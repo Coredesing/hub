@@ -1,0 +1,316 @@
+import { makeStyles } from '@material-ui/core';
+
+const useStyles = makeStyles((theme: any) => {
+  return {
+    poolDetailClaim: {
+      background: '#303035',
+      borderRadius: 12,
+      padding: '28px 28px',
+      marginBottom: 12,
+      color: '#FFFFFF',
+      fontFamily: 'DM Sans',
+      border: '1px solid #6398FF',
+
+      [theme?.breakpoints?.down('sm')]: {
+        padding: '28px 20px',
+      },
+      
+      '& button': {
+        color: '#FFFFFF',
+        height: 42,
+        padding: 5,
+        fontSize: 16,
+        fontFamily: 'DM Sans',
+        fontWeight: 500,
+        lineHeight: '24px',
+        borderRadius: 60,
+        width: 240,
+        maxWidth: '100%',
+        backgroundColor: '#3232DC !important',
+
+        [theme.breakpoints.down('sm')]: {
+          marginTop: '30px !important',
+        },
+
+        '&:disabled': {
+          cursor: 'not-allowed',
+          opacity: 0.6,
+          backgroundColor: '#3232DC !important',
+        }
+      },
+
+      [theme.breakpoints.down('sm')]: {
+        padding: '36px 20px',
+
+        '& #countdown': {
+          marginTop: 30
+        },
+
+        '& ul': {
+          textAlign: 'center',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+        },
+
+        '& button': {
+          width: '100% !important',
+          padding: '0 60px',
+          height: '42px',
+          font: 'normal normal bold 14px/18px DM Sans',
+        }
+      }
+    },
+    poolDetailClaimTitle: {
+      fontFamily: 'DM Sans',
+      fontWeight: 'bold',
+      fontSize: 16,
+      lineHeight: '24px',
+      marginBottom: 20,
+      textTransform: 'uppercase',
+
+      [theme?.breakpoints?.down('sm')]: {
+        textAlign: 'center',
+        fontSize: 16,
+        lineHeight: '24px',
+      },
+    },
+
+    poolDetailClaimInfo: {
+      marginBottom: 40,
+    },
+
+    poolDetailClaimInfoBlock: {
+      display: 'grid',
+      gridTemplateColumns: '140px 2fr',
+      fontFamily: 'Helvetica',
+      fontSize: 14,
+      lineHeight: '18px',
+      color: '#FFF',
+      gridColumnGap: 12,
+
+      [theme.breakpoints.down('sm')]: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        wordBreak: 'break-word',
+      },
+      
+      '& span:first-child': {
+        fontFamily: 'DM Sans',
+        fontWeight: 'bold',
+        color: '#AEAEAE',
+      },
+
+      '&:not(:first-child)': {
+        marginTop: 13,
+      },
+
+      '& .text-blue': {
+        color: '#6398FF'
+      }
+    },
+
+    poolDetailClaimProgress: {
+      display: 'flex',
+      position: 'relative',
+
+      '&:before': {
+        content: '""',
+        position: 'absolute',
+        top: -12,
+        left: 0,
+        right: 0,
+        height: 6,
+        background: '#44454B',
+
+        [theme.breakpoints.down('sm')]: {
+          top: 0,
+          left: 6,
+          right: 'auto',
+          height: '100%',
+          width: 5,
+        },
+      },
+
+      '& li .mark': {
+        position: 'absolute',
+        top: -17,
+        left: 0,
+        width: 16,
+        height: 16,
+        borderRadius: '50%',
+        background: '#44454B',
+        zIndex: 2,
+
+        [theme.breakpoints.down('sm')]: {
+          top: 0,
+          left: 0,
+          right: 'auto',
+        },
+      },
+
+      '& li .info': {
+        fontSize: 12,
+        lineHeight: '18px',
+        marginTop: 12,
+
+        [theme.breakpoints.down('sm')]: {
+          textAlign: 'left',
+          marginTop: 0,
+        },
+
+        '& > div:nth-child(2)': {
+          color: '#AEAEAE',
+          lineHeight: '20px',
+          marginTop: 4,
+        },
+
+        '&.show': {
+          whiteSpace: 'nowrap',
+          transform: 'translateX(50%) !important'
+        }
+      },
+
+      '& .first-item': {
+        flex: '3 1 0',
+        color: 'white',
+
+        [theme.breakpoints.down('sm')]: {
+          position: 'relative',
+          width: '100%',
+          textAlign: 'left',
+          paddingLeft: 25,
+          flex: '0 0 20px'
+        },
+
+        '&.active': {
+          color: '#6398FF',
+
+          '&:before': {
+            content: '""',
+            position: 'absolute',
+            top: -12,
+            left: 1,
+            right: 1,
+            height: 6,
+            background: '#6398FF',
+            zIndex: 1,
+
+            [theme.breakpoints.down('sm')]: {
+              content: 'unset'
+            },
+          },
+
+          '& .info > div:first-child': {
+            color: '#6398FF'
+          },
+
+          '&.solo:before': {
+            [theme.breakpoints.down('sm')]: {
+              top: -12,
+              left: 6,
+              height: '99%',
+              width: 5,
+              right: 'auto',
+            },
+          }
+        }
+      },
+
+      '& .item.last-item': {
+        flex: '5 1 0',
+
+        '& .info.show': {
+          transform: 'none !important',
+        },
+
+        [theme.breakpoints.down('sm')]: {
+          flex: '0 0 80px'
+        },
+      },
+
+      '& .item': {
+        flex: '2 1 0',
+        position: 'relative',
+
+        [theme.breakpoints.down('sm')]: {
+          width: '100%',
+          paddingLeft: 25,
+          flex: '0 0 50px'
+        },
+
+        '& .mark': {
+          left: 'unset',
+          right: 0,
+
+          [theme.breakpoints.down('sm')]: {
+            bottom: 0,
+            left: 0,
+            right: 'auto',
+            top: 'auto'
+          },
+        },
+
+        '& .info': {
+          textAlign: 'right',
+
+          [theme.breakpoints.down('sm')]: {
+            textAlign: 'left',
+            position: 'absolute',
+            left: 24,
+            bottom: -24
+          },
+        },
+
+        '&:not(:last-child):not(:first-child) .info': {
+          position: 'absolute',
+          right: 0,
+          textAlign: 'center',
+          transform: 'translateX(4px)',
+
+          [theme.breakpoints.down('sm')]: {
+            textAlign: 'left',
+            transform: 'none',
+          },
+        },
+
+        '&.active': {
+          '&:before': {
+            content: '""',
+            position: 'absolute',
+            top: -12,
+            left: 1,
+            right: 1,
+            height: 6,
+            background: '#6398FF',
+            zIndex: 1,
+
+            [theme.breakpoints.down('sm')]: {
+              top: -30,
+              left: 6,
+              height: '125%',
+              width: 5,
+              right: 'auto',
+            },
+          },
+
+          '& .info > div:first-child': {
+            color: '#6398FF'
+          },
+
+          '&.solo:before': {
+            [theme.breakpoints.down('sm')]: {
+              top: -12,
+              left: 6,
+              height: '99%',
+              width: 5,
+              right: 'auto',
+            },
+          }
+        }
+      }
+    }
+  };
+});
+
+export default useStyles;

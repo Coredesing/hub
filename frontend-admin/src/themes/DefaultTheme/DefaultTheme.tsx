@@ -1,6 +1,6 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ZIndex } from '@material-ui/core/styles/zIndex';
-import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
+import { ThemeOptions } from '@material-ui/core/styles/createTheme';
 
 declare module '@material-ui/core/styles/zIndex' {
   interface ZIndex {
@@ -8,7 +8,7 @@ declare module '@material-ui/core/styles/zIndex' {
   }
 }
 
-declare module '@material-ui/core/styles/createMuiTheme' {
+declare module '@material-ui/core/styles/createTheme' {
   interface Theme {
     zIndex: ZIndex;
   }

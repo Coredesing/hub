@@ -485,7 +485,7 @@ class CampaignController {
       }
       // call to SC to get convert rate token erc20 -> our token
       const receipt = await HelperUtils.getOfferCurrencyInfo(camp);
-      const rate = receipt[0];
+      const rate = new BigNumber(receipt[0]);
       const decimal = receipt[1];
       const unit = receipt[2];
       console.log(rate, decimal, unit);

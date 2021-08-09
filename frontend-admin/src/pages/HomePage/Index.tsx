@@ -60,14 +60,15 @@ const HomePage = (props: any) => {
       const erc20Token = await getTokenInfo(tokenAddress);
 
       if (erc20Token) {
-        const { name, symbol, decimals, address } = erc20Token;
+        const { name, symbol, decimals, address, token_type } = erc20Token;
 
         setLoadingToken(false);
         setToken({
           name,
           symbol,
           decimals,
-          address
+          address,
+          token_type,
         });
       }
     } catch (err) {

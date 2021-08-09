@@ -148,7 +148,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
         address: getUSDTAddress(appChainID),
         name: "USDT",
         symbol: "USDT",
-        decimals: (appChainID == ETH_CHAIN_ID || appChainID == POLYGON_CHAIN_ID) ? 6 : 18
+        decimals: (appChainID === ETH_CHAIN_ID || appChainID === POLYGON_CHAIN_ID) ? 6 : 18
       };
     }
 
@@ -166,7 +166,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
         address: getUSDCAddress(appChainID),
         name: "USDC",
         symbol: "USDC",
-        decimals: (appChainID == ETH_CHAIN_ID || appChainID == POLYGON_CHAIN_ID) ? 6 : 18
+        decimals: (appChainID === ETH_CHAIN_ID || appChainID === POLYGON_CHAIN_ID) ? 6 : 18
       };
     }
 

@@ -79,13 +79,14 @@ const CreateCampaign: React.FC<RouteComponentProps> = (props: RouteComponentProp
       const erc20Token = await getTokenInfo(tokenAddress);
 
       if (erc20Token) {
-        const { name, symbol, decimals, address } = erc20Token;
+        const { name, symbol, decimals, address, token_type } = erc20Token;
         setLoadingToken(false);
         setToken({
           name,
           symbol,
           decimals,
-          address
+          address,
+          token_type,
         });
       }
     } catch (err) {
@@ -249,17 +250,21 @@ const CreateCampaign: React.FC<RouteComponentProps> = (props: RouteComponentProp
                     </div>
                   </div>
                   <div className="tokenInfoBlock">
-                    <span className="tokenInfoLabel">Token Symbol</span>
+                    <span className="tokenInfoLabel">Symbol</span>
                     <div className="tokenInfoContent">
-                      <Tooltip title={<p style={{ fontSize: 15 }}>{token.symbol}</p>}>
-                        <p className="wordBreak">{`${token.symbol}`}</p>
-                      </Tooltip>
+                      {`${token.symbol}`}
                     </div>
                   </div>
                   <div className="tokenInfoBlock">
-                    <span className="tokenInfoLabel">Token Decimals</span>
+                    <span className="tokenInfoLabel">Decimals</span>
                     <div className="tokenInfoContent">
                       {`${token.decimals}`}
+                    </div>
+                  </div>
+                  <div className="tokenInfoBlock">
+                    <span className="tokenInfoLabel">Type</span>
+                    <div className="tokenInfoContent">
+                      {`${token.token_type}`}
                     </div>
                   </div>
                 </div>

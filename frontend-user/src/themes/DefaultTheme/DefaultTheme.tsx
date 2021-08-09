@@ -1,4 +1,4 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 import { ZIndex } from '@material-ui/core/styles/zIndex';
 import { ThemeOptions } from '@material-ui/core/styles/createTheme';
 
@@ -19,7 +19,7 @@ declare module '@material-ui/core/styles/createTheme' {
 }
 
 export const createLemonadeTheme = (options: ThemeOptions = {}) => {
-  return createMuiTheme(options);
+  return createTheme(options);
 };
 
 const themeOptions = {

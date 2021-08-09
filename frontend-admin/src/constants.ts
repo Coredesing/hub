@@ -26,6 +26,10 @@ export const POOL_TYPE = {
   SWAP: 'swap',
   CLAIMABLE: 'claimable',
 };
+export const TOKEN_TYPE = {
+  ERC20: 'erc20',
+  ERC721: 'erc721',
+};
 export const NETWORK_AVAILABLE = {
   ETH: 'eth',
   BSC: 'bsc',

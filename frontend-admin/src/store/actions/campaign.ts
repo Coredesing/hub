@@ -10,6 +10,7 @@ import { alertActions } from '../constants/alert';
 import { BaseRequest } from '../../request/Request';
 import campaignFactoryABI from '../../abi/Swap/CampaignFactory.json';
 import campaignFactoryClaimABI from '../../abi/Claim/CampaignFactory.json';
+import campaignFactoryClaimNFTABI from '../../abi/Claim/CampaignFactoryNFT.json';
 
 import campaignABI from '../../abi/Swap/Campaign.json';
 import erc20ABI from '../../abi/Erc20.json';
@@ -21,7 +22,14 @@ import { getDigitsAfterDecimals } from '../../utils/formatNumber';
 import { TokenType } from '../../utils/token';
 import {adminRoute} from "../../utils";
 import {updateDeploySuccess} from "../../request/pool";
-import {ACCEPT_CURRENCY, POOL_TYPE, NETWORK_AVAILABLE, MAPPING_CURRENCY_ADDRESS, NATIVE_TOKEN_ADDRESS} from "../../constants";
+import {
+  ACCEPT_CURRENCY,
+  POOL_TYPE,
+  NETWORK_AVAILABLE,
+  MAPPING_CURRENCY_ADDRESS,
+  NATIVE_TOKEN_ADDRESS,
+  TOKEN_TYPE
+} from "../../constants";
 import {alertFailure} from "./alert";
 const queryString = require('query-string');
 const ETH_LINK_DEFAULT_ADDRESS = process.env.REACT_APP_SMART_CONTRACT_ETHLINK_ADDRESS || "";
@@ -637,16 +645,21 @@ export const deployPool = (campaign: any, history: any) => {
       let tokenByEthDecimals = 0;
       let tokenByETHActualRate: any;
       let reversedRate = removeTrailingZeros(new BigNumber(1).dividedBy(token_by_eth).toFixed());
+      let paidTokenDecimal = 0
 
       if (network_available == NETWORK_AVAILABLE.ETH) {
         if (accept_currency === ACCEPT_CURRENCY.ETH) {
           tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, 0)).toFixed();
+          paidTokenDecimal = 18
         } else if (accept_currency === ACCEPT_CURRENCY.USDT) {
           tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 6)).toFixed();
+          paidTokenDecimal = 6
         } else if (accept_currency === ACCEPT_CURRENCY.USDC) {
           tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 6)).toFixed();
+          paidTokenDecimal = 6
         }
       } else if (network_available == NETWORK_AVAILABLE.BSC) {
+        paidTokenDecimal = 18
         if (accept_currency === ACCEPT_CURRENCY.ETH) {
           tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, 0)).toFixed();
         } else if (accept_currency === ACCEPT_CURRENCY.USDT) {
@@ -657,10 +670,13 @@ export const deployPool = (campaign: any, history: any) => {
       } else if (network_available == NETWORK_AVAILABLE.POLYGON) {
         if (accept_currency === ACCEPT_CURRENCY.ETH) {
           tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, 0)).toFixed();
+          paidTokenDecimal = 18
         } else if (accept_currency === ACCEPT_CURRENCY.USDT) {
           tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 6)).toFixed();
+          paidTokenDecimal = 6
         } else if (accept_currency === ACCEPT_CURRENCY.USDC) {
           tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 6)).toFixed();
+          paidTokenDecimal = 6
         }
       }
 
@@ -693,12 +709,19 @@ export const deployPool = (campaign: any, history: any) => {
       // }
       tokenByETHActualRate = new BigNumber(tokenByETHActualRate).multipliedBy(Math.pow(10, digitsAfterDecimals)).toFixed();
 
-      console.log('tokenByETHActualRate', tokenByETHActualRate, digitsAfterDecimals);
+      // 1 accepted_currency --> token
+      if (tokenInfo && tokenInfo.token_type === 'erc721') {
+        digitsAfterDecimals = 30
+        tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(new BigNumber(10).pow(digitsAfterDecimals - paidTokenDecimal))
+      }
 
       const poolType = campaign.pool_type;
       let factorySmartContract = getContractInstance(campaignFactoryABI, process.env.REACT_APP_SMART_CONTRACT_FACTORY_ADDRESS || '');
       if (poolType === POOL_TYPE.CLAIMABLE) {
         factorySmartContract = getContractInstance(campaignFactoryClaimABI, process.env.REACT_APP_SMART_CONTRACT_PRESALE_FACTORY_ADDRESS || '');
+      }
+      if (tokenInfo && tokenInfo.token_type === TOKEN_TYPE.ERC721) {
+        factorySmartContract = getContractInstance(campaignFactoryClaimNFTABI, process.env.REACT_APP_SMART_CONTRACT_PRESALE_FACTORY_NFT_ADDRESS || '')
       }
 
       switch (network_available) {
@@ -706,11 +729,19 @@ export const deployPool = (campaign: any, history: any) => {
           const poolBscAddress = poolType === POOL_TYPE.CLAIMABLE ?
               process.env.REACT_APP_SMART_CONTRACT_BSC_PRESALE_FACTORY_ADDRESS : process.env.REACT_APP_SMART_CONTRACT_BSC_FACTORY_ADDRESS
           factorySmartContract = getContractInstance(campaignFactoryABI, poolBscAddress || '', false);
+
+          if (tokenInfo && tokenInfo.token_type === TOKEN_TYPE.ERC721) {
+            factorySmartContract = getContractInstance(campaignFactoryClaimNFTABI, process.env.REACT_APP_SMART_CONTRACT_BSC_PRESALE_FACTORY_NFT_ADDRESS || '')
+          }
           break
         case NETWORK_AVAILABLE.POLYGON:
           const poolPolygonAddress = poolType === POOL_TYPE.CLAIMABLE ?
               process.env.REACT_APP_SMART_CONTRACT_POLYGON_PRESALE_FACTORY_ADDRESS : process.env.REACT_APP_SMART_CONTRACT_POLYGON_FACTORY_ADDRESS
           factorySmartContract = getContractInstance(campaignFactoryABI, poolPolygonAddress || '', false);
+
+          if (tokenInfo && tokenInfo.token_type === TOKEN_TYPE.ERC721) {
+            factorySmartContract = getContractInstance(campaignFactoryClaimNFTABI, process.env.REACT_APP_SMART_CONTRACT_POLYGON_PRESALE_FACTORY_NFT_ADDRESS || '')
+          }
           break
         default:
           // default is init value above

@@ -83,6 +83,7 @@ class PoolController {
       'name': tokenInfo && tokenInfo.name,
       'decimals': tokenInfo && tokenInfo.decimals,
       'token': tokenInfo && tokenInfo.address,
+      'token_type': tokenInfo && tokenInfo.token_type,
 
       'token_sold_display': inputParams.token_sold_display,
       'progress_display': inputParams.progress_display,
@@ -208,6 +209,7 @@ class PoolController {
       'name': tokenInfo && tokenInfo.name,
       'decimals': tokenInfo && tokenInfo.decimals,
       'token': tokenInfo && tokenInfo.address,
+      'token_type': tokenInfo && tokenInfo.token_type,
 
       'token_sold_display': inputParams.token_sold_display,
       'progress_display': inputParams.progress_display,
@@ -466,7 +468,7 @@ class PoolController {
         'release_time', 'start_join_pool_time', 'start_time', 'end_join_pool_time', 'finish_time',
 
         // Token Info
-        'name', 'symbol', 'decimals', 'token', 'token_images', 'total_sold_coin',
+        'name', 'symbol', 'decimals', 'token', 'token_type', 'token_images', 'total_sold_coin',
         'token_conversion_rate', 'ether_conversion_rate',
         'price_usdt', 'display_price_rate',
         'token_sold',

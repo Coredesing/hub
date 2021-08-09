@@ -111,7 +111,7 @@ function PoolForm(props: any) {
     };
 
     if (data.token) {
-      tokenInfo = await getTokenInforDetail(data.token);
+      tokenInfo = await getTokenInforDetail(data.token, data.token_type);
       if (!tokenInfo?.symbol) {
         throw Error('Token Information has not been loaded !!!');
         dispatch(alertFailure('Token Information has not been loaded !!!'))
@@ -361,12 +361,12 @@ function PoolForm(props: any) {
     }, 100);
   };
 
-  const getTokenInforDetail = async (token: string) => {
-    const erc20Token = await getTokenInfo(token);
+  const getTokenInforDetail = async (token: string, token_type: string) => {
+    const erc20Token = await getTokenInfo(token, token_type);
     let tokenInfo: any = {};
     if (erc20Token) {
-      const { name, symbol, decimals, address } = erc20Token;
-      tokenInfo = { name, symbol, decimals, address };
+      const { name, symbol, decimals, address, token_type } = erc20Token;
+      tokenInfo = { name, symbol, decimals, address, token_type };
     }
     return tokenInfo;
   }
@@ -388,7 +388,7 @@ function PoolForm(props: any) {
     try {
       // Save data before deploy
       const response = await createUpdatePool(data);
-      const tokenInfo = await getTokenInforDetail(data.token);
+      const tokenInfo = await getTokenInforDetail(data.token, data.token_type);
 
       const history = props.history;
       const minTier = data.minTier;
@@ -628,6 +628,7 @@ function PoolForm(props: any) {
               setToken={setToken}
               setValue={setValue}
               getValues={getValues}
+              control={control}
               errors={errors}
               watch={watch}
               needValidate={needValidate}

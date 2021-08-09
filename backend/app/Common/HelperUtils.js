@@ -437,6 +437,10 @@ const getTokenSoldSmartContract = async (pool) => {
   const isClaimable = pool.pool_type == Const.POOL_TYPE.CLAIMABLE;
   const poolContract = isClaimable ? await getContractClaimInstance(pool) : await getContractInstance(pool);
   let tokenSold = await poolContract.methods.tokenSold().call();
+  if (pool.token_type === 'erc721') {
+    console.log('[getTokenSoldSmartContract] - tokenSold', tokenSold);
+    return tokenSold
+  }
   tokenSold = new BigNumber(tokenSold).div(new BigNumber(10).pow(18)).toFixed();
   console.log('[getTokenSoldSmartContract] - tokenSold', tokenSold);
   return tokenSold;

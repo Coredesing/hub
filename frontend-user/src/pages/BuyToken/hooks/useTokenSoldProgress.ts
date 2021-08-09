@@ -35,6 +35,10 @@ const useTokenSoldProgress = (poolAddress: string | undefined, totalTokens: numb
         if (poolContract) {
           const tokensSold = await poolContract.methods.tokenSold().call();
           let tokensSoldCal = new BigNumber(tokensSold).div(new BigNumber(10).pow(18)).toFixed();
+          if (poolDetails.tokenDetails.token_type === 'erc721') {
+            tokensSoldCal = tokensSold
+          }
+
           let { progress, tokenSold, totalSoldCoin } = getProgressWithPools({
             ...poolDetails,
             token_sold: tokensSoldCal,

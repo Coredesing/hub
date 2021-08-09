@@ -713,6 +713,7 @@ export const deployPool = (campaign: any, history: any) => {
       if (tokenInfo && tokenInfo.token_type === 'erc721') {
         digitsAfterDecimals = 30
         tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(new BigNumber(10).pow(digitsAfterDecimals - paidTokenDecimal))
+        tokenByETHActualRate = tokenByETHActualRate.integerValue(BigNumber.ROUND_DOWN)
       }
 
       const poolType = campaign.pool_type;
@@ -772,7 +773,10 @@ export const deployPool = (campaign: any, history: any) => {
           dispatch({ type: alertActions.SUCCESS_MESSAGE, payload: 'Deploy Pool Successful!'});
 
           let campaignHash = '';
-          if (createdCampaign?.events && createdCampaign?.events && createdCampaign?.events[0]) {
+          if (createdCampaign?.events && createdCampaign?.events && createdCampaign?.events.PresalePoolCreated) {
+            campaignHash = createdCampaign?.events.PresalePoolCreated.address;
+          }
+          if (campaignHash === '' && createdCampaign?.events && createdCampaign?.events && createdCampaign?.events[0]) {
             campaignHash = createdCampaign?.events[0].address;
           }
           const updateData = {

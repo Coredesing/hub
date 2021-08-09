@@ -101,7 +101,8 @@ const usePoolDetails = (poolId : number): PoolDetailsReturnType => {
         symbol: data.symbol,
         name: data.name,
         decimals: data.decimals,
-        address: data.token
+        address: data.token,
+        token_type: data.token_type,
       }
 
       data.tiers.length > 0 && data.tiers.map((tier: any) => {

@@ -60,7 +60,7 @@ function ApproveButton(props: any) {
   };
 
   const approve = async () => {
-    const allowanceAmount = '10000000000000000000000';
+    const allowanceAmount = '10000000000000000000000000000000000000000';
     const poolHash = poolDetail?.campaign_hash;
     setLoading(true);
     try {

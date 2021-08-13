@@ -501,21 +501,26 @@ class UserController {
         console.log(`Failed when call block pass api with refID ${params.refId} and ${params.recordId}`);
         return HelperUtils.responseBadRequest();
       }
-      // get user info
-      const email = JSON.parse(response.body).data.identities.email.value;
-      const wallet = JSON.parse(response.body).data.identities.crypto_address_eth.value;
-      const kycStatus = JSON.parse(response.body).data.status;
 
-      const address_country = JSON.parse(JSON.parse(response.body).data.identities.address.value).country;
+      const data = JSON.parse(response.body).data
+      console.log('block pass data', data, response.body)
+      // get user info
+      const email = data.identities.email.value;
+      const wallet = data.identities.crypto_address_eth.value;
+      const kycStatus = data.status;
+
+      const address_country = JSON.parse(data.identities.address.value).country;
       let passport_issuing_country = address_country;
 
-      if (JSON.parse(response.body).data.identities.passport_issuing_country != null) {
-        passport_issuing_country = JSON.parse(response.body).data.identities.passport_issuing_country.value;
-      } else if (JSON.parse(response.body).data.identities.national_id_issuing_country != null) {
-        passport_issuing_country = JSON.parse(response.body).data.identities.national_id_issuing_country.value;
-      } else if (JSON.parse(response.body).data.driving_license_issuing_country != null) {
-        passport_issuing_country = JSON.parse(response.body).data.identities.driving_license_issuing_country.value;
+      if (data.identities.passport_issuing_country != null) {
+        passport_issuing_country = data.identities.passport_issuing_country.value;
+      } else if (data.identities.national_id_issuing_country != null) {
+        passport_issuing_country = data.identities.national_id_issuing_country.value;
+      } else if (data.driving_license_issuing_country != null) {
+        passport_issuing_country = data.identities.driving_license_issuing_country.value;
       }
+
+      // check blockpass is duplicate
 
       // save to db to log
       const blockPassObj = new BlockPassModel();
@@ -537,7 +542,7 @@ class UserController {
       });
       blockPassObj.save();
 
-      if (Const.KYC_STATUS[kycStatus.toString().toUpperCase()] == Const.KYC_STATUS.APPROVED) {
+      if (Const.KYC_STATUS[kycStatus.toString().toUpperCase()] === Const.KYC_STATUS.APPROVED) {
         const approvedRecord = await BlockpassApprovedModel.query().where('record_id', params.recordId).first();
         if (!approvedRecord) {
           const blockpassApproved = new BlockpassApprovedModel();

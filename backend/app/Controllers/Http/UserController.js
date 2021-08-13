@@ -503,7 +503,6 @@ class UserController {
       }
 
       const data = JSON.parse(response.body).data
-      console.log('block pass data', data, response.body)
       // get user info
       const email = data.identities.email.value;
       const wallet = data.identities.crypto_address_eth.value;
@@ -519,8 +518,6 @@ class UserController {
       } else if (data.driving_license_issuing_country != null) {
         passport_issuing_country = data.identities.driving_license_issuing_country.value;
       }
-
-      // check blockpass is duplicate
 
       // save to db to log
       const blockPassObj = new BlockPassModel();

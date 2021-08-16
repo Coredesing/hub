@@ -23,14 +23,14 @@ import { TIERS } from "../../../constants";
 import useAuth from "../../../hooks/useAuth";
 import { getUserTier } from "../../../store/actions/sota-tiers";
 
-const BrightStartIcon = "bright-star.svg";
-const WalletIcon = "/images/wallet.svg";
+// const BrightStartIcon = "bright-star.svg";
+// const WalletIcon = "/images/wallet.svg";
 const logo = '/images/gamefi.png';
 const ethIcon = '/images/icons/eth.svg';
-const iconClose = "/images/icons/close.svg";
+// const iconClose = "/images/icons/close.svg";
 const iconHamburger = "/images/icons/hamburger.svg";
-const iconAccount = "/images/icons/account.svg";
-const EthereumIcon = "/images/ethereum.svg";
+// const iconAccount = "/images/icons/account.svg";
+// const EthereumIcon = "/images/ethereum.svg";
 
 const HeaderDefaultLayout: React.FC<any> = (props: any) => {
   const styles = useStyles();
@@ -274,7 +274,9 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
                 <li className={styles.headerLink}><a href="#">Stake</a></li>
               </ul>
               <div className={styles.headerAccount}>
-                <span className={styles.headerAccText}>My Account</span>
+                <a href="/#/account" className={styles.headerAccText}>
+                  My Account
+                </a>
                 <div className={styles.headerAccBtn}>
                   <button
                     title="Switch network"

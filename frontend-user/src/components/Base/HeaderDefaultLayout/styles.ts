@@ -417,6 +417,9 @@ const useStyles = makeStyles((theme) => {
       lineHeight: '24px',
       color: '#FFFFFF',
       mixBlendMode: 'normal',
+      '&:hover': {
+        color: '#FFFFFF',
+      }
     },
     headerAccBtn: {
       background: '#2E2E2E',

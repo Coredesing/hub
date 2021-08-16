@@ -34,6 +34,89 @@
   font-style: normal;
   font-display: block;
 }
+@font-face {
+  font-family: 'Hanken Grotesk';
+  src: url("./styles/fonts/HKGrotesk-Light.ttf") format("truetype");
+  font-weight: 'normal';
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Space Ranger';
+  src: url("./styles/fonts/spacerangerbold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Space Ranger';
+  src: url("./styles/fonts/spacerangerout.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Firs Neue';
+  src: url("./styles/fonts/TTFirsNeue-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Firs Neue';
+  src: url("./styles/fonts/TTFirsNeue-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Firs Neue';
+  src: url("./styles/fonts/TTFirsNeue-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'Firs Neue';
+  src: url("./styles/fonts/TTFirsNeue-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Firs Neue';
+  src: url("./styles/fonts/TTFirsNeue-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Firs Neue';
+  src: url("./styles/fonts/TTFirsNeue-DemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Firs Neue';
+  src: url("./styles/fonts/TTFirsNeue-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Firs Neue';
+  src: url("./styles/fonts/TTFirsNeue-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Firs Neue';
+  src: url("./styles/fonts/TTFirsNeue-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+}
 
 [class^="custom-icon-"], [class*=" custom-icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */

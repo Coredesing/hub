@@ -37,8 +37,9 @@ import JoinPolkaSmith from "./pages/JoinPolkaSmith"
 //@ts-ignore
 import { NotificationContainer, NotificationManager } from 'react-notifications'
 import 'react-notifications/lib/notifications.css';
-import {adminRoute, publicRoute} from "./utils";
+import { adminRoute, publicRoute } from "./utils";
 import ComingSoon from "./pages/ComingSoon/ComingSoon";
+import Ticket from './pages/Ticket';
 
 /**
  * Main App routes.
@@ -121,9 +122,11 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
             exact path="/"
             render={() => <Redirect to={`${'/home'}`} />}
           /> */}
+                    <Route exact path={'/ticket'} component={Ticket} />
                     <Route path={`${'/polkasmith-privacy'}`} component={PolkaSmithPrivacyPolicy} />
                     <Route path={`${'/join-polkasmith'}`} component={JoinPolkaSmith} />
-                    <Route exact path={`${'/dashboard'}`} component={Dashboard} />
+                    {/* <Route exact path={`${'/dashboard'}`} component={Dashboard} /> */}
+                    <Route exact path={`${'/'}`} component={Ticket} />
                     <Route path={`${'/buy-token/:id'}`} component={BuyToken} />
                     <Route path={'/register'} component={InvestorRegister} />
                     <Route path={'/login'} component={InvestorLogin} />
@@ -133,13 +136,13 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                     <Route path={'/network-change'} component={NetworkChange} />
                     <Route path={'/change-password/:role?'} component={ChangePassword} />
                     <Route path={'/account'} component={AccountV2} />
-                    <Route path={'/stake'} component={Deposit}/>
-                    <Route path={'/unstake'} component={Withdraw}/>
+                    <Route path={'/stake'} component={Deposit} />
+                    <Route path={'/unstake'} component={Withdraw} />
                     <Route path={'/pools'} component={Pools} />
                     <Route path={'/privacy'} component={PrivacyPolicy} />
                     <Route path={'/terms'} component={Terms} />
-                    <Route path={'/'} component={Landing} />
-
+                    {/* <Route path={'/'} component={Landing} /> */}
+                    <Route path={'/'} component={Ticket} />
                     <Route path={'/coming-soon'} component={ComingSoon} />
                     <Route component={NotFoundPage} />
                 </Switch>

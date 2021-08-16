@@ -136,7 +136,6 @@ const Dashboard = (props: any) => {
   // useEffect(() => {
   //   setTimeout(function(){ window.scroll({ top: 0, behavior: 'smooth'}) }, 500);
   // }, [])
-
   return (
     <DefaultLayout>
       <BackgroundComponent/>

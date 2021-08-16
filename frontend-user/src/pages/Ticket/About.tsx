@@ -186,7 +186,7 @@ export function AboutTicket() {
                     <div className={classes.link}>
                         <span className="text">Website</span>
                         <div className={classes.weblink}>
-                            <a href="/">gamefi.org <img src={shareIcon} alt="" /> </a>
+                            <a href="https://gamefi.org" target="_blank">gamefi.org <img src={shareIcon} alt="" /> </a>
                         </div>
                     </div>
                     <div className={classes.link}>

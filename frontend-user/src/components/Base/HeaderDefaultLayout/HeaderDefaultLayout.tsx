@@ -43,6 +43,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
   const { appChainID } = useSelector((state: any) => state.appNetwork).data;
   const walletsInfo = useSelector((state: any) => state.wallet).entities;
   const [openSideBar, setOpenSideBar] = useState(false);
+  const [toggleNavbar, setToggleNavbar] = useState(false);
   const { data: message = "" } = useSelector((state: any) => state.messages);
   const { data: userTier } = useSelector((state: any) => state.userTier);
 
@@ -155,7 +156,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
   return (
     <>
       <div className={styles.navBar}>
-        {isWidthDown("xs", props.width) ? (
+        {/* {isWidthDown("md", props.width) ? (
           <>
             <div>
               <Link to={"/"} className={styles.navbarLink}>
@@ -258,83 +259,89 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
               </button>
             </div>
           </>
-        ) : (
-          <>
-            <div className={styles.navBarGF}>
-              <div className="logo">
-                <a href={"#/"}><img src={logo} alt="" /></a>
-              </div>
-              <nav className={styles.headerNav}>
-                <ul className={styles.headerLinks}>
-                  <li className={styles.headerLink}><a href="#">Home</a></li>
-                  <li className={styles.headerLink}><a href="#">Token sales</a></li>
-                  <li className={styles.headerLink}><a href="#">Game Items Sales</a></li>
-                  <li className={styles.headerLink}><a href="#">Marketplace</a></li>
-                  <li className={styles.headerLink}><a href="#">Stake</a></li>
-                </ul>
-                <div className={styles.headerAccount}>
-
-                  <span className={styles.headerAccText}>My Account</span>
-
-                  <div className={styles.headerAccBtn}>
-                      <button
-                        title="Switch network"
-                        onClick={() => {
-                          setSwitchNetworkDialog(true);
-                          setOpenSideBar(false);
-                        }}
-                        className="logo-currency"
-                      >
-                        <span >
-                          <img
-                            src={`${chainLogo}`}
-                            alt=""
-                          />
-                        </span>
-                        {/* <span className={styles.btnConnectText}>
+        ) : ( */}
+        <>
+          <div className={styles.navBarGF}>
+            <div className="logo">
+              <a href={"#/"}><img src={logo} alt="" /></a>
+            </div>
+            <nav className={`${styles.headerNav} ${toggleNavbar ? 'show' : ''}`}>
+              <ul className={styles.headerLinks}>
+                <li className={styles.headerLink}><a href="#">Home</a></li>
+                <li className={styles.headerLink}><a href="#">Token sales</a></li>
+                <li className={styles.headerLink}><a href="#">Game Items Sales</a></li>
+                <li className={styles.headerLink}><a href="#">Marketplace</a></li>
+                <li className={styles.headerLink}><a href="#">Stake</a></li>
+              </ul>
+              <div className={styles.headerAccount}>
+                <span className={styles.headerAccText}>My Account</span>
+                <div className={styles.headerAccBtn}>
+                  <button
+                    title="Switch network"
+                    onClick={() => {
+                      setSwitchNetworkDialog(true);
+                      setOpenSideBar(false);
+                    }}
+                    className="logo-currency"
+                  >
+                    <span >
+                      <img
+                        src={`${chainLogo}`}
+                        alt=""
+                      />
+                    </span>
+                    {/* <span className={styles.btnConnectText}>
                                 {chainName}
                               </span> */}
-                      </button>
-                      <button
-                        title="Connect wallet"
-                        className={styles.btnWallet}
-                        disabled={connectWalletLoading}
-                        onClick={() => {
-                          if (!connectWalletLoading) {
-                            !currentAccount
-                              ? handleConnectWalletOpen()
-                              : handleDisconnectDialogOpen();
-                          }
-                        }}>
-                        {!connectWalletLoading ? (
-                          currentAccount ? <>
-                            <span className="balance">{currentAccount &&
-                              (!loginError
-                                ? `${balance} ${chainCurrency}`
-                                : "0")}
-                            </span>
-                            <span className="address">{trimMiddlePartAddress(currentAccount || '')}</span>
-                          </> : <span className="connect-wl">
-                            {/* <img src={WalletIcon} alt="wallet" /> */}
-                            Connect Wallet
-                          </span>
-                        ) : (
-                          <BeatLoader
-                            color={"white"}
-                            css={css`
+                  </button>
+                  <button
+                    title="Connect wallet"
+                    className={styles.btnWallet}
+                    disabled={connectWalletLoading}
+                    onClick={() => {
+                      if (!connectWalletLoading) {
+                        !currentAccount
+                          ? handleConnectWalletOpen()
+                          : handleDisconnectDialogOpen();
+                      }
+                    }}>
+                    {!connectWalletLoading ? (
+                      currentAccount ? <>
+                        <span className="balance">{currentAccount &&
+                          (!loginError
+                            ? `${balance} ${chainCurrency}`
+                            : "0")}
+                        </span>
+                        <span className="address">{trimMiddlePartAddress(currentAccount || '')}</span>
+                      </> : <span className="connect-wl">
+                        {/* <img src={WalletIcon} alt="wallet" /> */}
+                        Connect Wallet
+                      </span>
+                    ) : (
+                      <BeatLoader
+                        color={"white"}
+                        css={css`
                             margin-top: 3px;
                           `}
-                            size={10}
-                          />
-                        )}
-                      </button>
-                  </div>
+                        size={10}
+                      />
+                    )}
+                  </button>
                 </div>
-              </nav>
-            </div>
+              </div>
 
-          </>
-        )}
+            </nav>
+            <div className={styles.hamburger}>
+              <img
+                src={iconHamburger}
+                onClick={() => setToggleNavbar(!toggleNavbar)}
+                alt=""
+              />
+            </div>
+          </div>
+
+        </>
+        {/* )} */}
       </div>
       <HeaderContext.Provider value={{ agreedTerms, setAgreedTerms }}>
         <ConnectWalletModal

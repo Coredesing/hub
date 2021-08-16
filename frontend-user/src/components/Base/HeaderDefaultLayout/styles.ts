@@ -297,6 +297,10 @@ const useStyles = makeStyles((theme) => {
       font: 'normal normal bold 16px/24px DM Sans',
       position: 'relative',
       zIndex: 1,
+      [theme.breakpoints.down('md')]: {
+        gridTemplateColumns: '173px 30px',
+        justifyContent: 'space-between',
+      },
 
       // '& > div': {
       //   display: 'flex',
@@ -325,44 +329,59 @@ const useStyles = makeStyles((theme) => {
       //     }
       //   }
       // },
-      [theme.breakpoints.down('sm')]: {
-        position: 'static',
-        padding: '10px 40px',
-      },
-      [theme.breakpoints.down('xs')]: {
-        padding: '0',
-        flexDirection: 'column',
-        position: 'relative',
+      // [theme.breakpoints.down('sm')]: {
+      //   position: 'static',
+      //   padding: '10px 40px',
+      // },
+      // [theme.breakpoints.down('xs')]: {
+      //   padding: '0',
+      //   flexDirection: 'column',
+      //   position: 'relative',
 
-        '& > div:first-child': {
-          width: '100%',
-          padding: '10px 32px',
-          display: 'grid',
-          gridTemplateColumns: '1fr auto auto',
-          alignItems: 'center'
-        },
+      //   '& > div:first-child': {
+      //     width: '100%',
+      //     padding: '10px 32px',
+      //     display: 'grid',
+      //     gridTemplateColumns: '1fr auto auto',
+      //     alignItems: 'center'
+      //   },
 
-        '& .logo img': {
-          width: '30px',
-        },
+      //   '& .logo img': {
+      //     width: '30px',
+      //   },
 
-        '& .connects': {
-          order: 3
-        },
+      //   '& .connects': {
+      //     order: 3
+      //   },
 
-        '& .pool': {
-          order: 2
-        },
+      //   '& .pool': {
+      //     order: 2
+      //   },
 
-        '& .logo': {
-          order: 1
-        }
-      },
+      //   '& .logo': {
+      //     order: 1
+      //   }
+      // },
     },
     headerNav: {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
+      gap: '32px',
+      [theme.breakpoints.down('md')]: {
+        display: 'none',
+        position: 'absolute',
+        top: '80px',
+        left: 0,
+        width: '100%',
+        background: '#000',
+        placeContent: 'center',
+        textAlign: 'center',
+        padding: '20px',
+        '&.show': {
+          display: 'grid',
+        }
+      },
     },
     headerLinks: {
       margin: 0,
@@ -370,6 +389,9 @@ const useStyles = makeStyles((theme) => {
       display: 'flex',
       gap: '32px',
       flexWrap: 'wrap',
+      [theme.breakpoints.down('md')]: {
+        display: 'grid',
+      }
     },
     headerLink: {
       '& a': {
@@ -459,6 +481,13 @@ const useStyles = makeStyles((theme) => {
         padding: '7px 0px',
         paddingRight: '4px',
       }
+    },
+    hamburger: {
+      cursor: 'pointer',
+      display: 'none',
+      [theme.breakpoints.down('md')]: {
+        display: 'block',
+      },
     }
   };
 });

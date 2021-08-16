@@ -24,8 +24,9 @@ import useAuth from "../../../hooks/useAuth";
 import { getUserTier } from "../../../store/actions/sota-tiers";
 
 const BrightStartIcon = "bright-star.svg";
-const WalletIcon = "wallet.svg";
-const logo = "/images/logo-red-kite.svg";
+const WalletIcon = "/images/wallet.svg";
+const logo = '/images/gamefi.png';
+const ethIcon = '/images/icons/eth.svg';
 const iconClose = "/images/icons/close.svg";
 const iconHamburger = "/images/icons/hamburger.svg";
 const iconAccount = "/images/icons/account.svg";
@@ -45,7 +46,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
   const { data: message = "" } = useSelector((state: any) => state.messages);
   const { data: userTier } = useSelector((state: any) => state.userTier);
 
-  const [chainLogo, setChainLogo] = useState<String>(EthereumIcon);
+  const [chainLogo, setChainLogo] = useState<String>(ethIcon);
   const [chainName, setChainName] = useState<String>("Ethereum");
   const [chainCurrency, setChainCurrency] = useState<String>("ETH");
 
@@ -131,13 +132,13 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
     }
   }, [walletsInfo, walletName]);
 
-  useEffect(()=> {
+  useEffect(() => {
     const networkInfo = APP_NETWORKS_SUPPORT[Number(appChainID)];
     if (!networkInfo) {
       return;
     }
 
-    setChainLogo(networkInfo.icon || EthereumIcon);
+    setChainLogo(networkInfo.icon || ethIcon);
     setChainName(networkInfo.name || 'Ethereum');
     setChainCurrency(networkInfo.currency || 'ETH');
   }, [appChainID]);
@@ -149,8 +150,8 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
     }
   };
 
-  
-  
+
+
   return (
     <>
       <div className={styles.navBar}>
@@ -177,7 +178,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
             </div>
             <div className={styles.rightBar + (openSideBar ? " active" : "")}>
               <>
-                <img src={logo} className={styles.sideBarLogo} alt="logo"/>
+                <img src={logo} className={styles.sideBarLogo} alt="logo" />
                 <img
                   src={iconClose}
                   className={styles.closeBtn}
@@ -194,11 +195,11 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
               />
               {currentAccount && (
                 <a href={"#/account"}
-                   className={`${styles.btn} start my-account`}
+                  className={`${styles.btn} start my-account`}
                 >
-                  <img className="icon" src={iconAccount}/>
+                  <img className="icon" src={iconAccount} />
                   My Account
-                  {TIERS[userTier] && <span>(<img src={TIERS[userTier]?.icon}/>{TIERS[userTier]?.name})</span>}
+                  {TIERS[userTier] && <span>(<img src={TIERS[userTier]?.icon} />{TIERS[userTier]?.name})</span>}
                 </a>
               )}
               <button
@@ -235,11 +236,10 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
                           ? `${balance} ${chainCurrency}`
                           : "0")}
                     </span>
-                    {!currentAccount && <img src={`/images/${WalletIcon}`} alt="wallet"/>}
+                    {!currentAccount && <img src={WalletIcon} alt="wallet" />}
                     <span
-                      className={`${styles.btnConnectText} ${
-                        currentAccount ? styles.btnAccount : ""
-                      }`}
+                      className={`${styles.btnConnectText} ${currentAccount ? styles.btnAccount : ""
+                        }`}
                     >
                       {(currentAccount &&
                         `${trimMiddlePartAddress(currentAccount)}`) ||
@@ -260,82 +260,79 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
           </>
         ) : (
           <>
-            <ButtonLink
-              text="Pool"
-              to={"/dashboard"}
-              icon={BrightStartIcon}
-              className={`${styles.btn} start`}
-              onClick={handleClickPoolList}
-            />
-            {currentAccount && (
-              <a href={"#/account"}
-                 className={`${styles.btn} start my-account`}
-              >
-                <img className="icon" src={iconAccount}/>
-                My Account
-                {TIERS[userTier] && <span>(<img src={TIERS[userTier]?.icon}/>{TIERS[userTier]?.name})</span>}
-              </a>
-            )}
-            <div className={styles.spacer}></div>
-            <Link to={"/"} className={styles.navbarLogo}>
-              <img src={logo} alt="" />
-            </Link>
-            <div className={styles.spacer}></div>
-            <button
-              className={`${styles.btn} ${styles.btnNetwork}`}
-              onClick={() => {
-                setSwitchNetworkDialog(true);
-                setOpenSideBar(false);
-              }}
-            >
-              <img
-                src={`${chainLogo}`}
-                alt=""
-              />
-              <span className={styles.btnConnectText}>
-                {chainName}
-              </span>
-            </button>
-            <button
-              className={`${styles.btn} ${styles.btnConnect}`}
-              onClick={() => {
-                if (!connectWalletLoading) {
-                  !currentAccount
-                    ? handleConnectWalletOpen()
-                    : handleDisconnectDialogOpen();
-                }
-              }}
-              disabled={connectWalletLoading}
-            >
-              {!connectWalletLoading ? (
-                <>
-                  <span>
-                    {currentAccount &&
-                      (!loginError
-                        ? `${balance} ${chainCurrency}`
-                        : "0")}
-                  </span>
-                  {!currentAccount && <img src={`/images/${WalletIcon}`} alt="wallet"/>}
-                  <span
-                    className={`${styles.btnConnectText} ${
-                      currentAccount ? styles.btnAccount : ""
-                    }`}
-                  >
-                    {(currentAccount &&
-                      `${trimMiddlePartAddress(currentAccount)}`) ||
-                      "Connect Wallet"}
-                  </span>
-                </>
-              ) : (
-                <BeatLoader
-                  color={"white"}
-                  css={css`
-                    margin-top: 3px;
-                  `}
-                  size={10}
-                />
-              )}
-            </button>
+            <div className={styles.navBarGF}>
+              <div className="logo">
+                <a href={"#/"}><img src={logo} alt="" /></a>
+              </div>
+              <nav className={styles.headerNav}>
+                <ul className={styles.headerLinks}>
+                  <li className={styles.headerLink}><a href="#">Home</a></li>
+                  <li className={styles.headerLink}><a href="#">Token sales</a></li>
+                  <li className={styles.headerLink}><a href="#">Game Items Sales</a></li>
+                  <li className={styles.headerLink}><a href="#">Marketplace</a></li>
+                  <li className={styles.headerLink}><a href="#">Stake</a></li>
+                </ul>
+                <div className={styles.headerAccount}>
+
+                  <span className={styles.headerAccText}>My Account</span>
+
+                  <div className={styles.headerAccBtn}>
+                      <button
+                        title="Switch network"
+                        onClick={() => {
+                          setSwitchNetworkDialog(true);
+                          setOpenSideBar(false);
+                        }}
+                        className="logo-currency"
+                      >
+                        <span >
+                          <img
+                            src={`${chainLogo}`}
+                            alt=""
+                          />
+                        </span>
+                        {/* <span className={styles.btnConnectText}>
+                                {chainName}
+                              </span> */}
+                      </button>
+                      <button
+                        title="Connect wallet"
+                        className={styles.btnWallet}
+                        disabled={connectWalletLoading}
+                        onClick={() => {
+                          if (!connectWalletLoading) {
+                            !currentAccount
+                              ? handleConnectWalletOpen()
+                              : handleDisconnectDialogOpen();
+                          }
+                        }}>
+                        {!connectWalletLoading ? (
+                          currentAccount ? <>
+                            <span className="balance">{currentAccount &&
+                              (!loginError
+                                ? `${balance} ${chainCurrency}`
+                                : "0")}
+                            </span>
+                            <span className="address">{trimMiddlePartAddress(currentAccount || '')}</span>
+                          </> : <span className="connect-wl">
+                            {/* <img src={WalletIcon} alt="wallet" /> */}
+                            Connect Wallet
+                          </span>
+                        ) : (
+                          <BeatLoader
+                            color={"white"}
+                            css={css`
+                            margin-top: 3px;
+                          `}
+                            size={10}
+                          />
+                        )}
+                      </button>
+                  </div>
+                </div>
+              </nav>
+            </div>
+
           </>
         )}
       </div>

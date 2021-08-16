@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import clsx from 'clsx';
 import useStyles from './style';
-import LandingLayout from "../../components/Layout/LandingLayout";
+import DefaultLayout from "../../components/Layout/DefaultLayout";
 
 // import SwipeableViews from 'react-swipeable-views';
 import { AboutTicket } from './About';
@@ -16,7 +16,7 @@ const Ticket: React.FC<any> = (props: any) => {
   const styles = useStyles();
   const [hasError, setError] = useState<boolean>(false);
   return (
-    <LandingLayout>
+    <DefaultLayout>
 
       <div className={styles.content}>
         {hasError && <div className={clsx(styles.displayContent,)}>
@@ -135,7 +135,7 @@ const Ticket: React.FC<any> = (props: any) => {
           <AboutTicket />
         </div>
       </div>
-    </LandingLayout>
+    </DefaultLayout>
   )
 }
 

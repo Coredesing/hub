@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import clsx from 'clsx';
 import useStyles from './style';
@@ -14,16 +14,18 @@ const soldoutImg = '/images/soldout.png';
 const Ticket: React.FC<any> = (props: any) => {
   const isShowProg = false;
   const styles = useStyles();
+  const [hasError, setError] = useState<boolean>(false);
   return (
     <LandingLayout>
 
       <div className={styles.content}>
-        <div className={clsx(styles.displayContent,)}>
+        {hasError && <div className={clsx(styles.displayContent,)}>
           <div className={styles.alert}>
             The connected wallet address (0xa45...223) is unverified. <a className="kyc-link" href="/">Please sumbit KYC</a> now or switch to a verified address.
             Click <a className="link" href="#">here</a> for more process details.
           </div>
-        </div>
+        </div>}
+
         <div className={styles.card}>
           <div className={styles.cardImg}>
             <img src={ticketImg} alt="" />

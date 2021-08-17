@@ -21,7 +21,7 @@ Route.get('/', () => 'It\'s working')
 Route.get('image/:fileName', 'FileController.getImage');
 
 // GameFI new route
-Route.post('webhook/block-pass', 'UserController.kycUpdateStatus').middleware('checkBlockPassSignature');
+Route.post('block-pass', 'UserController.kycUpdateStatus').middleware('checkBlockPassSignature');
 
 Route.group(() => {
   Route.get('pool/gamefi-ticket', 'PoolController.getGameFITicket');

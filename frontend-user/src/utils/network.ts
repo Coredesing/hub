@@ -48,4 +48,18 @@ export const getEtherscanTransactionAddress = ({ appChainID, address }: any) => 
   }
 };
 
+export const getAppNetWork = (appChainID: any) => {
+  // With appChainID: Can use code belows:
+  // const { appChainID } = useTypedSelector(state  => state.appNetwork).data;
 
+  switch (appChainID) {
+    case BSC_CHAIN_ID:
+      return 'bsc';
+
+    case POLYGON_CHAIN_ID:
+      return 'polygon';
+
+    case ETH_CHAIN_ID:
+      return 'eth';
+  }
+};

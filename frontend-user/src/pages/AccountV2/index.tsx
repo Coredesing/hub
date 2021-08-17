@@ -19,9 +19,11 @@ import TierInfomation from "./TierInfomation";
 import { CONVERSION_RATE, USER_STATUS } from "../../constants";
 import useUserTier from "../../hooks/useUserTier";
 import { trimMiddlePartAddress } from "../../utils/accountAddress";
-import {ChainId} from "../../constants/network";
+import { ChainId } from "../../constants/network";
 import NftTicket from "./NftTicket";
 import CardsTicket from "./NftTicket/Cards";
+import NeedHelp from "./NeedHelp";
+import IdoPolls from "./IdoPolls";
 
 const TOKEN_ADDRESS = process.env.REACT_APP_PKF || "";
 const TOKEN_UNI_ADDRESS = process.env.REACT_APP_UNI_LP || "";
@@ -30,10 +32,33 @@ const TOKEN_MANTRA_ADDRESS = process.env.REACT_APP_MANTRA_LP || "";
 const iconWarning = "/images/warning-red.svg";
 const iconClose = "/images/icons/close.svg";
 
+const menuMyAccount = [
+  {
+    name: 'My Profile',
+    icon: '/images/icons/icon_my_profile.svg',
+  },
+  {
+    name: 'My Tier',
+    icon: '/images/icons/icon_my_tier.svg',
+  },
+  {
+    name: 'IDO Pools',
+    icon: '/images/icons/icon_my_pools.svg',
+  },
+  {
+    name: 'NFT Tickets',
+    icon: '/images/icons/ticket.svg',
+  },
+  {
+    name: 'Need Help',
+    icon: '/images/icons/icon_need_help.svg',
+  },
+]
+
 const AccountV2 = (props: any) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-
+  const [tabAccount] = useState(menuMyAccount);
   const { data: balance = {} } = useSelector((state: any) => state.balance);
   const { data: userInfo = {} } = useSelector((state: any) => state.userInfo);
   const { isAuth, connectedAccount, wrongChain } = useAuth();
@@ -93,6 +118,16 @@ const AccountV2 = (props: any) => {
       setIsKYC(false);
     }
   }, [data]);
+  const query = new URLSearchParams(props.location.search);
+  const currentTab = query.get('tab')
+  let currentTabIndex = currentTab ? parseInt(currentTab) : 0
+  currentTabIndex = currentTabIndex < menuMyAccount.length ? currentTabIndex : 0
+  const [activeMenuAccount, setActiveMenuAccount] = useState(menuMyAccount[currentTabIndex].name);
+  const selectTab = (name: any, index: any) => {
+    setActiveMenuAccount(name)
+    props.history.push('/account?tab=' + index)
+  }
+
 
   return (
     <DefaultLayout>
@@ -130,40 +165,70 @@ const AccountV2 = (props: any) => {
             <span>Please switch to the ETH network to Stake/Unstake.</span>
           </div>
         )}
-        <NftTicket />
-        <CardsTicket />
-        <AccountInformation
-          classNamePrefix="account-infomation"
-          balance={balance}
-          userInfo={userInfo}
-          tokenPKFDetails={tokenPKFDetails}
-          email={email}
-          emailVerified={emailVerified}
-          setEmail={setEmail}
-          setEmailVeryfied={setEmailVeryfied}
-          isKYC={isKYC}
-          kycStatus={data?.user?.is_kyc}
-          userTier={currentTier}
-        />
-        <div className={classes.tier}>
-          <Tiers
-            showMoreInfomation={false}
-            tokenSymbol={tokenPKFDetails?.symbol}
-            userTier={currentTier}
-            total={total}
-            isKYC={isKYC}
-          />
-          <ManageTier
-            listTokenDetails={listTokenDetails}
-            emailVerified={emailVerified}
-            totalUnstaked={totalUnstaked}
-            total={total}
-            appChainID={appChainID}
-            isKYC={isKYC}
-            connectedAccount={connectedAccount}
-          />
-          <TierInfomation />
+        <div className={classes.bodyContentMyAccount}>
+          <div className={classes.leftAccount}>
+            <nav className={classes.tabAccount}>
+              {
+                tabAccount.map((item, index) => {
+                  return (
+                    <li
+                      className={`${classes.itemTabAccount}  ${activeMenuAccount === item.name ? 'active' : ''}`}
+                      key={index}
+                      onClick={() => selectTab(item.name, index)}
+                    >
+                      <div className={`${classes.iconItemTabAccount} ${activeMenuAccount === item.name ? 'active' : ''}`} style={{
+                        WebkitMaskImage: `url(${item.icon})`,
+                        maskImage: `url(${item.icon})`,
+                      }}></div>
+                      {item.name}
+                    </li>
+                  )
+                })
+              }
+            </nav>
+          </div>
+          <div className="rightAccount">
+            {activeMenuAccount === 'My Profile' && <AccountInformation
+              classNamePrefix="account-infomation"
+              balance={balance}
+              userInfo={userInfo}
+              tokenPKFDetails={tokenPKFDetails}
+              email={email}
+              emailVerified={emailVerified}
+              setEmail={setEmail}
+              setEmailVeryfied={setEmailVeryfied}
+              isKYC={isKYC}
+              kycStatus={data?.user?.is_kyc}
+              userTier={currentTier}
+            />}
+            {activeMenuAccount === 'My Tier' && <div className={classes.tier}>
+              <Tiers
+                showMoreInfomation={false}
+                tokenSymbol={tokenPKFDetails?.symbol}
+                userTier={currentTier}
+                total={total}
+                isKYC={isKYC}
+              />
+              <ManageTier
+                listTokenDetails={listTokenDetails}
+                emailVerified={emailVerified}
+                totalUnstaked={totalUnstaked}
+                total={total}
+                appChainID={appChainID}
+                isKYC={isKYC}
+                connectedAccount={connectedAccount}
+              />
+              <TierInfomation />
+            </div>}
+            {activeMenuAccount === 'IDO Pools' && <IdoPolls />}
+            {activeMenuAccount === 'NFT Tickets' && <>
+            <NftTicket />
+            <CardsTicket />
+            </>}
+            {activeMenuAccount === 'Need Help' && <NeedHelp />}
+          </div>
         </div>
+
       </div>
     </DefaultLayout>
   );

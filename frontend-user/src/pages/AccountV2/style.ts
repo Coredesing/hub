@@ -120,8 +120,143 @@ const useStyles = makeStyles((theme: any) => {
       background: '#303035',
       borderRadius: '12px',
       padding: '28px',
-    }
+    },
+    bodyContentMyAccount: {
+      display: 'grid',
+      gridTemplateColumns: '200px 1fr',
+      color: '#FFFFFF',
+
+      [theme.breakpoints.down('sm')]: {
+        gridTemplateColumns: '1fr',
+      },
+    },
+
+    leftAccount: {
+      padding: '0 30px',
+
+      [theme.breakpoints.down('sm')]: {
+        padding: 0,
+      },
+    },
+
+    titlLeft: {
+      fontFamily: 'DM Sans',
+      fontWeight: 'bold',
+      fontSize: 20,
+      lineHeight: '24px',
+      color: '#FFFFFF',
+      marginBottom: 27,
+
+      [theme.breakpoints.down('sm')]: {
+        display: 'none',
+      },
+    },
+
+    tabAccount: {
+      display: 'flex',
+      flexDirection: 'column',
+
+      [theme.breakpoints.down('sm')]: {
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        // display: 'grid',
+        // gridTemplateColumns: '1fr 1fr 1fr 1fr',
+      },
+    },
+
+    itemTabAccount: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      fontFamily: 'Firs Neue',
+      fontWeight: 600,
+      fontSize: '16px',
+      lineHeight: '28px',
+      color: '#AEAEAE',
+      cursor: 'pointer',
+      marginBottom: 12,
+
+      [theme.breakpoints.down('sm')]: {
+        marginRight: 15,
+        marginBottom: 15,
+
+        '&:last-child': {
+          marginRight: 0,
+        }
+      },
+
+      '&.active': {
+        color: '#72F34B',
+        cursor: 'inherit',
+      }
+    },
+
+    iconItemTabAccount: {
+      marginRight: 8,
+      width: 16,
+      height: 16,
+      maskPositionX: 'center',
+      maskPositionY: 'center',
+      maskSize: 'contain',
+      maskRepeatX: 'no-repeat',
+      maskRepeatY: 'no-repeat',
+      maskOrigin: 'initial',
+      maskClip: 'initial',
+      background: '#AEAEAE',
+
+      '&.active': {
+        background: '#72F34B',
+      },
+
+      [theme.breakpoints.down('sm')]: {
+        display: 'none',
+      },
+    },
   };
 });
 
 export default useStyles;
+
+export const useTabStyles = makeStyles((theme: any) => ({
+  tabTitle: {
+    fontFamily: 'Firs Neue',
+    fontStyle: 'normal',
+    fontWeight: 600,
+    fontSize: '20px',
+    lineHeight: '28px',
+    color: '#FFFFFF',
+    margin: 0,
+    padding: 0,
+    marginBottom: '20px',
+    position: 'relative',
+    '&:before': {
+      content: '""',
+      position: 'absolute',
+      height: '100%',
+      left: '-32px',
+      top: '-5px',
+      border: '4px solid #72F34B',
+    }
+  },
+  tabContent: {
+    padding: '20px 32px',
+    boxSizing: 'border-box',
+    background: '#2E2E2E',
+    borderRadius: '4px',
+  },
+  tabHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '5px',
+    '& .filter': {
+      display: 'flex',
+      gap: '8px',
+    },
+    '& .search': {
+
+    }
+  },
+  tabBody: {
+
+  },
+}))

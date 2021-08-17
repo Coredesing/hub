@@ -20,6 +20,8 @@ import { CONVERSION_RATE, USER_STATUS } from "../../constants";
 import useUserTier from "../../hooks/useUserTier";
 import { trimMiddlePartAddress } from "../../utils/accountAddress";
 import {ChainId} from "../../constants/network";
+import NftTicket from "./NftTicket";
+import CardsTicket from "./NftTicket/Cards";
 
 const TOKEN_ADDRESS = process.env.REACT_APP_PKF || "";
 const TOKEN_UNI_ADDRESS = process.env.REACT_APP_UNI_LP || "";
@@ -128,7 +130,8 @@ const AccountV2 = (props: any) => {
             <span>Please switch to the ETH network to Stake/Unstake.</span>
           </div>
         )}
-
+        <NftTicket />
+        <CardsTicket />
         <AccountInformation
           classNamePrefix="account-infomation"
           balance={balance}

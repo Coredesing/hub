@@ -324,7 +324,8 @@ const useStyles = makeStyles((theme: any) => {
       textAlign: 'center',
       padding: '13px 20px',
       textTransform: 'uppercase',
-      minWidth: '200px'
+      minWidth: '200px',
+      cursor: 'pointer'
     },
     finished: {
       alignItems: 'center',

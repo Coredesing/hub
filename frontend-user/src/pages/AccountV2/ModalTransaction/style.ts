@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: any) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        background: '#3232DC',
+        background: '#72F34B',
         borderRadius: '60px',
         height: '42px',
         width: '100%',

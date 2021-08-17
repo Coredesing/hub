@@ -197,3 +197,15 @@ export const ETHERSCAN_BASE_URL: any = {
   '137': 'https://polygonscan.com',
   '80001': 'https://mumbai.polygonscan.com/',
 };
+
+export const NULL_AMOUNT = 'N/A';
+export const POOL_STATUS_JOINED = {  // Pool Status for User Joined Pool (Version 3)
+  NONE: 'NONE',
+  APPLIED_WHITELIST: 'APPLIED_WHITELIST',
+  WIN_WHITELIST: 'WIN_WHITELIST',
+  NOT_WIN_WHITELIST: 'NOT_WIN_WHITELIST',
+  CANCELED_WHITELIST: 'CANCELED_WHITELIST',
+  SWAPPING: 'SWAPPING',
+  CLAIMABLE: 'CLAIMABLE',
+  COMPLETED: 'COMPLETED',
+};

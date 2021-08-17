@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: any) => {
         textAlign: 'center',
 
         '& span': {
-          color: '#6398FF'
+          color: '#72F34B'
         }
       },
 
@@ -69,8 +69,8 @@ const useStyles = makeStyles((theme: any) => {
         '& .btn': {
           padding: '12px',
           flex: '0 0 49%',
-          borderRadius: '60px',
-          color: 'white',
+          borderRadius: '2px',
+          color: 'black',
           font: 'normal normal bold 14px/18px DM Sans',
           background: '#727272',
           cursor: 'pointer',
@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme: any) => {
           },
 
           '&:first-child': {
-            background: '#3232DC'
+            background: '#72F34B'
           },
 
           '&.disabled': {
@@ -135,8 +135,8 @@ const useStyles = makeStyles((theme: any) => {
       },
       '& button#btn-max-deposit': {
         font: 'normal normal bold 12px/14px DM Sans',
-        color: '#FFF',
-        backgroundColor: '#6398FF',
+        color: '#000',
+        backgroundColor: '#72F34B',
         borderRadius: '4px',
         width: 'auto',
         padding: '4px 10px',
@@ -160,7 +160,7 @@ const useStyles = makeStyles((theme: any) => {
           fontWeight: 'bold',
           fontSize: '20px',
           lineHeight: '24px',
-          color: '#6398FF',
+          color: '#72F34B',
 
           [theme.breakpoints.down('sm')]: {
             marginTop: 4
@@ -198,8 +198,8 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '& .stage.active': {
-        color: '#6398FF',
-        borderBottomColor: '#6398FF'
+        color: '#72F34B',
+        borderBottomColor: '#72F34B'
       }
     },
     message: {

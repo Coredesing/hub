@@ -1,18 +1,65 @@
 import BigNumber from 'bignumber.js';
 import {PoolStatus} from "./getPoolStatus";
 
-const getFirstClaimConfigRecord = (campaignClaimConfig: Array<any>) => {
+export const getFirstClaimConfigRecord = (campaignClaimConfig: Array<any>) => {
   if (!campaignClaimConfig || (campaignClaimConfig.length == 0)) {
     return null;
   }
   return campaignClaimConfig[0];
 };
-const getLastClaimConfigRecord = (campaignClaimConfig: Array<any>) => {
+export const getLastClaimConfigRecord = (campaignClaimConfig: Array<any>) => {
   if (!campaignClaimConfig || (campaignClaimConfig.length == 0)) {
     return null;
   }
   return campaignClaimConfig[campaignClaimConfig.length - 1];
 };
+
+
+export const firstClaimConfig = (poolDetails: any) => {
+  if (poolDetails?.campaignClaimConfig && poolDetails?.campaignClaimConfig.length > 0) {
+    const firstClaim = poolDetails.campaignClaimConfig[0];
+    return firstClaim;
+  }
+  return null;
+};
+
+export const lastClaimConfig = (poolDetails: any) => {
+  if (poolDetails?.campaignClaimConfig && poolDetails?.campaignClaimConfig.length > 0) {
+    const lastClaim = poolDetails.campaignClaimConfig[poolDetails.campaignClaimConfig.length - 1];
+    return lastClaim;
+  }
+  return null;
+};
+
+export const getFirstClaimConfigTime = (poolDetails: any) => {
+  const firstClaim = firstClaimConfig(poolDetails);
+  if (firstClaim) {
+    const startClaim = parseInt(firstClaim.start_time);
+    return startClaim;
+  }
+  return null;
+};
+
+export const getLastClaimConfigTime = (poolDetails: any) => {
+  const lastClaim = lastClaimConfig(poolDetails);
+  if (lastClaim) {
+    const startClaim = parseInt(lastClaim.start_time) + (7*24*3600); // +1week
+    return startClaim;
+  }
+  return null;
+};
+
+export const getPoolCountDownPreOrder = (params: any): any => {
+  const { endBuyTime } = params;
+  let date;
+  let display;
+  let displayShort;
+  date = endBuyTime;
+  display = 'Token Swap starts in';
+  displayShort = "Launch in";
+
+  return { date, display, displayShort };
+}
 
 export const getPoolCountDown = (
   startJoinTime: Date | undefined,
@@ -43,9 +90,6 @@ export const getPoolCountDown = (
   const startDateFirstClaim = startTimeFirstClaim ? new Date(Number(startTimeFirstClaim)) : undefined;
   const endTimeFirstClaim = lastClaimRecord && ((lastClaimRecord.end_time || 0) * 1000);
   const endDateFirstClaim = endTimeFirstClaim ? new Date(Number(endTimeFirstClaim)) : undefined;
-
-  // console.log('startTimeFirstClaim: ', startTimeFirstClaim, startDateFirstClaim, poolStatus);
-  // console.log('method: ', method, poolStatus, poolDetails, firstClaimRecord, lastClaimRecord, (startJoinTime && startJoinTime.getTime()));
 
   if (method && method === "whitelist") {
     if (isUpcoming) {
@@ -92,7 +136,7 @@ export const getPoolCountDown = (
     } else if (isTBA) {
       return { date, display, displayShort };
     } else if (isEnded) {
-      display = 'Pool is end';
+      display = 'Pool is over';
       return { date, display, displayShort };
     }
   }
@@ -119,3 +163,4 @@ export const getPoolCountDown = (
     displayShort
   }
 }
+

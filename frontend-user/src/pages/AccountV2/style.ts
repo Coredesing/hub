@@ -261,3 +261,53 @@ const useStyles = makeStyles((theme: any) => {
 });
 
 export default useStyles;
+
+export const useTabStyles = makeStyles((theme: any) => ({
+  tabTitle: {
+    fontFamily: 'Firs Neue',
+    fontStyle: 'normal',
+    fontWeight: 600,
+    fontSize: '20px',
+    lineHeight: '28px',
+    color: '#FFFFFF',
+    margin: 0,
+    padding: 0,
+    marginBottom: '20px',
+    position: 'relative',
+    '&:before': {
+      content: '""',
+      position: 'absolute',
+      height: '100%',
+      left: '-32px',
+      top: '-5px',
+      border: '4px solid #72F34B',
+    }
+  },
+  tabContent: {
+    padding: '20px 32px',
+    boxSizing: 'border-box',
+    background: '#2E2E2E',
+    borderRadius: '4px',
+  },
+  tabHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '5px',
+    '& .filter': {
+      display: 'flex',
+      gap: '8px',
+    },
+    '& .search': {
+
+    },
+    [theme.breakpoints.down('sm')]: {
+      display: 'grid',
+      gridTemplateColumns: '1fr',
+      justifyContent: 'start',
+      gap: '5px',
+    }
+  },
+  tabBody: {
+
+  },
+}))

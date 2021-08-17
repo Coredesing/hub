@@ -43,11 +43,11 @@ const menuMyAccount = [
     icon: '/images/account_v3/icons/icon_my_tier.svg',
   },{
     name: 'IDO Pools',
-    icon: '/images/account_v3/icons/icon_my_pools.svg',
+    icon: '/images/icons/icon_my_pools.svg',
   },
   {
     name: 'NFT Tickets',
-    icon: '/images/account_v3/icons/ticket.svg',
+    icon: '/images/icons/ticket.svg',
   },
   {
     name: 'Need Help',

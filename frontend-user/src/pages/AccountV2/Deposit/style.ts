@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme: any) => {
       fontFamily: 'DM Sans',
       position: 'relative',
       paddingTop: 90,
+      paddingBottom: 90,
 
       '& .modal-content': {
         width: '600px',

@@ -254,6 +254,12 @@ export const useTabStyles = makeStyles((theme: any) => ({
     },
     '& .search': {
 
+    },
+    [theme.breakpoints.down('sm')]: {
+      display: 'grid',
+      gridTemplateColumns: '1fr',
+      justifyContent: 'start',
+      gap: '5px',
     }
   },
   tabBody: {

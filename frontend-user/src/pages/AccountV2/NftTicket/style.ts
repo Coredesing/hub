@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -112,11 +112,14 @@ export const useCardStyles = makeStyles((theme: any) => {
         width: '146px',
         height: '215px',
         cursor: 'pointer',
+        transformStyle: 'preserve-3d',
+        transition: '1s ease-in-out',
       },
 
       '& .img-hidden': {
         position: 'relative',
         background: '#0A0A0A',
+        animation: `hidecard 1000ms ${theme.transitions.easing.easeInOut}`,
         '& .question': {
           position: 'absolute',
           top: '50%',
@@ -125,6 +128,8 @@ export const useCardStyles = makeStyles((theme: any) => {
         }
       },
       '& .img-shown': {
+        animation: `showcard 1000ms ${theme.transitions.easing.easeInOut}`,
+        
         '& img': {
           width: '100%',
           height: '100%',

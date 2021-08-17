@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import clsx from 'clsx';
 import useStyles, { useCardStyles } from './style';
 import { useTabStyles } from '../style';
+import './style.css';
 const questionImg = '/images/question.png';
 const ethIcon = '/images/icons/eth.svg';
 const characterImg = '/images/character.png';

@@ -20,6 +20,15 @@ const Route = use('Route')
 Route.get('/', () => 'It\'s working')
 Route.get('image/:fileName', 'FileController.getImage');
 
+// GameFI new route
+Route.post('webhook/block-pass', 'UserController.kycUpdateStatus').middleware('checkBlockPassSignature');
+
+Route.group(() => {
+  Route.get('pool/gamefi-ticket', 'PoolController.getGameFITicket');
+
+  Route.get('user/profile', 'UserController.profile').middleware(['maskEmailAndWallet']);
+}).prefix('api/v1');
+
 // Webhook
 Route.group(() => {
   Route.post('ico-campaign', 'CampaignController.icoCampaignCreate')
@@ -34,13 +43,6 @@ Route.group(() => {
   Route.post('mantra-stake/index-stake-info', 'MantraStakeController.indexStakeInfo');
   Route.post('reputation/index-stake-info', 'ReputationController.indexStakeInfo');
 }).prefix('webhook').middleware('checkJwtWebhook');
-
-Route.post('block-pass/receive', 'UserController.kycUpdateStatus').middleware('checkBlockPassSignature');
-
-
-
-
-
 
 // ICO Owner User (Admin Page)
 Route.group(() => {

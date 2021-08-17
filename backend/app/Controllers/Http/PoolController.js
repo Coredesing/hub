@@ -27,6 +27,65 @@ const BigNumber = use('bignumber.js');
 const { pick } = require('lodash');
 
 class PoolController {
+  // special pool: GamefiTicket
+  async getGameFITicket() {
+    try {
+      if (await RedisUtils.checkExistRedisPoolDetail(0)) {
+        const cachedPoolDetail = await RedisUtils.getRedisPoolDetail(0);
+        return HelperUtils.responseSuccess(JSON.parse(cachedPoolDetail));
+      }
+
+      let pool = await CampaignModel.query()
+        .with('whitelistBannerSetting')
+        .where('token_type', 'erc721')
+        .where('min_tier', 0)
+        .where('is_display', 1)
+        .where('symbol', 'Ticket')
+        .last();
+
+      if (!pool) {
+        return HelperUtils.responseNotFound('Pool not found');
+      }
+
+      pool = JSON.parse(JSON.stringify(pool));
+
+      const publicPool = pick(pool, [
+        // Pool Info
+        'id', 'title', 'website', 'banner', 'updated_at', 'created_at',
+        'campaign_hash', 'description', 'registed_by', 'register_by',
+        'campaign_status',
+
+        // Types
+        'buy_type', 'accept_currency', 'min_tier', 'network_available',
+        'pool_type', 'is_deploy', 'is_display', 'is_pause', 'is_private',
+        'public_winner_status',
+
+        // Time
+        'release_time', 'start_join_pool_time', 'start_time', 'end_join_pool_time', 'finish_time',
+
+        // Token Info
+        'name', 'symbol', 'decimals', 'token', 'token_type', 'token_images', 'total_sold_coin',
+        'token_conversion_rate', 'ether_conversion_rate',
+        'price_usdt', 'display_price_rate',
+        'token_sold',
+
+        // Progress Display Setting
+        'token_sold_display',
+        'progress_display',
+
+        // Lock Schedule Setting
+        'whitelist_country',
+      ]);
+
+      // Cache data
+      RedisUtils.createRedisPoolDetail(0, publicPool);
+
+      return HelperUtils.responseSuccess(publicPool);
+    } catch (e) {
+      console.log(e);
+      return HelperUtils.responseErrorInternal('ERROR: Get public pool fail !');
+    }
+  }
 
   async createPool({ request, auth }) {
     const inputParams = request.only([

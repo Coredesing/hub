@@ -37,8 +37,8 @@ const useStyles = makeStyles((theme) => ({
         fontFamily: 'Firs Neue',
         fontWeight: 'normal',
         fontStyle: 'normal',
-        fontSize: '16px',
-        lineHeight: '24px',
+        fontSize: '14px',
+        lineHeight: '22px',
         color: '#d1d1d1',
         mixBlendMode: 'normal',
     },
@@ -61,8 +61,8 @@ const useStyles = makeStyles((theme) => ({
             fontFamily: 'Firs Neue',
             fontWeight: 'normal',
             fontStyle: 'normal',
-            fontSize: '16px',
-            lineHeight: '24px',
+            fontSize: '14px',
+            lineHeight: '22px',
             color: '#fff',
             mixBlendMode: 'normal',
         }
@@ -75,8 +75,8 @@ const useStyles = makeStyles((theme) => ({
             fontFamily: 'Firs Neue',
             fontWeight: 'normal',
             fontStyle: 'normal',
-            fontSize: '16px',
-            lineHeight: '24px',
+            fontSize: '14px',
+            lineHeight: '22px',
             color: '#fff',
             mixBlendMode: 'normal',
             display: 'inline-flex',
@@ -86,9 +86,13 @@ const useStyles = makeStyles((theme) => ({
     socials: {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, 28px)',
-        gap: '12px',
+        gap: '10px',
         '& a': {
-            display: 'grid'
+            display: 'grid',
+            '& img': {
+                width: '24px',
+                height: '24px',
+            }
         }
     }
 
@@ -186,7 +190,7 @@ export function AboutTicket() {
                     <div className={classes.link}>
                         <span className="text">Website</span>
                         <div className={classes.weblink}>
-                            <a href="/">gamefi.org <img src={shareIcon} alt="" /> </a>
+                            <a href="https://gamefi.org" target="_blank">gamefi.org <img src={shareIcon} alt="" /> </a>
                         </div>
                     </div>
                     <div className={classes.link}>

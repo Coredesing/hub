@@ -10,8 +10,6 @@ import {
 } from "../../store/actions/sota-tiers";
 import { getAllowance } from "../../store/actions/sota-token";
 import Tiers from "./Tiers";
-import MyPools from "./MyPools";
-import NeedHelp from "./NeedHelp";
 import DefaultLayout from "../../components/Layout/DefaultLayout";
 import AccountInformation from "./AccountInformation";
 import useStyles from "./style";
@@ -21,13 +19,18 @@ import useFetch from "../../hooks/useFetch";
 import { USER_STATUS } from "../../constants";
 import useUserTier from "../../hooks/useUserTier";
 import { trimMiddlePartAddress } from "../../utils/accountAddress";
-import {ChainId} from "../../constants/network";
+import { ChainId } from "../../constants/network";
+import NftTicket from "./NftTicket";
+import CardsTicket from "./NftTicket/Cards";
+import NeedHelp from "./NeedHelp";
+import IdoPolls from "./IdoPolls";
 import axios from '../../services/axios';
 import {numberWithCommas} from '../../utils/formatNumber';
 
 const TOKEN_ADDRESS = process.env.REACT_APP_PKF || "";
 const TOKEN_UNI_ADDRESS = process.env.REACT_APP_UNI_LP || "";
 const TOKEN_MANTRA_ADDRESS = process.env.REACT_APP_MANTRA_LP || "";
+
 const iconWarning = "/images/warning-red.svg";
 
 const menuMyAccount = [
@@ -38,10 +41,13 @@ const menuMyAccount = [
   {
     name: 'My Tier',
     icon: '/images/account_v3/icons/icon_my_tier.svg',
+  },{
+    name: 'IDO Pools',
+    icon: '/images/account_v3/icons/icon_my_pools.svg',
   },
   {
-    name: 'My Pools',
-    icon: '/images/account_v3/icons/icon_my_pools.svg',
+    name: 'NFT Tickets',
+    icon: '/images/account_v3/icons/ticket.svg',
   },
   {
     name: 'Need Help',
@@ -52,6 +58,7 @@ const menuMyAccount = [
 const AccountV2 = (props: any) => {
   const classes = useStyles();
   const dispatch = useDispatch();
+
   const { data: balance = {} } = useSelector((state: any) => state.balance);
   const { data: userInfo = {} } = useSelector((state: any) => state.userInfo);
   const { isAuth, connectedAccount, wrongChain } = useAuth();
@@ -304,13 +311,11 @@ const AccountV2 = (props: any) => {
               </div>
             }
 
-            {
-              activeMenuAccount === 'My Pools' &&
-              <MyPools
-                notEth={(+appChainID?.appChainID > ChainId.KOVAN)}
-                userTier={currentTier}
-              />
-            }
+            {activeMenuAccount === 'IDO Pools' && <IdoPolls />}
+            {activeMenuAccount === 'NFT Tickets' && <>
+              <NftTicket />
+              <CardsTicket />
+            </>}
 
             {
               activeMenuAccount === 'Need Help' &&

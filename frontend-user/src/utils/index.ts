@@ -167,3 +167,10 @@ export const disconnectWalletLink = (library: any) => {
   const provider = (library?.provider as any);
   provider?.close && provider?.close();
 };
+
+export const formatNumber = (num: number) => {
+  if(num < 10) {
+    return String(`0${num}`);
+  }
+  return num;
+}

@@ -2,23 +2,23 @@ import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => {
   return {
-    navBar: {
-      gridArea: 'header',
-      width: '1120px',
-      margin: '24px auto',
-      maxWidth: 'calc(100vw - 80px)',
-      backgroundColor: '#020616',
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      position: 'relative',
-      [theme.breakpoints.only('xs')]: {
-        flexDirection: 'column',
-        margin: '10px auto',
-        maxWidth: 'calc(100vw - 60px)',
-      }
-    },
+    // navBar: {
+    //   gridArea: 'header',
+    //   width: '1120px',
+    //   margin: '24px auto',
+    //   maxWidth: 'calc(100vw - 80px)',
+    //   backgroundColor: '#020616',
+    //   display: 'flex',
+    //   flexDirection: 'row',
+    //   justifyContent: 'space-between',
+    //   alignItems: 'center',
+    //   position: 'relative',
+    //   [theme.breakpoints.only('xs')]: {
+    //     flexDirection: 'column',
+    //     margin: '10px auto',
+    //     maxWidth: 'calc(100vw - 60px)',
+    //   }
+    // },
     navbarLink: {
       textAlign: 'center',
       display: 'inline-block'
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => {
       backgroundColor: 'none',
       border: 'none',
       cursor: 'pointer',
-    
+
       '&:focus': {
         outline: 'none'
       },
@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => {
           filter: 'brightness(0) invert(1)'
         },
 
-        '& span' :{
+        '& span': {
           display: 'flex',
           alignItems: 'center',
         },
@@ -104,7 +104,7 @@ const useStyles = makeStyles((theme) => {
       '& img': {
         width: '20px',
         height: '20px',
-      },     
+      },
       [theme.breakpoints.only('xs')]: {
         marginLeft: 0
       }
@@ -198,7 +198,7 @@ const useStyles = makeStyles((theme) => {
     iconWarning: {
       marginRight: 8,
     },
-    
+
     loginErrorBannerText: {
       font: 'normal normal 400 14px/24px Helvetica',
       color: 'white',
@@ -222,7 +222,7 @@ const useStyles = makeStyles((theme) => {
       alignItems: 'center',
       [theme.breakpoints.only('xs')]: {
 
-        '& .startMobile':{
+        '& .startMobile': {
           marginRight: 5,
         }
       }
@@ -284,6 +284,213 @@ const useStyles = makeStyles((theme) => {
           marginTop: '5px'
         }
       }
+    },
+    navBarGF: {
+      display: 'grid',
+      gridTemplateColumns: '173px auto',
+      alignItems: 'center',
+      gap: '32px',
+      padding: '26px 84px',
+      background: '#000',
+      width: '100%',
+      color: '#FFFFFF',
+      font: 'normal normal bold 16px/24px DM Sans',
+      position: 'relative',
+      zIndex: 1,
+      [theme.breakpoints.down('md')]: {
+        gridTemplateColumns: '173px 30px',
+        justifyContent: 'space-between',
+      },
+
+      // '& > div': {
+      //   display: 'flex',
+      //   flexDirection: 'row',
+      //   alignItems: 'center',
+      //   justifyContent: 'space-between',
+      //   width: '100%',
+
+      //   '& .pool ': {
+      //     display: 'flex'
+      //   },
+
+      //   '& a': {
+      //     color: '#FFFFFF'
+      //   },
+
+      //   '& .connects i': {
+      //     marginLeft: '20px',
+
+      //     '&::before': {
+      //       color: '#9F9F9F'
+      //     },
+
+      //     '&:hover::before': {
+      //       color: '#D01F37'
+      //     }
+      //   }
+      // },
+      // [theme.breakpoints.down('sm')]: {
+      //   position: 'static',
+      //   padding: '10px 40px',
+      // },
+      // [theme.breakpoints.down('xs')]: {
+      //   padding: '0',
+      //   flexDirection: 'column',
+      //   position: 'relative',
+
+      //   '& > div:first-child': {
+      //     width: '100%',
+      //     padding: '10px 32px',
+      //     display: 'grid',
+      //     gridTemplateColumns: '1fr auto auto',
+      //     alignItems: 'center'
+      //   },
+
+      //   '& .logo img': {
+      //     width: '30px',
+      //   },
+
+      //   '& .connects': {
+      //     order: 3
+      //   },
+
+      //   '& .pool': {
+      //     order: 2
+      //   },
+
+      //   '& .logo': {
+      //     order: 1
+      //   }
+      // },
+    },
+    headerNav: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      gap: '32px',
+      [theme.breakpoints.down('md')]: {
+        display: 'none',
+        position: 'absolute',
+        top: '80px',
+        left: 0,
+        width: '100%',
+        background: '#000',
+        placeContent: 'center',
+        textAlign: 'center',
+        padding: '20px',
+        '&.show': {
+          display: 'grid',
+        }
+      },
+    },
+    headerLinks: {
+      margin: 0,
+      padding: 0,
+      display: 'flex',
+      gap: '32px',
+      flexWrap: 'wrap',
+      [theme.breakpoints.down('md')]: {
+        display: 'grid',
+      }
+    },
+    headerLink: {
+      '& a': {
+        fontFamily: 'Firs Neue',
+        fontStyle: 'normal',
+        fontWeight: 600,
+        fontSize: '14px',
+        lineHeight: '24px',
+        color: '#FFFFFF',
+        mixBlendMode: 'normal',
+      }
+    },
+    headerAccount: {
+      display: 'flex',
+      gap: '28px',
+      alignItems: 'center',
+    },
+    headerAccText: {
+      fontFamily: 'Firs Neue',
+      fontStyle: 'normal',
+      fontWeight: 600,
+      fontSize: '14px',
+      lineHeight: '24px',
+      color: '#FFFFFF',
+      mixBlendMode: 'normal',
+      '&:hover': {
+        color: '#FFFFFF',
+      }
+    },
+    headerAccBtn: {
+      background: '#2E2E2E',
+      borderRadius: '4px',
+      outline: 'none',
+      border: 'none',
+      padding: '4px 4px 4px 8px',
+      display: 'flex',
+      gap: '6px',
+      alignItems: 'center',
+      
+
+      '& .logo-currency': {
+        outline: 'none',
+        background: 'transparent',
+        border: 'none',
+        cursor: 'pointer',
+        display: 'grid'
+      },
+
+    },
+    btnWallet: {
+      outline: 'none',
+      background: 'transparent',
+      border: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      cursor: 'pointer',
+      '& .balance': {
+        fontFamily: 'Firs Neue',
+        fontStyle: 'normal',
+        fontWeight: 600,
+        fontSize: '14px',
+        lineHeight: '24px',
+        color: '#FFFFFF',
+        mixBlendMode: 'normal',
+        marginRight: '3px'
+      },
+      '& .address': {
+        display: 'block',
+        fontFamily: 'Firs Neue',
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: '14px',
+        lineHeight: '22px',
+        color: '#FFFFFF',
+        mixBlendMode: 'normal',
+        padding: '7px 13px',
+        background: '#000000',
+        borderRadius: '4px'
+      },
+      '& .connect-wl': {
+        display: 'flex',
+        gap: '3px',
+        fontFamily: 'Firs Neue',
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: '14px',
+        lineHeight: '22px',
+        color: '#FFFFFF',
+        mixBlendMode: 'normal',
+        padding: '7px 0px',
+        paddingRight: '4px',
+      }
+    },
+    hamburger: {
+      cursor: 'pointer',
+      display: 'none',
+      [theme.breakpoints.down('md')]: {
+        display: 'block',
+      },
     }
   };
 });

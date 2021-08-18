@@ -236,7 +236,6 @@ const Ticket: React.FC<any> = (props: any) => {
     try {
       // setApproveModal(true);
       await approveToken();
-      console.log(infoTicket.campaign_hash, connectedAccount, tokenToApprove)
       if ( infoTicket.campaign_hash && connectedAccount && tokenToApprove) {
         setTokenAllowance(await retrieveTokenAllowance(tokenToApprove, connectedAccount, infoTicket.campaign_hash) as number);
         // setTokenBalance(await retrieveTokenBalance(tokenToApprove, connectedAccount) as number);

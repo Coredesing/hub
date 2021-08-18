@@ -11,3 +11,19 @@ export const getBalance = async (loginUser: string | null | undefined, tokenAddr
     }
     return 0;
 };
+
+interface IError {
+    data?: {
+        message: string
+    }
+}
+export const handleErrMsg = (err: IError) => {
+    const message = err?.data?.message || '';
+    if(message.includes('POOL::ENDED')) {
+        return 'The sale has ended';
+    }
+    if(message.includes('POOL:PURCHASE_AMOUNT_EXCEED_ALLOWANCE')) {
+        return 'You cannot buy more than the maximum allowed quantity';
+    }
+    return '';
+}

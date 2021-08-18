@@ -3,29 +3,21 @@ import { withRouter } from 'react-router-dom';
 import clsx from 'clsx';
 import useStyles from './style';
 import DefaultLayout from "../../components/Layout/DefaultLayout";
-// import BigNumber from 'bignumber.js';
 // import SwipeableViews from 'react-swipeable-views';
 import { AboutTicket } from './About';
 import { formatNumber, getDiffTime } from '../../utils';
 import { Progress } from './Progress';
 import useFetch from '../../hooks/useFetch';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { APP_NETWORKS_SUPPORT, ETH_CHAIN_ID, POLYGON_CHAIN_ID } from '../../constants/network';
 import useKyc from '../../hooks/useKyc';
 import useAuth from '../../hooks/useAuth';
-import usePoolDetails from '../../hooks/usePoolDetails';
 import { AlertKYC } from '../../components/Base/AlertKYC';
-import { getBalance, isApproved } from './utils';
-import axios from 'axios';
-import useWalletSignature from '../../hooks/useWalletSignature';
+import { getBalance } from './utils';
 import usePoolDepositAction from './hooks/usePoolDepositAction';
-import { approve } from '../../store/actions/sota-token';
-import { useWeb3React } from '@web3-react/core';
 import { caclDiffTime } from './getDiffTime';
-import { getContractAddress } from './getContractAddress';
 import useTokenAllowance from '../../hooks/useTokenAllowance';
 import useTokenApprove from '../../hooks/useTokenApprove';
-import useUserPurchased from './hooks/useUserPurchased';
 import { getBUSDAddress, getUSDCAddress, getUSDTAddress } from '../../utils/contractAddress/getAddresses';
 import { PurchaseCurrency } from '../../constants/purchasableCurrency';
 const ticketImg = '/images/gamefi-ticket.png';
@@ -65,8 +57,6 @@ const Ticket: React.FC<any> = (props: any) => {
     loading: loadingTicket,
   } = useFetch<any>(`/pool/gamefi-ticket`);
 
-  const dispatch = useDispatch();
-
   const [allowNetwork, setAllowNetwork] = useState<boolean>(false);
   useEffect(() => {
     const networkInfo = APP_NETWORKS_SUPPORT[Number(appChainID)];
@@ -84,16 +74,21 @@ const Ticket: React.FC<any> = (props: any) => {
       if (openTime > Date.now()) {
         setOpenTime(getDiffTime(openTime, Date.now()));
       }
-      if (finishTime > openTime) {
+      if (finishTime > openTime && finishTime > Date.now()) {
         setIsBuy(true);
         setTimeEnd(getDiffTime(finishTime, Date.now() >= openTime ? Date.now() : openTime));
       } else {
         setFinishedTime(true);
         setIsBuy(false);
       }
+
       setInfoTicket(dataTicket);
     }
   }, [dataTicket, loadingTicket]);
+
+  useEffect(() => {
+    console.log(finishedTime)
+  }, [finishedTime])
 
   const [renewBalance, setNewBalance] = useState(true);
   useEffect(() => {
@@ -148,7 +143,6 @@ const Ticket: React.FC<any> = (props: any) => {
         setTimeEnd(caclDiffTime(newEndTime));
       }, 1000);
     }
-
 
     return () => {
       interval && clearInterval(interval);
@@ -328,8 +322,8 @@ const isAccApproved = (tokenAllowance: number) => {
                 <span >TOTAL SALE</span> {infoTicket.total_sold_coin}
               </h4>
               <button>
-                <img src={tetherIcon} alt="" />
-                <span>{infoTicket.ether_conversion_rate} {(infoTicket.accept_currency || '').toUpperCase()}</span>
+                <img height={20} src={infoTicket && infoTicket.accept_currency ? `/images/${infoTicket.accept_currency.toUpperCase()}.png` : ''} alt="" />
+                <span>{infoTicket.ether_conversion_rate} {infoTicket && infoTicket.accept_currency ? infoTicket.accept_currency.toUpperCase() : ''}</span>
                 <span className="small-text">
                   /{infoTicket.symbol}
                 </span>
@@ -403,7 +397,7 @@ const isAccApproved = (tokenAllowance: number) => {
                   </span>
                 </div>}
 
-                {allowNetwork && isBuy && isAccApproved(tokenAllowance || 0) && <div className={styles.infoTicket}>
+                {allowNetwork && !finishedTime && isBuy && isAccApproved(tokenAllowance || 0) && <div className={styles.infoTicket}>
                   <div className={styles.amountBuy}>
                     <span>Amount</span>
                     <div>

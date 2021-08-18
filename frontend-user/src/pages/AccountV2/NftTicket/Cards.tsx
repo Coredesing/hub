@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import useStyles, { useCardStyles } from './style';
+import { useTabStyles } from '../style';
+import './style.css';
 const questionImg = '/images/question.png';
 const ethIcon = '/images/icons/eth.svg';
 const characterImg = '/images/character.png';
@@ -8,7 +10,7 @@ const guardImg = '/images/guard.png';
 
 const Cards = (props: any) => {
     const { classNamePrefix = '' } = props;
-    const styles = { ...useStyles(), ...useCardStyles() };
+    const styles = { ...useStyles(), ...useCardStyles(), ...useTabStyles() };
     const [cards, setCards] = useState<{ [k in string]: any }[]>([
         { img: characterImg, id: '#123456', price: '0.15 ETH', isShow: true, },
         { img: characterImg, id: '#123456', price: '0.15 ETH', isShow: false, },

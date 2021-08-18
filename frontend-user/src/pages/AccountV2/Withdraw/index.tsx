@@ -237,7 +237,7 @@ const Withdraw = (props: any) => {
             </button>
             <ButtonLink
               text={'Cancel'}
-              to={'/account'}
+              to={'/account?tab=1'}
               className="btn btn-cancel"
               onClick={handleClose}
             />

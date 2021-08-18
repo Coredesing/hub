@@ -11,52 +11,41 @@ const useStyles = makeStyles((theme: any) => {
       marginRight: 12,
     },
 
-    textRate: {
-      color: '#6398FF',
-    },
+    textRate: {},
     
     conversionRate: {
       display: 'flex',
-      flexDirection: 'column',
-      width: 300,
       maxWidth: '100%',
+      flexWrap: 'wrap',
+      alignItems: 'center',
       
-      '& .group': {
-        display: 'flex',
-        minHeight: 42,
-        alignItems: 'center',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        fontFamily: 'DM Sans',
-        fontWeight: 500,
-        fontSize: 16,
-        lineHeight: '24px',
-        color: '#FFFFFF',
+      [theme.breakpoints.down('sm')]: {
+        flexDirection: 'column',
       },
-
-      '& .group:last-child': {
-        borderBottom: 'none'
-      },
-
-      '& span:last-child': {
-        textAlign: 'right'
-      },
-
-      '& span': {
-        width: '40%',
-      },
-
-      '& .title': {
-        fontFamily: 'Helvetica',
-        fontSize: 16,
-        lineHeight: '24px',
-        color: '#FFFFFF',
-        marginRight: 15,
-        fontWeight: 400,
-        marginBottom: 5,
-      }
     },
+
+    group: {
+      display: 'flex',
+      fontFamily: 'DM Sans',
+      fontWeight: 'bold',
+      fontSize: 14,
+      lineHeight: '20px',
+      color: '#FFFFFF',
+    },
+
+    title: {
+      fontFamily: 'Helvetica',
+      fontSize: 14,
+      lineHeight: '20px',
+      color: '#FFFFFF',
+      marginRight: 12,
+      fontWeight: 'normal',
+      
+      [theme.breakpoints.down('sm')]: {
+        marginRight: 0,
+        marginBottom: 4,
+      },
+    }
   };
 });
 

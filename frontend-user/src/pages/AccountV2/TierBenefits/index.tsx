@@ -4,13 +4,13 @@ import useAuth from '../../../hooks/useAuth';
 import { numberWithCommas } from "../../../utils/formatNumber";
 import useStyles from './style';
 
-function createData(name: string, dove: number, hawk: number, eagle: number, phoenix: number) {
-  return { name, dove, hawk, eagle, phoenix };
+function createData(name: string, rookie: number, elite: number, pro: number, master: number) {
+  return { name, rookie, elite, pro, master };
 }
 
 const rows = [
-  createData('Minimum stalking time required (PKF/LP-PKF)', 0, 0, 0, 0),
-  createData('Unstaking delay (PKF/LP-PKF)', 0, 0, 0, 0),
+  createData('Minimum stalking time required (GAFI)', 0, 0, 0, 0),
+  createData('Unstaking delay (GAFI)', 0, 0, 0, 0),
   createData('Social interaction requirements', 1, 1, 0, 0),
   createData('Guaranteed allocation', 0, 1, 1, 1),
   createData('Exclusive pools', 0, 0, 1, 1),
@@ -20,14 +20,14 @@ const rows = [
 
 const rowsMobile = [
   {
-    name: 'DOVE',
+    name: 'ROOKIE',
     values: [
       'Minimum amount of Red Kite point required :<span>500</span>',
       'Social interaction requirements',
     ]
   },
   {
-    name: 'HAWK',
+    name: 'ELITE',
     values: [
       'Minimum amount of Red Kite point required :<span>5,000</span>',
       'Social interaction requirements',
@@ -35,7 +35,7 @@ const rowsMobile = [
     ]
   },
   {
-    name: 'DOVE',
+    name: 'PRO',
     values: [
       'Minimum amount of Red Kite point required :<span>20,000</span>',
       'Guaranteed allocation',
@@ -43,7 +43,7 @@ const rowsMobile = [
     ]
   },
   {
-    name: 'PHOENIX',
+    name: 'MASTER',
     values: [
       'Minimum amount of Red Kite point required :<span>60,000</span>',
       'Guaranteed allocation',
@@ -68,10 +68,10 @@ const TierBenefits = (props: any) => {
             <TableHead>
               <TableRow>
                 <TableCell className={styles.tableCellHead}></TableCell>
-                <TableCell className={styles.tableCellHead} align="right">Dove</TableCell>
-                <TableCell className={styles.tableCellHead} align="right">Hawk</TableCell>
-                <TableCell className={styles.tableCellHead} align="right">Eagle</TableCell>
-                <TableCell className={styles.tableCellHead} align="right">Phoenix</TableCell>
+                <TableCell className={styles.tableCellHead} align="right">Rookie</TableCell>
+                <TableCell className={styles.tableCellHead} align="right">Elite</TableCell>
+                <TableCell className={styles.tableCellHead} align="right">Pro</TableCell>
+                <TableCell className={styles.tableCellHead} align="right">Master</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -90,16 +90,16 @@ const TierBenefits = (props: any) => {
                     {row.name}
                   </TableCell>
                   <TableCell className={styles.tableCellBody} align="right">
-                    <img src={`/images/account_v3/icons/icon_table_${row.dove === 0 ? 'false' : 'true'}.svg`} alt="" />
+                    <img src={`/images/account_v3/icons/icon_table_${row.rookie === 0 ? 'false' : 'true'}.svg`} alt="" />
                   </TableCell>
                   <TableCell className={styles.tableCellBody} align="right">
-                    <img src={`/images/account_v3/icons/icon_table_${row.hawk === 0 ? 'false' : 'true'}.svg`} alt="" />
+                    <img src={`/images/account_v3/icons/icon_table_${row.elite === 0 ? 'false' : 'true'}.svg`} alt="" />
                   </TableCell>
                   <TableCell className={styles.tableCellBody} align="right">
-                    <img src={`/images/account_v3/icons/icon_table_${row.eagle === 0 ? 'false' : 'true'}.svg`} alt="" />
+                    <img src={`/images/account_v3/icons/icon_table_${row.pro === 0 ? 'false' : 'true'}.svg`} alt="" />
                   </TableCell>
                   <TableCell className={styles.tableCellBody} align="right">
-                    <img src={`/images/account_v3/icons/icon_table_${row.phoenix === 0 ? 'false' : 'true'}.svg`} alt="" />
+                    <img src={`/images/account_v3/icons/icon_table_${row.master === 0 ? 'false' : 'true'}.svg`} alt="" />
                   </TableCell>
                 </TableRow>
               ))}

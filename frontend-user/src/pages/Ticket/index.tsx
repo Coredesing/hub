@@ -73,6 +73,7 @@ const Ticket: React.FC<any> = (props: any) => {
 
   useEffect(() => {
     if (!loadingTicket && dataTicket) {
+      console.log(dataTicket)
       const openTime = +dataTicket.start_time * 1000;
       const finishTime = +dataTicket.finish_time * 1000;
       if (openTime > Date.now()) {
@@ -105,13 +106,13 @@ const Ticket: React.FC<any> = (props: any) => {
         setAccApprove(approved);
         const myNumTicket = await getBalance(connectedAccount, dataTicket.token, dataTicket.network_available, dataTicket.accept_currency);
         setTicketBought(+myNumTicket);
-        setNewBalance(false);
+        // setNewBalance(false);
       } catch (error) {
         console.log(error)
       }
 
     }
-    renewBalance && connectedAccount && dataTicket && setBalance();
+    connectedAccount && dataTicket && setBalance();
   }, [connectedAccount, dataTicket, renewBalance]);
 
   useEffect(() => {
@@ -218,6 +219,11 @@ const Ticket: React.FC<any> = (props: any) => {
     return Math.ceil((sold * 100) / total) || 0;
   }
 
+  const getMaxTicketBuy = (ownedTicket: number, maxTicket: number = 0) => {
+    if(ownedTicket >= maxTicket) return 0;
+    return maxTicket - ownedTicket;
+  }
+
   return (
     <DefaultLayout>
 
@@ -304,7 +310,7 @@ const Ticket: React.FC<any> = (props: any) => {
                   </span>
                 </div>
                 <div className={styles.infoTicket}>
-                  <span className={styles.text}>OWNED</span> <span className={styles.textBold}>{ticketBought}
+                  <span className={styles.text}>OWNED/MAX</span> <span className={styles.textBold}>{ticketBought}/{getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)}
                   </span>
                 </div>
                 <div className={styles.infoTicket}>

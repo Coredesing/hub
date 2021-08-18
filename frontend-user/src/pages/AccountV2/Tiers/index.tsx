@@ -163,7 +163,7 @@ const Tiers = (props: any) => {
               emailVerified={emailVerified}
               isKYC={isKYC}
             />
-            <TierInfomation />
+            {/* <TierInfomation /> */}
 
             <Link 
               className={styles.btnHow}

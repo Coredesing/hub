@@ -13,6 +13,7 @@ const ErrorFactory = use('App/Common/ErrorFactory');
 const CONFIGS_FOLDER = '../../blockchain_configs/';
 const NETWORK_CONFIGS = require(`${CONFIGS_FOLDER}${process.env.NODE_ENV}`);
 const CONTRACT_CONFIGS = NETWORK_CONFIGS.contracts[Const.CONTRACTS.CAMPAIGN];
+const ERC721_ABI = require('../../blockchain_configs/contracts/Erc721');
 const { abi: CONTRACT_ABI } = CONTRACT_CONFIGS.CONTRACT_DATA;
 const { abi: CONTRACT_CLAIM_ABI } = CONTRACT_CONFIGS.CONTRACT_CLAIMABLE;
 
@@ -313,7 +314,6 @@ const getExternalTokenSmartContract = async (wallet_address) => {
   return externalTokenMantra;
 };
 
-
 const getUserTotalStakeSmartContract = async (wallet_address) => {
   const tierSc = getTierSmartContractInstance();
   const totalStaked = await tierSc.methods.userTotalStaked(wallet_address).call();
@@ -357,6 +357,25 @@ const getContractInstance = async (camp) => {
     return getContractInstanceDev(camp);
   }
   return new networkToWeb3[camp.network_available].eth.Contract(CONTRACT_ABI, camp.campaign_hash);
+}
+
+const getERC721TokenContractInstanceDev = async (camp) => {
+  const web3Dev = new Web3(getWeb3ProviderLink());
+  const web3BscDev = new Web3(getWeb3BscProviderLink());
+  const web3PolygonDev = new Web3(getWeb3PolygonProviderLink());
+  const networkToWeb3Dev = {
+    [Const.NETWORK_AVAILABLE.ETH]: web3Dev,
+    [Const.NETWORK_AVAILABLE.BSC]: web3BscDev,
+    [Const.NETWORK_AVAILABLE.POLYGON]: web3PolygonDev
+  }
+  return new networkToWeb3Dev[camp.network_available].eth.Contract(ERC721_ABI, camp.token);
+};
+
+const getERC721TokenContractInstance = async (camp) => {
+  if (isDevelopment) {  // Prevent limit request Infura when dev
+    return getERC721TokenContractInstanceDev(camp);
+  }
+  return new networkToWeb3[camp.network_available].eth.Contract(ERC721_ABI, camp.token);
 }
 
 const getContractClaimInstance = async (camp) => {
@@ -731,6 +750,7 @@ module.exports = {
   getUserTotalStakeSmartContract,
   getUnstakeMantraSmartContract,
   getExternalTokenSmartContract,
+  getERC721TokenContractInstance,
   getUserTierSmart,
   getContractInstance,
   getContractClaimInstance,

@@ -28,7 +28,7 @@ class PickWinnerWithGameFITicket {
 
   // This is where the work is done.
   static async handle(data) {
-    console.log('PickRandomWinnerJobWithLuckyDove-job started', data);
+    console.log('PickWinnerWithGameFITicket-job started', data);
     try {
       // pickup winner
       await PickWinnerWithGameFITicket.doPickupWinner(data);
@@ -43,10 +43,6 @@ class PickWinnerWithGameFITicket {
     const campaignUpdated = await CampaignModel.query().where('id', data.campaign_id).first();
     await campaignUpdated.winners().delete();
 
-    // get number of ticket
-    let tierList = await TierModel.query().where('campaign_id', data.campaign_id).fetch();
-    tierList = JSON.parse(JSON.stringify(tierList));
-    const numberOfTicket = tierList[0].ticket_allow ?? 0
     let users = await UserModel.query().where('is_kyc', 1).where('status', 1).fetch();
     users = JSON.parse(JSON.stringify(users));
 
@@ -57,7 +53,7 @@ class PickWinnerWithGameFITicket {
         wallet_address: u.wallet_address,
         campaign_id: data.campaign_id,
         level: 0,
-        lottery_ticket: numberOfTicket,
+        lottery_ticket: 1,
       });
       return winnerModel;
     })

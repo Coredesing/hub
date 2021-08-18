@@ -24,13 +24,56 @@ Route.get('image/:fileName', 'FileController.getImage');
 Route.post('block-pass', 'UserController.kycUpdateStatus').middleware('checkBlockPassSignature');
 
 Route.group(() => {
+  // pool
   Route.get('pool/gamefi-ticket', 'PoolController.getGameFITicket');
+  Route.get('pool/:campaignId', 'PoolController.getPoolPublic');
+  Route.get('pool/:campaignId/tiers', 'TierController.getTiers');
+  Route.get('pool/:campaignId/winners', 'WinnerListUserController.getWinnerAndReserveList');
+  Route.get('pool/:campaignId/user/:walletAddress/current-tier', 'UserController.getCurrentTier');
+  Route.get('pool/:campaignId/check-exist-winner', 'WinnerListUserController.checkExistWinner').validator('CheckUserWinnerExist');
+  Route.get('pool/:campaignId/check-picked-winner', 'WinnerListUserController.checkPickedWinner');
+  Route.get('pool/:campaignId/claim-configs', 'ClaimConfigController.getListClaimConfig');
+  Route.get('pool/:campaignId/user/:walletAddress/claimable-amount', 'ClaimConfigController.getClaimableAmount');
 
+  // pools
+  Route.get('pools', 'PoolController.getPoolList');
+  Route.get('pools/top-pools', 'PoolController.getTopPools');
+  Route.get('pools/user/:walletAddress/joined-pools', 'PoolController.getJoinedPools');
+  Route.get('pools/v2/upcoming-pools', 'PoolController.getUpcomingPools');
+  Route.get('pools/v2/featured-pools', 'PoolController.getFeaturedPools');
+  Route.get('pools/v3/active-pools', 'PoolController.getActivePoolsV3');
+  Route.get('pools/v3/next-to-launch-pools', 'PoolController.getNextToLaunchPoolsV3');
+  Route.get('pools/v3/upcoming-pools', 'PoolController.getUpcomingPoolsV3');
+  Route.get('pools/v3/complete-sale-pools', 'PoolController.getCompleteSalePoolsV3');
+  
+  // user
   Route.get('user/profile', 'UserController.profile').middleware(['maskEmailAndWallet']);
   Route.post('user/deposit', 'CampaignController.deposit').middleware(['checkSignature']);
   Route.post('user/claim', 'CampaignController.claim').middleware(['checkSignature']);
+  Route.put('user/update-profile', 'UserController.updateProfile').middleware(['checkSignature']);
+
+  Route.get('user/check-wallet-address', 'UserAuthController.checkWalletAddress');
+  Route.post('user/check-active', 'UserController.checkUserActive');
+  Route.post('user/join-campaign', 'CampaignController.joinCampaign').middleware(['checkSignature']);
+  Route.get('user/whitelist-search/:campaignId', 'WhiteListUserController.search');
+  Route.get('user/whitelist-apply/previous', 'WhiteListSubmissionController.getPreviousWhitelistSubmission');
+  Route.get('user/whitelist-apply/:campaignId', 'WhiteListSubmissionController.getWhitelistSubmission');
+  Route.post('user/whitelist-apply/:campaignId', 'WhiteListSubmissionController.addWhitelistSubmission');
+  Route.get('user/winner-list/:campaignId', 'WinnerListUserController.getWinnerListPublic').middleware(['maskEmailAndWallet']);
+  Route.get('user/winner-search/:campaignId', 'WinnerListUserController.search').middleware(['maskEmailAndWallet']);
+  Route.get('user/counting/:campaignId', 'CampaignController.countingJoinedCampaign');
+  Route.get('user/check-join-campaign/:campaignId', 'CampaignController.checkJoinedCampaign');
+
+  // config
+  Route.get('get-rate-setting', 'RateSettingController.getRateSetting');
+
+  // reputation
+  Route.get('reputation/points/:walletAddress', 'ReputationController.getReputationPoint');
+  Route.get('reputation/histories/:walletAddress', 'ReputationController.getReputationHistory');
 }).prefix('api/v1');
 
+
+// old route
 // Webhook
 Route.group(() => {
   Route.post('ico-campaign', 'CampaignController.icoCampaignCreate')
@@ -139,76 +182,11 @@ Route.group(() => {
   Route.post('deposit-admin', 'CampaignController.depositAdmin').middleware(['auth:admin']);
 }).prefix(Const.USER_TYPE_PREFIX.ICO_OWNER).middleware(['typeAdmin', 'checkPrefix', 'checkAdminJwtSecret']); //user/public
 
-
-
 // Investor User
 Route.get('campaign-latest-active', 'CampaignController.campaignLatestActive')
 
-Route.group(() => {
-  Route.post('/login', 'UserAuthController.login').validator('Login').middleware('checkSignature');
-  Route.post('/register', 'UserAuthController.register').validator('Register').middleware('checkSignature');
-  Route.post('/register-email', 'UserAuthController.registerVerifyEmail').middleware('checkSignature');
-
-  Route.get('confirm-email/:token', 'UserController.confirmEmail'); // Confirm email when register
-  Route.get('check-wallet-address', 'UserAuthController.checkWalletAddress');
-  Route.post('check-wallet-address', 'UserAuthController.checkWalletAddress');
-  Route.get('check-token/:token', 'UserController.checkToken');
-  Route.post('reset-password/:token', 'UserController.resetPassword').validator('ResetPassword').middleware('checkSignature');
-  Route.get('profile', 'UserController.profile').middleware(['maskEmailAndWallet']);
-  Route.post('check-active', 'UserController.checkUserActive');
-
-  Route.post('join-campaign', 'CampaignController.joinCampaign').middleware(['checkSignature']);
-  Route.post('deposit', 'CampaignController.deposit').middleware(['checkSignature']);
-  Route.post('claim', 'CampaignController.claim').middleware(['checkSignature']);
-  Route.get('whitelist-search/:campaignId', 'WhiteListUserController.search');
-  Route.get('whitelist-apply/previous', 'WhiteListSubmissionController.getPreviousWhitelistSubmission');
-  Route.get('whitelist-apply/:campaignId', 'WhiteListSubmissionController.getWhitelistSubmission');
-  Route.post('whitelist-apply/:campaignId', 'WhiteListSubmissionController.addWhitelistSubmission');
-  Route.get('winner-list/:campaignId', 'WinnerListUserController.getWinnerListPublic').middleware(['maskEmailAndWallet']);
-  Route.get('winner-search/:campaignId', 'WinnerListUserController.search').middleware(['maskEmailAndWallet']);
-  Route.get('counting/:campaignId', 'CampaignController.countingJoinedCampaign');
-  Route.get('check-join-campaign/:campaignId', 'CampaignController.checkJoinedCampaign');
-
-  Route.get('get-airdrop/:campaignId/:walletAddress', 'CampaignController.getAirdrop');
-}).prefix(Const.USER_TYPE_PREFIX.PUBLIC_USER).middleware(['typeUser', 'checkPrefix', 'formatEmailAndWallet']);// , 'maskEmailAndWallet'
-
 Route.post(':type/check-max-usd', 'UserBuyCampaignController.checkBuy')
   .middleware(['checkPrefix', 'auth', 'checkJwtSecret']);
-
-// Public API:
-Route.group(() => {
-  Route.get('pools', 'PoolController.getPoolList');
-  Route.get('pools/top-pools', 'PoolController.getTopPools');
-  Route.get('pools/user/:walletAddress/joined-pools', 'PoolController.getJoinedPools');
-
-  // Pool List V2
-  Route.get('pools/v2/upcoming-pools', 'PoolController.getUpcomingPools');
-  Route.get('pools/v2/featured-pools', 'PoolController.getFeaturedPools');
-
-  // Pool List V3
-  Route.get('pools/v3/active-pools', 'PoolController.getActivePoolsV3');
-  Route.get('pools/v3/next-to-launch-pools', 'PoolController.getNextToLaunchPoolsV3');
-  Route.get('pools/v3/upcoming-pools', 'PoolController.getUpcomingPoolsV3');
-  Route.get('pools/v3/complete-sale-pools', 'PoolController.getCompleteSalePoolsV3');
-
-  Route.get('pool/:campaignId', 'PoolController.getPoolPublic');
-  Route.get('pool/:campaignId/tiers', 'TierController.getTiers');
-  Route.get('pool/:campaignId/winners', 'WinnerListUserController.getWinnerAndReserveList');
-  Route.get('pool/:campaignId/user/:walletAddress/current-tier', 'UserController.getCurrentTier');
-  Route.post('user/check-email-verified', 'UserController.checkEmailVerified');
-  Route.get('pool/:campaignId/check-exist-winner', 'WinnerListUserController.checkExistWinner').validator('CheckUserWinnerExist');
-  Route.get('pool/:campaignId/check-picked-winner', 'WinnerListUserController.checkPickedWinner');
-
-  // Claim Config
-  Route.get('pool/:campaignId/claim-configs', 'ClaimConfigController.getListClaimConfig');
-  Route.get('pool/:campaignId/user/:walletAddress/claimable-amount', 'ClaimConfigController.getClaimableAmount');
-
-  Route.get('reputation/points/:walletAddress', 'ReputationController.getReputationPoint');
-  Route.get('reputation/histories/:walletAddress', 'ReputationController.getReputationHistory');
-  Route.get('get-rate-setting', 'RateSettingController.getRateSetting');
-
-}).middleware(['maskEmailAndWallet']);
-
 
 // Test API:
 Route.get('api/v1/epkf/bonus', 'UserController.getEPkfBonusBalance');

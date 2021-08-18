@@ -23,7 +23,6 @@ import { approve } from '../../store/actions/sota-token';
 import { useWeb3React } from '@web3-react/core';
 import { caclDiffTime } from './getDiffTime';
 import { getContractAddress } from './getContractAddress';
-const tetherIcon = '/images/icons/tether.svg';
 const brightIcon = '/images/icons/bright.svg';
 const finishedImg = '/images/finished.png';
 const soldoutImg = '/images/soldout.png';
@@ -247,8 +246,8 @@ const Ticket: React.FC<any> = (props: any) => {
                 <span >TOTAL SALE</span> {infoTicket.total_sold_coin}
               </h4>
               <button>
-                <img height={20} src={infoTicket && infoTicket.accept_currency ? `/images/${infoTicket.accept_currency}.png` : tetherIcon} alt="" />
-                <span>{infoTicket.ether_conversion_rate} {infoTicket && infoTicket.accept_currency ? infoTicket.accept_currency.toUpperCase() : 'USDT'}</span>
+                <img height={20} src={infoTicket && infoTicket.accept_currency ? `/images/${infoTicket.accept_currency}.png` : ''} alt="" />
+                <span>{infoTicket.ether_conversion_rate} {infoTicket && infoTicket.accept_currency ? infoTicket.accept_currency.toUpperCase() : ''}</span>
                 <span className="small-text">
                   /{infoTicket.symbol}
                 </span>

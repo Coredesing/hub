@@ -2,6 +2,7 @@
 
 const CampaignModel = use('App/Models/Campaign');
 const WalletAccountModel = use('App/Models/WalletAccount');
+const UserModel = use('App/Models/User');
 const WalletAccountService = use('App/Services/WalletAccountService');
 const Const = use('App/Common/Const');
 const PoolService = use('App/Services/PoolService');
@@ -46,10 +47,16 @@ class PoolController {
       if (!pool) {
         return HelperUtils.responseNotFound('Pool not found');
       }
-
       pool = JSON.parse(JSON.stringify(pool));
 
-      const publicPool = pick(pool, [
+      let count = await UserModel.query()
+        .where('is_kyc', 1)
+        .where('status', 1)
+        .count('* as total');
+
+      let participants = (count && count.length > 0) ? count[0].total : 0
+      participants = parseInt(participants) || 0
+      let publicPool = pick(pool, [
         // Pool Info
         'id', 'title', 'website', 'banner', 'updated_at', 'created_at',
         'campaign_hash', 'description', 'registed_by', 'register_by',
@@ -76,6 +83,8 @@ class PoolController {
         // Lock Schedule Setting
         'whitelist_country',
       ]);
+
+      publicPool.participants = participants;
 
       // Cache data
       RedisUtils.createRedisPoolDetail(0, publicPool);

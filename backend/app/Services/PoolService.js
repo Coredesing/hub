@@ -417,14 +417,8 @@ class PoolService {
       .with('campaignClaimConfig')
       .where('campaign_status', Const.POOL_STATUS.CLAIMABLE)
       .orderBy('id', 'DESC')
-
-
-      // .where('id', 979)
-
-
       .fetch();
     pools = JSON.parse(JSON.stringify(pools));
-    console.log('[filterPoolClaimable] - pools.length:', pools.length);
     return pools;
   }
 
@@ -470,15 +464,12 @@ class PoolService {
 
   async updatePoolInformation(pool) {
     try {
-      console.log('[PoolService::updatePoolInformation] - poolId', pool.id);
       const tokenSold = await HelperUtils.getTokenSoldSmartContract(pool);
-      console.log('[PoolService::updatePoolInformation] - tokenSold: ', tokenSold);
 
       const status = await HelperUtils.getPoolStatusByPoolDetail(pool, tokenSold);
-      console.log('[PoolService::updatePoolInformation] - Finish Status:', status);
+      console.log('[PoolService::updatePoolInformation]', pool.id, tokenSold, status);
 
       const lastTime =  HelperUtils.getLastActualFinishTime(pool); // lastClaimConfig + 12h
-      console.log('lastClaimTime + 1week: ============>', lastTime);
 
       const dataUpdate = {
         token_sold: tokenSold,
@@ -490,7 +481,6 @@ class PoolService {
       const result = await CampaignModel.query().where('id', pool.id).update(dataUpdate);
       RedisUtils.deleteRedisPoolDetail(pool.id);
     } catch (e) {
-      console.log('[PoolService::updatePoolInformation] - ERROR: ', pool);
       console.log('[PoolService::updatePoolInformation] - ERROR: ', e);
     }
   }

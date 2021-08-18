@@ -434,15 +434,13 @@ const getTokenSoldSmartContract = async (pool) => {
   if (!pool.campaign_hash) {
     return 0;
   }
-  const isClaimable = pool.pool_type == Const.POOL_TYPE.CLAIMABLE;
+  const isClaimable = pool.pool_type === Const.POOL_TYPE.CLAIMABLE;
   const poolContract = isClaimable ? await getContractClaimInstance(pool) : await getContractInstance(pool);
   let tokenSold = await poolContract.methods.tokenSold().call();
   if (pool.token_type === 'erc721') {
-    console.log('[getTokenSoldSmartContract] - tokenSold', tokenSold);
     return tokenSold
   }
   tokenSold = new BigNumber(tokenSold).div(new BigNumber(10).pow(18)).toFixed();
-  console.log('[getTokenSoldSmartContract] - tokenSold', tokenSold);
   return tokenSold;
 };
 
@@ -639,42 +637,29 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
     tokenSold: tokenSold || poolDetails.tokenSold || poolDetails.token_sold || '0',
   });
 
-
-  console.log('Process 111', progress, tokenSold, PoolStatus);
-
   const soldProgress = progress;
   const today = new Date().getTime();
   const requiredReleaseTime = isClaimable ? !releaseTime : false;
-
-  console.log('Process 222', startJoinTime, endJoinTime, startBuyTime, endBuyTime)
 
   // Check TBA Status
   if ((!startJoinTime || !endJoinTime) && buyType === Const.BUY_TYPE.WHITELIST_LOTTERY) {
     return PoolStatus.TBA;
   }
 
-  console.log('Process 333');
-
   if ((!startBuyTime || !endBuyTime) && buyType === Const.BUY_TYPE.FCFS) {
     return PoolStatus.TBA;
   }
-
-  console.log('Process 444');
 
   // Check Upcoming Status
   if (startJoinTime && today < startJoinTime.getTime()) {
     return PoolStatus.UPCOMING;
   }
 
-  console.log('Process 555');
-
   // exist start_join_time
   // but don't exist start_buy_time
   if (startJoinTime && !startBuyTime) {
     return PoolStatus.UPCOMING;
   }
-
-  console.log('Process 666');
 
   // or current time < start buy time
   if (startBuyTime && today < startBuyTime.getTime()) {
@@ -687,8 +672,6 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
     return PoolStatus.UPCOMING;
   }
 
-  console.log('Process 777');
-
   // Check Claimable Status
   const lastClaimTime = lastClaimConfigTime();
   if (
@@ -698,8 +681,6 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
   ) {
     return PoolStatus.CLAIMABLE;
   }
-
-  console.log('Process 888');
 
   if (releaseTime) {
     // Check Filled Status
@@ -721,7 +702,6 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
       return PoolStatus.SWAP; // In Progress
     }
   }
-  console.log('Process 9999: PoolStatus.CLOSED');
 
   return PoolStatus.CLOSED;
 };

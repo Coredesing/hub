@@ -3,6 +3,7 @@
 const getGameFIPool = async (CampaignModel) => {
   try {
     let pool = await CampaignModel.query()
+      .with('tiers')
       .with('whitelistBannerSetting')
       .with('socialNetworkSetting')
       .where('token_type', 'erc721')

@@ -81,6 +81,8 @@ class PoolController {
       ]);
 
       publicPool.participants = participants;
+      publicPool.max_buy_ticket = new BigNumber(pool.tiers[0].max_buy).dividedBy(new BigNumber(pool.token_conversion_rate)).integerValue(BigNumber.ROUND_DOWN);
+      publicPool.max_buy_ticket = parseInt(publicPool.max_buy_ticket.toFixed())
 
       // Cache data
       RedisUtils.createRedisPoolDetail(0, publicPool);

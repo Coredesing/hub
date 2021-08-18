@@ -196,13 +196,13 @@ export function AboutTicket({info = {}}: any) {
                     <div className={classes.link}>
                         <span className="text">Social</span>
                         <div className={classes.socials}>
-                            <a href="/">
+                            <a href={info.socialNetworkSetting?.telegram_link} target="_blank" rel="noreferrer">
                                 <img src={telegramIcon} alt="" />
                             </a>
-                            <a href="/">
+                            <a href={info.socialNetworkSetting?.twitter_link} target="_blank" rel="noreferrer">
                                 <img src={twitterIcon} alt="" />
                             </a>
-                            <a href="/">
+                            <a href={info.socialNetworkSetting?.medium_link} target="_blank" rel="noreferrer">
                                 <img src={mediumIcon} alt="" />
                             </a>
                         </div>

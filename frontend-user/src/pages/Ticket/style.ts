@@ -27,14 +27,6 @@ const useStyles = makeStyles((theme: any) => {
       fontWeight: 'normal',
       fontSize: '14px',
       lineHeight: '22px',
-      '& .kyc-link': {
-        fontFamily: 'inherit',
-        fontStyle: 'inherit',
-        color: 'inherit',
-        fontWeight: 'bold',
-        cursor: 'pointer',
-        textDecoration: 'underline',
-      },
       '& a': {
         '&.link': {
           textDecoration: 'underline',
@@ -329,6 +321,21 @@ const useStyles = makeStyles((theme: any) => {
       background: '#72f348',
       borderRadius: '2px',
       color: '#000',
+      fontWeight: 600,
+      fontSize: '16px',
+      lineHeight: '28px',
+      textAlign: 'center',
+      padding: '13px 20px',
+      textTransform: 'uppercase',
+      minWidth: '200px',
+      cursor: 'pointer'
+    },
+    btnApprove: {
+      outline: 'none',
+      border: 'none',
+      background: '#0070a7',
+      borderRadius: '2px',
+      color: '#fff',
       fontWeight: 600,
       fontSize: '16px',
       lineHeight: '28px',

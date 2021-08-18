@@ -69,9 +69,9 @@ const ManageTier = (props: any) => {
           </div>
         </div>
         <div className={styles.tableBody}>
-          {renderToken("PKF", balance?.pkf, userInfo?.pkfStaked)}
-          {renderToken(CONVERSION_RATE[0]?.symbol, balance?.uni, userInfo?.uniStaked)}
-          {renderToken(CONVERSION_RATE[1]?.symbol, 0, userInfo?.ePkf)}
+          {renderToken("GAFI", balance?.pkf, userInfo?.pkfStaked)}
+          {/* {renderToken(CONVERSION_RATE[0]?.symbol, balance?.uni, userInfo?.uniStaked)}
+          {renderToken(CONVERSION_RATE[1]?.symbol, 0, userInfo?.ePkf)} */}
         </div>
       </div>
     </div>

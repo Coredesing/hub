@@ -45,10 +45,10 @@ const menuMyAccount = [
     name: 'IDO Pools',
     icon: '/images/icons/icon_my_pools.svg',
   },
-  {
-    name: 'NFT Tickets',
-    icon: '/images/icons/ticket.svg',
-  },
+  // {
+  //   name: 'NFT Tickets',
+  //   icon: '/images/icons/ticket.svg',
+  // },
   {
     name: 'Need Help',
     icon: '/images/account_v3/icons/icon_need_help.svg',
@@ -312,10 +312,10 @@ const AccountV2 = (props: any) => {
             }
 
             {activeMenuAccount === 'IDO Pools' && <IdoPolls />}
-            {activeMenuAccount === 'NFT Tickets' && <>
+            {/* {activeMenuAccount === 'NFT Tickets' && <>
               <NftTicket />
               <CardsTicket />
-            </>}
+            </>} */}
 
             {
               activeMenuAccount === 'Need Help' &&

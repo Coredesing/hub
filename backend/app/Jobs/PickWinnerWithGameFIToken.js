@@ -8,6 +8,7 @@ const WinnerListUserModel = use('App/Models/WinnerListUser');
 const WhitelistService = use('App/Services/WhitelistUserService');
 const UserBalanceSnapshotService = use('App/Services/UserBalanceSnapshotService');
 const HelperUtils = use('App/Common/HelperUtils');
+const GameFIUtils = use('App/Common/GameFIUtils');
 
 const priority = 'critical'; // Priority of job, can be low, normal, medium, high or critical
 const attempts = 5; // Number of times to attempt job if it fails
@@ -28,12 +29,52 @@ class PickWinnerWithGameFIToken {
     return Const.JOB_KEY.PICKUP_RANDOM_WINNER;
   }
 
+  static async getGameFIAddress() {
+    if (await RedisUtils.checkExistRedisPoolDetail(0)) {
+      const cachedPoolDetail = await RedisUtils.getRedisPoolDetail(0)
+      const poolDetail = JSON.parse(cachedPoolDetail)
+      return poolDetail.token
+    }
+
+    let pool = await GameFIUtils.getGameFIPool(CampaignModel)
+    if (!pool) {
+      return null;
+    }
+
+    return pool.token
+  }
+
+  static async fetchTicketBalance(tokenAddress, userAddress) {
+    try {
+      const token = await HelperUtils.getERC721TokenContractInstance(tokenAddress)
+      const ticket = await token.methods.balanceOf.call(userAddress)
+
+      return {
+        winnerTicket: ticket,
+        isError: false,
+      }
+    }
+    catch (e) {
+      console.log('Pick winner with user ', userAddress, ' error ', e)
+      return {
+        winnerTicket: 0,
+        isError: true,
+      }
+    }
+  }
+
   // This is where the work is done.
   static async handle(data) {
     console.log('PickWinnerWithGameFIToken-job started', data);
     try {
+      // get GameFI NFT Ticket address
+      const tokenAddress = PickWinnerWithGameFIToken.getGameFIAddress()
+      if (!tokenAddress) {
+        console.log('GameFI Ticket not found')
+        return
+      }
       // do snapshot balance
-      await PickWinnerWithGameFIToken.doSnapshotBalance(data);
+      await PickWinnerWithGameFIToken.doSnapshotBalance(data, tokenAddress);
       // pickup random winner after snapshot all whitelist user balance
       await PickWinnerWithGameFIToken.doPickupRandomWinner(data);
     } catch (e) {
@@ -42,7 +83,7 @@ class PickWinnerWithGameFIToken {
     }
   }
 
-  static async doSnapshotBalance(data) {
+  static async doSnapshotBalance(data, tokenAddress) {
     // delete all old snapshot
     const campaignUpdated = await CampaignModel.query().where('id', data.campaign_id).first();
     await campaignUpdated.userBalanceSnapshots().delete();
@@ -74,15 +115,19 @@ class PickWinnerWithGameFIToken {
       for (let i = 0; i < whitelistObj.data.length; i++) {
         // get user PKF balance and tier from SC
         const wallet = whitelistObj.data[i].wallet_address;
-        const token = await HelperUtils.getERC721TokenContractInstance(wallet);
-        const numberOfNFTicket = await token.methods.balanceOf.call(wallet)
+        const {winnerTicket, isError} = PickWinnerWithGameFIToken.fetchTicketBalance(tokenAddress, wallet)
+        let lotteryTicket = 1
+        if (!isError) {
+          lotteryTicket = winnerTicket
+        }
 
         let userSnapShot = new UserBalanceSnapshotModel();
         userSnapShot.fill({
           campaign_id: data.campaign_id,
           wallet_address: wallet,
           level: 0,
-          lottery_ticket: numberOfNFTicket,
+          winner_ticket: winnerTicket,
+          lottery_ticket: lotteryTicket,
           pkf_balance: 0,
           pkf_balance_with_weight_rate: 0,
         });
@@ -99,23 +144,19 @@ class PickWinnerWithGameFIToken {
     // delete old winner
     const campaignUpdated = await CampaignModel.query().where('id', data.campaign_id).first();
     await campaignUpdated.winners().delete();
-    // let tierList = await TierModel.query().where('campaign_id', data.campaign_id).fetch();
-    // tierList = JSON.parse(JSON.stringify(tierList));
-
     const userSnapshotService = new UserBalanceSnapshotService();
-
 
     let userSnapshots = await userSnapshotService.getAllSnapshotByFiltersWithUser({campaign_id: data.campaign_id});
     userSnapshots = JSON.parse(JSON.stringify(userSnapshots));
 
-    const winners = userSnapshots.map(u => {
+    const winners = userSnapshots.filter(u => u.winner_ticket > 0).map(u => {
       const winnerModel = new WinnerListUserModel();
       winnerModel.fill({
         email: u.email,
         wallet_address: u.wallet_address,
         campaign_id: data.campaign_id,
         level: 0,
-        lottery_ticket: u.lottery_ticket,
+        lottery_ticket: u.winner_ticket,
       });
       return winnerModel;
     })
@@ -125,7 +166,7 @@ class PickWinnerWithGameFIToken {
 
   // Dispatch
   static doDispatch(data) {
-    console.log('Dispatch pickup winner with data : ', data);
+    console.log('Dispatch pickup winner with data: ', data);
     kue.dispatch(this.key, data, { priority, attempts, remove, jobFn });
   }
 }

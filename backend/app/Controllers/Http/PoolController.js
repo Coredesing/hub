@@ -9,6 +9,7 @@ const PoolService = use('App/Services/PoolService');
 const WhitelistBannerSettingService = use('App/Services/WhitelistBannerSettingService');
 const HelperUtils = use('App/Common/HelperUtils');
 const RedisUtils = use('App/Common/RedisUtils');
+const GameFIUtils = use('App/Common/GameFIUtils');
 
 const Redis = use('Redis');
 const CONFIGS_FOLDER = '../../../blockchain_configs/';
@@ -36,18 +37,10 @@ class PoolController {
         return HelperUtils.responseSuccess(JSON.parse(cachedPoolDetail));
       }
 
-      let pool = await CampaignModel.query()
-        .with('whitelistBannerSetting')
-        .where('token_type', 'erc721')
-        .where('min_tier', 0)
-        .where('is_display', 1)
-        .where('symbol', 'Ticket')
-        .last();
-
+      let pool = await GameFIUtils.getGameFIPool(CampaignModel)
       if (!pool) {
         return HelperUtils.responseNotFound('Pool not found');
       }
-      pool = JSON.parse(JSON.stringify(pool));
 
       let count = await UserModel.query()
         .where('is_kyc', 1)

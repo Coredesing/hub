@@ -147,7 +147,8 @@ const Ticket: React.FC<any> = (props: any) => {
   }, [isBuy, endTime, setTimeEnd]);
 
   const ascAmount = () => {
-    if (numTicketBuy === 25) {
+    const ticketCanBuy = getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket);
+    if (numTicketBuy >= ticketCanBuy) {
       return;
     }
     setNumTicketBuy(n => n + 1);
@@ -156,6 +157,18 @@ const Ticket: React.FC<any> = (props: any) => {
     if (numTicketBuy > 0) {
       setNumTicketBuy(n => n - 1);
     }
+  }
+
+  const ascMaxAmount = () =>{
+    const maxTicket = getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket);
+    if(maxTicket === 0) return;
+    setNumTicketBuy(maxTicket);
+  }
+
+  const descMinAmount = () => {
+    const maxTicket = getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket);
+    if(maxTicket === 0) return;
+    setNumTicketBuy(1);
   }
   // const { data: depositTransaction, error: depositError1 } = useSelector((state: any) => state.deposit);
   // const { data: approveTransaction, error: approveError } = useSelector((state: any) => state.approve);
@@ -236,7 +249,7 @@ const Ticket: React.FC<any> = (props: any) => {
     try {
       // setApproveModal(true);
       await approveToken();
-      if ( infoTicket.campaign_hash && connectedAccount && tokenToApprove) {
+      if (infoTicket.campaign_hash && connectedAccount && tokenToApprove) {
         setTokenAllowance(await retrieveTokenAllowance(tokenToApprove, connectedAccount, infoTicket.campaign_hash) as number);
         // setTokenBalance(await retrieveTokenBalance(tokenToApprove, connectedAccount) as number);
       }
@@ -251,20 +264,20 @@ const Ticket: React.FC<any> = (props: any) => {
       setTokenAllowance(await retrieveTokenAllowance(tokenToApprove, connectedAccount, infoTicket.campaign_hash) as number);
     }
 
-}, [connectedAccount, tokenToApprove, infoTicket.campaign_hash, retrieveTokenAllowance]);
+  }, [connectedAccount, tokenToApprove, infoTicket.campaign_hash, retrieveTokenAllowance]);
 
 
-useEffect(() => {
-  const fetchPoolDetailsBlockchain = async () => {
-    await fetchPoolDetails();
+  useEffect(() => {
+    const fetchPoolDetailsBlockchain = async () => {
+      await fetchPoolDetails();
+    }
+
+    connectedAccount && infoTicket.campaign_hash && fetchPoolDetailsBlockchain();
+  }, [connectedAccount, infoTicket.campaign_hash, fetchPoolDetails]);
+
+  const isAccApproved = (tokenAllowance: number) => {
+    return +tokenAllowance > 0;
   }
-
-  connectedAccount && infoTicket.campaign_hash && fetchPoolDetailsBlockchain();
-}, [connectedAccount, infoTicket.campaign_hash, fetchPoolDetails]);
-
-const isAccApproved = (tokenAllowance: number) => {
-  return +tokenAllowance > 0;
-}
 
   useEffect(() => {
     console.log(tokenDepositLoading,
@@ -295,7 +308,7 @@ const isAccApproved = (tokenAllowance: number) => {
   }
 
   const getMaxTicketBuy = (ownedTicket: number, maxTicket: number = 0) => {
-    if(ownedTicket >= maxTicket) return 0;
+    if (ownedTicket >= maxTicket) return 0;
     return maxTicket - ownedTicket;
   }
 
@@ -392,14 +405,23 @@ const isAccApproved = (tokenAllowance: number) => {
                     {formatNumber(endTime.days)}d : {formatNumber(endTime.hours)}h : {formatNumber(endTime.minutes)}m : {formatNumber(endTime.seconds)}s
                   </span>
                 </div>}
-
                 {allowNetwork && !finishedTime && isBuy && isAccApproved(tokenAllowance || 0) && <div className={styles.infoTicket}>
                   <div className={styles.amountBuy}>
                     <span>Amount</span>
                     <div>
-                      <span onClick={descAmount}>-</span>
+                      <span onClick={descMinAmount} className={clsx({
+                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                      })}>Min</span>
+                      <span onClick={descAmount} className={clsx({
+                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                      })}>-</span>
                       <span>{numTicketBuy}</span>
-                      <span onClick={ascAmount}>+</span>
+                      <span onClick={ascAmount} className={clsx({
+                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                      })}>+</span>
+                      <span onClick={ascMaxAmount} className={clsx({
+                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                      })}>Max</span>
                     </div>
                   </div>
                   <button className={clsx(styles.buynow, {
@@ -410,8 +432,8 @@ const isAccApproved = (tokenAllowance: number) => {
                 </div>}
 
                 {!isAccApproved(tokenAllowance || 0) && <button className={styles.btnApprove} onClick={handleTokenApprove} >
-                    Approve
-                  </button>}
+                  Approve
+                </button>}
 
                 {finishedTime && <div className={clsx(styles.infoTicket, styles.finished)}>
                   <div className="img-finished">

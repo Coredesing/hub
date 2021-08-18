@@ -27,6 +27,14 @@ const useStyles = makeStyles((theme: any) => {
       fontWeight: 'normal',
       fontSize: '14px',
       lineHeight: '22px',
+      '& .kyc-link': {
+        fontFamily: 'inherit',
+        fontStyle: 'inherit',
+        color: 'inherit',
+        fontWeight: 'bold',
+        cursor: 'pointer',
+        textDecoration: 'underline',
+      },
       '& a': {
         '&.link': {
           textDecoration: 'underline',
@@ -55,7 +63,10 @@ const useStyles = makeStyles((theme: any) => {
       }
     },
     cardImg: {
-
+      '& img': {
+        width: '100%',
+        maxHeight: '360px',
+      }
     },
     cardBody: {
       paddingTop: '30px',

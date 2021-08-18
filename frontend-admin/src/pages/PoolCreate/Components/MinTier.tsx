@@ -15,7 +15,7 @@ function MinTier(props: any) {
   const renderError = renderErrorCreatePool;
 
   useEffect(() => {
-    if (poolDetail && poolDetail.min_tier) {
+    if (poolDetail) {
       setValue('minTier', poolDetail.min_tier);
     }
   }, [poolDetail]);
@@ -28,13 +28,14 @@ function MinTier(props: any) {
         <Controller
           rules={{ required: true }}
           control={control}
-          defaultValue={1}
+          defaultValue={poolDetail ? poolDetail.min_tier : 1}
           name="minTier"
           as={
             <Select
               labelId="minTier"
               id="minTier"
               name="minTier"
+              value={poolDetail ? poolDetail.min_tier : 1}
               // onChange={handleChange}
               disabled={isDeployed}
             >

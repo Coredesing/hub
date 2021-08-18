@@ -48,6 +48,8 @@ export const PICK_WINNER_RULE = {
   RULE_NORMAL: 'rule-normal',
   RULE_WITH_WEIGHT_RATE: 'rule-with-weight-rate',
   RULE_LUCKY_DOVE: 'rule-lucky-dove', // extend from RULE_WITH_WEIGHT_RATE
+  RULE_GAMEFI_TICKET: 'rule-gamefi-ticket',
+  RULE_GAFI_TOKEN: 'rule-gamefi-token',
 };
 
 export const USDT_ADDRESS = process.env.REACT_APP_SMART_CONTRACT_USDT_ADDRESS;

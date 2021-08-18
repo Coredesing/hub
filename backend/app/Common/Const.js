@@ -149,6 +149,8 @@ module.exports = Object.freeze({
     RULE_NORMAL: 'rule-normal',
     RULE_WITH_WEIGHT_RATE: 'rule-with-weight-rate',
     RULE_LUCKY_DOVE: 'rule-lucky-dove', // extend from RULE_WITH_WEIGHT_RATE
+    RULE_GAMEFI_TICKET: 'rule-gamefi-ticket',
+    RULE_GAFI_TOKEN: 'rule-gamefi-token',
   },
   SOCIAL_SUBMISSION_STATUS: {
     PENDING: 0,

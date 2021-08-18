@@ -27,9 +27,8 @@ Route.group(() => {
   Route.get('pool/gamefi-ticket', 'PoolController.getGameFITicket');
 
   Route.get('user/profile', 'UserController.profile').middleware(['maskEmailAndWallet']);
-  Route.post('deposit', 'CampaignController.deposit').middleware(['checkSignature']);
-  Route.post('claim', 'CampaignController.claim').middleware(['checkSignature']);
-  Route.post('deposit-gafi', 'PoolController.depositGameFI').middleware(['checkSignature']);
+  Route.post('user/deposit', 'CampaignController.deposit').middleware(['checkSignature']);
+  Route.post('user/claim', 'CampaignController.claim').middleware(['checkSignature']);
 }).prefix('api/v1');
 
 // Webhook

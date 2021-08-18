@@ -246,7 +246,7 @@ const Ticket: React.FC<any> = (props: any) => {
                 <span >TOTAL SALE</span> {infoTicket.total_sold_coin}
               </h4>
               <button>
-                <img height={20} src={infoTicket && infoTicket.accept_currency ? `/images/${infoTicket.accept_currency}.png` : ''} alt="" />
+                <img height={20} src={infoTicket && infoTicket.accept_currency ? `/images/${infoTicket.accept_currency.toUpperCase()}.png` : ''} alt="" />
                 <span>{infoTicket.ether_conversion_rate} {infoTicket && infoTicket.accept_currency ? infoTicket.accept_currency.toUpperCase() : ''}</span>
                 <span className="small-text">
                   /{infoTicket.symbol}

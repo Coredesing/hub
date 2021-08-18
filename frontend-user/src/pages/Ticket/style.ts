@@ -315,6 +315,9 @@ const useStyles = makeStyles((theme: any) => {
         }
       }
     },
+    buyDisabled: {
+      background: '#498631 !important',
+    },
     buynow: {
       outline: 'none',
       border: 'none',

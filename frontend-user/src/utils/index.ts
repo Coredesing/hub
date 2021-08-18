@@ -174,3 +174,18 @@ export const formatNumber = (num: number) => {
   }
   return num;
 }
+
+type Timestamp = number;
+export const getDiffTime = (date1: Timestamp, date2: Timestamp) => {
+  let difftime = date1 - date2;
+  const days = Math.floor(difftime / 1000 / 60 / (60 * 24));
+  difftime = difftime - days * 1000 * 60 * 60 * 24;
+  const hours = Math.floor(difftime / 1000 / 60 / 60);
+  difftime = difftime - hours * 1000 * 60 * 60;
+  const minutes = Math.floor(difftime / 1000 / 60);
+  difftime = difftime - minutes * 1000 * 60;
+  const seconds = Math.floor(difftime / 1000);
+  return {
+    days, hours, minutes, seconds,
+  }
+}

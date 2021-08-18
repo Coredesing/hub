@@ -149,7 +149,7 @@ const AntTabs = withStyles({
     },
 })(Tabs);
 
-export function AboutTicket() {
+export function AboutTicket({info = {}}: any) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -175,14 +175,14 @@ export function AboutTicket() {
             <TabPanel value={value} index={0}>
                 <ul className={classes.tabPaneContent}>
                     {
-                        rules.map((rule, idx) => <li key="idx">{idx + 1}. {rule}</li>)
+                        rules.map((rule, idx) => <li key={idx}>{idx + 1}. {rule}</li>)
                     }
                 </ul>
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <div className={classes.desc}>
                     <p className={classes.tabPaneContent}>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque iaculis et magna ut feugiat. Pellentesque varius sagittis velit eget blandit. Sed vehicula lorem a lectus pulvinar pharetra. Nunc justo mi, lacinia ac dolor id.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque iaculis et magna ut feugiat. Pellentesque varius sagittis velit eget blandit. Sed vehicula lorem a lectus pulvinar pharetra. Nunc justo mi, lacinia ac dolor id.
+                        {info.description}
                     </p>
                 </div>
 
@@ -190,7 +190,7 @@ export function AboutTicket() {
                     <div className={classes.link}>
                         <span className="text">Website</span>
                         <div className={classes.weblink}>
-                            <a href="https://gamefi.org" target="_blank">gamefi.org <img src={shareIcon} alt="" /> </a>
+                            <a href={info.website} target="_blank" rel="noreferrer">{info.website}<img src={shareIcon} alt="" /> </a>
                         </div>
                     </div>
                     <div className={classes.link}>

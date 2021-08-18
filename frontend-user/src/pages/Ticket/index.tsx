@@ -23,7 +23,6 @@ import { approve } from '../../store/actions/sota-token';
 import { useWeb3React } from '@web3-react/core';
 import { caclDiffTime } from './getDiffTime';
 import { getContractAddress } from './getContractAddress';
-const ticketImg = '/images/gamefi-ticket.png';
 const tetherIcon = '/images/icons/tether.svg';
 const brightIcon = '/images/icons/bright.svg';
 const finishedImg = '/images/finished.png';
@@ -86,6 +85,7 @@ const Ticket: React.FC<any> = (props: any) => {
         setFinishedTime(true);
         setIsBuy(false);
       }
+
       setInfoTicket(dataTicket);
     }
   }, [dataTicket, loadingTicket]);
@@ -102,7 +102,6 @@ const Ticket: React.FC<any> = (props: any) => {
     const setBalance = async () => {
       try {
         const approved = await isApproved(connectedAccount, dataTicket.campaign_hash, library, dataTicket.network_available, dataTicket.accept_currency);
-        console.log('approved', approved);
         setAccApprove(approved);
         const myNumTicket = await getBalance(connectedAccount, dataTicket.token, dataTicket.network_available, dataTicket.accept_currency);
         setTicketBought(+myNumTicket);
@@ -150,7 +149,6 @@ const Ticket: React.FC<any> = (props: any) => {
         setTimeEnd(caclDiffTime(newEndTime));
       }, 1000);
     }
-
 
     return () => {
       interval && clearInterval(interval);
@@ -249,8 +247,8 @@ const Ticket: React.FC<any> = (props: any) => {
                 <span >TOTAL SALE</span> {infoTicket.total_sold_coin}
               </h4>
               <button>
-                <img src={tetherIcon} alt="" />
-                <span>{infoTicket.ether_conversion_rate} USDT</span>
+                <img height={20} src={infoTicket && infoTicket.accept_currency ? `/images/${infoTicket.accept_currency}.png` : tetherIcon} alt="" />
+                <span>{infoTicket.ether_conversion_rate} {infoTicket && infoTicket.accept_currency ? infoTicket.accept_currency.toUpperCase() : 'USDT'}</span>
                 <span className="small-text">
                   /{infoTicket.symbol}
                 </span>

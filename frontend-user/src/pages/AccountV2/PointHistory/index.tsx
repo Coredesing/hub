@@ -226,10 +226,6 @@ const PointHistory = (props: any) => {
 
       <div className={styles.infoTab}>
         <div className={styles.intemInfoTab}>
-          <div className={styles.nameInfoTab}>From KSM Contribution</div>
-          <div className={styles.valueInfoTab}>{dataHistories?.totalEarned ? numberWithCommas(dataHistories?.rkpFromKSM?.toString()) : '0'} GP</div>
-        </div>
-        <div className={styles.intemInfoTab}>
           <div className={styles.nameInfoTab}>From Staking Transactions</div>
           <div className={styles.valueInfoTab}>{dataHistories?.totalEarned ? numberWithCommas(dataHistories?.rkpFromStaked?.toString()) : '0'} GP</div>
         </div>

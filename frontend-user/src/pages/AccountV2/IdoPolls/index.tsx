@@ -404,7 +404,7 @@ const IdoPolls = (props: any) => {
                 </TableHead>
                 <TableBody>
                     {pools.map((row: any, index: number) => (
-                        <TableRowBody key={row.name}>
+                        <TableRowBody key={row.name + index}>
                             <TableCell component="th" scope="row">
                                 <div>
                                     <img src={row.token_images} alt="" />

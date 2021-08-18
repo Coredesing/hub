@@ -22,14 +22,14 @@ const rowsMobile = [
   {
     name: 'ROOKIE',
     values: [
-      'Minimum amount of Red Kite point required :<span>500</span>',
+      'Minimum amount of GameFI power required :<span>500</span>',
       'Social interaction requirements',
     ]
   },
   {
     name: 'ELITE',
     values: [
-      'Minimum amount of Red Kite point required :<span>5,000</span>',
+      'Minimum amount of GameFI power required :<span>5,000</span>',
       'Social interaction requirements',
       'Guaranteed allocation'
     ]
@@ -37,7 +37,7 @@ const rowsMobile = [
   {
     name: 'PRO',
     values: [
-      'Minimum amount of Red Kite point required :<span>20,000</span>',
+      'Minimum amount of GameFI power required :<span>20,000</span>',
       'Guaranteed allocation',
       'Exclusive pools'
     ]
@@ -45,7 +45,7 @@ const rowsMobile = [
   {
     name: 'MASTER',
     values: [
-      'Minimum amount of Red Kite point required :<span>60,000</span>',
+      'Minimum amount of GameFI power required :<span>60,000</span>',
       'Guaranteed allocation',
       'Exclusive pools',
       'Occasional airdrop of NFT and tokens',
@@ -77,7 +77,7 @@ const TierBenefits = (props: any) => {
             <TableBody>
               <TableRow className={styles.tableRow}>
                 <TableCell className={styles.tableCellBody} component="th" scope="row">
-                  Minimum amount of Red Kite point required
+                  Minimum amount of GameFI power required
                 </TableCell>
                 <TableCell className={styles.tableCellBody} align="right">{numberWithCommas('500')}</TableCell>
                 <TableCell className={styles.tableCellBody} align="right">{numberWithCommas('5000')}</TableCell>

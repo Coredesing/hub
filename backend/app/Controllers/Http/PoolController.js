@@ -69,6 +69,9 @@ class PoolController {
         'price_usdt', 'display_price_rate',
         'token_sold',
 
+        // social network
+        'socialNetworkSetting',
+
         // Progress Display Setting
         'token_sold_display',
         'progress_display',

@@ -74,21 +74,18 @@ const Ticket: React.FC<any> = (props: any) => {
       if (openTime > Date.now()) {
         setOpenTime(getDiffTime(openTime, Date.now()));
       }
-      if (finishTime > openTime && finishTime > Date.now()) {
-        setIsBuy(true);
-        setTimeEnd(getDiffTime(finishTime, Date.now() >= openTime ? Date.now() : openTime));
-      } else {
+
+      if (finishTime < Date.now() || finishTime <= openTime) {
         setFinishedTime(true);
         setIsBuy(false);
+      } else {
+        setIsBuy(true);
+        setTimeEnd(getDiffTime(finishTime, Date.now() >= openTime ? Date.now() : openTime));
       }
 
       setInfoTicket(dataTicket);
     }
   }, [dataTicket, loadingTicket]);
-
-  useEffect(() => {
-    console.log(finishedTime)
-  }, [finishedTime])
 
   const [renewBalance, setNewBalance] = useState(true);
   useEffect(() => {

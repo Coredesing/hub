@@ -192,7 +192,6 @@ const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount
       } catch (err) {
         console.log('[ERROR] - deposit:', err);
         const message = handleErrMsg(err) || TRANSACTION_ERROR_MESSAGE;
-        console.log(message)
         dispatch(alertFailure(message));
         setDepositError(message);
         setSignature("");

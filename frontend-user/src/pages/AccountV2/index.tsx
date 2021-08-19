@@ -26,6 +26,7 @@ import NeedHelp from "./NeedHelp";
 import IdoPolls from "./IdoPolls";
 import axios from '../../services/axios';
 import {numberWithCommas} from '../../utils/formatNumber';
+import { AlertKYC } from "../../components/Base/AlertKYC";
 
 const TOKEN_ADDRESS = process.env.REACT_APP_PKF || "";
 const TOKEN_UNI_ADDRESS = process.env.REACT_APP_UNI_LP || "";
@@ -199,7 +200,11 @@ const AccountV2 = (props: any) => {
     <DefaultLayout isKYC={isKYC}>
       <div className={classes.accountContainer}>
 
-        {!isKYC && !loading && connectedAccount && (
+      {
+          !isKYC && !loading && <AlertKYC connectedAccount={connectedAccount} className={classes.kycAlert} />
+        }
+
+        {/* {!isKYC && !loading && connectedAccount && (
           <div className={classes.alertVerifyEmail}>
             <img src={iconWarning} style={{ marginRight: "12px" }} alt="" />
             <span>
@@ -223,7 +228,7 @@ const AccountV2 = (props: any) => {
               for more process details.
             </span>
           </div>
-        )}
+        )} */}
 
         {/* appChainID > KOVAN ID => Not Ethereum mainnet/testnet */}
         {(+appChainID?.appChainID > ChainId.KOVAN) && isKYC && activeMenuAccount === 'My Tier' && (

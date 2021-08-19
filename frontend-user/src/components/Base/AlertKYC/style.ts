@@ -17,8 +17,9 @@ const useStyles = makeStyles((theme: any) => {
       textAlign: 'center',
       color: ' #fff',
       fontWeight: 'normal',
-      fontSize: '14px',
+      fontSize: '15px',
       lineHeight: '22px',
+      letterSpacing: '0.5px',
       '& a': {
         '&.link': {
           textDecoration: 'underline',

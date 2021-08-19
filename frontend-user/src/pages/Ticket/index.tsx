@@ -369,22 +369,22 @@ const Ticket: React.FC<any> = (props: any) => {
                   <div className="times">
                     <span className="time">
                       <span className="number">{formatNumber(openTime.days)}</span>
-                      <span className="text">Days</span>
+                      <span className="text">Day{openTime.days > 1 ? 's' : ''}</span>
                     </span>
                     <span className="dot">:</span>
                     <span className="time">
                       <span className="number">{formatNumber(openTime.hours)}</span>
-                      <span className="text">Hours</span>
+                      <span className="text">Hour{openTime.hours > 1 ? 's' : ''}</span>
                     </span>
                     <span className="dot">:</span>
                     <span className="time">
                       <span className="number">{formatNumber(openTime.minutes)}</span>
-                      <span className="text">Minutes</span>
+                      <span className="text">Minute{openTime.minutes > 1 ? 's' : ''}</span>
                     </span>
                     <span className="dot">:</span>
                     <span className="time">
                       <span className="number">{formatNumber(openTime.seconds)}</span>
-                      <span className="text">Seconds</span>
+                      <span className="text">Second{openTime.seconds > 1 ? 's' : ''}</span>
                     </span>
                   </div>
                 </div>

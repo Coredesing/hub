@@ -1,12 +1,13 @@
-import React from 'react'
+import React from 'react';
+import clsx from 'clsx';
 import { trimMiddlePartAddress } from '../../../utils/accountAddress';
 import useStyles from './style';
 const iconWarning = "/images/warning-red.svg";
 
-export const AlertKYC = ({connectedAccount}: {[k in string]: any}) => {
+export const AlertKYC = ({connectedAccount, ...props}: {[k in string]: any}) => {
     const classes = useStyles();
     return (
-        <div className={classes.displayContent}>
+        <div className={clsx(classes.displayContent, props.className)}>
             <div className={classes.alert}>
                 <img src={iconWarning} style={{ marginRight: "12px" }} alt="" />
                 <span>

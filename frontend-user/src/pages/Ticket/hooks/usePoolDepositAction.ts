@@ -172,7 +172,6 @@ const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount
     } catch (err) {
       console.log('[ERROR] - depositWithSignature:', err);
       const message = handleErrMsg(err) || TRANSACTION_ERROR_MESSAGE;
-      console.log(message)
       dispatch(alertFailure(message));
       setDepositError(message);
       setTokenDepositLoading(false);

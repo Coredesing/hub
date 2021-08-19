@@ -28,6 +28,10 @@ const useStyles = makeStyles((theme: any) => {
         marginRight: 6,
       },
     },
+    kycAlert: {
+      paddingLeft: '0 !important',
+      paddingRight: '0 !important',
+    },
 
     alertVerifyEmail: {
       position: 'relative',
@@ -158,6 +162,9 @@ const useStyles = makeStyles((theme: any) => {
 
     // styles v3
     bodyContentMyAccount: {
+      paddingRight: '30px',
+      paddingLeft: '30px',
+      marginTop: '35px',
       display: 'grid',
       gridTemplateColumns: '200px 1fr',
       color: '#FFFFFF',
@@ -168,7 +175,8 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     leftAccount: {
-      padding: '0 30px',
+      // padding: '0 30px',
+      paddingRight: '30px',
 
       [theme.breakpoints.down('sm')]: {
         padding: 0,

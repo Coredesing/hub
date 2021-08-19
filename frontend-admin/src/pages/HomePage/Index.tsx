@@ -14,18 +14,11 @@ import {
 import {useForm} from 'react-hook-form'
 import {TransitionProps} from '@material-ui/core/transitions';
 import {connect, useDispatch, useSelector} from 'react-redux';
-import Skeleton from '@material-ui/lab/Skeleton';
 import {debounce} from 'lodash';
-import CampaignProgress from '../../components/Base/CampaignProgress';
-import ExchangeRate from '../../components/Base/ExchangeRate';
-import ButtonLink from '../../components/Base/ButtonLink';
-import {getCampaignDetail, getLatestCampaign} from '../../store/actions/campaign';
-import {addTokenByUser, getTokensByUser} from '../../store/actions/token';
-import {convertUnixTimeToDateTime} from '../../utils/convertDate';
+import {addTokenByUser} from '../../store/actions/token';
 import BigNumber from 'bignumber.js';
 import {getTokenInfo, TokenType} from '../../utils/token';
 import { logout } from '../../store/actions/user';
-import {adminRoute} from "../../utils";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & { children?: React.ReactElement<any, any> },
@@ -38,10 +31,9 @@ const HomePage = (props: any) => {
   const styles = useStyles();
   const dispatch = useDispatch();
 
-  const { data, loading } = useSelector((state: any) => state.campaignLatest);
+  const { data } = useSelector((state: any) => state.campaignLatest);
   const { loading: tokenCreateLoading } = useSelector((state: any) => state.tokenCreateByUser);
   const { loading: tokensByUserLoading, data: tokens } = useSelector((state: any) => state.tokensByUser);
-  const campaignDetailContract = useSelector((state: any) => state.campaignDetail);
   const loginUser = useSelector((state: any) => state.userConnect).data;
 
   const [openAddToken, setOpenAddToken] = useState(false);
@@ -113,14 +105,14 @@ const HomePage = (props: any) => {
   }
 
   useEffect(() => {
-    dispatch(getTokensByUser());
-    dispatch(getLatestCampaign());
+    // dispatch(getTokensByUser());
+    // dispatch(getLatestCampaign());
   }, [dispatch, loginUser]);
 
   const id = (data && data.campaign_hash);
 
   useEffect(() => {
-    dispatch(getCampaignDetail(id));
+    // dispatch(getCampaignDetail(id));
   }, [id]);
 
   return (
@@ -173,77 +165,6 @@ const HomePage = (props: any) => {
             {
               tokenCreateLoading && ( <div className={styles.loadingIconWrapper}><CircularProgress  size={25} /></div> )
             }
-          </div>
-        </div>
-        <div className={styles.rightContainer}>
-          <div className={styles.rightContainerBlock}>
-            <div className={styles.createButtonWrap}>
-              <ButtonLink to={adminRoute('/campaigns/add')} icon="icon-plus.svg" className={styles.buttonCreateNew} text="Create New Campaign" />
-            </div>
-            <div className={styles.mainContent}>
-              {
-                loading ? (
-                  <div className={styles.skeletonLoading}>
-                    {
-                      [...Array(3)].map((num, index) => (
-                      <div key={index}>
-                        <Skeleton className={styles.skeleton} width="100%" />
-                      </div>
-                      ))
-                    }
-                  </div>
-                ) : (
-                  data && (
-                    <>
-                      <div className={styles.date}>
-                        <img src="/images/icon-clock.svg" alt="right-arrow"/>
-                        {convertUnixTimeToDateTime(data.start_time)} - {convertUnixTimeToDateTime(data.finish_time)}
-                      </div>
-                      <Tooltip title={<p style={{ fontSize: 15 }}>{data.title}</p>}>
-                          <div className={styles.chartTitle}>
-                          {data.title}
-                          </div>
-                        </Tooltip>
-                      <CampaignProgress campaign={{
-                        tokenLeft: data.tokenLeft,
-                        tokenSold: data.tokenSold,
-                        tokenClaimed: data.tokenClaimed,
-                        totalTokens: data.totalTokens,
-                        tokenSymbol: data.symbol
-                      }} className={styles.campaignProgressSpace} buyNow={data.campaign_hash}/>
-                    </>
-                  )
-                )
-              }
-              </div>
-          </div>
-          <div className={styles.rightContainerBlock}>
-                <div className={styles.mainContent}>
-            {
-              loading ? (
-                <div className={styles.skeletonLoading}>
-                  {
-                    [...Array(3)].map((num, index) => (
-                    <div key={index}>
-                      <Skeleton className={styles.skeleton} width="100%" />
-                    </div>
-                    ))
-                  }
-                </div>
-              ) : (
-                <>
-                  <label className={styles.nameGroupShow} style={{ display: 'flex', alignItems: 'center' }}>
-                    <span>Exchange Rates</span>
-                  </label>
-                  <ExchangeRate from="ETH" to={data && data.symbol} rate={data && data.ether_conversion_rate} />
-                  {campaignDetailContract && campaignDetailContract.data &&
-                    Number(campaignDetailContract.data.erc20ConversionRate) !== 0 &&
-                    <ExchangeRate from="USDT" to={campaignDetailContract.data.tokenSymbol} rate={campaignDetailContract.data.erc20ConversionRate} />
-                  }
-                </>
-              )
-            }
-            </div>
           </div>
         </div>
          <Dialog

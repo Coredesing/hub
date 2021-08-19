@@ -20,7 +20,25 @@ const Route = use('Route')
 Route.get('/', () => 'It\'s working')
 Route.get('image/:fileName', 'FileController.getImage');
 
-// GameFI new route
+// /api/v1 --> user
+// /api/v2 --> admin
+
+// Webhook
+Route.group(() => {
+  Route.post('ico-campaign', 'CampaignController.icoCampaignCreate')
+  Route.post('edit-campaign', 'CampaignController.icoCampaignEdit')
+  Route.post('campaign-status', 'CampaignController.CampaignEditStatus')
+  Route.post('campaign-changed', 'CampaignController.CampaignChanged')
+  Route.post('transaction', 'TransactionController.transactionCreate')
+  Route.post('transaction-refund', 'TransactionController.transactionRefund')
+  Route.post('affiliate-campaign', 'AffiliateCampaignController.affiliateCreate')
+  Route.post('token-claimed', 'TransactionController.tokenClaimed')
+
+  Route.post('mantra-stake/index-stake-info', 'MantraStakeController.indexStakeInfo');
+  Route.post('reputation/index-stake-info', 'ReputationController.indexStakeInfo');
+}).prefix('webhook').middleware('checkJwtWebhook');
+
+// GameFI user new route
 Route.post('block-pass', 'UserController.kycUpdateStatus').middleware('checkBlockPassSignature');
 
 Route.group(() => {
@@ -45,7 +63,7 @@ Route.group(() => {
   Route.get('pools/v3/next-to-launch-pools', 'PoolController.getNextToLaunchPoolsV3');
   Route.get('pools/v3/upcoming-pools', 'PoolController.getUpcomingPoolsV3');
   Route.get('pools/v3/complete-sale-pools', 'PoolController.getCompleteSalePoolsV3');
-  
+
   // user
   Route.get('user/profile', 'UserController.profile').middleware(['maskEmailAndWallet']);
   Route.post('user/deposit', 'CampaignController.deposit').middleware(['checkSignature']);
@@ -72,43 +90,7 @@ Route.group(() => {
   Route.get('reputation/histories/:walletAddress', 'ReputationController.getReputationHistory');
 }).prefix('api/v1');
 
-
-// old route
-// Webhook
-Route.group(() => {
-  Route.post('ico-campaign', 'CampaignController.icoCampaignCreate')
-  Route.post('edit-campaign', 'CampaignController.icoCampaignEdit')
-  Route.post('campaign-status', 'CampaignController.CampaignEditStatus')
-  Route.post('campaign-changed', 'CampaignController.CampaignChanged')
-  Route.post('transaction', 'TransactionController.transactionCreate')
-  Route.post('transaction-refund', 'TransactionController.transactionRefund')
-  Route.post('affiliate-campaign', 'AffiliateCampaignController.affiliateCreate')
-  Route.post('token-claimed', 'TransactionController.tokenClaimed')
-
-  Route.post('mantra-stake/index-stake-info', 'MantraStakeController.indexStakeInfo');
-  Route.post('reputation/index-stake-info', 'ReputationController.indexStakeInfo');
-}).prefix('webhook').middleware('checkJwtWebhook');
-
-// ICO Owner User (Admin Page)
-Route.group(() => {
-  Route.get('/contract/campaign-factories', 'ContractController.campaignFactories')
-  Route.get('/contract/campaigns', 'ContractController.campaigns')
-  // Route.post('campaign-create', 'CampaignController.campaignCreate')
-  Route.get('campaigns', 'CampaignController.campaignList')
-  Route.get('campaign-new', 'CampaignController.campaignNew')
-  Route.get('campaigns/:campaign', 'CampaignController.campaignShow')
-  Route.get('campaign-delete/:walletAddress/:campaign', 'CampaignController.campaignDelete')
-  Route.get('transactions', 'TransactionController.transactionList')
-
-  Route.post('asset-tokens', 'AssetTokenController.create')
-  Route.get('asset-tokens/:contract', 'AssetTokenController.list')
-  Route.delete('asset-tokens/delete/:id', 'AssetTokenController.remove')
-  Route.get('affiliate-campaign/:token', 'AffiliateCampaignController.affiliateList')
-
-  Route.get('my-campaign', 'CampaignController.myCampaign')
-  Route.get('my-campaign/:status', 'CampaignController.myCampaign').middleware('checkStatus');
-}).middleware(['typeAdmin', 'auth:admin', 'checkAdminJwtSecret']);
-
+// GameFI admin new route
 Route.group(() => {
   Route.post('upload-avatar', 'FileController.uploadAvatar');
 
@@ -144,22 +126,6 @@ Route.group(() => {
   //snapshot user balance
   Route.get('pool/:campaignId/user-snapshot-balance', 'CampaignController.userSnapShotBalance');
 
-}).prefix(Const.USER_TYPE_PREFIX.ICO_OWNER).middleware(['typeAdmin', 'checkPrefix', 'auth:admin', 'checkAdminJwtSecret']);
-
-Route.group(() => {
-  // Auth
-  Route.post('/login', 'AuthAdminController.login').validator('Login').middleware('checkSignature');
-  // Route.post('/register', 'AuthAdminController.adminRegister').validator('Register').middleware('checkSignature');
-  // Route.get('confirm-email/:token', 'AdminController.confirmEmail'); // Confirm email when register
-  // Route.post('forgot-password', 'AdminController.forgotPassword').validator('ForgotPassword').middleware('checkSignature');
-  Route.get('check-wallet-address', 'AuthAdminController.checkWalletAddress');
-  Route.post('check-wallet-address', 'AuthAdminController.checkWalletAddress');
-  Route.get('check-token/:token', 'AdminController.checkToken');
-  Route.post('reset-password/:token', 'AdminController.resetPassword').validator('ResetPassword').middleware('checkSignature');
-
-}).prefix(Const.USER_TYPE_PREFIX.ICO_OWNER).middleware(['typeAdmin', 'checkPrefix', 'formatEmailAndWallet']);
-
-Route.group(() => {
   Route.get('profile', 'AdminController.profile').middleware(['auth:admin', 'checkRole']);
   Route.post('change-password', 'AdminController.changePassword').middleware(['checkSignature', 'auth:admin', 'checkRole']);
   Route.post('update-profile', 'AdminController.updateProfile').middleware(['auth:admin', 'checkRole']).validator('UpdateProfile');
@@ -180,26 +146,39 @@ Route.group(() => {
   Route.put('kyc-users/:id/change-kyc', 'UserController.kycUserChangeIsKyc').middleware(['auth:admin']);
 
   Route.post('deposit-admin', 'CampaignController.depositAdmin').middleware(['auth:admin']);
-}).prefix(Const.USER_TYPE_PREFIX.ICO_OWNER).middleware(['typeAdmin', 'checkPrefix', 'checkAdminJwtSecret']); //user/public
+}).prefix('api/v2/admin').middleware(['auth:admin', 'checkAdminJwtSecret']);
 
-// Investor User
-Route.get('campaign-latest-active', 'CampaignController.campaignLatestActive')
+Route.group(() => {
+  Route.post('/login', 'AuthAdminController.login').validator('Login').middleware('checkSignature');
+  // Route.post('/register', 'AuthAdminController.adminRegister').validator('Register').middleware('checkSignature');
+  // Route.get('confirm-email/:token', 'AdminController.confirmEmail'); // Confirm email when register
+  // Route.post('forgot-password', 'AdminController.forgotPassword').validator('ForgotPassword').middleware('checkSignature');
+  Route.get('check-wallet-address', 'AuthAdminController.checkWalletAddress');
+  Route.post('check-wallet-address', 'AuthAdminController.checkWalletAddress');
+  Route.get('check-token/:token', 'AdminController.checkToken');
+  Route.post('reset-password/:token', 'AdminController.resetPassword').validator('ResetPassword').middleware('checkSignature');
 
-Route.post(':type/check-max-usd', 'UserBuyCampaignController.checkBuy')
-  .middleware(['checkPrefix', 'auth', 'checkJwtSecret']);
+}).prefix('api/v2/admin').middleware(['typeAdmin', 'checkPrefix', 'formatEmailAndWallet']);
 
-// Test API:
-Route.get('api/v1/epkf/bonus', 'UserController.getEPkfBonusBalance');
-// Route.get('test/run-pool-status', 'PoolController.poolStatus');
+Route.group(() => {
+  Route.get('pool/:campaignId/tiers', 'TierController.getTiers');
 
-// API V2
-// Route.get('dashboard/graph/:campaign', 'RevenueController.getRevenue').middleware(['checkIcoOwner', 'checkJwtSecret', 'auth']);
+  Route.get('contract/campaign-factories', 'ContractController.campaignFactories')
+  Route.get('contract/campaigns', 'ContractController.campaigns')
+  // Route.post('campaign-create', 'CampaignController.campaignCreate')
+  Route.get('campaigns', 'CampaignController.campaignList')
+  Route.get('campaign-new', 'CampaignController.campaignNew')
+  Route.get('campaigns/:campaign', 'CampaignController.campaignShow')
+  Route.get('campaign-delete/:walletAddress/:campaign', 'CampaignController.campaignDelete')
+  Route.get('transactions', 'TransactionController.transactionList')
 
-// Route.get('latest-transaction', 'TransactionController.latestTransaction')
-// Route.get('public-campaign', 'CampaignController.myCampaign')
-// Route.get('public-campaign/:status', 'CampaignController.myCampaign').middleware('checkPublicStatus')
-// Route.post('user/change-type', 'UserController.changeType').validator('ChangeUserType')
-// Route.post('user/buy', 'UserBuyCampaignController.getUserBuy').validator('CheckUserBought')
-// Route.get('coming-soon', 'ConfigController.getConfig')
+  Route.post('asset-tokens', 'AssetTokenController.create')
+  Route.get('asset-tokens/:contract', 'AssetTokenController.list')
+  Route.delete('asset-tokens/delete/:id', 'AssetTokenController.remove')
+  Route.get('affiliate-campaign/:token', 'AffiliateCampaignController.affiliateList')
 
+  Route.get('my-campaign', 'CampaignController.myCampaign')
+  Route.get('my-campaign/:status', 'CampaignController.myCampaign').middleware('checkStatus');
+}).prefix('/api/v2').middleware(['auth:admin', 'checkAdminJwtSecret']);
 
+Route.post(':type/check-max-usd', 'UserBuyCampaignController.checkBuy').middleware(['checkPrefix', 'auth', 'checkJwtSecret']);

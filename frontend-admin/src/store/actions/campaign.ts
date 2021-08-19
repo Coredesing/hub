@@ -713,7 +713,7 @@ export const deployPool = (campaign: any, history: any) => {
       if (tokenInfo && tokenInfo.token_type === 'erc721') {
         digitsAfterDecimals = 30
         tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(new BigNumber(10).pow(digitsAfterDecimals - paidTokenDecimal))
-        tokenByETHActualRate = tokenByETHActualRate.integerValue(BigNumber.ROUND_CEIL)
+        tokenByETHActualRate = tokenByETHActualRate.integerValue(BigNumber.ROUND_CEIL).toFixed()
       }
 
       const poolType = campaign.pool_type;

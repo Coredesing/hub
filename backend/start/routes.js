@@ -20,6 +20,9 @@ const Route = use('Route')
 Route.get('/', () => 'It\'s working')
 Route.get('image/:fileName', 'FileController.getImage');
 
+// /api/v1 --> user
+// /api/v2 --> admin
+
 // Webhook
 Route.group(() => {
   Route.post('ico-campaign', 'CampaignController.icoCampaignCreate')
@@ -143,7 +146,7 @@ Route.group(() => {
   Route.put('kyc-users/:id/change-kyc', 'UserController.kycUserChangeIsKyc').middleware(['auth:admin']);
 
   Route.post('deposit-admin', 'CampaignController.depositAdmin').middleware(['auth:admin']);
-}).prefix('api/v1/admin').middleware(['auth:admin', 'checkAdminJwtSecret']);
+}).prefix('api/v2/admin').middleware(['auth:admin', 'checkAdminJwtSecret']);
 
 Route.group(() => {
   Route.post('/login', 'AuthAdminController.login').validator('Login').middleware('checkSignature');
@@ -155,9 +158,11 @@ Route.group(() => {
   Route.get('check-token/:token', 'AdminController.checkToken');
   Route.post('reset-password/:token', 'AdminController.resetPassword').validator('ResetPassword').middleware('checkSignature');
 
-}).prefix('api/v1/admin').middleware(['typeAdmin', 'checkPrefix', 'formatEmailAndWallet']);
+}).prefix('api/v2/admin').middleware(['typeAdmin', 'checkPrefix', 'formatEmailAndWallet']);
 
 Route.group(() => {
+  Route.get('pool/:campaignId/tiers', 'TierController.getTiers');
+
   Route.get('contract/campaign-factories', 'ContractController.campaignFactories')
   Route.get('contract/campaigns', 'ContractController.campaigns')
   // Route.post('campaign-create', 'CampaignController.campaignCreate')
@@ -174,7 +179,6 @@ Route.group(() => {
 
   Route.get('my-campaign', 'CampaignController.myCampaign')
   Route.get('my-campaign/:status', 'CampaignController.myCampaign').middleware('checkStatus');
-}).prefix('/api/v1').middleware(['auth:admin', 'checkAdminJwtSecret']);
-
+}).prefix('/api/v2').middleware(['auth:admin', 'checkAdminJwtSecret']);
 
 Route.post(':type/check-max-usd', 'UserBuyCampaignController.checkBuy').middleware(['checkPrefix', 'auth', 'checkJwtSecret']);

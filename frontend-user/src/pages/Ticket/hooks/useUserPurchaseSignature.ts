@@ -28,7 +28,6 @@ const useUserPurchaseSignature = (connectedAccount: string | undefined | null, c
             wallet_address: connectedAccount,
             signature: authSignature
           }, config);
-          console.log('response', response)
           if (response.data && response.status && response.status === 200) {
             const { data, message, status } = response.data;
             if (data && status === 200) {

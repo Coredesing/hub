@@ -711,7 +711,7 @@ export const deployPool = (campaign: any, history: any) => {
 
       // 1 accepted_currency --> token
       if (tokenInfo && tokenInfo.token_type === 'erc721') {
-        digitsAfterDecimals = 30
+        digitsAfterDecimals = 22
         tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(new BigNumber(10).pow(digitsAfterDecimals - paidTokenDecimal))
         tokenByETHActualRate = tokenByETHActualRate.integerValue(BigNumber.ROUND_CEIL)
       }

@@ -188,7 +188,6 @@ const Ticket: React.FC<any> = (props: any) => {
   // console.log('approveTransaction', approveTransaction)
   // console.log('allowance', allowance)
 
-
   const {
     deposit,
     tokenDepositTransaction,
@@ -213,7 +212,7 @@ const Ticket: React.FC<any> = (props: any) => {
     }
     if (tokenDepositTransaction) {
       setOpenModalTx(true);
-      setTicketBought(0);
+      setNumTicketBuy(0);
     }
   }, [tokenDepositSuccess, tokenDepositTransaction])
 

@@ -86,7 +86,7 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
 
     useEffect(() => {
         const { type, message } = alert;
-        if (type === 'success' && message) {
+        if ((type === 'success' || type === 'warning') && message) {
             NotificationManager[type](message);
         }
     }, [alert]);

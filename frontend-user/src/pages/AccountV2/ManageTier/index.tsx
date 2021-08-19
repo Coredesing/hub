@@ -43,7 +43,7 @@ const ManageTier = (props: any) => {
 
   return (
     <div className={styles.content}>
-      <div className={styles.buttonArea}> 
+      {/* <div className={styles.buttonArea}> 
         <Button
           className={`${styles.btn} btnStake`}
           disabled={emailVerified === USER_STATUS.UNVERIFIED || wrongChain || !isAuth || ETH_CHAIN_ID !== appChainID || !isKYC}
@@ -59,7 +59,7 @@ const ManageTier = (props: any) => {
         >
           Unstake
         </Button>
-      </div>
+      </div> */}
       <div className={styles.walletBalance}>
         <div className={styles.tableHead}>
           <div className="group">

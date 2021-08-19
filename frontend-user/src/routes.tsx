@@ -123,8 +123,8 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
             render={() => <Redirect to={`${'/home'}`} />}
           /> */}
                     <Route exact path={'/ticket'} component={Ticket} />
-                    <Route path={`${'/polkasmith-privacy'}`} component={PolkaSmithPrivacyPolicy} />
-                    <Route path={`${'/join-polkasmith'}`} component={JoinPolkaSmith} />
+                    {/* <Route path={`${'/polkasmith-privacy'}`} component={PolkaSmithPrivacyPolicy} />
+                    <Route path={`${'/join-polkasmith'}`} component={JoinPolkaSmith} /> */}
                     {/* <Route exact path={`${'/dashboard'}`} component={Dashboard} /> */}
                     <Route exact path={`${'/'}`} component={Ticket} />
                     <Route path={`${'/buy-token/:id'}`} component={BuyToken} />
@@ -136,14 +136,14 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                     <Route path={'/network-change'} component={NetworkChange} />
                     <Route path={'/change-password/:role?'} component={ChangePassword} />
                     <Route path={'/account'} component={AccountV2} />
-                    <Route path={'/stake'} component={Deposit} />
-                    <Route path={'/unstake'} component={Withdraw} />
+                    {/* <Route path={'/stake'} component={Deposit} />
+                    <Route path={'/unstake'} component={Withdraw} /> */}
                     <Route path={'/pools'} component={Pools} />
-                    <Route path={'/privacy'} component={PrivacyPolicy} />
-                    <Route path={'/terms'} component={Terms} />
+                    {/* <Route path={'/privacy'} component={PrivacyPolicy} /> */}
+                    {/* <Route path={'/terms'} component={Terms} /> */}
                     {/* <Route path={'/'} component={Landing} /> */}
+                    {/* <Route path={'/coming-soon'} component={ComingSoon} /> */}
                     <Route path={'/'} component={Ticket} />
-                    <Route path={'/coming-soon'} component={ComingSoon} />
                     <Route component={NotFoundPage} />
                 </Switch>
             </div>

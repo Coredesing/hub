@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 
 import useUserPurchaseSignature from '../hooks/useUserPurchaseSignature';
 import useWalletSignature from '../../../hooks/useWalletSignature';
-import { alertSuccess, alertFailure } from '../../../store/actions/alert';
+import { alertSuccess, alertFailure, alertWarning } from '../../../store/actions/alert';
 import Pool_ABI from '../../../abi/Pool.json';
 import { NETWORK } from '../../../constants';
 import PreSalePool from '../../../abi/PreSalePool.json';
@@ -161,10 +161,10 @@ const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount
         setUserPurchasedSignature("");
         setSignature("");
         setTokenDepositTransaction(transaction.hash);
-
+        dispatch(alertWarning("Request is processing!"));
         await transaction.wait(1);
 
-        dispatch(alertSuccess("Token Deposit Successful!"));
+        dispatch(alertSuccess("Request is completed!"));
         setTokenDepositLoading(false);
         setTokenDepositSuccess(true);
 

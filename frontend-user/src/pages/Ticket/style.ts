@@ -283,6 +283,7 @@ const useStyles = makeStyles((theme: any) => {
       mixBlendMode: 'normal',
     },
     amountBuy: {
+
       '& > span': {
         textTransform: 'uppercase',
         fontFamily: 'Firs Neue',
@@ -306,13 +307,29 @@ const useStyles = makeStyles((theme: any) => {
         mixBlendMode: 'normal',
         '& span': {
           display: 'block',
-          padding: '5px 14px',
+          padding: '5px 12px',
           border: '1px solid #2E2E2E',
           cursor: 'pointer'
         },
-        '& span:nth-child(2)': {
-          padding: '5px 18px',
-        }
+        '& span:nth-child(3)': {
+          padding: '5px 10px',
+        },
+        '& > span input': {
+          fontFamily: 'Firs Neue',
+          fontStyle: 'normal',
+          color: ' #ffffff',
+          fontWeight: 600,
+          fontSize: '16px',
+          lineHeight: '28px',
+          background: 'transparent',
+          border: 'none',
+          borderBottom: '1px solid #3a3a3a',
+          borderRadius: 'unset',
+          width: '44px',
+          height: '26px',
+          padding: '8px 4px',
+          textAlign: 'center',
+        },
       }
     },
     disabledAct: {
@@ -355,6 +372,37 @@ const useStyles = makeStyles((theme: any) => {
     finished: {
       alignItems: 'center',
       marginTop: '30px'
+    },
+    comingSoon: {
+      width: '100%',
+      fontFamily: 'Firs Neue',
+      fontStyle: 'normal',
+      fontWeight: 600,
+      fontSize: '24px',
+      lineHeight: '36px',
+      textAlign: 'center',
+      background: '#2E2E2E',
+      color: '#FFFFFF',
+      padding: '10px',
+      borderRadius: '4px',
+    },
+    alertMsg: {
+      width: '100%',
+      marginTop: '14px',
+      '& img': {
+        width: '14px',
+        height: '14px',
+        marginRight: '8px'
+      },
+      '& span': {
+        fontFamily: 'Firs Neue',
+        fontStyle: 'normal',
+        fontWeight: 600,
+        fontSize: '12px',
+        lineHeight: '16px',
+        textAlign: 'left',
+        color: '#F24B4B',
+      }
     }
   };
 });

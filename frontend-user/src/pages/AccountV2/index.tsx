@@ -184,9 +184,6 @@ const AccountV2 = (props: any) => {
       }
     }
   };
-
-  console.log('connectedAccount', connectedAccount)
-
   useEffect(() => {
     dispatch(getTiers());
     connectedAccount && dispatch(getUserInfo(connectedAccount));
@@ -201,7 +198,7 @@ const AccountV2 = (props: any) => {
       <div className={classes.accountContainer}>
 
       {
-          !isKYC && !loading && <AlertKYC connectedAccount={connectedAccount} className={classes.kycAlert} />
+          !isKYC && !loading && connectedAccount && <AlertKYC connectedAccount={connectedAccount} className={classes.kycAlert} />
         }
 
         {/* {!isKYC && !loading && connectedAccount && (

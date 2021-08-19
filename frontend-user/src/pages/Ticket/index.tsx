@@ -21,8 +21,10 @@ import useTokenApprove from '../../hooks/useTokenApprove';
 import { getBUSDAddress, getUSDCAddress, getUSDTAddress } from '../../utils/contractAddress/getAddresses';
 import { PurchaseCurrency } from '../../constants/purchasableCurrency';
 import useUserPurchased from './hooks/useUserPurchased';
+// import { FormInputNumber } from '../../components/Base/FormInputNumber/FormInputNumber';
+const iconWarning = "/images/warning-red.svg";
 const ticketImg = '/images/gamefi-ticket.png';
-const tetherIcon = '/images/icons/tether.svg';
+// const tetherIcon = '/images/icons/tether.svg';
 const brightIcon = '/images/icons/bright.svg';
 const finishedImg = '/images/finished.png';
 const soldoutImg = '/images/soldout.png';
@@ -32,7 +34,7 @@ const Ticket: React.FC<any> = (props: any) => {
   const { connectedAccount, isAuth, wrongChain } = useAuth();
 
   const { isKYC } = useKyc(connectedAccount);
-
+  const alert = useSelector((state: any) => state.alert);
   const { appChainID } = useSelector((state: any) => state.appNetwork).data;
   const [ticketBought, setTicketBought] = useState<number>(0);
   const [numTicketBuy, setNumTicketBuy] = useState<number>(0);
@@ -104,7 +106,7 @@ const Ticket: React.FC<any> = (props: any) => {
       }
 
     }
-    renewBalance && connectedAccount && dataTicket && setBalance();
+    (renewBalance || connectedAccount) && dataTicket && setBalance();
   }, [connectedAccount, dataTicket, renewBalance]);
 
   useEffect(() => {
@@ -161,15 +163,15 @@ const Ticket: React.FC<any> = (props: any) => {
     }
   }
 
-  const ascMaxAmount = () =>{
+  const ascMaxAmount = () => {
     const maxTicket = getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket);
-    if(maxTicket === 0) return;
+    if (maxTicket === 0) return;
     setNumTicketBuy(maxTicket);
   }
 
   const descMinAmount = () => {
     const maxTicket = getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket);
-    if(maxTicket === 0) return;
+    if (maxTicket === 0) return;
     setNumTicketBuy(1);
   }
   // const { data: depositTransaction, error: depositError1 } = useSelector((state: any) => state.deposit);
@@ -183,10 +185,10 @@ const Ticket: React.FC<any> = (props: any) => {
 
   const {
     deposit,
-    tokenDepositLoading,
+    /*tokenDepositLoading,
     tokenDepositTransaction,
     depositError,
-    tokenDepositSuccess
+    tokenDepositSuccess*/
   } = usePoolDepositAction({
     poolAddress: infoTicket.campaign_hash,
     poolId: infoTicket?.id,
@@ -239,7 +241,7 @@ const Ticket: React.FC<any> = (props: any) => {
 
   const tokenToApprove = getApproveToken(appChainID);
 
-  const { approveToken, tokenApproveLoading, transactionHash } = useTokenApprove(
+  const { approveToken, /*tokenApproveLoading, transactionHash*/ } = useTokenApprove(
     tokenToApprove,
     connectedAccount,
     infoTicket.campaign_hash,
@@ -283,31 +285,20 @@ const Ticket: React.FC<any> = (props: any) => {
   } = useUserPurchased(infoTicket.campaign_hash, true);
 
   useEffect(() => {
-    if(connectedAccount && renewBalance && infoTicket.campaign_hash) {
-      retrieveUserPurchased(connectedAccount, infoTicket.campaign_hash).then((ticket) => {
+    if ((renewBalance || connectedAccount) && infoTicket.campaign_hash) {
+      if(connectedAccount) retrieveUserPurchased(connectedAccount, infoTicket.campaign_hash).then((ticket) => {
         setTicketBought(+ticket || 0)
         setNewBalance(false);
       }).catch((err) => {
         console.log(err);
       });
     }
-    
+
   }, [renewBalance, connectedAccount, infoTicket, retrieveUserPurchased]);
 
   const isAccApproved = (tokenAllowance: number) => {
     return +tokenAllowance > 0;
   }
-
-  useEffect(() => {
-    console.log(tokenDepositLoading,
-      tokenDepositTransaction,
-      depositError,
-      tokenDepositSuccess)
-  }, [tokenDepositLoading,
-    tokenDepositTransaction,
-    depositError,
-    tokenDepositSuccess])
-
 
   const onBuyTicket = async () => {
     try {
@@ -331,29 +322,36 @@ const Ticket: React.FC<any> = (props: any) => {
     return maxTicket - boughtTicket;
   }
 
+  const getRemaining = (totalTicket: number, totalSold: number) => {
+    return (+totalTicket - +totalSold) || 0;
+  }
+
   return (
     <DefaultLayout>
 
       <div className={styles.content}>
         {
-          !isKYC && !loadingTicket && <AlertKYC connectedAccount={connectedAccount} />
+          !isKYC && !loadingTicket && connectedAccount && <AlertKYC connectedAccount={connectedAccount} />
         }
 
         <div className={styles.card}>
           <div className={styles.cardImg}>
-            <img src={infoTicket.token_images} alt="" />
+            <img src={infoTicket.token_images} alt="" onError={(e: any) => {
+              e.target.onerror = null;
+              e.target.src = ticketImg;
+            }} />
           </div>
           <div className={styles.cardBody}>
             <div className={styles.cardBodyText}>
-              <h3>{infoTicket.name}</h3>
+              <h3>{infoTicket.name || 'Ticket'}</h3>
               <h4>
-                <span >TOTAL SALE</span> {infoTicket.total_sold_coin}
+                <span >TOTAL SALE</span> {infoTicket.total_sold_coin || 0}
               </h4>
               <button>
                 <img height={20} src={infoTicket && infoTicket.accept_currency ? `/images/${infoTicket.accept_currency.toUpperCase()}.png` : ''} alt="" />
-                <span>{infoTicket.ether_conversion_rate} {infoTicket && infoTicket.accept_currency ? infoTicket.accept_currency.toUpperCase() : ''}</span>
+                <span>{infoTicket.ether_conversion_rate} {infoTicket && infoTicket.accept_currency ? infoTicket.accept_currency.toUpperCase() : '...'}</span>
                 <span className="small-text">
-                  /{infoTicket.symbol}
+                  /{infoTicket.symbol || 'Ticket'}
                 </span>
               </button>
             </div>
@@ -401,13 +399,13 @@ const Ticket: React.FC<any> = (props: any) => {
                     </span>
 
                     <span className="amount">
-                      {infoTicket.token_sold}/{infoTicket.total_sold_coin} Tickets
+                      {infoTicket.token_sold || '...'}/{infoTicket.total_sold_coin || '...'} Tickets
                     </span>
                   </div>
                 </div>
                 <div className={styles.infoTicket}>
                   <span className={styles.text}>Remaining</span> <span className={styles.textBold}>
-                    {(+infoTicket.total_sold_coin || 0) - (+infoTicket.token_sold || 0)}
+                    {getRemaining(infoTicket.total_sold_coin, infoTicket.token_sold)}
                   </span>
                 </div>
                 <div className={styles.infoTicket}>
@@ -415,11 +413,11 @@ const Ticket: React.FC<any> = (props: any) => {
                   </span>
                 </div>
                 <div className={styles.infoTicket}>
-                  <span className={styles.text}>BOUGHT/MAX</span> <span className={styles.textBold}>{ticketBought}/{getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)}
+                  <span className={styles.text}>BOUGHT/MAX</span> <span className={styles.textBold}>{ticketBought}/{getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket) || 0}
                   </span>
                 </div>
                 <div className={styles.infoTicket}>
-                  <span className={styles.text}>PARTICIPANTS</span> <span className={styles.textBold}>{infoTicket.participants}
+                  <span className={styles.text}>PARTICIPANTS</span> <span className={styles.textBold}>{infoTicket.participants || 0}
                   </span>
                 </div>
                 {!finishedTime && isBuy && <div className={styles.infoTicket}>
@@ -428,43 +426,56 @@ const Ticket: React.FC<any> = (props: any) => {
                     {formatNumber(endTime.days)}d : {formatNumber(endTime.hours)}h : {formatNumber(endTime.minutes)}m : {formatNumber(endTime.seconds)}s
                   </span>
                 </div>}
-                {allowNetwork && !finishedTime && isBuy && isAccApproved(tokenAllowance || 0) && <div className={styles.infoTicket}>
-                  <div className={styles.amountBuy}>
-                    <span>Amount</span>
-                    <div>
-                      <span onClick={descMinAmount} className={clsx({
-                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
-                      })}>Min</span>
-                      <span onClick={descAmount} className={clsx({
-                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
-                      })}>-</span>
-                      <span>{numTicketBuy}</span>
-                      <span onClick={ascAmount} className={clsx({
-                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
-                      })}>+</span>
-                      <span onClick={ascMaxAmount} className={clsx({
-                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
-                      })}>Max</span>
-                    </div>
-                  </div>
-                  <button className={clsx(styles.buynow, {
-                    [styles.buyDisabled]: numTicketBuy <= 0
-                  })} onClick={onBuyTicket} disabled={numTicketBuy <= 0}>
-                    buy now
-                  </button>
-                </div>}
+                { infoTicket.campaign_hash ? <>
+                    {allowNetwork && !finishedTime && isBuy && isAccApproved(tokenAllowance || 0) && <div className={styles.infoTicket}>
+                      <div className={styles.amountBuy}>
+                        <span>Amount</span>
+                        <div>
+                          <span onClick={descMinAmount} className={clsx({
+                            [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                          })}>Min</span>
+                          <span onClick={descAmount} className={clsx({
+                            [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                          })}>-</span>
+                          <span>
+                            {numTicketBuy}
+                            {/* {getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket) ?
+                              <FormInputNumber type="number" value={numTicketBuy} allowZero isInteger isPositive onChange={setNumTicketBuy} min={0} max={getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)} />
+                              : numTicketBuy} */}
+                          </span>
+                          <span onClick={ascAmount} className={clsx({
+                            [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                          })}>+</span>
+                          <span onClick={ascMaxAmount} className={clsx({
+                            [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                          })}>Max</span>
+                        </div>
+                      </div>
+                      <button className={clsx(styles.buynow, {
+                        [styles.buyDisabled]: numTicketBuy <= 0
+                      })} onClick={onBuyTicket} disabled={numTicketBuy <= 0}>
+                        buy now
+                      </button>
+                    </div>}
 
-                {!isAccApproved(tokenAllowance || 0) && <button className={styles.btnApprove} onClick={handleTokenApprove} >
-                  Approve
-                </button>}
+                    {!isAccApproved(tokenAllowance || 0) && !finishedTime && <button className={styles.btnApprove} onClick={handleTokenApprove} >
+                      Approve
+                    </button>}
+                    {alert?.type === 'error' && alert.message && <div className={styles.alertMsg}>
+                      <img src={iconWarning} alt="" />
+                      <span>{alert.message}</span>
+                    </div>}
+                  </> : <div className={styles.comingSoon}>Coming soon</div>
+                }
 
-                {finishedTime && <div className={clsx(styles.infoTicket, styles.finished)}>
+                {finishedTime && infoTicket.campaign_hash && <div className={clsx(styles.infoTicket, styles.finished)}>
                   <div className="img-finished">
                     <img src={finishedImg} alt="" />
                   </div>
-                  <div className="soldout">
+                  {!getRemaining(infoTicket.total_sold_coin, infoTicket.token_sold) && <div className="soldout">
                     <img src={soldoutImg} alt="" />
-                  </div>
+                  </div>}
+
                 </div>}
 
               </div>}

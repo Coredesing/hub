@@ -274,9 +274,10 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
                 <li className={styles.headerLink}><a href="#">Stake</a></li>
               </ul>
               <div className={styles.headerAccount}>
-                <a href="/#/account" className={styles.headerAccText}>
+                {connectedAccount && <a href="/#/account" className={styles.headerAccText}>
                   My Account
-                </a>
+                </a>}
+
                 <div className={styles.headerAccBtn}>
                   <button
                     title="Switch network"

@@ -29,8 +29,8 @@ const useStyles = makeStyles((theme: any) => {
       },
     },
     kycAlert: {
-      paddingLeft: 0,
-      paddingRight: 0,
+      paddingLeft: '0 !important',
+      paddingRight: '0 !important',
     },
 
     alertVerifyEmail: {

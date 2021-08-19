@@ -334,7 +334,7 @@ const Ticket: React.FC<any> = (props: any) => {
 
         <div className={styles.card}>
           <div className={styles.cardImg}>
-            <img src={infoTicket.token_images} alt="" onError={(e: any) => {
+            <img src={infoTicket.banner} alt="" onError={(e: any) => {
               e.target.onerror = null;
               e.target.src = ticketImg;
             }} />

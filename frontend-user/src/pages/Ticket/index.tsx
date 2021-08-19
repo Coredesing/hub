@@ -326,9 +326,9 @@ const Ticket: React.FC<any> = (props: any) => {
     return Math.ceil((sold * 100) / total) || 0;
   }
 
-  const getMaxTicketBuy = (ownedTicket: number, maxTicket: number = 0) => {
-    if (ownedTicket >= maxTicket) return 0;
-    return maxTicket - ownedTicket;
+  const getMaxTicketBuy = (boughtTicket: number, maxTicket: number = 0) => {
+    if (boughtTicket >= maxTicket) return 0;
+    return maxTicket - boughtTicket;
   }
 
   return (

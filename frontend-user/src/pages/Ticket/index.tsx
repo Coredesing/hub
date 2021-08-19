@@ -20,6 +20,7 @@ import useTokenAllowance from '../../hooks/useTokenAllowance';
 import useTokenApprove from '../../hooks/useTokenApprove';
 import { getBUSDAddress, getUSDCAddress, getUSDTAddress } from '../../utils/contractAddress/getAddresses';
 import { PurchaseCurrency } from '../../constants/purchasableCurrency';
+import useUserPurchased from './hooks/useUserPurchased';
 const ticketImg = '/images/gamefi-ticket.png';
 const tetherIcon = '/images/icons/tether.svg';
 const brightIcon = '/images/icons/bright.svg';
@@ -88,6 +89,7 @@ const Ticket: React.FC<any> = (props: any) => {
   }, [dataTicket, loadingTicket]);
 
   const [renewBalance, setNewBalance] = useState(true);
+  const [ownedTicket, setOwnedTicket] = useState(0);
   useEffect(() => {
     const setBalance = async () => {
       try {
@@ -95,14 +97,14 @@ const Ticket: React.FC<any> = (props: any) => {
         // console.log('approved', approved);
         // setAccApprove(approved);
         const myNumTicket = await getBalance(connectedAccount, dataTicket.token, dataTicket.network_available, dataTicket.accept_currency);
-        setTicketBought(+myNumTicket);
-        // setNewBalance(false);
+        setOwnedTicket(+myNumTicket);
+        setNewBalance(false);
       } catch (error) {
         console.log(error)
       }
 
     }
-    connectedAccount && dataTicket && setBalance();
+    renewBalance && connectedAccount && dataTicket && setBalance();
   }, [connectedAccount, dataTicket, renewBalance]);
 
   useEffect(() => {
@@ -275,6 +277,23 @@ const Ticket: React.FC<any> = (props: any) => {
     connectedAccount && infoTicket.campaign_hash && fetchPoolDetailsBlockchain();
   }, [connectedAccount, infoTicket.campaign_hash, fetchPoolDetails]);
 
+  const {
+    retrieveUserPurchased,
+    // userPurchasedLoading
+  } = useUserPurchased(infoTicket.campaign_hash, true);
+
+  useEffect(() => {
+    if(connectedAccount && renewBalance && infoTicket.campaign_hash) {
+      retrieveUserPurchased(connectedAccount, infoTicket.campaign_hash).then((ticket) => {
+        setTicketBought(+ticket || 0)
+        setNewBalance(false);
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+    
+  }, [renewBalance, connectedAccount, infoTicket, retrieveUserPurchased]);
+
   const isAccApproved = (tokenAllowance: number) => {
     return +tokenAllowance > 0;
   }
@@ -307,9 +326,9 @@ const Ticket: React.FC<any> = (props: any) => {
     return Math.ceil((sold * 100) / total) || 0;
   }
 
-  const getMaxTicketBuy = (ownedTicket: number, maxTicket: number = 0) => {
-    if (ownedTicket >= maxTicket) return 0;
-    return maxTicket - ownedTicket;
+  const getMaxTicketBuy = (boughtTicket: number, maxTicket: number = 0) => {
+    if (boughtTicket >= maxTicket) return 0;
+    return maxTicket - boughtTicket;
   }
 
   return (
@@ -392,7 +411,11 @@ const Ticket: React.FC<any> = (props: any) => {
                   </span>
                 </div>
                 <div className={styles.infoTicket}>
-                  <span className={styles.text}>OWNED/MAX</span> <span className={styles.textBold}>{ticketBought}/{getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)}
+                  <span className={styles.text}>OWNED</span> <span className={styles.textBold}>{ownedTicket}
+                  </span>
+                </div>
+                <div className={styles.infoTicket}>
+                  <span className={styles.text}>BOUGHT/MAX</span> <span className={styles.textBold}>{ticketBought}/{getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)}
                   </span>
                 </div>
                 <div className={styles.infoTicket}>

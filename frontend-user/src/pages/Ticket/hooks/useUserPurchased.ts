@@ -4,38 +4,37 @@ import BigNumber from 'bignumber.js';
 
 import { TokenType } from '../../../hooks/useTokenDetails';
 import { useTypedSelector } from '../../../hooks/useTypedSelector';
-import{ getContractInstance, SmartContractMethod } from '../../../services/web3';
-import Pool_ABI from '../../../abi/Pool.json';
+import { getContractInstance, SmartContractMethod } from '../../../services/web3';
+import PreSalePool_ABI from '../../../abi/PreSalePool.json';
 
 const useUserPurchased = (
-  tokenDetails: TokenType | undefined, 
+  // tokenDetails: TokenType | undefined,
   poolAddress: string | undefined,
   ableToFetchFromBlockchain: boolean | undefined
 ) => {
   const [userPurchasedLoading, setUserPurchasedLoading] = useState<boolean>(false);
 
-  const { appChainID } = useTypedSelector(state  => state.appNetwork).data;
-  const connector  = useTypedSelector(state => state.connector).data;
+  const { appChainID } = useTypedSelector(state => state.appNetwork).data;
+  const connector = useTypedSelector(state => state.connector).data;
 
   const retrieveUserPurchased = useCallback(async (userAddress: string, poolAddress: string) => {
     try {
-      if (userAddress && poolAddress && tokenDetails && ableToFetchFromBlockchain 
-          && ethers.utils.isAddress(userAddress) 
-          && ethers.utils.isAddress(poolAddress) 
-         ) {
-           setUserPurchasedLoading(true);
+      if (userAddress && poolAddress && ableToFetchFromBlockchain
+        && ethers.utils.isAddress(userAddress)
+        && ethers.utils.isAddress(poolAddress)
+      ) {
+        setUserPurchasedLoading(true);
 
-           const contract = getContractInstance(Pool_ABI, poolAddress, connector, appChainID, SmartContractMethod.Read); 
+        const contract = getContractInstance(PreSalePool_ABI, poolAddress, connector, appChainID, SmartContractMethod.Read);
 
-           if (contract) {
-             const userPurchased = await contract.methods.userPurchased(userAddress).call();
-             const userPurchasedReturn = new BigNumber(userPurchased).div(new BigNumber(10).pow(tokenDetails.decimals)).toFixed();
+        if (contract) {
+          const userPurchased = await contract.methods.userPurchased(userAddress).call();
+          // const userPurchasedReturn = new BigNumber(userPurchased).div(new BigNumber(10).pow(tokenDetails.decimals)).toFixed();
+          return userPurchased;
+        }
 
-             return userPurchasedReturn;
-           }
-
-           return 0;
-         }
+        return 0;
+      }
     } catch (err) {
       console.log(err.message);
     }

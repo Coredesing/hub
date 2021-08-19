@@ -9,7 +9,6 @@ import { alertSuccess, alertFailure } from '../../../store/actions/alert';
 import Pool_ABI from '../../../abi/Pool.json';
 import { NETWORK } from '../../../constants';
 import PreSalePool from '../../../abi/PreSalePool.json';
-import Erc721 from '../../../abi/Erc721.json';
 import { getContract } from '../../../utils/contract';
 import { TRANSACTION_ERROR_MESSAGE } from '../../../constants/alert';
 import { fixGasLimitWithProvider } from "../../../utils";
@@ -71,7 +70,6 @@ const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount
       if (minBuy && maxBuy && signature && amount) {
         const abiUse = isClaimable ? PreSalePool : Pool_ABI;
         const poolContract = getContract(poolAddress, abiUse, library, connectedAccount as string);
-        console.log(poolContract)
         const method = acceptCurrency === 'ETH' ? 'buyTokenByEtherWithPermission' : 'buyTokenByTokenWithPermission';
         let decimals = 6;
         const isBSC = networkAvailable == 'bsc';

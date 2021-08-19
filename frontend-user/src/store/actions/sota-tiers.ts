@@ -78,13 +78,13 @@ export const getUserTier = (address: string, forceUsingEther: string = 'eth') =>
         rateStakeInfo
       } = await getTokenStakeSmartContractInfo(contract, address);
       await dispatch(getRates(rateSettings));
-      console.log('tokenStakesInfo:', tokenStakes, rateSettings, rateStakeInfo);
+      // console.log('tokenStakesInfo:', tokenStakes, rateSettings, rateStakeInfo);
 
       // Find Tier of user
       let tiers = (await contract?.methods.getTiers().call()) || [];
       tiers = tiers.slice(0, 4);
 
-      console.log('tokenStakesInfo-tiers:', tiers);
+      // console.log('tokenStakesInfo-tiers:', tiers);
       // @ts-ignore
       const pkfEq = new BigNumber(tokenStakes?.totalStaked || 0).multipliedBy(Math.pow(10, 18));
       let userTier = 0;

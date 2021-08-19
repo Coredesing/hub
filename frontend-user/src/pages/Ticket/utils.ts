@@ -20,10 +20,10 @@ interface IError {
 export const handleErrMsg = (err: IError) => {
     const message = err?.data?.message || '';
     if(message.includes('POOL::ENDED')) {
-        return 'The sale has ended';
+        return 'The sale has ended.';
     }
     if(message.includes('POOL:PURCHASE_AMOUNT_EXCEED_ALLOWANCE')) {
-        return 'You cannot buy more than the maximum allowed quantity';
+        return 'The number of Tickets you want to buy is greater than the number you can buy. Please try again.';
     }
     return '';
 }

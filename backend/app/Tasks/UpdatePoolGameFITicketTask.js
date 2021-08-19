@@ -3,6 +3,7 @@
 const Task = use('Task')
 const PoolService = use('App/Services/PoolService');
 const GameFIUtils = use('App/Common/GameFIUtils');
+const CampaignModel = use('App/Models/Campaign');
 
 class UpdatePoolGameFITicketTask extends Task {
   static get schedule () {

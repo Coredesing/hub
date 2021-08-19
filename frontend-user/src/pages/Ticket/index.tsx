@@ -31,7 +31,7 @@ const soldoutImg = '/images/soldout.png';
 const Ticket: React.FC<any> = (props: any) => {
   const styles = useStyles();
 
-  const { connectedAccount, isAuth, wrongChain } = useAuth();
+  const { connectedAccount, /*isAuth, wrongChain*/ } = useAuth();
 
   const { isKYC } = useKyc(connectedAccount);
   const alert = useSelector((state: any) => state.alert);
@@ -71,13 +71,12 @@ const Ticket: React.FC<any> = (props: any) => {
 
   useEffect(() => {
     if (!loadingTicket && dataTicket) {
-      console.log(dataTicket)
       const openTime = +dataTicket.start_time * 1000;
       const finishTime = +dataTicket.finish_time * 1000;
+      
       if (openTime > Date.now()) {
         setOpenTime(getDiffTime(openTime, Date.now()));
       }
-
       if (finishTime < Date.now() || finishTime <= openTime) {
         setFinishedTime(true);
         setIsBuy(false);
@@ -275,7 +274,6 @@ const Ticket: React.FC<any> = (props: any) => {
     const fetchPoolDetailsBlockchain = async () => {
       await fetchPoolDetails();
     }
-
     connectedAccount && infoTicket.campaign_hash && fetchPoolDetailsBlockchain();
   }, [connectedAccount, infoTicket.campaign_hash, fetchPoolDetails]);
 
@@ -286,7 +284,7 @@ const Ticket: React.FC<any> = (props: any) => {
 
   useEffect(() => {
     if ((renewBalance || connectedAccount) && infoTicket.campaign_hash) {
-      if(connectedAccount) retrieveUserPurchased(connectedAccount, infoTicket.campaign_hash).then((ticket) => {
+      if (connectedAccount) retrieveUserPurchased(connectedAccount, infoTicket.campaign_hash).then((ticket) => {
         setTicketBought(+ticket || 0)
         setNewBalance(false);
       }).catch((err) => {
@@ -387,7 +385,9 @@ const Ticket: React.FC<any> = (props: any) => {
                   </div>
                 </div>
               }
-              {isShowInfo && <div className={styles.cardBodyProgress}>
+
+              {!infoTicket.campaign_hash && <div className={styles.comingSoon}>Coming soon</div>}
+              {infoTicket.campaign_hash && isShowInfo && <div className={styles.cardBodyProgress}>
                 <div className={styles.progressItem}>
                   <span className={styles.text}>Progress</span>
                   <div className="showProgress">
@@ -426,60 +426,54 @@ const Ticket: React.FC<any> = (props: any) => {
                     {formatNumber(endTime.days)}d : {formatNumber(endTime.hours)}h : {formatNumber(endTime.minutes)}m : {formatNumber(endTime.seconds)}s
                   </span>
                 </div>}
-                { infoTicket.campaign_hash ? <>
-                    {allowNetwork && !finishedTime && isBuy && isAccApproved(tokenAllowance || 0) && <div className={styles.infoTicket}>
-                      <div className={styles.amountBuy}>
-                        <span>Amount</span>
-                        <div>
-                          <span onClick={descMinAmount} className={clsx({
-                            [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
-                          })}>Min</span>
-                          <span onClick={descAmount} className={clsx({
-                            [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
-                          })}>-</span>
-                          <span>
-                            {numTicketBuy}
-                            {/* {getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket) ?
-                              <FormInputNumber type="number" value={numTicketBuy} allowZero isInteger isPositive onChange={setNumTicketBuy} min={0} max={getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)} />
-                              : numTicketBuy} */}
-                          </span>
-                          <span onClick={ascAmount} className={clsx({
-                            [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
-                          })}>+</span>
-                          <span onClick={ascMaxAmount} className={clsx({
-                            [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
-                          })}>Max</span>
-                        </div>
-                      </div>
-                      <button className={clsx(styles.buynow, {
-                        [styles.buyDisabled]: numTicketBuy <= 0
-                      })} onClick={onBuyTicket} disabled={numTicketBuy <= 0}>
-                        buy now
-                      </button>
-                    </div>}
+                {allowNetwork && !finishedTime && isBuy && isAccApproved(tokenAllowance || 0) && <div className={styles.infoTicket}>
+                  <div className={styles.amountBuy}>
+                    <span>Amount</span>
+                    <div>
+                      <span onClick={descMinAmount} className={clsx({
+                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                      })}>Min</span>
+                      <span onClick={descAmount} className={clsx({
+                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                      })}>-</span>
+                      <span>
+                        {numTicketBuy}
+                        {/* {getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket) ?
+                            <FormInputNumber type="number" value={numTicketBuy} allowZero isInteger isPositive onChange={setNumTicketBuy} min={0} max={getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)} />
+                            : numTicketBuy} */}
+                      </span>
+                      <span onClick={ascAmount} className={clsx({
+                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                      })}>+</span>
+                      <span onClick={ascMaxAmount} className={clsx({
+                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                      })}>Max</span>
+                    </div>
+                  </div>
+                  <button className={clsx(styles.buynow, {
+                    [styles.buyDisabled]: numTicketBuy <= 0
+                  })} onClick={onBuyTicket} disabled={numTicketBuy <= 0}>
+                    buy now
+                  </button>
+                </div>}
 
-                    {!isAccApproved(tokenAllowance || 0) && !finishedTime && <button className={styles.btnApprove} onClick={handleTokenApprove} >
-                      Approve
-                    </button>}
-                    {alert?.type === 'error' && alert.message && <div className={styles.alertMsg}>
-                      <img src={iconWarning} alt="" />
-                      <span>{alert.message}</span>
-                    </div>}
-                  </> : <div className={styles.comingSoon}>Coming soon</div>
-                }
+                {!isAccApproved(tokenAllowance || 0) && !finishedTime && <button className={styles.btnApprove} onClick={handleTokenApprove} >
+                  Approve
+                </button>}
+                {alert?.type === 'error' && alert.message && <div className={styles.alertMsg}>
+                  <img src={iconWarning} alt="" />
+                  <span>{alert.message}</span>
+                </div>}
 
-                {finishedTime && infoTicket.campaign_hash && <div className={clsx(styles.infoTicket, styles.finished)}>
+                {finishedTime && <div className={clsx(styles.infoTicket, styles.finished)}>
                   <div className="img-finished">
                     <img src={finishedImg} alt="" />
                   </div>
                   {!getRemaining(infoTicket.total_sold_coin, infoTicket.token_sold) && <div className="soldout">
                     <img src={soldoutImg} alt="" />
                   </div>}
-
                 </div>}
-
               </div>}
-
             </div>
           </div>
         </div>

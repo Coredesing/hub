@@ -84,12 +84,12 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
         }
     }, []);
 
-    // useEffect(() => {
-    //     const { type, message } = alert;
-    //     if (type && message) {
-    //         NotificationManager[type](message);
-    //     }
-    // }, [alert]);
+    useEffect(() => {
+        const { type, message } = alert;
+        if ((type === 'success' || type === 'warning') && message) {
+            NotificationManager[type](message);
+        }
+    }, [alert]);
 
     useEffect(() => {
         history.listen((location, action) => {

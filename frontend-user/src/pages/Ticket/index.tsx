@@ -7,7 +7,7 @@ import DefaultLayout from "../../components/Layout/DefaultLayout";
 import { AboutTicket } from './About';
 import { formatNumber, getDiffTime } from '../../utils';
 import { Progress } from './Progress';
-import useFetch from '../../hooks/useFetch';
+import { useFetchV1 } from '../../hooks/useFetch';
 import { useSelector } from 'react-redux';
 import { APP_NETWORKS_SUPPORT, ETH_CHAIN_ID, POLYGON_CHAIN_ID } from '../../constants/network';
 import useKyc from '../../hooks/useKyc';
@@ -21,6 +21,7 @@ import useTokenApprove from '../../hooks/useTokenApprove';
 import { getBUSDAddress, getUSDCAddress, getUSDTAddress } from '../../utils/contractAddress/getAddresses';
 import { PurchaseCurrency } from '../../constants/purchasableCurrency';
 import useUserPurchased from './hooks/useUserPurchased';
+import TicketModal from './TicketModal';
 // import { FormInputNumber } from '../../components/Base/FormInputNumber/FormInputNumber';
 const iconWarning = "/images/warning-red.svg";
 const ticketImg = '/images/gamefi-ticket.png';
@@ -32,8 +33,8 @@ const Ticket: React.FC<any> = (props: any) => {
   const styles = useStyles();
 
   const { connectedAccount, /*isAuth, wrongChain*/ } = useAuth();
-
-  const { isKYC } = useKyc(connectedAccount);
+  const { isKYC, checkingKyc } = useKyc(connectedAccount);
+  // console.log(isKYC, checkingKyc)
   const alert = useSelector((state: any) => state.alert);
   const { appChainID } = useSelector((state: any) => state.appNetwork).data;
   const [ticketBought, setTicketBought] = useState<number>(0);
@@ -55,10 +56,11 @@ const Ticket: React.FC<any> = (props: any) => {
     seconds: 0
   });
   const [infoTicket, setInfoTicket] = useState<{ [k in string]: any }>({});
+  const [renewTicket, setNewTicket] = useState<boolean>(true);
   const {
     data: dataTicket = null,
     loading: loadingTicket,
-  } = useFetch<any>(`/pool/gamefi-ticket`);
+  } = useFetchV1<any>(`/pool/gamefi-ticket`, renewTicket);
 
   const [allowNetwork, setAllowNetwork] = useState<boolean>(false);
   useEffect(() => {
@@ -73,7 +75,7 @@ const Ticket: React.FC<any> = (props: any) => {
     if (!loadingTicket && dataTicket) {
       const openTime = +dataTicket.start_time * 1000;
       const finishTime = +dataTicket.finish_time * 1000;
-      
+
       if (openTime > Date.now()) {
         setOpenTime(getDiffTime(openTime, Date.now()));
       }
@@ -84,13 +86,18 @@ const Ticket: React.FC<any> = (props: any) => {
         setIsBuy(true);
         setTimeEnd(getDiffTime(finishTime, Date.now() >= openTime ? Date.now() : openTime));
       }
-
+      setNewTicket(false);
       setInfoTicket(dataTicket);
     }
   }, [dataTicket, loadingTicket]);
 
   const [renewBalance, setNewBalance] = useState(true);
   const [ownedTicket, setOwnedTicket] = useState(0);
+  const [openModal, setOpenModalTx] = useState(false);
+  const onCloseModal = () => {
+    setOpenModalTx(false);
+  }
+
   useEffect(() => {
     const setBalance = async () => {
       try {
@@ -181,13 +188,14 @@ const Ticket: React.FC<any> = (props: any) => {
   // console.log('approveTransaction', approveTransaction)
   // console.log('allowance', allowance)
 
-
   const {
     deposit,
-    /*tokenDepositLoading,
     tokenDepositTransaction,
+    tokenDepositSuccess,
+    /*tokenDepositLoading,
+    
     depositError,
-    tokenDepositSuccess*/
+    */
   } = usePoolDepositAction({
     poolAddress: infoTicket.campaign_hash,
     poolId: infoTicket?.id,
@@ -196,6 +204,17 @@ const Ticket: React.FC<any> = (props: any) => {
     isClaimable: infoTicket.pool_type === "claimable",
     networkAvailable: infoTicket.network_available
   });
+
+  useEffect(() => {
+    if (tokenDepositSuccess) {
+      setNewTicket(true);
+      setNewBalance(true);
+    }
+    if (tokenDepositTransaction) {
+      setOpenModalTx(true);
+      setNumTicketBuy(0);
+    }
+  }, [tokenDepositSuccess, tokenDepositTransaction])
 
   const { retrieveTokenAllowance } = useTokenAllowance();
 
@@ -300,11 +319,8 @@ const Ticket: React.FC<any> = (props: any) => {
 
   const onBuyTicket = async () => {
     try {
-
       if (numTicketBuy > 0) {
         await deposit();
-        setNewBalance(true);
-        setTicketBought(0);
       }
     } catch (error) {
       console.log(error);
@@ -326,10 +342,10 @@ const Ticket: React.FC<any> = (props: any) => {
 
   return (
     <DefaultLayout>
-
+      <TicketModal open={openModal} onClose={onCloseModal} transaction={tokenDepositTransaction} />
       <div className={styles.content}>
         {
-          !isKYC && !loadingTicket && connectedAccount && <AlertKYC connectedAccount={connectedAccount} />
+          !isKYC && !checkingKyc && connectedAccount && <AlertKYC connectedAccount={connectedAccount} />
         }
 
         <div className={styles.card}>
@@ -343,7 +359,7 @@ const Ticket: React.FC<any> = (props: any) => {
             <div className={styles.cardBodyText}>
               <h3>{infoTicket.name || 'Ticket'}</h3>
               <h4>
-                <span >TOTAL SALE</span> {infoTicket.total_sold_coin || 0}
+                <span>TOTAL SALE</span> {infoTicket.total_sold_coin || 0}
               </h4>
               <button>
                 <img height={20} src={infoTicket && infoTicket.accept_currency ? `/images/${infoTicket.accept_currency.toUpperCase()}.png` : ''} alt="" />
@@ -413,7 +429,7 @@ const Ticket: React.FC<any> = (props: any) => {
                   </span>
                 </div>
                 <div className={styles.infoTicket}>
-                  <span className={styles.text}>BOUGHT/MAX</span> <span className={styles.textBold}>{ticketBought}/{getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket) || 0}
+                  <span className={styles.text}>BOUGHT/MAX</span> <span className={styles.textBold}>{ticketBought}/{infoTicket.max_buy_ticket || 0}
                   </span>
                 </div>
                 <div className={styles.infoTicket}>
@@ -431,10 +447,10 @@ const Ticket: React.FC<any> = (props: any) => {
                     <span>Amount</span>
                     <div>
                       <span onClick={descMinAmount} className={clsx({
-                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket) || numTicketBuy === 0
                       })}>Min</span>
                       <span onClick={descAmount} className={clsx({
-                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket) || numTicketBuy === 0
                       })}>-</span>
                       <span>
                         {numTicketBuy}
@@ -443,10 +459,10 @@ const Ticket: React.FC<any> = (props: any) => {
                             : numTicketBuy} */}
                       </span>
                       <span onClick={ascAmount} className={clsx({
-                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket) || numTicketBuy === getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
                       })}>+</span>
                       <span onClick={ascMaxAmount} className={clsx({
-                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)|| numTicketBuy === getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
                       })}>Max</span>
                     </div>
                   </div>

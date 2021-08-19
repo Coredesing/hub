@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: any) => {
           fontFamily: 'inherit',
           fontStyle: 'inherit',
           color: 'inherit',
-          
+
         },
         '&.kyc-link': {
           fontFamily: 'inherit',
@@ -314,6 +314,13 @@ const useStyles = makeStyles((theme: any) => {
           padding: '5px 18px',
         }
       }
+    },
+    disabledAct: {
+      cursor: 'not-allowed !important',
+      color: '#565555',
+    },
+    buyDisabled: {
+      background: '#498631 !important',
     },
     buynow: {
       outline: 'none',

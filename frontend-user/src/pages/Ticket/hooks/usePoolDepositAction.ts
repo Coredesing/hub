@@ -12,7 +12,8 @@ import PreSalePool from '../../../abi/PreSalePool.json';
 import Erc721 from '../../../abi/Erc721.json';
 import { getContract } from '../../../utils/contract';
 import { TRANSACTION_ERROR_MESSAGE } from '../../../constants/alert';
-import {fixGasLimitWithProvider} from "../../../utils";
+import { fixGasLimitWithProvider } from "../../../utils";
+import { handleErrMsg } from '../utils';
 
 type PoolDepositActionParams = {
   poolAddress?: string;
@@ -39,12 +40,12 @@ const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount
   const { signature, minBuy, maxBuy, error: buyError, setSignature: setUserPurchasedSignature } = useUserPurchaseSignature(connectedAccount, poolId, authSignature);
   useEffect(() => {
     poolAddress &&
-    purchasableCurrency &&
-    signature &&
-    minBuy &&
-    maxBuy &&
-    !depositError &&
-    depositWithSignature(poolAddress, purchasableCurrency, amount, signature, `${minBuy}`, maxBuy);
+      purchasableCurrency &&
+      signature &&
+      minBuy &&
+      maxBuy &&
+      !depositError &&
+      depositWithSignature(poolAddress, purchasableCurrency, amount, signature, `${minBuy}`, maxBuy);
   }, [signature, poolAddress, purchasableCurrency, amount, minBuy, maxBuy, depositError]);
 
 
@@ -68,10 +69,10 @@ const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount
   ) => {
     try {
       if (minBuy && maxBuy && signature && amount) {
-        const abiUse = isClaimable ? PreSalePool: Pool_ABI;
+        const abiUse = isClaimable ? PreSalePool : Pool_ABI;
         const poolContract = getContract(poolAddress, abiUse, library, connectedAccount as string);
         console.log(poolContract)
-        const method = acceptCurrency === 'ETH' ? 'buyTokenByEtherWithPermission': 'buyTokenByTokenWithPermission';
+        const method = acceptCurrency === 'ETH' ? 'buyTokenByEtherWithPermission' : 'buyTokenByTokenWithPermission';
         let decimals = 6;
         const isBSC = networkAvailable == 'bsc';
         if (isBSC) {
@@ -97,25 +98,25 @@ const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount
           case NETWORK.BSC:
             if (acceptCurrency === "USDT") {
               buyCurr = process.env.REACT_APP_USDT_BSC_SMART_CONTRACT || '';
-            } 
+            }
             if (acceptCurrency === "USDC") {
               buyCurr = process.env.REACT_APP_USDC_BSC_SMART_CONTRACT || '';
             }
             break;
-          
+
           case NETWORK.POLYGON:
             if (acceptCurrency === "USDT") {
               buyCurr = process.env.REACT_APP_USDT_POLYGON_SMART_CONTRACT || '';
             }
             if (acceptCurrency === "USDC") {
-              buyCurr =  process.env.REACT_APP_USDC_POLYGON_SMART_CONTRACT || '';
+              buyCurr = process.env.REACT_APP_USDC_POLYGON_SMART_CONTRACT || '';
             }
             break;
-          
+
           case NETWORK.ETHEREUM:
             if (acceptCurrency === "USDT") {
               buyCurr = process.env.REACT_APP_USDT_SMART_CONTRACT || '';
-            } 
+            }
             if (acceptCurrency === "USDC") {
               buyCurr = process.env.REACT_APP_USDC_SMART_CONTRACT || '';
             }
@@ -144,7 +145,7 @@ const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount
           {
             value: new BigNumber(amount).multipliedBy(10 ** 18).toFixed()
           }
-        ]: [
+        ] : [
           connectedAccount,
           // acceptCurrency === "USDT" ? USDT_ADDRESS: USDC_ADDRESS,
           buyCurr,
@@ -172,8 +173,10 @@ const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount
       }
     } catch (err) {
       console.log('[ERROR] - depositWithSignature:', err);
-      dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
-      setDepositError(TRANSACTION_ERROR_MESSAGE);
+      const message = handleErrMsg(err) || TRANSACTION_ERROR_MESSAGE;
+      console.log(message)
+      dispatch(alertFailure(message));
+      setDepositError(message);
       setTokenDepositLoading(false);
       setSignature("");
       setUserPurchasedSignature("");
@@ -191,8 +194,10 @@ const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount
         await signMessage();
       } catch (err) {
         console.log('[ERROR] - deposit:', err);
-        dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
-        setDepositError(TRANSACTION_ERROR_MESSAGE);
+        const message = handleErrMsg(err) || TRANSACTION_ERROR_MESSAGE;
+        console.log(message)
+        dispatch(alertFailure(message));
+        setDepositError(message);
         setSignature("");
         setTokenDepositLoading(false);
       }

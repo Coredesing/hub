@@ -1,28 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import clsx from 'clsx';
 import useStyles from './style';
 import DefaultLayout from "../../components/Layout/DefaultLayout";
-
 // import SwipeableViews from 'react-swipeable-views';
 import { AboutTicket } from './About';
 import { formatNumber, getDiffTime } from '../../utils';
 import { Progress } from './Progress';
 import useFetch from '../../hooks/useFetch';
-import { useDispatch, useSelector } from 'react-redux';
-import { APP_NETWORKS_SUPPORT } from '../../constants/network';
+import { useSelector } from 'react-redux';
+import { APP_NETWORKS_SUPPORT, ETH_CHAIN_ID, POLYGON_CHAIN_ID } from '../../constants/network';
 import useKyc from '../../hooks/useKyc';
 import useAuth from '../../hooks/useAuth';
-import usePoolDetails from '../../hooks/usePoolDetails';
 import { AlertKYC } from '../../components/Base/AlertKYC';
-import { getBalance, isApproved } from './utils';
-import axios from 'axios';
-import useWalletSignature from '../../hooks/useWalletSignature';
+import { getBalance } from './utils';
 import usePoolDepositAction from './hooks/usePoolDepositAction';
-import { approve } from '../../store/actions/sota-token';
-import { useWeb3React } from '@web3-react/core';
 import { caclDiffTime } from './getDiffTime';
-import { getContractAddress } from './getContractAddress';
+import useTokenAllowance from '../../hooks/useTokenAllowance';
+import useTokenApprove from '../../hooks/useTokenApprove';
+import { getBUSDAddress, getUSDCAddress, getUSDTAddress } from '../../utils/contractAddress/getAddresses';
+import { PurchaseCurrency } from '../../constants/purchasableCurrency';
+const ticketImg = '/images/gamefi-ticket.png';
+const tetherIcon = '/images/icons/tether.svg';
 const brightIcon = '/images/icons/bright.svg';
 const finishedImg = '/images/finished.png';
 const soldoutImg = '/images/soldout.png';
@@ -58,8 +57,6 @@ const Ticket: React.FC<any> = (props: any) => {
     loading: loadingTicket,
   } = useFetch<any>(`/pool/gamefi-ticket`);
 
-  const dispatch = useDispatch();
-
   const [allowNetwork, setAllowNetwork] = useState<boolean>(false);
   useEffect(() => {
     const networkInfo = APP_NETWORKS_SUPPORT[Number(appChainID)];
@@ -90,19 +87,13 @@ const Ticket: React.FC<any> = (props: any) => {
     }
   }, [dataTicket, loadingTicket]);
 
-  const { account: connectedAccount1, library } = useWeb3React();
-  const onApprove = () => {
-    const tokenContract = getContractAddress(infoTicket.network_available, dataTicket.accept_currency);
-    dispatch(approve(connectedAccount1, library, tokenContract, infoTicket.campaign_hash));
-    setAccApprove(true);
-  }
   const [renewBalance, setNewBalance] = useState(true);
-  const [isAccApproved, setAccApprove] = useState(true);
   useEffect(() => {
     const setBalance = async () => {
       try {
-        const approved = await isApproved(connectedAccount, dataTicket.campaign_hash, library, dataTicket.network_available, dataTicket.accept_currency);
-        setAccApprove(approved);
+        // const approved = await isApproved(connectedAccount, dataTicket.campaign_hash, library, dataTicket.network_available, dataTicket.accept_currency);
+        // console.log('approved', approved);
+        // setAccApprove(approved);
         const myNumTicket = await getBalance(connectedAccount, dataTicket.token, dataTicket.network_available, dataTicket.accept_currency);
         setTicketBought(+myNumTicket);
         // setNewBalance(false);
@@ -156,7 +147,8 @@ const Ticket: React.FC<any> = (props: any) => {
   }, [isBuy, endTime, setTimeEnd]);
 
   const ascAmount = () => {
-    if (numTicketBuy === 25) {
+    const ticketCanBuy = getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket);
+    if (numTicketBuy >= ticketCanBuy) {
       return;
     }
     setNumTicketBuy(n => n + 1);
@@ -165,6 +157,18 @@ const Ticket: React.FC<any> = (props: any) => {
     if (numTicketBuy > 0) {
       setNumTicketBuy(n => n - 1);
     }
+  }
+
+  const ascMaxAmount = () =>{
+    const maxTicket = getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket);
+    if(maxTicket === 0) return;
+    setNumTicketBuy(maxTicket);
+  }
+
+  const descMinAmount = () => {
+    const maxTicket = getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket);
+    if(maxTicket === 0) return;
+    setNumTicketBuy(1);
   }
   // const { data: depositTransaction, error: depositError1 } = useSelector((state: any) => state.deposit);
   // const { data: approveTransaction, error: approveError } = useSelector((state: any) => state.approve);
@@ -190,6 +194,91 @@ const Ticket: React.FC<any> = (props: any) => {
     networkAvailable: infoTicket.network_available
   });
 
+  const { retrieveTokenAllowance } = useTokenAllowance();
+
+  const getApproveToken = useCallback((appChainID: string) => {
+    const purchasableCurrency = String(infoTicket.accept_currency).toUpperCase();
+    if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.USDT) {
+      return {
+        address: getUSDTAddress(appChainID),
+        name: "USDT",
+        symbol: "USDT",
+        decimals: (appChainID === ETH_CHAIN_ID || appChainID === POLYGON_CHAIN_ID) ? 6 : 18
+      };
+    }
+
+    if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.BUSD) {
+      return {
+        address: getBUSDAddress(appChainID),
+        name: "BUSD",
+        symbol: "BUSD",
+        decimals: 18
+      };
+    }
+
+    if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.USDC) {
+      return {
+        address: getUSDCAddress(appChainID),
+        name: "USDC",
+        symbol: "USDC",
+        decimals: (appChainID === ETH_CHAIN_ID || appChainID === POLYGON_CHAIN_ID) ? 6 : 18
+      };
+    }
+
+    if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.ETH) {
+      return {
+        address: "0x00",
+        name: 'ETH',
+        symbol: 'ETH',
+        decimals: 18
+      }
+    }
+  }, [infoTicket.accept_currency])
+
+  const tokenToApprove = getApproveToken(appChainID);
+
+  const { approveToken, tokenApproveLoading, transactionHash } = useTokenApprove(
+    tokenToApprove,
+    connectedAccount,
+    infoTicket.campaign_hash,
+    false
+  );
+  const [tokenAllowance, setTokenAllowance] = useState<number | undefined>(undefined);
+
+  const handleTokenApprove = async () => {
+    try {
+      // setApproveModal(true);
+      await approveToken();
+      if (infoTicket.campaign_hash && connectedAccount && tokenToApprove) {
+        setTokenAllowance(await retrieveTokenAllowance(tokenToApprove, connectedAccount, infoTicket.campaign_hash) as number);
+        // setTokenBalance(await retrieveTokenBalance(tokenToApprove, connectedAccount) as number);
+      }
+    } catch (err) {
+      console.log(err);
+      // setApproveModal(false);
+    }
+  }
+
+  const fetchPoolDetails = useCallback(async () => {
+    if (infoTicket.campaign_hash && connectedAccount && tokenToApprove) {
+      setTokenAllowance(await retrieveTokenAllowance(tokenToApprove, connectedAccount, infoTicket.campaign_hash) as number);
+    }
+
+  }, [connectedAccount, tokenToApprove, infoTicket.campaign_hash, retrieveTokenAllowance]);
+
+
+  useEffect(() => {
+    const fetchPoolDetailsBlockchain = async () => {
+      await fetchPoolDetails();
+    }
+
+    connectedAccount && infoTicket.campaign_hash && fetchPoolDetailsBlockchain();
+  }, [connectedAccount, infoTicket.campaign_hash, fetchPoolDetails]);
+
+  const isAccApproved = (tokenAllowance: number) => {
+    return +tokenAllowance > 0;
+  }
+
   useEffect(() => {
     console.log(tokenDepositLoading,
       tokenDepositTransaction,
@@ -207,6 +296,7 @@ const Ticket: React.FC<any> = (props: any) => {
       if (numTicketBuy > 0) {
         await deposit();
         setNewBalance(true);
+        setTicketBought(0);
       }
     } catch (error) {
       console.log(error);
@@ -218,7 +308,7 @@ const Ticket: React.FC<any> = (props: any) => {
   }
 
   const getMaxTicketBuy = (ownedTicket: number, maxTicket: number = 0) => {
-    if(ownedTicket >= maxTicket) return 0;
+    if (ownedTicket >= maxTicket) return 0;
     return maxTicket - ownedTicket;
   }
 
@@ -226,12 +316,6 @@ const Ticket: React.FC<any> = (props: any) => {
     <DefaultLayout>
 
       <div className={styles.content}>
-        {!isAccApproved &&  <div className={styles.displayContent}>
-          <div className={`${styles.alert}`}>
-            <span className="kyc-link" onClick={onApprove}>Please approve your account to continue</span>
-          </div>
-        </div>}
-       
         {
           !isKYC && !loadingTicket && <AlertKYC connectedAccount={connectedAccount} />
         }
@@ -321,20 +405,35 @@ const Ticket: React.FC<any> = (props: any) => {
                     {formatNumber(endTime.days)}d : {formatNumber(endTime.hours)}h : {formatNumber(endTime.minutes)}m : {formatNumber(endTime.seconds)}s
                   </span>
                 </div>}
-
-                {allowNetwork && isBuy && isAccApproved && <div className={styles.infoTicket}>
+                {allowNetwork && !finishedTime && isBuy && isAccApproved(tokenAllowance || 0) && <div className={styles.infoTicket}>
                   <div className={styles.amountBuy}>
                     <span>Amount</span>
                     <div>
-                      <span onClick={descAmount}>-</span>
+                      <span onClick={descMinAmount} className={clsx({
+                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                      })}>Min</span>
+                      <span onClick={descAmount} className={clsx({
+                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                      })}>-</span>
                       <span>{numTicketBuy}</span>
-                      <span onClick={ascAmount}>+</span>
+                      <span onClick={ascAmount} className={clsx({
+                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                      })}>+</span>
+                      <span onClick={ascMaxAmount} className={clsx({
+                        [styles.disabledAct]: !getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)
+                      })}>Max</span>
                     </div>
                   </div>
-                  <button className={styles.buynow} onClick={onBuyTicket} disabled={numTicketBuy <= 0}>
+                  <button className={clsx(styles.buynow, {
+                    [styles.buyDisabled]: numTicketBuy <= 0
+                  })} onClick={onBuyTicket} disabled={numTicketBuy <= 0}>
                     buy now
                   </button>
                 </div>}
+
+                {!isAccApproved(tokenAllowance || 0) && <button className={styles.btnApprove} onClick={handleTokenApprove} >
+                  Approve
+                </button>}
 
                 {finishedTime && <div className={clsx(styles.infoTicket, styles.finished)}>
                   <div className="img-finished">

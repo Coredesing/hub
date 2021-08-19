@@ -249,7 +249,6 @@ const getUserTierSmart = async (wallet_address) => {
       epkf_rate: 1,
     }
   }
-  console.log('rateSetting:', rateSetting);
 
   // Get Tier Smart Contract Info
   const tierSc = getTierSmartContractInstance();
@@ -260,19 +259,14 @@ const getUserTierSmart = async (wallet_address) => {
     tierSc.methods.userInfo(wallet_address, process.env.PKF_SMART_CONTRACT_ADDRESS || '').call(), // stakedPkf
     tierSc.methods.userInfo(wallet_address, process.env.UNI_LP_PKF_SMART_CONTRACT_ADDRESS || '').call(), // staked LP_PKF
   ]);
-  console.log('[getUserTierSmart] - receivedData: ', receivedData[0], receivedData[1]);
 
   // Caculate PKF Staked
   let stakedPkf = (receivedData[3] && receivedData[3].staked) || 0;
   stakedPkf = new BigNumber(stakedPkf);
-  console.log('PKF_SMART_CONTRACT_ADDRESS:', process.env.PKF_SMART_CONTRACT_ADDRESS);
-  console.log('receivedData[3]', receivedData[3], stakedPkf.toFixed());
 
   // Caculate LP-PKF Staked
   let stakedUni = (receivedData[4] && receivedData[4].staked) || 0;
   stakedUni = new BigNumber(stakedUni).multipliedBy(rateSetting.lp_pkf_rate);
-  console.log('UNI_LP_PKF_SMART_CONTRACT_ADDRESS:', process.env.UNI_LP_PKF_SMART_CONTRACT_ADDRESS);
-  console.log('receivedData[4]', receivedData[4], stakedUni.toFixed());
 
   // calc pfk equal
   let ePkf = 0;
@@ -280,24 +274,17 @@ const getUserTierSmart = async (wallet_address) => {
   if (ePkfResponse && ePkfResponse.code === 200) {
     ePkf = new BigNumber((ePkfResponse && ePkfResponse.data) || 0).multipliedBy(rateSetting.epkf_rate).toFixed();
   }
-  console.log('ePkf', ePkf);
-
   const pkfEq = new BigNumber(stakedPkf).plus(stakedUni).plus(ePkf);
-  console.log('pkfEq:', pkfEq.toFixed());
 
   // get 4 tiers
   let userTier = 0;
   const tiers = receivedData[0].slice(0, 4);
 
-  console.log('Tiers=======>', tiers);
   tiers.map((pkfRequire, index) => {
     if (pkfEq.gte(pkfRequire)) {
       userTier = index + 1;
     }
   });
-
-  console.log('wallet_address - userTier: ', wallet_address, userTier);
-  console.log('pkfEq', pkfEq.toFixed());
 
   return [
     userTier,

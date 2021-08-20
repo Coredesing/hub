@@ -6,8 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
-import { getEtherscanName, getEtherscanTransactionLink } from '../../utils/network';
-import { useSelector } from 'react-redux';
+import { getEtherscanTransactionLink, getNetworkInfo } from '../../utils/network';
 const closeIcon = '/images/icons/close.svg';
 const useStyles = makeStyles({
   paper: {
@@ -81,10 +80,9 @@ const TicketModal = ({ open, ...props }: any) => {
   const handleClose = () => {
     props.onClose()
   };
-  const { appChainID } = useSelector((state: any) => state.appNetwork).data;
-  const explorerName = getEtherscanName({networkAvailable: props.networkName});
+  const info = getNetworkInfo(props.networkName);
   const transactionLink = getEtherscanTransactionLink({
-    appChainID,
+    appChainID: info.id,
     transactionHash: props.transaction,
   })
 
@@ -109,7 +107,7 @@ const TicketModal = ({ open, ...props }: any) => {
       </DialogContent>
       <DialogActions className={classes.actions}>
         <Link href={transactionLink} target="_blank" className={classes.btnView}>
-          View on {explorerName}
+          View on {info.details.explorerName}
         </Link>
       </DialogActions>
     </Dialog>

@@ -139,8 +139,9 @@ export const APP_NETWORKS_SUPPORT: {[key: number]: NetworkInfo } = {
         symbol: 'ETH',
         decimals: 18,
       },
-      rpcUrls: [],
-      blockExplorerUrls: [],
+      rpcUrls: [NETWORK_URL],
+      blockExplorerUrls: [ETHERSCAN_URL],
+      explorerName: 'Etherscan'
     }
   },
   [BSC_CHAIN_ID]: {
@@ -158,8 +159,9 @@ export const APP_NETWORKS_SUPPORT: {[key: number]: NetworkInfo } = {
         symbol: 'BNB',
         decimals: 18,
       },
-      rpcUrls: [process.env.REACT_APP_BSC_RPC_URL],
-      blockExplorerUrls: [process.env.REACT_APP_BSCSCAN_BASE_URL],
+      rpcUrls: [BSC_RPC_URL],
+      blockExplorerUrls: [BCSSCAN_URL],
+      explorerName: 'Bscscan'
     }
   },
   [POLYGON_CHAIN_ID]: {
@@ -177,8 +179,9 @@ export const APP_NETWORKS_SUPPORT: {[key: number]: NetworkInfo } = {
         symbol: 'MATIC',
         decimals: 18,
       },
-      rpcUrls: [process.env.REACT_APP_POLYGON_RPC_URL],
-      blockExplorerUrls: [process.env.REACT_APP_POLSCAN_BASE_URL],
+      rpcUrls: [POLYGON_RPC_URL],
+      blockExplorerUrls: [POLYGONSCAN_URL],
+      explorerName: 'Polygonscan'
     }
   },
 }

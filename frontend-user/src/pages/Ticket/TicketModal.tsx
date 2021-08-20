@@ -6,7 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
-import { getEtherscanTransactionLink } from '../../utils/network';
+import { getEtherscanName, getEtherscanTransactionLink } from '../../utils/network';
 import { useSelector } from 'react-redux';
 const closeIcon = '/images/icons/close.svg';
 const useStyles = makeStyles({
@@ -73,7 +73,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default function TicketModal({ open, ...props }: any) {
+const TicketModal = ({ open, ...props }: any) => {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -82,6 +82,7 @@ export default function TicketModal({ open, ...props }: any) {
     props.onClose()
   };
   const { appChainID } = useSelector((state: any) => state.appNetwork).data;
+  const explorerName = getEtherscanName({networkAvailable: props.networkName});
   const transactionLink = getEtherscanTransactionLink({
     appChainID,
     transactionHash: props.transaction,
@@ -108,9 +109,11 @@ export default function TicketModal({ open, ...props }: any) {
       </DialogContent>
       <DialogActions className={classes.actions}>
         <Link href={transactionLink} target="_blank" className={classes.btnView}>
-          View on Etherscan
+          View on {explorerName}
         </Link>
       </DialogActions>
     </Dialog>
   );
 }
+
+export default React.memo(TicketModal);

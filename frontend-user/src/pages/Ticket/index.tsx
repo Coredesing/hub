@@ -94,9 +94,9 @@ const Ticket: React.FC<any> = (props: any) => {
   const [renewBalance, setNewBalance] = useState(true);
   const [ownedTicket, setOwnedTicket] = useState(0);
   const [openModal, setOpenModalTx] = useState(false);
-  const onCloseModal = () => {
+  const onCloseModal = useCallback(() => {
     setOpenModalTx(false);
-  }
+  }, [setOpenModalTx]);
 
   useEffect(() => {
     const setBalance = async () => {
@@ -342,7 +342,7 @@ const Ticket: React.FC<any> = (props: any) => {
 
   return (
     <DefaultLayout>
-      <TicketModal open={openModal} onClose={onCloseModal} transaction={tokenDepositTransaction} />
+      <TicketModal open={openModal} onClose={onCloseModal} transaction={tokenDepositTransaction} networkName={infoTicket?.network_available} />
       <div className={styles.content}>
         {
           !isKYC && !checkingKyc && connectedAccount && <AlertKYC connectedAccount={connectedAccount} />
@@ -351,7 +351,7 @@ const Ticket: React.FC<any> = (props: any) => {
         <div className={styles.card}>
           <div className={styles.cardImg}>
             <img src={infoTicket.banner} alt="" onError={(e: any) => {
-              e.target.onerror = null;
+              // e.target.onerror = null;
               e.target.src = ticketImg;
             }} />
           </div>

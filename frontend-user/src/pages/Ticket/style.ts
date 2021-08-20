@@ -50,29 +50,38 @@ const useStyles = makeStyles((theme: any) => {
       gridTemplateColumns: 'repeat(auto-fit, 461px)',
       placeContent: 'center',
       gap: '40px',
-      [theme.breakpoints.down('md')]: {
-        placeItems: 'center'
+      [theme.breakpoints.down('sm')]: {
+        placeItems: 'center',
+        gap: '20px',
+      },
+      [theme.breakpoints.down('xs')]: {
+        gridTemplateColumns: '310px'
       }
     },
     cardImg: {
       '& img': {
         width: '100%',
-        maxHeight: '360px',
+        maxHeight: '376px',
+        height: '100%',
       }
     },
     cardBody: {
-      paddingTop: '30px',
+      // paddingTop: '30px',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
       width: '461px',
-      gap: '30px',
+      gap: '20px',
       [theme.breakpoints.down('md')]: {
         // width: '461px',
+      },
+      [theme.breakpoints.down('xs')]: {
+        width: '300px',
       }
     },
     cardBodyText: {
       display: 'grid',
+      placeContent: 'center',
       '& h4, & h3': {
         margin: 0,
         padding: 0,
@@ -87,7 +96,7 @@ const useStyles = makeStyles((theme: any) => {
         fontSize: '28px',
         lineHeight: '36px',
         color: ' #FFFFFF',
-        marginBottom: '4px',
+        // marginBottom: '4px',
       },
       '& h4': {
         fontWeight: '600',
@@ -120,6 +129,18 @@ const useStyles = makeStyles((theme: any) => {
         justifyContent: 'center',
         minWidth: '190px',
         cursor: 'pointer',
+
+        '&.openBuy': {
+          width: '190px',
+          fontSize: '16px',
+          lineHeight: '28px',
+          padding: '4px 25px',
+
+          '& .small-text': {
+            fontSize: '12px',
+            lineHeight: '16px',
+          }
+        },
 
         '& img': {
           marginRight: '8px'
@@ -230,12 +251,16 @@ const useStyles = makeStyles((theme: any) => {
 
     cardBodyProgress: {
       display: 'grid',
-      gap: '15px',
+      gap: '4px',
+      [theme.breakpoints.down('xs')]: {
+        display: 'block',
+      },
 
     },
     progressItem: {
       display: 'grid',
       gap: '10px',
+
       '& .total .amount': {
         fontFamily: 'Firs Neue',
         fontStyle: 'normal',
@@ -268,6 +293,16 @@ const useStyles = makeStyles((theme: any) => {
     infoTicket: {
       display: 'flex',
       justifyContent: 'space-between',
+      [theme.breakpoints.down('xs')]: {
+        marginTop: '5px',
+      },
+    },
+    buyBox: {
+      [theme.breakpoints.down('xs')]: {
+        display: 'grid',
+        gridTemplateColumns: '1fr',
+        gap: '5px',
+      },
     },
     timeEnd: {
       display: 'block',
@@ -283,6 +318,11 @@ const useStyles = makeStyles((theme: any) => {
       mixBlendMode: 'normal',
     },
     amountBuy: {
+      [theme.breakpoints.down('xs')]: {
+        display: 'grid',
+        ' grid-template-columns': '40px auto',
+        'place-content': 'space-between',
+      },
 
       '& > span': {
         textTransform: 'uppercase',
@@ -302,17 +342,19 @@ const useStyles = makeStyles((theme: any) => {
         fontStyle: 'normal',
         color: ' #ffffff',
         fontWeight: 600,
-        fontSize: '16px',
-        lineHeight: '28px',
+        fontSize: '12px',
+        lineHeight: '20px',
         mixBlendMode: 'normal',
         '& span': {
-          display: 'block',
+          display: 'grid',
+          placeContent: 'center',
           padding: '5px 12px',
           border: '1px solid #2E2E2E',
           cursor: 'pointer'
         },
         '& span:nth-child(3)': {
-          padding: '5px 10px',
+          padding: '5px 14px',
+          fontSize: '16px',
         },
         '& > span input': {
           fontFamily: 'Firs Neue',
@@ -330,6 +372,23 @@ const useStyles = makeStyles((theme: any) => {
           padding: '8px 4px',
           textAlign: 'center',
         },
+      }
+    },
+    btnMinMax: {
+      background: '#72F34B',
+      color: '#000',
+      textTransform: 'uppercase',
+
+      '&.max': {
+        borderRadius: '0px 2px 2px 0px',
+      },
+      '&.min': {
+        borderRadius: '2px 0px  0px 2px',
+      },
+
+      '&.disabled': {
+        background: '#498631 !important',
+        cursor: 'not-allowed !important',
       }
     },
     disabledAct: {
@@ -352,7 +411,8 @@ const useStyles = makeStyles((theme: any) => {
       padding: '13px 20px',
       textTransform: 'uppercase',
       minWidth: '200px',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      height: '52px',
     },
     btnApprove: {
       outline: 'none',

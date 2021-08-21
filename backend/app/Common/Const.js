@@ -9,6 +9,7 @@ module.exports = Object.freeze({
     ERC20: 'Erc20',
     TIER: 'Tier',
     MANTRA_STAKE: 'MantraStake',
+    STAKING_POOL: 'StakingPool',
   },
   TX_TABLE: {
     CAMPAIGN: 1,
@@ -72,6 +73,13 @@ module.exports = Object.freeze({
     ACTIVE: 1,
     BLOCKED: 2,
     DELETED: 3
+  },
+  TIER_LEVEL: {
+    START: 0,
+    ROOKIE: 1,
+    ELITE: 2,
+    PRO: 3,
+    MASTER: 4,
   },
   FILE_SITE: '2mb',
   FILE_EXT: ['png', 'gif', 'jpg', 'jpeg', 'JPEG'],
@@ -167,5 +175,16 @@ module.exports = Object.freeze({
     ENDED: 'Ended',
     CLOSED: 'Ended',
   },
+  POOL_STATUS_JOINED: {  // Pool Status for User Joined Pool (Version 3)
+    NONE: 'NONE',
+    APPLIED_WHITELIST: 'APPLIED_WHITELIST',
+    WIN_WHITELIST: 'WIN_WHITELIST',
+    NOT_WIN_WHITELIST: 'NOT_WIN_WHITELIST',
+    CANCELED_WHITELIST: 'CANCELED_WHITELIST',
+    SWAPPING: 'SWAPPING',
+    CLAIMABLE: 'CLAIMABLE',
+    COMPLETED: 'COMPLETED',
+  },
+  NULL_AMOUNT: 'N/A',
 
 });

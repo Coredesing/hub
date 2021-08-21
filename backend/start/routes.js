@@ -25,17 +25,17 @@ Route.get('image/:fileName', 'FileController.getImage');
 
 // Webhook
 Route.group(() => {
-  Route.post('ico-campaign', 'CampaignController.icoCampaignCreate')
-  Route.post('edit-campaign', 'CampaignController.icoCampaignEdit')
-  Route.post('campaign-status', 'CampaignController.CampaignEditStatus')
-  Route.post('campaign-changed', 'CampaignController.CampaignChanged')
-  Route.post('transaction', 'TransactionController.transactionCreate')
-  Route.post('transaction-refund', 'TransactionController.transactionRefund')
-  Route.post('affiliate-campaign', 'AffiliateCampaignController.affiliateCreate')
-  Route.post('token-claimed', 'TransactionController.tokenClaimed')
-
-  Route.post('mantra-stake/index-stake-info', 'MantraStakeController.indexStakeInfo');
-  Route.post('reputation/index-stake-info', 'ReputationController.indexStakeInfo');
+  // Route.post('ico-campaign', 'CampaignController.icoCampaignCreate')
+  // Route.post('edit-campaign', 'CampaignController.icoCampaignEdit')
+  // Route.post('campaign-status', 'CampaignController.CampaignEditStatus')
+  // Route.post('campaign-changed', 'CampaignController.CampaignChanged')
+  // Route.post('transaction', 'TransactionController.transactionCreate')
+  // Route.post('transaction-refund', 'TransactionController.transactionRefund')
+  // Route.post('affiliate-campaign', 'AffiliateCampaignController.affiliateCreate')
+  // Route.post('token-claimed', 'TransactionController.tokenClaimed')
+  //
+  // Route.post('mantra-stake/index-stake-info', 'MantraStakeController.indexStakeInfo');
+  // Route.post('reputation/index-stake-info', 'ReputationController.indexStakeInfo');
 }).prefix('webhook').middleware('checkJwtWebhook');
 
 // GameFI user new route
@@ -59,10 +59,11 @@ Route.group(() => {
   Route.get('pools/user/:walletAddress/joined-pools', 'PoolController.getJoinedPools');
   Route.get('pools/v2/upcoming-pools', 'PoolController.getUpcomingPools');
   Route.get('pools/v2/featured-pools', 'PoolController.getFeaturedPools');
-  Route.get('pools/v3/active-pools', 'PoolController.getActivePoolsV3');
-  Route.get('pools/v3/next-to-launch-pools', 'PoolController.getNextToLaunchPoolsV3');
-  Route.get('pools/v3/upcoming-pools', 'PoolController.getUpcomingPoolsV3');
-  Route.get('pools/v3/complete-sale-pools', 'PoolController.getCompleteSalePoolsV3');
+
+  Route.get('pools/active-pools', 'PoolController.getActivePoolsV3');
+  Route.get('pools/next-to-launch-pools', 'PoolController.getNextToLaunchPoolsV3');
+  Route.get('pools/upcoming-pools', 'PoolController.getUpcomingPoolsV3');
+  Route.get('pools/complete-sale-pools', 'PoolController.getCompleteSalePoolsV3');
 
   // user
   Route.get('user/profile', 'UserController.profile').middleware(['maskEmailAndWallet']);
@@ -127,9 +128,9 @@ Route.group(() => {
   Route.get('pool/:campaignId/user-snapshot-balance', 'CampaignController.userSnapShotBalance');
 
   Route.get('profile', 'AdminController.profile').middleware(['auth:admin', 'checkRole']);
-  Route.post('change-password', 'AdminController.changePassword').middleware(['checkSignature', 'auth:admin', 'checkRole']);
+  // Route.post('change-password', 'AdminController.changePassword').middleware(['checkSignature', 'auth:admin', 'checkRole']);
   Route.post('update-profile', 'AdminController.updateProfile').middleware(['auth:admin', 'checkRole']).validator('UpdateProfile');
-  Route.post('transaction-create', 'TransactionController.transactionAdd').middleware(['auth:admin']);
+  // Route.post('transaction-create', 'TransactionController.transactionAdd').middleware(['auth:admin']);
 
   Route.get('users', 'UserController.userList').middleware(['auth:admin']);
 
@@ -156,7 +157,7 @@ Route.group(() => {
   Route.get('check-wallet-address', 'AuthAdminController.checkWalletAddress');
   Route.post('check-wallet-address', 'AuthAdminController.checkWalletAddress');
   Route.get('check-token/:token', 'AdminController.checkToken');
-  Route.post('reset-password/:token', 'AdminController.resetPassword').validator('ResetPassword').middleware('checkSignature');
+  // Route.post('reset-password/:token', 'AdminController.resetPassword').validator('ResetPassword').middleware('checkSignature');
 
 }).prefix('api/v2/admin').middleware(['typeAdmin', 'checkPrefix', 'formatEmailAndWallet']);
 

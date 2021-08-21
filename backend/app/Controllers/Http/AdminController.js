@@ -162,7 +162,7 @@ class AdminController {
 
     const passwordOld = param.password_old;
     const passwordNew = param.password_new;
-    const role = request.params.type == Const.USER_TYPE_PREFIX.ICO_OWNER ? Const.USER_ROLE.ICO_OWNER : Const.USER_ROLE.PUBLIC_USER;
+    const role = request.params.type === Const.USER_TYPE_PREFIX.ICO_OWNER ? Const.USER_ROLE.ICO_OWNER : Const.USER_ROLE.PUBLIC_USER;
     const user = auth.user;
 
     if(await Hash.verify(passwordOld, user.password)) {

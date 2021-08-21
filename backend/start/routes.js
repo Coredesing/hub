@@ -127,9 +127,9 @@ Route.group(() => {
   Route.get('pool/:campaignId/user-snapshot-balance', 'CampaignController.userSnapShotBalance');
 
   Route.get('profile', 'AdminController.profile').middleware(['auth:admin', 'checkRole']);
-  Route.post('change-password', 'AdminController.changePassword').middleware(['checkSignature', 'auth:admin', 'checkRole']);
+  // Route.post('change-password', 'AdminController.changePassword').middleware(['checkSignature', 'auth:admin', 'checkRole']);
   Route.post('update-profile', 'AdminController.updateProfile').middleware(['auth:admin', 'checkRole']).validator('UpdateProfile');
-  Route.post('transaction-create', 'TransactionController.transactionAdd').middleware(['auth:admin']);
+  // Route.post('transaction-create', 'TransactionController.transactionAdd').middleware(['auth:admin']);
 
   Route.get('users', 'UserController.userList').middleware(['auth:admin']);
 
@@ -156,7 +156,7 @@ Route.group(() => {
   Route.get('check-wallet-address', 'AuthAdminController.checkWalletAddress');
   Route.post('check-wallet-address', 'AuthAdminController.checkWalletAddress');
   Route.get('check-token/:token', 'AdminController.checkToken');
-  Route.post('reset-password/:token', 'AdminController.resetPassword').validator('ResetPassword').middleware('checkSignature');
+  // Route.post('reset-password/:token', 'AdminController.resetPassword').validator('ResetPassword').middleware('checkSignature');
 
 }).prefix('api/v2/admin').middleware(['typeAdmin', 'checkPrefix', 'formatEmailAndWallet']);
 

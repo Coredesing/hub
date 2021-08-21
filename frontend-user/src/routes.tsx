@@ -40,6 +40,7 @@ import 'react-notifications/lib/notifications.css';
 import { adminRoute, publicRoute } from "./utils";
 import ComingSoon from "./pages/ComingSoon/ComingSoon";
 import Ticket from './pages/Ticket';
+import Home from './pages/Home';
 
 /**
  * Main App routes.
@@ -126,7 +127,7 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                     {/* <Route path={`${'/polkasmith-privacy'}`} component={PolkaSmithPrivacyPolicy} />
                     <Route path={`${'/join-polkasmith'}`} component={JoinPolkaSmith} /> */}
                     {/* <Route exact path={`${'/dashboard'}`} component={Dashboard} /> */}
-                    <Route exact path={`${'/'}`} component={Ticket} />
+                    {/* <Route exact path={`${'/'}`} component={Home} /> */}
                     <Route path={`${'/buy-token/:id'}`} component={BuyToken} />
                     <Route path={'/register'} component={InvestorRegister} />
                     <Route path={'/login'} component={InvestorLogin} />
@@ -143,7 +144,7 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                     {/* <Route path={'/terms'} component={Terms} /> */}
                     {/* <Route path={'/'} component={Landing} /> */}
                     {/* <Route path={'/coming-soon'} component={ComingSoon} /> */}
-                    <Route path={'/'} component={Ticket} />
+                    <Route path={'/'} component={Home} />
                     <Route component={NotFoundPage} />
                 </Switch>
             </div>

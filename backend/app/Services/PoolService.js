@@ -548,6 +548,28 @@ class PoolService {
     };
   }
 
+  async getPoolByTokenType(filterParams) {
+    const limit = filterParams.limit ? filterParams.limit : 5;
+    const page = filterParams.page ? filterParams.page : 1;
+    const token_type = filterParams.token_type ? filterParams.token_type : 'erc20'
+
+    let pools = await this.buildQueryBuilder({})
+      .where('token_type', token_type)
+      .whereIn('campaign_status', [
+        Const.POOL_STATUS.TBA,
+        Const.POOL_STATUS.UPCOMING,
+        Const.POOL_STATUS.FILLED,
+        Const.POOL_STATUS.SWAP,
+        Const.POOL_STATUS.CLAIMABLE,
+      ])
+      .orderBy('priority', 'DESC')
+      .orderBy('campaign_status', 'DESC')
+      .orderBy('start_join_pool_time', 'DESC')
+      .orderBy('id', 'DESC')
+      .paginate(page, limit);
+
+    return pools;
+  }
 }
 
 module.exports = PoolService;

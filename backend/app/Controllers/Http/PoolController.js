@@ -4,25 +4,10 @@ const CampaignModel = use('App/Models/Campaign');
 const WalletAccountModel = use('App/Models/WalletAccount');
 const UserModel = use('App/Models/User');
 const WalletAccountService = use('App/Services/WalletAccountService');
-const Const = use('App/Common/Const');
 const PoolService = use('App/Services/PoolService');
-const WhitelistBannerSettingService = use('App/Services/WhitelistBannerSettingService');
 const HelperUtils = use('App/Common/HelperUtils');
 const RedisUtils = use('App/Common/RedisUtils');
 const GameFIUtils = use('App/Common/GameFIUtils');
-
-const Redis = use('Redis');
-const CONFIGS_FOLDER = '../../../blockchain_configs/';
-const NETWORK_CONFIGS = require(`${CONFIGS_FOLDER}${process.env.NODE_ENV}`);
-const CONTRACT_CONFIGS = NETWORK_CONFIGS.contracts[Const.CONTRACTS.CAMPAIGN];
-const CONTRACT_FACTORY_CONFIGS = NETWORK_CONFIGS.contracts[Const.CONTRACTS.CAMPAIGNFACTORY];
-
-const { abi: CONTRACT_ABI } = CONTRACT_CONFIGS.CONTRACT_DATA;
-const { abi: CONTRACT_FACTORY_ABI } = CONTRACT_FACTORY_CONFIGS.CONTRACT_DATA;
-const { abi: CONTRACT_ERC20_ABI } = require('../../../blockchain_configs/contracts/Normal/Erc20.json');
-
-const Web3 = require('web3');
-const web3 = new Web3(NETWORK_CONFIGS.WEB3_API_URL);
 const Config = use('Config')
 const moment = require('moment');
 const BigNumber = use('bignumber.js');
@@ -737,6 +722,16 @@ class PoolController {
     } catch (e) {
       console.log(e);
       return HelperUtils.responseErrorInternal('getCompleteSalePoolsV3 Fail !!!');
+    }
+  }
+
+  async getPoolByTokenType({ request, params }) {
+    const inputParams = request.all();
+    try {
+      let listData = await (new PoolService).getPoolByTokenType(inputParams);
+      return HelperUtils.responseSuccess(listData);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal('getPoolByTokenType Fail');
     }
   }
 

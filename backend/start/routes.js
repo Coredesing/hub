@@ -42,6 +42,9 @@ Route.group(() => {
 Route.post('block-pass', 'UserController.kycUpdateStatus').middleware('checkBlockPassSignature');
 
 Route.group(() => {
+  // home
+  Route.get('home/performance', 'HomeController.getPerformance');
+
   // pool
   Route.get('pool/gamefi-ticket', 'PoolController.getGameFITicket');
   Route.get('pool/:campaignId', 'PoolController.getPoolPublic');
@@ -55,6 +58,7 @@ Route.group(() => {
 
   // pools
   Route.get('pools', 'PoolController.getPoolList');
+  Route.get('pools/token-type', 'PoolController.getPoolByTokenType');
   Route.get('pools/top-pools', 'PoolController.getTopPools');
   Route.get('pools/user/:walletAddress/joined-pools', 'PoolController.getJoinedPools');
   Route.get('pools/v2/upcoming-pools', 'PoolController.getUpcomingPools');

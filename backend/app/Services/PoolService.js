@@ -75,6 +75,10 @@ class PoolService {
       builder = builder.where('is_display', '=', params.is_display);
     }
 
+    if (params.token_type) {
+      builder = builder.where('token_type', params.token_type)
+    }
+
     return builder;
   }
 

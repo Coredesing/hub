@@ -685,6 +685,10 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
     releaseTime && lastClaimTime &&
     releaseTime.getTime() <= today && today < (lastClaimTime * 1000)
   ) {
+    if (poolDetails.process && poolDetails.process === Const.PROCESS.ONLY_CLAIM) {
+      return PoolStatus.FILLED;
+    }
+
     return PoolStatus.CLAIMABLE;
   }
 

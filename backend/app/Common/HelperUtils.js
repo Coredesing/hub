@@ -177,7 +177,7 @@ const responseErrorInternal = (message) => {
 const responseNotFound = (message) => {
   return {
     status: 404,
-    message: message || 'Not Found !',
+    message: message || 'Not Found!',
     data: null,
   }
 };
@@ -193,7 +193,7 @@ const responseBadRequest = (message) => {
 const responseSuccess = (data = null, message) => {
   return {
     status: 200,
-    message: message || 'Success !',
+    message: message || 'Success!',
     data,
   }
 };

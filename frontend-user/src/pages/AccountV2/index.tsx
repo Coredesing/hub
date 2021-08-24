@@ -25,7 +25,7 @@ import CardsTicket from "./NftTicket/Cards";
 import NeedHelp from "./NeedHelp";
 import IdoPolls from "./IdoPolls";
 import axios from '../../services/axios';
-import {numberWithCommas} from '../../utils/formatNumber';
+import { numberWithCommas } from '../../utils/formatNumber';
 import { AlertKYC } from "../../components/Base/AlertKYC";
 
 const TOKEN_ADDRESS = process.env.REACT_APP_PKF || "";
@@ -42,7 +42,7 @@ const menuMyAccount = [
   {
     name: 'My Tier',
     icon: '/images/account_v3/icons/icon_my_tier.svg',
-  },{
+  }, {
     name: 'IDO Pools',
     icon: '/images/icons/icon_my_pools.svg',
   },
@@ -77,17 +77,13 @@ const AccountV2 = (props: any) => {
     TOKEN_MANTRA_ADDRESS,
     "eth"
   );
-  const { data = {}, loading } = useFetch<any>(connectedAccount ? `/user/profile?wallet_address=${connectedAccount}` : undefined);
   const query = new URLSearchParams(props.location.search);
   const currentTab = query.get('tab')
   let currentTabIndex = currentTab ? parseInt(currentTab) : 0
   currentTabIndex = currentTabIndex < menuMyAccount.length ? currentTabIndex : 0
 
-  const [emailVerified, setEmailVeryfied] = useState(0);
-  const [email, setEmail] = useState<string>("");
-  const [twitter, setTwitter] = useState<string>("");
-  const [telegram, setTelegram] = useState<string>("");
-  const [isKYC, setIsKYC] = useState(false);
+  const [emailVerified, setEmailVeryfied] = useState(USER_STATUS.ACTIVE);
+  const [isKYC, setIsKYC] = useState(true);
   const [listTokenDetails, setListTokenDetails] = useState([]) as any;
   const { data: appChainID } = useSelector((state: any) => state.appNetwork)
   const { currentTier, totalUnstaked, total } = useUserTier(connectedAccount || '', 'eth');
@@ -95,8 +91,39 @@ const AccountV2 = (props: any) => {
   const [activeMenuAccount, setActiveMenuAccount] = useState(menuMyAccount[currentTabIndex].name);
   const [updatedSuccess, setUpdatedSuccess] = useState(false);
   const [dataHistories, setDataHistories] = useState({}) as any;
-  const {data: tiers = {}} = useSelector((state: any) => state.tiers);
-  const {data: userTier = 0} = useSelector((state: any) => state.userTier);
+  const { data: tiers = {} } = useSelector((state: any) => state.tiers);
+  const { data: userTier = 0 } = useSelector((state: any) => state.userTier);
+  const [userProfile, setUserProfile] = useState<{ [k in string]: any }>({});
+  const [loadingUserProfile, setRenewUserProfile] = useState(false);
+
+  useEffect(() => {
+    setRenewUserProfile(true);
+  }, [connectedAccount]);
+  useEffect(() => {
+    if (!connectedAccount) {
+      setUserProfile({});
+      setIsKYC(false);
+      setEmailVeryfied(USER_STATUS.UNVERIFIED);
+      return;
+    }
+    if (loadingUserProfile && connectedAccount) {
+      axios.get(`/user/profile?wallet_address=${connectedAccount}`)
+        .then((res) => {
+          const user = res.data.data?.user || {};
+          setUserProfile({
+            ...user,
+          });
+          setIsKYC(user.is_kyc === 1);
+          setEmailVeryfied(user.status);
+        }).catch(() => {
+          setUserProfile({});
+          setIsKYC(false);
+          setEmailVeryfied(USER_STATUS.UNVERIFIED);
+        }).finally(() => {
+          setRenewUserProfile(false);
+        })
+    }
+  }, [connectedAccount, loadingUserProfile]);
 
   useEffect(() => {
     if (isAuth && connectedAccount && !wrongChain) {
@@ -107,14 +134,6 @@ const AccountV2 = (props: any) => {
   }, [isAuth, wrongChain, connectedAccount, dispatch]);
 
   useEffect(() => {
-    setEmail("");
-    setTwitter("");
-    setTelegram("");
-    setEmailVeryfied(USER_STATUS.UNVERIFIED);
-    setIsKYC(false);
-  }, [connectedAccount]);
-
-  useEffect(() => {
     setListTokenDetails([tokenPKFDetails, tokenUniLPDetails]);
   }, [tokenPKFDetails, tokenUniLPDetails, tokenMantraLPDetails]);
 
@@ -122,27 +141,7 @@ const AccountV2 = (props: any) => {
     setUpdatedSuccess(false);
   }, [activeMenuAccount]);
 
-  useEffect(() => {
-    if (isAuth && connectedAccount && !wrongChain) {
-      getUserProfile();
-    }
-  },[data, updatedSuccess, connectedAccount]);
 
-  const getUserHistory = async () => {
-    setLoadingGetHistory(true);
-    const response = await axios.get(`/reputation/histories/${connectedAccount}?hideZeroTx=flase&page=1&limit=10`);
-
-    if (response.data) {
-      setLoadingGetHistory(false);
-      if (response.data.status === 200) {
-        setDataHistories(response?.data?.data);
-      }
-
-      if (response.data.status !== 200) {
-        setDataHistories({});
-      }
-    }
-  };
 
   const selectTab = (name: any, index: any) => {
     setActiveMenuAccount(name)
@@ -150,40 +149,25 @@ const AccountV2 = (props: any) => {
   }
 
   useEffect(() => {
-    getUserHistory();
-    getUserProfile();
-  }, []);
+    const getUserHistory = async () => {
+      setLoadingGetHistory(true);
+      const response = await axios.get(`/reputation/histories/${connectedAccount}?hideZeroTx=flase&page=1&limit=10`);
 
-  useEffect(() => {
-    getUserHistory();
-    getUserProfile();
-  }, [connectedAccount]);
-
-  const getUserProfile = async () => {
-    if (!connectedAccount) {
-      return null
-    } else {
-      const response = await axios.get(`/user/profile?wallet_address=${connectedAccount}`);
       if (response.data) {
+        setLoadingGetHistory(false);
         if (response.data.status === 200) {
-          const user = response?.data?.data?.user;
-          setEmail(user?.email);
-          setTwitter(user?.user_twitter);
-          setTelegram(user?.user_telegram);
-          setEmailVeryfied(user?.status);
-          setIsKYC(user?.is_kyc === 1 ? true : false);
+          setDataHistories(response?.data?.data);
         }
 
         if (response.data.status !== 200) {
-          setEmail("");
-          setTwitter("");
-          setTelegram("");
-          setEmailVeryfied(USER_STATUS.UNVERIFIED);
-          setIsKYC(false);
+          setDataHistories({});
         }
       }
-    }
-  };
+    };
+    connectedAccount ? getUserHistory() : setDataHistories({});
+  }, [connectedAccount]);
+
+
   useEffect(() => {
     dispatch(getTiers());
     connectedAccount && dispatch(getUserInfo(connectedAccount));
@@ -196,36 +180,9 @@ const AccountV2 = (props: any) => {
   return (
     <DefaultLayout isKYC={isKYC}>
       <div className={classes.accountContainer}>
-
-      {
-          !isKYC && !loading && connectedAccount && <AlertKYC connectedAccount={connectedAccount} className={classes.kycAlert} />
+        {
+          !isKYC && !loadingUserProfile && connectedAccount && <AlertKYC connectedAccount={connectedAccount} className={classes.kycAlert} />
         }
-
-        {/* {!isKYC && !loading && connectedAccount && (
-          <div className={classes.alertVerifyEmail}>
-            <img src={iconWarning} style={{ marginRight: "12px" }} alt="" />
-            <span>
-              The connected wallet address (
-              {trimMiddlePartAddress(connectedAccount)}) is unverified.&nbsp;
-              <a
-                href="https://verify-with.blockpass.org/?clientId=red_kite_kyc_7a0e6&serviceName=Red%20Kite%20KYC&env=prod"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Please sumbit KYC now
-              </a>
-              &nbsp;or switch to a verified address. Click{" "}
-              <a
-                href="https://medium.com/polkafoundry/what-to-do-before-joining-idos-on-red-kite-de9b0d778dbe"
-                target="_blank"
-                rel="noreferrer"
-              >
-                here
-              </a>{" "}
-              for more process details.
-            </span>
-          </div>
-        )} */}
 
         {/* appChainID > KOVAN ID => Not Ethereum mainnet/testnet */}
         {(+appChainID?.appChainID > ChainId.KOVAN) && isKYC && activeMenuAccount === 'My Tier' && (
@@ -258,7 +215,7 @@ const AccountV2 = (props: any) => {
                 tabAccount.map((item, index) => {
                   return (
                     <li
-                      className={`${classes.itemTabAccount}  ${activeMenuAccount === item.name? 'active' : ''}`}
+                      className={`${classes.itemTabAccount}  ${activeMenuAccount === item.name ? 'active' : ''}`}
                       key={index}
                       onClick={() => selectTab(item.name, index)}
                     >
@@ -275,26 +232,27 @@ const AccountV2 = (props: any) => {
           </div>
 
           <div className={classes.rightAccount}>
-            { activeMenuAccount === 'My Profile' &&
+            {activeMenuAccount === 'My Profile' && !loadingUserProfile &&
               <AccountInformation
                 notEth={(+appChainID?.appChainID > ChainId.KOVAN)}
                 classNamePrefix="account-infomation"
                 balance={balance}
                 userInfo={userInfo}
                 tokenPKFDetails={tokenPKFDetails}
-                email={email}
-                twitter={twitter}
-                telegram={telegram}
+                email={userProfile.email}
+                twitter={userProfile.user_twitter}
+                telegram={userProfile.user_telegram}
                 emailVerified={emailVerified}
-                setEmail={setEmail}
-                setEmailVeryfied={setEmailVeryfied}
+                // setEmail={setEmail}
+                // setEmailVeryfied={setEmailVeryfied}
                 isKYC={isKYC}
-                kycStatus={data?.user?.is_kyc}
+                kycStatus={userProfile.is_kyc}
                 setUpdatedSuccess={setUpdatedSuccess}
+                setRenewUserProfile={setRenewUserProfile}
               />
             }
 
-            { activeMenuAccount === 'My Tier' &&
+            {activeMenuAccount === 'My Tier' &&
               <div className={classes.tier}>
                 <Tiers
                   showMoreInfomation={false}
@@ -328,7 +286,7 @@ const AccountV2 = (props: any) => {
         </div>
       </div>
 
-      <Backdrop open={loadingGetHistory || loading} className={classes.backdrop}>
+      <Backdrop open={loadingGetHistory || loadingUserProfile} className={classes.backdrop}>
         <CircularProgress color="inherit" />
       </Backdrop>
     </DefaultLayout>

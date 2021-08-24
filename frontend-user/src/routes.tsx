@@ -40,7 +40,9 @@ import 'react-notifications/lib/notifications.css';
 import { adminRoute, publicRoute } from "./utils";
 import ComingSoon from "./pages/ComingSoon/ComingSoon";
 import Ticket from './pages/Ticket';
-import Home from './pages/Home';
+// import Home from './pages/Home';
+import Home1 from './pages/Home1';
+import TicketSale from './pages/TicketSale';
 
 /**
  * Main App routes.
@@ -139,12 +141,14 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                     <Route path={'/account'} component={AccountV2} />
                     {/* <Route path={'/stake'} component={Deposit} />
                     <Route path={'/unstake'} component={Withdraw} /> */}
-                    <Route path={'/pools'} component={Pools} />
+                    <Route exact path={'/pools'} component={Pools} />
                     {/* <Route path={'/privacy'} component={PrivacyPolicy} /> */}
                     {/* <Route path={'/terms'} component={Terms} /> */}
                     {/* <Route path={'/'} component={Landing} /> */}
                     {/* <Route path={'/coming-soon'} component={ComingSoon} /> */}
-                    <Route path={'/'} component={Home} />
+                    {/* <Route path={'/home'} component={Home} /> */}
+                    <Route exact path={'/pools/:type'} component={TicketSale} />
+                    <Route exact path={'/'} component={Home1} />
                     <Route component={NotFoundPage} />
                 </Switch>
             </div>

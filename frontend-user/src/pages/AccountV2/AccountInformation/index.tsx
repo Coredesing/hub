@@ -27,14 +27,15 @@ const AccountInformation = (props: any) => {
 
   const {
     email,
-    setEmail,
-    setEmailVeryfied,
+    // setEmail,
+    // setEmailVeryfied,
     kycStatus,
     twitter,
     telegram,
     setUpdatedSuccess,
     notEth,
     isKYC,
+    setRenewUserProfile,
   } = props;
 
   useEffect(() => {
@@ -82,6 +83,7 @@ const AccountInformation = (props: any) => {
         if (response.data.status === 200) {
           setOnEditProfile(false);
           setUpdatedSuccess(true);
+          setRenewUserProfile(true);
         }
 
         if (response.data.status !== 200) {
@@ -267,9 +269,10 @@ const AccountInformation = (props: any) => {
       <ModalVerifyEmail
         setOpenModalVerifyEmail={setOpenModalVerifyEmail}
         email={email}
-        setEmail={setEmail}
+        // setEmail={setEmail}
         open={openModalVerifyEmail}
-        setEmailVeryfied={setEmailVeryfied}
+        // setEmailVeryfied={setEmailVeryfied}
+        setRenewUserProfile={setRenewUserProfile}
       />
     </div>
   );

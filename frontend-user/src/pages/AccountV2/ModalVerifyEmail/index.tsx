@@ -26,9 +26,10 @@ const ModalVerifyEmail = (props: any) => {
   const {
     setOpenModalVerifyEmail,
     email,
-    setEmail,
-    setEmailVeryfied,
-    open
+    // setEmail,
+    // setEmailVeryfied,
+    open,
+    setRenewUserProfile,
   } = props;
 
   useEffect(() => {
@@ -52,9 +53,10 @@ const ModalVerifyEmail = (props: any) => {
         if(res.data.status == 200) {
           dispatch(alertSuccess(res.data.message));
           window.location.reload();
-          setEmail(inputEmail)
+          setRenewUserProfile(true);
+          // setEmail(inputEmail)
           setOpenModalVerifyEmail(false);
-          setEmailVeryfied(1);
+          // setEmailVeryfied(1);
         } else if(res.data.status == 400) {
           dispatch(alertFailure(res.data.message));
         }

@@ -645,7 +645,8 @@ class CampaignController {
       }
 
       let maxTokenClaim = new BigNumber(0);
-      if (camp.token_type === Const.TOKEN_TYPE.ERC721 && camp.process === Const.ONLY_CLAIM) {
+      if (camp.token_type === Const.TOKEN_TYPE.ERC721 && camp.process === Const.PROCESS.ONLY_CLAIM) {
+        const winnerListService = new WinnerListService();
         let winner = await winnerListService.findOneByFilters({'wallet_address': userWalletAddress, 'campaign_id': campaign_id});
         if (!winner || !winner.lottery_ticket || winner.lottery_ticket < 1) {
           return HelperUtils.responseBadRequest("you are not allowed to claim ticket");

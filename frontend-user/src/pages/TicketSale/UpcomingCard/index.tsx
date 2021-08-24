@@ -1,0 +1,79 @@
+import clsx from 'clsx';
+import useStyles from './style';
+import { useCardStyles } from '../style';
+import { caclDiffTime, formatNumber, getDiffTime } from '../../../utils';
+import { useEffect, useState } from 'react';
+import Image from '../../../components/Base/Image';
+
+type Props = {
+  card: { [k: string]: any },
+  [k: string]: any
+}
+export const UpcomingCard = ({ card, ...props }: Props) => {
+  const styles = { ...useStyles(), ...useCardStyles() };
+
+  const [openTime, setOpenTime] = useState<{ [k in string]: number }>({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  });
+
+  useEffect(() => {
+    if (card) {
+      const openTime = +card.start_time * 1000;
+      if (openTime > Date.now()) {
+        setOpenTime(getDiffTime(openTime, Date.now()));
+      }
+    }
+  }, [card]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+
+      const newOpenTime = { ...openTime };
+      if (newOpenTime.days === 0 && newOpenTime.hours === 0 && newOpenTime.minutes === 0 && newOpenTime.seconds === 0) {
+        clearInterval(interval);
+        // recall api
+        return;
+      }
+      setOpenTime(caclDiffTime(newOpenTime));
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    }
+  }, [openTime, setOpenTime]);
+
+  return (
+    <div className={clsx(styles.card, styles.cardUpcoming)}>
+      <div className={clsx(styles.cardImg, styles.cardImgUpcoming)}>
+        <h4>{card.seed || 'Private'}</h4>
+        <Image src={card.banner} />
+        {/* <img src={card.image} alt="" /> */}
+      </div>
+      <div className={styles.cardBody}>
+        <div className={clsx(styles.cardBodyItem, styles.cardBodyTitle, styles.BodyTitleUpc)}>
+          <h4>{card.title}</h4>
+          <img src={`/images/icons/${card.accept_currency}.png`} alt="" />
+          {/* <img src={`/images/icons/eth.svg`} alt="" /> */}
+        </div>
+        <div className={styles.cardBodyItem}>
+          <span className={styles.text}>Total SALES</span>
+          <span className={styles.textBold}> {card.total_sold_coin}</span>
+        </div>
+        <div className={styles.cardBodyItem}>
+          <span className={styles.text}>PRICE</span>
+          <span className={clsx(styles.textBold, styles.price)}> {card.ether_conversion_rate} {card.accept_currency} </span>
+        </div>
+        <div className={'cardBodyTimeEndItem'}>
+          <img src='/images/icons/bright.svg' alt="" />
+          <span className={clsx(styles.text, 'sp1')}>OPEN IN</span>
+          <span className={styles.timeEnd}>
+            {formatNumber(openTime.days)}d : {formatNumber(openTime.hours)}h : {formatNumber(openTime.minutes)}m : {formatNumber(openTime.seconds)}s
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};

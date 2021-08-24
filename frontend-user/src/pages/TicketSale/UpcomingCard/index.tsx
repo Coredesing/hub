@@ -4,12 +4,14 @@ import { useCardStyles } from '../style';
 import { caclDiffTime, formatNumber, getDiffTime } from '../../../utils';
 import { useEffect, useState } from 'react';
 import Image from '../../../components/Base/Image';
+import { getSeedRound } from '../utils';
 
 type Props = {
   card: { [k: string]: any },
+  refresh: Function,
   [k: string]: any
 }
-export const UpcomingCard = ({ card, ...props }: Props) => {
+export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
   const styles = { ...useStyles(), ...useCardStyles() };
 
   const [openTime, setOpenTime] = useState<{ [k in string]: number }>({
@@ -34,6 +36,7 @@ export const UpcomingCard = ({ card, ...props }: Props) => {
       const newOpenTime = { ...openTime };
       if (newOpenTime.days === 0 && newOpenTime.hours === 0 && newOpenTime.minutes === 0 && newOpenTime.seconds === 0) {
         clearInterval(interval);
+        refresh();
         // recall api
         return;
       }
@@ -43,12 +46,12 @@ export const UpcomingCard = ({ card, ...props }: Props) => {
     return () => {
       clearInterval(interval);
     }
-  }, [openTime, setOpenTime]);
+  }, [openTime, setOpenTime, refresh]);
 
   return (
     <div className={clsx(styles.card, styles.cardUpcoming)}>
       <div className={clsx(styles.cardImg, styles.cardImgUpcoming)}>
-        <h4>{card.seed || 'Private'}</h4>
+        <h4>{getSeedRound(card.is_private)} Sale</h4>
         <Image src={card.banner} />
         {/* <img src={card.image} alt="" /> */}
       </div>

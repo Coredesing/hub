@@ -6,14 +6,22 @@ const useStyles = makeStyles((theme: any) => ({
     width: '840px',
     gridTemplateColumns: '401px auto',
     gap: '32px',
-    [theme.breakpoints.down('md')]: {
-      width: 'unset',
-      gridTemplateColumns: '400px',
+    // [theme.breakpoints.down('md')]: {
+    //   width: 'unset',
+    //   gridTemplateColumns: '400px',
+    // },
+    // [theme.breakpoints.down('sm')]: {
+    //   width: 'unset',
+    //   gridTemplateColumns: '310px',
+    // }
+    [theme.breakpoints.down("sm")]: {
+      width: "400px",
+      gridTemplateColumns: "auto",
     },
-    [theme.breakpoints.down('sm')]: {
-      width: 'unset',
-      gridTemplateColumns: '310px',
-    }
+    [theme.breakpoints.down("xs")]: {
+      width: "319px",
+      gridTemplateColumns: "auto",
+    },
   },
   cardActiveApproved: {
     border: '1px solid #72F34B',
@@ -59,7 +67,7 @@ const useStyles = makeStyles((theme: any) => ({
     '&.approved': {
       color: '#000',
       background: '#72f348',
-    }, 
+    },
     '&.not-approved': {
       border: '1px solid #72F34B',
       color: '#72F34B',

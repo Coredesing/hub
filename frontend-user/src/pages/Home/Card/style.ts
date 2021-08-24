@@ -4,7 +4,7 @@ const useStyles = makeStyles((theme: any) => ({
     cardImgUpcoming: {
 
         maxHeight: '220px',
-        overflow: 'hidden',
+        // overflow: 'hidden',
 
         '&::before, &::after': {
             height: '6px !important',

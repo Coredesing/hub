@@ -10,6 +10,7 @@ import withWidth, { isWidthDown, isWidthUp } from '@material-ui/core/withWidth';
 import { CompleteCard } from './CompleteCard';
 import { Link } from '@material-ui/core';
 import { useFetchV1 } from '../../hooks/useFetch';
+import { TOKEN_TYPE } from '../../constants';
 
 type ResponseData = {
   data: { [k: string]: any }[],
@@ -24,27 +25,26 @@ const TicketSale = (props: any) => {
   const {
     data: activePools = {} as ResponseData,
     loading: loadingActivePools
-  } = useFetchV1(`/pools/active-pools?limit=10&page=1`);
+  } = useFetchV1(`/pools/active-pools?token_type=${TOKEN_TYPE.ERC721}&limit=10&page=1`);
   const {
     data: upcomingPools = {} as ResponseData,
     loading: loadingUpcomingPools
-  } = useFetchV1(`/pools/upcoming-pools?limit=10&page=1`);
-  console.log(upcomingPools)
+  } = useFetchV1(`/pools/upcoming-pools?token_type=${TOKEN_TYPE.ERC721}&limit=10&page=1`);
   const {
     data: compeltePools = {} as ResponseData,
     loading: loadingcompletePools
-  } = useFetchV1(`/pools/complete-sale-pools?limit=10&page=1`);
+  } = useFetchV1(`/pools/complete-sale-pools?token_type=${TOKEN_TYPE.ERC721}&limit=10&page=1`);
 
 
   return (
     <DefaultLayout>
       <section className={clsx(styles.pools, styles.section)}>
         <div className="rectangle">
-          <img src="/images/landing/rectangle-1.png" alt="" />
+          <img src="/images/landing/rectangle.png" alt="" />
         </div>
 
         <div className={styles.poolItem}>
-          <h3>Acitive Pools</h3>
+          <h3>Active Pools</h3>
 
           <div className={clsx(styles.cards, styles.cardsActive)}>
             {
@@ -66,7 +66,7 @@ const TicketSale = (props: any) => {
       </section>
       <section className={clsx(styles.completePools, styles.section)}>
         <div className="rectangle">
-          <img src="/images/landing/rectangle.png" alt="" />
+          <img src="/images/landing/rectangle-black.png" alt="" />
         </div>
         <div className={styles.poolItem}>
           <h3>Complete Sale</h3>

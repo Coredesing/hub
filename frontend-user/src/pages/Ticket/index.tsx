@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useParams } from 'react-router-dom';
 import clsx from 'clsx';
 import useStyles from './style';
 import DefaultLayout from "../../components/Layout/DefaultLayout";
@@ -31,7 +31,8 @@ const finishedImg = '/images/finished.png';
 const soldoutImg = '/images/soldout.png';
 const Ticket: React.FC<any> = (props: any) => {
   const styles = useStyles();
-
+  const params = useParams<{[k: string]: any}>();
+  const id = params.id;
   const { connectedAccount, /*isAuth, wrongChain*/ } = useAuth();
   const { isKYC, checkingKyc } = useKyc(connectedAccount);
   // console.log(isKYC, checkingKyc)
@@ -60,7 +61,7 @@ const Ticket: React.FC<any> = (props: any) => {
   const {
     data: dataTicket = null,
     loading: loadingTicket,
-  } = useFetchV1<any>(`/pool/gamefi-ticket`, renewTicket);
+  } = useFetchV1<any>(`/pool/${id}`, renewTicket);
 
   const [allowNetwork, setAllowNetwork] = useState<boolean>(false);
   useEffect(() => {

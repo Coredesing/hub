@@ -1,6 +1,6 @@
 import useStyles from './style';
-import commonStyle from '../../../styles/CommonStyle'
 import clsx from 'clsx';
+import Link from '@material-ui/core/Link';
 // @ts-ignore
 import { Fade } from 'react-reveal';
 import { useCardStyles } from '../style';
@@ -63,8 +63,6 @@ export const ActiveCard = ({ card, ...props }: Props) => {
     }
   }, [isBuy, endTime, setTimeEnd]);
 
-
-  const onBuyTicket = () => { }
   return (
     <div className={clsx(styles.card, styles.cardActive, {
       [styles.cardActiveApproved]: card.isApproved
@@ -110,12 +108,10 @@ export const ActiveCard = ({ card, ...props }: Props) => {
                 {formatNumber(endTime.days)}d : {formatNumber(endTime.hours)}h : {formatNumber(endTime.minutes)}m : {formatNumber(endTime.seconds)}s
               </span>
             </div>
-            <button className={clsx(styles.buynow, {
-              'approved': card.isApproved,
-              'not-approved': !card.isApproved,
-            })} onClick={onBuyTicket}>
-              {card.isApproved ? 'Buy Now' : 'Approve'}
-            </button>
+            <Link href={`/#/buy-nft/${card.id}`} className={clsx(styles.btnDetail, 'not-approved')}>
+              {/* {card.isApproved ? 'Buy Now' : 'Approve'} */}
+              Detail
+            </Link>
           </div>
         }
 

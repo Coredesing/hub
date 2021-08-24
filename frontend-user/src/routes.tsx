@@ -40,8 +40,7 @@ import 'react-notifications/lib/notifications.css';
 import { adminRoute, publicRoute } from "./utils";
 import ComingSoon from "./pages/ComingSoon/ComingSoon";
 import Ticket from './pages/Ticket';
-// import Home from './pages/Home';
-import Home1 from './pages/Home1';
+import Home from './pages/Home';
 import TicketSale from './pages/TicketSale';
 
 /**
@@ -125,7 +124,7 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
             exact path="/"
             render={() => <Redirect to={`${'/home'}`} />}
           /> */}
-                    <Route exact path={'/ticket'} component={Ticket} />
+                    <Route exact path={'/buy-nft/:id'} component={Ticket} />
                     {/* <Route path={`${'/polkasmith-privacy'}`} component={PolkaSmithPrivacyPolicy} />
                     <Route path={`${'/join-polkasmith'}`} component={JoinPolkaSmith} /> */}
                     {/* <Route exact path={`${'/dashboard'}`} component={Dashboard} /> */}
@@ -148,7 +147,7 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                     {/* <Route path={'/coming-soon'} component={ComingSoon} /> */}
                     {/* <Route path={'/home'} component={Home} /> */}
                     <Route exact path={'/pools/:type'} component={TicketSale} />
-                    <Route exact path={'/'} component={Home1} />
+                    <Route exact path={'/'} component={Home} />
                     <Route component={NotFoundPage} />
                 </Switch>
             </div>

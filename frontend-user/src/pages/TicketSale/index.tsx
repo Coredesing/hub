@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button, TextField } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
 import clsx from 'clsx';
@@ -22,18 +22,29 @@ type ResponseData = {
 
 const TicketSale = (props: any) => {
   const styles = { ...useStyles(), ...useCardStyles() };
+  const [recall, setRecall] = useState(true);
+  const refresh = useCallback(() => {
+    setRecall(true);
+  }, [setRecall]);
   const {
     data: activePools = {} as ResponseData,
     loading: loadingActivePools
-  } = useFetchV1(`/pools/active-pools?token_type=${TOKEN_TYPE.ERC721}&limit=10&page=1`);
+  } = useFetchV1(`/pools/active-pools?token_type=${TOKEN_TYPE.ERC721}&limit=10&page=1`, recall);
   const {
     data: upcomingPools = {} as ResponseData,
     loading: loadingUpcomingPools
-  } = useFetchV1(`/pools/upcoming-pools?token_type=${TOKEN_TYPE.ERC721}&limit=10&page=1`);
+  } = useFetchV1(`/pools/upcoming-pools?token_type=${TOKEN_TYPE.ERC721}&limit=10&page=1`, recall);
+  console.log(upcomingPools)
   const {
     data: compeltePools = {} as ResponseData,
     loading: loadingcompletePools
-  } = useFetchV1(`/pools/complete-sale-pools?token_type=${TOKEN_TYPE.ERC721}&limit=10&page=1`);
+  } = useFetchV1(`/pools/complete-sale-pools?token_type=${TOKEN_TYPE.ERC721}&limit=10&page=1`, recall);
+
+  useEffect(() => {
+    if(!loadingActivePools && !loadingUpcomingPools && !loadingcompletePools) {
+      setRecall(false);
+    }
+  }, [loadingActivePools, loadingUpcomingPools, loadingcompletePools])
 
 
   return (
@@ -48,7 +59,7 @@ const TicketSale = (props: any) => {
 
           <div className={clsx(styles.cards, styles.cardsActive)}>
             {
-              (activePools?.data || []).map((card, id) => <ActiveCard key={id} card={card} />)
+              (activePools?.data || []).map((card, id) => <ActiveCard key={id} card={card} refresh={refresh}/>)
             }
 
           </div>
@@ -59,7 +70,7 @@ const TicketSale = (props: any) => {
 
           <div className={clsx(styles.cards, styles.cardsUpcoming)}>
             {
-              (upcomingPools?.data || []).map((card, id: number) => <UpcomingCard key={id} card={card} />)
+              (upcomingPools?.data || []).map((card, id: number) => <UpcomingCard key={id} card={card} refresh={refresh} />)
             }
           </div>
         </div>

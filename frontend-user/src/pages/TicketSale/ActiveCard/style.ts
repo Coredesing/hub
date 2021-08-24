@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme: any) => ({
     fontSize: '14px',
     lineHeight: '26px',
     textAlign: 'center',
-    minWidth: '150px',
+    minWidth: '130px',
     cursor: 'pointer',
     height: '44px',
     background: 'transparent',

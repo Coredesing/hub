@@ -157,12 +157,17 @@ export function AboutTicket({info = {}}: any) {
         setValue(newValue);
     };
 
-    const getRules = (info: {[k in string]: any}) => [
-        `Every user can only buy a maximum of ${info.max_buy_ticket || 0} tickets.`,
-        'Each ticket can buy 100 GAFI.',
-        `Total number: ${info.total_sold_coin || 0} tickets.`,
-        'KYC required.',
-    ]
+    // const getRules = (info: {[k in string]: any}) => [
+    //     `Every user can only buy a maximum of ${info.max_buy_ticket || 0} tickets.`,
+    //     'Each ticket can buy 100 GAFI.',
+    //     `Total number: ${info.total_sold_coin || 0} tickets.`,
+    //     'KYC required.',
+    // ]
+
+    const getRules = (rule = '') => {
+        if(typeof rule !== 'string') return [];
+        return rule.split('\n').filter(r => r.trim());
+    }
 
     return (
         <div className={classes.root}>
@@ -175,7 +180,7 @@ export function AboutTicket({info = {}}: any) {
             <TabPanel value={value} index={0}>
                 <ul className={classes.tabPaneContent}>
                     {
-                        getRules(info).map((rule, idx) => <li key={idx}>{idx + 1}. {rule}</li>)
+                        getRules(info.rule).map((rule, idx) => <li key={idx}>{idx + 1}. {rule}</li>)
                     }
                 </ul>
             </TabPanel>

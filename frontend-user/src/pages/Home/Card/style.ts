@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme: any) => ({
             top: '-26px',
             left: '50%',
             transform: 'translate(-50%)',
+            textTransform: 'uppercase'
         },
 
 

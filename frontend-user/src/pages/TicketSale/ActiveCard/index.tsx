@@ -12,10 +12,11 @@ import { calcProgress, getRemaining } from '../utils';
 
 type Props = {
   card: { [k: string]: any },
+  refresh: Function,
   [k: string]: any
 }
 
-export const ActiveCard = ({ card, ...props }: Props) => {
+export const ActiveCard = ({ card, refresh, ...props }: Props) => {
   const styles = { ...useStyles(), ...useCardStyles() };
   const [isBuy, setIsBuy] = useState<boolean>(false);
   const [finishedTime, setFinishedTime] = useState<boolean>(true);
@@ -52,6 +53,7 @@ export const ActiveCard = ({ card, ...props }: Props) => {
           clearInterval(interval);
           setIsBuy(false);
           setFinishedTime(true);
+          refresh();
           return;
         }
         setTimeEnd(caclDiffTime(newEndTime));

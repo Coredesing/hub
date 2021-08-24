@@ -7,12 +7,14 @@ class CampaignsSchema extends Schema {
   up () {
     this.table('campaigns', (table) => {
       table.text('rule');
+      table.text('process').defaultTo('all')
     })
   }
 
   down () {
     this.table('campaigns', (table) => {
       table.dropColumn('rule');
+      table.dropColumn('process')
     })
   }
 }

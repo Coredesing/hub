@@ -47,6 +47,7 @@ import ForbiddenCountry from "./Components/ForbiddenCountry/ForbiddenCountry";
 import SocialSetting from "./Components/SocialSetting/SocialSetting";
 import FreeTimeSetting from "./Components/FreeTimeSetting/FreeTimeSetting";
 import PoolRule from "./Components/PoolRule";
+import Process from "./Components/Process";
 
 function PoolForm(props: any) {
   const classes = useStyles();
@@ -129,6 +130,7 @@ function PoolForm(props: any) {
       website: data.website,
       banner: data.banner,
       description: data.description,
+      process: data.process,
       rule: data.rule ?? '',
       address_receiver: data.addressReceiver,
 
@@ -259,6 +261,7 @@ function PoolForm(props: any) {
       website: data.website,
       banner: data.banner,
       description: data.description,
+      process: data.process,
       rule: data.rule ?? '',
 
       // USDT Price
@@ -417,6 +420,7 @@ function PoolForm(props: any) {
         website: data.website,
         banner: data.banner,
         description: data.description,
+        process: data.process,
         rule: data.rule ?? '',
         address_receiver: data.addressReceiver,
 
@@ -583,6 +587,14 @@ function PoolForm(props: any) {
                 errors={errors}
                 control={control}
                 watch={watch}
+              />
+
+              <Process
+                  poolDetail={poolDetail}
+                  setValue={setValue}
+                  errors={errors}
+                  control={control}
+                  watch={watch}
               />
 
             </div>

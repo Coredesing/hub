@@ -1,266 +1,300 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: any) => {
   return {
     section: {
-      position: 'relative',
-      paddingTop: '80px',
-      paddingBottom: '160px',
-      '& .rectangle': {
-        position: 'absolute',
-        width: '100%',
+      position: "relative",
+      paddingTop: "80px",
+      [theme.breakpoints.down("sm")]: {
+        paddingTop: "60px",
+      },
+      [theme.breakpoints.down("xs")]: {
+        paddingTop: "40px",
+      },
+      paddingBottom: "160px",
+      "& .rectangle": {
+        position: "absolute",
+        width: "100%",
+        heigt: "305px",
+        [theme.breakpoints.down("sm")]: {
+          height: "238px",
+        },
+        [theme.breakpoints.down("xs")]: {
+          height: "170px",
+        },
         top: 0,
-        '& img': {
-          width: '100%',
-        }
-      }
+        "& img": {
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+        },
+      },
     },
     pools: {
-      display: 'grid',
-      gap: '120px',
-      background: '#171717',
+      display: "grid",
+      gap: "120px",
+      background: "#171717",
     },
     poolItem: {
-      position: 'relative',
-      '& > h3': {
-        fontFamily: 'Firs Neue',
-        fontStyle: 'normal',
+      position: "relative",
+      "& > h3": {
+        fontFamily: "Firs Neue",
+        fontStyle: "normal",
         fontWeight: 600,
-        fontSize: '32px',
-        lineHeight: '40px',
-        textAlign: 'center',
-        color: '#FFFFFF',
-        marginBottom: '24px'
-      }
+        fontSize: "32px",
+        lineHeight: "40px",
+        textAlign: "center",
+        color: "#FFFFFF",
+        marginBottom: "24px",
+        [theme.breakpoints.down("sm")]: {
+          marginBottom: "16px",
+        },
+        [theme.breakpoints.down("xs")]: {
+          fontSize: "24px",
+          lineHeight: "36px",
+          marginBottom: "8px",
+        },
+      },
     },
     completePools: {
-      background: '#0A0A0A',
+      background: "#0A0A0A",
     },
     contact: {
-      background: '#72F34B',
-      padding: '0px calc((100% - 800px) / 2)',
-      paddingTop: '80px',
-      paddingBottom: '52px',
-      '& h3': {
-        fontFamily: 'Space Ranger',
-        color: '#0A0A0A',
-        fontSize: '72px',
-        lineHeight: '60px',
-        fontWeight: 'bold',
-        letterSpacing: '0.02em',
-        textAlign: 'center',
-        marginBottom: '28px'
+      background: "#72F34B",
+      padding: "0px calc((100% - 800px) / 2)",
+      paddingTop: "80px",
+      paddingBottom: "52px",
+      "& h3": {
+        fontFamily: "Space Ranger",
+        color: "#0A0A0A",
+        fontSize: "72px",
+        lineHeight: "60px",
+        fontWeight: "bold",
+        letterSpacing: "0.02em",
+        textAlign: "center",
+        marginBottom: "28px",
       },
 
-      '& .rectangle': {
-        top: '50px',
-        left: 0
-      }
+      "& .rectangle": {
+        top: "50px",
+        left: 0,
+      },
     },
     contactForm: {
-      textAlign: 'center',
-      marginBottom: '16px',
+      textAlign: "center",
+      marginBottom: "16px",
     },
     inputForm: {
-      background: '#fff',
-      color: '#0A0A0A',
-      fontStyle: 'normal',
-      fontFamily: 'Firs Neue',
-      fontSize: '18px',
-      fontWeight: 'normal',
-      lineHeight: '28px',
-      mixBlendMode: 'normal',
-      height: '56px',
-      width: '380px',
-      borderRight: 'unset',
-      borderTopRightRadius: 'unset',
-      borderBottomRightRadius: 'unset',
-      '& > div': {
-        borderRadius: 'unset',
-      }
+      background: "#fff",
+      color: "#0A0A0A",
+      fontStyle: "normal",
+      fontFamily: "Firs Neue",
+      fontSize: "18px",
+      fontWeight: "normal",
+      lineHeight: "28px",
+      mixBlendMode: "normal",
+      height: "56px",
+      width: "380px",
+      borderRight: "unset",
+      borderTopRightRadius: "unset",
+      borderBottomRightRadius: "unset",
+      "& > div": {
+        borderRadius: "unset",
+      },
     },
     btnForm: {
-      background: '#0A0A0A',
-      color: '#72F34B',
-      height: '56px',
-      width: '180px',
-      borderTopLeftRadius: 'unset',
-      borderBottomLeftRadius: 'unset',
-      borderLeft: 'unset',
-      borderRadius: 'unset',
-      '&:hover': {
-        background: '#0A0A0A',
-        color: '#72F34B',
-      }
+      background: "#0A0A0A",
+      color: "#72F34B",
+      height: "56px",
+      width: "180px",
+      borderTopLeftRadius: "unset",
+      borderBottomLeftRadius: "unset",
+      borderLeft: "unset",
+      borderRadius: "unset",
+      "&:hover": {
+        background: "#0A0A0A",
+        color: "#72F34B",
+      },
     },
     alertMsg: {
-      width: '100%',
-      marginTop: '14px',
-      '& img': {
-        width: '14px',
-        height: '14px',
-        marginRight: '8px'
+      width: "100%",
+      marginTop: "14px",
+      "& img": {
+        width: "14px",
+        height: "14px",
+        marginRight: "8px",
       },
-      '& span': {
-        fontFamily: 'Firs Neue',
-        fontStyle: 'normal',
+      "& span": {
+        fontFamily: "Firs Neue",
+        fontStyle: "normal",
         fontWeight: 600,
-        fontSize: '18px',
-        lineHeight: '28px',
-        textAlign: 'left',
-        color: '#F24B4B',
-      }
-    }
-  }
+        fontSize: "18px",
+        lineHeight: "28px",
+        textAlign: "left",
+        color: "#F24B4B",
+      },
+    },
+  };
 });
 
 export default useStyles;
 
 export const useCardStyles = makeStyles((theme) => ({
   cards: {
-    fontFamily: 'Firs Neue',
+    fontFamily: "Firs Neue",
   },
   cardsActive: {
-    display: 'grid',
-    placeContent: 'center',
-    gap: '12px'
+    display: "grid",
+    placeContent: "center",
+    gap: "12px",
+    [theme.breakpoints.down("xs")]: {
+      gap: "16px",
+    },
   },
   cardsUpcoming: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, 360px)',
-    gap: '20px',
-    placeContent: 'center',
-    [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: '310px',
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, 360px)",
+    gap: "20px",
+    placeContent: "center",
+    // [theme.breakpoints.down("sm")]: {
+    //   gridTemplateColumns: "310px",
+    // },
+    [theme.breakpoints.down("sm")]: {
+      gridTemplateColumns: "400px",
+    },
+    [theme.breakpoints.down("xs")]: {
+      gridTemplateColumns: "319px",
     },
   },
   completeCards: {
-    display: 'grid',
-    gap: '12px',
-    placeContent: 'center',
-    marginBottom: '40px'
+    display: "grid",
+    gap: "12px",
+    placeContent: "center",
+    marginBottom: "40px",
   },
   card: {
-    padding: '19px',
-    paddingTop: '26px',
-    border: '1px solid #28481E',
-    borderRadius: '4px',
-    transition: '.3s',
-    '&:hover': {
-      border: '1px solid #72F34B',
-      boxShadow: '0px 4px 40px rgba(114, 243, 75, 0.12)',
-      background: '#000000'
-    }
+    padding: "19px",
+    [theme.breakpoints.down("xs")]: {
+      paddingLeft: "16px",
+      paddingRight: "16px",
+    },
+    paddingTop: "26px",
+    border: "1px solid #28481E",
+    borderRadius: "4px",
+    transition: ".3s",
+    "&:hover": {
+      border: "1px solid #72F34B",
+      boxShadow: "0px 4px 40px rgba(114, 243, 75, 0.12)",
+      background: "#000000",
+    },
   },
   cardImg: {
-    position: 'relative',
-    maxHeight: '285px',
-    '&::before, &::after': {
+    position: "relative",
+    maxHeight: "285px",
+    "&::before, &::after": {
       content: '""',
-      height: '9px',
-      width: '120px',
-      position: 'absolute',
-      background: '#458531',
-      top: '-17.5px',
+      height: "9px",
+      width: "120px",
+      position: "absolute",
+      background: "#458531",
+      top: "-17.5px",
     },
-    '&::before': {
-      left: '3px',
-      transform: 'skew(-40deg)'
+    "&::before": {
+      left: "3px",
+      transform: "skew(-40deg)",
     },
-    '&::after': {
-      right: '3px',
-      transform: 'skew( 40deg )'
+    "&::after": {
+      right: "3px",
+      transform: "skew( 40deg )",
     },
-    '& img': {
-      width: '100%'
+    "& img": {
+      width: "100%",
     },
-
   },
   cardBody: {
-    display: 'grid',
-    gap: '8px',
+    display: "grid",
+    gap: "8px",
   },
   cardBodyItem: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    [theme.breakpoints.down('xs')]: {
-      marginTop: '5px',
+    display: "flex",
+    justifyContent: "space-between",
+    [theme.breakpoints.down("xs")]: {
+      marginTop: "5px",
     },
   },
   cardBodyTitle: {
-    marginBottom: '4px',
-    '& h4': {
-      fontFamily: 'Firs Neue',
-      fontStyle: 'normal',
-      color: ' #fff',
-      fontWeight: 'bold',
-      fontSize: '28px',
-      lineHeight: '36px',
+    marginBottom: "4px",
+    "& h4": {
+      fontFamily: "Firs Neue",
+      fontStyle: "normal",
+      color: " #fff",
+      fontWeight: "bold",
+      fontSize: "28px",
+      lineHeight: "36px",
     },
-    '& img': {
-      width: '28px',
-      height: "28px"
-    }
+    "& img": {
+      width: "28px",
+      height: "28px",
+    },
   },
   cardBodyProgressItem: {
-    display: 'grid',
-    gap: '4px',
-    [theme.breakpoints.down('xs')]: {
-      display: 'block',
+    display: "grid",
+    gap: "4px",
+    [theme.breakpoints.down("xs")]: {
+      display: "block",
     },
-
   },
   progressItem: {
-    display: 'grid',
-    gap: '10px',
+    display: "grid",
+    gap: "10px",
 
-    '& .total .amount': {
-      fontFamily: 'Firs Neue',
-      fontStyle: 'normal',
-      color: ' #aeaeae',
-      fontWeight: 'normal',
-      fontSize: '16px',
-      lineHeight: '24px',
-      mixBlendMode: 'normal',
-    }
+    "& .total .amount": {
+      fontFamily: "Firs Neue",
+      fontStyle: "normal",
+      color: " #aeaeae",
+      fontWeight: "normal",
+      fontSize: "16px",
+      lineHeight: "24px",
+      mixBlendMode: "normal",
+    },
   },
   text: {
-    fontFamily: 'Firs Neue',
-    fontStyle: 'normal',
-    color: ' #fff',
-    fontWeight: 'normal',
-    fontSize: '12px',
-    lineHeight: '16px',
-    mixBlendMode: 'normal',
-    textTransform: 'uppercase'
+    fontFamily: "Firs Neue",
+    fontStyle: "normal",
+    color: " #fff",
+    fontWeight: "normal",
+    fontSize: "12px",
+    lineHeight: "16px",
+    mixBlendMode: "normal",
+    textTransform: "uppercase",
   },
   textBold: {
-    fontFamily: 'Firs Neue',
-    fontStyle: 'normal',
-    color: ' #fff',
+    fontFamily: "Firs Neue",
+    fontStyle: "normal",
+    color: " #fff",
     fontWeight: 600,
-    fontSize: '16px',
-    lineHeight: '28px',
-    mixBlendMode: 'normal',
+    fontSize: "16px",
+    lineHeight: "28px",
+    mixBlendMode: "normal",
   },
   cardsActions: {
-    display: 'grid',
-    placeContent: 'center'
+    display: "grid",
+    placeContent: "center",
   },
   btnView: {
-    padding: '7px 10px',
-    fontFamily: 'inherit',
-    background: '#72F34B',
-    color: '#000',
-    fontSize: '16px',
-    lineHeight: '28px',
-    borderRadius: '4px',
-    minWidth: '260px',
-    display: 'block',
-    textAlign: 'center',
-    '&:hover': {
-      background: '#5ec73e',
-      color: '#000',
-    }
+    padding: "7px 10px",
+    fontFamily: "inherit",
+    background: "#72F34B",
+    color: "#000",
+    fontSize: "16px",
+    lineHeight: "28px",
+    borderRadius: "4px",
+    minWidth: "260px",
+    display: "block",
+    textAlign: "center",
+    "&:hover": {
+      background: "#5ec73e",
+      color: "#000",
+    },
   },
 }));

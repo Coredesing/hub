@@ -172,7 +172,8 @@ export const useCardStyles = makeStyles((theme) => ({
       transform: 'skew( 40deg )'
     },
     '& img': {
-      width: '100%'
+      width: '100%',
+      height: '100%'
     },
 
   },

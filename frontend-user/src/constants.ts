@@ -209,3 +209,8 @@ export const POOL_STATUS_JOINED = {  // Pool Status for User Joined Pool (Versio
   CLAIMABLE: 'CLAIMABLE',
   COMPLETED: 'COMPLETED',
 };
+
+export enum TOKEN_TYPE {
+  ERC721 = 'erc721',
+  ERC20 = 'erc20'
+} 

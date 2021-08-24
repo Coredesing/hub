@@ -16,7 +16,7 @@ export const PartnerCard = ({ card, ...props }: Props) => {
       </div>
       <div className="info">
         <h4>My DEFI pet</h4>
-        <h5>My DeFi Pet is a a virtual pet game that combines, My DeFi Pet is a a virtual pet game that combines, My DeFi Pet is a a virtual pet game that combines</h5>
+        {/* <h5>My DeFi Pet is a a virtual pet game that combines, My DeFi Pet is a a virtual pet game that combines, My DeFi Pet is a a virtual pet game that combines</h5> */}
         <Link href="#">
           Discover
 

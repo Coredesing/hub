@@ -23,7 +23,10 @@ const useStyles = makeStyles((theme: any) => ({
             right: 0,
             padding: '12px 10px',
             transition: '.5s',
-            marginBottom: '-200px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
             '& h4': {
                 fontFamily: 'Firs Neue',
                 fontStyle: 'normal',
@@ -35,24 +38,24 @@ const useStyles = makeStyles((theme: any) => ({
                 mixBlendMode: 'normal',
                 marginBottom: '4px',
             },
-            '& h5': {
-                fontFamily: 'Firs Neue',
-                fontStyle: 'normal',
-                fontWeight: 'normal',
-                fontSize: '14px',
-                lineHeight: '22px',
-                textAlign: 'left',
-                color: '#D1D1D1',
-                mixBlendMode: 'normal',
-                marginBottom: '8px',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                height: '44px',
-                maxWidth: '201px',
-                display: '-webkit-box',
-                '-webkit-line-clamp': 2,
-                '-webkit-box-orient': 'vertical',
-            },
+            // '& h5': {
+            //     fontFamily: 'Firs Neue',
+            //     fontStyle: 'normal',
+            //     fontWeight: 'normal',
+            //     fontSize: '14px',
+            //     lineHeight: '22px',
+            //     textAlign: 'left',
+            //     color: '#D1D1D1',
+            //     mixBlendMode: 'normal',
+            //     marginBottom: '8px',
+            //     overflow: 'hidden',
+            //     textOverflow: 'ellipsis',
+            //     height: '44px',
+            //     maxWidth: '201px',
+            //     display: '-webkit-box',
+            //     '-webkit-line-clamp': 2,
+            //     '-webkit-box-orient': 'vertical',
+            // },
 
             '& a': {
                 fontFamily: 'Firs Neue',
@@ -76,6 +79,7 @@ const useStyles = makeStyles((theme: any) => ({
         '&:hover .info': {
             top: 0,
             opacity: 1,
+
         }
     }
 }));

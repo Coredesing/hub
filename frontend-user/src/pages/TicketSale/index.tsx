@@ -10,7 +10,6 @@ import withWidth, { isWidthDown, isWidthUp } from '@material-ui/core/withWidth';
 import { CompleteCard } from './CompleteCard';
 import { Link } from '@material-ui/core';
 import { useFetchV1 } from '../../hooks/useFetch';
-import {useParams} from 'react-router-dom';
 
 type ResponseData = {
   data: { [k: string]: any }[],
@@ -22,21 +21,20 @@ type ResponseData = {
 
 const TicketSale = (props: any) => {
   const styles = { ...useStyles(), ...useCardStyles() };
-  const params = useParams<{[k in string]: any}>();
-  const type = params.type;
-  const tokeType = type === 'ticket' ? 'erc721' : 'erc20';
   const {
     data: activePools = {} as ResponseData,
     loading: loadingActivePools
-  } = useFetchV1(`/pools/active-pools?token_type=${tokeType}&limit=10&page=1`);
+  } = useFetchV1(`/pools/active-pools?limit=10&page=1`);
   const {
     data: upcomingPools = {} as ResponseData,
     loading: loadingUpcomingPools
-  } = useFetchV1(`/pools/upcoming-pools?token_type=${tokeType}&limit=10&page=1`);
+  } = useFetchV1(`/pools/upcoming-pools?limit=10&page=1`);
+  console.log(upcomingPools)
   const {
     data: compeltePools = {} as ResponseData,
     loading: loadingcompletePools
-  } = useFetchV1(`/pools/complete-sale-pools?token_type=${tokeType}&limit=10&page=1`);
+  } = useFetchV1(`/pools/complete-sale-pools?limit=10&page=1`);
+
 
   return (
     <DefaultLayout>
@@ -61,7 +59,7 @@ const TicketSale = (props: any) => {
 
           <div className={clsx(styles.cards, styles.cardsUpcoming)}>
             {
-              (upcomingPools?.data?.length ? upcomingPools?.data : activePools?.data || []).map((card, id: number) => <UpcomingCard key={id} card={card} />)
+              (upcomingPools?.data || []).map((card, id: number) => <UpcomingCard key={id} card={card} />)
             }
           </div>
         </div>

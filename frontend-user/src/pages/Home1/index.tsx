@@ -57,7 +57,7 @@ const Home = (props: any) => {
           <h1>Dedicated Gaming Launchpad & IGO</h1>
           <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="200" height="200" fill="url(#paint0_radial)" />
-            <g clip-path="url(#clip0)">
+            <g clipPath="url(#clip0)">
               <path d="M48.7619 153.022C49.9194 153.022 50.8577 152.084 50.8577 150.927C50.8577 149.769 49.9194 148.831 48.7619 148.831C47.6044 148.831 46.666 149.769 46.666 150.927C46.666 152.084 47.6044 153.022 48.7619 153.022Z" fill="#72F34B" />
               <path d="M102.293 99.8643C103.448 99.8643 104.385 98.9278 104.385 97.7726C104.385 96.6174 103.448 95.6809 102.293 95.6809C101.138 95.6809 100.201 96.6174 100.201 97.7726C100.201 98.9278 101.138 99.8643 102.293 99.8643Z" fill="#72F34B" />
               <path d="M129.684 71.2562C128.002 69.5745 125.766 68.6487 123.389 68.6487C121.011 68.6487 118.775 69.5749 117.094 71.2562C113.622 74.7274 113.622 80.3754 117.094 83.8464C118.829 85.5821 121.109 86.4496 123.389 86.4496C125.668 86.4496 127.948 85.5816 129.684 83.8464C133.155 80.3752 133.155 74.7272 129.684 71.2562ZM126.726 80.8883C124.886 82.7283 121.891 82.7283 120.051 80.8883C118.211 79.0483 118.211 76.0541 120.051 74.2139C120.943 73.3224 122.128 72.8316 123.389 72.8316C124.649 72.8316 125.834 73.3224 126.726 74.2139C128.566 76.0541 128.566 79.0483 126.726 80.8883Z" fill="#72F34B" />
@@ -66,8 +66,8 @@ const Home = (props: any) => {
             </g>
             <defs>
               <radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(100 100) rotate(90) scale(100)">
-                <stop stop-color="#1C4612" />
-                <stop offset="1" stop-color="#1C4612" stop-opacity="0" />
+                <stop stopColor="#1C4612" />
+                <stop offset="1" stop-color="#1C4612" stopOpacity="0" />
               </radialGradient>
               <clipPath id="clip0">
                 <rect width="106.667" height="106.667" fill="white" transform="translate(46.666 46.6667)" />
@@ -87,7 +87,7 @@ const Home = (props: any) => {
         <div className={clsx(styles.content, 'horizontal')}>
           <div className={clsx(styles.contentTitle, 'left')}>
             <h3>Ticket Sales</h3>
-            <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque iaculis et magna ut feugiat. Pellentesque varius sagittis velit eget blandit.</h5>
+            <h5>Ticket is an item that allows you to join IDO pools. To view information about other Ticket pools, click the Discover button below.</h5>
             <Link href="/#/pools/ticket" className={styles.btnDiscover}>Discover</Link>
           </div>
           <div className={clsx(styles.cards, styles.cardsTicketSales)}>
@@ -106,8 +106,8 @@ const Home = (props: any) => {
         <div className={clsx(styles.content, 'vertical')}>
           <div className={clsx(styles.contentTitle, 'center')}>
             <h3>Token Sales</h3>
-            <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque iaculis et magna ut feugiat. Pellentesque varius sagittis velit eget blandit.</h5>
-            <Link href="/#/pools/token" className={styles.btnDiscover}>Discover</Link>
+            <h5>Make sure you have a Ticket to join IDO. To view information about other IDO pools, click the Discover button below.</h5>
+            {/* <Link href="/#/" className={styles.btnDiscover}>Discover</Link> */}
           </div>
           <div className={clsx(styles.cards, styles.cardsTokenSales)}>
             {

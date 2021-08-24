@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme: any) => ({
             transform: 'translate(-50%)',
         }
     },
+    cardOpening: {
+        cursor: 'pointer',
+    }
 }));
 
 export default useStyles;

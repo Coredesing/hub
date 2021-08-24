@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: any) => ({
       marginRight: '6px'
     }
   },
-  buynow: {
+  btnDetail: {
     outline: 'none',
     border: 'none',
     borderRadius: '2px',
@@ -50,6 +50,12 @@ const useStyles = makeStyles((theme: any) => ({
     cursor: 'pointer',
     height: '44px',
     background: 'transparent',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '&:hover': {
+      textDecoration: 'unset',
+    },
     '&.approved': {
       color: '#000',
       background: '#72f348',

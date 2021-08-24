@@ -125,7 +125,7 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
             exact path="/"
             render={() => <Redirect to={`${'/home'}`} />}
           /> */}
-                    <Route exact path={'/ticket'} component={Ticket} />
+                    <Route exact path={'/buy-nft/:id'} component={Ticket} />
                     {/* <Route path={`${'/polkasmith-privacy'}`} component={PolkaSmithPrivacyPolicy} />
                     <Route path={`${'/join-polkasmith'}`} component={JoinPolkaSmith} /> */}
                     {/* <Route exact path={`${'/dashboard'}`} component={Dashboard} /> */}

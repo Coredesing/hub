@@ -18,7 +18,6 @@ class WinnerListUserController {
     const campaign_id = request.params.campaignId;
     const page = request.input('page');
     const pageSize = request.input('limit') ? request.input('limit') : 10;
-    console.log(`[getWinnerListPublic] - start getWinnerList with campaign_id ${campaign_id} and page ${page} and pageSize ${pageSize}`);
     try {
       let campaign = null;
       // Try get Campaign detail from Redis Cache
@@ -30,29 +29,14 @@ class WinnerListUserController {
         }
       } else {
         campaign = await CampaignModel.query().where('id', campaign_id).first();
-        console.log('[getWinnerListPublic] - Don\'t exist cache data Public Pool Detail. Getting from DB. ');
-        console.log(JSON.stringify(campaign));
       }
       if (!campaign) {
         return HelperUtils.responseNotFound('Pool not found');
       }
 
-      console.log('[getWinnerListPublic] - Winner List Status:', campaign.public_winner_status, campaign.public_winner_status == Const.PUBLIC_WINNER_STATUS.PRIVATE);
-      if (campaign && (campaign.public_winner_status == Const.PUBLIC_WINNER_STATUS.PRIVATE)) {
+      if (campaign && (campaign.public_winner_status === Const.PUBLIC_WINNER_STATUS.PRIVATE)) {
         return HelperUtils.responseSuccess([]);
       }
-
-      console.log('[getWinnerListPublic] - Get Winner List');
-      // get from redis cached
-      let redisKey = 'winners_' + campaign_id;
-      if (page) {
-        redisKey = redisKey.concat('_', page, '_', pageSize);
-      }
-      // if (await Redis.exists(redisKey)) {
-      //   console.log(`existed key ${redisKey} on redis`);
-      //   const cachedWinners = await Redis.get(redisKey);
-      //   return HelperUtils.responseSuccess(JSON.parse(cachedWinners));
-      // }
 
       // if not existed winners on redis then get from db
       // create params to query to db
@@ -65,12 +49,10 @@ class WinnerListUserController {
       const winnerListService = new WinnerListService();
       // get winner list
       const winners = await winnerListService.findWinnerListUser(filterParams);
-      // save to redis
-      await Redis.set(redisKey, JSON.stringify(winners))
+
       return HelperUtils.responseSuccess(winners);
     } catch (e) {
-      console.log(e);
-      return HelperUtils.responseErrorInternal('Get Winner List Failed !');
+      return HelperUtils.responseErrorInternal('Get Winner List Failed!');
     }
   }
 

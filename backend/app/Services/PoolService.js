@@ -75,6 +75,10 @@ class PoolService {
       builder = builder.where('is_display', '=', params.is_display);
     }
 
+    if (params.token_type) {
+      builder = builder.where('token_type', params.token_type)
+    }
+
     return builder;
   }
 
@@ -99,10 +103,10 @@ class PoolService {
   }
 
   async getUpcomingPools(filterParams) {
-    const limit = filterParams.limit ? filterParams.limit : Const.DEFAULT_LIMIT;
-    const page = filterParams.page ? filterParams.page : 1;
-    filterParams.limit = limit;
-    filterParams.page = page;
+    const limit = filterParams.limit ? filterParams.limit : Const.DEFAULT_LIMIT
+    const page = filterParams.page ? filterParams.page : 1
+    filterParams.limit = limit
+    filterParams.page = page
 
     let pools = await this.buildQueryBuilder(filterParams)
       .whereNotIn('campaign_status', [
@@ -208,15 +212,14 @@ class PoolService {
     const now = moment().unix();
     let pools = await this.buildQueryBuilder(filterParams)
       .with('campaignClaimConfig')
-      .where('campaign_status', Const.POOL_STATUS.TBA)
       .where('is_display', Const.POOL_DISPLAY.DISPLAY)
-      .orWhere(builder => {
+      .where(builder => {
         builder
-          .where('end_join_pool_time', '>', now)
-          .where('is_display', Const.POOL_DISPLAY.DISPLAY)
-          .whereIn('campaign_status', [
-            Const.POOL_STATUS.UPCOMING,
-          ]);
+          .where('campaign_status', Const.POOL_STATUS.TBA)
+          .orWhere(query => {
+              query.where('end_join_pool_time', '>', now)
+              .where('campaign_status', Const.POOL_STATUS.UPCOMING);
+          })
       })
       .orderBy('priority', 'DESC')
       .orderBy('start_join_pool_time', 'ASC')
@@ -414,8 +417,8 @@ class PoolService {
    */
   async filterPoolClaimable() {
     let pools = await CampaignModel.query()
-      .with('campaignClaimConfig')
       .where('campaign_status', Const.POOL_STATUS.CLAIMABLE)
+      .with('campaignClaimConfig')
       .orderBy('id', 'DESC')
       .fetch();
     pools = JSON.parse(JSON.stringify(pools));
@@ -424,17 +427,11 @@ class PoolService {
 
   async filterActivePoolWithStatus() {
     let pools = await CampaignModel.query()
+      .whereNotIn('campaign_status', [
+        Const.POOL_STATUS.ENDED,
+        Const.POOL_STATUS.CLAIMABLE
+      ])
       .with('campaignClaimConfig')
-      .whereNull('campaign_status')
-      .orWhere(builder => {
-        builder
-          .whereNotIn('campaign_status', [
-            Const.POOL_STATUS.ENDED,
-            Const.POOL_STATUS.CLAIMABLE
-          ])
-          // .where('campaign_status', '!=', Const.POOL_STATUS.ENDED)
-          // .where('campaign_status', '!=', Const.POOL_STATUS.CLAIMABLE)
-      })
       .orderBy('id', 'DESC')
       .fetch();
     pools = JSON.parse(JSON.stringify(pools));

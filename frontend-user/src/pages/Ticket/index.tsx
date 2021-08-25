@@ -613,19 +613,11 @@ const Ticket: React.FC<any> = (props: any) => {
                       </span>
                     </div>
                   )}
-                  <button
-                    className={clsx(styles.buynow, {
-                      [styles.buyDisabled]: numTicketBuy <= 0,
-                    })}
-                    onClick={onClaimTicket}
-                  >
-                    Claim
-                  </button>
                   {!finishedTime &&
                     (isClaim ? (
                       <button
                         className={clsx(styles.buynow, {
-                          [styles.buyDisabled]: numTicketBuy <= 0,
+                          // [styles.buyDisabled]: numTicketBuy <= 0
                         })}
                         onClick={onClaimTicket}
                       >

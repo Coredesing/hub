@@ -86,11 +86,11 @@ const TicketSale = (props: any) => {
               (compeltePools?.data || []).map((card, id) => <CompleteCard key={id} card={card} />)
             }
           </div>
-          <div className={styles.cardsActions}>
+          {/* <div className={styles.cardsActions}>
             <Link href={'transactionLink'} className={styles.btnView}>
               View all pools
             </Link>
-          </div>
+          </div> */}
         </div>
       </section>
       <section className={clsx(styles.section, styles.contact)}>
@@ -108,10 +108,10 @@ const TicketSale = (props: any) => {
             </Button>
           </form>
 
-          <div className={styles.alertMsg}>
+          {/* <div className={styles.alertMsg}>
             <img src={'/images/warning-red.svg'} alt="" />
             <span>Something wrong was happened. Please try again later!</span>
-          </div>
+          </div> */}
         </div>
       </section>
     </DefaultLayout>

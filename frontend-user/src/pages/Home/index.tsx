@@ -71,9 +71,9 @@ const Home = (props: any) => {
                 <h4>Parachain Crowdloan</h4>
                 <h3>Support the projects by locking your KSM/ DOT & earn tokens as rewards</h3>
               </div>
-              <Button className="btn-join">
+              <Link className="btn-join" href="https://polkasmith.polkafoundry.com/" target="_blank">
                 Join NOW
-              </Button>
+              </Link>
             </div>
           </div>
         }

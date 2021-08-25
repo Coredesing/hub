@@ -19,7 +19,7 @@ const originalChainIdChangeHandler = bscConnector.handleChainChanged;
 //@ts-ignore
 bscConnector.handleChainChanged = (chainId: string) => {
   const chainIdNum = Number(chainId);
-  console.debug("Handling 'chainChanged' event with payload", chainId, isNaN(chainIdNum));
+  // console.debug("Handling 'chainChanged' event with payload", chainId, isNaN(chainIdNum));
   if (isNaN(chainIdNum)) {
     bscConnector.emitError('NaN ChainId');
     return;

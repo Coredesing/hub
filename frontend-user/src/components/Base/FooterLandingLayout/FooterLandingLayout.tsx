@@ -1,5 +1,5 @@
 import useStyles from './styles';
-import { Link } from 'react-router-dom';
+import Link from '@material-ui/core/Link';
 import DefaultLayout from "../../Layout/DefaultLayout";
 const byTokenLogo = '/images/logo-red-kite.svg';
 const iconArrow = "/images/icons/arrow_up-white.svg"
@@ -37,23 +37,23 @@ const FooterLandingLayout = () => {
           <div className={styles.navLinks}>
             <h4>OUR TEAM</h4>
             <ul className="link">
-              <li><a href="/">Features</a></li>
-              <li><a href="/">Roadmap</a></li>
-              <li><a href="/">Our Team</a></li>
-              <li><a href="/">Advisors</a></li>
+              <li><Link href="https://gamefi.org/#features" target="_blank">Features</Link></li>
+              <li><Link href="https://gamefi.org/#roadmap" target="_blank">Roadmap</Link></li>
+              <li><Link href="https://gamefi.org/#ourteam" target="_blank">Our Team</Link></li>
+              <li><Link href="https://gamefi.org/#advisors" target="_blank">Advisors</Link></li>
             </ul>
           </div>
           <div className={styles.navLinks}>
             <h4>TOKEN</h4>
             <ul className="link">
-              <li><a href="/">Token Metrics</a></li>
-              <li><a href="/">Token Utilities</a></li>
+              <li><Link href="https://docsend.com/view/wg9czts7ugkvrp99" target="_blank">Token Metrics</Link></li>
+              <li><Link href="https://docsend.com/view/wg9czts7ugkvrp99" target="_blank">Token Utilities</Link></li>
             </ul>
           </div>
           <div className={styles.navLinks}>
             <h4>Contact</h4>
             <ul className="link">
-              <li><a href="/">Contact Us</a></li>
+              <li><Link href="https://t.me/GameFi_Official" target="_blank">Contact Us</Link></li>
             </ul>
           </div>
         </div>

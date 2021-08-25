@@ -230,9 +230,6 @@ const AboutTicket = ({ info = {} }: any) => {
     setPage(1);
   }
 
-
-  console.log(isClaim)
-
   return (
     <div className={classes.root}>
       <AppBar className={classes.appbar} position="static">

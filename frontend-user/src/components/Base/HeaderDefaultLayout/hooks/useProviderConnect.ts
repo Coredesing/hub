@@ -68,7 +68,7 @@ const useProviderConnect = (
 
   useEffect(() => {
     if (currentConnector && currentConnector.on && !active && !error) {
-      console.log('running once');
+      // console.log('running once');
 
       const handleWeb3ReactUpdate = (updated: any) => {
         if (updated.account) {
@@ -164,7 +164,7 @@ const useProviderConnect = (
 
   // Handle Provider choose
   const handleProviderChosen = (name: string, connector: AbstractConnector) => {
-    console.log('Wallet Connected: ', name);
+    // console.log('Wallet Connected: ', name);
     setCurrentConnector(connector);
     walletName.indexOf(name) < 0 && setWalletName([...walletName, name]);
   }

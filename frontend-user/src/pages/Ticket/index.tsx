@@ -87,7 +87,6 @@ const Ticket: React.FC<any> = (props: any) => {
 
   useEffect(() => {
     if (!loadingTicket && dataTicket) {
-      console.log(dataTicket)
       setNewTicket(false);
       setInfoTicket(dataTicket);
       if (isEndPool(dataTicket.campaign_status)) {

@@ -6,8 +6,8 @@ const useStyles = makeStyles((theme: any) => {
       position: 'relative',
       paddingTop: '80px',
       paddingBottom: '160px',
-      paddingLeft: '84px',
-      paddingRight: '84px',
+      paddingLeft: '160px',
+      paddingRight: '160px',
       '& .rectangle': {
         position: 'absolute',
         width: '100%',
@@ -15,6 +15,22 @@ const useStyles = makeStyles((theme: any) => {
         left: 0,
         '& img': {
           width: '100%',
+        },
+
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+        },
+
+        '&.bl::before': {
+          background: 'linear-gradient(to bottom, rgba(255,0,0,0), rgb(10 10 10 / 90%))'
+        },
+        '&.gr::before': {
+          background: 'linear-gradient(to bottom, rgba(255,0,0,0), rgb(23 23 23 / 90%))'
         }
       }
     },
@@ -26,44 +42,145 @@ const useStyles = makeStyles((theme: any) => {
         display: 'flex',
         gap: '10px',
         alignItems: 'center',
-        marginBottom: '160px',
+        marginBottom: '24px',
         '& h1': {
-          maxWidth: '890px',
+          // maxWidth: '890px',
           color: '#fff',
           fontFamily: 'Space Ranger',
           fontWeight: 'bold',
-          fontSize: '88px',
+          fontSize: '82px',
           fontStyle: 'normal',
-          lineHeight: '78px',
+          lineHeight: '62px',
           letterSpacing: '0.02em',
+          textAlign: 'center',
         },
-        '& svg': {
-          [theme.breakpoints.up('md')]: {
-            width: '200px',
-            height: '200px',
-          },
-          [theme.breakpoints.down('md')]: {
-            minWidth: '150px',
-            minHeight: '150px',
-          }
-        }
+        // '& svg': {
+        //   [theme.breakpoints.up('md')]: {
+        //     width: '200px',
+        //     height: '200px',
+        //   },
+        //   [theme.breakpoints.down('md')]: {
+        //     minWidth: '150px',
+        //     minHeight: '150px',
+        //   }
+        // }
       },
       '& .small-text': {
         color: '#fff',
         fontFamily: 'Firs Neue',
         fontWeight: 600,
         fontStyle: 'normal',
-        fontSize: '24px',
-        lineHeight: '36px',
+        fontSize: '20px',
+        lineHeight: '28px',
         letterSpacing: '0.02em',
+        textAlign: 'center',
 
         '& .launchpad': {
           color: '#72F34B'
         }
       }
     },
+    bannerContent: {
+      width: '100%',
+      maxWidth: '1120px',
+    },
+    wrapperImgBanner: {
+      width: '100%',
+      position: 'absolute',
+      top: '10px',
+      left: 0,
+      display: 'grid',
+      placeContent: 'center',
+      paddingLeft: '84px',
+      paddingRight: '84px',
+    },
+    imgBanner: {
+      // left: '0px',
+      // width: '100%',
+      maxWidth: '1120px',
+      minHeight: '80px',
+      backgroundImage: 'url(/images/banner-2.png), url(/images/banner-1.png)',
+      'background-position': 'right top, center',
+      'background-repeat': 'no-repeat, repeat',
+      backgroundSize: '40%, cover',
+      position: 'relative',
+      display: 'flex',
+      gap: '45px',
+      alignItems: 'center',
+      paddingLeft: '62px',
+      paddingRight: '102px',
+      justifyContent: 'center',
+      [theme.breakpoints.down('sm')]: {
+        gap: '10px',
+        flexDirection: 'column',
+        backgroundSize: '40%, contain',
+        alignItems: 'center',
+        paddingTop: '10px',
+        paddingBottom: '10px'
+      },
+      '& .text': {
+        '& h4': {
+          fontFamily: 'Firs Neue',
+          fontStyle: 'normal',
+          fontWeight: 'normal',
+          fontSize: '12px',
+          lineHeight: '14px',
+          textTransform: 'uppercase',
+          color: '#fff',
+          marginBottom: '4px',
+
+        },
+        '& h3': {
+          fontFamily: 'Firs Neue',
+          fontStyle: 'normal',
+          fontWeight: 600,
+          fontSize: '20px',
+          lineHeight: '28px',
+          color: '#fff',
+        },
+        [theme.breakpoints.down('sm')]: {
+          '& h4, & h3': {
+            textAlign: 'center',
+          },
+          '& h3': {
+            fontSize: '16px',
+            lineHeight: '22px',
+            textAlign: 'center'
+          }
+        },
+      },
+      '& .btn-join': {
+        background: '#0A0A0A',
+        borderRadius: '4px',
+        border: '1px solid #ff0095',
+        color: '#fff',
+        fontFamily: 'Firs Neue',
+        fontStyle: 'normal',
+        fontWeight: 600,
+        fontSize: '14px',
+        lineHeight: '24px',
+        mixBlendMode: 'normal',
+        height: '40px',
+        minWidth: '180px',
+        width: 'fit-content',
+      }
+    },
+    btnCloseBanner: {
+      position: 'absolute',
+      right: '7px',
+      top: '7px',
+      minWidth: 'unset',
+      width: '18px',
+      height: '18px',
+      borderRadius: '50%',
+      background: '#D4D4D4',
+      '& img': {
+        width: '18px',
+        height: '18px',
+      }
+    },
     ticketSales: {
-      paddingTop: '130px',
+      paddingTop: '120px',
       paddingBottom: '130px',
       background: '#171717',
 
@@ -72,11 +189,11 @@ const useStyles = makeStyles((theme: any) => {
       background: '#0A0A0A',
       paddingLeft: '0',
       paddingRight: '0',
-      paddingTop: '130px',
+      paddingTop: '120px',
       paddingBottom: '130px',
     },
     partners: {
-      paddingTop: '130px',
+      paddingTop: '120px',
       paddingBottom: '130px',
     },
     perfomance: {
@@ -89,17 +206,25 @@ const useStyles = makeStyles((theme: any) => {
         left: 0,
       }
     },
+    wrapperContent: {
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+    },
     content: {
       display: 'flex',
       gap: '70px',
       position: 'relative',
+      maxWidth: '1120px',
+      width: '100%',
 
       '&.horizontal': {
 
       },
       '&.vertical': {
         display: 'grid',
-        gridTemplateColumns: '1fr',
+        gap: '40px',
+        // gridTemplateColumns: '1fr',
       }
     },
     contentTitle: {
@@ -158,7 +283,7 @@ const useStyles = makeStyles((theme: any) => {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      
+
       '&:hover': {
         color: '#000',
         textDecoration: 'unset',
@@ -198,7 +323,8 @@ const useStyles = makeStyles((theme: any) => {
         }
       }
 
-    }
+    },
+
   }
 });
 
@@ -232,18 +358,13 @@ export const useCardStyles = makeStyles((theme) => ({
   },
   cardsPartnerShip: {
     display: 'grid',
-    gridTemplateColumns: '201px 201px 201px 201px',
+    gridTemplateColumns: 'repeat(auto-fit, 201px)',
     placeContent: 'center',
     gap: '80px',
-    [theme.breakpoints.down('md')]: {
-      gridTemplateColumns: '201px 201px 201px',
-    },
     [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: '201px 201px',
       gap: '40px',
     },
     [theme.breakpoints.down('xs')]: {
-      gridTemplateColumns: '201px',
       gap: '20px',
     },
   },

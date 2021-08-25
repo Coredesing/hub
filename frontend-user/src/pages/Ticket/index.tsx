@@ -30,6 +30,7 @@ import {
 import { PurchaseCurrency } from "../../constants/purchasableCurrency";
 import useUserPurchased from "./hooks/useUserPurchased";
 import TicketModal from "./TicketModal";
+import useTokenClaim from "./hooks/useTokenClaim";
 // import { FormInputNumber } from '../../components/Base/FormInputNumber/FormInputNumber';
 const iconWarning = "/images/warning-red.svg";
 const ticketImg = "/images/gamefi-ticket.png";
@@ -71,8 +72,6 @@ const Ticket: React.FC<any> = (props: any) => {
     renewTicket
   );
 
-  // console.log("dataTicket", dataTicket);
-
   const [allowNetwork, setAllowNetwork] = useState<boolean>(false);
   useEffect(() => {
     const networkInfo = APP_NETWORKS_SUPPORT[Number(appChainID)];
@@ -84,9 +83,11 @@ const Ticket: React.FC<any> = (props: any) => {
         (infoTicket.network_available || "").toLowerCase()
     );
   }, [infoTicket, appChainID]);
+  const isClaim = dataTicket?.process === "only-claim";
 
   useEffect(() => {
     if (!loadingTicket && dataTicket) {
+      console.log(dataTicket);
       const openTime = +dataTicket.start_time * 1000;
       const finishTime = +dataTicket.finish_time * 1000;
 
@@ -221,6 +222,17 @@ const Ticket: React.FC<any> = (props: any) => {
   // console.log('depositError1', depositError1, 'depositTransaction', depositTransaction)
   // console.log('approveTransaction', approveTransaction)
   // console.log('allowance', allowance)
+
+  const { claimToken, transactionHash, claimTokenSuccess } = useTokenClaim(
+    infoTicket.campaign_hash,
+    infoTicket?.id
+  );
+
+  useEffect(() => {
+    if (claimTokenSuccess && transactionHash) {
+      setOpenModalTx(true);
+    }
+  }, [claimTokenSuccess, transactionHash]);
 
   const {
     deposit,
@@ -395,6 +407,9 @@ const Ticket: React.FC<any> = (props: any) => {
     return +tokenAllowance > 0;
   };
 
+  const onClaimTicket = async () => {
+    await claimToken();
+  };
   const onBuyTicket = async () => {
     try {
       if (numTicketBuy > 0) {
@@ -423,7 +438,7 @@ const Ticket: React.FC<any> = (props: any) => {
       <TicketModal
         open={openModal}
         onClose={onCloseModal}
-        transaction={tokenDepositTransaction}
+        transaction={tokenDepositTransaction || transactionHash}
         networkName={infoTicket?.network_available}
       />
       <div className={styles.content}>
@@ -461,7 +476,7 @@ const Ticket: React.FC<any> = (props: any) => {
                   alt=""
                 />
                 <span>
-                  {infoTicket.ether_conversion_rate}{" "}
+                  {isClaim ? 0 : infoTicket.ether_conversion_rate}{" "}
                   {infoTicket && infoTicket.accept_currency
                     ? infoTicket.accept_currency.toUpperCase()
                     : "..."}
@@ -598,125 +613,147 @@ const Ticket: React.FC<any> = (props: any) => {
                       </span>
                     </div>
                   )}
-                  {allowNetwork &&
-                    !finishedTime &&
-                    isBuy &&
-                    isAccApproved(tokenAllowance || 0) && (
-                      <div
-                        className={clsx(styles.infoTicket, styles.buyBox)}
-                        style={{ marginTop: "16px" }}
+                  <button
+                    className={clsx(styles.buynow, {
+                      [styles.buyDisabled]: numTicketBuy <= 0,
+                    })}
+                    onClick={onClaimTicket}
+                  >
+                    Claim
+                  </button>
+                  {!finishedTime &&
+                    (isClaim ? (
+                      <button
+                        className={clsx(styles.buynow, {
+                          [styles.buyDisabled]: numTicketBuy <= 0,
+                        })}
+                        onClick={onClaimTicket}
                       >
-                        <div className={styles.amountBuy}>
-                          <span>Amount</span>
-                          <div>
-                            <span
-                              onClick={descMinAmount}
-                              className={clsx(styles.btnMinMax, "min", {
-                                disabled:
-                                  !getMaxTicketBuy(
-                                    ticketBought,
-                                    +infoTicket.max_buy_ticket
-                                  ) || numTicketBuy === 0,
-                              })}
+                        Claim
+                      </button>
+                    ) : (
+                      <>
+                        {allowNetwork &&
+                          isBuy &&
+                          isAccApproved(tokenAllowance || 0) && (
+                            <div
+                              className={clsx(styles.infoTicket, styles.buyBox)}
+                              style={{ marginTop: "16px" }}
                             >
-                              Min
-                            </span>
-                            <span
-                              onClick={descAmount}
-                              className={clsx({
-                                [styles.disabledAct]:
-                                  !getMaxTicketBuy(
-                                    ticketBought,
-                                    +infoTicket.max_buy_ticket
-                                  ) || numTicketBuy === 0,
-                              })}
-                            >
-                              <svg
-                                width="12"
-                                height="3"
-                                viewBox="0 0 12 3"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M11.1818 0H0.818182C0.366544 0 0 0.366544 0 0.818182V1.3636C0 1.81524 0.366544 2.18178 0.818182 2.18178H11.1818C11.6334 2.18178 12 1.81524 12 1.3636V0.818182C12 0.366544 11.6334 0 11.1818 0Z"
-                                  fill="white"
-                                />
-                              </svg>
-                            </span>
-                            <span>
-                              {numTicketBuy}
-                              {/* {getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket) ?
+                              <div className={styles.amountBuy}>
+                                <span>Amount</span>
+                                <div>
+                                  <span
+                                    onClick={descMinAmount}
+                                    className={clsx(styles.btnMinMax, "min", {
+                                      disabled:
+                                        !getMaxTicketBuy(
+                                          ticketBought,
+                                          +infoTicket.max_buy_ticket
+                                        ) || numTicketBuy === 0,
+                                    })}
+                                  >
+                                    Min
+                                  </span>
+                                  <span
+                                    onClick={descAmount}
+                                    className={clsx({
+                                      [styles.disabledAct]:
+                                        !getMaxTicketBuy(
+                                          ticketBought,
+                                          +infoTicket.max_buy_ticket
+                                        ) || numTicketBuy === 0,
+                                    })}
+                                  >
+                                    <svg
+                                      width="12"
+                                      height="3"
+                                      viewBox="0 0 12 3"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M11.1818 0H0.818182C0.366544 0 0 0.366544 0 0.818182V1.3636C0 1.81524 0.366544 2.18178 0.818182 2.18178H11.1818C11.6334 2.18178 12 1.81524 12 1.3636V0.818182C12 0.366544 11.6334 0 11.1818 0Z"
+                                        fill="white"
+                                      />
+                                    </svg>
+                                  </span>
+                                  <span>
+                                    {numTicketBuy}
+                                    {/* {getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket) ?
                             <FormInputNumber type="number" value={numTicketBuy} allowZero isInteger isPositive onChange={setNumTicketBuy} min={0} max={getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)} />
                             : numTicketBuy} */}
-                            </span>
-                            <span
-                              onClick={ascAmount}
-                              className={clsx({
-                                [styles.disabledAct]:
-                                  !getMaxTicketBuy(
-                                    ticketBought,
-                                    +infoTicket.max_buy_ticket
-                                  ) ||
-                                  numTicketBuy ===
-                                    getMaxTicketBuy(
-                                      ticketBought,
-                                      +infoTicket.max_buy_ticket
-                                    ),
-                              })}
-                            >
-                              <svg
-                                width="12"
-                                height="12"
-                                viewBox="0 0 12 12"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
+                                  </span>
+                                  <span
+                                    onClick={ascAmount}
+                                    className={clsx({
+                                      [styles.disabledAct]:
+                                        !getMaxTicketBuy(
+                                          ticketBought,
+                                          +infoTicket.max_buy_ticket
+                                        ) ||
+                                        numTicketBuy ===
+                                          getMaxTicketBuy(
+                                            ticketBought,
+                                            +infoTicket.max_buy_ticket
+                                          ),
+                                    })}
+                                  >
+                                    <svg
+                                      width="12"
+                                      height="12"
+                                      viewBox="0 0 12 12"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M11.343 5.06254H11.3437H6.93746V0.664585C6.93746 0.302634 6.64439 0 6.28244 0H5.71863C5.35678 0 5.06244 0.302634 5.06244 0.664585V5.06254H0.656293C0.294537 5.06254 0 5.35522 0 5.71727V6.28429C0 6.64605 0.294439 6.93746 0.656293 6.93746H5.06254V11.3513C5.06254 11.7131 5.35678 11.9999 5.71873 11.9999H6.28254C6.64449 11.9999 6.93756 11.713 6.93756 11.3513V6.93746H11.343C11.705 6.93746 12 6.64595 12 6.28429V5.71727C12 5.35522 11.705 5.06254 11.343 5.06254Z"
+                                        fill="white"
+                                      />
+                                    </svg>
+                                  </span>
+                                  <span
+                                    onClick={ascMaxAmount}
+                                    className={clsx(styles.btnMinMax, "max", {
+                                      disabled:
+                                        !getMaxTicketBuy(
+                                          ticketBought,
+                                          +infoTicket.max_buy_ticket
+                                        ) ||
+                                        numTicketBuy ===
+                                          getMaxTicketBuy(
+                                            ticketBought,
+                                            +infoTicket.max_buy_ticket
+                                          ),
+                                    })}
+                                  >
+                                    Max
+                                  </span>
+                                </div>
+                              </div>
+                              <button
+                                className={clsx(styles.buynow, {
+                                  [styles.buyDisabled]: numTicketBuy <= 0,
+                                })}
+                                onClick={onBuyTicket}
+                                disabled={numTicketBuy <= 0}
                               >
-                                <path
-                                  d="M11.343 5.06254H11.3437H6.93746V0.664585C6.93746 0.302634 6.64439 0 6.28244 0H5.71863C5.35678 0 5.06244 0.302634 5.06244 0.664585V5.06254H0.656293C0.294537 5.06254 0 5.35522 0 5.71727V6.28429C0 6.64605 0.294439 6.93746 0.656293 6.93746H5.06254V11.3513C5.06254 11.7131 5.35678 11.9999 5.71873 11.9999H6.28254C6.64449 11.9999 6.93756 11.713 6.93756 11.3513V6.93746H11.343C11.705 6.93746 12 6.64595 12 6.28429V5.71727C12 5.35522 11.705 5.06254 11.343 5.06254Z"
-                                  fill="white"
-                                />
-                              </svg>
-                            </span>
-                            <span
-                              onClick={ascMaxAmount}
-                              className={clsx(styles.btnMinMax, "max", {
-                                disabled:
-                                  !getMaxTicketBuy(
-                                    ticketBought,
-                                    +infoTicket.max_buy_ticket
-                                  ) ||
-                                  numTicketBuy ===
-                                    getMaxTicketBuy(
-                                      ticketBought,
-                                      +infoTicket.max_buy_ticket
-                                    ),
-                              })}
-                            >
-                              Max
-                            </span>
-                          </div>
-                        </div>
-                        <button
-                          className={clsx(styles.buynow, {
-                            [styles.buyDisabled]: numTicketBuy <= 0,
-                          })}
-                          onClick={onBuyTicket}
-                          disabled={numTicketBuy <= 0}
-                        >
-                          buy now
-                        </button>
-                      </div>
-                    )}
+                                buy now
+                              </button>
+                            </div>
+                          )}
 
-                  {!isAccApproved(tokenAllowance || 0) && !finishedTime && (
-                    <button
-                      className={styles.btnApprove}
-                      onClick={handleTokenApprove}
-                    >
-                      Approve
-                    </button>
-                  )}
+                        {!isAccApproved(tokenAllowance || 0) && (
+                          <button
+                            className={styles.btnApprove}
+                            onClick={handleTokenApprove}
+                          >
+                            Approve
+                          </button>
+                        )}
+                      </>
+                    ))}
+
                   {alert?.type === "error" && alert.message && (
                     <div className={styles.alertMsg}>
                       <img src={iconWarning} alt="" />

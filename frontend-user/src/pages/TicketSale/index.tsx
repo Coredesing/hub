@@ -34,7 +34,6 @@ const TicketSale = (props: any) => {
     data: upcomingPools = {} as ResponseData,
     loading: loadingUpcomingPools
   } = useFetchV1(`/pools/upcoming-pools?token_type=${TOKEN_TYPE.ERC721}&limit=10&page=1`, recall);
-  console.log(upcomingPools)
   const {
     data: compeltePools = {} as ResponseData,
     loading: loadingcompletePools

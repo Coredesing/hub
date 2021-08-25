@@ -44,6 +44,7 @@ Route.post('block-pass', 'UserController.kycUpdateStatus').middleware('checkBloc
 Route.group(() => {
   // home
   Route.get('home/performance', 'HomeController.getPerformance');
+  Route.post('home/subscribe', 'HomeController.subscribe');
 
   // pool
   Route.get('pool/gamefi-ticket', 'PoolController.getGameFITicket');

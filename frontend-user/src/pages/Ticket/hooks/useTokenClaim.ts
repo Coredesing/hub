@@ -6,7 +6,7 @@ import useUserClaimSignature from '../hooks/useUserClaimSignature';
 import useWalletSignature from '../../../hooks/useWalletSignature';
 import PreSale_ABI from '../../../abi/PreSalePool.json';
 import { getContract } from '../../../utils/contract';
-import { alertSuccess, alertFailure } from '../../../store/actions/alert';
+import { alertSuccess, alertFailure, alertWarning } from '../../../store/actions/alert';
 import BigNumber from 'bignumber.js';
 
 const useTokenClaim = (poolAddress: string | undefined, poolId: number | undefined) => {
@@ -23,11 +23,11 @@ const useTokenClaim = (poolAddress: string | undefined, poolId: number | undefin
 
   useEffect(() => {
     poolAddress &&
-    signature &&
-    amount &&
-    !claimError &&
-    !loadingClaim &&
-    claimTokenWithSignature(signature, amount);
+      signature &&
+      amount &&
+      !claimError &&
+      !loadingClaim &&
+      claimTokenWithSignature(signature, amount);
   }, [signature, poolAddress, amount, claimError, loadingClaim]);
 
   useEffect(() => {
@@ -43,45 +43,45 @@ const useTokenClaim = (poolAddress: string | undefined, poolId: number | undefin
   const claimTokenWithSignature = useCallback(
     async (signature: string, amount: string) => {
 
-    console.log('poolAddress, signature, amount, account:', poolAddress, signature, amount, account);
-    if (poolAddress && signature && amount && account) {
+      console.log('poolAddress, signature, amount, account:', poolAddress, signature, amount, account);
+      if (poolAddress && signature && amount && account) {
 
-      if (amount && (new BigNumber(amount)).lte(0)) {
-        const msg = 'Please wait until the next milestone to claim the tokens.';
-        dispatch(alertFailure(msg));
-        setClaimTokenLoading(false);
-        setClaimError(msg);
-        setSignature("");
-        setUserClaimSignature("");
-        return;
+        if (amount && (new BigNumber(amount)).lte(0)) {
+          const msg = 'Please wait until the next milestone to claim the tokens.';
+          dispatch(alertFailure(msg));
+          setClaimTokenLoading(false);
+          setClaimError(msg);
+          setSignature("");
+          setUserClaimSignature("");
+          return;
+        }
+
+        try {
+          const contract = getContract(poolAddress, PreSale_ABI, library, account as string);
+          if (contract) {
+            // let overrides = fixGasLimitWithProvider(library, 'claim');
+            // const transaction = await contract.claimTokens(account, amount, signature, overrides);
+            const transaction = await contract.claimTokens(account, amount, signature);
+
+            setSignature("");
+            setUserClaimSignature("");
+            setClaimTransactionHash(transaction.hash);
+            dispatch(alertWarning("Request is processing!"));
+            await transaction.wait(1);
+
+            setClaimTokenSuccess(true);
+            setClaimTokenLoading(false);
+            dispatch(alertSuccess("Token Claim Successful"));
+          }
+        } catch (err) {
+          dispatch(alertFailure(err.message));
+          setClaimTokenLoading(false);
+          setClaimError(err.message);
+          setSignature("");
+          setUserClaimSignature("");
+        }
       }
-
-      try {
-         const contract = getContract(poolAddress, PreSale_ABI, library, account as string);
-         if (contract) {
-           // let overrides = fixGasLimitWithProvider(library, 'claim');
-           // const transaction = await contract.claimTokens(account, amount, signature, overrides);
-           const transaction = await contract.claimTokens(account, amount, signature);
-
-           setSignature("");
-           setUserClaimSignature("");
-           setClaimTransactionHash(transaction.hash);
-
-           await transaction.wait(1);
-
-           setClaimTokenSuccess(true);
-           setClaimTokenLoading(false);
-           dispatch(alertSuccess("Token Claim Successful"));
-         }
-      } catch (err) {
-        dispatch(alertFailure(err.message));
-        setClaimTokenLoading(false);
-        setClaimError(err.message);
-        setSignature("");
-        setUserClaimSignature("");
-      }
-    }
-  }, [poolAddress, library, account, amount, signature]);
+    }, [poolAddress, library, account, amount, signature]);
 
   const claimToken = useCallback(async () => {
     if (poolAddress) {

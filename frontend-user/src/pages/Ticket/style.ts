@@ -131,7 +131,7 @@ const useStyles = makeStyles((theme: any) => {
         cursor: 'pointer',
 
         '&.openBuy': {
-          width: '190px',
+          width: 'fit-content',
           fontSize: '16px',
           lineHeight: '28px',
           padding: '4px 25px',

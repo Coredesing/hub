@@ -594,7 +594,6 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
   if (!poolDetails) {
     return PoolStatus.TBA;
   }
-  console.log('poolDetails:', JSON.stringify(poolDetails));
 
   const firstClaimConfig = () => {
     return getFirstClaimConfig(poolDetails);
@@ -690,6 +689,10 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
 
   // Check Claimable Status
   const lastClaimTime = lastClaimConfigTime();
+  if (!lastClaimTime && poolDetails.process && poolDetails.process === Const.PROCESS.ONLY_CLAIM) {
+    return PoolStatus.FILLED;
+  }
+
   if (
     isClaimable &&
     releaseTime && lastClaimTime &&

@@ -4,7 +4,7 @@ import clsx from "clsx";
 import useStyles from "./style";
 import DefaultLayout from "../../components/Layout/DefaultLayout";
 // import SwipeableViews from 'react-swipeable-views';
-import { AboutTicket } from "./About";
+import AboutTicket from "./About";
 import { formatNumber, getDiffTime } from "../../utils";
 import { Progress } from "./Progress";
 import { useFetchV1 } from "../../hooks/useFetch";
@@ -87,6 +87,7 @@ const Ticket: React.FC<any> = (props: any) => {
 
   useEffect(() => {
     if (!loadingTicket && dataTicket) {
+      console.log(dataTicket)
       setNewTicket(false);
       setInfoTicket(dataTicket);
       if (isEndPool(dataTicket.campaign_status)) {

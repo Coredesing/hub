@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import PropTypes from "prop-types";
 // import SwipeableViews from 'react-swipeable-views';
@@ -9,6 +9,19 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import Pagination from '@material-ui/lab/Pagination';
+import { useFetchV1 } from "../../hooks/useFetch";
+import {
+  TableCell,
+  TableContainer,
+  Table,
+  TableBody,
+  TableHead,
+  TableRowBody,
+  TableRowHead
+} from '../../components/Base/Table';
+import { PaginationResult } from "../../types/Pagination";
+import { SearchBox } from "../../components/Base/SearchBox";
 const shareIcon = "/images/icons/share.svg";
 const telegramIcon = "/images/icons/telegram-1.svg";
 const twitterIcon = "/images/icons/twitter-1.svg";
@@ -17,7 +30,7 @@ const mediumIcon = "/images/icons/medium-1.svg";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: "transparent",
+    backgroundColor: "#171717",
   },
   tabName: {
     fontFamily: "Firs Neue",
@@ -104,6 +117,30 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  paginationNav: {
+    marginTop: '32px',
+    marginBottom: '10px',
+    background: 'transparent',
+  },
+  ulPagination: {
+    '& button': {
+      background: 'transparent',
+      color: '#AEAEAE',
+      fontSize: '14px',
+      lineHeight: '24px',
+      fontFamily: 'Firs Neue',
+      fontStyle: 'normal',
+      fontWeight: 600,
+
+      '&[aria-label^="page"]': {
+        background: '#72F34B',
+        color: '#000000',
+        '&:hover': {
+          background: '#4fa934',
+        }
+      }
+    }
+  }
 }));
 
 function TabPanel(props: any) {
@@ -156,27 +193,45 @@ const AntTabs = withStyles({
   },
 })(Tabs);
 
-export function AboutTicket({ info = {} }: any) {
+const AboutTicket = ({ info = {} }: any) => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const theme = useTheme();
   const matchSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const [page, setPage] = useState(1);
+  const [isGetWinner, setIsGetWinner] = useState(false);
+  const [searchWinner, setSearchWinner] = useState('');
+  const limitPage = 10;
+  const isClaim = info?.process === "only-claim";
+  const { data: winner = {} as PaginationResult } = useFetchV1(`/user/winner-list/${info.id}?page=${page}&limit=10&search_term=${searchWinner}`, isGetWinner);
+
+  useEffect(() => {
+    if (isClaim && info?.campaign_hash) {
+      setIsGetWinner(true);
+    }
+  }, [isClaim, info])
 
   const handleChange = (event: any, newValue: any) => {
     setValue(newValue);
   };
 
-  // const getRules = (info: {[k in string]: any}) => [
-  //     `Every user can only buy a maximum of ${info.max_buy_ticket || 0} tickets.`,
-  //     'Each ticket can buy 100 GAFI.',
-  //     `Total number: ${info.total_sold_coin || 0} tickets.`,
-  //     'KYC required.',
-  // ]
-
   const getRules = (rule = "") => {
     if (typeof rule !== "string") return [];
     return rule.split("\n").filter((r) => r.trim());
   };
+
+  const onChangePage = (event: any, page: number) => {
+    setPage(page);
+  }
+
+  const onSearchWinner = (event: any) => {
+    const value = event.target?.value;
+    setSearchWinner(value);
+    setPage(1);
+  }
+
+
+  console.log(isClaim)
 
   return (
     <div className={classes.root}>
@@ -200,6 +255,14 @@ export function AboutTicket({ info = {} }: any) {
             style={value === 1 ? { color: "#72F34B" } : {}}
             {...a11yProps(1)}
           />
+          {isClaim &&
+            <Tab
+              className={classes.tabName}
+              label={`Winner (${winner.total || 0})`}
+              style={value === 1 ? { color: "#72F34B" } : {}}
+              {...a11yProps(1)}
+            />
+          }
         </AntTabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -254,6 +317,43 @@ export function AboutTicket({ info = {} }: any) {
           </div>
         </div>
       </TabPanel>
+      <TabPanel value={value} index={2}>
+        <div style={{ maxWidth: '400px' }}>
+          <SearchBox
+            value={searchWinner}
+            onChange={onSearchWinner}
+            placeholder="Search first or last 14 digits of your wallet address"
+          />
+        </div>
+        <TableContainer style={{ background: '#171717', marginTop: '7px' }}>
+
+          <Table>
+            <TableHead>
+              <TableRowHead>
+                <TableCell>No</TableCell>
+                <TableCell align="left">Wallet Address</TableCell>
+              </TableRowHead>
+            </TableHead>
+            <TableBody>
+              {(winner.data || []).map((row, idx) => (
+                <TableRowBody key={row.id}>
+                  <TableCell component="th" scope="row"> {idx} </TableCell>
+                  <TableCell align="left">{row.wallet_address}</TableCell>
+                </TableRowBody>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Pagination count={Math.ceil(+winner.total / limitPage)} shape="rounded"
+          onChange={onChangePage}
+          className={classes.paginationNav}
+          classes={{
+            ul: classes.ulPagination
+          }}
+        />
+      </TabPanel>
     </div>
   );
 }
+
+export default React.memo(AboutTicket);

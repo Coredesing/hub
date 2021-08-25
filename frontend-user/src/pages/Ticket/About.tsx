@@ -22,6 +22,7 @@ import {
 } from '../../components/Base/Table';
 import { PaginationResult } from "../../types/Pagination";
 import { SearchBox } from "../../components/Base/SearchBox";
+import { debounce } from "../../utils";
 const shareIcon = "/images/icons/share.svg";
 const telegramIcon = "/images/icons/telegram-1.svg";
 const twitterIcon = "/images/icons/twitter-1.svg";
@@ -203,7 +204,7 @@ const AboutTicket = ({ info = {} }: any) => {
   const [searchWinner, setSearchWinner] = useState('');
   const limitPage = 10;
   const isClaim = info?.process === "only-claim";
-  const { data: winner = {} as PaginationResult } = useFetchV1(`/user/winner-list/${info.id}?page=${page}&limit=10&search_term=${searchWinner}`, isGetWinner);
+  const { data: winner = {} as PaginationResult } = useFetchV1(`/user/winner-list/${info.id}?page=${page}&limit=${limitPage}&search_term=${searchWinner}`, isGetWinner);
 
   useEffect(() => {
     if (isClaim && info?.campaign_hash) {
@@ -229,6 +230,8 @@ const AboutTicket = ({ info = {} }: any) => {
     setSearchWinner(value);
     setPage(1);
   }
+
+  const onSearch = debounce(onSearchWinner, 1000);
 
   return (
     <div className={classes.root}>
@@ -317,8 +320,8 @@ const AboutTicket = ({ info = {} }: any) => {
       <TabPanel value={value} index={2}>
         <div style={{ maxWidth: '400px' }}>
           <SearchBox
-            value={searchWinner}
-            onChange={onSearchWinner}
+            // value={searchWinner}
+            onChange={onSearch}
             placeholder="Search first or last 14 digits of your wallet address"
           />
         </div>
@@ -334,7 +337,7 @@ const AboutTicket = ({ info = {} }: any) => {
             <TableBody>
               {(winner.data || []).map((row, idx) => (
                 <TableRowBody key={row.id}>
-                  <TableCell component="th" scope="row"> {idx} </TableCell>
+                  <TableCell component="th" scope="row"> {((+winner.page - 1) * limitPage + idx + 1)} </TableCell>
                   <TableCell align="left">{row.wallet_address}</TableCell>
                 </TableRowBody>
               ))}

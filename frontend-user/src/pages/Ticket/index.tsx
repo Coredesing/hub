@@ -17,7 +17,7 @@ import {
 import useKyc from "../../hooks/useKyc";
 import useAuth from "../../hooks/useAuth";
 import { AlertKYC } from "../../components/Base/AlertKYC";
-import { getBalance } from "./utils";
+import { getBalance, isEndPool } from "./utils";
 import usePoolDepositAction from "./hooks/usePoolDepositAction";
 import { caclDiffTime } from "./getDiffTime";
 import useTokenAllowance from "../../hooks/useTokenAllowance";
@@ -80,16 +80,31 @@ const Ticket: React.FC<any> = (props: any) => {
     }
     setAllowNetwork(
       String(networkInfo.name).toLowerCase() ===
-        (infoTicket.network_available || "").toLowerCase()
+      (infoTicket.network_available || "").toLowerCase()
     );
   }, [infoTicket, appChainID]);
   const isClaim = dataTicket?.process === "only-claim";
 
   useEffect(() => {
     if (!loadingTicket && dataTicket) {
-      console.log(dataTicket);
-      const openTime = +dataTicket.start_time * 1000;
-      const finishTime = +dataTicket.finish_time * 1000;
+      setNewTicket(false);
+      setInfoTicket(dataTicket);
+      if (isEndPool(dataTicket.campaign_status)) {
+        setFinishedTime(true);
+        return
+      }
+      let openTime: number;
+      let finishTime: number;
+      if (isClaim) {
+        let claimConfig = (dataTicket.campaignClaimConfig || []).slice(-1)[0];
+        if (!claimConfig) return;
+        openTime = +claimConfig.start_time * 1000;
+        const endTime = +dataTicket.end_time * 1000 || openTime + (60 * 60 * 24 * 7);
+        finishTime = endTime;
+      } else {
+        openTime = +dataTicket.start_time * 1000;
+        finishTime = +dataTicket.finish_time * 1000;
+      }
 
       if (openTime > Date.now()) {
         setOpenTime(getDiffTime(openTime, Date.now()));
@@ -109,7 +124,7 @@ const Ticket: React.FC<any> = (props: any) => {
       setNewTicket(false);
       setInfoTicket(dataTicket);
     }
-  }, [dataTicket, loadingTicket]);
+  }, [dataTicket, loadingTicket, isClaim]);
 
   const [renewBalance, setNewBalance] = useState(true);
   const [ownedTicket, setOwnedTicket] = useState(0);
@@ -164,7 +179,7 @@ const Ticket: React.FC<any> = (props: any) => {
 
   useEffect(() => {
     let interval: any;
-    if (isBuy) {
+    if (isBuy && endOpenTime) {
       interval = setInterval(() => {
         const newEndTime = { ...endTime };
         if (
@@ -186,9 +201,10 @@ const Ticket: React.FC<any> = (props: any) => {
     return () => {
       interval && clearInterval(interval);
     };
-  }, [isBuy, endTime, setTimeEnd]);
+  }, [isBuy, endTime, setTimeEnd, endOpenTime]);
 
   const ascAmount = () => {
+    if (!isKYC) return;
     const ticketCanBuy = getMaxTicketBuy(
       ticketBought,
       +infoTicket.max_buy_ticket
@@ -199,18 +215,21 @@ const Ticket: React.FC<any> = (props: any) => {
     setNumTicketBuy((n) => n + 1);
   };
   const descAmount = () => {
+    if (!isKYC) return;
     if (numTicketBuy > 0) {
       setNumTicketBuy((n) => n - 1);
     }
   };
 
   const ascMaxAmount = () => {
+    if (!isKYC) return;
     const maxTicket = getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket);
     if (maxTicket === 0) return;
     setNumTicketBuy(maxTicket);
   };
 
   const descMinAmount = () => {
+    if (!isKYC) return;
     const maxTicket = getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket);
     if (maxTicket === 0) return;
     setNumTicketBuy(1);
@@ -229,7 +248,10 @@ const Ticket: React.FC<any> = (props: any) => {
   );
 
   useEffect(() => {
-    if (claimTokenSuccess && transactionHash) {
+    if (claimTokenSuccess) {
+      setNewTicket(true);
+    }
+    if (transactionHash) {
       setOpenModalTx(true);
     }
   }, [claimTokenSuccess, transactionHash]);
@@ -408,9 +430,11 @@ const Ticket: React.FC<any> = (props: any) => {
   };
 
   const onClaimTicket = async () => {
+    if (!isKYC) return;
     await claimToken();
   };
   const onBuyTicket = async () => {
+    if (!isKYC) return;
     try {
       if (numTicketBuy > 0) {
         await deposit();
@@ -588,13 +612,15 @@ const Ticket: React.FC<any> = (props: any) => {
                     <span className={styles.text}>OWNED</span>{" "}
                     <span className={styles.textBold}>{ownedTicket}</span>
                   </div>
-                  <div className={styles.infoTicket}>
-                    <span className={styles.text}>BOUGHT/MAX</span>{" "}
-                    <span className={styles.textBold}>
-                      {ticketBought}/{infoTicket.max_buy_ticket || 0}
-                    </span>
-                  </div>
-                  {finishedTime && (
+                  {
+                    !isClaim && <div className={styles.infoTicket}>
+                      <span className={styles.text}>BOUGHT/MAX</span>{" "}
+                      <span className={styles.textBold}>
+                        {ticketBought}/{infoTicket.max_buy_ticket || 0}
+                      </span>
+                    </div>
+                  }
+                  {!isClaim && finishedTime && (
                     <div className={styles.infoTicket}>
                       <span className={styles.text}>PARTICIPANTS</span>{" "}
                       <span className={styles.textBold}>
@@ -602,6 +628,17 @@ const Ticket: React.FC<any> = (props: any) => {
                       </span>
                     </div>
                   )}
+                  {
+                    isClaim && <div className={styles.infoTicket}>
+                      <span className={styles.text}>AVAILABLE TO CAILM</span>{" "}
+                      <span className={styles.textBold}>
+                        {getRemaining(
+                          infoTicket.total_sold_coin,
+                          infoTicket.token_sold
+                        )}
+                      </span>
+                    </div>
+                  }
                   {!finishedTime && isBuy && (
                     <div className={styles.infoTicket}>
                       <span className={styles.text}>END IN</span>
@@ -616,11 +653,10 @@ const Ticket: React.FC<any> = (props: any) => {
                   {!finishedTime &&
                     (isClaim ? (
                       <button
-                        className={clsx(styles.buynow, {
-                          // [styles.buyDisabled]: numTicketBuy <= 0
+                        className={clsx(styles.btnClaim, {
+                          disabled: !isKYC
                         })}
-                        onClick={onClaimTicket}
-                      >
+                        onClick={onClaimTicket} disabled={!isKYC}>
                         Claim
                       </button>
                     ) : (
@@ -642,7 +678,7 @@ const Ticket: React.FC<any> = (props: any) => {
                                         !getMaxTicketBuy(
                                           ticketBought,
                                           +infoTicket.max_buy_ticket
-                                        ) || numTicketBuy === 0,
+                                        ) || numTicketBuy === 0 || !isKYC,
                                     })}
                                   >
                                     Min
@@ -654,7 +690,7 @@ const Ticket: React.FC<any> = (props: any) => {
                                         !getMaxTicketBuy(
                                           ticketBought,
                                           +infoTicket.max_buy_ticket
-                                        ) || numTicketBuy === 0,
+                                        ) || numTicketBuy === 0 || !isKYC,
                                     })}
                                   >
                                     <svg
@@ -685,10 +721,10 @@ const Ticket: React.FC<any> = (props: any) => {
                                           +infoTicket.max_buy_ticket
                                         ) ||
                                         numTicketBuy ===
-                                          getMaxTicketBuy(
-                                            ticketBought,
-                                            +infoTicket.max_buy_ticket
-                                          ),
+                                        getMaxTicketBuy(
+                                          ticketBought,
+                                          +infoTicket.max_buy_ticket
+                                        ) || !isKYC,
                                     })}
                                   >
                                     <svg
@@ -713,10 +749,10 @@ const Ticket: React.FC<any> = (props: any) => {
                                           +infoTicket.max_buy_ticket
                                         ) ||
                                         numTicketBuy ===
-                                          getMaxTicketBuy(
-                                            ticketBought,
-                                            +infoTicket.max_buy_ticket
-                                          ),
+                                        getMaxTicketBuy(
+                                          ticketBought,
+                                          +infoTicket.max_buy_ticket
+                                        ) || !isKYC,
                                     })}
                                   >
                                     Max
@@ -728,7 +764,7 @@ const Ticket: React.FC<any> = (props: any) => {
                                   [styles.buyDisabled]: numTicketBuy <= 0,
                                 })}
                                 onClick={onBuyTicket}
-                                disabled={numTicketBuy <= 0}
+                                disabled={numTicketBuy <= 0 || !isKYC}
                               >
                                 buy now
                               </button>
@@ -762,10 +798,10 @@ const Ticket: React.FC<any> = (props: any) => {
                         infoTicket.total_sold_coin,
                         infoTicket.token_sold
                       ) && (
-                        <div className="soldout">
-                          <img src={soldoutImg} alt="" />
-                        </div>
-                      )}
+                          <div className="soldout">
+                            <img src={soldoutImg} alt="" />
+                          </div>
+                        )}
                     </div>
                   )}
                 </div>

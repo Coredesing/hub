@@ -394,6 +394,26 @@ const useStyles = makeStyles((theme: any) => {
     buyDisabled: {
       background: "#498631 !important",
     },
+    btnClaim: {
+      outline: 'none',
+      border: 'none',
+      background: '#F3E24B',
+      borderRadius: '2px',
+      color: '#000',
+      fontWeight: 600,
+      fontSize: '16px',
+      lineHeight: '28px',
+      textAlign: 'center',
+      padding: '13px 20px',
+      textTransform: 'uppercase',
+      minWidth: '200px',
+      cursor: 'pointer',
+      height: '52px',
+      marginTop: '16px',
+      '&.disabled': {
+        opacity: '.5'
+      }
+    },
     buynow: {
       outline: "none",
       border: "none",

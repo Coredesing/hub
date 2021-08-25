@@ -442,12 +442,22 @@ const getTokenSoldSmartContract = async (pool) => {
   }
   const isClaimable = pool.pool_type === Const.POOL_TYPE.CLAIMABLE;
   const poolContract = isClaimable ? await getContractClaimInstance(pool) : await getContractInstance(pool);
-  let tokenSold = await poolContract.methods.tokenSold().call();
-  if (pool.token_type === 'erc721') {
-    return tokenSold
+
+  try {
+    if (pool.token_type === Const.TOKEN_TYPE.ERC721 && pool.process === Const.PROCESS.ONLY_CLAIM) {
+      return await poolContract.methods.tokenClaimed().call();
+    }
+
+    let tokenSold = await poolContract.methods.tokenSold().call();
+    if (pool.token_type === 'erc721') {
+      return tokenSold
+    }
+    tokenSold = new BigNumber(tokenSold).div(new BigNumber(10).pow(18)).toFixed();
+    return tokenSold;
   }
-  tokenSold = new BigNumber(tokenSold).div(new BigNumber(10).pow(18)).toFixed();
-  return tokenSold;
+  catch (e) {
+    return 0
+  }
 };
 
 const getEventSmartContract = async ({ contract, eventName, filter = {} }) => {

@@ -27,3 +27,7 @@ export const handleErrMsg = (err: IError) => {
     }
     return '';
 }
+
+export const isEndPool = (status: string) => {
+    return String(status).toLowerCase() === 'ended'
+} 

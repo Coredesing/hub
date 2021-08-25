@@ -146,7 +146,7 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                     {/* <Route path={'/'} component={Landing} /> */}
                     {/* <Route path={'/coming-soon'} component={ComingSoon} /> */}
                     {/* <Route path={'/home'} component={Home} /> */}
-                    <Route exact path={'/pools/:type'} component={TicketSale} />
+                    <Route exact path={'/pools/ticket'} component={TicketSale} />
                     <Route exact path={'/'} component={Home} />
                     <Route component={NotFoundPage} />
                 </Switch>

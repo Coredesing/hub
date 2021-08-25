@@ -65,7 +65,7 @@ export const TableBody = TableBodyMui;
 export const TableHead = TableHeadMui;
 
 interface ISortLabel {
-    order?: 'asc' | 'desc' | undefined,
+    order?: 'asc' | 'desc' | null,
     children?: any,
     [k: string]: any
 }

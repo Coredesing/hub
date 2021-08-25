@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, TextField, Link } from '@material-ui/core';
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
@@ -58,6 +58,36 @@ const Home = (props: any) => {
   const onCloseImgBanner = () => {
     setIsShowImgModal(false);
   }
+
+  const [listPerfomance, setListPerfomance] = useState<Data[]>([]);
+
+  useEffect(() => {
+    if (!loadingcompletePools) {
+      setListPerfomance(perfomances);
+    }
+  }, [perfomances, loadingcompletePools]);
+
+  const [fieldSorted, setFieldSorted] = useState<{ field: keyof Data, order?: 'asc' | 'desc' }>({ field: '' });
+  const onSortListPerfomance = (field: keyof Data) => {
+    if (field === fieldSorted.field) {
+      const sorted = perfomances.sort((a: any, b: any) => {
+        const numA = +(String(a[field]).replace(/\$/i, '').replace(/,/ig, '')) || 0;
+        const numB = +(String(b[field]).replace(/\$/i, '').replace(/,/ig, '')) || 0;
+        return fieldSorted.order === 'asc' ? numA === numB ? -1 : numA - numB : numA === numB ? 1 : numB - numA;
+      })
+      setListPerfomance(sorted);
+      setFieldSorted({ field, order: fieldSorted.order === 'asc' ? 'desc' : 'asc' });
+    } else {
+      const sorted = perfomances.sort((a: any, b: any) => {
+        const numA = +(String(a[field]).replace(/\$/i, '').replace(/,/ig, '')) || 0;
+        const numB = +(String(b[field]).replace(/\$/i, '').replace(/,/ig, '')) || 0;
+        return numA === numB ? 1 : numA - numB;
+      })
+      setListPerfomance(sorted);
+      setFieldSorted({ field, order: 'desc' });
+    }
+  }
+
   return (
     <DefaultLayout>
       <section className={clsx(styles.banner, styles.section)}>
@@ -80,12 +110,12 @@ const Home = (props: any) => {
 
         <div className={styles.wrapperContent}>
           <div className={clsx(styles.bannerContent)}>
-          <div className="large-text">
-            <h1>Dedicated Gaming Launchpad & IGO</h1>
-          </div>
-          <h4 className="small-text">
-            GameFi is the <span className="launchpad">first IGO launchpad</span>, with tools to facilitate the success of games.
-          </h4>
+            <div className="large-text">
+              <h1>Dedicated Gaming Launchpad & IGO</h1>
+            </div>
+            <h4 className="small-text">
+              GameFi is the <span className="launchpad">first IGO launchpad</span>, with tools to facilitate the success of games.
+            </h4>
           </div>
         </div>
       </section>
@@ -169,15 +199,15 @@ const Home = (props: any) => {
                       <TableCell align="left">
                         IDO Price
                       </TableCell>
-                      <TableCell align="left">
-                        <TableSortLabel order={"asc"}>ATH</TableSortLabel>
+                      <TableCell align="left" onClick={() => onSortListPerfomance('ath')}>
+                        <TableSortLabel order={fieldSorted.field === 'ath' ? fieldSorted.order : null}>ATH</TableSortLabel>
                       </TableCell>
-                      <TableCell align="left"><TableSortLabel>Holders</TableSortLabel></TableCell>
-                      <TableCell align="left"><TableSortLabel>Daily Volume</TableSortLabel></TableCell>
+                      <TableCell align="left" onClick={() => onSortListPerfomance('holders')}><TableSortLabel order={fieldSorted.field === 'holders' ? fieldSorted.order : null}>Holders</TableSortLabel></TableCell>
+                      <TableCell align="left" onClick={() => onSortListPerfomance('volume')}><TableSortLabel order={fieldSorted.field === 'volume' ? fieldSorted.order : null}>Daily Volume</TableSortLabel></TableCell>
                     </TableRowHead>
                   </TableHead>
                   <TableBody >
-                    {perfomances.map((row, id) => (
+                    {listPerfomance.map((row, id) => (
                       <TableRowBody key={id}>
                         <TableCell component="th" scope="row">
                           <div className={styles.tbCellProject}>

@@ -12,7 +12,6 @@ type Props = {
   [k: string]: any;
 };
 export const Card = ({ card, ...props }: Props) => {
-  console.log('card: ', card);
   
   const styles = { ...useStyles(), ...useCardStyles() };
   // const isOpen = card.campaign_status === "Filled";

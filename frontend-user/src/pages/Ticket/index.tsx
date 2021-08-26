@@ -110,7 +110,6 @@ const Ticket: React.FC<any> = (props: any) => {
         )
         .then((res) => {
           const result = res.data;
-          console.log(result)
           if (result?.status === 200) {
             info.ok = true;
             info.data = result.data || {};
@@ -132,7 +131,6 @@ const Ticket: React.FC<any> = (props: any) => {
 
   useEffect(() => {
     if (!loadingTicket && dataTicket) {
-      console.log(dataTicket)
       setNewTicket(false);
       setInfoTicket(dataTicket);
       if (isEndPool(dataTicket.campaign_status)) {
@@ -214,6 +212,7 @@ const Ticket: React.FC<any> = (props: any) => {
           if(Date.now() >= phase[2].openTime && Date.now() < phase[2].finishTime) {
             setTimeEnd(getDiffTime( phase[2].finishTime, Date.now() ))
             setFinishedTime(false);
+            setAccInWinners({ ok: false, loading: true, error: "" });
             clearInterval(interval);
           }
         }, 1000);

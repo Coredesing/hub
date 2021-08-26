@@ -127,6 +127,8 @@ const Ticket: React.FC<any> = (props: any) => {
     }
   }, [isAccInWinners, connectedAccount, id]);
 
+  const [phase, setPhase] = useState<any>({});
+  const [phaseName, setPhaseName] = useState('');
   useEffect(() => {
     if (!loadingTicket && dataTicket) {
       setNewTicket(false);
@@ -142,20 +144,45 @@ const Ticket: React.FC<any> = (props: any) => {
         const claimConfigs = dataTicket.campaignClaimConfig || [];
         const leng = claimConfigs.length;
         if (!leng) return;
+        const freeBuyTime = dataTicket.freeBuyTimeSetting;
         if (leng === 1) {
           const openClaim = claimConfigs[0];
           openTime = +openClaim.start_time * 1000;
-          const endTime =
-            +openClaim.end_time * 1000 || openTime + 1000 * 60 * 60 * 24;
+          const endTime = +freeBuyTime?.start_buy_time * 1000 || +openClaim.end_time * 1000 || openTime + 1000 * 60 * 60 * 24;
           finishTime = endTime;
+          if(freeBuyTime) {
+            setPhaseName('Phase 1');
+            setPhase({
+              1: {
+                openTime,
+                finishTime,
+              },
+              2: {
+                openTime: finishTime,
+                finishTime: finishTime + 1000 * 60 * 60 * 24
+              }
+            })
+          }
         } else {
           const openClaim = claimConfigs[0];
           let endClaim = claimConfigs.slice(-1)[0];
           if (!endClaim) return;
           openTime = +openClaim.start_time * 1000;
-          const endTime =
-            +endClaim.end_time * 1000 || +endClaim.start_time * 1000;
+          const endTime = +freeBuyTime?.start_buy_time * 1000 || +endClaim.end_time * 1000 || +endClaim.start_time * 1000;
           finishTime = endTime;
+          if(freeBuyTime) {
+            setPhaseName('Phase 1');
+            setPhase({
+              1: {
+                openTime,
+                finishTime: +freeBuyTime?.start_buy_time * 1000,
+              },
+              2: {
+                openTime: +freeBuyTime?.start_buy_time * 1000,
+                finishTime: endTime
+              }
+            })
+          }
         }
       } else {
         openTime = +dataTicket.start_time * 1000;
@@ -179,6 +206,24 @@ const Ticket: React.FC<any> = (props: any) => {
       }
     }
   }, [dataTicket, loadingTicket, isClaim]);
+
+  useEffect(() => {
+      if(Object.keys(phase).length) {
+        const interval = setInterval(() => {
+          if(Date.now() > phase[2].finishTime) {
+            clearInterval(interval);
+            return;
+          }
+          if(Date.now() >= phase[2].openTime && Date.now() < phase[2].finishTime) {
+            setTimeEnd(getDiffTime( phase[2].finishTime, Date.now() ))
+            setFinishedTime(false);
+            setAccInWinners({ ok: false, loading: true, error: "" });
+            setPhaseName('Phase 2');
+            clearInterval(interval);
+          }
+        }, 1000);
+      }
+  }, [phase]);
 
   const [renewBalance, setNewBalance] = useState(true);
   const [ownedTicket, setOwnedTicket] = useState(0);
@@ -329,8 +374,8 @@ const Ticket: React.FC<any> = (props: any) => {
     }
   }, [checkUserClaimed, isClaim, retrieveClaimableTokens, infoTicket.campaign_hash, connectedAccount]);
 
-  const isUserClaimed = (numTicketClaimed: number) => {
-    return +numTicketClaimed > 0;
+  const isNotClaim = (numTicketClaimed: number, available: number) => {
+    return +available - +numTicketClaimed <= 0;
   }
 
   useEffect(() => {
@@ -522,12 +567,8 @@ const Ticket: React.FC<any> = (props: any) => {
     return +tokenAllowance > 0;
   };
 
-  useEffect(() => {
-    console.log('lockWhenClaiming', lockWhenClaiming)
-  }, [lockWhenClaiming]);
-
   const onClaimTicket = async () => {
-    if (!isKYC || userClaimed || lockWhenClaiming) return;
+    if (!isKYC || isNotClaim(userClaimed, isAccInWinners.data?.lottery_ticket) || lockWhenClaiming) return;
     setLockWhenClaiming(true);
     await claimToken();
   };
@@ -734,13 +775,13 @@ const Ticket: React.FC<any> = (props: any) => {
                     <div className={styles.infoTicket}>
                       <span className={styles.text}>AVAILABLE TO CAILM</span>{" "}
                       <span className={styles.textBold}>
-                        { isUserClaimed(userClaimed) ? 0 : +isAccInWinners.data?.lottery_ticket || 0}
+                        { +isAccInWinners.data?.lottery_ticket - userClaimed || 0}
                       </span>
                     </div>
                   )}
                   {!finishedTime && isBuy && (
                     <div className={styles.infoTicket}>
-                      <span className={styles.text}>END IN</span>
+                      <span className={styles.text}>{phaseName} END IN</span>
                       <span className={styles.timeEnd}>
                         {formatNumber(endTime.days)}d :{" "}
                         {formatNumber(endTime.hours)}h :{" "}
@@ -755,11 +796,11 @@ const Ticket: React.FC<any> = (props: any) => {
                         <button
                           className={clsx(styles.btnClaim, {
                             disabled:
-                              !isKYC || isUserClaimed(userClaimed) || lockWhenClaiming,
+                              !isKYC || isNotClaim(userClaimed, isAccInWinners.data?.lottery_ticket) || lockWhenClaiming,
                           })}
                           onClick={onClaimTicket}
                           disabled={
-                            !isKYC || isUserClaimed(userClaimed) || lockWhenClaiming
+                            !isKYC || isNotClaim(userClaimed, isAccInWinners.data?.lottery_ticket) || lockWhenClaiming
                           }
                         >
                           Claim

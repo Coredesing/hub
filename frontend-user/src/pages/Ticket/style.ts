@@ -83,6 +83,7 @@ const useStyles = makeStyles((theme: any) => {
     cardBodyText: {
       display: "grid",
       placeContent: "center",
+      placeItems: "center",
       "& h4, & h3": {
         margin: 0,
         padding: 0,

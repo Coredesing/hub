@@ -31,7 +31,8 @@ import { PurchaseCurrency } from "../../constants/purchasableCurrency";
 import useUserPurchased from "./hooks/useUserPurchased";
 import TicketModal from "./TicketModal";
 import useTokenClaim from "./hooks/useTokenClaim";
-import axios from '../../services/axios';
+import axios from "../../services/axios";
+import useUserRemainTokensClaim from "./hooks/useUserRemainTokensClaim";
 // import { FormInputNumber } from '../../components/Base/FormInputNumber/FormInputNumber';
 const iconWarning = "/images/warning-red.svg";
 const ticketImg = "/images/gamefi-ticket.png";
@@ -72,7 +73,7 @@ const Ticket: React.FC<any> = (props: any) => {
     `/pool/${id}`,
     renewTicket
   );
-  
+
   const [allowNetwork, setAllowNetwork] = useState<boolean>(false);
   useEffect(() => {
     const networkInfo = APP_NETWORKS_SUPPORT[Number(appChainID)];
@@ -86,64 +87,74 @@ const Ticket: React.FC<any> = (props: any) => {
   }, [infoTicket, appChainID]);
   const isClaim = dataTicket?.process === "only-claim";
 
-
-  const [isAccInWinners, setAccInWinners] = useState<{loading: boolean, ok?: boolean, error?: string, data?:{[k: string]: any}}>({
+  const [isAccInWinners, setAccInWinners] = useState<{
+    loading: boolean;
+    ok?: boolean;
+    error?: string;
+    data?: { [k: string]: any };
+  }>({
     loading: false,
     ok: false,
   });
   useEffect(() => {
-    if(isClaim) {
-      setAccInWinners({ok: false, loading: true, error: '',});
+    if (isClaim) {
+      setAccInWinners({ ok: false, loading: true, error: "" });
     }
   }, [isClaim, connectedAccount]);
   useEffect(() => {
-    console.log(isAccInWinners)
-    if(isAccInWinners.loading) {
+    if (isAccInWinners.loading) {
       let info: any = {};
-      axios.get(`/pool/${id}/check-exist-winner?wallet_address=${connectedAccount}&campaignId=${id}`)
+      axios
+        .get(
+          `/pool/${id}/check-exist-winner?wallet_address=${connectedAccount}&campaignId=${id}`
+        )
         .then((res) => {
           const result = res.data;
-          if(result?.status === 200) {
+          if (result?.status === 200) {
             info.ok = true;
             info.data = result.data || {};
           } else {
-            info.error = 'You\'re not in winners';
+            info.error = "You're not in winners";
           }
-        }).catch(err => {
-          info.error = 'You\'re not in winners';
-        }).finally(() => {
+        })
+        .catch((err) => {
+          info.error = "You're not in winners";
+        })
+        .finally(() => {
           info.loading = false;
           setAccInWinners(info);
-        })
+        });
     }
   }, [isAccInWinners, connectedAccount, id]);
-  
+
   useEffect(() => {
     if (!loadingTicket && dataTicket) {
       setNewTicket(false);
       setInfoTicket(dataTicket);
       if (isEndPool(dataTicket.campaign_status)) {
         setFinishedTime(true);
-        return
+        return;
       }
       let openTime: number;
       let finishTime: number;
 
       if (isClaim) {
-        const claimConfigs =dataTicket.campaignClaimConfig || [];
+        const claimConfigs = dataTicket.campaignClaimConfig || [];
         const leng = claimConfigs.length;
-        if(!leng) return;
-        if(leng === 1) {
+        if (!leng) return;
+        if (leng === 1) {
           const openClaim = claimConfigs[0];
           openTime = +openClaim.start_time * 1000;
-          const endTime = +openClaim.end_time * 1000 || openTime + (1000 * 60 * 60 * 24);
+          const endTime =
+            +openClaim.end_time * 1000 || openTime + 1000 * 60 * 60 * 24;
           finishTime = endTime;
         } else {
           const openClaim = claimConfigs[0];
           let endClaim = claimConfigs.slice(-1)[0];
           if (!endClaim) return;
           openTime = +openClaim.start_time * 1000;
-          const endTime = +endClaim.end_time * 1000 || (+endClaim.start_time * 1000);
+          const endTime =
+            +endClaim.end_time * 1000 || +endClaim.start_time * 1000;
           finishTime = endTime;
         }
       } else {
@@ -290,15 +301,46 @@ const Ticket: React.FC<any> = (props: any) => {
     infoTicket?.id
   );
 
+  // const [lockWhenClaiming, setLockWhenClaiming] = useState(false);
+  const [userClaimed, setUserClaimed] = useState(false);
+  const {
+    retrieveClaimableTokens
+  } = useUserRemainTokensClaim(infoTicket.campaign_hash, true);
+  const checkUserClaimed = useCallback(() => {
+    if (!connectedAccount) {
+      setUserClaimed(false);
+      return;
+    }
+    retrieveClaimableTokens(connectedAccount, infoTicket.campaign_hash).then((res) => {
+      if (+res?.userClaimed > 0) {
+        setUserClaimed(true);
+      } else {
+        setUserClaimed(false);
+      }
+    })
+  }, [retrieveClaimableTokens, setUserClaimed, connectedAccount, infoTicket.campaign_hash]);
+
+  useEffect(() => {
+    if (isClaim) {
+      checkUserClaimed();
+    }
+  }, [checkUserClaimed, isClaim, retrieveClaimableTokens, infoTicket.campaign_hash, connectedAccount]);
+
   useEffect(() => {
     if (claimTokenSuccess) {
       setNewTicket(true);
-      setAccInWinners((d) => ({error: '', loading: true, ok: false, data: d.data}));
+      setAccInWinners((d) => ({
+        error: "",
+        loading: true,
+        ok: false,
+        data: d.data,
+      }));
+      checkUserClaimed();
     }
     if (transactionHash) {
       setOpenModalTx(true);
     }
-  }, [claimTokenSuccess, transactionHash]);
+  }, [claimTokenSuccess, transactionHash, checkUserClaimed]);
 
   const {
     deposit,
@@ -474,7 +516,7 @@ const Ticket: React.FC<any> = (props: any) => {
   };
 
   const onClaimTicket = async () => {
-    if (!isKYC || +isAccInWinners.data?.lottery_ticket > 0) return;
+    if (!isKYC || userClaimed) return;
     await claimToken();
   };
   const onBuyTicket = async () => {
@@ -527,7 +569,7 @@ const Ticket: React.FC<any> = (props: any) => {
           </div>
           <div className={styles.cardBody}>
             <div className={styles.cardBodyText}>
-              <h3>{infoTicket.name || "Ticket"}</h3>
+              <h3>{infoTicket.title || infoTicket.name}</h3>
               {!endOpenTime && (
                 <h4>
                   <span>TOTAL SALE</span> {infoTicket.total_sold_coin || 0}
@@ -654,16 +696,20 @@ const Ticket: React.FC<any> = (props: any) => {
                   )}
                   <div className={styles.infoTicket}>
                     <span className={styles.text}>OWNED</span>{" "}
-                    <span className={styles.textBold}>{isClaim ? +isAccInWinners.data?.lottery_ticket || 0 : ownedTicket}</span>
+                    <span className={styles.textBold}>
+                      {isClaim
+                        ? +isAccInWinners.data?.lottery_ticket || 0
+                        : ownedTicket}
+                    </span>
                   </div>
-                  {
-                    !isClaim && <div className={styles.infoTicket}>
+                  {!isClaim && (
+                    <div className={styles.infoTicket}>
                       <span className={styles.text}>BOUGHT/MAX</span>{" "}
                       <span className={styles.textBold}>
                         {ticketBought}/{infoTicket.max_buy_ticket || 0}
                       </span>
                     </div>
-                  }
+                  )}
                   {!isClaim && finishedTime && (
                     <div className={styles.infoTicket}>
                       <span className={styles.text}>PARTICIPANTS</span>{" "}
@@ -672,8 +718,8 @@ const Ticket: React.FC<any> = (props: any) => {
                       </span>
                     </div>
                   )}
-                  {
-                    isClaim && <div className={styles.infoTicket}>
+                  {isClaim && (
+                    <div className={styles.infoTicket}>
                       <span className={styles.text}>AVAILABLE TO CAILM</span>{" "}
                       <span className={styles.textBold}>
                         {getRemaining(
@@ -682,7 +728,7 @@ const Ticket: React.FC<any> = (props: any) => {
                         )}
                       </span>
                     </div>
-                  }
+                  )}
                   {!finishedTime && isBuy && (
                     <div className={styles.infoTicket}>
                       <span className={styles.text}>END IN</span>
@@ -696,13 +742,21 @@ const Ticket: React.FC<any> = (props: any) => {
                   )}
                   {!finishedTime &&
                     (isClaim ? (
-                      isAccInWinners.ok && (<button
-                        className={clsx(styles.btnClaim, {
-                          disabled: !isKYC || +isAccInWinners.data?.lottery_ticket > 0
-                        })}
-                        onClick={onClaimTicket} disabled={!isKYC || +isAccInWinners.data?.lottery_ticket > 0}>
-                        Claim
-                      </button>)
+                      isAccInWinners.ok && (
+                        <button
+                          className={clsx(styles.btnClaim, {
+                            disabled:
+                              !isKYC ||
+                              userClaimed,
+                          })}
+                          onClick={onClaimTicket}
+                          disabled={
+                            !isKYC || userClaimed
+                          }
+                        >
+                          Claim
+                        </button>
+                      )
                     ) : (
                       <>
                         {allowNetwork &&
@@ -722,7 +776,9 @@ const Ticket: React.FC<any> = (props: any) => {
                                         !getMaxTicketBuy(
                                           ticketBought,
                                           +infoTicket.max_buy_ticket
-                                        ) || numTicketBuy === 0 || !isKYC,
+                                        ) ||
+                                        numTicketBuy === 0 ||
+                                        !isKYC,
                                     })}
                                   >
                                     Min
@@ -734,7 +790,9 @@ const Ticket: React.FC<any> = (props: any) => {
                                         !getMaxTicketBuy(
                                           ticketBought,
                                           +infoTicket.max_buy_ticket
-                                        ) || numTicketBuy === 0 || !isKYC,
+                                        ) ||
+                                        numTicketBuy === 0 ||
+                                        !isKYC,
                                     })}
                                   >
                                     <svg
@@ -768,7 +826,8 @@ const Ticket: React.FC<any> = (props: any) => {
                                         getMaxTicketBuy(
                                           ticketBought,
                                           +infoTicket.max_buy_ticket
-                                        ) || !isKYC,
+                                        ) ||
+                                        !isKYC,
                                     })}
                                   >
                                     <svg
@@ -796,7 +855,8 @@ const Ticket: React.FC<any> = (props: any) => {
                                         getMaxTicketBuy(
                                           ticketBought,
                                           +infoTicket.max_buy_ticket
-                                        ) || !isKYC,
+                                        ) ||
+                                        !isKYC,
                                     })}
                                   >
                                     Max
@@ -826,12 +886,19 @@ const Ticket: React.FC<any> = (props: any) => {
                       </>
                     ))}
 
-                  {((alert?.type === "error" && alert.message) || (!isAccInWinners.loading && !isAccInWinners.ok && isAccInWinners.error)) && (
-                    <div className={styles.alertMsg}>
-                      <img src={iconWarning} alt="" />
-                      <span>{!isAccInWinners.ok ? isAccInWinners.error : alert.message}</span>
-                    </div>
-                  )}
+                  {((alert?.type === "error" && alert.message) ||
+                    (!isAccInWinners.loading &&
+                      !isAccInWinners.ok &&
+                      isAccInWinners.error)) && (
+                      <div className={styles.alertMsg}>
+                        <img src={iconWarning} alt="" />
+                        <span>
+                          {!isAccInWinners.ok
+                            ? isAccInWinners.error
+                            : alert.message}
+                        </span>
+                      </div>
+                    )}
 
                   {finishedTime && (
                     <div className={clsx(styles.infoTicket, styles.finished)}>

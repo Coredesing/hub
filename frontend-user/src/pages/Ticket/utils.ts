@@ -25,6 +25,9 @@ export const handleErrMsg = (err: IError) => {
     if(message.includes('POOL:PURCHASE_AMOUNT_EXCEED_ALLOWANCE')) {
         return 'The number of Tickets you want to buy is greater than the number you can buy. Please try again.';
     }
+    if(message.includes('POOL::AMOUNT_MUST_GREATER_THAN_CLAIMED')) {
+        return 'You have already claimed.';
+    }
     return '';
 }
 

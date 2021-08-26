@@ -83,6 +83,7 @@ const useStyles = makeStyles((theme: any) => {
     cardBodyText: {
       display: "grid",
       placeContent: "center",
+      placeItems: "center",
       "& h4, & h3": {
         margin: 0,
         padding: 0,
@@ -397,7 +398,7 @@ const useStyles = makeStyles((theme: any) => {
     btnClaim: {
       outline: 'none',
       border: 'none',
-      background: '#F3E24B',
+      background: '#F3E24B !important',
       borderRadius: '2px',
       color: '#000',
       fontWeight: 600,

@@ -32,6 +32,7 @@ import useUserPurchased from "./hooks/useUserPurchased";
 import TicketModal from "./TicketModal";
 import useTokenClaim from "./hooks/useTokenClaim";
 import axios from "../../services/axios";
+import useUserRemainTokensClaim from "./hooks/useUserRemainTokensClaim";
 // import { FormInputNumber } from '../../components/Base/FormInputNumber/FormInputNumber';
 const iconWarning = "/images/warning-red.svg";
 const ticketImg = "/images/gamefi-ticket.png";
@@ -81,7 +82,7 @@ const Ticket: React.FC<any> = (props: any) => {
     }
     setAllowNetwork(
       String(networkInfo.name).toLowerCase() ===
-        (infoTicket.network_available || "").toLowerCase()
+      (infoTicket.network_available || "").toLowerCase()
     );
   }, [infoTicket, appChainID]);
   const isClaim = dataTicket?.process === "only-claim";
@@ -101,7 +102,6 @@ const Ticket: React.FC<any> = (props: any) => {
     }
   }, [isClaim, connectedAccount]);
   useEffect(() => {
-    console.log(isAccInWinners);
     if (isAccInWinners.loading) {
       let info: any = {};
       axios
@@ -296,10 +296,42 @@ const Ticket: React.FC<any> = (props: any) => {
   // console.log('approveTransaction', approveTransaction)
   // console.log('allowance', allowance)
 
-  const { claimToken, transactionHash, claimTokenSuccess } = useTokenClaim(
+  const { claimToken, transactionHash, claimTokenSuccess, loading: loadingClaming, error: errorClaming } = useTokenClaim(
     infoTicket.campaign_hash,
     infoTicket?.id
   );
+
+  const [lockWhenClaiming, setLockWhenClaiming] = useState(false);
+  const [userClaimed, setUserClaimed] = useState(0);
+
+  useEffect(() => {
+    if(!loadingClaming) {
+      setLockWhenClaiming(false);
+    }
+  }, [loadingClaming, errorClaming]);
+
+  const {
+    retrieveClaimableTokens
+  } = useUserRemainTokensClaim(infoTicket.campaign_hash, true);
+  const checkUserClaimed = useCallback(() => {
+    if (!connectedAccount) {
+      setUserClaimed(0);
+      return;
+    }
+    retrieveClaimableTokens(connectedAccount, infoTicket.campaign_hash).then((res) => {
+      setUserClaimed(+res?.userClaimed || 0);
+    }).catch(() => setUserClaimed(0));
+  }, [retrieveClaimableTokens, setUserClaimed, connectedAccount, infoTicket.campaign_hash]);
+
+  useEffect(() => {
+    if (isClaim) {
+      checkUserClaimed();
+    }
+  }, [checkUserClaimed, isClaim, retrieveClaimableTokens, infoTicket.campaign_hash, connectedAccount]);
+
+  const isUserClaimed = (numTicketClaimed: number) => {
+    return +numTicketClaimed > 0;
+  }
 
   useEffect(() => {
     if (claimTokenSuccess) {
@@ -310,11 +342,12 @@ const Ticket: React.FC<any> = (props: any) => {
         ok: false,
         data: d.data,
       }));
+      checkUserClaimed();
     }
     if (transactionHash) {
       setOpenModalTx(true);
     }
-  }, [claimTokenSuccess, transactionHash]);
+  }, [claimTokenSuccess, transactionHash, checkUserClaimed]);
 
   const {
     deposit,
@@ -489,8 +522,13 @@ const Ticket: React.FC<any> = (props: any) => {
     return +tokenAllowance > 0;
   };
 
+  useEffect(() => {
+    console.log('lockWhenClaiming', lockWhenClaiming)
+  }, [lockWhenClaiming]);
+
   const onClaimTicket = async () => {
-    if (!isKYC || +isAccInWinners.data?.lottery_ticket > 0) return;
+    if (!isKYC || userClaimed || lockWhenClaiming) return;
+    setLockWhenClaiming(true);
     await claimToken();
   };
   const onBuyTicket = async () => {
@@ -672,7 +710,7 @@ const Ticket: React.FC<any> = (props: any) => {
                     <span className={styles.text}>OWNED</span>{" "}
                     <span className={styles.textBold}>
                       {isClaim
-                        ? +isAccInWinners.data?.lottery_ticket || 0
+                        ? userClaimed
                         : ownedTicket}
                     </span>
                   </div>
@@ -696,10 +734,7 @@ const Ticket: React.FC<any> = (props: any) => {
                     <div className={styles.infoTicket}>
                       <span className={styles.text}>AVAILABLE TO CAILM</span>{" "}
                       <span className={styles.textBold}>
-                        {getRemaining(
-                          infoTicket.total_sold_coin,
-                          infoTicket.token_sold
-                        )}
+                        { isUserClaimed(userClaimed) ? 0 : +isAccInWinners.data?.lottery_ticket || 0}
                       </span>
                     </div>
                   )}
@@ -720,12 +755,11 @@ const Ticket: React.FC<any> = (props: any) => {
                         <button
                           className={clsx(styles.btnClaim, {
                             disabled:
-                              !isKYC ||
-                              +isAccInWinners.data?.lottery_ticket > 0,
+                              !isKYC || isUserClaimed(userClaimed) || lockWhenClaiming,
                           })}
                           onClick={onClaimTicket}
                           disabled={
-                            !isKYC || +isAccInWinners.data?.lottery_ticket > 0
+                            !isKYC || isUserClaimed(userClaimed) || lockWhenClaiming
                           }
                         >
                           Claim
@@ -797,10 +831,10 @@ const Ticket: React.FC<any> = (props: any) => {
                                           +infoTicket.max_buy_ticket
                                         ) ||
                                         numTicketBuy ===
-                                          getMaxTicketBuy(
-                                            ticketBought,
-                                            +infoTicket.max_buy_ticket
-                                          ) ||
+                                        getMaxTicketBuy(
+                                          ticketBought,
+                                          +infoTicket.max_buy_ticket
+                                        ) ||
                                         !isKYC,
                                     })}
                                   >
@@ -826,10 +860,10 @@ const Ticket: React.FC<any> = (props: any) => {
                                           +infoTicket.max_buy_ticket
                                         ) ||
                                         numTicketBuy ===
-                                          getMaxTicketBuy(
-                                            ticketBought,
-                                            +infoTicket.max_buy_ticket
-                                          ) ||
+                                        getMaxTicketBuy(
+                                          ticketBought,
+                                          +infoTicket.max_buy_ticket
+                                        ) ||
                                         !isKYC,
                                     })}
                                   >
@@ -864,15 +898,15 @@ const Ticket: React.FC<any> = (props: any) => {
                     (!isAccInWinners.loading &&
                       !isAccInWinners.ok &&
                       isAccInWinners.error)) && (
-                    <div className={styles.alertMsg}>
-                      <img src={iconWarning} alt="" />
-                      <span>
-                        {!isAccInWinners.ok
-                          ? isAccInWinners.error
-                          : alert.message}
-                      </span>
-                    </div>
-                  )}
+                      <div className={styles.alertMsg}>
+                        <img src={iconWarning} alt="" />
+                        <span>
+                          {!isAccInWinners.ok
+                            ? isAccInWinners.error
+                            : alert.message}
+                        </span>
+                      </div>
+                    )}
 
                   {finishedTime && (
                     <div className={clsx(styles.infoTicket, styles.finished)}>
@@ -883,10 +917,10 @@ const Ticket: React.FC<any> = (props: any) => {
                         infoTicket.total_sold_coin,
                         infoTicket.token_sold
                       ) && (
-                        <div className="soldout">
-                          <img src={soldoutImg} alt="" />
-                        </div>
-                      )}
+                          <div className="soldout">
+                            <img src={soldoutImg} alt="" />
+                          </div>
+                        )}
                     </div>
                   )}
                 </div>

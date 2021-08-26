@@ -8,6 +8,10 @@ const useStyles = makeStyles((theme: any) => {
       paddingBottom: "160px",
       paddingLeft: "160px",
       paddingRight: "160px",
+      [theme.breakpoints.down("xs")]: {
+        paddingLeft: "28px",
+        paddingRight: "28px",
+      },
       "& .rectangle": {
         position: "absolute",
         width: "100%",
@@ -15,6 +19,9 @@ const useStyles = makeStyles((theme: any) => {
         left: 0,
         "& img": {
           width: "100%",
+        },
+        [theme.breakpoints.down("xs")]: {
+          top: "50px",
         },
 
         "&::before": {
@@ -56,6 +63,15 @@ const useStyles = makeStyles((theme: any) => {
           letterSpacing: "0.02em",
           textAlign: "center",
         },
+        [theme.breakpoints.down("xs")]: {
+          "& h1": {
+            fontSize: "48px",
+            lineHeight: "40px",
+            letterSpacing: "0.02em",
+            textAlign: "center",
+          },
+        },
+
         // '& svg': {
         //   [theme.breakpoints.up('md')]: {
         //     width: '200px',
@@ -76,15 +92,22 @@ const useStyles = makeStyles((theme: any) => {
         lineHeight: "28px",
         letterSpacing: "0.02em",
         textAlign: "center",
-
+        [theme.breakpoints.down("xs")]: {
+          fontSize: "16px",
+          lineHeight: "22px",
+        },
         "& .launchpad": {
           color: "#72F34B",
         },
+      },
+      [theme.breakpoints.down("xs")]: {
+        paddingBottom: "100px",
       },
     },
     bannerContent: {
       width: "100%",
       maxWidth: "1120px",
+      [theme.breakpoints.down("xs")]: {},
     },
     wrapperImgBanner: {
       width: "100%",
@@ -95,6 +118,10 @@ const useStyles = makeStyles((theme: any) => {
       placeContent: "center",
       paddingLeft: "84px",
       paddingRight: "84px",
+      [theme.breakpoints.down("xs")]: {
+        paddingLeft: "12px",
+        paddingRight: "12px",
+      },
     },
     imgBanner: {
       // left: '0px',
@@ -119,6 +146,17 @@ const useStyles = makeStyles((theme: any) => {
         alignItems: "center",
         paddingTop: "10px",
         paddingBottom: "10px",
+      },
+      [theme.breakpoints.down("xs")]: {
+        gap: "10px",
+        flexDirection: "column",
+        backgroundSize: "40%, contain",
+        alignItems: "center",
+        paddingTop: "10px",
+        paddingBottom: "10px",
+        paddingLeft: "28px",
+        paddingRight: "28px",
+        width: "100%",
       },
       "& .text": {
         "& h4": {
@@ -191,6 +229,9 @@ const useStyles = makeStyles((theme: any) => {
       paddingTop: "120px",
       paddingBottom: "130px",
       background: "#171717",
+      [theme.breakpoints.down("xs")]: {
+        paddingTop: "40px",
+      },
     },
     tokenSales: {
       background: "#0A0A0A",
@@ -217,6 +258,7 @@ const useStyles = makeStyles((theme: any) => {
       width: "100%",
       display: "flex",
       justifyContent: "center",
+      marginTop: "28px",
     },
     content: {
       display: "flex",
@@ -251,6 +293,24 @@ const useStyles = makeStyles((theme: any) => {
         fontStyle: "normal",
         fontSize: "20px",
         lineHeight: "32px",
+      },
+      [theme.breakpoints.down("xs")]: {
+        "& h3": {
+          color: "#fff",
+          fontFamily: "Firs Neue",
+          fontWeight: 600,
+          fontSize: "28px",
+          lineHeight: "36px",
+          fontStyle: "normal",
+        },
+        "& h5": {
+          color: "#fff",
+          fontFamily: "Firs Neue",
+          fontWeight: "400",
+          fontStyle: "normal",
+          fontSize: "14px",
+          lineHeight: "22px",
+        },
       },
       "&.left": {
         "& h3": {
@@ -337,6 +397,9 @@ export const useCardStyles = makeStyles((theme) => ({
   cards: {
     fontFamily: "Firs Neue",
     gap: "20px",
+    [theme.breakpoints.down("xs")]: {
+      gap: "7px",
+    },
   },
   cardsTicketSales: {
     display: "grid",
@@ -350,7 +413,7 @@ export const useCardStyles = makeStyles((theme) => ({
       gridTemplateColumns: "280px 280px",
     },
     [theme.breakpoints.down("xs")]: {
-      gridTemplateColumns: "300px",
+      gridTemplateColumns: "auto auto",
     },
   },
   cardsTokenSales: {
@@ -388,6 +451,10 @@ export const useCardStyles = makeStyles((theme) => ({
       boxShadow: "0px 4px 40px rgba(114, 243, 75, 0.12)",
       background: "#000000",
     },
+    [theme.breakpoints.down("xs")]: {
+      padding: "7px",
+      paddingTop: "26px",
+    },
   },
   cardImg: {
     position: "relative",
@@ -395,6 +462,9 @@ export const useCardStyles = makeStyles((theme) => ({
     height: "198px",
     [theme.breakpoints.down("sm")]: {
       height: "170px",
+    },
+    [theme.breakpoints.down("xs")]: {
+      height: "148px",
     },
     "&::before, &::after": {
       content: '""',
@@ -415,6 +485,8 @@ export const useCardStyles = makeStyles((theme) => ({
     "& img": {
       width: "100%",
       height: "100%",
+      objectFit: "cover",
+      borderRadius: "4px",
     },
   },
 }));

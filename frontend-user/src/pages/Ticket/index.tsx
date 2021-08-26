@@ -136,7 +136,7 @@ const Ticket: React.FC<any> = (props: any) => {
         if(leng === 1) {
           const openClaim = claimConfigs[0];
           openTime = +openClaim.start_time * 1000;
-          const endTime = +openClaim.end_time * 1000 || openTime + (60 * 60 * 24 * 1);
+          const endTime = +openClaim.end_time * 1000 || openTime + (1000 * 60 * 60 * 24);
           finishTime = endTime;
         } else {
           const openClaim = claimConfigs[0];
@@ -166,8 +166,6 @@ const Ticket: React.FC<any> = (props: any) => {
           )
         );
       }
-      setNewTicket(false);
-      setInfoTicket(dataTicket);
     }
   }, [dataTicket, loadingTicket, isClaim]);
 

@@ -734,7 +734,7 @@ const Ticket: React.FC<any> = (props: any) => {
                     <div className={styles.infoTicket}>
                       <span className={styles.text}>AVAILABLE TO CAILM</span>{" "}
                       <span className={styles.textBold}>
-                        {+isAccInWinners.data?.lottery_ticket || 0}
+                        { isUserClaimed(userClaimed) ? 0 : +isAccInWinners.data?.lottery_ticket || 0}
                       </span>
                     </div>
                   )}

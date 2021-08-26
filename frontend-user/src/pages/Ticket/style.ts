@@ -398,7 +398,7 @@ const useStyles = makeStyles((theme: any) => {
     btnClaim: {
       outline: 'none',
       border: 'none',
-      background: '#F3E24B',
+      background: '#F3E24B !important',
       borderRadius: '2px',
       color: '#000',
       fontWeight: 600,

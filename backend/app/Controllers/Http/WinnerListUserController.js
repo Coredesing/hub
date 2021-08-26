@@ -247,7 +247,7 @@ class WinnerListUserController {
       const poolService = new PoolService;
       const poolExist = await poolService.getPoolById(campaign_id);
       console.log('[checkExistWinner] - poolExist.public_winner_status:', poolExist && poolExist.public_winner_status);
-      if (!poolExist || (poolExist.public_winner_status == Const.PUBLIC_WINNER_STATUS.PRIVATE)) {
+      if (!poolExist || (poolExist.public_winner_status === Const.PUBLIC_WINNER_STATUS.PRIVATE)) {
         return HelperUtils.responseNotFound('User not exist in Winner User List');
       }
 
@@ -258,6 +258,7 @@ class WinnerListUserController {
       }).first();
 
       if (existRecord) {
+        existRecord.email = ''
         console.log('[checkExistWinner] - Record exist in Winner: ', existRecord);
         return HelperUtils.responseSuccess(existRecord, 'User exist in Winner User List');
       }

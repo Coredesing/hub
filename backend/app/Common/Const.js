@@ -186,5 +186,13 @@ module.exports = Object.freeze({
     COMPLETED: 'COMPLETED',
   },
   NULL_AMOUNT: 'N/A',
-
+  PROCESS: {
+    ALL: 'all',
+    ONLY_CLAIM: 'only-claim',
+    ONLY_BUY: 'only-buy',
+  },
+  TOKEN_TYPE: {
+    ERC20: 'erc20',
+    ERC721: 'erc721',
+  }
 });

@@ -82,7 +82,7 @@ class PoolController {
   async createPool({ request, auth }) {
     const inputParams = request.only([
       'registed_by',
-      'title', 'website', 'banner', 'description', 'address_receiver',
+      'title', 'website', 'banner', 'description', 'process', 'rule', 'address_receiver',
       'token', 'token_images', 'total_sold_coin',
       'token_by_eth', 'token_conversion_rate', 'price_usdt', 'display_price_rate',
       'tokenInfo',
@@ -106,6 +106,8 @@ class PoolController {
       'title': inputParams.title,
       'website': inputParams.website,
       'description': inputParams.description,
+      'rule': inputParams.rule,
+      'process': inputParams.process,
       // 'token': inputParams.token,
       'start_time': inputParams.start_time,
       'finish_time': inputParams.finish_time,
@@ -211,7 +213,7 @@ class PoolController {
   async updatePool({ request, auth, params }) {
     const inputParams = request.only([
       'registed_by',
-      'title', 'website', 'banner', 'description', 'address_receiver',
+      'title', 'website', 'banner', 'description', 'process', 'rule', 'address_receiver',
       'token', 'token_images', 'total_sold_coin',
       'token_by_eth', 'token_conversion_rate', 'price_usdt', 'display_price_rate',
       'tokenInfo',
@@ -235,6 +237,8 @@ class PoolController {
       'title': inputParams.title,
       'website': inputParams.website,
       'description': inputParams.description,
+      'process': inputParams.process,
+      'rule': inputParams.rule,
       'start_time': inputParams.start_time,
       'finish_time': inputParams.finish_time,
       'ether_conversion_rate': inputParams.token_by_eth,
@@ -270,8 +274,6 @@ class PoolController {
       'forbidden_countries': JSON.stringify((inputParams && inputParams.forbidden_countries) || []),
     };
 
-    console.log('[updatePool] - tokenInfo:', inputParams.tokenInfo);
-    console.log('[updatePool] - Update Pool with data: ', data, params);
     const campaignId = params.campaignId;
     try {
       const poolService = new PoolService;
@@ -507,7 +509,7 @@ class PoolController {
       const publicPool = pick(pool, [
         // Pool Info
         'id', 'title', 'website', 'banner', 'updated_at', 'created_at',
-        'campaign_hash', 'campaign_id', 'description', 'registed_by', 'register_by',
+        'campaign_hash', 'campaign_id', 'description', 'process', 'rule', 'registed_by', 'register_by',
         'campaign_status',
 
         // Types

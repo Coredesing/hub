@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme: any) => {
     alertMsg: {
       width: '100%',
       marginTop: '14px',
-      '& img': {
+      '& img, & svg': {
         width: '14px',
         height: '14px',
         marginRight: '8px'
@@ -108,7 +108,12 @@ const useStyles = makeStyles((theme: any) => {
         fontSize: '18px',
         lineHeight: '28px',
         textAlign: 'left',
+      },
+      '&.error span': {
         color: '#F24B4B',
+      },
+      '&.success span': {
+        color: '#0A0A0A',
       }
     }
   }

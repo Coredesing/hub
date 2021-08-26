@@ -46,6 +46,8 @@ import LockSchedule from "./Components/LockSchedule/LockSchedule";
 import ForbiddenCountry from "./Components/ForbiddenCountry/ForbiddenCountry";
 import SocialSetting from "./Components/SocialSetting/SocialSetting";
 import FreeTimeSetting from "./Components/FreeTimeSetting/FreeTimeSetting";
+import PoolRule from "./Components/PoolRule";
+import Process from "./Components/Process";
 
 function PoolForm(props: any) {
   const classes = useStyles();
@@ -128,6 +130,8 @@ function PoolForm(props: any) {
       website: data.website,
       banner: data.banner,
       description: data.description,
+      process: data.process,
+      rule: data.rule ?? '',
       address_receiver: data.addressReceiver,
 
       // Token
@@ -250,7 +254,6 @@ function PoolForm(props: any) {
     // Format Claim Config
     let campaignClaimConfig = data.campaignClaimConfig || '[]';
     campaignClaimConfig = campaignClaimConfigFormat(campaignClaimConfig);
-    console.log('campaignClaimConfig', campaignClaimConfig);
 
     const submitData = {
       // Pool general
@@ -258,6 +261,8 @@ function PoolForm(props: any) {
       website: data.website,
       banner: data.banner,
       description: data.description,
+      process: data.process,
+      rule: data.rule ?? '',
 
       // USDT Price
       price_usdt: data.price_usdt, // Do not check isAcceptEth
@@ -415,6 +420,8 @@ function PoolForm(props: any) {
         website: data.website,
         banner: data.banner,
         description: data.description,
+        process: data.process,
+        rule: data.rule ?? '',
         address_receiver: data.addressReceiver,
 
         // Token
@@ -580,6 +587,14 @@ function PoolForm(props: any) {
                 errors={errors}
                 control={control}
                 watch={watch}
+              />
+
+              <Process
+                  poolDetail={poolDetail}
+                  setValue={setValue}
+                  errors={errors}
+                  control={control}
+                  watch={watch}
               />
 
             </div>
@@ -749,6 +764,20 @@ function PoolForm(props: any) {
               register={register}
               setValue={setValue}
               errors={errors}
+            />
+          </div>
+        </Grid>
+      </Grid>
+
+
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <div className={classes.exchangeRate}>
+            <PoolRule
+                poolDetail={poolDetail}
+                register={register}
+                setValue={setValue}
+                errors={errors}
             />
           </div>
         </Grid>

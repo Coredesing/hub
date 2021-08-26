@@ -164,6 +164,13 @@ const useStyles = makeStyles((theme: any) => {
         height: "40px",
         minWidth: "180px",
         width: "fit-content",
+        display: "grid",
+        justifyContent: "center",
+        alignItems: "center",
+        cursor: "pointer",
+        "&:hover": {
+          textDecoration: "unset",
+        },
       },
     },
     btnCloseBanner: {

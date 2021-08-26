@@ -442,12 +442,22 @@ const getTokenSoldSmartContract = async (pool) => {
   }
   const isClaimable = pool.pool_type === Const.POOL_TYPE.CLAIMABLE;
   const poolContract = isClaimable ? await getContractClaimInstance(pool) : await getContractInstance(pool);
-  let tokenSold = await poolContract.methods.tokenSold().call();
-  if (pool.token_type === 'erc721') {
-    return tokenSold
+
+  try {
+    if (pool.token_type === Const.TOKEN_TYPE.ERC721 && pool.process === Const.PROCESS.ONLY_CLAIM) {
+      return await poolContract.methods.tokenClaimed().call();
+    }
+
+    let tokenSold = await poolContract.methods.tokenSold().call();
+    if (pool.token_type === 'erc721') {
+      return tokenSold
+    }
+    tokenSold = new BigNumber(tokenSold).div(new BigNumber(10).pow(18)).toFixed();
+    return tokenSold;
   }
-  tokenSold = new BigNumber(tokenSold).div(new BigNumber(10).pow(18)).toFixed();
-  return tokenSold;
+  catch (e) {
+    return 0
+  }
 };
 
 const getEventSmartContract = async ({ contract, eventName, filter = {} }) => {
@@ -584,7 +594,6 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
   if (!poolDetails) {
     return PoolStatus.TBA;
   }
-  console.log('poolDetails:', JSON.stringify(poolDetails));
 
   const firstClaimConfig = () => {
     return getFirstClaimConfig(poolDetails);
@@ -680,11 +689,19 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
 
   // Check Claimable Status
   const lastClaimTime = lastClaimConfigTime();
+  if (!lastClaimTime && poolDetails.process && poolDetails.process === Const.PROCESS.ONLY_CLAIM) {
+    return PoolStatus.FILLED;
+  }
+
   if (
     isClaimable &&
     releaseTime && lastClaimTime &&
     releaseTime.getTime() <= today && today < (lastClaimTime * 1000)
   ) {
+    if (poolDetails.process && poolDetails.process === Const.PROCESS.ONLY_CLAIM) {
+      return PoolStatus.FILLED;
+    }
+
     return PoolStatus.CLAIMABLE;
   }
 

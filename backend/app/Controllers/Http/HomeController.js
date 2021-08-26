@@ -2,8 +2,29 @@
 
 const RedisUtils = use('App/Common/RedisUtils');
 const HelperUtils = use('App/Common/HelperUtils');
+const SubscribeEmailService = use('App/Services/SubscribeEmailService');
 
 class HomeController {
+  async subscribe({request}) {
+    try {
+      const param = request.all()
+      const email = param.email
+      if (!email) {
+        return HelperUtils.responseBadRequest("Email is invalid");
+      }
+
+      const subscribeService = new SubscribeEmailService();
+      const data = await subscribeService.createRecord(email)
+      if (!data) {
+        return HelperUtils.responseErrorInternal('Subscribe email error');
+      }
+
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal('Subscribe email error');
+    }
+  }
+
   async getPerformance({request}) {
     try {
       if (await RedisUtils.checkExistPerformanceDetail()) {

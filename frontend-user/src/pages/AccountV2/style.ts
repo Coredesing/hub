@@ -2,6 +2,37 @@ import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: any) => {
   return {
+    messageUpdateSuccess: {
+      position: 'relative',
+      width: '100%',
+      padding: '11px 9px 10px 9px',
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: '#244A9C',
+      marginBottom: 15,
+      borderRadius: '8px',
+      minHeight: 42,
+      fontFamily: 'Helvetica',
+      fontSize: 14,
+      lineHeight: '20px',
+      color: '#FFFFFF',
+      
+      
+      [theme.breakpoints.down('sm')]: {
+        alignItems: 'flex-start',
+      },
+
+      '& img': {
+        marginRight: 6,
+      },
+    },
+    kycAlert: {
+      paddingLeft: '0 !important',
+      paddingRight: '0 !important',
+    },
+
     alertVerifyEmail: {
       position: 'relative',
       width: '100%',
@@ -39,7 +70,7 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '& a': {
-        color: '#6398FF'
+        color: '#72F34B'
       }
     },
 
@@ -100,6 +131,7 @@ const useStyles = makeStyles((theme: any) => {
     accountContainer: {
       padding: '10px 0 80px 0',
       width: 1040,
+      minHeight: 'calc(100vh - 400px)',
       maxWidth: 'calc(100vw - 80px)',
       margin: 'auto',
 
@@ -116,12 +148,174 @@ const useStyles = makeStyles((theme: any) => {
         gap: '60px'
       },
     },
+    
     tier: {
       background: '#303035',
       borderRadius: '12px',
-      padding: '28px',
-    }
+      padding: '20px 32px',
+
+      [theme.breakpoints.down('sm')]: {
+        padding: '20px 20px',
+      },
+    },
+
+
+    // styles v3
+    bodyContentMyAccount: {
+      paddingRight: '30px',
+      paddingLeft: '30px',
+      marginTop: '35px',
+      display: 'grid',
+      gridTemplateColumns: '200px 1fr',
+      color: '#FFFFFF',
+
+      [theme.breakpoints.down('sm')]: {
+        gridTemplateColumns: '1fr',
+      },
+    },
+
+    leftAccount: {
+      // padding: '0 30px',
+      paddingRight: '30px',
+
+      [theme.breakpoints.down('sm')]: {
+        padding: 0,
+      },
+    },
+
+    titlLeft: {
+      fontFamily: 'DM Sans',
+      fontWeight: 'bold',
+      fontSize: 20,
+      lineHeight: '24px',
+      color: '#FFFFFF',
+      marginBottom: 27,
+
+      [theme.breakpoints.down('sm')]: {
+        display: 'none',
+      },
+    },
+
+    tabAccount: {
+      display: 'flex',
+      flexDirection: 'column',
+
+      [theme.breakpoints.down('sm')]: {
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        // display: 'grid',
+        // gridTemplateColumns: '1fr 1fr 1fr 1fr',
+      },
+    },
+
+    itemTabAccount: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      fontFamily: 'DM Sans',
+      fontWeight: 500,
+      fontSize: 16,
+      lineHeight: '24px',
+      color: '#AEAEAE',
+      cursor: 'pointer',
+      marginBottom: 12,
+
+      [theme.breakpoints.down('sm')]: {
+        marginRight: 15,
+        marginBottom: 15,
+
+        '&:last-child': {
+          marginRight: 0,
+        }
+      },
+
+      '&.active': {
+        color: '#72F34B',
+        cursor: 'inherit',
+      }
+    },
+
+    iconItemTabAccount: {
+      marginRight: 8,
+      width: 16,
+      height: 16,
+      maskPositionX: 'center',
+      maskPositionY: 'center',
+      maskSize: 'contain',
+      maskRepeatX: 'no-repeat',
+      maskRepeatY: 'no-repeat',
+      maskOrigin: 'initial',
+      maskClip: 'initial',
+      background: '#AEAEAE',
+
+      '&.active': {
+        background: '#72F34B',
+      },
+
+      [theme.breakpoints.down('sm')]: {
+        display: 'none',
+      },
+    },
+
+    rightAccount: {
+
+    },
+    
+    backdrop: {
+      zIndex: theme.zIndex.drawer + 1,
+      color: '#fff',
+    },
   };
 });
 
 export default useStyles;
+
+export const useTabStyles = makeStyles((theme: any) => ({
+  tabTitle: {
+    fontFamily: 'Firs Neue',
+    fontStyle: 'normal',
+    fontWeight: 600,
+    fontSize: '20px',
+    lineHeight: '28px',
+    color: '#FFFFFF',
+    margin: 0,
+    padding: 0,
+    marginBottom: '20px',
+    position: 'relative',
+    '&:before': {
+      content: '""',
+      position: 'absolute',
+      height: '100%',
+      left: '-32px',
+      top: '-5px',
+      border: '4px solid #72F34B',
+    }
+  },
+  tabContent: {
+    padding: '20px 32px',
+    boxSizing: 'border-box',
+    background: '#2E2E2E',
+    borderRadius: '4px',
+  },
+  tabHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '5px',
+    '& .filter': {
+      display: 'flex',
+      gap: '8px',
+    },
+    '& .search': {
+
+    },
+    [theme.breakpoints.down('sm')]: {
+      display: 'grid',
+      gridTemplateColumns: '1fr',
+      justifyContent: 'start',
+      gap: '5px',
+    }
+  },
+  tabBody: {
+
+  },
+}))

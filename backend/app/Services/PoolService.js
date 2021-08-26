@@ -75,6 +75,10 @@ class PoolService {
       builder = builder.where('is_display', '=', params.is_display);
     }
 
+    if (params.token_type) {
+      builder = builder.where('token_type', params.token_type)
+    }
+
     return builder;
   }
 
@@ -99,10 +103,10 @@ class PoolService {
   }
 
   async getUpcomingPools(filterParams) {
-    const limit = filterParams.limit ? filterParams.limit : Const.DEFAULT_LIMIT;
-    const page = filterParams.page ? filterParams.page : 1;
-    filterParams.limit = limit;
-    filterParams.page = page;
+    const limit = filterParams.limit ? filterParams.limit : Const.DEFAULT_LIMIT
+    const page = filterParams.page ? filterParams.page : 1
+    filterParams.limit = limit
+    filterParams.page = page
 
     let pools = await this.buildQueryBuilder(filterParams)
       .whereNotIn('campaign_status', [
@@ -208,15 +212,14 @@ class PoolService {
     const now = moment().unix();
     let pools = await this.buildQueryBuilder(filterParams)
       .with('campaignClaimConfig')
-      .where('campaign_status', Const.POOL_STATUS.TBA)
       .where('is_display', Const.POOL_DISPLAY.DISPLAY)
-      .orWhere(builder => {
+      .where(builder => {
         builder
-          .where('end_join_pool_time', '>', now)
-          .where('is_display', Const.POOL_DISPLAY.DISPLAY)
-          .whereIn('campaign_status', [
-            Const.POOL_STATUS.UPCOMING,
-          ]);
+          .where('campaign_status', Const.POOL_STATUS.TBA)
+          .orWhere(query => {
+              query.where('end_join_pool_time', '>', now)
+              .where('campaign_status', Const.POOL_STATUS.UPCOMING);
+          })
       })
       .orderBy('priority', 'DESC')
       .orderBy('start_join_pool_time', 'ASC')
@@ -404,6 +407,18 @@ class PoolService {
     return pool;
   };
 
+  async getPoolWithFreeBuySettingById(poolId) {
+    if (await RedisUtils.checkExistRedisPoolDetail(poolId)) {
+      let cachedPoolDetail = await RedisUtils.getRedisPoolDetail(poolId);
+      if (cachedPoolDetail) {
+        return JSON.parse(cachedPoolDetail);
+      }
+    }
+
+    const pool = await CampaignModel.query().where('id', poolId).with('freeBuyTimeSetting').first();
+    return JSON.parse(JSON.stringify(pool));
+  };
+
   async checkPoolExist(poolId) {
     const pool = this.getPoolById(poolId);
     return !!pool;
@@ -414,33 +429,21 @@ class PoolService {
    */
   async filterPoolClaimable() {
     let pools = await CampaignModel.query()
-      .with('campaignClaimConfig')
       .where('campaign_status', Const.POOL_STATUS.CLAIMABLE)
+      .with('campaignClaimConfig')
       .orderBy('id', 'DESC')
-
-
-      // .where('id', 979)
-
-
       .fetch();
     pools = JSON.parse(JSON.stringify(pools));
-    console.log('[filterPoolClaimable] - pools.length:', pools.length);
     return pools;
   }
 
   async filterActivePoolWithStatus() {
     let pools = await CampaignModel.query()
+      .whereNotIn('campaign_status', [
+        Const.POOL_STATUS.ENDED,
+        Const.POOL_STATUS.CLAIMABLE
+      ])
       .with('campaignClaimConfig')
-      .whereNull('campaign_status')
-      .orWhere(builder => {
-        builder
-          .whereNotIn('campaign_status', [
-            Const.POOL_STATUS.ENDED,
-            Const.POOL_STATUS.CLAIMABLE
-          ])
-          // .where('campaign_status', '!=', Const.POOL_STATUS.ENDED)
-          // .where('campaign_status', '!=', Const.POOL_STATUS.CLAIMABLE)
-      })
       .orderBy('id', 'DESC')
       .fetch();
     pools = JSON.parse(JSON.stringify(pools));
@@ -470,15 +473,12 @@ class PoolService {
 
   async updatePoolInformation(pool) {
     try {
-      console.log('[PoolService::updatePoolInformation] - poolId', pool.id);
       const tokenSold = await HelperUtils.getTokenSoldSmartContract(pool);
-      console.log('[PoolService::updatePoolInformation] - tokenSold: ', tokenSold);
 
       const status = await HelperUtils.getPoolStatusByPoolDetail(pool, tokenSold);
-      console.log('[PoolService::updatePoolInformation] - Finish Status:', status);
+      console.log('[PoolService::updatePoolInformation]', pool.id, tokenSold, status);
 
       const lastTime =  HelperUtils.getLastActualFinishTime(pool); // lastClaimConfig + 12h
-      console.log('lastClaimTime + 1week: ============>', lastTime);
 
       const dataUpdate = {
         token_sold: tokenSold,
@@ -490,7 +490,6 @@ class PoolService {
       const result = await CampaignModel.query().where('id', pool.id).update(dataUpdate);
       RedisUtils.deleteRedisPoolDetail(pool.id);
     } catch (e) {
-      console.log('[PoolService::updatePoolInformation] - ERROR: ', pool);
       console.log('[PoolService::updatePoolInformation] - ERROR: ', e);
     }
   }
@@ -558,6 +557,28 @@ class PoolService {
     };
   }
 
+  async getPoolByTokenType(filterParams) {
+    const limit = filterParams.limit ? filterParams.limit : 5;
+    const page = filterParams.page ? filterParams.page : 1;
+    const token_type = filterParams.token_type ? filterParams.token_type : 'erc20'
+
+    let pools = await this.buildQueryBuilder({})
+      .where('token_type', token_type)
+      .whereIn('campaign_status', [
+        Const.POOL_STATUS.TBA,
+        Const.POOL_STATUS.UPCOMING,
+        Const.POOL_STATUS.FILLED,
+        Const.POOL_STATUS.SWAP,
+        Const.POOL_STATUS.CLAIMABLE,
+      ])
+      .orderBy('priority', 'DESC')
+      .orderBy('campaign_status', 'DESC')
+      .orderBy('start_join_pool_time', 'DESC')
+      .orderBy('id', 'DESC')
+      .paginate(page, limit);
+
+    return pools;
+  }
 }
 
 module.exports = PoolService;

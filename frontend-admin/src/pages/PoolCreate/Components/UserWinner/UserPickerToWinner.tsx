@@ -53,26 +53,40 @@ function UserPickerToWinner(props: any) {
             setInputPicker(e.target.value)
           }}
         />
+        {/*<Button*/}
+        {/*  variant="contained"*/}
+        {/*  color="primary"*/}
+        {/*  onClick={() => handlePickerRandom(PICK_WINNER_RULE.RULE_NORMAL)}*/}
+        {/*  style={{ marginLeft: 10, marginTop: -5 }}*/}
+        {/*>Normal Rule</Button>*/}
+
         <Button
           variant="contained"
           color="primary"
-          onClick={() => handlePickerRandom(PICK_WINNER_RULE.RULE_NORMAL)}
+          onClick={() => handlePickerRandom(PICK_WINNER_RULE.RULE_GAMEFI_TICKET)}
           style={{ marginLeft: 10, marginTop: -5 }}
-        >Pick With Normal Rule</Button>
+        >GameFI Ticket</Button>
+
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => handlePickerRandom(PICK_WINNER_RULE.RULE_GAMEFI_TICKET)}
+          style={{ marginLeft: 10, marginTop: -5 }}
+        >GameFI Token</Button>
 
         <Button
           variant="contained"
           color="primary"
           onClick={() => handlePickerRandom(PICK_WINNER_RULE.RULE_WITH_WEIGHT_RATE)}
           style={{ marginLeft: 10, marginTop: -5 }}
-        >Pick With Weight Rate</Button>
+        >Weight Rate</Button>
 
         <Button
           variant="contained"
           color="primary"
           onClick={() => handlePickerRandom(PICK_WINNER_RULE.RULE_LUCKY_DOVE)}
           style={{ marginLeft: 10, marginTop: -5 }}
-        >Pick Lucky Dove</Button>
+        >Lucky Dove</Button>
       </div>
 
     </>

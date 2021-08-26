@@ -40,21 +40,20 @@ class WhitelistSubmissionService {
   }
 
   async addWhitelistSubmission(params) {
-    console.log('[addWhitelistSubmission] - Params: ', params);
     if (!params.wallet_address || !params.campaign_id || !params.user_twitter || !params.user_telegram) {
       ErrorFactory.badRequest('Missing required field')
     }
 
     let wl = await WhitelistSubmissionModel.query().
-      where('campaign_id', params.campaign_id).
-      where('wallet_address', params.wallet_address).first();
+    where('campaign_id', params.campaign_id).
+    where('wallet_address', params.wallet_address).first();
     if (wl) {
       if (wl.whitelist_user_id) {
         ErrorFactory.badRequest('User already joined this campain');
       } else {
         await WhitelistSubmissionModel.query().
-          where('campaign_id', params.campaign_id).
-          where('wallet_address', params.wallet_address).delete()
+        where('campaign_id', params.campaign_id).
+        where('wallet_address', params.wallet_address).delete()
       }
     }
 
@@ -82,14 +81,21 @@ class WhitelistSubmissionService {
     });
     await whitelistSubmission.save();
 
-    console.log('Res: ', whitelistSubmission);
+    return whitelistSubmission;
+  }
+
+  async createWhitelistSubmissionAccount(params) {
+    const whitelistSubmission = new WhitelistSubmissionModel;
+    whitelistSubmission.fill(params);
+    await whitelistSubmission.save();
+
     return whitelistSubmission;
   }
 
   async checkFullSubmission(campaign_id, wallet_address) {
     const submission = await WhitelistSubmissionModel.query().
-      where('campaign_id', campaign_id).
-      where('wallet_address', wallet_address).first();
+    where('campaign_id', campaign_id).
+    where('wallet_address', wallet_address).first();
     if (!submission) {
       ErrorFactory.internal('WhitelistSubbmission not found')
     }
@@ -113,6 +119,36 @@ class WhitelistSubmissionService {
       this.checkSubmission(submission, requirement, 'partner_twitter_status'),
       this.checkSubmission(submission, requirement, 'partner_group_status'),
       this.checkSubmission(submission, requirement, 'partner_channel_status'),
+    ]);
+  }
+
+  async checkPendingSubmission(campaign_id, wallet_address) {
+    const submission = await WhitelistSubmissionModel.query().
+    where('campaign_id', campaign_id).
+    where('wallet_address', wallet_address).first();
+    if (!submission) {
+      ErrorFactory.internal('WhitelistSubbmission not found')
+    }
+
+    const userTier = (await HelperUtils.getUserTierSmart(wallet_address))[0];
+    if (userTier >= 3) {
+      await this.approveSubmission(submission)
+      return Array(8).fill(Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
+    }
+
+    const requirement = await CampaignSocialRequirementModel.query().where('campaign_id', campaign_id).first()
+    if (!requirement) {
+      await this.approveSubmission(submission)
+      return Array(8).fill(Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
+    }
+
+    return await Promise.all([
+      submission.self_twitter_status === Const.SOCIAL_SUBMISSION_STATUS.COMPLETED ? Const.SOCIAL_SUBMISSION_STATUS.COMPLETED : this.checkSubmission(submission, requirement, 'self_twitter_status'),
+      submission.self_group_status === Const.SOCIAL_SUBMISSION_STATUS.COMPLETED ? Const.SOCIAL_SUBMISSION_STATUS.COMPLETED : this.checkSubmission(submission, requirement, 'self_group_status'),
+      submission.self_channel_status === Const.SOCIAL_SUBMISSION_STATUS.COMPLETED ? Const.SOCIAL_SUBMISSION_STATUS.COMPLETED : this.checkSubmission(submission, requirement, 'self_channel_status'),
+      submission.partner_twitter_status === Const.SOCIAL_SUBMISSION_STATUS.COMPLETED ? Const.SOCIAL_SUBMISSION_STATUS.COMPLETED : this.checkSubmission(submission, requirement, 'partner_twitter_status'),
+      submission.partner_group_status === Const.SOCIAL_SUBMISSION_STATUS.COMPLETED ? Const.SOCIAL_SUBMISSION_STATUS.COMPLETED : this.checkSubmission(submission, requirement, 'partner_group_status'),
+      submission.partner_channel_status === Const.SOCIAL_SUBMISSION_STATUS.COMPLETED ? Const.SOCIAL_SUBMISSION_STATUS.COMPLETED : this.checkSubmission(submission, requirement, 'partner_channel_status'),
     ]);
   }
 

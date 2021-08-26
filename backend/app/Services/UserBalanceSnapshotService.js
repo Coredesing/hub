@@ -48,6 +48,10 @@ class UserBalanceSnapshotService {
     return await this.buildQueryBuilder(params).fetch();
   }
 
+  async getAllSnapshotByFiltersWithUser(params) {
+    return await this.buildQueryBuilder(params).with('user').fetch();
+  }
+
   async countByFilters(params) {
     return await this.buildQueryBuilder(params).count();
   }

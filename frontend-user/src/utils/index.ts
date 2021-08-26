@@ -167,3 +167,72 @@ export const disconnectWalletLink = (library: any) => {
   const provider = (library?.provider as any);
   provider?.close && provider?.close();
 };
+
+export const formatNumber = (num: number) => {
+  if(num < 10) {
+    return String(`0${num}`);
+  }
+  return num;
+}
+
+type Timestamp = number;
+export const getDiffTime = (date1: Timestamp, date2: Timestamp) => {
+  let difftime = date1 - date2;
+  const days = Math.floor(difftime / 1000 / 60 / (60 * 24));
+  difftime = difftime - days * 1000 * 60 * 60 * 24;
+  const hours = Math.floor(difftime / 1000 / 60 / 60);
+  difftime = difftime - hours * 1000 * 60 * 60;
+  const minutes = Math.floor(difftime / 1000 / 60);
+  difftime = difftime - minutes * 1000 * 60;
+  const seconds = Math.floor(difftime / 1000);
+  return {
+    days, hours, minutes, seconds,
+  }
+}
+
+
+export const caclDiffTime = (time: {[k in string]: any}): {[k in string]: any} => {
+  if (time.seconds === 0) {
+      time.seconds = 59;
+      if (time.minutes === 0) {
+          time.minutes = 59;
+          if (time.hours === 0) {
+              if (time.days > 0) {
+                  time.days -= 1;
+                  time.hours = 23;
+              }
+          } else {
+              time.hours -= 1;
+          }
+      } else {
+          time.minutes -= 1;
+      }
+  } else {
+      time.seconds -= 1;
+  }
+
+  return time;
+}
+
+export const isEmail = (email: string) => {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+};
+
+export const debounce = (fn: Function, timer: number) => {
+  let timeout: any;
+  return function (args?: any) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      fn(args);
+    }, timer)
+  }
+}
+
+export const formatCampaignStatus = (status: string) => {
+  const stt = String(status).toLowerCase();
+  if(stt === 'filled') return 'Opening';
+  if(stt === 'ended') return 'Ended';
+  if(stt === 'upcoming') return 'Upcoming';
+  return status;
+}

@@ -26,9 +26,10 @@ const ModalVerifyEmail = (props: any) => {
   const {
     setOpenModalVerifyEmail,
     email,
-    setEmail,
-    setEmailVeryfied,
-    open
+    // setEmail,
+    // setEmailVeryfied,
+    open,
+    setRenewUserProfile,
   } = props;
 
   useEffect(() => {
@@ -36,14 +37,12 @@ const ModalVerifyEmail = (props: any) => {
   }, [email])
 
   useEffect(() => {
-    console.log('signature', signature)
     if(signature != '') {
       const data = {
         email: inputEmail,
         signature: signature,
         wallet_address: connectedAccount || ''
       }
-      console.log(data)
       const options = {
         headers: {
           msgSignature: process.env.REACT_APP_MESSAGE_INVESTOR_SIGNATURE
@@ -54,9 +53,10 @@ const ModalVerifyEmail = (props: any) => {
         if(res.data.status == 200) {
           dispatch(alertSuccess(res.data.message));
           window.location.reload();
-          setEmail(inputEmail)
+          setRenewUserProfile(true);
+          // setEmail(inputEmail)
           setOpenModalVerifyEmail(false);
-          setEmailVeryfied(1);
+          // setEmailVeryfied(1);
         } else if(res.data.status == 400) {
           dispatch(alertFailure(res.data.message));
         }
@@ -68,7 +68,6 @@ const ModalVerifyEmail = (props: any) => {
   }, [signature])
 
   useEffect(() => {
-    console.log(REGEX.test(inputEmail) )
     if(!REGEX.test(inputEmail) || inputEmail == '') setDisableVerify(true);
     else setDisableVerify(false);
   }, [inputEmail])
@@ -93,7 +92,7 @@ const ModalVerifyEmail = (props: any) => {
     >
       <div className="modal-content">
         <DialogTitle id="alert-dialog-slide-title" className="modal-content__head">
-          <img src={closeIcon} className="btn-close" onClick={() => setOpenModalVerifyEmail(false)}/>
+          <img src={closeIcon} alt="" className="btn-close" onClick={() => setOpenModalVerifyEmail(false)}/>
           <span className="title">Verify Email</span>
         </DialogTitle>
         <DialogContent className="modal-content__body">

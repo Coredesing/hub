@@ -4,7 +4,8 @@ import { NONAME } from 'dns';
 const useCommonStyle = makeStyles((theme) => {
   return {
     DefaultLayout: {
-      background: 'radial-gradient(50% 50% at 50% 50%, rgb(34, 34, 40) 0%, rgb(4, 7, 25) 100%)',
+      background: '#171717',
+      // background: 'radial-gradient(50% 50% at 50% 50%, rgb(34, 34, 40) 0%, rgb(4, 7, 25) 100%)',
       minHeight: '100vh',
       /* grid container settings */
       display: 'grid',

@@ -1,50 +1,73 @@
 import useStyles from './styles';
-import { Link } from 'react-router-dom';
+import Link from '@material-ui/core/Link';
 import DefaultLayout from "../../Layout/DefaultLayout";
 const byTokenLogo = '/images/logo-red-kite.svg';
 const iconArrow = "/images/icons/arrow_up-white.svg"
+const telegramIcon = '/images/icons/telegram-2.svg';
+const twitterIcon = '/images/icons/twitter-2.svg';
+const logoPage = '/images/gamefi.png';
 
 const FooterLandingLayout = () => {
   const styles = useStyles();
 
-  function scrollTop () {
-    window.scroll({ top: 0, behavior: 'smooth'})
+  function scrollTop() {
+    window.scroll({ top: 0, behavior: 'smooth' })
   }
 
   return (
     <div className={styles.footer}>
       <div className={styles.mainContent}>
-        <div className={styles.infoRedKite}>
-          <Link to={'/'}>
-            <img className={styles.logo} src={byTokenLogo} alt="" />
-          </Link>
-          <p>Launch hand-picked projects and help them shine.</p>
-          <ul className={styles.shareLink}>
-            <li className={styles.teleGram}>
-              <a href="https://t.me/polkafoundry/" target="_blank"><i className="custom-icon-telegram"></i></a>
-            </li>
-            <li className={styles.twitter}>
-              <a href="https://twitter.com/polkafoundry/" target="_blank"><i className="custom-icon-twitter"></i></a>
-            </li>
-            {/* <li className={styles.facebook}>
-              <a href="#"><i className="custom-icon-facebook"></i></a>
-            </li>
-            <li className={styles.github}>
-              <a href="#"><i className="custom-icon-github"></i></a>
-            </li> */}
-          </ul>
+        <div className={styles.aboutPage}>
+          <div className="img">
+            <img src={logoPage} alt="" />
+          </div>
+          <p>
+            From the labs behind Red Kite launchpad and several NFT games
+          </p>
+          <div className="socials">
+            <a href="/">
+              <img src={telegramIcon} alt="" />
+            </a>
+            <a href="/">
+              <img src={twitterIcon} alt="" />
+            </a>
+          </div>
+        </div>
+        <div className={styles.navFooter}>
+          <div className={styles.navLinks}>
+            <h4>OUR TEAM</h4>
+            <ul className="link">
+              <li><Link href="https://gamefi.org/#features" target="_blank">Features</Link></li>
+              <li><Link href="https://gamefi.org/#roadmap" target="_blank">Roadmap</Link></li>
+              <li><Link href="https://gamefi.org/#ourteam" target="_blank">Our Team</Link></li>
+              <li><Link href="https://gamefi.org/#advisors" target="_blank">Advisors</Link></li>
+            </ul>
+          </div>
+          <div className={styles.navLinks}>
+            <h4>TOKEN</h4>
+            <ul className="link">
+              <li><Link href="https://docsend.com/view/wg9czts7ugkvrp99" target="_blank">Token Metrics</Link></li>
+              <li><Link href="https://docsend.com/view/wg9czts7ugkvrp99" target="_blank">Token Utilities</Link></li>
+            </ul>
+          </div>
+          <div className={styles.navLinks}>
+            <h4>Contact</h4>
+            <ul className="link">
+              <li><Link href="https://t.me/GameFi_Official" target="_blank">Contact Us</Link></li>
+            </ul>
+          </div>
         </div>
       </div>
-      <div className={styles.subContent}>
+      {/* <div className={styles.subContent}>
         <a href='https://redkite.polkafoundry.com/#/terms' target='_blank'>Terms of Service</a>
         <a href='https://redkite.polkafoundry.com/#/privacy' target='_blank'>Privacy Policy</a>
         <a href='mailto:support@polkafoundry.com'>support@polkafoundry.com</a>
-      </div>
+      </div> */}
       <div className={styles.endContent}>
-        <p className={styles.copyRight}>Copyright © 2021 Icetea Labs. All rights reserved.</p>
+        <p className={styles.copyRight}>© Icetea Labs, 2021</p>
       </div>
       <div className={styles.btnToTop} onClick={scrollTop}>
-        <img src={iconArrow}/>
+        <img src={iconArrow} alt="" />
         <p>Back to Top</p>
       </div>
     </div>

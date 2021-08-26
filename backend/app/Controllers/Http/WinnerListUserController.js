@@ -18,41 +18,24 @@ class WinnerListUserController {
     const campaign_id = request.params.campaignId;
     const page = request.input('page');
     const pageSize = request.input('limit') ? request.input('limit') : 10;
-    console.log(`[getWinnerListPublic] - start getWinnerList with campaign_id ${campaign_id} and page ${page} and pageSize ${pageSize}`);
     try {
       let campaign = null;
       // Try get Campaign detail from Redis Cache
       if (await RedisUtils.checkExistRedisPoolDetail(campaign_id)) {
         let cachedPoolDetail = await RedisUtils.getRedisPoolDetail(campaign_id);
-        console.log('[getWinnerListPublic] - Exist cache data Public Pool Detail: ', cachedPoolDetail);
         if (cachedPoolDetail) {
           campaign = JSON.parse(cachedPoolDetail);
         }
       } else {
         campaign = await CampaignModel.query().where('id', campaign_id).first();
-        console.log('[getWinnerListPublic] - Don\'t exist cache data Public Pool Detail. Getting from DB. ');
-        console.log(JSON.stringify(campaign));
       }
       if (!campaign) {
         return HelperUtils.responseNotFound('Pool not found');
       }
 
-      console.log('[getWinnerListPublic] - Winner List Status:', campaign.public_winner_status, campaign.public_winner_status == Const.PUBLIC_WINNER_STATUS.PRIVATE);
-      if (campaign && (campaign.public_winner_status == Const.PUBLIC_WINNER_STATUS.PRIVATE)) {
+      if (campaign && (campaign.public_winner_status === Const.PUBLIC_WINNER_STATUS.PRIVATE)) {
         return HelperUtils.responseSuccess([]);
       }
-
-      console.log('[getWinnerListPublic] - Get Winner List');
-      // get from redis cached
-      let redisKey = 'winners_' + campaign_id;
-      if (page) {
-        redisKey = redisKey.concat('_', page, '_', pageSize);
-      }
-      // if (await Redis.exists(redisKey)) {
-      //   console.log(`existed key ${redisKey} on redis`);
-      //   const cachedWinners = await Redis.get(redisKey);
-      //   return HelperUtils.responseSuccess(JSON.parse(cachedWinners));
-      // }
 
       // if not existed winners on redis then get from db
       // create params to query to db
@@ -65,12 +48,10 @@ class WinnerListUserController {
       const winnerListService = new WinnerListService();
       // get winner list
       const winners = await winnerListService.findWinnerListUser(filterParams);
-      // save to redis
-      await Redis.set(redisKey, JSON.stringify(winners))
+
       return HelperUtils.responseSuccess(winners);
     } catch (e) {
-      console.log(e);
-      return HelperUtils.responseErrorInternal('Get Winner List Failed !');
+      return HelperUtils.responseErrorInternal('Get Winner List Failed!');
     }
   }
 
@@ -261,22 +242,28 @@ class WinnerListUserController {
       const campaign_id = params.campaignId;
       const wallet_address = inputParams.wallet_address;
 
-      // Check Public Winner Status
       const poolService = new PoolService;
-      const poolExist = await poolService.getPoolById(campaign_id);
-      console.log('[checkExistWinner] - poolExist.public_winner_status:', poolExist && poolExist.public_winner_status);
-      if (!poolExist || (poolExist.public_winner_status == Const.PUBLIC_WINNER_STATUS.PRIVATE)) {
+      const poolExist = await poolService.getPoolWithFreeBuySettingById(campaign_id);
+      if (!poolExist || (poolExist.public_winner_status === Const.PUBLIC_WINNER_STATUS.PRIVATE)) {
         return HelperUtils.responseNotFound('User not exist in Winner User List');
       }
 
       const winnerService = new WinnerListService();
+      const now = new Date().getTime();
+
       let existRecord = await winnerService.buildQueryBuilder({
         wallet_address,
         campaign_id,
       }).first();
 
       if (existRecord) {
-        console.log('[checkExistWinner] - Record exist in Winner: ', existRecord);
+        existRecord.email = ''
+        if (poolExist.token_type === Const.TOKEN_TYPE.ERC721 && poolExist.process === Const.PROCESS.ONLY_CLAIM &&
+          poolExist.freeBuyTimeSetting && poolExist.freeBuyTimeSetting.start_buy_time &&
+          now >= Number(poolExist.freeBuyTimeSetting.start_buy_time) * 1000) {
+          existRecord.lottery_ticket++
+        }
+
         return HelperUtils.responseSuccess(existRecord, 'User exist in Winner User List');
       }
 
@@ -287,7 +274,7 @@ class WinnerListUserController {
       }).first();
 
       if (existRecord) {
-        console.log('[checkExistWinner] - Record exist in Reserved: ', existRecord);
+        existRecord.email = ''
         return HelperUtils.responseSuccess(existRecord, 'User exist in Winner User List');
       }
 

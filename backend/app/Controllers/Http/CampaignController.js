@@ -354,7 +354,7 @@ class CampaignController {
     if (!campaign_id) {
       return HelperUtils.responseBadRequest('Bad request with campaign_id');
     }
-    console.log('Deposit campaign with params: ', params, campaign_id, userWalletAddress);
+
     try {
       // get user info
       const userService = new UserService();
@@ -363,11 +363,9 @@ class CampaignController {
       }
       const user = await userService.findUser(userParams);
       if (!user || !user.email) {
-        console.log(`User ${user}`);
         return HelperUtils.responseBadRequest("You're not valid user to buy this campaign !");
       }
-      if (user.is_kyc != Const.KYC_STATUS.APPROVED) {
-        console.log('User does not KYC yet !');
+      if (user.is_kyc !== Const.KYC_STATUS.APPROVED) {
         return HelperUtils.responseBadRequest("You must register for KYC successfully to be allowed to purchase !");
       }
       // check campaign info
@@ -378,25 +376,19 @@ class CampaignController {
       const campaignService = new PoolService();
       const camp = await campaignService.buildQueryBuilder({ id: campaign_id }).with('freeBuyTimeSetting').first();
       if (!camp) {
-        console.log(`Do not found campaign with id ${campaign_id}`);
         return HelperUtils.responseBadRequest("Do not found campaign");
       }
+
+      if (camp.process === Const.PROCESS.ONLY_CLAIM) {
+        return HelperUtils.responseBadRequest("Cannot buy");
+      }
+
       let minBuy = 0, maxBuy = 0;
       let winner;
       const current = ConvertDateUtils.getDatetimeNowUTC();
-      console.log(`Current time is ${current}`);
-
-      // // check if current time is free to buy or not
-      // const isFreeBuyTime = (current >= (Number(camp.start_time) + Number(OFFER_FREE_TIME)));
-      // console.log(`isFreeBuyTime ${isFreeBuyTime}`);
-      // if (isFreeBuyTime) {
-      //   maxBuy = Number(OFFER_FREE_BUY);
-      // }
 
       // FREE BUY TIME:
       const { maxBonus, isFreeBuyTime, existWhitelist } = await campaignService.getFreeBuyTimeInfo(camp, userWalletAddress);
-      console.log('[CampaignController::deposit] - isFreeBuyTime:', isFreeBuyTime);
-
 
       // check user winner or reserved lis if campaign is lottery
       if (camp.buy_type === Const.BUY_TYPE.WHITELIST_LOTTERY) {
@@ -413,7 +405,6 @@ class CampaignController {
           const reservedListService = new ReservedListService();
           const reserved = await reservedListService.findOneByFilter(winnerParams);
           if (!reserved) {
-            console.log()
             return HelperUtils.responseBadRequest("Sorry, you are not on the list of winners to join this pool.");
           }
           // check time start buy for tier
@@ -485,7 +476,7 @@ class CampaignController {
       }
       // call to SC to get convert rate token erc20 -> our token
       const receipt = await HelperUtils.getOfferCurrencyInfo(camp);
-      const rate = receipt[0];
+      const rate = new BigNumber(receipt[0]);
       const decimal = receipt[1];
       const unit = receipt[2];
       console.log(rate, decimal, unit);
@@ -628,16 +619,20 @@ class CampaignController {
         'campaign_id': campaign_id
       };
       // call to db get campaign info
-      const campaignService = new CampaignService();
-      const camp = await campaignService.findByCampaignId(campaign_id)
+      const campaignService = new PoolService();
+      const camp = await campaignService.getPoolWithFreeBuySettingById(campaign_id);
       if (!camp) {
-        console.log(`Do not found campaign with id ${campaign_id}`);
         return HelperUtils.responseBadRequest("Do not found campaign");
       }
-      if (camp.pool_type != Const.POOL_TYPE.CLAIMABLE) {
-        console.log(`Campaign is not claimable with id ${campaign_id}`);
+      if (camp.pool_type !== Const.POOL_TYPE.CLAIMABLE) {
         return HelperUtils.responseBadRequest("Campaign is not claimable !");
       }
+
+      if (camp.process === Const.PROCESS.ONLY_BUY
+        || (camp.token_type === Const.TOKEN_TYPE.ERC721 && camp.process === Const.PROCESS.ALL)) {
+        return HelperUtils.responseBadRequest("Cannot claim");
+      }
+
       // get campaign claim config from db
       const claimParams = {
         'campaign_id': campaign_id,
@@ -646,23 +641,37 @@ class CampaignController {
       const claimConfigService = new CampaignClaimConfigService();
       const claimConfig = await claimConfigService.findLastClaimPhase(claimParams);
       if (!claimConfig) {
-        console.log(`Do not found claim config for campaign ${campaign_id}`);
         return HelperUtils.responseBadRequest("You can not claim token at current time !");
       }
-      // call to SC to get amount token purchased of user
-      const campaignClaimSC = await HelperUtils.getContractClaimInstance(camp);
-      const received = await Promise.all([
-        campaignClaimSC.methods.userPurchased(userWalletAddress).call(),
-        campaignClaimSC.methods.userClaimed(userWalletAddress).call()
-      ]);
-      const tokenPurchased = received[0];
-      const tokenClaimed = received[1];
-      // calc max token that user can claimable
-      const maxTokenClaim = new BigNumber(claimConfig.max_percent_claim).dividedBy(100).multipliedBy(tokenPurchased)
-        .decimalPlaces(0, BigNumber.ROUND_DOWN).toFixed(0, BigNumber.ROUND_DOWN);
-      console.log(`user token purchased ${tokenPurchased} and user claimed ${tokenClaimed} and max token claim ${maxTokenClaim}`);
 
-      console.log('claimConfig BE:', claimConfig);
+      let maxTokenClaim = new BigNumber(0);
+      if (camp.token_type === Const.TOKEN_TYPE.ERC721 && camp.process === Const.PROCESS.ONLY_CLAIM) {
+        const winnerListService = new WinnerListService();
+        let winner = await winnerListService.findOneByFilters({'wallet_address': userWalletAddress, 'campaign_id': campaign_id});
+        if (!winner || !winner.lottery_ticket || winner.lottery_ticket < 1) {
+          return HelperUtils.responseBadRequest("you are not allowed to claim ticket");
+        }
+        const now = new Date().getTime();
+        if (camp.freeBuyTimeSetting && camp.freeBuyTimeSetting.start_buy_time &&
+          now >= Number(camp.freeBuyTimeSetting.start_buy_time) * 1000) {
+          winner.lottery_ticket++
+        }
+
+        maxTokenClaim = new BigNumber(winner.lottery_ticket);
+      } else {
+        // call to SC to get amount token purchased of user
+        const campaignClaimSC = await HelperUtils.getContractClaimInstance(camp);
+        const received = await Promise.all([
+          campaignClaimSC.methods.userPurchased(userWalletAddress).call(),
+          campaignClaimSC.methods.userClaimed(userWalletAddress).call()
+        ]);
+        const tokenPurchased = received[0];
+        // calc max token that user can claimable
+        maxTokenClaim = new BigNumber(claimConfig.max_percent_claim).dividedBy(100).multipliedBy(tokenPurchased)
+          .decimalPlaces(0, BigNumber.ROUND_DOWN).toFixed(0, BigNumber.ROUND_DOWN);
+      }
+
+      console.log(`max token claim ${maxTokenClaim}`);
 
       // get message hash
       const messageHash = web3.utils.soliditySha3(userWalletAddress, maxTokenClaim);

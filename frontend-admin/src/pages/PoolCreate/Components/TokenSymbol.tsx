@@ -12,13 +12,14 @@ function TokenLogo(props: any) {
 
   const [disabled, setDisabled] = useState<boolean>(false)
   const wacthTokenAddress = watch('token')
+  const token_type = watch('token_type')
 
   useEffect(()=>{
     if (!wacthTokenAddress) {
       return 
     }
 
-    getTokenInforDetail(wacthTokenAddress)
+    getTokenInforDetail(wacthTokenAddress, token_type)
     .then((tokenInfo: any)  => {
       if (tokenInfo.symbol) {
         setValue('token_symbol', tokenInfo.symbol);

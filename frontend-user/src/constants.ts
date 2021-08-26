@@ -124,25 +124,25 @@ export const TIERS = [
     bgColor: '#B8B8FF',
   },
   {
-    name: 'Dove',
+    name: 'Rookie',
     bg: '/images/icons/hawk-bg.png',
     bgColor: '#8181D8',
     icon: '/images/icons/dove.png'
   },
   {
-    name: 'Hawk',
+    name: 'Elite',
     bg: '/images/icons/falcon-bg.png',
     bgColor: '#6F44E9',
     icon: '/images/icons/hawk.png'
   },
   {
-    name: 'Eagle',
+    name: 'Pro',
     bg: '/images/icons/eagle-bg.png',
     bgColor: '#4646FF',
     icon: '/images/icons/eagle.png'
   },
   {
-    name: 'Phoenix',
+    name: 'Master',
     bg: '/images/icons/phoenix-bg.png',
     bgColor: '',
     icon: '/images/icons/pheonix.png'
@@ -151,18 +151,18 @@ export const TIERS = [
 
 export const TIER_LEVELS = {
   NONE: 0,
-  DOVE: 1,
-  HAWK: 2,
-  EAGLE: 3,
-  PHOENIX: 4,
+  ROOKIE: 1,
+  ELITE: 2,
+  PRO: 3,
+  MASTER: 4,
 };
 
 export const TIER_NAMES = {
   0: '--',
-  1: 'Dove',
-  2: 'Hawk',
-  3: 'Eagle',
-  4: 'Phoenix',
+  1: 'Rookie',
+  2: 'Elite',
+  3: 'Pro',
+  4: 'Master',
 };
 
 export const KYC_STATUS = {
@@ -197,3 +197,20 @@ export const ETHERSCAN_BASE_URL: any = {
   '137': 'https://polygonscan.com',
   '80001': 'https://mumbai.polygonscan.com/',
 };
+
+export const NULL_AMOUNT = 'N/A';
+export const POOL_STATUS_JOINED = {  // Pool Status for User Joined Pool (Version 3)
+  NONE: 'NONE',
+  APPLIED_WHITELIST: 'APPLIED_WHITELIST',
+  WIN_WHITELIST: 'WIN_WHITELIST',
+  NOT_WIN_WHITELIST: 'NOT_WIN_WHITELIST',
+  CANCELED_WHITELIST: 'CANCELED_WHITELIST',
+  SWAPPING: 'SWAPPING',
+  CLAIMABLE: 'CLAIMABLE',
+  COMPLETED: 'COMPLETED',
+};
+
+export enum TOKEN_TYPE {
+  ERC721 = 'erc721',
+  ERC20 = 'erc20'
+} 

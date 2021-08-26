@@ -1,9 +1,9 @@
 export enum UserTier {
   Start = '-' ,
-  Bronze = 'Dove',
-  Silver = 'Hawk',
-  Gold = 'Eagle',
-  Phoenix = 'Phoenix'
+  Bronze = 'Rookie',
+  Silver = 'Elite',
+  Gold = 'Pro',
+  Phoenix = 'Master'
 }
 
 export type userTiers = Extract<UserTier, 

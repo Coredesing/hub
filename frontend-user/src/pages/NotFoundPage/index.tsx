@@ -1,22 +1,29 @@
-import React from 'react';
-import InvestorLayout from "../InvestorLayout/InvestorLayout";
-import TextTitle from "../InvestorLayout/TextTitle";
+import React from "react";
+import DefaultLayout from "../../components/Layout/DefaultLayout";
 
 const NotFoundPage = () => {
-
   return (
-    <InvestorLayout>
-      <TextTitle>
-        Not Found !!!
-      </TextTitle>
-    </InvestorLayout>
+    <DefaultLayout>
+      <div
+        id="wrapper"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <img
+          src="/images/404.png"
+          alt="404"
+          style={{
+            width: 500,
+            height: 500,
+            objectFit: "contain",
+          }}
+        />
+      </div>
+    </DefaultLayout>
   );
-
-  // return (
-  //   <div>
-  //     NotFoundPage
-  //   </div>
-  // );
 };
 
 export default NotFoundPage;

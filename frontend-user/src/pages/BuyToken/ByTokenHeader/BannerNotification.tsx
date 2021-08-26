@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom';
 import {formatRoundDown, formatRoundUp, numberWithCommas} from "../../../utils/formatNumber";
 import {PurchaseCurrency} from "../../../constants/purchasableCurrency";
 import {getBUSDAddress, getUSDCAddress, getUSDTAddress} from "../../../utils/contractAddress/getAddresses";
-import {ETH_CHAIN_ID} from "../../../constants/network";
+import {ETH_CHAIN_ID, POLYGON_CHAIN_ID} from "../../../constants/network";
 import {useTypedSelector} from "../../../hooks/useTypedSelector";
 import useTokenAllowance from "../../../hooks/useTokenAllowance";
 import BigNumber from 'bignumber.js';
@@ -72,7 +72,7 @@ function BannerNotification(props: any) {
         address: getUSDTAddress(appChainID),
         name: "USDT",
         symbol: "USDT",
-        decimals: appChainID == ETH_CHAIN_ID ? 6 : 18
+        decimals: appChainID === ETH_CHAIN_ID || appChainID === POLYGON_CHAIN_ID ? 6 : 18
       };
     }
 
@@ -90,7 +90,7 @@ function BannerNotification(props: any) {
         address: getUSDCAddress(appChainID),
         name: "USDC",
         symbol: "USDC",
-        decimals: appChainID == ETH_CHAIN_ID ? 6 : 18
+        decimals: appChainID === ETH_CHAIN_ID || appChainID === POLYGON_CHAIN_ID ? 6 : 18
       };
     }
 

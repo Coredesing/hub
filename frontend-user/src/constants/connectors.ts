@@ -9,8 +9,8 @@ import {BSC_CHAIN_ID, ETH_CHAIN_ID, NETWORK_BSC_URL} from './network';
 import {FORMATIC_KEY, NETWORK_URL, APP_NETWORKS_NAME } from './network';
 
 const METAMASK_DEEPLINK = process.env.REACT_APP_METAMASK_DEEPLINK;
-console.log('METAMASK_DEEPLINK', METAMASK_DEEPLINK);
-console.log('FORMATIC_KEY, NETWORK_URL, APP_NETWORKS_NAME', FORMATIC_KEY, NETWORK_URL, APP_NETWORKS_NAME);
+// console.log('METAMASK_DEEPLINK', METAMASK_DEEPLINK);
+// console.log('FORMATIC_KEY, NETWORK_URL, APP_NETWORKS_NAME', FORMATIC_KEY, NETWORK_URL, APP_NETWORKS_NAME);
 
 export const bscConnector = new BscConnector({}) as any;
 export const injected = new InjectedConnector({});
@@ -20,7 +20,7 @@ const originalChainIdChangeHandler = bscConnector.handleChainChanged;
 //@ts-ignore
 bscConnector.handleChainChanged = (chainId: string) => {
   const chainIdNum = Number(chainId);
-  console.debug("Handling 'chainChanged' event with payload", chainId, isNaN(chainIdNum));
+  // console.debug("Handling 'chainChanged' event with payload", chainId, isNaN(chainIdNum));
   if (isNaN(chainIdNum)) {
     bscConnector.emitError('NaN ChainId');
     return;

@@ -32,7 +32,6 @@ export const getAllowance = (owner: string) => {
         payload: result,
       });
     } catch (error) {
-      console.log(error)
       dispatch({
         type: sotaTokenActions.ALLOWANCE_FAILURE,
         payload: error
@@ -41,14 +40,14 @@ export const getAllowance = (owner: string) => {
   }
 };
 
-export const approve = (address: string | null | undefined, library: Web3Provider, tokenAddress: string) => {
+export const approve = (address: string | null | undefined, library: Web3Provider, tokenAddress: string, campainhash?:string) => {
   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
     dispatch({ type: sotaTokenActions.APPROVE_LOADING });
     try {
       let result = {} as any;
 
       const contract = getContract(tokenAddress, erc20ABI, library, address || '');
-      result = await contract?.approve(process.env.REACT_APP_TIERS, MAX_INT);
+      result = await contract?.approve(campainhash ? campainhash : process.env.REACT_APP_TIERS, MAX_INT);
       dispatch({
         type: sotaTokenActions.APPROVE_SUCCESS,
         payload: result,

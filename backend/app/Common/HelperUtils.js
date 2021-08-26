@@ -13,6 +13,7 @@ const ErrorFactory = use('App/Common/ErrorFactory');
 const CONFIGS_FOLDER = '../../blockchain_configs/';
 const NETWORK_CONFIGS = require(`${CONFIGS_FOLDER}${process.env.NODE_ENV}`);
 const CONTRACT_CONFIGS = NETWORK_CONFIGS.contracts[Const.CONTRACTS.CAMPAIGN];
+const ERC721_ABI = require('../../blockchain_configs/contracts/Erc721');
 const { abi: CONTRACT_ABI } = CONTRACT_CONFIGS.CONTRACT_DATA;
 const { abi: CONTRACT_CLAIM_ABI } = CONTRACT_CONFIGS.CONTRACT_CLAIMABLE;
 
@@ -176,7 +177,7 @@ const responseErrorInternal = (message) => {
 const responseNotFound = (message) => {
   return {
     status: 404,
-    message: message || 'Not Found !',
+    message: message || 'Not Found!',
     data: null,
   }
 };
@@ -192,7 +193,7 @@ const responseBadRequest = (message) => {
 const responseSuccess = (data = null, message) => {
   return {
     status: 200,
-    message: message || 'Success !',
+    message: message || 'Success!',
     data,
   }
 };
@@ -248,7 +249,6 @@ const getUserTierSmart = async (wallet_address) => {
       epkf_rate: 1,
     }
   }
-  console.log('rateSetting:', rateSetting);
 
   // Get Tier Smart Contract Info
   const tierSc = getTierSmartContractInstance();
@@ -259,19 +259,14 @@ const getUserTierSmart = async (wallet_address) => {
     tierSc.methods.userInfo(wallet_address, process.env.PKF_SMART_CONTRACT_ADDRESS || '').call(), // stakedPkf
     tierSc.methods.userInfo(wallet_address, process.env.UNI_LP_PKF_SMART_CONTRACT_ADDRESS || '').call(), // staked LP_PKF
   ]);
-  console.log('[getUserTierSmart] - receivedData: ', receivedData[0], receivedData[1]);
 
   // Caculate PKF Staked
   let stakedPkf = (receivedData[3] && receivedData[3].staked) || 0;
   stakedPkf = new BigNumber(stakedPkf);
-  console.log('PKF_SMART_CONTRACT_ADDRESS:', process.env.PKF_SMART_CONTRACT_ADDRESS);
-  console.log('receivedData[3]', receivedData[3], stakedPkf.toFixed());
 
   // Caculate LP-PKF Staked
   let stakedUni = (receivedData[4] && receivedData[4].staked) || 0;
   stakedUni = new BigNumber(stakedUni).multipliedBy(rateSetting.lp_pkf_rate);
-  console.log('UNI_LP_PKF_SMART_CONTRACT_ADDRESS:', process.env.UNI_LP_PKF_SMART_CONTRACT_ADDRESS);
-  console.log('receivedData[4]', receivedData[4], stakedUni.toFixed());
 
   // calc pfk equal
   let ePkf = 0;
@@ -279,24 +274,17 @@ const getUserTierSmart = async (wallet_address) => {
   if (ePkfResponse && ePkfResponse.code === 200) {
     ePkf = new BigNumber((ePkfResponse && ePkfResponse.data) || 0).multipliedBy(rateSetting.epkf_rate).toFixed();
   }
-  console.log('ePkf', ePkf);
-
   const pkfEq = new BigNumber(stakedPkf).plus(stakedUni).plus(ePkf);
-  console.log('pkfEq:', pkfEq.toFixed());
 
   // get 4 tiers
   let userTier = 0;
   const tiers = receivedData[0].slice(0, 4);
 
-  console.log('Tiers=======>', tiers);
   tiers.map((pkfRequire, index) => {
     if (pkfEq.gte(pkfRequire)) {
       userTier = index + 1;
     }
   });
-
-  console.log('wallet_address - userTier: ', wallet_address, userTier);
-  console.log('pkfEq', pkfEq.toFixed());
 
   return [
     userTier,
@@ -312,7 +300,6 @@ const getExternalTokenSmartContract = async (wallet_address) => {
   console.log('[getExternalTokenSmartContract] - externalToken', externalTokenMantra);
   return externalTokenMantra;
 };
-
 
 const getUserTotalStakeSmartContract = async (wallet_address) => {
   const tierSc = getTierSmartContractInstance();
@@ -357,6 +344,25 @@ const getContractInstance = async (camp) => {
     return getContractInstanceDev(camp);
   }
   return new networkToWeb3[camp.network_available].eth.Contract(CONTRACT_ABI, camp.campaign_hash);
+}
+
+const getERC721TokenContractInstanceDev = async (camp) => {
+  const web3Dev = new Web3(getWeb3ProviderLink());
+  const web3BscDev = new Web3(getWeb3BscProviderLink());
+  const web3PolygonDev = new Web3(getWeb3PolygonProviderLink());
+  const networkToWeb3Dev = {
+    [Const.NETWORK_AVAILABLE.ETH]: web3Dev,
+    [Const.NETWORK_AVAILABLE.BSC]: web3BscDev,
+    [Const.NETWORK_AVAILABLE.POLYGON]: web3PolygonDev
+  }
+  return new networkToWeb3Dev[camp.network_available].eth.Contract(ERC721_ABI, camp.token);
+};
+
+const getERC721TokenContractInstance = async (camp) => {
+  if (isDevelopment) {  // Prevent limit request Infura when dev
+    return getERC721TokenContractInstanceDev(camp);
+  }
+  return new networkToWeb3[camp.network_available].eth.Contract(ERC721_ABI, camp.token);
 }
 
 const getContractClaimInstance = async (camp) => {
@@ -434,12 +440,24 @@ const getTokenSoldSmartContract = async (pool) => {
   if (!pool.campaign_hash) {
     return 0;
   }
-  const isClaimable = pool.pool_type == Const.POOL_TYPE.CLAIMABLE;
+  const isClaimable = pool.pool_type === Const.POOL_TYPE.CLAIMABLE;
   const poolContract = isClaimable ? await getContractClaimInstance(pool) : await getContractInstance(pool);
-  let tokenSold = await poolContract.methods.tokenSold().call();
-  tokenSold = new BigNumber(tokenSold).div(new BigNumber(10).pow(18)).toFixed();
-  console.log('[getTokenSoldSmartContract] - tokenSold', tokenSold);
-  return tokenSold;
+
+  try {
+    if (pool.token_type === Const.TOKEN_TYPE.ERC721 && pool.process === Const.PROCESS.ONLY_CLAIM) {
+      return await poolContract.methods.tokenClaimed().call();
+    }
+
+    let tokenSold = await poolContract.methods.tokenSold().call();
+    if (pool.token_type === 'erc721') {
+      return tokenSold
+    }
+    tokenSold = new BigNumber(tokenSold).div(new BigNumber(10).pow(18)).toFixed();
+    return tokenSold;
+  }
+  catch (e) {
+    return 0
+  }
 };
 
 const getEventSmartContract = async ({ contract, eventName, filter = {} }) => {
@@ -576,7 +594,6 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
   if (!poolDetails) {
     return PoolStatus.TBA;
   }
-  console.log('poolDetails:', JSON.stringify(poolDetails));
 
   const firstClaimConfig = () => {
     return getFirstClaimConfig(poolDetails);
@@ -635,42 +652,29 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
     tokenSold: tokenSold || poolDetails.tokenSold || poolDetails.token_sold || '0',
   });
 
-
-  console.log('Process 111', progress, tokenSold, PoolStatus);
-
   const soldProgress = progress;
   const today = new Date().getTime();
   const requiredReleaseTime = isClaimable ? !releaseTime : false;
-
-  console.log('Process 222', startJoinTime, endJoinTime, startBuyTime, endBuyTime)
 
   // Check TBA Status
   if ((!startJoinTime || !endJoinTime) && buyType === Const.BUY_TYPE.WHITELIST_LOTTERY) {
     return PoolStatus.TBA;
   }
 
-  console.log('Process 333');
-
   if ((!startBuyTime || !endBuyTime) && buyType === Const.BUY_TYPE.FCFS) {
     return PoolStatus.TBA;
   }
-
-  console.log('Process 444');
 
   // Check Upcoming Status
   if (startJoinTime && today < startJoinTime.getTime()) {
     return PoolStatus.UPCOMING;
   }
 
-  console.log('Process 555');
-
   // exist start_join_time
   // but don't exist start_buy_time
   if (startJoinTime && !startBuyTime) {
     return PoolStatus.UPCOMING;
   }
-
-  console.log('Process 666');
 
   // or current time < start buy time
   if (startBuyTime && today < startBuyTime.getTime()) {
@@ -683,19 +687,23 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
     return PoolStatus.UPCOMING;
   }
 
-  console.log('Process 777');
-
   // Check Claimable Status
   const lastClaimTime = lastClaimConfigTime();
+  if (!lastClaimTime && poolDetails.process && poolDetails.process === Const.PROCESS.ONLY_CLAIM) {
+    return PoolStatus.FILLED;
+  }
+
   if (
     isClaimable &&
     releaseTime && lastClaimTime &&
     releaseTime.getTime() <= today && today < (lastClaimTime * 1000)
   ) {
+    if (poolDetails.process && poolDetails.process === Const.PROCESS.ONLY_CLAIM) {
+      return PoolStatus.FILLED;
+    }
+
     return PoolStatus.CLAIMABLE;
   }
-
-  console.log('Process 888');
 
   if (releaseTime) {
     // Check Filled Status
@@ -717,7 +725,6 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
       return PoolStatus.SWAP; // In Progress
     }
   }
-  console.log('Process 9999: PoolStatus.CLOSED');
 
   return PoolStatus.CLOSED;
 };
@@ -747,6 +754,7 @@ module.exports = {
   getUserTotalStakeSmartContract,
   getUnstakeMantraSmartContract,
   getExternalTokenSmartContract,
+  getERC721TokenContractInstance,
   getUserTierSmart,
   getContractInstance,
   getContractClaimInstance,

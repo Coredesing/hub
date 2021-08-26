@@ -302,7 +302,7 @@ export const getTokenStakeSmartContractInfo = async (
 
   rateObject = await getRateSettingAPI();
   rateSettings = mappingRateSettingObjectToArray(rateObject);
-  console.log("epkfStaked", epkfStaked);
+  // console.log("epkfStaked", epkfStaked);
 
   // Calculate totak stake balance
   const totalStaked = new BigNumber(stakedPkf)

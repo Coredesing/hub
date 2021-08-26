@@ -270,7 +270,7 @@ export const getCampaignDetail = (id: string, isInvestor: boolean = false) => {
           releaseTime, tokenClaimed,
         ]);
 
-        console.log('tokenClaimed=======>', campaignDetail[16]);
+        // console.log('tokenClaimed=======>', campaignDetail[16]);
 
         // Init ERC20 Contract By Token Address get from Campaign Contract
         const erc20Contract = getContractInstance(erc20ABI, campaignDetail[8]);
@@ -300,7 +300,7 @@ export const getCampaignDetail = (id: string, isInvestor: boolean = false) => {
           const tokenClaimed = new BigNumber(campaignDetail[16]).dividedBy(Math.pow(10, tokenDetail[2]));
           const refundable = isCampaignOwner && (new BigNumber(tokenLeft).plus(tokenClaimed)).gt(0) && (new Date(unixCloseTime) < new Date());
 
-          console.log('tokenLeft', tokenLeft.toFixed());
+          // console.log('tokenLeft', tokenLeft.toFixed());
           // console.log('(new BigNumber(tokenLeft).plus(tokenClaimed)).gt(0)', (new BigNumber(tokenLeft).plus(tokenClaimed)).toFixed());
 
           dispatch({
@@ -651,10 +651,10 @@ export const editCampaignWithProp = (prop: string, value: string, handleEditSucc
 
           case 'ETH': {
             const etherDecimals = getDigitsAfterDecimals(value.toString());
-            console.log(etherDecimals);
-            console.log('new BigNumber(value).multipliedBy(Math.pow(10, etherDecimals)',
-              new BigNumber(value).multipliedBy(Math.pow(10, etherDecimals)).toString()
-              );
+            // console.log(etherDecimals);
+            // console.log('new BigNumber(value).multipliedBy(Math.pow(10, etherDecimals)',
+            //   new BigNumber(value).multipliedBy(Math.pow(10, etherDecimals)).toString()
+            //   );
 
             await campaignContract.methods.setEtherConversionRateAndDecimals(new BigNumber(value).multipliedBy(Math.pow(10, etherDecimals)).toString(), etherDecimals).send({
               from: user.data.wallet_address

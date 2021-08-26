@@ -2,36 +2,87 @@
 
 const CampaignModel = use('App/Models/Campaign');
 const WalletAccountModel = use('App/Models/WalletAccount');
+const UserModel = use('App/Models/User');
 const WalletAccountService = use('App/Services/WalletAccountService');
-const Const = use('App/Common/Const');
 const PoolService = use('App/Services/PoolService');
-const WhitelistBannerSettingService = use('App/Services/WhitelistBannerSettingService');
 const HelperUtils = use('App/Common/HelperUtils');
 const RedisUtils = use('App/Common/RedisUtils');
-
-const Redis = use('Redis');
-const CONFIGS_FOLDER = '../../../blockchain_configs/';
-const NETWORK_CONFIGS = require(`${CONFIGS_FOLDER}${process.env.NODE_ENV}`);
-const CONTRACT_CONFIGS = NETWORK_CONFIGS.contracts[Const.CONTRACTS.CAMPAIGN];
-const CONTRACT_FACTORY_CONFIGS = NETWORK_CONFIGS.contracts[Const.CONTRACTS.CAMPAIGNFACTORY];
-
-const { abi: CONTRACT_ABI } = CONTRACT_CONFIGS.CONTRACT_DATA;
-const { abi: CONTRACT_FACTORY_ABI } = CONTRACT_FACTORY_CONFIGS.CONTRACT_DATA;
-const { abi: CONTRACT_ERC20_ABI } = require('../../../blockchain_configs/contracts/Normal/Erc20.json');
-
-const Web3 = require('web3');
-const web3 = new Web3(NETWORK_CONFIGS.WEB3_API_URL);
+const GameFIUtils = use('App/Common/GameFIUtils');
 const Config = use('Config')
 const moment = require('moment');
 const BigNumber = use('bignumber.js');
 const { pick } = require('lodash');
 
 class PoolController {
+  // special pool: GamefiTicket
+  async getGameFITicket() {
+    try {
+      if (await RedisUtils.checkExistRedisPoolDetail(0)) {
+        const cachedPoolDetail = await RedisUtils.getRedisPoolDetail(0);
+        return HelperUtils.responseSuccess(JSON.parse(cachedPoolDetail));
+      }
+
+      let pool = await GameFIUtils.getGameFIPool(CampaignModel)
+      if (!pool) {
+        return HelperUtils.responseNotFound('Pool not found');
+      }
+
+      let count = await UserModel.query()
+        .where('is_kyc', 1)
+        .where('status', 1)
+        .count('* as total');
+
+      let participants = (count && count.length > 0) ? count[0].total : 0
+      participants = parseInt(participants) || 0
+      let publicPool = pick(pool, [
+        // Pool Info
+        'id', 'title', 'website', 'banner', 'updated_at', 'created_at',
+        'campaign_hash', 'description', 'registed_by', 'register_by',
+        'campaign_status',
+
+        // Types
+        'buy_type', 'accept_currency', 'min_tier', 'network_available',
+        'pool_type', 'is_deploy', 'is_display', 'is_pause', 'is_private',
+        'public_winner_status',
+
+        // Time
+        'release_time', 'start_join_pool_time', 'start_time', 'end_join_pool_time', 'finish_time',
+
+        // Token Info
+        'name', 'symbol', 'decimals', 'token', 'token_type', 'token_images', 'total_sold_coin',
+        'token_conversion_rate', 'ether_conversion_rate',
+        'price_usdt', 'display_price_rate',
+        'token_sold',
+
+        // social network
+        'socialNetworkSetting',
+
+        // Progress Display Setting
+        'token_sold_display',
+        'progress_display',
+
+        // Lock Schedule Setting
+        'whitelist_country',
+      ]);
+
+      publicPool.participants = participants;
+      publicPool.max_buy_ticket = new BigNumber(pool.tiers[0].max_buy).dividedBy(new BigNumber(pool.token_conversion_rate)).integerValue(BigNumber.ROUND_DOWN);
+      publicPool.max_buy_ticket = parseInt(publicPool.max_buy_ticket.toFixed())
+
+      // Cache data
+      RedisUtils.createRedisPoolDetail(0, publicPool);
+
+      return HelperUtils.responseSuccess(publicPool);
+    } catch (e) {
+      console.log(e);
+      return HelperUtils.responseErrorInternal('ERROR: Get public pool fail !');
+    }
+  }
 
   async createPool({ request, auth }) {
     const inputParams = request.only([
       'registed_by',
-      'title', 'website', 'banner', 'description', 'address_receiver',
+      'title', 'website', 'banner', 'description', 'process', 'rule', 'address_receiver',
       'token', 'token_images', 'total_sold_coin',
       'token_by_eth', 'token_conversion_rate', 'price_usdt', 'display_price_rate',
       'tokenInfo',
@@ -55,6 +106,8 @@ class PoolController {
       'title': inputParams.title,
       'website': inputParams.website,
       'description': inputParams.description,
+      'rule': inputParams.rule,
+      'process': inputParams.process,
       // 'token': inputParams.token,
       'start_time': inputParams.start_time,
       'finish_time': inputParams.finish_time,
@@ -83,6 +136,7 @@ class PoolController {
       'name': tokenInfo && tokenInfo.name,
       'decimals': tokenInfo && tokenInfo.decimals,
       'token': tokenInfo && tokenInfo.address,
+      'token_type': tokenInfo && tokenInfo.token_type,
 
       'token_sold_display': inputParams.token_sold_display,
       'progress_display': inputParams.progress_display,
@@ -159,7 +213,7 @@ class PoolController {
   async updatePool({ request, auth, params }) {
     const inputParams = request.only([
       'registed_by',
-      'title', 'website', 'banner', 'description', 'address_receiver',
+      'title', 'website', 'banner', 'description', 'process', 'rule', 'address_receiver',
       'token', 'token_images', 'total_sold_coin',
       'token_by_eth', 'token_conversion_rate', 'price_usdt', 'display_price_rate',
       'tokenInfo',
@@ -183,6 +237,8 @@ class PoolController {
       'title': inputParams.title,
       'website': inputParams.website,
       'description': inputParams.description,
+      'process': inputParams.process,
+      'rule': inputParams.rule,
       'start_time': inputParams.start_time,
       'finish_time': inputParams.finish_time,
       'ether_conversion_rate': inputParams.token_by_eth,
@@ -208,6 +264,7 @@ class PoolController {
       'name': tokenInfo && tokenInfo.name,
       'decimals': tokenInfo && tokenInfo.decimals,
       'token': tokenInfo && tokenInfo.address,
+      'token_type': tokenInfo && tokenInfo.token_type,
 
       'token_sold_display': inputParams.token_sold_display,
       'progress_display': inputParams.progress_display,
@@ -217,8 +274,6 @@ class PoolController {
       'forbidden_countries': JSON.stringify((inputParams && inputParams.forbidden_countries) || []),
     };
 
-    console.log('[updatePool] - tokenInfo:', inputParams.tokenInfo);
-    console.log('[updatePool] - Update Pool with data: ', data, params);
     const campaignId = params.campaignId;
     try {
       const poolService = new PoolService;
@@ -433,7 +488,6 @@ class PoolController {
     try {
       if (await RedisUtils.checkExistRedisPoolDetail(poolId)) {
         const cachedPoolDetail = await RedisUtils.getRedisPoolDetail(poolId);
-        console.log('Exist cache data Public Pool Detail: ', cachedPoolDetail);
         return HelperUtils.responseSuccess(JSON.parse(cachedPoolDetail));
       }
 
@@ -454,7 +508,7 @@ class PoolController {
       const publicPool = pick(pool, [
         // Pool Info
         'id', 'title', 'website', 'banner', 'updated_at', 'created_at',
-        'campaign_hash', 'campaign_id', 'description', 'registed_by', 'register_by',
+        'campaign_hash', 'campaign_id', 'description', 'process', 'rule', 'registed_by', 'register_by',
         'campaign_status',
 
         // Types
@@ -466,7 +520,7 @@ class PoolController {
         'release_time', 'start_join_pool_time', 'start_time', 'end_join_pool_time', 'finish_time',
 
         // Token Info
-        'name', 'symbol', 'decimals', 'token', 'token_images', 'total_sold_coin',
+        'name', 'symbol', 'decimals', 'token', 'token_type', 'token_images', 'total_sold_coin',
         'token_conversion_rate', 'ether_conversion_rate',
         'price_usdt', 'display_price_rate',
         'token_sold',
@@ -669,6 +723,16 @@ class PoolController {
     } catch (e) {
       console.log(e);
       return HelperUtils.responseErrorInternal('getCompleteSalePoolsV3 Fail !!!');
+    }
+  }
+
+  async getPoolByTokenType({ request, params }) {
+    const inputParams = request.all();
+    try {
+      let listData = await (new PoolService).getPoolByTokenType(inputParams);
+      return HelperUtils.responseSuccess(listData);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal('getPoolByTokenType Fail');
     }
   }
 

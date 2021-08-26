@@ -37,8 +37,11 @@ import JoinPolkaSmith from "./pages/JoinPolkaSmith"
 //@ts-ignore
 import { NotificationContainer, NotificationManager } from 'react-notifications'
 import 'react-notifications/lib/notifications.css';
-import {adminRoute, publicRoute} from "./utils";
+import { adminRoute, publicRoute } from "./utils";
 import ComingSoon from "./pages/ComingSoon/ComingSoon";
+import Ticket from './pages/Ticket';
+import Home from './pages/Home';
+import TicketSale from './pages/TicketSale';
 
 /**
  * Main App routes.
@@ -85,7 +88,7 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
 
     useEffect(() => {
         const { type, message } = alert;
-        if (type && message) {
+        if ((type === 'success' || type === 'warning') && message) {
             NotificationManager[type](message);
         }
     }, [alert]);
@@ -121,9 +124,11 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
             exact path="/"
             render={() => <Redirect to={`${'/home'}`} />}
           /> */}
-                    <Route path={`${'/polkasmith-privacy'}`} component={PolkaSmithPrivacyPolicy} />
-                    <Route path={`${'/join-polkasmith'}`} component={JoinPolkaSmith} />
-                    <Route exact path={`${'/dashboard'}`} component={Dashboard} />
+                    <Route exact path={'/buy-nft/:id'} component={Ticket} />
+                    {/* <Route path={`${'/polkasmith-privacy'}`} component={PolkaSmithPrivacyPolicy} />
+                    <Route path={`${'/join-polkasmith'}`} component={JoinPolkaSmith} /> */}
+                    {/* <Route exact path={`${'/dashboard'}`} component={Dashboard} /> */}
+                    {/* <Route exact path={`${'/'}`} component={Home} /> */}
                     <Route path={`${'/buy-token/:id'}`} component={BuyToken} />
                     <Route path={'/register'} component={InvestorRegister} />
                     <Route path={'/login'} component={InvestorLogin} />
@@ -133,14 +138,16 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                     <Route path={'/network-change'} component={NetworkChange} />
                     <Route path={'/change-password/:role?'} component={ChangePassword} />
                     <Route path={'/account'} component={AccountV2} />
-                    <Route path={'/stake'} component={Deposit}/>
-                    <Route path={'/unstake'} component={Withdraw}/>
-                    <Route path={'/pools'} component={Pools} />
-                    <Route path={'/privacy'} component={PrivacyPolicy} />
-                    <Route path={'/terms'} component={Terms} />
-                    <Route path={'/'} component={Landing} />
-
-                    <Route path={'/coming-soon'} component={ComingSoon} />
+                    {/* <Route path={'/stake'} component={Deposit} />
+                    <Route path={'/unstake'} component={Withdraw} /> */}
+                    <Route exact path={'/pools'} component={Pools} />
+                    {/* <Route path={'/privacy'} component={PrivacyPolicy} /> */}
+                    {/* <Route path={'/terms'} component={Terms} /> */}
+                    {/* <Route path={'/'} component={Landing} /> */}
+                    {/* <Route path={'/coming-soon'} component={ComingSoon} /> */}
+                    {/* <Route path={'/home'} component={Home} /> */}
+                    <Route exact path={'/pools/ticket'} component={TicketSale} />
+                    <Route exact path={'/'} component={Home} />
                     <Route component={NotFoundPage} />
                 </Switch>
             </div>

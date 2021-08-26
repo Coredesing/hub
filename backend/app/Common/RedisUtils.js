@@ -182,6 +182,24 @@ const deleteRedisRateSetting = () => {
   return false;
 };
 
+/*
+  Home setting
+ */
+const getRedisPerformanceSetting = () => {
+  return `home_performance`;
+};
+
+const getRedisPerformanceDetail = async () => {
+  return await Redis.get(getRedisPerformanceSetting());
+};
+
+const checkExistPerformanceDetail = async () => {
+  return await Redis.exists(getRedisPerformanceSetting());
+};
+
+const setRedisPerformanceDetail = async(data) => {
+  return await Redis.set(getRedisPerformanceSetting(), JSON.stringify(data));
+}
 
 module.exports = {
   // POOL LIST
@@ -212,4 +230,8 @@ module.exports = {
   createRedisRateSetting,
   deleteRedisRateSetting,
 
+  // Home Setting
+  checkExistPerformanceDetail,
+  getRedisPerformanceDetail,
+  setRedisPerformanceDetail,
 };

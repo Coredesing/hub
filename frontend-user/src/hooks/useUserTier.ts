@@ -48,8 +48,6 @@ const useUserTier = (address: string, networkAvailable: string): UserTier => {
     const getTotalUnstaked = async () => {
       if(SPKF_ADDRESS && address) {
         try {
-          console.log('loading============>', loading, SPKF_ADDRESS, address);
-
           const contract = getContractInstance(
             MANTRA_ABI,
             SPKF_ADDRESS,
@@ -63,13 +61,10 @@ const useUserTier = (address: string, networkAvailable: string): UserTier => {
           const totalStaked = new BigNumber(userInfo.totalStaked);
           let balance = new BigNumber(0); // await contract?.methods.balanceOf(address).call();
           balance = (new BigNumber(balance).div(Math.pow(10, 18)))
-          console.log('getTotalUnstaked balance', totalUnstakedResult, totalUnstaked, balance);
 
           const ePkf = await getEPkfBonusBalanceValue(address);
-          console.log('ePkf=getEPkfBonusBalanceValue=========>', ePkf);
 
           const total = totalStaked.plus(totalUnstaked).plus(balance).plus(ePkf);
-          console.log('getTotalUnstaked total', total);
           setTotalUnstaked(totalUnstaked.toString());
           setTotal(total.toString());
           calculateUserTier(total);

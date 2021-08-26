@@ -46,6 +46,8 @@ import LockSchedule from "./Components/LockSchedule/LockSchedule";
 import ForbiddenCountry from "./Components/ForbiddenCountry/ForbiddenCountry";
 import SocialSetting from "./Components/SocialSetting/SocialSetting";
 import FreeTimeSetting from "./Components/FreeTimeSetting/FreeTimeSetting";
+import PoolRule from "./Components/PoolRule";
+import Process from "./Components/Process";
 
 function PoolForm(props: any) {
   const classes = useStyles();
@@ -111,7 +113,7 @@ function PoolForm(props: any) {
     };
 
     if (data.token) {
-      tokenInfo = await getTokenInforDetail(data.token);
+      tokenInfo = await getTokenInforDetail(data.token, data.token_type);
       if (!tokenInfo?.symbol) {
         throw Error('Token Information has not been loaded !!!');
         dispatch(alertFailure('Token Information has not been loaded !!!'))
@@ -128,6 +130,8 @@ function PoolForm(props: any) {
       website: data.website,
       banner: data.banner,
       description: data.description,
+      process: data.process,
+      rule: data.rule ?? '',
       address_receiver: data.addressReceiver,
 
       // Token
@@ -250,7 +254,6 @@ function PoolForm(props: any) {
     // Format Claim Config
     let campaignClaimConfig = data.campaignClaimConfig || '[]';
     campaignClaimConfig = campaignClaimConfigFormat(campaignClaimConfig);
-    console.log('campaignClaimConfig', campaignClaimConfig);
 
     const submitData = {
       // Pool general
@@ -258,6 +261,8 @@ function PoolForm(props: any) {
       website: data.website,
       banner: data.banner,
       description: data.description,
+      process: data.process,
+      rule: data.rule ?? '',
 
       // USDT Price
       price_usdt: data.price_usdt, // Do not check isAcceptEth
@@ -361,12 +366,12 @@ function PoolForm(props: any) {
     }, 100);
   };
 
-  const getTokenInforDetail = async (token: string) => {
-    const erc20Token = await getTokenInfo(token);
+  const getTokenInforDetail = async (token: string, token_type: string) => {
+    const erc20Token = await getTokenInfo(token, token_type);
     let tokenInfo: any = {};
     if (erc20Token) {
-      const { name, symbol, decimals, address } = erc20Token;
-      tokenInfo = { name, symbol, decimals, address };
+      const { name, symbol, decimals, address, token_type } = erc20Token;
+      tokenInfo = { name, symbol, decimals, address, token_type };
     }
     return tokenInfo;
   }
@@ -388,7 +393,7 @@ function PoolForm(props: any) {
     try {
       // Save data before deploy
       const response = await createUpdatePool(data);
-      const tokenInfo = await getTokenInforDetail(data.token);
+      const tokenInfo = await getTokenInforDetail(data.token, data.token_type);
 
       const history = props.history;
       const minTier = data.minTier;
@@ -415,6 +420,8 @@ function PoolForm(props: any) {
         website: data.website,
         banner: data.banner,
         description: data.description,
+        process: data.process,
+        rule: data.rule ?? '',
         address_receiver: data.addressReceiver,
 
         // Token
@@ -582,6 +589,14 @@ function PoolForm(props: any) {
                 watch={watch}
               />
 
+              <Process
+                  poolDetail={poolDetail}
+                  setValue={setValue}
+                  errors={errors}
+                  control={control}
+                  watch={watch}
+              />
+
             </div>
 
 
@@ -628,6 +643,7 @@ function PoolForm(props: any) {
               setToken={setToken}
               setValue={setValue}
               getValues={getValues}
+              control={control}
               errors={errors}
               watch={watch}
               needValidate={needValidate}
@@ -748,6 +764,20 @@ function PoolForm(props: any) {
               register={register}
               setValue={setValue}
               errors={errors}
+            />
+          </div>
+        </Grid>
+      </Grid>
+
+
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <div className={classes.exchangeRate}>
+            <PoolRule
+                poolDetail={poolDetail}
+                register={register}
+                setValue={setValue}
+                errors={errors}
             />
           </div>
         </Grid>

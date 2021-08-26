@@ -8,6 +8,8 @@ const Redis = use('Redis');
 const PickRandomWinnerJobWithWeightRate = use('App/Jobs/PickRandomWinnerJobWithWeightRate');
 const PickRandomWinnerNormalRule = use('App/Jobs/PickRandomWinnerNormalRule');
 const PickRandomWinnerJobWithLuckyDove = use('App/Jobs/PickRandomWinnerJobWithLuckyDove');
+const PickWinnerWithGameFITicket = use('App/Jobs/PickWinnerWithGameFITicket');
+const PickWinnerWithGameFIToken = use('App/Jobs/PickWinnerWithGameFIToken');
 const Const = use('App/Common/Const');
 
 class WhiteListUserController {
@@ -135,17 +137,26 @@ class WhiteListUserController {
         campaign_id : campaign_id,
         tiers : tierData
       }
+
       // dispatch to job to pick random user
-      if (rule === Const.PICK_WINNER_RULE.RULE_NORMAL) {
-        PickRandomWinnerNormalRule.handle(randomData);
-        (new CampaignService).updatePickWinnerRule(campaign_id, Const.PICK_WINNER_RULE.RULE_NORMAL);
-      } else if (rule === Const.PICK_WINNER_RULE.RULE_WITH_WEIGHT_RATE) {
-        PickRandomWinnerJobWithWeightRate.handle(randomData);
-        (new CampaignService).updatePickWinnerRule(campaign_id, Const.PICK_WINNER_RULE.RULE_WITH_WEIGHT_RATE);
-      } else if (rule === Const.PICK_WINNER_RULE.RULE_LUCKY_DOVE) {
-        PickRandomWinnerJobWithLuckyDove.handle(randomData);
-        (new CampaignService).updatePickWinnerRule(campaign_id, Const.PICK_WINNER_RULE.RULE_LUCKY_DOVE);
+      switch (rule) {
+        case Const.PICK_WINNER_RULE.RULE_NORMAL:
+          PickRandomWinnerNormalRule.handle(randomData)
+          break;
+        case Const.PICK_WINNER_RULE.RULE_WITH_WEIGHT_RATE:
+          PickRandomWinnerJobWithWeightRate.handle(randomData)
+          break;
+        case Const.PICK_WINNER_RULE.RULE_LUCKY_DOVE:
+          PickRandomWinnerJobWithLuckyDove.handle(randomData)
+          break;
+        case Const.PICK_WINNER_RULE.RULE_GAMEFI_TICKET:
+          PickWinnerWithGameFITicket.handle(randomData)
+          break;
+        case Const.PICK_WINNER_RULE.RULE_GAFI_TOKEN:
+          PickWinnerWithGameFIToken.handle(randomData)
+          break;
       }
+      (new CampaignService).updatePickWinnerRule(campaign_id, rule);
       return HelperUtils.responseSuccess(null, "Pickup random winner successful !")
     } catch (e) {
       console.log(e);

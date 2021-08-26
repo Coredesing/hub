@@ -6,7 +6,6 @@ const AdminModel = use('App/Models/Admin')
 class CheckAdminJwtSecret {
   async handle({ request, auth }, next) {
 
-    console.log('Admin User: ', auth.jwtPayload);
     if(!auth || !auth.jwtPayload || !auth.jwtPayload.data){
       throw new ForbiddenException();
     }

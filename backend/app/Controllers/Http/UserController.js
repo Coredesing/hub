@@ -9,13 +9,15 @@ const Env = use('Env');
 const Hash = use('Hash');
 const Event = use('Event')
 const Database = use('Database');
-
 const ErrorFactory = use('App/Common/ErrorFactory');
+
 const PoolService = use('App/Services/PoolService');
 const WhitelistService = use('App/Services/WhitelistUserService');
+const WhitelistSubmissionService = use('App/Services/WhitelistSubmissionService');
+const UserService = use('App/Services/UserService');
+
 const TierService = use('App/Services/TierService');
 const ReservedListService = use('App/Services/ReservedListService');
-const UserService = use('App/Services/UserService');
 const UserModel = use('App/Models/User');
 const TierModel = use('App/Models/Tier');
 const ConfigModel = use('App/Models/Config');
@@ -23,9 +25,9 @@ const BlockpassApprovedModel = use('App/Models/BlockPassApproved');
 const WinnerModel = use('App/Models/WinnerListUser');
 const PasswordResetModel = use('App/Models/PasswordReset');
 const BlockPassModel = use('App/Models/BlockPass');
+
 const HelperUtils = use('App/Common/HelperUtils');
 const RedisUtils = use('App/Common/RedisUtils');
-
 const SendForgotPasswordJob = use('App/Jobs/SendForgotPasswordJob');
 
 class UserController {
@@ -77,10 +79,14 @@ class UserController {
   async profile({ request }) {
     try {
       const params = request.all();
-      const findedUser = await UserModel.query().where('wallet_address', params.wallet_address).first();
+      const wallet_address = params.wallet_address;
+      const findedUser = await UserModel.query().where('wallet_address', wallet_address).first();
       if (!findedUser) {
         return HelperUtils.responseNotFound();
       }
+      const whitelistSubmission = JSON.parse(JSON.stringify(
+        await (new WhitelistSubmissionService).findSubmission({ wallet_address })
+      ));
 
       return HelperUtils.responseSuccess({
         user: {
@@ -88,6 +94,8 @@ class UserController {
           id: findedUser.id,
           status: findedUser.status,
           is_kyc: findedUser.is_kyc,
+          user_twitter: whitelistSubmission && whitelistSubmission.user_twitter,
+          user_telegram: whitelistSubmission && whitelistSubmission.user_telegram,
         }
       });
     } catch (e) {
@@ -96,27 +104,35 @@ class UserController {
     }
   }
 
-  async updateProfile({ request, auth }) {
+  async updateProfile({ request }) {
     try {
-      let user = auth.user;
-      const params = request.only(['firstname', 'lastname']);
       const userService = new UserService();
-      const userAuthInfo = {
-        email: user.email,
-        role: user.role,
-      };
-      user = await userService.findUser(userAuthInfo);
+      const params = request.only(['user_twitter', 'user_telegram']);
+      const wallet_address = request.header('wallet_address');
+      const user = await userService.buildQueryBuilder({ wallet_address }).first();
       if (!user) {
         return HelperUtils.responseNotFound('User Not Found');
       }
 
-      const result = await userService.updateUser(params, userAuthInfo);
-      if (!result) {
-        return HelperUtils.responseErrorInternal('Update Fail');
+      const whitelistSubmission = JSON.parse(JSON.stringify(
+        await (new WhitelistSubmissionService).findSubmission({ wallet_address })
+      ));
+
+      if (whitelistSubmission) {
+        await (new WhitelistSubmissionService).buildQueryBuilder({ wallet_address }).update(params);
+      } else {
+        await (new WhitelistSubmissionService).createWhitelistSubmissionAccount({
+          ...params,
+          wallet_address,
+        });
       }
 
       return HelperUtils.responseSuccess({
-        user: await userService.findUser(userAuthInfo),
+        user: {
+          ...params,
+          id: user.id,
+          wallet_address: user.wallet_address,
+        }
       }, 'Update Success');
     } catch (e) {
       console.log(e);
@@ -351,12 +367,10 @@ class UserController {
         wallet_address: walletAddress,
         campaign_id: campaignId,
       };
-      console.log('[getCurrentTier] - filterParams: ', filterParams);
 
       // Check Public Winner Status
       const poolService = new PoolService;
       const poolExist = await poolService.getPoolById(campaignId);
-      console.log('[getCurrentTier] - poolExist.public_winner_status:', poolExist && poolExist.public_winner_status);
 
       if (!poolExist) {
         return HelperUtils.responseSuccess({
@@ -367,8 +381,7 @@ class UserController {
           level: 0,
         });
       }
-      const isPublicWinner = (poolExist.public_winner_status == Const.PUBLIC_WINNER_STATUS.PUBLIC);
-      console.log('[getCurrentTier] - isPublicWinner:', isPublicWinner);
+      const isPublicWinner = (poolExist.public_winner_status === Const.PUBLIC_WINNER_STATUS.PUBLIC);
 
       // FREE BUY TIME: Check if current time is free to buy or not
       const camp = await poolService.buildQueryBuilder({ id: campaignId }).with('freeBuyTimeSetting').first();
@@ -378,12 +391,10 @@ class UserController {
         if (!!existWhitelist) {
           maxTotalBonus = maxBonus;
         }
-        console.log('maxTotalBonus:', maxTotalBonus);
       }
 
       // Check user is in reserved list
       const reserve = await (new ReservedListService).buildQueryBuilder(filterParams).first();
-      console.log('[getCurrentTier] - isReserve:', !!reserve);
       if (reserve) {
         const tier = {
           min_buy: reserve.min_buy,
@@ -392,15 +403,12 @@ class UserController {
           end_time: reserve.end_time,
           level: 0
         };
-        console.log('[getCurrentTier] - tier:', JSON.stringify(tier));
         return HelperUtils.responseSuccess(formatDataPrivateWinner(tier, isPublicWinner));
       } else {
         // Get Tier in smart contract
         const userTier = (await HelperUtils.getUserTierSmart(walletAddress))[0];
-        console.log('[getCurrentTier] - userTier:', userTier);
         const tierDb = await TierModel.query().where('campaign_id', campaignId).where('level', userTier).first();
         if (!tierDb) {
-          console.log(`[getCurrentTier] - Not exist Tier ${userTier} for campaign ${campaignId}`);
           return HelperUtils.responseSuccess(formatDataPrivateWinner({
             min_buy: 0,
             max_buy: new BigNumber(maxTotalBonus).toFixed(),
@@ -412,10 +420,8 @@ class UserController {
         // get lottery ticket from winner list
         const winner = await WinnerModel.query().where('campaign_id', campaignId).where('wallet_address', walletAddress).first();
         if (winner) {
-          console.log(`User has win with level ${winner.level} and win ticket ${winner.lottery_ticket}`);
           const tier = await TierModel.query().where('campaign_id', campaignId).where('level', winner.level).first();
           if (!tier) {
-            console.log(`Do not found tier of winner ${winner.level}`)
             return HelperUtils.responseBadRequest();
           }
           return HelperUtils.responseSuccess(formatDataPrivateWinner({
@@ -436,8 +442,6 @@ class UserController {
           end_time: tierDb.end_time,
           level: userTier
         }
-        console.log('[getCurrentTier] - tier:', JSON.stringify(tier));
-        console.log('[getCurrentTier] - Response:', formatDataPrivateWinner(tier, isPublicWinner));
         return HelperUtils.responseSuccess(formatDataPrivateWinner(tier, isPublicWinner));
       }
     } catch (e) {
@@ -454,14 +458,12 @@ class UserController {
     try {
       const userService = new UserService();
       const userFound = await userService.findUser(inputParams);
-      console.log('[activeKyc] - userFound: ', JSON.stringify(userFound));
 
       if (!userFound) {
         return HelperUtils.responseNotFound('User Not found');
       }
       if (!userFound.is_kyc) {
         const user = await userService.buildQueryBuilder({ id: userFound.id }).update({ is_kyc: Const.KYC_STATUS.APPROVED });
-        console.log('[activeKyc] - User: ', JSON.stringify(user));
       }
 
       return HelperUtils.responseSuccess({
@@ -611,15 +613,6 @@ class UserController {
         });
         await UserModel.query().where('id', user.id).update(userModel);
       }
-      // // update user KYC status
-      // const userModel = new UserModel();
-      // userModel.fill({
-      //   ...JSON.parse(JSON.stringify(user)),
-      //   is_kyc: Const.KYC_STATUS[kycStatus.toString().toUpperCase()],
-      //   record_id: params.recordId,
-      //   ref_id: params.refId
-      // });
-      // await UserModel.query().where('id', user.id).update(userModel);
 
       return HelperUtils.responseSuccess();
     } catch (e) {
@@ -693,12 +686,6 @@ class UserController {
       user.status = Const.USER_STATUS.ACTIVE;
       const res = await user.save();
 
-      // const authService = new AuthService();
-      // await authService.sendAdminInfoEmail({
-      //   user: admin,
-      //   password: request.input('password'),
-      // });
-
       return HelperUtils.responseSuccess(res);
     } catch (e) {
       console.log(e);
@@ -710,7 +697,6 @@ class UserController {
     try {
       const inputs = request.only(['email', 'wallet_address', 'is_kyc',  'national_id_issuing_country']);
       const password = request.input('password');
-      console.log('Update Kyc User with params: ', params.id, inputs);
 
       const userService = new UserService();
       const user = await userService.findUser({id: params.id});
@@ -734,7 +720,6 @@ class UserController {
   async kycUserChangeIsKyc({request, auth, params}) {
     const inputParams = request.only(['is_kyc']);
 
-    console.log('Update Is Kyc with data: ', inputParams);
     const userId = params.id;
     try {
       const userService = new UserService();

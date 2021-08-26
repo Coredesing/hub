@@ -47,7 +47,6 @@ export const getTiers = (forceUsingEther: string = 'eth') => {
       });
 
     } catch (error) {
-      console.log(error)
       dispatch({
         type: sotaTiersActions.TIERS_FAILURE,
         payload: error
@@ -78,13 +77,13 @@ export const getUserTier = (address: string, forceUsingEther: string = 'eth') =>
         rateStakeInfo
       } = await getTokenStakeSmartContractInfo(contract, address);
       await dispatch(getRates(rateSettings));
-      console.log('tokenStakesInfo:', tokenStakes, rateSettings, rateStakeInfo);
+      // console.log('tokenStakesInfo:', tokenStakes, rateSettings, rateStakeInfo);
 
       // Find Tier of user
       let tiers = (await contract?.methods.getTiers().call()) || [];
       tiers = tiers.slice(0, 4);
 
-      console.log('tokenStakesInfo-tiers:', tiers);
+      // console.log('tokenStakesInfo-tiers:', tiers);
       // @ts-ignore
       const pkfEq = new BigNumber(tokenStakes?.totalStaked || 0).multipliedBy(Math.pow(10, 18));
       let userTier = 0;
@@ -100,7 +99,6 @@ export const getUserTier = (address: string, forceUsingEther: string = 'eth') =>
       });
 
     } catch (error) {
-      console.log(error)
       dispatch({
         type: sotaTiersActions.USER_TIER_FAILURE,
         payload: error
@@ -139,7 +137,6 @@ export const getUserInfo = (address: string, forceUsingEther: string = 'eth', to
       });
 
     } catch (error) {
-      console.log(error)
       dispatch({
         type: sotaTiersActions.USER_INFO_FAILURE,
         payload: error
@@ -173,7 +170,6 @@ export const deposit = (address: string | null | undefined, amount: string, libr
       }
       dispatch(alertSuccess('You have successfully staked.'));
     } catch (error) {
-      console.log(error)
       dispatch(alertFailure("Transaction submited failure"))
 
       dispatch({
@@ -208,7 +204,6 @@ export const withdraw = (address: string | null | undefined, amount: string, lib
       dispatch(alertSuccess('You have successfully unstaked.'));
 
     } catch (error) {
-      console.log(error)
       dispatch(alertFailure("Transaction submit failure"))
       dispatch({
         type: sotaTiersActions.WITHDRAW_FAILURE,
@@ -243,7 +238,6 @@ export const getWithdrawFee = (address: string | null | undefined, amount: strin
       });
 
     } catch (error) {
-      console.log(error)
       dispatch({
         type: sotaTiersActions.WITHDRAW_FEE_FAILURE,
         payload: error
@@ -287,7 +281,6 @@ export const getWithdrawPercent = () => {
       });
 
     } catch (error) {
-      console.log(error)
       dispatch({
         type: sotaTiersActions.WITHDRAW_PERCENT_FAILURE,
         payload: error
@@ -331,7 +324,6 @@ export const getRates = (tokens: any) => {
       });
 
     } catch (error) {
-      console.log(error)
       dispatch({
         type: sotaTiersActions.RATES_FAILURE,
         payload: error

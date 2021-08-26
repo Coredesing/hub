@@ -151,7 +151,7 @@ const Home = (props: any) => {
           </div>
         )}
 
-        <div className={styles.wrapperContent}>
+        <div className={styles.wrapperContent} style={!isShowImgBanner ? {marginTop: -50} : {}}>
           <div className={clsx(styles.bannerContent)}>
             <div className="large-text">
               <h1>Dedicated Gaming Launchpad & IGO</h1>

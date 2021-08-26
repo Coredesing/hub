@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import useStyles from './style';
 import Image from '../../../components/Base/Image';
 import Link from '@material-ui/core/Link';
+
 type Props = {
   card: { [k: string]: any },
   [k: string]: any

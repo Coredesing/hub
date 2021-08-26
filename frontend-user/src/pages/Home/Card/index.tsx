@@ -12,6 +12,8 @@ type Props = {
   [k: string]: any;
 };
 export const Card = ({ card, ...props }: Props) => {
+  console.log('card: ', card);
+  
   const styles = { ...useStyles(), ...useCardStyles() };
   // const isOpen = card.campaign_status === "Filled";
   const isTicket = card.token_type === TOKEN_TYPE.ERC721;
@@ -20,6 +22,7 @@ export const Card = ({ card, ...props }: Props) => {
       <div className={clsx(styles.cardImg, styles.cardImgUpcoming)}>
         <h4>{formatCampaignStatus(card.campaign_status)}</h4>
         <Image src={card.banner} />
+        <h5>{card.title}</h5>
       </div>
 
       <Link

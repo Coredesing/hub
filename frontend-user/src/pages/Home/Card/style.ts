@@ -3,6 +3,9 @@ import { makeStyles } from "@material-ui/core";
 const useStyles = makeStyles((theme: any) => ({
   cardImgUpcoming: {
     maxHeight: "220px",
+    [theme.breakpoints.down("xs")]: {
+      paddingBottom: '13px',
+    },
     // overflow: 'hidden',
 
     "&::before, &::after": {
@@ -35,6 +38,22 @@ const useStyles = makeStyles((theme: any) => ({
         top: "-20px",
       },
     },
+    "& h5": {
+      textAlign: "center",
+      color: "#FFFFFF",
+      fontWeight: 600,
+      fontSize: "14px",
+      lineHeight: "16px",
+      marginTop: '2px',
+      [theme.breakpoints.down("xs")]: {
+        fontWeight: 400,
+        fontSize: "12px",
+        lineHeight: "14px",
+      },
+    },
+    "& img": {
+      height: "90%"
+    },
   },
   cardOpening: {
     position: "relative",
@@ -48,6 +67,9 @@ const useStyles = makeStyles((theme: any) => ({
       alignItems: "center",
       left: "50%",
     },
+    [theme.breakpoints.down("xs")]: {
+      paddingBottom: '13px',
+    }
   },
   btnDetail: {
     position: "absolute",
@@ -62,6 +84,9 @@ const useStyles = makeStyles((theme: any) => ({
     lineHeight: "26px",
     textAlign: "center",
     minWidth: "150px",
+    [theme.breakpoints.down("xs")]: {
+      minWidth: "100px",
+    },
     cursor: "pointer",
     height: "44px",
     color: "#000",

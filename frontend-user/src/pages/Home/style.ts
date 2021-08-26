@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core";
+import Content from "../../components/Base/MainDefaultLayout/MainDefaultLayout";
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -8,6 +9,10 @@ const useStyles = makeStyles((theme: any) => {
       paddingBottom: "160px",
       paddingLeft: "160px",
       paddingRight: "160px",
+      [theme.breakpoints.down("md")]: {
+        paddingLeft: "60px",
+        paddingRight: "60px",
+      },
       [theme.breakpoints.down("xs")]: {
         paddingLeft: "28px",
         paddingRight: "28px",
@@ -19,6 +24,7 @@ const useStyles = makeStyles((theme: any) => {
         left: 0,
         "& img": {
           width: "100%",
+          objectFit: "cover"
         },
         [theme.breakpoints.down("xs")]: {
           top: "50px",
@@ -231,6 +237,7 @@ const useStyles = makeStyles((theme: any) => {
       background: "#171717",
       [theme.breakpoints.down("xs")]: {
         paddingTop: "40px",
+        paddingBottom: "40px",
       },
     },
     tokenSales: {
@@ -239,10 +246,21 @@ const useStyles = makeStyles((theme: any) => {
       paddingRight: "0",
       paddingTop: "120px",
       paddingBottom: "130px",
+      [theme.breakpoints.down("xs")]: {
+        padding: "28px",
+        paddingTop: "40px",
+        paddingBottom: "40px"
+      },
+
     },
     partners: {
       paddingTop: "120px",
       paddingBottom: "130px",
+      [theme.breakpoints.down("xs")]: {
+        paddingTop: "40px",
+        paddingBottom: "70px"
+      },
+
     },
     perfomance: {
       paddingTop: "60px",
@@ -253,12 +271,17 @@ const useStyles = makeStyles((theme: any) => {
         top: 0,
         left: 0,
       },
+      [theme.breakpoints.down("xs")]: {
+        paddingTop: "40px",
+        paddingBottom: "80px"
+      },
     },
     wrapperContent: {
       width: "100%",
       display: "flex",
       justifyContent: "center",
       marginTop: "28px",
+      // overflow: "hidden"
     },
     content: {
       display: "flex",
@@ -266,7 +289,6 @@ const useStyles = makeStyles((theme: any) => {
       position: "relative",
       maxWidth: "1120px",
       width: "100%",
-
       "&.horizontal": {},
       "&.vertical": {
         display: "grid",
@@ -362,6 +384,7 @@ const useStyles = makeStyles((theme: any) => {
       "& img": {
         width: "40px",
         height: "40px",
+        objectFit: "cover"
       },
 
       "& > div": {
@@ -407,7 +430,7 @@ export const useCardStyles = makeStyles((theme) => ({
     paddingTop: "40px",
     [theme.breakpoints.down("md")]: {
       placeContent: "center",
-      paddingTop: "unset",
+      paddingTop: "unset", 
     },
     [theme.breakpoints.down("sm")]: {
       gridTemplateColumns: "280px 280px",
@@ -431,7 +454,8 @@ export const useCardStyles = makeStyles((theme) => ({
       gap: "40px",
     },
     [theme.breakpoints.down("xs")]: {
-      gap: "20px",
+      gap: "7px",
+      gridTemplateColumns: "auto auto"
     },
   },
   cardTokenSale: {
@@ -454,6 +478,7 @@ export const useCardStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("xs")]: {
       padding: "7px",
       paddingTop: "26px",
+      paddingBottom: '13px',
     },
   },
   cardImg: {

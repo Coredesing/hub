@@ -32,6 +32,7 @@ import useUserPurchased from "./hooks/useUserPurchased";
 import TicketModal from "./TicketModal";
 import useTokenClaim from "./hooks/useTokenClaim";
 import axios from "../../services/axios";
+import useUserRemainTokensClaim from "./hooks/useUserRemainTokensClaim";
 // import { FormInputNumber } from '../../components/Base/FormInputNumber/FormInputNumber';
 const iconWarning = "/images/warning-red.svg";
 const ticketImg = "/images/gamefi-ticket.png";
@@ -81,7 +82,7 @@ const Ticket: React.FC<any> = (props: any) => {
     }
     setAllowNetwork(
       String(networkInfo.name).toLowerCase() ===
-        (infoTicket.network_available || "").toLowerCase()
+      (infoTicket.network_available || "").toLowerCase()
     );
   }, [infoTicket, appChainID]);
   const isClaim = dataTicket?.process === "only-claim";
@@ -101,7 +102,6 @@ const Ticket: React.FC<any> = (props: any) => {
     }
   }, [isClaim, connectedAccount]);
   useEffect(() => {
-    console.log(isAccInWinners);
     if (isAccInWinners.loading) {
       let info: any = {};
       axios
@@ -301,6 +301,31 @@ const Ticket: React.FC<any> = (props: any) => {
     infoTicket?.id
   );
 
+  // const [lockWhenClaiming, setLockWhenClaiming] = useState(false);
+  const [userClaimed, setUserClaimed] = useState(false);
+  const {
+    retrieveClaimableTokens
+  } = useUserRemainTokensClaim(infoTicket.campaign_hash, true);
+  const checkUserClaimed = useCallback(() => {
+    if (!connectedAccount) {
+      setUserClaimed(false);
+      return;
+    }
+    retrieveClaimableTokens(connectedAccount, infoTicket.campaign_hash).then((res) => {
+      if (+res?.userClaimed > 0) {
+        setUserClaimed(true);
+      } else {
+        setUserClaimed(false);
+      }
+    })
+  }, [retrieveClaimableTokens, setUserClaimed, connectedAccount, infoTicket.campaign_hash]);
+
+  useEffect(() => {
+    if (isClaim) {
+      checkUserClaimed();
+    }
+  }, [checkUserClaimed, isClaim, retrieveClaimableTokens, infoTicket.campaign_hash, connectedAccount]);
+
   useEffect(() => {
     if (claimTokenSuccess) {
       setNewTicket(true);
@@ -310,11 +335,12 @@ const Ticket: React.FC<any> = (props: any) => {
         ok: false,
         data: d.data,
       }));
+      checkUserClaimed();
     }
     if (transactionHash) {
       setOpenModalTx(true);
     }
-  }, [claimTokenSuccess, transactionHash]);
+  }, [claimTokenSuccess, transactionHash, checkUserClaimed]);
 
   const {
     deposit,
@@ -490,7 +516,7 @@ const Ticket: React.FC<any> = (props: any) => {
   };
 
   const onClaimTicket = async () => {
-    if (!isKYC || +isAccInWinners.data?.lottery_ticket > 0) return;
+    if (!isKYC || userClaimed) return;
     await claimToken();
   };
   const onBuyTicket = async () => {
@@ -721,11 +747,11 @@ const Ticket: React.FC<any> = (props: any) => {
                           className={clsx(styles.btnClaim, {
                             disabled:
                               !isKYC ||
-                              +isAccInWinners.data?.lottery_ticket > 0,
+                              userClaimed,
                           })}
                           onClick={onClaimTicket}
                           disabled={
-                            !isKYC || +isAccInWinners.data?.lottery_ticket > 0
+                            !isKYC || userClaimed
                           }
                         >
                           Claim
@@ -797,10 +823,10 @@ const Ticket: React.FC<any> = (props: any) => {
                                           +infoTicket.max_buy_ticket
                                         ) ||
                                         numTicketBuy ===
-                                          getMaxTicketBuy(
-                                            ticketBought,
-                                            +infoTicket.max_buy_ticket
-                                          ) ||
+                                        getMaxTicketBuy(
+                                          ticketBought,
+                                          +infoTicket.max_buy_ticket
+                                        ) ||
                                         !isKYC,
                                     })}
                                   >
@@ -826,10 +852,10 @@ const Ticket: React.FC<any> = (props: any) => {
                                           +infoTicket.max_buy_ticket
                                         ) ||
                                         numTicketBuy ===
-                                          getMaxTicketBuy(
-                                            ticketBought,
-                                            +infoTicket.max_buy_ticket
-                                          ) ||
+                                        getMaxTicketBuy(
+                                          ticketBought,
+                                          +infoTicket.max_buy_ticket
+                                        ) ||
                                         !isKYC,
                                     })}
                                   >
@@ -864,15 +890,15 @@ const Ticket: React.FC<any> = (props: any) => {
                     (!isAccInWinners.loading &&
                       !isAccInWinners.ok &&
                       isAccInWinners.error)) && (
-                    <div className={styles.alertMsg}>
-                      <img src={iconWarning} alt="" />
-                      <span>
-                        {!isAccInWinners.ok
-                          ? isAccInWinners.error
-                          : alert.message}
-                      </span>
-                    </div>
-                  )}
+                      <div className={styles.alertMsg}>
+                        <img src={iconWarning} alt="" />
+                        <span>
+                          {!isAccInWinners.ok
+                            ? isAccInWinners.error
+                            : alert.message}
+                        </span>
+                      </div>
+                    )}
 
                   {finishedTime && (
                     <div className={clsx(styles.infoTicket, styles.finished)}>
@@ -883,10 +909,10 @@ const Ticket: React.FC<any> = (props: any) => {
                         infoTicket.total_sold_coin,
                         infoTicket.token_sold
                       ) && (
-                        <div className="soldout">
-                          <img src={soldoutImg} alt="" />
-                        </div>
-                      )}
+                          <div className="soldout">
+                            <img src={soldoutImg} alt="" />
+                          </div>
+                        )}
                     </div>
                   )}
                 </div>

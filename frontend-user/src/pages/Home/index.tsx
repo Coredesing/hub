@@ -42,7 +42,6 @@ const Home = (props: any) => {
   } = useFetchV1(
     `/pools/token-type?token_type=${TOKEN_TYPE.ERC721}&page=1&limit=4`
   );
-  console.log(ticketSales);
   const {
     data: tokenSales = {} as ResponseData,
     loading: loadingUpcomingPools,
@@ -151,7 +150,7 @@ const Home = (props: any) => {
           </div>
         )}
 
-        <div className={styles.wrapperContent}>
+        <div className={styles.wrapperContent} style={!isShowImgBanner ? {marginTop: -50} : {}}>
           <div className={clsx(styles.bannerContent)}>
             <div className="large-text">
               <h1>Dedicated Gaming Launchpad & IGO</h1>
@@ -172,14 +171,14 @@ const Home = (props: any) => {
         <div className={styles.wrapperContent}>
           <div
             className={clsx(styles.content, {
-              horizontal: !isMdScreen,
-              vertical: isMdScreen,
+              horizontal: !isMdScreen && !!(ticketSales.data || []).length,
+              vertical: isMdScreen || !(ticketSales.data || []).length,
             })}
           >
             <div
               className={clsx(styles.contentTitle, {
-                left: !isMdScreen,
-                center: isMdScreen,
+                left: !isMdScreen && !!(ticketSales.data || []).length,
+                center: isMdScreen || !(ticketSales.data || []).length,
               })}
             >
               <h3>Ticket Sales</h3>

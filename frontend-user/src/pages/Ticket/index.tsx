@@ -302,7 +302,7 @@ const Ticket: React.FC<any> = (props: any) => {
   );
 
   const [lockWhenClaiming, setLockWhenClaiming] = useState(false);
-  const [userClaimed, setUserClaimed] = useState(false);
+  const [userClaimed, setUserClaimed] = useState(0);
 
   useEffect(() => {
     if(!loadingClaming) {
@@ -315,16 +315,12 @@ const Ticket: React.FC<any> = (props: any) => {
   } = useUserRemainTokensClaim(infoTicket.campaign_hash, true);
   const checkUserClaimed = useCallback(() => {
     if (!connectedAccount) {
-      setUserClaimed(false);
+      setUserClaimed(0);
       return;
     }
     retrieveClaimableTokens(connectedAccount, infoTicket.campaign_hash).then((res) => {
-      if (+res?.userClaimed > 0) {
-        setUserClaimed(true);
-      } else {
-        setUserClaimed(false);
-      }
-    })
+      setUserClaimed(+res?.userClaimed || 0);
+    }).catch(() => setUserClaimed(0));
   }, [retrieveClaimableTokens, setUserClaimed, connectedAccount, infoTicket.campaign_hash]);
 
   useEffect(() => {
@@ -332,6 +328,10 @@ const Ticket: React.FC<any> = (props: any) => {
       checkUserClaimed();
     }
   }, [checkUserClaimed, isClaim, retrieveClaimableTokens, infoTicket.campaign_hash, connectedAccount]);
+
+  const isUserClaimed = (numTicketClaimed: number) => {
+    return +numTicketClaimed > 0;
+  }
 
   useEffect(() => {
     if (claimTokenSuccess) {
@@ -710,7 +710,7 @@ const Ticket: React.FC<any> = (props: any) => {
                     <span className={styles.text}>OWNED</span>{" "}
                     <span className={styles.textBold}>
                       {isClaim
-                        ? +isAccInWinners.data?.lottery_ticket || 0
+                        ? userClaimed
                         : ownedTicket}
                     </span>
                   </div>
@@ -734,10 +734,7 @@ const Ticket: React.FC<any> = (props: any) => {
                     <div className={styles.infoTicket}>
                       <span className={styles.text}>AVAILABLE TO CAILM</span>{" "}
                       <span className={styles.textBold}>
-                        {getRemaining(
-                          infoTicket.total_sold_coin,
-                          infoTicket.token_sold
-                        )}
+                        {+isAccInWinners.data?.lottery_ticket || 0}
                       </span>
                     </div>
                   )}
@@ -758,11 +755,11 @@ const Ticket: React.FC<any> = (props: any) => {
                         <button
                           className={clsx(styles.btnClaim, {
                             disabled:
-                              !isKYC || userClaimed || lockWhenClaiming,
+                              !isKYC || isUserClaimed(userClaimed) || lockWhenClaiming,
                           })}
                           onClick={onClaimTicket}
                           disabled={
-                            !isKYC || userClaimed || lockWhenClaiming
+                            !isKYC || isUserClaimed(userClaimed) || lockWhenClaiming
                           }
                         >
                           Claim

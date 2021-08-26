@@ -328,63 +328,6 @@ const useStyles = makeStyles((theme: any) => {
         },
       },
     },
-    instruction: {
-      display: "flex",
-      width: "100%",
-      height: "80px",
-      backgroundColor: "#FFFFFF",
-      justifyContent: "center",
-      alignItems: "center",
-      "& .text": {
-        fontFamily: "Firs Neue",
-        fontStyle: "normal",
-        fontWeight: 600,
-        fontSize: "24px",
-        lineHeight: "36px",
-        marginRight: "20px",
-      },
-      "& .textCenter": {
-        fontFamily: "Firs Neue",
-        fontStyle: "normal",
-        fontWeight: 600,
-        fontSize: "16px",
-        lineHeight: "22px",
-      },
-      "& .textEnd": {
-        fontFamily: "Firs Neue",
-        fontStyle: "normal",
-        fontWeight: 600,
-        fontSize: "16px",
-        lineHeight: "22px",
-        width: "177px",
-      },
-      "& .instructionIcon": {
-        marginTop: "-20px",
-        marginRight: "8px",
-      },
-    },
-    gridInstruction: {
-      display: "grid",
-      width: "100%",
-      height: "80px",
-      gridTemplateColumns: "30fr auto 30fr",
-      gap: "24px",
-    },
-    instructionCenter: {
-      "& img": {
-        width: "100%",
-        height: "80px",
-        objectFit: "fill",
-      },
-    },
-    instructionSteps: {
-      // width: "auto",
-      backgroundColor: "red",
-      position: "absolute",
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr 1fr",
-    },
-    instructionStep: {},
   };
 });
 

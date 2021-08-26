@@ -21,6 +21,7 @@ import {
   TableSortLabel,
 } from "../../components/Base/Table";
 import { TOKEN_TYPE } from "../../constants";
+import Instruction from "./Instruction";
 
 type Data = { [k: string]: any };
 type ResponseData = {
@@ -162,6 +163,7 @@ const Home = (props: any) => {
           </div>
         </div>
       </section>
+      <Instruction />
       <section className={clsx(styles.ticketSales, styles.section)}>
         <div className="rectangle gr">
           <img src="/images/ticket-sale-text.svg" alt="" />

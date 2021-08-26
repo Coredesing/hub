@@ -131,6 +131,7 @@ const Ticket: React.FC<any> = (props: any) => {
   const [phaseName, setPhaseName] = useState('');
   useEffect(() => {
     if (!loadingTicket && dataTicket) {
+      console.log(dataTicket)
       setNewTicket(false);
       setInfoTicket(dataTicket);
       if (isEndPool(dataTicket.campaign_status)) {
@@ -144,13 +145,13 @@ const Ticket: React.FC<any> = (props: any) => {
         const claimConfigs = dataTicket.campaignClaimConfig || [];
         const leng = claimConfigs.length;
         if (!leng) return;
-        const freeBuyTime = dataTicket.freeBuyTimeSetting;
+        const timeStartPhase2 = dataTicket.freeBuyTimeSetting?.start_buy_time;
         if (leng === 1) {
           const openClaim = claimConfigs[0];
           openTime = +openClaim.start_time * 1000;
-          const endTime = +freeBuyTime?.start_buy_time * 1000 || +openClaim.end_time * 1000 || openTime + 1000 * 60 * 60 * 24;
+          const endTime = timeStartPhase2 ? +timeStartPhase2 * 1000 : (+openClaim.end_time * 1000 || openTime + 1000 * 60 * 60 * 24);
           finishTime = endTime;
-          if(freeBuyTime) {
+          if(timeStartPhase2) {
             setPhaseName('Phase 1');
             setPhase({
               1: {
@@ -168,17 +169,17 @@ const Ticket: React.FC<any> = (props: any) => {
           let endClaim = claimConfigs.slice(-1)[0];
           if (!endClaim) return;
           openTime = +openClaim.start_time * 1000;
-          const endTime = +freeBuyTime?.start_buy_time * 1000 || +endClaim.end_time * 1000 || +endClaim.start_time * 1000;
+          const endTime = timeStartPhase2 ? +timeStartPhase2 * 1000 : (+endClaim.end_time * 1000 || +endClaim.start_time * 1000);
           finishTime = endTime;
-          if(freeBuyTime) {
+          if(timeStartPhase2) {
             setPhaseName('Phase 1');
             setPhase({
               1: {
                 openTime,
-                finishTime: +freeBuyTime?.start_buy_time * 1000,
+                finishTime: +timeStartPhase2 * 1000,
               },
               2: {
-                openTime: +freeBuyTime?.start_buy_time * 1000,
+                openTime: +timeStartPhase2 * 1000,
                 finishTime: endTime
               }
             })

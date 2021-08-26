@@ -488,7 +488,6 @@ class PoolController {
     try {
       if (await RedisUtils.checkExistRedisPoolDetail(poolId)) {
         const cachedPoolDetail = await RedisUtils.getRedisPoolDetail(poolId);
-        console.log('Exist cache data Public Pool Detail: ', cachedPoolDetail);
         return HelperUtils.responseSuccess(JSON.parse(cachedPoolDetail));
       }
 

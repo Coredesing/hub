@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Button, TextField, Link } from '@material-ui/core';
+import React, { useEffect, useState } from "react";
+import { Button, TextField, Link } from "@material-ui/core";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-import { withRouter } from 'react-router-dom';
-import clsx from 'clsx';
-import useStyles, { useCardStyles } from './style';
-import DefaultLayout from '../../components/Layout/DefaultLayout'
-import withWidth, { isWidthDown, isWidthUp } from '@material-ui/core/withWidth';
-import { useFetchV1 } from '../../hooks/useFetch';
-import { Card } from './Card';
-import { PartnerCard } from './PartnerCard';
+import { withRouter } from "react-router-dom";
+import clsx from "clsx";
+import useStyles, { useCardStyles } from "./style";
+import DefaultLayout from "../../components/Layout/DefaultLayout";
+import withWidth, { isWidthDown, isWidthUp } from "@material-ui/core/withWidth";
+import { useFetchV1 } from "../../hooks/useFetch";
+import { Card } from "./Card";
+import { PartnerCard } from "./PartnerCard";
 import {
   TableContainer,
   Table,
@@ -19,17 +19,18 @@ import {
   TableRowBody,
   TableRowHead,
   TableSortLabel,
-} from '../../components/Base/Table';
-import { TOKEN_TYPE } from '../../constants';
+} from "../../components/Base/Table";
+import { TOKEN_TYPE } from "../../constants";
+import Instruction from "./Instruction";
 
-type Data = { [k: string]: any }
+type Data = { [k: string]: any };
 type ResponseData = {
-  data: Data[],
-  lastPage: number,
-  page: number,
-  perPage: number,
-  total: number
-}
+  data: Data[];
+  lastPage: number;
+  page: number;
+  perPage: number;
+  total: number;
+};
 
 const Home = (props: any) => {
   const styles = { ...useStyles(), ...useCardStyles() };
@@ -37,28 +38,42 @@ const Home = (props: any) => {
   const isMdScreen = useMediaQuery(theme.breakpoints.down("md"));
   const {
     data: ticketSales = {} as ResponseData,
-    loading: loadingActivePools
-  } = useFetchV1(`/pools/token-type?token_type=${TOKEN_TYPE.ERC721}&page=1&limit=4`);
-  console.log(ticketSales)
+    loading: loadingActivePools,
+  } = useFetchV1(
+    `/pools/token-type?token_type=${TOKEN_TYPE.ERC721}&page=1&limit=4`
+  );
+  console.log(ticketSales);
   const {
     data: tokenSales = {} as ResponseData,
-    loading: loadingUpcomingPools
-  } = useFetchV1(`/pools/token-type?token_type=${TOKEN_TYPE.ERC20}&page=1&limit=5`);
-  const {
-    data: perfomances = [] as Data[],
-    loading: loadingcompletePools
-  } = useFetchV1('/home/performance');
+    loading: loadingUpcomingPools,
+  } = useFetchV1(
+    `/pools/token-type?token_type=${TOKEN_TYPE.ERC20}&page=1&limit=5`
+  );
+  const { data: perfomances = [] as Data[], loading: loadingcompletePools } =
+    useFetchV1("/home/performance");
 
   const partnerships = [
-    { banner: '/images/partnerships/step-hero.png', name: 'Step Hero', website: 'https://stephero.io/' },
-    { banner: '/images/partnerships/kaby-arena.png', name: 'Kaby Arena', website: 'https://kabyarena.com/' },
-    { banner: '/images/partnerships/bunicorn.png', name: 'Bunicorn', website: 'https://buni.finance/' },
-  ]
+    {
+      banner: "/images/partnerships/step-hero.png",
+      name: "Step Hero",
+      website: "https://stephero.io/",
+    },
+    {
+      banner: "/images/partnerships/kaby-arena.png",
+      name: "Kaby Arena",
+      website: "https://kabyarena.com/",
+    },
+    {
+      banner: "/images/partnerships/bunicorn.png",
+      name: "Bunicorn",
+      website: "https://buni.finance/",
+    },
+  ];
 
   const [isShowImgBanner, setIsShowImgModal] = useState(true);
   const onCloseImgBanner = () => {
     setIsShowImgModal(false);
-  }
+  };
 
   const [listPerfomance, setListPerfomance] = useState<Data[]>([]);
 
@@ -68,46 +83,73 @@ const Home = (props: any) => {
     }
   }, [perfomances, loadingcompletePools]);
 
-  const [fieldSorted, setFieldSorted] = useState<{ field: keyof Data, order?: 'asc' | 'desc' }>({ field: '' });
+  const [fieldSorted, setFieldSorted] = useState<{
+    field: keyof Data;
+    order?: "asc" | "desc";
+  }>({ field: "" });
   const onSortListPerfomance = (field: keyof Data) => {
     if (field === fieldSorted.field) {
       const sorted = perfomances.sort((a: any, b: any) => {
-        const numA = +(String(a[field]).replace(/\$/i, '').replace(/,/ig, '')) || 0;
-        const numB = +(String(b[field]).replace(/\$/i, '').replace(/,/ig, '')) || 0;
-        return fieldSorted.order === 'asc' ? numA === numB ? -1 : numA - numB : numA === numB ? 1 : numB - numA;
-      })
+        const numA =
+          +String(a[field]).replace(/\$/i, "").replace(/,/gi, "") || 0;
+        const numB =
+          +String(b[field]).replace(/\$/i, "").replace(/,/gi, "") || 0;
+        return fieldSorted.order === "asc"
+          ? numA === numB
+            ? -1
+            : numA - numB
+          : numA === numB
+          ? 1
+          : numB - numA;
+      });
       setListPerfomance(sorted);
-      setFieldSorted({ field, order: fieldSorted.order === 'asc' ? 'desc' : 'asc' });
+      setFieldSorted({
+        field,
+        order: fieldSorted.order === "asc" ? "desc" : "asc",
+      });
     } else {
       const sorted = perfomances.sort((a: any, b: any) => {
-        const numA = +(String(a[field]).replace(/\$/i, '').replace(/,/ig, '')) || 0;
-        const numB = +(String(b[field]).replace(/\$/i, '').replace(/,/ig, '')) || 0;
+        const numA =
+          +String(a[field]).replace(/\$/i, "").replace(/,/gi, "") || 0;
+        const numB =
+          +String(b[field]).replace(/\$/i, "").replace(/,/gi, "") || 0;
         return numA === numB ? 1 : numA - numB;
-      })
+      });
       setListPerfomance(sorted);
-      setFieldSorted({ field, order: 'desc' });
+      setFieldSorted({ field, order: "desc" });
     }
-  }
+  };
 
   return (
     <DefaultLayout>
       <section className={clsx(styles.banner, styles.section)}>
-        {isShowImgBanner &&
+        {isShowImgBanner && (
           <div className={styles.wrapperImgBanner}>
             <div className={styles.imgBanner}>
-              <Button onClick={onCloseImgBanner} color="primary" className={styles.btnCloseBanner}>
-                <img src={'/images/icons/close.svg'} alt="" />
+              <Button
+                onClick={onCloseImgBanner}
+                color="primary"
+                className={styles.btnCloseBanner}
+              >
+                <img src={"/images/icons/close.svg"} alt="" />
               </Button>
               <div className="text">
                 <h4>Parachain Crowdloan</h4>
-                <h3>Support the projects by locking your KSM/ DOT & earn tokens as rewards</h3>
+                <h3>
+                  Support the projects by locking your KSM/ DOT & earn tokens as
+                  rewards
+                </h3>
               </div>
-              <Link className="btn-join" href="https://polkasmith.polkafoundry.com/" target="_blank">
+              <Link
+                className="btn-join"
+                href="https://polkasmith.polkafoundry.com/"
+                target="_blank"
+              >
                 Join NOW
               </Link>
             </div>
           </div>
-        }
+        )}
 
         <div className={styles.wrapperContent}>
           <div className={clsx(styles.bannerContent)}>
@@ -115,33 +157,45 @@ const Home = (props: any) => {
               <h1>Dedicated Gaming Launchpad & IGO</h1>
             </div>
             <h4 className="small-text">
-              GameFi is the <span className="launchpad">first IGO launchpad</span>, with tools to facilitate the success of games.
+              GameFi is the{" "}
+              <span className="launchpad">first IGO launchpad</span>, with tools
+              to facilitate the success of games.
             </h4>
           </div>
         </div>
       </section>
+      <Instruction />
       <section className={clsx(styles.ticketSales, styles.section)}>
         <div className="rectangle gr">
           <img src="/images/ticket-sale-text.svg" alt="" />
         </div>
         <div className={styles.wrapperContent}>
-          <div className={clsx(styles.content, {
-            'horizontal': !isMdScreen,
-            'vertical': isMdScreen
-          })}>
-            <div className={clsx(styles.contentTitle, {
-              'left': !isMdScreen,
-              'center': isMdScreen,
-            })}>
+          <div
+            className={clsx(styles.content, {
+              horizontal: !isMdScreen,
+              vertical: isMdScreen,
+            })}
+          >
+            <div
+              className={clsx(styles.contentTitle, {
+                left: !isMdScreen,
+                center: isMdScreen,
+              })}
+            >
               <h3>Ticket Sales</h3>
-              <h5>Ticket is an item that allows you to join IDO pools. To view information about other Ticket pools, click the Discover button below.</h5>
-              <Link href="/#/pools/ticket" className={styles.btnDiscover}>Discover</Link>
+              <h5>
+                Ticket is an item that allows you to join IDO pools. To view
+                information about other Ticket pools, click the Discover button
+                below.
+              </h5>
+              <Link href="/#/pools/ticket" className={styles.btnDiscover}>
+                Discover
+              </Link>
             </div>
             <div className={clsx(styles.cards, styles.cardsTicketSales)}>
-              {
-                (ticketSales.data || []).map((card, id) => <Card card={card} key={id} />)
-              }
-
+              {(ticketSales.data || []).map((card, id) => (
+                <Card card={card} key={id} />
+              ))}
             </div>
           </div>
         </div>
@@ -151,16 +205,19 @@ const Home = (props: any) => {
           <img src="/images/token-sales-text.svg" alt="" />
         </div>
         <div className={styles.wrapperContent}>
-          <div className={clsx(styles.content, 'vertical')}>
-            <div className={clsx(styles.contentTitle, 'center')}>
+          <div className={clsx(styles.content, "vertical")}>
+            <div className={clsx(styles.contentTitle, "center")}>
               <h3>Token Sales</h3>
-              <h5>Make sure you have a Ticket to join IDO. To view information about other IDO pools, click the Discover button below.</h5>
+              <h5>
+                Make sure you have a Ticket to join IDO. To view information
+                about other IDO pools, click the Discover button below.
+              </h5>
               {/* <Link href="/#/" className={styles.btnDiscover}>Discover</Link> */}
             </div>
             <div className={clsx(styles.cards, styles.cardsTokenSales)}>
-              {
-                (tokenSales.data || []).map((card, id) => <Card card={card} key={id} className={styles.cardTokenSale} />)
-              }
+              {(tokenSales.data || []).map((card, id) => (
+                <Card card={card} key={id} className={styles.cardTokenSale} />
+              ))}
             </div>
           </div>
         </div>
@@ -170,14 +227,14 @@ const Home = (props: any) => {
           <img src="/images/partnership-text.svg" alt="" />
         </div>
         <div className={styles.wrapperContent}>
-          <div className={clsx(styles.content, 'vertical')}>
-            <div className={clsx(styles.contentTitle, 'center')}>
+          <div className={clsx(styles.content, "vertical")}>
+            <div className={clsx(styles.contentTitle, "center")}>
               <h3>Partnership</h3>
             </div>
             <div className={clsx(styles.cards, styles.cardsPartnerShip)}>
-              {
-                partnerships.map((card, id) => <PartnerCard card={card} key={id} />)
-              }
+              {partnerships.map((card, id) => (
+                <PartnerCard card={card} key={id} />
+              ))}
             </div>
           </div>
         </div>
@@ -187,27 +244,62 @@ const Home = (props: any) => {
           <img src="/images/landing/rectangle.png" alt="" />
         </div>
         <div className={styles.wrapperContent}>
-          <div className={clsx(styles.content, 'vertical')}>
-            <div className={clsx(styles.contentTitle, 'center')}>
+          <div className={clsx(styles.content, "vertical")}>
+            <div className={clsx(styles.contentTitle, "center")}>
               <h3>Performance</h3>
             </div>
             <div className={clsx(styles.cards)}>
-              <TableContainer style={{ maxHeight: 'calc(57px * 6)' }}>
+              <TableContainer style={{ maxHeight: "calc(57px * 6)" }}>
                 <Table stickyHeader>
                   <TableHead>
                     <TableRowHead>
                       <TableCell>Project</TableCell>
-                      <TableCell align="left">
-                        IDO Price
+                      <TableCell align="left">IDO Price</TableCell>
+                      <TableCell
+                        align="left"
+                        onClick={() => onSortListPerfomance("ath")}
+                      >
+                        <TableSortLabel
+                          order={
+                            fieldSorted.field === "ath"
+                              ? fieldSorted.order
+                              : null
+                          }
+                        >
+                          ATH
+                        </TableSortLabel>
                       </TableCell>
-                      <TableCell align="left" onClick={() => onSortListPerfomance('ath')}>
-                        <TableSortLabel order={fieldSorted.field === 'ath' ? fieldSorted.order : null}>ATH</TableSortLabel>
+                      <TableCell
+                        align="left"
+                        onClick={() => onSortListPerfomance("holders")}
+                      >
+                        <TableSortLabel
+                          order={
+                            fieldSorted.field === "holders"
+                              ? fieldSorted.order
+                              : null
+                          }
+                        >
+                          Holders
+                        </TableSortLabel>
                       </TableCell>
-                      <TableCell align="left" onClick={() => onSortListPerfomance('holders')}><TableSortLabel order={fieldSorted.field === 'holders' ? fieldSorted.order : null}>Holders</TableSortLabel></TableCell>
-                      <TableCell align="left" onClick={() => onSortListPerfomance('volume')}><TableSortLabel order={fieldSorted.field === 'volume' ? fieldSorted.order : null}>Daily Volume</TableSortLabel></TableCell>
+                      <TableCell
+                        align="left"
+                        onClick={() => onSortListPerfomance("volume")}
+                      >
+                        <TableSortLabel
+                          order={
+                            fieldSorted.field === "volume"
+                              ? fieldSorted.order
+                              : null
+                          }
+                        >
+                          Daily Volume
+                        </TableSortLabel>
+                      </TableCell>
                     </TableRowHead>
                   </TableHead>
-                  <TableBody >
+                  <TableBody>
                     {listPerfomance.map((row, id) => (
                       <TableRowBody key={id}>
                         <TableCell component="th" scope="row">

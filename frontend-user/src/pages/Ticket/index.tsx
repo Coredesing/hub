@@ -296,13 +296,20 @@ const Ticket: React.FC<any> = (props: any) => {
   // console.log('approveTransaction', approveTransaction)
   // console.log('allowance', allowance)
 
-  const { claimToken, transactionHash, claimTokenSuccess } = useTokenClaim(
+  const { claimToken, transactionHash, claimTokenSuccess, loading: loadingClaming, error: errorClaming } = useTokenClaim(
     infoTicket.campaign_hash,
     infoTicket?.id
   );
 
-  // const [lockWhenClaiming, setLockWhenClaiming] = useState(false);
+  const [lockWhenClaiming, setLockWhenClaiming] = useState(false);
   const [userClaimed, setUserClaimed] = useState(false);
+
+  useEffect(() => {
+    if(!loadingClaming) {
+      setLockWhenClaiming(false);
+    }
+  }, [loadingClaming, errorClaming]);
+
   const {
     retrieveClaimableTokens
   } = useUserRemainTokensClaim(infoTicket.campaign_hash, true);
@@ -515,8 +522,13 @@ const Ticket: React.FC<any> = (props: any) => {
     return +tokenAllowance > 0;
   };
 
+  useEffect(() => {
+    console.log('lockWhenClaiming', lockWhenClaiming)
+  }, [lockWhenClaiming]);
+
   const onClaimTicket = async () => {
-    if (!isKYC || userClaimed) return;
+    if (!isKYC || userClaimed || lockWhenClaiming) return;
+    setLockWhenClaiming(true);
     await claimToken();
   };
   const onBuyTicket = async () => {
@@ -746,12 +758,11 @@ const Ticket: React.FC<any> = (props: any) => {
                         <button
                           className={clsx(styles.btnClaim, {
                             disabled:
-                              !isKYC ||
-                              userClaimed,
+                              !isKYC || userClaimed || lockWhenClaiming,
                           })}
                           onClick={onClaimTicket}
                           disabled={
-                            !isKYC || userClaimed
+                            !isKYC || userClaimed || lockWhenClaiming
                           }
                         >
                           Claim

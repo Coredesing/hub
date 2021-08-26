@@ -32,7 +32,6 @@ export const getAllowance = (owner: string) => {
         payload: result,
       });
     } catch (error) {
-      console.log(error)
       dispatch({
         type: sotaTokenActions.ALLOWANCE_FAILURE,
         payload: error

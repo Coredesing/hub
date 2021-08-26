@@ -28,11 +28,11 @@ const useStyles = makeStyles((theme: any) => {
 
         "&.bl::before": {
           background:
-            "linear-gradient(to bottom, rgba(255,0,0,0), rgb(10 10 10 / 90%))",
+            "linear-gradient(180deg, #0A0A0A 0%, rgba(23, 23, 23, 0) 0.01%, #0A0A0A 57.29%)",
         },
         "&.gr::before": {
           background:
-            "linear-gradient(to bottom, rgba(255,0,0,0), rgb(23 23 23 / 90%))",
+            "linear-gradient(180deg, #0A0A0A 0%, rgba(23, 23, 23, 0) 0.01%, #171717 57.29%)",
         },
       },
     },

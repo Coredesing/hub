@@ -42,6 +42,7 @@ const Home = (props: any) => {
   } = useFetchV1(
     `/pools/token-type?token_type=${TOKEN_TYPE.ERC721}&page=1&limit=4`
   );
+  console.log(ticketSales);
   const {
     data: tokenSales = {} as ResponseData,
     loading: loadingUpcomingPools,
@@ -245,7 +246,7 @@ const Home = (props: any) => {
         <div className={styles.wrapperContent}>
           <div className={clsx(styles.content, "vertical")}>
             <div className={clsx(styles.contentTitle, "center")}>
-              <h3>Perfomance</h3>
+              <h3>Performance</h3>
             </div>
             <div className={clsx(styles.cards)}>
               <TableContainer style={{ maxHeight: "calc(57px * 6)" }}>

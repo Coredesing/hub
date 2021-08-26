@@ -97,6 +97,7 @@ const Ticket: React.FC<any> = (props: any) => {
     }
   }, [isClaim, connectedAccount]);
   useEffect(() => {
+    console.log(isAccInWinners)
     if(isAccInWinners.loading) {
       let info: any = {};
       axios.get(`/pool/${id}/check-exist-winner?wallet_address=${connectedAccount}&campaignId=${id}`)
@@ -135,7 +136,7 @@ const Ticket: React.FC<any> = (props: any) => {
         if(leng === 1) {
           const openClaim = claimConfigs[0];
           openTime = +openClaim.start_time * 1000;
-          const endTime = +openClaim.end_time * 1000 || openTime + (60 * 60 * 24 * 1);
+          const endTime = +openClaim.end_time * 1000 || openTime + (1000 * 60 * 60 * 24);
           finishTime = endTime;
         } else {
           const openClaim = claimConfigs[0];
@@ -165,8 +166,6 @@ const Ticket: React.FC<any> = (props: any) => {
           )
         );
       }
-      setNewTicket(false);
-      setInfoTicket(dataTicket);
     }
   }, [dataTicket, loadingTicket, isClaim]);
 
@@ -475,7 +474,7 @@ const Ticket: React.FC<any> = (props: any) => {
   };
 
   const onClaimTicket = async () => {
-    if (!isKYC) return;
+    if (!isKYC || +isAccInWinners.data?.lottery_ticket > 0) return;
     await claimToken();
   };
   const onBuyTicket = async () => {
@@ -699,9 +698,9 @@ const Ticket: React.FC<any> = (props: any) => {
                     (isClaim ? (
                       isAccInWinners.ok && (<button
                         className={clsx(styles.btnClaim, {
-                          disabled: !isKYC
+                          disabled: !isKYC || +isAccInWinners.data?.lottery_ticket > 0
                         })}
-                        onClick={onClaimTicket} disabled={!isKYC}>
+                        onClick={onClaimTicket} disabled={!isKYC || +isAccInWinners.data?.lottery_ticket > 0}>
                         Claim
                       </button>)
                     ) : (

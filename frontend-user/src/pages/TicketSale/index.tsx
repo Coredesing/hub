@@ -64,7 +64,7 @@ const TicketSale = (props: any) => {
           setEmail('');
           setStatusSub({ ok: true, msg: 'Subcribe succesfully. We\'ll contact to you as soos as possible!.', isShow: true });
           setTimeout(() => {
-            setStatusSub({isShow: false});
+            setStatusSub({ isShow: false });
           }, 4000);
         } else {
           setStatusSub({ ok: false, msg: 'Something wrong was happened. Please try again later!', isShow: true });
@@ -82,49 +82,56 @@ const TicketSale = (props: any) => {
         <div className="rectangle">
           <img src="/images/landing/rectangle.png" alt="" />
         </div>
+        {
+          !!(activePools?.data || []).length && <div className={styles.poolItem}>
+            <h3>Opening Pools</h3>
 
-        <div className={styles.poolItem}>
-          <h3>Active Pools</h3>
+            <div className={clsx(styles.cards, styles.cardsActive)}>
+              {
+                (activePools?.data || []).map((card, id) => <ActiveCard key={id} card={card} refresh={refresh} />)
+              }
 
-          <div className={clsx(styles.cards, styles.cardsActive)}>
-            {
-              (activePools?.data || []).map((card, id) => <ActiveCard key={id} card={card} refresh={refresh} />)
-            }
-
+            </div>
           </div>
-        </div>
+        }
 
-        <div className={styles.poolItem}>
-          <h3>Upcoming</h3>
+        {
+          !!(upcomingPools?.data || []).length && <div className={styles.poolItem}>
+            <h3>Upcoming</h3>
 
-          <div className={clsx(styles.cards, styles.cardsUpcoming)}>
-            {
-              (upcomingPools?.data || []).map((card, id: number) => <UpcomingCard key={id} card={card} refresh={refresh} />)
-            }
+            <div className={clsx(styles.cards, styles.cardsUpcoming)}>
+              {
+                (upcomingPools?.data || []).map((card, id: number) => <UpcomingCard key={id} card={card} refresh={refresh} />)
+              }
+            </div>
           </div>
-        </div>
+        }
+
       </section>
-      <section className={clsx(styles.completePools, styles.section)}>
-        <div className="rectangle">
-          <img src="/images/landing/rectangle-black.png" alt="" />
-        </div>
-        <div className={styles.poolItem}>
-          <h3>Complete Sale</h3>
-
-          <div className={clsx(styles.cards, styles.completeCards)}>
-            {
-              (compeltePools?.data || []).map((card, id) => <CompleteCard key={id} card={card} />)
-            }
+      {
+        !!(compeltePools?.data || []).length && <section className={clsx(styles.completePools, styles.section)}>
+          <div className="rectangle">
+            <img src="/images/landing/rectangle-black.png" alt="" />
           </div>
-          {/* <div className={styles.cardsActions}>
+          <div className={styles.poolItem}>
+            <h3>Finished</h3>
+
+            <div className={clsx(styles.cards, styles.completeCards)}>
+              {
+                (compeltePools?.data || []).map((card, id) => <CompleteCard key={id} card={card} />)
+              }
+            </div>
+            {/* <div className={styles.cardsActions}>
             <Link href={'transactionLink'} className={styles.btnView}>
               View all pools
             </Link>
           </div> */}
-        </div>
-      </section>
+          </div>
+        </section>
+      }
+
       <section className={clsx(styles.section, styles.contact)}>
-        <div className="rectangle">
+        <div className="rectangle green">
           <img src="/images/subcriber.svg" alt="" />
         </div>
         <h3>

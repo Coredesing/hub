@@ -5,6 +5,7 @@ import useStyles from './style';
 import { useCardStyles } from '../style';
 import Image from '../../../components/Base/Image';
 import { TOKEN_TYPE } from '../../../constants';
+import { formatCampaignStatus } from '../../../utils';
 
 type Props = {
   card: { [k: string]: any },
@@ -19,9 +20,8 @@ export const Card = ({ card, ...props }: Props) => {
       [styles.cardOpening]: isOpen
     })}>
       <div className={clsx(styles.cardImg, styles.cardImgUpcoming)}>
-        <h4>{card.campaign_status}</h4>
+        <h4>{formatCampaignStatus(card.campaign_status)}</h4>
         <Image src={card.banner} />
-
       </div>
       {
         isOpen && <Link href={`/#/${isTicket ? 'buy-nft' : 'buy-token'}/${card.id}`} className={clsx(styles.btnDetail, 'btn-detail')}>

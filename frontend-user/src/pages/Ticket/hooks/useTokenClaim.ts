@@ -8,6 +8,7 @@ import PreSale_ABI from '../../../abi/PreSalePool.json';
 import { getContract } from '../../../utils/contract';
 import { alertSuccess, alertFailure, alertWarning } from '../../../store/actions/alert';
 import BigNumber from 'bignumber.js';
+import { handleErrMsg } from '../utils';
 
 const useTokenClaim = (poolAddress: string | undefined, poolId: number | undefined) => {
   const { library, account } = useWeb3React();
@@ -74,9 +75,10 @@ const useTokenClaim = (poolAddress: string | undefined, poolId: number | undefin
             dispatch(alertSuccess("Token Claim Successful"));
           }
         } catch (err) {
-          dispatch(alertFailure(err.message));
+          const message = handleErrMsg(err) || err.message;
+          dispatch(alertFailure(message));
           setClaimTokenLoading(false);
-          setClaimError(err.message);
+          setClaimError(message);
           setSignature("");
           setUserClaimSignature("");
         }

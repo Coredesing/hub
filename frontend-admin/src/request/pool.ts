@@ -69,3 +69,12 @@ export const depositPoolAdmin = async (data: any) => {
   const resObject = await response.json();
   return resObject;
 };
+
+export const uploadWinners = async (poolId: any, data: any) => {
+  const baseRequest = new BaseRequest();
+  let url = apiRoute(`/pool/${poolId}/upload-winners`);
+
+  const response = await baseRequest.postImage(url, data) as any;
+  const resObject = await response.json();
+  return resObject;
+};

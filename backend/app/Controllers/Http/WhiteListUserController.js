@@ -9,7 +9,7 @@ const PickRandomWinnerJobWithWeightRate = use('App/Jobs/PickRandomWinnerJobWithW
 const PickRandomWinnerNormalRule = use('App/Jobs/PickRandomWinnerNormalRule');
 const PickRandomWinnerJobWithLuckyDove = use('App/Jobs/PickRandomWinnerJobWithLuckyDove');
 const PickWinnerWithGameFITicket = use('App/Jobs/PickWinnerWithGameFITicket');
-const PickWinnerWithGameFIToken = use('App/Jobs/PickWinnerWithGameFIToken');
+const PickWinnerBaseOnSnapshot = use('App/Jobs/PickWinnerBaseOnSnapshot');
 const Const = use('App/Common/Const');
 
 class WhiteListUserController {
@@ -152,8 +152,8 @@ class WhiteListUserController {
         case Const.PICK_WINNER_RULE.RULE_GAMEFI_TICKET:
           PickWinnerWithGameFITicket.handle(randomData)
           break;
-        case Const.PICK_WINNER_RULE.RULE_GAFI_TOKEN:
-          PickWinnerWithGameFIToken.handle(randomData)
+        case Const.PICK_WINNER_RULE.RULE_BASE_ON_SNAPSHOT:
+          PickWinnerBaseOnSnapshot.handle(randomData)
           break;
       }
       (new CampaignService).updatePickWinnerRule(campaign_id, rule);

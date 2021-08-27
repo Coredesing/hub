@@ -22,13 +22,11 @@ const useTokenAllowance = () => {
           && ethers.utils.isAddress(token.address) 
       ) {
       setTokenAllowanceLoading(true);
-
       const contract = getContractInstance(ERC20_ABI, token.address, connector, appChainID, SmartContractMethod.Read);
 
       if (contract) {
         const balance = await contract.methods.allowance(owner, spender).call();
         const allowanceReturn = new BigNumber(balance).div(new BigNumber(10).pow(token?.decimals as number)).toNumber();
-
         return allowanceReturn;
       }
 

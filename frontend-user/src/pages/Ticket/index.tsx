@@ -131,7 +131,6 @@ const Ticket: React.FC<any> = (props: any) => {
   const [phaseName, setPhaseName] = useState('');
   useEffect(() => {
     if (!loadingTicket && dataTicket) {
-      console.log(dataTicket)
       setNewTicket(false);
       setInfoTicket(dataTicket);
       if (isEndPool(dataTicket.campaign_status)) {
@@ -223,6 +222,10 @@ const Ticket: React.FC<any> = (props: any) => {
             clearInterval(interval);
           }
         }, 1000);
+
+        return () => {
+          clearInterval(interval);
+        }
       }
   }, [phase]);
 
@@ -251,8 +254,8 @@ const Ticket: React.FC<any> = (props: any) => {
         console.log(error);
       }
     };
-    (renewBalance || connectedAccount) && dataTicket && setBalance();
-  }, [connectedAccount, dataTicket, renewBalance]);
+    !isClaim && (renewBalance || connectedAccount) && dataTicket && setBalance();
+  }, [connectedAccount, dataTicket, renewBalance, isClaim]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -425,7 +428,7 @@ const Ticket: React.FC<any> = (props: any) => {
     }
   }, [tokenDepositSuccess, tokenDepositTransaction]);
 
-  const { retrieveTokenAllowance } = useTokenAllowance();
+  const { retrieveTokenAllowance, tokenAllowanceLoading } = useTokenAllowance();
 
   const getApproveToken = useCallback(
     (appChainID: string) => {
@@ -540,10 +543,10 @@ const Ticket: React.FC<any> = (props: any) => {
     const fetchPoolDetailsBlockchain = async () => {
       await fetchPoolDetails();
     };
-    connectedAccount &&
+    !tokenAllowanceLoading && connectedAccount &&
       infoTicket.campaign_hash &&
       fetchPoolDetailsBlockchain();
-  }, [connectedAccount, infoTicket.campaign_hash, fetchPoolDetails]);
+  }, [connectedAccount, infoTicket.campaign_hash, fetchPoolDetails, tokenAllowanceLoading]);
 
   const {
     retrieveUserPurchased,

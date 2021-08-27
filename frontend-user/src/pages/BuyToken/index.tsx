@@ -56,6 +56,8 @@ import ApplyWhitelistModal from "./ApplyWhitelistModal/ApplyWhitelistModal";
 
 import {getPoolStatusByPoolDetail} from "../../utils/getPoolStatusByPoolDetail";
 import useCountDownFreeBuyTime from "./hooks/useCountDownFreeBuyTime";
+import useKyc from '../../hooks/useKyc';
+import { AlertKYC } from '../../components/Base/AlertKYC';
 
 const copyImage = "/images/copy.svg";
 const poolImage = "/images/pool_circle.svg";
@@ -96,6 +98,7 @@ const BuyToken: React.FC<any> = (props: any) => {
       poolDetails?.networkAvailable,
       poolDetails,
   );
+  const {checkingKyc, isKYC} = useKyc(connectedAccount);
   const { joinPool, poolJoinLoading, joinPoolSuccess } = usePoolJoinAction({ poolId: poolDetails?.id, poolDetails });
   const { data: existedWinner } = useFetch<Array<any>>(
     poolDetails ? `/pool/${poolDetails?.id}/check-exist-winner?wallet_address=${connectedAccount}`: undefined,
@@ -318,6 +321,9 @@ const BuyToken: React.FC<any> = (props: any) => {
       return (
         <>
           <section className={styles.headerComponent}>
+            {
+              !isKYC && !checkingKyc && connectedAccount && <AlertKYC className={styles.alertKyc} connectedAccount={connectedAccount} />
+            }
 
             <BannerNotification
               poolDetails={poolDetails}
@@ -460,6 +466,7 @@ const BuyToken: React.FC<any> = (props: any) => {
               currentUserTier={currentUserTier}
               poolDetailsMapping={poolDetailsMapping}
               poolDetails={poolDetails}
+              isKyc={isKYC}
             />
           }
 
@@ -476,6 +483,7 @@ const BuyToken: React.FC<any> = (props: any) => {
               poolDetails={poolDetails}
               currencyName={currencyName}
               startBuyTimeInDate={startBuyTimeInDate}
+              isKyc={isKYC}
             />
           }
 

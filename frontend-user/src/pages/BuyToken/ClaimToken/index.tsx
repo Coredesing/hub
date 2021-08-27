@@ -29,7 +29,8 @@ type ClaimTokenProps = {
   poolDetails: any;
   currencyName: any,
   startBuyTimeInDate: any;
-  width: any
+  width: any,
+  isKyc?: boolean,
 };
 
 const tickIcon = "/images/icons/tick_claim.svg";
@@ -54,6 +55,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
     disableAllButton,
     currencyName,
     startBuyTimeInDate,
+    isKyc,
   } = props;
 
   const nowTime = new Date();
@@ -291,10 +293,10 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
         style={{ marginTop: 8 }}
         text={"Claim Tokens"}
         backgroundColor={"#72F34B"}
-        disabled={!availableClaim || userPurchased <= 0 || disableAllButton}
+        disabled={!availableClaim || userPurchased <= 0 || disableAllButton || !isKyc}
         // disabled={disableAllButton || !ableToFetchFromBlockchain} // If network is not correct, disable Claim Button
         loading={loading}
-        onClick={handleTokenClaim}
+        onClick={isKyc ? handleTokenClaim : undefined}
       />
 
       <TransactionSubmitModal

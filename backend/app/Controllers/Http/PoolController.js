@@ -794,7 +794,7 @@ class PoolController {
 
       return HelperUtils.responseSuccess({message: 'upload successfully'});
     } catch (e) {
-      return HelperUtils.responseErrorInternal('getPoolByTokenType Fail');
+      return HelperUtils.responseErrorInternal('upload user Fail');
     }
   }
 }

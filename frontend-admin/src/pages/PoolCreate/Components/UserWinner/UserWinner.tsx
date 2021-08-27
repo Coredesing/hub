@@ -53,7 +53,6 @@ function UserWinner(props: any) {
   };
 
   const handleSubmission = async () => {
-    console.log('click ne')
     const formData = new FormData();
     formData.append('file', selectedFile ?? '');
 

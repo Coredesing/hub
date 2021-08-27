@@ -239,59 +239,64 @@ const getEPkfBonusBalance = (wallet_address) => {
 const getUserTierSmart = async (wallet_address) => {
   // TODO: Setting cache for Rate Setting
   // Get Rate Setting
-  let rateSetting = await RateSetting.query().first();
-  if (rateSetting) {
-    rateSetting = JSON.parse(JSON.stringify(rateSetting));
-  } else {
-    rateSetting = {
-      lp_pkf_rate: 1,
-      spkf_rate: 1,
-      epkf_rate: 1,
+  try {
+    let rateSetting = await RateSetting.query().first();
+    if (rateSetting) {
+      rateSetting = JSON.parse(JSON.stringify(rateSetting));
+    } else {
+      rateSetting = {
+        lp_pkf_rate: 1,
+        spkf_rate: 1,
+        epkf_rate: 1,
+      }
     }
-  }
 
-  // Get Tier Smart Contract Info
-  const tierSc = getTierSmartContractInstance();
-  const receivedData = await Promise.all([
-    tierSc.methods.getTiers().call(),
-    tierSc.methods.userTotalStaked(wallet_address).call(),
-    getEPkfBonusBalance(wallet_address),
-    tierSc.methods.userInfo(wallet_address, process.env.PKF_SMART_CONTRACT_ADDRESS || '').call(), // stakedPkf
-    tierSc.methods.userInfo(wallet_address, process.env.UNI_LP_PKF_SMART_CONTRACT_ADDRESS || '').call(), // staked LP_PKF
-  ]);
+    // Get Tier Smart Contract Info
+    const tierSc = getTierSmartContractInstance();
+    const receivedData = await Promise.all([
+      tierSc.methods.getTiers().call(),
+      tierSc.methods.userTotalStaked(wallet_address).call(),
+      getEPkfBonusBalance(wallet_address),
+      tierSc.methods.userInfo(wallet_address, process.env.PKF_SMART_CONTRACT_ADDRESS || '').call(), // stakedPkf
+      tierSc.methods.userInfo(wallet_address, process.env.UNI_LP_PKF_SMART_CONTRACT_ADDRESS || '').call(), // staked LP_PKF
+    ]);
 
-  // Caculate PKF Staked
-  let stakedPkf = (receivedData[3] && receivedData[3].staked) || 0;
-  stakedPkf = new BigNumber(stakedPkf);
+    // Caculate PKF Staked
+    let stakedPkf = (receivedData[3] && receivedData[3].staked) || 0;
+    stakedPkf = new BigNumber(stakedPkf);
 
-  // Caculate LP-PKF Staked
-  let stakedUni = (receivedData[4] && receivedData[4].staked) || 0;
-  stakedUni = new BigNumber(stakedUni).multipliedBy(rateSetting.lp_pkf_rate);
+    // Caculate LP-PKF Staked
+    let stakedUni = (receivedData[4] && receivedData[4].staked) || 0;
+    stakedUni = new BigNumber(stakedUni).multipliedBy(rateSetting.lp_pkf_rate);
 
-  // calc pfk equal
-  let ePkf = 0;
-  const ePkfResponse = receivedData[2] && receivedData[2].data;
-  if (ePkfResponse && ePkfResponse.code === 200) {
-    ePkf = new BigNumber((ePkfResponse && ePkfResponse.data) || 0).multipliedBy(rateSetting.epkf_rate).toFixed();
-  }
-  const pkfEq = new BigNumber(stakedPkf).plus(stakedUni).plus(ePkf);
-
-  // get 4 tiers
-  let userTier = 0;
-  const tiers = receivedData[0].slice(0, 4);
-
-  tiers.map((pkfRequire, index) => {
-    if (pkfEq.gte(pkfRequire)) {
-      userTier = index + 1;
+    // calc pfk equal
+    let ePkf = 0;
+    const ePkfResponse = receivedData[2] && receivedData[2].data;
+    if (ePkfResponse && ePkfResponse.code === 200) {
+      ePkf = new BigNumber((ePkfResponse && ePkfResponse.data) || 0).multipliedBy(rateSetting.epkf_rate).toFixed();
     }
-  });
+    const pkfEq = new BigNumber(stakedPkf).plus(stakedUni).plus(ePkf);
 
-  return [
-    userTier,
-    new BigNumber(pkfEq).dividedBy(Math.pow(10, 18)).toFixed(),
-    new BigNumber(stakedPkf).plus(stakedUni).dividedBy(Math.pow(10, 18)).toFixed(),
-    new BigNumber(ePkf).dividedBy(Math.pow(10, 18)).toFixed(),
-  ];
+    // get 4 tiers
+    let userTier = 0;
+    const tiers = receivedData[0].slice(0, 4);
+
+    tiers.map((pkfRequire, index) => {
+      if (pkfEq.gte(pkfRequire)) {
+        userTier = index + 1;
+      }
+    });
+
+    return [
+      userTier,
+      new BigNumber(pkfEq).dividedBy(Math.pow(10, 18)).toFixed(),
+      new BigNumber(stakedPkf).plus(stakedUni).dividedBy(Math.pow(10, 18)).toFixed(),
+      new BigNumber(ePkf).dividedBy(Math.pow(10, 18)).toFixed(),
+    ];
+  }
+  catch (e) {
+    return [0, 0, 0, 0]
+  }
 };
 
 const getExternalTokenSmartContract = async (wallet_address) => {

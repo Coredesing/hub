@@ -1,10 +1,9 @@
 import clsx from 'clsx';
 import useStyles from './style';
 import { useCardStyles } from '../style';
-import { caclDiffTime, formatNumber, getDiffTime } from '../../../utils';
+import { caclDiffTime, formatNumber, getDiffTime, getSeedRound } from '../../../utils';
 import { useEffect, useState } from 'react';
 import Image from '../../../components/Base/Image';
-import { getSeedRound } from '../utils';
 
 type Props = {
   card: { [k: string]: any },

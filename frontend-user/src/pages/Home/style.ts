@@ -430,7 +430,7 @@ export const useCardStyles = makeStyles((theme) => ({
     paddingTop: "40px",
     [theme.breakpoints.down("md")]: {
       placeContent: "center",
-      paddingTop: "unset", 
+      paddingTop: "unset",
     },
     [theme.breakpoints.down("sm")]: {
       gridTemplateColumns: "280px 280px",
@@ -463,10 +463,51 @@ export const useCardStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       width: "280px",
     },
+    [theme.breakpoints.down("xs")]: {
+      width: "156px",
+    },
+
+    '& .card-token-title': {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      '& h4': {
+        fontFamily: 'Firs Neue',
+        fontStyle: 'normal',
+        fontWeight: 600,
+        fontSize: '20px',
+        lineHeight: '28px',
+        color: '#fff',
+
+        [theme.breakpoints.down("xs")]: {
+          fontWeight: 'normal',
+          fontSize: '12px',
+          lineHeight: '14px',
+        },
+
+      },
+      '& span': {
+        display: 'block',
+        padding: '6px 8px',
+        fontFamily: 'Firs Neue',
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: '12px',
+        color: '#fff',
+        borderRadius: '2px',
+        background: '#28481E',
+        textTransform: 'uppercase',
+        [theme.breakpoints.down("xs")]: {
+          fontSize: '8px',
+          padding: '4px 4px',
+        },
+      }
+    }
   },
   card: {
     padding: "19px",
     paddingTop: "26px",
+    paddingBottom: '15px',
     border: "1px solid #28481E",
     borderRadius: "4px",
     transition: ".3s",
@@ -480,6 +521,21 @@ export const useCardStyles = makeStyles((theme) => ({
       paddingTop: "26px",
       paddingBottom: '13px',
     },
+
+    '& .title': {
+      "& h5": {
+        textAlign: "center",
+        color: "#FFFFFF",
+        fontWeight: 600,
+        fontSize: "20px",
+        lineHeight: "28px",
+        [theme.breakpoints.down("xs")]: {
+          fontWeight: 400,
+          fontSize: "12px",
+          lineHeight: "14px",
+        },
+      },
+    }
   },
   cardImg: {
     position: "relative",
@@ -493,8 +549,8 @@ export const useCardStyles = makeStyles((theme) => ({
     },
     "&::before, &::after": {
       content: '""',
-      height: "9px",
-      width: "120px",
+      height: "6px",
+      width: "70px",
       position: "absolute",
       background: "#458531",
       top: "-17.5px",

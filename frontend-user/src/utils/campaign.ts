@@ -284,7 +284,7 @@ export const getTokenStakeSmartContractInfo = async (
     .call();
   const stakedMantra = convertFromWei(resultMantra.staked);
 
-  let epkfStaked = await getEPkfBonusBalanceValue(address);
+  let epkfStaked = 0 ?? await getEPkfBonusBalanceValue(address);
 
   result = {
     ...result,

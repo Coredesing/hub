@@ -36,6 +36,18 @@ export const isMetaMaskInstalled = () => {
   return ethereum && ethereum.isMetaMask;
 };
 
+export const appHttpProvider= {
+  providers: {
+    [ETH_CHAIN_ID]: new Web3.providers.HttpProvider(NETWORK_URL),
+  },
+  getProvider(chainId: string, url: string) {
+    if(!this.providers[chainId]) {
+      this.providers[chainId] = new Web3.providers.HttpProvider(url)
+    }
+    return this.providers[chainId];
+  }
+}
+
 
 export const getProviderByNetwork = (
   networkName: connectorNames,
@@ -44,18 +56,18 @@ export const getProviderByNetwork = (
   forceUsingEther: boolean
 ) => {
   if (forceUsingEther) {
-      return new Web3.providers.HttpProvider(NETWORK_URL);
+      return appHttpProvider.getProvider(ETH_CHAIN_ID, NETWORK_URL);
   }
 
   if (appChainID && typeMethod === SmartContractMethod.Read) {
       switch (appChainID) {
         case BSC_CHAIN_ID: 
-          return new Web3.providers.HttpProvider(BSC_NETWORK_URL);
+          return appHttpProvider.getProvider(BSC_CHAIN_ID, BSC_NETWORK_URL);
         case POLYGON_CHAIN_ID:
-          return new Web3.providers.HttpProvider(POLYGON_NETWORK_URL);
+          return appHttpProvider.getProvider(POLYGON_CHAIN_ID, POLYGON_NETWORK_URL);
         case ETH_CHAIN_ID:
         default:
-          return new Web3.providers.HttpProvider(NETWORK_URL);
+          return appHttpProvider.getProvider(ETH_CHAIN_ID, NETWORK_URL);
       }
   }
 
@@ -89,15 +101,15 @@ export const getContractInstanceWeb3 = (networkAvailable : string ) => {
   let provider;
   switch (networkAvailable) {
     case NETWORK_AVAILABLE.BSC:
-      provider = new Web3.providers.HttpProvider(BSC_NETWORK_URL);
+      provider = appHttpProvider.getProvider(BSC_CHAIN_ID, BSC_NETWORK_URL);
       return new Web3(provider);
     
     case NETWORK_AVAILABLE.POLYGON:
-      provider = new Web3.providers.HttpProvider(POLYGON_NETWORK_URL);
+      provider = appHttpProvider.getProvider(POLYGON_CHAIN_ID, POLYGON_NETWORK_URL);
       return new Web3(provider);
 
     case NETWORK_AVAILABLE.ETH:
-      provider = new Web3.providers.HttpProvider(NETWORK_URL);
+      provider = appHttpProvider.getProvider(ETH_CHAIN_ID, NETWORK_URL);
       return new Web3(provider);
 
     default:

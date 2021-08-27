@@ -3,18 +3,20 @@ import { makeStyles } from "@material-ui/core";
 const useStyles = makeStyles((theme: any) => ({
   cardImgUpcoming: {
     maxHeight: "220px",
+    marginBottom: '15px',
     [theme.breakpoints.down("xs")]: {
-      paddingBottom: '13px',
+      marginBottom: '13px',
+      maxHeight: "108px",
     },
     // overflow: 'hidden',
 
     "&::before, &::after": {
       height: "6px !important",
       width: "25% !important",
-      //   [theme.breakpoints.down("xs")]: {
-      //     height: "4px !important",
-      //     width: "20% !important",
-      //   },
+        [theme.breakpoints.down("xs")]: {
+          height: "3px !important",
+          width: "20% !important",
+        },
     },
 
     "& h4": {
@@ -38,22 +40,9 @@ const useStyles = makeStyles((theme: any) => ({
         top: "-20px",
       },
     },
-    "& h5": {
-      textAlign: "center",
-      color: "#FFFFFF",
-      fontWeight: 600,
-      fontSize: "14px",
-      lineHeight: "16px",
-      marginTop: '2px',
-      [theme.breakpoints.down("xs")]: {
-        fontWeight: 400,
-        fontSize: "12px",
-        lineHeight: "14px",
-      },
-    },
-    "& img": {
-      height: "90%"
-    },
+    // "& img": {
+    //   height: "90%"
+    // },
   },
   cardOpening: {
     position: "relative",

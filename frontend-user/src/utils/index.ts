@@ -231,8 +231,15 @@ export const debounce = (fn: Function, timer: number) => {
 
 export const formatCampaignStatus = (status: string) => {
   const stt = String(status).toLowerCase();
-  if(stt === 'filled') return 'Opening';
+  if(stt === 'filled' || stt === 'swap') return 'Opening';
   if(stt === 'ended') return 'Ended';
   if(stt === 'upcoming') return 'Upcoming';
   return status;
+}
+
+export const getSeedRound = (key: 0 | 1 | 2 | number) => {
+  if(key === 0) return 'Public';
+  if(key === 1) return 'Private';
+  if(key === 2) return 'Seed';
+  return ''
 }

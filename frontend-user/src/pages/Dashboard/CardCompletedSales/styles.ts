@@ -5,8 +5,9 @@ const useStyles = makeStyles((theme: any) => {
     cardCompletedSales: {
       overflow: 'hidden',
       height: '100%',
-      background: '#222228',
-      borderRadius: 24,
+      background: '#171717',
+      borderRadius: 4,
+      border: '1px solid #28481E',
       padding: 20,
       marginBottom: 12,
       display: 'grid',
@@ -17,6 +18,10 @@ const useStyles = makeStyles((theme: any) => {
         gridTemplateColumns: '100%',
         padding: '24px 20px',
       },
+
+      '&:hover': {
+        borderColor: '#72F34B'
+      }
     },
 
     leftCard: {
@@ -111,6 +116,8 @@ const useStyles = makeStyles((theme: any) => {
       display: 'flex',
       flexWrap: 'wrap',
       justifyContent: 'flex-start',
+      alignItems: 'center',
+      fontSize: 16
     },
 
     listInfo: {
@@ -150,9 +157,8 @@ const useStyles = makeStyles((theme: any) => {
       lineHeight: '16px',
       textAlign: 'center',
       color: '#FFD058',
-      padding: '4px 10px',
+      padding: 2,
       borderRadius: 4,
-      height: 24,
       textTransform: 'uppercase',
 
       '&.tba': {
@@ -188,17 +194,14 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     poolStatusWarning: {
-      marginRight: 8,
       fontFamily: 'DM Sans',
       fontWeight: 'bold',
       fontSize: 12,
       lineHeight: '16px',
       textAlign: 'center',
-      color: '#FFFFFF',
-      padding: '4px 12px',
+      color: '#72F34B',
+      padding: 2,
       borderRadius: 4,
-      background: '#38383D',
-      height: 24,
       textTransform: 'uppercase',
     },
 
@@ -228,7 +231,7 @@ const useStyles = makeStyles((theme: any) => {
 
     currentProgress: {
       height: 4,
-      background: '#D01F36',
+      background: '#72F34B',
       boxShadow: '0px 4px 8px rgba(208, 31, 54, 0.4)',
       borderRadius: 20,
       display: 'block',

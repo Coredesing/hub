@@ -3,17 +3,25 @@ import { makeStyles } from '@material-ui/core';
 const useStyles = makeStyles((theme: any) => {
   return {
     cardActive: {
+      fontFamily: 'Firs Neue',
       overflow: 'hidden',
       height: '100%',
-      background: '#222228',
-      borderRadius: 32,
+      background: '#171717',
+      borderRadius: 4,
       boxShadow:' 0px 4px 20px rgba(0, 0, 0, 0.6)',
+      border: '1px solid #28481E',
       display: 'grid',
       gridTemplateColumns: '387px 1fr',
+      padding: '32px 24px 24px',
+      position: 'relative',
 
       [theme.breakpoints.down('sm')]: {
         gridTemplateColumns: '1fr',
       },
+
+      '&:hover': {
+        borderColor: '#72F34B'
+      }
     },
 
     cardActiveBanner: {
@@ -32,7 +40,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     cardActiveRight: {
-      padding: 32,
+      padding: '32px 0 0 32px',
       paddingBottom: 16,
 
       [theme.breakpoints.down('sm')]: {
@@ -42,7 +50,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     tooltip: {
-      fontFamily: 'DM Sans',
+      fontFamily: 'Firs Neue',
       fontWeight: 500,
       fontSize: 14,
       lineHeight: '24px',
@@ -81,7 +89,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     title: {
-      fontFamily: 'DM Sans',
+      fontFamily: 'Firs Neue',
       fontWeight: 'bold',
       fontSize: 24,
       lineHeight: '28px',
@@ -97,7 +105,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     name: {
-      fontFamily: 'Helvetica',
+      fontFamily: 'Firs Neue',
       fontSize: 22,
       lineHeight: '20px',
       color: '#AEAEAE',
@@ -136,7 +144,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     nameInfo: {
-      fontFamily: 'Helvetica',
+      fontFamily: 'Firs Neue',
       fontSize: 16,
       lineHeight: '24px',
       color: '#AEAEAE',
@@ -146,7 +154,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     valueInfo: {
-      fontFamily: 'DM Sans',
+      fontFamily: 'Firs Neue',
       fontWeight: 500,
       fontSize: 18,
       lineHeight: '26px',
@@ -158,13 +166,13 @@ const useStyles = makeStyles((theme: any) => {
       justifyContent: 'flex-end',
 
       '&.is': {
-        color: '#6398FF',
+        color: '#72F34B',
       }
     },
 
     poolStatus: {
       marginLeft: 12,
-      fontFamily: 'DM Sans',
+      fontFamily: 'Firs Neue',
       fontWeight: 500,
       fontSize: 16,
       lineHeight: '24px',
@@ -184,7 +192,7 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '&.joining':{
-        background: '#956AF6',
+        background: '#72F34B',
       },
 
       '&.filled': {
@@ -213,18 +221,39 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     poolStatusWarning: {
-      fontFamily: 'DM Sans',
+      fontFamily: 'Firs Neue',
       fontWeight: 500,
       fontSize: 16,
       lineHeight: '24px',
       textAlign: 'center',
-      color: '#3232DC',
-      padding: '5px 17px',
+      color: '#72F34B',
       borderRadius: 10,
-      background: '#FFFFFF',
-      height: 34,
-      boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
+      height: 24,
       textTransform: 'uppercase',
+      position: 'absolute',
+      top: 4,
+      left: 24,
+      width: 'calc(100% - 48px)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '0 2px',
+
+      '&:before': {
+        content: "''",
+        width: 120,
+        height: 8,
+        background: '#458531',
+        transform: 'skewX(-30deg)'
+      },
+
+      '&:after': {
+        content: "''",
+        width: 120,
+        height: 8,
+        background: '#458531',
+        transform: 'skewX(30deg)'
+      },
     },
 
     progressArea: {
@@ -239,7 +268,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     titleProgressArea: {
-      fontFamily: 'Helvetica',
+      fontFamily: 'Firs Neue',
       fontSize: 16,
       lineHeight: '24px',
       color: '#AEAEAE',
@@ -268,7 +297,7 @@ const useStyles = makeStyles((theme: any) => {
     currentProgress: {
       position: 'relative',
       height: 8,
-      background: '#D01F36',
+      background: '#72F34B',
       borderRadius: 20,
       display: 'block',
       transition: '2s',
@@ -282,11 +311,13 @@ const useStyles = makeStyles((theme: any) => {
     progressInfo: {
       display: 'flex',
       flexDirection: 'row',
-      fontFamily: 'Helvetica',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      fontFamily: 'Firs Neue',
       fontSize: 16,
       lineHeight: '24px',
       color: '#AEAEAE',
-      alignItems: 'center',
+      marginTop: 8,
 
       '& span': {
         whiteSpace: 'nowrap',
@@ -297,7 +328,7 @@ const useStyles = makeStyles((theme: any) => {
           marginRight: 4,
           color: '#FFFFFF',
           fontSize: 14,
-          fontFamily: 'DM Sans',
+          fontFamily: 'Firs Neue',
           fontWeight: 'Bold',
           marginTop: -3,
         }
@@ -307,21 +338,21 @@ const useStyles = makeStyles((theme: any) => {
     btnSwapNow: {
       width: '100%',
       height: 42,
-      background: '#3232DC',
-      borderRadius: 60,
+      background: '#72F34B',
+      borderRadius: 4,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       alignContent: 'center',
-      fontFamily: 'DM Sans',
+      fontFamily: 'Firs Neue',
       fontWeight: 500,
       fontSize: 16,
       lineHeight: 24,
-      color: '#FFFFFF',
+      color: '#000',
       overflow: 'hidden',
 
       '&:hover': {
-        color: '#FFFFFF',
+        color: '#000',
         opacity: 0.8
       },
 
@@ -332,12 +363,12 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     btnDetail: {
-      border: '2px solid #6398FF',
-      color: '#6398FF',
+      border: '2px solid #72F34B',
+      color: '#72F34B',
       background: 'transparent',
 
       '&:hover': {
-        color: '#6398FF',
+        color: '#72F34B',
         opacity: 0.8
       },
     },
@@ -368,34 +399,32 @@ const useStyles = makeStyles((theme: any) => {
     endIn: {
       display: 'flex',
       width: '100%',
-      background: '#38383D',
-      borderRadius: 60,
       alignItems: 'center',
-      justifyContent: 'center',
       flexWrap: 'wrap',
       height: 42,
     },
 
     endInText: {
-      fontSize: 16,
-      lineHeight: '24px',
-      color: '#AEAEAE',
+      fontSize: 12,
+      lineHeight: '16px',
+      color: '#FFFFFF',
+      textTransform: 'uppercase',
       marginRight: 6,
     },
 
     endInTextClaimable: {
-      fontFamily: 'DM Sans',
+      fontFamily: 'Firs Neue',
       fontWeight: 'bold',
-      fontSize: 14,
+      fontSize: 16,
       lineHeight: '18px',
-      color: '#FFD058',
+      color: '#72F34B',
       textTransform: 'uppercase',
     },
 
     endInCountdown: {
-      fontFamily: 'DM Sans',
+      fontFamily: 'Firs Neue',
       fontWeight: 'bold',
-      fontSize: 18,
+      fontSize: 16,
       lineHeight: '26px',
       color: '#FFFFFF',
     },

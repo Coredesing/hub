@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '& a': {
-        color: '#6398FF'
+        color: '#72F34B'
       },
 
       [theme?.breakpoints?.down('sm')]: {
@@ -185,7 +185,7 @@ const useStyles = makeStyles((theme: any) => {
       marginBottom: 20,
 
       '& a': {
-        color: '#6398FF',
+        color: '#72F34B',
         textDecoration: 'underline',
       },
       '& img': {

@@ -300,7 +300,7 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
               onClick={verifyAndSubmit}
               loading={loading}
               disabled={loading || !inputTelegram || !inputTwitter}
-              backgroundColor={'#3232DC'}
+              backgroundColor={'#72F34B'}
               style={{
                 minWidth: 200,
                 padding: '13px 30px',

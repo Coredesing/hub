@@ -262,7 +262,7 @@ const useStyles = makeStyles((theme) => {
       marginTop: 25,
       display: 'flex',
       width: '100%',
-      background: '#3232DC',
+      background: '#72F34B',
       borderRadius: 60,
       padding: '0',
       color: 'white',

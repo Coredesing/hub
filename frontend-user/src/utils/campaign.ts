@@ -65,12 +65,12 @@ export const getAccessPoolText = (pool: any) => {
   const isPrivate = pool?.is_private || pool?.isPrivate;
   const buyType = pool?.buy_type || pool?.buyType || pool?.method;
   if (isPrivate == POOL_IS_PRIVATE.PRIVATE) {
-    return "Private";
+    return "Private Sale";
   }
   if (isPrivate == POOL_IS_PRIVATE.SEED) {
-    return "Seed";
+    return "Seed Sale";
   }
-  return "Public";
+  return "Public Sale";
   // return ((buyType + '').toLowerCase() == BUY_TYPE.WHITELIST_LOTTERY ? "Whitelist/Lottery" : BUY_TYPE.FCFS.toUpperCase());
 };
 

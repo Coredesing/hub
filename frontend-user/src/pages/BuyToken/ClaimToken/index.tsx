@@ -15,7 +15,6 @@ import ClaimInfo from "./ClaimInfo";
 import useDetectClaimConfigApplying from "../hooks/useDetectClaimConfigApplying";
 import BigNumber from "bignumber.js";
 import {updateUserClaimInfo} from "../../../store/actions/claim-user-info";
-import moment from "moment";
 import {Tooltip} from "@material-ui/core";
 import withWidth, {isWidthDown} from "@material-ui/core/withWidth";
 
@@ -70,18 +69,15 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
   const { retrieveClaimableTokens } = useUserRemainTokensClaim(
     tokenDetails,
     poolAddress,
-    ableToFetchFromBlockchain
+    poolDetails?.networkAvailable || poolDetails?.network_available
   );
   const availableClaim = releaseTime ? nowTime >= releaseTime : false;
 
   useEffect(() => {
     const fetchUserPurchased = async () => {
       if (connectedAccount && poolAddress) {
-        const userClaimInformations = await retrieveClaimableTokens(
-          connectedAccount,
-          poolAddress
-        );
-        console.log("userClaimInformations", userClaimInformations);
+        const userClaimInformations = await retrieveClaimableTokens(connectedAccount, poolAddress);
+        // console.log("userClaimInformations", userClaimInformations);
         dispatch(updateUserClaimInfo(userClaimInformations));
         setUserClaimInfo(userClaimInformations);
         setUserPurchased(
@@ -90,11 +86,10 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
       }
     };
 
-    (ableToFetchFromBlockchain || buyTokenSuccess) && fetchUserPurchased();
+    fetchUserPurchased();
   }, [
     connectedAccount,
     poolAddress,
-    ableToFetchFromBlockchain,
     claimTokenSuccess,
     buyTokenSuccess,
   ]);
@@ -263,9 +258,9 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
         {progress.slice(1, progress.length).map((item, index) => {
           return (
             <li key={index}
-                className={`item ${item.marked ? "active" : ""} ${progress.length === 2 ? "solo" : (index === progress.length-2) ? "last-item" : ""}`}>
+                className={`item ${item.marked || (index === 0 && progress[0].marked) ? "active" : ""} ${progress.length === 2 ? "solo" : (index === progress.length-2) ? "last-item" : ""}`}>
               <div className="mark">
-                {item.marked && <img src={tickIcon} />}
+                {item.marked && <img src={tickIcon} alt="" />}
               </div>
               <div className={`info ${item.showInfo && !isWidthDown('xs', props.width) && progress.length > 2 ? "show" : ""}`}>
                 {item.showInfo || isWidthDown('xs', props.width) ?
@@ -283,7 +278,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
                                     <p>{numberWithCommas(''+item.tokenAmount)} {tokenDetails?.symbol}</p>
                                     <p>{item.date && convertTimeToStringFormatWithoutGMT(item.date)}</p>
                                   </div>}>
-                    <div>{item.percent}%</div>
+                    <div>{numberWithCommas((item?.percent + ''), 1)}%</div>
                   </Tooltip>
                 }
               </div>
@@ -295,7 +290,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
       <Button
         style={{ marginTop: 8 }}
         text={"Claim Tokens"}
-        backgroundColor={"#3232DC"}
+        backgroundColor={"#72F34B"}
         disabled={!availableClaim || userPurchased <= 0 || disableAllButton}
         // disabled={disableAllButton || !ableToFetchFromBlockchain} // If network is not correct, disable Claim Button
         loading={loading}

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import useStyles from "./style";
 import {formatRoundDown, formatRoundUp, numberWithCommas} from "../../../utils/formatNumber";
 import BigNumber from 'bignumber.js';
@@ -25,7 +25,7 @@ function ClaimInfo(props: any) {
   const {
     userPurchased = 0,
     userClaimed = 0,
-    userPurchasedReturn = 0,
+    // userPurchasedReturn = 0,
   } = (userClaimInfo || {});
 
   const { account: connectedAccount } = useWeb3React();

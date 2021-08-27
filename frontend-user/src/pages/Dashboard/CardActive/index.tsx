@@ -1,13 +1,13 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Tooltip } from "@material-ui/core";
+import React, {useCallback, useEffect, useState} from "react";
+import {Tooltip} from "@material-ui/core";
 import useStyles from "./styles";
-import { numberWithCommas } from "../../../utils/formatNumber";
-import { Link } from "react-router-dom";
-import { getPoolCountDown } from "../../../utils/getPoolCountDown";
-import { ACCEPT_CURRENCY, NETWORK } from "../../../constants";
+import {numberWithCommas} from "../../../utils/formatNumber";
+import {Link} from "react-router-dom";
+import {getPoolCountDown} from "../../../utils/getPoolCountDown";
+import {ACCEPT_CURRENCY, NETWORK} from "../../../constants";
 import useFetch from "../../../hooks/useFetch";
-import { getIconCurrencyUsdt } from "../../../utils/usdt";
-import { PoolStatus } from "../../../utils/getPoolStatus";
+import {getIconCurrencyUsdt} from "../../../utils/usdt";
+import {PoolStatus} from "../../../utils/getPoolStatus";
 import {
   getAccessPoolText,
   getProgressWithPools,
@@ -17,16 +17,17 @@ import {
 import BigNumber from "bignumber.js";
 import CountdownSort from "../../../components/Base/CountdownSort";
 import useTokenSoldProgress from "../../BuyToken/hooks/useTokenSoldProgress";
-import { getPoolStatusByPoolDetail } from "../../../utils/getPoolStatusByPoolDetail";
+import {getPoolStatusByPoolDetail} from "../../../utils/getPoolStatusByPoolDetail";
+
 const EthereumIcon = "/images/ethereum.svg";
 const BSCIcon = "/images/bsc.svg";
 const PolygonIcon = "/images/polygon-matic.svg";
 
 const CardActive = (props: any): JSX.Element => {
   const styles = useStyles();
-  const { pool, autoFetch } = props;
+  const {pool, autoFetch} = props;
 
-  const { data: participants } = useFetch<any>(`/user/counting/${pool.id}`);
+  const {data: participants} = useFetch<any>(`/user/counting/${pool.id}`);
 
   const [progress, setProgress] = useState("0");
   const [tokenSold, setTokenSold] = useState("0");
@@ -60,7 +61,7 @@ const CardActive = (props: any): JSX.Element => {
     }
   }, [autoFetch, pool]);
 
-  const { currencyName } = getIconCurrencyUsdt({
+  const {currencyName} = getIconCurrencyUsdt({
     purchasableCurrency: pool?.accept_currency,
     networkAvailable: pool?.network_available,
   });
@@ -68,21 +69,21 @@ const CardActive = (props: any): JSX.Element => {
   const tokenDetails =
     pool.token === "TBD"
       ? {
-          symbol: "TBA",
-          name: "TBA",
-          decimals: 18,
-          address: "Token contract not available yet.",
-        }
+        symbol: "TBA",
+        name: "TBA",
+        decimals: 18,
+        address: "Token contract not available yet.",
+      }
       : {
-          symbol: pool.symbol,
-          name: pool.name,
-          decimals: pool.decimals,
-          address: pool.token,
-        };
+        symbol: pool.symbol,
+        name: pool.name,
+        decimals: pool.decimals,
+        address: pool.token,
+      };
 
   const poolStatus = getPoolStatusByPoolDetail(pool, tokenSold);
 
-  const { soldProgress } = useTokenSoldProgress(
+  const {soldProgress} = useTokenSoldProgress(
     pool?.campaign_hash,
     pool?.total_sold_coin,
     pool?.network_available,
@@ -90,86 +91,59 @@ const CardActive = (props: any): JSX.Element => {
   );
 
 
-  const joinTimeInDate = pool?.start_join_pool_time ? new Date(Number(pool?.start_join_pool_time) * 1000): undefined;
-  const endJoinTimeInDate = pool?.end_join_pool_time ? new Date(Number(pool?.end_join_pool_time) * 1000): undefined;
-  const startBuyTimeInDate = pool?.start_time ? new Date(Number(pool?.start_time) * 1000): undefined;
-  const endBuyTimeInDate = pool?.finish_time ? new Date(Number(pool?.finish_time) * 1000): undefined;
-  const announcementTime = pool?.whitelistBannerSetting?.announcement_time ? new Date(Number(pool?.whitelistBannerSetting?.announcement_time) * 1000): undefined;
+  const joinTimeInDate = pool?.start_join_pool_time ? new Date(Number(pool?.start_join_pool_time) * 1000) : undefined;
+  const endJoinTimeInDate = pool?.end_join_pool_time ? new Date(Number(pool?.end_join_pool_time) * 1000) : undefined;
+  const startBuyTimeInDate = pool?.start_time ? new Date(Number(pool?.start_time) * 1000) : undefined;
+  const endBuyTimeInDate = pool?.finish_time ? new Date(Number(pool?.finish_time) * 1000) : undefined;
+  const announcementTime = pool?.whitelistBannerSetting?.announcement_time ? new Date(Number(pool?.whitelistBannerSetting?.announcement_time) * 1000) : undefined;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const releaseTimeInDate = pool?.release_time ? new Date(Number(pool?.release_time) * 1000): undefined;
+  const releaseTimeInDate = pool?.release_time ? new Date(Number(pool?.release_time) * 1000) : undefined;
 
   const displayCountDownTime = useCallback(
     (
       method: string | undefined,
       startJoinTime: Date | undefined,
-      endJoinTime: Date| undefined,
+      endJoinTime: Date | undefined,
       startBuyTime: Date | undefined,
       endBuyTime: Date | undefined
     ) => {
       return getPoolCountDown(
-        startJoinTime, 
-        endJoinTime, 
-        startBuyTime, 
-        endBuyTime, 
-        releaseTimeInDate, 
-        method, 
-        poolStatus, 
-        pool, 
+        startJoinTime,
+        endJoinTime,
+        startBuyTime,
+        endBuyTime,
+        releaseTimeInDate,
+        method,
+        poolStatus,
+        pool,
         soldProgress
       );
     },
     [pool, poolStatus, releaseTimeInDate, soldProgress]
   );
 
-  const { date: countDownDate, displayShort } = displayCountDownTime(
+  const {date: countDownDate, displayShort} = displayCountDownTime(
     pool?.buy_type,
     joinTimeInDate,
     endJoinTimeInDate,
     startBuyTimeInDate,
     endBuyTimeInDate
   );
-  
+
   return (
     // <Link to={`/buy-token/${pool.id}`}>
     <div className={styles.cardActive}>
+      <div className={`${styles.poolStatusWarning}`}>
+        {getAccessPoolText(pool)}
+      </div>
       <div className={styles.cardActiveBanner}>
-        <img src={pool.banner} alt="" />
-        <div className={styles.listStatus}>
-          <div className={`${styles.poolStatusWarning}`}>
-            {getAccessPoolText(pool)}
-          </div>
-          {/* {pool.status === PoolStatus.Closed && (
-            <div className={`${styles.poolStatus} ended`}>
-              <span>{PoolStatus.Closed}</span>
-            </div>
-          )}
-          {pool.status === PoolStatus.TBA && (
-            <div className={`${styles.poolStatus} tba`}>TBA</div>
-          )}
-          {pool.status === PoolStatus.Filled && (
-            <div className={`${styles.poolStatus} time`}>
-              <span>{PoolStatus.Filled}</span>
-            </div>
-          )}
-          {pool.status === PoolStatus.Progress && (
-            <div className={`${styles.poolStatus} in-progress`}>
-              <span>{PoolStatus.Progress}</span>
-            </div>
-          )}
-          {(pool.status === PoolStatus.Joining ||
-            pool.status === PoolStatus.Upcoming) && (
-            <div className={`${styles.poolStatus} joining`}>Whitelisting</div>
-          )}
-          {pool.status === PoolStatus.Claimable && (
-            <div className={`${styles.poolStatus} claimable`}>Claimable</div>
-          )} */}
-        </div>
+        <img src={pool.banner} alt=""/>
       </div>
 
       <div className={styles.cardActiveRight}>
         <div className={styles.cardActiveHeaderLeft}>
           <Tooltip
-            classes={{ tooltip: styles.tooltip }}
+            classes={{tooltip: styles.tooltip}}
             title={pool.title}
             arrow
             placement="top"
@@ -178,10 +152,10 @@ const CardActive = (props: any): JSX.Element => {
           </Tooltip>
           {
             {
-              'eth': <img className={styles.iconCoin} src={EthereumIcon} alt="" />,
-              'bsc': <img className={styles.iconCoin} src={BSCIcon} alt="" />,
-              'polygon': <img className={styles.iconCoin} src={PolygonIcon} alt="" />,
-            }[`${pool?.network_available}`] || <img className={styles.iconCoin} src={EthereumIcon} alt="" />
+              'eth': <img className={styles.iconCoin} src={EthereumIcon} alt=""/>,
+              'bsc': <img className={styles.iconCoin} src={BSCIcon} alt=""/>,
+              'polygon': <img className={styles.iconCoin} src={PolygonIcon} alt=""/>,
+            }[`${pool?.network_available}`] || <img className={styles.iconCoin} src={EthereumIcon} alt=""/>
           }
         </div>
 
@@ -224,22 +198,6 @@ const CardActive = (props: any): JSX.Element => {
         <div className={styles.progressArea}>
           <div className={styles.progressAreaHeader}>
             <p className={styles.titleProgressArea}>Progress</p>
-            <div className={styles.progressInfo}>
-              <span>
-                (
-                {new BigNumber(progress).gte(100)
-                  ? new BigNumber(progress).toFixed(0)
-                  : new BigNumber(progress).toFixed(0)}
-                %)
-              </span>
-              <span>
-                {numberWithCommas(tokenSold, 0)}
-                &nbsp;/&nbsp;
-                {numberWithCommas(totalSoldCoin)}
-                &nbsp;
-                {pool.symbol}
-              </span>
-            </div>
           </div>
           <div className={styles.progress}>
             <span
@@ -261,6 +219,21 @@ const CardActive = (props: any): JSX.Element => {
               />
             </span>
           </div>
+          <div className={styles.progressInfo}>
+              <span>
+                {new BigNumber(progress).gte(100)
+                  ? new BigNumber(progress).toFixed(0)
+                  : new BigNumber(progress).toFixed(0)}
+                %
+              </span>
+            <span>
+                {numberWithCommas(tokenSold, 0)}
+              &nbsp;/&nbsp;
+              {numberWithCommas(totalSoldCoin)}
+              &nbsp;
+              {pool.symbol}
+              </span>
+          </div>
         </div>
 
         <div className={styles.groupBtnBottom}>
@@ -273,7 +246,7 @@ const CardActive = (props: any): JSX.Element => {
               <span className={styles.endInText}>{displayShort}</span>
               <span className={styles.endInCountdown}>
                 
-                <CountdownSort startDate={countDownDate} />
+                <CountdownSort startDate={countDownDate}/>
               </span>
             </div>
           )}

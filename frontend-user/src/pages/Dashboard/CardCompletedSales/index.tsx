@@ -68,6 +68,7 @@ const CardCompletedSales = (props: any): JSX.Element => {
               <div className={`${styles.poolStatusWarning}`}>
                 {getAccessPoolText(pool)}
               </div>
+              /
               {pool.status === PoolStatus.Closed && (
                 <div className={`${styles.poolStatus} ended`}>
                   <span>{PoolStatus.Closed}</span>

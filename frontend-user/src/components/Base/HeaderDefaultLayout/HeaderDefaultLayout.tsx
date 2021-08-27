@@ -268,7 +268,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
             <nav className={`${styles.headerNav} ${toggleNavbar ? 'show' : ''}`}>
               <ul className={styles.headerLinks}>
                 <li className={styles.headerLink}><Link to="/">Home</Link></li>
-                <li className={styles.headerLink}><Link to="#">Token sales</Link></li>
+                <li className={styles.headerLink}><Link to="/dashboard">Token sales</Link></li>
                 <li className={styles.headerLink}><Link to="/pools/ticket">Ticket sales</Link></li>
                 {/* <li className={styles.headerLink}><Link to="#">Items Sales</Link></li> */}
                 {/* <li className={styles.headerLink}><Link href="#">Marketplace</Link></li> */}

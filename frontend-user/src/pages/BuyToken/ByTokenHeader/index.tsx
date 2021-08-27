@@ -89,7 +89,7 @@ const HeaderByToken: FC<Props> = ({ poolDetailsMapping, poolDetails }) => {
             {!copiedAddress ? (
               <img src={copyImage} alt="copy-icon" />
             ) : (
-              <p style={{ color: "#6398FF", marginLeft: 10 }}>Copied</p>
+              <p style={{ color: "#72F34B", marginLeft: 10 }}>Copied</p>
             )}
           </CopyToClipboard>
         </div>

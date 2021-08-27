@@ -11,10 +11,25 @@ const useStyles = makeStyles((theme: any) => {
       },
     },
     card: {
-      borderRadius: 28,
+      background: '#171717',
+      borderRadius: 4,
       overflow: 'hidden',
       height: '100%',
-      background: '#222228',
+      fontFamily: 'Firs Neue',
+      border: '1px solid #28481E',
+      padding: '4px 20px 20px',
+
+      '&:hover': {
+        borderColor: '#72F34B',
+
+        '& .status:before': {
+          background: '#72F34B'
+        },
+
+        '& .status:after': {
+          background: '#72F34B'
+        }
+      }
     },
     
     cardHeader: {
@@ -38,7 +53,7 @@ const useStyles = makeStyles((theme: any) => {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        fontFamily: 'DM Sans',
+        
         fontStyle: 'normal',
         fontWeight: 'bold',
         fontSize: '12px',
@@ -101,10 +116,10 @@ const useStyles = makeStyles((theme: any) => {
       height: 42,
       width: '100%',
       border: 0,
-      borderRadius: 60,
-      background: '#38383D',
+      borderRadius: 2,
+      background: '#000000',
       cursor: 'pointer',
-      fontFamily: 'Helvetica',
+      
       fontSize: 16,
       lineHeight: '24px',
       textAlign: 'center',
@@ -127,7 +142,7 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '& > div': {
-        fontFamily: 'DM Sans',
+        
         fontWeight: 'bold',
         fontSize: 18,
         lineHeight: '26px',
@@ -148,22 +163,37 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     poolStatusWarning: {
-      fontFamily: 'DM Sans',
       fontWeight: 500,
       fontSize: 16,
       lineHeight: '24px',
       textAlign: 'center',
-      color: '#3232DC',
-      padding: '5px 15px',
+      color: '#72F34B',
       borderRadius: 10,
-      background: '#FFFFFF',
-      height: 34,
       boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
       textTransform: 'uppercase',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '0 2px',
+
+      '&:before': {
+        content: "''",
+        width: 80,
+        height: 6,
+        background: '#458531',
+        transform: 'skewX(-30deg)'
+      },
+
+      '&:after': {
+        content: "''",
+        width: 80,
+        height: 6,
+        background: '#458531',
+        transform: 'skewX(30deg)'
+      },
     },
 
     tooltip: {
-      fontFamily: 'DM Sans',
       fontWeight: 500,
       fontSize: 14,
       lineHeight: '24px',
@@ -172,7 +202,7 @@ const useStyles = makeStyles((theme: any) => {
     },
     
     cardBody: {
-      padding: 20,
+      paddingTop: 20,
       '& .card-content__title': {
         // display: 'Grid',
         // placeContent: 'center',
@@ -188,7 +218,6 @@ const useStyles = makeStyles((theme: any) => {
         },
 
         '& > p': {
-          fontFamily: 'DM Sans',
           fontWeight: 'bold',
           fontSize: 20,
           lineHeight: '24px',
@@ -207,7 +236,6 @@ const useStyles = makeStyles((theme: any) => {
         },
 
         '& > div h3': {
-          fontFamily: 'DM Sans',
           fontWeight: 'bold',
           fontSize: 24,
           lineHeight: '24px',
@@ -225,7 +253,7 @@ const useStyles = makeStyles((theme: any) => {
         },
 
         '& > div p': {
-          fontFamily: 'Helvetica',
+          
           fontStyle: 'normal',
           fontWeight: 'normal',
           fontSize: 16,
@@ -254,7 +282,6 @@ const useStyles = makeStyles((theme: any) => {
           marginTop: '10px',
 
           '& span:first-child': {
-            fontFamily: 'Helvetica',
             fontStyle: 'normal',
             fontWeight: 'normal',
             fontSize:  16,
@@ -263,7 +290,6 @@ const useStyles = makeStyles((theme: any) => {
           },
 
           '& span:last-child': {
-            fontFamily: 'DM Sans',
             fontStyle: 'normal',
             fontWeight: 'bold',
             fontSize: 18,
@@ -273,7 +299,6 @@ const useStyles = makeStyles((theme: any) => {
           },
 
           '& .total': {
-            fontFamily: 'DM Sans',
             fontStyle: 'normal',
             fontWeight: 500,
             fontSize:  18,
@@ -303,7 +328,6 @@ const useStyles = makeStyles((theme: any) => {
         marginRight: '10px'
       },
       '& .token-area span': {
-        fontFamily: 'Helvetica',
         fontStyle: 'normal',
         fontWeight: 'normal',
         fontSize: '12px',
@@ -315,7 +339,6 @@ const useStyles = makeStyles((theme: any) => {
         marginTop: '30px',
 
         '& p': {
-          fontFamily: 'Helvetica',
           fontStyle: 'normal',
           fontWeight: 'normal',
           fontSize: '12px',
@@ -350,7 +373,6 @@ const useStyles = makeStyles((theme: any) => {
         },
 
         '& div span': {
-          fontFamily: 'Helvetica',
           fontStyle: 'normal',
           fontWeight: 'normal',
           fontSize: '12px',
@@ -359,7 +381,6 @@ const useStyles = makeStyles((theme: any) => {
         },
 
         '& div div span:first-child': {
-          fontFamily: 'DM Sans',
           fontStyle: 'normal',
           fontWeight: 'bold',
           fontSize: '14px',

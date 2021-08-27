@@ -133,7 +133,7 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
               className={styles.btnOpenModal}
               target="_blank"
               href={poolDetails?.lockSchedule}
-              style={{ color: "#6398FF" }}
+              style={{ color: "#72F34B" }}
               rel="noreferrer"
             >
               View token release schedule

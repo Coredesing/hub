@@ -15,7 +15,7 @@ const StatusBar: React.FC<StatusBarProps> = ({ currentStatus }: StatusBarProps) 
       label: PoolStatus.TBA 
     },
     {
-      color: '#6398FF',
+      color: '#72F34B',
       label: PoolStatus.Upcoming 
     },
     {

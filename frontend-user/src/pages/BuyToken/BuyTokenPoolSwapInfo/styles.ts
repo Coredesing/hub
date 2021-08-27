@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: any) => {
       marginTop: 4,
       fontSize: 28,
       lineHeight: '32px',
-      color: '#6398FF',
+      color: '#72F34B',
       fontWeight: 'bold',
     },
 

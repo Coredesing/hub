@@ -630,7 +630,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
           <div>
             <Button
               text={'Swap'}
-              backgroundColor={'#3232DC'}
+              backgroundColor={'#72F34B'}
               disabled={!purchasable}
               onClick={handleTokenDeposit}
               loading={tokenDepositLoading}

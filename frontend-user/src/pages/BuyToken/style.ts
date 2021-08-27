@@ -2,6 +2,14 @@ import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: any) => {
   return {
+    alertKyc: {
+      paddingLeft: 0,
+      paddingRight: 0,
+      marginBottom: '10px',
+      '& div': {
+        borderRadius: '8px',
+      }
+    },
     bottomBoxHowTo: {
       marginTop: 100,
       position: 'relative',

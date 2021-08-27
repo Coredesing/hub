@@ -407,6 +407,18 @@ class PoolService {
     return pool;
   };
 
+  async getPoolWithFreeBuySettingById(poolId) {
+    if (await RedisUtils.checkExistRedisPoolDetail(poolId)) {
+      let cachedPoolDetail = await RedisUtils.getRedisPoolDetail(poolId);
+      if (cachedPoolDetail) {
+        return JSON.parse(cachedPoolDetail);
+      }
+    }
+
+    const pool = await CampaignModel.query().where('id', poolId).with('freeBuyTimeSetting').first();
+    return JSON.parse(JSON.stringify(pool));
+  };
+
   async checkPoolExist(poolId) {
     const pool = this.getPoolById(poolId);
     return !!pool;

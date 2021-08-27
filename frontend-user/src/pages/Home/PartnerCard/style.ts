@@ -4,6 +4,10 @@ const useStyles = makeStyles((theme: any) => ({
     partnerCard: {
         width: '201px',
         height: '142.5px',
+        [theme.breakpoints.down("xs")]: {
+            width: "auto",
+            height: '111px',
+        },
         borderRadius: '2px',
         position: 'relative',
         overflow: 'hidden',
@@ -12,6 +16,8 @@ const useStyles = makeStyles((theme: any) => ({
             width: '100%',
             height: '100%',
             transition: '.5s',
+            borderRadius: "4px",
+            objectFit: "cover",
         },
 
         '& .info': {

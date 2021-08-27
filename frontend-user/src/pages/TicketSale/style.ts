@@ -12,7 +12,19 @@ const useStyles = makeStyles((theme: any) => {
         top: 0,
         '& img': {
           width: '100%',
-        }
+        },
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+        },
+
+        '&.green::before': {
+          background: 'linear-gradient(180deg, rgba(114, 243, 75, 0) 0%, #72F34B 57.29%)'
+        },
       }
     },
     pools: {
@@ -41,6 +53,7 @@ const useStyles = makeStyles((theme: any) => {
       padding: '0px calc((100% - 800px) / 2)',
       paddingTop: '80px',
       paddingBottom: '52px',
+      position: 'relative',
       '& h3': {
         fontFamily: 'Space Ranger',
         color: '#0A0A0A',
@@ -49,7 +62,8 @@ const useStyles = makeStyles((theme: any) => {
         fontWeight: 'bold',
         letterSpacing: '0.02em',
         textAlign: 'center',
-        marginBottom: '28px'
+        marginBottom: '28px',
+        position: 'relative',
       },
 
       '& .rectangle': {

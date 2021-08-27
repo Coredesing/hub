@@ -619,8 +619,8 @@ class CampaignController {
         'campaign_id': campaign_id
       };
       // call to db get campaign info
-      const campaignService = new CampaignService();
-      const camp = await campaignService.findByCampaignId(campaign_id)
+      const campaignService = new PoolService();
+      const camp = await campaignService.getPoolWithFreeBuySettingById(campaign_id);
       if (!camp) {
         return HelperUtils.responseBadRequest("Do not found campaign");
       }
@@ -651,6 +651,12 @@ class CampaignController {
         if (!winner || !winner.lottery_ticket || winner.lottery_ticket < 1) {
           return HelperUtils.responseBadRequest("you are not allowed to claim ticket");
         }
+        const now = new Date().getTime();
+        if (camp.freeBuyTimeSetting && camp.freeBuyTimeSetting.start_buy_time &&
+          now >= Number(camp.freeBuyTimeSetting.start_buy_time) * 1000) {
+          winner.lottery_ticket++
+        }
+
         maxTokenClaim = new BigNumber(winner.lottery_ticket);
       } else {
         // call to SC to get amount token purchased of user

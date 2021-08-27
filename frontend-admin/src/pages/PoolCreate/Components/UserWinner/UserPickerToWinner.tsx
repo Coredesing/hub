@@ -70,9 +70,9 @@ function UserPickerToWinner(props: any) {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => handlePickerRandom(PICK_WINNER_RULE.RULE_GAMEFI_TICKET)}
+          onClick={() => handlePickerRandom(PICK_WINNER_RULE.RULE_BASE_ON_SNAPSHOT)}
           style={{ marginLeft: 10, marginTop: -5 }}
-        >GameFI Token</Button>
+        >Base on snapshot</Button>
 
         <Button
           variant="contained"

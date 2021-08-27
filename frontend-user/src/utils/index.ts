@@ -228,3 +228,11 @@ export const debounce = (fn: Function, timer: number) => {
     }, timer)
   }
 }
+
+export const formatCampaignStatus = (status: string) => {
+  const stt = String(status).toLowerCase();
+  if(stt === 'filled') return 'Opening';
+  if(stt === 'ended') return 'Ended';
+  if(stt === 'upcoming') return 'Upcoming';
+  return status;
+}

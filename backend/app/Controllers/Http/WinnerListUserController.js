@@ -23,7 +23,6 @@ class WinnerListUserController {
       // Try get Campaign detail from Redis Cache
       if (await RedisUtils.checkExistRedisPoolDetail(campaign_id)) {
         let cachedPoolDetail = await RedisUtils.getRedisPoolDetail(campaign_id);
-        console.log('[getWinnerListPublic] - Exist cache data Public Pool Detail: ', cachedPoolDetail);
         if (cachedPoolDetail) {
           campaign = JSON.parse(cachedPoolDetail);
         }
@@ -243,15 +242,15 @@ class WinnerListUserController {
       const campaign_id = params.campaignId;
       const wallet_address = inputParams.wallet_address;
 
-      // Check Public Winner Status
       const poolService = new PoolService;
-      const poolExist = await poolService.getPoolById(campaign_id);
-      console.log('[checkExistWinner] - poolExist.public_winner_status:', poolExist && poolExist.public_winner_status);
+      const poolExist = await poolService.getPoolWithFreeBuySettingById(campaign_id);
       if (!poolExist || (poolExist.public_winner_status === Const.PUBLIC_WINNER_STATUS.PRIVATE)) {
         return HelperUtils.responseNotFound('User not exist in Winner User List');
       }
 
       const winnerService = new WinnerListService();
+      const now = new Date().getTime();
+
       let existRecord = await winnerService.buildQueryBuilder({
         wallet_address,
         campaign_id,
@@ -259,7 +258,12 @@ class WinnerListUserController {
 
       if (existRecord) {
         existRecord.email = ''
-        console.log('[checkExistWinner] - Record exist in Winner: ', existRecord);
+        if (poolExist.token_type === Const.TOKEN_TYPE.ERC721 && poolExist.process === Const.PROCESS.ONLY_CLAIM &&
+          poolExist.freeBuyTimeSetting && poolExist.freeBuyTimeSetting.start_buy_time &&
+          now >= Number(poolExist.freeBuyTimeSetting.start_buy_time) * 1000) {
+          existRecord.lottery_ticket++
+        }
+
         return HelperUtils.responseSuccess(existRecord, 'User exist in Winner User List');
       }
 
@@ -270,7 +274,7 @@ class WinnerListUserController {
       }).first();
 
       if (existRecord) {
-        console.log('[checkExistWinner] - Record exist in Reserved: ', existRecord);
+        existRecord.email = ''
         return HelperUtils.responseSuccess(existRecord, 'User exist in Winner User List');
       }
 

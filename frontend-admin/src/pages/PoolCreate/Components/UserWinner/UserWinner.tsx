@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import TableContainer from "@material-ui/core/TableContainer";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -18,11 +18,15 @@ import Link from "@material-ui/core/Link";
 import useMapMaxBuyTier from "../hooks/useMapMaxBuyTier";
 import BigNumber from "bignumber.js";
 import PublicWinnerSetting from "./PublicWinnerSetting";
+import UserPickerToWinner from "./UserPickerToWinner";
+import {uploadWinners} from "../../../../request/pool";
 
 function UserWinner(props: any) {
   const commonStyle = useCommonStyle();
   const classesTable = useStylesTable();
   const { poolDetail } = props;
+  const [selectedFile, setSelectedFile] = useState();
+
   const {
     rows,
     search, searchDelay,
@@ -44,14 +48,42 @@ function UserWinner(props: any) {
     minBuyTiersMapping,
   } = useMapMaxBuyTier({ poolDetail });
 
+  const changeHandler = (event: any) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  const handleSubmission = async () => {
+    console.log('click ne')
+    const formData = new FormData();
+    formData.append('file', selectedFile ?? '');
+
+    await uploadWinners(poolDetail.id, formData)
+        .then((response) => response.json())
+        .then((result) => {
+          console.log('result', result);
+        }).catch((e) => {
+          console.log('upload error', e)
+        });
+  };
+
   return (
     <>
       <div style={{color: 'red'}}>
         <div>These Winner list accounts still have to check their tier when buying tokens. If you want to skip this check, please add accounts to the Reserve list.</div>
       </div>
-      <div className={commonStyle.boxSearch}>
+
+      <div className={commonStyle.boxSearch} style={{ marginTop: 10 }} >
         <input className={commonStyle.inputSearch} onChange={searchDelay} placeholder="Search" />
         <img src="/images/icon-search.svg" alt="" style={{ marginLeft: -30 }} />
+
+        <div style={{float: 'right'}}>
+          <Button onClick={handleSubmission}
+              variant="contained"
+              color="primary"
+          >Submit</Button>
+        </div>
+        <input style={{marginLeft: 10, float: 'right'}} type={'file'} name="file"  onChange={changeHandler} />
+        <span style={{float: 'right'}}>Upload Winners</span>
       </div>
 
       <TableContainer component={Paper} className={`${commonStyle.tableScroll} ${classesTable.tableUserJoin}`}>

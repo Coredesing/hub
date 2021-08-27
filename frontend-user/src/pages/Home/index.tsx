@@ -22,6 +22,7 @@ import {
 } from "../../components/Base/Table";
 import { TOKEN_TYPE } from "../../constants";
 import Instruction from "./Instruction";
+import { getSeedRound } from "../../utils";
 
 type Data = { [k: string]: any };
 type ResponseData = {
@@ -193,7 +194,7 @@ const Home = (props: any) => {
             </div>
             <div className={clsx(styles.cards, styles.cardsTicketSales)}>
               {(ticketSales.data || []).map((card, id) => (
-                <Card card={card} key={id} />
+                <Card card={card} key={id} title={<h5>{card.title}</h5>} />
               ))}
             </div>
           </div>
@@ -215,7 +216,12 @@ const Home = (props: any) => {
             </div>
             <div className={clsx(styles.cards, styles.cardsTokenSales)}>
               {(tokenSales.data || []).map((card, id) => (
-                <Card card={card} key={id} className={styles.cardTokenSale} />
+                <Card card={card} key={id} className={styles.cardTokenSale}
+                title={<div className="card-token-title">
+                  <h4>{card.title}</h4>
+                  <span>{getSeedRound(card.is_private)}</span>
+                </div>}
+                />
               ))}
             </div>
           </div>

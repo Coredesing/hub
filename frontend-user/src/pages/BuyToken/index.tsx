@@ -56,6 +56,8 @@ import ApplyWhitelistModal from "./ApplyWhitelistModal/ApplyWhitelistModal";
 
 import {getPoolStatusByPoolDetail} from "../../utils/getPoolStatusByPoolDetail";
 import useCountDownFreeBuyTime from "./hooks/useCountDownFreeBuyTime";
+import useKyc from '../../hooks/useKyc';
+import { AlertKYC } from '../../components/Base/AlertKYC';
 
 const copyImage = "/images/copy.svg";
 const poolImage = "/images/pool_circle.svg";
@@ -96,6 +98,7 @@ const BuyToken: React.FC<any> = (props: any) => {
       poolDetails?.networkAvailable,
       poolDetails,
   );
+  const {checkingKyc, isKYC} = useKyc(connectedAccount);
   const { joinPool, poolJoinLoading, joinPoolSuccess } = usePoolJoinAction({ poolId: poolDetails?.id, poolDetails });
   const { data: existedWinner } = useFetch<Array<any>>(
     poolDetails ? `/pool/${poolDetails?.id}/check-exist-winner?wallet_address=${connectedAccount}`: undefined,
@@ -296,7 +299,7 @@ const BuyToken: React.FC<any> = (props: any) => {
     if (loadingPoolDetail)  {
       return (
         <div className={styles.loader} style={{ marginTop: 70 }}>
-          <HashLoader loading={true} color={'#3232DC'} />
+          <HashLoader loading={true} color={'#72F34B'} />
           <p className={styles.loaderText}>
             <span style={{ marginRight: 10 }}>Loading Pool Details ...</span>
           </p>
@@ -318,6 +321,9 @@ const BuyToken: React.FC<any> = (props: any) => {
       return (
         <>
           <section className={styles.headerComponent}>
+            {
+              !isKYC && !checkingKyc && connectedAccount && <AlertKYC className={styles.alertKyc} connectedAccount={connectedAccount} />
+            }
 
             <BannerNotification
               poolDetails={poolDetails}
@@ -460,6 +466,7 @@ const BuyToken: React.FC<any> = (props: any) => {
               currentUserTier={currentUserTier}
               poolDetailsMapping={poolDetailsMapping}
               poolDetails={poolDetails}
+              isKyc={isKYC}
             />
           }
 
@@ -476,6 +483,7 @@ const BuyToken: React.FC<any> = (props: any) => {
               poolDetails={poolDetails}
               currencyName={currencyName}
               startBuyTimeInDate={startBuyTimeInDate}
+              isKyc={isKYC}
             />
           }
 
@@ -545,7 +553,7 @@ const BuyToken: React.FC<any> = (props: any) => {
                       >
                       {
                         !copiedAddress ? <img src={copyImage} alt="copy-icon" className={styles.poolHeaderCopy} />
-                        : <p style={{ color: '#6398FF', marginLeft: 10 }}>Copied</p>
+                        : <p style={{ color: '#72F34B', marginLeft: 10 }}>Copied</p>
                       }
                       </CopyToClipboard>
                     </p>
@@ -670,7 +678,7 @@ const BuyToken: React.FC<any> = (props: any) => {
               {
                 (loadingPoolDetail) ? (
                   <div className={styles.loader}>
-                    <HashLoader loading={true} color={'#3232DC'} />
+                    <HashLoader loading={true} color={'#72F34B'} />
                     <p className={styles.loaderText}>
                       <span style={{ marginRight: 10 }}>Loading Pool Details ...</span>
                     </p>
@@ -736,7 +744,7 @@ const BuyToken: React.FC<any> = (props: any) => {
 
                       <Button
                         text={getEtherscanName({ networkAvailable: poolDetails?.networkAvailable })}
-                        backgroundColor={'#3232DC'}
+                        backgroundColor={'#72F34B'}
                         onClick={() => {
                           const url = getEtherscanTransactionAddress({ appChainID: appChainID, address: poolDetails?.tokenDetails?.address });
                           poolDetails && window.open(url as string, '_blank')

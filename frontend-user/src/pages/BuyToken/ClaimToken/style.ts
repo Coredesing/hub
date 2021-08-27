@@ -9,24 +9,24 @@ const useStyles = makeStyles((theme: any) => {
       marginBottom: 12,
       color: '#FFFFFF',
       fontFamily: 'DM Sans',
-      border: '1px solid #6398FF',
+      border: '1px solid #72F34B',
 
       [theme?.breakpoints?.down('sm')]: {
         padding: '28px 20px',
       },
       
       '& button': {
-        color: '#FFFFFF',
+        color: '#000',
         height: 42,
         padding: 5,
         fontSize: 16,
         fontFamily: 'DM Sans',
         fontWeight: 500,
         lineHeight: '24px',
-        borderRadius: 60,
+        borderRadius: 2,
         width: 240,
         maxWidth: '100%',
-        backgroundColor: '#3232DC !important',
+        backgroundColor: '#72F34B !important',
 
         [theme.breakpoints.down('sm')]: {
           marginTop: '30px !important',
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: any) => {
         '&:disabled': {
           cursor: 'not-allowed',
           opacity: 0.6,
-          backgroundColor: '#3232DC !important',
+          backgroundColor: '#72F34B !important',
         }
       },
 
@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '& .text-blue': {
-        color: '#6398FF'
+        color: '#72F34B'
       }
     },
 
@@ -184,16 +184,17 @@ const useStyles = makeStyles((theme: any) => {
         },
 
         '&.active': {
-          color: '#6398FF',
+          color: '#72F34B',
+          position: 'relative',
 
           '&:before': {
             content: '""',
             position: 'absolute',
             top: -12,
-            left: 1,
-            right: 1,
+            left: 0,
+            right: 0,
             height: 6,
-            background: '#6398FF',
+            background: '#72F34B',
             zIndex: 1,
 
             [theme.breakpoints.down('sm')]: {
@@ -202,7 +203,7 @@ const useStyles = makeStyles((theme: any) => {
           },
 
           '& .info > div:first-child': {
-            color: '#6398FF'
+            color: '#72F34B'
           },
 
           '&.solo:before': {
@@ -279,10 +280,10 @@ const useStyles = makeStyles((theme: any) => {
             content: '""',
             position: 'absolute',
             top: -12,
-            left: 1,
+            left: 0,
             right: 1,
             height: 6,
-            background: '#6398FF',
+            background: '#72F34B',
             zIndex: 1,
 
             [theme.breakpoints.down('sm')]: {
@@ -295,7 +296,7 @@ const useStyles = makeStyles((theme: any) => {
           },
 
           '& .info > div:first-child': {
-            color: '#6398FF'
+            color: '#72F34B'
           },
 
           '&.solo:before': {

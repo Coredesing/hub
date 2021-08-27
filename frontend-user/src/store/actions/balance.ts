@@ -43,14 +43,14 @@ export const getBalance = (loginUser: string) => {
       const pkfBalance = await balanceOf(process.env.REACT_APP_PKF, appChainID, connector, loginUser);
       const uniBalance = await balanceOf(process.env.REACT_APP_UNI_LP, appChainID, connector, loginUser);
       const mantraBalance = await balanceOf(process.env.REACT_APP_MANTRA_LP, appChainID, connector, loginUser);
-      let ePkf = await getEPkfBonusBalanceValue(loginUser);
+      // let ePkf = await getEPkfBonusBalanceValue(loginUser);
 
       result = {
         ...result,
         pkf: pkfBalance,
         uni: uniBalance,
         mantra: mantraBalance,
-        ePkf,
+        // ePkf,
       };
 
       dispatch({

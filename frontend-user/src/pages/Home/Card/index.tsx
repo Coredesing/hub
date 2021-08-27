@@ -6,13 +6,15 @@ import { useCardStyles } from "../style";
 import Image from "../../../components/Base/Image";
 import { TOKEN_TYPE } from "../../../constants";
 import { formatCampaignStatus } from "../../../utils";
+import React from "react";
 
 type Props = {
   card: { [k: string]: any };
+  title?: string | React.ReactElement;
   [k: string]: any;
 };
-export const Card = ({ card, ...props }: Props) => {
-  
+export const Card = ({ card, title, ...props }: Props) => {
+
   const styles = { ...useStyles(), ...useCardStyles() };
   // const isOpen = card.campaign_status === "Filled";
   const isTicket = card.token_type === TOKEN_TYPE.ERC721;
@@ -21,9 +23,10 @@ export const Card = ({ card, ...props }: Props) => {
       <div className={clsx(styles.cardImg, styles.cardImgUpcoming)}>
         <h4>{formatCampaignStatus(card.campaign_status)}</h4>
         <Image src={card.banner} />
-        <h5>{card.title}</h5>
       </div>
-
+      <div className="title">
+        {title}
+      </div>
       <Link
         href={`/#/${isTicket ? "buy-nft" : "buy-token"}/${card.id}`}
         className={clsx(styles.btnDetail, "btn-detail")}

@@ -295,7 +295,7 @@ function BannerNotification(props: any) {
                   You can view the list of winners&nbsp;
                   <a
                     style={{
-                      color: '#6398ff',
+                      color: '#72F34B',
                       textDecoration: 'underline',
                       cursor: 'pointer',
                     }}
@@ -314,7 +314,7 @@ function BannerNotification(props: any) {
                   {' '}
                   <a
                     style={{
-                      color: '#6398ff',
+                      color: '#72F34B',
                       textDecoration: 'underline',
                       cursor: 'pointer',
                     }}

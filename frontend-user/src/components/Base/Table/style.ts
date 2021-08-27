@@ -6,6 +6,18 @@ export const useTableStyles = makeStyles((theme: any) => {
             borderBottom: 'none',
             borderRadius: '4px',
             boxSizing: 'border-box',
+            '&::-webkit-scrollbar': {
+                width: '5px',
+                height: '5px',
+            },
+            '&::-webkit-scrollbar-track': {
+                background: "#888",
+                borderRadius: '12px',
+            },
+            '&::-webkit-scrollbar-thumb': {
+                backgroundColor: '#FFFFFF',
+                borderRadius: '12px',
+            }
 
         },
         table: {
@@ -37,6 +49,7 @@ export const useTableStyles = makeStyles((theme: any) => {
             display: 'flex',
             flexDirection: 'column',
             gap: '2px',
-        }
+        },
+        
     };
 });

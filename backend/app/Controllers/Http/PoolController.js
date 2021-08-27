@@ -9,9 +9,11 @@ const HelperUtils = use('App/Common/HelperUtils');
 const RedisUtils = use('App/Common/RedisUtils');
 const GameFIUtils = use('App/Common/GameFIUtils');
 const Config = use('Config')
+const UserBalanceSnapshotModel = use('App/Models/UserBalanceSnapshot');
 const moment = require('moment');
 const BigNumber = use('bignumber.js');
 const { pick } = require('lodash');
+const csv = require('fast-csv');
 
 class PoolController {
   // special pool: GamefiTicket
@@ -744,6 +746,57 @@ class PoolController {
     return pools;
   }
 
+  async uploadWinners({ request, auth, params }) {
+    const campaignId = params.campaignId;
+    const file = request.file('file');
+
+    if (!campaignId) {
+      return HelperUtils.responseNotFound('Pool not found');
+    }
+
+    try {
+      let userSnapshots = []
+      csv.parseFile(file.tmpPath, {headers: false})
+        .on("data", (data) => {
+          if (data.length < 2) {
+            return
+          }
+          const wallet_address = data[0]
+          let ticket = parseInt(data[1]) ?? 1
+          ticket = isNaN(ticket) ? 1 : ticket
+          if (ticket < 1) {
+            ticket = 1
+          }
+
+          let userSnapShot = new UserBalanceSnapshotModel();
+          userSnapShot.fill({
+            campaign_id: campaignId,
+            wallet_address: wallet_address,
+            level: 0,
+            winner_ticket: ticket,
+            lottery_ticket: ticket,
+            pkf_balance: 0,
+            pkf_balance_with_weight_rate: 0,
+          });
+          userSnapshots.push(userSnapShot);
+        })
+        .on("error", (e) => {
+          console.log('error', e);
+        })
+        .on("end", async () => {
+          const campaignUpdated = await CampaignModel.query().where('id', campaignId).first();
+          if (!campaignUpdated) {
+            return
+          }
+          await campaignUpdated.userBalanceSnapshots().delete();
+          await campaignUpdated.userBalanceSnapshots().saveMany(userSnapshots);
+        });
+
+      return HelperUtils.responseSuccess({message: 'upload successfully'});
+    } catch (e) {
+      return HelperUtils.responseErrorInternal('upload user Fail');
+    }
+  }
 }
 
 module.exports = PoolController

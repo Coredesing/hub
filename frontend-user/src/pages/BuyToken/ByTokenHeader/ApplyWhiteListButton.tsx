@@ -70,11 +70,11 @@ function ApplyWhiteListButton(props: any) {
     <>
       <Button
         text={readyJoin ? 'Applied Whitelist' : 'Apply Whitelist'}
-        backgroundColor={readyJoin ? '#3232DC' : '#D01F36'}
+        backgroundColor={readyJoin ? '#72F34B' : '#D01F36'}
         style={{
           width: 200,
           height: 42,
-          backgroundColor: `${readyJoin ? '#3232DC' : '#D01F36'}`,
+          backgroundColor: `${readyJoin ? '#72F34B' : '#D01F36'}`,
           borderRadius: 60,
           color: 'white',
           border: 'none',

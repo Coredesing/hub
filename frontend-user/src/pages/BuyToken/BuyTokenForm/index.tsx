@@ -66,6 +66,7 @@ type BuyTokenFormProps = {
   networkAvailable: string,
   poolDetailsMapping: any,
   poolDetails: any,
+  isKyc?: boolean,
 }
 
 enum MessageType {
@@ -115,6 +116,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
     networkAvailable,
     poolDetailsMapping,
     poolDetails,
+    isKyc,
 } = props;
 
   const {
@@ -620,8 +622,8 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
               <Button
                 text={new BigNumber(tokenAllowance || 0).gt(0) ? 'Approved': 'Approve'}
                 backgroundColor={'#29C08A'}
-                disabled={!enableApprove}
-                onClick={handleTokenApprove}
+                disabled={!enableApprove || !isKyc}
+                onClick={isKyc ? handleTokenApprove : undefined}
                 loading={tokenApproveLoading}
               /> 
             }
@@ -630,9 +632,9 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
           <div>
             <Button
               text={'Swap'}
-              backgroundColor={'#3232DC'}
-              disabled={!purchasable}
-              onClick={handleTokenDeposit}
+              backgroundColor={'#72F34B'}
+              disabled={!purchasable || !isKyc}
+              onClick={isKyc ? handleTokenDeposit : undefined}
               loading={tokenDepositLoading}
             />
           </div>

@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme: any) => {
       fontWeight: 'bold',
       fontSize: 14,
       lineHeight: '18px',
-      color: '#6398FF',
+      color: '#72F34B',
     },
 
     btnGroup: {
@@ -25,9 +25,9 @@ const useStyles = makeStyles((theme: any) => {
         fontWeight: '500',
         fontSize: 16,
         lineHeight: '24px',
-        color: '#FFFFFF',
+        color: '#000000',
         padding: 5,
-        borderRadius: 60,
+        borderRadius: 2,
       },
 
       '&>div:last-child>button': {
@@ -41,11 +41,11 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '&>div:first-child>button': {
-        backgroundColor: '#3232DC !important',
+        backgroundColor: '#72F34B !important',
       },
 
       '&>div:first-child>button:disabled': {
-        backgroundColor: '#3232DC !important',
+        backgroundColor: '#72F34B !important',
         opacity: 0.6,
         cursor: 'not-allowed',
       },
@@ -71,12 +71,12 @@ const useStyles = makeStyles((theme: any) => {
       display: 'grid',
       gridColumnGap: 40,
       gridTemplateColumns: '1fr 1fr',
-      border: '1px solid #6398FF',
+      border: '1px solid #72F34B',
 
       [theme?.breakpoints?.down('sm')]: {
         gridTemplateColumns: '1fr',
         padding: '28px 20px',
-        border: '1px solid #6398FF',
+        border: '1px solid #72F34B',
       },
     },
     
@@ -121,18 +121,18 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     stepOneActive: {
-      borderColor: '#6398FF',
-      color: '#6398FF',
+      borderColor: '#72F34B',
+      color: '#72F34B',
     },
 
     stepTwoActive: {
-      borderColor: '#6398FF',
-      color: '#6398FF',
+      borderColor: '#72F34B',
+      color: '#72F34B',
     },
 
     activeDisableStep1: {
-      borderColor: '#6398FF',
-      color: '#6398FF',
+      borderColor: '#72F34B',
+      color: '#72F34B',
       opacity: 0.5,
     },
     
@@ -263,7 +263,7 @@ const useStyles = makeStyles((theme: any) => {
       fontWeight: 'bold',
       fontSize: 20,
       lineHeight: '24px',
-      color: '#6398FF',
+      color: '#72F34B',
       marginTop: 4,
     },
 
@@ -303,7 +303,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     purchasableCurrencyMax: {
-      background: '#6398FF',
+      background: '#72F34B',
       borderRadius: 4,
       minWidth: 67.82,
       height: 32,
@@ -312,7 +312,7 @@ const useStyles = makeStyles((theme: any) => {
       fontWeight: 'bold',
       fontSize: 14,
       lineHeight: '18px',
-      color: '#FFFFFF',
+      color: '#000000',
       marginLeft: 13,
 
       '&:hover': {

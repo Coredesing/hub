@@ -115,7 +115,7 @@ const WhitelistCountryModal: React.FC<any> = (props: any) => {
 
           <Button
             text={'Cancel'}
-            backgroundColor={'#3232dc'}
+            backgroundColor={'#72F34B'}
             onClick={handleClose}
             style={{
               minWidth: 125,

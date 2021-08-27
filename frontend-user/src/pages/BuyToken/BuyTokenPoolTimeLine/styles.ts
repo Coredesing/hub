@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme: any) => {
       color: '#AEAEAE',
 
       '&.active': {
-        color: '#6398FF',
+        color: '#72F34B',
       },
 
       '&:last-child': {
@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme: any) => {
 
       '&.active': {
         color: '#FFFFFF',
-        background: '#6398FF',
+        background: '#72F34B',
       },
 
       [theme?.breakpoints?.down('sm')]: {

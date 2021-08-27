@@ -2,6 +2,14 @@ import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: any) => {
   return {
+    alertKyc: {
+      paddingLeft: 0,
+      paddingRight: 0,
+      marginBottom: '10px',
+      '& div': {
+        borderRadius: '8px',
+      }
+    },
     bottomBoxHowTo: {
       marginTop: 100,
       position: 'relative',
@@ -10,7 +18,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     boxHowTo: {
-      background: '#3232DC',
+      background: '#72F34B',
       boxShadow: '0px 4px 40px rgba(0, 0, 0, 0.6)',
       borderRadius: 12,
       width: 280,
@@ -85,7 +93,7 @@ const useStyles = makeStyles((theme: any) => {
         top: 2,
         width: 5,
         height: 10,
-        border: 'solid #3232DC',
+        border: 'solid #72F34B',
         borderWidth: '0 3px 3px 0',
         transform: 'rotate(45deg)',
         borderRadius: 3,
@@ -245,7 +253,7 @@ const useStyles = makeStyles((theme: any) => {
         background: "#12A064"
       },
       '&--Upcoming': {
-        background: "#6398FF"
+        background: "#72F34B"
       },
       '&--Ended': {
         backgroundColor: "#D01F36"
@@ -424,13 +432,13 @@ const useStyles = makeStyles((theme: any) => {
       font: 'normal normal bold 14px/18px DM Sans'
     },
     poolDetailLinkActive: {
-      color: '#6398FF',
+      color: '#72F34B',
       '&::before': {
         content: '""',
         position: 'absolute',
         height: 3,
         left: 0,
-        backgroundColor: '#6398FF',
+        backgroundColor: '#72F34B',
         bottom: 0,
         width: '100%',
         borderRadius: 20
@@ -628,11 +636,11 @@ const useStyles = makeStyles((theme: any) => {
           },
 
           '&.active': {
-            color: '#6398FF',
+            color: '#72F34B',
             position: 'relative',
 
             '&:after': {
-              background: '#6398FF',
+              background: '#72F34B',
             }
           }
         },

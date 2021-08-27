@@ -172,42 +172,11 @@ const Card = (props: any): JSX.Element => {
   return (
     <Link to={`/buy-token/${pool.id}`} className={styles.boxCard}>
       <div className={styles.card}>
+        <div className={`${styles.poolStatusWarning} status`}>
+          {getAccessPoolText(pool)}
+        </div>
         <div className={styles.cardHeader}>
           <img src={pool.banner} alt="" />
-          <div className={styles.listStatus}>
-            <div className={`${styles.poolStatusWarning}`}>
-              {getAccessPoolText(pool)}
-            </div>
-            {/* {pool.status === PoolStatus.Closed && (
-              <div className="time ended">
-                <span>{PoolStatus.Closed}</span>
-              </div>
-            )}
-            {pool.status === PoolStatus.TBA && (
-              <div className="time tba">
-                <span>TBA</span>
-              </div>
-            )}
-            {pool.status === PoolStatus.Filled && (
-              <div className="time filled">
-                <span>{PoolStatus.Filled}</span>
-              </div>
-            )}
-            {pool.status === PoolStatus.Progress && (
-              <div className="time in-progress">
-                <span>{PoolStatus.Progress}</span>
-              </div>
-            )}
-            {(pool.status === PoolStatus.Joining ||
-              pool.status === PoolStatus.Upcoming) && (
-              <div className="time joining">Whitelisting</div>
-            )}
-            {pool.status === PoolStatus.Claimable && (
-              <div className="time claimable">
-                <span>Claimable</span>
-              </div>
-            )} */}
-          </div>
         </div>
         <div className={styles.cardBody}>
           <div className={styles.cardBodyHead}>

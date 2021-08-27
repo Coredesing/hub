@@ -130,7 +130,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     btnOpenModal: {
-      color: '#6398FF',
+      color: '#72F34B',
       textDecoration: 'underline',
       cursor: 'pointer',
     },

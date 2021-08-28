@@ -755,7 +755,16 @@ class PoolController {
     }
 
     try {
-      let userSnapshots = []
+      if (!file.tmpPath) {
+        return HelperUtils.responseNotFound('File path not found');
+      }
+
+      const campaignUpdated = await CampaignModel.query().where('id', campaignId).first();
+      if (!campaignUpdated) {
+        return HelperUtils.responseNotFound('Pool not found');
+      }
+      await campaignUpdated.userBalanceSnapshots().delete();
+
       csv.parseFile(file.tmpPath, {headers: false})
         .on("data", (data) => {
           if (data.length < 2) {

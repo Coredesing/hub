@@ -141,11 +141,12 @@ const ContentTicket = ({ id, ...props }: any) => {
     loading: false,
     ok: false,
   });
+  const maxCanBuyOrClaim = +isAccInWinners.data?.lottery_ticket || 0;
   useEffect(() => {
-    if (isClaim) {
+    if (connectedAccount) {
       setAccInWinners({ ok: false, loading: true, error: "" });
     }
-  }, [isClaim, connectedAccount]);
+  }, [connectedAccount]);
   useEffect(() => {
     if (isAccInWinners.loading) {
       let info: any = {};
@@ -176,6 +177,7 @@ const ContentTicket = ({ id, ...props }: any) => {
   const [phaseName, setPhaseName] = useState('');
   useEffect(() => {
     if (!loadingTicket && dataTicket) {
+      console.log(dataTicket)
       setNewTicket(false);
       setInfoTicket(dataTicket);
       if (isEndPool(dataTicket.campaign_status)) {
@@ -184,7 +186,6 @@ const ContentTicket = ({ id, ...props }: any) => {
       }
       let openTime: number;
       let finishTime: number;
-
       if (isClaim) {
         const claimConfigs = dataTicket.campaignClaimConfig || [];
         const leng = claimConfigs.length;
@@ -355,7 +356,7 @@ const ContentTicket = ({ id, ...props }: any) => {
     if (!isKYC) return;
     const ticketCanBuy = getMaxTicketBuy(
       ticketBought,
-      +infoTicket.max_buy_ticket
+      maxCanBuyOrClaim
     );
     if (numTicketBuy >= ticketCanBuy) {
       return;
@@ -371,14 +372,14 @@ const ContentTicket = ({ id, ...props }: any) => {
 
   const ascMaxAmount = () => {
     if (!isKYC) return;
-    const maxTicket = getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket);
+    const maxTicket = getMaxTicketBuy(ticketBought, maxCanBuyOrClaim);
     if (maxTicket === 0) return;
     setNumTicketBuy(maxTicket);
   };
 
   const descMinAmount = () => {
     if (!isKYC) return;
-    const maxTicket = getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket);
+    const maxTicket = getMaxTicketBuy(ticketBought, maxCanBuyOrClaim);
     if (maxTicket === 0) return;
     setNumTicketBuy(1);
   };
@@ -533,7 +534,6 @@ const ContentTicket = ({ id, ...props }: any) => {
     },
     [infoTicket.accept_currency]
   );
-
   const tokenToApprove = getApproveToken(appChainID);
 
   const { approveToken /*tokenApproveLoading, transactionHash*/ } =
@@ -645,6 +645,7 @@ const ContentTicket = ({ id, ...props }: any) => {
     return +totalTicket - +totalSold || 0;
   };
 
+  
   return (
     loadingTicket ? <div className={styles.loader} style={{ marginTop: 70 }}>
       <HashLoader loading={true} color={'#72F34B'} />
@@ -814,7 +815,7 @@ const ContentTicket = ({ id, ...props }: any) => {
                       <div className={styles.infoTicket}>
                         <span className={styles.text}>BOUGHT/MAX</span>{" "}
                         <span className={styles.textBold}>
-                          {ticketBought}/{infoTicket.max_buy_ticket || 0}
+                          {ticketBought}/{maxCanBuyOrClaim || 0}
                         </span>
                       </div>
                     )}
@@ -830,7 +831,7 @@ const ContentTicket = ({ id, ...props }: any) => {
                       <div className={styles.infoTicket}>
                         <span className={styles.text}>AVAILABLE TO CAILM</span>{" "}
                         <span className={styles.textBold}>
-                          {+isAccInWinners.data?.lottery_ticket - userClaimed || 0}
+                          {maxCanBuyOrClaim - userClaimed || 0}
                         </span>
                       </div>
                     )}
@@ -851,11 +852,11 @@ const ContentTicket = ({ id, ...props }: any) => {
                           <button
                             className={clsx(styles.btnClaim, {
                               disabled:
-                                !isKYC || isNotClaim(userClaimed, isAccInWinners.data?.lottery_ticket) || lockWhenClaiming,
+                                !isKYC || isNotClaim(userClaimed, maxCanBuyOrClaim) || lockWhenClaiming,
                             })}
                             onClick={onClaimTicket}
                             disabled={
-                              !isKYC || isNotClaim(userClaimed, isAccInWinners.data?.lottery_ticket) || lockWhenClaiming
+                              !isKYC || isNotClaim(userClaimed, maxCanBuyOrClaim) || lockWhenClaiming
                             }
                           >
                             Claim
@@ -863,7 +864,7 @@ const ContentTicket = ({ id, ...props }: any) => {
                         )
                       ) : (
                         <>
-                          {allowNetwork &&
+                          {isAccInWinners.ok && allowNetwork &&
                             isBuy &&
                             isAccApproved(tokenAllowance || 0) && (
                               <div
@@ -879,7 +880,7 @@ const ContentTicket = ({ id, ...props }: any) => {
                                         disabled:
                                           !getMaxTicketBuy(
                                             ticketBought,
-                                            +infoTicket.max_buy_ticket
+                                            maxCanBuyOrClaim
                                           ) ||
                                           numTicketBuy === 0 ||
                                           !isKYC,
@@ -893,7 +894,7 @@ const ContentTicket = ({ id, ...props }: any) => {
                                         [styles.disabledAct]:
                                           !getMaxTicketBuy(
                                             ticketBought,
-                                            +infoTicket.max_buy_ticket
+                                            maxCanBuyOrClaim
                                           ) ||
                                           numTicketBuy === 0 ||
                                           !isKYC,
@@ -924,12 +925,12 @@ const ContentTicket = ({ id, ...props }: any) => {
                                         [styles.disabledAct]:
                                           !getMaxTicketBuy(
                                             ticketBought,
-                                            +infoTicket.max_buy_ticket
+                                            maxCanBuyOrClaim
                                           ) ||
                                           numTicketBuy ===
                                           getMaxTicketBuy(
                                             ticketBought,
-                                            +infoTicket.max_buy_ticket
+                                            maxCanBuyOrClaim
                                           ) ||
                                           !isKYC,
                                       })}
@@ -953,12 +954,12 @@ const ContentTicket = ({ id, ...props }: any) => {
                                         disabled:
                                           !getMaxTicketBuy(
                                             ticketBought,
-                                            +infoTicket.max_buy_ticket
+                                            maxCanBuyOrClaim
                                           ) ||
                                           numTicketBuy ===
                                           getMaxTicketBuy(
                                             ticketBought,
-                                            +infoTicket.max_buy_ticket
+                                            maxCanBuyOrClaim
                                           ) ||
                                           !isKYC,
                                       })}

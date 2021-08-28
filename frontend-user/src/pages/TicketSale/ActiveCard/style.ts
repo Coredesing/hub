@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => ({
   cardActive: {
@@ -29,7 +30,7 @@ const useStyles = makeStyles((theme: any) => ({
     background: '#000000'
   },
   timeEnd: {
-    display: 'flex',
+    ...typeDisplayFlex,
     alignItems: 'center',
     // padding: '3px 8px',
     borderRadius: '4px',
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme: any) => ({
     cursor: 'pointer',
     height: '44px',
     background: 'transparent',
-    display: 'flex',
+    ...typeDisplayFlex,
     justifyContent: 'center',
     alignItems: 'center',
     '&:hover': {

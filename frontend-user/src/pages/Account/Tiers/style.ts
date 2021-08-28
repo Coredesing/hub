@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -12,7 +13,7 @@ const useStyles = makeStyles((theme: any) => {
       }
     },
     title: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       alignItems: 'center',
       marginBottom: '20px',
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme: any) => {
       textDecoration: 'underline'
     },
     tierList: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -76,7 +77,7 @@ const useStyles = makeStyles((theme: any) => {
         width: '0',
       },
       '& > div': {
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'column',
         alignItems: 'center',
         position: 'relative',
@@ -100,7 +101,7 @@ const useStyles = makeStyles((theme: any) => {
         width: '28px',
         height: '28px',
         minWidth: '28px',
-        display: 'flex',
+        ...typeDisplayFlex,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: '50%',
@@ -155,7 +156,7 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '& .info': {
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'column',
         alignItems: 'center'
       },
@@ -214,7 +215,7 @@ const useStyles = makeStyles((theme: any) => {
     },
     [theme.breakpoints.down('xs')]: {
       tierInfo: {
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'row',
         width: 'auto',
         height: '25%',
@@ -268,7 +269,7 @@ const useStyles = makeStyles((theme: any) => {
         },
 
         '& > div': {
-          display: 'flex',
+          ...typeDisplayFlex,
           flexDirection: 'row',
           alignItems: 'flex-start',
           justifyContent: 'space-between',
@@ -311,7 +312,7 @@ const useStyles = makeStyles((theme: any) => {
         }
       },
       tierList: {
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'column',
         alignItems: 'flex-start',
         justifyContent: 'space-between',

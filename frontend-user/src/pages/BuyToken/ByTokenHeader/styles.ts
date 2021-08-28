@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -8,7 +9,7 @@ const useStyles = makeStyles((theme: any) => {
       position: 'relative',
       width: '100%',
       padding: 9,
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme: any) => {
 
     errroTier: {
       width: '100%',
-      display: 'flex',
+      ...typeDisplayFlex,
       padding: 12,
       position: 'relative',
       background: '#591425',
@@ -62,7 +63,7 @@ const useStyles = makeStyles((theme: any) => {
 
     warningWhite: {
       width: '100%',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       padding: 10,
       flexDirection: 'row',
@@ -83,7 +84,7 @@ const useStyles = makeStyles((theme: any) => {
 
     whitelistPending: {
       width: '100%',
-      display: 'flex',
+      ...typeDisplayFlex,
       padding: 12,
       flexDirection: 'row',
       paddingLeft: '2rem',
@@ -107,7 +108,7 @@ const useStyles = makeStyles((theme: any) => {
 
     whitelistSuccess: {
       width: '100%',
-      display: 'flex',
+      ...typeDisplayFlex,
       padding: 12,
       flexDirection: 'row',
       justifyContent: 'center',
@@ -134,14 +135,14 @@ const useStyles = makeStyles((theme: any) => {
     headerComponent: {
       color: '#FFFFFF',
       marginBottom: 16,
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
       alignItems: 'center',
     },
 
     top: {
       marginBottom: 15,
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'center',
       alignItems: 'center',
 
@@ -177,7 +178,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     address: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       fontFamily: 'Helvetica',
       fontSize: 14,
@@ -194,7 +195,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     navHeaderComponent: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexWrap: 'wrap',
       alignContent: 'center',
       alignItems: 'center',
@@ -210,7 +211,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     item: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       fontFamily: 'DM Sans',
       fontWeight: 'bold',

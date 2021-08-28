@@ -18,7 +18,7 @@ import Button from '../../components/Base/Button';
 import {userAlreadyExists} from '../../utils/user';
 import InvestorLayout from "../InvestorLayout/InvestorLayout";
 import TextTitle from "../InvestorLayout/TextTitle";
-import useCommonStyle from '../../styles/CommonStyle'
+import useCommonStyle, { typeDisplayFlex } from '../../styles/CommonStyle'
 import Logo from '../InvestorLayout/Logo'
 
 const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -96,7 +96,7 @@ const InvestorLogin: React.FC<any> = (props: any) => {
   const render = () => {
     if (loadingUserExists) {
       return (
-        <div className="login__user-loading" style={{ height: 660, maxHeight: 660, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
+        <div className="login__user-loading" style={{ height: 660, maxHeight: 660, ...typeDisplayFlex, alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
           <HashLoader color={'#3232DC'} />
           <p className="login__user-loading-text" style={{ textAlign: 'center', color: '#999999' }}>Loading Ethereum Wallet</p>
         </div>

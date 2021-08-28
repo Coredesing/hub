@@ -1,11 +1,12 @@
 
 
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
     confirmEmail: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme: any) => {
         borderRadius: '40px',
         backgroundColor: '#3232DC',
         outline: 'none',
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center',
         justifyContent: 'center',
         color: '#FFF',
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme: any) => {
       }
     },
     contentLoading: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
       height: '100%',

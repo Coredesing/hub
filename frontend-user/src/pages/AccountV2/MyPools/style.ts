@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -51,7 +52,7 @@ const useStyles = makeStyles((theme: any) => {
 
     headTable: {
       marginBottom: 9,
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between',
 
       [theme.breakpoints.down('sm')]: {
@@ -63,7 +64,7 @@ const useStyles = makeStyles((theme: any) => {
 
       [theme.breakpoints.down('sm')]: {
         marginBottom: 8,
-        display: 'flex',
+        ...typeDisplayFlex,
         justifyContent: 'space-between',
       },
     },
@@ -121,7 +122,7 @@ const useStyles = makeStyles((theme: any) => {
       background: '#222228',
       border: '1px solid #44454B',
       borderRadius: 4,
-      display: 'flex',
+      ...typeDisplayFlex,
 
       [theme.breakpoints.down('sm')]: {
         maxWidth: '100%',
@@ -242,7 +243,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     titleBoxMobile: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       marginBottom: 16,
     },
@@ -281,7 +282,7 @@ const useStyles = makeStyles((theme: any) => {
       fontFamily: 'Helvetica',
       fontSize: 14,
       lineHeight: '20px',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       color: '#FFFFFF',
     },

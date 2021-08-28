@@ -1,8 +1,9 @@
 import { makeStyles } from "@material-ui/core";
+import { typeDisplayFlex } from "../../../styles/CommonStyle";
 
 const useStyles = makeStyles((theme: any) => ({
   instruction: {
-    display: "flex",
+    ...typeDisplayFlex,
     width: "100%",
     height: "80px",
     backgroundColor: "#FFFFFF",
@@ -104,7 +105,7 @@ const useStyles = makeStyles((theme: any) => ({
     },
   },
   gridInstruction: {
-    display: "flex",
+    ...typeDisplayFlex,
     width: "100%",
     height: "80px",
     justifyContent: "center",
@@ -113,7 +114,7 @@ const useStyles = makeStyles((theme: any) => ({
     backgroundImage: `url("/images/instruction_center_bg.png")`,
     backgroundSize: "100% 100%",
     backgroundRepeat: "no-repeat",
-    display: "flex",
+    ...typeDisplayFlex,
     width: "40%",
     height: "82px",
     alignItems: "center",
@@ -125,7 +126,7 @@ const useStyles = makeStyles((theme: any) => ({
     },
   },
   instructionStep: {
-    display: "flex",
+    ...typeDisplayFlex,
     width: "100%",
     paddingRight: "10px",
     paddingLeft: "10px",

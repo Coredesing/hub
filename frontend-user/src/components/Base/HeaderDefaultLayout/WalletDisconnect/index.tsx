@@ -14,6 +14,7 @@ import useStyles from './style';
 import { trimMiddlePartAddress } from '../../../../utils/accountAddress';
 import {useWeb3React} from "@web3-react/core";
 import {checkIsWalletLink, disconnectWalletLink} from "../../../../utils";
+import { typeDisplayFlex } from '../../../../styles/CommonStyle';
 
 const linkIcon = '/images/hyperlink.svg';
 
@@ -24,7 +25,7 @@ const styles = (theme: Theme) =>
       padding: theme.spacing(2),
       paddingTop: 0,
       borderRadius: 50,
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between'
     },
     closeButton: {

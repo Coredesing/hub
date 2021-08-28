@@ -9,6 +9,7 @@ import Paper from "@material-ui/core/Paper";
 import { useTableStyles } from "./style";
 import clsx from "clsx";
 import useWindowSize from "../../../hooks/useWindowSize";
+import { typeDisplayFlex } from "../../../styles/CommonStyle";
 
 export const TableCell = withStyles((theme) => ({
   head: {
@@ -29,7 +30,7 @@ export const TableRowBody = withStyles((theme) => ({
   root: {
     background: "#2E2E2E",
     "& th div": {
-      display: "flex",
+      ...typeDisplayFlex,
       alignItems: "center",
       gap: "8px",
     },

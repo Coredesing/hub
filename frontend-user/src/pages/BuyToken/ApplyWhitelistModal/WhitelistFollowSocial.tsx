@@ -2,6 +2,7 @@ import React from 'react'
 import withWidth, { isWidthDown, isWidthUp } from '@material-ui/core/withWidth';
 import { Tooltip } from '@material-ui/core';
 import useStyles from './style'
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const poolImage = "/images/pool_circle.svg";
 
@@ -65,7 +66,7 @@ function WhitelistFollowSocial(props: any) {
           Follow and subscribe to {poolDetails?.title}'s and PolkaFoundry’s accounts
         </p>
       </div>
-      <div style={{display: 'flex', marginTop: '.75rem'}}>
+      <div style={{...typeDisplayFlex, marginTop: '.75rem'}}>
         {!isWidthDown('md', props.width) &&
         <table className={styles.socialFollowTable}>
           <thead>

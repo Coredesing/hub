@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 export const useTableStyles = makeStyles((theme: any) => {
     return {
         wrapperTable: {
@@ -36,17 +37,17 @@ export const useTableStyles = makeStyles((theme: any) => {
             color: '#F24B4B'
         },
         groupBtn: {
-            display: 'flex',
+            ...typeDisplayFlex,
             gap: '6px',
         },
         labelSort: {
-            display: 'flex',
+            ...typeDisplayFlex,
             gap: '4px',
             alignItems: 'center',
             cursor: 'pointer',
         },
         sortIcon: {
-            display: 'flex',
+            ...typeDisplayFlex,
             flexDirection: 'column',
             gap: '2px',
         },

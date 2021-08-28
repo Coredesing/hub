@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme: any) => {
       font: 'normal normal normal 14px/24px Helvetica'
     },
     PoolAboutText: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       font: 'normal normal bold 14px/18px DM Sans',
       [theme.breakpoints.down('xs')]: {

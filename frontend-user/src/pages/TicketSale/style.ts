@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -201,7 +202,7 @@ export const useCardStyles = makeStyles((theme) => ({
     gap: '8px',
   },
   cardBodyItem: {
-    display: 'flex',
+    ...typeDisplayFlex,
     justifyContent: 'space-between',
     [theme.breakpoints.down('xs')]: {
       marginTop: '5px',

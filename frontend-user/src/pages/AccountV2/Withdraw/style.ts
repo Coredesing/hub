@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -7,7 +8,7 @@ const useStyles = makeStyles((theme: any) => {
       backgroundRepeat: 'no-repeat',
       backgroundSize: '100% auto',
       backgroundPosition: '0px 80px',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'flex-start',
       justifyContent: 'center',
       minHeight: 'calc(100vh - 145px)',
@@ -80,7 +81,7 @@ const useStyles = makeStyles((theme: any) => {
           cursor: 'pointer',
           border: 'none',
           outline: 'none',
-          display: 'flex',
+          ...typeDisplayFlex,
           alignItems: 'center',
           justifyContent: 'center',
 
@@ -117,7 +118,7 @@ const useStyles = makeStyles((theme: any) => {
         background: '#222228',
         border: '1px solid #44454B',
         borderRadius: '4px',
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center',
         padding: '4px',
       },
@@ -144,7 +145,7 @@ const useStyles = makeStyles((theme: any) => {
       '& .balance': {
         color: '#FFF',
         font: 'normal normal 500 16px/24px DM Sans',
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginLeft: '4px',
@@ -181,7 +182,7 @@ const useStyles = makeStyles((theme: any) => {
       maxWidth: 'calc(100vw - 80px)',
       transform: 'translateX(-50%)',
       padding: '12px 0',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
       background: '#591425',

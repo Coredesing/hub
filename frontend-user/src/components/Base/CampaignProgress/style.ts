@@ -1,4 +1,5 @@
 import {makeStyles} from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -14,7 +15,7 @@ const useStyles = makeStyles((theme: any) => {
       borderRadius: '50%',
       width: 25,
       height: 25,
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'center',
     },
     '& .MuiButton-label': {
@@ -38,12 +39,12 @@ const useStyles = makeStyles((theme: any) => {
         display: 'inline-block'
       },
       '&__left': {
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center',
         marginBottom: '15px',
       },
       '&__left-value--flex': {
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center'
       },
       '&__left-value': {
@@ -71,12 +72,12 @@ const useStyles = makeStyles((theme: any) => {
         borderRadius: '5px',
       },
       '&__explication': {
-        display: 'flex',
+        ...typeDisplayFlex,
         justifyContent: 'space-between',
         width: '100%'
       },
       '&__explication-item': {
-        display: 'flex',
+        ...typeDisplayFlex,
         maxWidth: '48%',
       },
       '&__explication-item-inner-title': {

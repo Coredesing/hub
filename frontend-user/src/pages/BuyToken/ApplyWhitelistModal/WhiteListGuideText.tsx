@@ -1,4 +1,5 @@
 import React from 'react';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 function WhiteListGuideText(props: any) {
   return (
@@ -6,7 +7,7 @@ function WhiteListGuideText(props: any) {
       <p style={{ paddingBottom: 10, color: '#FFFFFF' }}>
         In order to participate in the IDO, you must fullfil requirements as below. 
       </p>
-      <div style={{display: 'flex', marginTop: '.75rem', marginBottom: '2rem', color: '#AEAEAE'}}>
+      <div style={{...typeDisplayFlex, marginTop: '.75rem', marginBottom: '2rem', color: '#AEAEAE'}}>
         <p>
           Eagle and Phoenix tiers are not required to do the social requirements. However, we recommend 
           following our official Twitter and Telegram groups to stay up-to-date with important announcements.

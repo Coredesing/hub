@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -12,7 +13,7 @@ const useStyles = makeStyles((theme) => {
       overflowY: 'initial'
     },
     dialogActions: {
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'flex-end',
       padding: '8px 24px',
       marginTop: 15,

@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -13,7 +14,7 @@ const useStyles = makeStyles((theme: any) => {
     bottomBoxHowTo: {
       marginTop: 100,
       position: 'relative',
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'flex-end',
     },
 
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     titleBoxHowTo: {
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between',
       fontFamily: 'DM Sans',
       fontWeight: 'bold',
@@ -64,7 +65,7 @@ const useStyles = makeStyles((theme: any) => {
       fontSize: 16,
       lineHeight: '24px',
       marginBottom: 14,
-      display: 'flex',
+      ...typeDisplayFlex,
     },
 
     checkmark: {
@@ -141,7 +142,7 @@ const useStyles = makeStyles((theme: any) => {
     //   textAlign: 'center',
     //   height: '40px',
     //   position: 'relative',
-    //   display: 'flex',
+    //   ...typeDisplayFlex,
     //   alignItems: 'center',
     //   justifyContent: 'center',
 
@@ -157,7 +158,7 @@ const useStyles = makeStyles((theme: any) => {
       borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
     },
     poolHeaderWrapper: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'flex-start',
     },
     poolHeaderNetworkAvailable: {
@@ -172,7 +173,7 @@ const useStyles = makeStyles((theme: any) => {
       padding: '13px 8px',
       backgroundColor: 'rgba(50, 50, 220, 0.2)',
       fontSize: 'normal normal bold 14px/18px DM Sans',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       marginTop: 20,
 
@@ -204,7 +205,7 @@ const useStyles = makeStyles((theme: any) => {
     poolHeaderTitle: {
       fontWeight: 700,
       fontSize: 28,
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       font: 'normal normal bold 28px/32px DM Sans',
       [theme.breakpoints.down('xs')]: {
@@ -213,7 +214,7 @@ const useStyles = makeStyles((theme: any) => {
         fontSize: 25,
 
         '& > div': {
-          display: 'flex',
+          ...typeDisplayFlex,
           flexDirection: 'row',
           alignItems: 'center',
         },
@@ -227,12 +228,12 @@ const useStyles = makeStyles((theme: any) => {
       borderRadius: 20
     },
     poolHeaderTypeInner: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       font: 'normal normal normal 12px/28px Helvetica',
     },
     poolType: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       marginTop: 30
     },
@@ -270,7 +271,7 @@ const useStyles = makeStyles((theme: any) => {
     },
     poolHeaderAddress: {
       fontSize: 14,
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       marginTop: 8,
       lineHeight: "20px",
@@ -319,7 +320,7 @@ const useStyles = makeStyles((theme: any) => {
     },
     poolsDetailBasicText: {
       color: 'white',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       marginLeft: 50,
       textOverflow: 'ellipsis',
@@ -342,7 +343,7 @@ const useStyles = makeStyles((theme: any) => {
       width: 18
     },
     poolDetailTierWrapper: {
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between',
       marginTop: 30,
       alignItems: 'center',
@@ -372,7 +373,7 @@ const useStyles = makeStyles((theme: any) => {
       font: 'normal normal bold 14px/18px DM Sans'
     },
     poolDetailProgressStat: {
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between',
       margin: '12px 0px 5px 0px',
       color: '#999999',
@@ -445,11 +446,11 @@ const useStyles = makeStyles((theme: any) => {
       }
     },
     poolDetailLinks: {
-      display: 'flex',
+      ...typeDisplayFlex,
       borderBottom: '1px solid rgba(255, 255, 255, .1)'
     },
     poolDetailBuyForm: {
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between',
       alignItems: 'flex-start',
 
@@ -467,7 +468,7 @@ const useStyles = makeStyles((theme: any) => {
       padding: '13px 15px',
       backgroundColor: 'rgba(50, 50, 220, 0.2)',
       fontSize: 'normal normal bold 14px/18px DM Sans',
-      // display: 'flex',
+      // ...typeDisplayFlex,
       display: 'block',
       alignItems: 'center',
       marginTop: 20,
@@ -493,7 +494,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     loader: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center'
@@ -508,7 +509,7 @@ const useStyles = makeStyles((theme: any) => {
     headerComponent: {
       color: '#FFFFFF',
       marginBottom: 16,
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
       alignItems: 'center',
     },
@@ -520,7 +521,7 @@ const useStyles = makeStyles((theme: any) => {
       },
       poolHeaderAddress: {
         fontSize: 14,
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center',
         marginTop: 8
       },
@@ -556,7 +557,7 @@ const useStyles = makeStyles((theme: any) => {
         padding: '10px'
       },
       btnGroup: {
-        display: 'flex',
+        ...typeDisplayFlex,
         justifyContent: 'center',
         '& button': {
           padding: '15px 25px',
@@ -599,7 +600,7 @@ const useStyles = makeStyles((theme: any) => {
 
     navBottom: {
       color: '#ffffff',
-      display: 'flex',
+      ...typeDisplayFlex,
       marginBottom: 22,
 
       '& li': {

@@ -64,7 +64,7 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
       interval && clearInterval(interval);
     }
   }, [isBuy, endTime, setTimeEnd]);
-
+  const isClaim = card?.process === "only-claim";
   return (
     <div className={clsx(styles.card, styles.cardActive, {
       [styles.cardActiveApproved]: card.isApproved
@@ -84,7 +84,7 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
         </div>
         <div className={styles.cardBodyItem}>
           <span className={styles.text}>Price</span> <span className={clsx(styles.textBold, styles.price)}>
-            {card.ether_conversion_rate} {card.accept_currency}
+            {isClaim ? 0 : card.ether_conversion_rate} {card.accept_currency}
           </span>
         </div>
         <div className={styles.progressItem}>

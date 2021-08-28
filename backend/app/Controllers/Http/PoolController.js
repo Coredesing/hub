@@ -778,19 +778,12 @@ class PoolController {
             pkf_balance: 0,
             pkf_balance_with_weight_rate: 0,
           });
-          userSnapshots.push(userSnapShot);
+          userSnapShot.save()
         })
         .on("error", (e) => {
           console.log('error', e);
         })
-        .on("end", async () => {
-          const campaignUpdated = await CampaignModel.query().where('id', campaignId).first();
-          if (!campaignUpdated) {
-            return
-          }
-          await campaignUpdated.userBalanceSnapshots().delete();
-          await campaignUpdated.userBalanceSnapshots().saveMany(userSnapshots);
-        });
+        .on("end", async () => {});
 
       return HelperUtils.responseSuccess({message: 'upload successfully'});
     } catch (e) {

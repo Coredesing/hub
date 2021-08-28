@@ -5,9 +5,6 @@ const POOL_ABI = require('../abi/Swap/Campaign.json');
 const POOL_PRESALE_ABI = require('../abi/Claim/Campaign.json');
 const ERC20_ABI = require('../abi/Erc20.json');
 
-const NETWORK_URL = process.env.REACT_APP_NETWORK_URL || "";
-const BSC_NETWORK_URL = process.env.REACT_APP_BSC_RPC_URL || "";
-
 export const getWeb3Instance = () => {
   const windowObj = window as any;
   const { ethereum, web3 } = windowObj;
@@ -59,15 +56,6 @@ export const getAbiPool = (isClaimable = true) => {
   const ABI = isClaimable ? POOL_PRESALE_ABI : POOL_ABI;
   return ABI;
 }
-
-export const getContractInstanceWeb3 = (isEth = true) => {
-  let provider = new Web3.providers.HttpProvider(NETWORK_URL);
-  if (!isEth) {
-    provider = new Web3.providers.HttpProvider(BSC_NETWORK_URL);
-  }
-  let web3Instance = new Web3(provider);
-  return web3Instance;
-};
 
 export const getPoolContract = ({ networkAvailable, poolHash, isClaimable = true }: any) => {
   let web3Instance = null;

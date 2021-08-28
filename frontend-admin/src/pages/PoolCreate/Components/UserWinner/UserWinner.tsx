@@ -17,15 +17,16 @@ import {etherscanRoute} from "../../../../utils";
 import Link from "@material-ui/core/Link";
 import useMapMaxBuyTier from "../hooks/useMapMaxBuyTier";
 import BigNumber from "bignumber.js";
-import PublicWinnerSetting from "./PublicWinnerSetting";
-import UserPickerToWinner from "./UserPickerToWinner";
 import {uploadWinners} from "../../../../request/pool";
+import {alertFailure, alertSuccess} from "../../../../store/actions/alert";
+import {useDispatch} from "react-redux";
 
 function UserWinner(props: any) {
   const commonStyle = useCommonStyle();
   const classesTable = useStylesTable();
   const { poolDetail } = props;
   const [selectedFile, setSelectedFile] = useState();
+  const dispatch = useDispatch();
 
   const {
     rows,
@@ -57,11 +58,10 @@ function UserWinner(props: any) {
     formData.append('file', selectedFile ?? '');
 
     await uploadWinners(poolDetail.id, formData)
-        .then((response) => response.json())
         .then((result) => {
-          console.log('result', result);
+          dispatch(alertSuccess(`Upload successfully`))
         }).catch((e) => {
-          console.log('upload error', e)
+          dispatch(alertFailure(`Upload error`))
         });
   };
 

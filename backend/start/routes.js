@@ -36,6 +36,7 @@ Route.group(() => {
   //
   // Route.post('mantra-stake/index-stake-info', 'MantraStakeController.indexStakeInfo');
   // Route.post('reputation/index-stake-info', 'ReputationController.indexStakeInfo');
+  Route.get('user/kyc', 'UserController.getKycStatusByErc20Address');
 }).prefix('webhook').middleware('checkJwtWebhook');
 
 // GameFI user new route

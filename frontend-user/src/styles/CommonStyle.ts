@@ -23,6 +23,9 @@ const useCommonStyle = makeStyles((theme) => {
       minHeight: "100vh",
       overflow: "auto",
       paddingTop: "80px",
+      [theme.breakpoints.down('xs')]: {
+        paddingTop: '60px'
+      }
     },
     headPage: {
       ...typeDisplayFlex,

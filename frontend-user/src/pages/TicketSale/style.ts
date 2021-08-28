@@ -218,6 +218,7 @@ export const useCardStyles = makeStyles((theme) => ({
   cardBodyItem: {
     ...typeDisplayFlex,
     justifyContent: 'space-between',
+    alignItems: 'center',
     [theme.breakpoints.down('xs')]: {
       marginTop: '5px',
     },

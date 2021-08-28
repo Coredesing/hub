@@ -58,6 +58,7 @@ import {getPoolStatusByPoolDetail} from "../../utils/getPoolStatusByPoolDetail";
 import useCountDownFreeBuyTime from "./hooks/useCountDownFreeBuyTime";
 import useKyc from '../../hooks/useKyc';
 import { AlertKYC } from '../../components/Base/AlertKYC';
+import { setTypeIsPushNoti } from '../../store/actions/alert';
 
 const copyImage = "/images/copy.svg";
 const poolImage = "/images/pool_circle.svg";
@@ -232,6 +233,10 @@ const BuyToken: React.FC<any> = (props: any) => {
 
     return 'Determined at whitelist closing';
   }, [existedWinner, userBuyLimit, poolDetails, verifiedEmail]);
+
+  useEffect(() => {
+    dispatch(setTypeIsPushNoti());
+  }, [dispatch]);
 
   useEffect(() => {
     setActiveNav(HeaderType.Main);

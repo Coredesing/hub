@@ -49,6 +49,7 @@ import TicketSale from './pages/TicketSale';
 const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
     const dispatch = useDispatch();
     const alert = useSelector((state: any) => state.alert);
+    const alertTypeIsPush = useSelector((state: any) => state.alertTypeIsPush);
     const { history } = props;
 
     const { deactivate } = useWeb3React();
@@ -88,10 +89,13 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
 
     useEffect(() => {
         const { type, message } = alert;
-        if ((type === 'success' || type === 'warning') && message) {
+        if (!alertTypeIsPush.success && type === 'success') return;
+        if (!alertTypeIsPush.warn && type === 'warning') return;
+        if (!alertTypeIsPush.failed && type === 'error') return;
+        if (message) {
             NotificationManager[type](message);
         }
-    }, [alert]);
+    }, [alert, alertTypeIsPush]);
 
     useEffect(() => {
         history.listen((location, action) => {

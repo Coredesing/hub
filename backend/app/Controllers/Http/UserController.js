@@ -479,7 +479,6 @@ class UserController {
   async kycUpdateStatus({ request }) {
     const params = request.only(['guid', 'status', 'clientId', 'event', 'recordId', 'refId', 'submitCount',
       'blockPassID', 'inreviewDate', 'waitingDate', 'approvedDate', 'env']);
-    console.log(`KYC update with info ${JSON.stringify(params)}`);
     try {
       // call to api to get user info
       const url = process.env.BLOCK_PASS_API_URL.replace('CLIENT_ID', process.env.BLOCK_PASS_CLIENT_ID)
@@ -500,23 +499,24 @@ class UserController {
       })
 
       if (!response || response.statusCode !== 200) {
-        console.log(`Failed when call block pass api with refID ${params.refId} and ${params.recordId}`);
         return HelperUtils.responseBadRequest();
       }
-      // get user info
-      const email = JSON.parse(response.body).data.identities.email.value;
-      const wallet = JSON.parse(response.body).data.identities.crypto_address_eth.value;
-      const kycStatus = JSON.parse(response.body).data.status;
 
-      const address_country = JSON.parse(JSON.parse(response.body).data.identities.address.value).country;
+      const body = JSON.parse(response.body)
+      // get user info
+      const email = body.data.identities.email.value;
+      const wallet = body.data.identities.crypto_address_eth.value;
+      const kycStatus = body.data.status;
+
+      const address_country = JSON.parse(body.data.identities.address.value).country;
       let passport_issuing_country = address_country;
 
-      if (JSON.parse(response.body).data.identities.passport_issuing_country != null) {
-        passport_issuing_country = JSON.parse(response.body).data.identities.passport_issuing_country.value;
-      } else if (JSON.parse(response.body).data.identities.national_id_issuing_country != null) {
-        passport_issuing_country = JSON.parse(response.body).data.identities.national_id_issuing_country.value;
-      } else if (JSON.parse(response.body).data.driving_license_issuing_country != null) {
-        passport_issuing_country = JSON.parse(response.body).data.identities.driving_license_issuing_country.value;
+      if (body.data.identities.passport_issuing_country != null) {
+        passport_issuing_country = body.data.identities.passport_issuing_country.value;
+      } else if (body.data.identities.national_id_issuing_country != null) {
+        passport_issuing_country = body.data.identities.national_id_issuing_country.value;
+      } else if (body.data.driving_license_issuing_country != null) {
+        passport_issuing_country = body.data.identities.driving_license_issuing_country.value;
       }
 
       // save to db to log
@@ -539,7 +539,7 @@ class UserController {
       });
       blockPassObj.save();
 
-      if (Const.KYC_STATUS[kycStatus.toString().toUpperCase()] == Const.KYC_STATUS.APPROVED) {
+      if (Const.KYC_STATUS[kycStatus.toString().toUpperCase()] === Const.KYC_STATUS.APPROVED) {
         const approvedRecord = await BlockpassApprovedModel.query().where('record_id', params.recordId).first();
         if (!approvedRecord) {
           const blockpassApproved = new BlockpassApprovedModel();
@@ -584,7 +584,7 @@ class UserController {
         return HelperUtils.responseBadRequest();
       }
 
-      let user = await UserModel.query().where('email', email).where('wallet_address', wallet).first();
+      let user = await UserModel.query().where('email', email).first();
 
       if (!user) {
         user = new UserModel();
@@ -605,6 +605,7 @@ class UserController {
         const userModel = new UserModel();
         userModel.fill({
           ...JSON.parse(JSON.stringify(user)),
+          wallet_address: wallet,
           is_kyc: Const.KYC_STATUS[kycStatus.toString().toUpperCase()],
           record_id: params.recordId,
           ref_id: params.refId,

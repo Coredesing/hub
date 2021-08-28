@@ -22,6 +22,7 @@ import { WalletConnectionState } from "../../../store/reducers/wallet";
 import { TIERS } from "../../../constants";
 import useAuth from "../../../hooks/useAuth";
 import { getUserTier } from "../../../store/actions/sota-tiers";
+import { useMediaQuery, useTheme } from "@material-ui/core";
 
 // const BrightStartIcon = "bright-star.svg";
 // const WalletIcon = "/images/wallet.svg";
@@ -35,7 +36,8 @@ const iconHamburger = "/images/icons/hamburger.svg";
 const HeaderDefaultLayout: React.FC<any> = (props: any) => {
   const styles = useStyles();
   const dispatch = useDispatch();
-
+  const theme = useTheme();
+  const isMdScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [switchNetworkDialog, setSwitchNetworkDialog] =
     useState<boolean>(false);
   const [disconnectDialog, setDisconnectDialog] = useState<boolean>(false);
@@ -151,6 +153,11 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
     }
   };
 
+  const hideNavMenu = () => {
+    if(isMdScreen && toggleNavbar) {
+      setToggleNavbar(false);
+    }
+  }
 
 
   return (
@@ -267,14 +274,14 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
             </div>
             <nav className={`${styles.headerNav} ${toggleNavbar ? 'show' : ''}`}>
               <ul className={styles.headerLinks}>
-                <li className={styles.headerLink}><Link to="/">Home</Link></li>
-                <li className={styles.headerLink}><Link to="/dashboard">Token sales</Link></li>
-                <li className={styles.headerLink}><Link to="/pools/ticket">Ticket sales</Link></li>
+                <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/">Home</Link></li>
+                <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/dashboard">Token sales</Link></li>
+                <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/ticket">Ticket sales</Link></li>
                 {/* <li className={styles.headerLink}><Link to="#">Items Sales</Link></li> */}
                 {/* <li className={styles.headerLink}><Link href="#">Marketplace</Link></li> */}
                 {/* <li className={styles.headerLink}><Link href="#">Stake</Link></li> */}
               </ul>
-              <div className={styles.headerAccount}>
+              <div className={styles.headerAccount} onClick={hideNavMenu}>
                 {connectedAccount && <a href="/#/account" className={styles.headerAccText}>
                   My Account
                 </a>}
@@ -335,12 +342,19 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
               </div>
 
             </nav>
-            <div className={styles.hamburger}>
-              <img
+            <div className={styles.hamburger} onClick={() => setToggleNavbar(!toggleNavbar)}>
+              <svg width="28" height="19" viewBox="0 0 28 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M26.2052 10.6398H1.7949C0.803359 10.6398 0 10.0132 0 9.23986C0 8.46651 0.803359 7.83984 1.7949 7.83984H26.2052C27.1966 7.83984 28 8.46646 28 9.23986C28 10.0133 27.1966 10.6398 26.2052 10.6398Z" fill="#0A0A0A" />
+                <path d="M13.104 2.8H1.45602C0.651683 2.8 0 2.17335 0 1.4C0 0.626654 0.651683 0 1.45602 0H13.104C13.9083 0 14.56 0.626611 14.56 1.4C14.56 2.17339 13.9083 2.8 13.104 2.8Z" fill="#0A0A0A" />
+                <path d="M26.5434 18.4799H14.8955C14.0911 18.4799 13.4395 17.8533 13.4395 17.0799C13.4395 16.3066 14.0911 15.6799 14.8955 15.6799H26.5434C27.3477 15.6799 27.9995 16.3065 27.9995 17.0799C27.9995 17.8533 27.3477 18.4799 26.5434 18.4799Z" fill="#0A0A0A" />
+              </svg>
+
+
+              {/* <img
                 src={iconHamburger}
                 onClick={() => setToggleNavbar(!toggleNavbar)}
                 alt=""
-              />
+              /> */}
             </div>
           </div>
 

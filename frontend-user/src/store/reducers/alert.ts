@@ -46,3 +46,20 @@ export const alertReducer = (state: StateType = initialState, action: AnyAction)
     }
   }
 }
+type TypeIsPushNoti = {
+  success: boolean,
+  warn: boolean,
+  failed: boolean
+}
+export const getTypeIsPushNotiReducer = (state: TypeIsPushNoti = {success: true, warn: true, failed: true}, action: AnyAction) => {
+  switch(action.type) {
+    case alertActions.TYPE_IS_PUSH_NOTI: {
+      return {
+        ...(action.payload || {})
+      }
+    }
+    default: {
+      return state;
+    }
+  }
+}

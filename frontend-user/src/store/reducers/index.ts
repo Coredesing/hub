@@ -16,7 +16,7 @@ import {
 import { transactionCampaignReducer } from './transaction'
 import { affiliateCampaignReducer, affiliateLinkGenerateReducer } from './affiliate'
 import { getTokensReducer, createTokenReducer } from './token'
-import { alertReducer } from './alert'
+import { alertReducer, getTypeIsPushNotiReducer } from './alert'
 import userReducer, { userConnectReducer, userRegisterReducer, investorReducer, investorRegisterReducer, userProfileReducer, userProfileUpdateReducer } from './user';
 import { buyTokenReducer, buyTokenPurchasableReducer } from './buy-token';
 import {claimTokenReducer,claimTokenClaimableReducer, stakedTokensClaimReducer } from "./claim-token"
@@ -98,7 +98,8 @@ const rootReducer = combineReducers({
   withdrawFee: withdrawFeeReducer,
   withdrawPercent: withdrawPercentReducer,
   rates: ratesReducer,
-  messages: messageReducer
+  messages: messageReducer,
+  alertTypeIsPush: getTypeIsPushNotiReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

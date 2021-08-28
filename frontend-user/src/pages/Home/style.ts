@@ -1,5 +1,4 @@
 import { makeStyles } from "@material-ui/core";
-import Content from "../../components/Base/MainDefaultLayout/MainDefaultLayout";
 import { typeDisplayFlex } from "../../styles/CommonStyle";
 
 const useStyles = makeStyles((theme: any) => {

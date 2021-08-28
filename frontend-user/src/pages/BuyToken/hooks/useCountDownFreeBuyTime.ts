@@ -4,7 +4,7 @@ const useCountDownFreeBuyTime = (
   poolDetails: any,
 ) => {
 
-  console.log('[useCountDownEngine]: poolDetails: ', poolDetails?.freeBuyTimeSetting?.start_buy_time);
+  // console.log('[useCountDownEngine]: poolDetails: ', poolDetails?.freeBuyTimeSetting?.start_buy_time);
   const countdown = useCountDownEngine({
     name: 'countdown-free-buy-time',
     intervalTime: 1000,
@@ -14,8 +14,8 @@ const useCountDownFreeBuyTime = (
       return !!poolDetails?.freeBuyTimeSetting?.start_buy_time;
     },
     onFinish: (data: any) => {
-      console.log('[useCountDownEngine]: Countdown Finish. Reached Free Buy Time !!!');
-      console.log('[useCountDownEngine]: Page will reload in 1 seconds...');
+      // console.log('[useCountDownEngine]: Countdown Finish. Reached Free Buy Time !!!');
+      // console.log('[useCountDownEngine]: Page will reload in 1 seconds...');
       setTimeout(() => {
         window.location.reload();
       }, 1000)
@@ -26,11 +26,11 @@ const useCountDownFreeBuyTime = (
         nowUnix,
         endTime
       } = data;
-      console.log('[useCountDownEngine]: ', name,  nowUnix, (nowUnix - endTime)/1000);
-      console.log('[useCountDownEngine]: onEachInterval');
+      // console.log('[useCountDownEngine]: ', name,  nowUnix, (nowUnix - endTime)/1000);
+      // console.log('[useCountDownEngine]: onEachInterval');
     },
     onParamChange: (data: any) => {
-      console.log('[useCountDownEngine]:onParamChange');
+      // console.log('[useCountDownEngine]:onParamChange');
     },
   });
 

@@ -23,6 +23,7 @@ import {
 import { PaginationResult } from "../../types/Pagination";
 import { SearchBox } from "../../components/Base/SearchBox";
 import { debounce } from "../../utils";
+import { numberWithCommas } from "../../utils/formatNumber";
 const shareIcon = "/images/icons/share.svg";
 const telegramIcon = "/images/icons/telegram-1.svg";
 const twitterIcon = "/images/icons/twitter-1.svg";
@@ -256,7 +257,7 @@ const AboutTicket = ({ info = {} }: any) => {
           />
           <Tab
             className={classes.tabName}
-            label={`Winner (${winner.total || 0})`}
+            label={`Winner (${numberWithCommas(winner.total || 0, 0)})`}
             style={value === 1 ? { color: "#72F34B" } : {}}
             {...a11yProps(1)}
           />

@@ -738,6 +738,22 @@ class UserController {
       return HelperUtils.responseErrorInternal();
     }
   }
+
+  async getKycStatusByErc20Address({request}) {
+    const params = request.only(['address']);
+    const address = params.address
+    try {
+      const userService = new UserService();
+      const user = await userService.findUser({wallet_address: address});
+      if (!user) {
+        return HelperUtils.responseSuccess(false)
+      }
+
+      return HelperUtils.responseSuccess(user.is_kyc === 1)
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
 }
 
 module.exports = UserController;

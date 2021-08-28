@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import Image from '../../../components/Base/Image';
 import { calcProgress, getRemaining } from '../utils';
 import { TOKEN_TYPE } from '../../../constants';
+import { numberWithCommas } from '../../../utils/formatNumber';
 
 type Props = {
   card: { [k: string]: any },
@@ -82,7 +83,7 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
         {!isTicket &&
           <div className={styles.cardBodyItem}>
             <span className={styles.text}>TOTAL RAISE</span> <span className={styles.textBold}>
-              {'$' + (Math.ceil((+card.ether_conversion_rate * +card.total_sold_coin) || 0))}
+              {'$' + (numberWithCommas(Math.ceil((+card.ether_conversion_rate * +card.total_sold_coin) || 0), 0))}
             </span>
           </div>
         }
@@ -124,7 +125,7 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
             </span>
 
             <span className="amount">
-              {card.token_sold || '...'}/{card.total_sold_coin || '...'} Tickets
+              {card.token_sold ? numberWithCommas(card.token_sold, 0) : '...'}/{card.total_sold_coin ? numberWithCommas(card.total_sold_coin, 0) : '...'} Tickets
             </span>
           </div>
         </div>

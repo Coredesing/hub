@@ -482,6 +482,18 @@ const useStyles = makeStyles((theme: any) => {
         color: "#F24B4B",
       },
     },
+    loader: {
+      ...typeDisplayFlex,
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    loaderText: {
+      fontWeight: 700,
+      marginTop: 20,
+      color: "#999999",
+      font: 'normal normal bold 14px/18px DM Sans'
+    },
   };
 });
 

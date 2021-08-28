@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react'
-import {createStyles, Theme, withStyles, WithStyles} from '@material-ui/core/styles'
+import React, { useState, useEffect } from 'react'
+import { createStyles, makeStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
 import { useDispatch } from 'react-redux'
 import { alertFailure, alertSuccess } from '../../../store/actions/alert'
 import Dialog from '@material-ui/core/Dialog'
@@ -34,14 +34,22 @@ const titleStyles = (theme: Theme) =>
       color: 'black',
       backgroundColor: '#4B4B4B',
       padding: 4,
-      "&:hover" : {
+      "&:hover": {
         backgroundColor: '#D4D4D4'
       }
     },
     svgIcon: {
       fontSize: 5
-    }
+    },
+
   })
+
+const alertStyles = makeStyles({
+  alert: {
+    ...typeDisplayFlex,
+    marginBottom: '1rem'
+  }
+})
 
 export interface DialogTitleProps extends WithStyles<typeof titleStyles> {
   id: string
@@ -103,26 +111,28 @@ const DialogActions = withStyles((theme: Theme) => ({
 }))(MuiDialogActions)
 
 const PendingAlert = () => {
+  const styles = alertStyles();
   return (
-    <div style={{...typeDisplayFlex, marginBottom: '1rem'}}>
-      <svg width="14" height="14" style={{marginTop: '.1rem', minWidth: '14px', minHeight: '14px'}} viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M7 0C3.14005 0 0 3.14005 0 7C0 10.86 3.14005 14 7 14C10.86 14 14 10.86 14 7C14 3.14005 10.86 0 7 0ZM10.3291 10.6207C10.2153 10.7345 10.066 10.7917 9.9167 10.7917C9.76738 10.7917 9.61795 10.7345 9.5043 10.6207L6.5876 7.7041C6.47791 7.59505 6.4167 7.44679 6.4167 7.2917V3.5C6.4167 3.17743 6.67796 2.9167 7 2.9167C7.32204 2.9167 7.5833 3.17743 7.5833 3.5V7.0502L10.3291 9.7959C10.5571 10.024 10.5571 10.3927 10.3291 10.6207Z" fill="#FFD058"/>
+    <div className={styles.alert}>
+      <svg width="14" height="14" style={{ marginTop: '.1rem', minWidth: '14px', minHeight: '14px' }} viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7 0C3.14005 0 0 3.14005 0 7C0 10.86 3.14005 14 7 14C10.86 14 14 10.86 14 7C14 3.14005 10.86 0 7 0ZM10.3291 10.6207C10.2153 10.7345 10.066 10.7917 9.9167 10.7917C9.76738 10.7917 9.61795 10.7345 9.5043 10.6207L6.5876 7.7041C6.47791 7.59505 6.4167 7.44679 6.4167 7.2917V3.5C6.4167 3.17743 6.67796 2.9167 7 2.9167C7.32204 2.9167 7.5833 3.17743 7.5833 3.5V7.0502L10.3291 9.7959C10.5571 10.024 10.5571 10.3927 10.3291 10.6207Z" fill="#FFD058" />
       </svg>
-      <p style={{marginLeft: '.5rem', color: '#FFD058', fontSize: '14px'}}>
-        Your whitelist application is pending approval. We will check and verify later in a short time.<br/>
-        Please kindly wait. Email to support@polkafoundry.com if you need further assistance. 
+      <p style={{ marginLeft: '.5rem', color: '#FFD058', fontSize: '14px' }}>
+        Your whitelist application is pending approval. We will check and verify later in a short time.<br />
+        Please kindly wait. Email to support@polkafoundry.com if you need further assistance.
       </p>
     </div>
   )
 }
 
 const RejectedAlert = () => {
+  const styles = alertStyles();
   return (
-    <div style={{...typeDisplayFlex, marginBottom: '1rem'}}>
-      <svg width="14" height="14" style={{marginTop: '.1rem', minWidth: '14px', minHeight: '14px'}} viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M7.02734 0C3.18254 0 0 3.12785 0 6.97266C0 10.8175 3.18254 14 7.02734 14C10.8721 14 14 10.8175 14 6.97266C14 3.12785 10.8721 0 7.02734 0ZM10.4787 9.26379C10.7986 9.58371 10.7986 10.1041 10.4787 10.4243C10.1612 10.7414 9.64086 10.7466 9.3182 10.4243L7.02734 8.13258L4.68152 10.4245C4.3616 10.7445 3.84125 10.7445 3.52105 10.4245C3.20113 10.1046 3.20113 9.58426 3.52105 9.26406L5.81246 6.97266L3.52105 4.68125C3.20113 4.36105 3.20113 3.8407 3.52105 3.52078C3.84125 3.20086 4.3616 3.20086 4.68152 3.52078L7.02734 5.81273L9.3182 3.52078C9.63758 3.20141 10.1579 3.20031 10.4787 3.52078C10.7986 3.8407 10.7986 4.36105 10.4787 4.68125L8.18727 6.97266L10.4787 9.26379Z" fill="#D01F36"/>
+    <div className={styles.alert}>
+      <svg width="14" height="14" style={{ marginTop: '.1rem', minWidth: '14px', minHeight: '14px' }} viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.02734 0C3.18254 0 0 3.12785 0 6.97266C0 10.8175 3.18254 14 7.02734 14C10.8721 14 14 10.8175 14 6.97266C14 3.12785 10.8721 0 7.02734 0ZM10.4787 9.26379C10.7986 9.58371 10.7986 10.1041 10.4787 10.4243C10.1612 10.7414 9.64086 10.7466 9.3182 10.4243L7.02734 8.13258L4.68152 10.4245C4.3616 10.7445 3.84125 10.7445 3.52105 10.4245C3.20113 10.1046 3.20113 9.58426 3.52105 9.26406L5.81246 6.97266L3.52105 4.68125C3.20113 4.36105 3.20113 3.8407 3.52105 3.52078C3.84125 3.20086 4.3616 3.20086 4.68152 3.52078L7.02734 5.81273L9.3182 3.52078C9.63758 3.20141 10.1579 3.20031 10.4787 3.52078C10.7986 3.8407 10.7986 4.36105 10.4787 4.68125L8.18727 6.97266L10.4787 9.26379Z" fill="#D01F36" />
       </svg>
-      <p style={{marginLeft: '.5rem', color: '#D01F36', fontSize: '14px'}}>
+      <p style={{ marginLeft: '.5rem', color: '#D01F36', fontSize: '14px' }}>
         You haven't followed or subscribed to these accounts.
       </p>
     </div>
@@ -191,7 +201,7 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
     setLoading(false)
 
     if (resObj.status && resObj.status === 200) {
-      handleClose()      
+      handleClose()
       joinPool()
     } else {
       dispatch(alertFailure(resObj.message))
@@ -200,126 +210,126 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
   }
 
   return (
-      <Dialog open fullWidth={true} maxWidth={'md'} className={styles.socialDialog}>
-        <DialogTitle id="customized-dialog-title" onClose={handleClose} customClass={styles.dialogTitle} >
-          Welcome to {poolDetails?.title} IDO on Red Kite 
-        </DialogTitle>
-        <DialogContent>
-          <div>
-            { !whitelistSubmission && <WhiteListGuideText />}
-          </div>
-          <div>
-            <WhitelistFollowSocial poolDetails={poolDetails} whitelistSubmission={whitelistSubmission || rejectedSubmission} />
-          </div>
-          { pendingSubmission && <PendingAlert />}
-          { rejectedSubmission && <RejectedAlert />}
-          <div>
-            <div className="socialForm">
-              
-              {
-                poolDetails?.socialRequirement?.self_retweet_post && <>
-                  <div className={styles.socialStep}>
-                    <div className={styles.socialStepNunber}>
-                      02
-                    </div>
-                    <p style={{fontWeight: 700}}>
-                      Like and retweet the &nbsp;
-                       <a target="_blank" rel="noopener noreferrer" 
-                        className={styles.socialAnchorlink}
-                        href={poolDetails?.socialRequirement?.self_retweet_post}>
-                        {poolDetails?.title} IDO announcement
-                      </a> on PolkaFoundry’s Twitter 
-                      {
-                        poolDetails?.socialRequirement?.self_retweet_post_hashtag && 
-                        <span>
-                          &nbsp;with the hashtags <span style={{color: 'rgb(99, 152, 255)'}}>{poolDetails?.socialRequirement?.self_retweet_post_hashtag}</span>
-                        </span>
-                      }
-                    </p>
-                  </div>
-                </>
-              }
+    <Dialog open fullWidth={true} maxWidth={'md'} className={styles.socialDialog}>
+      <DialogTitle id="customized-dialog-title" onClose={handleClose} customClass={styles.dialogTitle} >
+        Welcome to {poolDetails?.title} IDO on Red Kite
+      </DialogTitle>
+      <DialogContent>
+        <div>
+          {!whitelistSubmission && <WhiteListGuideText />}
+        </div>
+        <div>
+          <WhitelistFollowSocial poolDetails={poolDetails} whitelistSubmission={whitelistSubmission || rejectedSubmission} />
+        </div>
+        {pendingSubmission && <PendingAlert />}
+        {rejectedSubmission && <RejectedAlert />}
+        <div>
+          <div className="socialForm">
 
-              {
-                poolDetails?.socialRequirement?.partner_retweet_post && <>
-                  <div className={styles.socialStep}>
-                    <div className={styles.socialStepNunber}>
-                      {poolDetails?.socialRequirement?.self_retweet_post ? '03': '02'}
-                    </div>
-                    <p style={{fontWeight: 700}}>
-                      Like and retweet the &nbsp;
-                       <a target="_blank" rel="noopener noreferrer" 
-                        className={styles.socialAnchorlink}
-                        href={poolDetails?.socialRequirement?.partner_retweet_post}>
-                        {poolDetails?.title} IDO announcement
-                      </a> on {poolDetails?.title}’s Twitter
-                      {
-                        poolDetails?.socialRequirement?.partner_retweet_post_hashtag && 
-                        <span>
-                          &nbsp;with the hashtags <span style={{color: 'rgb(99, 152, 255)'}}>{poolDetails?.socialRequirement?.partner_retweet_post_hashtag}</span>
-                        </span>
-                      }
-                    </p>
+            {
+              poolDetails?.socialRequirement?.self_retweet_post && <>
+                <div className={styles.socialStep}>
+                  <div className={styles.socialStepNunber}>
+                    02
                   </div>
-                </>
-              }
+                  <p style={{ fontWeight: 700 }}>
+                    Like and retweet the &nbsp;
+                    <a target="_blank" rel="noopener noreferrer"
+                      className={styles.socialAnchorlink}
+                      href={poolDetails?.socialRequirement?.self_retweet_post}>
+                      {poolDetails?.title} IDO announcement
+                    </a> on PolkaFoundry’s Twitter
+                    {
+                      poolDetails?.socialRequirement?.self_retweet_post_hashtag &&
+                      <span>
+                        &nbsp;with the hashtags <span style={{ color: 'rgb(99, 152, 255)' }}>{poolDetails?.socialRequirement?.self_retweet_post_hashtag}</span>
+                      </span>
+                    }
+                  </p>
+                </div>
+              </>
+            }
 
-              <div className="row">
-                <div className="input-group">
-                  <div className="label">Your Twitter Account <span style={{color: '#D01F36'}}>*</span> </div>
-                  <input
-                    type="text"
-                    disabled={alreadyJoinPool || joinPoolSuccess}
-                    value={inputTwitter}
-                    onChange={e => setInputTwitter(e.target.value)}
-                    placeholder="E.g: username"
-                    maxLength={60}
-                  />
-                  {invalidTwitter && <div style={{color: '#D01F36'}}>Invalid username</div>}
+            {
+              poolDetails?.socialRequirement?.partner_retweet_post && <>
+                <div className={styles.socialStep}>
+                  <div className={styles.socialStepNunber}>
+                    {poolDetails?.socialRequirement?.self_retweet_post ? '03' : '02'}
+                  </div>
+                  <p style={{ fontWeight: 700 }}>
+                    Like and retweet the &nbsp;
+                    <a target="_blank" rel="noopener noreferrer"
+                      className={styles.socialAnchorlink}
+                      href={poolDetails?.socialRequirement?.partner_retweet_post}>
+                      {poolDetails?.title} IDO announcement
+                    </a> on {poolDetails?.title}’s Twitter
+                    {
+                      poolDetails?.socialRequirement?.partner_retweet_post_hashtag &&
+                      <span>
+                        &nbsp;with the hashtags <span style={{ color: 'rgb(99, 152, 255)' }}>{poolDetails?.socialRequirement?.partner_retweet_post_hashtag}</span>
+                      </span>
+                    }
+                  </p>
                 </div>
-                <div className="input-group">
-                  <div className="label">Your Telegram Account <span style={{color: '#D01F36'}}>*</span> </div>
-                  <input
-                    type="text"
-                    disabled={alreadyJoinPool || joinPoolSuccess}
-                    value={inputTelegram}
-                    onChange={e => setInputTelegram(e.target.value)}
-                    placeholder="E.g: username"
-                    maxLength={60}
-                  />
-                  {invalidTelegram && <div style={{color: '#D01F36'}}>Invalid username</div>}
-                </div>
+              </>
+            }
+
+            <div className="row">
+              <div className="input-group">
+                <div className="label">Your Twitter Account <span style={{ color: '#D01F36' }}>*</span> </div>
+                <input
+                  type="text"
+                  disabled={alreadyJoinPool || joinPoolSuccess}
+                  value={inputTwitter}
+                  onChange={e => setInputTwitter(e.target.value)}
+                  placeholder="E.g: username"
+                  maxLength={60}
+                />
+                {invalidTwitter && <div style={{ color: '#D01F36' }}>Invalid username</div>}
+              </div>
+              <div className="input-group">
+                <div className="label">Your Telegram Account <span style={{ color: '#D01F36' }}>*</span> </div>
+                <input
+                  type="text"
+                  disabled={alreadyJoinPool || joinPoolSuccess}
+                  value={inputTelegram}
+                  onChange={e => setInputTelegram(e.target.value)}
+                  placeholder="E.g: username"
+                  maxLength={60}
+                />
+                {invalidTelegram && <div style={{ color: '#D01F36' }}>Invalid username</div>}
               </div>
             </div>
           </div>
-        </DialogContent>
-        {
-          !alreadyJoinPool && !joinPoolSuccess &&
-          <DialogActions>
-            <Button
-              text={'Submit'}
-              onClick={verifyAndSubmit}
-              loading={loading}
-              disabled={loading || !inputTelegram || !inputTwitter}
-              backgroundColor={'#72F34B'}
-              style={{
-                minWidth: 200,
-                padding: '13px 30px',
-              }}
-            />
+        </div>
+      </DialogContent>
+      {
+        !alreadyJoinPool && !joinPoolSuccess &&
+        <DialogActions>
+          <Button
+            text={'Submit'}
+            onClick={verifyAndSubmit}
+            loading={loading}
+            disabled={loading || !inputTelegram || !inputTwitter}
+            backgroundColor={'#72F34B'}
+            style={{
+              minWidth: 200,
+              padding: '13px 30px',
+            }}
+          />
 
-            <Button
-              text={'Cancel'}
-              onClick={handleClose}
-              backgroundColor={'#727272'}
-              style={{
-                minWidth: 200,
-                padding: '13px 30px',
-              }}
-            />
-          </DialogActions>
-        }
-      </Dialog>
+          <Button
+            text={'Cancel'}
+            onClick={handleClose}
+            backgroundColor={'#727272'}
+            style={{
+              minWidth: 200,
+              padding: '13px 30px',
+            }}
+          />
+        </DialogActions>
+      }
+    </Dialog>
   )
 }
 

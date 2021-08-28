@@ -96,7 +96,7 @@ const InvestorLogin: React.FC<any> = (props: any) => {
   const render = () => {
     if (loadingUserExists) {
       return (
-        <div className="login__user-loading" style={{ height: 660, maxHeight: 660, ...typeDisplayFlex, alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
+        <div className={`login__user-loading ${classes.loadingUser}`}>
           <HashLoader color={'#3232DC'} />
           <p className="login__user-loading-text" style={{ textAlign: 'center', color: '#999999' }}>Loading Ethereum Wallet</p>
         </div>

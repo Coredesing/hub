@@ -38,7 +38,7 @@ const useDetectClaimConfigApplying = (
         setCurrentClaimIndex(validIndex);
 
         const next = poolDetails.campaignClaimConfig[validIndex + 1];
-        console.log('NextClaim: next: ', next);
+        // console.log('NextClaim: next: ', next);
         if (next) {
           setNextClaim(next);
           setNextClaimIndex(validIndex + 1);
@@ -47,7 +47,7 @@ const useDetectClaimConfigApplying = (
         if (validIndex >= 0 && userPurchased && userClaimed) {
           let maximum: any = (new BigNumber(validRow?.max_percent_claim || 0).dividedBy(100).multipliedBy(userPurchased || 0)).minus(userClaimed);
           maximum = new BigNumber(formatRoundDown(maximum));
-          console.log('validRow.max_percent_claim', validRow?.max_percent_claim, userPurchased, userClaimed, maximum);
+          // console.log('validRow.max_percent_claim', validRow?.max_percent_claim, userPurchased, userClaimed, maximum);
           if (maximum.lt(0)) {
             setMaximumTokenClaimUtilNow(0);
           } else {
@@ -55,13 +55,13 @@ const useDetectClaimConfigApplying = (
           }
         }
       }
-      console.log('Finish validRow', validRow, validIndex);
+      // console.log('Finish validRow', validRow, validIndex);
     };
 
     if (poolDetails && poolDetails.campaignClaimConfig && poolDetails.campaignClaimConfig.length > 0) {
       detechCurrentPhase();
       detechCurrentPhaseInterval = setInterval(() => {
-        console.log('Deteching current phase....');
+        // console.log('Deteching current phase....');
         detechCurrentPhase();
       }, 10000);
     }

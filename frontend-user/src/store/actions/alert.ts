@@ -26,3 +26,16 @@ export const clearAlert = ()  => {
     type: alertActions.CLEAR_MESSAGE,
   }
 }
+
+export const setTypeIsPushNoti = ({
+  success = true,
+  warn = true,
+  failed = true,
+}: {success?: boolean, warn?: boolean, failed?: boolean} = {}) => {
+  return {
+    type: alertActions.TYPE_IS_PUSH_NOTI,
+    payload: {
+      success, warn, failed,
+    }
+  }
+}

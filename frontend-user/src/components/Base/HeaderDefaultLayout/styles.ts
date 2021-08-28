@@ -286,20 +286,32 @@ const useStyles = makeStyles((theme) => {
       }
     },
     navBarGF: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100%',
+      minHeight: '80px',
       display: 'grid',
       gridTemplateColumns: '173px auto',
       alignItems: 'center',
       gap: '32px',
-      padding: '26px 84px',
+      padding: '10px 84px',
       background: '#000',
-      width: '100%',
       color: '#FFFFFF',
       font: 'normal normal bold 16px/24px DM Sans',
-      position: 'relative',
+      // position: 'relative',
       zIndex: 1,
       [theme.breakpoints.down('md')]: {
-        gridTemplateColumns: '173px 30px',
+        gridTemplateColumns: '173px 60px',
         justifyContent: 'space-between',
+      },
+      [theme.breakpoints.down('xs')]: {
+        padding: '0px 32px',
+        minHeight: '60px',
+        gridTemplateColumns: 'auto auto',
+        '& .logo img': {
+          height: '16px'
+        }
       },
 
       // '& > div': {
@@ -382,6 +394,9 @@ const useStyles = makeStyles((theme) => {
           display: 'grid',
         }
       },
+      [theme.breakpoints.down('xs')]: {
+        top: '60px',
+      }
     },
     headerLinks: {
       margin: 0,
@@ -408,6 +423,9 @@ const useStyles = makeStyles((theme) => {
       display: 'flex',
       gap: '28px',
       alignItems: 'center',
+      [theme.breakpoints.down('md')]: {
+        display: 'grid',
+      }
     },
     headerAccText: {
       fontFamily: 'Firs Neue',
@@ -488,8 +506,16 @@ const useStyles = makeStyles((theme) => {
     hamburger: {
       cursor: 'pointer',
       display: 'none',
+      width: '60px',
+      height: '60px',
+      background: '#72F34B',
       [theme.breakpoints.down('md')]: {
-        display: 'block',
+        display: 'grid',
+        placeContent: 'center',
+      },
+      [theme.breakpoints.down('xs')]: {
+        position: 'absolute',
+        right: 0
       },
     }
   };

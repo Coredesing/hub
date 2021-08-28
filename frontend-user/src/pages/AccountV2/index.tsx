@@ -97,7 +97,7 @@ const AccountV2 = (props: any) => {
   const [loadingUserProfile, setRenewUserProfile] = useState(false);
 
   useEffect(() => {
-    setRenewUserProfile(true);
+    setRenewUserProfile(!!connectedAccount);
   }, [connectedAccount]);
   useEffect(() => {
     if (!connectedAccount) {

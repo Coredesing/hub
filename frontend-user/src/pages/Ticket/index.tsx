@@ -8,7 +8,7 @@ import AboutTicket from "./About";
 import { formatNumber, getDiffTime } from "../../utils";
 import { Progress } from "./Progress";
 import { useFetchV1 } from "../../hooks/useFetch";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   APP_NETWORKS_SUPPORT,
   ETH_CHAIN_ID,
@@ -33,6 +33,7 @@ import TicketModal from "./TicketModal";
 import useTokenClaim from "./hooks/useTokenClaim";
 import axios from "../../services/axios";
 import useUserRemainTokensClaim from "./hooks/useUserRemainTokensClaim";
+import { setTypeIsPushNoti } from "../../store/actions/alert";
 // import { FormInputNumber } from '../../components/Base/FormInputNumber/FormInputNumber';
 const iconWarning = "/images/warning-red.svg";
 const ticketImg = "/images/gamefi-ticket.png";
@@ -42,6 +43,7 @@ const finishedImg = "/images/finished.png";
 const soldoutImg = "/images/soldout.png";
 const Ticket: React.FC<any> = (props: any) => {
   const styles = useStyles();
+  const dispatch = useDispatch();
   const params = useParams<{ [k: string]: any }>();
   const id = params.id;
   const { connectedAccount /*isAuth, wrongChain*/ } = useAuth();
@@ -86,6 +88,10 @@ const Ticket: React.FC<any> = (props: any) => {
     );
   }, [infoTicket, appChainID]);
   const isClaim = dataTicket?.process === "only-claim";
+
+  useEffect(() => {
+    dispatch(setTypeIsPushNoti({ failed: false }));
+  }, [dispatch]);
 
   const [isAccInWinners, setAccInWinners] = useState<{
     loading: boolean;
@@ -150,7 +156,7 @@ const Ticket: React.FC<any> = (props: any) => {
           openTime = +openClaim.start_time * 1000;
           const endTime = timeStartPhase2 ? +timeStartPhase2 * 1000 : (+openClaim.end_time * 1000 || openTime + 1000 * 60 * 60 * 24);
           finishTime = endTime;
-          if(timeStartPhase2) {
+          if (timeStartPhase2) {
             setPhaseName('Phase 1');
             setPhase({
               1: {
@@ -170,7 +176,7 @@ const Ticket: React.FC<any> = (props: any) => {
           openTime = +openClaim.start_time * 1000;
           const endTime = timeStartPhase2 ? +timeStartPhase2 * 1000 : (+endClaim.end_time * 1000 || +endClaim.start_time * 1000);
           finishTime = endTime;
-          if(timeStartPhase2) {
+          if (timeStartPhase2) {
             setPhaseName('Phase 1');
             setPhase({
               1: {
@@ -208,25 +214,25 @@ const Ticket: React.FC<any> = (props: any) => {
   }, [dataTicket, loadingTicket, isClaim]);
 
   useEffect(() => {
-      if(Object.keys(phase).length) {
-        const interval = setInterval(() => {
-          if(Date.now() > phase[2].finishTime) {
-            clearInterval(interval);
-            return;
-          }
-          if(Date.now() >= phase[2].openTime && Date.now() < phase[2].finishTime) {
-            setTimeEnd(getDiffTime( phase[2].finishTime, Date.now() ))
-            setFinishedTime(false);
-            setAccInWinners({ ok: false, loading: true, error: "" });
-            setPhaseName('Phase 2');
-            clearInterval(interval);
-          }
-        }, 1000);
-
-        return () => {
+    if (Object.keys(phase).length) {
+      const interval = setInterval(() => {
+        if (Date.now() > phase[2].finishTime) {
+          clearInterval(interval);
+          return;
+        }
+        if (Date.now() >= phase[2].openTime && Date.now() < phase[2].finishTime) {
+          setTimeEnd(getDiffTime(phase[2].finishTime, Date.now()))
+          setFinishedTime(false);
+          setAccInWinners({ ok: false, loading: true, error: "" });
+          setPhaseName('Phase 2');
           clearInterval(interval);
         }
+      }, 1000);
+
+      return () => {
+        clearInterval(interval);
       }
+    }
   }, [phase]);
 
   const [renewBalance, setNewBalance] = useState(true);
@@ -354,7 +360,7 @@ const Ticket: React.FC<any> = (props: any) => {
   const [userClaimed, setUserClaimed] = useState(0);
 
   useEffect(() => {
-    if(!loadingClaming) {
+    if (!loadingClaming) {
       setLockWhenClaiming(false);
     }
   }, [loadingClaming, errorClaming]);
@@ -701,7 +707,7 @@ const Ticket: React.FC<any> = (props: any) => {
                   </div>
                 </div>
               )}
-
+              
               {endOpenTime && !infoTicket.campaign_hash && (
                 <div className={styles.comingSoon}>Coming soon</div>
               )}
@@ -779,7 +785,7 @@ const Ticket: React.FC<any> = (props: any) => {
                     <div className={styles.infoTicket}>
                       <span className={styles.text}>AVAILABLE TO CAILM</span>{" "}
                       <span className={styles.textBold}>
-                        { +isAccInWinners.data?.lottery_ticket - userClaimed || 0}
+                        {+isAccInWinners.data?.lottery_ticket - userClaimed || 0}
                       </span>
                     </div>
                   )}

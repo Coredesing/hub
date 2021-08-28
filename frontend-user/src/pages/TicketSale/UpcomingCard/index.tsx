@@ -4,6 +4,7 @@ import { useCardStyles } from '../style';
 import { caclDiffTime, formatNumber, getDiffTime, getSeedRound } from '../../../utils';
 import { useEffect, useState } from 'react';
 import Image from '../../../components/Base/Image';
+import { TOKEN_TYPE } from '../../../constants';
 
 type Props = {
   card: { [k: string]: any },
@@ -46,6 +47,9 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
       clearInterval(interval);
     }
   }, [openTime, setOpenTime, refresh]);
+  console.log(card)
+
+  const isTicket = card?.token_type === TOKEN_TYPE.ERC721;
 
   return (
     <div className={clsx(styles.card, styles.cardUpcoming)}>
@@ -61,13 +65,22 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
           {/* <img src={`/images/icons/eth.svg`} alt="" /> */}
         </div>
         <div className={styles.cardBodyItem}>
-          <span className={styles.text}>Total SALES</span>
-          <span className={styles.textBold}> {card.total_sold_coin}</span>
+          <span className={styles.text}>TOTAL {!isTicket ? 'RAISE' : 'SALES'}</span>
+          <span className={styles.textBold}> {!isTicket ? '$' + (Math.ceil((+card.ether_conversion_rate * +card.total_sold_coin) || 0)) : card.total_sold_coin}</span>
         </div>
-        <div className={styles.cardBodyItem}>
+        {!isTicket && <div className={styles.cardBodyItem}>
+          <span className={styles.text}>EXCHANGE RATE</span>
+          <span className={clsx(styles.textBold, styles.price)} style={{textTransform: 'uppercase'}}> 1 {card.symbol} = {card.ether_conversion_rate} {card.accept_currency} </span>
+        </div>}
+        {!isTicket && <div className={styles.cardBodyItem}>
+          <span className={styles.text}>SUPPORTED</span>
+          <span className={clsx(styles.textBold, styles.price)} style={{textTransform: 'uppercase'}}> {card.accept_currency} </span>
+        </div>}
+        {isTicket && <div className={styles.cardBodyItem}>
           <span className={styles.text}>PRICE</span>
           <span className={clsx(styles.textBold, styles.price)}> {card.ether_conversion_rate} {card.accept_currency} </span>
         </div>
+        }
         <div className={'cardBodyTimeEndItem'}>
           <img src='/images/icons/bright.svg' alt="" />
           <span className={clsx(styles.text, 'sp1')}>OPEN IN</span>

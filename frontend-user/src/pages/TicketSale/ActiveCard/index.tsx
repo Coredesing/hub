@@ -79,16 +79,40 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
           <h4>{card.title}</h4>
           <img src={`/images/icons/${card.accept_currency}.png`} alt="" />
         </div>
-        <div className={styles.cardBodyItem}>
-          <span className={styles.text}>Remaining</span> <span className={styles.textBold}>
-            {getRemaining(card.total_sold_coin, card.token_sold)}
-          </span>
-        </div>
-        <div className={styles.cardBodyItem}>
-          <span className={styles.text}>Price</span> <span className={clsx(styles.textBold, styles.price)}>
-            {isClaim ? 0 : card.ether_conversion_rate} {card.accept_currency}
-          </span>
-        </div>
+        {!isTicket &&
+          <div className={styles.cardBodyItem}>
+            <span className={styles.text}>TOTAL RAISE</span> <span className={styles.textBold}>
+              {'$' + (Math.ceil((+card.ether_conversion_rate * +card.total_sold_coin) || 0))}
+            </span>
+          </div>
+        }
+        {!isTicket &&
+          <div className={styles.cardBodyItem}>
+            <span className={styles.text}>EXCHANGE RATE</span> <span className={styles.textBold} style={{textTransform: 'uppercase'}}>
+              1 {card.symbol} = {card.ether_conversion_rate} {card.accept_currency}
+            </span>
+          </div>}
+        {!isTicket &&
+          <div className={styles.cardBodyItem}>
+            <span className={styles.text}>SUPPORTED</span> <span className={styles.textBold} style={{textTransform: 'uppercase'}}>
+              {card.accept_currency}
+            </span>
+          </div>
+        }
+        {isTicket &&
+          <div className={styles.cardBodyItem}>
+            <span className={styles.text}>REMAINING</span> <span className={styles.textBold}>
+              {getRemaining(card.total_sold_coin, card.token_sold)}
+            </span>
+          </div>
+        }
+        {isTicket &&
+          <div className={styles.cardBodyItem}>
+            <span className={styles.text}>PRICE</span> <span className={clsx(styles.textBold, styles.price)}>
+              {isClaim ? 0 : card.ether_conversion_rate} {card.accept_currency}
+            </span>
+          </div>
+        }
         <div className={styles.progressItem}>
           <span className={styles.text}>Progress</span>
           <div className="showProgress">

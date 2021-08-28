@@ -106,6 +106,7 @@ const useStyles = makeStyles((theme: any) => ({
   },
   gridInstruction: {
     ...typeDisplayFlex,
+    alignItems: 'center',
     width: "100%",
     height: "80px",
     justifyContent: "center",

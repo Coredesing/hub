@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -7,7 +8,7 @@ const useStyles = makeStyles((theme) => {
       width: '100%',
       maxWidth: 'calc(100vw - 80px)',
       backgroundColor: '#020616',
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => {
       color: '#D01F36'
     },
     rightBar: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'flex-end',
@@ -67,7 +68,7 @@ const useStyles = makeStyles((theme) => {
       padding: '0 10px',
       height: '36px',
       borderRadius: 20,
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       color: '#999999',
       marginLeft: 40,
@@ -82,7 +83,7 @@ const useStyles = makeStyles((theme) => {
     btnConnect: {
       background: '#3232DC',
       height: '36px',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       padding: '0 14px',
       borderRadius: 20,
@@ -96,7 +97,7 @@ const useStyles = makeStyles((theme) => {
     },
     btnConnectText: {
       marginLeft: 10,
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
       font: 'normal normal normal 12px/18px Helvetica'
@@ -104,7 +105,7 @@ const useStyles = makeStyles((theme) => {
     btnLogout: {
       background: '#3232DC',
       borderRadius: '8px',
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'center',
       alignItems: 'center',
       border: 'none',
@@ -147,7 +148,7 @@ const useStyles = makeStyles((theme) => {
       fontSize: 15,
       color: 'white',
       padding: 10,
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'center',
       alignItems: 'center',
       fontWeight: 500,

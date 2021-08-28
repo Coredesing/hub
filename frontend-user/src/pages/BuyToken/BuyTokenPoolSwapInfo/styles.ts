@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     topSec: {
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between',
       marginBottom: 24,
     },
@@ -62,7 +63,7 @@ const useStyles = makeStyles((theme: any) => {
       fontSize: 14,
       lineHeight: '18px',
       marginBottom: 10,
-      display: 'flex',
+      ...typeDisplayFlex,
     },
 
     titleSub2: {
@@ -70,7 +71,7 @@ const useStyles = makeStyles((theme: any) => {
       fontSize: 14,
       lineHeight: '18px',
       marginBottom: 24,
-      display: 'flex',
+      ...typeDisplayFlex,
     },
 
     botSec: {
@@ -78,7 +79,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     jubValue: {
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between',
       marginBottom: 10,
     },

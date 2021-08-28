@@ -1,5 +1,6 @@
 import { makeStyles } from "@material-ui/core";
-import Content from "../../components/Base/MainDefaultLayout/MainDefaultLayout";
+import { typeDisplayFlex } from "../../styles/CommonStyle";
+import { isSafari } from "react-device-detect";
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme: any) => {
         left: 0,
         "& img": {
           width: "100%",
-          objectFit: "cover"
+          objectFit: "cover",
         },
         [theme.breakpoints.down("xs")]: {
           top: "50px",
@@ -54,7 +55,7 @@ const useStyles = makeStyles((theme: any) => {
       paddingTop: "130px",
       paddingBottom: "130px",
       "& .large-text": {
-        display: "flex",
+        ...typeDisplayFlex,
         gap: "10px",
         alignItems: "center",
         marginBottom: "24px",
@@ -139,7 +140,7 @@ const useStyles = makeStyles((theme: any) => {
       "background-repeat": "no-repeat, repeat",
       backgroundSize: "40%, cover",
       position: "relative",
-      display: "flex",
+      ...typeDisplayFlex,
       gap: "45px",
       alignItems: "center",
       paddingLeft: "62px",
@@ -249,18 +250,16 @@ const useStyles = makeStyles((theme: any) => {
       [theme.breakpoints.down("xs")]: {
         padding: "28px",
         paddingTop: "40px",
-        paddingBottom: "40px"
+        paddingBottom: "40px",
       },
-
     },
     partners: {
       paddingTop: "120px",
       paddingBottom: "130px",
       [theme.breakpoints.down("xs")]: {
         paddingTop: "40px",
-        paddingBottom: "70px"
+        paddingBottom: "70px",
       },
-
     },
     perfomance: {
       paddingTop: "60px",
@@ -273,18 +272,18 @@ const useStyles = makeStyles((theme: any) => {
       },
       [theme.breakpoints.down("xs")]: {
         paddingTop: "40px",
-        paddingBottom: "80px"
+        paddingBottom: "80px",
       },
     },
     wrapperContent: {
       width: "100%",
-      display: "flex",
+      ...typeDisplayFlex,
       justifyContent: "center",
       marginTop: "28px",
       // overflow: "hidden"
     },
     content: {
-      display: "flex",
+      ...typeDisplayFlex,
       gap: "70px",
       position: "relative",
       maxWidth: "1120px",
@@ -297,7 +296,7 @@ const useStyles = makeStyles((theme: any) => {
       },
     },
     contentTitle: {
-      display: "flex",
+      ...typeDisplayFlex,
       flexDirection: "column",
       gap: "12px",
       "& h3": {
@@ -354,6 +353,7 @@ const useStyles = makeStyles((theme: any) => {
       },
     },
     btnDiscover: {
+      marginTop: isSafari ? "12px" : 0,
       outline: "none",
       border: "none",
       borderRadius: "2px",
@@ -367,7 +367,7 @@ const useStyles = makeStyles((theme: any) => {
       color: "#000",
       background: "#72f348",
       width: "fit-content",
-      display: "flex",
+      ...typeDisplayFlex,
       justifyContent: "center",
       alignItems: "center",
 
@@ -384,11 +384,11 @@ const useStyles = makeStyles((theme: any) => {
       "& img": {
         width: "40px",
         height: "40px",
-        objectFit: "cover"
+        objectFit: "cover",
       },
 
       "& > div": {
-        display: "flex",
+        ...typeDisplayFlex,
         flexDirection: "column !important",
         alignItems: "flex-start !important",
         gap: "0px !important",
@@ -440,7 +440,7 @@ export const useCardStyles = makeStyles((theme) => ({
     },
   },
   cardsTokenSales: {
-    display: "flex",
+    ...typeDisplayFlex,
     justifyContent: "center",
     gap: "20px",
     overflow: "hidden",
@@ -455,10 +455,11 @@ export const useCardStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down("xs")]: {
       gap: "7px",
-      gridTemplateColumns: "auto auto"
+      gridTemplateColumns: "auto auto",
     },
   },
   cardTokenSale: {
+    marginRight: isSafari ? "20px" : 0,
     width: "315px",
     [theme.breakpoints.down("sm")]: {
       width: "280px",
@@ -467,47 +468,46 @@ export const useCardStyles = makeStyles((theme) => ({
       width: "156px",
     },
 
-    '& .card-token-title': {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      '& h4': {
-        fontFamily: 'Firs Neue',
-        fontStyle: 'normal',
+    "& .card-token-title": {
+      ...typeDisplayFlex,
+      justifyContent: "space-between",
+      alignItems: "center",
+      "& h4": {
+        fontFamily: "Firs Neue",
+        fontStyle: "normal",
         fontWeight: 600,
-        fontSize: '20px',
-        lineHeight: '28px',
-        color: '#fff',
+        fontSize: "20px",
+        lineHeight: "28px",
+        color: "#fff",
 
         [theme.breakpoints.down("xs")]: {
-          fontWeight: 'normal',
-          fontSize: '12px',
-          lineHeight: '14px',
+          fontWeight: "normal",
+          fontSize: "12px",
+          lineHeight: "14px",
         },
-
       },
-      '& span': {
-        display: 'block',
-        padding: '6px 8px',
-        fontFamily: 'Firs Neue',
-        fontStyle: 'normal',
-        fontWeight: 'normal',
-        fontSize: '12px',
-        color: '#fff',
-        borderRadius: '2px',
-        background: '#28481E',
-        textTransform: 'uppercase',
+      "& span": {
+        display: "block",
+        padding: "6px 8px",
+        fontFamily: "Firs Neue",
+        fontStyle: "normal",
+        fontWeight: "normal",
+        fontSize: "12px",
+        color: "#fff",
+        borderRadius: "2px",
+        background: "#28481E",
+        textTransform: "uppercase",
         [theme.breakpoints.down("xs")]: {
-          fontSize: '8px',
-          padding: '4px 4px',
+          fontSize: "8px",
+          padding: "4px 4px",
         },
-      }
-    }
+      },
+    },
   },
   card: {
     padding: "19px",
     paddingTop: "26px",
-    paddingBottom: '15px',
+    paddingBottom: "15px",
     border: "1px solid #28481E",
     borderRadius: "4px",
     transition: ".3s",
@@ -519,10 +519,10 @@ export const useCardStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("xs")]: {
       padding: "7px",
       paddingTop: "26px",
-      paddingBottom: '13px',
+      paddingBottom: "13px",
     },
 
-    '& .title': {
+    "& .title": {
       "& h5": {
         textAlign: "center",
         color: "#FFFFFF",
@@ -535,7 +535,7 @@ export const useCardStyles = makeStyles((theme) => ({
           lineHeight: "14px",
         },
       },
-    }
+    },
   },
   cardImg: {
     position: "relative",

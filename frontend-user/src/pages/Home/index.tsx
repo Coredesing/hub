@@ -212,7 +212,7 @@ const Home = (props: any) => {
                 Make sure you have a Ticket to join IDO. To view information
                 about other IDO pools, click the Discover button below.
               </h5>
-              {/* <Link href="/#/" className={styles.btnDiscover}>Discover</Link> */}
+              <Link href="/#/pools/token" className={styles.btnDiscover}>Discover</Link>
             </div>
             <div className={clsx(styles.cards, styles.cardsTokenSales)}>
               {(tokenSales.data || []).map((card, id) => (

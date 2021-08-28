@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => {
         '& .socialForm': {
           marginTop: '30px',
           '& > .row': {
-            display: 'flex',
+            ...typeDisplayFlex,
             flexDirection: 'column',
             [theme.breakpoints.up('md')]: {
               flexDirection: 'row',
@@ -101,7 +102,7 @@ const useStyles = makeStyles((theme) => {
       }
     },
     socialStep: {
-      display: 'flex', 
+      ...typeDisplayFlex, 
       [theme.breakpoints.up('md')]: {
         alignItems:'center', 
       },
@@ -113,7 +114,7 @@ const useStyles = makeStyles((theme) => {
       width: '1.5rem', 
       borderRadius: '50%', 
       backgroundColor: '#222228', 
-      display: 'flex',
+      ...typeDisplayFlex,
       position: 'absolute',
       left: '-2.5rem',
       [theme.breakpoints.down('md')]: {
@@ -175,7 +176,7 @@ const useStyles = makeStyles((theme) => {
         paddingLeft: '4rem'
       },
       '& .flex-cell': {
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center',
         [theme.breakpoints.down('md')]: {
           justifyContent:'flex-end'
@@ -223,7 +224,7 @@ const useStyles = makeStyles((theme) => {
       }
     },
     dialogPrivacy: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center'
     },
     dialogPrivacyText: {
@@ -260,7 +261,7 @@ const useStyles = makeStyles((theme) => {
     },
     dialogButton: {
       marginTop: 25,
-      display: 'flex',
+      ...typeDisplayFlex,
       width: '100%',
       background: '#72F34B',
       borderRadius: 60,
@@ -286,6 +287,13 @@ const useStyles = makeStyles((theme) => {
       '&:active': {
         transform: 'translateY(-3px)'
       },
+    },
+    whitelistFlSocial: {
+      ...typeDisplayFlex, marginTop: '.75rem'
+    },
+    whitelistContentModal: {
+      ...typeDisplayFlex, marginTop: '.75rem',
+      marginBottom: '2rem', color: '#AEAEAE'
     }
   };
 });

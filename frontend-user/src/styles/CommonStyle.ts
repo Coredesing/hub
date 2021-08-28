@@ -1,500 +1,521 @@
-import { makeStyles } from '@material-ui/core';
-import { NONAME } from 'dns';
+import { makeStyles } from "@material-ui/core";
+import { NONAME } from "dns";
 
 const useCommonStyle = makeStyles((theme) => {
   return {
     DefaultLayout: {
-      background: '#171717',
+      background: "#171717",
       // background: 'radial-gradient(50% 50% at 50% 50%, rgb(34, 34, 40) 0%, rgb(4, 7, 25) 100%)',
-      minHeight: '100vh',
+      minHeight: "100vh",
       /* grid container settings */
-      display: 'grid',
-      gridTemplateRows: 'auto 1fr auto',
-      gridTemplateAreas: 
-        `'header'
+      display: "grid",
+      gridTemplateRows: "auto 1fr auto",
+      gridTemplateAreas: `'header'
         'main'
         'footer'`,
     },
     bgBody: {
-      backgroundImage: 'url(/images/bg_layout.svg)',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: '100% auto',
-      backgroundPosition: '0px 90px',
-      position: 'relative',
-      minHeight: '100vh',
-      overflow: 'auto',
-      paddingTop: '80px',
+      backgroundImage: "url(/images/bg_layout.svg)",
+      backgroundRepeat: "no-repeat",
+      backgroundSize: "100% auto",
+      backgroundPosition: "0px 90px",
+      position: "relative",
+      minHeight: "100vh",
+      overflow: "auto",
+      paddingTop: "80px",
     },
     headPage: {
-      display: 'flex',
+      ...typeDisplayFlex,
       marginBottom: 25,
     },
-    headPageLeft: {
-
-    },
+    headPageLeft: {},
     headPageRight: {
-      marginLeft: 'auto',
-      display: 'flex',
+      marginLeft: "auto",
+      ...typeDisplayFlex,
     },
     btnBack: {
-      background: '#FFCC00',
-      boxShadow: '0px 0px 15px rgba(243, 203, 25, 0.3)',
+      background: "#FFCC00",
+      boxShadow: "0px 0px 15px rgba(243, 203, 25, 0.3)",
       borderRadius: 8,
       height: 40,
       minWidth: 92,
       fontWeight: 500,
       fontSize: 14,
       lineHeight: 160,
-      alignItems: 'center',
-      color: '#FFFFFF',
-      textTransform: 'inherit',
-      fontFamily: 'Roboto-Bold',
-      overflow: 'hidden',
-      '&:hover': {
-        background: '#FFCC00',
-      }
+      alignItems: "center",
+      color: "#FFFFFF",
+      textTransform: "inherit",
+      fontFamily: "Roboto-Bold",
+      overflow: "hidden",
+      "&:hover": {
+        background: "#FFCC00",
+      },
     },
     TimePicker: {
-      '& .react-time-picker__wrapper': {
-        background: '#F0F0F0',
+      "& .react-time-picker__wrapper": {
+        background: "#F0F0F0",
         borderRadius: 8,
-        border: 'none',
+        border: "none",
         height: 40,
-        padding: '5px 10px',
+        padding: "5px 10px",
       },
-      '& .react-time-picker__inputGroup': {
+      "& .react-time-picker__inputGroup": {
         fontSize: 14,
-        lineHeight: '20px',
-        letterSpacing: '0.25px',
-        color: '#9A9A9A',
-        '& input': {
-          outline: 'none',
-          border: 'none',
+        lineHeight: "20px",
+        letterSpacing: "0.25px",
+        color: "#9A9A9A",
+        "& input": {
+          outline: "none",
+          border: "none",
           fontSize: 14,
-          lineHeight: '20px',
-          letterSpacing: '0.25px',
-          color: '#9A9A9A',
-        }
+          lineHeight: "20px",
+          letterSpacing: "0.25px",
+          color: "#9A9A9A",
+        },
       },
-      '& .react-time-picker__button': {
+      "& .react-time-picker__button": {
         padding: 5,
-        outline: 'none',
-        border: 'none',
+        outline: "none",
+        border: "none",
 
-        '& svg': {
+        "& svg": {
           width: 16,
-          stroke: '#9A9A9A',
-        }
+          stroke: "#9A9A9A",
+        },
       },
-      '& .react-time-picker__inputGroup__input': {
-        outline: 'none',
-        border: 'none',
+      "& .react-time-picker__inputGroup__input": {
+        outline: "none",
+        border: "none",
         fontSize: 14,
-        lineHeight: '20px',
-        letterSpacing: '0.25px',
-        color: '#9A9A9A',
-      }
+        lineHeight: "20px",
+        letterSpacing: "0.25px",
+        color: "#9A9A9A",
+      },
     },
     DatePicker: {
-      '& .react-date-picker__wrapper': {
-        background: '#F0F0F0',
+      "& .react-date-picker__wrapper": {
+        background: "#F0F0F0",
         borderRadius: 8,
-        border: 'none',
+        border: "none",
         height: 40,
-        padding: '5px 10px',
+        padding: "5px 10px",
       },
-      '& .react-date-picker__inputGroup': {
+      "& .react-date-picker__inputGroup": {
         fontSize: 14,
-        lineHeight: '20px',
-        letterSpacing: '0.25px',
-        color: '#9A9A9A',
-        '& input': {
-          outline: 'none',
-          border: 'none',
+        lineHeight: "20px",
+        letterSpacing: "0.25px",
+        color: "#9A9A9A",
+        "& input": {
+          outline: "none",
+          border: "none",
           fontSize: 14,
-          lineHeight: '20px',
-          letterSpacing: '0.25px',
-          color: '#9A9A9A',
-        }
+          lineHeight: "20px",
+          letterSpacing: "0.25px",
+          color: "#9A9A9A",
+        },
       },
-      '& .react-date-picker__button': {
+      "& .react-date-picker__button": {
         padding: 5,
-        outline: 'none',
-        border: 'none',
+        outline: "none",
+        border: "none",
 
-        '& svg': {
+        "& svg": {
           width: 16,
-          stroke: '#9A9A9A',
-        }
-      }
+          stroke: "#9A9A9A",
+        },
+      },
     },
     DateTimePicker: {
-      '& .react-datetime-picker__wrapper': {
-        background: '#F0F0F0',
+      "& .react-datetime-picker__wrapper": {
+        background: "#F0F0F0",
         borderRadius: 8,
-        border: 'none',
+        border: "none",
         height: 40,
-        padding: '5px 10px',
-        color: 'black'
+        padding: "5px 10px",
+        color: "black",
       },
-      '& .react-datetime-picker__inputGroup': {
+      "& .react-datetime-picker__inputGroup": {
         fontSize: 14,
-        lineHeight: '20px',
-        letterSpacing: '0.25px',
-        color: '#9A9A9A',
-        '& input': {
-          outline: 'none',
-          border: 'none',
+        lineHeight: "20px",
+        letterSpacing: "0.25px",
+        color: "#9A9A9A",
+        "& input": {
+          outline: "none",
+          border: "none",
           fontSize: 14,
-          lineHeight: '20px',
-          letterSpacing: '0.25px',
-          color: 'black',
-        }
+          lineHeight: "20px",
+          letterSpacing: "0.25px",
+          color: "black",
+        },
       },
-      '& .react-datetime-picker__inputGroup__divider': {
-        color: 'black'
+      "& .react-datetime-picker__inputGroup__divider": {
+        color: "black",
       },
-      '& .react-datetime-picker__inputGroup__leadingZero': {
-        color: 'black'
+      "& .react-datetime-picker__inputGroup__leadingZero": {
+        color: "black",
       },
 
-      '& .react-datetime-picker__button': {
+      "& .react-datetime-picker__button": {
         padding: 5,
-        outline: 'none',
-        border: 'none',
+        outline: "none",
+        border: "none",
 
-        '& svg': {
+        "& svg": {
           width: 16,
-          stroke: '#9A9A9A',
-        }
-      }
+          stroke: "#9A9A9A",
+        },
+      },
     },
     iconLine: {
-      margin: '0px 8px',
-      position: 'relative',
+      margin: "0px 8px",
+      position: "relative",
       width: 12,
     },
     boxSearch: {
-      position: 'relative',
+      position: "relative",
       marginLeft: 12,
     },
     inputSearch: {
-      background: '#F0F0F0',
+      background: "#F0F0F0",
       borderRadius: 8,
       width: 228,
-      maxWidth: '100%',
+      maxWidth: "100%",
       height: 40,
-      outline: 'none',
-      border: 'none',
+      outline: "none",
+      border: "none",
       fontSize: 14,
-      lineHeight: '20px',
-      letterSpacing: '0.25px',
-      color: 'black',
-      padding: '10px 15px',
+      lineHeight: "20px",
+      letterSpacing: "0.25px",
+      color: "black",
+      padding: "10px 15px",
       paddingRight: 40,
     },
     iconSearch: {
-      position: 'absolute',
+      position: "absolute",
       right: 16,
       top: 12,
     },
     loadingTransaction: {
-      position: 'fixed',
-      width: '100%',
-      height: '100%',
-      top: '0',
-      left: '0',
+      position: "fixed",
+      width: "100%",
+      height: "100%",
+      top: "0",
+      left: "0",
       zIndex: 10,
-      '& .MuiBackdrop-root': {
-        backgroundColor: 'rgba(3, 9, 46, 0.6)',
+      "& .MuiBackdrop-root": {
+        backgroundColor: "rgba(3, 9, 46, 0.6)",
       },
-      '& .MuiPaper-rounded': {
-        background: 'none',
-      },
-
-      '& .content': {
-        padding: '60px',
-        background: '#020616',
-        borderRadius: '4px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
+      "& .MuiPaper-rounded": {
+        background: "none",
       },
 
-      '& .content img': {
-        position: 'absolute',
-        top: '10px',
-        right: '10px',
-        cursor: 'pointer',
+      "& .content": {
+        padding: "60px",
+        background: "#020616",
+        borderRadius: "4px",
+        ...typeDisplayFlex,
+        flexDirection: "column",
+        alignItems: "center",
       },
 
-      '& .content > span': {
-        textAlign: 'center',
-        marginBottom: '40px',
-        display: 'block',
-        width: '100%',
-        color: '#ffffff'
-      }
+      "& .content img": {
+        position: "absolute",
+        top: "10px",
+        right: "10px",
+        cursor: "pointer",
+      },
+
+      "& .content > span": {
+        textAlign: "center",
+        marginBottom: "40px",
+        display: "block",
+        width: "100%",
+        color: "#ffffff",
+      },
     },
     modalTransactionInfomation: {
-      '& .modal-content__body span': {
-        fontFamily: 'Helvetica',
-        fontStyle: 'normal',
-        fontWeight: 'normal',
-        fontSize: '14px',
-        lineHeight: '24px',
-        color: '#FDFDFD',
+      "& .modal-content__body span": {
+        fontFamily: "Helvetica",
+        fontStyle: "normal",
+        fontWeight: "normal",
+        fontSize: "14px",
+        lineHeight: "24px",
+        color: "#FDFDFD",
       },
 
-      '& .MuiBackdrop-root': {
-        background: 'none',
+      "& .MuiBackdrop-root": {
+        background: "none",
       },
-      '& .MuiPaper-rounded': {
-        background: 'none',
+      "& .MuiPaper-rounded": {
+        background: "none",
       },
-      '& .modal-content__body': {
-        backgroundColor: 'unset!important'
+      "& .modal-content__body": {
+        backgroundColor: "unset!important",
       },
 
-      '& .modal-content__foot button': {
-        padding: '12px!important',
-        background: 'none'
-      }
+      "& .modal-content__foot button": {
+        padding: "12px!important",
+        background: "none",
+      },
     },
     modal: {
-      position: 'fixed',
-      width: '100%',
-      height: '100%',
-      top: '0',
-      left: '0',
+      position: "fixed",
+      width: "100%",
+      height: "100%",
+      top: "0",
+      left: "0",
       zIndex: 5,
-      backgroundColor: 'rgba(3, 9, 46, 0.6)',
+      backgroundColor: "rgba(3, 9, 46, 0.6)",
 
-      '& .MuiBackdrop-root': {
-        background: 'none',
+      "& .MuiBackdrop-root": {
+        background: "none",
       },
-      '& .MuiPaper-rounded': {
-        background: 'none',
+      "& .MuiPaper-rounded": {
+        background: "none",
       },
-      '& .modal-content': {
-        width: '480px',
-        maxWidth: '100%',
-        maxHeight: '80%',
-        overflow: 'auto',
-        padding: '60px',
-        background: '#020616',
-        borderRadius: '4px',
-      },
-
-      '& .modal-content__head': {
-        padding: '10px 0',
-        '& .title': {
-          color: '#FFFFFF',
-          fontFamily: 'DM Sans',
-          fontStyle: 'normal',
-          fontWeight: 'bold',
-          fontSize: '18px',
-          lineHeight: '24px',
-          textAlign: 'center'
-        },
-
-        '& .btn-close': {
-          position: 'absolute',
-          top: '10px',
-          right: '10px',
-          cursor: 'pointer',
-        },
+      "& .modal-content": {
+        width: "480px",
+        maxWidth: "100%",
+        maxHeight: "80%",
+        overflow: "auto",
+        padding: "60px",
+        background: "#020616",
+        borderRadius: "4px",
       },
 
-      '& .modal-content__body': {
-        borderRadius: '4px',
-        padding: '10px 12px',
-        margin: '20px 0 32px 0',
-
-        '& .subtitle': {
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          color: '#999999',
-          fontFamily: 'Helvetica',
-          fontStyle: 'normal',
-          fontWeight: 'normal',
-          fontSize: '12px',
-          lineHeight: '18px',
+      "& .modal-content__head": {
+        padding: "10px 0",
+        "& .title": {
+          color: "#FFFFFF",
+          fontFamily: "DM Sans",
+          fontStyle: "normal",
+          fontWeight: "bold",
+          fontSize: "18px",
+          lineHeight: "24px",
+          textAlign: "center",
         },
 
-        '& .input-group': {
-          position: 'relative'
+        "& .btn-close": {
+          position: "absolute",
+          top: "10px",
+          right: "10px",
+          cursor: "pointer",
+        },
+      },
+
+      "& .modal-content__body": {
+        borderRadius: "4px",
+        padding: "10px 12px",
+        margin: "20px 0 32px 0",
+
+        "& .subtitle": {
+          ...typeDisplayFlex,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          color: "#999999",
+          fontFamily: "Helvetica",
+          fontStyle: "normal",
+          fontWeight: "normal",
+          fontSize: "12px",
+          lineHeight: "18px",
         },
 
-        '& .input-group input': {
-          width: '100%',
-          height: '40px',
-          background: 'none',
-          fontFamily: 'Helvetica',
-          fontStyle: 'normal',
-          fontWeight: 'normal',
-          fontSize: '14px',
-          lineHeight: '24px',
-          color: '#FDFDFD',
-          border: 'none',
-          outline: 'none',
-          paddingRight: '60px',
+        "& .input-group": {
+          position: "relative",
         },
 
-        '& .input-group .btn-max': {
-          width: '50px',
-          height: '20px',
-          color: '#000',
-          fontFamily: 'DM Sans',
-          fontStyle: 'normal',
-          fontWeight: 'bold',
-          fontSize: '12px',
-          lineHeight: '14px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          border: 'none',
-          outline: 'none',
-          background: '#FFFFFF',
-          padding: '0 12px',
-          borderRadius: '1rem',
+        "& .input-group input": {
+          width: "100%",
+          height: "40px",
+          background: "none",
+          fontFamily: "Helvetica",
+          fontStyle: "normal",
+          fontWeight: "normal",
+          fontSize: "14px",
+          lineHeight: "24px",
+          color: "#FDFDFD",
+          border: "none",
+          outline: "none",
+          paddingRight: "60px",
+        },
 
-          '&:hover': {
-            cursor: 'pointer'
+        "& .input-group .btn-max": {
+          width: "50px",
+          height: "20px",
+          color: "#000",
+          fontFamily: "DM Sans",
+          fontStyle: "normal",
+          fontWeight: "bold",
+          fontSize: "12px",
+          lineHeight: "14px",
+          ...typeDisplayFlex,
+          justifyContent: "center",
+          alignItems: "center",
+          border: "none",
+          outline: "none",
+          background: "#FFFFFF",
+          padding: "0 12px",
+          borderRadius: "1rem",
+
+          "&:hover": {
+            cursor: "pointer",
           },
         },
 
-        '& .input-group span': {
-          color: '#000'
+        "& .input-group span": {
+          color: "#000",
         },
 
-        '& .input-group div': {
-          position: 'absolute',
-          right: '0',
-          top: '10px'
-        }
+        "& .input-group div": {
+          position: "absolute",
+          right: "0",
+          top: "10px",
+        },
       },
 
-      '& .modal-content__foot': {
-        display: 'flex', 
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+      "& .modal-content__foot": {
+        ...typeDisplayFlex,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
         padding: 0,
 
-        '& button': {
-          borderRadius: '60px',
-          color: '#FFFFFF',
-          fontFamily: 'DM Sans',
-          fontStyle: 'normal',
-          fontWeight: 'bold',
-          fontSize: '14px',
-          lineHeight: '18px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          border: 'none',
-          outline: 'none',
-          padding: '12px 60px',
+        "& button": {
+          borderRadius: "60px",
+          color: "#FFFFFF",
+          fontFamily: "DM Sans",
+          fontStyle: "normal",
+          fontWeight: "bold",
+          fontSize: "14px",
+          lineHeight: "18px",
+          ...typeDisplayFlex,
+          justifyContent: "center",
+          alignItems: "center",
+          border: "none",
+          outline: "none",
+          padding: "12px 60px",
 
-          '&:hover': {
-            cursor: 'pointer'
+          "&:hover": {
+            cursor: "pointer",
           },
 
-          '&.disabled': {
-            backgroundColor: '#727272!important'
+          "&.disabled": {
+            backgroundColor: "#727272!important",
           },
 
-          '&:first-child': {
-            backgroundColor: '#3232DC'
+          "&:first-child": {
+            backgroundColor: "#3232DC",
           },
 
-          '&.btn-cancel': {
-            backgroundColor: '#727272'
-          }
-        }
+          "&.btn-cancel": {
+            backgroundColor: "#727272",
+          },
+        },
       },
     },
     nnb2832d: {
-      font: 'normal normal 700 28px/32px DM Sans',
+      font: "normal normal 700 28px/32px DM Sans",
     },
     nnb1824d: {
-      font: 'normal normal 700 18px/24px DM Sans',
+      font: "normal normal 700 18px/24px DM Sans",
     },
     nnb1624d: {
-      font: 'normal normal 700 16px/24px DM Sans',
+      font: "normal normal 700 16px/24px DM Sans",
     },
     nnb1418d: {
-      font: 'normal normal 700 14px/18px DM Sans',
+      font: "normal normal 700 14px/18px DM Sans",
     },
     nnb1214d: {
-      font: 'normal normal 700 12px/14px DM Sans',
+      font: "normal normal 700 12px/14px DM Sans",
     },
     nnb2432d: {
-      font: 'normal normal 700 24px/32px DM Sans',
+      font: "normal normal 700 24px/32px DM Sans",
     },
     nnn1424h: {
-      font: 'normal normal 400 14px/24px Helvetica',
+      font: "normal normal 400 14px/24px Helvetica",
     },
     nnn1218h: {
-      font: 'normal normal 400 12px/18px Helvetica',
+      font: "normal normal 400 12px/18px Helvetica",
     },
 
     tooltip: {
       maxWidth: 500,
-      backgroundColor: '#030925',
-      boxShadow: '0px 12px 20px rgba(0, 0, 0, 0.07)',
-      borderRadius: '4px',
-      padding: '7px 10px',
-      '&:before': {
+      backgroundColor: "#030925",
+      boxShadow: "0px 12px 20px rgba(0, 0, 0, 0.07)",
+      borderRadius: "4px",
+      padding: "7px 10px",
+      "&:before": {
         content: '""',
-        width: '10px',
-        height: '10px',
-        display: 'block',
-        backgroundColor: '#030925',
-        transform: 'rotate(-45deg)',
-        position: 'absolute',
-        left: '5px',
-        bottom: '10px'
-      }
+        width: "10px",
+        height: "10px",
+        display: "block",
+        backgroundColor: "#030925",
+        transform: "rotate(-45deg)",
+        position: "absolute",
+        left: "5px",
+        bottom: "10px",
+      },
     },
 
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down("xs")]: {
       modal: {
-        '& .modal-content__body': {
-          padding: '0'
+        "& .modal-content__body": {
+          padding: "0",
         },
-        '& .modal-content': {
-          padding: '15px',
+        "& .modal-content": {
+          padding: "15px",
         },
-        '& .modal-content__foot': {
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-  
-          '& button': {
-            padding: '12px 30px',
-            width: '100%',
-            marginBottom: '15px',
-          }
+        "& .modal-content__foot": {
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-between",
+
+          "& button": {
+            padding: "12px 30px",
+            width: "100%",
+            marginBottom: "15px",
+          },
         },
-        '& .MuiDialogActions-spacing > :not(:first-child)': {
-          marginLeft: '0',
-        }
+        "& .MuiDialogActions-spacing > :not(:first-child)": {
+          marginLeft: "0",
+        },
       },
       loadingTransaction: {
-        width: '100vw',
-        height: '100vh',
-        '& .MuiPaper-rounded': {
-          width: '100%'
+        width: "100vw",
+        height: "100vh",
+        "& .MuiPaper-rounded": {
+          width: "100%",
         },
-        '& .content': {
-          padding: '15px',
+        "& .content": {
+          padding: "15px",
         },
       },
-    }
+    },
   };
 });
 
 export default useCommonStyle;
+
+export const typeDisplayFlex = {
+  "@supports (display: flex)": {
+    display: "flex",
+  },
+  // "@supports (display: -webkit-flex)": {
+  //   display: "-webkit-flex",
+  // },
+  // "@supports (display: -moz-flex)": {
+  //   display: "-moz-flex",
+  // },
+  // "@supports (display: -ms-flexbox)": {
+  //   display: "-ms-flexbox",
+  // },
+  "@supports (display: WebkitFlex)": {
+    display: "WebkitFlex",
+  },
+  "@supports (display: MozFlex)": {
+    display: "MozFlex",
+  },
+  "@supports (display: MsFlexbox)": {
+    display: "MsFlexbox",
+  },
+};

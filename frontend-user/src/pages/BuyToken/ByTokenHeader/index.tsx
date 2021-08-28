@@ -48,7 +48,7 @@ const HeaderByToken: FC<Props> = ({ poolDetailsMapping, poolDetails }) => {
   var duration = eventEndTime.valueOf() - currentTime.valueOf();
   var durationShow = Math.ceil(duration / (1000 * 60 * 60 * 24));
 
-  console.log('durationShow', durationShow)
+  // console.log('durationShow', durationShow)
 
   return (
   <>

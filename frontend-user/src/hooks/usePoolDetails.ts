@@ -141,7 +141,7 @@ const usePoolDetails = (poolId : number): PoolDetailsReturnType => {
       })();
       
 
-      console.log('data.campaignClaimConfig', data.campaignClaimConfig, campaignClaimConfig);
+      // console.log('data.campaignClaimConfig', data.campaignClaimConfig, campaignClaimConfig);
 
       return {
         method: data.buy_type,

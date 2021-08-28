@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -8,7 +9,7 @@ const useStyles = makeStyles((theme) => {
       maxWidth: 120,
       width: 120,
       cursor: 'pointer',
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'space-between',

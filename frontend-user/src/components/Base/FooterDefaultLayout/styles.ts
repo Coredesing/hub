@@ -1,11 +1,12 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme) => {
   return {
     footer: {
       gridArea: 'footer',
       width: '100%',
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
       alignItems: 'center',
       padding: '0 80px',
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme) => {
       }
     },
     infoRedKite: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
       fontFamily: 'Helvetica',
       fontStyle: 'normal',
@@ -45,7 +46,7 @@ const useStyles = makeStyles((theme) => {
     },
     shareLink: {
       marginTop: 15,
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       alignItems: 'center',
 
@@ -82,7 +83,7 @@ const useStyles = makeStyles((theme) => {
       }
     },
     companyLink: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
     },
     help: {
@@ -92,7 +93,7 @@ const useStyles = makeStyles((theme) => {
       }
     },
     helpLink: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
     },
     developers: {
@@ -102,7 +103,7 @@ const useStyles = makeStyles((theme) => {
       }
     },
     developerLink: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
     },
     title: {

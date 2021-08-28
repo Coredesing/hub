@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 
 export const useSelectBoxStyles = makeStyles((theme: any) => {
@@ -130,7 +131,7 @@ export const useTableStyles = makeStyles((theme: any) => {
       color: '#F24B4B'
     },
     groupBtn: {
-      display: 'flex',
+      ...typeDisplayFlex,
       gap: '6px',
     },
   };

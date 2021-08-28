@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => ({
   cardUpcoming: {
@@ -9,7 +10,7 @@ const useStyles = makeStyles((theme: any) => ({
       width: '100%',
       borderRadius: '2px',
       background: '#000000',
-      display: 'flex',
+      ...typeDisplayFlex,
       gap: '8px',
       justifyContent: 'center',
       alignItems: 'center',
@@ -52,7 +53,7 @@ const useStyles = makeStyles((theme: any) => ({
   },
 
   timeEnd: {
-    display: 'flex',
+    ...typeDisplayFlex,
     alignItems: 'center',
     // padding: '3px 8px',
     borderRadius: '4px',

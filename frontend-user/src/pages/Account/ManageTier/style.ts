@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -13,7 +14,7 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '& .button-area': {
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center',
         flexDirection: 'row'
       },
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme: any) => {
         border: 'none',
         outline: 'none',
         padding: '0 35px',
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center',
         justifyContent: 'center',
 
@@ -94,7 +95,7 @@ const useStyles = makeStyles((theme: any) => {
       '& ul li': {
         height: '40px',
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-        display: 'flex',
+        ...typeDisplayFlex,
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row'
@@ -127,7 +128,7 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '& .current-penalty': {
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -135,7 +136,7 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '& .last-deposit': {
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -196,7 +197,7 @@ const useStyles = makeStyles((theme: any) => {
         margin: '20px 0 32px 0',
 
         '& .subtitle': {
-          display: 'flex',
+          ...typeDisplayFlex,
           flexDirection: 'row',
           justifyContent: 'space-between',
           color: '#999999',
@@ -234,7 +235,7 @@ const useStyles = makeStyles((theme: any) => {
           fontWeight: 'bold',
           fontSize: '12px',
           lineHeight: '14px',
-          display: 'flex',
+          ...typeDisplayFlex,
           justifyContent: 'center',
           alignItems: 'center',
           border: 'none',
@@ -260,7 +261,7 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '& .modal-content__foot': {
-        display: 'flex', 
+        ...typeDisplayFlex, 
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -273,7 +274,7 @@ const useStyles = makeStyles((theme: any) => {
           fontWeight: 'bold',
           fontSize: '14px',
           lineHeight: '18px',
-          display: 'flex',
+          ...typeDisplayFlex,
           justifyContent: 'center',
           alignItems: 'center',
           border: 'none',

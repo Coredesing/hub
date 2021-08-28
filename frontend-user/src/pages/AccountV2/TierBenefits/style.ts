@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -55,7 +56,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     valueActiveMobile: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'flex-start',
       fontFamily: 'Helvetica',
       fontWeight: 'normal',

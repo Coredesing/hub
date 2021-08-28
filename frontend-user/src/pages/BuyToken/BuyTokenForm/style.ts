@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -89,7 +90,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     listStep: {
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between',
     },
 
@@ -104,7 +105,7 @@ const useStyles = makeStyles((theme: any) => {
       paddingBottom: 4,
       textAlign: 'center',
       marginBottom: 20,
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'center',
 
       '& img': {
@@ -157,7 +158,7 @@ const useStyles = makeStyles((theme: any) => {
       fontSize: 14,
       lineHeight: '18px',
       color: '#FFFFFF',
-      display: 'flex',
+      ...typeDisplayFlex,
       flexWrap: 'wrap',
       justifyContent: 'space-between',
 
@@ -191,7 +192,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     buyTokenInputWrapper: {
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between',
       alignItems: 'center',
       fontSize: 14,
@@ -233,7 +234,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     buyTokenInputLabel: {
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between',
       alignItems: 'center',
       color: '#999999',
@@ -288,7 +289,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     purchasableCurrency: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       fontFamily: 'Helvetica',
       fontSize: 14,

@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core";
+import { typeDisplayFlex } from "../../../styles/CommonStyle";
 
 const useStyles = makeStyles((theme: any) => ({
   cardComp: {
@@ -65,7 +66,7 @@ const useStyles = makeStyles((theme: any) => ({
       alignItems: "center",
     },
     [theme.breakpoints.down("sm")]: {
-      display: "flex",
+      ...typeDisplayFlex,
     },
   },
   compText: {
@@ -110,7 +111,7 @@ const useStyles = makeStyles((theme: any) => ({
       width: "100%",
     },
     "& .title": {
-      display: "flex",
+      ...typeDisplayFlex,
       justifyContent: "space-between",
       alignItems: "flex-end",
       "& .percent": {

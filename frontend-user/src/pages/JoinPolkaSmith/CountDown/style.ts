@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import {isMobile} from 'react-device-detect';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 // @ts-ignore
 const useStyles = makeStyles((theme: any) => {
@@ -7,7 +8,7 @@ const useStyles = makeStyles((theme: any) => {
     introCounting: {
       marginTop: 50,
       marginBottom: 50,
-      display: "flex",
+      ...typeDisplayFlex,
       justifyContent: "center",
       "& h1" :{
         fontSize: isMobile ? "28px !important" : "36px",

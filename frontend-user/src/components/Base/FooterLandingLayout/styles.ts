@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -16,7 +17,7 @@ const useStyles = makeStyles((theme) => {
     mainContent: {
       display: 'grid',
       gridTemplateColumns: '360px auto',
-      // display: 'flex',
+      // ...typeDisplayFlex,
       // flexWrap: 'wrap',
       gap: '80px',
       padding: '0px 84px',
@@ -29,7 +30,7 @@ const useStyles = makeStyles((theme) => {
       }
     },
     aboutPage: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
       textAlign: 'left',
       maxWidth: '360px',
@@ -103,7 +104,7 @@ const useStyles = makeStyles((theme) => {
       }
     },
     // infoRedKite: {
-    //   display: 'flex',
+    //   ...typeDisplayFlex,
     //   flexDirection: 'column',
     //   fontFamily: 'Helvetica',
     //   fontStyle: 'normal',
@@ -131,7 +132,7 @@ const useStyles = makeStyles((theme) => {
     // },
     // shareLink: {
     //   marginTop: '20px',
-    //   display: 'flex',
+    //   ...typeDisplayFlex,
     //   flexDirection: 'row',
     //   alignItems: 'center',
     //   justifyContent: 'center',
@@ -166,21 +167,21 @@ const useStyles = makeStyles((theme) => {
     //   paddingTop: '60px',
     // },
     // companyLink: {
-    //   display: 'flex',
+    //   ...typeDisplayFlex,
     //   flexDirection: 'column',
     // },
     // help: {
     //   paddingTop: '60px',
     // },
     // helpLink: {
-    //   display: 'flex',
+    //   ...typeDisplayFlex,
     //   flexDirection: 'column',
     // },
     // developers: {
     //   paddingTop: '60px',
     // },
     // developerLink: {
-    //   display: 'flex',
+    //   ...typeDisplayFlex,
     //   flexDirection: 'column',
     // },
     // title: {
@@ -220,7 +221,7 @@ const useStyles = makeStyles((theme) => {
       position: 'fixed',
       right: '30px',
       bottom: '70px',
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
       alignItems: 'center',
       color: 'white',

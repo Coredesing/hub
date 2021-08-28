@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -69,7 +70,7 @@ const useStyles = makeStyles((theme: any) => {
       alignItems: 'center',
       justifyContent: 'center',
       wordBreak: 'break-word',
-      display: 'flex',
+      ...typeDisplayFlex,
     },
 
     iconUserTier: {
@@ -85,7 +86,7 @@ const useStyles = makeStyles((theme: any) => {
       lineHeight: '20px',
       color: '#FFFFFF',
       padding: '11px 12px',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       flexWrap: 'wrap',
       marginBottom: 35,
@@ -105,7 +106,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     menuTier: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
       listStyle: 'none',
@@ -180,7 +181,7 @@ const useStyles = makeStyles((theme: any) => {
 
     btnHow: {
       marginTop: 20,
-      display: 'flex',
+      ...typeDisplayFlex,
       flexWrap: 'wrap',
       alignItems: 'center',
       width: '100%',

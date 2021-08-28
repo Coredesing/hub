@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme: any) => {
 
     sectionBody: {
       marginBottom: 24,
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'flex-start',
 
       [theme.breakpoints.down('sm')]: {
@@ -85,7 +86,7 @@ const useStyles = makeStyles((theme: any) => {
       background: '#222228',
       border: '1px solid #44454B',
       borderRadius: 4,
-      display: 'flex',
+      ...typeDisplayFlex,
       marginBottom: 20,
 
       '& input': {

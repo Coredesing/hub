@@ -1,9 +1,10 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
     button: {
-      display: 'flex',
+      ...typeDisplayFlex,
       cursor: 'pointer',
       width: '100%',
       maxWidth: '100%',

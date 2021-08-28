@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -15,12 +16,12 @@ const useStyles = makeStyles((theme) => {
       transition: 'min-width 0.5s',
     },
     headLeft: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       marginBottom: 24,
     },
     BoxInfoUser: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
     },
     avatar: {
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme) => {
         whiteWpace: 'nowrap',
       },
       '& .status': {
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center',
         letterSpacing: 0.4,
         color: '#9A9A9A',
@@ -79,7 +80,7 @@ const useStyles = makeStyles((theme) => {
       marginBottom: 5,
     },
     linkItemNavLeft: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       borderRadius: 15,
       minHeight: 74,

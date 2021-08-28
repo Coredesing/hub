@@ -1,5 +1,6 @@
 
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -14,7 +15,7 @@ const useStyles = makeStyles((theme: any) => {
       },
       '& .forgot-ps__logo': {
         marginBottom: '15px',
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center'
       },
       '& .forgot-ps-logo': {
@@ -67,7 +68,7 @@ const useStyles = makeStyles((theme: any) => {
         cursor: 'pointer',
         backgroundColor: '#FFCC00',
         color: 'white',
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center',
         transition: '.2s all ease-in',
 

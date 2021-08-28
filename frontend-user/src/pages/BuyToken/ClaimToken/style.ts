@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -90,7 +91,7 @@ const useStyles = makeStyles((theme: any) => {
       gridColumnGap: 12,
 
       [theme.breakpoints.down('sm')]: {
-        display: 'flex',
+        ...typeDisplayFlex,
         flexWrap: 'wrap',
         wordBreak: 'break-word',
       },
@@ -111,7 +112,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     poolDetailClaimProgress: {
-      display: 'flex',
+      ...typeDisplayFlex,
       position: 'relative',
 
       '&:before': {

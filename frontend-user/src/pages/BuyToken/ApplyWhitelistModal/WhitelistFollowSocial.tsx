@@ -65,7 +65,7 @@ function WhitelistFollowSocial(props: any) {
           Follow and subscribe to {poolDetails?.title}'s and PolkaFoundry’s accounts
         </p>
       </div>
-      <div style={{display: 'flex', marginTop: '.75rem'}}>
+      <div className={styles.whitelistFlSocial}>
         {!isWidthDown('md', props.width) &&
         <table className={styles.socialFollowTable}>
           <thead>

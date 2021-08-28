@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme: any) => {
         border: 'none',
         outline: 'none',
         padding: '0 27px',
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: '60px',
@@ -43,7 +44,7 @@ const useStyles = makeStyles((theme: any) => {
       background: 'rgba(208, 31, 54, 0.4)',
       top: 0,
       left: 0,
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
@@ -112,7 +113,7 @@ const useStyles = makeStyles((theme: any) => {
       },
     },
     buttonArea: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       alignItems: 'center',
       marginTop: '32px',

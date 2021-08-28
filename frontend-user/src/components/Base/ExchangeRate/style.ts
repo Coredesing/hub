@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -10,16 +11,16 @@ const useStyles = makeStyles((theme) => {
       marginTop: 20
     },
     groupShowRate: {
-      display: 'flex',
+      ...typeDisplayFlex,
     },
     formControlFlexBlock: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
       width: '40%'
     },
     formControlFlex: {
       marginTop: 20,
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between',
       alignItems: 'center',
     },
@@ -55,7 +56,7 @@ const useStyles = makeStyles((theme) => {
       lineHeight: '20px',
       letterSpacing: 0.25,
       color: '#00AF12',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
 
       '& .icon': {
@@ -68,7 +69,7 @@ const useStyles = makeStyles((theme) => {
       }
     },
     formControlRate: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       position: 'relative',
       marginTop: 5,

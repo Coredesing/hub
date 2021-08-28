@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme: any) => {
       '& .time': {
         background: '#030925',
         borderRadius: '40px',
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
@@ -124,7 +125,7 @@ const useStyles = makeStyles((theme: any) => {
       lineHeight: '24px',
       textAlign: 'center',
       color: '#D6D6D6',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       alignContent: 'center',
       justifyContent: 'center',
@@ -157,7 +158,7 @@ const useStyles = makeStyles((theme: any) => {
       width: '100%',
       top: 0,
       left: 0,
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'flex-start',
       alignItems: 'center',
     },
@@ -171,7 +172,7 @@ const useStyles = makeStyles((theme: any) => {
       borderRadius: 10,
       boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
       textTransform: 'uppercase',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'space-between',
       padding: '0 2px',
@@ -229,7 +230,7 @@ const useStyles = makeStyles((theme: any) => {
         },
 
         '& > div': {
-          display: 'flex',
+          ...typeDisplayFlex,
           flexDirection: 'column',
           justifyContent: 'center',
           width: '100%'
@@ -271,11 +272,11 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '& .card-content__content': {
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'column',
 
         '& li': {
-          display: 'flex',
+          ...typeDisplayFlex,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -310,13 +311,13 @@ const useStyles = makeStyles((theme: any) => {
 
       '& .token-area': {
         marginTop: '30px',
-        display: 'flex',
+        ...typeDisplayFlex,
       },
       '& .token-area > div': {
         background: 'rgba(255, 255, 255, 0.1)',
         borderRadius: '20px',
         padding: '5px 17px',
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'row',
         alignItems: 'center',
         marginRight: '12px'
@@ -367,7 +368,7 @@ const useStyles = makeStyles((theme: any) => {
         },
 
         '& div': {
-          display: 'flex',
+          ...typeDisplayFlex,
           flexDirection: 'row',
           justifyContent: 'space-between'
         },

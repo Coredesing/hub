@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -13,7 +14,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     headPage: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexWrap: 'wrap',
       justifyContent: 'space-between',
       marginBottom: 22,
@@ -82,7 +83,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     inputGroup: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       justifyContent: 'flex-start',
       alignItems: 'center',
@@ -98,7 +99,7 @@ const useStyles = makeStyles((theme: any) => {
       
 
       '& .flex': {
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center',
         color: 'white'
       },
@@ -153,7 +154,7 @@ const useStyles = makeStyles((theme: any) => {
 
     groupInput: {
       width: '100%',
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
     },
 
@@ -212,7 +213,7 @@ const useStyles = makeStyles((theme: any) => {
       marginTop: '25px',
 
       '& .kyc-info': {
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -232,7 +233,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     walletInfo: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
       background: 'rgba(255, 255, 255, 0.06)',
       borderRadius: '8px',
@@ -273,7 +274,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     footerPage: {
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'flex-end',
       paddingTop: 12,
       borderTop: '1px solid rgb(114 114 114 / 50%)',

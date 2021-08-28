@@ -1,21 +1,21 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {HashLoader} from "react-spinners";
-import {Link, useLocation, useParams} from 'react-router-dom';
-import {useDispatch} from 'react-redux';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { HashLoader } from "react-spinners";
+import { Link, useLocation, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 //@ts-ignore
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import BigNumber from 'bignumber.js';
 import Tooltip from '@material-ui/core/Tooltip';
-import withWidth, {isWidthDown, isWidthUp} from '@material-ui/core/withWidth';
+import withWidth, { isWidthDown, isWidthUp } from '@material-ui/core/withWidth';
 
-import {useTypedSelector} from '../../hooks/useTypedSelector';
-import usePoolDetailsMapping, {PoolDetailKey} from './hooks/usePoolDetailsMapping';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
+import usePoolDetailsMapping, { PoolDetailKey } from './hooks/usePoolDetailsMapping';
 import useAuth from '../../hooks/useAuth';
 import usePoolDetails from '../../hooks/usePoolDetails';
 import useTokenSoldProgress from './hooks/useTokenSoldProgress';
 import usePoolJoinAction from './hooks/usePoolJoinAction';
 import useWhitelistSubmissionDetail from './hooks/useWhitelistSubmissionDetail';
-import useFetch from '../../hooks/useFetch';
+import useFetch, { useFetchV1 } from '../../hooks/useFetch';
 
 import Tiers from '../AccountV2/Tiers';
 import LotteryWinners from './LotteryWinners';
@@ -27,19 +27,19 @@ import Button from './Button';
 import StatusBar from './StatusBar';
 import Countdown from '../../components/Base/Countdown';
 import DefaultLayout from '../../components/Layout/DefaultLayout';
-import {ETH_CHAIN_ID, BSC_CHAIN_ID, POLYGON_CHAIN_ID, NETWORK_BSC_NAME, NETWORK_ETH_NAME} from '../../constants/network';
-import {getPoolCountDown} from '../../utils/getPoolCountDown';
-import {numberWithCommas} from '../../utils/formatNumber';
+import { ETH_CHAIN_ID, BSC_CHAIN_ID, POLYGON_CHAIN_ID, NETWORK_BSC_NAME, NETWORK_ETH_NAME } from '../../constants/network';
+import { getPoolCountDown } from '../../utils/getPoolCountDown';
+import { numberWithCommas } from '../../utils/formatNumber';
 
-import {sotaTiersActions} from '../../store/constants/sota-tiers';
+import { sotaTiersActions } from '../../store/constants/sota-tiers';
 
 import useStyles from './style';
-import {pushMessage} from '../../store/actions/message';
-import {getIconCurrencyUsdt} from "../../utils/usdt";
-import {POOL_TYPE, TIER_LEVELS, KYC_STATUS} from "../../constants";
+import { pushMessage } from '../../store/actions/message';
+import { getIconCurrencyUsdt } from "../../utils/usdt";
+import { POOL_TYPE, TIER_LEVELS, KYC_STATUS } from "../../constants";
 import PoolInfoTable from "./PoolInfoTable/PoolInfoTable";
 import WhiteListUserGuideBanner from "./WhiteListUserGuideBanner/WhiteListUserGuideBanner";
-import {getEtherscanName, getEtherscanTransactionAddress} from "../../utils/network";
+import { getEtherscanName, getEtherscanTransactionAddress } from "../../utils/network";
 import PoolIsEndMessage from "./PoolIsEndMessage/PoolIsEndMessage";
 import WhitelistCountryModal from "./ApplyWhitelistModal/WhitelistCountryModal";
 
@@ -54,12 +54,14 @@ import ApplyWhiteListButton from "./ByTokenHeader/ApplyWhiteListButton";
 import HowToParticipant from "./HowToParticipant";
 import ApplyWhitelistModal from "./ApplyWhitelistModal/ApplyWhitelistModal";
 
-import {getPoolStatusByPoolDetail} from "../../utils/getPoolStatusByPoolDetail";
+import { getPoolStatusByPoolDetail } from "../../utils/getPoolStatusByPoolDetail";
 import useCountDownFreeBuyTime from "./hooks/useCountDownFreeBuyTime";
 import useKyc from '../../hooks/useKyc';
 import { AlertKYC } from '../../components/Base/AlertKYC';
 import { setTypeIsPushNoti } from '../../store/actions/alert';
-
+import { TOKEN_TYPE } from "../../constants";
+import NotFoundPage from "../NotFoundPage/ContentPage";
+import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
 const copyImage = "/images/copy.svg";
 const poolImage = "/images/pool_circle.svg";
 const iconClose = "/images/icons/close.svg";
@@ -76,33 +78,66 @@ const headers = [HeaderType.Main, HeaderType.MyTier, HeaderType.About, HeaderTyp
 const ETHERSCAN_BASE_URL = process.env.REACT_APP_ETHERSCAN_BASE_URL;
 
 const BuyToken: React.FC<any> = (props: any) => {
+  const params = useParams<{ [k: string]: any }>();
+  const id = params.id;
+  const theme = useTheme();
+  const [checkParamType, setCheckParamType] = useState({
+    checking: true,
+    valid: false,
+  });
+  const { data: dataTicket = null, loading: loadingTicket } = useFetchV1<any>(
+    `/pool/${id}`,
+  );
+  useEffect(() => {
+    if (!loadingTicket) {
+      const result = {
+        checking: false,
+        valid: false
+      }
+      if (dataTicket) {
+        result.valid = dataTicket.token_type === TOKEN_TYPE.ERC20;
+      }
+      setCheckParamType(result);
+    }
+  }, [loadingTicket, dataTicket]);
+  return <DefaultLayout>
+    {
+      checkParamType.checking ?
+        <Backdrop open={checkParamType.checking} style={{ color: '#fff', zIndex: theme.zIndex.drawer + 1, }}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+        : (checkParamType.valid ? <ContentToken id={id} /> : <NotFoundPage />)
+    }
+  </DefaultLayout>
+}
+
+const ContentToken = ({id, ...props}: any) => {
   const dispatch = useDispatch();
   const styles = useStyles();
 
   const [buyTokenSuccess, setBuyTokenSuccess] = useState<boolean>(false);
 
-  const [copiedAddress, setCopiedAddress] = useState(false);
+  // const [copiedAddress, setCopiedAddress] = useState(false);
   const [activeNav, setActiveNav] = useState(HeaderType.About);
   const [disableAllButton, setDisableAllButton] = useState<boolean>(false);
   const [showWhitelistFormModal, setShowWhitelistFormModal] = useState<boolean>(false);
 
   const { pathname } = useLocation();
-  const { id } = useParams() as any;
   /* const userTier = useTypedSelector(state => state.userTier).data; */
   const { appChainID } = useTypedSelector(state => state.appNetwork).data;
   const { poolDetails, loading: loadingPoolDetail } = usePoolDetails(id);
   const { isAuth, connectedAccount, wrongChain } = useAuth();
   // Fetch token sold, total tokens sold
   const { tokenSold, soldProgress } = useTokenSoldProgress(
-      poolDetails?.poolAddress,
-      poolDetails?.amount,
-      poolDetails?.networkAvailable,
-      poolDetails,
+    poolDetails?.poolAddress,
+    poolDetails?.amount,
+    poolDetails?.networkAvailable,
+    poolDetails,
   );
-  const {checkingKyc, isKYC} = useKyc(connectedAccount);
+  const { checkingKyc, isKYC } = useKyc(connectedAccount);
   const { joinPool, poolJoinLoading, joinPoolSuccess } = usePoolJoinAction({ poolId: poolDetails?.id, poolDetails });
   const { data: existedWinner } = useFetch<Array<any>>(
-    poolDetails ? `/pool/${poolDetails?.id}/check-exist-winner?wallet_address=${connectedAccount}`: undefined,
+    poolDetails ? `/pool/${poolDetails?.id}/check-exist-winner?wallet_address=${connectedAccount}` : undefined,
     poolDetails?.method !== "whitelist"
   );
 
@@ -111,33 +146,33 @@ const BuyToken: React.FC<any> = (props: any) => {
   } = useFetch<any>(`/user/profile?wallet_address=${connectedAccount}`);
 
   const { data: pickedWinner } = useFetch<Array<any>>(
-    poolDetails ? `/pool/${poolDetails?.id}/check-picked-winner`: undefined,
+    poolDetails ? `/pool/${poolDetails?.id}/check-picked-winner` : undefined,
     poolDetails?.method !== "whitelist"
   );
 
   const { data: alreadyJoinPool } = useFetch<boolean>(
     poolDetails && connectedAccount ?
-    `/user/check-join-campaign/${poolDetails?.id}?wallet_address=${connectedAccount}`
-    : undefined
+      `/user/check-join-campaign/${poolDetails?.id}?wallet_address=${connectedAccount}`
+      : undefined
   );
 
-  const {submission: whitelistSubmission, completed: whitelistCompleted, loading: whitelistLoading} = useWhitelistSubmissionDetail(poolDetails?.id, connectedAccount, alreadyJoinPool, joinPoolSuccess)
+  const { submission: whitelistSubmission, completed: whitelistCompleted, loading: whitelistLoading } = useWhitelistSubmissionDetail(poolDetails?.id, connectedAccount, alreadyJoinPool, joinPoolSuccess)
 
   const { data: previousWhitelistSubmission } = useFetch<boolean>(
     poolDetails && connectedAccount ?
-    `/user/whitelist-apply/previous?wallet_address=${connectedAccount}`
-    : undefined
+      `/user/whitelist-apply/previous?wallet_address=${connectedAccount}`
+      : undefined
   );
 
   const { data: verifiedEmail = true } = useFetch<boolean>(
     poolDetails && connectedAccount && isAuth ?
-    `/user/check-wallet-address?wallet_address=${connectedAccount}`
-    : undefined
+      `/user/check-wallet-address?wallet_address=${connectedAccount}`
+      : undefined
   );
   const { data: currentUserTier } = useFetch<any>(
     id && connectedAccount ?
-    `pool/${id}/user/${connectedAccount}/current-tier`
-    : undefined,
+      `pool/${id}/user/${connectedAccount}/current-tier`
+      : undefined,
   );
   const { data: winnersList } = useFetch<any>(`/user/winner-list/${id}?page=1&limit=10&`);
 
@@ -146,11 +181,11 @@ const BuyToken: React.FC<any> = (props: any) => {
   const countDown = useCountDownFreeBuyTime(poolDetails);
 
   // Use for check whether pool exist in selected network or not
-  const appNetwork = (()=>{
+  const appNetwork = (() => {
     switch (appChainID) {
       case BSC_CHAIN_ID:
         return 'bsc';
-      
+
       case POLYGON_CHAIN_ID:
         return 'polygon';
 
@@ -165,14 +200,14 @@ const BuyToken: React.FC<any> = (props: any) => {
 
   // With Whitelist situation, Enable when join time < current < end join time
   // With FCFS, always disable join button
-  const joinTimeInDate = poolDetails?.joinTime ? new Date(Number(poolDetails?.joinTime) * 1000): undefined;
-  const endJoinTimeInDate = poolDetails?.endJoinTime ? new Date(Number(poolDetails?.endJoinTime) * 1000): undefined;
-  const startBuyTimeInDate = poolDetails?.startBuyTime ? new Date(Number(poolDetails?.startBuyTime) * 1000): undefined;
-  const endBuyTimeInDate = poolDetails?.endBuyTime ? new Date(Number(poolDetails?.endBuyTime) * 1000): undefined;
-  const announcementTime = poolDetails?.whitelistBannerSetting?.announcement_time ? new Date(Number(poolDetails?.whitelistBannerSetting?.announcement_time) * 1000): undefined;
+  const joinTimeInDate = poolDetails?.joinTime ? new Date(Number(poolDetails?.joinTime) * 1000) : undefined;
+  const endJoinTimeInDate = poolDetails?.endJoinTime ? new Date(Number(poolDetails?.endJoinTime) * 1000) : undefined;
+  const startBuyTimeInDate = poolDetails?.startBuyTime ? new Date(Number(poolDetails?.startBuyTime) * 1000) : undefined;
+  const endBuyTimeInDate = poolDetails?.endBuyTime ? new Date(Number(poolDetails?.endBuyTime) * 1000) : undefined;
+  const announcementTime = poolDetails?.whitelistBannerSetting?.announcement_time ? new Date(Number(poolDetails?.whitelistBannerSetting?.announcement_time) * 1000) : undefined;
   /* const tierStartBuyInDate = new Date(Number(currentUserTier?.start_time) * 1000); */
   /* const tierEndBuyInDate = new Date(Number(currentUserTier?.end_time) * 1000); */
-  const releaseTimeInDate = poolDetails?.releaseTime ? new Date(Number(poolDetails?.releaseTime) * 1000): undefined;
+  const releaseTimeInDate = poolDetails?.releaseTime ? new Date(Number(poolDetails?.releaseTime) * 1000) : undefined;
 
   const [activeTabBottom, setActiveTabBottom] = useState('tab_pool_details')
   const [numberWiner, setNumberWiner] = useState(0);
@@ -192,7 +227,7 @@ const BuyToken: React.FC<any> = (props: any) => {
     /* today <= tierEndBuyInDate && */
     poolDetails?.isDeployed &&
     verifiedEmail;
-    /* (poolDetails?.method === 'whitelist' ? alreadyJoinPool: true); */
+  /* (poolDetails?.method === 'whitelist' ? alreadyJoinPool: true); */
 
 
   const poolStatus = getPoolStatusByPoolDetail(
@@ -203,7 +238,7 @@ const BuyToken: React.FC<any> = (props: any) => {
   const displayCountDownTime = useCallback((
     method: string | undefined,
     startJoinTime: Date | undefined,
-    endJoinTime: Date| undefined,
+    endJoinTime: Date | undefined,
     startBuyTime: Date | undefined,
     endBuyTime: Date | undefined
   ) => {
@@ -265,20 +300,20 @@ const BuyToken: React.FC<any> = (props: any) => {
   }, [currentUserTier]);
 
   useEffect(() => {
-    const appNetwork = (()=>{
+    const appNetwork = (() => {
       switch (appChainID) {
         case BSC_CHAIN_ID:
           return 'bsc';
-        
+
         case POLYGON_CHAIN_ID:
           return 'polygon';
-  
+
         case ETH_CHAIN_ID:
           return 'eth';
       }
     })();
     setDisableAllButton(appNetwork !== poolDetails?.networkAvailable);
-    if(appNetwork !== poolDetails?.networkAvailable && poolDetails) {
+    if (appNetwork !== poolDetails?.networkAvailable && poolDetails) {
       dispatch(pushMessage(`Please switch to ${poolDetails?.networkAvailable.toLocaleUpperCase()} network to do Apply Whitelist, Approve/Buy tokens.`))
     } else {
       dispatch(pushMessage(''));
@@ -301,7 +336,7 @@ const BuyToken: React.FC<any> = (props: any) => {
 
   const render = () => {
 
-    if (loadingPoolDetail)  {
+    if (loadingPoolDetail) {
       return (
         <div className={styles.loader} style={{ marginTop: 70 }}>
           <HashLoader loading={true} color={'#72F34B'} />
@@ -367,7 +402,7 @@ const BuyToken: React.FC<any> = (props: any) => {
               joinTimeInDate && new Date() > joinTimeInDate && !(alreadyJoinPool || joinPoolSuccess) &&
               !(ableToFetchFromBlockchain && (winnersList && winnersList.total > 0)) &&
               !isOverTimeApplyWhiteList &&
-                <ApplyWhiteListButton
+              <ApplyWhiteListButton
                 poolDetails={poolDetails}
                 joinTimeInDate={joinTimeInDate}
                 endJoinTimeInDate={endJoinTimeInDate}
@@ -412,16 +447,16 @@ const BuyToken: React.FC<any> = (props: any) => {
 
             {
               showWhitelistFormModal &&
-                <ApplyWhitelistModal
-                  poolDetails={poolDetails}
-                  connectedAccount={connectedAccount}
-                  joinPool={joinPool}
-                  alreadyJoinPool={alreadyJoinPool}
-                  joinPoolSuccess={joinPoolSuccess}
-                  whitelistSubmission={whitelistSubmission}
-                  previousWhitelistSubmission={previousWhitelistSubmission}
-                  handleClose={() => { setShowWhitelistFormModal(false) }}
-                />
+              <ApplyWhitelistModal
+                poolDetails={poolDetails}
+                connectedAccount={connectedAccount}
+                joinPool={joinPool}
+                alreadyJoinPool={alreadyJoinPool}
+                joinPoolSuccess={joinPoolSuccess}
+                whitelistSubmission={whitelistSubmission}
+                previousWhitelistSubmission={previousWhitelistSubmission}
+                handleClose={() => { setShowWhitelistFormModal(false) }}
+              />
             }
 
           </section>
@@ -439,7 +474,7 @@ const BuyToken: React.FC<any> = (props: any) => {
             />
           </div>
 
-          { startBuyTimeInDate &&
+          {startBuyTimeInDate &&
             endBuyTimeInDate &&
             startBuyTimeInDate < new Date() && new Date() < endBuyTimeInDate &&
             <BuyTokenForm
@@ -509,18 +544,18 @@ const BuyToken: React.FC<any> = (props: any) => {
               />
             }
 
-              <div className={`${activeTabBottom === 'tab_winner' && 'show'} ${styles.hiddenTabWinner}`}>
-                <div ref={winnerListRef} />
-                <LotteryWinners
-                  handleWiners={(total) => setNumberWiner(total)}
-                  poolId={poolDetails?.id}
-                  userWinLottery={existedWinner ? true : false}
-                  pickedWinner={!!pickedWinner}
-                  maximumBuy={userBuyLimit}
-                  purchasableCurrency={poolDetails?.purchasableCurrency.toUpperCase()}
-                  verifiedEmail={verifiedEmail ? true: false}
-                />
-              </div>
+            <div className={`${activeTabBottom === 'tab_winner' && 'show'} ${styles.hiddenTabWinner}`}>
+              <div ref={winnerListRef} />
+              <LotteryWinners
+                handleWiners={(total) => setNumberWiner(total)}
+                poolId={poolDetails?.id}
+                userWinLottery={existedWinner ? true : false}
+                pickedWinner={!!pickedWinner}
+                maximumBuy={userBuyLimit}
+                purchasableCurrency={poolDetails?.purchasableCurrency.toUpperCase()}
+                verifiedEmail={verifiedEmail ? true : false}
+              />
+            </div>
           </div>
 
           <HowToParticipant
@@ -943,12 +978,9 @@ const BuyToken: React.FC<any> = (props: any) => {
   }
 
   return (
-    <DefaultLayout>
-      <div className={styles.poolDetailContainer}>
-        {render()}
-     </div>
-    </DefaultLayout>
+    <div className={styles.poolDetailContainer}>
+      {render()}
+    </div>
   )
 }
-
 export default withWidth()(BuyToken);

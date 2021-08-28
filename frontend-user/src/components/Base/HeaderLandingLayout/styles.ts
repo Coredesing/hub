@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -16,7 +17,7 @@ const useStyles = makeStyles((theme) => {
       zIndex: 1,
 
       // '& > div': {
-      //   display: 'flex',
+      //   ...typeDisplayFlex,
       //   flexDirection: 'row',
       //   alignItems: 'center',
       //   justifyContent: 'space-between',
@@ -77,14 +78,14 @@ const useStyles = makeStyles((theme) => {
       },
     },
     headerNav: {
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between',
       alignItems: 'center',
     },
     headerLinks: {
       margin: 0,
       padding: 0,
-      display: 'flex',
+      ...typeDisplayFlex,
       gap: '32px',
       flexWrap: 'wrap',
     },
@@ -100,7 +101,7 @@ const useStyles = makeStyles((theme) => {
       }
     },
     headerAccount: {
-      display: 'flex',
+      ...typeDisplayFlex,
       gap: '28px',
       alignItems: 'center',
     },
@@ -119,7 +120,7 @@ const useStyles = makeStyles((theme) => {
       outline: 'none',
       border: 'none',
       padding: '4px 4px 4px 8px',
-      display: 'flex',
+      ...typeDisplayFlex,
       gap: '6px',
       alignItems: 'center',
 
@@ -155,7 +156,7 @@ const useStyles = makeStyles((theme) => {
     //   top: '80px',
     //   backgroundColor: 'rgba(50, 50, 200, 0.4)',
     //   width: '100%',
-    //   display: 'flex',
+    //   ...typeDisplayFlex,
     //   alignItems: 'center',
     //   justifyContent: 'center!important',
     //   padding: '10px 0',
@@ -163,7 +164,7 @@ const useStyles = makeStyles((theme) => {
     // },
     // loginErrorBannerText: {
     //   font: 'normal normal 400 14px/24px Helvetica',
-    //   display: 'flex',
+    //   ...typeDisplayFlex,
     //   alignItems: 'center',
     //   marginLeft: '10px',
     // },
@@ -178,7 +179,7 @@ const useStyles = makeStyles((theme) => {
     //   boxSizing: 'border-box',
     //   borderRadius: '30px',
     //   height: '28px',
-    //   display: 'flex',
+    //   ...typeDisplayFlex,
     //   alignItems: 'center',
     //   font: 'normal normal 700 12px/14px DM Sans',
 

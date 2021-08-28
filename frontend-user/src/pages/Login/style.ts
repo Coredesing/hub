@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -54,7 +55,9 @@ const useStyles = makeStyles((theme: any) => {
       },
       
     },
-
+    loadingUser: {
+      height: 660, maxHeight: 660, ...typeDisplayFlex, alignItems: 'center', justifyContent: 'center', flexDirection: 'column'
+    }
 
     //   [theme.breakpoints.up('md')]: {
     //     '& .login__title': {

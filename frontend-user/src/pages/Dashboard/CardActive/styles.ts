@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -123,7 +124,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     listStatus: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexWrap: 'wrap',
       justifyContent: 'flex-end',
       position: 'absolute',
@@ -160,7 +161,7 @@ const useStyles = makeStyles((theme: any) => {
       lineHeight: '26px',
       textAlign: 'right',
       color: '#FFFFFF',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       whiteSpace: 'nowrap',
       justifyContent: 'flex-end',
@@ -234,7 +235,7 @@ const useStyles = makeStyles((theme: any) => {
       top: 4,
       left: 24,
       width: 'calc(100% - 48px)',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'space-between',
       padding: '0 2px',
@@ -261,7 +262,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     progressAreaHeader: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexWrap: 'wrap',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -309,7 +310,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     progressInfo: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -340,7 +341,7 @@ const useStyles = makeStyles((theme: any) => {
       height: 42,
       background: '#72F34B',
       borderRadius: 4,
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
       alignContent: 'center',
@@ -397,7 +398,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     endIn: {
-      display: 'flex',
+      ...typeDisplayFlex,
       width: '100%',
       alignItems: 'center',
       flexWrap: 'wrap',

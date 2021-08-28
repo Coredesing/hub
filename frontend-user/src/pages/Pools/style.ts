@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -6,7 +7,7 @@ const useStyles = makeStyles((theme: any) => {
       padding: '100px'
     },
     tabs: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       alignItems: 'center',
       borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
@@ -18,7 +19,7 @@ const useStyles = makeStyles((theme: any) => {
       background: 'none',
       outline: 'none',
       cursor: 'pointer',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
       color: '#fff',
@@ -81,7 +82,7 @@ const useStyles = makeStyles((theme: any) => {
     },
     poolsHead: {
       padding: '0 35px',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       height: '60px',
       width: '100%',
@@ -96,13 +97,13 @@ const useStyles = makeStyles((theme: any) => {
       },
       '& tr': {
         width: '100%',
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'row'
       }
     },
     poolsBody: {
       // minHeight: '460px',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection: 'column',
@@ -121,7 +122,7 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '& .loading td': {
-        display: 'flex',
+        ...typeDisplayFlex,
         align: 'center',
         alignItems: 'center',
         justifyContent: 'center'

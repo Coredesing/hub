@@ -50,7 +50,6 @@ const Ticket: React.FC<any> = (props: any) => {
   const { isKYC, checkingKyc } = useKyc(connectedAccount);
   // console.log(isKYC, checkingKyc)
   const alert = useSelector((state: any) => state.alert);
-  console.log('alert', alert)
   const { appChainID } = useSelector((state: any) => state.appNetwork).data;
   const [ticketBought, setTicketBought] = useState<number>(0);
   const [numTicketBuy, setNumTicketBuy] = useState<number>(0);
@@ -90,11 +89,7 @@ const Ticket: React.FC<any> = (props: any) => {
   }, [infoTicket, appChainID]);
   const isClaim = dataTicket?.process === "only-claim";
 
-  const alertTypeIsPush = useSelector((state: any) => state.alertTypeIsPush)
-  console.log(alertTypeIsPush)
-
   useEffect(() => {
-    console.log('rerun')
     dispatch(setTypeIsPushNoti({ failed: false }));
   }, [dispatch]);
 

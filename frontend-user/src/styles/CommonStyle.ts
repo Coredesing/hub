@@ -23,6 +23,7 @@ const useCommonStyle = makeStyles((theme) => {
       position: 'relative',
       minHeight: '100vh',
       overflow: 'auto',
+      paddingTop: '80px',
     },
     headPage: {
       display: 'flex',

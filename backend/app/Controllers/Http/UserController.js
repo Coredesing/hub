@@ -584,7 +584,7 @@ class UserController {
         return HelperUtils.responseBadRequest();
       }
 
-      let user = await UserModel.query().where('email', email).where('wallet_address', wallet).first();
+      let user = await UserModel.query().where('email', email).first();
 
       if (!user) {
         user = new UserModel();

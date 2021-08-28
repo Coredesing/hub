@@ -1,10 +1,11 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
     installMetameask: {
       minHeight: '100vh',
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'center',
       alignItems: 'center',
       '&__wrap': {

@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -16,7 +17,7 @@ const useStyles = makeStyles((theme: any) => {
     },
     connectYourWallet__wrapper: {
       margin: '50px 0px',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'flex-start',
       backgroundColor: 'white',
       padding: '50px 20px',
@@ -40,7 +41,7 @@ const useStyles = makeStyles((theme: any) => {
     buyToken: {
       backgroundColor: theme.custom.colors.mainBackground,
       minHeight: '100vh',
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'center',
       alignItems: 'center',
       textAlign: 'left',
@@ -92,7 +93,7 @@ const useStyles = makeStyles((theme: any) => {
       '&__campaign-duration': {
         fontSize: '16px',
         fontWeight: '500',
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center',
         marginBottom: '5px',
         '& span': {
@@ -116,7 +117,7 @@ const useStyles = makeStyles((theme: any) => {
       },
       '&__campaign-total': {
         letterSpacing: '0.15px',
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center',
         marginBottom: '15px',
         '& .total': {
@@ -134,7 +135,7 @@ const useStyles = makeStyles((theme: any) => {
         marginBottom: '20px',
       },
       '&__campaign-explication': {
-        display: 'flex',
+        ...typeDisplayFlex,
         justifyContent: 'space-between',
       },
 
@@ -176,10 +177,10 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '&__form-amount-unit': {
-        display: 'flex',
+        ...typeDisplayFlex,
       },
       '&__form-token-convert-unit-wrap': {
-        display: 'flex',
+        ...typeDisplayFlex,
       },
       '&__form-token-convert': {
         flexGrow: 1,
@@ -191,7 +192,7 @@ const useStyles = makeStyles((theme: any) => {
       },
       '&__form-exchange': {
         marginBottom: '12px',
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center',
         fontWeight: 'bold',
         fontSize: '12px',
@@ -247,7 +248,7 @@ const useStyles = makeStyles((theme: any) => {
         marginBottom: '5px',
       },
       '&__balance-content': {
-        display: 'flex',
+        ...typeDisplayFlex,
       },
       '&__balance-item': {
         fontSize: '16px',

@@ -1,5 +1,6 @@
 import React from "react";
 import DefaultLayout from "../../components/Layout/DefaultLayout";
+import { typeDisplayFlex } from "../../styles/CommonStyle";
 
 const NotFoundPage = () => {
   return (
@@ -7,7 +8,7 @@ const NotFoundPage = () => {
       <div
         id="wrapper"
         style={{
-          display: "flex",
+          ...typeDisplayFlex,
           justifyContent: "center",
           alignItems: "center",
         }}

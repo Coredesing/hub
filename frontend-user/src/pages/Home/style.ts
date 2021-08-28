@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core";
-import Content from "../../components/Base/MainDefaultLayout/MainDefaultLayout";
+import { typeDisplayFlex } from "../../styles/CommonStyle";
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme: any) => {
       paddingTop: "130px",
       paddingBottom: "130px",
       "& .large-text": {
-        display: "flex",
+        ...typeDisplayFlex,
         gap: "10px",
         alignItems: "center",
         marginBottom: "24px",
@@ -139,7 +139,7 @@ const useStyles = makeStyles((theme: any) => {
       "background-repeat": "no-repeat, repeat",
       backgroundSize: "40%, cover",
       position: "relative",
-      display: "flex",
+      ...typeDisplayFlex,
       gap: "45px",
       alignItems: "center",
       paddingLeft: "62px",
@@ -278,13 +278,13 @@ const useStyles = makeStyles((theme: any) => {
     },
     wrapperContent: {
       width: "100%",
-      display: "flex",
+      ...typeDisplayFlex,
       justifyContent: "center",
       marginTop: "28px",
       // overflow: "hidden"
     },
     content: {
-      display: "flex",
+      ...typeDisplayFlex,
       gap: "70px",
       position: "relative",
       maxWidth: "1120px",
@@ -297,7 +297,7 @@ const useStyles = makeStyles((theme: any) => {
       },
     },
     contentTitle: {
-      display: "flex",
+      ...typeDisplayFlex,
       flexDirection: "column",
       gap: "12px",
       "& h3": {
@@ -367,7 +367,7 @@ const useStyles = makeStyles((theme: any) => {
       color: "#000",
       background: "#72f348",
       width: "fit-content",
-      display: "flex",
+      ...typeDisplayFlex,
       justifyContent: "center",
       alignItems: "center",
 
@@ -388,7 +388,7 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       "& > div": {
-        display: "flex",
+        ...typeDisplayFlex,
         flexDirection: "column !important",
         alignItems: "flex-start !important",
         gap: "0px !important",
@@ -440,7 +440,7 @@ export const useCardStyles = makeStyles((theme) => ({
     },
   },
   cardsTokenSales: {
-    display: "flex",
+    ...typeDisplayFlex,
     justifyContent: "center",
     gap: "20px",
     overflow: "hidden",
@@ -468,7 +468,7 @@ export const useCardStyles = makeStyles((theme) => ({
     },
 
     '& .card-token-title': {
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between',
       alignItems: 'center',
       '& h4': {

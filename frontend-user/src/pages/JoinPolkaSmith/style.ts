@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import {isMobile} from 'react-device-detect';
+import { typeDisplayFlex } from '../../styles/CommonStyle';
 
 // @ts-ignore
 const useStyles = makeStyles((theme: any) => {
@@ -20,7 +21,7 @@ const useStyles = makeStyles((theme: any) => {
       color: "white",
     },
     headerContainer: {
-      display: "flex",
+      ...typeDisplayFlex,
       width: "100%",
     },
     headerText: {
@@ -48,7 +49,7 @@ const useStyles = makeStyles((theme: any) => {
     overviewLabel: {
       width: "100%",
       marginTop: 60,
-      display: "flex",
+      ...typeDisplayFlex,
       flexWrap: "wrap",
       borderWidth: 1,
       borderStyle: "solid",
@@ -82,7 +83,7 @@ const useStyles = makeStyles((theme: any) => {
       },
     },
     introContainer: {
-      display: "flex",
+      ...typeDisplayFlex,
       width: "100%",
       flexWrap: "wrap",
 
@@ -113,7 +114,7 @@ const useStyles = makeStyles((theme: any) => {
       border: 'none',
       outline: 'none',
       padding: '0 27px',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: '60px',
@@ -133,7 +134,7 @@ const useStyles = makeStyles((theme: any) => {
       border: 'none',
       outline: 'none',
       padding: '0 27px',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: 5,
@@ -157,7 +158,7 @@ const useStyles = makeStyles((theme: any) => {
       lineHeight: 1.8
     },
     additionalInfo: {
-      display: "flex",
+      ...typeDisplayFlex,
       flexWrap: "wrap",
       marginTop: 40
     },
@@ -186,7 +187,7 @@ const useStyles = makeStyles((theme: any) => {
       marginTop: 20
     },
     leaderBoardRow: {
-      display: "flex",
+      ...typeDisplayFlex,
       marginTop: 10
     },
     leaderBoardItem: {
@@ -228,7 +229,7 @@ const useStyles = makeStyles((theme: any) => {
     },
     questionTitle: {
       marginTop: 20,
-      display: "flex",
+      ...typeDisplayFlex,
       width: "100%",
       "& h3" : {
         display: "inline-block",
@@ -288,7 +289,7 @@ const useStyles = makeStyles((theme: any) => {
       }
     },
     contributeInputGroup: {
-      display: "flex",
+      ...typeDisplayFlex,
       margin: "20px 0px",
       "& h2" :{
         fontSize: isMobile ? "22px !important" : "24px",
@@ -315,7 +316,7 @@ const useStyles = makeStyles((theme: any) => {
       width: "65%"
     },
     policyConfirm: {
-      display: "flex",
+      ...typeDisplayFlex,
       textAlign: "left",
       margin: "20px 0",
     },
@@ -330,7 +331,7 @@ const useStyles = makeStyles((theme: any) => {
       border: 'none',
       outline: 'none',
       padding: '0 5px',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: 5,
@@ -343,7 +344,7 @@ const useStyles = makeStyles((theme: any) => {
       margin: "auto"
     },
     statusMessage: {
-      display: "flex",
+      ...typeDisplayFlex,
       width: "100%",
       fontSize: 14,
       color: "#ff8800"

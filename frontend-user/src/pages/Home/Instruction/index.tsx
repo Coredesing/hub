@@ -1,4 +1,5 @@
 import { useMediaQuery, useTheme } from "@material-ui/core";
+import { typeDisplayFlex } from "../../../styles/CommonStyle";
 import useStyles from "./styles";
 
 const Instruction = () => {
@@ -13,7 +14,7 @@ const Instruction = () => {
         {!isSMScreen && (
           <div
             style={{
-              display: "flex",
+              ...typeDisplayFlex,
               justifyContent: "flex-end",
               alignItems: "center",
               marginRight: "24px",
@@ -64,7 +65,7 @@ const Instruction = () => {
         {!isSMScreen && (
           <div
             style={{
-              display: "flex",
+              ...typeDisplayFlex,
               alignItems: "center",
               marginLeft: "24px",
             }}

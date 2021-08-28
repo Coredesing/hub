@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -55,7 +56,7 @@ const useStyles = makeStyles((theme: any) => {
 
     intemInfoTab: {
       marginBottom: 18,
-      display: 'flex',
+      ...typeDisplayFlex,
       flexWrap: 'wrap',
       fontFamily: 'DM Sans',
       fontWeight: 500,
@@ -82,7 +83,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     headTabTable: {
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between',
       alignItems: 'center',
       marginBottom: 10,
@@ -106,7 +107,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     rightHeadTabTable: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
     },
 
@@ -186,7 +187,7 @@ const useStyles = makeStyles((theme: any) => {
 
     dadText: {
       height: 42,
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
       fontFamily: 'DM Sans',
@@ -203,7 +204,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     childText: {
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -220,7 +221,7 @@ const useStyles = makeStyles((theme: any) => {
       color: '#AEAEAE',
       borderTop: '1px solid #37373D',
       borderRight: '1px solid #37373D',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
       overflow: 'hidden',
@@ -249,7 +250,7 @@ const useStyles = makeStyles((theme: any) => {
       lineHeight: '20px',
       color: '#FFFFFF',
       borderRight: '1px solid #37373D',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
       whiteWpace: 'nowrap',

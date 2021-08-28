@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -15,7 +16,7 @@ const useStyles = makeStyles((theme: any) => {
       margin: '20px 0',
     },
     inputGroup: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       justifyContent: 'flex-start',
       alignItems: 'flex-start',
@@ -78,7 +79,7 @@ const useStyles = makeStyles((theme: any) => {
       marginTop: '25px',
 
       '& .kyc-info': {
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -116,7 +117,7 @@ const useStyles = makeStyles((theme: any) => {
       },
     },
     walletInfo: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
       background: 'rgba(255, 255, 255, 0.06)',
       borderRadius: '8px',

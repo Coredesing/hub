@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => {
       }
     },
     dialogPrivacy: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center'
     },
     dialogPrivacyText: {
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme) => {
       display: 'flex'
     },
     dialogContent: {
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between',
       margin: '0 -20px',
       padding: '0 !important' as any,

@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -9,7 +10,7 @@ const useStyles = makeStyles((theme: any) => {
       color: '#F24B4B'
     },
     groupBtn: {
-      display: 'flex',
+      ...typeDisplayFlex,
       gap: '6px',
     },
     btnAction: {
@@ -50,7 +51,7 @@ export default useStyles;
 export const useCardStyles = makeStyles((theme: any) => {
   return {
     tabCardTitle: {
-      display: 'flex',
+      ...typeDisplayFlex,
       gap: '10px',
       '& .text': {
         '& h2, & h6': {
@@ -154,7 +155,7 @@ export const useCardStyles = makeStyles((theme: any) => {
           fontWeight: 'normal',
           fontSize: '12px',
           lineHeight: '20px',
-          display: 'flex',
+          ...typeDisplayFlex,
           gap: '4px',
           alignItems: 'center',
 

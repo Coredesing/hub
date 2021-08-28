@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => ({
     partnerCard: {
@@ -29,7 +30,7 @@ const useStyles = makeStyles((theme: any) => ({
             right: 0,
             padding: '12px 10px',
             transition: '.5s',
-            display: 'flex',
+            ...typeDisplayFlex,
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
@@ -71,7 +72,7 @@ const useStyles = makeStyles((theme: any) => ({
                 lineHeight: '24px',
                 textAlign: 'left',
                 color: '#72F34B',
-                display: 'flex',
+                ...typeDisplayFlex,
                 gap: '2px',
                 alignItems: 'center',
             }

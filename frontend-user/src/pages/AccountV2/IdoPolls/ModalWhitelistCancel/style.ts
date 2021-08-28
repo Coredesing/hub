@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -13,7 +14,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     headModalWhitelistCancel: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
       alignItems: 'center',
       position: 'relative',

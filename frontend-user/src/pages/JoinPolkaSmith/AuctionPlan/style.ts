@@ -1,12 +1,13 @@
 import { makeStyles } from '@material-ui/core';
 import {isMobile} from 'react-device-detect';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 // @ts-ignore
 const useStyles = makeStyles((theme: any) => {
   return {
     auctionPlanContainer: {
       marginTop: 30,
-      display: "flex",
+      ...typeDisplayFlex,
       flexWrap: "wrap",
     },
     auctionPlanDetail: {
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme: any) => {
       color: '#FFFFFF',
       border: 'none',
       outline: 'none',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: '60px',

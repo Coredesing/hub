@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -7,7 +8,7 @@ const useStyles = makeStyles((theme: any) => {
       width: '100%',
     },
     row: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       alignItems: 'center',
       height: '46px',
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme: any) => {
     },
     name: {
       color: '#fff',
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       alignItems: 'center',
       minWidth: '240px',
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme: any) => {
     },
     status: {
       '& div': {
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center',
         justifyContent: 'center',
         height: '26px',
@@ -98,7 +99,7 @@ const useStyles = makeStyles((theme: any) => {
       minWidth: '400px',
       width: '40%',
       color: '#fff',
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       alignItems: 'center',
       transition: '.2s all ease-in',

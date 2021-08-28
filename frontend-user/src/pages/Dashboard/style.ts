@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -16,7 +17,7 @@ const useStyles = makeStyles((theme: any) => {
       border: 'none',
       outline: 'none',
       padding: '0 27px',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
       margin: '40px auto 0 auto',
@@ -93,7 +94,7 @@ const useStyles = makeStyles((theme: any) => {
         border: 'none',
         outline: 'none',
         padding: '0 27px',
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: '60px',
@@ -116,7 +117,7 @@ const useStyles = makeStyles((theme: any) => {
       margin: 'auto',
       maxWidth: 'calc(100vw - 80px)',
       minHeight: 480,
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
@@ -178,86 +179,86 @@ const useStyles = makeStyles((theme: any) => {
         }
       }
     },
-    contact: {
-      background: '#72F34B',
-      padding: '0px calc((100% - 800px) / 2)',
-      paddingTop: '80px',
-      paddingBottom: '52px',
-      '& h3': {
-        fontFamily: 'Space Ranger',
-        color: '#0A0A0A',
-        fontSize: '72px',
-        lineHeight: '60px',
-        fontWeight: 'bold',
-        letterSpacing: '0.02em',
-        textAlign: 'center',
-        marginBottom: '28px'
-      },
+    // contact: {
+    //   background: '#72F34B',
+    //   padding: '0px calc((100% - 800px) / 2)',
+    //   paddingTop: '80px',
+    //   paddingBottom: '52px',
+    //   '& h3': {
+    //     fontFamily: 'Space Ranger',
+    //     color: '#0A0A0A',
+    //     fontSize: '72px',
+    //     lineHeight: '60px',
+    //     fontWeight: 'bold',
+    //     letterSpacing: '0.02em',
+    //     textAlign: 'center',
+    //     marginBottom: '28px'
+    //   },
 
-      '& .rectangle': {
-        top: '50px',
-        left: 0
-      }
-    },
-    contactForm: {
-      textAlign: 'center',
-      marginBottom: '16px',
-    },
-    inputForm: {
-      background: '#fff',
-      color: '#0A0A0A',
-      fontStyle: 'normal',
-      fontFamily: 'Firs Neue',
-      fontSize: '18px',
-      fontWeight: 'normal',
-      lineHeight: '28px',
-      mixBlendMode: 'normal',
-      height: '56px',
-      width: '380px',
-      borderRight: 'unset',
-      borderTopRightRadius: 'unset',
-      borderBottomRightRadius: 'unset',
-      '& > div': {
-        borderRadius: 'unset',
-      }
-    },
-    btnForm: {
-      background: '#0A0A0A',
-      color: '#72F34B',
-      height: '56px',
-      width: '180px',
-      borderTopLeftRadius: 'unset',
-      borderBottomLeftRadius: 'unset',
-      borderLeft: 'unset',
-      borderRadius: 'unset',
-      '&:hover': {
-        background: '#0A0A0A',
-        color: '#72F34B',
-      }
-    },
-    alertMsg: {
-      width: '100%',
-      marginTop: '14px',
-      '& img, & svg': {
-        width: '14px',
-        height: '14px',
-        marginRight: '8px'
-      },
-      '& span': {
-        fontFamily: 'Firs Neue',
-        fontStyle: 'normal',
-        fontWeight: 600,
-        fontSize: '18px',
-        lineHeight: '28px',
-        textAlign: 'left',
-      },
-      '&.error span': {
-        color: '#F24B4B',
-      },
-      '&.success span': {
-        color: '#0A0A0A',
-      }
-    }
+    //   '& .rectangle': {
+    //     top: '50px',
+    //     left: 0
+    //   }
+    // },
+    // contactForm: {
+    //   textAlign: 'center',
+    //   marginBottom: '16px',
+    // },
+    // inputForm: {
+    //   background: '#fff',
+    //   color: '#0A0A0A',
+    //   fontStyle: 'normal',
+    //   fontFamily: 'Firs Neue',
+    //   fontSize: '18px',
+    //   fontWeight: 'normal',
+    //   lineHeight: '28px',
+    //   mixBlendMode: 'normal',
+    //   height: '56px',
+    //   width: '380px',
+    //   borderRight: 'unset',
+    //   borderTopRightRadius: 'unset',
+    //   borderBottomRightRadius: 'unset',
+    //   '& > div': {
+    //     borderRadius: 'unset',
+    //   }
+    // },
+    // btnForm: {
+    //   background: '#0A0A0A',
+    //   color: '#72F34B',
+    //   height: '56px',
+    //   width: '180px',
+    //   borderTopLeftRadius: 'unset',
+    //   borderBottomLeftRadius: 'unset',
+    //   borderLeft: 'unset',
+    //   borderRadius: 'unset',
+    //   '&:hover': {
+    //     background: '#0A0A0A',
+    //     color: '#72F34B',
+    //   }
+    // },
+    // alertMsg: {
+    //   width: '100%',
+    //   marginTop: '14px',
+    //   '& img, & svg': {
+    //     width: '14px',
+    //     height: '14px',
+    //     marginRight: '8px'
+    //   },
+    //   '& span': {
+    //     fontFamily: 'Firs Neue',
+    //     fontStyle: 'normal',
+    //     fontWeight: 600,
+    //     fontSize: '18px',
+    //     lineHeight: '28px',
+    //     textAlign: 'left',
+    //   },
+    //   '&.error span': {
+    //     color: '#F24B4B',
+    //   },
+    //   '&.success span': {
+    //     color: '#0A0A0A',
+    //   }
+    // }
   };
 });
 

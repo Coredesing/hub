@@ -20,6 +20,7 @@ import AuctionPlan from "./AuctionPlan";
 import { usePopperTooltip } from 'react-popper-tooltip';
 import 'react-popper-tooltip/dist/styles.css';
 import {float} from "hardhat/internal/core/params/argumentTypes";
+import { typeDisplayFlex } from '../../styles/CommonStyle';
 
 const {u8aConcat, u8aToHex} = require('@polkadot/util');
 const {blake2AsU8a, encodeAddress, decodeAddress} = require('@polkadot/util-crypto');
@@ -492,7 +493,7 @@ const JoinPolkaSmith = (props: any) => {
                                         <div style={{
                                             marginTop: 50,
                                             textAlign: "left",
-                                            display: "flex",
+                                            ...typeDisplayFlex,
                                             flexWrap: "wrap"
                                         }}>
                                             <div className={styles.detailInfo}>

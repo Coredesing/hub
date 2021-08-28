@@ -26,7 +26,7 @@ const useCommonStyle = makeStyles((theme) => {
       paddingTop: '80px',
     },
     headPage: {
-      display: 'flex',
+      ...typeDisplayFlex,
       marginBottom: 25,
     },
     headPageLeft: {
@@ -34,7 +34,7 @@ const useCommonStyle = makeStyles((theme) => {
     },
     headPageRight: {
       marginLeft: 'auto',
-      display: 'flex',
+      ...typeDisplayFlex,
     },
     btnBack: {
       background: '#FFCC00',
@@ -216,7 +216,7 @@ const useCommonStyle = makeStyles((theme) => {
         padding: '60px',
         background: '#020616',
         borderRadius: '4px',
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'column',
         alignItems: 'center'
       },
@@ -312,7 +312,7 @@ const useCommonStyle = makeStyles((theme) => {
         margin: '20px 0 32px 0',
 
         '& .subtitle': {
-          display: 'flex',
+          ...typeDisplayFlex,
           flexDirection: 'row',
           justifyContent: 'space-between',
           color: '#999999',
@@ -351,7 +351,7 @@ const useCommonStyle = makeStyles((theme) => {
           fontWeight: 'bold',
           fontSize: '12px',
           lineHeight: '14px',
-          display: 'flex',
+          ...typeDisplayFlex,
           justifyContent: 'center',
           alignItems: 'center',
           border: 'none',
@@ -377,7 +377,7 @@ const useCommonStyle = makeStyles((theme) => {
       },
 
       '& .modal-content__foot': {
-        display: 'flex', 
+        ...typeDisplayFlex, 
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -391,7 +391,7 @@ const useCommonStyle = makeStyles((theme) => {
           fontWeight: 'bold',
           fontSize: '14px',
           lineHeight: '18px',
-          display: 'flex',
+          ...typeDisplayFlex,
           justifyContent: 'center',
           alignItems: 'center',
           border: 'none',
@@ -498,3 +498,18 @@ const useCommonStyle = makeStyles((theme) => {
 });
 
 export default useCommonStyle;
+
+export const typeDisplayFlex = {
+  '@supports (display: flex)': {
+    display: 'flex',
+  },
+  '@supports (display: -webkit-flex)': {
+    display: '-webkit-flex',
+  },
+  '@supports (display: -moz-flex)': {
+    display: '-moz-flex',
+  },
+  '@supports (display: -ms-flexbox)': {
+    display: '-ms-flexbox',
+  },
+}

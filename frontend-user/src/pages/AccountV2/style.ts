@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -6,7 +7,7 @@ const useStyles = makeStyles((theme: any) => {
       position: 'relative',
       width: '100%',
       padding: '11px 9px 10px 9px',
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme: any) => {
       position: 'relative',
       width: '100%',
       padding: 9,
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
@@ -197,7 +198,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     tabAccount: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
 
       [theme.breakpoints.down('sm')]: {
@@ -209,7 +210,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     itemTabAccount: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexWrap: 'wrap',
       alignItems: 'center',
       fontFamily: 'DM Sans',
@@ -298,11 +299,11 @@ export const useTabStyles = makeStyles((theme: any) => ({
     borderRadius: '4px',
   },
   tabHeader: {
-    display: 'flex',
+    ...typeDisplayFlex,
     justifyContent: 'space-between',
     marginBottom: '5px',
     '& .filter': {
-      display: 'flex',
+      ...typeDisplayFlex,
       gap: '8px',
     },
     '& .search': {

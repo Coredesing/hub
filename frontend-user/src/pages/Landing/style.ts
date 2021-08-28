@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import {isMobile} from 'react-device-detect';
+import { typeDisplayFlex } from '../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -35,7 +36,7 @@ const useStyles = makeStyles((theme: any) => {
         color: '#FFFFFF'
       },
       '& .buttons': {
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
@@ -51,7 +52,7 @@ const useStyles = makeStyles((theme: any) => {
         border: 'none',
         outline: 'none',
         padding: '12px 35px',
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: '60px',
@@ -172,7 +173,7 @@ const useStyles = makeStyles((theme: any) => {
       },
     },
     projectMain: {
-      display: "flex",
+      ...typeDisplayFlex,
       flexWrap: "wrap",
       width: "90%",
       margin: '0 auto',
@@ -211,7 +212,7 @@ const useStyles = makeStyles((theme: any) => {
       border: 'none',
       outline: 'none',
       padding: '0 27px',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: '60px',

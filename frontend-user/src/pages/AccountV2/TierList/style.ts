@@ -1,9 +1,10 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
     tierList: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -59,7 +60,7 @@ const useStyles = makeStyles((theme: any) => {
         },
       },
       '& > div': {
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'column',
         alignItems: 'center',
         position: 'relative',
@@ -99,7 +100,7 @@ const useStyles = makeStyles((theme: any) => {
         zIndex: 1,
         width: '100%',
         height: '100%',
-        display: 'flex',
+        ...typeDisplayFlex,
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative'
@@ -155,7 +156,7 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '& .info': {
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'column',
         alignItems: 'center',
         marginTop: '15px'
@@ -208,7 +209,7 @@ const useStyles = makeStyles((theme: any) => {
 
     [theme.breakpoints.down('xs')]: {
       tierInfo: {
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'row',
         width: 'auto',
         height: '25%',
@@ -265,7 +266,7 @@ const useStyles = makeStyles((theme: any) => {
         },
 
         '& > div': {
-          display: 'flex',
+          ...typeDisplayFlex,
           flexDirection: 'row',
           alignItems: 'flex-end',
           justifyContent: 'space-between',
@@ -303,7 +304,7 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       tierList: {
-        display: 'flex',
+        ...typeDisplayFlex,
         flexDirection: 'column-reverse',
         alignItems: 'flex-start',
         justifyContent: 'space-between',

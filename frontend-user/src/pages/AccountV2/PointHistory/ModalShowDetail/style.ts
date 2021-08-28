@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     headModalShowDetail: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
       alignItems: 'center',
       position: 'relative',
@@ -52,12 +53,12 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     listItem: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
     },
 
     Item: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
       borderBottom: '1px solid rgb(255 255 255 / 10%)',
       padding: '12px 6px',
@@ -73,7 +74,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     groupItem: {
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between',
       alignItems: 'center',
       color: '#FFFFFF',
@@ -100,12 +101,12 @@ const useStyles = makeStyles((theme: any) => {
     listUnstake: {
       background: '#222228',
       borderRadius: 8,
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
     },
 
     itemUnstake: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
       padding: '12px 20px',
       borderBottom: '1px solid rgb(255 255 255 / 10%)',

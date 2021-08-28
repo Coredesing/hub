@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core";
+import { typeDisplayFlex } from "../../styles/CommonStyle";
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -68,7 +69,7 @@ const useStyles = makeStyles((theme: any) => {
     },
     cardBody: {
       // paddingTop: '30px',
-      display: "flex",
+      ...typeDisplayFlex,
       flexDirection: "column",
       justifyContent: "space-between",
       width: "461px",
@@ -126,7 +127,7 @@ const useStyles = makeStyles((theme: any) => {
         fontWeight: "600",
         fontSize: "20px",
         lineHeight: "28px",
-        display: "flex",
+        ...typeDisplayFlex,
         alignItems: "center",
         justifyContent: "center",
         minWidth: "190px",
@@ -170,7 +171,7 @@ const useStyles = makeStyles((theme: any) => {
         lineHeight: "16px",
         mixBlendMode: "normal",
         textTransform: "uppercase",
-        display: "flex",
+        ...typeDisplayFlex,
         justifyContent: "center",
 
         "& .open": {
@@ -197,7 +198,7 @@ const useStyles = makeStyles((theme: any) => {
         },
       },
       "& .times": {
-        display: "flex",
+        ...typeDisplayFlex,
         justifyContent: "space-around",
         gap: "12px",
         background: "#2E2E2E",
@@ -288,7 +289,7 @@ const useStyles = makeStyles((theme: any) => {
       mixBlendMode: "normal",
     },
     infoTicket: {
-      display: "flex",
+      ...typeDisplayFlex,
       justifyContent: "space-between",
       [theme.breakpoints.down("xs")]: {
         marginTop: "5px",
@@ -334,7 +335,7 @@ const useStyles = makeStyles((theme: any) => {
         display: "block",
       },
       "& > div": {
-        display: "flex",
+        ...typeDisplayFlex,
         fontFamily: "Firs Neue",
         fontStyle: "normal",
         color: " #ffffff",

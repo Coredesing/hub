@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core";
+import { typeDisplayFlex } from "../../../styles/CommonStyle";
 
 const useStyles = makeStyles((theme: any) => ({
   cardImgUpcoming: {
@@ -51,7 +52,7 @@ const useStyles = makeStyles((theme: any) => ({
       opacity: ".3",
     },
     "&:hover .btn-detail": {
-      display: "flex",
+      ...typeDisplayFlex,
       justifyContent: "center",
       alignItems: "center",
       left: "50%",

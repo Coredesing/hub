@@ -9,6 +9,7 @@ import { AppContext } from '../../../../AppContext';
 import ConnectWalletBox from '../ConnectWalletBox';
 
 import useStyles from './style';
+import { typeDisplayFlex } from '../../../../styles/CommonStyle';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -17,7 +18,7 @@ const styles = (theme: Theme) =>
       padding: theme.spacing(2),
       paddingTop: 0,
       borderRadius: 50,
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between'
     },
     closeButton: {

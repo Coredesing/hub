@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core'
 import { Theme } from '@material-ui/core/styles/createTheme'
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 interface Props {
   spacing: number;
@@ -23,7 +24,7 @@ const useStyles = makeStyles<Theme, Props>(props => ({
     }
   },
   buttonContent: {
-    display: 'flex',
+    ...typeDisplayFlex,
     padding: '12px 15px',
     alignItems: 'center',
     fontSize: 14,

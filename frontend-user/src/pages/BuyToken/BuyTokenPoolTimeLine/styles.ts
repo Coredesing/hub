@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     statusBarSteps: {
-      display: 'flex',
+      ...typeDisplayFlex,
       position: 'relative',
       width: 'calc(100% - 30px)',
       marginBottom: 24,
@@ -63,7 +64,7 @@ const useStyles = makeStyles((theme: any) => {
 
     itemStatusBarSteps: {
       width: 'calc(100%/4)',
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
       position: 'relative',
       fontFamily: 'DM Sans',
@@ -107,7 +108,7 @@ const useStyles = makeStyles((theme: any) => {
       height: 28,
       borderRadius: '50%',
       background: '#44454B',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
       cursor: 'pointer',
@@ -162,7 +163,7 @@ const useStyles = makeStyles((theme: any) => {
       lineHeight: '24px',
       color: '#FFFFFF',
       marginTop: 100,
-      display: 'flex',
+      ...typeDisplayFlex,
       flexWrap: 'wrap',
 
       [theme?.breakpoints?.down('md')]: {

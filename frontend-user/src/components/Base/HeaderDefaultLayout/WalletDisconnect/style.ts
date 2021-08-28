@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -35,7 +36,7 @@ const useStyles = makeStyles((theme) => {
       }
     },
     dialogPrivacy: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center'
     },
     dialogPrivacyText: {
@@ -73,16 +74,16 @@ const useStyles = makeStyles((theme) => {
       padding: 10,
       borderRadius: 10,
       color: 'white',
-      display: 'flex',
+      ...typeDisplayFlex,
     },
     accountDetailBlocks: {
-      display: 'flex',
+      ...typeDisplayFlex,
       marginLeft: 20,
       width: '90%',
       justifyContent: 'space-between'
     },
     accountDetailBlock: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: "column",
       alignItems: 'flex-start',
       justifyContent: 'center',
@@ -97,7 +98,7 @@ const useStyles = makeStyles((theme) => {
       width: 50
     },
     accountDetailAddress: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       marginTop: 20,
       backgroundColor: '#0d0f14',
@@ -124,7 +125,7 @@ const useStyles = makeStyles((theme) => {
       display: 'inline-block'
     },
     accountDetailDisconnect: {
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
       color: '#59f',

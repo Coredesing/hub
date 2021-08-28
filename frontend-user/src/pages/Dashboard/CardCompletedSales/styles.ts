@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     introCard: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
     },
 
@@ -64,7 +65,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     cardActiveHeaderLeft: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
     },
 
@@ -113,7 +114,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     listStatus: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexWrap: 'wrap',
       justifyContent: 'flex-start',
       alignItems: 'center',
@@ -127,7 +128,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     itemInfo: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'column',
     },
 
@@ -244,7 +245,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     progressInfo: {
-      display: 'flex',
+      ...typeDisplayFlex,
       flexDirection: 'row',
       justifyContent: 'space-between',
       fontFamily: 'DM Sans',
@@ -273,7 +274,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     headProgressArea: {
-      display: 'flex',
+      ...typeDisplayFlex,
       justifyContent: 'space-between',
     },
 
@@ -288,7 +289,7 @@ const useStyles = makeStyles((theme: any) => {
       color: '#D01F36',
       height: 32,
       padding: '4px 13px',
-      display: 'flex',
+      ...typeDisplayFlex,
       alignItems: 'center',
       alignContent: 'center',
       flexDirection: 'row',

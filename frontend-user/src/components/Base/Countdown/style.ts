@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '../../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) => {
     },
 
     listCountDown: {
-      display: 'flex', 
+      ...typeDisplayFlex,
       alignItems: 'flex-start',
 
       [theme?.breakpoints?.down('sm')]: {

@@ -147,13 +147,14 @@ function BannerNotification(props: any) {
               target="_blank"
               rel="noreferrer"
             >Please sumbit KYC now</a>
-            &nbsp;or switch to a verified address. Click{" "}
-            <a
-              href="https://medium.com/polkafoundry/what-to-do-before-joining-idos-on-red-kite-de9b0d778dbe"
-              target="_blank"
-              rel="noreferrer"
-            >here</a>{" "}
-            for more process details.
+            &nbsp;or switch to a verified address.
+            {/*Click{" "}*/}
+            {/*<a*/}
+            {/*  href="https://medium.com/polkafoundry/what-to-do-before-joining-idos-on-red-kite-de9b0d778dbe"*/}
+            {/*  target="_blank"*/}
+            {/*  rel="noreferrer"*/}
+            {/*>here</a>{" "}*/}
+            {/*for more process details.*/}
           </span>
         </div>
       }

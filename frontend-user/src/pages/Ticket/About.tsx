@@ -203,13 +203,13 @@ const AboutTicket = ({ info = {} }: any) => {
   const [isGetWinner, setIsGetWinner] = useState(false);
   const [searchWinner, setSearchWinner] = useState('');
   const limitPage = 10;
-  const isClaim = info?.process === "only-claim";
+  // const isClaim = info?.process === "only-claim";
   const { data: winner = {} as PaginationResult } = useFetchV1(`/user/winner-list/${info.id}?page=${page}&limit=${limitPage}&search_term=${searchWinner}`, isGetWinner);
   useEffect(() => {
-    if (isClaim && info?.campaign_hash) {
+    if (info?.campaign_hash) {
       setIsGetWinner(true);
     }
-  }, [isClaim, info])
+  }, [info])
 
   const handleChange = (event: any, newValue: any) => {
     setValue(newValue);
@@ -254,14 +254,12 @@ const AboutTicket = ({ info = {} }: any) => {
             style={value === 1 ? { color: "#72F34B" } : {}}
             {...a11yProps(1)}
           />
-          {isClaim &&
-            <Tab
-              className={classes.tabName}
-              label={`Winner (${winner.total || 0})`}
-              style={value === 1 ? { color: "#72F34B" } : {}}
-              {...a11yProps(1)}
-            />
-          }
+          <Tab
+            className={classes.tabName}
+            label={`Winner (${winner.total || 0})`}
+            style={value === 1 ? { color: "#72F34B" } : {}}
+            {...a11yProps(1)}
+          />
         </AntTabs>
       </AppBar>
       <TabPanel value={value} index={0}>

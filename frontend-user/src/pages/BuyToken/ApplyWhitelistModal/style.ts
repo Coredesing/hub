@@ -287,6 +287,13 @@ const useStyles = makeStyles((theme) => {
       '&:active': {
         transform: 'translateY(-3px)'
       },
+    },
+    whitelistFlSocial: {
+      ...typeDisplayFlex, marginTop: '.75rem'
+    },
+    whitelistContentModal: {
+      ...typeDisplayFlex, marginTop: '.75rem',
+      marginBottom: '2rem', color: '#AEAEAE'
     }
   };
 });

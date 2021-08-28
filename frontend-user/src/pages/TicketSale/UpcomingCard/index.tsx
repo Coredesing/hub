@@ -5,6 +5,7 @@ import { caclDiffTime, formatNumber, getDiffTime, getSeedRound } from '../../../
 import { useEffect, useState } from 'react';
 import Image from '../../../components/Base/Image';
 import { TOKEN_TYPE } from '../../../constants';
+import { numberWithCommas } from '../../../utils/formatNumber';
 
 type Props = {
   card: { [k: string]: any },
@@ -66,7 +67,7 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
         </div>
         <div className={styles.cardBodyItem}>
           <span className={styles.text}>TOTAL {!isTicket ? 'RAISE' : 'SALES'}</span>
-          <span className={styles.textBold}> {!isTicket ? '$' + (Math.ceil((+card.ether_conversion_rate * +card.total_sold_coin) || 0)) : card.total_sold_coin}</span>
+          <span className={styles.textBold}> {!isTicket ? '$' + (numberWithCommas(Math.ceil((+card.ether_conversion_rate * +card.total_sold_coin) || 0), 0)) : card.total_sold_coin}</span>
         </div>
         {!isTicket && <div className={styles.cardBodyItem}>
           <span className={styles.text}>EXCHANGE RATE</span>

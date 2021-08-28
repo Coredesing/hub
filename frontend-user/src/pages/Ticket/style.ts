@@ -85,6 +85,7 @@ const useStyles = makeStyles((theme: any) => {
       display: "grid",
       placeContent: "center",
       placeItems: "center",
+      gridTemplateColumns: '1fr',
       "& h4, & h3": {
         margin: 0,
         padding: 0,
@@ -92,6 +93,7 @@ const useStyles = makeStyles((theme: any) => {
         fontStyle: "normal",
         textAlign: "center",
         mixBlendMode: "normal",
+        width: '100%'
       },
 
       "& h3": {
@@ -446,6 +448,8 @@ const useStyles = makeStyles((theme: any) => {
       textTransform: "uppercase",
       minWidth: "200px",
       cursor: "pointer",
+      display: 'grid',
+      placeContent: 'center',
     },
     finished: {
       alignItems: "center",

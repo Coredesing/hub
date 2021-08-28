@@ -125,7 +125,7 @@ export const getPoolStatusByPoolDetail = (
     return PoolStatus.Upcoming;
   }
 
-  console.log('[getPoolStatusByPoolDetail] - tokenSold: ', poolDetails?.id, tokenSold, poolDetails);
+  // console.log('[getPoolStatusByPoolDetail] - tokenSold: ', poolDetails?.id, tokenSold, poolDetails);
 
   // Check Claimable Status
   const lastClaimTime = lastClaimConfigTime();

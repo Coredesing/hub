@@ -23,8 +23,8 @@ function HowToParticipant(props: any) {
   const announcementTime = poolDetails?.whitelistBannerSetting?.announcement_time ? new Date(Number(poolDetails?.whitelistBannerSetting?.announcement_time) * 1000): undefined;
   const announcementTimeDisplay = momentTimezone.tz(announcementTime, moment.tz.guess()).format("dddd, MMMM DD, YYYY");
   const endJoinTimeDisplay = momentTimezone.tz(endJoinTimeInDate, moment.tz.guess()).format("dddd, MMMM DD, YYYY");
-  console.log('announcementTimeDisplay======>', announcementTime, announcementTimeDisplay);
-  console.log('endJoinTimeDisplay======>', endJoinTimeInDate, endJoinTimeDisplay);
+  // console.log('announcementTimeDisplay======>', announcementTime, announcementTimeDisplay);
+  // console.log('endJoinTimeDisplay======>', endJoinTimeInDate, endJoinTimeDisplay);
 
   const availableJoin = (poolDetails?.method === 'whitelist' && joinTimeInDate && endJoinTimeInDate) ? today <= endJoinTimeInDate : false;
   if (!availableJoin) {
@@ -92,4 +92,4 @@ function HowToParticipant(props: any) {
   );
 }
 
-export default HowToParticipant;
+export default React.memo(HowToParticipant);

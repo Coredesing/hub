@@ -9,6 +9,7 @@ import { caclDiffTime, formatNumber, getDiffTime } from '../../../utils';
 import { useEffect, useState } from 'react';
 import Image from '../../../components/Base/Image';
 import { calcProgress, getRemaining } from '../utils';
+import { TOKEN_TYPE } from '../../../constants';
 
 type Props = {
   card: { [k: string]: any },
@@ -65,6 +66,7 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
     }
   }, [isBuy, endTime, setTimeEnd]);
   const isClaim = card?.process === "only-claim";
+  const isTicket = card?.token_type === TOKEN_TYPE.ERC721;
   return (
     <div className={clsx(styles.card, styles.cardActive, {
       [styles.cardActiveApproved]: card.isApproved
@@ -110,7 +112,7 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
                 {formatNumber(endTime.days)}d : {formatNumber(endTime.hours)}h : {formatNumber(endTime.minutes)}m : {formatNumber(endTime.seconds)}s
               </span>
             </div>
-            <Link href={`/#/buy-nft/${card.id}`} className={clsx(styles.btnDetail, 'not-approved')}>
+            <Link href={`/#/${isTicket ? 'buy-nft' : 'buy-token'}/${card.id}`} className={clsx(styles.btnDetail, 'not-approved')}>
               {/* {card.isApproved ? 'Buy Now' : 'Approve'} */}
               Detail
             </Link>

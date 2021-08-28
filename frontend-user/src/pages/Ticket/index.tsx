@@ -34,6 +34,10 @@ import useTokenClaim from "./hooks/useTokenClaim";
 import axios from "../../services/axios";
 import useUserRemainTokensClaim from "./hooks/useUserRemainTokensClaim";
 import { setTypeIsPushNoti } from "../../store/actions/alert";
+import { TOKEN_TYPE } from "../../constants";
+import NotFoundPage from "../NotFoundPage/ContentPage";
+import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
+import { HashLoader } from "react-spinners";
 // import { FormInputNumber } from '../../components/Base/FormInputNumber/FormInputNumber';
 const iconWarning = "/images/warning-red.svg";
 const ticketImg = "/images/gamefi-ticket.png";
@@ -42,10 +46,45 @@ const brightIcon = "/images/icons/bright.svg";
 const finishedImg = "/images/finished.png";
 const soldoutImg = "/images/soldout.png";
 const Ticket: React.FC<any> = (props: any) => {
-  const styles = useStyles();
-  const dispatch = useDispatch();
   const params = useParams<{ [k: string]: any }>();
   const id = params.id;
+  const theme = useTheme();
+  const [checkParamType, setCheckParamType] = useState({
+    checking: true,
+    valid: false,
+  });
+  const { data: dataTicket = null, loading: loadingTicket } = useFetchV1<any>(
+    `/pool/${id}`,
+  );
+  useEffect(() => {
+    if (!loadingTicket) {
+      const result = {
+        checking: false,
+        valid: false
+      }
+      if (dataTicket) {
+        result.valid = dataTicket.token_type === TOKEN_TYPE.ERC721;
+      }
+      setCheckParamType(result);
+    }
+  }, [loadingTicket, dataTicket]);
+
+  return (
+    <DefaultLayout>
+      {
+        checkParamType.checking ?
+          <Backdrop open={checkParamType.checking} style={{ color: '#fff', zIndex: theme.zIndex.drawer + 1, }}>
+            <CircularProgress color="inherit" />
+          </Backdrop>
+          : (checkParamType.valid ? <ContentTicket id={id} /> : <NotFoundPage />)
+      }
+    </DefaultLayout>
+  );
+};
+
+const ContentTicket = ({ id, ...props }: any) => {
+  const styles = useStyles();
+  const dispatch = useDispatch();
   const { connectedAccount /*isAuth, wrongChain*/ } = useAuth();
   const { isKYC, checkingKyc } = useKyc(connectedAccount);
   // console.log(isKYC, checkingKyc)
@@ -607,384 +646,389 @@ const Ticket: React.FC<any> = (props: any) => {
   };
 
   return (
-    <DefaultLayout>
-      <TicketModal
-        open={openModal}
-        onClose={onCloseModal}
-        transaction={tokenDepositTransaction || transactionHash}
-        networkName={infoTicket?.network_available}
-      />
-      <div className={styles.content}>
-        {!isKYC && !checkingKyc && connectedAccount && (
-          <AlertKYC connectedAccount={connectedAccount} />
-        )}
+    loadingTicket ? <div className={styles.loader} style={{ marginTop: 70 }}>
+      <HashLoader loading={true} color={'#72F34B'} />
+      <p className={styles.loaderText}>
+        <span style={{ marginRight: 10 }}>Loading Pool Details ...</span>
+      </p>
+    </div> :
+      <>
+        <TicketModal
+          open={openModal}
+          onClose={onCloseModal}
+          transaction={tokenDepositTransaction || transactionHash}
+          networkName={infoTicket?.network_available}
+        />
+        <div className={styles.content}>
+          {!isKYC && !checkingKyc && connectedAccount && (
+            <AlertKYC connectedAccount={connectedAccount} />
+          )}
 
-        <div className={styles.card}>
-          <div className={styles.cardImg}>
-            <img
-              src={infoTicket.banner}
-              alt=""
-              onError={(e: any) => {
-                // e.target.onerror = null;
-                e.target.src = ticketImg;
-              }}
-            />
-          </div>
-          <div className={styles.cardBody}>
-            <div className={styles.cardBodyText}>
-              <h3>{infoTicket.title || infoTicket.name}</h3>
-              {!endOpenTime && (
-                <h4>
-                  <span>TOTAL SALE</span> {infoTicket.total_sold_coin || 0}
-                </h4>
-              )}
-              <button className={clsx({ openBuy: isShowInfo })}>
-                <img
-                  height={20}
-                  src={
-                    infoTicket && infoTicket.accept_currency
-                      ? `/images/${infoTicket.accept_currency.toUpperCase()}.png`
-                      : ""
-                  }
-                  alt=""
-                />
-                <span>
-                  {isClaim ? 0 : infoTicket.ether_conversion_rate}{" "}
-                  {infoTicket && infoTicket.accept_currency
-                    ? infoTicket.accept_currency.toUpperCase()
-                    : "..."}
-                </span>
-                <span className="small-text">
-                  /{infoTicket.symbol || "Ticket"}
-                </span>
-              </button>
+          <div className={styles.card}>
+            <div className={styles.cardImg}>
+              <img
+                src={infoTicket.banner}
+                alt=""
+                onError={(e: any) => {
+                  // e.target.onerror = null;
+                  e.target.src = ticketImg;
+                }}
+              />
             </div>
-            <div className={styles.cardBodyDetail}>
-              {!endOpenTime && (
-                <div className={styles.cardBodyClock}>
-                  <h5>
-                    Open in
-                    <span className="open">
-                      <img src={brightIcon} alt="" />
-                    </span>
-                  </h5>
-                  <div className="times">
-                    <span className="time">
-                      <span className="number">
-                        {formatNumber(openTime.days)}
+            <div className={styles.cardBody}>
+              <div className={styles.cardBodyText}>
+                <h3>{infoTicket.title || infoTicket.name}</h3>
+                {!endOpenTime && (
+                  <h4>
+                    <span>TOTAL SALE</span> {infoTicket.total_sold_coin || 0}
+                  </h4>
+                )}
+                <button className={clsx({ openBuy: isShowInfo })}>
+                  <img
+                    height={20}
+                    src={
+                      infoTicket && infoTicket.accept_currency
+                        ? `/images/${infoTicket.accept_currency.toUpperCase()}.png`
+                        : ""
+                    }
+                    alt=""
+                  />
+                  <span>
+                    {isClaim ? 0 : infoTicket.ether_conversion_rate}{" "}
+                    {infoTicket && infoTicket.accept_currency
+                      ? infoTicket.accept_currency.toUpperCase()
+                      : "..."}
+                  </span>
+                  <span className="small-text">
+                    /{infoTicket.symbol || "Ticket"}
+                  </span>
+                </button>
+              </div>
+              <div className={styles.cardBodyDetail}>
+                {!endOpenTime && (
+                  <div className={styles.cardBodyClock}>
+                    <h5>
+                      Open in
+                      <span className="open">
+                        <img src={brightIcon} alt="" />
                       </span>
-                      <span className="text">
-                        Day{openTime.days > 1 ? "s" : ""}
+                    </h5>
+                    <div className="times">
+                      <span className="time">
+                        <span className="number">
+                          {formatNumber(openTime.days)}
+                        </span>
+                        <span className="text">
+                          Day{openTime.days > 1 ? "s" : ""}
+                        </span>
                       </span>
-                    </span>
-                    <span className="dot">:</span>
-                    <span className="time">
-                      <span className="number">
-                        {formatNumber(openTime.hours)}
+                      <span className="dot">:</span>
+                      <span className="time">
+                        <span className="number">
+                          {formatNumber(openTime.hours)}
+                        </span>
+                        <span className="text">
+                          Hour{openTime.hours > 1 ? "s" : ""}
+                        </span>
                       </span>
-                      <span className="text">
-                        Hour{openTime.hours > 1 ? "s" : ""}
+                      <span className="dot">:</span>
+                      <span className="time">
+                        <span className="number">
+                          {formatNumber(openTime.minutes)}
+                        </span>
+                        <span className="text">
+                          Minute{openTime.minutes > 1 ? "s" : ""}
+                        </span>
                       </span>
-                    </span>
-                    <span className="dot">:</span>
-                    <span className="time">
-                      <span className="number">
-                        {formatNumber(openTime.minutes)}
+                      <span className="dot">:</span>
+                      <span className="time">
+                        <span className="number">
+                          {formatNumber(openTime.seconds)}
+                        </span>
+                        <span className="text">
+                          Second{openTime.seconds > 1 ? "s" : ""}
+                        </span>
                       </span>
-                      <span className="text">
-                        Minute{openTime.minutes > 1 ? "s" : ""}
-                      </span>
-                    </span>
-                    <span className="dot">:</span>
-                    <span className="time">
-                      <span className="number">
-                        {formatNumber(openTime.seconds)}
-                      </span>
-                      <span className="text">
-                        Second{openTime.seconds > 1 ? "s" : ""}
-                      </span>
-                    </span>
-                  </div>
-                </div>
-              )}
-              
-              {endOpenTime && !infoTicket.campaign_hash && (
-                <div className={styles.comingSoon}>Coming soon</div>
-              )}
-              {infoTicket.campaign_hash && isShowInfo && (
-                <div className={styles.cardBodyProgress}>
-                  <div className={styles.progressItem}>
-                    <span className={styles.text}>Progress</span>
-                    <div className="showProgress">
-                      <Progress
-                        progress={calcProgress(
-                          +infoTicket.token_sold,
-                          +infoTicket.total_sold_coin
-                        )}
-                      />
                     </div>
-                    <div className={clsx(styles.infoTicket, "total")}>
-                      <span className={styles.textBold}>
-                        {calcProgress(
-                          +infoTicket.token_sold,
-                          +infoTicket.total_sold_coin
-                        )}
-                        %
-                      </span>
+                  </div>
+                )}
 
-                      <span className="amount">
-                        {infoTicket.token_sold || "..."}/
-                        {infoTicket.total_sold_coin || "..."} Tickets
-                      </span>
-                    </div>
-                  </div>
-                  {!finishedTime && (
-                    <div className={styles.infoTicket}>
-                      <span className={styles.text}>Remaining</span>{" "}
-                      <span className={styles.textBold}>
-                        {getRemaining(
-                          infoTicket.total_sold_coin,
-                          infoTicket.token_sold
-                        )}
-                      </span>
-                    </div>
-                  )}
-                  {finishedTime && (
-                    <div className={styles.infoTicket}>
-                      <span className={styles.text}>TOTAL SALES</span>{" "}
-                      <span className={styles.textBold}>
-                        {infoTicket.total_sold_coin || 0}
-                      </span>
-                    </div>
-                  )}
-                  <div className={styles.infoTicket}>
-                    <span className={styles.text}>OWNED</span>{" "}
-                    <span className={styles.textBold}>
-                      {isClaim
-                        ? userClaimed
-                        : ownedTicket}
-                    </span>
-                  </div>
-                  {!isClaim && (
-                    <div className={styles.infoTicket}>
-                      <span className={styles.text}>BOUGHT/MAX</span>{" "}
-                      <span className={styles.textBold}>
-                        {ticketBought}/{infoTicket.max_buy_ticket || 0}
-                      </span>
-                    </div>
-                  )}
-                  {!isClaim && finishedTime && (
-                    <div className={styles.infoTicket}>
-                      <span className={styles.text}>PARTICIPANTS</span>{" "}
-                      <span className={styles.textBold}>
-                        {infoTicket.participants || 0}
-                      </span>
-                    </div>
-                  )}
-                  {isClaim && (
-                    <div className={styles.infoTicket}>
-                      <span className={styles.text}>AVAILABLE TO CAILM</span>{" "}
-                      <span className={styles.textBold}>
-                        {+isAccInWinners.data?.lottery_ticket - userClaimed || 0}
-                      </span>
-                    </div>
-                  )}
-                  {!finishedTime && isBuy && (
-                    <div className={styles.infoTicket}>
-                      <span className={styles.text}>{phaseName} END IN</span>
-                      <span className={styles.timeEnd}>
-                        {formatNumber(endTime.days)}d :{" "}
-                        {formatNumber(endTime.hours)}h :{" "}
-                        {formatNumber(endTime.minutes)}m :{" "}
-                        {formatNumber(endTime.seconds)}s
-                      </span>
-                    </div>
-                  )}
-                  {!finishedTime &&
-                    (isClaim ? (
-                      isAccInWinners.ok && (
-                        <button
-                          className={clsx(styles.btnClaim, {
-                            disabled:
-                              !isKYC || isNotClaim(userClaimed, isAccInWinners.data?.lottery_ticket) || lockWhenClaiming,
-                          })}
-                          onClick={onClaimTicket}
-                          disabled={
-                            !isKYC || isNotClaim(userClaimed, isAccInWinners.data?.lottery_ticket) || lockWhenClaiming
-                          }
-                        >
-                          Claim
-                        </button>
-                      )
-                    ) : (
-                      <>
-                        {allowNetwork &&
-                          isBuy &&
-                          isAccApproved(tokenAllowance || 0) && (
-                            <div
-                              className={clsx(styles.infoTicket, styles.buyBox)}
-                              style={{ marginTop: "16px" }}
-                            >
-                              <div className={styles.amountBuy}>
-                                <span>Amount</span>
-                                <div>
-                                  <span
-                                    onClick={descMinAmount}
-                                    className={clsx(styles.btnMinMax, "min", {
-                                      disabled:
-                                        !getMaxTicketBuy(
-                                          ticketBought,
-                                          +infoTicket.max_buy_ticket
-                                        ) ||
-                                        numTicketBuy === 0 ||
-                                        !isKYC,
-                                    })}
-                                  >
-                                    Min
-                                  </span>
-                                  <span
-                                    onClick={descAmount}
-                                    className={clsx({
-                                      [styles.disabledAct]:
-                                        !getMaxTicketBuy(
-                                          ticketBought,
-                                          +infoTicket.max_buy_ticket
-                                        ) ||
-                                        numTicketBuy === 0 ||
-                                        !isKYC,
-                                    })}
-                                  >
-                                    <svg
-                                      width="12"
-                                      height="3"
-                                      viewBox="0 0 12 3"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        d="M11.1818 0H0.818182C0.366544 0 0 0.366544 0 0.818182V1.3636C0 1.81524 0.366544 2.18178 0.818182 2.18178H11.1818C11.6334 2.18178 12 1.81524 12 1.3636V0.818182C12 0.366544 11.6334 0 11.1818 0Z"
-                                        fill="white"
-                                      />
-                                    </svg>
-                                  </span>
-                                  <span>
-                                    {numTicketBuy}
-                                    {/* {getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket) ?
-                            <FormInputNumber type="number" value={numTicketBuy} allowZero isInteger isPositive onChange={setNumTicketBuy} min={0} max={getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)} />
-                            : numTicketBuy} */}
-                                  </span>
-                                  <span
-                                    onClick={ascAmount}
-                                    className={clsx({
-                                      [styles.disabledAct]:
-                                        !getMaxTicketBuy(
-                                          ticketBought,
-                                          +infoTicket.max_buy_ticket
-                                        ) ||
-                                        numTicketBuy ===
-                                        getMaxTicketBuy(
-                                          ticketBought,
-                                          +infoTicket.max_buy_ticket
-                                        ) ||
-                                        !isKYC,
-                                    })}
-                                  >
-                                    <svg
-                                      width="12"
-                                      height="12"
-                                      viewBox="0 0 12 12"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        d="M11.343 5.06254H11.3437H6.93746V0.664585C6.93746 0.302634 6.64439 0 6.28244 0H5.71863C5.35678 0 5.06244 0.302634 5.06244 0.664585V5.06254H0.656293C0.294537 5.06254 0 5.35522 0 5.71727V6.28429C0 6.64605 0.294439 6.93746 0.656293 6.93746H5.06254V11.3513C5.06254 11.7131 5.35678 11.9999 5.71873 11.9999H6.28254C6.64449 11.9999 6.93756 11.713 6.93756 11.3513V6.93746H11.343C11.705 6.93746 12 6.64595 12 6.28429V5.71727C12 5.35522 11.705 5.06254 11.343 5.06254Z"
-                                        fill="white"
-                                      />
-                                    </svg>
-                                  </span>
-                                  <span
-                                    onClick={ascMaxAmount}
-                                    className={clsx(styles.btnMinMax, "max", {
-                                      disabled:
-                                        !getMaxTicketBuy(
-                                          ticketBought,
-                                          +infoTicket.max_buy_ticket
-                                        ) ||
-                                        numTicketBuy ===
-                                        getMaxTicketBuy(
-                                          ticketBought,
-                                          +infoTicket.max_buy_ticket
-                                        ) ||
-                                        !isKYC,
-                                    })}
-                                  >
-                                    Max
-                                  </span>
-                                </div>
-                              </div>
-                              <button
-                                className={clsx(styles.buynow, {
-                                  [styles.buyDisabled]: numTicketBuy <= 0,
-                                })}
-                                onClick={onBuyTicket}
-                                disabled={numTicketBuy <= 0 || !isKYC}
-                              >
-                                buy now
-                              </button>
-                            </div>
+                {endOpenTime && !infoTicket.campaign_hash && (
+                  <div className={styles.comingSoon}>Coming soon</div>
+                )}
+                {infoTicket.campaign_hash && isShowInfo && (
+                  <div className={styles.cardBodyProgress}>
+                    <div className={styles.progressItem}>
+                      <span className={styles.text}>Progress</span>
+                      <div className="showProgress">
+                        <Progress
+                          progress={calcProgress(
+                            +infoTicket.token_sold,
+                            +infoTicket.total_sold_coin
                           )}
+                        />
+                      </div>
+                      <div className={clsx(styles.infoTicket, "total")}>
+                        <span className={styles.textBold}>
+                          {calcProgress(
+                            +infoTicket.token_sold,
+                            +infoTicket.total_sold_coin
+                          )}
+                          %
+                        </span>
 
-                        {!isAccApproved(tokenAllowance || 0) && (
-                          <button
-                            className={styles.btnApprove}
-                            onClick={handleTokenApprove}
-                          >
-                            Approve
-                          </button>
-                        )}
-                      </>
-                    ))}
-
-                  {((alert?.type === "error" && alert.message) ||
-                    (!isAccInWinners.loading &&
-                      !isAccInWinners.ok &&
-                      isAccInWinners.error)) && (
-                      <div className={styles.alertMsg}>
-                        <img src={iconWarning} alt="" />
-                        <span>
-                          {!isAccInWinners.ok
-                            ? isAccInWinners.error
-                            : alert.message}
+                        <span className="amount">
+                          {infoTicket.token_sold || "..."}/
+                          {infoTicket.total_sold_coin || "..."} Tickets
+                        </span>
+                      </div>
+                    </div>
+                    {!finishedTime && (
+                      <div className={styles.infoTicket}>
+                        <span className={styles.text}>Remaining</span>{" "}
+                        <span className={styles.textBold}>
+                          {getRemaining(
+                            infoTicket.total_sold_coin,
+                            infoTicket.token_sold
+                          )}
                         </span>
                       </div>
                     )}
-
-                  {finishedTime && (
-                    <div className={clsx(styles.infoTicket, styles.finished)}>
-                      <div className="img-finished">
-                        <img src={finishedImg} alt="" />
+                    {finishedTime && (
+                      <div className={styles.infoTicket}>
+                        <span className={styles.text}>TOTAL SALES</span>{" "}
+                        <span className={styles.textBold}>
+                          {infoTicket.total_sold_coin || 0}
+                        </span>
                       </div>
-                      {!getRemaining(
-                        infoTicket.total_sold_coin,
-                        infoTicket.token_sold
-                      ) && (
-                          <div className="soldout">
-                            <img src={soldoutImg} alt="" />
-                          </div>
-                        )}
+                    )}
+                    <div className={styles.infoTicket}>
+                      <span className={styles.text}>OWNED</span>{" "}
+                      <span className={styles.textBold}>
+                        {isClaim
+                          ? userClaimed
+                          : ownedTicket}
+                      </span>
                     </div>
-                  )}
-                </div>
-              )}
+                    {!isClaim && (
+                      <div className={styles.infoTicket}>
+                        <span className={styles.text}>BOUGHT/MAX</span>{" "}
+                        <span className={styles.textBold}>
+                          {ticketBought}/{infoTicket.max_buy_ticket || 0}
+                        </span>
+                      </div>
+                    )}
+                    {!isClaim && finishedTime && (
+                      <div className={styles.infoTicket}>
+                        <span className={styles.text}>PARTICIPANTS</span>{" "}
+                        <span className={styles.textBold}>
+                          {infoTicket.participants || 0}
+                        </span>
+                      </div>
+                    )}
+                    {isClaim && (
+                      <div className={styles.infoTicket}>
+                        <span className={styles.text}>AVAILABLE TO CAILM</span>{" "}
+                        <span className={styles.textBold}>
+                          {+isAccInWinners.data?.lottery_ticket - userClaimed || 0}
+                        </span>
+                      </div>
+                    )}
+                    {!finishedTime && isBuy && (
+                      <div className={styles.infoTicket}>
+                        <span className={styles.text}>{phaseName} END IN</span>
+                        <span className={styles.timeEnd}>
+                          {formatNumber(endTime.days)}d :{" "}
+                          {formatNumber(endTime.hours)}h :{" "}
+                          {formatNumber(endTime.minutes)}m :{" "}
+                          {formatNumber(endTime.seconds)}s
+                        </span>
+                      </div>
+                    )}
+                    {!finishedTime &&
+                      (isClaim ? (
+                        isAccInWinners.ok && (
+                          <button
+                            className={clsx(styles.btnClaim, {
+                              disabled:
+                                !isKYC || isNotClaim(userClaimed, isAccInWinners.data?.lottery_ticket) || lockWhenClaiming,
+                            })}
+                            onClick={onClaimTicket}
+                            disabled={
+                              !isKYC || isNotClaim(userClaimed, isAccInWinners.data?.lottery_ticket) || lockWhenClaiming
+                            }
+                          >
+                            Claim
+                          </button>
+                        )
+                      ) : (
+                        <>
+                          {allowNetwork &&
+                            isBuy &&
+                            isAccApproved(tokenAllowance || 0) && (
+                              <div
+                                className={clsx(styles.infoTicket, styles.buyBox)}
+                                style={{ marginTop: "16px" }}
+                              >
+                                <div className={styles.amountBuy}>
+                                  <span>Amount</span>
+                                  <div>
+                                    <span
+                                      onClick={descMinAmount}
+                                      className={clsx(styles.btnMinMax, "min", {
+                                        disabled:
+                                          !getMaxTicketBuy(
+                                            ticketBought,
+                                            +infoTicket.max_buy_ticket
+                                          ) ||
+                                          numTicketBuy === 0 ||
+                                          !isKYC,
+                                      })}
+                                    >
+                                      Min
+                                    </span>
+                                    <span
+                                      onClick={descAmount}
+                                      className={clsx({
+                                        [styles.disabledAct]:
+                                          !getMaxTicketBuy(
+                                            ticketBought,
+                                            +infoTicket.max_buy_ticket
+                                          ) ||
+                                          numTicketBuy === 0 ||
+                                          !isKYC,
+                                      })}
+                                    >
+                                      <svg
+                                        width="12"
+                                        height="3"
+                                        viewBox="0 0 12 3"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path
+                                          d="M11.1818 0H0.818182C0.366544 0 0 0.366544 0 0.818182V1.3636C0 1.81524 0.366544 2.18178 0.818182 2.18178H11.1818C11.6334 2.18178 12 1.81524 12 1.3636V0.818182C12 0.366544 11.6334 0 11.1818 0Z"
+                                          fill="white"
+                                        />
+                                      </svg>
+                                    </span>
+                                    <span>
+                                      {numTicketBuy}
+                                      {/* {getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket) ?
+                            <FormInputNumber type="number" value={numTicketBuy} allowZero isInteger isPositive onChange={setNumTicketBuy} min={0} max={getMaxTicketBuy(ticketBought, +infoTicket.max_buy_ticket)} />
+                            : numTicketBuy} */}
+                                    </span>
+                                    <span
+                                      onClick={ascAmount}
+                                      className={clsx({
+                                        [styles.disabledAct]:
+                                          !getMaxTicketBuy(
+                                            ticketBought,
+                                            +infoTicket.max_buy_ticket
+                                          ) ||
+                                          numTicketBuy ===
+                                          getMaxTicketBuy(
+                                            ticketBought,
+                                            +infoTicket.max_buy_ticket
+                                          ) ||
+                                          !isKYC,
+                                      })}
+                                    >
+                                      <svg
+                                        width="12"
+                                        height="12"
+                                        viewBox="0 0 12 12"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path
+                                          d="M11.343 5.06254H11.3437H6.93746V0.664585C6.93746 0.302634 6.64439 0 6.28244 0H5.71863C5.35678 0 5.06244 0.302634 5.06244 0.664585V5.06254H0.656293C0.294537 5.06254 0 5.35522 0 5.71727V6.28429C0 6.64605 0.294439 6.93746 0.656293 6.93746H5.06254V11.3513C5.06254 11.7131 5.35678 11.9999 5.71873 11.9999H6.28254C6.64449 11.9999 6.93756 11.713 6.93756 11.3513V6.93746H11.343C11.705 6.93746 12 6.64595 12 6.28429V5.71727C12 5.35522 11.705 5.06254 11.343 5.06254Z"
+                                          fill="white"
+                                        />
+                                      </svg>
+                                    </span>
+                                    <span
+                                      onClick={ascMaxAmount}
+                                      className={clsx(styles.btnMinMax, "max", {
+                                        disabled:
+                                          !getMaxTicketBuy(
+                                            ticketBought,
+                                            +infoTicket.max_buy_ticket
+                                          ) ||
+                                          numTicketBuy ===
+                                          getMaxTicketBuy(
+                                            ticketBought,
+                                            +infoTicket.max_buy_ticket
+                                          ) ||
+                                          !isKYC,
+                                      })}
+                                    >
+                                      Max
+                                    </span>
+                                  </div>
+                                </div>
+                                <button
+                                  className={clsx(styles.buynow, {
+                                    [styles.buyDisabled]: numTicketBuy <= 0,
+                                  })}
+                                  onClick={onBuyTicket}
+                                  disabled={numTicketBuy <= 0 || !isKYC}
+                                >
+                                  buy now
+                                </button>
+                              </div>
+                            )}
+
+                          {!isAccApproved(tokenAllowance || 0) && (
+                            <button
+                              className={styles.btnApprove}
+                              onClick={handleTokenApprove}
+                            >
+                              Approve
+                            </button>
+                          )}
+                        </>
+                      ))}
+
+                    {((alert?.type === "error" && alert.message) ||
+                      (!isAccInWinners.loading &&
+                        !isAccInWinners.ok &&
+                        isAccInWinners.error)) && (
+                        <div className={styles.alertMsg}>
+                          <img src={iconWarning} alt="" />
+                          <span>
+                            {!isAccInWinners.ok
+                              ? isAccInWinners.error
+                              : alert.message}
+                          </span>
+                        </div>
+                      )}
+
+                    {finishedTime && (
+                      <div className={clsx(styles.infoTicket, styles.finished)}>
+                        <div className="img-finished">
+                          <img src={finishedImg} alt="" />
+                        </div>
+                        {!getRemaining(
+                          infoTicket.total_sold_coin,
+                          infoTicket.token_sold
+                        ) && (
+                            <div className="soldout">
+                              <img src={soldoutImg} alt="" />
+                            </div>
+                          )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
+          <div className={styles.displayContent}>
+            <AboutTicket info={infoTicket} />
+          </div>
         </div>
-        <div className={styles.displayContent}>
-          <AboutTicket info={infoTicket} />
-        </div>
-      </div>
-    </DefaultLayout>
+      </>
   );
-};
-
+}
 export default withRouter(Ticket);

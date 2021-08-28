@@ -33,11 +33,12 @@ import TicketModal from "./TicketModal";
 import useTokenClaim from "./hooks/useTokenClaim";
 import axios from "../../services/axios";
 import useUserRemainTokensClaim from "./hooks/useUserRemainTokensClaim";
-import { setTypeIsPushNoti } from "../../store/actions/alert";
+import { alertFailure, setTypeIsPushNoti } from "../../store/actions/alert";
 import { TOKEN_TYPE } from "../../constants";
 import NotFoundPage from "../NotFoundPage/ContentPage";
 import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
 import { HashLoader } from "react-spinners";
+import { numberWithCommas } from "../../utils/formatNumber";
 // import { FormInputNumber } from '../../components/Base/FormInputNumber/FormInputNumber';
 const iconWarning = "/images/warning-red.svg";
 const ticketImg = "/images/gamefi-ticket.png";
@@ -115,15 +116,18 @@ const ContentTicket = ({ id, ...props }: any) => {
     renewTicket
   );
 
-  const [allowNetwork, setAllowNetwork] = useState<boolean>(false);
+  const [allowNetwork, setAllowNetwork] = useState<{ ok: boolean, [k: string]: any }>({ ok: false });
   useEffect(() => {
     const networkInfo = APP_NETWORKS_SUPPORT[Number(appChainID)];
     if (!networkInfo) {
       return;
     }
     setAllowNetwork(
-      String(networkInfo.name).toLowerCase() ===
-      (infoTicket.network_available || "").toLowerCase()
+      {
+        ok: String(networkInfo.name).toLowerCase() ===
+          (infoTicket.network_available || "").toLowerCase(),
+        ...networkInfo,
+      }
     );
   }, [infoTicket, appChainID]);
   const isClaim = dataTicket?.process === "only-claim";
@@ -177,7 +181,6 @@ const ContentTicket = ({ id, ...props }: any) => {
   const [phaseName, setPhaseName] = useState('');
   useEffect(() => {
     if (!loadingTicket && dataTicket) {
-      console.log(dataTicket)
       setNewTicket(false);
       setInfoTicket(dataTicket);
       if (isEndPool(dataTicket.campaign_status)) {
@@ -547,9 +550,12 @@ const ContentTicket = ({ id, ...props }: any) => {
     undefined
   );
 
+  const [isApproving, setIsApproving] = useState(false);
   const handleTokenApprove = async () => {
     try {
       // setApproveModal(true);
+      if (isApproving) return;
+      setIsApproving(true);
       await approveToken();
       if (infoTicket.campaign_hash && connectedAccount && tokenToApprove) {
         setTokenAllowance(
@@ -559,10 +565,12 @@ const ContentTicket = ({ id, ...props }: any) => {
             infoTicket.campaign_hash
           )) as number
         );
+        setIsApproving(false);
         // setTokenBalance(await retrieveTokenBalance(tokenToApprove, connectedAccount) as number);
       }
     } catch (err) {
-      console.log(err);
+      dispatch(alertFailure('Hmm, Something went wrong. Please try again'));
+      setIsApproving(false);
       // setApproveModal(false);
     }
   };
@@ -645,7 +653,7 @@ const ContentTicket = ({ id, ...props }: any) => {
     return +totalTicket - +totalSold || 0;
   };
 
-  
+
   return (
     loadingTicket ? <div className={styles.loader} style={{ marginTop: 70 }}>
       <HashLoader loading={true} color={'#72F34B'} />
@@ -678,10 +686,15 @@ const ContentTicket = ({ id, ...props }: any) => {
             </div>
             <div className={styles.cardBody}>
               <div className={styles.cardBodyText}>
-                <h3>{infoTicket.title || infoTicket.name}</h3>
+                <h3 style={{ position: 'relative' }}>
+                  {
+                    allowNetwork.icon && <img src={allowNetwork.icon} alt="" style={{ position: 'absolute', top: '5px', left: 0, width: '24px', height: '24px' }} />
+                  }
+                  {infoTicket.title || infoTicket.name}
+                </h3>
                 {!endOpenTime && (
                   <h4>
-                    <span>TOTAL SALE</span> {infoTicket.total_sold_coin || 0}
+                    <span>TOTAL SALE</span> {infoTicket.total_sold_coin ? numberWithCommas(infoTicket.total_sold_coin, 0) : 0}
                   </h4>
                 )}
                 <button className={clsx({ openBuy: isShowInfo })}>
@@ -779,8 +792,8 @@ const ContentTicket = ({ id, ...props }: any) => {
                         </span>
 
                         <span className="amount">
-                          {infoTicket.token_sold || "..."}/
-                          {infoTicket.total_sold_coin || "..."} Tickets
+                          {infoTicket.token_sold ? numberWithCommas(infoTicket.token_sold, 0) : "..."}/
+                          {infoTicket.total_sold_coin ? numberWithCommas(infoTicket.total_sold_coin, 0) : "..."} Tickets
                         </span>
                       </div>
                     </div>
@@ -788,10 +801,10 @@ const ContentTicket = ({ id, ...props }: any) => {
                       <div className={styles.infoTicket}>
                         <span className={styles.text}>Remaining</span>{" "}
                         <span className={styles.textBold}>
-                          {getRemaining(
+                          {numberWithCommas(getRemaining(
                             infoTicket.total_sold_coin,
                             infoTicket.token_sold
-                          )}
+                          ), 0)}
                         </span>
                       </div>
                     )}
@@ -799,7 +812,7 @@ const ContentTicket = ({ id, ...props }: any) => {
                       <div className={styles.infoTicket}>
                         <span className={styles.text}>TOTAL SALES</span>{" "}
                         <span className={styles.textBold}>
-                          {infoTicket.total_sold_coin || 0}
+                          {infoTicket.total_sold_coin ? numberWithCommas(infoTicket.total_sold_coin, 0) : 0}
                         </span>
                       </div>
                     )}
@@ -823,7 +836,7 @@ const ContentTicket = ({ id, ...props }: any) => {
                       <div className={styles.infoTicket}>
                         <span className={styles.text}>PARTICIPANTS</span>{" "}
                         <span className={styles.textBold}>
-                          {infoTicket.participants || 0}
+                          {infoTicket.participants ? numberWithCommas(infoTicket.participants, 0) : 0}
                         </span>
                       </div>
                     )}
@@ -864,7 +877,7 @@ const ContentTicket = ({ id, ...props }: any) => {
                         )
                       ) : (
                         <>
-                          {isAccInWinners.ok && allowNetwork &&
+                          {isAccInWinners.ok && allowNetwork.ok &&
                             isBuy &&
                             isAccApproved(tokenAllowance || 0) && (
                               <div
@@ -882,7 +895,10 @@ const ContentTicket = ({ id, ...props }: any) => {
                                             ticketBought,
                                             maxCanBuyOrClaim
                                           ) ||
-                                          numTicketBuy === 0 ||
+                                          numTicketBuy === getMaxTicketBuy(
+                                            ticketBought,
+                                            maxCanBuyOrClaim
+                                          ) ||
                                           !isKYC,
                                       })}
                                     >
@@ -979,13 +995,15 @@ const ContentTicket = ({ id, ...props }: any) => {
                                 </button>
                               </div>
                             )}
-
                           {!isAccApproved(tokenAllowance || 0) && (
                             <button
                               className={styles.btnApprove}
                               onClick={handleTokenApprove}
                             >
-                              Approve
+                              {isApproving ? <div style={{ display: 'grid', gridTemplateColumns: '28px auto', gap: '5px', placeContent: 'center' }}>
+                                <CircularProgress style={{ color: '#fff', width: '28px', height: '28px' }} />
+                                Approving
+                              </div> : 'Approve'}
                             </button>
                           )}
                         </>

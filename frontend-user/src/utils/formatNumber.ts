@@ -141,7 +141,7 @@ function format(num: string){
   return splittedStrs[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "." + splittedStrs[1];
 }
 
-export function numberWithCommas(x: string = "", decimals: number = 2) {
+export function numberWithCommas(x: string | number = "", decimals: number = 2) {
   x = typeof x === 'string' ? x: (x as number).toFixed();
   return removeTrailingZeros(commaNumber(new BigNumber(x).toFixed(decimals), ",", "."));
   // }

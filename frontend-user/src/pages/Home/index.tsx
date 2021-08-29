@@ -54,19 +54,19 @@ const Home = (props: any) => {
 
   const partnerships = [
     {
-      banner: "/images/partnerships/step-hero.png",
-      name: "Step Hero",
-      website: "https://stephero.io/",
-    },
-    {
       banner: "/images/partnerships/kaby-arena.png",
       name: "Kaby Arena",
       website: "https://kabyarena.com/",
     },
+    // {
+    //   banner: "/images/partnerships/bunicorn.png",
+    //   name: "Bunicorn",
+    //   website: "https://buni.finance/",
+    // },
     {
-      banner: "/images/partnerships/bunicorn.png",
-      name: "Bunicorn",
-      website: "https://buni.finance/",
+      banner: "/images/partnerships/mechmaster.png",
+      name: "Mechmaster",
+      website: "https://mechmaster.io/",
     },
   ];
 

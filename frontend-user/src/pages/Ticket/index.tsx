@@ -746,7 +746,7 @@ const ContentTicket = ({ id, ...props }: any) => {
                     {infoTicket.network_available}
                   </span>
                 </div>
-                {endOpenTime && (
+                {!endOpenTime && (
                   <div className={styles.cardBodyClock}>
                     <h5>
                       Open in
@@ -793,7 +793,6 @@ const ContentTicket = ({ id, ...props }: any) => {
                     </div>
                   </div>
                 )}
-
 
                 {endOpenTime && !infoTicket.campaign_hash && (
                   <div className={styles.comingSoon}>Coming soon</div>

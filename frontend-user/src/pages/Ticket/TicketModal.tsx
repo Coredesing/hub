@@ -107,7 +107,7 @@ const TicketModal = ({ open, ...props }: any) => {
       </DialogContent>
       <DialogActions className={classes.actions}>
         <Link href={transactionLink} target="_blank" className={classes.btnView}>
-          View on {info.details.explorerName}
+          View on {info.explorerName}
         </Link>
       </DialogActions>
     </Dialog>

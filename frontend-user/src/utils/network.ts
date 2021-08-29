@@ -7,7 +7,7 @@ import {NETWORK_AVAILABLE} from "../constants";
 
 export const getEtherscanName = ({networkAvailable}: any) => {
   const info = getNetworkInfo(networkAvailable);
-  return info.details.explorerName;
+  return info.explorerName;
 };
 
 export const getEtherscanTransactionLink = ({ appChainID, transactionHash }: any) => {

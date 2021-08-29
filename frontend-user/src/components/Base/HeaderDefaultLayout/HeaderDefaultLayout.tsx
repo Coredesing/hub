@@ -23,6 +23,7 @@ import { TIERS } from "../../../constants";
 import useAuth from "../../../hooks/useAuth";
 import { getUserTier } from "../../../store/actions/sota-tiers";
 import { useMediaQuery, useTheme } from "@material-ui/core";
+import { WrapperAlert } from "../WrapperAlert";
 
 // const BrightStartIcon = "bright-star.svg";
 // const WalletIcon = "/images/wallet.svg";
@@ -154,7 +155,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
   };
 
   const hideNavMenu = () => {
-    if(isMdScreen && toggleNavbar) {
+    if (isMdScreen && toggleNavbar) {
       setToggleNavbar(false);
     }
   }
@@ -275,8 +276,8 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
             <nav className={`${styles.headerNav} ${toggleNavbar ? 'show' : ''}`}>
               <ul className={styles.headerLinks}>
                 <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/">Home</Link></li>
-                <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/token">Token sales</Link></li>
                 <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/ticket">Ticket sales</Link></li>
+                <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/token">Token sales</Link></li>
                 {/* <li className={styles.headerLink}><Link to="#">Items Sales</Link></li> */}
                 {/* <li className={styles.headerLink}><Link href="#">Marketplace</Link></li> */}
                 {/* <li className={styles.headerLink}><Link href="#">Stake</Link></li> */}
@@ -381,12 +382,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
         />
       </HeaderContext.Provider>
       {loginError && (
-        <div className={styles.loginErrorBanner}>
-          <img
-            src="/images/red-warning.svg"
-            alt="red-warning icon"
-            className={styles.iconWarning}
-          />
+        <WrapperAlert>
           <span className={styles.loginErrorBannerText}>
             {loginError} Learn how to &nbsp;
             <a
@@ -407,18 +403,13 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
               Change App Network
             </button>
           </span>
-        </div>
+        </WrapperAlert>
       )}
-      {window.location.href.indexOf("buy-token") > -1 &&
+      {(window.location.href.indexOf("buy-token") > -1 || window.location.href.indexOf("buy-nft") > -1) &&
         !loginError &&
-        message != "" && (
-          <div className={styles.loginErrorBanner}>
-            <img
-              src="/images/red-warning.svg"
-              alt="red-warning icon"
-              className={styles.iconWarning}
-            />
-            <span className={styles.loginErrorBannerText}>
+        message !== "" && (
+          <WrapperAlert type="error">
+          <span className={styles.loginErrorBannerText}>
               {message}&nbsp;&nbsp;
               <button
                 className={styles.btnChangeAppNetwork}
@@ -430,7 +421,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
                 Change App Network
               </button>
             </span>
-          </div>
+          </WrapperAlert>
         )}
     </>
   );

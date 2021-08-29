@@ -131,6 +131,7 @@ export const APP_NETWORKS_SUPPORT: {[key: number]: NetworkInfo } = {
     disableIcon: "/images/ethereum-disabled.png",
     currency: 'ETH',
     networkName: NETWORK_NAME_MAPPINGS[ETH_CHAIN_ID],
+    explorerName: 'Etherscan',
     details: {
       chainId: `0x${(+ETH_CHAIN_ID).toString(16)}`,
       chainName: NETWORK_NAME_MAPPINGS[ETH_CHAIN_ID],
@@ -141,7 +142,6 @@ export const APP_NETWORKS_SUPPORT: {[key: number]: NetworkInfo } = {
       },
       rpcUrls: [NETWORK_URL],
       blockExplorerUrls: [ETHERSCAN_URL],
-      explorerName: 'Etherscan'
     }
   },
   [BSC_CHAIN_ID]: {
@@ -151,6 +151,7 @@ export const APP_NETWORKS_SUPPORT: {[key: number]: NetworkInfo } = {
     disableIcon: "/images/binance-disabled.png",
     currency: 'BNB',
     networkName: NETWORK_NAME_MAPPINGS[BSC_CHAIN_ID],
+    explorerName: 'Bscscan',
     details: {
       chainId: `0x${(+BSC_CHAIN_ID).toString(16)}`,
       chainName: NETWORK_NAME_MAPPINGS[BSC_CHAIN_ID],
@@ -161,7 +162,6 @@ export const APP_NETWORKS_SUPPORT: {[key: number]: NetworkInfo } = {
       },
       rpcUrls: [BSC_RPC_URL],
       blockExplorerUrls: [BCSSCAN_URL],
-      explorerName: 'Bscscan'
     }
   },
   [POLYGON_CHAIN_ID]: {
@@ -171,6 +171,7 @@ export const APP_NETWORKS_SUPPORT: {[key: number]: NetworkInfo } = {
     disableIcon: "/images/polygon-matic-disabled.svg",
     currency: 'MATIC',
     networkName: NETWORK_NAME_MAPPINGS[POLYGON_CHAIN_ID],
+    explorerName: 'Polygonscan',
     details: {
       chainId: `0x${(+POLYGON_CHAIN_ID).toString(16)}`,
       chainName: NETWORK_NAME_MAPPINGS[POLYGON_CHAIN_ID],
@@ -181,7 +182,6 @@ export const APP_NETWORKS_SUPPORT: {[key: number]: NetworkInfo } = {
       },
       rpcUrls: [POLYGON_RPC_URL],
       blockExplorerUrls: [POLYGONSCAN_URL],
-      explorerName: 'Polygonscan'
     }
   },
 }

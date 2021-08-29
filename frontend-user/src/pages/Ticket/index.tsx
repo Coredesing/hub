@@ -39,6 +39,8 @@ import NotFoundPage from "../NotFoundPage/ContentPage";
 import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
 import { HashLoader } from "react-spinners";
 import { numberWithCommas } from "../../utils/formatNumber";
+import { WrapperAlert } from "../../components/Base/WrapperAlert";
+import { pushMessage } from "../../store/actions/message";
 // import { FormInputNumber } from '../../components/Base/FormInputNumber/FormInputNumber';
 const iconWarning = "/images/warning-red.svg";
 const ticketImg = "/images/gamefi-ticket.png";
@@ -119,17 +121,22 @@ const ContentTicket = ({ id, ...props }: any) => {
   const [allowNetwork, setAllowNetwork] = useState<{ ok: boolean, [k: string]: any }>({ ok: false });
   useEffect(() => {
     const networkInfo = APP_NETWORKS_SUPPORT[Number(appChainID)];
-    if (!networkInfo) {
+    if (!networkInfo || !infoTicket) {
       return;
+    }
+    const ok = String(networkInfo.name).toLowerCase() === (infoTicket.network_available || "").toLowerCase();
+    if (!ok) {
+      dispatch(pushMessage(`Please switch to ${(infoTicket.network_available || '').toLocaleUpperCase()} network to do Apply Whitelist, Approve/Buy tokens.`))
+    } else {
+      dispatch(pushMessage(''));
     }
     setAllowNetwork(
       {
-        ok: String(networkInfo.name).toLowerCase() ===
-          (infoTicket.network_available || "").toLowerCase(),
+        ok,
         ...networkInfo,
       }
     );
-  }, [infoTicket, appChainID]);
+  }, [infoTicket, appChainID, dispatch]);
   const isClaim = dataTicket?.process === "only-claim";
 
   useEffect(() => {
@@ -147,9 +154,7 @@ const ContentTicket = ({ id, ...props }: any) => {
   });
   const maxCanBuyOrClaim = +isAccInWinners.data?.lottery_ticket || 0;
   useEffect(() => {
-    if (connectedAccount) {
-      setAccInWinners({ ok: false, loading: true, error: "" });
-    }
+    setAccInWinners({ ok: false, loading: !!connectedAccount, error: "" });
   }, [connectedAccount]);
   useEffect(() => {
     if (isAccInWinners.loading) {
@@ -236,7 +241,7 @@ const ContentTicket = ({ id, ...props }: any) => {
       } else {
         let timeStartPhase2 = dataTicket.freeBuyTimeSetting?.start_buy_time;
         openTime = +dataTicket.start_time * 1000;
-        if(timeStartPhase2) {
+        if (timeStartPhase2) {
           timeStartPhase2 = +timeStartPhase2 * 1000;
           finishTime = timeStartPhase2;
           setPhaseName('Phase 1');
@@ -686,6 +691,12 @@ const ContentTicket = ({ id, ...props }: any) => {
           networkName={infoTicket?.network_available}
         />
         <div className={styles.content}>
+
+          {
+            !connectedAccount && <WrapperAlert>
+              Please connect to wallet
+            </WrapperAlert>
+          }
           {!isKYC && !checkingKyc && connectedAccount && (
             <AlertKYC connectedAccount={connectedAccount} />
           )}
@@ -705,7 +716,7 @@ const ContentTicket = ({ id, ...props }: any) => {
               <div className={styles.cardBodyText}>
                 <h3 style={{ position: 'relative' }}>
                   {
-                    allowNetwork.icon && <img src={allowNetwork.icon} alt="" style={{ position: 'absolute', top: '5px', left: 0, width: '24px', height: '24px' }} />
+                    <img src={`/images/${infoTicket.network_available}.svg`} alt="" style={{ position: 'absolute', top: '5px', left: 0, width: '24px', height: '24px' }} />
                   }
                   {infoTicket.title || infoTicket.name}
                 </h3>
@@ -736,6 +747,11 @@ const ContentTicket = ({ id, ...props }: any) => {
                 </button>
               </div>
               <div className={styles.cardBodyDetail}>
+                <div className={styles.infoTicket}>
+                  <span className={styles.text}>SUPPORTED</span> <span className={styles.textBold} style={{ textTransform: 'uppercase' }}>
+                    {infoTicket.network_available}
+                  </span>
+                </div>
                 {!endOpenTime && (
                   <div className={styles.cardBodyClock}>
                     <h5>
@@ -1012,7 +1028,7 @@ const ContentTicket = ({ id, ...props }: any) => {
                                 </button>
                               </div>
                             )}
-                          {!isAccApproved(tokenAllowance || 0) && (
+                          {isAccInWinners.ok && !isAccApproved(tokenAllowance || 0) && (
                             <button
                               className={styles.btnApprove}
                               onClick={handleTokenApprove}

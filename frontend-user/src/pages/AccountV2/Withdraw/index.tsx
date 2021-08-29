@@ -1,22 +1,23 @@
-import {useEffect, useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
-import _, {gt} from 'lodash';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import _, { gt } from 'lodash';
 import useStyles from './style';
 import useCommonStyle from '../../../styles/CommonStyle';
-import {withdraw, getWithdrawFee} from '../../../store/actions/sota-tiers';
-import {useWeb3React} from '@web3-react/core';
+import { withdraw, getWithdrawFee } from '../../../store/actions/sota-tiers';
+import { useWeb3React } from '@web3-react/core';
 import BigNumber from 'bignumber.js';
-import {numberWithCommas} from '../../../utils/formatNumber';
+import { numberWithCommas } from '../../../utils/formatNumber';
 import NumberFormat from 'react-number-format';
-import {Dialog, DialogTitle, DialogContent, DialogActions, CircularProgress} from '@material-ui/core';
-import {sotaTiersActions} from "../../../store/constants/sota-tiers";
+import { Dialog, DialogTitle, DialogContent, DialogActions, CircularProgress } from '@material-ui/core';
+import { sotaTiersActions } from "../../../store/constants/sota-tiers";
 import useTokenDetails from "../../../hooks/useTokenDetails";
 import useUserTier from "../../../hooks/useUserTier";
 import ModalTransaction from "../ModalTransaction";
 import ButtonLink from "../../../components/Base/ButtonLink";
 import DefaultLayout from "../../../components/Layout/DefaultLayout";
 import { ETH_CHAIN_ID } from '../../../constants/network'
-import {TOKEN_STAKE_NAMES, TOKEN_STAKE_SYMBOLS} from "../../../constants";
+import { TOKEN_STAKE_NAMES, TOKEN_STAKE_SYMBOLS } from "../../../constants";
+import { WrapperAlert } from '../../../components/Base/WrapperAlert';
 
 const closeIcon = '/images/icons/close.svg';
 const iconWarning = "/images/warning-red.svg";
@@ -53,28 +54,28 @@ const Withdraw = (props: any) => {
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [disableWithdraw, setDisableWithdraw] = useState(true);
 
-  const {tokenDetails: tokenPKFDetails} = useTokenDetails(TOKEN_ADDRESS, 'eth');
-  const {tokenDetails: tokenUniLPDetails} = useTokenDetails(TOKEN_UNI_ADDRESS, 'eth');
-  const {tokenDetails: tokenMantraLPDetails} = useTokenDetails(TOKEN_MANTRA_ADDRESS, 'eth');
+  const { tokenDetails: tokenPKFDetails } = useTokenDetails(TOKEN_ADDRESS, 'eth');
+  const { tokenDetails: tokenUniLPDetails } = useTokenDetails(TOKEN_UNI_ADDRESS, 'eth');
+  const { tokenDetails: tokenMantraLPDetails } = useTokenDetails(TOKEN_MANTRA_ADDRESS, 'eth');
   const [listTokenDetails, setListTokenDetails] = useState([]) as any;
   const [openModalTransactionSubmitting, setOpenModalTransactionSubmitting] = useState(false)
   const [transactionHashes, setTransactionHashes] = useState([]) as any;
 
   const { data: withdrawTransaction, error: withdrawError } = useSelector((state: any) => state.withdraw);
-  const {data: userInfo = {}} = useSelector((state: any) => state.userInfo);
-  const {data: withdrawFee = {}} = useSelector((state: any) => state.withdrawFee);
-  const {account: connectedAccount, library} = useWeb3React();
-  const {data: appChainID} = useSelector((state: any) => state.appNetwork);
-  const {data: rates} = useSelector((state: any) => state.rates);
+  const { data: userInfo = {} } = useSelector((state: any) => state.userInfo);
+  const { data: withdrawFee = {} } = useSelector((state: any) => state.withdrawFee);
+  const { account: connectedAccount, library } = useWeb3React();
+  const { data: appChainID } = useSelector((state: any) => state.appNetwork);
+  const { data: rates } = useSelector((state: any) => state.rates);
 
   const [currentToken, setCurrentToken] = useState(undefined) as any;
   const [currentStaked, setCurrentStaked] = useState('0');
   const [currentRate, setCurrentRate] = useState(0);
 
-  const {total} = useUserTier(connectedAccount || '', 'eth');
+  const { total } = useUserTier(connectedAccount || '', 'eth');
 
   const setDefaultToken = () => {
-    if(!currentToken) {
+    if (!currentToken) {
       setCurrentToken(listTokenDetails[0])
       setCurrentStaked(userInfo.pkfStaked)
       setCurrentRate(1)
@@ -90,15 +91,15 @@ const Withdraw = (props: any) => {
   }
 
   useEffect(() => {
-    if(withdrawTransaction?.hash) {
-      setTransactionHashes([...transactionHashes, {tnx: withdrawTransaction.hash, isApprove: false}]);
+    if (withdrawTransaction?.hash) {
+      setTransactionHashes([...transactionHashes, { tnx: withdrawTransaction.hash, isApprove: false }]);
       setOpenModalTransactionSubmitting(false);
       dispatch({
         type: sotaTiersActions.WITHDRAW_SUCCESS,
         payload: undefined,
       });
     }
-    if(withdrawError.message) setOpenModalTransactionSubmitting(false);
+    if (withdrawError.message) setOpenModalTransactionSubmitting(false);
   }, [withdrawTransaction, withdrawError])
 
   useEffect(() => {
@@ -177,10 +178,8 @@ const Withdraw = (props: any) => {
   return (
     <DefaultLayout>
       <div className={styles.modalWithdraw}>
-        {appChainID.appChainID !== ETH_CHAIN_ID && <div className={styles.message}>
-          <img src={iconWarning} style={{ marginRight: "12px" }} alt="" />
-          Please switch to the ETH network to Unstake.
-        </div>}
+        {appChainID.appChainID !== ETH_CHAIN_ID
+          && <WrapperAlert type='error'> Please switch to the ETH network to Unstake.</WrapperAlert>}
         <div className="modal-content">
           <div id="alert-dialog-slide-title" className="modal-content__head">
             <h2 className="title">You
@@ -199,9 +198,9 @@ const Withdraw = (props: any) => {
                 <span>Your wallet staked</span>
                 <span>{_.isEmpty(currentStaked) ? 0 : numberWithCommas(currentStaked)} {
                   currentToken?.symbol
-                  === 'PKF' ? 'PKF'
+                    === 'PKF' ? 'PKF'
                     : (currentToken?.symbol === CONVERSION_RATE[0].keyMainnet && appChainID.appChainID === '1' ||
-                    currentToken?.symbol === CONVERSION_RATE[0].key && appChainID.appChainID === '5') ? CONVERSION_RATE[0]?.symbol : CONVERSION_RATE[1]?.symbol
+                      currentToken?.symbol === CONVERSION_RATE[0].key && appChainID.appChainID === '5') ? CONVERSION_RATE[0]?.symbol : CONVERSION_RATE[1]?.symbol
                 }</span>
               </div>
               <div className="subtitle">
@@ -223,7 +222,7 @@ const Withdraw = (props: any) => {
                   </button>
                 </div>
               </div>
-              <div className="balance" style={{marginTop: '16px'}}>
+              <div className="balance" style={{ marginTop: '16px' }}>
                 <span>Equivalent</span>
                 <span>{numberWithCommas((parseFloat(withdrawAmount) * currentRate || 0).toString())} Points</span>
               </div>
@@ -253,7 +252,7 @@ const Withdraw = (props: any) => {
           className={commonStyles.loadingTransaction}
         >
           <DialogContent className="content">
-            <img src={closeIcon} onClick={() => setOpenModalTransactionSubmitting(false)}/>
+            <img src={closeIcon} onClick={() => setOpenModalTransactionSubmitting(false)} />
             <span className={commonStyles.nnb1824d}>Transaction Submitting</span>
             <CircularProgress color="primary" />
           </DialogContent>

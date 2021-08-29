@@ -258,7 +258,7 @@ class WinnerListUserController {
 
       if (existRecord) {
         existRecord.email = ''
-        if (poolExist.token_type === Const.TOKEN_TYPE.ERC721 && poolExist.process === Const.PROCESS.ONLY_CLAIM &&
+        if (poolExist.token_type === Const.TOKEN_TYPE.ERC721 &&
           poolExist.freeBuyTimeSetting && poolExist.freeBuyTimeSetting.start_buy_time &&
           now >= Number(poolExist.freeBuyTimeSetting.start_buy_time) * 1000) {
           existRecord.lottery_ticket++

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import Image from '../../../components/Base/Image';
 import { TOKEN_TYPE } from '../../../constants';
 import { numberWithCommas } from '../../../utils/formatNumber';
-
+import Link from '@material-ui/core/Link';
 type Props = {
   card: { [k: string]: any },
   refresh: Function,
@@ -71,11 +71,11 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
         </div>
         {!isTicket && <div className={styles.cardBodyItem}>
           <span className={styles.text}>EXCHANGE RATE</span>
-          <span className={clsx(styles.textBold, styles.price)} style={{textTransform: 'uppercase'}}> 1 {card.symbol} = {card.ether_conversion_rate} {card.accept_currency} </span>
+          <span className={clsx(styles.textBold, styles.price)} style={{ textTransform: 'uppercase' }}> 1 {card.symbol} = {card.ether_conversion_rate} {card.accept_currency} </span>
         </div>}
         {!isTicket && <div className={styles.cardBodyItem}>
           <span className={styles.text}>SUPPORTED</span>
-          <span className={clsx(styles.textBold, styles.price)} style={{textTransform: 'uppercase'}}> {card.accept_currency} </span>
+          <span className={clsx(styles.textBold, styles.price)} style={{ textTransform: 'uppercase' }}> {card.accept_currency} </span>
         </div>}
         {isTicket && <div className={styles.cardBodyItem}>
           <span className={styles.text}>PRICE</span>
@@ -89,6 +89,9 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
             {formatNumber(openTime.days)}d : {formatNumber(openTime.hours)}h : {formatNumber(openTime.minutes)}m : {formatNumber(openTime.seconds)}s
           </span>
         </div>
+        <Link href={`/#/${isTicket ? 'buy-nft' : 'buy-token'}/${card.id}`} className={clsx(styles.btnDetail, 'not-approved')}>
+          Detail
+        </Link>
       </div>
     </div>
   );

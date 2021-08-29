@@ -65,7 +65,7 @@ const Home = (props: any) => {
     // },
     {
       banner: "/images/partnerships/mechmaster.png",
-      name: "Mechmaster",
+      name: "Mech Master",
       website: "https://mechmaster.io/",
     },
   ];

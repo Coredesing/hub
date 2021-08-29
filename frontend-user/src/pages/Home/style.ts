@@ -378,8 +378,10 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     tbCellProject: {
-      display: "flex !important",
+      // display: "flex !important",
       gap: "10px !important",
+      display: 'grid !important',
+      gridTemplateColumns: '40px auto',
 
       "& img": {
         width: "40px",

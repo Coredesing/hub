@@ -90,7 +90,7 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
           </li>
         </ul>
         <ul className={styles.listContent}>
-          <li className={styles.itemListContent}>
+          {/* <li className={styles.itemListContent}>
             <span className={styles.nameItemListContent}>
               Schedule by Tiers
             </span>
@@ -100,7 +100,7 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
             >
               Click here to see details
             </span>
-          </li>
+          </li> */}
           <li className={styles.itemListContent}>
             <span className={styles.nameItemListContent}>Total Raise</span>
             <span>
@@ -177,7 +177,7 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
           <div className={styles.botSection}>{poolDetails?.description}</div>
         </>
       )}
-
+{/* 
       <Dialog
         open={openModal}
         keepMounted
@@ -309,7 +309,7 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
             </Hidden>
           </DialogContent>
         </div>
-      </Dialog>
+      </Dialog> */}
     </section>
   );
 };

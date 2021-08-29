@@ -72,7 +72,34 @@ const useStyles = makeStyles((theme: any) => ({
   },
   price: {
     textTransform: 'uppercase',
-  }
+  },
+  btnDetail: {
+    outline: 'none',
+    border: 'none',
+    borderRadius: '2px',
+    fontWeight: 600,
+    fontSize: '14px',
+    lineHeight: '26px',
+    textAlign: 'center',
+    minWidth: '130px',
+    cursor: 'pointer',
+    height: '44px',
+    background: 'transparent',
+    ...typeDisplayFlex,
+    justifyContent: 'center',
+    alignItems: 'center',
+    '&:hover': {
+      textDecoration: 'unset',
+    },
+    '&.approved': {
+      color: '#000',
+      background: '#72f348',
+    },
+    '&.not-approved': {
+      border: '1px solid #72F34B',
+      color: '#72F34B',
+    }
+  },
 }));
 
 export default useStyles;

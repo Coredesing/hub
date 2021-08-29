@@ -484,7 +484,7 @@ class CampaignController {
       // FREE BUY TIME: Check if current time is free to buy or not
       if (isFreeBuyTime) {
         console.log('[CampaignController::deposit] - maxBuy-maxBonus:', maxBuy, maxBonus, !!existWhitelist);
-        if (!!existWhitelist) {
+        if (!!existWhitelist || (winner && camp.token_type === Const.TOKEN_TYPE.ERC721)) {
           maxBuy = new BigNumber(maxBuy).plus(maxBonus).toNumber();
         }
       }

@@ -201,13 +201,15 @@ const AboutTicket = ({ info = {} }: any) => {
   const theme = useTheme();
   const matchSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [page, setPage] = useState(1);
-  const [isGetWinner, setIsGetWinner] = useState(true);
+  const [isGetWinner, setIsGetWinner] = useState(false);
   const [searchWinner, setSearchWinner] = useState('');
   const limitPage = 10;
   // const isClaim = info?.process === "only-claim";
   const { data: winner = {} as PaginationResult } = useFetchV1(`/user/winner-list/${info.id}?page=${page}&limit=${limitPage}&search_term=${searchWinner}`, isGetWinner);
   useEffect(() => {
-    setIsGetWinner(true);
+    if (info?.campaign_hash) {
+      setIsGetWinner(true);
+    }
   }, [info])
 
   const handleChange = (event: any, newValue: any) => {
@@ -255,7 +257,7 @@ const AboutTicket = ({ info = {} }: any) => {
           />
           <Tab
             className={classes.tabName}
-            label={`Winner (${numberWithCommas(winner?.total || 0, 0)})`}
+            label={`Winner (${numberWithCommas(winner.total || 0, 0)})`}
             style={value === 1 ? { color: "#72F34B" } : {}}
             {...a11yProps(1)}
           />
@@ -331,16 +333,16 @@ const AboutTicket = ({ info = {} }: any) => {
               </TableRowHead>
             </TableHead>
             <TableBody>
-              {(winner?.data || []).map((row, idx) => (
+              {(winner.data || []).map((row, idx) => (
                 <TableRowBody key={row.id}>
-                  <TableCell component="th" scope="row"> {((+winner?.page - 1) * limitPage + idx + 1)} </TableCell>
+                  <TableCell component="th" scope="row"> {((+winner.page - 1) * limitPage + idx + 1)} </TableCell>
                   <TableCell align="left">{row.wallet_address}</TableCell>
                 </TableRowBody>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-        <Pagination count={Math.ceil((+winner?.total || 0) / limitPage)} shape="rounded"
+        <Pagination count={Math.ceil((+winner.total || 0) / limitPage)} shape="rounded"
           onChange={onChangePage}
           className={classes.paginationNav}
           classes={{

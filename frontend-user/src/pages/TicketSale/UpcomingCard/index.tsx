@@ -48,7 +48,6 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
       clearInterval(interval);
     }
   }, [openTime, setOpenTime, refresh]);
-  console.log(card)
 
   const isTicket = card?.token_type === TOKEN_TYPE.ERC721;
 

@@ -710,7 +710,7 @@ const ContentTicket = ({ id, ...props }: any) => {
               <div className={styles.cardBodyText}>
                 <h3 style={{ position: 'relative' }}>
                   {
-                    allowNetwork.icon && <img src={allowNetwork.icon} alt="" style={{ position: 'absolute', top: '5px', left: 0, width: '24px', height: '24px' }} />
+                    <img src={`/images/${infoTicket.network_available}.svg`} alt="" style={{ position: 'absolute', top: '5px', left: 0, width: '24px', height: '24px' }} />
                   }
                   {infoTicket.title || infoTicket.name}
                 </h3>

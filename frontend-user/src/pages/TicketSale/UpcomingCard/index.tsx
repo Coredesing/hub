@@ -72,10 +72,10 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
           <span className={styles.text}>EXCHANGE RATE</span>
           <span className={clsx(styles.textBold, styles.price)} style={{ textTransform: 'uppercase' }}> 1 {card.symbol} = {card.ether_conversion_rate} {card.accept_currency} </span>
         </div>}
-        {!isTicket && <div className={styles.cardBodyItem}>
+        <div className={styles.cardBodyItem}>
           <span className={styles.text}>SUPPORTED</span>
-          <span className={clsx(styles.textBold, styles.price)} style={{ textTransform: 'uppercase' }}> {card.accept_currency} </span>
-        </div>}
+          <span className={clsx(styles.textBold, styles.price)} style={{ textTransform: 'uppercase' }}> {card.network_available} </span>
+        </div>
         {isTicket && <div className={styles.cardBodyItem}>
           <span className={styles.text}>PRICE</span>
           <span className={clsx(styles.textBold, styles.price)}> {card.ether_conversion_rate} {card.accept_currency} </span>

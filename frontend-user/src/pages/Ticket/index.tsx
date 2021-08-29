@@ -234,8 +234,25 @@ const ContentTicket = ({ id, ...props }: any) => {
           }
         }
       } else {
+        let timeStartPhase2 = dataTicket.freeBuyTimeSetting?.start_buy_time;
         openTime = +dataTicket.start_time * 1000;
-        finishTime = +dataTicket.finish_time * 1000;
+        if(timeStartPhase2) {
+          timeStartPhase2 = +timeStartPhase2 * 1000;
+          finishTime = timeStartPhase2;
+          setPhaseName('Phase 1');
+          setPhase({
+            1: {
+              openTime,
+              finishTime: timeStartPhase2,
+            },
+            2: {
+              openTime: timeStartPhase2,
+              finishTime: +dataTicket.finish_time * 1000
+            }
+          })
+        } else {
+          finishTime = +dataTicket.finish_time * 1000;
+        }
       }
 
       if (openTime > Date.now()) {

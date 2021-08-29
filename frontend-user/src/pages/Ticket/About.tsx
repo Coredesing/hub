@@ -201,15 +201,13 @@ const AboutTicket = ({ info = {} }: any) => {
   const theme = useTheme();
   const matchSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [page, setPage] = useState(1);
-  const [isGetWinner, setIsGetWinner] = useState(false);
+  const [isGetWinner, setIsGetWinner] = useState(true);
   const [searchWinner, setSearchWinner] = useState('');
   const limitPage = 10;
   // const isClaim = info?.process === "only-claim";
   const { data: winner = {} as PaginationResult } = useFetchV1(`/user/winner-list/${info.id}?page=${page}&limit=${limitPage}&search_term=${searchWinner}`, isGetWinner);
   useEffect(() => {
-    if (info?.campaign_hash) {
-      setIsGetWinner(true);
-    }
+    setIsGetWinner(true);
   }, [info])
 
   const handleChange = (event: any, newValue: any) => {

@@ -201,7 +201,7 @@ const AboutTicket = ({ info = {} }: any) => {
   const theme = useTheme();
   const matchSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [page, setPage] = useState(1);
-  const [isGetWinner, setIsGetWinner] = useState(false);
+  const [isGetWinner, setIsGetWinner] = useState(true);
   const [searchWinner, setSearchWinner] = useState('');
   const limitPage = 10;
   // const isClaim = info?.process === "only-claim";
@@ -257,7 +257,7 @@ const AboutTicket = ({ info = {} }: any) => {
           />
           <Tab
             className={classes.tabName}
-            label={`Winner (${numberWithCommas(winner.total || 0, 0)})`}
+            label={`Winner (${numberWithCommas(winner ? winner.total || 0 : 0, 0)})`}
             style={value === 1 ? { color: "#72F34B" } : {}}
             {...a11yProps(1)}
           />
@@ -342,7 +342,7 @@ const AboutTicket = ({ info = {} }: any) => {
             </TableBody>
           </Table>
         </TableContainer>
-        <Pagination count={Math.ceil((+winner.total || 0) / limitPage)} shape="rounded"
+        <Pagination count={Math.ceil((+winner ? winner.total || 0 : 0) / limitPage)} shape="rounded"
           onChange={onChangePage}
           className={classes.paginationNav}
           classes={{

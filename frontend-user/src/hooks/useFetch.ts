@@ -47,7 +47,7 @@ export const useFetchV1 = <T>(uri: string | undefined, isCall: boolean = true, c
   const fetchDataFromUri = useCallback(async () => {
     try {
       const response = await axios.get(uri as string, config) as any;
-      response.data && setData(response?.data?.data);
+      response.data && response.data.data && setData(response?.data?.data);
 
       setLoading(false);
     } catch (error) {

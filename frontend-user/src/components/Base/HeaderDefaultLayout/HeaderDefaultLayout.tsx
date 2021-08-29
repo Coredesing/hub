@@ -48,7 +48,6 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
   const [openSideBar, setOpenSideBar] = useState(false);
   const [toggleNavbar, setToggleNavbar] = useState(false);
   const { data: message = "" } = useSelector((state: any) => state.messages);
-  console.log(message)
   const { data: userTier } = useSelector((state: any) => state.userTier);
 
   const [chainLogo, setChainLogo] = useState<String>(ethIcon);

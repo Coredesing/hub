@@ -93,13 +93,11 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
               1 {card.symbol} = {card.ether_conversion_rate} {card.accept_currency}
             </span>
           </div>}
-        {!isTicket &&
           <div className={styles.cardBodyItem}>
             <span className={styles.text}>SUPPORTED</span> <span className={styles.textBold} style={{textTransform: 'uppercase'}}>
-              {card.accept_currency}
+              {card.network_available}
             </span>
           </div>
-        }
         {isTicket &&
           <div className={styles.cardBodyItem}>
             <span className={styles.text}>REMAINING</span> <span className={styles.textBold}>

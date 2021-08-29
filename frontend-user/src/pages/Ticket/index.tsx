@@ -39,6 +39,7 @@ import NotFoundPage from "../NotFoundPage/ContentPage";
 import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
 import { HashLoader } from "react-spinners";
 import { numberWithCommas } from "../../utils/formatNumber";
+import { WrapperAlert } from "../../components/Base/WrapperAlert";
 // import { FormInputNumber } from '../../components/Base/FormInputNumber/FormInputNumber';
 const iconWarning = "/images/warning-red.svg";
 const ticketImg = "/images/gamefi-ticket.png";
@@ -147,9 +148,7 @@ const ContentTicket = ({ id, ...props }: any) => {
   });
   const maxCanBuyOrClaim = +isAccInWinners.data?.lottery_ticket || 0;
   useEffect(() => {
-    if (connectedAccount) {
-      setAccInWinners({ ok: false, loading: true, error: "" });
-    }
+    setAccInWinners({ ok: false, loading: !!connectedAccount, error: "" });
   }, [connectedAccount]);
   useEffect(() => {
     if (isAccInWinners.loading) {
@@ -236,7 +235,7 @@ const ContentTicket = ({ id, ...props }: any) => {
       } else {
         let timeStartPhase2 = dataTicket.freeBuyTimeSetting?.start_buy_time;
         openTime = +dataTicket.start_time * 1000;
-        if(timeStartPhase2) {
+        if (timeStartPhase2) {
           timeStartPhase2 = +timeStartPhase2 * 1000;
           finishTime = timeStartPhase2;
           setPhaseName('Phase 1');
@@ -686,6 +685,12 @@ const ContentTicket = ({ id, ...props }: any) => {
           networkName={infoTicket?.network_available}
         />
         <div className={styles.content}>
+
+          {
+            !connectedAccount && <WrapperAlert>
+              Please connect to wallet
+            </WrapperAlert>
+          }
           {!isKYC && !checkingKyc && connectedAccount && (
             <AlertKYC connectedAccount={connectedAccount} />
           )}
@@ -736,7 +741,12 @@ const ContentTicket = ({ id, ...props }: any) => {
                 </button>
               </div>
               <div className={styles.cardBodyDetail}>
-                {!endOpenTime && (
+                <div className={styles.infoTicket}>
+                  <span className={styles.text}>SUPPORTED</span> <span className={styles.textBold} style={{ textTransform: 'uppercase' }}>
+                    {infoTicket.network_available}
+                  </span>
+                </div>
+                {endOpenTime && (
                   <div className={styles.cardBodyClock}>
                     <h5>
                       Open in
@@ -783,6 +793,7 @@ const ContentTicket = ({ id, ...props }: any) => {
                     </div>
                   </div>
                 )}
+
 
                 {endOpenTime && !infoTicket.campaign_hash && (
                   <div className={styles.comingSoon}>Coming soon</div>

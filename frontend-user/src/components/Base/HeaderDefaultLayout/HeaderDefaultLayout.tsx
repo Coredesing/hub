@@ -23,6 +23,7 @@ import { TIERS } from "../../../constants";
 import useAuth from "../../../hooks/useAuth";
 import { getUserTier } from "../../../store/actions/sota-tiers";
 import { useMediaQuery, useTheme } from "@material-ui/core";
+import { WrapperAlert } from "../WrapperAlert";
 
 // const BrightStartIcon = "bright-star.svg";
 // const WalletIcon = "/images/wallet.svg";
@@ -154,7 +155,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
   };
 
   const hideNavMenu = () => {
-    if(isMdScreen && toggleNavbar) {
+    if (isMdScreen && toggleNavbar) {
       setToggleNavbar(false);
     }
   }
@@ -381,12 +382,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
         />
       </HeaderContext.Provider>
       {loginError && (
-        <div className={styles.loginErrorBanner}>
-          <img
-            src="/images/red-warning.svg"
-            alt="red-warning icon"
-            className={styles.iconWarning}
-          />
+        <WrapperAlert>
           <span className={styles.loginErrorBannerText}>
             {loginError} Learn how to &nbsp;
             <a
@@ -407,7 +403,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
               Change App Network
             </button>
           </span>
-        </div>
+        </WrapperAlert>
       )}
       {window.location.href.indexOf("buy-token") > -1 &&
         !loginError &&

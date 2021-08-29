@@ -62,6 +62,7 @@ import { setTypeIsPushNoti } from '../../store/actions/alert';
 import { TOKEN_TYPE } from "../../constants";
 import NotFoundPage from "../NotFoundPage/ContentPage";
 import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
+import { WrapperAlert } from '../../components/Base/WrapperAlert';
 const copyImage = "/images/copy.svg";
 const poolImage = "/images/pool_circle.svg";
 const iconClose = "/images/icons/close.svg";
@@ -111,7 +112,7 @@ const BuyToken: React.FC<any> = (props: any) => {
   </DefaultLayout>
 }
 
-const ContentToken = ({id, ...props}: any) => {
+const ContentToken = ({ id, ...props }: any) => {
   const dispatch = useDispatch();
   const styles = useStyles();
 
@@ -361,6 +362,11 @@ const ContentToken = ({id, ...props}: any) => {
       return (
         <>
           <section className={styles.headerComponent}>
+            {
+              !connectedAccount && <WrapperAlert>
+                Please connect to wallet
+              </WrapperAlert>
+            }
             {
               !isKYC && !checkingKyc && connectedAccount && <AlertKYC className={styles.alertKyc} connectedAccount={connectedAccount} />
             }

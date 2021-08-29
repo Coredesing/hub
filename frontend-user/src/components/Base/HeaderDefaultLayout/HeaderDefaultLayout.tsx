@@ -48,6 +48,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
   const [openSideBar, setOpenSideBar] = useState(false);
   const [toggleNavbar, setToggleNavbar] = useState(false);
   const { data: message = "" } = useSelector((state: any) => state.messages);
+  console.log(message)
   const { data: userTier } = useSelector((state: any) => state.userTier);
 
   const [chainLogo, setChainLogo] = useState<String>(ethIcon);
@@ -405,16 +406,11 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
           </span>
         </WrapperAlert>
       )}
-      {window.location.href.indexOf("buy-token") > -1 &&
+      {(window.location.href.indexOf("buy-token") > -1 || window.location.href.indexOf("buy-nft") > -1) &&
         !loginError &&
-        message != "" && (
-          <div className={styles.loginErrorBanner}>
-            <img
-              src="/images/red-warning.svg"
-              alt="red-warning icon"
-              className={styles.iconWarning}
-            />
-            <span className={styles.loginErrorBannerText}>
+        message !== "" && (
+          <WrapperAlert type="error">
+          <span className={styles.loginErrorBannerText}>
               {message}&nbsp;&nbsp;
               <button
                 className={styles.btnChangeAppNetwork}
@@ -426,7 +422,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
                 Change App Network
               </button>
             </span>
-          </div>
+          </WrapperAlert>
         )}
     </>
   );

@@ -20,6 +20,7 @@ import ButtonLink from "../../../components/Base/ButtonLink";
 import DefaultLayout from "../../../components/Layout/DefaultLayout";
 import { ETH_CHAIN_ID } from '../../../constants/network'
 import {getBalance} from "../../../store/actions/balance";
+import { WrapperAlert } from '../../../components/Base/WrapperAlert';
 
 const closeIcon = '/images/icons/close.svg';
 const iconWarning = "/images/warning-red.svg";
@@ -296,10 +297,9 @@ const Deposit = (props: any) => {
               onClick={handleClose}
             />
           </DialogActions>
-          {appChainID.appChainID !== ETH_CHAIN_ID && <div className={styles.message}>
-            <img src={iconWarning} style={{ marginRight: "12px" }} alt="" />
-            Please switch to the ETH network to Stake.
-          </div>}
+          {appChainID.appChainID !== ETH_CHAIN_ID && <WrapperAlert type='error'>
+            <span>Please switch to the ETH network to Stake/Unstake</span>
+          </WrapperAlert>}
         </div>
         <Dialog
           open={openModalTransactionSubmitting}

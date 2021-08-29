@@ -40,6 +40,7 @@ import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
 import { HashLoader } from "react-spinners";
 import { numberWithCommas } from "../../utils/formatNumber";
 import { WrapperAlert } from "../../components/Base/WrapperAlert";
+import { pushMessage } from "../../store/actions/message";
 // import { FormInputNumber } from '../../components/Base/FormInputNumber/FormInputNumber';
 const iconWarning = "/images/warning-red.svg";
 const ticketImg = "/images/gamefi-ticket.png";
@@ -120,17 +121,22 @@ const ContentTicket = ({ id, ...props }: any) => {
   const [allowNetwork, setAllowNetwork] = useState<{ ok: boolean, [k: string]: any }>({ ok: false });
   useEffect(() => {
     const networkInfo = APP_NETWORKS_SUPPORT[Number(appChainID)];
-    if (!networkInfo) {
+    if (!networkInfo || !infoTicket) {
       return;
+    }
+    const ok = String(networkInfo.name).toLowerCase() === (infoTicket.network_available || "").toLowerCase();
+    if (!ok) {
+      dispatch(pushMessage(`Please switch to ${(infoTicket.network_available || '').toLocaleUpperCase()} network to do Apply Whitelist, Approve/Buy tokens.`))
+    } else {
+      dispatch(pushMessage(''));
     }
     setAllowNetwork(
       {
-        ok: String(networkInfo.name).toLowerCase() ===
-          (infoTicket.network_available || "").toLowerCase(),
+        ok,
         ...networkInfo,
       }
     );
-  }, [infoTicket, appChainID]);
+  }, [infoTicket, appChainID, dispatch]);
   const isClaim = dataTicket?.process === "only-claim";
 
   useEffect(() => {
@@ -1022,7 +1028,7 @@ const ContentTicket = ({ id, ...props }: any) => {
                                 </button>
                               </div>
                             )}
-                          {!isAccApproved(tokenAllowance || 0) && (
+                          {isAccInWinners.ok && !isAccApproved(tokenAllowance || 0) && (
                             <button
                               className={styles.btnApprove}
                               onClick={handleTokenApprove}

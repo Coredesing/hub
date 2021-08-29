@@ -255,7 +255,7 @@ const AboutTicket = ({ info = {} }: any) => {
           />
           <Tab
             className={classes.tabName}
-            label={`Winner (${numberWithCommas(winner.total || 0, 0)})`}
+            label={`Winner (${numberWithCommas(winner?.total || 0, 0)})`}
             style={value === 1 ? { color: "#72F34B" } : {}}
             {...a11yProps(1)}
           />
@@ -331,16 +331,16 @@ const AboutTicket = ({ info = {} }: any) => {
               </TableRowHead>
             </TableHead>
             <TableBody>
-              {(winner.data || []).map((row, idx) => (
+              {(winner?.data || []).map((row, idx) => (
                 <TableRowBody key={row.id}>
-                  <TableCell component="th" scope="row"> {((+winner.page - 1) * limitPage + idx + 1)} </TableCell>
+                  <TableCell component="th" scope="row"> {((+winner?.page - 1) * limitPage + idx + 1)} </TableCell>
                   <TableCell align="left">{row.wallet_address}</TableCell>
                 </TableRowBody>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-        <Pagination count={Math.ceil((+winner.total || 0) / limitPage)} shape="rounded"
+        <Pagination count={Math.ceil((+winner?.total || 0) / limitPage)} shape="rounded"
           onChange={onChangePage}
           className={classes.paginationNav}
           classes={{

@@ -76,7 +76,7 @@ const Instruction = () => {
               alt=""
             />
             <span className="textEnd">
-              Make sure you have ticket to join IDO
+              Make sure you have ticket to join IGO
             </span>
           </div>
         )}

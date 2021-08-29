@@ -27,6 +27,7 @@ import { ChainId } from "../../constants/network";
 import axios from '../../services/axios';
 // import { numberWithCommas } from '../../utils/formatNumber';
 import { AlertKYC } from "../../components/Base/AlertKYC";
+import { WrapperAlert } from "../../components/Base/WrapperAlert";
 
 const TOKEN_ADDRESS = process.env.REACT_APP_PKF || "";
 // const TOKEN_UNI_ADDRESS = process.env.REACT_APP_UNI_LP || "";
@@ -186,10 +187,9 @@ const AccountV2 = (props: any) => {
 
         {/* appChainID > KOVAN ID => Not Ethereum mainnet/testnet */}
         {(+appChainID?.appChainID > ChainId.KOVAN) && isKYC && activeMenuAccount === 'My Tier' && (
-          <div className={`${classes.alertVerifyEmail} ${classes.errorSwich}`}>
-            <img src={iconWarning} style={{ marginRight: "12px" }} alt="" />
+          <WrapperAlert type='error'>
             <span>Please switch to the ETH network to Stake/Unstake</span>
-          </div>
+          </WrapperAlert>
         )}
 
 

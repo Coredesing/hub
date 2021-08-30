@@ -4,7 +4,7 @@ import useFetch from '../../../hooks/useFetch';
 import { numberWithCommas } from '../../../utils/formatNumber';
 import { debounce } from 'lodash';
 /* import { CircularProgress } from '@material-ui/core'; */
-import withWidth, {isWidthDown} from '@material-ui/core/withWidth';
+import withWidth, { isWidthDown } from '@material-ui/core/withWidth';
 
 import Tooltip from '@material-ui/core/Tooltip';
 import Pagination from '@material-ui/lab/Pagination';
@@ -36,13 +36,13 @@ const shortenAddress = (address: string, digits: number = 4) => {
 
 const LotteryWinners: React.FC<LotteryWinnersProps> = (props: LotteryWinnersProps) => {
   const styles = useStyles();
-  const { poolId, userWinLottery, maximumBuy, purchasableCurrency, verifiedEmail, pickedWinner, handleWiners} = props;
+  const { poolId, userWinLottery, maximumBuy, purchasableCurrency, verifiedEmail, pickedWinner, handleWiners } = props;
   const [input, setInput] = useState("");
   const [searchedWinners, setSearchedWinners] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [totalWinners, setTotalWinners] = useState(0);
-  const { data: winnersList } = useFetch<any>(`/user/winner-${!input ? 'list': 'search'}/${poolId}?page=${currentPage}&limit=10&${input ? `search=${input}`: ''}`);
+  const { data: winnersList } = useFetch<any>(`/user/winner-${!input ? 'list' : 'search'}/${poolId}?page=${currentPage}&limit=10&${input ? `search=${input}` : ''}`);
 
   const searchDebounce = () => {
     if (winnersList) {
@@ -85,48 +85,57 @@ const LotteryWinners: React.FC<LotteryWinnersProps> = (props: LotteryWinnersProp
         <Table className={styles.table} aria-label="simple table">
           <TableHead className={styles.tableHeaderWrapper}>
             <TableRow>
-            {
-              headers.map(header => (
-                <TableCell key={header} className={styles.tableHeader}>
-                  <span>
-                    {header}
-                  </span>
-                </TableCell>
-              ))
-            }
+              {
+                headers.map(header => (
+                  <TableCell key={header} className={styles.tableHeader}>
+                    <span>
+                      {header}
+                    </span>
+                  </TableCell>
+                ))
+              }
             </TableRow>
           </TableHead>
           <TableBody>
-            {searchedWinners && searchedWinners.length> 0 && searchedWinners.map((row: any, index) => (
-            <TableRow key={index}>
-              <TableCell component="th" scope="row">
-                {index + 1}
-              </TableCell>
-              <TableCell component="th" scope="row">
-                {isWidthDown('sm', props.width) ?
-                  <Tooltip title={<p>{row.wallet_address}</p>}>
-                    <>
-                      {shortenAddress(row.wallet_address)}
-                    </>
-                  </Tooltip>
-                  : row.wallet_address
-                }
-              </TableCell>
+            {searchedWinners && searchedWinners.length > 0 && searchedWinners.map((row: any, index) => (
+              <TableRow key={index}>
+                <TableCell component="th" scope="row">
+                  {index + 1}
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  {isWidthDown('sm', props.width) ?
+                    <Tooltip title={<p>{row.wallet_address}</p>}>
+                      <>
+                        {shortenAddress(row.wallet_address)}
+                      </>
+                    </Tooltip>
+                    : row.wallet_address
+                  }
+                </TableCell>
               </TableRow>
-          ))}
-            </TableBody>
-          </Table>
+            ))}
+          </TableBody>
+        </Table>
       </TableContainer>
 
       {
-        searchedWinners && searchedWinners.length> 0 && (
-          <Pagination
-            count={totalPage}
-            color="primary"
-            style={{ marginTop: 30 }} className={styles.pagination}
+        searchedWinners && searchedWinners.length > 0 && (
+          <Pagination count={totalPage} shape="rounded"
+            // onChange={onChangePage}
             onChange={(e: any, value: any) => setCurrentPage(value)}
+            className={styles.paginationNav}
+            classes={{
+              ul: styles.ulPagination
+            }}
             page={currentPage}
           />
+          // <Pagination
+          //   count={totalPage}
+          //   color="primary"
+          //   style={{ marginTop: 30 }} className={styles.pagination}
+          //   onChange={(e: any, value: any) => setCurrentPage(value)}
+          //   page={currentPage}
+          // />
         )
       }
     </div>

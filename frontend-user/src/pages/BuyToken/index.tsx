@@ -226,7 +226,7 @@ const ContentToken = ({ id, ...props }: any) => {
     today <= endBuyTimeInDate &&
     /* today >= tierStartBuyInDate && */
     /* today <= tierEndBuyInDate && */
-    poolDetails?.isDeployed
+    poolDetails?.isDeployed 
     // && verifiedEmail
     ;
   /* (poolDetails?.method === 'whitelist' ? alreadyJoinPool: true); */
@@ -535,12 +535,14 @@ const ContentToken = ({ id, ...props }: any) => {
           }
 
           <div className={styles.boxBottom}>
-            <ul className={`${'multilTabBottom'} ${styles.navBottom}`}>
+            <ul className={`${!!pickedWinner && 'multilTabBottom'} ${styles.navBottom}`}>
               <li onClick={() => setActiveTabBottom('tab_pool_details')} className={activeTabBottom === 'tab_pool_details' ? 'active' : ''}>Pool Details</li>
-
-              <li onClick={() => setActiveTabBottom('tab_winner')} className={activeTabBottom === 'tab_winner' ? 'active' : ''}>
-                Winners ({numberWiner})
-              </li>
+              {
+                !!pickedWinner &&
+                <li onClick={() => setActiveTabBottom('tab_winner')} className={activeTabBottom === 'tab_winner' ? 'active' : ''}>
+                  Winners ({numberWiner})
+                </li>
+              }
             </ul>
             {
               activeTabBottom === 'tab_pool_details' &&
@@ -558,7 +560,7 @@ const ContentToken = ({ id, ...props }: any) => {
                 pickedWinner={!!pickedWinner}
                 maximumBuy={userBuyLimit}
                 purchasableCurrency={poolDetails?.purchasableCurrency.toUpperCase()}
-              // verifiedEmail={verifiedEmail ? true : false}
+                // verifiedEmail={verifiedEmail ? true : false}
               />
             </div>
           </div>

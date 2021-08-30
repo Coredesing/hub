@@ -755,13 +755,14 @@ const ContentTicket = ({ id, ...props }: any) => {
                     /{infoTicket.symbol || "Ticket"}
                   </span>
                 </button>
-              </div>
-              <div className={styles.cardBodyDetail}>
-                <div className={styles.infoTicket}>
+                <div className={styles.infoTicket} style={{width: '100%', marginTop: '20px', alignItems: 'center'}}>
                   <span className={styles.text}>SUPPORTED</span> <span className={styles.textBold} style={{ textTransform: 'uppercase' }}>
                     {infoTicket.network_available}
                   </span>
                 </div>
+              </div>
+              <div className={styles.cardBodyDetail}>
+
                 {!endOpenTime && (
                   <div className={styles.cardBodyClock}>
                     <h5>
@@ -941,7 +942,7 @@ const ContentTicket = ({ id, ...props }: any) => {
                                           numTicketBuy === getMaxTicketBuy(
                                             ticketBought,
                                             maxCanBuyOrClaim
-                                          ) || 
+                                          ) ||
                                           !isKYC,
                                       })}
                                     >
@@ -1019,7 +1020,7 @@ const ContentTicket = ({ id, ...props }: any) => {
                                           getMaxTicketBuy(
                                             ticketBought,
                                             maxCanBuyOrClaim
-                                          ) || 
+                                          ) ||
                                           !isKYC,
                                       })}
                                     >

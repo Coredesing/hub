@@ -323,7 +323,7 @@ const ContentToken = ({ id, ...props }: any) => {
   }, [appChainID, poolDetails])
 
 
-  const [showWhitelistCountryModal, setShowWhitelistCountryModal] = useState(false);
+  // const [showWhitelistCountryModal, setShowWhitelistCountryModal] = useState(false);
 
   const winnerListRef = useRef(null);
   const scrollToWinner = () => {
@@ -368,9 +368,6 @@ const ContentToken = ({ id, ...props }: any) => {
                 Please connect to wallet
               </WrapperAlert>
             }
-            {
-              !isKYC && !checkingKyc && connectedAccount && <AlertKYC className={styles.alertKyc} connectedAccount={connectedAccount} />
-            }
 
             <BannerNotification
               poolDetails={poolDetails}
@@ -378,7 +375,7 @@ const ContentToken = ({ id, ...props }: any) => {
               winnersList={winnersList}
               // verifiedEmail={verifiedEmail}
               currentUserTier={currentUserTier}
-              existedWinner={existedWinner}
+              // existedWinner={existedWinner}
               currencyName={currencyName}
               userBuyLimit={userBuyLimit}
               endBuyTimeInDate={endBuyTimeInDate}
@@ -486,7 +483,7 @@ const ContentToken = ({ id, ...props }: any) => {
             startBuyTimeInDate < new Date() && new Date() < endBuyTimeInDate &&
             <BuyTokenForm
               disableAllButton={disableAllButton}
-              existedWinner={existedWinner}
+              // existedWinner={existedWinner}
               alreadyJoinPool={alreadyJoinPool}
               joinPoolSuccess={joinPoolSuccess}
               tokenDetails={poolDetails?.tokenDetails}
@@ -556,7 +553,8 @@ const ContentToken = ({ id, ...props }: any) => {
               <LotteryWinners
                 handleWiners={(total) => setNumberWiner(total)}
                 poolId={poolDetails?.id}
-                userWinLottery={existedWinner ? true : false}
+                // userWinLottery={existedWinner ? true : false}
+                userWinLottery={userBuyLimit > 0}
                 pickedWinner={!!pickedWinner}
                 maximumBuy={userBuyLimit}
                 purchasableCurrency={poolDetails?.purchasableCurrency.toUpperCase()}

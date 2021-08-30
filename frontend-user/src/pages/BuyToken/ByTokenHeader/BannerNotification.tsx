@@ -26,7 +26,7 @@ function BannerNotification(props: any) {
     winnersList,
     // verifiedEmail,
     currentUserTier,
-    existedWinner,
+    // existedWinner,
     currencyName,
     userBuyLimit,
     startBuyTimeInDate,
@@ -46,7 +46,6 @@ function BannerNotification(props: any) {
     maximumBuy,
     countDownDate,
   } = props;
-
   const { appChainID, walletChainID } = useTypedSelector(state => state.appNetwork).data;
 
   // Fet User Claim Info
@@ -232,45 +231,43 @@ function BannerNotification(props: any) {
         (poolDetails?.publicWinnerStatus == PUBLIC_WINNER_STATUS.PUBLIC) && (now.valueOf() < startBuyTimeInDate.valueOf()) &&
         // (currentUserTier && currentUserTier.level == TIER_LEVELS.DOVE) &&
         <>
-          {true &&
-            <WrapperAlert type="info">
-              <span>
-                The whitelist winners are out! Congratulations on your&nbsp;
-                <span style={{ color: '#ff673e' }}>{numberWithCommas(`${+existedWinner?.data?.lottery_ticket || 0}`)} {currencyName} </span>
-                allocation for {poolDetails?.title}. {' '}
-                You can view the list of winners&nbsp;
-                <LinkMui
-                  style={{
-                    color: '#72F34B',
-                    textDecoration: 'underline',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => {
-                    scrollToWinner();
-                  }}
-                >here</LinkMui>.
-              </span>
-            </WrapperAlert>
-          }
-          {!existedWinner &&
-            <WrapperAlert type="error">
+          {connectedAccount && (userBuyLimit > 0 ? <WrapperAlert type="info">
+            <span>
+              The whitelist winners are out! Congratulations on your&nbsp;
+              <span style={{ color: '#ff673e' }}>{numberWithCommas(`${userBuyLimit}`)} {currencyName} </span>
+              allocation for {poolDetails?.title}. {' '}
+              You can view the list of winners&nbsp;
+              <LinkMui
+                style={{
+                  color: '#72F34B',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  scrollToWinner();
+                }}
+              >here</LinkMui>.
+            </span>
+          </WrapperAlert>
+            : <WrapperAlert type="error">
               <span>
                 Sorry, you have not been chosen as whitelist winner.
-                 {/* However, you can join the free token purchase mode for {poolDetails?.title} Pool. Click
-                {' '}
-                <LinkMui
-                  style={{
-                    color: '#72F34B',
-                    textDecoration: 'underline',
-                    cursor: 'pointer',
-                  }}
-                  href={'https://bit.ly/3r3sniO'}
-                  target={'_blank'}
-                >here</LinkMui>
-                {' '} to read more. */}
+                {/* However, you can join the free token purchase mode for {poolDetails?.title} Pool. Click
+              {' '}
+              <LinkMui
+                style={{
+                  color: '#72F34B',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                }}
+                href={'https://bit.ly/3r3sniO'}
+                target={'_blank'}
+              >here</LinkMui>
+              {' '} to read more. */}
               </span>
             </WrapperAlert>
-          }
+          )}
+
         </>
       }
     </>

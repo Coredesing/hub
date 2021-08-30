@@ -213,14 +213,10 @@ class PoolService {
     let pools = await this.buildQueryBuilder(filterParams)
       .with('campaignClaimConfig')
       .where('is_display', Const.POOL_DISPLAY.DISPLAY)
-      .where(builder => {
-        builder
-          .where('campaign_status', Const.POOL_STATUS.TBA)
-          .orWhere(query => {
-              query.where('end_join_pool_time', '>', now)
-              .where('campaign_status', Const.POOL_STATUS.UPCOMING);
-          })
-      })
+      .whereIn('campaign_status', [
+        Const.POOL_STATUS.TBA,
+        Const.POOL_STATUS.UPCOMING,
+      ])
       .orderBy('priority', 'DESC')
       .orderBy('start_join_pool_time', 'ASC')
       .paginate(page, limit);

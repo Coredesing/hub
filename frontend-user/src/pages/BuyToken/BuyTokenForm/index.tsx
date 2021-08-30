@@ -61,7 +61,7 @@ type BuyTokenFormProps = {
   currentUserTier: any,
   alreadyJoinPool: any,
   joinPoolSuccess: boolean,
-  existedWinner: any,
+  // existedWinner: any,
   disableAllButton: boolean,
   networkAvailable: string,
   poolDetailsMapping: any,
@@ -111,7 +111,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
     currentUserTier,
     joinPoolSuccess,
     alreadyJoinPool,
-    existedWinner,
+    // existedWinner,
     disableAllButton,
     networkAvailable,
     poolDetailsMapping,
@@ -285,7 +285,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
       && (purchasableCurrency && purchasableCurrency !== PurchaseCurrency.ETH)
       && !wrongChain && ableToFetchFromBlockchain && isDeployed
       // && (alreadyJoinPool || joinPoolSuccess)
-      && existedWinner && !disableAllButton
+      && new BigNumber(maximumBuy).gt(0) && !disableAllButton
     )  {
       enableApprove = true;
     }

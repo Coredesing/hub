@@ -2,11 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { trimMiddlePartAddress } from "../../../utils/accountAddress";
 import useStyles from "./styles";
 import { ACCEPT_CURRENCY, PUBLIC_WINNER_STATUS, TIERS } from "../../../constants";
-import { Link } from 'react-router-dom';
 import { formatRoundDown, formatRoundUp, numberWithCommas } from "../../../utils/formatNumber";
 import { PurchaseCurrency } from "../../../constants/purchasableCurrency";
-import { getBUSDAddress, getUSDCAddress, getUSDTAddress } from "../../../utils/contractAddress/getAddresses";
-import { ETH_CHAIN_ID, POLYGON_CHAIN_ID } from "../../../constants/network";
 import { useTypedSelector } from "../../../hooks/useTypedSelector";
 import useTokenAllowance from "../../../hooks/useTokenAllowance";
 import BigNumber from 'bignumber.js';
@@ -18,6 +15,8 @@ import { PoolStatus } from '../../../utils/getPoolStatus';
 import useDetectClaimConfigApplying from "../hooks/useDetectClaimConfigApplying";
 import { WrapperAlert } from '../../../components/Base/WrapperAlert';
 import { AlertKYC } from '../../../components/Base/AlertKYC';
+import LinkMui from '@material-ui/core/Link';
+import { getApproveToken } from '../../../utils';
 
 function BannerNotification(props: any) {
   const styles = useStyles();
@@ -25,9 +24,9 @@ function BannerNotification(props: any) {
     poolDetails,
     ableToFetchFromBlockchain,
     winnersList,
-    verifiedEmail,
+    // verifiedEmail,
     currentUserTier,
-    existedWinner,
+    // existedWinner,
     currencyName,
     userBuyLimit,
     startBuyTimeInDate,
@@ -37,7 +36,6 @@ function BannerNotification(props: any) {
     joinPoolSuccess,
     connectedAccount,
     isKYC,
-    dataUser,
     announcementTime,
     purchasableCurrency,
     whitelistCompleted,
@@ -48,7 +46,6 @@ function BannerNotification(props: any) {
     maximumBuy,
     countDownDate,
   } = props;
-
   const { appChainID, walletChainID } = useTypedSelector(state => state.appNetwork).data;
 
   // Fet User Claim Info
@@ -68,51 +65,14 @@ function BannerNotification(props: any) {
   );
 
   // Fetch Token Allow
-  const getApproveToken = useCallback((appChainID: string) => {
-    if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.USDT) {
-      return {
-        address: getUSDTAddress(appChainID),
-        name: "USDT",
-        symbol: "USDT",
-        decimals: appChainID === ETH_CHAIN_ID || appChainID === POLYGON_CHAIN_ID ? 6 : 18
-      };
-    }
-
-    if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.BUSD) {
-      return {
-        address: getBUSDAddress(appChainID),
-        name: "BUSD",
-        symbol: "BUSD",
-        decimals: 18
-      };
-    }
-
-    if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.USDC) {
-      return {
-        address: getUSDCAddress(appChainID),
-        name: "USDC",
-        symbol: "USDC",
-        decimals: appChainID === ETH_CHAIN_ID || appChainID === POLYGON_CHAIN_ID ? 6 : 18
-      };
-    }
-
-    if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.ETH) {
-      return {
-        address: "0x00",
-        name: 'ETH',
-        symbol: 'ETH',
-        decimals: 18
-      }
-    }
-  }, [purchasableCurrency, appChainID]);
-  const tokenToApprove = getApproveToken(appChainID);
+  const tokenToApprove = getApproveToken(appChainID, purchasableCurrency);
   const [tokenAllowance, setTokenAllowance] = useState<number | undefined>(undefined);
   const [userPurchased, setUserPurchased] = useState<number>(0);
 
   const { retrieveTokenAllowance } = useTokenAllowance();
   const { retrieveUserPurchased } = useUserPurchased(tokenDetails, poolAddress, ableToFetchFromBlockchain);
   const fetchPoolDetails = useCallback(async () => {
-    console.log('tokenDetails, poolAddress, connectedAccount, tokenToApprove', tokenDetails, poolAddress, connectedAccount, tokenToApprove)
+    // console.log('tokenDetails, poolAddress, connectedAccount, tokenToApprove', tokenDetails, poolAddress, connectedAccount, tokenToApprove)
     if (tokenDetails && poolAddress && connectedAccount && tokenToApprove) {
       setTokenAllowance(await retrieveTokenAllowance(tokenToApprove, connectedAccount, poolAddress) as number);
       setUserPurchased(await retrieveUserPurchased(connectedAccount, poolAddress) as number);
@@ -138,11 +98,11 @@ function BannerNotification(props: any) {
 
   return (
     <>
-      {poolDetails && dataUser && !isKYC && connectedAccount &&
+      {poolDetails && !isKYC && connectedAccount &&
         <AlertKYC connectedAccount={connectedAccount} />
       }
 
-      {isKYC && currentUserTier?.level < poolDetails?.minTier &&
+      {/* {isKYC && currentUserTier?.level < poolDetails?.minTier &&
         <WrapperAlert type="error">
           <span>
             You haven't achieved min tier (
@@ -155,7 +115,7 @@ function BannerNotification(props: any) {
           </span>
           {' '}.
         </WrapperAlert>
-      }
+      } */}
 
       {
         (poolDetails?.campaignStatus === PoolStatus.Closed) &&
@@ -265,50 +225,49 @@ function BannerNotification(props: any) {
       }
 
       {
-        ableToFetchFromBlockchain && (winnersList && winnersList.total > 0) && verifiedEmail &&
+        ableToFetchFromBlockchain && (winnersList && +winnersList.total > 0)
+        // && verifiedEmail 
+        &&
         (poolDetails?.publicWinnerStatus == PUBLIC_WINNER_STATUS.PUBLIC) && (now.valueOf() < startBuyTimeInDate.valueOf()) &&
         // (currentUserTier && currentUserTier.level == TIER_LEVELS.DOVE) &&
         <>
-          {existedWinner &&
-            <div className={styles.warningWhite}>
-              <img src="/images/fire-cracker.svg" alt="file-cracker" /> &nbsp; {' '}
+          {connectedAccount && (userBuyLimit > 0 ? <WrapperAlert type="info">
+            <span>
+              The whitelist winners are out! Congratulations on your&nbsp;
+              <span style={{ color: '#ff673e' }}>{numberWithCommas(`${userBuyLimit}`)} {currencyName} </span>
+              allocation for {poolDetails?.title}. {' '}
+              You can view the list of winners&nbsp;
+              <LinkMui
+                style={{
+                  color: '#72F34B',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  scrollToWinner();
+                }}
+              >here</LinkMui>.
+            </span>
+          </WrapperAlert>
+            : <WrapperAlert type="error">
               <span>
-                The whitelist winners are out! Congratulations on your&nbsp;
-                <span style={{ color: '#ff673e' }}>{numberWithCommas(`${userBuyLimit}`)} {currencyName} </span>
-                allocation for {poolDetails?.title}. {' '}
-                You can view the list of winners&nbsp;
-                <a
-                  style={{
-                    color: '#72F34B',
-                    textDecoration: 'underline',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => {
-                    scrollToWinner();
-                  }}
-                >here</a>.
+                Sorry, you have not been chosen as whitelist winner.
+                {/* However, you can join the free token purchase mode for {poolDetails?.title} Pool. Click
+              {' '}
+              <LinkMui
+                style={{
+                  color: '#72F34B',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                }}
+                href={'https://bit.ly/3r3sniO'}
+                target={'_blank'}
+              >here</LinkMui>
+              {' '} to read more. */}
               </span>
-            </div>
-          }
-          {!existedWinner &&
-            <div className={styles.warningWhite}>
-              <img src="/images/warning-white.svg" style={{ marginRight: "10px" }} alt="" />
-              <span>
-                Sorry, you have not been chosen as whitelist winner. However, you can join the free token purchase mode for {poolDetails?.title} Pool. Click
-                {' '}
-                <a
-                  style={{
-                    color: '#72F34B',
-                    textDecoration: 'underline',
-                    cursor: 'pointer',
-                  }}
-                  href={'https://bit.ly/3r3sniO'}
-                  target={'_blank'}
-                >here</a>
-                {' '} to read more.
-              </span>
-            </div>
-          }
+            </WrapperAlert>
+          )}
+
         </>
       }
     </>

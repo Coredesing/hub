@@ -63,6 +63,7 @@ import { TOKEN_TYPE } from "../../constants";
 import NotFoundPage from "../NotFoundPage/ContentPage";
 import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
 import { WrapperAlert } from '../../components/Base/WrapperAlert';
+import { isClaim, isSwap } from './utils';
 const copyImage = "/images/copy.svg";
 const poolImage = "/images/pool_circle.svg";
 const iconClose = "/images/icons/close.svg";
@@ -137,14 +138,14 @@ const ContentToken = ({ id, ...props }: any) => {
   );
   const { checkingKyc, isKYC } = useKyc(connectedAccount);
   const { joinPool, poolJoinLoading, joinPoolSuccess } = usePoolJoinAction({ poolId: poolDetails?.id, poolDetails });
-  const { data: existedWinner } = useFetch<Array<any>>(
-    poolDetails ? `/pool/${poolDetails?.id}/check-exist-winner?wallet_address=${connectedAccount}` : undefined,
-    poolDetails?.method !== "whitelist"
-  );
+  // const { data: existedWinner } = useFetch<Array<any>>(
+  //   poolDetails ? `/pool/${poolDetails?.id}/check-exist-winner?wallet_address=${connectedAccount}` : undefined,
+  //   poolDetails?.method !== "whitelist"
+  // );
 
-  const {
-    data: dataUser
-  } = useFetch<any>(`/user/profile?wallet_address=${connectedAccount}`);
+  // const {
+  //   data: dataUser
+  // } = useFetch<any>(`/user/profile?wallet_address=${connectedAccount}`);
 
   const { data: pickedWinner } = useFetch<Array<any>>(
     poolDetails ? `/pool/${poolDetails?.id}/check-picked-winner` : undefined,
@@ -165,11 +166,11 @@ const ContentToken = ({ id, ...props }: any) => {
       : undefined
   );
 
-  const { data: verifiedEmail = true } = useFetch<boolean>(
-    poolDetails && connectedAccount && isAuth ?
-      `/user/check-wallet-address?wallet_address=${connectedAccount}`
-      : undefined
-  );
+  // const { data: verifiedEmail = true } = useFetch<boolean>(
+  //   poolDetails && connectedAccount && isAuth ?
+  //     `/user/check-wallet-address?wallet_address=${connectedAccount}`
+  //     : undefined
+  // );
   const { data: currentUserTier } = useFetch<any>(
     id && connectedAccount ?
       `pool/${id}/user/${connectedAccount}/current-tier`
@@ -179,7 +180,7 @@ const ContentToken = ({ id, ...props }: any) => {
 
   const poolDetailsMapping = usePoolDetailsMapping(poolDetails);
 
-  const countDown = useCountDownFreeBuyTime(poolDetails);
+  // const countDown = useCountDownFreeBuyTime(poolDetails);
 
   // Use for check whether pool exist in selected network or not
   const appNetwork = (() => {
@@ -226,8 +227,9 @@ const ContentToken = ({ id, ...props }: any) => {
     today <= endBuyTimeInDate &&
     /* today >= tierStartBuyInDate && */
     /* today <= tierEndBuyInDate && */
-    poolDetails?.isDeployed &&
-    verifiedEmail;
+    poolDetails?.isDeployed 
+    // && verifiedEmail
+    ;
   /* (poolDetails?.method === 'whitelist' ? alreadyJoinPool: true); */
 
 
@@ -250,25 +252,25 @@ const ContentToken = ({ id, ...props }: any) => {
 
   const { date: countDownDate, display } = displayCountDownTime(poolDetails?.method, joinTimeInDate, endJoinTimeInDate, startBuyTimeInDate, endBuyTimeInDate)
 
-  const shortenAddress = (address: string, digits: number = 4) => {
-    return `${address.substring(0, digits + 2)}...${address.substring(42 - digits)}`
-  }
+  // const shortenAddress = (address: string, digits: number = 4) => {
+  //   return `${address.substring(0, digits + 2)}...${address.substring(42 - digits)}`
+  // }
 
-  const userTiersAnnotationText = useMemo(() => {
-    if (!verifiedEmail) {
-      return 'Determined at whitelist closing';
-    }
+  // const userTiersAnnotationText = useMemo(() => {
+  //   if (!verifiedEmail) {
+  //     return 'Determined at whitelist closing';
+  //   }
 
-    if (pickedWinner && poolDetails) {
-      const approximateValue = new BigNumber(userBuyLimit).dividedBy(poolDetails?.ethRate || 0);
-      return `
-        *Individual caps: ${numberWithCommas(userBuyLimit.toString())} ${currencyName} - ${' '} 
-        Estimated equivalent of ${numberWithCommas(approximateValue.toFixed())} ${poolDetails?.tokenDetails?.symbol}
-      `;
-    }
+  //   if (pickedWinner && poolDetails) {
+  //     const approximateValue = new BigNumber(userBuyLimit).dividedBy(poolDetails?.ethRate || 0);
+  //     return `
+  //       *Individual caps: ${numberWithCommas(userBuyLimit.toString())} ${currencyName} - ${' '} 
+  //       Estimated equivalent of ${numberWithCommas(approximateValue.toFixed())} ${poolDetails?.tokenDetails?.symbol}
+  //     `;
+  //   }
 
-    return 'Determined at whitelist closing';
-  }, [existedWinner, userBuyLimit, poolDetails, verifiedEmail]);
+  //   return 'Determined at whitelist closing';
+  // }, [existedWinner, userBuyLimit, poolDetails, verifiedEmail]);
 
   useEffect(() => {
     dispatch(setTypeIsPushNoti());
@@ -322,7 +324,7 @@ const ContentToken = ({ id, ...props }: any) => {
   }, [appChainID, poolDetails])
 
 
-  const [showWhitelistCountryModal, setShowWhitelistCountryModal] = useState(false);
+  // const [showWhitelistCountryModal, setShowWhitelistCountryModal] = useState(false);
 
   const winnerListRef = useRef(null);
   const scrollToWinner = () => {
@@ -334,7 +336,6 @@ const ContentToken = ({ id, ...props }: any) => {
   };
   const now = new Date();
   const isOverTimeApplyWhiteList = endJoinTimeInDate && endJoinTimeInDate < now;
-
   const render = () => {
 
     if (loadingPoolDetail) {
@@ -367,24 +368,21 @@ const ContentToken = ({ id, ...props }: any) => {
                 Please connect to wallet
               </WrapperAlert>
             }
-            {
-              !isKYC && !checkingKyc && connectedAccount && <AlertKYC className={styles.alertKyc} connectedAccount={connectedAccount} />
-            }
 
             <BannerNotification
               poolDetails={poolDetails}
               ableToFetchFromBlockchain={ableToFetchFromBlockchain}
               winnersList={winnersList}
-              verifiedEmail={verifiedEmail}
+              // verifiedEmail={verifiedEmail}
               currentUserTier={currentUserTier}
-              existedWinner={existedWinner}
+              // existedWinner={existedWinner}
               currencyName={currencyName}
               userBuyLimit={userBuyLimit}
               endBuyTimeInDate={endBuyTimeInDate}
               alreadyJoinPool={alreadyJoinPool}
               joinPoolSuccess={joinPoolSuccess}
-              isKYC={dataUser?.user?.is_kyc === KYC_STATUS.APPROVED ? true : false}
-              dataUser={dataUser}
+              isKYC={isKYC}
+              // dataUser={dataUser}
               connectedAccount={connectedAccount}
               startBuyTimeInDate={startBuyTimeInDate}
               announcementTime={announcementTime}
@@ -415,14 +413,14 @@ const ContentToken = ({ id, ...props }: any) => {
                 currentUserTier={currentUserTier}
                 connectedAccount={connectedAccount}
                 wrongChain={wrongChain}
-                verifiedEmail={verifiedEmail}
+                // verifiedEmail={verifiedEmail}
 
                 alreadyJoinPool={alreadyJoinPool}
                 joinPoolSuccess={joinPoolSuccess}
                 poolJoinLoading={poolJoinLoading}
                 // joinPool={joinPool}
                 joinPool={() => { setShowWhitelistFormModal(true) }}
-                isKYC={dataUser?.user?.is_kyc === KYC_STATUS.APPROVED ? true : false}
+                isKYC={isKYC}
                 winnersList={winnersList}
                 ableToFetchFromBlockchain={ableToFetchFromBlockchain}
               />
@@ -480,12 +478,14 @@ const ContentToken = ({ id, ...props }: any) => {
             />
           </div>
 
-          {startBuyTimeInDate &&
+          {
+          isSwap(poolDetails?.campaignStatus) &&
+          startBuyTimeInDate &&
             endBuyTimeInDate &&
             startBuyTimeInDate < new Date() && new Date() < endBuyTimeInDate &&
             <BuyTokenForm
               disableAllButton={disableAllButton}
-              existedWinner={existedWinner}
+              // existedWinner={existedWinner}
               alreadyJoinPool={alreadyJoinPool}
               joinPoolSuccess={joinPoolSuccess}
               tokenDetails={poolDetails?.tokenDetails}
@@ -517,7 +517,7 @@ const ContentToken = ({ id, ...props }: any) => {
           }
 
           {
-            poolDetails?.type === POOL_TYPE.CLAIMABLE &&
+            isClaim(poolDetails?.campaignStatus) &&
             <ClaimToken
               releaseTime={poolDetails?.releaseTime ? releaseTimeInDate : undefined}
               ableToFetchFromBlockchain={ableToFetchFromBlockchain}
@@ -539,7 +539,7 @@ const ContentToken = ({ id, ...props }: any) => {
               {
                 !!pickedWinner &&
                 <li onClick={() => setActiveTabBottom('tab_winner')} className={activeTabBottom === 'tab_winner' ? 'active' : ''}>
-                  Winner ({numberWiner})
+                  Winners ({numberWiner})
                 </li>
               }
             </ul>
@@ -555,11 +555,12 @@ const ContentToken = ({ id, ...props }: any) => {
               <LotteryWinners
                 handleWiners={(total) => setNumberWiner(total)}
                 poolId={poolDetails?.id}
-                userWinLottery={existedWinner ? true : false}
+                // userWinLottery={existedWinner ? true : false}
+                userWinLottery={userBuyLimit > 0}
                 pickedWinner={!!pickedWinner}
                 maximumBuy={userBuyLimit}
                 purchasableCurrency={poolDetails?.purchasableCurrency.toUpperCase()}
-                verifiedEmail={verifiedEmail ? true : false}
+                // verifiedEmail={verifiedEmail ? true : false}
               />
             </div>
           </div>
@@ -572,7 +573,7 @@ const ContentToken = ({ id, ...props }: any) => {
             alreadyJoinPool={alreadyJoinPool}
             joinPoolSuccess={joinPoolSuccess}
             whitelistCompleted={whitelistCompleted}
-            isKYC={dataUser?.user?.is_kyc === KYC_STATUS.APPROVED ? true : false}
+            isKYC={isKYC}
           />
 
           {/* <header className={styles.poolDetailHeader}>

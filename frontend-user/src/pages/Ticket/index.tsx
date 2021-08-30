@@ -701,7 +701,7 @@ const ContentTicket = ({ id, ...props }: any) => {
             (!isAccInWinners.loading && connectedAccount) && (isAccInWinners.ok
               ? <WrapperAlert type="info">
                 The whitelist winners are out! Congratulations on your&nbsp;
-                <span style={{ color: '#ff673e' }}>{numberWithCommas(`${isClaim ? userClaimed : ticketBought}`)} </span>
+                <span style={{ color: '#ff673e' }}>{numberWithCommas(`${maxCanBuyOrClaim}`)} </span>
                 allocation for {infoTicket?.title}. {' '}
                 You can view more the list of winners at winners tab.
               </WrapperAlert>

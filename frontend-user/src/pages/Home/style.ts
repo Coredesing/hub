@@ -247,7 +247,9 @@ const useStyles = makeStyles((theme: any) => {
       paddingRight: "0",
       paddingTop: "120px",
       paddingBottom: "130px",
+      height: "770px",
       [theme.breakpoints.down("xs")]: {
+        height: "520px",
         padding: "28px",
         paddingTop: "40px",
         paddingBottom: "40px",
@@ -380,8 +382,8 @@ const useStyles = makeStyles((theme: any) => {
     tbCellProject: {
       // display: "flex !important",
       gap: "10px !important",
-      display: 'grid !important',
-      gridTemplateColumns: '40px auto',
+      display: "grid !important",
+      gridTemplateColumns: "40px auto",
 
       "& img": {
         width: "40px",
@@ -447,6 +449,10 @@ export const useCardStyles = makeStyles((theme) => ({
     gap: "20px",
     overflow: "hidden",
   },
+  tokenSalesSlide: {
+    display: "flex",
+    position: "absolute",
+  },
   cardsPartnerShip: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, 201px)",
@@ -461,13 +467,15 @@ export const useCardStyles = makeStyles((theme) => ({
     },
   },
   cardTokenSale: {
-    marginRight: isSafari ? "20px" : 0,
+    marginRight: "20px",
     width: "315px",
     [theme.breakpoints.down("sm")]: {
       width: "280px",
+      marginRight: "14px",
     },
     [theme.breakpoints.down("xs")]: {
       width: "156px",
+      marginRight: "7px",
     },
 
     "& .card-token-title": {

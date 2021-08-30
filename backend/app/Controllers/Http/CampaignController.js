@@ -361,11 +361,12 @@ class CampaignController {
       const userParams = {
         'wallet_address': userWalletAddress
       }
+      const isKYCRequired = process.env.REACT_APP_APP_KYC_REQUIRED === true || process.env.REACT_APP_APP_KYC_REQUIRED === 'true'
       const user = await userService.findUser(userParams);
-      if (!user || !user.email) {
+      if (isKYCRequired && (!user || !user.email)) {
         return HelperUtils.responseBadRequest("You're not valid user to buy this campaign !");
       }
-      if (user.is_kyc !== Const.KYC_STATUS.APPROVED) {
+      if (isKYCRequired && user.is_kyc !== Const.KYC_STATUS.APPROVED) {
         return HelperUtils.responseBadRequest("You must register for KYC successfully to be allowed to purchase !");
       }
       // check campaign info

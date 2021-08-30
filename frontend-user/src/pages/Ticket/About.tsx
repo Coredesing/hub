@@ -206,6 +206,7 @@ const AboutTicket = ({ info = {} }: any) => {
   const limitPage = 10;
   // const isClaim = info?.process === "only-claim";
   const { data: winner = {} as PaginationResult } = useFetchV1(`/user/winner-list/${info.id}?page=${page}&limit=${limitPage}&search_term=${searchWinner}`, isGetWinner);
+  console.log(winner)
   useEffect(() => {
     if (info?.campaign_hash) {
       setIsGetWinner(true);
@@ -342,7 +343,7 @@ const AboutTicket = ({ info = {} }: any) => {
             </TableBody>
           </Table>
         </TableContainer>
-        <Pagination count={Math.ceil((+winner ? winner.total || 0 : 0) / limitPage)} shape="rounded"
+        <Pagination count={Math.ceil((+winner?.total || 0) / limitPage)} shape="rounded"
           onChange={onChangePage}
           className={classes.paginationNav}
           classes={{

@@ -142,9 +142,9 @@ const ContentToken = ({ id, ...props }: any) => {
     poolDetails?.method !== "whitelist"
   );
 
-  const {
-    data: dataUser
-  } = useFetch<any>(`/user/profile?wallet_address=${connectedAccount}`);
+  // const {
+  //   data: dataUser
+  // } = useFetch<any>(`/user/profile?wallet_address=${connectedAccount}`);
 
   const { data: pickedWinner } = useFetch<Array<any>>(
     poolDetails ? `/pool/${poolDetails?.id}/check-picked-winner` : undefined,
@@ -165,11 +165,11 @@ const ContentToken = ({ id, ...props }: any) => {
       : undefined
   );
 
-  const { data: verifiedEmail = true } = useFetch<boolean>(
-    poolDetails && connectedAccount && isAuth ?
-      `/user/check-wallet-address?wallet_address=${connectedAccount}`
-      : undefined
-  );
+  // const { data: verifiedEmail = true } = useFetch<boolean>(
+  //   poolDetails && connectedAccount && isAuth ?
+  //     `/user/check-wallet-address?wallet_address=${connectedAccount}`
+  //     : undefined
+  // );
   const { data: currentUserTier } = useFetch<any>(
     id && connectedAccount ?
       `pool/${id}/user/${connectedAccount}/current-tier`
@@ -179,7 +179,7 @@ const ContentToken = ({ id, ...props }: any) => {
 
   const poolDetailsMapping = usePoolDetailsMapping(poolDetails);
 
-  const countDown = useCountDownFreeBuyTime(poolDetails);
+  // const countDown = useCountDownFreeBuyTime(poolDetails);
 
   // Use for check whether pool exist in selected network or not
   const appNetwork = (() => {
@@ -226,8 +226,9 @@ const ContentToken = ({ id, ...props }: any) => {
     today <= endBuyTimeInDate &&
     /* today >= tierStartBuyInDate && */
     /* today <= tierEndBuyInDate && */
-    poolDetails?.isDeployed &&
-    verifiedEmail;
+    poolDetails?.isDeployed 
+    // && verifiedEmail
+    ;
   /* (poolDetails?.method === 'whitelist' ? alreadyJoinPool: true); */
 
 
@@ -250,25 +251,25 @@ const ContentToken = ({ id, ...props }: any) => {
 
   const { date: countDownDate, display } = displayCountDownTime(poolDetails?.method, joinTimeInDate, endJoinTimeInDate, startBuyTimeInDate, endBuyTimeInDate)
 
-  const shortenAddress = (address: string, digits: number = 4) => {
-    return `${address.substring(0, digits + 2)}...${address.substring(42 - digits)}`
-  }
+  // const shortenAddress = (address: string, digits: number = 4) => {
+  //   return `${address.substring(0, digits + 2)}...${address.substring(42 - digits)}`
+  // }
 
-  const userTiersAnnotationText = useMemo(() => {
-    if (!verifiedEmail) {
-      return 'Determined at whitelist closing';
-    }
+  // const userTiersAnnotationText = useMemo(() => {
+  //   if (!verifiedEmail) {
+  //     return 'Determined at whitelist closing';
+  //   }
 
-    if (pickedWinner && poolDetails) {
-      const approximateValue = new BigNumber(userBuyLimit).dividedBy(poolDetails?.ethRate || 0);
-      return `
-        *Individual caps: ${numberWithCommas(userBuyLimit.toString())} ${currencyName} - ${' '} 
-        Estimated equivalent of ${numberWithCommas(approximateValue.toFixed())} ${poolDetails?.tokenDetails?.symbol}
-      `;
-    }
+  //   if (pickedWinner && poolDetails) {
+  //     const approximateValue = new BigNumber(userBuyLimit).dividedBy(poolDetails?.ethRate || 0);
+  //     return `
+  //       *Individual caps: ${numberWithCommas(userBuyLimit.toString())} ${currencyName} - ${' '} 
+  //       Estimated equivalent of ${numberWithCommas(approximateValue.toFixed())} ${poolDetails?.tokenDetails?.symbol}
+  //     `;
+  //   }
 
-    return 'Determined at whitelist closing';
-  }, [existedWinner, userBuyLimit, poolDetails, verifiedEmail]);
+  //   return 'Determined at whitelist closing';
+  // }, [existedWinner, userBuyLimit, poolDetails, verifiedEmail]);
 
   useEffect(() => {
     dispatch(setTypeIsPushNoti());
@@ -375,7 +376,7 @@ const ContentToken = ({ id, ...props }: any) => {
               poolDetails={poolDetails}
               ableToFetchFromBlockchain={ableToFetchFromBlockchain}
               winnersList={winnersList}
-              verifiedEmail={verifiedEmail}
+              // verifiedEmail={verifiedEmail}
               currentUserTier={currentUserTier}
               existedWinner={existedWinner}
               currencyName={currencyName}
@@ -383,8 +384,8 @@ const ContentToken = ({ id, ...props }: any) => {
               endBuyTimeInDate={endBuyTimeInDate}
               alreadyJoinPool={alreadyJoinPool}
               joinPoolSuccess={joinPoolSuccess}
-              isKYC={dataUser?.user?.is_kyc === KYC_STATUS.APPROVED ? true : false}
-              dataUser={dataUser}
+              isKYC={isKYC}
+              // dataUser={dataUser}
               connectedAccount={connectedAccount}
               startBuyTimeInDate={startBuyTimeInDate}
               announcementTime={announcementTime}
@@ -415,14 +416,14 @@ const ContentToken = ({ id, ...props }: any) => {
                 currentUserTier={currentUserTier}
                 connectedAccount={connectedAccount}
                 wrongChain={wrongChain}
-                verifiedEmail={verifiedEmail}
+                // verifiedEmail={verifiedEmail}
 
                 alreadyJoinPool={alreadyJoinPool}
                 joinPoolSuccess={joinPoolSuccess}
                 poolJoinLoading={poolJoinLoading}
                 // joinPool={joinPool}
                 joinPool={() => { setShowWhitelistFormModal(true) }}
-                isKYC={dataUser?.user?.is_kyc === KYC_STATUS.APPROVED ? true : false}
+                isKYC={isKYC}
                 winnersList={winnersList}
                 ableToFetchFromBlockchain={ableToFetchFromBlockchain}
               />
@@ -539,7 +540,7 @@ const ContentToken = ({ id, ...props }: any) => {
               {
                 !!pickedWinner &&
                 <li onClick={() => setActiveTabBottom('tab_winner')} className={activeTabBottom === 'tab_winner' ? 'active' : ''}>
-                  Winner ({numberWiner})
+                  Winners ({numberWiner})
                 </li>
               }
             </ul>
@@ -559,7 +560,7 @@ const ContentToken = ({ id, ...props }: any) => {
                 pickedWinner={!!pickedWinner}
                 maximumBuy={userBuyLimit}
                 purchasableCurrency={poolDetails?.purchasableCurrency.toUpperCase()}
-                verifiedEmail={verifiedEmail ? true : false}
+                // verifiedEmail={verifiedEmail ? true : false}
               />
             </div>
           </div>
@@ -572,7 +573,7 @@ const ContentToken = ({ id, ...props }: any) => {
             alreadyJoinPool={alreadyJoinPool}
             joinPoolSuccess={joinPoolSuccess}
             whitelistCompleted={whitelistCompleted}
-            isKYC={dataUser?.user?.is_kyc === KYC_STATUS.APPROVED ? true : false}
+            isKYC={isKYC}
           />
 
           {/* <header className={styles.poolDetailHeader}>

@@ -2,6 +2,9 @@ import BigNumber from 'bignumber.js';
 import _ from 'lodash';
 import {ADMIN_URL_PREFIX, API_URL_PREFIX, ETHERSCAN_BASE_URL, IMAGE_URL_PREFIX, NETWORK_AVAILABLE} from "../constants";
 import axios from "axios";
+import { PurchaseCurrency } from '../constants/purchasableCurrency';
+import { getBUSDAddress, getUSDCAddress, getUSDTAddress } from './contractAddress/getAddresses';
+import { ETH_CHAIN_ID, POLYGON_CHAIN_ID } from '../constants/network';
 
 
 export function formatPrecisionAmount(amount: any, precision: number = 18): string {
@@ -243,3 +246,41 @@ export const getSeedRound = (key: 0 | 1 | 2 | number) => {
   if(key === 2) return 'Seed';
   return ''
 }
+
+export const getApproveToken = (appChainID: string, purchasableCurrency: string) => {
+  if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.USDT) {
+    return {
+      address: getUSDTAddress(appChainID),
+      name: "USDT",
+      symbol: "USDT",
+      decimals: appChainID === ETH_CHAIN_ID || appChainID === POLYGON_CHAIN_ID ? 6 : 18
+    };
+  }
+
+  if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.BUSD) {
+    return {
+      address: getBUSDAddress(appChainID),
+      name: "BUSD",
+      symbol: "BUSD",
+      decimals: 18
+    };
+  }
+
+  if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.USDC) {
+    return {
+      address: getUSDCAddress(appChainID),
+      name: "USDC",
+      symbol: "USDC",
+      decimals: appChainID === ETH_CHAIN_ID || appChainID === POLYGON_CHAIN_ID ? 6 : 18
+    };
+  }
+
+  if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.ETH) {
+    return {
+      address: "0x00",
+      name: 'ETH',
+      symbol: 'ETH',
+      decimals: 18
+    }
+  }
+};

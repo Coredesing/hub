@@ -257,7 +257,7 @@ const AboutTicket = ({ info = {} }: any) => {
           />
           <Tab
             className={classes.tabName}
-            label={`Winner (${numberWithCommas(winner ? winner.total || 0 : 0, 0)})`}
+            label={`Winners (${numberWithCommas(winner ? winner.total || 0 : 0, 0)})`}
             style={value === 1 ? { color: "#72F34B" } : {}}
             {...a11yProps(1)}
           />

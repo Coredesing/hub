@@ -121,7 +121,7 @@ const ContentTicket = ({ id, ...props }: any) => {
   const [allowNetwork, setAllowNetwork] = useState<{ ok: boolean, [k: string]: any }>({ ok: false });
   useEffect(() => {
     const networkInfo = APP_NETWORKS_SUPPORT[Number(appChainID)];
-    if (!networkInfo || !infoTicket) {
+    if (!networkInfo || !infoTicket?.network_available) {
       return;
     }
     const ok = String(networkInfo.name).toLowerCase() === (infoTicket.network_available || "").toLowerCase();
@@ -697,6 +697,16 @@ const ContentTicket = ({ id, ...props }: any) => {
               Please connect to wallet
             </WrapperAlert>
           }
+          {
+            (!isAccInWinners.loading && connectedAccount) && (isAccInWinners.ok
+              ? <WrapperAlert type="info">
+                The whitelist winners are out! Congratulations on your&nbsp;
+                <span style={{ color: '#ff673e' }}>{numberWithCommas(`${maxCanBuyOrClaim}`)} </span>
+                allocation for {infoTicket?.title}. {' '}
+                You can view more the list of winners at winners tab.
+              </WrapperAlert>
+              : <WrapperAlert type="error"> Sorry, you have not been chosen as whitelist winner. </WrapperAlert>)
+          }
           {!isKYC && !checkingKyc && connectedAccount && (
             <AlertKYC connectedAccount={connectedAccount} />
           )}
@@ -931,7 +941,7 @@ const ContentTicket = ({ id, ...props }: any) => {
                                           numTicketBuy === getMaxTicketBuy(
                                             ticketBought,
                                             maxCanBuyOrClaim
-                                          ) ||
+                                          ) || 
                                           !isKYC,
                                       })}
                                     >
@@ -1009,7 +1019,7 @@ const ContentTicket = ({ id, ...props }: any) => {
                                           getMaxTicketBuy(
                                             ticketBought,
                                             maxCanBuyOrClaim
-                                          ) ||
+                                          ) || 
                                           !isKYC,
                                       })}
                                     >
@@ -1042,19 +1052,14 @@ const ContentTicket = ({ id, ...props }: any) => {
                         </>
                       ))}
 
-                    {((alert?.type === "error" && alert.message) ||
-                      (!isAccInWinners.loading &&
-                        !isAccInWinners.ok &&
-                        isAccInWinners.error)) && (
-                        <div className={styles.alertMsg}>
-                          <img src={iconWarning} alt="" />
-                          <span>
-                            {!isAccInWinners.ok
-                              ? isAccInWinners.error
-                              : alert.message}
-                          </span>
-                        </div>
-                      )}
+                    {(alert?.type === "error" && alert.message) && (
+                      <div className={styles.alertMsg}>
+                        <img src={iconWarning} alt="" />
+                        <span>
+                          {alert.message}
+                        </span>
+                      </div>
+                    )}
 
                     {finishedTime && (
                       <div className={clsx(styles.infoTicket, styles.finished)}>

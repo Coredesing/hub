@@ -4,7 +4,7 @@ import {WalletLinkConnector} from '@web3-react/walletlink-connector'
 import {InjectedConnector} from '@web3-react/injected-connector'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import {FortmaticConnector} from '../connectors/Fortmatic';
-import {BSC_CHAIN_ID, ETH_CHAIN_ID, NETWORK_BSC_URL, POLYGON_CHAIN_ID} from './network';
+import {BSC_CHAIN_ID, ETH_CHAIN_ID, NETWORK_BSC_URL, POLYGON_CHAIN_ID, POLYGON_RPC_URL} from './network';
 
 import {FORMATIC_KEY, NETWORK_URL, APP_NETWORKS_NAME } from './network';
 
@@ -55,7 +55,7 @@ export const walletConnectBsc = new WalletConnectConnector({
 });
 
 export const walletConnectPolygon = new WalletConnectConnector({
-  rpc: { [Number(POLYGON_CHAIN_ID)]: 'https://rpc-mainnet.maticvigil.com' },
+  rpc: { [Number(POLYGON_CHAIN_ID)]: POLYGON_RPC_URL },
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
   pollingInterval: 10000

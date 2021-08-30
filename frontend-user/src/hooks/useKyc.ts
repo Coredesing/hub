@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { USER_STATUS } from '../constants';
 import axios from '../services/axios';
+const isRequiredKyc = process.env.REACT_APP_APP_KYC_REQUIRED === 'true';
 
 type ReturnType = {
     emailVerified: number,
@@ -27,7 +28,12 @@ const useKyc = (connectedAccount: string | null | undefined): ReturnType => {
                 checkingKyc: false,
             })
         }
-        connectedAccount && run();
+        if(isRequiredKyc) {
+            connectedAccount && run();
+        } else {
+            setInfo(info => ({...info, checkingKyc: false, isKYC: true}));
+        }
+        
     }, [connectedAccount])
     return info;
 }

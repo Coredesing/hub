@@ -78,7 +78,7 @@ export const getPoolCountDown = (
   let displayShort;
 
   const isTBA = poolStatus == PoolStatus.TBA;
-  const isUpcoming = poolStatus == PoolStatus.Upcoming;
+  const isUpcoming = poolStatus == PoolStatus.Upcoming || isTBA;
   const isSwaping = poolStatus == PoolStatus.Progress;
   const isFilled = poolStatus == PoolStatus.Filled;
   const isClaimable = poolStatus == PoolStatus.Claimable;

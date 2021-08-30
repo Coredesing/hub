@@ -342,7 +342,7 @@ const AboutTicket = ({ info = {} }: any) => {
             </TableBody>
           </Table>
         </TableContainer>
-        <Pagination count={Math.ceil((+winner ? winner.total || 0 : 0) / limitPage)} shape="rounded"
+        <Pagination count={Math.ceil((+winner?.total || 0) / limitPage)} shape="rounded"
           onChange={onChangePage}
           className={classes.paginationNav}
           classes={{

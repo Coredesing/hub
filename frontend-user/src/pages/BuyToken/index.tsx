@@ -63,6 +63,7 @@ import { TOKEN_TYPE } from "../../constants";
 import NotFoundPage from "../NotFoundPage/ContentPage";
 import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
 import { WrapperAlert } from '../../components/Base/WrapperAlert';
+import { isClaim, isSwap } from './utils';
 const copyImage = "/images/copy.svg";
 const poolImage = "/images/pool_circle.svg";
 const iconClose = "/images/icons/close.svg";
@@ -137,10 +138,10 @@ const ContentToken = ({ id, ...props }: any) => {
   );
   const { checkingKyc, isKYC } = useKyc(connectedAccount);
   const { joinPool, poolJoinLoading, joinPoolSuccess } = usePoolJoinAction({ poolId: poolDetails?.id, poolDetails });
-  const { data: existedWinner } = useFetch<Array<any>>(
-    poolDetails ? `/pool/${poolDetails?.id}/check-exist-winner?wallet_address=${connectedAccount}` : undefined,
-    poolDetails?.method !== "whitelist"
-  );
+  // const { data: existedWinner } = useFetch<Array<any>>(
+  //   poolDetails ? `/pool/${poolDetails?.id}/check-exist-winner?wallet_address=${connectedAccount}` : undefined,
+  //   poolDetails?.method !== "whitelist"
+  // );
 
   // const {
   //   data: dataUser
@@ -335,7 +336,6 @@ const ContentToken = ({ id, ...props }: any) => {
   };
   const now = new Date();
   const isOverTimeApplyWhiteList = endJoinTimeInDate && endJoinTimeInDate < now;
-
   const render = () => {
 
     if (loadingPoolDetail) {
@@ -478,7 +478,9 @@ const ContentToken = ({ id, ...props }: any) => {
             />
           </div>
 
-          {startBuyTimeInDate &&
+          {
+          isSwap(poolDetails?.campaignStatus) &&
+          startBuyTimeInDate &&
             endBuyTimeInDate &&
             startBuyTimeInDate < new Date() && new Date() < endBuyTimeInDate &&
             <BuyTokenForm
@@ -515,7 +517,7 @@ const ContentToken = ({ id, ...props }: any) => {
           }
 
           {
-            poolDetails?.type === POOL_TYPE.CLAIMABLE &&
+            isClaim(poolDetails?.campaignStatus) &&
             <ClaimToken
               releaseTime={poolDetails?.releaseTime ? releaseTimeInDate : undefined}
               ableToFetchFromBlockchain={ableToFetchFromBlockchain}

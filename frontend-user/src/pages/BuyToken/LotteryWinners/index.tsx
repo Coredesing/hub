@@ -26,7 +26,7 @@ type LotteryWinnersProps = {
   pickedWinner?: boolean;
   maximumBuy: number | undefined;
   purchasableCurrency: string | undefined;
-  verifiedEmail: boolean | undefined;
+  verifiedEmail?: boolean | undefined;
   handleWiners: (total: number) => void;
 }
 

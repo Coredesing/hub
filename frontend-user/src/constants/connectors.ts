@@ -4,7 +4,7 @@ import {WalletLinkConnector} from '@web3-react/walletlink-connector'
 import {InjectedConnector} from '@web3-react/injected-connector'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import {FortmaticConnector} from '../connectors/Fortmatic';
-import {BSC_CHAIN_ID, ETH_CHAIN_ID, NETWORK_BSC_URL} from './network';
+import {BSC_CHAIN_ID, ETH_CHAIN_ID, NETWORK_BSC_URL, POLYGON_CHAIN_ID} from './network';
 
 import {FORMATIC_KEY, NETWORK_URL, APP_NETWORKS_NAME } from './network';
 
@@ -54,6 +54,13 @@ export const walletConnectBsc = new WalletConnectConnector({
   pollingInterval: 10000
 });
 
+export const walletConnectPolygon = new WalletConnectConnector({
+  rpc: { [Number(POLYGON_CHAIN_ID)]: 'https://rpc-mainnet.maticvigil.com' },
+  bridge: 'https://bridge.walletconnect.org',
+  qrcode: true,
+  pollingInterval: 10000
+});
+
 
 // mainnet only
 export const fortmatic = new FortmaticConnector({
@@ -82,7 +89,8 @@ export enum ConnectorNames {
   WalletConnect = "WalletConnect",
   WalletConnectBsc = "WalletConnect",
   WalletLinkConnect = "Coinbase Wallet",
-  Fortmatic = 'Fortmatic'
+  Fortmatic = 'Fortmatic',
+  WalletConnectPolygon = "WalletConnect",
 }
 
 export type connectorNames = Extract<ConnectorNames, ConnectorNames.MetaMask | ConnectorNames.BSC | ConnectorNames.WalletConnect | ConnectorNames.WalletLinkConnect | ConnectorNames.Fortmatic>;
@@ -150,6 +158,14 @@ export const SUPPORTED_WALLETS_BSC: { [key: string]: WalletInfo } = {
 
 export const SUPPORTED_WALLETS_POLYGON: { [key: string]: WalletInfo } = {
   METAMASK: SUPPORTED_WALLETS.METAMASK,
+  WALLET_CONNECT: {
+    connector: walletConnectPolygon,
+    name: ConnectorNames.WalletConnect,
+    icon: '/images/WalletConnect.svg',
+    description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
+    disableIcon: '/images/wallet-connect-disabled.svg',
+    href: null,
+  },
 }
 
 export const connectorsByName: { [key in ConnectorNames]: AbstractConnector } = {
@@ -159,6 +175,7 @@ export const connectorsByName: { [key in ConnectorNames]: AbstractConnector } = 
   [ConnectorNames.WalletConnect]: walletConnect,
   [ConnectorNames.WalletConnectBsc]: walletConnectBsc,
   [ConnectorNames.WalletLinkConnect]: walletLinkConnect,
+  [ConnectorNames.WalletConnectPolygon]: walletConnectPolygon,
 }
 
 export const connectorsSupportByNetwork: {[key: string]: { [key:string]: WalletInfo }  } = {

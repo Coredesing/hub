@@ -512,7 +512,7 @@ const getProgressWithPools = (pool) => {
   if (isFinish) {
     return {
       progress: '100',
-      tokenSold: pool.token_type === Const.TOKEN_TYPE.ERC721 ? tokenSold : calculateTokenSoldWhenFinish(totalSoldCoin),
+      tokenSold: tokenSold,
       totalSoldCoin: totalSoldCoin,
     }
   }

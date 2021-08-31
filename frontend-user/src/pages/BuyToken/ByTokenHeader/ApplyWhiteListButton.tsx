@@ -16,9 +16,7 @@ function ApplyWhiteListButton(props: any) {
     currentUserTier,
     connectedAccount,
     wrongChain,
-    verifiedEmail,
     disableAllButton,
-
     alreadyJoinPool,
     joinPoolSuccess,
     poolJoinLoading,
@@ -36,7 +34,6 @@ function ApplyWhiteListButton(props: any) {
       connectedAccount &&
       !wrongChain &&
       new BigNumber(currentUserTier?.level || 0).gte(poolDetails?.minTier)
-      && verifiedEmail
       && isKYC
     )
     : false;
@@ -59,7 +56,6 @@ function ApplyWhiteListButton(props: any) {
 
   const hideButton =
     ableToFetchFromBlockchain
-    && verifiedEmail
     && (winnersList && winnersList.total > 0)
     && (poolDetails?.publicWinnerStatus == PUBLIC_WINNER_STATUS.PUBLIC);
   if (hideButton) {

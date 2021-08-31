@@ -25,12 +25,12 @@ const FooterLandingLayout = () => {
             From the labs behind Red Kite launchpad and several NFT games
           </p>
           <div className="socials">
-            <a href="/">
+            <Link href="https://t.me/GameFi_Official" target="_blank">
               <img src={telegramIcon} alt="" />
-            </a>
-            <a href="/">
+            </Link>
+            <Link href="https://twitter.com/GameFi_Official" target="_blank">
               <img src={twitterIcon} alt="" />
-            </a>
+            </Link>
           </div>
         </div>
         <div className={styles.navFooter}>

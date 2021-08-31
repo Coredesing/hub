@@ -12,7 +12,7 @@ import { TOKEN_TYPE } from '../../constants';
 import { PaginationResult } from '../../types/Pagination';
 import ContactForm from '../../components/Base/ContactForm';
 import NotFoundPage from '../NotFoundPage';
-import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
+import { Backdrop, CircularProgress, Link, useTheme } from '@material-ui/core';
 
 const TicketSale = (props: any) => {
   const theme = useTheme();
@@ -100,7 +100,9 @@ const TicketSale = (props: any) => {
 
                 <div className={clsx(styles.cards, styles.completeCards)}>
                   {
-                    (compeltePools?.data || []).map((card, id) => <CompleteCard key={id} card={card} />)
+                    (compeltePools?.data || []).map((card, id) => <Link href={`/#/${card?.token_type === TOKEN_TYPE.ERC721 ? 'buy-nft' : 'buy-token'}/${card.id}`}>
+                      <CompleteCard key={id} card={card} />
+                    </Link>)
                   }
                 </div>
                 {/* <div className={styles.cardsActions}>

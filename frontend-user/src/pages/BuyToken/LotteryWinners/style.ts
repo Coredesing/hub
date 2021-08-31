@@ -174,6 +174,7 @@ const useStyles = makeStyles((theme: any) => {
       background: 'transparent',
     },
     ulPagination: {
+      color: '#AEAEAE',
       '& button': {
         background: 'transparent',
         color: '#AEAEAE',

@@ -386,10 +386,15 @@ class UserController {
       // FREE BUY TIME: Check if current time is free to buy or not
       const camp = await poolService.buildQueryBuilder({ id: campaignId }).with('freeBuyTimeSetting').first();
       const { maxBonus, isFreeBuyTime, existWhitelist } = await poolService.getFreeBuyTimeInfo(camp, walletAddress);
+      const isKYCRequired = process.env.REACT_APP_APP_KYC_REQUIRED === true || process.env.REACT_APP_APP_KYC_REQUIRED === 'true'
       let maxTotalBonus = 0;
       if (isFreeBuyTime) {
         if (!!existWhitelist) {
           maxTotalBonus = maxBonus;
+        }
+
+        if (!isKYCRequired) {
+          maxTotalBonus = maxBonus
         }
       }
 
@@ -424,6 +429,7 @@ class UserController {
           if (!tier) {
             return HelperUtils.responseBadRequest();
           }
+
           return HelperUtils.responseSuccess(formatDataPrivateWinner({
             min_buy: tier.min_buy,
             max_buy: new BigNumber(
@@ -434,15 +440,20 @@ class UserController {
             level: userTier
           }, isPublicWinner));
         }
+
         // user not winner
-        const tier = {
-          min_buy: 0,
-          max_buy: new BigNumber(maxTotalBonus).toFixed(),
-          start_time: tierDb.start_time,
-          end_time: tierDb.end_time,
-          level: userTier
+        if (isKYCRequired) {
+          const tier = {
+            min_buy: 0,
+            max_buy: new BigNumber(maxTotalBonus).toFixed(),
+            start_time: tierDb.start_time,
+            end_time: tierDb.end_time,
+            level: userTier
+          }
+          return HelperUtils.responseSuccess(formatDataPrivateWinner(tier, isPublicWinner));
         }
-        return HelperUtils.responseSuccess(formatDataPrivateWinner(tier, isPublicWinner));
+        // user not winner
+        return HelperUtils.responseBadRequest();
       }
     } catch (e) {
       console.log(e);

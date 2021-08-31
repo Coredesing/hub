@@ -79,7 +79,6 @@ const useStyles = makeStyles((theme: any) => ({
     mixBlendMode: "normal",
   },
   cardCompTitle: {
-    placeContent: 'start',
     "& span": {
       textTransform: "uppercase",
       "& .seed": {

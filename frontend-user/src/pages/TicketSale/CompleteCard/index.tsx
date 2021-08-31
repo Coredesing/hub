@@ -8,6 +8,7 @@ import Image from "../../../components/Base/Image";
 import { calcProgress } from "../utils";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
+import { numberWithCommas } from "../../../utils/formatNumber";
 
 type Props = {
   card: { [k: string]: any };
@@ -75,7 +76,7 @@ export const CompleteCard = ({ card, ...props }: Props) => {
             className={styles.textBold}
             style={{ fontSize: "20px", lineHeight: "28px" }}
           >
-            {card.total_sold_coin || 0}
+            {numberWithCommas(card.total_sold_coin || 0, 0)}
           </span>
         </div>
         <div className={clsx(styles.cardCompItem, styles.cardCompProgress)}>
@@ -91,7 +92,7 @@ export const CompleteCard = ({ card, ...props }: Props) => {
                 ({calcProgress(+card.token_sold, +card.total_sold_coin)}%)
               </span>
               <span className={clsx(styles.text, styles.compText)}>
-                {card.token_sold || "..."}/{card.total_sold_coin || "..."}{" "}
+                {numberWithCommas(card.token_sold || 0, 2)}/{numberWithCommas(card.total_sold_coin || 0)}{" "}
                 {card.tokenSymbol}
               </span>
             </span>

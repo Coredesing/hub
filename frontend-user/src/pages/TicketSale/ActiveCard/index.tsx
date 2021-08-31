@@ -123,7 +123,7 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
             </span>
 
             <span className="amount">
-              {card.token_sold ? numberWithCommas(card.token_sold, 0) : '...'}/{card.total_sold_coin ? numberWithCommas(card.total_sold_coin, 0) : '...'} Tickets
+              {card.token_sold ? numberWithCommas(card.token_sold, 0) : '...'}/{card.total_sold_coin ? numberWithCommas(card.total_sold_coin, 0) : '...'} {isTicket ? 'Tickets' : 'Tokens'}
             </span>
           </div>
         </div>

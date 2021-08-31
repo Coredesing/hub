@@ -57,6 +57,7 @@ const useStyles = makeStyles((theme: any) => ({
     display: "grid",
     flexDirection: "column",
     justifyContent: "center",
+    placeContent: 'start',
     gap: "12px",
     // width: "100%",
     [theme.breakpoints.down("md")]: {
@@ -78,6 +79,7 @@ const useStyles = makeStyles((theme: any) => ({
     mixBlendMode: "normal",
   },
   cardCompTitle: {
+    placeContent: 'start',
     "& span": {
       textTransform: "uppercase",
       "& .seed": {

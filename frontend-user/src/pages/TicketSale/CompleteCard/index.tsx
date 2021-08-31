@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import useStyles from "./style";
 import { useCardStyles } from "../style";
-import { formatNumber, getDiffTime } from "../../../utils";
+import { formatNumber, getDiffTime, getSeedRound } from "../../../utils";
 import { useEffect, useState } from "react";
 import { Progress } from "../../../components/Base/Progress";
 import Image from "../../../components/Base/Image";
@@ -48,7 +48,7 @@ export const CompleteCard = ({ card, ...props }: Props) => {
         {!matchXS && (
           <div className={clsx(styles.cardCompItem, styles.cardCompTitle)}>
             <span className={styles.compText}>
-              <span className="seed">{card.seed || "Private"}</span>
+              <span className="seed">{getSeedRound(card.is_private)}</span>
               <span className="claim">/{card.pool_type}</span>
             </span>
             <h4>{card.title}</h4>
@@ -61,7 +61,7 @@ export const CompleteCard = ({ card, ...props }: Props) => {
             </div>
             <div className={clsx(styles.cardCompItem, styles.cardCompTitle)}>
               <span className={styles.compText}>
-                <span className="seed">{card.seed || "Private"}</span>
+                <span className="seed">{getSeedRound(card.is_private)}</span>
                 <span className="claim">/{card.pool_type}</span>
               </span>
               <h4>{card.title}</h4>
@@ -92,7 +92,7 @@ export const CompleteCard = ({ card, ...props }: Props) => {
                 ({calcProgress(+card.token_sold, +card.total_sold_coin)}%)
               </span>
               <span className={clsx(styles.text, styles.compText)}>
-                {numberWithCommas(card.token_sold || 0, 2)}/{numberWithCommas(card.total_sold_coin || 0)}{" "}
+                {numberWithCommas(card.token_sold || 0, 0)}/{numberWithCommas(card.total_sold_coin || 0)}{" "}
                 {card.tokenSymbol}
               </span>
             </span>

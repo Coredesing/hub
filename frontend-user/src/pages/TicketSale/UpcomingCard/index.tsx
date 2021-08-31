@@ -7,6 +7,7 @@ import Image from '../../../components/Base/Image';
 import { TOKEN_TYPE } from '../../../constants';
 import { numberWithCommas } from '../../../utils/formatNumber';
 import Link from '@material-ui/core/Link';
+import { getRoute } from '../utils';
 type Props = {
   card: { [k: string]: any },
   refresh: Function,
@@ -88,7 +89,7 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
             {formatNumber(openTime.days)}d : {formatNumber(openTime.hours)}h : {formatNumber(openTime.minutes)}m : {formatNumber(openTime.seconds)}s
           </span>
         </div>
-        <Link href={`/#/${isTicket ? 'buy-nft' : 'buy-token'}/${card.id}`} className={clsx(styles.btnDetail, 'not-approved')}>
+        <Link href={`/#/${getRoute(card.token_type)}/${card.id}`} className={clsx(styles.btnDetail, 'not-approved')}>
           Detail
         </Link>
       </div>

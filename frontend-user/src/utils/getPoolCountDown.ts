@@ -117,7 +117,7 @@ export const getPoolCountDown = (
       }
       if (startTimePhase2) {
         if (startBuyTime.getTime() < today && today < startTimePhase2) {
-          date = endBuyTime;
+          date = new Date(startTimePhase2);
           display = 'Token Swap Phase 1 ends in';
           displayShort = "End in";
           return { date, display, displayShort };

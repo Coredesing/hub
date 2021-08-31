@@ -538,10 +538,10 @@ class PoolService {
       campaign_id: campaignId,
       wallet_address: walletAddress,
     }).first();
-    if (!existWhitelist && pool.token_type === Const.TOKEN_TYPE.ERC20) {
-      isFreeBuyTime = false;
-      maxBonus = 0;
-    }
+    // if (!existWhitelist && pool.token_type === Const.TOKEN_TYPE.ERC20) {
+    //   isFreeBuyTime = false;
+    //   maxBonus = 0;
+    // }
 
     console.log('[PoolService::getFreeBuyTimeInfo] - isFreeBuyTime:', isFreeBuyTime, maxBonus, startFreeBuyTime);
 

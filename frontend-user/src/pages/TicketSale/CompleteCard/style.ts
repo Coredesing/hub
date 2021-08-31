@@ -113,7 +113,7 @@ const useStyles = makeStyles((theme: any) => ({
     "& .title": {
       ...typeDisplayFlex,
       justifyContent: "space-between",
-      alignItems: "flex-end",
+      alignItems: "flex-start",
       "& .percent": {
         lineHeight: "24px",
         fontSize: "14px",

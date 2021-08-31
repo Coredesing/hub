@@ -222,33 +222,33 @@ const Home = (props: any) => {
               </Link>
             </div>
             <div className={clsx(styles.cards, styles.cardsTokenSales)}>
-              <div className={styles.tokenSalesSlide}>
-                <Swiper
-                  slidesPerView={3}
-                  spaceBetween={30}
-                  freeMode={true}
-                  pagination={{
-                    clickable: true,
-                  }}
-                  className="mySwiper"
-                >
-                  {(tokenSales.data || []).map((card, id) => (
-                    <SwiperSlide>
-                      <Card
-                        card={card}
-                        key={id}
-                        className={styles.cardTokenSale}
-                        title={
-                          <div className="card-token-title">
-                            <h4>{card.title}</h4>
-                            <span>{getSeedRound(card.is_private)}</span>
-                          </div>
-                        }
-                      />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </div>
+              <Swiper
+                slidesPerView={"auto"}
+                spaceBetween={10}
+                // freeMode={true}
+                pagination={{
+                  clickable: true,
+                }}
+                className={styles.tokenSalesSlide}
+              >
+                {/* <div className={styles.tokenSalesSlide}> */}
+                {(tokenSales.data || []).map((card, id) => (
+                  <SwiperSlide className={styles.slideElement}>
+                    <Card
+                      card={card}
+                      key={id}
+                      className={styles.cardTokenSale}
+                      title={
+                        <div className="card-token-title">
+                          <h4>{card.title}</h4>
+                          <span>{getSeedRound(card.is_private)}</span>
+                        </div>
+                      }
+                    />
+                  </SwiperSlide>
+                ))}
+                {/* </div> */}
+              </Swiper>
             </div>
           </div>
         </div>

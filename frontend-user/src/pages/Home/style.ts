@@ -467,15 +467,16 @@ export const useCardStyles = makeStyles((theme) => ({
     },
   },
   cardTokenSale: {
-    marginRight: "20px",
+    // marginRight: "20px",
     width: "315px",
+    height: "100%",
     [theme.breakpoints.down("sm")]: {
       width: "280px",
-      marginRight: "14px",
+      // marginRight: "14px",
     },
     [theme.breakpoints.down("xs")]: {
       width: "156px",
-      marginRight: "7px",
+      // marginRight: "7px",
     },
 
     "& .card-token-title": {
@@ -513,6 +514,9 @@ export const useCardStyles = makeStyles((theme) => ({
         },
       },
     },
+  },
+  slideElement: {
+    width: "20%",
   },
   card: {
     padding: "19px",

@@ -8,7 +8,7 @@ import { Progress } from '../../../components/Base/Progress';
 import { caclDiffTime, formatNumber, getDiffTime } from '../../../utils';
 import { useEffect, useState } from 'react';
 import Image from '../../../components/Base/Image';
-import { calcProgress, getRemaining } from '../utils';
+import { calcProgress, getRemaining, getRoute } from '../utils';
 import { TOKEN_TYPE } from '../../../constants';
 import { numberWithCommas } from '../../../utils/formatNumber';
 
@@ -135,7 +135,7 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
                 {formatNumber(endTime.days)}d : {formatNumber(endTime.hours)}h : {formatNumber(endTime.minutes)}m : {formatNumber(endTime.seconds)}s
               </span>
             </div>
-            <Link href={`/#/${isTicket ? 'buy-nft' : 'buy-token'}/${card.id}`} className={clsx(styles.btnDetail, 'not-approved')}>
+            <Link href={`/#/${getRoute(card.token_type)}/${card.id}`} className={clsx(styles.btnDetail, 'not-approved')}>
               {/* {card.isApproved ? 'Buy Now' : 'Approve'} */}
               Detail
             </Link>

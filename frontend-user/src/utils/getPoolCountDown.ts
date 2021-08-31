@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import {PoolStatus} from "./getPoolStatus";
+import { PoolStatus } from "./getPoolStatus";
 
 export const getFirstClaimConfigRecord = (campaignClaimConfig: Array<any>) => {
   if (!campaignClaimConfig || (campaignClaimConfig.length == 0)) {
@@ -43,7 +43,7 @@ export const getFirstClaimConfigTime = (poolDetails: any) => {
 export const getLastClaimConfigTime = (poolDetails: any) => {
   const lastClaim = lastClaimConfig(poolDetails);
   if (lastClaim) {
-    const startClaim = parseInt(lastClaim.start_time) + (7*24*3600); // +1week
+    const startClaim = parseInt(lastClaim.start_time) + (7 * 24 * 3600); // +1week
     return startClaim;
   }
   return null;
@@ -71,7 +71,7 @@ export const getPoolCountDown = (
   poolStatus: any | undefined,
   poolDetails: any | undefined,
   soldProgress: any | undefined,
-): { date: Date | undefined, display: string | undefined,  displayShort: string | undefined} => {
+): { date: Date | undefined, display: string | undefined, displayShort: string | undefined } => {
   const today = new Date().getTime();
   let date;
   let display;
@@ -96,26 +96,44 @@ export const getPoolCountDown = (
       if (startJoinTime && today < startJoinTime.getTime()) {
         date = startJoinTime;
         display = 'You can apply Whitelist in';
-        displayShort="Whitelist starts in";
+        displayShort = "Whitelist starts in";
         return { date, display, displayShort };
       } else if (startJoinTime && endJoinTime && startJoinTime.getTime() < today && today < endJoinTime.getTime()) {
         date = endJoinTime;
         display = 'End to apply for the Whitelist in';
-        displayShort="Whitelist ends in";
+        displayShort = "Whitelist ends in";
         return { date, display, displayShort };
       } else if (endJoinTime && startBuyTime && endJoinTime.getTime() < today && today < startBuyTime.getTime()) {
         date = startBuyTime;
         display = 'Token Swap starts in';
-        displayShort="Launch in";
+        displayShort = "Launch in";
         return { date, display, displayShort };
       }
     } else if (isSwaping) {
-      if (startBuyTime && endBuyTime && startBuyTime.getTime() < today && today < endBuyTime.getTime()) {
+      if (!startBuyTime || !endBuyTime) return { date, display, displayShort };
+      let startTimePhase2;
+      if (poolDetails?.freeBuyTimeSetting?.start_buy_time) {
+        startTimePhase2 = +poolDetails?.freeBuyTimeSetting?.start_buy_time * 1000;
+      }
+      if (startTimePhase2) {
+        if (startBuyTime.getTime() < today && today < startTimePhase2) {
+          date = endBuyTime;
+          display = 'Token Swap Phase 1 ends in';
+          displayShort = "End in";
+          return { date, display, displayShort };
+        } else if (startTimePhase2 < today && today < endBuyTime.getTime()) {
+          date = endBuyTime;
+          display = 'Token Swap Phase 2 ends in';
+          displayShort = "End in";
+          return { date, display, displayShort };
+        }
+      } else if (startBuyTime.getTime() < today && today < endBuyTime.getTime()) {
         date = endBuyTime;
-        display = 'Token Swap ends in';
-        displayShort="End in";
+        display = 'Token Swap  ends in';
+        displayShort = "End in";
         return { date, display, displayShort };
       }
+
     } else if (isFilled) {
       if (
         new BigNumber(soldProgress).gt(99) ||
@@ -123,14 +141,14 @@ export const getPoolCountDown = (
       ) {
         date = startDateFirstClaim;
         display = 'You can claim your token in';
-        displayShort="Claim in";
+        displayShort = "Claim in";
         return { date, display, displayShort };
       }
     } else if (isClaimable) {
       if (releaseTimeInDate && releaseTimeInDate.getTime() < today) {
         date = undefined;
         display = 'Pool is claimable';
-        displayShort="Claimable";
+        displayShort = "Claimable";
         return { date, display, displayShort };
       }
     } else if (isTBA) {

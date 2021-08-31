@@ -512,17 +512,9 @@ const getProgressWithPools = (pool) => {
   if (isFinish) {
     return {
       progress: '100',
-      tokenSold: calculateTokenSoldWhenFinish(totalSoldCoin),
+      tokenSold: pool.token_type === Const.TOKEN_TYPE.ERC721 ? tokenSold : calculateTokenSoldWhenFinish(totalSoldCoin),
       totalSoldCoin: totalSoldCoin,
     }
-  }
-
-  if (pool.id == 22) {
-    return {
-      progress: '100',
-      tokenSold: '500000',
-      totalSoldCoin: '500000',
-    };
   }
 
   // Merge config display with real

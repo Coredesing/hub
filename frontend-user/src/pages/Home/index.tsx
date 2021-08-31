@@ -23,6 +23,8 @@ import {
 import { TOKEN_TYPE } from "../../constants";
 import Instruction from "./Instruction";
 import { getSeedRound } from "../../utils";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/swiper.min.css";
 
 type Data = { [k: string]: any };
 type ResponseData = {
@@ -221,19 +223,31 @@ const Home = (props: any) => {
             </div>
             <div className={clsx(styles.cards, styles.cardsTokenSales)}>
               <div className={styles.tokenSalesSlide}>
-                {(tokenSales.data || []).map((card, id) => (
-                  <Card
-                    card={card}
-                    key={id}
-                    className={styles.cardTokenSale}
-                    title={
-                      <div className="card-token-title">
-                        <h4>{card.title}</h4>
-                        <span>{getSeedRound(card.is_private)}</span>
-                      </div>
-                    }
-                  />
-                ))}
+                <Swiper
+                  slidesPerView={3}
+                  spaceBetween={30}
+                  freeMode={true}
+                  pagination={{
+                    clickable: true,
+                  }}
+                  className="mySwiper"
+                >
+                  {(tokenSales.data || []).map((card, id) => (
+                    <SwiperSlide>
+                      <Card
+                        card={card}
+                        key={id}
+                        className={styles.cardTokenSale}
+                        title={
+                          <div className="card-token-title">
+                            <h4>{card.title}</h4>
+                            <span>{getSeedRound(card.is_private)}</span>
+                          </div>
+                        }
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
               </div>
             </div>
           </div>

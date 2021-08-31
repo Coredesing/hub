@@ -5,7 +5,11 @@ export const getRemaining = (totalTicket: number, totalSold: number) => {
 }
 
 export const calcProgress = (sold: number, total: number) => {
-    return Math.ceil((sold * 100) / total) || 0;
+    const percent = ((sold * 100) / total) || 0;
+    if(percent > 99 && percent < 100) {
+        return 99;
+    }
+    return Math.ceil(percent) || 0;
 }
 
 export const getRoute = (tokenType: string) => {

@@ -663,8 +663,16 @@ const ContentTicket = ({ id, ...props }: any) => {
   };
 
   const calcProgress = (sold: number, total: number) => {
-    return Math.ceil((sold * 100) / total) || 0;
-  };
+    const percent = ((sold * 100) / total) || 0;
+    if (percent > 99 && percent < 100) {
+      return 99;
+    }
+    return Math.ceil(percent) || 0;
+  }
+
+  // const calcProgress = (sold: number, total: number) => {
+  //   return Math.ceil((sold * 100) / total) || 0;
+  // };
 
   const getMaxTicketBuy = (boughtTicket: number, maxTicket: number = 0) => {
     if (boughtTicket >= maxTicket) return 0;
@@ -755,7 +763,7 @@ const ContentTicket = ({ id, ...props }: any) => {
                     /{infoTicket.symbol || "Ticket"}
                   </span>
                 </button>
-                <div className={styles.infoTicket} style={{width: '100%', marginTop: '20px', alignItems: 'center'}}>
+                <div className={styles.infoTicket} style={{ width: '100%', marginTop: '20px', alignItems: 'center' }}>
                   <span className={styles.text}>SUPPORTED</span> <span className={styles.textBold} style={{ textTransform: 'uppercase' }}>
                     {infoTicket.network_available}
                   </span>

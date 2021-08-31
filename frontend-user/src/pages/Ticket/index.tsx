@@ -663,16 +663,8 @@ const ContentTicket = ({ id, ...props }: any) => {
   };
 
   const calcProgress = (sold: number, total: number) => {
-    const percent = ((sold * 100) / total) || 0;
-    if (percent > 99 && percent < 100) {
-      return 99;
-    }
-    return Math.ceil(percent) || 0;
-  }
-
-  // const calcProgress = (sold: number, total: number) => {
-  //   return Math.ceil((sold * 100) / total) || 0;
-  // };
+    return Math.ceil((sold * 100) / total) || 0;
+  };
 
   const getMaxTicketBuy = (boughtTicket: number, maxTicket: number = 0) => {
     if (boughtTicket >= maxTicket) return 0;

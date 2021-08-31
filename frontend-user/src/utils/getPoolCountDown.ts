@@ -129,7 +129,7 @@ export const getPoolCountDown = (
         }
       } else if (startBuyTime.getTime() < today && today < endBuyTime.getTime()) {
         date = endBuyTime;
-        display = 'Token Swap  ends in';
+        display = 'Token Swap ends in';
         displayShort = "End in";
         return { date, display, displayShort };
       }

@@ -172,7 +172,13 @@ export const useCardStyles = makeStyles((theme) => ({
     display: 'grid',
     gap: '12px',
     placeContent: 'center',
-    marginBottom: '40px'
+    marginBottom: '40px',
+  },
+  noUnderline: {
+    textDecoration: 'unset',
+    '&:hover': {
+      textDecoration: 'unset !important',
+    }
   },
   card: {
     padding: '19px',

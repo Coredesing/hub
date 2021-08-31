@@ -755,7 +755,7 @@ const ContentTicket = ({ id, ...props }: any) => {
                     /{infoTicket.symbol || "Ticket"}
                   </span>
                 </button>
-                <div className={styles.infoTicket} style={{width: '100%', marginTop: '20px', alignItems: 'center'}}>
+                <div className={styles.infoTicket} style={{ width: '100%', marginTop: '20px', alignItems: 'center' }}>
                   <span className={styles.text}>SUPPORTED</span> <span className={styles.textBold} style={{ textTransform: 'uppercase' }}>
                     {infoTicket.network_available}
                   </span>

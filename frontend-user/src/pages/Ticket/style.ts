@@ -502,3 +502,122 @@ const useStyles = makeStyles((theme: any) => {
 });
 
 export default useStyles;
+
+
+
+export const useAboutStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: "#171717",
+  },
+  tabName: {
+    fontFamily: "Firs Neue",
+    fontWeight: 600,
+    fontStyle: "normal",
+    fontSize: "16px",
+    lineHeight: "28px",
+    // color: "#72F34B",
+    mixBlendMode: "normal",
+    textTransform: "unset",
+    justifyContent: "space-between",
+    [theme.breakpoints.down("xs")]: {
+      fontWeight: 600,
+      fontSize: "14px",
+      lineHeight: "24px",
+    },
+  },
+  appbar: {
+    background: "transparent",
+    boxShadow: "none",
+    [theme.breakpoints.down("sm")]: {
+      paddingLeft: "24px",
+      paddingRight: "24px",
+    },
+  },
+  tabPaneContent: {
+    fontFamily: "Firs Neue",
+    fontWeight: "normal",
+    fontStyle: "normal",
+    fontSize: "14px",
+    lineHeight: "22px",
+    color: "#d1d1d1",
+    mixBlendMode: "normal",
+  },
+  desc: {
+    marginBottom: "20px",
+  },
+  links: {
+    display: "grid",
+    gridTemplateColumns: "1fr",
+    gap: "20px",
+  },
+  link: {
+    display: "grid",
+    gridTemplateColumns: "80px auto",
+    gap: "2px",
+    alignItems: "center",
+
+    "& .text": {
+      fontFamily: "Firs Neue",
+      fontWeight: "normal",
+      fontStyle: "normal",
+      fontSize: "14px",
+      lineHeight: "22px",
+      color: "#fff",
+      mixBlendMode: "normal",
+    },
+  },
+  weblink: {
+    "& a": {
+      background: "#2E2E2E",
+      borderRadius: "4px",
+      padding: "4px 8px",
+      fontFamily: "Firs Neue",
+      fontWeight: "normal",
+      fontStyle: "normal",
+      fontSize: "14px",
+      lineHeight: "22px",
+      color: "#fff",
+      mixBlendMode: "normal",
+      display: "inline-flex",
+      gap: "7px",
+    },
+  },
+  socials: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, 28px)",
+    gap: "10px",
+    "& a": {
+      display: "grid",
+      "& img": {
+        width: "24px",
+        height: "24px",
+      },
+    },
+  },
+  paginationNav: {
+    marginTop: '32px',
+    marginBottom: '10px',
+    background: 'transparent',
+  },
+  ulPagination: {
+    color: '#AEAEAE',
+    '& button': {
+      background: 'transparent',
+      color: '#AEAEAE',
+      fontSize: '14px',
+      lineHeight: '24px',
+      fontFamily: 'Firs Neue',
+      fontStyle: 'normal',
+      fontWeight: 600,
+
+      '&[aria-label^="page"]': {
+        background: '#72F34B',
+        color: '#000000',
+        '&:hover': {
+          background: '#4fa934',
+        }
+      }
+    }
+  }
+}));

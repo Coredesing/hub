@@ -1,5 +1,6 @@
+import { CountDownTimeType } from "./types";
 
-export const caclDiffTime = (time: {[k in string]: any}): {[k in string]: any} => {
+export const caclDiffTime = (time: CountDownTimeType): CountDownTimeType => {
     if (time.seconds === 0) {
         time.seconds = 59;
         if (time.minutes === 0) {

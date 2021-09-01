@@ -101,7 +101,7 @@ const TicketSale = (props: any) => {
 
                 <div className={clsx(styles.cards, styles.completeCards)}>
                   {
-                    (compeltePools?.data || []).map((card, id) => <Link key={id} href={`/#/${getRoute(card?.token_type)}/${card.id}`}>
+                    (compeltePools?.data || []).map((card, id) => <Link className={styles.noUnderline} key={id} href={`/#/${getRoute(card?.token_type)}/${card.id}`}>
                       <CompleteCard key={id} card={card} />
                     </Link>)
                   }

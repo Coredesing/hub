@@ -164,7 +164,6 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
     {},
     { percent: 100, marked: true, tokenAmount: 10000, date: new Date(), showInfo: true },
   ]);
-
   const [policy, setPolicy] = useState("");
 
   useEffect(() => {
@@ -253,7 +252,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
               )}
             </div>
             {progress[0]?.date && (
-              <div>{buildMomentTimezone(progress[0].date).format('h:mm A, DD/MM/YYYY')}</div>
+              <div>{convertTimeToStringFormat(progress[0].date) || buildMomentTimezone(progress[0].date).format('h:mm A, DD/MM/YYYY')}</div>
             )}
           </div>
         </li>
@@ -272,13 +271,13 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
                       {tokenDetails?.symbol})
                     </div>
                     <div>
-                      {item.date && convertTimeToStringFormatWithoutGMT(item.date)}
+                      {item.date && convertTimeToStringFormat(item.date)}
                     </div>
                   </>
                   :
                   <Tooltip title={<div>
                                     <p>{numberWithCommas(''+item.tokenAmount)} {tokenDetails?.symbol}</p>
-                                    <p>{item.date && convertTimeToStringFormatWithoutGMT(item.date)}</p>
+                                    <p>{item.date && convertTimeToStringFormat(item.date)}</p>
                                   </div>}>
                     <div>{numberWithCommas((item?.percent + ''), 1)}%</div>
                   </Tooltip>

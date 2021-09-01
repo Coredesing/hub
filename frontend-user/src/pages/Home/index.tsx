@@ -22,9 +22,7 @@ import {
 } from "../../components/Base/Table";
 import { TOKEN_TYPE } from "../../constants";
 import Instruction from "./Instruction";
-import { getSeedRound } from "../../utils";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/swiper.min.css";
+import TicketSlide from "./TicketSlide";
 
 type Data = { [k: string]: any };
 type ResponseData = {
@@ -221,37 +219,10 @@ const Home = (props: any) => {
                 Discover
               </Link>
             </div>
-            <div className={clsx(styles.cards, styles.cardsTokenSales)}>
-              <Swiper
-                slidesPerView={"auto"}
-                spaceBetween={10}
-                // freeMode={true}
-                pagination={{
-                  clickable: true,
-                }}
-                className={styles.tokenSalesSlide}
-              >
-                {/* <div className={styles.tokenSalesSlide}> */}
-                {(tokenSales.data || []).map((card, id) => (
-                  <SwiperSlide className={styles.slideElement}>
-                    <Card
-                      card={card}
-                      key={id}
-                      className={styles.cardTokenSale}
-                      title={
-                        <div className="card-token-title">
-                          <h4>{card.title}</h4>
-                          <span>{getSeedRound(card.is_private)}</span>
-                        </div>
-                      }
-                    />
-                  </SwiperSlide>
-                ))}
-                {/* </div> */}
-              </Swiper>
-            </div>
+            <div className={clsx(styles.cards, styles.cardsTokenSales)} />
           </div>
         </div>
+        <TicketSlide data={tokenSales.data} />
       </section>
       <section className={clsx(styles.partners, styles.section)}>
         <div className="rectangle gr">

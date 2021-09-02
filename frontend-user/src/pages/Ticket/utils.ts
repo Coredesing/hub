@@ -34,3 +34,11 @@ export const handleErrMsg = (err: IError) => {
 export const isEndPool = (status: string) => {
     return String(status).toLowerCase() === 'ended'
 } 
+
+export const calcProgress = (sold: number, total: number) => {
+    return Math.ceil((sold * 100) / total) || 0;
+};
+
+export const getRemaining = (totalTicket: number, totalSold: number) => {
+    return +totalTicket - +totalSold || 0;
+};

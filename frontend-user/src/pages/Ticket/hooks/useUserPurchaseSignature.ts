@@ -5,7 +5,8 @@ import { alertFailure } from '../../../store/actions/alert';
 
 const MESSAGE_INVESTOR_SIGNATURE = process.env.REACT_APP_MESSAGE_INVESTOR_SIGNATURE || "";
 
-const useUserPurchaseSignature = (connectedAccount: string | undefined | null, campaignId: number | undefined, authSignature: string | undefined) => {
+const useUserPurchaseSignature = (connectedAccount: string | undefined | null, campaignId: number | undefined,
+                                  authSignature: string | undefined, captchaToken: string | undefined) => {
   const dispatch = useDispatch();
   const [signature, setSignature] = useState<string | undefined>(undefined);
   const [minBuy, setMinBuy] = useState<string| undefined>("");
@@ -26,7 +27,8 @@ const useUserPurchaseSignature = (connectedAccount: string | undefined | null, c
           const response = await axios.post('/user/deposit', {
             campaign_id: campaignId,
             wallet_address: connectedAccount,
-            signature: authSignature
+            signature: authSignature,
+            captcha_token: captchaToken
           }, config);
           if (response.data && response.status && response.status === 200) {
             const { data, message, status } = response.data;

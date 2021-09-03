@@ -118,7 +118,6 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
     poolDetails,
     isKyc,
   } = props;
-  console.log(props)
 
   const {
     loginError,
@@ -132,6 +131,11 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
   const { appChainID, walletChainID } = useTypedSelector(state => state.appNetwork).data;
   const connector = useTypedSelector(state => state.connector).data;
 
+  const [verifiedCapcha, setVerifiedCapcha] = useState<string>('');
+  const onVerifyCapcha = (token: string | null) => {
+    setVerifiedCapcha(token || '')
+  }
+
   const etherscanName = getEtherscanName({ networkAvailable });
   const {
     deposit,
@@ -139,7 +143,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
     tokenDepositTransaction,
     depositError,
     tokenDepositSuccess
-  } = usePoolDepositAction({ poolAddress, poolId, purchasableCurrency, amount: input, isClaimable, networkAvailable });
+  } = usePoolDepositAction({ poolAddress, poolId, purchasableCurrency, amount: input, isClaimable, networkAvailable, captchaToken: verifiedCapcha});
 
   const { currencyIcon, currencyName } = getIconCurrencyUsdt({ purchasableCurrency, networkAvailable });
   const { retrieveTokenAllowance } = useTokenAllowance();
@@ -192,9 +196,6 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
 
   const { retrieveTokenSold, tokenSold: totalUserTokenSold } = useTokenSold(tokenDetails, poolAddress, ableToFetchFromBlockchain);
   const poolErrorBeforeBuy = useMemo(() => {
-
-
-
     if (minimumBuy && input && new BigNumber(input || 0).lt(minimumBuy) && !connectedAccountFirstBuy && new Date() > startBuyTimeInDate) {
       return {
         message: `The minimum amount you must trade is ${new BigNumber(minimumBuy).toFixed(2)} ${currencyName}.`,
@@ -450,11 +451,6 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
     } catch (err) {
       setApproveModal(false);
     }
-  }
-
-  const [verifiedCapcha, setVerifiedCapcha] = useState<string | null>('');
-  const onVerifyCapcha = (token: string | null) => {
-      setVerifiedCapcha(token)
   }
 
   return (

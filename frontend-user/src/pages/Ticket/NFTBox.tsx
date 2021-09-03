@@ -429,6 +429,7 @@ const ContentNFTBox = ({ id, ...props }: any) => {
         ).toString(16)}`,
         isClaimable: infoTicket.pool_type === "claimable",
         networkAvailable: infoTicket.network_available,
+        captchaToken: '', // TODO: use recaptcha here
     });
 
     useEffect(() => {

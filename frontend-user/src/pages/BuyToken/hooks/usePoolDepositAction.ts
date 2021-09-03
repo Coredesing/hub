@@ -20,13 +20,14 @@ type PoolDepositActionParams = {
   amount: string;
   isClaimable: boolean;
   networkAvailable: string;
+  captchaToken: string;
 }
 
 const USDT_ADDRESS = process.env.REACT_APP_USDT_SMART_CONTRACT;
 const USDC_ADDRESS = process.env.REACT_APP_USDC_SMART_CONTRACT;
 const USDT_OR_USDC_DECIMALS = 6;
 
-const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount, isClaimable, networkAvailable }: PoolDepositActionParams) => {
+const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount, isClaimable, networkAvailable , captchaToken}: PoolDepositActionParams) => {
   const dispatch = useDispatch();
 
   const [depositError, setDepositError] = useState("");
@@ -36,7 +37,7 @@ const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount
 
   const { account: connectedAccount, library } = useWeb3React();
   const { error, signMessage, signature: authSignature, setSignature } = useWalletSignature();
-  const { signature, minBuy, maxBuy, error: buyError, setSignature: setUserPurchasedSignature } = useUserPurchaseSignature(connectedAccount, poolId, authSignature);
+  const { signature, minBuy, maxBuy, error: buyError, setSignature: setUserPurchasedSignature } = useUserPurchaseSignature(connectedAccount, poolId, authSignature, captchaToken);
 
   useEffect(() => {
     poolAddress &&
@@ -168,7 +169,6 @@ const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount
         dispatch(alertSuccess("Token Deposit Successful!"));
         setTokenDepositLoading(false);
         setTokenDepositSuccess(true);
-
       }
     } catch (err) {
       console.log('[ERROR] - depositWithSignature:', err);

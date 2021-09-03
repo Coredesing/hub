@@ -12,8 +12,7 @@ import {
   Hidden,
   Paper,
   Select,
-  Table,
-  withWidth
+  withWidth,
 } from "@material-ui/core";
 
 import Pagination from '@material-ui/lab/Pagination';
@@ -22,7 +21,7 @@ import axios from '../../../services/axios';
 import useAuth from '../../../hooks/useAuth';
 import useFetch from '../../../hooks/useFetch';
 import { getAccessPoolText } from "../../../utils/campaign";
-import { NULL_AMOUNT, POOL_IS_PRIVATE, POOL_STATUS, POOL_STATUS_JOINED, POOL_STATUS_TEXT } from "../../../constants";
+import { NULL_AMOUNT, POOL_STATUS_JOINED, POOL_STATUS_TEXT} from "../../../constants";
 import useWalletSignature from '../../../hooks/useWalletSignature';
 import { alertFailure, alertSuccess } from '../../../store/actions/alert';
 import ModalWhitelistCancel from "./ModalWhitelistCancel";
@@ -45,38 +44,12 @@ import {
   TableRowBody,
   TableRowHead
 } from '../components/Table';
+import { listStatuses, listTypes } from "../constants";
+import { formatCampaignStatus, getSeedRound, isErc20, isErc721 } from "../../../utils";
+import clsx from 'clsx';
+import { getRoute } from "../../TicketSale/utils";
 
-const nftIcon = '/images/nft1.png';
-
-function createData(name: string, type: string, status: string, owned: number, icon: string) {
-    return { name, type, status, owned, icon };
-}
-
-const rows = [
-    createData('Bunicorn', 'Pulbic', 'Opening', 1, nftIcon),
-    createData('Bunicorn', 'Private', 'Opening', 1, nftIcon),
-    createData('Bunicorn', 'Seed', 'Finished', 3, nftIcon),
-];
-
-const listStatuses = [
-  { value: '', babel: 'All Statuses', color: '' },
-  { value: POOL_STATUS_JOINED.APPLIED_WHITELIST, babel: 'Applied Whitelist', color: '#9E63FF' },
-  { value: POOL_STATUS_JOINED.WIN_WHITELIST, babel: 'Win Whitelist', color: '#FF9330' },
-  { value: POOL_STATUS_JOINED.NOT_WIN_WHITELIST, babel: 'Not Win Whitelist', color: '#7E7E7E' },
-  { value: POOL_STATUS_JOINED.SWAPPING, babel: 'Swapping', color: '#6398FF' },
-  { value: POOL_STATUS_JOINED.CLAIMABLE, babel: 'Claimable', color: '#FFD058' },
-  { value: POOL_STATUS_JOINED.COMPLETED, babel: 'Completed', color: '#7E7E7E' },
-  { value: POOL_STATUS_JOINED.CANCELED_WHITELIST, babel: 'Canceled Whitelist', color: '#D01F36' },
-];
-
-const listTypes = [
-  { value: 1000, babel: 'All types' },
-  { value: POOL_IS_PRIVATE.PUBLIC, babel: 'Public' },
-  { value: POOL_IS_PRIVATE.PRIVATE, babel: 'Private' },
-  { value: POOL_IS_PRIVATE.SEED, babel: 'Seed' },
-];
-
-const IdoPolls = (props: any) => {
+const IdoPools = (props: any) => {
   const styles = { ...useStyles(), ...useTabStyles() };
   const { notEth } = props;
 
@@ -212,6 +185,21 @@ const IdoPolls = (props: any) => {
       purchasableCurrency: pool?.purchasableCurrency || pool?.accept_currency,
       networkAvailable: pool?.networkAvailable || pool?.network_available,
     });
+    let amount = '';
+    if(isErc721(pool.token_type)) {
+      const isClaim = pool.process === 'only-claim';
+      if(isClaim) {
+        amount = pool.userClaimInfo?.user_claimed || 0;
+      } else {
+        amount = pool.userClaimInfo?.user_purchased || 0;
+      }
+      return `${amount} ${pool.symbol?.toUpperCase()}`
+    }
+    if(isErc20(pool.token_type)) {
+      amount = pool.userClaimInfo?.user_purchased || 0;
+      return `${amount} ${currencyName?.toUpperCase()}`
+    }
+    
     if (pool.allowcation_amount === NULL_AMOUNT) return '-';
     let allowcationAmount = pool.allowcation_amount;
     if (new BigNumber(allowcationAmount).lte(0)) return '-';
@@ -373,62 +361,60 @@ const IdoPolls = (props: any) => {
             itemNameValue={'value'}
             itemNameShowValue={'babel'}
           />
-          <SelectBox 
+          <SelectBox
             IconComponent={ExpandMoreIcon}
-              value={filterType.type}
-              onChange={handleChangeType}
+            value={filterType.type}
+            onChange={handleChangeType}
             inputProps={{
               name: 'type',
-                id: 'list-types',
+              id: 'list-types',
             }}
             items={listTypes}
             itemNameValue={'value'}
-            itemNameShowValue={'babel'}/>
+            itemNameShowValue={'babel'} />
         </div>
         <div className="search">
           <SearchBox onChange={handleInputChange} placeholder="Search pool name" />
         </div>
       </div>
-      
+
       <Hidden smDown>
-      <TableContainer>
-            <TableMui>
-                <TableHead>
-                    <TableRowHead>
-                        <TableCell>Pool Name</TableCell>
-                        <TableCell align="left">Type</TableCell>
-                        <TableCell align="left">Status</TableCell>
-                        <TableCell align="left">Allocation</TableCell>
-                        <TableCell align="left">Action</TableCell>
-                    </TableRowHead>
-                </TableHead>
-                <TableBody>
-                    {pools.map((row: any, index: number) => (
-                        <TableRowBody key={row.name + index}>
-                            <TableCell component="th" scope="row">
-                                <div>
-                                    <img src={row.token_images} alt="" />
-                                    {row.name}
-                                </div>
-                            </TableCell>
-                            <TableCell align="left">{row.type}</TableCell>
-                            <TableCell align="left">
-                                {poolStatus(row)}
-                            </TableCell>
-                            <TableCell align="left">{allocationAmount(row)}</TableCell>
-                            <TableCell align="left">
-                            {actionButton(row)}
-                                    {/* <Button variant="outlined" color="primary" className={clsx(classes.btnDetail, classes.btnAction)}>
-                                        Pool Detail
-                                    </Button>
-                                    <Button variant="contained" color="primary" className={clsx(classes.btnView, classes.btnAction)}>
-                                        View Tickets
-                                    </Button> */}
-                            </TableCell>
-                        </TableRowBody>
-                    ))}
-                </TableBody>
-            </TableMui>
+        <TableContainer>
+          <TableMui>
+            <TableHead>
+              <TableRowHead>
+                <TableCell>Pool Name</TableCell>
+                <TableCell align="left">Type</TableCell>
+                <TableCell align="left">Status</TableCell>
+                <TableCell align="left">Allocation</TableCell>
+                <TableCell align="left" style={{width: '140px'}}>Action</TableCell>
+              </TableRowHead>
+            </TableHead>
+            <TableBody>
+              {pools.map((row: any, index: number) => (
+                <TableRowBody key={row.name + index}>
+                  <TableCell component="th" scope="row">
+                    <div>
+                      <img src={row.banner} width="40" height="40" alt="" />
+                      {row.title}
+                    </div>
+                  </TableCell>
+                  <TableCell align="left">{getSeedRound(row.is_private)}</TableCell>
+                  <TableCell align="left">
+                    {formatCampaignStatus(row.campaign_status)}
+                    {/* {poolStatus(row)} */}
+                  </TableCell>
+                  <TableCell align="left">{allocationAmount(row)}</TableCell>
+                  <TableCell align="left">
+                    <Link  to={`${getRoute(row.token_type)}/${row.id}`} className={clsx(styles.btnDetail, styles.btnAct)}>
+                      Pool Detail
+                    </Link>
+                    {/* {actionButton(row)} */}
+                  </TableCell>
+                </TableRowBody>
+              ))}
+            </TableBody>
+          </TableMui>
         </TableContainer>
         {/* <TableContainer component={Paper} className={styles.tableContainer}>
           <Table aria-label="simple table">
@@ -545,4 +531,4 @@ const IdoPolls = (props: any) => {
   );
 };
 
-export default withWidth()(withRouter(IdoPolls));
+export default withWidth()(withRouter(IdoPools));

@@ -303,7 +303,30 @@ const useStyles = makeStyles((theme: any) => {
         color: 'white'
       }
     },
+    btnDetail: {
+      
+      border: '1px solid #72F34B',
+      color: '#72F34B',
+      '&:hover': {
+        border: '1px solid #72F34B',
+        color: '#72F34B',
+      }
 
+    },
+    btnAct: {
+      padding: '10px 14px',
+      fontFamily: 'Firs Neue',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: '12px',
+      lineHeight: '20px',
+      textTransform: 'unset',
+      borderRadius: '4px',
+      '&:hover': {
+        // border: 'unset',
+        // background: 'unset',
+      }
+    },
     btnAction: {
       background: '#ebebeb',
       borderRadius: 36,

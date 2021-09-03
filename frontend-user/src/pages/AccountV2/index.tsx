@@ -23,39 +23,19 @@ import { ChainId } from "../../constants/network";
 // import NftTicket from "./NftTicket";
 // import CardsTicket from "./NftTicket/Cards";
 // import NeedHelp from "./NeedHelp";
-// import IdoPolls from "./IdoPolls";
+import IdoPools from "./IdoPools";
 import axios from '../../services/axios';
 // import { numberWithCommas } from '../../utils/formatNumber';
 import { AlertKYC } from "../../components/Base/AlertKYC";
 import { WrapperAlert } from "../../components/Base/WrapperAlert";
+import { MenuLeft } from "./constants";
+import clsx from 'clsx';
 
 const TOKEN_ADDRESS = process.env.REACT_APP_PKF || "";
 // const TOKEN_UNI_ADDRESS = process.env.REACT_APP_UNI_LP || "";
 // const TOKEN_MANTRA_ADDRESS = process.env.REACT_APP_MANTRA_LP || "";
 
 const iconWarning = "/images/warning-red.svg";
-
-const menuMyAccount = [
-  {
-    name: 'My Profile',
-    icon: '/images/account_v3/icons/icon_my_profile.svg',
-  },
-  // {
-  //   name: 'My Tier',
-  //   icon: '/images/account_v3/icons/icon_my_tier.svg',
-  // }, {
-  //   name: 'IDO Pools',
-  //   icon: '/images/icons/icon_my_pools.svg',
-  // },
-  // {
-  //   name: 'NFT Tickets',
-  //   icon: '/images/icons/ticket.svg',
-  // },
-  // {
-  //   name: 'Need Help',
-  //   icon: '/images/account_v3/icons/icon_need_help.svg',
-  // },
-]
 
 const AccountV2 = (props: any) => {
   const classes = useStyles();
@@ -79,17 +59,15 @@ const AccountV2 = (props: any) => {
   //   "eth"
   // );
   const query = new URLSearchParams(props.location.search);
-  const currentTab = query.get('tab')
-  let currentTabIndex = currentTab ? parseInt(currentTab) : 0
-  currentTabIndex = currentTabIndex < menuMyAccount.length ? currentTabIndex : 0
-
+  const currentTab = query.get('tab') as string;
+  const currentTabMenu = MenuLeft[currentTab] || MenuLeft.profile;
   const [emailVerified, setEmailVeryfied] = useState(USER_STATUS.ACTIVE);
   const [isKYC, setIsKYC] = useState(true);
   // const [listTokenDetails, setListTokenDetails] = useState([]) as any;
   const { data: appChainID } = useSelector((state: any) => state.appNetwork)
   // const { currentTier, totalUnstaked, total } = useUserTier(connectedAccount || '', 'eth');
-  const [tabAccount] = useState(menuMyAccount);
-  const [activeMenuAccount, setActiveMenuAccount] = useState(menuMyAccount[currentTabIndex].name);
+  const [tabAccount] = useState(Object.values(MenuLeft));
+  const [activeMenuAccount, setActiveMenuAccount] = useState(currentTabMenu.key);
   const [updatedSuccess, setUpdatedSuccess] = useState(false);
   // const [dataHistories, setDataHistories] = useState({}) as any;
   // const { data: tiers = {} } = useSelector((state: any) => state.tiers);
@@ -144,9 +122,9 @@ const AccountV2 = (props: any) => {
 
 
 
-  const selectTab = (name: any, index: any) => {
+  const selectTab = (name: any) => {
     setActiveMenuAccount(name)
-    props.history.push('/account?tab=' + index)
+    props.history.push('/account?tab=' + name)
   }
 
   // useEffect(() => {
@@ -211,28 +189,34 @@ const AccountV2 = (props: any) => {
           <div className={classes.leftAccount}>
             <div className={classes.titlLeft}>My Account</div>
             <nav className={classes.tabAccount}>
-              {/* {
+              {
                 tabAccount.map((item, index) => {
                   return (
                     <li
-                      className={`${classes.itemTabAccount}  ${activeMenuAccount === item.name ? 'active' : ''}`}
+                      className={clsx(classes.itemTabAccount, {
+                        active: activeMenuAccount === item.key
+                      })}
                       key={index}
-                      onClick={() => selectTab(item.name, index)}
+                      onClick={() => selectTab(item.key)}
                     >
-                      <div className={`${classes.iconItemTabAccount} ${activeMenuAccount === item.name ? 'active' : ''}`} style={{
-                        WebkitMaskImage: `url(${item.icon})`,
-                        maskImage: `url(${item.icon})`,
-                      }}></div>
+                      <div
+                        className={clsx(classes.iconItemTabAccount, {
+                          active: activeMenuAccount === item.key
+                        })}
+                        style={{
+                          WebkitMaskImage: `url(${item.icon})`,
+                          maskImage: `url(${item.icon})`,
+                        }}></div>
                       {item.name}
                     </li>
                   )
                 })
-              } */}
+              }
             </nav>
           </div>
 
           <div className={classes.rightAccount}>
-            {activeMenuAccount === 'My Profile' && !loadingUserProfile &&
+            {activeMenuAccount === MenuLeft.profile.key && !loadingUserProfile &&
               <AccountInformation
                 notEth={(+appChainID?.appChainID > ChainId.KOVAN)}
                 classNamePrefix="account-infomation"
@@ -271,7 +255,7 @@ const AccountV2 = (props: any) => {
               </div>
             } */}
 
-            {/* {activeMenuAccount === 'IDO Pools' && <IdoPolls />} */}
+            {activeMenuAccount === MenuLeft.pool.key && <IdoPools />}
             {/* {activeMenuAccount === 'NFT Tickets' && <>
               <NftTicket />
               <CardsTicket />

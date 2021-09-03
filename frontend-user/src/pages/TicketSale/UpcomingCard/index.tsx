@@ -51,6 +51,10 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
   }, [openTime, setOpenTime, refresh]);
 
   const isTicket = card?.token_type === TOKEN_TYPE.ERC721;
+  let accept_currency = card?.accept_currency;
+  if (card?.network_available === 'bsc' && accept_currency === 'usdt') {
+    accept_currency = 'busd'
+  }
 
   return (
     <div className={clsx(styles.card, styles.cardUpcoming)}>
@@ -62,7 +66,7 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
       <div className={styles.cardBody}>
         <div className={clsx(styles.cardBodyItem, styles.cardBodyTitle, styles.BodyTitleUpc)}>
           <h4>{card.title}</h4>
-          <img src={`/images/icons/${card.accept_currency}.png`} alt="" />
+          <img src={`/images/icons/${accept_currency}.png`} alt="" />
           {/* <img src={`/images/icons/eth.svg`} alt="" /> */}
         </div>
         <div className={styles.cardBodyItem}>
@@ -71,7 +75,7 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
         </div>
         {!isTicket && <div className={styles.cardBodyItem}>
           <span className={styles.text}>EXCHANGE RATE</span>
-          <span className={clsx(styles.textBold, styles.price)} style={{ textTransform: 'uppercase' }}> 1 {card.symbol} = {card.ether_conversion_rate} {card.accept_currency} </span>
+          <span className={clsx(styles.textBold, styles.price)} style={{ textTransform: 'uppercase' }}> 1 {card.symbol} = {card.ether_conversion_rate} {accept_currency} </span>
         </div>}
         <div className={styles.cardBodyItem}>
           <span className={styles.text}>SUPPORTED</span>
@@ -79,7 +83,7 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
         </div>
         {isTicket && <div className={styles.cardBodyItem}>
           <span className={styles.text}>PRICE</span>
-          <span className={clsx(styles.textBold, styles.price)}> {card.ether_conversion_rate} {card.accept_currency} </span>
+          <span className={clsx(styles.textBold, styles.price)}> {card.ether_conversion_rate} {accept_currency} </span>
         </div>
         }
         <div className={'cardBodyTimeEndItem'}>

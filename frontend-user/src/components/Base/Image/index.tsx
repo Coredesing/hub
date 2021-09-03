@@ -1,5 +1,5 @@
 import React from 'react'
-const ticketImg = '/images/gamefi-ticket.png';
+const notLoadImg = '/images/not-loaed.png';
 type Props = {
     src: string,
     defaultSrc?: string,
@@ -10,7 +10,7 @@ const Image = ({ src, defaultSrc, ...props }: Props) => {
         // eslint-disable-next-line jsx-a11y/alt-text
         <img src={src} onError={(e: any) => {
             e.target.onerror = null;
-            e.target.src = defaultSrc || ticketImg;
+            e.target.src = defaultSrc || notLoadImg;
         }} {...props} />
     )
 }

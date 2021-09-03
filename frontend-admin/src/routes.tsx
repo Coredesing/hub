@@ -8,10 +8,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import ErrorBoundary from './components/Base/ErrorBoundary';
 import PrivateRoute from './components/Base/PrivateRoute';
 import HomePage from './pages/HomePage/Index';
-import Campaigns from './pages/Campaigns';
-import CreateCampaign from './pages/CreateCampaign';
 import Login from './pages/Login';
-import CampaignDetailPage from './pages/CampaignDetailPage';
 import TransactionPending from './pages/TransactionPending';
 import Setting from './pages/Setting';
 import NetworkChange from './pages/NetworkChange';
@@ -21,7 +18,7 @@ import ChangePassword from './pages/ChangePassword';
 import ConfirmEmail from './pages/ConfirmEmail';
 import Profile from './pages/Profile';
 import AppContainer from "./AppContainer";
-import Register from "./pages/Register";
+import CaptchaWhitelist from "./pages/CaptchaWhitelist";
 
 //@ts-ignore
 import { NotificationContainer, NotificationManager } from 'react-notifications'
@@ -96,6 +93,8 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
         <Route path={adminRoute('/kyc-user-create')} component={KycUserCreate} />
 
         <Route path={adminRoute('/network-change')} component={NetworkChange} />
+        <Route path={adminRoute('/captcha-whitelist')} component={CaptchaWhitelist} />
+
         <Route path={('/coming-soon')} component={ComingSoon} />
         <PrivateRoute exact path={adminRoute('/error')} component={ErrorPage} />
         <Route component={NotFoundPage} />

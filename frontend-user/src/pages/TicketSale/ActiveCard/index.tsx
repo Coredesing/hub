@@ -68,6 +68,11 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
   }, [isBuy, endTime, setTimeEnd]);
   const isClaim = card?.process === "only-claim";
   const isTicket = card?.token_type === TOKEN_TYPE.ERC721;
+  let accept_currency = card?.accept_currency;
+  if (card?.network_available === 'bsc' && accept_currency === 'usdt') {
+    accept_currency = 'busd'
+  }
+
   return (
     <div className={clsx(styles.card, styles.cardActive, {
       [styles.cardActiveApproved]: card.isApproved
@@ -78,7 +83,7 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
       <div className={styles.cardBody}>
         <div className={clsx(styles.cardBodyItem, styles.cardBodyTitle)}>
           <h4>{card.title}</h4>
-          <img src={`/images/icons/${card.accept_currency}.png`} alt="" />
+          <img src={`/images/icons/${accept_currency}.png`} alt="" />
         </div>
         {!isTicket &&
           <div className={styles.cardBodyItem}>
@@ -90,7 +95,7 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
         {!isTicket &&
           <div className={styles.cardBodyItem}>
             <span className={styles.text}>EXCHANGE RATE</span> <span className={styles.textBold} style={{textTransform: 'uppercase'}}>
-              1 {card.symbol} = {card.ether_conversion_rate} {card.accept_currency}
+              1 {card.symbol} = {card.ether_conversion_rate} {accept_currency}
             </span>
           </div>}
           <div className={styles.cardBodyItem}>
@@ -108,7 +113,7 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
         {isTicket &&
           <div className={styles.cardBodyItem}>
             <span className={styles.text}>PRICE</span> <span className={clsx(styles.textBold, styles.price)}>
-              {isClaim ? 0 : card.ether_conversion_rate} {card.accept_currency}
+              {isClaim ? 0 : card.ether_conversion_rate} {accept_currency}
             </span>
           </div>
         }

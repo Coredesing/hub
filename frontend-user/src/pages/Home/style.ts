@@ -247,7 +247,9 @@ const useStyles = makeStyles((theme: any) => {
       paddingRight: "0",
       paddingTop: "120px",
       paddingBottom: "130px",
+      height: "770px",
       [theme.breakpoints.down("xs")]: {
+        height: "520px",
         padding: "28px",
         paddingTop: "40px",
         paddingBottom: "40px",
@@ -380,8 +382,8 @@ const useStyles = makeStyles((theme: any) => {
     tbCellProject: {
       // display: "flex !important",
       gap: "10px !important",
-      display: 'grid !important',
-      gridTemplateColumns: '40px auto',
+      display: "grid !important",
+      gridTemplateColumns: "40px auto",
 
       "& img": {
         width: "40px",
@@ -461,15 +463,14 @@ export const useCardStyles = makeStyles((theme) => ({
     },
   },
   cardTokenSale: {
-    marginRight: isSafari ? "20px" : 0,
     width: "315px",
+    height: "100%",
     [theme.breakpoints.down("sm")]: {
       width: "280px",
     },
     [theme.breakpoints.down("xs")]: {
       width: "156px",
     },
-
     "& .card-token-title": {
       ...typeDisplayFlex,
       justifyContent: "space-between",

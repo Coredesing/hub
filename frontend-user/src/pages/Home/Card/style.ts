@@ -4,9 +4,9 @@ import { typeDisplayFlex } from "../../../styles/CommonStyle";
 const useStyles = makeStyles((theme: any) => ({
   cardImgUpcoming: {
     maxHeight: "220px",
-    marginBottom: '15px',
+    marginBottom: "15px",
     [theme.breakpoints.down("xs")]: {
-      marginBottom: '13px',
+      marginBottom: "13px",
       maxHeight: "108px",
     },
     // overflow: 'hidden',
@@ -14,10 +14,10 @@ const useStyles = makeStyles((theme: any) => ({
     "&::before, &::after": {
       height: "6px !important",
       width: "25% !important",
-        [theme.breakpoints.down("xs")]: {
-          height: "3px !important",
-          width: "20% !important",
-        },
+      [theme.breakpoints.down("xs")]: {
+        height: "3px !important",
+        width: "20% !important",
+      },
     },
 
     "& h4": {
@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme: any) => ({
     // },
   },
   cardOpening: {
+    height: "100%",
     position: "relative",
     transition: ".5s",
     "&:hover > div": {
@@ -58,8 +59,8 @@ const useStyles = makeStyles((theme: any) => ({
       left: "50%",
     },
     [theme.breakpoints.down("xs")]: {
-      paddingBottom: '13px',
-    }
+      paddingBottom: "13px",
+    },
   },
   btnDetail: {
     position: "absolute",

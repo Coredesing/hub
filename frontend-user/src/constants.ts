@@ -213,4 +213,6 @@ export const POOL_STATUS_JOINED = {  // Pool Status for User Joined Pool (Versio
 export enum TOKEN_TYPE {
   ERC721 = 'erc721',
   ERC20 = 'erc20'
-} 
+}
+
+export const RECAPTCHA_SITE_KEY  = process.env.REACT_APP_RECAPTCHA_SITE_KEY as string;

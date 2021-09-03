@@ -12,7 +12,7 @@ import {
   Hidden,
   Paper,
   Select,
-  withWidth
+  withWidth,
 } from "@material-ui/core";
 
 import Pagination from '@material-ui/lab/Pagination';
@@ -21,7 +21,7 @@ import axios from '../../../services/axios';
 import useAuth from '../../../hooks/useAuth';
 import useFetch from '../../../hooks/useFetch';
 import { getAccessPoolText } from "../../../utils/campaign";
-import { NULL_AMOUNT, POOL_STATUS_JOINED, POOL_STATUS_TEXT } from "../../../constants";
+import { NULL_AMOUNT, POOL_STATUS_JOINED, POOL_STATUS_TEXT} from "../../../constants";
 import useWalletSignature from '../../../hooks/useWalletSignature';
 import { alertFailure, alertSuccess } from '../../../store/actions/alert';
 import ModalWhitelistCancel from "./ModalWhitelistCancel";
@@ -45,7 +45,9 @@ import {
   TableRowHead
 } from '../components/Table';
 import { listStatuses, listTypes } from "../constants";
-import { getSeedRound } from "../../../utils";
+import { formatCampaignStatus, getSeedRound, isErc20, isErc721 } from "../../../utils";
+import clsx from 'clsx';
+import { getRoute } from "../../TicketSale/utils";
 
 const IdoPools = (props: any) => {
   const styles = { ...useStyles(), ...useTabStyles() };
@@ -135,7 +137,6 @@ const IdoPools = (props: any) => {
           appNetwork,
           wrongChain
         });
-        console.log(listData)
       }
 
       setPools(listData);
@@ -184,6 +185,21 @@ const IdoPools = (props: any) => {
       purchasableCurrency: pool?.purchasableCurrency || pool?.accept_currency,
       networkAvailable: pool?.networkAvailable || pool?.network_available,
     });
+    let amount = '';
+    if(isErc721(pool.token_type)) {
+      const isClaim = pool.process === 'only-claim';
+      if(isClaim) {
+        amount = pool.userClaimInfo?.user_claimed || 0;
+      } else {
+        amount = pool.userClaimInfo?.user_purchased || 0;
+      }
+      return `${amount} ${pool.symbol?.toUpperCase()}`
+    }
+    if(isErc20(pool.token_type)) {
+      amount = pool.userClaimInfo?.user_purchased || 0;
+      return `${amount} ${currencyName?.toUpperCase()}`
+    }
+    
     if (pool.allowcation_amount === NULL_AMOUNT) return '-';
     let allowcationAmount = pool.allowcation_amount;
     if (new BigNumber(allowcationAmount).lte(0)) return '-';
@@ -371,7 +387,7 @@ const IdoPools = (props: any) => {
                 <TableCell align="left">Type</TableCell>
                 <TableCell align="left">Status</TableCell>
                 <TableCell align="left">Allocation</TableCell>
-                <TableCell align="left">Action</TableCell>
+                <TableCell align="left" style={{width: '140px'}}>Action</TableCell>
               </TableRowHead>
             </TableHead>
             <TableBody>
@@ -385,17 +401,15 @@ const IdoPools = (props: any) => {
                   </TableCell>
                   <TableCell align="left">{getSeedRound(row.is_private)}</TableCell>
                   <TableCell align="left">
-                    {poolStatus(row)}
+                    {formatCampaignStatus(row.campaign_status)}
+                    {/* {poolStatus(row)} */}
                   </TableCell>
                   <TableCell align="left">{allocationAmount(row)}</TableCell>
                   <TableCell align="left">
-                    {actionButton(row)}
-                    {/* <Button variant="outlined" color="primary" className={clsx(classes.btnDetail, classes.btnAction)}>
-                                        Pool Detail
-                                    </Button>
-                                    <Button variant="contained" color="primary" className={clsx(classes.btnView, classes.btnAction)}>
-                                        View Tickets
-                                    </Button> */}
+                    <Link  to={`${getRoute(row.token_type)}/${row.id}`} className={clsx(styles.btnDetail, styles.btnAct)}>
+                      Pool Detail
+                    </Link>
+                    {/* {actionButton(row)} */}
                   </TableCell>
                 </TableRowBody>
               ))}

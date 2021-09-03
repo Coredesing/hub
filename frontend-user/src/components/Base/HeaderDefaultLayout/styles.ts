@@ -398,23 +398,29 @@ const useStyles = makeStyles((theme) => {
         top: "60px",
       },
     },
-    headerLinks: {
-      margin: 0,
-      padding: 0,
-      ...typeDisplayFlex,
-      gap: "32px",
-      flexWrap: "wrap",
-      [theme.breakpoints.down("md")]: {
-        display: "grid",
-      },
-    },
+    headerLinks: isSafari
+      ? {
+          margin: 0,
+          padding: 0,
+          display: "grid",
+          gridTemplateColumns: "auto auto auto",
+          gap: "32px",
+          flexWrap: "wrap",
+          [theme.breakpoints.down("md")]: {
+            display: "grid",
+          },
+        }
+      : {
+          margin: 0,
+          padding: 0,
+          ...typeDisplayFlex,
+          gap: "32px",
+          flexWrap: "wrap",
+          [theme.breakpoints.down("md")]: {
+            display: "grid",
+          },
+        },
     headerLink: {
-      [theme.breakpoints.down("lg")]: {
-        marginRight: isSafari ? "32px" : 0,
-      },
-      [theme.breakpoints.down("md")]: {
-        marginRight: 0,
-      },
       "& a": {
         fontFamily: "Firs Neue",
         fontStyle: "normal",

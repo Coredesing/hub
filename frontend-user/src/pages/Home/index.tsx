@@ -22,7 +22,7 @@ import {
 } from "../../components/Base/Table";
 import { TOKEN_TYPE } from "../../constants";
 import Instruction from "./Instruction";
-import { getSeedRound } from "../../utils";
+import TicketSlide from "./TicketSlide";
 
 type Data = { [k: string]: any };
 type ResponseData = {
@@ -151,7 +151,10 @@ const Home = (props: any) => {
           </div>
         )}
 
-        <div className={styles.wrapperContent} style={!isShowImgBanner ? {marginTop: -50} : {}}>
+        <div
+          className={styles.wrapperContent}
+          style={!isShowImgBanner ? { marginTop: -50 } : {}}
+        >
           <div className={clsx(styles.bannerContent)}>
             <div className="large-text">
               <h1>Dedicated Gaming Launchpad & IGO</h1>
@@ -212,20 +215,14 @@ const Home = (props: any) => {
                 Make sure you have a Ticket to join IDO. To view information
                 about other IDO pools, click the Discover button below.
               </h5>
-              <Link href="/#/pools/token" className={styles.btnDiscover}>Discover</Link>
+              <Link href="/#/pools/token" className={styles.btnDiscover}>
+                Discover
+              </Link>
             </div>
-            <div className={clsx(styles.cards, styles.cardsTokenSales)}>
-              {(tokenSales.data || []).map((card, id) => (
-                <Card card={card} key={id} className={styles.cardTokenSale}
-                title={<div className="card-token-title">
-                  <h4>{card.title}</h4>
-                  <span>{getSeedRound(card.is_private)}</span>
-                </div>}
-                />
-              ))}
-            </div>
+            <div className={clsx(styles.cards, styles.cardsTokenSales)} />
           </div>
         </div>
+        <TicketSlide data={tokenSales.data} />
       </section>
       <section className={clsx(styles.partners, styles.section)}>
         <div className="rectangle gr">

@@ -633,12 +633,11 @@ class PoolController {
 
   async getJoinedPools({ request, params }) {
     const inputParams = request.all();
-    const limit = inputParams.limit ? inputParams.limit : Config.get('const.limit_default');
-    const page = inputParams.page ? inputParams.page : Config.get('const.page_default');
+    const limit = inputParams.limit ? inputParams.limit : 20;
+    const page = inputParams.page ? inputParams.page : 1;
     inputParams.limit = limit;
     inputParams.page = page;
     inputParams.is_search = true;
-    console.log('[getJoinedPools] - inputParams: ', inputParams);
 
     const walletAddress = params.walletAddress;
     try {

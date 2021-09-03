@@ -37,6 +37,7 @@ import { settingDeactivateReducer } from './setting-deactivate';
 import { settingOwnerReducer } from './setting-owner';
 import { balanceReducer } from './balance';
 import { usdtDetailReducer } from './usdt-detail';
+import { whitelistReducer, whitelistCreateReducer, whitelistRemoveReducer } from './whitelist'
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -78,6 +79,9 @@ const rootReducer = combineReducers({
   balance: balanceReducer,
   usdtDetail: usdtDetailReducer,
   alert: alertReducer,
+  whitelist: whitelistReducer,
+  whitelistCreate: whitelistCreateReducer,
+  whitelistRemoveReducer: whitelistRemoveReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

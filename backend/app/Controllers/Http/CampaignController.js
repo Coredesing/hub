@@ -12,7 +12,7 @@ const WhitelistSubmissionService = use('App/Services/WhitelistSubmissionService'
 const ReservedListService = use('App/Services/ReservedListService');
 const CampaignClaimConfigService = use('App/Services/CampaignClaimConfigService');
 const SnapshotBalance = use('App/Jobs/SnapshotBalance')
-const GetUserPurchasedBalanceJob = use('App/Jobs/GetUserPurchasedBalanceJob')
+const ReCaptchaService = use("App/Services/ReCaptchaService");
 
 const UserService = use('App/Services/UserService');
 const Const = use('App/Common/Const');
@@ -83,7 +83,7 @@ class CampaignController {
       const param = request.all();
       console.log('[Webhook] - Create Pool with params: ', param);
 
-      if (param.event != Const.CRAWLER_EVENT.POOL_CREATED) {
+      if (param.event !== Const.CRAWLER_EVENT.POOL_CREATED) {
         return HelperUtils.responseBadRequest('Event Name is invalid');
       }
 
@@ -302,7 +302,7 @@ class CampaignController {
         console.log(`User ${user}`);
         return HelperUtils.responseBadRequest("You're not valid user to join this campaign !");
       }
-      if (user.is_kyc != Const.KYC_STATUS.APPROVED) {
+      if (user.is_kyc !== Const.KYC_STATUS.APPROVED) {
         console.log('User does not KYC yet !');
         return HelperUtils.responseBadRequest("You must register for KYC successfully to be allowed to join. Or the email address and/or wallet address you used for KYC does not match the one you use on Red Kite. Please check and update on Blockpass to complete KYC verification.");
       }
@@ -356,6 +356,12 @@ class CampaignController {
     }
 
     try {
+      const captchaService = new ReCaptchaService()
+      const ReCaptchaVerified = await captchaService.Verify(params.captcha_token, userWalletAddress)
+      if (!ReCaptchaVerified) {
+        return HelperUtils.responseBadRequest('reCAPTCHA verification failed');
+      }
+
       // get user info
       const userService = new UserService();
       const userParams = {

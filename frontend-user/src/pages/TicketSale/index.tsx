@@ -30,7 +30,7 @@ const TicketSale = (props: any) => {
   useEffect(() => {
     setCheckParamType({
       checking: false,
-      valid: params.type === 'ticket' || params.type === 'token'
+      valid: ['ticket', 'token', 'items'].includes(params.type),
     });
     setRecall(true);
   }, [params]);

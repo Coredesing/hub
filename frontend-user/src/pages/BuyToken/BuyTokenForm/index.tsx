@@ -399,7 +399,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
     // Remain: 295.43
     const currencyUserBought = formatRoundUp(new BigNumber(userPurchased).multipliedBy(poolDetails?.ethRate || 0)); // ROUND_UP: 4.999999999999999999987744 --> 5
     const remainCurrencyAvailable = formatRoundDown(new BigNumber(maximumBuy).minus(currencyUserBought)); // ROUND_DOWN: 295.435424132100000000012256 --> 295.43
-    if (!captchaToken) {
+    if (!verifiedCapcha) {
       dispatch(alertFailure(`Recaptcha requires verification.`));
       return false
     }
@@ -452,9 +452,9 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
     }
   }
 
-  const [captchaToken, setCaptchaToken] = useState<string>("");
-  const onCaptchaVerified = (value: any) => {
-    setCaptchaToken(value)
+  const [verifiedCapcha, setVerifiedCapcha] = useState<string | null>('');
+  const onVerifyCapcha = (token: string | null) => {
+      setVerifiedCapcha(token)
   }
 
   return (
@@ -587,8 +587,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
         }
         {
           !enableApprove && maximumBuy && maximumBuy > 0 &&
-          <Recapcha onChange={onCaptchaVerified} className={styles.captchaContainer} />
-
+          <Recapcha onChange={onVerifyCapcha} className={styles.captchaContainer} />
         }
 
         <div className={styles.btnGroup}>
@@ -609,8 +608,8 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
             <Button
               text={'Swap'}
               backgroundColor={'#72F34B'}
-              disabled={!purchasable || !isKyc || !captchaToken}
-              onClick={(isKyc && captchaToken) ? handleTokenDeposit : undefined}
+              disabled={!purchasable || !isKyc || !verifiedCapcha}
+              onClick={(isKyc) ? handleTokenDeposit : undefined}
               loading={tokenDepositLoading}
             />
           </div>

@@ -23,9 +23,9 @@ const useCommonStyle = makeStyles((theme) => {
       minHeight: "100vh",
       overflow: "auto",
       paddingTop: "80px",
-      [theme.breakpoints.down('xs')]: {
-        paddingTop: '60px'
-      }
+      [theme.breakpoints.down("xs")]: {
+        paddingTop: "60px",
+      },
     },
     headPage: {
       ...typeDisplayFlex,
@@ -503,22 +503,13 @@ export const typeDisplayFlex = {
   "@supports (display: flex)": {
     display: "flex",
   },
-  // "@supports (display: -webkit-flex)": {
-  //   display: "-webkit-flex",
-  // },
-  // "@supports (display: -moz-flex)": {
-  //   display: "-moz-flex",
-  // },
-  // "@supports (display: -ms-flexbox)": {
-  //   display: "-ms-flexbox",
-  // },
-  "@supports (display: WebkitFlex)": {
-    display: "WebkitFlex",
+  "@supports (display: -webkit-flex)": {
+    display: "-webkit-flex",
   },
-  "@supports (display: MozFlex)": {
-    display: "MozFlex",
+  "@supports (display: -moz-flex)": {
+    display: "-moz-flex",
   },
-  "@supports (display: MsFlexbox)": {
-    display: "MsFlexbox",
+  "@supports (display: -ms-flexbox)": {
+    display: "-ms-flexbox",
   },
 };

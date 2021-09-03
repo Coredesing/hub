@@ -154,6 +154,11 @@ Route.group(() => {
   Route.put('kyc-users/:id/change-kyc', 'UserController.kycUserChangeIsKyc').middleware(['auth:admin']);
 
   Route.post('deposit-admin', 'CampaignController.depositAdmin').middleware(['auth:admin']);
+
+  // whitelist
+  Route.get('/whitelist', 'CaptchaWhitelistController.get')
+  Route.post('/whitelist', 'CaptchaWhitelistController.set')
+  Route.delete('/whitelist', 'CaptchaWhitelistController.remove')
 }).prefix('api/v2/admin').middleware(['auth:admin', 'checkAdminJwtSecret']);
 
 Route.group(() => {

@@ -364,6 +364,13 @@ const useStyles = makeStyles((theme: any) => {
 
     allowcationContent: {
     },
+    captchaContainer: {
+      margin: "auto",
+      marginTop: 10,
+      marginBottom: -10,
+      width: "fit-content",
+      textAlign: "center"
+    }
   };
 });
 

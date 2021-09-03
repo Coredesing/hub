@@ -425,6 +425,11 @@ const Ticket = ({ id, ...props }: any) => {
         }
     }, [claimTokenSuccess, transactionHash, checkUserClaimed]);
 
+    const [verifiedCapcha, setVerifiedCapcha] = useState<string>('');
+    const onVerifyCapcha = (token: string | null) => {
+        setVerifiedCapcha(token || '')
+    }
+
     const {
         deposit,
         tokenDepositTransaction,
@@ -442,6 +447,7 @@ const Ticket = ({ id, ...props }: any) => {
         ).toString(16)}`,
         isClaimable: infoTicket.pool_type === "claimable",
         networkAvailable: infoTicket.network_available,
+        captchaToken: verifiedCapcha,
     });
 
     useEffect(() => {
@@ -567,11 +573,6 @@ const Ticket = ({ id, ...props }: any) => {
         if (boughtTicket >= maxTicket) return 0;
         return maxTicket - boughtTicket;
     };
-
-    const [verifiedCapcha, setVerifiedCapcha] = useState<string | null>('');
-    const onVerifyCapcha = (token: string | null) => {
-        setVerifiedCapcha(token)
-    }
 
     return (
         loadingTicket ? <div className={styles.loader} style={{ marginTop: 70 }}>

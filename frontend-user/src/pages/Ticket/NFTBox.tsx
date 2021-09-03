@@ -586,6 +586,9 @@ const ContentNFTBox = ({ id, ...props }: any) => {
                     {!isKYC && !checkingKyc && connectedAccount && (
                         <AlertKYC connectedAccount={connectedAccount} />
                     )}
+                    <div className={styles.bannerBox}>
+                        <Image src="/images/nftbox-banner.png" />
+                    </div>
 
                     <div className={styles.card}>
                         <div className={styles.cardImg}>

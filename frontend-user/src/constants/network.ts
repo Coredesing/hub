@@ -18,6 +18,7 @@ export const BUSD_BSC_ADDRESS = process.env.REACT_APP_BUSD_BSC_SMART_CONTRACT;
 export const ETHERSCAN_URL = process.env.REACT_APP_ETHERSCAN_BASE_URL || "";
 export const BCSSCAN_URL = process.env.REACT_APP_BSCSCAN_BASE_URL || "";
 export const POLYGONSCAN_URL = process.env.REACT_APP_POLSCAN_BASE_URL || "";
+export const DEFAULT_CHAIN_ID =  process.env.REACT_APP_DEFAULT_CHAIN_ID || ETH_CHAIN_ID;
 
 export enum ChainId  {
   MAINNET = 1,
@@ -185,3 +186,5 @@ export const APP_NETWORKS_SUPPORT: {[key: number]: NetworkInfo } = {
     }
   },
 }
+
+export const ChainDefault = APP_NETWORKS_SUPPORT[+DEFAULT_CHAIN_ID] || APP_NETWORKS_SUPPORT[+ETH_CHAIN_ID];

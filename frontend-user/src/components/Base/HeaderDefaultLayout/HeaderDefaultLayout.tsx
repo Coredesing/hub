@@ -7,7 +7,7 @@ import withWidth, { isWidthDown } from "@material-ui/core/withWidth";
 import useStyles from "./styles";
 
 import ButtonLink from "../ButtonLink";
-import { APP_NETWORKS_SUPPORT } from "../../../constants/network";
+import { APP_NETWORKS_SUPPORT, ChainDefault } from "../../../constants/network";
 import AppNetworkSwitch from "./AppNetworkSwitch";
 import ConnectWalletModal from "./ConnectWalletModal";
 import WalletDisconnect from "./WalletDisconnect";
@@ -50,9 +50,9 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
   const { data: message = "" } = useSelector((state: any) => state.messages);
   const { data: userTier } = useSelector((state: any) => state.userTier);
 
-  const [chainLogo, setChainLogo] = useState<String>(ethIcon);
-  const [chainName, setChainName] = useState<String>("Ethereum");
-  const [chainCurrency, setChainCurrency] = useState<String>("ETH");
+  const [chainLogo, setChainLogo] = useState<string>(ChainDefault.icon);
+  const [chainName, setChainName] = useState<string>(ChainDefault.name);
+  const [chainCurrency, setChainCurrency] = useState<string>(ChainDefault.currency || '');
 
   const { isAuth, connectedAccount, wrongChain } = useAuth();
 
@@ -142,9 +142,9 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
       return;
     }
 
-    setChainLogo(networkInfo.icon || ethIcon);
-    setChainName(networkInfo.name || 'Ethereum');
-    setChainCurrency(networkInfo.currency || 'ETH');
+    setChainLogo(networkInfo.icon);
+    setChainName(networkInfo.name);
+    setChainCurrency(networkInfo.currency || '');
   }, [appChainID]);
 
   const handleClickPoolList = (e: any) => {

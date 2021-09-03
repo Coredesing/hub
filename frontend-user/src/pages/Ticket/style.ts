@@ -498,6 +498,17 @@ const useStyles = makeStyles((theme: any) => {
       color: "#999999",
       font: 'normal normal bold 14px/18px DM Sans'
     },
+    bannerBox: {
+      width: '100%',
+      maxHeight: '550px',
+      minHeight: '180px',
+      '& img': {
+        width: '100%',
+        height: '100%',
+        minHeight: '180px',
+        maxHeight: '550px',
+      }
+    }
   };
 });
 

@@ -8,7 +8,6 @@ import { TOKEN_TYPE } from "../../constants";
 import NotFoundPage from "../NotFoundPage/ContentPage";
 import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
 import ContentTicket from './Ticket';
-import NFTBox from './NFTBox';
 
 const Ticket: React.FC<any> = (props: any) => {
   const params = useParams<{ [k: string]: any }>();
@@ -41,8 +40,7 @@ const Ticket: React.FC<any> = (props: any) => {
           <Backdrop open={checkParamType.checking} style={{ color: '#fff', zIndex: theme.zIndex.drawer + 1, }}>
             <CircularProgress color="inherit" />
           </Backdrop>
-          : (checkParamType.valid ? <NFTBox id={id} /> : <NotFoundPage />)
-          // : (checkParamType.valid ? <ContentTicket id={id} /> : <NotFoundPage />)
+          : (checkParamType.valid ? <ContentTicket id={id} /> : <NotFoundPage />)
       }
     </DefaultLayout>
   );

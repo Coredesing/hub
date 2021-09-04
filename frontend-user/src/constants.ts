@@ -216,3 +216,4 @@ export enum TOKEN_TYPE {
 }
 
 export const RECAPTCHA_SITE_KEY  = process.env.REACT_APP_RECAPTCHA_SITE_KEY as string;
+export const ALLOW_RECAPCHA = !!RECAPTCHA_SITE_KEY;

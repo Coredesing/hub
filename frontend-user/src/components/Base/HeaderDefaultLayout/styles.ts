@@ -403,7 +403,7 @@ const useStyles = makeStyles((theme) => {
           margin: 0,
           padding: 0,
           display: "grid",
-          gridTemplateColumns: "auto auto auto",
+          gridTemplateColumns: "repeat(4, minmax(auto, auto))",
           gap: "32px",
           flexWrap: "wrap",
           [theme.breakpoints.down("md")]: {

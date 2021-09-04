@@ -183,15 +183,18 @@ const useStyles = makeStyles((theme: any) => {
           fontSize: "20px",
           lineHeight: "28px",
           color: "#fff",
+          marginRight: isSafari ? "45px" : 0,
         },
         [theme.breakpoints.down("sm")]: {
           "& h4, & h3": {
             textAlign: "center",
+            marginRight: 0,
           },
           "& h3": {
             fontSize: "16px",
             lineHeight: "22px",
             textAlign: "center",
+            marginBottom: isSafari ? "10px" : 0,
           },
         },
       },
@@ -230,6 +233,7 @@ const useStyles = makeStyles((theme: any) => {
       "& img": {
         width: "18px",
         height: "18px",
+        position: "absolute", // fix tren safari
       },
     },
     ticketSales: {

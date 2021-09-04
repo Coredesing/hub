@@ -10,6 +10,8 @@ const RedisUtils = use('App/Common/RedisUtils');
 const GameFIUtils = use('App/Common/GameFIUtils');
 const Config = use('Config')
 const UserBalanceSnapshotModel = use('App/Models/UserBalanceSnapshot');
+const WhitelistUserModel = use('App/Models/WhitelistUser');
+const WhitelistService = use('App/Services/WhitelistUserService');
 const moment = require('moment');
 const BigNumber = use('bignumber.js');
 const { pick } = require('lodash');
@@ -763,30 +765,37 @@ class PoolController {
         return HelperUtils.responseNotFound('Pool not found');
       }
       await campaignUpdated.userBalanceSnapshots().delete();
+      const wlService = new WhitelistService();
+      await wlService.buildQueryBuilder({campaign_id: campaignId}).delete()
 
       csv.parseFile(file.tmpPath, {headers: false})
-        .on("data", (data) => {
+        .on("data", async (data) => {
           if (data.length < 2) {
             return
           }
           const wallet_address = data[0]
           let ticket = parseInt(data[1]) ?? 1
           ticket = isNaN(ticket) ? 1 : ticket
-          if (ticket < 1) {
-            ticket = 1
-          }
 
-          let userSnapShot = new UserBalanceSnapshotModel();
-          userSnapShot.fill({
-            campaign_id: campaignId,
-            wallet_address: wallet_address,
-            level: 0,
-            winner_ticket: ticket,
-            lottery_ticket: ticket,
-            pkf_balance: 0,
-            pkf_balance_with_weight_rate: 0,
-          });
-          userSnapShot.save()
+          try {
+            let userSnapShot = new UserBalanceSnapshotModel();
+            userSnapShot.fill({
+              campaign_id: campaignId,
+              wallet_address: wallet_address,
+              level: 0,
+              winner_ticket: ticket,
+              lottery_ticket: ticket,
+              pkf_balance: 0,
+              pkf_balance_with_weight_rate: 0,
+            });
+            await userSnapShot.save()
+
+            let newWhitelist = new WhitelistUserModel();
+            newWhitelist.wallet_address = wallet_address;
+            newWhitelist.campaign_id = campaignId;
+            newWhitelist.email = '';
+            await newWhitelist.save();
+          }catch (e) {}
         })
         .on("error", (e) => {
           console.log('error', e);

@@ -96,9 +96,13 @@ class PoolService {
 
   getJoinedPools(walletAddress, params) {
     const query = this.buildSearchQuery(params);
-    query.whereHas('whitelistUsers', (builder) => {
-      builder.where('wallet_address', walletAddress);
-    }, '>', 0);
+    query
+      .whereHas('whitelistUsers', (builder) => {
+        builder.where('wallet_address', walletAddress);
+      }, '>', 0)
+      .orWhereHas('winnerlistUsers', (builder) => {
+        builder.where('wallet_address', walletAddress);
+      }, '>', 0);
     return query;
   }
 
@@ -474,7 +478,7 @@ class PoolService {
       const status = await HelperUtils.getPoolStatusByPoolDetail(pool, tokenSold);
       console.log('[PoolService::updatePoolInformation]', pool.id, tokenSold, status);
 
-      const lastTime =  HelperUtils.getLastActualFinishTime(pool); // lastClaimConfig + 12h
+      const lastTime = HelperUtils.getLastActualFinishTime(pool); // lastClaimConfig + 12h
 
       const dataUpdate = {
         token_sold: tokenSold,

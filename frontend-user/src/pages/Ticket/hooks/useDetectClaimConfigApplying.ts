@@ -1,10 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import moment from "moment";
 import BigNumber from "bignumber.js";
-import usePoolDepositAction from "./usePoolDepositAction";
 import {formatRoundDown} from "../../../utils/formatNumber";
-
-
 
 const useDetectClaimConfigApplying = (
   poolDetails: any,

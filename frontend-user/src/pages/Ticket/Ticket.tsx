@@ -35,6 +35,7 @@ import { ButtonApprove } from "./components/ButtonApprove";
 import { ButtonBuy } from "./components/ButtonBuy";
 import { ButtonClaim } from "./components/ButtonClaim";
 import Image from "../../components/Base/Image";
+import { Recapcha } from "../../components/Base/Recapcha";
 const iconWarning = "/images/warning-red.svg";
 const ticketImg = "/images/gamefi-ticket.png";
 const finishedImg = "/images/finished.png";
@@ -424,6 +425,11 @@ const Ticket = ({ id, ...props }: any) => {
         }
     }, [claimTokenSuccess, transactionHash, checkUserClaimed]);
 
+    const [verifiedCapcha, setVerifiedCapcha] = useState<string>('');
+    const onVerifyCapcha = (token: string | null) => {
+        setVerifiedCapcha(token || '')
+    }
+
     const {
         deposit,
         tokenDepositTransaction,
@@ -441,6 +447,7 @@ const Ticket = ({ id, ...props }: any) => {
         ).toString(16)}`,
         isClaimable: infoTicket.pool_type === "claimable",
         networkAvailable: infoTicket.network_available,
+        captchaToken: verifiedCapcha,
     });
 
     useEffect(() => {
@@ -550,6 +557,9 @@ const Ticket = ({ id, ...props }: any) => {
     };
     const onBuyTicket = async () => {
         if (!isKYC) return;
+        if (!verifiedCapcha) {
+            return dispatch(alertFailure('Recaptcha requires verification.'));
+        }
         try {
             if (numTicketBuy > 0) {
                 await deposit();
@@ -745,23 +755,26 @@ const Ticket = ({ id, ...props }: any) => {
                                                     {isAccInWinners.ok && allowNetwork.ok &&
                                                         isBuy &&
                                                         isAccApproved(tokenAllowance || 0) && (
-                                                            <div
-                                                                className={clsx(styles.infoTicket, styles.buyBox)}
-                                                                style={{ marginTop: "16px" }}
-                                                            >
-                                                                <AscDescAmountBox
-                                                                    descMinAmount={descMinAmount}
-                                                                    descAmount={descAmount}
-                                                                    ascAmount={ascAmount}
-                                                                    ascMaxAmount={ascMaxAmount}
-                                                                    value={numTicketBuy}
-                                                                    disabledMin={!getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || numTicketBuy === getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || !isKYC}
-                                                                    disabledSub={!getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || numTicketBuy === 0 || !isKYC}
-                                                                    disabledAdd={!getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || numTicketBuy === getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || !isKYC}
-                                                                    disabledMax={!getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || numTicketBuy === getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || !isKYC}
-                                                                />
-                                                                <ButtonBuy onClick={onBuyTicket} disabled={numTicketBuy <= 0 || !isKYC} />
-                                                            </div>
+                                                            <>
+                                                                <Recapcha onChange={onVerifyCapcha} />
+                                                                <div
+                                                                    className={clsx(styles.infoTicket, styles.buyBox)}
+                                                                    style={{ marginTop: "16px" }}
+                                                                >
+                                                                    <AscDescAmountBox
+                                                                        descMinAmount={descMinAmount}
+                                                                        descAmount={descAmount}
+                                                                        ascAmount={ascAmount}
+                                                                        ascMaxAmount={ascMaxAmount}
+                                                                        value={numTicketBuy}
+                                                                        disabledMin={!getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || numTicketBuy === getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || !isKYC}
+                                                                        disabledSub={!getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || numTicketBuy === 0 || !isKYC}
+                                                                        disabledAdd={!getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || numTicketBuy === getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || !isKYC}
+                                                                        disabledMax={!getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || numTicketBuy === getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || !isKYC}
+                                                                    />
+                                                                    <ButtonBuy onClick={onBuyTicket} disabled={numTicketBuy <= 0 || !isKYC || !verifiedCapcha} />
+                                                                </div>
+                                                            </>
                                                         )}
                                                     {isAccInWinners.ok && !isAccApproved(tokenAllowance || 0) && (
                                                         <ButtonApprove isApproving={isApproving} onClick={handleTokenApprove} />

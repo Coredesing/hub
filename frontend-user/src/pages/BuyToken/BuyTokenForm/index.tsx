@@ -8,10 +8,8 @@ import TransactionSubmitModal from '../../../components/Base/TransactionSubmitMo
 import Button from '../Button';
 import useStyles from './style';
 
-import { getUSDCAddress, getUSDTAddress, getBUSDAddress } from '../../../utils/contractAddress/getAddresses';
-import {formatRoundDown, formatRoundUp, numberWithCommas} from '../../../utils/formatNumber';
+import { formatRoundDown, formatRoundUp, numberWithCommas } from '../../../utils/formatNumber';
 import { ACCEPT_CURRENCY, NETWORK, TIERS } from '../../../constants';
-import { BSC_CHAIN_ID, ETH_CHAIN_ID, POLYGON_CHAIN_ID } from '../../../constants/network';
 import { PurchaseCurrency } from '../../../constants/purchasableCurrency';
 import { TokenType } from '../../../hooks/useTokenDetails';
 import getAccountBalance from '../../../utils/getAccountBalance';
@@ -30,10 +28,12 @@ import {
   convertTimeToStringFormatWithoutGMT,
   convertUnixTimeToDateTime
 } from "../../../utils/convertDate";
-import {getIconCurrencyUsdt} from "../../../utils/usdt";
+import { getIconCurrencyUsdt } from "../../../utils/usdt";
 import useTokenSold from "../hooks/useTokenSold";
-import {getEtherscanName} from "../../../utils/network";
-import {alertFailure} from "../../../store/actions/alert";
+import { getEtherscanName } from "../../../utils/network";
+import { alertFailure } from "../../../store/actions/alert";
+import { Recapcha } from '../../../components/Base/Recapcha';
+import { getApproveToken } from '../../../utils';
 
 const REGEX_NUMBER = /^-?[0-9]{0,}[.]{0,1}[0-9]{0,6}$/;
 
@@ -117,7 +117,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
     poolDetailsMapping,
     poolDetails,
     isKyc,
-} = props;
+  } = props;
 
   const {
     loginError,
@@ -125,64 +125,31 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
   } = useContext(AppContext);
 
   const currentAccount = currentConnectedWallet && currentConnectedWallet.addresses[0];
-  const balance = currentConnectedWallet ? currentConnectedWallet.balances[currentAccount]: 0;
+  const balance = currentConnectedWallet ? currentConnectedWallet.balances[currentAccount] : 0;
 
   const { connectedAccount, wrongChain } = useAuth();
   const { appChainID, walletChainID } = useTypedSelector(state => state.appNetwork).data;
   const connector = useTypedSelector(state => state.connector).data;
 
-  const etherscanName = getEtherscanName({networkAvailable});
+  const [verifiedCapcha, setVerifiedCapcha] = useState<string>('');
+  const onVerifyCapcha = (token: string | null) => {
+    setVerifiedCapcha(token || '')
+  }
+
+  const etherscanName = getEtherscanName({ networkAvailable });
   const {
     deposit,
     tokenDepositLoading,
     tokenDepositTransaction,
     depositError,
     tokenDepositSuccess
-  } = usePoolDepositAction({ poolAddress, poolId, purchasableCurrency, amount: input, isClaimable, networkAvailable });
+  } = usePoolDepositAction({ poolAddress, poolId, purchasableCurrency, amount: input, isClaimable, networkAvailable, captchaToken: verifiedCapcha});
 
   const { currencyIcon, currencyName } = getIconCurrencyUsdt({ purchasableCurrency, networkAvailable });
   const { retrieveTokenAllowance } = useTokenAllowance();
   const { retrieveUserPurchased } = useUserPurchased(tokenDetails, poolAddress, ableToFetchFromBlockchain);
 
-  const getApproveToken = useCallback((appChainID: string) => {
-    if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.USDT) {
-      return {
-        address: getUSDTAddress(appChainID),
-        name: "USDT",
-        symbol: "USDT",
-        decimals: (appChainID === ETH_CHAIN_ID || appChainID === POLYGON_CHAIN_ID) ? 6 : 18
-      };
-    }
-
-    if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.BUSD) {
-      return {
-        address: getBUSDAddress(appChainID),
-        name: "BUSD",
-        symbol: "BUSD",
-        decimals: 18
-      };
-    }
-
-    if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.USDC) {
-      return {
-        address: getUSDCAddress(appChainID),
-        name: "USDC",
-        symbol: "USDC",
-        decimals: (appChainID === ETH_CHAIN_ID || appChainID === POLYGON_CHAIN_ID) ? 6 : 18
-      };
-    }
-
-    if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.ETH) {
-      return {
-        address: "0x00",
-        name: 'ETH',
-        symbol: 'ETH',
-        decimals: 18
-      }
-    }
-  }, [purchasableCurrency, appChainID])
-
-  const tokenToApprove = getApproveToken(appChainID);
+  const tokenToApprove = getApproveToken(appChainID, purchasableCurrency);
 
   const { approveToken, tokenApproveLoading, transactionHash } = useTokenApprove(
     tokenToApprove,
@@ -212,10 +179,10 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
   // Check if user already buy at least minimum tokens at the first time
   const connectedAccountFirstBuy =
     connectedAccount
-    ? (
-       parsedFirstBuy[poolAddress] ? parsedFirstBuy[poolAddress][connectedAccount]: false
-    )
-    : false;
+      ? (
+        parsedFirstBuy[poolAddress] ? parsedFirstBuy[poolAddress][connectedAccount] : false
+      )
+      : false;
 
   const availableMaximumBuy = useMemo(() => {
     // Check if max buy greater than total ICO coins sold
@@ -227,11 +194,8 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
     return maxBuy.gt(0) ? formatRoundDown(maxBuy) : '0';
   }, [tokenBalance, maximumBuy, userPurchased, poolAmount, tokenSold, rate]);
 
-  const { retrieveTokenSold, tokenSold: totalUserTokenSold  } = useTokenSold(tokenDetails, poolAddress, ableToFetchFromBlockchain);
+  const { retrieveTokenSold, tokenSold: totalUserTokenSold } = useTokenSold(tokenDetails, poolAddress, ableToFetchFromBlockchain);
   const poolErrorBeforeBuy = useMemo(() => {
-
-
-
     if (minimumBuy && input && new BigNumber(input || 0).lt(minimumBuy) && !connectedAccountFirstBuy && new Date() > startBuyTimeInDate) {
       return {
         message: `The minimum amount you must trade is ${new BigNumber(minimumBuy).toFixed(2)} ${currencyName}.`,
@@ -256,8 +220,8 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
 
   let enableApprove = false;
   let activeDisableStep1 = false;
-  let activeStep2= false;
-  let activeStep2Bought= false;
+  let activeStep2 = false;
+  let activeStep2Bought = false;
 
 
   // Check whether current user's tier is valid or not
@@ -265,17 +229,17 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
 
   // Check multiple conditions for purchasing time
   const purchasable =
-     availablePurchase
-     && estimateTokens > 0
-     && !poolErrorBeforeBuy
-     // && new BigNumber(input).lte(new BigNumber(maximumBuy))
-     // && new BigNumber(input).lte(remainingAmount)
-     // && new BigNumber(estimateTokens).lte(new BigNumber(poolAmount).minus(tokenSold))
-     // && new BigNumber(tokenBalance).gte(new BigNumber(input))
-     // && validTier
-     && !wrongChain
-     && !disableAllButton
-     && ((purchasableCurrency !== PurchaseCurrency.ETH ? new BigNumber(tokenAllowance || 0).gt(0): true));
+    availablePurchase
+    && estimateTokens > 0
+    && !poolErrorBeforeBuy
+    // && new BigNumber(input).lte(new BigNumber(maximumBuy))
+    // && new BigNumber(input).lte(remainingAmount)
+    // && new BigNumber(estimateTokens).lte(new BigNumber(poolAmount).minus(tokenSold))
+    // && new BigNumber(tokenBalance).gte(new BigNumber(input))
+    // && validTier
+    && !wrongChain
+    && !disableAllButton
+    && ((purchasableCurrency !== PurchaseCurrency.ETH ? new BigNumber(tokenAllowance || 0).gt(0) : true));
 
 
   // Actually I don't know why i'm doing it right here :)))
@@ -286,7 +250,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
       && !wrongChain && ableToFetchFromBlockchain && isDeployed
       // && (alreadyJoinPool || joinPoolSuccess)
       && new BigNumber(maximumBuy).gt(0) && !disableAllButton
-    )  {
+    ) {
       enableApprove = true;
     }
     const isAlreadyJoinPool = (alreadyJoinPool || joinPoolSuccess);
@@ -302,43 +266,43 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
       }
     }
 
-    if(tokenAllowance > 0) {
+    if (tokenAllowance > 0) {
       activeDisableStep1 = true;
       activeStep2 = true;
     }
-    if(userPurchased > 0) {
+    if (userPurchased > 0) {
       activeDisableStep1 = true;
       activeStep2 = true;
-      activeStep2Bought= true;
+      activeStep2Bought = true;
     }
   }
 
 
   // Fetch User balance
   const fetchUserBalance = useCallback(async () => {
-      if (appChainID && connectedAccount && connector) {
-        const accountBalance = await getAccountBalance(appChainID, walletChainID, connectedAccount as string, connector);
+    if (appChainID && connectedAccount && connector) {
+      const accountBalance = await getAccountBalance(appChainID, walletChainID, connectedAccount as string, connector);
 
-        dispatch(
-          connectWalletSuccess(
-            connector,
-            [connectedAccount],
-            {
-              [connectedAccount]: new BigNumber(accountBalance._hex).div(new BigNumber(10).pow(18)).toFixed(5)
-            }
-          )
+      dispatch(
+        connectWalletSuccess(
+          connector,
+          [connectedAccount],
+          {
+            [connectedAccount]: new BigNumber(accountBalance._hex).div(new BigNumber(10).pow(18)).toFixed(5)
+          }
         )
-      }
+      )
+    }
   }, [connector, appChainID, walletChainID, connectedAccount]);
 
   const fetchPoolDetails = useCallback(async () => {
-      if (tokenDetails && poolAddress && connectedAccount && tokenToApprove) {
-        setTokenAllowance(await retrieveTokenAllowance(tokenToApprove, connectedAccount, poolAddress) as number);
-        setUserPurchased(await retrieveUserPurchased(connectedAccount, poolAddress) as number);
-        setTokenBalance(await retrieveTokenBalance(tokenToApprove, connectedAccount) as number);
-        setWalletBalance(await retrieveTokenBalance(tokenDetails, connectedAccount) as number);
-        setPoolBalance(await retrieveTokenBalance(tokenDetails, poolAddress) as number);
-      }
+    if (tokenDetails && poolAddress && connectedAccount && tokenToApprove) {
+      setTokenAllowance(await retrieveTokenAllowance(tokenToApprove, connectedAccount, poolAddress) as number);
+      setUserPurchased(await retrieveUserPurchased(connectedAccount, poolAddress) as number);
+      setTokenBalance(await retrieveTokenBalance(tokenToApprove, connectedAccount) as number);
+      setWalletBalance(await retrieveTokenBalance(tokenDetails, connectedAccount) as number);
+      setPoolBalance(await retrieveTokenBalance(tokenDetails, poolAddress) as number);
+    }
 
   }, [tokenDetails, connectedAccount, tokenToApprove, poolAddress]);
 
@@ -436,7 +400,10 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
     // Remain: 295.43
     const currencyUserBought = formatRoundUp(new BigNumber(userPurchased).multipliedBy(poolDetails?.ethRate || 0)); // ROUND_UP: 4.999999999999999999987744 --> 5
     const remainCurrencyAvailable = formatRoundDown(new BigNumber(maximumBuy).minus(currencyUserBought)); // ROUND_DOWN: 295.435424132100000000012256 --> 295.43
-
+    if (!verifiedCapcha) {
+      dispatch(alertFailure(`Recaptcha requires verification.`));
+      return false
+    }
     const isOverMaxBuy = new BigNumber(input).gt(remainCurrencyAvailable);
     if (isOverMaxBuy) {
       dispatch(alertFailure(`You can only buy up to ${numberWithCommas(remainCurrencyAvailable, 2)} ${currencyName}`));
@@ -528,8 +495,8 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
             <span className={styles.allocationContent}>
               {!!currentUserTier && !!currentUserTier.start_time && !!currentUserTier.end_time &&
                 <>
-                  { convertUnixTimeToDateTime(currentUserTier.start_time, 1)?? 'TBA' } - <br/>
-                  { convertUnixTimeToDateTime(currentUserTier.end_time, 1)?? 'TBA' }
+                  {convertUnixTimeToDateTime(currentUserTier.start_time, 1) ?? 'TBA'} - <br />
+                  {convertUnixTimeToDateTime(currentUserTier.end_time, 1) ?? 'TBA'}
                 </>
               }
             </span>
@@ -606,7 +573,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
         </div>
 
         {
-          <p className={`${poolErrorBeforeBuy?.type === MessageType.error ? `${styles.poolErrorBuy}`: `${styles.poolErrorBuyWarning}`}`}>
+          <p className={`${poolErrorBeforeBuy?.type === MessageType.error ? `${styles.poolErrorBuy}` : `${styles.poolErrorBuyWarning}`}`}>
             {poolErrorBeforeBuy && poolErrorBeforeBuy.message}
           </p>
         }
@@ -614,27 +581,31 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
         {(purchasableCurrency !== PurchaseCurrency.ETH) && (purchasableCurrency.toUpperCase() !== ACCEPT_CURRENCY.ETH?.toUpperCase()) &&
           <p className={styles.approveWarning}>{`You need to Approve once (and only once) before you can start purchasing.`}</p>
         }
+        {
+          !enableApprove && maximumBuy && maximumBuy > 0 &&
+          <Recapcha onChange={onVerifyCapcha} className={styles.captchaContainer} />
+        }
 
         <div className={styles.btnGroup}>
           <div>
             {
               purchasableCurrency.toUpperCase() !== ACCEPT_CURRENCY.ETH?.toUpperCase() &&
               <Button
-                text={new BigNumber(tokenAllowance || 0).gt(0) ? 'Approved': 'Approve'}
+                text={new BigNumber(tokenAllowance || 0).gt(0) ? 'Approved' : 'Approve'}
                 backgroundColor={'#29C08A'}
                 disabled={!enableApprove || !isKyc}
                 onClick={isKyc ? handleTokenApprove : undefined}
                 loading={tokenApproveLoading}
-              /> 
+              />
             }
           </div>
-        
+
           <div>
             <Button
               text={'Swap'}
               backgroundColor={'#72F34B'}
-              disabled={!purchasable || !isKyc}
-              onClick={isKyc ? handleTokenDeposit : undefined}
+              disabled={!purchasable || !isKyc || !verifiedCapcha}
+              onClick={(isKyc) ? handleTokenDeposit : undefined}
               loading={tokenDepositLoading}
             />
           </div>

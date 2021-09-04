@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import _ from 'lodash';
-import {ADMIN_URL_PREFIX, API_URL_PREFIX, ETHERSCAN_BASE_URL, IMAGE_URL_PREFIX, NETWORK_AVAILABLE} from "../constants";
+import {ADMIN_URL_PREFIX, API_URL_PREFIX, ETHERSCAN_BASE_URL, IMAGE_URL_PREFIX, NETWORK_AVAILABLE, TOKEN_TYPE} from "../constants";
 import axios from "axios";
 import { PurchaseCurrency } from '../constants/purchasableCurrency';
 import { getBUSDAddress, getUSDCAddress, getUSDTAddress } from './contractAddress/getAddresses';
@@ -284,3 +284,6 @@ export const getApproveToken = (appChainID: string, purchasableCurrency: string)
     }
   }
 };
+
+export const isErc721 = (type: string) => type === TOKEN_TYPE.ERC721;
+export const isErc20 = (type: string) => type === TOKEN_TYPE.ERC20;

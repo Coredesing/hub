@@ -429,6 +429,7 @@ const ContentNFTBox = ({ id, ...props }: any) => {
         ).toString(16)}`,
         isClaimable: infoTicket.pool_type === "claimable",
         networkAvailable: infoTicket.network_available,
+        captchaToken: '', // TODO: use recaptcha here
     });
 
     useEffect(() => {
@@ -586,6 +587,9 @@ const ContentNFTBox = ({ id, ...props }: any) => {
                     {!isKYC && !checkingKyc && connectedAccount && (
                         <AlertKYC connectedAccount={connectedAccount} />
                     )}
+                    <div className={styles.bannerBox}>
+                        <Image src="/images/nftbox-banner.png" />
+                    </div>
 
                     <div className={styles.card}>
                         <div className={styles.cardImg}>

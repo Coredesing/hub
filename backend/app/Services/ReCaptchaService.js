@@ -20,6 +20,7 @@ class ReCaptchaService {
     }
 
     const SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY
+    if (SECRET_KEY == null || !SECRET_KEY.length) return true;
     const url = `https://www.google.com/recaptcha/api/siteverify?secret=${SECRET_KEY}&response=${captchaToken}`;
     await axios.post(url)
       .then((response) => {

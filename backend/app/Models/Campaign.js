@@ -54,6 +54,10 @@ class Campaign extends Model {
     return this.hasMany('App/Models/UserWhitelistSubmission')
   }
 
+  winnerlistUsers() {
+    return this.hasMany('App/Models/WinnerListUser')
+  }
+
   freeBuyTimeSetting() {
     return this.hasOne('App/Models/FreeBuyTimeSetting')
   }

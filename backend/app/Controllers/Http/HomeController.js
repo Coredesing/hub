@@ -37,9 +37,11 @@ class HomeController {
       // TODO: create table settings
       let performance = [];
       performance.push(this.createPerformance('https://ipfs.icetea.io/gateway/ipfs/QmVgYNupb1PzyBDGrRqV2KvMjWeZd6qPAfbipgMNZ5kEPz',
-        'Kaby Arena', 'KABY', '$0.007', 'N/A', 0,'N/A'))
+        'Kaby Arena', 'KABY', '$0.007', '0.175', 'N/A','$8,102,799'))
+      performance.push(this.createPerformance('https://i.imgur.com/PXspJBK.png',
+        'Death Road', 'DRACE', '$0.006', 'N/A', 'N/A','N/A'))
       performance.push(this.createPerformance('/images/partnerships/mechmaster.png',
-        'Mech Master', 'MECH', 'N/A', 'N/A', 0,'N/A'))
+        'Mech Master', 'MECH', 'N/A', 'N/A', 'N/A','N/A'))
 
       // Cache data
       // await RedisUtils.setRedisPerformanceDetail(performance);

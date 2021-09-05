@@ -48,6 +48,7 @@ import { listStatuses, listTypes } from "../constants";
 import { formatCampaignStatus, getSeedRound, isErc20, isErc721 } from "../../../utils";
 import clsx from 'clsx';
 import { getRoute } from "../../TicketSale/utils";
+import { numberWithCommas } from "../../../utils/formatNumber";
 
 const IdoPools = (props: any) => {
   const styles = { ...useStyles(), ...useTabStyles() };
@@ -193,11 +194,12 @@ const IdoPools = (props: any) => {
       } else {
         amount = pool.userClaimInfo?.user_purchased || 0;
       }
-      return `${amount} ${pool.symbol?.toUpperCase()}`
+      return `${numberWithCommas(amount, 0)} ${pool.symbol?.toUpperCase()}`
     }
     if(isErc20(pool.token_type)) {
       amount = pool.userClaimInfo?.user_purchased || 0;
-      return `${amount} ${currencyName?.toUpperCase()}`
+      const ethRate = pool.accept_currency === 'eth' ? pool.ether_conversion_rate: pool.token_conversion_rate;
+      return `${numberWithCommas((+amount * +ethRate) || 0, 0)} ${currencyName?.toUpperCase()}`
     }
     
     if (pool.allowcation_amount === NULL_AMOUNT) return '-';

@@ -18,7 +18,7 @@ describe("Linear Pool ", function () {
     this.carol = this.signers[2];
     this.minter = this.signers[4];
 
-    this.LinearPool = await ethers.getContractFactory("StakingPool");
+    this.LinearPool = await ethers.getContractFactory("LinearPool");
   });
   beforeEach(async function () {
     this.AcceptedToken = await ethers.getContractFactory("ERC20Mock", this.minter);
@@ -35,8 +35,8 @@ describe("Linear Pool ", function () {
 
     it("should allow emergency withdraw", async function () {
       // default flexible pool with 5% APR
-      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address, "0", "0"], {
-        initializer: '__StakingPool_init'
+      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
+        initializer: '__LinearPool_init'
       });
       await this.pool.deployed();
       await this.pkf.connect(this.minter).approve(this.pool.address, utils.parseEther("10000"));
@@ -74,8 +74,8 @@ describe("Linear Pool ", function () {
       expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("1000"));
     });
     it("should not allow admin set delay duration too long", async function () {
-      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address, "0", "0"], {
-        initializer: '__StakingPool_init'
+      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
+        initializer: '__LinearPool_init'
       });
       await this.pool.deployed();
 
@@ -106,8 +106,8 @@ describe("Linear Pool ", function () {
     });
     it("should distribute pkfs properly for each staker", async function () {
       // default flexible pool with 5% APR
-      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address, "0", "0"], {
-        initializer: '__StakingPool_init'
+      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
+        initializer: '__LinearPool_init'
       });
       await this.pool.deployed();
       await this.pkf.connect(this.minter).approve(this.pool.address, utils.parseEther("10000"));
@@ -155,8 +155,8 @@ describe("Linear Pool ", function () {
     });
     it("should not allow user to withdraw before waiting delay time", async function () {
       // default flexible pool with 5% APR
-      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address, "0", "0"], {
-        initializer: '__StakingPool_init'
+      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
+        initializer: '__LinearPool_init'
       });
       await this.pool.deployed();
       await this.pkf.connect(this.minter).approve(this.pool.address, utils.parseEther("10000"));
@@ -204,8 +204,8 @@ describe("Linear Pool ", function () {
     });
     it("should allow user to deposit multiple times", async function () {
       // flexible pool with 100% APR
-      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address, "0", "0"], {
-        initializer: '__StakingPool_init'
+      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
+        initializer: '__LinearPool_init'
       });
       await this.pool.deployed();
       await this.pkf.connect(this.minter).approve(this.pool.address, utils.parseEther("10000"));
@@ -310,8 +310,8 @@ describe("Linear Pool ", function () {
     });
     it("should distribute pkfs properly for each staker", async function () {
       // fixed pool with 20% APR
-      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address, "0", "0"], {
-        initializer: '__StakingPool_init'
+      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
+        initializer: '__LinearPool_init'
       });
       await this.pool.deployed();
       await this.pkf.connect(this.minter).approve(this.pool.address, utils.parseEther("10000"));
@@ -374,8 +374,8 @@ describe("Linear Pool ", function () {
     });
     it("should allow user to deposit multiple times", async function () {
       // fixed pool with 20% APR
-      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address, "0", "0"], {
-        initializer: '__StakingPool_init'
+      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
+        initializer: '__LinearPool_init'
       });
       await this.pool.deployed();
       await this.pkf.connect(this.minter).approve(this.pool.address, utils.parseEther("10000"));
@@ -442,8 +442,8 @@ describe("Linear Pool ", function () {
 
     });
     it("should not allow user to withdraw before lock time end", async function () {
-      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address, "0", "0"], {
-        initializer: '__StakingPool_init'
+      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
+        initializer: '__LinearPool_init'
       });
       await this.pool.deployed();
       await this.pkf.connect(this.minter).approve(this.pool.address, utils.parseEther("10000"));
@@ -513,8 +513,8 @@ describe("Linear Pool ", function () {
       expect(await this.pkf.balanceOf(this.bob.address)).to.equal(utils.parseEther("1040"));
     });
     it("should allow user to claim reward multiple times", async function () {
-      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address, "0", "0"], {
-        initializer: '__StakingPool_init'
+      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
+        initializer: '__LinearPool_init'
       });
       await this.pool.deployed();
       await this.pkf.connect(this.minter).approve(this.pool.address, utils.parseEther("10000"));
@@ -574,8 +574,8 @@ describe("Linear Pool ", function () {
 
     });
     it("should not allow user to deposit after end join time", async function () {
-      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address, "0", "0"], {
-        initializer: '__StakingPool_init'
+      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
+        initializer: '__LinearPool_init'
       });
       await this.pool.deployed();
       await this.pkf.connect(this.minter).approve(this.pool.address, utils.parseEther("10000"));
@@ -616,8 +616,8 @@ describe("Linear Pool ", function () {
 
     });
     it("should verify the staking amount correctly", async function () {
-      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address, "0", "0"], {
-        initializer: '__StakingPool_init'
+      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
+        initializer: '__LinearPool_init'
       });
       await this.pool.deployed();
       await this.pkf.connect(this.minter).approve(this.pool.address, utils.parseEther("10000"));
@@ -703,6 +703,78 @@ describe("Linear Pool ", function () {
           .linearDeposit(0, utils.parseEther("50"), { from: this.carol.address }),
         "LinearStakingPool: insufficient amount"
       );
+    });
+    it("should allow user to switch to another pool", async function () {
+      // default flexible pool with 5% APR
+      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
+        initializer: '__LinearPool_init'
+      });
+      await this.pool.deployed();
+      await this.pkf.connect(this.minter).approve(this.pool.address, utils.parseEther("10000"));
+      await this.pool.linearSetRewardDistributor(this.minter.address);
+      await this.pool.linearAddPool(
+        0,
+        0,
+        0,
+        0,
+        0,
+        duration.days(7).toNumber(),
+        (await time.latest()).toNumber(),
+        (await time.latest()).toNumber() + duration.years(1).toNumber()
+      );
+      await this.pool.linearAddPool(
+        0,
+        0,
+        0,
+        0,
+        0,
+        duration.days(14).toNumber(),
+        (await time.latest()).toNumber(),
+        (await time.latest()).toNumber() + duration.years(1).toNumber()
+      );
+      expect(await this.pool.linearPoolLength()).to.equal(2);
+
+
+      await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
+        from: this.alice.address,
+      });
+
+      // Alice deposits 100 tokens to the 1st pool
+      await this.pool
+        .connect(this.alice)
+        .linearDeposit(0, utils.parseEther("100"), { from: this.alice.address });
+      expect(await this.pool.linearTotalStaked(0)).to.equal(utils.parseEther("100"));
+
+      // Alice deposits 200 tokens to the 2nd pool
+      await this.pool
+        .connect(this.alice)
+        .linearDeposit(1, utils.parseEther("200"), { from: this.alice.address });
+      expect(await this.pool.linearTotalStaked(1)).to.equal(utils.parseEther("200"));
+
+      // Alice switches tokens from the 1st to the 2nd pool
+      await this.pool
+        .connect(this.alice)
+        .linearSwitch(0, 1, { from: this.alice.address });
+      expect(await this.pool.linearTotalStaked(1)).to.equal(utils.parseEther("300"));
+
+      await this.pool
+        .connect(this.alice)
+        .linearWithdraw(1, utils.parseEther("300"), { from: this.alice.address })
+
+      // Alice should not be able to claim withdraw after 10 days.
+      await time.increase(duration.days(10).toNumber());
+      await expectRevert(
+        this.pool
+          .connect(this.alice)
+          .linearClaimPendingWithdraw(1, { from: this.alice.address }),
+        "LinearStakingPool: not released yet"
+      );
+
+      // Alice should be able to withdraw after 4 more days.
+      await time.increase(duration.days(4).toNumber());
+      await this.pool
+        .connect(this.alice)
+        .linearClaimPendingWithdraw(1, { from: this.alice.address });
     });
 
   });

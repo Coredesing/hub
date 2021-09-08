@@ -259,6 +259,27 @@ contract LinearPool is
     }
 
     /**
+     * @notice Deposit token to earn rewards for another address
+     * @param _poolId id of the pool
+     * @param _amount amount of token to deposit
+     * @param _account the account that received the rewards
+     */
+    function linearDepositFor(
+        uint256 _poolId,
+        uint128 _amount,
+        address _account
+    ) external nonReentrant linearValidatePoolById(_poolId) {
+        _linearDeposit(_poolId, _amount, _account);
+
+        linearAcceptedToken.safeTransferFrom(
+            address(msg.sender),
+            address(this),
+            _amount
+        );
+        emit LinearDeposit(_poolId, _account, _amount);
+    }
+
+    /**
      * @notice Withdraw token from a pool
      * @param _poolId id of the pool
      * @param _amount amount to withdraw

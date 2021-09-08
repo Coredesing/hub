@@ -68,6 +68,11 @@ const Home = (props: any) => {
       name: "Mech Master",
       website: "https://mechmaster.io/",
     },
+    {
+      banner: "/images/partnerships/deathroad.jpg",
+      name: "Death Road",
+      website: "https://deathroad.io/",
+    },
   ];
 
   const [isShowImgBanner, setIsShowImgModal] = useState(true);
@@ -122,7 +127,7 @@ const Home = (props: any) => {
 
   return (
     <DefaultLayout>
-      <section className={clsx(styles.banner, styles.section)}>
+      <section className={clsx(styles.banner, styles.section)} style={isShowImgBanner ? {paddingTop: '10px'} : {}}>
         {isShowImgBanner && (
           <div className={styles.wrapperImgBanner}>
             <div className={styles.imgBanner}>
@@ -153,7 +158,7 @@ const Home = (props: any) => {
 
         <div
           className={styles.wrapperContent}
-          style={!isShowImgBanner ? { marginTop: -50 } : {}}
+          // style={!isShowImgBanner ? { marginTop: -50 } : {}}
         >
           <div className={clsx(styles.bannerContent)}>
             <div className="large-text">
@@ -167,7 +172,7 @@ const Home = (props: any) => {
           </div>
         </div>
       </section>
-      <Instruction />
+      {/* <Instruction /> */}
       <section className={clsx(styles.ticketSales, styles.section)}>
         <div className="rectangle gr">
           <img src="/images/ticket-sale-text.svg" alt="" />

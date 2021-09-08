@@ -741,15 +741,17 @@ class PoolController {
   }
 
   async getTopBid({ request, auth, params }) {
+    const inputParams = request.all();
     // TODO: For testing purpose
     const poolId = params.campaignId;
-    const wallet_address = request.wallet_address;
+    const wallet_address = inputParams.wallet_address;
     try {
       let data = {
-        'wallet_address': wallet_address,
-        'rank': 5,
-        'limit': 30,
-        'top': [
+        wallet_address: wallet_address,
+        pool_id: poolId,
+        rank: 5,
+        limit: 30,
+        top: [
           {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A1', last_time: 1631109835, amount: '100000000000000000'},
           {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A2', last_time: 1631109835, amount: '110000000000000000'},
           {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A3', last_time: 1631109835, amount: '120000000000000000'},

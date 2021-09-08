@@ -322,6 +322,63 @@ contract LinearPool is
     }
 
     /**
+     * @notice Switch token from a pool to a new pool
+     * @param _curPoolId id of the current pool
+     * @param _newPoolId id of the new pool
+     */
+    function linearSwitch(uint256 _curPoolId, uint256 _newPoolId)
+        external
+        nonReentrant
+        linearValidatePoolById(_curPoolId)
+        linearValidatePoolById(_newPoolId)
+    {
+        address account = msg.sender;
+
+        LinearPoolInfo storage curPool = linearPoolInfo[_curPoolId];
+        LinearStakingData storage currentStakingData = linearStakingData[
+            _curPoolId
+        ][account];
+
+        LinearPoolInfo storage newPool = linearPoolInfo[_newPoolId];
+
+        require(
+            newPool.lockDuration >= curPool.lockDuration &&
+                newPool.delayDuration > curPool.delayDuration,
+            "LinearStakingPool: invalid new pool"
+        );
+
+        require(
+            currentStakingData.balance > 0,
+            "LinearStakingPool: invalid switch amount"
+        );
+
+        _linearHarvest(_curPoolId, account);
+
+        if (currentStakingData.reward > 0) {
+            require(
+                linearRewardDistributor != address(0),
+                "LinearStakingPool: invalid reward distributor"
+            );
+
+            uint128 reward = currentStakingData.reward;
+            currentStakingData.reward = 0;
+            linearAcceptedToken.safeTransferFrom(
+                linearRewardDistributor,
+                account,
+                reward
+            );
+            emit LinearRewardsHarvested(_curPoolId, account, reward);
+        }
+
+        uint128 switchAmount = currentStakingData.balance;
+        currentStakingData.balance = 0;
+        emit LinearWithdraw(_curPoolId, account, switchAmount);
+
+        _linearDeposit(_newPoolId, switchAmount, account);
+        emit LinearDeposit(_newPoolId, account, switchAmount);
+    }
+
+    /**
      * @notice Claim pending withdrawal
      * @param _poolId id of the pool
      */

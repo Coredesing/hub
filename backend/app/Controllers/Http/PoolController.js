@@ -18,71 +18,6 @@ const { pick } = require('lodash');
 const csv = require('fast-csv');
 
 class PoolController {
-  // special pool: GamefiTicket
-  async getGameFITicket() {
-    try {
-      if (await RedisUtils.checkExistRedisPoolDetail(0)) {
-        const cachedPoolDetail = await RedisUtils.getRedisPoolDetail(0);
-        return HelperUtils.responseSuccess(JSON.parse(cachedPoolDetail));
-      }
-
-      let pool = await GameFIUtils.getGameFIPool(CampaignModel)
-      if (!pool) {
-        return HelperUtils.responseNotFound('Pool not found');
-      }
-
-      let count = await UserModel.query()
-        .where('is_kyc', 1)
-        .where('status', 1)
-        .count('* as total');
-
-      let participants = (count && count.length > 0) ? count[0].total : 0
-      participants = parseInt(participants) || 0
-      let publicPool = pick(pool, [
-        // Pool Info
-        'id', 'title', 'website', 'banner', 'updated_at', 'created_at',
-        'campaign_hash', 'description', 'registed_by', 'register_by',
-        'campaign_status',
-
-        // Types
-        'buy_type', 'accept_currency', 'min_tier', 'network_available',
-        'pool_type', 'is_deploy', 'is_display', 'is_pause', 'is_private',
-        'public_winner_status',
-
-        // Time
-        'release_time', 'start_join_pool_time', 'start_time', 'end_join_pool_time', 'finish_time',
-
-        // Token Info
-        'name', 'symbol', 'decimals', 'token', 'token_type', 'token_images', 'total_sold_coin',
-        'token_conversion_rate', 'ether_conversion_rate',
-        'price_usdt', 'display_price_rate',
-        'token_sold',
-
-        // social network
-        'socialNetworkSetting',
-
-        // Progress Display Setting
-        'token_sold_display',
-        'progress_display',
-
-        // Lock Schedule Setting
-        'whitelist_country',
-      ]);
-
-      publicPool.participants = participants;
-      publicPool.max_buy_ticket = new BigNumber(pool.tiers[0].max_buy).dividedBy(new BigNumber(pool.token_conversion_rate)).integerValue(BigNumber.ROUND_DOWN);
-      publicPool.max_buy_ticket = parseInt(publicPool.max_buy_ticket.toFixed())
-
-      // Cache data
-      RedisUtils.createRedisPoolDetail(0, publicPool);
-
-      return HelperUtils.responseSuccess(publicPool);
-    } catch (e) {
-      console.log(e);
-      return HelperUtils.responseErrorInternal('ERROR: Get public pool fail !');
-    }
-  }
-
   async createPool({ request, auth }) {
     const inputParams = request.only([
       'registed_by',
@@ -507,7 +442,6 @@ class PoolController {
       if (!pool) {
         return HelperUtils.responseNotFound('Pool not found');
       }
-      pool = JSON.parse(JSON.stringify(pool));
 
       const publicPool = pick(pool, [
         // Pool Info
@@ -566,11 +500,9 @@ class PoolController {
           }
         });
       }
-      console.log('[getPublicPool] - pool.campaignClaimConfig: ', JSON.stringify(pool.campaignClaimConfig));
 
       // Cache data
       RedisUtils.createRedisPoolDetail(poolId, publicPool);
-
       return HelperUtils.responseSuccess(publicPool);
     } catch (e) {
       console.log(e);
@@ -805,6 +737,56 @@ class PoolController {
       return HelperUtils.responseSuccess({message: 'upload successfully'});
     } catch (e) {
       return HelperUtils.responseErrorInternal('upload user Fail');
+    }
+  }
+
+  async getTopBid({ request, auth, params }) {
+    // TODO: For testing purpose
+    const poolId = params.campaignId;
+    const wallet_address = request.wallet_address;
+    try {
+      let data = {
+        'wallet_address': wallet_address,
+        'rank': 5,
+        'limit': 30,
+        'top': [
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A1', last_time: 1631109835, amount: '100000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A2', last_time: 1631109835, amount: '110000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A3', last_time: 1631109835, amount: '120000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A4', last_time: 1631109835, amount: '130000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A5', last_time: 1631109835, amount: '140000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A6', last_time: 1631109835, amount: '150000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A7', last_time: 1631109835, amount: '160000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A8', last_time: 1631109835, amount: '170000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A9', last_time: 1631109835, amount: '180000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7B1', last_time: 1631109835, amount: '190000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7B2', last_time: 1631109835, amount: '110000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7B3', last_time: 1631109835, amount: '120000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7B4', last_time: 1631109835, amount: '130000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7B5', last_time: 1631109835, amount: '140000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7B6', last_time: 1631109835, amount: '150000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7B7', last_time: 1631109835, amount: '160000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7B8', last_time: 1631109835, amount: '170000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7B9', last_time: 1631109835, amount: '180000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7C1', last_time: 1631109835, amount: '190000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7C2', last_time: 1631109835, amount: '110000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7C3', last_time: 1631109835, amount: '100000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7C4', last_time: 1631109835, amount: '130000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7C5', last_time: 1631109835, amount: '140000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7C6', last_time: 1631109835, amount: '150000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7C7', last_time: 1631109835, amount: '100000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7C8', last_time: 1631109835, amount: '160000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7C9', last_time: 1631109835, amount: '170000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7D1', last_time: 1631109835, amount: '180000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7D2', last_time: 1631109835, amount: '190000000000000000'},
+          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7D3', last_time: 1631109835, amount: '100000000000000000'},
+          {wallet_address: '0x5Be32c89607Aedc3C069301c6fb8f9D50838C3B5', last_time: 1631095435, amount: '2500000000000000000'}
+        ]
+      }
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      console.log(e);
+      return HelperUtils.responseErrorInternal('ERROR: Get public pool fail !');
     }
   }
 }

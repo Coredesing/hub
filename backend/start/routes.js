@@ -48,8 +48,8 @@ Route.group(() => {
   Route.post('home/subscribe', 'HomeController.subscribe');
 
   // pool
-  Route.get('pool/gamefi-ticket', 'PoolController.getGameFITicket');
   Route.get('pool/:campaignId', 'PoolController.getPoolPublic');
+  Route.get('pool/:campaignId/top-bid', 'PoolController.getTopBid');
   Route.get('pool/:campaignId/tiers', 'TierController.getTiers');
   Route.get('pool/:campaignId/winners', 'WinnerListUserController.getWinnerAndReserveList');
   Route.get('pool/:campaignId/user/:walletAddress/current-tier', 'UserController.getCurrentTier');

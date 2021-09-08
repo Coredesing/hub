@@ -190,6 +190,7 @@ module.exports = Object.freeze({
     ALL: 'all',
     ONLY_CLAIM: 'only-claim',
     ONLY_BUY: 'only-buy',
+    ONLY_BID: 'only-bid',
   },
   TOKEN_TYPE: {
     ERC20: 'erc20',

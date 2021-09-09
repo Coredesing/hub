@@ -613,6 +613,9 @@ export const useAboutStyles = makeStyles((theme) => ({
   },
   ulPagination: {
     color: '#AEAEAE',
+    '& li div': {
+      color: '#AEAEAE',
+    },
     '& button': {
       background: 'transparent',
       color: '#AEAEAE',

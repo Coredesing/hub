@@ -287,3 +287,4 @@ export const getApproveToken = (appChainID: string, purchasableCurrency: string)
 
 export const isErc721 = (type: string) => type === TOKEN_TYPE.ERC721;
 export const isErc20 = (type: string) => type === TOKEN_TYPE.ERC20;
+export const escapeRegExp = (string: string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

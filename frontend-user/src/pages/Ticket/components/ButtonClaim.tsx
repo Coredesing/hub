@@ -1,6 +1,5 @@
 import React, { MouseEventHandler } from 'react'
-import clsx from 'clsx';
-import useStyles from '../style';
+import { ButtonYellow } from './ButtonYellow'
 
 type Props = {
     onClick: MouseEventHandler,
@@ -10,16 +9,10 @@ export const ButtonClaim = ({
     disabled,
     onClick,
     ...props }: Props) => {
-    const styles = useStyles();
     return (
-        <button
-            className={clsx(styles.btnClaim, {
-                disabled: disabled,
-            })}
-            onClick={onClick}
-            disabled={disabled}
-        >
+        <ButtonYellow onClick={onClick}
+            disabled={disabled}>
             Claim
-        </button>
+        </ButtonYellow>
     )
 }

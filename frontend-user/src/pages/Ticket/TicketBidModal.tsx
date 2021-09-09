@@ -173,7 +173,7 @@ const TicketBidModal = ({ open, bidInfo = {}, ownedBidStaked = {}, token = {}, .
       setBalance(balance);
       setRenewBalance(false);
     }
-    renewBalance && library && token?.address && getBalance();
+    (renewBalance || account) && library && token?.address && getBalance();
   }, [library, account, token, renewBalance]);
 
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -238,7 +238,7 @@ const TicketBidModal = ({ open, bidInfo = {}, ownedBidStaked = {}, token = {}, .
           </span>
         </div>
         <div className={classes.formGroup}>
-          <FormInputNumber value={value} onChange={onChangeValue} isPositive allowZero />
+          <FormInputNumber value={value} onChange={onChangeValue} isPositive allowZero placeholder="Enter your amount"/>
           <span>(Your Wallet Balance: {balance} {bidInfo.accept_currency})</span>
         </div>
         {error && <AlertMsg message={error} />}

@@ -273,10 +273,11 @@ const ContentNFTBox = ({ id, ...props }: any) => {
     const onPlaceBid = useCallback((value: number) => {
         return stake(value)
     }, [stake]);
-
+    const [recallTopBid, setRecallTopBid] = useState(0);
     useEffect(() => {
         if (resultBid.success) {
             setRefreshNumStaked(true);
+            setRecallTopBid(c => c + 1);
         }
         if (resultBid.transaction) {
             setOpenModalTx(true);
@@ -476,7 +477,7 @@ const ContentNFTBox = ({ id, ...props }: any) => {
                         </div>
                     </div>
                     <div className={styles.displayContent}>
-                        <AboutTicket info={infoTicket} connectedAccount={connectedAccount} setRankUser={setRankUser} token={tokenToApprove} />
+                        <AboutTicket info={infoTicket} connectedAccount={connectedAccount} setRankUser={setRankUser} token={tokenToApprove} recallCount={recallTopBid}/>
                     </div>
                 </div>
             </>

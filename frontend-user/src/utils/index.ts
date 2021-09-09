@@ -290,3 +290,8 @@ export const getApproveToken = (appChainID: string, purchasableCurrency: string)
 export const isErc721 = (type: string) => type === TOKEN_TYPE.ERC721;
 export const isErc20 = (type: string) => type === TOKEN_TYPE.ERC20;
 export const escapeRegExp = (string: string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+export const cvtAddressToStar = (address: string) => {
+  const stars = '**********';
+  return address.slice(0, 14) + stars + address.slice(-14);
+}

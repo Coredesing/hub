@@ -94,7 +94,6 @@ const ContentNFTBox = ({ id, ...props }: any) => {
     const [phaseName, setPhaseName] = useState('');
     useEffect(() => {
         if (!loadingTicket && dataTicket) {
-            console.log(dataTicket)
             setNewTicket(false);
             setInfoTicket(dataTicket);
             if (isEndPool(dataTicket.campaign_status)) {
@@ -188,6 +187,12 @@ const ContentNFTBox = ({ id, ...props }: any) => {
     }, [connectedAccount, dataTicket, refreshNumStaked]);
 
     useEffect(() => {
+        if (!connectedAccount) {
+            setOwnedBidStaked({lastTime: 0, staked: 0});
+        }
+    }, [connectedAccount]);
+
+    useEffect(() => {
         const interval = setInterval(() => {
             const newOpenTime = { ...openTime };
             if (
@@ -242,15 +247,12 @@ const ContentNFTBox = ({ id, ...props }: any) => {
         token: tokenToApprove,
     });
 
-    useEffect(() => {
-        console.log('resultBid', resultBid)
-    }, [resultBid])
 
     const [lockWhenClaiming, setLockWhenClaiming] = useState(false);
     const onClaim = async () => {
-        if (!isKYC ||  lockWhenClaiming) return;
+        if (!isKYC || lockWhenClaiming) return;
         setLockWhenClaiming(true);
-        await claim();
+        claim();
     };
 
     useEffect(() => {
@@ -406,7 +408,7 @@ const ContentNFTBox = ({ id, ...props }: any) => {
                                             alt=""
                                         />
                                         <span className={clsx(styles.textBold, 'text-uppercase')}>
-                                            0 {infoTicket.accept_currency}
+                                            {!endOpenTime ? 0 : numberWithCommas(((ownedBidStaked.staked || 0) / 10 ** (tokenToApprove?.decimals || 0)) + '', 4)} {infoTicket.accept_currency}
                                         </span>
                                     </div>
                                 </div>
@@ -443,7 +445,7 @@ const ContentNFTBox = ({ id, ...props }: any) => {
                                             <ButtonApprove isApproving={isApproving} onClick={handleTokenApprove} />
                                         )}
                                         {
-                                            !finishedTime && allowNetwork.ok && <ButtonYellow onClick={onShowModalBid} style={{ textTransform: 'unset', width: '100%' }}>Place a Bid</ButtonYellow>
+                                            !finishedTime && allowNetwork.ok && connectedAccount && <ButtonYellow onClick={onShowModalBid} style={{ textTransform: 'unset', width: '100%' }}>Place a Bid</ButtonYellow>
                                         }
                                         {
                                             finishedTime && <ButtonYellow onClick={onClaim} style={{ textTransform: 'unset', width: '100%' }}>Claim</ButtonYellow>
@@ -474,7 +476,7 @@ const ContentNFTBox = ({ id, ...props }: any) => {
                         </div>
                     </div>
                     <div className={styles.displayContent}>
-                        <AboutTicket info={infoTicket} connectedAccount={connectedAccount} setRankUser={setRankUser} />
+                        <AboutTicket info={infoTicket} connectedAccount={connectedAccount} setRankUser={setRankUser} token={tokenToApprove} />
                     </div>
                 </div>
             </>

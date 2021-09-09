@@ -22,10 +22,11 @@ import {
 } from '../../components/Base/Table';
 import { PaginationResult } from "../../types/Pagination";
 import { SearchBox } from "../../components/Base/SearchBox";
-import { debounce, escapeRegExp } from "../../utils";
+import { cvtAddressToStar, debounce, escapeRegExp } from "../../utils";
 import { numberWithCommas } from "../../utils/formatNumber";
 import { useAboutStyles } from "./style";
 import { isBid } from "./utils";
+import { convertTimeToStringFormat } from "../../utils/convertDate";
 const shareIcon = "/images/icons/share.svg";
 const telegramIcon = "/images/icons/telegram-1.svg";
 const twitterIcon = "/images/icons/twitter-1.svg";
@@ -89,7 +90,7 @@ type Props = {
 
 const sliceArr = (arr: any[], from: number, to: number) => arr.slice(from, to)
 
-const AboutTicket = ({ info = {}, connectedAccount, ...props }: Props) => {
+const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) => {
   const classes = useAboutStyles();
   const [value, setValue] = React.useState(0);
   const theme = useTheme();
@@ -192,7 +193,7 @@ const AboutTicket = ({ info = {}, connectedAccount, ...props }: Props) => {
           <Tab
             className={classes.tabName}
             label={
-              isTicketBid ? `Top Bid (${numberWithCommas(pagination.total, 0)})` : `Winners (${numberWithCommas(winner ? winner.total || 0 : 0, 0)})`
+              isTicketBid ? `Top Users (${numberWithCommas(pagination.total, 0)})` : `Winners (${numberWithCommas(winner ? winner.total || 0 : 0, 0)})`
             }
             style={value === 2 ? { color: "#72F34B" } : {}}
             {...a11yProps(1)}
@@ -266,13 +267,17 @@ const AboutTicket = ({ info = {}, connectedAccount, ...props }: Props) => {
               <TableRowHead>
                 <TableCell>No</TableCell>
                 <TableCell align="left">Wallet Address</TableCell>
+                {isTicketBid && <TableCell align="left">Amounts</TableCell>}
+                {isTicketBid && <TableCell align="left">Last Time</TableCell>}
               </TableRowHead>
             </TableHead>
             <TableBody>
               {(pagination.list || []).map((row, idx) => (
                 <TableRowBody key={row.id}>
                   <TableCell component="th" scope="row"> {((page - 1) * limitPage + idx + 1)} </TableCell>
-                  <TableCell align="left">{row.wallet_address}</TableCell>
+                  <TableCell align="left">{ isTicketBid ? cvtAddressToStar(row.wallet_address) : row.wallet_address }</TableCell>
+                  {isTicketBid && <TableCell align="left">{ numberWithCommas((+row.amount / 10 ** token?.decimals) + '', 4) }</TableCell>}
+                  {isTicketBid && <TableCell align="left">{ convertTimeToStringFormat(new Date(+row.last_time * 1000)) }</TableCell>}
                 </TableRowBody>
               ))}
             </TableBody>

@@ -16,6 +16,7 @@ const CONTRACT_CONFIGS = NETWORK_CONFIGS.contracts[Const.CONTRACTS.CAMPAIGN];
 const ERC721_ABI = require('../../blockchain_configs/contracts/Erc721');
 const { abi: CONTRACT_ABI } = CONTRACT_CONFIGS.CONTRACT_DATA;
 const { abi: CONTRACT_CLAIM_ABI } = CONTRACT_CONFIGS.CONTRACT_CLAIMABLE;
+const { abi: STAKING_CONTEST_CONTRACT_ABI } = NETWORK_CONFIGS.contracts[Const.CONTRACTS.STAKING_CONTEST].CONTRACT_DATA;
 
 /**
  * Switch Link Web3
@@ -341,14 +342,26 @@ const getContractInstanceDev = async (camp) => {
     [Const.NETWORK_AVAILABLE.BSC]: web3BscDev,
     [Const.NETWORK_AVAILABLE.POLYGON]: web3PolygonDev
   }
-  return new networkToWeb3Dev[camp.network_available].eth.Contract(CONTRACT_ABI, camp.campaign_hash);
+
+  let abi = CONTRACT_ABI
+  if (camp.process === Const.PROCESS.ONLY_BID) {
+    abi = STAKING_CONTEST_CONTRACT_ABI
+  }
+
+  return new networkToWeb3Dev[camp.network_available].eth.Contract(abi, camp.campaign_hash);
 };
 
 const getContractInstance = async (camp) => {
   if (isDevelopment) {  // Prevent limit request Infura when dev
     return getContractInstanceDev(camp);
   }
-  return new networkToWeb3[camp.network_available].eth.Contract(CONTRACT_ABI, camp.campaign_hash);
+
+  let abi = CONTRACT_ABI
+  if (camp.process === Const.PROCESS.ONLY_BID) {
+    abi = STAKING_CONTEST_CONTRACT_ABI
+  }
+
+  return new networkToWeb3[camp.network_available].eth.Contract(abi, camp.campaign_hash);
 }
 
 const getERC721TokenContractInstanceDev = async (camp) => {
@@ -734,6 +747,27 @@ const getDecimalsByTokenAddress = async ({ network = Const.NETWORK_AVAILABLE.ETH
   }
 }
 
+const getTopStakingContest = async (pool) => {
+  if (!pool || !pool.campaign_hash || pool.process !== Const.PROCESS.ONLY_BID) {
+    return null;
+  }
+  const poolContract = await getContractInstance(pool);
+
+  try {
+    const data = await poolContract.methods.getTops().call()
+    let result = []
+    for (let index = 0; index < data[0].length; index++) {
+      result.push({wallet_address: data[0][index], amount: data[1][index], last_time: data[2][index]})
+    }
+
+    return result
+  }
+  catch (e) {
+    console.log('getTopStakingContest error', e)
+    return null
+  }
+};
+
 module.exports = {
   randomString,
   doMask,
@@ -771,4 +805,5 @@ module.exports = {
   getFirstClaimConfig,
   getDecimalsByTokenAddress,
   getEPkfBonusBalance,
+  getTopStakingContest,
 };

@@ -10,6 +10,7 @@ module.exports = Object.freeze({
     TIER: 'Tier',
     MANTRA_STAKE: 'MantraStake',
     STAKING_POOL: 'StakingPool',
+    STAKING_CONTEST: 'StakingContest',
   },
   TX_TABLE: {
     CAMPAIGN: 1,

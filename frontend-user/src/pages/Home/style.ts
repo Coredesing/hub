@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: any) => {
     },
     banner: {
       background: "#0A0A0A",
-      paddingTop: "130px",
+      paddingTop: "90px",
       paddingBottom: "130px",
       "& .large-text": {
         ...typeDisplayFlex,
@@ -118,9 +118,10 @@ const useStyles = makeStyles((theme: any) => {
     },
     wrapperImgBanner: {
       width: "100%",
-      position: "absolute",
-      top: "10px",
-      left: 0,
+      position: "relative",
+      // position: "absolute",
+      // top: "10px",
+      // left: 0,
       display: "grid",
       placeContent: "center",
       paddingLeft: "84px",

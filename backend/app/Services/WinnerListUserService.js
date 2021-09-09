@@ -19,8 +19,13 @@ class WinnerListUserService {
       builder = builder.where('campaign_id', params.campaign_id);
     }
 
+    if ((!params.search_term || params.search_term.length < 4) && process.env.WHITELIST_ADDRESS_WINNERS) {
+      const whitelist = process.env.WHITELIST_ADDRESS_WINNERS.split(',')
+      builder = builder.whereNotIn('wallet_address', whitelist)
+    }
+
     // For search box
-    if (params.search_term) {
+    if (params.search_term && params.search_term.length > 3) {
       builder = builder.where(query => {
         query.where('wallet_address', 'like', '%'+ params.search_term +'%')
           .orWhere('email', 'like', '%'+ params.search_term +'%');
@@ -32,10 +37,16 @@ class WinnerListUserService {
 
   buildSearchQuery(params) {
     let builder = WinnerListModel.query();
-    if (params.search) {
+    if ((!params.search || params.search.length < 4) && process.env.WHITELIST_ADDRESS_WINNERS) {
+      const whitelist = process.env.WHITELIST_ADDRESS_WINNERS.split(',')
+      builder = builder.whereNotIn('wallet_address', whitelist)
+    }
+
+    if (params.search && params.search.length > 3) {
       builder = builder.where('email', 'like', '%' + params.search + '%')
         .orWhere('wallet_address', 'like', '%' + params.search + '%');
     }
+
     if (params.campaign_id) {
       builder = builder.where('campaign_id', params.campaign_id);
     }

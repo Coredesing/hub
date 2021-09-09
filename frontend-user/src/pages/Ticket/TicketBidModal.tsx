@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -9,8 +9,10 @@ import { typeDisplayFlex } from '../../styles/CommonStyle';
 import AlertMsg from './components/AlertMsg';
 import { ButtonYellow } from './components/ButtonYellow';
 import { ResultStaked } from './types';
-import {FormInputNumber} from '../../components/Base/FormInputNumber';
-
+import { FormInputNumber } from '../../components/Base/FormInputNumber';
+import { getContract } from '../../utils/contract';
+import Erc20Json from '../../abi/Erc20.json';
+import { useWeb3React } from '@web3-react/core';
 const commaNumber = require('comma-number');
 const closeIcon = '/images/icons/close.svg';
 const useStyles = makeStyles({
@@ -146,19 +148,37 @@ const useStyles = makeStyles({
 
 type Props = {
   open: boolean,
-  bidInfo: {[k: string]: any},
+  bidInfo: { [k: string]: any },
   ownedBidStaked: ResultStaked,
   [k: string]: any
 }
 const TicketBidModal = ({ open, bidInfo = {}, ownedBidStaked = {}, token = {}, ...props }: Props) => {
+  const { library, account } = useWeb3React();
+
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [value, setValue] = useState('');
   const [error, setError] = useState('');
+  const [balance, setBalance] = useState<string | undefined>();
+  const [renewBalance, setRenewBalance] = useState(true);
+
+  useEffect(() => {
+    if (!account) return setBalance('0');
+    const getBalance = async () => {
+      const contract = getContract(token.address, Erc20Json, library, account);
+      let balance = await contract.balanceOf(account);
+      balance = balance.toNumber();
+      balance = commaNumber(+(balance / 10 ** token.decimals).toFixed(4) * 10000 / 10000) || '0';
+      setBalance(balance);
+      setRenewBalance(false);
+    }
+    renewBalance && library && token?.address && getBalance();
+  }, [library, account, token, renewBalance]);
+
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {value} = e.target;
-    if(+value > 0 && error) {
+    const { value } = e.target;
+    if (+value > 0 && error) {
       setError('');
     }
     setValue(value);
@@ -170,18 +190,19 @@ const TicketBidModal = ({ open, bidInfo = {}, ownedBidStaked = {}, token = {}, .
   };
 
   const onPlaceBid = async () => {
-    if(!props.onClick) return;
+    if (!props.onClick || !account) return;
     const result = await props.onClick(+value);
-    if(result?.success) {
+    if (result?.success) {
       setValue('');
+      setRenewBalance(true);
     } else {
       setError(result?.error || '');
     }
   };
-  
+
   const numStaked = (staked?: number) => {
-    if( !staked || staked <= 0) return staked;
-    if(token?.decimals) {
+    if (!staked || staked <= 0) return staked;
+    if (token?.decimals) {
       return commaNumber(+(staked / 10 ** token?.decimals).toFixed(4) * 10000 / 10000) || 0;
     }
   }
@@ -205,6 +226,10 @@ const TicketBidModal = ({ open, bidInfo = {}, ownedBidStaked = {}, token = {}, .
           <label>Opening price</label>
           <span>0 {bidInfo.accept_currency}</span>
         </div>
+        <div className={classes.boxGroup}>
+          <label>Your bid</label>
+          <span>{numStaked(ownedBidStaked.staked)} {bidInfo.accept_currency}</span>
+        </div>
         <div className={`${classes.boxGroup} ${classes.mb0}`}>
           <label>Bid</label>
           <span>
@@ -213,15 +238,14 @@ const TicketBidModal = ({ open, bidInfo = {}, ownedBidStaked = {}, token = {}, .
           </span>
         </div>
         <div className={classes.formGroup}>
-          <FormInputNumber value={value} onChange={onChangeValue} isPositive allowZero/>
-          <span>(Your Wallet Balance: {numStaked(ownedBidStaked.staked)} {bidInfo.accept_currency})</span>
+          <FormInputNumber value={value} onChange={onChangeValue} isPositive allowZero />
+          <span>(Your Wallet Balance: {balance} {bidInfo.accept_currency})</span>
         </div>
         {error && <AlertMsg message={error} />}
-        
 
       </DialogContent>
       <DialogActions className={classes.actions}>
-        <ButtonYellow onClick={onPlaceBid} className={classes.btnBid}>
+        <ButtonYellow onClick={onPlaceBid} className={classes.btnBid} disabled={!account}>
           Place a Bid
         </ButtonYellow>
       </DialogActions>

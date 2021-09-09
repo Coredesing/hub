@@ -105,7 +105,7 @@ const AboutTicket = ({ info = {}, connectedAccount, ...props }: Props) => {
   const isTicketBid = isBid(info.process);
   const url = (() => {
     if (isTicketBid) {
-      return `/pool/${49}/top-bid?wallet_address=${connectedAccount}`
+      return `/pool/${info.id}/top-bid?wallet_address=${connectedAccount}`
     }
     return `/user/winner-list/${info.id}?page=${page}&limit=${limitPage}&search_term=${searchWinner}`
   })();

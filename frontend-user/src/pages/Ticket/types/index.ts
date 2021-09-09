@@ -4,3 +4,7 @@ export type CountDownTimeType = {
     minutes: number,
     seconds: number,
 }
+export interface ResultStaked {
+    staked?: number,
+    lastTime?: number
+}

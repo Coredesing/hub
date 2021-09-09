@@ -443,6 +443,7 @@ class PoolController {
         return HelperUtils.responseNotFound('Pool not found');
       }
 
+      pool = JSON.parse(JSON.stringify(pool))
       const publicPool = pick(pool, [
         // Pool Info
         'id', 'title', 'website', 'banner', 'updated_at', 'created_at',
@@ -490,7 +491,6 @@ class PoolController {
         'freeBuyTimeSetting',
       ]);
 
-      console.log('[getPublicPool] - pool.tiers: ', JSON.stringify(pool.tiers));
       if (pool.tiers && pool.tiers.length > 0) {
         publicPool.tiers = pool.tiers.map((item, index) => {
           return {
@@ -743,49 +743,34 @@ class PoolController {
   async getTopBid({ request, auth, params }) {
     const inputParams = request.all();
     // TODO: For testing purpose
-    const poolId = params.campaignId;
+    const campaignId = params.campaignId;
     const wallet_address = inputParams.wallet_address;
     try {
-      let data = {
-        wallet_address: wallet_address,
-        pool_id: poolId,
-        rank: 5,
-        limit: 30,
-        top: [
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A1', last_time: 1631109835, amount: '100000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A2', last_time: 1631109835, amount: '110000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A3', last_time: 1631109835, amount: '120000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A4', last_time: 1631109835, amount: '130000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A5', last_time: 1631109835, amount: '140000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A6', last_time: 1631109835, amount: '150000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A7', last_time: 1631109835, amount: '160000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A8', last_time: 1631109835, amount: '170000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7A9', last_time: 1631109835, amount: '180000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7B1', last_time: 1631109835, amount: '190000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7B2', last_time: 1631109835, amount: '110000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7B3', last_time: 1631109835, amount: '120000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7B4', last_time: 1631109835, amount: '130000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7B5', last_time: 1631109835, amount: '140000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7B6', last_time: 1631109835, amount: '150000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7B7', last_time: 1631109835, amount: '160000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7B8', last_time: 1631109835, amount: '170000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7B9', last_time: 1631109835, amount: '180000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7C1', last_time: 1631109835, amount: '190000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7C2', last_time: 1631109835, amount: '110000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7C3', last_time: 1631109835, amount: '100000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7C4', last_time: 1631109835, amount: '130000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7C5', last_time: 1631109835, amount: '140000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7C6', last_time: 1631109835, amount: '150000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7C7', last_time: 1631109835, amount: '100000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7C8', last_time: 1631109835, amount: '160000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7C9', last_time: 1631109835, amount: '170000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7D1', last_time: 1631109835, amount: '180000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7D2', last_time: 1631109835, amount: '190000000000000000'},
-          {wallet_address: '0xB2C340F3e08825bf0EA35da03da434156764c7D3', last_time: 1631109835, amount: '100000000000000000'},
-          {wallet_address: '0x5Be32c89607Aedc3C069301c6fb8f9D50838C3B5', last_time: 1631095435, amount: '2500000000000000000'}
-        ]
+      if (!await RedisUtils.checkExistTopBid(campaignId) || !wallet_address) {
+        return {
+          wallet_address: wallet_address,
+          rank: -1,
+          limit: 10,
+          top: [],
+        }
       }
-      return HelperUtils.responseSuccess(data);
+
+      let dataStr = await RedisUtils.getRedisTopBid(campaignId)
+      const data = JSON.parse(dataStr)
+      let rank = -1;
+      for (let index = 0; index < data.length; index++) {
+        if (data[index].wallet_address.toLowerCase() === wallet_address.toLowerCase()) {
+          rank = index + 1
+          break
+        }
+      }
+
+      return HelperUtils.responseSuccess({
+        wallet_address: wallet_address,
+        rank: rank,
+        limit: data.length,
+        top: data,
+      });
     } catch (e) {
       console.log(e);
       return HelperUtils.responseErrorInternal('ERROR: Get public pool fail !');

@@ -201,6 +201,26 @@ const setRedisPerformanceDetail = async(data) => {
   return await Redis.set(getRedisPerformanceSetting(), JSON.stringify(data));
 }
 
+/*
+  Top Bid
+ */
+const getRedisKeyTopBid = (poolId) => {
+  return `top_bid_${poolId}`;
+};
+
+const getRedisTopBid = async (poolId) => {
+  return await Redis.get(getRedisKeyTopBid(poolId));
+};
+
+const setRedisTopBid = async (poolId, data) => {
+  const redisKey = getRedisKeyTopBid(poolId);
+  return await Redis.set(redisKey, JSON.stringify(data));
+};
+
+const checkExistTopBid = async (poolId) => {
+  return await Redis.exists(getRedisKeyTopBid(poolId));
+};
+
 module.exports = {
   // POOL LIST
   checkExistRedisPoolList,
@@ -234,4 +254,9 @@ module.exports = {
   checkExistPerformanceDetail,
   getRedisPerformanceDetail,
   setRedisPerformanceDetail,
+
+  // Top Bid
+  getRedisTopBid,
+  setRedisTopBid,
+  checkExistTopBid,
 };

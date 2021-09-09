@@ -10,6 +10,7 @@ module.exports = Object.freeze({
     TIER: 'Tier',
     MANTRA_STAKE: 'MantraStake',
     STAKING_POOL: 'StakingPool',
+    STAKING_CONTEST: 'StakingContest',
   },
   TX_TABLE: {
     CAMPAIGN: 1,
@@ -190,6 +191,7 @@ module.exports = Object.freeze({
     ALL: 'all',
     ONLY_CLAIM: 'only-claim',
     ONLY_BUY: 'only-buy',
+    ONLY_BID: 'only-bid',
   },
   TOKEN_TYPE: {
     ERC20: 'erc20',

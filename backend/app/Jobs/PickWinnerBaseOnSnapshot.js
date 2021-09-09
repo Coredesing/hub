@@ -46,7 +46,7 @@ class PickWinnerBaseOnSnapshot {
     let userSnapshots = await userSnapshotService.getAllSnapshotByFilters({campaign_id: data.campaign_id});
     userSnapshots = JSON.parse(JSON.stringify(userSnapshots));
 
-    const winners = userSnapshots.filter(u => u.winner_ticket > 0).map(u => {
+    const winners = userSnapshots.map(u => {
       const winnerModel = new WinnerListUserModel();
       winnerModel.fill({
         email: u.email,

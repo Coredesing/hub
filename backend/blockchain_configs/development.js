@@ -30,6 +30,15 @@ module.exports = {
       BREAK_TIME_AFTER_ONE_GO: 15000,
       NEED_NOTIFY_BY_WEBHOOK: true,
     },
+    StakingContest: {
+      CONTRACT_DATA: require('./contracts/Normal/StakingContest.json'),
+      CONTRACT_CLAIMABLE: require('./contracts/Claim/Campaign.json'),
+      CONTRACT_ADDRESS: '',
+      FIRST_CRAWL_BLOCK: 745,
+      BLOCK_NUM_IN_ONE_GO: 100,
+      BREAK_TIME_AFTER_ONE_GO: 1000,
+      NEED_NOTIFY_BY_WEBHOOK: true
+    },
     EthLink: {
       CONTRACT_DATA: require('./contracts/Normal/EthLink.json'),
       CONTRACT_ADDRESS: '0xdf7986c3C00A08967285382A3f1476Cbe7e91ba0',

@@ -36,15 +36,14 @@ const useStyles = makeStyles({
 interface IProps {
   value: any,
   onChange: Function,
-  isInteger: boolean,
-  isPositive: boolean,
-  allowZero: boolean,
-  min: number,
-  max: number,
+  isInteger?: boolean,
+  isPositive?: boolean,
+  allowZero?: boolean,
+  min?: number,
+  max?: number,
   [k: string]: any
 }
 export const FormInputNumber = (props: IProps) => {
-  console.log(props)
   const classes = useStyles();
   const { value, onChange, allowZero, isPositive, isInteger, ...otherProps } =
     props;

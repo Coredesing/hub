@@ -25,7 +25,7 @@ import { SearchBox } from "../../components/Base/SearchBox";
 import { debounce, escapeRegExp } from "../../utils";
 import { numberWithCommas } from "../../utils/formatNumber";
 import { useAboutStyles } from "./style";
-import { TicketType } from "./types";
+import { isBid } from "./utils";
 const shareIcon = "/images/icons/share.svg";
 const telegramIcon = "/images/icons/telegram-1.svg";
 const twitterIcon = "/images/icons/twitter-1.svg";
@@ -84,13 +84,12 @@ const AntTabs = withStyles({
 
 type Props = {
   info: { [k: string]: any },
-  type?: TicketType,
   [k: string]: any
 }
 
 const sliceArr = (arr: any[], from: number, to: number) => arr.slice(from, to)
 
-const AboutTicket = ({ info = {}, type = TicketType.BUY, connectedAccount }: Props) => {
+const AboutTicket = ({ info = {}, connectedAccount, ...props }: Props) => {
   const classes = useAboutStyles();
   const [value, setValue] = React.useState(0);
   const theme = useTheme();
@@ -103,7 +102,7 @@ const AboutTicket = ({ info = {}, type = TicketType.BUY, connectedAccount }: Pro
   }>({ total: 0, list: [] });
   const limitPage = 10;
   // const isClaim = info?.process === "only-claim";
-  const isTicketBid = type === TicketType.BID;
+  const isTicketBid = isBid(info.process);
   const url = (() => {
     if (isTicketBid) {
       return `/pool/${49}/top-bid?wallet_address=${connectedAccount}`
@@ -118,10 +117,19 @@ const AboutTicket = ({ info = {}, type = TicketType.BUY, connectedAccount }: Pro
   }, [info])
 
   useEffect(() => {
-    if (type === TicketType.BUY && winner.data) {
+    if (!isTicketBid && winner.data) {
       setPagination({ total: +winner.total, list: winner.data })
     }
-  }, [winner, type])
+  }, [winner, isTicketBid])
+
+  useEffect(() => {
+    if(!isTicketBid || !props.setRankUser) return;
+    if('rank' in winner) {
+      props.setRankUser(+winner.rank >= 0 ? winner.rank : -1 )
+    } else {
+      props.setRankUser(-1);
+    }
+  }, [isTicketBid, winner, props]);
 
   useEffect(() => {
     if (isTicketBid && winner.top) {

@@ -1,8 +1,13 @@
 import { getContractInstance } from '../../services/web3';
 import erc721ABI from '../../abi/Erc721.json';
+import StakingContest from '../../abi/StakingContest.json';
 import { getNetworkInfo } from '../../utils/network';
+import { ResultStaked } from './types';
 
-export const getBalance = async (loginUser: string | null | undefined, tokenAddress: string, network: string, currency: string) => {
+type Address = string;
+
+
+export const getBalance = async (loginUser: Address | null | undefined, tokenAddress: Address, network: string, currency: string) => {
     if (!loginUser) return 0;
     const contract = getContractInstance(erc721ABI, tokenAddress, undefined, getNetworkInfo(network).id);
     if (contract) {
@@ -12,12 +17,25 @@ export const getBalance = async (loginUser: string | null | undefined, tokenAddr
     return 0;
 };
 
-interface IError {
-    data?: {
-        message: string
+export const getUserStaked = async (loginUser: Address | null | undefined, campaignHash: Address, network: string, currency: string) => {
+    const result : ResultStaked = {staked: 0, lastTime: 0};
+    if (!loginUser) return result;
+    const contract = getContractInstance(StakingContest, campaignHash, undefined, getNetworkInfo(network).id);
+    if (contract) {
+        const infoStaked = await contract.methods.getUserStake(loginUser).call();
+        result.staked =  +infoStaked[0];
+        result.lastTime =  +infoStaked[1];
     }
-}
-export const handleErrMsg = (err: IError) => {
+    return result;
+};
+
+// interface IError extends Error {
+//     data?: {
+//         message: string
+//     },
+//     [k: string]: any
+// }
+export const handleErrMsg = (err: any) => {
     const message = err?.data?.message || '';
     if(message.includes('POOL::ENDED')) {
         return 'The sale has ended.';
@@ -27,6 +45,12 @@ export const handleErrMsg = (err: IError) => {
     }
     if(message.includes('POOL::AMOUNT_MUST_GREATER_THAN_CLAIMED')) {
         return 'You have already claimed.';
+    }
+    if(message.includes('transfer amount exceeds balance')) {
+        return 'Not enough balance.';
+    }
+    if(message.includes('User has already claimed')) {
+        return 'User has already claimed.';
     }
     return '';
 }
@@ -42,3 +66,7 @@ export const calcProgress = (sold: number, total: number) => {
 export const getRemaining = (totalTicket: number, totalSold: number) => {
     return +totalTicket - +totalSold || 0;
 };
+
+export const isBid = (type: string) => {
+    return type === 'only-bid';
+}

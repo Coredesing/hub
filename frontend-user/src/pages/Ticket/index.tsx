@@ -8,6 +8,8 @@ import { TOKEN_TYPE } from "../../constants";
 import NotFoundPage from "../NotFoundPage/ContentPage";
 import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
 import ContentTicket from './Ticket';
+import TicketBid from './TicketBid';
+import { isBid } from "./utils";
 
 const Ticket: React.FC<any> = (props: any) => {
   const params = useParams<{ [k: string]: any }>();
@@ -40,7 +42,9 @@ const Ticket: React.FC<any> = (props: any) => {
           <Backdrop open={checkParamType.checking} style={{ color: '#fff', zIndex: theme.zIndex.drawer + 1, }}>
             <CircularProgress color="inherit" />
           </Backdrop>
-          : (checkParamType.valid ? <ContentTicket id={id} /> : <NotFoundPage />)
+          : (checkParamType.valid ? (
+            isBid(dataTicket.process) ? <TicketBid id={id} /> : <ContentTicket id={id} />
+          ) : <NotFoundPage />)
       }
     </DefaultLayout>
   );

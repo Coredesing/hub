@@ -4,7 +4,7 @@ export type CountDownTimeType = {
     minutes: number,
     seconds: number,
 }
-export enum TicketType {
-    BUY = 'buy',
-    BID = 'bid',
+export interface ResultStaked {
+    staked?: number,
+    lastTime?: number
 }

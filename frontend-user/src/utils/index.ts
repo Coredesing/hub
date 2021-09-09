@@ -248,7 +248,9 @@ export const getSeedRound = (key: 0 | 1 | 2 | number) => {
 }
 
 export const getApproveToken = (appChainID: string, purchasableCurrency: string) => {
-  if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.USDT) {
+  if(!purchasableCurrency) return;
+  purchasableCurrency = String(purchasableCurrency).toUpperCase();
+  if (purchasableCurrency === PurchaseCurrency.USDT) {
     return {
       address: getUSDTAddress(appChainID),
       name: "USDT",
@@ -257,7 +259,7 @@ export const getApproveToken = (appChainID: string, purchasableCurrency: string)
     };
   }
 
-  if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.BUSD) {
+  if (purchasableCurrency === PurchaseCurrency.BUSD) {
     return {
       address: getBUSDAddress(appChainID),
       name: "BUSD",
@@ -266,7 +268,7 @@ export const getApproveToken = (appChainID: string, purchasableCurrency: string)
     };
   }
 
-  if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.USDC) {
+  if (purchasableCurrency === PurchaseCurrency.USDC) {
     return {
       address: getUSDCAddress(appChainID),
       name: "USDC",
@@ -275,7 +277,7 @@ export const getApproveToken = (appChainID: string, purchasableCurrency: string)
     };
   }
 
-  if (purchasableCurrency && purchasableCurrency === PurchaseCurrency.ETH) {
+  if (purchasableCurrency === PurchaseCurrency.ETH) {
     return {
       address: "0x00",
       name: 'ETH',

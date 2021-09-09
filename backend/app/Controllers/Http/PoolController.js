@@ -443,6 +443,7 @@ class PoolController {
         return HelperUtils.responseNotFound('Pool not found');
       }
 
+      pool = JSON.parse(JSON.stringify(pool))
       const publicPool = pick(pool, [
         // Pool Info
         'id', 'title', 'website', 'banner', 'updated_at', 'created_at',
@@ -490,7 +491,6 @@ class PoolController {
         'freeBuyTimeSetting',
       ]);
 
-      console.log('[getPublicPool] - pool.tiers: ', JSON.stringify(pool.tiers));
       if (pool.tiers && pool.tiers.length > 0) {
         publicPool.tiers = pool.tiers.map((item, index) => {
           return {

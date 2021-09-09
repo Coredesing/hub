@@ -453,6 +453,22 @@ class PoolService {
     return pools;
   }
 
+  async filterActiveTopBidPool() {
+    let pools = await CampaignModel.query()
+      .whereNotIn('campaign_status', [
+        Const.POOL_STATUS.ENDED,
+        Const.POOL_STATUS.CLAIMABLE
+      ])
+      .where('process', Const.PROCESS.ONLY_BID)
+      .orderBy('id', 'DESC')
+      .fetch();
+    pools = JSON.parse(JSON.stringify(pools));
+
+    console.log('[filterActiveTopBidPool] - pools.length:', pools.length);
+
+    return pools;
+  }
+
   async runUpdatePoolStatus() {
     const pools = await this.filterActivePoolWithStatus();
     const limit = pLimit(10);
@@ -576,6 +592,41 @@ class PoolService {
       .orderBy('start_join_pool_time', 'DESC')
       .orderBy('id', 'DESC')
       .paginate(page, limit);
+
+    return pools;
+  }
+
+  async updateTopBidInformation(pool) {
+    try {
+      if (pool.process !== Const.PROCESS.ONLY_BID) {
+        return
+      }
+
+      const data = await HelperUtils.getTopStakingContest(pool);
+      if (!data) {
+        return
+      }
+
+      await RedisUtils.setRedisTopBid(pool.id, data);
+    } catch (e) {
+      console.log('[PoolService::updateTopBidInformation] - ERROR: ', e);
+    }
+  }
+
+  async runUpdateTopBid() {
+    const pools = await this.filterActiveTopBidPool();
+    const limit = pLimit(10);
+    await Promise.all(
+      pools.map(async pool => {
+        return limit(async () => {
+          this.updateTopBidInformation(pool);
+        })
+      })
+    ).then((res) => {
+      console.log('[runUpdateTopBid] - Finish');
+    }).catch((e) => {
+      console.log('[runUpdateTopBid] - ERROR: ', e);
+    });
 
     return pools;
   }

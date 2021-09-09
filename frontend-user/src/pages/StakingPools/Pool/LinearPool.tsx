@@ -27,7 +27,7 @@ import useLinearUnstake from '../hook/useLinearUnstake';
 import useLinearClaim from '../hook/useLinearClaim';
 import useLinearClaimPendingWithdraw from '../hook/useLinearClaimPendingWithdraw';
 
-import { ETH_CHAIN_ID } from '../../../constants/network'
+import { ChainDefault, ETH_CHAIN_ID } from '../../../constants/network'
 import { useTypedSelector } from '../../../hooks/useTypedSelector';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { BigNumber, utils } from 'ethers';
@@ -50,7 +50,7 @@ const LinearPool = (props: any) => {
   const dispatch = useDispatch();
 
   const { appChainID, walletChainID } = useTypedSelector(state => state.appNetwork).data;
-  const {tokenDetails} = useTokenDetails(poolDetail?.acceptedToken, 'eth');
+  const {tokenDetails} = useTokenDetails(poolDetail?.acceptedToken, ChainDefault.name);
   const [tokenAllowance, setTokenAllowance] = useState(BigNumber.from('0'));
   const { retrieveTokenAllowance } = useTokenAllowance();
   const [tokenBalance, setTokenBalance] = useState('0');
@@ -105,6 +105,7 @@ const LinearPool = (props: any) => {
   const handleApprove = async () => {
     try {
       setOpenModalTransactionSubmitting(true);
+      debugger
       await approveToken()
       setOpenModalTransactionSubmitting(false);
     } catch (err) {
@@ -291,8 +292,10 @@ const LinearPool = (props: any) => {
   }, [confirmed, previousStep])
 
   const wrongChain = useMemo(() => {
-    return appChainID !== ETH_CHAIN_ID || appChainID !== walletChainID;
+    return appChainID !== ChainDefault.id || appChainID !== walletChainID;
   }, [appChainID, walletChainID]);
+
+  console.log('wrongChain', wrongChain)
 
   return (
     <Accordion className={styles.pool}>
@@ -315,15 +318,15 @@ const LinearPool = (props: any) => {
             }
           </div>
         </div>
-        <div className="pool--sumary-block pool--sumary-block__min-width">
+        {/* <div className="pool--sumary-block pool--sumary-block__min-width">
           <div className={styles.textSecondary}>
             Earned
           </div>
           <div className={styles.textPrimary}>
             {(+utils.formatEther(poolDetail?.pendingReward)).toFixed(2)} {tokenDetails?.symbol}
           </div>
-        </div>
-        <div className="pool--sumary-block pool--sumary-block__min-width-sm">
+        </div> */}
+        {/* <div className="pool--sumary-block pool--sumary-block__min-width-sm">
           <div className={styles.textSecondary}>
             APR
           </div>
@@ -339,8 +342,8 @@ const LinearPool = (props: any) => {
               </svg>
             }
           </div>
-        </div>
-        {
+        </div> */}
+        {/* {
           <div className="pool--sumary-block pool--sumary-block__min-width-lg mobile-hidden">
             <div className={styles.textSecondary}>
               Remaining
@@ -353,7 +356,7 @@ const LinearPool = (props: any) => {
               } 
             </div>
           </div>
-        }
+        } */}
         <div className="pool--sumary-block mobile-hidden">
           <div className={styles.textSecondary}>
             Lock-up term
@@ -377,15 +380,15 @@ const LinearPool = (props: any) => {
       </AccordionSummary>
       <AccordionDetails className="pool--detail">
         <div className="pool--detail-block" style={{paddingRight: '10px'}}>
-        <div className="items-center mobile-flex-row justify-between w-full">
+        {/* <div className="items-center mobile-flex-row justify-between w-full">
             <div className={styles.textSecondary}>
               Earned
             </div>
             <div className={styles.textPrimary}>
               {(+utils.formatEther(poolDetail?.pendingReward)).toFixed(2)} {tokenDetails?.symbol}
             </div>
-          </div>
-          <div className="items-center mobile-flex-row justify-between w-full">
+          </div> */}
+          {/* <div className="items-center mobile-flex-row justify-between w-full">
             <div className={styles.textSecondary}>
               APR
             </div>
@@ -401,8 +404,8 @@ const LinearPool = (props: any) => {
               }
               {poolDetail?.APR}%
             </div>
-          </div>
-          {
+          </div> */}
+          {/* {
             poolDetail?.cap && BigNumber.from(poolDetail?.cap).gt(BigNumber.from('0')) &&
             <div className="items-center mobile-flex-row justify-between w-full">
               <div className={styles.textSecondary}>
@@ -412,7 +415,7 @@ const LinearPool = (props: any) => {
                 {(+utils.formatEther(BigNumber.from(poolDetail?.cap).sub(BigNumber.from(poolDetail?.totalStaked)))).toFixed(2)} {tokenDetails?.symbol}
               </div>
             </div>
-          }
+          } */}
           <div className="items-center mobile-flex-row justify-between w-full">
             <div className={styles.textSecondary}>
               Lock-up term
@@ -533,15 +536,17 @@ const LinearPool = (props: any) => {
             </div>
           }
         </div>
+
+        {/*
         <div className="pool--detail-block pool--detail-block__claim">
-          <div>
+           <div>
             <div className={styles.textSecondary}>
               Earned
             </div>
             <div className={styles.textPrimary}>
               {(+utils.formatEther(poolDetail?.pendingReward)).toFixed(2)} {tokenDetails?.symbol}
             </div>
-          </div>
+          </div> 
 
           <Button
             text="Claim Token"
@@ -554,6 +559,7 @@ const LinearPool = (props: any) => {
             disabled={poolDetail?.pendingReward === "0" || wrongChain}
           />
         </div>
+        */}
         {
           !connectedAccount &&
           <div className="pool--detail-block pool--detail-block__claim">

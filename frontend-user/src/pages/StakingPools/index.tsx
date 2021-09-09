@@ -22,7 +22,7 @@ import {ethers, BigNumber} from 'ethers';
 import useTokenAllowance from '../../hooks/useTokenAllowance';
 import useDetailListStakingPool from './hook/useDetailListStakingPool';
 import ModalStake from "./ModalStake";
-import { ETH_CHAIN_ID } from '../../constants/network'
+import { ChainDefault, ETH_CHAIN_ID } from '../../constants/network'
 import {getBalance} from "../../store/actions/balance";
 
 import useFetch from '../../hooks/useFetch';
@@ -54,6 +54,7 @@ const StakingPools = (props: any) => {
 
 
   const { appChainID, walletChainID } = useTypedSelector(state => state.appNetwork).data;
+  console.log(appChainID, walletChainID)
   const {account: connectedAccount, library} = useWeb3React();
   const {data: balance = {}} = useSelector((state: any) => state.balance);
   const { retrieveTokenAllowance } = useTokenAllowance();
@@ -132,7 +133,7 @@ const StakingPools = (props: any) => {
   }, [connectedAccount, dispatch]);
 
   const wrongChain = useMemo(() => {
-    return appChainID !== ETH_CHAIN_ID || appChainID !== walletChainID;
+    return appChainID !== ChainDefault.id || appChainID !== walletChainID;
   }, [appChainID, walletChainID]);
 
   // End Staking Logic
@@ -144,7 +145,7 @@ const StakingPools = (props: any) => {
           {wrongChain && 
             <div className={styles.message}>
               <img src={iconWarning} style={{ marginRight: "12px" }} alt="" />
-              Please switch to the ETH network to join these staking pools
+              Please switch to the {ChainDefault.name} network to join these staking pools
             </div>
           }
           <StakingHeader

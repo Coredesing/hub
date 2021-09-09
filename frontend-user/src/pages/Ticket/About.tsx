@@ -102,7 +102,7 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
     total: number, list: { [k: string]: any }[],
   }>({ total: 0, list: [] });
   const limitPage = 10;
-  // const isClaim = info?.process === "only-claim";
+  const [cachedRecallCount, setCachedRecallCount] = useState(0);
   const isTicketBid = isBid(info.process);
   const url = (() => {
     if (isTicketBid) {
@@ -115,7 +115,20 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
     if (info?.campaign_hash) {
       setIsGetWinner(true);
     }
-  }, [info])
+  }, [info, connectedAccount])
+
+  useEffect(() => {
+    if(winner.data || winner.top) {
+      setIsGetWinner(false);
+    }
+  }, [winner]);
+
+  useEffect(() => {
+      if(props.recallCount > cachedRecallCount) {
+        setCachedRecallCount(props.recallCount);
+        setIsGetWinner(true);
+      }
+  }, [props.recallCount, cachedRecallCount, isGetWinner]);
 
   useEffect(() => {
     if (!isTicketBid && winner.data) {

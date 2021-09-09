@@ -19,6 +19,9 @@ import ConfirmEmail from './pages/ConfirmEmail';
 import Profile from './pages/Profile';
 import AppContainer from "./AppContainer";
 import CaptchaWhitelist from "./pages/CaptchaWhitelist";
+import StakingPools from "./pages/StakingPools";
+import StakingPoolCreate from "./pages/StakingPoolCreate/PoolCreate";
+import StakingPoolEdit from "./pages/StakingPoolCreate/PoolEdit";
 
 //@ts-ignore
 import { NotificationContainer, NotificationManager } from 'react-notifications'
@@ -74,6 +77,10 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
 
         <PrivateRoute path={adminRoute('/setting')} component={Setting} />
         <PrivateRoute path={adminRoute('/profile')} component={Profile} />
+
+        <PrivateRoute path={adminRoute('/staking')} exact component={StakingPools} />
+        <PrivateRoute path={adminRoute('/staking/add')} exact component={StakingPoolCreate} />
+        <PrivateRoute path={adminRoute('/staking/:id')} exact component={StakingPoolEdit} />
 
         {/*<Route path={adminRoute('/register')} component={Register} />*/}
         <Route path={adminRoute('/login')} component={Login} />

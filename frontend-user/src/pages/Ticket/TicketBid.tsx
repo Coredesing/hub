@@ -259,7 +259,7 @@ const ContentNFTBox = ({ id, ...props }: any) => {
     const onClaim = async () => {
         if (!isKYC || lockWhenClaiming) return;
         if (new BigNumber(ownedBidStaked.staked || 0).lte(0)) {
-            return dispatch(alertFailure("Sorry, you don't stake tokens yet."))
+            return dispatch(alertFailure("Sorry, you need to stake GAFI to continue this action."))
         }
         setLockWhenClaiming(true);
         claim();

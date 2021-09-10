@@ -9,7 +9,7 @@ const Content: React.FC<any> = (props: any) => {
   } = props
 
   return (
-    <div className={styles.mainLayout}>
+    <div className={styles.mainLayout} style={props.isShowBannerContract ? {marginTop: '80px'} : {}}>
       {props.children}
     </div>
   );

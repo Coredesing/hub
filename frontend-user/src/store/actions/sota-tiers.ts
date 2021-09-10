@@ -11,6 +11,7 @@ import BigNumber from 'bignumber.js';
 
 import {getAllowance} from './sota-token';
 import {getTokenStakeSmartContractInfo} from "../../utils/campaign";
+import { BaseRequest } from '../../request/Request';
 
 export const resetTiers = () => {
   return {
@@ -22,21 +23,21 @@ export const getTiers = (forceUsingEther: string = 'eth') => {
   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
     dispatch({ type: sotaTiersActions.TIERS_LOADING });
     try {
-      const { appChainID } = getState().appNetwork.data;
-      const connector  = getState().connector.data;
+      const baseRequest = new BaseRequest();
+      const response = await baseRequest.get(`/get-tiers`) as any;
+      const resObj = await response.json();
 
-      const contract = getContractInstance(
-        RedKite.abi,
-        process.env.REACT_APP_TIERS as string,
-        connector,
-        appChainID,
-        SmartContractMethod.Read,
-        forceUsingEther === 'eth'
-      );
+      if (!resObj.status || resObj.status !== 200 || !resObj.data) {
+        dispatch({
+          type: sotaTiersActions.TIERS_FAILURE,
+          payload: new Error("Invalid tiers payload")
+        });
+        return;
+      }
 
-      let result = await contract?.methods.getTiers().call();
+      let result = resObj.data;
 
-      result = result.filter((e: any) => e != '0')
+      result = result.filter((e: any) => e !== '0')
       result = result.map((e: any) => {
         return parseFloat(convertFromWei(e))
       })

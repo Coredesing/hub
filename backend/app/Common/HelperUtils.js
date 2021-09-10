@@ -840,4 +840,5 @@ module.exports = {
   getDecimalsByTokenAddress,
   getEPkfBonusBalance,
   getTopStakingContest,
+  getTiers,
 };

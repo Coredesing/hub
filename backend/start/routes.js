@@ -99,6 +99,10 @@ Route.group(() => {
 
   // Staking pool
   Route.get('staking-pool', 'StakingPoolController.getPublicPoolList');
+
+  // Tiers
+  Route.get('get-tiers', 'TierSettingController.getTiersSetting');
+
 }).prefix('api/v1');
 
 // GameFI admin new route

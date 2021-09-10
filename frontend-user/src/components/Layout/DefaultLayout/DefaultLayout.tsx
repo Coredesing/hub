@@ -16,7 +16,7 @@ const DefaultLayout = (props: any) => {
   const styles = useStyles();
   return (
     <div className={commonStyle.DefaultLayout}>
-      <div className={commonStyle.bgBody}>
+      <div className={commonStyle.bgBody} style={isShowBannerContract ? {paddingTop: '180px'}: {}}>
         {isShowBannerContract &&
           <div className={styles.bannerContract}>
             <Button
@@ -35,7 +35,7 @@ const DefaultLayout = (props: any) => {
           </div>
         }
         <HeaderDefaultLayout isShowBannerContract={isShowBannerContract} heightBannerContract={"100px"}/>
-        <MainDefaultLayout isShowBannerContract={isShowBannerContract} heightBannerContract={"100px"}>{props.children}</MainDefaultLayout>
+        <MainDefaultLayout >{props.children}</MainDefaultLayout>
         <FooterLandingLayout />
       </div>
     </div>

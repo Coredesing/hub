@@ -12,7 +12,7 @@ import ModalConfirmation from '../ModalConfirm';
 import ModalROI from '../ModalROI';
 import useCommonStyle from '../../../styles/CommonStyle';
 import moment from "moment";
-import {numberWithCommas} from '../../../utils/formatNumber';
+import { numberWithCommas } from '../../../utils/formatNumber';
 
 import { useDispatch } from 'react-redux';
 import { alertSuccess, alertFailure } from '../../../store/actions/alert';
@@ -31,6 +31,8 @@ import { ChainDefault, ETH_CHAIN_ID } from '../../../constants/network'
 import { useTypedSelector } from '../../../hooks/useTypedSelector';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { BigNumber, utils } from 'ethers';
+import ModalSwitchPool from '../ModalSwitchPool';
+import useSwitchPool from '../hook/useSwitchPool';
 
 
 const ONE_DAY_IN_SECONDS = 86400;
@@ -39,34 +41,35 @@ const ONE_YEAR_IN_SECONDS = '31536000';
 const ArrowIcon = () => {
   return (
     <svg width="16" height="9" viewBox="0 0 16 9" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-      <path id="Shape Copy 26" d="M7.99997 8.72727C7.71322 8.72727 7.4265 8.6225 7.20788 8.41341L0.328227 1.83028C-0.109409 1.41151 -0.109409 0.732549 0.328227 0.313949C0.765686 -0.10465 1.4751 -0.10465 1.91277 0.313949L7.99997 6.13907L14.0872 0.314153C14.5249 -0.104447 15.2342 -0.104447 15.6716 0.314153C16.1095 0.732752 16.1095 1.41171 15.6716 1.83048L8.79207 8.41361C8.57334 8.62274 8.28662 8.72727 7.99997 8.72727Z" fill="currentColor"/>
+      <path id="Shape Copy 26" d="M7.99997 8.72727C7.71322 8.72727 7.4265 8.6225 7.20788 8.41341L0.328227 1.83028C-0.109409 1.41151 -0.109409 0.732549 0.328227 0.313949C0.765686 -0.10465 1.4751 -0.10465 1.91277 0.313949L7.99997 6.13907L14.0872 0.314153C14.5249 -0.104447 15.2342 -0.104447 15.6716 0.314153C16.1095 0.732752 16.1095 1.41171 15.6716 1.83048L8.79207 8.41361C8.57334 8.62274 8.28662 8.72727 7.99997 8.72727Z" fill="currentColor" />
     </svg>
   )
 }
 
 const LinearPool = (props: any) => {
-  const { connectedAccount, poolDetail, poolAddress, reload, setOpenModalTransactionSubmitting, setTransactionHashes } = props
+  const { connectedAccount, poolDetail, poolAddress, reload, setOpenModalTransactionSubmitting, setTransactionHashes, poolsList } = props
   const styles = useStyles();
   const dispatch = useDispatch();
 
   const { appChainID, walletChainID } = useTypedSelector(state => state.appNetwork).data;
-  const {tokenDetails} = useTokenDetails(poolDetail?.acceptedToken, ChainDefault.name);
+  const { tokenDetails } = useTokenDetails(poolDetail?.acceptedToken, ChainDefault.name);
   const [tokenAllowance, setTokenAllowance] = useState(BigNumber.from('0'));
   const { retrieveTokenAllowance } = useTokenAllowance();
   const [tokenBalance, setTokenBalance] = useState('0');
   const { retrieveTokenBalance } = useTokenBalance(tokenDetails, connectedAccount);
-  const {approveToken , tokenApproveLoading, transactionHash: approveTransactionHash} = useTokenApprove(tokenDetails, connectedAccount, poolAddress, false);
+  const { approveToken, tokenApproveLoading, transactionHash: approveTransactionHash } = useTokenApprove(tokenDetails, connectedAccount, poolAddress, false);
 
   const [showStakeModal, setShowStakeModal] = useState(false);
   const [stakeAmount, setStakeAmount] = useState('0');
   const [showUnstakeModal, setShowUnstakeModal] = useState(false);
   const [unstakeAmount, setUnstakeAmount] = useState('0');
   const [showClaimModal, setShowClaimModal] = useState(false);
+  const [showSwitchModal, setShowSwitchModal] = useState(false);
 
-  const {linearStakeToken , transactionHash: stakeTransactionHash} = useLinearStake(poolAddress, poolDetail?.pool_id, stakeAmount);
-  const {linearClaimToken, transactionHash: unstakeTransactionHash} = useLinearClaim(poolAddress, poolDetail?.pool_id);
-  const {linearUnstakeToken, transactionHash: claimTransactionHash} = useLinearUnstake(poolAddress, poolDetail?.pool_id, unstakeAmount);
-  const {linearClaimPendingWithdraw, transactionHash: claimPendingTransactionHash} = useLinearClaimPendingWithdraw(poolAddress, poolDetail?.pool_id);
+  const { linearStakeToken, transactionHash: stakeTransactionHash } = useLinearStake(poolAddress, poolDetail?.pool_id, stakeAmount);
+  const { linearClaimToken, transactionHash: unstakeTransactionHash } = useLinearClaim(poolAddress, poolDetail?.pool_id);
+  const { linearUnstakeToken, transactionHash: claimTransactionHash } = useLinearUnstake(poolAddress, poolDetail?.pool_id, unstakeAmount);
+  const { linearClaimPendingWithdraw, transactionHash: claimPendingTransactionHash } = useLinearClaimPendingWithdraw(poolAddress, poolDetail?.pool_id);
 
   const [progress, setProgress] = useState('0');
   const [showROIModal, setShowROIModal] = useState(false);
@@ -75,11 +78,11 @@ const LinearPool = (props: any) => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [previousStep, setPreviousStep] = useState('');
 
-  const loadTokenAllowance = useCallback(async () =>{
-    setTokenAllowance(BigNumber.from('0x'+((await retrieveTokenAllowance(tokenDetails, connectedAccount, poolAddress))?.toString(16)||'0')));
-  },[tokenDetails, connectedAccount, poolAddress, retrieveTokenAllowance])
+  const loadTokenAllowance = useCallback(async () => {
+    setTokenAllowance(BigNumber.from('0x' + ((await retrieveTokenAllowance(tokenDetails, connectedAccount, poolAddress))?.toString(16) || '0')));
+  }, [tokenDetails, connectedAccount, poolAddress, retrieveTokenAllowance])
 
-  useEffect(()=>{
+  useEffect(() => {
     try {
       loadTokenAllowance()
     } catch (err) {
@@ -87,7 +90,7 @@ const LinearPool = (props: any) => {
     }
   }, [poolDetail, connectedAccount, loadTokenAllowance, tokenApproveLoading]);
 
-  useEffect(()=>{
+  useEffect(() => {
     retrieveTokenBalance(tokenDetails, connectedAccount)
       .then(balance => {
         setTokenBalance(balance as string);
@@ -95,7 +98,7 @@ const LinearPool = (props: any) => {
   }, [retrieveTokenBalance, connectedAccount, tokenDetails]);
 
   useEffect(() => {
-    if (!poolDetail?.cap || poolDetail?.cap === "0"){
+    if (!poolDetail?.cap || poolDetail?.cap === "0") {
       return
     }
     const prg = Number(utils.formatEther(poolDetail?.totalStaked)) / Number(utils.formatEther(poolDetail?.cap)) * 100
@@ -105,7 +108,6 @@ const LinearPool = (props: any) => {
   const handleApprove = async () => {
     try {
       setOpenModalTransactionSubmitting(true);
-      debugger
       await approveToken()
       setOpenModalTransactionSubmitting(false);
     } catch (err) {
@@ -114,16 +116,16 @@ const LinearPool = (props: any) => {
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!approveTransactionHash) {
       return
     }
     setOpenModalTransactionSubmitting(false);
-    setTransactionHashes([{tnx: approveTransactionHash, isApprove: true}])
+    setTransactionHashes([{ tnx: approveTransactionHash, isApprove: true }])
   }, [approveTransactionHash, setOpenModalTransactionSubmitting, setTransactionHashes])
 
 
-  const handleStake = async () =>{
+  const handleStake = async () => {
     try {
       if (utils.parseEther(stakeAmount).add(poolDetail?.stakingAmount || '0').lt(BigNumber.from(poolDetail?.minInvestment || '0'))) {
         dispatch(alertFailure(`Minimum stake amount is ${utils.formatEther(poolDetail?.minInvestment)} ${tokenDetails?.symbol}`));
@@ -135,7 +137,7 @@ const LinearPool = (props: any) => {
         return;
       }
 
-      if (BigNumber.from(poolDetail?.cap || '0').gt(BigNumber.from('0')) && 
+      if (BigNumber.from(poolDetail?.cap || '0').gt(BigNumber.from('0')) &&
         BigNumber.from(poolDetail?.totalStaked).add(utils.parseEther(stakeAmount || '0')).gt(BigNumber.from(poolDetail?.cap || '0'))) {
         dispatch(alertFailure('The number of tokens you want to stake is greater than the amount remaining in the pool. Please try again'));
         return;
@@ -168,16 +170,16 @@ const LinearPool = (props: any) => {
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!stakeTransactionHash) {
       return
     }
     setOpenModalTransactionSubmitting(false);
-    setTransactionHashes([{tnx: stakeTransactionHash, isApprove: false}])
+    setTransactionHashes([{ tnx: stakeTransactionHash, isApprove: false }])
   }, [stakeTransactionHash, setOpenModalTransactionSubmitting, setTransactionHashes])
 
 
-  const handleUnstake = async () =>{
+  const handleUnstake = async () => {
     try {
       if (utils.parseEther(unstakeAmount).lt(BigNumber.from('0'))) {
         dispatch(alertFailure('Invalid amount'));
@@ -186,7 +188,7 @@ const LinearPool = (props: any) => {
 
       if (BigNumber.from(poolDetail?.pendingWithdrawal?.amount || '0').gt(BigNumber.from('0')) && confirmed === false) {
         setPreviousStep('unstake');
-        if (Number(poolDetail?.pendingWithdrawal?.applicableAt) > moment().unix()){
+        if (Number(poolDetail?.pendingWithdrawal?.applicableAt) > moment().unix()) {
           setConfirmationText(`You currently have ${tokenDetails?.symbol} waiting to be withdrawn. If you continue to withdraw tokens, the withdrawal delay time will be extended until ${moment.unix(moment().unix() + Number(poolDetail?.delayDuration)).format("YYYY-MM-DD HH:mm:ss ([GMT]Z)")}`);
         } else {
           setConfirmationText(`You currently have ${tokenDetails?.symbol} available for withdrawal. If you continue to withdraw tokens, the withdrawal delay time will be extended until ${moment.unix(moment().unix() + Number(poolDetail?.delayDuration)).format("YYYY-MM-DD HH:mm:ss ([GMT]Z)")}`);
@@ -215,16 +217,16 @@ const LinearPool = (props: any) => {
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!unstakeTransactionHash) {
       return
     }
     setOpenModalTransactionSubmitting(false);
-    setTransactionHashes([{tnx: unstakeTransactionHash, isApprove: false}])
+    setTransactionHashes([{ tnx: unstakeTransactionHash, isApprove: false }])
   }, [unstakeTransactionHash, setOpenModalTransactionSubmitting, setTransactionHashes])
 
 
-  const handleClaim = async () =>{
+  const handleClaim = async () => {
     try {
       setShowClaimModal(false);
       setOpenModalTransactionSubmitting(true);
@@ -238,16 +240,16 @@ const LinearPool = (props: any) => {
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!claimTransactionHash) {
       return
     }
     setOpenModalTransactionSubmitting(false);
-    setTransactionHashes([{tnx: claimTransactionHash, isApprove: false}])
+    setTransactionHashes([{ tnx: claimTransactionHash, isApprove: false }])
   }, [claimTransactionHash, setOpenModalTransactionSubmitting, setTransactionHashes])
 
 
-  const handleClaimPendingWithdraw = async () =>{
+  const handleClaimPendingWithdraw = async () => {
     try {
       setOpenModalTransactionSubmitting(true);
       await linearClaimPendingWithdraw();
@@ -259,13 +261,38 @@ const LinearPool = (props: any) => {
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!claimPendingTransactionHash) {
       return
     }
     setOpenModalTransactionSubmitting(false);
-    setTransactionHashes([{tnx: claimPendingTransactionHash, isApprove: false}])
+    setTransactionHashes([{ tnx: claimPendingTransactionHash, isApprove: false }])
   }, [claimPendingTransactionHash, setOpenModalTransactionSubmitting, setTransactionHashes])
+
+  const onShowSwitchPoolModal = () => {
+    setShowSwitchModal(true);
+  }
+
+  const onCloseSwitchModal = () => {
+    setShowSwitchModal(false);
+  }
+
+  const {linearSwitchPool, transactionHash: transactionHashSwitchPool} = useSwitchPool(poolDetail.pool_address)
+  const [idSwitched, setIdSwitched] = useState();
+  const onSwitchPool = async (fromId: number, toId: number) => {
+    setOpenModalTransactionSubmitting(true);
+    await linearSwitchPool(fromId, toId);
+    setOpenModalTransactionSubmitting(false);
+    reload && reload();
+  }
+
+  useEffect(() => {
+    if (!transactionHashSwitchPool) {
+      return
+    }
+    setOpenModalTransactionSubmitting(false);
+    setTransactionHashes([{ tnx: transactionHashSwitchPool, isApprove: false }])
+  }, [transactionHashSwitchPool, setTransactionHashes, setOpenModalTransactionSubmitting])
 
 
   useEffect(() => {
@@ -295,8 +322,6 @@ const LinearPool = (props: any) => {
     return appChainID !== ChainDefault.id || appChainID !== walletChainID;
   }, [appChainID, walletChainID]);
 
-  console.log('wrongChain', wrongChain)
-
   return (
     <Accordion className={styles.pool}>
       <AccordionSummary
@@ -304,21 +329,21 @@ const LinearPool = (props: any) => {
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-      <div className="pool--sumary">
-        <img src={poolDetail?.logo} className="pool--logo" alt="" />
-        <div className="pool--sumary-block">
-          <div className={styles.textPrimary} style={{fontSize: '20px'}}>
-            {poolDetail?.title}
+        <div className="pool--sumary">
+          <img src={poolDetail?.logo} className="pool--logo" alt="" />
+          <div className="pool--sumary-block">
+            <div className={styles.textPrimary} style={{ fontSize: '20px' }}>
+              {poolDetail?.title}
+            </div>
+            <div className={styles.textSecondary + ' mobile-hidden'}>
+              {
+                poolDetail?.rkp_rate > 0 ?
+                  <span>With IDO</span> :
+                  <span style={{ color: '#D0AA4D' }}>Without IDO</span>
+              }
+            </div>
           </div>
-          <div className={styles.textSecondary + ' mobile-hidden'}>
-            {
-              poolDetail?.rkp_rate > 0 ? 
-              <span>With IDO</span> : 
-              <span style={{color: '#D0AA4D'}}>Without IDO</span>
-            }
-          </div>
-        </div>
-        {/* <div className="pool--sumary-block pool--sumary-block__min-width">
+          {/* <div className="pool--sumary-block pool--sumary-block__min-width">
           <div className={styles.textSecondary}>
             Earned
           </div>
@@ -326,7 +351,7 @@ const LinearPool = (props: any) => {
             {(+utils.formatEther(poolDetail?.pendingReward)).toFixed(2)} {tokenDetails?.symbol}
           </div>
         </div> */}
-        {/* <div className="pool--sumary-block pool--sumary-block__min-width-sm">
+          {/* <div className="pool--sumary-block pool--sumary-block__min-width-sm">
           <div className={styles.textSecondary}>
             APR
           </div>
@@ -343,7 +368,7 @@ const LinearPool = (props: any) => {
             }
           </div>
         </div> */}
-        {/* {
+          {/* {
           <div className="pool--sumary-block pool--sumary-block__min-width-lg mobile-hidden">
             <div className={styles.textSecondary}>
               Remaining
@@ -357,30 +382,30 @@ const LinearPool = (props: any) => {
             </div>
           </div>
         } */}
-        <div className="pool--sumary-block mobile-hidden">
-          <div className={styles.textSecondary}>
-            Lock-up term
+          <div className="pool--sumary-block mobile-hidden">
+            <div className={styles.textSecondary}>
+              Lock-up term
+            </div>
+            <div className={styles.textPrimary}>
+              {Number(poolDetail?.lockDuration) > 0 ? `${(Number(poolDetail?.lockDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
+            </div>
           </div>
-          <div className={styles.textPrimary}>
-            { Number(poolDetail?.lockDuration) > 0 ? `${(Number(poolDetail?.lockDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
+          <div className="pool--sumary-block mobile-hidden">
+            <div className={styles.textSecondary}>
+              Withdrawal delay time
+            </div>
+            <div className={styles.textPrimary}>
+              {Number(poolDetail?.delayDuration) > 0 ? `${(Number(poolDetail?.delayDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
+            </div>
           </div>
         </div>
-        <div className="pool--sumary-block mobile-hidden">
-          <div className={styles.textSecondary}>
-            Withdrawal delay time
-          </div>
-          <div className={styles.textPrimary}>
-            { Number(poolDetail?.delayDuration) > 0 ? `${(Number(poolDetail?.delayDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
-          </div>
+        <div className="pool--expand-text mobile-hidden">
+          Details
         </div>
-      </div>
-      <div className="pool--expand-text mobile-hidden">
-        Details
-      </div>
       </AccordionSummary>
       <AccordionDetails className="pool--detail">
-        <div className="pool--detail-block" style={{paddingRight: '10px'}}>
-        {/* <div className="items-center mobile-flex-row justify-between w-full">
+        <div className="pool--detail-block" style={{ paddingRight: '10px' }}>
+          {/* <div className="items-center mobile-flex-row justify-between w-full">
             <div className={styles.textSecondary}>
               Earned
             </div>
@@ -421,7 +446,7 @@ const LinearPool = (props: any) => {
               Lock-up term
             </div>
             <div className={styles.textPrimary}>
-              { Number(poolDetail?.lockDuration) > 0 ? `${(Number(poolDetail?.lockDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
+              {Number(poolDetail?.lockDuration) > 0 ? `${(Number(poolDetail?.lockDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
             </div>
           </div>
           <div className="items-center mobile-flex-row justify-between w-full">
@@ -429,7 +454,7 @@ const LinearPool = (props: any) => {
               Withdrawal delay time
             </div>
             <div className={styles.textPrimary}>
-              { Number(poolDetail?.delayDuration) > 0 ? `${(Number(poolDetail?.delayDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
+              {Number(poolDetail?.delayDuration) > 0 ? `${(Number(poolDetail?.delayDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
             </div>
           </div>
 
@@ -438,8 +463,8 @@ const LinearPool = (props: any) => {
               Total pool amount
             </div>
             <div className={styles.textPrimary}>
-              
-              { (poolDetail?.cap && BigNumber.from(poolDetail?.cap).gt(BigNumber.from('0'))) ? `${(+utils.formatEther(poolDetail?.cap)).toFixed(2)} ${tokenDetails?.symbol}` : 'Unlimited' }
+
+              {(poolDetail?.cap && BigNumber.from(poolDetail?.cap).gt(BigNumber.from('0'))) ? `${(+utils.formatEther(poolDetail?.cap)).toFixed(2)} ${tokenDetails?.symbol}` : 'Unlimited'}
             </div>
           </div>
           {
@@ -447,15 +472,13 @@ const LinearPool = (props: any) => {
             <div className={styles.progressArea}>
               <div className={styles.progress}>
                 <span
-                  className={`${styles.currentProgress} ${
-                    parseFloat(progress) > 0 ? "" : "inactive"
-                  }`}
+                  className={`${styles.currentProgress} ${parseFloat(progress) > 0 ? "" : "inactive"
+                    }`}
                   style={{
-                    width: `${
-                      parseFloat(progress) > 99
+                    width: `${parseFloat(progress) > 99
                         ? 100
                         : Math.round(parseFloat(progress))
-                    }%`,
+                      }%`,
                   }}
                 >
                   <img
@@ -592,7 +615,7 @@ const LinearPool = (props: any) => {
         {
           connectedAccount && tokenAllowance.gt(BigNumber.from('0')) &&
           <div className="pool--detail-block">
-            <div style={{marginBottom: '20px'}}>
+            <div style={{ marginBottom: '20px' }}>
               <div className={styles.textSecondary}>
                 Staking
               </div>
@@ -604,7 +627,7 @@ const LinearPool = (props: any) => {
             <div className="xs-flex-row justify-between" style={{ marginTop: 'auto' }}>
               {
                 (Number(poolDetail?.startJoinTime) > 0 && Number(poolDetail?.startJoinTime) < moment().unix()) &&
-                (Number(poolDetail?.endJoinTime) > 0 && Number(poolDetail?.endJoinTime) > moment().unix()) && 
+                (Number(poolDetail?.endJoinTime) > 0 && Number(poolDetail?.endJoinTime) > moment().unix()) &&
                 (BigNumber.from(poolDetail?.cap).eq(BigNumber.from('0')) || BigNumber.from(poolDetail?.cap).sub(BigNumber.from(poolDetail?.totalStaked)).gt(BigNumber.from('0'))) &&
                 <Button
                   text="Stake"
@@ -635,6 +658,23 @@ const LinearPool = (props: any) => {
                   }
                 />
               }
+              {
+                BigNumber.from(poolDetail?.stakingAmount || '0').gt(BigNumber.from('0')) &&
+                <Button
+                  text="Switch Pool"
+                  onClick={() => {
+                    setIdSwitched(poolDetail.pool_id);
+                    onShowSwitchPoolModal();
+                  }}
+                  backgroundColor="#3232DC"
+                  style={{ width: 'unset', minWidth: '100px', marginLeft: '6px' }}
+                  disabled={
+                    wrongChain ||
+                    poolDetail?.stakingAmount === "0" ||
+                    (Number(poolDetail?.lockDuration) > 0 && (Number(poolDetail?.stakingJoinedTime) + Number(poolDetail?.lockDuration)) > moment().unix())
+                  }
+                />
+              }
             </div>
           </div>
         }
@@ -642,7 +682,7 @@ const LinearPool = (props: any) => {
         {
           connectedAccount && tokenAllowance.gt(BigNumber.from('0')) && BigNumber.from(poolDetail?.pendingWithdrawal?.amount || '0').gt(BigNumber.from('0')) &&
           <div className="pool--detail-block">
-            <div className="pool--detail-block__withdraw" style={{  }}>
+            <div className="pool--detail-block__withdraw" style={{}}>
               <div>
                 <div className={styles.textSecondary}>
                   Withdrawal Amount
@@ -651,12 +691,12 @@ const LinearPool = (props: any) => {
                   {(+utils.formatEther(poolDetail?.pendingWithdrawal?.amount)).toFixed(2)} {tokenDetails?.symbol}
                 </div>
               </div>
-              <div style={{ }}>
+              <div style={{}}>
                 <div className={styles.textSecondary}>
                   Available at
                 </div>
                 <div className={styles.textPrimary}>
-                {moment.unix(Number(poolDetail?.pendingWithdrawal?.applicableAt)).format("YYYY-MM-DD HH:mm:ss")}
+                  {moment.unix(Number(poolDetail?.pendingWithdrawal?.applicableAt)).format("YYYY-MM-DD HH:mm:ss")}
                 </div>
               </div>
             </div>
@@ -674,6 +714,17 @@ const LinearPool = (props: any) => {
         }
 
       </AccordionDetails>
+      <ModalSwitchPool
+        open={showSwitchModal}
+        onClose={onCloseSwitchModal}
+        idSwitched={idSwitched}
+        poolsList={poolsList}
+        tokenDetails={tokenDetails}
+        poolDetail={poolDetail}
+        tokenBalance={tokenBalance}
+        amount={stakeAmount}
+        stakingAmount={Number(utils.formatEther(poolDetail?.stakingAmount)).toFixed(2)}
+        onConfirm={onSwitchPool} />
       <ModalStake
         open={showStakeModal}
         amount={stakeAmount}

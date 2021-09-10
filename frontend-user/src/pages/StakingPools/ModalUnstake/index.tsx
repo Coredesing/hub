@@ -1,4 +1,3 @@
-import _, { set } from 'lodash';
 import { useEffect, useState } from 'react';
 import useStyles from './style';
 import usePoolStyles from '../Pool/style';

@@ -30,11 +30,11 @@ import useAllocClaimPendingWithdraw from '../hook/useAllocClaimPendingWithdraw';
 import { ETH_CHAIN_ID } from '../../../constants/network'
 import { useTypedSelector } from '../../../hooks/useTypedSelector';
 import { useCallback, useEffect, useState, useMemo } from 'react';
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, utils, ethers } from 'ethers';
 
 const ONE_DAY_IN_SECONDS = 86400;
 const EST_BLOCK_PER_YEAR = 2369600; // Number of block per year, with estimated 20s/block
-
+const ETH_RPC_URL = process.env.REACT_APP_NETWORK_URL || "";
 const ArrowIcon = () => {
   return (
     <svg width="16" height="9" viewBox="0 0 16 9" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -42,9 +42,16 @@ const ArrowIcon = () => {
     </svg>
   )
 }
-
+const provider = new ethers.providers.JsonRpcProvider(ETH_RPC_URL);
 const AllocationPool = (props: any) => {
-  const { connectedAccount, poolDetail, blockNumber, poolAddress, reload, setOpenModalTransactionSubmitting, setTransactionHashes } = props
+  const { connectedAccount, poolDetail, poolAddress, reload, setOpenModalTransactionSubmitting, setTransactionHashes } = props;
+  const [blockNumber, setBlockNumber] = useState<number>(0);
+
+  provider.on("block", (num: any)=>{
+    if (num && Number(num) !== blockNumber) {
+      setBlockNumber(Number(num))
+    }
+  })
   const styles = useStyles();
   const { library } = useWeb3React();
   const dispatch = useDispatch();

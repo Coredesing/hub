@@ -46,10 +46,11 @@ const AccountV2 = (props: any) => {
   const { isAuth, connectedAccount, wrongChain } = useAuth();
   // const [loadingGetHistory, setLoadingGetHistory] = useState(false);
 
-  const { tokenDetails: tokenPKFDetails } = useTokenDetails(
-    TOKEN_ADDRESS,
-    "eth"
-  );
+  // const { tokenDetails: tokenPKFDetails } = useTokenDetails(
+  //   TOKEN_ADDRESS,
+  //   "eth"
+  // );
+
   // const { tokenDetails: tokenUniLPDetails } = useTokenDetails(
   //   TOKEN_UNI_ADDRESS,
   //   "eth"
@@ -222,7 +223,7 @@ const AccountV2 = (props: any) => {
                 classNamePrefix="account-infomation"
                 balance={balance}
                 userInfo={userInfo}
-                tokenPKFDetails={tokenPKFDetails}
+                // tokenPKFDetails={tokenPKFDetails}
                 email={userProfile.email}
                 twitter={userProfile.user_twitter}
                 telegram={userProfile.user_telegram}
@@ -240,7 +241,7 @@ const AccountV2 = (props: any) => {
               <div className={classes.tier}>
                 <Tiers
                   showMoreInfomation={false}
-                  tokenSymbol={tokenPKFDetails?.symbol}
+                  // tokenSymbol={tokenPKFDetails?.symbol}
                   total={total}
                   isKYC={isKYC}
                   tiers={tiers}

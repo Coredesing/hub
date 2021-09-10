@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme: any) => ({
   cardCompItem: {
     display: "grid",
     flexDirection: "column",
-    justifyContent: "center",
+    // justifyContent: "center",
     placeContent: 'start',
     gap: "12px",
     // width: "100%",

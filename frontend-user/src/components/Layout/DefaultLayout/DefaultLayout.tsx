@@ -26,14 +26,16 @@ const DefaultLayout = (props: any) => {
             >
               <img src={"/images/icons/close.svg"} alt="" />
             </Button>
-            <h3 style={{ marginBottom: '5px' }}>Official GAFI contract address:</h3>
-            <h3>
-              {ChainDefault.name}: <LinkMui className={styles.link} target="_blank" href={getEtherscanTransactionAddress({ appChainID: ChainDefault.id, address: GAMEFI_ADDRESS })}>{GAMEFI_ADDRESS}</LinkMui>
-            </h3>
+            <div>
+              <h3 style={{ marginBottom: '5px' }}>Official GAFI contract address:</h3>
+              <h3>
+                {ChainDefault.name}: <LinkMui className={styles.link} target="_blank" href={getEtherscanTransactionAddress({ appChainID: ChainDefault.id, address: GAMEFI_ADDRESS })}>{GAMEFI_ADDRESS}</LinkMui>
+              </h3>
+            </div>
           </div>
         }
-        <HeaderDefaultLayout isShowBannerContract={isShowBannerContract} />
-        <MainDefaultLayout isShowBannerContract={isShowBannerContract}>{props.children}</MainDefaultLayout>
+        <HeaderDefaultLayout isShowBannerContract={isShowBannerContract} heightBannerContract={"100px"}/>
+        <MainDefaultLayout isShowBannerContract={isShowBannerContract} heightBannerContract={"100px"}>{props.children}</MainDefaultLayout>
         <FooterLandingLayout />
       </div>
     </div>

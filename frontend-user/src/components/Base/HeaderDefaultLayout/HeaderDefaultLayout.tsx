@@ -271,7 +271,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
         ) : ( */}
         <>
           
-          <div className={styles.navBarGF} style={props.isShowBannerContract ? {top: '80px'}: {}}>
+          <div className={styles.navBarGF} style={props.isShowBannerContract ? {top: props.heightBannerContract}: {}}>
             <div className="logo">
               <a href={"#/"}><img src={logo} alt="" /></a>
             </div>

@@ -364,7 +364,7 @@ contract LinearPool is
 
         require(
             newPool.lockDuration >= curPool.lockDuration &&
-                newPool.delayDuration > curPool.delayDuration,
+                newPool.delayDuration >= curPool.delayDuration,
             "LinearStakingPool: invalid new pool"
         );
 

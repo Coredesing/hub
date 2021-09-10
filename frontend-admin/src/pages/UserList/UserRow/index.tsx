@@ -43,13 +43,13 @@ const UserRecord: React.FC<UserRowProps> = (props: UserRowProps) => {
   const stringifyTier = (tier: any) => {
     switch(tier) {
       case 1:
-        return 'Dove';
+        return 'Rookie';
       case 2:
-        return 'Hawk';
+        return 'Elite';
       case 3:
-        return 'Eagle';
+        return 'Pro';
       case 4:
-        return 'Phoenix';
+        return 'Master';
       default: 
         return 'None';
     }

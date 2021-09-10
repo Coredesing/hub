@@ -271,7 +271,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
         ) : ( */}
         <>
           
-          <div className={styles.navBarGF} style={props.isShowBannerContract ? {top: '80px'}: {}}>
+          <div className={styles.navBarGF} style={props.isShowBannerContract ? {top: props.heightBannerContract}: {}}>
             <div className="logo">
               <a href={"#/"}><img src={logo} alt="" /></a>
             </div>
@@ -279,6 +279,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
               <ul className={styles.headerLinks}>
                 <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/">Home</Link></li>
                 <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/ticket">Ticket sales</Link></li>
+                <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/token">Token sales</Link></li>
                 {/* <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/items">Items Sales</Link></li> */}
                 {/* <li className={styles.headerLink}><Link href="#">Marketplace</Link></li> */}
                 {/* <li className={styles.headerLink}><Link href="#">Stake</Link></li> */}

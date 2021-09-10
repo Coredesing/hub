@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => {
     // },
     bannerContract: {
       width: '100%',
-      padding: '20px 10px',
+      padding: '0px 10px',
       textAlign: 'center',
       background: '#171717',
       color: '#fff',
@@ -33,7 +33,11 @@ const useStyles = makeStyles((theme) => {
       zIndex: 1000,
       fontFamily: "Firs Neue",
       fontStyle: "normal",
-      fontWeight: 'normal'
+      fontWeight: 'normal',
+      display: 'grid',
+      placeContent: 'center',
+      justifyContent: 'center',
+      height: '100px',
     },
     link: {
       color: '#fff',
@@ -41,6 +45,8 @@ const useStyles = makeStyles((theme) => {
       fontFamily: "Firs Neue",
       fontStyle: "normal",
       fontWeight: 'normal',
+      wordWrap: 'break-word',
+      wordBreak: 'break-all',
       '&:hover': {
         color: '#fff',
       }

@@ -7,10 +7,10 @@ export const MAX_BUY_CAMPAIGN = 1000;
 export const DATETIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 export const TIERS = [
   '-',
-  'Dove',
-  'Hawk',
-  'Eagle',
-  'Phoenix',
+  'Rookie',
+  'Elite',
+  'Pro',
+  'Master',
 ];
 
 export const ACCEPT_CURRENCY = {

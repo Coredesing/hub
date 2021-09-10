@@ -161,6 +161,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
   }
 
 
+
   return (
     <>
       <div className={styles.navBar}>
@@ -269,7 +270,8 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
           </>
         ) : ( */}
         <>
-          <div className={styles.navBarGF}>
+          
+          <div className={styles.navBarGF} style={props.isShowBannerContract ? {top: '80px'}: {}}>
             <div className="logo">
               <a href={"#/"}><img src={logo} alt="" /></a>
             </div>
@@ -408,7 +410,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
         !loginError &&
         message !== "" && (
           <WrapperAlert type="error">
-          <span className={styles.loginErrorBannerText}>
+            <span className={styles.loginErrorBannerText}>
               {message}&nbsp;&nbsp;
               <button
                 className={styles.btnChangeAppNetwork}

@@ -279,14 +279,16 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
                 <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/ticket">Ticket sales</Link></li>
                 <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/token">Token sales</Link></li>
                 <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/items">Items Sales</Link></li>
-                <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/staking-pools">Staking</Link></li>
+
                 {/* <li className={styles.headerLink}><Link href="#">Marketplace</Link></li> */}
                 {/* <li className={styles.headerLink}><Link href="#">Stake</Link></li> */}
               </ul>
               <div className={styles.headerAccount} onClick={hideNavMenu}>
-                {connectedAccount && <a href="/#/account" className={styles.headerAccText}>
-                  My Account
-                </a>}
+                {connectedAccount && <>
+                  <Link to="/account" className={styles.headerAccText}>  My Account </Link>
+                  <Link className={styles.headerAccText} to="/staking-pools">Staking</Link>
+                </>
+                }
 
                 <div className={styles.headerAccBtn}>
                   <button
@@ -410,7 +412,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
         !loginError &&
         message !== "" && (
           <WrapperAlert type="error">
-          <span className={styles.loginErrorBannerText}>
+            <span className={styles.loginErrorBannerText}>
               {message}&nbsp;&nbsp;
               <button
                 className={styles.btnChangeAppNetwork}

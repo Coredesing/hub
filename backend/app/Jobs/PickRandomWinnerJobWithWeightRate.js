@@ -78,7 +78,6 @@ class PickRandomWinnerJobWithWeightRate {
         // get user PKF balance and tier from SC
         const wallet = whitelistObj.data[i].wallet_address;
         const receivedData = await HelperUtils.getUserTierSmart(wallet);
-        console.log('getUserTierSmart: ', receivedData);
         const tier = receivedData[0];
         const pkfBalanceSmartContract = receivedData[1];
         let pkfBalance = pkfBalanceSmartContract;

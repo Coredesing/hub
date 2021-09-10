@@ -73,6 +73,7 @@ Route.group(() => {
 
   // user
   Route.get('user/profile', 'UserController.profile').middleware(['maskEmailAndWallet']);
+  Route.get('user/tier-info', 'UserController.tierInfo').middleware(['maskEmailAndWallet']);
   Route.post('user/deposit', 'CampaignController.deposit').middleware(['checkSignature']);
   Route.post('user/claim', 'CampaignController.claim').middleware(['checkSignature']);
   Route.put('user/update-profile', 'UserController.updateProfile').middleware(['checkSignature']);

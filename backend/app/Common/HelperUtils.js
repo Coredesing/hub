@@ -9,19 +9,27 @@ const moment = use('moment');
 
 const Const = use('App/Common/Const');
 const ErrorFactory = use('App/Common/ErrorFactory');
+const RedisUtils = use('App/Common/RedisUtils')
+const StakingPoolModel = use('App/Models/StakingPool');
 
 const CONFIGS_FOLDER = '../../blockchain_configs/';
 const NETWORK_CONFIGS = require(`${CONFIGS_FOLDER}${process.env.NODE_ENV}`);
 const CONTRACT_CONFIGS = NETWORK_CONFIGS.contracts[Const.CONTRACTS.CAMPAIGN];
+const STAKING_CONTRACT_CONFIGS = NETWORK_CONFIGS.contracts[Const.CONTRACTS.STAKING_POOL];
+const { abi: STAKING_POOL_CONTRACT_ABI } = STAKING_CONTRACT_CONFIGS.CONTRACT_DATA;
 const ERC721_ABI = require('../../blockchain_configs/contracts/Erc721');
 const { abi: CONTRACT_ABI } = CONTRACT_CONFIGS.CONTRACT_DATA;
 const { abi: CONTRACT_CLAIM_ABI } = CONTRACT_CONFIGS.CONTRACT_CLAIMABLE;
 const { abi: STAKING_CONTEST_CONTRACT_ABI } = NETWORK_CONFIGS.contracts[Const.CONTRACTS.STAKING_CONTEST].CONTRACT_DATA;
 
+const GAFI_SMART_CONTRACT_ADDRESS = process.env.GAFI_SMART_CONTRACT_ADDRESS
+const UNI_LP_GAFI_SMART_CONTRACT_ADDRESS = process.env.UNI_LP_GAFI_SMART_CONTRACT_ADDRESS
+const STAKING_POOL_SMART_CONTRACT = process.env.STAKING_POOL_SMART_CONTRACT
+
 /**
  * Switch Link Web3
  */
-const isDevelopment = process.env.NODE_ENV == 'development';
+const isDevelopment = process.env.NODE_ENV === 'development';
 console.log('isDevelopment:===========>', isDevelopment, process.env.NODE_ENV);
 const getWeb3ProviderLink = () => {
   if (isDevelopment) {
@@ -224,12 +232,6 @@ const getTierSmartContractInstance = () => {
   const tierSc = new web3.eth.Contract(CONTRACT_TIER_ABI, TIER_SMART_CONTRACT);
   return tierSc;
 };
-
-const getMantraStakeSmartContractInstance = () => {
-  const mantraSc = new web3.eth.Contract(CONTRACT_STAKE_ABI, MANTRA_DAO_STAKE_SMART_CONTRACT);
-  return mantraSc;
-};
-
 const getEPkfBonusBalance = (wallet_address) => {
   return axios.get(EPKF_BONUS_LINK.replace('WALLET_ADDRESS', wallet_address))
     .catch(e => {
@@ -237,62 +239,124 @@ const getEPkfBonusBalance = (wallet_address) => {
     })
 }
 
-const getUserTierSmart = async (wallet_address) => {
-  // TODO: Setting cache for Rate Setting
-  // Get Rate Setting
+const getTiers = () => {
+  let tiers = []
   try {
-    let rateSetting = await RateSetting.query().first();
-    if (rateSetting) {
-      rateSetting = JSON.parse(JSON.stringify(rateSetting));
+    tiers = JSON.parse(process.env.USER_TIERS)
+  } catch (error) {
+    tiers = [100, 500, 2500, 4000]
+  }
+  return tiers.map(tier => Web3.utils.toWei(tier.toString()))
+}
+
+const getRateSetting = async () => {
+  let rateSetting
+  try {
+    if (await RedisUtils.checkExistRedisRateSetting()) {
+      rateSetting = JSON.parse(await RedisUtils.getRedisRateSetting())
     } else {
-      rateSetting = {
-        lp_pkf_rate: 1,
-        spkf_rate: 1,
-        epkf_rate: 1,
-      }
+      rateSetting = JSON.parse(JSON.stringify(await RateSetting.query().first()));
+      RedisUtils.createRedisRateSetting(rateSetting)
+    }
+  } catch (error) {
+  }
+
+  if (!rateSetting) {
+    rateSetting = {
+      lp_pkf_rate: 0,
+      spkf_rate: 0,
+      epkf_rate: 0,
+    }
+  }
+
+  return rateSetting
+}
+
+const getStakingPool = async (wallet_address) => {
+  const pools = await StakingPoolModel.query().fetch();
+
+  const listPool = JSON.parse(JSON.stringify(pools))
+  let stakedPkf = new BigNumber('0');
+  let stakedUni = new BigNumber('0');
+  for (const pool of listPool) {
+    if (!pool.pool_address) {
+      continue;
     }
 
-    // Get Tier Smart Contract Info
-    const tierSc = getTierSmartContractInstance();
-    const receivedData = await Promise.all([
-      tierSc.methods.getTiers().call(),
-      tierSc.methods.userTotalStaked(wallet_address).call(),
-      getEPkfBonusBalance(wallet_address),
-      tierSc.methods.userInfo(wallet_address, process.env.PKF_SMART_CONTRACT_ADDRESS || '').call(), // stakedPkf
-      tierSc.methods.userInfo(wallet_address, process.env.UNI_LP_PKF_SMART_CONTRACT_ADDRESS || '').call(), // staked LP_PKF
-    ]);
+    const stakingPoolSC = new networkToWeb3[Const.NETWORK_AVAILABLE.BSC].eth.Contract(STAKING_POOL_CONTRACT_ABI, pool.pool_address);
+    if (!stakingPoolSC) {
+      continue;
+    }
+
+    try {
+      switch (pool.staking_type) {
+        case 'alloc':
+          const [allocPoolInfo, allocUserInfo] = await Promise.all([
+            stakingPoolSC.methods.allocPoolInfo(pool.pool_id).call(),
+            stakingPoolSC.methods.allocUserInfo(pool.pool_id, wallet_address).call()
+          ]);
+
+          if (allocPoolInfo.lpToken.toLowerCase() === GAFI_SMART_CONTRACT_ADDRESS.toLowerCase()) {
+            stakedPkf = stakedPkf.plus(new BigNumber(allocUserInfo.amount));
+            break;
+          }
+
+          if (allocPoolInfo.lpToken.toLowerCase() === UNI_LP_GAFI_SMART_CONTRACT_ADDRESS.toLowerCase()) {
+            stakedUni = stakedUni.plus(new BigNumber(allocUserInfo.amount));
+            break;
+          }
+
+          break;
+        case 'linear':
+          const [linearAcceptedToken, linearStakingData] = await Promise.all([
+            stakingPoolSC.methods.linearAcceptedToken().call(),
+            stakingPoolSC.methods.linearStakingData(pool.pool_id, wallet_address).call()
+          ]);
+
+          if (linearAcceptedToken.toLowerCase() === GAFI_SMART_CONTRACT_ADDRESS.toLowerCase()) {
+            stakedPkf = stakedPkf.plus(new BigNumber(linearStakingData.balance));
+          }
+          break;
+      }
+    } catch (err) {
+      console.log('getStakingPoolPKF', err)
+    }
+  }
+
+  return {
+    staked: stakedPkf.toFixed(),
+    stakedUni: stakedUni.toFixed(),
+  };
+}
+
+const getUserTierSmart = async (wallet_address) => {
+  try {
+    // Get cached Rate Setting
+    // const rateSetting = await getRateSetting()
+    const tiers = await getTiers()
+    const stakingData = await getStakingPool(wallet_address)
 
     // Caculate PKF Staked
-    let stakedPkf = (receivedData[3] && receivedData[3].staked) || 0;
-    stakedPkf = new BigNumber(stakedPkf);
+    let stakedToken = new BigNumber((stakingData && stakingData.staked) || 0)
 
     // Caculate LP-PKF Staked
-    let stakedUni = (receivedData[4] && receivedData[4].staked) || 0;
-    stakedUni = new BigNumber(stakedUni).multipliedBy(rateSetting.lp_pkf_rate);
+    // TODO: .multipliedBy(rateSetting.lp_pkf_rate)
+    // let stakedUni = new BigNumber((stakingData && stakingData.stakedUni) || 0);
+    let stakedUni = new BigNumber(0);
 
-    // calc pfk equal
-    let ePkf = 0;
-    const ePkfResponse = receivedData[2] && receivedData[2].data;
-    if (ePkfResponse && ePkfResponse.code === 200) {
-      ePkf = new BigNumber((ePkfResponse && ePkfResponse.data) || 0).multipliedBy(rateSetting.epkf_rate).toFixed();
-    }
-    const pkfEq = new BigNumber(stakedPkf).plus(stakedUni).plus(ePkf);
-
-    // get 4 tiers
+    // get tiers
     let userTier = 0;
-    const tiers = receivedData[0].slice(0, 4);
-
-    tiers.map((pkfRequire, index) => {
-      if (pkfEq.gte(pkfRequire)) {
+    tiers.map((tokenRequire, index) => {
+      if (stakedToken.gte(tokenRequire)) {
         userTier = index + 1;
       }
     });
 
     return [
       userTier,
-      new BigNumber(pkfEq).dividedBy(Math.pow(10, 18)).toFixed(),
-      new BigNumber(stakedPkf).plus(stakedUni).dividedBy(Math.pow(10, 18)).toFixed(),
-      new BigNumber(ePkf).dividedBy(Math.pow(10, 18)).toFixed(),
+      stakedToken.plus(stakedUni).dividedBy(Math.pow(10, 18)).toFixed(),
+      stakedToken.dividedBy(Math.pow(10, 18)).toFixed(),
+      0,
     ];
   }
   catch (e) {
@@ -300,37 +364,11 @@ const getUserTierSmart = async (wallet_address) => {
   }
 };
 
-const getExternalTokenSmartContract = async (wallet_address) => {
-  const tierSc = getTierSmartContractInstance();
-  const externalTokenMantra = await tierSc.methods.externalToken(MANTRA_DAO_STAKE_SMART_CONTRACT).call();
-  console.log('[getExternalTokenSmartContract] - externalToken', externalTokenMantra);
-  return externalTokenMantra;
-};
-
 const getUserTotalStakeSmartContract = async (wallet_address) => {
   const tierSc = getTierSmartContractInstance();
   const totalStaked = await tierSc.methods.userTotalStaked(wallet_address).call();
   console.log('[getUserTotalStakeSmartContract] - totalStaked', totalStaked);
   return totalStaked;
-};
-
-const getUnstakeMantraSmartContract = async (wallet_address) => {
-  const mantraSc = getMantraStakeSmartContractInstance();
-  const unstakeAmountMantra = await mantraSc.methods.getUnstake(wallet_address).call();
-  console.log('[getUnstakeMantraSmartContract] - unstakeAmountMantra', unstakeAmountMantra);
-  return unstakeAmountMantra;
-};
-
-const getTierBalanceInfos = async (wallet_address) => {
-  const tierSc = getTierSmartContractInstance();
-  const mantraSc = getMantraStakeSmartContractInstance();
-  const receivedData = await Promise.all([
-    tierSc.methods.getTiers().call(),
-    tierSc.methods.userTotalStaked(wallet_address).call(),
-    mantraSc.methods.getUnstake(wallet_address).call(),
-    tierSc.methods.externalToken(MANTRA_DAO_STAKE_SMART_CONTRACT).call(),
-  ]);
-  return receivedData;
 };
 
 const getContractInstanceDev = async (camp) => {
@@ -780,11 +818,7 @@ module.exports = {
   checkSumAddress,
   paginationArray,
   getTierSmartContractInstance,
-  getMantraStakeSmartContractInstance,
-  getTierBalanceInfos,
   getUserTotalStakeSmartContract,
-  getUnstakeMantraSmartContract,
-  getExternalTokenSmartContract,
   getERC721TokenContractInstance,
   getUserTierSmart,
   getContractInstance,

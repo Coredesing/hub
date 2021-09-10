@@ -9,7 +9,7 @@ import NotFoundPage from "../NotFoundPage/ContentPage";
 import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
 import ContentTicket from './Ticket';
 import TicketBid from './TicketBid';
-import { isBid } from "./utils";
+import { isBidorStake } from "./utils";
 
 const Ticket: React.FC<any> = (props: any) => {
   const params = useParams<{ [k: string]: any }>();
@@ -34,7 +34,6 @@ const Ticket: React.FC<any> = (props: any) => {
       setCheckParamType(result);
     }
   }, [loadingTicket, dataTicket]);
-
   return (
     <DefaultLayout>
       {
@@ -43,7 +42,7 @@ const Ticket: React.FC<any> = (props: any) => {
             <CircularProgress color="inherit" />
           </Backdrop>
           : (checkParamType.valid ? (
-            isBid(dataTicket.process) ? <TicketBid id={id} /> : <ContentTicket id={id} />
+            isBidorStake(dataTicket.process) ? <TicketBid id={id} /> : <ContentTicket id={id} />
           ) : <NotFoundPage />)
       }
     </DefaultLayout>

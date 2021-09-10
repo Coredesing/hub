@@ -13,6 +13,8 @@ import { FormInputNumber } from '../../components/Base/FormInputNumber';
 import { getContract } from '../../utils/contract';
 import Erc20Json from '../../abi/Erc20.json';
 import { useWeb3React } from '@web3-react/core';
+import BigNumber from 'bignumber.js';
+
 const commaNumber = require('comma-number');
 const closeIcon = '/images/icons/close.svg';
 const useStyles = makeStyles({
@@ -154,7 +156,6 @@ type Props = {
 }
 const TicketBidModal = ({ open, bidInfo = {}, ownedBidStaked = {}, token = {}, ...props }: Props) => {
   const { library, account } = useWeb3React();
-
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -166,15 +167,20 @@ const TicketBidModal = ({ open, bidInfo = {}, ownedBidStaked = {}, token = {}, .
   useEffect(() => {
     if (!account) return setBalance('0');
     const getBalance = async () => {
-      const contract = getContract(token.address, Erc20Json, library, account);
-      let balance = await contract.balanceOf(account);
-      balance = balance.toNumber();
-      balance = commaNumber(+(balance / 10 ** token.decimals).toFixed(4) * 10000 / 10000) || '0';
-      setBalance(balance);
-      setRenewBalance(false);
+      try {
+        const contract = getContract(bidInfo.token, Erc20Json, library, account);
+        let balance = await contract.balanceOf(account);
+        balance = balance.toBigInt();
+        balance = new BigNumber(balance).dividedBy(new BigNumber(10 ** bidInfo.decimals));
+        balance = commaNumber(+(balance).toFixed(4) * 10000 / 10000) || '0';
+        setBalance(balance);
+        setRenewBalance(false);
+      } catch (error) {
+        console.log(error);
+      }
     }
-    (renewBalance || account) && library && token?.address && getBalance();
-  }, [library, account, token, renewBalance]);
+    (renewBalance || account) && library && bidInfo?.token && getBalance();
+  }, [library, account, bidInfo, renewBalance]);
 
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -220,33 +226,37 @@ const TicketBidModal = ({ open, bidInfo = {}, ownedBidStaked = {}, token = {}, .
         <img src={closeIcon} alt="" />
       </Button>
       <DialogContent className={classes.content}>
-        <h3>Your Bid</h3>
+        <h3>Your Stake</h3>
 
         <div className={classes.boxGroup}>
           <label>Opening price</label>
-          <span>0 {bidInfo.accept_currency}</span>
+          <span>0 {bidInfo.symbol}</span>
         </div>
         <div className={classes.boxGroup}>
-          <label>Your bid</label>
-          <span>{numStaked(ownedBidStaked.staked)} {bidInfo.accept_currency}</span>
+          <label>Your Stake</label>
+          <span>{numStaked(ownedBidStaked.staked)} {bidInfo.symbol}</span>
         </div>
         <div className={`${classes.boxGroup} ${classes.mb0}`}>
-          <label>Bid</label>
+          <label>{/*Bid*/}Stake</label>
           <span>
-            <img src={`/images/icons/${(bidInfo.accept_currency || '').toLowerCase()}.png`} alt="" />
-            {bidInfo.accept_currency}
+            <img className="rounded" src={`/images/icons/${(bidInfo.symbol || '').toLowerCase()}.png`} onError={(e: any) => {
+              e.target.onerror = null;
+              e.target.src = bidInfo.token_images;
+            }}
+              alt="" />
+            {bidInfo.symbol}
           </span>
         </div>
         <div className={classes.formGroup}>
-          <FormInputNumber value={value} onChange={onChangeValue} isPositive allowZero placeholder="Enter your amount"/>
-          <span>(Your Wallet Balance: {balance} {bidInfo.accept_currency})</span>
+          <FormInputNumber value={value} onChange={onChangeValue} isPositive allowZero placeholder="Enter your amount" />
+          <span>(Your Wallet Balance: {balance} {bidInfo.symbol})</span>
         </div>
         {error && <AlertMsg message={error} />}
 
       </DialogContent>
       <DialogActions className={classes.actions}>
         <ButtonYellow onClick={onPlaceBid} className={classes.btnBid} disabled={!account}>
-          Place a Bid
+          Place a Stake
         </ButtonYellow>
       </DialogActions>
     </Dialog>

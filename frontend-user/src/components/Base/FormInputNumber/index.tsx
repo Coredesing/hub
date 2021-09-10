@@ -60,7 +60,7 @@ export const FormInputNumber = (props: IProps) => {
       onChange(event);
       return;
     }
-    if (isNumber(+valInput)) {
+    if ( !isNaN(+valInput) && isNumber(+valInput)) {
       if (!allowZero && valInput.charAt(0) === "0") {
         valInput = valInput.replace(/0/i, "");
       }

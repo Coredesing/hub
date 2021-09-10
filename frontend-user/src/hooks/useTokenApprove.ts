@@ -29,7 +29,6 @@ const useTokenAllowance = (
     setTransactionHash("");
 
     try {
-      debugger
       if (token && spender && owner
         && ethers.utils.isAddress(owner)
         && ethers.utils.isAddress(spender)

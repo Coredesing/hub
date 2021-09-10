@@ -5,6 +5,7 @@ import usePoolStyles from '../Pool/style';
 import useCommonStyle from '../../../styles/CommonStyle';
 import Button from '../Button';
 import {Dialog, DialogTitle, DialogContent, DialogActions} from '@material-ui/core';
+import { numberWithCommas } from '../../../utils/formatNumber';
 
 const closeIcon = '/images/icons/close.svg'
 
@@ -99,7 +100,7 @@ const ModalStake = (props: any) => {
               min="0"
             />
           </div>
-          <div className="token-balance">Balance: {tokenBalance}</div>
+          <div className="token-balance">Balance: {numberWithCommas(tokenBalance, 4)} {tokenDetails?.symbol}</div>
 
           <div className={poolStyles.progressArea} style={{width: '100%', marginTop: '20px'}}>
             <div className={poolStyles.progress}>

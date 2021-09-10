@@ -457,7 +457,7 @@ const ContentNFTBox = ({ id, ...props }: any) => {
                                             <ButtonApprove isApproving={isApproving} onClick={handleTokenApprove} />
                                         )}
                                         {
-                                            isAccApproved(tokenAllowance || 0) && !finishedTime && allowNetwork.ok && connectedAccount && <ButtonYellow onClick={onShowModalBid} style={{ textTransform: 'unset', width: '100%' }}>Place a Stake</ButtonYellow>
+                                            isAccApproved(tokenAllowance || 0) && !finishedTime && allowNetwork.ok && connectedAccount && <ButtonYellow onClick={onShowModalBid} style={{ textTransform: 'unset', width: '100%' }}>Stake</ButtonYellow>
                                         }
                                         {
                                             isAccApproved(tokenAllowance || 0) && finishedTime && <ButtonYellow onClick={onClaim} style={{ textTransform: 'unset', width: '100%' }}>Claim</ButtonYellow>

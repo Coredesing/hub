@@ -17,7 +17,6 @@ const BuyTokenPoolSwapInfo: FC<Props> = ({poolDetails, currencyName}) => {
     poolDetails?.networkAvailable,
     poolDetails,
   );
-    console.log(poolDetails)
   const showProgress = (sold:number, totalSold: number) => {
     const _sold = new BigNumber(sold);
     const _totalSold = new BigNumber(totalSold);

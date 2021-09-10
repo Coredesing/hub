@@ -9,7 +9,7 @@ import {
   getUserInfo,
 } from "../../store/actions/sota-tiers";
 import { getAllowance } from "../../store/actions/sota-token";
-// import Tiers from "./Tiers";
+import Tiers from "./Tiers";
 import DefaultLayout from "../../components/Layout/DefaultLayout";
 import AccountInformation from "./AccountInformation";
 import useStyles from "./style";
@@ -17,7 +17,7 @@ import useAuth from "../../hooks/useAuth";
 import useTokenDetails from "../../hooks/useTokenDetails";
 // import useFetch from "../../hooks/useFetch";
 import { USER_STATUS } from "../../constants";
-// import useUserTier from "../../hooks/useUserTier";
+import useUserTier from "../../hooks/useUserTier";
 // import { trimMiddlePartAddress } from "../../utils/accountAddress";
 import { ChainId } from "../../constants/network";
 // import NftTicket from "./NftTicket";
@@ -25,7 +25,7 @@ import { ChainId } from "../../constants/network";
 // import NeedHelp from "./NeedHelp";
 import IdoPools from "./IdoPools";
 import axios from '../../services/axios';
-// import { numberWithCommas } from '../../utils/formatNumber';
+import { numberWithCommas } from '../../utils/formatNumber';
 import { AlertKYC } from "../../components/Base/AlertKYC";
 import { WrapperAlert } from "../../components/Base/WrapperAlert";
 import { MenuLeft } from "./constants";
@@ -65,13 +65,13 @@ const AccountV2 = (props: any) => {
   const [isKYC, setIsKYC] = useState(true);
   // const [listTokenDetails, setListTokenDetails] = useState([]) as any;
   const { data: appChainID } = useSelector((state: any) => state.appNetwork)
-  // const { currentTier, totalUnstaked, total } = useUserTier(connectedAccount || '', 'eth');
+  const { currentTier, totalUnstaked, total } = useUserTier(connectedAccount || '', 'eth');
   const [tabAccount] = useState(Object.values(MenuLeft));
   const [activeMenuAccount, setActiveMenuAccount] = useState(currentTabMenu.key);
   const [updatedSuccess, setUpdatedSuccess] = useState(false);
-  // const [dataHistories, setDataHistories] = useState({}) as any;
-  // const { data: tiers = {} } = useSelector((state: any) => state.tiers);
-  // const { data: userTier = 0 } = useSelector((state: any) => state.userTier);
+  const [dataHistories, setDataHistories] = useState({}) as any;
+  const { data: tiers = {} } = useSelector((state: any) => state.tiers);
+  const { data: userTier = 0 } = useSelector((state: any) => state.userTier);
   const [userProfile, setUserProfile] = useState<{ [k in string]: any }>({});
   const [loadingUserProfile, setRenewUserProfile] = useState(false);
 
@@ -153,8 +153,8 @@ const AccountV2 = (props: any) => {
     connectedAccount && dispatch(getUserTier(connectedAccount));
   }, [connectedAccount, dispatch]);
 
-  // const totalRedKitePoints = userInfo?.totalStaked ? numberWithCommas((Number(userInfo?.totalStaked)).toString() || '0') : '0';
-  // const pointsLeftToNextTier = userInfo?.totalStaked ? numberWithCommas((tiers[userTier] - Number(userInfo?.totalStaked)).toString() || '0') : '0';
+  const totalRedKitePoints = userInfo?.totalStaked ? numberWithCommas((Number(userInfo?.totalStaked)).toString() || '0') : '0';
+  const pointsLeftToNextTier = userInfo?.totalStaked ? numberWithCommas((tiers[userTier] - Number(userInfo?.totalStaked)).toString() || '0') : '0';
 
   return (
     <DefaultLayout isKYC={isKYC}>
@@ -236,7 +236,7 @@ const AccountV2 = (props: any) => {
               />
             }
 
-            {/* {activeMenuAccount === 'My Tier' &&
+            {activeMenuAccount === MenuLeft.tier.key &&
               <div className={classes.tier}>
                 <Tiers
                   showMoreInfomation={false}
@@ -253,7 +253,7 @@ const AccountV2 = (props: any) => {
                   pointsLeftToNextTier={pointsLeftToNextTier}
                 />
               </div>
-            } */}
+            }
 
             {activeMenuAccount === MenuLeft.pool.key && <IdoPools />}
             {/* {activeMenuAccount === 'NFT Tickets' && <>

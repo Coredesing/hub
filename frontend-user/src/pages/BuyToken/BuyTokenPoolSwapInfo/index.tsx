@@ -71,7 +71,7 @@ const BuyTokenPoolSwapInfo: FC<Props> = ({poolDetails, currencyName}) => {
 
         <div className={styles.jubValue}>
           <div className={styles.leftBotSec}>
-            {numberWithCommas(new BigNumber(soldProgress).gt(99) ? '100': soldProgress)}%
+            {numberWithCommas(new BigNumber(soldProgress).gte(100) ? '100': soldProgress)}%
           </div>
           <div className={styles.rightBotSec}>
             {
@@ -82,7 +82,7 @@ const BuyTokenPoolSwapInfo: FC<Props> = ({poolDetails, currencyName}) => {
         </div>
 
         <div className={styles.progress}>
-          <div className={styles.achieved} style={{ width: `${new BigNumber(soldProgress).gt(100) ? '100': soldProgress}%` }}></div>
+          <div className={styles.achieved} style={{ width: `${new BigNumber(soldProgress).gte(100) ? '100': soldProgress}%` }}></div>
         </div>
       </div>
     </section>

@@ -25,7 +25,7 @@ import { SearchBox } from "../../components/Base/SearchBox";
 import { cvtAddressToStar, debounce, escapeRegExp } from "../../utils";
 import { numberWithCommas } from "../../utils/formatNumber";
 import { useAboutStyles } from "./style";
-import { isBid } from "./utils";
+import { isBidorStake } from "./utils";
 import { convertTimeToStringFormat } from "../../utils/convertDate";
 const shareIcon = "/images/icons/share.svg";
 const telegramIcon = "/images/icons/telegram-1.svg";
@@ -92,7 +92,7 @@ const sliceArr = (arr: any[], from: number, to: number) => arr.slice(from, to)
 
 const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) => {
   const classes = useAboutStyles();
-  const [value, setValue] = React.useState(0);
+  const [tabCurrent, setTab] = React.useState(props.defaultTab || 0);
   const theme = useTheme();
   const matchSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [page, setPage] = useState(1);
@@ -103,7 +103,7 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
   }>({ total: 0, list: [] });
   const limitPage = 10;
   const [cachedRecallCount, setCachedRecallCount] = useState(0);
-  const isTicketBid = isBid(info.process);
+  const isTicketBid = isBidorStake(info.process);
   const url = (() => {
     if (isTicketBid) {
       return `/pool/${info.id}/top-bid?wallet_address=${connectedAccount}`
@@ -161,7 +161,7 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
   }, [isTicketBid, page, winner, searchWinner])
 
   const handleChange = (event: any, newValue: any) => {
-    setValue(newValue);
+    setTab(newValue);
   };
 
   const getRules = (rule = "") => {
@@ -186,7 +186,7 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
       <AppBar className={classes.appbar} position="static">
         <AntTabs
           centered={matchSM ? true : false}
-          value={value}
+          value={tabCurrent}
           onChange={handleChange}
           aria-label="simple tabs example"
           variant={matchSM ? "fullWidth" : "standard"}
@@ -194,13 +194,13 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
           <Tab
             className={classes.tabName}
             label="Rule Introduction"
-            style={value === 0 ? { color: "#72F34B" } : {}}
+            style={tabCurrent === 0 ? { color: "#72F34B" } : {}}
             {...a11yProps(0)}
           />
           <Tab
             className={classes.tabName}
             label="About project"
-            style={value === 1 ? { color: "#72F34B" } : {}}
+            style={tabCurrent === 1 ? { color: "#72F34B" } : {}}
             {...a11yProps(1)}
           />
           <Tab
@@ -208,12 +208,12 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
             label={
               isTicketBid ? `Top Users (${numberWithCommas(pagination.total, 0)})` : `Winners (${numberWithCommas(winner ? winner.total || 0 : 0, 0)})`
             }
-            style={value === 2 ? { color: "#72F34B" } : {}}
+            style={tabCurrent === 2 ? { color: "#72F34B" } : {}}
             {...a11yProps(1)}
           />
         </AntTabs>
       </AppBar>
-      <TabPanel value={value} index={0}>
+      <TabPanel value={tabCurrent} index={0}>
         <ul className={classes.tabPaneContent}>
           {getRules(info.rule).map((rule, idx) => (
             <li key={idx}>
@@ -222,7 +222,7 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
           ))}
         </ul>
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel value={tabCurrent} index={1}>
         <div className={classes.desc}>
           <p className={classes.tabPaneContent}>{info.description}</p>
         </div>
@@ -265,7 +265,7 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
           </div>
         </div>
       </TabPanel>
-      <TabPanel value={value} index={2}>
+      <TabPanel value={tabCurrent} index={2}>
         <div style={{ maxWidth: '400px' }}>
           <SearchBox
             // value={searchWinner}

@@ -18,13 +18,13 @@ export const getBalance = async (loginUser: Address | null | undefined, tokenAdd
 };
 
 export const getUserStaked = async (loginUser: Address | null | undefined, campaignHash: Address, network: string, currency: string) => {
-    const result : ResultStaked = {staked: 0, lastTime: 0};
+    const result: ResultStaked = { staked: 0, lastTime: 0 };
     if (!loginUser) return result;
     const contract = getContractInstance(StakingContest, campaignHash, undefined, getNetworkInfo(network).id);
     if (contract) {
         const infoStaked = await contract.methods.getUserStake(loginUser).call();
-        result.staked =  +infoStaked[0];
-        result.lastTime =  +infoStaked[1];
+        result.staked = +infoStaked[0];
+        result.lastTime = +infoStaked[1];
     }
     return result;
 };
@@ -37,19 +37,19 @@ export const getUserStaked = async (loginUser: Address | null | undefined, campa
 // }
 export const handleErrMsg = (err: any) => {
     const message = err?.data?.message || '';
-    if(message.includes('POOL::ENDED')) {
+    if (message.includes('POOL::ENDED')) {
         return 'The sale has ended.';
     }
-    if(message.includes('POOL:PURCHASE_AMOUNT_EXCEED_ALLOWANCE')) {
+    if (message.includes('POOL:PURCHASE_AMOUNT_EXCEED_ALLOWANCE')) {
         return 'The number of Tickets you want to buy is greater than the number you can buy. Please try again.';
     }
-    if(message.includes('POOL::AMOUNT_MUST_GREATER_THAN_CLAIMED')) {
+    if (message.includes('POOL::AMOUNT_MUST_GREATER_THAN_CLAIMED')) {
         return 'You have already claimed.';
     }
-    if(message.includes('transfer amount exceeds balance')) {
+    if (message.includes('transfer amount exceeds balance')) {
         return 'Not enough balance.';
     }
-    if(message.includes('User has already claimed')) {
+    if (message.includes('User has already claimed')) {
         return 'User has already claimed.';
     }
     return '';
@@ -57,7 +57,7 @@ export const handleErrMsg = (err: any) => {
 
 export const isEndPool = (status: string) => {
     return String(status).toLowerCase() === 'ended'
-} 
+}
 
 export const calcProgress = (sold: number, total: number) => {
     return Math.ceil((sold * 100) / total) || 0;
@@ -67,6 +67,6 @@ export const getRemaining = (totalTicket: number, totalSold: number) => {
     return +totalTicket - +totalSold || 0;
 };
 
-export const isBid = (type: string) => {
-    return type === 'only-bid';
+export const isBidorStake = (type: string) => {
+    return type === 'only-bid' || type === 'only-stake';
 }

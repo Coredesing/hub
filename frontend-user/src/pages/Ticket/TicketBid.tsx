@@ -72,7 +72,7 @@ const ContentNFTBox = ({ id, ...props }: any) => {
         if (!networkInfo || !infoTicket?.network_available) {
             return;
         }
-        const ok = String(networkInfo.name).toLowerCase() === (infoTicket.network_available || "").toLowerCase();
+        const ok = String(networkInfo.shortName).toLowerCase() === (infoTicket.network_available || "").toLowerCase();
         if (!ok) {
             dispatch(pushMessage(`Please switch to ${(infoTicket.network_available || '').toLocaleUpperCase()} network to do Apply Whitelist, Approve/Buy tokens.`))
         } else {
@@ -103,24 +103,24 @@ const ContentNFTBox = ({ id, ...props }: any) => {
             let openTime: number;
             let finishTime: number;
             let timeStartPhase2 = dataTicket.freeBuyTimeSetting?.start_buy_time;
-                openTime = +dataTicket.start_time * 1000;
-                if (timeStartPhase2) {
-                    timeStartPhase2 = +timeStartPhase2 * 1000;
-                    finishTime = timeStartPhase2;
-                    setPhaseName('Phase 1');
-                    setPhase({
-                        1: {
-                            openTime,
-                            finishTime: timeStartPhase2,
-                        },
-                        2: {
-                            openTime: timeStartPhase2,
-                            finishTime: +dataTicket.finish_time * 1000
-                        }
-                    })
-                } else {
-                    finishTime = +dataTicket.finish_time * 1000;
-                }
+            openTime = +dataTicket.start_time * 1000;
+            if (timeStartPhase2) {
+                timeStartPhase2 = +timeStartPhase2 * 1000;
+                finishTime = timeStartPhase2;
+                setPhaseName('Phase 1');
+                setPhase({
+                    1: {
+                        openTime,
+                        finishTime: timeStartPhase2,
+                    },
+                    2: {
+                        openTime: timeStartPhase2,
+                        finishTime: +dataTicket.finish_time * 1000
+                    }
+                })
+            } else {
+                finishTime = +dataTicket.finish_time * 1000;
+            }
 
             if (openTime > Date.now()) {
                 setOpenTime(getDiffTime(openTime, Date.now()));
@@ -188,7 +188,7 @@ const ContentNFTBox = ({ id, ...props }: any) => {
 
     useEffect(() => {
         if (!connectedAccount) {
-            setOwnedBidStaked({lastTime: 0, staked: 0});
+            setOwnedBidStaked({ lastTime: 0, staked: 0 });
         }
     }, [connectedAccount]);
 
@@ -240,8 +240,14 @@ const ContentNFTBox = ({ id, ...props }: any) => {
             interval && clearInterval(interval);
         };
     }, [canBuy, endTime, setTimeEnd, endOpenTime]);
-    
-    const tokenToApprove = useMemo(() => getApproveToken(appChainID, infoTicket.accept_currency), [appChainID, infoTicket.accept_currency]);
+
+    // const tokenToApprove = useMemo(() => getApproveToken(appChainID, infoTicket.accept_currency), [appChainID, infoTicket.accept_currency]);
+    const tokenToApprove = useMemo(() => ({
+        decimals: infoTicket.decimals || '',
+        address: infoTicket.token || '',
+        name: infoTicket.name || '',
+        symbol: infoTicket.symbol || ''
+    }), [infoTicket]);
     const { resultBid, stake, claim } = useTicketBid({
         poolAddress: infoTicket.campaign_hash,
         token: tokenToApprove,
@@ -396,20 +402,25 @@ const ContentNFTBox = ({ id, ...props }: any) => {
                                 )}
                                 <div className={clsx(styles.priceBidBox)}>
                                     <span className={clsx(styles.text)}>
-                                        {!endOpenTime ? 'OPENING PRICE' : 'YOUR BID'}
+                                        {!endOpenTime ? 'OPENING PRICE' : 'YOUR STAKE'}
                                     </span>
                                     <div>
                                         <img
                                             height={20}
+                                            className="rounded"
                                             src={
                                                 infoTicket && infoTicket.accept_currency
-                                                    ? `/images/icons/${infoTicket.accept_currency.toLowerCase()}.png`
+                                                    ? `/images/icons/${infoTicket.symbol.toLowerCase()}.png`
                                                     : ""
                                             }
+                                            onError={(e: any) => {
+                                                e.target.onerror = null;
+                                                e.target.src = infoTicket.token_images;
+                                            }}
                                             alt=""
                                         />
                                         <span className={clsx(styles.textBold, 'text-uppercase')}>
-                                            {!endOpenTime ? 0 : numberWithCommas(((ownedBidStaked.staked || 0) / 10 ** (tokenToApprove?.decimals || 0)) + '', 4)} {infoTicket.accept_currency}
+                                            {!endOpenTime ? 0 : numberWithCommas(((ownedBidStaked.staked || 0) / 10 ** (tokenToApprove?.decimals || 0)) + '', 4)} {infoTicket.symbol}
                                         </span>
                                     </div>
                                 </div>
@@ -446,10 +457,10 @@ const ContentNFTBox = ({ id, ...props }: any) => {
                                             <ButtonApprove isApproving={isApproving} onClick={handleTokenApprove} />
                                         )}
                                         {
-                                            !finishedTime && allowNetwork.ok && connectedAccount && <ButtonYellow onClick={onShowModalBid} style={{ textTransform: 'unset', width: '100%' }}>Place a Bid</ButtonYellow>
+                                            isAccApproved(tokenAllowance || 0) && !finishedTime && allowNetwork.ok && connectedAccount && <ButtonYellow onClick={onShowModalBid} style={{ textTransform: 'unset', width: '100%' }}>Place a Stake</ButtonYellow>
                                         }
                                         {
-                                            finishedTime && <ButtonYellow onClick={onClaim} style={{ textTransform: 'unset', width: '100%' }}>Claim</ButtonYellow>
+                                            isAccApproved(tokenAllowance || 0) && finishedTime && <ButtonYellow onClick={onClaim} style={{ textTransform: 'unset', width: '100%' }}>Claim</ButtonYellow>
                                         }
 
                                         {(alert?.type === "error" && alert.message) && (
@@ -477,7 +488,14 @@ const ContentNFTBox = ({ id, ...props }: any) => {
                         </div>
                     </div>
                     <div className={styles.displayContent}>
-                        <AboutTicket info={infoTicket} connectedAccount={connectedAccount} setRankUser={setRankUser} token={tokenToApprove} recallCount={recallTopBid}/>
+                        <AboutTicket
+                            info={infoTicket}
+                            connectedAccount={connectedAccount}
+                            setRankUser={setRankUser}
+                            token={tokenToApprove}
+                            recallCount={recallTopBid}
+                            defaultTab={2}
+                        />
                     </div>
                 </div>
             </>

@@ -459,7 +459,7 @@ class PoolService {
         Const.POOL_STATUS.ENDED,
         Const.POOL_STATUS.CLAIMABLE
       ])
-      .where('process', Const.PROCESS.ONLY_BID)
+      .where('process', Const.PROCESS.ONLY_STAKE)
       .orderBy('id', 'DESC')
       .fetch();
     pools = JSON.parse(JSON.stringify(pools));
@@ -598,7 +598,7 @@ class PoolService {
 
   async updateTopBidInformation(pool) {
     try {
-      if (pool.process !== Const.PROCESS.ONLY_BID) {
+      if (pool.process !== Const.PROCESS.ONLY_STAKE) {
         return
       }
 

@@ -382,7 +382,7 @@ const getContractInstanceDev = async (camp) => {
   }
 
   let abi = CONTRACT_ABI
-  if (camp.process === Const.PROCESS.ONLY_BID) {
+  if (camp.process === Const.PROCESS.ONLY_STAKE) {
     abi = STAKING_CONTEST_CONTRACT_ABI
   }
 
@@ -395,7 +395,7 @@ const getContractInstance = async (camp) => {
   }
 
   let abi = CONTRACT_ABI
-  if (camp.process === Const.PROCESS.ONLY_BID) {
+  if (camp.process === Const.PROCESS.ONLY_STAKE) {
     abi = STAKING_CONTEST_CONTRACT_ABI
   }
 
@@ -786,7 +786,7 @@ const getDecimalsByTokenAddress = async ({ network = Const.NETWORK_AVAILABLE.ETH
 }
 
 const getTopStakingContest = async (pool) => {
-  if (!pool || !pool.campaign_hash || pool.process !== Const.PROCESS.ONLY_BID) {
+  if (!pool || !pool.campaign_hash || pool.process !== Const.PROCESS.ONLY_STAKE) {
     return null;
   }
   const poolContract = await getContractInstance(pool);

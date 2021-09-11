@@ -15,9 +15,9 @@ const useStyles = makeStyles((theme: any) => {
         content: '""',
         display: 'block',
         width: '100%',
-        height: '6px',
+        height: '4px',
         position: 'absolute',
-        top: '6.5px',
+        top: '8px',
         left: '0',
         backgroundColor: '#44454B',
         borderRadius: '20px'
@@ -47,17 +47,17 @@ const useStyles = makeStyles((theme: any) => {
       '&:last-child': {
         width: '0',
 
-        '&.active .icon': {
-          background: 'linear-gradient(130.43deg, #4646FF 21.24%, #D01F1F 92.77%)'
-        },
+        // '&.active .icon': {
+        //   background: 'linear-gradient(130.43deg, #4646FF 21.24%, #D01F1F 92.77%)'
+        // },
 
-        '&.active .icon:before': {
-          borderBottomColor: '#4646FF'
-        },
+        // '&.active .icon:before': {
+        //   borderBottomColor: '#4646FF'
+        // },
 
-        '&.active .icon:after': {
-          borderTopColor: '#D01F1F'
-        },
+        // '&.active .icon:after': {
+        //   borderTopColor: '#D01F1F'
+        // },
       },
       '& > div': {
         ...typeDisplayFlex,
@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '& .icon': {
-        width: '32px',
+        width: '36px',
         height: '20px',
         background: 'currentColor',
         position: 'relative',
@@ -78,8 +78,8 @@ const useStyles = makeStyles((theme: any) => {
 
       '& .icon:before': {
         content: '""',
-        borderLeft: '16px solid transparent',
-        borderRight: '16px solid transparent',
+        borderLeft: '18px solid transparent',
+        borderRight: '18px solid transparent',
         borderBottom: '10px solid currentColor',
         position: 'absolute',
         top: '-10px',
@@ -87,8 +87,8 @@ const useStyles = makeStyles((theme: any) => {
 
       '& .icon:after': {
         content: '""',
-        borderLeft: '16px solid transparent',
-        borderRight: '16px solid transparent',
+        borderLeft: '18px solid transparent',
+        borderRight: '18px solid transparent',
         borderTop: '10px solid currentColor',
         position: 'absolute',
         bottom: '-10px',
@@ -103,13 +103,17 @@ const useStyles = makeStyles((theme: any) => {
         ...typeDisplayFlex,
         alignItems: 'center',
         justifyContent: 'center',
-        position: 'relative'
+        position: 'relative',
+        '& .tier-icon': {
+          width: '25px',
+          height: '20px'
+        }
       },
 
       '& .icon-inner:before': {
         content: '""',
-        borderLeft: '16px solid transparent',
-        borderRight: '16px solid transparent',
+        borderLeft: '18px solid transparent',
+        borderRight: '18px solid transparent',
         borderBottom: '10px solid #303035',
         position: 'absolute',
         top: '-9px',
@@ -118,8 +122,8 @@ const useStyles = makeStyles((theme: any) => {
 
       '& .icon-inner:after': {
         content: '""',
-        borderLeft: '16px solid transparent',
-        borderRight: '16px solid transparent',
+        borderLeft: '18px solid transparent',
+        borderRight: '18px solid transparent',
         borderTop: '10px solid #303035',
         position: 'absolute',
         bottom: '-9px',
@@ -135,9 +139,9 @@ const useStyles = makeStyles((theme: any) => {
 
       '& .progress-bar': {
         display: 'block',
-        height: '6px',
+        height: '4px',
         position: 'absolute',
-        top: '6.5px',
+        top: '8px',
         left: '1px',
         width: 'calc(100% - 2px)',
 
@@ -195,9 +199,13 @@ const useStyles = makeStyles((theme: any) => {
         fontFamily: 'Helvetica',
         fontStyle: 'normal',
         fontWeight: 'normal',
-        fontSize: '12px',
+        fontSize: '14px',
         lineHeight: '18px',
-        color: '#FFFFFF',
+        color: '#fff',
+      },
+
+      '& span.unit': {
+        color: '#AEAEAE',
       },
 
       '& .tier-name': {
@@ -276,7 +284,7 @@ const useStyles = makeStyles((theme: any) => {
 
         '& .progress-bar': {
           display: 'block',
-          width: '6px',
+          width: '4px',
           position: 'absolute',
           bottom: 20,
           top: 'auto',
@@ -315,7 +323,7 @@ const useStyles = makeStyles((theme: any) => {
         '&::before': {
           content: '""',
           display: 'block',
-          width: '6px',
+          width: '4px',
           height: '100%',
           position: 'absolute',
           top: '0',

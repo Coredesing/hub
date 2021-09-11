@@ -119,7 +119,8 @@ export const CONVERSION_RATE = [
 export const TIERS = [
   {
     name: 'Start',
-    icon: '/images/icons/rocket.svg',
+    icon: '/images/tiers/starster.png',
+    // icon: '/images/icons/rocket.svg',
     bg: '/images/icons/red-kite-bg.png',
     bgColor: '#B8B8FF',
   },
@@ -127,25 +128,25 @@ export const TIERS = [
     name: 'Rookie',
     bg: '/images/icons/hawk-bg.png',
     bgColor: '#8181D8',
-    icon: '/images/icons/dove.png'
+    icon: '/images/tiers/rookie.png'
   },
   {
     name: 'Elite',
     bg: '/images/icons/falcon-bg.png',
     bgColor: '#6F44E9',
-    icon: '/images/icons/hawk.png'
+    icon: '/images/tiers/elite.png'
   },
   {
     name: 'Pro',
     bg: '/images/icons/eagle-bg.png',
     bgColor: '#4646FF',
-    icon: '/images/icons/eagle.png'
+    icon: '/images/tiers/pro.png'
   },
   {
     name: 'Master',
     bg: '/images/icons/phoenix-bg.png',
     bgColor: '',
-    icon: '/images/icons/pheonix.png'
+    icon: '/images/tiers/master.png'
   }
 ];
 

@@ -1,9 +1,9 @@
-import {useEffect, useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { Link, Hidden } from '@material-ui/core';
 import _ from 'lodash';
-import {TIERS} from '../../../constants';
+import { TIERS } from '../../../constants';
 import useStyles from './style';
 import useAuth from '../../../hooks/useAuth';
 import withWidth from '@material-ui/core/withWidth';
@@ -12,15 +12,16 @@ import ManageTier from "../ManageTier";
 import TierInfomation from "../TierInfomation";
 import PointHistory from "../PointHistory";
 import TierBenefits from "../TierBenefits";
+import { useTabStyles } from '../style';
 
-const tabMenu = ['Overview', 
-// 'GameFi Power History', 'Tier Benefits'
+const tabMenu = ['Overview',
+  // 'GameFi Power History', 'Tier Benefits'
 ];
 
 const Tiers = (props: any) => {
-  const styles = useStyles();
+  const styles = { ...useStyles(), ...useTabStyles() };
   const [loading, setLoading] = useState(true);
-  const {isAuth, connectedAccount, wrongChain} = useAuth();
+  const { isAuth, connectedAccount, wrongChain } = useAuth();
   const [tabMyTier] = useState(tabMenu);
   const [acitveTab, setAcitveTab] = useState<Number>(0);
 
@@ -87,19 +88,18 @@ const Tiers = (props: any) => {
     <div
       className={styles.tierComponent + (!loading ? ' active' : ' inactive') + (showMoreInfomation ? ' bg-none' : '')}
     >
-      <div className={styles.tierTitle}>
-        My Tier
-      </div>
+      <h2 className={styles.tabTitle}> My Tier</h2>
+
 
       <ul className={styles.listInfo}>
         <li className={styles.itemInfo}>
           <div className={styles.nameItemInfo}>Current Tier</div>
           <div className={styles.valueItemInfo}>
             {
-              connectedAccount ? 
-              <><img alt="" className={styles.iconUserTier} src={TIERS[userTier]?.icon}/> {TIERS[userTier]?.name}</>
-              :
-              ''  
+              connectedAccount ?
+                <><img alt="" className={styles.iconUserTier} src={TIERS[userTier]?.icon} /> {TIERS[userTier]?.name}</>
+                :
+                ''
             }
           </div>
         </li>
@@ -113,47 +113,47 @@ const Tiers = (props: any) => {
           <div className={styles.nameItemInfo}>Power left to next tier</div>
           <div className={styles.valueItemInfo}>
             {
-              connectedAccount ? 
-              <>{userTier > 3 ? '0' : pointsLeftToNextTier}</>
-              :
-              ''
+              connectedAccount ?
+                <>{userTier > 3 ? '0' : pointsLeftToNextTier}</>
+                :
+                ''
             }
           </div>
         </li>
       </ul>
 
-      <div className={styles.message}>
+      {/* <div className={styles.message}>
         <img src="/images/account_v3/icons/icon_notice.svg" alt="" />
         Total GameFi Power = Your Staked Amount + Σ GameFi Power you achieved
-      </div>
+      </div> */}
 
-      <nav className={styles.menuTier}>
-        {
-          tabMyTier.length > 1 &&
-          tabMyTier.map((item, index) => {
-            return (
-              <li
-                className={`${styles.itemTabMyTier} ${index === acitveTab ? 'active' : ''}`}
-                key={index} 
-                onClick={() => setAcitveTab(index)}
-              >
-                <Hidden smDown>
-                  {item}
-                </Hidden>
-                <Hidden mdUp>
-                  {index === 1 ? 'GPs History' : item}
-                </Hidden>
-              </li>
-            )
-          })
-        }
-      </nav>
-
+      {tabMyTier.length > 1 &&
+        <nav className={styles.menuTier}>
+          {
+            tabMyTier.map((item, index) => {
+              return (
+                <li
+                  className={`${styles.itemTabMyTier} ${index === acitveTab ? 'active' : ''}`}
+                  key={index}
+                  onClick={() => setAcitveTab(index)}
+                >
+                  <Hidden smDown>
+                    {item}
+                  </Hidden>
+                  <Hidden mdUp>
+                    {index === 1 ? 'GPs History' : item}
+                  </Hidden>
+                </li>
+              )
+            })
+          }
+        </nav>
+      }
       <div className={styles.bodyPage}>
         {
-          acitveTab === 0 && 
+          acitveTab === 0 &&
           <>
-            <TierList 
+            <TierList
               tiersBuyLimit={tiersBuyLimit}
               tiers={tiers}
               userTier={userTier}
@@ -162,6 +162,9 @@ const Tiers = (props: any) => {
               showMoreInfomation={showMoreInfomation}
               hideStatistics={hideStatistics}
             />
+            <div className={styles.infoRate}>
+              <span>* </span>Conversion Rate : 1 GAFI - ETH LP <img src="/images/icons/direction.svg" alt="" /> 800 GameFi Power
+            </div>
             {/* <ManageTier
               emailVerified={emailVerified}
               isKYC={isKYC}
@@ -181,11 +184,11 @@ const Tiers = (props: any) => {
         }
 
         {
-          acitveTab === 1 && 
+          acitveTab === 1 &&
           <>
             <PointHistory />
 
-            <Link 
+            <Link
               className={styles.btnHow}
               target="_blank"
               href={`https://medium.com/polkafoundry/users-reputation-system-on-red-kite-feb4b4890df0`}>
@@ -196,12 +199,12 @@ const Tiers = (props: any) => {
           </>
         }
 
-        { 
-          acitveTab === 2 && 
+        {
+          acitveTab === 2 &&
           <TierBenefits />
         }
-        
-        
+
+
       </div>
     </div>
   );

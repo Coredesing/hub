@@ -41,7 +41,6 @@ export const getTiers = (forceUsingEther: string = 'eth') => {
       result = result.map((e: any) => {
         return parseFloat(convertFromWei(e))
       })
-
       dispatch({
         type: sotaTiersActions.TIERS_SUCCESS,
         payload: result,
@@ -60,40 +59,11 @@ export const getUserTier = (address: string, forceUsingEther: string = 'eth') =>
   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
     dispatch({ type: sotaTiersActions.USER_TIER_LOADING });
     try {
-      const { appChainID } = getState().appNetwork.data;
-      const connector = getState().connector.data;
 
-      const contract = getContractInstance(
-        RedKite.abi,
-        process.env.REACT_APP_TIERS as string,
-        connector,
-        appChainID,
-        SmartContractMethod.Read,
-        forceUsingEther === 'eth'
-      );
-
-      const {
-        tokenStakes,
-        rateSettings,
-        rateStakeInfo
-      } = await getTokenStakeSmartContractInfo(contract, address);
-      await dispatch(getRates(rateSettings));
-      // console.log('tokenStakesInfo:', tokenStakes, rateSettings, rateStakeInfo);
-
-      // Find Tier of user
-      let tiers = (await contract?.methods.getTiers().call()) || [];
-      tiers = tiers.slice(0, 4);
-
-      // console.log('tokenStakesInfo-tiers:', tiers);
-      // @ts-ignore
-      const pkfEq = new BigNumber(tokenStakes?.totalStaked || 0).multipliedBy(Math.pow(10, 18));
-      let userTier = 0;
-      tiers.map((pkfRequire: any, index: number) => {
-        if (pkfEq.gte(pkfRequire)) {
-          userTier = index + 1;
-        }
-      });
-
+      const baseRequest = new BaseRequest();
+      const response = await baseRequest.get(`/user/tier-info?wallet_address=${address}`) as any;
+      const resObj = await response.json();
+      const userTier = resObj.data?.tier || 0;
       dispatch({
         type: sotaTiersActions.USER_TIER_SUCCESS,
         payload: userTier,
@@ -112,25 +82,34 @@ export const getUserInfo = (address: string, forceUsingEther: string = 'eth', to
   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
     dispatch({ type: sotaTiersActions.USER_INFO_LOADING });
     try {
-      const { appChainID } = getState().appNetwork.data;
-      const { rates } = getState();
-      const connector = undefined;
+      // const { appChainID } = getState().appNetwork.data;
+      // const { rates } = getState();
+      // const connector = undefined;
 
-      const contract = getContractInstance(
-        RedKite.abi,
-        process.env.REACT_APP_TIERS as string,
-        connector,
-        appChainID,
-        SmartContractMethod.Read,
-        forceUsingEther === 'eth'
-      );
+      // const contract = getContractInstance(
+      //   RedKite.abi,
+      //   process.env.REACT_APP_TIERS as string,
+      //   connector,
+      //   appChainID,
+      //   SmartContractMethod.Read,
+      //   forceUsingEther === 'eth'
+      // );
 
-      const {
-        tokenStakes,
-        rateSettings,
-        rateStakeInfo
-      } = await getTokenStakeSmartContractInfo(contract, address);
-      await dispatch(getRates(rateSettings));
+      // const {
+      //   tokenStakes,
+      //   rateSettings,
+      //   rateStakeInfo
+      // } = await getTokenStakeSmartContractInfo(contract, address);
+      // await dispatch(getRates(rateSettings));
+      const tokenStakes = {
+        resultPkf: 0,
+        pkfStaked: 0,
+        resultUni: 0,
+        uniStaked: 0,
+        resultMantra: 0,
+        mantraStaked: 0,
+        ePkf: 0,
+      }
 
       dispatch({
         type: sotaTiersActions.USER_INFO_SUCCESS,

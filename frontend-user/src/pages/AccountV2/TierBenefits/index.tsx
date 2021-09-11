@@ -3,7 +3,8 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import useAuth from '../../../hooks/useAuth';
 import { numberWithCommas } from "../../../utils/formatNumber";
 import useStyles from './style';
-
+import {TIERS, TIER_NAMES} from '../../../constants';
+import { useMemo } from 'react';
 function createData(name: string, rookie: number, elite: number, pro: number, master: number) {
   return { name, rookie, elite, pro, master };
 }
@@ -18,47 +19,63 @@ const rows = [
   createData('Private prosperity group', 0, 0, 0, 1),
 ];
 
-const rowsMobile = [
+
+const rowTiersMobile = [
   {
-    name: 'ROOKIE',
+    name: TIER_NAMES[1].toLowerCase(),
     values: [
-      'Minimum amount of GameFI power required :<span>500</span>',
+      'Minimum amount of GameFI power required :<span>$value</span>',
       'Social interaction requirements',
     ]
   },
   {
-    name: 'ELITE',
+    name: TIER_NAMES[2].toLowerCase(),
     values: [
-      'Minimum amount of GameFI power required :<span>5,000</span>',
+      'Minimum amount of GameFI power required :<span>$value</span>',
       'Social interaction requirements',
       'Guaranteed allocation'
     ]
   },
   {
-    name: 'PRO',
+    name: TIER_NAMES[3].toLowerCase(),
     values: [
-      'Minimum amount of GameFI power required :<span>20,000</span>',
+      'Minimum amount of GameFI power required :<span>$value</span>',
       'Guaranteed allocation',
       'Exclusive pools'
     ]
   },
   {
-    name: 'MASTER',
+    name: TIER_NAMES[4].toLowerCase(),
     values: [
-      'Minimum amount of GameFI power required :<span>60,000</span>',
+      'Minimum amount of GameFI power required :<span>$value</span>',
       'Guaranteed allocation',
       'Exclusive pools',
       'Occasional airdrop of NFT and tokens',
       'Private prosperity group',
     ]
   },
-];
+]
 
 const TierBenefits = (props: any) => {
   const styles = useStyles();
   const { connectedAccount} = useAuth();
-
+  const { data: tiers = [] } = useSelector((state: any) => state.tiers);
   const {data: rates} = useSelector((state: any) => state.rates);
+
+  const rowCells: any[] = tiers.map((val: number, idx: any) => {
+    const key: keyof typeof TIER_NAMES = (idx + 1);
+    return {
+      value: numberWithCommas(val),
+      name: TIER_NAMES[key] || ''
+    }
+  })
+  const rowsMobile = useMemo(() => {
+    const rows = tiers.map((value: number, idx: number) => {
+      rowTiersMobile[idx].values[0] = rowTiersMobile[idx].values[0].replace(/\$value/, numberWithCommas(value + ''));
+      return rowTiersMobile[idx];
+    });
+    return rows;
+  }, [tiers]);
 
   return (
     <div className={styles.tabTierBenefits}>
@@ -68,10 +85,9 @@ const TierBenefits = (props: any) => {
             <TableHead>
               <TableRow>
                 <TableCell className={styles.tableCellHead}></TableCell>
-                <TableCell className={styles.tableCellHead} align="right">Rookie</TableCell>
-                <TableCell className={styles.tableCellHead} align="right">Elite</TableCell>
-                <TableCell className={styles.tableCellHead} align="right">Pro</TableCell>
-                <TableCell className={styles.tableCellHead} align="right">Master</TableCell>
+                {
+                  rowCells.map((row) => <TableCell className={styles.tableCellHead} align="right">{row.name}</TableCell>)
+                }
               </TableRow>
             </TableHead>
             <TableBody>
@@ -79,10 +95,9 @@ const TierBenefits = (props: any) => {
                 <TableCell className={styles.tableCellBody} component="th" scope="row">
                   Minimum amount of GameFI power required
                 </TableCell>
-                <TableCell className={styles.tableCellBody} align="right">{numberWithCommas('500')}</TableCell>
-                <TableCell className={styles.tableCellBody} align="right">{numberWithCommas('5000')}</TableCell>
-                <TableCell className={styles.tableCellBody} align="right">{numberWithCommas('20000')}</TableCell>
-                <TableCell className={styles.tableCellBody} align="right">{numberWithCommas('60000')}</TableCell>
+                {
+                  rowCells.map((row) =>  <TableCell className={styles.tableCellBody} align="right">{row.value}</TableCell>)
+                }
               </TableRow>
               {rows.map((row) => (
                 <TableRow key={row.name} className={styles.tableRow}>
@@ -111,13 +126,13 @@ const TierBenefits = (props: any) => {
       <Hidden mdUp>
         <div className={styles.tierBenefitsMobile}>
           {
-            rowsMobile?.map((item, index) => {
+            rowsMobile?.map((item: any, index: number) => {
               return (
                 <div className={styles.itemTierMobile} key={index}>
                   <div className={styles.nameTierMobile}>{item.name}</div>
                   <ul className={styles.listActiveTierMobile}>
                     {
-                      item?.values?.map((value, i)=> {
+                      item?.values?.map((value: string, i: number)=> {
                         return (
                           <li key={i} className={styles.valueActiveMobile} >
                             <img src={`/images/account_v3/icons/icon_table_true.svg`} alt="" />

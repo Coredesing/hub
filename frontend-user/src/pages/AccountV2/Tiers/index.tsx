@@ -13,7 +13,9 @@ import TierInfomation from "../TierInfomation";
 import PointHistory from "../PointHistory";
 import TierBenefits from "../TierBenefits";
 
-const tabMenu = ['Overview', 'GameFi Power History', 'Tier Benefits'];
+const tabMenu = ['Overview', 
+// 'GameFi Power History', 'Tier Benefits'
+];
 
 const Tiers = (props: any) => {
   const styles = useStyles();
@@ -127,6 +129,7 @@ const Tiers = (props: any) => {
 
       <nav className={styles.menuTier}>
         {
+          tabMyTier.length > 1 &&
           tabMyTier.map((item, index) => {
             return (
               <li
@@ -159,20 +162,21 @@ const Tiers = (props: any) => {
               showMoreInfomation={showMoreInfomation}
               hideStatistics={hideStatistics}
             />
-            <ManageTier
+            {/* <ManageTier
               emailVerified={emailVerified}
               isKYC={isKYC}
-            />
+            /> */}
             {/* <TierInfomation /> */}
 
-            <Link 
+            {/* <Link 
               className={styles.btnHow}
               target="_blank"
-              href={`https://medium.com/polkafoundry/new-tier-policy-updates-for-red-kite-launchpad-2b8a1d0c1fac`}>
+              href={`https://medium.com/polkafoundry/new-tier-policy-updates-for-red-kite-launchpad-2b8a1d0c1fac`}
+              >
               <img className={styles.iconBtnHow} src="/images/account_v3/icons/icon_how.svg" alt="" />
               Learn more about GameFi Tiers
               <ChevronRightIcon className={styles.iconArrowRight} />
-            </Link>
+            </Link> */}
           </>
         }
 

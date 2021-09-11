@@ -33,6 +33,7 @@ import { useCallback, useEffect, useState, useMemo } from 'react';
 import { BigNumber, utils } from 'ethers';
 import ModalSwitchPool from '../ModalSwitchPool';
 import useSwitchPool from '../hook/useSwitchPool';
+import { getUserTier } from '../../../store/actions/sota-tiers';
 
 
 const ONE_DAY_IN_SECONDS = 86400;
@@ -159,6 +160,7 @@ const LinearPool = (props: any) => {
       setStakeAmount('0');
       setOpenModalTransactionSubmitting(false);
       setConfirmationText('');
+      dispatch(getUserTier(connectedAccount))
       reload && reload();
     } catch (err) {
       setConfirmed(false);
@@ -206,6 +208,7 @@ const LinearPool = (props: any) => {
       setUnstakeAmount('0');
       setOpenModalTransactionSubmitting(false);
       setConfirmationText('');
+      dispatch(getUserTier(connectedAccount))
       reload && reload();
     } catch (err) {
       setConfirmed(false);

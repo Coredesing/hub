@@ -7,8 +7,8 @@ require("@nomiclabs/hardhat-etherscan");
 require("dotenv").config();
 require("hardhat-gas-reporter");
 
-const privateKey = process.env.DEPLOY_ACCOUNT_PRIVATE_KEY;
-const alchemyKey = process.env.ALCHEMY_API_KEY;
+const privateKey = process.env.DEPLOYER_PRIVATE_KEY;
+const alchemyKey = process.env.ALCHEMY_API_KEY || '';
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
@@ -29,6 +29,30 @@ module.exports = {
       url: `https://eth-mainnet.alchemyapi.io/v2/${alchemyKey}`,
       accounts: [privateKey],
       gasPrice: 80000000000,
+    },
+    bsc_testnet: {
+      url: `https://data-seed-prebsc-1-s2.binance.org:8545/`,
+      chainId: 97,
+      gasPrice: 80000000000,
+      accounts: [privateKey]
+    },
+    bsc: {
+      url: `https://bsc-dataseed.binance.org/`,
+      chainId: 56,
+      gasPrice: 80000000000,
+      accounts: [privateKey]
+    },
+    polygon_testnet: {
+      url: 'https://rpc-mumbai.maticvigil.com/',
+      chainId: 80001,
+      gasPrice: 80000000000,
+      accounts: [privateKey],
+    },
+    polygon: {
+      url: 'https://rpc-mainnet.maticvigil.com/',
+      chainId: 137,
+      gasPrice: 80000000000,
+      accounts: [privateKey],
     },
   },
   etherscan: {

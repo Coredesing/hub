@@ -31,6 +31,7 @@ import AlertMsg from "./components/AlertMsg";
 import { ButtonApprove } from "./components/ButtonApprove";
 import { isNumber } from 'lodash';
 import useTicketBid from "./hooks/useTicketBid";
+import BigNumber from 'bignumber.js'
 const ticketImg = "/images/gamefi-ticket.png";
 const finishedImg = "/images/finished.png";
 const soldoutImg = "/images/soldout.png";
@@ -257,6 +258,9 @@ const ContentNFTBox = ({ id, ...props }: any) => {
     const [lockWhenClaiming, setLockWhenClaiming] = useState(false);
     const onClaim = async () => {
         if (!isKYC || lockWhenClaiming) return;
+        if (new BigNumber(ownedBidStaked.staked || 0).lte(0)) {
+            return dispatch(alertFailure("Sorry, you need to stake GAFI to continue this action."))
+        }
         setLockWhenClaiming(true);
         claim();
     };
@@ -420,7 +424,7 @@ const ContentNFTBox = ({ id, ...props }: any) => {
                                             alt=""
                                         />
                                         <span className={clsx(styles.textBold, 'text-uppercase')}>
-                                            {!endOpenTime ? 0 : numberWithCommas(((ownedBidStaked.staked || 0) / 10 ** (tokenToApprove?.decimals || 0)) + '', 4)} {infoTicket.symbol}
+                                            {!endOpenTime ? 0 : numberWithCommas(((new BigNumber(ownedBidStaked.staked || 0).dividedBy(new BigNumber(10 ** (tokenToApprove?.decimals || 0))))) + '', 4)} {infoTicket.symbol}
                                         </span>
                                     </div>
                                 </div>
@@ -453,14 +457,14 @@ const ContentNFTBox = ({ id, ...props }: any) => {
                                                 <CountDownEndTime time={endTime} />
                                             </div>
                                         )}
-                                        {isNumber(tokenAllowance) && !isAccApproved(tokenAllowance || 0) && (
+                                        {isNumber(tokenAllowance) && !isAccApproved(tokenAllowance || 0) && endOpenTime && !finishedTime && (
                                             <ButtonApprove isApproving={isApproving} onClick={handleTokenApprove} />
                                         )}
                                         {
-                                            isAccApproved(tokenAllowance || 0) && !finishedTime && allowNetwork.ok && connectedAccount && <ButtonYellow onClick={onShowModalBid} style={{ textTransform: 'unset', width: '100%' }}>Place a Stake</ButtonYellow>
+                                            isAccApproved(tokenAllowance || 0) && !finishedTime && allowNetwork.ok && connectedAccount && <ButtonYellow onClick={onShowModalBid} style={{ textTransform: 'unset', width: '100%' }}>Stake</ButtonYellow>
                                         }
                                         {
-                                            isAccApproved(tokenAllowance || 0) && finishedTime && <ButtonYellow onClick={onClaim} style={{ textTransform: 'unset', width: '100%' }}>Claim</ButtonYellow>
+                                            isAccApproved(tokenAllowance || 0) && finishedTime  && <ButtonYellow onClick={onClaim} style={{ textTransform: 'unset', width: '100%' }}>Claim</ButtonYellow>
                                         }
 
                                         {(alert?.type === "error" && alert.message) && (

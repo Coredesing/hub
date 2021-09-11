@@ -256,7 +256,7 @@ const TicketBidModal = ({ open, bidInfo = {}, ownedBidStaked = {}, token = {}, .
       </DialogContent>
       <DialogActions className={classes.actions}>
         <ButtonYellow onClick={onPlaceBid} className={classes.btnBid} disabled={!account}>
-          Place a Stake
+          Stake
         </ButtonYellow>
       </DialogActions>
     </Dialog>

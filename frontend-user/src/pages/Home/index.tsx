@@ -84,6 +84,27 @@ const Home = (props: any) => {
 
   useEffect(() => {
     if (!loadingcompletePools) {
+      perfomances.map(data => {
+        data.profit = ''
+        if (data.ath === 'N/A' || !data.ath || data.ath.length < 1) {
+          return data
+        }
+
+        if (data.price === 'N/A' || !data.price || data.price.length < 1) {
+          return data
+        }
+        let profit = ''
+
+        try {
+          const floatPrice = parseFloat(data.price[0] === '$' ? data.price.slice(1) : data.price)
+          const floatAth = parseFloat(data.ath[0] === '$' ? data.ath.slice(1) : data.ath)
+          profit = (floatAth / floatPrice).toFixed(1)
+        }
+        catch (e) {}
+
+        data.profit = profit
+        return data
+      })
       setListPerfomance(perfomances);
     }
   }, [perfomances, loadingcompletePools]);
@@ -278,20 +299,6 @@ const Home = (props: any) => {
                       </TableCell>
                       <TableCell
                         align="left"
-                        onClick={() => onSortListPerfomance("holders")}
-                      >
-                        <TableSortLabel
-                          order={
-                            fieldSorted.field === "holders"
-                              ? fieldSorted.order
-                              : null
-                          }
-                        >
-                          Holders
-                        </TableSortLabel>
-                      </TableCell>
-                      <TableCell
-                        align="left"
                         onClick={() => onSortListPerfomance("volume")}
                       >
                         <TableSortLabel
@@ -319,8 +326,8 @@ const Home = (props: any) => {
                           </div>
                         </TableCell>
                         <TableCell align="left">{row.price}</TableCell>
-                        <TableCell align="left"> {row.ath} </TableCell>
-                        <TableCell align="left">{row.holders}</TableCell>
+                        {/*<TableCell align="left"> {row.ath} <span>{row.profit ? `(X ${row.profit})` : ''}</span></TableCell>*/}
+                        <TableCell align="left"> {row.ath}</TableCell>
                         <TableCell align="left"> {row.volume} </TableCell>
                       </TableRowBody>
                     ))}

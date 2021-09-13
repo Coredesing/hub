@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { debounce } from 'lodash';
 import BigNumber from "bignumber.js";
 import { useWeb3React } from '@web3-react/core';
@@ -19,7 +19,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import axios from '../../../services/axios';
 import useAuth from '../../../hooks/useAuth';
-import useFetch from '../../../hooks/useFetch';
+// import useFetch from '../../../hooks/useFetch';
 import { getAccessPoolText } from "../../../utils/campaign";
 import { NULL_AMOUNT, POOL_STATUS_JOINED, POOL_STATUS_TEXT} from "../../../constants";
 import useWalletSignature from '../../../hooks/useWalletSignature';
@@ -27,8 +27,8 @@ import { alertFailure, alertSuccess } from '../../../store/actions/alert';
 import ModalWhitelistCancel from "./ModalWhitelistCancel";
 import useStyles from './style';
 import { unixTimeNow } from "../../../utils/convertDate";
-import { fillClaimInfo } from "../../../utils/claim";
-import { getAppNetWork } from "../../../utils/network";
+// import { fillClaimInfo } from "../../../utils/claim";
+// import { getAppNetWork } from "../../../utils/network";
 import { getIconCurrencyUsdt } from "../../../utils/usdt";
 import ClaimStatusTextCell from "./ClaimStatusTextCell";
 import ClaimButtonCell from "./ClaimButtonCell";
@@ -49,103 +49,67 @@ import { formatCampaignStatus, getSeedRound, isErc20, isErc721 } from "../../../
 import clsx from 'clsx';
 import { getRoute } from "../../TicketSale/utils";
 import { numberWithCommas } from "../../../utils/formatNumber";
+import { IdoPoolContext, ObjType } from "../context/IdoPoolContext";
 
 const IdoPools = (props: any) => {
   const styles = { ...useStyles(), ...useTabStyles() };
-  const { notEth } = props;
-
+  const {
+    data: dataPools,
+    filter,
+    setFilter,
+    loadingPools,
+    setLoadingPools,
+    pagination,
+  } = useContext(IdoPoolContext);
   const history = useHistory();
   const dispatch = useDispatch();
   const { account } = useWeb3React();
   const { signature, signMessage } = useWalletSignature();
 
   // For Detech Claim
-  const { connectedAccount, wrongChain } = useAuth();
-  const { data: appChain } = useSelector((state: any) => state.appNetwork);
-  const appChainID = appChain.appChainID;
-  const { data: connector } = useSelector((state: any) => state.connector);
-  const appNetwork = getAppNetWork(appChainID);
+  const { connectedAccount } = useAuth();
 
   const { data: userTier = 0 } = useSelector((state: any) => state.userTier);
-  const [input, setInput] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
-  const [pools, setPools] = useState([]);
   const [poolCancel, setPoolCancel] = useState({});
   const [openModalCancel, setOpenModalCancel] = useState(false);
-  const [currentTimeGetPool, setCurrentTimeGetPool] = useState(new Date().getTime());
-  const [loadingClaimInfo, setLoadingClaimInfo] = useState(false);
   const now = unixTimeNow();
 
-  const [filterStatus, setFilterStatus] = React.useState<{ status: string | number; babel: string }>({
-    status: '',
-    babel: '',
-  });
-
-  const [filterType, setFilterType] = useState<{ type: string | number; babel: string }>({
-    type: 1000,
-    babel: '',
-  });
-
+  const onChangePage = (e: any, page: number) => {
+    if (!loadingPools) {
+      setFilter && setFilter((f: ObjType) => ({...f, page}));
+      setLoadingPools && setLoadingPools(true);
+    }
+  }
   const handleChangeStatus = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
-    const name = event.target.name as keyof typeof filterStatus;
-    const value = event.target.value as keyof typeof filterStatus;
-    setFilterStatus({
-      ...filterStatus,
-      [name]: value,
-    });
+    const name = event.target.name as string;
+    const value = event.target.value;
+    setFilter && setFilter((f: ObjType) => ({...f, [name]: value}));
+    setLoadingPools && setLoadingPools(true);
   };
 
   const handleChangeType = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
-    const name = event.target.name as keyof typeof filterType;
-    const value = event.target.value as keyof typeof filterType;
-    setFilterType({
-      ...filterType,
-      [name]: value,
-    });
+    const name = event.target.name as string;
+    const value = event.target.value;
+    setFilter && setFilter((f: ObjType) => ({...f, [name]: value}));
+    setLoadingPools && setLoadingPools(true);
   };
 
-  const getPoolsPrefixUri = () => {
-    let uri = '/pools';
-    return `${uri}/user/${connectedAccount}/joined-pools`;
-  }
-
-  const { data: poolsList, loading: loadingGetPool } = useFetch<any>(
-    `${getPoolsPrefixUri()}?page=${currentPage}&limit=10&title=${input}&type=${filterType.type}&status=${filterStatus.status}&current_time=${currentTimeGetPool}`
-  );
+  // when mounted page
+  useEffect(() => {
+    if(!dataPools?.length) {
+      setLoadingPools && setLoadingPools(true);
+    }
+  }, [dataPools, setLoadingPools]);
 
   const handleInputChange = debounce((e: any) => {
-    Promise.resolve().then(() => {
-      setInput(e.target.value);
-      setCurrentPage(1);
-    });
+    setFilter && setFilter((filter: ObjType) => ({
+      ...filter,
+      search: e.target.value,
+      page: 1,
+    }));
+    setLoadingPools && setLoadingPools(true);
   }, 1000);
 
-  useEffect(() => {
-    const manipulatePoolsData = async (pools: any) => {
-      let listData = pools.data;
-      // Setting Pages:
-      setTotalPage(pools.lastPage);
-      setCurrentPage(Number(pools.page));
-      setLoadingClaimInfo(true);
-
-      if (listData && listData.length > 0) {
-        listData = await fillClaimInfo({
-          listData,
-          connectedAccount,
-          connector,
-          appChainID,
-          appNetwork,
-          wrongChain
-        });
-      }
-
-      setPools(listData);
-      setLoadingClaimInfo(false);
-    };
-
-    poolsList && poolsList.data && manipulatePoolsData(poolsList);
-  }, [poolsList, appChain, connector]);
 
   const poolStatus = (pool: any) => {
     switch (pool.joined_status) {
@@ -263,10 +227,8 @@ const IdoPools = (props: any) => {
 
       if (response.data) {
         if (response.data.status === 200) {
-          getPoolsPrefixUri();
           setPoolCancel({});
           setOpenModalCancel(false);
-          setCurrentTimeGetPool(new Date().getTime());
           dispatch(alertSuccess("You have successfully cancelled your whitelist application."));
         }
 
@@ -354,7 +316,7 @@ const IdoPools = (props: any) => {
         <div className="filter">
           <SelectBox
             IconComponent={ExpandMoreIcon}
-            value={filterStatus.status}
+            value={filter.status}
             onChange={handleChangeStatus}
             inputProps={{
               name: 'status',
@@ -365,7 +327,7 @@ const IdoPools = (props: any) => {
           />
           <SelectBox
             IconComponent={ExpandMoreIcon}
-            value={filterType.type}
+            value={filter.type}
             onChange={handleChangeType}
             inputProps={{
               name: 'type',
@@ -376,7 +338,7 @@ const IdoPools = (props: any) => {
             itemNameShowValue={'babel'} />
         </div>
         <div className="search">
-          <SearchBox onChange={handleInputChange} placeholder="Search pool name" />
+          <SearchBox onChange={handleInputChange} placeholder="Search pool name" defaultValue={filter.search} />
         </div>
       </div>
 
@@ -393,7 +355,7 @@ const IdoPools = (props: any) => {
               </TableRowHead>
             </TableHead>
             <TableBody>
-              {pools.map((row: any, index: number) => (
+              {(dataPools || []).map((row: any, index: number) => (
                 <TableRowBody key={row.name + index}>
                   <TableCell component="th" scope="row">
                     <div>
@@ -461,7 +423,7 @@ const IdoPools = (props: any) => {
 
       <Hidden mdUp>
         <div className={styles.datasMobile}>
-          {pools.map((row: any, index: number) => (
+          {(dataPools || []).map((row: any, index: number) => (
             <div key={index} className={styles.boxDataMobile}>
               <div className={styles.titleBoxMobile}>
                 <Link to={`/buy-token/${row?.id}`} className={styles.toDetailPool}>
@@ -505,16 +467,12 @@ const IdoPools = (props: any) => {
 
       <div className={styles.pagination}>
         {
-          totalPage > 1 && <Pagination
-            count={totalPage}
+          pagination.total > 1 && <Pagination
+            count={pagination.total || 0}
             color="primary"
             style={{ marginTop: 30 }} className={styles.pagination}
-            onChange={(e: any, value: any) => {
-              if (!loadingGetPool) {
-                setCurrentPage(value)
-              }
-            }}
-            page={currentPage}
+            onChange={onChangePage}
+            page={pagination.page}
           />
         }
       </div>
@@ -526,7 +484,7 @@ const IdoPools = (props: any) => {
         onCancelPool={(pool: any) => onCancelPool(pool)}
       />
 
-      <Backdrop open={loadingClaimInfo} className={styles.backdrop}>
+      <Backdrop open={loadingPools} className={styles.backdrop}>
         <CircularProgress color="inherit" />
       </Backdrop>
     </div>

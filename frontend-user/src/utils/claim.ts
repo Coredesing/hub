@@ -186,9 +186,9 @@ export const detechClaimablePhase = async (params: any) => {
   const userPurchased = userClaimInfo?.userPurchased || 0;
   const userPurchasedValue = userClaimInfo?.userPurchasedReturn || 0;
   const userClaimed = userClaimInfo?.userClaimed || 0;
-  if (userPurchased || userPurchasedValue || userClaimed) {
-    console.log('POOLS', poolDetails, ableToFetchFromBlockchain, userClaimInfo);
-  }
+  // if (userPurchased || userPurchasedValue || userClaimed) {
+  //   console.log('POOLS', poolDetails, ableToFetchFromBlockchain, userClaimInfo);
+  // }
   const {
     currentClaim,
     currentClaimIndex,

@@ -21,7 +21,7 @@ const TierList = (props: any) => {
     showMoreInfomation,
     hideStatistics,
   } = props;
-
+  console.log('usertier', userTier);
   return (
     <ul className={styles.tierList}>
       <li className={`${styles.tierInfo} active first-tier`}>
@@ -65,14 +65,14 @@ const TierList = (props: any) => {
                   transition: `all 1s ease ${idx + 1}s`
                 }}
               />}
-              {+userTier === idx + 1 && connectedAccount && !showMoreInfomation && isWidthUp('sm', props.width) && <span
+              {+userTier > idx + 1  && connectedAccount && !showMoreInfomation && isWidthUp('sm', props.width) && <span
                 className={"progress-bar" + (loading ? ' inactive' : ' active')}
                 style={{
                   backgroundColor: '#72F34B',
                   width: `${currentProcess}%`
                 }}
               />}
-              {+userTier === idx + 1 && connectedAccount && !showMoreInfomation && isWidthDown('xs', props.width) && <span
+              {+userTier > idx + 1  && connectedAccount && !showMoreInfomation && isWidthDown('xs', props.width) && <span
                 className={"progress-bar" + (loading ? ' inactive' : ' active')}
                 style={{
                   backgroundColor: '#72F34B',

@@ -21,7 +21,6 @@ const TierList = (props: any) => {
     showMoreInfomation,
     hideStatistics,
   } = props;
-  console.log('usertier', userTier);
   return (
     <ul className={styles.tierList}>
       <li className={`${styles.tierInfo} active first-tier`}>

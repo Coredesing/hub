@@ -315,6 +315,7 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
             style={{
               minWidth: 200,
               padding: '13px 30px',
+              color: '#000',
             }}
           />
 

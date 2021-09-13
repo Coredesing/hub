@@ -161,6 +161,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
   }
 
 
+
   return (
     <>
       <div className={styles.navBar}>
@@ -269,7 +270,8 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
           </>
         ) : ( */}
         <>
-          <div className={styles.navBarGF}>
+          
+          <div className={styles.navBarGF} style={props.isShowBannerContract ? {top: props.heightBannerContract}: {}}>
             <div className="logo">
               <a href={"#/"}><img src={logo} alt="" /></a>
             </div>
@@ -278,14 +280,13 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
                 <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/">Home</Link></li>
                 <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/ticket">Ticket sales</Link></li>
                 <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/token">Token sales</Link></li>
-                <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/items">Items Sales</Link></li>
-
+                {/* <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/items">Items Sales</Link></li> */}
                 {/* <li className={styles.headerLink}><Link href="#">Marketplace</Link></li> */}
                 {/* <li className={styles.headerLink}><Link href="#">Stake</Link></li> */}
               </ul>
               <div className={styles.headerAccount} onClick={hideNavMenu}>
                 {connectedAccount && <>
-                  <Link to="/account" className={styles.headerAccText}>  My Account </Link>
+                  <Link to="/account" className={styles.headerAccText}>My Account </Link>
                   <Link className={styles.headerAccText} to="/staking-pools">Staking</Link>
                 </>
                 }

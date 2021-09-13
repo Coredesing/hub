@@ -118,6 +118,7 @@ export const FORMATIC_KEY_TEST = process.env.REACT_APP_FORMATIC_KEY_TEST;
 export const NETWORK_ETH_NAME = process.env.REACT_APP_NETWORK_ETH_NAME;
 export const NETWORK_BSC_NAME = process.env.REACT_APP_NETWORK_BSC_NAME;
 export const NETWORK_POLYGON_NAME = process.env.REACT_APP_NETWORK_POLYGON_NAME;
+export const GAMEFI_ADDRESS = process.env.REACT_APP_GAMEFI_ADDRESS;
 
 export const appNetwork: { [key: string]: string } = {
   [ETH_CHAIN_ID]: NETWORK_ETH_NAME as string,
@@ -148,7 +149,7 @@ export const APP_NETWORKS_SUPPORT: {[key: number]: NetworkInfo } = {
     }
   },
   [BSC_CHAIN_ID]: {
-    name: 'BSC Mainnet',
+    name: 'BSC',
     shortName: 'bsc',
     id: BSC_CHAIN_ID ,
     icon: "/images/bsc.svg",

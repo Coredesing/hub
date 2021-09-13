@@ -289,7 +289,7 @@ export const useTabStyles = makeStyles((theme: any) => ({
       height: '100%',
       left: '-32px',
       top: '-5px',
-      border: '4px solid #72F34B',
+      border: '2px solid #72F34B',
     }
   },
   tabContent: {

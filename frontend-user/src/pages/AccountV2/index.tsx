@@ -108,7 +108,6 @@ const AccountV2 = (props: any) => {
   useEffect(() => {
     if (isAuth && connectedAccount && !wrongChain) {
       dispatch(getBalance(connectedAccount));
-      dispatch(getUserTier(connectedAccount));
       dispatch(getAllowance(connectedAccount));
     }
   }, [isAuth, wrongChain, connectedAccount, dispatch]);
@@ -147,11 +146,13 @@ const AccountV2 = (props: any) => {
   //   connectedAccount ? getUserHistory() : setDataHistories({});
   // }, [connectedAccount]);
 
-
   useEffect(() => {
     dispatch(getTiers());
+  }, [dispatch])
+
+
+  useEffect(() => {    
     connectedAccount && dispatch(getUserInfo(connectedAccount));
-    connectedAccount && dispatch(getUserTier(connectedAccount));
   }, [connectedAccount, dispatch]);
 
   const totalRedKitePoints = userInfo?.totalStaked ? numberWithCommas((Number(userInfo?.totalStaked)).toString() || '0') : '0';

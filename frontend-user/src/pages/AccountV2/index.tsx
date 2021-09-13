@@ -151,7 +151,7 @@ const AccountV2 = (props: any) => {
   }, [dispatch])
 
 
-  useEffect(() => {    
+  useEffect(() => {
     connectedAccount && dispatch(getUserInfo(connectedAccount));
   }, [connectedAccount, dispatch]);
 
@@ -256,8 +256,10 @@ const AccountV2 = (props: any) => {
                 />
               </div>
             }
-
-            {activeMenuAccount === MenuLeft.pool.key && <IdoPools />}
+            <div style={activeMenuAccount !== MenuLeft.pool.key ? { display: 'none' } : {}}>
+              <IdoPools />
+            </div>
+            {/* {activeMenuAccount === MenuLeft.pool.key && <IdoPools />} */}
             {/* {activeMenuAccount === 'NFT Tickets' && <>
               <NftTicket />
               <CardsTicket />

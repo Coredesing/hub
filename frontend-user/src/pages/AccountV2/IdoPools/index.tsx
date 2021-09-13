@@ -526,11 +526,11 @@ const IdoPools = (props: any) => {
         onCancelPool={(pool: any) => onCancelPool(pool)}
       />
 
-      <Backdrop open={loadingGetPool || loadingClaimInfo} className={styles.backdrop}>
+      <Backdrop open={loadingClaimInfo} className={styles.backdrop}>
         <CircularProgress color="inherit" />
       </Backdrop>
     </div>
   );
 };
 
-export default withWidth()(withRouter(IdoPools));
+export default withWidth()(IdoPools);

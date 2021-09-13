@@ -8,22 +8,27 @@ import useStyles from './style';
 import useAuth from '../../../hooks/useAuth';
 import withWidth from '@material-ui/core/withWidth';
 import TierList from "../TierList";
-import ManageTier from "../ManageTier";
-import TierInfomation from "../TierInfomation";
+// import ManageTier from "../ManageTier";
+// import TierInfomation from "../TierInfomation";
 import PointHistory from "../PointHistory";
 import TierBenefits from "../TierBenefits";
 import { useTabStyles } from '../style';
+import { getTiers, getUserTier } from '../../../store/actions/sota-tiers';
+import { numberWithCommas } from '../../../utils/formatNumber';
 
 const tabMenu = ['Overview',
   // 'GameFi Power History', 'Tier Benefits'
 ];
 
 const Tiers = (props: any) => {
+  const dispatch = useDispatch();
   const styles = { ...useStyles(), ...useTabStyles() };
   const [loading, setLoading] = useState(true);
   const { isAuth, connectedAccount, wrongChain } = useAuth();
   const [tabMyTier] = useState(tabMenu);
   const [acitveTab, setAcitveTab] = useState<Number>(0);
+  const { data: userTier } = useSelector((state: any) => state.userTier);
+  const { data: tiers } = useSelector((state: any) => state.tiers);
 
   const {
     showMoreInfomation = false,
@@ -31,16 +36,30 @@ const Tiers = (props: any) => {
     tokenSymbol,
     total,
     hideStatistics,
-    emailVerified,
-    isKYC,
+    // emailVerified,
+    // isKYC,
     userInfo,
-    userTier,
-    tiers,
-    totalRedKitePoints,
-    pointsLeftToNextTier,
+    // tiers,
+    // totalRedKitePoints,
+    // pointsLeftToNextTier,
   } = props;
 
+  useEffect(() => {
+    if (isAuth && connectedAccount && !wrongChain && !_.isNumber(userTier)) {
+      dispatch(getUserTier(connectedAccount));
+    }
+  }, [isAuth, wrongChain, connectedAccount, dispatch, userTier]);
+
+  useEffect(() => {
+    if(_.isEmpty(tiers)) {
+      dispatch(getTiers());
+    }
+  }, [dispatch, tiers])
+
+
   const [currentProcess, setCurrentProcess] = useState(undefined) as any;
+  const totalRedKitePoints = userInfo?.totalStaked ? numberWithCommas((Number(userInfo?.totalStaked)).toString() || '0') : '0';
+  const pointsLeftToNextTier = userInfo?.totalStaked ? numberWithCommas((tiers?.[userTier] - Number(userInfo?.totalStaked)).toString() || '0') : '0';
 
   const calculateProcess = (ListData: any, current: any) => {
     let tierA = 0;

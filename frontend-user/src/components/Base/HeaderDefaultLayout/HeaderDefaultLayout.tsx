@@ -48,19 +48,12 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
   const [openSideBar, setOpenSideBar] = useState(false);
   const [toggleNavbar, setToggleNavbar] = useState(false);
   const { data: message = "" } = useSelector((state: any) => state.messages);
-  const { data: userTier } = useSelector((state: any) => state.userTier);
-
   const [chainLogo, setChainLogo] = useState<string>(ChainDefault.icon);
   const [chainName, setChainName] = useState<string>(ChainDefault.name);
   const [chainCurrency, setChainCurrency] = useState<string>(ChainDefault.currency || '');
 
-  const { isAuth, connectedAccount, wrongChain } = useAuth();
+  const { connectedAccount } = useAuth();
 
-  useEffect(() => {
-    if (isAuth && connectedAccount && !wrongChain) {
-      dispatch(getUserTier(connectedAccount));
-    }
-  }, [isAuth, wrongChain, connectedAccount, dispatch]);
 
   const {
     handleProviderChosen,

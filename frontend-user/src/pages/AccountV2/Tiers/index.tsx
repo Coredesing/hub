@@ -162,9 +162,9 @@ const Tiers = (props: any) => {
               showMoreInfomation={showMoreInfomation}
               hideStatistics={hideStatistics}
             />
-            <div className={styles.infoRate}>
+            {/* <div className={styles.infoRate}>
               <span>* </span>Conversion Rate : 1 GAFI - ETH LP <img src="/images/icons/direction.svg" alt="" /> 800 GameFi Power
-            </div>
+            </div> */}
             {/* <ManageTier
               emailVerified={emailVerified}
               isKYC={isKYC}

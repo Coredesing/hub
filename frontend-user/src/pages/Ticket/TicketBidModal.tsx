@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -14,6 +14,7 @@ import { getContract } from '../../utils/contract';
 import Erc20Json from '../../abi/Erc20.json';
 import { useWeb3React } from '@web3-react/core';
 import BigNumber from 'bignumber.js';
+import DialogBidStatus, {StatusType} from './components/DialogBidStatus';
 
 const commaNumber = require('comma-number');
 const closeIcon = '/images/icons/close.svg';
@@ -195,16 +196,26 @@ const TicketBidModal = ({ open, bidInfo = {}, ownedBidStaked = {}, token = {}, .
     props.onClose();
   };
 
+  const [openStatusModal, setOpenStatusModal] = useState<{status?: StatusType, open: boolean, subTitle?: string, title?: string, data?: {[k : string]: any}}>({open: false});
   const onPlaceBid = async () => {
     if (!props.onClick || !account) return;
+    setOpenStatusModal({status:'processing', open: true, title: 'Adding', data: {value}});
     const result = await props.onClick(+value);
     if (result?.success) {
       setValue('');
       setRenewBalance(true);
+      setOpenStatusModal({status:'success', open: true, title: 'Success add', data: {value}});
     } else {
-      setError(result?.error || '');
+      setOpenStatusModal({status:'failed', open: true, title: 'Failed add', subTitle: result?.error || ''});
     }
   };
+
+  const onCloseStatusModal = useCallback(
+    () => {
+      setOpenStatusModal({open: false});
+    },
+    [setOpenStatusModal],
+  )
 
   const numStaked = (staked?: number) => {
     if (!staked || staked <= 0) return staked;
@@ -222,6 +233,7 @@ const TicketBidModal = ({ open, bidInfo = {}, ownedBidStaked = {}, token = {}, .
         paper: classes.paper
       }}
     >
+      <DialogBidStatus {...openStatusModal} bidInfo={bidInfo}  onClose={onCloseStatusModal}/>
       <Button autoFocus onClick={handleClose} color="primary" className={classes.btnClose}>
         <img src={closeIcon} alt="" />
       </Button>

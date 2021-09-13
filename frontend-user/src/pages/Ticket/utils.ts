@@ -52,6 +52,9 @@ export const handleErrMsg = (err: any) => {
     if (message.includes('User has already claimed')) {
         return 'User has already claimed.';
     }
+    if (message.includes('Event::ENDED')) {
+        return 'The event has ended.';
+    }
     return '';
 }
 

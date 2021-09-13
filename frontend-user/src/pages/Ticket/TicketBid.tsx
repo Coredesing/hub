@@ -412,8 +412,7 @@ const ContentNFTBox = ({ id, ...props }: any) => {
                                         <img
                                             height={20}
                                             className="rounded"
-                                            src={
-                                                infoTicket && infoTicket.accept_currency
+                                            src={ infoTicket?.symbol
                                                     ? `/images/icons/${infoTicket.symbol.toLowerCase()}.png`
                                                     : ""
                                             }
@@ -461,7 +460,8 @@ const ContentNFTBox = ({ id, ...props }: any) => {
                                             <ButtonApprove isApproving={isApproving} onClick={handleTokenApprove} />
                                         )}
                                         {
-                                            isAccApproved(tokenAllowance || 0) && !finishedTime && allowNetwork.ok && connectedAccount && <ButtonYellow onClick={onShowModalBid} style={{ textTransform: 'unset', width: '100%' }}>Stake</ButtonYellow>
+                                            isAccApproved(tokenAllowance || 0) && !finishedTime && allowNetwork.ok && connectedAccount && 
+                                            <ButtonYellow onClick={onShowModalBid} style={{ textTransform: 'unset', width: '100%' }}>Stake</ButtonYellow>
                                         }
                                         {
                                             isAccApproved(tokenAllowance || 0) && finishedTime  && <ButtonYellow onClick={onClaim} style={{ textTransform: 'unset', width: '100%' }}>Claim</ButtonYellow>

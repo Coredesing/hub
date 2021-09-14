@@ -83,6 +83,7 @@ contract LinearPool is
         uint128 delayDuration;
         uint128 startJoinTime;
         uint128 endJoinTime;
+        bool useLocalDelayPool;
     }
 
     struct LinearStakingData {
@@ -90,6 +91,7 @@ contract LinearPool is
         uint128 joinTime;
         uint128 updatedTime;
         uint128 reward;
+        uint256 exp;
     }
 
     struct LinearPendingWithdrawal {
@@ -184,7 +186,8 @@ contract LinearPool is
                 lockDuration: _lockDuration,
                 delayDuration: _delayDuration,
                 startJoinTime: _startJoinTime,
-                endJoinTime: _endJoinTime
+                endJoinTime: _endJoinTime,
+                useLocalDelayPool: false
             })
         );
         emit LinearPoolCreated(linearPoolInfo.length - 1, _APR);
@@ -250,6 +253,19 @@ contract LinearPool is
             "LinearStakingPool: invalid reward distributor"
         );
         linearRewardDistributor = _linearRewardDistributor;
+    }
+
+    /**
+     * @notice Set the delay pool. Can only be called by the owner.
+     * @param _useLocalDelayPool the delay pool parameter
+     */
+    function linearSetUseLocalDelayPool(
+        uint128 _poolId,
+        bool _useLocalDelayPool
+    ) external onlyOwner linearValidatePoolById(_poolId) {
+        LinearPoolInfo storage pool = linearPoolInfo[_poolId];
+
+        linearPoolInfo[_poolId].useLocalDelayPool = _useLocalDelayPool;
     }
 
     /**
@@ -644,6 +660,21 @@ contract LinearPool is
     }
 
     /**
+     * @notice Gets number of deposited tokens in a pool
+     * @param _poolId id of the pool
+     * @param _account address of a user
+     * @return total token deposited in a pool by a user
+     */
+    function linearExpOf(uint256 _poolId, address _account)
+        external
+        view
+        linearValidatePoolById(_poolId)
+        returns (uint256)
+    {
+        return linearStakingData[_poolId][_account].exp;
+    }
+
+    /**
      * @notice Gets the delay duration in a pool by a user
      * @param _poolId id of the pool
      * @param _account address of a user
@@ -655,6 +686,12 @@ contract LinearPool is
         linearValidatePoolById(_poolId)
         returns (uint128)
     {
+        // use local delay
+        if (linearPoolInfo[_poolId].useLocalDelayPool) {
+            return linearPoolInfo[_poolId].delayDuration;
+        }
+
+        // use global delay
         if (tierInfos.length < 1) {
             return 0;
         }
@@ -771,7 +808,14 @@ contract LinearPool is
             _account
         ];
 
+        uint256 lastUpdatedTime = uint256(stakingData.updatedTime);
+
         stakingData.reward = linearPendingReward(_poolId, _account);
         stakingData.updatedTime = block.timestamp.toUint128();
+
+        // calculate exp
+        uint256 stakedTime = lastUpdatedTime > block.timestamp ? 0 : block.timestamp - lastUpdatedTime;
+        uint256 stakedTimeInSeconds = lastUpdatedTime == 0 ? 0 : stakedTime;
+        stakingData.exp += stakingData.balance * stakedTimeInSeconds / 1e5;
     }
 }

@@ -474,9 +474,9 @@ contract LinearPool is
             emit LinearRewardsHarvested(_poolId, account, reward);
         }
 
-        stakingData.balance -= _amount;
         // get delayDuration
         uint128 delayDuration = linearDurationOf(_poolId, account);
+        stakingData.balance -= _amount;
 
         if (delayDuration == 0) {
             linearAcceptedToken.safeTransfer(account, _amount);
@@ -702,13 +702,14 @@ contract LinearPool is
 
         uint128 balance = linearStakingData[_poolId][_account].balance;
         // case tierInfos.length - 1 is in whitelist (masters)
-        for (uint256 index = tierInfos.length - 2; index >= 0; index--) {
+        uint128 delay = 0;
+        for (uint256 index = 0; index < tierInfos.length - 1; index++) {
             if (balance >= tierInfos[index].threshold) {
-                return tierInfos[index].delayDuration;
+                delay = tierInfos[index].delayDuration;
             }
         }
 
-        return 0;
+        return delay;
     }
 
     /**

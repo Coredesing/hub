@@ -457,6 +457,7 @@ describe("Linear Pool ", function () {
           .linearDeposit(0, utils.parseEther("2"), { from: this.alice.address });
 
       let delta = await time.latest();
+
       // test rookie alice
       expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("998"));
       expect(await this.pool.linearTotalStaked(0)).to.equal(utils.parseEther("2"));
@@ -467,11 +468,19 @@ describe("Linear Pool ", function () {
         .linearWithdraw(0, utils.parseEther("2"), { from: this.alice.address })
       expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("998"));
       expect(await this.pool.linearBalanceOf(0, this.alice.address)).to.equal(utils.parseEther("0"));
-      // await time.increaseTo(duration.days(1).add(delta.toString()).toNumber());
-
+      await expectRevert(
+          this.pool
+              .connect(this.alice)
+              .linearClaimPendingWithdraw(0, { from: this.alice.address }),
+          "LinearStakingPool: not released yet"
+      );
+      // lock rookie 1days
+      await time.increaseTo(duration.days(2).add(delta.toString()).toNumber());
       console.log("start withdraw");
-      this.pool.connect(this.alice).linearClaimPendingWithdraw(0, { from: this.alice.address });
+      this.pool.connect(this.alice).linearClaimPendingWithdraw(0);
       console.log("end withdraw");
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("1000"));
+
     });
   });
 

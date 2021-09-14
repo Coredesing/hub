@@ -30,14 +30,16 @@ const useContractDetail = (
 
       setLoading(true);
 
-      const [allocEndBlockNumber, allocRewardPerBlock, allocRewardToken, totalAllocPoint, linearAcceptedToken] = await Promise.all([
-        contract.methods.allocEndBlockNumber().call(),
-        contract.methods.allocRewardPerBlock().call(),
-        contract.methods.allocRewardToken().call(),
-        contract.methods.totalAllocPoint().call(),
-        contract.methods.linearAcceptedToken().call(),
-      ]);
-      setContractDetail({allocEndBlockNumber, allocRewardPerBlock, allocRewardToken, totalAllocPoint, linearAcceptedToken})
+      // const [allocEndBlockNumber, allocRewardPerBlock, allocRewardToken, totalAllocPoint, linearAcceptedToken] = await Promise.all([
+      //   contract.methods.allocEndBlockNumber().call(),
+      //   contract.methods.allocRewardPerBlock().call(),
+      //   contract.methods.allocRewardToken().call(),
+      //   contract.methods.totalAllocPoint().call(),
+      //   contract.methods.linearAcceptedToken().call(),
+      // ]);
+      // setContractDetail({allocEndBlockNumber, allocRewardPerBlock, allocRewardToken, totalAllocPoint, linearAcceptedToken})
+      const linearAcceptedToken = await contract.methods.linearAcceptedToken().call()
+      setContractDetail({allocEndBlockNumber: 0, allocRewardPerBlock: 0, allocRewardToken: '0x0000000000000000000000000000000000000000', totalAllocPoint: 0, linearAcceptedToken})
       
       setLoading(false);
     } catch (err) {

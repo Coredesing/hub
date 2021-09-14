@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@base-components/*": [
+                "src/components/Base/*"
+            ],
+            "@layout-components/*": [
+                "src/components/Layout/*"
+            ],
+            "@contants/*": [
+                "src/contants/*"
+            ],
+            "@abi/*": [
+                "src/abi/*"
+            ],
+            "@services/*": [
+                "src/services/*"
+            ],
+            "@hooks/*": [
+                "src/hooks/*"
+            ]
+        }
+    }
+}

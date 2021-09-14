@@ -9,7 +9,6 @@ const {
   time,
 } = require('@openzeppelin/test-helpers');
 
-
 describe("Linear Pool ", function () {
   before(async function () {
     this.signers = await ethers.getSigners();
@@ -51,6 +50,8 @@ describe("Linear Pool ", function () {
         (await time.latest()).toNumber(),
         (await time.latest()).toNumber() + duration.years(1).toNumber()
       );
+
+      await this.pool.linearSetUseLocalDelayPool(0, true);
 
       await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
         from: this.alice.address,
@@ -123,6 +124,8 @@ describe("Linear Pool ", function () {
         (await time.latest()).toNumber() + duration.years(1).toNumber()
       );
 
+      await this.pool.linearSetUseLocalDelayPool(0, true);
+
       await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
         from: this.alice.address,
       });
@@ -172,6 +175,8 @@ describe("Linear Pool ", function () {
         (await time.latest()).toNumber() + duration.years(1).toNumber()
       );
 
+      await this.pool.linearSetUseLocalDelayPool(0, true);
+
       await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
         from: this.alice.address,
       });
@@ -220,6 +225,8 @@ describe("Linear Pool ", function () {
         (await time.latest()).toNumber(),
         (await time.latest()).toNumber() + duration.years(10).toNumber()
       );
+
+      await this.pool.linearSetUseLocalDelayPool(0, true);
 
       await this.pkf.connect(this.minter).transfer(this.alice.address, utils.parseEther("9000"));
       await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("10000"), {
@@ -328,6 +335,8 @@ describe("Linear Pool ", function () {
       );
       expect(await this.pool.linearPoolLength()).to.equal(2);
 
+      await this.pool.linearSetUseLocalDelayPool(0, true);
+      await this.pool.linearSetUseLocalDelayPool(1, true);
 
       await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
         from: this.alice.address,
@@ -387,6 +396,7 @@ describe("Linear Pool ", function () {
         (await time.latest()).toNumber(),
         (await time.latest()).toNumber() + duration.years(1).toNumber()
       );
+      await this.pool.linearSetUseLocalDelayPool(0, true);
 
       await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
         from: this.alice.address,
@@ -414,6 +424,55 @@ describe("Linear Pool ", function () {
 
     });
 
+    it("should distribute pkfs on tiers", async function () {
+      // default flexible pool with 5% APR
+      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
+        initializer: '__LinearPool_init'
+      });
+      await this.pool.deployed();
+      await this.pkf.connect(this.minter).approve(this.pool.address, utils.parseEther("10000"));
+      await this.pool.linearSetRewardDistributor(this.minter.address);
+      await this.pool.linearAddPool(
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          (await time.latest()).toNumber(),
+          (await time.latest()).toNumber() + duration.years(1).toNumber()
+      );
+      await this.pool.linearInitTierInfo(
+          [utils.parseEther("1"), utils.parseEther("5"), utils.parseEther("10"), utils.parseEther("50")],
+          [duration.days(1), duration.days(2), duration.days(3), duration.days(4)]
+      );
+
+      await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
+        from: this.alice.address,
+      });
+
+      // Alice deposits 1000 tokens at time Delta
+      await this.pool
+          .connect(this.alice)
+          .linearDeposit(0, utils.parseEther("2"), { from: this.alice.address });
+
+      let delta = await time.latest();
+      // test rookie alice
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("998"));
+      expect(await this.pool.linearTotalStaked(0)).to.equal(utils.parseEther("2"));
+      // lock 1 days
+      expect(await this.pool.connect(this.alice).linearDurationOf(0, this.alice.address)).to.equal(duration.days("1"));
+      this.pool
+        .connect(this.alice)
+        .linearWithdraw(0, utils.parseEther("2"), { from: this.alice.address })
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("998"));
+      expect(await this.pool.linearBalanceOf(0, this.alice.address)).to.equal(utils.parseEther("0"));
+      // await time.increaseTo(duration.days(1).add(delta.toString()).toNumber());
+
+      console.log("start withdraw");
+      this.pool.connect(this.alice).linearClaimPendingWithdraw(0, { from: this.alice.address });
+      console.log("end withdraw");
+    });
   });
 
   context("With fixed pool", function () {
@@ -440,6 +499,7 @@ describe("Linear Pool ", function () {
         (await time.latest()).toNumber(),
         (await time.latest()).toNumber() + duration.days(7).toNumber()
       );
+      await this.pool.linearSetUseLocalDelayPool(0, true);
 
       await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
         from: this.alice.address,
@@ -504,6 +564,7 @@ describe("Linear Pool ", function () {
         (await time.latest()).toNumber(),
         (await time.latest()).toNumber() + duration.days(365).toNumber()
       );
+      await this.pool.linearSetUseLocalDelayPool(0, true);
 
       await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
         from: this.alice.address,
@@ -572,6 +633,7 @@ describe("Linear Pool ", function () {
         (await time.latest()).toNumber(),
         (await time.latest()).toNumber() + duration.days(7).toNumber()
       );
+      await this.pool.linearSetUseLocalDelayPool(0, true);
 
       await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
         from: this.alice.address,
@@ -643,6 +705,7 @@ describe("Linear Pool ", function () {
         (await time.latest()).toNumber(),
         (await time.latest()).toNumber() + duration.days(7).toNumber()
       );
+      await this.pool.linearSetUseLocalDelayPool(0, true);
 
       await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
         from: this.alice.address,
@@ -704,6 +767,7 @@ describe("Linear Pool ", function () {
         (await time.latest()).toNumber(),
         (await time.latest()).toNumber() + duration.days(7).toNumber()
       );
+      await this.pool.linearSetUseLocalDelayPool(0, true);
 
       await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
         from: this.alice.address,
@@ -746,6 +810,7 @@ describe("Linear Pool ", function () {
         (await time.latest()).toNumber(),
         (await time.latest()).toNumber() + duration.days(7).toNumber()
       );
+      await this.pool.linearSetUseLocalDelayPool(0, true);
 
       await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
         from: this.alice.address,

@@ -177,7 +177,9 @@ const useStyles = makeStyles((theme: any) => {
         width: '100%'
       }
     },
-
+    accorditionDetails: {
+      display: 'unset',
+    },
     progressArea: {
       marginBottom: 12,
       width: '280px',
@@ -248,6 +250,9 @@ const useStyles = makeStyles((theme: any) => {
       '&:hover': {
         color: '#4f79cc',
       }
+    },
+    cellActive: {
+      background: '#0A0A0A'
     }
   }
 });

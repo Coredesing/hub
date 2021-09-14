@@ -23,6 +23,12 @@ contract LinearPool is
 
     uint64 public constant LINEAR_MAXIMUM_DELAY_DURATION = 35 days; // maximum 35 days delay
 
+    // tiers
+    TierInfo[] public tierInfos;
+
+    // masters
+    mapping(address => bool) masters;
+
     // The accepted token
     IERC20 public linearAcceptedToken;
     // The reward distribution address
@@ -89,6 +95,11 @@ contract LinearPool is
     struct LinearPendingWithdrawal {
         uint128 amount;
         uint128 applicableAt;
+    }
+
+    struct TierInfo {
+        uint128 threshold;
+        uint128 delayDuration;
     }
 
     /**
@@ -259,6 +270,126 @@ contract LinearPool is
     }
 
     /**
+     * @notice Set the linear info. Can only be called by the owner.
+     * @param _thresholds the tier threshold
+     * @param _delays the delay time
+     */
+    function linearInitTierInfo(uint128[] memory _thresholds, uint128[] memory _delays)
+    external
+    onlyOwner
+    {
+        require(
+            _thresholds.length == _delays.length,
+            "LinearStakingPool: Init length not match"
+        );
+
+        require(
+            tierInfos.length == 0,
+            "LinearStakingPool: Init cannot be called more than once"
+        );
+
+        for (uint128 index = 0; index < _thresholds.length; index++) {
+            tierInfos.push(TierInfo(_thresholds[index], _delays[index]));
+        }
+    }
+
+    /**
+     * @notice Set the linear info. Can only be called by the owner.
+     * @param _thresholds the tier threshold
+     * @param _delays the delay time
+     */
+    function linearPushNewTierInfo(uint128 _thresholds, uint128 _delays)
+    external
+    onlyOwner
+    {
+        tierInfos.push(TierInfo(_thresholds, _delays));
+    }
+
+    /**
+     * @notice Set the linear info. Can only be called by the owner.
+     * @param _level the tier level
+     * @param _threshold the tier threshold
+     * @param _delay the delay time
+     */
+    function linearSetTierInfo(uint128 _level, uint128 _threshold, uint128 _delay)
+    external
+    onlyOwner
+    {
+        require(
+            tierInfos.length > _level,
+            "LinearStakingPool: setTierInfo invalid level"
+        );
+
+        tierInfos[_level].threshold = _threshold;
+        tierInfos[_level].delayDuration = _delay;
+    }
+
+    /**
+     * @notice Set the linear info. Can only be called by the owner.
+     * @param _level the tier level
+     * @param _delayDuration the delay time
+     */
+    function linearSetTierDelay(uint128 _level, uint128 _delayDuration)
+    external
+    onlyOwner
+    {
+        require(
+            tierInfos.length > _level,
+            "LinearStakingPool: setTierInfo invalid level"
+        );
+
+        require(
+            _delayDuration <= LINEAR_MAXIMUM_DELAY_DURATION,
+            "LinearStakingPool: delay duration is too long"
+        );
+
+        tierInfos[_level].delayDuration = _delayDuration;
+    }
+
+    /**
+     * @notice Set the linear info. Can only be called by the owner.
+     * @param _level the tier level
+     * @param _threshold the delay time
+     */
+    function linearSetTierThreshold(uint128 _level, uint128 _threshold)
+    external
+    onlyOwner
+    {
+        require(
+            tierInfos.length > _level,
+            "LinearStakingPool: setTierInfo invalid level"
+        );
+
+        tierInfos[_level].threshold = _threshold;
+    }
+
+    /**
+     * @notice grant the master tier. Can only be called by the owner.
+     * @param _masters the address of master
+     */
+    function linearGrantMaster(address[] memory _masters)
+    external
+    onlyOwner
+    {
+        for (uint128 index; index < _masters.length; index++) {
+            masters[_masters[index]] = true;
+        }
+    }
+
+    /**
+     * @notice grant the master tier. Can only be called by the owner.
+     * @param _members the address of master
+     */
+    function linearRevokeMaster(address[] memory _members)
+    external
+    onlyOwner
+    {
+        for (uint128 index; index < _members.length; index++) {
+            masters[_members[index]] = false;
+        }
+    }
+
+    /**
      * @notice Deposit token to earn rewards for another address
      * @param _poolId id of the pool
      * @param _amount amount of token to deposit
@@ -328,7 +459,10 @@ contract LinearPool is
         }
 
         stakingData.balance -= _amount;
-        if (pool.delayDuration == 0) {
+        // get delayDuration
+        uint128 delayDuration = linearDurationOf(_poolId, account);
+
+        if (delayDuration == 0) {
             linearAcceptedToken.safeTransfer(account, _amount);
             emit LinearWithdraw(_poolId, account, _amount);
             return;
@@ -339,7 +473,7 @@ contract LinearPool is
         ][account];
 
         pending.amount += _amount;
-        pending.applicableAt = block.timestamp.toUint128() + pool.delayDuration;
+        pending.applicableAt = block.timestamp.toUint128() + delayDuration;
     }
 
     /**
@@ -507,6 +641,37 @@ contract LinearPool is
         returns (uint128)
     {
         return linearStakingData[_poolId][_account].balance;
+    }
+
+    /**
+     * @notice Gets the delay duration in a pool by a user
+     * @param _poolId id of the pool
+     * @param _account address of a user
+     * @return the delay duration
+     */
+    function linearDurationOf(uint256 _poolId, address _account)
+        public
+        view
+        linearValidatePoolById(_poolId)
+        returns (uint128)
+    {
+        if (tierInfos.length < 1) {
+            return 0;
+        }
+
+        if (masters[_account]) {
+            return tierInfos[tierInfos.length - 1].delayDuration;
+        }
+
+        uint128 balance = linearStakingData[_poolId][_account].balance;
+        // case tierInfos.length - 1 is in whitelist (masters)
+        for (uint256 index = tierInfos.length - 2; index >= 0; index--) {
+            if (balance >= tierInfos[index].threshold) {
+                return tierInfos[index].delayDuration;
+            }
+        }
+
+        return 0;
     }
 
     /**

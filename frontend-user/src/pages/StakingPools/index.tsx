@@ -65,6 +65,7 @@ const StakingPools = (props: any) => {
   const [openModalTransactionSubmitting, setOpenModalTransactionSubmitting] = useState(false)
   const [transactionHashes, setTransactionHashes] = useState([]) as any;
   const { data: poolsList, loading: loadingGetPool } = useFetch<any>(`/staking-pool`);
+  const { data: listTopStaked, loading: loadingTopStaked } = useFetch<any>(`/staking-pool/top-staked`);
   const { allocPools, linearPools, fetchDetailList, loading: loadingDetailList } = useDetailListStakingPool(poolsList)
   const [filteredAllocPools, setFilteredAllocPools] = useState([]) as any;
   const [filteredLinearPools, setFilteredLinearPools] = useState([]) as any;
@@ -212,6 +213,7 @@ const StakingPools = (props: any) => {
                       poolDetail={pool}
                       poolAddress={pool?.pool_address}
                       poolsList={poolsList}
+                      listTopStaked={listTopStaked}
                     />
                   ))
                 }

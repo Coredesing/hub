@@ -99,6 +99,7 @@ Route.group(() => {
 
   // Staking pool
   Route.get('staking-pool', 'StakingPoolController.getPublicPoolList');
+  Route.get('staking-pool/top-staked', 'StakingPoolController.getTopUserStaked');
 
   // Tiers
   Route.get('get-tiers', 'TierSettingController.getTiersSetting');

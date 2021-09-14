@@ -341,89 +341,16 @@ contract LinearPool is
     }
 
     /**
-     * @notice Set the linear info. Can only be called by the owner.
-     * @param _level the tier level
-     * @param _delayDuration the delay time
-     */
-    function linearSetTierDelay(uint128 _level, uint128 _delayDuration)
-    external
-    onlyOwner
-    {
-        require(
-            tierInfos.length > _level,
-            "LinearStakingPool: setTierInfo invalid level"
-        );
-
-        require(
-            _delayDuration <= LINEAR_MAXIMUM_DELAY_DURATION,
-            "LinearStakingPool: delay duration is too long"
-        );
-
-        tierInfos[_level].delayDuration = _delayDuration;
-    }
-
-    /**
-     * @notice Set the linear info. Can only be called by the owner.
-     * @param _level the tier level
-     * @param _threshold the delay time
-     */
-    function linearSetTierThreshold(uint128 _level, uint128 _threshold)
-    external
-    onlyOwner
-    {
-        require(
-            tierInfos.length > _level,
-            "LinearStakingPool: setTierInfo invalid level"
-        );
-
-        tierInfos[_level].threshold = _threshold;
-    }
-
-    /**
      * @notice grant the master tier. Can only be called by the owner.
      * @param _masters the address of master
      */
-    function linearGrantMaster(address[] memory _masters)
+    function linearSetMaster(address[] memory _masters, bool _master)
     external
     onlyOwner
     {
         for (uint128 index; index < _masters.length; index++) {
-            masters[_masters[index]] = true;
+            masters[_masters[index]] = _master;
         }
-    }
-
-    /**
-     * @notice grant the master tier. Can only be called by the owner.
-     * @param _members the address of master
-     */
-    function linearRevokeMaster(address[] memory _members)
-    external
-    onlyOwner
-    {
-        for (uint128 index; index < _members.length; index++) {
-            masters[_members[index]] = false;
-        }
-    }
-
-    /**
-     * @notice Deposit token to earn rewards for another address
-     * @param _poolId id of the pool
-     * @param _amount amount of token to deposit
-     * @param _account the account that received the rewards
-     */
-    function linearDepositFor(
-        uint256 _poolId,
-        uint128 _amount,
-        address _account
-    ) external nonReentrant linearValidatePoolById(_poolId) {
-        _linearDeposit(_poolId, _amount, _account);
-
-        linearAcceptedToken.safeTransferFrom(
-            address(msg.sender),
-            address(this),
-            _amount
-        );
-        emit LinearDeposit(_poolId, _account, _amount);
     }
 
     /**
@@ -490,63 +417,6 @@ contract LinearPool is
 
         pending.amount += _amount;
         pending.applicableAt = block.timestamp.toUint128() + delayDuration;
-    }
-
-    /**
-     * @notice Switch token from a pool to a new pool
-     * @param _curPoolId id of the current pool
-     * @param _newPoolId id of the new pool
-     */
-    function linearSwitch(uint256 _curPoolId, uint256 _newPoolId)
-        external
-        nonReentrant
-        linearValidatePoolById(_curPoolId)
-        linearValidatePoolById(_newPoolId)
-    {
-        address account = msg.sender;
-
-        LinearPoolInfo storage curPool = linearPoolInfo[_curPoolId];
-        LinearStakingData storage currentStakingData = linearStakingData[
-            _curPoolId
-        ][account];
-
-        LinearPoolInfo storage newPool = linearPoolInfo[_newPoolId];
-
-        require(
-            newPool.lockDuration >= curPool.lockDuration &&
-                newPool.delayDuration >= curPool.delayDuration,
-            "LinearStakingPool: invalid new pool"
-        );
-
-        require(
-            currentStakingData.balance > 0,
-            "LinearStakingPool: invalid switch amount"
-        );
-
-        _linearHarvest(_curPoolId, account);
-
-        if (currentStakingData.reward > 0) {
-            require(
-                linearRewardDistributor != address(0),
-                "LinearStakingPool: invalid reward distributor"
-            );
-
-            uint128 reward = currentStakingData.reward;
-            currentStakingData.reward = 0;
-            linearAcceptedToken.safeTransferFrom(
-                linearRewardDistributor,
-                account,
-                reward
-            );
-            emit LinearRewardsHarvested(_curPoolId, account, reward);
-        }
-
-        uint128 switchAmount = currentStakingData.balance;
-        currentStakingData.balance = 0;
-        emit LinearWithdraw(_curPoolId, account, switchAmount);
-
-        _linearDeposit(_newPoolId, switchAmount, account);
-        emit LinearDeposit(_newPoolId, account, switchAmount);
     }
 
     /**

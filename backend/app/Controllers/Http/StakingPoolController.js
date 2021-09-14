@@ -155,6 +155,40 @@ class StakingPoolController {
       return HelperUtils.responseErrorInternal('Get Pools Fail !!!');
     }
   }
+
+  async getTopUserStaked({ request }) {
+    try {
+      // TODO: dev
+      let data = {
+        limit: 10,
+        top: [
+          {"wallet_address":"0x4731507D5aa4C9377567cb709E5A0487EcE3beC3","amount":"175000000","last_time":"1631196295"},
+          {"wallet_address":"0x0c3dB0597Cc93e71696f7f52AdcB491eB546C4c6","amount":"174150002","last_time":"1631196207"},
+          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD0488d1","amount":"122000001","last_time":"1631201593"},
+          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD0488d2","amount":"122000001","last_time":"1631201593"},
+          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD0488d3","amount":"122000001","last_time":"1631201593"},
+          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD0488d4","amount":"122000001","last_time":"1631201593"},
+          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD0488d5","amount":"122000001","last_time":"1631201593"},
+          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD0488d6","amount":"122000001","last_time":"1631201593"},
+          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD0488d7","amount":"122000001","last_time":"1631201593"},
+          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD048816","amount":"122000001","last_time":"1631201593"},
+          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD048810","amount":"122000001","last_time":"1631201593"},
+          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD048811","amount":"122000001","last_time":"1631201593"},
+          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD048812","amount":"122000001","last_time":"1631201593"},
+          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD048813","amount":"122000001","last_time":"1631201593"},
+          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD048814","amount":"122000001","last_time":"1631201593"},
+          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD048815","amount":"122000001","last_time":"1631201593"},
+          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD048817","amount":"122000001","last_time":"1631201593"},
+          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD048818","amount":"122000001","last_time":"1631201593"}
+        ]
+      }
+
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      console.log(e)
+      return HelperUtils.responseErrorInternal('Get Tops Fail !!!');
+    }
+  }
 }
 
 module.exports = StakingPoolController

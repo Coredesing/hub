@@ -31,7 +31,7 @@ function PoolContractAddress(props: any) {
             name='pool_address'
             ref={register({
               required: true,
-              validate:  (val: string) => (val && contractDetail?.allocRewardToken && contractDetail?.linearAcceptedToken ) ? true : false
+              validate:  (val: string) => (val && contractDetail?.linearAcceptedToken ) ? true : false
             })}
             defaultValue={isEdit ? poolDetail?.pool_address : DEFAULT_STAKING_POOL_ADDRESS}
             maxLength={255}
@@ -43,7 +43,7 @@ function PoolContractAddress(props: any) {
               <div className={classes.circularProgress}>
                 <CircularProgress size={25} />
               </div> : (
-                (contractDetail && contractDetail?.allocRewardToken && contractDetail?.linearAcceptedToken) ?
+                (contractDetail && contractDetail?.linearAcceptedToken) ?
                  <img alt="" src="/images/icon_check.svg" className={classes.loadingTokenIcon} /> :
                  <img alt="" src="/images/icon_close.svg" className={classes.loadingTokenIcon} /> 
                 )
@@ -55,7 +55,7 @@ function PoolContractAddress(props: any) {
           }
         </p>
 
-        {!(contractDetail && contractDetail?.allocRewardToken && contractDetail?.linearAcceptedToken) &&
+        {!(contractDetail && contractDetail?.linearAcceptedToken) &&
           <>
             <p className={`${classes.formErrorMessage}`}>
               Invalid Pool Contract Address
@@ -67,7 +67,7 @@ function PoolContractAddress(props: any) {
         }
       </div>
       {
-        contractDetail && contractDetail?.allocRewardToken && contractDetail?.linearAcceptedToken && (
+        contractDetail && contractDetail?.linearAcceptedToken && (
           <div className={classes.tokenInfo} style={{flexDirection: 'column', alignItems: 'normal'}}>
             <div className="tokenInfoContent">
               <p className="tokenInfoText">Alloc Reward Token: {`${contractDetail?.allocRewardToken}`}</p>

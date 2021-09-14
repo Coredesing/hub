@@ -306,123 +306,123 @@ describe("Linear Pool ", function () {
       ))).toFixed(2));
 
     });
-    it("should allow user to switch to another pool", async function () {
-      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
-        initializer: '__LinearPool_init'
-      });
-      await this.pool.deployed();
-      await this.pkf.connect(this.minter).approve(this.pool.address, utils.parseEther("10000"));
-      await this.pool.linearSetRewardDistributor(this.minter.address);
-      await this.pool.linearAddPool(
-        0,
-        0,
-        0,
-        0,
-        0,
-        duration.days(7).toNumber(),
-        (await time.latest()).toNumber(),
-        (await time.latest()).toNumber() + duration.years(1).toNumber()
-      );
-      await this.pool.linearAddPool(
-        0,
-        0,
-        0,
-        0,
-        0,
-        duration.days(14).toNumber(),
-        (await time.latest()).toNumber(),
-        (await time.latest()).toNumber() + duration.years(1).toNumber()
-      );
-      expect(await this.pool.linearPoolLength()).to.equal(2);
-
-      await this.pool.linearSetUseLocalDelayPool(0, true);
-      await this.pool.linearSetUseLocalDelayPool(1, true);
-
-      await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
-        from: this.alice.address,
-      });
-
-      // Alice deposits 100 tokens to the 1st pool
-      await this.pool
-        .connect(this.alice)
-        .linearDeposit(0, utils.parseEther("100"), { from: this.alice.address });
-      expect(await this.pool.linearTotalStaked(0)).to.equal(utils.parseEther("100"));
-
-      // Alice deposits 200 tokens to the 2nd pool
-      await this.pool
-        .connect(this.alice)
-        .linearDeposit(1, utils.parseEther("200"), { from: this.alice.address });
-      expect(await this.pool.linearTotalStaked(1)).to.equal(utils.parseEther("200"));
-
-      // Alice switches tokens from the 1st to the 2nd pool
-      await this.pool
-        .connect(this.alice)
-        .linearSwitch(0, 1, { from: this.alice.address });
-      expect(await this.pool.linearTotalStaked(1)).to.equal(utils.parseEther("300"));
-
-      await this.pool
-        .connect(this.alice)
-        .linearWithdraw(1, utils.parseEther("300"), { from: this.alice.address })
-
-      // Alice should not be able to claim withdraw after 10 days.
-      await time.increase(duration.days(10).toNumber());
-      await expectRevert(
-        this.pool
-          .connect(this.alice)
-          .linearClaimPendingWithdraw(1, { from: this.alice.address }),
-        "LinearStakingPool: not released yet"
-      );
-
-      // Alice should be able to withdraw after 4 more days.
-      await time.increase(duration.days(4).toNumber());
-      await this.pool
-        .connect(this.alice)
-        .linearClaimPendingWithdraw(1, { from: this.alice.address });
-    });
-    it("should allow user to deposit for another user", async function () {
-      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
-        initializer: '__LinearPool_init'
-      });
-      await this.pool.deployed();
-      await this.pkf.connect(this.minter).approve(this.pool.address, utils.parseEther("10000"));
-      await this.pool.linearSetRewardDistributor(this.minter.address);
-      await this.pool.linearAddPool(
-        0,
-        0,
-        0,
-        0,
-        0,
-        duration.days(7).toNumber(),
-        (await time.latest()).toNumber(),
-        (await time.latest()).toNumber() + duration.years(1).toNumber()
-      );
-      await this.pool.linearSetUseLocalDelayPool(0, true);
-
-      await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
-        from: this.alice.address,
-      });
-
-      await this.pkf.connect(this.bob).approve(this.pool.address, utils.parseEther("1000"), {
-        from: this.bob.address,
-      });
-
-      // Alice deposits 100 tokens to the 1st pool
-      await this.pool
-        .connect(this.alice)
-        .linearDeposit(0, utils.parseEther("100"), { from: this.alice.address });
-      expect(await this.pool.linearTotalStaked(0)).to.equal(utils.parseEther("100"));
-      expect((await this.pool.linearStakingData(0, this.alice.address))['balance']).to.equal(utils.parseEther("100"));
-
-      // Bob deposits 200 tokens for Alice
-      await this.pool
-        .connect(this.bob)
-        .linearDepositFor(0, utils.parseEther("200"), this.alice.address, { from: this.bob.address });
-
-      expect(await this.pool.linearTotalStaked(0)).to.equal(utils.parseEther("300"));
-      expect((await this.pool.linearStakingData(0, this.alice.address))['balance']).to.equal(utils.parseEther("300"));
-      expect((await this.pool.linearStakingData(0, this.bob.address))['balance']).to.equal(utils.parseEther("0"));
-
-    });
+    // it("should allow user to switch to another pool", async function () {
+    //   this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
+    //     initializer: '__LinearPool_init'
+    //   });
+    //   await this.pool.deployed();
+    //   await this.pkf.connect(this.minter).approve(this.pool.address, utils.parseEther("10000"));
+    //   await this.pool.linearSetRewardDistributor(this.minter.address);
+    //   await this.pool.linearAddPool(
+    //     0,
+    //     0,
+    //     0,
+    //     0,
+    //     0,
+    //     duration.days(7).toNumber(),
+    //     (await time.latest()).toNumber(),
+    //     (await time.latest()).toNumber() + duration.years(1).toNumber()
+    //   );
+    //   await this.pool.linearAddPool(
+    //     0,
+    //     0,
+    //     0,
+    //     0,
+    //     0,
+    //     duration.days(14).toNumber(),
+    //     (await time.latest()).toNumber(),
+    //     (await time.latest()).toNumber() + duration.years(1).toNumber()
+    //   );
+    //   expect(await this.pool.linearPoolLength()).to.equal(2);
+    //
+    //   await this.pool.linearSetUseLocalDelayPool(0, true);
+    //   await this.pool.linearSetUseLocalDelayPool(1, true);
+    //
+    //   await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
+    //     from: this.alice.address,
+    //   });
+    //
+    //   // Alice deposits 100 tokens to the 1st pool
+    //   await this.pool
+    //     .connect(this.alice)
+    //     .linearDeposit(0, utils.parseEther("100"), { from: this.alice.address });
+    //   expect(await this.pool.linearTotalStaked(0)).to.equal(utils.parseEther("100"));
+    //
+    //   // Alice deposits 200 tokens to the 2nd pool
+    //   await this.pool
+    //     .connect(this.alice)
+    //     .linearDeposit(1, utils.parseEther("200"), { from: this.alice.address });
+    //   expect(await this.pool.linearTotalStaked(1)).to.equal(utils.parseEther("200"));
+    //
+    //   // Alice switches tokens from the 1st to the 2nd pool
+    //   await this.pool
+    //     .connect(this.alice)
+    //     .linearSwitch(0, 1, { from: this.alice.address });
+    //   expect(await this.pool.linearTotalStaked(1)).to.equal(utils.parseEther("300"));
+    //
+    //   await this.pool
+    //     .connect(this.alice)
+    //     .linearWithdraw(1, utils.parseEther("300"), { from: this.alice.address })
+    //
+    //   // Alice should not be able to claim withdraw after 10 days.
+    //   await time.increase(duration.days(10).toNumber());
+    //   await expectRevert(
+    //     this.pool
+    //       .connect(this.alice)
+    //       .linearClaimPendingWithdraw(1, { from: this.alice.address }),
+    //     "LinearStakingPool: not released yet"
+    //   );
+    //
+    //   // Alice should be able to withdraw after 4 more days.
+    //   await time.increase(duration.days(4).toNumber());
+    //   await this.pool
+    //     .connect(this.alice)
+    //     .linearClaimPendingWithdraw(1, { from: this.alice.address });
+    // });
+    // it("should allow user to deposit for another user", async function () {
+    //   this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
+    //     initializer: '__LinearPool_init'
+    //   });
+    //   await this.pool.deployed();
+    //   await this.pkf.connect(this.minter).approve(this.pool.address, utils.parseEther("10000"));
+    //   await this.pool.linearSetRewardDistributor(this.minter.address);
+    //   await this.pool.linearAddPool(
+    //     0,
+    //     0,
+    //     0,
+    //     0,
+    //     0,
+    //     duration.days(7).toNumber(),
+    //     (await time.latest()).toNumber(),
+    //     (await time.latest()).toNumber() + duration.years(1).toNumber()
+    //   );
+    //   await this.pool.linearSetUseLocalDelayPool(0, true);
+    //
+    //   await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
+    //     from: this.alice.address,
+    //   });
+    //
+    //   await this.pkf.connect(this.bob).approve(this.pool.address, utils.parseEther("1000"), {
+    //     from: this.bob.address,
+    //   });
+    //
+    //   // Alice deposits 100 tokens to the 1st pool
+    //   await this.pool
+    //     .connect(this.alice)
+    //     .linearDeposit(0, utils.parseEther("100"), { from: this.alice.address });
+    //   expect(await this.pool.linearTotalStaked(0)).to.equal(utils.parseEther("100"));
+    //   expect((await this.pool.linearStakingData(0, this.alice.address))['balance']).to.equal(utils.parseEther("100"));
+    //
+    //   // Bob deposits 200 tokens for Alice
+    //   await this.pool
+    //     .connect(this.bob)
+    //     .linearDepositFor(0, utils.parseEther("200"), this.alice.address, { from: this.bob.address });
+    //
+    //   expect(await this.pool.linearTotalStaked(0)).to.equal(utils.parseEther("300"));
+    //   expect((await this.pool.linearStakingData(0, this.alice.address))['balance']).to.equal(utils.parseEther("300"));
+    //   expect((await this.pool.linearStakingData(0, this.bob.address))['balance']).to.equal(utils.parseEther("0"));
+    //
+    // });
 
     it("should distribute pkfs on tiers", async function () {
       // default flexible pool with 5% APR
@@ -527,7 +527,7 @@ describe("Linear Pool ", function () {
 
       // increase to master (with NFT)
       await this.pool.connect(this.alice).linearDeposit(0, utils.parseEther("100"))
-      await this.pool.linearGrantMaster([this.alice.address])
+      await this.pool.linearSetMaster([this.alice.address], true)
       expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("900"));
       expect(await this.pool.linearBalanceOf(0, this.alice.address)).to.equal(utils.parseEther("100"));
       expect(await this.pool.connect(this.alice).linearDurationOf(0, this.alice.address)).to.equal(duration.days("7"));

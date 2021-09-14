@@ -52,7 +52,8 @@ module.exports = Object.freeze({
     SEND_CONFIRMATION_EMAIL: 'SendConfirmationEmailJob-job',
     SEND_ADMIN_INFO_EMAIL: 'SendAdminInfoEmailJob-job',
     GET_USER_PURCHASED_BALANCE: 'GetUserPurchasedBalanceJob-job',
-    PICKUP_RANDOM_WINNER: 'PickupRandomWinner-job'
+    PICKUP_RANDOM_WINNER: 'PickupRandomWinner-job',
+    CACHING_REPUTATION: 'CachingReputation-job',
   },
   ACTIVE: 0,
   SUSPEND: 1,

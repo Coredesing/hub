@@ -272,6 +272,20 @@ const getRateSetting = async () => {
   return rateSetting
 }
 
+const getStakingPoolInstance = async () => {
+  const pool = process.env.STAKING_POOL_SMART_CONTRACT
+  if (!pool) {
+    return null
+  }
+
+  const stakingPoolSC = new networkToWeb3[Const.NETWORK_AVAILABLE.BSC].eth.Contract(STAKING_POOL_CONTRACT_ABI, pool);
+  if (!stakingPoolSC) {
+    return null
+  }
+
+  return stakingPoolSC
+}
+
 const getStakingPool = async (wallet_address) => {
   const pools = await StakingPoolModel.query().fetch();
 
@@ -806,6 +820,10 @@ const getTopStakingContest = async (pool) => {
   }
 };
 
+const getStakingProvider = async () => {
+  return networkToWeb3[Const.NETWORK_AVAILABLE.BSC]
+}
+
 module.exports = {
   randomString,
   doMask,
@@ -823,6 +841,7 @@ module.exports = {
   getUserTierSmart,
   getContractInstance,
   getContractClaimInstance,
+  getStakingPoolInstance,
   getOfferCurrencyInfo,
   getTokenSoldSmartContract,
   getEventSmartContract,
@@ -841,4 +860,5 @@ module.exports = {
   getEPkfBonusBalance,
   getTopStakingContest,
   getTiers,
+  getStakingProvider,
 };

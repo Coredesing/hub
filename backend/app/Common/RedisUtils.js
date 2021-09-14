@@ -221,6 +221,44 @@ const checkExistTopBid = async (poolId) => {
   return await Redis.exists(getRedisKeyTopBid(poolId));
 };
 
+/*
+  Fetch events
+ */
+const getRedisKeyStakingEvent = () => {
+  return `staking_events_block_number`;
+};
+
+const getRedisStakingLastBlockNumber = async () => {
+  return await Redis.get(getRedisKeyStakingEvent());
+};
+
+const setRedisStakingLastBlockNumber = async (data) => {
+  return await Redis.set(getRedisKeyStakingEvent(), JSON.stringify(data));
+};
+
+const checkExistStakingLastBlockNumber = async () => {
+  return await Redis.exists(getRedisKeyStakingEvent());
+};
+
+/*
+  Top events
+ */
+const getRedisKeyTopUsersStaking = () => {
+  return `staking_events_top_users`;
+};
+
+const getRedisTopUsersStaking = async () => {
+  return await Redis.get(getRedisKeyTopUsersStaking());
+};
+
+const setRedisTopUsersStaking = async (data) => {
+  return await Redis.set(getRedisKeyTopUsersStaking(), JSON.stringify(data));
+};
+
+const checkExistTopUsersStaking = async () => {
+  return await Redis.exists(getRedisKeyTopUsersStaking());
+};
+
 module.exports = {
   // POOL LIST
   checkExistRedisPoolList,
@@ -259,4 +297,14 @@ module.exports = {
   getRedisTopBid,
   setRedisTopBid,
   checkExistTopBid,
+
+  // staking event
+  getRedisStakingLastBlockNumber,
+  setRedisStakingLastBlockNumber,
+  checkExistStakingLastBlockNumber,
+
+  // top users
+  getRedisTopUsersStaking,
+  setRedisTopUsersStaking,
+  checkExistTopUsersStaking
 };

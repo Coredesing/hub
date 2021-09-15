@@ -139,4 +139,12 @@ export class BaseRequest {
   async _responseHandler(response = {}) {
     return response;
   }
+
+  async postDownload(url: string, data: object) {
+    const res = await fetch(this.buildUrl(url), {
+      method: "POST",
+      headers: this.getHeader()
+    })
+    return res.blob()
+  }
 }

@@ -81,6 +81,7 @@ const jobs = [
   'App/Jobs/SendConfirmationEmailJob',
   'App/Jobs/GetUserPurchasedBalanceJob',
   'App/Jobs/GetUserKycInformationJob',
+  'App/Jobs/ExportUsers',
 ];
 
 module.exports = { providers, aceProviders, aliases, commands, jobs }

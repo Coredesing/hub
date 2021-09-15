@@ -806,6 +806,10 @@ const getTopStakingContest = async (pool) => {
   }
 };
 
+const getPathExportUsers = (fileName) => {
+  return `download/export_users/${fileName}`
+}
+
 module.exports = {
   randomString,
   doMask,
@@ -841,4 +845,5 @@ module.exports = {
   getEPkfBonusBalance,
   getTopStakingContest,
   getTiers,
+  getPathExportUsers,
 };

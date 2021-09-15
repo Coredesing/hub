@@ -148,6 +148,9 @@ Route.group(() => {
   // Route.post('transaction-create', 'TransactionController.transactionAdd').middleware(['auth:admin']);
 
   Route.get('users', 'UserController.userList').middleware(['auth:admin']);
+  Route.post('users/export', 'UserController.exportUsers').middleware(['auth:admin']);
+  Route.post('users/download/:id', 'UserController.downloadUsers').middleware(['auth:admin']);
+  Route.get('users/export-files', 'UserController.getExportFiles').middleware(['auth:admin']);
 
   Route.get('admins', 'AdminController.adminList').middleware(['auth:admin']);
   Route.get('admins/:id', 'AdminController.adminDetail').middleware(['auth:admin']);

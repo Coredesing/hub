@@ -147,7 +147,7 @@ const Home = (props: any) => {
   };
 
   return (
-    <DefaultLayout>
+    <DefaultLayout style={{background: '#0A0A0A'}}>
       <section className={clsx(styles.banner, styles.section)} style={isShowImgBanner ? {paddingTop: '10px'} : {}}>
         {isShowImgBanner && (
           <div className={styles.wrapperImgBanner}>

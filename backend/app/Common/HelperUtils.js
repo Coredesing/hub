@@ -244,7 +244,7 @@ const getTiers = () => {
   try {
     tiers = JSON.parse(process.env.USER_TIERS)
   } catch (error) {
-    tiers = [100, 500, 2500, 4000]
+    tiers = [15, 100, 400, 1000]
   }
   return tiers.map(tier => Web3.utils.toWei(tier.toString()))
 }
@@ -290,7 +290,7 @@ const getStakingPool = async (wallet_address) => {
   const pools = await StakingPoolModel.query().fetch();
 
   const listPool = JSON.parse(JSON.stringify(pools))
-  let stakedPkf = new BigNumber('0');
+  let stakedToken = new BigNumber('0');
   let stakedUni = new BigNumber('0');
   for (const pool of listPool) {
     if (!pool.pool_address) {
@@ -311,7 +311,7 @@ const getStakingPool = async (wallet_address) => {
           ]);
 
           if (allocPoolInfo.lpToken.toLowerCase() === GAFI_SMART_CONTRACT_ADDRESS.toLowerCase()) {
-            stakedPkf = stakedPkf.plus(new BigNumber(allocUserInfo.amount));
+            stakedToken = stakedToken.plus(new BigNumber(allocUserInfo.amount));
             break;
           }
 
@@ -323,14 +323,16 @@ const getStakingPool = async (wallet_address) => {
           break;
         case 'linear':
           const [linearAcceptedToken, linearStakingData] = await Promise.all([
-            stakingPoolSC.methods.linearAcceptedToken().call(),
+            // stakingPoolSC.methods.linearAcceptedToken().call(),
+            GAFI_SMART_CONTRACT_ADDRESS,
             stakingPoolSC.methods.linearStakingData(pool.pool_id, wallet_address).call()
           ]);
 
           if (linearAcceptedToken.toLowerCase() === GAFI_SMART_CONTRACT_ADDRESS.toLowerCase()) {
-            stakedPkf = stakedPkf.plus(new BigNumber(linearStakingData.balance));
+            stakedToken = stakedToken.plus(new BigNumber(linearStakingData.balance));
           }
           break;
+        default:
       }
     } catch (err) {
       console.log('getStakingPoolPKF', err)
@@ -338,7 +340,7 @@ const getStakingPool = async (wallet_address) => {
   }
 
   return {
-    staked: stakedPkf.toFixed(),
+    staked: stakedToken.toFixed(),
     stakedUni: stakedUni.toFixed(),
   };
 }
@@ -361,6 +363,11 @@ const getUserTierSmart = async (wallet_address) => {
     // get tiers
     let userTier = 0;
     tiers.map((tokenRequire, index) => {
+      // master: Fetch NFT Owner
+      if (index === tiers.length - 1) {
+        return
+      }
+
       if (stakedToken.gte(tokenRequire)) {
         userTier = index + 1;
       }

@@ -40,15 +40,6 @@ class PoolService {
         builder = builder.where(query => {
           query.where('title', 'like', '%' + params.title + '%')
             .orWhere('symbol', 'like', '%' + params.title + '%')
-            .orWhere('token', 'like', '%' + params.title + '%')
-            .orWhere('campaign_hash', 'like', '%' + params.title + '%');
-
-          if ((params.title).toLowerCase() == Config.get('const.suspend')) {
-            query.orWhere('is_pause', '=', 1)
-          }
-          if ((params.title).toLowerCase() == Config.get('const.active')) {
-            query.orWhere('is_pause', '=', 0)
-          }
         })
       } else {
         builder = builder.where('title', params.title);
@@ -95,15 +86,15 @@ class PoolService {
   }
 
   getJoinedPools(walletAddress, params) {
-    const query = this.buildSearchQuery(params);
-    query
-      .whereHas('whitelistUsers', (builder) => {
+    let query = this.buildSearchQuery(params);
+    return query.where(query => {
+      query.whereHas('whitelistUsers', (builder) => {
         builder.where('wallet_address', walletAddress);
       }, '>', 0)
-      .orWhereHas('winnerlistUsers', (builder) => {
-        builder.where('wallet_address', walletAddress);
-      }, '>', 0);
-    return query;
+        .orWhereHas('winnerlistUsers', (builder) => {
+          builder.where('wallet_address', walletAddress);
+        }, '>', 0);
+    })
   }
 
   async getUpcomingPools(filterParams) {

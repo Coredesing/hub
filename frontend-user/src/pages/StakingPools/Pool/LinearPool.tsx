@@ -31,8 +31,8 @@ import { ChainDefault, ETH_CHAIN_ID } from '../../../constants/network'
 import { useTypedSelector } from '../../../hooks/useTypedSelector';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { BigNumber, utils } from 'ethers';
-import ModalSwitchPool from '../ModalSwitchPool';
-import useSwitchPool from '../hook/useSwitchPool';
+// import ModalSwitchPool from '../ModalSwitchPool';
+// import useSwitchPool from '../hook/useSwitchPool';
 import { getUserTier } from '../../../store/actions/sota-tiers';
 import {
   TableContainer,
@@ -79,7 +79,7 @@ const LinearPool = (props: any) => {
   const [showUnstakeModal, setShowUnstakeModal] = useState(false);
   const [unstakeAmount, setUnstakeAmount] = useState('0');
   const [showClaimModal, setShowClaimModal] = useState(false);
-  const [showSwitchModal, setShowSwitchModal] = useState(false);
+  // const [showSwitchModal, setShowSwitchModal] = useState(false);
 
   const { linearStakeToken, transactionHash: stakeTransactionHash } = useLinearStake(poolAddress, poolDetail?.pool_id, stakeAmount);
   const { linearClaimToken, transactionHash: unstakeTransactionHash } = useLinearClaim(poolAddress, poolDetail?.pool_id);
@@ -286,30 +286,30 @@ const LinearPool = (props: any) => {
     setTransactionHashes([{ tnx: claimPendingTransactionHash, isApprove: false }])
   }, [claimPendingTransactionHash, setOpenModalTransactionSubmitting, setTransactionHashes])
 
-  const onShowSwitchPoolModal = () => {
-    setShowSwitchModal(true);
-  }
+  // const onShowSwitchPoolModal = () => {
+  //   setShowSwitchModal(true);
+  // }
 
-  const onCloseSwitchModal = () => {
-    setShowSwitchModal(false);
-  }
+  // const onCloseSwitchModal = () => {
+  //   setShowSwitchModal(false);
+  // }
 
-  const { linearSwitchPool, transactionHash: transactionHashSwitchPool } = useSwitchPool(poolDetail.pool_address)
-  const [idSwitched, setIdSwitched] = useState();
-  const onSwitchPool = async (fromId: number, toId: number) => {
-    setOpenModalTransactionSubmitting(true);
-    await linearSwitchPool(fromId, toId);
-    setOpenModalTransactionSubmitting(false);
-    reload && reload();
-  }
+  // const { linearSwitchPool, transactionHash: transactionHashSwitchPool } = useSwitchPool(poolDetail.pool_address)
+  // const [idSwitched, setIdSwitched] = useState();
+  // const onSwitchPool = async (fromId: number, toId: number) => {
+  //   setOpenModalTransactionSubmitting(true);
+  //   await linearSwitchPool(fromId, toId);
+  //   setOpenModalTransactionSubmitting(false);
+  //   reload && reload();
+  // }
 
-  useEffect(() => {
-    if (!transactionHashSwitchPool) {
-      return
-    }
-    setOpenModalTransactionSubmitting(false);
-    setTransactionHashes([{ tnx: transactionHashSwitchPool, isApprove: false }])
-  }, [transactionHashSwitchPool, setTransactionHashes, setOpenModalTransactionSubmitting])
+  // useEffect(() => {
+  //   if (!transactionHashSwitchPool) {
+  //     return
+  //   }
+  //   setOpenModalTransactionSubmitting(false);
+  //   setTransactionHashes([{ tnx: transactionHashSwitchPool, isApprove: false }])
+  // }, [transactionHashSwitchPool, setTransactionHashes, setOpenModalTransactionSubmitting])
 
 
   useEffect(() => {
@@ -438,6 +438,7 @@ const LinearPool = (props: any) => {
           </div>
           <div className="pool--sumary-block">
             <Box className={styles.textSecondary} marginBottom="10px">
+              GAFI staking event&nbsp;
               {
                 listTopStaked?.start_time * 1000 > Date.now() ? 'Open in'
                   : listTopStaked?.end_time * 1000 > Date.now() ? 'End in' : 'Finished'
@@ -808,7 +809,7 @@ const LinearPool = (props: any) => {
           </Box>
         </div>
       </AccordionDetails>
-      <ModalSwitchPool
+      {/* <ModalSwitchPool
         open={showSwitchModal}
         onClose={onCloseSwitchModal}
         idSwitched={idSwitched}
@@ -818,7 +819,7 @@ const LinearPool = (props: any) => {
         tokenBalance={tokenBalance}
         amount={stakeAmount}
         stakingAmount={Number(utils.formatEther(poolDetail?.stakingAmount)).toFixed(2)}
-        onConfirm={onSwitchPool} />
+        onConfirm={onSwitchPool} /> */}
       <ModalStake
         open={showStakeModal}
         amount={stakeAmount}

@@ -13,6 +13,21 @@ const initialState = {
   error: ''
 };
 
+export const getDelayTiersReducer = (state: StateType = initialState, action: AnyAction) => {
+  switch (action.type) {
+    case sotaTiersActions.DELAY_TIERS_SUCCESS: {
+      return {
+        ...state,
+        data: action.payload,
+        loading: false
+      }
+    }
+    default: {
+      return state;
+    }
+  }
+};
+
 export const getTiersReducer = (state: StateType = initialState, action: AnyAction) => {
   switch (action.type) {
 

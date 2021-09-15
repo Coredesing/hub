@@ -23,7 +23,8 @@
             "@utils/*": ["src/utils/*"],
             "@pages/*": ["src/pages/*"],
             "@styles/*": ["src/styles/*"],
-            "@store/*": ["src/store/*"]
+            "@store/*": ["src/store/*"],
+            "@app-constants": ["src/constants"]
         }
     }
 }

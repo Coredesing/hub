@@ -35,15 +35,19 @@ export const getTiers = (forceUsingEther: string = 'eth') => {
         return;
       }
 
-      let result = resObj.data;
+      const result = resObj.data;
 
-      result = result.filter((e: any) => e !== '0')
-      result = result.map((e: any) => {
+      let tiers = (result?.tiers || []).filter((e: any) => e !== '0')
+      tiers = tiers.map((e: any) => {
         return parseFloat(convertFromWei(e))
       })
       dispatch({
         type: sotaTiersActions.TIERS_SUCCESS,
-        payload: result,
+        payload: tiers,
+      });
+      dispatch({
+        type: sotaTiersActions.DELAY_TIERS_SUCCESS,
+        payload: result?.delays || [],
       });
 
     } catch (error) {

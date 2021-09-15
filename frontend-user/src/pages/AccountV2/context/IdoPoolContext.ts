@@ -10,7 +10,7 @@ export type IdoPoolContextType = {
     setLoadingPools?: Dispatch<SetStateAction<boolean>>,
     setFilter?(obj: ObjType): void,
     setData?(data: DataType): void,
-    pagination: Pick<PaginationResult, 'total' | 'perPage' | 'page' | 'lastPage'>,
+    pagination: Pick<PaginationResult, 'total' | 'perPage' | 'page' | 'lastPage'> & {totalPage?: number},
 }
 
 export const IdoPoolContext = createContext<IdoPoolContextType>({

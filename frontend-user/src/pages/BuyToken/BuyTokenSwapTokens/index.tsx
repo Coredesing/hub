@@ -51,7 +51,7 @@ const BuyTokenSwapTokens: FC<Props> = ({poolDetails, poolDetailsMapping, maximum
           </div>
 
           <div className={styles.allowcationWrap}>
-            <span className={styles.allowcationTitle}>{navHeader[0]?.minTier?.display} Tier Buy Time: </span>
+            <span className={styles.allowcationTitle}>{navHeader[0]?.minTier?.display} Rank Buy Time: </span>
             <span className={styles.allocationContent}>
               {numberWithCommas(new BigNumber(maximumBuy).toFixed())} {poolDetails?.title}
             </span>

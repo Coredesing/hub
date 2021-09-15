@@ -52,7 +52,7 @@ function HowToParticipant(props: any) {
                 </li>
                 <li className={`${styles.itemHowTo} ${enoughtMinTier && styles.activeItemHowTo}`}>
                   <div className={`${styles.checkmark} ${enoughtMinTier && styles.activeCheckmark}`}></div>
-                  Achieve Min Tier of pool
+                  Achieve Min Rank of pool
                 </li>
                 <li className={`${styles.itemHowTo} ${appliedWhiteList && styles.activeItemHowTo}`}>
                   <div className={`${styles.checkmark} ${appliedWhiteList && styles.activeCheckmark}`}></div>

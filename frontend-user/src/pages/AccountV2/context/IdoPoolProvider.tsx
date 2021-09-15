@@ -8,22 +8,32 @@ import { fillClaimInfo } from '../../../utils/claim';
 import { getAppNetWork } from '../../../utils/network';
 
 const IdoPoolProvider = (props: any) => {
-    const [filter, setFilter] = useState<ObjType>({currentTimeGetPool: Date.now()});
+    const [filter, setFilter] = useState<ObjType>({ currentTimeGetPool: Date.now() });
     const [data, setData] = useState<DataType>([]);
-    const [pagination, setPagination] = useState<Pick<PaginationResult, 'total' | 'perPage' | 'page' | 'lastPage'>>({ 
+    const defaultPagination = {
         total: 0,
         perPage: 10,
         page: 1,
-        lastPage: 1,});
+        lastPage: 1,
+        totalPage: 0,
+    }
+    const [pagination, setPagination] = useState<Pick<PaginationResult, 'total' | 'perPage' | 'page' | 'lastPage'> & {totalPage?: number}>(defaultPagination);
     const [loadingPools, setLoadingPools] = useState(false);
     const { connectedAccount, wrongChain } = useAuth();
     const { data: connector } = useSelector((state: any) => state.connector);
     const { data: appChain } = useSelector((state: any) => state.appNetwork);
     const appChainID = appChain.appChainID;
     const appNetwork = getAppNetWork(appChainID);
+
     useEffect(() => {
-        loadingPools && axios.get(
-            `/pools/user/${connectedAccount}/joined-pools?page=${filter.page || 1}&limit=10&title=${filter.search || ''}&type=${filter.type || ''}&status=${filter.status || ''}&current_time=${filter.currentTimeGetPool || ''}`
+        if (!connectedAccount) {
+            setData([]);
+            setPagination(defaultPagination)
+        }
+    }, [connectedAccount]);
+    useEffect(() => {
+        loadingPools && connectedAccount && axios.get(
+            `/pools/user/${connectedAccount}/joined-pools?page=${filter.page || 1}&limit=${pagination.perPage}&title=${filter.search || ''}&type=${filter.type ?? ''}&status=${filter.status || ''}&current_time=${filter.currentTimeGetPool || ''}`
         ).then(async (res) => {
             const result = res.data;
             const pools = result.data?.data || [];
@@ -37,10 +47,11 @@ const IdoPoolProvider = (props: any) => {
             });
             setData(listData);
             setPagination({
-                page: result.page,
-                lastPage: result.lastPage,
-                perPage: result.perPage,
-                total: +result.total,
+                page: result.data?.page,
+                lastPage: result.data?.lastPage,
+                perPage: result.data?.perPage,
+                total: +result.data?.total,
+                totalPage: Math.ceil((+result.data?.total || 0) / pagination.perPage)
             })
             setLoadingPools(false);
         }).catch(() => {

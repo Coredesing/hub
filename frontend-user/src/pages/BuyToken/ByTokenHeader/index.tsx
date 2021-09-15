@@ -113,7 +113,7 @@ const HeaderByToken: FC<Props> = ({ poolDetailsMapping, poolDetails }) => {
               alt=""
             />
             {navHeader[0]?.minTier?.display}
-            &nbsp;at Min Tier
+            &nbsp;at Min Rank
           </li>
 
           <li className={styles.item}>
@@ -155,7 +155,7 @@ const HeaderByToken: FC<Props> = ({ poolDetailsMapping, poolDetails }) => {
               alt=""
             />
             {navHeader[0]?.minTier?.display}
-            &nbsp;at Min Tier
+            &nbsp;at Min Rank
           </li>
         </Hidden>
 

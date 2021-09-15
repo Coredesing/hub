@@ -164,11 +164,11 @@ const AccountV2 = (props: any) => {
         }
 
         {/* appChainID > KOVAN ID => Not Ethereum mainnet/testnet */}
-        {(+appChainID?.appChainID > ChainId.KOVAN) && isKYC && activeMenuAccount === 'My Tier' && (
+        {/* {(+appChainID?.appChainID > ChainId.KOVAN) && isKYC && activeMenuAccount === 'My Tier' && (
           <WrapperAlert type='error'>
             <span>Please switch to the ETH network to Stake/Unstake</span>
           </WrapperAlert>
-        )}
+        )} */}
 
 
         {updatedSuccess &&

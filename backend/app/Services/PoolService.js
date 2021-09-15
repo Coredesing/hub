@@ -595,41 +595,6 @@ class PoolService {
 
     return pools;
   }
-
-  async updateTopBidInformation(pool) {
-    try {
-      if (pool.process !== Const.PROCESS.ONLY_STAKE) {
-        return
-      }
-
-      const data = await HelperUtils.getTopStakingContest(pool);
-      if (!data) {
-        return
-      }
-
-      await RedisUtils.setRedisTopBid(pool.id, data);
-    } catch (e) {
-      console.log('[PoolService::updateTopBidInformation] - ERROR: ', e);
-    }
-  }
-
-  async runUpdateTopBid() {
-    const pools = await this.filterActiveTopBidPool();
-    const limit = pLimit(10);
-    await Promise.all(
-      pools.map(async pool => {
-        return limit(async () => {
-          this.updateTopBidInformation(pool);
-        })
-      })
-    ).then((res) => {
-      console.log('[runUpdateTopBid] - Finish');
-    }).catch((e) => {
-      console.log('[runUpdateTopBid] - ERROR: ', e);
-    });
-
-    return pools;
-  }
 }
 
 module.exports = PoolService;

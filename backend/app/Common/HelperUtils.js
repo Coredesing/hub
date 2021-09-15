@@ -20,7 +20,6 @@ const { abi: STAKING_POOL_CONTRACT_ABI } = STAKING_CONTRACT_CONFIGS.CONTRACT_DAT
 const ERC721_ABI = require('../../blockchain_configs/contracts/Erc721');
 const { abi: CONTRACT_ABI } = CONTRACT_CONFIGS.CONTRACT_DATA;
 const { abi: CONTRACT_CLAIM_ABI } = CONTRACT_CONFIGS.CONTRACT_CLAIMABLE;
-const { abi: STAKING_CONTEST_CONTRACT_ABI } = NETWORK_CONFIGS.contracts[Const.CONTRACTS.STAKING_CONTEST].CONTRACT_DATA;
 
 const GAFI_SMART_CONTRACT_ADDRESS = process.env.GAFI_SMART_CONTRACT_ADDRESS
 const UNI_LP_GAFI_SMART_CONTRACT_ADDRESS = process.env.UNI_LP_GAFI_SMART_CONTRACT_ADDRESS
@@ -88,9 +87,7 @@ const networkToWeb3 = {
 // Tier Smart contract
 const { abi: CONTRACT_TIER_ABI } = require('../../blockchain_configs/contracts/Normal/Tier.json');
 const TIER_SMART_CONTRACT = process.env.TIER_SMART_CONTRACT;
-const { abi: CONTRACT_STAKE_ABI } = require('../../blockchain_configs/contracts/Normal/MantraStake.json');
 const { abi: CONTRACT_ERC20_ABI } = require('../../blockchain_configs/contracts/Normal/Erc20.json');
-const MANTRA_DAO_STAKE_SMART_CONTRACT = process.env.MATRA_DAO_STAKE_SMART_CONTRACT;
 const ETH_SMART_CONTRACT_USDT_ADDRESS = process.env.ETH_SMART_CONTRACT_USDT_ADDRESS;
 const ETH_SMART_CONTRACT_USDC_ADDRESS = process.env.ETH_SMART_CONTRACT_USDC_ADDRESS;
 const BSC_SMART_CONTRACT_USDT_ADDRESS = process.env.BSC_SMART_CONTRACT_USDT_ADDRESS;
@@ -129,7 +126,7 @@ const randomString = async (length = 40) => {
 const doMask = (obj, fields) => {
   for (const prop in obj) {
     if (!obj.hasOwnProperty(prop)) continue;
-    if (fields.indexOf(prop) != -1) {
+    if (fields.indexOf(prop) !== -1) {
       obj[prop] = this.maskEmail(obj[prop]);
     } else if (typeof obj[prop] === 'object') {
       this.doMask(obj[prop], fields);
@@ -138,7 +135,6 @@ const doMask = (obj, fields) => {
 };
 
 const maskEmail = async (email) => {
-  console.log(`Email before mask is ${email}`);
   const preEmailLength = email.split("@")[0].length;
   // get number of word to hide, half of preEmail
   const hideLength = ~~(preEmailLength / 2);
@@ -147,32 +143,20 @@ const maskEmail = async (email) => {
   const r = new RegExp(".{" + hideLength + "}@", "g")
   // replace hide with ***
   email = email.replace(r, "***@");
-  console.log(`Email after mask is ${email}`);
   return email;
 };
 
 const maskWalletAddress = async (wallet) => {
-  console.log(`Wallet before mask is ${wallet}`);
   const preWalletLength = wallet.length;
-  console.log('preWalletLength', preWalletLength);
 
   // get number of word to hide, 1/3 of preWallet
   const hideLength = Math.floor(preWalletLength / 3);
-  console.log('hideLength', hideLength);
 
   // replace hide with ***
   let r = wallet.substr(hideLength, hideLength);
   wallet = wallet.replace(r, "*************");
 
-  console.log(`Wallet after mask is ${wallet}`);
   return wallet;
-};
-
-const checkRole = (params, extraData) => {
-  return {
-    ...params,
-    role: params.type === Const.USER_TYPE_PREFIX.ICO_OWNER ? Const.USER_ROLE.ICO_OWNER : Const.USER_ROLE.PUBLIC_USER,
-  }
 };
 
 const responseErrorInternal = (message) => {
@@ -225,20 +209,6 @@ const paginationArray = (array, page_number, page_size) => {
   };
 };
 
-/**
- * Smart Contract Utils
- */
-const getTierSmartContractInstance = () => {
-  const tierSc = new web3.eth.Contract(CONTRACT_TIER_ABI, TIER_SMART_CONTRACT);
-  return tierSc;
-};
-const getEPkfBonusBalance = (wallet_address) => {
-  return axios.get(EPKF_BONUS_LINK.replace('WALLET_ADDRESS', wallet_address))
-    .catch(e => {
-      return {};
-    })
-}
-
 const getTiers = () => {
   let tiers = []
   try {
@@ -273,7 +243,7 @@ const getRateSetting = async () => {
 }
 
 const getStakingPoolInstance = async () => {
-  const pool = process.env.STAKING_POOL_SMART_CONTRACT
+  const pool = STAKING_POOL_SMART_CONTRACT
   if (!pool) {
     return null
   }
@@ -385,13 +355,6 @@ const getUserTierSmart = async (wallet_address) => {
   }
 };
 
-const getUserTotalStakeSmartContract = async (wallet_address) => {
-  const tierSc = getTierSmartContractInstance();
-  const totalStaked = await tierSc.methods.userTotalStaked(wallet_address).call();
-  console.log('[getUserTotalStakeSmartContract] - totalStaked', totalStaked);
-  return totalStaked;
-};
-
 const getContractInstanceDev = async (camp) => {
   const web3Dev = new Web3(getWeb3ProviderLink());
   const web3BscDev = new Web3(getWeb3BscProviderLink());
@@ -402,12 +365,7 @@ const getContractInstanceDev = async (camp) => {
     [Const.NETWORK_AVAILABLE.POLYGON]: web3PolygonDev
   }
 
-  let abi = CONTRACT_ABI
-  if (camp.process === Const.PROCESS.ONLY_STAKE) {
-    abi = STAKING_CONTEST_CONTRACT_ABI
-  }
-
-  return new networkToWeb3Dev[camp.network_available].eth.Contract(abi, camp.campaign_hash);
+  return new networkToWeb3Dev[camp.network_available].eth.Contract(CONTRACT_ABI, camp.campaign_hash);
 };
 
 const getContractInstance = async (camp) => {
@@ -415,12 +373,7 @@ const getContractInstance = async (camp) => {
     return getContractInstanceDev(camp);
   }
 
-  let abi = CONTRACT_ABI
-  if (camp.process === Const.PROCESS.ONLY_STAKE) {
-    abi = STAKING_CONTEST_CONTRACT_ABI
-  }
-
-  return new networkToWeb3[camp.network_available].eth.Contract(abi, camp.campaign_hash);
+  return new networkToWeb3[camp.network_available].eth.Contract(CONTRACT_ABI, camp.campaign_hash);
 }
 
 const getERC721TokenContractInstanceDev = async (camp) => {
@@ -537,32 +490,12 @@ const getTokenSoldSmartContract = async (pool) => {
   }
 };
 
-const getEventSmartContract = async ({ contract, eventName, filter = {} }) => {
-  const events = await contract.getPastEvents(eventName, {
-    filter,
-    fromBlock: 0,
-    toBlock: 'latest'
-  })
-  return events
-}
-
-const getBlockInfo = async (blockHashOrNumber) => {
-  return web3.eth.getBlock(blockHashOrNumber)
-}
-
 /**
  * Functions: Calculate Pool Progress
  */
 const checkPoolIsFinish = (pool) => {
   const currentTime = moment().unix();
   return (pool.finish_time && currentTime > pool.finish_time);
-};
-
-const calculateTokenSoldWhenFinish = (totalSoldCoin) => {
-  const result = new BigNumber(totalSoldCoin).minus(
-    new BigNumber(totalSoldCoin).div(10000)
-  ).toFixed();
-  return result;
 };
 
 const getProgressWithPools = (pool) => {
@@ -628,8 +561,7 @@ const getProgressWithPools = (pool) => {
  */
 const getLastClaimConfig = (poolDetails) => {
   if (poolDetails.campaignClaimConfig && poolDetails.campaignClaimConfig.length > 0) {
-    const lastClaim = poolDetails.campaignClaimConfig[poolDetails.campaignClaimConfig.length - 1];
-    return lastClaim;
+    return poolDetails.campaignClaimConfig[poolDetails.campaignClaimConfig.length - 1];
   }
   return null;
 };
@@ -637,24 +569,23 @@ const getLastClaimConfig = (poolDetails) => {
 const getLastClaimConfigTime = (poolDetails) => {
   const lastClaim = getLastClaimConfig(poolDetails);
   if (lastClaim) {
-    const startClaim = new BigNumber(lastClaim.start_time).plus(7 * 24 * 3600).toFixed(); // +1week
-    return startClaim;
+     // +1week
+    return new BigNumber(lastClaim.start_time).plus(7 * 24 * 3600).toFixed();
   }
   return null;
 };
 
 const getLastActualFinishTime = (poolDetails) => {
   if (poolDetails.finish_time) {
-    const actualFinishTime = new BigNumber(poolDetails.finish_time).plus(12 * 3600).toFixed(); // +12h
-    return actualFinishTime;
+     // +12h
+    return new BigNumber(poolDetails.finish_time).plus(12 * 3600).toFixed();
   }
   return null;
 };
 
 const getFirstClaimConfig = (poolDetails) => {
   if (poolDetails && poolDetails.campaignClaimConfig && poolDetails.campaignClaimConfig.length > 0) {
-    const firstClaim = poolDetails.campaignClaimConfig[0];
-    return firstClaim;
+    return poolDetails.campaignClaimConfig[0];
   }
   return null;
 };
@@ -673,7 +604,6 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
   const lastClaimConfigTime = () => {
     return getLastClaimConfigTime(poolDetails);
   };
-
 
   const startBuyTimeField = () => {
     return poolDetails.start_time;
@@ -806,27 +736,6 @@ const getDecimalsByTokenAddress = async ({ network = Const.NETWORK_AVAILABLE.ETH
   }
 }
 
-const getTopStakingContest = async (pool) => {
-  if (!pool || !pool.campaign_hash || pool.process !== Const.PROCESS.ONLY_STAKE) {
-    return null;
-  }
-  const poolContract = await getContractInstance(pool);
-
-  try {
-    const data = await poolContract.methods.getTops().call()
-    let result = []
-    for (let index = 0; index < data[0].length; index++) {
-      result.push({wallet_address: data[0][index], amount: data[1][index], last_time: data[2][index]})
-    }
-
-    return result
-  }
-  catch (e) {
-    console.log('getTopStakingContest error', e)
-    return null
-  }
-};
-
 const getStakingProvider = async () => {
   return networkToWeb3[Const.NETWORK_AVAILABLE.BSC]
 }
@@ -842,8 +751,6 @@ module.exports = {
   responseBadRequest,
   checkSumAddress,
   paginationArray,
-  getTierSmartContractInstance,
-  getUserTotalStakeSmartContract,
   getERC721TokenContractInstance,
   getUserTierSmart,
   getContractInstance,
@@ -851,8 +758,6 @@ module.exports = {
   getStakingPoolInstance,
   getOfferCurrencyInfo,
   getTokenSoldSmartContract,
-  getEventSmartContract,
-  getBlockInfo,
   getPoolStatusByPoolDetail,
   getProgressWithPools,
   checkPoolIsFinish,
@@ -864,8 +769,6 @@ module.exports = {
   getLastActualFinishTime,
   getFirstClaimConfig,
   getDecimalsByTokenAddress,
-  getEPkfBonusBalance,
-  getTopStakingContest,
   getTiers,
   getStakingProvider,
 };

@@ -94,8 +94,8 @@ Route.group(() => {
   Route.get('get-rate-setting', 'RateSettingController.getRateSetting');
 
   // reputation
-  Route.get('reputation/points/:walletAddress', 'ReputationController.getReputationPoint');
-  Route.get('reputation/histories/:walletAddress', 'ReputationController.getReputationHistory');
+  // Route.get('reputation/points/:walletAddress', 'ReputationController.getReputationPoint');
+  // Route.get('reputation/histories/:walletAddress', 'ReputationController.getReputationHistory');
 
   // Staking pool
   Route.get('staking-pool', 'StakingPoolController.getPublicPoolList');

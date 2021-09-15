@@ -268,6 +268,7 @@ const useStyles = makeStyles((theme: any) => {
       },
     },
     partners: {
+      background: '#171717',
       paddingTop: "120px",
       paddingBottom: "130px",
       [theme.breakpoints.down("xs")]: {

@@ -1,6 +1,7 @@
 'use strict'
 const StakingPoolModel = use('App/Models/StakingPool');
 const HelperUtils = use('App/Common/HelperUtils');
+const RedisUtils = use('App/Common/RedisUtils')
 const Const = use('App/Common/Const');
 const Web3 = require('web3');
 
@@ -158,30 +159,17 @@ class StakingPoolController {
 
   async getTopUserStaked({ request }) {
     try {
-      // TODO: dev
-      let data = {
-        limit: 10,
-        top: [
-          {"wallet_address":"0x4731507D5aa4C9377567cb709E5A0487EcE3beC3","amount":"175000000","last_time":"1631196295"},
-          {"wallet_address":"0x0c3dB0597Cc93e71696f7f52AdcB491eB546C4c6","amount":"174150002","last_time":"1631196207"},
-          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD0488d1","amount":"122000001","last_time":"1631201593"},
-          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD0488d2","amount":"122000001","last_time":"1631201593"},
-          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD0488d3","amount":"122000001","last_time":"1631201593"},
-          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD0488d4","amount":"122000001","last_time":"1631201593"},
-          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD0488d5","amount":"122000001","last_time":"1631201593"},
-          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD0488d6","amount":"122000001","last_time":"1631201593"},
-          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD0488d7","amount":"122000001","last_time":"1631201593"},
-          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD048816","amount":"122000001","last_time":"1631201593"},
-          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD048810","amount":"122000001","last_time":"1631201593"},
-          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD048811","amount":"122000001","last_time":"1631201593"},
-          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD048812","amount":"122000001","last_time":"1631201593"},
-          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD048813","amount":"122000001","last_time":"1631201593"},
-          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD048814","amount":"122000001","last_time":"1631201593"},
-          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD048815","amount":"122000001","last_time":"1631201593"},
-          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD048817","amount":"122000001","last_time":"1631201593"},
-          {"wallet_address":"0x2EE206A3872b17f91071A003dA20c345bD048818","amount":"122000001","last_time":"1631201593"}
-        ]
+      if (!await RedisUtils.checkExistTopUsersStaking()) {
+        return HelperUtils.responseSuccess({
+          start_time: process.env.EVENT_START_TIME,
+          end_time: process.env.EVENT_END_TIME,
+          limit: 10,
+          top: []
+        });
       }
+
+      let data = await RedisUtils.getRedisTopUsersStaking()
+      data = JSON.parse(data)
 
       return HelperUtils.responseSuccess(data);
     } catch (e) {

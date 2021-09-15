@@ -404,6 +404,7 @@ contract LinearPool is
         // get delayDuration
         uint128 delayDuration = linearDurationOf(_poolId, account);
         stakingData.balance -= _amount;
+        emit LinearPendingWithdraw(_poolId, account, _amount);
 
         if (delayDuration == 0) {
             linearAcceptedToken.safeTransfer(account, _amount);

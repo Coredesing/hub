@@ -52,7 +52,8 @@ module.exports = Object.freeze({
     SEND_CONFIRMATION_EMAIL: 'SendConfirmationEmailJob-job',
     SEND_ADMIN_INFO_EMAIL: 'SendAdminInfoEmailJob-job',
     GET_USER_PURCHASED_BALANCE: 'GetUserPurchasedBalanceJob-job',
-    PICKUP_RANDOM_WINNER: 'PickupRandomWinner-job'
+    PICKUP_RANDOM_WINNER: 'PickupRandomWinner-job',
+    CACHING_REPUTATION: 'CachingReputation-job',
   },
   ACTIVE: 0,
   SUSPEND: 1,
@@ -197,5 +198,6 @@ module.exports = Object.freeze({
   TOKEN_TYPE: {
     ERC20: 'erc20',
     ERC721: 'erc721',
-  }
+  },
+  TIER_CACHED_TTL: 10 * 60 * 1000, // 10 minutes
 });

@@ -29,14 +29,20 @@ const useStyles = makeStyles((theme: any) => {
       '& .pool--sumary': {
         display: 'flex',
         // alignItems: 'center',
+        [theme.breakpoints.down('sm')]: {
+          display: 'grid',
+          gap: '10px',
+          placeContent: 'center',
+          placeItems: 'center',
+        },
       },
       '& .pool--sumary-block': {
         marginLeft: '10px',
         marginRight: '10px',
         '&:nth-child(2)': {
-          width: '80px',
+          // width: '80px',
           [theme.breakpoints.up('md')]: {
-            width: '180px'
+            // width: '180px'
           },
         },
       },
@@ -208,11 +214,11 @@ const useStyles = makeStyles((theme: any) => {
     currentProgress: {
       position: 'relative',
       height: 4,
-      background: '#D01F36',
+      background: '#72F34B',
       borderRadius: 20,
       display: 'block',
       transition: '2s',
-      boxShadow: '0px 4px 8px rgba(208, 31, 54, 0.4)',
+      // boxShadow: '0px 4px 8px rgba(208, 31, 54, 0.4)',
 
       '&.inactive': {
         width: '0 !important',
@@ -257,7 +263,11 @@ const useStyles = makeStyles((theme: any) => {
     },
     delayTierBoxs: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, 110px)',
+      gap: '10px',
+      gridTemplateColumns: 'repeat(auto-fit, 100px)',
+      [theme.breakpoints.down('xs')]: {
+        gridTemplateColumns: '1fr',
+      },
     },
     delayTierBox: {
       fontFamily: 'Firs Neue',
@@ -280,6 +290,17 @@ const useStyles = makeStyles((theme: any) => {
         fontSize: '16px',
         textAlign: 'center',
       }
+    },
+    accordionSummary: {
+      display: 'unset',
+    },
+    accordionSummaryContent: {
+      width: '100%',
+      display: 'grid',
+      gridTemplateColumns: 'calc(100% - 50px) 50px',
+      [theme.breakpoints.down('xs')]: {
+        gridTemplateColumns: '1fr',
+      },
     }
   }
 });

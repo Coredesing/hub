@@ -30,6 +30,10 @@ export const useStyles = makeStyles((theme: any) => ({
                 paddingTop: "6px",
                 paddingBottom: "6px",
 
+                [theme.breakpoints.down('xs')]: {
+                    width: "40px",
+                },
+
                 "& .number, & .text": {
                     fontStyle: "normal",
                     mixBlendMode: "normal",
@@ -41,6 +45,10 @@ export const useStyles = makeStyles((theme: any) => ({
                     fontSize: "24px",
                     lineHeight: "36px",
                     fontFamily: "Firs Neue",
+                    [theme.breakpoints.down('xs')]: {
+                        fontSize: "16px",
+                        lineHeight: "28px",
+                    },
                 },
                 "& .text": {
                     color: "#D1D1D1",

@@ -25,7 +25,7 @@ import ModalStake from "./ModalStake";
 import { ChainDefault, ETH_CHAIN_ID } from '../../constants/network'
 import { getBalance } from "../../store/actions/balance";
 
-import useFetch from '../../hooks/useFetch';
+import useFetch, { useFetchV1 } from '../../hooks/useFetch';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import DialogTxSubmitted from '../../components/Base/DialogTxSubmitted';
 import { WrapperAlert } from '../../components/Base/WrapperAlert';
@@ -82,12 +82,13 @@ const StakingPools = (props: any) => {
   const [openModalTransactionSubmitting, setOpenModalTransactionSubmitting] = useState(false)
   const [transactionHashes, setTransactionHashes] = useState([]) as any;
   const { data: poolsList, loading: loadingGetPool } = useFetch<any>(`/staking-pool`);
-  const { data: listTopStaked, loading: loadingTopStaked } = useFetch<any>(`/staking-pool/top-staked`);
+  const [resetTopStaking, setResetTopStaking] = useState(true);
+  const { data: listTopStaked, loading: loadingTopStaked } = useFetchV1<any>(`/staking-pool/top-staked`, resetTopStaking);
   const { allocPools, linearPools, fetchDetailList, loading: loadingDetailList } = useDetailListStakingPool(poolsList)
   const [filteredAllocPools, setFilteredAllocPools] = useState([]) as any;
   const [filteredLinearPools, setFilteredLinearPools] = useState([]) as any;
   const { data: tiers } = useSelector((state: any) => state.tiers);
-  
+
   useEffect(() => {
     if (_.isEmpty(tiers)) {
       dispatch(getTiers());
@@ -135,12 +136,35 @@ const StakingPools = (props: any) => {
     setFilteredLinearPools(listLinear);
   }, [linearPools, allocPools, durationType, benefitType, stakedOnly, searchString])
 
+  const [recallTopStaking, resRecallTopStaking] = useState({ isCall: false, inSeconds: 0 });
+
+
   const reloadData = useCallback(async () => {
     if (connectedAccount) {
       dispatch(getBalance(connectedAccount));
     }
+    resRecallTopStaking({ isCall: true, inSeconds: 30 });
     fetchDetailList && fetchDetailList();
-  }, [connectedAccount, fetchDetailList, dispatch])
+  }, [connectedAccount, fetchDetailList, dispatch]);
+
+  useEffect(() => {
+    if (recallTopStaking.isCall) {
+      let count = 0;
+      const timer = setTimeout(() => {
+        resRecallTopStaking(d => ({...d, inSeconds: d.inSeconds - 1}));
+        if (count === recallTopStaking.inSeconds) {
+          setResetTopStaking(true);
+          clearInterval(timer);
+          resRecallTopStaking({ isCall: false, inSeconds: 0 });
+          return;
+        }
+        count++;
+      }, 1000);
+      return () => {
+        clearTimeout(timer);
+      }
+    }
+  }, [recallTopStaking])
 
 
   useEffect(() => {
@@ -161,6 +185,12 @@ const StakingPools = (props: any) => {
     const value = event.target?.value;
     setSearchWallet(value);
   }, 1000);
+
+  useEffect(() => {
+    if (listTopStaked?.top) {
+      setResetTopStaking(false);
+    }
+  }, [listTopStaked])
 
   useEffect(() => {
     let arr = (listTopStaked?.top || []).map((t: any, idx: number) => ({ ...t, idx }));
@@ -198,7 +228,7 @@ const StakingPools = (props: any) => {
           {
             loadingDetailList &&
             <div className={styles.loader} style={{ marginTop: 70 }}>
-              <HashLoader loading={true} color={'#3232DC'} />
+              <HashLoader loading={true} color={'#72F34B'} />
             </div>
           }
 
@@ -243,6 +273,7 @@ const StakingPools = (props: any) => {
                 {
                   filteredLinearPools.map((pool: any) => (
                     <LinearPool
+                      expandedDetail={filteredLinearPools[0].pool_id === pool.pool_id}
                       key={pool?.id}
                       reload={reloadData}
                       setTransactionHashes={setTransactionHashes}
@@ -256,45 +287,51 @@ const StakingPools = (props: any) => {
                 }
                 {listTopStaked && !listTopStaked?.disable &&
                   <Box marginTop="30px" className={styles.boxRank}>
-                    <Box className={styles.boxListRank}>
-                      <Typography variant="h5" component="h5" className="text-uppercase">
-                        Gamefi stake event
-                      </Typography>
-                      <Box className={styles.endInText}>
-                        {
-                          listTopStaked?.start_time * 1000 > Date.now() ? 'Open in'
-                            : listTopStaked?.end_time * 1000 > Date.now() ? 'End in' : 'Finished'
-                        }
+                    <Box className={styles.boxRankHeader}>
+                      <Box className={styles.boxListRank}>
+                        <Typography variant="h5" component="h5" className="text-uppercase">
+                          Gamefi stake event
+                        </Typography>
+                        <Box className={styles.list}>
+                          <Typography variant="h5" component="h5" className="item">
+                            1. TOP 10 RANKING will be given 1 NFT Master
+                          </Typography>
+                          <Typography variant="h5" component="h5" className="item">
+                            2. RANKING is a list of people who stake higher than {tiers?.slice && tiers?.slice(-1)?.[0]} GAFI
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box className={styles.boxListRank} marginBottom="20px">
+                        <Box className={styles.endInText}>
+                          {
+                            listTopStaked?.start_time * 1000 > Date.now() ? 'Open in'
+                              : listTopStaked?.end_time * 1000 > Date.now() ? 'End in' : 'Finished'
+                          }
+                        </Box>
+                        <Box>
+                          <CountDownTimeV1 time={
+                            listTopStaked?.start_time * 1000 > Date.now() ?
+                              {
+                                date1: listTopStaked?.start_time * 1000,
+                                date2: Date.now()
+                              } :
+                              listTopStaked?.end_time * 1000 > Date.now() ? {
+                                date1: listTopStaked?.end_time * 1000,
+                                date2: Date.now()
+                              } : {
+                                days: 0, hours: 0, minutes: 0, seconds: 0
+                              }
+                          }
+                            onFinish={() => console.log('finished')} />
+                        </Box>
                       </Box>
                     </Box>
-                    <Box className={styles.boxListRank} marginBottom="20px">
-                      <Box className={styles.list}>
-                        <Typography variant="h5" component="h5" className="item">
-                          1. TOP 10 RANKING will be given 1 NFT Master
-                        </Typography>
-                        <Typography variant="h5" component="h5" className="item">
-                          2. RANKING is a list of people who stake higher than {tiers?.slice && tiers?.slice(-1)?.[0]} GAFI
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <CountDownTimeV1 time={
-                          listTopStaked?.start_time * 1000 > Date.now() ?
-                            {
-                              date1: listTopStaked?.start_time * 1000,
-                              date2: Date.now()
-                            } :
-                            listTopStaked?.end_time * 1000 > Date.now() ? {
-                              date1: listTopStaked?.end_time * 1000,
-                              date2: Date.now()
-                            } : {
-                              days: 0, hours: 0, minutes: 0, seconds: 0
-                            }
-                        }
-                          onFinish={() => console.log('finished')} />
-                      </Box>
-                    </Box>
-                    <Typography variant="h5" component="h5" className="text-uppercase">
-                      Ranking
+
+                    <Typography variant="h5" component="h5" className="text-uppercase" style={{ marginBottom: '10px' }}>
+                      Ranking&nbsp;
+                      {
+                        recallTopStaking.isCall && <span style={{ fontFamily: 'Firs Neue', fontSize: '12px', fontWeight: 'normal', textTransform: 'none' }}>(The top will be update in {recallTopStaking.inSeconds} seconds)</span>
+                      }
                     </Typography>
                     <Box marginBottom="10px" width="50%">
                       <SearchBox onChange={onSearchWallet} placeholder="Search first or last 14 digits of your wallet" />

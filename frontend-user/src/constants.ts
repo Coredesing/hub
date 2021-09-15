@@ -116,34 +116,36 @@ export const CONVERSION_RATE = [
   // },
 ]
 
+const tiers = ['Start',  'Rookie', 'Elite', 'Pro', 'Legend']
+
 export const TIERS = [
   {
-    name: 'Start',
+    name: tiers[0],
     icon: '/images/tiers/starster.png',
     // icon: '/images/icons/rocket.svg',
     bg: '/images/icons/red-kite-bg.png',
     bgColor: '#B8B8FF',
   },
   {
-    name: 'Rookie',
+    name: tiers[1],
     bg: '/images/icons/hawk-bg.png',
     bgColor: '#8181D8',
     icon: '/images/tiers/rookie.png'
   },
   {
-    name: 'Elite',
+    name: tiers[2],
     bg: '/images/icons/falcon-bg.png',
     bgColor: '#6F44E9',
     icon: '/images/tiers/elite.png'
   },
   {
-    name: 'Pro',
+    name: tiers[3],
     bg: '/images/icons/eagle-bg.png',
     bgColor: '#4646FF',
     icon: '/images/tiers/pro.png'
   },
   {
-    name: 'Master',
+    name: tiers[4],
     bg: '/images/icons/phoenix-bg.png',
     bgColor: '',
     icon: '/images/tiers/master.png'
@@ -152,18 +154,18 @@ export const TIERS = [
 
 export const TIER_LEVELS = {
   NONE: 0,
-  ROOKIE: 1,
-  ELITE: 2,
-  PRO: 3,
-  MASTER: 4,
+  [tiers[1].toUpperCase()]: 1,
+  [tiers[2].toUpperCase()]: 2,
+  [tiers[3].toUpperCase()]: 3,
+  [tiers[4].toUpperCase()]: 4,
 };
 
 export const TIER_NAMES = {
   0: '--',
-  1: 'Rookie',
-  2: 'Elite',
-  3: 'Pro',
-  4: 'Master',
+  1: tiers[1],
+  2: tiers[2],
+  3: tiers[3],
+  4: tiers[4],
 };
 
 export const KYC_STATUS = {

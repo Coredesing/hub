@@ -1,4 +1,5 @@
-import { ButtonGroup, Button, Switch, FormControlLabel} from '@material-ui/core';
+import { SearchBox } from '@base-components/SearchBox';
+import { ButtonGroup, Button, Switch, FormControlLabel } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import useCommonStyle from '../../../styles/CommonStyle';
 import { useSwitchStyle, useButtonGroupStyle } from './style';
@@ -17,7 +18,7 @@ export const BENEFIT_REWARD_ONLY = 'reward-only';
 
 
 const StakingHeader = (props: any) => {
-  const {durationType, setDurationType, poolType, setPoolType, stakedOnly, setStakedOnly, benefitType, setBenefitType, searchString, setSearchString } = props;
+  const { durationType, setDurationType, poolType, setPoolType, stakedOnly, setStakedOnly, benefitType, setBenefitType, searchString, setSearchString } = props;
   // const styles = useStyles();
   const commonStyles = useCommonStyle();
   const switchStyle = useSwitchStyle();
@@ -35,7 +36,7 @@ const StakingHeader = (props: any) => {
     }
   }, [])
 
-  const selectBenefitType = (type: string) =>{
+  const selectBenefitType = (type: string) => {
     setBenefitType(type)
     props.history.push('/staking-pools?benefit=' + type)
   }
@@ -43,22 +44,22 @@ const StakingHeader = (props: any) => {
 
   return (
     <div className="controller-area">
-      <div style={{display: 'flex'}}>
+      <div style={{ display: 'flex' }}>
         <ButtonGroup color="primary" className={btnGroupStyle.group} aria-label="outlined primary button group">
-          <Button 
+          <Button
             className={durationType === DURATION_LIVE ? btnGroupStyle.btnActive : btnGroupStyle.btnDisabled}
-            onClick={()=> { setDurationType(DURATION_LIVE) }}
+            onClick={() => { setDurationType(DURATION_LIVE) }}
           >
             Live
           </Button>
-          <Button 
+          <Button
             className={durationType === DURATION_FINISHED ? btnGroupStyle.btnActive : btnGroupStyle.btnDisabled}
-            onClick={()=> { setDurationType(DURATION_FINISHED) }}
+            onClick={() => { setDurationType(DURATION_FINISHED) }}
           >
             Finished
           </Button>
         </ButtonGroup>
-        <ButtonGroup color="primary" className={btnGroupStyle.group} aria-label="outlined primary button group">
+        {/* <ButtonGroup color="primary" className={btnGroupStyle.group} aria-label="outlined primary button group">
           <Button 
             className={poolType === POOL_TYPE_ALLOC ? btnGroupStyle.btnActive : btnGroupStyle.btnDisabled}
             onClick={()=> { setPoolType(POOL_TYPE_ALLOC) }}
@@ -71,13 +72,13 @@ const StakingHeader = (props: any) => {
           >
             Linear Rate
           </Button>
-        </ButtonGroup>
+        </ButtonGroup> */}
       </div>
       <FormControlLabel
         control={<Switch
           name="checkedB"
           checked={stakedOnly}
-          onChange={(event)=>{ setStakedOnly(event.target.checked) }}
+          onChange={(event) => { setStakedOnly(event.target.checked) }}
           classes={{
             root: switchStyle.root,
             switchBase: switchStyle.switchBase,
@@ -89,7 +90,7 @@ const StakingHeader = (props: any) => {
         label="My Staking Pools"
       />
       <div className="controller-area__right">
-        <div className="form-control-label">
+        {/* <div className="form-control-label">
           <span>Benefits</span>
           <select name="select_benefit" id="select-benefit" value={benefitType} onChange={(e) => selectBenefitType(e.target.value)}>
             <option value="all">
@@ -102,18 +103,24 @@ const StakingHeader = (props: any) => {
               Without IDO
             </option>
           </select>
-        </div>
+        </div> */}
         <div className="form-control-label">
           <span>Search</span>
           <div className="controller-area__search">
-            <input
+            <SearchBox value={searchString}
+              onChange={(e: any) => setSearchString(e.target.value)}
+              type="text"
+              placeholder="Search pool name"
+              // className={commonStyles.nnn1424h} 
+              />
+            {/* <input
               value={searchString}
               onChange={(e) => setSearchString(e.target.value)}
               type="text"
               placeholder="Search pool name"
               className={commonStyles.nnn1424h}
-            />
-            <img src={iconSearch} alt=""/>
+            /> */}
+            {/* <img src={iconSearch} alt="" /> */}
           </div>
         </div>
       </div>

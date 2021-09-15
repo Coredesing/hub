@@ -20,7 +20,10 @@ const useStyles = makeStyles((theme: any) => {
       paddingTop: 90,
 
       '& .content': {
-        width: '1120px',
+        maxWidth: '1120px',
+        width: '100%',
+        paddingLeft: '10px',
+        paddingRight: '10px',
         [theme.breakpoints.down('xs')]: {
           // padding: '20px 24px',
           width: '90%'
@@ -35,7 +38,7 @@ const useStyles = makeStyles((theme: any) => {
           alignItems: 'flex-start',
         },
         // justifyContent: 'space-between',
-        
+
         marginBottom: '20px',
 
 
@@ -57,7 +60,7 @@ const useStyles = makeStyles((theme: any) => {
           width: '180px',
           maxWidth: '100%',
           height: '42px',
-    
+
           '& input': {
             background: '#222228',
             border: '1px solid #44454B',
@@ -116,7 +119,8 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '& .pool-area': {
-        width: '1120px',
+        maxWidth: '1120px',
+        width: '100%',
         background: '#222228',
         padding: '15px 21px',
         borderRadius: '24px',
@@ -134,8 +138,8 @@ const useStyles = makeStyles((theme: any) => {
         position: 'absolute',
         top: 0,
         left: '50%',
-        width: '1040px',
-        maxWidth: 'calc(100vw - 80px)',
+        maxWidth: '1040px',
+        width: '100%',
         transform: 'translateX(-50%)',
         padding: '12px 0',
         display: 'flex',
@@ -150,7 +154,8 @@ const useStyles = makeStyles((theme: any) => {
 
       // legacy
       '& .modal-content': {
-        width: '1120px',
+        maxWidth: '1120px',
+        width: '100%',
         background: '#38383F',
         borderRadius: '12px',
         padding: '48px 56px',
@@ -218,7 +223,7 @@ const useStyles = makeStyles((theme: any) => {
           },
 
           '&:first-child': {
-            background: '#3232DC'
+            background: '#72F34B'
           },
 
           '&.disabled': {
@@ -355,7 +360,8 @@ const useStyles = makeStyles((theme: any) => {
       position: 'absolute',
       top: 0,
       left: '50%',
-      width: '1120px',
+      maxWidth: '1120px',
+      width: '100%',
       // maxWidth: 'calc(100vw - 80px)',
       transform: 'translateX(-50%)',
       padding: '12px 10px',
@@ -388,22 +394,33 @@ const useStyles = makeStyles((theme: any) => {
       '& h5': {
         fontWeight: 400,
         fontFamily: 'Firs Neue',
-        marginBottom: '10px',
+      }
+    },
+    boxRankHeader: {
+      display: 'grid',
+      gap: '20px',
+      gridTemplateColumns: 'repeat(auto-fit, calc(50% - 10px))',
+      marginBottom: '20px',
+      [theme.breakpoints.down('sm')]: {
+        gridTemplateColumns: '1fr',
       }
     },
     boxListRank: {
       display: 'grid',
-      gap: '20px',
-      gridTemplateColumns: 'repeat(auto-fit, calc(50% - 10px))'
+      gap: '10px',
+      // gridTemplateColumns: 'repeat(auto-fit, calc(50% - 10px))',
+      // [theme.breakpoints.down('sm')]: {
+      //   gridTemplateColumns: '1fr',
+      // }
 
     },
     endInText: {
       display: 'grid',
       alignItems: 'center',
       fontSize: '16px',
-        lineHeight: '24px',
-        fontWeight: 'normal',
-        fontFamily: 'Firs Neue',
+      lineHeight: '24px',
+      fontWeight: 'normal',
+      fontFamily: 'Firs Neue',
     },
     list: {
       '& .item': {
@@ -431,13 +448,13 @@ export const useSwitchStyle = makeStyles((theme) => {
         transform: 'translateX(16px)',
         color: theme.palette.common.white,
         '& + $track': {
-          backgroundColor: '#3232DC',
+          backgroundColor: '#72F34B',
           opacity: 1,
           border: 'none',
         },
       },
       '&$focusVisible $thumb': {
-        color: '#3232DC',
+        color: '#72F34B',
         border: '6px solid #fff',
       },
     },

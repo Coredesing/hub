@@ -20,15 +20,15 @@ export const useSwitchStyle = makeStyles((theme) => {
       padding: 2,
       '&$checked': {
         transform: 'translateX(16px)',
-        color: theme.palette.common.white,
+        color: '#000',
         '& + $track': {
-          backgroundColor: '#3232DC',
+          backgroundColor: '#72F34B',
           opacity: 1,
           border: 'none',
         },
       },
       '&$focusVisible $thumb': {
-        color: '#3232DC',
+        color: '#72F34B',
         border: '6px solid #fff',
       },
     },
@@ -68,8 +68,8 @@ export const useButtonGroupStyle = makeStyles((theme) => {
       }
     },
     btnActive: {
-      background: '#3232DC',
-      color: '#FFFFFF',
+      background: '#72F34B',
+      color: '#000',
       textTransform: 'capitalize',
       fontWeight: 'bold',
       outline: 'none',
@@ -81,7 +81,7 @@ export const useButtonGroupStyle = makeStyles((theme) => {
       borderRadius: '30px',
       '&:hover': {
         textTransform: 'capitalize',
-        background: '#3232DC',
+        background: '#72F34B',
         border: 'none',
         outline: 'none',
       }

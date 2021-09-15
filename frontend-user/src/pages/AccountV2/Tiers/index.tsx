@@ -106,12 +106,12 @@ const Tiers = (props: any) => {
     <div
       className={styles.tierComponent + (!loading ? ' active' : ' inactive') + (showMoreInfomation ? ' bg-none' : '')}
     >
-      <h2 className={styles.tabTitle}> My Tier</h2>
+      <h2 className={styles.tabTitle}> My Rank</h2>
 
 
       <ul className={styles.listInfo}>
         <li className={styles.itemInfo}>
-          <div className={styles.nameItemInfo}>Current Tier</div>
+          <div className={styles.nameItemInfo}>Current Rank</div>
           <div className={styles.valueItemInfo}>
             {
               connectedAccount ?
@@ -128,7 +128,7 @@ const Tiers = (props: any) => {
           </div>
         </li>
         <li className={styles.itemInfo}>
-          <div className={styles.nameItemInfo}>GAFI Left to next tier</div>
+          <div className={styles.nameItemInfo}>GAFI Left to next Rank</div>
           <div className={styles.valueItemInfo}>
             {
               connectedAccount ?
@@ -195,7 +195,7 @@ const Tiers = (props: any) => {
               href={`https://medium.com/polkafoundry/new-tier-policy-updates-for-red-kite-launchpad-2b8a1d0c1fac`}
               >
               <img className={styles.iconBtnHow} src="/images/account_v3/icons/icon_how.svg" alt="" />
-              Learn more about GameFi Tiers
+              Learn more about GameFi Ranks
               <ChevronRightIcon className={styles.iconArrowRight} />
             </Link> */}
           </>

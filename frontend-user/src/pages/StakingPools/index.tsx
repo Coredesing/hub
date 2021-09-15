@@ -297,7 +297,7 @@ const StakingPools = (props: any) => {
                             1. TOP 10 RANKING will be given 1 NFT Legend
                           </Typography>
                           <Typography variant="h5" component="h5" className="item">
-                            2. RANKING is a list of people who stake higher than {tiers?.slice && tiers?.slice(-1)?.[0]} GAFI
+                            2. The results will be updated every minute and will be announced after review
                           </Typography>
                         </Box>
                       </Box>

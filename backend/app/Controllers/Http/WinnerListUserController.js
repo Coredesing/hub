@@ -219,7 +219,7 @@ class WinnerListUserController {
           model.wallet_address = item.wallet_address;
           model.campaign_id = item.campaign_id;
           model.lottery_ticket = 1;
-          model.level = (await HelperUtils.getUserTierSmart(walletAddress))[0];
+          model.level = (await HelperUtils.getUserTierSmartWithCached(walletAddress))[0];
           await model.save();
 
           return model;

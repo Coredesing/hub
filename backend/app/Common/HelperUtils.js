@@ -321,6 +321,17 @@ const getStakingPool = async (wallet_address) => {
   };
 }
 
+const getUserTierSmartWithCached = async (wallet_address) => {
+  if (await RedisUtils.checkExistRedisUserTierBalance(wallet_address)) {
+    return JSON.parse(await RedisUtils.getRedisUserTierBalance(wallet_address));
+  }
+
+  const tierInfo = await getUserTierSmart(wallet_address);
+  RedisUtils.createRedisUserTierBalance(wallet_address, tierInfo);
+
+  return tierInfo
+}
+
 const getUserTierSmart = async (wallet_address) => {
   try {
     // Get cached Rate Setting
@@ -758,6 +769,7 @@ module.exports = {
   checkSumAddress,
   paginationArray,
   getERC721TokenContractInstance,
+  getUserTierSmartWithCached,
   getUserTierSmart,
   getContractInstance,
   getContractClaimInstance,

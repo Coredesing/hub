@@ -251,9 +251,6 @@ const useStyles = makeStyles((theme: any) => {
         color: '#4f79cc',
       }
     },
-    cellActive: {
-      background: '#0A0A0A'
-    }
   }
 });
 

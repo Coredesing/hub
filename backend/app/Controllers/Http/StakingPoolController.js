@@ -159,17 +159,29 @@ class StakingPoolController {
 
   async getTopUserStaked({ request }) {
     try {
+      if (process.env.EVENT_DISABLE === 'true') {
+        return HelperUtils.responseSuccess({
+          start_time: process.env.EVENT_START_TIME,
+          end_time: process.env.EVENT_END_TIME,
+          limit: 10,
+          top: [],
+          disable: true,
+        });
+      }
+
       if (!await RedisUtils.checkExistTopUsersStaking()) {
         return HelperUtils.responseSuccess({
           start_time: process.env.EVENT_START_TIME,
           end_time: process.env.EVENT_END_TIME,
           limit: 10,
-          top: []
+          top: [],
+          disable: false,
         });
       }
 
       let data = await RedisUtils.getRedisTopUsersStaking()
       data = JSON.parse(data)
+      data.disable = false
 
       return HelperUtils.responseSuccess(data);
     } catch (e) {

@@ -68,6 +68,13 @@ export const getUserTier = (address: string, forceUsingEther: string = 'eth') =>
         type: sotaTiersActions.USER_TIER_SUCCESS,
         payload: userTier,
       });
+      dispatch({
+        type: sotaTiersActions.USER_INFO_SUCCESS,
+        payload: {
+          totalStaked: +resObj.data?.stakedInfo?.tokenStaked || 0,
+          uniStaked: +resObj.data?.stakedInfo?.uniStaked || 0,
+        },
+      });
 
     } catch (error) {
       dispatch({
@@ -101,20 +108,21 @@ export const getUserInfo = (address: string, forceUsingEther: string = 'eth', to
       //   rateStakeInfo
       // } = await getTokenStakeSmartContractInfo(contract, address);
       // await dispatch(getRates(rateSettings));
-      const tokenStakes = {
-        resultPkf: 0,
-        pkfStaked: 0,
-        resultUni: 0,
-        uniStaked: 0,
-        resultMantra: 0,
-        mantraStaked: 0,
-        ePkf: 0,
-      }
+      // const tokenStakes = {
+      //   resultPkf: 0,
+      //   pkfStaked: 0,
+      //   resultUni: 0,
+      //   uniStaked: 0,
+      //   resultMantra: 0,
+      //   mantraStaked: 0,
+      //   ePkf: 0,
+      //   tokenStaked: 0,
+      // }
 
-      dispatch({
-        type: sotaTiersActions.USER_INFO_SUCCESS,
-        payload: tokenStakes,
-      });
+      // dispatch({
+      //   type: sotaTiersActions.USER_INFO_SUCCESS,
+      //   payload: tokenStakes,
+      // });
 
     } catch (error) {
       dispatch({

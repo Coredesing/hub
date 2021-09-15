@@ -34,21 +34,7 @@ import { BigNumber, utils } from 'ethers';
 // import ModalSwitchPool from '../ModalSwitchPool';
 // import useSwitchPool from '../hook/useSwitchPool';
 import { getUserTier } from '../../../store/actions/sota-tiers';
-import {
-  TableContainer,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRowBody,
-  TableRowHead,
-  TableSortLabel,
-} from "@base-components/Table";
-import { convertTimeToStringFormat } from '@utils/convertDate';
-import { SearchBox } from '@base-components/SearchBox';
-import { CountDownTimeV1 } from '@base-components/CountDownTime';
-import { Box, Typography } from '@material-ui/core';
-import { cvtAddressToStar, debounce, escapeRegExp } from '@utils/index';
+
 
 const ONE_DAY_IN_SECONDS = 86400;
 const ONE_YEAR_IN_SECONDS = '31536000';
@@ -343,22 +329,6 @@ const LinearPool = (props: any) => {
   //   setPoolOpening(currPool => currPool === poolId ? -1 : poolId);
   // }
 
-  const [topWalletRanking, setTopWalletRanking] = useState<any[]>([]);
-  const [searchWallet, setSearchWallet] = useState('');
-
-  const onSearchWallet = debounce((event: any) => {
-    const value = event.target?.value;
-    setSearchWallet(value);
-  }, 1000);
-  useEffect(() => {
-    let arr = listTopStaked?.top || [];
-    if (searchWallet) {
-      const regex = new RegExp(escapeRegExp(searchWallet), 'i');
-      arr = arr.filter((item: any) => regex.test(item.wallet_address));
-    }
-    setTopWalletRanking(arr)
-  }, [listTopStaked, searchWallet]);
-
   return (
     <Accordion className={styles.pool}>
       <AccordionSummary
@@ -435,29 +405,6 @@ const LinearPool = (props: any) => {
             <div className={styles.textPrimary}>
               {Number(poolDetail?.delayDuration) > 0 ? `${(Number(poolDetail?.delayDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
             </div>
-          </div>
-          <div className="pool--sumary-block">
-            <Box className={styles.textSecondary} marginBottom="10px">
-              GAFI staking event&nbsp;
-              {
-                listTopStaked?.start_time * 1000 > Date.now() ? 'Open in'
-                  : listTopStaked?.end_time * 1000 > Date.now() ? 'End in' : 'Finished'
-              }
-            </Box>
-            {<CountDownTimeV1 time={
-              listTopStaked?.start_time * 1000 > Date.now() ?
-                {
-                  date1: listTopStaked?.start_time * 1000,
-                  date2: Date.now()
-                } :
-                listTopStaked?.end_time * 1000 > Date.now() ? {
-                  date1: listTopStaked?.end_time * 1000,
-                  date2: Date.now()
-                } : {
-                  days: 0, hours: 0, minutes: 0, seconds: 0
-                }
-            }
-              onFinish={() => console.log('finished')} />}
           </div>
         </div>
         <div className="pool--expand-text mobile-hidden">
@@ -774,39 +721,6 @@ const LinearPool = (props: any) => {
               />
             </div>
           }
-        </div>
-        <div className="pool--detail-table">
-          <Box>
-            <Typography variant="h5" component="h5" className="text-uppercase" style={{ marginBottom: '5px' }}>
-              Ranking&nbsp;
-              <span style={{ fontSize: '12px', fontFamily: 'Firs Neue', textTransform: 'none' }}>(* Only the top {listTopStaked?.limit} will receive rewards.) </span>
-            </Typography>
-            <Box marginBottom="10px" width="50%">
-              <SearchBox onChange={onSearchWallet} placeholder="Search first or last 14 digits of your wallet" />
-            </Box>
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRowHead>
-                    <TableCell>No</TableCell>
-                    <TableCell align="left">Wallet Address</TableCell>
-                    <TableCell align="left">Current Staked</TableCell>
-                    <TableCell align="left">Last time Stake</TableCell>
-                  </TableRowHead>
-                </TableHead>
-                <TableBody>
-                  {topWalletRanking.map((row: any, idx: number) => (
-                    <TableRowBody key={idx}>
-                      <TableCell component="th" scope="row" className={idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>  {idx + 1} </TableCell>
-                      <TableCell align="left" className={idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{cvtAddressToStar(row.wallet_address)}</TableCell>
-                      <TableCell align="left" className={idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{numberWithCommas((row.amount + '') || 0, 4)}</TableCell>
-                      <TableCell align="left" className={idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{convertTimeToStringFormat(new Date(+row.last_time * 1000))}</TableCell>
-                    </TableRowBody>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
         </div>
       </AccordionDetails>
       {/* <ModalSwitchPool

@@ -56,10 +56,9 @@ const Tiers = (props: any) => {
     }
   }, [dispatch, tiers])
 
-
   const [currentProcess, setCurrentProcess] = useState(undefined) as any;
-  const totalRedKitePoints = userInfo?.totalStaked ? numberWithCommas((Number(userInfo?.totalStaked)).toString() || '0') : '0';
-  const pointsLeftToNextTier = userInfo?.totalStaked ? numberWithCommas((tiers?.[userTier] - Number(userInfo?.totalStaked)).toString() || '0') : '0';
+  const totalStaked = userInfo?.totalStaked || 0;
+  const pointsLeftToNextTier = tiers?.[userTier] && tiers[userTier] > totalStaked ? tiers[userTier] - totalStaked : 0 ;
 
   const calculateProcess = (ListData: any, current: any) => {
     let tierA = 0;
@@ -123,13 +122,13 @@ const Tiers = (props: any) => {
           </div>
         </li>
         <li className={styles.itemInfo}>
-          <div className={styles.nameItemInfo}>GameFi Power</div>
+          <div className={styles.nameItemInfo}>GAFI Staked</div>
           <div className={styles.valueItemInfo}>
-            {connectedAccount ? totalRedKitePoints : ''}
+            {connectedAccount ? numberWithCommas((userInfo?.totalStaked || 0) + '', 4) : ''}
           </div>
         </li>
         <li className={styles.itemInfo}>
-          <div className={styles.nameItemInfo}>Power left to next tier</div>
+          <div className={styles.nameItemInfo}>GAFI Left to next tier</div>
           <div className={styles.valueItemInfo}>
             {
               connectedAccount ?

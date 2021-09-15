@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { typeDisplayFlex } from '@styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -379,7 +380,40 @@ const useStyles = makeStyles((theme: any) => {
       background: '#591425',
       marginBottom: 15,
       borderRadius: '8px',
-    }
+    },
+    cellActive: {
+      background: '#0A0A0A'
+    },
+    boxRank: {
+      '& h5': {
+        fontWeight: 400,
+        fontFamily: 'Firs Neue',
+        marginBottom: '10px',
+      }
+    },
+    boxListRank: {
+      display: 'grid',
+      gap: '20px',
+      gridTemplateColumns: 'repeat(auto-fit, calc(50% - 10px))'
+
+    },
+    endInText: {
+      display: 'grid',
+      alignItems: 'center',
+      fontSize: '16px',
+        lineHeight: '24px',
+        fontWeight: 'normal',
+        fontFamily: 'Firs Neue',
+    },
+    list: {
+      '& .item': {
+        marginBottom: '5px',
+        fontSize: '14px',
+        lineHeight: '24px',
+        fontWeight: 'normal',
+        fontFamily: 'Firs Neue',
+      }
+    },
   };
 });
 

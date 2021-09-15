@@ -211,12 +211,18 @@ const paginationArray = (array, page_number, page_size) => {
 
 const getTiers = () => {
   let tiers = []
+  let delays = []
   try {
     tiers = JSON.parse(process.env.USER_TIERS)
+    delays = JSON.parse(process.env.DELAY_DURATIONS)
   } catch (error) {
     tiers = [15, 100, 400, 1000]
+    delays = [5, 8, 12, 15]
   }
-  return tiers.map(tier => Web3.utils.toWei(tier.toString()))
+  return {
+    tiers: tiers.map(tier => Web3.utils.toWei(tier.toString())),
+    delays: delays
+  }
 }
 
 const getRateSetting = async () => {
@@ -319,7 +325,7 @@ const getUserTierSmart = async (wallet_address) => {
   try {
     // Get cached Rate Setting
     // const rateSetting = await getRateSetting()
-    const tiers = await getTiers()
+    const tiers = (await getTiers()).tiers
     const stakingData = await getStakingPool(wallet_address)
 
     // Caculate PKF Staked

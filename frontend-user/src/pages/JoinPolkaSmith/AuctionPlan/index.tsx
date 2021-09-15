@@ -30,7 +30,7 @@ const AuctionPlan = (props: any) => {
                         style={{display: "inline-block", fontSize: 44, lineHeight: 2, fontWeight: "bold"}}>500 </span><span> Red Kite Points/1 KSM</span>
                     </p>
                     <div className={styles.auctionKeyword}>Whether Win or Lose</div>
-                    <p className={styles.auctionDes}>Each Red Kite point is equivalent to 1 PKF staked on Red Kite launchpad. Even if you don't stake any PKF on Red Kite, you can get the same tier benefits when owning a corresponding amount of Red Kite Point. For example, holding 500 Red Kite Points gives you all the Dove tier benefits (including joining IDOs) without staking 500 PKFs.
+                    <p className={styles.auctionDes}>Each Red Kite point is equivalent to 1 PKF staked on Red Kite launchpad. Even if you don't stake any PKF on Red Kite, you can get the same rank benefits when owning a corresponding amount of Red Kite Point. For example, holding 500 Red Kite Points gives you all the Dove rank benefits (including joining IDOs) without staking 500 PKFs.
                     </p>
                 </div>
                 <div className={styles.auctionPlanDetail1} style={{borderBottomLeftRadius: 10}}>

@@ -40,14 +40,14 @@ const Dashboard = (props: any) => {
     },
     {
       image: '/images/landing/image6.svg',
-      title: 'Tier and Reputation',
-      description: "Our bot system automatically monitors participants' behavior to set reputation points for each partcicipants based on their actions. Reputation will affect a participant's tier and their ability to participate in next launches.",
+      title: 'Rank and Reputation',
+      description: "Our bot system automatically monitors participants' behavior to set reputation points for each partcicipants based on their actions. Reputation will affect a participant's rank and their ability to participate in next launches.",
       backgroundColor: 'linear-gradient(180deg, #50A3CF 0%, #060B26 50%)'
     },
     {
       image: '/images/landing/image3.svg',
       title: 'Fairness',
-      description: "We understand that opportunities should be delivered fairly and efficiently. Red Kite's lane-based swap system ensures everybody has a chance to join accordingly based on their tier without having to resort to gas war.",
+      description: "We understand that opportunities should be delivered fairly and efficiently. Red Kite's lane-based swap system ensures everybody has a chance to join accordingly based on their rank without having to resort to gas war.",
       backgroundColor: 'linear-gradient(180deg, #50307D 0%, #060B26 50%)'
     },
     {

@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: any) => {
       },
       '& .pool--sumary': {
         display: 'flex',
-        alignItems: 'center',
+        // alignItems: 'center',
       },
       '& .pool--sumary-block': {
         marginLeft: '10px',

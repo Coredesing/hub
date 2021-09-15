@@ -31,8 +31,8 @@ import { ChainDefault, ETH_CHAIN_ID } from '../../../constants/network'
 import { useTypedSelector } from '../../../hooks/useTypedSelector';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { BigNumber, utils } from 'ethers';
-import ModalSwitchPool from '../ModalSwitchPool';
-import useSwitchPool from '../hook/useSwitchPool';
+// import ModalSwitchPool from '../ModalSwitchPool';
+// import useSwitchPool from '../hook/useSwitchPool';
 import { getUserTier } from '../../../store/actions/sota-tiers';
 import {
   TableContainer,
@@ -48,7 +48,7 @@ import { convertTimeToStringFormat } from '@utils/convertDate';
 import { SearchBox } from '@base-components/SearchBox';
 import { CountDownTimeV1 } from '@base-components/CountDownTime';
 import { Box, Typography } from '@material-ui/core';
-import { cvtAddressToStar } from '@utils/index';
+import { cvtAddressToStar, debounce, escapeRegExp } from '@utils/index';
 
 const ONE_DAY_IN_SECONDS = 86400;
 const ONE_YEAR_IN_SECONDS = '31536000';
@@ -60,15 +60,6 @@ const ArrowIcon = () => {
     </svg>
   )
 }
-
-const dataPools = [
-  { wallet: '0xdg3aggaega325rvaffagaa2rgaDa2', lastTime: Date.now(), staked: '1000000000' },
-  { wallet: '0xdg3aggaega325rvaffagaa2rgaDa2', lastTime: Date.now(), staked: '1000000000' },
-  { wallet: '0xdg3aggaega325rvaffagaa2rgaDa2', lastTime: Date.now(), staked: '1000000000' },
-  { wallet: '0xdg3aggaega325rvaffagaa2rgaDa2', lastTime: Date.now(), staked: '1000000000' },
-  { wallet: '0xdg3aggaega325rvaffagaa2rgaDa2', lastTime: Date.now(), staked: '1000000000' },
-  { wallet: '0xdg3aggaega325rvaffagaa2rgaDa2', lastTime: Date.now(), staked: '1000000000' },
-]
 
 const LinearPool = (props: any) => {
   const { connectedAccount, poolDetail, poolAddress, reload, setOpenModalTransactionSubmitting, setTransactionHashes, poolsList, listTopStaked } = props
@@ -88,7 +79,7 @@ const LinearPool = (props: any) => {
   const [showUnstakeModal, setShowUnstakeModal] = useState(false);
   const [unstakeAmount, setUnstakeAmount] = useState('0');
   const [showClaimModal, setShowClaimModal] = useState(false);
-  const [showSwitchModal, setShowSwitchModal] = useState(false);
+  // const [showSwitchModal, setShowSwitchModal] = useState(false);
 
   const { linearStakeToken, transactionHash: stakeTransactionHash } = useLinearStake(poolAddress, poolDetail?.pool_id, stakeAmount);
   const { linearClaimToken, transactionHash: unstakeTransactionHash } = useLinearClaim(poolAddress, poolDetail?.pool_id);
@@ -295,30 +286,30 @@ const LinearPool = (props: any) => {
     setTransactionHashes([{ tnx: claimPendingTransactionHash, isApprove: false }])
   }, [claimPendingTransactionHash, setOpenModalTransactionSubmitting, setTransactionHashes])
 
-  const onShowSwitchPoolModal = () => {
-    setShowSwitchModal(true);
-  }
+  // const onShowSwitchPoolModal = () => {
+  //   setShowSwitchModal(true);
+  // }
 
-  const onCloseSwitchModal = () => {
-    setShowSwitchModal(false);
-  }
+  // const onCloseSwitchModal = () => {
+  //   setShowSwitchModal(false);
+  // }
 
-  const { linearSwitchPool, transactionHash: transactionHashSwitchPool } = useSwitchPool(poolDetail.pool_address)
-  const [idSwitched, setIdSwitched] = useState();
-  const onSwitchPool = async (fromId: number, toId: number) => {
-    setOpenModalTransactionSubmitting(true);
-    await linearSwitchPool(fromId, toId);
-    setOpenModalTransactionSubmitting(false);
-    reload && reload();
-  }
+  // const { linearSwitchPool, transactionHash: transactionHashSwitchPool } = useSwitchPool(poolDetail.pool_address)
+  // const [idSwitched, setIdSwitched] = useState();
+  // const onSwitchPool = async (fromId: number, toId: number) => {
+  //   setOpenModalTransactionSubmitting(true);
+  //   await linearSwitchPool(fromId, toId);
+  //   setOpenModalTransactionSubmitting(false);
+  //   reload && reload();
+  // }
 
-  useEffect(() => {
-    if (!transactionHashSwitchPool) {
-      return
-    }
-    setOpenModalTransactionSubmitting(false);
-    setTransactionHashes([{ tnx: transactionHashSwitchPool, isApprove: false }])
-  }, [transactionHashSwitchPool, setTransactionHashes, setOpenModalTransactionSubmitting])
+  // useEffect(() => {
+  //   if (!transactionHashSwitchPool) {
+  //     return
+  //   }
+  //   setOpenModalTransactionSubmitting(false);
+  //   setTransactionHashes([{ tnx: transactionHashSwitchPool, isApprove: false }])
+  // }, [transactionHashSwitchPool, setTransactionHashes, setOpenModalTransactionSubmitting])
 
 
   useEffect(() => {
@@ -347,10 +338,26 @@ const LinearPool = (props: any) => {
     return appChainID !== ChainDefault.id || appChainID !== walletChainID;
   }, [appChainID, walletChainID]);
 
-  const [poolOpening, setPoolOpening] = useState(-1);
-  const onShowDetail = (poolId: number) => {
-    setPoolOpening(currPool => currPool === poolId ? -1 : poolId);
-  }
+  // const [poolOpening, setPoolOpening] = useState(-1);
+  // const onShowDetail = (poolId: number) => {
+  //   setPoolOpening(currPool => currPool === poolId ? -1 : poolId);
+  // }
+
+  const [topWalletRanking, setTopWalletRanking] = useState<any[]>([]);
+  const [searchWallet, setSearchWallet] = useState('');
+
+  const onSearchWallet = debounce((event: any) => {
+    const value = event.target?.value;
+    setSearchWallet(value);
+  }, 1000);
+  useEffect(() => {
+    let arr = listTopStaked?.top || [];
+    if (searchWallet) {
+      const regex = new RegExp(escapeRegExp(searchWallet), 'i');
+      arr = arr.filter((item: any) => regex.test(item.wallet_address));
+    }
+    setTopWalletRanking(arr)
+  }, [listTopStaked, searchWallet]);
 
   return (
     <Accordion className={styles.pool}>
@@ -358,7 +365,7 @@ const LinearPool = (props: any) => {
         expandIcon={<ArrowIcon />}
         aria-controls="panel1a-content"
         id="panel1a-header"
-        onClick={() => onShowDetail(poolDetail.pool_id)}
+      // onClick={() => onShowDetail(poolDetail.pool_id)}
       >
         <div className="pool--sumary">
           <img src={poolDetail?.logo} className="pool--logo" alt="" />
@@ -428,6 +435,29 @@ const LinearPool = (props: any) => {
             <div className={styles.textPrimary}>
               {Number(poolDetail?.delayDuration) > 0 ? `${(Number(poolDetail?.delayDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
             </div>
+          </div>
+          <div className="pool--sumary-block">
+            <Box className={styles.textSecondary} marginBottom="10px">
+              GAFI staking event&nbsp;
+              {
+                listTopStaked?.start_time * 1000 > Date.now() ? 'Open in'
+                  : listTopStaked?.end_time * 1000 > Date.now() ? 'End in' : 'Finished'
+              }
+            </Box>
+            {<CountDownTimeV1 time={
+              listTopStaked?.start_time * 1000 > Date.now() ?
+                {
+                  date1: listTopStaked?.start_time * 1000,
+                  date2: Date.now()
+                } :
+                listTopStaked?.end_time * 1000 > Date.now() ? {
+                  date1: listTopStaked?.end_time * 1000,
+                  date2: Date.now()
+                } : {
+                  days: 0, hours: 0, minutes: 0, seconds: 0
+                }
+            }
+              onFinish={() => console.log('finished')} />}
           </div>
         </div>
         <div className="pool--expand-text mobile-hidden">
@@ -748,45 +778,11 @@ const LinearPool = (props: any) => {
         <div className="pool--detail-table">
           <Box>
             <Typography variant="h5" component="h5" className="text-uppercase" style={{ marginBottom: '5px' }}>
-              Gafi staking event
-
-            </Typography>
-            <Box display="grid" gridGap="10px" gridTemplateColumns="repeat(auto-fit, calc(50% - 10px))">
-              <Box>
-                {/* <Typography>Top 10 Ranking</Typography>
-                <Typography>Top 10 Ranking</Typography> */}
-              </Box>
-              <Box>
-                <Typography>
-                  {
-                    listTopStaked?.start_time * 1000 > Date.now() ? 'Open in'
-                      : listTopStaked?.end_time * 1000 > Date.now() ? 'End in' : 'Finished'
-                  }
-                </Typography>
-                {poolOpening === poolDetail.pool_id && <CountDownTimeV1 time={
-                  listTopStaked?.start_time * 1000 > Date.now() ? 
-                  {
-                    date1: listTopStaked?.start_time * 1000, 
-                    date2: Date.now()
-                  } :
-                  listTopStaked?.end_time * 1000 > Date.now() ? {
-                    date1: listTopStaked?.end_time * 1000, 
-                    date2: Date.now()
-                  } : {
-                    days: 0, hours: 0, minutes: 0, seconds: 0
-                  }
-                }
-                  onFinish={() => console.log('finished')} />}
-              </Box>
-            </Box>
-          </Box>
-          <Box>
-            <Typography variant="h5" component="h5" className="text-uppercase" style={{ marginBottom: '5px' }}>
               Ranking&nbsp;
               <span style={{ fontSize: '12px', fontFamily: 'Firs Neue', textTransform: 'none' }}>(* Only the top {listTopStaked?.limit} will receive rewards.) </span>
             </Typography>
             <Box marginBottom="10px" width="50%">
-              <SearchBox placeholder="Search first or last 14 digits of your wallet" />
+              <SearchBox onChange={onSearchWallet} placeholder="Search first or last 14 digits of your wallet" />
             </Box>
             <TableContainer>
               <Table>
@@ -794,17 +790,17 @@ const LinearPool = (props: any) => {
                   <TableRowHead>
                     <TableCell>No</TableCell>
                     <TableCell align="left">Wallet Address</TableCell>
-                    <TableCell align="left">Last time Stake</TableCell>
                     <TableCell align="left">Current Staked</TableCell>
+                    <TableCell align="left">Last time Stake</TableCell>
                   </TableRowHead>
                 </TableHead>
                 <TableBody>
-                  {(listTopStaked?.top || []).map((row: any, idx: number) => (
+                  {topWalletRanking.map((row: any, idx: number) => (
                     <TableRowBody key={idx}>
                       <TableCell component="th" scope="row" className={idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>  {idx + 1} </TableCell>
                       <TableCell align="left" className={idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{cvtAddressToStar(row.wallet_address)}</TableCell>
+                      <TableCell align="left" className={idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{numberWithCommas((row.amount + '') || 0, 4)}</TableCell>
                       <TableCell align="left" className={idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{convertTimeToStringFormat(new Date(+row.last_time * 1000))}</TableCell>
-                      <TableCell align="left" className={idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{numberWithCommas(row.amount, 4)}</TableCell>
                     </TableRowBody>
                   ))}
                 </TableBody>
@@ -813,7 +809,7 @@ const LinearPool = (props: any) => {
           </Box>
         </div>
       </AccordionDetails>
-      <ModalSwitchPool
+      {/* <ModalSwitchPool
         open={showSwitchModal}
         onClose={onCloseSwitchModal}
         idSwitched={idSwitched}
@@ -823,7 +819,7 @@ const LinearPool = (props: any) => {
         tokenBalance={tokenBalance}
         amount={stakeAmount}
         stakingAmount={Number(utils.formatEther(poolDetail?.stakingAmount)).toFixed(2)}
-        onConfirm={onSwitchPool} />
+        onConfirm={onSwitchPool} /> */}
       <ModalStake
         open={showStakeModal}
         amount={stakeAmount}

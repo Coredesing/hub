@@ -328,33 +328,33 @@ const LinearPool = (props: any) => {
   }, [appChainID, walletChainID]);
 
   // const [poolOpening, setPoolOpening] = useState(-1);
-  // const onShowDetail = (poolId: number) => {
-  //   setPoolOpening(currPool => currPool === poolId ? -1 : poolId);
-  // }
+
+  const [expanded, setExpaned] = useState<boolean>(props.expandedDetail);
 
   return (
-    <Accordion className={styles.pool}>
+    <Accordion className={styles.pool} expanded={expanded}>
       <AccordionSummary
         expandIcon={<ArrowIcon />}
         aria-controls="panel1a-content"
         id="panel1a-header"
-      // onClick={() => onShowDetail(poolDetail.pool_id)}
+        onClick={() => setExpaned(b => !b)}
       >
-        <div className="pool--sumary">
-          <img src={poolDetail?.logo} className="pool--logo" alt="" />
-          <div className="pool--sumary-block">
-            <div className={styles.textPrimary} style={{ fontSize: '20px' }}>
-              {poolDetail?.title}
+        <div className={styles.accordionSummaryContent}>
+          <div className="pool--sumary">
+            <img src={poolDetail?.logo} className="pool--logo" alt="" />
+            <div className="pool--sumary-block">
+              <div className={styles.textPrimary} style={{ fontSize: '20px' }}>
+                {poolDetail?.title}
+              </div>
+              <div className={styles.textSecondary + ' mobile-hidden'}>
+                {
+                  poolDetail?.rkp_rate > 0 ?
+                    <span>With IDO</span> :
+                    <span style={{ color: '#D0AA4D' }}>Without IDO</span>
+                }
+              </div>
             </div>
-            <div className={styles.textSecondary + ' mobile-hidden'}>
-              {
-                poolDetail?.rkp_rate > 0 ?
-                  <span>With IDO</span> :
-                  <span style={{ color: '#D0AA4D' }}>Without IDO</span>
-              }
-            </div>
-          </div>
-          {/* <div className="pool--sumary-block pool--sumary-block__min-width">
+            {/* <div className="pool--sumary-block pool--sumary-block__min-width">
           <div className={styles.textSecondary}>
             Earned
           </div>
@@ -362,7 +362,7 @@ const LinearPool = (props: any) => {
             {(+utils.formatEther(poolDetail?.pendingReward)).toFixed(2)} {tokenDetails?.symbol}
           </div>
         </div> */}
-          {/* <div className="pool--sumary-block pool--sumary-block__min-width-sm">
+            {/* <div className="pool--sumary-block pool--sumary-block__min-width-sm">
           <div className={styles.textSecondary}>
             APR
           </div>
@@ -379,7 +379,7 @@ const LinearPool = (props: any) => {
             }
           </div>
         </div> */}
-          {/* {
+            {/* {
           <div className="pool--sumary-block pool--sumary-block__min-width-lg mobile-hidden">
             <div className={styles.textSecondary}>
               Remaining
@@ -393,7 +393,7 @@ const LinearPool = (props: any) => {
             </div>
           </div>
         } */}
-          {/* <div className="pool--sumary-block mobile-hidden">
+            {/* <div className="pool--sumary-block mobile-hidden">
             <div className={styles.textSecondary}>
               Lock-up term
             </div>
@@ -401,30 +401,31 @@ const LinearPool = (props: any) => {
               {Number(poolDetail?.lockDuration) > 0 ? `${(Number(poolDetail?.lockDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
             </div>
           </div> */}
-          <Box className="pool--sumary-block">
-            <div className={styles.textSecondary}>
-              Withdrawal delay (days)
-            </div>
-            {/* <div className={styles.textPrimary}>
+            <Box className="pool--sumary-block">
+              <div className={styles.textSecondary}>
+                Withdrawal delay (days)
+              </div>
+              {/* <div className={styles.textPrimary}>
               {Number(poolDetail?.delayDuration) > 0 ? `${(Number(poolDetail?.delayDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
             </div> */}
-          </Box>
-          <Box className={clsx("pool--sumary-block", styles.delayTierBoxs)} width={((delayTiers?.length || 0) * 110) + 'px'}>
-            {
-              (!!delayTiers?.length) && delayTiers.map((days: number, idx: number) => (
-                <div className={styles.delayTierBox}>
-                  <h4 className={styles.textSecondary}>
-                    <img src={TIERS[idx + 1].icon} alt="" />
-                    {TIERS[idx + 1]?.name}
-                  </h4>
-                  <h5>{days} day{days > 1 && 's'}</h5>
-                </div>
-              ))
-            }
-          </Box>
-        </div>
-        <div className="pool--expand-text mobile-hidden">
-          Details
+            </Box>
+            <Box className={clsx("pool--sumary-block", styles.delayTierBoxs)} maxWidth={((delayTiers?.length || 0) * 110) + 'px'} width="100%">
+              {
+                (!!delayTiers?.length) && delayTiers.map((days: number, idx: number) => (
+                  <div className={styles.delayTierBox}>
+                    <h4 className={styles.textSecondary}>
+                      <img src={TIERS[idx + 1].icon} alt="" />
+                      {TIERS[idx + 1]?.name}
+                    </h4>
+                    <h5>{days} day{days > 1 && 's'}</h5>
+                  </div>
+                ))
+              }
+            </Box>
+          </div>
+          <div className="pool--expand-text mobile-hidden">
+            Details
+          </div>
         </div>
       </AccordionSummary>
       <AccordionDetails className={styles.accorditionDetails} >
@@ -631,7 +632,8 @@ const LinearPool = (props: any) => {
                   text="Enable"
                   onClick={() => handleApprove()}
                   disabled={wrongChain}
-                  backgroundColor="#3232DC"
+                  backgroundColor="#72F34B"
+                  style={{ color: '#000' }}
                 />
               </div>
             </div>
@@ -645,7 +647,7 @@ const LinearPool = (props: any) => {
                   Staking
                 </div>
                 <div className={styles.textPrimary}>
-                  {(+utils.formatEther(poolDetail?.stakingAmount)).toFixed(2)} {tokenDetails?.symbol}
+                  {numberWithCommas(utils.formatEther(poolDetail?.stakingAmount), 4)} {tokenDetails?.symbol}
                 </div>
               </div>
 
@@ -657,7 +659,8 @@ const LinearPool = (props: any) => {
                   <Button
                     text="Stake"
                     onClick={() => setShowStakeModal(true)}
-                    backgroundColor="#3232DC"
+                    backgroundColor="#72F34B"
+                    style={{ color: '#000' }}
                     disabled={
                       wrongChain ||
                       (Number(poolDetail?.startJoinTime) > 0 && Number(poolDetail?.startJoinTime) > moment().unix()) ||
@@ -672,8 +675,8 @@ const LinearPool = (props: any) => {
                     onClick={() => setShowUnstakeModal(true)}
                     backgroundColor="#191920"
                     style={{
-                      color: '#6398FF',
-                      border: '1px solid #6398FF',
+                      color: '#72F34B',
+                      border: '1px solid #72F34B',
                       margin: 'auto 0px 10px 6px',
                     }}
                     disabled={
@@ -713,7 +716,7 @@ const LinearPool = (props: any) => {
                     Withdrawal Amount
                   </div>
                   <div className={styles.textPrimary}>
-                    {(+utils.formatEther(poolDetail?.pendingWithdrawal?.amount)).toFixed(2)} {tokenDetails?.symbol}
+                    {numberWithCommas(utils.formatEther(poolDetail?.pendingWithdrawal?.amount), 4)} {tokenDetails?.symbol}
                   </div>
                 </div>
                 <div style={{}}>
@@ -729,10 +732,8 @@ const LinearPool = (props: any) => {
               <Button
                 text="Withdraw"
                 onClick={handleClaimPendingWithdraw}
-                backgroundColor="#3232DC"
-                style={{
-                  width: '160px',
-                }}
+                backgroundColor="#72F34B"
+                style={{ color: '#000' }}
                 disabled={Number(poolDetail?.pendingWithdrawal?.applicableAt) > moment().unix() || wrongChain}
               />
             </div>

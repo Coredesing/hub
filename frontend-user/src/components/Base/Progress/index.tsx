@@ -12,10 +12,10 @@ const useStyles = makeStyles(() => {
             background: '#565656',
             borderRadius: '2px',
             position: 'relative',
-            
             '& img': {
                 position: 'absolute',
                 top: '-22px',
+                transition: '0.5s',
             }
         },
         showProgress: {
@@ -24,7 +24,8 @@ const useStyles = makeStyles(() => {
             height: '6px',
             background: '#72F34B',
             boxShadow: '0px 0px 12px rgba(114, 243, 75, 0.2)',
-            width: '20px'
+            width: '20px',
+            transition: '0.5s',
         }
     };
 });
@@ -51,3 +52,5 @@ export const Progress = (props: IProps) => {
         </div>
     )
 }
+
+export default React.memo(Progress);

@@ -4,8 +4,9 @@ import useStyles from './style';
 import usePoolStyles from '../Pool/style';
 import useCommonStyle from '../../../styles/CommonStyle';
 import Button from '../Button';
-import {Dialog, DialogTitle, DialogContent, DialogActions} from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import { numberWithCommas } from '../../../utils/formatNumber';
+import Progress from '@base-components/Progress';
 
 const closeIcon = '/images/icons/close.svg'
 
@@ -28,7 +29,7 @@ const ModalStake = (props: any) => {
     logo,
   } = props;
 
-  
+
   const [progress, setProgress] = useState('0');
   useEffect(() => {
     setProgress((Number(amount) / Number(tokenBalance) * 100).toFixed(0))
@@ -44,7 +45,7 @@ const ModalStake = (props: any) => {
     >
       <div className="modal-content">
         <DialogTitle id="alert-dialog-slide-title" className="modal-content__head">
-          <img src={closeIcon} alt="" onClick={onClose} className="btn-close"/>
+          <img src={closeIcon} alt="" onClick={onClose} className="btn-close" />
           <div className="title">Stake</div>
         </DialogTitle>
         <DialogContent className="modal-content__body">
@@ -57,18 +58,18 @@ const ModalStake = (props: any) => {
             </div>
           </div>
           {
-            stakingAmount && Number(stakingAmount) > 0 && 
+            stakingAmount && Number(stakingAmount) > 0 &&
             <div className="token-type">
               <div>
                 Staking
               </div>
               <div className="token-detail">
-                {stakingAmount}
+                {numberWithCommas(stakingAmount + '', 4)}
               </div>
             </div>
           }
           {
-            min && Number(min) > 0 && 
+            min && Number(min) > 0 &&
             <div className="token-type">
               <div>
                 Min Stake
@@ -79,7 +80,7 @@ const ModalStake = (props: any) => {
             </div>
           }
           {
-            max && Number(max) > 0 && 
+            max && Number(max) > 0 &&
             <div className="token-type">
               <div>
                 Max Stake
@@ -95,38 +96,19 @@ const ModalStake = (props: any) => {
           <div className="input-group">
             <input
               value={amount}
-              onChange={(event) => setAmount(event.target.value) }
+              onChange={(event) => setAmount(event.target.value)}
               type="number"
               min="0"
             />
           </div>
           <div className="token-balance">Balance: {numberWithCommas(tokenBalance, 4)} {tokenDetails?.symbol}</div>
 
-          <div className={poolStyles.progressArea} style={{width: '100%', marginTop: '20px'}}>
-            <div className={poolStyles.progress}>
-              <span
-                className={`${poolStyles.currentProgress} ${
-                  parseFloat(progress) > 0 ? "" : "inactive"
-                }`}
-                style={{
-                  width: `${
-                    parseFloat(progress) > 99
-                      ? 100
-                      : Math.round(parseFloat(progress))
-                  }%`,
-                }}
-              >
-                <img
-                  className={poolStyles.iconCurrentProgress}
-                  src="/images/icons/icon_progress.svg"
-                  alt=""
-                />
-              </span>
-            </div>
-            <div className={poolStyles.currentPercentage}>({Number(progress).toFixed(0)}%)</div>
+          <div className={poolStyles.progressArea} style={{ width: '100%', marginTop: '20px' }}>
+            <Progress progress={+progress} />
+            <div className={poolStyles.currentPercentage}>({Number(+progress || 0).toFixed(0)}%)</div>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px'}}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
             <Button
               text="25%"
               onClick={() => setAmount(Number(tokenBalance) * 0.25 + '')}
@@ -165,7 +147,7 @@ const ModalStake = (props: any) => {
             />
             <Button
               text="100%"
-              onClick={() => setAmount(tokenBalance)}
+              onClick={() => setAmount(+tokenBalance + '')}
               backgroundColor="#545459"
               style={{
                 height: '32px',
@@ -182,13 +164,14 @@ const ModalStake = (props: any) => {
           <Button
             text="Stake"
             onClick={onConfirm}
-            backgroundColor="#3232DC"
+            backgroundColor="#72F34B"
             style={{
               height: '42px',
               width: '280px',
               margin: 'auto',
               borderRadius: '36px',
               padding: '12px 30px',
+              color: '#000'
             }}
             disabled={isNaN(amount) || Number(amount) <= 0}
           />

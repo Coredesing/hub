@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme: any) => {
           width: '100% !important',
         },
         // borderRight: '1px solid #37373D',
-        
+
         '&:not(:last-child)': {
           borderRight: '1px solid #37373D',
           [theme.breakpoints.down('xs')]: {
@@ -144,10 +144,10 @@ const useStyles = makeStyles((theme: any) => {
         },
         marginBottom: '20px'
       },
-      
+
       '& .pool--detail-block__grid': {
-        display: 'grid', 
-        gridColumnGap: '12px', 
+        display: 'grid',
+        gridColumnGap: '12px',
         gridTemplateColumns: '140px 2fr',
         alignItems: 'center',
         marginBottom: '3px'
@@ -236,7 +236,11 @@ const useStyles = makeStyles((theme: any) => {
       color: '#FFFFFF'
     },
     textSecondary: {
-      color: '#AEAEAE'
+      color: '#AEAEAE',
+      fontFamily: 'Firs Neue',
+      fontWeight: 'normal',
+      fontSize: '14px',
+      lineHeight: '24px',
     },
     link: {
       backgroundColor: 'Transparent',
@@ -251,6 +255,32 @@ const useStyles = makeStyles((theme: any) => {
         color: '#4f79cc',
       }
     },
+    delayTierBoxs: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, 110px)',
+    },
+    delayTierBox: {
+      fontFamily: 'Firs Neue',
+      fontWeight: 'normal',
+
+      '& h4': {
+        display: 'grid',
+        gridTemplateColumns: '30px auto',
+        gap: '6px',
+        marginBottom: '5px',
+        placeContent: 'center',
+        '& img': {
+          width: '30px',
+          height: '26px',
+        }
+      },
+      '& h5': {
+        fontFamily: 'Firs Neue',
+        fontWeight: 600,
+        fontSize: '16px',
+        textAlign: 'center',
+      }
+    }
   }
 });
 

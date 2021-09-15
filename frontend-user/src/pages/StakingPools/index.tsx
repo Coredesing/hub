@@ -87,8 +87,7 @@ const StakingPools = (props: any) => {
   const [filteredAllocPools, setFilteredAllocPools] = useState([]) as any;
   const [filteredLinearPools, setFilteredLinearPools] = useState([]) as any;
   const { data: tiers } = useSelector((state: any) => state.tiers);
-  console.log('tiers', tiers)
-
+  
   useEffect(() => {
     if (_.isEmpty(tiers)) {
       dispatch(getTiers());

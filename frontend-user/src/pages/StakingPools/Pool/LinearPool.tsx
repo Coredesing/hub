@@ -14,7 +14,7 @@ import useCommonStyle from '../../../styles/CommonStyle';
 import moment from "moment";
 import { numberWithCommas } from '../../../utils/formatNumber';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { alertSuccess, alertFailure } from '../../../store/actions/alert';
 
 import useTokenDetails from '../../../hooks/useTokenDetails';
@@ -34,6 +34,9 @@ import { BigNumber, utils } from 'ethers';
 // import ModalSwitchPool from '../ModalSwitchPool';
 // import useSwitchPool from '../hook/useSwitchPool';
 import { getUserTier } from '../../../store/actions/sota-tiers';
+import { TIERS } from '@app-constants';
+import clsx from 'clsx';
+import { Box } from '@material-ui/core';
 
 
 const ONE_DAY_IN_SECONDS = 86400;
@@ -51,7 +54,7 @@ const LinearPool = (props: any) => {
   const { connectedAccount, poolDetail, poolAddress, reload, setOpenModalTransactionSubmitting, setTransactionHashes, poolsList, listTopStaked } = props
   const styles = useStyles();
   const dispatch = useDispatch();
-
+  const { data: delayTiers = [] } = useSelector((state: any) => state.delayTiers);
   const { appChainID, walletChainID } = useTypedSelector(state => state.appNetwork).data;
   const { tokenDetails } = useTokenDetails(poolDetail?.acceptedToken, ChainDefault.name);
   const [tokenAllowance, setTokenAllowance] = useState(BigNumber.from('0'));
@@ -390,22 +393,35 @@ const LinearPool = (props: any) => {
             </div>
           </div>
         } */}
-          <div className="pool--sumary-block mobile-hidden">
+          {/* <div className="pool--sumary-block mobile-hidden">
             <div className={styles.textSecondary}>
               Lock-up term
             </div>
             <div className={styles.textPrimary}>
               {Number(poolDetail?.lockDuration) > 0 ? `${(Number(poolDetail?.lockDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
             </div>
-          </div>
-          <div className="pool--sumary-block mobile-hidden">
+          </div> */}
+          <Box className="pool--sumary-block">
             <div className={styles.textSecondary}>
-              Withdrawal delay time
+              Withdrawal delay (days)
             </div>
-            <div className={styles.textPrimary}>
+            {/* <div className={styles.textPrimary}>
               {Number(poolDetail?.delayDuration) > 0 ? `${(Number(poolDetail?.delayDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
-            </div>
-          </div>
+            </div> */}
+          </Box>
+          <Box className={clsx("pool--sumary-block", styles.delayTierBoxs)} width={((delayTiers?.length || 0) * 110) + 'px'}>
+            {
+              (!!delayTiers?.length) && delayTiers.map((days: number, idx: number) => (
+                <div className={styles.delayTierBox}>
+                  <h4 className={styles.textSecondary}>
+                    <img src={TIERS[idx + 1].icon} alt="" />
+                    {TIERS[idx + 1]?.name}
+                  </h4>
+                  <h5>{days} day{days > 1 && 's'}</h5>
+                </div>
+              ))
+            }
+          </Box>
         </div>
         <div className="pool--expand-text mobile-hidden">
           Details

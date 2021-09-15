@@ -60,7 +60,7 @@ const StakingPools = (props: any) => {
   const commonStyles = useCommonStyle();
 
   const dispatch = useDispatch();
-  
+
 
   // Start Staking Logic 
 
@@ -90,7 +90,7 @@ const StakingPools = (props: any) => {
   console.log('tiers', tiers)
 
   useEffect(() => {
-    if(_.isEmpty(tiers)) {
+    if (_.isEmpty(tiers)) {
       dispatch(getTiers());
     }
   }, [dispatch, tiers])
@@ -255,74 +255,76 @@ const StakingPools = (props: any) => {
                     />
                   ))
                 }
-                <Box marginTop="30px" className={styles.boxRank}>
-                  <Box className={styles.boxListRank}>
+                {listTopStaked && !listTopStaked?.disable &&
+                  <Box marginTop="30px" className={styles.boxRank}>
+                    <Box className={styles.boxListRank}>
+                      <Typography variant="h5" component="h5" className="text-uppercase">
+                        Gamefi stake event
+                      </Typography>
+                      <Box className={styles.endInText}>
+                        {
+                          listTopStaked?.start_time * 1000 > Date.now() ? 'Open in'
+                            : listTopStaked?.end_time * 1000 > Date.now() ? 'End in' : 'Finished'
+                        }
+                      </Box>
+                    </Box>
+                    <Box className={styles.boxListRank} marginBottom="20px">
+                      <Box className={styles.list}>
+                        <Typography variant="h5" component="h5" className="item">
+                          1. TOP 10 RANKING will be given 1 NFT Master
+                        </Typography>
+                        <Typography variant="h5" component="h5" className="item">
+                          2. RANKING is a list of people who stake higher than {tiers?.slice && tiers?.slice(-1)?.[0]} GAFI
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <CountDownTimeV1 time={
+                          listTopStaked?.start_time * 1000 > Date.now() ?
+                            {
+                              date1: listTopStaked?.start_time * 1000,
+                              date2: Date.now()
+                            } :
+                            listTopStaked?.end_time * 1000 > Date.now() ? {
+                              date1: listTopStaked?.end_time * 1000,
+                              date2: Date.now()
+                            } : {
+                              days: 0, hours: 0, minutes: 0, seconds: 0
+                            }
+                        }
+                          onFinish={() => console.log('finished')} />
+                      </Box>
+                    </Box>
                     <Typography variant="h5" component="h5" className="text-uppercase">
-                      Gamefi stake event
+                      Ranking
                     </Typography>
-                    <Box className={styles.endInText}>
-                      {
-                        listTopStaked?.start_time * 1000 > Date.now() ? 'Open in'
-                          : listTopStaked?.end_time * 1000 > Date.now() ? 'End in' : 'Finished'
-                      }
+                    <Box marginBottom="10px" width="50%">
+                      <SearchBox onChange={onSearchWallet} placeholder="Search first or last 14 digits of your wallet" />
                     </Box>
-                  </Box>
-                  <Box className={styles.boxListRank} marginBottom="20px">
-                    <Box className={styles.list}>
-                      <Typography variant="h5" component="h5" className="item">
-                        1. TOP 10 RANKING will be given 1 NFT Master
-                      </Typography>
-                      <Typography variant="h5" component="h5" className="item">
-                        2. RANKING is a list of people who stake higher than {tiers?.slice && tiers?.slice(-1)?.[0]} GAFI
-                      </Typography>
-                    </Box>
-                    <Box>
-                      <CountDownTimeV1 time={
-                        listTopStaked?.start_time * 1000 > Date.now() ?
-                          {
-                            date1: listTopStaked?.start_time * 1000,
-                            date2: Date.now()
-                          } :
-                          listTopStaked?.end_time * 1000 > Date.now() ? {
-                            date1: listTopStaked?.end_time * 1000,
-                            date2: Date.now()
-                          } : {
-                            days: 0, hours: 0, minutes: 0, seconds: 0
-                          }
-                      }
-                        onFinish={() => console.log('finished')} />
-                    </Box>
-                  </Box>
-                  <Typography variant="h5" component="h5" className="text-uppercase">
-                    Ranking
-                  </Typography>
-                  <Box marginBottom="10px" width="50%">
-                    <SearchBox onChange={onSearchWallet} placeholder="Search first or last 14 digits of your wallet" />
-                  </Box>
-                  <TableContainer>
-                    <Table>
-                      <TableHead>
-                        <TableRowHead>
-                          <TableCell>No</TableCell>
-                          <TableCell align="left">Wallet Address</TableCell>
-                          <TableCell align="left">Current Staked</TableCell>
-                          <TableCell align="left">Last time Stake</TableCell>
-                        </TableRowHead>
-                      </TableHead>
-                      <TableBody>
-                        {topWalletRanking.map((row: any, idx: number) => (
-                          <TableRowBody key={idx}>
-                            <TableCell component="th" scope="row" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>  {row.idx + 1} </TableCell>
-                            <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{cvtAddressToStar(row.wallet_address)}</TableCell>
-                            <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{numberWithCommas((row.amount + '') || 0, 4)}</TableCell>
-                            <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{convertTimeToStringFormat(new Date(+row.last_time * 1000))}</TableCell>
-                          </TableRowBody>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
+                    <TableContainer>
+                      <Table>
+                        <TableHead>
+                          <TableRowHead>
+                            <TableCell>No</TableCell>
+                            <TableCell align="left">Wallet Address</TableCell>
+                            <TableCell align="left">Current Staked</TableCell>
+                            <TableCell align="left">Last time Stake</TableCell>
+                          </TableRowHead>
+                        </TableHead>
+                        <TableBody>
+                          {topWalletRanking.map((row: any, idx: number) => (
+                            <TableRowBody key={idx}>
+                              <TableCell component="th" scope="row" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>  {row.idx + 1} </TableCell>
+                              <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{cvtAddressToStar(row.wallet_address)}</TableCell>
+                              <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{numberWithCommas((row.amount + '') || 0, 4)}</TableCell>
+                              <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{convertTimeToStringFormat(new Date(+row.last_time * 1000))}</TableCell>
+                            </TableRowBody>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
 
-                </Box>
+                  </Box>
+                }
               </div>
             </>
           }

@@ -198,5 +198,6 @@ module.exports = Object.freeze({
   TOKEN_TYPE: {
     ERC20: 'erc20',
     ERC721: 'erc721',
-  }
+  },
+  TIER_CACHED_TTL: 10 * 60 * 1000, // 10 minutes
 });

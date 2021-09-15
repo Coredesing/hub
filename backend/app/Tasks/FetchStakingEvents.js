@@ -25,7 +25,7 @@ class FetchStakingEvents extends Task {
       this.isRunning = true
 
       console.log('Task FetchTopStaked handle');
-      // await (new StakingEventService).runAll();
+      await (new StakingEventService).runAll();
     }
     catch (e) {
       console.log('error', e)

@@ -7,6 +7,7 @@ const endTime = process.env.EVENT_END_TIME
 
 class FetchTopStaked extends Task {
   isRunning = false;
+  oneMinute = 60 * 1000;
 
   static get schedule () {
     console.log('[FetchTopStaked] - ACTIVE - process.env.NODE_ENV', process.env.NODE_ENV);
@@ -25,8 +26,13 @@ class FetchTopStaked extends Task {
     }
     try {
       this.isRunning = true
+      const now = (new Date().getTime()) / 1000
 
-      console.log('Task FetchTopStaked handle');
+      // Don't update after 1 minutes
+      if (now < startTime || now > endTime + this.oneMinute) {
+        return
+      }
+
       await (new StakingEventService).queryTop({
         start_time: startTime,
         end_time: endTime,

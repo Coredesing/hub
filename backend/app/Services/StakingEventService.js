@@ -104,6 +104,9 @@ class StakingEventService {
         data.amount = parseFloat(new BigNumber(data.raw_amount).dividedBy(ONE_UNIT).toFixed(6)) * sign;
 
         await data.save();
+
+        const tierInfo = await HelperUtils.getUserTierSmart(event.returnValues.account);
+        await RedisUtils.createRedisUserTierBalance(event.returnValues.account, tierInfo);
       }
       catch (e) {}
     }

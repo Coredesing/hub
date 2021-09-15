@@ -23,6 +23,12 @@ contract LinearPool is
 
     uint64 public constant LINEAR_MAXIMUM_DELAY_DURATION = 35 days; // maximum 35 days delay
 
+    // tiers
+    TierInfo[] public tierInfos;
+
+    // masters
+    mapping(address => bool) masters;
+
     // The accepted token
     IERC20 public linearAcceptedToken;
     // The reward distribution address
@@ -77,6 +83,7 @@ contract LinearPool is
         uint128 delayDuration;
         uint128 startJoinTime;
         uint128 endJoinTime;
+        bool useLocalDelayPool;
     }
 
     struct LinearStakingData {
@@ -84,11 +91,17 @@ contract LinearPool is
         uint128 joinTime;
         uint128 updatedTime;
         uint128 reward;
+        uint256 exp;
     }
 
     struct LinearPendingWithdrawal {
         uint128 amount;
         uint128 applicableAt;
+    }
+
+    struct TierInfo {
+        uint128 threshold;
+        uint128 delayDuration;
     }
 
     /**
@@ -173,7 +186,8 @@ contract LinearPool is
                 lockDuration: _lockDuration,
                 delayDuration: _delayDuration,
                 startJoinTime: _startJoinTime,
-                endJoinTime: _endJoinTime
+                endJoinTime: _endJoinTime,
+                useLocalDelayPool: false
             })
         );
         emit LinearPoolCreated(linearPoolInfo.length - 1, _APR);
@@ -242,6 +256,17 @@ contract LinearPool is
     }
 
     /**
+     * @notice Set the delay pool. Can only be called by the owner.
+     * @param _useLocalDelayPool the delay pool parameter
+     */
+    function linearSetUseLocalDelayPool(
+        uint128 _poolId,
+        bool _useLocalDelayPool
+    ) external onlyOwner linearValidatePoolById(_poolId) {
+        linearPoolInfo[_poolId].useLocalDelayPool = _useLocalDelayPool;
+    }
+
+    /**
      * @notice Deposit token to earn rewards
      * @param _poolId id of the pool
      * @param _amount amount of token to deposit
@@ -259,24 +284,71 @@ contract LinearPool is
     }
 
     /**
-     * @notice Deposit token to earn rewards for another address
-     * @param _poolId id of the pool
-     * @param _amount amount of token to deposit
-     * @param _account the account that received the rewards
+     * @notice Set the linear info. Can only be called by the owner.
+     * @param _thresholds the tier threshold
+     * @param _delays the delay time
      */
-    function linearDepositFor(
-        uint256 _poolId,
-        uint128 _amount,
-        address _account
-    ) external nonReentrant linearValidatePoolById(_poolId) {
-        _linearDeposit(_poolId, _amount, _account);
-
-        linearAcceptedToken.safeTransferFrom(
-            address(msg.sender),
-            address(this),
-            _amount
+    function linearInitTierInfo(uint128[] memory _thresholds, uint128[] memory _delays)
+    external
+    onlyOwner
+    {
+        require(
+            _thresholds.length == _delays.length,
+            "LinearStakingPool: Init length not match"
         );
-        emit LinearDeposit(_poolId, _account, _amount);
+
+        require(
+            tierInfos.length == 0,
+            "LinearStakingPool: Init cannot be called more than once"
+        );
+
+        for (uint128 index = 0; index < _thresholds.length; index++) {
+            tierInfos.push(TierInfo(_thresholds[index], _delays[index]));
+        }
+    }
+
+    /**
+     * @notice Set the linear info. Can only be called by the owner.
+     * @param _thresholds the tier threshold
+     * @param _delays the delay time
+     */
+    function linearPushNewTierInfo(uint128 _thresholds, uint128 _delays)
+    external
+    onlyOwner
+    {
+        tierInfos.push(TierInfo(_thresholds, _delays));
+    }
+
+    /**
+     * @notice Set the linear info. Can only be called by the owner.
+     * @param _level the tier level
+     * @param _threshold the tier threshold
+     * @param _delay the delay time
+     */
+    function linearSetTierInfo(uint128 _level, uint128 _threshold, uint128 _delay)
+    external
+    onlyOwner
+    {
+        require(
+            tierInfos.length > _level,
+            "LinearStakingPool: setTierInfo invalid level"
+        );
+
+        tierInfos[_level].threshold = _threshold;
+        tierInfos[_level].delayDuration = _delay;
+    }
+
+    /**
+     * @notice grant the master tier. Can only be called by the owner.
+     * @param _masters the address of master
+     */
+    function linearSetMaster(address[] memory _masters, bool _master)
+    external
+    onlyOwner
+    {
+        for (uint128 index; index < _masters.length; index++) {
+            masters[_masters[index]] = _master;
+        }
     }
 
     /**
@@ -327,8 +399,12 @@ contract LinearPool is
             emit LinearRewardsHarvested(_poolId, account, reward);
         }
 
+        // get delayDuration
+        uint128 delayDuration = linearDurationOf(_poolId, account);
         stakingData.balance -= _amount;
-        if (pool.delayDuration == 0) {
+        emit LinearPendingWithdraw(_poolId, account, _amount);
+
+        if (delayDuration == 0) {
             linearAcceptedToken.safeTransfer(account, _amount);
             emit LinearWithdraw(_poolId, account, _amount);
             return;
@@ -339,64 +415,7 @@ contract LinearPool is
         ][account];
 
         pending.amount += _amount;
-        pending.applicableAt = block.timestamp.toUint128() + pool.delayDuration;
-    }
-
-    /**
-     * @notice Switch token from a pool to a new pool
-     * @param _curPoolId id of the current pool
-     * @param _newPoolId id of the new pool
-     */
-    function linearSwitch(uint256 _curPoolId, uint256 _newPoolId)
-        external
-        nonReentrant
-        linearValidatePoolById(_curPoolId)
-        linearValidatePoolById(_newPoolId)
-    {
-        address account = msg.sender;
-
-        LinearPoolInfo storage curPool = linearPoolInfo[_curPoolId];
-        LinearStakingData storage currentStakingData = linearStakingData[
-            _curPoolId
-        ][account];
-
-        LinearPoolInfo storage newPool = linearPoolInfo[_newPoolId];
-
-        require(
-            newPool.lockDuration >= curPool.lockDuration &&
-                newPool.delayDuration >= curPool.delayDuration,
-            "LinearStakingPool: invalid new pool"
-        );
-
-        require(
-            currentStakingData.balance > 0,
-            "LinearStakingPool: invalid switch amount"
-        );
-
-        _linearHarvest(_curPoolId, account);
-
-        if (currentStakingData.reward > 0) {
-            require(
-                linearRewardDistributor != address(0),
-                "LinearStakingPool: invalid reward distributor"
-            );
-
-            uint128 reward = currentStakingData.reward;
-            currentStakingData.reward = 0;
-            linearAcceptedToken.safeTransferFrom(
-                linearRewardDistributor,
-                account,
-                reward
-            );
-            emit LinearRewardsHarvested(_curPoolId, account, reward);
-        }
-
-        uint128 switchAmount = currentStakingData.balance;
-        currentStakingData.balance = 0;
-        emit LinearWithdraw(_curPoolId, account, switchAmount);
-
-        _linearDeposit(_newPoolId, switchAmount, account);
-        emit LinearDeposit(_newPoolId, account, switchAmount);
+        pending.applicableAt = block.timestamp.toUint128() + delayDuration;
     }
 
     /**
@@ -510,6 +529,59 @@ contract LinearPool is
     }
 
     /**
+     * @notice Gets number of deposited tokens in a pool
+     * @param _poolId id of the pool
+     * @param _account address of a user
+     * @return total token deposited in a pool by a user
+     */
+    function linearExpOf(uint256 _poolId, address _account)
+        external
+        view
+        linearValidatePoolById(_poolId)
+        returns (uint256)
+    {
+        return linearStakingData[_poolId][_account].exp;
+    }
+
+    /**
+     * @notice Gets the delay duration in a pool by a user
+     * @param _poolId id of the pool
+     * @param _account address of a user
+     * @return the delay duration
+     */
+    function linearDurationOf(uint256 _poolId, address _account)
+        public
+        view
+        linearValidatePoolById(_poolId)
+        returns (uint128)
+    {
+        // use local delay
+        if (linearPoolInfo[_poolId].useLocalDelayPool) {
+            return linearPoolInfo[_poolId].delayDuration;
+        }
+
+        // use global delay
+        if (tierInfos.length < 1) {
+            return 0;
+        }
+
+        if (masters[_account]) {
+            return tierInfos[tierInfos.length - 1].delayDuration;
+        }
+
+        uint128 balance = linearStakingData[_poolId][_account].balance;
+        // case tierInfos.length - 1 is in whitelist (masters)
+        uint128 delay = 0;
+        for (uint256 index = 0; index < tierInfos.length - 1; index++) {
+            if (balance >= tierInfos[index].threshold) {
+                delay = tierInfos[index].delayDuration;
+            }
+        }
+
+        return delay;
+    }
+
+    /**
      * @notice Update allowance for emergency withdraw
      * @param _shouldAllow should allow emergency withdraw or not
      */
@@ -606,7 +678,14 @@ contract LinearPool is
             _account
         ];
 
+        uint256 lastUpdatedTime = uint256(stakingData.updatedTime);
+
         stakingData.reward = linearPendingReward(_poolId, _account);
         stakingData.updatedTime = block.timestamp.toUint128();
+
+        // calculate exp
+        uint256 stakedTime = lastUpdatedTime > block.timestamp ? 0 : block.timestamp - lastUpdatedTime;
+        uint256 stakedTimeInSeconds = lastUpdatedTime == 0 ? 0 : stakedTime;
+        stakingData.exp += stakingData.balance * stakedTimeInSeconds / 1e5;
     }
 }

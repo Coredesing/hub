@@ -20,7 +20,6 @@ const useDetailListStakingPool = (
   const { account } = useWeb3React();
 
   const fetchDetailList = useCallback(async() => {
-    console.log('Loading detail staking pools')
     try {
       if(!poolsList || !poolsList?.length) {
         return;

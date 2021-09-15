@@ -2,17 +2,14 @@
 
 const CampaignModel = use('App/Models/Campaign');
 const WalletAccountModel = use('App/Models/WalletAccount');
-const UserModel = use('App/Models/User');
 const WalletAccountService = use('App/Services/WalletAccountService');
 const PoolService = use('App/Services/PoolService');
 const HelperUtils = use('App/Common/HelperUtils');
 const RedisUtils = use('App/Common/RedisUtils');
-const GameFIUtils = use('App/Common/GameFIUtils');
 const Config = use('Config')
 const UserBalanceSnapshotModel = use('App/Models/UserBalanceSnapshot');
 const WhitelistUserModel = use('App/Models/WhitelistUser');
 const WhitelistService = use('App/Services/WhitelistUserService');
-const moment = require('moment');
 const BigNumber = use('bignumber.js');
 const { pick } = require('lodash');
 const csv = require('fast-csv');

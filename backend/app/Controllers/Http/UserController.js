@@ -129,19 +129,20 @@ class UserController {
       const params = request.all();
       const wallet_address = params.wallet_address;
 
-      // if (await RedisUtils.checkExistRedisUserTierBalance(wallet_address)) {
-      //   const cached = JSON.parse(await RedisUtils.getRedisUserTierBalance(wallet_address));
-      //   const tierCacheTimeToLive = 5 * 60 * 1000 // 1 minutes
-      //
-      //   if ((new Date()).getTime() - cached.updatedAt < tierCacheTimeToLive) {
-      //     return HelperUtils.responseSuccess({
-      //       tier: cached.data[0],
-      //       stakedInfo: cached.data[4],
-      //     });
-      //   }
-      // }
+      if (await RedisUtils.checkExistRedisUserTierBalance(wallet_address)) {
+        const cached = JSON.parse(await RedisUtils.getRedisUserTierBalance(wallet_address));
+
+        return HelperUtils.responseSuccess({
+          tier: cached.data[0],
+          stakedInfo: {
+            tokenStaked: new BigNumber(cached.data[2]).toFixed(4),
+            uniStaked: new BigNumber(0).toFixed(4)
+          },
+        });
+      }
+
       const tierInfo = await HelperUtils.getUserTierSmart(wallet_address);
-      // RedisUtils.createRedisUserTierBalance(wallet_address, tierInfo);
+      RedisUtils.createRedisUserTierBalance(wallet_address, tierInfo);
 
       return HelperUtils.responseSuccess({
         tier: tierInfo[0],

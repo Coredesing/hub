@@ -4,8 +4,8 @@ import { Backdrop, CircularProgress } from '@material-ui/core';
 import { withRouter } from "react-router-dom";
 import { getBalance } from "../../store/actions/balance";
 import {
-  getUserTier,
-  getTiers,
+  // getUserTier,
+  // getTiers,
   getUserInfo,
 } from "../../store/actions/sota-tiers";
 import { getAllowance } from "../../store/actions/sota-token";
@@ -14,10 +14,10 @@ import DefaultLayout from "../../components/Layout/DefaultLayout";
 import AccountInformation from "./AccountInformation";
 import useStyles from "./style";
 import useAuth from "../../hooks/useAuth";
-import useTokenDetails from "../../hooks/useTokenDetails";
+// import useTokenDetails from "../../hooks/useTokenDetails";
 // import useFetch from "../../hooks/useFetch";
 import { USER_STATUS } from "../../constants";
-import useUserTier from "../../hooks/useUserTier";
+// import useUserTier from "../../hooks/useUserTier";
 // import { trimMiddlePartAddress } from "../../utils/accountAddress";
 import { ChainId } from "../../constants/network";
 // import NftTicket from "./NftTicket";
@@ -25,17 +25,18 @@ import { ChainId } from "../../constants/network";
 // import NeedHelp from "./NeedHelp";
 import IdoPools from "./IdoPools";
 import axios from '../../services/axios';
-import { numberWithCommas } from '../../utils/formatNumber';
+// import { numberWithCommas } from '../../utils/formatNumber';
 import { AlertKYC } from "../../components/Base/AlertKYC";
 import { WrapperAlert } from "../../components/Base/WrapperAlert";
 import { MenuLeft } from "./constants";
 import clsx from 'clsx';
+import IdoPoolProvider from "./context/IdoPoolProvider";
 
-const TOKEN_ADDRESS = process.env.REACT_APP_PKF || "";
+// const TOKEN_ADDRESS = process.env.REACT_APP_PKF || "";
 // const TOKEN_UNI_ADDRESS = process.env.REACT_APP_UNI_LP || "";
 // const TOKEN_MANTRA_ADDRESS = process.env.REACT_APP_MANTRA_LP || "";
 
-const iconWarning = "/images/warning-red.svg";
+// const iconWarning = "/images/warning-red.svg";
 
 const AccountV2 = (props: any) => {
   const classes = useStyles();
@@ -66,13 +67,13 @@ const AccountV2 = (props: any) => {
   const [isKYC, setIsKYC] = useState(true);
   // const [listTokenDetails, setListTokenDetails] = useState([]) as any;
   const { data: appChainID } = useSelector((state: any) => state.appNetwork)
-  const { currentTier, totalUnstaked, total } = useUserTier(connectedAccount || '', 'eth');
+  // const { currentTier, totalUnstaked, total } = useUserTier(connectedAccount || '', 'eth');
   const [tabAccount] = useState(Object.values(MenuLeft));
   const [activeMenuAccount, setActiveMenuAccount] = useState(currentTabMenu.key);
   const [updatedSuccess, setUpdatedSuccess] = useState(false);
-  const [dataHistories, setDataHistories] = useState({}) as any;
-  const { data: tiers = {} } = useSelector((state: any) => state.tiers);
-  const { data: userTier = 0 } = useSelector((state: any) => state.userTier);
+  // const [dataHistories, setDataHistories] = useState({}) as any;
+  // const { data: tiers = {} } = useSelector((state: any) => state.tiers);
+  // const { data: userTier = 0 } = useSelector((state: any) => state.userTier);
   const [userProfile, setUserProfile] = useState<{ [k in string]: any }>({});
   const [loadingUserProfile, setRenewUserProfile] = useState(false);
 
@@ -146,17 +147,14 @@ const AccountV2 = (props: any) => {
   //   connectedAccount ? getUserHistory() : setDataHistories({});
   // }, [connectedAccount]);
 
-  useEffect(() => {
-    dispatch(getTiers());
-  }, [dispatch])
+
 
 
   useEffect(() => {
     connectedAccount && dispatch(getUserInfo(connectedAccount));
   }, [connectedAccount, dispatch]);
 
-  const totalRedKitePoints = userInfo?.totalStaked ? numberWithCommas((Number(userInfo?.totalStaked)).toString() || '0') : '0';
-  const pointsLeftToNextTier = userInfo?.totalStaked ? numberWithCommas((tiers[userTier] - Number(userInfo?.totalStaked)).toString() || '0') : '0';
+
 
   return (
     <DefaultLayout isKYC={isKYC}>
@@ -243,23 +241,22 @@ const AccountV2 = (props: any) => {
                 <Tiers
                   showMoreInfomation={false}
                   // tokenSymbol={tokenPKFDetails?.symbol}
-                  total={total}
+                  // total={total}
                   isKYC={isKYC}
-                  tiers={tiers}
+                  // tiers={tiers}
                   userInfo={userInfo}
-                  userTier={userTier}
+                  // userTier={userTier}
                   emailVerified={emailVerified}
                   connectedAccount={connectedAccount}
-                  dataHistories={dataHistories}
-                  totalRedKitePoints={totalRedKitePoints}
-                  pointsLeftToNextTier={pointsLeftToNextTier}
+                // dataHistories={dataHistories}
+                // totalRedKitePoints={totalRedKitePoints}
+                // pointsLeftToNextTier={pointsLeftToNextTier}
                 />
               </div>
             }
-            <div style={activeMenuAccount !== MenuLeft.pool.key ? { display: 'none' } : {}}>
-              <IdoPools />
-            </div>
-            {/* {activeMenuAccount === MenuLeft.pool.key && <IdoPools />} */}
+            <IdoPoolProvider>
+              {activeMenuAccount === MenuLeft.pool.key && <IdoPools />}
+            </IdoPoolProvider>
             {/* {activeMenuAccount === 'NFT Tickets' && <>
               <NftTicket />
               <CardsTicket />

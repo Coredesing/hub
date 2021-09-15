@@ -2,6 +2,8 @@
 
 const Const = use('App/Common/Const');
 const Redis = use('Redis');
+const ENABLE_REDIS = true;
+const TIER_CACHED_TTL = 10 * 60; // 10 minutes
 
 const logRedisUtil = (message) => {
   console.log(`[RedisUtils] - ${message}`);
@@ -221,6 +223,92 @@ const checkExistTopBid = async (poolId) => {
   return await Redis.exists(getRedisKeyTopBid(poolId));
 };
 
+/*
+  Fetch events
+ */
+const getRedisKeyStakingEvent = () => {
+  return `staking_events_block_number`;
+};
+
+const getRedisStakingLastBlockNumber = async () => {
+  return await Redis.get(getRedisKeyStakingEvent());
+};
+
+const setRedisStakingLastBlockNumber = async (data) => {
+  return await Redis.set(getRedisKeyStakingEvent(), JSON.stringify(data));
+};
+
+const checkExistStakingLastBlockNumber = async () => {
+  return await Redis.exists(getRedisKeyStakingEvent());
+};
+
+/*
+  Top events
+ */
+const getRedisKeyTopUsersStaking = () => {
+  return `staking_events_top_users`;
+};
+
+const getRedisTopUsersStaking = async () => {
+  return await Redis.get(getRedisKeyTopUsersStaking());
+};
+
+const setRedisTopUsersStaking = async (data) => {
+  return await Redis.set(getRedisKeyTopUsersStaking(), JSON.stringify(data));
+};
+
+const checkExistTopUsersStaking = async () => {
+  return await Redis.exists(getRedisKeyTopUsersStaking());
+};
+
+/**
+ * User Tier
+ */
+const getRedisKeyUserTierBalance = (walletAddress) => {
+  return `user_tier_balance_${walletAddress}`;
+};
+
+const getRedisUserTierBalance = async (walletAddress) => {
+  return await Redis.get(getRedisKeyUserTierBalance(walletAddress));
+};
+
+const checkExistRedisUserTierBalance = async (walletAddress) => {
+  let redisKey = getRedisKeyUserTierBalance(walletAddress);
+
+  if (!ENABLE_REDIS) {
+    return false;
+  }
+
+  return await Redis.exists(redisKey)
+};
+
+const createRedisUserTierBalance = async (walletAddress, data) => {
+  const redisKey = getRedisKeyUserTierBalance(walletAddress);
+
+  if (!ENABLE_REDIS) {
+    return false;
+  }
+
+  const cache = {
+    data: data,
+    updatedAt: (new Date()).getTime()
+  }
+
+  return await Redis.setex(redisKey, TIER_CACHED_TTL, JSON.stringify(cache));
+};
+
+const deleteRedisUserTierBalance = (walletAddress) => {
+  let redisKey = getRedisKeyUserTierBalance(walletAddress);
+  if (Redis.exists(redisKey)) {
+    logRedisUtil(`deleteRedisUserTierBalance - existed key ${redisKey} on redis`);
+    // remove old key
+    Redis.del(redisKey);
+    return true;
+  }
+
+  return false;
+};
+
 module.exports = {
   // POOL LIST
   checkExistRedisPoolList,
@@ -259,4 +347,20 @@ module.exports = {
   getRedisTopBid,
   setRedisTopBid,
   checkExistTopBid,
+
+  // staking event
+  getRedisStakingLastBlockNumber,
+  setRedisStakingLastBlockNumber,
+  checkExistStakingLastBlockNumber,
+
+  // top users
+  getRedisTopUsersStaking,
+  setRedisTopUsersStaking,
+  checkExistTopUsersStaking,
+
+  // user tiers
+  getRedisUserTierBalance,
+  checkExistRedisUserTierBalance,
+  createRedisUserTierBalance,
+  deleteRedisUserTierBalance,
 };

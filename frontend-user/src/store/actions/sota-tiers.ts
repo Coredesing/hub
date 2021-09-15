@@ -35,15 +35,19 @@ export const getTiers = (forceUsingEther: string = 'eth') => {
         return;
       }
 
-      let result = resObj.data;
+      const result = resObj.data;
 
-      result = result.filter((e: any) => e !== '0')
-      result = result.map((e: any) => {
+      let tiers = (result?.tiers || []).filter((e: any) => e !== '0')
+      tiers = tiers.map((e: any) => {
         return parseFloat(convertFromWei(e))
       })
       dispatch({
         type: sotaTiersActions.TIERS_SUCCESS,
-        payload: result,
+        payload: tiers,
+      });
+      dispatch({
+        type: sotaTiersActions.DELAY_TIERS_SUCCESS,
+        payload: result?.delays || [],
       });
 
     } catch (error) {
@@ -67,6 +71,13 @@ export const getUserTier = (address: string, forceUsingEther: string = 'eth') =>
       dispatch({
         type: sotaTiersActions.USER_TIER_SUCCESS,
         payload: userTier,
+      });
+      dispatch({
+        type: sotaTiersActions.USER_INFO_SUCCESS,
+        payload: {
+          totalStaked: +resObj.data?.stakedInfo?.tokenStaked || 0,
+          uniStaked: +resObj.data?.stakedInfo?.uniStaked || 0,
+        },
       });
 
     } catch (error) {
@@ -101,20 +112,21 @@ export const getUserInfo = (address: string, forceUsingEther: string = 'eth', to
       //   rateStakeInfo
       // } = await getTokenStakeSmartContractInfo(contract, address);
       // await dispatch(getRates(rateSettings));
-      const tokenStakes = {
-        resultPkf: 0,
-        pkfStaked: 0,
-        resultUni: 0,
-        uniStaked: 0,
-        resultMantra: 0,
-        mantraStaked: 0,
-        ePkf: 0,
-      }
+      // const tokenStakes = {
+      //   resultPkf: 0,
+      //   pkfStaked: 0,
+      //   resultUni: 0,
+      //   uniStaked: 0,
+      //   resultMantra: 0,
+      //   mantraStaked: 0,
+      //   ePkf: 0,
+      //   tokenStaked: 0,
+      // }
 
-      dispatch({
-        type: sotaTiersActions.USER_INFO_SUCCESS,
-        payload: tokenStakes,
-      });
+      // dispatch({
+      //   type: sotaTiersActions.USER_INFO_SUCCESS,
+      //   payload: tokenStakes,
+      // });
 
     } catch (error) {
       dispatch({

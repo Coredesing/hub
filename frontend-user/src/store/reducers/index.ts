@@ -39,7 +39,8 @@ import {
   getUserInfoReducer,
   withdrawFeeReducer,
   withdrawPercentReducer,
-  ratesReducer
+  ratesReducer,
+  getDelayTiersReducer,
 } from './sota-tiers'
 import { getAllowanceReducer, approveReducer } from './sota-token';
 import { messageReducer } from './message';
@@ -99,7 +100,8 @@ const rootReducer = combineReducers({
   withdrawPercent: withdrawPercentReducer,
   rates: ratesReducer,
   messages: messageReducer,
-  alertTypeIsPush: getTypeIsPushNotiReducer
+  alertTypeIsPush: getTypeIsPushNotiReducer,
+  delayTiers: getDelayTiersReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

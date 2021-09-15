@@ -14,7 +14,7 @@ import useCommonStyle from '../../../styles/CommonStyle';
 import moment from "moment";
 import { numberWithCommas } from '../../../utils/formatNumber';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { alertSuccess, alertFailure } from '../../../store/actions/alert';
 
 import useTokenDetails from '../../../hooks/useTokenDetails';
@@ -31,9 +31,12 @@ import { ChainDefault, ETH_CHAIN_ID } from '../../../constants/network'
 import { useTypedSelector } from '../../../hooks/useTypedSelector';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { BigNumber, utils } from 'ethers';
-import ModalSwitchPool from '../ModalSwitchPool';
-import useSwitchPool from '../hook/useSwitchPool';
+// import ModalSwitchPool from '../ModalSwitchPool';
+// import useSwitchPool from '../hook/useSwitchPool';
 import { getUserTier } from '../../../store/actions/sota-tiers';
+import { TIERS } from '@app-constants';
+import clsx from 'clsx';
+import { Box } from '@material-ui/core';
 
 
 const ONE_DAY_IN_SECONDS = 86400;
@@ -48,10 +51,10 @@ const ArrowIcon = () => {
 }
 
 const LinearPool = (props: any) => {
-  const { connectedAccount, poolDetail, poolAddress, reload, setOpenModalTransactionSubmitting, setTransactionHashes, poolsList } = props
+  const { connectedAccount, poolDetail, poolAddress, reload, setOpenModalTransactionSubmitting, setTransactionHashes, poolsList, listTopStaked } = props
   const styles = useStyles();
   const dispatch = useDispatch();
-
+  const { data: delayTiers = [] } = useSelector((state: any) => state.delayTiers);
   const { appChainID, walletChainID } = useTypedSelector(state => state.appNetwork).data;
   const { tokenDetails } = useTokenDetails(poolDetail?.acceptedToken, ChainDefault.name);
   const [tokenAllowance, setTokenAllowance] = useState(BigNumber.from('0'));
@@ -65,7 +68,7 @@ const LinearPool = (props: any) => {
   const [showUnstakeModal, setShowUnstakeModal] = useState(false);
   const [unstakeAmount, setUnstakeAmount] = useState('0');
   const [showClaimModal, setShowClaimModal] = useState(false);
-  const [showSwitchModal, setShowSwitchModal] = useState(false);
+  // const [showSwitchModal, setShowSwitchModal] = useState(false);
 
   const { linearStakeToken, transactionHash: stakeTransactionHash } = useLinearStake(poolAddress, poolDetail?.pool_id, stakeAmount);
   const { linearClaimToken, transactionHash: unstakeTransactionHash } = useLinearClaim(poolAddress, poolDetail?.pool_id);
@@ -272,30 +275,30 @@ const LinearPool = (props: any) => {
     setTransactionHashes([{ tnx: claimPendingTransactionHash, isApprove: false }])
   }, [claimPendingTransactionHash, setOpenModalTransactionSubmitting, setTransactionHashes])
 
-  const onShowSwitchPoolModal = () => {
-    setShowSwitchModal(true);
-  }
+  // const onShowSwitchPoolModal = () => {
+  //   setShowSwitchModal(true);
+  // }
 
-  const onCloseSwitchModal = () => {
-    setShowSwitchModal(false);
-  }
+  // const onCloseSwitchModal = () => {
+  //   setShowSwitchModal(false);
+  // }
 
-  const {linearSwitchPool, transactionHash: transactionHashSwitchPool} = useSwitchPool(poolDetail.pool_address)
-  const [idSwitched, setIdSwitched] = useState();
-  const onSwitchPool = async (fromId: number, toId: number) => {
-    setOpenModalTransactionSubmitting(true);
-    await linearSwitchPool(fromId, toId);
-    setOpenModalTransactionSubmitting(false);
-    reload && reload();
-  }
+  // const { linearSwitchPool, transactionHash: transactionHashSwitchPool } = useSwitchPool(poolDetail.pool_address)
+  // const [idSwitched, setIdSwitched] = useState();
+  // const onSwitchPool = async (fromId: number, toId: number) => {
+  //   setOpenModalTransactionSubmitting(true);
+  //   await linearSwitchPool(fromId, toId);
+  //   setOpenModalTransactionSubmitting(false);
+  //   reload && reload();
+  // }
 
-  useEffect(() => {
-    if (!transactionHashSwitchPool) {
-      return
-    }
-    setOpenModalTransactionSubmitting(false);
-    setTransactionHashes([{ tnx: transactionHashSwitchPool, isApprove: false }])
-  }, [transactionHashSwitchPool, setTransactionHashes, setOpenModalTransactionSubmitting])
+  // useEffect(() => {
+  //   if (!transactionHashSwitchPool) {
+  //     return
+  //   }
+  //   setOpenModalTransactionSubmitting(false);
+  //   setTransactionHashes([{ tnx: transactionHashSwitchPool, isApprove: false }])
+  // }, [transactionHashSwitchPool, setTransactionHashes, setOpenModalTransactionSubmitting])
 
 
   useEffect(() => {
@@ -320,33 +323,38 @@ const LinearPool = (props: any) => {
         return;
     }
   }, [confirmed, previousStep])
-
   const wrongChain = useMemo(() => {
     return appChainID !== ChainDefault.id || appChainID !== walletChainID;
   }, [appChainID, walletChainID]);
 
+  // const [poolOpening, setPoolOpening] = useState(-1);
+
+  const [expanded, setExpaned] = useState<boolean>(props.expandedDetail);
+
   return (
-    <Accordion className={styles.pool}>
+    <Accordion className={styles.pool} expanded={expanded}>
       <AccordionSummary
         expandIcon={<ArrowIcon />}
         aria-controls="panel1a-content"
         id="panel1a-header"
+        onClick={() => setExpaned(b => !b)}
       >
-        <div className="pool--sumary">
-          <img src={poolDetail?.logo} className="pool--logo" alt="" />
-          <div className="pool--sumary-block">
-            <div className={styles.textPrimary} style={{ fontSize: '20px' }}>
-              {poolDetail?.title}
+        <div className={styles.accordionSummaryContent}>
+          <div className="pool--sumary">
+            <img src={poolDetail?.logo} className="pool--logo" alt="" />
+            <div className="pool--sumary-block">
+              <div className={styles.textPrimary} style={{ fontSize: '20px' }}>
+                {poolDetail?.title}
+              </div>
+              <div className={styles.textSecondary + ' mobile-hidden'}>
+                {
+                  poolDetail?.rkp_rate > 0 ?
+                    <span>With IDO</span> :
+                    <span style={{ color: '#D0AA4D' }}>Without IDO</span>
+                }
+              </div>
             </div>
-            <div className={styles.textSecondary + ' mobile-hidden'}>
-              {
-                poolDetail?.rkp_rate > 0 ?
-                  <span>With IDO</span> :
-                  <span style={{ color: '#D0AA4D' }}>Without IDO</span>
-              }
-            </div>
-          </div>
-          {/* <div className="pool--sumary-block pool--sumary-block__min-width">
+            {/* <div className="pool--sumary-block pool--sumary-block__min-width">
           <div className={styles.textSecondary}>
             Earned
           </div>
@@ -354,7 +362,7 @@ const LinearPool = (props: any) => {
             {(+utils.formatEther(poolDetail?.pendingReward)).toFixed(2)} {tokenDetails?.symbol}
           </div>
         </div> */}
-          {/* <div className="pool--sumary-block pool--sumary-block__min-width-sm">
+            {/* <div className="pool--sumary-block pool--sumary-block__min-width-sm">
           <div className={styles.textSecondary}>
             APR
           </div>
@@ -371,7 +379,7 @@ const LinearPool = (props: any) => {
             }
           </div>
         </div> */}
-          {/* {
+            {/* {
           <div className="pool--sumary-block pool--sumary-block__min-width-lg mobile-hidden">
             <div className={styles.textSecondary}>
               Remaining
@@ -385,30 +393,45 @@ const LinearPool = (props: any) => {
             </div>
           </div>
         } */}
-          <div className="pool--sumary-block mobile-hidden">
+            {/* <div className="pool--sumary-block mobile-hidden">
             <div className={styles.textSecondary}>
               Lock-up term
             </div>
             <div className={styles.textPrimary}>
               {Number(poolDetail?.lockDuration) > 0 ? `${(Number(poolDetail?.lockDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
             </div>
-          </div>
-          <div className="pool--sumary-block mobile-hidden">
-            <div className={styles.textSecondary}>
-              Withdrawal delay time
-            </div>
-            <div className={styles.textPrimary}>
+          </div> */}
+            <Box className="pool--sumary-block">
+              <div className={styles.textSecondary}>
+                Withdrawal delay (days)
+              </div>
+              {/* <div className={styles.textPrimary}>
               {Number(poolDetail?.delayDuration) > 0 ? `${(Number(poolDetail?.delayDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
-            </div>
+            </div> */}
+            </Box>
+            <Box className={clsx("pool--sumary-block", styles.delayTierBoxs)} maxWidth={((delayTiers?.length || 0) * 110) + 'px'} width="100%">
+              {
+                (!!delayTiers?.length) && delayTiers.map((days: number, idx: number) => (
+                  <div className={styles.delayTierBox}>
+                    <h4 className={styles.textSecondary}>
+                      <img src={TIERS[idx + 1].icon} alt="" />
+                      {TIERS[idx + 1]?.name}
+                    </h4>
+                    <h5>{days} day{days > 1 && 's'}</h5>
+                  </div>
+                ))
+              }
+            </Box>
           </div>
-        </div>
-        <div className="pool--expand-text mobile-hidden">
-          Details
+          <div className="pool--expand-text mobile-hidden">
+            Details
+          </div>
         </div>
       </AccordionSummary>
-      <AccordionDetails className="pool--detail">
-        <div className="pool--detail-block" style={{ paddingRight: '10px' }}>
-          {/* <div className="items-center mobile-flex-row justify-between w-full">
+      <AccordionDetails className={styles.accorditionDetails} >
+        <div className="pool--detail">
+          <div className="pool--detail-block" style={{ paddingRight: '10px' }}>
+            {/* <div className="items-center mobile-flex-row justify-between w-full">
             <div className={styles.textSecondary}>
               Earned
             </div>
@@ -416,7 +439,7 @@ const LinearPool = (props: any) => {
               {(+utils.formatEther(poolDetail?.pendingReward)).toFixed(2)} {tokenDetails?.symbol}
             </div>
           </div> */}
-          {/* <div className="items-center mobile-flex-row justify-between w-full">
+            {/* <div className="items-center mobile-flex-row justify-between w-full">
             <div className={styles.textSecondary}>
               APR
             </div>
@@ -433,7 +456,7 @@ const LinearPool = (props: any) => {
               {poolDetail?.APR}%
             </div>
           </div> */}
-          {/* {
+            {/* {
             poolDetail?.cap && BigNumber.from(poolDetail?.cap).gt(BigNumber.from('0')) &&
             <div className="items-center mobile-flex-row justify-between w-full">
               <div className={styles.textSecondary}>
@@ -444,126 +467,126 @@ const LinearPool = (props: any) => {
               </div>
             </div>
           } */}
-          <div className="items-center mobile-flex-row justify-between w-full">
-            <div className={styles.textSecondary}>
-              Lock-up term
+            <div className="items-center mobile-flex-row justify-between w-full">
+              <div className={styles.textSecondary}>
+                Lock-up term
+              </div>
+              <div className={styles.textPrimary}>
+                {Number(poolDetail?.lockDuration) > 0 ? `${(Number(poolDetail?.lockDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
+              </div>
             </div>
-            <div className={styles.textPrimary}>
-              {Number(poolDetail?.lockDuration) > 0 ? `${(Number(poolDetail?.lockDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
+            <div className="items-center mobile-flex-row justify-between w-full">
+              <div className={styles.textSecondary}>
+                Withdrawal delay time
+              </div>
+              <div className={styles.textPrimary}>
+                {Number(poolDetail?.delayDuration) > 0 ? `${(Number(poolDetail?.delayDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
+              </div>
             </div>
-          </div>
-          <div className="items-center mobile-flex-row justify-between w-full">
-            <div className={styles.textSecondary}>
-              Withdrawal delay time
-            </div>
-            <div className={styles.textPrimary}>
-              {Number(poolDetail?.delayDuration) > 0 ? `${(Number(poolDetail?.delayDuration) / ONE_DAY_IN_SECONDS).toFixed(0)} days` : 'None'}
-            </div>
-          </div>
 
-          <div className="pool--detail-block__grid items-center mobile-flex-row justify-between w-full">
-            <div className={styles.textSecondary}>
-              Total pool amount
-            </div>
-            <div className={styles.textPrimary}>
+            <div className="pool--detail-block__grid items-center mobile-flex-row justify-between w-full">
+              <div className={styles.textSecondary}>
+                Total pool amount
+              </div>
+              <div className={styles.textPrimary}>
 
-              {(poolDetail?.cap && BigNumber.from(poolDetail?.cap).gt(BigNumber.from('0'))) ? `${(+utils.formatEther(poolDetail?.cap)).toFixed(2)} ${tokenDetails?.symbol}` : 'Unlimited'}
+                {(poolDetail?.cap && BigNumber.from(poolDetail?.cap).gt(BigNumber.from('0'))) ? `${(+utils.formatEther(poolDetail?.cap)).toFixed(2)} ${tokenDetails?.symbol}` : 'Unlimited'}
+              </div>
             </div>
-          </div>
-          {
-            poolDetail?.cap && BigNumber.from(poolDetail?.cap).gt(BigNumber.from('0')) &&
-            <div className={styles.progressArea}>
-              <div className={styles.progress}>
-                <span
-                  className={`${styles.currentProgress} ${parseFloat(progress) > 0 ? "" : "inactive"
-                    }`}
-                  style={{
-                    width: `${parseFloat(progress) > 99
+            {
+              poolDetail?.cap && BigNumber.from(poolDetail?.cap).gt(BigNumber.from('0')) &&
+              <div className={styles.progressArea}>
+                <div className={styles.progress}>
+                  <span
+                    className={`${styles.currentProgress} ${parseFloat(progress) > 0 ? "" : "inactive"
+                      }`}
+                    style={{
+                      width: `${parseFloat(progress) > 99
                         ? 100
                         : Math.round(parseFloat(progress))
-                      }%`,
-                  }}
-                >
-                  <img
-                    className={styles.iconCurrentProgress}
-                    src="/images/icons/icon_progress.svg"
-                    alt=""
-                  />
-                </span>
+                        }%`,
+                    }}
+                  >
+                    <img
+                      className={styles.iconCurrentProgress}
+                      src="/images/icons/icon_progress.svg"
+                      alt=""
+                    />
+                  </span>
+                </div>
+                <div className={styles.currentPercentage}>({Number(progress).toFixed(0)}%)</div>
               </div>
-              <div className={styles.currentPercentage}>({Number(progress).toFixed(0)}%)</div>
-            </div>
-          }
+            }
 
 
-          <div className="pool--detail-block__grid items-center mobile-flex-row justify-between w-full">
-            <div className={styles.textSecondary}>
-              Start time join
+            <div className="pool--detail-block__grid items-center mobile-flex-row justify-between w-full">
+              <div className={styles.textSecondary}>
+                Start time join
+              </div>
+              <div className={styles.textPrimary}>
+                {moment.unix(Number(poolDetail?.startJoinTime)).format("YYYY-MM-DD HH:mm")}
+              </div>
             </div>
-            <div className={styles.textPrimary}>
-              {moment.unix(Number(poolDetail?.startJoinTime)).format("YYYY-MM-DD HH:mm")}
+            <div className="pool--detail-block__grid items-center mobile-flex-row justify-between w-full">
+              <div className={styles.textSecondary}>
+                End time join
+              </div>
+              <div className={styles.textPrimary}>
+                {moment.unix(Number(poolDetail?.endJoinTime)).format("YYYY-MM-DD HH:mm")}
+              </div>
             </div>
+            {
+              BigNumber.from(poolDetail?.minInvestment || '0').gt(BigNumber.from('0')) &&
+              <div className="pool--detail-block__grid items-center mobile-flex-row justify-between w-full">
+                <div className={styles.textSecondary}>
+                  Stake amount (Min)
+                </div>
+                <div className={styles.textPrimary}>
+                  {(+utils.formatEther(poolDetail?.minInvestment)).toFixed(2)} {tokenDetails?.symbol}/1 person
+                </div>
+              </div>
+            }
+            {
+              BigNumber.from(poolDetail?.maxInvestment || '0').gt(BigNumber.from('0')) &&
+              <div className="pool--detail-block__grid items-center mobile-flex-row justify-between w-full">
+                <div className={styles.textSecondary}>
+                  Stake amount (Max)
+                </div>
+                <div className={styles.textPrimary}>
+                  {(+utils.formatEther(poolDetail?.maxInvestment)).toFixed(2)} {tokenDetails?.symbol}/1 person
+                </div>
+              </div>
+            }
+            {
+              Number(poolDetail?.stakingJoinedTime) > 0 && Number(poolDetail?.lockDuration) > 0 &&
+              <div className="pool--detail-block__grid items-center mobile-flex-row justify-between w-full">
+                <div className={styles.textSecondary}>
+                  Expiry Date
+                </div>
+                <div className={styles.textPrimary}>
+                  {moment.unix(Number(poolDetail?.stakingJoinedTime) + Number(poolDetail?.lockDuration)).format("YYYY-MM-DD HH:mm:ss")}
+                </div>
+              </div>
+            }
+            {
+              Number(poolDetail?.stakingJoinedTime) > 0 && Number(poolDetail?.lockDuration) > 0 && BigNumber.from(poolDetail?.stakingAmount || '0').gt(BigNumber.from('0')) &&
+              <div className="pool--detail-block__grid items-center mobile-flex-row justify-between w-full">
+                <div className={styles.textSecondary}>
+                  Estimated profit
+                </div>
+                <div className={styles.textPrimary}>
+                  {
+                    Number(utils.formatEther(BigNumber.from(poolDetail?.stakingAmount || '0')
+                      .mul(BigNumber.from(poolDetail?.APR || '0')).div(BigNumber.from('100'))
+                      .mul(BigNumber.from(poolDetail?.lockDuration)).div(BigNumber.from(ONE_YEAR_IN_SECONDS))
+                    )).toFixed(2)
+                  } {tokenDetails?.symbol}
+                </div>
+              </div>
+            }
           </div>
-          <div className="pool--detail-block__grid items-center mobile-flex-row justify-between w-full">
-            <div className={styles.textSecondary}>
-              End time join
-            </div>
-            <div className={styles.textPrimary}>
-              {moment.unix(Number(poolDetail?.endJoinTime)).format("YYYY-MM-DD HH:mm")}
-            </div>
-          </div>
-          {
-            BigNumber.from(poolDetail?.minInvestment || '0').gt(BigNumber.from('0')) &&
-            <div className="pool--detail-block__grid items-center mobile-flex-row justify-between w-full">
-              <div className={styles.textSecondary}>
-                Stake amount (Min)
-              </div>
-              <div className={styles.textPrimary}>
-                {(+utils.formatEther(poolDetail?.minInvestment)).toFixed(2)} {tokenDetails?.symbol}/1 person
-              </div>
-            </div>
-          }
-          {
-            BigNumber.from(poolDetail?.maxInvestment || '0').gt(BigNumber.from('0')) &&
-            <div className="pool--detail-block__grid items-center mobile-flex-row justify-between w-full">
-              <div className={styles.textSecondary}>
-                Stake amount (Max)
-              </div>
-              <div className={styles.textPrimary}>
-                {(+utils.formatEther(poolDetail?.maxInvestment)).toFixed(2)} {tokenDetails?.symbol}/1 person
-              </div>
-            </div>
-          }
-          {
-            Number(poolDetail?.stakingJoinedTime) > 0 && Number(poolDetail?.lockDuration) > 0 &&
-            <div className="pool--detail-block__grid items-center mobile-flex-row justify-between w-full">
-              <div className={styles.textSecondary}>
-                Expiry Date
-              </div>
-              <div className={styles.textPrimary}>
-                {moment.unix(Number(poolDetail?.stakingJoinedTime) + Number(poolDetail?.lockDuration)).format("YYYY-MM-DD HH:mm:ss")}
-              </div>
-            </div>
-          }
-          {
-            Number(poolDetail?.stakingJoinedTime) > 0 && Number(poolDetail?.lockDuration) > 0 && BigNumber.from(poolDetail?.stakingAmount || '0').gt(BigNumber.from('0')) &&
-            <div className="pool--detail-block__grid items-center mobile-flex-row justify-between w-full">
-              <div className={styles.textSecondary}>
-                Estimated profit
-              </div>
-              <div className={styles.textPrimary}>
-                {
-                  Number(utils.formatEther(BigNumber.from(poolDetail?.stakingAmount || '0')
-                    .mul(BigNumber.from(poolDetail?.APR || '0')).div(BigNumber.from('100'))
-                    .mul(BigNumber.from(poolDetail?.lockDuration)).div(BigNumber.from(ONE_YEAR_IN_SECONDS))
-                  )).toFixed(2)
-                } {tokenDetails?.symbol}
-              </div>
-            </div>
-          }
-        </div>
 
-        {/*
+          {/*
         <div className="pool--detail-block pool--detail-block__claim">
            <div>
             <div className={styles.textSecondary}>
@@ -586,138 +609,138 @@ const LinearPool = (props: any) => {
           />
         </div>
         */}
-        {
-          !connectedAccount &&
-          <div className="pool--detail-block pool--detail-block__claim">
-            <div className={styles.textSecondary}>
-              Start Staking
+          {
+            !connectedAccount &&
+            <div className="pool--detail-block pool--detail-block__claim">
+              <div className={styles.textSecondary}>
+                Start Staking
+              </div>
+
+              <ConnectButton />
             </div>
+          }
 
-            <ConnectButton />
-          </div>
-        }
+          {
+            connectedAccount && tokenAllowance.eq(BigNumber.from('0')) &&
+            <div className="pool--detail-block pool--detail-block__claim">
+              <div className={styles.textSecondary}>
+                Enable Pool
+              </div>
 
-        {
-          connectedAccount && tokenAllowance.eq(BigNumber.from('0')) &&
-          <div className="pool--detail-block pool--detail-block__claim">
-            <div className={styles.textSecondary}>
-              Enable Pool
+              <div style={{ marginTop: 'auto' }}>
+                <Button
+                  text="Enable"
+                  onClick={() => handleApprove()}
+                  disabled={wrongChain}
+                  backgroundColor="#72F34B"
+                  style={{ color: '#000' }}
+                />
+              </div>
             </div>
+          }
 
-            <div style={{ marginTop: 'auto' }}>
+          {
+            connectedAccount && tokenAllowance.gt(BigNumber.from('0')) &&
+            <div className="pool--detail-block">
+              <div style={{ marginBottom: '20px' }}>
+                <div className={styles.textSecondary}>
+                  Staking
+                </div>
+                <div className={styles.textPrimary}>
+                  {numberWithCommas(utils.formatEther(poolDetail?.stakingAmount), 4)} {tokenDetails?.symbol}
+                </div>
+              </div>
+
+              <div className="xs-flex-row justify-between" style={{ marginTop: 'auto' }}>
+                {
+                  (Number(poolDetail?.startJoinTime) > 0 && Number(poolDetail?.startJoinTime) < moment().unix()) &&
+                  (Number(poolDetail?.endJoinTime) > 0 && Number(poolDetail?.endJoinTime) > moment().unix()) &&
+                  (BigNumber.from(poolDetail?.cap).eq(BigNumber.from('0')) || BigNumber.from(poolDetail?.cap).sub(BigNumber.from(poolDetail?.totalStaked)).gt(BigNumber.from('0'))) &&
+                  <Button
+                    text="Stake"
+                    onClick={() => setShowStakeModal(true)}
+                    backgroundColor="#72F34B"
+                    style={{ color: '#000' }}
+                    disabled={
+                      wrongChain ||
+                      (Number(poolDetail?.startJoinTime) > 0 && Number(poolDetail?.startJoinTime) > moment().unix()) ||
+                      (Number(poolDetail?.endJoinTime) > 0 && Number(poolDetail?.endJoinTime) < moment().unix())
+                    }
+                  />
+                }
+                {
+                  BigNumber.from(poolDetail?.stakingAmount || '0').gt(BigNumber.from('0')) &&
+                  <Button
+                    text="Untake"
+                    onClick={() => setShowUnstakeModal(true)}
+                    backgroundColor="#191920"
+                    style={{
+                      color: '#72F34B',
+                      border: '1px solid #72F34B',
+                      margin: 'auto 0px 10px 6px',
+                    }}
+                    disabled={
+                      wrongChain ||
+                      poolDetail?.stakingAmount === "0" ||
+                      (Number(poolDetail?.lockDuration) > 0 && (Number(poolDetail?.stakingJoinedTime) + Number(poolDetail?.lockDuration)) > moment().unix())
+                    }
+                  />
+                }
+                {/* {
+                  BigNumber.from(poolDetail?.stakingAmount || '0').gt(BigNumber.from('0')) &&
+                  <Button
+                    text="Switch Pool"
+                    onClick={() => {
+                      setIdSwitched(poolDetail.pool_id);
+                      onShowSwitchPoolModal();
+                    }}
+                    backgroundColor="#3232DC"
+                    style={{ width: 'unset', minWidth: '100px', marginLeft: '6px' }}
+                    disabled={
+                      wrongChain ||
+                      poolDetail?.stakingAmount === "0" ||
+                      (Number(poolDetail?.lockDuration) > 0 && (Number(poolDetail?.stakingJoinedTime) + Number(poolDetail?.lockDuration)) > moment().unix())
+                    }
+                  />
+                } */}
+              </div>
+            </div>
+          }
+
+          {
+            connectedAccount && tokenAllowance.gt(BigNumber.from('0')) && BigNumber.from(poolDetail?.pendingWithdrawal?.amount || '0').gt(BigNumber.from('0')) &&
+            <div className="pool--detail-block">
+              <div className="pool--detail-block__withdraw" style={{}}>
+                <div>
+                  <div className={styles.textSecondary}>
+                    Withdrawal Amount
+                  </div>
+                  <div className={styles.textPrimary}>
+                    {numberWithCommas(utils.formatEther(poolDetail?.pendingWithdrawal?.amount), 4)} {tokenDetails?.symbol}
+                  </div>
+                </div>
+                <div style={{}}>
+                  <div className={styles.textSecondary}>
+                    Available at
+                  </div>
+                  <div className={styles.textPrimary}>
+                    {moment.unix(Number(poolDetail?.pendingWithdrawal?.applicableAt)).format("YYYY-MM-DD HH:mm:ss")}
+                  </div>
+                </div>
+              </div>
+
               <Button
-                text="Enable"
-                onClick={() => handleApprove()}
-                disabled={wrongChain}
-                backgroundColor="#3232DC"
+                text="Withdraw"
+                onClick={handleClaimPendingWithdraw}
+                backgroundColor="#72F34B"
+                style={{ color: '#000' }}
+                disabled={Number(poolDetail?.pendingWithdrawal?.applicableAt) > moment().unix() || wrongChain}
               />
             </div>
-          </div>
-        }
-
-        {
-          connectedAccount && tokenAllowance.gt(BigNumber.from('0')) &&
-          <div className="pool--detail-block">
-            <div style={{ marginBottom: '20px' }}>
-              <div className={styles.textSecondary}>
-                Staking
-              </div>
-              <div className={styles.textPrimary}>
-                {(+utils.formatEther(poolDetail?.stakingAmount)).toFixed(2)} {tokenDetails?.symbol}
-              </div>
-            </div>
-
-            <div className="xs-flex-row justify-between" style={{ marginTop: 'auto' }}>
-              {
-                (Number(poolDetail?.startJoinTime) > 0 && Number(poolDetail?.startJoinTime) < moment().unix()) &&
-                (Number(poolDetail?.endJoinTime) > 0 && Number(poolDetail?.endJoinTime) > moment().unix()) &&
-                (BigNumber.from(poolDetail?.cap).eq(BigNumber.from('0')) || BigNumber.from(poolDetail?.cap).sub(BigNumber.from(poolDetail?.totalStaked)).gt(BigNumber.from('0'))) &&
-                <Button
-                  text="Stake"
-                  onClick={() => setShowStakeModal(true)}
-                  backgroundColor="#3232DC"
-                  disabled={
-                    wrongChain ||
-                    (Number(poolDetail?.startJoinTime) > 0 && Number(poolDetail?.startJoinTime) > moment().unix()) ||
-                    (Number(poolDetail?.endJoinTime) > 0 && Number(poolDetail?.endJoinTime) < moment().unix())
-                  }
-                />
-              }
-              {
-                BigNumber.from(poolDetail?.stakingAmount || '0').gt(BigNumber.from('0')) &&
-                <Button
-                  text="Untake"
-                  onClick={() => setShowUnstakeModal(true)}
-                  backgroundColor="#191920"
-                  style={{
-                    color: '#6398FF',
-                    border: '1px solid #6398FF',
-                    margin: 'auto 0px 10px 6px',
-                  }}
-                  disabled={
-                    wrongChain ||
-                    poolDetail?.stakingAmount === "0" ||
-                    (Number(poolDetail?.lockDuration) > 0 && (Number(poolDetail?.stakingJoinedTime) + Number(poolDetail?.lockDuration)) > moment().unix())
-                  }
-                />
-              }
-              {
-                BigNumber.from(poolDetail?.stakingAmount || '0').gt(BigNumber.from('0')) &&
-                <Button
-                  text="Switch Pool"
-                  onClick={() => {
-                    setIdSwitched(poolDetail.pool_id);
-                    onShowSwitchPoolModal();
-                  }}
-                  backgroundColor="#3232DC"
-                  style={{ width: 'unset', minWidth: '100px', marginLeft: '6px' }}
-                  disabled={
-                    wrongChain ||
-                    poolDetail?.stakingAmount === "0" ||
-                    (Number(poolDetail?.lockDuration) > 0 && (Number(poolDetail?.stakingJoinedTime) + Number(poolDetail?.lockDuration)) > moment().unix())
-                  }
-                />
-              }
-            </div>
-          </div>
-        }
-
-        {
-          connectedAccount && tokenAllowance.gt(BigNumber.from('0')) && BigNumber.from(poolDetail?.pendingWithdrawal?.amount || '0').gt(BigNumber.from('0')) &&
-          <div className="pool--detail-block">
-            <div className="pool--detail-block__withdraw" style={{}}>
-              <div>
-                <div className={styles.textSecondary}>
-                  Withdrawal Amount
-                </div>
-                <div className={styles.textPrimary}>
-                  {(+utils.formatEther(poolDetail?.pendingWithdrawal?.amount)).toFixed(2)} {tokenDetails?.symbol}
-                </div>
-              </div>
-              <div style={{}}>
-                <div className={styles.textSecondary}>
-                  Available at
-                </div>
-                <div className={styles.textPrimary}>
-                  {moment.unix(Number(poolDetail?.pendingWithdrawal?.applicableAt)).format("YYYY-MM-DD HH:mm:ss")}
-                </div>
-              </div>
-            </div>
-
-            <Button
-              text="Withdraw"
-              onClick={handleClaimPendingWithdraw}
-              backgroundColor="#3232DC"
-              style={{
-                width: '160px',
-              }}
-              disabled={Number(poolDetail?.pendingWithdrawal?.applicableAt) > moment().unix() || wrongChain}
-            />
-          </div>
-        }
-
+          }
+        </div>
       </AccordionDetails>
-      <ModalSwitchPool
+      {/* <ModalSwitchPool
         open={showSwitchModal}
         onClose={onCloseSwitchModal}
         idSwitched={idSwitched}
@@ -727,7 +750,7 @@ const LinearPool = (props: any) => {
         tokenBalance={tokenBalance}
         amount={stakeAmount}
         stakingAmount={Number(utils.formatEther(poolDetail?.stakingAmount)).toFixed(2)}
-        onConfirm={onSwitchPool} />
+        onConfirm={onSwitchPool} /> */}
       <ModalStake
         open={showStakeModal}
         amount={stakeAmount}

@@ -28,15 +28,21 @@ const useStyles = makeStyles((theme: any) => {
       },
       '& .pool--sumary': {
         display: 'flex',
-        alignItems: 'center',
+        // alignItems: 'center',
+        [theme.breakpoints.down('sm')]: {
+          display: 'grid',
+          gap: '10px',
+          placeContent: 'center',
+          placeItems: 'center',
+        },
       },
       '& .pool--sumary-block': {
         marginLeft: '10px',
         marginRight: '10px',
         '&:nth-child(2)': {
-          width: '80px',
+          // width: '80px',
           [theme.breakpoints.up('md')]: {
-            width: '180px'
+            // width: '180px'
           },
         },
       },
@@ -115,7 +121,7 @@ const useStyles = makeStyles((theme: any) => {
           width: '100% !important',
         },
         // borderRight: '1px solid #37373D',
-        
+
         '&:not(:last-child)': {
           borderRight: '1px solid #37373D',
           [theme.breakpoints.down('xs')]: {
@@ -144,10 +150,10 @@ const useStyles = makeStyles((theme: any) => {
         },
         marginBottom: '20px'
       },
-      
+
       '& .pool--detail-block__grid': {
-        display: 'grid', 
-        gridColumnGap: '12px', 
+        display: 'grid',
+        gridColumnGap: '12px',
         gridTemplateColumns: '140px 2fr',
         alignItems: 'center',
         marginBottom: '3px'
@@ -177,7 +183,9 @@ const useStyles = makeStyles((theme: any) => {
         width: '100%'
       }
     },
-
+    accorditionDetails: {
+      display: 'unset',
+    },
     progressArea: {
       marginBottom: 12,
       width: '280px',
@@ -206,11 +214,11 @@ const useStyles = makeStyles((theme: any) => {
     currentProgress: {
       position: 'relative',
       height: 4,
-      background: '#D01F36',
+      background: '#72F34B',
       borderRadius: 20,
       display: 'block',
       transition: '2s',
-      boxShadow: '0px 4px 8px rgba(208, 31, 54, 0.4)',
+      // boxShadow: '0px 4px 8px rgba(208, 31, 54, 0.4)',
 
       '&.inactive': {
         width: '0 !important',
@@ -234,7 +242,11 @@ const useStyles = makeStyles((theme: any) => {
       color: '#FFFFFF'
     },
     textSecondary: {
-      color: '#AEAEAE'
+      color: '#AEAEAE',
+      fontFamily: 'Firs Neue',
+      fontWeight: 'normal',
+      fontSize: '14px',
+      lineHeight: '24px',
     },
     link: {
       backgroundColor: 'Transparent',
@@ -248,6 +260,47 @@ const useStyles = makeStyles((theme: any) => {
       '&:hover': {
         color: '#4f79cc',
       }
+    },
+    delayTierBoxs: {
+      display: 'grid',
+      gap: '10px',
+      gridTemplateColumns: 'repeat(auto-fit, 100px)',
+      [theme.breakpoints.down('xs')]: {
+        gridTemplateColumns: '1fr',
+      },
+    },
+    delayTierBox: {
+      fontFamily: 'Firs Neue',
+      fontWeight: 'normal',
+
+      '& h4': {
+        display: 'grid',
+        gridTemplateColumns: '30px auto',
+        gap: '6px',
+        marginBottom: '5px',
+        placeContent: 'center',
+        '& img': {
+          width: '30px',
+          height: '26px',
+        }
+      },
+      '& h5': {
+        fontFamily: 'Firs Neue',
+        fontWeight: 600,
+        fontSize: '16px',
+        textAlign: 'center',
+      }
+    },
+    accordionSummary: {
+      display: 'unset',
+    },
+    accordionSummaryContent: {
+      width: '100%',
+      display: 'grid',
+      gridTemplateColumns: 'calc(100% - 50px) 50px',
+      [theme.breakpoints.down('xs')]: {
+        gridTemplateColumns: '1fr',
+      },
     }
   }
 });

@@ -86,7 +86,10 @@ class UserController {
 
         return HelperUtils.responseSuccess({
           tier: cached.data[0],
-          stakedInfo: cached.data[1],
+          stakedInfo: {
+            tokenStaked: new BigNumber(cached.data[2]).toFixed(4),
+            uniStaked: new BigNumber(0).toFixed(4)
+          },
         });
       }
 

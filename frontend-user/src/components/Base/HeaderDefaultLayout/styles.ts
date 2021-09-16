@@ -449,7 +449,7 @@ const useStyles = makeStyles((theme) => {
       fontWeight: 600,
       fontSize: "14px",
       lineHeight: "24px",
-      color: "#FFFFFF",
+      color: "#FFFFFF !important",
       mixBlendMode: "normal",
       "&:hover": {
         color: "#FFFFFF",

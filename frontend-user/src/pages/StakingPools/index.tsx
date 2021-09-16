@@ -271,7 +271,7 @@ const StakingPools = (props: any) => {
           <div className="pool-area">
             {
               !loadingDetailList && poolType === POOL_TYPE_LINEAR && filteredLinearPools.length > 0 &&
-              filteredLinearPools.map((pool: any) => (
+              filteredLinearPools.map((pool: any, idx: number) => (
                 <LinearPool
                   expandedDetail={filteredLinearPools[0].pool_id === pool.pool_id}
                   key={pool?.id}

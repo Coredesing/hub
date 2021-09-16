@@ -412,7 +412,7 @@ const LinearPool = (props: any) => {
             <Box className={clsx("pool--sumary-block", styles.delayTierBoxs)} maxWidth={((delayTiers?.length || 0) * 110) + 'px'} width="100%">
               {
                 (!!delayTiers?.length) && delayTiers.map((days: number, idx: number) => (
-                  <div className={styles.delayTierBox}>
+                  <div className={styles.delayTierBox} key={idx}>
                     <h4 className={styles.textSecondary}>
                       <img src={TIERS[idx + 1].icon} alt="" />
                       {TIERS[idx + 1]?.name}

@@ -28,7 +28,7 @@ class StakingEventService {
       const cachedData = {
         start_time: param.start_time,
         end_time: param.end_time,
-        limit: param.top ? param.top : param.limit,
+        limit: param.limit ? param.limit : param.top,
         top: data,
       }
 

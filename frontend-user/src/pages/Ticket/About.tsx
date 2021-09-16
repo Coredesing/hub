@@ -44,7 +44,7 @@ function TabPanel(props: any) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -286,7 +286,7 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
             </TableHead>
             <TableBody>
               {(pagination.list || []).map((row, idx) => (
-                <TableRowBody key={row.id}>
+                <TableRowBody key={idx}>
                   <TableCell component="th" scope="row"> {((page - 1) * limitPage + idx + 1)} </TableCell>
                   <TableCell align="left">{ isTicketBid ? cvtAddressToStar(row.wallet_address) : row.wallet_address }</TableCell>
                   {isTicketBid && <TableCell align="left">{ numberWithCommas((+row.amount / 10 ** token?.decimals) + '', 4) }</TableCell>}

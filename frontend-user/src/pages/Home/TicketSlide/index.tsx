@@ -22,7 +22,7 @@ const TicketSlide = ({ data }: any) => {
         }}
       >
         {(data || []).map((card: any, id: any) => (
-          <SwiperSlide>
+          <SwiperSlide key={id}>
             <Card
               card={card}
               key={id}

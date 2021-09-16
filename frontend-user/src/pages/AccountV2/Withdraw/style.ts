@@ -4,8 +4,8 @@ import { typeDisplayFlex } from '../../../styles/CommonStyle';
 const useStyles = makeStyles((theme: any) => {
   return {
     modalWithdraw: {
-      backgroundImage: 'url(/images/bg_layout.svg)',
-      backgroundRepeat: 'no-repeat',
+      // backgroundImage: 'url(/images/bg_layout.svg)',
+      // backgroundRepeat: 'no-repeat',
       backgroundSize: '100% auto',
       backgroundPosition: '0px 80px',
       ...typeDisplayFlex,

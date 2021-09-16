@@ -58,7 +58,15 @@ const Tiers = (props: any) => {
 
   const [currentProcess, setCurrentProcess] = useState(undefined) as any;
   const totalStaked = userInfo?.totalStaked || 0;
-  const pointsLeftToNextTier = tiers?.[userTier] && tiers[userTier] > totalStaked ? tiers[userTier] - totalStaked : 0 ;
+  const pointsLeftToNextTier = (() => {
+    const lengTier = tiers?.length;
+    if(!lengTier) return;
+    if(userTier === lengTier - 1) {
+      return 'NFT required'
+    } else {
+      return tiers?.[userTier] && tiers[userTier] > totalStaked ? tiers[userTier] - totalStaked : 0;
+    }
+  })();
 
   const calculateProcess = (ListData: any, current: any) => {
     let tierA = 0;

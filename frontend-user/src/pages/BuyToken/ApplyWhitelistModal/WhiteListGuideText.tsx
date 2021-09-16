@@ -10,7 +10,7 @@ function WhiteListGuideText(props: any) {
       </p>
       <div className={styles.whitelistContentModal}>
         <p>
-          Eagle and Phoenix tiers are not required to do the social requirements. However, we recommend 
+          Pro and Legend ranks are not required to do the social requirements. However, we recommend
           following our official Twitter and Telegram groups to stay up-to-date with important announcements.
         </p>
       </div>

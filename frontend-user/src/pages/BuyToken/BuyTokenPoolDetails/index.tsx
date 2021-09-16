@@ -13,15 +13,19 @@ import {
   convertTimeToStringFormatWithoutGMT,
 } from "../../../utils/convertDate";
 import useStyles from "./styles";
-import {ACCEPT_CURRENCY, POOL_STATUS} from "../../../constants";
+import { ACCEPT_CURRENCY, POOL_STATUS } from "../../../constants";
 import BigNumber from "bignumber.js";
-import {getTotalRaiseByPool, showTotalRaisePrice} from "../../../utils/campaign";
+import { getTotalRaiseByPool, showTotalRaisePrice } from "../../../utils/campaign";
 
 type Props = {
   poolDetails: any;
 };
 
 const headers = ["Tier", "Start Buy Time", "End Buy Time"];
+
+const cvtStrToParagraph = (string: string = '') => {
+  return string.split('\n').map((val) => val && <p style={{ marginTop: '20px' }}>{val}</p>)
+}
 
 const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
   const styles = useStyles();
@@ -174,10 +178,12 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
       {poolDetails?.description && (
         <>
           <div className={styles.titleBot}>Project Information</div>
-          <div className={styles.botSection}>{poolDetails?.description}</div>
+          <div className={styles.botSection}>
+            {cvtStrToParagraph(poolDetails?.description)}
+          </div>
         </>
       )}
-{/* 
+      {/* 
       <Dialog
         open={openModal}
         keepMounted

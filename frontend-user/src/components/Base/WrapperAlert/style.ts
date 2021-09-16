@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: any) => {
     },
     alert: {
       width: '100%',
-      maxWidth: '1040px',
+      maxWidth: '1120px',
       marginTop: '12px',
       marginBottom: '12px',
       borderRadius: '2px',

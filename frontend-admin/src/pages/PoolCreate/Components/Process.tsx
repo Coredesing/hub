@@ -49,6 +49,16 @@ function Process(props: any) {
                   label="Only Claim"
                   disabled={isDeployed}
                 />
+                <FormControlLabel
+                    value="only-stake" control={<Radio />}
+                    label="Only Stake"
+                    disabled={isDeployed}
+                />
+                <FormControlLabel
+                    value="only-bid" control={<Radio />}
+                    label="Only Bid"
+                    disabled={isDeployed}
+                />
               </RadioGroup>
             }
           />

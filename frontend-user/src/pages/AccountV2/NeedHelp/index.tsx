@@ -12,7 +12,7 @@ const guideFAQs = [
         href: "https://redkite-faq.polkafoundry.com/guides/before-joining-idos.html",
       },
       {
-        title: "Tier and Reputation",
+        title: "Rank and Reputation",
         href: "https://redkite-faq.polkafoundry.com/guides/tier.html",
       },
       {

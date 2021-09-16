@@ -71,6 +71,7 @@ export const NETWORK_NAME_MAPPINGS: any = {
 
 export interface NetworkInfo {
   name: string;
+  shortName?: string;
   id?: string | undefined;
   icon: string,
   disableIcon: string,
@@ -128,6 +129,7 @@ export const appNetwork: { [key: string]: string } = {
 export const APP_NETWORKS_SUPPORT: {[key: number]: NetworkInfo } = {
   [ETH_CHAIN_ID]: {
     name: 'Ethereum',
+    shortName: 'eth',
     id: ETH_CHAIN_ID,
     icon: "/images/ethereum.svg",
     disableIcon: "/images/ethereum-disabled.png",
@@ -148,6 +150,7 @@ export const APP_NETWORKS_SUPPORT: {[key: number]: NetworkInfo } = {
   },
   [BSC_CHAIN_ID]: {
     name: 'BSC',
+    shortName: 'bsc',
     id: BSC_CHAIN_ID ,
     icon: "/images/bsc.svg",
     disableIcon: "/images/binance-disabled.png",
@@ -168,6 +171,7 @@ export const APP_NETWORKS_SUPPORT: {[key: number]: NetworkInfo } = {
   },
   [POLYGON_CHAIN_ID]: {
     name: 'Polygon',
+    shortName: 'polygon',
     id: POLYGON_CHAIN_ID ,
     icon: "/images/polygon-matic.svg",
     disableIcon: "/images/polygon-matic-disabled.svg",

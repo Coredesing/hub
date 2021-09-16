@@ -15,9 +15,9 @@ export const MenuLeft: IMenuLeft = {
         icon: '/images/account_v3/icons/icon_my_profile.svg',
     },
     tier: {
-        key: 'tier',
-        //   name: 'My Tier',
-        //   icon: '/images/account_v3/icons/icon_my_tier.svg',
+        key: 'rank',
+        name: 'My Rank',
+        icon: '/images/account_v3/icons/icon_my_tier.svg',
     },
     pool: {
         key: 'pool',

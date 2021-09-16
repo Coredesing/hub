@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: any) => {
       color: '#AEAEAE',
 
       '&.active': {
-        color: '#72F34B',
+        color: '#000',
       },
 
       '&:last-child': {
@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme: any) => {
       fontSize: 16,
 
       '&.active': {
-        color: '#FFFFFF',
+        color: '#000',
         background: '#72F34B',
       },
 
@@ -131,7 +131,7 @@ const useStyles = makeStyles((theme: any) => {
       textAlign: 'center',
       position: 'relative',
       left: 'calc(-50% + 14px)',
-
+      color: '#AEAEAE',
       [theme?.breakpoints?.down('sm')]: {
         marginTop: 0,
         fontSize: 14,

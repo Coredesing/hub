@@ -72,7 +72,7 @@ enum HeaderType {
   Main = "Main",
   About = "About the project",
   Participants = "Winner",
-  MyTier = "My Tier"
+  MyTier = "My Rank"
 }
 
 const headers = [HeaderType.Main, HeaderType.MyTier, HeaderType.About, HeaderType.Participants];

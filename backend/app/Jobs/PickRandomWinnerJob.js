@@ -70,7 +70,7 @@ class PickRandomWinnerJob {
       for (let i = 0; i < whitelistObj.data.length; i++) {
         // get user PKF balance and tier from SC
         const wallet = whitelistObj.data[i].wallet_address;
-        const receivedData = await HelperUtils.getUserTierSmart(wallet);
+        const receivedData = await HelperUtils.getUserTierSmartWithCached(wallet);
         const tier = receivedData[0];
         const pkfBalance = receivedData[1];
         // mock test

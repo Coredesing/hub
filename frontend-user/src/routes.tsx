@@ -42,6 +42,7 @@ import ComingSoon from "./pages/ComingSoon/ComingSoon";
 import Ticket from './pages/Ticket';
 import Home from './pages/Home';
 import TicketSale from './pages/TicketSale';
+import StakingPools from './pages/StakingPools';
 
 /**
  * Main App routes.
@@ -128,6 +129,7 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
             exact path="/"
             render={() => <Redirect to={`${'/home'}`} />}
           /> */}
+                    <Route exact path={'/staking-pools'} component={StakingPools} />
                     <Route exact path={'/buy-nft/:id'} component={Ticket} />
                     {/* <Route path={`${'/polkasmith-privacy'}`} component={PolkaSmithPrivacyPolicy} />
                     <Route path={`${'/join-polkasmith'}`} component={JoinPolkaSmith} /> */}

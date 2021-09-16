@@ -22,22 +22,64 @@ const useStyles = makeStyles((theme) => {
     //   }
     // },
     bannerContract: {
+      // background: '#171717',
       width: '100%',
-      padding: '0px 10px',
-      textAlign: 'center',
-      background: '#171717',
-      color: '#fff',
       position: 'fixed',
-      top: 0,
+      top: '90px',
       left: 0,
       zIndex: 1000,
+      [theme.breakpoints.down('xs')]: {
+        top: '70px',
+      }
+      
+    },
+    content: {
+      color: '#fff',
+      padding: '0px 10px',
+      textAlign: 'center',
+      backgroundImage: 'url(/images/banner-3.png)',
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
       fontFamily: "Firs Neue",
       fontStyle: "normal",
       fontWeight: 'normal',
       display: 'grid',
       placeContent: 'center',
       justifyContent: 'center',
-      height: '100px',
+      height: '70px',
+      width: '100%',
+      maxWidth: '1120px',
+      position: 'absolute',
+      left: '50%',
+      transform: 'translate(-50%)',
+      borderRadius: '4px'
+    },
+    wrapperText: {
+      display: 'grid',
+      gap: '10px',
+      gridTemplateColumns: '245px auto',
+      alignItems: 'center',
+      [theme.breakpoints.down('sm')]: {
+        gap: '0px',
+        gridTemplateColumns: 'auto',
+      },
+      '& h3': {
+        fontSize: '16px',
+        fontWeight: 600,
+        fontFamily: "Firs Neue",
+        fontStyle: "normal",
+        wordWrap: 'break-word',
+        wordBreak: 'break-all',
+        '&:nth-child(2)': {
+          display: 'grid',
+          gridTemplateColumns: 'auto auto auto',
+          gap: '6px',
+          '& img': {
+            width: '18px',
+            height: '18px',
+          }
+        }
+      }
     },
     link: {
       color: '#fff',
@@ -53,16 +95,16 @@ const useStyles = makeStyles((theme) => {
     },
     btnCloseBanner: {
       position: "absolute",
-      right: "14px",
-      top: "14px",
+      right: "7px",
+      top: "7px",
       minWidth: "unset",
-      width: "25px",
-      height: "25px",
+      width: "18px",
+      height: "18px",
       borderRadius: "50%",
       background: "#D4D4D4",
       "& img": {
-        width: "25px",
-        height: "25px",
+        width: "18px",
+        height: "18px",
         position: "absolute", // fix tren safari
       },
     },

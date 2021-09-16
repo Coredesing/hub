@@ -17,9 +17,9 @@ const nav = [
     icon: 'icon-list-campaign',
   },
   {
-    title: 'List User',
-    part: adminRoute('/users'),
-    icon: 'icon-users',
+    title: 'Staking Pools',
+    part: adminRoute('/staking'),
+    icon: 'icon-list-campaign',
   },
   {
     title: 'KYC User List',
@@ -29,6 +29,11 @@ const nav = [
   {
     title: 'List Admin',
     part: adminRoute('/admins'),
+    icon: 'icon-users',
+  },
+  {
+    title: 'List User',
+    part: adminRoute('/users'),
     icon: 'icon-users',
   },
   {

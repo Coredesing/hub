@@ -73,6 +73,7 @@ Route.group(() => {
 
   // user
   Route.get('user/profile', 'UserController.profile').middleware(['maskEmailAndWallet']);
+  Route.get('user/tier-info', 'UserController.tierInfo').middleware(['maskEmailAndWallet']);
   Route.post('user/deposit', 'CampaignController.deposit').middleware(['checkSignature']);
   Route.post('user/claim', 'CampaignController.claim').middleware(['checkSignature']);
   Route.put('user/update-profile', 'UserController.updateProfile').middleware(['checkSignature']);
@@ -93,8 +94,16 @@ Route.group(() => {
   Route.get('get-rate-setting', 'RateSettingController.getRateSetting');
 
   // reputation
-  Route.get('reputation/points/:walletAddress', 'ReputationController.getReputationPoint');
-  Route.get('reputation/histories/:walletAddress', 'ReputationController.getReputationHistory');
+  // Route.get('reputation/points/:walletAddress', 'ReputationController.getReputationPoint');
+  // Route.get('reputation/histories/:walletAddress', 'ReputationController.getReputationHistory');
+
+  // Staking pool
+  Route.get('staking-pool', 'StakingPoolController.getPublicPoolList');
+  Route.get('staking-pool/top-staked', 'StakingPoolController.getTopUserStaked');
+
+  // Tiers
+  Route.get('get-tiers', 'TierSettingController.getTiersSetting');
+
 }).prefix('api/v1');
 
 // GameFI admin new route
@@ -159,6 +168,13 @@ Route.group(() => {
   Route.get('/whitelist', 'CaptchaWhitelistController.get')
   Route.post('/whitelist', 'CaptchaWhitelistController.set')
   Route.delete('/whitelist', 'CaptchaWhitelistController.remove')
+
+  // Staking pool
+  Route.post('staking-pool/create', 'StakingPoolController.createPool');
+  Route.post('staking-pool/:stakingPoolId/update', 'StakingPoolController.updatePool');
+  Route.get('staking-pool', 'StakingPoolController.getPoolList');
+  Route.get('staking-pool/:stakingPoolId', 'StakingPoolController.getPool');
+  Route.post('staking-pool/:stakingPoolId/change-display', 'StakingPoolController.changeDisplay');
 }).prefix('api/v2/admin').middleware(['auth:admin', 'checkAdminJwtSecret']);
 
 Route.group(() => {

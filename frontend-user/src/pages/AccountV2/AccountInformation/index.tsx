@@ -11,9 +11,11 @@ import { useDispatch } from 'react-redux';
 import { alertFailure } from '../../../store/actions/alert';
 import {useForm} from 'react-hook-form';
 import useStyles from './style';
+import { useTabStyles } from '../style';
 
 const AccountInformation = (props: any) => {
   const styles = useStyles();
+  const tabStyles = useTabStyles();
   const dispatch = useDispatch();
   const [openModalVerifyEmail, setOpenModalVerifyEmail] = useState(false);
   const { connectedAccount} = useAuth();
@@ -104,7 +106,7 @@ const AccountInformation = (props: any) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.headPage}>
-        <h2 className={styles.title}>My profile</h2>
+      <h2 className={tabStyles.tabTitle}>My profile</h2>
         {
           connectedAccount && !onEditProfile && isKYC &&
           <Hidden smDown>

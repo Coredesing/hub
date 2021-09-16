@@ -4,17 +4,17 @@ import { Backdrop, CircularProgress } from '@material-ui/core';
 import { withRouter } from "react-router-dom";
 import { getBalance } from "../../store/actions/balance";
 import {
-  getUserTier,
-  getTiers,
+  // getUserTier,
+  // getTiers,
   getUserInfo,
 } from "../../store/actions/sota-tiers";
 import { getAllowance } from "../../store/actions/sota-token";
-// import Tiers from "./Tiers";
+import Tiers from "./Tiers";
 import DefaultLayout from "../../components/Layout/DefaultLayout";
 import AccountInformation from "./AccountInformation";
 import useStyles from "./style";
 import useAuth from "../../hooks/useAuth";
-import useTokenDetails from "../../hooks/useTokenDetails";
+// import useTokenDetails from "../../hooks/useTokenDetails";
 // import useFetch from "../../hooks/useFetch";
 import { USER_STATUS } from "../../constants";
 // import useUserTier from "../../hooks/useUserTier";
@@ -30,12 +30,13 @@ import { AlertKYC } from "../../components/Base/AlertKYC";
 import { WrapperAlert } from "../../components/Base/WrapperAlert";
 import { MenuLeft } from "./constants";
 import clsx from 'clsx';
+import IdoPoolProvider from "./context/IdoPoolProvider";
 
-const TOKEN_ADDRESS = process.env.REACT_APP_PKF || "";
+// const TOKEN_ADDRESS = process.env.REACT_APP_PKF || "";
 // const TOKEN_UNI_ADDRESS = process.env.REACT_APP_UNI_LP || "";
 // const TOKEN_MANTRA_ADDRESS = process.env.REACT_APP_MANTRA_LP || "";
 
-const iconWarning = "/images/warning-red.svg";
+// const iconWarning = "/images/warning-red.svg";
 
 const AccountV2 = (props: any) => {
   const classes = useStyles();
@@ -46,10 +47,11 @@ const AccountV2 = (props: any) => {
   const { isAuth, connectedAccount, wrongChain } = useAuth();
   // const [loadingGetHistory, setLoadingGetHistory] = useState(false);
 
-  const { tokenDetails: tokenPKFDetails } = useTokenDetails(
-    TOKEN_ADDRESS,
-    "eth"
-  );
+  // const { tokenDetails: tokenPKFDetails } = useTokenDetails(
+  //   TOKEN_ADDRESS,
+  //   "eth"
+  // );
+
   // const { tokenDetails: tokenUniLPDetails } = useTokenDetails(
   //   TOKEN_UNI_ADDRESS,
   //   "eth"
@@ -107,7 +109,6 @@ const AccountV2 = (props: any) => {
   useEffect(() => {
     if (isAuth && connectedAccount && !wrongChain) {
       dispatch(getBalance(connectedAccount));
-      dispatch(getUserTier(connectedAccount));
       dispatch(getAllowance(connectedAccount));
     }
   }, [isAuth, wrongChain, connectedAccount, dispatch]);
@@ -147,14 +148,13 @@ const AccountV2 = (props: any) => {
   // }, [connectedAccount]);
 
 
+
+
   useEffect(() => {
-    dispatch(getTiers());
     connectedAccount && dispatch(getUserInfo(connectedAccount));
-    connectedAccount && dispatch(getUserTier(connectedAccount));
   }, [connectedAccount, dispatch]);
 
-  // const totalRedKitePoints = userInfo?.totalStaked ? numberWithCommas((Number(userInfo?.totalStaked)).toString() || '0') : '0';
-  // const pointsLeftToNextTier = userInfo?.totalStaked ? numberWithCommas((tiers[userTier] - Number(userInfo?.totalStaked)).toString() || '0') : '0';
+
 
   return (
     <DefaultLayout isKYC={isKYC}>
@@ -164,11 +164,11 @@ const AccountV2 = (props: any) => {
         }
 
         {/* appChainID > KOVAN ID => Not Ethereum mainnet/testnet */}
-        {(+appChainID?.appChainID > ChainId.KOVAN) && isKYC && activeMenuAccount === 'My Tier' && (
+        {/* {(+appChainID?.appChainID > ChainId.KOVAN) && isKYC && activeMenuAccount === 'My Tier' && (
           <WrapperAlert type='error'>
             <span>Please switch to the ETH network to Stake/Unstake</span>
           </WrapperAlert>
-        )}
+        )} */}
 
 
         {updatedSuccess &&
@@ -222,7 +222,7 @@ const AccountV2 = (props: any) => {
                 classNamePrefix="account-infomation"
                 balance={balance}
                 userInfo={userInfo}
-                tokenPKFDetails={tokenPKFDetails}
+                // tokenPKFDetails={tokenPKFDetails}
                 email={userProfile.email}
                 twitter={userProfile.user_twitter}
                 telegram={userProfile.user_telegram}
@@ -236,26 +236,27 @@ const AccountV2 = (props: any) => {
               />
             }
 
-            {/* {activeMenuAccount === 'My Tier' &&
+            {activeMenuAccount === MenuLeft.tier.key &&
               <div className={classes.tier}>
                 <Tiers
                   showMoreInfomation={false}
-                  tokenSymbol={tokenPKFDetails?.symbol}
-                  total={total}
+                  // tokenSymbol={tokenPKFDetails?.symbol}
+                  // total={total}
                   isKYC={isKYC}
-                  tiers={tiers}
+                  // tiers={tiers}
                   userInfo={userInfo}
-                  userTier={userTier}
+                  // userTier={userTier}
                   emailVerified={emailVerified}
                   connectedAccount={connectedAccount}
-                  dataHistories={dataHistories}
-                  totalRedKitePoints={totalRedKitePoints}
-                  pointsLeftToNextTier={pointsLeftToNextTier}
+                // dataHistories={dataHistories}
+                // totalRedKitePoints={totalRedKitePoints}
+                // pointsLeftToNextTier={pointsLeftToNextTier}
                 />
               </div>
-            } */}
-
-            {activeMenuAccount === MenuLeft.pool.key && <IdoPools />}
+            }
+            <IdoPoolProvider>
+              {activeMenuAccount === MenuLeft.pool.key && <IdoPools />}
+            </IdoPoolProvider>
             {/* {activeMenuAccount === 'NFT Tickets' && <>
               <NftTicket />
               <CardsTicket />

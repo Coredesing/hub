@@ -80,7 +80,7 @@ const Ticket = ({ id, ...props }: any) => {
         if (!networkInfo || !infoTicket?.network_available) {
             return;
         }
-        const ok = String(networkInfo.name).toLowerCase() === (infoTicket.network_available || "").toLowerCase();
+        const ok = String(networkInfo.shortName).toLowerCase() === (infoTicket.network_available || "").toLowerCase();
         if (!ok) {
             dispatch(pushMessage(`Please switch to ${(infoTicket.network_available || '').toLocaleUpperCase()} network to do Apply Whitelist, Approve/Buy tokens.`))
         } else {

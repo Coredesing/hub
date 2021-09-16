@@ -4,10 +4,11 @@ import { typeDisplayFlex } from '../../../styles/CommonStyle';
 const useStyles = makeStyles((theme: any) => {
   return {
     tierTitle: {
-      fontWeight: 'bold',
-      fontSize: 16,
-      lineHeight: '24px',
-      textTransform: 'uppercase',
+      fontFamily: 'Firs Neue',
+      fontWeight: 600,
+      fontSize: 20,
+      lineHeight: '28px',
+      // textTransform: 'uppercase',
       color: '#FFFFFF',
       marginBottom: 20,
 
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme: any) => {
     itemInfo: {
       padding: 16,
       borderRight: '1px solid rgb(255 255 255 / 10%)',
-      fontFamily: 'DM Sans',
+      fontFamily: 'Firs Neue',
       fontWeight: 'bold',
       minHeight: 90,
 
@@ -54,16 +55,18 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     nameItemInfo: {
-      fontSize: 14,
-      lineHeight: '18px',
+      fontWeight: 500,
+      fontSize: 12,
+      lineHeight: '20px',
       color: '#FFFFFF',
       marginBottom: 10,
       textTransform: 'uppercase'
     },
 
     valueItemInfo: {
-      fontSize: 22,
-      lineHeight: '24px',
+      fontWeight: 600,
+      fontSize: 16,
+      lineHeight: '22px',
       minHeight: 24,
       color: '#72F34B',
       flexWrap: 'wrap',
@@ -185,15 +188,15 @@ const useStyles = makeStyles((theme: any) => {
       flexWrap: 'wrap',
       alignItems: 'center',
       width: '100%',
-      background: '#444449',
-      border: '1px solid #58585A',
-      borderRadius: 8,
+      background: '#4F4F4F',
+      border: '1px solid #4F4F4F',
+      borderRadius: 4,
       minHeight: 46,
       padding: '10px 16px',
-      fontFamily: 'DM Sans',
-      fontWeight: 'bold',
+      fontFamily: 'Firs Neue',
+      fontWeight: 600,
       fontSize: 14,
-      lineHeight: '18px',
+      lineHeight: '24px',
       color: '#FFFFFF',
       cursor: 'pointer',
 
@@ -210,6 +213,15 @@ const useStyles = makeStyles((theme: any) => {
 
     iconArrowRight: {
       marginLeft: 'auto',
+    },
+    infoRate: {
+      marginTop: '20px',
+      fontFamily: 'Firs Neue',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: '14px',
+      lineHeight: '22px',
+      color: '#fff'
     }
   };
 });

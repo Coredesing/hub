@@ -97,10 +97,15 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       "& h3": {
+        paddingLeft: '24px',
         fontWeight: "bold",
         fontSize: "28px",
         lineHeight: "36px",
         color: " #FFFFFF",
+        position: 'relative',
+        '& img': {
+          position: 'absolute', top: '5px', left: 0, width: '24px', height: '24px'
+        }
         // marginBottom: '4px',
       },
       "& h4": {
@@ -508,6 +513,32 @@ const useStyles = makeStyles((theme: any) => {
         minHeight: '180px',
         maxHeight: '550px',
       }
+    },
+    priceBidBox: {
+      marginTop: '22px',
+      width: '100%',
+      border: '1px solid #72F34B',
+      boxSizing: 'border-box',
+      borderRadius: '4px',
+      padding: '9px 20px',
+
+      '& > span': {
+        display: 'block',
+        marginBottom: '4px',
+      },
+      '& > div': {
+        display: 'grid',
+        gridTemplateColumns: '18px auto',
+        gridGap: '8px',
+        alignItems: 'center',
+        '& img': {
+          width: '18px',
+          height: '18px',
+        },
+        '& span': {
+          fontSize: '20px',
+        }
+      }
     }
   };
 });
@@ -613,6 +644,9 @@ export const useAboutStyles = makeStyles((theme) => ({
   },
   ulPagination: {
     color: '#AEAEAE',
+    '& li div': {
+      color: '#AEAEAE',
+    },
     '& button': {
       background: 'transparent',
       color: '#AEAEAE',

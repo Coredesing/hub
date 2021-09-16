@@ -11,6 +11,7 @@ import BigNumber from 'bignumber.js';
 
 import {getAllowance} from './sota-token';
 import {getTokenStakeSmartContractInfo} from "../../utils/campaign";
+import { BaseRequest } from '../../request/Request';
 
 export const resetTiers = () => {
   return {
@@ -22,28 +23,31 @@ export const getTiers = (forceUsingEther: string = 'eth') => {
   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
     dispatch({ type: sotaTiersActions.TIERS_LOADING });
     try {
-      const { appChainID } = getState().appNetwork.data;
-      const connector  = getState().connector.data;
+      const baseRequest = new BaseRequest();
+      const response = await baseRequest.get(`/get-tiers`) as any;
+      const resObj = await response.json();
 
-      const contract = getContractInstance(
-        RedKite.abi,
-        process.env.REACT_APP_TIERS as string,
-        connector,
-        appChainID,
-        SmartContractMethod.Read,
-        forceUsingEther === 'eth'
-      );
+      if (!resObj.status || resObj.status !== 200 || !resObj.data) {
+        dispatch({
+          type: sotaTiersActions.TIERS_FAILURE,
+          payload: new Error("Invalid tiers payload")
+        });
+        return;
+      }
 
-      let result = await contract?.methods.getTiers().call();
+      const result = resObj.data;
 
-      result = result.filter((e: any) => e != '0')
-      result = result.map((e: any) => {
+      let tiers = (result?.tiers || []).filter((e: any) => e !== '0')
+      tiers = tiers.map((e: any) => {
         return parseFloat(convertFromWei(e))
       })
-
       dispatch({
         type: sotaTiersActions.TIERS_SUCCESS,
-        payload: result,
+        payload: tiers,
+      });
+      dispatch({
+        type: sotaTiersActions.DELAY_TIERS_SUCCESS,
+        payload: result?.delays || [],
       });
 
     } catch (error) {
@@ -59,43 +63,21 @@ export const getUserTier = (address: string, forceUsingEther: string = 'eth') =>
   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
     dispatch({ type: sotaTiersActions.USER_TIER_LOADING });
     try {
-      const { appChainID } = getState().appNetwork.data;
-      const connector = getState().connector.data;
 
-      const contract = getContractInstance(
-        RedKite.abi,
-        process.env.REACT_APP_TIERS as string,
-        connector,
-        appChainID,
-        SmartContractMethod.Read,
-        forceUsingEther === 'eth'
-      );
-
-      const {
-        tokenStakes,
-        rateSettings,
-        rateStakeInfo
-      } = await getTokenStakeSmartContractInfo(contract, address);
-      await dispatch(getRates(rateSettings));
-      // console.log('tokenStakesInfo:', tokenStakes, rateSettings, rateStakeInfo);
-
-      // Find Tier of user
-      let tiers = (await contract?.methods.getTiers().call()) || [];
-      tiers = tiers.slice(0, 4);
-
-      // console.log('tokenStakesInfo-tiers:', tiers);
-      // @ts-ignore
-      const pkfEq = new BigNumber(tokenStakes?.totalStaked || 0).multipliedBy(Math.pow(10, 18));
-      let userTier = 0;
-      tiers.map((pkfRequire: any, index: number) => {
-        if (pkfEq.gte(pkfRequire)) {
-          userTier = index + 1;
-        }
-      });
-
+      const baseRequest = new BaseRequest();
+      const response = await baseRequest.get(`/user/tier-info?wallet_address=${address}`) as any;
+      const resObj = await response.json();
+      const userTier = resObj.data?.tier || 0;
       dispatch({
         type: sotaTiersActions.USER_TIER_SUCCESS,
         payload: userTier,
+      });
+      dispatch({
+        type: sotaTiersActions.USER_INFO_SUCCESS,
+        payload: {
+          totalStaked: +resObj.data?.stakedInfo?.tokenStaked || 0,
+          uniStaked: +resObj.data?.stakedInfo?.uniStaked || 0,
+        },
       });
 
     } catch (error) {
@@ -111,30 +93,40 @@ export const getUserInfo = (address: string, forceUsingEther: string = 'eth', to
   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
     dispatch({ type: sotaTiersActions.USER_INFO_LOADING });
     try {
-      const { appChainID } = getState().appNetwork.data;
-      const { rates } = getState();
-      const connector = undefined;
+      // const { appChainID } = getState().appNetwork.data;
+      // const { rates } = getState();
+      // const connector = undefined;
 
-      const contract = getContractInstance(
-        RedKite.abi,
-        process.env.REACT_APP_TIERS as string,
-        connector,
-        appChainID,
-        SmartContractMethod.Read,
-        forceUsingEther === 'eth'
-      );
+      // const contract = getContractInstance(
+      //   RedKite.abi,
+      //   process.env.REACT_APP_TIERS as string,
+      //   connector,
+      //   appChainID,
+      //   SmartContractMethod.Read,
+      //   forceUsingEther === 'eth'
+      // );
 
-      const {
-        tokenStakes,
-        rateSettings,
-        rateStakeInfo
-      } = await getTokenStakeSmartContractInfo(contract, address);
-      await dispatch(getRates(rateSettings));
+      // const {
+      //   tokenStakes,
+      //   rateSettings,
+      //   rateStakeInfo
+      // } = await getTokenStakeSmartContractInfo(contract, address);
+      // await dispatch(getRates(rateSettings));
+      // const tokenStakes = {
+      //   resultPkf: 0,
+      //   pkfStaked: 0,
+      //   resultUni: 0,
+      //   uniStaked: 0,
+      //   resultMantra: 0,
+      //   mantraStaked: 0,
+      //   ePkf: 0,
+      //   tokenStaked: 0,
+      // }
 
-      dispatch({
-        type: sotaTiersActions.USER_INFO_SUCCESS,
-        payload: tokenStakes,
-      });
+      // dispatch({
+      //   type: sotaTiersActions.USER_INFO_SUCCESS,
+      //   payload: tokenStakes,
+      // });
 
     } catch (error) {
       dispatch({

@@ -48,19 +48,12 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
   const [openSideBar, setOpenSideBar] = useState(false);
   const [toggleNavbar, setToggleNavbar] = useState(false);
   const { data: message = "" } = useSelector((state: any) => state.messages);
-  const { data: userTier } = useSelector((state: any) => state.userTier);
-
   const [chainLogo, setChainLogo] = useState<string>(ChainDefault.icon);
   const [chainName, setChainName] = useState<string>(ChainDefault.name);
   const [chainCurrency, setChainCurrency] = useState<string>(ChainDefault.currency || '');
 
-  const { isAuth, connectedAccount, wrongChain } = useAuth();
+  const { connectedAccount } = useAuth();
 
-  useEffect(() => {
-    if (isAuth && connectedAccount && !wrongChain) {
-      dispatch(getUserTier(connectedAccount));
-    }
-  }, [isAuth, wrongChain, connectedAccount, dispatch]);
 
   const {
     handleProviderChosen,
@@ -285,9 +278,11 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
                 {/* <li className={styles.headerLink}><Link href="#">Stake</Link></li> */}
               </ul>
               <div className={styles.headerAccount} onClick={hideNavMenu}>
-                {connectedAccount && <a href="/#/account" className={styles.headerAccText}>
-                  My Account
-                </a>}
+                {connectedAccount && <>
+                  <Link to="/account" className={styles.headerAccText}>My Account </Link>
+                  <Link className={styles.headerAccText} to="/staking-pools">Staking</Link>
+                </>
+                }
 
                 <div className={styles.headerAccBtn}>
                   <button

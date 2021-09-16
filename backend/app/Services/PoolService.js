@@ -87,7 +87,7 @@ class PoolService {
 
   getJoinedPools(walletAddress, params) {
     let query = this.buildSearchQuery(params);
-    return query.where(query => {
+    query = query.where(query => {
       query.whereHas('whitelistUsers', (builder) => {
         builder.where('wallet_address', walletAddress);
       }, '>', 0)
@@ -95,6 +95,14 @@ class PoolService {
           builder.where('wallet_address', walletAddress);
         }, '>', 0);
     })
+
+    if (params.type === Const.POOL_IS_PRIVATE.PUBLIC.toString() ||
+      params.type === Const.POOL_IS_PRIVATE.PRIVATE.toString() ||
+      params.type === Const.POOL_IS_PRIVATE.SEED.toString()) {
+      query = query.where('is_private', params.type);
+    }
+
+    return query
   }
 
   async getUpcomingPools(filterParams) {

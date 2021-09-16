@@ -51,7 +51,7 @@ const TierList = (props: any) => {
           }}
         />}
       </li>
-      {tiers.length > 0 && tiers.map((tier: any, idx: any) => {
+      {tiers.length > 0 && tiers.map((tier: any, idx: number) => {
         if (tier !== 0) {
           return (
             <li key={idx}
@@ -64,14 +64,14 @@ const TierList = (props: any) => {
                   transition: `all 1s ease ${idx + 1}s`
                 }}
               />}
-              {+userTier > idx + 1  && connectedAccount && !showMoreInfomation && isWidthUp('sm', props.width) && <span
+              {+userTier > idx + 1 && connectedAccount && !showMoreInfomation && isWidthUp('sm', props.width) && <span
                 className={"progress-bar" + (loading ? ' inactive' : ' active')}
                 style={{
                   backgroundColor: '#72F34B',
                   width: `${currentProcess}%`
                 }}
               />}
-              {+userTier > idx + 1  && connectedAccount && !showMoreInfomation && isWidthDown('xs', props.width) && <span
+              {+userTier > idx + 1 && connectedAccount && !showMoreInfomation && isWidthDown('xs', props.width) && <span
                 className={"progress-bar" + (loading ? ' inactive' : ' active')}
                 style={{
                   backgroundColor: '#72F34B',
@@ -87,9 +87,17 @@ const TierList = (props: any) => {
                 </div>
                 <div className="info">
                   <span className={(userTier > idx) ? "tier-name" : ""}>{TIERS[idx + 1].name}</span>
-                  {!showMoreInfomation && <span className="unit">{numberWithCommas(tier)} GP</span>}
-                  {showMoreInfomation && !hideStatistics &&
-                    <span className="unit">{numberWithCommas(tiersBuyLimit[idx + 1])} GP</span>}
+                  {/* {!showMoreInfomation &&  */}
+                  <span className="unit">{
+                    idx === tiers.length - 1 ? 'NFT required' :
+                      numberWithCommas(tier) + 'GP'
+                  } </span>
+                  {/* } */}
+                  {/* {showMoreInfomation && !hideStatistics &&
+                    <span className="unit">{
+                      idx === tiers.length - 1 ? 'NFT required' :
+                        numberWithCommas(tiersBuyLimit[idx + 1]) + ' GP'
+                    }</span>} */}
                 </div>
               </div>
             </li>

@@ -236,7 +236,7 @@ const AccountV2 = (props: any) => {
               />
             }
 
-            {activeMenuAccount === MenuLeft.tier.key &&
+            {activeMenuAccount === MenuLeft.rank.key &&
               <div className={classes.tier}>
                 <Tiers
                   showMoreInfomation={false}

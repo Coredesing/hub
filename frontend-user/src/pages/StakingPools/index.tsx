@@ -151,7 +151,7 @@ const StakingPools = (props: any) => {
     if (recallTopStaking.isCall) {
       let count = 0;
       const timer = setTimeout(() => {
-        resRecallTopStaking(d => ({...d, inSeconds: d.inSeconds - 1}));
+        resRecallTopStaking(d => ({ ...d, inSeconds: d.inSeconds - 1 }));
         if (count === recallTopStaking.inSeconds) {
           setResetTopStaking(true);
           clearInterval(timer);
@@ -260,110 +260,109 @@ const StakingPools = (props: any) => {
             </>
           }
 
-          {
-            !loadingDetailList && poolType === POOL_TYPE_LINEAR && filteredLinearPools.length > 0 &&
-            <>
-              {/* {durationType === DURATION_FINISHED && 
+
+
+          {/* {durationType === DURATION_FINISHED && 
                 <div className={styles.messageDuration}>
                   <img src={iconWarning} style={{ marginRight: "12px" }} alt="" />
                   These pools are no longer distributing rewards. Please unstake your tokens.
                 </div>
               } */}
-              <div className="pool-area">
-                {
-                  filteredLinearPools.map((pool: any) => (
-                    <LinearPool
-                      expandedDetail={filteredLinearPools[0].pool_id === pool.pool_id}
-                      key={pool?.id}
-                      reload={reloadData}
-                      setTransactionHashes={setTransactionHashes}
-                      setOpenModalTransactionSubmitting={setOpenModalTransactionSubmitting}
-                      connectedAccount={connectedAccount}
-                      poolDetail={pool}
-                      poolAddress={pool?.pool_address}
-                      poolsList={poolsList}
-                    />
-                  ))
-                }
-                {listTopStaked && !listTopStaked?.disable &&
-                  <Box marginTop="30px" className={styles.boxRank}>
-                    <Box className={styles.boxRankHeader}>
-                      <Box className={styles.boxListRank}>
-                        <Typography variant="h5" component="h5" className="text-uppercase">
-                          Gamefi stake event
-                        </Typography>
-                        <Box className={styles.list}>
-                          <Typography variant="h5" component="h5" className="item">
-                            1. TOP 10 RANKING will be given 1 NFT Legend
-                          </Typography>
-                          <Typography variant="h5" component="h5" className="item">
-                            2. RANKING is a list of people who stake higher than {tiers?.slice && tiers?.slice(-1)?.[0]} GAFI
-                          </Typography>
-                        </Box>
-                      </Box>
-                      <Box className={styles.boxListRank} marginBottom="20px">
-                        <Box className={styles.endInText}>
-                          {
-                            listTopStaked?.start_time * 1000 > Date.now() ? 'Open in'
-                              : listTopStaked?.end_time * 1000 > Date.now() ? 'End in' : 'Finished'
-                          }
-                        </Box>
-                        <Box>
-                          <CountDownTimeV1 time={
-                            listTopStaked?.start_time * 1000 > Date.now() ?
-                              {
-                                date1: listTopStaked?.start_time * 1000,
-                                date2: Date.now()
-                              } :
-                              listTopStaked?.end_time * 1000 > Date.now() ? {
-                                date1: listTopStaked?.end_time * 1000,
-                                date2: Date.now()
-                              } : {
-                                days: 0, hours: 0, minutes: 0, seconds: 0
-                              }
-                          }
-                            onFinish={() => console.log('finished')} />
-                        </Box>
-                      </Box>
-                    </Box>
-
-                    <Typography variant="h5" component="h5" className="text-uppercase" style={{ marginBottom: '10px' }}>
-                      Ranking&nbsp;
-                      {
-                        recallTopStaking.isCall && <span style={{ fontFamily: 'Firs Neue', fontSize: '12px', fontWeight: 'normal', textTransform: 'none' }}>(The top will be update in {recallTopStaking.inSeconds} seconds)</span>
-                      }
+          <div className="pool-area">
+            {
+              !loadingDetailList && poolType === POOL_TYPE_LINEAR && filteredLinearPools.length > 0 &&
+              filteredLinearPools.map((pool: any) => (
+                <LinearPool
+                  expandedDetail={filteredLinearPools[0].pool_id === pool.pool_id}
+                  key={pool?.id}
+                  reload={reloadData}
+                  setTransactionHashes={setTransactionHashes}
+                  setOpenModalTransactionSubmitting={setOpenModalTransactionSubmitting}
+                  connectedAccount={connectedAccount}
+                  poolDetail={pool}
+                  poolAddress={pool?.pool_address}
+                  poolsList={poolsList}
+                />
+              ))
+            }
+            {listTopStaked && !listTopStaked?.disable &&
+              <Box marginTop="30px" className={styles.boxRank}>
+                <Box className={styles.boxRankHeader}>
+                  <Box className={styles.boxListRank}>
+                    <Typography variant="h5" component="h5" className="text-uppercase">
+                      Gamefi stake event
                     </Typography>
-                    <Box marginBottom="10px" width="50%">
-                      <SearchBox onChange={onSearchWallet} placeholder="Search first or last 14 digits of your wallet" />
+                    <Box className={styles.list}>
+                      <Typography variant="h5" component="h5" className="item">
+                        1. TOP 10 RANKING will be given 1 NFT Legend
+                      </Typography>
+                      <Typography variant="h5" component="h5" className="item">
+                        2. RANKING is a list of people who stake higher than {tiers?.slice && tiers?.slice(-1)?.[0]} GAFI
+                      </Typography>
                     </Box>
-                    <TableContainer>
-                      <Table>
-                        <TableHead>
-                          <TableRowHead>
-                            <TableCell>No</TableCell>
-                            <TableCell align="left">Wallet Address</TableCell>
-                            <TableCell align="left">Current Staked</TableCell>
-                            <TableCell align="left">Last time Stake</TableCell>
-                          </TableRowHead>
-                        </TableHead>
-                        <TableBody>
-                          {topWalletRanking.map((row: any, idx: number) => (
-                            <TableRowBody key={idx}>
-                              <TableCell component="th" scope="row" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>  {row.idx + 1} </TableCell>
-                              <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{cvtAddressToStar(row.wallet_address)}</TableCell>
-                              <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{numberWithCommas((row.amount + '') || 0, 4)}</TableCell>
-                              <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{convertTimeToStringFormat(new Date(+row.last_time * 1000))}</TableCell>
-                            </TableRowBody>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-
                   </Box>
-                }
-              </div>
-            </>
-          }
+                  <Box className={styles.boxListRank} marginBottom="20px">
+                    <Box className={styles.endInText}>
+                      {
+                        listTopStaked?.start_time * 1000 > Date.now() ? 'Open in'
+                          : listTopStaked?.end_time * 1000 > Date.now() ? 'End in' : 'Finished'
+                      }
+                    </Box>
+                    <Box>
+                      <CountDownTimeV1 time={
+                        listTopStaked?.start_time * 1000 > Date.now() ?
+                          {
+                            date1: listTopStaked?.start_time * 1000,
+                            date2: Date.now()
+                          } :
+                          listTopStaked?.end_time * 1000 > Date.now() ? {
+                            date1: listTopStaked?.end_time * 1000,
+                            date2: Date.now()
+                          } : {
+                            days: 0, hours: 0, minutes: 0, seconds: 0
+                          }
+                      }
+                        onFinish={() => console.log('finished')} />
+                    </Box>
+                  </Box>
+                </Box>
+
+                <Typography variant="h5" component="h5" className="text-uppercase" style={{ marginBottom: '10px' }}>
+                  Ranking&nbsp;
+                  {
+                    recallTopStaking.isCall && <span style={{ fontFamily: 'Firs Neue', fontSize: '12px', fontWeight: 'normal', textTransform: 'none' }}>(The top will be update in {recallTopStaking.inSeconds} seconds)</span>
+                  }
+                </Typography>
+                <Box marginBottom="10px" width="50%">
+                  <SearchBox onChange={onSearchWallet} placeholder="Search first or last 14 digits of your wallet" />
+                </Box>
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRowHead>
+                        <TableCell>No</TableCell>
+                        <TableCell align="left">Wallet Address</TableCell>
+                        <TableCell align="left">Current Staked</TableCell>
+                        <TableCell align="left">Last time Stake</TableCell>
+                      </TableRowHead>
+                    </TableHead>
+                    <TableBody>
+                      {topWalletRanking.map((row: any, idx: number) => (
+                        <TableRowBody key={idx}>
+                          <TableCell component="th" scope="row" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>  {row.idx + 1} </TableCell>
+                          <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{cvtAddressToStar(row.wallet_address)}</TableCell>
+                          <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{numberWithCommas((row.amount + '') || 0, 4)}</TableCell>
+                          <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{convertTimeToStringFormat(new Date(+row.last_time * 1000))}</TableCell>
+                        </TableRowBody>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+
+              </Box>
+            }
+          </div>
+
 
         </div>
 

@@ -3,14 +3,20 @@ import { makeStyles } from '@material-ui/core';
 
 export const useSwitchStyle = makeStyles((theme) => {
   return {
+    formLabel: {
+      fontFamily: 'Firs Neue',
+      '& span': {
+        fontFamily: 'inherit !important'
+      }
+    },
     root: {
       width: 38,
       height: 21,
       padding: 0,
       margin: theme.spacing(1),
       [theme.breakpoints.down('xs')]: {
-        marginTop: '20px',
-        marginBottom: '30px',
+        // marginTop: '20px',
+        // marginBottom: '30px',
       },
       [theme.breakpoints.up('xs')]: {
         marginLeft: '20px',
@@ -55,6 +61,9 @@ export const useButtonGroupStyle = makeStyles((theme) => {
       background: '#222228',
       borderRadius: '100px',
       overflow: 'hidden',
+      '& button': {
+        fontFamily: 'Firs Neue !important',
+      },
       '&:not(:first-child)': {
         marginLeft: '15px',
       },

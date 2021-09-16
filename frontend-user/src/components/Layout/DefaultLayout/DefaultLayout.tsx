@@ -8,7 +8,6 @@ import useStyles from './styles';
 import { ChainDefault, GAMEFI_ADDRESS } from '../../../constants/network';
 import { getEtherscanTransactionAddress } from "../../../utils/network";
 const DefaultLayout = ({ style, children, ...props }: any) => {
-  console.log(children)
   const theme = useTheme();
   const matchXs = useMediaQuery(theme.breakpoints.down("xs"));
   const commonStyle = useCommonStyle();

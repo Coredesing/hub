@@ -37,7 +37,7 @@ class FetchTopStaked extends Task {
       await (new StakingEventService).queryTop({
         start_time: startTime,
         end_time: endTime,
-        top: 10,
+        top: limit,
         limit: limit,
         min_tier: 0
       });

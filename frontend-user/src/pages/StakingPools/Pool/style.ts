@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme: any) => {
       },
       '& .pool--sumary': {
         display: 'flex',
+        gap: '10px',
         // alignItems: 'center',
         [theme.breakpoints.down('sm')]: {
           display: 'grid',

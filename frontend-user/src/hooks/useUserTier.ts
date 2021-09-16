@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { BigNumber } from 'bignumber.js';
 import useTokenDetails from './useTokenDetails';
 import {getEPkfBonusBalanceValue} from "../utils/campaign";
+import { ChainDefault } from '../constants/network';
 
 const SPKF_ADDRESS = process.env.REACT_APP_MANTRA_LP || 'undefined';
 
@@ -24,7 +25,7 @@ const useUserTier = (address: string, networkAvailable: string): UserTier => {
   const connector  = useTypedSelector(state => state.connector).data;
   const [ loading, setLoading] = useState<boolean>(true);
   const { data: tiers, loading: tiersLoading } = useSelector((state: any) => state.tiers);
-  const { tokenDetails, loading: tokenDetailsLoading } = useTokenDetails(SPKF_ADDRESS, 'eth');
+  const { tokenDetails, loading: tokenDetailsLoading } = useTokenDetails(SPKF_ADDRESS, ChainDefault.shortName || '');
   const [ totalUnstaked, setTotalUnstaked ] = useState<string>('0');
   const [ total, setTotal ] = useState<string>('0');
 

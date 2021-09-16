@@ -15,7 +15,7 @@ import useUserTier from "../../../hooks/useUserTier";
 import ModalTransaction from "../ModalTransaction";
 import ButtonLink from "../../../components/Base/ButtonLink";
 import DefaultLayout from "../../../components/Layout/DefaultLayout";
-import { ETH_CHAIN_ID } from '../../../constants/network'
+import { ChainDefault, ETH_CHAIN_ID } from '../../../constants/network'
 import { TOKEN_STAKE_NAMES, TOKEN_STAKE_SYMBOLS } from "../../../constants";
 import { WrapperAlert } from '../../../components/Base/WrapperAlert';
 
@@ -54,9 +54,9 @@ const Withdraw = (props: any) => {
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [disableWithdraw, setDisableWithdraw] = useState(true);
 
-  const { tokenDetails: tokenPKFDetails } = useTokenDetails(TOKEN_ADDRESS, 'eth');
-  const { tokenDetails: tokenUniLPDetails } = useTokenDetails(TOKEN_UNI_ADDRESS, 'eth');
-  const { tokenDetails: tokenMantraLPDetails } = useTokenDetails(TOKEN_MANTRA_ADDRESS, 'eth');
+  const { tokenDetails: tokenPKFDetails } = useTokenDetails(TOKEN_ADDRESS, ChainDefault.shortName || '');
+  const { tokenDetails: tokenUniLPDetails } = useTokenDetails(TOKEN_UNI_ADDRESS, ChainDefault.shortName || '');
+  const { tokenDetails: tokenMantraLPDetails } = useTokenDetails(TOKEN_MANTRA_ADDRESS, ChainDefault.shortName || '');
   const [listTokenDetails, setListTokenDetails] = useState([]) as any;
   const [openModalTransactionSubmitting, setOpenModalTransactionSubmitting] = useState(false)
   const [transactionHashes, setTransactionHashes] = useState([]) as any;
@@ -72,7 +72,7 @@ const Withdraw = (props: any) => {
   const [currentStaked, setCurrentStaked] = useState('0');
   const [currentRate, setCurrentRate] = useState(0);
 
-  const { total } = useUserTier(connectedAccount || '', 'eth');
+  const { total } = useUserTier(connectedAccount || '', ChainDefault.shortName || '');
 
   const setDefaultToken = () => {
     if (!currentToken) {

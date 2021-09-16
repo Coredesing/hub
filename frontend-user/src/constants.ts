@@ -220,4 +220,4 @@ export enum TOKEN_TYPE {
 
 export const RECAPTCHA_SITE_KEY  = process.env.REACT_APP_RECAPTCHA_SITE_KEY as string;
 export const ALLOW_RECAPCHA = !!RECAPTCHA_SITE_KEY;
-export const LINK_SWAP_TOKEN = '';
+export const LINK_SWAP_TOKEN = 'https://pancakeswap.finance/swap?outputCurrency=0x89af13a10b32f1b2f8d1588f93027f69b6f4e27e&inputCurrency=0xe9e7cea3dedca5984780bafc599bd69add087d56';

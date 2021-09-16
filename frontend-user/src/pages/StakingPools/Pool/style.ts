@@ -28,17 +28,23 @@ const useStyles = makeStyles((theme: any) => {
       },
       '& .pool--sumary': {
         display: 'flex',
+        gap: '10px',
         // alignItems: 'center',
         [theme.breakpoints.down('sm')]: {
           display: 'grid',
           gap: '10px',
           placeContent: 'center',
           placeItems: 'center',
+          gridTemplateColumns: '1fr',
         },
       },
       '& .pool--sumary-block': {
         marginLeft: '10px',
         marginRight: '10px',
+        [theme.breakpoints.up('xs')]: {
+          marginLeft: '0',
+          marginRight: '0',
+        },
         '&:nth-child(2)': {
           // width: '80px',
           [theme.breakpoints.up('md')]: {
@@ -263,10 +269,11 @@ const useStyles = makeStyles((theme: any) => {
     },
     delayTierBoxs: {
       display: 'grid',
-      gap: '10px',
+      gap: '8px',
       gridTemplateColumns: 'repeat(auto-fit, 100px)',
       [theme.breakpoints.down('xs')]: {
-        gridTemplateColumns: '1fr',
+        gridTemplateColumns: 'repeat(auto-fit, 54px)',
+        gap: '5px',
       },
     },
     delayTierBox: {
@@ -282,13 +289,27 @@ const useStyles = makeStyles((theme: any) => {
         '& img': {
           width: '30px',
           height: '26px',
-        }
+        },
+        [theme.breakpoints.down('xs')]: {
+          gap: '0px',
+          gridTemplateColumns: '1fr',
+          placeItems: 'center',
+          fontSize: '12px',
+          marginBottom: '2px',
+          '& img': {
+            width: '25px',
+            height: '20px',
+          },
+        },
       },
       '& h5': {
         fontFamily: 'Firs Neue',
         fontWeight: 600,
         fontSize: '16px',
         textAlign: 'center',
+        [theme.breakpoints.down('xs')]: {
+          fontSize: '12px',
+        },
       }
     },
     accordionSummary: {

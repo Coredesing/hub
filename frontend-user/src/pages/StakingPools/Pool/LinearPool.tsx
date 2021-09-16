@@ -758,9 +758,9 @@ const LinearPool = (props: any) => {
         tokenDetails={tokenDetails}
         logo={poolDetail?.logo}
         tokenBalance={tokenBalance}
-        min={Number(utils.formatEther(poolDetail?.minInvestment)).toFixed(2)}
-        max={Number(utils.formatEther(poolDetail?.maxInvestment)).toFixed(2)}
-        stakingAmount={Number(utils.formatEther(poolDetail?.stakingAmount)).toFixed(2)}
+        min={Number(utils.formatEther(poolDetail?.minInvestment || 0)).toFixed(2)}
+        max={Number(utils.formatEther(poolDetail?.maxInvestment || 0)).toFixed(2)}
+        stakingAmount={Number(utils.formatEther(poolDetail?.stakingAmount || 0)).toFixed(2)}
         onClose={() => setShowStakeModal(false)}
         onConfirm={handleStake}
       />

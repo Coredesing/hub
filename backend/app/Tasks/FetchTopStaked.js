@@ -4,6 +4,7 @@ const Task = use('Task')
 const StakingEventService = use('App/Services/StakingEventService');
 const startTime = process.env.EVENT_START_TIME
 const endTime = process.env.EVENT_END_TIME
+const limit = process.env.EVENT_LIMIT
 
 class FetchTopStaked extends Task {
   isRunning = false;
@@ -37,7 +38,7 @@ class FetchTopStaked extends Task {
         start_time: startTime,
         end_time: endTime,
         top: 10,
-        limit: 20,
+        limit: limit,
         min_tier: 0
       });
     }

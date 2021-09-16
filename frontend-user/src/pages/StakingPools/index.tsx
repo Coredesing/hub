@@ -294,7 +294,7 @@ const StakingPools = (props: any) => {
                     </Typography>
                     <Box className={styles.list}>
                       <Typography variant="h5" component="h5" className="item">
-                        1. TOP 10 RANKING will be given 1 NFT Legend
+                        1. TOP 12 RANKING will be given 1 NFT Legend
                       </Typography>
                       <Typography variant="h5" component="h5" className="item">
                       2. The results will be updated every minute and will be announced after review

@@ -18,7 +18,7 @@ const guideFAQs = [
         href: "https://faq.gamefi.org/#ii-token-igo-pool",
       },
       {
-        title: "How to claim tokens",
+        title: "Staking",
         href: "https://faq.gamefi.org/#iii-staking",
       },
       // {

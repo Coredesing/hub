@@ -317,7 +317,7 @@ class CampaignController {
         return HelperUtils.responseBadRequest("You haven't submitted the whitelist application form !");
       }
       // check user tier
-      const userTier = (await HelperUtils.getUserTierSmart(wallet_address))[0];
+      const userTier = (await HelperUtils.getUserTierSmartWithCached(wallet_address))[0];
       console.log(`user tier is ${userTier}`);
       // check user tier with min tier of campaign
       if (camp.min_tier > userTier) {
@@ -430,7 +430,7 @@ class CampaignController {
       // check user tier if user not in reserved list
       if (winner) {
         // get realtime tier from SC
-        const currentTier = (await HelperUtils.getUserTierSmart(userWalletAddress))[0];
+        const currentTier = (await HelperUtils.getUserTierSmartWithCached(userWalletAddress))[0];
         // if user decrement their tier then they can not buy token
         if (currentTier < winner.level) {
           console.log(`Current tier ${currentTier} and snapshot tier ${winner.level}`);

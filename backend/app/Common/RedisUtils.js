@@ -289,12 +289,7 @@ const createRedisUserTierBalance = async (walletAddress, data) => {
     return false;
   }
 
-  const cache = {
-    data: data,
-    updatedAt: (new Date()).getTime()
-  }
-
-  return await Redis.setex(redisKey, TIER_CACHED_TTL, JSON.stringify(cache));
+  return await Redis.setex(redisKey, TIER_CACHED_TTL, JSON.stringify(data));
 };
 
 const deleteRedisUserTierBalance = (walletAddress) => {

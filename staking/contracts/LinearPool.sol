@@ -263,8 +263,6 @@ contract LinearPool is
         uint128 _poolId,
         bool _useLocalDelayPool
     ) external onlyOwner linearValidatePoolById(_poolId) {
-        LinearPoolInfo storage pool = linearPoolInfo[_poolId];
-
         linearPoolInfo[_poolId].useLocalDelayPool = _useLocalDelayPool;
     }
 

@@ -211,12 +211,18 @@ const paginationArray = (array, page_number, page_size) => {
 
 const getTiers = () => {
   let tiers = []
+  let delays = []
   try {
     tiers = JSON.parse(process.env.USER_TIERS)
+    delays = JSON.parse(process.env.DELAY_DURATIONS)
   } catch (error) {
     tiers = [15, 100, 400, 1000]
+    delays = [5, 8, 12, 15]
   }
-  return tiers.map(tier => Web3.utils.toWei(tier.toString()))
+  return {
+    tiers: tiers.map(tier => Web3.utils.toWei(tier.toString())),
+    delays: delays
+  }
 }
 
 const getRateSetting = async () => {
@@ -315,11 +321,22 @@ const getStakingPool = async (wallet_address) => {
   };
 }
 
+const getUserTierSmartWithCached = async (wallet_address) => {
+  if (await RedisUtils.checkExistRedisUserTierBalance(wallet_address)) {
+    return JSON.parse(await RedisUtils.getRedisUserTierBalance(wallet_address));
+  }
+
+  const tierInfo = await getUserTierSmart(wallet_address);
+  RedisUtils.createRedisUserTierBalance(wallet_address, tierInfo);
+
+  return tierInfo
+}
+
 const getUserTierSmart = async (wallet_address) => {
   try {
     // Get cached Rate Setting
     // const rateSetting = await getRateSetting()
-    const tiers = await getTiers()
+    const tiers = (await getTiers()).tiers
     const stakingData = await getStakingPool(wallet_address)
 
     // Caculate PKF Staked
@@ -752,6 +769,7 @@ module.exports = {
   checkSumAddress,
   paginationArray,
   getERC721TokenContractInstance,
+  getUserTierSmartWithCached,
   getUserTierSmart,
   getContractInstance,
   getContractClaimInstance,

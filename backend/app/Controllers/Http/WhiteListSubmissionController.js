@@ -122,7 +122,7 @@ class WhiteListSubmissionController {
         return HelperUtils.responseBadRequest(`Sorry, citizens and residents of ${CountryList && CountryList[user.national_id_issuing_country] || user.national_id_issuing_country} are restricted to participate in the IDO.`);
       }
       // check user tier
-      const userTier = (await HelperUtils.getUserTierSmart(wallet_address))[0];
+      const userTier = (await HelperUtils.getUserTierSmartWithCached(wallet_address))[0];
       console.log(`user tier is ${userTier}`);
       // check user tier with min tier of campaign
       if (camp.min_tier > userTier) {

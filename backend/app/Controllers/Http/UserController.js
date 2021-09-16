@@ -56,7 +56,7 @@ class UserController {
 
       let userList = JSON.parse(JSON.stringify(await userQuery.fetch()));
       const userAdditionInfoPromises = userList.map(async (u) => {
-        const tierInfo = await HelperUtils.getUserTierSmart(u.wallet_address);
+        const tierInfo = await HelperUtils.getUserTierSmartWithCached(u.wallet_address);
         return { tier: tierInfo[0], total_pkf: tierInfo[1], staked_pkf: tierInfo[2], ksm_bonus_pkf: tierInfo[3] }
       });
 
@@ -80,18 +80,7 @@ class UserController {
     try {
       const params = request.all();
       const wallet_address = params.wallet_address;
-
-      if (await RedisUtils.checkExistRedisUserTierBalance(wallet_address)) {
-        const cached = JSON.parse(await RedisUtils.getRedisUserTierBalance(wallet_address));
-
-        return HelperUtils.responseSuccess({
-          tier: cached.data[0],
-          stakedInfo: cached.data[1],
-        });
-      }
-
-      const tierInfo = await HelperUtils.getUserTierSmart(wallet_address);
-      RedisUtils.createRedisUserTierBalance(wallet_address, tierInfo);
+      const tierInfo = await HelperUtils.getUserTierSmartWithCached(wallet_address);
 
       return HelperUtils.responseSuccess({
         tier: tierInfo[0],
@@ -441,7 +430,7 @@ class UserController {
         return HelperUtils.responseSuccess(formatDataPrivateWinner(tier, isPublicWinner));
       } else {
         // Get Tier in smart contract
-        const userTier = (await HelperUtils.getUserTierSmart(walletAddress))[0];
+        const userTier = (await HelperUtils.getUserTierSmartWithCached(walletAddress))[0];
         const tierDb = await TierModel.query().where('campaign_id', campaignId).where('level', userTier).first();
         if (!tierDb) {
           return HelperUtils.responseSuccess(formatDataPrivateWinner({

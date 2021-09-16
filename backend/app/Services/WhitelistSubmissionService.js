@@ -100,7 +100,7 @@ class WhitelistSubmissionService {
       ErrorFactory.internal('WhitelistSubbmission not found')
     }
 
-    const userTier = (await HelperUtils.getUserTierSmart(wallet_address))[0];
+    const userTier = (await HelperUtils.getUserTierSmartWithCached(wallet_address))[0];
     if (userTier >= 3) {
       await this.approveSubmission(submission)
       return Array(8).fill(Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
@@ -130,7 +130,7 @@ class WhitelistSubmissionService {
       ErrorFactory.internal('WhitelistSubbmission not found')
     }
 
-    const userTier = (await HelperUtils.getUserTierSmart(wallet_address))[0];
+    const userTier = (await HelperUtils.getUserTierSmartWithCached(wallet_address))[0];
     if (userTier >= 3) {
       await this.approveSubmission(submission)
       return Array(8).fill(Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)

@@ -19,6 +19,7 @@ class StakingEventService {
         .max('dispatch_at as last_time')
         .groupBy('wallet_address')
         .orderBy('amount', 'desc')
+        .orderBy('last_time', 'asc')
         .limit(param.limit)
 
       const min_tier = param.min_tier ? param.min_tier : 0
@@ -39,44 +40,47 @@ class StakingEventService {
   }
 
   async runAll() {
-    const provider = await HelperUtils.getStakingProvider()
-    const latestBlockNumber = await provider.eth.getBlockNumber()
-    let from = {
-      deposit: DEFAULT_FROM,
-      withdraw: DEFAULT_FROM,
-    }
     try {
-      if (await RedisUtils.checkExistStakingLastBlockNumber()) {
-        from = JSON.parse(await RedisUtils.getRedisStakingLastBlockNumber())
-      }
-    }
-    catch (e) {
-      from = {
+      const provider = await HelperUtils.getStakingProvider()
+      const latestBlockNumber = (await provider.eth.getBlockNumber()) - 1
+      let from = {
         deposit: DEFAULT_FROM,
         withdraw: DEFAULT_FROM,
       }
-    }
-
-    // fetch staking
-    for (let index = from.deposit; index < latestBlockNumber; index += STEP) {
-      let to = index + STEP
-      if (to > latestBlockNumber) {
-        to = latestBlockNumber
+      try {
+        if (await RedisUtils.checkExistStakingLastBlockNumber()) {
+          from = JSON.parse(await RedisUtils.getRedisStakingLastBlockNumber())
+        }
+      }
+      catch (e) {
+        from = {
+          deposit: DEFAULT_FROM,
+          withdraw: DEFAULT_FROM,
+        }
       }
 
-      await this.run(provider, LINEAR_DEPOSIT_EVENT, index, to)
-    }
+      // fetch staking
+      for (let index = from.deposit; index < latestBlockNumber; index += STEP) {
+        let to = index + STEP
+        if (to >= latestBlockNumber) {
+          to = latestBlockNumber
+        }
 
-    // fetch withdraw
-    for (let index = from.withdraw; index < latestBlockNumber; index += STEP) {
-      let to = index + STEP
-      if (to > latestBlockNumber) {
-        to = latestBlockNumber
+        await this.run(provider, LINEAR_DEPOSIT_EVENT, index, to)
       }
-      await this.run(provider, LINEAR_WITHDRAW_EVENT, index, to)
-    }
 
-    await RedisUtils.setRedisStakingLastBlockNumber({deposit: latestBlockNumber, withdraw: latestBlockNumber})
+      // fetch withdraw
+      for (let index = from.withdraw; index < latestBlockNumber; index += STEP) {
+        let to = index + STEP
+        if (to > latestBlockNumber) {
+          to = latestBlockNumber
+        }
+        await this.run(provider, LINEAR_WITHDRAW_EVENT, index, to)
+      }
+
+      await RedisUtils.setRedisStakingLastBlockNumber({deposit: latestBlockNumber, withdraw: latestBlockNumber})
+    }
+    catch (e) {}
   }
 
   async run(provider, event_type, from, to) {

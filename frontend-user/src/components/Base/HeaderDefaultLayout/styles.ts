@@ -429,6 +429,10 @@ const useStyles = makeStyles((theme) => {
         lineHeight: "24px",
         color: "#FFFFFF",
         mixBlendMode: "normal",
+        "&:hover": {
+          color: "#FFFFFF",
+          textDecoration: 'underline'
+        },
       },
     },
     headerAccount: {
@@ -449,6 +453,7 @@ const useStyles = makeStyles((theme) => {
       mixBlendMode: "normal",
       "&:hover": {
         color: "#FFFFFF",
+        textDecoration: 'underline'
       },
     },
     headerAccBtn: {

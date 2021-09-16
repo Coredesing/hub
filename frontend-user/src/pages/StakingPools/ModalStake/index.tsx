@@ -1,12 +1,13 @@
-import _, { set } from 'lodash';
+// import _, { set } from 'lodash';
 import { useEffect, useState } from 'react';
 import useStyles from './style';
 import usePoolStyles from '../Pool/style';
 import useCommonStyle from '../../../styles/CommonStyle';
 import Button from '../Button';
-import { Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Link } from '@material-ui/core';
 import { numberWithCommas } from '../../../utils/formatNumber';
 import Progress from '@base-components/Progress';
+import { LINK_SWAP_TOKEN } from '@app-constants';
 
 const closeIcon = '/images/icons/close.svg'
 
@@ -171,10 +172,26 @@ const ModalStake = (props: any) => {
               margin: 'auto',
               borderRadius: '36px',
               padding: '12px 30px',
-              color: '#000'
+              color: '#000',
+              marginRight: '5px'
             }}
             disabled={isNaN(amount) || Number(amount) <= 0}
           />
+          <Link href={LINK_SWAP_TOKEN} target="_blank" rel="noreferrer" style={{
+            height: '42px',
+            width: '280px',
+            margin: 'auto',
+            borderRadius: '36px',
+            padding: '12px 30px',
+            color: '#72F34B',
+            backgroundColor: "transparent",
+            border: '1px solid #72F34B',
+            textAlign: 'center',
+            fontWeight: 600,
+          }}>
+            Get GAFI
+          </Link>
+
           {/* <Button
             text="Get PKF"
             onClick={()=> window.open(`https://app.uniswap.org/#/swap?outputCurrency=${tokenDetails?.address}&use=V2`)}

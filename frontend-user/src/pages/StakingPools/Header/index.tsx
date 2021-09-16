@@ -44,7 +44,7 @@ const StakingHeader = (props: any) => {
 
   return (
     <div className="controller-area">
-      <div style={{ display: 'flex' }}>
+      <div className="controller-area__left">
         <ButtonGroup color="primary" className={btnGroupStyle.group} aria-label="outlined primary button group">
           <Button
             className={durationType === DURATION_LIVE ? btnGroupStyle.btnActive : btnGroupStyle.btnDisabled}
@@ -73,22 +73,23 @@ const StakingHeader = (props: any) => {
             Linear Rate
           </Button>
         </ButtonGroup> */}
+        <FormControlLabel
+          className={switchStyle.formLabel}
+          control={<Switch
+            name="checkedB"
+            checked={stakedOnly}
+            onChange={(event) => { setStakedOnly(event.target.checked) }}
+            classes={{
+              root: switchStyle.root,
+              switchBase: switchStyle.switchBase,
+              thumb: switchStyle.thumb,
+              track: switchStyle.track,
+              checked: switchStyle.checked,
+            }}
+          />}
+          label="My Staking Pools"
+        />
       </div>
-      <FormControlLabel
-        control={<Switch
-          name="checkedB"
-          checked={stakedOnly}
-          onChange={(event) => { setStakedOnly(event.target.checked) }}
-          classes={{
-            root: switchStyle.root,
-            switchBase: switchStyle.switchBase,
-            thumb: switchStyle.thumb,
-            track: switchStyle.track,
-            checked: switchStyle.checked,
-          }}
-        />}
-        label="My Staking Pools"
-      />
       <div className="controller-area__right">
         {/* <div className="form-control-label">
           <span>Benefits</span>
@@ -105,14 +106,14 @@ const StakingHeader = (props: any) => {
           </select>
         </div> */}
         <div className="form-control-label">
-          <span>Search</span>
+          {/* <span>Search</span> */}
           <div className="controller-area__search">
             <SearchBox value={searchString}
               onChange={(e: any) => setSearchString(e.target.value)}
               type="text"
               placeholder="Search pool name"
-              // className={commonStyles.nnn1424h} 
-              />
+            // className={commonStyles.nnn1424h} 
+            />
             {/* <input
               value={searchString}
               onChange={(e) => setSearchString(e.target.value)}

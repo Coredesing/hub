@@ -22,7 +22,7 @@ import { USER_STATUS } from "../../constants";
 import { ChainId } from "../../constants/network";
 // import NftTicket from "./NftTicket";
 // import CardsTicket from "./NftTicket/Cards";
-// import NeedHelp from "./NeedHelp";
+import NeedHelp from "./NeedHelp";
 import IdoPools from "./IdoPools";
 import axios from '../../services/axios';
 // import { numberWithCommas } from '../../utils/formatNumber';
@@ -262,10 +262,10 @@ const AccountV2 = (props: any) => {
               <CardsTicket />
             </>} */}
 
-            {/* {
-              activeMenuAccount === 'Need Help' &&
+            {
+              activeMenuAccount === MenuLeft.help.key &&
               <NeedHelp />
-            } */}
+            }
 
           </div>
         </div>

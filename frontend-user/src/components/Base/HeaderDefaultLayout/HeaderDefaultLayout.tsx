@@ -19,10 +19,10 @@ import {
   connectorNames,
 } from "../../../constants/connectors";
 import { WalletConnectionState } from "../../../store/reducers/wallet";
-import { TIERS } from "../../../constants";
+import { LINK_SWAP_TOKEN, TIERS } from "@app-constants";
 import useAuth from "../../../hooks/useAuth";
 import { getUserTier } from "../../../store/actions/sota-tiers";
-import { useMediaQuery, useTheme } from "@material-ui/core";
+import { useMediaQuery, useTheme, Link as LinkMui } from "@material-ui/core";
 import { WrapperAlert } from "../WrapperAlert";
 
 // const BrightStartIcon = "bright-star.svg";
@@ -273,6 +273,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
                 <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/">Home</Link></li>
                 <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/ticket">Ticket sales</Link></li>
                 <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/token">Token sales</Link></li>
+                <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/staking-pools">Staking</Link></li>
                 {/* <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/items">Items Sales</Link></li> */}
                 {/* <li className={styles.headerLink}><Link href="#">Marketplace</Link></li> */}
                 {/* <li className={styles.headerLink}><Link href="#">Stake</Link></li> */}
@@ -280,7 +281,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
               <div className={styles.headerAccount} onClick={hideNavMenu}>
                 {connectedAccount && <>
                   <Link to="/account" className={styles.headerAccText}>My Account </Link>
-                  <Link className={styles.headerAccText} to="/staking-pools">Staking</Link>
+                  <LinkMui className={styles.headerAccText} href={LINK_SWAP_TOKEN} target="_blank" rel="noreferrer">Buy GAFI</LinkMui>
                 </>
                 }
 

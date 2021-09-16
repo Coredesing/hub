@@ -163,7 +163,7 @@ class StakingPoolController {
         return HelperUtils.responseSuccess({
           start_time: process.env.EVENT_START_TIME,
           end_time: process.env.EVENT_END_TIME,
-          limit: 10,
+          limit: process.env.EVENT_LIMIT,
           top: [],
           disable: true,
         });
@@ -173,7 +173,7 @@ class StakingPoolController {
         return HelperUtils.responseSuccess({
           start_time: process.env.EVENT_START_TIME,
           end_time: process.env.EVENT_END_TIME,
-          limit: 10,
+          limit: process.env.EVENT_LIMIT,
           top: [],
           disable: false,
         });

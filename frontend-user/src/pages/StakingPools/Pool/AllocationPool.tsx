@@ -34,7 +34,6 @@ import { BigNumber, utils, ethers } from 'ethers';
 
 const ONE_DAY_IN_SECONDS = 86400;
 const EST_BLOCK_PER_YEAR = 2369600; // Number of block per year, with estimated 20s/block
-const ETH_RPC_URL = process.env.REACT_APP_NETWORK_URL || "";
 const ArrowIcon = () => {
   return (
     <svg width="16" height="9" viewBox="0 0 16 9" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -42,7 +41,7 @@ const ArrowIcon = () => {
     </svg>
   )
 }
-const provider = new ethers.providers.JsonRpcProvider(ETH_RPC_URL);
+const provider = new ethers.providers.JsonRpcProvider(ChainDefault?.details?.rpcUrls?.[0]);
 const AllocationPool = (props: any) => {
   const { connectedAccount, poolDetail, poolAddress, reload, setOpenModalTransactionSubmitting, setTransactionHashes } = props;
   const [blockNumber, setBlockNumber] = useState<number>(0);

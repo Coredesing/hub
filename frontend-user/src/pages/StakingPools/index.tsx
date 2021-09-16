@@ -13,16 +13,16 @@ import {
 } from '@material-ui/core';
 import CustomButton from './Button'
 import StakingHeader, { DURATION_LIVE, DURATION_FINISHED, POOL_TYPE_ALLOC, POOL_TYPE_LINEAR, BENEFIT_ALL, BENEFIT_IDO_ONLY, BENEFIT_REWARD_ONLY } from './Header'
-import AllocationPool from './Pool/AllocationPool';
+// import AllocationPool from './Pool/AllocationPool';
 import LinearPool from './Pool/LinearPool';
 import useTokenDetails from "../../hooks/useTokenDetails";
 import ButtonLink from "../../components/Base/ButtonLink";
 import ModalTransaction from "./ModalTransaction";
-import { ethers, BigNumber } from 'ethers';
+import { BigNumber } from 'ethers';
 import useTokenAllowance from '../../hooks/useTokenAllowance';
 import useDetailListStakingPool from './hook/useDetailListStakingPool';
 import ModalStake from "./ModalStake";
-import { ChainDefault, ETH_CHAIN_ID } from '../../constants/network'
+import { ChainDefault } from '../../constants/network'
 import { getBalance } from "../../store/actions/balance";
 
 import useFetch, { useFetchV1 } from '../../hooks/useFetch';
@@ -48,12 +48,6 @@ import { numberWithCommas } from '@utils/formatNumber';
 import { getTiers } from '@store/actions/sota-tiers';
 
 const closeIcon = '/images/icons/close.svg';
-const iconWarning = "/images/warning-red.svg";
-
-const ETH_RPC_URL = process.env.REACT_APP_NETWORK_URL || "";
-const ETH_NETWORK_NAME = process.env.REACT_APP_ETH_NETWORK_NAME || "";
-
-
 
 const StakingPools = (props: any) => {
   const styles = useStyles();
@@ -233,7 +227,7 @@ const StakingPools = (props: any) => {
           }
 
           {
-            !loadingDetailList && poolType === POOL_TYPE_ALLOC && filteredAllocPools.length > 0 &&
+            // !loadingDetailList && poolType === POOL_TYPE_ALLOC && filteredAllocPools.length > 0 &&
             <>
               {/* {durationType === DURATION_FINISHED && 
                 <div className={styles.messageDuration}>
@@ -241,7 +235,7 @@ const StakingPools = (props: any) => {
                   These pools are no longer distributing rewards. Please unstake your tokens.
                 </div>
               } */}
-              <div className="pool-area">
+              {/* <div className="pool-area">
                 {
                   filteredAllocPools.map((pool: any) => (
                     <AllocationPool
@@ -256,7 +250,7 @@ const StakingPools = (props: any) => {
                     />
                   ))
                 }
-              </div>
+              </div> */}
             </>
           }
 

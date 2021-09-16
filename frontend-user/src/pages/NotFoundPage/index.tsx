@@ -4,7 +4,7 @@ import ContentPage from "./ContentPage";
 
 const NotFoundPage = () => {
   return (
-    <DefaultLayout>
+    <DefaultLayout style={{backgroundColor: '#0A0A0A'}}>
       <ContentPage />
     </DefaultLayout>
   );

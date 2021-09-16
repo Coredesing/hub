@@ -7,7 +7,8 @@ import { Button, Link as LinkMui, useMediaQuery, useTheme } from "@material-ui/c
 import useStyles from './styles';
 import { ChainDefault, GAMEFI_ADDRESS } from '../../../constants/network';
 import { getEtherscanTransactionAddress } from "../../../utils/network";
-const DefaultLayout = (props: any) => {
+const DefaultLayout = ({ style, children, ...props }: any) => {
+  console.log(children)
   const theme = useTheme();
   const matchXs = useMediaQuery(theme.breakpoints.down("xs"));
   const commonStyle = useCommonStyle();
@@ -16,8 +17,11 @@ const DefaultLayout = (props: any) => {
     setShowBannerContract(false);
   }
   const styles = useStyles();
+  const isMultiChildren = (children: any) => {
+    return Array.isArray(children);
+  }
   return (
-    <div className={commonStyle.DefaultLayout} style={props.style}>
+    <div className={commonStyle.DefaultLayout} style={style}>
       <div className={commonStyle.bgBody} style={isShowBannerContract ? { paddingTop: matchXs ? '140px' : '160px' } : {}}>
 
         <HeaderDefaultLayout isShowBannerContract={isShowBannerContract} />
@@ -42,7 +46,13 @@ const DefaultLayout = (props: any) => {
             </div>
           </div>
         }
-        <MainDefaultLayout >{props.children}</MainDefaultLayout>
+        <MainDefaultLayout >{
+          isMultiChildren(children) ? children : React.cloneElement(children, {
+            ...props,
+            isShowBannerContract
+          })
+
+        }</MainDefaultLayout>
         <FooterLandingLayout />
       </div>
     </div>

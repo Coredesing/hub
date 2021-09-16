@@ -671,7 +671,7 @@ const LinearPool = (props: any) => {
                 {
                   BigNumber.from(poolDetail?.stakingAmount || '0').gt(BigNumber.from('0')) &&
                   <Button
-                    text="Untake"
+                    text="Unstake"
                     onClick={() => setShowUnstakeModal(true)}
                     backgroundColor="#191920"
                     style={{

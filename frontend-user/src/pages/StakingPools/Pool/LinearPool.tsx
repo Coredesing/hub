@@ -56,7 +56,7 @@ const LinearPool = (props: any) => {
   const dispatch = useDispatch();
   const { data: delayTiers = [] } = useSelector((state: any) => state.delayTiers);
   const { appChainID, walletChainID } = useTypedSelector(state => state.appNetwork).data;
-  const { tokenDetails } = useTokenDetails(poolDetail?.acceptedToken, ChainDefault.name);
+  const { tokenDetails } = useTokenDetails(poolDetail?.acceptedToken, ChainDefault.shortName || '');
   const [tokenAllowance, setTokenAllowance] = useState(BigNumber.from('0'));
   const { retrieveTokenAllowance } = useTokenAllowance();
   const [tokenBalance, setTokenBalance] = useState('0');

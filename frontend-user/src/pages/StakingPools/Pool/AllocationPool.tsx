@@ -27,7 +27,7 @@ import useAllocUnstake from '../hook/useAllocUnstake';
 import useAllocClaim from '../hook/useAllocClaim';
 import useAllocClaimPendingWithdraw from '../hook/useAllocClaimPendingWithdraw';
 
-import { ETH_CHAIN_ID } from '../../../constants/network'
+import { ChainDefault, ETH_CHAIN_ID } from '../../../constants/network'
 import { useTypedSelector } from '../../../hooks/useTypedSelector';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { BigNumber, utils, ethers } from 'ethers';
@@ -57,8 +57,8 @@ const AllocationPool = (props: any) => {
   const dispatch = useDispatch();
   
   const { appChainID, walletChainID } = useTypedSelector(state => state.appNetwork).data;
-  const {tokenDetails} = useTokenDetails(poolDetail?.lpToken, 'eth');
-  const {tokenDetails: rewardTokenDetails} = useTokenDetails(poolDetail?.rewardToken, 'eth');
+  const {tokenDetails} = useTokenDetails(poolDetail?.lpToken, ChainDefault.shortName || '');
+  const {tokenDetails: rewardTokenDetails} = useTokenDetails(poolDetail?.rewardToken, ChainDefault.shortName || '');
   const [tokenAllowance, setTokenAllowance] = useState(BigNumber.from('0'));
   const { retrieveTokenAllowance } = useTokenAllowance();
   const [tokenBalance, setTokenBalance] = useState('0');

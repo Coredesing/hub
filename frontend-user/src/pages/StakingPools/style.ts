@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme: any) => {
       color: '#FFF',
       fontFamily: 'DM Sans',
       position: 'relative',
+      marginTop: '20px',
       // paddingTop: 90,
 
       '& .content': {

@@ -1,6 +1,7 @@
 'use strict'
 
 const Redis = use('Redis');
+const HelperUtils = use('App/Common/HelperUtils');
 
 /*
   Top events
@@ -56,7 +57,34 @@ const setRedisStakingPoolsDetail = async (data) => {
     return
   }
 
-  return await Redis.set(getRedisKeyStakingPoolsDetail(), JSON.stringify(data));
+  const instance = await HelperUtils.getStakingPoolInstance()
+  if (!instance) {
+    return
+  }
+
+  data = JSON.parse(JSON.stringify(data))
+  try {
+    data = await Promise.all(data.map(async (item) => {
+      if (item.staking_type === 'linear') {
+        const scData = await instance.methods.linearPoolInfo(item.pool_id).call()
+        item.cap = scData.cap
+        item.minInvestment = scData.minInvestment
+        item.maxInvestment = scData.maxInvestment
+        item.APR = scData.APR
+        item.lockDuration = scData.lockDuration
+        item.delayDuration = scData.delayDuration
+        item.startJoinTime = scData.startJoinTime
+        item.endJoinTime = scData.endJoinTime
+      }
+
+      return item
+    }))
+
+  }catch (e) {
+    return
+  }
+
+  await Redis.set(getRedisKeyStakingPoolsDetail(), JSON.stringify(data));
 };
 
 const existRedisStakingPoolsDetail = async () => {

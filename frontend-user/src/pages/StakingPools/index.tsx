@@ -46,19 +46,16 @@ import { Box, Typography } from '@material-ui/core';
 import { cvtAddressToStar, debounce, escapeRegExp } from '@utils/index';
 import { numberWithCommas } from '@utils/formatNumber';
 import { getTiers } from '@store/actions/sota-tiers';
+import WrapperContent from '@base-components/WrapperContent';
 
 const closeIcon = '/images/icons/close.svg';
 
 const StakingPools = (props: any) => {
   const styles = useStyles();
   const commonStyles = useCommonStyle();
-
   const dispatch = useDispatch();
 
-
   // Start Staking Logic 
-
-
 
   const { appChainID, walletChainID } = useTypedSelector(state => state.appNetwork).data;
   const { account: connectedAccount, library } = useWeb3React();
@@ -197,45 +194,46 @@ const StakingPools = (props: any) => {
 
   return (
     <DefaultLayout>
-      <div className={styles.wrapper}>
-        <div className="content">
-          {wrongChain &&
-            <WrapperAlert type="error">
-              Please switch to the {ChainDefault.name} network to join these staking pools
-            </WrapperAlert>
-          }
-          <StakingHeader
-            durationType={durationType}
-            setDurationType={setDurationType}
-            poolType={poolType}
-            setPoolType={setPoolType}
-            stakedOnly={stakedOnly}
-            setStakedOnly={setStakedOnly}
-            benefitType={benefitType}
-            setBenefitType={setBenefitType}
-            location={props.location}
-            history={props.history}
-            searchString={searchString}
-            setSearchString={setSearchString}
-          />
+      <WrapperContent useShowBanner={false}>
+        <div className={styles.wrapper}>
+          <div className="content">
+            {wrongChain &&
+              <WrapperAlert type="error">
+                Please switch to the {ChainDefault.name} network to join these staking pools
+              </WrapperAlert>
+            }
+            <StakingHeader
+              durationType={durationType}
+              setDurationType={setDurationType}
+              poolType={poolType}
+              setPoolType={setPoolType}
+              stakedOnly={stakedOnly}
+              setStakedOnly={setStakedOnly}
+              benefitType={benefitType}
+              setBenefitType={setBenefitType}
+              location={props.location}
+              history={props.history}
+              searchString={searchString}
+              setSearchString={setSearchString}
+            />
 
-          {
-            loadingDetailList &&
-            <div className={styles.loader} style={{ marginTop: 70 }}>
-              <HashLoader loading={true} color={'#72F34B'} />
-            </div>
-          }
+            {
+              loadingDetailList &&
+              <div className={styles.loader} style={{ marginTop: 70 }}>
+                <HashLoader loading={true} color={'#72F34B'} />
+              </div>
+            }
 
-          {
-            // !loadingDetailList && poolType === POOL_TYPE_ALLOC && filteredAllocPools.length > 0 &&
-            <>
-              {/* {durationType === DURATION_FINISHED && 
+            {
+              // !loadingDetailList && poolType === POOL_TYPE_ALLOC && filteredAllocPools.length > 0 &&
+              <>
+                {/* {durationType === DURATION_FINISHED && 
                 <div className={styles.messageDuration}>
                   <img src={iconWarning} style={{ marginRight: "12px" }} alt="" />
                   These pools are no longer distributing rewards. Please unstake your tokens.
                 </div>
               } */}
-              {/* <div className="pool-area">
+                {/* <div className="pool-area">
                 {
                   filteredAllocPools.map((pool: any) => (
                     <AllocationPool
@@ -251,139 +249,140 @@ const StakingPools = (props: any) => {
                   ))
                 }
               </div> */}
-            </>
-          }
+              </>
+            }
 
 
 
-          {/* {durationType === DURATION_FINISHED && 
+            {/* {durationType === DURATION_FINISHED && 
                 <div className={styles.messageDuration}>
                   <img src={iconWarning} style={{ marginRight: "12px" }} alt="" />
                   These pools are no longer distributing rewards. Please unstake your tokens.
                 </div>
               } */}
-          <div className="pool-area">
-            {
-              !loadingDetailList && poolType === POOL_TYPE_LINEAR && filteredLinearPools.length > 0 &&
-              filteredLinearPools.map((pool: any, idx: number) => (
-                <LinearPool
-                  expandedDetail={filteredLinearPools[0].pool_id === pool.pool_id}
-                  key={pool?.id}
-                  reload={reloadData}
-                  setTransactionHashes={setTransactionHashes}
-                  setOpenModalTransactionSubmitting={setOpenModalTransactionSubmitting}
-                  connectedAccount={connectedAccount}
-                  poolDetail={pool}
-                  poolAddress={pool?.pool_address}
-                  poolsList={poolsList}
-                />
-              ))
-            }
-            {listTopStaked && !listTopStaked?.disable &&
-              <Box marginTop="30px" className={styles.boxRank}>
-                <Box className={styles.boxRankHeader}>
-                  <Box className={styles.boxListRank}>
-                    <Typography variant="h5" component="h5" className="text-uppercase">
-                      Gamefi stake event
-                    </Typography>
-                    <Box className={styles.list}>
-                      <Typography variant="h5" component="h5" className="item">
-                        1. TOP 12 RANKING will be given 1 NFT Legend
+            <div className="pool-area">
+              {
+                !loadingDetailList && poolType === POOL_TYPE_LINEAR && filteredLinearPools.length > 0 &&
+                filteredLinearPools.map((pool: any, idx: number) => (
+                  <LinearPool
+                    expandedDetail={filteredLinearPools[0].pool_id === pool.pool_id}
+                    key={pool?.id}
+                    reload={reloadData}
+                    setTransactionHashes={setTransactionHashes}
+                    setOpenModalTransactionSubmitting={setOpenModalTransactionSubmitting}
+                    connectedAccount={connectedAccount}
+                    poolDetail={pool}
+                    poolAddress={pool?.pool_address}
+                    poolsList={poolsList}
+                  />
+                ))
+              }
+              {listTopStaked && !listTopStaked?.disable &&
+                <Box marginTop="30px" className={styles.boxRank}>
+                  <Box className={styles.boxRankHeader}>
+                    <Box className={styles.boxListRank}>
+                      <Typography variant="h5" component="h5" className="text-uppercase">
+                        Gamefi stake event
                       </Typography>
-                      <Typography variant="h5" component="h5" className="item">
-                      2. The results will be updated every minute and will be announced after review
-                      </Typography>
+                      <Box className={styles.list}>
+                        <Typography variant="h5" component="h5" className="item">
+                          1. TOP 12 RANKING will be given 1 NFT Legend
+                        </Typography>
+                        <Typography variant="h5" component="h5" className="item">
+                          2. The results will be updated every minute and will be announced after review
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Box className={styles.boxListRank} marginBottom="20px">
+                      <Box className={styles.endInText}>
+                        {
+                          listTopStaked?.start_time * 1000 > Date.now() ? 'Open in'
+                            : listTopStaked?.end_time * 1000 > Date.now() ? 'End in' : 'Finished'
+                        }
+                      </Box>
+                      <Box>
+                        <CountDownTimeV1 time={
+                          listTopStaked?.start_time * 1000 > Date.now() ?
+                            {
+                              date1: listTopStaked?.start_time * 1000,
+                              date2: Date.now()
+                            } :
+                            listTopStaked?.end_time * 1000 > Date.now() ? {
+                              date1: listTopStaked?.end_time * 1000,
+                              date2: Date.now()
+                            } : {
+                              days: 0, hours: 0, minutes: 0, seconds: 0
+                            }
+                        }
+                          onFinish={() => console.log('finished')} />
+                      </Box>
                     </Box>
                   </Box>
-                  <Box className={styles.boxListRank} marginBottom="20px">
-                    <Box className={styles.endInText}>
-                      {
-                        listTopStaked?.start_time * 1000 > Date.now() ? 'Open in'
-                          : listTopStaked?.end_time * 1000 > Date.now() ? 'End in' : 'Finished'
-                      }
-                    </Box>
-                    <Box>
-                      <CountDownTimeV1 time={
-                        listTopStaked?.start_time * 1000 > Date.now() ?
-                          {
-                            date1: listTopStaked?.start_time * 1000,
-                            date2: Date.now()
-                          } :
-                          listTopStaked?.end_time * 1000 > Date.now() ? {
-                            date1: listTopStaked?.end_time * 1000,
-                            date2: Date.now()
-                          } : {
-                            days: 0, hours: 0, minutes: 0, seconds: 0
-                          }
-                      }
-                        onFinish={() => console.log('finished')} />
-                    </Box>
+
+                  <Typography variant="h5" component="h5" className="text-uppercase" style={{ marginBottom: '10px' }}>
+                    Ranking&nbsp;
+                    {
+                      recallTopStaking.isCall && <span style={{ fontFamily: 'Firs Neue', fontSize: '12px', fontWeight: 'normal', textTransform: 'none' }}>(The top will be update in {recallTopStaking.inSeconds} seconds)</span>
+                    }
+                  </Typography>
+                  <Box marginBottom="10px" width="50%">
+                    <SearchBox onChange={onSearchWallet} placeholder="Search first or last 14 digits of your wallet" />
                   </Box>
-                </Box>
+                  <TableContainer>
+                    <Table>
+                      <TableHead>
+                        <TableRowHead>
+                          <TableCell>No</TableCell>
+                          <TableCell align="left">Wallet Address</TableCell>
+                          <TableCell align="left">Current Staked</TableCell>
+                          <TableCell align="left">Last time Stake</TableCell>
+                        </TableRowHead>
+                      </TableHead>
+                      <TableBody>
+                        {topWalletRanking.map((row: any, idx: number) => (
+                          <TableRowBody key={idx}>
+                            <TableCell component="th" scope="row" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>  {row.idx + 1} </TableCell>
+                            <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{cvtAddressToStar(row.wallet_address)}</TableCell>
+                            <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{numberWithCommas((row.amount + '') || 0, 4)}</TableCell>
+                            <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{convertTimeToStringFormat(new Date(+row.last_time * 1000))}</TableCell>
+                          </TableRowBody>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
 
-                <Typography variant="h5" component="h5" className="text-uppercase" style={{ marginBottom: '10px' }}>
-                  Ranking&nbsp;
-                  {
-                    recallTopStaking.isCall && <span style={{ fontFamily: 'Firs Neue', fontSize: '12px', fontWeight: 'normal', textTransform: 'none' }}>(The top will be update in {recallTopStaking.inSeconds} seconds)</span>
-                  }
-                </Typography>
-                <Box marginBottom="10px" width="50%">
-                  <SearchBox onChange={onSearchWallet} placeholder="Search first or last 14 digits of your wallet" />
                 </Box>
-                <TableContainer>
-                  <Table>
-                    <TableHead>
-                      <TableRowHead>
-                        <TableCell>No</TableCell>
-                        <TableCell align="left">Wallet Address</TableCell>
-                        <TableCell align="left">Current Staked</TableCell>
-                        <TableCell align="left">Last time Stake</TableCell>
-                      </TableRowHead>
-                    </TableHead>
-                    <TableBody>
-                      {topWalletRanking.map((row: any, idx: number) => (
-                        <TableRowBody key={idx}>
-                          <TableCell component="th" scope="row" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>  {row.idx + 1} </TableCell>
-                          <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{cvtAddressToStar(row.wallet_address)}</TableCell>
-                          <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{numberWithCommas((row.amount + '') || 0, 4)}</TableCell>
-                          <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{convertTimeToStringFormat(new Date(+row.last_time * 1000))}</TableCell>
-                        </TableRowBody>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+              }
+            </div>
 
-              </Box>
-            }
+
           </div>
 
+          <Dialog
+            open={openModalTransactionSubmitting}
+            keepMounted
+            onClose={() => setOpenModalTransactionSubmitting(false)}
+            aria-labelledby="alert-dialog-slide-title"
+            aria-describedby="alert-dialog-slide-description"
+            className={commonStyles.loadingTransaction}
+          >
+            <DialogContent className="content">
+              <img src={closeIcon} alt="" onClick={() => setOpenModalTransactionSubmitting(false)} />
+              <span className={commonStyles.nnb1824d}>Transaction Submitting</span>
+              <CircularProgress color="primary" />
+            </DialogContent>
+          </Dialog>
 
+          <ModalStake open={false} />
+
+          {transactionHashes.length > 0 && <DialogTxSubmitted
+            networkName={ChainDefault.id}
+            transaction={transactionHashes[0].tnx}
+            onClose={() => setTransactionHashes([])}
+            open={transactionHashes.length > 0}
+          />}
         </div>
-
-        <Dialog
-          open={openModalTransactionSubmitting}
-          keepMounted
-          onClose={() => setOpenModalTransactionSubmitting(false)}
-          aria-labelledby="alert-dialog-slide-title"
-          aria-describedby="alert-dialog-slide-description"
-          className={commonStyles.loadingTransaction}
-        >
-          <DialogContent className="content">
-            <img src={closeIcon} alt="" onClick={() => setOpenModalTransactionSubmitting(false)} />
-            <span className={commonStyles.nnb1824d}>Transaction Submitting</span>
-            <CircularProgress color="primary" />
-          </DialogContent>
-        </Dialog>
-
-        <ModalStake open={false} />
-
-        {transactionHashes.length > 0 && <DialogTxSubmitted
-          networkName={ChainDefault.id}
-          transaction={transactionHashes[0].tnx}
-          onClose={() => setTransactionHashes([])}
-          open={transactionHashes.length > 0}
-        />}
-      </div>
+      </WrapperContent>
     </DefaultLayout>
   );
 };

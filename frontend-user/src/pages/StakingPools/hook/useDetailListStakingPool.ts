@@ -86,10 +86,14 @@ const useDetailListStakingPool = (
           //   break;
           
           case 'linear':
-            // debugger;
-            const linearData = await contract.methods.linearPoolInfo(BigNumber.from(pool.pool_id)).call();
+            let linearData: {[k: string]: any} = {};
+            if('startJoinTime' in pool && 'endJoinTime' in pool ) {
+              linearData = pool;
+            } else {
+              linearData = await contract.methods.linearPoolInfo(BigNumber.from(pool.pool_id)).call();
+            }
             let linearPendingReward = "0"
-            let linearPendingWithdrawal, linearUserInfo
+            let linearPendingWithdrawal, linearUserInfo;
             if (account) {
               [linearUserInfo, linearPendingReward, linearPendingWithdrawal] = await Promise.all([
                 contract.methods.linearStakingData(BigNumber.from(pool.pool_id), account).call(),
@@ -103,7 +107,7 @@ const useDetailListStakingPool = (
                 ...pool,
                 acceptedToken: linearAcceptedToken,
                 cap: linearData.cap, 
-                totalStaked: linearData.totalStaked, 
+                totalStaked: linearData.totalStaked || '0', 
                 minInvestment: linearData.minInvestment, 
                 maxInvestment: linearData.maxInvestment, 
                 APR: linearData.APR, 

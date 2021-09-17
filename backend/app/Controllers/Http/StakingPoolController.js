@@ -156,10 +156,6 @@ class StakingPoolController {
       }
 
       let listData = await StakingPoolModel.query().where('is_display', 1).fetch();
-      // for (const data of listData) {
-      //   // fetch
-      // }
-
       await RedisStakingPoolUtils.setRedisStakingPoolsDetail(listData)
       return HelperUtils.responseSuccess(listData);
     } catch (e) {

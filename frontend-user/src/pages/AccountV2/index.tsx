@@ -43,7 +43,7 @@ const AccountV2 = (props: any) => {
   const dispatch = useDispatch();
 
   const { data: balance = {} } = useSelector((state: any) => state.balance);
-  const { data: userInfo = {} } = useSelector((state: any) => state.userInfo);
+ 
   const { isAuth, connectedAccount, wrongChain } = useAuth();
   // const [loadingGetHistory, setLoadingGetHistory] = useState(false);
 
@@ -148,12 +148,9 @@ const AccountV2 = (props: any) => {
   // }, [connectedAccount]);
 
 
-
-
-  useEffect(() => {
-    connectedAccount && dispatch(getUserInfo(connectedAccount));
-  }, [connectedAccount, dispatch]);
-
+  // useEffect(() => {
+  //   connectedAccount && dispatch(getUserInfo(connectedAccount));
+  // }, [connectedAccount, dispatch]);
 
 
   return (
@@ -221,7 +218,7 @@ const AccountV2 = (props: any) => {
                 notEth={(+appChainID?.appChainID > ChainId.KOVAN)}
                 classNamePrefix="account-infomation"
                 balance={balance}
-                userInfo={userInfo}
+                // userInfo={userInfo}
                 // tokenPKFDetails={tokenPKFDetails}
                 email={userProfile.email}
                 twitter={userProfile.user_twitter}
@@ -244,7 +241,7 @@ const AccountV2 = (props: any) => {
                   // total={total}
                   isKYC={isKYC}
                   // tiers={tiers}
-                  userInfo={userInfo}
+                  // userInfo={userInfo}
                   // userTier={userTier}
                   emailVerified={emailVerified}
                   connectedAccount={connectedAccount}

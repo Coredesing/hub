@@ -27,7 +27,7 @@ const PasswordResetModel = use('App/Models/PasswordReset');
 const BlockPassModel = use('App/Models/BlockPass');
 
 const HelperUtils = use('App/Common/HelperUtils');
-const RedisUtils = use('App/Common/RedisUtils');
+const RedisUserUtils = use('App/Common/RedisUserUtils');
 const SendForgotPasswordJob = use('App/Jobs/SendForgotPasswordJob');
 
 class UserController {
@@ -99,6 +99,12 @@ class UserController {
     try {
       const params = request.all();
       const wallet_address = params.wallet_address;
+
+      if (await RedisUserUtils.existRedisUserProfile(wallet_address)) {
+        const user = JSON.parse(await RedisUserUtils.getRedisUserProfile(wallet_address))
+        return HelperUtils.responseSuccess({user: user})
+      }
+
       const findedUser = await UserModel.query().where('wallet_address', wallet_address).first();
       if (!findedUser) {
         return HelperUtils.responseNotFound();
@@ -107,15 +113,21 @@ class UserController {
         await (new WhitelistSubmissionService).findSubmission({ wallet_address })
       ));
 
+      const user = {
+        email: findedUser.email,
+        id: findedUser.id,
+        status: findedUser.status,
+        is_kyc: findedUser.is_kyc,
+        user_twitter: whitelistSubmission && whitelistSubmission.user_twitter,
+        user_telegram: whitelistSubmission && whitelistSubmission.user_telegram,
+      }
+
+      if (user.is_kyc && user.status) {
+        await RedisUserUtils.setRedisUserProfile(wallet_address, user)
+      }
+
       return HelperUtils.responseSuccess({
-        user: {
-          email: findedUser.email,
-          id: findedUser.id,
-          status: findedUser.status,
-          is_kyc: findedUser.is_kyc,
-          user_twitter: whitelistSubmission && whitelistSubmission.user_twitter,
-          user_telegram: whitelistSubmission && whitelistSubmission.user_telegram,
-        }
+        user: user,
       });
     } catch (e) {
       console.log(e);
@@ -146,6 +158,7 @@ class UserController {
         });
       }
 
+      await RedisUserUtils.deleteRedisUserProfile(wallet_address)
       return HelperUtils.responseSuccess({
         user: {
           ...params,

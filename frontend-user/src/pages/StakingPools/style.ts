@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: any) => {
       color: '#FFF',
       fontFamily: 'DM Sans',
       position: 'relative',
-      paddingTop: 90,
+      // paddingTop: 90,
 
       '& .content': {
         maxWidth: '1120px',

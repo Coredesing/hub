@@ -29,7 +29,7 @@ const Tiers = (props: any) => {
   const [acitveTab, setAcitveTab] = useState<Number>(0);
   const { data: userTier } = useSelector((state: any) => state.userTier);
   const { data: tiers } = useSelector((state: any) => state.tiers);
-
+  const { data: userInfo = {} } = useSelector((state: any) => state.userInfo);
   const {
     showMoreInfomation = false,
     tiersBuyLimit,
@@ -38,20 +38,17 @@ const Tiers = (props: any) => {
     hideStatistics,
     // emailVerified,
     // isKYC,
-    userInfo,
+    // userInfo,
     // tiers,
     // totalRedKitePoints,
     // pointsLeftToNextTier,
   } = props;
+  useEffect(() => {
+    dispatch(getUserTier(!wrongChain && connectedAccount ? connectedAccount : ''));
+  }, [wrongChain, connectedAccount, dispatch]);
 
   useEffect(() => {
-    if (isAuth && connectedAccount && !wrongChain && !_.isNumber(userTier)) {
-      dispatch(getUserTier(connectedAccount));
-    }
-  }, [isAuth, wrongChain, connectedAccount, dispatch, userTier]);
-
-  useEffect(() => {
-    if(_.isEmpty(tiers)) {
+    if (_.isEmpty(tiers)) {
       dispatch(getTiers());
     }
   }, [dispatch, tiers])
@@ -60,8 +57,8 @@ const Tiers = (props: any) => {
   const totalStaked = userInfo?.totalStaked || 0;
   const pointsLeftToNextTier = (() => {
     const lengTier = tiers?.length;
-    if(!lengTier) return;
-    if(userTier === lengTier - 1) {
+    if (!lengTier) return;
+    if (userTier === lengTier - 1) {
       return 'NFT required'
     } else {
       return tiers?.[userTier] && tiers[userTier] > totalStaked ? tiers[userTier] - totalStaked : 0;
@@ -96,15 +93,23 @@ const Tiers = (props: any) => {
     if (!_.isEmpty(tiers)) {
       setLoading(false);
     }
-    if (showMoreInfomation && userTier) {
-      setCurrentProcess(0);
-      return;
+  }, [tiers]);
+
+  useEffect(() => {
+    
+    // if (showMoreInfomation && userTier) {
+    //   setCurrentProcess(0);
+    //   return;
+    // }
+    if(userInfo?.totalStaked <= 0) {
+      return setCurrentProcess(0);
     }
     if (!showMoreInfomation && userInfo?.totalStaked) {
       let process = calculateProcess(tiers, userInfo?.totalStaked);
       setCurrentProcess(process);
     }
-  }, [tiers, userTier, userInfo, tiersBuyLimit, showMoreInfomation, tokenSymbol, connectedAccount, isAuth, wrongChain, total])
+    
+  }, [tiers, userInfo, showMoreInfomation, connectedAccount, isAuth, wrongChain, total])
 
   useEffect(() => {
     if (currentProcess !== undefined) setLoading(false)

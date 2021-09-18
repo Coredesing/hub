@@ -168,7 +168,7 @@ const ModalStake = (props: any) => {
           </div>
 
           {
-            Number(userTier - 1) > 0 &&
+            Number(userTier - 1) >= 0 &&
             <ul style={{ listStyleType: 'disc', paddingLeft: '20px', margin: '20px 0', color: '#fed469' }}>
               <li>
                 {/* Be aware that there is a delay when you <strong>Unstake</strong> tokens depending on your  <strong>Rank</strong> */}

@@ -473,19 +473,20 @@ class UserController {
           }, isPublicWinner));
         }
 
-        // user not winner
-        if (isKYCRequired) {
-          const tier = {
-            min_buy: 0,
-            max_buy: new BigNumber(maxTotalBonus).toFixed(),
-            start_time: tierDb.start_time,
-            end_time: tierDb.end_time,
-            level: userTier
-          }
-          return HelperUtils.responseSuccess(formatDataPrivateWinner(tier, isPublicWinner));
+        const tier = {
+          min_buy: 0,
+          max_buy: new BigNumber(maxTotalBonus).toFixed(),
+          start_time: tierDb.start_time,
+          end_time: tierDb.end_time,
+          level: userTier
         }
         // user not winner
-        return HelperUtils.responseBadRequest();
+        if (isKYCRequired) {
+          return HelperUtils.responseSuccess(formatDataPrivateWinner(tier, isPublicWinner));
+        }
+
+        // user not winner
+        return HelperUtils.responseSuccess(formatDataPrivateWinner(tier, isPublicWinner));
       }
     } catch (e) {
       console.log(e);

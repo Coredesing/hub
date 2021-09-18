@@ -164,6 +164,11 @@ const ModalStake = (props: any) => {
               </li>
             </ul>
           }
+          <div className="delay-notes">
+            <div>
+                Be aware that there is a delay when you withdraw tokens depending on your rank
+            </div>
+          </div>
 
         </DialogContent>
         <DialogActions className="modal-content__foot">

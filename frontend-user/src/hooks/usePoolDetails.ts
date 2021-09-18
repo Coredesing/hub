@@ -42,6 +42,7 @@ export type PoolDetails = {
   minTier: number;
   isDeployed: boolean;
   isDisplay: boolean;
+  kycBypass: boolean;
   addressReceiver: string;
   minimumBuy: number[];
   description: string;
@@ -170,6 +171,7 @@ const usePoolDetails = (poolId : number): PoolDetailsReturnType => {
         minTier: data.min_tier,
         isDeployed: data.is_deploy === 1,
         isDisplay: data.is_display === 1,
+        kycBypass: data.kyc_bypass === 1,
         addressReceiver: data.address_receiver,
         description: data.description,
         tiersWithDetails,

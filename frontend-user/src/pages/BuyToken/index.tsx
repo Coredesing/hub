@@ -36,7 +36,7 @@ import { sotaTiersActions } from '../../store/constants/sota-tiers';
 import useStyles from './style';
 import { pushMessage } from '../../store/actions/message';
 import { getIconCurrencyUsdt } from "../../utils/usdt";
-import { POOL_TYPE, TIER_LEVELS, KYC_STATUS } from "../../constants";
+import { POOL_TYPE, TIER_LEVELS, KYC_STATUS, POOL_IS_PRIVATE } from "../../constants";
 import PoolInfoTable from "./PoolInfoTable/PoolInfoTable";
 import WhiteListUserGuideBanner from "./WhiteListUserGuideBanner/WhiteListUserGuideBanner";
 import { getEtherscanName, getEtherscanTransactionAddress } from "../../utils/network";
@@ -64,6 +64,7 @@ import NotFoundPage from "../NotFoundPage/ContentPage";
 import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
 import { WrapperAlert } from '../../components/Base/WrapperAlert';
 import { isClaim, isSwap } from './utils';
+
 const copyImage = "/images/copy.svg";
 const poolImage = "/images/pool_circle.svg";
 const iconClose = "/images/icons/close.svg";
@@ -143,9 +144,7 @@ const ContentToken = ({ id, ...props }: any) => {
   //   poolDetails?.method !== "whitelist"
   // );
 
-  // const {
-  //   data: dataUser
-  // } = useFetch<any>(`/user/profile?wallet_address=${connectedAccount}`);
+  // const { data: dataUser } = useFetch<any>(connectedAccount ? `/user/profile?wallet_address=${connectedAccount}` : undefined);
 
   const { data: pickedWinner } = useFetch<Array<any>>(
     poolDetails ? `/pool/${poolDetails?.id}/check-picked-winner` : undefined,
@@ -381,7 +380,8 @@ const ContentToken = ({ id, ...props }: any) => {
               endBuyTimeInDate={endBuyTimeInDate}
               alreadyJoinPool={alreadyJoinPool}
               joinPoolSuccess={joinPoolSuccess}
-              isKYC={isKYC}
+              // isKYC={(dataUser?.user?.is_kyc === KYC_STATUS.APPROVED || poolDetails?.kycBypass) ? true : false}
+              isKYC={!!(isKYC || poolDetails?.kycBypass)}
               // dataUser={dataUser}
               connectedAccount={connectedAccount}
               startBuyTimeInDate={startBuyTimeInDate}
@@ -403,6 +403,7 @@ const ContentToken = ({ id, ...props }: any) => {
             />
 
             {
+              Number(poolDetails?.isPrivate || '0') !== POOL_IS_PRIVATE.COMMUNITY &&
               joinTimeInDate && new Date() > joinTimeInDate && !(alreadyJoinPool || joinPoolSuccess) &&
               !(ableToFetchFromBlockchain && (winnersList && winnersList.total > 0)) &&
               !isOverTimeApplyWhiteList &&
@@ -420,13 +421,40 @@ const ContentToken = ({ id, ...props }: any) => {
                 poolJoinLoading={poolJoinLoading}
                 // joinPool={joinPool}
                 joinPool={() => { setShowWhitelistFormModal(true) }}
-                isKYC={isKYC}
+                isKYC={!!(isKYC || poolDetails?.kycBypass)}
                 winnersList={winnersList}
                 ableToFetchFromBlockchain={ableToFetchFromBlockchain}
               />
             }
 
             {
+              Number(poolDetails?.isPrivate || '0') === POOL_IS_PRIVATE.COMMUNITY &&
+              poolDetails?.socialRequirement?.gleam_link &&
+              joinTimeInDate && new Date() > joinTimeInDate && !(alreadyJoinPool || joinPoolSuccess) &&
+              !(ableToFetchFromBlockchain && (winnersList && winnersList.total > 0)) &&
+              !isOverTimeApplyWhiteList &&
+              <Button
+                  text='Join Competition'
+                  backgroundColor='#D01F36'
+                  style={{
+                    width: 200,
+                    height: 42,
+                    backgroundColor: '#D01F36',
+                    borderRadius: 60,
+                    color: 'white',
+                    border: 'none',
+                    marginTop: 16,
+                    padding: 10,
+                    fontSize: 16,
+                    lineHeight: '24px',
+                    fontWeight: 500,
+                  }}
+                  onClick={() => window.open(poolDetails?.socialRequirement?.gleam_link)}
+              />
+            }
+
+            {
+              Number(poolDetails?.isPrivate || '0') !== POOL_IS_PRIVATE.COMMUNITY &&
               (alreadyJoinPool || joinPoolSuccess) && !whitelistCompleted && !whitelistLoading &&
               !(ableToFetchFromBlockchain && (winnersList && winnersList.total > 0)) &&
               <Button
@@ -512,7 +540,7 @@ const ContentToken = ({ id, ...props }: any) => {
               currentUserTier={currentUserTier}
               poolDetailsMapping={poolDetailsMapping}
               poolDetails={poolDetails}
-              isKyc={isKYC}
+              isKyc={!!(isKYC || poolDetails?.kycBypass)}
             />
           }
 
@@ -529,7 +557,7 @@ const ContentToken = ({ id, ...props }: any) => {
               poolDetails={poolDetails}
               currencyName={currencyName}
               startBuyTimeInDate={startBuyTimeInDate}
-              isKyc={isKYC}
+              isKyc={!!(isKYC || poolDetails?.kycBypass)}
             />
           }
 
@@ -573,7 +601,7 @@ const ContentToken = ({ id, ...props }: any) => {
             alreadyJoinPool={alreadyJoinPool}
             joinPoolSuccess={joinPoolSuccess}
             whitelistCompleted={whitelistCompleted}
-            isKYC={isKYC}
+            isKYC={!!(isKYC || poolDetails?.kycBypass)}
           />
 
           {/* <header className={styles.poolDetailHeader}>

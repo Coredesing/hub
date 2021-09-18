@@ -18,7 +18,10 @@ function PrivatePoolSetting(props: any) {
 
   useEffect(() => {
     if (poolDetail) {
-      if (poolDetail.is_private == POOL_IS_PRIVATE.PUBLIC || poolDetail.is_private == POOL_IS_PRIVATE.PRIVATE) {
+      if (poolDetail.is_private == POOL_IS_PRIVATE.PUBLIC ||
+          poolDetail.is_private == POOL_IS_PRIVATE.PRIVATE ||
+          poolDetail.is_private == POOL_IS_PRIVATE.SEED ||
+          poolDetail.is_private == POOL_IS_PRIVATE.COMMUNITY ) {
         setValue('isPrivate', poolDetail.is_private + '');
       }
     }
@@ -51,6 +54,11 @@ function PrivatePoolSetting(props: any) {
                   value={POOL_IS_PRIVATE.SEED + ''} control={<Radio />}
                   label="Seed"
                   disabled={isDeployed}
+                />
+                <FormControlLabel
+                    value={POOL_IS_PRIVATE.COMMUNITY + ''} control={<Radio />}
+                    label="Community"
+                    disabled={isDeployed}
                 />
               </RadioGroup>
             }

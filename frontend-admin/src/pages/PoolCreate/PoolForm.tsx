@@ -14,6 +14,7 @@ import {withRouter} from "react-router-dom";
 import {deployPool} from "../../store/actions/campaign";
 import {adminRoute} from "../../utils";
 
+import KycRequired from "./Components/KycRequired";
 import PoolBanner from "./Components/PoolBanner";
 import TokenAddress from "./Components/TokenAddress";
 import TotalCoinSold from "./Components/TotalCoinSold";
@@ -42,12 +43,14 @@ import PrivatePoolSetting from "./Components/PrivatePoolSetting";
 import BuyTokens from "./Components/BuyRemainTokens/BuyTokens";
 import WhitelistBannerSetting from "./Components/WhitelistBannerSetting/WhitelistBannerSetting";
 import ProgressDisplaySetting from "./Components/ProgressDisplaySetting/ProgressDisplaySetting";
+import GleamRequirement from "./Components/WhitelistSocialRequirement/GleamRequirement";
 import LockSchedule from "./Components/LockSchedule/LockSchedule";
 import ForbiddenCountry from "./Components/ForbiddenCountry/ForbiddenCountry";
 import SocialSetting from "./Components/SocialSetting/SocialSetting";
 import FreeTimeSetting from "./Components/FreeTimeSetting/FreeTimeSetting";
 import PoolRule from "./Components/PoolRule";
 import Process from "./Components/Process";
+import {POOL_IS_PRIVATE} from "../../constants";
 
 function PoolForm(props: any) {
   const classes = useStyles();
@@ -160,6 +163,7 @@ function PoolForm(props: any) {
       network_available: data.networkAvailable,
       buy_type: data.buyType,
       pool_type: data.poolType,
+      kyc_bypass: data.kyc_bypass,
 
       // Private Pool Setting
       is_private: data.isPrivate,
@@ -179,12 +183,13 @@ function PoolForm(props: any) {
       self_group: data.self_group,
       self_channel: data.self_channel,
       self_retweet_post: data.self_retweet_post,
-      self_retweet_post_hashtag: data.self_retweet_post.self_retweet_post_hashtag,
+      self_retweet_post_hashtag: data.self_retweet_post_hashtag,
       partner_twitter: data.partner_twitter,
       partner_group: data.partner_group,
       partner_channel: data.partner_channel,
       partner_retweet_post: data.partner_retweet_post,
       partner_retweet_post_hashtag: data.partner_retweet_post_hashtag,
+      gleam_link: data.gleam_link,
 
       // Forbidden Countries Setting
       forbidden_countries: data.forbidden_countries,
@@ -267,6 +272,9 @@ function PoolForm(props: any) {
       // USDT Price
       price_usdt: data.price_usdt, // Do not check isAcceptEth
       display_price_rate: data.display_price_rate,
+
+      // KYC required
+      kyc_bypass: data.kyc_bypass,
 
       // Token
       token_images: data.tokenImages,
@@ -437,6 +445,8 @@ function PoolForm(props: any) {
         price_usdt: data.price_usdt,
         display_price_rate: data.display_price_rate,
 
+        kyc_bypass: data.kyc_bypass,
+
         // TokenInfo
         tokenInfo,
 
@@ -502,6 +512,7 @@ function PoolForm(props: any) {
   };
 
   const watchBuyType = watch('buyType');
+  const watchIsPrivate = watch('isPrivate');
   const isDeployed = !!poolDetail?.is_deploy;
 
   console.log('errors==========>', errors);
@@ -589,6 +600,14 @@ function PoolForm(props: any) {
                 watch={watch}
               />
 
+              <KycRequired
+                  poolDetail={poolDetail}
+                  setValue={setValue}
+                  errors={errors}
+                  control={control}
+                  watch={watch}
+              />
+
               <Process
                   poolDetail={poolDetail}
                   setValue={setValue}
@@ -620,16 +639,33 @@ function PoolForm(props: any) {
               register={register}
             />
 
-            <div className={classes.exchangeRate}>
-              <WhitelistSocialRequirement
-                poolDetail={poolDetail}
-                register={register}
-                setValue={setValue}
-                errors={errors}
-                control={control}
-                watch={watch}
-              />
-            </div>
+            {
+              (watchIsPrivate ? Number(watchIsPrivate) : 0) !== POOL_IS_PRIVATE.COMMUNITY &&
+              <div className={classes.exchangeRate}>
+                <WhitelistSocialRequirement
+                    poolDetail={poolDetail}
+                    register={register}
+                    setValue={setValue}
+                    errors={errors}
+                    control={control}
+                    watch={watch}
+                />
+              </div>
+            }
+
+            {
+              (watchIsPrivate ? Number(watchIsPrivate) : 0) === POOL_IS_PRIVATE.COMMUNITY &&
+              <div className={classes.exchangeRate}>
+                <GleamRequirement
+                    poolDetail={poolDetail}
+                    register={register}
+                    setValue={setValue}
+                    errors={errors}
+                    control={control}
+                    watch={watch}
+                />
+              </div>
+            }
 
           </div>
         </Grid>

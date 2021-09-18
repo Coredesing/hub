@@ -239,7 +239,7 @@ const AccountInformation = (props: any) => {
           <span></span>
           {connectedAccount && <>
             <span style={{ color: 'red', display: 'inline-block' }}>
-            {kycStatus === KYC_STATUS.RESUBMIT && 'Please send information to support@polkafoundry.com to resubmit KYC.'}
+            {kycStatus === KYC_STATUS.RESUBMIT && 'Please send information to support@gamefi.org to resubmit KYC.'}
             </span>
           </>}
         </div>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import TableContainer from "@material-ui/core/TableContainer";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -6,9 +6,12 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
-import {Button} from "@material-ui/core";
+import {Button, Switch} from "@material-ui/core";
 import {useCommonStyle} from "../../../../styles";
-import {addParticipantUserToWinner, deleteParticipantUser, getParticipantUser, updateParticipantWhitelistSubmission} from "../../../../request/participants";
+import {
+  addParticipantUserToWinner, deleteParticipantUser, getParticipantUser,
+  updateParticipantWhitelistSubmission, verifyParticipantWhitelistSubmission,
+  verifyBatchParticipantWhitelistSubmission, approveBatchParticipantWhitelistSubmission} from "../../../../request/participants";
 import {useDispatch} from "react-redux";
 import {withRouter} from "react-router";
 import {alertFailure, alertSuccess} from "../../../../store/actions/alert";
@@ -33,10 +36,11 @@ function UserParticipant(props: any) {
   const classesTable = useStylesTable();
   const { poolDetail } = props;
   const dispatch = useDispatch();
+  const [whitelistPendingOnly, setWhitelistPendingOnly] = useState(false);
 
   const getParticipantUserWithTier = async (poolId: any, searchParams: any) => {
     try {
-      let participantsUsers = await getParticipantUser(poolId, searchParams);
+      let participantsUsers = await getParticipantUser(poolId, {...searchParams, whitelist_pending: whitelistPendingOnly});
 
       if (poolDetail.buy_type === BUY_TYPE.FCFS) {
         return participantsUsers;
@@ -77,11 +81,6 @@ function UserParticipant(props: any) {
           continue;
         }
 
-        if (listStatuses.includes(3)) {
-          users[i].whitelistStatus = 'Rejected';
-          continue;
-        }
-
         users[i].whitelistStatus = 'Pending';
       }
 
@@ -98,7 +97,7 @@ function UserParticipant(props: any) {
     rows,
     search, searchDelay,
     failure, loading,
-    lastPage, currentPage, totalRecords,
+    lastPage, currentPage, totalRecords, setCurrentPage,
     handlePaginationChange,
   } = useGetList({
     poolDetail,
@@ -170,6 +169,57 @@ function UserParticipant(props: any) {
       })
   }
 
+  const handleVerifyWhitelistSubmission = async (data: any) => {
+    return verifyParticipantWhitelistSubmission(data.campaign_id, data.wallet_address)
+        .then((res: any) => {
+          console.log('[verifyParticipantWhitelistSubmission] - res', res);
+          if (res.status === 200) {
+            dispatch(alertSuccess('Verify Participant Whitelist Submission Success'));
+            search(); // Re-search list
+            setSelectedWhitelistSubmission({});
+            setIsOpenWhitelistPopup(false);
+            // setAddedUsers([]);  // Reset list checked user
+            // onChange([]); // Reset check-all checkbox
+          } else {
+            dispatch(alertFailure('Verify Participant Whitelist Submission Fail'));
+          }
+        })
+  }
+
+  const handleVerifyBatchWhitelistSubmission = async (data: any) => {
+    return verifyBatchParticipantWhitelistSubmission(poolDetail?.id, {wallet_addresses: addedUsers})
+        .then((res: any) => {
+          console.log('[verifyBatchParticipantWhitelistSubmission] - res', res);
+          if (res.status === 200) {
+            dispatch(alertSuccess('Verify Batch Participant Whitelist Submission Success'));
+            search(); // Re-search list
+            setSelectedWhitelistSubmission({});
+            setIsOpenWhitelistPopup(false);
+            setAddedUsers([]);  // Reset list checked user
+            onChange([]); // Reset check-all checkbox
+          } else {
+            dispatch(alertFailure('Verify Batch Participant Whitelist Submission Fail'));
+          }
+        })
+  }
+
+  const handleApproveBatchWhitelistSubmission = async (data: any) => {
+    return approveBatchParticipantWhitelistSubmission(poolDetail?.id, {wallet_addresses: addedUsers})
+        .then((res: any) => {
+          console.log('[approveBatchParticipantWhitelistSubmission] - res', res);
+          if (res.status === 200) {
+            dispatch(alertSuccess('Approve Batch Participant Whitelist Submission Success'));
+            search(); // Re-search list
+            setSelectedWhitelistSubmission({});
+            setIsOpenWhitelistPopup(false);
+            setAddedUsers([]);  // Reset list checked user
+            onChange([]); // Reset check-all checkbox
+          } else {
+            dispatch(alertFailure('Approve Batch Participant Whitelist Submission Fail'));
+          }
+        })
+  }
+
   const onCheckToAdd = (e: any, row: any, index: number) => {
     console.log('[onCheckToAdd]: ', e.target.value, row, index);
     const isChecked = e.target.checked;
@@ -203,6 +253,14 @@ function UserParticipant(props: any) {
       setAddedUsers([]);
     }
   };
+
+  useEffect(()=>{
+    if (currentPage !== 1) {
+      setCurrentPage(1);
+      return;
+    }
+    search();
+  }, [whitelistPendingOnly])
 
   return (
     <>
@@ -241,6 +299,34 @@ function UserParticipant(props: any) {
 
       </div>
 
+      <div className={commonStyle.boxSearch}>
+        <div style={{marginTop: '15px'}}>
+          <div style={{display: 'inline', marginRight: '10px'}}>
+            <Switch
+                color="primary"
+                value={whitelistPendingOnly}
+                onChange={(e) => {
+                  setWhitelistPendingOnly(e.target.checked);
+                }}
+            />
+            Pending Only
+          </div>
+
+          <Button
+              variant="contained"
+              color="primary"
+              onClick={handleVerifyBatchWhitelistSubmission}
+          >Verify Selected</Button>
+
+          <Button
+              variant="contained"
+              color="primary"
+              style={{marginLeft: '10px'}}
+              onClick={handleApproveBatchWhitelistSubmission}
+          >Approve Selected</Button>
+        </div>
+      </div>
+
       {isOpenWhitelistPopup &&
         <UserWhitelistSubmissionPopup
           isOpenEditPopup={isOpenWhitelistPopup}
@@ -248,6 +334,7 @@ function UserParticipant(props: any) {
           editData={selectedWhitelistSubmission}
           requirements={poolDetail.socialRequirement}
           handleUpdateData={handleUpdateWhitelistSubmission}
+          handleVerifyData={handleVerifyWhitelistSubmission}
         />
       }
 

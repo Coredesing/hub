@@ -14,7 +14,7 @@ function WhitelistSocialRequirement(props: any) {
       <div><label className={classes.exchangeRateTitle}>Whitelist Social Requirements</label></div>
       <WhitelistSocialField
         fieldName={'self_twitter'}
-        placeholder={'E.g: PolkaFoundry'}
+        placeholder={'GameFi_Official'}
         poolDetail={poolDetail}
         register={register}
         setValue={setValue}
@@ -25,7 +25,7 @@ function WhitelistSocialRequirement(props: any) {
 
       <WhitelistSocialField
         fieldName={'self_group'}
-        placeholder={'E.g: PolkaFoundry'}
+        placeholder={'GameFi_Official'}
         poolDetail={poolDetail}
         register={register}
         setValue={setValue}
@@ -36,7 +36,7 @@ function WhitelistSocialRequirement(props: any) {
 
       <WhitelistSocialField
         fieldName={'self_channel'}
-        placeholder={'E.g: PolkaFoundryANN'}
+        placeholder={'GameFi_OfficialANN'}
         poolDetail={poolDetail}
         register={register}
         setValue={setValue}
@@ -57,7 +57,7 @@ function WhitelistSocialRequirement(props: any) {
 
       <WhitelistSocialField
         fieldName={'self_retweet_post_hashtag'}
-        placeholder={'E.g: #RedKite $PKF'}
+        placeholder={''}
         poolDetail={poolDetail}
         register={register}
         setValue={setValue}
@@ -108,7 +108,7 @@ function WhitelistSocialRequirement(props: any) {
 
       <WhitelistSocialField
         fieldName={'partner_retweet_post_hashtag'}
-        placeholder={'E.g: #RedKite $PKF'}
+        placeholder={''}
         poolDetail={poolDetail}
         register={register}
         setValue={setValue}

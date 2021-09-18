@@ -29,23 +29,23 @@ const useGetList = (props: any) => {
       };
       handleSearchFunction &&
       handleSearchFunction(poolDetail.id, searchParams)
-        .then((res: any) => {
-          if (res?.status !== 200) {
-            setFailure(true);
-            return [];
-          } else {
-            let response = res.data || {};
-            setFailure(false);
-            setLastPage(response.lastPage || 1);
-            setCurrentPage(response.page || 1);
-            setTotalRecords(response.total || 1);
+          .then((res: any) => {
+            if (res?.status !== 200) {
+              setFailure(true);
+              return [];
+            } else {
+              let response = res.data || {};
+              setFailure(false);
+              setLastPage(response.lastPage || 1);
+              setCurrentPage(response.page || 1);
+              setTotalRecords(response.total || 1);
 
-            let newData = response.data || [];
-            setRows(newData);
+              let newData = response.data || [];
+              setRows(newData);
 
-            return newData;
-          }
-        });
+              return newData;
+            }
+          });
     }
   };
 
@@ -61,14 +61,10 @@ const useGetList = (props: any) => {
     rows, setRows,
     search, searchDelay,
     failure, loading,
-    lastPage, currentPage, totalRecords,
+    lastPage, currentPage, totalRecords, setCurrentPage,
     handlePaginationChange,
   }
 };
 
 
 export default useGetList;
-
-
-
-

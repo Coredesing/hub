@@ -47,6 +47,36 @@ export const updateParticipantWhitelistSubmission = async (campaignId: any, wall
   return resObject;
 };
 
+export const verifyParticipantWhitelistSubmission = async (campaignId: any, walletAddress: any) => {
+  const baseRequest = new BaseRequest();
+
+  let url = apiRoute(`/pool/${campaignId}/whitelist-submission/${walletAddress}/verify`);
+  const response = await baseRequest.post(url, {}) as any;
+  const resObject = await response.json();
+
+  return resObject;
+};
+
+export const verifyBatchParticipantWhitelistSubmission = async (campaignId: any, payload: any = []) => {
+  const baseRequest = new BaseRequest();
+
+  let url = apiRoute(`/pool/${campaignId}/whitelist-submission/batch/verify`);
+  const response = await baseRequest.post(url, payload) as any;
+  const resObject = await response.json();
+
+  return resObject;
+};
+
+export const approveBatchParticipantWhitelistSubmission = async (campaignId: any, payload: any = []) => {
+  const baseRequest = new BaseRequest();
+
+  let url = apiRoute(`/pool/${campaignId}/whitelist-submission/batch/approve`);
+  const response = await baseRequest.post(url, payload) as any;
+  const resObject = await response.json();
+
+  return resObject;
+};
+
 export const pickerRandomWinner = async (campaignId: any, numberRandom: any = 100) => {
   const baseRequest = new BaseRequest();
   console.log('campaignId', campaignId);

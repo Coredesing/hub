@@ -20,7 +20,7 @@ function WhitelistSocialField(props: any) {
           type="text"
           placeholder={placeholder ? placeholder : ''}
           name={fieldName}
-          defaultValue={poolDetail?.socialRequirement?.[fieldName]}
+          defaultValue={poolDetail?.socialRequirement?.[fieldName] ? poolDetail?.socialRequirement?.[fieldName] : placeholder}
           ref={register({
             // required: true
           })}

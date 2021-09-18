@@ -80,7 +80,7 @@ function CreateEditClaimConfigForm(props: any) {
             <Controller
               control={control}
               rules={{
-                required: true,
+                required: false,
               }}
               name="startTime"
               render={(field) => {
@@ -93,7 +93,7 @@ function CreateEditClaimConfigForm(props: any) {
                       format: "HH:mm"
                     }}
                     onSelect={(datetimeSelected: any) => {
-                      setValue(field.name, datetimeSelected, {shouldValidate: true});
+                      setValue(field.name, datetimeSelected, {shouldValidate: false});
                     }}
                     minuteStep={15}
                   />

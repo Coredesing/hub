@@ -172,7 +172,7 @@ class WhitelistSubmissionService {
     switch (type) {
       case 'self_twitter_status':
         result = await this.checkFollowTwitter(submission.user_twitter, requirement.self_twitter, Const.SOCIAL_SUBMISSION_STATUS.ERROR);
-        if (result != submission.self_twitter_status) {
+        if (result !== submission.self_twitter_status) {
           submission.merge({ self_twitter_status: result });
           await submission.save();
         }
@@ -180,7 +180,7 @@ class WhitelistSubmissionService {
 
       case 'self_group_status':
         result = await this.checkJoinTelegram(submission.user_telegram, requirement.self_group, Const.SOCIAL_SUBMISSION_STATUS.ERROR);
-        if (result != submission.self_group_status) {
+        if (result !== submission.self_group_status) {
           submission.merge({ self_group_status: result });
           await submission.save();
 
@@ -189,7 +189,7 @@ class WhitelistSubmissionService {
 
       case 'self_channel_status':
         result = await this.checkFollowTelegram(submission.user_telegram, requirement.self_channel, Const.SOCIAL_SUBMISSION_STATUS.ERROR);
-        if (result != submission.self_channel_status) {
+        if (result !== submission.self_channel_status) {
           submission.merge({ self_channel_status: result });
           await submission.save();
         }
@@ -197,7 +197,7 @@ class WhitelistSubmissionService {
 
       case 'partner_twitter_status':
         result = await this.checkFollowTwitter(submission.user_twitter, requirement.partner_twitter, Const.SOCIAL_SUBMISSION_STATUS.ERROR);
-        if (result != submission.partner_twitter_status) {
+        if (result !== submission.partner_twitter_status) {
           submission.merge({ partner_twitter_status: result });
           await submission.save();
         }
@@ -205,7 +205,7 @@ class WhitelistSubmissionService {
 
       case 'partner_group_status':
         result = await this.checkJoinTelegram(submission.user_telegram, requirement.partner_group, Const.SOCIAL_SUBMISSION_STATUS.ERROR);
-        if (result != submission.partner_group_status) {
+        if (result !== submission.partner_group_status) {
           submission.merge({ partner_group_status: result });
           await submission.save();
         }
@@ -213,7 +213,7 @@ class WhitelistSubmissionService {
 
       case 'partner_channel_status':
         result = await this.checkFollowTelegram(submission.user_telegram, requirement.partner_channel, Const.SOCIAL_SUBMISSION_STATUS.ERROR);
-        if (result != submission.partner_channel_status) {
+        if (result !== submission.partner_channel_status) {
           submission.merge({ partner_channel_status: result });
           await submission.save();
         }

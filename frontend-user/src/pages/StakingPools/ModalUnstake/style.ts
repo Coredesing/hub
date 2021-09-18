@@ -64,6 +64,9 @@ const useStyles = makeStyles((theme: any) => {
           marginBottom: '5px',
           fontWeight: 700,
           color: '#FFFFFF'
+        },
+        '& .delay-notes': {
+          color: '#ffc107',
         }
       },
       '& .modal-content__foot': {

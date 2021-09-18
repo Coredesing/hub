@@ -499,7 +499,9 @@ const getTokenSoldSmartContract = async (pool) => {
     if (pool.token_type === 'erc721') {
       return tokenSold
     }
-    tokenSold = new BigNumber(tokenSold).div(new BigNumber(10).pow(18)).toFixed();
+    const decimal = pool.decimals ? pool.decimals : 18
+
+    tokenSold = new BigNumber(tokenSold).div(new BigNumber(10).pow(decimal)).toFixed();
     return tokenSold;
   }
   catch (e) {

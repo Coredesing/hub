@@ -97,7 +97,7 @@ const BuyTokenPoolTimeLine: FC<Props> = ({currentStatus, display, poolDetails, c
                       classes={{ tooltip: styles.customToolTip }}
                       placement="bottom-start"
                     >
-                      <span onClick={() => setAvtiveTooltTip(index)} className={`${styles.itemValue} ${item.name === currentStatus ? 'active' : ''}`}>{item.value}</span>
+                      <span onClick={() => setAvtiveTooltTip(index)} className={`${styles.itemValue} ${item.active === currentStatus ? 'active' : ''}`}>{item.value}</span>
                     </Tooltip>
                     </ClickAwayListener>
                 </Hidden>
@@ -113,7 +113,7 @@ const BuyTokenPoolTimeLine: FC<Props> = ({currentStatus, display, poolDetails, c
                     classes={{ tooltip: styles.customToolTip }}
                     placement="bottom"
                   >
-                    <span className={`${styles.itemValue} ${item.name === currentStatus ? 'active' : ''}`}>{item.value}</span>
+                    <span className={`${styles.itemValue} ${item.active === currentStatus ? 'active' : ''}`}>{item.value}</span>
                   </Tooltip>
                 </Hidden>
                 <span className={`${styles.itemName} itemName`}>{item.name}</span>

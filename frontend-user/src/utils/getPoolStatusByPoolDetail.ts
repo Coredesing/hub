@@ -152,7 +152,7 @@ export const getPoolStatusByPoolDetail = (
     // Check Progress Status
     if (
       releaseTime && today < releaseTime.getTime()
-      && new BigNumber(soldProgress || 0).lt(99)
+      && new BigNumber(soldProgress || 0).lt(100)
     ) {
       return PoolStatus.Progress;
     }

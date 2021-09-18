@@ -166,7 +166,7 @@ const ModalStake = (props: any) => {
           }
           <div className="delay-notes">
             <div>
-                Be aware that there is a delay when you withdraw tokens depending on your rank
+                Be aware that there is a delay when you unstake tokens depending on your rank
             </div>
           </div>
 

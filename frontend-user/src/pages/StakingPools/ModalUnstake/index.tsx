@@ -77,14 +77,17 @@ const ModalStake = (props: any) => {
               <div>{!BigNumber.from(stakingAmount || '0').eq(BigNumber.from('0')) && numberWithCommas(utils.formatEther(stakingAmount), 4)}</div>
             </div>
           </div>
-          <div className="token-type">
-            <div>
-              Current Profit
+          {
+            !BigNumber.from(pendingReward || '0').eq(BigNumber.from('0')) &&
+            <div className="token-type">
+              <div>
+                Current Profit
+              </div>
+              <div className="token-detail">
+                <div>{numberWithCommas(utils.formatEther(pendingReward), 4)}</div>
+              </div>
             </div>
-            <div className="token-detail">
-              <div>{!BigNumber.from(pendingReward || '0').eq(BigNumber.from('0')) && numberWithCommas(utils.formatEther(pendingReward), 4)}</div>
-            </div>
-          </div>
+          }
           {
             Number(userTier - 1) >= 0 &&
             <div className="token-type">

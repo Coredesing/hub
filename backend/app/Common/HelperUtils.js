@@ -561,7 +561,7 @@ const getProgressWithPools = (pool) => {
   if (new BigNumber(progress).lte(0)) {
     progress = '0';
   }
-  if (new BigNumber(progress).gt(99)) {
+  if (new BigNumber(progress).gt(new BigNumber(99.99))) {
     progress = '100';
   }
 
@@ -723,7 +723,17 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
     return PoolStatus.CLAIMABLE;
   }
 
-  if (releaseTime) {
+  const actualFinishTime = getLastActualFinishTime(poolDetails);
+  const now = moment().unix();
+  if (actualFinishTime && actualFinishTime < now) {
+    return PoolStatus.CLOSED;
+  }
+
+  if (new BigNumber(soldProgress || 0).gte(new BigNumber(99.99))) {
+    return PoolStatus.CLOSED;
+  }
+
+  if (releaseTime && actualFinishTime && actualFinishTime > now) {
     // Check Filled Status
     // if (new BigNumber(soldProgress || 0).gte(99)) { // soldProgress >=99
     //   return PoolStatus.FILLED;
@@ -738,7 +748,6 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
     // Check Progress Status
     if (
       releaseTime && today < releaseTime.getTime()
-      && new BigNumber(soldProgress || 0).lt(99)
     ) {
       return PoolStatus.SWAP; // In Progress
     }

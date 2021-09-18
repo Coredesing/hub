@@ -34,7 +34,12 @@ const useTokenSoldProgress = (poolAddress: string | undefined, totalTokens: numb
 
         if (poolContract) {
           const tokensSold = await poolContract.methods.tokenSold().call();
-          let tokensSoldCal = new BigNumber(tokensSold).div(new BigNumber(10).pow(18)).toFixed();
+          let decimal = 18
+          if (poolDetails && poolDetails.tokenDetails && poolDetails.tokenDetails.decimals) {
+            decimal = poolDetails.tokenDetails.decimals
+          }
+
+          let tokensSoldCal = new BigNumber(tokensSold).div(new BigNumber(10).pow(decimal)).toFixed();
           if (poolDetails && poolDetails.tokenDetails && poolDetails.tokenDetails.token_type === 'erc721') {
             tokensSoldCal = tokensSold
           }

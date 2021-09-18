@@ -263,10 +263,10 @@ function WhitelistFollowSocial(props: any) {
               <th colSpan={2}>
                 <img
                   className={styles.iconToken}
-                  src="/images/gamefi.png"
+                  src="/images/logo-polkafoundry.png"
                   alt=""
                 />
-                <span>GameFi</span>
+                <span>PolkaFoundry</span>
               </th>
             </tr>
           </thead>

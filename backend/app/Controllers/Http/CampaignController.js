@@ -355,19 +355,6 @@ class CampaignController {
         return HelperUtils.responseBadRequest('reCAPTCHA verification failed');
       }
 
-      // get user info
-      const userService = new UserService();
-      const userParams = {
-        'wallet_address': userWalletAddress
-      }
-      const isKYCRequired = process.env.REACT_APP_APP_KYC_REQUIRED === true || process.env.REACT_APP_APP_KYC_REQUIRED === 'true'
-      const user = await userService.findUser(userParams);
-      if (isKYCRequired && (!user || !user.email)) {
-        return HelperUtils.responseBadRequest("You're not valid user to buy this campaign !");
-      }
-      if (isKYCRequired && user.is_kyc !== Const.KYC_STATUS.APPROVED) {
-        return HelperUtils.responseBadRequest("You must register for KYC successfully to be allowed to purchase !");
-      }
       // check campaign info
       const filterParams = {
         'campaign_id': campaign_id
@@ -383,6 +370,18 @@ class CampaignController {
         return HelperUtils.responseBadRequest("Cannot buy");
       }
 
+      if (!camp.kyc_bypass) {
+        // get user info
+        const userService = new UserService();
+        const user = await userService.findUser({wallet_address: userWalletAddress});
+        if (!user || !user.email) {
+          return HelperUtils.responseBadRequest("You're not valid user to buy this campaign !");
+        }
+        if (user.is_kyc !== Const.KYC_STATUS.APPROVED) {
+          return HelperUtils.responseBadRequest("You must register for KYC successfully to be allowed to purchase !");
+        }
+      }
+
       let minBuy = 0, maxBuy = 0;
       let winner;
       const current = ConvertDateUtils.getDatetimeNowUTC();
@@ -393,22 +392,16 @@ class CampaignController {
       // check user winner or reserved lis if campaign is lottery
       if (camp.buy_type === Const.BUY_TYPE.WHITELIST_LOTTERY) {
         // check if exist in winner list
-        const winnerListService = new WinnerListService();
-        const winnerParams = {
-          'wallet_address': userWalletAddress,
-          'campaign_id': campaign_id
-        }
-        winner = await winnerListService.findOneByFilters(winnerParams);
+        winner = await (new WinnerListService()).findOneByFilters({ wallet_address: userWalletAddress, campaign_id });
+
         // if user not in winner list then check on reserved list
         if (!isFreeBuyTime && !winner) {
           // if user is not in winner list then check with reserved list
-          const reservedListService = new ReservedListService();
-          const reserved = await reservedListService.findOneByFilter(winnerParams);
+          const reserved = await (new ReservedListService()).findOneByFilter({ wallet_address: userWalletAddress, campaign_id });
           if (!reserved) {
             return HelperUtils.responseBadRequest("Sorry, you are not on the list of winners to join this pool.");
           }
           // check time start buy for tier
-          console.log(`Reserved ${reserved.start_time} ${reserved.end_time} ${current}`);
           if (reserved.start_time > current) {
             return HelperUtils.responseBadRequest('It is not yet time for your tier to start buying!');
           }
@@ -424,9 +417,10 @@ class CampaignController {
       if (winner) {
         // get realtime tier from SC
         const currentTier = (await HelperUtils.getUserTierSmartWithCached(userWalletAddress))[0];
+        const isInPreOrderTime = HelperUtils.checkIsInPreOrderTime(camp, currentTier);
+
         // if user decrement their tier then they can not buy token
         if (currentTier < winner.level) {
-          console.log(`Current tier ${currentTier} and snapshot tier ${winner.level}`);
           if (!isFreeBuyTime) {
             return HelperUtils.responseBadRequest('You have already decreased your tier so you can no longer buy tokens in this pool!');
           }
@@ -439,20 +433,15 @@ class CampaignController {
             return HelperUtils.responseBadRequest("You're not tier qualified for buy this campaign!");
           }
         }
+
         // call to db to get tier info
-        const tierService = new TierService();
-        const tierParams = {
-          'campaign_id': params.campaign_id,
-          'level': winner.level
-        };
-        const tier = await tierService.findByLevelAndCampaign(tierParams);
+        const tier = await (new TierService()).findByLevelAndCampaign({ campaign_id, level: winner.level });
         if (!tier) {
           if (!isFreeBuyTime) {
             return HelperUtils.responseBadRequest("You're not tier qualified for buy this campaign !");
           }
         } else {
           // check time start buy for tier
-          console.log(`${tier.start_time} ${tier.end_time} ${current}`);
           if (!isFreeBuyTime) {
             if (tier.start_time > current) {
               return HelperUtils.responseBadRequest('It is not yet time for your tier to start buying!');
@@ -471,7 +460,6 @@ class CampaignController {
       const walletService = new WalletService();
       const wallet = await walletService.findByCampaignId(filterParams);
       if (!wallet) {
-        console.log(`Do not found wallet for campaign ${campaign_id}`);
         return HelperUtils.responseBadRequest("Do not found wallet for campaign");
       }
       // call to SC to get convert rate token erc20 -> our token
@@ -479,7 +467,6 @@ class CampaignController {
       const rate = new BigNumber(receipt[0]);
       const decimal = receipt[1];
       const unit = receipt[2];
-      console.log(rate, decimal, unit);
 
       // FREE BUY TIME: Check if current time is free to buy or not
       if (isFreeBuyTime) {
@@ -492,10 +479,8 @@ class CampaignController {
       // calc min, max token user can buy
       const maxTokenAmount = new BigNumber(maxBuy).multipliedBy(rate).dividedBy(Math.pow(10, Number(decimal))).multipliedBy(Math.pow(10, unit)).toFixed(0);
       const minTokenAmount = new BigNumber(minBuy).multipliedBy(rate).dividedBy(Math.pow(10, Number(decimal))).multipliedBy(Math.pow(10, unit)).toFixed(0);
-      console.log(minTokenAmount, maxTokenAmount, userWalletAddress);
       // get message hash
       const messageHash = web3.utils.soliditySha3(userWalletAddress, maxTokenAmount, minTokenAmount);
-      console.log(`message hash ${messageHash}`);
       const privateKey = wallet.private_key;
       // create signature
       const account = web3.eth.accounts.privateKeyToAccount(privateKey);

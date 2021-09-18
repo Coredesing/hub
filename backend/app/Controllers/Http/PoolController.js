@@ -21,9 +21,9 @@ class PoolController {
       'title', 'website', 'banner', 'description', 'process', 'rule', 'address_receiver',
       'token', 'token_images', 'total_sold_coin',
       'token_by_eth', 'token_conversion_rate', 'price_usdt', 'display_price_rate',
-      'tokenInfo',
+      'tokenInfo', 'gleam_link',
       'start_time', 'finish_time', 'release_time', 'start_join_pool_time', 'end_join_pool_time',
-      'accept_currency', 'network_available', 'buy_type', 'pool_type', 'is_private',
+      'accept_currency', 'network_available', 'buy_type', 'pool_type', 'is_private', 'kyc_bypass',
       'min_tier', 'tier_configuration', 'claim_configuration',
       'self_twitter', 'self_group', 'self_channel', 'self_retweet_post', 'self_retweet_post_hashtag', 'partner_twitter', 'partner_group', 'partner_channel', 'partner_retweet_post', 'partner_retweet_post_hashtag',
       'guide_link', 'whitelist_link', 'announcement_time',
@@ -63,6 +63,7 @@ class PoolController {
       'network_available': inputParams.network_available,
       'buy_type': inputParams.buy_type,
       'pool_type': inputParams.pool_type,
+      'kyc_bypass': inputParams.kyc_bypass,
       'is_private': inputParams.is_private,
       'min_tier': inputParams.min_tier,
 
@@ -112,6 +113,7 @@ class PoolController {
         partner_channel: inputParams.partner_channel,
         partner_retweet_post: inputParams.partner_retweet_post,
         partner_retweet_post_hashtag: inputParams.partner_retweet_post_hashtag,
+        gleam_link: inputParams.gleam_link,
       });
 
       // Update Whitelist Banner Setting
@@ -152,9 +154,9 @@ class PoolController {
       'title', 'website', 'banner', 'description', 'process', 'rule', 'address_receiver',
       'token', 'token_images', 'total_sold_coin',
       'token_by_eth', 'token_conversion_rate', 'price_usdt', 'display_price_rate',
-      'tokenInfo',
+      'tokenInfo', 'gleam_link',
       'start_time', 'finish_time', 'release_time', 'start_join_pool_time', 'end_join_pool_time',
-      'accept_currency', 'network_available', 'buy_type', 'pool_type', 'is_private',
+      'accept_currency', 'network_available', 'buy_type', 'pool_type', 'is_private', 'kyc_bypass',
       'min_tier', 'tier_configuration', 'claim_configuration',
       'self_twitter', 'self_group', 'self_channel', 'self_retweet_post', 'self_retweet_post_hashtag', 'partner_twitter', 'partner_group', 'partner_channel', 'partner_retweet_post', 'partner_retweet_post_hashtag',
       'guide_link', 'whitelist_link', 'announcement_time',
@@ -193,6 +195,7 @@ class PoolController {
       'network_available': inputParams.network_available,
       'buy_type': inputParams.buy_type,
       'pool_type': inputParams.pool_type,
+      'kyc_bypass': inputParams.kyc_bypass,
       'is_private': inputParams.is_private,
       'min_tier': inputParams.min_tier,
 
@@ -239,6 +242,7 @@ class PoolController {
         partner_channel: inputParams.partner_channel,
         partner_retweet_post: inputParams.partner_retweet_post,
         partner_retweet_post_hashtag: inputParams.partner_retweet_post_hashtag,
+        gleam_link: inputParams.gleam_link,
       });
 
       // Update Whitelist Banner Setting
@@ -455,6 +459,9 @@ class PoolController {
         // Time
         'release_time', 'start_join_pool_time', 'start_time', 'end_join_pool_time', 'finish_time',
 
+        // KYC required
+        'kyc_bypass',
+
         // Token Info
         'name', 'symbol', 'decimals', 'token', 'token_type', 'token_images', 'total_sold_coin',
         'token_conversion_rate', 'ether_conversion_rate',
@@ -524,7 +531,7 @@ class PoolController {
       // }
 
       let listData = (new PoolService).buildSearchQuery(param).with('campaignClaimConfig');
-      if (process.env.NODE_ENV == 'development') {
+      if (process.env.NODE_ENV === 'development') {
         listData = listData.orderBy('id', 'DESC');
       } else {
         listData = listData.orderBy('id', 'ASC');

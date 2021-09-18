@@ -768,6 +768,27 @@ const getStakingProvider = async () => {
   return networkToWeb3[Const.NETWORK_AVAILABLE.BSC]
 }
 
+const checkIsInPreOrderTime = (poolDetails, currentUserTierLevel) => {
+  // if (!poolDetails) {
+  //   return false;
+  // }
+  // if (currentUserTierLevel < poolDetails.pre_order_min_tier) {
+  //   return false;
+  // }
+  //
+  // let startPreOrderTime = poolDetails.startPreOrderTime || poolDetails.start_pre_order_time;
+  // let startBuyTime = poolDetails.startBuyTime || poolDetails.start_time;
+  // if (!startPreOrderTime || !startBuyTime) {
+  //   return false;
+  // }
+  //
+  // const now = moment().unix();
+  // if (startPreOrderTime < now && now < startBuyTime) {
+  //   return true;
+  // }
+  return false;
+};
+
 module.exports = {
   randomString,
   doMask,
@@ -800,4 +821,5 @@ module.exports = {
   getDecimalsByTokenAddress,
   getTiers,
   getStakingProvider,
+  checkIsInPreOrderTime,
 };

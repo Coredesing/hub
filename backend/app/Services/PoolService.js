@@ -326,7 +326,7 @@ class PoolService {
 
   async updateWhitelistSocialRequirement(campaign, data) {
     if (!data.self_twitter && !data.self_group && !data.self_channel && !data.self_retweet_post
-      && !data.partner_twitter && !data.partner_group && !data.partner_channel && !data.partner_retweet_post) {
+      && !data.partner_twitter && !data.partner_group && !data.partner_channel && !data.partner_retweet_post && !data.gleam_link) {
       await campaign.socialRequirement().delete();
       console.log('WhitelistSocialRequirement cleared', data);
       return true;
@@ -539,16 +539,13 @@ class PoolService {
       }
     }
     const freeBuyTimeSetting = JSON.parse(JSON.stringify(pool)).freeBuyTimeSetting;
-    console.log('Campaign freeBuyTimeSetting:', freeBuyTimeSetting);
     let maxBonus = freeBuyTimeSetting && freeBuyTimeSetting.max_bonus;
     const startFreeBuyTime = freeBuyTimeSetting && freeBuyTimeSetting.start_buy_time;
 
     const current = ConvertDateUtils.getDatetimeNowUTC();
     let isFreeBuyTime = false;
     if (maxBonus && startFreeBuyTime) {
-      console.log('startFreeBuyTime:', startFreeBuyTime);
       isFreeBuyTime = Number(startFreeBuyTime) < current;
-      console.log('isFreeTime', isFreeBuyTime, current);
     }
 
     const campaignId = pool && pool.id;
@@ -557,10 +554,10 @@ class PoolService {
       campaign_id: campaignId,
       wallet_address: walletAddress,
     }).first();
-    // if (!existWhitelist && pool.token_type === Const.TOKEN_TYPE.ERC20) {
-    //   isFreeBuyTime = false;
-    //   maxBonus = 0;
-    // }
+    if (!existWhitelist) {
+      isFreeBuyTime = false;
+      maxBonus = 0;
+    }
 
     console.log('[PoolService::getFreeBuyTimeInfo] - isFreeBuyTime:', isFreeBuyTime, maxBonus, startFreeBuyTime);
 

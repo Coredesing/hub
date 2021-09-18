@@ -15,6 +15,7 @@ type Props = {
 }
 export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
   const styles = { ...useStyles(), ...useCardStyles() };
+  const [titleTime, setTitleTime] = useState('');
 
   const [openTime, setOpenTime] = useState<{ [k in string]: number }>({
     days: 0,
@@ -22,15 +23,39 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
     minutes: 0,
     seconds: 0
   });
+  const isTicket = card?.token_type === TOKEN_TYPE.ERC721;
 
   useEffect(() => {
     if (card) {
-      const openTime = +card.start_time * 1000;
-      if (openTime > Date.now()) {
-        setOpenTime(getDiffTime(openTime, Date.now()));
+      let timer: number = 0;
+      if (card.start_join_pool_time && +card.start_join_pool_time * 1000 > Date.now()) {
+        timer = +card.start_join_pool_time * 1000;
+        setTitleTime('Whitelist Open in');
+      } else if (card.end_join_pool_time && +card.end_join_pool_time * 1000 > Date.now()) {
+        timer = +card.end_join_pool_time * 1000;
+        setTitleTime('Whitelist End in');
+      } else if (card.start_time && +card.start_time * 1000 > Date.now()) {
+        setTitleTime('Start Buy in');
+        timer = +card.start_time * 1000;
+      } else if (card.finish_time) {
+        const finish_time = +card.finish_time * 1000;
+
+        if (finish_time > Date.now()) {
+          setTitleTime('End Buy in');
+          timer = +card.finish_time * 1000;
+        }
+        if(finish_time <= Date.now()) {
+          setTitleTime('Finished')
+        }
+      } else {
+        setTitleTime('Coming soon');
+      }
+      if (timer && timer > Date.now()) {
+        setOpenTime(getDiffTime(timer, Date.now()));
       }
     }
   }, [card]);
+
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -50,7 +75,6 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
     }
   }, [openTime, setOpenTime, refresh]);
 
-  const isTicket = card?.token_type === TOKEN_TYPE.ERC721;
   let accept_currency = card?.accept_currency;
   if (card?.network_available === 'bsc' && accept_currency === 'usdt') {
     accept_currency = 'busd'
@@ -88,9 +112,9 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
         }
         <div className={'cardBodyTimeEndItem'}>
           <img src='/images/icons/bright.svg' alt="" />
-          <span className={clsx(styles.text, 'sp1')}>OPEN IN</span>
+          <span className={clsx(styles.text, 'sp1 text-uppercase')}>{titleTime}</span>
           <span className={styles.timeEnd}>
-            {formatNumber(openTime.days)}d : {formatNumber(openTime.hours)}h : {formatNumber(openTime.minutes)}m : {formatNumber(openTime.seconds)}s
+            {(titleTime !== 'Coming soon' && titleTime !== 'Finished') && <>{formatNumber(openTime.days)}d : {formatNumber(openTime.hours)}h : {formatNumber(openTime.minutes)}m : {formatNumber(openTime.seconds)}s</>}
           </span>
         </div>
         <Link href={`/#/${getRoute(card.token_type)}/${card.id}`} className={clsx(styles.btnDetail, 'not-approved')}>

@@ -48,11 +48,12 @@ class WhiteListUserController {
     }
   }
 
-  async getParticipants({request}) {
+  async getParticipants({ request }) {
     // get request params
     const campaign_id = request.params.campaignId;
     const page = request.input('page');
     const pageSize = request.input('limit') ? request.input('limit') : 10;
+    const whiteListPending = request.input('whitelist_pending') ? request.input('whitelist_pending') === 'true' : false;
     console.log(`start getWhiteList with campaign_id ${campaign_id} and page ${page} and pageSize ${pageSize}`);
     try {
       // get from redis cached
@@ -70,6 +71,7 @@ class WhiteListUserController {
         'campaign_id': campaign_id,
         'page': page,
         'pageSize': pageSize,
+        'whitelist_pending': whiteListPending,
         'search_term': request.input('search_term') || '',
       };
       const whitelistService = new WhitelistService();

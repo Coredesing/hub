@@ -282,15 +282,12 @@ class CampaignController {
       const campaignService = new CampaignService();
       const camp = await campaignService.findByCampaignId(campaign_id);
       if (!camp || camp.buy_type !== Const.BUY_TYPE.WHITELIST_LOTTERY) {
-        console.log(`Campaign with id ${campaign_id}`)
         return HelperUtils.responseBadRequest(`Bad request with campaignId ${campaign_id}`)
       }
       const currentDate = ConvertDateUtils.getDatetimeNowUTC();
-      console.log(`Join with date ${currentDate}`);
       // check time to join campaign
       if (camp.start_join_pool_time > currentDate || camp.end_join_pool_time < currentDate) {
-        console.log(`It's not right time to join campaign ${currentDate} ${camp.start_join_pool_time} ${camp.end_join_pool_time}`)
-        return HelperUtils.responseBadRequest("It's not right time to join this campaign !");
+        return HelperUtils.responseBadRequest("It's not right time to join this campaign");
       }
       // get user info
       const userService = new UserService();
@@ -299,12 +296,10 @@ class CampaignController {
       }
       const user = await userService.findUser(userParams);
       if (!user || !user.email) {
-        console.log(`User ${user}`);
-        return HelperUtils.responseBadRequest("You're not valid user to join this campaign !");
+        return HelperUtils.responseBadRequest("You're not valid user to join this campaign");
       }
       if (user.is_kyc !== Const.KYC_STATUS.APPROVED) {
-        console.log('User does not KYC yet !');
-        return HelperUtils.responseBadRequest("You must register for KYC successfully to be allowed to join. Or the email address and/or wallet address you used for KYC does not match the one you use on Red Kite. Please check and update on Blockpass to complete KYC verification.");
+        return HelperUtils.responseBadRequest("unsuccessful KYC account");
       }
       // check if user submitted the whitelist form
       const whitelistSubmissionService = new WhitelistSubmissionService();
@@ -314,14 +309,13 @@ class CampaignController {
       }
       const whitelistSubmission = whitelistSubmissionService.findSubmission(submissionParams)
       if (!whitelistSubmission) {
-        return HelperUtils.responseBadRequest("You haven't submitted the whitelist application form !");
+        return HelperUtils.responseBadRequest("You haven't submitted the whitelist application form");
       }
       // check user tier
       const userTier = (await HelperUtils.getUserTierSmartWithCached(wallet_address))[0];
-      console.log(`user tier is ${userTier}`);
       // check user tier with min tier of campaign
       if (camp.min_tier > userTier) {
-        return HelperUtils.responseBadRequest("You're not tier qualified for join this campaign!");
+        return HelperUtils.responseBadRequest("You're not valid for join this campaign!");
       }
       // call to db to get tier info
       const tierService = new TierService();
@@ -331,17 +325,16 @@ class CampaignController {
       };
       const tier = await tierService.findByLevelAndCampaign(tierParams);
       if (!tier) {
-        return HelperUtils.responseBadRequest("You're not tier qualified for join this campaign!");
+        return HelperUtils.responseBadRequest("You're not tier qualified for join this campaign");
       }
       // call to join campaign
       await campaignService.joinCampaign(campaign_id, wallet_address, user.email);
-      return HelperUtils.responseSuccess(null, "Apply Whitelist successful. !");
+      return HelperUtils.responseSuccess(null, "Apply Whitelist successful");
     } catch (e) {
-      console.log("error", e)
       if (e instanceof BadRequestException) {
         return HelperUtils.responseBadRequest(e.message);
       } else {
-        return HelperUtils.responseErrorInternal('ERROR : Apply Whitelist fail !');
+        return HelperUtils.responseErrorInternal('ERROR : Apply Whitelist fail');
       }
     }
   }

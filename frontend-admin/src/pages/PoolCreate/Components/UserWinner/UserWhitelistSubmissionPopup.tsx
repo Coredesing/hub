@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 function UserWhitelistSubmissionPopup(props: any) {
   const classes = useStyles();
   const {
-    isOpenEditPopup, setIsOpenEditPopup, editData, handleUpdateData, requirements
+    isOpenEditPopup, setIsOpenEditPopup, editData, handleUpdateData, handleVerifyData, requirements
   } = props;
 
   const statusOptions = [
@@ -37,6 +37,17 @@ function UserWhitelistSubmissionPopup(props: any) {
 
   const submitData = (data: any) => {
     handleUpdateData && handleUpdateData(data);
+  };
+
+  const verifyData = (data: any) => {
+    handleVerifyData && handleVerifyData(data)
+  };
+
+  const handleVerifyPopup = () => {
+    return handleSubmit(verifyData)()
+        .then((res) => {
+          console.log('Res: ', res);
+        });
   };
 
   const handleSubmitPopup = () => {
@@ -234,6 +245,9 @@ function UserWhitelistSubmissionPopup(props: any) {
         </DialogContent>
 
         <DialogActions style={{marginTop: '20px'}}>
+          <Button onClick={handleVerifyPopup} variant="contained" color="primary">
+            Verify
+          </Button>
           <Button onClick={approveAllAndSubmit} variant="contained" color="primary">
             Approve All
           </Button>

@@ -62,7 +62,7 @@ function WhitelistFollowSocial(props: any) {
       <div className={styles.socialStep}>
         <div className={styles.socialStepNunber}>01</div>
         <p style={{fontWeight: 700}}>
-          Follow and subscribe to {poolDetails?.title}'s and PolkaFoundry’s accounts
+          Follow and subscribe to {poolDetails?.title}'s and GameFi’s accounts
         </p>
       </div>
       <div className={styles.whitelistFlSocial}>
@@ -82,10 +82,10 @@ function WhitelistFollowSocial(props: any) {
               <th>
                 <img
                   className={styles.iconToken}
-                  src="/images/logo-polkafoundry.png"
+                  src="/images/partnerships/gamefi.png"
                   alt=""
                 />
-                <span>PolkaFoundry</span>
+                <span>GameFi</span>
               </th>
             </tr>
           </thead>

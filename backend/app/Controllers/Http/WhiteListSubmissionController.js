@@ -88,14 +88,11 @@ class WhiteListSubmissionController {
       const campaignService = new CampaignService();
       const camp = await campaignService.findByCampaignId(campaign_id);
       if (!camp || camp.buy_type !== Const.BUY_TYPE.WHITELIST_LOTTERY) {
-        console.log(`Campaign with id ${campaign_id}`)
         return HelperUtils.responseBadRequest(`Bad request with campaignId ${campaign_id}`)
       }
       const currentDate = ConvertDateUtils.getDatetimeNowUTC();
-      console.log(`Join with date ${currentDate}`);
       // check time to join campaign
       if (camp.start_join_pool_time > currentDate || camp.end_join_pool_time < currentDate) {
-        console.log(`It's not right time to join campaign ${currentDate} ${camp.start_join_pool_time} ${camp.end_join_pool_time}`)
         return HelperUtils.responseBadRequest("It's not right time to join this campaign !");
       }
       // get user info
@@ -105,11 +102,9 @@ class WhiteListSubmissionController {
       }
       const user = await userService.findUser(userParams);
       if (!user || !user.email) {
-        console.log(`User ${user}`);
         return HelperUtils.responseBadRequest("You're not valid user to join this campaign !");
       }
-      if (user.is_kyc != Const.KYC_STATUS.APPROVED) {
-        console.log('User does not KYC yet !');
+      if (user.is_kyc !== Const.KYC_STATUS.APPROVED) {
         return HelperUtils.responseBadRequest("You must register for KYC successfully to be allowed to join. Or the email address and/or wallet address you used for KYC does not match the one you use on Red Kite. Please check and update on Blockpass to complete KYC verification.");
       }
       let forbidden_countries = [];
@@ -119,11 +114,10 @@ class WhiteListSubmissionController {
         forbidden_countries = [];
       }
       if (forbidden_countries.includes(user.national_id_issuing_country)) {
-        return HelperUtils.responseBadRequest(`Sorry, citizens and residents of ${CountryList && CountryList[user.national_id_issuing_country] || user.national_id_issuing_country} are restricted to participate in the IDO.`);
+        return HelperUtils.responseBadRequest(`Sorry, citizens and residents of ${CountryList && CountryList[user.national_id_issuing_country] || user.national_id_issuing_country} are restricted to participate in the IGO.`);
       }
       // check user tier
       const userTier = (await HelperUtils.getUserTierSmartWithCached(wallet_address))[0];
-      console.log(`user tier is ${userTier}`);
       // check user tier with min tier of campaign
       if (camp.min_tier > userTier) {
         return HelperUtils.responseBadRequest("You're not tier qualified for join this campaign!");
@@ -203,6 +197,101 @@ class WhiteListSubmissionController {
 
       await submission.save();
 
+      return HelperUtils.responseSuccess();
+
+    } catch (e) {
+      console.log("error", e)
+      if (e instanceof BadRequestException) {
+        return HelperUtils.responseBadRequest(e.message);
+      } else {
+        return HelperUtils.responseErrorInternal('ERROR : Get Whitelist Submission fail !');
+      }
+    }
+  }
+
+  async verifyWhitelistSubmission({ request, params }) {
+    const campaign_id = params.campaignId;
+    const wallet_address = params.walletAddress;
+
+    if (!campaign_id) {
+      return HelperUtils.responseBadRequest('Bad request with campaign_id');
+    }
+    if (!wallet_address) {
+      return HelperUtils.responseBadRequest('Bad request with wallet_address');
+    }
+
+    try {
+      const whitelistSubmissionService = new WhitelistSubmissionService();
+
+      const socialCheckResult = await whitelistSubmissionService.checkPendingSubmission(campaign_id, wallet_address);
+      return HelperUtils.responseSuccess(socialCheckResult);
+
+    } catch (e) {
+      console.log("error", e)
+      if (e instanceof BadRequestException) {
+        return HelperUtils.responseBadRequest(e.message);
+      } else {
+        return HelperUtils.responseErrorInternal('ERROR : Get Whitelist Submission fail !');
+      }
+    }
+  }
+
+  async verifyBatchWhitelistSubmission({ request, params }) {
+    const campaign_id = params.campaignId;
+    const inputParams = request.only(['wallet_addresses', 'campaign_id']);
+
+    if (!campaign_id) {
+      return HelperUtils.responseBadRequest('Bad request with campaign_id');
+    }
+    if (!inputParams.wallet_addresses || !inputParams.wallet_addresses.length) {
+      return HelperUtils.responseBadRequest('Bad request with wallet_address');
+    }
+
+    try {
+      const whitelistSubmissionService = new WhitelistSubmissionService();
+
+      for (const wallet_address of inputParams.wallet_addresses) {
+        await whitelistSubmissionService.checkPendingSubmission(campaign_id, wallet_address);
+      }
+      return HelperUtils.responseSuccess();
+
+    } catch (e) {
+      console.log("error", e)
+      if (e instanceof BadRequestException) {
+        return HelperUtils.responseBadRequest(e.message);
+      } else {
+        return HelperUtils.responseErrorInternal('ERROR : Get Whitelist Submission fail !');
+      }
+    }
+  }
+
+  async approveBatchWhitelistSubmission({ request, params }) {
+    const campaign_id = params.campaignId;
+    const inputParams = request.only(['wallet_addresses', 'campaign_id']);
+
+    if (!campaign_id) {
+      return HelperUtils.responseBadRequest('Bad request with campaign_id');
+    }
+    if (!inputParams.wallet_addresses || !inputParams.wallet_addresses.length) {
+      return HelperUtils.responseBadRequest('Bad request with wallet_address');
+    }
+
+    try {
+      const whitelistSubmissionService = new WhitelistSubmissionService();
+
+      for (const wallet_address of inputParams.wallet_addresses) {
+        const submissionParams = {
+          wallet_address,
+          campaign_id,
+        }
+
+        const submission = await whitelistSubmissionService.findSubmission(submissionParams)
+        if (!submission) {
+          continue;
+        }
+
+        await whitelistSubmissionService.approveSubmission(submission)
+      }
       return HelperUtils.responseSuccess();
 
     } catch (e) {

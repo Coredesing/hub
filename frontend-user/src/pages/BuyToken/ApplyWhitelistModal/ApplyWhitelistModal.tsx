@@ -119,7 +119,7 @@ const PendingAlert = () => {
       </svg>
       <p style={{ marginLeft: '.5rem', color: '#FFD058', fontSize: '14px' }}>
         Your whitelist application is pending approval. We will check and verify later in a short time.<br />
-        Please kindly wait. Email to support@polkafoundry.com if you need further assistance.
+        Please kindly wait. Email to support@gamefi.com if you need further assistance.
       </p>
     </div>
   )
@@ -212,7 +212,7 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
   return (
     <Dialog open fullWidth={true} maxWidth={'md'} className={styles.socialDialog}>
       <DialogTitle id="customized-dialog-title" onClose={handleClose} customClass={styles.dialogTitle} >
-        Welcome to {poolDetails?.title} IDO on Red Kite
+        Welcome to {poolDetails?.title} IDO on GameFi
       </DialogTitle>
       <DialogContent>
         <div>
@@ -238,7 +238,7 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
                       className={styles.socialAnchorlink}
                       href={poolDetails?.socialRequirement?.self_retweet_post}>
                       {poolDetails?.title} IDO announcement
-                    </a> on PolkaFoundry’s Twitter
+                    </a> on GameFi’s Twitter
                     {
                       poolDetails?.socialRequirement?.self_retweet_post_hashtag &&
                       <span>

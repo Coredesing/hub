@@ -7,6 +7,9 @@ import { Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/
 import { BigNumber, utils } from 'ethers';
 import Progress from '@base-components/Progress'
 import { numberWithCommas } from '@utils/formatNumber';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserTier } from '@store/actions/sota-tiers';
+import useAuth from '@hooks/useAuth';
 const closeIcon = '/images/icons/close.svg';
 const ONE_DAY_IN_SECONDS = 86400;
 
@@ -14,6 +17,8 @@ const ModalStake = (props: any) => {
   const styles = useStyles();
   const poolStyles = usePoolStyles();
   const commonStyles = useCommonStyle();
+  const dispatch = useDispatch();
+  const { connectedAccount, wrongChain } = useAuth();
 
   const {
     open,
@@ -27,6 +32,12 @@ const ModalStake = (props: any) => {
     stakingAmount,
     logo,
   } = props;
+
+  const { data: userTier } = useSelector((state: any) => state.userTier);
+  const { data: delayTiers = [] } = useSelector((state: any) => state.delayTiers);
+  useEffect(() => {
+    dispatch(getUserTier(!wrongChain && connectedAccount ? connectedAccount : ''));
+  }, [wrongChain, connectedAccount, dispatch]);
 
   const [progress, setProgress] = useState('0');
   useEffect(() => {
@@ -66,22 +77,25 @@ const ModalStake = (props: any) => {
               <div>{!BigNumber.from(stakingAmount || '0').eq(BigNumber.from('0')) && numberWithCommas(utils.formatEther(stakingAmount), 4)}</div>
             </div>
           </div>
-          <div className="token-type">
-            <div>
-              Current Profit
-            </div>
-            <div className="token-detail">
-              <div>{!BigNumber.from(pendingReward || '0').eq(BigNumber.from('0')) && numberWithCommas(utils.formatEther(pendingReward), 4)}</div>
-            </div>
-          </div>
           {
-            Number(delayDuration) > 0 &&
+            !BigNumber.from(pendingReward || '0').eq(BigNumber.from('0')) &&
+            <div className="token-type">
+              <div>
+                Current Profit
+              </div>
+              <div className="token-detail">
+                <div>{numberWithCommas(utils.formatEther(pendingReward), 4)}</div>
+              </div>
+            </div>
+          }
+          {
+            Number(userTier - 1) >= 0 &&
             <div className="token-type">
               <div>
                 Withdrawal delay time
               </div>
               <div className="token-detail">
-                <div> {(Number(delayDuration) / ONE_DAY_IN_SECONDS).toFixed(0)}  days</div>
+                <div> {delayTiers[userTier - 1]}  days</div>
               </div>
             </div>
           }
@@ -154,9 +168,10 @@ const ModalStake = (props: any) => {
           </div>
 
           {
-            Number(delayDuration) > 0 &&
-            <ul style={{ listStyleType: 'disc', paddingLeft: '20px', margin: '20px 0' }}>
+            Number(userTier - 1) > 0 &&
+            <ul style={{ listStyleType: 'disc', paddingLeft: '20px', margin: '20px 0', color: '#fed469' }}>
               <li>
+                {/* Be aware that there is a delay when you <strong>Unstake</strong> tokens depending on your  <strong>Rank</strong> */}
                 There is an Withdrawal delay time before you can <strong>Withdraw</strong> your Staked tokens. Following that Withdrawal delay time you will be able to withdraw.
               </li>
               <li style={{ marginTop: '10px' }}>
@@ -164,11 +179,11 @@ const ModalStake = (props: any) => {
               </li>
             </ul>
           }
-          <div className="delay-notes">
+          {/* <div className="delay-notes">
             <div>
                 Be aware that there is a delay when you unstake tokens depending on your rank
             </div>
-          </div>
+          </div> */}
 
         </DialogContent>
         <DialogActions className="modal-content__foot">

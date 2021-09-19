@@ -46,6 +46,7 @@ Route.group(() => {
   // home
   Route.get('home/performance', 'HomeController.getPerformance');
   Route.post('home/subscribe', 'HomeController.subscribe');
+  Route.get('/legend/:id', 'HomeController.getLegendImages');
 
   // pool
   Route.get('pool/:campaignId', 'PoolController.getPoolPublic');

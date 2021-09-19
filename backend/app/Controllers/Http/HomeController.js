@@ -46,6 +46,21 @@ class HomeController {
       return HelperUtils.responseErrorInternal('ERROR: Get performance fail!');
     }
   }
+
+  async getLegendImages({ request, auth, params }) {
+    const nftId = params.campaignId;
+
+    try {
+      let data = {
+        image: 'https://gamefi-public.s3.amazonaws.com/legend.png'
+      }
+
+      // check valid nft
+      return data;
+    } catch (e) {
+      return HelperUtils.responseErrorInternal('ERROR: Fetch images error');
+    }
+  }
 }
 
 module.exports = HomeController

@@ -244,6 +244,7 @@ export const getSeedRound = (key: 0 | 1 | 2 | number) => {
   if(key === 0) return 'Public';
   if(key === 1) return 'Private';
   if(key === 2) return 'Seed';
+  if(key === 3) return 'Community';
   return ''
 }
 

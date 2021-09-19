@@ -65,7 +65,7 @@ export const Card = ({ card, title, ...props }: Props) => {
 
   const onRefresh = useCallback(() => {
     setReresh(true);
-  }, [])
+  }, [setReresh])
 
   return (
     <div className={clsx(styles.card, props.className, styles.cardOpening)}>

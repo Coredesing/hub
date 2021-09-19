@@ -129,6 +129,9 @@ export const CountDownTimeV2 = (props: PropsV2) => {
 
     useEffect(() => {
         if (!props.time) return;
+        if ('days' in props.time) {
+            if (isZero(props.time.days) && isZero(props.time.hours) && isZero(props.time.minutes) && isZero(props.time.seconds)) return;
+        }
         const interval = setInterval(() => {
             setTime((time: any) => {
                 if (!time) return time;
@@ -149,7 +152,7 @@ export const CountDownTimeV2 = (props: PropsV2) => {
         if (isFinish) {
             props.onFinish && props.onFinish();
         }
-    }, [isFinish, props]);
+    }, [isFinish]);
     return <div className={clsx(styles.boxTimeV2, props.dislayType || 'vertical')}>
         <div className={styles.boxTitleTimeV2}>
             <img src='/images/icons/bright.svg' alt="" />

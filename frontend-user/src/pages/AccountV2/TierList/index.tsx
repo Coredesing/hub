@@ -33,7 +33,7 @@ const TierList = (props: any) => {
           </div>
           <div className="info">
             <span className="tier-name">{TIERS[0].name}</span>
-            <span>GP</span>
+            <span>GAFI</span>
           </div>
         </div>
         {isWidthUp('sm', props.width) && connectedAccount && <span
@@ -90,7 +90,7 @@ const TierList = (props: any) => {
                   {/* {!showMoreInfomation &&  */}
                   <span className="unit">{
                     idx === tiers.length - 1 ? 'NFT required' :
-                      numberWithCommas(tier) + 'GP'
+                      numberWithCommas(tier) + ' GAFI'
                   } </span>
                   {/* } */}
                   {/* {showMoreInfomation && !hideStatistics &&

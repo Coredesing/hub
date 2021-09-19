@@ -17,6 +17,7 @@ import { WrapperAlert } from '../../../components/Base/WrapperAlert';
 import { AlertKYC } from '../../../components/Base/AlertKYC';
 import LinkMui from '@material-ui/core/Link';
 import { getApproveToken } from '../../../utils';
+import { Link } from 'react-router-dom';
 
 function BannerNotification(props: any) {
   const styles = useStyles();
@@ -102,20 +103,20 @@ function BannerNotification(props: any) {
         <AlertKYC connectedAccount={connectedAccount} />
       }
 
-      {/* {isKYC && currentUserTier?.level < poolDetails?.minTier &&
+      {isKYC && currentUserTier?.level < poolDetails?.minTier &&
         <WrapperAlert type="error">
           <span>
             You haven't achieved min tier (
             {TIERS[poolDetails?.minTier]?.name || ''}
             ) to apply for Whitelist yet. To upgrade your Tier, please click&nbsp;
             <Link
-              to="/account"
-              style={{ color: 'white', textDecoration: 'underline' }}
+              to="/staking-pools"
+              style={{ color: 'white', textDecoration: 'underline', fontWeight: 600 }}
             > here </Link>
           </span>
           {' '}.
         </WrapperAlert>
-      } */}
+      }
 
       {
         (poolDetails?.campaignStatus === PoolStatus.Closed) &&

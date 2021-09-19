@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme: any) => {
       },
       '& .modal-content__foot': {
         borderTop: '1px solid #727272',
-        padding: '16px 0px 0px'
+        padding: '16px 0px 0px !important'
       },
     },
     notice: {

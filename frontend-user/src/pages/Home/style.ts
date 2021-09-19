@@ -259,7 +259,7 @@ const useStyles = makeStyles((theme: any) => {
       paddingRight: "0",
       paddingTop: "120px",
       paddingBottom: "130px",
-      height: "770px",
+      minHeight: "770px",
       [theme.breakpoints.down("xs")]: {
         height: "520px",
         padding: "28px",

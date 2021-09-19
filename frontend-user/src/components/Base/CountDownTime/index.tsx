@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { caclDiffTime, formatNumber, getDiffTime } from '@utils/index';
 import useStyles from './style';
+import clsx from 'clsx';
 
 type TimeStamp = number;
 
@@ -23,15 +24,20 @@ type Props = {
     time: CountDownTimeType,
     onFinish?: Function,
 }
+type PropsV2 = Props & {
+    title?: string,
+    isDislayTime?: boolean,
+    dislayType?: 'vertical' | 'horizontal'
+}
 const isZero = (num: number) => num === 0;
 
 export const CountDownTimeV1 = (props: Props) => {
     const styles = useStyles();
-    const [time, setTime] = useState<DHMSType | {[k: string]: any}>({});
+    const [time, setTime] = useState<DHMSType | { [k: string]: any }>({});
     const [isFinish, setFinish] = useState(false);
 
     useEffect(() => {
-        if('date1' in props.time) {
+        if ('date1' in props.time) {
             setTime(getDiffTime(props.time.date1, props.time.date2))
         } else {
             setTime(props.time);
@@ -39,7 +45,7 @@ export const CountDownTimeV1 = (props: Props) => {
     }, [props.time])
 
     useEffect(() => {
-        if(!props.time) return;
+        if (!props.time) return;
         const interval = setInterval(() => {
             setTime((time: any) => {
                 if (!time) return time;
@@ -107,3 +113,53 @@ export const CountDownTimeV1 = (props: Props) => {
 }
 
 export default CountDownTimeV1;
+
+export const CountDownTimeV2 = (props: PropsV2) => {
+    const styles = useStyles();
+
+    const [time, setTime] = useState<DHMSType | { [k: string]: any }>({});
+    const [isFinish, setFinish] = useState(false);
+    useEffect(() => {
+        if ('date1' in props.time) {
+            setTime(getDiffTime(props.time.date1, props.time.date2))
+        } else {
+            setTime(props.time);
+        }
+    }, [props.time]);
+
+    useEffect(() => {
+        if (!props.time) return;
+        if ('days' in props.time) {
+            if (isZero(props.time.days) && isZero(props.time.hours) && isZero(props.time.minutes) && isZero(props.time.seconds)) return;
+        }
+        const interval = setInterval(() => {
+            setTime((time: any) => {
+                if (!time) return time;
+                const newOpenTime = { ...time };
+                if (isZero(newOpenTime.days) && isZero(newOpenTime.hours) && isZero(newOpenTime.minutes) && isZero(newOpenTime.seconds)) {
+                    clearInterval(interval);
+                    setFinish(true);
+                    return newOpenTime;
+                }
+                return caclDiffTime(newOpenTime);
+            })
+        }, 1000);
+        return () => {
+            clearInterval(interval)
+        };
+    }, [props.time]);
+    useEffect(() => {
+        if (isFinish) {
+            props.onFinish && props.onFinish();
+        }
+    }, [isFinish]);
+    return <div className={clsx(styles.boxTimeV2, props.dislayType || 'vertical')}>
+        <div className={styles.boxTitleTimeV2}>
+            <img src='/images/icons/bright.svg' alt="" />
+            <span className={clsx(styles.text, 'sp1 text-uppercase')}>{props.title}</span>
+        </div>
+        <span className={styles.timeEnd}>
+            {props.isDislayTime && <><span>{formatNumber(time.days)}d</span> <span>:</span> <span>{formatNumber(time.hours)}h</span> <span>:</span> <span>{formatNumber(time.minutes)}m</span> <span>:</span> <span>{formatNumber(time.seconds)}s</span></>}
+        </span>
+    </div>
+}

@@ -269,6 +269,9 @@ const useCommonStyle = makeStyles((theme) => {
       left: "0",
       zIndex: 5,
       backgroundColor: "rgba(3, 9, 46, 0.6)",
+      '& .paperModal': {
+        maxHeight: 'calc(100% - 130px)',
+      },
 
       "& .MuiBackdrop-root": {
         background: "none",
@@ -382,6 +385,7 @@ const useCommonStyle = makeStyles((theme) => {
         alignItems: "center",
         justifyContent: "space-between",
         padding: 0,
+        gap: '4px',
 
         "& button": {
           borderRadius: "60px",
@@ -472,6 +476,7 @@ const useCommonStyle = makeStyles((theme) => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "space-between",
+          gap: '4px',
 
           "& button": {
             padding: "12px 30px",

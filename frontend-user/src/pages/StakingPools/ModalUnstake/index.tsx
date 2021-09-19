@@ -54,6 +54,9 @@ const ModalStake = (props: any) => {
       aria-labelledby="alert-dialog-slide-title"
       aria-describedby="alert-dialog-slide-description"
       className={commonStyles.modal + ' ' + styles.modalStake}
+      classes={{
+        paper: 'paperModal'
+      }}
     >
       <div className="modal-content">
         <DialogTitle id="alert-dialog-slide-title" className="modal-content__head">

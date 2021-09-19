@@ -43,6 +43,9 @@ const ModalStake = (props: any) => {
       aria-labelledby="alert-dialog-slide-title"
       aria-describedby="alert-dialog-slide-description"
       className={commonStyles.modal + ' ' + styles.modalStake}
+      classes={{
+        paper: 'paperModal'
+      }}
     >
       <div className="modal-content">
         <DialogTitle id="alert-dialog-slide-title" className="modal-content__head">
@@ -173,7 +176,7 @@ const ModalStake = (props: any) => {
               borderRadius: '36px',
               padding: '12px 30px',
               color: '#000',
-              marginRight: '5px'
+              // marginRight: '5px'
             }}
             disabled={isNaN(amount) || Number(amount) <= 0}
           />

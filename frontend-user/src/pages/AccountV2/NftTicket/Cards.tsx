@@ -24,9 +24,9 @@ const Cards = (props: any) => {
     // ]);
     const { data: userInfo } = useSelector((state: any) => state.userInfo);
 
-    const [cardData, setCardData] = useState<{[k: string]: any}>({});
+    const [cardData, setCardData] = useState<{ [k: string]: any }>({});
     useEffect(() => {
-        if(_.isNumber(userInfo.id)) {
+        if (_.isNumber(userInfo.id)) {
             axios.get(`/legend/${userInfo.id}`)
                 .then((res) => {
                     setCardData(res.data || {});
@@ -64,22 +64,25 @@ const Cards = (props: any) => {
                 <div className={styles.cards}>
                     {/* {
                         cards.map((c, idx) =>  */}
-                    {cardData && <div key={cardData.name} className={styles.card}>
-                        <div /*onClick={() => toggleCard(cardData.name)} */>
-                            {/* {!c.isShow ? <div className="img-hidden">
+                    {cardData &&
+                        <div className={styles.wrapperCard}>
+                            <div key={cardData.name} className={styles.card}>
+                                <div /*onClick={() => toggleCard(cardData.name)} */>
+                                    {/* {!c.isShow ? <div className="img-hidden">
                                 <img className="question" src={questionImg} alt="" /></div> :  */}
-                                <div className="img-shown">
-                                <img src={cardData.image} alt="" /></div>
-                             {/* } */}
-                        </div>
-                        <div className="info">
-                            <h4>#{formatNumber(userInfo.id, 3)}</h4>
-                            {/* <h5>
+                                    <div className="img-shown">
+                                        <img src={cardData.image} alt="" /></div>
+                                    {/* } */}
+                                </div>
+                            </div>
+                            <div className="info">
+                                <h4>#{formatNumber(userInfo.id, 3)}</h4>
+                                {/* <h5>
                                 <img src={ethIcon} alt="" />
                                 {c.price}
                             </h5> */}
-                        </div>
-                    </div>}
+                            </div>
+                        </div>}
 
                     {/* )
                     } */}

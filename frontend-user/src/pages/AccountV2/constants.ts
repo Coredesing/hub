@@ -24,11 +24,11 @@ export const MenuLeft: IMenuLeft = {
         name: 'My Pools',
         icon: '/images/icons/icon_my_pools.svg',
     },
-    // ticket: {
-        // key: 'ticket',
-        //   name: 'NFT Tickets',
-        //   icon: '/images/icons/ticket.svg',
-    // },
+    ticket: {
+        key: 'ticket',
+        name: 'NFT',
+        icon: '/images/icons/ticket.svg',
+    },
     help: {
         key: 'help',
         name: 'Need Help',

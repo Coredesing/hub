@@ -48,17 +48,29 @@ class HomeController {
   }
 
   async getLegendImages({ request, auth, params }) {
-    const nftId = params.campaignId;
-
     try {
-      let data = {
-        image: 'https://gamefi-public.s3.amazonaws.com/legend.png'
+      const nftId = parseInt(params.campaignId);
+      const LEGEND = HelperUtils.getLegendData()
+
+      if (!LEGEND) {
+        return HelperUtils.responseErrorInternal('ERROR: Fetch API error');
       }
 
-      // check valid nft
-      return data;
+      const nft = LEGEND.filter(data => data.id === nftId)
+      let image = 'https://gamefi-public.s3.amazonaws.com/legend-valid.png';
+
+      if (nft.valid === false) {
+        image = 'https://gamefi-public.s3.amazonaws.com/legend-expired.png'
+      }
+
+      return {
+        image: image,
+        external_url: image,
+        description: 'GameFi NFT Legend',
+        name: 'Legend',
+      };
     } catch (e) {
-      return HelperUtils.responseErrorInternal('ERROR: Fetch images error');
+      return HelperUtils.responseErrorInternal('ERROR: Fetch API error');
     }
   }
 }

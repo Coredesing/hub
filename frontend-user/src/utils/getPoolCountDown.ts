@@ -95,7 +95,7 @@ export const getPoolCountDown = (
     if (isUpcoming) {
       if (startJoinTime && today < startJoinTime.getTime()) {
         date = startJoinTime;
-        display = 'You can apply Whitelist in';
+        display = 'Whitelist registration will start in';
         displayShort = "Whitelist starts in";
         return { date, display, displayShort };
       } else if (startJoinTime && endJoinTime && startJoinTime.getTime() < today && today < endJoinTime.getTime()) {

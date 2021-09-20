@@ -1,0 +1,52 @@
+[
+  {
+    "id": 0,
+    "wallet_address": "0x",
+    "valid": true
+  },
+  {
+    "id": 1,
+    "wallet_address": "0x",
+    "valid": true
+  },
+  {
+    "id": 2,
+    "wallet_address": "0x",
+    "valid": true
+  },
+  {
+    "id": 3,
+    "wallet_address": "0x",
+    "valid": true
+  },
+  {
+    "id": 4,
+    "wallet_address": "0x",
+    "valid": true
+  },
+  {
+    "id": 5,
+    "wallet_address": "0x",
+    "valid": true
+  },
+  {
+    "id": 6,
+    "wallet_address": "0x",
+    "valid": true
+  },
+  {
+    "id": 7,
+    "wallet_address": "0x",
+    "valid": true
+  },
+  {
+    "id": 8,
+    "wallet_address": "0x",
+    "valid": true
+  },
+  {
+    "id": 9,
+    "wallet_address": "0x",
+    "valid": true
+  }
+]

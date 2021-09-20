@@ -24,6 +24,7 @@ const { abi: CONTRACT_CLAIM_ABI } = CONTRACT_CONFIGS.CONTRACT_CLAIMABLE;
 const GAFI_SMART_CONTRACT_ADDRESS = process.env.GAFI_SMART_CONTRACT_ADDRESS
 const UNI_LP_GAFI_SMART_CONTRACT_ADDRESS = process.env.UNI_LP_GAFI_SMART_CONTRACT_ADDRESS
 const STAKING_POOL_SMART_CONTRACT = process.env.STAKING_POOL_SMART_CONTRACT
+const LEGEND_DATA = NETWORK_CONFIGS.contracts[Const.CONTRACTS.Legend].DATA;
 
 /**
  * Switch Link Web3
@@ -352,7 +353,10 @@ const getUserTierSmart = async (wallet_address) => {
     tiers.map((tokenRequire, index) => {
       // master: Fetch NFT Owner
       if (index === tiers.length - 1) {
-        return
+        if (getLegendIdByOwner(wallet_address) && stakedToken.gte(tokenRequire)) {
+          userTier = index + 1;
+        }
+        return;
       }
 
       if (stakedToken.gte(tokenRequire)) {
@@ -768,6 +772,23 @@ const getStakingProvider = async () => {
   return networkToWeb3[Const.NETWORK_AVAILABLE.BSC]
 }
 
+const getLegendData = () => {
+  return LEGEND_DATA;
+}
+
+const getLegendIdByOwner = (wallet_address) => {
+  if (!LEGEND_DATA) {
+    return
+  }
+
+  const data = LEGEND_DATA.filter(data => data.wallet_address === wallet_address && data.valid === true);
+  if (!data || data.length < 1) {
+    return
+  }
+
+  return data[0]
+}
+
 const checkIsInPreOrderTime = (poolDetails, currentUserTierLevel) => {
   // if (!poolDetails) {
   //   return false;
@@ -822,4 +843,7 @@ module.exports = {
   getTiers,
   getStakingProvider,
   checkIsInPreOrderTime,
+
+  getLegendData,
+  getLegendIdByOwner,
 };

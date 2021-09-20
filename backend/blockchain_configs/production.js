@@ -52,6 +52,11 @@ module.exports = {
       BLOCK_NUM_IN_ONE_GO: 100,
       BREAK_TIME_AFTER_ONE_GO: 1000,
       NEED_NOTIFY_BY_WEBHOOK: true
+    },
+    Legend: {
+      CONTRACT_ADDRESS: '0x9a524692087707fdb0b64f1409FcC1907Ef083b8',
+      CONTRACT_DATA: require('./contracts/Erc721.json'),
+      DATA: require('./contracts/Legend/Legends.json')
     }
   }
 };

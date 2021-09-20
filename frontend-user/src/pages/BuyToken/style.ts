@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     boxHowTo: {
-      background: '#72F34B',
+      background: '#2dc000',
       boxShadow: '0px 4px 40px rgba(0, 0, 0, 0.6)',
       borderRadius: 12,
       width: 280,
@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme: any) => {
         top: 2,
         width: 5,
         height: 10,
-        border: 'solid #72F34B',
+        border: 'solid #000',
         borderWidth: '0 3px 3px 0',
         transform: 'rotate(45deg)',
         borderRadius: 3,

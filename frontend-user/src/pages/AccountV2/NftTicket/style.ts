@@ -78,7 +78,8 @@ export const useCardStyles = makeStyles((theme: any) => {
     cards: {
       display: 'grid',
       gap: '8px',
-      gridTemplateColumns: 'repeat(auto-fit, 166px)',
+      gridTemplateColumns: 'repeat(auto-fit, 200px)',
+      placeContent: 'center',
 
 
     },
@@ -110,7 +111,7 @@ export const useCardStyles = makeStyles((theme: any) => {
       },
 
       '& .img-hidden, & .img-shown': {
-        width: '146px',
+        // width: '146px',
         height: '215px',
         cursor: 'pointer',
         transformStyle: 'preserve-3d',

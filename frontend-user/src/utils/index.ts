@@ -171,11 +171,17 @@ export const disconnectWalletLink = (library: any) => {
   provider?.close && provider?.close();
 };
 
-export const formatNumber = (num: number) => {
-  if(num < 10) {
-    return String(`0${num}`);
+export const formatNumber = (num: number, range: number = 2) => {
+  const lengNum = String(num).length;
+  if(lengNum < range) {
+    const arr = new Array(range - lengNum).fill('0', 0, range - lengNum);
+    return arr.join('') + num;
   }
   return num;
+  // if(num < 10) {
+  //   return String(`0${num}`);
+  // }
+  // return num;
 }
 
 type Timestamp = number;

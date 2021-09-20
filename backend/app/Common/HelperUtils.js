@@ -352,9 +352,14 @@ const getUserTierSmart = async (wallet_address) => {
     let userTier = 0;
     tiers.map((tokenRequire, index) => {
       // master: Fetch NFT Owner
-      if (index === tiers.length - 1
-        && getLegendIdByOwner(wallet_address)
-        && stakedToken.gte(tokenRequire)) {
+      if (index === tiers.length - 1) {
+        if (getLegendIdByOwner(wallet_address) && stakedToken.gte(tokenRequire)) {
+          userTier = index + 1;
+        }
+        return;
+      }
+
+      if (stakedToken.gte(tokenRequire)) {
         userTier = index + 1;
       }
     });

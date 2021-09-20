@@ -66,7 +66,8 @@ export const getUserTier = (address: string, forceUsingEther: string = 'eth') =>
       let userTier = 0;
       const userInfo = {
         totalStaked: 0,
-        uniStaked: 0
+        uniStaked: 0,
+        id: null as null | number,
       }
       if(address) {
         const baseRequest = new BaseRequest();
@@ -74,7 +75,8 @@ export const getUserTier = (address: string, forceUsingEther: string = 'eth') =>
         const resObj = await response.json();
         userTier = resObj.data?.tier || 0;
         userInfo.totalStaked = +resObj.data?.stakedInfo?.tokenStaked || 0;
-        userInfo.uniStaked = +resObj.data?.stakedInfo?.uniStaked || 0
+        userInfo.uniStaked = +resObj.data?.stakedInfo?.uniStaked || 0;
+        userInfo.id = +resObj.data?.id ?? null;
       }
       dispatch({
         type: sotaTiersActions.USER_TIER_SUCCESS,

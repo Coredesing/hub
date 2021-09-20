@@ -43,9 +43,9 @@ const Tiers = (props: any) => {
     // totalRedKitePoints,
     // pointsLeftToNextTier,
   } = props;
-  useEffect(() => {
-    dispatch(getUserTier(!wrongChain && connectedAccount ? connectedAccount : ''));
-  }, [wrongChain, connectedAccount, dispatch]);
+  // useEffect(() => {
+  //   dispatch(getUserTier(!wrongChain && connectedAccount ? connectedAccount : ''));
+  // }, [wrongChain, connectedAccount, dispatch]);
 
   useEffect(() => {
     if (_.isEmpty(tiers)) {

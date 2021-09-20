@@ -6,6 +6,7 @@ import './style.css';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
 import axios from '@services/axios';
+import { formatNumber } from '@utils/index';
 
 const questionImg = '/images/question.png';
 const ethIcon = '/images/icons/eth.svg';
@@ -71,13 +72,13 @@ const Cards = (props: any) => {
                                 <img src={cardData.image} alt="" /></div>
                              {/* } */}
                         </div>
-                        {/* <div className="info">
-                            <h4>{c.id}</h4>
-                            <h5>
+                        <div className="info">
+                            <h4>#{formatNumber(userInfo.id, 3)}</h4>
+                            {/* <h5>
                                 <img src={ethIcon} alt="" />
                                 {c.price}
-                            </h5>
-                        </div> */}
+                            </h5> */}
+                        </div>
                     </div>}
 
                     {/* )

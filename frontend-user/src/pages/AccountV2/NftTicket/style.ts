@@ -140,6 +140,7 @@ export const useCardStyles = makeStyles((theme: any) => {
       '& .info': {
         paddingLeft: '4px',
         paddingRight: '4px',
+        textAlign: 'center',
         '& h4, & h5': {
           margin: 0,
           padding: 0,

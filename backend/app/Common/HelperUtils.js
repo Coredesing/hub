@@ -772,6 +772,10 @@ const getStakingProvider = async () => {
   return networkToWeb3[Const.NETWORK_AVAILABLE.BSC]
 }
 
+const getPathExportUsers = (fileName) => {
+  return `download/export_users/${fileName}`
+}
+
 const getLegendData = () => {
   return LEGEND_DATA;
 }
@@ -841,6 +845,7 @@ module.exports = {
   getFirstClaimConfig,
   getDecimalsByTokenAddress,
   getTiers,
+  getPathExportUsers,
   getStakingProvider,
   checkIsInPreOrderTime,
 

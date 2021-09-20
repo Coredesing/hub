@@ -27,9 +27,9 @@ function HowToParticipant(props: any) {
   // console.log('endJoinTimeDisplay======>', endJoinTimeInDate, endJoinTimeDisplay);
 
   const availableJoin = (poolDetails?.method === 'whitelist' && joinTimeInDate && endJoinTimeInDate) ? today <= endJoinTimeInDate : false;
-  if (!availableJoin) {
-    return <></>;
-  }
+  // if (!availableJoin) {
+  //   return <></>;
+  // }
   const enoughtMinTier = new BigNumber(currentUserTier?.level || 0).gte(poolDetails?.minTier);
   const appliedWhiteList = alreadyJoinPool || joinPoolSuccess;
   const isAppliedSuccess = isKYC && appliedWhiteList && enoughtMinTier;

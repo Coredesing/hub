@@ -25,7 +25,7 @@ export const MenuLeft: IMenuLeft = {
         icon: '/images/icons/icon_my_pools.svg',
     },
     ticket: {
-        key: 'ticket',
+        key: 'nft',
         name: 'NFT',
         icon: '/images/icons/ticket.svg',
     },

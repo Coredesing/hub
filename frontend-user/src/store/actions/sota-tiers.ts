@@ -63,21 +63,28 @@ export const getUserTier = (address: string, forceUsingEther: string = 'eth') =>
   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
     dispatch({ type: sotaTiersActions.USER_TIER_LOADING });
     try {
-
-      const baseRequest = new BaseRequest();
-      const response = await baseRequest.get(`/user/tier-info?wallet_address=${address}`) as any;
-      const resObj = await response.json();
-      const userTier = resObj.data?.tier || 0;
+      let userTier = 0;
+      const userInfo = {
+        totalStaked: 0,
+        uniStaked: 0,
+        id: null as null | number,
+      }
+      if(address) {
+        const baseRequest = new BaseRequest();
+        const response = await baseRequest.get(`/user/tier-info?wallet_address=${address}`) as any;
+        const resObj = await response.json();
+        userTier = resObj.data?.tier || 0;
+        userInfo.totalStaked = +resObj.data?.stakedInfo?.tokenStaked || 0;
+        userInfo.uniStaked = +resObj.data?.stakedInfo?.uniStaked || 0;
+        userInfo.id = +resObj.data?.id ?? null;
+      }
       dispatch({
         type: sotaTiersActions.USER_TIER_SUCCESS,
         payload: userTier,
       });
       dispatch({
         type: sotaTiersActions.USER_INFO_SUCCESS,
-        payload: {
-          totalStaked: +resObj.data?.stakedInfo?.tokenStaked || 0,
-          uniStaked: +resObj.data?.stakedInfo?.uniStaked || 0,
-        },
+        payload: userInfo,
       });
 
     } catch (error) {

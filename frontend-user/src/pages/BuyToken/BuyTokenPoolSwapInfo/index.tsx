@@ -21,7 +21,7 @@ const BuyTokenPoolSwapInfo: FC<Props> = ({poolDetails, currencyName}) => {
     const _sold = new BigNumber(sold);
     const _totalSold = new BigNumber(totalSold);
     const percent = _sold.multipliedBy(100).dividedBy(_totalSold)
-    return percent.lt(100) ? percent.toFixed(0) : 100;
+    return percent.lt(100) ? +percent.toFixed(1) : 100;
   }
   return (
     <section className={styles.sectionBuyTokenPoolSwapInfo}>

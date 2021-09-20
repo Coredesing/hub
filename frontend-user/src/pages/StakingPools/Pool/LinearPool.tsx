@@ -56,7 +56,7 @@ const LinearPool = (props: any) => {
   const dispatch = useDispatch();
   const { data: delayTiers = [] } = useSelector((state: any) => state.delayTiers);
   const { appChainID, walletChainID } = useTypedSelector(state => state.appNetwork).data;
-  const { tokenDetails } = useTokenDetails(poolDetail?.acceptedToken, ChainDefault.name);
+  const { tokenDetails } = useTokenDetails(poolDetail?.acceptedToken, ChainDefault.shortName || '');
   const [tokenAllowance, setTokenAllowance] = useState(BigNumber.from('0'));
   const { retrieveTokenAllowance } = useTokenAllowance();
   const [tokenBalance, setTokenBalance] = useState('0');
@@ -412,7 +412,7 @@ const LinearPool = (props: any) => {
             <Box className={clsx("pool--sumary-block", styles.delayTierBoxs)} maxWidth={((delayTiers?.length || 0) * 110) + 'px'} width="100%">
               {
                 (!!delayTiers?.length) && delayTiers.map((days: number, idx: number) => (
-                  <div className={styles.delayTierBox}>
+                  <div className={styles.delayTierBox} key={idx}>
                     <h4 className={styles.textSecondary}>
                       <img src={TIERS[idx + 1].icon} alt="" />
                       {TIERS[idx + 1]?.name}
@@ -671,7 +671,7 @@ const LinearPool = (props: any) => {
                 {
                   BigNumber.from(poolDetail?.stakingAmount || '0').gt(BigNumber.from('0')) &&
                   <Button
-                    text="Untake"
+                    text="Unstake"
                     onClick={() => setShowUnstakeModal(true)}
                     backgroundColor="#191920"
                     style={{
@@ -758,9 +758,9 @@ const LinearPool = (props: any) => {
         tokenDetails={tokenDetails}
         logo={poolDetail?.logo}
         tokenBalance={tokenBalance}
-        min={Number(utils.formatEther(poolDetail?.minInvestment)).toFixed(2)}
-        max={Number(utils.formatEther(poolDetail?.maxInvestment)).toFixed(2)}
-        stakingAmount={Number(utils.formatEther(poolDetail?.stakingAmount)).toFixed(2)}
+        min={Number(utils.formatEther(poolDetail?.minInvestment || 0)).toFixed(2)}
+        max={Number(utils.formatEther(poolDetail?.maxInvestment || 0)).toFixed(2)}
+        stakingAmount={Number(utils.formatEther(poolDetail?.stakingAmount || 0)).toFixed(2)}
         onClose={() => setShowStakeModal(false)}
         onConfirm={handleStake}
       />

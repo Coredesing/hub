@@ -8,7 +8,7 @@ import { useTypedSelector } from '../../../hooks/useTypedSelector';
 import { getContractInstance, SmartContractMethod } from '../../../services/web3';
 
 import STAKING_POOL_ABI from '../../../abi/StakingPool.json';
-
+const TOKEN_ADDRESS = process.env.REACT_APP_PKF || '';
 const useDetailListStakingPool = (
   poolsList: Array<any> | null | undefined,
 ) => {
@@ -38,7 +38,9 @@ const useDetailListStakingPool = (
           continue;
         }
 
-        const [/*allocEndBlockNumber, allocRewardPerBlock, allocRewardToken, totalAllocPoint, */linearAcceptedToken] = await Promise.all([
+        const [/*allocEndBlockNumber, allocRewardPerBlock, allocRewardToken, totalAllocPoint, */linearAcceptedToken] = [TOKEN_ADDRESS] ||
+        
+        await Promise.all([
           // contract.methods.allocEndBlockNumber().call(),
           // contract.methods.allocRewardPerBlock().call(),
           // contract.methods.allocRewardToken().call(),
@@ -84,14 +86,18 @@ const useDetailListStakingPool = (
           //   break;
           
           case 'linear':
-            // debugger;
-            const linearData = await contract.methods.linearPoolInfo(BigNumber.from(pool.pool_id)).call();
+            let linearData: {[k: string]: any} = {};
+            if('startJoinTime' in pool && 'endJoinTime' in pool ) {
+              linearData = pool;
+            } else {
+              linearData = await contract.methods.linearPoolInfo(BigNumber.from(pool.pool_id)).call();
+            }
             let linearPendingReward = "0"
-            let linearPendingWithdrawal, linearUserInfo
+            let linearPendingWithdrawal, linearUserInfo;
             if (account) {
               [linearUserInfo, linearPendingReward, linearPendingWithdrawal] = await Promise.all([
                 contract.methods.linearStakingData(BigNumber.from(pool.pool_id), account).call(),
-                contract.methods.linearPendingReward(BigNumber.from(pool.pool_id), account).call(),
+                '0' ?? contract.methods.linearPendingReward(BigNumber.from(pool.pool_id), account).call(),
                 contract.methods.linearPendingWithdrawals(BigNumber.from(pool.pool_id), account).call()
               ])
             }
@@ -101,7 +107,7 @@ const useDetailListStakingPool = (
                 ...pool,
                 acceptedToken: linearAcceptedToken,
                 cap: linearData.cap, 
-                totalStaked: linearData.totalStaked, 
+                totalStaked: linearData.totalStaked || '0', 
                 minInvestment: linearData.minInvestment, 
                 maxInvestment: linearData.maxInvestment, 
                 APR: linearData.APR, 

@@ -18,8 +18,7 @@ function ClaimPolicy(props: any) {
           type="text"
           name="claim_policy"
           defaultValue={poolDetail?.claim_policy}
-          ref={register({
-          })}
+          ref={register({})}
           className={classes.formControlInput}
           maxLength={255}
         />

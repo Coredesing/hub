@@ -13,7 +13,7 @@ const balanceOf = async (tokenAddress: string | undefined, appChainID: any, conn
     connector,
     appChainID,
     SmartContractMethod.Read,
-    true
+    false
   );
   if (tokenContract) {
     const tokenDecimals = await tokenContract.methods.decimals().call();

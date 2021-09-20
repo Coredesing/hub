@@ -248,7 +248,6 @@ class CampaignService {
       .where('wallet_address', wallet_address)
       .where('campaign_id', campaign_id).first();
     if (existWl != null) {
-      console.log(`Existed record on whitelist with the same wallet_address ${wallet_address} and campaign_id ${campaign_id}`);
       ErrorFactory.badRequest('Bad request duplicate with wallet_address ' + wallet_address);
     }
     // check for whitelist submission
@@ -264,6 +263,7 @@ class CampaignService {
     whitelist.campaign_id = campaign_id;
     whitelist.email = email;
     await whitelist.save();
+
     whitelistSubmission.merge({ whitelist_user_id: whitelist.id });
     await whitelistSubmission.save();
     // remove all old key of white list on redis
@@ -272,7 +272,6 @@ class CampaignService {
     // find all key matched with key regex
     const keys = await Redis.keys(redisKeyRegex);
     for (const key of keys) {
-      console.log(key);
       await Redis.del(key);
     }
   }
@@ -287,10 +286,9 @@ class CampaignService {
     if (!campaign) {
       return false;
     }
-    let result = CampaignModel.query().where('id', campaign_id).update({
+    return CampaignModel.query().where('id', campaign_id).update({
       pick_winner_rule: rule
     });
-    return result;
   }
 }
 

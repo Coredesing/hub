@@ -50,7 +50,8 @@ class WhitelistUserService {
     // filter only users who completed every whitelist step
     if (params && params.whitelist_completed) {
       builder = this.buildQueryBuilder(params)
-        .with('whitelistSubmission', (query) => {
+        .with('whitelistSubmission')
+        .whereHas('whitelistSubmission', (query) => {
           query.where('self_twitter_status', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
             .andWhere('self_group_status', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
             .andWhere('self_channel_status', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
@@ -59,6 +60,23 @@ class WhitelistUserService {
             .andWhere('partner_group_status', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
             .andWhere('partner_channel_status', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
             .andWhere('partner_retweet_post_status', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
+        });
+    }
+
+    if (params && params.whitelist_pending) {
+      builder = this.buildQueryBuilder(params)
+        .with('whitelistSubmission')
+        .whereHas('whitelistSubmission', (query) => {
+          query.where((query) => {
+            query.where('self_twitter_status', '<>', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
+              .orWhere('self_group_status', '<>', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
+              .orWhere('self_channel_status', '<>', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
+              .orWhere('self_retweet_post_status', '<>', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
+              .orWhere('partner_twitter_status', '<>', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
+              .orWhere('partner_group_status', '<>', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
+              .orWhere('partner_channel_status', '<>', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
+              .orWhere('partner_retweet_post_status', '<>', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
+          })
         });
     }
     if (params.page && params.pageSize) {

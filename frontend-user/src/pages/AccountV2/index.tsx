@@ -4,10 +4,10 @@ import { Backdrop, CircularProgress } from '@material-ui/core';
 import { withRouter } from "react-router-dom";
 import { getBalance } from "../../store/actions/balance";
 import {
-  // getUserTier,
+  getUserTier,
   // getTiers,
   getUserInfo,
-} from "../../store/actions/sota-tiers";
+} from "@store/actions/sota-tiers";
 import { getAllowance } from "../../store/actions/sota-token";
 import Tiers from "./Tiers";
 import DefaultLayout from "../../components/Layout/DefaultLayout";
@@ -21,8 +21,8 @@ import { USER_STATUS } from "../../constants";
 // import { trimMiddlePartAddress } from "../../utils/accountAddress";
 import { ChainId } from "../../constants/network";
 // import NftTicket from "./NftTicket";
-// import CardsTicket from "./NftTicket/Cards";
-// import NeedHelp from "./NeedHelp";
+import CardsTicket from "./NftTicket/Cards";
+import NeedHelp from "./NeedHelp";
 import IdoPools from "./IdoPools";
 import axios from '../../services/axios';
 // import { numberWithCommas } from '../../utils/formatNumber';
@@ -31,6 +31,7 @@ import { WrapperAlert } from "../../components/Base/WrapperAlert";
 import { MenuLeft } from "./constants";
 import clsx from 'clsx';
 import IdoPoolProvider from "./context/IdoPoolProvider";
+import _ from 'lodash';
 
 // const TOKEN_ADDRESS = process.env.REACT_APP_PKF || "";
 // const TOKEN_UNI_ADDRESS = process.env.REACT_APP_UNI_LP || "";
@@ -43,7 +44,7 @@ const AccountV2 = (props: any) => {
   const dispatch = useDispatch();
 
   const { data: balance = {} } = useSelector((state: any) => state.balance);
-  const { data: userInfo = {} } = useSelector((state: any) => state.userInfo);
+ 
   const { isAuth, connectedAccount, wrongChain } = useAuth();
   // const [loadingGetHistory, setLoadingGetHistory] = useState(false);
 
@@ -73,9 +74,13 @@ const AccountV2 = (props: any) => {
   const [updatedSuccess, setUpdatedSuccess] = useState(false);
   // const [dataHistories, setDataHistories] = useState({}) as any;
   // const { data: tiers = {} } = useSelector((state: any) => state.tiers);
-  // const { data: userTier = 0 } = useSelector((state: any) => state.userTier);
+  const { data: userTier } = useSelector((state: any) => state.userTier);
+  // const { data: userInfo } = useSelector((state: any) => state.userInfo);
   const [userProfile, setUserProfile] = useState<{ [k in string]: any }>({});
   const [loadingUserProfile, setRenewUserProfile] = useState(false);
+  useEffect(() => {
+    dispatch(getUserTier(!wrongChain && connectedAccount ? connectedAccount : ''));
+  }, [wrongChain, connectedAccount, dispatch]);
 
   useEffect(() => {
     setRenewUserProfile(!!connectedAccount);
@@ -148,12 +153,9 @@ const AccountV2 = (props: any) => {
   // }, [connectedAccount]);
 
 
-
-
-  useEffect(() => {
-    connectedAccount && dispatch(getUserInfo(connectedAccount));
-  }, [connectedAccount, dispatch]);
-
+  // useEffect(() => {
+  //   connectedAccount && dispatch(getUserInfo(connectedAccount));
+  // }, [connectedAccount, dispatch]);
 
 
   return (
@@ -164,11 +166,11 @@ const AccountV2 = (props: any) => {
         }
 
         {/* appChainID > KOVAN ID => Not Ethereum mainnet/testnet */}
-        {(+appChainID?.appChainID > ChainId.KOVAN) && isKYC && activeMenuAccount === 'My Tier' && (
+        {/* {(+appChainID?.appChainID > ChainId.KOVAN) && isKYC && activeMenuAccount === 'My Tier' && (
           <WrapperAlert type='error'>
             <span>Please switch to the ETH network to Stake/Unstake</span>
           </WrapperAlert>
-        )}
+        )} */}
 
 
         {updatedSuccess &&
@@ -191,6 +193,7 @@ const AccountV2 = (props: any) => {
             <nav className={classes.tabAccount}>
               {
                 tabAccount.map((item, index) => {
+                  if(item.key === MenuLeft.ticket.key && userTier < 3) return null;
                   return (
                     <li
                       className={clsx(classes.itemTabAccount, {
@@ -221,7 +224,7 @@ const AccountV2 = (props: any) => {
                 notEth={(+appChainID?.appChainID > ChainId.KOVAN)}
                 classNamePrefix="account-infomation"
                 balance={balance}
-                userInfo={userInfo}
+                // userInfo={userInfo}
                 // tokenPKFDetails={tokenPKFDetails}
                 email={userProfile.email}
                 twitter={userProfile.user_twitter}
@@ -236,7 +239,7 @@ const AccountV2 = (props: any) => {
               />
             }
 
-            {activeMenuAccount === MenuLeft.tier.key &&
+            {activeMenuAccount === MenuLeft.rank.key &&
               <div className={classes.tier}>
                 <Tiers
                   showMoreInfomation={false}
@@ -244,7 +247,7 @@ const AccountV2 = (props: any) => {
                   // total={total}
                   isKYC={isKYC}
                   // tiers={tiers}
-                  userInfo={userInfo}
+                  // userInfo={userInfo}
                   // userTier={userTier}
                   emailVerified={emailVerified}
                   connectedAccount={connectedAccount}
@@ -257,15 +260,15 @@ const AccountV2 = (props: any) => {
             <IdoPoolProvider>
               {activeMenuAccount === MenuLeft.pool.key && <IdoPools />}
             </IdoPoolProvider>
-            {/* {activeMenuAccount === 'NFT Tickets' && <>
-              <NftTicket />
+            {activeMenuAccount === MenuLeft.ticket.key && userTier > 3 && <>
+              {/* <NftTicket /> */}
               <CardsTicket />
-            </>} */}
+            </>}
 
-            {/* {
-              activeMenuAccount === 'Need Help' &&
+            {
+              activeMenuAccount === MenuLeft.help.key &&
               <NeedHelp />
-            } */}
+            }
 
           </div>
         </div>

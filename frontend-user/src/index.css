@@ -241,3 +241,22 @@ button:disabled {
 .rounded {
   border-radius: 50%;
 }
+
+body {
+  padding-right: unset !important;
+  overflow: unset !important;
+  overflow-x: hidden !important;
+}
+
+body::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+body::-webkit-scrollbar-track {
+  background: #888;
+  border-radius: 12px;
+}
+body::-webkit-scrollbar-thumb {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+}

@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core';
 const useStyles = makeStyles((theme: any) => {
   return {
     modalStake: {
+      fontFamily: 'Firs Neue',
       '& .MuiPaper-root': {
         [theme.breakpoints.down('xs')]: {
           margin: '10px'
@@ -38,7 +39,8 @@ const useStyles = makeStyles((theme: any) => {
         },
         '& .token-detail': {
           display: 'flex',
-          alignItems: 'center'
+          alignItems: 'center',
+          fontWeight: 600,
         },
         '& .token-logo': {
           width: '22px',
@@ -63,12 +65,13 @@ const useStyles = makeStyles((theme: any) => {
         '& .subtitle': {
           marginBottom: '5px',
           fontWeight: 700,
-          color: '#FFFFFF'
+          color: '#FFFFFF',
+          fontFamily: 'inherit'
         }
       },
       '& .modal-content__foot': {
         borderTop: '1px solid #727272',
-        padding: '16px 0px 0px'
+        padding: '16px 0px 0px !important'
       },
     },
     notice: {

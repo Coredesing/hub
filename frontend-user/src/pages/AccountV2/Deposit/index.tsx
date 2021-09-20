@@ -18,7 +18,7 @@ import {sotaTokenActions} from "../../../store/constants/sota-token";
 import useUserTier from "../../../hooks/useUserTier";
 import ButtonLink from "../../../components/Base/ButtonLink";
 import DefaultLayout from "../../../components/Layout/DefaultLayout";
-import { ETH_CHAIN_ID } from '../../../constants/network'
+import { ETH_CHAIN_ID, ChainDefault } from '../../../constants/network'
 import {getBalance} from "../../../store/actions/balance";
 import { WrapperAlert } from '../../../components/Base/WrapperAlert';
 
@@ -45,9 +45,9 @@ const Deposit = (props: any) => {
   const [depositAmount, setDepositAmount] = useState('');
   const [disableDeposit, setDisableDeposit] = useState(true);
 
-  const {tokenDetails: tokenPKFDetails} = useTokenDetails(TOKEN_ADDRESS, 'eth');
-  const {tokenDetails: tokenUniLPDetails} = useTokenDetails(TOKEN_UNI_ADDRESS, 'eth');
-  const {tokenDetails: tokenMantraLPDetails} = useTokenDetails(TOKEN_MANTRA_ADDRESS, 'eth');
+  const {tokenDetails: tokenPKFDetails} = useTokenDetails(TOKEN_ADDRESS, ChainDefault.shortName || '');
+  const {tokenDetails: tokenUniLPDetails} = useTokenDetails(TOKEN_UNI_ADDRESS, ChainDefault.shortName || '');
+  const {tokenDetails: tokenMantraLPDetails} = useTokenDetails(TOKEN_MANTRA_ADDRESS, ChainDefault.shortName || '');
   const [listTokenDetails, setListTokenDetails] = useState([]) as any;
   const [openModalTransactionSubmitting, setOpenModalTransactionSubmitting] = useState(false)
   const [transactionHashes, setTransactionHashes] = useState([]) as any;
@@ -71,7 +71,7 @@ const Deposit = (props: any) => {
   const [currentAllowance, setCurrentAllowance] = useState('0');
   const [currentRate, setCurrentRate] = useState(0);
 
-  const {total} = useUserTier(connectedAccount || '', 'eth')
+  const {total} = useUserTier(connectedAccount || '', ChainDefault.shortName || '')
 
   const setDefaultToken = () => {
     if(!currentToken) {

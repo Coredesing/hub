@@ -15,13 +15,12 @@ import {
   withWidth,
 } from "@material-ui/core";
 
-import Pagination from '@material-ui/lab/Pagination';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import axios from '../../../services/axios';
 import useAuth from '../../../hooks/useAuth';
 // import useFetch from '../../../hooks/useFetch';
 import { getAccessPoolText } from "../../../utils/campaign";
-import { NULL_AMOUNT, POOL_STATUS_JOINED, POOL_STATUS_TEXT} from "../../../constants";
+import { NULL_AMOUNT, POOL_STATUS_JOINED, POOL_STATUS_TEXT } from "../../../constants";
 import useWalletSignature from '../../../hooks/useWalletSignature';
 import { alertFailure, alertSuccess } from '../../../store/actions/alert';
 import ModalWhitelistCancel from "./ModalWhitelistCancel";
@@ -50,6 +49,7 @@ import clsx from 'clsx';
 import { getRoute } from "../../TicketSale/utils";
 import { numberWithCommas } from "../../../utils/formatNumber";
 import { IdoPoolContext, ObjType } from "../context/IdoPoolContext";
+import Pagination from "@base-components/Pagination";
 
 const IdoPools = (props: any) => {
   const styles = { ...useStyles(), ...useTabStyles() };
@@ -75,31 +75,33 @@ const IdoPools = (props: any) => {
   const now = unixTimeNow();
 
   const onChangePage = (e: any, page: number) => {
+    if(pagination.page === page) return;
     if (!loadingPools) {
-      setFilter && setFilter((f: ObjType) => ({...f, page}));
+      setFilter && setFilter((f: ObjType) => ({ ...f, page }));
       setLoadingPools && setLoadingPools(true);
     }
   }
   const handleChangeStatus = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
     const name = event.target.name as string;
     const value = event.target.value;
-    setFilter && setFilter((f: ObjType) => ({...f, [name]: value}));
+    setFilter && setFilter((f: ObjType) => ({ ...f, [name]: value }));
     setLoadingPools && setLoadingPools(true);
   };
 
   const handleChangeType = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
     const name = event.target.name as string;
     const value = event.target.value;
-    setFilter && setFilter((f: ObjType) => ({...f, [name]: value}));
+    setFilter && setFilter((f: ObjType) => ({ ...f, [name]: value }));
     setLoadingPools && setLoadingPools(true);
   };
 
   // when mounted page
   useEffect(() => {
-    if(!dataPools?.length) {
+    if (!connectedAccount) return;
+    if (!dataPools?.length) {
       setLoadingPools && setLoadingPools(true);
     }
-  }, [dataPools, setLoadingPools]);
+  }, [dataPools, setLoadingPools, connectedAccount]);
 
   const handleInputChange = debounce((e: any) => {
     setFilter && setFilter((filter: ObjType) => ({
@@ -151,21 +153,21 @@ const IdoPools = (props: any) => {
       networkAvailable: pool?.networkAvailable || pool?.network_available,
     });
     let amount = '';
-    if(isErc721(pool.token_type)) {
+    if (isErc721(pool.token_type)) {
       const isClaim = pool.process === 'only-claim';
-      if(isClaim) {
+      if (isClaim) {
         amount = pool.userClaimInfo?.user_claimed || 0;
       } else {
         amount = pool.userClaimInfo?.user_purchased || 0;
       }
       return `${numberWithCommas(amount, 0)} ${pool.symbol?.toUpperCase()}`
     }
-    if(isErc20(pool.token_type)) {
+    if (isErc20(pool.token_type)) {
       amount = pool.userClaimInfo?.user_purchased || 0;
-      const ethRate = pool.accept_currency === 'eth' ? pool.ether_conversion_rate: pool.token_conversion_rate;
+      const ethRate = pool.accept_currency === 'eth' ? pool.ether_conversion_rate : pool.token_conversion_rate;
       return `${numberWithCommas((+amount * +ethRate) || 0, 0)} ${currencyName?.toUpperCase()}`
     }
-    
+
     if (pool.allowcation_amount === NULL_AMOUNT) return '-';
     let allowcationAmount = pool.allowcation_amount;
     if (new BigNumber(allowcationAmount).lte(0)) return '-';
@@ -314,7 +316,7 @@ const IdoPools = (props: any) => {
       <h2 className={styles.tabTitle}>IDO Pools</h2>
       <div className={styles.tabHeader}>
         <div className="filter">
-          <SelectBox
+          {/* <SelectBox
             IconComponent={ExpandMoreIcon}
             value={filter.status}
             onChange={handleChangeStatus}
@@ -324,7 +326,7 @@ const IdoPools = (props: any) => {
             items={listStatuses}
             itemNameValue={'value'}
             itemNameShowValue={'babel'}
-          />
+          /> */}
           <SelectBox
             IconComponent={ExpandMoreIcon}
             value={filter.type}
@@ -351,7 +353,7 @@ const IdoPools = (props: any) => {
                 <TableCell align="left">Type</TableCell>
                 <TableCell align="left">Status</TableCell>
                 <TableCell align="left">Allocation</TableCell>
-                <TableCell align="left" style={{width: '140px'}}>Action</TableCell>
+                <TableCell align="left" style={{ width: '140px' }}>Action</TableCell>
               </TableRowHead>
             </TableHead>
             <TableBody>
@@ -370,7 +372,7 @@ const IdoPools = (props: any) => {
                   </TableCell>
                   <TableCell align="left">{allocationAmount(row)}</TableCell>
                   <TableCell align="left">
-                    <Link  to={`${getRoute(row.token_type)}/${row.id}`} className={clsx(styles.btnDetail, styles.btnAct)}>
+                    <Link to={`${getRoute(row.token_type)}/${row.id}`} className={clsx(styles.btnDetail, styles.btnAct)}>
                       Pool Detail
                     </Link>
                     {/* {actionButton(row)} */}
@@ -466,7 +468,12 @@ const IdoPools = (props: any) => {
       </Hidden>
 
       <div className={styles.pagination}>
-        {
+        <Pagination
+          count={pagination?.totalPage || 0}
+          onChange={onChangePage}
+          page={pagination.page}
+        />
+        {/* {
           pagination.total > 1 && <Pagination
             count={pagination.total || 0}
             color="primary"
@@ -474,7 +481,7 @@ const IdoPools = (props: any) => {
             onChange={onChangePage}
             page={pagination.page}
           />
-        }
+        } */}
       </div>
 
       <ModalWhitelistCancel

@@ -78,9 +78,42 @@ export const useCardStyles = makeStyles((theme: any) => {
     cards: {
       display: 'grid',
       gap: '8px',
-      gridTemplateColumns: 'repeat(auto-fit, 166px)',
+      gridTemplateColumns: 'repeat(auto-fit, 200px)',
+      placeContent: 'center',
 
 
+    },
+    wrapperCard: {
+      '& .info': {
+        paddingLeft: '4px',
+        paddingRight: '4px',
+        textAlign: 'center',
+        '& h4, & h5': {
+          margin: 0,
+          padding: 0,
+          fontFamily: 'Firs Neue',
+          fontStyle: 'normal',
+          color: '#FFFFFF',
+        },
+        '& h4': {
+          fontWeight: 600,
+          fontSize: '14px',
+          lineHeight: '24px',
+        },
+        '& h5': {
+          fontWeight: 'normal',
+          fontSize: '12px',
+          lineHeight: '20px',
+          ...typeDisplayFlex,
+          gap: '4px',
+          alignItems: 'center',
+
+          '& img': {
+            width: '14px',
+            height: '14px',
+          }
+        }
+      }
     },
     card: {
       padding: '10px',
@@ -110,7 +143,7 @@ export const useCardStyles = makeStyles((theme: any) => {
       },
 
       '& .img-hidden, & .img-shown': {
-        width: '146px',
+        // width: '146px',
         height: '215px',
         cursor: 'pointer',
         transformStyle: 'preserve-3d',
@@ -139,6 +172,7 @@ export const useCardStyles = makeStyles((theme: any) => {
       '& .info': {
         paddingLeft: '4px',
         paddingRight: '4px',
+        textAlign: 'center',
         '& h4, & h5': {
           margin: 0,
           padding: 0,

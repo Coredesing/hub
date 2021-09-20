@@ -119,7 +119,7 @@ const fqaList = [
     {
         title: "What is Red Kite Point?",
         content: <p>Red Kite Point is not a token; it is just a unique point on our launchpad, Red Kite.<br/><br/>
-            Each Red Kite point is equivalent to 1 PKF staked on Red Kite. Even if you don't stake any PKF on Red Kite, you can get the same tier benefits.<br/><br/>
+            Each Red Kite point is equivalent to 1 PKF staked on Red Kite. Even if you don't stake any PKF on Red Kite, you can get the same rank benefits.<br/><br/>
             Note: Red Kite point is only meaningful in red kite, it no longer exists when KSM gets unlocked.</p>
     },
 

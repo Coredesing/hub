@@ -119,16 +119,23 @@ const useStyles = makeStyles((theme: any) => {
     wrapperImgBanner: {
       width: "100%",
       position: "relative",
+      maxWidth: '1120px',
+      left: '50%',
+      transform: 'translate(-50%)',
       // position: "absolute",
       // top: "10px",
       // left: 0,
-      display: "grid",
-      placeContent: "center",
-      paddingLeft: "84px",
-      paddingRight: "84px",
+      // display: "grid",
+      // placeContent: "center",
+      // paddingLeft: "84px",
+      // paddingRight: "84px",
+      [theme.breakpoints.down("md")]: {
+        width: "calc(100% + 120px)",
+      },
       [theme.breakpoints.down("xs")]: {
-        paddingLeft: "12px",
-        paddingRight: "12px",
+        // paddingLeft: "12px",
+        // paddingRight: "12px",
+        width: "calc(100% + 56px)",
       },
     },
     imgBanner: {
@@ -252,7 +259,7 @@ const useStyles = makeStyles((theme: any) => {
       paddingRight: "0",
       paddingTop: "120px",
       paddingBottom: "130px",
-      height: "770px",
+      minHeight: "770px",
       [theme.breakpoints.down("xs")]: {
         height: "520px",
         padding: "28px",
@@ -261,6 +268,7 @@ const useStyles = makeStyles((theme: any) => {
       },
     },
     partners: {
+      background: '#171717',
       paddingTop: "120px",
       paddingBottom: "130px",
       [theme.breakpoints.down("xs")]: {

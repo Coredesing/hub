@@ -46,6 +46,33 @@ class HomeController {
       return HelperUtils.responseErrorInternal('ERROR: Get performance fail!');
     }
   }
+
+  async getLegendImages({ request, auth, params }) {
+    try {
+      const nftId = parseInt(params.campaignId);
+      const LEGEND = HelperUtils.getLegendData()
+
+      if (!LEGEND) {
+        return HelperUtils.responseErrorInternal('ERROR: Fetch API error');
+      }
+
+      const nft = LEGEND.filter(data => data.id === nftId)
+      let image = 'https://gamefi-public.s3.amazonaws.com/legend-valid.png';
+
+      if (nft.valid === false) {
+        image = 'https://gamefi-public.s3.amazonaws.com/legend-expired.png'
+      }
+
+      return {
+        image: image,
+        external_url: image,
+        description: 'GameFi NFT Legend',
+        name: 'Legend',
+      };
+    } catch (e) {
+      return HelperUtils.responseErrorInternal('ERROR: Fetch API error');
+    }
+  }
 }
 
 module.exports = HomeController

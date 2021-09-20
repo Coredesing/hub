@@ -60,6 +60,61 @@ export const useStyles = makeStyles((theme: any) => ({
                 },
             },
         },
+    },
+    boxTimeV2: {
+        display: 'grid',
+        gap: '5px',
+        padding: '7px 2px',
+        background: '#171717',
+        minHeight: '42px',
+        fontSize: '16px',
+        [theme.breakpoints.down('xs')]: {
+            fontSize: '14px'
+        },
+        '&.vertical': {
+            gridTemplateColumns: '1fr',
+            placeContent: 'center',
+            placeItems: 'center',
+        },
+        '&.horizontal': {
+            gridTemplateColumns: 'auto auto',
+            placeContent: 'center',
+            placeItems: 'center',
+        }
+    },
+    text: {
+        fontFamily: 'Firs Neue',
+        fontStyle: 'normal',
+        color: ' #fff',
+        fontWeight: 'normal',
+        fontSize: '12px',
+        // lineHeight: '16px',
+        mixBlendMode: 'normal',
+        textTransform: 'uppercase'
+    },
+    timeEnd: {
+        ...typeDisplayFlex,
+        alignItems: 'center',
+        // padding: '3px 8px',
+        borderRadius: '4px',
+        // background: '#2E2E2E',
+        fontFamily: 'Firs Neue',
+        fontStyle: 'normal',
+        color: ' #fff',
+        fontWeight: 600,
+        fontSize: 'inherit',
+        // lineHeight: '28px',
+        mixBlendMode: 'normal',
+        '& .sp1': {
+            display: 'block',
+            marginRight: '6px'
+        }
+    },
+    boxTitleTimeV2: {
+        display: 'grid',
+        gridTemplateColumns: '12px auto',
+        gap: '2px',
+        alignItems: 'center'
     }
 }));
 

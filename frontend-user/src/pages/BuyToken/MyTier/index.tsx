@@ -21,7 +21,7 @@ type MyTierProps = {
   poolDetails: any,
 }
 
-const headers = ['Tier', 'Allocation (%)', 'Start Buy Time', 'End Buy Time'];
+const headers = ['Rank', 'Allocation (%)', 'Start Buy Time', 'End Buy Time'];
 
 const MyTier: React.FC<MyTierProps> = ({ tiers, poolDetails }: MyTierProps) => {
   const styles = useStyles();
@@ -34,7 +34,7 @@ const MyTier: React.FC<MyTierProps> = ({ tiers, poolDetails }: MyTierProps) => {
       {/*   To upgrade your tier, please click <Link to="/account" style={{ color: '#6399FF', textDecoration: 'underline' }}>here</Link> ! */}
       {/* </p> */}
       <p className={styles.MyTierRulesHeader}>
-        At current tier, you will be able to purchase with the following rules:
+        At current rank, you will be able to purchase with the following rules:
       </p>
         <TableContainer component={Paper} className={styles.tableContainer}>
           <Table className={styles.table} aria-label="simple table">

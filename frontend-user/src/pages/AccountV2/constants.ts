@@ -14,9 +14,9 @@ export const MenuLeft: IMenuLeft = {
         name: 'My Profile',
         icon: '/images/account_v3/icons/icon_my_profile.svg',
     },
-    tier: {
-        key: 'tier',
-        name: 'My Tier',
+    rank: {
+        key: 'rank',
+        name: 'My Rank',
         icon: '/images/account_v3/icons/icon_my_tier.svg',
     },
     pool: {
@@ -25,14 +25,14 @@ export const MenuLeft: IMenuLeft = {
         icon: '/images/icons/icon_my_pools.svg',
     },
     ticket: {
-        key: 'ticket',
-        //   name: 'NFT Tickets',
-        //   icon: '/images/icons/ticket.svg',
+        key: 'nft',
+        name: 'NFT',
+        icon: '/images/icons/ticket.svg',
     },
     help: {
         key: 'help',
-        //   name: 'Need Help',
-        //   icon: '/images/account_v3/icons/icon_need_help.svg',
+        name: 'Need Help',
+        icon: '/images/account_v3/icons/icon_need_help.svg',
     }
 }
 

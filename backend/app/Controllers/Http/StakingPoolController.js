@@ -1,7 +1,7 @@
 'use strict'
 const StakingPoolModel = use('App/Models/StakingPool');
 const HelperUtils = use('App/Common/HelperUtils');
-const RedisUtils = use('App/Common/RedisUtils')
+const RedisStakingPoolUtils = use('App/Common/RedisStakingPoolUtils')
 const Const = use('App/Common/Const');
 const Web3 = require('web3');
 
@@ -43,6 +43,7 @@ class StakingPoolController {
         reward_token_price: data.reward_token_price,
       });
 
+      await RedisStakingPoolUtils.deleteRedisStakingPoolsDetail()
       return HelperUtils.responseSuccess();
     } catch (e) {
       console.log(e)
@@ -90,6 +91,7 @@ class StakingPoolController {
         reward_token_price: data.reward_token_price,
       });
 
+      await RedisStakingPoolUtils.deleteRedisStakingPoolsDetail()
       return HelperUtils.responseSuccess();
     } catch (e) {
       console.log(e)
@@ -113,6 +115,7 @@ class StakingPoolController {
         is_display: inputParams.is_display,
       });
 
+      await RedisStakingPoolUtils.deleteRedisStakingPoolsDetail()
       return HelperUtils.responseSuccess();
     } catch (e) {
       console.log(e)
@@ -148,8 +151,12 @@ class StakingPoolController {
 
   async getPublicPoolList({ request }) {
     try {
-      let listData = await StakingPoolModel.query().where('is_display', 1).fetch();
+      if (await RedisStakingPoolUtils.existRedisStakingPoolsDetail()) {
+        return HelperUtils.responseSuccess(JSON.parse(await RedisStakingPoolUtils.getRedisStakingPoolsDetail()))
+      }
 
+      let listData = await StakingPoolModel.query().where('is_display', 1).fetch();
+      await RedisStakingPoolUtils.setRedisStakingPoolsDetail(listData)
       return HelperUtils.responseSuccess(listData);
     } catch (e) {
       console.log(e)
@@ -163,23 +170,23 @@ class StakingPoolController {
         return HelperUtils.responseSuccess({
           start_time: process.env.EVENT_START_TIME,
           end_time: process.env.EVENT_END_TIME,
-          limit: 10,
+          limit: process.env.EVENT_LIMIT,
           top: [],
           disable: true,
         });
       }
 
-      if (!await RedisUtils.checkExistTopUsersStaking()) {
+      if (!await RedisStakingPoolUtils.checkExistTopUsersStaking()) {
         return HelperUtils.responseSuccess({
           start_time: process.env.EVENT_START_TIME,
           end_time: process.env.EVENT_END_TIME,
-          limit: 10,
+          limit: process.env.EVENT_LIMIT,
           top: [],
           disable: false,
         });
       }
 
-      let data = await RedisUtils.getRedisTopUsersStaking()
+      let data = await RedisStakingPoolUtils.getRedisTopUsersStaking()
       data = JSON.parse(data)
       data.disable = false
 

@@ -46,6 +46,7 @@ Route.group(() => {
   // home
   Route.get('home/performance', 'HomeController.getPerformance');
   Route.post('home/subscribe', 'HomeController.subscribe');
+  Route.get('/legend/:id', 'HomeController.getLegendImages');
 
   // pool
   Route.get('pool/:campaignId', 'PoolController.getPoolPublic');
@@ -127,6 +128,9 @@ Route.group(() => {
   Route.put('pool/:campaignId/whitelist-submission/:walletAddress', 'WhiteListSubmissionController.updateWhitelistSubmission');
   Route.delete('pool/:campaignId/participants/:walletAddress/delete', 'WhiteListUserController.deleteWhiteList');
   Route.post('pool/winner-random/:campaignId/:number', 'WhiteListUserController.getRandomWinners');
+  Route.post('pool/:campaignId/whitelist-submission/batch/verify', 'WhiteListSubmissionController.verifyBatchWhitelistSubmission');
+  Route.post('pool/:campaignId/whitelist-submission/batch/approve', 'WhiteListSubmissionController.approveBatchWhitelistSubmission');
+  Route.post('pool/:campaignId/whitelist-submission/:walletAddress/verify', 'WhiteListSubmissionController.verifyWhitelistSubmission');
 
   // Winners
   Route.get('pool/:campaignId/winners', 'WinnerListUserController.getWinnerListAdmin');

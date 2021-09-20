@@ -4,8 +4,8 @@ import { typeDisplayFlex } from '@styles/CommonStyle';
 const useStyles = makeStyles((theme: any) => {
   return {
     wrapper: {
-      backgroundImage: 'url(/images/bg_layout.svg)',
-      backgroundRepeat: 'no-repeat',
+      // backgroundImage: 'url(/images/bg_layout.svg)',
+      // backgroundRepeat: 'no-repeat',
       backgroundSize: '100% auto',
       backgroundPosition: '0px 80px',
       display: 'flex',
@@ -17,36 +17,42 @@ const useStyles = makeStyles((theme: any) => {
       color: '#FFF',
       fontFamily: 'DM Sans',
       position: 'relative',
-      paddingTop: 90,
+      marginTop: '20px',
+      // paddingTop: 90,
 
       '& .content': {
         maxWidth: '1120px',
         width: '100%',
         paddingLeft: '10px',
         paddingRight: '10px',
+        
         [theme.breakpoints.down('xs')]: {
           // padding: '20px 24px',
           width: '90%'
         }
       },
       '& .controller-area': {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'flex-end',
+        marginBottom: '20px',
+        display: 'grid',
+        gap: '10px',
+        gridTemplateColumns: 'auto auto',
         [theme.breakpoints.down('xs')]: {
-          flexDirection: 'column',
-          alignItems: 'flex-start',
+          gridTemplateColumns: '1fr',
         },
         // justifyContent: 'space-between',
 
-        marginBottom: '20px',
-
+        '& .controller-area__left': {
+          ...typeDisplayFlex,
+          alignItems: 'center',
+        },
 
         '& .controller-area__right': {
-          display: 'flex',
-          flexDirection: 'row',
-          maxWidth: '100%',
-          marginLeft: 'auto',
+          display: 'grid',
+          justifyContent: 'flex-end',
+          [theme.breakpoints.down('xs')]: {
+            display: 'unset',
+          },
+          // marginLeft: 'auto',
           // '& :not(:first-child)': {
           //   marginLeft: '20px',
           //   [theme.breakpoints.down('xs')]: {
@@ -57,9 +63,12 @@ const useStyles = makeStyles((theme: any) => {
 
         '& .controller-area__search': {
           position: 'relative',
-          width: '180px',
-          maxWidth: '100%',
+          width: '100%',
+          maxWidth: '200px',
           height: '42px',
+          [theme.breakpoints.down('xs')]: {
+            maxWidth: '100%',
+          },
 
           '& input': {
             background: '#222228',
@@ -100,7 +109,7 @@ const useStyles = makeStyles((theme: any) => {
 
         '& .form-control-label': {
           [theme.breakpoints.down('xs')]: {
-            maxWidth: '47.5%',
+            // maxWidth: '47.5%',
           },
           '&:not(:first-child)': {
             marginLeft: '20px',
@@ -125,7 +134,7 @@ const useStyles = makeStyles((theme: any) => {
         padding: '15px 21px',
         borderRadius: '24px',
         [theme.breakpoints.down('xs')]: {
-          padding: '10px 0px',
+          padding: '10px',
           borderRadius: '12px',
           width: '100%'
         }
@@ -265,7 +274,7 @@ const useStyles = makeStyles((theme: any) => {
 
     group: {
       marginTop: '16px',
-
+      width: 'fit-content',
       '& .input-group': {
         background: '#222228',
         border: '1px solid #44454B',

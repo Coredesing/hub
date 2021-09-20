@@ -30,16 +30,17 @@ const useStakingPoolDetail = (
       }
 
       setLoading(true);
+      const linearAcceptedToken = await contract.methods.linearAcceptedToken().call();
 
-      const [allocEndBlockNumber, allocRewardPerBlock, allocRewardToken, totalAllocPoint, linearAcceptedToken] = await Promise.all([
-        contract.methods.allocEndBlockNumber().call(),
-        contract.methods.allocRewardPerBlock().call(),
-        contract.methods.allocRewardToken().call(),
-        contract.methods.totalAllocPoint().call(),
-        contract.methods.linearAcceptedToken().call(),
-      ]);
       switch (poolType) {
         case 'alloc':
+          const [allocEndBlockNumber, allocRewardPerBlock, allocRewardToken, totalAllocPoint] = await Promise.all([
+            contract.methods.allocEndBlockNumber().call(),
+            contract.methods.allocRewardPerBlock().call(),
+            contract.methods.allocRewardToken().call(),
+            contract.methods.totalAllocPoint().call(),
+          ]);
+
           const allocData = await contract.methods.allocPoolInfo(BigNumber.from(poolId)).call();
           setPoolDetail({
             rewardToken: allocRewardToken,

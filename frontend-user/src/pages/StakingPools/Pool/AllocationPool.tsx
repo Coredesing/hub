@@ -27,14 +27,13 @@ import useAllocUnstake from '../hook/useAllocUnstake';
 import useAllocClaim from '../hook/useAllocClaim';
 import useAllocClaimPendingWithdraw from '../hook/useAllocClaimPendingWithdraw';
 
-import { ETH_CHAIN_ID } from '../../../constants/network'
+import { ChainDefault, ETH_CHAIN_ID } from '../../../constants/network'
 import { useTypedSelector } from '../../../hooks/useTypedSelector';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { BigNumber, utils, ethers } from 'ethers';
 
 const ONE_DAY_IN_SECONDS = 86400;
 const EST_BLOCK_PER_YEAR = 2369600; // Number of block per year, with estimated 20s/block
-const ETH_RPC_URL = process.env.REACT_APP_NETWORK_URL || "";
 const ArrowIcon = () => {
   return (
     <svg width="16" height="9" viewBox="0 0 16 9" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -42,7 +41,7 @@ const ArrowIcon = () => {
     </svg>
   )
 }
-const provider = new ethers.providers.JsonRpcProvider(ETH_RPC_URL);
+const provider = new ethers.providers.JsonRpcProvider(ChainDefault?.details?.rpcUrls?.[0]);
 const AllocationPool = (props: any) => {
   const { connectedAccount, poolDetail, poolAddress, reload, setOpenModalTransactionSubmitting, setTransactionHashes } = props;
   const [blockNumber, setBlockNumber] = useState<number>(0);
@@ -57,8 +56,8 @@ const AllocationPool = (props: any) => {
   const dispatch = useDispatch();
   
   const { appChainID, walletChainID } = useTypedSelector(state => state.appNetwork).data;
-  const {tokenDetails} = useTokenDetails(poolDetail?.lpToken, 'eth');
-  const {tokenDetails: rewardTokenDetails} = useTokenDetails(poolDetail?.rewardToken, 'eth');
+  const {tokenDetails} = useTokenDetails(poolDetail?.lpToken, ChainDefault.shortName || '');
+  const {tokenDetails: rewardTokenDetails} = useTokenDetails(poolDetail?.rewardToken, ChainDefault.shortName || '');
   const [tokenAllowance, setTokenAllowance] = useState(BigNumber.from('0'));
   const { retrieveTokenAllowance } = useTokenAllowance();
   const [tokenBalance, setTokenBalance] = useState('0');

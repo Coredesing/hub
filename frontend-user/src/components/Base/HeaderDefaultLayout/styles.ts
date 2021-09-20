@@ -300,7 +300,7 @@ const useStyles = makeStyles((theme) => {
       color: "#FFFFFF",
       font: "normal normal bold 16px/24px DM Sans",
       // position: 'relative',
-      zIndex: 1000,
+      zIndex: 10000,
       [theme.breakpoints.down("md")]: {
         gridTemplateColumns: "173px 60px",
         justifyContent: "space-between",
@@ -429,6 +429,10 @@ const useStyles = makeStyles((theme) => {
         lineHeight: "24px",
         color: "#FFFFFF",
         mixBlendMode: "normal",
+        "&:hover": {
+          color: "#FFFFFF",
+          textDecoration: 'underline'
+        },
       },
     },
     headerAccount: {
@@ -445,10 +449,11 @@ const useStyles = makeStyles((theme) => {
       fontWeight: 600,
       fontSize: "14px",
       lineHeight: "24px",
-      color: "#FFFFFF",
+      color: "#FFFFFF !important",
       mixBlendMode: "normal",
       "&:hover": {
         color: "#FFFFFF",
+        textDecoration: 'underline'
       },
     },
     headerAccBtn: {

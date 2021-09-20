@@ -43,6 +43,7 @@ export const POOL_IS_PRIVATE = {
   PUBLIC: 0,
   PRIVATE: 1,
   SEED: 2,
+  COMMUNITY: 3,
 };
 export const PICK_WINNER_RULE = {
   RULE_NORMAL: 'rule-normal',

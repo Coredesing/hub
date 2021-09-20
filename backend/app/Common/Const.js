@@ -11,6 +11,7 @@ module.exports = Object.freeze({
     MANTRA_STAKE: 'MantraStake',
     STAKING_POOL: 'StakingPool',
     STAKING_CONTEST: 'StakingContest',
+    Legend: 'Legend',
   },
   TX_TABLE: {
     CAMPAIGN: 1,
@@ -198,6 +199,10 @@ module.exports = Object.freeze({
   TOKEN_TYPE: {
     ERC20: 'erc20',
     ERC721: 'erc721',
+  },
+  STAKING_POOL_TYPE: {
+    ALLOC: 'alloc',
+    LINEAR: 'linear'
   },
   TIER_CACHED_TTL: 10 * 60 * 1000, // 10 minutes
 });

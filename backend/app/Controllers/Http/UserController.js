@@ -29,7 +29,7 @@ const BlockPassModel = use('App/Models/BlockPass');
 const ExportUserModel = use('App/Models/ExportUser');
 
 const HelperUtils = use('App/Common/HelperUtils');
-const RedisUtils = use('App/Common/RedisUtils');
+const RedisUserUtils = use('App/Common/RedisUserUtils');
 const SendForgotPasswordJob = use('App/Jobs/SendForgotPasswordJob');
 const ExportUsersJob = use('App/Jobs/ExportUsers');
 
@@ -60,7 +60,7 @@ class UserController {
       let userList = JSON.parse(JSON.stringify(await userQuery.paginate(page, limit)));
 
       const userAdditionInfoPromises = userList.data.map(async (u) => {
-        const tierInfo = await HelperUtils.getUserTierSmart(u.wallet_address);
+        const tierInfo = await HelperUtils.getUserTierSmartWithCached(u.wallet_address);
         return { tier: tierInfo[0], total_pkf: tierInfo[1], staked_pkf: tierInfo[2], ksm_bonus_pkf: tierInfo[3] }
       });
 
@@ -128,21 +128,9 @@ class UserController {
     try {
       const params = request.all();
       const wallet_address = params.wallet_address;
-
-      if (await RedisUtils.checkExistRedisUserTierBalance(wallet_address)) {
-        const cached = JSON.parse(await RedisUtils.getRedisUserTierBalance(wallet_address));
-
-        return HelperUtils.responseSuccess({
-          tier: cached.data[0],
-          stakedInfo: {
-            tokenStaked: new BigNumber(cached.data[2]).toFixed(4),
-            uniStaked: new BigNumber(0).toFixed(4)
-          },
-        });
-      }
-
-      const tierInfo = await HelperUtils.getUserTierSmart(wallet_address);
-      RedisUtils.createRedisUserTierBalance(wallet_address, tierInfo);
+      const tierInfo = await HelperUtils.getUserTierSmartWithCached(wallet_address);
+      const Legend = HelperUtils.getLegendIdByOwner(wallet_address);
+      const id = Legend ? Legend.id : 0
 
       return HelperUtils.responseSuccess({
         tier: tierInfo[0],
@@ -150,6 +138,7 @@ class UserController {
           tokenStaked: new BigNumber(tierInfo[2]).toFixed(4),
           uniStaked: new BigNumber(0).toFixed(4)
         },
+        id: id,
       });
     } catch (e) {
       console.log('tierInfo error', e)
@@ -161,6 +150,12 @@ class UserController {
     try {
       const params = request.all();
       const wallet_address = params.wallet_address;
+
+      if (await RedisUserUtils.existRedisUserProfile(wallet_address)) {
+        const user = JSON.parse(await RedisUserUtils.getRedisUserProfile(wallet_address))
+        return HelperUtils.responseSuccess({user: user})
+      }
+
       const findedUser = await UserModel.query().where('wallet_address', wallet_address).first();
       if (!findedUser) {
         return HelperUtils.responseNotFound();
@@ -169,15 +164,21 @@ class UserController {
         await (new WhitelistSubmissionService).findSubmission({ wallet_address })
       ));
 
+      const user = {
+        email: findedUser.email,
+        id: findedUser.id,
+        status: findedUser.status,
+        is_kyc: findedUser.is_kyc,
+        user_twitter: whitelistSubmission && whitelistSubmission.user_twitter,
+        user_telegram: whitelistSubmission && whitelistSubmission.user_telegram,
+      }
+
+      if (user.is_kyc && user.status) {
+        await RedisUserUtils.setRedisUserProfile(wallet_address, user)
+      }
+
       return HelperUtils.responseSuccess({
-        user: {
-          email: findedUser.email,
-          id: findedUser.id,
-          status: findedUser.status,
-          is_kyc: findedUser.is_kyc,
-          user_twitter: whitelistSubmission && whitelistSubmission.user_twitter,
-          user_telegram: whitelistSubmission && whitelistSubmission.user_telegram,
-        }
+        user: user,
       });
     } catch (e) {
       console.log(e);
@@ -208,6 +209,7 @@ class UserController {
         });
       }
 
+      await RedisUserUtils.deleteRedisUserProfile(wallet_address)
       return HelperUtils.responseSuccess({
         user: {
           ...params,
@@ -492,7 +494,7 @@ class UserController {
         return HelperUtils.responseSuccess(formatDataPrivateWinner(tier, isPublicWinner));
       } else {
         // Get Tier in smart contract
-        const userTier = (await HelperUtils.getUserTierSmart(walletAddress))[0];
+        const userTier = (await HelperUtils.getUserTierSmartWithCached(walletAddress))[0];
         const tierDb = await TierModel.query().where('campaign_id', campaignId).where('level', userTier).first();
         if (!tierDb) {
           return HelperUtils.responseSuccess(formatDataPrivateWinner({
@@ -522,19 +524,20 @@ class UserController {
           }, isPublicWinner));
         }
 
-        // user not winner
-        if (isKYCRequired) {
-          const tier = {
-            min_buy: 0,
-            max_buy: new BigNumber(maxTotalBonus).toFixed(),
-            start_time: tierDb.start_time,
-            end_time: tierDb.end_time,
-            level: userTier
-          }
-          return HelperUtils.responseSuccess(formatDataPrivateWinner(tier, isPublicWinner));
+        const tier = {
+          min_buy: 0,
+          max_buy: new BigNumber(maxTotalBonus).toFixed(),
+          start_time: tierDb.start_time,
+          end_time: tierDb.end_time,
+          level: userTier
         }
         // user not winner
-        return HelperUtils.responseBadRequest();
+        if (isKYCRequired) {
+          return HelperUtils.responseSuccess(formatDataPrivateWinner(tier, isPublicWinner));
+        }
+
+        // user not winner
+        return HelperUtils.responseSuccess(formatDataPrivateWinner(tier, isPublicWinner));
       }
     } catch (e) {
       console.log(e);

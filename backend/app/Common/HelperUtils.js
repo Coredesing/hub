@@ -24,6 +24,7 @@ const { abi: CONTRACT_CLAIM_ABI } = CONTRACT_CONFIGS.CONTRACT_CLAIMABLE;
 const GAFI_SMART_CONTRACT_ADDRESS = process.env.GAFI_SMART_CONTRACT_ADDRESS
 const UNI_LP_GAFI_SMART_CONTRACT_ADDRESS = process.env.UNI_LP_GAFI_SMART_CONTRACT_ADDRESS
 const STAKING_POOL_SMART_CONTRACT = process.env.STAKING_POOL_SMART_CONTRACT
+const LEGEND_DATA = NETWORK_CONFIGS.contracts[Const.CONTRACTS.Legend].DATA;
 
 /**
  * Switch Link Web3
@@ -321,6 +322,17 @@ const getStakingPool = async (wallet_address) => {
   };
 }
 
+const getUserTierSmartWithCached = async (wallet_address) => {
+  if (await RedisUtils.checkExistRedisUserTierBalance(wallet_address)) {
+    return JSON.parse(await RedisUtils.getRedisUserTierBalance(wallet_address));
+  }
+
+  const tierInfo = await getUserTierSmart(wallet_address);
+  RedisUtils.createRedisUserTierBalance(wallet_address, tierInfo);
+
+  return tierInfo
+}
+
 const getUserTierSmart = async (wallet_address) => {
   try {
     // Get cached Rate Setting
@@ -341,7 +353,10 @@ const getUserTierSmart = async (wallet_address) => {
     tiers.map((tokenRequire, index) => {
       // master: Fetch NFT Owner
       if (index === tiers.length - 1) {
-        return
+        if (getLegendIdByOwner(wallet_address) && stakedToken.gte(tokenRequire)) {
+          userTier = index + 1;
+        }
+        return;
       }
 
       if (stakedToken.gte(tokenRequire)) {
@@ -488,7 +503,9 @@ const getTokenSoldSmartContract = async (pool) => {
     if (pool.token_type === 'erc721') {
       return tokenSold
     }
-    tokenSold = new BigNumber(tokenSold).div(new BigNumber(10).pow(18)).toFixed();
+    const decimal = pool.decimals ? pool.decimals : 18
+
+    tokenSold = new BigNumber(tokenSold).div(new BigNumber(10).pow(decimal)).toFixed();
     return tokenSold;
   }
   catch (e) {
@@ -548,7 +565,7 @@ const getProgressWithPools = (pool) => {
   if (new BigNumber(progress).lte(0)) {
     progress = '0';
   }
-  if (new BigNumber(progress).gt(99)) {
+  if (new BigNumber(progress).gt(new BigNumber(99.99))) {
     progress = '100';
   }
 
@@ -710,7 +727,17 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
     return PoolStatus.CLAIMABLE;
   }
 
-  if (releaseTime) {
+  const actualFinishTime = getLastActualFinishTime(poolDetails);
+  const now = moment().unix();
+  if (actualFinishTime && actualFinishTime < now) {
+    return PoolStatus.CLOSED;
+  }
+
+  if (new BigNumber(soldProgress || 0).gte(new BigNumber(99.99))) {
+    return PoolStatus.CLOSED;
+  }
+
+  if (releaseTime && actualFinishTime && actualFinishTime > now) {
     // Check Filled Status
     // if (new BigNumber(soldProgress || 0).gte(99)) { // soldProgress >=99
     //   return PoolStatus.FILLED;
@@ -725,7 +752,6 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
     // Check Progress Status
     if (
       releaseTime && today < releaseTime.getTime()
-      && new BigNumber(soldProgress || 0).lt(99)
     ) {
       return PoolStatus.SWAP; // In Progress
     }
@@ -750,6 +776,44 @@ const getPathExportUsers = (fileName) => {
   return `download/export_users/${fileName}`
 }
 
+const getLegendData = () => {
+  return LEGEND_DATA;
+}
+
+const getLegendIdByOwner = (wallet_address) => {
+  if (!LEGEND_DATA) {
+    return
+  }
+
+  const data = LEGEND_DATA.filter(data => data.wallet_address === wallet_address && data.valid === true);
+  if (!data || data.length < 1) {
+    return
+  }
+
+  return data[0]
+}
+
+const checkIsInPreOrderTime = (poolDetails, currentUserTierLevel) => {
+  // if (!poolDetails) {
+  //   return false;
+  // }
+  // if (currentUserTierLevel < poolDetails.pre_order_min_tier) {
+  //   return false;
+  // }
+  //
+  // let startPreOrderTime = poolDetails.startPreOrderTime || poolDetails.start_pre_order_time;
+  // let startBuyTime = poolDetails.startBuyTime || poolDetails.start_time;
+  // if (!startPreOrderTime || !startBuyTime) {
+  //   return false;
+  // }
+  //
+  // const now = moment().unix();
+  // if (startPreOrderTime < now && now < startBuyTime) {
+  //   return true;
+  // }
+  return false;
+};
+
 module.exports = {
   randomString,
   doMask,
@@ -762,6 +826,7 @@ module.exports = {
   checkSumAddress,
   paginationArray,
   getERC721TokenContractInstance,
+  getUserTierSmartWithCached,
   getUserTierSmart,
   getContractInstance,
   getContractClaimInstance,
@@ -782,4 +847,8 @@ module.exports = {
   getTiers,
   getPathExportUsers,
   getStakingProvider,
+  checkIsInPreOrderTime,
+
+  getLegendData,
+  getLegendIdByOwner,
 };

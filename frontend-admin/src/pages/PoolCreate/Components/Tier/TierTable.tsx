@@ -29,10 +29,10 @@ const createData = (name: string, startTime: any, endTime: any, minBuy: number, 
 const createDefaultTiers = () => {
   return [
     createData('-', null, null, 0, 1000, false),
-    createData('Rookie', moment().format(DATETIME_FORMAT), moment().add(1, 'd').format(DATETIME_FORMAT), 0, 2000, false),
-    createData('Elite', moment().format(DATETIME_FORMAT), moment().add(1, 'd').format(DATETIME_FORMAT), 0, 3000, false),
-    createData('Pro', moment().format(DATETIME_FORMAT), moment().add(1, 'd').format(DATETIME_FORMAT), 0, 4000, false),
-    createData('Master', moment().format(DATETIME_FORMAT), moment().add(1, 'd').format(DATETIME_FORMAT), 0, 5000, false),
+    createData('Rookie', moment().format(DATETIME_FORMAT), moment().add(1, 'd').format(DATETIME_FORMAT), 0, 20, false),
+    createData('Elite', moment().format(DATETIME_FORMAT), moment().add(1, 'd').format(DATETIME_FORMAT), 0, 20, false),
+    createData('Pro', moment().format(DATETIME_FORMAT), moment().add(1, 'd').format(DATETIME_FORMAT), 0, 20, false),
+    createData('Legend', moment().format(DATETIME_FORMAT), moment().add(1, 'd').format(DATETIME_FORMAT), 0, 10, false),
   ];
 };
 

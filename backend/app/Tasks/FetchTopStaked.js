@@ -4,6 +4,8 @@ const Task = use('Task')
 const StakingEventService = use('App/Services/StakingEventService');
 const startTime = process.env.EVENT_START_TIME
 const endTime = process.env.EVENT_END_TIME
+const limit = process.env.EVENT_LIMIT
+const top = process.env.EVENT_TOP
 
 class FetchTopStaked extends Task {
   isRunning = false;
@@ -13,9 +15,9 @@ class FetchTopStaked extends Task {
     console.log('[FetchTopStaked] - ACTIVE - process.env.NODE_ENV', process.env.NODE_ENV);
     if (process.env.NODE_ENV === 'development') {
       // return '*/15 * * * * *';
-      return '*/20 * * * * *';
+      return '*/30 * * * * *';
     } else {
-      return '0 */1 * * * *';
+      return '*/30 * * * * *';
     }
   }
 
@@ -36,8 +38,8 @@ class FetchTopStaked extends Task {
       await (new StakingEventService).queryTop({
         start_time: startTime,
         end_time: endTime,
-        top: 10,
-        limit: 20,
+        top: top,
+        limit: limit,
         min_tier: 0
       });
     }

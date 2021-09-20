@@ -147,7 +147,7 @@ const Home = (props: any) => {
   };
 
   return (
-    <DefaultLayout>
+    <DefaultLayout style={{background: '#0A0A0A'}}>
       <section className={clsx(styles.banner, styles.section)} style={isShowImgBanner ? {paddingTop: '10px'} : {}}>
         {isShowImgBanner && (
           <div className={styles.wrapperImgBanner}>
@@ -213,8 +213,7 @@ const Home = (props: any) => {
             >
               <h3>Ticket Sales</h3>
               <h5>
-                Ticket is an item that allows you to join IDO pools. To view
-                information about other Ticket pools, click the Discover button
+                To view information about other Ticket pools, click the Discover button
                 below.
               </h5>
               <Link href="/#/pools/ticket" className={styles.btnDiscover}>
@@ -238,8 +237,7 @@ const Home = (props: any) => {
             <div className={clsx(styles.contentTitle, "center")}>
               <h3>Token Sales</h3>
               <h5>
-                Make sure you have a Ticket to join IDO. To view information
-                about other IDO pools, click the Discover button below.
+                To view information about other IGO pools, click the Discover button below.
               </h5>
               <Link href="/#/pools/token" className={styles.btnDiscover}>
                 Discover

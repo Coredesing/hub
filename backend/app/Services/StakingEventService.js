@@ -4,6 +4,7 @@ const HelperUtils = use('App/Common/HelperUtils');
 const StakingEventModel = use('App/Models/StakingEvent');
 const BigNumber = use('bignumber.js');
 const RedisUtils = use('App/Common/RedisUtils')
+const RedisStakingPoolUtils = use('App/Common/RedisStakingPoolUtils')
 const LINEAR_DEPOSIT_EVENT = 'LinearDeposit'
 const LINEAR_WITHDRAW_EVENT = 'LinearPendingWithdraw'
 const DEFAULT_FROM = process.env.START_BLOCK || 12304325
@@ -32,7 +33,7 @@ class StakingEventService {
         top: data,
       }
 
-      await RedisUtils.setRedisTopUsersStaking(cachedData)
+      await RedisStakingPoolUtils.setRedisTopUsersStaking(cachedData)
     }
     catch (e) {
       console.log('error', e)
@@ -48,8 +49,8 @@ class StakingEventService {
         withdraw: DEFAULT_FROM,
       }
       try {
-        if (await RedisUtils.checkExistStakingLastBlockNumber()) {
-          from = JSON.parse(await RedisUtils.getRedisStakingLastBlockNumber())
+        if (await RedisStakingPoolUtils.checkExistStakingLastBlockNumber()) {
+          from = JSON.parse(await RedisStakingPoolUtils.getRedisStakingLastBlockNumber())
         }
       }
       catch (e) {
@@ -78,7 +79,7 @@ class StakingEventService {
         await this.run(provider, LINEAR_WITHDRAW_EVENT, index, to)
       }
 
-      await RedisUtils.setRedisStakingLastBlockNumber({deposit: latestBlockNumber, withdraw: latestBlockNumber})
+      await RedisStakingPoolUtils.setRedisStakingLastBlockNumber({deposit: latestBlockNumber, withdraw: latestBlockNumber})
     }
     catch (e) {}
   }

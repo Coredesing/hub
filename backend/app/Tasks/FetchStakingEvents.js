@@ -10,9 +10,9 @@ class FetchStakingEvents extends Task {
     console.log('[FetchTopStaked] - ACTIVE - process.env.NODE_ENV', process.env.NODE_ENV);
     if (process.env.NODE_ENV === 'development') {
       // return '*/15 * * * * *';
-      return '*/30 * * * * *';
+      return '*/15 * * * * *';
     } else {
-      return '*/30 * * * * *';
+      return '*/15 * * * * *';
     }
   }
 

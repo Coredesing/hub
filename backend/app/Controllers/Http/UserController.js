@@ -81,6 +81,8 @@ class UserController {
       const params = request.all();
       const wallet_address = params.wallet_address;
       const tierInfo = await HelperUtils.getUserTierSmartWithCached(wallet_address);
+      const Legend = HelperUtils.getLegendIdByOwner(wallet_address);
+      const id = Legend ? Legend.id : 0
 
       return HelperUtils.responseSuccess({
         tier: tierInfo[0],
@@ -88,6 +90,7 @@ class UserController {
           tokenStaked: new BigNumber(tierInfo[2]).toFixed(4),
           uniStaked: new BigNumber(0).toFixed(4)
         },
+        id: id,
       });
     } catch (e) {
       console.log('tierInfo error', e)

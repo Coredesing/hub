@@ -352,13 +352,10 @@ const getUserTierSmart = async (wallet_address) => {
     let userTier = 0;
     tiers.map((tokenRequire, index) => {
       // master: Fetch NFT Owner
-      if (index === tiers.length - 1) {
-        if (LEGEND_DATA &&
-          LEGEND_DATA.filter(data => data.valid === true && data.wallet_address === wallet_address).length > 0) {
-          if (stakedToken.gte(tokenRequire)) {
-            userTier = index + 1;
-          }
-        }
+      if (index === tiers.length - 1
+        && getLegendIdByOwner(wallet_address)
+        && stakedToken.gte(tokenRequire)) {
+        userTier = index + 1;
       }
     });
 
@@ -770,8 +767,21 @@ const getStakingProvider = async () => {
   return networkToWeb3[Const.NETWORK_AVAILABLE.BSC]
 }
 
-const getLegendData = async () => {
+const getLegendData = () => {
   return LEGEND_DATA;
+}
+
+const getLegendIdByOwner = (wallet_address) => {
+  if (!LEGEND_DATA) {
+    return
+  }
+
+  const data = LEGEND_DATA.filter(data => data.wallet_address === wallet_address && data.valid === true);
+  if (!data || data.length < 1) {
+    return
+  }
+
+  return data[0]
 }
 
 const checkIsInPreOrderTime = (poolDetails, currentUserTierLevel) => {
@@ -830,4 +840,5 @@ module.exports = {
   checkIsInPreOrderTime,
 
   getLegendData,
+  getLegendIdByOwner,
 };

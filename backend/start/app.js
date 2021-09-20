@@ -68,19 +68,20 @@ const aliases = {
 |
 */
 const commands = [
-  'App/Commands/AutoJoinUser',
-  'App/Commands/SnapshotBalanceCommand',
-  'App/Commands/GetUserPurchasedBalanceCommand',
-  'App/Commands/GetUserKycInformationCommand',
+  // 'App/Commands/AutoJoinUser',
+  // 'App/Commands/SnapshotBalanceCommand',
+  // 'App/Commands/GetUserPurchasedBalanceCommand',
+  // 'App/Commands/GetUserKycInformationCommand',
   // 'App/Commands/SignatureCommand',
 ];
 
 const jobs = [
-  'App/Jobs/CheckTxStatus',
-  'App/Jobs/SendForgotPasswordJob',
-  'App/Jobs/SendConfirmationEmailJob',
-  'App/Jobs/GetUserPurchasedBalanceJob',
-  'App/Jobs/GetUserKycInformationJob',
+  // 'App/Jobs/CheckTxStatus',
+  // 'App/Jobs/SendForgotPasswordJob',
+  // 'App/Jobs/SendConfirmationEmailJob',
+  // 'App/Jobs/GetUserPurchasedBalanceJob',
+  // 'App/Jobs/GetUserKycInformationJob',
+  'App/Jobs/ExportUsers',
 ];
 
 module.exports = { providers, aceProviders, aliases, commands, jobs }

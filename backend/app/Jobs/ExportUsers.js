@@ -104,7 +104,7 @@ class ExportUsers {
       }]
 
       const json2csvParser = new Parser({ fields });
-      const csv = json2csvParser.parse(userList);
+      const csv = json2csvParser.parse(userList.sort((firstUser, secondUser) => this.compareNumber(secondUser.tier, firstUser.tier) || secondUser.total_gafi - firstUser.total_gafi));
 
       fs.writeFileSync(HelperUtils.getPathExportUsers(fileName), csv);
 
@@ -113,6 +113,10 @@ class ExportUsers {
       await ExportUserModel.query().where('file_name', fileName).update({ status: 'fail' })
       throw error
     }
+  }
+
+  compareNumber(firstNumber, secondNumber) {
+    return firstNumber == secondNumber ? 0 : (firstNumber < secondNumber ? -1 : 1)
   }
 
   // Dispatch

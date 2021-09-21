@@ -16,12 +16,20 @@ export const getUserList = async (queryParams: any) => {
   return resObject;
 };
 
-export const exportUserList = async () => {
+export const exportUserList = async (queryParams: any) => {
   const baseRequest = new BaseRequest();
-  let url = apiRoute(`/users/export`);
-  url += '?' + queryString.stringify();
+  let url = apiRoute(`/users/export-user-list`);
 
-  const response = await baseRequest.post(url, {}) as any;
+  const response = await baseRequest.post(url, queryParams || {}) as any;
+  const resObject = await response.json();
+
+  return resObject;
+}
+
+export const exportSnapshotWhiteList = async (queryParams: any) => {
+  const baseRequest = new BaseRequest();
+  let url = apiRoute(`/users/export-whitelist`);
+  const response = await baseRequest.post(url, queryParams || {}) as any;
   const resObject = await response.json();
 
   return resObject;
@@ -31,7 +39,6 @@ export const downloadUserList = async (fileId: number, fileName: string) => {
   const baseRequest = new BaseRequest();
   let url = apiRoute(`/users/download/${fileId}`);
   const fileData = await baseRequest.postDownload(url, {}) as any;
-  console.log({fileData})
   FileDownload(fileData, fileName);
 }
 

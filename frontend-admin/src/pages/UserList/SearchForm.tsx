@@ -9,14 +9,15 @@ const SearchForm = (props: any) => {
   const commonStyle = useCommonStyle();
   const {
     handleSearch,
-    seachValue
+    seachValue,
+    placeholder
   } = props;
 
   return (
     <>
       <div className={classes.headerRight}>
         <div className={commonStyle.boxSearch}>
-          <input className={commonStyle.inputSearch} value={seachValue} onChange={handleSearch} placeholder="Search" />
+          <input className={commonStyle.inputSearch} value={seachValue} onChange={handleSearch} placeholder={placeholder} />
           <img className={commonStyle.iconSearch} src="/images/icon-search.svg" alt="" />
         </div>
       </div>

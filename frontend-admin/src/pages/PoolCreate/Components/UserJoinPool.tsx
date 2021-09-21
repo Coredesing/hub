@@ -6,6 +6,7 @@ import UserWinner from "./UserWinner/UserWinner";
 import {Tabs} from 'antd';
 import UserReverse from "./UserWinner/UserReverse";
 import PublicWinnerSetting from "./UserWinner/PublicWinnerSetting";
+import { exportSnapshotWhiteList } from "../../../request/user"
 
 const { TabPane } = Tabs;
 function callback(key: any) {
@@ -51,6 +52,7 @@ const UserJoinPool = (props: any) => {
           <UserReverse poolDetail={poolDetail} />
         </TabPane>
       </Tabs>
+      <button className={classes.exportBtn} onClick={() => exportSnapshotWhiteList({ poolId: poolDetail.id })}>Download Snapshot Whitelist User</button>
     </>
   );
 };

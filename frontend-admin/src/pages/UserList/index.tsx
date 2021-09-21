@@ -22,6 +22,8 @@ const UserList: React.FC<any> = (props: any) => {
   const [lastPage, setLastPage] = useState(1);
 
   const [query, setQuery] = useState('');
+  const [searchTelegram, setSearchTelegram] = useState('');
+  const [searchEmail, setSearchEmail] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [failure, setFailure] = useState(false);
@@ -29,6 +31,8 @@ const UserList: React.FC<any> = (props: any) => {
   const getUserListInfo = async (query: any) => {
     const queryParams: any = {
       searchQuery: query,
+      searchTelegram,
+      searchEmail,
       page: currentPage
     };
     if (selectedTier >= 0) {
@@ -66,15 +70,23 @@ const UserList: React.FC<any> = (props: any) => {
     setQuery(event.target.value);
   };
 
+  const handleSearchTelegram = (event: any) => {
+    setSearchTelegram(event.target.value);
+  };
+
+  const handleSearchEmail = (event: any) => {
+    setSearchEmail(event.target.value);
+  };
+
   useEffect(() => {
     getUserListInfo('');
-  }, [query, currentPage]);
+  }, [query, currentPage, searchTelegram, searchEmail]);
 
   return (
     <DefaultLayout>
       <div className={classes.header}>
         <div className="header-left">
-          <button className={classes.exportBtn} onClick={exportUserList}>Export to CSV</button>
+          <button className={classes.exportBtn} onClick={() => exportUserList({ searchTelegram, searchEmail })}>Export to CSV</button>
         </div>
         <Select
           name="minTier"
@@ -98,8 +110,19 @@ const UserList: React.FC<any> = (props: any) => {
           }
         </Select>
         <SearchForm
+          seachValue={searchTelegram}
+          handleSearch={handleSearchTelegram}
+          placeholder='Search telegram'
+        />
+        <SearchForm
+          seachValue={searchEmail}
+          handleSearch={handleSearchEmail}
+          placeholder='Search email'
+        />
+        <SearchForm
           seachValue={query}
           handleSearch={handleSearch}
+          placeholder='Search'
         />
       </div>
 
@@ -139,7 +162,7 @@ const UserList: React.FC<any> = (props: any) => {
         }
       </TableContainer>
 
-      <FileExport/>
+      <FileExport />
     </DefaultLayout>
   )
 };

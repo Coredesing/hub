@@ -2,6 +2,7 @@
 const kue = use('Kue');
 const { Parser } = require('json2csv');
 const fs = require('fs')
+const BigNumber = use('bignumber.js');
 
 const UserModel = use('App/Models/User')
 const ExportUserModel = use('App/Models/ExportUser')
@@ -104,7 +105,7 @@ class ExportUsers {
       }]
 
       const json2csvParser = new Parser({ fields });
-      const csv = json2csvParser.parse(userList.sort((firstUser, secondUser) => this.compareNumber(secondUser.tier, firstUser.tier) || secondUser.total_gafi - firstUser.total_gafi));
+      const csv = json2csvParser.parse(userList.sort((firstUser, secondUser) => this.compareNumber(secondUser.tier, firstUser.tier) || this.compareNumber(secondUser.total_gafi, firstUser.total_gafi)));
 
       fs.writeFileSync(HelperUtils.getPathExportUsers(fileName), csv);
 
@@ -116,7 +117,7 @@ class ExportUsers {
   }
 
   compareNumber(firstNumber, secondNumber) {
-    return firstNumber == secondNumber ? 0 : (firstNumber < secondNumber ? -1 : 1)
+    return new BigNumber(firstNumber).comparedTo(new BigNumber(secondNumber))
   }
 
   // Dispatch

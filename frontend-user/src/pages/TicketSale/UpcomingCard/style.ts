@@ -15,7 +15,8 @@ const useStyles = makeStyles((theme: any) => ({
       justifyContent: 'center',
       alignItems: 'center',
       padding: '7px 0px',
-      transition: '.3s'
+      transition: '.3s',
+      minHeight: '42px',
     },
 
     '&:hover .cardBodyTimeEndItem': {

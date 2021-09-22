@@ -92,7 +92,7 @@ export const CompleteCard = ({ card, ...props }: Props) => {
                 ({calcProgress(+card.token_sold, +card.total_sold_coin)}%)
               </span>
               <span className={clsx(styles.text, styles.compText)}>
-                {numberWithCommas(card.token_sold || 0, 0)}/{numberWithCommas(card.total_sold_coin || 0)}{" "}
+                {numberWithCommas(+card.token_sold + '' || 0, 0)}/{numberWithCommas(card.total_sold_coin || 0)}{" "}
                 {card.tokenSymbol}
               </span>
             </span>

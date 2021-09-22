@@ -81,7 +81,9 @@ const BuyTokenPoolSwapInfo: FC<Props> = ({poolDetails, currencyName}) => {
           </div>
           <div className={styles.rightBotSec}>
             {
-              numberWithCommas(new BigNumber(tokenSold).gt(`${poolDetails?.amount}`) ? `${poolDetails?.amount}`: tokenSold, 2)}&nbsp;
+              showProgress(+poolDetails.tokenSold || 0, +poolDetails.totalSoldCoin || 0) === 100 
+              ? numberWithCommas(`${poolDetails?.amount}` || "0", 2) 
+              : numberWithCommas(new BigNumber(tokenSold).gt(`${poolDetails?.amount}`) ? `${poolDetails?.amount}`: tokenSold, 2)}&nbsp;
               / {numberWithCommas(`${poolDetails?.amount}` || "0", 2)
             }
           </div>

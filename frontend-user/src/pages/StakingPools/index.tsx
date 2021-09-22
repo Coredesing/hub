@@ -47,7 +47,6 @@ import { cvtAddressToStar, debounce, escapeRegExp } from '@utils/index';
 import { numberWithCommas } from '@utils/formatNumber';
 import { getTiers } from '@store/actions/sota-tiers';
 import WrapperContent from '@base-components/WrapperContent';
-
 const closeIcon = '/images/icons/close.svg';
 
 const StakingPools = (props: any) => {
@@ -366,11 +365,9 @@ const StakingPools = (props: any) => {
                       </TableBody>
                     </Table>
                   </TableContainer>
-
                 </Box>
               }
             </div>
-
 
           </div>
 

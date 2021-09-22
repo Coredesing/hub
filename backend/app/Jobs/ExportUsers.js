@@ -10,7 +10,6 @@ const WhitelistModel = use('App/Models/WhitelistUser')
 const Database = use('Database');
 const HelperUtils = use('App/Common/HelperUtils')
 const Const = use('App/Common/Const')
-const RedisStakingPoolUtils = use('App/Common/RedisStakingPoolUtils')
 
 const priority = 'normal'; // Priority of job, can be low, normal, medium, high or critical
 const attempts = 1; // Number of times to attempt job if it fails
@@ -72,10 +71,9 @@ class ExportUsers {
       }
 
       const userList = JSON.parse(JSON.stringify(await userQuery.fetch()))
-      const pools = JSON.parse(await RedisStakingPoolUtils.getRedisStakingPoolsDetail())
 
       const userAdditionInfoPromises = userList.map(async (u) => {
-        const tierInfo = await HelperUtils.getUserTierSmartWithCached(u.wallet_address, pools);
+        const tierInfo = await HelperUtils.getUserTierSmartWithCached(u.wallet_address);
         return { tier: tierInfo[0], total_gafi: tierInfo[1], staked_gafi: tierInfo[2] }
       });
 

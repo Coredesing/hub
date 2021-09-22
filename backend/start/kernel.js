@@ -87,8 +87,12 @@ Server
 */
 const Scheduler = use('Adonis/Addons/Scheduler');
 new Promise(() => {
+  if (process.env.KUE_RUNNING === 'true' || process.env.KUE_RUNNING === true) {
+    return;
+  }
+
   Scheduler.run();
-  return ;
+  return;
 }).then(() => {
 
 });

@@ -328,19 +328,7 @@ const StakingPools = (props: any) => {
                       </Box>
                       {
                         !eventTime.isFinished && <Box>
-                          <CountDownTimeV1 time={
-                            listTopStaked?.start_time * 1000 > Date.now() ?
-                              {
-                                date1: listTopStaked?.start_time * 1000,
-                                date2: Date.now()
-                              } :
-                              listTopStaked?.end_time * 1000 > Date.now() ? {
-                                date1: listTopStaked?.end_time * 1000,
-                                date2: Date.now()
-                              } : {
-                                days: 0, hours: 0, minutes: 0, seconds: 0
-                              }
-                          }
+                          <CountDownTimeV1 time={eventTime.time}
                             onFinish={onFinishCountdown} />
                         </Box>
                       }

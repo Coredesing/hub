@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { makeStyles } from '@material-ui/core';
+import { isNumber } from 'lodash';
 
 const rocketIcon = '/images/icons/rocket-1.svg';
 
@@ -30,24 +31,26 @@ const useStyles = makeStyles(() => {
     };
 });
 
+type NumberString = string;
 interface IProps {
-    progress: number
+    progress: number | NumberString;
 }
 
 export const Progress = (props: IProps) => {
     const classes = useStyles();
-    let leftImg = props.progress;
+    const progress = isNumber(+props.progress) ? +props.progress : 0;
+    let leftImg = progress;
     let leftImgPx = '17px';
-    if(props.progress < 5) {
+    if(progress < 5) {
         leftImg = 0;
     }
     if(props.progress >= 90) {
-        leftImg = props.progress - 1;
-        leftImgPx = `${17 * 2 - 2 - (100 - props.progress)}px`
+        leftImg = progress - 1;
+        leftImgPx = `${17 * 2 - 2 - (100 - progress)}px`
     }
     return (
         <div className={classes.progress}>
-            <div className={classes.showProgress} style={{width: `${props.progress || 0}%`}}></div>
+            <div className={classes.showProgress} style={{width: `${progress || 0}%`}}></div>
             <img src={rocketIcon} alt="" style={{left: `calc(${leftImg || 0}% - ${leftImgPx})`}} />
         </div>
     )

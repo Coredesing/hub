@@ -304,7 +304,8 @@ export const cvtAddressToStar = (address: string) => {
 }
 export const calcPercentRate = (input: number, total: number) => {
   const percent = ((input * 100) / total);
-  if(percent > 99 && percent < 100) return 99;
+  if(!percent) return 0;
+  const split = percent.toString().split('.');
 
-  return Math.ceil(percent);
+  return `${split[0]}${split[1] ? '.' + split[1].charAt(0) : ''}`;
 };

@@ -3,7 +3,7 @@ import clsx from "clsx";
 import useStyles from "./style";
 import AboutTicket from "./About";
 import { getApproveToken, getDiffTime } from "../../utils";
-import { Progress } from "./Progress";
+import { Progress } from "@base-components/Progress";
 import { useFetchV1 } from "../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
 import {

@@ -102,7 +102,7 @@ class UserController {
     try {
       const params = request.only(['poolId']);
       const newExportUser = new ExportUserModel()
-      const fileName = `snapshot_whitelist_${params.poolId}_at_${moment().format('DD_MM_YYYY hh:mm:ss')}.csv`
+      const fileName = `snapshot_whitelist_${params.poolId}_at_${moment().format('DD_MM_YYYY_hh:mm:ss')}.csv`
       newExportUser.file_name = fileName
       newExportUser.status = 'pending'
       newExportUser.download_number = 0

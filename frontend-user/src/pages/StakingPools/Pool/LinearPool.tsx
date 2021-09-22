@@ -38,7 +38,6 @@ import { TIERS } from '@app-constants';
 import clsx from 'clsx';
 import { Box } from '@material-ui/core';
 
-
 const ONE_DAY_IN_SECONDS = 86400;
 const ONE_YEAR_IN_SECONDS = '31536000';
 
@@ -127,6 +126,7 @@ const LinearPool = (props: any) => {
     setOpenModalTransactionSubmitting(false);
     setTransactionHashes([{ tnx: approveTransactionHash, isApprove: true }])
   }, [approveTransactionHash, setOpenModalTransactionSubmitting, setTransactionHashes])
+
 
 
   const handleStake = async () => {

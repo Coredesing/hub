@@ -47,9 +47,6 @@ import { cvtAddressToStar, debounce, escapeRegExp } from '@utils/index';
 import { numberWithCommas } from '@utils/formatNumber';
 import { getTiers } from '@store/actions/sota-tiers';
 import WrapperContent from '@base-components/WrapperContent';
-import {topStaking} from './data';
-import SelectBox from '@base-components/SelectBox';
-console.log(topStaking);
 const closeIcon = '/images/icons/close.svg';
 
 const StakingPools = (props: any) => {
@@ -223,35 +220,6 @@ const StakingPools = (props: any) => {
     setTopWalletRanking(arr)
   }, [listTopStaked, searchWallet]);
 
-  const [currentTops, setCurrentTops] = useState<any>({});
-  const onChangePool = (event: any) => {
-    setCurrentTops((old: any) => {
-      const currentChange: any = JSON.parse(JSON.stringify(topStaking[event.target.value]));
-      if(!old.top) {
-        return currentChange;
-      }
-      const before = topStaking[currentChange.id - 1];
-      if(!before) {
-        return currentChange;
-      }
-
-      currentChange.top.map((n: any, currRank: number) => {
-        let beforeRank = before.top.findIndex((o) => o.wallet_address === n.wallet_address);
-        currRank += 1; 
-        beforeRank += 1; 
-          if(currRank=== beforeRank) {
-            n.note = '';
-          } else if(currRank < beforeRank) {
-            n.note = `+${beforeRank - currRank}`;
-          } else {
-            n.note = `-${currRank - beforeRank}`;
-          }
-        return n;
-      })
-      return currentChange;
-    });
-  }
-
   return (
     <DefaultLayout>
       <WrapperContent useShowBanner={false}>
@@ -397,42 +365,9 @@ const StakingPools = (props: any) => {
                       </TableBody>
                     </Table>
                   </TableContainer>
-
-                  <SelectBox 
-                  items={topStaking.map((t, id) => ({poolName: t.poolname, id}))}
-                  itemNameShowValue={'poolName'}
-                  itemNameValue={'id'}
-                  onChange={onChangePool}
-                  >
-
-                  </SelectBox>
-                  <TableContainer>
-                    <Table>
-                      <TableHead>
-                        <TableRowHead>
-                          <TableCell>No</TableCell>
-                          <TableCell align="left">Wallet Address</TableCell>
-                          <TableCell align="left">Current Staked</TableCell>
-                          <TableCell align="left">Last time Stake</TableCell>
-                        </TableRowHead>
-                      </TableHead>
-                      <TableBody>
-                        {currentTops?.top?.map((row: any, idx: number) => (
-                          <TableRowBody key={idx}>
-                            <TableCell component="th" scope="row" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>  {idx + 1} {row.note} </TableCell>
-                            <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{cvtAddressToStar(row.wallet_address)}</TableCell>
-                            <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{numberWithCommas((row.amount + '') || 0, 4)}</TableCell>
-                            <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{convertTimeToStringFormat(new Date(+row.last_time * 1000))}</TableCell>
-                          </TableRowBody>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-
                 </Box>
               }
             </div>
-
 
           </div>
 

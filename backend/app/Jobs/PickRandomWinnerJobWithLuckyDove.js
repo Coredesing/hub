@@ -81,20 +81,20 @@ class PickRandomWinnerJobWithLuckyDove {
         const tier = receivedData[0];
         const pkfBalanceSmartContract = receivedData[1];
         let pkfBalance = pkfBalanceSmartContract;
-        switch (tier) {
-          case 1: // Dove
-            break;
-          case 2: // Hawk
-            break;
-          case 3: // Eagle
-            pkfBalance = new BigNumber(pkfBalance).multipliedBy(1.05).toFixed();
-            break;
-          case 4: // Phoenix
-            pkfBalance = new BigNumber(pkfBalance).multipliedBy(1.1).toFixed();
-            break;
-          default:
-            break;
-        }
+        // switch (tier) {
+        //   case 1: // Dove
+        //     break;
+        //   case 2: // Hawk
+        //     break;
+        //   case 3: // Eagle
+        //     pkfBalance = new BigNumber(pkfBalance).toFixed();
+        //     break;
+        //   case 4: // Phoenix
+        //     pkfBalance = new BigNumber(pkfBalance).toFixed();
+        //     break;
+        //   default:
+        //     break;
+        // }
 
         // mock test
         // const tier = Math.floor(Math.random() * 5);
@@ -103,47 +103,49 @@ class PickRandomWinnerJobWithLuckyDove {
         console.log(`Snapshot user balance with wallet ${wallet} tier ${tier} pkf_balance ${pkfBalance}`);
         // calc lottery_tickets
         // TODO need get setting from Db
-        let luckyLevel = 0;
-        let tickets = 0;
-        switch (tier) {
-          case 1: // Dove
-            console.log('DOVE:');
-            luckyLevel = await PickRandomWinnerJobWithLuckyDove.getLuckyDoveLevel(data.campaign_id, wallet);
-            console.log('luckyLevel:', luckyLevel);
+        // let luckyLevel = 0;
+        // let tickets = 0;
+        // switch (tier) {
+        //   case 1: // Dove
+        //     console.log('DOVE:');
+        //     luckyLevel = await PickRandomWinnerJobWithLuckyDove.getLuckyDoveLevel(data.campaign_id, wallet);
+        //     console.log('luckyLevel:', luckyLevel);
+        //
+        //     if (luckyLevel) {
+        //       console.log('Origin pkfBalance:', pkfBalance);
+        //       if (luckyLevel === 1) {
+        //         console.log('new BigNumber(pkfBalance).mul(2).toNumber():', new BigNumber(+pkfBalance).multipliedBy(2).toNumber());
+        //         tickets = Math.floor(
+        //           new BigNumber(+pkfBalance).multipliedBy(2).toNumber() // Bonus Lucky x2
+        //           / 500
+        //         );
+        //       } else if (luckyLevel >= 2) { // Fail >= 2 times --> Bonus x3
+        //         console.log('new BigNumber(pkfBalance).mul(3).toNumber():', new BigNumber(+pkfBalance).multipliedBy(3).toNumber());
+        //         tickets = Math.floor(
+        //           new BigNumber(+pkfBalance).multipliedBy(3).toNumber() // Bonus Lucky x3
+        //           / 500
+        //         );
+        //       }
+        //     } else {
+        //       tickets = Math.floor(pkfBalance / 500);
+        //     }
+        //     console.log('tickets', tickets);
+        //
+        //     break;
+        //   case 2: // Hawk
+        //     tickets = Math.floor(pkfBalance / 500);
+        //     break;
+        //   case 3: // Eagle
+        //     tickets = Math.floor(pkfBalance / 2000);
+        //     break;
+        //   case 4: // Phoenix
+        //     tickets = Math.floor(pkfBalance / 2000);
+        //     break;
+        //   default:
+        //     console.log('User has no quality tier to get lottery ticket');
+        // }
 
-            if (luckyLevel) {
-              console.log('Origin pkfBalance:', pkfBalance);
-              if (luckyLevel == 1) {
-                console.log('new BigNumber(pkfBalance).mul(2).toNumber():', new BigNumber(+pkfBalance).multipliedBy(2).toNumber());
-                tickets = Math.floor(
-                  new BigNumber(+pkfBalance).multipliedBy(2).toNumber() // Bonus Lucky x2
-                  / 500
-                );
-              } else if (luckyLevel >= 2) { // Fail >= 2 times --> Bonus x3
-                console.log('new BigNumber(pkfBalance).mul(3).toNumber():', new BigNumber(+pkfBalance).multipliedBy(3).toNumber());
-                tickets = Math.floor(
-                  new BigNumber(+pkfBalance).multipliedBy(3).toNumber() // Bonus Lucky x3
-                  / 500
-                );
-              }
-            } else {
-              tickets = Math.floor(pkfBalance / 500);
-            }
-            console.log('tickets', tickets);
-
-            break;
-          case 2: // Hawk
-            tickets = Math.floor(pkfBalance / 500);
-            break;
-          case 3: // Eagle
-            tickets = Math.floor(pkfBalance / 2000);
-            break;
-          case 4: // Phoenix
-            tickets = Math.floor(pkfBalance / 2000);
-            break;
-          default:
-            console.log('User has no quality tier to get lottery ticket');
-        }
+        let tickets = Math.floor(pkfBalance / 200);
         let userSnapShot = new UserBalanceSnapshotModel();
         userSnapShot.fill({
           campaign_id: data.campaign_id,
@@ -153,9 +155,9 @@ class PickRandomWinnerJobWithLuckyDove {
           pkf_balance: pkfBalanceSmartContract,
           pkf_balance_with_weight_rate: pkfBalance,
         });
-        if (luckyLevel) {
-          userSnapShot.lucky_level = luckyLevel;
-        }
+        // if (luckyLevel) {
+        //   userSnapShot.lucky_level = luckyLevel;
+        // }
         userSnapshots.push(userSnapShot);
       }
       // save to user_balance_snapshot
@@ -235,16 +237,16 @@ class PickRandomWinnerJobWithLuckyDove {
     // delete old winner
     const campaignUpdated = await CampaignModel.query().where('id', data.campaign_id).first();
     await campaignUpdated.winners().delete();
-    let tierList = await TierModel.query().where('campaign_id', data.campaign_id).fetch();
-    tierList = JSON.parse(JSON.stringify(tierList));
+    // let tierList = await TierModel.query().where('campaign_id', data.campaign_id).fetch();
+    // tierList = JSON.parse(JSON.stringify(tierList));
 
     const userSnapshotService = new UserBalanceSnapshotService();
-    const totalPKFObj = await userSnapshotService.sumPKFWithWeightRateBalance({
-      campaign_id: data.campaign_id,
-    });
-    const totalPKF = totalPKFObj[0]['sum(`pkf_balance_with_weight_rate`)'];
-
-    console.log('totalPKFtotalPKFtotalPKF============================>', totalPKF);
+    // const totalPKFObj = await userSnapshotService.sumPKFWithWeightRateBalance({
+    //   campaign_id: data.campaign_id,
+    // });
+    // const totalPKF = totalPKFObj[0]['sum(`pkf_balance_with_weight_rate`)'];
+    //
+    // console.log('totalPKFtotalPKFtotalPKF============================>', totalPKF);
 
     for (let i = 0; i < data.tiers.length; i++) {
       const tier = data.tiers[i];
@@ -256,35 +258,34 @@ class PickRandomWinnerJobWithLuckyDove {
       const userSnapshots = await userSnapshotService.getAllSnapshotByFilters(filters);
       const countObj = await userSnapshotService.countByFilters(filters);
       const count = countObj[0]['count(*)'];
-      if (count && count == 0) {
+      if (count && count === 0) {
         console.log(`Do not have any user belong to tier ${tier.level}`);
         continue;
       }
       let winners;
 
-      if (tier.level == 0) {
+      if (tier.level === 0) {
         // Nothing to do
-      } else if (tier.level == 1) {
+      } else if (tier.level < 4) {
         // pickup random lottery ticket for these tiers 1 Dove
-        winners = await PickRandomWinnerJobWithLuckyDove.pickupRandom(userSnapshots.toJSON(), tier.ticket_allow, data.campaign_id);
+        winners = await PickRandomWinnerJobWithLuckyDove.pickupRandom(userSnapshots.toJSON(), tier.ticket_allow, data.campaign_id, tier.level);
       } else {
-        // pickup random lottery ticket for  tier 2,3,4 Hawk Eagle Phoenix
-        // case ticket_allow > no of users
-        // calc lottery ticket for each user base on amount sPKF
-        const tiers = tierList;
-        console.log('data.tiers', tiers);
-        winners = userSnapshots.toJSON().map(snapshot => {
-          const winnerModel = new WinnerListUserModel();
-          const tickets = this.caculateAllowcationByTier(snapshot, tier, tiers, totalPKF);
-          console.log('WINNER:', snapshot, tickets);
-          winnerModel.fill({
-            wallet_address: snapshot.wallet_address,
-            campaign_id: data.campaign_id,
-            level: snapshot.level,
-            lottery_ticket: tickets,
-          });
-          return winnerModel;
-        });
+        // TODO: calculate Legends manually
+
+        // const tiers = tierList;
+        // console.log('data.tiers', tiers);
+        // winners = userSnapshots.toJSON().map(snapshot => {
+        //   const winnerModel = new WinnerListUserModel();
+        //   const tickets = this.caculateAllowcationByTier(snapshot, tier, tiers, totalPKF);
+        //   console.log('WINNER:', snapshot, tickets);
+        //   winnerModel.fill({
+        //     wallet_address: snapshot.wallet_address,
+        //     campaign_id: data.campaign_id,
+        //     level: snapshot.level,
+        //     lottery_ticket: tickets,
+        //   });
+        //   return winnerModel;
+        // });
       }
       console.log('END doPickupRandomWinner: winners:', JSON.stringify(winners));
       // save to winner list
@@ -350,6 +351,19 @@ class PickRandomWinnerJobWithLuckyDove {
   }
 
   static async pickupRandom(userSnapshots, totalWinners, campaign_id, tier) {
+    let limit = [
+      {tier: 1, max_ticket: 3},
+      {tier: 2, max_ticket: 15},
+      {tier: 3, max_ticket: 35}
+    ]
+    let max_ticket = limit.filter(data => data.tier === tier)
+    if (!max_ticket || max_ticket.length < 1) {
+      return
+    }
+    max_ticket = max_ticket.max_ticket;
+
+    console.log('tier', max_ticket.max_ticket)
+
     // convert to array to pick random lottery
     let userSnapshotArray = [];
     userSnapshots.map(snapshot => {
@@ -372,7 +386,7 @@ class PickRandomWinnerJobWithLuckyDove {
       // check existed
       if (winnerSnapshots.has(winner.wallet_address)) {
         const existed = winnerSnapshots.get(winner.wallet_address);
-        if (existed.winner_ticket < 2) {
+        if (existed.winner_ticket < max_ticket) {
           // max 2 win ticket for each user
           // increment winner ticket
           existed.winner_ticket = existed.winner_ticket + 1;

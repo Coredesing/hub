@@ -177,11 +177,40 @@ const StakingPools = (props: any) => {
     setSearchWallet(value);
   }, 1000);
 
+  const [eventTime, setEventTime] = useState<{ [k: string]: any }>({
+    isFinished: true, title: '', time: { days: 0, hours: 0, minutes: 0, seconds: 0 }
+  });
+
+  const handleEventTime = (listTopStaked: any) => {
+    if (listTopStaked?.start_time * 1000 > Date.now()) {
+      setEventTime({
+        isFinished: false, title: 'Open in', time: {
+          date1: listTopStaked?.start_time * 1000,
+          date2: Date.now()
+        }
+      });
+    } else if (listTopStaked?.end_time * 1000 > Date.now()) {
+      setEventTime({
+        isFinished: false, title: 'End in', time: {
+          date1: listTopStaked?.end_time * 1000,
+          date2: Date.now()
+        }
+      });
+    } else {
+      setEventTime({ isFinished: true, title: '' });
+    }
+  }
+
   useEffect(() => {
     if (listTopStaked?.top) {
       setResetTopStaking(false);
+      handleEventTime(listTopStaked);
     }
   }, [listTopStaked])
+
+  const onFinishCountdown = useCallback(() => {
+    handleEventTime(listTopStaked);
+  }, [listTopStaked]);
 
   useEffect(() => {
     let arr = (listTopStaked?.top || []).map((t: any, idx: number) => ({ ...t, idx }));
@@ -295,27 +324,14 @@ const StakingPools = (props: any) => {
                     </Box>
                     <Box className={styles.boxListRank} marginBottom="20px">
                       <Box className={styles.endInText}>
-                        {
-                          listTopStaked?.start_time * 1000 > Date.now() ? 'Open in'
-                            : listTopStaked?.end_time * 1000 > Date.now() ? 'End in' : 'Finished'
-                        }
+                        {eventTime.title}
                       </Box>
-                      <Box>
-                        <CountDownTimeV1 time={
-                          listTopStaked?.start_time * 1000 > Date.now() ?
-                            {
-                              date1: listTopStaked?.start_time * 1000,
-                              date2: Date.now()
-                            } :
-                            listTopStaked?.end_time * 1000 > Date.now() ? {
-                              date1: listTopStaked?.end_time * 1000,
-                              date2: Date.now()
-                            } : {
-                              days: 0, hours: 0, minutes: 0, seconds: 0
-                            }
-                        }
-                          onFinish={() => console.log('finished')} />
-                      </Box>
+                      {
+                        !eventTime.isFinished && <Box>
+                          <CountDownTimeV1 time={eventTime.time}
+                            onFinish={onFinishCountdown} />
+                        </Box>
+                      }
                     </Box>
                   </Box>
 

@@ -3,6 +3,7 @@ import erc721ABI from '../../abi/Erc721.json';
 import StakingContest from '../../abi/StakingContest.json';
 import { getNetworkInfo } from '../../utils/network';
 import { ResultStaked } from './types';
+import { calcPercentRate } from '@utils/index';
 
 type Address = string;
 
@@ -63,7 +64,7 @@ export const isEndPool = (status: string) => {
 }
 
 export const calcProgress = (sold: number, total: number) => {
-    return Math.ceil((sold * 100) / total) || 0;
+    return calcPercentRate(sold, total);
 };
 
 export const getRemaining = (totalTicket: number, totalSold: number) => {

@@ -64,6 +64,7 @@ import NotFoundPage from "../NotFoundPage/ContentPage";
 import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
 import { WrapperAlert } from '../../components/Base/WrapperAlert';
 import { isClaim, isSwap } from './utils';
+import WrapperContent from '@base-components/WrapperContent';
 
 const copyImage = "/images/copy.svg";
 const poolImage = "/images/pool_circle.svg";
@@ -104,13 +105,15 @@ const BuyToken: React.FC<any> = (props: any) => {
     }
   }, [loadingTicket, dataTicket]);
   return <DefaultLayout>
-    {
-      checkParamType.checking ?
-        <Backdrop open={checkParamType.checking} style={{ color: '#fff', zIndex: theme.zIndex.drawer + 1, }}>
-          <CircularProgress color="inherit" />
-        </Backdrop>
-        : (checkParamType.valid ? <ContentToken id={id} /> : <NotFoundPage />)
-    }
+    <WrapperContent useShowBanner={false}>
+      {
+        checkParamType.checking ?
+          <Backdrop open={checkParamType.checking} style={{ color: '#fff', zIndex: theme.zIndex.drawer + 1, }}>
+            <CircularProgress color="inherit" />
+          </Backdrop>
+          : (checkParamType.valid ? <ContentToken id={id} /> : <NotFoundPage />)
+      }
+    </WrapperContent>
   </DefaultLayout>
 }
 
@@ -226,7 +229,7 @@ const ContentToken = ({ id, ...props }: any) => {
     today <= endBuyTimeInDate &&
     /* today >= tierStartBuyInDate && */
     /* today <= tierEndBuyInDate && */
-    poolDetails?.isDeployed 
+    poolDetails?.isDeployed
     // && verifiedEmail
     ;
   /* (poolDetails?.method === 'whitelist' ? alreadyJoinPool: true); */
@@ -434,22 +437,22 @@ const ContentToken = ({ id, ...props }: any) => {
               !(ableToFetchFromBlockchain && (winnersList && winnersList.total > 0)) &&
               !isOverTimeApplyWhiteList &&
               <Button
-                  text='Join Competition'
-                  backgroundColor='#D01F36'
-                  style={{
-                    width: 200,
-                    height: 42,
-                    backgroundColor: '#D01F36',
-                    borderRadius: 60,
-                    color: 'white',
-                    border: 'none',
-                    marginTop: 16,
-                    padding: 10,
-                    fontSize: 16,
-                    lineHeight: '24px',
-                    fontWeight: 500,
-                  }}
-                  onClick={() => window.open(poolDetails?.socialRequirement?.gleam_link)}
+                text='Join Competition'
+                backgroundColor='#D01F36'
+                style={{
+                  width: 200,
+                  height: 42,
+                  backgroundColor: '#D01F36',
+                  borderRadius: 60,
+                  color: 'white',
+                  border: 'none',
+                  marginTop: 16,
+                  padding: 10,
+                  fontSize: 16,
+                  lineHeight: '24px',
+                  fontWeight: 500,
+                }}
+                onClick={() => window.open(poolDetails?.socialRequirement?.gleam_link)}
               />
             }
 
@@ -507,8 +510,8 @@ const ContentToken = ({ id, ...props }: any) => {
           </div>
 
           {
-          isSwap(poolDetails?.campaignStatus) &&
-          startBuyTimeInDate &&
+            isSwap(poolDetails?.campaignStatus) &&
+            startBuyTimeInDate &&
             endBuyTimeInDate &&
             startBuyTimeInDate < new Date() && new Date() < endBuyTimeInDate &&
             <BuyTokenForm
@@ -588,7 +591,7 @@ const ContentToken = ({ id, ...props }: any) => {
                 pickedWinner={!!pickedWinner}
                 maximumBuy={userBuyLimit}
                 purchasableCurrency={poolDetails?.purchasableCurrency.toUpperCase()}
-                // verifiedEmail={verifiedEmail ? true : false}
+              // verifiedEmail={verifiedEmail ? true : false}
               />
             </div>
           </div>

@@ -302,3 +302,9 @@ export const cvtAddressToStar = (address: string) => {
   const stars = '**********';
   return address.slice(0, 14) + stars + address.slice(-14);
 }
+export const calcPercentRate = (input: number, total: number) => {
+  const percent = ((input * 100) / total);
+  if(percent > 99 && percent < 100) return 99;
+
+  return Math.ceil(percent);
+};

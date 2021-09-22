@@ -113,6 +113,8 @@ class ExportUsers {
     } catch (error) {
       await ExportUserModel.query().where('file_name', fileName).update({ status: 'fail' })
       throw error
+    } finally {
+      console.log('export user done')
     }
   }
 
@@ -128,4 +130,3 @@ class ExportUsers {
 }
 
 module.exports = ExportUsers
-

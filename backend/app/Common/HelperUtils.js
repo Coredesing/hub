@@ -25,6 +25,8 @@ const GAFI_SMART_CONTRACT_ADDRESS = process.env.GAFI_SMART_CONTRACT_ADDRESS
 const UNI_LP_GAFI_SMART_CONTRACT_ADDRESS = process.env.UNI_LP_GAFI_SMART_CONTRACT_ADDRESS
 const STAKING_POOL_SMART_CONTRACT = process.env.STAKING_POOL_SMART_CONTRACT
 const LEGEND_DATA = NETWORK_CONFIGS.contracts[Const.CONTRACTS.Legend].DATA;
+const BONUS_DATA = NETWORK_CONFIGS.contracts[Const.CONTRACTS.STAKING_POOL].BONUS;
+const ONE_UNIT = new BigNumber(Math.pow(10, 18))
 
 /**
  * Switch Link Web3
@@ -348,6 +350,10 @@ const getUserTierSmart = async (wallet_address) => {
     // let stakedUni = new BigNumber((stakingData && stakingData.stakedUni) || 0);
     let stakedUni = new BigNumber(0);
 
+    // Bonus points
+    const bonus = new BigNumber(getBonusPoint(wallet_address)).multipliedBy(ONE_UNIT)
+    stakedToken = stakedToken.plus(bonus)
+
     // get tiers
     let userTier = 0;
     tiers.map((tokenRequire, index) => {
@@ -366,8 +372,8 @@ const getUserTierSmart = async (wallet_address) => {
 
     return [
       userTier,
-      stakedToken.plus(stakedUni).dividedBy(Math.pow(10, 18)).toFixed(),
-      stakedToken.dividedBy(Math.pow(10, 18)).toFixed(),
+      stakedToken.plus(stakedUni).dividedBy(ONE_UNIT).toFixed(),
+      stakedToken.dividedBy(ONE_UNIT).toFixed(),
       0,
     ];
   }
@@ -772,6 +778,10 @@ const getStakingProvider = async () => {
   return networkToWeb3[Const.NETWORK_AVAILABLE.BSC]
 }
 
+const getPathExportUsers = (fileName) => {
+  return `download/export_users/${fileName}`
+}
+
 const getLegendData = () => {
   return LEGEND_DATA;
 }
@@ -787,6 +797,21 @@ const getLegendIdByOwner = (wallet_address) => {
   }
 
   return data[0]
+}
+
+const getBonusPoint = (wallet_address) => {
+  if (!BONUS_DATA) {
+    return 0
+  }
+
+  const data = BONUS_DATA.filter(data => data.wallet_address === wallet_address);
+  if (!data || data.length < 1) {
+    return 0
+  }
+
+  const bonus = parseInt(data[0].gafi)
+
+  return isNaN(bonus) ? 0 : bonus
 }
 
 const checkIsInPreOrderTime = (poolDetails, currentUserTierLevel) => {
@@ -841,6 +866,7 @@ module.exports = {
   getFirstClaimConfig,
   getDecimalsByTokenAddress,
   getTiers,
+  getPathExportUsers,
   getStakingProvider,
   checkIsInPreOrderTime,
 

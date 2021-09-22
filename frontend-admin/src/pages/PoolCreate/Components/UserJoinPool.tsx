@@ -6,6 +6,10 @@ import UserWinner from "./UserWinner/UserWinner";
 import {Tabs} from 'antd';
 import UserReverse from "./UserWinner/UserReverse";
 import PublicWinnerSetting from "./UserWinner/PublicWinnerSetting";
+import { exportSnapshotWhiteList } from "../../../request/user"
+import {uploadWinners} from "../../../request/pool";
+import {alertFailure, alertSuccess} from "../../../store/actions/alert";
+import {useDispatch} from "react-redux";
 
 const { TabPane } = Tabs;
 function callback(key: any) {
@@ -18,6 +22,17 @@ const UserJoinPool = (props: any) => {
     setValue, errors, control,
     poolDetail,
   } = props;
+  const dispatch = useDispatch();
+
+
+  const handleSubmission = async () => {
+    await exportSnapshotWhiteList({ poolId: poolDetail.id })
+    .then((result) => {
+      dispatch(alertSuccess(`Snapshot successfully`))
+    }).catch((e) => {
+      dispatch(alertFailure(`Snapshot error`))
+    });
+  };
 
   return (
     <>
@@ -51,6 +66,7 @@ const UserJoinPool = (props: any) => {
           <UserReverse poolDetail={poolDetail} />
         </TabPane>
       </Tabs>
+      <button className={classes.exportBtn} onClick={handleSubmission}>Snapshot Whitelist User</button>
     </>
   );
 };

@@ -205,4 +205,8 @@ module.exports = Object.freeze({
     LINEAR: 'linear'
   },
   TIER_CACHED_TTL: 10 * 60 * 1000, // 10 minutes
+  EXPORT_USER_TYPE: {
+    USER_LIST: 'USER_LIST',
+    SNAPSHOT_WHITELIST: 'SNAPSHOT_WHITELIST'
+  }
 });

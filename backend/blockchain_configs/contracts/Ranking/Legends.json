@@ -1,0 +1,62 @@
+[
+  {
+    "id": 0,
+    "wallet_address": "0x5E9feE15038CA8333e80F3A4725a2320b4ce62AE",
+    "valid": true
+  },
+  {
+    "id": 1,
+    "wallet_address": "0x539edd96b903c6bfDA5A54a28A74a85432309a88",
+    "valid": true
+  },
+  {
+    "id": 2,
+    "wallet_address": "0x61E98B202DD547665951cB6468C2bDB3D880efC1",
+    "valid": true
+  },
+  {
+    "id": 3,
+    "wallet_address": "0x996131EEd1fc6f83F8245602c8D171227311ceAf",
+    "valid": true
+  },
+  {
+    "id": 4,
+    "wallet_address": "0xaC6dE9f16c7b9B44C4e5C9073C3a10fA45aB4d5a",
+    "valid": true
+  },
+  {
+    "id": 5,
+    "wallet_address": "0x16CdDd6e47661DC4D709804A7f7f687CFa6eFca6",
+    "valid": true
+  },
+  {
+    "id": 6,
+    "wallet_address": "0x9bA4C6e0594118bA0B9DfF300FaE795Bb1037311",
+    "valid": true
+  },
+  {
+    "id": 7,
+    "wallet_address": "0x0C5D8C995C19af7d5691082cB5Cca2622b2cFa42",
+    "valid": true
+  },
+  {
+    "id": 8,
+    "wallet_address": "0x3C69e20E4Ec8bb4148378f1e5Dfc1d6EA94AA22C",
+    "valid": true
+  },
+  {
+    "id": 9,
+    "wallet_address": "0x57a36E40A540FB1744cC30D47D2C7E5888110C5D",
+    "valid": true
+  },
+  {
+    "id": 10,
+    "wallet_address": "0xF91fec621564d1D9179Ce8d3FA47a80a3Bb4B0FD",
+    "valid": true
+  },
+  {
+    "id": 11,
+    "wallet_address": "0x3506e5f79754e8aAd83152b8E6189b6c5508AAD4",
+    "valid": true
+  }
+]

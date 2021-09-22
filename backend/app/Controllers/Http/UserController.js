@@ -3,6 +3,7 @@
 const requests = require("request");
 const BigNumber = use('bignumber.js');
 const randomString = use('random-string');
+const moment = require('moment')
 
 const Const = use('App/Common/Const');
 const Env = use('Env');
@@ -12,7 +13,6 @@ const Database = use('Database');
 const ErrorFactory = use('App/Common/ErrorFactory');
 
 const PoolService = use('App/Services/PoolService');
-const WhitelistService = use('App/Services/WhitelistUserService');
 const WhitelistSubmissionService = use('App/Services/WhitelistSubmissionService');
 const UserService = use('App/Services/UserService');
 
@@ -25,15 +25,17 @@ const BlockpassApprovedModel = use('App/Models/BlockPassApproved');
 const WinnerModel = use('App/Models/WinnerListUser');
 const PasswordResetModel = use('App/Models/PasswordReset');
 const BlockPassModel = use('App/Models/BlockPass');
+const ExportUserModel = use('App/Models/ExportUser');
 
 const HelperUtils = use('App/Common/HelperUtils');
 const RedisUserUtils = use('App/Common/RedisUserUtils');
 const SendForgotPasswordJob = use('App/Jobs/SendForgotPasswordJob');
+const ExportUsersJob = use('App/Jobs/ExportUsers');
 
 class UserController {
   async userList({ request }) {
     try {
-      const params = request.only(['limit', 'page']);
+      const params = request.only(['searchTelegram', 'searchEmail', 'limit', 'page', 'tier']);
       const searchQuery = request.input('searchQuery');
       const limit = params.limit || Const.DEFAULT_LIMIT;
       const page = params.page || 1;
@@ -53,19 +55,21 @@ class UserController {
         })
         .select('users.*')
         .select('whitelist_submissions.user_telegram')
+      if (params.searchEmail) userQuery.where('users.email', 'like', '%' + params.searchEmail + '%')
+      if (params.searchTelegram) userQuery.where('whitelist_submissions.user_telegram', 'like', '%' + params.searchTelegram + '%')
+      let userList = JSON.parse(JSON.stringify(await userQuery.paginate(page, limit)));
 
-      let userList = JSON.parse(JSON.stringify(await userQuery.fetch()));
-      const userAdditionInfoPromises = userList.map(async (u) => {
+      const userAdditionInfoPromises = userList.data.map(async (u) => {
         const tierInfo = await HelperUtils.getUserTierSmartWithCached(u.wallet_address);
         return { tier: tierInfo[0], total_pkf: tierInfo[1], staked_pkf: tierInfo[2], ksm_bonus_pkf: tierInfo[3] }
       });
 
       const response = await Promise.all(userAdditionInfoPromises);
-      for (let i = 0; i < userList.length; i++) {
-        userList[i].tier = Number(response[i] && response[i].tier) || 0;
-        userList[i].total_pkf = Number(response[i] && response[i].total_pkf) || 0;
-        userList[i].staked_pkf = Number(response[i] && response[i].staked_pkf) || 0;
-        userList[i].ksm_bonus_pkf = Number(response[i] && response[i].ksm_bonus_pkf) || 0;
+      for (let i = 0; i < userList.data.length; i++) {
+        userList.data[i].tier = Number(response[i] && response[i].tier) || 0;
+        userList.data[i].total_pkf = Number(response[i] && response[i].total_pkf) || 0;
+        userList.data[i].staked_pkf = Number(response[i] && response[i].staked_pkf) || 0;
+        userList.data[i].ksm_bonus_pkf = Number(response[i] && response[i].ksm_bonus_pkf) || 0;
       }
       // users.data = userList;
 
@@ -73,6 +77,69 @@ class UserController {
     } catch (e) {
       console.log(e);
       return HelperUtils.responseErrorInternal('ERROR: get user list fail !');
+    }
+  }
+
+  async exportUsers({ request }) {
+    try {
+      const params = request.only(['searchTelegram', 'searchEmail']);
+
+      const newExportUser = new ExportUserModel()
+      const fileName = `gamefi_user_${moment().format('DD_MM_YYYY')}_${moment().valueOf()}.csv`
+      newExportUser.file_name = fileName
+      newExportUser.status = 'pending'
+      newExportUser.download_number = 0
+      await newExportUser.save()
+
+      ExportUsersJob.doDispatch({ type: Const.EXPORT_USER_TYPE.USER_LIST, filter: { searchTelegram: params.searchTelegram, searchEmail: params.searchEmail }, fileName })
+      return HelperUtils.responseSuccess('success');
+    } catch (error) {
+      return HelperUtils.responseErrorInternal('ERROR: export users fail !');
+    }
+  }
+
+  async exportSnapshotWhitelist({ request }) {
+    try {
+      const params = request.only(['poolId']);
+      const newExportUser = new ExportUserModel()
+      const fileName = `snapshot_whitelist_${params.poolId}_at_${moment().format('DD_MM_YYYY_hh:mm:ss')}.csv`
+      newExportUser.file_name = fileName
+      newExportUser.status = 'pending'
+      newExportUser.download_number = 0
+      await newExportUser.save()
+
+      ExportUsersJob.doDispatch({ type: Const.EXPORT_USER_TYPE.SNAPSHOT_WHITELIST, filter: { poolId: params.poolId }, fileName })
+      return HelperUtils.responseSuccess('success');
+    } catch (error) {
+      return HelperUtils.responseErrorInternal('ERROR: export snapshot whitelist fail !');
+    }
+  }
+
+  async downloadUsers({ request, params, response }) {
+    try {
+      const id = params.id;
+      let exportFile = await ExportUserModel.query().where('id', id).where('status', 'success').orderBy('created_at', 'desc').first()
+      if (!exportFile) HelperUtils.responseErrorInternal('ERROR: file not available to download !');
+
+      exportFile.download_number = exportFile.download_number + 1;
+      await exportFile.save();
+      response.attachment(HelperUtils.getPathExportUsers(exportFile.file_name))
+    } catch (error) {
+      return HelperUtils.responseErrorInternal('ERROR: export users fail !');
+    }
+  }
+
+  async getExportFiles({ request }) {
+    try {
+      const params = request.only(['limit', 'page']);
+      const limit = params.limit || Const.DEFAULT_LIMIT;
+      const page = params.page || 1;
+
+      const files = await ExportUserModel.query().orderBy('created_at', 'desc').paginate(page, limit)
+
+      return HelperUtils.responseSuccess(files);
+    } catch (error) {
+      return HelperUtils.responseErrorInternal('ERROR: get export files fail !');
     }
   }
 

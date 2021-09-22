@@ -265,13 +265,15 @@ const getStakingPoolInstance = async () => {
   return stakingPoolSC
 }
 
-const getStakingPool = async (wallet_address) => {
-  const pools = await StakingPoolModel.query().fetch();
+const getStakingPool = async (wallet_address, pools) => {
+  if (!pools || !Array.isArray(pools) || pools.length < 1) {
+    pools = await StakingPoolModel.query().fetch();
+    pools = JSON.parse(JSON.stringify(pools))
+  }
 
-  const listPool = JSON.parse(JSON.stringify(pools))
   let stakedToken = new BigNumber('0');
   let stakedUni = new BigNumber('0');
-  for (const pool of listPool) {
+  for (const pool of pools) {
     if (!pool.pool_address) {
       continue;
     }
@@ -314,7 +316,7 @@ const getStakingPool = async (wallet_address) => {
         default:
       }
     } catch (err) {
-      console.log('getStakingPoolPKF', err)
+      console.log('getStakingPool', err)
     }
   }
 
@@ -324,23 +326,23 @@ const getStakingPool = async (wallet_address) => {
   };
 }
 
-const getUserTierSmartWithCached = async (wallet_address) => {
+const getUserTierSmartWithCached = async (wallet_address, pools) => {
   if (await RedisUtils.checkExistRedisUserTierBalance(wallet_address)) {
     return JSON.parse(await RedisUtils.getRedisUserTierBalance(wallet_address));
   }
 
-  const tierInfo = await getUserTierSmart(wallet_address);
+  const tierInfo = await getUserTierSmart(wallet_address, pools);
   RedisUtils.createRedisUserTierBalance(wallet_address, tierInfo);
 
   return tierInfo
 }
 
-const getUserTierSmart = async (wallet_address) => {
+const getUserTierSmart = async (wallet_address, pools) => {
   try {
     // Get cached Rate Setting
     // const rateSetting = await getRateSetting()
     const tiers = (await getTiers()).tiers
-    const stakingData = await getStakingPool(wallet_address)
+    const stakingData = await getStakingPool(wallet_address, pools)
 
     // Caculate PKF Staked
     let stakedToken = new BigNumber((stakingData && stakingData.staked) || 0)

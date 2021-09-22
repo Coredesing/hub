@@ -13,7 +13,6 @@ const Database = use('Database');
 const ErrorFactory = use('App/Common/ErrorFactory');
 
 const PoolService = use('App/Services/PoolService');
-const WhitelistService = use('App/Services/WhitelistUserService');
 const WhitelistSubmissionService = use('App/Services/WhitelistSubmissionService');
 const UserService = use('App/Services/UserService');
 
@@ -36,7 +35,7 @@ const ExportUsersJob = use('App/Jobs/ExportUsers');
 class UserController {
   async userList({ request }) {
     try {
-      const params = request.only(['limit', 'page', 'tier']);
+      const params = request.only(['searchTelegram', 'searchEmail', 'limit', 'page', 'tier']);
       const searchQuery = request.input('searchQuery');
       const limit = params.limit || Const.DEFAULT_LIMIT;
       const page = params.page || 1;
@@ -56,7 +55,8 @@ class UserController {
         })
         .select('users.*')
         .select('whitelist_submissions.user_telegram')
-
+      if (params.searchEmail) userQuery.where('users.email', 'like', '%' + params.searchEmail + '%')
+      if (params.searchTelegram) userQuery.where('whitelist_submissions.user_telegram', 'like', '%' + params.searchTelegram + '%')
       let userList = JSON.parse(JSON.stringify(await userQuery.paginate(page, limit)));
 
       const userAdditionInfoPromises = userList.data.map(async (u) => {
@@ -82,6 +82,8 @@ class UserController {
 
   async exportUsers({ request }) {
     try {
+      const params = request.only(['searchTelegram', 'searchEmail']);
+
       const newExportUser = new ExportUserModel()
       const fileName = `gamefi_user_${moment().format('DD_MM_YYYY')}_${moment().valueOf()}.csv`
       newExportUser.file_name = fileName
@@ -89,10 +91,27 @@ class UserController {
       newExportUser.download_number = 0
       await newExportUser.save()
 
-      ExportUsersJob.doDispatch(fileName)
+      ExportUsersJob.doDispatch({ type: Const.EXPORT_USER_TYPE.USER_LIST, filter: { searchTelegram: params.searchTelegram, searchEmail: params.searchEmail }, fileName })
       return HelperUtils.responseSuccess('success');
     } catch (error) {
       return HelperUtils.responseErrorInternal('ERROR: export users fail !');
+    }
+  }
+
+  async exportSnapshotWhitelist({ request }) {
+    try {
+      const params = request.only(['poolId']);
+      const newExportUser = new ExportUserModel()
+      const fileName = `snapshot_whitelist_${params.poolId}_at_${moment().format('DD_MM_YYYY_hh:mm:ss')}.csv`
+      newExportUser.file_name = fileName
+      newExportUser.status = 'pending'
+      newExportUser.download_number = 0
+      await newExportUser.save()
+
+      ExportUsersJob.doDispatch({ type: Const.EXPORT_USER_TYPE.SNAPSHOT_WHITELIST, filter: { poolId: params.poolId }, fileName })
+      return HelperUtils.responseSuccess('success');
+    } catch (error) {
+      return HelperUtils.responseErrorInternal('ERROR: export snapshot whitelist fail !');
     }
   }
 

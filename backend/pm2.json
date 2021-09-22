@@ -7,6 +7,17 @@
       "exec_interpreter": "none",
       "exec_mode"  : "fork_mode",
       "watch": false
+    },
+    {
+      "name": "GameFI Kue",
+      "script": "adonis",
+      "args": "kue:listen",
+      "env": {
+        "KUE_RUNNING": "true",
+      },
+      "exec_interpreter": "none",
+      "exec_mode"  : "fork_mode",
+      "watch": false
     }
   ]
 }

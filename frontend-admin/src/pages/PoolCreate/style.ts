@@ -314,7 +314,18 @@ const useStyles = makeStyles(theme => ({
     top: '50%',
     transform: 'translateY(-50%)'
   },
-
+  exportBtn: {
+    padding: '13px 20px',
+    backgroundColor: '#FFCC00',
+    border: 'none',
+    borderRadius: 10,
+    color: 'white',
+    fontWeight: 600,
+    cursor: 'pointer',
+    '&:focus': {
+      outline: 'none'
+    }
+  },
 }))
 
 export default useStyles

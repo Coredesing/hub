@@ -42,6 +42,7 @@ module.exports = {
     StakingPool: {
       CONTRACT_DATA: require('./contracts/Normal/StakingPool.json'),
       CONTRACT_CLAIMABLE: require('./contracts/Claim/Campaign.json'),
+      BONUS: require('./contracts/Ranking/Bonus'),
       CONTRACT_ADDRESS: '',
       FIRST_CRAWL_BLOCK: 745,
       BLOCK_NUM_IN_ONE_GO: 100,
@@ -59,7 +60,7 @@ module.exports = {
     Legend: {
       CONTRACT_ADDRESS: '0x9a524692087707fdb0b64f1409FcC1907Ef083b8',
       CONTRACT_DATA: require('./contracts/Erc721.json'),
-      DATA: require('./contracts/Legend/Legends.json')
+      DATA: require('./contracts/Ranking/Legends.json')
     }
   }
 };

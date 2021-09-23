@@ -579,7 +579,7 @@ const getProgressWithPools = (pool) => {
   if (new BigNumber(progress).lte(0)) {
     progress = '0';
   }
-  if (new BigNumber(progress).gt(new BigNumber(99.99))) {
+  if (new BigNumber(progress).gt(new BigNumber(99.9))) {
     progress = '100';
   }
 
@@ -747,7 +747,7 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
     return PoolStatus.CLOSED;
   }
 
-  if (new BigNumber(soldProgress || 0).gte(new BigNumber(99.99))) {
+  if (new BigNumber(soldProgress || 0).gte(new BigNumber(99.9))) {
     return PoolStatus.CLOSED;
   }
 

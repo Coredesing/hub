@@ -579,7 +579,7 @@ const getProgressWithPools = (pool) => {
   if (new BigNumber(progress).lte(0)) {
     progress = '0';
   }
-  if (new BigNumber(progress).gt(new BigNumber(99.9))) {
+  if (new BigNumber(progress).gte(new BigNumber(99.9))) {
     progress = '100';
   }
 

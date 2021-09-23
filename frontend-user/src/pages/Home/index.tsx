@@ -73,6 +73,16 @@ const Home = (props: any) => {
       name: "Death Road",
       website: "https://deathroad.io/",
     },
+    {
+      banner: "/images/partnerships/heroverse.png",
+      name: "Heroverse",
+      website: "https://heroverse.io/",
+    },
+    {
+      banner: "/images/partnerships/darkfrontier.png",
+      name: "Dark Frontier",
+      website: "https://www.darkfrontiers.com/",
+    },
   ];
 
   const [isShowImgBanner, setIsShowImgModal] = useState(true);

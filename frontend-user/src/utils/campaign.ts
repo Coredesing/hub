@@ -144,7 +144,7 @@ export const getProgressWithPools = (pool: any) => {
   if (new BigNumber(progress).lte(0)) {
     progress = "0";
   }
-  if (new BigNumber(progress).gte(100)) {
+  if (new BigNumber(progress).gte(99.9)) {
     progress = "100";
   }
 

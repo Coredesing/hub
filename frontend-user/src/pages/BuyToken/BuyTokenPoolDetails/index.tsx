@@ -24,7 +24,7 @@ type Props = {
 const headers = ["Tier", "Start Buy Time", "End Buy Time"];
 
 const cvtStrToParagraph = (string: string = '') => {
-  return string.split('\n').map((val) => val && <p style={{ marginTop: '20px' }}>{val}</p>)
+  return string.split('\n').map((val, idx) => val && <p key={idx} style={{ marginTop: '20px' }}>{val}</p>)
 }
 
 const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {

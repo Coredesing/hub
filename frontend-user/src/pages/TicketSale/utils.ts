@@ -1,3 +1,4 @@
+import { calcPercentRate } from "@utils/index";
 import { TOKEN_TYPE } from "../../constants";
 
 export const getRemaining = (totalTicket: number, totalSold: number) => {
@@ -5,7 +6,7 @@ export const getRemaining = (totalTicket: number, totalSold: number) => {
 }
 
 export const calcProgress = (sold: number, total: number) => {
-    return Math.ceil((sold * 100) / total) || 0;
+    return calcPercentRate(sold, total);
 };
 
 export const getRoute = (tokenType: string) => {

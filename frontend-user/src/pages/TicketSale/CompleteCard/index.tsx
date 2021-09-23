@@ -9,6 +9,7 @@ import { calcProgress } from "../utils";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import { numberWithCommas } from "../../../utils/formatNumber";
+import BigNumber from 'bn.js';
 
 type Props = {
   card: { [k: string]: any };
@@ -36,6 +37,17 @@ export const CompleteCard = ({ card, ...props }: Props) => {
       }
     }
   }, [card]);
+
+  const getTotalSold = (card: any) => {
+    if(card.token_sold_display && new BigNumber(card.token_sold_display).gten(0)) {
+      const totalSold = new BigNumber(card.token_sold).add(new BigNumber(card.token_sold_display));
+      if(totalSold.gte(new BigNumber(card.total_sold_coin))) {
+        return card.total_sold_coin;
+      }
+      return new BigNumber(card.token_sold).add(new BigNumber(card.token_sold_display)).toNumber().toFixed(1);
+    }
+    return card.token_sold;
+  }
 
   return (
     <div className={clsx(styles.card, styles.cardComp)}>
@@ -89,17 +101,17 @@ export const CompleteCard = ({ card, ...props }: Props) => {
             </span>
             <span>
               <span className={clsx(styles.textBold, "percent")}>
-                ({calcProgress(+card.token_sold, +card.total_sold_coin)}%)
+                ({calcProgress(+getTotalSold(card), +card.total_sold_coin)}%)
               </span>
               <span className={clsx(styles.text, styles.compText)}>
-                {numberWithCommas(card.token_sold || 0, 0)}/{numberWithCommas(card.total_sold_coin || 0)}{" "}
+                {numberWithCommas(+getTotalSold(card) + '' || 0, 0)}/{numberWithCommas(card.total_sold_coin || 0)}{" "}
                 {card.tokenSymbol}
               </span>
             </span>
           </div>
           <div className="progress">
             <Progress
-              progress={calcProgress(+card.token_sold, +card.total_sold_coin)}
+              progress={calcProgress(+getTotalSold(card), +card.total_sold_coin)}
             />
           </div>
         </div>

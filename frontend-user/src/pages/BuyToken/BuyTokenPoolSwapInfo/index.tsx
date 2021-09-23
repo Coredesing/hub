@@ -17,11 +17,14 @@ const BuyTokenPoolSwapInfo: FC<Props> = ({poolDetails, currencyName}) => {
     poolDetails?.networkAvailable,
     poolDetails,
   );
-  const showProgress = (sold:number, totalSold: number) => {
-    const _sold = new BigNumber(sold);
-    const _totalSold = new BigNumber(totalSold);
-    const percent = _sold.multipliedBy(100).dividedBy(_totalSold)
-    return percent.lt(100) ? +percent.toFixed(1) : 100;
+  // const showProgress = (sold:number, totalSold: number) => {
+  //   const _sold = new BigNumber(sold);
+  //   const _totalSold = new BigNumber(totalSold);
+  //   const percent = _sold.multipliedBy(100).dividedBy(_totalSold)
+  //   return percent.lt(100) ? +percent.toFixed(1) : 100;
+  // }
+  const showProgress = (soldProgress: number | string) => {
+    return +soldProgress;
   }
   return (
     <section className={styles.sectionBuyTokenPoolSwapInfo}>
@@ -76,12 +79,12 @@ const BuyTokenPoolSwapInfo: FC<Props> = ({poolDetails, currencyName}) => {
 
         <div className={styles.jubValue}>
           <div className={styles.leftBotSec}>
-            {/* {numberWithCommas(new BigNumber(soldProgress).gte(100) ? '100': soldProgress)}% */}
-            { showProgress(+poolDetails.tokenSold || 0, +poolDetails.totalSoldCoin || 0)}%
+            {showProgress(soldProgress)}%
+            {/* { showProgress(+poolDetails.tokenSold || 0, +poolDetails.totalSoldCoin || 0)}% */}
           </div>
           <div className={styles.rightBotSec}>
             {
-              showProgress(+poolDetails.tokenSold || 0, +poolDetails.totalSoldCoin || 0) === 100 
+              showProgress(soldProgress) === 100 
               ? numberWithCommas(`${poolDetails?.amount}` || "0", 2) 
               : numberWithCommas(new BigNumber(tokenSold).gt(`${poolDetails?.amount}`) ? `${poolDetails?.amount}`: tokenSold, 2)}&nbsp;
               / {numberWithCommas(`${poolDetails?.amount}` || "0", 2)
@@ -90,7 +93,7 @@ const BuyTokenPoolSwapInfo: FC<Props> = ({poolDetails, currencyName}) => {
         </div>
 
         <div className={styles.progress}>
-          <div className={styles.achieved} style={{ width: `${ showProgress(+poolDetails.tokenSold || 0, +poolDetails.totalSoldCoin || 0)}%` }}></div>
+          <div className={styles.achieved} style={{ width: `${ showProgress(soldProgress)}%` }}></div>
         </div>
       </div>
     </section>

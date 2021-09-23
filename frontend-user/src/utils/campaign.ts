@@ -108,13 +108,13 @@ export const getProgressWithPools = (pool: any) => {
     };
   }
 
-  if (pool.id == 22) {
-    return {
-      progress: "100",
-      tokenSold: "500000",
-      totalSoldCoin: "500000",
-    };
-  }
+  // if (pool.id == 22) {
+  //   return {
+  //     progress: "100",
+  //     tokenSold: "500000",
+  //     totalSoldCoin: "500000",
+  //   };
+  // }
 
   // Merge config display with real
   const originTokenSold = tokenSold;
@@ -134,14 +134,13 @@ export const getProgressWithPools = (pool: any) => {
       .div(totalSoldCoinDiv)
       .multipliedBy(100)
       .plus(progressDisplay)
-      .toFixed();
+      .toFixed(1);
   } else {
     progress = new BigNumber(tokenSold)
       .div(totalSoldCoinDiv)
       .multipliedBy(100)
-      .toFixed();
+      .toFixed(1);
   }
-
   if (new BigNumber(progress).lte(0)) {
     progress = "0";
   }

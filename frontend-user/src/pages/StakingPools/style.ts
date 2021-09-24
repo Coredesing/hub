@@ -440,6 +440,48 @@ const useStyles = makeStyles((theme: any) => {
         fontFamily: 'Firs Neue',
       }
     },
+    cellRank: {
+      display: 'grid !important',
+      gridTemplateColumns: '28px 28px',
+      gap: '10px !important',
+      alignItems: 'center !important',
+      '& .rank': {
+        position: 'relative',
+        width: '28px',
+        height: '29px',
+  
+        '& img': {
+          width: '100%',
+          height: '100%'
+        },
+        '& span': {
+          display: 'block',
+          position: 'absolute',
+          color: '#171717',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          fontSize: '14px',
+          fontWeight: 600,
+          fontFamily: 'Firs Neue',
+        }
+      },
+      '& .movement': {
+        display: 'block !important',
+        textAlign: 'center',
+        '& span.icon': {
+          height: '10px',
+          marginBottom: '5px',
+        },
+        '& span': {
+          display: 'block',
+        },
+
+        '& .down svg': {
+          transform: 'rotate(-180deg)'
+        }
+      }
+    },
   };
 });
 

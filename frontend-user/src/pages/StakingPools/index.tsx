@@ -47,8 +47,9 @@ import { cvtAddressToStar, debounce, escapeRegExp } from '@utils/index';
 import { numberWithCommas } from '@utils/formatNumber';
 import { getTiers } from '@store/actions/sota-tiers';
 import WrapperContent from '@base-components/WrapperContent';
-import {topStaking} from './data';
+import { topStaking } from './data';
 import SelectBox from '@base-components/SelectBox';
+import { getVectorIcon } from '@base-components/Icon';
 console.log(topStaking);
 const closeIcon = '/images/icons/close.svg';
 
@@ -227,27 +228,28 @@ const StakingPools = (props: any) => {
   const onChangePool = (event: any) => {
     setCurrentTops((old: any) => {
       const currentChange: any = JSON.parse(JSON.stringify(topStaking[event.target.value]));
-      if(!old.top) {
+      if (!old.top) {
         return currentChange;
       }
       const before = topStaking[currentChange.id - 1];
-      if(!before) {
+      if (!before) {
         return currentChange;
       }
 
       currentChange.top.map((n: any, currRank: number) => {
         let beforeRank = before.top.findIndex((o) => o.wallet_address === n.wallet_address);
-        currRank += 1; 
-        beforeRank += 1; 
-          if(currRank=== beforeRank) {
-            n.note = '';
-          } else if(currRank < beforeRank) {
-            n.note = `+${beforeRank - currRank}`;
-          } else {
-            n.note = `-${currRank - beforeRank}`;
-          }
+        currRank += 1;
+        beforeRank += 1;
+        if (currRank === beforeRank) {
+          n.steps = 0;
+        } else if (currRank < beforeRank) {
+          n.steps = beforeRank - currRank;
+        } else {
+          n.steps = -(currRank - beforeRank);
+        }
         return n;
       })
+      console.log(currentChange)
       return currentChange;
     });
   }
@@ -256,7 +258,7 @@ const StakingPools = (props: any) => {
   //     const newDeposit: any = {};
   //     const newWithdraw: any = {};
   //     filteredLinearPools.forEach((pool: any) => {
-        
+
   //       const contract = getContract(pool.pool_address, STAKING_POOL_ABI, library, connectedAccount as string);
   //       if(contract) {
   //         contract.on('LinearDeposit', (poolid, address, amount) => {
@@ -279,7 +281,7 @@ const StakingPools = (props: any) => {
   //     })
   //   }
   // }, [filteredLinearPools, connectedAccount, library]);
-  
+
 
   return (
     <DefaultLayout>
@@ -427,11 +429,11 @@ const StakingPools = (props: any) => {
                     </Table>
                   </TableContainer>
 
-                  <SelectBox 
-                  items={topStaking.map((t, id) => ({poolName: t.poolname, id}))}
-                  itemNameShowValue={'poolName'}
-                  itemNameValue={'id'}
-                  onChange={onChangePool}
+                  <SelectBox
+                    items={topStaking.map((t, id) => ({ poolName: t.poolname, id }))}
+                    itemNameShowValue={'poolName'}
+                    itemNameValue={'id'}
+                    onChange={onChangePool}
                   >
 
                   </SelectBox>
@@ -448,7 +450,20 @@ const StakingPools = (props: any) => {
                       <TableBody>
                         {currentTops?.top?.map((row: any, idx: number) => (
                           <TableRowBody key={idx}>
-                            <TableCell component="th" scope="row" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>  {idx + 1} {row.note} </TableCell>
+                            <TableCell component="th" scope="row" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>
+                              <div className={styles.cellRank}>
+                                <div className="rank">
+                                  <img src={`/images/icons/${!row.steps ? 'gray' : row.steps > 0 ? 'green' : 'red'}-rank.png`} alt="" />
+                                  <span>{idx + 1}</span>
+                                </div>
+                                <div className="movement">
+                                  {row.steps > 0 ? <span className="up icon">{getVectorIcon()}</span> : row.steps < 0 ? <span className="down icon">{getVectorIcon('#D01F36')}</span> : ''}
+                                  <span>
+                                    {row.steps}
+                                  </span>
+                                </div>
+                              </div>
+                            </TableCell>
                             <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{cvtAddressToStar(row.wallet_address)}</TableCell>
                             <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{numberWithCommas((row.amount + '') || 0, 4)}</TableCell>
                             <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{convertTimeToStringFormat(new Date(+row.last_time * 1000))}</TableCell>

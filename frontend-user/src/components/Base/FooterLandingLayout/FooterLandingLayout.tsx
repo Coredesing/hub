@@ -64,7 +64,7 @@ const FooterLandingLayout = () => {
         <a href='mailto:support@polkafoundry.com'>support@polkafoundry.com</a>
       </div> */}
       <div className={styles.endContent}>
-        <p className={styles.copyRight}>© Icetea Labs, 2021</p>
+        <a className={styles.copyRight} href="https://icetea.io/">© Icetea Labs, 2021</a>
       </div>
       <div className={styles.btnToTop} onClick={scrollTop}>
         <img src={iconArrow} alt="" />

@@ -152,6 +152,7 @@ export const SUPPORTED_WALLETS_BSC: { [key: string]: WalletInfo } = {
     description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
     disableIcon: '/images/wallet-connect-disabled.svg',
     href: null,
+    mobile: true,
   },
 }
 
@@ -164,6 +165,7 @@ export const SUPPORTED_WALLETS_POLYGON: { [key: string]: WalletInfo } = {
     description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
     disableIcon: '/images/wallet-connect-disabled.svg',
     href: null,
+    mobile: true,
   },
 }
 

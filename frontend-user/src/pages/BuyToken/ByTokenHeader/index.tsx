@@ -1,10 +1,10 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import usePoolJoinAction from '../hooks/usePoolJoinAction';
 import Button from '../Button';
 import { getEtherscanTransactionAddress } from "../../../utils/network";
 import { useTypedSelector } from "../../../hooks/useTypedSelector";
-import { ETH_CHAIN_ID, BSC_CHAIN_ID, POLYGON_CHAIN_ID } from '../../../constants/network';
+import { ETH_CHAIN_ID, BSC_CHAIN_ID, POLYGON_CHAIN_ID, ChainDefault } from '../../../constants/network';
 import useStyles from "./styles";
 import { Hidden } from "@material-ui/core";
 
@@ -24,6 +24,11 @@ const HeaderByToken: FC<Props> = ({ poolDetailsMapping, poolDetails }) => {
 
   const { appChainID } = useTypedSelector(state => state.appNetwork).data;
 
+  const listNetwork = useMemo(() => ({
+    'eth': 'Ethereum',
+    'bsc': 'Binance Smart Chain',
+    'polygon': 'Polygon',
+  }), []);
 
   useEffect(() => {
     let appNetwork;
@@ -123,11 +128,7 @@ const HeaderByToken: FC<Props> = ({ poolDetailsMapping, poolDetails }) => {
               alt=""
             />
             {
-              {
-                'eth': 'Ethereum',
-                'bsc': 'Binance Smart Chain',
-                'polygon': 'Polygon',
-              }[`${poolDetails?.networkAvailable}`] || 'Ethereum'
+              listNetwork[poolDetails?.networkAvailable as keyof typeof listNetwork] || ChainDefault.name
             }
             {/* {poolDetails?.networkAvailable === 'eth' ? 'Ethereum' : 'Binance Smart Chain'} */}
           </li>
@@ -141,11 +142,7 @@ const HeaderByToken: FC<Props> = ({ poolDetailsMapping, poolDetails }) => {
               alt=""
             />
             {
-              {
-                'eth': 'Ethereum',
-                'bsc': 'Binance Smart Chain',
-                'polygon': 'Polygon',
-              }[`${poolDetails?.networkAvailable}`] || 'Ethereum'
+              listNetwork[poolDetails?.networkAvailable as keyof typeof listNetwork] || ChainDefault.name
             }
           </li>
           <li className={styles.item}>

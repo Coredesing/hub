@@ -166,7 +166,7 @@ const HeaderByToken: FC<Props> = ({ poolDetailsMapping, poolDetails }) => {
               src="/images/icons/icon_launching.svg"
               alt=""
             />
-            Launching in {durationShow} day
+            Launching in {durationShow} day{durationShow > 1 ? 's' : ''}
           </li>
         )}
       </ul>

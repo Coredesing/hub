@@ -13,9 +13,12 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/utils/ERC721HolderUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
-import "./VRFConsumerBaseUpgradable.sol";
 
-contract NFTBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgradeable, ERC721HolderUpgradeable, VRFConsumerBaseUpgradable {
+interface IExternalRandom {
+    function requestRandomNumber(uint256 eventId) external returns (uint256, bool);
+}
+
+contract NFTBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgradeable, ERC721HolderUpgradeable {
     struct SaleEvent {
         uint256 currentSupply;
         uint256 maxSupply;
@@ -34,6 +37,8 @@ contract NFTBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgradeabl
     struct Box {
         uint256 id;
         uint256 nftId;
+        uint256 eventId;
+        uint256 subBoxId;
         bool revealed;
     }
 
@@ -53,11 +58,11 @@ contract NFTBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgradeabl
     uint256 public maxSupply;
     address public fundWallet;
     address public signer;
-    bytes32 internal keyHash;
-    uint256 public constant FEE_RANDOM = 10 ** 17; // 0.1 LINK
-    mapping(uint256 => mapping(uint256 => bool)) public minted; // check nftId is minted for saleId
+    address public externalRandom;
+    bool public allowTransfer;
+    mapping(uint256 => bool) public minted; // check nftId is minted for saleId
     mapping(uint256 => mapping(uint256 => SubBox)) public subBoxes;
-    mapping(bytes32 => RandomEvent) public randomMapping; // match random requestId vs eventId
+    mapping(uint256 => mapping(address => uint256)) public userBought;
     SaleEvent[] public saleEvents;
     Box[] public boxes;
 
@@ -69,6 +74,8 @@ contract NFTBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgradeabl
     event SaleEventNFTUpdated(uint256 id, address nft);
     event SaleEventExternalRandomUpdated(uint256 id, bool useExternalRandom);
     event RandomBox(uint256 boxId, uint256 nftId);
+    event RandomSpecialBox(uint256 seed, uint256 boxId, uint256 nftId);
+    event SetRandomNumber(address sender, uint256 eventId, bytes32 requestId, uint256 randomness);
 
     function __NFTBox_init(
         string memory name,
@@ -76,31 +83,25 @@ contract NFTBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgradeabl
         string memory _uri,
         address _signer,
         address _fundWallet,
-        address _vrfCoordinator,
-        address _linkToken,
-        bytes32 _keyHash
+        address _externalRandom
     ) public initializer {
         __Ownable_init();
         ERC721Upgradeable.__ERC721_init(name, symbol);
-        VRFConsumerBaseUpgradable.initialize(_vrfCoordinator, _linkToken);
 
         uri = _uri;
         signer = _signer;
         fundWallet = _fundWallet;
-        keyHash = _keyHash;
+        externalRandom = _externalRandom;
+        allowTransfer = false;
     }
 
     function setBaseURI(string memory baseURI) public onlyOwner {
         uri = baseURI;
     }
 
-    function setVrfCoordinator(address _vrfCoordinator, address _linkToken) public onlyOwner {
-        require(_vrfCoordinator != address(0), "invalid contract");
-        VRFConsumerBaseUpgradable.initialize(_vrfCoordinator, _linkToken);
-    }
-
-    function setKeyHash(bytes32 _keyHash) public onlyOwner {
-        keyHash = _keyHash;
+    function setExternalRandom(address _externalRandom) public onlyOwner {
+        require(_externalRandom != address(0), "invalid contract");
+        externalRandom = _externalRandom;
     }
 
     function setSigner(address _signer) public onlyOwner {
@@ -117,6 +118,10 @@ contract NFTBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgradeabl
         for (uint256 index = 0; index < max.length; index++) {
             subBoxes[eventID][index] = SubBox(index, max[index], 0);
         }
+    }
+
+    function setAllowTransfer(bool allow) public onlyOwner {
+        allowTransfer = allow;
     }
 
     function setSaleEventTime(
@@ -193,26 +198,25 @@ contract NFTBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgradeabl
         emit NewSaleEventAdded(saleEvents.length);
     }
 
-    function getRandomNumber(uint256 eventId) public onlyOwner {
-        require(LINK.balanceOf(address(this)) >= FEE_RANDOM, "Not enough LINK - fill contract with faucet");
-        bytes32 requestId = requestRandomness(keyHash, FEE_RANDOM);
-        require(!randomMapping[requestId].isRequest, "NFTBox: random error");
-        randomMapping[requestId] = RandomEvent(eventId, true, false);
-    }
+    function setRandomNumber(uint256 eventId, bytes32 requestId, uint256 randomness) external {
+        require(msg.sender == externalRandom, "NFTBox: msg.sender is not valid");
 
-    function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
-        require(randomMapping[requestId].isRequest && !randomMapping[requestId].isFulFill, "NFTBox: fulfill error");
-        uint256 eventId = randomMapping[requestId].eventId;
-        SaleEvent storage sale = saleEvents[eventId];
+        SaleEvent memory sale = saleEvents[eventId];
         require(sale.startTime > 0, "event not found");
         require(sale.currentSupply == sale.maxSupply || block.timestamp > sale.endTime, "The current sale events has not sold out");
         require(sale.revealed < sale.maxSupply, "The current sale has random successfully");
 
-        uint256 seed = randomness;
+        uint256 seed = randomness % sale.maxSupply;
         for (uint256 index = 0; index < sale.maxSupply; index++) {
-            seed = uint256(keccak256(abi.encodePacked(seed, block.timestamp, eventId, index))) % (sale.maxSupply - sale.revealed);
+            uint256 length = 1;
+            if (sale.maxSupply > sale.revealed) {
+                length = sale.maxSupply - sale.revealed;
+            }
+            seed = uint256(keccak256(abi.encodePacked(seed, index))) % length;
             _linkBox(eventId, index + sale.startingBoxIndex, seed);
         }
+
+        emit SetRandomNumber(msg.sender, eventId, requestId, randomness);
     }
 
     function randomEvent(uint256 eventId) public onlyOwner {
@@ -222,26 +226,34 @@ contract NFTBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgradeabl
         require(sale.revealed < sale.maxSupply, "The current sale has random successfully");
 
         uint256 seed = 0;
-        if (sale.useExternalRandom) {
-            getRandomNumber(eventId);
-            return;
+        if (sale.useExternalRandom && externalRandom != address(0)) {
+            (uint256 randomness, bool isOk) = IExternalRandom(externalRandom).requestRandomNumber(eventId);
+            if (!isOk) {
+                return;
+            }
+            seed = randomness % sale.maxSupply;
         } else {
             seed = uint256(keccak256(abi.encodePacked(block.difficulty, block.timestamp, eventId))) % sale.maxSupply;
         }
 
         for (uint256 index = 0; index < sale.maxSupply; index++) {
-            seed = uint256(keccak256(abi.encodePacked(seed, block.timestamp, eventId, index))) % (sale.maxSupply - sale.revealed);
+            uint256 length = 1;
+            if (sale.maxSupply > sale.revealed) {
+                length = sale.maxSupply - sale.revealed;
+            }
+            seed = uint256(keccak256(abi.encodePacked(seed, index))) % length;
             _linkBox(eventId, index + sale.startingBoxIndex, seed);
         }
     }
 
     function claimBox(uint256 eventId, uint256 amount, uint256 subBoxId, bytes memory signature) public payable {
         SaleEvent storage sale = saleEvents[eventId];
-        require(amount > 0 && amount + balanceOf(msg.sender) <= sale.maxPerBatch, "NFTBox: Rate limit exceeded");
+        require(amount > 0 && amount + userBought[eventId][msg.sender] <= sale.maxPerBatch, "NFTBox: Rate limit exceeded");
         require(block.timestamp >= sale.startTime, "NFTBox: Sale has not started");
         require(block.timestamp <= sale.endTime, "NFTBox: Sale has ended");
         require(sale.currentSupply + amount <= sale.maxSupply, "NFTBox: sold out");
         require(msg.value == sale.price * amount, "NFTBox: invalid value");
+        // TODO
         require(verify(msg.sender, eventId, amount, subBoxId, signature), "NFTBox: verify error");
 
         if (sale.useSubEvent) {
@@ -252,18 +264,16 @@ contract NFTBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgradeabl
         require(isSuccess);
 
         for (uint i = 0; i < amount; i++) {
-            uint256 boxId = _createBox();
+            uint256 boxId = _createBox(eventId, subBoxId);
             _safeMint(msg.sender, boxId);
         }
 
         sale.currentSupply += amount;
         subBoxes[eventId][subBoxId].totalSold += amount;
+        userBought[eventId][msg.sender] += amount;
     }
 
-    function claimNFT(uint256 eventId) public {
-        SaleEvent storage sale = saleEvents[eventId];
-        require(block.timestamp > sale.endTime || sale.maxSupply == sale.revealed, "NFTBox: Sale has not ended");
-        require(sale.NFT != address(0), "NFTBox: Cannot claim NFT");
+    function claimAllNFT() public {
         uint256 length = balanceOf(msg.sender);
         require(length > 0, "NFTBox: User must buy box before claim");
 
@@ -278,49 +288,97 @@ contract NFTBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgradeabl
                 continue;
             }
 
+            SaleEvent memory sale = saleEvents[boxes[boxId].eventId];
+            if(sale.NFT == address(0)) {
+                continue;
+            }
+
             // transfer NFT
             IERC721(sale.NFT).safeTransferFrom(address(this), msg.sender, boxes[boxId].nftId);
-
+            // reveal
             boxes[boxId].revealed = true;
             // burn box
             _burn(boxId);
         }
     }
 
-    function _createBox() private returns (uint256) {
+    function claimNFT(uint256 boxId) public {
+        require(ownerOf(boxId) == msg.sender, "NFTBox: User must be owner of boxId");
+        require(boxes[boxId].revealed, "NFTBox: Box has not been revealed");
+        SaleEvent memory sale = saleEvents[boxes[boxId].eventId];
+        require(sale.NFT != address(0), "NFTBox: NFT not found");
+
+        // transfer NFT
+        IERC721(sale.NFT).safeTransferFrom(address(this), msg.sender, boxes[boxId].nftId);
+        // reveal
+        boxes[boxId].revealed = true;
+        // burn box
+        _burn(boxId);
+    }
+
+    function _createBox(uint256 eventId, uint256 subBoxId) private returns (uint256) {
         uint256 id = boxes.length;
-        boxes.push(Box(id, 0, false));
+        boxes.push(Box(id, 0, eventId, subBoxId, false));
 
         emit BoxCreated(id);
         return id;
     }
 
-    function _linkBox(uint256 saleId, uint256 boxId, uint256 seed) private {
+    function _linkBox(uint256 saleId, uint256 boxId, uint256 seed) internal {
         SaleEvent storage sale = saleEvents[saleId];
-        // require(!boxes[boxId].revealed, "The current box has been revealed");
-        if (boxes[boxId].revealed) {
+        if (boxes.length <= boxId || boxes[boxId].revealed || sale.maxSupply < 1) {
             return;
         }
+        Box storage box = boxes[boxId];
 
         for (uint256 index = sale.startNFTId; index <= sale.startNFTId + sale.maxSupply - 1; index++) {
-            if (seed == 0 && !minted[saleId][index]) {
+            if (seed == 0 && !minted[index]) {
                 // update sale
-                minted[saleId][index] = true;
-                sale.revealed = sale.revealed + 1;
+                minted[index] = true;
+                sale.revealed++;
 
                 // update box
-                boxes[boxId].nftId = index;
-                boxes[boxId].revealed =  true;
+                box.nftId = index;
+                box.revealed =  true;
                 emit RandomBox(boxId, index);
                 return;
             }
 
-            if (seed == 0 && minted[saleId][index]) {
+            if (seed == 0 && minted[index]) {
                 continue;
             }
 
-            seed = seed - 1;
+            if (seed > 0) {
+                seed = seed - 1;
+            }
         }
+
+        // why it is here?
+        for (uint256 index = sale.startNFTId; index <= sale.startNFTId + sale.maxSupply - 1; index++) {
+            if (!minted[index]) {
+                // update sale
+                minted[index] = true;
+                sale.revealed++;
+
+                // update box
+                box.nftId = index;
+                box.revealed =  true;
+                emit RandomSpecialBox(seed, boxId, index);
+                return;
+            }
+        }
+    }
+
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal virtual override {
+        if (from != address(0) && to != address(0)) {
+            require(allowTransfer, "NFTBox: Box is not allowed to transfer");
+        }
+
+        super._beforeTokenTransfer(from, to, tokenId);
     }
 
     function _baseURI() internal view override returns (string memory) {
@@ -348,4 +406,7 @@ contract NFTBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgradeabl
     function getEthSignedMessageHash(bytes32 _messageHash) public pure returns (bytes32) {
         return ECDSA.toEthSignedMessageHash(_messageHash);
     }
+
+    receive() external payable {}
+    fallback() external payable {}
 }

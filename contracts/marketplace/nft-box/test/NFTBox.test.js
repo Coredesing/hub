@@ -36,8 +36,8 @@ describe("NFT Box ", function () {
       const maxPerBatch = 50;
 
       this.box = await upgrades.deployProxy(this.NFTBox, [
-          "NFTBox", "BOX", "http://127.0.0.1/",
-        this.signer.address, this.fundWallet.address, ZERO_ADDRESS, ZERO_ADDRESS, DEFAULT_KEY_HASH], {
+        "NFTBox", "BOX", "http://127.0.0.1/",
+        this.signer.address, this.fundWallet.address, ZERO_ADDRESS], {
         initializer: '__NFTBox_init'
       });
       await this.box.deployed();
@@ -47,9 +47,9 @@ describe("NFT Box ", function () {
       await this.nft.mint(maxSupply, this.box.address);
 
       await this.box.addSaleEvent(
-        maxSupply, utils.parseEther("0.1"), (await time.latest()).toNumber(),
-        (await time.latest()).toNumber() + duration.days(1).toNumber(), maxPerBatch,
-        this.nft.address, 0, 0, false, true
+          maxSupply, utils.parseEther("0.1"), (await time.latest()).toNumber(),
+          (await time.latest()).toNumber() + duration.days(1).toNumber(), maxPerBatch,
+          ZERO_ADDRESS, 0, 0, false, true
       );
       await this.box.setSubBox(0, [30, 30, 30, 30, 30])
 
@@ -105,6 +105,17 @@ describe("NFT Box ", function () {
           "NFTBox: Rate limit exceeded"
       );
 
+      // do not allow
+      await expectRevert(
+          this.box.connect(this.alice).transferFrom(this.alice.address, this.bob.address, 0),
+          "NFTBox: Box is not allowed to transfer"
+      );
+      // allow
+      await this.box.setAllowTransfer(true);
+      await this.box.connect(this.alice).transferFrom(this.alice.address, this.bob.address, 0)
+      await this.box.connect(this.bob).transferFrom(this.bob.address, this.alice.address, 0)
+      await this.box.setAllowTransfer(false);
+
       const sale = await this.box.connect(this.alice).saleEvents(0)
       const balanceOf = await this.nft.balanceOf(this.box.address)
       const balanceBoxOfAlice = await this.box.balanceOf(this.alice.address)
@@ -116,13 +127,20 @@ describe("NFT Box ", function () {
       expect(maxPerBatch - 10).to.equal(balanceBoxOfBob.toNumber());
 
       // cannot claim before random
+      await this.box.connect(this.alice).claimAllNFT()
+      await this.box.connect(this.bob).claimAllNFT()
+
       await expectRevert(
           this.box.connect(this.alice).claimNFT(0),
-          "NFTBox: Sale has not ended"
+          "NFTBox: Box has not been revealed"
       );
       await expectRevert(
           this.box.connect(this.bob).claimNFT(0),
-          "NFTBox: Sale has not ended"
+          "NFTBox: User must be owner of boxId"
+      );
+      await expectRevert(
+          this.box.connect(this.bob).claimNFT(maxPerBatch + 1),
+          "NFTBox: Box has not been revealed"
       );
 
       // random
@@ -131,14 +149,29 @@ describe("NFT Box ", function () {
       for (let index = 0; index < maxSupply; index++) {
         const box = await this.box.boxes(index);
         const NftId = box[1].toNumber()
-        console.log(`link box ${index} to NFT ${NftId} with status: ${box[2]}`)
+        console.log(`link box ${index} to NFT ${NftId} with status: ${box[4]}`)
 
         expect(!!existed[NftId]).to.equal(false);
         existed[NftId] = true
       }
+      await expectRevert(
+          this.box.connect(this.alice).claimNFT(0),
+          "NFTBox: NFT not found"
+      );
+      await expectRevert(
+          this.box.connect(this.bob).claimNFT(maxPerBatch + 1),
+          "NFTBox: NFT not found"
+      );
+      await this.box.setSaleEventAddress(0, this.nft.address)
 
       await this.box.connect(this.alice).claimNFT(0)
-      await this.box.connect(this.bob).claimNFT(0)
+      await this.box.connect(this.alice).claimAllNFT()
+      await this.box.connect(this.bob).claimAllNFT()
+      await expectRevert(
+          this.box.connect(this.alice).claimNFT(0),
+          "ERC721: owner query for nonexistent token"
+      );
+
       const balanceBoxOfAliceAfterClaim = await this.box.balanceOf(this.alice.address)
       const balanceBoxOfBobAfterClaim = await this.box.balanceOf(this.bob.address)
       const balanceNFTOfAlice = await this.nft.balanceOf(this.alice.address)
@@ -163,6 +196,111 @@ describe("NFT Box ", function () {
         const NftId = await this.nft.tokenOfOwnerByIndex(this.bob.address, index);
         expect(!!existed[NftId]).to.equal(false);
         console.log(`Bob is owner of NFT ${NftId}`)
+        existed[NftId] = true
+      }
+
+      console.log('event 2')
+      await this.box.addSaleEvent(
+          maxPerBatch, utils.parseEther("0.1"), (await time.latest()).toNumber(),
+          (await time.latest()).toNumber() + duration.days(1).toNumber(), maxPerBatch,
+          this.nft.address, 90, 90, false, true
+      );
+      await this.box.setSubBox(1, [maxPerBatch, maxPerBatch, maxPerBatch, maxPerBatch, maxPerBatch])
+
+      // alice buy 10
+      await expectRevert(
+          this.box.connect(this.alice).claimBox(1, 10, 0, "0x0000", {
+            value: utils.parseEther("1")
+          }),
+          "ECDSA: invalid signature length"
+      );
+
+      const messageEvent2 = web3.utils.soliditySha3(this.alice.address, 1, 10, 0);
+      const messageEvent2Red = web3.utils.soliditySha3(this.alice.address, 1, 10, 1);
+      await this.box.connect(this.alice).claimBox(1, 10, 0, this.signer.signMessage(ethers.utils.arrayify(messageEvent2)),
+          { value: utils.parseEther("1") })
+      await this.box.connect(this.alice).claimBox(1, 10, 0, this.signer.signMessage(ethers.utils.arrayify(messageEvent2)),
+          { value: utils.parseEther("1") })
+      await this.box.connect(this.alice).claimBox(1, 10, 1, this.signer.signMessage(ethers.utils.arrayify(messageEvent2Red)),
+          { value: utils.parseEther("1") })
+      await this.box.connect(this.alice).claimBox(1, 10, 1, this.signer.signMessage(ethers.utils.arrayify(messageEvent2Red)),
+          { value: utils.parseEther("1") })
+      await this.box.connect(this.alice).claimBox(1, 10, 1, this.signer.signMessage(ethers.utils.arrayify(messageEvent2Red)),
+          { value: utils.parseEther("1") })
+      await expectRevert(
+          this.box.connect(this.alice).claimBox(1, 10, 0, this.signer.signMessage(ethers.utils.arrayify(messageEvent2)),
+              { value: utils.parseEther("1") }),
+          "NFTBox: Rate limit exceeded"
+      );
+      await expectRevert(
+          this.box.connect(this.alice).claimBox(0, 30, 0, this.signer.signMessage(ethers.utils.arrayify(messageEvent2)),
+              { value: utils.parseEther("3") }),
+          "NFTBox: Rate limit exceeded"
+      );
+
+      await this.nft.mint(maxPerBatch, this.box.address);
+      const sale1 = await this.box.connect(this.alice).saleEvents(1)
+      const balanceOfEvent2 = await this.nft.balanceOf(this.box.address)
+      const balanceBoxOfEvent2Alice = await this.box.balanceOf(this.alice.address)
+
+      expect(maxPerBatch).to.equal(sale1[0].toNumber());
+      expect(maxPerBatch).to.equal(balanceOfEvent2.toNumber());
+      expect(maxPerBatch).to.equal(balanceBoxOfEvent2Alice.toNumber());
+
+      // cannot claim before random
+      await this.box.connect(this.alice).claimAllNFT()
+      await expectRevert(
+          this.box.connect(this.bob).claimAllNFT(),
+          "NFTBox: User must buy box before claim"
+      );
+
+      await expectRevert(
+          this.box.connect(this.alice).claimNFT(maxSupply),
+          "NFTBox: Box has not been revealed"
+      );
+      await expectRevert(
+          this.box.connect(this.bob).claimNFT(maxSupply),
+          "NFTBox: User must be owner of boxId"
+      );
+      await expectRevert(
+          this.box.connect(this.alice).claimNFT(maxSupply + 1),
+          "NFTBox: Box has not been revealed"
+      );
+
+      // random
+      await this.box.randomEvent(1);
+      existed = {}
+      for (let index = maxSupply; index < maxSupply + maxPerBatch; index++) {
+        const box = await this.box.boxes(index);
+        const NftId = box[1].toNumber()
+        console.log(`link box ${index} to NFT ${NftId} with status: ${box[4]}`)
+
+        expect(!!existed[NftId]).to.equal(false);
+        existed[NftId] = true
+      }
+      await this.box.connect(this.alice).claimNFT(maxSupply)
+      await expectRevert(
+          this.box.connect(this.bob).claimNFT(maxSupply + 1),
+          "NFTBox: User must be owner of boxId"
+      );
+      await this.box.connect(this.alice).claimAllNFT()
+      await expectRevert(
+          this.box.connect(this.alice).claimNFT(maxSupply),
+          "ERC721: owner query for nonexistent token"
+      );
+
+      const balanceBoxOfEvent2AliceAfterClaim = await this.box.balanceOf(this.alice.address)
+      const balanceNFTOfEvent2Alice = await this.nft.balanceOf(this.alice.address)
+
+      expect(maxPerBatch + maxPerBatch).to.equal(balanceNFTOfEvent2Alice.toNumber());
+      expect(0).to.equal(balanceBoxOfEvent2AliceAfterClaim.toNumber());
+
+      existed = {}
+      console.log('NFT of Alice', balanceNFTOfAlice.toNumber())
+      for (let index = 0; index < balanceNFTOfAlice.toNumber(); index++) {
+        const NftId = await this.nft.tokenOfOwnerByIndex(this.alice.address, index);
+        expect(!!existed[NftId]).to.equal(false);
+        console.log(`Alice is owner of NFT ${NftId}`)
         existed[NftId] = true
       }
     });

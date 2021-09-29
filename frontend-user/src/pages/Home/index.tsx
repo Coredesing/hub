@@ -156,6 +156,8 @@ const Home = (props: any) => {
     }
   };
 
+  console.log('ac', ticketSales?.data?.length, tokenSales.data);
+  
   return (
     <DefaultLayout style={{background: '#0A0A0A'}}>
       <section className={clsx(styles.banner, styles.section)} style={isShowImgBanner ? {paddingTop: '10px'} : {}}>
@@ -204,7 +206,7 @@ const Home = (props: any) => {
         </div>
       </section>
       {/* <Instruction /> */}
-      <section className={clsx(styles.ticketSales, styles.section)}>
+      {ticketSales?.data?.length && <section className={clsx(styles.ticketSales, styles.section)}>
         <div className="rectangle gr">
           <img src="/images/ticket-sale-text.svg" alt="" />
         </div>
@@ -237,8 +239,8 @@ const Home = (props: any) => {
             </div>
           </div>
         </div>
-      </section>
-      <section className={clsx(styles.tokenSales, styles.section)}>
+      </section>}
+      {tokenSales?.data?.length && <section className={clsx(styles.tokenSales, styles.section)}>
         <div className="rectangle bl">
           <img src="/images/token-sales-text.svg" alt="" />
         </div>
@@ -257,7 +259,7 @@ const Home = (props: any) => {
           </div>
         </div>
         <TicketSlide data={tokenSales.data} />
-      </section>
+      </section>}
       <section className={clsx(styles.partners, styles.section)}>
         <div className="rectangle gr">
           <img src="/images/partnership-text.svg" alt="" />

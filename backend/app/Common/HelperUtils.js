@@ -166,7 +166,7 @@ const maskWalletAddress = async (wallet) => {
 const responseErrorInternal = (message) => {
   return {
     status: 500,
-    message: message || 'Sorry there seems to be a server error!',
+    message: message || 'Internal server error',
     data: null,
   }
 };

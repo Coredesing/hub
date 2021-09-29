@@ -84,6 +84,28 @@ class Common {
   throwUnknownTxTableErr(txTable) {
     throw ErrorFactory.internal(`Unknown txTable: ${txTable}`);
   }
+
+  groupBy(objectArray, property) {
+    return objectArray.reduce((result, item) => {
+      if (!Array.isArray(result)) {
+        result = []
+      }
+      const key = item[property]
+      let existed = false
+      for (let index = 0; index < result.length; index++) {
+        if (result[index].id === key) {
+          result[index].top.push(item)
+          existed = true
+          break;
+        }
+      }
+
+      if (!existed) {
+        result.push({name: '', id: item.campaign_id, top: [item]})
+      }
+      return result
+    }, {})
+  }
 }
 
 module.exports = new Common();

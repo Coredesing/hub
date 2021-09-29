@@ -1,7 +1,6 @@
 'use strict'
 const StakingPoolModel = use('App/Models/StakingPool');
 const HelperUtils = use('App/Common/HelperUtils');
-const RedisUtils = use('App/Common/RedisUtils');
 const RedisStakingPoolUtils = use('App/Common/RedisStakingPoolUtils')
 const RedisLegendSnapshotUtils = use('App/Common/RedisLegendSnapshotUtils')
 const LegendSnapshotService = use('App/Services/LegendSnapshotService')
@@ -234,6 +233,21 @@ class StakingPoolController {
 
       await RedisLegendSnapshotUtils.setRedisLegendSnapshot(cachedData)
       return HelperUtils.responseSuccess(cachedData);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
+  async getLegendCurrentStaked({request}) {
+    try {
+      if (await RedisLegendSnapshotUtils.existRedisLegendCurrentStaked()) {
+        let data = await RedisLegendSnapshotUtils.getRedisLegendCurrentStaked()
+        data = JSON.parse(data)
+
+        return HelperUtils.responseSuccess(data)
+      }
+
+      return HelperUtils.responseSuccess([]);
     } catch (e) {
       return HelperUtils.responseErrorInternal();
     }

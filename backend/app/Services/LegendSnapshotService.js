@@ -1,7 +1,6 @@
 'use strict'
 
 const LegendSnapshotModel = use('App/Models/LegendSnapshot');
-const RedisLegendSnapshotUtils = use('App/Common/RedisLegendSnapshotUtils')
 const DEFAULT_LIMIT = 60 // 5 pools
 
 class LegendSnapshotService {

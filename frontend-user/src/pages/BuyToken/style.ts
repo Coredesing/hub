@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme: any) => {
 
     poolDetailContainer: {
       padding: '40px 0 80px 0',
-      width: '1040px',
+      width: '1120px',
       maxWidth: 'calc(100vw - 80px)',
       margin: 'auto',
 

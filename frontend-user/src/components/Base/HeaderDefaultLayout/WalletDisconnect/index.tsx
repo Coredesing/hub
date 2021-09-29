@@ -120,7 +120,7 @@ const WalletDisconnect: React.FC<ComponentProps> = (props: any) => {
       <DialogContent className={styles.dialogContent}>
         <div className={styles.accountDetails}>
           <div className={styles.accountDetailsIcon}>
-            <img src="images/logo-red-kite.svg" style={{ width: '100%' }}/>
+            <img src="/images/gamefi-circle.png" style={{ width: '100%' }}/>
           </div>
           <div className={styles.accountDetailBlocks}>
             <div className={styles.accountDetailBlock}>
@@ -154,7 +154,7 @@ const WalletDisconnect: React.FC<ComponentProps> = (props: any) => {
         </div>
         <div className={styles.accountDetailCta}>
           <div className={styles.accountDetailDisconnect} onClick={handleAccountLogout}>
-            <img src="/images/disconnect.svg" className={styles.accountDetailCtaIcon} alt="" />
+          <img src="/images/disconnect.svg" className={styles.accountDetailCtaIcon} alt="" />
             <span>Disconnect</span>
           </div>
         </div>

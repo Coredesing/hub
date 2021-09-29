@@ -216,6 +216,10 @@ const useStyles = makeStyles((theme) => {
       fontSize: '12px',
       lineHeight: '15px',
       color: '#C2C3D8',
+      display: 'block',
+      '&:hover': {
+        color: '#f4f4f4'
+      }
     },
     btnToTop: {
       position: 'fixed',

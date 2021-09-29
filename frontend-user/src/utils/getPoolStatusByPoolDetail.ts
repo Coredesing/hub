@@ -93,7 +93,7 @@ export const getPoolStatusByPoolDetail = (
   const soldProgress = progress;
   const today = new Date().getTime();
   const requiredReleaseTime = isClaimable ? !releaseTime: false;
-
+  
   // Check TBA Status
   if ((!startJoinTime || !endJoinTime) && buyType === BUY_TYPE.WHITELIST_LOTTERY) {
     return PoolStatus.TBA;
@@ -152,7 +152,7 @@ export const getPoolStatusByPoolDetail = (
     // Check Progress Status
     if (
       releaseTime && today < releaseTime.getTime()
-      && new BigNumber(soldProgress || 0).lt(100)
+      && new BigNumber(soldProgress || 0).lt(99.9)
     ) {
       return PoolStatus.Progress;
     }

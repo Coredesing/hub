@@ -488,7 +488,8 @@ class UserController {
       // FREE BUY TIME: Check if current time is free to buy or not
       const camp = await poolService.buildQueryBuilder({ id: campaignId }).with('freeBuyTimeSetting').first();
       const { maxBonus, isFreeBuyTime, existWhitelist } = await poolService.getFreeBuyTimeInfo(camp, walletAddress);
-      const isKYCRequired = process.env.REACT_APP_APP_KYC_REQUIRED === true || process.env.REACT_APP_APP_KYC_REQUIRED === 'true'
+
+      const isKYCRequired = poolExist.kyc_bypass === 0
       let maxTotalBonus = 0;
       if (isFreeBuyTime) {
         if (!!existWhitelist) {
@@ -549,10 +550,6 @@ class UserController {
           start_time: tierDb.start_time,
           end_time: tierDb.end_time,
           level: userTier
-        }
-        // user not winner
-        if (isKYCRequired) {
-          return HelperUtils.responseSuccess(formatDataPrivateWinner(tier, isPublicWinner));
         }
 
         // user not winner

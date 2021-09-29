@@ -128,7 +128,7 @@ const useStyles = makeStyles((theme) => {
       ...typeDisplayFlex,
       alignItems: 'center',
       justifyContent: 'center',
-      color: '#59f',
+      color: '#72F34B',
       cursor: 'pointer',
       font: 'normal normal bold 14px/18px DM Sans'
     },

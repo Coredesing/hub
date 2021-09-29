@@ -510,7 +510,7 @@ const ContentToken = ({ id, ...props }: any) => {
           </div>
 
           {
-            isSwap(poolDetails?.campaignStatus) &&
+            ((+soldProgress < 100) && isSwap(poolDetails?.campaignStatus)) &&
             startBuyTimeInDate &&
             endBuyTimeInDate &&
             startBuyTimeInDate < new Date() && new Date() < endBuyTimeInDate &&
@@ -548,7 +548,7 @@ const ContentToken = ({ id, ...props }: any) => {
           }
 
           {
-            isClaim(poolDetails?.campaignStatus) &&
+            ((+soldProgress === 100 ) || isClaim(poolDetails?.campaignStatus)) &&
             <ClaimToken
               releaseTime={poolDetails?.releaseTime ? releaseTimeInDate : undefined}
               ableToFetchFromBlockchain={ableToFetchFromBlockchain}

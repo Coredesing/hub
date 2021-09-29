@@ -10,6 +10,7 @@ const moment = use('moment');
 const Const = use('App/Common/Const');
 const ErrorFactory = use('App/Common/ErrorFactory');
 const RedisUtils = use('App/Common/RedisUtils')
+const RedisStakingPoolUtils = use('App/Common/RedisStakingPoolUtils')
 const StakingPoolModel = use('App/Models/StakingPool');
 
 const CONFIGS_FOLDER = '../../blockchain_configs/';
@@ -266,12 +267,19 @@ const getStakingPoolInstance = async () => {
 }
 
 const getStakingPool = async (wallet_address) => {
-  const pools = await StakingPoolModel.query().fetch();
+  let pools = []
+  if (await RedisStakingPoolUtils.existRedisStakingPoolsDetail()) {
+    pools = JSON.parse(await RedisStakingPoolUtils.getRedisStakingPoolsDetail())
+  }
 
-  const listPool = JSON.parse(JSON.stringify(pools))
+  if (!pools || !Array.isArray(pools) || pools.length < 1) {
+    pools = await StakingPoolModel.query().fetch();
+    pools = JSON.parse(JSON.stringify(pools))
+  }
+
   let stakedToken = new BigNumber('0');
   let stakedUni = new BigNumber('0');
-  for (const pool of listPool) {
+  for (const pool of pools) {
     if (!pool.pool_address) {
       continue;
     }
@@ -314,7 +322,7 @@ const getStakingPool = async (wallet_address) => {
         default:
       }
     } catch (err) {
-      console.log('getStakingPoolPKF', err)
+      console.log('getStakingPool', err)
     }
   }
 
@@ -571,7 +579,7 @@ const getProgressWithPools = (pool) => {
   if (new BigNumber(progress).lte(0)) {
     progress = '0';
   }
-  if (new BigNumber(progress).gt(new BigNumber(99.99))) {
+  if (new BigNumber(progress).gte(new BigNumber(99.9))) {
     progress = '100';
   }
 
@@ -739,7 +747,7 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
     return PoolStatus.CLOSED;
   }
 
-  if (new BigNumber(soldProgress || 0).gte(new BigNumber(99.99))) {
+  if (new BigNumber(soldProgress || 0).gte(new BigNumber(99.9))) {
     return PoolStatus.CLOSED;
   }
 

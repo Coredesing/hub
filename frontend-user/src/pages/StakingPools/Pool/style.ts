@@ -191,6 +191,9 @@ const useStyles = makeStyles((theme: any) => {
     },
     accorditionDetails: {
       display: 'unset',
+      "& .note": {
+        color: "#D01F36",
+      },
     },
     progressArea: {
       marginBottom: 12,

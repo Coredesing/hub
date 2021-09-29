@@ -429,6 +429,10 @@ const LinearPool = (props: any) => {
         </div>
       </AccordionSummary>
       <AccordionDetails className={styles.accorditionDetails} >
+        <div className="note">
+          Note: NEVER transfer coin/token directly to smart contract. All
+          transactions need to go through GameFi's UI.
+        </div>
         <div className="pool--detail">
           <div className="pool--detail-block" style={{ paddingRight: '10px' }}>
             {/* <div className="items-center mobile-flex-row justify-between w-full">

@@ -155,8 +155,6 @@ const Home = (props: any) => {
       setFieldSorted({ field, order: "desc" });
     }
   };
-
-  console.log('ac', ticketSales?.data?.length, tokenSales.data);
   
   return (
     <DefaultLayout style={{background: '#0A0A0A'}}>

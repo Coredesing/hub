@@ -159,7 +159,28 @@ export const CountDownTimeV2 = (props: PropsV2) => {
             <span className={clsx(styles.text, 'sp1 text-uppercase')}>{props.title}</span>
         </div>
         <span className={styles.timeEnd}>
-            {props.isDislayTime && <><span>{formatNumber(time.days)}d</span> <span>:</span> <span>{formatNumber(time.hours)}h</span> <span>:</span> <span>{formatNumber(time.minutes)}m</span> <span>:</span> <span>{formatNumber(time.seconds)}s</span></>}
+            {props.isDislayTime && (
+                <>
+                    <span>&nbsp;</span>
+                    {time.days > 1 && <span>{formatNumber(time.days)} days</span>}
+                    {time.days === 1 && <span>{formatNumber(time.days)} day</span>}
+                    {time.days < 1 && time.hours >= 1 && (
+                        <span>
+                            <span>{formatNumber(time.hours)}h</span>
+                            {time.minutes >= 1 && <span>&nbsp;:&nbsp;</span>}
+                        </span>
+                    )}
+                    {time.days < 1 && time.minutes >= 1 && (
+                        <span>
+                            {<span>{formatNumber(time.minutes)}m</span>}
+                            {time.hours < 1 && <span>&nbsp;:&nbsp;</span>}
+                        </span>
+                    )}
+                    {time.days < 1 && time.hours < 1 && (
+                        <span>{formatNumber(time.seconds)}s</span>
+                    )}
+                </>
+            )}        
         </span>
     </div>
 }

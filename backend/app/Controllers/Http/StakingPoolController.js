@@ -156,11 +156,11 @@ class StakingPoolController {
       }
 
       let listData = await StakingPoolModel.query().where('is_display', 1).fetch();
+      listData = await HelperUtils.getStakingPoolsDetail(listData)
       await RedisStakingPoolUtils.setRedisStakingPoolsDetail(listData)
       return HelperUtils.responseSuccess(listData);
     } catch (e) {
-      console.log(e)
-      return HelperUtils.responseErrorInternal('Get Pools Fail !!!');
+      return HelperUtils.responseErrorInternal('Internal server error');
     }
   }
 

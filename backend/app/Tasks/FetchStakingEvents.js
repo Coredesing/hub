@@ -7,7 +7,7 @@ class FetchStakingEvents extends Task {
   isRunning = false;
 
   static get schedule () {
-    console.log('[FetchTopStaked] - ACTIVE - process.env.NODE_ENV', process.env.NODE_ENV);
+    console.log('[FetchStakingEvents] - ACTIVE - process.env.NODE_ENV', process.env.NODE_ENV);
     if (process.env.NODE_ENV === 'development') {
       // return '*/15 * * * * *';
       return '*/15 * * * * *';
@@ -24,7 +24,7 @@ class FetchStakingEvents extends Task {
     try {
       this.isRunning = true
 
-      console.log('Task FetchTopStaked handle');
+      console.log('Task FetchStakingEvents handle');
       await (new StakingEventService).runAll();
     }
     catch (e) {

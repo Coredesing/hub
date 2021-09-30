@@ -42,15 +42,18 @@ import {
 import { convertTimeToStringFormat } from '@utils/convertDate';
 import { SearchBox } from '@base-components/SearchBox';
 import { CountDownTimeV1 } from '@base-components/CountDownTime';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Typography, Button } from '@material-ui/core';
 import { cvtAddressToStar, debounce, escapeRegExp } from '@utils/index';
 import { numberWithCommas } from '@utils/formatNumber';
 import { getTiers } from '@store/actions/sota-tiers';
 import WrapperContent from '@base-components/WrapperContent';
-import { topStaking } from './data';
 import SelectBox from '@base-components/SelectBox';
 import { getVectorIcon } from '@base-components/Icon';
-console.log(topStaking);
+import BN from 'bignumber.js';
+import { getContract } from '@utils/contract';
+import STAKING_POOL_ABI from '@abi/StakingPool.json';
+import clsx from 'clsx';
+
 const closeIcon = '/images/icons/close.svg';
 
 const StakingPools = (props: any) => {
@@ -225,62 +228,108 @@ const StakingPools = (props: any) => {
   }, [listTopStaked, searchWallet]);
 
   const [currentTops, setCurrentTops] = useState<any>({});
-  const onChangePool = (event: any) => {
+  const { data: topStakedsOver = [] as any } = useFetchV1('/staking-pool/legend-snapshots');
+  const [recallTopLegend, setRecallTopLegend] = useState(true);
+  const { data: topStakedCurrent = [] as any } = useFetchV1('/staking-pool/legend-current', recallTopLegend);
+
+  const [topsStaked, setTopsStaked] = useState<any>([]);
+
+  const sortTopsStaked = (topsStaked: any[], currentStake: { [k: string]: any }) => {
+    const idx = topsStaked.findIndex((e: any) => e.name === currentStake.name);
+    if (idx <= 0) return currentStake;
+
+    const before = topsStaked[idx - 1];
+    if (!before) {
+      return currentStake;
+    }
+    currentStake.top.map((n: any, currRank: number) => {
+      let beforeRank = before.top.findIndex((o: any) => o.wallet_address === n.wallet_address);
+      currRank += 1;
+      beforeRank += 1;
+      n.isHighlight = n.wallet_address === connectedAccount;
+      if (beforeRank === 0) {
+        n.steps = 0;
+      } else if (currRank === beforeRank) {
+        n.steps = 0;
+      } else if (currRank < beforeRank) {
+        n.steps = beforeRank - currRank;
+      } else {
+        n.steps = -(currRank - beforeRank);
+      }
+      return n;
+    })
+    return currentStake;
+  }
+
+  const idForRealTime = -1;
+
+  useEffect(() => {
+    let arr: any = [];
+    let current: { [k: string]: any } = {};
+    if (topStakedsOver?.length) {
+      arr = [...topStakedsOver];
+      current = arr.slice(-1)[0];
+    }
+    if (topStakedCurrent?.length) {
+      current = { name: 'Realtime Stake', top: topStakedCurrent, id: idForRealTime }
+      arr = [...arr, current];
+    }
+    if (current.name) {
+      setCurrentTops(sortTopsStaked(arr, current));
+    }
+    if (arr.length) {
+      setRecallTopLegend(false);
+      setTopsStaked(arr);
+    }
+  }, [topStakedsOver, topStakedCurrent]);
+
+  const onSetCurrentTop = (id: number) => {
     setCurrentTops((old: any) => {
-      const currentChange: any = JSON.parse(JSON.stringify(topStaking[event.target.value]));
+      const currentChange: any = JSON.parse(JSON.stringify(topsStaked.find((t: any) => +t.id === +id) || {}));
       if (!old.top) {
         return currentChange;
       }
-      const before = topStaking[currentChange.id - 1];
-      if (!before) {
-        return currentChange;
-      }
-
-      currentChange.top.map((n: any, currRank: number) => {
-        let beforeRank = before.top.findIndex((o) => o.wallet_address === n.wallet_address);
-        currRank += 1;
-        beforeRank += 1;
-        if (currRank === beforeRank) {
-          n.steps = 0;
-        } else if (currRank < beforeRank) {
-          n.steps = beforeRank - currRank;
-        } else {
-          n.steps = -(currRank - beforeRank);
-        }
-        return n;
-      })
-      console.log(currentChange)
-      return currentChange;
+      return sortTopsStaked(topsStaked, currentChange);
     });
   }
-  // useEffect(() => {
-  //   if(connectedAccount && filteredLinearPools?.length) {
-  //     const newDeposit: any = {};
-  //     const newWithdraw: any = {};
-  //     filteredLinearPools.forEach((pool: any) => {
 
-  //       const contract = getContract(pool.pool_address, STAKING_POOL_ABI, library, connectedAccount as string);
-  //       if(contract) {
-  //         contract.on('LinearDeposit', (poolid, address, amount) => {
-  //           if(!new BN(newDeposit.poolid || 0).eq(new BN(poolid.toNumber())) || newDeposit.address !== address || !new BN(newDeposit.amount || 0).eq(new BN(amount.toBigInt()))) {
-  //             newDeposit.address = address;
-  //             newDeposit.poolid = new BN(poolid.toNumber());
-  //             newDeposit.amount = new BN(amount.toBigInt());
-  //             setResetTopStaking(true);
-  //           }
-  //         })
-  //         contract.on('LinearPendingWithdraw', (poolid, address, amount) => {
-  //           if(!new BN(newWithdraw.poolid || 0).eq(new BN(poolid.toNumber())) || newWithdraw.address !== address || !new BN(newWithdraw.amount || 0).eq(new BN(amount.toBigInt()))) {
-  //             newWithdraw.address = address;
-  //             newWithdraw.poolid = new BN(poolid.toNumber());
-  //             newWithdraw.amount = new BN(amount.toBigInt());
-  //             setResetTopStaking(true);
-  //           }
-  //         })
-  //       }
-  //     })
-  //   }
-  // }, [filteredLinearPools, connectedAccount, library]);
+  const onSelectPool = (id: number) => {
+    onSetCurrentTop(id);
+  }
+
+  const onChangePool = (event: any) => {
+    onSetCurrentTop(event.target.value);
+  }
+
+  const onSetRecallTopStake = debounce(() => {
+    setRecallTopLegend(true);
+  }, 1000);
+
+  useEffect(() => {
+    if (connectedAccount && filteredLinearPools?.length) {
+      filteredLinearPools.forEach((pool: any) => {
+
+        const contract = getContract(pool.pool_address, STAKING_POOL_ABI, library, connectedAccount as string);
+        if (contract) {
+          contract.on('LinearDeposit', (poolid, address, amount) => {
+            if (topStakedCurrent.find((e: any) => e.wallet_address === address)) {
+              onSetRecallTopStake();
+            }
+          })
+          // contract.on('LinearPendingWithdraw', (poolid, address, amount) => {
+          //   if (!new BN(newWithdraw.poolid || 0).eq(new BN(poolid.toNumber())) || newWithdraw.address !== address || !new BN(newWithdraw.amount || 0).eq(new BN(amount.toBigInt()))) {
+          //     newWithdraw.address = address;
+          //     newWithdraw.poolid = new BN(poolid.toNumber());
+          //     newWithdraw.amount = new BN(amount.toBigInt());
+          //     // setResetTopStaking(true);
+          //     setRecallTopLegend(true);
+
+          //   }
+          // })
+        }
+      })
+    }
+  }, [filteredLinearPools, connectedAccount, library]);
 
 
   return (
@@ -369,7 +418,7 @@ const StakingPools = (props: any) => {
                 ))
               }
               {listTopStaked && !listTopStaked?.disable &&
-                <Box marginTop="30px" className={styles.boxRank}>
+                <Box marginTop="30px" marginBottom="20px" className={styles.boxRank}>
                   <Box className={styles.boxRankHeader}>
                     <Box className={styles.boxListRank}>
                       <Typography variant="h5" component="h5" className="text-uppercase">
@@ -428,53 +477,88 @@ const StakingPools = (props: any) => {
                       </TableBody>
                     </Table>
                   </TableContainer>
-
-                  <SelectBox
-                    items={topStaking.map((t, id) => ({ poolName: t.poolname, id }))}
-                    itemNameShowValue={'poolName'}
-                    itemNameValue={'id'}
-                    onChange={onChangePool}
-                  >
-
-                  </SelectBox>
-                  <TableContainer>
-                    <Table>
-                      <TableHead>
-                        <TableRowHead>
-                          <TableCell>No</TableCell>
-                          <TableCell align="left">Wallet Address</TableCell>
-                          <TableCell align="left">Current Staked</TableCell>
-                          <TableCell align="left">Last time Stake</TableCell>
-                        </TableRowHead>
-                      </TableHead>
-                      <TableBody>
-                        {currentTops?.top?.map((row: any, idx: number) => (
-                          <TableRowBody key={idx}>
-                            <TableCell component="th" scope="row" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>
-                              <div className={styles.cellRank}>
-                                <div className="rank">
-                                  <img src={`/images/icons/${!row.steps ? 'gray' : row.steps > 0 ? 'green' : 'red'}-rank.png`} alt="" />
-                                  <span>{idx + 1}</span>
-                                </div>
-                                <div className="movement">
-                                  {row.steps > 0 ? <span className="up icon">{getVectorIcon()}</span> : row.steps < 0 ? <span className="down icon">{getVectorIcon('#D01F36')}</span> : ''}
-                                  <span>
-                                    {row.steps}
-                                  </span>
-                                </div>
-                              </div>
-                            </TableCell>
-                            <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{cvtAddressToStar(row.wallet_address)}</TableCell>
-                            <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{numberWithCommas((row.amount + '') || 0, 4)}</TableCell>
-                            <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{convertTimeToStringFormat(new Date(+row.last_time * 1000))}</TableCell>
-                          </TableRowBody>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-
                 </Box>
               }
+              <Box marginBottom="20px" gridGap="16px" display="flex" flexDirection="column">
+                <Box marginRight="20px">
+                  <Box display="flex" gridGap="8px" flexWrap="wrap" marginBottom="10px">
+                    <Button className={clsx(styles.btnFilterPool, { active: currentTops.id === idForRealTime })} onClick={() => {
+                      onSelectPool(idForRealTime);
+                    }}>
+                      Realtime
+                    </Button>
+                    <Button className={clsx(styles.btnFilterPool, { active: currentTops.id !== idForRealTime })} onClick={() => {
+                      const id = topStakedsOver?.length ? topStakedsOver.slice(-1)[0].id : null;
+                      id && onSelectPool(id);
+                    }}>
+                      Snapshot
+                    </Button>
+                    {currentTops.id !== idForRealTime && <SelectBox
+                      items={(topsStaked || []).filter((t: any) => t.id !== idForRealTime).map((t: any) => ({ poolName: t.name, id: t.id }))}
+                      itemNameShowValue={'poolName'}
+                      itemNameValue={'id'}
+                      onChange={onChangePool}
+                      value={currentTops.id + ''}
+                      defaultValue={currentTops.id + ''}
+                    />}
+                  </Box>
+                </Box>
+                <Box>
+                  <h3 className="text-uppercase" style={{ fontSize: '24px', fontFamily: 'Firs Neue', color: '#fff' }}>
+                    {currentTops.id === idForRealTime ? 'LEGENDARY RANKING REALTIME' : (currentTops.name ? currentTops.name + ' - ' : '') + 'legendary SNAPSHOT'}
+                  </h3>
+                </Box>
+              </Box>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRowHead>
+                      <TableCell align="left">No</TableCell>
+                      <TableCell align="left">Wallet Address</TableCell>
+                      <TableCell align="left">Amount</TableCell>
+                      <TableCell align="left">{currentTops.id !== idForRealTime ? 'Snapshot Time' : 'Last Time Staked'}</TableCell>
+                    </TableRowHead>
+                  </TableHead>
+                  <TableBody>
+                    {currentTops?.top?.map((row: any, idx: number) => (
+                      <TableRowBody key={idx}>
+                        <TableCell component="th" scope="row" className={clsx(row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined, {
+                          [styles.cellHighlight]: row.isHighlight
+                        })}>
+                          <div className={styles.cellRank}>
+                            {/* <div>
+                              {row.isHighlight && <svg width="15" height="17" viewBox="0 0 15 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 8.5L0.749999 16.7272L0.75 0.272758L15 8.5Z" fill="#72F34B" />
+                              </svg>}
+                            </div> */}
+
+                            <div className="rank">
+                              <img src={`/images/icons/${!row.steps ? 'gray' : row.steps > 0 ? 'green' : 'red'}-rank.png`} alt="" />
+                              <span>{idx + 1}</span>
+                            </div>
+                            <div className="movement">
+                              {row.steps > 0 ? <span className="up icon">{getVectorIcon()}</span> : row.steps < 0 ? <span className="down icon">{getVectorIcon('#D01F36')}</span> : ''}
+                              <span>
+                                {(row.steps === 0 ? '-' : (row.steps > 0 ? row.steps : row.steps ? -row.steps : ''))}
+                              </span>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell align="left" className={clsx(row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined, {
+                          [styles.cellHighlight]: row.isHighlight
+                        })}>{cvtAddressToStar(row.wallet_address)}</TableCell>
+                        <TableCell align="left" className={clsx(row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined, {
+                          [styles.cellHighlight]: row.isHighlight
+                        })}>{numberWithCommas((row.amount + '') || 0, 4)}</TableCell>
+                        <TableCell align="left" className={clsx(row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined, {
+                          [styles.cellHighlight]: row.isHighlight
+                        })}>{convertTimeToStringFormat(new Date((currentTops.id > 0 ? +row.snapshot_at : +row.last_time) * 1000))}</TableCell>
+                      </TableRowBody>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
             </div>
 
 

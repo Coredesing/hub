@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: any) => {
         width: '100%',
         paddingLeft: '10px',
         paddingRight: '10px',
-        
+
         [theme.breakpoints.down('xs')]: {
           // padding: '20px 24px',
           width: '90%'
@@ -449,7 +449,7 @@ const useStyles = makeStyles((theme: any) => {
         position: 'relative',
         width: '28px',
         height: '29px',
-  
+
         '& img': {
           width: '100%',
           height: '100%'
@@ -482,6 +482,26 @@ const useStyles = makeStyles((theme: any) => {
         }
       }
     },
+    btnFilterPool: {
+      textTransform: 'unset', 
+      borderRadius: '60px', 
+      color: '#AEAEAE',
+      background: 'transparent',
+      border: '1px solid #44454B',
+      outline: 'none', 
+      padding: '7px 24px', 
+      fontSize: '16px', 
+      fontFamily: 'Firs Neue',
+
+      '&.active': {
+        color: '#000', 
+        background: '#72F34B', 
+        border: '1px solid #72F34B', 
+      }
+    },
+    cellHighlight: {
+      background: 'rgba(114, 243, 75, 0.2)',
+    }
   };
 });
 

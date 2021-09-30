@@ -8,6 +8,8 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Link } from '@materi
 import { numberWithCommas } from '../../../utils/formatNumber';
 import Progress from '@base-components/Progress';
 import { LINK_SWAP_TOKEN } from '@app-constants';
+import BigNumber from 'bignumber.js';
+import { calcPercentRate } from '@utils/index';
 
 const closeIcon = '/images/icons/close.svg'
 
@@ -30,10 +32,12 @@ const ModalStake = (props: any) => {
     logo,
   } = props;
 
-  
+
   const [progress, setProgress] = useState('0');
   useEffect(() => {
-    setProgress((Number(amount) / Number(tokenBalance) * 100).toFixed(0))
+    if (new BigNumber(tokenBalance).gt(0)) {
+      setProgress(calcPercentRate(amount, tokenBalance) + '')
+    }
   }, [amount, tokenBalance, setProgress])
 
   return (
@@ -109,7 +113,7 @@ const ModalStake = (props: any) => {
 
           <div className={poolStyles.progressArea} style={{ width: '100%', marginTop: '20px' }}>
             <Progress progress={+progress} />
-            <div className={poolStyles.currentPercentage}>({Number(+progress || 0).toFixed(0)}%)</div>
+            <div className={poolStyles.currentPercentage}>({+progress}%)</div>
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>

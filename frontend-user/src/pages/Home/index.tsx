@@ -285,7 +285,7 @@ const Home = (props: any) => {
               <h3>Performance</h3>
             </div>
             <div className={clsx(styles.cards)}>
-              <TableContainer style={{ maxHeight: "calc(57px * 6)", backgroundColor: "#171717" }}>
+              <TableContainer style={{ maxHeight: "calc(57px * 6)" }}>
                 <Table stickyHeader>
                   <TableHead>
                     <TableRowHead>

@@ -7,6 +7,8 @@ import { TRANSACTION_ERROR_MESSAGE } from '../constants/alert';
 import { alertFailure } from '../store/actions/alert';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import { ConnectorNames, connectorNames } from '../constants/connectors';
+import Web3 from 'web3';
+const web3 = new Web3();
 
 const MESSAGE_INVESTOR_SIGNATURE = process.env.REACT_APP_MESSAGE_INVESTOR_SIGNATURE || "";
 
@@ -50,7 +52,7 @@ const useWalletSignature = () => {
       if (connectedAccount && library && connector) {
         const paramsWithConnector = getParamsWithConnector(connectedAccount)[connector as connectorNames];
         const provider = library.provider;
-
+        
         setError("");
 
         if (connector === ConnectorNames.WalletConnect) {
@@ -77,6 +79,13 @@ const useWalletSignature = () => {
           console.log('signature', signature);
           signature && signature.result && setSignature(signature.result);
         } else {
+          if((window as any).ethereum?.isCoin98 || (window as any).coin98) {
+            web3.setProvider(provider);
+            const signature = await web3.eth.personal.sign(MESSAGE_INVESTOR_SIGNATURE, connectedAccount, '');
+            setSignature(signature);
+            return;
+          }
+          
           await (provider as any).sendAsync({
             method: paramsWithConnector.method,
             params: paramsWithConnector.params

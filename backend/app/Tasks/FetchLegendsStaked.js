@@ -3,11 +3,11 @@
 const Task = use('Task')
 const StakingEventService = use('App/Services/StakingEventService');
 
-class FetchStakingEvents extends Task {
+class FetchLegendsStaked extends Task {
   isRunning = false;
 
   static get schedule () {
-    console.log('[FetchStakingEvents] - ACTIVE - process.env.NODE_ENV', process.env.NODE_ENV);
+    console.log('[FetchLegendsStaked] - ACTIVE - process.env.NODE_ENV', process.env.NODE_ENV);
     if (process.env.NODE_ENV === 'development') {
       // return '*/15 * * * * *';
       return '*/15 * * * * *';
@@ -18,14 +18,14 @@ class FetchStakingEvents extends Task {
 
   async handle () {
     if (this.isRunning) {
-      console.log('stop FetchStakingEvents')
+      console.log('stop FetchLegendsStaked')
       return
     }
     try {
       this.isRunning = true
 
-      console.log('Task FetchStakingEvents handle');
-      await (new StakingEventService).runAll();
+      console.log('Task FetchLegendsStaked handle');
+      await (new StakingEventService).runLegendStaking();
     }
     catch (e) {
       console.log('error', e)
@@ -36,4 +36,4 @@ class FetchStakingEvents extends Task {
   }
 }
 
-module.exports = FetchStakingEvents;
+module.exports = FetchLegendsStaked;

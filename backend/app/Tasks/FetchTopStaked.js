@@ -23,7 +23,7 @@ class FetchTopStaked extends Task {
 
   async handle () {
     if (this.isRunning) {
-      console.log('stop')
+      console.log('stop FetchTopStaked')
       return
     }
     try {

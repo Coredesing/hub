@@ -2,6 +2,11 @@
 const StakingPoolModel = use('App/Models/StakingPool');
 const HelperUtils = use('App/Common/HelperUtils');
 const RedisStakingPoolUtils = use('App/Common/RedisStakingPoolUtils')
+const RedisLegendSnapshotUtils = use('App/Common/RedisLegendSnapshotUtils')
+const LegendSnapshotService = use('App/Services/LegendSnapshotService')
+const CampaignModel = use('App/Models/Campaign');
+const Common = use('App/Common/Common');
+
 const Const = use('App/Common/Const');
 const Web3 = require('web3');
 
@@ -156,11 +161,11 @@ class StakingPoolController {
       }
 
       let listData = await StakingPoolModel.query().where('is_display', 1).fetch();
+      listData = await HelperUtils.getStakingPoolsDetail(listData)
       await RedisStakingPoolUtils.setRedisStakingPoolsDetail(listData)
       return HelperUtils.responseSuccess(listData);
     } catch (e) {
-      console.log(e)
-      return HelperUtils.responseErrorInternal('Get Pools Fail !!!');
+      return HelperUtils.responseErrorInternal('Internal server error');
     }
   }
 
@@ -194,6 +199,57 @@ class StakingPoolController {
     } catch (e) {
       console.log(e)
       return HelperUtils.responseErrorInternal('Get Tops Fail !!!');
+    }
+  }
+
+  async getLegendSnapshots({request}) {
+    try {
+      if (await RedisLegendSnapshotUtils.existRedisLegendSnapshot()) {
+        let data = await RedisLegendSnapshotUtils.getRedisLegendSnapshot()
+        data = JSON.parse(data)
+
+        return HelperUtils.responseSuccess(data)
+      }
+
+      let data = await (new LegendSnapshotService).query()
+      let cachedData = Common.groupBy(JSON.parse(JSON.stringify(data)), 'campaign_id')
+
+      for (let index = 0; index < cachedData.length; index++) {
+        try {
+          const campaign_id = cachedData[index].id
+          // if (await RedisUtils.checkExistRedisPoolDetail(campaign_id)) {
+          //   let detail = await RedisUtils.getRedisPoolDetail(campaign_id);
+          //   console.log('detail', detail)
+          // }
+          const campaign = await CampaignModel.query().where('id', campaign_id).first()
+          if (!campaign) {
+            continue
+          }
+
+          cachedData[index].name = campaign.title
+        }
+        catch (e) {}
+      }
+
+      await RedisLegendSnapshotUtils.setRedisLegendSnapshot(cachedData)
+      return HelperUtils.responseSuccess(cachedData);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
+  async getLegendCurrentStaked({request}) {
+    try {
+      if (await RedisLegendSnapshotUtils.existRedisLegendCurrentStaked()) {
+        let data = await RedisLegendSnapshotUtils.getRedisLegendCurrentStaked()
+        data = JSON.parse(data)
+
+        return HelperUtils.responseSuccess(data)
+      }
+
+      return HelperUtils.responseSuccess([]);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
     }
   }
 }

@@ -166,7 +166,7 @@ const maskWalletAddress = async (wallet) => {
 const responseErrorInternal = (message) => {
   return {
     status: 500,
-    message: message || 'Sorry there seems to be a server error!',
+    message: message || 'Internal server error',
     data: null,
   }
 };
@@ -265,6 +265,41 @@ const getStakingPoolInstance = async () => {
 
   return stakingPoolSC
 }
+
+const getStakingPoolsDetail = async (data) => {
+  if (!data) {
+    return
+  }
+
+  const instance = await getStakingPoolInstance()
+  if (!instance) {
+    return data
+  }
+
+  data = JSON.parse(JSON.stringify(data))
+  try {
+    data = await Promise.all(data.map(async (item) => {
+      if (item.staking_type === 'linear') {
+        const scData = await instance.methods.linearPoolInfo(item.pool_id).call()
+        item.cap = scData.cap
+        item.minInvestment = scData.minInvestment
+        item.maxInvestment = scData.maxInvestment
+        item.APR = scData.APR
+        item.lockDuration = scData.lockDuration
+        item.delayDuration = scData.delayDuration
+        item.startJoinTime = scData.startJoinTime
+        item.endJoinTime = scData.endJoinTime
+      }
+
+      return item
+    }))
+
+  } catch (e) {
+    return
+  }
+
+  return data
+};
 
 const getStakingPool = async (wallet_address) => {
   let pools = []
@@ -795,11 +830,11 @@ const getLegendData = () => {
 }
 
 const getLegendIdByOwner = (wallet_address) => {
-  if (!LEGEND_DATA) {
+  if (!LEGEND_DATA || !wallet_address) {
     return
   }
 
-  const data = LEGEND_DATA.filter(data => data.wallet_address === wallet_address && data.valid === true);
+  const data = LEGEND_DATA.filter(data => data.wallet_address.toLowerCase() === wallet_address.toLowerCase() && data.valid === true);
   if (!data || data.length < 1) {
     return
   }
@@ -860,6 +895,7 @@ module.exports = {
   getContractInstance,
   getContractClaimInstance,
   getStakingPoolInstance,
+  getStakingPoolsDetail,
   getOfferCurrencyInfo,
   getTokenSoldSmartContract,
   getPoolStatusByPoolDetail,

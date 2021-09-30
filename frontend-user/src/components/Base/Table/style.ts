@@ -3,6 +3,7 @@ import { typeDisplayFlex } from '../../../styles/CommonStyle';
 export const useTableStyles = makeStyles((theme: any) => {
     return {
         wrapperTable: {
+            backgroundColor: "#000000",
             border: '1px solid #44454B',
             borderBottom: 'none',
             borderRadius: '4px',

@@ -30,7 +30,7 @@ const ModalStake = (props: any) => {
     logo,
   } = props;
 
-
+  
   const [progress, setProgress] = useState('0');
   useEffect(() => {
     setProgress((Number(amount) / Number(tokenBalance) * 100).toFixed(0))

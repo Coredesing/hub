@@ -760,7 +760,7 @@ const LinearPool = (props: any) => {
         tokenBalance={tokenBalance}
         min={Number(utils.formatEther(poolDetail?.minInvestment || 0)).toFixed(2)}
         max={Number(utils.formatEther(poolDetail?.maxInvestment || 0)).toFixed(2)}
-        stakingAmount={Number(utils.formatEther(poolDetail?.stakingAmount || 0)).toFixed(2)}
+        stakingAmount={utils.formatEther(poolDetail?.stakingAmount || 0)}
         onClose={() => setShowStakeModal(false)}
         onConfirm={handleStake}
       />

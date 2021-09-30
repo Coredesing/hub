@@ -1,6 +1,5 @@
 'use strict'
 
-const Const = use('App/Common/Const');
 const Redis = use('Redis');
 const ENABLE_REDIS = true;
 const TIER_CACHED_TTL = 10 * 60; // 10 minutes

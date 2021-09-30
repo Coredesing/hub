@@ -166,7 +166,7 @@ const maskWalletAddress = async (wallet) => {
 const responseErrorInternal = (message) => {
   return {
     status: 500,
-    message: message || 'Sorry there seems to be a server error!',
+    message: message || 'Internal server error',
     data: null,
   }
 };
@@ -830,11 +830,11 @@ const getLegendData = () => {
 }
 
 const getLegendIdByOwner = (wallet_address) => {
-  if (!LEGEND_DATA) {
+  if (!LEGEND_DATA || !wallet_address) {
     return
   }
 
-  const data = LEGEND_DATA.filter(data => data.wallet_address === wallet_address && data.valid === true);
+  const data = LEGEND_DATA.filter(data => data.wallet_address.toLowerCase() === wallet_address.toLowerCase() && data.valid === true);
   if (!data || data.length < 1) {
     return
   }

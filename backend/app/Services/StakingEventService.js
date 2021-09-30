@@ -5,6 +5,7 @@ const StakingEventModel = use('App/Models/StakingEvent');
 const BigNumber = use('bignumber.js');
 const RedisUtils = use('App/Common/RedisUtils')
 const RedisStakingPoolUtils = use('App/Common/RedisStakingPoolUtils')
+const RedisLegendSnapshotUtils = use('App/Common/RedisLegendSnapshotUtils')
 const LINEAR_DEPOSIT_EVENT = 'LinearDeposit'
 const LINEAR_WITHDRAW_EVENT = 'LinearPendingWithdraw'
 const DEFAULT_FROM = process.env.START_BLOCK || 12304325
@@ -38,6 +39,70 @@ class StakingEventService {
     catch (e) {
       console.log('error', e)
     }
+  }
+
+  async runLegendStaking() {
+    try {
+      const legends = await HelperUtils.getLegendData()
+      let data = []
+      for (let index = 0; index < legends.length; index++) {
+        const item = legends[index]
+        if (!item.valid) {
+          data.push({
+            wallet_address: item.wallet_address,
+            amount: 0
+          })
+          break
+        }
+
+        try {
+          const tier = await HelperUtils.getUserTierSmart(item.wallet_address)
+          let last_time = 0
+
+          if (await RedisLegendSnapshotUtils.existRedisLegendLastTime(item.wallet_address)) {
+            last_time = await RedisLegendSnapshotUtils.getRedisLegendLastTime(item.wallet_address)
+          }
+
+          if (last_time < 1) {
+            const stakingEventData = await StakingEventModel.query()
+              .where('wallet_address', item.wallet_address)
+              .orderBy('dispatch_at', 'desc')
+              .limit(1).first()
+
+            if (stakingEventData && stakingEventData.dispatch_at) {
+              last_time = stakingEventData.dispatch_at
+              await RedisLegendSnapshotUtils.setRedisLegendLastTime(item.wallet_address, last_time)
+            }
+          }
+
+          data.push({
+            wallet_address: item.wallet_address,
+            amount: tier[1],
+            last_time: parseInt(last_time),
+          })
+        }
+        catch (e) {
+          data.push({
+            wallet_address: item.wallet_address,
+            amount: 0,
+            last_time: 0
+          })
+        }
+      }
+
+      data.sort((a, b) => {
+        const amountA = new BigNumber(a.amount)
+        const amountB = new BigNumber(b.amount)
+        if (amountA.eq(amountB)) {
+          return a.last_time > b.last_time ? -1 : 1;
+        }
+
+        return amountA.gte(amountB) ? -1 : 1;
+      });
+
+      await RedisLegendSnapshotUtils.setRedisLegendCurrentStaked(data)
+    }
+    catch (e) {}
   }
 
   async runAll() {
@@ -112,6 +177,10 @@ class StakingEventService {
 
         const tierInfo = await HelperUtils.getUserTierSmart(event.returnValues.account);
         await RedisUtils.createRedisUserTierBalance(event.returnValues.account, tierInfo);
+
+        if (HelperUtils.getLegendIdByOwner(event.returnValues.account)) {
+          await RedisLegendSnapshotUtils.setRedisLegendLastTime(event.returnValues.account, blockData.timestamp);
+        }
       }
       catch (e) {}
     }

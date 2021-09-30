@@ -316,16 +316,6 @@ const StakingPools = (props: any) => {
               onSetRecallTopStake();
             }
           })
-          // contract.on('LinearPendingWithdraw', (poolid, address, amount) => {
-          //   if (!new BN(newWithdraw.poolid || 0).eq(new BN(poolid.toNumber())) || newWithdraw.address !== address || !new BN(newWithdraw.amount || 0).eq(new BN(amount.toBigInt()))) {
-          //     newWithdraw.address = address;
-          //     newWithdraw.poolid = new BN(poolid.toNumber());
-          //     newWithdraw.amount = new BN(amount.toBigInt());
-          //     // setResetTopStaking(true);
-          //     setRecallTopLegend(true);
-
-          //   }
-          // })
         }
       })
     }

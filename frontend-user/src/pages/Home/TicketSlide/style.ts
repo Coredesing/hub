@@ -39,7 +39,10 @@ const useStyles = makeStyles((theme: any) => {
           fontFamily: "Firs Neue",
           fontStyle: "normal",
           fontWeight: 600,
-          fontSize: "20px",
+          fontSize: "16px",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
           lineHeight: "28px",
           color: "#fff",
 

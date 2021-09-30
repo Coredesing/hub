@@ -9,15 +9,15 @@ import { HashLoader } from "react-spinners";
 import moment from 'moment'
 import DefaultLayout from "../../components/Layout/DefaultLayout";
 import {
-  Dialog, DialogContent, DialogActions, CircularProgress,
+  Dialog, DialogContent, /*DialogActions,*/ CircularProgress,
 } from '@material-ui/core';
-import CustomButton from './Button'
+// import CustomButton from './Button'
 import StakingHeader, { DURATION_LIVE, DURATION_FINISHED, POOL_TYPE_ALLOC, POOL_TYPE_LINEAR, BENEFIT_ALL, BENEFIT_IDO_ONLY, BENEFIT_REWARD_ONLY } from './Header'
 // import AllocationPool from './Pool/AllocationPool';
 import LinearPool from './Pool/LinearPool';
-import useTokenDetails from "../../hooks/useTokenDetails";
-import ButtonLink from "../../components/Base/ButtonLink";
-import ModalTransaction from "./ModalTransaction";
+// import useTokenDetails from "../../hooks/useTokenDetails";
+// import ButtonLink from "../../components/Base/ButtonLink";
+// import ModalTransaction from "./ModalTransaction";
 import { BigNumber } from 'ethers';
 import useTokenAllowance from '../../hooks/useTokenAllowance';
 import useDetailListStakingPool from './hook/useDetailListStakingPool';
@@ -37,7 +37,7 @@ import {
   TableHead,
   TableRowBody,
   TableRowHead,
-  TableSortLabel,
+  // TableSortLabel,
 } from "@base-components/Table";
 import { convertTimeToStringFormat } from '@utils/convertDate';
 import { SearchBox } from '@base-components/SearchBox';
@@ -49,7 +49,7 @@ import { getTiers } from '@store/actions/sota-tiers';
 import WrapperContent from '@base-components/WrapperContent';
 import SelectBox from '@base-components/SelectBox';
 import { getVectorIcon } from '@base-components/Icon';
-import BN from 'bignumber.js';
+// import BN from 'bignumber.js';
 import { getContract } from '@utils/contract';
 import STAKING_POOL_ABI from '@abi/StakingPool.json';
 import clsx from 'clsx';

@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: any) => {
         width: '100%',
         paddingLeft: '10px',
         paddingRight: '10px',
-        
+
         [theme.breakpoints.down('xs')]: {
           // padding: '20px 24px',
           width: '90%'
@@ -440,6 +440,68 @@ const useStyles = makeStyles((theme: any) => {
         fontFamily: 'Firs Neue',
       }
     },
+    cellRank: {
+      display: 'grid !important',
+      gridTemplateColumns: '28px 28px',
+      gap: '10px !important',
+      alignItems: 'center !important',
+      '& .rank': {
+        position: 'relative',
+        width: '28px',
+        height: '29px',
+
+        '& img': {
+          width: '100%',
+          height: '100%'
+        },
+        '& span': {
+          display: 'block',
+          position: 'absolute',
+          color: '#171717',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          fontSize: '14px',
+          fontWeight: 600,
+          fontFamily: 'Firs Neue',
+        }
+      },
+      '& .movement': {
+        display: 'block !important',
+        textAlign: 'center',
+        '& span.icon': {
+          height: '10px',
+          marginBottom: '5px',
+        },
+        '& span': {
+          display: 'block',
+        },
+
+        '& .down svg': {
+          transform: 'rotate(-180deg)'
+        }
+      }
+    },
+    btnFilterPool: {
+      textTransform: 'unset', 
+      borderRadius: '60px', 
+      color: '#AEAEAE',
+      background: 'transparent',
+      border: '1px solid #44454B',
+      outline: 'none', 
+      padding: '7px 24px', 
+      fontSize: '16px', 
+      fontFamily: 'Firs Neue',
+
+      '&.active': {
+        color: '#000', 
+        background: '#72F34B', 
+        border: '1px solid #72F34B', 
+      }
+    },
+    cellHighlight: {
+      background: 'rgba(114, 243, 75, 0.2)',
+    }
   };
 });
 

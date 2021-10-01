@@ -57,6 +57,7 @@ body {
     mix-blend-mode: normal;
     color: #fff;
     text-align: left;
+    margin-bottom: 8px;
 }
 
 .content .text h3 {
@@ -83,6 +84,37 @@ body {
     padding: 10px 0;
     width: 200px;
     display: block;
+}
+
+.content .text .time {
+    padding: 10px 12px;
+    width: 100%;
+    border: 1px solid #72F34B;
+    filter: drop-shadow(0px 0px 23.7037px #72F34B);
+    border-radius: 2px;
+}
+
+.content .text .time h4 {
+    font-family: "Firs Neue";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #72F34B;
+    mix-blend-mode: normal;
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+.content .text .time h3 {
+    font-family: "Firs Neue";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    color: #FFFFFF;
+    mix-blend-mode: normal;
+    margin-bottom: unset;
+    text-align: left;
 }
 
 .rectangle {

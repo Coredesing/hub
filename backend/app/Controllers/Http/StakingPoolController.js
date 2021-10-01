@@ -212,7 +212,7 @@ class StakingPoolController {
       }
 
       let data = await (new LegendSnapshotService).query()
-      let cachedData = Common.groupBy(JSON.parse(JSON.stringify(data)), 'campaign_id')
+      let cachedData = Common.SnapshotGroupBy(JSON.parse(JSON.stringify(data)), 'campaign_id')
 
       for (let index = 0; index < cachedData.length; index++) {
         try {

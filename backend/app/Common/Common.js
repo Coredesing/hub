@@ -85,7 +85,7 @@ class Common {
     throw ErrorFactory.internal(`Unknown txTable: ${txTable}`);
   }
 
-  groupBy(objectArray, property) {
+  SnapshotGroupBy(objectArray, property) {
     return objectArray.reduce((result, item) => {
       if (!Array.isArray(result)) {
         result = []
@@ -101,7 +101,7 @@ class Common {
       }
 
       if (!existed) {
-        result.push({name: '', id: item.campaign_id, top: [item]})
+        result.push({name: '', id: item.campaign_id, snapshot_at: item.snapshot_at, top: [item]})
       }
       return result
     }, {})

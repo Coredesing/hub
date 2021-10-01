@@ -8,6 +8,7 @@ class LegendSnapshotService {
     param = param || {}
     try {
       let data = await LegendSnapshotModel.query()
+        .select('wallet_address', 'campaign_id', 'amount', 'snapshot_at')
         .orderBy('snapshot_at', 'desc')
         .orderBy('campaign_id', 'desc')
         .orderBy('amount', 'desc')

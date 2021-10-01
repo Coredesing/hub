@@ -4,7 +4,8 @@ import {useCommonStyle} from "../../../styles";
 import {Controller} from "react-hook-form";
 import {DatePicker} from "antd";
 import moment from "moment";
-import {BUY_TYPE, DATETIME_FORMAT, POOL_TYPE} from "../../../constants";
+import { MenuItem, Select } from "@material-ui/core";
+import {BUY_TYPE, DATETIME_FORMAT, POOL_TYPE, TIERS} from "../../../constants";
 import {renderErrorCreatePool} from "../../../utils/validate";
 import {campaignClaimConfigFormat} from "../../../utils/campaign";
 
@@ -34,6 +35,13 @@ function DurationTime(props: any) {
       if (poolDetail.end_join_pool_time) {
         setValue('end_join_pool_time', moment(poolDetail.end_join_pool_time, DATETIME_FORMAT));
       }
+
+      // Pre-Order Times
+      if (poolDetail.start_pre_order_time) {
+        setValue('start_pre_order_time', moment(poolDetail.start_pre_order_time, DATETIME_FORMAT));
+      }
+      // Pre-Order min tier
+      setValue('pre_order_min_tier', poolDetail.pre_order_min_tier);
     }
   }, [poolDetail]);
   const isDeployed = !!poolDetail?.is_deploy;
@@ -186,6 +194,83 @@ function DurationTime(props: any) {
         </div>
       </div>
 
+      <div className={classes.formControlFlex}>
+        <div className={classes.formControlFlexBlock}>
+          <label className={classes.formControlLabel}>Pre-Order Min Tier</label>
+          <div style={{ marginBottom: 25 }}>
+            <Controller
+                control={control}
+                defaultValue={4}
+                name="pre_order_min_tier"
+                render={(field) => {
+                  return (
+                      <Select
+                          {...field}
+                          onChange={(event) => setValue(field.name, event.target.value)}
+                          disabled={isDeployed || isBuyTypeFCFS}
+                      >
+                        {
+                          TIERS.map((value, index) => {
+                            return (
+                                <MenuItem
+                                    key={index}
+                                    value={index}
+                                >
+                                  {value}
+                                </MenuItem>
+                            )
+                          })
+                        }
+                      </Select>
+                  )
+                }}
+            />
+          </div>
+          <div className={`${classes.formErrorMessage} ${classes.formErrorMessageAbsolute}`}>
+            {
+              renderError(errors, 'pre_order_min_tier')
+            }
+          </div>
+        </div>
+
+        <div className={classes.formControlFlexBlock}>
+          <label className={classes.formControlLabel}>Start Pre-Order Time</label>
+          <div style={{ marginBottom: 25 }}>
+            <Controller
+                control={control}
+                rules={{
+                  validate: {
+                  }
+                }}
+                name="start_pre_order_time"
+                render={(field) => {
+                  return (
+                      <DatePicker
+                          {...field}
+                          format="YYYY-MM-DD HH:mm:ss"
+                          showTime={{
+                            defaultValue: moment("00:00:00", "HH:mm:ss"),
+                            format: "HH:mm"
+                          }}
+                          onSelect={(datetimeSelected: any) => {
+                            setValue(field.name, datetimeSelected, { shouldValidate: true });
+                          }}
+                          minuteStep={15}
+                          className={`${commonStyle.DateTimePicker} ${classes.formDatePicker}`}
+                          disabled={isDeployed || isBuyTypeFCFS}
+                      />
+                  )
+                }}
+            />
+          </div>
+          <div className={`${classes.formErrorMessage} ${classes.formErrorMessageAbsolute}`}>
+            {
+              renderError(errors, 'start_pre_order_time')
+            }
+          </div>
+        </div>
+
+      </div>
 
       <div className={classes.formControlFlex}>
         <div className={classes.formControlFlexBlock}>

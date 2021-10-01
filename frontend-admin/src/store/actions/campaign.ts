@@ -585,12 +585,12 @@ export const deployPool = (campaign: any, history: any) => {
 
       const baseRequest = new BaseRequest();
       const {
-        title, affiliate, start_time, finish_time, release_time,
+        title, affiliate, start_time, finish_time, release_time, start_pre_order_time,
         token, address_receiver, token_by_eth, token_conversion_rate, tokenInfo,
         tier_configuration, accept_currency, network_available
       } = campaign;
       const releaseTimeUnix = release_time;
-      const startTimeUnix = start_time;
+      const startTimeUnix = start_pre_order_time || start_time;
       const finishTimeUnix = finish_time;
 
       const durationTime = finishTimeUnix - startTimeUnix;

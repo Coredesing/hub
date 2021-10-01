@@ -49,6 +49,8 @@ const PoolEdit: React.FC<RouteComponentProps> = (props: RouteComponentProps) => 
           release_time: data?.release_time ? moment.unix(data?.release_time).format(DATETIME_FORMAT) : null,
           start_join_pool_time: data?.start_join_pool_time ? moment.unix(data?.start_join_pool_time).format(DATETIME_FORMAT) : null,
           end_join_pool_time: data?.start_join_pool_time ? moment.unix(data?.end_join_pool_time).format(DATETIME_FORMAT) : null,
+          start_pre_order_time: data?.start_pre_order_time ? moment.unix(data?.start_pre_order_time).format(DATETIME_FORMAT) : null,
+          pre_order_min_tier: data?.pre_order_min_tier
         };
 
         setPoolDetail(newData);

@@ -438,16 +438,16 @@ class CampaignController {
         const tier = await (new TierService()).findByLevelAndCampaign({ campaign_id, level: winner.level });
         if (!tier) {
           if (!isFreeBuyTime) {
-            return HelperUtils.responseBadRequest("You're not tier qualified for buy this campaign !");
+            return HelperUtils.responseBadRequest("You're not tier qualified for buy this campaign");
           }
         } else {
           // check time start buy for tier
-          if (!isFreeBuyTime) {
+          if (!isFreeBuyTime && !isInPreOrderTime) {
             if (tier.start_time > current) {
-              return HelperUtils.responseBadRequest('It is not yet time for your tier to start buying!');
+              return HelperUtils.responseBadRequest('Please wait for your tier time');
             }
             if (tier.end_time < current) {
-              return HelperUtils.responseBadRequest("Time out of your tier you can buy!");
+              return HelperUtils.responseBadRequest("Tier timeout");
             }
           }
           // set min, max buy amount of user
@@ -460,7 +460,7 @@ class CampaignController {
       const walletService = new WalletService();
       const wallet = await walletService.findByCampaignId(filterParams);
       if (!wallet) {
-        return HelperUtils.responseBadRequest("Do not found wallet for campaign");
+        return HelperUtils.responseErrorInternal();
       }
       // call to SC to get convert rate token erc20 -> our token
       const receipt = await HelperUtils.getOfferCurrencyInfo(camp);

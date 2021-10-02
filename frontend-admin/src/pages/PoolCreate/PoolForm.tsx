@@ -157,6 +157,8 @@ function PoolForm(props: any) {
       release_time: data.release_time ? data.release_time.unix() : null,
       start_join_pool_time: data.start_join_pool_time ? data.start_join_pool_time.unix() : null,
       end_join_pool_time: data.end_join_pool_time ? data.end_join_pool_time.unix() : null,
+      pre_order_min_tier: data.pre_order_min_tier,
+      start_pre_order_time: data.start_pre_order_time ? data.start_pre_order_time.unix() : null,
 
       // Types
       accept_currency: data.acceptCurrency,
@@ -456,6 +458,8 @@ function PoolForm(props: any) {
         release_time: data.release_time ? data.release_time.unix() : null,
         start_join_pool_time: data.start_join_pool_time ? data.start_join_pool_time.unix() : null,
         end_join_pool_time: data.end_join_pool_time ? data.end_join_pool_time.unix() : null,
+        pre_order_min_tier: data.pre_order_min_tier,
+        start_pre_order_time: data.start_pre_order_time ? data.start_pre_order_time.unix() : null,
 
         // Types
         accept_currency: data.acceptCurrency,

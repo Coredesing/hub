@@ -22,7 +22,7 @@ export const getUsdtDetail = () => {
           });
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: usdtDetailActions.USDT_DETAIL_FAILURE,
         payload: error,

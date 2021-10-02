@@ -127,7 +127,7 @@ function TokenAddress(props: any) {
                     }
                     const token = await getTokenInfo(val, token_type);
                     return token;
-                  } catch (err) {
+                  } catch (err: any) {
                     return err.message;
                   }
                 },

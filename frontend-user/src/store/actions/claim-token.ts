@@ -85,7 +85,7 @@ export const claimStakedTokens = () => {
         dispatch(getCampaignDetail(transactionHash, isInvestor));
         dispatch(getBalance(loginInvestor));
       }
-     } catch (err) {
+     } catch (err: any) {
       console.log('ERROR', err);
       dispatch({
         type: alertActions.ERROR_MESSAGE,

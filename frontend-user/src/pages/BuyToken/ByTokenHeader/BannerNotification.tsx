@@ -69,6 +69,7 @@ function BannerNotification(props: any) {
   const tokenToApprove = getApproveToken(appChainID, purchasableCurrency);
   const [tokenAllowance, setTokenAllowance] = useState<number | undefined>(undefined);
   const [userPurchased, setUserPurchased] = useState<number>(0);
+  const [isDisplayDefaultMessage, setIsDisplayDefaultMessage] = useState<boolean>(false);
 
   const { retrieveTokenAllowance } = useTokenAllowance();
   const { retrieveUserPurchased } = useUserPurchased(tokenDetails, poolAddress, ableToFetchFromBlockchain);
@@ -86,6 +87,12 @@ function BannerNotification(props: any) {
     };
     loadPool();
   }, [connectedAccount, ableToFetchFromBlockchain]);
+
+  useEffect(() => {
+    if (connectedAccount && currentUserTier && currentUserTier.max_buy >= 0) {
+      setIsDisplayDefaultMessage(true);
+    }
+  }, [connectedAccount, currentUserTier]);
 
   const now = new Date();
   const readyAllowance = ((purchasableCurrency !== PurchaseCurrency.ETH ? new BigNumber(tokenAllowance || 0).gt(0) : true));
@@ -250,21 +257,9 @@ function BannerNotification(props: any) {
               >here</LinkMui>.
             </span>
           </WrapperAlert>
-            : <WrapperAlert type="error">
+            : isDisplayDefaultMessage && <WrapperAlert type="error">
               <span>
                 Sorry, you have not been chosen as whitelist winner.
-                {/* However, you can join the free token purchase mode for {poolDetails?.title} Pool. Click
-              {' '}
-              <LinkMui
-                style={{
-                  color: '#72F34B',
-                  textDecoration: 'underline',
-                  cursor: 'pointer',
-                }}
-                href={'https://bit.ly/3r3sniO'}
-                target={'_blank'}
-              >here</LinkMui>
-              {' '} to read more. */}
               </span>
             </WrapperAlert>
           )}

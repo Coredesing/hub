@@ -22,7 +22,7 @@ class PoolController {
       'token', 'token_images', 'total_sold_coin',
       'token_by_eth', 'token_conversion_rate', 'price_usdt', 'display_price_rate',
       'tokenInfo', 'gleam_link',
-      'start_time', 'finish_time', 'release_time', 'start_join_pool_time', 'end_join_pool_time',
+      'start_time', 'finish_time', 'release_time', 'start_join_pool_time', 'end_join_pool_time', 'start_pre_order_time', 'pre_order_min_tier',
       'accept_currency', 'network_available', 'buy_type', 'pool_type', 'is_private', 'kyc_bypass',
       'min_tier', 'tier_configuration', 'claim_configuration',
       'self_twitter', 'self_group', 'self_channel', 'self_retweet_post', 'self_retweet_post_hashtag', 'partner_twitter', 'partner_group', 'partner_channel', 'partner_retweet_post', 'partner_retweet_post_hashtag',
@@ -59,6 +59,8 @@ class PoolController {
       'release_time': inputParams.release_time,
       'start_join_pool_time': inputParams.start_join_pool_time,
       'end_join_pool_time': inputParams.end_join_pool_time,
+      'start_pre_order_time': inputParams.start_pre_order_time,
+      'pre_order_min_tier': inputParams.pre_order_min_tier,
       'accept_currency': inputParams.accept_currency,
       'network_available': inputParams.network_available,
       'buy_type': inputParams.buy_type,
@@ -155,7 +157,7 @@ class PoolController {
       'token', 'token_images', 'total_sold_coin',
       'token_by_eth', 'token_conversion_rate', 'price_usdt', 'display_price_rate',
       'tokenInfo', 'gleam_link',
-      'start_time', 'finish_time', 'release_time', 'start_join_pool_time', 'end_join_pool_time',
+      'start_time', 'finish_time', 'release_time', 'start_join_pool_time', 'end_join_pool_time', 'start_pre_order_time', 'pre_order_min_tier',
       'accept_currency', 'network_available', 'buy_type', 'pool_type', 'is_private', 'kyc_bypass',
       'min_tier', 'tier_configuration', 'claim_configuration',
       'self_twitter', 'self_group', 'self_channel', 'self_retweet_post', 'self_retweet_post_hashtag', 'partner_twitter', 'partner_group', 'partner_channel', 'partner_retweet_post', 'partner_retweet_post_hashtag',
@@ -191,6 +193,8 @@ class PoolController {
       'release_time': inputParams.release_time,
       'start_join_pool_time': inputParams.start_join_pool_time,
       'end_join_pool_time': inputParams.end_join_pool_time,
+      'start_pre_order_time': inputParams.start_pre_order_time,
+      'pre_order_min_tier': inputParams.pre_order_min_tier,
       'accept_currency': inputParams.accept_currency,
       'network_available': inputParams.network_available,
       'buy_type': inputParams.buy_type,
@@ -458,6 +462,9 @@ class PoolController {
 
         // Time
         'release_time', 'start_join_pool_time', 'start_time', 'end_join_pool_time', 'finish_time',
+
+        // Pre-order
+        'pre_order_min_tier', 'start_pre_order_time',
 
         // KYC required
         'kyc_bypass',

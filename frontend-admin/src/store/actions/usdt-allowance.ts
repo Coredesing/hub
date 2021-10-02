@@ -22,7 +22,7 @@ export const getUsdtAllowance = (amount: string, campaignId: string) => {
           payload: allowanceResult,
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: usdtAllowanceActions.USDT_ALLOWANCE_FAILURE,
         payload: error,

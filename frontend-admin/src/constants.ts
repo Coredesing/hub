@@ -10,7 +10,7 @@ export const TIERS = [
   'Rookie',
   'Elite',
   'Pro',
-  'Master',
+  'Legend',
 ];
 
 export const ACCEPT_CURRENCY = {

@@ -42,11 +42,11 @@ export const claimToken = (campaignId: string) => {
             dispatch(getBalance(loginUser));
           }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('ERROR', error);
       dispatch({
         type: claimTokenActions.CLAIM_TOKEN_FAILURE,
-        payload: error.message,
+        payload: error?.message,
       });
 
       dispatch({
@@ -86,7 +86,7 @@ export const claimStakedTokens = () => {
         dispatch(getCampaignDetail(transactionHash, isInvestor));
         dispatch(getBalance(loginInvestor));
       }
-     } catch (err) {
+     } catch (err: any) {
       console.log('ERROR', err);
       dispatch({
         type: alertActions.ERROR_MESSAGE,
@@ -94,7 +94,7 @@ export const claimStakedTokens = () => {
       });
       dispatch({
         type: claimTokenActions.CLAIM_TOKEN_STAKED_FAILURE,
-        payload: err.message,
+        payload: err?.message,
       });
      }
   }
@@ -123,10 +123,10 @@ export const claimStakedTokens = () => {
 //           payload: false
 //         });
 //       }
-//     } catch (err) {
+//     } catch (err: any) {
 //       dispatch({
 //         type: buyTokenActions.BUY_TOKEN_AVAILABLE_FAILURE,
-//         payload: err.message,
+//         payload: err?.message,
 //       });
 //     }
 //   }

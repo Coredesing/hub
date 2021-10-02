@@ -115,7 +115,7 @@ const ResetPassword: React.FC<any> = (props: any) => {
         const redirectUrl = adminRoute('/login');
         props.history.push(redirectUrl);
       })
-    } catch (err) {
+    } catch (err: any) {
       dispatch(alertFailure(err.message));
       setResetPasswordLoading(false);
     }

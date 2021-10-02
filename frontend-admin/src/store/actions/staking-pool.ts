@@ -127,17 +127,17 @@ export const deployStakingPool = (stakingPool: any) => {
       }
         
         
-    } catch (err) {
+    } catch (err: any) {
       console.log('ERROR: ', err);
 
       // dispatch({
       //   type: campaignActions.MY_CAMPAIGN_CREATE_FAIL,
-      //   payload: err.message
+      //   payload: err?.message
       // });
 
       dispatch({
         type: alertActions.ERROR_MESSAGE,
-        payload: err.message
+        payload: err?.message
       });
     }
   }
@@ -201,12 +201,12 @@ export const updateStakingPool = (stakingPool: any) => {
       }
         
         
-    } catch (err) {
+    } catch (err: any) {
       console.log('ERROR: ', err);
 
       dispatch({
         type: alertActions.ERROR_MESSAGE,
-        payload: err.message
+        payload: err?.message
       });
     }
   }

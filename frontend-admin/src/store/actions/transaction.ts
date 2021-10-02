@@ -28,7 +28,7 @@ export const getTransactionByCampaign = (transactionID: string, currentPage: num
         });
       }
 
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: transactionActions.TRANSACTION_BY_CAMPAIGN_FAIL,
         payload: error.message

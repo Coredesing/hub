@@ -256,11 +256,11 @@ export const buyToken = (amount: any, tokenConvert: any, campaignId: string, uni
         }
       }
 
-    } catch (error) {
+    } catch (error: any) {
       console.log('ERROR', error);
       dispatch({
         type: buyTokenActions.BUY_TOKEN_FAILURE,
-        payload: error.message,
+        payload: error?.message,
       });
 
       dispatch({
@@ -305,10 +305,10 @@ export const isCampaignPurchasable = () => {
           });
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: buyTokenActions.BUY_TOKEN_AVAILABLE_FAILURE,
-        payload: err.message,
+        payload: err?.message,
       });
     }
   }

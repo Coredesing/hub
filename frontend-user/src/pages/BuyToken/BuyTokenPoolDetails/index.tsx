@@ -216,7 +216,7 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
                 poolDetails?.tiersWithDetails?.map(
                   (row: any, index: number) => {
                     if (index < minTier) {
-                      return <></>;
+                      return ;
                     }
                     return (
                       <div className={styles.boxTierMobile} key={index}>
@@ -285,7 +285,7 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
                       poolDetails?.tiersWithDetails?.map(
                         (row: any, index: number) => {
                           if (index < minTier) {
-                            return <></>;
+                            return;
                           }
                           return (
                             <TableRow key={index}>

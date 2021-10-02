@@ -28,7 +28,7 @@ import StatusBar from './StatusBar';
 import Countdown from '../../components/Base/Countdown';
 import DefaultLayout from '../../components/Layout/DefaultLayout';
 import { ETH_CHAIN_ID, BSC_CHAIN_ID, POLYGON_CHAIN_ID, NETWORK_BSC_NAME, NETWORK_ETH_NAME } from '../../constants/network';
-import { getPoolCountDown } from '../../utils/getPoolCountDown';
+import { getPoolCountDown, getPoolCountDownPreOrder } from '../../utils/getPoolCountDown';
 import { numberWithCommas } from '../../utils/formatNumber';
 
 import { sotaTiersActions } from '../../store/constants/sota-tiers';
@@ -42,6 +42,13 @@ import WhiteListUserGuideBanner from "./WhiteListUserGuideBanner/WhiteListUserGu
 import { getEtherscanName, getEtherscanTransactionAddress } from "../../utils/network";
 import PoolIsEndMessage from "./PoolIsEndMessage/PoolIsEndMessage";
 import WhitelistCountryModal from "./ApplyWhitelistModal/WhitelistCountryModal";
+
+import {
+  checkIsInPreOrderTime,
+  checkIsPoolPreOrder,
+  checkIsEnoughTierPreOrder,
+  checkAllowUserBuyPreOrder
+} from "../../utils/preOrder";
 
 // new component update ui
 
@@ -201,13 +208,32 @@ const ContentToken = ({ id, ...props }: any) => {
 
   const userBuyLimit = currentUserTier?.max_buy || 0;
   const userBuyMinimum = currentUserTier?.min_buy || 0;
+  const currentUserTierLevel = currentUserTier?.level || 0;
+
+  // Detect PreOrder
+  const isPreOrderPool = checkIsPoolPreOrder({ poolDetails, currentUserTierLevel });
+  const isEnoughTierPreOrder = checkIsEnoughTierPreOrder({ poolDetails, currentUserTierLevel });
+  const isInPreOrderTime = isPreOrderPool && checkIsInPreOrderTime({ poolDetails, currentUserTierLevel });
+  const allowUserBuyPreOrder = isPreOrderPool && checkAllowUserBuyPreOrder({
+    poolDetails,
+    currentUserTierLevel,
+    userJoined: (alreadyJoinPool || joinPoolSuccess),
+  });
 
   // With Whitelist situation, Enable when join time < current < end join time
   // With FCFS, always disable join button
   const joinTimeInDate = poolDetails?.joinTime ? new Date(Number(poolDetails?.joinTime) * 1000) : undefined;
   const endJoinTimeInDate = poolDetails?.endJoinTime ? new Date(Number(poolDetails?.endJoinTime) * 1000) : undefined;
-  const startBuyTimeInDate = poolDetails?.startBuyTime ? new Date(Number(poolDetails?.startBuyTime) * 1000) : undefined;
-  const endBuyTimeInDate = poolDetails?.endBuyTime ? new Date(Number(poolDetails?.endBuyTime) * 1000) : undefined;
+  // const startBuyTimeInDate = poolDetails?.startBuyTime ? new Date(Number(poolDetails?.startBuyTime) * 1000) : undefined;
+  // const endBuyTimeInDate = poolDetails?.endBuyTime ? new Date(Number(poolDetails?.endBuyTime) * 1000) : undefined;
+
+  const startStartTimePreOrder = (poolDetails?.startPreOrderTime ? new Date(Number(poolDetails?.startPreOrderTime) * 1000) : undefined);
+  const startBuyTimeNormal = (poolDetails?.startBuyTime ? new Date(Number(poolDetails?.startBuyTime) * 1000) : undefined);
+  const startBuyTimeInDate = isInPreOrderTime ? startStartTimePreOrder : startBuyTimeNormal;
+
+  const endStartTimePreOrder = (poolDetails?.startBuyTime ? new Date(Number(poolDetails?.startBuyTime) * 1000) : undefined);
+  const endBuyTimeNormal = (poolDetails?.endBuyTime ? new Date(Number(poolDetails?.endBuyTime) * 1000) : undefined)
+  const endBuyTimeInDate = isInPreOrderTime ? endStartTimePreOrder : endBuyTimeNormal;
   const announcementTime = poolDetails?.whitelistBannerSetting?.announcement_time ? new Date(Number(poolDetails?.whitelistBannerSetting?.announcement_time) * 1000) : undefined;
   /* const tierStartBuyInDate = new Date(Number(currentUserTier?.start_time) * 1000); */
   /* const tierEndBuyInDate = new Date(Number(currentUserTier?.end_time) * 1000); */
@@ -247,6 +273,10 @@ const ContentToken = ({ id, ...props }: any) => {
     startBuyTime: Date | undefined,
     endBuyTime: Date | undefined
   ) => {
+    if (isEnoughTierPreOrder && isInPreOrderTime) { // Pool is PreOrder Pool and Pool in PreOrder Time Actived
+      return getPoolCountDownPreOrder({ endBuyTime });
+    }
+
     return getPoolCountDown(
       startJoinTime, endJoinTime, startBuyTime, endBuyTime, releaseTimeInDate, method, poolDetails?.campaignStatus, poolDetails, soldProgress
     );
@@ -398,6 +428,8 @@ const ContentToken = ({ id, ...props }: any) => {
               maximumBuy={userBuyLimit}
               isOverTimeApplyWhiteList={isOverTimeApplyWhiteList}
               countDownDate={countDownDate}
+              isPreOrderPool={isPreOrderPool}
+              isInPreOrderTime={isInPreOrderTime}
             />
 
             <ByTokenHeader
@@ -508,7 +540,6 @@ const ContentToken = ({ id, ...props }: any) => {
               currencyName={currencyName}
             />
           </div>
-
           {
             ((+soldProgress < 100) && isSwap(poolDetails?.campaignStatus)) &&
             startBuyTimeInDate &&
@@ -544,6 +575,54 @@ const ContentToken = ({ id, ...props }: any) => {
               poolDetailsMapping={poolDetailsMapping}
               poolDetails={poolDetails}
               isKyc={!!(isKYC || poolDetails?.kycBypass)}
+              // Setting Enable PreOrder
+              isInPreOrderTime={false}
+            />
+          }
+
+          {
+            (alreadyJoinPool || joinPoolSuccess) &&
+            isPreOrderPool &&      // Pre Order Pool
+            isEnoughTierPreOrder &&
+            allowUserBuyPreOrder &&
+            startBuyTimeInDate &&
+            endBuyTimeInDate &&
+            startBuyTimeInDate < new Date() && new Date() < endBuyTimeInDate &&
+            <BuyTokenForm
+                disableAllButton={disableAllButton}
+                // existedWinner={existedWinner}
+                alreadyJoinPool={alreadyJoinPool}
+                joinPoolSuccess={joinPoolSuccess}
+                tokenDetails={poolDetails?.tokenDetails}
+                networkAvailable={poolDetails?.networkAvailable || ''}
+                rate={poolDetails?.ethRate}
+                poolAddress={poolDetails?.poolAddress}
+                maximumBuy={userBuyLimit}
+                minimumBuy={userBuyMinimum}
+                poolAmount={poolDetails?.amount}
+                purchasableCurrency={poolDetails?.purchasableCurrency?.toUpperCase()}
+                poolId={poolDetails?.id}
+                joinTime={joinTimeInDate}
+                method={poolDetails?.method}
+                availablePurchase={availablePurchase}
+                ableToFetchFromBlockchain={ableToFetchFromBlockchain}
+                minTier={poolDetails?.minTier}
+                isDeployed={poolDetails?.isDeployed}
+
+                // Apply PreOrder Time
+                startBuyTimeInDate={startBuyTimeInDate}
+                endBuyTimeInDate={endBuyTimeInDate}
+
+                endJoinTimeInDate={endJoinTimeInDate}
+                tokenSold={tokenSold}
+                setBuyTokenSuccess={setBuyTokenSuccess}
+                isClaimable={poolDetails?.type === 'claimable'}
+                currentUserTier={currentUserTier}
+                poolDetailsMapping={poolDetailsMapping}
+                poolDetails={poolDetails}
+                isKyc={!!(isKYC || poolDetails?.kycBypass)}
+                // Setting Enable PreOrder
+                isInPreOrderTime={isInPreOrderTime}
             />
           }
 

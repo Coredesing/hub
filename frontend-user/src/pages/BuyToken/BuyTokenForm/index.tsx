@@ -67,6 +67,7 @@ type BuyTokenFormProps = {
   poolDetailsMapping: any,
   poolDetails: any,
   isKyc?: boolean,
+  isInPreOrderTime: boolean,
 }
 
 enum MessageType {
@@ -117,6 +118,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
     poolDetailsMapping,
     poolDetails,
     isKyc,
+    isInPreOrderTime,
   } = props;
 
   const {
@@ -265,7 +267,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
         enableApprove = false;
       }
     }
-
+    
     if (tokenAllowance > 0) {
       activeDisableStep1 = true;
       activeStep2 = true;
@@ -602,7 +604,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
 
           <div>
             <Button
-              text={'Swap'}
+              text={isInPreOrderTime ? 'Pre-order' : 'Swap'}
               backgroundColor={'#72F34B'}
               disabled={!purchasable || !isKyc || !verifiedCapcha}
               onClick={(isKyc) ? handleTokenDeposit : undefined}

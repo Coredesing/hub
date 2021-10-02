@@ -752,7 +752,6 @@ export const deployPool = (campaign: any, history: any) => {
         let createdCampaign;
         const userWalletAddress = getState().user.data.wallet_address;
         const signerWallet = campaign.wallet.wallet_address;
-        console.log('userWallet', signerWallet);
 
         createdCampaign = await factorySmartContract.methods.registerPool(
           token,

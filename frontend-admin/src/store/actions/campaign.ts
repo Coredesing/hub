@@ -89,10 +89,10 @@ export const getCampaigns = (currentPage: number = 1, query: string = '', startT
           }
         })
       }
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: campaignActions.CAMPAIGNS_FAIL,
-        payload: err.message
+        payload: err?.message
       })
     }
 
@@ -123,7 +123,7 @@ export const getCampaignDetailHttp = (transactionHash: string) => {
           }
         })
       }
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: campaignActions.CAMPAIGN_DETAIL_HTTP_FAIL,
         payload: false
@@ -174,11 +174,10 @@ export const getLatestCampaign = () => {
         }
 
       }
-    } catch (err) {
-      console.log(err.message);
+    } catch (err: any) {
       dispatch({
         type: campaignActions.CAMPAIGN_LATEST_GET_FAIL,
-        payload: err.message
+        payload: err?.message
       })
     }
   }
@@ -224,11 +223,10 @@ export const getLatestActiveCampaign = () => {
         }
 
       }
-    } catch (err) {
-      console.log(err.message);
+    } catch (err: any) {
       dispatch({
         type: campaignActions.CAMPAIGN_LATEST_ACTIVE_GET_FAIL,
-        payload: err.message
+        payload: err?.message
       })
     }
   }
@@ -353,10 +351,10 @@ export const getCampaignDetail = (id: string, isInvestor: boolean = false) => {
         }
 
       }
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: campaignActions.CAMPAIGN_DETAIL_FAIL,
-        payload: err.message
+        payload: err?.message
       });
     }
   }
@@ -397,15 +395,15 @@ export const registerICOCampaign = (website: string, history: any) => {
 
       }
 
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: campaignActions.CAMPAIGN_REGISTER_ICO_FAIL,
-        payload: err.message
+        payload: err?.message
       });
 
       dispatch({
         type: alertActions.ERROR_MESSAGE,
-        payload: err.message
+        payload: err?.message
       });
     }
   }
@@ -446,15 +444,15 @@ export const setUSDTRate = (rate: number) => {
           dispatch(getCampaignDetail(transactionHash));
         };
       }
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: campaignActions.CAMPAIGN_ERC20_RATE_FAIL,
-        payload: err.message
+        payload: err?.message
       });
 
       dispatch({
         type: alertActions.ERROR_MESSAGE,
-        payload: err.message
+        payload: err?.message
       });
     }
   }
@@ -485,15 +483,15 @@ export const createAffiliateCampaign = (campaign: campaignAffiliateCreateProps, 
 
         dispatch(getAffiliateByCampaign());
       }
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: campaignActions.CAMPAIGN_AFFILIATE_CREATE_FAIL,
-        payload: err.message
+        payload: err?.message
       });
 
       dispatch({
         type: alertActions.ERROR_MESSAGE,
-        payload: err.message
+        payload: err?.message
       });
     }
   }
@@ -564,15 +562,15 @@ export const createCampaign = (campaign: campaignCreateProps, history: any) => {
           })
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: campaignActions.MY_CAMPAIGN_CREATE_FAIL,
-        payload: err.message
+        payload: err?.message
       });
 
       dispatch({
         type: alertActions.ERROR_MESSAGE,
-        payload: err.message
+        payload: err?.message
       });
     }
   }
@@ -790,17 +788,17 @@ export const deployPool = (campaign: any, history: any) => {
           await updateDeploySuccess(updateData, campaign.id);
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.log('ERROR: ', err);
 
       dispatch({
         type: campaignActions.MY_CAMPAIGN_CREATE_FAIL,
-        payload: err.message
+        payload: err?.message
       });
 
       dispatch({
         type: alertActions.ERROR_MESSAGE,
-        payload: err.message
+        payload: err?.message
       });
     }
   }
@@ -840,15 +838,15 @@ export const toggleCampaignStatus = () => {
         dispatch(getCampaignDetail(transactionHash));
       }
 
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: campaignActions.CAMPAIGN_STATUS_TOGGLE_FAIL,
-        payload: err.message
+        payload: err?.message
       });
 
       dispatch({
         type: alertActions.ERROR_MESSAGE,
-        payload: err.message
+        payload: err?.message
       });
     }
   }
@@ -950,17 +948,17 @@ export const editCampaignWithProp = (prop: string, value: string, handleEditSucc
         dispatch(getCampaignDetail(transactionHash));
       }
 
-    } catch (err) {
+    } catch (err: any) {
       handleEditSuccess();
 
       dispatch({
         type: campaignActions.CAMPAIGN_EDIT_FAIL,
-        payload: err.message
+        payload: err?.message
       });
 
       dispatch({
         type: alertActions.ERROR_MESSAGE,
-        payload: err.message
+        payload: err?.message
       });
     }
   }
@@ -994,15 +992,15 @@ export const refundTokensForIcoOwner = (receiverAddress: string, amount: number)
         dispatch(getCampaignDetail(transactionHash));
       }
 
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: campaignActions.CAMPAIGN_TOKENS_REFUND_FAIL,
-        payload: err.message
+        payload: err?.message
       });
 
       dispatch({
         type: alertActions.ERROR_MESSAGE,
-        payload: err.message
+        payload: err?.message
       });
     }
   }

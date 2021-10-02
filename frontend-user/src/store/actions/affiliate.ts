@@ -83,7 +83,7 @@ export const generateAffiliateLink = (campaign_index: any) => {
         dispatch(getAffiliateByCampaign());
       }
 
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: affiliateActions.AFFILIATE_LINK_GENERATE_FAIL,
         payload: err.message

@@ -36,7 +36,7 @@ const fetchListPool = async ()=> {
       console.log(data)
       return data
     }
-  } catch (err) {
+  } catch (err: any) {
     console.log(err)
   }
 }

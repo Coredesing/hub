@@ -40,7 +40,7 @@ export const deactivateSetting = () => {
           dispatch(getSettingDetail());
       }
 
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: settingDeactivateActions.SETTING_DEACTIVATE_FAIL,
         payload: error,
@@ -48,7 +48,7 @@ export const deactivateSetting = () => {
 
       dispatch({
         type: alertActions.ERROR_MESSAGE,
-        payload: error.message,
+        payload: error?.message,
       });
     }
   }

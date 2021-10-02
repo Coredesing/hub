@@ -74,7 +74,7 @@ const useStakingPoolDetail = (
       }
 
       setLoading(false);
-    } catch (err) {
+    } catch (err: any) {
       console.log('[ERROR] - useContractDetail:', err);
       setLoading(false);
       // throw new Error(err.message);

@@ -42,7 +42,7 @@ export const approveUsdt = (amount: string, campaignId: string) => {
           }
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: usdtApproveActions.USDT_APPROVE_FAILURE,
         payload: error,

@@ -44,15 +44,15 @@ export const getAffiliateByCampaign = () => {
           }
 
       }
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: affiliateActions.AFFILIATE_BY_CAMPAIGN_FAIL,
-        payload: err.message
+        payload: err?.message
       });
 
       dispatch({
         type: alertActions.ERROR_MESSAGE,
-        payload: err.message
+        payload: err?.message
       });
     }
   }
@@ -83,15 +83,15 @@ export const generateAffiliateLink = (campaign_index: any) => {
         dispatch(getAffiliateByCampaign());
       }
 
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: affiliateActions.AFFILIATE_LINK_GENERATE_FAIL,
-        payload: err.message
+        payload: err?.message
       });
 
       dispatch({
         type: alertActions.ERROR_MESSAGE,
-        payload: err.message
+        payload: err?.message
       });
     }
   }

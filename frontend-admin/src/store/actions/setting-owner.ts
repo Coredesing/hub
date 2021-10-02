@@ -34,7 +34,7 @@ export const setOwner = (owner: string) => {
         }
       }
 
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: settingOwnerActions.SETTING_OWNER_FAILURE,
         payload: error,
@@ -42,7 +42,7 @@ export const setOwner = (owner: string) => {
 
       dispatch({
         type: alertActions.ERROR_MESSAGE,
-        payload: error.message,
+        payload: error?.message,
       });
     }
   }

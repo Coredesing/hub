@@ -52,7 +52,7 @@ export const getTokenInfo = async (tokenAddress: string, token_type: string = 'e
             token_type: TOKEN_TYPE.ERC20,
           }
       }
-    } catch (err) {
+    } catch (err: any) {
       throw new Error("Token address is invalid." +  err.message);
     };
 }
@@ -69,8 +69,8 @@ export const tokenAlreadyUsed = async (tokenAddress: string): Promise<boolean> =
       return Number(tokenRegistered.registeredBy) > 0;
     }
 
-  } catch (err) {
-    console.log(err.message);
+  } catch (err: any) {
+    console.log(err?.message);
     return true;
   }
 

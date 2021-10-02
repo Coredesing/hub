@@ -49,7 +49,7 @@ export const getTokensByUser = () => {
             payload: tokensDetail
           })
         }   
-      } catch (err) {
+      } catch (err: any) {
         dispatch({
           type: tokenActions.TOKENS_BY_USER_FAIL,
           payload: err.message

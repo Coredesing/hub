@@ -30,7 +30,7 @@ export const getSettingDetail = () => {
         });
       }
 
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: settingDetailActions.SETTING_DETAIL_FAILURE,
         payload: error

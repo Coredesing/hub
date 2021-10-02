@@ -89,7 +89,7 @@ function TokenAddress(props: any) {
                     }
                     const erc20Token = await getTokenInfo(val);
                     return erc20Token;
-                  } catch (err) {
+                  } catch (err: any) {
                     return err.message;
                   }
                 },

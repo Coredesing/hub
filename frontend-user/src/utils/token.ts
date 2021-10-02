@@ -31,7 +31,7 @@ export const getTokenInfo = async (tokenAddress: string): Promise<ReturnType> =>
           address: tokenAddress
         }
       };
-    } catch (err) {
+    } catch (e) {
       throw new Error("Token address is invalid.");
     };
 }
@@ -48,8 +48,7 @@ export const tokenAlreadyUsed = async (tokenAddress: string): Promise<boolean> =
       return Number(tokenRegistered.registeredBy) > 0;
     }
 
-  } catch (err) {
-    console.log(err.message);
+  } catch (e) {
     return true;
   }
 

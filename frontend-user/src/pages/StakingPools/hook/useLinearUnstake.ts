@@ -42,7 +42,7 @@ const useLinearUnstake = (
               setTokenUnstakeLoading(false);
              }
            }
-      } catch (err) {
+      } catch (err: any) {
         console.log('[ERROR] - useLinearUnstake:', err);
         dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
         setTokenUnstakeLoading(false);

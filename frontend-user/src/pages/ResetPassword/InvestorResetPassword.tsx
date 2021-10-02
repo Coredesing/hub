@@ -116,7 +116,7 @@ const InvestorResetPassword: React.FC<any> = (props: any) => {
         const redirectUrl = isInvestor ? publicRoute('/login') : adminRoute('/login');
         props.history.push(redirectUrl);
       })
-    } catch (err) {
+    } catch (err: any) {
       dispatch(alertFailure(err.message));
       setResetPasswordLoading(false);
     }

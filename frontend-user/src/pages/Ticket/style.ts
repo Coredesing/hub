@@ -981,7 +981,7 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
         gap: '8px',
         '& .box-type': {
           cursor: 'pointer',
-          padding: '5px 8px',
+          padding: '5px 4px',
           display: 'grid',
           gridTemplateColumns: '40px auto',
           gap: '5px',
@@ -995,6 +995,11 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
             '& span': {
               color: '#fff',
             }
+          },
+
+          '& .icon': {
+            width: '40px',
+            height: '20px',
           },
 
           '& span': {

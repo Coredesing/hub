@@ -144,99 +144,99 @@ const MysteryBox = ({ id, ...props }: any) => {
 
     const [phase, setPhase] = useState<any>({});
     const [phaseName, setPhaseName] = useState('');
-    // useEffect(() => {
-    //     if (!loadingTicket && dataTicket) {
-    //         setNewTicket(false);
-    //         setInfoTicket(dataTicket);
-    //         if (isEndPool(dataTicket.campaign_status)) {
-    //             setFinishedTime(true);
-    //             return;
-    //         }
-    //         let openTime: number;
-    //         let finishTime: number;
-    //         if (isClaim) {
-    //             const claimConfigs = dataTicket.campaignClaimConfig || [];
-    //             const leng = claimConfigs.length;
-    //             if (!leng) return;
-    //             const timeStartPhase2 = dataTicket.freeBuyTimeSetting?.start_buy_time;
-    //             if (leng === 1) {
-    //                 const openClaim = claimConfigs[0];
-    //                 openTime = +openClaim.start_time * 1000;
-    //                 const endTime = timeStartPhase2 ? +timeStartPhase2 * 1000 : (+openClaim.end_time * 1000 || openTime + 1000 * 60 * 60 * 24);
-    //                 finishTime = endTime;
-    //                 if (timeStartPhase2) {
-    //                     setPhaseName('Phase 1');
-    //                     setPhase({
-    //                         1: {
-    //                             openTime,
-    //                             finishTime,
-    //                         },
-    //                         2: {
-    //                             openTime: finishTime,
-    //                             finishTime: finishTime + 1000 * 60 * 60 * 24
-    //                         }
-    //                     })
-    //                 }
-    //             } else {
-    //                 const openClaim = claimConfigs[0];
-    //                 let endClaim = claimConfigs.slice(-1)[0];
-    //                 if (!endClaim) return;
-    //                 openTime = +openClaim.start_time * 1000;
-    //                 const endTime = timeStartPhase2 ? +timeStartPhase2 * 1000 : (+endClaim.end_time * 1000 || +endClaim.start_time * 1000);
-    //                 finishTime = endTime;
-    //                 if (timeStartPhase2) {
-    //                     setPhaseName('Phase 1');
-    //                     setPhase({
-    //                         1: {
-    //                             openTime,
-    //                             finishTime: +timeStartPhase2 * 1000,
-    //                         },
-    //                         2: {
-    //                             openTime: +timeStartPhase2 * 1000,
-    //                             finishTime: endTime
-    //                         }
-    //                     })
-    //                 }
-    //             }
-    //         } else {
-    //             let timeStartPhase2 = dataTicket.freeBuyTimeSetting?.start_buy_time;
-    //             openTime = +dataTicket.start_time * 1000;
-    //             if (timeStartPhase2) {
-    //                 timeStartPhase2 = +timeStartPhase2 * 1000;
-    //                 finishTime = timeStartPhase2;
-    //                 setPhaseName('Phase 1');
-    //                 setPhase({
-    //                     1: {
-    //                         openTime,
-    //                         finishTime: timeStartPhase2,
-    //                     },
-    //                     2: {
-    //                         openTime: timeStartPhase2,
-    //                         finishTime: +dataTicket.finish_time * 1000
-    //                     }
-    //                 })
-    //             } else {
-    //                 finishTime = +dataTicket.finish_time * 1000;
-    //             }
-    //         }
+    useEffect(() => {
+        if (!loadingTicket && dataTicket) {
+            setNewTicket(false);
+            setInfoTicket(dataTicket);
+            // if (isEndPool(dataTicket.campaign_status)) {
+            //     setFinishedTime(true);
+            //     return;
+            // }
+            // let openTime: number;
+            // let finishTime: number;
+            // if (isClaim) {
+            //     const claimConfigs = dataTicket.campaignClaimConfig || [];
+            //     const leng = claimConfigs.length;
+            //     if (!leng) return;
+            //     const timeStartPhase2 = dataTicket.freeBuyTimeSetting?.start_buy_time;
+            //     if (leng === 1) {
+            //         const openClaim = claimConfigs[0];
+            //         openTime = +openClaim.start_time * 1000;
+            //         const endTime = timeStartPhase2 ? +timeStartPhase2 * 1000 : (+openClaim.end_time * 1000 || openTime + 1000 * 60 * 60 * 24);
+            //         finishTime = endTime;
+            //         if (timeStartPhase2) {
+            //             setPhaseName('Phase 1');
+            //             setPhase({
+            //                 1: {
+            //                     openTime,
+            //                     finishTime,
+            //                 },
+            //                 2: {
+            //                     openTime: finishTime,
+            //                     finishTime: finishTime + 1000 * 60 * 60 * 24
+            //                 }
+            //             })
+            //         }
+            //     } else {
+            //         const openClaim = claimConfigs[0];
+            //         let endClaim = claimConfigs.slice(-1)[0];
+            //         if (!endClaim) return;
+            //         openTime = +openClaim.start_time * 1000;
+            //         const endTime = timeStartPhase2 ? +timeStartPhase2 * 1000 : (+endClaim.end_time * 1000 || +endClaim.start_time * 1000);
+            //         finishTime = endTime;
+            //         if (timeStartPhase2) {
+            //             setPhaseName('Phase 1');
+            //             setPhase({
+            //                 1: {
+            //                     openTime,
+            //                     finishTime: +timeStartPhase2 * 1000,
+            //                 },
+            //                 2: {
+            //                     openTime: +timeStartPhase2 * 1000,
+            //                     finishTime: endTime
+            //                 }
+            //             })
+            //         }
+            //     }
+            // } else {
+            //     let timeStartPhase2 = dataTicket.freeBuyTimeSetting?.start_buy_time;
+            //     openTime = +dataTicket.start_time * 1000;
+            //     if (timeStartPhase2) {
+            //         timeStartPhase2 = +timeStartPhase2 * 1000;
+            //         finishTime = timeStartPhase2;
+            //         setPhaseName('Phase 1');
+            //         setPhase({
+            //             1: {
+            //                 openTime,
+            //                 finishTime: timeStartPhase2,
+            //             },
+            //             2: {
+            //                 openTime: timeStartPhase2,
+            //                 finishTime: +dataTicket.finish_time * 1000
+            //             }
+            //         })
+            //     } else {
+            //         finishTime = +dataTicket.finish_time * 1000;
+            //     }
+            // }
 
-    //         if (openTime > Date.now()) {
-    //             setOpenTime(getDiffTime(openTime, Date.now()));
-    //         }
-    //         if (finishTime < Date.now() || finishTime <= openTime) {
-    //             setFinishedTime(true);
-    //             setIsBuy(false);
-    //         } else {
-    //             setIsBuy(true);
-    //             setTimeEnd(
-    //                 getDiffTime(
-    //                     finishTime,
-    //                     Date.now() >= openTime ? Date.now() : openTime
-    //                 )
-    //             );
-    //         }
-    //     }
-    // }, [dataTicket, loadingTicket, isClaim]);
+            // if (openTime > Date.now()) {
+            //     setOpenTime(getDiffTime(openTime, Date.now()));
+            // }
+            // if (finishTime < Date.now() || finishTime <= openTime) {
+            //     setFinishedTime(true);
+            //     setIsBuy(false);
+            // } else {
+            //     setIsBuy(true);
+            //     setTimeEnd(
+            //         getDiffTime(
+            //             finishTime,
+            //             Date.now() >= openTime ? Date.now() : openTime
+            //         )
+            //     );
+            // }
+        }
+    }, [dataTicket, loadingTicket, isClaim]);
 
     const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, isFinished?: boolean }>({ date1: 0, date2: 0, title: '' });
     const onSetCountdown = useCallback(() => {
@@ -633,6 +633,9 @@ const MysteryBox = ({ id, ...props }: any) => {
         orderBox(numberBox)
     }, [infoTicket, connectedAccount]);
 
+    const [idSelectedType, onSelectType] = useState(-1);
+
+
     return (
         loadingTicket ? <div className={styles.loader} style={{ marginTop: 70 }}>
             <HashLoader loading={true} color={'#72F34B'} />
@@ -727,22 +730,12 @@ const MysteryBox = ({ id, ...props }: any) => {
                                         <div className="box-type-wrapper">
                                             <h4 className="text-uppercase">TYPE</h4>
                                             <div className="box-types">
-                                                <div className="box-type active">
-                                                    <img src="/images/icons/small-box.png" className="icon" alt="" />
-                                                    <span>Grey x100</span>
-                                                </div>
-                                                <div className="box-type">
-                                                    <img src="/images/icons/small-box.png" className="icon" alt="" />
-                                                    <span>Grey x100</span>
-                                                </div>
-                                                <div className="box-type">
-                                                    <img src="/images/icons/small-box.png" className="icon" alt="" />
-                                                    <span>Grey x100</span>
-                                                </div>
-                                                <div className="box-type">
-                                                    <img src="/images/icons/small-box.png" className="icon" alt="" />
-                                                    <span>Grey x100</span>
-                                                </div>
+                                                {
+                                                    (infoTicket.boxTypesConfig || []).map((t: any) => <div onClick={() => onSelectType(t.id)} className={clsx("box-type", {active: t.id === idSelectedType})}>
+                                                        <img src={t.icon} className="icon" alt="" />
+                                                        <span>{t.name} x{t.limit}</span>
+                                                    </div>)
+                                                }
                                             </div>
                                         </div>
                                         {

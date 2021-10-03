@@ -174,7 +174,7 @@ const responseErrorInternal = (message) => {
 const responseNotFound = (message) => {
   return {
     status: 404,
-    message: message || 'Not Found!',
+    message: message || 'Not Found',
     data: null,
   }
 };
@@ -182,7 +182,7 @@ const responseNotFound = (message) => {
 const responseBadRequest = (message) => {
   return {
     status: 400,
-    message: message || 'Looks like this is unkown request, please try again or contact us.',
+    message: message || 'Bad request',
     data: null,
   }
 };
@@ -190,7 +190,7 @@ const responseBadRequest = (message) => {
 const responseSuccess = (data = null, message) => {
   return {
     status: 200,
-    message: message || 'Success!',
+    message: message || 'Success',
     data,
   }
 };

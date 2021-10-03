@@ -50,7 +50,7 @@ class NFTOrderController {
         amount: amount,
       })
 
-      return HelperUtils.responseSuccess();
+      return HelperUtils.responseSuccess({data: true});
     }
     catch(e) {
       return HelperUtils.responseErrorInternal();
@@ -76,16 +76,9 @@ class NFTOrderController {
         wallet_address: wallet_address,
         campaign_id: campaign_id
       })
+      const amount = (data && data.amount) ? data.amount : 0
 
-      if (!data) {
-        return HelperUtils.responseSuccess({
-          amount: 0,
-        });
-      }
-
-      return HelperUtils.responseSuccess({
-        amount: data.amount
-      });
+      return HelperUtils.responseSuccess({amount: amount});
     }
     catch(e) {
       return HelperUtils.responseErrorInternal();

@@ -506,12 +506,17 @@ class PoolController {
 
       if (publicPool && publicPool.token_type === CONST.TOKEN_TYPE.MYSTERY_BOX) {
         const ntfService = new NFTOrderService();
-        const orders = await ntfService.sumOrder(publicPool.id);
+        const orders = await ntfService.sumOrderAndRegistered(publicPool.id);
         let totalOrder = 0
+        let totalRegistered = 0
         if (orders && orders.length > 0) {
           totalOrder = parseInt(orders[0]['sum(`amount`)'])
         }
+        if (orders && orders.length > 0) {
+          totalRegistered = parseInt(orders[0]['count(*)'])
+        }
         publicPool.totalOrder = isNaN(totalOrder) ? 0 : totalOrder
+        publicPool.totalRegistered = isNaN(totalRegistered) ? 0 : totalRegistered
       }
 
       if (pool.tiers && pool.tiers.length > 0) {

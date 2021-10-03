@@ -218,8 +218,8 @@ function PoolForm(props: any) {
 
       // Claim Policy
       claim_policy: data.claim_policy,
-      seriesContentConfig: JSON.parse(data.seriesContentConfig),
-      boxTypesConfig: JSON.parse(data.boxTypesConfig),
+      seriesContentConfig: Array.isArray(data.seriesContentConfig) ? JSON.parse(data.seriesContentConfig) : [],
+      boxTypesConfig: Array.isArray(data.boxTypesConfig) ? JSON.parse(data.boxTypesConfig): [],
 
       // Free Time Settings
       freeBuyTimeSetting: {
@@ -327,8 +327,8 @@ function PoolForm(props: any) {
 
       // Claim Policy
       claim_policy: data.claim_policy,
-      seriesContentConfig: JSON.parse(data.seriesContentConfig),
-      boxTypesConfig: JSON.parse(data.boxTypesConfig),
+      seriesContentConfig: Array.isArray(data.seriesContentConfig) ? JSON.parse(data.seriesContentConfig) : [],
+      boxTypesConfig: Array.isArray(data.boxTypesConfig) ? JSON.parse(data.boxTypesConfig): [],
 
       // Free Time Settings
       freeBuyTimeSetting: {
@@ -495,8 +495,8 @@ function PoolForm(props: any) {
 
         // Claim Policy
         claim_policy: data.claim_policy,
-        seriesContentConfig: JSON.parse(data.seriesContentConfig),
-        boxTypesConfig: JSON.parse(data.boxTypesConfig),
+        seriesContentConfig: Array.isArray(data.seriesContentConfig) ? JSON.parse(data.seriesContentConfig) : [],
+        boxTypesConfig: Array.isArray(data.boxTypesConfig) ? JSON.parse(data.boxTypesConfig): [],
 
         // Free Time Settings
         freeBuyTimeSetting: {

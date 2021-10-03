@@ -33,7 +33,11 @@ class NFTOrderService {
   }
 
   async getOrder(params) {
-    return await this.buildQueryBuilder(params).first();
+    return this.buildQueryBuilder(params).first();
+  }
+
+  async sumOrder(campaign_id) {
+    return this.buildQueryBuilder({campaign_id: campaign_id}).sum('amount');
   }
 }
 

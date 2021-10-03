@@ -10,9 +10,11 @@ const Config = use('Config')
 const UserBalanceSnapshotModel = use('App/Models/UserBalanceSnapshot');
 const WhitelistUserModel = use('App/Models/WhitelistUser');
 const WhitelistService = use('App/Services/WhitelistUserService');
+const NFTOrderService = use('App/Services/NFTOrderService');
 const BigNumber = use('bignumber.js');
 const { pick } = require('lodash');
 const csv = require('fast-csv');
+const CONST = use('App/Common/Const');
 
 class PoolController {
   async createPool({ request, auth }) {
@@ -501,6 +503,16 @@ class PoolController {
         // Free Buy Time Setting
         'freeBuyTimeSetting',
       ]);
+
+      if (publicPool && publicPool.token_type === CONST.TOKEN_TYPE.MYSTERY_BOX) {
+        const ntfService = new NFTOrderService();
+        const orders = await ntfService.sumOrder(publicPool.id);
+        let totalOrder = 0
+        if (orders && orders.length > 0) {
+          totalOrder = parseInt(orders[0]['sum(`amount`)'])
+        }
+        publicPool.totalOrder = isNaN(totalOrder) ? 0 : totalOrder
+      }
 
       if (pool.tiers && pool.tiers.length > 0) {
         publicPool.tiers = pool.tiers.map((item, index) => {

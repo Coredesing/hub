@@ -103,6 +103,11 @@ function TokenAddress(props: any) {
                     label={TOKEN_TYPE.ERC721 + ' (NFT)'}
                     disabled={isDeployed}
                 />
+                <FormControlLabel
+                    value={TOKEN_TYPE.MYSTERY_BOX} control={<Radio />}
+                    label={TOKEN_TYPE.MYSTERY_BOX}
+                    disabled={isDeployed}
+                />
               </RadioGroup>
             }
         />

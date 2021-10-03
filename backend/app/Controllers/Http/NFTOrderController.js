@@ -4,6 +4,7 @@ const NFTOrderService = use('App/Services/NFTOrderService');
 const PoolService = use('App/Services/PoolService');
 const HelperUtils = use('App/Common/HelperUtils');
 const UserService = use('App/Services/UserService');
+const CONST = use('App/Common/Const');
 
 class NFTOrderController {
   async order({request, auth, params}) {
@@ -38,7 +39,7 @@ class NFTOrderController {
         if (!user || !user.email) {
           return HelperUtils.responseBadRequest("User not found");
         }
-        if (user.is_kyc !== Const.KYC_STATUS.APPROVED) {
+        if (user.is_kyc !== CONST.KYC_STATUS.APPROVED) {
           return HelperUtils.responseBadRequest("Your KYC status is not verified");
         }
       }

@@ -99,7 +99,7 @@ function BoxTypesConfigTable(props: any) {
           handleCreateUpdateData={handleCreateUpdateData}
         />
       }
-      <div><label className={classes.exchangeRateTitle}>Series Content Configuration</label></div>
+      <div><label className={classes.exchangeRateTitle}>Box Types Configuration</label></div>
 
       <div className={classes.formControl}>
         <Button

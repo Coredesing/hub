@@ -34,7 +34,7 @@ export const setFeeRate = (feeRate: string) => {
         }
       }
 
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: settingFeeRateActions.SETTING_FEE_RATE_FAILURE,
         payload: error,
@@ -42,7 +42,7 @@ export const setFeeRate = (feeRate: string) => {
 
       dispatch({
         type: alertActions.ERROR_MESSAGE,
-        payload: error.message,
+        payload: error?.message,
       });
     }
   }

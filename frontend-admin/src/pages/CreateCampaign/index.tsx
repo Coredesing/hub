@@ -212,7 +212,7 @@ const CreateCampaign: React.FC<RouteComponentProps> = (props: RouteComponentProp
                         const erc20Token = await getTokenInfo(val);
 
                         return erc20Token;
-                      } catch (err) {
+                      } catch (err: any) {
                         return err.message;
                       }
                     },

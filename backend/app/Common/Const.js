@@ -199,6 +199,7 @@ module.exports = Object.freeze({
   TOKEN_TYPE: {
     ERC20: 'erc20',
     ERC721: 'erc721',
+    MYSTERY_BOX: 'box',
   },
   STAKING_POOL_TYPE: {
     ALLOC: 'alloc',

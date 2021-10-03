@@ -256,7 +256,7 @@ export const buyToken = (amount: any, tokenConvert: any, campaignId: string, uni
         }
       }
 
-    } catch (error) {
+    } catch (error: any) {
       console.log('ERROR', error);
       dispatch({
         type: buyTokenActions.BUY_TOKEN_FAILURE,

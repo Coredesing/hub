@@ -37,6 +37,8 @@ import UserJoinPool from "./Components/UserJoinPool";
 import PoolWebsite from "./Components/PoolWebsite";
 import moment from "moment";
 import ClaimConfigTable from "./Components/ClaimConfig/ClaimConfigTable";
+import SeriesContentTable from "./Components/SeriesContentConfig/SeriesContentTable";
+import BoxTypesConfigTable from "./Components/BoxTypesConfig/BoxTypesConfigTable";
 import WhitelistSocialRequirement from "./Components/WhitelistSocialRequirement";
 import {campaignClaimConfigFormat} from "../../utils/campaign";
 import PrivatePoolSetting from "./Components/PrivatePoolSetting";
@@ -50,7 +52,8 @@ import SocialSetting from "./Components/SocialSetting/SocialSetting";
 import FreeTimeSetting from "./Components/FreeTimeSetting/FreeTimeSetting";
 import PoolRule from "./Components/PoolRule";
 import Process from "./Components/Process";
-import {POOL_IS_PRIVATE} from "../../constants";
+import {POOL_IS_PRIVATE, TOKEN_TYPE} from "../../constants";
+import {Const} from "../../../../crawler/bin/ethlink/Const";
 
 function PoolForm(props: any) {
   const classes = useStyles();
@@ -157,6 +160,8 @@ function PoolForm(props: any) {
       release_time: data.release_time ? data.release_time.unix() : null,
       start_join_pool_time: data.start_join_pool_time ? data.start_join_pool_time.unix() : null,
       end_join_pool_time: data.end_join_pool_time ? data.end_join_pool_time.unix() : null,
+      pre_order_min_tier: data.pre_order_min_tier,
+      start_pre_order_time: data.start_pre_order_time ? data.start_pre_order_time.unix() : null,
 
       // Types
       accept_currency: data.acceptCurrency,
@@ -213,6 +218,8 @@ function PoolForm(props: any) {
 
       // Claim Policy
       claim_policy: data.claim_policy,
+      seriesContentConfig: Array.isArray(data.seriesContentConfig) ? JSON.parse(data.seriesContentConfig) : [],
+      boxTypesConfig: Array.isArray(data.boxTypesConfig) ? JSON.parse(data.boxTypesConfig): [],
 
       // Free Time Settings
       freeBuyTimeSetting: {
@@ -320,6 +327,8 @@ function PoolForm(props: any) {
 
       // Claim Policy
       claim_policy: data.claim_policy,
+      seriesContentConfig: Array.isArray(data.seriesContentConfig) ? JSON.parse(data.seriesContentConfig) : [],
+      boxTypesConfig: Array.isArray(data.boxTypesConfig) ? JSON.parse(data.boxTypesConfig): [],
 
       // Free Time Settings
       freeBuyTimeSetting: {
@@ -456,6 +465,8 @@ function PoolForm(props: any) {
         release_time: data.release_time ? data.release_time.unix() : null,
         start_join_pool_time: data.start_join_pool_time ? data.start_join_pool_time.unix() : null,
         end_join_pool_time: data.end_join_pool_time ? data.end_join_pool_time.unix() : null,
+        pre_order_min_tier: data.pre_order_min_tier,
+        start_pre_order_time: data.start_pre_order_time ? data.start_pre_order_time.unix() : null,
 
         // Types
         accept_currency: data.acceptCurrency,
@@ -484,6 +495,8 @@ function PoolForm(props: any) {
 
         // Claim Policy
         claim_policy: data.claim_policy,
+        seriesContentConfig: Array.isArray(data.seriesContentConfig) ? JSON.parse(data.seriesContentConfig) : [],
+        boxTypesConfig: Array.isArray(data.boxTypesConfig) ? JSON.parse(data.boxTypesConfig): [],
 
         // Free Time Settings
         freeBuyTimeSetting: {
@@ -513,6 +526,7 @@ function PoolForm(props: any) {
 
   const watchBuyType = watch('buyType');
   const watchIsPrivate = watch('isPrivate');
+  const watchTokenType = watch('token_type');
   const isDeployed = !!poolDetail?.is_deploy;
 
   console.log('errors==========>', errors);
@@ -805,20 +819,52 @@ function PoolForm(props: any) {
         </Grid>
       </Grid>
 
-
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <div className={classes.exchangeRate}>
-            <PoolRule
-                poolDetail={poolDetail}
-                register={register}
-                setValue={setValue}
-                errors={errors}
-            />
-          </div>
+      {
+        watchTokenType && watchTokenType !== TOKEN_TYPE.ERC20 &&
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <div className={classes.exchangeRate}>
+              <PoolRule
+                  poolDetail={poolDetail}
+                  register={register}
+                  setValue={setValue}
+                  errors={errors}
+              />
+            </div>
+          </Grid>
         </Grid>
-      </Grid>
+      }
 
+      {
+        watchTokenType && watchTokenType === TOKEN_TYPE.MYSTERY_BOX &&
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <div className={classes.exchangeRate}>
+              <SeriesContentTable
+                  poolDetail={poolDetail}
+                  setValue={setValue}
+                  register={register}
+                  watch={watch}
+                  errors={errors}
+                  control={control}
+              />
+            </div>
+          </Grid>
+
+          <Grid item xs={6}>
+            <div className={classes.exchangeRate}>
+              <BoxTypesConfigTable
+                  poolDetail={poolDetail}
+                  setValue={setValue}
+                  register={register}
+                  watch={watch}
+                  errors={errors}
+                  control={control}
+              />
+            </div>
+          </Grid>
+        </Grid>
+      }
 
       <Grid container spacing={2}>
         <Grid item xs={12}>

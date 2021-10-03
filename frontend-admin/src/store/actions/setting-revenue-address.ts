@@ -34,7 +34,7 @@ export const setRevenueAddress = (revenueAddress: string) => {
         }
       }
 
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: settingRevenueAddressActions.SETTING_REVENUE_ADDRESS_FAILURE,
         payload: error,
@@ -42,7 +42,7 @@ export const setRevenueAddress = (revenueAddress: string) => {
 
       dispatch({
         type: alertActions.ERROR_MESSAGE,
-        payload: error.message,
+        payload: error?.message,
       });
     }
   }

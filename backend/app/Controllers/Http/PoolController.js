@@ -10,9 +10,11 @@ const Config = use('Config')
 const UserBalanceSnapshotModel = use('App/Models/UserBalanceSnapshot');
 const WhitelistUserModel = use('App/Models/WhitelistUser');
 const WhitelistService = use('App/Services/WhitelistUserService');
+const NFTOrderService = use('App/Services/NFTOrderService');
 const BigNumber = use('bignumber.js');
 const { pick } = require('lodash');
 const csv = require('fast-csv');
+const CONST = use('App/Common/Const');
 
 class PoolController {
   async createPool({ request, auth }) {
@@ -22,7 +24,7 @@ class PoolController {
       'token', 'token_images', 'total_sold_coin',
       'token_by_eth', 'token_conversion_rate', 'price_usdt', 'display_price_rate',
       'tokenInfo', 'gleam_link',
-      'start_time', 'finish_time', 'release_time', 'start_join_pool_time', 'end_join_pool_time',
+      'start_time', 'finish_time', 'release_time', 'start_join_pool_time', 'end_join_pool_time', 'start_pre_order_time', 'pre_order_min_tier',
       'accept_currency', 'network_available', 'buy_type', 'pool_type', 'is_private', 'kyc_bypass',
       'min_tier', 'tier_configuration', 'claim_configuration',
       'self_twitter', 'self_group', 'self_channel', 'self_retweet_post', 'self_retweet_post_hashtag', 'partner_twitter', 'partner_group', 'partner_channel', 'partner_retweet_post', 'partner_retweet_post_hashtag',
@@ -33,6 +35,7 @@ class PoolController {
       'claim_policy',
       'forbidden_countries',
       'freeBuyTimeSetting',
+      'seriesContentConfig', 'boxTypesConfig',
     ]);
 
     const tokenInfo = inputParams.tokenInfo;
@@ -59,6 +62,8 @@ class PoolController {
       'release_time': inputParams.release_time,
       'start_join_pool_time': inputParams.start_join_pool_time,
       'end_join_pool_time': inputParams.end_join_pool_time,
+      'start_pre_order_time': inputParams.start_pre_order_time,
+      'pre_order_min_tier': inputParams.pre_order_min_tier,
       'accept_currency': inputParams.accept_currency,
       'network_available': inputParams.network_available,
       'buy_type': inputParams.buy_type,
@@ -96,6 +101,9 @@ class PoolController {
       claimConfigs = poolService.addDefaultClaimConfig(claimConfigs, campaign.finish_time);
       console.log('[createPool] - Update Claim Config - claimConfigs', claimConfigs);
       await poolService.updateClaimConfig(campaign, claimConfigs);
+
+      await poolService.updateSeriesContentConfig(campaign, inputParams.seriesContentConfig || [])
+      await poolService.updateBoxTypesConfig(campaign, inputParams.boxTypesConfig || [])
 
       // Update Tier Config
       console.log('[createPool] - Update Tier Config - inputParams.tier_configuration', inputParams.tier_configuration);
@@ -155,7 +163,7 @@ class PoolController {
       'token', 'token_images', 'total_sold_coin',
       'token_by_eth', 'token_conversion_rate', 'price_usdt', 'display_price_rate',
       'tokenInfo', 'gleam_link',
-      'start_time', 'finish_time', 'release_time', 'start_join_pool_time', 'end_join_pool_time',
+      'start_time', 'finish_time', 'release_time', 'start_join_pool_time', 'end_join_pool_time', 'start_pre_order_time', 'pre_order_min_tier',
       'accept_currency', 'network_available', 'buy_type', 'pool_type', 'is_private', 'kyc_bypass',
       'min_tier', 'tier_configuration', 'claim_configuration',
       'self_twitter', 'self_group', 'self_channel', 'self_retweet_post', 'self_retweet_post_hashtag', 'partner_twitter', 'partner_group', 'partner_channel', 'partner_retweet_post', 'partner_retweet_post_hashtag',
@@ -166,6 +174,8 @@ class PoolController {
       'claim_policy',
       'forbidden_countries',
       'freeBuyTimeSetting',
+      'seriesContentConfig',
+      'boxTypesConfig',
     ]);
 
     const tokenInfo = inputParams.tokenInfo;
@@ -191,6 +201,8 @@ class PoolController {
       'release_time': inputParams.release_time,
       'start_join_pool_time': inputParams.start_join_pool_time,
       'end_join_pool_time': inputParams.end_join_pool_time,
+      'start_pre_order_time': inputParams.start_pre_order_time,
+      'pre_order_min_tier': inputParams.pre_order_min_tier,
       'accept_currency': inputParams.accept_currency,
       'network_available': inputParams.network_available,
       'buy_type': inputParams.buy_type,
@@ -224,6 +236,9 @@ class PoolController {
 
       // Update Claim Config
       await poolService.updateClaimConfig(campaign, inputParams.claim_configuration || []);
+
+      await poolService.updateSeriesContentConfig(campaign, inputParams.seriesContentConfig || [])
+      await poolService.updateBoxTypesConfig(campaign, inputParams.boxTypesConfig || [])
 
       // Update Tier Config
       if (!campaign.is_deploy) {
@@ -382,6 +397,8 @@ class PoolController {
         .with('whitelistBannerSetting')
         .with('socialNetworkSetting')
         .with('freeBuyTimeSetting')
+        .with('seriesContentConfig')
+        .with('boxTypesConfig')
         .where('id', poolId)
         .first();
       if (!pool) {
@@ -438,8 +455,11 @@ class PoolController {
         .with('socialNetworkSetting')
         .with('socialRequirement')
         .with('freeBuyTimeSetting')
+        .with('seriesContentConfig')
+        .with('boxTypesConfig')
         .where('id', poolId)
         .first();
+
       if (!pool) {
         return HelperUtils.responseNotFound('Pool not found');
       }
@@ -458,6 +478,9 @@ class PoolController {
 
         // Time
         'release_time', 'start_join_pool_time', 'start_time', 'end_join_pool_time', 'finish_time',
+
+        // Pre-order
+        'pre_order_min_tier', 'start_pre_order_time',
 
         // KYC required
         'kyc_bypass',
@@ -493,7 +516,25 @@ class PoolController {
 
         // Free Buy Time Setting
         'freeBuyTimeSetting',
+
+        'seriesContentConfig',
+        'boxTypesConfig',
       ]);
+
+      if (publicPool && publicPool.token_type === CONST.TOKEN_TYPE.MYSTERY_BOX) {
+        const ntfService = new NFTOrderService();
+        const orders = await ntfService.sumOrderAndRegistered(publicPool.id);
+        let totalOrder = 0
+        let totalRegistered = 0
+        if (orders && orders.length > 0) {
+          totalOrder = parseInt(orders[0]['sum(`amount`)'])
+        }
+        if (orders && orders.length > 0) {
+          totalRegistered = parseInt(orders[0]['count(*)'])
+        }
+        publicPool.totalOrder = isNaN(totalOrder) ? 0 : totalOrder
+        publicPool.totalRegistered = isNaN(totalRegistered) ? 0 : totalRegistered
+      }
 
       if (pool.tiers && pool.tiers.length > 0) {
         publicPool.tiers = pool.tiers.map((item, index) => {

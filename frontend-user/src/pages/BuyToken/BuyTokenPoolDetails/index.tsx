@@ -21,7 +21,7 @@ type Props = {
   poolDetails: any;
 };
 
-const headers = ["Tier", "Start Buy Time", "End Buy Time"];
+const headers = ["Rank", "Start Buy Time", "End Buy Time"];
 
 const cvtStrToParagraph = (string: string = '') => {
   return string.split('\n').map((val, idx) => val && <p key={idx} style={{ marginTop: '20px' }}>{val}</p>)
@@ -85,6 +85,14 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
             </li>
           )}
           <li className={styles.itemListContent}>
+            <span className={styles.nameItemListContent}>Pre-order Start Time</span>
+            <span>
+               {poolDetails?.startPreOrderTime
+                   ? convertTimeToStringFormat(new Date(poolDetails.startPreOrderTime * 1000))
+                   : "TBA"}{" "}
+             </span>
+          </li>
+          <li className={styles.itemListContent}>
             <span className={styles.nameItemListContent}>Token Claim Time</span>
             <span>
               {releaseTimeInDate
@@ -94,17 +102,17 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
           </li>
         </ul>
         <ul className={styles.listContent}>
-          {/* <li className={styles.itemListContent}>
+          {<li className={styles.itemListContent}>
             <span className={styles.nameItemListContent}>
-              Schedule by Tiers
+              Schedule by Ranks
             </span>
             <span
               className={styles.btnOpenModal}
-              onClick={() => setOpenModal(true)}
+              // onClick={() => setOpenModal(true)}
             >
               Click here to see details
             </span>
-          </li> */}
+          </li>}
           <li className={styles.itemListContent}>
             <span className={styles.nameItemListContent}>Total Raise</span>
             <span>
@@ -183,7 +191,7 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
           </div>
         </>
       )}
-      {/* 
+      {
       <Dialog
         open={openModal}
         keepMounted
@@ -194,7 +202,7 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
       >
         <div className={styles.modalContentTiers}>
           <DialogTitle className={styles.headerModal}>
-            Schedule by Tiers
+            Schedule by Ranks
             <img
               src="/images/icons/close.svg"
               alt=""
@@ -208,12 +216,12 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
                 poolDetails?.tiersWithDetails?.map(
                   (row: any, index: number) => {
                     if (index < minTier) {
-                      return <></>;
+                      return ;
                     }
                     return (
                       <div className={styles.boxTierMobile} key={index}>
                         <div className={styles.itemTierMobile}>
-                          <div className={styles.nameItemTierMobile}>Tier</div>
+                          <div className={styles.nameItemTierMobile}>Rank</div>
                           <div className={styles.valueItemTierMobile}>
                             {row.name}
                             {row.name !== "-" && (
@@ -277,16 +285,23 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
                       poolDetails?.tiersWithDetails?.map(
                         (row: any, index: number) => {
                           if (index < minTier) {
-                            return <></>;
+                            return;
                           }
                           return (
                             <TableRow key={index}>
                               <TableCell component="th" scope="row">
-                                {row.name}
+                                {row.name === '-' ? 'Starter' : row.name}
+                                {row.name === '-' && (
+                                  <img
+                                    className={styles.iconTable}
+                                    src={`/images/tiers/starster.png`}
+                                    alt=""
+                                  />
+                                )}
                                 {row.name !== "-" && (
                                   <img
                                     className={styles.iconTable}
-                                    src={`/images/icons/${row?.name?.toLowerCase()}.png`}
+                                    src={`/images/tiers/${row?.name?.toLowerCase()}.png`}
                                     alt=""
                                   />
                                 )}
@@ -315,7 +330,7 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
             </Hidden>
           </DialogContent>
         </div>
-      </Dialog> */}
+      </Dialog>}
     </section>
   );
 };

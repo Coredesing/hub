@@ -63,7 +63,7 @@ const HomePage = (props: any) => {
           token_type,
         });
       }
-    } catch (err) {
+    } catch (err: any) {
       setLoadingToken(false);
       setError('token', {
         type: "invalidToken",
@@ -189,7 +189,8 @@ const HomePage = (props: any) => {
                         const tokenInfo = await getTokenInfo(val);
 
                         if (tokenInfo) return true;
-                      } catch (err) { return err.message;
+                      } catch (err: any) {
+                        return err.message;
                       }
                     }
                   }

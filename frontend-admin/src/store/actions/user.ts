@@ -123,7 +123,7 @@ export const login = (password: string, isInvestor: boolean = false) => {
 
       console.log('Res: ', res)
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('ERROR Login: ', error);
       dispatch(alertFailure(error.message));
       dispatchErrorWithMsg(dispatch, userActions.USER_LOGIN_FAILURE, '');
@@ -208,7 +208,7 @@ export const register = ({ username, email, password }: UserRegisterProps, isInv
           }
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('ERROR Register: ', error);
       dispatch(alertFailure(error.message));
       dispatchErrorWithMsg(dispatch, !isInvestor ? userActions.USER_REGISTER_FAILURE: userActions.INVESTOR_REGISTER_FAILURE, '');
@@ -233,7 +233,7 @@ export const connectWallet = () => {
       } else {
         dispatch(logout());
       }
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: userActions.USER_CONNECT_WALLET_FAILURE,
         payload: error
@@ -262,7 +262,7 @@ export const getUserDetail = () => {
           payload: resObj.message
         })
       }
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: userActions.USER_PROFILE_FAILURE,
         payload: error
@@ -325,7 +325,7 @@ export const updateUserProfile = (updatedUser: UserProfileProps) => {
           }
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       dispatchErrorWithMsg(dispatch, userActions.USER_PROFILE_UPDATE_FAILURE, error.message);
     }
   }

@@ -26,10 +26,10 @@ export const getWhitelist = () => {
                     }
                 })
             }
-        } catch (err) {
+        } catch (err: any) {
             dispatch({
                 type: whitelistAction.WHITELIST_FAIL,
-                payload: err.message
+                payload: err?.message
             })
         }
 
@@ -67,14 +67,14 @@ export const setWhitelist = (address: string) => {
                     payload: message
                 });
             }
-        } catch (err) {
+        } catch (err: any) {
             dispatch({
                 type: whitelistAction.CREATE_WHITELIST_FAIL,
-                payload: err.message
+                payload: err?.message
             })
             dispatch({
                 type: alertActions.ERROR_MESSAGE,
-                payload: err.message
+                payload: err?.message
             });
         }
     }
@@ -110,14 +110,14 @@ export const deleteWhitelist = (address: string) => {
                     payload: message
                 });
             }
-        } catch (err) {
+        } catch (err: any) {
             dispatch({
                 type: whitelistAction.DELETE_WHITELIST_FAIL,
-                payload: err.message
+                payload: err?.message
             })
             dispatch({
                 type: alertActions.ERROR_MESSAGE,
-                payload: err.message
+                payload: err?.message
             });
         }
     }

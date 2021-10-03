@@ -54,6 +54,7 @@ const FooterLandingLayout = () => {
             <h4>Contact</h4>
             <ul className="link">
               <li><Link href="https://t.me/GameFi_Official" target="_blank">Contact Us</Link></li>
+              <li><Link href="https://faq.gamefi.org/" target="_blank">Help Center</Link></li>
             </ul>
           </div>
         </div>

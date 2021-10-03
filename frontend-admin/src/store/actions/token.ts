@@ -49,10 +49,10 @@ export const getTokensByUser = () => {
             payload: tokensDetail
           })
         }
-      } catch (err) {
+      } catch (err: any) {
         dispatch({
           type: tokenActions.TOKENS_BY_USER_FAIL,
-          payload: err.message
+          payload: err?.message
         });
       }
     }
@@ -88,15 +88,15 @@ export const addTokenByUser = (tokenCreate: { tokenSymbol: string, tokenAddress:
       } else if (resObject.status === 400) {
         throw new Error(resObject.message);
       }
-    } catch (err) {
+    } catch (err: any) {
        dispatch({
          type: alertActions.ERROR_MESSAGE,
-         payload: err.message
+         payload: err?.message
        });
 
         dispatch({
           type: tokenActions.TOKENS_CREATE_BY_USER_FAIL,
-          payload: err.message
+          payload: err?.message
         })
       }
     }

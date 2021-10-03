@@ -61,6 +61,14 @@ class Campaign extends Model {
   freeBuyTimeSetting() {
     return this.hasOne('App/Models/FreeBuyTimeSetting')
   }
+
+  seriesContentConfig() {
+    return this.hasMany('App/Models/SeriesContent')
+  }
+
+  boxTypesConfig() {
+    return this.hasMany('App/Models/BoxType')
+  }
 }
 
 module.exports = Campaign;

@@ -63,6 +63,8 @@ export type PoolDetails = {
   campaignStatus?: string;
   poolStatus?: string;
   freeBuyTimeSetting?: any;
+  preOrderMinTier?: any;  // pre_order_min_tier
+  startPreOrderTime?: any; // start_pre_order_time
 }
 
 export type PoolDetailsReturnType ={
@@ -192,7 +194,8 @@ const usePoolDetails = (poolId : number): PoolDetailsReturnType => {
         campaignStatus: data?.campaign_status,
         poolStatus: data?.campaign_status,  // alias of campaignStatus
         freeBuyTimeSetting: data?.freeBuyTimeSetting,
-
+        preOrderMinTier: data?.pre_order_min_tier,
+        startPreOrderTime: data?.start_pre_order_time,
       }
     }
 

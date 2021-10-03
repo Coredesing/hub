@@ -6,11 +6,11 @@ const HelperUtils = use('App/Common/HelperUtils');
 const UserService = use('App/Services/UserService');
 
 class NFTOrderController {
-  async order({request}) {
-    const param = request.all()
-    const campaign_id = param.campaign_id
-    const amount = isNaN(param.amount) ? -1 : parseInt(param.amount)
-    const wallet_address = param.wallet_address
+  async order({request, auth, params}) {
+    const requestParam = request.all()
+    const campaign_id = params.campaignId
+    const amount = isNaN(requestParam.amount) ? -1 : parseInt(requestParam.amount)
+    const wallet_address = requestParam.wallet_address
 
     if (amount < 1) {
       return HelperUtils.responseBadRequest('Invalid amount');
@@ -57,10 +57,10 @@ class NFTOrderController {
     }
   }
 
-  async getOrder({request}) {
-    const param = request.all()
-    const campaign_id = param.campaign_id
-    const wallet_address = param.wallet_address
+  async getOrder({request, auth, params}) {
+    const requestParams = request.all()
+    const campaign_id = params.campaignId
+    const wallet_address = requestParams.wallet_address
 
     if (!campaign_id) {
       return HelperUtils.responseBadRequest('Invalid campaign');

@@ -58,6 +58,8 @@ Route.group(() => {
   Route.get('pool/:campaignId/check-picked-winner', 'WinnerListUserController.checkPickedWinner');
   Route.get('pool/:campaignId/claim-configs', 'ClaimConfigController.getListClaimConfig');
   Route.get('pool/:campaignId/user/:walletAddress/claimable-amount', 'ClaimConfigController.getClaimableAmount');
+  Route.get('pool/:campaignId/nft-order', 'NFTOrderController.getOrder');
+  Route.post('pool/:campaignId/nft-order', 'NFTOrderController.order').middleware(['checkSignature']);
 
   // pools
   Route.get('pools', 'PoolController.getPoolList');
@@ -90,8 +92,6 @@ Route.group(() => {
   Route.get('user/winner-search/:campaignId', 'WinnerListUserController.search').middleware(['maskEmailAndWallet']);
   Route.get('user/counting/:campaignId', 'CampaignController.countingJoinedCampaign');
   Route.get('user/check-join-campaign/:campaignId', 'CampaignController.checkJoinedCampaign');
-  Route.get('user/:campaignId/nft-order', 'NFTOrderController.getOrder');
-  Route.post('user/:campaignId/nft-order', 'NFTOrderController.order').middleware(['checkSignature']);
 
   // config
   Route.get('get-rate-setting', 'RateSettingController.getRateSetting');

@@ -10,9 +10,11 @@ const Config = use('Config')
 const UserBalanceSnapshotModel = use('App/Models/UserBalanceSnapshot');
 const WhitelistUserModel = use('App/Models/WhitelistUser');
 const WhitelistService = use('App/Services/WhitelistUserService');
+const NFTOrderService = use('App/Services/NFTOrderService');
 const BigNumber = use('bignumber.js');
 const { pick } = require('lodash');
 const csv = require('fast-csv');
+const CONST = use('App/Common/Const');
 
 class PoolController {
   async createPool({ request, auth }) {
@@ -33,6 +35,7 @@ class PoolController {
       'claim_policy',
       'forbidden_countries',
       'freeBuyTimeSetting',
+      'seriesContentConfig', 'boxTypesConfig',
     ]);
 
     const tokenInfo = inputParams.tokenInfo;
@@ -98,6 +101,9 @@ class PoolController {
       claimConfigs = poolService.addDefaultClaimConfig(claimConfigs, campaign.finish_time);
       console.log('[createPool] - Update Claim Config - claimConfigs', claimConfigs);
       await poolService.updateClaimConfig(campaign, claimConfigs);
+
+      await poolService.updateSeriesContentConfig(campaign, inputParams.seriesContentConfig || [])
+      await poolService.updateBoxTypesConfig(campaign, inputParams.boxTypesConfig || [])
 
       // Update Tier Config
       console.log('[createPool] - Update Tier Config - inputParams.tier_configuration', inputParams.tier_configuration);
@@ -168,6 +174,8 @@ class PoolController {
       'claim_policy',
       'forbidden_countries',
       'freeBuyTimeSetting',
+      'seriesContentConfig',
+      'boxTypesConfig',
     ]);
 
     const tokenInfo = inputParams.tokenInfo;
@@ -228,6 +236,9 @@ class PoolController {
 
       // Update Claim Config
       await poolService.updateClaimConfig(campaign, inputParams.claim_configuration || []);
+
+      await poolService.updateSeriesContentConfig(campaign, inputParams.seriesContentConfig || [])
+      await poolService.updateBoxTypesConfig(campaign, inputParams.boxTypesConfig || [])
 
       // Update Tier Config
       if (!campaign.is_deploy) {
@@ -386,6 +397,8 @@ class PoolController {
         .with('whitelistBannerSetting')
         .with('socialNetworkSetting')
         .with('freeBuyTimeSetting')
+        .with('seriesContentConfig')
+        .with('boxTypesConfig')
         .where('id', poolId)
         .first();
       if (!pool) {
@@ -442,8 +455,11 @@ class PoolController {
         .with('socialNetworkSetting')
         .with('socialRequirement')
         .with('freeBuyTimeSetting')
+        .with('seriesContentConfig')
+        .with('boxTypesConfig')
         .where('id', poolId)
         .first();
+
       if (!pool) {
         return HelperUtils.responseNotFound('Pool not found');
       }
@@ -500,7 +516,25 @@ class PoolController {
 
         // Free Buy Time Setting
         'freeBuyTimeSetting',
+
+        'seriesContentConfig',
+        'boxTypesConfig',
       ]);
+
+      if (publicPool && publicPool.token_type === CONST.TOKEN_TYPE.MYSTERY_BOX) {
+        const ntfService = new NFTOrderService();
+        const orders = await ntfService.sumOrderAndRegistered(publicPool.id);
+        let totalOrder = 0
+        let totalRegistered = 0
+        if (orders && orders.length > 0) {
+          totalOrder = parseInt(orders[0]['sum(`amount`)'])
+        }
+        if (orders && orders.length > 0) {
+          totalRegistered = parseInt(orders[0]['count(*)'])
+        }
+        publicPool.totalOrder = isNaN(totalOrder) ? 0 : totalOrder
+        publicPool.totalRegistered = isNaN(totalRegistered) ? 0 : totalRegistered
+      }
 
       if (pool.tiers && pool.tiers.length > 0) {
         publicPool.tiers = pool.tiers.map((item, index) => {

@@ -58,6 +58,8 @@ Route.group(() => {
   Route.get('pool/:campaignId/check-picked-winner', 'WinnerListUserController.checkPickedWinner');
   Route.get('pool/:campaignId/claim-configs', 'ClaimConfigController.getListClaimConfig');
   Route.get('pool/:campaignId/user/:walletAddress/claimable-amount', 'ClaimConfigController.getClaimableAmount');
+  Route.get('pool/:campaignId/nft-order', 'NFTOrderController.getOrder');
+  Route.post('pool/:campaignId/nft-order', 'NFTOrderController.order').middleware(['checkSignature']);
 
   // pools
   Route.get('pools', 'PoolController.getPoolList');

@@ -375,10 +375,10 @@ class CampaignController {
         const userService = new UserService();
         const user = await userService.findUser({wallet_address: userWalletAddress});
         if (!user || !user.email) {
-          return HelperUtils.responseBadRequest("You're not valid user to buy this campaign !");
+          return HelperUtils.responseBadRequest("User not found");
         }
         if (user.is_kyc !== Const.KYC_STATUS.APPROVED) {
-          return HelperUtils.responseBadRequest("You must register for KYC successfully to be allowed to purchase !");
+          return HelperUtils.responseBadRequest("Your KYC status is not verified");
         }
       }
 

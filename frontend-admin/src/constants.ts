@@ -29,6 +29,7 @@ export const POOL_TYPE = {
 export const TOKEN_TYPE = {
   ERC20: 'erc20',
   ERC721: 'erc721',
+  MYSTERY_BOX: 'box',
 };
 export const NETWORK_AVAILABLE = {
   ETH: 'eth',

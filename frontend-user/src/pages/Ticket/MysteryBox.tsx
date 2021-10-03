@@ -238,7 +238,7 @@ const MysteryBox = ({ id, ...props }: any) => {
         }
     }, [dataTicket, loadingTicket, isClaim]);
 
-    const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, isFinished?: boolean }>({ date1: 0, date2: 0, title: '' });
+    const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, isFinished?: boolean, isOrder?: boolean, isWhitelist?: boolean }>({ date1: 0, date2: 0, title: '' });
     const onSetCountdown = useCallback(() => {
         if (dataTicket) {
             // const startTime = +dataTicket.start_time * 1000;
@@ -248,9 +248,9 @@ const MysteryBox = ({ id, ...props }: any) => {
             if (startJoinPooltime > Date.now()) {
                 setCountdown({ date1: startJoinPooltime, date2: Date.now(), title: 'Whitelist start in' });
             } else if (endJoinPoolTime > Date.now()) {
-                setCountdown({ date1: endJoinPoolTime, date2: Date.now(), title: 'Whitelist End In' });
+                setCountdown({ date1: endJoinPoolTime, date2: Date.now(), title: 'Whitelist End In', isWhitelist: true });
             } else if (finishTime > Date.now()) {
-                setCountdown({ date1: finishTime, date2: Date.now(), title: 'Order End in' });
+                setCountdown({ date1: finishTime, date2: Date.now(), title: 'Order End in', isOrder: true });
             } else {
                 setCountdown({ date1: 0, date2: 0, title: 'Finished', isFinished: true });
             }
@@ -739,13 +739,13 @@ const MysteryBox = ({ id, ...props }: any) => {
                                             </div>
                                         </div>
                                         {
-                                            (!loadingJoinpool && !alreadyJoinPool) &&
+                                            (!loadingJoinpool && !alreadyJoinPool && countdown.isWhitelist) &&
                                             <ButtonGreen onClick={onApplyWhitelist} isLoading={isApplyingWhitelist} disabled={alreadyJoinPool || poolJoinLoading || joinPoolSuccess} className="text-transform-unset w-full">
                                                 {(alreadyJoinPool || joinPoolSuccess) ? 'Applied Whitelist' : 'Apply Whitelist'}
                                             </ButtonGreen>
                                         }
                                         {
-                                            // (!loadingJoinpool && alreadyJoinPool) && 
+                                            (!loadingJoinpool && alreadyJoinPool && countdown.isOrder) && 
                                             <ButtonGreen onClick={onShowModalOrderBox} className="text-transform-unset w-full">
                                                 Order Box
                                             </ButtonGreen>

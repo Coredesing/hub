@@ -52,7 +52,7 @@ const usePoolJoinAction = ({ poolId }: PoolDepositActionParams) => {
           wallet_address: account,
           campaign_id: poolId,
         }, config as any) as any;
-        console.log('response', response)
+
         if (response.data) {
           if (response.data.status === 200) {
             setJoinPoolSuccess(true);

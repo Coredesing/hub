@@ -6,6 +6,8 @@ const moment = use('moment');
 
 const CampaignModel = use('App/Models/Campaign');
 const CampaignClaimConfigModel = use('App/Models/CampaignClaimConfig');
+const SeriesContentModel = use('App/Models/SeriesContent');
+const BoxTypesModel = use('App/Models/BoxType');
 const TierModel = use('App/Models/Tier');
 const WhitelistBannerSettingModel = use('App/Models/WhitelistBannerSetting');
 const SocialNetworkSettingModel = use('App/Models/SocialNetworkSetting');
@@ -272,7 +274,7 @@ class PoolService {
 
   addDefaultClaimConfig(claim_configuration, default_datetime) {
     let claimConfigs = claim_configuration || [];
-    if (claimConfigs.length == 0) {
+    if (claimConfigs.length === 0) {
       claimConfigs = [{
         minBuy: 0,
         maxBuy: 100,
@@ -297,6 +299,37 @@ class PoolService {
 
     await campaign.campaignClaimConfig().delete();
     await campaign.campaignClaimConfig().saveMany(campaignClaimConfigs);
+  }
+
+  async updateSeriesContentConfig(campaign, seriesContents) {
+    const seriesContentConfig = seriesContents.map((item) => {
+      const data = new SeriesContentModel();
+      data.fill({
+        name: item.name,
+        amount: item.amount,
+        rate: item.rate
+      });
+      return data;
+    });
+
+    await campaign.seriesContentConfig().delete();
+    await campaign.seriesContentConfig().saveMany(seriesContentConfig);
+  }
+
+  async updateBoxTypesConfig(campaign, boxTypes) {
+    const boxTypesConfig = boxTypes.map((item) => {
+      const data = new BoxTypesModel();
+      data.fill({
+        name: item.name,
+        limit: item.limit,
+        icon: item.icon,
+        banner: item.banner,
+      });
+      return data;
+    });
+
+    await campaign.boxTypesConfig().delete();
+    await campaign.boxTypesConfig().saveMany(boxTypesConfig);
   }
 
   async updateTierConfig(campaign, tier_configuration) {

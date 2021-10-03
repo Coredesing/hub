@@ -57,7 +57,6 @@ class WinnerListUserController {
       // get winner list
       let winners = await winnerListService.findWinnerListUser(filterParams);
       winners = JSON.parse(JSON.stringify(winners))
-      console.log('winners', winners, searchTerm)
       if (page < 2 && searchTerm === '') {
         RedisWinnerUtils.setRedisPoolWinners(campaign_id, page, winners)
       }

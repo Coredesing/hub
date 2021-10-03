@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import clsx from "clsx";
-import useStyles from "./style";
-import AboutTicket from "./About";
-import { getApproveToken, getDiffTime } from "../../utils";
+import useStyles, { useMysteyBoxStyles } from "./style";
+import { AboutMysteryBox } from "./About";
+import { apiRoute, getApproveToken, getDiffTime } from "../../utils";
 import { Progress } from "@base-components/Progress";
 import { useFetchV1 } from "../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,7 +27,6 @@ import { HashLoader } from "react-spinners";
 import { numberWithCommas } from "../../utils/formatNumber";
 import { WrapperAlert } from "../../components/Base/WrapperAlert";
 import { pushMessage } from "../../store/actions/message";
-import { CountDownOpenInTime } from "./components/CountDownOpenInTime";
 import { CountDownTimeType } from "./types";
 import { CountDownEndTime } from "./components/CountDownEndTime";
 import { AscDescAmountBox } from "./components/AscDescAmountBox";
@@ -35,13 +34,20 @@ import { ButtonBuy } from "./components/ButtonBuy";
 import { ButtonApprove } from "./components/ButtonApprove";
 import { ButtonClaim } from "./components/ButtonClaim";
 import Image from "../../components/Base/Image";
+import usePoolJoinAction from './hooks/usePoolJoinAction';
+import { ButtonGreen } from "@base-components/Buttons";
+import CountDownTimeV1, { CountDownTimeType as CountDownTimeTypeV1 } from "@base-components/CountDownTime";
+import { BaseRequest } from "../../request/Request";
+import ModalOrderBox from './components/ModalOrderBox';
+import useOrderBox from "./hooks/useOrderBox";
 const iconWarning = "/images/warning-red.svg";
-const ticketImg = "/images/gamefi-ticket.png";
+const ticketImg = "/images/gamefi-ticket.png"
 const finishedImg = "/images/finished.png";
 const soldoutImg = "/images/soldout.png";
 
-const ContentNFTBox = ({ id, ...props }: any) => {
+const MysteryBox = ({ id, ...props }: any) => {
     const styles = useStyles();
+    const mysteryStyles = useMysteyBoxStyles();
     const dispatch = useDispatch();
     const { connectedAccount /*isAuth, wrongChain*/ } = useAuth();
     const { isKYC, checkingKyc } = useKyc(connectedAccount);
@@ -93,9 +99,9 @@ const ContentNFTBox = ({ id, ...props }: any) => {
     }, [infoTicket, appChainID, dispatch]);
     const isClaim = dataTicket?.process === "only-claim";
 
-    useEffect(() => {
-        dispatch(setTypeIsPushNoti({ failed: false }));
-    }, [dispatch]);
+    // useEffect(() => {
+    //     dispatch(setTypeIsPushNoti({ failed: false }));
+    // }, [dispatch]);
 
     const [isAccInWinners, setAccInWinners] = useState<{
         loading: boolean;
@@ -138,99 +144,123 @@ const ContentNFTBox = ({ id, ...props }: any) => {
 
     const [phase, setPhase] = useState<any>({});
     const [phaseName, setPhaseName] = useState('');
-    useEffect(() => {
-        if (!loadingTicket && dataTicket) {
-            setNewTicket(false);
-            setInfoTicket(dataTicket);
-            if (isEndPool(dataTicket.campaign_status)) {
-                setFinishedTime(true);
-                return;
-            }
-            let openTime: number;
-            let finishTime: number;
-            if (isClaim) {
-                const claimConfigs = dataTicket.campaignClaimConfig || [];
-                const leng = claimConfigs.length;
-                if (!leng) return;
-                const timeStartPhase2 = dataTicket.freeBuyTimeSetting?.start_buy_time;
-                if (leng === 1) {
-                    const openClaim = claimConfigs[0];
-                    openTime = +openClaim.start_time * 1000;
-                    const endTime = timeStartPhase2 ? +timeStartPhase2 * 1000 : (+openClaim.end_time * 1000 || openTime + 1000 * 60 * 60 * 24);
-                    finishTime = endTime;
-                    if (timeStartPhase2) {
-                        setPhaseName('Phase 1');
-                        setPhase({
-                            1: {
-                                openTime,
-                                finishTime,
-                            },
-                            2: {
-                                openTime: finishTime,
-                                finishTime: finishTime + 1000 * 60 * 60 * 24
-                            }
-                        })
-                    }
-                } else {
-                    const openClaim = claimConfigs[0];
-                    let endClaim = claimConfigs.slice(-1)[0];
-                    if (!endClaim) return;
-                    openTime = +openClaim.start_time * 1000;
-                    const endTime = timeStartPhase2 ? +timeStartPhase2 * 1000 : (+endClaim.end_time * 1000 || +endClaim.start_time * 1000);
-                    finishTime = endTime;
-                    if (timeStartPhase2) {
-                        setPhaseName('Phase 1');
-                        setPhase({
-                            1: {
-                                openTime,
-                                finishTime: +timeStartPhase2 * 1000,
-                            },
-                            2: {
-                                openTime: +timeStartPhase2 * 1000,
-                                finishTime: endTime
-                            }
-                        })
-                    }
-                }
-            } else {
-                let timeStartPhase2 = dataTicket.freeBuyTimeSetting?.start_buy_time;
-                openTime = +dataTicket.start_time * 1000;
-                if (timeStartPhase2) {
-                    timeStartPhase2 = +timeStartPhase2 * 1000;
-                    finishTime = timeStartPhase2;
-                    setPhaseName('Phase 1');
-                    setPhase({
-                        1: {
-                            openTime,
-                            finishTime: timeStartPhase2,
-                        },
-                        2: {
-                            openTime: timeStartPhase2,
-                            finishTime: +dataTicket.finish_time * 1000
-                        }
-                    })
-                } else {
-                    finishTime = +dataTicket.finish_time * 1000;
-                }
-            }
+    // useEffect(() => {
+    //     if (!loadingTicket && dataTicket) {
+    //         setNewTicket(false);
+    //         setInfoTicket(dataTicket);
+    //         if (isEndPool(dataTicket.campaign_status)) {
+    //             setFinishedTime(true);
+    //             return;
+    //         }
+    //         let openTime: number;
+    //         let finishTime: number;
+    //         if (isClaim) {
+    //             const claimConfigs = dataTicket.campaignClaimConfig || [];
+    //             const leng = claimConfigs.length;
+    //             if (!leng) return;
+    //             const timeStartPhase2 = dataTicket.freeBuyTimeSetting?.start_buy_time;
+    //             if (leng === 1) {
+    //                 const openClaim = claimConfigs[0];
+    //                 openTime = +openClaim.start_time * 1000;
+    //                 const endTime = timeStartPhase2 ? +timeStartPhase2 * 1000 : (+openClaim.end_time * 1000 || openTime + 1000 * 60 * 60 * 24);
+    //                 finishTime = endTime;
+    //                 if (timeStartPhase2) {
+    //                     setPhaseName('Phase 1');
+    //                     setPhase({
+    //                         1: {
+    //                             openTime,
+    //                             finishTime,
+    //                         },
+    //                         2: {
+    //                             openTime: finishTime,
+    //                             finishTime: finishTime + 1000 * 60 * 60 * 24
+    //                         }
+    //                     })
+    //                 }
+    //             } else {
+    //                 const openClaim = claimConfigs[0];
+    //                 let endClaim = claimConfigs.slice(-1)[0];
+    //                 if (!endClaim) return;
+    //                 openTime = +openClaim.start_time * 1000;
+    //                 const endTime = timeStartPhase2 ? +timeStartPhase2 * 1000 : (+endClaim.end_time * 1000 || +endClaim.start_time * 1000);
+    //                 finishTime = endTime;
+    //                 if (timeStartPhase2) {
+    //                     setPhaseName('Phase 1');
+    //                     setPhase({
+    //                         1: {
+    //                             openTime,
+    //                             finishTime: +timeStartPhase2 * 1000,
+    //                         },
+    //                         2: {
+    //                             openTime: +timeStartPhase2 * 1000,
+    //                             finishTime: endTime
+    //                         }
+    //                     })
+    //                 }
+    //             }
+    //         } else {
+    //             let timeStartPhase2 = dataTicket.freeBuyTimeSetting?.start_buy_time;
+    //             openTime = +dataTicket.start_time * 1000;
+    //             if (timeStartPhase2) {
+    //                 timeStartPhase2 = +timeStartPhase2 * 1000;
+    //                 finishTime = timeStartPhase2;
+    //                 setPhaseName('Phase 1');
+    //                 setPhase({
+    //                     1: {
+    //                         openTime,
+    //                         finishTime: timeStartPhase2,
+    //                     },
+    //                     2: {
+    //                         openTime: timeStartPhase2,
+    //                         finishTime: +dataTicket.finish_time * 1000
+    //                     }
+    //                 })
+    //             } else {
+    //                 finishTime = +dataTicket.finish_time * 1000;
+    //             }
+    //         }
 
-            if (openTime > Date.now()) {
-                setOpenTime(getDiffTime(openTime, Date.now()));
-            }
-            if (finishTime < Date.now() || finishTime <= openTime) {
-                setFinishedTime(true);
-                setIsBuy(false);
+    //         if (openTime > Date.now()) {
+    //             setOpenTime(getDiffTime(openTime, Date.now()));
+    //         }
+    //         if (finishTime < Date.now() || finishTime <= openTime) {
+    //             setFinishedTime(true);
+    //             setIsBuy(false);
+    //         } else {
+    //             setIsBuy(true);
+    //             setTimeEnd(
+    //                 getDiffTime(
+    //                     finishTime,
+    //                     Date.now() >= openTime ? Date.now() : openTime
+    //                 )
+    //             );
+    //         }
+    //     }
+    // }, [dataTicket, loadingTicket, isClaim]);
+
+    const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, isFinished?: boolean }>({ date1: 0, date2: 0, title: '' });
+    const onSetCountdown = useCallback(() => {
+        if (dataTicket) {
+            // const startTime = +dataTicket.start_time * 1000;
+            const startJoinPooltime = +dataTicket.start_join_pool_time * 1000;
+            const endJoinPoolTime = +dataTicket.end_join_pool_time * 1000;
+            const finishTime = +dataTicket.finish_time * 1000;
+            if (startJoinPooltime > Date.now()) {
+                setCountdown({ date1: startJoinPooltime, date2: Date.now(), title: 'Whitelist start in' });
+            } else if (endJoinPoolTime > Date.now()) {
+                setCountdown({ date1: endJoinPoolTime, date2: Date.now(), title: 'Whitelist End In' });
+            } else if (finishTime > Date.now()) {
+                setCountdown({ date1: finishTime, date2: Date.now(), title: 'Order End in' });
             } else {
-                setIsBuy(true);
-                setTimeEnd(
-                    getDiffTime(
-                        finishTime,
-                        Date.now() >= openTime ? Date.now() : openTime
-                    )
-                );
+                setCountdown({ date1: 0, date2: 0, title: 'Finished', isFinished: true });
             }
         }
-    }, [dataTicket, loadingTicket, isClaim]);
+    }, [dataTicket]);
+    useEffect(() => {
+        if (!loadingTicket && dataTicket) {
+            onSetCountdown();
+        }
+    }, [dataTicket, loadingTicket])
 
     useEffect(() => {
         if (Object.keys(phase).length) {
@@ -553,6 +583,56 @@ const ContentNFTBox = ({ id, ...props }: any) => {
         return maxTicket - boughtTicket;
     };
 
+    const [isApplyingWhitelist, setApplyingWhitelist] = useState(false);
+    const onApplyWhitelist = async () => {
+        setApplyingWhitelist(true);
+        const baseRequest = new BaseRequest()
+        const response = await baseRequest.post(apiRoute(`/whitelist-apply/${infoTicket.id}`), {
+            wallet_address: connectedAccount,
+            user_twitter: 'nu',
+            user_telegram: 'd',
+        }) as any
+        const resObj = await response.json()
+        setApplyingWhitelist(false)
+
+        if (resObj?.status === 200) {
+            joinPool()
+        } else {
+            dispatch(alertFailure(resObj.message))
+            setApplyingWhitelist(false);
+        }
+    }
+    const [recallBoughtBox, setRecallBoughtBox] = useState(true);
+    const { data: boughtBoxes = {} as any } = useFetchV1<boolean>(`/pool/${infoTicket?.id}/nft-order?wallet_address=${connectedAccount}`, !!(connectedAccount && 'id' in infoTicket) && recallBoughtBox);
+    useEffect(() => {
+        if (boughtBoxes && 'amount' in boughtBoxes) {
+            setRecallBoughtBox(false);
+        }
+    }, [boughtBoxes]);
+
+    const { data: alreadyJoinPool, loading: loadingJoinpool } = useFetchV1<boolean>(`/user/check-join-campaign/${infoTicket?.id}?wallet_address=${connectedAccount}`, !!(connectedAccount && 'id' in infoTicket));
+    const { joinPool, poolJoinLoading, joinPoolSuccess } = usePoolJoinAction({ poolId: infoTicket?.id });
+
+    const [openModalOrderBox, setOpenModalOrderBox] = useState(false);
+    const onShowModalOrderBox = () => {
+        setOpenModalOrderBox(true);
+    }
+    const onCloseModalOrderBox = useCallback(() => {
+        setOpenModalOrderBox(false);
+    }, []);
+
+    const { orderBox, buyBoxLoading, statusBuyBox } = useOrderBox({ poolId: infoTicket.id, });
+    useEffect(() => {
+        if (statusBuyBox) {
+            setOpenModalOrderBox(false);
+            setRecallBoughtBox(true);
+        }
+    }, [statusBuyBox]);
+
+    const onOrderBox = useCallback(async (numberBox: number) => {
+        orderBox(numberBox)
+    }, [infoTicket, connectedAccount]);
+
     return (
         loadingTicket ? <div className={styles.loader} style={{ marginTop: 70 }}>
             <HashLoader loading={true} color={'#72F34B'} />
@@ -567,6 +647,7 @@ const ContentNFTBox = ({ id, ...props }: any) => {
                     transaction={tokenDepositTransaction || transactionHash}
                     networkName={infoTicket?.network_available}
                 />
+                <ModalOrderBox open={openModalOrderBox} onClose={onCloseModalOrderBox} onConfirm={onOrderBox} isLoadingButton={buyBoxLoading} />
                 <div className={styles.content}>
 
                     {
@@ -587,216 +668,106 @@ const ContentNFTBox = ({ id, ...props }: any) => {
                     {!isKYC && !checkingKyc && connectedAccount && (
                         <AlertKYC connectedAccount={connectedAccount} />
                     )}
-                    <div className={styles.bannerBox}>
+                    {/* <div className={styles.bannerBox}>
                         <Image src="/images/nftbox-banner.png" />
-                    </div>
+                    </div> */}
 
-                    <div className={styles.card}>
-                        <div className={styles.cardImg}>
-                            <Image src={infoTicket.banner} defaultSrc={ticketImg} />
-                        </div>
-                        <div className={styles.cardBody}>
-                            <div className={styles.cardBodyText}>
-                                <h3 style={{ position: 'relative' }}>
-                                    {
-                                        <img src={`/images/${infoTicket.network_available}.svg`} alt="" style={{ position: 'absolute', top: '5px', left: 0, width: '24px', height: '24px' }} />
-                                    }
-                                    {infoTicket.title || infoTicket.name}
-                                </h3>
-                                {!endOpenTime && (
-                                    <h4>
-                                        <span>TOTAL SALE</span> {infoTicket.total_sold_coin ? numberWithCommas(infoTicket.total_sold_coin, 0) : 0}
-                                    </h4>
-                                )}
-                                <button className={clsx({ openBuy: isShowInfo })}>
-                                    <img
-                                        height={20}
-                                        src={
-                                            infoTicket && infoTicket.accept_currency
-                                                ? `/images/${infoTicket.accept_currency.toUpperCase()}.png`
-                                                : ""
-                                        }
-                                        alt=""
-                                    />
-                                    <span>
-                                        {isClaim ? 0 : infoTicket.ether_conversion_rate}{" "}
-                                        {infoTicket && infoTicket.accept_currency
-                                            ? infoTicket.accept_currency.toUpperCase()
-                                            : "..."}
-                                    </span>
-                                    <span className="small-text">
-                                        /{infoTicket.symbol || "Ticket"}
-                                    </span>
-                                </button>
-                                <div className={styles.infoTicket} style={{ width: '100%', marginTop: '20px', alignItems: 'center' }}>
-                                    <span className={styles.text}>SUPPORTED</span> <span className={styles.textBold} style={{ textTransform: 'uppercase' }}>
-                                        {infoTicket.network_available}
-                                    </span>
+                    <div className={styles.contentCard}>
+                        <div className={styles.wrapperCard}>
+                            <div className={mysteryStyles.headerBox}>
+                                <div className="items">
+                                    <div className="item">
+                                        <label className="label">Registered Users</label>
+                                        <h4 className="value">{numberWithCommas(infoTicket.totalRegistered)}</h4>
+                                    </div>
+                                    <div className="item">
+                                        <label className="label">Ordered Boxes</label>
+                                        <h4 className="value">{numberWithCommas((infoTicket.totalOrder || 0) + '')}</h4>
+                                    </div>
+                                    <div className="item">
+                                        <label className="label">Your Ordered</label>
+                                        <h4 className="value">{numberWithCommas((boughtBoxes?.amount || 0) + '')}</h4>
+                                    </div>
+                                </div>
+                                <div className="box-countdown">
+                                    <h4 className="text-uppercase">{countdown.title}</h4>
+                                    {!countdown.isFinished && <CountDownTimeV1 time={countdown} className={"countdown"} onFinish={onSetCountdown} />}
                                 </div>
                             </div>
-                            <div className={styles.cardBodyDetail}>
-
-                                {!endOpenTime && (
-                                    <CountDownOpenInTime time={openTime} />
-                                )}
-
-                                {endOpenTime && !infoTicket.campaign_hash && (
-                                    <div className={styles.comingSoon}>Coming soon</div>
-                                )}
-                                {infoTicket.campaign_hash && isShowInfo && (
-                                    <div className={styles.cardBodyProgress}>
-                                        <div className={styles.progressItem}>
-                                            <span className={styles.text}>Progress</span>
-                                            <div className="showProgress">
-                                                <Progress
-                                                    progress={calcProgress(
-                                                        +infoTicket.token_sold,
-                                                        +infoTicket.total_sold_coin
-                                                    )}
-                                                />
-                                            </div>
-                                            <div className={clsx(styles.infoTicket, "total")}>
-                                                <span className={styles.textBold}>
-                                                    {calcProgress(
-                                                        +infoTicket.token_sold,
-                                                        +infoTicket.total_sold_coin
-                                                    )}
-                                                    %
-                                                </span>
-
-                                                <span className="amount">
-                                                    {infoTicket.token_sold ? numberWithCommas(infoTicket.token_sold, 0) : "..."}/
-                                                    {infoTicket.total_sold_coin ? numberWithCommas(infoTicket.total_sold_coin, 0) : "..."} Tickets
-                                                </span>
-                                            </div>
-                                        </div>
-                                        {!finishedTime && (
-                                            <div className={styles.infoTicket}>
-                                                <span className={styles.text}>Remaining</span>{" "}
-                                                <span className={styles.textBold}>
-                                                    {numberWithCommas(getRemaining(
-                                                        infoTicket.total_sold_coin,
-                                                        infoTicket.token_sold
-                                                    ), 0)}
-                                                </span>
-                                            </div>
-                                        )}
-                                        {finishedTime && (
-                                            <div className={styles.infoTicket}>
-                                                <span className={styles.text}>TOTAL SALES</span>{" "}
-                                                <span className={styles.textBold}>
-                                                    {infoTicket.total_sold_coin ? numberWithCommas(infoTicket.total_sold_coin, 0) : 0}
-                                                </span>
-                                            </div>
-                                        )}
-                                        <div className={styles.infoTicket}>
-                                            <span className={styles.text}>OWNED</span>{" "}
-                                            <span className={styles.textBold}>
-                                                {isClaim
-                                                    ? userClaimed
-                                                    : ownedTicket}
-                                            </span>
-                                        </div>
-                                        {!isClaim && (
-                                            <div className={styles.infoTicket}>
-                                                <span className={styles.text}>BOUGHT/MAX</span>{" "}
-                                                <span className={styles.textBold}>
-                                                    {ticketBought}/{maxCanBuyOrClaim || 0}
-                                                </span>
-                                            </div>
-                                        )}
-                                        {!isClaim && finishedTime && (
-                                            <div className={styles.infoTicket}>
-                                                <span className={styles.text}>PARTICIPANTS</span>{" "}
-                                                <span className={styles.textBold}>
-                                                    {infoTicket.participants ? numberWithCommas(infoTicket.participants, 0) : 0}
-                                                </span>
-                                            </div>
-                                        )}
-                                        {isClaim && (
-                                            <div className={styles.infoTicket}>
-                                                <span className={styles.text}>AVAILABLE TO CAILM</span>{" "}
-                                                <span className={styles.textBold}>
-                                                    {maxCanBuyOrClaim - userClaimed || 0}
-                                                </span>
-                                            </div>
-                                        )}
-                                        {!finishedTime && isBuy && (
-                                            <div className={styles.infoTicket}>
-                                                <span className={styles.text}>{phaseName} END IN</span>
-                                                <CountDownEndTime time={endTime} />
-                                            </div>
-                                        )}
-                                        {!finishedTime &&
-                                            (isClaim ? (
-                                                isAccInWinners.ok && (
-                                                    <ButtonClaim onClick={onClaimTicket} disabled={!isKYC || isNotClaim(userClaimed, maxCanBuyOrClaim) || lockWhenClaiming} />
-                                                )
-                                            ) : (
-                                                <>
-                                                    {
-                                                        isAccInWinners.ok && allowNetwork.ok &&
-                                                        isBuy &&
-                                                        isAccApproved(tokenAllowance || 0) &&
-                                                        (
-                                                            <div
-                                                                className={clsx(styles.infoTicket, styles.buyBox)}
-                                                                style={{ marginTop: "16px" }}
-                                                            >
-                                                                <AscDescAmountBox
-                                                                    descMinAmount={descMinAmount}
-                                                                    descAmount={descAmount}
-                                                                    ascAmount={ascAmount}
-                                                                    ascMaxAmount={ascMaxAmount}
-                                                                    value={numTicketBuy}
-                                                                    disabledMin={!getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || numTicketBuy === getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || !isKYC}
-                                                                    disabledSub={!getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || numTicketBuy === 0 || !isKYC}
-                                                                    disabledAdd={!getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || numTicketBuy === getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || !isKYC}
-                                                                    disabledMax={!getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || numTicketBuy === getMaxTicketBuy(ticketBought, maxCanBuyOrClaim) || !isKYC}
-                                                                />
-                                                                <ButtonBuy onClick={onBuyTicket} disabled={numTicketBuy <= 0 || !isKYC} />
-                                                            </div>
-                                                        )}
-                                                    {isAccInWinners.ok && !isAccApproved(tokenAllowance || 0) && (
-                                                        <ButtonApprove isApproving={isApproving} onClick={handleTokenApprove} />
-                                                    )}
-                                                </>
-                                            ))}
-
-                                        {(alert?.type === "error" && alert.message) && (
-                                            <div className={styles.alertMsg}>
-                                                <img src={iconWarning} alt="" />
-                                                <span>
-                                                    {alert.message}
-                                                </span>
-                                            </div>
-                                        )}
-
-                                        {finishedTime && (
-                                            <div className={clsx(styles.infoTicket, styles.finished)}>
-                                                <div className="img-finished">
-                                                    <img src={finishedImg} alt="" />
-                                                </div>
-                                                {!getRemaining(
-                                                    infoTicket.total_sold_coin,
-                                                    infoTicket.token_sold
-                                                ) && (
-                                                        <div className="soldout">
-                                                            <img src={soldoutImg} alt="" />
-                                                        </div>
-                                                    )}
-                                            </div>
-                                        )}
+                            <div className={styles.card}>
+                                <div className={styles.cardImg}>
+                                    <Image src={infoTicket.banner} defaultSrc={ticketImg} />
+                                </div>
+                                <div className={mysteryStyles.carBodyInfo}>
+                                    <div className={mysteryStyles.cardBodyHeader}>
+                                        <h3 className="text-uppercase">
+                                            {infoTicket.title || infoTicket.name}
+                                        </h3>
+                                        <h4 className="text-uppercase">
+                                            <img src={infoTicket.token_images} className="icon rounded" alt="" />
+                                            {infoTicket.symbol}
+                                        </h4>
                                     </div>
-                                )}
+                                    <div className="divider"></div>
+                                    <div className={mysteryStyles.cardBodyDetail}>
+                                        <div className={mysteryStyles.currency}>
+                                            <img src={`/images/icons/${(infoTicket.accept_currency || '').toLowerCase()}.png`} alt="" />
+                                            <span className="text-uppercase">{infoTicket.token_conversion_rate} {infoTicket.accept_currency}</span>
+                                        </div>
+                                        <div className="detail-items">
+                                            <div className="item">
+                                                <label className="label text-uppercase">Total sale</label>
+                                                <span>{numberWithCommas((infoTicket.total_sold_coin || 0) + '')} Boxes</span>
+                                            </div>
+                                            <div className="item">
+                                                <label className="label text-uppercase">supported</label>
+                                                <span className="text-uppercase icon"><img src={`/images/icons/${(infoTicket.network_available || '').toLowerCase()}.png`} className="icon" alt="" /> {infoTicket.network_available}</span>
+                                            </div>
+                                        </div>
+                                        <div className="box-type-wrapper">
+                                            <h4 className="text-uppercase">TYPE</h4>
+                                            <div className="box-types">
+                                                <div className="box-type active">
+                                                    <img src="/images/icons/small-box.png" className="icon" alt="" />
+                                                    <span>Grey x100</span>
+                                                </div>
+                                                <div className="box-type">
+                                                    <img src="/images/icons/small-box.png" className="icon" alt="" />
+                                                    <span>Grey x100</span>
+                                                </div>
+                                                <div className="box-type">
+                                                    <img src="/images/icons/small-box.png" className="icon" alt="" />
+                                                    <span>Grey x100</span>
+                                                </div>
+                                                <div className="box-type">
+                                                    <img src="/images/icons/small-box.png" className="icon" alt="" />
+                                                    <span>Grey x100</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {
+                                            (!loadingJoinpool && !alreadyJoinPool) &&
+                                            <ButtonGreen onClick={onApplyWhitelist} isLoading={isApplyingWhitelist} disabled={alreadyJoinPool || poolJoinLoading || joinPoolSuccess} className="text-transform-unset w-full">
+                                                {(alreadyJoinPool || joinPoolSuccess) ? 'Applied Whitelist' : 'Apply Whitelist'}
+                                            </ButtonGreen>
+                                        }
+                                        {
+                                            // (!loadingJoinpool && alreadyJoinPool) && 
+                                            <ButtonGreen onClick={onShowModalOrderBox} className="text-transform-unset w-full">
+                                                Order Box
+                                            </ButtonGreen>
+                                        }
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div className={styles.displayContent}>
-                        <AboutTicket info={infoTicket} />
+                        <AboutMysteryBox info={infoTicket} />
                     </div>
                 </div>
             </>
     );
 }
-export default ContentNFTBox;
+export default MysteryBox;

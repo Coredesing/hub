@@ -12,6 +12,15 @@ const useStyles = makeStyles((theme: any) => {
       // paddingLeft: 'calc(100% - (461px * 2))',
       // paddingRight: 'calc(100% - (461px * 2))'
     },
+    contentCard: {
+      width: '100%',
+      display: 'grid',
+      placeContent: 'center'
+    },
+    wrapperCard: {
+      maxWidth: '1120px',
+      width: '100%',
+    },
     displayContent: {
       paddingLeft: "calc((100% - (461px * 2 + 40px)) / 2)",
       paddingRight: "calc((100% - (461px * 2 + 40px)) / 2)",
@@ -49,7 +58,7 @@ const useStyles = makeStyles((theme: any) => {
       display: "grid",
       gridTemplateColumns: "repeat(auto-fit, 461px)",
       placeContent: "center",
-      gap: "40px",
+      gap: "30px",
       [theme.breakpoints.down("sm")]: {
         placeItems: "center",
         gap: "20px",
@@ -562,6 +571,9 @@ export const useAboutStyles = makeStyles((theme) => ({
     mixBlendMode: "normal",
     textTransform: "unset",
     justifyContent: "space-between",
+    '&.active': {
+      color: "#72F34B"
+    },
     [theme.breakpoints.down("xs")]: {
       fontWeight: 600,
       fontSize: "14px",
@@ -663,6 +675,355 @@ export const useAboutStyles = makeStyles((theme) => ({
           background: '#4fa934',
         }
       }
+    }
+  },
+  wrapperBoxTimeLine: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, 220px)',
+    gridAutoRows: 'auto',
+    placeContent: 'center',
+    '& .box': {
+      borderRight: '1px solid rgba(255, 255, 255, 0.2)',
+      padding: '20px',
+      textAlign: 'center',
+      background: '#000000',
+      '&.active': {
+        borderRadius: '4px',
+        background: '#72F34B',
+        '& .step span': {
+          background: '#000',
+        },
+        ' & .title, & .desc': {
+          color: ' #000',
+        },
+      },
+      '& .step': {
+        marginBottom: '15px',
+        display: 'grid',
+        alignItems: 'center',
+        placeContent: 'center',
+        '& span': {
+          background: '#2E2E2E',
+          display: 'grid',
+          alignItems: 'center',
+          width: '29px',
+          height: '29px',
+          borderRadius: '50%',
+          fontFamily: 'Firs Neue',
+          fontStyle: 'normal',
+          fontWeight: 600,
+          fontSize: '14px',
+          lineHeight: '24px',
+          color: ' #fff',
+        }
+      },
+      '& .title': {
+        fontFamily: 'Firs Neue',
+        fontStyle: 'normal',
+        fontWeight: 600,
+        fontSize: '16px',
+        lineHeight: '22px',
+        color: ' #fff',
+        marginBottom: '6px',
+        textTransform: 'uppercase',
+      },
+      '& .desc': {
+        fontFamily: 'Firs Neue',
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: '12px',
+        lineHeight: '16px',
+        color: ' #fff',
+        marginBottom: '15px',
+        textAlign: 'center',
+      },
+
+    },
+    '& .box:first-child': {
+      borderRight: 'unset',
+      borderTopLeftRadius: '4px',
+      borderBottomLeftRadius: '4px',
+    },
+    '& .box:last-child': {
+      borderRight: 'unset',
+      borderTopRightRadius: '4px',
+      borderBottomRightRadius: '4px',
+    }
+
+  },
+  wrapperBox: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, 190px)',
+    gridAutoRows: 'auto',
+    placeContent: 'center',
+    gap: '12px',
+    '& .box': {
+      '& .img-box': {
+        border: '1px solid rgba(255, 255, 255, 0.2)',
+        padding: '10px',
+        marginBottom: '4px',
+        borderRadius: '2px',
+        position: 'relative',
+        zIndex: '100',
+        '&::before': {
+          content: '""',
+          filter: 'blur(15px)',
+          position: 'absolute',
+          background: '#283145',
+          width: 'calc(100% - 20px)',
+          height: '80px',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          borderRadius: '50%'
+        },
+        // 
+        '& img': {
+          width: '100%',
+          height: '100px',
+          position: 'relative',
+        }
+      },
+      '& .id-box': {
+        fontFamily: "Firs Neue",
+        fontWeight: 600,
+        fontStyle: "normal",
+        fontSize: "14px",
+        lineHeight: "22px",
+        color: "#fff",
+        mixBlendMode: "normal",
+        display: 'block',
+        textAlign: 'left',
+      }
+    },
+    '& .box.active': {
+      '& .img-box': {
+        border: '1px solid #72F34B',
+      }
+
+    }
+  }
+}));
+
+export const useMysteyBoxStyles = makeStyles((theme) => ({
+  headerBox: {
+    minHeight: '70px',
+    background: '#2E2E2E',
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    overflow: 'hidden',
+    [theme.breakpoints.down('sm')]: {
+      gridTemplateColumns: '1fr',
+    },
+    '& .items': {
+      display: 'grid',
+      gridTemplateColumns: '160px 160px 160px',
+
+      [theme.breakpoints.down('sm')]: {
+        gridTemplateColumns: 'repeat(auto-fit, calc(100% / 3))',
+      },
+
+      '& .item': {
+        borderRight: '1px solid rgba(238, 238, 238, 0.2)',
+        padding: '10px 20px',
+        '& .label': {
+          fontFamily: 'Firs Neue',
+          fontStyle: 'normal',
+          fontWeight: 'normal',
+          fontSize: '12px',
+          lineHeight: '16px',
+          color: '#AEAEAE',
+          marginBottom: '12px',
+          display: 'block',
+        },
+        '& .value': {
+          fontFamily: 'Firs Neue',
+          fontStyle: 'normal',
+          fontWeight: 600,
+          fontSize: '16px',
+          lineHeight: '22px',
+          color: '#fff',
+        }
+      },
+      '& .item:last-child': {
+        borderRight: 'unset',
+      }
+    },
+    '& .box-countdown': {
+      background: '#000',
+      height: '100%',
+      transform: 'skew(-20deg)',
+      width: 'calc(100% + 20px)',
+      display: 'flex',
+      gap: '10px',
+      alignItems: 'center',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+      [theme.breakpoints.down('sm')]: {
+        flexDirection: 'column',
+        transform: 'unset',
+        gap: '0',
+      },
+      '& h4': {
+        fontFamily: 'Firs Neue',
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: '12px',
+        lineHeight: '16px',
+        color: '#AEAEAE',
+        transform: 'skew(20deg)',
+        [theme.breakpoints.down('sm')]: {
+          transform: 'unset',
+          marginTop: '10px',
+        },
+      },
+      '& .countdown': {
+        fontFamily: 'Space Ranger',
+        background: '#000',
+        transform: 'skew(20deg)',
+
+        [theme.breakpoints.down('sm')]: {
+          transform: 'unset',
+        },
+
+        '& .time .number': {
+          transform: 'skew(-20deg)',
+          fontSize: '36px',
+          lineHeight: '40px',
+        },
+        '& .time .text': {
+          fontSize: '10px',
+        }
+      },
+    }
+  },
+  cardBodyHeader: {
+    marginBottom: '14px',
+    '& h3': {
+      fontFamily: 'Firs Neue',
+      fontStyle: 'normal',
+      fontWeight: 600,
+      fontSize: '24px',
+      lineHeight: '32px',
+      color: '#fff',
+      marginBottom: '5px',
+    },
+    '& h4': {
+      display: 'grid',
+      gridTemplateColumns: '20px auto',
+      gap: '8px',
+      alignItems: 'center',
+      '& .icon': {
+        width: '20px',
+        height: '20px',
+      },
+      fontFamily: 'Firs Neue',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: '14px',
+      color: '#fff',
+    },
+  },
+  carBodyInfo: {
+    width: '100%',
+  },
+  cardBodyDetail: {
+    marginTop: '14px',
+    display: 'grid',
+    gridTemplateColumns: '1fr',
+    gap: '20px',
+    '& .detail-items': {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(120px,1fr))',
+
+      '& .item': {
+        '& .label': {
+          fontFamily: 'Firs Neue',
+          fontStyle: 'normal',
+          fontWeight: 'normal',
+          fontSize: '12px',
+          color: '#AEAEAE',
+          marginBottom: '5px',
+          display: 'block',
+        },
+        '& span': {
+          fontFamily: 'Firs Neue',
+          fontStyle: 'normal',
+          fontWeight: 600,
+          fontSize: '16px',
+          color: '#fff',
+          marginBottom: '5px',
+          display: 'block',
+        },
+        '& span.icon': {
+          display: 'grid',
+          gap: '5px',
+          gridTemplateColumns: '16px auto',
+          '& .icon': {
+            width: '16px',
+            height: '16px',
+          }
+        }
+      }
+    },
+    '& .box-type-wrapper': {
+      '& > h4': {
+        fontFamily: 'Firs Neue',
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: '12px',
+        color: '#fff',
+        marginBottom: '5px',
+      },
+      '& .box-types': {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(130px,1fr))',
+        gap: '8px',
+        '& .box-type': {
+          cursor: 'pointer',
+          padding: '5px 8px',
+          display: 'grid',
+          gridTemplateColumns: '40px auto',
+          gap: '5px',
+          alignItems: 'center',
+          placeContent: 'center',
+          border: '1px solid #555',
+          borderRadius: '4px',
+          '&.active': {
+            border: '1px solid #fff',
+
+            '& span': {
+              color: '#fff',
+            }
+          },
+
+          '& span': {
+            fontFamily: 'Firs Neue',
+            fontStyle: 'normal',
+            fontWeight: 600,
+            fontSize: '12px',
+            color: '#AEAEAE',
+          }
+        }
+      }
+    }
+  },
+  currency: {
+    display: 'grid',
+    gridTemplateColumns: '24px auto',
+    gap: '8px',
+    alignItems: 'center',
+    '& .icon': {
+      width: '24px',
+      height: '24px',
+    },
+    '& span': {
+      fontFamily: 'Firs Neue',
+      fontStyle: 'normal',
+      fontWeight: 600,
+      fontSize: '20px',
+      color: '#fff',
+      display: 'block',
     }
   }
 }));

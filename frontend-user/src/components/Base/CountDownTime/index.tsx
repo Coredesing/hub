@@ -23,6 +23,7 @@ export type CountDownTimeType = DHMSType | CountDonwRanges
 type Props = {
     time: CountDownTimeType,
     onFinish?: Function,
+    [k: string]: any,
 }
 type PropsV2 = Props & {
     title?: string,
@@ -70,7 +71,7 @@ export const CountDownTimeV1 = (props: Props) => {
     }, [isFinish, props]);
 
     return (
-        <div className={styles.cardBodyClock}>
+        <div className={clsx(styles.cardBodyClock, props.className)}>
             <div className="times">
                 <span className="time">
                     <span className="number">

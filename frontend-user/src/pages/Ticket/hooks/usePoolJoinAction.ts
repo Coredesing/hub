@@ -12,7 +12,7 @@ type PoolDepositActionParams = {
   poolDetails?: any
 }
 
-const usePoolJoinAction = ({ poolId, poolDetails }: PoolDepositActionParams) => {
+const usePoolJoinAction = ({ poolId }: PoolDepositActionParams) => {
   const dispatch = useDispatch();
   const { account, library } = useWeb3React();
   const [joinPoolSuccess, setJoinPoolSuccess] = useState<boolean>(false);
@@ -52,7 +52,7 @@ const usePoolJoinAction = ({ poolId, poolDetails }: PoolDepositActionParams) => 
           wallet_address: account,
           campaign_id: poolId,
         }, config as any) as any;
-
+        console.log('response', response)
         if (response.data) {
           if (response.data.status === 200) {
             setJoinPoolSuccess(true);

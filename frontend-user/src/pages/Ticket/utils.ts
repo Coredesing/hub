@@ -74,3 +74,7 @@ export const getRemaining = (totalTicket: number, totalSold: number) => {
 export const isBidorStake = (type: string) => {
     return type === 'only-bid' || type === 'only-stake';
 }
+
+export const isMysteryBox = (type: string) => {
+    return type === 'box';
+}

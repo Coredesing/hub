@@ -54,7 +54,7 @@ const TicketSale = (props: any) => {
       setRecall(false);
     }
   }, [loadingActivePools, loadingUpcomingPools, loadingcompletePools]);
-
+  
   return (
     checkParamType.checking ?
       <Backdrop open={checkParamType.checking} style={{ color: '#fff', zIndex: theme.zIndex.drawer + 1, }}>
@@ -84,7 +84,7 @@ const TicketSale = (props: any) => {
 
                 <div className={clsx(styles.cards, styles.cardsUpcoming)}>
                   {
-                    (upcomingPools?.data || []).map((card, id: number) => <UpcomingCard key={id} card={card} refresh={refresh} />)
+                    ([...upcomingPools?.data,...upcomingPools?.data,...upcomingPools?.data] || []).map((card, id: number) => <UpcomingCard key={id} card={card} refresh={refresh} />)
                   }
                 </div>
               </div>

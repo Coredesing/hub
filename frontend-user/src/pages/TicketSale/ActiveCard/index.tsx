@@ -41,6 +41,7 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
         setFinishedTime(false);
         setIsBuy(true);
         setTimeEnd(getDiffTime(finishTime, Date.now() >= openTime ? Date.now() : openTime));
+        // setTimeEnd({days: 0, hours: 0, minutes: 0, seconds: 0})
       }
     }
   }, [card]);
@@ -135,7 +136,7 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
         {
           /*isBuy &&*/ <div className={clsx(styles.cardBodyItem, styles.buyBox)} style={{ marginTop: '16px' }}>
             <div className={styles.timeEnd}>
-              <span className={clsx(styles.text, 'sp1')}>END IN</span>
+              <span className={clsx(styles.text, 'sp1')} style={{marginTop: 2}}>END IN</span>
               <span className={styles.timeEnd}>
                   <span>&nbsp;</span>
                   {endTime.days > 1 && <span>{formatNumber(endTime.days)} days</span>}

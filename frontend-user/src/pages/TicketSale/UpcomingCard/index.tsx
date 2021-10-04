@@ -112,7 +112,7 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
         }
         <div className={'cardBodyTimeEndItem'}>
           <img src='/images/icons/bright.svg' alt="" />
-          <span className={clsx(styles.text, 'sp1 text-uppercase')}>{titleTime}</span>
+          <span className={clsx(styles.text, 'sp1 text-uppercase')} style={{marginTop: 3}}>{titleTime}</span>
           <span className={styles.timeEnd}>
             {(titleTime !== 'Coming soon' && titleTime !== 'Finished') && 
               <>

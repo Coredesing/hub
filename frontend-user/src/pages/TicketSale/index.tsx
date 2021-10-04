@@ -84,7 +84,7 @@ const TicketSale = (props: any) => {
 
                 <div className={clsx(styles.cards, styles.cardsUpcoming)}>
                   {
-                    ([...upcomingPools?.data,...upcomingPools?.data,...upcomingPools?.data] || []).map((card, id: number) => <UpcomingCard key={id} card={card} refresh={refresh} />)
+                    (upcomingPools?.data || []).map((card, id: number) => <UpcomingCard key={id} card={card} refresh={refresh} />)
                   }
                 </div>
               </div>

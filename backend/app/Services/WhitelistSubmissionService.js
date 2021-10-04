@@ -5,7 +5,6 @@ const CampaignSocialRequirementModel = use('App/Models/CampaignSocialRequirement
 const ErrorFactory = use('App/Common/ErrorFactory');
 const HelperUtils = use('App/Common/HelperUtils');
 const requests = require('request');
-const { URL } = require('url');
 const Const = use('App/Common/Const');
 
 const SOCIAL_NETWORK_TELEGRAM = 'telegram';

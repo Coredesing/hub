@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: any) => ({
     },
 }));
 type Props = {
-    onClick: MouseEventHandler,
+    onClick?: MouseEventHandler,
     disabled?: boolean,
     children: any,
     isLoading?: boolean,

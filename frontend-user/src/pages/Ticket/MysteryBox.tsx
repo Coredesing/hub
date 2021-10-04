@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import clsx from "clsx";
 import useStyles, { useMysteyBoxStyles } from "./style";
 import { AboutMysteryBox } from "./About";
-import { apiRoute, getApproveToken, getDiffTime } from "../../utils";
+import { apiRoute, getApproveToken, getDiffTime, isImageFile, isVideoFile } from "../../utils";
 import { Progress } from "@base-components/Progress";
 import { useFetchV1 } from "../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,12 +22,12 @@ import TicketModal from "./TicketModal";
 import useTokenClaim from "./hooks/useTokenClaim";
 import axios from "../../services/axios";
 import useUserRemainTokensClaim from "./hooks/useUserRemainTokensClaim";
-import { alertFailure, setTypeIsPushNoti } from "../../store/actions/alert";
+import { alertFailure, alertSuccess, setTypeIsPushNoti } from "../../store/actions/alert";
 import { HashLoader } from "react-spinners";
 import { numberWithCommas } from "../../utils/formatNumber";
 import { WrapperAlert } from "../../components/Base/WrapperAlert";
 import { pushMessage } from "../../store/actions/message";
-import { CountDownTimeType } from "./types";
+import { CountDownTimeType, TimelineType } from "./types";
 import { CountDownEndTime } from "./components/CountDownEndTime";
 import { AscDescAmountBox } from "./components/AscDescAmountBox";
 import { ButtonBuy } from "./components/ButtonBuy";
@@ -40,6 +40,8 @@ import CountDownTimeV1, { CountDownTimeType as CountDownTimeTypeV1 } from "@base
 import { BaseRequest } from "../../request/Request";
 import ModalOrderBox from './components/ModalOrderBox';
 import useOrderBox from "./hooks/useOrderBox";
+import { convertTimeToStringFormat } from "@utils/convertDate";
+import ModalConfirmBuyBox from "./components/ModalConfirmBuyBox";
 const iconWarning = "/images/warning-red.svg";
 const ticketImg = "/images/gamefi-ticket.png"
 const finishedImg = "/images/finished.png";
@@ -53,24 +55,8 @@ const MysteryBox = ({ id, ...props }: any) => {
     const { isKYC, checkingKyc } = useKyc(connectedAccount);
     const alert = useSelector((state: any) => state.alert);
     const { appChainID } = useSelector((state: any) => state.appNetwork).data;
-    const [ticketBought, setTicketBought] = useState<number>(0);
-    const [numTicketBuy, setNumTicketBuy] = useState<number>(0);
-    const [isShowInfo, setIsShowInfo] = useState<boolean>(false);
-    const [isBuy, setIsBuy] = useState<boolean>(false);
-    const [endOpenTime, setEndOpenTime] = useState<boolean>(false);
-    const [finishedTime, setFinishedTime] = useState<boolean>(false);
-    const [openTime, setOpenTime] = useState<CountDownTimeType>({
-        days: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-    });
-    const [endTime, setTimeEnd] = useState<CountDownTimeType>({
-        days: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-    });
+    const [boxBought, setBoxBought] = useState<number>(0);
+    const [numBoxBuy, setNumBoxBuy] = useState<number>(0);
     const [infoTicket, setInfoTicket] = useState<{ [k in string]: any }>({});
     const [renewTicket, setNewTicket] = useState<boolean>(true);
     const { data: dataTicket = null, loading: loadingTicket } = useFetchV1<any>(
@@ -103,186 +89,111 @@ const MysteryBox = ({ id, ...props }: any) => {
     //     dispatch(setTypeIsPushNoti({ failed: false }));
     // }, [dispatch]);
 
-    const [isAccInWinners, setAccInWinners] = useState<{
-        loading: boolean;
-        ok?: boolean;
-        error?: string;
-        data?: { [k: string]: any };
-    }>({
-        loading: false,
-        ok: false,
-    });
-    const maxCanBuyOrClaim = +isAccInWinners.data?.lottery_ticket || 0;
-    useEffect(() => {
-        setAccInWinners({ ok: false, loading: !!connectedAccount, error: "" });
-    }, [connectedAccount]);
-    useEffect(() => {
-        if (isAccInWinners.loading) {
-            let info: any = {};
-            axios
-                .get(
-                    `/pool/${id}/check-exist-winner?wallet_address=${connectedAccount}&campaignId=${id}`
-                )
-                .then((res) => {
-                    const result = res.data;
-                    if (result?.status === 200) {
-                        info.ok = true;
-                        info.data = result.data || {};
-                    } else {
-                        info.error = "You're not in winners";
-                    }
-                })
-                .catch((err) => {
-                    info.error = "You're not in winners";
-                })
-                .finally(() => {
-                    info.loading = false;
-                    setAccInWinners(info);
-                });
-        }
-    }, [isAccInWinners, connectedAccount, id]);
+    const [maxBoxCanBuy, setMaxBoxCanBuy] = useState(0);
+    const [boxTypeSelected, onSelectBoxType] = useState<{ [k: string]: any }>({});
 
-    const [phase, setPhase] = useState<any>({});
-    const [phaseName, setPhaseName] = useState('');
     useEffect(() => {
         if (!loadingTicket && dataTicket) {
             setNewTicket(false);
             setInfoTicket(dataTicket);
-            // if (isEndPool(dataTicket.campaign_status)) {
-            //     setFinishedTime(true);
-            //     return;
-            // }
-            // let openTime: number;
-            // let finishTime: number;
-            // if (isClaim) {
-            //     const claimConfigs = dataTicket.campaignClaimConfig || [];
-            //     const leng = claimConfigs.length;
-            //     if (!leng) return;
-            //     const timeStartPhase2 = dataTicket.freeBuyTimeSetting?.start_buy_time;
-            //     if (leng === 1) {
-            //         const openClaim = claimConfigs[0];
-            //         openTime = +openClaim.start_time * 1000;
-            //         const endTime = timeStartPhase2 ? +timeStartPhase2 * 1000 : (+openClaim.end_time * 1000 || openTime + 1000 * 60 * 60 * 24);
-            //         finishTime = endTime;
-            //         if (timeStartPhase2) {
-            //             setPhaseName('Phase 1');
-            //             setPhase({
-            //                 1: {
-            //                     openTime,
-            //                     finishTime,
-            //                 },
-            //                 2: {
-            //                     openTime: finishTime,
-            //                     finishTime: finishTime + 1000 * 60 * 60 * 24
-            //                 }
-            //             })
-            //         }
-            //     } else {
-            //         const openClaim = claimConfigs[0];
-            //         let endClaim = claimConfigs.slice(-1)[0];
-            //         if (!endClaim) return;
-            //         openTime = +openClaim.start_time * 1000;
-            //         const endTime = timeStartPhase2 ? +timeStartPhase2 * 1000 : (+endClaim.end_time * 1000 || +endClaim.start_time * 1000);
-            //         finishTime = endTime;
-            //         if (timeStartPhase2) {
-            //             setPhaseName('Phase 1');
-            //             setPhase({
-            //                 1: {
-            //                     openTime,
-            //                     finishTime: +timeStartPhase2 * 1000,
-            //                 },
-            //                 2: {
-            //                     openTime: +timeStartPhase2 * 1000,
-            //                     finishTime: endTime
-            //                 }
-            //             })
-            //         }
-            //     }
-            // } else {
-            //     let timeStartPhase2 = dataTicket.freeBuyTimeSetting?.start_buy_time;
-            //     openTime = +dataTicket.start_time * 1000;
-            //     if (timeStartPhase2) {
-            //         timeStartPhase2 = +timeStartPhase2 * 1000;
-            //         finishTime = timeStartPhase2;
-            //         setPhaseName('Phase 1');
-            //         setPhase({
-            //             1: {
-            //                 openTime,
-            //                 finishTime: timeStartPhase2,
-            //             },
-            //             2: {
-            //                 openTime: timeStartPhase2,
-            //                 finishTime: +dataTicket.finish_time * 1000
-            //             }
-            //         })
-            //     } else {
-            //         finishTime = +dataTicket.finish_time * 1000;
-            //     }
-            // }
-
-            // if (openTime > Date.now()) {
-            //     setOpenTime(getDiffTime(openTime, Date.now()));
-            // }
-            // if (finishTime < Date.now() || finishTime <= openTime) {
-            //     setFinishedTime(true);
-            //     setIsBuy(false);
-            // } else {
-            //     setIsBuy(true);
-            //     setTimeEnd(
-            //         getDiffTime(
-            //             finishTime,
-            //             Date.now() >= openTime ? Date.now() : openTime
-            //         )
-            //     );
-            // }
+            const firstBoxType = dataTicket.boxTypesConfig?.[0];
+            if (firstBoxType) onSelectBoxType(firstBoxType)
         }
     }, [dataTicket, loadingTicket, isClaim]);
 
-    const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, isFinished?: boolean, isOrder?: boolean, isWhitelist?: boolean }>({ date1: 0, date2: 0, title: '' });
+    const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, [k: string]: any }>({ date1: 0, date2: 0, title: '' });
+    const [timelines, setTimelines] = useState<TimelineType | {}>({});
+
+    const getTimelineOfPool = (pool: { [k: string]: any }) => {
+        const startJoinPooltime = +pool.start_join_pool_time * 1000;
+        const endJoinPoolTime = +dataTicket.end_join_pool_time * 1000;
+        const startBuyTime = +dataTicket.start_time * 1000;
+        const freeBuyTime = +dataTicket.freeBuyTimeSetting?.start_buy_time * 1000 || null;
+        const finishTime = +dataTicket.finish_time * 1000;
+        return { startJoinPooltime, endJoinPoolTime, startBuyTime, freeBuyTime, finishTime }
+    }
+
     const onSetCountdown = useCallback(() => {
         if (dataTicket) {
-            // const startTime = +dataTicket.start_time * 1000;
-            const startJoinPooltime = +dataTicket.start_join_pool_time * 1000;
-            const endJoinPoolTime = +dataTicket.end_join_pool_time * 1000;
-            const finishTime = +dataTicket.finish_time * 1000;
-            if (startJoinPooltime > Date.now()) {
-                setCountdown({ date1: startJoinPooltime, date2: Date.now(), title: 'Whitelist start in' });
-            } else if (endJoinPoolTime > Date.now()) {
-                setCountdown({ date1: endJoinPoolTime, date2: Date.now(), title: 'Whitelist End In', isWhitelist: true });
-            } else if (finishTime > Date.now()) {
-                setCountdown({ date1: finishTime, date2: Date.now(), title: 'Order End in', isOrder: true });
+            const timeLine = getTimelineOfPool(dataTicket);
+
+            const timeLinesInfo: { [k: string]: any } = {
+                1: {
+                    title: 'UPCOMMING',
+                    desc: `Whitelist will be opened on ${convertTimeToStringFormat(new Date(timeLine.startJoinPooltime))}.`
+                },
+                2: {
+                    title: 'WHITELIST',
+                    desc: 'Click the [APPLY WHITELIST] button to register for Phase 1.'
+                }
+            };
+            if (timeLine.freeBuyTime) {
+                timeLinesInfo[3] = {
+                    title: 'BUY PHASE 1',
+                    desc: 'Whitelist registrants will be given favorable dealings to buy Mecha Boxes in the first 1 hours after the opening, on a FCFS basis.'
+                };
+                timeLinesInfo[4] = {
+                    title: 'BUY PHASE 2',
+                    desc: 'The whitelist of phase 2 will be started right after phase 1 ends. Remaining boxes left in phase 1 will be transferred to phase 2.'
+                };
+                timeLinesInfo[5] = {
+                    title: 'END',
+                    desc: 'Thank you for watching.'
+                }
             } else {
-                setCountdown({ date1: 0, date2: 0, title: 'Finished', isFinished: true });
+                timeLinesInfo[3] = {
+                    title: 'BUY PHASE 1',
+                    desc: 'Whitelist registrants will be given favorable dealings to buy Mecha Boxes in the first 1 hours after the opening, on a FCFS basis.'
+                };
+                timeLinesInfo[4] = {
+                    title: 'END',
+                    desc: 'Thank you for watching.'
+                }
             }
+
+
+            if (timeLine.startJoinPooltime > Date.now()) {
+                setCountdown({ date1: timeLine.startJoinPooltime, date2: Date.now(), title: 'Whitelist Start in' });
+                timeLinesInfo[1].current = true;
+            }
+            else if (timeLine.endJoinPoolTime > Date.now()) {
+                setCountdown({ date1: timeLine.endJoinPoolTime, date2: Date.now(), title: 'Whitelist End In', isWhitelist: true });
+                timeLinesInfo[2].current = true;
+            }
+            else if (timeLine.startBuyTime > Date.now()) {
+                timeLinesInfo[2].current = true;
+                if (timeLine.freeBuyTime) {
+                    setCountdown({ date1: timeLine.startBuyTime, date2: Date.now(), title: 'Phase 1 Start Buy in' });
+                } else {
+                    setCountdown({ date1: timeLine.startBuyTime, date2: Date.now(), title: 'Start Buy in' });
+                }
+            }
+            else if (timeLine.freeBuyTime && timeLine.freeBuyTime > Date.now()) {
+                timeLinesInfo[3].current = true;
+                setCountdown({ date1: timeLine.freeBuyTime, date2: Date.now(), title: 'Phase 1 Buy end in', isBuy: true });
+            }
+            else if (timeLine.finishTime > Date.now()) {
+                if (timeLine.freeBuyTime) {
+                    timeLinesInfo[4].current = true;
+                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Phase 2 End Buy in', isBuy: true });
+                } else {
+                    timeLinesInfo[3].current = true;
+                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'End Buy in', isBuy: true });
+                }
+            }
+            else {
+                setCountdown({ date1: 0, date2: 0, title: 'Finished', isFinished: true });
+                timeLine.freeBuyTime ? (timeLinesInfo[5].current = true) : (timeLinesInfo[4].current = true);
+            }
+            setTimelines(timeLinesInfo);
         }
     }, [dataTicket]);
+
     useEffect(() => {
         if (!loadingTicket && dataTicket) {
             onSetCountdown();
         }
     }, [dataTicket, loadingTicket])
-
-    useEffect(() => {
-        if (Object.keys(phase).length) {
-            const interval = setInterval(() => {
-                if (Date.now() > phase[2].finishTime) {
-                    clearInterval(interval);
-                    return;
-                }
-                if (Date.now() >= phase[2].openTime && Date.now() < phase[2].finishTime) {
-                    setTimeEnd(getDiffTime(phase[2].finishTime, Date.now()))
-                    setFinishedTime(false);
-                    setAccInWinners({ ok: false, loading: true, error: "" });
-                    setPhaseName('Phase 2');
-                    clearInterval(interval);
-                }
-            }, 1000);
-
-            return () => {
-                clearInterval(interval);
-            }
-        }
-    }, [phase]);
 
     const [renewBalance, setNewBalance] = useState(true);
     const [ownedTicket, setOwnedTicket] = useState(0);
@@ -294,9 +205,6 @@ const MysteryBox = ({ id, ...props }: any) => {
     useEffect(() => {
         const setBalance = async () => {
             try {
-                // const approved = await isApproved(connectedAccount, dataTicket.campaign_hash, library, dataTicket.network_available, dataTicket.accept_currency);
-                // console.log('approved', approved);
-                // setAccApprove(approved);
                 const myNumTicket = await getBalance(
                     connectedAccount,
                     dataTicket.token,
@@ -312,85 +220,36 @@ const MysteryBox = ({ id, ...props }: any) => {
         !isClaim && (renewBalance || connectedAccount) && dataTicket && setBalance();
     }, [connectedAccount, dataTicket, renewBalance, isClaim]);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            const newOpenTime = { ...openTime };
-            if (
-                newOpenTime.days === 0 &&
-                newOpenTime.hours === 0 &&
-                newOpenTime.minutes === 0 &&
-                newOpenTime.seconds === 0
-            ) {
-                clearInterval(interval);
-                setIsBuy(true);
-                setEndOpenTime(true);
-                setIsShowInfo(true);
-                return;
-            }
-            setOpenTime(caclDiffTime(newOpenTime));
-        }, 1000);
-
-        return () => {
-            clearInterval(interval);
-        };
-    }, [openTime, setOpenTime]);
-
-    useEffect(() => {
-        let interval: any;
-        if (isBuy && endOpenTime) {
-            interval = setInterval(() => {
-                const newEndTime = { ...endTime };
-                if (
-                    newEndTime.days === 0 &&
-                    newEndTime.hours === 0 &&
-                    newEndTime.minutes === 0 &&
-                    newEndTime.seconds === 0
-                ) {
-                    clearInterval(interval);
-                    setIsBuy(false);
-                    setEndOpenTime(true);
-                    setFinishedTime(true);
-                    return;
-                }
-                setTimeEnd(caclDiffTime(newEndTime));
-            }, 1000);
-        }
-
-        return () => {
-            interval && clearInterval(interval);
-        };
-    }, [isBuy, endTime, setTimeEnd, endOpenTime]);
-
     const ascAmount = () => {
         if (!isKYC) return;
         const ticketCanBuy = getMaxTicketBuy(
-            ticketBought,
-            maxCanBuyOrClaim
+            boxBought,
+            maxBoxCanBuy
         );
-        if (numTicketBuy >= ticketCanBuy) {
+        if (numBoxBuy >= ticketCanBuy) {
             return;
         }
-        setNumTicketBuy((n) => n + 1);
+        setNumBoxBuy((n) => n + 1);
     };
     const descAmount = () => {
         if (!isKYC) return;
-        if (numTicketBuy > 0) {
-            setNumTicketBuy((n) => n - 1);
+        if (numBoxBuy > 0) {
+            setNumBoxBuy((n) => n - 1);
         }
     };
 
     const ascMaxAmount = () => {
         if (!isKYC) return;
-        const maxTicket = getMaxTicketBuy(ticketBought, maxCanBuyOrClaim);
+        const maxTicket = getMaxTicketBuy(boxBought, maxBoxCanBuy);
         if (maxTicket === 0) return;
-        setNumTicketBuy(maxTicket);
+        setNumBoxBuy(maxTicket);
     };
 
     const descMinAmount = () => {
         if (!isKYC) return;
-        const maxTicket = getMaxTicketBuy(ticketBought, maxCanBuyOrClaim);
+        const maxTicket = getMaxTicketBuy(boxBought, maxBoxCanBuy);
         if (maxTicket === 0) return;
-        setNumTicketBuy(1);
+        setNumBoxBuy(1);
     };
 
     const { claimToken, transactionHash, claimTokenSuccess, loading: loadingClaming, error: errorClaming } = useTokenClaim(
@@ -433,12 +292,6 @@ const MysteryBox = ({ id, ...props }: any) => {
     useEffect(() => {
         if (claimTokenSuccess) {
             setNewTicket(true);
-            setAccInWinners((d) => ({
-                error: "",
-                loading: true,
-                ok: false,
-                data: d.data,
-            }));
             checkUserClaimed();
         }
         if (transactionHash) {
@@ -455,7 +308,7 @@ const MysteryBox = ({ id, ...props }: any) => {
         poolId: infoTicket?.id,
         purchasableCurrency: String(infoTicket.accept_currency).toUpperCase(),
         amount: `0x${(
-            numTicketBuy * (+infoTicket.ether_conversion_rate || 0)
+            numBoxBuy * (+infoTicket.ether_conversion_rate || 0)
         ).toString(16)}`,
         isClaimable: infoTicket.pool_type === "claimable",
         networkAvailable: infoTicket.network_available,
@@ -469,7 +322,7 @@ const MysteryBox = ({ id, ...props }: any) => {
         }
         if (tokenDepositTransaction) {
             setOpenModalTx(true);
-            setNumTicketBuy(0);
+            setNumBoxBuy(0);
         }
     }, [tokenDepositSuccess, tokenDepositTransaction]);
 
@@ -549,7 +402,7 @@ const MysteryBox = ({ id, ...props }: any) => {
             if (connectedAccount)
                 retrieveUserPurchased(connectedAccount, infoTicket.campaign_hash)
                     .then((ticket) => {
-                        setTicketBought(+ticket || 0);
+                        setBoxBought(+ticket || 0);
                         setNewBalance(false);
                     })
                     .catch((err) => {
@@ -562,22 +415,6 @@ const MysteryBox = ({ id, ...props }: any) => {
         return +tokenAllowance > 0;
     };
 
-    const onClaimTicket = async () => {
-        if (!isKYC || isNotClaim(userClaimed, isAccInWinners.data?.lottery_ticket) || lockWhenClaiming) return;
-        setLockWhenClaiming(true);
-        await claimToken();
-    };
-    const onBuyTicket = async () => {
-        if (!isKYC) return;
-        try {
-            if (numTicketBuy > 0) {
-                await deposit();
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
     const getMaxTicketBuy = (boughtTicket: number, maxTicket: number = 0) => {
         if (boughtTicket >= maxTicket) return 0;
         return maxTicket - boughtTicket;
@@ -587,10 +424,8 @@ const MysteryBox = ({ id, ...props }: any) => {
     const onApplyWhitelist = async () => {
         setApplyingWhitelist(true);
         const baseRequest = new BaseRequest()
-        const response = await baseRequest.post(apiRoute(`/whitelist-apply/${infoTicket.id}`), {
+        const response = await baseRequest.post(`/pool/${infoTicket.id}/whitelist-apply-box`, {
             wallet_address: connectedAccount,
-            user_twitter: 'nu',
-            user_telegram: 'd',
         }) as any
         const resObj = await response.json()
         setApplyingWhitelist(false)
@@ -606,19 +441,32 @@ const MysteryBox = ({ id, ...props }: any) => {
     const { data: boughtBoxes = {} as any } = useFetchV1<boolean>(`/pool/${infoTicket?.id}/nft-order?wallet_address=${connectedAccount}`, !!(connectedAccount && 'id' in infoTicket) && recallBoughtBox);
     useEffect(() => {
         if (boughtBoxes && 'amount' in boughtBoxes) {
+            setMaxBoxCanBuy(boughtBoxes.amount);
             setRecallBoughtBox(false);
         }
     }, [boughtBoxes]);
 
     const { data: alreadyJoinPool, loading: loadingJoinpool } = useFetchV1<boolean>(`/user/check-join-campaign/${infoTicket?.id}?wallet_address=${connectedAccount}`, !!(connectedAccount && 'id' in infoTicket));
     const { joinPool, poolJoinLoading, joinPoolSuccess } = usePoolJoinAction({ poolId: infoTicket?.id });
-
+    useEffect(() => {
+        if (joinPoolSuccess) {
+            setApplyingWhitelist(false);
+        }
+    }, [joinPoolSuccess])
     const [openModalOrderBox, setOpenModalOrderBox] = useState(false);
     const onShowModalOrderBox = () => {
         setOpenModalOrderBox(true);
     }
     const onCloseModalOrderBox = useCallback(() => {
         setOpenModalOrderBox(false);
+    }, []);
+
+    const [openModalConfirmBuyBox, setOpenModalConfirmBuyBox] = useState(false);
+    const onShowModalConfirmBuyBox = () => {
+        setOpenModalConfirmBuyBox(true);
+    }
+    const onCloseModalConfirmBuyBox = useCallback(() => {
+        setOpenModalConfirmBuyBox(false);
     }, []);
 
     const { orderBox, buyBoxLoading, statusBuyBox } = useOrderBox({ poolId: infoTicket.id, });
@@ -633,8 +481,11 @@ const MysteryBox = ({ id, ...props }: any) => {
         orderBox(numberBox)
     }, [infoTicket, connectedAccount]);
 
-    const [idSelectedType, onSelectType] = useState(-1);
-
+    const onBuyBox = useCallback((capcha: string) => {
+        console.log('capcha', capcha);
+        dispatch(alertSuccess("Buy successfully!"));
+        onCloseModalConfirmBuyBox();
+    }, []);
 
     return (
         loadingTicket ? <div className={styles.loader} style={{ marginTop: 70 }}>
@@ -651,6 +502,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                     networkName={infoTicket?.network_available}
                 />
                 <ModalOrderBox open={openModalOrderBox} onClose={onCloseModalOrderBox} onConfirm={onOrderBox} isLoadingButton={buyBoxLoading} />
+                <ModalConfirmBuyBox open={openModalConfirmBuyBox} onClose={onCloseModalConfirmBuyBox} onConfirm={onBuyBox} infoBox={infoTicket} isLoadingButton={buyBoxLoading} amount={numBoxBuy} />
                 <div className={styles.content}>
 
                     {
@@ -659,13 +511,8 @@ const MysteryBox = ({ id, ...props }: any) => {
                         </WrapperAlert>
                     }
                     {
-                        (!isAccInWinners.loading && connectedAccount) && (isAccInWinners.ok
-                            ? <WrapperAlert type="info">
-                                The whitelist winners are out! Congratulations on your&nbsp;
-                                <span style={{ color: '#ff673e' }}>{numberWithCommas(`${maxCanBuyOrClaim}`)} </span>
-                                allocation for {infoTicket?.title}. {' '}
-                                You can view more the list of winners at winners tab.
-                            </WrapperAlert>
+                        (!loadingJoinpool && connectedAccount) && (alreadyJoinPool
+                            ? null
                             : <WrapperAlert type="error"> Sorry, you have not been chosen as whitelist winner. </WrapperAlert>)
                     }
                     {!isKYC && !checkingKyc && connectedAccount && (
@@ -681,7 +528,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                 <div className="items">
                                     <div className="item">
                                         <label className="label">Registered Users</label>
-                                        <h4 className="value">{numberWithCommas(infoTicket.totalRegistered)}</h4>
+                                        <h4 className="value">{numberWithCommas(infoTicket.totalRegistered || 0)}</h4>
                                     </div>
                                     <div className="item">
                                         <label className="label">Ordered Boxes</label>
@@ -698,8 +545,24 @@ const MysteryBox = ({ id, ...props }: any) => {
                                 </div>
                             </div>
                             <div className={styles.card}>
-                                <div className={styles.cardImg}>
-                                    <Image src={infoTicket.banner} defaultSrc={ticketImg} />
+                                <div className={clsx(styles.cardImg, mysteryStyles.cardImg)}>
+                                    {isImageFile(boxTypeSelected.banner) && <Image src={boxTypeSelected.banner} />}
+                                    {isVideoFile(boxTypeSelected.banner) && <>
+                                        <div className="wrapperVideo">
+                                            <div className="uncontrol"></div>
+                                            <video
+                                                preload="auto"
+                                                autoPlay
+                                                loop
+                                                muted
+                                            >
+                                                <source src={boxTypeSelected.banner} type="video/mp4" />
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        </div>
+                                    </>
+                                    }
+
                                 </div>
                                 <div className={mysteryStyles.carBodyInfo}>
                                     <div className={mysteryStyles.cardBodyHeader}>
@@ -731,23 +594,40 @@ const MysteryBox = ({ id, ...props }: any) => {
                                             <h4 className="text-uppercase">TYPE</h4>
                                             <div className="box-types">
                                                 {
-                                                    (infoTicket.boxTypesConfig || []).map((t: any) => <div onClick={() => onSelectType(t.id)} className={clsx("box-type", {active: t.id === idSelectedType})}>
+                                                    (infoTicket.boxTypesConfig || []).map((t: any) => <div onClick={() => onSelectBoxType(t)} className={clsx("box-type", { active: t.id === boxTypeSelected.id })}>
                                                         <img src={t.icon} className="icon" alt="" />
                                                         <span>{t.name} x{t.limit}</span>
                                                     </div>)
                                                 }
                                             </div>
                                         </div>
+                                        <AscDescAmountBox
+                                            descMinAmount={descMinAmount}
+                                            descAmount={descAmount}
+                                            ascAmount={ascAmount}
+                                            ascMaxAmount={ascMaxAmount}
+                                            value={numBoxBuy}
+                                            disabledMin={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === 1}
+                                            disabledSub={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === 0}
+                                            disabledAdd={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
+                                            disabledMax={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
+                                        />
                                         {
                                             (!loadingJoinpool && !alreadyJoinPool && countdown.isWhitelist) &&
-                                            <ButtonGreen onClick={onApplyWhitelist} isLoading={isApplyingWhitelist} disabled={alreadyJoinPool || poolJoinLoading || joinPoolSuccess} className="text-transform-unset w-full">
+                                            <ButtonGreen onClick={onApplyWhitelist} isLoading={isApplyingWhitelist} disabled={alreadyJoinPool || poolJoinLoading || joinPoolSuccess || isApplyingWhitelist} className="text-transform-unset w-full">
                                                 {(alreadyJoinPool || joinPoolSuccess) ? 'Applied Whitelist' : 'Apply Whitelist'}
                                             </ButtonGreen>
                                         }
                                         {
-                                            (!loadingJoinpool && alreadyJoinPool && countdown.isOrder) && 
-                                            <ButtonGreen onClick={onShowModalOrderBox} className="text-transform-unset w-full">
+                                            (!loadingJoinpool && (alreadyJoinPool || joinPoolSuccess)) && countdown.isWhitelist &&
+                                            <ButtonGreen onClick={(alreadyJoinPool || joinPoolSuccess) ? onShowModalOrderBox : undefined} className="text-transform-unset w-full">
                                                 Order Box
+                                            </ButtonGreen>
+                                        }
+                                        {
+                                            (!loadingJoinpool && (alreadyJoinPool || joinPoolSuccess)) && countdown.isBuy &&
+                                            <ButtonGreen disabled={+numBoxBuy < 1} onClick={(alreadyJoinPool || joinPoolSuccess) ? onShowModalConfirmBuyBox : undefined} className="text-transform-unset w-full">
+                                                Buy Now
                                             </ButtonGreen>
                                         }
 
@@ -757,7 +637,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                         </div>
                     </div>
                     <div className={styles.displayContent}>
-                        <AboutMysteryBox info={infoTicket} />
+                        <AboutMysteryBox info={infoTicket} timelines={timelines} />
                     </div>
                 </div>
             </>

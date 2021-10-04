@@ -680,13 +680,17 @@ export const useAboutStyles = makeStyles((theme) => ({
   wrapperBoxTimeLine: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, 220px)',
-    gridAutoRows: 'auto',
+    gridAutoRows: 'minmax(max-content, 1fr)',
     placeContent: 'center',
     '& .box': {
-      borderRight: '1px solid rgba(255, 255, 255, 0.2)',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      // borderRight: 'unset',
       padding: '20px',
       textAlign: 'center',
       background: '#000000',
+      // '&:last-child': {
+      //   borderRight: '1px solid rgba(255, 255, 255, 0.2)',
+      // },
       '&.active': {
         borderRadius: '4px',
         background: '#72F34B',
@@ -740,7 +744,7 @@ export const useAboutStyles = makeStyles((theme) => ({
 
     },
     '& .box:first-child': {
-      borderRight: 'unset',
+      // borderRight: 'unset',
       borderTopLeftRadius: '4px',
       borderBottomLeftRadius: '4px',
     },
@@ -754,7 +758,7 @@ export const useAboutStyles = makeStyles((theme) => ({
   wrapperBox: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, 190px)',
-    gridAutoRows: 'auto',
+    gridAutoRows: 'minmax(max-content, 1fr)',
     placeContent: 'center',
     gap: '12px',
     '& .box': {
@@ -812,6 +816,7 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
     overflow: 'hidden',
+    marginTop: '10px',
     [theme.breakpoints.down('sm')]: {
       gridTemplateColumns: '1fr',
     },
@@ -1030,5 +1035,28 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
       color: '#fff',
       display: 'block',
     }
+  },
+  cardImg: {
+
+    '& .wrapperVideo': {
+      position: 'relative',
+      height: '379px',
+      '& .uncontrol': {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1000,
+        display: 'block',
+        background: 'transparent',
+      },
+
+      '& video': {
+        width: '100%',
+        height: '100%',
+      }
+    },
+
   }
 }));

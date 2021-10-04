@@ -29,6 +29,7 @@ import { isBidorStake } from "./utils";
 import { convertTimeToStringFormat } from "../../utils/convertDate";
 import { boxes, timelines } from "./data";
 import clsx from 'clsx';
+import { TimelineType } from "./types";
 const shareIcon = "/images/icons/share.svg";
 const telegramIcon = "/images/icons/telegram-1.svg";
 const twitterIcon = "/images/icons/twitter-1.svg";
@@ -120,7 +121,7 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
   }, [info, connectedAccount])
 
   useEffect(() => {
-    if (winner.data || winner.top) {
+    if (winner?.data || winner?.top) {
       setIsGetWinner(false);
     }
   }, [winner]);
@@ -133,7 +134,7 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
   }, [props.recallCount, cachedRecallCount, isGetWinner]);
 
   useEffect(() => {
-    if (!isTicketBid && winner.data) {
+    if (!isTicketBid && winner?.data) {
       setPagination({ total: +winner.total, list: winner.data })
     }
   }, [winner, isTicketBid])
@@ -310,7 +311,7 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
 
 export default React.memo(AboutTicket);
 
-export const AboutMysteryBox = ({ info = {}, connectedAccount, token, ...props }: Props) => {
+export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines = {} as {[k: number]: TimelineType}, ...props }: Props) => {
   const classes = useAboutStyles();
   const [tabCurrent, setTab] = React.useState(props.defaultTab || 0);
   const theme = useTheme();
@@ -368,11 +369,11 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, ...props }
             label={"Timeline"}
             {...a11yProps(1)}
           />
-          <Tab
+          {/* <Tab
             className={clsx(classes.tabName, { active: tabCurrent === 3 })}
             label={"Collection (20)"}
             {...a11yProps(1)}
-          />
+          /> */}
         </AntTabs>
       </AppBar>
       <TabPanel value={tabCurrent} index={0}>
@@ -427,10 +428,10 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, ...props }
       <TabPanel value={tabCurrent} index={2}>
         <div className={classes.wrapperBoxTimeLine}>
           {
-            timelines.map((t) => <div key={t.step} className={clsx("box", { active: t.step === 1 })}>
-              <div className="step"><span>{formatNumber(t.step, 2)}</span></div>
-              <div className="title">{t.title}</div>
-              <div className="desc">{t.desc}</div>
+            (Object.values(timelines) as TimelineType[]).map((timeline, idx: number) => <div key={idx} className={clsx("box", { active: timeline.current })}>
+              <div className="step"><span>{formatNumber(idx + 1, 2)}</span></div>
+              <div className="title">{timeline.title}</div>
+              <div className="desc">{timeline.desc}</div>
             </div>)
           }
         </div>
@@ -438,7 +439,7 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, ...props }
       <TabPanel value={tabCurrent} index={3}>
         <div className={classes.wrapperBox}>
           {
-            boxes.map((b, id) => <div key={id} className={clsx("box", {active: id === 0})}>
+            boxes.map((b, id) => <div key={id} className={clsx("box", { active: id === 0 })}>
               <div className="img-box">
                 <img src={b.icon} alt="" />
               </div>

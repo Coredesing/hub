@@ -9,7 +9,7 @@ class LegendSnapshotService {
     try {
       let data = await LegendSnapshotModel.query()
         .select('wallet_address', 'campaign_id', 'amount', 'snapshot_at')
-        .orderBy('snapshot_at', 'desc')
+        .orderBy('snapshot_at', 'asc')
         .orderBy('campaign_id', 'desc')
         .orderBy('amount', 'desc')
         .limit(param.limit || DEFAULT_LIMIT)

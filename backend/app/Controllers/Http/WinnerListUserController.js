@@ -4,6 +4,7 @@ const Redis = use('Redis');
 const Const = use('App/Common/Const');
 const HelperUtils = use('App/Common/HelperUtils');
 const RedisUtils = use('App/Common/RedisUtils');
+const RedisWinnerUtils = use('App/Common/RedisWinnerUtils');
 
 const WinnerListService = use('App/Services/WinnerListUserService');
 const ReservedListService = use('App/Services/ReservedListService');
@@ -18,6 +19,7 @@ class WinnerListUserController {
     const campaign_id = request.params.campaignId;
     const page = request.input('page');
     const pageSize = request.input('limit') ? request.input('limit') : 10;
+    const searchTerm = request.input('search_term') || '';
     try {
       let campaign = null;
       // Try get Campaign detail from Redis Cache
@@ -43,11 +45,21 @@ class WinnerListUserController {
         'campaign_id': campaign_id,
         'page': page,
         'pageSize': pageSize,
-        'search_term': request.input('search_term') || '',
+        'search_term': searchTerm,
       };
+
+      if (page < 2 && searchTerm === '' && await RedisWinnerUtils.checkExistRedisPoolWinners(campaign_id, page)) {
+        const data = JSON.parse(await RedisWinnerUtils.getRedisPoolWinners(campaign_id, page))
+        return HelperUtils.responseSuccess(data);
+      }
+
       const winnerListService = new WinnerListService();
       // get winner list
-      const winners = await winnerListService.findWinnerListUser(filterParams);
+      let winners = await winnerListService.findWinnerListUser(filterParams);
+      winners = JSON.parse(JSON.stringify(winners))
+      if (page < 2 && searchTerm === '') {
+        RedisWinnerUtils.setRedisPoolWinners(campaign_id, page, winners)
+      }
 
       return HelperUtils.responseSuccess(winners);
     } catch (e) {
@@ -286,27 +298,23 @@ class WinnerListUserController {
 
   async checkPickedWinner({request, params}) {
     try {
-      console.log('[checkPickedWinner] - Params: ', params);
       const campaign_id = params.campaignId;
       const winnerService = new WinnerListService();
 
       // Check Public Winner Status
       const poolService = new PoolService;
       const poolExist = await poolService.getPoolById(campaign_id);
-      console.log('[checkPickedWinner] - poolExist.public_winner_status:', (poolExist && poolExist.public_winner_status));
-      if (!poolExist || (poolExist.public_winner_status == Const.PUBLIC_WINNER_STATUS.PRIVATE)) {
+      if (!poolExist || (poolExist.public_winner_status === Const.PUBLIC_WINNER_STATUS.PRIVATE)) {
         return HelperUtils.responseSuccess(false, 'The campaign has not yet chosen a winner');
       }
 
       // TODO: Add to Cache
       let existRecord = await winnerService.buildQueryBuilder({ campaign_id }).first();
       if (existRecord) {
-        console.log('[checkPickedWinner] - Exist Winner: ', JSON.stringify(existRecord));
-        return HelperUtils.responseSuccess(true, 'Campaign picked Winner');
+        return HelperUtils.responseSuccess(true, 'Success');
       }
-      return HelperUtils.responseSuccess(false, 'The campaign has not yet chosen a winner');
+      return HelperUtils.responseSuccess(false, 'winners not found');
     } catch (e) {
-      console.log('[checkPickedWinner] - ERROR: ', e);
       return HelperUtils.responseErrorInternal();
     }
   }

@@ -35,6 +35,7 @@ class PoolController {
       'claim_policy',
       'forbidden_countries',
       'freeBuyTimeSetting',
+      'seriesContentConfig', 'boxTypesConfig',
     ]);
 
     const tokenInfo = inputParams.tokenInfo;
@@ -100,6 +101,9 @@ class PoolController {
       claimConfigs = poolService.addDefaultClaimConfig(claimConfigs, campaign.finish_time);
       console.log('[createPool] - Update Claim Config - claimConfigs', claimConfigs);
       await poolService.updateClaimConfig(campaign, claimConfigs);
+
+      await poolService.updateSeriesContentConfig(campaign, inputParams.seriesContentConfig || [])
+      await poolService.updateBoxTypesConfig(campaign, inputParams.boxTypesConfig || [])
 
       // Update Tier Config
       console.log('[createPool] - Update Tier Config - inputParams.tier_configuration', inputParams.tier_configuration);
@@ -170,6 +174,8 @@ class PoolController {
       'claim_policy',
       'forbidden_countries',
       'freeBuyTimeSetting',
+      'seriesContentConfig',
+      'boxTypesConfig',
     ]);
 
     const tokenInfo = inputParams.tokenInfo;
@@ -230,6 +236,9 @@ class PoolController {
 
       // Update Claim Config
       await poolService.updateClaimConfig(campaign, inputParams.claim_configuration || []);
+
+      await poolService.updateSeriesContentConfig(campaign, inputParams.seriesContentConfig || [])
+      await poolService.updateBoxTypesConfig(campaign, inputParams.boxTypesConfig || [])
 
       // Update Tier Config
       if (!campaign.is_deploy) {
@@ -388,6 +397,8 @@ class PoolController {
         .with('whitelistBannerSetting')
         .with('socialNetworkSetting')
         .with('freeBuyTimeSetting')
+        .with('seriesContentConfig')
+        .with('boxTypesConfig')
         .where('id', poolId)
         .first();
       if (!pool) {
@@ -444,8 +455,11 @@ class PoolController {
         .with('socialNetworkSetting')
         .with('socialRequirement')
         .with('freeBuyTimeSetting')
+        .with('seriesContentConfig')
+        .with('boxTypesConfig')
         .where('id', poolId)
         .first();
+
       if (!pool) {
         return HelperUtils.responseNotFound('Pool not found');
       }
@@ -502,6 +516,9 @@ class PoolController {
 
         // Free Buy Time Setting
         'freeBuyTimeSetting',
+
+        'seriesContentConfig',
+        'boxTypesConfig',
       ]);
 
       if (publicPool && publicPool.token_type === CONST.TOKEN_TYPE.MYSTERY_BOX) {

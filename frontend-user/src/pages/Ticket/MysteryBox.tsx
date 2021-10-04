@@ -119,7 +119,7 @@ const MysteryBox = ({ id, ...props }: any) => {
 
             const timeLinesInfo: { [k: string]: any } = {
                 1: {
-                    title: 'UPCOMMING',
+                    title: 'UPCOMING',
                     desc: `Whitelist will be opened on ${convertTimeToStringFormat(new Date(timeLine.startJoinPooltime))}.`
                 },
                 2: {
@@ -613,7 +613,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                             disabledMax={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
                                         />
                                         {
-                                            (!loadingJoinpool && !alreadyJoinPool && countdown.isWhitelist) &&
+                                            (!loadingJoinpool && !alreadyJoinPool && countdown.isWhitelist && !joinPoolSuccess) &&
                                             <ButtonGreen onClick={onApplyWhitelist} isLoading={isApplyingWhitelist} disabled={alreadyJoinPool || poolJoinLoading || joinPoolSuccess || isApplyingWhitelist} className="text-transform-unset w-full">
                                                 {(alreadyJoinPool || joinPoolSuccess) ? 'Applied Whitelist' : 'Apply Whitelist'}
                                             </ButtonGreen>

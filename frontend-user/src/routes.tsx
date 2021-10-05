@@ -44,6 +44,7 @@ import Home from './pages/Home';
 import TicketSale from './pages/TicketSale';
 import StakingPools from './pages/StakingPools';
 import MaintainPage from './pages/MaintainPage';
+import MysteryBoxes from './pages/MysteryBoxes';
 
 /**
  * Main App routes.
@@ -155,6 +156,7 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                     {/* <Route path={'/coming-soon'} component={ComingSoon} /> */}
                     {/* <Route path={'/home'} component={Home} /> */}
                     <Route exact path={'/pools/:type'} component={TicketSale} />
+                    <Route exact path={'/mystery-boxes'} component={MysteryBoxes} />
                     <Route exact path={'/'} component={Home} />
                     <Route exact path={'/maintain'} component={MaintainPage} />
                     <Route component={NotFoundPage} />

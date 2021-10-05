@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import CustomModal from '@base-components/CustomModal';
-import { ButtonGreen } from '@base-components/Buttons';
+import { ButtonBase } from '@base-components/Buttons';
 import { FormInputNumber } from '@base-components/FormInputNumber';
 import { makeStyles } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
@@ -48,9 +48,9 @@ const ModalOrderBox = ({ open, isLoadingButton, ...props }: Props) => {
             <div className={styles.wrapperContent}>
                 <h3>Number of Boxes you want to buy</h3>
                 <FormInputNumber isInteger isPositive allowZero value={numberBox} onChange={onChangeNumberBox} className="input" />
-                <ButtonGreen onClick={onConfirm} className="w-full text-transform-unset" isLoading={isLoadingButton} disabled={isLoadingButton}>
+                <ButtonBase color="green" onClick={onConfirm} className="w-full text-transform-unset" isLoading={isLoadingButton} disabled={isLoadingButton}>
                     Confirm
-                </ButtonGreen>
+                </ButtonBase>
             </div>
         </CustomModal>
     )

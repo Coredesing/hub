@@ -35,7 +35,7 @@ import { ButtonApprove } from "./components/ButtonApprove";
 import { ButtonClaim } from "./components/ButtonClaim";
 import Image from "../../components/Base/Image";
 import usePoolJoinAction from './hooks/usePoolJoinAction';
-import { ButtonGreen } from "@base-components/Buttons";
+import { ButtonBase } from "@base-components/Buttons";
 import CountDownTimeV1, { CountDownTimeType as CountDownTimeTypeV1 } from "@base-components/CountDownTime";
 import { BaseRequest } from "../../request/Request";
 import ModalOrderBox from './components/ModalOrderBox';
@@ -614,21 +614,21 @@ const MysteryBox = ({ id, ...props }: any) => {
                                         />
                                         {
                                             (!loadingJoinpool && !alreadyJoinPool && countdown.isWhitelist && !joinPoolSuccess) &&
-                                            <ButtonGreen onClick={onApplyWhitelist} isLoading={isApplyingWhitelist} disabled={alreadyJoinPool || poolJoinLoading || joinPoolSuccess || isApplyingWhitelist} className="text-transform-unset w-full">
+                                            <ButtonBase color="green" onClick={onApplyWhitelist} isLoading={isApplyingWhitelist} disabled={alreadyJoinPool || poolJoinLoading || joinPoolSuccess || isApplyingWhitelist} className="text-transform-unset w-full">
                                                 {(alreadyJoinPool || joinPoolSuccess) ? 'Applied Whitelist' : 'Apply Whitelist'}
-                                            </ButtonGreen>
+                                            </ButtonBase>
                                         }
                                         {
                                             (!loadingJoinpool && (alreadyJoinPool || joinPoolSuccess)) && countdown.isWhitelist &&
-                                            <ButtonGreen onClick={(alreadyJoinPool || joinPoolSuccess) ? onShowModalOrderBox : undefined} className="text-transform-unset w-full">
+                                            <ButtonBase color="green" onClick={(alreadyJoinPool || joinPoolSuccess) ? onShowModalOrderBox : undefined} className="text-transform-unset w-full">
                                                 Order Box
-                                            </ButtonGreen>
+                                            </ButtonBase>
                                         }
                                         {
                                             (!loadingJoinpool && (alreadyJoinPool || joinPoolSuccess)) && countdown.isBuy &&
-                                            <ButtonGreen disabled={+numBoxBuy < 1} onClick={(alreadyJoinPool || joinPoolSuccess) ? onShowModalConfirmBuyBox : undefined} className="text-transform-unset w-full">
+                                            <ButtonBase color="green" disabled={+numBoxBuy < 1} onClick={(alreadyJoinPool || joinPoolSuccess) ? onShowModalConfirmBuyBox : undefined} className="text-transform-unset w-full">
                                                 Buy Now
-                                            </ButtonGreen>
+                                            </ButtonBase>
                                         }
 
                                     </div>

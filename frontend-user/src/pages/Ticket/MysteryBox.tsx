@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import useStyles, { useMysteyBoxStyles } from "./style";
 import { AboutMysteryBox } from "./About";
-import { apiRoute, getApproveToken, getCurrencyByNetwork, getDiffTime, isImageFile, isVideoFile } from "../../utils";
+import { apiRoute, getApproveToken, getCurrencyByNetwork, getDiffTime, getTimelineOfPool, isImageFile, isVideoFile } from "../../utils";
 import { Progress } from "@base-components/Progress";
 import { useFetchV1 } from "../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
@@ -129,15 +129,6 @@ const MysteryBox = ({ id, ...props }: any) => {
 
     const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, [k: string]: any }>({ date1: 0, date2: 0, title: '' });
     const [timelines, setTimelines] = useState<TimelineType | {}>({});
-
-    const getTimelineOfPool = (pool: { [k: string]: any }) => {
-        const startJoinPooltime = +pool.start_join_pool_time * 1000;
-        const endJoinPoolTime = +dataTicket.end_join_pool_time * 1000;
-        const startBuyTime = +dataTicket.start_time * 1000;
-        const freeBuyTime = +dataTicket.freeBuyTimeSetting?.start_buy_time * 1000 || null;
-        const finishTime = +dataTicket.finish_time * 1000;
-        return { startJoinPooltime, endJoinPoolTime, startBuyTime, freeBuyTime, finishTime }
-    }
 
     const onSetCountdown = useCallback(() => {
         if (dataTicket) {

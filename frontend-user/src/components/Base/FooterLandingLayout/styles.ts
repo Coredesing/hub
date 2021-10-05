@@ -222,6 +222,7 @@ const useStyles = makeStyles((theme) => {
       }
     },
     btnToTop: {
+      zIndex: 1000,
       position: 'fixed',
       right: '30px',
       bottom: '70px',

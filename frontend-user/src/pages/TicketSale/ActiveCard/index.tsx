@@ -41,6 +41,7 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
         setFinishedTime(false);
         setIsBuy(true);
         setTimeEnd(getDiffTime(finishTime, Date.now() >= openTime ? Date.now() : openTime));
+        // setTimeEnd({days: 0, hours: 0, minutes: 0, seconds: 0})
       }
     }
   }, [card]);
@@ -135,9 +136,26 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
         {
           /*isBuy &&*/ <div className={clsx(styles.cardBodyItem, styles.buyBox)} style={{ marginTop: '16px' }}>
             <div className={styles.timeEnd}>
-              <span className={clsx(styles.text, 'sp1')}>END IN</span>
+              <span className={clsx(styles.text, 'sp1')} style={{marginTop: 2}}>END IN</span>
               <span className={styles.timeEnd}>
-                {formatNumber(endTime.days)}d : {formatNumber(endTime.hours)}h : {formatNumber(endTime.minutes)}m : {formatNumber(endTime.seconds)}s
+                  <span>&nbsp;</span>
+                  {endTime.days > 1 && <span>{formatNumber(endTime.days)} days</span>}
+                  {endTime.days === 1 && <span>{formatNumber(endTime.days)} day</span>}
+                  {endTime.days < 1 && endTime.hours >= 1 && (
+                    <span>
+                      <span>{formatNumber(endTime.hours)}h</span>
+                      {endTime.minutes >= 1 && <span>&nbsp;:&nbsp;</span>}
+                    </span>
+                  )}
+                  {endTime.days < 1 && endTime.minutes >= 1 && (
+                    <span>
+                      {<span>{formatNumber(endTime.minutes)}m</span>}
+                      {endTime.hours < 1 && <span>&nbsp;:&nbsp;</span>}
+                    </span>
+                  )}
+                  {endTime.days < 1 && endTime.hours < 1 && (
+                    <span>{formatNumber(endTime.seconds)}s</span>
+                  )}
               </span>
             </div>
             <Link href={`/#/${getRoute(card.token_type)}/${card.id}`} className={clsx(styles.btnDetail, 'not-approved')}>

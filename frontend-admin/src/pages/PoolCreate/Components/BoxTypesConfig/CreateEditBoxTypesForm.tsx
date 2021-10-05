@@ -30,6 +30,7 @@ function CreateEditBoxTypesForm(props: any) {
       limit: data.limit,
       icon: data.icon,
       banner: data.banner,
+      image: data.image,
     };
     handleCreateUpdateData && handleCreateUpdateData(responseData);
   };
@@ -136,6 +137,19 @@ function CreateEditBoxTypesForm(props: any) {
                       renderError(errors, 'required')
                   }
               </p>
+          </div>
+
+          <div className={classes.formControl}>
+              <label className={classes.formControlLabel}>Loading Image</label>
+              <div>
+                  <TextFieldWithValidate
+                      register={register}
+                      errors={errors}
+                      initValue={editData.image}
+                      controlName={'image'}
+                      validateRule={{}}
+                  />
+              </div>
           </div>
       </ConfirmDialog>
 

@@ -23,6 +23,7 @@ export type CountDownTimeType = DHMSType | CountDonwRanges
 type Props = {
     time: CountDownTimeType,
     onFinish?: Function,
+    [k: string]: any,
 }
 type PropsV2 = Props & {
     title?: string,
@@ -70,7 +71,7 @@ export const CountDownTimeV1 = (props: Props) => {
     }, [isFinish, props]);
 
     return (
-        <div className={styles.cardBodyClock}>
+        <div className={clsx(styles.cardBodyClock, props.className)}>
             <div className="times">
                 <span className="time">
                     <span className="number">
@@ -156,7 +157,7 @@ export const CountDownTimeV2 = (props: PropsV2) => {
     return <div className={clsx(styles.boxTimeV2, props.dislayType || 'vertical')}>
         <div className={styles.boxTitleTimeV2}>
             <img src='/images/icons/bright.svg' alt="" />
-            <span className={clsx(styles.text, 'sp1 text-uppercase')}>{props.title}</span>
+            <span className={clsx(styles.text, 'sp1 text-uppercase')} style={{marginTop: 2, marginLeft: 5}}>{props.title}</span>
         </div>
         <span className={styles.timeEnd}>
             {props.isDislayTime && (

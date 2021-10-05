@@ -1,262 +1,281 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:regular,bold,italic&subset=latin,latin-ext');
-
 @font-face {
-  font-family: 'Roboto-Regular';
-  src: local('Roboto-Regular'), url(./styles/fonts/Roboto-Regular.woff) format('woff');
+    font-family: 'Roboto-Regular';
+    src: local('Roboto-Regular'), url(./styles/fonts/Roboto-Regular.woff) format('woff');
 }
 
 @font-face {
-  font-family: 'Roboto-Bold';
-  src: local('Roboto-Bold'), url(./styles/fonts/Roboto-Bold.woff) format('woff');
+    font-family: 'Roboto-Bold';
+    src: local('Roboto-Bold'), url(./styles/fonts/Roboto-Bold.woff) format('woff');
 }
 
 @font-face {
-  font-family: 'Roboto-Italic';
-  src: local('Roboto-Italic'), url(./styles/fonts/Roboto-Italic.woff) format('woff');
+    font-family: 'Roboto-Italic';
+    src: local('Roboto-Italic'), url(./styles/fonts/Roboto-Italic.woff) format('woff');
 }
 
-
 @font-face {
-  font-family: 'Roboto-Medium';
-  src: local('Roboto-Medium'), url(./styles/fonts/Roboto-Medium.woff) format('woff');
+    font-family: 'Roboto-Medium';
+    src: local('Roboto-Medium'), url(./styles/fonts/Roboto-Medium.woff) format('woff');
 }
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
-
 @font-face {
-  font-family: 'icons';
-  src:  url('./styles/fonts/icons/icons.eot?hoymjw');
-  src:  url('./styles/fonts/icons/icons.eot?hoymjw#iefix') format('embedded-opentype'),
-    url('./styles/fonts/icons/icons.ttf?hoymjw') format('truetype'),
-    url('./styles/fonts/icons/icons.woff?hoymjw') format('woff'),
-    url('./styles/fonts/icons/icons.svg?hoymjw#icons') format('svg');
-  font-weight: normal;
-  font-style: normal;
-  font-display: block;
-}
-@font-face {
-  font-family: 'Hanken Grotesk';
-  src: url("./styles/fonts/HKGrotesk-Light.ttf") format("truetype");
-  font-weight: 'normal';
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Space Ranger';
-  src: url("./styles/fonts/spacerangerbold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
+    font-family: 'icons';
+    src: url('./styles/fonts/icons/icons.eot?hoymjw');
+    src: url('./styles/fonts/icons/icons.eot?hoymjw#iefix') format('embedded-opentype'), url('./styles/fonts/icons/icons.ttf?hoymjw') format('truetype'), url('./styles/fonts/icons/icons.woff?hoymjw') format('woff'), url('./styles/fonts/icons/icons.svg?hoymjw#icons') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
 }
 
 @font-face {
-  font-family: 'Space Ranger';
-  src: url("./styles/fonts/spacerangerout.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
+    font-family: 'Hanken Grotesk';
+    src: url("./styles/fonts/HKGrotesk-Light.ttf") format("truetype");
+    font-weight: 'normal';
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Firs Neue';
-  src: url("./styles/fonts/TTFirsNeue-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
+    font-family: 'Space Ranger';
+    src: url("./styles/fonts/spacerangerbold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Firs Neue';
-  src: url("./styles/fonts/TTFirsNeue-Light.ttf") format("truetype");
-  font-weight: 300;
-  font-style: normal;
+    font-family: 'Space Ranger';
+    src: url("./styles/fonts/spacerangerout.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Firs Neue';
-  src: url("./styles/fonts/TTFirsNeue-ExtraLight.ttf") format("truetype");
-  font-weight: 200;
-  font-style: normal;
-}
-
-
-@font-face {
-  font-family: 'Firs Neue';
-  src: url("./styles/fonts/TTFirsNeue-Thin.ttf") format("truetype");
-  font-weight: 100;
-  font-style: normal;
+    font-family: 'Firs Neue';
+    src: url("./styles/fonts/TTFirsNeue-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Firs Neue';
-  src: url("./styles/fonts/TTFirsNeue-Medium.ttf") format("truetype");
-  font-weight: 500;
-  font-style: normal;
+    font-family: 'Firs Neue';
+    src: url("./styles/fonts/TTFirsNeue-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Firs Neue';
-  src: url("./styles/fonts/TTFirsNeue-DemiBold.ttf") format("truetype");
-  font-weight: 600;
-  font-style: normal;
+    font-family: 'Firs Neue';
+    src: url("./styles/fonts/TTFirsNeue-ExtraLight.ttf") format("truetype");
+    font-weight: 200;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Firs Neue';
-  src: url("./styles/fonts/TTFirsNeue-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
+    font-family: 'Firs Neue';
+    src: url("./styles/fonts/TTFirsNeue-Thin.ttf") format("truetype");
+    font-weight: 100;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Firs Neue';
-  src: url("./styles/fonts/TTFirsNeue-ExtraBold.ttf") format("truetype");
-  font-weight: 800;
-  font-style: normal;
+    font-family: 'Firs Neue';
+    src: url("./styles/fonts/TTFirsNeue-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Firs Neue';
-  src: url("./styles/fonts/TTFirsNeue-Black.ttf") format("truetype");
-  font-weight: 900;
-  font-style: normal;
+    font-family: 'Firs Neue';
+    src: url("./styles/fonts/TTFirsNeue-DemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
 }
 
-[class^="custom-icon-"], [class*=" custom-icon-"] {
-  /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'icons' !important;
-  speak: never;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
+@font-face {
+    font-family: 'Firs Neue';
+    src: url("./styles/fonts/TTFirsNeue-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+}
 
-  /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@font-face {
+    font-family: 'Firs Neue';
+    src: url("./styles/fonts/TTFirsNeue-ExtraBold.ttf") format("truetype");
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Firs Neue';
+    src: url("./styles/fonts/TTFirsNeue-Black.ttf") format("truetype");
+    font-weight: 900;
+    font-style: normal;
+}
+
+[class^="custom-icon-"],
+[class*=" custom-icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icons' !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .custom-icon-facebook:before {
-  content: "\e900";
-  color: #9f9f9f;
+    content: "\e900";
+    color: #9f9f9f;
 }
+
 .custom-icon-github:before {
-  content: "\e901";
-  color: #9f9f9f;
+    content: "\e901";
+    color: #9f9f9f;
 }
+
 .custom-icon-telegram:before {
-  content: "\e902";
-  color: #d01f36;
+    content: "\e902";
+    color: #d01f36;
 }
+
 .custom-icon-twitter:before {
-  content: "\e903";
-  color: #9f9f9f;
+    content: "\e903";
+    color: #9f9f9f;
 }
 
 body {
-  margin: 0;
-  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #000000;
-  font-size: 14px;
-  margin: 0px;
+    margin: 0;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #000000;
+    font-size: 14px;
+    margin: 0px;
 }
 
 main {
-  background-color: #F7F8FA;
+    background-color: #F7F8FA;
 }
 
 * {
-  margin: 0px;
-  padding: 0px;
-  box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
 }
 
 a,
 a:hover,
 a:active {
-  text-decoration: none;
-  color: #4A4A4A;
+    text-decoration: none;
+    color: #4A4A4A;
 }
 
 .clearfix::after {
-  content: "";
-  clear: both;
-  display: table;
+    content: "";
+    clear: both;
+    display: table;
 }
 
 ol,
 ul {
-  list-style: none;
-  padding: 0px;
-  margin: 0px;
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
 }
 
-input[type=text][disabled], input:disabled {
-  cursor: not-allowed;
+input[type=text][disabled],
+input:disabled {
+    cursor: not-allowed;
 }
 
 .text-danger {
-  color: red;
+    color: red;
 }
 
 .text-center {
-  text-align: center;
+    text-align: center;
 }
 
 .text-uppercase {
-  text-transform: uppercase;
+    text-transform: uppercase;
 }
 
 .text-lowercase {
-  text-transform: lowercase;
+    text-transform: lowercase;
+}
+
+.text-transform-unset {
+    text-transform: unset !important;
 }
 
 input[type=number] {
-  -moz-appearance: textfield,
+    -moz-appearance: textfield,
 }
+
 input::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 button:disabled {
-  /* khong important file commont */
-  /* background-color: #5d5d5d !important; */
-  /* border-color: #5d5d5d !important; */
-  background-color: #5d5d5d;
-  border-color: #5d5d5d;
-  cursor: not-allowed ;
+    /* khong important file commont */
+    /* background-color: #5d5d5d !important; */
+    /* border-color: #5d5d5d !important; */
+    background-color: #5d5d5d;
+    border-color: #5d5d5d;
+    cursor: not-allowed;
 }
 
 .collapse-css-transition {
-  transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .rounded {
-  border-radius: 50%;
+    border-radius: 50%;
 }
 
 body {
-  padding-right: unset !important;
-  overflow: unset !important;
-  overflow-x: hidden !important;
+    padding-right: unset !important;
+    overflow: unset !important;
+    overflow-x: hidden !important;
 }
 
 body::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+    width: 5px;
+    height: 5px;
 }
+
 body::-webkit-scrollbar-track {
-  background: #888;
-  border-radius: 12px;
+    background: #888;
+    border-radius: 12px;
 }
+
 body::-webkit-scrollbar-thumb {
-  background-color: #FFFFFF;
-  border-radius: 12px;
+    background-color: #FFFFFF;
+    border-radius: 12px;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.divider {
+    height: 1px;
+    width: 100%;
+    opacity: 0.2;
+    background: #fff;
+}
+
+.rounded {
+    border-radius: 50%;
 }

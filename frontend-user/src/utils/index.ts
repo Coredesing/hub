@@ -309,3 +309,6 @@ export const calcPercentRate = (input: number, total: number) => {
 
   return `${split[0]}${split[1] ? '.' + split[1].charAt(0) : ''}`;
 };
+
+export const isImageFile = (str: string) => (/\.(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(str);
+export const isVideoFile = (str: string) => (/\.(mp4)$/i).test(str);

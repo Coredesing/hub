@@ -3,12 +3,10 @@ import clsx from 'clsx';
 import { makeStyles } from "@material-ui/core";
 import CircularProgress from '@base-components/CircularProgress';
 const useStyles = makeStyles((theme: any) => ({
-    btnGreen: {
+    btn: {
         outline: 'none',
         border: 'none',
-        background: '#72F34B !important',
         borderRadius: '2px',
-        color: '#000',
         fontWeight: 600,
         fontSize: '16px',
         lineHeight: '28px',
@@ -21,7 +19,19 @@ const useStyles = makeStyles((theme: any) => ({
         marginTop: '16px',
         '&.disabled': {
             opacity: '.5'
-        }
+        },
+        '&.gray': {
+            background: '#727272 !important',
+            color: '#fff',
+        },
+        '&.green': {
+            background: '#72F34B !important',
+            color: '#000',
+        },
+        '&.yellow': {
+            background: '#F3E24B !important',
+            color: '#000',
+        },
     },
 }));
 type Props = {
@@ -29,20 +39,22 @@ type Props = {
     disabled?: boolean,
     children: any,
     isLoading?: boolean,
+    color?: 'gray' | 'green' | 'yellow',
     [k: string]: any
 }
-export const ButtonGreen = ({
+export const ButtonBase = ({
     disabled,
     onClick,
     children,
     className,
     isLoading,
+    color = 'gray',
     ...props }: Props) => {
     const styles = useStyles();
     return (
         <button
             {...props}
-            className={clsx(styles.btnGreen, className, {
+            className={clsx(styles.btn, color, className, {
                 disabled: disabled,
             })}
             onClick={onClick}
@@ -55,3 +67,5 @@ export const ButtonGreen = ({
         </button>
     )
 }
+
+export default React.memo(ButtonBase);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import CustomModal from '@base-components/CustomModal';
-import { ButtonGreen } from '@base-components/Buttons';
+import { ButtonBase } from '@base-components/Buttons';
 import { Recapcha } from '@base-components/Recapcha';
 import { makeStyles, Box } from '@material-ui/core';
 import { formatRoundDown, numberWithCommas } from '@utils/formatNumber';
@@ -76,9 +76,9 @@ const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, ...pr
                 <Box>
                     <Recapcha onChange={onChangeRecapcha} />
                 </Box>
-                <ButtonGreen onClick={onConfirm} className="w-full text-transform-unset" isLoading={isLoadingButton} disabled={isLoadingButton || !isVerified}>
+                <ButtonBase color="green" onClick={onConfirm} className="w-full text-transform-unset" isLoading={isLoadingButton} disabled={isLoadingButton || !isVerified}>
                     Confirm
-                </ButtonGreen>
+                </ButtonBase>
             </div>
         </CustomModal>
     )

@@ -716,6 +716,17 @@ class PoolController {
     }
   }
 
+  async getMysteriousBoxPoolsV3({ request }) {
+    const inputParams = request.all();
+    try {
+      let listData = await (new PoolService).getMysteriousBoxPoolsV3(inputParams);
+      return HelperUtils.responseSuccess(listData);
+    } catch (e) {
+      console.log(e);
+      return HelperUtils.responseErrorInternal('getActivePoolsV3 Fail !!!');
+    }
+  }
+
   async poolStatus({ request, params }) {
     console.log('[poolStatus] - runUpdatePoolStatus: ');
     const poolService = new PoolService;

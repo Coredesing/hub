@@ -188,6 +188,24 @@ class PoolService {
     return pools;
   }
 
+  async getMysteriousBoxPoolsV3(filterParams) {
+    const limit = filterParams.limit ? filterParams.limit : 20;
+    const page = filterParams.page ? filterParams.page : 1;
+    filterParams.limit = limit;
+    filterParams.page = page;
+
+    let pools = await this.buildQueryBuilder(filterParams)
+      .with('campaignClaimConfig')
+      .where(builder => {
+        builder
+          .whereNotIn('campaign_status', [Const.POOL_STATUS.ENDED])
+      })
+      .orderBy('priority', 'DESC')
+      .orderBy('start_time', 'ASC')
+      .paginate(page, limit);
+    return pools;
+  }
+
   async getNextToLaunchPoolsV3(filterParams) {
     const limit = filterParams.limit ? filterParams.limit : 100000;
     const page = filterParams.page ? filterParams.page : 1;

@@ -74,6 +74,7 @@ Route.group(() => {
   Route.get('pools/next-to-launch-pools', 'PoolController.getNextToLaunchPoolsV3');
   Route.get('pools/upcoming-pools', 'PoolController.getUpcomingPoolsV3');
   Route.get('pools/complete-sale-pools', 'PoolController.getCompleteSalePoolsV3');
+  Route.get('pools/mysterious-box', 'PoolController.getMysteriousBoxPoolsV3');
 
   // user
   Route.get('user/profile', 'UserController.profile').middleware(['maskEmailAndWallet']);

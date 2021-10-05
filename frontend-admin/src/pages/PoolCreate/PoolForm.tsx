@@ -16,6 +16,7 @@ import {adminRoute} from "../../utils";
 
 import KycRequired from "./Components/KycRequired";
 import PoolBanner from "./Components/PoolBanner";
+import PoolMiniBanner from "./Components/PoolMiniBanner";
 import TokenAddress from "./Components/TokenAddress";
 import TotalCoinSold from "./Components/TotalCoinSold";
 import TokenLogo from "./Components/TokenLogo";
@@ -151,6 +152,7 @@ function PoolForm(props: any) {
       title: data.title,
       website: data.website,
       banner: data.banner,
+      mini_banner: data.mini_banner ?? '',
       description: data.description,
       process: data.process,
       rule: data.rule ?? '',
@@ -304,6 +306,7 @@ function PoolForm(props: any) {
       title: data.title,
       website: data.website,
       banner: data.banner,
+      mini_baner: data.mini_banner,
       description: data.description,
       process: data.process,
       rule: data.rule ?? '',
@@ -484,6 +487,7 @@ function PoolForm(props: any) {
         title: data.title,
         website: data.website,
         banner: data.banner,
+        mini_banner: data.mini_banner,
         description: data.description,
         process: data.process,
         rule: data.rule ?? '',
@@ -613,6 +617,13 @@ function PoolForm(props: any) {
                 register={register}
                 setValue={setValue}
                 errors={errors}
+              />
+
+              <PoolMiniBanner
+                  poolDetail={poolDetail}
+                  register={register}
+                  setValue={setValue}
+                  errors={errors}
               />
 
               <PoolWebsite

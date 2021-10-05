@@ -37,6 +37,8 @@ const Home = (props: any) => {
   const styles = { ...useStyles(), ...useCardStyles() };
   const theme = useTheme();
   const isMdScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const isSmScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   const {
     data: ticketSales = {} as ResponseData,
     loading: loadingActivePools,
@@ -94,27 +96,30 @@ const Home = (props: any) => {
 
   useEffect(() => {
     if (!loadingcompletePools) {
-      perfomances.map(data => {
-        data.profit = ''
-        if (data.ath === 'N/A' || !data.ath || data.ath.length < 1) {
-          return data
+      perfomances.map((data) => {
+        data.profit = "";
+        if (data.ath === "N/A" || !data.ath || data.ath.length < 1) {
+          return data;
         }
 
-        if (data.price === 'N/A' || !data.price || data.price.length < 1) {
-          return data
+        if (data.price === "N/A" || !data.price || data.price.length < 1) {
+          return data;
         }
-        let profit = ''
+        let profit = "";
 
         try {
-          const floatPrice = parseFloat(data.price[0] === '$' ? data.price.slice(1) : data.price)
-          const floatAth = parseFloat(data.ath[0] === '$' ? data.ath.slice(1) : data.ath)
-          profit = (floatAth / floatPrice).toFixed(1)
-        }
-        catch (e) {}
+          const floatPrice = parseFloat(
+            data.price[0] === "$" ? data.price.slice(1) : data.price
+          );
+          const floatAth = parseFloat(
+            data.ath[0] === "$" ? data.ath.slice(1) : data.ath
+          );
+          profit = (floatAth / floatPrice).toFixed(1);
+        } catch (e) {}
 
-        data.profit = profit
-        return data
-      })
+        data.profit = profit;
+        return data;
+      });
       setListPerfomance(perfomances);
     }
   }, [perfomances, loadingcompletePools]);
@@ -155,10 +160,13 @@ const Home = (props: any) => {
       setFieldSorted({ field, order: "desc" });
     }
   };
-  
+
   return (
-    <DefaultLayout style={{background: '#0A0A0A'}}>
-      <section className={clsx(styles.banner, styles.section)} style={isShowImgBanner ? {paddingTop: '10px'} : {}}>
+    <DefaultLayout style={{ background: "#0A0A0A" }}>
+      <section
+        className={clsx(styles.banner, styles.section)}
+        style={isShowImgBanner ? { paddingTop: "10px" } : {}}
+      >
         {isShowImgBanner && (
           <div className={styles.wrapperImgBanner}>
             <div className={styles.imgBanner}>
@@ -204,60 +212,72 @@ const Home = (props: any) => {
         </div>
       </section>
       {/* <Instruction /> */}
-      {ticketSales?.data?.length && <section className={clsx(styles.ticketSales, styles.section)}>
-        <div className="rectangle gr">
-          <img src="/images/ticket-sale-text.svg" alt="" />
-        </div>
-        <div className={styles.wrapperContent}>
-          <div
-            className={clsx(styles.content, {
-              horizontal: !isMdScreen && !!(ticketSales.data || []).length,
-              vertical: isMdScreen || !(ticketSales.data || []).length,
-            })}
-          >
+      {ticketSales?.data?.length && (
+        <section className={clsx(styles.ticketSales, styles.section)}>
+          <div className="rectangle gr">
+            <img src="/images/ticket-sale-text.svg" alt="" />
+          </div>
+          <div className={styles.wrapperContent}>
             <div
-              className={clsx(styles.contentTitle, {
-                left: !isMdScreen && !!(ticketSales.data || []).length,
-                center: isMdScreen || !(ticketSales.data || []).length,
+              className={clsx(styles.content, {
+                horizontal: !isMdScreen && !!(ticketSales.data || []).length,
+                vertical: isMdScreen || !(ticketSales.data || []).length,
               })}
             >
-              <h3>Ticket Sales</h3>
-              <h5>
-                To view information about other Ticket pools, click the Discover button
-                below.
-              </h5>
-              <Link href="/#/pools/ticket" className={styles.btnDiscover}>
-                Discover
-              </Link>
-            </div>
-            <div className={clsx(styles.cards, styles.cardsTicketSales)}>
-              {(ticketSales.data || []).map((card, id) => (
-                <Card card={card} key={id} title={<h5>{card.title}</h5>} />
-              ))}
+              <div
+                className={clsx(styles.contentTitle, {
+                  left: !isMdScreen && !!(ticketSales.data || []).length,
+                  center: isMdScreen || !(ticketSales.data || []).length,
+                })}
+              >
+                <h3>Ticket Sales</h3>
+                <h5>
+                  To view information about other Ticket pools, click the
+                  Discover button below.
+                </h5>
+                <Link href="/#/pools/ticket" className={styles.btnDiscover}>
+                  Discover
+                </Link>
+              </div>
+              <div className={clsx(styles.cards, styles.cardsTicketSales)}>
+                {(ticketSales.data || []).map((card, id) => (
+                  <Card card={card} key={id} title={<h5>{card.title}</h5>} />
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </section>}
-      {tokenSales?.data?.length && <section className={clsx(styles.tokenSales, styles.section)}>
-        <div className="rectangle bl">
-          <img src="/images/token-sales-text.svg" alt="" />
-        </div>
-        <div className={styles.wrapperContent}>
-          <div className={clsx(styles.content, "vertical")}>
-            <div className={clsx(styles.contentTitle, "center")}>
-              <h3>Token Sales</h3>
-              <h5>
-                To view information about other IGO pools, click the Discover button below.
-              </h5>
-              <Link href="/#/pools/token" className={styles.btnDiscover}>
-                Discover
-              </Link>
-            </div>
-            <div className={clsx(styles.cards, styles.cardsTokenSales)} />
+        </section>
+      )}
+      {tokenSales?.data?.length && (
+        <section className={clsx(styles.tokenSales, styles.section)}>
+          <div className="rectangle bl">
+            <img src="/images/token-sales-text.svg" alt="" />
           </div>
-        </div>
-        <TicketSlide data={tokenSales.data} />
-      </section>}
+          <div
+            className={styles.wrapperContent}
+            style={
+              isSmScreen
+                ? { paddingRight: "28px", paddingLeft: "28px" }
+                : undefined
+            }
+          >
+            <div className={clsx(styles.content, "vertical")}>
+              <div className={clsx(styles.contentTitle, "center")}>
+                <h3>Token Sales</h3>
+                <h5>
+                  To view information about other IGO pools, click the Discover
+                  button below.
+                </h5>
+                <Link href="/#/pools/token" className={styles.btnDiscover}>
+                  Discover
+                </Link>
+              </div>
+              <div className={clsx(styles.cards, styles.cardsTokenSales)} />
+            </div>
+          </div>
+          <TicketSlide data={tokenSales.data} />
+        </section>
+      )}
       <section className={clsx(styles.partners, styles.section)}>
         <div className="rectangle gr">
           <img src="/images/partnership-text.svg" alt="" />

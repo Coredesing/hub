@@ -20,6 +20,7 @@ const useStyles = makeStyles({
     // border: "none",
     boxSizing: "border-box",
     border: "1px solid #E7E6FF",
+    fontFamily: 'Firs Neue'
   },
   hideArrowNumber: {
     "&::-webkit-outer-spin-button": {
@@ -45,7 +46,7 @@ interface IProps {
 }
 export const FormInputNumber = (props: IProps) => {
   const classes = useStyles();
-  const { value, onChange, allowZero, isPositive, isInteger, ...otherProps } =
+  const { value, onChange, allowZero, isPositive, isInteger, className, ...otherProps } =
     props;
   const [val, setVal] = React.useState("");
 
@@ -110,7 +111,8 @@ export const FormInputNumber = (props: IProps) => {
     <input
       className={clsx(
         classes.input,
-        props.type === "number" && classes.hideArrowNumber
+        props.type === "number" && classes.hideArrowNumber,
+        className,
       )}
       value={val}
       onChange={_onChange}

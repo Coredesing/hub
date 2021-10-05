@@ -22,11 +22,14 @@ import {
 } from '../../components/Base/Table';
 import { PaginationResult } from "../../types/Pagination";
 import { SearchBox } from "../../components/Base/SearchBox";
-import { cvtAddressToStar, debounce, escapeRegExp } from "../../utils";
+import { cvtAddressToStar, debounce, escapeRegExp, formatNumber } from "../../utils";
 import { numberWithCommas } from "../../utils/formatNumber";
 import { useAboutStyles } from "./style";
 import { isBidorStake } from "./utils";
 import { convertTimeToStringFormat } from "../../utils/convertDate";
+import { boxes, timelines } from "./data";
+import clsx from 'clsx';
+import { TimelineType } from "./types";
 const shareIcon = "/images/icons/share.svg";
 const telegramIcon = "/images/icons/telegram-1.svg";
 const twitterIcon = "/images/icons/twitter-1.svg";
@@ -118,28 +121,28 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
   }, [info, connectedAccount])
 
   useEffect(() => {
-    if(winner.data || winner.top) {
+    if (winner?.data || winner?.top) {
       setIsGetWinner(false);
     }
   }, [winner]);
 
   useEffect(() => {
-      if(props.recallCount > cachedRecallCount) {
-        setCachedRecallCount(props.recallCount);
-        setIsGetWinner(true);
-      }
+    if (props.recallCount > cachedRecallCount) {
+      setCachedRecallCount(props.recallCount);
+      setIsGetWinner(true);
+    }
   }, [props.recallCount, cachedRecallCount, isGetWinner]);
 
   useEffect(() => {
-    if (!isTicketBid && winner.data) {
+    if (!isTicketBid && winner?.data) {
       setPagination({ total: +winner.total, list: winner.data })
     }
   }, [winner, isTicketBid])
 
   useEffect(() => {
-    if(!isTicketBid || !props.setRankUser) return;
-    if('rank' in winner) {
-      props.setRankUser(+winner.rank >= 0 ? winner.rank : -1 )
+    if (!isTicketBid || !props.setRankUser) return;
+    if ('rank' in winner) {
+      props.setRankUser(+winner.rank >= 0 ? winner.rank : -1)
     } else {
       props.setRankUser(-1);
     }
@@ -192,23 +195,20 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
           variant={matchSM ? "fullWidth" : "standard"}
         >
           <Tab
-            className={classes.tabName}
+            className={clsx(classes.tabName, { active: tabCurrent === 0 })}
             label="Rule Introduction"
-            style={tabCurrent === 0 ? { color: "#72F34B" } : {}}
             {...a11yProps(0)}
           />
           <Tab
-            className={classes.tabName}
+            className={clsx(classes.tabName, { active: tabCurrent === 1 })}
             label="About project"
-            style={tabCurrent === 1 ? { color: "#72F34B" } : {}}
             {...a11yProps(1)}
           />
           <Tab
-            className={classes.tabName}
+            className={clsx(classes.tabName, { active: tabCurrent === 2 })}
             label={
               isTicketBid ? `Top Users (${numberWithCommas(pagination.total, 0)})` : `Winners (${numberWithCommas(winner ? winner.total || 0 : 0, 0)})`
             }
-            style={tabCurrent === 2 ? { color: "#72F34B" } : {}}
             {...a11yProps(1)}
           />
         </AntTabs>
@@ -288,9 +288,9 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
               {(pagination.list || []).map((row, idx) => (
                 <TableRowBody key={idx}>
                   <TableCell component="th" scope="row"> {((page - 1) * limitPage + idx + 1)} </TableCell>
-                  <TableCell align="left">{ isTicketBid ? cvtAddressToStar(row.wallet_address) : row.wallet_address }</TableCell>
-                  {isTicketBid && <TableCell align="left">{ numberWithCommas((+row.amount / 10 ** token?.decimals) + '', 4) }</TableCell>}
-                  {isTicketBid && <TableCell align="left">{ convertTimeToStringFormat(new Date(+row.last_time * 1000)) }</TableCell>}
+                  <TableCell align="left">{isTicketBid ? cvtAddressToStar(row.wallet_address) : row.wallet_address}</TableCell>
+                  {isTicketBid && <TableCell align="left">{numberWithCommas((+row.amount / 10 ** token?.decimals) + '', 4)}</TableCell>}
+                  {isTicketBid && <TableCell align="left">{convertTimeToStringFormat(new Date(+row.last_time * 1000))}</TableCell>}
                 </TableRowBody>
               ))}
             </TableBody>
@@ -310,3 +310,146 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
 }
 
 export default React.memo(AboutTicket);
+
+export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines = {} as {[k: number]: TimelineType}, ...props }: Props) => {
+  const classes = useAboutStyles();
+  const [tabCurrent, setTab] = React.useState(props.defaultTab || 0);
+  const theme = useTheme();
+  const matchSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const [page, setPage] = useState(1);
+  const [searchWinner, setSearchWinner] = useState('');
+  const [pagination, setPagination] = useState<{
+    total: number, list: { [k: string]: any }[],
+  }>({ total: 0, list: [] });
+  const limitPage = 10;
+
+  const handleChange = (event: any, newValue: any) => {
+    setTab(newValue);
+  };
+
+  const getRules = (rule = "") => {
+    if (typeof rule !== "string") return [];
+    return rule.split("\n").filter((r) => r.trim());
+  };
+
+  const onChangePage = (event: any, page: number) => {
+    setPage(page);
+  }
+
+  const onSearchWinner = (event: any) => {
+    const value = event.target?.value;
+    setSearchWinner(value);
+    setPage(1);
+  }
+
+  const onSearch = debounce(onSearchWinner, 1000);
+
+  return (
+    <div className={classes.root}>
+      <AppBar className={classes.appbar} position="static">
+        <AntTabs
+          centered={matchSM ? true : false}
+          value={tabCurrent}
+          onChange={handleChange}
+          aria-label="simple tabs example"
+          variant={matchSM ? "fullWidth" : "standard"}
+        >
+          <Tab
+            className={clsx(classes.tabName, { active: tabCurrent === 0 })}
+            label="Rule Introduction"
+            {...a11yProps(0)}
+          />
+          <Tab
+            className={clsx(classes.tabName, { active: tabCurrent === 1 })}
+            label="Series Content"
+            {...a11yProps(1)}
+          />
+          <Tab
+            className={clsx(classes.tabName, { active: tabCurrent === 2 })}
+            label={"Timeline"}
+            {...a11yProps(1)}
+          />
+          {/* <Tab
+            className={clsx(classes.tabName, { active: tabCurrent === 3 })}
+            label={"Collection (20)"}
+            {...a11yProps(1)}
+          /> */}
+        </AntTabs>
+      </AppBar>
+      <TabPanel value={tabCurrent} index={0}>
+        <ul className={classes.tabPaneContent}>
+          {getRules(info.rule).map((rule, idx) => (
+            <li key={idx}>
+              {idx + 1}. {rule}
+            </li>
+          ))}
+        </ul>
+      </TabPanel>
+      <TabPanel value={tabCurrent} index={1}>
+        <div style={{ maxWidth: '400px' }}>
+          <SearchBox
+            // value={searchWinner}
+            onChange={onSearch}
+            placeholder="Search first or last 14 digits of your wallet address"
+          />
+        </div>
+        <TableContainer style={{ background: '#171717', marginTop: '7px' }}>
+
+          <Table>
+            <TableHead>
+              <TableRowHead>
+                <TableCell>No</TableCell>
+                <TableCell align="left">Name</TableCell>
+                <TableCell align="left">Amount</TableCell>
+                <TableCell align="left">Rare</TableCell>
+              </TableRowHead>
+            </TableHead>
+            <TableBody>
+              {(info.seriesContentConfig || []).map((row: any, idx: number) => (
+                <TableRowBody key={idx}>
+                  <TableCell component="th" scope="row"> {idx + 1} </TableCell>
+                  <TableCell align="left" className="text-uppercase">{row.name}</TableCell>
+                  <TableCell align="left">{numberWithCommas(row.amount)}</TableCell>
+                  <TableCell align="left">{row.rate}</TableCell>
+                </TableRowBody>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Pagination count={Math.ceil((pagination.total || 0) / limitPage)} shape="rounded"
+          onChange={onChangePage}
+          className={classes.paginationNav}
+          page={page}
+          classes={{
+            ul: classes.ulPagination
+          }}
+        />
+      </TabPanel>
+      <TabPanel value={tabCurrent} index={2}>
+        <div className={classes.wrapperBoxTimeLine}>
+          {
+            (Object.values(timelines) as TimelineType[]).map((timeline, idx: number) => <div key={idx} className={clsx("box", { active: timeline.current })}>
+              <div className="step"><span>{formatNumber(idx + 1, 2)}</span></div>
+              <div className="title">{timeline.title}</div>
+              <div className="desc">{timeline.desc}</div>
+            </div>)
+          }
+        </div>
+      </TabPanel>
+      <TabPanel value={tabCurrent} index={3}>
+        <div className={classes.wrapperBox}>
+          {
+            boxes.map((b, id) => <div key={id} className={clsx("box", { active: id === 0 })}>
+              <div className="img-box">
+                <img src={b.icon} alt="" />
+              </div>
+              <span className="id-box">
+                {b.id}
+              </span>
+            </div>)
+          }
+        </div>
+      </TabPanel>
+    </div>
+  );
+}

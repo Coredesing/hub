@@ -112,9 +112,30 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
         }
         <div className={'cardBodyTimeEndItem'}>
           <img src='/images/icons/bright.svg' alt="" />
-          <span className={clsx(styles.text, 'sp1 text-uppercase')}>{titleTime}</span>
+          <span className={clsx(styles.text, 'sp1 text-uppercase')} style={{marginTop: 3}}>{titleTime}</span>
           <span className={styles.timeEnd}>
-            {(titleTime !== 'Coming soon' && titleTime !== 'Finished') && <>{formatNumber(openTime.days)}d : {formatNumber(openTime.hours)}h : {formatNumber(openTime.minutes)}m : {formatNumber(openTime.seconds)}s</>}
+            {(titleTime !== 'Coming soon' && titleTime !== 'Finished') && 
+              <>
+                <span>&nbsp;</span>
+                {openTime.days > 1 && <span>{formatNumber(openTime.days)} days</span>}
+                {openTime.days === 1 && <span>{formatNumber(openTime.days)} day</span>}
+                {openTime.days < 1 && openTime.hours >= 1 && (
+                  <span>
+                    <span>{formatNumber(openTime.hours)}h</span>
+                    {openTime.minutes >= 1 && <span>&nbsp;:&nbsp;</span>}
+                  </span>
+                )}
+                {openTime.days < 1 && openTime.minutes >= 1 && (
+                  <span>
+                    {<span>{formatNumber(openTime.minutes)}m</span>}
+                    {openTime.hours < 1 && <span>&nbsp;:&nbsp;</span>}
+                  </span>
+                )}
+                {openTime.days < 1 && openTime.hours < 1 && (
+                  <span>{formatNumber(openTime.seconds)}s</span>
+                )}
+              </>
+            }
           </span>
         </div>
         <Link href={`/#/${getRoute(card.token_type)}/${card.id}`} className={clsx(styles.btnDetail, 'not-approved')}>

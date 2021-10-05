@@ -60,6 +60,7 @@ Route.group(() => {
   Route.get('pool/:campaignId/user/:walletAddress/claimable-amount', 'ClaimConfigController.getClaimableAmount');
   Route.get('pool/:campaignId/nft-order', 'NFTOrderController.getOrder');
   Route.post('pool/:campaignId/nft-order', 'NFTOrderController.order').middleware(['checkSignature']);
+  Route.post('pool/:campaignId/whitelist-apply-box', 'WhiteListSubmissionController.applyWhitelistSubmissionBox');
 
   // pools
   Route.get('pools', 'PoolController.getPoolList');
@@ -73,6 +74,7 @@ Route.group(() => {
   Route.get('pools/next-to-launch-pools', 'PoolController.getNextToLaunchPoolsV3');
   Route.get('pools/upcoming-pools', 'PoolController.getUpcomingPoolsV3');
   Route.get('pools/complete-sale-pools', 'PoolController.getCompleteSalePoolsV3');
+  Route.get('pools/mysterious-box', 'PoolController.getMysteriousBoxPoolsV3');
 
   // user
   Route.get('user/profile', 'UserController.profile').middleware(['maskEmailAndWallet']);

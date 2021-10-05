@@ -127,6 +127,22 @@ function PoolForm(props: any) {
       }
     }
 
+    try {
+      if (!Array.isArray(data.seriesContentConfig)) {
+        data.seriesContentConfig = JSON.parse(data.seriesContentConfig)
+      }
+    } catch (e) {
+      data.seriesContentConfig = []
+    }
+
+    try {
+      if (!Array.isArray(data.boxTypesConfig)) {
+        data.boxTypesConfig = JSON.parse(data.boxTypesConfig)
+      }
+    } catch (e) {
+      data.boxTypesConfig = []
+    }
+
     const submitData = {
       registed_by: loginUser?.wallet_address,
       is_display: data.is_display,
@@ -218,8 +234,8 @@ function PoolForm(props: any) {
 
       // Claim Policy
       claim_policy: data.claim_policy,
-      seriesContentConfig: Array.isArray(data.seriesContentConfig) ? JSON.parse(data.seriesContentConfig) : [],
-      boxTypesConfig: Array.isArray(data.boxTypesConfig) ? JSON.parse(data.boxTypesConfig): [],
+      seriesContentConfig: data.seriesContentConfig,
+      boxTypesConfig: data.boxTypesConfig,
 
       // Free Time Settings
       freeBuyTimeSetting: {
@@ -266,6 +282,22 @@ function PoolForm(props: any) {
     // Format Claim Config
     let campaignClaimConfig = data.campaignClaimConfig || '[]';
     campaignClaimConfig = campaignClaimConfigFormat(campaignClaimConfig);
+
+    try {
+      if (!Array.isArray(data.seriesContentConfig)) {
+        data.seriesContentConfig = JSON.parse(data.seriesContentConfig)
+      }
+    } catch (e) {
+      data.seriesContentConfig = []
+    }
+
+    try {
+      if (!Array.isArray(data.boxTypesConfig)) {
+        data.boxTypesConfig = JSON.parse(data.boxTypesConfig)
+      }
+    } catch (e) {
+      data.boxTypesConfig = []
+    }
 
     const submitData = {
       // Pool general
@@ -327,8 +359,8 @@ function PoolForm(props: any) {
 
       // Claim Policy
       claim_policy: data.claim_policy,
-      seriesContentConfig: Array.isArray(data.seriesContentConfig) ? JSON.parse(data.seriesContentConfig) : [],
-      boxTypesConfig: Array.isArray(data.boxTypesConfig) ? JSON.parse(data.boxTypesConfig): [],
+      seriesContentConfig: data.seriesContentConfig,
+      boxTypesConfig: data.boxTypesConfig,
 
       // Free Time Settings
       freeBuyTimeSetting: {
@@ -428,6 +460,22 @@ function PoolForm(props: any) {
         return item;
       });
 
+      try {
+        if (!Array.isArray(data.seriesContentConfig)) {
+          data.seriesContentConfig = JSON.parse(data.seriesContentConfig)
+        }
+      } catch (e) {
+        data.seriesContentConfig = []
+      }
+
+      try {
+        if (!Array.isArray(data.boxTypesConfig)) {
+          data.boxTypesConfig = JSON.parse(data.boxTypesConfig)
+        }
+      } catch (e) {
+        data.boxTypesConfig = []
+      }
+
       const submitData = {
         id: poolDetail.id,
         registed_by: loginUser?.wallet_address,
@@ -495,8 +543,8 @@ function PoolForm(props: any) {
 
         // Claim Policy
         claim_policy: data.claim_policy,
-        seriesContentConfig: Array.isArray(data.seriesContentConfig) ? JSON.parse(data.seriesContentConfig) : [],
-        boxTypesConfig: Array.isArray(data.boxTypesConfig) ? JSON.parse(data.boxTypesConfig): [],
+        seriesContentConfig: data.seriesContentConfig,
+        boxTypesConfig: data.boxTypesConfig,
 
         // Free Time Settings
         freeBuyTimeSetting: {
@@ -838,7 +886,7 @@ function PoolForm(props: any) {
       {
         watchTokenType && watchTokenType === TOKEN_TYPE.MYSTERY_BOX &&
         <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <div className={classes.exchangeRate}>
               <SeriesContentTable
                   poolDetail={poolDetail}
@@ -851,7 +899,7 @@ function PoolForm(props: any) {
             </div>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <div className={classes.exchangeRate}>
               <BoxTypesConfigTable
                   poolDetail={poolDetail}

@@ -72,6 +72,94 @@ class WhiteListSubmissionController {
     }
   }
 
+  async applyWhitelistSubmissionBox({ request, params }) {
+    // get request params
+    const campaign_id = params.campaignId;
+    const wallet_address = request.input('wallet_address');
+    if (!campaign_id) {
+      return HelperUtils.responseBadRequest('Bad request with campaign_id');
+    }
+
+    try {
+      // check campaign
+      const campaignService = new CampaignService();
+      const camp = await campaignService.findByCampaignId(campaign_id);
+      if (!camp || camp.buy_type !== Const.BUY_TYPE.WHITELIST_LOTTERY) {
+        return HelperUtils.responseBadRequest(`Invalid campaign`)
+      }
+
+      if (camp.token_type !== 'box') {
+        return HelperUtils.responseBadRequest(`Invalid campaign`)
+      }
+      const currentDate = ConvertDateUtils.getDatetimeNowUTC();
+      // check time to join campaign
+      if (camp.start_join_pool_time > currentDate || camp.end_join_pool_time < currentDate) {
+        return HelperUtils.responseBadRequest("It's not right time to join this campaign !");
+      }
+      // get user info
+      const userService = new UserService();
+      const userParams = {
+        'wallet_address': wallet_address
+      }
+      const user = await userService.findUser(userParams);
+
+      if (!camp.kyc_bypass) {
+        if (!user || !user.email) {
+          return HelperUtils.responseBadRequest("User not found");
+        }
+        if (user.is_kyc !== Const.KYC_STATUS.APPROVED) {
+          return HelperUtils.responseBadRequest("Your KYC status is not verified");
+        }
+      }
+
+      // check user tier
+      const userTier = (await HelperUtils.getUserTierSmartWithCached(wallet_address))[0];
+      // check user tier with min tier of campaign
+      if (camp.min_tier > userTier) {
+        return HelperUtils.responseBadRequest("You need to achieve higher rank for applying whitelist");
+      }
+      // call to db to get tier info
+      const tierService = new TierService();
+      const tierParams = {
+        'campaign_id': campaign_id,
+        'level': userTier
+      };
+      const tier = await tierService.findByLevelAndCampaign(tierParams);
+      if (!tier) {
+        return HelperUtils.responseBadRequest("Ranking not found");
+      }
+
+      // call to whitelist submission service
+      const whitelistSubmissionService = new WhitelistSubmissionService();
+      const submissionParams = {
+        wallet_address,
+        campaign_id,
+        user_telegram: wallet_address,
+        user_twitter: wallet_address,
+        self_twitter_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
+        self_group_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
+        self_channel_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
+        self_retweet_post_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
+        self_retweet_post_link: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
+        partner_twitter_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
+        partner_group_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
+        partner_channel_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
+        partner_retweet_post_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
+        partner_retweet_post_link: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED
+      }
+      await whitelistSubmissionService.createWhitelistSubmissionAccount(submissionParams)
+
+      return HelperUtils.responseSuccess(true);
+    } catch (e) {
+      console.log("error", e)
+      if (e instanceof BadRequestException) {
+        return HelperUtils.responseBadRequest(e.message);
+      } else {
+        return HelperUtils.responseErrorInternal('ERROR : Submit Whitelist fail !');
+      }
+    }
+  }
+
   async addWhitelistSubmission({ request, params }) {
     // get request params
     const campaign_id = params.campaignId;

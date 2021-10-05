@@ -12,7 +12,7 @@ type PoolDepositActionParams = {
   poolDetails?: any
 }
 
-const usePoolJoinAction = ({ poolId, poolDetails }: PoolDepositActionParams) => {
+const usePoolJoinAction = ({ poolId }: PoolDepositActionParams) => {
   const dispatch = useDispatch();
   const { account, library } = useWeb3React();
   const [joinPoolSuccess, setJoinPoolSuccess] = useState<boolean>(false);

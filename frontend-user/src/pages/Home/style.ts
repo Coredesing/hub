@@ -119,9 +119,9 @@ const useStyles = makeStyles((theme: any) => {
     wrapperImgBanner: {
       width: "100%",
       position: "relative",
-      maxWidth: '1120px',
-      left: '50%',
-      transform: 'translate(-50%)',
+      maxWidth: "1120px",
+      left: "50%",
+      transform: "translate(-50%)",
       // position: "absolute",
       // top: "10px",
       // left: 0,
@@ -259,16 +259,16 @@ const useStyles = makeStyles((theme: any) => {
       paddingRight: "0",
       paddingTop: "120px",
       paddingBottom: "130px",
-      minHeight: "770px",
+      // minHeight: "770px",
       [theme.breakpoints.down("xs")]: {
-        height: "520px",
-        padding: "28px",
+        height: "600px",
+        // padding: "28px",
         paddingTop: "40px",
         paddingBottom: "40px",
       },
     },
     partners: {
-      background: '#171717',
+      background: "#171717",
       paddingTop: "120px",
       paddingBottom: "130px",
       [theme.breakpoints.down("xs")]: {

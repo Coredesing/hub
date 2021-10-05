@@ -28,6 +28,12 @@ const useStyles = makeStyles((theme: any) => ({
     '&::before, &::after': {
       height: '6px !important',
       width: '80px !important',
+      [theme.breakpoints.down('sm')]: {
+        width: '70px !important',
+      },
+      [theme.breakpoints.down('xs')]: {
+        width: '60px !important',
+      }
     },
 
     '& h4': {

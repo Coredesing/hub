@@ -17,11 +17,7 @@ const useStylesTable = makeStyles({
   },
 });
 
-const createData = (id: number, name: any, amount: any, rate: number) => {
-  return { id, name, amount, rate };
-};
-
-const createDefaultTiers = () => {
+const createDefaultData = () => {
   return [];
 };
 
@@ -37,7 +33,7 @@ function SeriesContentTable(props: any) {
   const [editData, setEditData] = useState({});
   const [editRow, setEditRow] = useState(0);
   const [isEdit, setIsEdit] = useState(true);
-  const [rows, setRows] = useState(createDefaultTiers());
+  const [rows, setRows] = useState(createDefaultData());
 
   useEffect(() => {
     if (poolDetail && poolDetail.seriesContentConfig) {
@@ -118,6 +114,8 @@ function SeriesContentTable(props: any) {
               <TableCell>Name</TableCell>
               <TableCell>Amount</TableCell>
               <TableCell>Rate</TableCell>
+              <TableCell>Icon</TableCell>
+              <TableCell>Banner</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -128,6 +126,8 @@ function SeriesContentTable(props: any) {
                   <TableCell>{row.name}</TableCell>
                   <TableCell>{row.amount}</TableCell>
                   <TableCell>{row.rate}%</TableCell>
+                  <TableCell>{row.icon}</TableCell>
+                  <TableCell>{row.banner}</TableCell>
                   <TableCell align="right">
                     <Button
                       variant="contained"

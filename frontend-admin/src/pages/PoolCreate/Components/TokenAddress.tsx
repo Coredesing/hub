@@ -89,7 +89,7 @@ function TokenAddress(props: any) {
         <Controller
             rules={{ required: true }}
             control={control}
-            defaultValue={poolDetail ? poolDetail.token_type : TOKEN_TYPE.ERC20}
+            defaultValue={poolDetail ? poolDetail.token_type : ''}
             name="token_type"
             as={
               <RadioGroup row>

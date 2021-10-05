@@ -20,7 +20,7 @@ class PoolController {
   async createPool({ request, auth }) {
     const inputParams = request.only([
       'registed_by',
-      'title', 'website', 'banner', 'description', 'process', 'rule', 'address_receiver',
+      'title', 'website', 'banner', 'mini_banner', 'description', 'process', 'rule', 'address_receiver',
       'token', 'token_images', 'total_sold_coin',
       'token_by_eth', 'token_conversion_rate', 'price_usdt', 'display_price_rate',
       'tokenInfo', 'gleam_link',
@@ -56,6 +56,7 @@ class PoolController {
       'display_price_rate': inputParams.display_price_rate,
 
       'banner': inputParams.banner,
+      'mini_banner': inputParams.mini_banner,
       'address_receiver': inputParams.address_receiver,
       'token_images': inputParams.token_images,
       'total_sold_coin': inputParams.total_sold_coin,
@@ -159,7 +160,7 @@ class PoolController {
   async updatePool({ request, auth, params }) {
     const inputParams = request.only([
       'registed_by',
-      'title', 'website', 'banner', 'description', 'process', 'rule', 'address_receiver',
+      'title', 'website', 'banner', 'mini_banner', 'description', 'process', 'rule', 'address_receiver',
       'token', 'token_images', 'total_sold_coin',
       'token_by_eth', 'token_conversion_rate', 'price_usdt', 'display_price_rate',
       'tokenInfo', 'gleam_link',
@@ -195,6 +196,7 @@ class PoolController {
       'display_price_rate': inputParams.display_price_rate,
 
       'banner': inputParams.banner,
+      'mini_banner': inputParams.mini_banner,
       'address_receiver': inputParams.address_receiver,
       'token_images': inputParams.token_images,
       'total_sold_coin': inputParams.total_sold_coin,
@@ -467,7 +469,7 @@ class PoolController {
       pool = JSON.parse(JSON.stringify(pool))
       const publicPool = pick(pool, [
         // Pool Info
-        'id', 'title', 'website', 'banner', 'updated_at', 'created_at',
+        'id', 'title', 'website', 'banner', 'mini_banner', 'updated_at', 'created_at',
         'campaign_hash', 'campaign_id', 'description', 'process', 'rule', 'registed_by', 'register_by',
         'campaign_status',
 

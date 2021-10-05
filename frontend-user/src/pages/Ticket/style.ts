@@ -994,7 +994,8 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
           placeContent: 'center',
           border: '1px solid #555',
           borderRadius: '4px',
-          '&.active': {
+          transition: '0.3s',
+          '&.active, &:hover': {
             border: '1px solid #fff',
 
             '& span': {
@@ -1051,10 +1052,38 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
         display: 'block',
         background: 'transparent',
       },
+      '& .onload': {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 10,
+        display: 'block',
+        background: '#000',
+
+        '& > span': {
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+        }
+      },
+      '& .video': {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 100,
+        display: 'block',
+        background: '#000',
+      },
 
       '& video': {
         width: '100%',
         height: '100%',
+        zIndex: 100,
       }
     },
 

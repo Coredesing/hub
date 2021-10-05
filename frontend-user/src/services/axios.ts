@@ -7,3 +7,9 @@ const instance = axios.create({
 });
 
 export default instance;
+
+export const HeadersSignature = {
+  headers: {
+    msgSignature: process.env.REACT_APP_MESSAGE_INVESTOR_SIGNATURE
+  }
+}

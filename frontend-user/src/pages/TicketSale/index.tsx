@@ -8,12 +8,12 @@ import DefaultLayout from '../../components/Layout/DefaultLayout'
 import withWidth from '@material-ui/core/withWidth';
 import { CompleteCard } from './CompleteCard';
 import { useFetchV1 } from '../../hooks/useFetch';
-import { TOKEN_TYPE } from '../../constants';
 import { PaginationResult } from '../../types/Pagination';
 import ContactForm from '../../components/Base/ContactForm';
 import NotFoundPage from '../NotFoundPage';
 import { Backdrop, CircularProgress, Link, useTheme } from '@material-ui/core';
-import { getRoute } from './utils';
+import { getFilterTokenType, getRoute } from './utils';
+import { ACCEPT_ROUTES } from './ contants';
 
 const TicketSale = (props: any) => {
   const theme = useTheme();
@@ -30,11 +30,11 @@ const TicketSale = (props: any) => {
   useEffect(() => {
     setCheckParamType({
       checking: false,
-      valid: ['ticket', 'token', 'items'].includes(params.type),
+      valid: Object.values(ACCEPT_ROUTES).includes(params.type),
     });
     setRecall(true);
   }, [params]);
-  const tokenType = params.type === 'ticket' ? TOKEN_TYPE.ERC721 : TOKEN_TYPE.ERC20;
+  const tokenType = getFilterTokenType(params.type);
 
   const {
     data: activePools = {} as PaginationResult,

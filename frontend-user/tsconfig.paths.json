@@ -24,7 +24,8 @@
             "@pages/*": ["src/pages/*"],
             "@styles/*": ["src/styles/*"],
             "@store/*": ["src/store/*"],
-            "@app-constants": ["src/constants"]
+            "@app-constants": ["src/constants"],
+            "@request": ["src/request"]
         }
     }
 }

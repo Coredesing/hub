@@ -3,17 +3,19 @@ import { typeDisplayFlex } from "@styles/CommonStyle";
 
 export const useStyles = makeStyles((theme: any) => ({
     cardBodyClock: {
+        fontFamily: 'Firs Neue',
+        background: "#2E2E2E",
         "& .times": {
             ...typeDisplayFlex,
             justifyContent: "space-around",
             gap: "12px",
-            background: "#2E2E2E",
+            background: 'inherit',
             borderRadius: "4px",
 
             "& .dot": {
                 display: "block",
                 marginTop: "8px",
-                fontFamily: "Firs Neue",
+                fontFamily: "inherit",
                 fontStyle: "normal",
                 fontWeight: 600,
                 fontSize: "20px",
@@ -44,7 +46,7 @@ export const useStyles = makeStyles((theme: any) => ({
                     fontWeight: "600",
                     fontSize: "24px",
                     lineHeight: "36px",
-                    fontFamily: "Firs Neue",
+                    fontFamily: "inherit",
                     [theme.breakpoints.down('xs')]: {
                         fontSize: "16px",
                         lineHeight: "28px",

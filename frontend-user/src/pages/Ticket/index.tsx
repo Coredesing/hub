@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { withRouter, useParams } from "react-router-dom";
 import DefaultLayout from "../../components/Layout/DefaultLayout";
 // import SwipeableViews from 'react-swipeable-views';
@@ -9,7 +9,8 @@ import NotFoundPage from "../NotFoundPage/ContentPage";
 import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
 import ContentTicket from './Ticket';
 import TicketBid from './TicketBid';
-import { isBidorStake } from "./utils";
+import MysteryBox from './MysteryBox';
+import { isBidorStake, isMysteryBox } from "./utils";
 
 const Ticket: React.FC<any> = (props: any) => {
   const params = useParams<{ [k: string]: any }>();
@@ -29,11 +30,17 @@ const Ticket: React.FC<any> = (props: any) => {
         valid: false
       }
       if (dataTicket) {
-        result.valid = dataTicket.token_type === TOKEN_TYPE.ERC721;
+        result.valid = [TOKEN_TYPE.ERC721, TOKEN_TYPE.Box].includes(dataTicket.token_type);
       }
       setCheckParamType(result);
     }
   }, [loadingTicket, dataTicket]);
+
+  const render = useCallback((processType, tokenType, id) => {
+    if (isMysteryBox(tokenType)) return <MysteryBox id={id} />;
+    if (isBidorStake(processType)) return <TicketBid id={id} />;
+    return <ContentTicket id={id} />;
+  }, []);
   return (
     <DefaultLayout>
       {
@@ -42,7 +49,7 @@ const Ticket: React.FC<any> = (props: any) => {
             <CircularProgress color="inherit" />
           </Backdrop>
           : (checkParamType.valid ? (
-            isBidorStake(dataTicket.process) ? <TicketBid id={id} /> : <ContentTicket id={id} />
+            render(dataTicket.process, dataTicket.token_type, id)
           ) : <NotFoundPage />)
       }
     </DefaultLayout>

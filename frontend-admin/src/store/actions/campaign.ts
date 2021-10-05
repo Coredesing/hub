@@ -643,49 +643,43 @@ export const deployPool = (campaign: any, history: any) => {
       let tokenByEthDecimals = 0;
       let tokenByETHActualRate: any;
       let reversedRate = removeTrailingZeros(new BigNumber(1).dividedBy(token_by_eth).toFixed());
-      let paidTokenDecimal = 0
+      // Maximum padding 30 (minus 6-18, based on accept_currency decimals)
+      const digitsAfterDecimals = 30;
 
       if (network_available == NETWORK_AVAILABLE.ETH) {
         if (accept_currency === ACCEPT_CURRENCY.ETH) {
-          tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, 0)).toFixed();
-          paidTokenDecimal = 18
+          tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 18 + digitsAfterDecimals)).toFixed(0);
         } else if (accept_currency === ACCEPT_CURRENCY.USDT) {
-          tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 6)).toFixed();
-          paidTokenDecimal = 6
+          tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 6 + digitsAfterDecimals)).toFixed(0);
         } else if (accept_currency === ACCEPT_CURRENCY.USDC) {
-          tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 6)).toFixed();
-          paidTokenDecimal = 6
+          tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 6 + digitsAfterDecimals)).toFixed(0);
         }
       } else if (network_available == NETWORK_AVAILABLE.BSC) {
-        paidTokenDecimal = 18
         if (accept_currency === ACCEPT_CURRENCY.ETH) {
-          tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, 0)).toFixed();
+          tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 18 + digitsAfterDecimals)).toFixed(0);
         } else if (accept_currency === ACCEPT_CURRENCY.USDT) {
-          tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, 0)).toFixed();
+          tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 18 + digitsAfterDecimals)).toFixed(0);
         } else if (accept_currency === ACCEPT_CURRENCY.USDC) {
-          tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, 0)).toFixed();
+          tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 18 + digitsAfterDecimals)).toFixed(0);
         }
       } else if (network_available == NETWORK_AVAILABLE.POLYGON) {
         if (accept_currency === ACCEPT_CURRENCY.ETH) {
-          tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, 0)).toFixed();
-          paidTokenDecimal = 18
+          tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 18 + digitsAfterDecimals)).toFixed(0);
         } else if (accept_currency === ACCEPT_CURRENCY.USDT) {
-          tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 6)).toFixed();
-          paidTokenDecimal = 6
+          tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 6 + digitsAfterDecimals)).toFixed(0);
         } else if (accept_currency === ACCEPT_CURRENCY.USDC) {
-          tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 6)).toFixed();
-          paidTokenDecimal = 6
+          tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 6 + digitsAfterDecimals)).toFixed(0);
         }
       }
 
-      let digitsAfterDecimals = getDigitsAfterDecimals(tokenByETHActualRate);
-
-      if (digitsAfterDecimals > 6) {
-        // get 6 decimals after comma if decimals part is too long
-        const splittedComma = tokenByETHActualRate.split('.');
-        tokenByETHActualRate = splittedComma[0].concat(".", splittedComma[1].substr(0, 6));
-        digitsAfterDecimals = 6;
-      }
+      // let digitsAfterDecimals = getDigitsAfterDecimals(tokenByETHActualRate);
+      //
+      // if (digitsAfterDecimals > 6) {
+      //   // get 6 decimals after comma if decimals part is too long
+      //   const splittedComma = tokenByETHActualRate.split('.');
+      //   tokenByETHActualRate = splittedComma[0].concat(".", splittedComma[1].substr(0, 6));
+      //   digitsAfterDecimals = 6;
+      // }
 
       // if (accept_currency !== ACCEPT_CURRENCY.ETH) {
       //   if (network_available == NETWORK_AVAILABLE.ETH) {
@@ -705,14 +699,14 @@ export const deployPool = (campaign: any, history: any) => {
       //   tokenByETHActualRate = splittedComma[0].concat(".", splittedComma[1].substr(0, 6));
       //   digitsAfterDecimals = 6;
       // }
-      tokenByETHActualRate = new BigNumber(tokenByETHActualRate).multipliedBy(Math.pow(10, digitsAfterDecimals)).toFixed();
+      // tokenByETHActualRate = new BigNumber(tokenByETHActualRate).multipliedBy(Math.pow(10, digitsAfterDecimals)).toFixed();
 
       // 1 accepted_currency --> token
-      if (tokenInfo && tokenInfo.token_type === 'erc721') {
-        digitsAfterDecimals = 30
-        tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(new BigNumber(10).pow(digitsAfterDecimals - paidTokenDecimal))
-        tokenByETHActualRate = tokenByETHActualRate.integerValue(BigNumber.ROUND_CEIL).toFixed()
-      }
+      // if (tokenInfo && tokenInfo.token_type === 'erc721') {
+      //   digitsAfterDecimals = 30
+      //   tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(new BigNumber(10).pow(digitsAfterDecimals - paidTokenDecimal))
+      //   tokenByETHActualRate = tokenByETHActualRate.integerValue(BigNumber.ROUND_CEIL).toFixed()
+      // }
 
       const poolType = campaign.pool_type;
       let factorySmartContract = getContractInstance(campaignFactoryABI, process.env.REACT_APP_SMART_CONTRACT_FACTORY_ADDRESS || '');

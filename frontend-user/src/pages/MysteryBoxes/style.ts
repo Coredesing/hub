@@ -203,6 +203,7 @@ const useStyles = makeStyles((theme: any) => ({
 
         [theme.breakpoints.up('xl')] : {
           fontSize: '43px',
+          lineHeight: '50px',
           maxWidth: '600px',
           marginBottom: '20px',
         },

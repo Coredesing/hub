@@ -361,7 +361,7 @@ const IdoPools = (props: any) => {
                 <TableRowBody key={row.name + index}>
                   <TableCell component="th" scope="row">
                     <div>
-                      <img src={row.banner} width="40" height="40" alt="" />
+                      <img src={row.banner} width="40" height="40" alt="" style={{objectFit: 'cover'}}/>
                       {row.title}
                     </div>
                   </TableCell>
@@ -429,7 +429,7 @@ const IdoPools = (props: any) => {
             <div key={index} className={styles.boxDataMobile}>
               <div className={styles.titleBoxMobile}>
                 <Link to={`/buy-token/${row?.id}`} className={styles.toDetailPool}>
-                  <img className={styles.iconTokenMobile} src={row.token_images} alt="" />
+                  <img className={styles.iconTokenMobile} src={row.token_images} alt="" style={{objectFit: 'cover'}}/>
                   <span className={styles.nameTokenMobile}>{row.title}</span>
                 </Link>
               </div>

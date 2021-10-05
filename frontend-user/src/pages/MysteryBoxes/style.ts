@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: any) => ({
     padding: '68px 120px',
     paddingBottom: '30px',
 
-    [theme.breakpoints.down('sm')] : {
+    [theme.breakpoints.down('sm')]: {
       padding: '68px 20px',
     },
 
@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme: any) => ({
       backgroundPosition: 'center',
       backgroundSize: 'cover',
       backgroundRepeat: 'no-repeat',
+      // [theme.breakpoints.down('xs')]: {
+      //   // backgroundPosition: 'inherit',
+      // },
       '&::before, &::after': {
         content: '""',
         position: 'absolute',
@@ -33,14 +36,18 @@ const useStyles = makeStyles((theme: any) => ({
         bottom: 0,
         right: 0,
       },
-      '&::before': {
-        zIndex: 1,
-        background: ' linear-gradient(to left, transparent 30%, rgba(8, 8, 8, 1) 100%)',
+      [theme.breakpoints.up('sm')]: {
+        '&::before': {
+          zIndex: 1,
+          background: ' linear-gradient(to left, transparent 30%, rgba(8, 8, 8, 1) 100%)',
+        },
       },
-      // '&::after': {
-      //   zIndex: 1,
-      //   background: 'linear-gradient(to bottom, transparent 0%, rgba(8, 8, 8, 0.6) 100%)'
-      // }
+      [theme.breakpoints.down('sm')]: {
+        '&::after': {
+          zIndex: 1,
+          background: 'linear-gradient(to bottom, transparent 0%, rgba(8, 8, 8, 0.6) 20%)'
+        }
+      },
 
     },
     '& .wrapper-slides': {
@@ -61,11 +68,13 @@ const useStyles = makeStyles((theme: any) => ({
         paddingTop: '20px',
         paddingBottom: '20px',
         '& .slide': {
+          transition: '.3s',
           width: '250px',
           height: '142px',
           display: 'inline-block',
           marginRight: '10px',
           position: 'relative',
+          cursor: 'pointer',
           '& img': {
             width: '100%',
             height: '100%',
@@ -142,7 +151,7 @@ const useStyles = makeStyles((theme: any) => ({
           }
 
         },
-        '& .slide.active': {
+        '& .slide.active, & .slide:hover': {
           width: '270px',
           height: '152px',
           '& img': {
@@ -189,6 +198,9 @@ const useStyles = makeStyles((theme: any) => ({
     zIndex: 100,
     '& .detail-box': {
       marginBottom: '90px',
+      [theme.breakpoints.down('xs')]: {
+        textAlign: 'center',
+      },
       '& h1': {
         fontFamily: 'Firs Neue',
         fontStyle: 'normal',
@@ -201,16 +213,21 @@ const useStyles = makeStyles((theme: any) => ({
         maxWidth: '480px',
         textTransform: 'uppercase',
 
-        [theme.breakpoints.up('xl')] : {
+        [theme.breakpoints.up('xl')]: {
           fontSize: '43px',
           lineHeight: '50px',
           maxWidth: '600px',
           marginBottom: '20px',
         },
+        [theme.breakpoints.down('xs')]: {
+          fontSize: '24px',
+          lineHeight: '32px',
+
+        },
       },
       '& .status': {
         marginBottom: '12px',
-        [theme.breakpoints.up('xl')] : {
+        [theme.breakpoints.up('xl')]: {
           marginBottom: '20px',
         },
         '& span': {
@@ -225,8 +242,11 @@ const useStyles = makeStyles((theme: any) => ({
           background: '#000',
           color: '#fff',
           borderRadius: '4px',
-          [theme.breakpoints.up('xl')] : {
+          [theme.breakpoints.up('xl')]: {
             fontSize: '18px',
+          },
+          [theme.breakpoints.down('xs')]: {
+            fontSize: '14px',
           },
         },
 
@@ -253,10 +273,13 @@ const useStyles = makeStyles((theme: any) => ({
         color: '#FFFFFF',
         maxWidth: '480px',
         marginBottom: '16px',
-        [theme.breakpoints.up('xl')] : {
+        [theme.breakpoints.up('xl')]: {
           fontSize: '20px',
           maxWidth: '600px',
           marginBottom: '20px',
+        },
+        [theme.breakpoints.down('xs')]: {
+          fontSize: '14px',
         },
       },
       '& .detail-items': {
@@ -301,24 +324,30 @@ const useStyles = makeStyles((theme: any) => ({
       '& .countdown-box': {
         display: 'grid',
         gridTemplateColumns: '400px minmax(120px, 200px)',
+        [theme.breakpoints.down('xs')]: {
+          gridTemplateColumns: '1fr',
+          placeItems: 'center',
+
+        },
         '& .countdown': {
-          maxWidth: '360px',
-          [theme.breakpoints.down('sm')] : {
-            maxWidth: '280px',
-          },
-          
+          maxWidth: '400px',
+          width: '100%',
+          // [theme.breakpoints.down('xs')] : {
+          //   maxWidth: '280px',
+          // },
+
           fontFamily: 'Space Ranger',
           background: 'rgba(0, 0, 0, 0.5)',
-          
+
           '& .time .number': {
             transform: 'skew(-20deg)',
             fontSize: '28px',
-            [theme.breakpoints.up('xl')] : {
+            [theme.breakpoints.up('xl')]: {
               fontSize: '35px',
             },
           },
           '& .time .text': {
-            [theme.breakpoints.up('xl')] : {
+            [theme.breakpoints.up('xl')]: {
               fontSize: '10px',
             },
           }
@@ -336,7 +365,7 @@ const useStyles = makeStyles((theme: any) => ({
           display: 'grid',
           placeContent: 'center',
           borderRadius: '2px',
-          transition: '0.3',
+          transition: '0.3s',
           '&:hover': {
             color: '#000',
             background: '#72F34B',

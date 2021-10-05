@@ -4,7 +4,7 @@ import {ADMIN_URL_PREFIX, API_URL_PREFIX, ETHERSCAN_BASE_URL, IMAGE_URL_PREFIX, 
 import axios from "axios";
 import { PurchaseCurrency } from '../constants/purchasableCurrency';
 import { getBUSDAddress, getUSDCAddress, getUSDTAddress } from './contractAddress/getAddresses';
-import { ETH_CHAIN_ID, POLYGON_CHAIN_ID } from '../constants/network';
+import { ETH_CHAIN_ID, POLYGON_CHAIN_ID, ChainDefault } from '../constants/network';
 
 
 export function formatPrecisionAmount(amount: any, precision: number = 18): string {
@@ -312,3 +312,12 @@ export const calcPercentRate = (input: number, total: number) => {
 
 export const isImageFile = (str: string) => (/\.(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(str);
 export const isVideoFile = (str: string) => (/\.(mp4)$/i).test(str);
+export const getCurrencyByNetwork = (network: string) => {
+  network = String(network).toLowerCase();
+  switch(network) {
+    case 'bsc': return 'BNB';
+    case 'polygon': return 'MATIC';
+    case 'eth': return 'ETH';
+    default: return ChainDefault.currency;
+  }
+}

@@ -311,7 +311,7 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
 
 export default React.memo(AboutTicket);
 
-export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines = {} as {[k: number]: TimelineType}, ...props }: Props) => {
+export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines = {} as { [k: number]: TimelineType }, ...props }: Props) => {
   const classes = useAboutStyles();
   const [tabCurrent, setTab] = React.useState(props.defaultTab || 0);
   const theme = useTheme();
@@ -386,15 +386,7 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
         </ul>
       </TabPanel>
       <TabPanel value={tabCurrent} index={1}>
-        <div style={{ maxWidth: '400px' }}>
-          <SearchBox
-            // value={searchWinner}
-            onChange={onSearch}
-            placeholder="Search first or last 14 digits of your wallet address"
-          />
-        </div>
         <TableContainer style={{ background: '#171717', marginTop: '7px' }}>
-
           <Table>
             <TableHead>
               <TableRowHead>
@@ -408,22 +400,28 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
               {(info.seriesContentConfig || []).map((row: any, idx: number) => (
                 <TableRowBody key={idx}>
                   <TableCell component="th" scope="row"> {idx + 1} </TableCell>
-                  <TableCell align="left" className="text-uppercase">{row.name}</TableCell>
+                  <TableCell align="left" className="text-uppercase">
+                    <Box display="flex" alignItems="center" gridGap="8px">
+                      <img src={row.icon} width='32' height="34" alt="" />
+                      <span className="text-weight-600">{row.name}</span>
+                      
+                    </Box>
+                  </TableCell>
                   <TableCell align="left">{numberWithCommas(row.amount)}</TableCell>
-                  <TableCell align="left">{row.rate}</TableCell>
+                  <TableCell align="left">{row.rate}%</TableCell>
                 </TableRowBody>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-        <Pagination count={Math.ceil((pagination.total || 0) / limitPage)} shape="rounded"
+        {/* <Pagination count={Math.ceil((pagination.total || 0) / limitPage)} shape="rounded"
           onChange={onChangePage}
           className={classes.paginationNav}
           page={page}
           classes={{
             ul: classes.ulPagination
           }}
-        />
+        /> */}
       </TabPanel>
       <TabPanel value={tabCurrent} index={2}>
         <div className={classes.wrapperBoxTimeLine}>

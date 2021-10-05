@@ -133,7 +133,7 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
           /> */}
                     <Route exact path={'/staking-pools'} component={StakingPools} />
                     <Route exact path={'/buy-nft/:id'} component={Ticket} />
-                    {/* <Route exact path={'/mystery-box/:id'} component={Ticket} /> */}
+                    <Route exact path={'/mystery-box/:id'} component={Ticket} />
                     {/* <Route path={`${'/polkasmith-privacy'}`} component={PolkaSmithPrivacyPolicy} />
                     <Route path={`${'/join-polkasmith'}`} component={JoinPolkaSmith} /> */}
                     <Route exact path={`${'/dashboard'}`} component={Dashboard} />

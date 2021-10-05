@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import useStyles, { useMysteyBoxStyles } from "./style";
 import { AboutMysteryBox } from "./About";
-import { apiRoute, getApproveToken, getDiffTime, isImageFile, isVideoFile } from "../../utils";
+import { apiRoute, getApproveToken, getCurrencyByNetwork, getDiffTime, isImageFile, isVideoFile } from "../../utils";
 import { Progress } from "@base-components/Progress";
 import { useFetchV1 } from "../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
@@ -42,10 +42,6 @@ import ModalOrderBox from './components/ModalOrderBox';
 import useOrderBox from "./hooks/useOrderBox";
 import { convertTimeToStringFormat } from "@utils/convertDate";
 import ModalConfirmBuyBox from "./components/ModalConfirmBuyBox";
-const iconWarning = "/images/warning-red.svg";
-const ticketImg = "/images/gamefi-ticket.png"
-const finishedImg = "/images/finished.png";
-const soldoutImg = "/images/soldout.png";
 
 const MysteryBox = ({ id, ...props }: any) => {
     const styles = useStyles();
@@ -90,14 +86,44 @@ const MysteryBox = ({ id, ...props }: any) => {
     // }, [dispatch]);
 
     const [maxBoxCanBuy, setMaxBoxCanBuy] = useState(0);
-    const [boxTypeSelected, onSelectBoxType] = useState<{ [k: string]: any }>({});
+    const videoElement = useRef(null);
+    const [boxTypeSelected, setSelectBoxType] = useState<{ [k: string]: any }>({});
+    const onSelectBoxType = (boxType: { [k: string]: any }) => {
+        const wrapperVideo = document.querySelector('.wrapperVideo');
+        setSelectBoxType(boxType)
+        if (wrapperVideo) {
+            let elemDivVdo: any = wrapperVideo.querySelector('.video');
+            elemDivVdo && wrapperVideo.removeChild(elemDivVdo);
+
+            elemDivVdo = document.createElement('div');
+            elemDivVdo.className = "video";
+            const video = document.createElement('video');
+            video.autoplay = true;
+            video.controls = false;
+            video.muted = true;
+            video.loop = true;
+            video.preload = "auto"
+            const source = document.createElement('source');
+            source.src = boxType.banner;
+            source.type = "video/mp4";
+            video.appendChild(source);
+            elemDivVdo.appendChild(video);
+            elemDivVdo.style.zIndex = '1';
+            elemDivVdo && wrapperVideo.appendChild(elemDivVdo);
+            video.onloadedmetadata = function () {
+                setTimeout(() => {
+                    elemDivVdo.style.zIndex = '100';
+                }, 500);
+            };
+        }
+    }
 
     useEffect(() => {
         if (!loadingTicket && dataTicket) {
             setNewTicket(false);
             setInfoTicket(dataTicket);
             const firstBoxType = dataTicket.boxTypesConfig?.[0];
-            if (firstBoxType) onSelectBoxType(firstBoxType)
+            if (firstBoxType) setSelectBoxType(firstBoxType)
         }
     }, [dataTicket, loadingTicket, isClaim]);
 
@@ -511,9 +537,8 @@ const MysteryBox = ({ id, ...props }: any) => {
                         </WrapperAlert>
                     }
                     {
-                        (!loadingJoinpool && connectedAccount) && (alreadyJoinPool
-                            ? null
-                            : <WrapperAlert type="error"> Sorry, you have not been chosen as whitelist winner. </WrapperAlert>)
+                        (!loadingJoinpool && connectedAccount && countdown.isBuy) &&
+                        ((alreadyJoinPool || joinPoolSuccess) ? null : <WrapperAlert type="error"> Sorry, you have not been chosen as whitelist winner. </WrapperAlert>)
                     }
                     {!isKYC && !checkingKyc && connectedAccount && (
                         <AlertKYC connectedAccount={connectedAccount} />
@@ -550,15 +575,21 @@ const MysteryBox = ({ id, ...props }: any) => {
                                     {isVideoFile(boxTypeSelected.banner) && <>
                                         <div className="wrapperVideo">
                                             <div className="uncontrol"></div>
-                                            <video
-                                                preload="auto"
-                                                autoPlay
-                                                loop
-                                                muted
-                                            >
-                                                <source src={boxTypeSelected.banner} type="video/mp4" />
-                                                Your browser does not support the video tag.
-                                            </video>
+                                            <div className="onload">
+                                                <HashLoader loading={true} color={'#72F34B'} />
+                                            </div>
+                                            <div className="video">
+                                                <video
+                                                    preload="auto"
+                                                    autoPlay
+                                                    loop
+                                                    muted
+                                                    ref={videoElement}
+                                                >
+                                                    <source src={boxTypeSelected.banner} type="video/mp4" />
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            </div>
                                         </div>
                                     </>
                                     }
@@ -577,8 +608,8 @@ const MysteryBox = ({ id, ...props }: any) => {
                                     <div className="divider"></div>
                                     <div className={mysteryStyles.cardBodyDetail}>
                                         <div className={mysteryStyles.currency}>
-                                            <img src={`/images/icons/${(infoTicket.accept_currency || '').toLowerCase()}.png`} alt="" />
-                                            <span className="text-uppercase">{infoTicket.token_conversion_rate} {infoTicket.accept_currency}</span>
+                                            <img className="icon" src={`/images/icons/${(infoTicket.network_available || '').toLowerCase()}.png`} alt="" />
+                                            <span className="text-uppercase">{infoTicket.token_conversion_rate} {getCurrencyByNetwork(infoTicket.network_available)}</span>
                                         </div>
                                         <div className="detail-items">
                                             <div className="item">
@@ -594,14 +625,14 @@ const MysteryBox = ({ id, ...props }: any) => {
                                             <h4 className="text-uppercase">TYPE</h4>
                                             <div className="box-types">
                                                 {
-                                                    (infoTicket.boxTypesConfig || []).map((t: any) => <div onClick={() => onSelectBoxType(t)} className={clsx("box-type", { active: t.id === boxTypeSelected.id })}>
+                                                    (infoTicket.boxTypesConfig || []).map((t: any) => <div key={t.id} onClick={() => onSelectBoxType(t)} className={clsx("box-type", { active: t.id === boxTypeSelected.id })}>
                                                         <img src={t.icon} className="icon" alt="" />
                                                         <span>{t.name} x{t.limit}</span>
                                                     </div>)
                                                 }
                                             </div>
                                         </div>
-                                        <AscDescAmountBox
+                                        {countdown.isBuy && <AscDescAmountBox
                                             descMinAmount={descMinAmount}
                                             descAmount={descAmount}
                                             ascAmount={ascAmount}
@@ -611,7 +642,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                             disabledSub={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === 0}
                                             disabledAdd={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
                                             disabledMax={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
-                                        />
+                                        />}
                                         {
                                             (!loadingJoinpool && !alreadyJoinPool && countdown.isWhitelist && !joinPoolSuccess) &&
                                             <ButtonBase color="green" onClick={onApplyWhitelist} isLoading={isApplyingWhitelist} disabled={alreadyJoinPool || poolJoinLoading || joinPoolSuccess || isApplyingWhitelist} className="text-transform-unset w-full">
@@ -630,14 +661,29 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                 Buy Now
                                             </ButtonBase>
                                         }
-
+                                        {
+                                            countdown.isFinished &&
+                                            <div className={clsx(styles.infoTicket, styles.finished)}>
+                                                <div className="img-finished">
+                                                    <img src={"/images/finished.png"} alt="" />
+                                                </div>
+                                                {!getRemaining(
+                                                    infoTicket.total_sold_coin,
+                                                    infoTicket.token_sold
+                                                ) && (
+                                                        <div className="soldout">
+                                                            <img src={"/images/soldout.png"} alt="" />
+                                                        </div>
+                                                    )}
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className={styles.displayContent}>
-                        <AboutMysteryBox info={infoTicket} timelines={timelines} />
+                        <AboutMysteryBox info={infoTicket} timelines={timelines} defaultTab={2} />
                     </div>
                 </div>
             </>

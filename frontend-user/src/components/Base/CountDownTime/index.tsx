@@ -69,10 +69,11 @@ export const CountDownTimeV1 = (props: Props) => {
             props.onFinish && props.onFinish();
         }
     }, [isFinish, props]);
-
+    console.log('time.days', time.days)
     return (
         <div className={clsx(styles.cardBodyClock, props.className)}>
             <div className="times">
+
                 <span className="time">
                     <span className="number">
                         {formatNumber(time.days)}
@@ -181,7 +182,7 @@ export const CountDownTimeV2 = (props: PropsV2) => {
                         <span>{formatNumber(time.seconds)}s</span>
                     )}
                 </>
-            )}        
+            )}
         </span>
     </div>
 }

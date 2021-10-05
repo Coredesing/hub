@@ -167,7 +167,9 @@ const useStyles = makeStyles((theme: any) => ({
           fontStyle: 'normal',
           fontWeight: 600,
           fontSize: '14px',
-          background: '#000000'
+          background: '#000000',
+          display: 'grid',
+          placeContent: 'center'
         }
 
       }

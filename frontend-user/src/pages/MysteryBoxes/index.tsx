@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { withRouter, useParams } from 'react-router-dom';
+import { withRouter, useParams, Link } from 'react-router-dom';
 import clsx from 'clsx';
 import useStyles from './style';
 import DefaultLayout from '../../components/Layout/DefaultLayout'
@@ -7,7 +7,7 @@ import withWidth from '@material-ui/core/withWidth';
 import { useFetchV1 } from '../../hooks/useFetch';
 import { TOKEN_TYPE } from '../../constants';
 import { PaginationResult } from '../../types/Pagination';
-import { Backdrop, CircularProgress, Link, useTheme, Button } from '@material-ui/core';
+import { Backdrop, CircularProgress, useTheme, Button } from '@material-ui/core';
 import { getRoute } from './utils';
 import CountDownTimeV1 from '@base-components/CountDownTime';
 
@@ -67,9 +67,9 @@ const MysteryBoxes = (props: any) => {
               <div className="countdown">
                 <CountDownTimeV1 time={{ days: 1, hours: 1, minutes: 1, seconds: 44 }} />
               </div>
-              <Button className="btn">
+              <Link to="/mystery-box/88" className="btn">
                 JOIN NOW
-              </Button>
+              </Link>
             </div>
           </div>
         </div>

@@ -103,6 +103,7 @@ const MysteryBoxes = (props: any) => {
               </div> */}
               <div className="countdown-box">
                 {/* <CountDownTimeV1 time={currentBox.countdownTime} className="countdown" /> */}
+                <span className="text-uppercase">WHITELIST START IN</span>
                 <CountDownTimeV1 time={{date1: 1633528800000, date2: Date.now()}} className="countdown" /> 
                 
                 {/* <Link to={`/mystery-box/${currentBox.id}`} className="btn">

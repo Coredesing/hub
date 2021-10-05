@@ -200,9 +200,18 @@ const useStyles = makeStyles((theme: any) => ({
         display: 'block',
         maxWidth: '480px',
         textTransform: 'uppercase',
+
+        [theme.breakpoints.up('xl')] : {
+          fontSize: '43px',
+          maxWidth: '600px',
+          marginBottom: '20px',
+        },
       },
       '& .status': {
         marginBottom: '12px',
+        [theme.breakpoints.up('xl')] : {
+          marginBottom: '20px',
+        },
         '& span': {
           padding: '4px 10px',
           fontFamily: 'Firs Neue',
@@ -215,6 +224,9 @@ const useStyles = makeStyles((theme: any) => ({
           background: '#000',
           color: '#fff',
           borderRadius: '4px',
+          [theme.breakpoints.up('xl')] : {
+            fontSize: '18px',
+          },
         },
 
         '&.upcoming span': {
@@ -240,6 +252,11 @@ const useStyles = makeStyles((theme: any) => ({
         color: '#FFFFFF',
         maxWidth: '480px',
         marginBottom: '16px',
+        [theme.breakpoints.up('xl')] : {
+          fontSize: '20px',
+          maxWidth: '600px',
+          marginBottom: '20px',
+        },
       },
       '& .detail-items': {
         display: 'grid',
@@ -288,11 +305,21 @@ const useStyles = makeStyles((theme: any) => ({
           [theme.breakpoints.down('sm')] : {
             maxWidth: '280px',
           },
+          
           fontFamily: 'Space Ranger',
           background: 'rgba(0, 0, 0, 0.5)',
+          
           '& .time .number': {
             transform: 'skew(-20deg)',
-            fontSize: '28px'
+            fontSize: '28px',
+            [theme.breakpoints.up('xl')] : {
+              fontSize: '35px',
+            },
+          },
+          '& .time .text': {
+            [theme.breakpoints.up('xl')] : {
+              fontSize: '10px',
+            },
           }
         },
         '& .btn': {

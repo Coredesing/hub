@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: any) => ({
         '&.disabled': {
             opacity: '.5'
         },
-        '&.gray': {
+        '&.grey': {
             background: '#727272 !important',
             color: '#fff',
         },
@@ -39,7 +39,7 @@ type Props = {
     disabled?: boolean,
     children: any,
     isLoading?: boolean,
-    color?: 'gray' | 'green' | 'yellow',
+    color?: 'grey' | 'green' | 'yellow',
     [k: string]: any
 }
 export const ButtonBase = ({
@@ -48,7 +48,7 @@ export const ButtonBase = ({
     children,
     className,
     isLoading,
-    color = 'gray',
+    color = 'grey',
     ...props }: Props) => {
     const styles = useStyles();
     return (

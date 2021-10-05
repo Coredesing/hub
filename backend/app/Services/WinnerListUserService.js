@@ -19,7 +19,7 @@ class WinnerListUserService {
       builder = builder.where('campaign_id', params.campaign_id);
     }
 
-    if ((!params.search_term || params.search_term.length < 4) && process.env.WHITELIST_ADDRESS_WINNERS) {
+    if ((!params.search_term || params.search_term.length < 4) && process.env.WHITELIST_ADDRESS_WINNERS && !params.forceWinner) {
       const whitelist = process.env.WHITELIST_ADDRESS_WINNERS.split(',')
       builder = builder.whereNotIn('wallet_address', whitelist)
     }

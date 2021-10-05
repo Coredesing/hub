@@ -392,7 +392,7 @@ class CampaignController {
       // check user winner or reserved lis if campaign is lottery
       if (camp.buy_type === Const.BUY_TYPE.WHITELIST_LOTTERY) {
         // check if exist in winner list
-        winner = await (new WinnerListService()).findOneByFilters({ wallet_address: userWalletAddress, campaign_id });
+        winner = await (new WinnerListService()).findOneByFilters({ wallet_address: userWalletAddress, campaign_id: campaign_id, forceWinner: true });
 
         // if user not in winner list then check on reserved list
         if (!isFreeBuyTime && !winner) {

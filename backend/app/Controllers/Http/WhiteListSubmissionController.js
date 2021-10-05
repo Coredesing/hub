@@ -188,27 +188,30 @@ class WhiteListSubmissionController {
       const userParams = {
         'wallet_address': wallet_address
       }
-      const user = await userService.findUser(userParams);
-      if (!user || !user.email) {
-        return HelperUtils.responseBadRequest("You're not valid user to join this campaign !");
+      if (!camp.kyc_bypass) {
+        const user = await userService.findUser(userParams);
+        if (!user || !user.email) {
+          return HelperUtils.responseBadRequest("User not found");
+        }
+        if (user.is_kyc !== Const.KYC_STATUS.APPROVED) {
+          return HelperUtils.responseBadRequest("Your KYC status is not verified");
+        }
+        let forbidden_countries = [];
+        try {
+          forbidden_countries = JSON.parse(camp.forbidden_countries);
+        } catch (_) {
+          forbidden_countries = [];
+        }
+        if (forbidden_countries.includes(user.national_id_issuing_country)) {
+          return HelperUtils.responseBadRequest(`Citizens and residents of ${CountryList && CountryList[user.national_id_issuing_country] || user.national_id_issuing_country} are restricted to participate in this pool`);
+        }
       }
-      if (user.is_kyc !== Const.KYC_STATUS.APPROVED) {
-        return HelperUtils.responseBadRequest("You must register for KYC successfully to be allowed to join. Or the email address and/or wallet address you used for KYC does not match the one you use on Red Kite. Please check and update on Blockpass to complete KYC verification.");
-      }
-      let forbidden_countries = [];
-      try {
-        forbidden_countries = JSON.parse(camp.forbidden_countries);
-      } catch (_) {
-        forbidden_countries = [];
-      }
-      if (forbidden_countries.includes(user.national_id_issuing_country)) {
-        return HelperUtils.responseBadRequest(`Sorry, citizens and residents of ${CountryList && CountryList[user.national_id_issuing_country] || user.national_id_issuing_country} are restricted to participate in the IGO.`);
-      }
+
       // check user tier
       const userTier = (await HelperUtils.getUserTierSmartWithCached(wallet_address))[0];
       // check user tier with min tier of campaign
       if (camp.min_tier > userTier) {
-        return HelperUtils.responseBadRequest("You're not tier qualified for join this campaign!");
+        return HelperUtils.responseBadRequest("Ranking not found");
       }
       // call to db to get tier info
       const tierService = new TierService();
@@ -218,7 +221,7 @@ class WhiteListSubmissionController {
       };
       const tier = await tierService.findByLevelAndCampaign(tierParams);
       if (!tier) {
-        return HelperUtils.responseBadRequest("You're not tier qualified for join this campaign!");
+        return HelperUtils.responseBadRequest("Ranking not found");
       }
 
       // call to whitelist submission service

@@ -233,13 +233,23 @@ const useStyles = makeStyles((theme: any) => ({
         }
       },
       '& .countdown-box': {
-        display: 'grid',
-        gridTemplateColumns: '400px minmax(120px, 200px)',
-        [theme.breakpoints.down('xs')]: {
-          gridTemplateColumns: '1fr',
-          placeItems: 'center',
-
+        '&>span': {
+          fontFamily: 'Firs Neue',
+          fontStyle: 'normal',
+          fontWeight: 'normal',
+          fontSize: '12px',
+          lineHeight: '16px',
+          color: '#AEAEAE',
+          display: "block",
+          marginBottom: '8px',
         },
+        // display: 'grid',
+        // gridTemplateColumns: '400px minmax(120px, 200px)',
+        // [theme.breakpoints.down('xs')]: {
+        //   gridTemplateColumns: '1fr',
+        //   placeItems: 'center',
+
+        // },
         '& .countdown': {
           maxWidth: '400px',
           width: '100%',

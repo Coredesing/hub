@@ -307,7 +307,9 @@ class PoolService {
       data.fill({
         name: item.name,
         amount: item.amount,
-        rate: item.rate
+        rate: item.rate,
+        icon: item.icon,
+        banner: item.banner,
       });
       return data;
     });
@@ -324,6 +326,7 @@ class PoolService {
         limit: item.limit,
         icon: item.icon,
         banner: item.banner,
+        image: item.image,
       });
       return data;
     });

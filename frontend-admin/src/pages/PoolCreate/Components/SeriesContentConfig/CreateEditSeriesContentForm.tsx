@@ -31,7 +31,9 @@ function CreateEditSeriesContentForm(props: any) {
       // startTime: data.startTime.format(DATETIME_FORMAT),
       amount: data.amount,
       name: data.name,
-      rate: data.rate
+      rate: data.rate,
+      icon: data.icon,
+      banner: data.banner,
     };
     handleCreateUpdateData && handleCreateUpdateData(responseData);
   };
@@ -119,6 +121,32 @@ function CreateEditSeriesContentForm(props: any) {
               renderError(errors, 'maxBuyGreaterThanZero')
             }
           </p>
+        </div>
+
+        <div className={classes.formControl}>
+          <label className={classes.formControlLabel}>Icon</label>
+          <div>
+              <TextFieldWithValidate
+                  register={register}
+                  errors={errors}
+                  initValue={editData.icon}
+                  controlName={'icon'}
+                  validateRule={{}}
+              />
+          </div>
+        </div>
+
+        <div className={classes.formControl}>
+          <label className={classes.formControlLabel}>Banner</label>
+          <div>
+              <TextFieldWithValidate
+                  register={register}
+                  errors={errors}
+                  initValue={editData.banner}
+                  controlName={'banner'}
+                  validateRule={{}}
+              />
+          </div>
         </div>
       </ConfirmDialog>
 

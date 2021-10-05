@@ -17,11 +17,7 @@ const useStylesTable = makeStyles({
   },
 });
 
-const createData = (id: number, name: any, amount: any, rate: number) => {
-  return { id, name, amount, rate };
-};
-
-const createDefaultTiers = () => {
+const createDefaultData = () => {
   return [];
 };
 
@@ -29,7 +25,7 @@ function BoxTypesConfigTable(props: any) {
   const classes = useStyles();
   const classesTable = useStylesTable();
   const {
-    register, watch, setValue, control, errors,
+    register, setValue,
     poolDetail,
   } = props;
   const renderError = renderErrorCreatePool;
@@ -37,7 +33,7 @@ function BoxTypesConfigTable(props: any) {
   const [editData, setEditData] = useState({});
   const [editRow, setEditRow] = useState(0);
   const [isEdit, setIsEdit] = useState(true);
-  const [rows, setRows] = useState(createDefaultTiers());
+  const [rows, setRows] = useState(createDefaultData());
 
   useEffect(() => {
     if (poolDetail && poolDetail.boxTypesConfig) {
@@ -117,6 +113,7 @@ function BoxTypesConfigTable(props: any) {
               <TableCell>Limit</TableCell>
               <TableCell>Icon</TableCell>
               <TableCell>Banner</TableCell>
+              <TableCell>Loading Image</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -128,6 +125,7 @@ function BoxTypesConfigTable(props: any) {
                   <TableCell>{row.limit}</TableCell>
                   <TableCell>{row.icon}</TableCell>
                   <TableCell>{row.banner}</TableCell>
+                  <TableCell>{row.image}</TableCell>
                   <TableCell align="right">
                     <Button
                       variant="contained"

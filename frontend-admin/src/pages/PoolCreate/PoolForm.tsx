@@ -886,7 +886,7 @@ function PoolForm(props: any) {
       {
         watchTokenType && watchTokenType === TOKEN_TYPE.MYSTERY_BOX &&
         <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <div className={classes.exchangeRate}>
               <SeriesContentTable
                   poolDetail={poolDetail}
@@ -899,7 +899,7 @@ function PoolForm(props: any) {
             </div>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <div className={classes.exchangeRate}>
               <BoxTypesConfigTable
                   poolDetail={poolDetail}

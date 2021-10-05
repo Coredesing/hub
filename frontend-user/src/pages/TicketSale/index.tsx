@@ -54,7 +54,7 @@ const TicketSale = (props: any) => {
       setRecall(false);
     }
   }, [loadingActivePools, loadingUpcomingPools, loadingcompletePools]);
-
+  
   return (
     checkParamType.checking ?
       <Backdrop open={checkParamType.checking} style={{ color: '#fff', zIndex: theme.zIndex.drawer + 1, }}>

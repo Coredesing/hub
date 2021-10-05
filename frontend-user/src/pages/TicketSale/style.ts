@@ -161,10 +161,18 @@ export const useCardStyles = makeStyles((theme) => ({
   },
   cardsUpcoming: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, 360px)',
     gap: '20px',
     placeContent: 'center',
+    [theme.breakpoints.up('lg')]: {
+      gridTemplateColumns: '360px 360px 360px',
+    },
+    [theme.breakpoints.down('md')]: {
+      gridTemplateColumns: 'repeat(auto-fit, 360px)',
+    },
     [theme.breakpoints.down('sm')]: {
+      gridTemplateColumns: 'repeat(auto-fit, 330px)',
+    },
+    [theme.breakpoints.down('xs')]: {
       gridTemplateColumns: '310px',
     },
   },
@@ -213,7 +221,8 @@ export const useCardStyles = makeStyles((theme) => ({
     },
     '& img': {
       width: '100%',
-      height: '100%'
+      height: '100%',
+      objectFit: 'cover',
     },
 
   },

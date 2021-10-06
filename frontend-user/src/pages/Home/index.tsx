@@ -23,6 +23,7 @@ import {
 import { TOKEN_TYPE } from "../../constants";
 import Instruction from "./Instruction";
 import TicketSlide from "./TicketSlide";
+import MysteryBoxes from "./MysteryBoxes";
 
 type Data = { [k: string]: any };
 type ResponseData = {
@@ -53,14 +54,11 @@ const Home = (props: any) => {
   );
   const {
     data: mysteryBoxes = {} as ResponseData,
-    loading: loadingMysteryBoxes
-  } = useFetchV1(`/pools/mysterious-box?token_type=${TOKEN_TYPE.Box}`
-  );
+    loading: loadingMysteryBoxes,
+  } = useFetchV1(`/pools/mysterious-box?token_type=${TOKEN_TYPE.Box}`);
   const { data: perfomances = [] as Data[], loading: loadingcompletePools } =
     useFetchV1("/home/performance");
 
-    console.log('mysteryBoxes?.data', mysteryBoxes?.data);
-    
   const partnerships = [
     {
       banner: "/images/partnerships/kaby-arena.png",
@@ -219,6 +217,38 @@ const Home = (props: any) => {
         </div>
       </section>
       {/* <Instruction /> */}
+
+      {mysteryBoxes?.data?.length && (
+        <section className={clsx(styles.tokenSales, styles.section)}>
+          <div className="rectangle bl">
+            <img src="/images/token-sales-text.svg" alt="" />
+          </div>
+          <div
+            className={clsx(styles.wrapperContent, styles.mysteryBoxSection)}
+          >
+            <div
+              className={clsx(styles.content, "vertical")}
+              style={{ width: "40%" }}
+            >
+              <div className={clsx(styles.contentTitle, "center")}>
+                <h3>Mystery Boxes</h3>
+                <h5>
+                  To view information about Mystery Boxes, click the Discover
+                  button below.
+                </h5>
+                <Link href="/#/mystery-boxes" className={styles.btnDiscover}>
+                  Discover
+                </Link>
+              </div>
+              <div className={clsx(styles.cards, styles.cardsTokenSales)} />
+            </div>
+            <div style={{ width: "55%" }}>
+              <MysteryBoxes currentBox={mysteryBoxes?.data[0]} />
+            </div>
+          </div>
+        </section>
+      )}
+
       {ticketSales?.data?.length && (
         <section className={clsx(styles.ticketSales, styles.section)}>
           <div className="rectangle gr">
@@ -284,34 +314,6 @@ const Home = (props: any) => {
           </div>
           <TicketSlide data={tokenSales.data} />
         </section>
-      )}
-      {mysteryBoxes?.data?.length && (
-        <section className={clsx(styles.tokenSales, styles.section)}>
-        <div className="rectangle bl">
-          <img src="/images/token-sales-text.svg" alt="" />
-        </div>
-        <div
-          className={styles.wrapperContent}
-          style={
-            isSmScreen
-              ? { paddingRight: "28px", paddingLeft: "28px" }
-              : undefined
-          }
-        >
-          <div className={clsx(styles.content, "vertical")}>
-            <div className={clsx(styles.contentTitle, "center")}>
-              <h3>Mystery Boxes</h3>
-              <h5>
-                To view information about Mystery Boxes, click the Discover button below.
-              </h5>
-              <Link href="/#/mystery-boxes" className={styles.btnDiscover}>
-                Discover
-              </Link>
-            </div>
-            <div className={clsx(styles.cards, styles.cardsTokenSales)} />
-          </div>
-        </div>
-      </section>
       )}
       <section className={clsx(styles.partners, styles.section)}>
         <div className="rectangle gr">

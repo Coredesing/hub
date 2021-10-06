@@ -453,7 +453,6 @@ const MysteryBox = ({ id, ...props }: any) => {
                 wallet_address: connectedAccount,
             }) as any
             const resObj = await response.json()
-            console.log(resObj)
             // setApplyingWhitelist(false)
 
             if (resObj?.status === 200) {

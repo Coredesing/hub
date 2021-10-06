@@ -7,15 +7,19 @@ import withWidth from '@material-ui/core/withWidth';
 import { useFetchV1 } from '../../hooks/useFetch';
 import { TOKEN_TYPE } from '../../constants';
 import { PaginationResult } from '../../types/Pagination';
-import { Backdrop, CircularProgress, useTheme, Button } from '@material-ui/core';
+import { Backdrop, CircularProgress, useTheme, Button, useMediaQuery } from '@material-ui/core';
 import CountDownTimeV1, { CountDonwRanges } from '@base-components/CountDownTime';
 import SlideCard from './components/SlideCard';
 import { numberWithCommas } from '@utils/formatNumber';
 import { getCurrencyByNetwork } from '@utils/index';
 import { getCountdownInfo } from './utils';
 
+import SwiperCore, { Pagination } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
+import WrapperContent from '@base-components/WrapperContent';
 const MysteryBoxes = (props: any) => {
   const theme = useTheme();
+  const isSmScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const styles = { ...useStyles() };
   const [recall, setRecall] = useState(false);
   const refresh = useCallback(() => {
@@ -51,67 +55,81 @@ const MysteryBoxes = (props: any) => {
   }, [currentBox]);
 
   return (
-    <DefaultLayout>
-      {loadingcompletePools && !currentBox?.title ?
-        <Backdrop open={loadingcompletePools} style={{ color: '#fff', zIndex: theme.zIndex.drawer + 1, }}>
-          <CircularProgress color="inherit" />
-        </Backdrop> :
-        <section className={styles.section}>
-          <div className={styles.contentBox}>
-            <div className="banner" style={{ backgroundImage: `url(${currentBox.banner})` }}>
-            </div>
-            <div className={styles.content}>
-              <div className="detail-box">
-                <h1>
-                  {currentBox.title}
-                </h1>
-                <div className={clsx("status", { upcoming: time.isUpcoming, sale: time.isOnsale, over: time.isFinished })}>
-                  <span>
-                    {time.isUpcoming && 'Upcoming'}
-                    {time.isOnsale && 'ON SALE'}
-                    {time.isFinished && 'Sold Out'}
-                  </span>
-                </div>
-                <div className="desc">
-                  {currentBox.description}
-                </div>
+    <DefaultLayout hiddenFooter>
+      <WrapperContent useShowBanner={false}>
+        {loadingcompletePools && !currentBox?.title ?
+          <Backdrop open={loadingcompletePools} style={{ color: '#fff', zIndex: theme.zIndex.drawer + 1, }}>
+            <CircularProgress color="inherit" />
+          </Backdrop> :
+          <section className={styles.section}>
+            <div className={styles.contentBox}>
+              <div className="banner" style={{ backgroundImage: `url(${currentBox.banner})` }}>
+              </div>
+              <div className={styles.content}>
+                <div className="detail-box">
+                  <h1>
+                    {currentBox.title}
+                  </h1>
+                  <div className={clsx("status", { upcoming: time.isUpcoming, sale: time.isOnsale, over: time.isFinished })}>
+                    <span>
+                      {time.isUpcoming && 'Upcoming'}
+                      {time.isOnsale && 'ON SALE'}
+                      {time.isFinished && 'Sold Out'}
+                    </span>
+                  </div>
+                  <div className="desc">
+                    {currentBox.description}
+                  </div>
 
-                <div className="detail-items">
-                  <div className="item">
-                    <label>TOTAL SALE</label>
-                    <span>{numberWithCommas(currentBox.total_sold_coin || 0)} Boxes</span>
+                  <div className="detail-items">
+                    <div className="item">
+                      <label>TOTAL SALE</label>
+                      <span>{numberWithCommas(currentBox.total_sold_coin || 0)} Boxes</span>
+                    </div>
+                    <div className="item">
+                      <label>PRICE</label>
+                      <span>{currentBox.token_conversion_rate} {getCurrencyByNetwork(currentBox.network_available)}</span>
+                    </div>
+                    <div className="item">
+                      <label>SUPPORTED</label>
+                      <span className="icon">{currentBox.network_available} <img src={`/images/icons/${(currentBox.network_available || '').toLowerCase()}.png`} alt="" /></span>
+                    </div>
                   </div>
-                  <div className="item">
-                    <label>PRICE</label>
-                    <span>{currentBox.token_conversion_rate} {getCurrencyByNetwork(currentBox.network_available)}</span>
-                  </div>
-                  <div className="item">
-                    <label>SUPPORTED</label>
-                    <span className="icon">{currentBox.network_available} <img src={`/images/icons/${(currentBox.network_available || '').toLowerCase()}.png`} alt="" /></span>
-                  </div>
+                  <Link to={`/mystery-box/${currentBox.id}`} className={styles.btnJoin}>
+                    JOIN NOW
+                  </Link>
                 </div>
-                <Link to={`/mystery-box/${currentBox.id}`} className={styles.btnJoin}>
-                  JOIN NOW
-                </Link>
+              </div>
+              <div className="detail-countdown-box">
+                <div className="wrapper-countdown">
+                  <span>{time.title}</span>
+                  {
+                    time.date1 &&
+                    <CountDownTimeV1 time={{ date1: time.date1, date2: time.date2 }} className="countdown" />
+                  }
+                </div>
               </div>
             </div>
-            <div className="detail-countdown-box">
-              <div className="wrapper-countdown">
-                <span>{time.title}</span>
+            <div className={styles.wrapperSlideBoxes}>
+              <div className="slides">
                 {
-                  time.date1 &&
-                  <CountDownTimeV1 time={{ date1: time.date1, date2: time.date2 }} className="countdown" />
+                  isSmScreen ? <Swiper
+                    slidesPerView={"auto"}
+                    spaceBetween={6}
+                    freeMode={true}
+                    pagination={{
+                      clickable: true,
+                    }}
+                  >
+                    {(misteryBoxes?.data || []).map((item) => <SwiperSlide style={{ width: '220px' }} key={item.id}> <SlideCard onSelectItem={onSelectBox} key={item.id} active={currentBox.id === item.id} item={item} compareTime={compareTime} /> </SwiperSlide>)}
+                  </Swiper> :
+                    (misteryBoxes?.data || []).map((item) => <SlideCard onSelectItem={onSelectBox} key={item.id} active={currentBox.id === item.id} item={item} compareTime={compareTime} />)
                 }
               </div>
             </div>
-          </div>
-          <div className={styles.wrapperSlideBoxes}>
-            <div className="slides">
-              {(misteryBoxes?.data || []).map((item) => <SlideCard onSelectItem={onSelectBox} key={item.id} active={currentBox.id === item.id} item={item} compareTime={compareTime}  />)}
-            </div>
-          </div>
-        </section>
-      }
+          </section>
+        }
+      </WrapperContent>
     </DefaultLayout>
 
   );

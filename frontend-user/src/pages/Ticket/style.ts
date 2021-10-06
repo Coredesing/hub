@@ -679,7 +679,7 @@ export const useAboutStyles = makeStyles((theme) => ({
   },
   wrapperBoxTimeLine: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, 220px)',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(180px, calc(100% / 5)))',
     gridAutoRows: 'minmax(max-content, 1fr)',
     placeContent: 'center',
     '& .box': {
@@ -1038,7 +1038,7 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
     }
   },
   cardImg: {
-
+    width: '100%',
     '& .wrapperVideo': {
       position: 'relative',
       height: '379px',

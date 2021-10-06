@@ -401,7 +401,7 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
                 <TableRowBody key={idx}>
                   <TableCell component="th" scope="row"> {idx + 1} </TableCell>
                   <TableCell align="left" className="text-uppercase">
-                    <Box display="flex" alignItems="center" gridGap="8px">
+                    <Box display="flex" alignItems="center" gridGap="20px">
                       <img src={row.icon} width='32' height="34" alt="" />
                       <span className="text-weight-600">{row.name}</span>
                       

@@ -682,6 +682,9 @@ export const useAboutStyles = makeStyles((theme) => ({
     gridTemplateColumns: 'repeat(auto-fit, minmax(180px, calc(100% / 5)))',
     gridAutoRows: 'minmax(max-content, 1fr)',
     placeContent: 'center',
+    [theme.breakpoints.down('xs')]: {
+      gridTemplateColumns: '220px',
+    },
     '& .box': {
       border: '1px solid rgba(255, 255, 255, 0.2)',
       // borderRight: 'unset',

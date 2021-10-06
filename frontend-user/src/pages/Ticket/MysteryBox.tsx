@@ -523,7 +523,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                         transaction={tokenDepositTransaction || transactionHash}
                         networkName={infoTicket?.network_available}
                     />
-                    <ModalOrderBox open={openModalOrderBox} onClose={onCloseModalOrderBox} onConfirm={onOrderBox} isLoadingButton={buyBoxLoading} isSuccessOrderbox={ statusBuyBox}/>
+                    <ModalOrderBox open={openModalOrderBox} onClose={onCloseModalOrderBox} onConfirm={onOrderBox} isLoadingButton={buyBoxLoading} isSuccessOrderbox={statusBuyBox} />
                     <ModalConfirmBuyBox open={openModalConfirmBuyBox} onClose={onCloseModalConfirmBuyBox} onConfirm={onBuyBox} infoBox={infoTicket} isLoadingButton={buyBoxLoading} amount={numBoxBuy} />
                     <div className={styles.content}>
 
@@ -532,6 +532,9 @@ const MysteryBox = ({ id, ...props }: any) => {
                                 Please connect to wallet
                             </WrapperAlert>
                         }
+                        {(alreadyJoinPool || joinPoolSuccess) && <WrapperAlert type="info">
+                            Congratulations! You have successfully applied whitelist.
+                        </WrapperAlert>}
                         {
                             (!loadingJoinpool && connectedAccount && countdown.isBuy) &&
                             ((alreadyJoinPool || joinPoolSuccess) ? null : <WrapperAlert type="error"> Sorry, you have not been chosen as whitelist winner. </WrapperAlert>)

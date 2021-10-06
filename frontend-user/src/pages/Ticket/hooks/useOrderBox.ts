@@ -21,6 +21,7 @@ const useOrderBox = ({ poolId }: PoolDepositActionParams) => {
   const [amount, setAmount] = useState(0);
 
   const orderBox = useCallback(async (amount: number) => {
+    setStatusBuyBox(false);
     if (!amount) return dispatch(alertFailure("Amount must be greater than zero"));
     setAmount(amount);
     if (account && poolId && library) {

@@ -7,7 +7,7 @@ import { Button, Link as LinkMui, useMediaQuery, useTheme } from "@material-ui/c
 import useStyles from './styles';
 import { ChainDefault, GAMEFI_ADDRESS } from '../../../constants/network';
 import { getEtherscanTransactionAddress } from "../../../utils/network";
-const DefaultLayout = ({ style, children, ...props }: any) => {
+const DefaultLayout = ({ style, children, hiddenFooter = false, ...props }: any) => {
   const theme = useTheme();
   const matchXs = useMediaQuery(theme.breakpoints.down("xs"));
   const commonStyle = useCommonStyle();
@@ -52,7 +52,8 @@ const DefaultLayout = ({ style, children, ...props }: any) => {
           })
 
         }</MainDefaultLayout>
-        <FooterLandingLayout />
+        {!hiddenFooter && <FooterLandingLayout />}
+
       </div>
     </div>
   );

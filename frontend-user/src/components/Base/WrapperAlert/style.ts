@@ -9,10 +9,24 @@ const useStyles = makeStyles((theme: any) => {
       width: '100%',
       display: 'grid',
       placeItems: 'center',
+
     },
-    alert: {
+    alertBox: {
       width: '100%',
       maxWidth: '1120px',
+      display: 'grid',
+      placeContent: 'center',
+      '&.error': {
+        background: '#591425',
+        color: ' #fff',
+      },
+      '&.info': {
+        background: '#244a9c',
+        color: '#fff'
+      },
+    },
+    alert: {
+      width: 'fit-content',
       marginTop: '12px',
       marginBottom: '12px',
       borderRadius: '2px',
@@ -22,23 +36,23 @@ const useStyles = makeStyles((theme: any) => {
       textAlign: 'center',
       fontWeight: 'normal',
       fontSize: '15px',
-      lineHeight: '22px',
+      // lineHeight: '22px',
       letterSpacing: '0.5px',
-      '&.error': {
-        background: '#591425',
-        color: ' #fff',
+      display: 'grid',
+      gridTemplateColumns: '22px auto',
+      alignItems: 'center',
+      gap: '10px',
+      '& img': {
+
       },
-      '&.info': {
-        background: '#244a9c',
-        color: '#fff'
-      },
+     
       '& a': {
         '&.link': {
           textDecoration: 'underline',
           fontFamily: 'inherit',
           fontStyle: 'inherit',
           color: 'inherit',
-          
+
         },
         '&.kyc-link': {
           fontFamily: 'inherit',

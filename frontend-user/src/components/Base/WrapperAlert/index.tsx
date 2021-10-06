@@ -12,17 +12,19 @@ export const WrapperAlert = ({ type = 'error', ...props }: Props) => {
     const classes = useStyles();
     return (
         <div className={clsx(classes.displayContent, props.className)}>
-            <div className={clsx(classes.alert, type)}>
-                {
-                    type === 'error' && <img src={iconWarning} style={{ marginRight: "12px" }} alt="" />
-                }
-                {
-                    type === 'info' && <img src={'/images/warning-white.svg'} style={{ marginRight: "12px" }} alt="" />
-                }
-                {
-                    props.children
-                }
+            <div className={clsx(classes.alertBox, type)}>
+                <div className={clsx(classes.alert )}>
+                    {
+                        type === 'error' && <img src={iconWarning} style={{ marginRight: "12px" }} alt="" />
+                    }
+                    {
+                        type === 'info' && <img src={'/images/warning-white.svg'} style={{ marginRight: "12px" }} alt="" />
+                    }
+                    {
+                        props.children
+                    }
 
+                </div>
             </div>
         </div>
     )

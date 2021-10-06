@@ -390,25 +390,27 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
           <Table>
             <TableHead>
               <TableRowHead>
-                <TableCell>No</TableCell>
-                <TableCell align="left">Name</TableCell>
+                <TableCell width="80px" style={{paddingLeft: '28px'}}>No</TableCell>
+                <TableCell width="300px" style={{padding: '7px'}} align="left">Name</TableCell>
                 {/* <TableCell align="left">Amount</TableCell> */}
-                <TableCell align="left">Rare</TableCell>
+                <TableCell align="left" style={{padding: '7px'}}>Rare</TableCell>
               </TableRowHead>
             </TableHead>
             <TableBody>
               {(info.seriesContentConfig || []).map((row: any, idx: number) => (
                 <TableRowBody key={idx}>
-                  <TableCell component="th" scope="row"> {idx + 1} </TableCell>
-                  <TableCell align="left" className="text-uppercase">
-                    <Box display="flex" alignItems="center" gridGap="8px">
-                      <img src={row.icon} width='32' height="34" alt="" />
+                  <TableCell width="80px" component="th" scope="row" style={{paddingLeft: '28px'}}> {idx + 1} </TableCell>
+                  <TableCell align="left" style={{padding: '7px'}} className="text-uppercase">
+                    <Box display="flex" alignItems="center" gridGap="20px">
+                      <Box style={{background: "#000", placeContent: 'center', borderRadius: '2px', padding: '5px'}} display="grid">
+                        <img src={row.icon} width='30' height="30" alt="" />
+                      </Box>
                       <span className="text-weight-600">{row.name}</span>
-                      
+
                     </Box>
                   </TableCell>
                   {/* <TableCell align="left">{numberWithCommas(row.amount)}</TableCell> */}
-                  <TableCell align="left">{row.rate}%</TableCell>
+                  <TableCell align="left" style={{padding: '7px'}}>{row.rate}%</TableCell>
                 </TableRowBody>
               ))}
             </TableBody>

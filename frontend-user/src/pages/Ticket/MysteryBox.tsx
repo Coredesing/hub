@@ -139,7 +139,7 @@ const MysteryBox = ({ id, ...props }: any) => {
             const timeLinesInfo: { [k: string]: any } = {
                 1: {
                     title: 'UPCOMING',
-                    desc: `Whitelist will be opened on ${convertTimeToStringFormat(new Date(timeLine.startJoinPooltime))}.`
+                    desc: `Stay tuned and prepare to APPLY WHITELIST.`
                 },
                 2: {
                     title: 'WHITELIST',
@@ -188,15 +188,15 @@ const MysteryBox = ({ id, ...props }: any) => {
             }
             else if (timeLine.freeBuyTime && timeLine.freeBuyTime > Date.now()) {
                 timeLinesInfo[3].current = true;
-                setCountdown({ date1: timeLine.freeBuyTime, date2: Date.now(), title: 'Phase 1 End In', isBuy: true });
+                setCountdown({ date1: timeLine.freeBuyTime, date2: Date.now(), title: 'Phase 1 Ends In', isBuy: true });
             }
             else if (timeLine.finishTime > Date.now()) {
                 if (timeLine.freeBuyTime) {
                     timeLinesInfo[4].current = true;
-                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Phase 2 End In', isBuy: true });
+                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Phase 2 Ends In', isBuy: true });
                 } else {
                     timeLinesInfo[3].current = true;
-                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'End Buy In', isBuy: true });
+                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Sale Ends In', isBuy: true });
                 }
             }
             else {
@@ -457,6 +457,7 @@ const MysteryBox = ({ id, ...props }: any) => {
         }
     }
     const [recallBoughtBox, setRecallBoughtBox] = useState(true);
+
     const { data: boughtBoxes = {} as any } = useFetchV1<boolean>(`/pool/${infoTicket?.id}/nft-order?wallet_address=${connectedAccount}`, !!(connectedAccount && 'id' in infoTicket) && recallBoughtBox);
     useEffect(() => {
         if (boughtBoxes && 'amount' in boughtBoxes) {
@@ -493,6 +494,7 @@ const MysteryBox = ({ id, ...props }: any) => {
         if (statusBuyBox) {
             setOpenModalOrderBox(false);
             setRecallBoughtBox(true);
+            onCloseModalOrderBox();
         }
     }, [statusBuyBox]);
 
@@ -507,7 +509,7 @@ const MysteryBox = ({ id, ...props }: any) => {
     }, []);
 
     return (
-        <WrapperContent useShowBanner={false}>
+        <>
             {loadingTicket ? <div className={styles.loader} style={{ marginTop: 70 }}>
                 <HashLoader loading={true} color={'#72F34B'} />
                 <p className={styles.loaderText}>
@@ -521,7 +523,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                         transaction={tokenDepositTransaction || transactionHash}
                         networkName={infoTicket?.network_available}
                     />
-                    <ModalOrderBox open={openModalOrderBox} onClose={onCloseModalOrderBox} onConfirm={onOrderBox} isLoadingButton={buyBoxLoading} />
+                    <ModalOrderBox open={openModalOrderBox} onClose={onCloseModalOrderBox} onConfirm={onOrderBox} isLoadingButton={buyBoxLoading} isSuccessOrderbox={statusBuyBox} />
                     <ModalConfirmBuyBox open={openModalConfirmBuyBox} onClose={onCloseModalConfirmBuyBox} onConfirm={onBuyBox} infoBox={infoTicket} isLoadingButton={buyBoxLoading} amount={numBoxBuy} />
                     <div className={styles.content}>
 
@@ -530,6 +532,9 @@ const MysteryBox = ({ id, ...props }: any) => {
                                 Please connect to wallet
                             </WrapperAlert>
                         }
+                        {(alreadyJoinPool || joinPoolSuccess) && <WrapperAlert type="info">
+                            Congratulations! You have successfully applied whitelist.
+                        </WrapperAlert>}
                         {
                             (!loadingJoinpool && connectedAccount && countdown.isBuy) &&
                             ((alreadyJoinPool || joinPoolSuccess) ? null : <WrapperAlert type="error"> Sorry, you have not been chosen as whitelist winner. </WrapperAlert>)
@@ -682,7 +687,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                     </div>
                 </>
             }
-        </WrapperContent>
+        </>
     );
 }
 export default MysteryBox;

@@ -3,16 +3,23 @@ import { typeDisplayFlex } from '../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => ({
   section: {
-    position: 'relative',
+
     width: '100%',
-    minHeight: 'calc(100vh)',
-    padding: '68px 120px',
-    paddingBottom: '30px',
-
+    minHeight: 'calc(100vh - 80px)',
+    display: 'grid',
+    gridTemplateColumns: 'auto 280px',
     [theme.breakpoints.down('sm')]: {
-      padding: '68px 20px',
+      gridTemplateColumns: '1fr',
     },
-
+  },
+  contentBox: {
+    position: 'relative',
+    paddingLeft: '120px',
+    paddingTop: '60px',
+    [theme.breakpoints.down('sm')]: {
+      gridTemplateColumns: '1fr',
+      padding: '40px 32px',
+    },
     '& .banner': {
       zIndex: 1,
       position: 'absolute',
@@ -50,154 +57,101 @@ const useStyles = makeStyles((theme: any) => ({
       },
 
     },
-    '& .wrapper-slides': {
-      overflow: 'hidden',
-      whiteSpace: 'nowrap',
-      zIndex: 10,
+    '& .detail-countdown-box': {
       position: 'absolute',
+      zIndex: 100,
       bottom: 0,
       left: 0,
-      display: 'grid',
-      placeContent: 'center',
-      placeItems: 'center',
-      background: 'rgba(8, 8, 8, 0.3)',
       width: '100%',
-      '& .slides': {
-        width: 'calc(100% - 68px * 2)',
-        overflow: 'hidden',
-        paddingTop: '20px',
-        paddingBottom: '20px',
-        '& .slide': {
-          transition: '.3s',
-          width: '250px',
-          height: '142px',
-          display: 'inline-block',
-          marginRight: '10px',
-          position: 'relative',
-          cursor: 'pointer',
-          '& img': {
+      background: '#000000',
+      height: '80px',
+      display: 'grid',
+      alignItems: 'center',
+      [theme.breakpoints.down('sm')]: {
+        placeContent: 'center',
+        position: 'relative',
+        background: 'transparent',
+        '&:before': {
+          display: 'none',
+        }
+      },
+
+      '&:before': {
+        background: '#72F34B',
+        width: '100px',
+        height: '100%',
+        transform: 'skew(-30deg)',
+        position: 'absolute',
+        left: '-25px',
+        bottom: 0,
+        content: '""',
+      },
+      '& .wrapper-countdown': {
+        width: 'fit-content',
+        background: '#000000',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        paddingLeft: '120px',
+        [theme.breakpoints.down('sm')]: {
+          maxWidth: '480px',
+          paddingLeft: '0',
+          flexDirection: 'column',
+          background: 'transparent',
+        },
+        '& > span': {
+          fontFamily: 'Firs Neue',
+          fontStyle: 'normal',
+          fontWeight: 'normal',
+          fontSize: '12px',
+          lineHeight: '16px',
+          color: '#AEAEAE',
+          display: 'block',
+          textTransform: 'uppercase',
+        },
+
+        '& .countdown': {
+          background: '#000000',
+          width: '400px',
+          marginLeft: '20px',
+          zIndex: 10,
+          fontFamily: 'Space Ranger',
+          [theme.breakpoints.down('sm')]: {
+            background: 'transparent !important',
+            maxWidth: '400px',
             width: '100%',
-            height: '100%',
-          },
-          '& .detail': {
-            display: 'none',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            placeContent: 'center',
-            placeItems: 'center',
-            zIndex: 100,
-            padding: '15px',
-            '& .info': {
-              position: 'relative',
-              textAlign: 'center',
-              '& h3, & h2, & .countdown': {
-                fontFamily: 'Firs Neue',
-                fontStyle: 'normal',
-              },
-              '&.upcoming': {
-                '& h3': {
-                  color: '#72F34B'
-                }
-              },
-              '&.sale': {
-                '& h3': {
-                  color: '#4BCBF3'
-                }
-              },
-              '&.over': {
-                '& h3': {
-                  color: '#F24B4B'
-                }
-              },
-              '& h3': {
-                fontWeight: 600,
-                fontSize: '14px',
-                lineHeight: '24px',
-                textTransform: 'uppercase',
-                marginBottom: '7px',
-              },
-              '& h2': {
-                fontWeight: 600,
-                fontSize: '20px',
-                lineHeight: '28px',
-                textTransform: 'uppercase',
-                color: '#FFFFFF',
-                marginBottom: '12px',
-                wordWrap: 'break-word',
-                wordBreak: 'break-all',
-                whiteSpace: 'pre-line'
-              },
-              '& .countdown': {
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                '& span': {
-                  fontSize: '12px',
-                  lineHeight: '16px',
-                  color: '#fff',
-                  textTransform: 'uppercase',
-                },
-                '& .time': {
-                  fontSize: '16px',
-                  lineHeight: '28px',
-                  fontWeight: 600,
-                  color: '#fff',
-                }
-              }
+            '& .time .number': {
+              fontSize: '28px',
+              lineHeight: '32px',
             }
+          },
+          '& .time .number': {
+            transform: 'skew(-20deg)',
+            fontSize: '36px',
+            lineHeight: '40px',
+          },
+          '& .time .text': {
+            fontSize: '10px',
           }
-
-        },
-        '& .slide.active, & .slide:hover': {
-          width: '270px',
-          height: '152px',
-          '& img': {
-            // width: 'calc(100% + 20px)',
-            // height: 'calc(100% + 10px)',
-          },
-          '& .detail': {
-            display: 'grid',
-          },
-          '&::before': {
-            position: 'absolute',
-            zIndex: 100,
-            content: '""',
-            top: '-2px',
-            bottom: '-2px',
-            left: '-2px',
-            right: '-2px',
-            '-webkit-box-shadow': '0px 0px 50px 2px rgba(114,243,75, 0.6)',
-            '-moz-box-shadow': '0px 0px 50px 2px rgba(114,243,75,0.6)',
-            'box-shadow': '0px 0px 50px 2px rgba(114,243,75,0.6)',
-          },
-          '&::after': {
-            content: '""',
-            background: 'rgba(0,0,0, 0.6)',
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            top: 0,
-            left: 0,
-          }
-        },
-
-        '& .slide:last-child': {
-          marginRight: 'unset',
         }
       }
-
     }
-
   },
-
   content: {
     position: 'relative',
     zIndex: 100,
+    [theme.breakpoints.down('sm')]: {
+      display: 'grid',
+      placeContent: 'center',
+    },
     '& .detail-box': {
       marginBottom: '90px',
+      [theme.breakpoints.down('sm')]: {
+        display: 'grid',
+        placeItems: 'center',
+        maxWidth: '480px',
+        marginBottom: '20px',
+      },
       [theme.breakpoints.down('xs')]: {
         textAlign: 'center',
       },
@@ -273,6 +227,9 @@ const useStyles = makeStyles((theme: any) => ({
         color: '#FFFFFF',
         maxWidth: '480px',
         marginBottom: '16px',
+        [theme.breakpoints.down('sm')]: {
+          marginBottom: '12px',
+        },
         [theme.breakpoints.up('xl')]: {
           fontSize: '20px',
           maxWidth: '600px',
@@ -286,7 +243,17 @@ const useStyles = makeStyles((theme: any) => ({
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 200px))',
         marginBottom: '32px',
+        [theme.breakpoints.down('sm')]: {
+          gridTemplateColumns: '1fr',
+          width: '100%',
+          marginBottom: '28px',
+          gap: '9px',
+        },
         '& .item': {
+          [theme.breakpoints.down('sm')]: {
+            display: 'flex',
+            justifyContent: 'space-between',
+          },
           '& label': {
             fontFamily: 'Firs Neue',
             fontStyle: 'normal',
@@ -296,6 +263,11 @@ const useStyles = makeStyles((theme: any) => ({
             color: '#AEAEAE',
             display: 'block',
             marginBottom: '4px',
+            [theme.breakpoints.down('sm')]: {
+              color: '#fff',
+              fontSize: '12px',
+              lineHeight: '16px',
+            },
           },
           '& span': {
             fontFamily: 'Firs Neue',
@@ -332,19 +304,9 @@ const useStyles = makeStyles((theme: any) => ({
           display: "block",
           marginBottom: '8px',
         },
-        // display: 'grid',
-        // gridTemplateColumns: '400px minmax(120px, 200px)',
-        // [theme.breakpoints.down('xs')]: {
-        //   gridTemplateColumns: '1fr',
-        //   placeItems: 'center',
-
-        // },
         '& .countdown': {
           maxWidth: '400px',
           width: '100%',
-          // [theme.breakpoints.down('xs')] : {
-          //   maxWidth: '280px',
-          // },
 
           fontFamily: 'Space Ranger',
           background: 'rgba(0, 0, 0, 0.5)',
@@ -362,29 +324,252 @@ const useStyles = makeStyles((theme: any) => ({
             },
           }
         },
-        '& .btn': {
-          padding: '14px 30px',
-          border: '1px solid #72F34B',
-          color: '#72F34B',
-          textTransform: 'uppercase',
-          fontFamily: 'Firs Neue',
-          fontStyle: 'normal',
-          fontWeight: 600,
-          fontSize: '14px',
-          background: '#000000',
+      }
+    },
+  },
+  btnJoin: {
+    padding: '14px 30px',
+    border: '1px solid #72F34B',
+    color: '#72F34B',
+    textTransform: 'uppercase',
+    fontFamily: 'Firs Neue',
+    fontStyle: 'normal',
+    fontWeight: 600,
+    fontSize: '14px',
+    background: '#000000',
+    display: 'grid',
+    placeContent: 'center',
+    borderRadius: '2px',
+    transition: '0.3s',
+    maxWidth: '180px',
+    width: '100%',
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: 'unset',
+    },
+    '&:hover': {
+      color: '#000',
+      background: '#72F34B',
+      transition: '0.3',
+    }
+  },
+
+  wrapperSlideBoxes: {
+    width: '280px',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    zIndex: 10,
+    position: 'relative',
+    // bottom: 0,
+    // left: 0,
+    display: 'grid',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
+    background: 'rgba(8, 8, 8, 0.8)',
+    '& .slides': {
+      overflow: 'hidden',
+      paddingTop: '20px',
+      paddingBottom: '20px',
+      paddingLeft: '20px',
+      paddingRight: '20px',
+      ...typeDisplayFlex,
+      flexDirection: 'column',
+      alignItems: 'center',
+      [theme.breakpoints.down('sm')]: {
+        flexDirection: 'row',
+        gap: '6px',
+      },
+      '& .slide': {
+        border: '1px solid #000',
+        transition: '.3s',
+        width: '220px',
+        minHeight: '130px',
+        position: 'relative',
+        cursor: 'pointer',
+        marginBottom: '6px',
+        paddingTop: '8px',
+        '&  .img-slide': {
+
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 10,
+          '& img': {
+            width: '100%',
+            height: '100%',
+          }
+        },
+        '& .detail': {
+          width: '100%',
+          height: '100%',
+          position: 'relative',
+          zIndex: 100,
           display: 'grid',
-          placeContent: 'center',
-          borderRadius: '2px',
+          opacity: 0,
           transition: '0.3s',
-          '&:hover': {
-            color: '#000',
-            background: '#72F34B',
-            transition: '0.3',
+          '& .info': {
+            position: 'relative',
+            display: 'grid',
+            textAlign: 'center',
+            marginBottom: '60px',
+            '& .status': {
+              placeContent: 'center',
+              display: 'grid',
+
+            },
+            '& span, & h2, & .box-countdown': {
+              fontFamily: 'Firs Neue',
+              fontStyle: 'normal',
+            },
+            '&.upcoming': {
+              '& .status >span': {
+                color: '#72F34B',
+                background: 'rgba(114, 243, 75, 0.3)'
+              }
+            },
+            '&.sale': {
+              '& .status >span': {
+                color: '#4BCBF3',
+                background: 'rgba(75, 233, 243, 0.3)'
+              }
+            },
+            '&.over': {
+              '& .status >span': {
+                color: '#F24B4B',
+                background: 'rgba(242, 75, 75, 0.3)'
+              }
+            },
+            '& .status > span': {
+              display: 'block',
+              marginBottom: '6px',
+              padding: '4px 10px',
+              fontFamily: 'Firs Neue',
+              fontStyle: 'normal',
+              fontWeight: 600,
+              fontSize: '14px',
+              lineHeight: '24px',
+              textTransform: 'uppercase',
+              background: '#000',
+              color: '#fff',
+              borderRadius: '4px',
+              maxWidth: '100px',
+              [theme.breakpoints.up('xl')]: {
+                fontSize: '18px',
+              },
+              [theme.breakpoints.down('xs')]: {
+                fontSize: '14px',
+              },
+              [theme.breakpoints.down('sm')]: {
+                fontSize: '12px',
+                lineHeight: '14px',
+              },
+            },
+            '& h2': {
+              fontWeight: 600,
+              fontSize: '20px',
+              lineHeight: '24px',
+              color: '#FFFFFF',
+              marginBottom: '12px',
+              padding: '0px 10px',
+              wordWrap: 'break-word',
+              wordBreak: 'break-all',
+              whiteSpace: 'pre-line',
+              [theme.breakpoints.down('sm')]: {
+                fontSize: '16px',
+                lineHeight: '20px',
+              },
+            },
+          },
+          '& .box-countdown': {
+            display: 'grid',
+            gap: '7px',
+            alignItems: 'center',
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            '& span': {
+              fontSize: '12px',
+              lineHeight: '16px',
+              color: '#fff',
+              textTransform: 'uppercase',
+              textAlign: 'center',
+              [theme.breakpoints.down('sm')]: {
+                fontSize: '10px',
+                lineHeight: '14px',
+              },
+            },
+            '& .countdown': {
+              width: '100%',
+              background: 'rgba(23, 23, 23, 0.3)',
+              lineHeight: '28px',
+              fontWeight: 600,
+              color: '#fff',
+              paddingLeft: '5px',
+              paddingRight: '5px',
+              '& .times': {
+                gap: '6px',
+                background: 'unset',
+              },
+              '& .time': {
+                width: '40px',
+                '& .number': {
+                  color: '#fff',
+                  fontSize: '24px',
+                  fontFamily: 'Space Ranger',
+                  transform: 'skew(-20deg)'
+                },
+                '& .text': {
+                  fontSize: '8px',
+                  fontFamily: 'Firs Neue'
+                },
+              }
+            }
           }
         }
 
+      },
+      '& .slide.active, & .slide:hover': {
+        border: '1px solid #72F34B',
+        '& .img-slide::before': {
+          content: '""',
+          background: 'rgba(0, 0, 0, 0.7)',
+          width: '100%',
+          height: '100%',
+          position: 'absolute',
+        },
+        '& .detail': {
+          opacity: 1,
+        },
+        '&::before': {
+          position: 'absolute',
+          zIndex: 100,
+          content: '""',
+          top: '-2px',
+          bottom: '-2px',
+          left: '-2px',
+          right: '-2px',
+          '-webkit-box-shadow': '0px 0px 50px 2px rgba(114,243,75, 0.4)',
+          '-moz-box-shadow': '0px 0px 50px 2px rgba(114,243,75,0.4)',
+          'box-shadow': '0px 0px 50px 2px rgba(114,243,75,0.4)',
+        },
+        '&::after': {
+          content: '""',
+          background: 'rgba(0,0,0, 0.6)',
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          top: 0,
+          left: 0,
+        }
+      },
+
+      '& .slide:last-child': {
+        marginRight: 'unset',
       }
-    },
+    }
+
   }
 }));
 

@@ -9,8 +9,8 @@ type ReturnType = {
     isKYC: boolean,
     checkingKyc: boolean
 }
-const useKyc = (connectedAccount: string | null | undefined): ReturnType => {
-    
+const useKyc = (connectedAccount: string | null | undefined, isCheckKyc?: boolean): ReturnType => {
+
     const [info, setInfo] = useState<ReturnType>({
         emailVerified: USER_STATUS.UNVERIFIED,
         email: null,
@@ -28,13 +28,13 @@ const useKyc = (connectedAccount: string | null | undefined): ReturnType => {
                 checkingKyc: false,
             })
         }
-        if(isRequiredKyc) {
+        if (isRequiredKyc || isCheckKyc) {
             connectedAccount && run();
         } else {
-            setInfo(info => ({...info, checkingKyc: false, isKYC: true}));
+            setInfo(info => ({ ...info, checkingKyc: false, isKYC: true }));
         }
-        
-    }, [connectedAccount])
+
+    }, [connectedAccount, isCheckKyc])
     return info;
 }
 

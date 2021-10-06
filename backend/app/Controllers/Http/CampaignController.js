@@ -274,33 +274,37 @@ class CampaignController {
     const campaign_id = request.input('campaign_id');
     const wallet_address = request.header('wallet_address');
     if (!campaign_id) {
-      return HelperUtils.responseBadRequest('Bad request with campaign_id');
+      return HelperUtils.responseBadRequest('Invalid campaign');
     }
-    console.log('Join campaign with params: ', campaign_id, wallet_address);
     try {
       // check campaign
       const campaignService = new CampaignService();
       const camp = await campaignService.findByCampaignId(campaign_id);
       if (!camp || camp.buy_type !== Const.BUY_TYPE.WHITELIST_LOTTERY) {
-        return HelperUtils.responseBadRequest(`Bad request with campaignId ${campaign_id}`)
+        return HelperUtils.responseBadRequest("Invalid campaign")
       }
       const currentDate = ConvertDateUtils.getDatetimeNowUTC();
       // check time to join campaign
       if (camp.start_join_pool_time > currentDate || camp.end_join_pool_time < currentDate) {
-        return HelperUtils.responseBadRequest("It's not right time to join this campaign");
+        return HelperUtils.responseBadRequest("Invalid time");
       }
-      // get user info
-      const userService = new UserService();
-      const userParams = {
-        'wallet_address': wallet_address
+      let email = ''
+      if (!camp.kyc_bypass) {
+        // get user info
+        const userService = new UserService();
+        const userParams = {
+          'wallet_address': wallet_address
+        }
+        const user = await userService.findUser(userParams);
+        if (!user || !user.email) {
+          return HelperUtils.responseBadRequest("User not found");
+        }
+        if (user.is_kyc !== Const.KYC_STATUS.APPROVED) {
+          return HelperUtils.responseBadRequest("Your KYC status is not verified");
+        }
+        email = user.email
       }
-      const user = await userService.findUser(userParams);
-      if (!user || !user.email) {
-        return HelperUtils.responseBadRequest("You're not valid user to join this campaign");
-      }
-      if (user.is_kyc !== Const.KYC_STATUS.APPROVED) {
-        return HelperUtils.responseBadRequest("unsuccessful KYC account");
-      }
+
       // check if user submitted the whitelist form
       const whitelistSubmissionService = new WhitelistSubmissionService();
       const submissionParams = {
@@ -309,13 +313,13 @@ class CampaignController {
       }
       const whitelistSubmission = whitelistSubmissionService.findSubmission(submissionParams)
       if (!whitelistSubmission) {
-        return HelperUtils.responseBadRequest("You haven't submitted the whitelist application form");
+        return HelperUtils.responseBadRequest("Whitelist submission not found");
       }
       // check user tier
       const userTier = (await HelperUtils.getUserTierSmartWithCached(wallet_address))[0];
       // check user tier with min tier of campaign
       if (camp.min_tier > userTier) {
-        return HelperUtils.responseBadRequest("You're not valid for join this campaign!");
+        return HelperUtils.responseBadRequest("You need to achieve higher rank for applying whitelist");
       }
       // call to db to get tier info
       const tierService = new TierService();
@@ -325,10 +329,10 @@ class CampaignController {
       };
       const tier = await tierService.findByLevelAndCampaign(tierParams);
       if (!tier) {
-        return HelperUtils.responseBadRequest("You're not tier qualified for join this campaign");
+        return HelperUtils.responseBadRequest("Ranking not found");
       }
       // call to join campaign
-      await campaignService.joinCampaign(campaign_id, wallet_address, user.email);
+      await campaignService.joinCampaign(campaign_id, wallet_address, email);
       return HelperUtils.responseSuccess(null, "Apply Whitelist successful");
     } catch (e) {
       if (e instanceof BadRequestException) {
@@ -399,7 +403,7 @@ class CampaignController {
           // if user is not in winner list then check with reserved list
           const reserved = await (new ReservedListService()).findOneByFilter({ wallet_address: userWalletAddress, campaign_id });
           if (!reserved) {
-            return HelperUtils.responseBadRequest("Sorry, you are not on the list of winners to join this pool.");
+            return HelperUtils.responseBadRequest("You are not on the list of winners to join this pool.");
           }
           // check time start buy for tier
           if (reserved.start_time > current) {

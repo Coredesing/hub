@@ -38,6 +38,7 @@ export const CountDownTimeV1 = (props: Props) => {
     const [isFinish, setFinish] = useState(false);
 
     useEffect(() => {
+        if(!props.time) return;
         if ('date1' in props.time) {
             setTime(getDiffTime(props.time.date1, props.time.date2))
         } else {

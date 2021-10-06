@@ -279,3 +279,11 @@ body::-webkit-scrollbar-thumb {
 .rounded {
     border-radius: 50%;
 }
+
+.hidden {
+    display: none;
+}
+
+.text-weight-600 {
+    font-weight: 600;
+}

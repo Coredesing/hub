@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CustomModal from '@base-components/CustomModal';
 import { ButtonBase } from '@base-components/Buttons';
 import { FormInputNumber } from '@base-components/FormInputNumber';
@@ -30,19 +30,25 @@ type Props = {
     [k: string]: any,
 }
 
-const ModalOrderBox = ({ open, isLoadingButton, ...props }: Props) => {
+const ModalOrderBox = ({ open, isLoadingButton, isSuccessOrderbox, ...props }: Props) => {
     const styles = useStyles();
     const [numberBox, setNumberBox] = useState(0);
     const onChangeNumberBox = (event: any) => {
-        const {value} = event.target;
+        const { value } = event.target;
         setNumberBox(value ? +value : 0);
     }
     const onClose = () => {
         props.onClose && props.onClose();
+        setNumberBox(0);
     }
     const onConfirm = () => {
         props.onConfirm && props.onConfirm(numberBox);
     }
+    useEffect(() => {
+        if (isSuccessOrderbox) {
+            setNumberBox(0);
+        }
+    }, [isSuccessOrderbox])
     return (
         <CustomModal open={open} onClose={onClose}>
             <div className={styles.wrapperContent}>

@@ -595,8 +595,11 @@ export const useCardStyles = makeStyles((theme) => ({
       paddingLeft: "100px",
     },
     [theme.breakpoints.down("sm")]: {
+      marginBottom: "100px",
       paddingRight: "28px",
       paddingLeft: "28px",
+      flexDirection: "column",
+      alignItems: "center",
     },
   },
 }));

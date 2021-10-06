@@ -39,6 +39,8 @@ const Home = (props: any) => {
   const theme = useTheme();
   const isMdScreen = useMediaQuery(theme.breakpoints.down("md"));
   const isSmScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMdUpScreen = useMediaQuery(theme.breakpoints.up("md"));
+  const isSmUpScreen = useMediaQuery(theme.breakpoints.up("sm"));
 
   const {
     data: ticketSales = {} as ResponseData,
@@ -228,9 +230,12 @@ const Home = (props: any) => {
           >
             <div
               className={clsx(styles.content, "vertical")}
-              style={{ width: "40%" }}
+              style={{ width: isMdUpScreen ? "40%" : undefined }}
             >
-              <div className={clsx(styles.contentTitle, "center")}>
+              <div
+                className={clsx(styles.contentTitle, "center")}
+                style={{ display: "flex", textAlign: "center" }}
+              >
                 <h3>Mystery Boxes</h3>
                 <h5>
                   To view information about Mystery Boxes, click the Discover
@@ -242,7 +247,11 @@ const Home = (props: any) => {
               </div>
               <div className={clsx(styles.cards, styles.cardsTokenSales)} />
             </div>
-            <div style={{ width: "55%" }}>
+            <div
+              style={{
+                width: isMdUpScreen ? "55%" : "80%",
+              }}
+            >
               <MysteryBoxes currentBox={mysteryBoxes?.data[0]} />
             </div>
           </div>

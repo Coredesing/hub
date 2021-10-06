@@ -5,9 +5,15 @@ import { getCountdownInfo } from "@pages/MysteryBoxes/utils";
 import CountDownTimeV1, {
   CountDonwRanges,
 } from "@base-components/CountDownTime";
+import { useMediaQuery, useTheme } from "@material-ui/core";
 
 const MysteryBoxes = ({ currentBox }: any) => {
   const styles = useStyles();
+  const theme = useTheme();
+  const isMdScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const isSmScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const isXsScreen = useMediaQuery(theme.breakpoints.down("xs"));
+
   // const [currentBox, setCurrentBox] = useState<{ [k: string]: any }>({ upcoming: true });
   const [time, setTime] = useState<
     CountDonwRanges & { title?: string; [k: string]: any }
@@ -43,17 +49,19 @@ const MysteryBoxes = ({ currentBox }: any) => {
           </div>
         </div>
       </div>
-      <div className="detail-countdown-box">
-        <div className="wrapper-countdown">
-          <span>{time.title}</span>
-          {time.date1 && (
-            <CountDownTimeV1
-              time={{ date1: time.date1, date2: time.date2 }}
-              className="countdown"
-            />
-          )}
+      {!isXsScreen && (
+        <div className="detail-countdown-box">
+          <div className="wrapper-countdown">
+            <span>{time.title}</span>
+            {time.date1 && (
+              <CountDownTimeV1
+                time={{ date1: time.date1, date2: time.date2 }}
+                className="countdown"
+              />
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

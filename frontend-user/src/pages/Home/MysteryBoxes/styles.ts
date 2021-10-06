@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme: any) => ({
     },
     "& .banner": {
       zIndex: 1,
+      borderRadius: 4,
       position: "absolute",
       top: -50,
       left: 0,
@@ -35,14 +36,19 @@ const useStyles = makeStyles((theme: any) => ({
         "&::before": {
           zIndex: 1,
           background:
-            " linear-gradient(to left, transparent 30%, rgba(8, 8, 8, 1) 100%)",
+            " linear-gradient(to left, transparent 30%, rgba(8, 8, 8, 0.6) 100%)",
         },
       },
       [theme.breakpoints.down("sm")]: {
+        "&::before": {
+          zIndex: 1,
+          background:
+            " linear-gradient(to left, transparent 30%, rgba(8, 8, 8, 0.3) 100%)",
+        },
         "&::after": {
           zIndex: 1,
           background:
-            "linear-gradient(to bottom, transparent 0%, rgba(8, 8, 8, 0.6) 20%)",
+            "linear-gradient(to right, transparent 30%, rgba(8, 8, 8, 0.3) 100%)",
         },
       },
     },
@@ -53,6 +59,11 @@ const useStyles = makeStyles((theme: any) => ({
       left: 20,
       width: "100%",
       height: "81px",
+      [theme.breakpoints.down("sm")]: {
+        position: "relative",
+        left: 0,
+        alignItems: "center",
+      },
 
       "& .wrapper-countdown": {
         width: "30%",
@@ -88,7 +99,9 @@ const useStyles = makeStyles((theme: any) => ({
     zIndex: 100,
     "& .detail-box": {
       marginBottom: "20px",
-      [theme.breakpoints.down("xs")]: {
+      [theme.breakpoints.down("sm")]: {
+        justifyContent: "center",
+        alignItems: "center",
         textAlign: "center",
       },
       "& h1": {

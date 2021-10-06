@@ -87,11 +87,9 @@ const MysteryBox = ({ id, ...props }: any) => {
     // }, [dispatch]);
 
     const [maxBoxCanBuy, setMaxBoxCanBuy] = useState(0);
-    const videoElement = useRef(null);
     const [boxTypeSelected, setSelectBoxType] = useState<{ [k: string]: any }>({});
-    const onSelectBoxType = (boxType: { [k: string]: any }) => {
+    const handleLoadVideo = (boxType: { [k: string]: any }) => {
         const wrapperVideo = document.querySelector('.wrapperVideo');
-        setSelectBoxType(boxType)
         if (wrapperVideo) {
             let elemDivVdo: any = wrapperVideo.querySelector('.video');
             elemDivVdo && wrapperVideo.removeChild(elemDivVdo);
@@ -118,15 +116,22 @@ const MysteryBox = ({ id, ...props }: any) => {
             };
         }
     }
+    const onSelectBoxType = (boxType: { [k: string]: any }) => {
+        setSelectBoxType(boxType);
+        handleLoadVideo(boxType)
+    }
 
     useEffect(() => {
         if (!loadingTicket && dataTicket) {
             setNewTicket(false);
             setInfoTicket(dataTicket);
             const firstBoxType = dataTicket.boxTypesConfig?.[0];
-            if (firstBoxType) setSelectBoxType(firstBoxType)
+            if (firstBoxType) {
+                setSelectBoxType(firstBoxType)
+            }
         }
     }, [dataTicket, loadingTicket, isClaim]);
+
 
     const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, [k: string]: any }>({ date1: 0, date2: 0, title: '' });
     const [timelines, setTimelines] = useState<TimelineType | {}>({});
@@ -149,7 +154,7 @@ const MysteryBox = ({ id, ...props }: any) => {
             if (timeLine.freeBuyTime) {
                 timeLinesInfo[3] = {
                     title: 'BUY PHASE 1',
-                    desc: 'Whitelist registrants will be given favorable dealings to buy Mecha Boxes in the first 1 hours after the opening, on a FCFS basis.'
+                    desc: 'Whitelist registrants will be given favorable dealings to buy Mecha Boxes in phase 1, on a FCFS basis.'
                 };
                 timeLinesInfo[4] = {
                     title: 'BUY PHASE 2',
@@ -162,7 +167,7 @@ const MysteryBox = ({ id, ...props }: any) => {
             } else {
                 timeLinesInfo[3] = {
                     title: 'BUY PHASE 1',
-                    desc: 'Whitelist registrants will be given favorable dealings to buy Mecha Boxes in the first 1 hours after the opening, on a FCFS basis.'
+                    desc: 'Whitelist registrants will be given favorable dealings to buy Mecha Boxes in phase 1, on a FCFS basis.'
                 };
                 timeLinesInfo[4] = {
                     title: 'END',
@@ -440,20 +445,25 @@ const MysteryBox = ({ id, ...props }: any) => {
 
     const [isApplyingWhitelist, setApplyingWhitelist] = useState(false);
     const onApplyWhitelist = async () => {
-        if (!isKYC) return;
-        setApplyingWhitelist(true);
-        const baseRequest = new BaseRequest()
-        const response = await baseRequest.post(`/pool/${infoTicket.id}/whitelist-apply-box`, {
-            wallet_address: connectedAccount,
-        }) as any
-        const resObj = await response.json()
-        setApplyingWhitelist(false)
+        try {
+            if (!isKYC) return;
+            setApplyingWhitelist(true);
+            const baseRequest = new BaseRequest()
+            const response = await baseRequest.post(`/pool/${infoTicket.id}/whitelist-apply-box`, {
+                wallet_address: connectedAccount,
+            }) as any
+            const resObj = await response.json()
+            console.log(resObj)
+            // setApplyingWhitelist(false)
 
-        if (resObj?.status === 200) {
-            joinPool()
-        } else {
-            dispatch(alertFailure(resObj.message))
-            setApplyingWhitelist(false);
+            if (resObj?.status === 200) {
+                joinPool()
+            } else {
+                dispatch(alertFailure(resObj.message))
+                setApplyingWhitelist(false);
+            }
+        } catch (error) {
+            console.log(error)
         }
     }
     const [recallBoughtBox, setRecallBoughtBox] = useState(true);
@@ -466,13 +476,31 @@ const MysteryBox = ({ id, ...props }: any) => {
         }
     }, [boughtBoxes]);
 
-    const { data: alreadyJoinPool, loading: loadingJoinpool } = useFetchV1<boolean>(`/user/check-join-campaign/${infoTicket?.id}?wallet_address=${connectedAccount}`, !!(connectedAccount && 'id' in infoTicket));
-    const { joinPool, poolJoinLoading, joinPoolSuccess } = usePoolJoinAction({ poolId: infoTicket?.id });
+    const [recallCheckJoinCampaign, setRecallCheckJoin] = useState(true);
+
+    const { data: alreadyJoinPool, loading: loadingJoinpool } = useFetchV1<boolean>(`/user/check-join-campaign/${infoTicket?.id}?wallet_address=${connectedAccount}`, !!(connectedAccount && 'id' in infoTicket) && recallCheckJoinCampaign);
+    const { joinPool, poolJoinLoading, joinPoolSuccess } = usePoolJoinAction({ poolId: infoTicket?.id, connectedAccount: connectedAccount as string });
+
+    useEffect(() => {
+        if (!poolJoinLoading) {
+            setApplyingWhitelist(false);
+        }
+    }, [poolJoinLoading]);
     useEffect(() => {
         if (joinPoolSuccess) {
             setApplyingWhitelist(false);
+            onShowModalOrderBox();
         }
-    }, [joinPoolSuccess])
+    }, [joinPoolSuccess]);
+    useEffect(() => {
+        if (!loadingJoinpool) {
+            setRecallCheckJoin(false);
+        }
+    }, [loadingJoinpool]);
+    useEffect(() => {
+        setRecallCheckJoin(true);
+        setRecallBoughtBox(true);
+    }, [connectedAccount]);
     const [openModalOrderBox, setOpenModalOrderBox] = useState(false);
     const onShowModalOrderBox = () => {
         setOpenModalOrderBox(true);
@@ -495,6 +523,7 @@ const MysteryBox = ({ id, ...props }: any) => {
             setOpenModalOrderBox(false);
             setRecallBoughtBox(true);
             onCloseModalOrderBox();
+            setNewTicket(true);
         }
     }, [statusBuyBox]);
 
@@ -523,7 +552,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                         transaction={tokenDepositTransaction || transactionHash}
                         networkName={infoTicket?.network_available}
                     />
-                    <ModalOrderBox open={openModalOrderBox} onClose={onCloseModalOrderBox} onConfirm={onOrderBox} isLoadingButton={buyBoxLoading} isSuccessOrderbox={statusBuyBox} />
+                    <ModalOrderBox open={openModalOrderBox} onClose={onCloseModalOrderBox} onConfirm={onOrderBox} isLoadingButton={buyBoxLoading} isSuccessOrderbox={statusBuyBox} defaultValue={maxBoxCanBuy} />
                     <ModalConfirmBuyBox open={openModalConfirmBuyBox} onClose={onCloseModalConfirmBuyBox} onConfirm={onBuyBox} infoBox={infoTicket} isLoadingButton={buyBoxLoading} amount={numBoxBuy} />
                     <div className={styles.content}>
 
@@ -532,12 +561,12 @@ const MysteryBox = ({ id, ...props }: any) => {
                                 Please connect to wallet
                             </WrapperAlert>
                         }
-                        {(alreadyJoinPool || joinPoolSuccess) && <WrapperAlert type="info">
+                        {(alreadyJoinPool) && <WrapperAlert type="info">
                             Congratulations! You have successfully applied whitelist.
                         </WrapperAlert>}
                         {
                             (!loadingJoinpool && connectedAccount && countdown.isBuy) &&
-                            ((alreadyJoinPool || joinPoolSuccess) ? null : <WrapperAlert type="error"> Sorry, you have not been chosen as whitelist winner. </WrapperAlert>)
+                            ((alreadyJoinPool) ? null : <WrapperAlert type="error"> Sorry, you have not been chosen as whitelist winner. </WrapperAlert>)
                         }
                         {!isKYC && !checkingKyc && connectedAccount && (
                             <AlertKYC connectedAccount={connectedAccount} />
@@ -583,7 +612,6 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                         autoPlay
                                                         loop
                                                         muted
-                                                        ref={videoElement}
                                                     >
                                                         <source src={boxTypeSelected.banner} type="video/mp4" />
                                                         Your browser does not support the video tag.
@@ -643,15 +671,15 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                 disabledMax={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
                                             />} */}
                                             {
-                                                (connectedAccount && !checkingKyc && !loadingJoinpool && !alreadyJoinPool && !joinPoolSuccess && (countdown.isWhitelist || countdown.isUpcoming)) &&
-                                                <ButtonBase color="green" onClick={countdown.isWhitelist ? onApplyWhitelist : undefined} isLoading={isApplyingWhitelist} disabled={countdown.isUpcoming || alreadyJoinPool || poolJoinLoading || joinPoolSuccess || isApplyingWhitelist || !isKYC} className="text-transform-unset w-full">
-                                                    {(alreadyJoinPool || joinPoolSuccess) ? 'Applied Whitelist' : 'Apply Whitelist'}
+                                                (connectedAccount && !checkingKyc && !loadingJoinpool && !alreadyJoinPool && !joinPoolSuccess) && (countdown.isWhitelist || countdown.isUpcoming) &&
+                                                <ButtonBase color="green" onClick={countdown.isWhitelist ? onApplyWhitelist : undefined} isLoading={isApplyingWhitelist} disabled={countdown.isUpcoming || alreadyJoinPool || poolJoinLoading || isApplyingWhitelist || !isKYC} className="text-transform-unset w-full">
+                                                    {(alreadyJoinPool) ? 'Applied Whitelist' : 'Apply Whitelist'}
                                                 </ButtonBase>
                                             }
                                             {
                                                 (connectedAccount && !checkingKyc && !loadingJoinpool && (alreadyJoinPool || joinPoolSuccess)) && countdown.isWhitelist &&
                                                 <ButtonBase color="green" onClick={(alreadyJoinPool || joinPoolSuccess) && isKYC ? onShowModalOrderBox : undefined} disabled={!isKYC} className="text-transform-unset w-full">
-                                                    Order Box
+                                                    {maxBoxCanBuy > 0 ? 'Change Order' : 'Order Box'}
                                                 </ButtonBase>
                                             }
                                             {/* {

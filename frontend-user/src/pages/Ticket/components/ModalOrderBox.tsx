@@ -30,7 +30,7 @@ type Props = {
     [k: string]: any,
 }
 
-const ModalOrderBox = ({ open, isLoadingButton, isSuccessOrderbox, ...props }: Props) => {
+const ModalOrderBox = ({ open, isLoadingButton, defaultValue, ...props }: Props) => {
     const styles = useStyles();
     const [numberBox, setNumberBox] = useState(0);
     const onChangeNumberBox = (event: any) => {
@@ -39,21 +39,18 @@ const ModalOrderBox = ({ open, isLoadingButton, isSuccessOrderbox, ...props }: P
     }
     const onClose = () => {
         props.onClose && props.onClose();
-        setNumberBox(0);
     }
     const onConfirm = () => {
         props.onConfirm && props.onConfirm(numberBox);
     }
     useEffect(() => {
-        if (isSuccessOrderbox) {
-            setNumberBox(0);
-        }
-    }, [isSuccessOrderbox])
+        setNumberBox(defaultValue)
+    }, [defaultValue])
     return (
         <CustomModal open={open} onClose={onClose}>
             <div className={styles.wrapperContent}>
-                <h3>Number of Boxes you want to buy</h3>
-                <FormInputNumber isInteger isPositive allowZero value={numberBox} onChange={onChangeNumberBox} className="input" />
+                <h3>Number of Boxes you want to buy (Maximum: 20)</h3>
+                <FormInputNumber isInteger isPositive allowZero value={numberBox} onChange={onChangeNumberBox} className="input" max={20} />
                 <ButtonBase color="green" onClick={onConfirm} className="w-full text-transform-unset" isLoading={isLoadingButton} disabled={isLoadingButton}>
                     Confirm
                 </ButtonBase>
@@ -62,4 +59,4 @@ const ModalOrderBox = ({ open, isLoadingButton, isSuccessOrderbox, ...props }: P
     )
 }
 
-export default React.memo(ModalOrderBox)
+export default ModalOrderBox

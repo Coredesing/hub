@@ -12,12 +12,16 @@ type PoolDepositActionParams = {
   poolDetails?: any
 }
 
-const usePoolJoinAction = ({ poolId }: PoolDepositActionParams) => {
+const usePoolJoinAction = ({ poolId, connectedAccount }: PoolDepositActionParams) => {
   const dispatch = useDispatch();
   const { account, library } = useWeb3React();
   const [joinPoolSuccess, setJoinPoolSuccess] = useState<boolean>(false);
   const [poolJoinLoading, setPoolJoinLoading] = useState<boolean>(false);
   const { signature, signMessage, setSignature, error } = useWalletSignature();
+
+  useEffect(() => {
+    setJoinPoolSuccess(false);
+  }, [connectedAccount]);
 
   const joinPool = useCallback(async () => {
     if (account && poolId && library) {
@@ -53,15 +57,11 @@ const usePoolJoinAction = ({ poolId }: PoolDepositActionParams) => {
           campaign_id: poolId,
         }, config as any) as any;
 
-        if (response.data) {
-          if (response.data.status === 200) {
-            setJoinPoolSuccess(true);
-            dispatch(alertSuccess('Apply whitelist successfully'));
-          }
-
-          if (response.data.status !== 200) {
-            dispatch(alertFailure(response.data.message));
-          }
+        if (response.data?.status === 200) {
+          setJoinPoolSuccess(true);
+          dispatch(alertSuccess('Apply whitelist successfully'));
+        } else {
+          dispatch(alertFailure(response.data.message));
         }
 
         setSignature("");

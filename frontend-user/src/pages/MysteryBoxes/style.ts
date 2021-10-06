@@ -9,13 +9,17 @@ const useStyles = makeStyles((theme: any) => ({
     display: 'grid',
     gridTemplateColumns: 'auto 280px',
     [theme.breakpoints.down('sm')]: {
-      padding: '68px 20px',
+      gridTemplateColumns: '1fr',
     },
   },
   contentBox: {
     position: 'relative',
     paddingLeft: '120px',
     paddingTop: '60px',
+    [theme.breakpoints.down('sm')]: {
+      gridTemplateColumns: '1fr',
+      padding: '40px 32px',
+    },
     '& .banner': {
       zIndex: 1,
       position: 'absolute',
@@ -61,6 +65,16 @@ const useStyles = makeStyles((theme: any) => ({
       width: '100%',
       background: '#000000',
       height: '81px',
+      display: 'grid',
+      alignItems: 'center',
+      [theme.breakpoints.down('sm')]: {
+        placeContent: 'center',
+        position: 'relative',
+        background: 'transparent',
+        '&:before': {
+          display: 'none',
+        }
+      },
 
       '&:before': {
         background: '#72F34B',
@@ -79,6 +93,12 @@ const useStyles = makeStyles((theme: any) => ({
         justifyContent: 'flex-end',
         alignItems: 'center',
         paddingLeft: '120px',
+        [theme.breakpoints.down('sm')]: {
+          maxWidth: '480px',
+          paddingLeft: '0',
+          flexDirection: 'column',
+          background: 'transparent',
+        },
         '& > span': {
           fontFamily: 'Firs Neue',
           fontStyle: 'normal',
@@ -91,14 +111,26 @@ const useStyles = makeStyles((theme: any) => ({
         },
 
         '& .countdown': {
-          background: '#000000',
           width: '400px',
           marginLeft: '20px',
           zIndex: 10,
           fontFamily: 'Space Ranger',
-
+          [theme.breakpoints.down('sm')]: {
+            background: 'transparent !important',
+            maxWidth: '400px',
+            width: '100%',
+            '& .time .number': {
+              fontSize: '28px',
+              lineHeight: '32px',
+            }
+          },
           '& .time .number': {
             transform: 'skew(-20deg)',
+            fontSize: '36px',
+            lineHeight: '40px',
+          },
+          '& .time .text': {
+            fontSize: '10px',
           }
         }
       }
@@ -107,8 +139,18 @@ const useStyles = makeStyles((theme: any) => ({
   content: {
     position: 'relative',
     zIndex: 100,
+    [theme.breakpoints.down('sm')]: {
+      display: 'grid',
+      placeContent: 'center',
+    },
     '& .detail-box': {
       marginBottom: '90px',
+      [theme.breakpoints.down('sm')]: {
+        display: 'grid',
+        placeItems: 'center',
+        maxWidth: '480px',
+        marginBottom: '20px',
+      },
       [theme.breakpoints.down('xs')]: {
         textAlign: 'center',
       },
@@ -184,6 +226,9 @@ const useStyles = makeStyles((theme: any) => ({
         color: '#FFFFFF',
         maxWidth: '480px',
         marginBottom: '16px',
+        [theme.breakpoints.down('sm')]: {
+          marginBottom: '12px',
+        },
         [theme.breakpoints.up('xl')]: {
           fontSize: '20px',
           maxWidth: '600px',
@@ -197,7 +242,17 @@ const useStyles = makeStyles((theme: any) => ({
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 200px))',
         marginBottom: '32px',
+        [theme.breakpoints.down('sm')]: {
+          gridTemplateColumns: '1fr',
+          width: '100%',
+          marginBottom: '28px',
+          gap: '9px',
+        },
         '& .item': {
+          [theme.breakpoints.down('sm')]: {
+            display: 'flex',
+            justifyContent: 'space-between',
+          },
           '& label': {
             fontFamily: 'Firs Neue',
             fontStyle: 'normal',
@@ -207,6 +262,11 @@ const useStyles = makeStyles((theme: any) => ({
             color: '#AEAEAE',
             display: 'block',
             marginBottom: '4px',
+            [theme.breakpoints.down('sm')]: {
+              color: '#fff',
+              fontSize: '12px',
+              lineHeight: '16px',
+            },
           },
           '& span': {
             fontFamily: 'Firs Neue',
@@ -243,19 +303,9 @@ const useStyles = makeStyles((theme: any) => ({
           display: "block",
           marginBottom: '8px',
         },
-        // display: 'grid',
-        // gridTemplateColumns: '400px minmax(120px, 200px)',
-        // [theme.breakpoints.down('xs')]: {
-        //   gridTemplateColumns: '1fr',
-        //   placeItems: 'center',
-
-        // },
         '& .countdown': {
           maxWidth: '400px',
           width: '100%',
-          // [theme.breakpoints.down('xs')] : {
-          //   maxWidth: '280px',
-          // },
 
           fontFamily: 'Space Ranger',
           background: 'rgba(0, 0, 0, 0.5)',
@@ -291,6 +341,10 @@ const useStyles = makeStyles((theme: any) => ({
     borderRadius: '2px',
     transition: '0.3s',
     maxWidth: '180px',
+    width: '100%',
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: 'unset',
+    },
     '&:hover': {
       color: '#000',
       background: '#72F34B',
@@ -307,6 +361,9 @@ const useStyles = makeStyles((theme: any) => ({
     // bottom: 0,
     // left: 0,
     display: 'grid',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
     background: 'rgba(8, 8, 8, 0.8)',
     '& .slides': {
       overflow: 'hidden',
@@ -317,6 +374,10 @@ const useStyles = makeStyles((theme: any) => ({
       ...typeDisplayFlex,
       flexDirection: 'column',
       alignItems: 'center',
+      [theme.breakpoints.down('sm')]: {
+        flexDirection: 'row',
+        gap: '6px',
+      },
       '& .slide': {
         border: '1px solid #000',
         transition: '.3s',
@@ -346,7 +407,7 @@ const useStyles = makeStyles((theme: any) => ({
           zIndex: 100,
           display: 'grid',
           opacity: 0,
-          transistion: '0.3s',
+          transition: '0.3s',
           '& .info': {
             position: 'relative',
             display: 'grid',
@@ -355,6 +416,7 @@ const useStyles = makeStyles((theme: any) => ({
             '& .status': {
               placeContent: 'center',
               display: 'grid',
+
             },
             '& span, & h2, & .box-countdown': {
               fontFamily: 'Firs Neue',
@@ -398,6 +460,10 @@ const useStyles = makeStyles((theme: any) => ({
               [theme.breakpoints.down('xs')]: {
                 fontSize: '14px',
               },
+              [theme.breakpoints.down('sm')]: {
+                fontSize: '12px',
+                lineHeight: '14px',
+              },
             },
             '& h2': {
               fontWeight: 600,
@@ -408,7 +474,11 @@ const useStyles = makeStyles((theme: any) => ({
               padding: '0px 10px',
               wordWrap: 'break-word',
               wordBreak: 'break-all',
-              whiteSpace: 'pre-line'
+              whiteSpace: 'pre-line',
+              [theme.breakpoints.down('sm')]: {
+                fontSize: '16px',
+                lineHeight: '20px',
+              },
             },
           },
           '& .box-countdown': {
@@ -424,6 +494,10 @@ const useStyles = makeStyles((theme: any) => ({
               color: '#fff',
               textTransform: 'uppercase',
               textAlign: 'center',
+              [theme.breakpoints.down('sm')]: {
+                fontSize: '10px',
+                lineHeight: '14px',
+              },
             },
             '& .countdown': {
               width: '100%',

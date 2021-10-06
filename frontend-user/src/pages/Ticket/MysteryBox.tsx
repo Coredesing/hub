@@ -638,7 +638,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                 disabledMax={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
                                             />}
                                             {
-                                                (connectedAccount && !checkingKyc && !loadingJoinpool && (!alreadyJoinPool || !joinPoolSuccess) && (countdown.isWhitelist || countdown.isUpcoming)) &&
+                                                (connectedAccount && !checkingKyc && !loadingJoinpool && !alreadyJoinPool && !joinPoolSuccess && (countdown.isWhitelist || countdown.isUpcoming)) &&
                                                 <ButtonBase color="green" onClick={countdown.isWhitelist ? onApplyWhitelist : undefined} isLoading={isApplyingWhitelist} disabled={countdown.isUpcoming || alreadyJoinPool || poolJoinLoading || joinPoolSuccess || isApplyingWhitelist || !isKYC} className="text-transform-unset w-full">
                                                     {(alreadyJoinPool || joinPoolSuccess) ? 'Applied Whitelist' : 'Apply Whitelist'}
                                                 </ButtonBase>

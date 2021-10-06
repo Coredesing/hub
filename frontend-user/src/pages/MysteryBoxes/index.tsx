@@ -7,15 +7,18 @@ import withWidth from '@material-ui/core/withWidth';
 import { useFetchV1 } from '../../hooks/useFetch';
 import { TOKEN_TYPE } from '../../constants';
 import { PaginationResult } from '../../types/Pagination';
-import { Backdrop, CircularProgress, useTheme, Button } from '@material-ui/core';
+import { Backdrop, CircularProgress, useTheme, Button, useMediaQuery } from '@material-ui/core';
 import CountDownTimeV1, { CountDonwRanges } from '@base-components/CountDownTime';
 import SlideCard from './components/SlideCard';
 import { numberWithCommas } from '@utils/formatNumber';
 import { getCurrencyByNetwork } from '@utils/index';
 import { getCountdownInfo } from './utils';
 
+import SwiperCore, { Pagination } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
 const MysteryBoxes = (props: any) => {
   const theme = useTheme();
+  const isSmScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const styles = { ...useStyles() };
   const [recall, setRecall] = useState(false);
   const refresh = useCallback(() => {
@@ -107,7 +110,19 @@ const MysteryBoxes = (props: any) => {
           </div>
           <div className={styles.wrapperSlideBoxes}>
             <div className="slides">
-              {(misteryBoxes?.data || []).map((item) => <SlideCard onSelectItem={onSelectBox} key={item.id} active={currentBox.id === item.id} item={item} compareTime={compareTime}  />)}
+              {
+                isSmScreen ? <Swiper
+                  slidesPerView={"auto"}
+                  spaceBetween={6}
+                  freeMode={true}
+                  pagination={{
+                    clickable: true,
+                  }}
+                >
+                  {(misteryBoxes?.data || []).map((item) => <SwiperSlide style={{width: '220px'}} key={item.id}> <SlideCard onSelectItem={onSelectBox} key={item.id} active={currentBox.id === item.id} item={item} compareTime={compareTime} /> </SwiperSlide>)}
+                </Swiper> :
+                  (misteryBoxes?.data || []).map((item) => <SlideCard onSelectItem={onSelectBox} key={item.id} active={currentBox.id === item.id} item={item} compareTime={compareTime} />)
+              }
             </div>
           </div>
         </section>

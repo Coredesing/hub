@@ -5,14 +5,14 @@ import { getCountdownInfo } from "@pages/MysteryBoxes/utils";
 import CountDownTimeV1, {
   CountDonwRanges,
 } from "@base-components/CountDownTime";
-import { useMediaQuery, useTheme } from "@material-ui/core";
+// import { useMediaQuery, useTheme } from "@material-ui/core";
 
 const MysteryBoxes = ({ currentBox }: any) => {
   const styles = useStyles();
-  const theme = useTheme();
-  const isMdScreen = useMediaQuery(theme.breakpoints.down("md"));
-  const isSmScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const isXsScreen = useMediaQuery(theme.breakpoints.down("xs"));
+  //   const theme = useTheme();
+  //   const isMdScreen = useMediaQuery(theme.breakpoints.down("md"));
+  //   const isSmScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  //   const isXsScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   // const [currentBox, setCurrentBox] = useState<{ [k: string]: any }>({ upcoming: true });
   const [time, setTime] = useState<
@@ -48,7 +48,6 @@ const MysteryBoxes = ({ currentBox }: any) => {
               </span>
             </div>
           </div>
-          {/* {!isXsScreen && ( */}
           <div className="detail-countdown-box">
             <div className="wrapper-countdown">
               <span>{time.title}</span>
@@ -62,7 +61,6 @@ const MysteryBoxes = ({ currentBox }: any) => {
               )}
             </div>
           </div>
-          {/* )} */}
         </div>
       </div>
     </div>

@@ -94,7 +94,7 @@ class WhiteListSubmissionController {
       const currentDate = ConvertDateUtils.getDatetimeNowUTC();
       // check time to join campaign
       if (camp.start_join_pool_time > currentDate || camp.end_join_pool_time < currentDate) {
-        return HelperUtils.responseBadRequest("It's not right time to join this campaign !");
+        return HelperUtils.responseBadRequest("Invalid date");
       }
       // get user info
       const userService = new UserService();

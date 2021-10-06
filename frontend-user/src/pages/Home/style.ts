@@ -588,8 +588,8 @@ export const useCardStyles = makeStyles((theme) => ({
   },
   mysteryBoxSection: {
     justifyContent: "space-between",
-    paddingRight: "160px",
-    paddingLeft: "160px",
+    paddingRight: "150px",
+    paddingLeft: "150px",
     [theme.breakpoints.down("md")]: {
       paddingRight: "100px",
       paddingLeft: "100px",

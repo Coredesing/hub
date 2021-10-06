@@ -30,38 +30,41 @@ const MysteryBoxes = ({ currentBox }: any) => {
       <div
         className="banner"
         style={{ backgroundImage: `url(${currentBox.banner})` }}
-      />
-      <div className={styles.content}>
-        <div className="detail-box">
-          <h1>{currentBox.title}</h1>
-          <div
-            className={clsx("status", {
-              upcoming: time.isUpcoming,
-              sale: time.isOnsale,
-              over: time.isFinished,
-            })}
-          >
-            <span>
-              {time.isUpcoming && "Upcoming"}
-              {time.isOnsale && "ON SALE"}
-              {time.isFinished && "Sold Out"}
-            </span>
+      >
+        <div className={styles.content}>
+          <div className="detail-box">
+            <h1>{currentBox.title}</h1>
+            <div
+              className={clsx("status", {
+                upcoming: time.isUpcoming,
+                sale: time.isOnsale,
+                over: time.isFinished,
+              })}
+            >
+              <span>
+                {time.isUpcoming && "Upcoming"}
+                {time.isOnsale && "ON SALE"}
+                {time.isFinished && "Sold Out"}
+              </span>
+            </div>
           </div>
+          {/* {!isXsScreen && ( */}
+          <div className="detail-countdown-box">
+            <div className="wrapper-countdown">
+              <span>{time.title}</span>
+              {time.date1 && (
+                <div className={styles.countDownContainer}>
+                  <CountDownTimeV1
+                    time={{ date1: time.date1, date2: time.date2 }}
+                    className="countdown"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+          {/* )} */}
         </div>
       </div>
-      {!isXsScreen && (
-        <div className="detail-countdown-box">
-          <div className="wrapper-countdown">
-            <span>{time.title}</span>
-            {time.date1 && (
-              <CountDownTimeV1
-                time={{ date1: time.date1, date2: time.date2 }}
-                className="countdown"
-              />
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

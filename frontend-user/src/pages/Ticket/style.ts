@@ -562,17 +562,17 @@ export const useAboutStyles = makeStyles((theme) => ({
     backgroundColor: "#171717",
   },
   tabName: {
-    fontFamily: "Firs Neue",
+    fontFamily: "Firs Neue !important",
     fontWeight: 600,
-    fontStyle: "normal",
-    fontSize: "16px",
-    lineHeight: "28px",
+    fontStyle: "normal !important",
+    fontSize: "16px !important",
+    lineHeight: "28px !important",
     // color: "#72F34B",
     mixBlendMode: "normal",
     textTransform: "unset",
     justifyContent: "space-between",
     '&.active': {
-      color: "#72F34B"
+      color: "#72F34B !important"
     },
     [theme.breakpoints.down("xs")]: {
       fontWeight: 600,
@@ -581,7 +581,7 @@ export const useAboutStyles = makeStyles((theme) => ({
     },
   },
   appbar: {
-    background: "transparent",
+    background: "transparent !important",
     boxShadow: "none",
     [theme.breakpoints.down("sm")]: {
       paddingLeft: "24px",

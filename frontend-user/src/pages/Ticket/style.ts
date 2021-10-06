@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: any) => {
         gap: "20px",
       },
       [theme.breakpoints.down("xs")]: {
-        gridTemplateColumns: "319px",
+        gridTemplateColumns: "300px",
         marginTop: "28px",
       },
     },
@@ -562,17 +562,17 @@ export const useAboutStyles = makeStyles((theme) => ({
     backgroundColor: "#171717",
   },
   tabName: {
-    fontFamily: "Firs Neue",
+    fontFamily: "Firs Neue !important",
     fontWeight: 600,
-    fontStyle: "normal",
-    fontSize: "16px",
-    lineHeight: "28px",
+    fontStyle: "normal !important",
+    fontSize: "16px !important",
+    lineHeight: "28px !important",
     // color: "#72F34B",
     mixBlendMode: "normal",
     textTransform: "unset",
     justifyContent: "space-between",
     '&.active': {
-      color: "#72F34B"
+      color: "#72F34B !important"
     },
     [theme.breakpoints.down("xs")]: {
       fontWeight: 600,
@@ -581,7 +581,7 @@ export const useAboutStyles = makeStyles((theme) => ({
     },
   },
   appbar: {
-    background: "transparent",
+    background: "transparent !important",
     boxShadow: "none",
     [theme.breakpoints.down("sm")]: {
       paddingLeft: "24px",
@@ -682,6 +682,9 @@ export const useAboutStyles = makeStyles((theme) => ({
     gridTemplateColumns: 'repeat(auto-fit, minmax(180px, calc(100% / 5)))',
     gridAutoRows: 'minmax(max-content, 1fr)',
     placeContent: 'center',
+    [theme.breakpoints.down('xs')]: {
+      gridTemplateColumns: '220px',
+    },
     '& .box': {
       border: '1px solid rgba(255, 255, 255, 0.2)',
       // borderRight: 'unset',

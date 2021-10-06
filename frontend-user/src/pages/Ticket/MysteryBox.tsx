@@ -626,7 +626,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     }
                                                 </div>
                                             </div>
-                                            {countdown.isBuy && <AscDescAmountBox
+                                            {/* {countdown.isBuy && <AscDescAmountBox
                                                 descMinAmount={descMinAmount}
                                                 descAmount={descAmount}
                                                 ascAmount={ascAmount}
@@ -636,7 +636,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                 disabledSub={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === 0}
                                                 disabledAdd={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
                                                 disabledMax={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
-                                            />}
+                                            />} */}
                                             {
                                                 (connectedAccount && !checkingKyc && !loadingJoinpool && !alreadyJoinPool && !joinPoolSuccess && (countdown.isWhitelist || countdown.isUpcoming)) &&
                                                 <ButtonBase color="green" onClick={countdown.isWhitelist ? onApplyWhitelist : undefined} isLoading={isApplyingWhitelist} disabled={countdown.isUpcoming || alreadyJoinPool || poolJoinLoading || joinPoolSuccess || isApplyingWhitelist || !isKYC} className="text-transform-unset w-full">

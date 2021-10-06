@@ -392,7 +392,7 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
               <TableRowHead>
                 <TableCell>No</TableCell>
                 <TableCell align="left">Name</TableCell>
-                <TableCell align="left">Amount</TableCell>
+                {/* <TableCell align="left">Amount</TableCell> */}
                 <TableCell align="left">Rare</TableCell>
               </TableRowHead>
             </TableHead>
@@ -407,7 +407,7 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
                       
                     </Box>
                   </TableCell>
-                  <TableCell align="left">{numberWithCommas(row.amount)}</TableCell>
+                  {/* <TableCell align="left">{numberWithCommas(row.amount)}</TableCell> */}
                   <TableCell align="left">{row.rate}%</TableCell>
                 </TableRowBody>
               ))}

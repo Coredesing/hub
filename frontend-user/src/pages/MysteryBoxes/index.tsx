@@ -11,7 +11,8 @@ import { Backdrop, CircularProgress, useTheme, Button } from '@material-ui/core'
 import CountDownTimeV1, { CountDonwRanges } from '@base-components/CountDownTime';
 import SlideCard from './components/SlideCard';
 import { numberWithCommas } from '@utils/formatNumber';
-import { getTimelineOfPool, getCurrencyByNetwork } from '@utils/index';
+import { getCurrencyByNetwork } from '@utils/index';
+import { getCountdownInfo } from './utils';
 
 const MysteryBoxes = (props: any) => {
   const theme = useTheme();
@@ -29,22 +30,7 @@ const MysteryBoxes = (props: any) => {
   const [currentBox, setCurrentBox] = useState<{ [k: string]: any }>({ upcoming: true });
 
   const handleSelectBox = (box: { [k: string]: any }) => {
-    const currentBox = box;
-    currentBox.countdownTime = { date1: 0, date2: 0 };
-    if (!currentBox.start_time || +currentBox.start_time * 1000 > Date.now()) {
-      currentBox.upcoming = true;
-      if (currentBox.start_time && +currentBox.start_time * 1000 > Date.now()) {
-        currentBox.countdownTime.date1 = +currentBox.start_time * 1000;
-        currentBox.countdownTime.date2 = Date.now();
-      }
-    } else if (+currentBox.finish_time * 1000 > Date.now()) {
-      currentBox.sale = true;
-      currentBox.countdownTime.date1 = +currentBox.finish_time * 1000;
-      currentBox.countdownTime.date2 = Date.now();
-    } else {
-      currentBox.over = true;
-    }
-    setCurrentBox(currentBox);
+    setCurrentBox(box);
   }
   useEffect(() => {
     if (misteryBoxes?.data) {
@@ -56,20 +42,11 @@ const MysteryBoxes = (props: any) => {
     handleSelectBox(box);
   }
 
-  const [time, setTime] = useState<CountDonwRanges & { title?: string }>({ date1: 0, date2: 0 });
+  const [time, setTime] = useState<CountDonwRanges & { title?: string, [k: string]: any }>({ date1: 0, date2: 0 });
+  const [compareTime] = useState(Date.now());
   useEffect(() => {
     if ('id' in currentBox) {
-      const time = getTimelineOfPool(currentBox);
-      if (time.startJoinPooltime > Date.now()) {
-        return setTime({ date1: time.startJoinPooltime, date2: Date.now(), title: 'Whitelist start in' })
-      }
-      if (time.startBuyTime > Date.now()) {
-        return setTime({ date1: time.startBuyTime, date2: Date.now(), title: 'Open buy in' })
-      }
-      if (time.finishTime > Date.now()) {
-        return setTime({ date1: time.finishTime, date2: Date.now(), title: 'End buy in' })
-      }
-      setTime({ date1: 0, date2: 0, title: 'Finished' })
+      setTime(getCountdownInfo(currentBox, compareTime))
     }
   }, [currentBox]);
 
@@ -86,23 +63,17 @@ const MysteryBoxes = (props: any) => {
             <div className={styles.content}>
               <div className="detail-box">
                 <h1>
-                  {/* MECH MASTER <br />
-                MYSTERY NFT BOXES SALE */}
                   {currentBox.title}
                 </h1>
-                <div className={clsx("status", { upcoming: true /*currentBox.upcoming, sale: currentBox.sale, over: currentBox.over */ })}>
+                <div className={clsx("status", { upcoming: time.isUpcoming, sale: time.isOnsale, over: time.isFinished })}>
                   <span>
-                    {/* Upcoming */}
-                    {currentBox.upcoming && 'Upcoming'}
-                    {currentBox.sale && 'ON SALE'}
-                    {currentBox.over && 'Sold Out'}
+                    {time.isUpcoming && 'Upcoming'}
+                    {time.isOnsale && 'ON SALE'}
+                    {time.isFinished && 'Sold Out'}
                   </span>
                 </div>
                 <div className="desc">
-                  {currentBox.description || `In the Mech universe, you are challenged to collect giant fighting machines and futuristic weapons to save the world.
-                Being an experienced pilot in Augmented Reality, you set yourself apart from other players with unique tactics and sharp decision making skill.`}
-                  {/* In the Mech universe, you are challenged to collect giant fighting machines and futuristic weapons to save the world.
-                Being an experienced pilot in Augmented Reality, you set yourself apart from other players with unique tactics and sharp decision making skill. */}
+                  {currentBox.description}
                 </div>
 
                 <div className="detail-items">
@@ -136,7 +107,7 @@ const MysteryBoxes = (props: any) => {
           </div>
           <div className={styles.wrapperSlideBoxes}>
             <div className="slides">
-              {(misteryBoxes?.data || []).map((item) => <SlideCard onSelectItem={onSelectBox} key={item.id} active={currentBox.id === item.id} item={item} />)}
+              {(misteryBoxes?.data || []).map((item) => <SlideCard onSelectItem={onSelectBox} key={item.id} active={currentBox.id === item.id} item={item} compareTime={compareTime}  />)}
             </div>
           </div>
         </section>

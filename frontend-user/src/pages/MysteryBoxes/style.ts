@@ -344,7 +344,9 @@ const useStyles = makeStyles((theme: any) => ({
           height: '100%',
           position: 'relative',
           zIndex: 100,
-          display: 'none',
+          display: 'grid',
+          opacity: 0,
+          transistion: '0.3s',
           '& .info': {
             position: 'relative',
             display: 'grid',
@@ -463,7 +465,7 @@ const useStyles = makeStyles((theme: any) => ({
           position: 'absolute',
         },
         '& .detail': {
-          display: 'grid',
+          opacity: 1,
         },
         '&::before': {
           position: 'absolute',

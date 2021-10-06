@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: any) => {
         gap: "20px",
       },
       [theme.breakpoints.down("xs")]: {
-        gridTemplateColumns: "319px",
+        gridTemplateColumns: "300px",
         marginTop: "28px",
       },
     },

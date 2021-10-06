@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { withRouter, useParams } from "react-router-dom";
 import DefaultLayout from "../../components/Layout/DefaultLayout";
-// import SwipeableViews from 'react-swipeable-views';
-
 import { useFetchV1 } from "../../hooks/useFetch";
 import { TOKEN_TYPE } from "../../constants";
 import NotFoundPage from "../NotFoundPage/ContentPage";
@@ -11,6 +9,7 @@ import ContentTicket from './Ticket';
 import TicketBid from './TicketBid';
 import MysteryBox from './MysteryBox';
 import { isBidorStake, isMysteryBox } from "./utils";
+import WrapperContent from "@base-components/WrapperContent";
 
 const Ticket: React.FC<any> = (props: any) => {
   const params = useParams<{ [k: string]: any }>();
@@ -43,15 +42,17 @@ const Ticket: React.FC<any> = (props: any) => {
   }, []);
   return (
     <DefaultLayout>
-      {
-        checkParamType.checking ?
-          <Backdrop open={checkParamType.checking} style={{ color: '#fff', zIndex: theme.zIndex.drawer + 1, }}>
-            <CircularProgress color="inherit" />
-          </Backdrop>
-          : (checkParamType.valid ? (
-            render(dataTicket.process, dataTicket.token_type, id)
-          ) : <NotFoundPage />)
-      }
+      <WrapperContent useShowBanner={false}>
+        {
+          checkParamType.checking ?
+            <Backdrop open={checkParamType.checking} style={{ color: '#fff', zIndex: theme.zIndex.drawer + 1, }}>
+              <CircularProgress color="inherit" />
+            </Backdrop>
+            : (checkParamType.valid ? (
+              render(dataTicket.process, dataTicket.token_type, id)
+            ) : <NotFoundPage />)
+        }
+      </WrapperContent>
     </DefaultLayout>
   );
 };

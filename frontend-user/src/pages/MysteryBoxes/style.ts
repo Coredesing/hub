@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme: any) => ({
   section: {
 
     width: '100%',
-    minHeight: 'calc(100vh - 200px)',
+    minHeight: 'calc(100vh - 80px)',
     display: 'grid',
     gridTemplateColumns: 'auto 280px',
     [theme.breakpoints.down('sm')]: {
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: any) => ({
       left: 0,
       width: '100%',
       background: '#000000',
-      height: '81px',
+      height: '80px',
       display: 'grid',
       alignItems: 'center',
       [theme.breakpoints.down('sm')]: {
@@ -111,6 +111,7 @@ const useStyles = makeStyles((theme: any) => ({
         },
 
         '& .countdown': {
+          background: '#000000',
           width: '400px',
           marginLeft: '20px',
           zIndex: 10,

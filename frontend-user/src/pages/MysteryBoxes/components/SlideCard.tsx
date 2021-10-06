@@ -1,7 +1,7 @@
 import CountDownTimeV1, { CountDonwRanges } from '@base-components/CountDownTime';
-import { getTimelineOfPool } from '@utils/index';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
+import { getCountdownInfo } from '../utils';
 
 type Props = {
     item: { [k: string]: any },
@@ -10,22 +10,12 @@ type Props = {
     [k: string]: any;
 }
 
-const SlideCard = ({ item = {}, active, onSelectItem }: Props) => {
+const SlideCard = ({ item = {}, active, onSelectItem, compareTime }: Props) => {
 
-    const [time, setTime] = useState<CountDonwRanges & { title?: string }>({date1: 0, date2: 0});
+    const [time, setTime] = useState<CountDonwRanges & { title?: string, [k: string]: any }>({ date1: 0, date2: 0 });
     useEffect(() => {
         if ('id' in item) {
-            const time = getTimelineOfPool(item);
-            if (time.startJoinPooltime > Date.now()) {
-                return setTime({ date1: time.startJoinPooltime, date2: Date.now(), title: 'Whitelist start in' })
-            }
-            if (time.startBuyTime > Date.now()) {
-                return setTime({ date1: time.startBuyTime, date2: Date.now(), title: 'Open buy in' })
-            }
-            if (time.finishTime > Date.now()) {
-                return setTime({ date1: time.finishTime, date2: Date.now(), title: 'End buy in' })
-            }
-            setTime({ date1: 0, date2: 0, title: 'Finished' })
+            setTime(getCountdownInfo(item, compareTime))
         }
     }, [item]);
     return (
@@ -34,9 +24,13 @@ const SlideCard = ({ item = {}, active, onSelectItem }: Props) => {
                 <img src={item.mini_banner} alt="" />
             </div>
             <div className={clsx("detail")}>
-                <div className={clsx("info", { upcoming: true })}>
+                <div className={clsx("info", { upcoming: time.isUpcoming, sale: time.isOnsale, over: time.isFinished })}>
                     <div className="status">
-                        <span>{item.campaign_status}</span>
+                        <span>
+                            {time.isUpcoming && 'Upcoming'}
+                            {time.isOnsale && 'ON SALE'}
+                            {time.isFinished && 'Sold Out'}
+                        </span>
                     </div>
                     <h2>{item.title}</h2>
                 </div>
@@ -46,10 +40,9 @@ const SlideCard = ({ item = {}, active, onSelectItem }: Props) => {
                         <CountDownTimeV1 time={{ date1: time.date1, date2: time.date2 }} className="countdown" />
                     </div>
                 }
-
             </div>
         </div>
     )
 }
 
-export default React.memo(SlideCard)
+export default SlideCard

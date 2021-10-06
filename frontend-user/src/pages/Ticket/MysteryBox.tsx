@@ -42,13 +42,14 @@ import ModalOrderBox from './components/ModalOrderBox';
 import useOrderBox from "./hooks/useOrderBox";
 import { convertTimeToStringFormat } from "@utils/convertDate";
 import ModalConfirmBuyBox from "./components/ModalConfirmBuyBox";
+import WrapperContent from "@base-components/WrapperContent";
+import _ from 'lodash';
 
 const MysteryBox = ({ id, ...props }: any) => {
     const styles = useStyles();
     const mysteryStyles = useMysteyBoxStyles();
     const dispatch = useDispatch();
     const { connectedAccount /*isAuth, wrongChain*/ } = useAuth();
-    const { isKYC, checkingKyc } = useKyc(connectedAccount);
     const alert = useSelector((state: any) => state.alert);
     const { appChainID } = useSelector((state: any) => state.appNetwork).data;
     const [boxBought, setBoxBought] = useState<number>(0);
@@ -129,6 +130,7 @@ const MysteryBox = ({ id, ...props }: any) => {
 
     const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, [k: string]: any }>({ date1: 0, date2: 0, title: '' });
     const [timelines, setTimelines] = useState<TimelineType | {}>({});
+    const { checkingKyc, isKYC } = useKyc(connectedAccount, (_.isNumber(infoTicket?.kyc_bypass) && !infoTicket?.kyc_bypass));
 
     const onSetCountdown = useCallback(() => {
         if (dataTicket) {
@@ -168,34 +170,33 @@ const MysteryBox = ({ id, ...props }: any) => {
                 }
             }
 
-
             if (timeLine.startJoinPooltime > Date.now()) {
-                setCountdown({ date1: timeLine.startJoinPooltime, date2: Date.now(), title: 'Whitelist Start in' });
+                setCountdown({ date1: timeLine.startJoinPooltime, date2: Date.now(), title: 'Whitelist Opens In', isUpcoming: true });
                 timeLinesInfo[1].current = true;
             }
             else if (timeLine.endJoinPoolTime > Date.now()) {
-                setCountdown({ date1: timeLine.endJoinPoolTime, date2: Date.now(), title: 'Whitelist End In', isWhitelist: true });
+                setCountdown({ date1: timeLine.endJoinPoolTime, date2: Date.now(), title: 'Whitelist Closes In', isWhitelist: true });
                 timeLinesInfo[2].current = true;
             }
             else if (timeLine.startBuyTime > Date.now()) {
                 timeLinesInfo[2].current = true;
                 if (timeLine.freeBuyTime) {
-                    setCountdown({ date1: timeLine.startBuyTime, date2: Date.now(), title: 'Phase 1 Start Buy in' });
+                    setCountdown({ date1: timeLine.startBuyTime, date2: Date.now(), title: 'Sale Phase 1 Starts In' });
                 } else {
-                    setCountdown({ date1: timeLine.startBuyTime, date2: Date.now(), title: 'Start Buy in' });
+                    setCountdown({ date1: timeLine.startBuyTime, date2: Date.now(), title: 'Sale Starts In' });
                 }
             }
             else if (timeLine.freeBuyTime && timeLine.freeBuyTime > Date.now()) {
                 timeLinesInfo[3].current = true;
-                setCountdown({ date1: timeLine.freeBuyTime, date2: Date.now(), title: 'Phase 1 Buy end in', isBuy: true });
+                setCountdown({ date1: timeLine.freeBuyTime, date2: Date.now(), title: 'Phase 1 End In', isBuy: true });
             }
             else if (timeLine.finishTime > Date.now()) {
                 if (timeLine.freeBuyTime) {
                     timeLinesInfo[4].current = true;
-                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Phase 2 End Buy in', isBuy: true });
+                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Phase 2 End In', isBuy: true });
                 } else {
                     timeLinesInfo[3].current = true;
-                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'End Buy in', isBuy: true });
+                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'End Buy In', isBuy: true });
                 }
             }
             else {
@@ -219,23 +220,23 @@ const MysteryBox = ({ id, ...props }: any) => {
         setOpenModalTx(false);
     }, [setOpenModalTx]);
 
-    useEffect(() => {
-        const setBalance = async () => {
-            try {
-                const myNumTicket = await getBalance(
-                    connectedAccount,
-                    dataTicket.token,
-                    dataTicket.network_available,
-                    dataTicket.accept_currency
-                );
-                setOwnedTicket(+myNumTicket);
-                setNewBalance(false);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        !isClaim && (renewBalance || connectedAccount) && dataTicket && setBalance();
-    }, [connectedAccount, dataTicket, renewBalance, isClaim]);
+    // useEffect(() => {
+    //     const setBalance = async () => {
+    //         try {
+    //             const myNumTicket = await getBalance(
+    //                 connectedAccount,
+    //                 dataTicket.token,
+    //                 dataTicket.network_available,
+    //                 dataTicket.accept_currency
+    //             );
+    //             setOwnedTicket(+myNumTicket);
+    //             setNewBalance(false);
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //     };
+    //     !isClaim && (renewBalance || connectedAccount) && dataTicket && setBalance();
+    // }, [connectedAccount, dataTicket, renewBalance, isClaim]);
 
     const ascAmount = () => {
         if (!isKYC) return;
@@ -439,6 +440,7 @@ const MysteryBox = ({ id, ...props }: any) => {
 
     const [isApplyingWhitelist, setApplyingWhitelist] = useState(false);
     const onApplyWhitelist = async () => {
+        if (!isKYC) return;
         setApplyingWhitelist(true);
         const baseRequest = new BaseRequest()
         const response = await baseRequest.post(`/pool/${infoTicket.id}/whitelist-apply-box`, {
@@ -505,179 +507,182 @@ const MysteryBox = ({ id, ...props }: any) => {
     }, []);
 
     return (
-        loadingTicket ? <div className={styles.loader} style={{ marginTop: 70 }}>
-            <HashLoader loading={true} color={'#72F34B'} />
-            <p className={styles.loaderText}>
-                <span style={{ marginRight: 10 }}>Loading Pool Details ...</span>
-            </p>
-        </div> :
-            <>
-                <TicketModal
-                    open={openModal}
-                    onClose={onCloseModal}
-                    transaction={tokenDepositTransaction || transactionHash}
-                    networkName={infoTicket?.network_available}
-                />
-                <ModalOrderBox open={openModalOrderBox} onClose={onCloseModalOrderBox} onConfirm={onOrderBox} isLoadingButton={buyBoxLoading} />
-                <ModalConfirmBuyBox open={openModalConfirmBuyBox} onClose={onCloseModalConfirmBuyBox} onConfirm={onBuyBox} infoBox={infoTicket} isLoadingButton={buyBoxLoading} amount={numBoxBuy} />
-                <div className={styles.content}>
+        <WrapperContent useShowBanner={false}>
+            {loadingTicket ? <div className={styles.loader} style={{ marginTop: 70 }}>
+                <HashLoader loading={true} color={'#72F34B'} />
+                <p className={styles.loaderText}>
+                    <span style={{ marginRight: 10 }}>Loading Pool Details ...</span>
+                </p>
+            </div> :
+                <>
+                    <TicketModal
+                        open={openModal}
+                        onClose={onCloseModal}
+                        transaction={tokenDepositTransaction || transactionHash}
+                        networkName={infoTicket?.network_available}
+                    />
+                    <ModalOrderBox open={openModalOrderBox} onClose={onCloseModalOrderBox} onConfirm={onOrderBox} isLoadingButton={buyBoxLoading} />
+                    <ModalConfirmBuyBox open={openModalConfirmBuyBox} onClose={onCloseModalConfirmBuyBox} onConfirm={onBuyBox} infoBox={infoTicket} isLoadingButton={buyBoxLoading} amount={numBoxBuy} />
+                    <div className={styles.content}>
 
-                    {
-                        !connectedAccount && <WrapperAlert>
-                            Please connect to wallet
-                        </WrapperAlert>
-                    }
-                    {
-                        (!loadingJoinpool && connectedAccount && countdown.isBuy) &&
-                        ((alreadyJoinPool || joinPoolSuccess) ? null : <WrapperAlert type="error"> Sorry, you have not been chosen as whitelist winner. </WrapperAlert>)
-                    }
-                    {!isKYC && !checkingKyc && connectedAccount && (
-                        <AlertKYC connectedAccount={connectedAccount} />
-                    )}
-                    {/* <div className={styles.bannerBox}>
+                        {
+                            !connectedAccount && <WrapperAlert>
+                                Please connect to wallet
+                            </WrapperAlert>
+                        }
+                        {
+                            (!loadingJoinpool && connectedAccount && countdown.isBuy) &&
+                            ((alreadyJoinPool || joinPoolSuccess) ? null : <WrapperAlert type="error"> Sorry, you have not been chosen as whitelist winner. </WrapperAlert>)
+                        }
+                        {!isKYC && !checkingKyc && connectedAccount && (
+                            <AlertKYC connectedAccount={connectedAccount} />
+                        )}
+                        {/* <div className={styles.bannerBox}>
                         <Image src="/images/nftbox-banner.png" />
                     </div> */}
 
-                    <div className={styles.contentCard}>
-                        <div className={styles.wrapperCard}>
-                            <div className={mysteryStyles.headerBox}>
-                                <div className="items">
-                                    <div className="item">
-                                        <label className="label">Registered Users</label>
-                                        <h4 className="value">{numberWithCommas(infoTicket.totalRegistered || 0)}</h4>
+                        <div className={styles.contentCard}>
+                            <div className={styles.wrapperCard}>
+                                <div className={mysteryStyles.headerBox}>
+                                    <div className="items">
+                                        <div className="item">
+                                            <label className="label">Registered Users</label>
+                                            <h4 className="value">{numberWithCommas(infoTicket.totalRegistered || 0)}</h4>
+                                        </div>
+                                        <div className="item">
+                                            <label className="label">Ordered Boxes</label>
+                                            <h4 className="value">{numberWithCommas((infoTicket.totalOrder || 0) + '')}</h4>
+                                        </div>
+                                        <div className="item">
+                                            <label className="label">Your Ordered</label>
+                                            <h4 className="value">{numberWithCommas((boughtBoxes?.amount || 0) + '')}</h4>
+                                        </div>
                                     </div>
-                                    <div className="item">
-                                        <label className="label">Ordered Boxes</label>
-                                        <h4 className="value">{numberWithCommas((infoTicket.totalOrder || 0) + '')}</h4>
-                                    </div>
-                                    <div className="item">
-                                        <label className="label">Your Ordered</label>
-                                        <h4 className="value">{numberWithCommas((boughtBoxes?.amount || 0) + '')}</h4>
+                                    <div className="box-countdown">
+                                        <h4 className="text-uppercase">{countdown.title}</h4>
+                                        {!countdown.isFinished && <CountDownTimeV1 time={countdown} className={"countdown"} onFinish={onSetCountdown} />}
                                     </div>
                                 </div>
-                                <div className="box-countdown">
-                                    <h4 className="text-uppercase">{countdown.title}</h4>
-                                    {!countdown.isFinished && <CountDownTimeV1 time={countdown} className={"countdown"} onFinish={onSetCountdown} />}
-                                </div>
-                            </div>
-                            <div className={styles.card}>
-                                <div className={clsx(styles.cardImg, mysteryStyles.cardImg)}>
-                                    {isImageFile(boxTypeSelected.banner) && <Image src={boxTypeSelected.banner} />}
-                                    {isVideoFile(boxTypeSelected.banner) && <>
-                                        <div className="wrapperVideo">
-                                            <div className="uncontrol"></div>
-                                            <div className="onload">
-                                                <HashLoader loading={true} color={'#72F34B'} />
-                                            </div>
-                                            <div className="video">
-                                                <video
-                                                    preload="auto"
-                                                    autoPlay
-                                                    loop
-                                                    muted
-                                                    ref={videoElement}
-                                                >
-                                                    <source src={boxTypeSelected.banner} type="video/mp4" />
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            </div>
-                                        </div>
-                                    </>
-                                    }
-
-                                </div>
-                                <div className={mysteryStyles.carBodyInfo}>
-                                    <div className={mysteryStyles.cardBodyHeader}>
-                                        <h3 className="text-uppercase">
-                                            {infoTicket.title || infoTicket.name}
-                                        </h3>
-                                        <h4 className="text-uppercase">
-                                            <img src={infoTicket.token_images} className="icon rounded" alt="" />
-                                            {infoTicket.symbol}
-                                        </h4>
-                                    </div>
-                                    <div className="divider"></div>
-                                    <div className={mysteryStyles.cardBodyDetail}>
-                                        <div className={mysteryStyles.currency}>
-                                            <img className="icon" src={`/images/icons/${(infoTicket.network_available || '').toLowerCase()}.png`} alt="" />
-                                            <span className="text-uppercase">{infoTicket.token_conversion_rate} {getCurrencyByNetwork(infoTicket.network_available)}</span>
-                                        </div>
-                                        <div className="detail-items">
-                                            <div className="item">
-                                                <label className="label text-uppercase">Total sale</label>
-                                                <span>{numberWithCommas((infoTicket.total_sold_coin || 0) + '')} Boxes</span>
-                                            </div>
-                                            <div className="item">
-                                                <label className="label text-uppercase">supported</label>
-                                                <span className="text-uppercase icon"><img src={`/images/icons/${(infoTicket.network_available || '').toLowerCase()}.png`} className="icon" alt="" /> {infoTicket.network_available}</span>
-                                            </div>
-                                        </div>
-                                        <div className="box-type-wrapper">
-                                            <h4 className="text-uppercase">TYPE</h4>
-                                            <div className="box-types">
-                                                {
-                                                    (infoTicket.boxTypesConfig || []).map((t: any) => <div key={t.id} onClick={() => onSelectBoxType(t)} className={clsx("box-type", { active: t.id === boxTypeSelected.id })}>
-                                                        <img src={t.icon} className="icon" alt="" />
-                                                        <span>{t.name} x{t.limit}</span>
-                                                    </div>)
-                                                }
-                                            </div>
-                                        </div>
-                                        {countdown.isBuy && <AscDescAmountBox
-                                            descMinAmount={descMinAmount}
-                                            descAmount={descAmount}
-                                            ascAmount={ascAmount}
-                                            ascMaxAmount={ascMaxAmount}
-                                            value={numBoxBuy}
-                                            disabledMin={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === 1}
-                                            disabledSub={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === 0}
-                                            disabledAdd={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
-                                            disabledMax={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
-                                        />}
-                                        {
-                                            (!loadingJoinpool && !alreadyJoinPool && countdown.isWhitelist && !joinPoolSuccess) &&
-                                            <ButtonBase color="green" onClick={onApplyWhitelist} isLoading={isApplyingWhitelist} disabled={alreadyJoinPool || poolJoinLoading || joinPoolSuccess || isApplyingWhitelist} className="text-transform-unset w-full">
-                                                {(alreadyJoinPool || joinPoolSuccess) ? 'Applied Whitelist' : 'Apply Whitelist'}
-                                            </ButtonBase>
-                                        }
-                                        {
-                                            (!loadingJoinpool && (alreadyJoinPool || joinPoolSuccess)) && countdown.isWhitelist &&
-                                            <ButtonBase color="green" onClick={(alreadyJoinPool || joinPoolSuccess) ? onShowModalOrderBox : undefined} className="text-transform-unset w-full">
-                                                Order Box
-                                            </ButtonBase>
-                                        }
-                                        {
-                                            (!loadingJoinpool && (alreadyJoinPool || joinPoolSuccess)) && countdown.isBuy &&
-                                            <ButtonBase color="green" disabled={+numBoxBuy < 1} onClick={(alreadyJoinPool || joinPoolSuccess) ? onShowModalConfirmBuyBox : undefined} className="text-transform-unset w-full">
-                                                Buy Now
-                                            </ButtonBase>
-                                        }
-                                        {
-                                            countdown.isFinished &&
-                                            <div className={clsx(styles.infoTicket, styles.finished)}>
-                                                <div className="img-finished">
-                                                    <img src={"/images/finished.png"} alt="" />
+                                <div className={styles.card}>
+                                    <div className={clsx(styles.cardImg, mysteryStyles.cardImg)}>
+                                        {isImageFile(boxTypeSelected.banner) && <Image src={boxTypeSelected.banner} />}
+                                        {isVideoFile(boxTypeSelected.banner) && <>
+                                            <div className="wrapperVideo">
+                                                <div className="uncontrol"></div>
+                                                <div className="onload">
+                                                    <HashLoader loading={true} color={'#72F34B'} />
                                                 </div>
-                                                {!getRemaining(
-                                                    infoTicket.total_sold_coin,
-                                                    infoTicket.token_sold
-                                                ) && (
-                                                        <div className="soldout">
-                                                            <img src={"/images/soldout.png"} alt="" />
-                                                        </div>
-                                                    )}
+                                                <div className="video">
+                                                    <video
+                                                        preload="auto"
+                                                        autoPlay
+                                                        loop
+                                                        muted
+                                                        ref={videoElement}
+                                                    >
+                                                        <source src={boxTypeSelected.banner} type="video/mp4" />
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                </div>
                                             </div>
+                                        </>
                                         }
+
+                                    </div>
+                                    <div className={mysteryStyles.carBodyInfo}>
+                                        <div className={mysteryStyles.cardBodyHeader}>
+                                            <h3 className="text-uppercase">
+                                                {infoTicket.title || infoTicket.name}
+                                            </h3>
+                                            <h4 className="text-uppercase">
+                                                <img src={infoTicket.token_images} className="icon rounded" alt="" />
+                                                {infoTicket.symbol}
+                                            </h4>
+                                        </div>
+                                        <div className="divider"></div>
+                                        <div className={mysteryStyles.cardBodyDetail}>
+                                            <div className={mysteryStyles.currency}>
+                                                <img className="icon" src={`/images/icons/${(infoTicket.network_available || '').toLowerCase()}.png`} alt="" />
+                                                <span className="text-uppercase">{infoTicket.token_conversion_rate} {getCurrencyByNetwork(infoTicket.network_available)}</span>
+                                            </div>
+                                            <div className="detail-items">
+                                                <div className="item">
+                                                    <label className="label text-uppercase">Total sale</label>
+                                                    <span>{numberWithCommas((infoTicket.total_sold_coin || 0) + '')} Boxes</span>
+                                                </div>
+                                                <div className="item">
+                                                    <label className="label text-uppercase">supported</label>
+                                                    <span className="text-uppercase icon"><img src={`/images/icons/${(infoTicket.network_available || '').toLowerCase()}.png`} className="icon" alt="" /> {infoTicket.network_available}</span>
+                                                </div>
+                                            </div>
+                                            <div className="box-type-wrapper">
+                                                <h4 className="text-uppercase">TYPE</h4>
+                                                <div className="box-types">
+                                                    {
+                                                        (infoTicket.boxTypesConfig || []).map((t: any) => <div key={t.id} onClick={() => onSelectBoxType(t)} className={clsx("box-type", { active: t.id === boxTypeSelected.id })}>
+                                                            <img src={t.icon} className="icon" alt="" />
+                                                            <span>{t.name} x{t.limit}</span>
+                                                        </div>)
+                                                    }
+                                                </div>
+                                            </div>
+                                            {countdown.isBuy && <AscDescAmountBox
+                                                descMinAmount={descMinAmount}
+                                                descAmount={descAmount}
+                                                ascAmount={ascAmount}
+                                                ascMaxAmount={ascMaxAmount}
+                                                value={numBoxBuy}
+                                                disabledMin={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === 1}
+                                                disabledSub={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === 0}
+                                                disabledAdd={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
+                                                disabledMax={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
+                                            />}
+                                            {
+                                                (connectedAccount && !checkingKyc && !loadingJoinpool && (!alreadyJoinPool || !joinPoolSuccess) && (countdown.isWhitelist || countdown.isUpcoming)) &&
+                                                <ButtonBase color="green" onClick={countdown.isWhitelist ? onApplyWhitelist : undefined} isLoading={isApplyingWhitelist} disabled={countdown.isUpcoming || alreadyJoinPool || poolJoinLoading || joinPoolSuccess || isApplyingWhitelist || !isKYC} className="text-transform-unset w-full">
+                                                    {(alreadyJoinPool || joinPoolSuccess) ? 'Applied Whitelist' : 'Apply Whitelist'}
+                                                </ButtonBase>
+                                            }
+                                            {
+                                                (connectedAccount && !checkingKyc && !loadingJoinpool && (alreadyJoinPool || joinPoolSuccess)) && countdown.isWhitelist &&
+                                                <ButtonBase color="green" onClick={(alreadyJoinPool || joinPoolSuccess) && isKYC ? onShowModalOrderBox : undefined} disabled={!isKYC} className="text-transform-unset w-full">
+                                                    Order Box
+                                                </ButtonBase>
+                                            }
+                                            {/* {
+                                                (connectedAccount && !checkingKyc && !loadingJoinpool && (alreadyJoinPool || joinPoolSuccess)) && countdown.isBuy &&
+                                                <ButtonBase color="green" disabled={+numBoxBuy < 1 || !isKYC} onClick={(alreadyJoinPool || joinPoolSuccess) && isKYC ? onShowModalConfirmBuyBox : undefined} className="text-transform-unset w-full">
+                                                    Buy Now
+                                                </ButtonBase>
+                                            } */}
+                                            {
+                                                countdown.isFinished &&
+                                                <div className={clsx(styles.infoTicket, styles.finished)}>
+                                                    <div className="img-finished">
+                                                        <img src={"/images/finished.png"} alt="" />
+                                                    </div>
+                                                    {!getRemaining(
+                                                        infoTicket.total_sold_coin,
+                                                        infoTicket.token_sold
+                                                    ) && (
+                                                            <div className="soldout">
+                                                                <img src={"/images/soldout.png"} alt="" />
+                                                            </div>
+                                                        )}
+                                                </div>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div className={styles.displayContent}>
+                            <AboutMysteryBox info={infoTicket} timelines={timelines} defaultTab={2} />
+                        </div>
                     </div>
-                    <div className={styles.displayContent}>
-                        <AboutMysteryBox info={infoTicket} timelines={timelines} defaultTab={2} />
-                    </div>
-                </div>
-            </>
+                </>
+            }
+        </WrapperContent>
     );
 }
 export default MysteryBox;

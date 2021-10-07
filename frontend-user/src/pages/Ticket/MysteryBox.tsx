@@ -64,9 +64,6 @@ const MysteryBox = ({ id, ...props }: any) => {
         renewTicket
     );
     const { data: userTier, loading: loadingUserTier } = useSelector((state: any) => state.userTier);
-    useEffect(() => {
-        console.log('loadingUserTier', loadingUserTier)
-    }, [loadingUserTier])
 
     useEffect(() => {
         dispatch(getUserTier(!wrongChain && connectedAccount ? connectedAccount : ''));
@@ -464,7 +461,6 @@ const MysteryBox = ({ id, ...props }: any) => {
                 wallet_address: connectedAccount,
             }) as any
             const resObj = await response.json()
-            // setApplyingWhitelist(false)
 
             if (resObj?.status === 200) {
                 joinPool()
@@ -570,29 +566,23 @@ const MysteryBox = ({ id, ...props }: any) => {
                             </WrapperAlert>
                         }
                         {
-                            connectedAccount && !loadingTicket && infoTicket.min_tier > 0 && !loadingUserTier && _.isNumber(userTier) && (userTier < infoTicket.min_tier) && <WrapperAlert>
+                            countdown.isWhitelist && connectedAccount && !loadingTicket && infoTicket.min_tier > 0 && !loadingUserTier && _.isNumber(userTier) && (userTier < infoTicket.min_tier) && <WrapperAlert>
                                 <span>You haven't achieved min rank ({TIERS[infoTicket.min_tier]?.name}) to apply for Whitelist yet. To upgrade your Rank, please click <Link to="/account?tab=rank" className="text-weight-600 text-white link">here</Link></span>
                             </WrapperAlert>
                         }
                         {(alreadyJoinPool || joinPoolSuccess) && countdown.isWhitelist && <WrapperAlert type="info">
                             Congratulations! You have successfully applied whitelist.
                         </WrapperAlert>}
-                        {/* {(alreadyJoinPool || joinPoolSuccess) &&  countdown.isUpcomingSale && <WrapperAlert type="info">
-                            Congratulations! You have successfully applied whitelist and can buy Mystery boxes from Phase 1
+                        {(alreadyJoinPool || joinPoolSuccess) &&  (countdown.isSale || countdown.isUpcomingSale) && <WrapperAlert type="info">
+                            Congratulations! You have successfully applied whitelist and can buy Mystery boxes 
                         </WrapperAlert>}
-                        {(alreadyJoinPool || joinPoolSuccess) && countdown.isUpcomingSale && <WrapperAlert type="info">
-                            Congratulations! You have successfully applied whitelist and can buy Mystery boxes from Phase 1
-                        </WrapperAlert>} */}
                         {
                             (!loadingJoinpool && connectedAccount && countdown.isSale) &&
-                            ((alreadyJoinPool) ? null : <WrapperAlert type="error"> Sorry, you have not been chosen as whitelist winner. </WrapperAlert>)
+                            ((alreadyJoinPool) ? null : <WrapperAlert type="error"> Sorry, you didn’t apply whitelist. </WrapperAlert>)
                         }
                         {!isKYC && !checkingKyc && connectedAccount && (
                             <AlertKYC connectedAccount={connectedAccount} />
                         )}
-                        {/* <div className={styles.bannerBox}>
-                        <Image src="/images/nftbox-banner.png" />
-                    </div> */}
 
                         <div className={styles.contentCard}>
                             <div className={styles.wrapperCard}>
@@ -671,9 +661,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     {infoTicket.min_tier > 0 ? <span className="icon" style={{ gridTemplateColumns: '22px auto' }}><img src={TIERS[infoTicket.min_tier].icon} className="icon" alt="" style={{ width: "22px", height: "20px" }} /> {TIERS[infoTicket.min_tier].name}</span>
                                                         : <span>No Required</span>
                                                     }
-
                                                 </div>
-
                                             </div>
                                             <div className="box-type-wrapper">
                                                 <h4 className="text-uppercase">TYPE</h4>
@@ -686,7 +674,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     }
                                                 </div>
                                             </div>
-                                            {/* {countdown.isSale && <AscDescAmountBox
+                                            {countdown.isSale && <AscDescAmountBox
                                                 descMinAmount={descMinAmount}
                                                 descAmount={descAmount}
                                                 ascAmount={ascAmount}
@@ -696,7 +684,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                 disabledSub={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === 0}
                                                 disabledAdd={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
                                                 disabledMax={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
-                                            />} */}
+                                            />}
                                             {
                                                 (connectedAccount && !checkingKyc && !loadingJoinpool && !alreadyJoinPool && !joinPoolSuccess) && (countdown.isWhitelist || countdown.isUpcoming) &&
                                                 <ButtonBase color="green"
@@ -717,12 +705,12 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     {maxBoxCanBuy > 0 ? 'Change Order' : 'Order Box'}
                                                 </ButtonBase>
                                             }
-                                            {/* {
+                                            {
                                                 (connectedAccount && !checkingKyc && !loadingJoinpool && (alreadyJoinPool || joinPoolSuccess)) && countdown.isSale &&
                                                 <ButtonBase color="green" disabled={+numBoxBuy < 1 || !isKYC} onClick={(alreadyJoinPool || joinPoolSuccess) && isKYC ? onShowModalConfirmBuyBox : undefined} className="text-transform-unset w-full">
                                                     Buy Now
                                                 </ButtonBase>
-                                            } */}
+                                            }
                                             {
                                                 countdown.isFinished &&
                                                 <div className={clsx(styles.infoTicket, styles.finished)}>

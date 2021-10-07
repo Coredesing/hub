@@ -131,7 +131,7 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, ...props }: Pro
             let elemImg: any = wrapperImg.querySelector('img');
             if (!elemImg) return;
             const newElmImg = document.createElement('img');
-            newElmImg.src = newSerie.icon;
+            newElmImg.src = newSerie.banner;
             if (from === 'right-to-left') {
                 elemImg.classList.remove('r-t-l');
                 elemImg.classList.add('h-r-t-l');
@@ -189,7 +189,7 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, ...props }: Pro
                         </Box>
                         <Box className="wrapper-img" >
                             <div>
-                                <img src={currentSerie.icon} alt="" />
+                                <img src={currentSerie.banner} alt="" />
                             </div>
                         </Box>
                     </Box>

@@ -383,11 +383,11 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
             label={"Timeline"}
             {...a11yProps(1)}
           />
-          <Tab
+          {/* <Tab
             className={clsx(classes.tabName, { active: tabCurrent === 3 })}
             label={"Collection (20)"}
             {...a11yProps(1)}
-          />
+          /> */}
         </AntTabs>
       </AppBar>
       <TabPanel value={tabCurrent} index={0}>

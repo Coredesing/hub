@@ -49,8 +49,8 @@ const ModalOrderBox = ({ open, isLoadingButton, defaultValue, ...props }: Props)
     return (
         <CustomModal open={open} onClose={onClose}>
             <div className={styles.wrapperContent}>
-                <h3>Number of Boxes you want to buy (Maximum: 20)</h3>
-                <FormInputNumber isInteger isPositive allowZero value={numberBox} onChange={onChangeNumberBox} className="input" max={20} />
+                <h3>Number of Boxes you want to buy (Maximum: 10)</h3>
+                <FormInputNumber isInteger isPositive allowZero value={numberBox} onChange={onChangeNumberBox} className="input" max={10} />
                 <ButtonBase color="green" onClick={onConfirm} className="w-full text-transform-unset" isLoading={isLoadingButton} disabled={isLoadingButton}>
                     Confirm
                 </ButtonBase>

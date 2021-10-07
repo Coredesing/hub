@@ -663,6 +663,13 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     <label className="label text-uppercase">supported</label>
                                                     <span className="text-uppercase icon"><img src={`/images/icons/${(infoTicket.network_available || '').toLowerCase()}.png`} className="icon" alt="" /> {infoTicket.network_available}</span>
                                                 </div>
+                                                {
+                                                    infoTicket.min_tier > 0 && <div className="item" >
+                                                        <label className="label text-uppercase">MIN RANK</label>
+                                                        <span className="icon" style={{gridTemplateColumns: '22px auto'}}><img src={TIERS[infoTicket.min_tier].icon} className="icon" alt="" style={{width: "22px", height: "20px"}} /> {TIERS[infoTicket.min_tier].name}</span>
+                                                    </div>
+                                                }
+
                                             </div>
                                             <div className="box-type-wrapper">
                                                 <h4 className="text-uppercase">TYPE</h4>

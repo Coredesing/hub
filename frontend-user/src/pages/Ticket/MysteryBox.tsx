@@ -567,7 +567,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                             </WrapperAlert>
                         }
                         {
-                            connectedAccount && !loadingTicket && infoTicket.min_tier > 0 && ((_.isNumber(userTier) ? userTier : 0) < infoTicket.min_tier) && <WrapperAlert>
+                            connectedAccount && !loadingTicket && infoTicket.min_tier > 0 && _.isNumber(userTier) && (userTier < infoTicket.min_tier) && <WrapperAlert>
                                 <span>You haven't achieved min rank ({TIERS[infoTicket.min_tier]?.name}) to apply for Whitelist yet. To upgrade your Rank, please click <Link to="/account?tab=rank" className="text-weight-600 text-white link">here</Link></span>
                             </WrapperAlert>
                         }
@@ -663,12 +663,13 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     <label className="label text-uppercase">supported</label>
                                                     <span className="text-uppercase icon"><img src={`/images/icons/${(infoTicket.network_available || '').toLowerCase()}.png`} className="icon" alt="" /> {infoTicket.network_available}</span>
                                                 </div>
-                                                {
-                                                    infoTicket.min_tier > 0 && <div className="item" >
-                                                        <label className="label text-uppercase">MIN RANK</label>
-                                                        <span className="icon" style={{gridTemplateColumns: '22px auto'}}><img src={TIERS[infoTicket.min_tier].icon} className="icon" alt="" style={{width: "22px", height: "20px"}} /> {TIERS[infoTicket.min_tier].name}</span>
-                                                    </div>
-                                                }
+                                                <div className="item" >
+                                                    <label className="label text-uppercase">MIN RANK</label>
+                                                    {infoTicket.min_tier > 0 ? <span className="icon" style={{ gridTemplateColumns: '22px auto' }}><img src={TIERS[infoTicket.min_tier].icon} className="icon" alt="" style={{ width: "22px", height: "20px" }} /> {TIERS[infoTicket.min_tier].name}</span>
+                                                        : <span>No Required</span>
+                                                    }
+
+                                                </div>
 
                                             </div>
                                             <div className="box-type-wrapper">

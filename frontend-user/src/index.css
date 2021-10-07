@@ -291,3 +291,7 @@ body::-webkit-scrollbar-thumb {
 .text-white {
     color: #fff;
 }
+
+.text-right {
+    text-align: right;
+}

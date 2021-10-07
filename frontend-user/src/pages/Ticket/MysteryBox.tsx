@@ -44,12 +44,15 @@ import { convertTimeToStringFormat } from "@utils/convertDate";
 import ModalConfirmBuyBox from "./components/ModalConfirmBuyBox";
 import WrapperContent from "@base-components/WrapperContent";
 import _ from 'lodash';
+import { getUserTier } from "@store/actions/sota-tiers";
+import { Link } from "react-router-dom";
+import { TIERS } from "@app-constants";
 
 const MysteryBox = ({ id, ...props }: any) => {
     const styles = useStyles();
     const mysteryStyles = useMysteyBoxStyles();
     const dispatch = useDispatch();
-    const { connectedAccount /*isAuth, wrongChain*/ } = useAuth();
+    const { connectedAccount, wrongChain /*isAuth*/ } = useAuth();
     const alert = useSelector((state: any) => state.alert);
     const { appChainID } = useSelector((state: any) => state.appNetwork).data;
     const [boxBought, setBoxBought] = useState<number>(0);
@@ -60,6 +63,11 @@ const MysteryBox = ({ id, ...props }: any) => {
         `/pool/${id}`,
         renewTicket
     );
+    const { data: userTier } = useSelector((state: any) => state.userTier);
+
+    useEffect(() => {
+        dispatch(getUserTier(!wrongChain && connectedAccount ? connectedAccount : ''));
+    }, [wrongChain, connectedAccount, dispatch]);
 
     const [allowNetwork, setAllowNetwork] = useState<{ ok: boolean, [k: string]: any }>({ ok: false });
     useEffect(() => {
@@ -186,22 +194,22 @@ const MysteryBox = ({ id, ...props }: any) => {
             else if (timeLine.startBuyTime > Date.now()) {
                 timeLinesInfo[2].current = true;
                 if (timeLine.freeBuyTime) {
-                    setCountdown({ date1: timeLine.startBuyTime, date2: Date.now(), title: 'Sale Phase 1 Starts In' });
+                    setCountdown({ date1: timeLine.startBuyTime, date2: Date.now(), title: 'Sale Phase 1 Starts In', isUpcomingSale: true, isMultiPhase: true });
                 } else {
-                    setCountdown({ date1: timeLine.startBuyTime, date2: Date.now(), title: 'Sale Starts In' });
+                    setCountdown({ date1: timeLine.startBuyTime, date2: Date.now(), title: 'Sale Starts In', isUpcomingSale: true });
                 }
             }
             else if (timeLine.freeBuyTime && timeLine.freeBuyTime > Date.now()) {
                 timeLinesInfo[3].current = true;
-                setCountdown({ date1: timeLine.freeBuyTime, date2: Date.now(), title: 'Phase 1 Ends In', isBuy: true });
+                setCountdown({ date1: timeLine.freeBuyTime, date2: Date.now(), title: 'Phase 1 Ends In', isSale: true, isMultiPhase: true });
             }
             else if (timeLine.finishTime > Date.now()) {
                 if (timeLine.freeBuyTime) {
                     timeLinesInfo[4].current = true;
-                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Phase 2 Ends In', isBuy: true });
+                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Phase 2 Ends In', isSale: true, isMultiPhase: true });
                 } else {
                     timeLinesInfo[3].current = true;
-                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Sale Ends In', isBuy: true });
+                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Sale Ends In', isSale: true });
                 }
             }
             else {
@@ -466,7 +474,6 @@ const MysteryBox = ({ id, ...props }: any) => {
         }
     }
     const [recallBoughtBox, setRecallBoughtBox] = useState(true);
-
     const { data: boughtBoxes = {} as any } = useFetchV1<boolean>(`/pool/${infoTicket?.id}/nft-order?wallet_address=${connectedAccount}`, !!(connectedAccount && 'id' in infoTicket) && recallBoughtBox);
     useEffect(() => {
         if (boughtBoxes && 'amount' in boughtBoxes) {
@@ -554,17 +561,27 @@ const MysteryBox = ({ id, ...props }: any) => {
                     <ModalOrderBox open={openModalOrderBox} onClose={onCloseModalOrderBox} onConfirm={onOrderBox} isLoadingButton={buyBoxLoading} isSuccessOrderbox={statusBuyBox} defaultValue={maxBoxCanBuy} />
                     <ModalConfirmBuyBox open={openModalConfirmBuyBox} onClose={onCloseModalConfirmBuyBox} onConfirm={onBuyBox} infoBox={infoTicket} isLoadingButton={buyBoxLoading} amount={numBoxBuy} />
                     <div className={styles.content}>
-
                         {
                             !connectedAccount && <WrapperAlert>
                                 Please connect to wallet
                             </WrapperAlert>
                         }
-                        {(alreadyJoinPool) && <WrapperAlert type="info">
+                        {
+                            connectedAccount && !loadingTicket && infoTicket.min_tier > 0 && ((_.isNumber(userTier) ? userTier : 0) < infoTicket.min_tier) && <WrapperAlert>
+                                <span>You haven't achieved min rank ({TIERS[infoTicket.min_tier]?.name}) to apply for Whitelist yet. To upgrade your Rank, please click <Link to="/account?tab=rank" className="text-weight-600 text-white link">here</Link></span>
+                            </WrapperAlert>
+                        }
+                        {(alreadyJoinPool || joinPoolSuccess) && countdown.isWhitelist && <WrapperAlert type="info">
                             Congratulations! You have successfully applied whitelist.
                         </WrapperAlert>}
+                        {/* {(alreadyJoinPool || joinPoolSuccess) &&  countdown.isUpcomingSale && <WrapperAlert type="info">
+                            Congratulations! You have successfully applied whitelist and can buy Mystery boxes from Phase 1
+                        </WrapperAlert>}
+                        {(alreadyJoinPool || joinPoolSuccess) && countdown.isUpcomingSale && <WrapperAlert type="info">
+                            Congratulations! You have successfully applied whitelist and can buy Mystery boxes from Phase 1
+                        </WrapperAlert>} */}
                         {
-                            (!loadingJoinpool && connectedAccount && countdown.isBuy) &&
+                            (!loadingJoinpool && connectedAccount && countdown.isSale) &&
                             ((alreadyJoinPool) ? null : <WrapperAlert type="error"> Sorry, you have not been chosen as whitelist winner. </WrapperAlert>)
                         }
                         {!isKYC && !checkingKyc && connectedAccount && (
@@ -658,7 +675,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     }
                                                 </div>
                                             </div>
-                                            {/* {countdown.isBuy && <AscDescAmountBox
+                                            {/* {countdown.isSale && <AscDescAmountBox
                                                 descMinAmount={descMinAmount}
                                                 descAmount={descAmount}
                                                 ascAmount={ascAmount}
@@ -671,18 +688,26 @@ const MysteryBox = ({ id, ...props }: any) => {
                                             />} */}
                                             {
                                                 (connectedAccount && !checkingKyc && !loadingJoinpool && !alreadyJoinPool && !joinPoolSuccess) && (countdown.isWhitelist || countdown.isUpcoming) &&
-                                                <ButtonBase color="green" onClick={countdown.isWhitelist ? onApplyWhitelist : undefined} isLoading={isApplyingWhitelist} disabled={countdown.isUpcoming || alreadyJoinPool || poolJoinLoading || isApplyingWhitelist || !isKYC} className="text-transform-unset w-full">
+                                                <ButtonBase color="green"
+                                                    onClick={countdown.isWhitelist ? onApplyWhitelist : undefined}
+                                                    isLoading={isApplyingWhitelist}
+                                                    disabled={countdown.isUpcoming || alreadyJoinPool || poolJoinLoading || isApplyingWhitelist || !isKYC || (_.isNumber(userTier) && (userTier < infoTicket.min_tier))}
+                                                    className="text-transform-unset w-full">
                                                     {(alreadyJoinPool) ? 'Applied Whitelist' : 'Apply Whitelist'}
                                                 </ButtonBase>
                                             }
                                             {
                                                 (connectedAccount && !checkingKyc && !loadingJoinpool && (alreadyJoinPool || joinPoolSuccess)) && countdown.isWhitelist &&
-                                                <ButtonBase color="green" onClick={(alreadyJoinPool || joinPoolSuccess) && isKYC ? onShowModalOrderBox : undefined} disabled={!isKYC} className="text-transform-unset w-full">
+                                                <ButtonBase
+                                                    color="green"
+                                                    onClick={(alreadyJoinPool || joinPoolSuccess) && isKYC ? onShowModalOrderBox : undefined}
+                                                    disabled={!isKYC}
+                                                    className="text-transform-unset w-full">
                                                     {maxBoxCanBuy > 0 ? 'Change Order' : 'Order Box'}
                                                 </ButtonBase>
                                             }
                                             {/* {
-                                                (connectedAccount && !checkingKyc && !loadingJoinpool && (alreadyJoinPool || joinPoolSuccess)) && countdown.isBuy &&
+                                                (connectedAccount && !checkingKyc && !loadingJoinpool && (alreadyJoinPool || joinPoolSuccess)) && countdown.isSale &&
                                                 <ButtonBase color="green" disabled={+numBoxBuy < 1 || !isKYC} onClick={(alreadyJoinPool || joinPoolSuccess) && isKYC ? onShowModalConfirmBuyBox : undefined} className="text-transform-unset w-full">
                                                     Buy Now
                                                 </ButtonBase>

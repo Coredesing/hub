@@ -6,6 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import { typeDisplayFlex } from '@styles/CommonStyle';
+import clsx from 'clsx';
 
 const closeIcon = '/images/icons/close.svg';
 const useStyles = makeStyles({
@@ -143,12 +144,13 @@ type Props = {
     open: boolean,
     actions?: Element | ReactNode,
     onClose?: Function,
+    classes?: {[k: string]: any},
     [k: string]: any
 }
-const CustomModal = ({ open, actions, ...props }: Props) => {
+const CustomModal = ({ open, actions, classes = {}, ...props }: Props) => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const classes = useStyles();
+    const styles = useStyles();
 
     const handleClose = () => {
         props.onClose && props.onClose();
@@ -161,17 +163,18 @@ const CustomModal = ({ open, actions, ...props }: Props) => {
             onClose={handleClose}
             aria-labelledby="responsive-dialog-title"
             classes={{
-                paper: classes.paper
+                ...classes,
+                paper: clsx(styles.paper, classes.paper),
             }}
         >
-            <Button autoFocus onClick={handleClose} color="primary" className={classes.btnClose}>
+            <Button autoFocus onClick={handleClose} color="primary" className={styles.btnClose}>
                 <img src={closeIcon} alt="" />
             </Button>
-            <DialogContent className={classes.content}>
+            <DialogContent className={styles.content}>
                 {props.children}
 
             </DialogContent>
-            <DialogActions className={classes.actions}>
+            <DialogActions className={styles.actions}>
                 {actions}
             </DialogActions>
         </Dialog>

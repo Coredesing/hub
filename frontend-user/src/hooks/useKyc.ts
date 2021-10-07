@@ -28,7 +28,13 @@ const useKyc = (connectedAccount: string | null | undefined, isCheckKyc?: boolea
                 checkingKyc: false,
             })
         }
-        if (isRequiredKyc || isCheckKyc) {
+        if(isCheckKyc !== undefined) {
+            if(isCheckKyc) {
+                connectedAccount && run();
+            } else {
+                setInfo(info => ({ ...info, checkingKyc: false, isKYC: true }));
+            }
+        } else if (isRequiredKyc) {
             connectedAccount && run();
         } else {
             setInfo(info => ({ ...info, checkingKyc: false, isKYC: true }));

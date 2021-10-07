@@ -9,6 +9,12 @@ type ReturnType = {
     isKYC: boolean,
     checkingKyc: boolean
 }
+/**
+ * 
+ * @param connectedAccount 
+ * @param isCheckKyc if passed will priority check for this param
+ * @returns 
+ */
 const useKyc = (connectedAccount: string | null | undefined, isCheckKyc?: boolean): ReturnType => {
 
     const [info, setInfo] = useState<ReturnType>({

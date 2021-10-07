@@ -63,7 +63,10 @@ const MysteryBox = ({ id, ...props }: any) => {
         `/pool/${id}`,
         renewTicket
     );
-    const { data: userTier } = useSelector((state: any) => state.userTier);
+    const { data: userTier, loading: loadingUserTier } = useSelector((state: any) => state.userTier);
+    useEffect(() => {
+        console.log('loadingUserTier', loadingUserTier)
+    }, [loadingUserTier])
 
     useEffect(() => {
         dispatch(getUserTier(!wrongChain && connectedAccount ? connectedAccount : ''));
@@ -567,7 +570,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                             </WrapperAlert>
                         }
                         {
-                            connectedAccount && !loadingTicket && infoTicket.min_tier > 0 && _.isNumber(userTier) && (userTier < infoTicket.min_tier) && <WrapperAlert>
+                            connectedAccount && !loadingTicket && infoTicket.min_tier > 0 && !loadingUserTier && _.isNumber(userTier) && (userTier < infoTicket.min_tier) && <WrapperAlert>
                                 <span>You haven't achieved min rank ({TIERS[infoTicket.min_tier]?.name}) to apply for Whitelist yet. To upgrade your Rank, please click <Link to="/account?tab=rank" className="text-weight-600 text-white link">here</Link></span>
                             </WrapperAlert>
                         }

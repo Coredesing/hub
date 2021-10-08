@@ -942,7 +942,8 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
     gap: '20px',
     '& .detail-items': {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(120px,1fr))',
+      gridTemplateColumns: 'repeat(auto-fit, 115px)',
+      justifyContent: 'space-between',
 
       '& .item': {
         '& .label': {

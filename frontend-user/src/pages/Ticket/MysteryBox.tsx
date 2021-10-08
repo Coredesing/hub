@@ -63,7 +63,7 @@ const MysteryBox = ({ id, ...props }: any) => {
         `/pool/${id}`,
         renewTicket
     );
-    const { data: userTier } = useSelector((state: any) => state.userTier);
+    const { data: userTier, loading: loadingUserTier } = useSelector((state: any) => state.userTier);
 
     useEffect(() => {
         dispatch(getUserTier(!wrongChain && connectedAccount ? connectedAccount : ''));
@@ -461,7 +461,6 @@ const MysteryBox = ({ id, ...props }: any) => {
                 wallet_address: connectedAccount,
             }) as any
             const resObj = await response.json()
-            // setApplyingWhitelist(false)
 
             if (resObj?.status === 200) {
                 joinPool()
@@ -567,29 +566,23 @@ const MysteryBox = ({ id, ...props }: any) => {
                             </WrapperAlert>
                         }
                         {
-                            connectedAccount && !loadingTicket && infoTicket.min_tier > 0 && _.isNumber(userTier) && (userTier < infoTicket.min_tier) && <WrapperAlert>
+                            countdown.isWhitelist && connectedAccount && !loadingTicket && infoTicket.min_tier > 0 && !loadingUserTier && _.isNumber(userTier) && (userTier < infoTicket.min_tier) && <WrapperAlert>
                                 <span>You haven't achieved min rank ({TIERS[infoTicket.min_tier]?.name}) to apply for Whitelist yet. To upgrade your Rank, please click <Link to="/account?tab=rank" className="text-weight-600 text-white link">here</Link></span>
                             </WrapperAlert>
                         }
                         {(alreadyJoinPool || joinPoolSuccess) && countdown.isWhitelist && <WrapperAlert type="info">
                             Congratulations! You have successfully applied whitelist.
                         </WrapperAlert>}
-                        {/* {(alreadyJoinPool || joinPoolSuccess) &&  countdown.isUpcomingSale && <WrapperAlert type="info">
-                            Congratulations! You have successfully applied whitelist and can buy Mystery boxes from Phase 1
+                        {(alreadyJoinPool || joinPoolSuccess) && (countdown.isSale || countdown.isUpcomingSale) && <WrapperAlert type="info">
+                            Congratulations! You have successfully applied whitelist and can buy Mystery boxes
                         </WrapperAlert>}
-                        {(alreadyJoinPool || joinPoolSuccess) && countdown.isUpcomingSale && <WrapperAlert type="info">
-                            Congratulations! You have successfully applied whitelist and can buy Mystery boxes from Phase 1
-                        </WrapperAlert>} */}
                         {
                             (!loadingJoinpool && connectedAccount && countdown.isSale) &&
-                            ((alreadyJoinPool) ? null : <WrapperAlert type="error"> Sorry, you have not been chosen as whitelist winner. </WrapperAlert>)
+                            ((alreadyJoinPool) ? null : <WrapperAlert type="error"> Sorry, you didn’t apply whitelist. </WrapperAlert>)
                         }
                         {!isKYC && !checkingKyc && connectedAccount && (
                             <AlertKYC connectedAccount={connectedAccount} />
                         )}
-                        {/* <div className={styles.bannerBox}>
-                        <Image src="/images/nftbox-banner.png" />
-                    </div> */}
 
                         <div className={styles.contentCard}>
                             <div className={styles.wrapperCard}>
@@ -659,6 +652,13 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     <label className="label text-uppercase">Total sale</label>
                                                     <span>{numberWithCommas((infoTicket.total_sold_coin || 0) + '')} Boxes</span>
                                                 </div>
+                                                {
+                                                    !countdown.isUpcoming && !countdown.isWhitelist && !countdown.isUpcomingSale &&
+                                                    <div className="item">
+                                                        <label className="label text-uppercase">REMAINING</label>
+                                                        <span>{numberWithCommas(((+infoTicket.total_sold_coin || 0) - (+infoTicket.token_sold || 0) || 0) + '')}</span>
+                                                    </div>
+                                                }
                                                 <div className="item">
                                                     <label className="label text-uppercase">supported</label>
                                                     <span className="text-uppercase icon"><img src={`/images/icons/${(infoTicket.network_available || '').toLowerCase()}.png`} className="icon" alt="" /> {infoTicket.network_available}</span>
@@ -668,9 +668,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     {infoTicket.min_tier > 0 ? <span className="icon" style={{ gridTemplateColumns: '22px auto' }}><img src={TIERS[infoTicket.min_tier].icon} className="icon" alt="" style={{ width: "22px", height: "20px" }} /> {TIERS[infoTicket.min_tier].name}</span>
                                                         : <span>No Required</span>
                                                     }
-
                                                 </div>
-
                                             </div>
                                             <div className="box-type-wrapper">
                                                 <h4 className="text-uppercase">TYPE</h4>
@@ -683,17 +681,19 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     }
                                                 </div>
                                             </div>
-                                            {/* {countdown.isSale && <AscDescAmountBox
-                                                descMinAmount={descMinAmount}
-                                                descAmount={descAmount}
-                                                ascAmount={ascAmount}
-                                                ascMaxAmount={ascMaxAmount}
-                                                value={numBoxBuy}
-                                                disabledMin={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === 1}
-                                                disabledSub={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === 0}
-                                                disabledAdd={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
-                                                disabledMax={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
-                                            />} */}
+                                            {
+                                                countdown.isSale && 
+                                                <AscDescAmountBox
+                                                    descMinAmount={descMinAmount}
+                                                    descAmount={descAmount}
+                                                    ascAmount={ascAmount}
+                                                    ascMaxAmount={ascMaxAmount}
+                                                    value={numBoxBuy}
+                                                    disabledMin={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === 1}
+                                                    disabledSub={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === 0}
+                                                    disabledAdd={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
+                                                    disabledMax={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
+                                                />}
                                             {
                                                 (connectedAccount && !checkingKyc && !loadingJoinpool && !alreadyJoinPool && !joinPoolSuccess) && (countdown.isWhitelist || countdown.isUpcoming) &&
                                                 <ButtonBase color="green"
@@ -714,27 +714,54 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     {maxBoxCanBuy > 0 ? 'Change Order' : 'Order Box'}
                                                 </ButtonBase>
                                             }
-                                            {/* {
+                                            {
                                                 (connectedAccount && !checkingKyc && !loadingJoinpool && (alreadyJoinPool || joinPoolSuccess)) && countdown.isSale &&
                                                 <ButtonBase color="green" disabled={+numBoxBuy < 1 || !isKYC} onClick={(alreadyJoinPool || joinPoolSuccess) && isKYC ? onShowModalConfirmBuyBox : undefined} className="text-transform-unset w-full">
                                                     Buy Now
                                                 </ButtonBase>
-                                            } */}
+                                            }
                                             {
                                                 countdown.isFinished &&
-                                                <div className={clsx(styles.infoTicket, styles.finished)}>
-                                                    <div className="img-finished">
-                                                        <img src={"/images/finished.png"} alt="" />
+                                                <>
+                                                    <div className={styles.progressItem}>
+                                                        <span className={styles.text}>Progress</span>
+                                                        <div className="showProgress">
+                                                            <Progress
+                                                                progress={calcProgress(
+                                                                    +infoTicket.token_sold,
+                                                                    +infoTicket.total_sold_coin
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        <div className={clsx(styles.infoTicket, "total")}>
+                                                            <span className={styles.textBold}>
+                                                                {calcProgress(
+                                                                    +infoTicket.token_sold,
+                                                                    +infoTicket.total_sold_coin
+                                                                )}
+                                                                %
+                                                            </span>
+
+                                                            <span className="amount">
+                                                                {infoTicket.token_sold ? numberWithCommas(infoTicket.token_sold, 0) : "..."}/
+                                                                {infoTicket.total_sold_coin ? numberWithCommas(infoTicket.total_sold_coin, 0) : "..."} Boxes
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                    {!getRemaining(
-                                                        infoTicket.total_sold_coin,
-                                                        infoTicket.token_sold
-                                                    ) && (
-                                                            <div className="soldout">
-                                                                <img src={"/images/soldout.png"} alt="" />
-                                                            </div>
-                                                        )}
-                                                </div>
+                                                    <div className={clsx(styles.infoTicket, styles.finished)}>
+                                                        <div className="img-finished">
+                                                            <img src={"/images/finished.png"} alt="" />
+                                                        </div>
+                                                        {!getRemaining(
+                                                            infoTicket.total_sold_coin,
+                                                            infoTicket.token_sold
+                                                        ) && (
+                                                                <div className="soldout">
+                                                                    <img src={"/images/soldout.png"} alt="" />
+                                                                </div>
+                                                            )}
+                                                    </div>
+                                                </>
                                             }
                                         </div>
                                     </div>

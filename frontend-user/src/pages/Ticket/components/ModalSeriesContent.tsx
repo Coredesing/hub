@@ -54,9 +54,10 @@ const useStyles = makeStyles((theme) => ({
                 },
                 '& .header': {
                     display: 'grid',
-                    gridTemplateColumns: 'minmax(50px, 100px) 1px minmax(50px, 100px)',
-                    justifyContent: 'space-between',
+                    // gridTemplateColumns: 'minmax(50px, 100px) 1px minmax(50px, 100px)',
+                    // justifyContent: 'space-between',
                     marginBottom: '8px',
+                    placeContent: 'center',
                 },
                 '& .wrapper-img': {
                     padding: '30px 60px',
@@ -131,7 +132,7 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, ...props }: Pro
             let elemImg: any = wrapperImg.querySelector('img');
             if (!elemImg) return;
             const newElmImg = document.createElement('img');
-            newElmImg.src = newSerie.icon;
+            newElmImg.src = newSerie.banner;
             if (from === 'right-to-left') {
                 elemImg.classList.remove('r-t-l');
                 elemImg.classList.add('h-r-t-l');
@@ -164,7 +165,7 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, ...props }: Pro
     return (
         <CustomModal open={open} onClose={onClose} classes={{ paper: styles.paper }}>
             <Box className={styles.headerModal}>
-                <h3 className="text-white">{currentSerie.name} Amount</h3>
+                <h3 className="text-white">{currentSerie.name}</h3>
             </Box>
             <Box className={styles.bodyModal}>
                 <Box className="content">
@@ -175,13 +176,13 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, ...props }: Pro
                     </span>
                     <Box className="content-body">
                         <Box className="header">
-                            <Box className={styles.boxItem}>
+                            {/* <Box className={styles.boxItem}>
                                 <label>Amount</label>
                                 <span>{numberWithCommas(currentSerie.amount)}</span>
                             </Box>
                             <Box className={styles.boxItem}>
                                 <span className="line"></span>
-                            </Box>
+                            </Box> */}
                             <Box className={styles.boxItem}>
                                 <label className="text-right">Rare</label>
                                 <span className="text-right">{currentSerie.rate}%</span>
@@ -189,7 +190,7 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, ...props }: Pro
                         </Box>
                         <Box className="wrapper-img" >
                             <div>
-                                <img src={currentSerie.icon} alt="" />
+                                <img src={currentSerie.banner} alt="" />
                             </div>
                         </Box>
                     </Box>

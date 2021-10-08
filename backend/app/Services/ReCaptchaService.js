@@ -2,6 +2,7 @@
 
 const axios = use('axios');
 const CaptchaWhitelist = use('App/Models/CaptchaWhitelist');
+const RedisCaptchaWhitelistUser = use('App/Common/RedisCaptchaWhitelistUser');
 
 class ReCaptchaService {
   async Verify(captchaToken, address) {
@@ -10,8 +11,8 @@ class ReCaptchaService {
       return false;
     }
 
-    const isWhitelist = await CaptchaWhitelist.query().where('address', address.toLowerCase()).getCount()
-    if (isWhitelist > 0) {
+    const isWhitelist = await this.isAllowRecaptcha(address)
+    if (isWhitelist) {
       return true
     }
 
@@ -35,6 +36,36 @@ class ReCaptchaService {
       });
 
     return status
+  }
+
+  async isAllowRecaptcha(wallet_address) {
+    try {
+      if (!wallet_address) {
+        return false
+      }
+
+      let users = []
+      if (await RedisCaptchaWhitelistUser.checkExistRedisWhitelistCaptcha()) {
+        users = JSON.parse(await RedisCaptchaWhitelistUser.getRedisWhitelistCaptcha())
+        if (!Array.isArray(users)) {
+          return false
+        }
+
+        return users.filter(u => u.address.toLowerCase() === wallet_address.toLowerCase()).length > 0
+      }
+
+      const data = await CaptchaWhitelist.query().select('address').fetch()
+      users = JSON.parse(JSON.stringify(data))
+      if (!Array.isArray(users)) {
+        return false
+      }
+
+      await RedisCaptchaWhitelistUser.setRedisWhitelistCaptcha(users)
+      return users.filter(u => u.address.toLowerCase() === wallet_address.toLowerCase()).length > 0
+    }
+    catch (e) {
+      return false
+    }
   }
 }
 

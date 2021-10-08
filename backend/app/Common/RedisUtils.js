@@ -25,10 +25,8 @@ const checkExistRedisPoolDetail = async (poolId) => {
 
   const isExistRedisData = await Redis.exists(redisKey);
   if (isExistRedisData) {
-    logRedisUtil(`checkExistRedisPoolDetail - Exist Redis cache with key: ${redisKey}`);
     return true;
   }
-  logRedisUtil(`checkExistRedisPoolDetail - Not exist Redis cache with key: ${redisKey}`);
   return false;
 };
 

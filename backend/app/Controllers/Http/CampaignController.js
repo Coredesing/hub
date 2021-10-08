@@ -18,7 +18,7 @@ const UserService = use('App/Services/UserService');
 const Const = use('App/Common/Const');
 const HelperUtils = use('App/Common/HelperUtils');
 const ConvertDateUtils = use('App/Common/ConvertDateUtils');
-const Redis = use('Redis');
+const RedisUtils = use('App/Common/RedisUtils');
 const BigNumber = use('bignumber.js')
 BigNumber.config({ EXPONENTIAL_AT: 50 });
 
@@ -319,7 +319,7 @@ class CampaignController {
       const userTier = (await HelperUtils.getUserTierSmartWithCached(wallet_address))[0];
       // check user tier with min tier of campaign
       if (camp.min_tier > userTier) {
-        return HelperUtils.responseBadRequest("You need to achieve higher rank for applying whitelist");
+        return HelperUtils.responseBadRequest("You need to achieve a higher rank for applying whitelist");
       }
       // call to db to get tier info
       const tierService = new TierService();
@@ -365,7 +365,23 @@ class CampaignController {
       };
       // call to db get campaign info
       const campaignService = new PoolService();
-      const camp = await campaignService.buildQueryBuilder({ id: campaign_id }).with('freeBuyTimeSetting').first();
+      let camp = null
+      try {
+        if (await RedisUtils.checkExistRedisPoolDetail(campaign_id)) {
+          const cachedPoolDetail = await RedisUtils.getRedisPoolDetail(campaign_id);
+          camp = JSON.parse(cachedPoolDetail)
+        }
+      } catch (e) {
+        camp = null
+      }
+
+      if (!camp || !camp.freeBuyTimeSetting || !Array.isArray(camp.tiers)) {
+        camp = await campaignService.buildQueryBuilder({ id: campaign_id })
+          .with('freeBuyTimeSetting')
+          .with('tiers')
+          .first();
+      }
+
       if (!camp) {
         return HelperUtils.responseBadRequest("Do not found campaign");
       }
@@ -400,21 +416,21 @@ class CampaignController {
 
         // if user not in winner list then check on reserved list
         if (!isFreeBuyTime && !winner) {
-          // if user is not in winner list then check with reserved list
-          const reserved = await (new ReservedListService()).findOneByFilter({ wallet_address: userWalletAddress, campaign_id });
-          if (!reserved) {
-            return HelperUtils.responseBadRequest("You are not on the list of winners to join this pool.");
-          }
-          // check time start buy for tier
-          if (reserved.start_time > current) {
-            return HelperUtils.responseBadRequest('It is not yet time for your tier to start buying!');
-          }
-          if (reserved.end_time < current) {
-            return HelperUtils.responseBadRequest("Time out of your tier you can buy!");
-          }
-          // set min, max buy amount of user
-          minBuy = reserved.min_buy;
-          maxBuy = reserved.max_buy;
+        //   const reserved = await (new ReservedListService()).findOneByFilter({ wallet_address: userWalletAddress, campaign_id });
+        //   if (!reserved) {
+        //     return HelperUtils.responseBadRequest("You did not win this time");
+        //   }
+        //   // check time start buy for tier
+        //   if (reserved.start_time > current) {
+        //     return HelperUtils.responseBadRequest('Invalid time');
+        //   }
+        //   if (reserved.end_time < current) {
+        //     return HelperUtils.responseBadRequest("Invalid time");
+        //   }
+        //   // set min, max buy amount of user
+        //   minBuy = reserved.min_buy;
+        //   maxBuy = reserved.max_buy;
+          return HelperUtils.responseBadRequest("You did not win this time");
         }
       }
       // check user tier if user not in reserved list
@@ -426,23 +442,25 @@ class CampaignController {
         // if user decrement their tier then they can not buy token
         if (currentTier < winner.level) {
           if (!isFreeBuyTime) {
-            return HelperUtils.responseBadRequest('You have already decreased your tier so you can no longer buy tokens in this pool!');
+            return HelperUtils.responseBadRequest('You have decreased your rank which led you cannot buy tokens');
           }
         }
         // get user tier from winner table which snapshot user balance and pickup random winner
-        console.log(`user tier is ${winner.level}`);
         // check user tier with min tier of campaign
         if (camp.min_tier > winner.level) {
           if (!isFreeBuyTime) {
-            return HelperUtils.responseBadRequest("You're not tier qualified for buy this campaign!");
+            return HelperUtils.responseBadRequest("You need to achieve a higher rank for buying tokens");
           }
         }
 
         // call to db to get tier info
-        const tier = await (new TierService()).findByLevelAndCampaign({ campaign_id, level: winner.level });
+        let tier = camp.tiers.find(t => t.level === winner.level)
+        if (!tier) {
+          tier = await (new TierService()).findByLevelAndCampaign({ campaign_id, level: winner.level });
+        }
         if (!tier) {
           if (!isFreeBuyTime) {
-            return HelperUtils.responseBadRequest("You're not tier qualified for buy this campaign");
+            return HelperUtils.responseBadRequest("You are not allowed to join this campaign");
           }
         } else {
           // check time start buy for tier

@@ -116,7 +116,7 @@ class WhiteListSubmissionController {
       const userTier = (await HelperUtils.getUserTierSmartWithCached(wallet_address))[0];
       // check user tier with min tier of campaign
       if (camp.min_tier > userTier) {
-        return HelperUtils.responseBadRequest("You need to achieve higher rank for applying whitelist");
+        return HelperUtils.responseBadRequest("You need to achieve a higher rank for applying whitelist");
       }
       // call to db to get tier info
       const tierService = new TierService();

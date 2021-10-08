@@ -287,3 +287,11 @@ body::-webkit-scrollbar-thumb {
 .text-weight-600 {
     font-weight: 600;
 }
+
+.text-white {
+    color: #fff;
+}
+
+.text-right {
+    text-align: right;
+}

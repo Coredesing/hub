@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import PropTypes from "prop-types";
 // import SwipeableViews from 'react-swipeable-views';
@@ -30,6 +30,7 @@ import { convertTimeToStringFormat } from "../../utils/convertDate";
 import { boxes, timelines } from "./data";
 import clsx from 'clsx';
 import { TimelineType } from "./types";
+import ModalSeriesContent from "./components/ModalSeriesContent";
 const shareIcon = "/images/icons/share.svg";
 const telegramIcon = "/images/icons/telegram-1.svg";
 const twitterIcon = "/images/icons/twitter-1.svg";
@@ -344,6 +345,19 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
 
   const onSearch = debounce(onSearchWinner, 1000);
 
+  const [currentSerie, setCurrentSerie] = useState<{ [k: string]: any }>({});
+
+  const [openModalSerieContent, setOpenModalSerieContent] = useState(false);
+
+  const onSelectSerie = (serie: { [k: string]: any }) => {
+    setCurrentSerie(serie);
+    setOpenModalSerieContent(true);
+  }
+
+  const onCloseModalSerie = useCallback(() => {
+    setOpenModalSerieContent(false);
+  }, []);
+
   return (
     <div className={classes.root}>
       <AppBar className={classes.appbar} position="static">
@@ -386,23 +400,24 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
         </ul>
       </TabPanel>
       <TabPanel value={tabCurrent} index={1}>
+        <ModalSeriesContent open={openModalSerieContent} current={currentSerie} seriesContent={info.seriesContentConfig || []} onClose={onCloseModalSerie} />
         <TableContainer style={{ background: '#171717', marginTop: '7px' }}>
           <Table>
             <TableHead>
               <TableRowHead>
-                <TableCell width="80px" style={{paddingLeft: '28px'}}>No</TableCell>
-                <TableCell width="300px" style={{padding: '7px'}} align="left">Name</TableCell>
+                <TableCell width="80px" style={{ paddingLeft: '28px' }}>No</TableCell>
+                <TableCell width="300px" style={{ padding: '7px' }} align="left">Name</TableCell>
                 {/* <TableCell align="left">Amount</TableCell> */}
-                <TableCell align="left" style={{padding: '7px'}}>Rare</TableCell>
+                <TableCell align="left" style={{ padding: '7px' }}>Rare</TableCell>
               </TableRowHead>
             </TableHead>
             <TableBody>
               {(info.seriesContentConfig || []).map((row: any, idx: number) => (
                 <TableRowBody key={idx}>
-                  <TableCell width="80px" component="th" scope="row" style={{paddingLeft: '28px'}}> {idx + 1} </TableCell>
-                  <TableCell align="left" style={{padding: '7px'}} className="text-uppercase">
+                  <TableCell width="80px" component="th" scope="row" style={{ paddingLeft: '28px' }}> {idx + 1} </TableCell>
+                  <TableCell align="left" style={{ padding: '7px' }} className="text-uppercase">
                     <Box display="flex" alignItems="center" gridGap="20px">
-                      <Box style={{background: "#000", placeContent: 'center', borderRadius: '2px', padding: '5px'}} display="grid">
+                      <Box style={{ background: "#000", placeContent: 'center', borderRadius: '2px', padding: '5px', cursor: 'pointer' }} display="grid" onClick={() => onSelectSerie(row)}>
                         <img src={row.icon} width='30' height="30" alt="" />
                       </Box>
                       <span className="text-weight-600">{row.name}</span>
@@ -410,7 +425,7 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
                     </Box>
                   </TableCell>
                   {/* <TableCell align="left">{numberWithCommas(row.amount)}</TableCell> */}
-                  <TableCell align="left" style={{padding: '7px'}}>{row.rate}%</TableCell>
+                  <TableCell align="left" style={{ padding: '7px' }}>{row.rate}%</TableCell>
                 </TableRowBody>
               ))}
             </TableBody>

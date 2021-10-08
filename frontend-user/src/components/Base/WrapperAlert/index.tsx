@@ -15,10 +15,10 @@ export const WrapperAlert = ({ type = 'error', ...props }: Props) => {
             <div className={clsx(classes.alertBox, type)}>
                 <div className={clsx(classes.alert )}>
                     {
-                        type === 'error' && <img src={iconWarning} style={{ marginRight: "12px" }} alt="" />
+                        type === 'error' && <img src={iconWarning} alt="" />
                     }
                     {
-                        type === 'info' && <img src={'/images/warning-white.svg'} style={{ marginRight: "12px" }} alt="" />
+                        type === 'info' && <img src={'/images/warning-white.svg'} alt="" />
                     }
                     {
                         props.children

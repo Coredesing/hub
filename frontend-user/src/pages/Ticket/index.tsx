@@ -49,7 +49,7 @@ const Ticket: React.FC<any> = (props: any) => {
               <CircularProgress color="inherit" />
             </Backdrop>
             : (checkParamType.valid ? (
-              render(dataTicket.process, dataTicket.token_type, id)
+              render(dataTicket?.process, dataTicket?.token_type, id)
             ) : <NotFoundPage />)
         }
       </WrapperContent>

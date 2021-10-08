@@ -3,7 +3,9 @@ import CustomModal from '@base-components/CustomModal';
 import { ButtonBase } from '@base-components/Buttons';
 import { Recapcha } from '@base-components/Recapcha';
 import { makeStyles, Box } from '@material-ui/core';
-import { formatRoundDown, numberWithCommas } from '@utils/formatNumber';
+import { numberWithCommas } from '@utils/formatNumber';
+import BN from 'bignumber.js'
+
 const useStyles = makeStyles((theme) => ({
     wrapperContent: {
         width: '100%',
@@ -71,7 +73,7 @@ const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, ...pr
                 </Box>
                 <Box display="flex" justifyContent="space-between" className="item">
                     <label >Total</label>
-                    <span className="text-uppercase">{+formatRoundDown(+amount * +infoBox.ether_conversion_rate || 0, 8)} {infoBox.accept_currency}</span>
+                    <span className="text-uppercase">{ new BN(+amount).multipliedBy(new BN(+infoBox.ether_conversion_rate || 0)).toString() } {infoBox.accept_currency}</span>
                 </Box>
                 <Box>
                     <Recapcha onChange={onChangeRecapcha} />

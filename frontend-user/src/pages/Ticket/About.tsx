@@ -31,6 +31,7 @@ import { boxes, timelines } from "./data";
 import clsx from 'clsx';
 import { TimelineType } from "./types";
 import ModalSeriesContent from "./components/ModalSeriesContent";
+import ModalBoxCollection from "./components/ModalBoxCollection";
 const shareIcon = "/images/icons/share.svg";
 const telegramIcon = "/images/icons/telegram-1.svg";
 const twitterIcon = "/images/icons/twitter-1.svg";
@@ -349,6 +350,10 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
 
   const [openModalSerieContent, setOpenModalSerieContent] = useState(false);
 
+  const [currentBox, setCurrentBox] = useState<{ [k: string]: any }>({});
+
+  const [openModalBoxCollection, setOpenModalBoxCollection] = useState(false);
+
   const onSelectSerie = (serie: { [k: string]: any }) => {
     setCurrentSerie(serie);
     setOpenModalSerieContent(true);
@@ -356,6 +361,15 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
 
   const onCloseModalSerie = useCallback(() => {
     setOpenModalSerieContent(false);
+  }, []);
+
+  const onSelectBox = (box: { [k: string]: any }) => {
+    setCurrentBox(box);
+    setOpenModalBoxCollection(true);
+  }
+
+  const onCloseModalBox = useCallback(() => {
+    setOpenModalBoxCollection(false);
   }, []);
 
   return (
@@ -452,16 +466,19 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
         </div>
       </TabPanel>
       <TabPanel value={tabCurrent} index={3}>
+        <ModalBoxCollection open={openModalBoxCollection} current={currentBox} boxesContent={boxes || []} onClose={onCloseModalBox} />
         <div className={classes.wrapperBox}>
           {
-            boxes.map((b, id) => <div key={id} className={clsx("box", { active: id === 0 })}>
-              <div className="img-box">
-                <img src={b.icon} alt="" />
+            boxes.map((b, id) => 
+              <div key={id} onClick={() => onSelectBox(b)} className={clsx("box", { active: id === 0 })}>
+                <div className="img-box">
+                  <img src={b.icon} alt="" />
+                </div>
+                <span className="id-box">
+                  {b.id}
+                </span>
               </div>
-              <span className="id-box">
-                {b.id}
-              </span>
-            </div>)
+            )
           }
         </div>
       </TabPanel>

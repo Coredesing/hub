@@ -5,6 +5,7 @@ import { Recapcha } from '@base-components/Recapcha';
 import { makeStyles, Box } from '@material-ui/core';
 import { numberWithCommas } from '@utils/formatNumber';
 import BN from 'bignumber.js'
+import { getCurrencyByNetwork } from '@utils/index';
 
 const useStyles = makeStyles((theme) => ({
     wrapperContent: {
@@ -73,7 +74,7 @@ const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, ...pr
                 </Box>
                 <Box display="flex" justifyContent="space-between" className="item">
                     <label >Total</label>
-                    <span className="text-uppercase">{ new BN(+amount).multipliedBy(new BN(+infoBox.ether_conversion_rate || 0)).toString() } {infoBox.accept_currency}</span>
+                    <span className="text-uppercase">{ new BN(+amount).multipliedBy(new BN(+infoBox.ether_conversion_rate || 0)).toString() } {getCurrencyByNetwork(infoBox.network_available)}</span>
                 </Box>
                 <Box>
                     <Recapcha onChange={onChangeRecapcha} />

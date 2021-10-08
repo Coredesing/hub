@@ -350,6 +350,8 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
 
   const [openModalSerieContent, setOpenModalSerieContent] = useState(false);
 
+  const [currentBox, setCurrentBox] = useState<{ [k: string]: any }>({});
+
   const [openModalBoxCollection, setOpenModalBoxCollection] = useState(false);
 
   const onSelectSerie = (serie: { [k: string]: any }) => {
@@ -361,8 +363,8 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
     setOpenModalSerieContent(false);
   }, []);
 
-  const onSelectBox = (serie: { [k: string]: any }) => {
-    setCurrentSerie(serie);
+  const onSelectBox = (box: { [k: string]: any }) => {
+    setCurrentBox(box);
     setOpenModalBoxCollection(true);
   }
 
@@ -464,11 +466,11 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
         </div>
       </TabPanel>
       <TabPanel value={tabCurrent} index={3}>
-        <ModalBoxCollection open={openModalBoxCollection} current={currentSerie} seriesContent={info.seriesContentConfig || []} onClose={onCloseModalBox} />
+        <ModalBoxCollection open={openModalBoxCollection} current={currentBox} boxesContent={boxes || []} onClose={onCloseModalBox} />
         <div className={classes.wrapperBox}>
           {
             boxes.map((b, id) => 
-              <div key={id} onClick={onSelectBox} className={clsx("box", { active: id === 0 })}>
+              <div key={id} onClick={() => onSelectBox(b)} className={clsx("box", { active: id === 0 })}>
                 <div className="img-box">
                   <img src={b.icon} alt="" />
                 </div>

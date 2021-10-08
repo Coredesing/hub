@@ -4,10 +4,9 @@ import { makeStyles, Box } from '@material-ui/core';
 import clsx from 'clsx';
 import '../style.css'
 import { numberWithCommas } from '@utils/formatNumber';
-const useStyles = makeStyles((theme) => ({
-    headerModal: {
+import CountDownTimeV1 from '@base-components/CountDownTime';
 
-    },
+const useStyles = makeStyles((theme) => ({
     boxItem: {
         '& label': {
             fontFamily: 'Firs Neue',
@@ -46,38 +45,42 @@ const useStyles = makeStyles((theme) => ({
             gridTemplateColumns: '20px auto 20px',
             alignItems: 'center',
             justifyContent: 'space-between',
+            // [theme.breakpoints.down('xs')]: {
+            //     gap: '0',
+            // },
 
             '& .content-body': {
                 maxWidth: '320px',
                 [theme.breakpoints.down('xs')]: {
-                    height: '360px',
-                },
-                '& .header': {
-                    display: 'grid',
-                    gridTemplateColumns: 'minmax(50px, 100px) 1px minmax(50px, 100px)',
-                    justifyContent: 'space-between',
-                    marginBottom: '8px',
+                    maxWidth: '220px',
                 },
                 '& .wrapper-img': {
-                    padding: '30px 60px',
-                    background: '#000',
+                    // paddingTop: "30px",
+                    paddingLeft: '60px',
+                    paddingRight: '60px',
                     display: 'grid',
                     alignItems: 'center',
                     placeContent: 'center',
                     position: 'relative',
                     height: '100%',
-                    minHeight: '360px',
+                    // minHeight: '360px',
                     [theme.breakpoints.down('xs')]: {
-                        padding: '20px 30px',
+                        paddingLeft: 0,
+                        paddingRight: 0
                     },
                     '& div': {
-                        width: '196px',
-                        height: '298px',
+                        width: '287px',
+                        height: '158px',
                         position: 'relative',
                         overflow: 'hidden',
+                        marginBottom: '40px',
+                        [theme.breakpoints.down('xs')]: {
+                            width: '150px',
+                            height: '100px',
+                            marginBottom: '20px'
+                        },
                     },
                     '& img': {
-
                         width: '100%',
                         height: '100%',
                         objectFit: 'contain',
@@ -94,36 +97,90 @@ const useStyles = makeStyles((theme) => ({
                             animation: `rightToLeft 300ms forwards`,
                         },
                     },
+                    '& .box-name': {
+                        fontFamily: "Firs Neue",
+                        fontWeight: 600,
+                        fontStyle: "normal",
+                        fontSize: "20px",
+                        lineHeight: "24px",
+                        color: "#fff",
+                        mixBlendMode: "normal",
+                        display: 'block',
+                        textAlign: 'center',
+                    },
+                    '& .box-id': {
+                        fontFamily: "Firs Neue",
+                        fontWeight: 400,
+                        fontStyle: "normal",
+                        fontSize: "16px",
+                        lineHeight: "24px",
+                        color: "#fff",
+                        mixBlendMode: "normal",
+                        display: 'block',
+                        textAlign: 'center',
+                    },
+                },
+                "& .wrapper-countdown": {
+                    height: '84px',
+                    width: '100%',
+                    marginTop: '30px',
+                    [theme.breakpoints.down('xs')]: {
+                        marginTop: 0,
+                    },
+                    "& .countdown": {
+                        background: "rgba(0,0,0,0.4)",
+                        width: "100%",
+                        // zIndex: 10,
+                        fontFamily: "Space Ranger",
+                        "& .time .number": {
+                          transform: "skew(-20deg)",
+                        },
+                        [theme.breakpoints.down('xs')]: {
+                            paddingLeft: '10px',
+                            paddingRight: '10px'
+                        },
+                    },
                 }
             }
         }
     },
     paper: {
-        maxWidth: '440px',
+        maxWidth: '480px',
+        maxHeight: '480px',
+        padding: 0,
+        borderRadius: '4px',
+        backgroundColor: '#2E2E2E',
+        [theme.breakpoints.down('sm')]: {
+            maxHeight: '440px',
+        },
+        [theme.breakpoints.down('xs')]: {
+            maxWidth: '300px',
+            maxHeight: '300px',
+        },
     }
 }));
 type ObjectType = { [k: string]: any };
 type Props = {
     open: boolean;
     onClose?: Function,
-    seriesContent: ObjectType[],
+    boxesContent: ObjectType[],
     current: ObjectType,
     [k: string]: any,
 }
 
-const ModalBoxCollection = ({ open, current = {}, seriesContent, ...props }: Props) => {
+const ModalBoxCollection = ({ open, current = {}, boxesContent, ...props }: Props) => {
     const styles = useStyles();
-    const [currentSerie, setCurrentSerie] = useState<ObjectType>({});
+    const [currentBox, setCurrentBox] = useState<ObjectType>({});
 
     useEffect(() => {
-        current.id && setCurrentSerie(current)
+        current.id && setCurrentBox(current)
 
     }, [current])
     const onClose = () => {
         props.onClose && props.onClose();
     }
     let isHandlingShowImg = false;
-    const handleShowImg = (newSerie: ObjectType, from: 'right-to-left' | 'left-to-right') => {
+    const handleShowImg = (newBox: ObjectType, from: 'right-to-left' | 'left-to-right') => {
         if(isHandlingShowImg) return;
         const wrapperImg = document.querySelector('.wrapper-img div');
         isHandlingShowImg = true;
@@ -131,7 +188,7 @@ const ModalBoxCollection = ({ open, current = {}, seriesContent, ...props }: Pro
             let elemImg: any = wrapperImg.querySelector('img');
             if (!elemImg) return;
             const newElmImg = document.createElement('img');
-            newElmImg.src = newSerie.icon;
+            newElmImg.src = newBox.icon;
             if (from === 'right-to-left') {
                 elemImg.classList.remove('r-t-l');
                 elemImg.classList.add('h-r-t-l');
@@ -142,30 +199,31 @@ const ModalBoxCollection = ({ open, current = {}, seriesContent, ...props }: Pro
                 newElmImg.classList.add('l-t-r')
             }
             setTimeout(() => {
-                setCurrentSerie(newSerie);
+                setCurrentBox(newBox);
                 wrapperImg.removeChild(elemImg);
                 wrapperImg.appendChild(newElmImg);
                 isHandlingShowImg = false;
             }, 200)
+            
         }
     }
 
     const onPrevSerie = () => {
-        const idxCurr = seriesContent.findIndex(s => s.id === currentSerie.id);
-        const newSerie = idxCurr === 0 ? seriesContent.slice(-1)[0] : seriesContent[idxCurr - 1];
-        handleShowImg(newSerie, 'right-to-left');
+        const idxCurr = boxesContent.findIndex(s => s.id === currentBox.id);
+        const newBox = idxCurr === 0 ? boxesContent.slice(-1)[0] : boxesContent[idxCurr - 1];
+        handleShowImg(newBox, 'right-to-left');
     }
-    const onNextSerie = () => {
-        const idxCurr = seriesContent.findIndex(s => s.id === currentSerie.id);
-        const newSerie = idxCurr === seriesContent.length - 1 ? seriesContent[0] : seriesContent[idxCurr + 1];
-        handleShowImg(newSerie, 'left-to-right');
+    const onNextSerie = () => {     
+        const idxCurr = boxesContent.findIndex(s => s.id === currentBox.id);
+        const newBox = idxCurr === boxesContent.length - 1 ? boxesContent[0] : boxesContent[idxCurr + 1];
+        handleShowImg(newBox, 'left-to-right');
     }
 
     return (
         <CustomModal open={open} onClose={onClose} classes={{ paper: styles.paper }}>
-            <Box className={styles.headerModal}>
-                <h3 className="text-white">{currentSerie.name} Amount</h3>
-            </Box>
+            {/* <Box className={styles.headerModal}>
+                <h3 className="text-white">{currentBox.name} Amount</h3>
+            </Box> */}
             <Box className={styles.bodyModal}>
                 <Box className="content">
                     <span className="prev" onClick={onPrevSerie}>
@@ -174,23 +232,18 @@ const ModalBoxCollection = ({ open, current = {}, seriesContent, ...props }: Pro
                         </svg>
                     </span>
                     <Box className="content-body">
-                        <Box className="header">
-                            <Box className={styles.boxItem}>
-                                <label>Amount</label>
-                                <span>{numberWithCommas(currentSerie.amount)}</span>
-                            </Box>
-                            <Box className={styles.boxItem}>
-                                <span className="line"></span>
-                            </Box>
-                            <Box className={styles.boxItem}>
-                                <label className="text-right">Rare</label>
-                                <span className="text-right">{currentSerie.rate}%</span>
-                            </Box>
-                        </Box>
                         <Box className="wrapper-img" >
                             <div>
-                                <img src={currentSerie.icon} alt="" />
+                                <img src={currentBox.icon} alt="" />
                             </div>
+                            <span className="box-name">{currentBox.name}</span>
+                            <span className="box-id">{currentBox.id}</span>
+                        </Box>
+                        <Box className="wrapper-countdown">
+                            <CountDownTimeV1
+                                time={{ date1: 1633885200000, date2: 1633666793845 }}
+                                className="countdown"
+                            />
                         </Box>
                     </Box>
                     <span className="next" onClick={onNextSerie}>

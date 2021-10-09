@@ -598,7 +598,7 @@ class PoolService {
 
     const current = ConvertDateUtils.getDatetimeNowUTC();
     let isFreeBuyTime = false;
-    if (maxBonus && startFreeBuyTime) {
+    if (startFreeBuyTime) {
       isFreeBuyTime = Number(startFreeBuyTime) < current;
     }
 
@@ -609,11 +609,9 @@ class PoolService {
       wallet_address: walletAddress,
     }).first();
     if (!existWhitelist) {
-      isFreeBuyTime = false;
+      // isFreeBuyTime = false;
       maxBonus = 0;
     }
-
-    console.log('[PoolService::getFreeBuyTimeInfo] - isFreeBuyTime:', isFreeBuyTime, maxBonus, startFreeBuyTime);
 
     return {
       maxBonus,

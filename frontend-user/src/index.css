@@ -295,3 +295,7 @@ body::-webkit-scrollbar-thumb {
 .text-right {
     text-align: right;
 }
+
+.mt-0-important {
+    margin-top: 0;
+}

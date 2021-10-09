@@ -3,8 +3,14 @@ import CustomModal from '@base-components/CustomModal';
 import { ButtonBase } from '@base-components/Buttons';
 import { Recapcha } from '@base-components/Recapcha';
 import { makeStyles, Box } from '@material-ui/core';
-import { formatRoundDown, numberWithCommas } from '@utils/formatNumber';
+import { numberWithCommas } from '@utils/formatNumber';
+import BN from 'bignumber.js'
+import { getCurrencyByNetwork } from '@utils/index';
+
 const useStyles = makeStyles((theme) => ({
+    paper: {
+        maxWidth: '400px',
+    },
     wrapperContent: {
         width: '100%',
         '& h3': {
@@ -46,7 +52,7 @@ type Props = {
     [k: string]: any,
 }
 
-const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, ...props }: Props) => {
+const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, boxTypeSelected = {}, ...props }: Props) => {
     const styles = useStyles();
     const [isVerified, setVerify] = useState<string | null>('');
 
@@ -62,16 +68,27 @@ const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, ...pr
         setVerify(value);
     }
     return (
-        <CustomModal open={open} onClose={onClose}>
+        <CustomModal open={open} onClose={onClose} classes={{
+            paper: styles.paper
+        }}>
             <div className={styles.wrapperContent}>
                 <h3>Confirmation</h3>
+                <Box display="flex" justifyContent="space-between" className="item">
+                    <label>Box Type</label>
+                    <span className="text-uppercase">
+                        <Box display="flex" alignItems="center" gridGap="4px">
+                            <img src={boxTypeSelected.icon} width="40" height="25" />
+                            {boxTypeSelected.name}
+                        </Box>
+                    </span>
+                </Box>
                 <Box display="flex" justifyContent="space-between" className="item">
                     <label>Amount</label>
                     <span className="text-uppercase">{numberWithCommas(amount)}</span>
                 </Box>
                 <Box display="flex" justifyContent="space-between" className="item">
                     <label >Total</label>
-                    <span className="text-uppercase">{+formatRoundDown(+amount * +infoBox.ether_conversion_rate || 0, 8)} {infoBox.accept_currency}</span>
+                    <span className="text-uppercase">{new BN(+amount).multipliedBy(new BN(+infoBox.ether_conversion_rate || 0)).toString()} {getCurrencyByNetwork(infoBox.network_available)}</span>
                 </Box>
                 <Box>
                     <Recapcha onChange={onChangeRecapcha} />

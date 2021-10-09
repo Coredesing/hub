@@ -8,7 +8,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import { getEtherscanTransactionLink, getNetworkInfo } from '../../utils/network';
 const closeIcon = '/images/icons/close.svg';
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   paper: {
     maxWidth: 'unset',
     minWidth: '300px',
@@ -41,6 +41,9 @@ const useStyles = makeStyles({
     }
   },
   content: {
+    [theme.breakpoints.down('xs')]: {
+      flex: 'unset',
+    },
     marginTop: '45px',
     '& h3': {
       textAlign: 'center',
@@ -64,13 +67,16 @@ const useStyles = makeStyles({
       padding: '10px',
       borderRadius: '4px',
       background: '#2E2E2E',
+      wordWrap: 'break-word',
+      wordBreak: 'break-all',
+      whiteSpace: 'pre-line',
     }
   },
   actions: {
     display: 'grid',
     justifyContent: 'center',
   }
-})
+}))
 
 const TicketModal = ({ open, ...props }: any) => {
   const classes = useStyles();

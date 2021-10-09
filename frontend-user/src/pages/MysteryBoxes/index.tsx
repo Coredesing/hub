@@ -13,6 +13,7 @@ import SlideCard from './components/SlideCard';
 import { numberWithCommas } from '@utils/formatNumber';
 import { getCurrencyByNetwork } from '@utils/index';
 import { getCountdownInfo } from './utils';
+import {Helmet} from "react-helmet";
 
 import SwiperCore, { Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -56,6 +57,12 @@ const MysteryBoxes = (props: any) => {
 
   return (
     <DefaultLayout hiddenFooter>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>GameFi - Mystery boxes</title>
+        <meta property="og:image" content="https://gamefi-public.s3.amazonaws.com/mech-banner-new.jpg" />
+      </Helmet>
+
       <WrapperContent useShowBanner={false}>
         {loadingcompletePools && !currentBox?.title ?
           <Backdrop open={loadingcompletePools} style={{ color: '#fff', zIndex: theme.zIndex.drawer + 1, }}>

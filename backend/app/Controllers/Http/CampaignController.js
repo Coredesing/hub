@@ -355,11 +355,11 @@ class CampaignController {
     }
 
     try {
-      // const captchaService = new ReCaptchaService()
-      // const ReCaptchaVerified = await captchaService.Verify(params.captcha_token, userWalletAddress)
-      // if (!ReCaptchaVerified) {
-      //   return HelperUtils.responseBadRequest('reCAPTCHA verification failed');
-      // }
+      const captchaService = new ReCaptchaService()
+      const ReCaptchaVerified = await captchaService.Verify(params.captcha_token, userWalletAddress)
+      if (!ReCaptchaVerified) {
+        return HelperUtils.responseBadRequest('reCAPTCHA verification failed');
+      }
 
       // call to db get campaign info
       const campaignService = new PoolService();

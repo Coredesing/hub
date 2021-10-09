@@ -474,7 +474,7 @@ const useStyles = makeStyles((theme: any) => ({
               marginBottom: '12px',
               padding: '0px 10px',
               wordWrap: 'break-word',
-              wordBreak: 'break-all',
+              // wordBreak: 'break-all',
               whiteSpace: 'pre-line',
               [theme.breakpoints.down('sm')]: {
                 fontSize: '16px',

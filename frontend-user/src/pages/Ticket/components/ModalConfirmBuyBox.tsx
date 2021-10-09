@@ -49,7 +49,7 @@ type Props = {
     [k: string]: any,
 }
 
-const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, ...props }: Props) => {
+const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, boxTypeSelected = {}, ...props }: Props) => {
     const styles = useStyles();
     const [isVerified, setVerify] = useState<string | null>('');
 
@@ -69,12 +69,21 @@ const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, ...pr
             <div className={styles.wrapperContent}>
                 <h3>Confirmation</h3>
                 <Box display="flex" justifyContent="space-between" className="item">
+                    <label>Box Type</label>
+                    <span className="text-uppercase">
+                        <Box display="flex" alignItems="center" gridGap="4px">
+                            <img src={boxTypeSelected.icon} width="40" height="25" />
+                            {boxTypeSelected.name}
+                        </Box>
+                    </span>
+                </Box>
+                <Box display="flex" justifyContent="space-between" className="item">
                     <label>Amount</label>
                     <span className="text-uppercase">{numberWithCommas(amount)}</span>
                 </Box>
                 <Box display="flex" justifyContent="space-between" className="item">
                     <label >Total</label>
-                    <span className="text-uppercase">{ new BN(+amount).multipliedBy(new BN(+infoBox.ether_conversion_rate || 0)).toString() } {getCurrencyByNetwork(infoBox.network_available)}</span>
+                    <span className="text-uppercase">{new BN(+amount).multipliedBy(new BN(+infoBox.ether_conversion_rate || 0)).toString()} {getCurrencyByNetwork(infoBox.network_available)}</span>
                 </Box>
                 <Box>
                     <Recapcha onChange={onChangeRecapcha} />

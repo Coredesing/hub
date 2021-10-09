@@ -522,7 +522,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                         networkName={infoTicket?.network_available}
                     />
                     <ModalOrderBox open={openModalOrderBox} onClose={onCloseModalOrderBox} onConfirm={onOrderBox} isLoadingButton={orderBoxLoading} isSuccessOrderbox={statusOrderBox} defaultValue={boxesOrdered?.amount} />
-                    <ModalConfirmBuyBox open={openModalConfirmBuyBox} onClose={onCloseModalConfirmBuyBox} onConfirm={onBuyBox} infoBox={infoTicket} isLoadingButton={lockWhenBuyBox} amount={numBoxBuy} />
+                    <ModalConfirmBuyBox open={openModalConfirmBuyBox} onClose={onCloseModalConfirmBuyBox} onConfirm={onBuyBox} infoBox={infoTicket} isLoadingButton={lockWhenBuyBox} amount={numBoxBuy} boxTypeSelected={boxTypeSelected} />
                     <div className={styles.content}>
                         {
                             !connectedAccount && <WrapperAlert>
@@ -721,7 +721,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                 <ButtonBase
                                                     color="green"
                                                     isLoading={lockWhenBuyBox}
-                                                    disabled={+numBoxBuy < 1 || !isKYC}
+                                                    disabled={+numBoxBuy < 1 || !isKYC || lockWhenBuyBox}
                                                     onClick={(alreadyJoinPool || joinPoolSuccess || countdown.isPhase2) && isKYC ? onShowModalConfirmBuyBox : undefined}
                                                     className="mt-0-important text-transform-unset w-full">
                                                     Buy Now

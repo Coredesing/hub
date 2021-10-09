@@ -1093,11 +1093,22 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
       }
     },
   },
-  warpperAmount: {
+  wrapperAmount: {
     ...typeDisplayFlex,
     justifyContent: 'space-between',
 
+    [theme.breakpoints.down('xs')]: {
+      display: 'grid',
+      gridTemplateColumns: '1fr',
+    },
+
     '& .bought': {
+      marginTop: '20px',
+      [theme.breakpoints.down('xs')]: {
+        ...typeDisplayFlex,
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      },
       '& h4': {
         color: '#aeaeae',
         display: 'block',

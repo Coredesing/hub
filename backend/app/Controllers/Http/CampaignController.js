@@ -343,6 +343,118 @@ class CampaignController {
     }
   }
 
+  async depositBox({ request }) {
+    // get all request params
+    const params = request.all();
+    const campaign_id = params.campaign_id;
+    const userWalletAddress = request.header('wallet_address');
+    const amount = params.amount;
+    const subBoxId = params.sub_box_id;
+    if (!campaign_id) {
+      return HelperUtils.responseBadRequest('Bad request with campaign_id');
+    }
+
+    try {
+      // const captchaService = new ReCaptchaService()
+      // const ReCaptchaVerified = await captchaService.Verify(params.captcha_token, userWalletAddress)
+      // if (!ReCaptchaVerified) {
+      //   return HelperUtils.responseBadRequest('reCAPTCHA verification failed');
+      // }
+
+      // call to db get campaign info
+      const campaignService = new PoolService();
+      let camp = null
+      try {
+        if (await RedisUtils.checkExistRedisPoolDetail(campaign_id)) {
+          const cachedPoolDetail = await RedisUtils.getRedisPoolDetail(campaign_id);
+          camp = JSON.parse(cachedPoolDetail)
+        }
+      } catch (e) {
+        camp = null
+      }
+
+      if (!camp || !camp.freeBuyTimeSetting || !Array.isArray(camp.tiers)) {
+        camp = await campaignService.buildQueryBuilder({ id: campaign_id })
+          .with('freeBuyTimeSetting')
+          .with('tiers')
+          .first();
+      }
+
+      if (!camp) {
+        return HelperUtils.responseBadRequest("Do not found campaign");
+      }
+
+      if (camp.token_type !== Const.TOKEN_TYPE.MYSTERY_BOX) {
+        return HelperUtils.responseBadRequest("Cannot buy");
+      }
+
+      if (!camp.kyc_bypass) {
+        // get user info
+        const userService = new UserService();
+        const user = await userService.findUser({wallet_address: userWalletAddress});
+        if (!user || !user.email) {
+          return HelperUtils.responseBadRequest("User not found");
+        }
+        if (user.is_kyc !== Const.KYC_STATUS.APPROVED) {
+          return HelperUtils.responseBadRequest("Your KYC status is not verified");
+        }
+      }
+
+      const current = ConvertDateUtils.getDatetimeNowUTC();
+      const { isFreeBuyTime, existWhitelist } = await campaignService.getFreeBuyTimeInfo(camp, userWalletAddress);
+
+      if (!existWhitelist && !isFreeBuyTime) {
+        return HelperUtils.responseBadRequest("You are not allowed to buy this time");
+      }
+
+      // check user tier if user not in reserved list
+      // get realtime tier from SC
+      const currentTier = (await HelperUtils.getUserTierSmartWithCached(userWalletAddress))[0];
+      const isInPreOrderTime = HelperUtils.checkIsInPreOrderTime(camp, currentTier);
+
+      // get user tier from winner table which snapshot user balance and pickup random winner
+      // check user tier with min tier of campaign
+      if (camp.min_tier > currentTier) {
+        return HelperUtils.responseBadRequest("You need to achieve a higher rank for buying tokens");
+      }
+
+      // call to db to get tier info
+      let tier = camp.tiers.find(t => t.level === currentTier)
+
+      // check time start buy for tier
+      if (!isFreeBuyTime && !isInPreOrderTime) {
+        if (tier.start_time > current) {
+          return HelperUtils.responseBadRequest('Please wait for your tier time');
+        }
+        if (tier.end_time < current) {
+          return HelperUtils.responseBadRequest("Tier timeout");
+        }
+      }
+
+      // get private key for campaign from db
+      const walletService = new WalletService();
+      const wallet = await walletService.findByCampaignId({campaign_id: campaign_id});
+      if (!wallet) {
+        return HelperUtils.responseErrorInternal();
+      }
+
+      // get message hash
+      const eventId = 0
+      const messageHash = web3.utils.soliditySha3(userWalletAddress, eventId, amount, subBoxId);
+      const privateKey = wallet.private_key;
+      // create signature
+      const account = web3.eth.accounts.privateKeyToAccount(privateKey);
+      const accAddress = account.address;
+      web3.eth.accounts.wallet.add(account);
+      web3.eth.defaultAccount = accAddress;
+      const signature = await web3.eth.sign(messageHash, accAddress);
+      return HelperUtils.responseSuccess({signature: signature, eventId: eventId, amount: amount, subBoxId: subBoxId});
+    } catch (e) {
+      console.log('Deposit box', e);
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
   async deposit({ request }) {
     // get all request params
     const params = request.all();
@@ -386,7 +498,7 @@ class CampaignController {
         return HelperUtils.responseBadRequest("Do not found campaign");
       }
 
-      if (camp.process === Const.PROCESS.ONLY_CLAIM) {
+      if (camp.process === Const.PROCESS.ONLY_CLAIM || cam.token_type === Const.TOKEN_TYPE.MYSTERY_BOX) {
         return HelperUtils.responseBadRequest("Cannot buy");
       }
 

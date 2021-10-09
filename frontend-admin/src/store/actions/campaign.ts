@@ -713,7 +713,7 @@ export const deployPool = (campaign: any, history: any) => {
       if (poolType === POOL_TYPE.CLAIMABLE) {
         factorySmartContract = getContractInstance(campaignFactoryClaimABI, process.env.REACT_APP_SMART_CONTRACT_PRESALE_FACTORY_ADDRESS || '');
       }
-      if (tokenInfo && tokenInfo.token_type === TOKEN_TYPE.ERC721) {
+      if (tokenInfo && (tokenInfo.token_type === TOKEN_TYPE.ERC721 || tokenInfo.token_type === TOKEN_TYPE.MYSTERY_BOX)) {
         factorySmartContract = getContractInstance(campaignFactoryClaimNFTABI, process.env.REACT_APP_SMART_CONTRACT_PRESALE_FACTORY_NFT_ADDRESS || '')
       }
 
@@ -723,7 +723,7 @@ export const deployPool = (campaign: any, history: any) => {
               process.env.REACT_APP_SMART_CONTRACT_BSC_PRESALE_FACTORY_ADDRESS : process.env.REACT_APP_SMART_CONTRACT_BSC_FACTORY_ADDRESS
           factorySmartContract = getContractInstance(campaignFactoryABI, poolBscAddress || '', false);
 
-          if (tokenInfo && tokenInfo.token_type === TOKEN_TYPE.ERC721) {
+          if (tokenInfo && (tokenInfo.token_type === TOKEN_TYPE.ERC721 || tokenInfo.token_type === TOKEN_TYPE.MYSTERY_BOX)) {
             factorySmartContract = getContractInstance(campaignFactoryClaimNFTABI, process.env.REACT_APP_SMART_CONTRACT_BSC_PRESALE_FACTORY_NFT_ADDRESS || '')
           }
           break
@@ -732,7 +732,7 @@ export const deployPool = (campaign: any, history: any) => {
               process.env.REACT_APP_SMART_CONTRACT_POLYGON_PRESALE_FACTORY_ADDRESS : process.env.REACT_APP_SMART_CONTRACT_POLYGON_FACTORY_ADDRESS
           factorySmartContract = getContractInstance(campaignFactoryABI, poolPolygonAddress || '', false);
 
-          if (tokenInfo && tokenInfo.token_type === TOKEN_TYPE.ERC721) {
+          if (tokenInfo && (tokenInfo.token_type === TOKEN_TYPE.ERC721 || tokenInfo.token_type === TOKEN_TYPE.MYSTERY_BOX)) {
             factorySmartContract = getContractInstance(campaignFactoryClaimNFTABI, process.env.REACT_APP_SMART_CONTRACT_POLYGON_PRESALE_FACTORY_NFT_ADDRESS || '')
           }
           break

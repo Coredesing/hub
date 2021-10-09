@@ -396,6 +396,7 @@ const MysteryBox = ({ id, ...props }: any) => {
     useEffect(() => {
         if (!claimBoxLoading) {
             setLockWhenBuyBox(false);
+            onCloseModalConfirmBuyBox();
         }
     }, [claimBoxLoading]);
 
@@ -652,7 +653,7 @@ const MysteryBox = ({ id, ...props }: any) => {
 
                                             {
                                                 countdown.isSale && ((countdown.isPhase1 && (alreadyJoinPool || joinPoolSuccess)) || countdown.isPhase2) &&
-                                                <div className={mysteryStyles.warpperAmount}>
+                                                <div className={mysteryStyles.wrapperAmount}>
                                                     <AscDescAmountBox
                                                         descMinAmount={descMinAmount}
                                                         descAmount={descAmount}

@@ -8,7 +8,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import { getEtherscanTransactionLink, getNetworkInfo } from '../../../utils/network';
 const closeIcon = '/images/icons/close.svg';
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   paper: {
     maxWidth: 'unset',
     minWidth: '300px',
@@ -42,6 +42,9 @@ const useStyles = makeStyles({
   },
   content: {
     marginTop: '45px',
+    [theme.breakpoints.down('xs')]: {
+      flex: 'unset',
+    },
     '& h3': {
       textAlign: 'center',
       fontSize: '20px',
@@ -64,19 +67,22 @@ const useStyles = makeStyles({
       padding: '10px',
       borderRadius: '4px',
       background: '#2E2E2E',
+      wordWrap: 'break-word',
+      wordBreak: 'break-all',
+      whiteSpace: 'pre-line',
     }
   },
   actions: {
     display: 'grid',
     justifyContent: 'center',
   }
-})
+}))
 
 const DialogTxSubmitted = ({ open, ...props }: any) => {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  
+
   const handleClose = () => {
     props.onClose()
   };
@@ -99,7 +105,7 @@ const DialogTxSubmitted = ({ open, ...props }: any) => {
       <Button autoFocus onClick={handleClose} color="primary" className={classes.btnClose}>
         <img src={closeIcon} alt="" />
       </Button>
-      <DialogContent  className={classes.content}>
+      <DialogContent className={classes.content}>
         <h3>Transaction Submitted</h3>
         <h5>Tx Hash</h5>
         <p>{props.transaction}</p>

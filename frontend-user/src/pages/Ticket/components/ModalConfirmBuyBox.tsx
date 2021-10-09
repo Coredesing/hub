@@ -8,6 +8,9 @@ import BN from 'bignumber.js'
 import { getCurrencyByNetwork } from '@utils/index';
 
 const useStyles = makeStyles((theme) => ({
+    paper: {
+        maxWidth: '400px',
+    },
     wrapperContent: {
         width: '100%',
         '& h3': {
@@ -65,7 +68,9 @@ const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, boxTy
         setVerify(value);
     }
     return (
-        <CustomModal open={open} onClose={onClose}>
+        <CustomModal open={open} onClose={onClose} classes={{
+            paper: styles.paper
+        }}>
             <div className={styles.wrapperContent}>
                 <h3>Confirmation</h3>
                 <Box display="flex" justifyContent="space-between" className="item">

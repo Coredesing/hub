@@ -346,7 +346,6 @@ const MysteryBox = ({ id, ...props }: any) => {
                 setSubBoxes(infoTicket.boxTypesConfig);
                 setSelectBoxType(infoTicket.boxTypesConfig[0])
             }
-
         }
     }, [infoTicket, contractPreSale]);
 
@@ -401,11 +400,16 @@ const MysteryBox = ({ id, ...props }: any) => {
     }, [claimBoxLoading]);
 
     useEffect(() => {
+        if (claimTransactionHash) {
+            onCloseModalConfirmBuyBox();
+            setOpenModalTx(true);
+        }
+    }, [claimTransactionHash]);
+
+    useEffect(() => {
         if (isClaimedBoxSuccess) {
             setNewTicket(true);
             setRenewTotalBoxesBought(true);
-            setOpenModalTx(true);
-            onCloseModalConfirmBuyBox();
             setNumBoxBuy(0);
         }
     }, [isClaimedBoxSuccess]);
@@ -522,7 +526,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                         networkName={infoTicket?.network_available}
                     />
                     <ModalOrderBox open={openModalOrderBox} onClose={onCloseModalOrderBox} onConfirm={onOrderBox} isLoadingButton={orderBoxLoading} isSuccessOrderbox={statusOrderBox} defaultValue={boxesOrdered?.amount} />
-                    <ModalConfirmBuyBox open={openModalConfirmBuyBox} onClose={onCloseModalConfirmBuyBox} onConfirm={onBuyBox} infoBox={infoTicket} isLoadingButton={lockWhenBuyBox} amount={numBoxBuy} />
+                    <ModalConfirmBuyBox open={openModalConfirmBuyBox} onClose={onCloseModalConfirmBuyBox} onConfirm={onBuyBox} infoBox={infoTicket} isLoadingButton={lockWhenBuyBox} amount={numBoxBuy} boxTypeSelected={boxTypeSelected} />
                     <div className={styles.content}>
                         {
                             !connectedAccount && <WrapperAlert>
@@ -640,7 +644,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     {
                                                         (subBoxes).map((t: any) => <div key={t.id} onClick={() => onSelectBoxType(t)} className={clsx("box-type", { active: t.id === boxTypeSelected.id })}>
                                                             <img src={t.icon} className="icon" alt="" />
-                                                            <span>{t.name} x{t.totalSold || 0}/{t.maxSupply || t.limit}</span>
+                                                            <span>{t.name} {t.totalSold || 0}/{t.maxSupply || t.limit}</span>
                                                         </div>)
                                                     }
                                                 </div>
@@ -721,7 +725,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                 <ButtonBase
                                                     color="green"
                                                     isLoading={lockWhenBuyBox}
-                                                    disabled={+numBoxBuy < 1 || !isKYC}
+                                                    disabled={+numBoxBuy < 1 || !isKYC || lockWhenBuyBox}
                                                     onClick={(alreadyJoinPool || joinPoolSuccess || countdown.isPhase2) && isKYC ? onShowModalConfirmBuyBox : undefined}
                                                     className="mt-0-important text-transform-unset w-full">
                                                     Buy Now

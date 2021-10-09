@@ -48,7 +48,7 @@ const useClaimBox = ({ subBoxId, poolAddress, eventId, poolId, priceOfBox }: Poo
   }, [subBoxId, account, library, apiSignMessage]);
 
   useEffect(() => {
-    if (error && claimBoxLoading) {
+    if (error) {
       setClaimBoxLoading(false);
     }
   }, [error]);

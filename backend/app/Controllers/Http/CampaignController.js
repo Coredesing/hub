@@ -378,6 +378,8 @@ class CampaignController {
           .with('freeBuyTimeSetting')
           .with('tiers')
           .first();
+
+        camp = JSON.parse(JSON.stringify(camp))
       }
 
       if (!camp) {

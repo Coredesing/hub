@@ -401,11 +401,16 @@ const MysteryBox = ({ id, ...props }: any) => {
     }, [claimBoxLoading]);
 
     useEffect(() => {
+        if (claimTransactionHash) {
+            onCloseModalConfirmBuyBox();
+        }
+    }, [claimTransactionHash]);
+
+    useEffect(() => {
         if (isClaimedBoxSuccess) {
             setNewTicket(true);
             setRenewTotalBoxesBought(true);
             setOpenModalTx(true);
-            onCloseModalConfirmBuyBox();
             setNumBoxBuy(0);
         }
     }, [isClaimedBoxSuccess]);

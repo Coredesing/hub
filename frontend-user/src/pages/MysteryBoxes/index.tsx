@@ -59,7 +59,7 @@ const MysteryBoxes = (props: any) => {
     <DefaultLayout hiddenFooter>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>Mystery boxes</title>
+        <title>GameFi - Mystery boxes</title>
         <meta property="og:image" content="https://gamefi-public.s3.amazonaws.com/mech-banner-new.jpg" />
       </Helmet>
 

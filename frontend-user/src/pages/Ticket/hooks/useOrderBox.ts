@@ -15,35 +15,35 @@ type PoolDepositActionParams = {
 const useOrderBox = ({ poolId }: PoolDepositActionParams) => {
   const dispatch = useDispatch();
   const { account, library } = useWeb3React();
-  const [statusBuyBox, setStatusBuyBox] = useState<boolean>(false);
-  const [buyBoxLoading, setBuyBoxLoading] = useState<boolean>(false);
+  const [statusOrderBox, setStatusOrderBox] = useState<boolean>(false);
+  const [orderBoxLoading, setOrderBoxLoading] = useState<boolean>(false);
   const { signature, signMessage, setSignature, error } = useWalletSignature();
   const [amount, setAmount] = useState(0);
 
   const orderBox = useCallback(async (amount: number) => {
-    setStatusBuyBox(false);
+    setStatusOrderBox(false);
     if (!amount) return dispatch(alertFailure("Amount must be greater than zero"));
     setAmount(amount);
     if (account && poolId && library) {
       try {
-        setBuyBoxLoading(true);
+        setOrderBoxLoading(true);
 
         await signMessage();
       } catch (err) {
-        setBuyBoxLoading(false);
+        setOrderBoxLoading(false);
         dispatch(alertSuccess("Error when signing message"));
       }
     }
   }, [poolId, account, library, signMessage, amount]);
 
   useEffect(() => {
-    if (error && buyBoxLoading) {
-      setBuyBoxLoading(false);
+    if (error && orderBoxLoading) {
+      setOrderBoxLoading(false);
     }
   }, [error]);
 
   useEffect(() => {
-    if (!signature || !buyBoxLoading) return;
+    if (!signature || !orderBoxLoading) return;
     const handleBuyBox = async () => {
       const response = await axios.post(`/pool/${poolId}/nft-order`, {
         signature,
@@ -52,23 +52,23 @@ const useOrderBox = ({ poolId }: PoolDepositActionParams) => {
       }, HeadersSignature) as any;
 
       if (response.data?.status === 200) {
-        setStatusBuyBox(true);
+        setStatusOrderBox(true);
         dispatch(alertSuccess("Order successfully!"));
       } else {
         dispatch(alertFailure(response.data.message));
       }
 
       setSignature("");
-      setBuyBoxLoading(false);
+      setOrderBoxLoading(false);
     }
 
     handleBuyBox();
-  }, [signature, buyBoxLoading, amount]);
+  }, [signature, orderBoxLoading, amount]);
 
   return {
     orderBox,
-    buyBoxLoading,
-    statusBuyBox
+    orderBoxLoading,
+    statusOrderBox
   }
 }
 

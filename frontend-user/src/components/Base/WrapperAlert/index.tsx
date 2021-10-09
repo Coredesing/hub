@@ -21,7 +21,7 @@ export const WrapperAlert = ({ type = 'error', ...props }: Props) => {
                         type === 'info' && <img src={'/images/warning-white.svg'} alt="" />
                     }
                     {
-                        props.children
+                        <div>{props.children}</div>
                     }
 
                 </div>

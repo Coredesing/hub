@@ -31,6 +31,8 @@ import { boxes, timelines } from "./data";
 import clsx from 'clsx';
 import { TimelineType } from "./types";
 import ModalSeriesContent from "./components/ModalSeriesContent";
+import ModalBoxCollection from "./components/ModalBoxCollection";
+import { HashLoader } from "react-spinners";
 const shareIcon = "/images/icons/share.svg";
 const telegramIcon = "/images/icons/telegram-1.svg";
 const twitterIcon = "/images/icons/twitter-1.svg";
@@ -312,16 +314,24 @@ const AboutTicket = ({ info = {}, connectedAccount, token, ...props }: Props) =>
 
 export default React.memo(AboutTicket);
 
-export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines = {} as { [k: number]: TimelineType }, ...props }: Props) => {
+export const AboutMysteryBox = ({
+  info = {},
+  connectedAccount,
+  token,
+  timelines = {} as { [k: number]: TimelineType },
+  ownedBox = 0,
+  collections = [],
+  loadingCollection,
+  ...props }: Props) => {
   const classes = useAboutStyles();
   const [tabCurrent, setTab] = React.useState(props.defaultTab || 0);
   const theme = useTheme();
   const matchSM = useMediaQuery(theme.breakpoints.down("sm"));
-  const [page, setPage] = useState(1);
-  const [searchWinner, setSearchWinner] = useState('');
-  const [pagination, setPagination] = useState<{
-    total: number, list: { [k: string]: any }[],
-  }>({ total: 0, list: [] });
+  // const [page, setPage] = useState(1);
+  // const [searchWinner, setSearchWinner] = useState('');
+  // const [pagination, setPagination] = useState<{
+  //   total: number, list: { [k: string]: any }[],
+  // }>({ total: 0, list: [] });
   const limitPage = 10;
 
   const handleChange = (event: any, newValue: any) => {
@@ -333,21 +343,25 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
     return rule.split("\n").filter((r) => r.trim());
   };
 
-  const onChangePage = (event: any, page: number) => {
-    setPage(page);
-  }
+  // const onChangePage = (event: any, page: number) => {
+  //   setPage(page);
+  // }
 
-  const onSearchWinner = (event: any) => {
-    const value = event.target?.value;
-    setSearchWinner(value);
-    setPage(1);
-  }
+  // const onSearchWinner = (event: any) => {
+  //   const value = event.target?.value;
+  //   setSearchWinner(value);
+  //   setPage(1);
+  // }
 
-  const onSearch = debounce(onSearchWinner, 1000);
+  // const onSearch = debounce(onSearchWinner, 1000);
 
   const [currentSerie, setCurrentSerie] = useState<{ [k: string]: any }>({});
 
   const [openModalSerieContent, setOpenModalSerieContent] = useState(false);
+
+  const [currentBox, setCurrentBox] = useState<{ [k: string]: any }>({});
+
+  const [openModalBoxCollection, setOpenModalBoxCollection] = useState(false);
 
   const onSelectSerie = (serie: { [k: string]: any }) => {
     setCurrentSerie(serie);
@@ -358,6 +372,14 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
     setOpenModalSerieContent(false);
   }, []);
 
+  const onSelectBox = (box: { [k: string]: any }) => {
+    setCurrentBox(box);
+    setOpenModalBoxCollection(true);
+  }
+
+  const onCloseModalBox = useCallback(() => {
+    setOpenModalBoxCollection(false);
+  }, []);
   return (
     <div className={classes.root}>
       <AppBar className={classes.appbar} position="static">
@@ -383,11 +405,11 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
             label={"Timeline"}
             {...a11yProps(1)}
           />
-          {/* <Tab
+          <Tab
             className={clsx(classes.tabName, { active: tabCurrent === 3 })}
-            label={"Collection (20)"}
+            label={`Collection (${ownedBox})`}
             {...a11yProps(1)}
-          /> */}
+          />
         </AntTabs>
       </AppBar>
       <TabPanel value={tabCurrent} index={0}>
@@ -452,17 +474,21 @@ export const AboutMysteryBox = ({ info = {}, connectedAccount, token, timelines 
         </div>
       </TabPanel>
       <TabPanel value={tabCurrent} index={3}>
+        {/* <ModalBoxCollection open={openModalBoxCollection} current={currentBox} boxesContent={collections || []} onClose={onCloseModalBox} /> */}
         <div className={classes.wrapperBox}>
           {
-            boxes.map((b, id) => <div key={id} className={clsx("box", { active: id === 0 })}>
-              <div className="img-box">
-                <img src={b.icon} alt="" />
+            loadingCollection ? <HashLoader loading={true} color={'#72F34B'} /> : collections.map((b: any, id: number) =>
+              <div key={id} onClick={() => onSelectBox(b)} className={clsx("box", { active: currentBox.idCollection === b.idCollection })}>
+                <div className="img-box">
+                  <img src={b.icon} alt="" />
+                </div>
+                <span className="id-box">
+                  #{formatNumber(b.idCollection, 3)}
+                </span>
               </div>
-              <span className="id-box">
-                {b.id}
-              </span>
-            </div>)
+            )
           }
+
         </div>
       </TabPanel>
     </div>

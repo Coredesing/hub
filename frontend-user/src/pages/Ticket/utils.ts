@@ -56,6 +56,9 @@ export const handleErrMsg = (err: any) => {
     if (message.includes('Event::ENDED')) {
         return 'The event has ended.';
     }
+    if (message.includes('NFTBox: Rate limit exceeded')) {
+        return 'You have reached the limit of buying boxes.';
+    }
     return '';
 }
 

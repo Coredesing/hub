@@ -346,7 +346,6 @@ const MysteryBox = ({ id, ...props }: any) => {
                 setSubBoxes(infoTicket.boxTypesConfig);
                 setSelectBoxType(infoTicket.boxTypesConfig[0])
             }
-
         }
     }, [infoTicket, contractPreSale]);
 
@@ -403,6 +402,7 @@ const MysteryBox = ({ id, ...props }: any) => {
     useEffect(() => {
         if (claimTransactionHash) {
             onCloseModalConfirmBuyBox();
+            setOpenModalTx(true);
         }
     }, [claimTransactionHash]);
 
@@ -410,7 +410,6 @@ const MysteryBox = ({ id, ...props }: any) => {
         if (isClaimedBoxSuccess) {
             setNewTicket(true);
             setRenewTotalBoxesBought(true);
-            setOpenModalTx(true);
             setNumBoxBuy(0);
         }
     }, [isClaimedBoxSuccess]);
@@ -645,7 +644,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     {
                                                         (subBoxes).map((t: any) => <div key={t.id} onClick={() => onSelectBoxType(t)} className={clsx("box-type", { active: t.id === boxTypeSelected.id })}>
                                                             <img src={t.icon} className="icon" alt="" />
-                                                            <span>{t.name} x{t.totalSold || 0}/{t.maxSupply || t.limit}</span>
+                                                            <span>{t.name} {t.totalSold || 0}/{t.maxSupply || t.limit}</span>
                                                         </div>)
                                                     }
                                                 </div>

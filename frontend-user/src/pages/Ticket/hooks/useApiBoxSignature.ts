@@ -30,6 +30,7 @@ const useApiSignature = () => {
     eventId
   }: ApiSignatureType) => {
     try {
+      error && setError('');
       setDataSignToApi({
         campaign_id: campaignId,
         captcha_token: captchaToken,

@@ -765,6 +765,8 @@ export const useAboutStyles = makeStyles((theme) => ({
     placeContent: 'center',
     gap: '12px',
     '& .box': {
+      cursor: 'pointer',
+      transition: '0.3s',
       '& .img-box': {
         border: '1px solid rgba(255, 255, 255, 0.2)',
         padding: '10px',
@@ -803,7 +805,7 @@ export const useAboutStyles = makeStyles((theme) => ({
         textAlign: 'left',
       }
     },
-    '& .box.active': {
+    '& .box.active, & .box:hover': {
       '& .img-box': {
         border: '1px solid #72F34B',
       }
@@ -1090,6 +1092,22 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
         zIndex: 100,
       }
     },
+  },
+  warpperAmount: {
+    ...typeDisplayFlex,
+    justifyContent: 'space-between',
 
+    '& .bought': {
+      '& h4': {
+        color: '#aeaeae',
+        display: 'block',
+        fontSize: '12px',
+        fontStyle: 'normal',
+        fontFamily: 'Firs Neue',
+        fontWeight: 'normal',
+        lineHeight: '16px',
+        marginBottom: '6px',
+      }
+    }
   }
 }));

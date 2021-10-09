@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import '../style.css'
 import { numberWithCommas } from '@utils/formatNumber';
 import CountDownTimeV1 from '@base-components/CountDownTime';
+import { formatNumber } from '@utils/index';
 
 const useStyles = makeStyles((theme) => ({
     boxItem: {
@@ -173,7 +174,7 @@ const ModalBoxCollection = ({ open, current = {}, boxesContent, ...props }: Prop
     const [currentBox, setCurrentBox] = useState<ObjectType>({});
 
     useEffect(() => {
-        current.id && setCurrentBox(current)
+        'idCollection' in current && setCurrentBox(current)
 
     }, [current])
     const onClose = () => {
@@ -209,12 +210,12 @@ const ModalBoxCollection = ({ open, current = {}, boxesContent, ...props }: Prop
     }
 
     const onPrevSerie = () => {
-        const idxCurr = boxesContent.findIndex(s => s.id === currentBox.id);
+        const idxCurr = boxesContent.findIndex(s => s.idCollection === currentBox.idCollection);
         const newBox = idxCurr === 0 ? boxesContent.slice(-1)[0] : boxesContent[idxCurr - 1];
         handleShowImg(newBox, 'right-to-left');
     }
     const onNextSerie = () => {     
-        const idxCurr = boxesContent.findIndex(s => s.id === currentBox.id);
+        const idxCurr = boxesContent.findIndex(s => s.idCollection === currentBox.idCollection);
         const newBox = idxCurr === boxesContent.length - 1 ? boxesContent[0] : boxesContent[idxCurr + 1];
         handleShowImg(newBox, 'left-to-right');
     }
@@ -237,14 +238,14 @@ const ModalBoxCollection = ({ open, current = {}, boxesContent, ...props }: Prop
                                 <img src={currentBox.icon} alt="" />
                             </div>
                             <span className="box-name">{currentBox.name}</span>
-                            <span className="box-id">{currentBox.id}</span>
+                            <span className="box-id">#{formatNumber(currentBox.idCollection, 3)}</span>
                         </Box>
-                        <Box className="wrapper-countdown">
+                        {/* <Box className="wrapper-countdown">
                             <CountDownTimeV1
                                 time={{ date1: 1633885200000, date2: 1633666793845 }}
                                 className="countdown"
                             />
-                        </Box>
+                        </Box> */}
                     </Box>
                     <span className="next" onClick={onNextSerie}>
                         <svg width="20" height="9" viewBox="0 0 20 9" fill="none" xmlns="http://www.w3.org/2000/svg">

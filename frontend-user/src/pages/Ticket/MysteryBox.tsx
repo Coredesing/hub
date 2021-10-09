@@ -47,15 +47,21 @@ import _ from 'lodash';
 import { getUserTier } from "@store/actions/sota-tiers";
 import { Link } from "react-router-dom";
 import { TIERS } from "@app-constants";
+import useClaimBox from "./hooks/useClaimBox";
+import { getContract } from "@utils/contract";
+import PreSaleBoxAbi from '@abi/PreSaleBox.json';
+import { useWeb3React } from "@web3-react/core";
+import BigNumber from 'bn.js';
+import { Box } from "@material-ui/core";
 
 const MysteryBox = ({ id, ...props }: any) => {
     const styles = useStyles();
     const mysteryStyles = useMysteyBoxStyles();
     const dispatch = useDispatch();
+    const { library } = useWeb3React();
     const { connectedAccount, wrongChain /*isAuth*/ } = useAuth();
     const alert = useSelector((state: any) => state.alert);
     const { appChainID } = useSelector((state: any) => state.appNetwork).data;
-    const [boxBought, setBoxBought] = useState<number>(0);
     const [numBoxBuy, setNumBoxBuy] = useState<number>(0);
     const [infoTicket, setInfoTicket] = useState<{ [k in string]: any }>({});
     const [renewTicket, setNewTicket] = useState<boolean>(true);
@@ -96,6 +102,7 @@ const MysteryBox = ({ id, ...props }: any) => {
 
     const [maxBoxCanBuy, setMaxBoxCanBuy] = useState(0);
     const [boxTypeSelected, setSelectBoxType] = useState<{ [k: string]: any }>({});
+
     const handleLoadVideo = (boxType: { [k: string]: any }) => {
         const wrapperVideo = document.querySelector('.wrapperVideo');
         if (wrapperVideo) {
@@ -133,12 +140,17 @@ const MysteryBox = ({ id, ...props }: any) => {
         if (!loadingTicket && dataTicket) {
             setNewTicket(false);
             setInfoTicket(dataTicket);
-            const firstBoxType = dataTicket.boxTypesConfig?.[0];
-            if (firstBoxType) {
-                setSelectBoxType(firstBoxType)
-            }
         }
     }, [dataTicket, loadingTicket, isClaim]);
+
+    useEffect(() => {
+
+        if (Array.isArray(infoTicket?.tiers) && _.isNumber(userTier)) {
+            const currentTier = infoTicket.tiers.find(t => t.level === userTier);
+            setMaxBoxCanBuy(currentTier?.ticket_allow || 0);
+        }
+
+    }, [infoTicket, userTier]);
 
 
     const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, [k: string]: any }>({ date1: 0, date2: 0, title: '' });
@@ -201,15 +213,15 @@ const MysteryBox = ({ id, ...props }: any) => {
             }
             else if (timeLine.freeBuyTime && timeLine.freeBuyTime > Date.now()) {
                 timeLinesInfo[3].current = true;
-                setCountdown({ date1: timeLine.freeBuyTime, date2: Date.now(), title: 'Phase 1 Ends In', isSale: true, isMultiPhase: true });
+                setCountdown({ date1: timeLine.freeBuyTime, date2: Date.now(), title: 'Phase 1 Ends In', isSale: true, isPhase1: true });
             }
             else if (timeLine.finishTime > Date.now()) {
                 if (timeLine.freeBuyTime) {
                     timeLinesInfo[4].current = true;
-                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Phase 2 Ends In', isSale: true, isMultiPhase: true });
+                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Phase 2 Ends In', isSale: true, isPhase2: true });
                 } else {
                     timeLinesInfo[3].current = true;
-                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Sale Ends In', isSale: true });
+                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Sale Ends In', isSale: true, isPhase1: true });
                 }
             }
             else {
@@ -226,35 +238,35 @@ const MysteryBox = ({ id, ...props }: any) => {
         }
     }, [dataTicket, loadingTicket])
 
-    const [renewBalance, setNewBalance] = useState(true);
-    const [ownedTicket, setOwnedTicket] = useState(0);
+    const [recallMybox, setRecallMyBox] = useState(true);
+    const [ownedBox, setOwnedBox] = useState(0);
     const [openModal, setOpenModalTx] = useState(false);
     const onCloseModal = useCallback(() => {
         setOpenModalTx(false);
     }, [setOpenModalTx]);
 
-    // useEffect(() => {
-    //     const setBalance = async () => {
-    //         try {
-    //             const myNumTicket = await getBalance(
-    //                 connectedAccount,
-    //                 dataTicket.token,
-    //                 dataTicket.network_available,
-    //                 dataTicket.accept_currency
-    //             );
-    //             setOwnedTicket(+myNumTicket);
-    //             setNewBalance(false);
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     };
-    //     !isClaim && (renewBalance || connectedAccount) && dataTicket && setBalance();
-    // }, [connectedAccount, dataTicket, renewBalance, isClaim]);
+    useEffect(() => {
+        const getMyNumBox = async () => {
+            try {
+                const myNumBox = await getBalance(
+                    connectedAccount,
+                    dataTicket.token,
+                    dataTicket.network_available,
+                    dataTicket.accept_currency
+                );
+                setOwnedBox(+myNumBox);
+                setRecallMyBox(false);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        !isClaim && (recallMybox || connectedAccount) && dataTicket?.token && getMyNumBox();
+    }, [connectedAccount, dataTicket, recallMybox, isClaim]);
 
     const ascAmount = () => {
         if (!isKYC) return;
         const ticketCanBuy = getMaxTicketBuy(
-            boxBought,
+            ownedBox,
             maxBoxCanBuy
         );
         if (numBoxBuy >= ticketCanBuy) {
@@ -271,180 +283,132 @@ const MysteryBox = ({ id, ...props }: any) => {
 
     const ascMaxAmount = () => {
         if (!isKYC) return;
-        const maxTicket = getMaxTicketBuy(boxBought, maxBoxCanBuy);
+        const maxTicket = getMaxTicketBuy(ownedBox, maxBoxCanBuy);
         if (maxTicket === 0) return;
         setNumBoxBuy(maxTicket);
     };
 
     const descMinAmount = () => {
         if (!isKYC) return;
-        const maxTicket = getMaxTicketBuy(boxBought, maxBoxCanBuy);
+        const maxTicket = getMaxTicketBuy(ownedBox, maxBoxCanBuy);
         if (maxTicket === 0) return;
         setNumBoxBuy(1);
     };
 
-    const { claimToken, transactionHash, claimTokenSuccess, loading: loadingClaming, error: errorClaming } = useTokenClaim(
-        infoTicket.campaign_hash,
-        infoTicket?.id
-    );
+    const eventId = 0;
+    const { claimBox, claimBoxLoading, claimTransactionHash, isClaimedBoxSuccess } = useClaimBox({
+        poolAddress: infoTicket.campaign_hash,
+        poolId: infoTicket.id,
+        eventId,
+        subBoxId: boxTypeSelected.subBoxId,
+        priceOfBox: infoTicket.ether_conversion_rate,
+    });
 
-    const [lockWhenClaiming, setLockWhenClaiming] = useState(false);
-    const [userClaimed, setUserClaimed] = useState(0);
+    const [contractPreSale, setContractPreSale] = useState<any>();
+    useEffect(() => {
+        if (infoTicket?.campaign_hash && connectedAccount) {
+            const contract = getContract(infoTicket.campaign_hash, PreSaleBoxAbi, library, connectedAccount as string);
+            setContractPreSale(contract);
+        }
+    }, [infoTicket, connectedAccount])
+
+    const [lockWhenBuyBox, setLockWhenBuyBox] = useState(false);
+    const [subBoxes, setSubBoxes] = useState<{ [k: string]: any }[]>([]);
+    const [totalBoxesBought, setTotalBoxesBought] = useState(0);
+    const [renewTotalBoxesBought, setRenewTotalBoxesBought] = useState(true);
+    useEffect(() => {
+        if (infoTicket?.campaign_hash && renewTotalBoxesBought && contractPreSale) {
+            contractPreSale.saleEvents(eventId).then((res: any) => {
+                const totalBought = res.currentSupply ? res.currentSupply.toNumber() : 0;
+                setTotalBoxesBought(totalBought);
+            })
+        }
+    }, [infoTicket, renewTotalBoxesBought, contractPreSale]);
 
     useEffect(() => {
-        if (!loadingClaming) {
-            setLockWhenClaiming(false);
-        }
-    }, [loadingClaming, errorClaming]);
+        if (infoTicket?.boxTypesConfig?.length) {
+            if (contractPreSale) {
+                Promise.all(infoTicket.boxTypesConfig.map((b: any, subBoxId: number) => new Promise(async (res) => {
+                    const response = await contractPreSale.subBoxes(eventId, subBoxId);
+                    const result = {
+                        maxSupply: new BigNumber('maxSupply' in response ? response.maxSupply.toBigInt() : 0).toString(),
+                        totalSold: new BigNumber('totalSold' in response ? response.totalSold.toBigInt() : 0).toString(),
+                    }
+                    res({ ...b, subBoxId, ...result });
+                })))
+                    .then((arr) => {
+                        setSelectBoxType(arr[0] as { [k: string]: any })
+                        setSubBoxes(arr as any[])
+                    }).catch((err) => {
+                        console.log('err', err)
+                    })
+            } else {
+                setSubBoxes(infoTicket.boxTypesConfig);
+                setSelectBoxType(infoTicket.boxTypesConfig[0])
+            }
 
-    const {
-        retrieveClaimableTokens
-    } = useUserRemainTokensClaim(infoTicket.campaign_hash, true);
-    const checkUserClaimed = useCallback(() => {
-        if (!connectedAccount) {
-            setUserClaimed(0);
-            return;
         }
-        retrieveClaimableTokens(connectedAccount, infoTicket.campaign_hash).then((res) => {
-            setUserClaimed(+res?.userClaimed || 0);
-        }).catch(() => setUserClaimed(0));
-    }, [retrieveClaimableTokens, setUserClaimed, connectedAccount, infoTicket.campaign_hash]);
+    }, [infoTicket, contractPreSale]);
 
-    useEffect(() => {
-        if (isClaim) {
-            checkUserClaimed();
+    const [loadingCollection, setLoadingCollection] = useState(false);
+    const [collections, setCollections] = useState<{ [k: string]: any }>([]);
+    const handleSetCollections = async (ownedBox: number) => {
+        if (!contractPreSale) return;
+        setLoadingCollection(true);
+        setCollections([]);
+        try {
+            const arrCollections = [];
+            if (!connectedAccount) return;
+            for (let id = 0; id < ownedBox; id++) {
+                const idCollection = (await contractPreSale.tokenOfOwnerByIndex(connectedAccount, id)).toNumber();
+                const boxType = await contractPreSale.boxes(idCollection);
+                const idBoxType = boxType.subBoxId.toNumber();
+                const infoBox = subBoxes.find(b => b.subBoxId === idBoxType);
+                const collection = infoBox && { ...infoBox, idCollection };
+                collection && arrCollections.push(collection);
+            }
+            setCollections(arrCollections);
+        } catch (error) {
+            console.error('Something went wrong when show collections');
+        } finally {
+            setLoadingCollection(false);
         }
-    }, [checkUserClaimed, isClaim, retrieveClaimableTokens, infoTicket.campaign_hash, connectedAccount]);
-
-    const isNotClaim = (numTicketClaimed: number, available: number) => {
-        return +available - +numTicketClaimed <= 0;
     }
 
     useEffect(() => {
-        if (claimTokenSuccess) {
-            setNewTicket(true);
-            checkUserClaimed();
+        if (ownedBox > 0 && subBoxes.length) {
+            handleSetCollections(ownedBox);
         }
-        if (transactionHash) {
-            setOpenModalTx(true);
-        }
-    }, [claimTokenSuccess, transactionHash, checkUserClaimed]);
-
-    const {
-        deposit,
-        tokenDepositTransaction,
-        tokenDepositSuccess,
-    } = usePoolDepositAction({
-        poolAddress: infoTicket.campaign_hash,
-        poolId: infoTicket?.id,
-        purchasableCurrency: String(infoTicket.accept_currency).toUpperCase(),
-        amount: `0x${(
-            numBoxBuy * (+infoTicket.ether_conversion_rate || 0)
-        ).toString(16)}`,
-        isClaimable: infoTicket.pool_type === "claimable",
-        networkAvailable: infoTicket.network_available,
-        captchaToken: '', // TODO: use recaptcha here
-    });
+    }, [ownedBox, subBoxes]);
 
     useEffect(() => {
-        if (tokenDepositSuccess) {
-            setNewTicket(true);
-            setNewBalance(true);
+        if (ownedBox <= 0) {
+            setCollections([]);
         }
-        if (tokenDepositTransaction) {
+    }, [ownedBox])
+
+    useEffect(() => {
+        if (!connectedAccount) {
+            setCollections([]);
+            setOwnedBox(0);
+        }
+    }, [connectedAccount])
+
+    useEffect(() => {
+        if (!claimBoxLoading) {
+            setLockWhenBuyBox(false);
+        }
+    }, [claimBoxLoading]);
+
+    useEffect(() => {
+        if (isClaimedBoxSuccess) {
+            setNewTicket(true);
+            setRenewTotalBoxesBought(true);
             setOpenModalTx(true);
+            onCloseModalConfirmBuyBox();
             setNumBoxBuy(0);
         }
-    }, [tokenDepositSuccess, tokenDepositTransaction]);
-
-    const { retrieveTokenAllowance, tokenAllowanceLoading } = useTokenAllowance();
-
-    const tokenToApprove = getApproveToken(appChainID, infoTicket.accept_currency);
-
-    const { approveToken /*tokenApproveLoading, transactionHash*/ } =
-        useTokenApprove(
-            tokenToApprove,
-            connectedAccount,
-            infoTicket.campaign_hash,
-            false
-        );
-    const [tokenAllowance, setTokenAllowance] = useState<number | undefined>(
-        undefined
-    );
-
-    const [isApproving, setIsApproving] = useState(false);
-    const handleTokenApprove = async () => {
-        try {
-            // setApproveModal(true);
-            if (isApproving) return;
-            setIsApproving(true);
-            await approveToken();
-            if (infoTicket.campaign_hash && connectedAccount && tokenToApprove) {
-                setTokenAllowance(
-                    (await retrieveTokenAllowance(
-                        tokenToApprove,
-                        connectedAccount,
-                        infoTicket.campaign_hash
-                    )) as number
-                );
-                setIsApproving(false);
-                // setTokenBalance(await retrieveTokenBalance(tokenToApprove, connectedAccount) as number);
-            }
-        } catch (err) {
-            dispatch(alertFailure('Hmm, Something went wrong. Please try again'));
-            setIsApproving(false);
-            // setApproveModal(false);
-        }
-    };
-
-    const fetchPoolDetails = useCallback(async () => {
-        if (infoTicket.campaign_hash && connectedAccount && tokenToApprove) {
-            setTokenAllowance(
-                (await retrieveTokenAllowance(
-                    tokenToApprove,
-                    connectedAccount,
-                    infoTicket.campaign_hash
-                )) as number
-            );
-        }
-    }, [
-        connectedAccount,
-        tokenToApprove,
-        infoTicket.campaign_hash,
-        retrieveTokenAllowance,
-    ]);
-
-    useEffect(() => {
-        const fetchPoolDetailsBlockchain = async () => {
-            await fetchPoolDetails();
-        };
-        !tokenAllowanceLoading && connectedAccount &&
-            infoTicket.campaign_hash &&
-            fetchPoolDetailsBlockchain();
-    }, [connectedAccount, infoTicket.campaign_hash, fetchPoolDetails, tokenAllowanceLoading]);
-
-    const {
-        retrieveUserPurchased,
-        // userPurchasedLoading
-    } = useUserPurchased(infoTicket.campaign_hash, true);
-
-    useEffect(() => {
-        if ((renewBalance || connectedAccount) && infoTicket.campaign_hash) {
-            if (connectedAccount)
-                retrieveUserPurchased(connectedAccount, infoTicket.campaign_hash)
-                    .then((ticket) => {
-                        setBoxBought(+ticket || 0);
-                        setNewBalance(false);
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
-        }
-    }, [renewBalance, connectedAccount, infoTicket, retrieveUserPurchased]);
-
-    const isAccApproved = (tokenAllowance: number) => {
-        return +tokenAllowance > 0;
-    };
+    }, [isClaimedBoxSuccess]);
 
     const getMaxTicketBuy = (boughtTicket: number, maxTicket: number = 0) => {
         if (boughtTicket >= maxTicket) return 0;
@@ -472,14 +436,13 @@ const MysteryBox = ({ id, ...props }: any) => {
             console.log(error)
         }
     }
-    const [recallBoughtBox, setRecallBoughtBox] = useState(true);
-    const { data: boughtBoxes = {} as any } = useFetchV1<boolean>(`/pool/${infoTicket?.id}/nft-order?wallet_address=${connectedAccount}`, !!(connectedAccount && 'id' in infoTicket) && recallBoughtBox);
+    const [recallBoxOrdered, setRecallBoxOrdered] = useState(true);
+    const { data: boxesOrdered = {} as any } = useFetchV1<boolean>(`/pool/${infoTicket?.id}/nft-order?wallet_address=${connectedAccount}`, !!(connectedAccount && 'id' in infoTicket) && recallBoxOrdered);
     useEffect(() => {
-        if (boughtBoxes && 'amount' in boughtBoxes) {
-            setMaxBoxCanBuy(boughtBoxes.amount);
-            setRecallBoughtBox(false);
+        if (boxesOrdered && 'amount' in boxesOrdered) {
+            setRecallBoxOrdered(false);
         }
-    }, [boughtBoxes]);
+    }, [boxesOrdered]);
 
     const [recallCheckJoinCampaign, setRecallCheckJoin] = useState(true);
 
@@ -504,7 +467,7 @@ const MysteryBox = ({ id, ...props }: any) => {
     }, [loadingJoinpool]);
     useEffect(() => {
         setRecallCheckJoin(true);
-        setRecallBoughtBox(true);
+        setRecallBoxOrdered(true);
     }, [connectedAccount]);
     const [openModalOrderBox, setOpenModalOrderBox] = useState(false);
     const onShowModalOrderBox = () => {
@@ -522,25 +485,26 @@ const MysteryBox = ({ id, ...props }: any) => {
         setOpenModalConfirmBuyBox(false);
     }, []);
 
-    const { orderBox, buyBoxLoading, statusBuyBox } = useOrderBox({ poolId: infoTicket.id, });
+    const { orderBox, orderBoxLoading, statusOrderBox } = useOrderBox({ poolId: infoTicket.id, });
     useEffect(() => {
-        if (statusBuyBox) {
+        if (statusOrderBox) {
             setOpenModalOrderBox(false);
-            setRecallBoughtBox(true);
+            setRecallBoxOrdered(true);
             onCloseModalOrderBox();
             setNewTicket(true);
         }
-    }, [statusBuyBox]);
+    }, [statusOrderBox]);
 
     const onOrderBox = useCallback(async (numberBox: number) => {
         orderBox(numberBox)
     }, [infoTicket, connectedAccount]);
 
-    const onBuyBox = useCallback((capcha: string) => {
-        console.log('capcha', capcha);
-        dispatch(alertSuccess("Buy successfully!"));
-        onCloseModalConfirmBuyBox();
-    }, []);
+    const onBuyBox = useCallback((captcha: string) => {
+        if (boxTypeSelected) {
+            setLockWhenBuyBox(true);
+            claimBox(numBoxBuy, captcha, eventId);
+        }
+    }, [numBoxBuy, boxTypeSelected]);
 
     return (
         <>
@@ -554,11 +518,11 @@ const MysteryBox = ({ id, ...props }: any) => {
                     <TicketModal
                         open={openModal}
                         onClose={onCloseModal}
-                        transaction={tokenDepositTransaction || transactionHash}
+                        transaction={claimTransactionHash}
                         networkName={infoTicket?.network_available}
                     />
-                    <ModalOrderBox open={openModalOrderBox} onClose={onCloseModalOrderBox} onConfirm={onOrderBox} isLoadingButton={buyBoxLoading} isSuccessOrderbox={statusBuyBox} defaultValue={maxBoxCanBuy} />
-                    <ModalConfirmBuyBox open={openModalConfirmBuyBox} onClose={onCloseModalConfirmBuyBox} onConfirm={onBuyBox} infoBox={infoTicket} isLoadingButton={buyBoxLoading} amount={numBoxBuy} />
+                    <ModalOrderBox open={openModalOrderBox} onClose={onCloseModalOrderBox} onConfirm={onOrderBox} isLoadingButton={orderBoxLoading} isSuccessOrderbox={statusOrderBox} defaultValue={boxesOrdered?.amount} />
+                    <ModalConfirmBuyBox open={openModalConfirmBuyBox} onClose={onCloseModalConfirmBuyBox} onConfirm={onBuyBox} infoBox={infoTicket} isLoadingButton={lockWhenBuyBox} amount={numBoxBuy} />
                     <div className={styles.content}>
                         {
                             !connectedAccount && <WrapperAlert>
@@ -577,7 +541,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                             Congratulations! You have successfully applied whitelist and can buy Mystery boxes
                         </WrapperAlert>}
                         {
-                            (!loadingJoinpool && connectedAccount && countdown.isSale) &&
+                            (!loadingJoinpool && connectedAccount && countdown.isSale && !countdown.isPhase2) &&
                             ((alreadyJoinPool) ? null : <WrapperAlert type="error"> Sorry, you didn’t apply whitelist. </WrapperAlert>)
                         }
                         {!isKYC && !checkingKyc && connectedAccount && (
@@ -598,7 +562,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                         </div>
                                         <div className="item">
                                             <label className="label">Your Ordered</label>
-                                            <h4 className="value">{numberWithCommas((boughtBoxes?.amount || 0) + '')}</h4>
+                                            <h4 className="value">{numberWithCommas((boxesOrdered?.amount || 0) + '')}</h4>
                                         </div>
                                     </div>
                                     <div className="box-countdown">
@@ -656,7 +620,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     !countdown.isUpcoming && !countdown.isWhitelist && !countdown.isUpcomingSale &&
                                                     <div className="item">
                                                         <label className="label text-uppercase">REMAINING</label>
-                                                        <span>{numberWithCommas(((+infoTicket.total_sold_coin || 0) - (+infoTicket.token_sold || 0) || 0) + '')}</span>
+                                                        <span>{numberWithCommas(((+infoTicket.total_sold_coin || 0) - totalBoxesBought) + '')}</span>
                                                     </div>
                                                 }
                                                 <div className="item">
@@ -674,33 +638,44 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                 <h4 className="text-uppercase">TYPE</h4>
                                                 <div className="box-types">
                                                     {
-                                                        (infoTicket.boxTypesConfig || []).map((t: any) => <div key={t.id} onClick={() => onSelectBoxType(t)} className={clsx("box-type", { active: t.id === boxTypeSelected.id })}>
+                                                        (subBoxes).map((t: any) => <div key={t.id} onClick={() => onSelectBoxType(t)} className={clsx("box-type", { active: t.id === boxTypeSelected.id })}>
                                                             <img src={t.icon} className="icon" alt="" />
-                                                            <span>{t.name} x{t.limit}</span>
+                                                            <span>{t.name} x{t.totalSold || 0}/{t.maxSupply || t.limit}</span>
                                                         </div>)
                                                     }
                                                 </div>
                                             </div>
+
                                             {
-                                                countdown.isSale && 
-                                                <AscDescAmountBox
-                                                    descMinAmount={descMinAmount}
-                                                    descAmount={descAmount}
-                                                    ascAmount={ascAmount}
-                                                    ascMaxAmount={ascMaxAmount}
-                                                    value={numBoxBuy}
-                                                    disabledMin={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === 1}
-                                                    disabledSub={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === 0}
-                                                    disabledAdd={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
-                                                    disabledMax={!getMaxTicketBuy(boxBought, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(boxBought, maxBoxCanBuy)}
-                                                />}
+                                                countdown.isSale && ((countdown.isPhase1 && (alreadyJoinPool || joinPoolSuccess)) || countdown.isPhase2) &&
+                                                <div className={mysteryStyles.warpperAmount}>
+                                                    <AscDescAmountBox
+                                                        descMinAmount={descMinAmount}
+                                                        descAmount={descAmount}
+                                                        ascAmount={ascAmount}
+                                                        ascMaxAmount={ascMaxAmount}
+                                                        value={numBoxBuy}
+                                                        disabledMin={!getMaxTicketBuy(ownedBox, maxBoxCanBuy) || numBoxBuy === 1}
+                                                        disabledSub={!getMaxTicketBuy(ownedBox, maxBoxCanBuy) || numBoxBuy === 0}
+                                                        disabledAdd={!getMaxTicketBuy(ownedBox, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(ownedBox, maxBoxCanBuy)}
+                                                        disabledMax={!getMaxTicketBuy(ownedBox, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(ownedBox, maxBoxCanBuy)}
+                                                    />
+                                                    <div className="bought" >
+                                                        <h4 className="text-uppercase">BOUGHT/MAX</h4>
+                                                        <span className={styles.textBold}>
+                                                            {ownedBox}/{maxBoxCanBuy || 0}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            }
+
                                             {
                                                 (connectedAccount && !checkingKyc && !loadingJoinpool && !alreadyJoinPool && !joinPoolSuccess) && (countdown.isWhitelist || countdown.isUpcoming) &&
                                                 <ButtonBase color="green"
                                                     onClick={countdown.isWhitelist ? onApplyWhitelist : undefined}
                                                     isLoading={isApplyingWhitelist}
                                                     disabled={countdown.isUpcoming || alreadyJoinPool || poolJoinLoading || isApplyingWhitelist || !isKYC || (_.isNumber(userTier) && (userTier < infoTicket.min_tier))}
-                                                    className="text-transform-unset w-full">
+                                                    className="mt-0-important text-transform-unset w-full">
                                                     {(alreadyJoinPool) ? 'Applied Whitelist' : 'Apply Whitelist'}
                                                 </ButtonBase>
                                             }
@@ -710,58 +685,63 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     color="green"
                                                     onClick={(alreadyJoinPool || joinPoolSuccess) && isKYC ? onShowModalOrderBox : undefined}
                                                     disabled={!isKYC}
-                                                    className="text-transform-unset w-full">
-                                                    {maxBoxCanBuy > 0 ? 'Change Order' : 'Order Box'}
+                                                    className="mt-0-important text-transform-unset w-full">
+                                                    {boxesOrdered?.amount > 0 ? 'Change Order' : 'Order Box'}
                                                 </ButtonBase>
                                             }
                                             {
-                                                (connectedAccount && !checkingKyc && !loadingJoinpool && (alreadyJoinPool || joinPoolSuccess)) && countdown.isSale &&
-                                                <ButtonBase color="green" disabled={+numBoxBuy < 1 || !isKYC} onClick={(alreadyJoinPool || joinPoolSuccess) && isKYC ? onShowModalConfirmBuyBox : undefined} className="text-transform-unset w-full">
+                                                countdown.isSale && <div className={styles.progressItem}>
+                                                    <span className={styles.text}>Progress</span>
+                                                    <div className="showProgress">
+                                                        <Progress
+                                                            progress={calcProgress(
+                                                                +totalBoxesBought,
+                                                                +infoTicket.total_sold_coin
+                                                            )}
+                                                        />
+                                                    </div>
+                                                    <div className={clsx(styles.infoTicket, "total")}>
+                                                        <span className={styles.textBold}>
+                                                            {calcProgress(
+                                                                +totalBoxesBought,
+                                                                +infoTicket.total_sold_coin
+                                                            )}
+                                                            %
+                                                        </span>
+
+                                                        <span className="amount">
+                                                            {totalBoxesBought ?? "..."}/
+                                                            {infoTicket.total_sold_coin ? numberWithCommas(infoTicket.total_sold_coin, 0) : "..."} Boxes
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            }
+                                            {
+                                                (connectedAccount && !checkingKyc && !loadingJoinpool && countdown.isSale && ((countdown.isPhase1 && (alreadyJoinPool || joinPoolSuccess)) || countdown.isPhase2)) &&
+                                                <ButtonBase
+                                                    color="green"
+                                                    isLoading={lockWhenBuyBox}
+                                                    disabled={+numBoxBuy < 1 || !isKYC}
+                                                    onClick={(alreadyJoinPool || joinPoolSuccess || countdown.isPhase2) && isKYC ? onShowModalConfirmBuyBox : undefined}
+                                                    className="mt-0-important text-transform-unset w-full">
                                                     Buy Now
                                                 </ButtonBase>
                                             }
                                             {
                                                 countdown.isFinished &&
-                                                <>
-                                                    <div className={styles.progressItem}>
-                                                        <span className={styles.text}>Progress</span>
-                                                        <div className="showProgress">
-                                                            <Progress
-                                                                progress={calcProgress(
-                                                                    +infoTicket.token_sold,
-                                                                    +infoTicket.total_sold_coin
-                                                                )}
-                                                            />
-                                                        </div>
-                                                        <div className={clsx(styles.infoTicket, "total")}>
-                                                            <span className={styles.textBold}>
-                                                                {calcProgress(
-                                                                    +infoTicket.token_sold,
-                                                                    +infoTicket.total_sold_coin
-                                                                )}
-                                                                %
-                                                            </span>
-
-                                                            <span className="amount">
-                                                                {infoTicket.token_sold ? numberWithCommas(infoTicket.token_sold, 0) : "..."}/
-                                                                {infoTicket.total_sold_coin ? numberWithCommas(infoTicket.total_sold_coin, 0) : "..."} Boxes
-                                                            </span>
-                                                        </div>
+                                                <div className={clsx(styles.infoTicket, styles.finished)}>
+                                                    <div className="img-finished">
+                                                        <img src={"/images/finished.png"} alt="" />
                                                     </div>
-                                                    <div className={clsx(styles.infoTicket, styles.finished)}>
-                                                        <div className="img-finished">
-                                                            <img src={"/images/finished.png"} alt="" />
-                                                        </div>
-                                                        {!getRemaining(
-                                                            infoTicket.total_sold_coin,
-                                                            infoTicket.token_sold
-                                                        ) && (
-                                                                <div className="soldout">
-                                                                    <img src={"/images/soldout.png"} alt="" />
-                                                                </div>
-                                                            )}
-                                                    </div>
-                                                </>
+                                                    {!getRemaining(
+                                                        infoTicket.total_sold_coin,
+                                                        infoTicket.token_sold
+                                                    ) && (
+                                                            <div className="soldout">
+                                                                <img src={"/images/soldout.png"} alt="" />
+                                                            </div>
+                                                        )}
+                                                </div>
                                             }
                                         </div>
                                     </div>
@@ -769,7 +749,13 @@ const MysteryBox = ({ id, ...props }: any) => {
                             </div>
                         </div>
                         <div className={styles.displayContent}>
-                            <AboutMysteryBox info={infoTicket} timelines={timelines} defaultTab={2} />
+                            <AboutMysteryBox
+                                info={infoTicket}
+                                timelines={timelines}
+                                defaultTab={2}
+                                ownedBox={ownedBox}
+                                collections={loadingCollection ? [] : collections}
+                                loadingCollection={loadingCollection} />
                         </div>
                     </div>
                 </>

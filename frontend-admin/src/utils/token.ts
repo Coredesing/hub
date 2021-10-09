@@ -41,6 +41,14 @@ export const getTokenInfo = async (tokenAddress: string, token_type: string = 'e
             address: tokenAddress,
             token_type: TOKEN_TYPE.ERC721,
           }
+        case TOKEN_TYPE.MYSTERY_BOX:
+          return {
+            name: res[0],
+            symbol: res[1],
+            decimals: 0,
+            address: tokenAddress,
+            token_type: TOKEN_TYPE.MYSTERY_BOX,
+          }
         default:
           const tokenDecimals = await token.methods.decimals().call();
 

@@ -5,7 +5,6 @@ import { getCountdownInfo } from "@pages/MysteryBoxes/utils";
 import CountDownTimeV1, {
   CountDonwRanges,
 } from "@base-components/CountDownTime";
-import { Hidden } from "@material-ui/core";
 import './style.css';
 // import { useMediaQuery, useTheme } from "@material-ui/core";
 
@@ -66,15 +65,11 @@ const MysteryBoxes = ({ mysteryBoxes }: Props) => {
   const onPrevBox = () => {
     const idxCurr = mysteryBoxes.findIndex(b => b.id === currentBox.id);
     const newBox = idxCurr === 0 ? mysteryBoxes.slice(-1)[0] : mysteryBoxes[idxCurr - 1];
-    console.log(newBox);
-
     handleShowImg(newBox, 'right-to-left');
   }
   const onNextBox = () => {
     const idxCurr = mysteryBoxes.findIndex(b => b.id === currentBox.id);
     const newBox = idxCurr === mysteryBoxes.length - 1 ? mysteryBoxes[0] : mysteryBoxes[idxCurr + 1];
-    console.log(newBox);
-
     handleShowImg(newBox, 'left-to-right');
   }
 

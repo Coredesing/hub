@@ -502,7 +502,7 @@ class CampaignController {
         return HelperUtils.responseBadRequest("Do not found campaign");
       }
 
-      if (camp.process === Const.PROCESS.ONLY_CLAIM || cam.token_type === Const.TOKEN_TYPE.MYSTERY_BOX) {
+      if (camp.process === Const.PROCESS.ONLY_CLAIM || camp.token_type === Const.TOKEN_TYPE.MYSTERY_BOX) {
         return HelperUtils.responseBadRequest("Cannot buy");
       }
 

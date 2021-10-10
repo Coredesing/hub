@@ -126,6 +126,8 @@ function PoolForm(props: any) {
         dispatch(alertFailure('Token Information has not been loaded !!!'))
         return false;
       }
+
+      tokenInfo.symbol = data?.token_symbol
     }
 
     try {
@@ -463,6 +465,10 @@ function PoolForm(props: any) {
         return item;
       });
 
+      if (data && data.token_symbol) {
+        tokenInfo.symbol = data?.token_symbol
+      }
+
       try {
         if (!Array.isArray(data.seriesContentConfig)) {
           data.seriesContentConfig = JSON.parse(data.seriesContentConfig)
@@ -764,7 +770,6 @@ function PoolForm(props: any) {
               setValue={setValue}
               watch={watch}
               errors={errors}
-              getTokenInforDetail={getTokenInforDetail}
             />
 
             <AddressReceiveMoney

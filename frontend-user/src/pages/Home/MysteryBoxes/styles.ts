@@ -33,6 +33,32 @@ const useStyles = makeStyles((theme: any) => ({
         bottom: 0,
         right: 0,
       },
+      '& .wrapper-img': {
+        overflow: 'hidden',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        '& div, & img': {
+          width: '100%',
+          height: '100%'
+        },
+        '& img': {
+          '&.h-r-t-l': {
+            animation: `hiddenRightToLeft 200ms forwards`,
+          },
+          '&.h-l-t-r': {
+            animation: `hiddenLeftToRight 200ms forwards`,
+          },
+          '&.r-t-l': {
+            animation: `leftToRight 300ms forwards`,
+          },
+          '&.l-t-r': {
+            animation: `rightToLeft 300ms forwards`,
+          },
+        }
+      },
       [theme.breakpoints.up("md")]: {
         justifyContent: 'space-between',
         alignItems: 'flex-end',

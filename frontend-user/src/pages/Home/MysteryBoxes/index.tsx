@@ -6,6 +6,7 @@ import CountDownTimeV1, {
   CountDonwRanges,
 } from "@base-components/CountDownTime";
 import { Hidden } from "@material-ui/core";
+import './style.css';
 // import { useMediaQuery, useTheme } from "@material-ui/core";
 
 type ObjectType = { [k: string]: any };
@@ -21,9 +22,9 @@ const MysteryBoxes = ({ mysteryBoxes }: Props) => {
   //   const isXsScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   const [currentBox, setCurrentBox] = useState<{ [k: string]: any }>(mysteryBoxes[0]);
-  
+
   const [time, setTime] = useState<
-    CountDonwRanges & { title?: string; [k: string]: any }
+    CountDonwRanges & { title?: string;[k: string]: any }
   >({ date1: 0, date2: 0 });
   const [compareTime] = useState(Date.now());
   useEffect(() => {
@@ -42,7 +43,7 @@ const MysteryBoxes = ({ mysteryBoxes }: Props) => {
       let elemImg: any = wrapperImg.querySelector('img');
       if (!elemImg) return;
       const newElmImg = document.createElement('img');
-      newElmImg.src = newBox.icon;
+      newElmImg.src = newBox.banner;
       if (from === 'right-to-left') {
         elemImg.classList.remove('r-t-l');
         elemImg.classList.add('h-r-t-l');
@@ -64,7 +65,7 @@ const MysteryBoxes = ({ mysteryBoxes }: Props) => {
 
   const onPrevBox = () => {
     const idxCurr = mysteryBoxes.findIndex(b => b.id === currentBox.id);
-    const newBox = idxCurr === 0 ? mysteryBoxes.slice(-1)[0] : mysteryBoxes[idxCurr - 1]; 
+    const newBox = idxCurr === 0 ? mysteryBoxes.slice(-1)[0] : mysteryBoxes[idxCurr - 1];
     console.log(newBox);
 
     handleShowImg(newBox, 'right-to-left');
@@ -73,7 +74,7 @@ const MysteryBoxes = ({ mysteryBoxes }: Props) => {
     const idxCurr = mysteryBoxes.findIndex(b => b.id === currentBox.id);
     const newBox = idxCurr === mysteryBoxes.length - 1 ? mysteryBoxes[0] : mysteryBoxes[idxCurr + 1];
     console.log(newBox);
-    
+
     handleShowImg(newBox, 'left-to-right');
   }
 
@@ -81,8 +82,13 @@ const MysteryBoxes = ({ mysteryBoxes }: Props) => {
     <div className={styles.container}>
       <div
         className="banner"
-        style={{ backgroundImage: `url(${currentBox.banner})` }}
+        // style={{ backgroundImage: `url(${currentBox.banner})` }}
       >
+        <div className="wrapper-img">
+          <div>
+            <img src={currentBox.banner} alt="" />
+          </div>
+        </div>
         <div className={styles.boxContent}>
           <div className="detail-box">
             <h1>{currentBox.title}</h1>

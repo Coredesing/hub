@@ -1,0 +1,47 @@
+@keyframes leftToRight {
+    0% {
+        left: -100%;
+        /* opacity: 0; */
+        position: absolute;
+    }
+    100% {
+        /* opacity: 1; */
+        left: 0;
+        position: absolute;
+    }
+}
+
+@keyframes rightToLeft {
+    0% {
+        right: -100%;
+        /* opacity: 0; */
+        position: absolute;
+    }
+    100% {
+        /* opacity: 1; */
+        right: 0;
+        position: absolute;
+    }
+}
+
+@keyframes hiddenRightToLeft {
+    0% {
+        right: 0;
+        position: absolute;
+    }
+    100% {
+        right: -100%;
+        position: absolute;
+    }
+}
+
+@keyframes hiddenLeftToRight {
+    0% {
+        left: 0;
+        position: absolute;
+    }
+    100% {
+        left: -100%;
+        position: absolute;
+    }
+}

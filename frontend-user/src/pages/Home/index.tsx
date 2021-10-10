@@ -233,11 +233,11 @@ const Home = (props: any) => {
               style={{ width: isMdUpScreen ? "40%" : undefined }}
             >
               <div
-                className={clsx(styles.contentTitle, "center")}
-                style={{ display: "flex", textAlign: "center" }}
+                className={clsx(styles.contentTitle, isSmScreen ? "center": undefined)}
+                style={{ display: "flex", textAlign: isSmScreen ? "center" : undefined }}
               >
                 <h3>Mystery Boxes</h3>
-                <h5>
+                <h5 style={{maxWidth: isSmScreen ? undefined : '480px'}}>
                   To view information about Mystery Boxes, click the Discover
                   button below.
                 </h5>
@@ -252,7 +252,7 @@ const Home = (props: any) => {
                 width: isMdUpScreen ? "55%" : "80%",
               }}
             >
-              <MysteryBoxes currentBox={mysteryBoxes?.data[0]} />
+              <MysteryBoxes mysteryBoxes={mysteryBoxes?.data}/>
             </div>
           </div>
         </section>

@@ -24,7 +24,7 @@ function MinTier(props: any) {
   return (
     <>
       <FormControl component="fieldset">
-        <label className={classes.formControlLabel}>Min Tier</label>
+        <label className={classes.formControlLabel}>Min Ranking</label>
         <Controller
           rules={{ required: true }}
           control={control}

@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: any) => ({
-  contentBox: {
+  container: {
     height: "100%",
     position: "relative",
     [theme.breakpoints.down("sm")]: {
@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: any) => ({
       marginBottom: " 150px",
     },
     "& .banner": {
-      paddingLeft: "20px",
+      display: 'flex',
       zIndex: 1,
       borderRadius: 4,
       position: "absolute",
@@ -33,6 +33,39 @@ const useStyles = makeStyles((theme: any) => ({
         bottom: 0,
         right: 0,
       },
+      '& .wrapper-img': {
+        overflow: 'hidden',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        '& div, & img': {
+          width: '100%',
+          height: '100%'
+        },
+        '& img': {
+          '&.h-r-t-l': {
+            animation: `hiddenRightToLeft 200ms forwards`,
+          },
+          '&.h-l-t-r': {
+            animation: `hiddenLeftToRight 200ms forwards`,
+          },
+          '&.r-t-l': {
+            animation: `leftToRight 300ms forwards`,
+          },
+          '&.l-t-r': {
+            animation: `rightToLeft 300ms forwards`,
+          },
+        }
+      },
+      [theme.breakpoints.up("md")]: {
+        justifyContent: 'space-between',
+        alignItems: 'flex-end',
+        paddingLeft: "20px",
+        paddingRight: '10px',
+        paddingBottom: '30px',
+      },
       [theme.breakpoints.up("sm")]: {
         "&::before": {
           zIndex: 1,
@@ -41,7 +74,8 @@ const useStyles = makeStyles((theme: any) => ({
         },
       },
       [theme.breakpoints.down("sm")]: {
-        paddingLeft: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
         "&::before": {
           zIndex: 1,
           background:
@@ -55,7 +89,6 @@ const useStyles = makeStyles((theme: any) => ({
       },
     },
     "& .detail-countdown-box": {
-      //   position: "absolute",
       position: "relative",
       zIndex: 100,
       bottom: 0,
@@ -88,7 +121,7 @@ const useStyles = makeStyles((theme: any) => ({
 
         "& .countdown": {
           background: "rgba(0,0,0,0.5)",
-          width: "400px",
+          width: "100%",
           zIndex: 10,
           fontFamily: "Space Ranger",
 
@@ -103,11 +136,10 @@ const useStyles = makeStyles((theme: any) => ({
       },
     },
   },
-  content: {
+  boxContent: {
     position: "relative",
     zIndex: 100,
-    width: "100%",
-    marginTop: 100,
+    width: 'fit-content',
     "& .detail-box": {
       marginBottom: "20px",
       [theme.breakpoints.down("sm")]: {
@@ -125,13 +157,11 @@ const useStyles = makeStyles((theme: any) => ({
         color: "#FFFFFF",
         marginBottom: "12px",
         display: "block",
-        // maxWidth: "380px",
         textTransform: "uppercase",
 
         [theme.breakpoints.up("xl")]: {
           fontSize: "43px",
           lineHeight: "50px",
-          //   maxWidth: "600px",
           marginBottom: "20px",
         },
         [theme.breakpoints.down("xs")]: {
@@ -196,14 +226,8 @@ const useStyles = makeStyles((theme: any) => ({
 
         // },
         "& .countdown": {
-          maxWidth: "400px",
           width: "100%",
-          // [theme.breakpoints.down('xs')] : {
-          //   maxWidth: '280px',
-          // },
-
           fontFamily: "Space Ranger",
-          background: "rgba(0, 0, 0, 0.5)",
 
           "& .time .number": {
             transform: "skew(-20deg)",
@@ -222,15 +246,33 @@ const useStyles = makeStyles((theme: any) => ({
     },
   },
   countDownContainer: {
-    [theme.breakpoints.down("sm")]: {
-      paddingLeft: "15%",
-      paddingRight: "15%",
-    },
-    [theme.breakpoints.down("xs")]: {
-      paddingLeft: 0,
-      paddingRight: 0,
+    [theme.breakpoints.up("sm")]: {
+      borderRadius: '2px',
+      overflow: 'hidden',
     },
   },
+  changeBanner: {
+    display: 'flex',
+    zIndex: 100,
+    // alignItems: 'flex-end',
+    // backgroundColor: 'red',
+    paddingBottom: '5px',
+    width: 'fit-content',
+    '& .prev, & .next': {
+      cursor: 'pointer',
+      width: '32px',
+      display: 'flex',
+      justifyContent: 'center',
+    },
+    [theme.breakpoints.down("sm")]: {
+      position: "absolute",
+      right: '20px',
+      bottom: '20px'
+    },
+    [theme.breakpoints.down("xs")]: {
+      right: '10px',
+    }
+  }
 }));
 
 export default useStyles;

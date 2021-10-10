@@ -28,11 +28,11 @@ const createData = (name: string, startTime: any, endTime: any, minBuy: number, 
 
 const createDefaultTiers = () => {
   return [
-    createData('-', null, null, 0, 1000, false),
-    createData('Rookie', moment().format(DATETIME_FORMAT), moment().add(1, 'd').format(DATETIME_FORMAT), 0, 20, false),
-    createData('Elite', moment().format(DATETIME_FORMAT), moment().add(1, 'd').format(DATETIME_FORMAT), 0, 20, false),
-    createData('Pro', moment().format(DATETIME_FORMAT), moment().add(1, 'd').format(DATETIME_FORMAT), 0, 20, false),
-    createData('Legend', moment().format(DATETIME_FORMAT), moment().add(1, 'd').format(DATETIME_FORMAT), 0, 10, false),
+    createData('-', null, null, 0, 1, false),
+    createData('Rookie', moment().format(DATETIME_FORMAT), moment().add(1, 'd').format(DATETIME_FORMAT), 0, 1, false),
+    createData('Elite', moment().format(DATETIME_FORMAT), moment().add(1, 'd').format(DATETIME_FORMAT), 0, 1, false),
+    createData('Pro', moment().format(DATETIME_FORMAT), moment().add(1, 'd').format(DATETIME_FORMAT), 0, 1, false),
+    createData('Legend', moment().format(DATETIME_FORMAT), moment().add(1, 'd').format(DATETIME_FORMAT), 0, 1, false),
   ];
 };
 
@@ -121,6 +121,35 @@ function TierTable(props: any) {
     networkAvailable: networkAvailable,
   });
 
+  const startTime = watch('start_time');
+  const finishTime = watch('finish_time');
+
+  const handleSyncTime = async () => {
+    if (poolDetail && poolDetail.tiers && startTime && finishTime) {
+      const dataFormatted = poolDetail.tiers.map((item: any, index: any) => {
+        let startBuyTime = startTime.format(DATETIME_FORMAT)
+        let endBuyTime = finishTime.format(DATETIME_FORMAT)
+        if (index < minTier) {
+          startBuyTime = null
+          endBuyTime = null
+        }
+
+        return createData(
+            TIERS[index],
+            startBuyTime,
+            endBuyTime,
+            (new BigNumber(item.min_buy)).toNumber(),
+            (new BigNumber(item.max_buy)).toNumber() || 1,
+            false,
+            item.ticket_allow_percent || 0,
+            item.ticket_allow || 0,
+        );
+      });
+
+      setRows(dataFormatted);
+    }
+  };
+
   return (
     <>
       {isOpenEditPopup &&
@@ -137,13 +166,13 @@ function TierTable(props: any) {
       <div className={classes.formControl}>
         <label className={classes.formControlLabel}>Tier Configuration</label>
       </div>
-      {/*<div className={classes.formControl}>*/}
-      {/*  <Button*/}
-      {/*    variant="contained"*/}
-      {/*    color="primary"*/}
-      {/*    onClick={openPopupCreate}*/}
-      {/*  >Create</Button>*/}
-      {/*</div>*/}
+      <Button
+          variant="contained"
+          color="primary"
+          onClick={() => handleSyncTime()}
+          style={{ marginLeft: 10, marginTop: -5, float: 'right' }}
+      >Sync start and finish time</Button>
+
       <TableContainer component={Paper}>
         <Table className={classesTable.table} aria-label="simple table">
           <TableHead>

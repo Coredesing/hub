@@ -56,6 +56,9 @@ export const useStyles = makeStyles((theme: any) => ({
                     color: "#D1D1D1",
                     fontWeight: "600",
                     fontSize: "8px",
+                    [theme.breakpoints.down('xs')]: {
+                        fontSize: "7px",
+                    },
                     lineHeight: "12px",
                     fontFamily: "Hanken Grotesk",
                     textTransform: "uppercase",

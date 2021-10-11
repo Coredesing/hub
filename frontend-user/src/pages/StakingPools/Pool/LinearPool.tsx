@@ -37,6 +37,8 @@ import { getUserTier } from '../../../store/actions/sota-tiers';
 import { TIERS } from '@app-constants';
 import clsx from 'clsx';
 import { Box } from '@material-ui/core';
+import STAKING_POOL_ABI from '@abi/StakingPool.json';
+import { getContractInstance, SmartContractMethod } from '@services/web3';
 
 const ONE_DAY_IN_SECONDS = 86400;
 const ONE_YEAR_IN_SECONDS = '31536000';
@@ -184,6 +186,7 @@ const LinearPool = (props: any) => {
   }, [stakeTransactionHash, setOpenModalTransactionSubmitting, setTransactionHashes])
 
 
+  const connector  = useTypedSelector((state: any) => state.connector).data;
   const handleUnstake = async () => {
     try {
       if (utils.parseEther(unstakeAmount).lt(BigNumber.from('0'))) {
@@ -193,10 +196,12 @@ const LinearPool = (props: any) => {
 
       if (BigNumber.from(poolDetail?.pendingWithdrawal?.amount || '0').gt(BigNumber.from('0')) && confirmed === false) {
         setPreviousStep('unstake');
+        const contract = getContractInstance(STAKING_POOL_ABI, poolDetail.pool_address, connector, appChainID, SmartContractMethod.Read, false);
+        const delayDuration = await contract?.methods.linearDurationOf(poolDetail.pool_id, connectedAccount).call();
         if (Number(poolDetail?.pendingWithdrawal?.applicableAt) > moment().unix()) {
-          setConfirmationText(`You currently have ${tokenDetails?.symbol} waiting to be withdrawn. If you continue to withdraw tokens, the withdrawal delay time will be extended until ${moment.unix(moment().unix() + Number(poolDetail?.delayDuration)).format("YYYY-MM-DD HH:mm:ss ([GMT]Z)")}`);
+          setConfirmationText(`You currently have ${tokenDetails?.symbol} waiting to be withdrawn. If you continue to withdraw tokens, the withdrawal delay time will be extended until ${moment.unix(moment().unix() + Number(delayDuration)).format("YYYY-MM-DD HH:mm:ss ([GMT]Z)")}`);
         } else {
-          setConfirmationText(`You currently have ${tokenDetails?.symbol} available for withdrawal. If you continue to withdraw tokens, the withdrawal delay time will be extended until ${moment.unix(moment().unix() + Number(poolDetail?.delayDuration)).format("YYYY-MM-DD HH:mm:ss ([GMT]Z)")}`);
+          setConfirmationText(`You currently have ${tokenDetails?.symbol} available for withdrawal. If you continue to withdraw tokens, the withdrawal delay time will be extended until ${moment.unix(moment().unix() + Number(delayDuration)).format("YYYY-MM-DD HH:mm:ss ([GMT]Z)")}`);
         }
         setShowConfirmModal(true);
         setShowUnstakeModal(false);

@@ -60,7 +60,7 @@ const MysteryBox = ({ id, ...props }: any) => {
     const dispatch = useDispatch();
     const { library } = useWeb3React();
     const { connectedAccount, wrongChain /*isAuth*/ } = useAuth();
-    const alert = useSelector((state: any) => state.alert);
+    // const alert = useSelector((state: any) => state.alert);
     const { appChainID } = useSelector((state: any) => state.appNetwork).data;
     const [numBoxBuy, setNumBoxBuy] = useState<number>(0);
     const [infoTicket, setInfoTicket] = useState<{ [k in string]: any }>({});
@@ -159,6 +159,7 @@ const MysteryBox = ({ id, ...props }: any) => {
 
     const onSetCountdown = useCallback(() => {
         if (dataTicket) {
+            const isAccIsBuyPreOrder = userTier >= dataTicket.pre_order_min_tier;
             const timeLine = getTimelineOfPool(dataTicket);
 
             const timeLinesInfo: { [k: string]: any } = {
@@ -195,6 +196,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                 }
             }
 
+            const startBuyTime = isAccIsBuyPreOrder && timeLine.startPreOrderTime ? timeLine.startPreOrderTime : timeLine.startBuyTime;
             if (timeLine.startJoinPooltime > Date.now()) {
                 setCountdown({ date1: timeLine.startJoinPooltime, date2: Date.now(), title: 'Whitelist Opens In', isUpcoming: true });
                 timeLinesInfo[1].current = true;
@@ -203,12 +205,12 @@ const MysteryBox = ({ id, ...props }: any) => {
                 setCountdown({ date1: timeLine.endJoinPoolTime, date2: Date.now(), title: 'Whitelist Closes In', isWhitelist: true });
                 timeLinesInfo[2].current = true;
             }
-            else if (timeLine.startBuyTime > Date.now()) {
+            else if (startBuyTime > Date.now()) {
                 timeLinesInfo[2].current = true;
                 if (timeLine.freeBuyTime) {
-                    setCountdown({ date1: timeLine.startBuyTime, date2: Date.now(), title: 'Sale Phase 1 Starts In', isUpcomingSale: true, isMultiPhase: true });
+                    setCountdown({ date1: startBuyTime, date2: Date.now(), title: 'Sale Phase 1 Starts In', isUpcomingSale: true, isMultiPhase: true });
                 } else {
-                    setCountdown({ date1: timeLine.startBuyTime, date2: Date.now(), title: 'Sale Starts In', isUpcomingSale: true });
+                    setCountdown({ date1: startBuyTime, date2: Date.now(), title: 'Sale Starts In', isUpcomingSale: true });
                 }
             }
             else if (timeLine.freeBuyTime && timeLine.freeBuyTime > Date.now()) {
@@ -230,13 +232,13 @@ const MysteryBox = ({ id, ...props }: any) => {
             }
             setTimelines(timeLinesInfo);
         }
-    }, [dataTicket]);
+    }, [dataTicket, userTier]);
 
     useEffect(() => {
-        if (!loadingTicket && dataTicket) {
+        if (!loadingTicket && dataTicket && _.isNumber(userTier)) {
             onSetCountdown();
         }
-    }, [dataTicket, loadingTicket])
+    }, [dataTicket, loadingTicket, userTier])
 
     const [recallMybox, setRecallMyBox] = useState(true);
     const [ownedBox, setOwnedBox] = useState(0);
@@ -321,6 +323,8 @@ const MysteryBox = ({ id, ...props }: any) => {
             contractPreSale.saleEvents(eventId).then((res: any) => {
                 const totalBought = res.currentSupply ? res.currentSupply.toNumber() : 0;
                 setTotalBoxesBought(totalBought);
+            }).catch((err: any) => {
+                console.log('err', err);
             })
         }
     }, [infoTicket, renewTotalBoxesBought, contractPreSale]);
@@ -328,13 +332,18 @@ const MysteryBox = ({ id, ...props }: any) => {
     useEffect(() => {
         if (infoTicket?.boxTypesConfig?.length) {
             if (contractPreSale) {
-                Promise.all(infoTicket.boxTypesConfig.map((b: any, subBoxId: number) => new Promise(async (res) => {
-                    const response = await contractPreSale.subBoxes(eventId, subBoxId);
-                    const result = {
-                        maxSupply: new BigNumber('maxSupply' in response ? response.maxSupply.toBigInt() : 0).toString(),
-                        totalSold: new BigNumber('totalSold' in response ? response.totalSold.toBigInt() : 0).toString(),
+                Promise.all(infoTicket.boxTypesConfig.map((b: any, subBoxId: number) => new Promise(async (res, rej) => {
+                    try {
+                        const response = await contractPreSale.subBoxes(eventId, subBoxId);
+                        const result = {
+                            maxSupply: new BigNumber('maxSupply' in response ? response.maxSupply.toBigInt() : 0).toString(),
+                            totalSold: new BigNumber('totalSold' in response ? response.totalSold.toBigInt() : 0).toString(),
+                        }
+                        res({ ...b, subBoxId, ...result });
+                    } catch (error) {
+                        rej(error)
                     }
-                    res({ ...b, subBoxId, ...result });
+
                 })))
                     .then((arr) => {
                         setSelectBoxType(arr[0] as { [k: string]: any })
@@ -619,7 +628,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                             <div className="detail-items">
                                                 <div className="item">
                                                     <label className="label text-uppercase">Total sale</label>
-                                                    <span>{numberWithCommas((infoTicket.total_sold_coin || 0) + '')} Boxes</span>
+                                                    <span>{numberWithCommas((infoTicket.total_sold_coin || 0) + '')}</span>
                                                 </div>
                                                 {
                                                     !countdown.isUpcoming && !countdown.isWhitelist && !countdown.isUpcomingSale &&

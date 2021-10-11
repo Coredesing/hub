@@ -36,7 +36,7 @@ function BannerNotification(props: any) {
     alreadyJoinPool,
     joinPoolSuccess,
     connectedAccount,
-    isKYC,
+    // isKYC,
     announcementTime,
     purchasableCurrency,
     whitelistCompleted,
@@ -46,6 +46,7 @@ function BannerNotification(props: any) {
     tokenDetails,
     maximumBuy,
     countDownDate,
+    checkKyc,
   } = props;
   const { appChainID, walletChainID } = useTypedSelector(state => state.appNetwork).data;
 
@@ -106,11 +107,13 @@ function BannerNotification(props: any) {
 
   return (
     <>
-      {poolDetails && !isKYC && connectedAccount &&
-        <AlertKYC connectedAccount={connectedAccount} />
+      {poolDetails && 'checked' in checkKyc && !checkKyc.checked && !checkKyc?.isKyc && connectedAccount &&
+        <div style={{ marginBottom: '6px' }}>
+          <AlertKYC connectedAccount={connectedAccount} />
+        </div>
       }
 
-      {isKYC && currentUserTier?.level < poolDetails?.minTier &&
+      {checkKyc?.isKyc && currentUserTier?.level < poolDetails?.minTier &&
         <WrapperAlert type="error">
           <span>
             You haven't achieved min tier (

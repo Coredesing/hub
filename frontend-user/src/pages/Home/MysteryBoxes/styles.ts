@@ -42,7 +42,8 @@ const useStyles = makeStyles((theme: any) => ({
         bottom: 0,
         '& div, & img': {
           width: '100%',
-          height: '100%'
+          height: '100%',
+          objectFit: 'cover',
         },
         '& img': {
           '&.h-r-t-l': {

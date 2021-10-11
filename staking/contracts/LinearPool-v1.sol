@@ -10,7 +10,7 @@ import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeCastUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/structs/EnumerableSetUpgradeable.sol";
 
-contract LinearPool is
+contract LinearPoolV1 is
     Initializable,
     OwnableUpgradeable,
     ReentrancyGuardUpgradeable
@@ -45,9 +45,6 @@ contract LinearPool is
     uint128 public linearFlexLockDuration;
     // Allow emergency withdraw feature
     bool public linearAllowEmergencyWithdraw;
-
-    // Upgrade: Allow emergency transfer feature
-    mapping(address => bool) public linearAllowEmergencyTransfer;
 
     event LinearPoolCreated(uint256 indexed poolId, uint256 APR);
     event LinearDeposit(
@@ -573,8 +570,6 @@ contract LinearPool is
         }
 
         uint128 balance = linearStakingData[_poolId][_account].balance;
-        balance += linearPendingWithdrawals[_poolId][_account].amount;
-
         // case tierInfos.length - 1 is in whitelist (masters)
         uint128 delay = 0;
         for (uint256 index = 0; index < tierInfos.length - 1; index++) {
@@ -692,52 +687,5 @@ contract LinearPool is
         uint256 stakedTime = lastUpdatedTime > block.timestamp ? 0 : block.timestamp - lastUpdatedTime;
         uint256 stakedTimeInSeconds = lastUpdatedTime == 0 ? 0 : stakedTime;
         stakingData.exp += stakingData.balance * stakedTimeInSeconds / 1e5;
-    }
-
-    /**
-     * UPGRADE
-     * @notice Update allowance for emergency transfer
-     * @param account user's wallet address
-     * @param _shouldAllow should allow emergency transfer or not
-     */
-    function linearSetAllowEmergencyTransfer(address account, bool _shouldAllow)
-    external
-    onlyOwner
-    {
-        linearAllowEmergencyTransfer[account] = _shouldAllow;
-    }
-
-    /**
-     * UPGRADE
-     * @notice Withdraw and transfer to another wallet without caring about rewards. EMERGENCY ONLY.
-     * @param _poolId id of the pool
-     * @param _recipient recipient of the fund
-     */
-    function linearEmergencyTransfer(uint256 _poolId, address _recipient)
-    external
-    linearValidatePoolById(_poolId)
-    {
-        require(
-            linearAllowEmergencyTransfer[msg.sender],
-            "LinearStakingPool: emergency transfer is not allowed yet"
-        );
-
-        address account = msg.sender;
-        LinearStakingData storage stakingData = linearStakingData[_poolId][
-            account
-        ];
-
-        require(
-            stakingData.balance > 0,
-            "LinearStakingPool: nothing to withdraw"
-        );
-
-        uint128 amount = stakingData.balance;
-
-        stakingData.balance = 0;
-        stakingData.reward = 0;
-        stakingData.updatedTime = block.timestamp.toUint128();
-
-        linearAcceptedToken.safeTransfer(_recipient, amount);
     }
 }

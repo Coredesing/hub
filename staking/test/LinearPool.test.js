@@ -616,8 +616,8 @@ describe("Linear Pool ", function () {
       // Bob should have: 1000 + 20% * 200 = 1040
       expect(await this.pkf.balanceOf(this.bob.address)).to.equal(utils.parseEther("1040"));
     });
-    it("should allow user to deposit multiple times", async function () {
-      // fixed pool with 20% APR
+    it("should allow user to withdraw multiple time", async function () {
+      // default flexible pool with 5% APR
       this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
         initializer: '__LinearPool_init'
       });
@@ -625,66 +625,73 @@ describe("Linear Pool ", function () {
       await this.pkf.connect(this.minter).approve(this.pool.address, utils.parseEther("10000"));
       await this.pool.linearSetRewardDistributor(this.minter.address);
       await this.pool.linearAddPool(
-        0,
-        0,
-        0,
-        365,
-        duration.days(365).toNumber(),
-        0,
-        (await time.latest()).toNumber(),
-        (await time.latest()).toNumber() + duration.days(365).toNumber()
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          (await time.latest()).toNumber(),
+          (await time.latest()).toNumber() + duration.years(1).toNumber()
       );
-      await this.pool.linearSetUseLocalDelayPool(0, true);
+      await this.pool.linearInitTierInfo(
+          [utils.parseEther("1"), utils.parseEther("5"), utils.parseEther("10"), utils.parseEther("50")],
+          [duration.days(1), duration.days(3), duration.days(5), duration.days(7)]
+      );
 
       await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
         from: this.alice.address,
       });
 
-      // Alice deposits 100 tokens
+      // Alice deposits 1000 tokens at time Delta
       await this.pool
-        .connect(this.alice)
-        .linearDeposit(0, utils.parseEther("100"), { from: this.alice.address });
-
-      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("900"));
-      expect(await this.pool.linearTotalStaked(0)).to.equal(utils.parseEther("100"));
-
-      // // After 100 days
-      await time.increase(duration.days(100).toNumber());
-      expect((await this.pool.linearBalanceOf(0, this.alice.address))).to.equal(utils.parseEther("100"));
-      expect(Number(utils.formatEther(await this.pool.linearPendingReward(0, this.alice.address))).toFixed(2)).to.equal(Number("100").toFixed(2));
-
-      await this.pool
-        .connect(this.alice)
-        .linearDeposit(0, utils.parseEther("100"), { from: this.alice.address });
-
-      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("800"));
-      expect(await this.pool.linearTotalStaked(0)).to.equal(utils.parseEther("200"));
-
-      await time.increase(duration.days(100).toNumber());
-      expect((await this.pool.linearBalanceOf(0, this.alice.address))).to.equal(utils.parseEther("200"));
-      expect(Number(utils.formatEther(await this.pool.linearPendingReward(0, this.alice.address))).toFixed(2)).to.equal(Number("300").toFixed(2));
-
-      // Alice should not be abot to withdraw after 366 days
-      await time.increase(duration.days(166).toNumber());
-      await expectRevert(
-        this.pool
           .connect(this.alice)
-          .linearWithdraw(0, utils.parseEther("200"), { from: this.alice.address }),
-        "LinearStakingPool: still locked"
+          .linearDeposit(0, utils.parseEther("10"), { from: this.alice.address });
+
+      // test rookie alice
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("990"));
+      expect(await this.pool.linearBalanceOf(0, this.alice.address)).to.equal(utils.parseEther("10"));
+      // lock 1 days
+      expect(await this.pool.connect(this.alice).linearDurationOf(0, this.alice.address)).to.equal(duration.days("5"));
+      this.pool.connect(this.alice).linearWithdraw(0, utils.parseEther("10"))
+      let delta = await time.latest();
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("990"));
+      expect(await this.pool.linearBalanceOf(0, this.alice.address)).to.equal(utils.parseEther("0"));
+      await expectRevert(
+          this.pool.connect(this.alice).linearClaimPendingWithdraw(0),
+          "LinearStakingPool: not released yet"
       );
+      // lock rookie 1days
+      await time.increaseTo(duration.days(5).add(delta.toString()).toNumber() + 5);
+      await this.pool.connect(this.alice).linearClaimPendingWithdraw(0);
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("1000"));
 
-      // Alice should not be abot to withdraw after 465 days
-      await time.increase(duration.days(99).toNumber());
-      await this.pool
-        .connect(this.alice)
-        .linearWithdraw(0, utils.parseEther("200"), { from: this.alice.address });
+      // increase to pro
+      await this.pool.connect(this.alice).linearDeposit(0, utils.parseEther("10"))
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("990"));
+      expect(await this.pool.linearBalanceOf(0, this.alice.address)).to.equal(utils.parseEther("10"));
+      expect(await this.pool.connect(this.alice).linearDurationOf(0, this.alice.address)).to.equal(duration.days("5"));
 
-      expect(Number(utils.formatEther(await this.pkf.balanceOf(this.alice.address))).toFixed(2)).to.equal(Number(utils.formatEther(BigNumber.from(
-        utils.parseEther("1000")
-          .add(utils.parseEther("100"))
-          .add(utils.parseEther("200").mul("365").div("100"))
-      ))).toFixed(2));
+      await this.pool.connect(this.alice).linearWithdraw(0, utils.parseEther("5"));
+      delta = await time.latest();
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("990"));
+      expect(await this.pool.linearBalanceOf(0, this.alice.address)).to.equal(utils.parseEther("5"));
+      await expectRevert(
+          this.pool.connect(this.alice).linearClaimPendingWithdraw(0),
+          "LinearStakingPool: not released yet"
+      );
+      await this.pool.connect(this.alice).linearWithdraw(0, utils.parseEther("5"));
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("990"));
+      expect(await this.pool.linearBalanceOf(0, this.alice.address)).to.equal(utils.parseEther("0"));
 
+      await time.increaseTo(duration.days(4).add(delta.toString()).toNumber() + 1);
+      await expectRevert(
+          this.pool.connect(this.alice).linearClaimPendingWithdraw(0),
+          "LinearStakingPool: not released yet"
+      );
+      await time.increaseTo(duration.days(5).add(delta.toString()).toNumber() + 1);
+      await this.pool.connect(this.alice).linearClaimPendingWithdraw(0);
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("1000"));
     });
     it("should not allow user to withdraw before lock time end", async function () {
       this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
@@ -755,6 +762,78 @@ describe("Linear Pool ", function () {
       await this.pool
         .connect(this.bob)
         .linearWithdraw(0, utils.parseEther("200"), { from: this.bob.address });
+      // Bob should have: 1000 + 20% * 200 = 1040
+      expect(await this.pkf.balanceOf(this.bob.address)).to.equal(utils.parseEther("1040"));
+    });
+    it("should allow user to withdraw multiple time", async function () {
+      this.pool = await upgrades.deployProxy(this.LinearPool, [this.pkf.address], {
+        initializer: '__LinearPool_init'
+      });
+      await this.pool.deployed();
+      await this.pkf.connect(this.minter).approve(this.pool.address, utils.parseEther("10000"));
+      await this.pool.linearSetRewardDistributor(this.minter.address);
+      await this.pool.linearAddPool(
+          0,
+          0,
+          0,
+          20,
+          duration.years(1).toNumber(),
+          0,
+          (await time.latest()).toNumber(),
+          (await time.latest()).toNumber() + duration.days(7).toNumber()
+      );
+      await this.pool.linearSetUseLocalDelayPool(0, true);
+
+      await this.pkf.connect(this.alice).approve(this.pool.address, utils.parseEther("1000"), {
+        from: this.alice.address,
+      });
+      await this.pkf.connect(this.bob).approve(this.pool.address, utils.parseEther("1000"), {
+        from: this.bob.address,
+      });
+
+      // Alice deposits 100 tokens
+      await this.pool
+          .connect(this.alice)
+          .linearDeposit(0, utils.parseEther("100"), { from: this.alice.address });
+
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("900"));
+      expect(await this.pool.linearTotalStaked(0)).to.equal(utils.parseEther("100"));
+
+      // Bob deposits 200 tokens
+      await this.pool
+          .connect(this.bob)
+          .linearDeposit(0, utils.parseEther("200"), { from: this.bob.address });
+      expect(await this.pkf.balanceOf(this.bob.address)).to.equal(utils.parseEther("800"));
+      expect(await this.pool.linearTotalStaked(0)).to.equal(utils.parseEther("300"));
+
+      await expectRevert(
+          this.pool
+              .connect(this.alice)
+              .linearWithdraw(0, utils.parseEther("100"), { from: this.alice.address }),
+          "LinearStakingPool: still locked"
+      );
+
+      await expectRevert(
+          this.pool
+              .connect(this.bob)
+              .linearWithdraw(0, utils.parseEther("200"), { from: this.bob.address }),
+          "LinearStakingPool: still locked"
+      );
+
+      // After 1 years
+      await time.increase(duration.years(1).toNumber());
+
+      // Alice withdraws 100 tokens
+      await this.pool
+          .connect(this.alice)
+          .linearWithdraw(0, utils.parseEther("100"), { from: this.alice.address });
+      // Alice should have: 1000 + 20% * 100 = 1020
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("1020"));
+
+      // Bob withdraws 100 tokens
+      await this.pool
+          .connect(this.bob)
+          .linearWithdraw(0, utils.parseEther("200"), { from: this.bob.address });
       // Bob should have: 1000 + 20% * 200 = 1040
       expect(await this.pkf.balanceOf(this.bob.address)).to.equal(utils.parseEther("1040"));
     });
@@ -953,6 +1032,105 @@ describe("Linear Pool ", function () {
         "LinearStakingPool: insufficient amount"
       );
     });
+    it("should upgradable", async function () {
+      const LinearPoolV1 = await ethers.getContractFactory("LinearPoolV1");
+      const LinearPool = await ethers.getContractFactory("LinearPool");
 
+      const instance = await upgrades.deployProxy(LinearPoolV1, [this.pkf.address], {
+        initializer: '__LinearPool_init'
+      });
+      await instance.deployed();
+
+      await this.pkf.connect(this.minter).approve(instance.address, utils.parseEther("10000"));
+      await instance.linearSetRewardDistributor(this.minter.address);
+      await instance.linearAddPool(
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          (await time.latest()).toNumber(),
+          (await time.latest()).toNumber() + duration.years(1).toNumber()
+      );
+      await instance.linearInitTierInfo(
+          [utils.parseEther("1"), utils.parseEther("5"), utils.parseEther("10"), utils.parseEther("50")],
+          [duration.days(1), duration.days(3), duration.days(5), duration.days(7)]
+      );
+
+      await this.pkf.connect(this.alice).approve(instance.address, utils.parseEther("1000"), {
+        from: this.alice.address,
+      });
+
+      // Alice deposits 1000 tokens at time Delta
+      await instance.connect(this.alice).linearDeposit(0, utils.parseEther("10"), { from: this.alice.address });
+
+      // test rookie alice
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("990"));
+      expect(await instance.linearBalanceOf(0, this.alice.address)).to.equal(utils.parseEther("10"));
+      // lock 1 days
+      expect(await instance.connect(this.alice).linearDurationOf(0, this.alice.address)).to.equal(duration.days("5"));
+      instance.connect(this.alice).linearWithdraw(0, utils.parseEther("10"))
+      let delta = await time.latest();
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("990"));
+      expect(await instance.linearBalanceOf(0, this.alice.address)).to.equal(utils.parseEther("0"));
+      await expectRevert(
+          instance.connect(this.alice).linearClaimPendingWithdraw(0),
+          "LinearStakingPool: not released yet"
+      );
+      // lock rookie 1days
+      await time.increaseTo(duration.days(5).add(delta.toString()).toNumber() + 5);
+      await instance.connect(this.alice).linearClaimPendingWithdraw(0);
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("1000"));
+
+      // increase to pro
+      await instance.connect(this.alice).linearDeposit(0, utils.parseEther("10"))
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("990"));
+      expect(await instance.linearBalanceOf(0, this.alice.address)).to.equal(utils.parseEther("10"));
+      expect(await instance.connect(this.alice).linearDurationOf(0, this.alice.address)).to.equal(duration.days("5"));
+
+      await instance.connect(this.alice).linearWithdraw(0, utils.parseEther("5"));
+      delta = await time.latest();
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("990"));
+      expect(await instance.linearBalanceOf(0, this.alice.address)).to.equal(utils.parseEther("5"));
+      await expectRevert(
+          instance.connect(this.alice).linearClaimPendingWithdraw(0),
+          "LinearStakingPool: not released yet"
+      );
+      await instance.connect(this.alice).linearWithdraw(0, utils.parseEther("5"));
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("990"));
+      expect(await instance.linearBalanceOf(0, this.alice.address)).to.equal(utils.parseEther("0"));
+
+      await time.increaseTo(duration.days(2).add(delta.toString()).toNumber() + 1);
+      await expectRevert(
+          instance.connect(this.alice).linearClaimPendingWithdraw(0),
+          "LinearStakingPool: not released yet"
+      );
+      await time.increaseTo(duration.days(3).add(delta.toString()).toNumber() + 1);
+      await instance.connect(this.alice).linearClaimPendingWithdraw(0);
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("1000"));
+
+      // increase to pro
+      await instance.connect(this.alice).linearDeposit(0, utils.parseEther("10"))
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("990"));
+      expect(await instance.linearBalanceOf(0, this.alice.address)).to.equal(utils.parseEther("10"));
+      expect(await instance.connect(this.alice).linearDurationOf(0, this.alice.address)).to.equal(duration.days("5"));
+      await instance.connect(this.alice).linearWithdraw(0, utils.parseEther("5"));
+
+      const upgraded = await upgrades.upgradeProxy(instance.address, LinearPool);
+      expect((await upgraded.linearAcceptedToken())).to.equal(this.pkf.address);
+      expect(await upgraded.linearBalanceOf(0, this.alice.address)).to.equal(utils.parseEther("5"));
+      expect((await upgraded.linearPendingWithdrawals(0, this.alice.address)).amount).to.equal(utils.parseEther("5"));
+      await upgraded.connect(this.alice).linearWithdraw(0, utils.parseEther("5"));
+      delta = await time.latest();
+      await time.increaseTo(duration.days(4).add(delta.toString()).toNumber() + 1);
+      await expectRevert(
+          upgraded.connect(this.alice).linearClaimPendingWithdraw(0),
+          "LinearStakingPool: not released yet"
+      );
+      await time.increaseTo(duration.days(5).add(delta.toString()).toNumber() + 1);
+      await instance.connect(this.alice).linearClaimPendingWithdraw(0);
+      expect(await this.pkf.balanceOf(this.alice.address)).to.equal(utils.parseEther("1000"));
+    });
   });
 });

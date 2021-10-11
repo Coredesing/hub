@@ -59,7 +59,7 @@ export const handleErrMsg = (err: any) => {
     if (message.includes('NFTBox: Rate limit exceeded')) {
         return 'You have reached the limit of buying boxes.';
     }
-    return '';
+    return message || err.message;
 }
 
 export const isEndPool = (status: string) => {

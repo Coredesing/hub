@@ -207,7 +207,7 @@ const ContentToken = ({ id, ...props }: any) => {
   //     `/user/check-wallet-address?wallet_address=${connectedAccount}`
   //     : undefined
   // );
-  const { data: currentUserTier } = useFetch<any>(
+  const { data: currentUserTier, loading: loadingCurrentTier } = useFetch<any>(
     id && connectedAccount ?
       `pool/${id}/user/${connectedAccount}/current-tier`
       : undefined,
@@ -434,6 +434,7 @@ const ContentToken = ({ id, ...props }: any) => {
               winnersList={winnersList}
               // verifiedEmail={verifiedEmail}
               currentUserTier={currentUserTier}
+              loadingCurrentTier={loadingCurrentTier}
               // existedWinner={existedWinner}
               currencyName={currencyName}
               userBuyLimit={userBuyLimit}

@@ -27,6 +27,7 @@ function BannerNotification(props: any) {
     winnersList,
     // verifiedEmail,
     currentUserTier,
+    loadingCurrentTier,
     // existedWinner,
     currencyName,
     userBuyLimit,
@@ -113,7 +114,7 @@ function BannerNotification(props: any) {
         </div>
       }
 
-      {checkKyc?.isKyc && currentUserTier?.level < poolDetails?.minTier &&
+      {!loadingCurrentTier && currentUserTier?.level < poolDetails?.minTier &&
         <WrapperAlert type="error">
           <span>
             You haven't achieved min tier (

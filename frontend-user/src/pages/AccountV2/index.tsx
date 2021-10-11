@@ -161,9 +161,9 @@ const AccountV2 = (props: any) => {
   return (
     <DefaultLayout isKYC={isKYC}>
       <div className={classes.accountContainer}>
-        {
+        {/* {
           !isKYC && !loadingUserProfile && connectedAccount && <AlertKYC connectedAccount={connectedAccount} className={classes.kycAlert} />
-        }
+        } */}
 
         {/* appChainID > KOVAN ID => Not Ethereum mainnet/testnet */}
         {/* {(+appChainID?.appChainID > ChainId.KOVAN) && isKYC && activeMenuAccount === 'My Tier' && (

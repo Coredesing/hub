@@ -989,6 +989,7 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
       '& .box-types': {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(130px,1fr))',
+        gridAutoRows: 'minmax(42px, auto)',
         gap: '8px',
         '& .box-type': {
           cursor: 'pointer',

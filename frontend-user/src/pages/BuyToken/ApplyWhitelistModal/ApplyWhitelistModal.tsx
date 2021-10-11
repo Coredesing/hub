@@ -188,12 +188,6 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
   }
 
   const handleApply = async () => {
-
-    const isKyc = await onCheckKyc();
-    if(!isKyc) {
-      handleClose();
-      return;
-    }
     const baseRequest = new BaseRequest()
     setLoading(true)
     setRejectedSubmission(undefined)

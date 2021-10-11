@@ -107,11 +107,11 @@ function BannerNotification(props: any) {
 
   return (
     <>
-      {poolDetails && 'checking' in checkKyc && !checkKyc.checking && !checkKyc?.isKYC && connectedAccount &&
+      {poolDetails && 'checked' in checkKyc && !checkKyc.checked && !checkKyc?.isKyc && connectedAccount &&
         <AlertKYC connectedAccount={connectedAccount} />
       }
 
-      {checkKyc?.isKYC && currentUserTier?.level < poolDetails?.minTier &&
+      {checkKyc?.isKyc && currentUserTier?.level < poolDetails?.minTier &&
         <WrapperAlert type="error">
           <span>
             You haven't achieved min tier (

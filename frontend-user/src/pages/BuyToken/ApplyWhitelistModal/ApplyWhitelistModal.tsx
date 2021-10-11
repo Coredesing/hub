@@ -140,7 +140,7 @@ const RejectedAlert = () => {
 }
 
 const ApplyWhitelistModal: React.FC<any> = (props: any) => {
-  const { poolDetails, connectedAccount, alreadyJoinPool, joinPoolSuccess, joinPool, handleClose, whitelistSubmission, previousWhitelistSubmission } = props
+  const { poolDetails, connectedAccount, alreadyJoinPool, joinPoolSuccess, joinPool, handleClose, whitelistSubmission, previousWhitelistSubmission, onCheckKyc } = props
   const styles = useStyles()
 
   const dispatch = useDispatch()
@@ -188,6 +188,12 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
   }
 
   const handleApply = async () => {
+
+    const isKyc = await onCheckKyc();
+    if(!isKyc) {
+      handleClose();
+      return;
+    }
     const baseRequest = new BaseRequest()
     setLoading(true)
     setRejectedSubmission(undefined)

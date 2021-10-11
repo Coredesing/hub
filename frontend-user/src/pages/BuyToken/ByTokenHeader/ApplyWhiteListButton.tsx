@@ -21,7 +21,7 @@ function ApplyWhiteListButton(props: any) {
     joinPoolSuccess,
     poolJoinLoading,
     joinPool,
-    isKYC,
+    // isKYC,
     winnersList,
     ableToFetchFromBlockchain,
   } = props;
@@ -34,7 +34,7 @@ function ApplyWhiteListButton(props: any) {
       connectedAccount &&
       !wrongChain &&
       new BigNumber(currentUserTier?.level || 0).gte(poolDetails?.minTier)
-      && isKYC
+      // && isKYC
     )
     : false;
 

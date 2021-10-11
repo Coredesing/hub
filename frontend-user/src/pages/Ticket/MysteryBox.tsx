@@ -628,7 +628,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                             <div className="detail-items">
                                                 <div className="item">
                                                     <label className="label text-uppercase">Total sale</label>
-                                                    <span>{numberWithCommas((infoTicket.total_sold_coin || 0) + '')} Boxes</span>
+                                                    <span>{numberWithCommas((infoTicket.total_sold_coin || 0) + '')}</span>
                                                 </div>
                                                 {
                                                     !countdown.isUpcoming && !countdown.isWhitelist && !countdown.isUpcomingSale &&

@@ -11,7 +11,8 @@ import Image from '../../../components/Base/Image';
 import { calcProgress, getRemaining, getRoute } from '../utils';
 import { TOKEN_TYPE } from '../../../constants';
 import { numberWithCommas } from '../../../utils/formatNumber';
-
+import BN from 'bignumber.js';
+import _ from 'lodash';
 type Props = {
   card: { [k: string]: any },
   refresh: Function,
@@ -74,6 +75,13 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
     accept_currency = 'busd'
   }
 
+  const adjustProgress = (currentNumber: number | string, total: number, adjustNumber?: number) => {
+    adjustNumber = adjustNumber && _.isNumber(+adjustNumber) ? +adjustNumber : 0 ;
+    const result = new BN(currentNumber).plus(adjustNumber).toNumber();
+    if(result >= +total) return total;
+    return result;
+  }
+
   return (
     <div className={clsx(styles.card, styles.cardActive, {
       [styles.cardActiveApproved]: card.isApproved
@@ -121,15 +129,15 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
         <div className={styles.progressItem}>
           <span className={styles.text}>Progress</span>
           <div className="showProgress">
-            <Progress progress={calcProgress(+card.token_sold, +card.total_sold_coin)} />
+            <Progress progress={adjustProgress(calcProgress(+card.token_sold, +card.total_sold_coin), 100, card.progress_display)} />
           </div>
           <div className={clsx(styles.cardBodyItem, 'total')}>
             <span className={styles.textBold}>
-              {calcProgress(+card.token_sold, +card.total_sold_coin)}%
+              {adjustProgress(calcProgress(+card.token_sold, +card.total_sold_coin), 100, card.progress_display)}%
             </span>
 
             <span className="amount">
-              {card.token_sold ? numberWithCommas(card.token_sold, 0) : '...'}/{card.total_sold_coin ? numberWithCommas(card.total_sold_coin, 0) : '...'} {isTicket ? 'Tickets' : 'Tokens'}
+              {card.token_sold ? numberWithCommas(adjustProgress(card.token_sold, card.total_sold_coin, card.token_sold_display), 0) : '...'}/{card.total_sold_coin ? numberWithCommas(card.total_sold_coin, 0) : '...'} {isTicket ? 'Tickets' : 'Tokens'}
             </span>
           </div>
         </div>

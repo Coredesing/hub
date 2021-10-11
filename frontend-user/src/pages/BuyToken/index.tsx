@@ -72,6 +72,7 @@ import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
 import { WrapperAlert } from '../../components/Base/WrapperAlert';
 import { isClaim, isSwap } from './utils';
 import WrapperContent from '@base-components/WrapperContent';
+import axios from '@services/axios';
 
 const copyImage = "/images/copy.svg";
 const poolImage = "/images/pool_circle.svg";
@@ -147,7 +148,9 @@ const ContentToken = ({ id, ...props }: any) => {
     poolDetails?.networkAvailable,
     poolDetails,
   );
-  const { checkingKyc, isKYC } = useKyc(connectedAccount);
+  // const { checkingKyc, isKYC } = useKyc(connectedAccount);
+
+
   const { joinPool, poolJoinLoading, joinPoolSuccess } = usePoolJoinAction({ poolId: poolDetails?.id, poolDetails });
   // const { data: existedWinner } = useFetch<Array<any>>(
   //   poolDetails ? `/pool/${poolDetails?.id}/check-exist-winner?wallet_address=${connectedAccount}` : undefined,
@@ -155,7 +158,29 @@ const ContentToken = ({ id, ...props }: any) => {
   // );
 
   // const { data: dataUser } = useFetch<any>(connectedAccount ? `/user/profile?wallet_address=${connectedAccount}` : undefined);
+  const [checkKyc, setCheckKyc] = useState<{ [k: string]: any }>({});
 
+  const onCheckKyc = async () => {
+    setCheckKyc({
+      checking: true,
+    })
+    try {
+      let isKyc = false;
+      if (poolDetails?.kycBypass) {
+        isKyc = true;
+      } else {
+        const response = await axios.get(`/user/profile?wallet_address=${connectedAccount}`) as any;
+        const result = response.data.data;
+        isKyc = !!result?.user?.is_kyc;
+      }
+      setCheckKyc({ checking: false, isKyc: isKyc });
+
+      return isKyc;
+    } catch (error) {
+      setCheckKyc({ checking: false, isKyc: false });
+      return false;
+    }
+  }
   const { data: pickedWinner } = useFetch<Array<any>>(
     poolDetails ? `/pool/${poolDetails?.id}/check-picked-winner` : undefined,
     poolDetails?.method !== "whitelist"
@@ -414,7 +439,8 @@ const ContentToken = ({ id, ...props }: any) => {
               alreadyJoinPool={alreadyJoinPool}
               joinPoolSuccess={joinPoolSuccess}
               // isKYC={(dataUser?.user?.is_kyc === KYC_STATUS.APPROVED || poolDetails?.kycBypass) ? true : false}
-              isKYC={!!(isKYC || poolDetails?.kycBypass)}
+              // isKYC={!!(isKYC || poolDetails?.kycBypass)}
+              checkKyc={checkKyc}
               // dataUser={dataUser}
               connectedAccount={connectedAccount}
               startBuyTimeInDate={startBuyTimeInDate}
@@ -456,7 +482,8 @@ const ContentToken = ({ id, ...props }: any) => {
                 poolJoinLoading={poolJoinLoading}
                 // joinPool={joinPool}
                 joinPool={() => { setShowWhitelistFormModal(true) }}
-                isKYC={!!(isKYC || poolDetails?.kycBypass)}
+                // isKYC={!!(isKYC || poolDetails?.kycBypass)}
+                checkKyc={checkKyc}
                 winnersList={winnersList}
                 ableToFetchFromBlockchain={ableToFetchFromBlockchain}
               />
@@ -517,7 +544,9 @@ const ContentToken = ({ id, ...props }: any) => {
               <ApplyWhitelistModal
                 poolDetails={poolDetails}
                 connectedAccount={connectedAccount}
+                // joinPool={joinPool}
                 joinPool={joinPool}
+                onCheckKyc={onCheckKyc}
                 alreadyJoinPool={alreadyJoinPool}
                 joinPoolSuccess={joinPoolSuccess}
                 whitelistSubmission={whitelistSubmission}
@@ -574,7 +603,8 @@ const ContentToken = ({ id, ...props }: any) => {
               currentUserTier={currentUserTier}
               poolDetailsMapping={poolDetailsMapping}
               poolDetails={poolDetails}
-              isKyc={!!(isKYC || poolDetails?.kycBypass)}
+              isKyc={checkKyc.isKyc}
+              // isKyc={!!(isKYC || poolDetails?.kycBypass)}
               // Setting Enable PreOrder
               isInPreOrderTime={false}
             />
@@ -589,45 +619,46 @@ const ContentToken = ({ id, ...props }: any) => {
             endBuyTimeInDate &&
             startBuyTimeInDate < new Date() && new Date() < endBuyTimeInDate &&
             <BuyTokenForm
-                disableAllButton={disableAllButton}
-                // existedWinner={existedWinner}
-                alreadyJoinPool={alreadyJoinPool}
-                joinPoolSuccess={joinPoolSuccess}
-                tokenDetails={poolDetails?.tokenDetails}
-                networkAvailable={poolDetails?.networkAvailable || ''}
-                rate={poolDetails?.ethRate}
-                poolAddress={poolDetails?.poolAddress}
-                maximumBuy={userBuyLimit}
-                minimumBuy={userBuyMinimum}
-                poolAmount={poolDetails?.amount}
-                purchasableCurrency={poolDetails?.purchasableCurrency?.toUpperCase()}
-                poolId={poolDetails?.id}
-                joinTime={joinTimeInDate}
-                method={poolDetails?.method}
-                availablePurchase={availablePurchase}
-                ableToFetchFromBlockchain={ableToFetchFromBlockchain}
-                minTier={poolDetails?.minTier}
-                isDeployed={poolDetails?.isDeployed}
+              disableAllButton={disableAllButton}
+              // existedWinner={existedWinner}
+              alreadyJoinPool={alreadyJoinPool}
+              joinPoolSuccess={joinPoolSuccess}
+              tokenDetails={poolDetails?.tokenDetails}
+              networkAvailable={poolDetails?.networkAvailable || ''}
+              rate={poolDetails?.ethRate}
+              poolAddress={poolDetails?.poolAddress}
+              maximumBuy={userBuyLimit}
+              minimumBuy={userBuyMinimum}
+              poolAmount={poolDetails?.amount}
+              purchasableCurrency={poolDetails?.purchasableCurrency?.toUpperCase()}
+              poolId={poolDetails?.id}
+              joinTime={joinTimeInDate}
+              method={poolDetails?.method}
+              availablePurchase={availablePurchase}
+              ableToFetchFromBlockchain={ableToFetchFromBlockchain}
+              minTier={poolDetails?.minTier}
+              isDeployed={poolDetails?.isDeployed}
 
-                // Apply PreOrder Time
-                startBuyTimeInDate={startBuyTimeInDate}
-                endBuyTimeInDate={endBuyTimeInDate}
+              // Apply PreOrder Time
+              startBuyTimeInDate={startBuyTimeInDate}
+              endBuyTimeInDate={endBuyTimeInDate}
 
-                endJoinTimeInDate={endJoinTimeInDate}
-                tokenSold={tokenSold}
-                setBuyTokenSuccess={setBuyTokenSuccess}
-                isClaimable={poolDetails?.type === 'claimable'}
-                currentUserTier={currentUserTier}
-                poolDetailsMapping={poolDetailsMapping}
-                poolDetails={poolDetails}
-                isKyc={!!(isKYC || poolDetails?.kycBypass)}
-                // Setting Enable PreOrder
-                isInPreOrderTime={isInPreOrderTime}
+              endJoinTimeInDate={endJoinTimeInDate}
+              tokenSold={tokenSold}
+              setBuyTokenSuccess={setBuyTokenSuccess}
+              isClaimable={poolDetails?.type === 'claimable'}
+              currentUserTier={currentUserTier}
+              poolDetailsMapping={poolDetailsMapping}
+              poolDetails={poolDetails}
+              isKyc={checkKyc.isKyc}
+              // isKyc={!!(isKYC || poolDetails?.kycBypass)}
+              // Setting Enable PreOrder
+              isInPreOrderTime={isInPreOrderTime}
             />
           }
 
           {
-            ((+soldProgress === 100 ) || isClaim(poolDetails?.campaignStatus)) &&
+            ((+soldProgress === 100) || isClaim(poolDetails?.campaignStatus)) &&
             <ClaimToken
               releaseTime={poolDetails?.releaseTime ? releaseTimeInDate : undefined}
               ableToFetchFromBlockchain={ableToFetchFromBlockchain}
@@ -639,7 +670,8 @@ const ContentToken = ({ id, ...props }: any) => {
               poolDetails={poolDetails}
               currencyName={currencyName}
               startBuyTimeInDate={startBuyTimeInDate}
-              isKyc={!!(isKYC || poolDetails?.kycBypass)}
+              isKyc={checkKyc.isKyc}
+              // isKyc={!!(isKYC || poolDetails?.kycBypass)}
             />
           }
 
@@ -683,7 +715,8 @@ const ContentToken = ({ id, ...props }: any) => {
             alreadyJoinPool={alreadyJoinPool}
             joinPoolSuccess={joinPoolSuccess}
             whitelistCompleted={whitelistCompleted}
-            isKYC={!!(isKYC || poolDetails?.kycBypass)}
+            isKyc={checkKyc.isKyc}
+            // isKYC={!!(isKYC || poolDetails?.kycBypass)}
           />
 
           {/* <header className={styles.poolDetailHeader}>

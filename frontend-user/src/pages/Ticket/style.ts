@@ -896,6 +896,10 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
           transform: 'unset',
         },
 
+        '& .times': {
+          gap: '6px'
+        },
+
         '& .time .number': {
           transform: 'skew(-20deg)',
           fontSize: '36px',

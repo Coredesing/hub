@@ -11,22 +11,22 @@ async function main() {
   }
 
   console.log("Upgrading contracts with the account:", deployer.address);
-
   console.log("Account balance:", (await deployer.getBalance()).toString());
+  console.log("Proxy address:", poolAddress);
 
   // Get contract factory
   const NewPoolFactory = await ethers.getContractFactory(
-    'StakingPool',
+      'LinearPool',
   );
   // Upgrade contract proxy
   const tx = await upgrades.upgradeProxy(poolAddress, NewPoolFactory);
 
-  console.log("Upgraded StakingPool, transaction: ", tx.deployTransaction && tx.deployTransaction.hash);
+  console.log("Upgraded LinearPool, transaction: ", tx.deployTransaction && tx.deployTransaction.hash);
 }
 
 main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+    .then(() => process.exit(0))
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });

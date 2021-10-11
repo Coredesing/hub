@@ -126,7 +126,7 @@ const AccountInformation = (props: any) => {
         {(!kycStatus || kycStatus === KYC_STATUS.INCOMPLETE) &&
           <div className={styles.inputGroup}>
             <span>KYC</span>
-            <span style={{ wordBreak: 'break-word' }}>KYC is only required when you apply for the IDO Whitelists.</span>
+            <span style={{ wordBreak: 'break-word' }}>KYC is only required when you apply for the IGO Whitelists.</span>
           </div>
         }
         {

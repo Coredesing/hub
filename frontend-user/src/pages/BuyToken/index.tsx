@@ -160,10 +160,11 @@ const ContentToken = ({ id, ...props }: any) => {
   // const { data: dataUser } = useFetch<any>(connectedAccount ? `/user/profile?wallet_address=${connectedAccount}` : undefined);
   const [checkKyc, setCheckKyc] = useState<{ [k: string]: any }>({});
 
+  useEffect(() => {
+    setCheckKyc({});
+  }, [connectedAccount])
+
   const onCheckKyc = async () => {
-    setCheckKyc({
-      checking: true,
-    })
     try {
       let isKyc = false;
       if (poolDetails?.kycBypass) {
@@ -173,11 +174,12 @@ const ContentToken = ({ id, ...props }: any) => {
         const result = response.data.data;
         isKyc = !!result?.user?.is_kyc;
       }
-      setCheckKyc({ checking: false, isKyc: isKyc });
-
-      return isKyc;
+      setCheckKyc({ checked: false, isKyc: isKyc });
+      if (isKyc) {
+        setShowWhitelistFormModal(true);
+      }
     } catch (error) {
-      setCheckKyc({ checking: false, isKyc: false });
+      setCheckKyc({ checked: false, isKyc: false });
       return false;
     }
   }
@@ -481,7 +483,8 @@ const ContentToken = ({ id, ...props }: any) => {
                 joinPoolSuccess={joinPoolSuccess}
                 poolJoinLoading={poolJoinLoading}
                 // joinPool={joinPool}
-                joinPool={() => { setShowWhitelistFormModal(true) }}
+                joinPool={onCheckKyc}
+                // joinPool={() => { setShowWhitelistFormModal(true) }}
                 // isKYC={!!(isKYC || poolDetails?.kycBypass)}
                 checkKyc={checkKyc}
                 winnersList={winnersList}
@@ -546,7 +549,6 @@ const ContentToken = ({ id, ...props }: any) => {
                 connectedAccount={connectedAccount}
                 // joinPool={joinPool}
                 joinPool={joinPool}
-                onCheckKyc={onCheckKyc}
                 alreadyJoinPool={alreadyJoinPool}
                 joinPoolSuccess={joinPoolSuccess}
                 whitelistSubmission={whitelistSubmission}
@@ -671,7 +673,7 @@ const ContentToken = ({ id, ...props }: any) => {
               currencyName={currencyName}
               startBuyTimeInDate={startBuyTimeInDate}
               isKyc={checkKyc.isKyc}
-              // isKyc={!!(isKYC || poolDetails?.kycBypass)}
+            // isKyc={!!(isKYC || poolDetails?.kycBypass)}
             />
           }
 
@@ -716,7 +718,7 @@ const ContentToken = ({ id, ...props }: any) => {
             joinPoolSuccess={joinPoolSuccess}
             whitelistCompleted={whitelistCompleted}
             isKyc={checkKyc.isKyc}
-            // isKYC={!!(isKYC || poolDetails?.kycBypass)}
+          // isKYC={!!(isKYC || poolDetails?.kycBypass)}
           />
 
           {/* <header className={styles.poolDetailHeader}>

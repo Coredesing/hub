@@ -108,7 +108,9 @@ function BannerNotification(props: any) {
   return (
     <>
       {poolDetails && 'checked' in checkKyc && !checkKyc.checked && !checkKyc?.isKyc && connectedAccount &&
-        <AlertKYC connectedAccount={connectedAccount} />
+        <div style={{ marginBottom: '6px' }}>
+          <AlertKYC connectedAccount={connectedAccount} />
+        </div>
       }
 
       {checkKyc?.isKyc && currentUserTier?.level < poolDetails?.minTier &&

@@ -166,9 +166,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
     { percent: 100, marked: true, tokenAmount: 10000, date: new Date(), showInfo: true },
   ]);
   const [policy, setPolicy] = useState("");
-  useEffect(() => {
-    console.log('poolDetails', poolDetails)
-  }, [poolDetails])
+
   useEffect(() => {
     //calculate progress
     const userPurchased = userClaimInfo?.userPurchased || 0;
@@ -193,7 +191,6 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
       } else {
         config.unshift({});
       }
-      console.log('config', config)
     } //add 0% start for only 1 time claim
     setProgress(config);
     //calculate policy

@@ -2,7 +2,7 @@
   {
     "id": 0,
     "wallet_address": "0x5E9feE15038CA8333e80F3A4725a2320b4ce62AE",
-    "valid": false
+    "valid": true
   },
   {
     "id": 1,
@@ -58,11 +58,5 @@
     "id": 11,
     "wallet_address": "0x3506e5f79754e8aAd83152b8E6189b6c5508AAD4",
     "valid": true
-  },
-  {
-    "id": 12,
-    "wallet_address": "0xB67259BdE0E2C8204a1e12b0e164a2e5f536802F",
-    "valid": true,
-    "description": "Testing purpose"
   }
 ]

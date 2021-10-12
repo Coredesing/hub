@@ -151,9 +151,6 @@ Route.group(() => {
   Route.post('pool/reserves/update-setting', 'ReservedListController.updateReserveSetting');
   Route.get('pool/reserves/setting', 'ReservedListController.reserveSetting');
 
-  //snapshot user balance
-  Route.get('pool/:campaignId/user-snapshot-balance', 'CampaignController.userSnapShotBalance');
-
   Route.get('profile', 'AdminController.profile').middleware(['auth:admin', 'checkRole']);
   // Route.post('change-password', 'AdminController.changePassword').middleware(['checkSignature', 'auth:admin', 'checkRole']);
   Route.post('update-profile', 'AdminController.updateProfile').middleware(['auth:admin', 'checkRole']).validator('UpdateProfile');
@@ -221,8 +218,8 @@ Route.group(() => {
   Route.delete('asset-tokens/delete/:id', 'AssetTokenController.remove')
   Route.get('affiliate-campaign/:token', 'AffiliateCampaignController.affiliateList')
 
-  Route.get('my-campaign', 'CampaignController.myCampaign')
-  Route.get('my-campaign/:status', 'CampaignController.myCampaign').middleware('checkStatus');
+  // Route.get('my-campaign', 'CampaignController.myCampaign')
+  // Route.get('my-campaign/:status', 'CampaignController.myCampaign').middleware('checkStatus');
 }).prefix('/api/v2').middleware(['auth:admin', 'checkAdminJwtSecret']);
 
 Route.post(':type/check-max-usd', 'UserBuyCampaignController.checkBuy').middleware(['checkPrefix', 'auth', 'checkJwtSecret']);

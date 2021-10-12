@@ -292,10 +292,11 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
         style={{ marginTop: 8 }}
         text={"Claim Tokens"}
         backgroundColor={"#72F34B"}
-        disabled={!availableClaim || userPurchased <= 0 || disableAllButton || !isKyc}
+        disabled={!availableClaim || userPurchased <= 0 || disableAllButton}
         // disabled={disableAllButton || !ableToFetchFromBlockchain} // If network is not correct, disable Claim Button
         loading={loading}
-        onClick={isKyc ? handleTokenClaim : undefined}
+        // onClick={isKyc ? handleTokenClaim : undefined}
+        onClick={handleTokenClaim}
       />
 
       <TransactionSubmitModal

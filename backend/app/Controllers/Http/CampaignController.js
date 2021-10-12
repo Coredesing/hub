@@ -1,6 +1,5 @@
 'use strict'
 
-const AirdropModel = use('App/Models/Airdrop');
 const CampaignModel = use('App/Models/Campaign');
 const CampaignService = use('App/Services/CampaignService');
 const PoolService = use('App/Services/PoolService');
@@ -9,9 +8,7 @@ const TierService = use('App/Services/TierService');
 const WinnerListService = use('App/Services/WinnerListUserService');
 const WhitelistService = use('App/Services/WhitelistUserService');
 const WhitelistSubmissionService = use('App/Services/WhitelistSubmissionService');
-const ReservedListService = use('App/Services/ReservedListService');
 const CampaignClaimConfigService = use('App/Services/CampaignClaimConfigService');
-const SnapshotBalance = use('App/Jobs/SnapshotBalance')
 const ReCaptchaService = use("App/Services/ReCaptchaService");
 
 const UserService = use('App/Services/UserService');
@@ -24,18 +21,10 @@ BigNumber.config({ EXPONENTIAL_AT: 50 });
 
 const CONFIGS_FOLDER = '../../../blockchain_configs/';
 const NETWORK_CONFIGS = require(`${CONFIGS_FOLDER}${process.env.NODE_ENV}`);
-const CONTRACT_CONFIGS = NETWORK_CONFIGS.contracts[Const.CONTRACTS.CAMPAIGN];
-const CONTRACT_FACTORY_CONFIGS = NETWORK_CONFIGS.contracts[Const.CONTRACTS.CAMPAIGNFACTORY];
-
-const { abi: CONTRACT_ABI } = CONTRACT_CONFIGS.CONTRACT_DATA;
-const { abi: CONTRACT_ERC20_ABI } = require('../../../blockchain_configs/contracts/Normal/Erc20.json');
 
 const Web3 = require('web3');
-const BadRequestException = require("../../Exceptions/BadRequestException");
 const web3 = new Web3(NETWORK_CONFIGS.WEB3_API_URL);
 const Config = use('Config');
-const OFFER_FREE_TIME = process.env.OFFER_FREE_TIME_SECOND || 1800;
-const OFFER_FREE_BUY = process.env.OFFER_FREE_BUY_LIMIT || 0;
 
 class CampaignController {
   async campaignList({ request }) {
@@ -78,58 +67,6 @@ class CampaignController {
     }
   }
 
-  async icoCampaignCreate({ request }) {
-    try {
-      const param = request.all();
-      console.log('[Webhook] - Create Pool with params: ', param);
-
-      if (param.event !== Const.CRAWLER_EVENT.POOL_CREATED) {
-        return HelperUtils.responseBadRequest('Event Name is invalid');
-      }
-
-      const campaignHash = param.params.pool;
-      const token = param.params.token;
-      const contract = new web3.eth.Contract(CONTRACT_ABI, campaignHash);
-      const receipt = await Promise.all([
-        contract.methods.openTime().call(),
-        contract.methods.closeTime().call(),
-        contract.methods.name().call(),
-        contract.methods.getErc20TokenConversionRate(token).call(),
-        contract.methods.getEtherConversionRate().call(),
-        contract.methods.getEtherConversionRateDecimals().call(),
-        contract.methods.fundingWallet().call(),
-        contract.methods.paused().call(),
-      ]);
-      const findCampaign = await CampaignModel.query()
-        .where(function () {
-          this.where('campaign_hash', '=', campaignHash)
-            .orWhere('transaction_hash', '=', param.txHash)
-        })
-        .first();
-
-      console.log('Find Campaign: ', JSON.stringify(findCampaign));
-
-      const contractERC20 = new web3.eth.Contract(CONTRACT_ERC20_ABI, token);
-      // TODO: Check to remove this
-      const receiptData = await Promise.all([
-        contractERC20.methods.name().call(),
-        contractERC20.methods.decimals().call(),
-        contractERC20.methods.symbol().call(),
-      ]);
-      const CampaignSv = new CampaignService();
-      let campaign = {}
-      if (!findCampaign) {
-        campaign = await CampaignSv.createCampaign(param, receipt, receiptData)
-      } else {
-        campaign = await CampaignSv.updateCampaign(param, receipt, receiptData)
-      }
-      return HelperUtils.responseSuccess(campaign);
-    } catch (e) {
-      console.log(e);
-      return HelperUtils.responseErrorInternal("ERROR: Create ico campaign fail !");
-    }
-  }
-
   async campaignShow(request) {
     try {
       const campaign_value = request.params.campaign
@@ -166,43 +103,6 @@ class CampaignController {
     } catch (e) {
       console.log(e);
       return HelperUtils.responseErrorInternal('ERROR: Get campaign latest fail !');
-    }
-  }
-
-  async CampaignChanged({ request }) {
-    try {
-      console.log('WEBHOOK-Update Campaign');
-      const param = request.all();
-      const tx = await web3.eth.getTransaction(param.txHash);
-      if (tx == null)
-        return HelperUtils.responseBadRequest('campaign not found!')
-      const campaign = await CampaignModel.query().where('campaign_hash', '=', tx.to).first();
-      if (!campaign) {
-        console.log('waning! campaign not found!')
-        return HelperUtils.responseSuccess();
-      }
-      const contract = new web3.eth.Contract(CONTRACT_ABI, tx.to);
-      const receipt = await Promise.all([
-        contract.methods.openTime().call(),
-        contract.methods.closeTime().call(),
-        contract.methods.name().call(),
-        contract.methods.name().call(), // TODO: Check to remove this
-        contract.methods.getErc20TokenConversionRate(campaign.token).call(),
-        contract.methods.getEtherConversionRate().call(),
-        contract.methods.paused().call(),
-        contract.methods.getEtherConversionRateDecimals().call(),
-        contract.methods.fundingWallet().call(),
-      ]);
-
-      console.log('Update Campaign with Receipt: ', receipt);
-      const CampaignSv = new CampaignService();
-      const campaignUpdate = await CampaignSv.editCampaign(receipt, tx.to)
-
-      console.log('WEBHOOK-Update Campaign Success!', campaignUpdate);
-      return campaignUpdate
-    } catch (e) {
-      console.log(e);
-      return HelperUtils.responseErrorInternal('ERROR: Change campaign fail !');
     }
   }
 
@@ -251,21 +151,6 @@ class CampaignController {
     } catch (e) {
       console.log(e);
       return HelperUtils.responseErrorInternal('ERROR: create campaign fail !');
-    }
-  }
-
-  async myCampaign({ request, auth }) {
-    try {
-      const param = request.all();
-      const status = request.params.status;
-      const statusCode = Config.get('const.status_' + status)
-      const campaignService = new CampaignService;
-      const wallet_address = auth.user !== null ? auth.user.wallet_address : null
-      const listData = await campaignService.getCampaignByFilter(statusCode, param, wallet_address)
-      return HelperUtils.responseSuccess(listData);
-    } catch (e) {
-      console.log("error", e);
-      return HelperUtils.responseErrorInternal("ERROR: Get my campaign fail !");
     }
   }
 
@@ -335,11 +220,7 @@ class CampaignController {
       await campaignService.joinCampaign(campaign_id, wallet_address, email);
       return HelperUtils.responseSuccess(null, "Apply Whitelist successful");
     } catch (e) {
-      if (e instanceof BadRequestException) {
-        return HelperUtils.responseBadRequest(e.message);
-      } else {
-        return HelperUtils.responseErrorInternal('ERROR : Apply Whitelist fail');
-      }
+      return HelperUtils.responseErrorInternal();
     }
   }
 
@@ -748,10 +629,11 @@ class CampaignController {
         return HelperUtils.responseBadRequest("Do not found campaign");
       }
       if (camp.pool_type !== Const.POOL_TYPE.CLAIMABLE) {
-        return HelperUtils.responseBadRequest("Campaign is not claimable !");
+        return HelperUtils.responseBadRequest("Campaign is not claimable!");
       }
 
       if (camp.process === Const.PROCESS.ONLY_BUY
+        || camp.token_type === Const.TOKEN_TYPE.MYSTERY_BOX
         || (camp.token_type === Const.TOKEN_TYPE.ERC721 && camp.process === Const.PROCESS.ALL)) {
         return HelperUtils.responseBadRequest("Cannot claim");
       }
@@ -798,13 +680,11 @@ class CampaignController {
 
       // get message hash
       const messageHash = web3.utils.soliditySha3(userWalletAddress, maxTokenClaim);
-      console.log(`message hash to claim ${messageHash}`);
 
       // get private key for campaign from db
       const walletService = new WalletService();
       const wallet = await walletService.findByCampaignId(filterParams);
       if (wallet == null) {
-        console.log(`Do not found wallet for campaign ${campaign_id}`);
         return HelperUtils.responseBadRequest("Do not found wallet for campaign");
       }
       const privateKey = wallet.private_key;
@@ -821,62 +701,9 @@ class CampaignController {
       }
       return HelperUtils.responseSuccess(response);
     } catch (e) {
-      console.log(e);
-      return HelperUtils.responseErrorInternal("Claim token has internal server error !");
+      console.log('claim error', e);
+      return HelperUtils.responseErrorInternal();
     }
-  }
-
-  async userSnapShotBalance({ request }) {
-    // get request params
-    const campaign_id = request.params.campaignId;
-    console.log(`Snap shot user balance with campaign ${campaign_id}`);
-    try {
-      // get campaign
-      const camp = await CampaignModel.query().where('id', campaign_id).first();
-      if (!camp) {
-        console.log(`Do not found campaign with id ${campaign_id}`);
-        return HelperUtils.responseBadRequest('Do not found campaign');
-      }
-      // create data to snap shot
-      const data = {
-        campaign_id: campaign_id
-      }
-      // dispatch to job to snapshot balance
-      SnapshotBalance.handle(data);
-      return HelperUtils.responseSuccess(null, "Snapshot user balance successful !")
-    } catch (e) {
-      console.log(e);
-      return HelperUtils.responseErrorInternal('Snapshot user balance has error!');
-    }
-  }
-
-  async getAirdrop({ request }) {
-    const campaign_id = request.params.campaignId;
-    const wallet_address = request.params.walletAddress;
-    console.log(`Check Airdrop with: `, request.params);
-    try {
-      // get campaign
-      const camp = await CampaignModel.query().where('id', campaign_id).first();
-      if (!camp) {
-        console.log(`Campaign Not Found: ${campaign_id}`);
-        return HelperUtils.responseBadRequest('Campaign Not Found');
-      }
-
-      const airdrop = await AirdropModel.query()
-        .where('campaign_id', campaign_id)
-        .where('wallet_address', wallet_address)
-        .first();
-      if (!airdrop) {
-        return HelperUtils.responseSuccess(false, 'Not have Airdrop');
-      }
-
-      return HelperUtils.responseSuccess(airdrop, 'Get Airdrop successful !');
-    } catch (e) {
-      console.log(e);
-      return HelperUtils.responseErrorInternal('Get Airdrop Error');
-    }
-
-
   }
 
 }

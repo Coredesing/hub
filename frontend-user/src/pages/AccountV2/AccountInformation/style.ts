@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme: any) => {
       justifyContent: 'flex-start',
       alignItems: 'center',
       marginTop: 16,
-      fontFamily: 'Helvetica',
+      fontFamily: 'Firs Neue',
       fontSize: 14,
       lineHeight: '20px',
       color: '#FFFFFF',
@@ -108,7 +108,7 @@ const useStyles = makeStyles((theme: any) => {
         minWidth:  160,
         whiteSpace: 'nowrap',
         marginRight:  12,
-        fontFamily: 'DM Sans',
+        fontFamily: 'Firs Neue',
         fontWeight: 'bold',
         fontSize: 14,
         lineHeight: '20px',
@@ -131,7 +131,7 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '& button': {
-        fontFamily: 'DM Sans',
+        fontFamily: 'Firs Neue',
         fontStyle: 'normal',
         fontWeight: 'bold',
         fontSize: '14px',

@@ -27,6 +27,7 @@ function BannerNotification(props: any) {
     winnersList,
     // verifiedEmail,
     currentUserTier,
+    loadingCurrentTier,
     // existedWinner,
     currencyName,
     userBuyLimit,
@@ -36,7 +37,7 @@ function BannerNotification(props: any) {
     alreadyJoinPool,
     joinPoolSuccess,
     connectedAccount,
-    isKYC,
+    // isKYC,
     announcementTime,
     purchasableCurrency,
     whitelistCompleted,
@@ -46,6 +47,7 @@ function BannerNotification(props: any) {
     tokenDetails,
     maximumBuy,
     countDownDate,
+    checkKyc,
   } = props;
   const { appChainID, walletChainID } = useTypedSelector(state => state.appNetwork).data;
 
@@ -106,12 +108,12 @@ function BannerNotification(props: any) {
 
   return (
     <>
-      {poolDetails && !isKYC && connectedAccount &&
-        <AlertKYC connectedAccount={connectedAccount} />
+      {poolDetails && 'checked' in checkKyc && !checkKyc.checked && !checkKyc?.isKyc && connectedAccount &&
+        <AlertKYC connectedAccount={connectedAccount} className="mb-6px" />
       }
 
-      {isKYC && currentUserTier?.level < poolDetails?.minTier &&
-        <WrapperAlert type="error">
+      {!loadingCurrentTier && currentUserTier?.level < poolDetails?.minTier &&
+        <WrapperAlert type="error" className="mb-6px" >
           <span>
             You haven't achieved min tier (
             {TIERS[poolDetails?.minTier]?.name || ''}
@@ -127,7 +129,7 @@ function BannerNotification(props: any) {
 
       {
         (poolDetails?.campaignStatus === PoolStatus.Closed) &&
-        <WrapperAlert type="info">
+        <WrapperAlert type="info" className="mb-6px" >
           <span>
             The pool is over. Thank you for your participation
           </span>
@@ -136,7 +138,7 @@ function BannerNotification(props: any) {
 
       {
         (poolDetails?.campaignStatus === PoolStatus.Filled) &&
-        <WrapperAlert type="info">
+        <WrapperAlert type="info" className="mb-6px" >
           <span>
             The pool is full. Thank you for your participation. You can claim your token on {releaseTimeInDate && convertTimeToStringFormat(releaseTimeInDate)}.
           </span>
@@ -148,7 +150,7 @@ function BannerNotification(props: any) {
         && new BigNumber(formatRoundDown(maximumTokenClaimUtilNow, 2)).gt(0)
         // && !!currentClaimIndex
         &&
-        <WrapperAlert type="info">
+        <WrapperAlert type="info" className="mb-6px" >
           <span>
             You can claim your tokens now. Check Claim Policy and click Claim Tokens button.
           </span>
@@ -157,7 +159,7 @@ function BannerNotification(props: any) {
 
       {
         isInBuying &&
-        <WrapperAlert type="info">
+        <WrapperAlert type="info" className="mb-6px" >
           {
             purchasableCurrency.toUpperCase() === ACCEPT_CURRENCY.ETH?.toUpperCase()
               ?

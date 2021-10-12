@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import CustomModal from '@base-components/CustomModal';
 import { ButtonBase } from '@base-components/Buttons';
 import { Recapcha } from '@base-components/Recapcha';
@@ -6,6 +6,7 @@ import { makeStyles, Box } from '@material-ui/core';
 import { numberWithCommas } from '@utils/formatNumber';
 import BN from 'bignumber.js'
 import { getCurrencyByNetwork } from '@utils/index';
+import { AppContext } from '../../../AppContext';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -54,6 +55,18 @@ type Props = {
 
 const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, boxTypeSelected = {}, ...props }: Props) => {
     const styles = useStyles();
+    const {
+        currentConnectedWallet,
+    } = useContext(AppContext);
+    const currentAccount =
+        currentConnectedWallet && currentConnectedWallet.addresses[0];
+
+    const balance = currentConnectedWallet
+        ? currentConnectedWallet.balances[currentAccount]
+        : 0;
+
+    const totalBuy = new BN(+amount).multipliedBy(new BN(+infoBox.ether_conversion_rate || 0)).toString()
+
     const [isVerified, setVerify] = useState<string | null>('');
 
     const onClose = () => {
@@ -61,6 +74,7 @@ const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, boxTy
     }
 
     const onConfirm = () => {
+        if (new BN(balance).lt(totalBuy)) return;
         props.onConfirm && props.onConfirm(isVerified);
     }
 
@@ -87,13 +101,17 @@ const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, boxTy
                     <span className="text-uppercase">{numberWithCommas(amount)}</span>
                 </Box>
                 <Box display="flex" justifyContent="space-between" className="item">
+                    <label >Your Balance</label>
+                    <span className="text-uppercase">{new BN(+balance).toNumber()} {getCurrencyByNetwork(infoBox.network_available)}</span>
+                </Box>
+                <Box display="flex" justifyContent="space-between" className="item">
                     <label >Total</label>
-                    <span className="text-uppercase">{new BN(+amount).multipliedBy(new BN(+infoBox.ether_conversion_rate || 0)).toString()} {getCurrencyByNetwork(infoBox.network_available)}</span>
+                    <span className="text-uppercase">{totalBuy} {getCurrencyByNetwork(infoBox.network_available)}</span>
                 </Box>
                 <Box>
                     <Recapcha onChange={onChangeRecapcha} />
                 </Box>
-                <ButtonBase color="green" onClick={onConfirm} className="w-full text-transform-unset" isLoading={isLoadingButton} disabled={isLoadingButton || !isVerified}>
+                <ButtonBase color="green" onClick={onConfirm} className="w-full text-transform-unset" isLoading={isLoadingButton} disabled={isLoadingButton || !isVerified || new BN(balance).lt(totalBuy)}>
                     Confirm
                 </ButtonBase>
             </div>

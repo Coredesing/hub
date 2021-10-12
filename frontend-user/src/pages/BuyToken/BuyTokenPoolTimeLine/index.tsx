@@ -64,7 +64,7 @@ const BuyTokenPoolTimeLine: FC<Props> = ({currentStatus, display, poolDetails, c
 
 
   const onClickOutItemTooltip = (index: number) => {
-    console.log(index)
+    // console.log(index)
     // if(index !== avtiveTooltTip) {
     //   setOpenToolTip(true)
     // }

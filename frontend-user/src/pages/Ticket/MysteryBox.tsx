@@ -537,12 +537,12 @@ const MysteryBox = ({ id, ...props }: any) => {
                 Congratulations! You have successfully applied whitelist and can buy Mystery boxes
             </WrapperAlert>
         }
-        if((!loadingJoinpool && connectedAccount && countdown.isSale && !countdown.isPhase2) && !alreadyJoinPool) {
+        if ((!loadingJoinpool && connectedAccount && countdown.isSale && !countdown.isPhase2) && !alreadyJoinPool) {
             return <WrapperAlert type="error"> Sorry, you didn’t apply whitelist. </WrapperAlert>
         }
     }
 
-    const disabledBuyNow = +numBoxBuy < 1 || !isKYC || lockWhenBuyBox || !connectedAccount || loadingUserTier || !_.isNumber(userTier) || (infoTicket?.min_tier > 0  && (userTier < infoTicket.min_tier));
+    const disabledBuyNow = +numBoxBuy < 1 || !isKYC || lockWhenBuyBox || !connectedAccount || loadingUserTier || !_.isNumber(userTier) || (infoTicket?.min_tier > 0 && (userTier < infoTicket.min_tier));
 
     return (
         <>
@@ -769,11 +769,10 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                 </ButtonBase>
                                             }
                                             {
-                                                countdown.isFinished &&
                                                 <div className={clsx(styles.infoTicket, styles.finished)}>
-                                                    <div className="img-finished">
+                                                    {countdown.isFinished && <div className="img-finished">
                                                         <img src={"/images/finished.png"} alt="" />
-                                                    </div>
+                                                    </div>}
                                                     {!getRemaining(
                                                         infoTicket.total_sold_coin,
                                                         infoTicket.token_sold

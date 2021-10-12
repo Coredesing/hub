@@ -17,6 +17,7 @@ import BigNumber from "bignumber.js";
 import {updateUserClaimInfo} from "../../../store/actions/claim-user-info";
 import {Tooltip} from "@material-ui/core";
 import withWidth, {isWidthDown} from "@material-ui/core/withWidth";
+import BN from 'bignumber.js'
 
 type ClaimTokenProps = {
   releaseTime: Date | undefined;
@@ -165,12 +166,14 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
     { percent: 100, marked: true, tokenAmount: 10000, date: new Date(), showInfo: true },
   ]);
   const [policy, setPolicy] = useState("");
-
+  useEffect(() => {
+    console.log('poolDetails', poolDetails)
+  }, [poolDetails])
   useEffect(() => {
     //calculate progress
-    const userPurchased = userClaimInfo?.userPurchased || 0;
-    const userClaimed = userClaimInfo?.userClaimed || 0;
-    const percentClaimed = (userClaimed / userPurchased) * 100;
+    const userPurchased = 100 || userClaimInfo?.userPurchased || 0;
+    const userClaimed = 7 || userClaimInfo?.userClaimed || 0;
+    const percentClaimed = +(new BN(userClaimed).dividedBy(new BN(userPurchased)).multipliedBy(100).toFixed(1));
     let lastMaxPercent = 0;
     let nextClaim = poolDetails.campaignClaimConfig.reduce((next: number, cfg: any) => {
       return (+cfg.max_percent_claim <= percentClaimed) ? next + 1 : next
@@ -190,6 +193,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
       } else {
         config.unshift({});
       }
+      console.log('config', config)
     } //add 0% start for only 1 time claim
     setProgress(config);
     //calculate policy
@@ -267,7 +271,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
                 {item.showInfo || isWidthDown('xs', props.width) ?
                   <>
                     <div>
-                      {numberWithCommas((item?.percent + ''), 1)}% ({numberWithCommas(`${item?.tokenAmount + ''}`, 1)}{" "}
+                      {numberWithCommas((new BN((item?.percent || 0) as number).toFixed(1) + ''), 1)}% ({numberWithCommas(`${item?.tokenAmount + ''}`, 1)}{" "}
                       {tokenDetails?.symbol})
                     </div>
                     <div>

@@ -17,6 +17,7 @@ import BigNumber from "bignumber.js";
 import {updateUserClaimInfo} from "../../../store/actions/claim-user-info";
 import {Tooltip} from "@material-ui/core";
 import withWidth, {isWidthDown} from "@material-ui/core/withWidth";
+import BN from 'bignumber.js'
 
 type ClaimTokenProps = {
   releaseTime: Date | undefined;
@@ -170,7 +171,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
     //calculate progress
     const userPurchased = userClaimInfo?.userPurchased || 0;
     const userClaimed = userClaimInfo?.userClaimed || 0;
-    const percentClaimed = (userClaimed / userPurchased) * 100;
+    const percentClaimed = +(new BN(userClaimed).dividedBy(new BN(userPurchased)).multipliedBy(100).toFixed(1));
     let lastMaxPercent = 0;
     let nextClaim = poolDetails.campaignClaimConfig.reduce((next: number, cfg: any) => {
       return (+cfg.max_percent_claim <= percentClaimed) ? next + 1 : next
@@ -267,7 +268,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
                 {item.showInfo || isWidthDown('xs', props.width) ?
                   <>
                     <div>
-                      {numberWithCommas((item?.percent + ''), 1)}% ({numberWithCommas(`${item?.tokenAmount + ''}`, 1)}{" "}
+                      {numberWithCommas((new BN((item?.percent || 0) as number).toFixed(1) + ''), 1)}% ({numberWithCommas(`${item?.tokenAmount + ''}`, 1)}{" "}
                       {tokenDetails?.symbol})
                     </div>
                     <div>

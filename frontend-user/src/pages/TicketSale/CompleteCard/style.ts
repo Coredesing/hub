@@ -123,6 +123,9 @@ const useStyles = makeStyles((theme: any) => ({
     "& .progress": {
       height: "36px",
       paddingTop: "8px",
+      [theme.breakpoints.up("lg")]: {
+        width: "354px",
+      },
       [theme.breakpoints.down("lg")]: {
         width: "354px",
       },

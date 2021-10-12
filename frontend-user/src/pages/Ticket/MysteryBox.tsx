@@ -520,6 +520,30 @@ const MysteryBox = ({ id, ...props }: any) => {
         }
     }, [numBoxBuy, boxTypeSelected]);
 
+    const renderMsg = () => {
+        if (
+            connectedAccount && infoTicket.min_tier > 0 && !loadingUserTier && _.isNumber(userTier) && (userTier < infoTicket.min_tier)
+        ) {
+            return <WrapperAlert>
+                <span>You haven't achieved min rank ({TIERS[infoTicket.min_tier]?.name}) to apply for Whitelist yet. To upgrade your Rank, please click <Link to="/account?tab=rank" className="text-weight-600 text-white link">here</Link></span></WrapperAlert>
+        }
+        if ((alreadyJoinPool || joinPoolSuccess) && countdown.isWhitelist) {
+            return <WrapperAlert type="info">
+                Congratulations! You have successfully applied whitelist.
+            </WrapperAlert>
+        }
+        if ((alreadyJoinPool || joinPoolSuccess) && (countdown.isSale || countdown.isUpcomingSale)) {
+            return <WrapperAlert type="info">
+                Congratulations! You have successfully applied whitelist and can buy Mystery boxes
+            </WrapperAlert>
+        }
+        if((!loadingJoinpool && connectedAccount && countdown.isSale && !countdown.isPhase2) && !alreadyJoinPool) {
+            return <WrapperAlert type="error"> Sorry, you didn’t apply whitelist. </WrapperAlert>
+        }
+    }
+
+    const disabledBuyNow = +numBoxBuy < 1 || !isKYC || lockWhenBuyBox || !connectedAccount || loadingUserTier || !_.isNumber(userTier) || (infoTicket?.min_tier > 0  && (userTier < infoTicket.min_tier));
+
     return (
         <>
             {loadingTicket ? <div className={styles.loader} style={{ marginTop: 70 }}>
@@ -543,21 +567,24 @@ const MysteryBox = ({ id, ...props }: any) => {
                                 Please connect to wallet
                             </WrapperAlert>
                         }
-                        {
+                        {/* {
                             countdown.isWhitelist && connectedAccount && !loadingTicket && infoTicket.min_tier > 0 && !loadingUserTier && _.isNumber(userTier) && (userTier < infoTicket.min_tier) && <WrapperAlert>
                                 <span>You haven't achieved min rank ({TIERS[infoTicket.min_tier]?.name}) to apply for Whitelist yet. To upgrade your Rank, please click <Link to="/account?tab=rank" className="text-weight-600 text-white link">here</Link></span>
                             </WrapperAlert>
-                        }
-                        {(alreadyJoinPool || joinPoolSuccess) && countdown.isWhitelist && <WrapperAlert type="info">
-                            Congratulations! You have successfully applied whitelist.
-                        </WrapperAlert>}
-                        {(alreadyJoinPool || joinPoolSuccess) && (countdown.isSale || countdown.isUpcomingSale) && <WrapperAlert type="info">
-                            Congratulations! You have successfully applied whitelist and can buy Mystery boxes
-                        </WrapperAlert>}
+                        } */}
                         {
+                            renderMsg()
+                        }
+                        {/* {(alreadyJoinPool || joinPoolSuccess) && countdown.isWhitelist && <WrapperAlert type="info">
+                            Congratulations! You have successfully applied whitelist.
+                        </WrapperAlert>} */}
+                        {/* {(alreadyJoinPool || joinPoolSuccess) && (countdown.isSale || countdown.isUpcomingSale) && <WrapperAlert type="info">
+                            Congratulations! You have successfully applied whitelist and can buy Mystery boxes
+                        </WrapperAlert>} */}
+                        {/* {
                             (!loadingJoinpool && connectedAccount && countdown.isSale && !countdown.isPhase2) &&
                             ((alreadyJoinPool) ? null : <WrapperAlert type="error"> Sorry, you didn’t apply whitelist. </WrapperAlert>)
-                        }
+                        } */}
                         {!isKYC && !checkingKyc && connectedAccount && (
                             <AlertKYC connectedAccount={connectedAccount} />
                         )}
@@ -735,7 +762,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                 <ButtonBase
                                                     color="green"
                                                     isLoading={lockWhenBuyBox}
-                                                    disabled={+numBoxBuy < 1 || !isKYC || lockWhenBuyBox}
+                                                    disabled={disabledBuyNow}
                                                     onClick={(alreadyJoinPool || joinPoolSuccess || countdown.isPhase2) && isKYC ? onShowModalConfirmBuyBox : undefined}
                                                     className="mt-0-important text-transform-unset w-full">
                                                     Buy Now

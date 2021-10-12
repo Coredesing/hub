@@ -120,15 +120,16 @@ const useStyles = makeStyles((theme: any) => ({
             background: 'transparent !important',
             maxWidth: '400px',
             width: '100%',
-            '& .time .number': {
-              fontSize: '28px',
-              lineHeight: '32px',
-            }
+            marginLeft: 'unset',
           },
           '& .time .number': {
             transform: 'skew(-20deg)',
             fontSize: '36px',
             lineHeight: '40px',
+            [theme.breakpoints.down('sm')]: {
+              fontSize: '28px',
+              lineHeight: '32px',
+            }
           },
           '& .time .text': {
             fontSize: '10px',

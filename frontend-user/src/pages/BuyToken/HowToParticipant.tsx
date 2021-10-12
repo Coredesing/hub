@@ -46,10 +46,10 @@ function HowToParticipant(props: any) {
             showHowTo &&
             <div className={styles.contentHowTo}>
               <ul className={styles.listHowTo}>
-                <li className={`${styles.itemHowTo} ${isKYC && styles.activeItemHowTo}`}>
+                {/* <li className={`${styles.itemHowTo} ${isKYC && styles.activeItemHowTo}`}>
                   <div className={`${styles.checkmark} ${isKYC && styles.activeCheckmark}`}></div>
                   KYC Verification
-                </li>
+                </li> */}
                 <li className={`${styles.itemHowTo} ${enoughtMinTier && styles.activeItemHowTo}`}>
                   <div className={`${styles.checkmark} ${enoughtMinTier && styles.activeCheckmark}`}></div>
                   Achieve Min Rank of pool

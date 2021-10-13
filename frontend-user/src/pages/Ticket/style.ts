@@ -904,6 +904,10 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
           transform: 'skew(-20deg)',
           fontSize: '36px',
           lineHeight: '40px',
+          [theme.breakpoints.down('xs')]: {
+            fontSize: '24px',
+            lineHeight: '30px',
+          },
         },
         '& .time .text': {
           fontSize: '10px',

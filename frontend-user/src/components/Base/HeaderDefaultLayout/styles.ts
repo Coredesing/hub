@@ -390,12 +390,14 @@ const useStyles = makeStyles((theme) => {
         placeContent: "center",
         textAlign: "center",
         padding: "20px",
+        gap: "20px",
         "&.show": {
           display: "grid",
         },
       },
       [theme.breakpoints.down("xs")]: {
         top: "60px",
+        
       },
     },
     headerLinks: isSafari
@@ -408,6 +410,8 @@ const useStyles = makeStyles((theme) => {
           flexWrap: "wrap",
           [theme.breakpoints.down("md")]: {
             display: "grid",
+            gridTemplateColumns: "1fr",
+            gap: "20px",
           },
         }
       : {
@@ -418,6 +422,8 @@ const useStyles = makeStyles((theme) => {
           flexWrap: "wrap",
           [theme.breakpoints.down("md")]: {
             display: "grid",
+            gridTemplateColumns: "1fr",
+            gap: "20px",
           },
         },
     headerLink: {
@@ -441,6 +447,7 @@ const useStyles = makeStyles((theme) => {
       alignItems: "center",
       [theme.breakpoints.down("md")]: {
         display: "grid",
+        gap: "20px",
       },
     },
     headerAccText: {

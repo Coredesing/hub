@@ -556,9 +556,22 @@ class PoolService {
       if (lastTime) {
         dataUpdate.actual_finish_time = lastTime;
       }
-      const result = await CampaignModel.query().where('id', pool.id).update(dataUpdate);
-      RedisUtils.deleteRedisPoolDetail(pool.id);
+      await CampaignModel.query().where('id', pool.id).update(dataUpdate);
+
+      if (await RedisUtils.checkExistRedisPoolDetail(pool.id)) {
+        let cachedPoolDetail = await RedisUtils.getRedisPoolDetail(pool.id);
+        cachedPoolDetail = JSON.parse(cachedPoolDetail)
+        cachedPoolDetail.token_sold = tokenSold
+        cachedPoolDetail.campaign_status = status
+        if (lastTime) {
+          cachedPoolDetail.actual_finish_time = lastTime
+        }
+        await RedisUtils.createRedisPoolDetail(pool.id, cachedPoolDetail)
+      }
     } catch (e) {
+      if (pool && pool.id) {
+        await RedisUtils.deleteRedisPoolDetail(pool.id);
+      }
       console.log('[PoolService::updatePoolInformation] - ERROR: ', e);
     }
   }

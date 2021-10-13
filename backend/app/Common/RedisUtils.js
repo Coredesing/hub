@@ -32,7 +32,6 @@ const checkExistRedisPoolDetail = async (poolId) => {
 
 const createRedisPoolDetail = async (poolId, data) => {
   const redisKey = getRedisKeyPoolDetail(poolId);
-  logRedisUtil(`createRedisPoolDetail - Create Cache data with key: ${redisKey}`);
   return await Redis.set(redisKey, JSON.stringify(data));
 };
 
@@ -44,7 +43,7 @@ const deleteRedisPoolDetail = (poolId) => {
     Redis.del(redisKey);
     return true;
   }
-  logRedisUtil(`deleteRedisPoolDetail - not exist key ${redisKey}`);
+
   return false;
 };
 

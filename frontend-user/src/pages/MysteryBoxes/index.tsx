@@ -13,11 +13,11 @@ import SlideCard from './components/SlideCard';
 import { numberWithCommas } from '@utils/formatNumber';
 import { getCurrencyByNetwork } from '@utils/index';
 import { getCountdownInfo } from './utils';
-import {Helmet} from "react-helmet";
-
-import SwiperCore, { Pagination } from "swiper";
+import { Helmet } from "react-helmet";
 import { Swiper, SwiperSlide } from "swiper/react";
 import WrapperContent from '@base-components/WrapperContent';
+import { ObjectType } from '@app-types';
+
 const MysteryBoxes = (props: any) => {
   const theme = useTheme();
   const isSmScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -30,18 +30,13 @@ const MysteryBoxes = (props: any) => {
   const {
     data: misteryBoxes = {} as PaginationResult,
     loading: loadingcompletePools
-  } = useFetchV1(`/pools/mysterious-box?token_type=${TOKEN_TYPE.Box}`);
+  } = useFetchV1(`/pools/mysterious-box?token_type=${TOKEN_TYPE.Box}&limit=10`);
 
   const [currentBox, setCurrentBox] = useState<{ [k: string]: any }>({ upcoming: true });
 
   const handleSelectBox = (box: { [k: string]: any }) => {
     setCurrentBox(box);
   }
-  useEffect(() => {
-    if (misteryBoxes?.data) {
-      handleSelectBox(misteryBoxes?.data[0]);
-    }
-  }, [misteryBoxes]);
 
   const onSelectBox = (box: any) => {
     handleSelectBox(box);
@@ -54,6 +49,33 @@ const MysteryBoxes = (props: any) => {
       setTime(getCountdownInfo(currentBox, compareTime))
     }
   }, [currentBox]);
+
+
+  const [mysteryBoxList, setMysteryBoxList] = useState<ObjectType<any>[]>([]);
+  useEffect(() => {
+    if (misteryBoxes?.data) {
+      const listOnSale: ObjectType<any>[] = [];
+      const listUpComing: ObjectType<any>[] = [];
+      const listFinished: ObjectType<any>[] = [];
+      misteryBoxes.data.forEach((pool) => {
+        const time = getCountdownInfo(pool, compareTime);
+        if (time.isOnsale) {
+          listOnSale.push(pool);
+        } else if (time.isUpcoming) {
+          listUpComing.push(pool)
+        } else if (time.isFinished) {
+          listFinished.push(pool);
+        }
+      });
+      setMysteryBoxList([...listOnSale, ...listUpComing, ...listFinished]);
+    }
+  }, [misteryBoxes]);
+
+  useEffect(() => {
+    if (mysteryBoxList.length) {
+      handleSelectBox(mysteryBoxList[0]);
+    }
+  }, [mysteryBoxList]);
 
   return (
     <DefaultLayout hiddenFooter>
@@ -118,7 +140,7 @@ const MysteryBoxes = (props: any) => {
               </div>
             </div>
             <div className={styles.wrapperSlideBoxes}>
-              <div className="slides">
+              <div className="slides custom-scroll">
                 {
                   isSmScreen ? <Swiper
                     slidesPerView={"auto"}
@@ -128,9 +150,9 @@ const MysteryBoxes = (props: any) => {
                       clickable: true,
                     }}
                   >
-                    {(misteryBoxes?.data || []).map((item) => <SwiperSlide style={{ width: '220px' }} key={item.id}> <SlideCard onSelectItem={onSelectBox} key={item.id} active={currentBox.id === item.id} item={item} compareTime={compareTime} /> </SwiperSlide>)}
+                    {mysteryBoxList.map((item) => <SwiperSlide style={{ width: '220px' }} key={item.id}> <SlideCard onSelectItem={onSelectBox} key={item.id} active={currentBox.id === item.id} item={item} compareTime={compareTime} /> </SwiperSlide>)}
                   </Swiper> :
-                    (misteryBoxes?.data || []).map((item) => <SlideCard onSelectItem={onSelectBox} key={item.id} active={currentBox.id === item.id} item={item} compareTime={compareTime} />)
+                    mysteryBoxList.map((item) => <SlideCard onSelectItem={onSelectBox} key={item.id} active={currentBox.id === item.id} item={item} compareTime={compareTime} />)
                 }
               </div>
             </div>

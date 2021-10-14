@@ -4,6 +4,8 @@ const Task = use('Task')
 const PoolService = use('App/Services/PoolService');
 
 class UpdatePoolInformationTask extends Task {
+  isRunning = false;
+
   static get schedule () {
     console.log('[UpdatePoolInformationTask] - ACTIVE - process.env.NODE_ENV', process.env.NODE_ENV);
     if (process.env.NODE_ENV === 'development') {
@@ -17,10 +19,22 @@ class UpdatePoolInformationTask extends Task {
   }
 
   async handle () {
-    console.log('Task UpdatePoolInformationTask handle');
+    if (this.isRunning) {
+      console.log('stop UpdatePoolInformationTask')
+      return
+    }
 
-    const pools = (new PoolService).runUpdatePoolStatus();
-
+    try {
+      this.isRunning = true
+      console.log('Task UpdatePoolInformationTask handle');
+      (new PoolService).runUpdatePoolStatus();
+    }
+    catch (e) {
+      console.log('UpdatePoolInformationTask error', e)
+    }
+    finally {
+      this.isRunning = false
+    }
   }
 }
 

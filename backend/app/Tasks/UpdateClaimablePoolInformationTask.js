@@ -4,6 +4,8 @@ const Task = use('Task')
 const PoolService = use('App/Services/PoolService');
 
 class UpdateClaimablePoolInformationTask extends Task {
+  isRunning = false;
+
   static get schedule () {
     console.log('[UpdateClaimablePoolInformationTask] - CLAIMABLE - process.env.NODE_ENV', process.env.NODE_ENV);
     if (process.env.NODE_ENV === 'development') {
@@ -17,10 +19,22 @@ class UpdateClaimablePoolInformationTask extends Task {
   }
 
   async handle () {
-    console.log('Task UpdateClaimablePoolInformationTask handle');
+    if (this.isRunning) {
+      console.log('stop UpdateClaimablePoolInformationTask')
+      return
+    }
 
-    const pools = (new PoolService).runUpdatePoolClaimableStatus();
-
+    try {
+      this.isRunning = true
+      console.log('Task UpdateClaimablePoolInformationTask handle');
+      (new PoolService).runUpdatePoolClaimableStatus();
+    }
+    catch (e) {
+      console.log('UpdateClaimablePoolInformationTask error', e)
+    }
+    finally {
+      this.isRunning = false
+    }
   }
 }
 

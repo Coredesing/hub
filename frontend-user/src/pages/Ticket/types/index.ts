@@ -14,3 +14,10 @@ export type TimelineType = {
     desc: string;
     current?: boolean;
 }
+
+export type TokenType = {
+    address: string;
+    name: string;
+    symbol: string;
+    decimals: number;
+}

@@ -27,7 +27,7 @@ import { HashLoader } from "react-spinners";
 import { numberWithCommas } from "../../utils/formatNumber";
 import { WrapperAlert } from "../../components/Base/WrapperAlert";
 import { pushMessage } from "../../store/actions/message";
-import { CountDownTimeType, TimelineType } from "./types";
+import { CountDownTimeType, TimelineType, TokenType } from "./types";
 import { CountDownEndTime } from "./components/CountDownEndTime";
 import { AscDescAmountBox } from "./components/AscDescAmountBox";
 import { ButtonBuy } from "./components/ButtonBuy";
@@ -53,7 +53,12 @@ import PreSaleBoxAbi from '@abi/PreSaleBox.json';
 import { useWeb3React } from "@web3-react/core";
 import BigNumber from 'bn.js';
 import { Box } from "@material-ui/core";
-
+import { ObjectType } from "@app-types";
+const acceptedTokens = [
+    { icon: '/images/icons/bnb.png', address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', name: 'BUSD', symbol: 'BUSD', decimals: 18 },
+    { icon: '/images/icons/usdc.png', address: '0xdac17f958d2ee523a2206206994597c13d831ec7', name: 'USDC', symbol: 'USDC', decimals: 18 },
+    { icon: '/images/icons/usdt.png', address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', name: 'USDT', symbol: 'USDT', decimals: 18 },
+]
 const MysteryBox = ({ id, ...props }: any) => {
     const styles = useStyles();
     const mysteryStyles = useMysteyBoxStyles();
@@ -545,6 +550,77 @@ const MysteryBox = ({ id, ...props }: any) => {
         }
     }
 
+    const defaultToken = acceptedTokens[0];
+    const [tokenSeletected, setTokenSelected] = useState<ObjectType<any>>(defaultToken);
+    const [tokenToApprove, setTokenToApprove] = useState<TokenType & { icon: string }>(defaultToken);
+    const onSelectToken = (token: ObjectType<any>) => {
+        setTokenSelected(token);
+        console.log('token', token)
+        setTokenToApprove(token as TokenType & { icon: string });
+    }
+
+    const [isApproving, setIsApproving] = useState(false);
+
+    const { retrieveTokenAllowance, tokenAllowanceLoading } = useTokenAllowance();
+
+    const { approveToken /*tokenApproveLoading, transactionHash*/ } =
+        useTokenApprove(
+            tokenToApprove,
+            connectedAccount,
+            infoTicket.campaign_hash,
+            false
+        );
+    const [tokenAllowance, setTokenAllowance] = useState<number | undefined>(
+        undefined
+    );
+
+    const handleTokenApprove = async () => {
+        try {
+            if (isApproving) return;
+            setIsApproving(true);
+            await approveToken();
+            if (infoTicket.campaign_hash && connectedAccount && tokenToApprove) {
+                const numAllowance = await retrieveTokenAllowance(
+                    tokenToApprove,
+                    connectedAccount,
+                    infoTicket.campaign_hash
+                );
+                setTokenAllowance(numAllowance);
+                setIsApproving(false);
+            }
+        } catch (err) {
+            console.log('err', err)
+            // dispatch(alertFailure('Hmm, Something went wrong. Please try again'));
+            setIsApproving(false);
+        }
+    };
+
+    const getTokenAllowance = useCallback(async () => {
+        if (infoTicket.campaign_hash && connectedAccount && tokenToApprove) {
+            const numAllowance = await retrieveTokenAllowance(
+                tokenToApprove,
+                connectedAccount,
+                infoTicket.campaign_hash
+            );
+            setTokenAllowance(numAllowance);
+        }
+    }, [
+        connectedAccount,
+        tokenToApprove,
+        infoTicket.campaign_hash,
+        retrieveTokenAllowance,
+    ]);
+
+    useEffect(() => {
+        connectedAccount &&
+            infoTicket.campaign_hash &&
+            getTokenAllowance();
+    }, [connectedAccount, infoTicket.campaign_hash, getTokenAllowance]);
+
+    const isAccApproved = (tokenAllowance: number) => {
+        return +tokenAllowance > 0;
+    };
+
     const disabledBuyNow = +numBoxBuy < 1 || !isKYC || lockWhenBuyBox || !connectedAccount || loadingUserTier || !_.isNumber(userTier) || (infoTicket?.min_tier > 0 && (userTier < infoTicket.min_tier));
 
     return (
@@ -679,6 +755,17 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                 </div>
                                             </div>
                                             <div className="box-type-wrapper">
+                                                <h4 className="text-uppercase">Currency</h4>
+                                                <Box className="box-types" gridTemplateColumns="repeat(auto-fill, minmax(80px,1fr)) !important">
+                                                    {
+                                                        acceptedTokens.map((t) => <Box key={t.address} onClick={() => onSelectToken(t)} gridTemplateColumns="20px auto !important" className={clsx("box-type", { active: t.address === tokenSeletected.address })}>
+                                                            <img src={t.icon} className="icon" alt="" style={{ width: '20px', height: '20px' }} />
+                                                            <span>{t.name}</span>
+                                                        </Box>)
+                                                    }
+                                                </Box>
+                                            </div>
+                                            <div className="box-type-wrapper">
                                                 <h4 className="text-uppercase">TYPE</h4>
                                                 <div className="box-types">
                                                     {
@@ -760,6 +847,17 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     </div>
                                                 </div>
                                             }
+                                            {
+                                                !tokenAllowanceLoading && tokenAllowance !== undefined && !isAccApproved(tokenAllowance as number) && <ButtonBase
+                                                    color="green"
+                                                    isLoading={isApproving}
+                                                    disabled={isApproving}
+                                                    onClick={handleTokenApprove}
+                                                    className="mt-0-important text-transform-unset w-full">
+                                                    Approve
+                                                </ButtonBase>
+                                            }
+
                                             {
                                                 (connectedAccount && !checkingKyc && !loadingJoinpool && countdown.isSale && ((countdown.isPhase1 && (alreadyJoinPool || joinPoolSuccess)) || countdown.isPhase2)) &&
                                                 <ButtonBase

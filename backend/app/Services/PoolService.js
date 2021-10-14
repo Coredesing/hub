@@ -195,11 +195,6 @@ class PoolService {
     filterParams.page = page;
 
     let pools = await this.buildQueryBuilder(filterParams)
-      .with('campaignClaimConfig')
-      .where(builder => {
-        builder
-          .whereNotIn('campaign_status', [Const.POOL_STATUS.ENDED])
-      })
       .orderBy('priority', 'DESC')
       .orderBy('start_time', 'ASC')
       .paginate(page, limit);
@@ -553,9 +548,17 @@ class PoolService {
         token_sold: tokenSold,
         campaign_status: status,
       };
+
+      // update actual finish time
       if (lastTime) {
         dataUpdate.actual_finish_time = lastTime;
       }
+
+      // update priority
+      if (status === Const.POOL_STATUS.ENDED) {
+        dataUpdate.priority = 0
+      }
+
       await CampaignModel.query().where('id', pool.id).update(dataUpdate);
 
       if (await RedisUtils.checkExistRedisPoolDetail(pool.id)) {
@@ -565,6 +568,9 @@ class PoolService {
         cachedPoolDetail.campaign_status = status
         if (lastTime) {
           cachedPoolDetail.actual_finish_time = lastTime
+        }
+        if (status === Const.POOL_STATUS.ENDED) {
+          cachedPoolDetail.priority = 0
         }
         await RedisUtils.createRedisPoolDetail(pool.id, cachedPoolDetail)
       }

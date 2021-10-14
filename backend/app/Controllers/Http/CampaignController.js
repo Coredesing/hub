@@ -106,36 +106,6 @@ class CampaignController {
     }
   }
 
-  async CampaignEditStatus({ request }) {
-    try {
-      const param = request.all();
-      const tx = await web3.eth.getTransaction(param.txHash);
-      if (tx == null)
-        return HelperUtils.responseBadRequest('Transaction not found');
-      const campaign = await CampaignModel.query().where('campaign_hash', '=', tx.to).first();
-      if (!campaign) {
-        console.log('waning! campaign not found!')
-        return { status: 200 }
-      }
-      if (param.event == Config.get('const.pause')) {
-        const campaign = await CampaignModel.query().where('campaign_hash', '=', tx.to)
-          .update({
-            is_pause: true
-          })
-        return campaign;
-      } else {
-        const campaign = await CampaignModel.query().where('campaign_hash', '=', tx.to)
-          .update({
-            is_pause: false
-          })
-        return campaign;
-      }
-    } catch (e) {
-      console.log(e);
-      return HelperUtils.responseErrorInternal('ERROR: Update campaign status fail !')
-    }
-  }
-
   async campaignCreate({ request }) {
     try {
       const params = request.all();

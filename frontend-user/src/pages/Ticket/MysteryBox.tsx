@@ -196,7 +196,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                 }
             }
             const startBuyTime = isAccIsBuyPreOrder && timeLine.startPreOrderTime ? timeLine.startPreOrderTime : timeLine.startBuyTime;
-            const soldOut = !getRemaining(infoTicket.total_sold_coin, infoTicket.token_sold);
+            const soldOut = !getRemaining(dataTicket.total_sold_coin, dataTicket.token_sold);
             if (soldOut) {
                 setCountdown({ date1: 0, date2: 0, title: 'Finished', isFinished: true });
                 timeLine.freeBuyTime ? (timeLinesInfo[5].current = true) : (timeLinesInfo[4].current = true);

@@ -104,7 +104,7 @@ const MysteryBoxes = ({ mysteryBoxes }: Props) => {
           <div className="detail-countdown-box">
             <div className="wrapper-countdown">
               <span>{time.title}</span>
-              {time.date1 && (
+              {!time.isFinished && (
                 <div className={styles.countDownContainer}>
                   <CountDownTimeV1
                     time={{ date1: time.date1, date2: time.date2 }}

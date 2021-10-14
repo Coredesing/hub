@@ -66,7 +66,6 @@ const MysteryBoxes = (props: any) => {
         } else if (time.isFinished) {
           listFinished.push(pool);
         }
-        return time.isOnsale;
       });
       setMysteryBoxList([...listOnSale, ...listUpComing, ...listFinished]);
     }

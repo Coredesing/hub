@@ -60,11 +60,13 @@ export const getAbiPool = (isClaimable = true) => {
 export const getPoolContract = ({ networkAvailable, poolHash, isClaimable = true }: any) => {
   let web3Instance = null;
   const ABI = isClaimable ? POOL_PRESALE_ABI : POOL_ABI;
-  if (networkAvailable == NETWORK_AVAILABLE.BSC) {
-    web3Instance = getContractInstance(ABI, poolHash, false);
-  } else if (networkAvailable == NETWORK_AVAILABLE.ETH) {
+
+  if (networkAvailable === NETWORK_AVAILABLE.ETH) {
     web3Instance = getContractInstance(ABI, poolHash, true);
+  } else { // BSC & Polygon
+    web3Instance = getContractInstance(ABI, poolHash, false);
   }
+
   return web3Instance;
 };
 

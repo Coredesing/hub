@@ -95,8 +95,11 @@ const useStyles = makeStyles((theme: any) => {
       width: '10%',
       color: '#999999'
     },
-    type: {
+    tokenType: {
+      textTransform: 'capitalize',
+      minWidth: '120px',
       width: '10%',
+      color: '#999999'      
     },
     progress: {
       minWidth: '400px',
@@ -140,6 +143,9 @@ const useStyles = makeStyles((theme: any) => {
         display: 'none'
       },
       poolType: {
+        display: 'none'
+      },
+      tokenType: {
         display: 'none'
       },
       progress: {

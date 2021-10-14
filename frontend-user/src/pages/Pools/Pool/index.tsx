@@ -127,7 +127,7 @@ const Pool = (props: any): JSX.Element => {
           <div className={styles.poolType + ' ' + commonStyle.nnn1424h}>
             {getAccessPoolText(pool)}
           </div>
-          <div className={styles.type}>{pool.token_type}</div>
+          <div className={styles.tokenType}>{pool.token_type}</div>
           <div className={styles.progress}>
             <span className={commonStyle.nnb1418d}>{`${new BigNumber(progress).toFixed(2)}%`}</span>
             <div className="progress">

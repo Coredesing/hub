@@ -300,7 +300,7 @@ const useStyles = makeStyles((theme) => {
       color: "#FFFFFF",
       font: "normal normal bold 16px/24px DM Sans",
       // position: 'relative',
-      zIndex: 1000,
+      zIndex: 1001,
       [theme.breakpoints.down("md")]: {
         gridTemplateColumns: "173px 60px",
         justifyContent: "space-between",

@@ -664,7 +664,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     !countdown.isUpcoming && !countdown.isWhitelist && !countdown.isUpcomingSale &&
                                                     <div className="item">
                                                         <label className="label text-uppercase">REMAINING</label>
-                                                        <span>{numberWithCommas(((+infoTicket.total_sold_coin || 0) - totalBoxesBought) + '')}</span>
+                                                        <span>{numberWithCommas(getRemaining(infoTicket.total_sold_coin, infoTicket.token_sold) + '')}</span>
                                                     </div>
                                                 }
                                                 <div className="item">
@@ -776,14 +776,11 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     {countdown.isFinished && <div className="img-finished">
                                                         <img src={"/images/finished.png"} alt="" />
                                                     </div>}
-                                                    {!getRemaining(
-                                                        infoTicket.total_sold_coin,
-                                                        infoTicket.token_sold
-                                                    ) && (
-                                                            <div className="soldout">
-                                                                <img src={"/images/soldout.png"} alt="" />
-                                                            </div>
-                                                        )}
+                                                    {!loadingTicket && !getRemaining(infoTicket.total_sold_coin, infoTicket.token_sold) && (
+                                                        <div className="soldout">
+                                                            <img src={"/images/soldout.png"} alt="" />
+                                                        </div>
+                                                    )}
                                                 </div>
                                             }
                                         </div>

@@ -88,16 +88,12 @@ const networkToWeb3 = {
   [Const.NETWORK_AVAILABLE.POLYGON]: web3Polygon
 }
 
-// Tier Smart contract
-const { abi: CONTRACT_TIER_ABI } = require('../../blockchain_configs/contracts/Normal/Tier.json');
-const TIER_SMART_CONTRACT = process.env.TIER_SMART_CONTRACT;
 const { abi: CONTRACT_ERC20_ABI } = require('../../blockchain_configs/contracts/Normal/Erc20.json');
 const ETH_SMART_CONTRACT_USDT_ADDRESS = process.env.ETH_SMART_CONTRACT_USDT_ADDRESS;
 const ETH_SMART_CONTRACT_USDC_ADDRESS = process.env.ETH_SMART_CONTRACT_USDC_ADDRESS;
 const BSC_SMART_CONTRACT_USDT_ADDRESS = process.env.BSC_SMART_CONTRACT_USDT_ADDRESS;
 const BSC_SMART_CONTRACT_USDC_ADDRESS = process.env.BSC_SMART_CONTRACT_USDC_ADDRESS;
 const BSC_SMART_CONTRACT_BUSD_ADDRESS = process.env.BSC_SMART_CONTRACT_BUSD_ADDRESS;
-const EPKF_BONUS_LINK = process.env.EPKF_BONUS_LINK || '';
 const POLYGON_SMART_CONTRACT_USDT_ADDRESS = process.env.POLYGON_SMART_CONTRACT_USDT_ADDRESS;
 const POLYGON_SMART_CONTRACT_USDC_ADDRESS = process.env.POLYGON_SMART_CONTRACT_USDC_ADDRESS;
 
@@ -541,11 +537,18 @@ const getTokenSoldSmartContract = async (pool) => {
     return 0;
   }
   const isClaimable = pool.pool_type === Const.POOL_TYPE.CLAIMABLE;
-  const poolContract = isClaimable ? await getContractClaimInstance(pool) : await getContractInstance(pool);
+  let poolContract = isClaimable ? await getContractClaimInstance(pool) : await getContractInstance(pool);
+  if (pool && pool.token_type === Const.TOKEN_TYPE.MYSTERY_BOX) {
+    poolContract = await getERC721TokenContractInstance(pool)
+  }
 
   try {
     if (pool.token_type === Const.TOKEN_TYPE.ERC721 && pool.process === Const.PROCESS.ONLY_CLAIM) {
       return await poolContract.methods.tokenClaimed().call();
+    }
+
+    if (pool.token_type === Const.TOKEN_TYPE.MYSTERY_BOX) {
+      return poolContract.methods.totalSupply().call();
     }
 
     let tokenSold = await poolContract.methods.tokenSold().call();

@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: any) => {
     },
     ratio: {
       minWidth: '120px',
-      width: '12%',
+      width: '10%',
       color: '#999999'
     },
     status: {
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: any) => {
         justifyContent: 'center',
         height: '26px',
         minWidth: '90px',
-        width: '12%',
+        width: '10%',
         padding: '6px 15px',
         borderRadius: '20px',
         '& span': {
@@ -92,12 +92,15 @@ const useStyles = makeStyles((theme: any) => {
     poolType: {
       textTransform: 'capitalize',
       minWidth: '120px',
-      width: '12%',
+      width: '10%',
       color: '#999999'
+    },
+    type: {
+      width: '10%',
     },
     progress: {
       minWidth: '400px',
-      width: '40%',
+      width: '36%',
       color: '#fff',
       ...typeDisplayFlex,
       flexDirection: 'row',

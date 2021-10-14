@@ -148,10 +148,11 @@ const Pools = (props: any) => {
             <thead className={styles.poolsHead}>
               {isWidthUp('md', props.width) && <tr>
                 <th style={{minWidth: '240px', width: '24%'}}>Pool Name</th>
-                <th style={{minWidth: '120px', width: '12%'}}>Ratio</th>
-                <th style={{minWidth: '120px', width: '12%'}}>Access</th>
-                <th style={{minWidth: '400px', width: '40%'}}>Progress</th>
-                <th style={{minWidth: '120px', width: '12%'}}>Status</th>
+                <th style={{minWidth: '120px', width: '10%'}}>Ratio</th>
+                <th style={{minWidth: '120px', width: '10%'}}>Access</th>
+                <th style={{minWidth: '120px', width: '10%'}}>Type</th>
+                <th style={{minWidth: '400px', width: '36%'}}>Progress</th>
+                <th style={{minWidth: '120px', width: '10%'}}>Status</th>
               </tr>}
               {isWidthDown('sm', props.width) && <tr>
                 <th style={{minWidth: '150px', width: '50%'}}>Pool Name</th>

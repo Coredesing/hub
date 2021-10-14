@@ -24,6 +24,8 @@ import { TOKEN_TYPE } from "../../constants";
 import Instruction from "./Instruction";
 import TicketSlide from "./TicketSlide";
 import MysteryBoxes from "./MysteryBoxes";
+import { ObjectType } from "@app-types";
+import { getCountdownInfo } from "@pages/MysteryBoxes/utils";
 
 type Data = { [k: string]: any };
 type ResponseData = {
@@ -58,6 +60,29 @@ const Home = (props: any) => {
     data: mysteryBoxes = {} as ResponseData,
     loading: loadingMysteryBoxes,
   } = useFetchV1(`/pools/mysterious-box?token_type=${TOKEN_TYPE.Box}`);
+
+
+  const [mysteryBoxList, setMysteryBoxList] = useState<ObjectType<any>[]>([]);
+  useEffect(() => {
+    if (mysteryBoxes?.data?.length) {
+      const listOnSale: ObjectType<any>[] = [];
+      const listUpComing: ObjectType<any>[] = [];
+      const listFinished: ObjectType<any>[] = [];
+      const compareTime = Date.now();
+      mysteryBoxes.data.forEach((pool) => {
+        const time = getCountdownInfo(pool, compareTime);
+        if (time.isOnsale) {
+          listOnSale.push(pool);
+        } else if (time.isUpcoming) {
+          listUpComing.push(pool)
+        } else if (time.isFinished) {
+          listFinished.push(pool);
+        }
+      });
+      setMysteryBoxList([...listOnSale, ...listUpComing, ...listFinished]);
+    }
+  }, [mysteryBoxes]);
+
   const { data: perfomances = [] as Data[], loading: loadingcompletePools } =
     useFetchV1("/home/performance");
 
@@ -220,7 +245,7 @@ const Home = (props: any) => {
       </section>
       {/* <Instruction /> */}
 
-      {mysteryBoxes?.data?.length && (
+      {mysteryBoxList.length && (
         <section className={clsx(styles.tokenSales, styles.section)}>
           <div className="rectangle bl">
             <img src="/images/token-sales-text.svg" alt="" />
@@ -252,7 +277,7 @@ const Home = (props: any) => {
                 width: isMdUpScreen ? "55%" : "80%",
               }}
             >
-              <MysteryBoxes mysteryBoxes={mysteryBoxes?.data}/>
+              <MysteryBoxes mysteryBoxes={mysteryBoxList}/>
             </div>
           </div>
         </section>

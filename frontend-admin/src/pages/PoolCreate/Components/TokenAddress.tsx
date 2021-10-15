@@ -1,33 +1,36 @@
 import React, {useEffect, useState} from 'react';
 import {getTokenInfo} from "../../../utils/token";
-import {CircularProgress, Tooltip} from "@material-ui/core";
+import {CircularProgress, Tooltip, Button} from "@material-ui/core";
 import useStyles from "../style";
 import {debounce} from "lodash";
 import {renderErrorCreatePool} from "../../../utils/validate";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+
 import {
-  BSC_NETWORK_ACCEPT_CHAINS,
-  CHAIN_ID_NAME_MAPPING, ETH_NETWORK_ACCEPT_CHAINS, NETWORK_AVAILABLE,
-  POLYGON_NETWORK_ACCEPT_CHAINS,
-  POOL_TYPE,
-  TOKEN_TYPE
+  CHAIN_ID_NAME_MAPPING, TOKEN_TYPE
 } from "../../../constants";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import {Controller} from "react-hook-form";
-import FormControl from "@material-ui/core/FormControl";
+import {getPoolContract} from "../../../services/web3";
+import {updateDeploySuccess} from "../../../request/pool";
+import {alertFailure, alertSuccess} from "../../../store/actions/alert";
 
 function TokenAddress(props: any) {
   const classes = useStyles();
   const { currentNetworkId } = useSelector((state: any) => state).userCurrentNetwork;
   const [loadingToken, setLoadingToken] = useState(false);
+  const [editForm, setEditForm] = useState(false);
+  const { data: loginUser } = useSelector(( state: any ) => state.user);
   const {
     register, setValue, errors, control, watch, getValues, needValidate,
     poolDetail,
     token, setToken,
   } = props;
   const renderError = renderErrorCreatePool;
+  const dispatch = useDispatch();
+
   const networkAvailable = watch('networkAvailable');
   const isDeployed = !!poolDetail?.is_deploy;
 
@@ -81,6 +84,62 @@ function TokenAddress(props: any) {
     await loadingTokenData(e.target.value, token_type);
   }, 500);
 
+  const changeEditForm = async (value: boolean) => {
+    setEditForm(value)
+  }
+
+  const changeTokenSale = async () => {
+    try {
+      if (!loginUser || !loginUser.wallet_address) {
+        console.log('login user null')
+        return
+      }
+
+      if (!poolDetail || !poolDetail.network_available || !poolDetail.campaign_hash) {
+        console.log('pool detail null')
+        return
+      }
+
+      const newTokenAddress = getValues('token')
+      const contractInstance = await getPoolContract({
+        networkAvailable: poolDetail.network_available,
+        poolHash: poolDetail.campaign_hash,
+        isClaimable: true
+      })
+
+      if (!contractInstance) {
+        console.log('contract instance null')
+        return
+      }
+
+      const tx = await contractInstance.methods.changeSaleToken(newTokenAddress).send({from: loginUser.wallet_address});
+      if (!tx || !tx.events || !tx.events.TokenChanged) {
+        console.log('tx failed', tx)
+        dispatch(alertFailure(`Change Token sale blockchain error`))
+        return
+      }
+
+      // save to backend
+      const updateData = {
+        campaign_hash: poolDetail.campaign_hash,
+        token_symbol: token.symbol,
+        token_name: token.name,
+        token_decimals: token.decimals,
+        token_address: token.address,
+      };
+
+      await updateDeploySuccess(updateData, poolDetail.id)
+          .then(() => {
+            dispatch(alertSuccess(`Change Token sale successfully`))
+          }).catch(() => {
+            dispatch(alertFailure(`Change Token sale backend error`))
+          });
+    }
+    catch (e) {
+      dispatch(alertFailure(`Change Token sale error: ${e.message}`))
+    }
+  }
+
   return (
     <>
       <div className={classes.formControl}>
@@ -114,6 +173,30 @@ function TokenAddress(props: any) {
       </div>
       <div className={classes.formControl}>
         <label className={classes.formControlLabel}>Token address</label>
+        { isDeployed && !editForm &&
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => changeEditForm(true)}
+            style={{marginLeft: 10, marginBottom: 10, float: 'right'}}
+          >Edit Token</Button>
+        }
+        { isDeployed && editForm &&
+        <Button
+            variant="contained"
+            color="primary"
+            onClick={() => changeEditForm(false)}
+            style={{marginLeft: 10, marginBottom: 10, float: 'right'}}
+        >Cancel</Button>
+        }
+        {isDeployed && editForm && !loadingToken &&
+          <Button
+              variant="contained"
+              color="primary"
+              onClick={() => changeTokenSale()}
+              style={{ marginLeft: 10, marginBottom: 10, float: 'right' }}
+          >Change Token</Button>
+        }
         <div className={classes.formControlInputLoading}>
           <input
             type="text"
@@ -141,7 +224,7 @@ function TokenAddress(props: any) {
             maxLength={255}
             onChange={handleTokenGetInfo}
             className={classes.formControlInput}
-            disabled={isDeployed}
+            disabled={isDeployed && !editForm}
           />
           {
             loadingToken ?

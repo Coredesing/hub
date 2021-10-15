@@ -195,9 +195,12 @@ const MysteryBox = ({ id, ...props }: any) => {
                     desc: 'Thank you for watching.'
                 }
             }
-
             const startBuyTime = isAccIsBuyPreOrder && timeLine.startPreOrderTime ? timeLine.startPreOrderTime : timeLine.startBuyTime;
-            if (timeLine.startJoinPooltime > Date.now()) {
+            const soldOut = !getRemaining(dataTicket.total_sold_coin, dataTicket.token_sold);
+            if (soldOut) {
+                setCountdown({ date1: 0, date2: 0, title: 'Finished', isFinished: true });
+                timeLine.freeBuyTime ? (timeLinesInfo[5].current = true) : (timeLinesInfo[4].current = true);
+            } else if (timeLine.startJoinPooltime > Date.now()) {
                 setCountdown({ date1: timeLine.startJoinPooltime, date2: Date.now(), title: 'Whitelist Opens In', isUpcoming: true });
                 timeLinesInfo[1].current = true;
             }
@@ -537,12 +540,12 @@ const MysteryBox = ({ id, ...props }: any) => {
                 Congratulations! You have successfully applied whitelist and can buy Mystery boxes
             </WrapperAlert>
         }
-        if((!loadingJoinpool && connectedAccount && countdown.isSale && !countdown.isPhase2) && !alreadyJoinPool) {
+        if ((!loadingJoinpool && connectedAccount && countdown.isSale && !countdown.isPhase2) && !alreadyJoinPool) {
             return <WrapperAlert type="error"> Sorry, you didn’t apply whitelist. </WrapperAlert>
         }
     }
 
-    const disabledBuyNow = +numBoxBuy < 1 || !isKYC || lockWhenBuyBox || !connectedAccount || loadingUserTier || !_.isNumber(userTier) || (infoTicket?.min_tier > 0  && (userTier < infoTicket.min_tier));
+    const disabledBuyNow = +numBoxBuy < 1 || !isKYC || lockWhenBuyBox || !connectedAccount || loadingUserTier || !_.isNumber(userTier) || (infoTicket?.min_tier > 0 && (userTier < infoTicket.min_tier));
 
     return (
         <>
@@ -661,7 +664,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     !countdown.isUpcoming && !countdown.isWhitelist && !countdown.isUpcomingSale &&
                                                     <div className="item">
                                                         <label className="label text-uppercase">REMAINING</label>
-                                                        <span>{numberWithCommas(((+infoTicket.total_sold_coin || 0) - totalBoxesBought) + '')}</span>
+                                                        <span>{numberWithCommas(getRemaining(infoTicket.total_sold_coin, infoTicket.token_sold) + '')}</span>
                                                     </div>
                                                 }
                                                 <div className="item">
@@ -769,19 +772,15 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                 </ButtonBase>
                                             }
                                             {
-                                                countdown.isFinished &&
                                                 <div className={clsx(styles.infoTicket, styles.finished)}>
-                                                    <div className="img-finished">
+                                                    {countdown.isFinished && <div className="img-finished">
                                                         <img src={"/images/finished.png"} alt="" />
-                                                    </div>
-                                                    {!getRemaining(
-                                                        infoTicket.total_sold_coin,
-                                                        infoTicket.token_sold
-                                                    ) && (
-                                                            <div className="soldout">
-                                                                <img src={"/images/soldout.png"} alt="" />
-                                                            </div>
-                                                        )}
+                                                    </div>}
+                                                    {!loadingTicket && !getRemaining(infoTicket.total_sold_coin, infoTicket.token_sold) && (
+                                                        <div className="soldout">
+                                                            <img src={"/images/soldout.png"} alt="" />
+                                                        </div>
+                                                    )}
                                                 </div>
                                             }
                                         </div>

@@ -22,7 +22,7 @@ class HomeController {
 
       return HelperUtils.responseSuccess(data);
     } catch (e) {
-      return HelperUtils.responseErrorInternal('Subscribe email error');
+      return HelperUtils.responseErrorInternal();
     }
   }
 
@@ -43,7 +43,7 @@ class HomeController {
 
       return HelperUtils.responseSuccess(data);
     } catch (e) {
-      return HelperUtils.responseErrorInternal('ERROR: Get performance fail!');
+      return HelperUtils.responseErrorInternal();
     }
   }
 
@@ -70,7 +70,18 @@ class HomeController {
         name: 'Legend',
       };
     } catch (e) {
-      return HelperUtils.responseErrorInternal('ERROR: Fetch API error');
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
+  async getIP({request}) {
+    try {
+      return {
+        ip: request.ip(),
+        headers: request.headers()
+      };
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
     }
   }
 }

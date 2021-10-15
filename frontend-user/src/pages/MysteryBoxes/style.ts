@@ -368,7 +368,7 @@ const useStyles = makeStyles((theme: any) => ({
     },
     background: 'rgba(8, 8, 8, 0.8)',
     '& .slides': {
-      overflow: 'hidden',
+      // overflow: 'hidden',
       paddingTop: '20px',
       paddingBottom: '20px',
       paddingLeft: '20px',
@@ -376,9 +376,12 @@ const useStyles = makeStyles((theme: any) => ({
       ...typeDisplayFlex,
       flexDirection: 'column',
       alignItems: 'center',
+      maxHeight: 'calc(100vh - 80px)',
+      overflow: 'auto',
       [theme.breakpoints.down('sm')]: {
         flexDirection: 'row',
         gap: '6px',
+        maxHeight: 'unset',
       },
       '& .slide': {
         border: '1px solid #000',

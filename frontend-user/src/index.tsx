@@ -4,10 +4,10 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+const AppElement = process.env.NODE_ENV === 'production' ? <React.StrictMode><App /></React.StrictMode> : <React.Fragment><App /></React.Fragment>;
+
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  AppElement,
   document.getElementById('root')
 );
 

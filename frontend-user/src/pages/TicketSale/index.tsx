@@ -14,6 +14,7 @@ import NotFoundPage from '../NotFoundPage';
 import { Backdrop, CircularProgress, Link, useTheme } from '@material-ui/core';
 import { getFilterTokenType, getRoute } from './utils';
 import { ACCEPT_ROUTES } from './ contants';
+import { ObjectType } from '@app-types';
 
 const TicketSale = (props: any) => {
   const theme = useTheme();
@@ -54,7 +55,16 @@ const TicketSale = (props: any) => {
       setRecall(false);
     }
   }, [loadingActivePools, loadingUpcomingPools, loadingcompletePools]);
-  
+
+  const [upcomingPoolsList, setUpcomingPoolsList] = useState<ObjectType<any>[]>([]);
+
+  useEffect(() => {
+    if (upcomingPools.data?.length) {
+      const sorted = upcomingPools.data.sort((a) => a.campaign_status === 'TBA' ? 1 : -1);
+      setUpcomingPoolsList(sorted);
+    }
+  }, [upcomingPools])
+
   return (
     checkParamType.checking ?
       <Backdrop open={checkParamType.checking} style={{ color: '#fff', zIndex: theme.zIndex.drawer + 1, }}>
@@ -84,7 +94,7 @@ const TicketSale = (props: any) => {
 
                 <div className={clsx(styles.cards, styles.cardsUpcoming)}>
                   {
-                    (upcomingPools?.data || []).map((card, id: number) => <UpcomingCard key={id} card={card} refresh={refresh} />)
+                    upcomingPoolsList.map((card, id: number) => <UpcomingCard key={id} card={card} refresh={refresh} />)
                   }
                 </div>
               </div>

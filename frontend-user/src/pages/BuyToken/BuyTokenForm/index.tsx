@@ -595,8 +595,8 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
               <Button
                 text={new BigNumber(tokenAllowance || 0).gt(0) ? 'Approved' : 'Approve'}
                 backgroundColor={'#29C08A'}
-                disabled={!enableApprove || !isKyc}
-                onClick={isKyc ? handleTokenApprove : undefined}
+                disabled={!enableApprove}
+                onClick={handleTokenApprove}
                 loading={tokenApproveLoading}
               />
             }
@@ -606,8 +606,8 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
             <Button
               text={isInPreOrderTime ? 'Pre-order' : 'Swap'}
               backgroundColor={'#72F34B'}
-              disabled={!purchasable || !isKyc || !verifiedCapcha}
-              onClick={(isKyc) ? handleTokenDeposit : undefined}
+              disabled={!purchasable || !verifiedCapcha}
+              onClick={handleTokenDeposit}
               loading={tokenDepositLoading}
             />
           </div>

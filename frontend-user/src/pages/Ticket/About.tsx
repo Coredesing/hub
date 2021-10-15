@@ -327,6 +327,7 @@ export const AboutMysteryBox = ({
   const [tabCurrent, setTab] = React.useState(props.defaultTab || 0);
   const theme = useTheme();
   const matchSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchXS = useMediaQuery(theme.breakpoints.down("xs"));
   // const [page, setPage] = useState(1);
   // const [searchWinner, setSearchWinner] = useState('');
   // const [pagination, setPagination] = useState<{
@@ -384,11 +385,12 @@ export const AboutMysteryBox = ({
     <div className={classes.root}>
       <AppBar className={classes.appbar} position="static">
         <AntTabs
-          centered={matchSM ? true : false}
+          centered={matchXS ? undefined : matchSM ? true : false}
           value={tabCurrent}
           onChange={handleChange}
           aria-label="simple tabs example"
-          variant={matchSM ? "fullWidth" : "standard"}
+          variant={matchXS ? "scrollable" : matchSM ? "fullWidth" : "standard"}
+          scrollButtons={matchXS ? "auto" : undefined}
         >
           <Tab
             className={clsx(classes.tabName, { active: tabCurrent === 0 })}

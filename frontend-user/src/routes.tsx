@@ -62,11 +62,10 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                 gtag('event', 'page_view', {
                     page_title: document.title,
                     page_location: window.location.href,
-                    page_path: location.pathname + location.search,
+                    page_path: location.pathname,
                     send_to: process.env.REACT_APP_GTAG_ID
                 })
             }
-
         })
     }, [history])
     const { deactivate } = useWeb3React();

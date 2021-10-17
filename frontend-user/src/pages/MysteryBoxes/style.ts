@@ -392,8 +392,10 @@ const useStyles = makeStyles((theme: any) => ({
         cursor: 'pointer',
         marginBottom: '6px',
         paddingTop: '8px',
+        [theme.breakpoints.down('sm')]: {
+          height: '153px',
+        },
         '&  .img-slide': {
-
           position: 'absolute',
           top: 0,
           left: 0,
@@ -403,6 +405,7 @@ const useStyles = makeStyles((theme: any) => ({
           '& img': {
             width: '100%',
             height: '100%',
+            objectFit: 'cover',
           }
         },
         '& .detail': {

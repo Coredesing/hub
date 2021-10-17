@@ -22,7 +22,7 @@ class HomeController {
 
       return HelperUtils.responseSuccess(data);
     } catch (e) {
-      return HelperUtils.responseErrorInternal('Subscribe email error');
+      return HelperUtils.responseErrorInternal();
     }
   }
 
@@ -43,7 +43,7 @@ class HomeController {
 
       return HelperUtils.responseSuccess(data);
     } catch (e) {
-      return HelperUtils.responseErrorInternal('ERROR: Get performance fail!');
+      return HelperUtils.responseErrorInternal();
     }
   }
 
@@ -70,9 +70,12 @@ class HomeController {
         name: 'Legend',
       };
     } catch (e) {
-      return HelperUtils.responseErrorInternal('ERROR: Fetch API error');
+      return HelperUtils.responseErrorInternal();
     }
   }
+
+  // headers: cf-connecting-ip
+  // headers: x-forwarded-for
 }
 
 module.exports = HomeController

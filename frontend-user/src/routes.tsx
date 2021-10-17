@@ -63,7 +63,7 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                     page_title: document.title,
                     page_location: window.location.href,
                     page_path: location.pathname + location.search,
-                    send_to: 'G-747PVNBV6B'
+                    send_to: process.env.REACT_APP_GTAG_ID
                 })
             }
 

@@ -14,9 +14,12 @@ const STEP = 5000
 class StakingEventService {
   async queryTop(param) {
     try {
+      let LEGEND = HelperUtils.getLegendData()
+      LEGEND = LEGEND.map((data) => { return data.wallet_address })
       let data = await StakingEventModel.query()
         .whereBetween('dispatch_at', [param.start_time, param.end_time])
         .select('wallet_address')
+        .whereNotIn('wallet_address', LEGEND)
         .sum('amount as amount')
         .max('dispatch_at as last_time')
         .groupBy('wallet_address')

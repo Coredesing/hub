@@ -91,7 +91,7 @@ const IdoPools = (props: any) => {
   const handleChangeType = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
     const name = event.target.name as string;
     const value = event.target.value;
-    setFilter && setFilter((f: ObjType) => ({ ...f, [name]: value }));
+    setFilter && setFilter((f: ObjType) => ({ ...f, [name]: value, page: 1, }));
     setLoadingPools && setLoadingPools(true);
   };
 

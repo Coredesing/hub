@@ -46,7 +46,6 @@ Route.group(() => {
   // home
   Route.get('home/performance', 'HomeController.getPerformance');
   Route.post('home/subscribe', 'HomeController.subscribe');
-  Route.get('home/ip', 'HomeController.getIP');
   Route.get('/legend/:id', 'HomeController.getLegendImages');
 
   // pool

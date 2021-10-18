@@ -829,7 +829,7 @@ const getPathExportUsers = (fileName) => {
 }
 
 const getLegendData = () => {
-  return LEGEND_DATA;
+  return LEGEND_DATA.filter(data => { return data.valid === true });
 }
 
 const getLegendIdByOwner = (wallet_address) => {

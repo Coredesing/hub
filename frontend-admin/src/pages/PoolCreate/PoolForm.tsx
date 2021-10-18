@@ -3,7 +3,6 @@ import useStyles from "./style";
 import {useCommonStyle} from "../../styles";
 import {useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
-import {cloneDeep} from 'lodash';
 
 import {CircularProgress, Grid} from "@material-ui/core";
 import {getTokenInfo, TokenType} from "../../utils/token";
@@ -40,6 +39,7 @@ import moment from "moment";
 import ClaimConfigTable from "./Components/ClaimConfig/ClaimConfigTable";
 import SeriesContentTable from "./Components/SeriesContentConfig/SeriesContentTable";
 import BoxTypesConfigTable from "./Components/BoxTypesConfig/BoxTypesConfigTable";
+import AcceptedTokensConfigTable from "./Components/AcceptedTokens/AcceptedTokensConfigTable";
 import WhitelistSocialRequirement from "./Components/WhitelistSocialRequirement";
 import {campaignClaimConfigFormat} from "../../utils/campaign";
 import PrivatePoolSetting from "./Components/PrivatePoolSetting";
@@ -54,7 +54,6 @@ import FreeTimeSetting from "./Components/FreeTimeSetting/FreeTimeSetting";
 import PoolRule from "./Components/PoolRule";
 import Process from "./Components/Process";
 import {POOL_IS_PRIVATE, TOKEN_TYPE} from "../../constants";
-import {Const} from "../../../../crawler/bin/ethlink/Const";
 
 function PoolForm(props: any) {
   const classes = useStyles();
@@ -927,6 +926,19 @@ function PoolForm(props: any) {
               />
             </div>
           </Grid>
+
+          <Grid item xs={12}>
+            <div className={classes.exchangeRate}>
+              <AcceptedTokensConfigTable
+                  poolDetail={poolDetail}
+                  setValue={setValue}
+                  register={register}
+                  watch={watch}
+                  errors={errors}
+                  control={control}
+              />
+            </div>
+          </Grid>
         </Grid>
       }
 
@@ -1016,12 +1028,7 @@ function PoolForm(props: any) {
 
         </Grid>
       </Grid>
-
-
-
-
     </div>
-
   </>
   );
 }

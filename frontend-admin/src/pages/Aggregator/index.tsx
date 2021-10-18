@@ -4,7 +4,7 @@ import useStyles from './style';
 import DefaultLayout from "../../components/Layout/DefaultLayout";
 import Button from "../../components/Base/ButtonLink";
 import {adminRoute} from "../../utils";
-import {getAggregator} from "../../store/actions/aggregator";
+import {deleteAggregator, getAggregator} from "../../store/actions/aggregator";
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Pagination from "@material-ui/lab/Pagination";
@@ -27,7 +27,10 @@ const Aggregator: React.FC<any> = (props: any) => {
         dispatch(getAggregator(null))
     }
     const removeGame = (id:number) => {
-        console.log(id)
+        const r = window.confirm("Do you really want to delete?");
+        if(r){
+            dispatch(deleteAggregator(id))
+        }
     }
     return (
         <DefaultLayout>

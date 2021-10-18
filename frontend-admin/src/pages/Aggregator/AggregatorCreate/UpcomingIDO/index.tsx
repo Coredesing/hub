@@ -18,6 +18,10 @@ const UpcomingIDO: React.FC<any> = (props: any) => {
         network_available: gameDetails?.network_available,
         accept_currency: gameDetails?.accept_currency,
     });
+
+    if (upcomingIDOInfo) {
+        onChangeUpcomingIDO(upcomingIDOInfo)
+    }
     const onChangeUpcomingType = (event: any) => {
         let newData = {...upcomingIDOInfo}
         console.log(event)

@@ -38,6 +38,11 @@ const ProjectInformation: React.FC<any> = (props: any) => {
         reddit_link: gameDetails?.reddit_link,
         instagram_link: gameDetails?.instagram_link,
     });
+
+    if (projectInfo) {
+        onChangeProjectInfo(projectInfo)
+    }
+
     const onChangeRoadmap = (event: any) => {
         let newData = {...projectInfo}
         newData.roadmap = event

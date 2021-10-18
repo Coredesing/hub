@@ -206,7 +206,7 @@ Route.group(() => {
   Route.get('aggregator/:id', 'AggregatorController.findAggregator');
   Route.get('project-info/:id', 'AggregatorController.findProject');
   Route.get('tokenomics/:id', 'AggregatorController.findTokenomic');
-  Route.delete('aggregator/:id', 'AggregatorController.aggregatorCreate');
+  Route.delete('aggregator/:id', 'AggregatorController.removeGame');
 }).prefix('api/v2/admin').middleware(['auth:admin', 'checkAdminJwtSecret']);
 
 Route.group(() => {

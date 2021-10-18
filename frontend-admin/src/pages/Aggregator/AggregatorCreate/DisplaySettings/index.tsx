@@ -39,6 +39,11 @@ const DisplaySettings: React.FC<any> = (props: any) => {
         verified: gameDetails?.verified,
         top_favourite_link: gameDetails?.top_favourite_link,
     });
+
+    if (displaySettings) {
+        onChangeDisplaySettings(displaySettings)
+    }
+
     const onChangeIntroVideo = (event: any) => {
         let newData = {...displaySettings}
         newData.intro_video = event.target.value
@@ -171,11 +176,12 @@ const DisplaySettings: React.FC<any> = (props: any) => {
 
                     <div className={classes.formControl}>
                         <label className={classes.formControlLabel}>Upload Video</label>
-                        <button
+                        <input
+                            type="text"
+                            onChange={onChangeUploadVideo}
                             defaultValue={displaySettings.upload_video}
-                            //onChange={}
-                            className={classes.formControlButton}
-                        >Upload Video</button>
+                            className={classes.formControlInput}
+                        />
                     </div>
 
                     <div className={classes.formControlFull}>

@@ -19,7 +19,6 @@ export const getAggregator = (id:any) => {
             const response = await baseRequest.get(url) as any;
             const resObject = await response.json();
             const data = resObject;
-            console.log(data)
             dispatch({
                 type: aggregatorAction.GET_AGGREGATOR_SUCCESS,
                 payload: {
@@ -48,7 +47,6 @@ export const getTokenomic = (id:number) => {
             const response = await baseRequest.get(url) as any;
             const resObject = await response.json();
             const data = resObject;
-            console.log(data)
             dispatch({
                 type: aggregatorAction.GET_TOKENOMIC_SUCCESS,
                 payload: {
@@ -77,7 +75,6 @@ export const getProjectInfo = (id:number) => {
             const response = await baseRequest.get(url) as any;
             const resObject = await response.json();
             const data = resObject;
-            console.log(data)
             dispatch({
                 type: aggregatorAction.GET_PROJECT_SUCCESS,
                 payload: {
@@ -107,15 +104,12 @@ export const addAggregator = (gameData: any, tokenomicData: any, projectData: an
             const resObject = await response.json();
 
             const { id } = resObject;
-            console.log(id)
             let tokenomicUrl = `/admin/aggregator/tokenomic/${id}`
             let projectUrl = `/admin/aggregator/project/${id}`
             const tkresponse = await baseRequest.post(tokenomicUrl, tokenomicData) as any;
             const pjresponse = await baseRequest.post(projectUrl, projectData) as any;
             const tkresObject = await tkresponse.json();
             const pjresObject = await pjresponse.json();
-            console.log(tkresObject)
-            console.log(pjresObject)
             dispatch({
                 type: aggregatorAction.CREATE_AGGREGATOR_SUCCESS,
             })
@@ -138,7 +132,7 @@ export const addAggregator = (gameData: any, tokenomicData: any, projectData: an
     }
 }
 
-export const updateAggregator = (gameData: any, tokenomicData: any, projectData: any,) => {
+export const updateAggregator = (id:number, gameData: any, tokenomicData: any, projectData: any,) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
         const baseRequest = new BaseRequest();
         console.log(gameData)
@@ -147,18 +141,15 @@ export const updateAggregator = (gameData: any, tokenomicData: any, projectData:
         dispatch({ type: aggregatorAction.CREATE_AGGREGATOR_REQUEST });
 
         try {
-            let url = `/admin/aggregator/${gameData.id}`;
-            let tokenomicUrl = `/admin/aggregator/tokenomic/update/${gameData.id}`
-            let projectUrl = `/admin/aggregator/project/update/${gameData.id}`
+            let url = `/admin/aggregator/${id}`;
+            let tokenomicUrl = `/admin/aggregator/tokenomic/update/${id}`
+            let projectUrl = `/admin/aggregator/project/update/${id}`
             const response = await baseRequest.post(url, gameData) as any;
             const resObject = await response.json();
             const tkresponse = await baseRequest.post(tokenomicUrl, tokenomicData) as any;
             const tkresObject = await tkresponse.json();
             const pjresponse = await baseRequest.post(projectUrl, projectData) as any;
             const pjresObject = await pjresponse.json();
-            console.log(resObject)
-            console.log(tkresObject)
-            console.log(pjresObject)
             dispatch({
                 type: aggregatorAction.CREATE_AGGREGATOR_SUCCESS,
             })
@@ -181,7 +172,7 @@ export const updateAggregator = (gameData: any, tokenomicData: any, projectData:
 }
 
 
-export const deleteWhitelist = (id: string) => {
+export const deleteAggregator = (id: number) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
         const baseRequest = new BaseRequest();
 
@@ -201,7 +192,7 @@ export const deleteWhitelist = (id: string) => {
 
                 dispatch({
                     type: alertActions.SUCCESS_MESSAGE,
-                    payload: 'Remove whitelist Successful!'
+                    payload: 'Remove aggregator Successful!'
                 });
             } else {
                 const { message } = resObject;
@@ -210,6 +201,9 @@ export const deleteWhitelist = (id: string) => {
                     payload: message
                 });
             }
+            setTimeout(() => {
+                window.location.reload()
+            }, 1000)
         } catch (err: any) {
             dispatch({
                 type: aggregatorAction.DELETE_AGGREGATOR_FAIL,

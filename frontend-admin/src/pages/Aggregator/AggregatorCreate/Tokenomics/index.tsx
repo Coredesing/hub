@@ -36,6 +36,11 @@ const Tokenomics: React.FC<any> = (props: any) => {
         token_distribution: gameDetails?.token_distribution,
         token_release: gameDetails?.token_release,
     });
+
+    if (tokenomics) {
+        onChangeTokenomics(tokenomics)
+    }
+
     const onChangeTicker = (event: any) => {
         let newData = {...tokenomics}
         newData.ticker = event.target.value

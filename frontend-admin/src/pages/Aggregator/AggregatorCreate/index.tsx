@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import useStyles from './style';
 import DefaultLayout from "../../../components/Layout/DefaultLayout";
-import {useForm} from "react-hook-form";
 import GameInformation from "./GameInformation";
 import {CircularProgress} from "@material-ui/core";
 import { useTabs, TabPanel } from "react-headless-tabs"
@@ -33,7 +32,7 @@ const AggregatorCreate: React.FC<any> = (props: any) => {
         'project_info',
         'display',
         'upcoming'
-    ], 'GAME INFORMATION')
+    ], 'game_info')
     const handleGameCreateUpdate = () => {
         if (!isEdit) {
             const gameData = {
@@ -44,19 +43,12 @@ const AggregatorCreate: React.FC<any> = (props: any) => {
             dispatch(addAggregator(gameData, tokenomics, projectInfo))
             console.log(gameData)
         } else {
-            let gameData = gameInfo
-            if (Object.keys(gameData).length === 0) {
-                gameData = game_info.data
+            const gameData = {
+                gameInfo,
+                displaySettings,
+                upcomingIdo
             }
-            let tokenomicData = tokenomics
-            if (Object.keys(tokenomicData).length === 0) {
-                tokenomicData = tokenomic.data
-            }
-            let projectData = projectInfo
-            if (Object.keys(projectData).length === 0) {
-                projectData = project_info.data
-            }
-            dispatch(updateAggregator(gameData, tokenomicData, projectData))
+            dispatch(updateAggregator(itemID, gameData, tokenomics, projectInfo))
         }
 
     }
@@ -83,26 +75,23 @@ const AggregatorCreate: React.FC<any> = (props: any) => {
     }
 
     const onChangeGameInfo = (data: any) => {
+        console.log(data)
         setGameinfo(data)
     }
     const onChangeTokenomics = (data:any) => {
+        console.log(data)
         setTokenomics(data)
     }
     const onChangeProjectInfo = (data:any) => {
+        console.log(data)
         setProjectInfo(data)
     }
     const onChangeDisplaySettings = (data:any) => {
-        if (isEdit) {
-            setGameinfo(data)
-            return
-        }
+        console.log(data)
         setDisplaySettings(data)
     }
     const onChangeUpcomingIDO = (data:any) => {
-        if (isEdit) {
-            setGameinfo(data)
-            return
-        }
+        console.log(data)
         setUpcomingIdo(data)
     }
     return (

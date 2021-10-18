@@ -8,29 +8,28 @@ import CreatableSelect from "react-select/creatable";
 
 const GameInformation: React.FC<any> = (props: any) => {
     const classes = useStyles();
-    const { gameDetails, onChangeGameInfo } = props
-    const [gameInfo, setGameInfo] = useState({
-        category: gameDetails?.category,
-        developer: gameDetails?.developer,
-        language: gameDetails?.language,
-        game_name: gameDetails?.game_name,
-        hashtags: gameDetails?.hashtags,
-        system_require: gameDetails?.system_require,
-        game_intro: gameDetails?.game_intro,
-        game_features: gameDetails?.game_features,
-    });
+    let { gameDetails, onChangeGameInfo } = props
+    const [gameInfo, setGameInfo] = useState({...props.gameDetails});
     useEffect(() => {
-        if (!gameInfo || !gameInfo?.game_name) {
+        if (!gameInfo?.system_require || !gameInfo?.game_intro || !gameInfo?.game_features || !gameInfo?.game_name || !gameInfo?.developer || !gameInfo?.category || !gameInfo?.language || !gameInfo?.hashtags) {
             setGameInfo(gameDetails)
         }
-    }, [gameInfo])
+    }, [props])
     const categories = [
         { value: 'Action', label: 'Action' },
         { value: 'Adventure', label: 'Adventure' },
         { value: 'Card', label: 'Card' },
         { value: 'Metaverse', label: 'Metaverse' },
         { value: 'MMORPG', label: 'MMORPG' },
-        { value: 'Puzzle', label: 'Puzzle' }]
+        { value: 'Puzzle', label: 'Puzzle' },
+        { value: 'Racing', label: 'Racing' },
+        { value: 'Role Playing', label: 'Role Playing' },
+        { value: 'Simulation', label: 'Simulation' },
+        { value: 'Strategy', label: 'Strategy' },
+        { value: 'Real-Time Strategy', label: 'Real-Time Strategy' },
+        { value: 'Turn-Based Strategy', label: 'Turn-Based Strategy' },
+        { value: 'Others', label: 'Others' }
+        ]
     const isValidNewOption = (inputValue:any, selectValue:any) =>
         inputValue.length > 0 && selectValue.length < 3;
     const modules = {
@@ -76,8 +75,6 @@ const GameInformation: React.FC<any> = (props: any) => {
         })
     }
 
-    console.log(gameDetails)
-    console.log(gameInfo)
     const onChangeName = (event: any) => {
         let newData = {...gameInfo}
         newData.game_name = event.target.value

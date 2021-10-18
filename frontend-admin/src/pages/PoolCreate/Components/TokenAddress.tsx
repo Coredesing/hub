@@ -135,7 +135,7 @@ function TokenAddress(props: any) {
             dispatch(alertFailure(`Change Token sale backend error`))
           });
     }
-    catch (e) {
+    catch (e: any) {
       dispatch(alertFailure(`Change Token sale error: ${e.message}`))
     }
   }

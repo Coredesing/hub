@@ -537,14 +537,14 @@ class PoolService {
     try {
       const tokenSold = await HelperUtils.getTokenSoldSmartContract(pool);
 
-      const status = await HelperUtils.getPoolStatusByPoolDetail(pool, tokenSold);
-      console.log('[PoolService::updatePoolInformation]', pool.id, tokenSold, status);
+      const data = await HelperUtils.getPoolStatusByPoolDetail(pool, tokenSold);
+      console.log('[PoolService::updatePoolInformation]', pool.id, data.tokenSold, data.status);
 
       const lastTime = HelperUtils.getLastActualFinishTime(pool); // lastClaimConfig + 12h
 
       const dataUpdate = {
-        token_sold: tokenSold,
-        campaign_status: status,
+        token_sold: data.tokenSold || tokenSold,
+        campaign_status: data.status,
       };
 
       // update actual finish time
@@ -553,7 +553,7 @@ class PoolService {
       }
 
       // update priority
-      if (status === Const.POOL_STATUS.ENDED) {
+      if (data.status === Const.POOL_STATUS.ENDED) {
         dataUpdate.priority = 0
       }
 
@@ -562,12 +562,12 @@ class PoolService {
       if (await RedisUtils.checkExistRedisPoolDetail(pool.id)) {
         let cachedPoolDetail = await RedisUtils.getRedisPoolDetail(pool.id);
         cachedPoolDetail = JSON.parse(cachedPoolDetail)
-        cachedPoolDetail.token_sold = tokenSold
-        cachedPoolDetail.campaign_status = status
+        cachedPoolDetail.token_sold = data.tokenSold
+        cachedPoolDetail.campaign_status = data.status
         if (lastTime) {
           cachedPoolDetail.actual_finish_time = lastTime
         }
-        if (status === Const.POOL_STATUS.ENDED) {
+        if (data.status === Const.POOL_STATUS.ENDED) {
           cachedPoolDetail.priority = 0
         }
         await RedisUtils.createRedisPoolDetail(pool.id, cachedPoolDetail)

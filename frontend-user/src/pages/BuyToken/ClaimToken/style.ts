@@ -146,7 +146,7 @@ const useStyles = makeStyles((theme: any) => {
         '& .mark': {
           position: 'absolute',
           top: '-5px',
-          left: 0,
+          left: '-3px',
           content: '""',
           [theme.breakpoints.down('sm')]: {
             top: '-14px',

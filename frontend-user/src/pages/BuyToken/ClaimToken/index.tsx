@@ -255,7 +255,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
           progress.map((p: any, idx: number) => {
             return <li key={idx}
               className={clsx({
-                active: (idx === 0 || progress[idx + 1]?.marked)
+                active: ((idx === 0 && progress[idx + 1]?.marked) || progress[idx + 1]?.marked)
               })}
               style={
                 isSmScreen ?

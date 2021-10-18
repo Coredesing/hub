@@ -26,9 +26,7 @@ const Pool = (props: any): JSX.Element => {
 
   const {
     pool
-  } = props
-  console.log('pool', pool);
-  
+  } = props  
 
   useEffect(() => {
     const getTokenSoldByPool = async () => {

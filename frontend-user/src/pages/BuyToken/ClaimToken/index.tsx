@@ -43,7 +43,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
   const theme = useTheme();
   const isSmScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [openClaimModal, setOpenClaimModal] = useState<boolean>(false);
-  const [userPurchased, setUserPurchased] = useState<number>(1818.18);
+  const [userPurchased, setUserPurchased] = useState<number>(0);
   const [userClaimInfo, setUserClaimInfo] = useState<any>();
 
   const { account: connectedAccount } = useWeb3React();

@@ -56,6 +56,7 @@ import clsx from 'clsx';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
+import { TIERS } from '@app-constants';
 
 const closeIcon = '/images/icons/close.svg';
 
@@ -326,7 +327,7 @@ const StakingPools = (props: any) => {
   }, [filteredLinearPools, connectedAccount, library]);
 
 
-const [expandedEvent, setExpandEvent] = useState(true);
+  const [expandedEvent, setExpandEvent] = useState(true);
 
   return (
     <DefaultLayout>
@@ -425,7 +426,7 @@ const [expandedEvent, setExpandEvent] = useState(true);
                       expanded: styles.accordionSummaryExpanded,
                       root: styles.accordionSummaryRoot
                     }}
-                  onClick={() => setExpandEvent(b => !b)}
+                    onClick={() => setExpandEvent(b => !b)}
                   >
                     <Box className={styles.boxRankHeader}>
                       <Box className={styles.boxListRank}>
@@ -483,7 +484,16 @@ const [expandedEvent, setExpandEvent] = useState(true);
                           <TableBody>
                             {topWalletRanking.map((row: any, idx: number) => (
                               <TableRowBody key={idx}>
-                                <TableCell component="th" scope="row" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>  {row.idx + 1} </TableCell>
+                                <TableCell component="th" scope="row" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>
+                                  <Box >
+                                    <span>{row.idx + 1}</span>
+                                    {
+                                      row.idx + 1 <= listTopStaked?.limit && <Box width="40px" height="40px" marginLeft="10px">
+                                        <img src={TIERS.slice(-1)[0].icon} alt="" style={{ width: '40px', height: '40px' }} />
+                                      </Box>
+                                    }
+                                  </Box>
+                                </TableCell>
                                 <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{cvtAddressToStar(row.wallet_address)}</TableCell>
                                 <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{numberWithCommas((row.amount + '') || 0, 4)}</TableCell>
                                 <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{convertTimeToStringFormat(new Date(+row.last_time * 1000))}</TableCell>

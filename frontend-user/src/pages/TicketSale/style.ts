@@ -300,18 +300,20 @@ export const useCardStyles = makeStyles((theme) => ({
   },
   btnView: {
     padding: '7px 10px',
-    fontFamily: 'inherit',
     background: '#72F34B',
     color: '#000',
-    fontSize: '16px',
     lineHeight: '28px',
     borderRadius: '4px',
     minWidth: '260px',
     display: 'block',
     textAlign: 'center',
+    fontFamily: 'inherit',
+    fontSize: '14px',
+    fontWeight: 600,
     '&:hover': {
       background: '#5ec73e',
-      color: '#000',
-    }
+      color: "#000",
+      textDecoration: "unset",
+    },
   },
 }));

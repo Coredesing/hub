@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import {Button, makeStyles} from "@material-ui/core";
 import {renderErrorCreatePool} from "../../../../utils/validate";
 import CreateEditAcceptedTokensForm from "./CreateEditAcceptedTokensForm";
+import {NETWORK_AVAILABLE, ZERO_ADDRESS} from "../../../../constants";
 
 const useStylesTable = makeStyles({
   table: {
@@ -25,7 +26,7 @@ function AcceptedTokensConfigTable(props: any) {
   const classes = useStyles();
   const classesTable = useStylesTable();
   const {
-    register, setValue,
+    register, setValue, watch,
     poolDetail,
   } = props;
   const renderError = renderErrorCreatePool;
@@ -34,6 +35,7 @@ function AcceptedTokensConfigTable(props: any) {
   const [editRow, setEditRow] = useState(0);
   const [isEdit, setIsEdit] = useState(true);
   const [rows, setRows] = useState(createDefaultData());
+  const networkAvailable = watch('networkAvailable');
 
   useEffect(() => {
     if (poolDetail && poolDetail.acceptedTokensConfig) {
@@ -83,6 +85,30 @@ function AcceptedTokensConfigTable(props: any) {
     setValue('acceptedTokensConfig', newRows);
   };
 
+  const createCustomToken = (data: any) => {
+    const newRows = [...rows];
+    // @ts-ignore
+    newRows.push(data);
+    setRows(newRows);
+  };
+
+  const createNativeToken = () => {
+    if (!networkAvailable) {
+      return
+    }
+    let name = 'BNB'
+    switch (networkAvailable) {
+      case NETWORK_AVAILABLE.ETH:
+        name = 'ETH'
+        break;
+      case NETWORK_AVAILABLE.POLYGON:
+        name = 'MATIC'
+        break;
+    }
+
+    createCustomToken({name: name, address: ZERO_ADDRESS, price: 0.1, icon: ''})
+  };
+
   return (
     <>
       {isOpenEditPopup &&
@@ -103,6 +129,12 @@ function AcceptedTokensConfigTable(props: any) {
           color="primary"
           onClick={openPopupCreate}
         >Create</Button>
+        <Button
+            style={{marginLeft: 5}}
+            variant="contained"
+            color="primary"
+            onClick={createNativeToken}
+        >Native Token</Button>
       </div>
       
       <TableContainer component={Paper}>

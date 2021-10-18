@@ -525,7 +525,7 @@ const useStyles = makeStyles((theme: any) => {
       padding: '0 !important',
     },
     accordionSummaryContent: {
-      display: 'grid',
+      display: 'grid !important',
       gridTemplateColumns: 'calc(100% - 80px) 80px',
     },
     accordionSummaryExpanded: {

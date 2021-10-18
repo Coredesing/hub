@@ -104,7 +104,7 @@ const useStyles = makeStyles((theme: any) => {
         display: 'flex',
         alignItems: 'center',
         marginLeft: 'auto',
-        color: '#6398FF'
+        color: '#72F34B'
       },
       '& .pool--detail': {
         background: '#191920',
@@ -176,7 +176,7 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '& .MuiIconButton-label': {
-        color: '#6398FF',
+        color: '#72F34B',
       },
 
       '& .justify-between': {

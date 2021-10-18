@@ -501,6 +501,38 @@ const useStyles = makeStyles((theme: any) => {
     },
     cellHighlight: {
       background: 'rgba(114, 243, 75, 0.2)',
+    },
+    accordionRoot: {
+      background: 'transparent !important',
+      color: 'unset !important',
+      boxShadow: 'unset',
+      borderBottom: '1px solid #37373D',
+
+      [theme.breakpoints.down('xs')]: {
+        '& .expanded-text': {
+          display: 'none',
+        }
+      },
+
+      '& .expanded-text, & .MuiIconButton-label': {
+        color: '#72F34B'
+      },
+      '& .Mui-expanded .expanded-text, & .Mui-expanded .MuiIconButton-label': {
+        color: '#D01F36'
+      }
+    },
+    accordionSummaryRoot: {
+      padding: '0 !important',
+    },
+    accordionSummaryContent: {
+      display: 'grid',
+      gridTemplateColumns: 'calc(100% - 80px) 80px',
+    },
+    accordionSummaryExpanded: {
+      margin: '0 !important',
+    },
+    accordionDetailsRoot: {
+      display: 'block !important',
     }
   };
 });

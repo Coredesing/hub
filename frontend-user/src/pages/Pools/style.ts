@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: any) => {
       padding: '12px 0',
 
       '&.active': {
-        color: '#6398FF',
+        color: '#72F34B',
       },
       '&.active:after': {
         content: '""',
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: any) => {
         width: '100%',
         height: '3px',
         borderRadius: '20px',
-        backgroundColor: '#6398FF',
+        backgroundColor: '#72F34B',
         position: 'absolute',
         bottom: '0',
         left: '0',
@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme: any) => {
       marginBottom: '20px',
 
       '& input': {
-        background: '#11152A',
+        // background: '#11152A',
         border: '1px solid #2D2F36',
         boxSizing: 'border-box',
         borderRadius: '4px',
@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme: any) => {
       alignItems: 'center',
       height: '60px',
       width: '100%',
-      background: '#040D34',
+      background: '#171717',
       borderRadius: '4px 4px 0px 0px',
       font: 'normal normal bold 14px/18px DM Sans',
       color: '#FFF',
@@ -153,7 +153,30 @@ const useStyles = makeStyles((theme: any) => {
       '& *': {
         color: 'white'
       }
-    }
+    },
+    ulPagination: {
+      color: '#AEAEAE',
+      '& li div': {
+          color: '#AEAEAE',
+      },
+      '& button': {
+          background: 'transparent',
+          color: '#AEAEAE',
+          fontSize: '14px',
+          lineHeight: '24px',
+          fontFamily: 'Firs Neue',
+          fontStyle: 'normal',
+          fontWeight: 600,
+
+          '&[aria-label^="page"]': {
+              background: '#72F34B',
+              color: '#000000',
+              '&:hover': {
+                  background: '#4fa934',
+              }
+          }
+      }
+  }
   };
 });
 

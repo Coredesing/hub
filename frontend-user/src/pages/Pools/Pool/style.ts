@@ -130,7 +130,7 @@ const useStyles = makeStyles((theme: any) => {
         width: '280px',
         height: '5px',
         borderRadius: '10px',
-        backgroundColor: '#232394',
+        backgroundColor: '#72F34B',
         position: 'absolute',
         left: 0,
         top: 0,

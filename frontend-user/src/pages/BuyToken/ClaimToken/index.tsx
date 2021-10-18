@@ -191,8 +191,9 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
         date = cfg.start_time && new Date(cfg.start_time * 1000),
         marked = +cfg.max_percent_claim <= percentClaimed,
         showInfo = true;
+      const isDisplayDate = index - 1 === nextClaim;
       // lastMaxPercent = +cfg.max_percent_claim;
-      return { percent, tokenAmount, date, marked, showInfo };
+      return { percent, tokenAmount, date, marked, showInfo, isDisplayDate };
     });
     // if (config.length === 1) {
     //   if (userClaimed > 0) {
@@ -248,8 +249,11 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
 
       <ul className={
         // styles.poolDetailClaimProgress
-        styles.progressClaim
-      }>
+        clsx(styles.progressClaim,
+          { adjust: progress.length > 8 }
+        )
+      }
+      >
 
         {
           progress.map((p: any, idx: number) => {
@@ -282,8 +286,10 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
                     </span>
                   )}
                 </div>
-                {!p.marked && p.date && (
-                  <div>{convertTimeToStringFormat(p.date) || buildMomentTimezone(p.date).format('h:mm A, DD/MM/YYYY')}</div>
+                {!p.marked && (p.isDisplayDate || idx === progress.length - 1) && p.date && (
+                  <div>{
+                    // convertTimeToStringFormat(p.date) || 
+                    buildMomentTimezone(p.date).format('h:mm A, YYYY/MM/DD')}</div>
                 )}
               </div>
             </li>
@@ -361,7 +367,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
         transactionHash={transactionHash}
         networkAvailable={poolDetails?.networkAvailable}
       />
-    </div>
+    </div >
   );
 };
 

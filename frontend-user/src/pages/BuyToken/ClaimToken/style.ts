@@ -116,6 +116,12 @@ const useStyles = makeStyles((theme: any) => {
       marginBottom: '50px',
       // height: '6px',
       background: '#303035',
+      '&.adjust': {
+        width: '95% !important',
+        '& li:last-child .info': {
+          right: '-60px',
+        },
+      },
       '& li': {
         display: 'inline-block',
         position: 'relative',
@@ -167,7 +173,7 @@ const useStyles = makeStyles((theme: any) => {
           },
         },
         '&:last-child .info': {
-          right: '0',
+          right: '-10px',
           left: 'unset',
           textAlign: 'right',
           [theme.breakpoints.down('sm')]: {
@@ -176,13 +182,21 @@ const useStyles = makeStyles((theme: any) => {
             textAlign: 'left',
           },
         },
+        '&:nth-child(even) .info': {
+          top: '-40px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-end',
+          minHeight: '30px',
+        },
         '& .info': {
           position: 'absolute',
           top: '12px',
-          left: '-40px',
-          fontSize: 12,
-          lineHeight: '18px',
+          left: '-30px',
+          fontSize: 10,
+          // lineHeight: '18px',
           width: '140px',
+          wordBreak: 'break-word',
           // marginTop: 12,
           [theme.breakpoints.down('sm')]: {
             top: '-15px',

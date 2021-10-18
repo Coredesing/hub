@@ -26,6 +26,10 @@ const useStyles = makeStyles((theme: any) => {
       minWidth: '240px',
       width: '24%',
 
+      [theme.breakpoints.between("sm", "md")]: {
+        width: 'fit-content'
+      },
+
       '& img': {
         width: '28px',
         height: '28px',
@@ -35,7 +39,7 @@ const useStyles = makeStyles((theme: any) => {
     },
     ratio: {
       minWidth: '120px',
-      width: '12%',
+      width: '10%',
       color: '#999999'
     },
     status: {
@@ -45,7 +49,7 @@ const useStyles = makeStyles((theme: any) => {
         justifyContent: 'center',
         height: '26px',
         minWidth: '90px',
-        width: '12%',
+        width: '10%',
         padding: '6px 15px',
         borderRadius: '20px',
         '& span': {
@@ -92,12 +96,18 @@ const useStyles = makeStyles((theme: any) => {
     poolType: {
       textTransform: 'capitalize',
       minWidth: '120px',
-      width: '12%',
+      width: '10%',
       color: '#999999'
+    },
+    tokenType: {
+      textTransform: 'capitalize',
+      minWidth: '120px',
+      width: '10%',
+      color: '#999999'      
     },
     progress: {
       minWidth: '400px',
-      width: '40%',
+      width: '36%',
       color: '#fff',
       ...typeDisplayFlex,
       flexDirection: 'row',
@@ -127,7 +137,7 @@ const useStyles = makeStyles((theme: any) => {
         transition: '.2s all ease-in',
       }
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       row: {
         padding: '0 15px',
         minHeight: '46px',
@@ -137,6 +147,9 @@ const useStyles = makeStyles((theme: any) => {
         display: 'none'
       },
       poolType: {
+        display: 'none'
+      },
+      tokenType: {
         display: 'none'
       },
       progress: {

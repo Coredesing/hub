@@ -145,6 +145,14 @@ function PoolForm(props: any) {
       data.boxTypesConfig = []
     }
 
+    try {
+      if (!Array.isArray(data.acceptedTokensConfig)) {
+        data.acceptedTokensConfig = JSON.parse(data.acceptedTokensConfig)
+      }
+    } catch (e) {
+      data.acceptedTokensConfig = []
+    }
+
     const submitData = {
       registed_by: loginUser?.wallet_address,
       is_display: data.is_display,
@@ -239,6 +247,7 @@ function PoolForm(props: any) {
       claim_policy: data.claim_policy,
       seriesContentConfig: data.seriesContentConfig,
       boxTypesConfig: data.boxTypesConfig,
+      acceptedTokensConfig: data.acceptedTokensConfig,
 
       // Free Time Settings
       freeBuyTimeSetting: {
@@ -300,6 +309,14 @@ function PoolForm(props: any) {
       }
     } catch (e) {
       data.boxTypesConfig = []
+    }
+
+    try {
+      if (!Array.isArray(data.acceptedTokensConfig)) {
+        data.acceptedTokensConfig = JSON.parse(data.acceptedTokensConfig)
+      }
+    } catch (e) {
+      data.acceptedTokensConfig = []
     }
 
     const submitData = {
@@ -365,6 +382,7 @@ function PoolForm(props: any) {
       claim_policy: data.claim_policy,
       seriesContentConfig: data.seriesContentConfig,
       boxTypesConfig: data.boxTypesConfig,
+      acceptedTokensConfig: data.acceptedTokensConfig,
 
       // Free Time Settings
       freeBuyTimeSetting: {
@@ -484,6 +502,14 @@ function PoolForm(props: any) {
         data.boxTypesConfig = []
       }
 
+      try {
+        if (!Array.isArray(data.acceptedTokensConfig)) {
+          data.acceptedTokensConfig = JSON.parse(data.acceptedTokensConfig)
+        }
+      } catch (e) {
+        data.acceptedTokensConfig = []
+      }
+
       const submitData = {
         id: poolDetail.id,
         registed_by: loginUser?.wallet_address,
@@ -554,6 +580,7 @@ function PoolForm(props: any) {
         claim_policy: data.claim_policy,
         seriesContentConfig: data.seriesContentConfig,
         boxTypesConfig: data.boxTypesConfig,
+        acceptedTokensConfig: data.acceptedTokensConfig,
 
         // Free Time Settings
         freeBuyTimeSetting: {

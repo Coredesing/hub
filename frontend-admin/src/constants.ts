@@ -5,6 +5,7 @@ export const ADMIN_URL_PREFIX = 'dashboard';
 export const IMAGE_URL_PREFIX = 'image';
 export const MAX_BUY_CAMPAIGN = 1000;
 export const DATETIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const TIERS = [
   '-',
   'Rookie',

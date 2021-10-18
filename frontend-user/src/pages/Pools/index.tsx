@@ -53,8 +53,6 @@ const Pools = (props: any) => {
     `${getPoolsPrefixUri()}?page=${currentPage}&limit=10&title=${input}`
   );
 
-  console.log('poolsList: ', poolsList);
-
   const handleInputChange = debounce((e: any) => {
     Promise.resolve().then(() => {
       setInput(e.target.value);
@@ -146,7 +144,8 @@ const Pools = (props: any) => {
           </div>
           <table style={{ width: '100%' }} className={styles.listPools}>
             <thead className={styles.poolsHead}>
-              {isWidthUp('md', props.width) && <tr>
+              {isWidthUp('md', props.width) && 
+              <tr>
                 <th style={{minWidth: '240px', width: '24%'}}>Pool Name</th>
                 <th style={{minWidth: '120px', width: '10%'}}>Ratio</th>
                 <th style={{minWidth: '120px', width: '10%'}}>Access</th>

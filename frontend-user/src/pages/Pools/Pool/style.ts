@@ -26,6 +26,10 @@ const useStyles = makeStyles((theme: any) => {
       minWidth: '240px',
       width: '24%',
 
+      [theme.breakpoints.between("sm", "md")]: {
+        width: 'fit-content'
+      },
+
       '& img': {
         width: '28px',
         height: '28px',
@@ -133,7 +137,7 @@ const useStyles = makeStyles((theme: any) => {
         transition: '.2s all ease-in',
       }
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       row: {
         padding: '0 15px',
         minHeight: '46px',

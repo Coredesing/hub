@@ -82,6 +82,9 @@ const useStyles = makeStyles((theme: any) => {
     },
     poolsHead: {
       padding: '0 35px',
+      [theme.breakpoints.down('sm')]: {
+        padding: '0 15px',
+      },
       ...typeDisplayFlex,
       alignItems: 'center',
       height: '60px',

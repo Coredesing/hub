@@ -11,6 +11,7 @@ import {getIconCurrencyUsdt} from "../../../utils/usdt";
 import {PoolStatus} from "../../../utils/getPoolStatus";
 import {getAccessPoolText, getProgressWithPools, getTokenSold} from "../../../utils/campaign";
 import BigNumber from 'bignumber.js';
+import { useMediaQuery, useTheme } from "@material-ui/core";
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -20,9 +21,12 @@ const Pool = (props: any): JSX.Element => {
   const [timeLeft, setTimeLeft] = useState('');
   const [progress, setProgress] = useState(0);
 
+  const theme = useTheme();
+  const isMdUpScreen = useMediaQuery(theme.breakpoints.up("md"));
+
   const {
     pool
-  } = props
+  } = props  
 
   useEffect(() => {
     const getTokenSoldByPool = async () => {
@@ -37,7 +41,6 @@ const Pool = (props: any): JSX.Element => {
         tokenSold: resTokenSold,
       });
       setProgress(parseFloat(progressPercent));
-      console.log('Progress: ', progressPercent);
     };
 
     getTokenSoldByPool();
@@ -101,9 +104,9 @@ const Pool = (props: any): JSX.Element => {
   return (
     <td>
       <Link to={`/buy-token/${pool.id}`} className={styles.link}>
-        <div className={styles.row}>
+        {isMdUpScreen ? <div className={styles.row}>
           <div className={styles.name}>
-            <img src={pool.token_images} />
+            <img src={pool.token_images} alt="" />
             <span className={commonStyle.nnb1418d}>{pool.title}</span>
           </div>
           <div className={styles.ratio + ' ' + commonStyle.nnn1424h}>
@@ -125,6 +128,7 @@ const Pool = (props: any): JSX.Element => {
           <div className={styles.poolType + ' ' + commonStyle.nnn1424h}>
             {getAccessPoolText(pool)}
           </div>
+          <div className={styles.tokenType}>{pool.token_type === 'erc20' ? "Token" : pool.token_type === 'erc21' ? "Ticket" : "Box"}</div>
           <div className={styles.progress}>
             <span className={commonStyle.nnb1418d}>{`${new BigNumber(progress).toFixed(2)}%`}</span>
             <div className="progress">
@@ -137,7 +141,24 @@ const Pool = (props: any): JSX.Element => {
           <div className={styles.status}>
             {poolStatus()}
           </div>
-        </div>
+        </div> : <div className={styles.row}>
+          <div className={styles.name}>
+            <img src={pool.token_images} alt="" />
+            <span className={commonStyle.nnb1418d}>{pool.title}</span>
+          </div>
+          <div className={styles.progress}>
+            <span className={commonStyle.nnb1418d}>{`${new BigNumber(progress).toFixed(2)}%`}</span>
+            <div className="progress">
+              <span
+                className={`current-progress ${progress > 0 ? '' : 'inactive'}`}
+                style={{ width: `${new BigNumber(progress).toFixed(2)}%` }}
+              ></span>
+            </div>
+          </div>
+          <div className={styles.status}>
+            {poolStatus()}
+          </div>
+        </div>}
       </Link>
     </td>
   );

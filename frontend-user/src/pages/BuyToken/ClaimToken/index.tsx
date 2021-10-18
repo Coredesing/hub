@@ -1,23 +1,24 @@
-import React, {useEffect, useState} from "react";
-import {useWeb3React} from "@web3-react/core";
+import React, { useEffect, useState } from "react";
+import { useWeb3React } from "@web3-react/core";
 import Button from "../Button";
 import TransactionSubmitModal from "../../../components/Base/TransactionSubmitModal";
 import useStyles from "./style";
 
-import {TokenType} from "../../../hooks/useTokenDetails";
+import { TokenType } from "../../../hooks/useTokenDetails";
 import useUserRemainTokensClaim from "../hooks/useUserRemainTokensClaim";
 import useTokenClaim from "../hooks/useTokenClaim";
-import {buildMomentTimezone, convertTimeToStringFormat, convertTimeToStringFormatWithoutGMT} from "../../../utils/convertDate";
-import {numberWithCommas} from "../../../utils/formatNumber";
-import {useDispatch} from "react-redux";
-import {alertFailure} from "../../../store/actions/alert";
+import { buildMomentTimezone, convertTimeToStringFormat, convertTimeToStringFormatWithoutGMT } from "../../../utils/convertDate";
+import { numberWithCommas } from "../../../utils/formatNumber";
+import { useDispatch } from "react-redux";
+import { alertFailure } from "../../../store/actions/alert";
 import ClaimInfo from "./ClaimInfo";
 import useDetectClaimConfigApplying from "../hooks/useDetectClaimConfigApplying";
 import BigNumber from "bignumber.js";
-import {updateUserClaimInfo} from "../../../store/actions/claim-user-info";
-import {Tooltip} from "@material-ui/core";
-import withWidth, {isWidthDown} from "@material-ui/core/withWidth";
+import { updateUserClaimInfo } from "../../../store/actions/claim-user-info";
+import { Tooltip, useMediaQuery, useTheme } from "@material-ui/core";
+import withWidth, { isWidthDown } from "@material-ui/core/withWidth";
 import BN from 'bignumber.js'
+import clsx from 'clsx';
 
 type ClaimTokenProps = {
   releaseTime: Date | undefined;
@@ -39,7 +40,8 @@ const tickIcon = "/images/icons/tick_claim.svg";
 const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
   const dispatch = useDispatch();
   const styles = useStyles();
-
+  const theme = useTheme();
+  const isSmScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [openClaimModal, setOpenClaimModal] = useState<boolean>(false);
   const [userPurchased, setUserPurchased] = useState<number>(0);
   const [userClaimInfo, setUserClaimInfo] = useState<any>();
@@ -75,6 +77,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
     poolDetails?.networkAvailable || poolDetails?.network_available
   );
   const availableClaim = releaseTime ? nowTime >= releaseTime : false;
+
 
   useEffect(() => {
     const fetchUserPurchased = async () => {
@@ -171,40 +174,46 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
     //calculate progress
     const userPurchased = userClaimInfo?.userPurchased || 0;
     const userClaimed = userClaimInfo?.userClaimed || 0;
-    const percentClaimed = +(new BN(userClaimed).dividedBy(new BN(userPurchased)).multipliedBy(100).toFixed(1));
+    const percentClaimed = Math.ceil(+(new BN(userClaimed).dividedBy(new BN(userPurchased)).multipliedBy(100).toFixed(1)));
     let lastMaxPercent = 0;
     let nextClaim = poolDetails.campaignClaimConfig.reduce((next: number, cfg: any) => {
       return (+cfg.max_percent_claim <= percentClaimed) ? next + 1 : next
     }, 0);
-    const config = poolDetails.campaignClaimConfig.map((cfg: any, index: number) => {
-      let percent = +cfg.max_percent_claim - lastMaxPercent,
-        tokenAmount = (percent / 100) * userPurchased,
-        date = new Date(cfg.start_time * 1000),
+    const config = [
+      {
+        start_time: null,
+        max_percent_claim: 0,
+      },
+      ...poolDetails.campaignClaimConfig,
+    ].map((cfg: any, index: number) => {
+      let percent = +cfg.max_percent_claim,
+        tokenAmount = +(new BN((percent / 100) * userPurchased).toFixed(1)),
+        date = cfg.start_time && new Date(cfg.start_time * 1000),
         marked = +cfg.max_percent_claim <= percentClaimed,
-        showInfo = index === 0 || index === poolDetails.campaignClaimConfig.length - 1 || index === nextClaim;
-      lastMaxPercent = +cfg.max_percent_claim;
+        showInfo = true;
+      // lastMaxPercent = +cfg.max_percent_claim;
       return { percent, tokenAmount, date, marked, showInfo };
     });
-    if (config.length === 1) {
-      if (userClaimed > 0) {
-        config.unshift({ marked: true });
-      } else {
-        config.unshift({});
-      }
-    } //add 0% start for only 1 time claim
+    // if (config.length === 1) {
+    //   if (userClaimed > 0) {
+    //     config.unshift({ marked: true });
+    //   } else {
+    //     config.unshift({});
+    //   }
+    // } //add 0% start for only 1 time claim
     setProgress(config);
     //calculate policy
     //TODO: get policy from backend
     let policy =
       poolDetails?.claimPolicy ||
       "You can claim all tokens after " +
-        convertTimeToStringFormat(
-          new Date(
-            poolDetails.campaignClaimConfig[
-              poolDetails.campaignClaimConfig?.length - 1
-            ]?.start_time * 1000
-          )
-        );
+      convertTimeToStringFormat(
+        new Date(
+          poolDetails.campaignClaimConfig[
+            poolDetails.campaignClaimConfig?.length - 1
+          ]?.start_time * 1000
+        )
+      );
     setPolicy(policy);
   }, [poolDetails, userClaimInfo]);
 
@@ -237,8 +246,51 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
         currencyName={currencyName}
       />
 
-      <ul className={styles.poolDetailClaimProgress}>
-        <li className={`first-item ${progress[0]?.marked ? "active" : ""}`}>
+      <ul className={
+        // styles.poolDetailClaimProgress
+        styles.progressClaim
+      }>
+
+        {
+          progress.map((p: any, idx: number) => {
+            return <li key={idx}
+              className={clsx({
+                active: ((idx === 0 && progress[idx + 1]?.marked) || progress[idx + 1]?.marked)
+              })}
+              style={
+                isSmScreen ?
+                  {
+                    width: '6px',
+                    height: idx !== progress.length - 1 ? `calc(${progress[idx + 1] ? progress[idx + 1].percent as number - (progress[idx].percent || 0) : 0}px + 50px)` : 0,
+
+                  } : {
+                    height: '6px',
+                    width: `${progress[idx + 1] ? progress[idx + 1].percent as number - (progress[idx].percent || 0) : 0}%`,
+                  }
+              }
+            >
+              <div className="mark">
+                {p.marked && <img src={tickIcon} alt="" />}
+              </div>
+              <div className="info">
+                <div>
+                  {p.percent || 0}%&nbsp;
+                  {(p.tokenAmount || p.tokenAmount === 0) && (
+                    <span>
+                      ({numberWithCommas(`${p.tokenAmount}`, 1)}{" "}
+                      {tokenDetails?.symbol})
+                    </span>
+                  )}
+                </div>
+                {!p.marked && p.date && (
+                  <div>{convertTimeToStringFormat(p.date) || buildMomentTimezone(p.date).format('h:mm A, DD/MM/YYYY')}</div>
+                )}
+              </div>
+            </li>
+          })
+        }
+
+        {/* <li className={`first-item ${progress[0]?.marked ? "active" : ""}`}>
           <div className="mark">
             {progress[0]?.marked && <img src={tickIcon} alt=""/>}
           </div>
@@ -272,7 +324,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
                       {tokenDetails?.symbol})
                     </div>
                     <div>
-                      {item.date && convertTimeToStringFormat(item.date)}
+                      { !item.marked && item.date && convertTimeToStringFormat(item.date)}
                     </div>
                   </>
                   :
@@ -286,7 +338,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
               </div>
             </li>
           );
-        })}
+        })} */}
       </ul>
 
       <Button

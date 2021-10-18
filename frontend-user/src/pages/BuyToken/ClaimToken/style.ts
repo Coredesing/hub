@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: any) => {
       [theme?.breakpoints?.down('sm')]: {
         padding: '28px 20px',
       },
-      
+
       '& button': {
         color: '#000',
         height: 42,
@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme: any) => {
         flexWrap: 'wrap',
         wordBreak: 'break-word',
       },
-      
+
       '& span:first-child': {
         fontFamily: 'DM Sans',
         fontWeight: 'bold',
@@ -109,6 +109,89 @@ const useStyles = makeStyles((theme: any) => {
       '& .text-blue': {
         color: '#72F34B'
       }
+    },
+
+    progressClaim: {
+      width: '100%',
+      marginBottom: '50px',
+      // height: '6px',
+      background: '#303035',
+      '& li': {
+        display: 'inline-block',
+        position: 'relative',
+        height: '6px',
+        background: '#1b1b1b',
+        [theme.breakpoints.down('sm')]: {
+          display: 'block',
+        },
+        '&.active': {
+          background: '#72F34B',
+          '& .info': {
+            [theme.breakpoints.down('sm')]: {
+              top: '-15px',
+              left: '20px',
+              textAlign: 'left',
+            },
+          }
+        },
+        '& .mark:before': {
+          content: '""',
+          width: '16px',
+          height: '16px',
+          left: 0,
+          background: '#44454B',
+          borderRadius: '50%',
+          position: 'absolute',
+        },
+        '& .mark': {
+          position: 'absolute',
+          top: '-5px',
+          left: '-3px',
+          content: '""',
+          [theme.breakpoints.down('sm')]: {
+            top: '-14px',
+            left: '-5px',
+          },
+          '& img': {
+            position: 'relative',
+          }
+
+        },
+        '&:first-child .info': {
+          left: '0',
+          textAlign: 'left',
+          [theme.breakpoints.down('sm')]: {
+            top: '-15px',
+            left: '20px',
+            textAlign: 'left',
+          },
+        },
+        '&:last-child .info': {
+          right: '0',
+          left: 'unset',
+          textAlign: 'right',
+          [theme.breakpoints.down('sm')]: {
+            top: '-15px',
+            left: '20px',
+            textAlign: 'left',
+          },
+        },
+        '& .info': {
+          position: 'absolute',
+          top: '12px',
+          left: '-40px',
+          fontSize: 12,
+          lineHeight: '18px',
+          width: '140px',
+          // marginTop: 12,
+          [theme.breakpoints.down('sm')]: {
+            top: '-15px',
+            left: '20px',
+            textAlign: 'left',
+          },
+        }
+      },
+
     },
 
     poolDetailClaimProgress: {

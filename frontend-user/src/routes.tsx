@@ -58,7 +58,7 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
     useEffect(() => {
         history.listen((location) => {
             const { gtag } = window as any;
-            if (gtag) {
+            if (gtag && location) {
                 gtag('event', 'page_view', {
                     page_title: document.title,
                     page_location: window.location.href,

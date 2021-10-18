@@ -35,7 +35,7 @@ class PoolController {
       'claim_policy',
       'forbidden_countries',
       'freeBuyTimeSetting',
-      'seriesContentConfig', 'boxTypesConfig',
+      'seriesContentConfig', 'boxTypesConfig', 'acceptedTokensConfig'
     ]);
 
     const tokenInfo = inputParams.tokenInfo;
@@ -105,6 +105,7 @@ class PoolController {
 
       await poolService.updateSeriesContentConfig(campaign, inputParams.seriesContentConfig || [])
       await poolService.updateBoxTypesConfig(campaign, inputParams.boxTypesConfig || [])
+      await poolService.updateAcceptedTokensConfig(campaign, inputParams.acceptedTokensConfig || [])
 
       // Update Tier Config
       console.log('[createPool] - Update Tier Config - inputParams.tier_configuration', inputParams.tier_configuration);
@@ -177,6 +178,7 @@ class PoolController {
       'freeBuyTimeSetting',
       'seriesContentConfig',
       'boxTypesConfig',
+      'acceptedTokensConfig'
     ]);
 
     const tokenInfo = inputParams.tokenInfo;
@@ -241,6 +243,7 @@ class PoolController {
 
       await poolService.updateSeriesContentConfig(campaign, inputParams.seriesContentConfig || [])
       await poolService.updateBoxTypesConfig(campaign, inputParams.boxTypesConfig || [])
+      await poolService.updateAcceptedTokensConfig(campaign, inputParams.acceptedTokensConfig || [])
 
       // Update Tier Config
       if (!campaign.is_deploy) {
@@ -401,6 +404,7 @@ class PoolController {
         .with('freeBuyTimeSetting')
         .with('seriesContentConfig')
         .with('boxTypesConfig')
+        .with('acceptedTokensConfig')
         .where('id', poolId)
         .first();
       if (!pool) {
@@ -459,6 +463,7 @@ class PoolController {
         .with('freeBuyTimeSetting')
         .with('seriesContentConfig')
         .with('boxTypesConfig')
+        .with('acceptedTokensConfig')
         .where('id', poolId)
         .first();
 
@@ -521,6 +526,7 @@ class PoolController {
 
         'seriesContentConfig',
         'boxTypesConfig',
+        'acceptedTokensConfig',
       ]);
 
       if (publicPool && publicPool.token_type === CONST.TOKEN_TYPE.MYSTERY_BOX) {

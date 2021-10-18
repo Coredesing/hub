@@ -111,16 +111,16 @@ const TicketSale = (props: any) => {
 
                 <div className={clsx(styles.cards, styles.completeCards)}>
                   {
-                    (compeltePools?.data || []).map((card, id) => <Link className={styles.noUnderline} key={id} href={`/#/${getRoute(card?.token_type)}/${card.id}`}>
+                    (compeltePools?.data.slice(0, 5) || []).map((card, id) => <Link className={styles.noUnderline} key={id} href={`/#/${getRoute(card?.token_type)}/${card.id}`}>
                       <CompleteCard key={id} card={card} />
                     </Link>)
                   }
                 </div>
-                {/* <div className={styles.cardsActions}>
-              <Link href={'transactionLink'} className={styles.btnView}>
-                View all pools
-              </Link>
-            </div> */}
+                <div className={styles.cardsActions}>
+                  <Link href={'/#/pools'} className={styles.btnView}>
+                    View all pools
+                  </Link>
+                </div>
               </div>
             </section>
           }

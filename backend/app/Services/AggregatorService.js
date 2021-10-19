@@ -40,6 +40,8 @@ class AggregatorService {
     gameProject.network_available = param?.upcomingIdo?.network_available
     gameProject.token_price = param?.upcomingIdo?.token_price
     gameProject.icon_token_link = param?.upcomingIdo?.icon_token_link
+    gameProject.redkite_ido_link = param?.upcomingIdo?.redkite_ido_link
+    gameProject.gamefi_ido_link = param?.upcomingIdo?.gamefi_ido_link
     await gameProject.save();
     return gameProject;
   }

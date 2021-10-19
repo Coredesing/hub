@@ -14,7 +14,17 @@ const GameInformation: React.FC<any> = (props: any) => {
         if (!isEdit) {
             return
         }
-        if (!gameInfo?.system_require || !gameInfo?.game_intro || !gameInfo?.short_description || !gameInfo?.game_features || !gameInfo?.game_name || !gameInfo?.developer || !gameInfo?.category || !gameInfo?.language || !gameInfo?.hashtags) {
+        if (
+            (!gameInfo?.system_require && !!gameDetails?.system_require) ||
+            (!gameInfo?.game_intro && !!gameDetails?.game_intro) ||
+            (!gameInfo?.short_description && !!gameDetails?.short_description) ||
+            (!gameInfo?.game_features && !!gameDetails?.game_features) ||
+            (!gameInfo?.game_name && !!gameDetails?.game_name) ||
+            (!gameInfo?.developer && !!gameDetails?.developer) ||
+            (!gameInfo?.category && !!gameDetails?.category) ||
+            (!gameInfo?.language && !!gameDetails?.language) ||
+            (!gameInfo?.hashtags && !!gameDetails?.hashtags)
+        ) {
             setGameInfo(gameDetails)
         }
     }, [props])

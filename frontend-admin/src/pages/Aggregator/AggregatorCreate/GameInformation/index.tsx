@@ -8,9 +8,12 @@ import CreatableSelect from "react-select/creatable";
 
 const GameInformation: React.FC<any> = (props: any) => {
     const classes = useStyles();
-    let { gameDetails, onChangeGameInfo } = props
+    let { gameDetails, onChangeGameInfo, isEdit } = props
     const [gameInfo, setGameInfo] = useState({...props.gameDetails});
     useEffect(() => {
+        if (!isEdit) {
+            return
+        }
         if (!gameInfo?.system_require || !gameInfo?.game_intro || !gameInfo?.game_features || !gameInfo?.game_name || !gameInfo?.developer || !gameInfo?.category || !gameInfo?.language || !gameInfo?.hashtags) {
             setGameInfo(gameDetails)
         }

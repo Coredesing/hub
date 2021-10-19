@@ -1,0 +1,156 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-size: 14px;
+    line-height: 24px;
+}
+
+:root {
+    --padding-section: 160px;
+    --padding-article: 100px;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.spacer {
+    flex: 1;
+}
+
+.btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.divider {
+    height: 0;
+    margin: 8px 0;
+    border-top: 1px solid #FFFFFF25;
+}
+
+.btn:hover:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    background: #0002;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: all 0.4s;
+}
+
+.fade-leave,
+.fade-enter-from {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.fade-enter,
+.fade-leave-from {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.price {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    line-height: 18px;
+}
+
+.price > img {
+    margin-right: 8px;
+    width: 32px;
+    height: 32px;
+}
+
+.price .increased {
+    background: #72F34B;
+    border-radius: 4px;
+    padding: 4px;
+    color: black;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+.price .decreased {
+    background: #F24B4B;
+    border-radius: 4px;
+    padding: 4px;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+.price img {
+    display: inline;
+}
+
+
+.slide-down-enter-active {
+    transition: all 0.5s;
+}
+
+.slide-down-enter {
+    transform: translate3d(0, -10%, 0);
+    opacity: 0;
+}
+
+.slide-down-enter-to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+}
+
+@media screen and (min-width: 1440px) {
+    :root {
+        --padding-section: calc(160px + calc(50% - 720px));
+    }
+}
+
+.view-all {
+    display: flex;
+    align-items: center;
+    color: #72F34B;
+    cursor: pointer;
+}
+
+.view-all img {
+    margin-left: 8px;
+}

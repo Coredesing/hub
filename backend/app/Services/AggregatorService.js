@@ -32,6 +32,7 @@ class AggregatorService {
     gameProject.upload_video = param?.displaySettings?.upload_video
     gameProject.verified = param?.displaySettings?.verified
     gameProject.web_game_link = param?.displaySettings?.web_game_link
+    gameProject.top_favourite_link = param?.displaySettings?.top_favourite_link
     gameProject.accept_currency = param?.upcomingIdo?.accept_currency
     gameProject.ido_date = new Date(param?.upcomingIdo?.ido_date)
     gameProject.ido_image = param?.upcomingIdo?.ido_image

@@ -18,6 +18,7 @@ class AggregatorService {
     gameProject.game_features = param?.gameInfo?.game_features
     gameProject.game_intro = param?.gameInfo?.game_intro
     gameProject.system_require = param?.gameInfo?.system_require
+    gameProject.short_description = param?.gameInfo?.short_description
     gameProject.android_link = param?.displaySettings?.android_link
     gameProject.display_area = param?.displaySettings?.display_area
     gameProject.game_pc_link = param?.displaySettings?.game_pc_link
@@ -37,6 +38,7 @@ class AggregatorService {
     gameProject.ido_type = param?.upcomingIdo?.ido_type
     gameProject.network_available = param?.upcomingIdo?.network_available
     gameProject.token_price = param?.upcomingIdo?.token_price
+    gameProject.icon_token_link = param?.upcomingIdo?.icon_token_link
     await gameProject.save();
     return gameProject;
   }
@@ -59,6 +61,9 @@ class AggregatorService {
     projectInfo.twitter_link = param.twitter_link
     projectInfo.youtube_link = param.youtube_link
     projectInfo.reddit_link = param.reddit_link
+    projectInfo.medium_link = param?.medium_link
+    projectInfo.announcement_telegram_link = param?.announcement_telegram_link
+    projectInfo.coinmartketcap_link = param?.coinmartketcap_link
     const insertStatus = await projectInfo.save()
     return insertStatus
   }

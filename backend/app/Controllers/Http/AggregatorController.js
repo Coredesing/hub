@@ -76,6 +76,25 @@ class AggregatorController {
     }
   }
 
+  async getLikeByAddress({ request }) {
+    try {
+      const address = request.params.address
+      if (!address) {
+        return HelperUtils.responseErrorInternal('invalid address !');
+      }
+      let gameCount = GameFavourite.query()
+      gameCount.select('game_id')
+      gameCount = gameCount.where('user_address', address)
+      gameCount = gameCount.where('status', 1)
+
+      const rs = await gameCount.fetch()
+      return HelperUtils.responseSuccess(rs);
+    } catch (e) {
+      console.log(e);
+      return HelperUtils.responseErrorInternal('get game favourite fail !');
+    }
+  }
+
   async aggregatorCreate({request}) {
     try {
       const params = request.all();
@@ -170,6 +189,7 @@ class AggregatorController {
       if (verified) {
         builder = builder.where('verified', verified)
       }
+      builder = builder.orderBy('created_at', 'DESC')
       const list = await builder.paginate(page, perPage)
       return list
     }catch (e) {

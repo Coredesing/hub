@@ -51,6 +51,8 @@ Route.group(() => {
   // Aggregator
 
   Route.get('aggregator', 'AggregatorController.getAggregator');
+  Route.get('aggregator/get-like', 'AggregatorController.getLikeById');
+  Route.post('aggregator/like/:id', 'AggregatorController.setFavourite');
   Route.get('aggregator/:id', 'AggregatorController.findAggregator');
   Route.get('project-info/:id', 'AggregatorController.findProject');
   Route.get('tokenomics/:id', 'AggregatorController.findTokenomic');

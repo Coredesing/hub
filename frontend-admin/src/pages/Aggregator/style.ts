@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: 'white',
     },
     tableHeader: {
-        padding: '0px 0px 25px 30px',
+        // padding: '0px 0px 25px 30px',
         color: '#363636',
         fontWeight: 600
     },
@@ -41,13 +41,14 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: '#cd2d00',
         boxShadow: '0px 0px 30px rgba(243, 203, 25, 0.15)',
         borderRadius: 10,
-        padding: '10px 0px',
+        padding: 5,
         border: 'none',
         display: 'inline-block',
-        width: 80,
+        width: 60,
+        height: 30,
         color: 'white',
         fontWeight: 600,
-        fontSize: 14,
+        fontSize: 12,
         cursor: 'pointer',
         transition: '.2s all ease-in',
 
@@ -63,16 +64,21 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: '#0074cd',
         boxShadow: '0px 0px 30px rgba(243, 203, 25, 0.15)',
         borderRadius: 10,
-        height: 40,
+        height: 30,
         border: 'none',
         display: 'inline-block',
-        width: 80,
+        width: 50,
         color: 'white',
         fontWeight: 600,
-        fontSize: 14,
+        fontSize: 12,
         marginRight: 5,
         cursor: 'pointer',
         transition: '.2s all ease-in',
+        padding: 0,
+
+        '& p' : {
+            padding: '5px !important'
+        },
 
         '&:hover': {
             boxShadow: '0px 15px 20px rgba(0, 0, 0, .1)',

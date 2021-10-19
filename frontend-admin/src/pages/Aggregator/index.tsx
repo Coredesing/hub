@@ -4,10 +4,11 @@ import useStyles from './style';
 import DefaultLayout from "../../components/Layout/DefaultLayout";
 import Button from "../../components/Base/ButtonLink";
 import {adminRoute} from "../../utils";
-import {deleteAggregator, getAggregator} from "../../store/actions/aggregator";
+import {deleteAggregator, getAggregator, setShowAggregator} from "../../store/actions/aggregator";
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Pagination from "@material-ui/lab/Pagination";
+import {Switch} from "antd";
 
 const Aggregator: React.FC<any> = (props: any) => {
     const classes = useStyles();
@@ -15,7 +16,7 @@ const Aggregator: React.FC<any> = (props: any) => {
     const { game_info, loading, failure } = useSelector(( state: any ) => state.game_info);
     const [currentPage, setCurrentPage] = useState(1);
     const gameInfo = game_info?.data?.data
-    const tableHeaders = ["Created at", "Game Name", "Category", "Hashtags", "Actions"];
+    const tableHeaders = ["ID", "Created at", "Game Name", "Category", "Hashtags", "Is Show", "Actions"];
     const handlePaginationChange = (event: any, page: number) => {
         setCurrentPage(page);
     }
@@ -31,6 +32,9 @@ const Aggregator: React.FC<any> = (props: any) => {
         if(r){
             dispatch(deleteAggregator(id))
         }
+    }
+    const onChangeShowHide = (value:boolean, id:any) => {
+        dispatch(setShowAggregator(id,value))
     }
     return (
         <DefaultLayout>
@@ -52,7 +56,7 @@ const Aggregator: React.FC<any> = (props: any) => {
                                 <TableRow>
                                     {
                                         tableHeaders.map((tableHeader: string, index: number) => (
-                                            <TableCell key={index} className={classes.tableHeader}>{tableHeader}</TableCell>
+                                            <TableCell align={"left"} key={index} className={classes.tableHeader}>{tableHeader}</TableCell>
                                         ))
                                     }
                                 </TableRow>
@@ -61,11 +65,20 @@ const Aggregator: React.FC<any> = (props: any) => {
                                 {
                                     gameInfo && gameInfo.length > 0 && gameInfo.map((item: any, index: number) =>  (
                                         <TableRow key={index}>
+                                            <TableCell >{ item.id }</TableCell>
                                             <TableCell >{ item.created_at }</TableCell>
                                             <TableCell >{ item.game_name }</TableCell>
                                             <TableCell >{ item.category }</TableCell>
                                             <TableCell >{ item.hashtags }</TableCell>
-                                            <TableCell >
+                                            <TableCell align={'left'}><Switch
+                                                onChange={ async (switchValue) => {
+                                                    onChangeShowHide(switchValue, item.id);
+                                                }}
+                                                defaultChecked={item.is_show}
+                                                checkedChildren="Show"
+                                                unCheckedChildren="Hide"
+                                            /></TableCell>
+                                            <TableCell style={{display: 'flex'}}>
                                                 <Button text={'Edit'}
                                                     to={adminRoute('/aggregator/' + item.id)}
                                                     className={classes.editButton}

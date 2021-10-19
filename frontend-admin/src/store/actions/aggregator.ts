@@ -216,3 +216,46 @@ export const deleteAggregator = (id: number) => {
         }
     }
 }
+
+export const setShowAggregator = (id: number, status: boolean) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
+        const baseRequest = new BaseRequest();
+
+        dispatch({ type: aggregatorAction.DELETE_AGGREGATOR_REQUEST });
+
+        let url = `/admin/aggregator/set-show/${id}`;
+
+        try {
+            const response = await baseRequest.post(url, {status : status}) as any;
+            const resObject = await response.json();
+
+            if (resObject.status === 200) {
+                const { data } = resObject;
+                dispatch({
+                    type: aggregatorAction.DELETE_AGGREGATOR_SUCCESS,
+                })
+
+                dispatch({
+                    type: alertActions.SUCCESS_MESSAGE,
+                    payload: 'Set Show status Successful!'
+                });
+            } else {
+                const { message } = resObject;
+                dispatch({
+                    type: alertActions.ERROR_MESSAGE,
+                    payload: message
+                });
+            }
+        } catch (err: any) {
+            dispatch({
+                type: aggregatorAction.DELETE_AGGREGATOR_FAIL,
+                payload: err?.message
+            })
+            dispatch({
+                type: alertActions.ERROR_MESSAGE,
+                payload: err?.message
+            });
+        }
+    }
+}
+

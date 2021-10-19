@@ -10,9 +10,29 @@ const CONFIGS_FOLDER = '../../../blockchain_configs/';
 const NETWORK_CONFIGS = require(`${CONFIGS_FOLDER}${process.env.NODE_ENV}`);
 const Web3 = require('web3');
 const web3 = new Web3(NETWORK_CONFIGS.WEB3_API_URL);
-const Database = use('Database');
 
 class AggregatorController {
+  async setShowStatus({ request }) {
+    try {
+      const params = request.all();
+      const status = params.status
+      const game_id = request.params.id
+      if (!game_id) {
+        return HelperUtils.responseBadRequest('Invalid data input !');
+      }
+      const game = await GameInformation.find(game_id)
+      if (!game) {
+        return HelperUtils.responseBadRequest('Game not found !');
+      }
+      game.is_show = status
+      await game.save()
+      return HelperUtils.responseSuccess('','Update successfully');
+    } catch (e) {
+      console.log(e);
+      return HelperUtils.responseErrorInternal('ERROR: update fail !');
+    }
+  }
+
   async setFavourite({request}) {
     try {
       const params = request.all();
@@ -171,7 +191,7 @@ class AggregatorController {
     }
   }
 
-  async getAggregator({request}) {
+  async getAggregatorAdmin({request}) {
     try {
       const params = request.all();
       const page = params?.page ? parseInt(params?.page) : 1
@@ -189,6 +209,39 @@ class AggregatorController {
       if (verified) {
         builder = builder.where('verified', verified)
       }
+
+      builder = builder.orderBy('created_at', 'DESC')
+      const list = await builder.paginate(page, perPage)
+      return list
+    }catch (e) {
+      console.log(e);
+      return HelperUtils.responseErrorInternal('ERROR: update project information fail !');
+    }
+  }
+
+  async getAggregator({request}) {
+    try {
+      const params = request.all();
+      const page = params?.page ? parseInt(params?.page) : 1
+      const perPage = params?.per_page ? parseInt(params?.per_page) : 10
+      const category = params?.category
+      const display_area = params?.display_area
+      const verified = params?.verified
+      const ido_type = params?.ido_type
+      let builder = GameInformation.query()
+      if (category) {
+        builder = builder.where(`category`, 'like', `%${category}%`)
+      }
+      if (display_area) {
+        builder = builder.where('display_area', 'like', `%${display_area}%`)
+      }
+      if (verified) {
+        builder = builder.where('verified', verified)
+      }
+      if (ido_type) {
+        builder = builder.where('ido_type', ido_type)
+      }
+      builder = builder.where('is_show', true)
       builder = builder.orderBy('created_at', 'DESC')
       const list = await builder.paginate(page, perPage)
       return list

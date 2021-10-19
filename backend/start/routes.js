@@ -200,12 +200,13 @@ Route.group(() => {
 
   // Aggregator
   Route.post('aggregator/create', 'AggregatorController.aggregatorCreate');
+  Route.post('aggregator/set-show/:id', 'AggregatorController.setShowStatus');
   Route.post('aggregator/tokenomic/:id', 'AggregatorController.tokenomicsInsert');
   Route.post('aggregator/project/:id', 'AggregatorController.projectInsert');
   Route.post('aggregator/tokenomic/update/:id', 'AggregatorController.tokenomicsUpdate');
   Route.post('aggregator/project/update/:id', 'AggregatorController.projectUpdate');
   Route.post('aggregator/:id', 'AggregatorController.aggregatorUpdate');
-  Route.get('aggregator', 'AggregatorController.getAggregator');
+  Route.get('aggregator', 'AggregatorController.getAggregatorAdmin');
   Route.get('aggregator/:id', 'AggregatorController.findAggregator');
   Route.get('project-info/:id', 'AggregatorController.findProject');
   Route.get('tokenomics/:id', 'AggregatorController.findTokenomic');

@@ -39,6 +39,8 @@ import PoolEdit from "./pages/PoolCreate/PoolEdit";
 import KycUserList from "./pages/KycUserList/KycUserList";
 import KycUserEdit from "./pages/KycUserList/KycUserDetail/KycUserEdit";
 import KycUserCreate from "./pages/KycUserList/KycUserDetail/KycUserCreate";
+import Aggregator from "./pages/Aggregator";
+import AggregatorCreate from "./pages/Aggregator/AggregatorCreate";
 
 /**
  * Main App routes.
@@ -98,6 +100,10 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
         <Route path={adminRoute('/kyc-users')} component={KycUserList} />
         <Route path={adminRoute('/kyc-user-detail/:id')} component={KycUserEdit} />
         <Route path={adminRoute('/kyc-user-create')} component={KycUserCreate} />
+
+        <Route path={adminRoute('/aggregator')} exact component={Aggregator} />
+        <Route path={adminRoute('/aggregator/add')} exact component={AggregatorCreate} />
+        <Route path={adminRoute('/aggregator/:id')} exact component={AggregatorCreate} />
 
         <Route path={adminRoute('/network-change')} component={NetworkChange} />
         <Route path={adminRoute('/captcha-whitelist')} component={CaptchaWhitelist} />

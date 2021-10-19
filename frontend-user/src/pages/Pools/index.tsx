@@ -51,7 +51,7 @@ const Pools = (props: any) => {
   }
 
   const { data: poolsList, loading: loadingGetPool } = useFetch<any>(
-    `${getPoolsPrefixUri()}?page=${currentPage}&limit=10&title=${input}`
+    `${getPoolsPrefixUri()}?page=${currentPage}&limit=10&title=${input}&token_type=erc20`
   );
 
   // console.log('poolsList: ', poolsList);

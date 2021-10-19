@@ -97,21 +97,22 @@ const BuyToken: React.FC<any> = (props: any) => {
     checking: true,
     valid: false,
   });
-  const { data: dataTicket = null, loading: loadingTicket } = useFetchV1<any>(
-    `/pool/${id}`,
-  );
+  const { poolDetails, loading: loadingPoolDetail } = usePoolDetails(id);
+  // const { data: dataTicket = null, loading: loadingTicket } = useFetchV1<any>(
+  //   `/pool/${id}`,
+  // );
   useEffect(() => {
-    if (!loadingTicket) {
+    if (!loadingPoolDetail) {
       const result = {
         checking: false,
         valid: false
       }
-      if (dataTicket) {
-        result.valid = dataTicket.token_type === TOKEN_TYPE.ERC20;
+      if (poolDetails) {
+        result.valid = (poolDetails.tokenDetails as any)?.token_type === TOKEN_TYPE.ERC20;
       }
       setCheckParamType(result);
     }
-  }, [loadingTicket, dataTicket]);
+  }, [loadingPoolDetail, poolDetails]);
   return <DefaultLayout>
     <WrapperContent useShowBanner={false}>
       {
@@ -119,13 +120,13 @@ const BuyToken: React.FC<any> = (props: any) => {
           <Backdrop open={checkParamType.checking} style={{ color: '#fff', zIndex: theme.zIndex.drawer + 1, }}>
             <CircularProgress color="inherit" />
           </Backdrop>
-          : (checkParamType.valid ? <ContentToken id={id} /> : <NotFoundPage />)
+          : (checkParamType.valid ? <ContentToken id={id} poolDetails={poolDetails} /> : <NotFoundPage />)
       }
     </WrapperContent>
   </DefaultLayout>
 }
 
-const ContentToken = ({ id, ...props }: any) => {
+const ContentToken = ({ id, poolDetails, ...props }: any) => {
   const dispatch = useDispatch();
   const styles = useStyles();
 
@@ -139,7 +140,7 @@ const ContentToken = ({ id, ...props }: any) => {
   const { pathname } = useLocation();
   /* const userTier = useTypedSelector(state => state.userTier).data; */
   const { appChainID } = useTypedSelector(state => state.appNetwork).data;
-  const { poolDetails, loading: loadingPoolDetail } = usePoolDetails(id);
+  // const { poolDetails, loading: loadingPoolDetail } = usePoolDetails(id);
   const { isAuth, connectedAccount, wrongChain } = useAuth();
   // Fetch token sold, total tokens sold
   const { tokenSold, soldProgress } = useTokenSoldProgress(
@@ -207,11 +208,8 @@ const ContentToken = ({ id, ...props }: any) => {
   //     `/user/check-wallet-address?wallet_address=${connectedAccount}`
   //     : undefined
   // );
-  const { data: currentUserTier, loading: loadingCurrentTier } = useFetch<any>(
-    id && connectedAccount ?
-      `pool/${id}/user/${connectedAccount}/current-tier`
-      : undefined,
-  );
+
+  const { data: currentUserTier, loading: loadingCurrentTier } = useFetchV1<any>(`pool/${id}/user/${connectedAccount}/current-tier`, !!(id && connectedAccount));
 
   useEffect(() => {
     if (!loadingCurrentTier && currentUserTier) {
@@ -404,18 +402,18 @@ const ContentToken = ({ id, ...props }: any) => {
   const isOverTimeApplyWhiteList = endJoinTimeInDate && endJoinTimeInDate < now;
   const render = () => {
 
-    if (loadingPoolDetail) {
-      return (
-        <div className={styles.loader} style={{ marginTop: 70 }}>
-          <HashLoader loading={true} color={'#72F34B'} />
-          <p className={styles.loaderText}>
-            <span style={{ marginRight: 10 }}>Loading Pool Details ...</span>
-          </p>
-        </div>
-      )
-    }
+    // if (loadingPoolDetail) {
+    //   return (
+    //     <div className={styles.loader} style={{ marginTop: 70 }}>
+    //       <HashLoader loading={true} color={'#72F34B'} />
+    //       <p className={styles.loaderText}>
+    //         <span style={{ marginRight: 10 }}>Loading Pool Details ...</span>
+    //       </p>
+    //     </div>
+    //   )
+    // }
 
-    if ((!poolDetails || !poolDetails?.isDisplay) && !loadingPoolDetail) {
+    if ((!poolDetails || !poolDetails?.isDisplay) /**&& !loadingPoolDetail*/) {
       return (<p style={{
         color: 'white',
         textAlign: 'center',
@@ -681,6 +679,7 @@ const ContentToken = ({ id, ...props }: any) => {
               currencyName={currencyName}
               startBuyTimeInDate={startBuyTimeInDate}
               isKyc={checkKyc.isKyc}
+              currentUserTier={currentUserTier}
             // isKyc={!!(isKYC || poolDetails?.kycBypass)}
             />
           }

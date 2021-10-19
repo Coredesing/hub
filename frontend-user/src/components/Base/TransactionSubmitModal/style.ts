@@ -17,8 +17,9 @@ const useStyles = makeStyles((theme) => {
       }
     },
     dialogLabel: {
-      font: 'normal normal normal 12px/18px Helvetica',
-      textAlign: 'left'
+      font: 'normal normal normal 14px/18px Firs Neue',
+      textAlign: 'left',
+      color: '#eaeaea'
     },
     dialogContentTypo: {
       color: 'white',
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme) => {
     dialogTitle: {
       '& .MuiTypography-h6': {
         paddingBottom: 16,
-        font: 'normal normal bold 18px/24px DM Sans'
+        font: 'normal normal bold 18px/24px Firs Neue'
       },
 
       '& .MuiSvgIcon-root': {
@@ -72,7 +73,7 @@ const useStyles = makeStyles((theme) => {
       borderRadius: 4,
       border: 'none',
       color: 'white',
-      font: 'normal normal normal 14px/24px Helvetica',
+      font: 'normal normal normal 14px/24px Firs Neue',
 
       '&:focus': {
         outline: 'none',
@@ -83,12 +84,12 @@ const useStyles = makeStyles((theme) => {
       marginTop: 25,
       ...typeDisplayFlex,
       width: '100%',
-      background: '#3232DC',
+      background: '#72F34B',
       borderRadius: 60,
       padding: '0',
-      color: 'white',
+      color: '#000',
       border: 'none',
-      font: 'normal normal bold 14px/18px DM Sans',
+      font: 'normal normal 600 15px Firs Neue',
       cursor: 'pointer',
       transition: '.2s all ease-out',
       height: '42px',
@@ -100,8 +101,8 @@ const useStyles = makeStyles((theme) => {
       },
 
       '&:hover': {
-        opacity: .8,
-        color: 'white'
+        background: '#5ec73e',
+        color: '#000',
       },
 
       '&:active': {

@@ -18,6 +18,8 @@ const UpcomingIDO: React.FC<any> = (props: any) => {
         network_available: gameDetails?.network_available,
         accept_currency: gameDetails?.accept_currency,
         icon_token_link: gameDetails?.icon_token_link,
+        redkite_ido_link: gameDetails?.redkite_ido_link,
+        gamefi_ido_link: gameDetails?.gamefi_ido_link,
     });
 
     if (upcomingIDOInfo) {
@@ -63,6 +65,19 @@ const UpcomingIDO: React.FC<any> = (props: any) => {
     const onChangeAcceptCurrency = (event: any) => {
         let newData = {...upcomingIDOInfo}
         newData.accept_currency = event
+        setUpcomingIDOInfo(newData)
+        onChangeUpcomingIDO(newData)
+    }
+
+    const onChangeRedkiteLink = (event: any) => {
+        let newData = {...upcomingIDOInfo}
+        newData.redkite_ido_link = event.target.value
+        setUpcomingIDOInfo(newData)
+        onChangeUpcomingIDO(newData)
+    }
+    const onChangeGamefiLink = (event: any) => {
+        let newData = {...upcomingIDOInfo}
+        newData.gamefi_ido_link = event.target.value
         setUpcomingIDOInfo(newData)
         onChangeUpcomingIDO(newData)
     }
@@ -208,6 +223,25 @@ const UpcomingIDO: React.FC<any> = (props: any) => {
                             />
                             ETH
                         </label>
+                    </div>
+                    <div className={classes.formControl}>
+                        <label className={classes.formControlLabel}>Redkite IDO Link</label>
+                        <input
+                            type="text"
+                            placeholder={'Enter Redkite IDO Link'}
+                            defaultValue={upcomingIDOInfo.redkite_ido_link}
+                            onChange={onChangeRedkiteLink}
+                            className={classes.formControlInput}
+                        />
+                        <br/>
+                        <label className={classes.formControlLabel}>GameFi IDO Link</label>
+                        <input
+                            type="text"
+                            placeholder={'Enter GameFi IDO Link'}
+                            defaultValue={upcomingIDOInfo.gamefi_ido_link}
+                            onChange={onChangeGamefiLink}
+                            className={classes.formControlInput}
+                        />
                     </div>
                 </div>
             </div>

@@ -37,6 +37,9 @@ const ProjectInformation: React.FC<any> = (props: any) => {
         tiktok_link: gameDetails?.tiktok_link,
         reddit_link: gameDetails?.reddit_link,
         instagram_link: gameDetails?.instagram_link,
+        medium_link: gameDetails?.medium_link,
+        announcement_telegram_link: gameDetails?.announcement_telegram_link,
+        coinmartketcap_link: gameDetails?.coinmartketcap_link,
     });
 
     if (projectInfo) {
@@ -118,6 +121,27 @@ const ProjectInformation: React.FC<any> = (props: any) => {
     const onChangeInstagramLink = (event: any) => {
         let newData = {...projectInfo}
         newData.instagram_link = event.target.value
+        setProjectInfo(newData)
+        onChangeProjectInfo(newData)
+    }
+
+    const onChangeMediumLink = (event: any) => {
+        let newData = {...projectInfo}
+        newData.medium_link = event.target.value
+        setProjectInfo(newData)
+        onChangeProjectInfo(newData)
+    }
+
+    const onChangeAnnLink = (event: any) => {
+        let newData = {...projectInfo}
+        newData.announcement_telegram_link = event.target.value
+        setProjectInfo(newData)
+        onChangeProjectInfo(newData)
+    }
+
+    const onChangeCMCLink = (event: any) => {
+        let newData = {...projectInfo}
+        newData.coinmartketcap_link = event.target.value
         setProjectInfo(newData)
         onChangeProjectInfo(newData)
     }
@@ -273,6 +297,36 @@ const ProjectInformation: React.FC<any> = (props: any) => {
                             defaultValue={projectInfo.instagram_link}
                             onChange={onChangeInstagramLink}
 
+                            className={classes.formControlInput}
+                        />
+                    </div>
+
+                    <div className={classes.formControl}>
+                        <label className={classes.formControlLabel}>Medium Link</label>
+                        <input
+                            type="text"
+                            defaultValue={projectInfo.medium_link}
+                            onChange={onChangeMediumLink}
+                            className={classes.formControlInput}
+                        />
+                    </div>
+
+                    <div className={classes.formControl}>
+                        <label className={classes.formControlLabel}>Telegram ANN Link</label>
+                        <input
+                            type="text"
+                            defaultValue={projectInfo.announcement_telegram_link}
+                            onChange={onChangeAnnLink}
+                            className={classes.formControlInput}
+                        />
+                    </div>
+
+                    <div className={classes.formControl}>
+                        <label className={classes.formControlLabel}>CoinMarketCap Link</label>
+                        <input
+                            type="text"
+                            defaultValue={projectInfo.coinmartketcap_link}
+                            onChange={onChangeCMCLink}
                             className={classes.formControlInput}
                         />
                     </div>

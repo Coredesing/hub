@@ -183,10 +183,10 @@ const ContentToken = ({ id, ...props }: any) => {
       return false;
     }
   }
-  const { data: pickedWinner } = useFetch<Array<any>>(
-    poolDetails ? `/pool/${poolDetails?.id}/check-picked-winner` : undefined,
-    poolDetails?.method !== "whitelist"
-  );
+  // const { data: pickedWinner } = useFetch<Array<any>>(
+  //   poolDetails ? `/pool/${poolDetails?.id}/check-picked-winner` : undefined,
+  //   poolDetails?.method !== "whitelist"
+  // );
 
   const { data: alreadyJoinPool } = useFetch<boolean>(
     poolDetails && connectedAccount ?
@@ -212,7 +212,14 @@ const ContentToken = ({ id, ...props }: any) => {
       `pool/${id}/user/${connectedAccount}/current-tier`
       : undefined,
   );
+
+  useEffect(() => {
+    if (!loadingCurrentTier && currentUserTier) {
+      setCheckKyc({ isKyc: currentUserTier.exist_whitelist })
+    }
+  }, [loadingCurrentTier, currentUserTier])
   const { data: winnersList } = useFetch<any>(`/user/winner-list/${id}?page=1&limit=10&`);
+  const pickedWinner = !!(+winnersList?.total)
 
   const poolDetailsMapping = usePoolDetailsMapping(poolDetails);
 

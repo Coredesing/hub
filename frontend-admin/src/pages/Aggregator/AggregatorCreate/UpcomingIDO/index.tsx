@@ -17,6 +17,7 @@ const UpcomingIDO: React.FC<any> = (props: any) => {
         token_price: gameDetails?.token_price,
         network_available: gameDetails?.network_available,
         accept_currency: gameDetails?.accept_currency,
+        icon_token_link: gameDetails?.icon_token_link,
     });
 
     if (upcomingIDOInfo) {
@@ -44,6 +45,12 @@ const UpcomingIDO: React.FC<any> = (props: any) => {
     const onChangeTokenPrice = (event: any) => {
         let newData = {...upcomingIDOInfo}
         newData.token_price = event.target.value
+        setUpcomingIDOInfo(newData)
+        onChangeUpcomingIDO(newData)
+    }
+    const onChangeIconTokenLink = (event: any) => {
+        let newData = {...upcomingIDOInfo}
+        newData.icon_token_link = event.target.value
         setUpcomingIDOInfo(newData)
         onChangeUpcomingIDO(newData)
     }
@@ -108,6 +115,27 @@ const UpcomingIDO: React.FC<any> = (props: any) => {
                             placeholder={'Image Link for IDO'}
                             defaultValue={upcomingIDOInfo.ido_image}
                             onChange={onChangeIDOImage}
+                            className={classes.formControlInput}
+                        />
+                    </div>
+
+                    <div className={classes.formControl}>
+                        <label className={classes.formControlLabel}>Price per token</label>
+                        <input
+                            type="number"
+                            placeholder={'Token price'}
+                            defaultValue={upcomingIDOInfo.token_price}
+                            onChange={onChangeTokenPrice}
+                            className={classes.formControlInput}
+                        />
+                    </div>
+                    <div className={classes.formControl}>
+                        <label className={classes.formControlLabel}>Icon Token Link</label>
+                        <input
+                            type="text"
+                            placeholder={'Small Icon Token link'}
+                            defaultValue={upcomingIDOInfo.icon_token_link}
+                            onChange={onChangeIconTokenLink}
                             className={classes.formControlInput}
                         />
                     </div>
@@ -180,16 +208,6 @@ const UpcomingIDO: React.FC<any> = (props: any) => {
                             />
                             ETH
                         </label>
-                    </div>
-                    <div className={classes.formControl}>
-                        <label className={classes.formControlLabel}>Price per token</label>
-                        <input
-                            type="number"
-                            placeholder={'Token price'}
-                            defaultValue={upcomingIDOInfo.token_price}
-                            onChange={onChangeTokenPrice}
-                            className={classes.formControlInput}
-                        />
                     </div>
                 </div>
             </div>

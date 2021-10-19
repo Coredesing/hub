@@ -16,6 +16,11 @@ const useStyles = makeStyles(theme => ({
         width: '50%',
         position: 'relative',
     },
+    formControlFullWidth: {
+        padding: 10,
+        width: '100%',
+        position: 'relative',
+    },
     formControlFull: {
         padding: 10,
         marginTop: 10,

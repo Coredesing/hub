@@ -8,10 +8,13 @@ import CreatableSelect from "react-select/creatable";
 
 const GameInformation: React.FC<any> = (props: any) => {
     const classes = useStyles();
-    let { gameDetails, onChangeGameInfo } = props
+    let { gameDetails, onChangeGameInfo, isEdit } = props
     const [gameInfo, setGameInfo] = useState({...props.gameDetails});
     useEffect(() => {
-        if (!gameInfo?.system_require || !gameInfo?.game_intro || !gameInfo?.game_features || !gameInfo?.game_name || !gameInfo?.developer || !gameInfo?.category || !gameInfo?.language || !gameInfo?.hashtags) {
+        if (!isEdit) {
+            return
+        }
+        if (!gameInfo?.system_require || !gameInfo?.game_intro || !gameInfo?.short_description || !gameInfo?.game_features || !gameInfo?.game_name || !gameInfo?.developer || !gameInfo?.category || !gameInfo?.language || !gameInfo?.hashtags) {
             setGameInfo(gameDetails)
         }
     }, [props])
@@ -109,6 +112,12 @@ const GameInformation: React.FC<any> = (props: any) => {
         setGameInfo(newData)
         onChangeGameInfo(newData)
     }
+    const onChangeDescription = (event: any) => {
+        let newData = {...gameInfo}
+        newData.short_description = event.target.value
+        setGameInfo(newData)
+        onChangeGameInfo(newData)
+    }
     const onChangeSystemRequire = (event: any) => {
         let newData = {...gameInfo}
         console.log(event)
@@ -188,6 +197,16 @@ const GameInformation: React.FC<any> = (props: any) => {
                             placeholder={"Input new tags then Enter"}
 
                             options={[]}
+                        />
+                    </div>
+
+                    <div className={classes.formControlFullWidth}>
+                        <label className={classes.formControlLabel}>Short Description</label>
+                        <input
+                            type="text"
+                            onChange={onChangeDescription}
+                            defaultValue={gameInfo?.short_description}
+                            className={classes.formControlInput}
                         />
                     </div>
 

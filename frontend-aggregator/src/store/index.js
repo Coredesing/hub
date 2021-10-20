@@ -137,7 +137,7 @@ export default new Vuex.Store({
           liked: !!state.user.likes.find(id => id === item.id),
           likes: listLike.find(it => it.game_id === item.id)?.total_like || 0,
         }))
-        commit('updateListFavorite', list.splice(0, 5))
+        commit('updateListFavorite', list.splice(0, 6))
       }
     },
     async getListTopGame({ state, commit }) {

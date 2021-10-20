@@ -38,4 +38,12 @@ export default {
       line-height: 22px;
     }
   }
+
+  @media screen and (max-width: 600px) {
+    .breadcrumb {
+      &-divider {
+        margin: 0 10px;
+      }
+    }
+  }
 </style>

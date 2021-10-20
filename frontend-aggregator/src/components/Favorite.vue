@@ -68,9 +68,6 @@ export default {
     }
 
     &-info {
-      display: flex;
-      align-items: center;
-      justify-content: center;
       margin-top: 8px;
       font-size: 18px;
       line-height: 36px;
@@ -78,6 +75,7 @@ export default {
 
       img {
         margin-left: 8px;
+        display: inline;
       }
     }
 
@@ -101,6 +99,26 @@ export default {
         margin-top: 4px;
         font-size: 14px;
         line-height: 18px;
+      }
+    }
+  }
+
+  @media screen and (max-width: 600px){
+    .favorite {
+      width: 160px;
+
+      &-image {
+        width: 120px;
+        height: 120px;
+      }
+
+      &-info {
+        font-size: 16px;
+
+        img {
+          margin-left: 4px;
+          width: 14px;
+        }
       }
     }
   }

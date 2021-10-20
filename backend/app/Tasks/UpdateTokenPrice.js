@@ -6,25 +6,25 @@ const axios = use('axios');
 
 class UpdateTokenPrice extends Task {
   static get schedule () {
-    return '0 0 * * * *'
+    return '0 */1 * * * *'
   }
 
   async handle () {
     try {
       console.log(`start craw token price`)
       const list_token_builder = Tokenomic.query()
-      const BTCQuote = await this.getQuote('BTC')
-      const ETHQuote = await this.getQuote('ETH')
+      const BTCQuote = await this.getQuote('bitcoin')
+      const ETHQuote = await this.getQuote('ethereum')
       const token_list = await list_token_builder.fetch()
       token_list.rows.map(async row => {
-        if (!row.ticker) {
+        if (!row.coinmarketcap_slug) {
           return
         }
-        const symbol = row.ticker.toUpperCase()
+        const symbol = row.coinmarketcap_slug
         console.log(`getting ${symbol} price`)
         const tokenQuote = await this.getQuote(symbol)
         const tokenRecord = await Tokenomic.findBy('game_id', row.game_id)
-        if (!tokenRecord) {
+        if (!tokenRecord || !tokenQuote) {
           return
         }
         tokenRecord.price = tokenQuote.price
@@ -34,6 +34,7 @@ class UpdateTokenPrice extends Task {
         tokenRecord.price_btc_change_24h = (tokenQuote.percent_change_24h - BTCQuote.percent_change_24h)
         tokenRecord.price_eth = (tokenQuote.price / ETHQuote.price)
         tokenRecord.price_eth_change_24h = (tokenQuote.percent_change_24h - ETHQuote.percent_change_24h)
+        console.log(tokenRecord)
         await tokenRecord.save()
       })
     } catch (e) {
@@ -43,9 +44,14 @@ class UpdateTokenPrice extends Task {
   }
   async getQuote(symbol) {
     const cmc_api_token = process.env.CMC_PRO_API_KEY
-    const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${symbol}`;
+    const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?slug=${symbol}`;
     const response = await axios.get(url, {headers: {'X-CMC_PRO_API_KEY': cmc_api_token, Accept: 'application/json'}})
-    return response?.data?.data[symbol]?.quote.USD
+    console.log(response)
+    let data
+    Object.entries(response?.data?.data).forEach(([key, value]) => {
+      data = value
+    })
+    return data?.quote.USD
   }
 }
 

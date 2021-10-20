@@ -87,6 +87,7 @@ class AggregatorService {
     tokenomic.token_metrics = param.token_metrics
     tokenomic.token_distribution = param.token_distribution
     tokenomic.token_release = param.token_release
+    tokenomic.coinmarketcap_slug = param.coinmarketcap_slug
     const insertStatus = await tokenomic.save()
     return insertStatus
   }

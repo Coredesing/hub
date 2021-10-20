@@ -85,17 +85,6 @@ export default {
     background: linear-gradient(180deg, rgba(81, 81, 81, 0.43) 0%, rgba(81, 81, 81, 0) 100%);
     cursor: pointer;
 
-    &:before {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      content: '';
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 15%, rgba(0, 0, 0, 0) 60%);
-      border-radius: inherit;
-    }
-
     & > img {
       width: 100%;
       height: 100%;
@@ -176,7 +165,7 @@ export default {
       }
 
       .description {
-        color: #AEAEAE;
+        color: #C4C4C4;
         margin-bottom: 16px;
         height: 72px;
         overflow: hidden;
@@ -190,6 +179,75 @@ export default {
   &-main:hover,
   &-item:hover {
     border-color: #72F34B99;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .trending {
+    display: flex;
+    flex-direction: column;
+
+    &-main {
+      padding: 16px;
+
+      & > img {
+        border-radius: 12px;
+      }
+
+      &_detail {
+        padding: 24px;
+        left: 0;
+
+        &--title {
+          font-size: 24px;
+          line-height: 24px;
+
+          img {
+            width: 16px;
+            margin-left: 4px;
+          }
+        }
+
+        &--desc {
+          margin: 8px 0;
+          line-height: 18px;
+          height: 72px;
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-line-clamp: 4;
+          -webkit-box-orient: vertical;
+        }
+      }
+    }
+
+    &-item {
+      padding: 16px;
+      position: relative;
+
+      &_image {
+        max-width: 100%;
+
+        img {
+          border-radius: 12px;
+          opacity: 0.5;
+        }
+      }
+
+      &_detail {
+        position: absolute;
+        bottom: 0;
+        padding: 0 8px 16px;
+
+        .name {
+          font-size: 24px;
+          line-height: 24px;
+        }
+
+        .description {
+          margin-bottom: 8px;
+        }
+      }
+    }
   }
 }
 </style>

@@ -154,3 +154,15 @@ img {
 .view-all img {
     margin-left: 8px;
 }
+
+
+@media screen and (max-width: 600px) {
+    body {
+        font-size: 13px;
+        line-height: 22px;
+    }
+
+    :root {
+        --padding-section: 24px;
+    }
+}

@@ -17,7 +17,7 @@
       <template v-else>
         <img alt :src="mainItem.thumbnail"/>
       </template>
-      <div class="upcoming-main_title">
+      <div class="upcoming-main_title" @click.stop.prevent="viewDetail(mainItem)">
         {{ mainItem.game_name }}
         <img v-if="mainItem.verified" alt src="../assets/images/tick_green.svg"/>
       </div>
@@ -251,6 +251,53 @@ export default {
 
   &-only {
     display: block;
+  }
+
+  @media screen and (max-width: 600px) {
+    .upcoming {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      &-main,
+      &-item {
+        padding: 12px;
+        border-radius: 12px;
+
+        &_title {
+          top: 24px;
+          left: 24px;
+          font-size: 24px;
+
+          img {
+            width: 16px;
+            margin-left: 4px;
+          }
+        }
+
+        &_countdown {
+          left: 24px;
+          bottom: 20px;
+
+          p {
+            font-size: 12px;
+            line-height: 16px;
+            margin: 0;
+          }
+        }
+
+        &_play {
+          transform: scale(0.5) translate3d(-50%, -50%, 0);
+          transform-origin: top left;
+        }
+
+        &_sponsor {
+          top: 24px;
+          right: 24px;
+          padding: 0 6px;
+        }
+      }
+    }
   }
 }
 </style>

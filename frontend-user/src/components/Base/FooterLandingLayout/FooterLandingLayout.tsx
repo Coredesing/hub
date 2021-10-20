@@ -37,10 +37,10 @@ const FooterLandingLayout = () => {
           <div className={styles.navLinks}>
             <h4>OUR TEAM</h4>
             <ul className="link">
-              <li><Link href="https://gamefi.org/#features" target="_blank">Features</Link></li>
-              <li><Link href="https://gamefi.org/#roadmap" target="_blank">Roadmap</Link></li>
-              <li><Link href="https://gamefi.org/#ourteam" target="_blank">Our Team</Link></li>
-              <li><Link href="https://gamefi.org/#advisors" target="_blank">Advisors</Link></li>
+              <li><Link href="https://about.gamefi.org/#features" target="_blank">Features</Link></li>
+              <li><Link href="https://about.gamefi.org/#roadmap" target="_blank">Roadmap</Link></li>
+              <li><Link href="https://about.gamefi.org/#ourteam" target="_blank">Our Team</Link></li>
+              <li><Link href="https://about.gamefi.org/#advisors" target="_blank">Advisors</Link></li>
             </ul>
           </div>
           <div className={styles.navLinks}>
@@ -59,11 +59,6 @@ const FooterLandingLayout = () => {
           </div>
         </div>
       </div>
-      {/* <div className={styles.subContent}>
-        <a href='https://redkite.polkafoundry.com/#/terms' target='_blank'>Terms of Service</a>
-        <a href='https://redkite.polkafoundry.com/#/privacy' target='_blank'>Privacy Policy</a>
-        <a href='mailto:support@polkafoundry.com'>support@polkafoundry.com</a>
-      </div> */}
       <div className={styles.endContent}>
         <a className={styles.copyRight} href="https://icetea.io/">© Icetea Labs, 2021</a>
       </div>

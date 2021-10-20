@@ -12,7 +12,7 @@
       <h1 class="title">Upcoming IGOs</h1>
       <upcoming-section :main-item="mainUpcoming" :sub-items="subUpcoming"/>
     </section>
-    <section class="row align-center justify-center overflow-hidden">
+    <section @click="openBanner" class="row align-center justify-center overflow-hidden" style="cursor: pointer">
       <img alt src="../assets/images/bannerforgamefi.png"/>
       <mask-dot color="rgba(115, 83, 229)" right/>
     </section>
@@ -95,6 +95,9 @@ export default {
     async openList() {
       await this.$store.dispatch('getListAll')
       await this.$router.push({ path: 'list'})
+    },
+    async openBanner() {
+      window.open('https://mechmaster.io/');
     }
   }
 };

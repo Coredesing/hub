@@ -39,12 +39,13 @@
           <div class="price-detail">
             <div class="price-detail_token">{{ item.ticker }}</div>
             <div class="price-detail_value">
-              <span>$ {{ item.token_price }}</span>
-              <span v-if="item.tokenChange"
-                    :class="item.tokenChange > 0 ? 'increased' : 'decreased'">
-                <img v-if="item.tokenChange > 0" src="../assets/images/up.svg"/>
-                <img v-if="item.tokenChange < 0" src="../assets/images/down.svg"/>
-                {{ Math.abs(item.tokenChange) }}%
+              <span v-if="tokenomic.price > 0">$ {{ (+tokenomic.price).toFixed(3) }}</span>
+              <span v-else>$ {{ token_price }}</span>
+              <span v-if="tokenomic.price_change_24h"
+                    :class="tokenomic.price_change_24h > 0 ? 'increased' : 'decreased'">
+                <img v-if="tokenomic.price_change_24h > 0" src="../assets/images/up.svg"/>
+                <img v-if="tokenomic.price_change_24h < 0" src="../assets/images/down.svg"/>
+                {{ Math.abs(tokenomic.price_change_24h).toFixed(3) }}%
               </span>
             </div>
           </div>
@@ -226,6 +227,7 @@ export default {
 
       &_image {
         max-width: 100%;
+        max-height: 350px;
 
         img {
           border-radius: 12px;

@@ -35,6 +35,7 @@ const Tokenomics: React.FC<any> = (props: any) => {
         token_metrics: gameDetails?.token_metrics,
         token_distribution: gameDetails?.token_distribution,
         token_release: gameDetails?.token_release,
+        coinmarketcap_slug: gameDetails?.coinmarketcap_slug,
     });
 
     if (tokenomics) {
@@ -74,6 +75,12 @@ const Tokenomics: React.FC<any> = (props: any) => {
     const onChangeProjectValuation = (event: any) => {
         let newData = {...tokenomics}
         newData.project_valuation = event.target.value
+        setTokenomics(newData)
+        onChangeTokenomics(newData)
+    }
+    const onChangeCMCSlug = (event: any) => {
+        let newData = {...tokenomics}
+        newData.coinmarketcap_slug = event.target.value
         setTokenomics(newData)
         onChangeTokenomics(newData)
     }
@@ -118,6 +125,17 @@ const Tokenomics: React.FC<any> = (props: any) => {
                             name='name'
                             onChange={onChangeTicker}
                             defaultValue={tokenomics.ticker}
+
+                            className={classes.formControlInput}
+                        />
+                    </div>
+
+                    <div className={classes.formControl}>
+                        <label className={classes.formControlLabel}>CMC Slug (Ex: polkafoundry)</label>
+                        <input
+                            type="text"
+                            onChange={onChangeCMCSlug}
+                            defaultValue={tokenomics.coinmarketcap_slug}
 
                             className={classes.formControlInput}
                         />

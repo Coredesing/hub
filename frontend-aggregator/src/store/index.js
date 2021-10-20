@@ -239,7 +239,7 @@ export default new Vuex.Store({
         publisher: detail.publisher,
         language: detail.language,
         category: detail.category.split(',').join(', '),
-        token_price: detail.token_price,
+        token_price: detail.ido_type === 'upcoming' ? detail.token_price : tokenomic.price,
         token_icon: detail.icon_token_link,
         coinmarketcap: info.coinmarketcap_link,
         downloads: [
@@ -323,6 +323,13 @@ export default new Vuex.Store({
           }
         ].filter(item => !!item.data),
         liked: !!state.user.likes.find(id => id === detail.id),
+        tokenInfo: {
+          btc: +tokenomic.price_btc,
+          btcChange: +tokenomic.price_btc_change_24h,
+          eth: +tokenomic.price_eth,
+          ethChange: +tokenomic.price_eth_change_24h
+        },
+        tokenChange: +tokenomic.price_change_24h
       }
       commit('setGame', game)
       commit('changeLoadingStatus', false)

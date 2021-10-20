@@ -163,6 +163,7 @@ export default {
     .section {
       &-favorite {
         flex-wrap: wrap;
+        align-items: flex-start;
 
         .favorite {
           margin-bottom: 24px;

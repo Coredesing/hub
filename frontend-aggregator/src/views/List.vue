@@ -67,7 +67,9 @@ export default {
     }
   },
   async created() {
-
+    if((!this.listAll || this.listAll.length === 0) && !this.selectedCategory) {
+      await this.$store.dispatch('getListAll')
+    }
   },
   computed: {
     selectedCategory() {
@@ -122,6 +124,15 @@ export default {
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-rows: auto;
         grid-gap: 48px 24px;
+
+        .item ::v-deep .item-image {
+          height: 168px;
+
+          img {
+            height: 100%;
+            width: 100%;
+          }
+        }
       }
 
       .pagination {

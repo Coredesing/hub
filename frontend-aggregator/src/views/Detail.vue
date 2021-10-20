@@ -60,14 +60,14 @@
                       :class="game.tokenChange > 0 ? 'increased' : 'decreased'">
                 <img v-if="game.tokenChange > 0" src="../assets/images/up.svg"/>
                 <img v-if="game.tokenChange < 0" src="../assets/images/down.svg"/>
-                {{ Math.abs(game.tokenChange) }}%
+                {{ Math.abs(game.tokenChange.toFixed(2)) }}%
               </span>
               </div>
             </div>
-            <div v-if="tokenInfo" class="price-sub">
-              <span>&lt;{{ tokenInfo.btc }} BTC</span>
-              <span :class="tokenInfo.btcChange > 0 ? 'increased' : 'decreased'">
-              <template v-if="tokenInfo.btcChange > 0">
+            <div v-if="game.tokenInfo" class="price-sub">
+              <span>&lt;{{ game.tokenInfo.btc.toFixed(9) }} BTC</span>
+              <span :class="game.tokenInfo.btcChange > 0 ? 'increased' : 'decreased'">
+              <template v-if="game.tokenInfo.btcChange > 0">
                 <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                       d="M3.3962 0.514683C3.19605 0.254679 2.80395 0.254679 2.6038 0.514683L0.155585 3.695C-0.0975138 4.02379 0.136868 4.5 0.551788 4.5L5.44821 4.5C5.86313 4.5 6.09751 4.02379 5.84441 3.695L3.3962 0.514683Z"
@@ -81,11 +81,11 @@
                       fill="#F24B4B"/>
                 </svg>
               </template>
-              {{ Math.abs(tokenInfo.btcChange) }}%
+              {{ Math.abs(game.tokenInfo.btcChange.toFixed(2)) }}%
             </span>
-              <span>&lt;{{ tokenInfo.eth }} ETH</span>
-              <span :class="tokenInfo.ethChange > 0 ? 'increased' : 'decreased'">
-              <template v-if="tokenInfo.ethChange > 0">
+              <span>&lt;{{ game.tokenInfo.eth.toFixed(9) }} ETH</span>
+              <span :class="game.tokenInfo.ethChange > 0 ? 'increased' : 'decreased'">
+              <template v-if="game.tokenInfo.ethChange > 0">
                 <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                       d="M3.3962 0.514683C3.19605 0.254679 2.80395 0.254679 2.6038 0.514683L0.155585 3.695C-0.0975138 4.02379 0.136868 4.5 0.551788 4.5L5.44821 4.5C5.86313 4.5 6.09751 4.02379 5.84441 3.695L3.3962 0.514683Z"
@@ -99,7 +99,7 @@
                       fill="#F24B4B"/>
                 </svg>
               </template>
-              {{ Math.abs(tokenInfo.ethChange) }}%
+              {{ Math.abs(game.tokenInfo.ethChange.toFixed(2)) }}%
             </span>
             </div>
             <div v-if="tokenInfo" class="price-range">
@@ -304,19 +304,19 @@
           <div class="price" style="margin-bottom: 24px">
             <img alt :src="game.token_icon"/>
             <div class="price-detail_value">
-              <span>$ {{ game.token_price }}</span>
+              <span>$ {{ (+game.token_price).toFixed(5) }}</span>
               <span v-if="game.tokenChange"
                     :class="game.tokenChange > 0 ? 'increased' : 'decreased'">
                 <img v-if="game.tokenChange > 0" src="../assets/images/up.svg"/>
                 <img v-if="game.tokenChange < 0" src="../assets/images/down.svg"/>
-                {{ Math.abs(game.tokenChange) }}%
+                {{ Math.abs(game.tokenChange.toFixed(2)) }}%
               </span>
             </div>
           </div>
-          <div v-if="tokenInfo" class="price-sub">
-            <span>&lt;{{ tokenInfo.btc }} BTC</span>
-            <span :class="tokenInfo.btcChange > 0 ? 'increased' : 'decreased'">
-              <template v-if="tokenInfo.btcChange > 0">
+          <div v-if="game.tokenInfo" class="price-sub">
+            <span>&lt;{{ game.tokenInfo.btc.toFixed(9) }} BTC</span>
+            <span :class="game.tokenInfo.btcChange > 0 ? 'increased' : 'decreased'">
+              <template v-if="game.tokenInfo.btcChange > 0">
                 <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                       d="M3.3962 0.514683C3.19605 0.254679 2.80395 0.254679 2.6038 0.514683L0.155585 3.695C-0.0975138 4.02379 0.136868 4.5 0.551788 4.5L5.44821 4.5C5.86313 4.5 6.09751 4.02379 5.84441 3.695L3.3962 0.514683Z"
@@ -330,11 +330,11 @@
                       fill="#F24B4B"/>
                 </svg>
               </template>
-              {{ Math.abs(tokenInfo.btcChange) }}%
+              {{ Math.abs(game.tokenInfo.btcChange.toFixed(2)) }}%
             </span>
-            <span>&lt;{{ tokenInfo.eth }} ETH</span>
-            <span :class="tokenInfo.ethChange > 0 ? 'increased' : 'decreased'">
-              <template v-if="tokenInfo.ethChange > 0">
+            <span>&lt;{{ game.tokenInfo.eth.toFixed(9) }} ETH</span>
+            <span :class="game.tokenInfo.ethChange > 0 ? 'increased' : 'decreased'">
+              <template v-if="game.tokenInfo.ethChange > 0">
                 <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                       d="M3.3962 0.514683C3.19605 0.254679 2.80395 0.254679 2.6038 0.514683L0.155585 3.695C-0.0975138 4.02379 0.136868 4.5 0.551788 4.5L5.44821 4.5C5.86313 4.5 6.09751 4.02379 5.84441 3.695L3.3962 0.514683Z"
@@ -348,7 +348,7 @@
                       fill="#F24B4B"/>
                 </svg>
               </template>
-              {{ Math.abs(tokenInfo.ethChange) }}%
+              {{ Math.abs(game.tokenInfo.ethChange.toFixed(2)) }}%
             </span>
           </div>
           <div v-if="tokenInfo" class="price-range">
@@ -634,6 +634,7 @@ export default {
         &-sub {
           display: flex;
           align-items: center;
+          font-size: 12px;
 
           .increased {
             color: #72F34B;
@@ -793,8 +794,8 @@ export default {
         &-gamefi {
           display: flex;
           align-items: center;
-          justify-content: space-between;
-          padding: 16px 24px;
+          justify-content: center;
+          height: 69px;
           border-radius: 2px;
           color: white;
           text-decoration: none;

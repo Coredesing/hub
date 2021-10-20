@@ -122,4 +122,19 @@ export default {
       }
     }
   }
+
+  @media screen and (max-width: 374px) {
+    .favorite {
+      width: 130px;
+
+      &-info {
+        font-size: 13px;
+
+        img {
+          margin-left: 2px;
+          width: 12px;
+        }
+      }
+    }
+  }
 </style>

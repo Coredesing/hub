@@ -226,6 +226,7 @@ export default {
 
       &_image {
         max-width: 100%;
+        max-height: 350px;
 
         img {
           border-radius: 12px;

@@ -229,11 +229,11 @@
                 <span>Project Valuation:</span>
                 <span>{{ game.tokenomic.detail.project_valuation | displayNumber }}</span>
               </div>
-              <div class="tokenomic-info">
+              <div v-if="game.tokenomic.detail.initial_token_cir" class="tokenomic-info">
                 <span>Initial Token Circulation:</span>
                 <span>{{ game.tokenomic.detail.initial_token_cir | displayNumber }}</span>
               </div>
-              <div class="tokenomic-info">
+              <div v-if="game.tokenomic.detail.initial_token_market" class="tokenomic-info">
                 <span>Initial Market Cap:</span>
                 <span>${{ game.tokenomic.detail.initial_token_market | displayNumber }}</span>
               </div>

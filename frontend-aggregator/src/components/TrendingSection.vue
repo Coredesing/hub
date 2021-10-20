@@ -14,12 +14,13 @@
           <div class="price-detail">
             <div class="price-detail_token">{{ mainItem.ticker }}</div>
             <div class="price-detail_value">
-              <span>$ {{ mainItem.token_price }}</span>
-              <span v-if="mainItem.tokenChange"
-                    :class="mainItem.tokenChange > 0 ? 'increased' : 'decreased'">
-                <img v-if="mainItem.tokenChange > 0" src="../assets/images/up.svg"/>
-                <img v-if="mainItem.tokenChange < 0" src="../assets/images/down.svg"/>
-                {{ Math.abs(mainItem.tokenChange) }}%
+              <span v-if="mainItem.tokenomic.price > 0">$ {{ (+mainItem.tokenomic.price).toFixed(3) }}</span>
+              <span v-else>$ {{ mainItem.token_price }}</span>
+              <span v-if="mainItem.tokenomic.price_change_24h"
+                    :class="mainItem.tokenomic.price_change_24h > 0 ? 'increased' : 'decreased'">
+                <img v-if="mainItem.tokenomic.price_change_24h > 0" src="../assets/images/up.svg"/>
+                <img v-if="mainItem.tokenomic.price_change_24h < 0" src="../assets/images/down.svg"/>
+                {{ Math.abs(mainItem.tokenomic.price_change_24h).toFixed(3) }}%
               </span>
             </div>
           </div>
@@ -39,13 +40,13 @@
           <div class="price-detail">
             <div class="price-detail_token">{{ item.ticker }}</div>
             <div class="price-detail_value">
-              <span v-if="tokenomic.price > 0">$ {{ (+tokenomic.price).toFixed(3) }}</span>
-              <span v-else>$ {{ token_price }}</span>
-              <span v-if="tokenomic.price_change_24h"
-                    :class="tokenomic.price_change_24h > 0 ? 'increased' : 'decreased'">
-                <img v-if="tokenomic.price_change_24h > 0" src="../assets/images/up.svg"/>
-                <img v-if="tokenomic.price_change_24h < 0" src="../assets/images/down.svg"/>
-                {{ Math.abs(tokenomic.price_change_24h).toFixed(3) }}%
+              <span v-if="item.tokenomic.price > 0">$ {{ (+item.tokenomic.price).toFixed(3) }}</span>
+              <span v-else>$ {{ item.token_price }}</span>
+              <span v-if="item.tokenomic.price_change_24h"
+                    :class="item.tokenomic.price_change_24h > 0 ? 'increased' : 'decreased'">
+                <img v-if="item.tokenomic.price_change_24h > 0" src="../assets/images/up.svg"/>
+                <img v-if="item.tokenomic.price_change_24h < 0" src="../assets/images/down.svg"/>
+                {{ Math.abs(item.tokenomic.price_change_24h).toFixed(3) }}%
               </span>
             </div>
           </div>

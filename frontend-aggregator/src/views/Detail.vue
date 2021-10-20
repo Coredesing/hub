@@ -55,7 +55,7 @@
             <div class="price" style="margin-bottom: 24px">
               <img alt :src="game.token_icon"/>
               <div class="price-detail_value">
-                <span>$ {{ (+game.token_price).toFixed(5) }}</span>
+                <span>$ {{ (+game.token_price).toFixed(3) }}</span>
                 <span v-if="game.tokenChange"
                       :class="game.tokenChange > 0 ? 'increased' : 'decreased'">
                 <img v-if="game.tokenChange > 0" src="../assets/images/up.svg"/>
@@ -304,7 +304,7 @@
           <div class="price" style="margin-bottom: 24px">
             <img alt :src="game.token_icon"/>
             <div class="price-detail_value">
-              <span>$ {{ (+game.token_price).toFixed(5) }}</span>
+              <span>$ {{ (+game.token_price).toFixed(3) }}</span>
               <span v-if="game.tokenChange"
                     :class="game.tokenChange > 0 ? 'increased' : 'decreased'">
                 <img v-if="game.tokenChange > 0" src="../assets/images/up.svg"/>
@@ -438,6 +438,9 @@ export default {
   components: {MaskDot, Breadcrumb},
   filters: {
     displayNumber(val) {
+      if (!val) {
+        return ''
+      }
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   },

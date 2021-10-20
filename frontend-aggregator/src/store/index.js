@@ -294,7 +294,7 @@ export default new Vuex.Store({
           metric: tokenomic.token_metric
         },
         team: {
-          roadmap: info.roadmap.replace('<p>', '').replace('</p>', ''),
+          roadmap: info.roadmap ? info.roadmap.replace('<p>', '').replace('</p>', '') : '',
           partner: info.investors,
           technology: detail.technology,
           team: info.technologist,

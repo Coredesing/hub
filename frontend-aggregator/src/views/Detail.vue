@@ -381,16 +381,16 @@
             Price per token: <span>$ {{ game.ido.price }}</span>
           </div>
           <div class="divider" style="margin-bottom: 40px"/>
-          <a v-if="game.ido.link.redkite" class="btn ido-redkite" :href="game.ido.link.redkite.href">
+          <a v-if="game.ido.link.redkite" class="btn ido-redkite" target="_blank" :href="game.ido.link.redkite">
             <img alt src="../assets/images/redkite.svg"/>
-            <div>
+            <div v-if="game.ido.link.redkite.total">
               <p>Total Raise</p>
               <p>$ {{ game.ido.link.redkite.total }}</p>
             </div>
           </a>
-          <a v-if="game.ido.link.gamefi" class="btn ido-gamefi" :href="game.ido.link.gamefi.href">
+          <a v-if="game.ido.link.gamefi" class="btn ido-gamefi" target="_blank" :href="game.ido.link.gamefi">
             <img alt src="../assets/images/gamefi.svg"/>
-            <div>
+            <div v-if="game.ido.link.gamefi.total">
               <p>Total Raise</p>
               <p>$ {{ game.ido.link.gamefi.total }}</p>
             </div>

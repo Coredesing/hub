@@ -189,9 +189,9 @@ export default new Vuex.Store({
     async getListUpcoming({ commit }) {
       const url = URL.UPCOMING
       const response = await axios.get(url)
-      if (response && response.data) {
+      if (response && response.data && response.data.data) {
         let mainItem, subItems
-        if(response.data.length === 3) {
+        if(response.data.data.length === 3) {
           mainItem = {
             ...response.data.data[0],
             video: response.data.data[0].intro_video,
@@ -199,7 +199,7 @@ export default new Vuex.Store({
             deadline: response.data.data[0].ido_date
           }
           subItems = [response.data.data[1], response.data.data[2]].map(item => ({...item, thumbnail: item.screen_shots_1, deadline: item.ido_date}))
-        } else if (response.data.length === 2) {
+        } else if (response.data.data.length === 2) {
           subItems = [response.data.data[0], response.data.data[1]].map(item => ({...item, thumbnail: item.screen_shots_1, deadline: item.ido_date}))
         } else {
           mainItem = {
@@ -209,6 +209,7 @@ export default new Vuex.Store({
             deadline: response.data.data[0].ido_date
           }
         }
+
         commit('updateMainUpcoming', mainItem)
         commit('updateSubUpcoming', subItems)
       }

@@ -8,7 +8,7 @@
       </div>
       <mask-dot color="rgba(114, 243, 75)" top="200"/>
     </section>
-    <section v-if="mainUpcoming || (subUpcoming  && subUpcoming.length)">
+    <section v-if="(mainUpcoming && mainUpcoming.id) || (subUpcoming  && subUpcoming.length)">
       <h1 class="title">Upcoming IGOs</h1>
       <upcoming-section :main-item="mainUpcoming" :sub-items="subUpcoming"/>
     </section>

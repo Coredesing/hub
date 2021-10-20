@@ -9,35 +9,35 @@
         <a class="header-list_item" href="https://hub.gamefi.org/#/mystery-boxes" target="_blank">Mystery Box</a>
       </div>
       <div class="spacer"/>
-      <div :class="`search ${show.search ? 'show' : ''}`">
-        <input ref="search-input" type="text" v-model="searchText" v-click-outside="blur"/>
-        <img alt src="../assets/images/search.svg" @click.stop="openSearchBar"/>
-        <transition name="slide-down">
-          <div v-if="show.search && listSearch" class="search-result">
-            <template v-if="listSearch.length">
-              <div v-for="(item ,i) in listSearch" :key="i" class="search-result_item" @click="viewDetail(item)">
-                {{ item.game_name }}
-              </div>
-            </template>
-            <template v-else>
-              <div class="search-result_item" @click="viewList">Search all game</div>
-            </template>
-          </div>
-        </transition>
-      </div>
-      <div class="category">
-        <div class="category-title" @click="show.category = !show.category">
-          Category
-          <img alt src="../assets/images/arrow_right.svg" :style="{transform: show.category ? 'rotate(-90deg)' : 'rotate(90deg)'}"/>
-        </div>
-        <transition name="slide-down">
-          <div v-if="show.category" class="category-list">
-            <div class="category-list_item" v-for="(item, i) in CATEGORY_LIST" :key="i" @click="selectCategory(item)">
-              {{ item }}
-            </div>
-          </div>
-        </transition>
-      </div>
+<!--      <div :class="`search ${show.search ? 'show' : ''}`">-->
+<!--        <input ref="search-input" type="text" v-model="searchText" v-click-outside="blur"/>-->
+<!--        <img alt src="../assets/images/search.svg" @click.stop="openSearchBar"/>-->
+<!--        <transition name="slide-down">-->
+<!--          <div v-if="show.search && listSearch" class="search-result">-->
+<!--            <template v-if="listSearch.length">-->
+<!--              <div v-for="(item ,i) in listSearch" :key="i" class="search-result_item" @click="viewDetail(item)">-->
+<!--                {{ item.game_name }}-->
+<!--              </div>-->
+<!--            </template>-->
+<!--            <template v-else>-->
+<!--              <div class="search-result_item" @click="viewList">Search all game</div>-->
+<!--            </template>-->
+<!--          </div>-->
+<!--        </transition>-->
+<!--      </div>-->
+<!--      <div class="category">-->
+<!--        <div class="category-title" @click="show.category = !show.category">-->
+<!--          Category-->
+<!--          <img alt src="../assets/images/arrow_right.svg" :style="{transform: show.category ? 'rotate(-90deg)' : 'rotate(90deg)'}"/>-->
+<!--        </div>-->
+<!--        <transition name="slide-down">-->
+<!--          <div v-if="show.category" class="category-list">-->
+<!--            <div class="category-list_item" v-for="(item, i) in CATEGORY_LIST" :key="i" @click="selectCategory(item)">-->
+<!--              {{ item }}-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </transition>-->
+<!--      </div>-->
       <template v-if="user && user.address">
         <div class="address">{{ user.address | compressAddress}}</div>
       </template>

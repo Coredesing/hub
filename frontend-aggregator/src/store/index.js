@@ -137,7 +137,7 @@ export default new Vuex.Store({
           liked: !!state.user.likes.find(id => id === item.id),
           likes: listLike.find(it => it.game_id === item.id)?.total_like || 0,
         }))
-        commit('updateListFavorite', list.splice(0, 5))
+        commit('updateListFavorite', list.splice(0, 6))
       }
     },
     async getListTopGame({ state, commit }) {
@@ -230,6 +230,7 @@ export default new Vuex.Store({
       const detail = responses[0].data
       const info = responses[1].data
       const tokenomic = responses[2].data
+
       let game = {
         id: detail.id,
         game_name: detail.game_name,
@@ -242,7 +243,7 @@ export default new Vuex.Store({
         category: detail.category.split(',').join(', '),
         token_price: detail.ido_type === 'upcoming' ? detail.token_price : tokenomic.price,
         token_icon: detail.icon_token_link,
-        coinmarketcap: info.coinmarketcap_link,
+        coinmarketcap: info.coinmartketcap_link,
         downloads: [
           {type: 'Browser Game', link: detail.web_game_link},
           {type: 'PC Game', link: detail.game_pc_link},
@@ -293,7 +294,7 @@ export default new Vuex.Store({
           metric: tokenomic.token_metric
         },
         team: {
-          roadmap: info.roadmap.replace('<p>', '').replace('</p>', ''),
+          roadmap: info.roadmap ? info.roadmap.replace('<p>', '').replace('</p>', '') : '',
           partner: info.investors,
           technology: detail.technology,
           team: info.technologist,

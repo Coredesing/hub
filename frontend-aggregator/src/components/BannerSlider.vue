@@ -37,16 +37,19 @@
           </template>
         </div>
         <div class="slider-info_desc">{{ selectedItem.description }}</div>
-        <div :class="`btn btn-like ${selectedItem.liked ? 'liked' : ''}`" @click="likeGame">
-          <template v-if="selectedItem.liked">
-            <img alt src="../assets/images/heart_black.svg"/>
-            <span>Remove from Favourite List</span>
-          </template>
-          <template v-else>
-            <img alt src="../assets/images/heart_green.svg"/>
-            <span>Add to Favourite List</span>
-          </template>
+        <div class="btn btn-like" @click="viewMore(selectedItem)">
+          <span>View more</span>
         </div>
+<!--        <div :class="`btn btn-like ${selectedItem.liked ? 'liked' : ''}`" @click="likeGame">-->
+<!--          <template v-if="selectedItem.liked">-->
+<!--            <img alt src="../assets/images/heart_black.svg"/>-->
+<!--            <span>Remove from Favourite List</span>-->
+<!--          </template>-->
+<!--          <template v-else>-->
+<!--            <img alt src="../assets/images/heart_green.svg"/>-->
+<!--            <span>Add to Favourite List</span>-->
+<!--          </template>-->
+<!--        </div>-->
       </div>
     </template>
   </div>
@@ -118,6 +121,9 @@ export default {
     async likeGame() {
       this.selectedItem.liked = !this.selectedItem.liked
       await this.$store.dispatch('likeGame', { id: this.selectedItem.id, value: this.selectedItem.liked })
+    },
+    async viewMore(selectedItem) {
+      this.$router.push({ path: '/detail/' + selectedItem.id})
     }
   }
 }

@@ -55,7 +55,7 @@
             <div class="price" style="margin-bottom: 24px">
               <img alt :src="game.token_icon"/>
               <div class="price-detail_value">
-                <span>$ {{ game.token_price }}</span>
+                <span>$ {{ (+game.token_price).toFixed(3) }}</span>
                 <span v-if="game.tokenChange"
                       :class="game.tokenChange > 0 ? 'increased' : 'decreased'">
                 <img v-if="game.tokenChange > 0" src="../assets/images/up.svg"/>
@@ -169,7 +169,7 @@
           </template>
         </div>
         <div class="content-tab">
-          <div :class="`content-tab_item ${tab === 0 ? 'selected' : ''}`" @click="tab = 0">About this game</div>
+          <div :class="`content-tab_item ${tab === 0 ? 'selected' : ''}`" @click="tab = 0">About game</div>
           <div :class="`content-tab_item ${tab === 1 ? 'selected' : ''}`" @click="tab = 1">Tokenomics</div>
           <div :class="`content-tab_item ${tab === 2 ? 'selected' : ''}`" @click="tab = 2">Team</div>
         </div>
@@ -229,11 +229,11 @@
                 <span>Project Valuation:</span>
                 <span>{{ game.tokenomic.detail.project_valuation | displayNumber }}</span>
               </div>
-              <div class="tokenomic-info">
+              <div v-if="game.tokenomic.detail.initial_token_cir" class="tokenomic-info">
                 <span>Initial Token Circulation:</span>
                 <span>{{ game.tokenomic.detail.initial_token_cir | displayNumber }}</span>
               </div>
-              <div class="tokenomic-info">
+              <div v-if="game.tokenomic.detail.initial_token_market" class="tokenomic-info">
                 <span>Initial Market Cap:</span>
                 <span>${{ game.tokenomic.detail.initial_token_market | displayNumber }}</span>
               </div>
@@ -304,7 +304,7 @@
           <div class="price" style="margin-bottom: 24px">
             <img alt :src="game.token_icon"/>
             <div class="price-detail_value">
-              <span>$ {{ (+game.token_price).toFixed(5) }}</span>
+              <span>$ {{ (+game.token_price).toFixed(3) }}</span>
               <span v-if="game.tokenChange"
                     :class="game.tokenChange > 0 ? 'increased' : 'decreased'">
                 <img v-if="game.tokenChange > 0" src="../assets/images/up.svg"/>
@@ -438,6 +438,9 @@ export default {
   components: {MaskDot, Breadcrumb},
   filters: {
     displayNumber(val) {
+      if (!val) {
+        return ''
+      }
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   },

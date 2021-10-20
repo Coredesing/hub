@@ -17,7 +17,7 @@
       </div>
       <div class="column">
         <h2 class="title">About</h2>
-        <div @click="goTo('https://docsend.com/view/3a7347ud88mth66q', 'open')">Overview</div>
+        <div @click="goTo('https://about.gamefi.org/', 'open')">Overview</div>
 <!--        <div v-for="(item, i) in scrolls" :key="i" @click="goTo(item, 'scroll')">-->
 <!--          {{item}}-->
 <!--        </div>-->

@@ -228,6 +228,8 @@ class AggregatorController {
       const display_area = params?.display_area
       const verified = params?.verified
       const ido_type = params?.ido_type
+      const price = params?.price
+
       let builder = GameInformation.query()
       if (category) {
         builder = builder.where(`category`, 'like', `%${category}%`)
@@ -241,6 +243,10 @@ class AggregatorController {
       if (ido_type) {
         builder = builder.where('ido_type', ido_type)
       }
+      if (price) {
+        builder = builder.with('tokenomic')
+      }
+
       builder = builder.where('is_show', true)
       builder = builder.orderBy('created_at', 'DESC')
       const list = await builder.paginate(page, perPage)

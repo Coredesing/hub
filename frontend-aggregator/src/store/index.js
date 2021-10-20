@@ -165,7 +165,7 @@ export default new Vuex.Store({
       commit('changeLoadingStatus', false)
     },
     async getListLatest({ commit }) {
-      let url = URL.CATEGORY.slice(0, URL.CATEGORY.length - 1)
+      let url = URL.LATEST
       const response = await axios.get(url)
       if (response && response.data) {
         const list = response.data.data.map(item => ({
@@ -177,7 +177,7 @@ export default new Vuex.Store({
       }
     },
     async getListTrending({ commit }) {
-      const url = URL.DISPLAY + 'Trending'
+      const url = URL.DISPLAY + 'Trending&price=true'
       const response = await axios.get(url)
       if (response && response.data) {
         const mainItem = response.data.data[0]

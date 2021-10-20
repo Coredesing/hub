@@ -14,12 +14,13 @@
         <div class="price-detail">
           <div class="price-detail_token">{{ ticker }}</div>
           <div class="price-detail_value">
-            <span>$ {{ token_price }}</span>
-            <span v-if="tokenChange"
-                  :class="tokenChange > 0 ? 'increased' : 'decreased'">
-                <img v-if="tokenChange > 0" src="../assets/images/up.svg"/>
-                <img v-if="tokenChange < 0" src="../assets/images/down.svg"/>
-                {{ Math.abs(tokenChange) }}%
+            <span v-if="tokenomic.price > 0">$ {{ (+tokenomic.price).toFixed(3) }}</span>
+            <span v-else>$ {{ token_price }}</span>
+            <span v-if="tokenomic.price_change_24h"
+                  :class="tokenomic.price_change_24h > 0 ? 'increased' : 'decreased'">
+                <img v-if="tokenomic.price_change_24h > 0" src="../assets/images/up.svg"/>
+                <img v-if="tokenomic.price_change_24h < 0" src="../assets/images/down.svg"/>
+                {{ Math.abs(tokenomic.price_change_24h).toFixed(3) }}%
               </span>
           </div>
         </div>
@@ -42,6 +43,7 @@ export default {
     icon_token_link: null,
     token_price: [Number, String],
     tokenChange: Number,
+    tokenomic: Object,
   },
   methods: {
     viewDetail() {

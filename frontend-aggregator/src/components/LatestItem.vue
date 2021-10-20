@@ -14,9 +14,9 @@
         <div class="price-detail">
           <div class="price-detail_token">{{ ticker }}</div>
           <div class="price-detail_value">
-            <span v-if="tokenomic.price > 0">$ {{ (+tokenomic.price).toFixed(3) }}</span>
+            <span v-if="tokenomic && tokenomic.price > 0">$ {{ (+tokenomic.price).toFixed(3) }}</span>
             <span v-else>$ {{ token_price }}</span>
-            <span v-if="tokenomic.price_change_24h"
+            <span v-if="tokenomic && tokenomic.price_change_24h"
                   :class="tokenomic.price_change_24h > 0 ? 'increased' : 'decreased'">
                 <img v-if="tokenomic.price_change_24h > 0" src="../assets/images/up.svg"/>
                 <img v-if="tokenomic.price_change_24h < 0" src="../assets/images/down.svg"/>

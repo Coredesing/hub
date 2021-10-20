@@ -189,9 +189,9 @@ export default new Vuex.Store({
     async getListUpcoming({ commit }) {
       const url = URL.UPCOMING
       const response = await axios.get(url)
-      if (response && response.data) {
+      if (response && response.data && response.data.data) {
         let mainItem, subItems
-        if(response.data.length === 3) {
+        if(response.data.data.length === 3) {
           mainItem = {
             ...response.data.data[0],
             video: response.data.data[0].intro_video,
@@ -199,7 +199,7 @@ export default new Vuex.Store({
             deadline: response.data.data[0].ido_date
           }
           subItems = [response.data.data[1], response.data.data[2]].map(item => ({...item, thumbnail: item.screen_shots_1, deadline: item.ido_date}))
-        } else if (response.data.length === 2) {
+        } else if (response.data.data.length === 2) {
           subItems = [response.data.data[0], response.data.data[1]].map(item => ({...item, thumbnail: item.screen_shots_1, deadline: item.ido_date}))
         } else {
           mainItem = {
@@ -209,6 +209,7 @@ export default new Vuex.Store({
             deadline: response.data.data[0].ido_date
           }
         }
+
         commit('updateMainUpcoming', mainItem)
         commit('updateSubUpcoming', subItems)
       }
@@ -239,7 +240,7 @@ export default new Vuex.Store({
         publisher: detail.publisher,
         language: detail.language,
         category: detail.category.split(',').join(', '),
-        token_price: detail.token_price,
+        token_price: detail.ido_type === 'upcoming' ? detail.token_price : tokenomic.price,
         token_icon: detail.icon_token_link,
         coinmarketcap: info.coinmarketcap_link,
         downloads: [
@@ -323,6 +324,13 @@ export default new Vuex.Store({
           }
         ].filter(item => !!item.data),
         liked: !!state.user.likes.find(id => id === detail.id),
+        tokenInfo: {
+          btc: +tokenomic.price_btc,
+          btcChange: +tokenomic.price_btc_change_24h,
+          eth: +tokenomic.price_eth,
+          ethChange: +tokenomic.price_eth_change_24h
+        },
+        tokenChange: +tokenomic.price_change_24h
       }
       commit('setGame', game)
       commit('changeLoadingStatus', false)

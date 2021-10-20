@@ -230,6 +230,7 @@ export default new Vuex.Store({
       const detail = responses[0].data
       const info = responses[1].data
       const tokenomic = responses[2].data
+
       let game = {
         id: detail.id,
         game_name: detail.game_name,
@@ -242,7 +243,7 @@ export default new Vuex.Store({
         category: detail.category.split(',').join(', '),
         token_price: detail.ido_type === 'upcoming' ? detail.token_price : tokenomic.price,
         token_icon: detail.icon_token_link,
-        coinmarketcap: info.coinmarketcap_link,
+        coinmarketcap: info.coinmartketcap_link,
         downloads: [
           {type: 'Browser Game', link: detail.web_game_link},
           {type: 'PC Game', link: detail.game_pc_link},

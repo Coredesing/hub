@@ -19,7 +19,7 @@
     <section>
       <h1 class="title">Latest</h1>
       <div class="section-latest">
-        <latest-item v-for="(item, i) in listLatest" :key="i" v-bind="item" style="margin-right: 24px"/>
+        <latest-item v-for="(item, i) in listLatest" :key="i" v-bind="item"/>
       </div>
       <mask-dot color="#E553CE"/>
     </section>
@@ -131,6 +131,7 @@ export default {
 
       & > div {
         flex: 0 0 calc(33% - 24px);
+        margin-right: 24px;
 
         ::v-deep .item-image {
           height: 223px;
@@ -152,6 +153,28 @@ export default {
       &::-webkit-scrollbar-thumb {
         background: #72F34Baa;
         border-radius: 8px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .home {
+    .section {
+      &-favorite {
+        flex-wrap: wrap;
+
+        .favorite {
+          margin-bottom: 24px;
+        }
+      }
+
+      &-latest {
+        flex-direction: column;
+
+        .item {
+          margin-right: 0;
+        }
       }
     }
   }

@@ -43,6 +43,131 @@
             </div>
           </div>
         </div>
+        <div class="detail-main_side mobile">
+          <template v-if="game.ido_type === 'launched'">
+            <div class="title">
+              Current Price
+              <a :href="game.coinmarketcap" target="_blank" class="btn btn-cmc">
+                <img alt src="../assets/images/direct.svg">
+              </a>
+              <div class="tooltip">View on Coinmarketcap</div>
+            </div>
+            <div class="price" style="margin-bottom: 24px">
+              <img alt :src="game.token_icon"/>
+              <div class="price-detail_value">
+                <span>$ {{ game.token_price }}</span>
+                <span v-if="game.tokenChange"
+                      :class="game.tokenChange > 0 ? 'increased' : 'decreased'">
+                <img v-if="game.tokenChange > 0" src="../assets/images/up.svg"/>
+                <img v-if="game.tokenChange < 0" src="../assets/images/down.svg"/>
+                {{ Math.abs(game.tokenChange) }}%
+              </span>
+              </div>
+            </div>
+            <div v-if="tokenInfo" class="price-sub">
+              <span>&lt;{{ tokenInfo.btc }} BTC</span>
+              <span :class="tokenInfo.btcChange > 0 ? 'increased' : 'decreased'">
+              <template v-if="tokenInfo.btcChange > 0">
+                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                      d="M3.3962 0.514683C3.19605 0.254679 2.80395 0.254679 2.6038 0.514683L0.155585 3.695C-0.0975138 4.02379 0.136868 4.5 0.551788 4.5L5.44821 4.5C5.86313 4.5 6.09751 4.02379 5.84441 3.695L3.3962 0.514683Z"
+                      fill="#72F34B"/>
+                </svg>
+              </template>
+              <template v-else>
+                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                      d="M3.3962 4.48532C3.19605 4.74532 2.80395 4.74532 2.6038 4.48532L0.155585 1.305C-0.0975138 0.976212 0.136868 0.5 0.551788 0.5L5.44821 0.5C5.86313 0.5 6.09751 0.976213 5.84441 1.305L3.3962 4.48532Z"
+                      fill="#F24B4B"/>
+                </svg>
+              </template>
+              {{ Math.abs(tokenInfo.btcChange) }}%
+            </span>
+              <span>&lt;{{ tokenInfo.eth }} ETH</span>
+              <span :class="tokenInfo.ethChange > 0 ? 'increased' : 'decreased'">
+              <template v-if="tokenInfo.ethChange > 0">
+                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                      d="M3.3962 0.514683C3.19605 0.254679 2.80395 0.254679 2.6038 0.514683L0.155585 3.695C-0.0975138 4.02379 0.136868 4.5 0.551788 4.5L5.44821 4.5C5.86313 4.5 6.09751 4.02379 5.84441 3.695L3.3962 0.514683Z"
+                      fill="#72F34B"/>
+                </svg>
+              </template>
+              <template v-else>
+                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                      d="M3.3962 4.48532C3.19605 4.74532 2.80395 4.74532 2.6038 4.48532L0.155585 1.305C-0.0975138 0.976212 0.136868 0.5 0.551788 0.5L5.44821 0.5C5.86313 0.5 6.09751 0.976213 5.84441 1.305L3.3962 4.48532Z"
+                      fill="#F24B4B"/>
+                </svg>
+              </template>
+              {{ Math.abs(tokenInfo.ethChange) }}%
+            </span>
+            </div>
+            <div v-if="tokenInfo" class="price-range">
+              <span>Low: <b>${{ tokenInfo.low }}</b></span>
+              <div class="progress"></div>
+              <span>High: <b>${{ tokenInfo.high }}</b></span>
+            </div>
+            <div class="divider"/>
+            <div v-if="game.developer" class="info">
+              <div>Developer</div>
+              <div>{{ game.developer }}</div>
+            </div>
+            <div v-if="game.publisher" class="info">
+              <div>Publisher</div>
+              <div>{{ game.publisher }}</div>
+            </div>
+            <div v-if="game.category" class="info">
+              <div>Category</div>
+              <div>{{ game.category }}</div>
+            </div>
+            <div v-if="game.language" class="info">
+              <div>Language</div>
+              <div>{{ game.language }}</div>
+            </div>
+          </template>
+          <template v-else-if="game.ido">
+            <div class="ido-title">${{ game.token }} IDO on {{ game.ido.date }}</div>
+            <div class="ido-chain">{{ game.ido.chain }}</div>
+            <div class="ido-price">
+              Price per token: <span>$ {{ game.ido.price }}</span>
+              <div class="ido-price_currency">{{ game.ido.currency }}</div>
+            </div>
+            <div class="divider" style="margin-bottom: 40px"/>
+            <template v-if="game.ido.link.redkite || game.ido.link.gamefi">
+              <a v-if="game.ido.link.redkite" class="btn ido-redkite" :href="game.ido.link.redkite">
+                <img alt src="../assets/images/redkite.svg"/>
+              </a>
+              <a v-if="game.ido.link.gamefi" class="btn ido-gamefi" :href="game.ido.link.gamefi">
+                <img alt src="../assets/images/gamefi.svg"/>
+              </a>
+              <div class="divider" style="margin: 40px 0 28px"/>
+            </template>
+          </template>
+          <div :class="`btn btn-like ${game.liked ? 'liked' : ''}`" @click="like">
+            <template v-if="game.liked">
+              <img alt src="../assets/images/heart_black.svg"/>
+              <span>Remove from Favourite List</span>
+            </template>
+            <template v-else>
+              <img alt src="../assets/images/heart_green.svg"/>
+              <span>Add to Favourite List</span>
+            </template>
+          </div>
+          <template v-if="game.downloads && game.downloads.length && game.type === 'Launched'">
+            <div class="download">
+              <div class="btn btn-download" @click="show.download = !show.download">
+                Download
+                <img :style="!show.download && { transform: 'rotate(180deg)'}" alt src="../assets/images/up.svg"/>
+              </div>
+              <transition name="slide-down">
+                <div v-show="show.download" class="download-list">
+                  <a v-for="(item, i) in game.downloads" :key="i" :href="item.link" target="_blank">Download for
+                    {{ item.type }}</a>
+                </div>
+              </transition>
+            </div>
+          </template>
+        </div>
         <div class="content-tab">
           <div :class="`content-tab_item ${tab === 0 ? 'selected' : ''}`" @click="tab = 0">About this game</div>
           <div :class="`content-tab_item ${tab === 1 ? 'selected' : ''}`" @click="tab = 1">Tokenomics</div>
@@ -548,7 +673,6 @@ export default {
 
       .info {
         display: flex;
-        align-items: center;
         justify-content: space-between;
         margin: 16px 0;
 
@@ -558,6 +682,7 @@ export default {
 
         div:last-child {
           font-weight: 600;
+          text-align: right;
         }
       }
 
@@ -655,6 +780,13 @@ export default {
             font-weight: 600;
             margin-left: 4px;
           }
+
+          &_currency {
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: #4F4F4F;
+            margin-left: 24px;
+          }
         }
 
         &-redkite,
@@ -697,6 +829,10 @@ export default {
           border: 1px solid #72F34B
         }
       }
+
+      &.mobile {
+        display: none;
+      }
     }
 
     &_content {
@@ -720,6 +856,7 @@ export default {
               height: 100%;
               object-fit: fill;
               border-radius: 2px;
+              image-rendering: pixelated;
             }
 
             &--play {
@@ -792,6 +929,7 @@ export default {
                     height: 100%;
                     object-fit: fill;
                     border-radius: inherit;
+                    image-rendering: pixelated;
                   }
 
                   &.selected {
@@ -817,6 +955,7 @@ export default {
             position: relative;
             cursor: pointer;
             text-transform: uppercase;
+            text-align: center;
 
             &:before {
               content: '';
@@ -870,6 +1009,7 @@ export default {
             .tags {
               display: flex;
               align-items: center;
+              flex-wrap: wrap;
 
               .tag {
                 background: #72F34B70;
@@ -877,6 +1017,7 @@ export default {
                 color: #72F34B;
                 border-radius: 4px;
                 margin-right: 8px;
+                margin-bottom: 8px;
               }
             }
 
@@ -933,6 +1074,98 @@ export default {
                     font-weight: 600;
                   }
                 }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .detail {
+    padding-right: 12px;
+    padding-left: 12px;
+
+    &-title {
+      margin: 24px 0 16px;
+      font-size: 24px;
+      line-height: 28px;
+
+      img {
+        width: 16px;
+        margin-left: 4px;
+      }
+    }
+
+    &-main {
+
+      &_side {
+        display: none;
+
+        &.mobile {
+          display: block;
+          margin: 0;
+        }
+      }
+
+      &_content {
+        .content-media {
+
+          &_main {
+            height: 184px;
+            padding: 8px;
+            max-width: calc(100vw - 24px);
+            border-radius: 12px;
+
+            video,
+            img {
+              border-radius: 12px;
+              max-width: 100%;
+            }
+          }
+
+          &_slide {
+            margin-top: 8px;
+
+            &--prev,
+            &--next {
+              padding: 4px;
+            }
+
+            &--main {
+              .slide {
+                padding: 4px;
+
+                &-item {
+                  flex: 0 0 110px
+                }
+              }
+            }
+          }
+        }
+
+        .content-tab {
+          margin-top: 32px;
+          align-items: stretch;
+
+          &_item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          &-view {
+            .tokenomic {
+              padding: 16px;
+
+              span:first-child {
+                flex: 1;
+              }
+
+              span:last-child {
+                flex: 0 0 40%;
               }
             }
           }

@@ -226,4 +226,22 @@ export default {
     }
   }
 }
+
+@media screen and (max-width: 600px) {
+  .list {
+    &-main {
+      &_side {
+         display: none;
+      }
+
+      &_content {
+        .grid {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+      }
+    }
+  }
+}
 </style>

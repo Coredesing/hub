@@ -51,4 +51,10 @@ export default {
   filter: blur(100px);
 }
 
+
+@media screen and (max-width: 600px) {
+  .mask-dot {
+    display: none;
+  }
+}
 </style>

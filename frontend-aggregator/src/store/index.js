@@ -250,9 +250,13 @@ export default new Vuex.Store({
         ].filter(item => !!item.link),
         ido: {
           date: detail.ido_date ? dayjs(detail.ido_date).format('MMM DD, YYYY') : '',
-          price: detail.ido_price,
-          chain: detail.ido_chain,
-          link: {}
+          price: detail.token_price,
+          chain: detail.network_available,
+          currency: detail.accept_currency,
+          link: {
+            redkite: detail.redkite_ido_link,
+            gamefi: detail.gamefi_ido_link
+          }
         },
         information: {
           introduction: detail.game_intro,

@@ -148,4 +148,30 @@ export default {
     }
   }
 }
+
+@media screen and (max-width: 600px) {
+  .countdown-wrapper {
+    padding: 4px 8px;
+
+    &:after {
+      border-top-width: 48px;
+      border-right-width: 10px;
+      transform: translateX(10px);
+    }
+
+    .divider {
+      font-size: 28px;
+      margin: 0 0 18px;
+    }
+
+    & > div {
+      padding: 0 4px;
+    }
+
+    .item {
+      font-size: 20px;
+      line-height: 28px;
+    }
+  }
+}
 </style>

@@ -284,4 +284,47 @@ export default {
     }
   }
 }
+
+@media screen and (max-width: 600px) {
+  .slider {
+    height: auto;
+
+    &-wrapper {
+
+      video,
+      img {
+        height: 210px;
+      }
+
+      &:before {
+        display: none;
+      }
+    }
+
+    &-delimiter {
+      position: static;
+      margin-top: 16px;
+      height: 54px;
+
+      &_item {
+        flex: 1 1 0;
+        margin-right: 8px;
+      }
+    }
+
+    &-info {
+      position: static;
+      padding: 32px var(--padding-section);
+
+      &_title {
+        font-size: 24px;
+        line-height: 24px;
+
+        img {
+          width: 16px;
+        }
+      }
+    }
+  }
+}
 </style>

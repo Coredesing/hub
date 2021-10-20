@@ -3,46 +3,56 @@
     <a class="header-logo" @click="goToHome">
       <img alt src="../assets/images/logo.svg"/>
     </a>
-    <div class="header-list">
-      <a class="header-list_item" href="https://hub.gamefi.org/" target="_blank">Launchpad</a>
-      <a class="header-list_item" href="https://hub.gamefi.org/#/mystery-boxes" target="_blank">Mystery Box</a>
-    </div>
-    <div class="spacer"/>
-    <div :class="`search ${show.search ? 'show' : ''}`">
-      <input ref="search-input" type="text" v-model="searchText" v-click-outside="blur"/>
-      <img alt src="../assets/images/search.svg" @click.stop="openSearchBar"/>
-      <transition name="slide-down">
-        <div v-if="show.search && listSearch" class="search-result">
-          <template v-if="listSearch.length">
-            <div v-for="(item ,i) in listSearch" :key="i" class="search-result_item" @click="viewDetail(item)">
-              {{ item.game_name }}
-            </div>
-          </template>
-          <template v-else>
-            <div class="search-result_item" @click="viewList">Search all game</div>
-          </template>
-        </div>
-      </transition>
-    </div>
-    <div class="category">
-      <div class="category-title" @click="show.category = !show.category">
-        Category
-        <img alt src="../assets/images/arrow_right.svg" :style="{transform: show.category ? 'rotate(-90deg)' : 'rotate(90deg)'}"/>
+    <div :class="`header-nav ${show.nav ? 'show' : ''}`">
+      <div class="header-list">
+        <a class="header-list_item" href="https://hub.gamefi.org/" target="_blank">Launchpad</a>
+        <a class="header-list_item" href="https://hub.gamefi.org/#/mystery-boxes" target="_blank">Mystery Box</a>
       </div>
-      <transition name="slide-down">
-        <div v-if="show.category" class="category-list">
-          <div class="category-list_item" v-for="(item, i) in CATEGORY_LIST" :key="i" @click="selectCategory(item)">
-            {{ item }}
+      <div class="spacer"/>
+      <div :class="`search ${show.search ? 'show' : ''}`">
+        <input ref="search-input" type="text" v-model="searchText" v-click-outside="blur"/>
+        <img alt src="../assets/images/search.svg" @click.stop="openSearchBar"/>
+        <transition name="slide-down">
+          <div v-if="show.search && listSearch" class="search-result">
+            <template v-if="listSearch.length">
+              <div v-for="(item ,i) in listSearch" :key="i" class="search-result_item" @click="viewDetail(item)">
+                {{ item.game_name }}
+              </div>
+            </template>
+            <template v-else>
+              <div class="search-result_item" @click="viewList">Search all game</div>
+            </template>
           </div>
+        </transition>
+      </div>
+      <div class="category">
+        <div class="category-title" @click="show.category = !show.category">
+          Category
+          <img alt src="../assets/images/arrow_right.svg" :style="{transform: show.category ? 'rotate(-90deg)' : 'rotate(90deg)'}"/>
         </div>
-      </transition>
+        <transition name="slide-down">
+          <div v-if="show.category" class="category-list">
+            <div class="category-list_item" v-for="(item, i) in CATEGORY_LIST" :key="i" @click="selectCategory(item)">
+              {{ item }}
+            </div>
+          </div>
+        </transition>
+      </div>
+      <template v-if="user && user.address">
+        <div class="address">{{ user.address | compressAddress}}</div>
+      </template>
+      <template v-else>
+        <div class="btn" @click="connectWallet">Connect Wallet</div>
+      </template>
     </div>
-    <template v-if="user && user.address">
-      <div class="address">{{ user.address | compressAddress}}</div>
-    </template>
-    <template v-else>
-      <div class="btn" @click="connectWallet">Connect Wallet</div>
-    </template>
+    <div class="header-toggle" @click="show.nav = !show.nav">
+      <template v-if="show.nav">
+        <img alt src="../assets/images/close.svg"/>
+      </template>
+      <template v-else>
+        <img style="width: 20px" alt src="../assets/images/menu.svg"/>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -66,7 +76,8 @@ export default {
       CATEGORY_LIST,
       show: {
         category: false,
-        search: false
+        search: false,
+        nav: false,
       },
       searchText: ''
     }
@@ -133,6 +144,12 @@ export default {
 
     &-logo {
       cursor: pointer;
+    }
+
+    &-nav {
+      flex: 1;
+      display: flex;
+      align-items: center;
     }
 
     &-list {
@@ -291,6 +308,50 @@ export default {
       line-height: 24px;
       padding: 8px 36px;
       cursor: pointer;
+    }
+
+    &-toggle {
+      display: none;
+      cursor: pointer;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .header {
+      justify-content: space-between;
+
+      &-nav {
+        display: none;
+        position: fixed;
+        top: 64px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #000000;
+        flex-direction: column;
+        z-index: 1000;
+
+        &.show {
+          display: flex;
+        }
+
+        .spacer {
+          display: none;
+        }
+      }
+
+      &-list {
+        flex-direction: column;
+        margin: 0;
+
+        &_item {
+          margin: 16px 0;
+        }
+      }
+
+      &-toggle {
+        display: block;
+      }
     }
   }
 </style>

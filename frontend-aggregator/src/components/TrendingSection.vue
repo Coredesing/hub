@@ -14,9 +14,9 @@
           <div class="price-detail">
             <div class="price-detail_token">{{ mainItem.ticker }}</div>
             <div class="price-detail_value">
-              <span v-if="mainItem.tokenomic.price > 0">$ {{ (+mainItem.tokenomic.price).toFixed(3) }}</span>
+              <span v-if="mainItem.tokenomic && mainItem.tokenomic.price > 0">$ {{ (+mainItem.tokenomic.price).toFixed(3) }}</span>
               <span v-else>$ {{ mainItem.token_price }}</span>
-              <span v-if="mainItem.tokenomic.price_change_24h"
+              <span v-if="mainItem.tokenomic && mainItem.tokenomic.price_change_24h"
                     :class="mainItem.tokenomic.price_change_24h > 0 ? 'increased' : 'decreased'">
                 <img v-if="mainItem.tokenomic.price_change_24h > 0" src="../assets/images/up.svg"/>
                 <img v-if="mainItem.tokenomic.price_change_24h < 0" src="../assets/images/down.svg"/>
@@ -40,9 +40,9 @@
           <div class="price-detail">
             <div class="price-detail_token">{{ item.ticker }}</div>
             <div class="price-detail_value">
-              <span v-if="item.tokenomic.price > 0">$ {{ (+item.tokenomic.price).toFixed(3) }}</span>
+              <span v-if="item.tokenomic && item.tokenomic.price > 0">$ {{ (+item.tokenomic.price).toFixed(3) }}</span>
               <span v-else>$ {{ item.token_price }}</span>
-              <span v-if="item.tokenomic.price_change_24h"
+              <span v-if="item.tokenomic && item.tokenomic.price_change_24h"
                     :class="item.tokenomic.price_change_24h > 0 ? 'increased' : 'decreased'">
                 <img v-if="item.tokenomic.price_change_24h > 0" src="../assets/images/up.svg"/>
                 <img v-if="item.tokenomic.price_change_24h < 0" src="../assets/images/down.svg"/>

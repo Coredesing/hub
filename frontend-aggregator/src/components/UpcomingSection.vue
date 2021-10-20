@@ -276,6 +276,7 @@ export default {
         }
 
         &_countdown {
+          display: none !important;
           left: 24px;
           bottom: 20px;
 

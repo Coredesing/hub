@@ -6,7 +6,7 @@ const axios = use('axios');
 
 class UpdateTokenPrice extends Task {
   static get schedule () {
-    return '0 */1 * * * *'
+    return '0 0 * * * *'
   }
 
   async handle () {

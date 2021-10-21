@@ -328,6 +328,12 @@ const StakingPools = (props: any) => {
 
 
   const [expandedEvent, setExpandEvent] = useState(true);
+  const [expandedRank, setExpandRank] = useState(false);
+  useEffect(() => {
+    if(listTopStaked && listTopStaked?.disable) {
+      setExpandRank(true);
+    }
+  }, [listTopStaked])
 
   return (
     <DefaultLayout>
@@ -506,7 +512,7 @@ const StakingPools = (props: any) => {
                   </AccordionDetails>
                 </Accordion>
               }
-              <Accordion style={{ marginTop: "30px", marginBottom: "20px" }} className={styles.boxRank} classes={{ root: styles.accordionRoot }}>
+              <Accordion expanded={expandedRank} style={{ marginTop: "30px", marginBottom: "20px" }} className={styles.boxRank} classes={{ root: styles.accordionRoot }}>
                 <AccordionSummary
                   expandIcon={<svg width="16" height="9" viewBox="0 0 16 9" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path id="Shape Copy 26" d="M7.99997 8.72727C7.71322 8.72727 7.4265 8.6225 7.20788 8.41341L0.328227 1.83028C-0.109409 1.41151 -0.109409 0.732549 0.328227 0.313949C0.765686 -0.10465 1.4751 -0.10465 1.91277 0.313949L7.99997 6.13907L14.0872 0.314153C14.5249 -0.104447 15.2342 -0.104447 15.6716 0.314153C16.1095 0.732752 16.1095 1.41171 15.6716 1.83048L8.79207 8.41361C8.57334 8.62274 8.28662 8.72727 7.99997 8.72727Z" fill="currentColor" />
@@ -517,7 +523,7 @@ const StakingPools = (props: any) => {
                     expanded: styles.accordionSummaryExpanded,
                     root: styles.accordionSummaryRoot
                   }}
-                // onClick={() => setExpaned(b => !b)}
+                onClick={() => setExpandRank(b => !b)}
                 >
                   <Box marginBottom="20px" gridGap="16px" display="flex" flexDirection="column">
                     <Box marginRight="20px">

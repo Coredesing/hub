@@ -42,6 +42,8 @@ class AggregatorService {
     gameProject.icon_token_link = param?.upcomingIdo?.icon_token_link
     gameProject.redkite_ido_link = param?.upcomingIdo?.redkite_ido_link
     gameProject.gamefi_ido_link = param?.upcomingIdo?.gamefi_ido_link
+    gameProject.slug = param?.gameInfo.slug
+
     await gameProject.save();
     return gameProject;
   }

@@ -49,7 +49,6 @@ Route.group(() => {
   Route.get('/legend/:id', 'HomeController.getLegendImages');
 
   // Aggregator
-
   Route.get('aggregator', 'AggregatorController.getAggregator');
   Route.get('aggregator/get-like', 'AggregatorController.getLikeById');
   Route.get('aggregator/liked/:address', 'AggregatorController.getLikeByAddress');

@@ -608,14 +608,23 @@ const StakingPools = (props: any) => {
                             })}>{convertTimeToStringFormat(new Date((currentTops.id > 0 ? +row.snapshot_at : +row.last_time) * 1000))}</TableCell>
                           </TableRowBody>
                         ))}
+                        <TableRowBody>
+                          <TableCell colSpan={2}>
+                            <span style={{color: '#72F34B', fontSize: '16px', fontFamily: 'Firs Neue', fontWeight: 600}}>TOTAL GAFI</span>
+                          </TableCell>
+                          <TableCell colSpan={2}>
+                          <span style={{color: '#72F34B', fontSize: '16px', fontFamily: 'Firs Neue', fontWeight: 600}}>{numberWithCommas((currentTops?.top || []).reduce((r: any, n: any) => {
+                              r += +n.amount || 0;
+                              return r;
+                            }, 0), 4)}</span>
+                          </TableCell>
+                        </TableRowBody>
                       </TableBody>
                     </Table>
                   </TableContainer>
                 </AccordionDetails>
               </Accordion>
             </div>
-
-
           </div>
 
           <Dialog

@@ -9,6 +9,7 @@ const RedisLegendSnapshotUtils = use('App/Common/RedisLegendSnapshotUtils')
 const LINEAR_DEPOSIT_EVENT = 'LinearDeposit'
 const LINEAR_WITHDRAW_EVENT = 'LinearPendingWithdraw'
 const DEFAULT_FROM = process.env.START_BLOCK || 12304325
+const EXCLUDE_LEGENDS = (process.env.EVENT_MONTHLY_LEGENDS || '').split(',')
 const STEP = 5000
 
 class StakingEventService {
@@ -16,6 +17,12 @@ class StakingEventService {
     try {
       let LEGEND = HelperUtils.getLegendData()
       LEGEND = LEGEND.map((data) => { return data.wallet_address })
+      LEGEND = LEGEND.filter(( data) => {
+        if (!EXCLUDE_LEGENDS.find(item => item === data)) {
+          return data
+        }
+      })
+
       let data = await StakingEventModel.query()
         .whereBetween('dispatch_at', [param.start_time, param.end_time])
         .select('wallet_address')

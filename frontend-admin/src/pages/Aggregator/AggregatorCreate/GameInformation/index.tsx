@@ -160,7 +160,6 @@ const GameInformation: React.FC<any> = (props: any) => {
                             name='name'
                             onChange={onChangeName}
                             defaultValue={gameInfo?.game_name}
-
                             className={classes.formControlInput}
                         />
                     </div>
@@ -184,7 +183,6 @@ const GameInformation: React.FC<any> = (props: any) => {
                             onChange={onChangeCategory}
                             value={gameInfo?.category ? gameInfo.category.split(',').map((tx:any) => {return {value: tx, label: tx}}) : ''}
                             isValidNewOption={isValidNewOption}
-
                             isMulti={true}/>
                     </div>
 
@@ -195,7 +193,6 @@ const GameInformation: React.FC<any> = (props: any) => {
                             name='language'
                             onChange={onChangeLanguage}
                             defaultValue={gameInfo?.language}
-
                             className={classes.formControlInput}
                         />
                     </div>
@@ -208,7 +205,6 @@ const GameInformation: React.FC<any> = (props: any) => {
                             onChange={onChangeHashtags}
                             styles={customStyles}
                             placeholder={"Input new tags then Enter"}
-
                             options={[]}
                         />
                     </div>
@@ -218,9 +214,8 @@ const GameInformation: React.FC<any> = (props: any) => {
                         <input
                             type="text"
                             name='slug'
-                            onChange={onChangeLanguage}
+                            onChange={onChangeSlug}
                             defaultValue={gameInfo?.slug}
-
                             className={classes.formControlInput}
                         />
                     </div>
@@ -238,7 +233,6 @@ const GameInformation: React.FC<any> = (props: any) => {
                     <div className={classes.formControlFull}>
                         <label className={classes.formControlLabel}>System Requirements</label>
                         <ReactQuill
-
                             className={classes.textEditor}
                             theme="snow"
                             onChange={onChangeSystemRequire}

@@ -137,7 +137,8 @@ export default {
 
     &_image {
       position: relative;
-      max-width: 265px;
+      max-width: 212px;
+      max-height: 212px;
 
       .trending-item--sponsor {
         position: absolute;

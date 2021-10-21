@@ -45,7 +45,6 @@ const verifyMaxCanBuy = async (
 
     let ethPrice: any = await getETHPrices();
     if (!ethPrice) {
-      console.log('Get Price Frontend Fail');
       return true;
     }
 
@@ -53,7 +52,6 @@ const verifyMaxCanBuy = async (
     let ethBought = new BigNumber(claimableTokens).dividedBy(convertRate);
     let totalEthAmount = new BigNumber(ethBought).plus(amount);
     totalUsdtWillBuy = new BigNumber(totalEthAmount).multipliedBy(ethPrice).toFixed();
-    console.log('totalUsdtWillBuy', totalUsdtWillBuy);
     const remainUsdtBought = new BigNumber(MAX_BUY_CAMPAIGN).minus(totalUsdtWillBuy).toFixed();
 
 
@@ -64,14 +62,11 @@ const verifyMaxCanBuy = async (
       const message = 'You\'ve reached the maximum amount of tokens. You can only buy up to: ' + remainEthBought + ' ETH';
 
       const isOverBought = (new BigNumber(totalUsdtWillBuy).abs()).gt(MAX_BUY_CAMPAIGN);
-
-      console.log('isOverBought', isOverBought);
-
+      
       if (isOverBought) {
         dispatch(alertFailure(message));
         return false;
       } else {
-        console.log(message);
         return true;
       }
 
@@ -80,7 +75,6 @@ const verifyMaxCanBuy = async (
       const oldEthUsdtBought = new BigNumber(ethBought).multipliedBy(ethPrice).toFixed();
       const usdtBuySuccessed = new BigNumber(claimableTokens).dividedBy(erc20ConversionRate).toFixed();
       totalUsdtWillBuy = new BigNumber(amount).plus(usdtBuySuccessed).plus(oldEthUsdtBought).toFixed();
-      console.log('totalUsdtWillBuy', totalUsdtWillBuy);
 
       const remainUsdtBought = new BigNumber(MAX_BUY_CAMPAIGN).minus(usdtBuySuccessed).toFixed();
       const message = 'You\'ve reached the maximum amount of tokens. You can only buy up to: ' + remainUsdtBought + ' USDT';
@@ -89,7 +83,6 @@ const verifyMaxCanBuy = async (
         dispatch(alertFailure(message));
         return false;
       } else {
-        console.log(message);
         return true;
       }
     }
@@ -152,7 +145,6 @@ export const buyToken = (amount: any, tokenConvert: any, campaignId: string, uni
             dispatch(getCampaignDetail(campaignId, true));
             dispatch(getBalance(loginUser));
 
-            console.log('buyResult with ETH: ', buyResult)
             const baseRequest = new BaseRequest();
             const res = await baseRequest.post(`/public/transaction-create`, {
               campaign_hash: campaignId,
@@ -166,7 +158,6 @@ export const buyToken = (amount: any, tokenConvert: any, campaignId: string, uni
               .then(res => res.json())
               .then(res => {
                 if (res.status === 200) {
-                  console.log('Res /public/transaction-create', res);
                   return res;
                 } else {
                   dispatch(alertFailure(res.message));
@@ -227,7 +218,6 @@ export const buyToken = (amount: any, tokenConvert: any, campaignId: string, uni
                dispatch(getCampaignDetail(campaignId, true));
                dispatch(getBalance(loginUser));
 
-               console.log('buyResult with USDT', buyResult);
                const tokenAddress = buyResult?.events?.TokenPurchaseByToken?.returnValues?.token;
                const baseRequest = new BaseRequest();
                const res = await baseRequest.post(`/public/transaction-create`, {
@@ -242,7 +232,6 @@ export const buyToken = (amount: any, tokenConvert: any, campaignId: string, uni
                  .then(res => res.json())
                  .then(res => {
                    if (res.status === 200) {
-                     console.log('Res /public/transaction-create', res);
                      return res;
                    } else {
                      dispatch(alertFailure(res.message));
@@ -257,7 +246,6 @@ export const buyToken = (amount: any, tokenConvert: any, campaignId: string, uni
       }
 
     } catch (error: any) {
-      console.log('ERROR', error);
       dispatch({
         type: buyTokenActions.BUY_TOKEN_FAILURE,
         payload: error?.message,
@@ -296,7 +284,6 @@ export const isCampaignPurchasable = () => {
       } else {
         if (resObj?.status === 401) {
           // dispatch(alertFailure(resObj.message || 'Sorry, the token expired.'));
-          console.log('Sorry, the token expired.');
           dispatch(logout(true));
         } else {
           dispatch({

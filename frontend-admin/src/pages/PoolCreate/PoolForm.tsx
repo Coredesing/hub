@@ -255,9 +255,7 @@ function PoolForm(props: any) {
         max_bonus_free_buy: data.max_bonus_free_buy,
       }
     };
-
-    console.log('[createUpdatePool] - Submit with data: ', submitData);
-
+    
     let response = {};
     if (isEdit) {
       response = await updatePool(submitData, poolDetail.id);
@@ -390,9 +388,7 @@ function PoolForm(props: any) {
         max_bonus_free_buy: data.max_bonus_free_buy,
       }
     };
-
-    console.log('[updatePoolAfterDeloy] - Submit with data: ', submitData);
-
+    
     let response = await updatePool(submitData, poolDetail.id);
 
     return response;

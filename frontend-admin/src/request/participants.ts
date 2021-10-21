@@ -79,7 +79,6 @@ export const approveBatchParticipantWhitelistSubmission = async (campaignId: any
 
 export const pickerRandomWinner = async (campaignId: any, numberRandom: any = 100) => {
   const baseRequest = new BaseRequest();
-  console.log('campaignId', campaignId);
 
   // pool/winner-random/:campaignId/:number
   let url = apiRoute(`/pool/winner-random/${campaignId}/${numberRandom}`);

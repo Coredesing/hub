@@ -29,51 +29,20 @@ function TierTableWidthDataGrid(props: any) {
 
   // { fromRow, toRow, updated }
   const onGridRowsUpdated = (e: any) => {
-
-    console.log(e);
-    // const rows = state.rows.slice();
-    // for (let i = fromRow; i <= toRow; i++) {
-    //   rows[i] = { ...rows[i], ...updated };
-    // }
-
-
-    // this.setState(state => {
-    //   const rows = state.rows.slice();
-    //   for (let i = fromRow; i <= toRow; i++) {
-    //     rows[i] = { ...rows[i], ...updated };
-    //   }
-    //   return { rows };
-    // });
   };
 
   return (
     <>
-      {/*<FormControl component="fieldset">*/}
-      {/*  <DataGrid*/}
-      {/*    columns={columns}*/}
-      {/*    rows={rows}*/}
-      {/*  />*/}
-      {/*</FormControl>*/}
-
       <ReactDataGrid
         columns={columns}
         rowGetter={(i: any) => {
           // return rows[i];
-          console.log('ROW======>', i, rows);
-          return {key: 'thang', name: 'thang'};
+          return {key: '', name: ''};
         }}
         rowsCount={3}
         enableCellSelect={true}
         // onGridRowsUpdated={onGridRowsUpdated}
       />
-
-      {/*<ReactDataGrid*/}
-      {/*  columns={columns}*/}
-      {/*  rowGetter={(i: number) => this.state.rows[i]}*/}
-      {/*  rowsCount={3}*/}
-      {/*  onGridRowsUpdated={this.onGridRowsUpdated}*/}
-      {/*  enableCellSelect={true}*/}
-      {/*/>*/}
     </>
   );
 }

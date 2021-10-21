@@ -19,12 +19,10 @@ function UserPickerToWinner(props: any) {
     }
 
     const pickerNumber = parseInt(inputPicker);
-    console.log('pickerNumber', pickerNumber);
 
     // Call API random
     await pickerRandomWinner(poolDetail?.id, rule)
       .then((res) => {
-        console.log('[pickerRandomWinner] - res', res);
         if (res.status === 200) {
           dispatch(alertSuccess('Picker to Random Success'));
         } else {

@@ -32,20 +32,15 @@ function PublicWinnerSetting(props: any) {
 
   useEffect(() => {
     if (poolDetail) {
-      console.log('poolDetail.public_winner_status: ', poolDetail.public_winner_status);
       setValue('public_winner_status', !!poolDetail.public_winner_status);
     }
   }, [poolDetail]);
 
   const changeDisplay = async (value: any) => {
-
-    console.log('Change Status');
-
     const res = await changePublicWinnerStatus({
       pool_id: poolDetail.id,
       public_winner_status: value,
     });
-    console.log('Change Public Winner: Response: ', res);
     if (res.status === 200) {
       dispatch(alertSuccess('Change Public Winner Setting successful!'));
     }

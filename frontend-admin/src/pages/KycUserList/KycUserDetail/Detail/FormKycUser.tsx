@@ -25,7 +25,6 @@ const FormKycUser = (props: any) => {
   });
 
   const onSubmit = (values: any) => {
-    console.log(values);
     if (isCreate) {
       createKycUser(values)
         .then((res) => {
@@ -47,9 +46,7 @@ const FormKycUser = (props: any) => {
         });
     }
   };
-
-  console.log('Error: ', errors);
-
+  
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>

@@ -18,18 +18,17 @@ class AggregatorController {
       const status = params.status
       const game_id = request.params.id
       if (!game_id) {
-        return HelperUtils.responseBadRequest('Invalid data input !');
+        return HelperUtils.responseBadRequest('Invalid data');
       }
       const game = await GameInformation.find(game_id)
       if (!game) {
-        return HelperUtils.responseBadRequest('Game not found !');
+        return HelperUtils.responseBadRequest('Game not found');
       }
       game.is_show = status
       await game.save()
       return HelperUtils.responseSuccess('','Update successfully');
     } catch (e) {
-      console.log(e);
-      return HelperUtils.responseErrorInternal('ERROR: update fail !');
+      return HelperUtils.responseErrorInternal();
     }
   }
 
@@ -40,19 +39,19 @@ class AggregatorController {
       let address = params.address
       let status = params.status
       if (!signature || !address) {
-        return HelperUtils.responseBadRequest('Invalid data input !');
+        return HelperUtils.responseBadRequest('Invalid data');
       }
       address = address.toLowerCase()
       if (address) {
         let verified = false;
         try {
           verified = await web3.eth.accounts.recover('GameFi User Message', `0x${signature.replace("0x", "")}`);
-          console.log(verified)
         } catch (e) {
           console.log(e)
         }
+
         if (!verified || String(verified).toLowerCase() !== address) {
-          return HelperUtils.responseBadRequest('Invalid signature or address !');
+          return HelperUtils.responseBadRequest('Invalid signature or address');
         }
       }
       const gameFavouriteBuilder = GameFavourite.query()
@@ -71,7 +70,7 @@ class AggregatorController {
       return HelperUtils.responseSuccess('', 'update status successfully')
     } catch (e) {
       console.log(e);
-      return HelperUtils.responseErrorInternal('ERROR: update fail !');
+      return HelperUtils.responseErrorInternal();
     }
   }
 
@@ -92,7 +91,7 @@ class AggregatorController {
       return HelperUtils.responseSuccess(rs);
     } catch (e) {
       console.log(e);
-      return HelperUtils.responseErrorInternal('get game favourite fail !');
+      return HelperUtils.responseErrorInternal();
     }
   }
 
@@ -100,7 +99,7 @@ class AggregatorController {
     try {
       const address = request.params.address
       if (!address) {
-        return HelperUtils.responseErrorInternal('invalid address !');
+        return HelperUtils.responseErrorInternal('invalid address!');
       }
       let gameCount = GameFavourite.query()
       gameCount.select('game_id')
@@ -111,45 +110,41 @@ class AggregatorController {
       return HelperUtils.responseSuccess(rs);
     } catch (e) {
       console.log(e);
-      return HelperUtils.responseErrorInternal('get game favourite fail !');
+      return HelperUtils.responseErrorInternal();
     }
   }
 
   async aggregatorCreate({request}) {
     try {
       const params = request.all();
-      console.log(params)
       const aggregatorService = new AggregatorService()
       const aggregator = aggregatorService.setGame(params, false, 0)
       return aggregator
     } catch (e) {
       console.log(e);
-      return HelperUtils.responseErrorInternal('ERROR: create aggregator fail !');
+      return HelperUtils.responseErrorInternal();
     }
   }
   async aggregatorUpdate({ request }) {
     try {
       const params = request.all();
-      console.log(params)
       const aggregatorService = new AggregatorService()
       const aggregator = aggregatorService.setGame(params, true, request.params.id)
       return aggregator
     } catch (e) {
       console.log(e);
-      return HelperUtils.responseErrorInternal('ERROR: create aggregator fail !');
+      return HelperUtils.responseErrorInternal();
     }
   }
 
   async tokenomicsUpdate({request}) {
     try {
       const params = request.all();
-      console.log(params)
       const aggregatorService = new AggregatorService()
       const aggregator = aggregatorService.setTokenomic(request.params.id, params, true)
       return aggregator
     } catch (e) {
-      console.log(e);
-      return HelperUtils.responseErrorInternal('ERROR: update tokenomics fail !');
+      return HelperUtils.responseErrorInternal();
     }
   }
 
@@ -162,7 +157,7 @@ class AggregatorController {
       return aggregator
     } catch (e) {
       console.log(e);
-      return HelperUtils.responseErrorInternal('ERROR: update project information fail !');
+      return HelperUtils.responseErrorInternal();
     }
   }
 
@@ -174,7 +169,7 @@ class AggregatorController {
       return aggregator
     } catch (e) {
       console.log(e);
-      return HelperUtils.responseErrorInternal('ERROR: update tokenomics fail !');
+      return HelperUtils.responseErrorInternal();
     }
   }
 
@@ -187,7 +182,7 @@ class AggregatorController {
       return aggregator
     } catch (e) {
       console.log(e);
-      return HelperUtils.responseErrorInternal('ERROR: update project information fail !');
+      return HelperUtils.responseErrorInternal();
     }
   }
 
@@ -215,7 +210,7 @@ class AggregatorController {
       return list
     }catch (e) {
       console.log(e);
-      return HelperUtils.responseErrorInternal('ERROR: update project information fail !');
+      return HelperUtils.responseErrorInternal();
     }
   }
 
@@ -248,12 +243,11 @@ class AggregatorController {
       }
 
       builder = builder.where('is_show', true)
-      builder = builder.orderBy('created_at', 'DESC')
       const list = await builder.paginate(page, perPage)
       return list
     }catch (e) {
       console.log(e);
-      return HelperUtils.responseErrorInternal('ERROR: update project information fail !');
+      return HelperUtils.responseErrorInternal();
     }
   }
 
@@ -263,25 +257,45 @@ class AggregatorController {
       return game
     } catch (e) {
       console.log(e);
-      return HelperUtils.responseErrorInternal('ERROR: update project information fail !');
+      return HelperUtils.responseErrorInternal();
     }
   }
+
+  async findAggregatorBySlug({request}) {
+    try {
+      let game = await GameInformation.query()
+        .where('slug', request.params.slug)
+        .with('tokenomic')
+        .with('projectInformation')
+        .first()
+      if (!game) {
+        return HelperUtils.responseNotFound();
+      }
+
+      return game
+    } catch (e) {
+      console.log(e);
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
   async findProject({request}) {
     try {
       let project = await ProjectInformation.findBy('game_id',request.params.id)
       return project
     } catch (e) {
       console.log(e);
-      return HelperUtils.responseErrorInternal('ERROR: update project information fail !');
+      return HelperUtils.responseErrorInternal();
     }
   }
+
   async findTokenomic({request}) {
     try {
       let tokenomic = await Tokenomic.findBy('game_id',request.params.id)
       return tokenomic
     } catch (e) {
       console.log(e);
-      return HelperUtils.responseErrorInternal('ERROR: update project information fail !');
+      return HelperUtils.responseErrorInternal();
     }
   }
 
@@ -293,10 +307,9 @@ class AggregatorController {
       if (project) await project.delete()
       const game = await GameInformation.findBy('id', request.params.id)
       if (game) game.delete()
-      return {status: 200, message: 'remove aggregator successful'}
+      return HelperUtils.responseSuccess();
     }catch (e) {
-      console.log(e)
-      return HelperUtils.responseErrorInternal('ERROR: remove aggregator fail !');
+      return HelperUtils.responseErrorInternal();
     }
   }
 }

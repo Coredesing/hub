@@ -282,9 +282,7 @@ export const getCampaignDetail = (id: string, isInvestor: boolean = false) => {
           etherConversionRateDecimals, isClaimable, claimableTokens,
           releaseTime, tokenClaimed,
         ]);
-
-        console.log('tokenClaimed=======>', campaignDetail[16]);
-
+        
         // Init ERC20 Contract By Token Address get from Campaign Contract
         const erc20Contract = getContractInstance(erc20ABI, campaignDetail[8]);
         const usdtContract = getContractInstance(erc20ABI, USDT_LINK_DEFAULT_ADDRESS);
@@ -312,10 +310,7 @@ export const getCampaignDetail = (id: string, isInvestor: boolean = false) => {
           const unixCloseTime = convertUnixTimeToDateTime(campaignDetail[6]);
           const tokenClaimed = new BigNumber(campaignDetail[16]).dividedBy(Math.pow(10, tokenDetail[2]));
           const refundable = isCampaignOwner && (new BigNumber(tokenLeft).plus(tokenClaimed)).gt(0) && (new Date(unixCloseTime) < new Date());
-
-          console.log('tokenLeft', tokenLeft.toFixed());
-          // console.log('(new BigNumber(tokenLeft).plus(tokenClaimed)).gt(0)', (new BigNumber(tokenLeft).plus(tokenClaimed)).toFixed());
-
+          
           dispatch({
             type: campaignActions.CAMPAIGN_DETAIL_SUCCESS,
             payload: {
@@ -599,47 +594,6 @@ export const deployPool = (campaign: any, history: any) => {
         paidTokenAddress = NATIVE_TOKEN_ADDRESS
       }
 
-      // Old Code
-      // let tokenByEthDecimals: any;
-      // let tokenByETHActualRate: any;
-      // tokenByEthDecimals = getDigitsAfterDecimals(token_by_eth);
-      // if (token !== ACCEPT_CURRENCY.ETH) {
-      //   if (tokenByEthDecimals > 0) {
-      //     tokenByETHActualRate = new BigNumber(1).dividedBy(token_by_eth).multipliedBy(Math.pow(10, tokenInfo?.decimals - 6)).toFixed();
-      //   } else {
-      //     tokenByETHActualRate = new BigNumber(token_by_eth).multipliedBy(Math.pow(10, tokenInfo.decimals - 6)).toFixed();
-      //   }
-      // } else {
-      //   tokenByETHActualRate = new BigNumber(token_by_eth).multipliedBy(Math.pow(10, Number(tokenByEthDecimals))).multipliedBy(Math.pow(10, 18 - 18)).toFixed();
-      // }
-
-      // console.log('tokenByEthDecimals: ', tokenByEthDecimals);
-      // console.log('tokenByETHActualRate: ', tokenByETHActualRate);
-
-
-      // Old code 2
-      // let tokenByEthDecimals = 0;
-      // let tokenByETHActualRate: any;
-      // let reversedRate = removeTrailingZeros(new BigNumber(1).dividedBy(token_by_eth).toFixed());
-      // let digitsAfterDecimals = getDigitsAfterDecimals(reversedRate);
-      //
-      // if (digitsAfterDecimals > 6) {
-      //   // get 6 decimals after comma if decimals part is too long
-      //   const splittedComma = reversedRate.split('.');
-      //   reversedRate = splittedComma[0].concat(".", splittedComma[1].substr(0, 6));
-      //   digitsAfterDecimals = 6;
-      // }
-      //
-      // if (accept_currency !== ACCEPT_CURRENCY.ETH) {
-      //   if (network_available == NETWORK_AVAILABLE.ETH) {
-      //     tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 6)).toFixed();
-      //   } else {
-      //     tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, tokenInfo.decimals - 18)).toFixed();
-      //   }
-      // } else {
-      //   tokenByETHActualRate = new BigNumber(reversedRate).multipliedBy(Math.pow(10, Number(tokenByEthDecimals))).toFixed();
-      // }
-
       let tokenByEthDecimals = 0;
       let tokenByETHActualRate: any;
       let reversedRate = removeTrailingZeros(new BigNumber(1).dividedBy(token_by_eth).toFixed());
@@ -759,7 +713,6 @@ export const deployPool = (campaign: any, history: any) => {
           from: userWalletAddress,
         });
 
-        console.log('Deploy Response: ', createdCampaign);
         if (createdCampaign) {
           dispatch({ type: alertActions.SUCCESS_MESSAGE, payload: 'Deploy Pool Successful!'});
 
@@ -885,10 +838,8 @@ export const editCampaignWithProp = (prop: string, value: string, handleEditSucc
 
           case 'ETH': {
             const etherDecimals = getDigitsAfterDecimals(value.toString());
-            console.log(etherDecimals);
             console.log('new BigNumber(value).multipliedBy(Math.pow(10, etherDecimals)',
-              new BigNumber(value).multipliedBy(Math.pow(10, etherDecimals)).toString()
-              );
+              new BigNumber(value).multipliedBy(Math.pow(10, etherDecimals)).toString());
 
             await campaignContract.methods.setEtherConversionRateAndDecimals(new BigNumber(value).multipliedBy(Math.pow(10, etherDecimals)).toString(), etherDecimals).send({
               from: user.data.wallet_address

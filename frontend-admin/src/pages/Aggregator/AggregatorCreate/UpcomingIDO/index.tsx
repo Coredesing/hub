@@ -27,7 +27,6 @@ const UpcomingIDO: React.FC<any> = (props: any) => {
     }
     const onChangeUpcomingType = (event: any) => {
         let newData = {...upcomingIDOInfo}
-        console.log(event)
         newData.ido_type = event
         setUpcomingIDOInfo(newData)
         onChangeUpcomingIDO(newData)

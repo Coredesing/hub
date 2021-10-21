@@ -34,7 +34,6 @@ class UpdateTokenPrice extends Task {
         tokenRecord.price_btc_change_24h = (tokenQuote.percent_change_24h - BTCQuote.percent_change_24h)
         tokenRecord.price_eth = (tokenQuote.price / ETHQuote.price)
         tokenRecord.price_eth_change_24h = (tokenQuote.percent_change_24h - ETHQuote.percent_change_24h)
-        console.log(tokenRecord)
         await tokenRecord.save()
       })
     } catch (e) {
@@ -46,7 +45,6 @@ class UpdateTokenPrice extends Task {
     const cmc_api_token = process.env.CMC_PRO_API_KEY
     const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?slug=${symbol}`;
     const response = await axios.get(url, {headers: {'X-CMC_PRO_API_KEY': cmc_api_token, Accept: 'application/json'}})
-    console.log(response)
     let data
     Object.entries(response?.data?.data).forEach(([key, value]) => {
       data = value

@@ -471,6 +471,8 @@ export default {
             scrollTop = e.target.scrollingElement.scrollTop
         if(scrollTop > top && (window.innerHeight + scrollTop + 20) < height) {
           sideEl.style.paddingTop = `${scrollTop - top}px`
+        } else if (scrollTop < top) {
+          sideEl.style.paddingTop = ''
         }
       })
     }
@@ -491,11 +493,11 @@ export default {
       return [
         {
           text: 'Game List',
-          href: '#/list'
+          href: '/list'
         },
         {
           text: this.game.game_name,
-          href: '#/game/' + this.id
+          href: '/game/' + this.id
         }
       ]
     },

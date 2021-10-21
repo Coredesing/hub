@@ -135,9 +135,6 @@ export const addAggregator = (gameData: any, tokenomicData: any, projectData: an
 export const updateAggregator = (id:number, gameData: any, tokenomicData: any, projectData: any,) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
         const baseRequest = new BaseRequest();
-        console.log(gameData)
-        console.log(tokenomicData)
-        console.log(projectData)
         dispatch({ type: aggregatorAction.CREATE_AGGREGATOR_REQUEST });
 
         try {

@@ -46,7 +46,6 @@ function LinearJoinDuration(props: any) {
     if (campaignClaimConfigJSON) {
       try {
         let campaignClaimConfig = campaignClaimConfigFormat(campaignClaimConfigJSON);
-        // console.log('Change campaignClaimConfig: ', campaignClaimConfig);
         if (campaignClaimConfig && campaignClaimConfig.length > 0) {
           if (campaignClaimConfig[0]?.startTime) {
             let claimTimeValue = Number(campaignClaimConfig[0]?.startTime); // Format: Timestamp
@@ -75,13 +74,7 @@ function LinearJoinDuration(props: any) {
               control={control}
               rules={{
                 required: (needValidate && !isBuyTypeFCFS),
-                validate: {
-                  // greaterOrEqualToday: (value) => {
-                  //   if (isDeployed || isBuyTypeFCFS) return true;
-                  //   console.log(value);
-                  //   return new Date(value) >= new Date();
-                  // },
-                }
+                validate: {}
               }}
               name="start_join_pool_time"
               render={(field) => {
@@ -127,7 +120,6 @@ function LinearJoinDuration(props: any) {
                     const startTime = getValues('start_join_pool_time');
                     const valueUnix = moment(value).unix();
                     const startTimeUnix = moment(startTime).unix();
-                    console.log('Validate End Join Time', valueUnix, startTimeUnix);
 
                     return startTime ? valueUnix > startTimeUnix : valueUnix > moment().unix();
                   }

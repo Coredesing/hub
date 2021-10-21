@@ -18,7 +18,6 @@ const useStakingPoolDetail = (
   const [poolDetail, setPoolDetail] = useState({});
 
   const fetchStakingPoolDetail = useCallback(async() => {
-    console.log('Loading detail staking pool')
     try {
       if (!contractAddress || !utils.isAddress(contractAddress) || !networkAvailable) {
         return;

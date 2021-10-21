@@ -46,7 +46,6 @@ function CreateEditTierForm(props: any) {
   const handleSubmitPopup = () => {
     return handleSubmit(submitData)()
       .then((res) => {
-        console.log('Res: ', isValid, errors);
         if (isValid) {
           clearErrors();
         }
@@ -162,17 +161,6 @@ function CreateEditTierForm(props: any) {
             <Controller
               control={control}
               rules={{
-                // required: true,
-                // validate: {
-                //   greateOrEqualStartTime: value => {
-                //     const startTime = getValues('startTime');
-                //     const valueUnix = moment(value).unix();
-                //     const startTimeUnix = moment(startTime).unix();
-                //     console.log('Validate Finish Time', valueUnix, startTimeUnix);
-                //
-                //     return startTime ? valueUnix > startTimeUnix : valueUnix > moment().unix();
-                //   }
-                // }
               }}
               name="endTime"
               render={(field) => {

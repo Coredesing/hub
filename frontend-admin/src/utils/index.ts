@@ -95,13 +95,6 @@ export const getTransactionRowType = (transaction: any) => {
 };
 
 export const getETHPrices = async () => {
-  // To use:
-  // useEffect(() => {
-  //   getETHPrices().then((resPrices: any) => {
-  //     console.log(resPrices);
-  //   });
-  // }, []);
-
   return await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
     .then(function (response) {
       let resData = JSON.parse(JSON.stringify(response));

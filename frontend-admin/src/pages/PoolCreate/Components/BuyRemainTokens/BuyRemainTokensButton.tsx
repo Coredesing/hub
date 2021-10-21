@@ -116,8 +116,6 @@ function BuyRemainTokensButton(props: any) {
         campaignId: poolDetail.id
       });
       response = response.data || {};
-      console.log('[buyRemainTokens] - Response depositPoolAdmin ', response);
-      debugger;
 
       const buyResponse = await buyTokenWithSignature({
         isClaimable: poolDetail.type === 'claimable',
@@ -133,7 +131,6 @@ function BuyRemainTokensButton(props: any) {
         rate: poolDetail.ether_conversion_rate
       });
 
-      console.log('buyResponse', buyResponse);
       setTransactionHash(buyResponse.transactionHash);
 
       setLoading(false);

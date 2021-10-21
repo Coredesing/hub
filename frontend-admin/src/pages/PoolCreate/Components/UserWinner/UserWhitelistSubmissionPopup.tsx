@@ -46,7 +46,6 @@ function UserWhitelistSubmissionPopup(props: any) {
   const handleVerifyPopup = () => {
     return handleSubmit(verifyData)()
         .then((res) => {
-          console.log('Res: ', res);
         });
   };
 

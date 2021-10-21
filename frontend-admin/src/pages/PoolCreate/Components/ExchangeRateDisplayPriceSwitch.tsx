@@ -30,7 +30,6 @@ function ExchangeRateDisplayPriceSwitch(props: any) {
       poolId: poolDetail.id,
       isDisplay: value,
     });
-    console.log('Change display: Response: ', res);
     if (res.status === 200) {
       dispatch(alertSuccess('Change display setting successful!'));
     }

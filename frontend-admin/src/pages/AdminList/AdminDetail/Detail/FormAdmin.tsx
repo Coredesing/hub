@@ -30,7 +30,6 @@ const FormAdmin = (props: any) => {
   });
 
   const onSubmit = (values: any) => {
-    console.log(values);
     if (isCreate) {
       createAdmin(values)
         .then((res) => {
@@ -53,9 +52,7 @@ const FormAdmin = (props: any) => {
         });
     }
   };
-
-  console.log('Error: ', errors);
-
+  
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>

@@ -29,7 +29,6 @@ function KycSwitch(props: any) {
       userId: user.id,
       isKyc: value,
     });
-    console.log('Change Kyc: Response: ', res);
     if (res.status === 200) {
       dispatch(alertSuccess('Change KYC setting successful!'));
       return true;

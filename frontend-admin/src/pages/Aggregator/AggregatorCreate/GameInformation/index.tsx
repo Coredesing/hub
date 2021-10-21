@@ -106,8 +106,13 @@ const GameInformation: React.FC<any> = (props: any) => {
         setGameInfo(newData)
         onChangeGameInfo(newData)
     }
+    const onChangeSlug = (event: any) => {
+        let newData = {...gameInfo}
+        newData.slug = event.target.value
+        setGameInfo(newData)
+        onChangeGameInfo(newData)
+    }
     const onChangeCategory = (event: any) => {
-        console.log(event)
         let newData = {...gameInfo}
         const buff = event.map((data:any) => data.value )
         newData.category = buff.join(',')
@@ -115,7 +120,6 @@ const GameInformation: React.FC<any> = (props: any) => {
         onChangeGameInfo(newData)
     }
     const onChangeHashtags = (event: any) => {
-        console.log(event)
         let newData = {...gameInfo}
         const buff = event.map((data:any) => data.value )
         newData.hashtags = buff.join(',')
@@ -130,7 +134,6 @@ const GameInformation: React.FC<any> = (props: any) => {
     }
     const onChangeSystemRequire = (event: any) => {
         let newData = {...gameInfo}
-        console.log(event)
         newData.system_require = event
         setGameInfo(newData)
         onChangeGameInfo(newData)
@@ -207,6 +210,18 @@ const GameInformation: React.FC<any> = (props: any) => {
                             placeholder={"Input new tags then Enter"}
 
                             options={[]}
+                        />
+                    </div>
+
+                    <div className={classes.formControl}>
+                        <label className={classes.formControlLabel}>Slug (Unique)</label>
+                        <input
+                            type="text"
+                            name='slug'
+                            onChange={onChangeLanguage}
+                            defaultValue={gameInfo?.slug}
+
+                            className={classes.formControlInput}
                         />
                     </div>
 

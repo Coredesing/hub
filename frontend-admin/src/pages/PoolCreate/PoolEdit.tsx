@@ -28,7 +28,6 @@ const PoolEdit: React.FC<RouteComponentProps> = (props: RouteComponentProps) => 
     }
     try {
       const response = await getPoolBlockchainInfo(loginUser, data);
-      console.log('getPoolBlockchainInfo: ', response);
     } catch (e) {
       console.log('ERROR: ', e);
     }
@@ -54,11 +53,6 @@ const PoolEdit: React.FC<RouteComponentProps> = (props: RouteComponentProps) => 
         };
 
         setPoolDetail(newData);
-
-        // if (newData.is_deploy && newData.campaign_hash) {
-        //   console.log('newData=======', newData);
-        //   await getPoolInfoInBlockchain(newData);
-        // }
 
         return res.data;
       })

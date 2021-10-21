@@ -20,7 +20,6 @@ const useGetList = (props: any) => {
   };
   const searchDelay = debounce(handleCampaignSearch, 500);
   const search = () => {
-    console.log('SEARCH Query: ', query );
     if (poolDetail && poolDetail.id) {
       const searchParams = {
         search_term: query,

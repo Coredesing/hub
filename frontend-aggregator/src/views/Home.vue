@@ -18,8 +18,16 @@
     </section>
     <section>
       <h1 class="title">Latest</h1>
-      <div class="section-latest">
-        <latest-item v-for="(item, i) in listLatest" :key="i" v-bind="item"/>
+      <div class="row align-center">
+        <div class="prev-btn" @click="prevLatest">
+          <img alt src="../assets/images/arrow-left_round.svg"/>
+        </div>
+        <div ref="latest" class="section-latest">
+          <latest-item v-for="(item, i) in listLatest" :key="i" v-bind="item"/>
+        </div>
+        <div class="next-btn" @click="nextLatest">
+          <img alt src="../assets/images/arrow-right_round.svg"/>
+        </div>
       </div>
       <mask-dot color="#E553CE"/>
     </section>
@@ -62,6 +70,9 @@ export default {
     await this.$store.dispatch('getListUpcoming')
   },
   computed: {
+    user() {
+      return this.$store.state.user
+    },
     listFavorite() {
       return this.$store.state.listFavorite
     },
@@ -83,6 +94,7 @@ export default {
   },
   methods: {
     async likeGame(item, val) {
+      if(!this.user || !this.user.address) return
       const index = this.listFavorite.findIndex(g => g.id === item.id)
       this.listFavorite.splice(index, 1, {
         ...item,
@@ -98,6 +110,16 @@ export default {
     },
     async openBanner() {
       window.open('https://mechmaster.io/');
+    },
+    nextLatest() {
+      const latest = this.$refs.latest
+      const left = latest.scrollLeft + latest.offsetWidth + 23
+      latest.scroll({ left, behavior: 'smooth'})
+    },
+    prevLatest() {
+      const latest = this.$refs.latest
+      const left = latest.scrollLeft - (latest.offsetWidth + 23)
+      latest.scroll({ left, behavior: 'smooth'})
     }
   }
 };
@@ -116,6 +138,18 @@ export default {
       line-height: 36px;
       margin-bottom: 24px;
     }
+
+    .prev-btn,
+    .next-btn {
+      flex: 0 0 32px;
+      padding: 4px;
+      margin-bottom: 99px;
+      cursor: pointer;
+
+      img {
+        width: 24px;
+      }
+    }
   }
 
   .section {
@@ -133,8 +167,8 @@ export default {
       overflow: auto;
 
       & > div {
-        flex: 0 0 calc(33% - 24px);
-        margin-right: 24px;
+        flex: 0 0 calc(33% - 12px);
+        margin-right: calc(0.5% + 18px);
 
         ::v-deep .item-image {
           height: 223px;
@@ -144,18 +178,14 @@ export default {
             width: 100%;
           }
         }
+
+        &:last-child {
+         margin-right: 0;
+        }
       }
 
       &::-webkit-scrollbar {
-        background: #2E2E2E;
-        height: 6px;
-        border-radius: 8px;
-        cursor: pointer;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background: #72F34Baa;
-        border-radius: 8px;
+        display: none;
       }
     }
   }
@@ -163,6 +193,14 @@ export default {
 
 @media screen and (max-width: 600px) {
   .home {
+    section {
+
+      .prev-btn,
+      .next-btn {
+        display: none;
+      }
+    }
+
     .section {
       &-favorite {
         flex-wrap: wrap;

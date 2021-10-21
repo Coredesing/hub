@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import {URL} from "@/constant/api";
+import {SIGNATURE_MESSAGE, URL} from "@/constant/api";
 import axios from "axios";
 import dayjs from "dayjs";
 
@@ -217,7 +217,13 @@ export default new Vuex.Store({
     async likeGame({ state, commit }, payload) {
       const {id, value} = payload
       const url = URL.LIKE + id
-      const {address, signature} = state.user
+      let {address, signature} = state.user
+      if(!signature) {
+        const params = [address, SIGNATURE_MESSAGE]
+        const method = 'personal_sign'
+        signature = await window.ethereum.request({method, params})
+        commit('updateUser', { signature })
+      }
       await axios.post(url, {address, signature, status: value ? '1' : '0'})
 
       commit('updateLikeInfo', id)
@@ -236,6 +242,7 @@ export default new Vuex.Store({
         game_name: detail.game_name,
         verified: detail.verified,
         ido_type: detail.ido_type,
+        ido_date: detail.ido_date,
         ticker: tokenomic.ticker,
         developer: detail.developer,
         publisher: detail.publisher,
@@ -322,6 +329,10 @@ export default new Vuex.Store({
           {
             type: 'image',
             data: detail.screen_shots_5
+          },
+          {
+            type: 'image',
+            data: detail.screen_shots_2
           }
         ].filter(item => !!item.data),
         liked: !!state.user.likes.find(id => id === detail.id),
@@ -337,7 +348,7 @@ export default new Vuex.Store({
       commit('changeLoadingStatus', false)
     },
     async updateUserInfo({ state, commit }, payload) {
-      const {address, signature} = payload
+      const { address } = payload
       let likes = []
       const url = URL.USER_LIKE + address
       const response = await axios.get(url)
@@ -350,7 +361,14 @@ export default new Vuex.Store({
         commit('setGame', mapLikes(game, likes))
       }
 
-      commit('updateUser', {address, signature, likes})
+      commit('updateUser', {address, likes})
+    },
+    async logout({ commit }) {
+      commit('updateUser', {
+        address: '',
+        signature: '',
+        likes: []
+      })
     }
   },
   modules: {},

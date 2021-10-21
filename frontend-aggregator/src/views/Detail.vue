@@ -270,7 +270,7 @@
           <template v-if="tab === 2 && game.team">
             <div v-if="game.team.roadmap">
               <div class="title">Roadmap</div>
-              <img alt :src="game.team.roadmap"/>
+              <img class="zoom" alt :src="game.team.roadmap"/>
             </div>
             <div v-if="game.team.partner">
               <div class="title">Partner</div>
@@ -292,7 +292,7 @@
           </template>
         </div>
       </div>
-      <div class="detail-main_side">
+      <div ref="side" class="detail-main_side">
         <template v-if="game.ido_type === 'launched'">
           <div class="title">
             Current Price
@@ -376,6 +376,7 @@
         </template>
         <template v-else-if="game.ido">
           <div class="ido-title">${{ game.token }} IDO on {{ game.ido.date }}</div>
+          <countdown :deadline="game.ido_date"/>
           <div class="ido-chain">{{ game.ido.chain }}</div>
           <div class="ido-price">
             Price per token: <span>$ {{ game.ido.price }}</span>
@@ -432,10 +433,11 @@ import Breadcrumb from "@/components/Breadcrumb";
 // import * as am4core from "@amcharts/amcharts4/core";
 // import * as am4charts from "@amcharts/amcharts4/charts";
 import MaskDot from "@/components/MaskDot";
+import Countdown from "@/components/Countdown";
 
 export default {
   name: "Detail",
-  components: {MaskDot, Breadcrumb},
+  components: {Countdown, MaskDot, Breadcrumb},
   filters: {
     displayNumber(val) {
       if (!val) {
@@ -460,7 +462,23 @@ export default {
     this.id = this.$route.params.id
     await this.$store.dispatch('getGameDetail', this.id)
   },
+  mounted() {
+    if(window.innerWidth > 600) {
+      const sideEl = this.$refs.side
+      const top = 254
+      document.addEventListener('scroll', (e) => {
+        const height = e.target.scrollingElement.scrollHeight,
+            scrollTop = e.target.scrollingElement.scrollTop
+        if(scrollTop > top && (window.innerHeight + scrollTop + 20) < height) {
+          sideEl.style.paddingTop = `${scrollTop - top}px`
+        }
+      })
+    }
+  },
   computed: {
+    user() {
+      return this.$store.state.user
+    },
     game() {
       return this.$store.state.game
     },
@@ -477,7 +495,7 @@ export default {
         },
         {
           text: this.game.game_name,
-          href: '#/detail/' + this.id
+          href: '#/game/' + this.id
         }
       ]
     },
@@ -505,6 +523,7 @@ export default {
   },
   methods: {
     async like() {
+      if(!this.user || !this.user.address) return
       await this.$store.dispatch('likeGame', { id: this.game.id, value: !this.game.liked })
       const game = {...this.game, liked: !this.game.liked}
       this.$store.commit('setGame', game)
@@ -767,6 +786,7 @@ export default {
 
         &-chain {
           width: fit-content;
+          margin-top: 12px;
           margin-bottom: 16px;
           background: #4F4F4F;
           border-radius: 4px;
@@ -916,6 +936,7 @@ export default {
                 max-width: 100%;
                 scroll-snap-type: x mandatory;
                 padding: 8px;
+                justify-content: center;
 
                 &::-webkit-scrollbar {
                   display: none;
@@ -1141,6 +1162,7 @@ export default {
             &--main {
               .slide {
                 padding: 4px;
+                justify-content: flex-start;
 
                 &-item {
                   flex: 0 0 110px

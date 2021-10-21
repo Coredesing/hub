@@ -123,7 +123,7 @@ export default {
       await this.$store.dispatch('likeGame', { id: this.selectedItem.id, value: this.selectedItem.liked })
     },
     async viewMore(selectedItem) {
-      this.$router.push({ path: '/detail/' + selectedItem.id})
+      this.$router.push({ path: '/game/' + selectedItem.id})
     }
   }
 }
@@ -186,6 +186,8 @@ export default {
     position: absolute;
     bottom: 88px;
     right: 160px;
+    opacity: 0;
+    transition: opacity 0.4s;
 
     &_prev,
     &_next {
@@ -234,6 +236,8 @@ export default {
     bottom: 88px;
     left: 160px;
     max-width: 550px;
+    opacity: 0;
+    transition: opacity 0.4s;
 
     &_title {
       font-weight: bold;
@@ -289,6 +293,15 @@ export default {
       }
     }
   }
+
+  &:hover &-info,
+  &:hover &-delimiter {
+    opacity: 1;
+  }
+
+  &:hover &-wrapper:before {
+    content: '';
+  }
 }
 
 @media screen and (max-width: 600px) {
@@ -308,6 +321,7 @@ export default {
     }
 
     &-delimiter {
+      opacity: 1;
       position: static;
       margin-top: 16px;
       height: 54px;
@@ -319,6 +333,7 @@ export default {
     }
 
     &-info {
+      opacity: 1;
       position: static;
       padding: 32px var(--padding-section);
 

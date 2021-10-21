@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     viewDetail() {
-      this.$router.push({ path: '/detail/' + this.id})
+      this.$router.push({ path: '/game/' + this.id})
     }
   }
 }

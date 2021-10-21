@@ -59,7 +59,7 @@ export default {
       breadcrumbs: [
         {
           text: 'Game List',
-          href: '#/list'
+          href: '/list'
         }
       ],
       searchText: '',

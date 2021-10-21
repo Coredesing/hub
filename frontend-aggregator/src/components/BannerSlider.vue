@@ -15,9 +15,11 @@
         <div class="slider-delimiter_prev" @click="prevItem">
           <img alt src="../assets/images/arrow-left_round.svg"/>
         </div>
-        <div v-for="(item, i) in selectedList" :key="i"
-             :class="`slider-delimiter_item ${selectedItem.id === item.id && 'selected'}`" @click="selectItem(item)">
-          <img alt :src="item.thumbnail"/>
+        <div ref="delimiter" class="slider-delimiter_main">
+          <div v-for="(item, i) in selectedList" :key="i"
+               :class="`slider-delimiter_item ${selectedItem.id === item.id && 'selected'}`" @click="selectItem(item)">
+            <img alt :src="item.thumbnail"/>
+          </div>
         </div>
         <div class="slider-delimiter_next" @click="nextItem">
           <img alt src="../assets/images/arrow-right_round.svg"/>
@@ -95,6 +97,8 @@ export default {
         index = -1
       }
       this.selectedItem = this.list[index + 1]
+      const delimiter = this.$refs.delimiter
+      delimiter.scroll({left: (index + 1) * 96, behavior: 'smooth'})
     },
     prevItem() {
       let index = this.list.findIndex(it => it.id === this.selectedItem.id)
@@ -102,6 +106,8 @@ export default {
         index = this.list.length
       }
       this.selectedItem = this.list[index - 1]
+      const delimiter = this.$refs.delimiter
+      delimiter.scroll({left: (index - 1) * 96, behavior: 'smooth'})
     },
     initializeVideo() {
       const video = this.$refs.video
@@ -182,7 +188,6 @@ export default {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    height: 69px;
     position: absolute;
     bottom: 88px;
     right: 160px;
@@ -205,6 +210,19 @@ export default {
       transform: translateX(-10px);
     }
 
+    &_main {
+      display: flex;
+      align-items: center;
+      padding: 4px;
+      height: 69px;
+      width: 420px;
+      overflow: auto;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
     &_item {
       flex: 0 0 96px;
       height: 100%;
@@ -225,7 +243,7 @@ export default {
         box-shadow: 0 0 10px #FFFFFF;
       }
 
-      &:nth-last-child(2) {
+      &:nth-last-child(1) {
         margin-right: 0;
       }
     }

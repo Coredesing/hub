@@ -159,7 +159,7 @@ export default new Vuex.Store({
           title: item.game_name,
           description: item.short_description
         }))
-        commit('updateListTopGame', list.splice(0, 4))
+        commit('updateListTopGame', list)
       }
 
       commit('changeLoadingStatus', false)

@@ -13,6 +13,9 @@
           <a href="https://twitter.com/GameFi_Official" target="_blank">
             <img alt src="../assets/images/twitter_green.svg"/>
           </a>
+          <a href="https://medium.com/gamefi-official/" target="_blank">
+            <img alt src="../assets/images/medium_green.svg" style="margin-left: 8px; width: 32px">
+          </a>
         </div>
       </div>
       <div class="column">

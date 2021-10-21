@@ -76,7 +76,7 @@ export default {
       }
     },
     viewDetail(item) {
-      this.$router.push({ path: '/detail/' + item.id})
+      this.$router.push({ path: '/game/' + item.id})
     }
   }
 }
@@ -252,51 +252,50 @@ export default {
   &-only {
     display: block;
   }
+}
 
-  @media screen and (max-width: 600px) {
-    .upcoming {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+@media screen and (max-width: 600px) {
+  .upcoming {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-      &-main,
-      &-item {
-        padding: 12px;
-        border-radius: 12px;
+    &-main,
+    &-item {
+      padding: 12px;
+      border-radius: 12px;
 
-        &_title {
-          top: 24px;
-          left: 24px;
-          font-size: 24px;
+      &_title {
+        top: 24px;
+        left: 24px;
+        font-size: 24px;
 
-          img {
-            width: 16px;
-            margin-left: 4px;
-          }
+        img {
+          width: 16px;
+          margin-left: 4px;
         }
+      }
 
-        &_countdown {
-          display: none !important;
-          left: 24px;
-          bottom: 20px;
+      &_countdown {
+        left: 24px;
+        bottom: 20px;
 
-          p {
-            font-size: 12px;
-            line-height: 16px;
-            margin: 0;
-          }
+        p {
+          font-size: 12px;
+          line-height: 16px;
+          margin: 0;
         }
+      }
 
-        &_play {
-          transform: scale(0.5) translate3d(-50%, -50%, 0);
-          transform-origin: top left;
-        }
+      &_play {
+        transform: scale(0.5) translate3d(-50%, -50%, 0);
+        transform-origin: top left;
+      }
 
-        &_sponsor {
-          top: 24px;
-          right: 24px;
-          padding: 0 6px;
-        }
+      &_sponsor {
+        top: 24px;
+        right: 24px;
+        padding: 0 6px;
       }
     }
   }

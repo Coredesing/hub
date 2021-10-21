@@ -156,6 +156,14 @@ img {
 }
 
 
+.zoom:hover {
+    cursor: zoom-in;
+    position: relative;
+    transform: scale(1.5);
+    transform-origin: top left;
+    z-index: 100;
+}
+
 @media screen and (max-width: 600px) {
     body {
         font-size: 13px;

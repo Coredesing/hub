@@ -18,13 +18,14 @@ const routes = [
     component: List
   },
   {
-    path: "/detail/:id",
+    path: "/game/:id",
     name: "Detail",
     component: Detail
   }
 ];
 
 const router = new VueRouter({
+  mode: "history",
   routes,
   scrollBehavior() {
     return {x: 0, y: 0}

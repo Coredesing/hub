@@ -40,6 +40,7 @@
 <!--      </div>-->
       <template v-if="user && user.address">
         <div class="address">{{ user.address | compressAddress}}</div>
+        <div class="btn btn-logout" @click="logout">Log out</div>
       </template>
       <template v-else>
         <div class="btn" @click="connectWallet">Connect Wallet</div>
@@ -47,7 +48,7 @@
     </div>
     <div class="header-toggle" @click="show.nav = !show.nav">
       <template v-if="show.nav">
-        <img alt src="../assets/images/close.svg"/>
+        <img style="width: 20px" alt src="../assets/images/close.svg"/>
       </template>
       <template v-else>
         <img style="width: 20px" alt src="../assets/images/menu.svg"/>
@@ -59,7 +60,6 @@
 <script>
 import { CATEGORY_LIST } from "@/constant/category";
 import ClickOutside from 'vue-click-outside'
-import {SIGNATURE_MESSAGE} from "@/constant/api";
 
 export default {
   name: "Header",
@@ -102,11 +102,7 @@ export default {
       if(ethereum) {
         await ethereum.request({ method: 'eth_requestAccounts' });
         const address = await ethereum.request({ method: 'eth_accounts'})
-        const msg = SIGNATURE_MESSAGE
-        const params = [address[0], msg]
-        const method = 'personal_sign'
-        const signature = await window.ethereum.request({method, params})
-        await this.$store.dispatch('updateUserInfo', {address: address[0], signature})
+        await this.$store.dispatch('updateUserInfo', {address: address[0]})
       }
     },
     async selectCategory(item) {
@@ -126,10 +122,13 @@ export default {
       this.$refs['search-input'].focus()
     },
     viewDetail(item) {
-      this.$router.push({ path: `/detail/${item.id}` })
+      this.$router.push({ path: `/game/${item.id}` })
     },
     viewList() {
       this.$router.push({ path: '/list'})
+    },
+    async logout() {
+      await this.$store.dispatch('logout')
     }
   }
 }
@@ -308,6 +307,14 @@ export default {
       line-height: 24px;
       padding: 8px 36px;
       cursor: pointer;
+
+      &-logout {
+        background: transparent;
+        border: 1px solid #72F34B;
+        color: #72F34B;
+        padding: 2px 12px;
+        margin-left: 12px;
+      }
     }
 
     &-toggle {

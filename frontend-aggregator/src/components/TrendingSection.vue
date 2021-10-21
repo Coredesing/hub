@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     viewDetail(item) {
-      this.$router.push({ path: '/detail/' + item.id})
+      this.$router.push({ path: '/game/' + item.id})
     }
   }
 }
@@ -75,7 +75,7 @@ export default {
 .trending {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 256px 256px;
   grid-gap: 32px;
 
   &-main {
@@ -89,7 +89,6 @@ export default {
 
     & > img {
       width: 100%;
-      height: 100%;
       opacity: 0.5;
       image-rendering: pixelated
     }
@@ -150,7 +149,6 @@ export default {
       }
 
       img {
-        height: 100%;
         border-radius: 2px;
         image-rendering: pixelated
       }

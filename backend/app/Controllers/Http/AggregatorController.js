@@ -260,6 +260,25 @@ class AggregatorController {
       return HelperUtils.responseErrorInternal();
     }
   }
+
+  async findAggregatorBySlug({request}) {
+    try {
+      let game = await GameInformation.query()
+        .where('slug', request.params.slug)
+        .with('tokenomic')
+        .with('projectInformation')
+        .first()
+      if (!game) {
+        return HelperUtils.responseNotFound();
+      }
+
+      return game
+    } catch (e) {
+      console.log(e);
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
   async findProject({request}) {
     try {
       let project = await ProjectInformation.findBy('game_id',request.params.id)
@@ -269,6 +288,7 @@ class AggregatorController {
       return HelperUtils.responseErrorInternal();
     }
   }
+
   async findTokenomic({request}) {
     try {
       let tokenomic = await Tokenomic.findBy('game_id',request.params.id)

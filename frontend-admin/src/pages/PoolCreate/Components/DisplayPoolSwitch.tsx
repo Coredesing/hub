@@ -20,7 +20,6 @@ function DisplayPoolSwitch(props: any) {
 
   useEffect(() => {
     if (poolDetail && (poolDetail.is_display != undefined)) {
-      console.log('poolDetail.is_display: ', poolDetail.is_display);
       setValue('is_display', !!poolDetail.is_display);
     }
   }, [poolDetail]);
@@ -30,7 +29,6 @@ function DisplayPoolSwitch(props: any) {
       poolId: poolDetail.id,
       isDisplay: value,
     });
-    console.log('Change display: Response: ', res);
     if (res.status === 200) {
       dispatch(alertSuccess('Change display setting successful!'));
     }

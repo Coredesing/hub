@@ -13,7 +13,6 @@ function CreateEditSeriesContentForm(props: any) {
     handleCreateUpdateData,
   } = props;
   const renderError = renderErrorCreatePool;
-  console.log('editData', editData);
   const {
     register, clearErrors, errors, handleSubmit,
     formState: { isValid }

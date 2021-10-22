@@ -36,14 +36,12 @@ function PoolBannerOld(props: any) {
 
   const onChange = async (imageList: any, addUpdateIndex: any) => {
     // data for submit
-    console.log(imageList, addUpdateIndex);
     setImages(imageList);
     if (imageList.length > 0) {
       for (let index in imageList) {
         await uploadFile(imageList[index].file)
         .then((res) => {
           const fileName = res.data && res.data.fileName;
-          console.log('fileName', fileName);
           setImageUploaded(fileName);
         });
       }

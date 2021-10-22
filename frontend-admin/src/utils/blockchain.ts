@@ -10,8 +10,6 @@ const ETH_LINK_DEFAULT_ADDRESS = process.env.REACT_APP_SMART_CONTRACT_ETHLINK_AD
 const USDT_LINK_DEFAULT_ADDRESS = process.env.REACT_APP_SMART_CONTRACT_USDT_ADDRESS || "";
 
 export const getPoolBlockchainInfo = async (loginUser: any, params: any): Promise<any> => {
-  console.log('params', params);
-
   const campaignHash = params.campaign_hash;
   const web3Instance = getWeb3Instance();
   const campaignContract = getContractInstance(campaignABI, campaignHash);
@@ -78,68 +76,13 @@ export const getPoolBlockchainInfo = async (loginUser: any, params: any): Promis
       const tokenDecimals = erc20Contract.methods.decimals().call();
       const totalTokens = erc20Contract.methods.balanceOf(campaignHash).call();
       const tokenDetail = await Promise.all([tokenName, tokenSymbol, tokenDecimals, totalTokens]);
-      console.log('tokenDetail======>', tokenDetail);
       const tokenInfo = {
         name: tokenDetail[0],
         symbol: tokenDetail[1],
         decimals: tokenDetail[2],
         totalTokens: tokenDetail[3],
       };
-
-      // const claimableTokens = 0;// new BigNumber(campaignDetail[14]).dividedBy(Math.pow(10, tokenInfo.decimals)).toFixed();
-      // const tokenSold = new BigNumber(campaignInfo.tokenSold).dividedBy(Math.pow(10, tokenInfo.decimals));
-      // const tokenLeft = new BigNumber(campaignInfo.ethLink).dividedBy(Math.pow(10, tokenInfo.decimals)).minus(tokenSold);
-
-      // console.log('1111');
-      //
-      // const usdtDecimal = await usdtContract.methods.decimals().call();
-      //
-      // console.log('2');
-      //
-      // const erc20ConversionRate = new BigNumber(campaignInfo.erc20ConversionRate).dividedBy(Math.pow(10, (18 - Number(usdtDecimal)))).toFixed();
-      //
-      // console.log('3');
-      //
-      // const unixCloseTime = convertUnixTimeToDateTime(campaignInfo.closeTime);
-      // const tokenClaimed = 0;// new BigNumber(campaignDetail[16]).dividedBy(Math.pow(10, tokenInfo.decimals));
-      //
-      // console.log('4');
-      //
-      // const refundable = isCampaignOwner && (new BigNumber(tokenLeft).plus(tokenClaimed)).gt(0) && (new Date(unixCloseTime) < new Date());
-      //
-      //
-      //
-      // console.log('tokenDetail======>', refundable, tokenDetail);
-
     }
-
-
     return campaignInfo;
   }
 };
-
-// export const getTokenRemainingCanBuy = (campaignDetail: any): string => {
-//   if (!campaignDetail) return '0';
-//   const tokenLeft = _.get(campaignDetail, 'tokenLeft', 0);
-//   const tokenClaimed = _.get(campaignDetail, 'tokenClaimed', 0);
-//   let remainTokenAvailable = new BigNumber(tokenLeft).plus(tokenClaimed);
-//
-//   return remainTokenAvailable.toFixed();
-// };
-//
-// export const checkIsBetweenCloseTimeAndReleaseTime = (campaignDetail: any): boolean => {
-//   const closeTime = _.get(campaignDetail, 'closeTime', '');
-//   const releaseTime = _.get(campaignDetail, 'releaseTime', '');
-//
-//   let isBetween = false;
-//   if (closeTime && releaseTime) {
-//     const closeTimeDate = moment.unix(parseInt(closeTime)).toDate();
-//     const releaseTimeDate = moment.unix(parseInt(releaseTime)).toDate();
-//     const currentDate = new Date();
-//     if (closeTimeDate <= currentDate && currentDate < releaseTimeDate) {
-//       isBetween = true;
-//     }
-//   }
-//
-//   return isBetween;
-// };

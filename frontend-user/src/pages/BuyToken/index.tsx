@@ -716,18 +716,21 @@ const ContentToken = ({ id, ...props }: any) => {
               />
             </div>
           </div>
+          {
+            // hidden when is commnunity pool
+            poolDetails && +poolDetails?.isPrivate !== 3 && <HowToParticipant
+              poolDetails={poolDetails}
+              joinTimeInDate={joinTimeInDate}
+              endJoinTimeInDate={endJoinTimeInDate}
+              currentUserTier={currentUserTier}
+              alreadyJoinPool={alreadyJoinPool}
+              joinPoolSuccess={joinPoolSuccess}
+              whitelistCompleted={whitelistCompleted}
+              isKyc={checkKyc.isKyc}
+            // isKYC={!!(isKYC || poolDetails?.kycBypass)}
+            />
+          }
 
-          <HowToParticipant
-            poolDetails={poolDetails}
-            joinTimeInDate={joinTimeInDate}
-            endJoinTimeInDate={endJoinTimeInDate}
-            currentUserTier={currentUserTier}
-            alreadyJoinPool={alreadyJoinPool}
-            joinPoolSuccess={joinPoolSuccess}
-            whitelistCompleted={whitelistCompleted}
-            isKyc={checkKyc.isKyc}
-          // isKYC={!!(isKYC || poolDetails?.kycBypass)}
-          />
 
           {/* <header className={styles.poolDetailHeader}>
             <div className={styles.poolHeaderWrapper}>

@@ -13,7 +13,6 @@ class ErrorBoundary extends Component<any, State> {
   }
 
   componentDidCatch(error: any, errorInfo: React.ErrorInfo) {
-    console.log('ErrorBoundary - Error Info: ' + errorInfo.componentStack);
     const { history } = this.props;
     this.setState({ hasError: true });
     history.push({ pathname: adminRoute('/error'), state: { hasError: true } });

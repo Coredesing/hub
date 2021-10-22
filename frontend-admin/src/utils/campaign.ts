@@ -12,9 +12,6 @@ import {
 
 
 export const checkIsFinishTime = (campaignDetail: any): boolean => {
-
-  console.log('campaignDetail', campaignDetail);
-
   const closeTime = _.get(campaignDetail, 'closeTime', '');
   let isFinish = false;
   if (closeTime) {
@@ -63,7 +60,6 @@ export const campaignClaimConfigFormat = (campaignClaimConfigJSON: string) => {
     return item;
   });
 
-  console.log('campaignClaimConfig', campaignClaimConfig);
   return campaignClaimConfig;
 };
 
@@ -132,9 +128,7 @@ export const buyTokenWithSignature = async (data: any) => {
   const connectedAccount = userWalletAddress;
   const isUseEth = acceptCurrency === 'ETH';
   let params = [];
-
-  console.log('Buy amount:', amount);
-
+  
   // const method = acceptCurrency === 'ETH' ? 'buyTokenByEtherWithPermission': 'buyTokenByTokenWithPermission';
   if (isUseEth) {
     params = [
@@ -144,14 +138,11 @@ export const buyTokenWithSignature = async (data: any) => {
       minBuy,
       signature,
     ];
-
-    console.log('params', params);
-
+    
     const transaction = await poolContract.methods.buyTokenByEtherWithPermission(...params).send({
       from: connectedAccount,
       value: new BigNumber(amount).multipliedBy(10 ** 18).toFixed()
     });
-    console.log('transaction', transaction);
     return transaction;
   } else {
     params = [
@@ -164,11 +155,9 @@ export const buyTokenWithSignature = async (data: any) => {
       signature
     ];
 
-    console.log('params', params);
     const transaction = await poolContract.methods.buyTokenByTokenWithPermission(...params).send({
       from: connectedAccount,
     });
-    console.log('transaction', transaction);
     return transaction;
   }
 

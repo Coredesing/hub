@@ -11,6 +11,10 @@ class GameInformation extends Model {
   tokenomic() {
     return this.hasOne('App/Models/Tokenomic', 'id', 'game_id')
   }
+
+  projectInformation() {
+    return this.hasOne('App/Models/ProjectInformation', 'id', 'game_id')
+  }
 }
 
 module.exports = GameInformation

@@ -57,7 +57,6 @@ function UserReverseSetting(props: any) {
     };
     updateReserveSetting(submitData)
       .then((res) => {
-        console.log('updateTierSetting: ', res);
         if (res && res.status !== 200) {
           console.log('Error: ', res);
           dispatch(alertFailure('Update setting Fail'));
@@ -208,14 +207,6 @@ function UserReverseSetting(props: any) {
                   rules={{
                     required: true,
                     validate: {
-                      // greateOrEqualStartTime: value => {
-                      //   const startTime = getValues('startTime');
-                      //   const valueUnix = moment(value).unix();
-                      //   const startTimeUnix = moment(startTime).unix();
-                      //   console.log('Validate Finish Time', valueUnix, startTimeUnix);
-                      //
-                      //   return startTime ? valueUnix > startTimeUnix : valueUnix > moment().unix();
-                      // }
                     }
                   }}
                   name="endTime"

@@ -13,8 +13,6 @@ const NetworkWarningCreateEditPoolBanner: React.FC<any> = (props: any) => {
   const styles = useStyles();
   const { userCurrentNetwork } = useSelector((state: any) => state);
   const currentNetworkId = userCurrentNetwork?.currentNetworkId;
-  console.log('currentNetworkId: ', currentNetworkId);
-  // console.log('APP_NETWORK_NAMES', APP_NETWORK_NAMES, currentNetworkId);
 
   if (currentNetworkId === '') return null;
   if (currentNetworkId == ACCEPT_NETWORKS.ETH_CHAIN_ID || currentNetworkId == ACCEPT_NETWORKS.BSC_CHAIN_ID) {

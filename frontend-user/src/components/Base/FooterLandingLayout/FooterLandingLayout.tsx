@@ -31,6 +31,9 @@ const FooterLandingLayout = () => {
             <Link href="https://twitter.com/GameFi_Official" target="_blank">
               <img src={twitterIcon} alt="" />
             </Link>
+            <Link href="https://medium.com/gamefi-official" target="_blank">
+              <img src={"/images/icons/medium-1.svg"} width="32" height="33" alt="" />
+            </Link>
           </div>
         </div>
         <div className={styles.navFooter}>

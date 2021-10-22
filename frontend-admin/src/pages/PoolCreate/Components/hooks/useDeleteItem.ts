@@ -6,7 +6,6 @@ const useDeleteItem = (props: any) => {
   const { poolDetail, handleSearchFunction, handleDeleteFunction } = props;
 
   const deleteItem = async (e: any, row: any, index: number) => {
-    console.log('ROW: ', row, index);
     // eslint-disable-next-line no-restricted-globals
     if (!confirm('Do you want delete this item?')) {
       return false;

@@ -7,7 +7,6 @@ import FormAdmin from "./FormAdmin";
 const AdminDetailPage = (props: any) => {
   const styles = useStyles();
   const { history, match, admin, loading, failure, isCreate } = props;
-  console.log('isCreate', isCreate);
 
   const showAdminCreate = () => {
     return (

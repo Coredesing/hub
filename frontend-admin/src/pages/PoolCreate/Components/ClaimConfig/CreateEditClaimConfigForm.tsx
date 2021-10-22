@@ -16,7 +16,6 @@ function CreateEditClaimConfigForm(props: any) {
     handleCreateUpdateData,
   } = props;
   const renderError = renderErrorCreatePool;
-  console.log('editData', editData);
   const {
     register, setValue, getValues, clearErrors, errors, handleSubmit, control,
     formState: { touched, isValid }

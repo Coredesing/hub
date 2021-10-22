@@ -56,9 +56,7 @@ function NetworkAvailable(props: any) {
                       acceptNet = ETH_NETWORK_ACCEPT_CHAINS[currentNetworkId]
                   }
 
-                  console.log('acceptNet', acceptNet);
                   if (!acceptNet) {
-                    console.log('Network Deploy not match!!!');
                     return false;
                   }
                   return true;

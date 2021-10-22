@@ -41,7 +41,6 @@ const AggregatorCreate: React.FC<any> = (props: any) => {
                 upcomingIdo
             }
             dispatch(addAggregator(gameData, tokenomics, projectInfo))
-            console.log(gameData)
         } else {
             const gameData = {
                 gameInfo,
@@ -75,23 +74,18 @@ const AggregatorCreate: React.FC<any> = (props: any) => {
     }
 
     const onChangeGameInfo = (data: any) => {
-        console.log(data)
         setGameinfo(data)
     }
     const onChangeTokenomics = (data:any) => {
-        console.log(data)
         setTokenomics(data)
     }
     const onChangeProjectInfo = (data:any) => {
-        console.log(data)
         setProjectInfo(data)
     }
     const onChangeDisplaySettings = (data:any) => {
-        console.log(data)
         setDisplaySettings(data)
     }
     const onChangeUpcomingIDO = (data:any) => {
-        console.log(data)
         setUpcomingIdo(data)
     }
     return (

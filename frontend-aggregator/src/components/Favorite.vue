@@ -21,19 +21,19 @@
 export default {
   name: "Favorite",
   props: {
-    id: Number,
     icon: null,
     liked: Boolean,
     likes: [Number, String],
     game_name: String,
-    verified: Boolean
+    verified: Boolean,
+    slug: String
   },
   methods: {
     clickLike() {
       this.$emit('like', !this.liked)
     },
     viewDetail() {
-      this.$router.push({ path: '/game/' + this.id})
+      this.$router.push({ path: '/game/' + this.slug})
     }
   }
 }

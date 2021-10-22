@@ -478,6 +478,9 @@ export default {
     },
     meta () {
       return this.getMetadata()
+    },
+    link () {
+      return this.getLinks()
     }
   },
   async created() {
@@ -589,6 +592,12 @@ export default {
         slide.scroll({ left: (this.game.media.length - 1) * 118, behavior: 'smooth'})
         this.display = this.game.media.length - 1
       }
+    },
+    getLinks() {
+      return [
+        { rel: 'icon', href: 'https://gamefi.org/favicon.ico', sizes: '16x16', type: 'image/png' },
+        { rel: 'preload', href: this.getImageFromPath(), type: 'image/png' }
+      ]
     },
     getDetailFromPath() {
       const baseRoute = this.$route

@@ -23,7 +23,7 @@
       </div>
       <div v-if="mainItem.sponsor" class="upcoming-main_sponsor">Sponsor</div>
       <div class="upcoming-main_countdown">
-        <p>Countdown to IDO Date <img src="../assets/images/dot_green.svg"></p>
+        <p>Countdown to IGO Date <img src="../assets/images/dot_green.svg"></p>
         <countdown :deadline="mainItem.deadline"/>
       </div>
     </div>
@@ -35,7 +35,7 @@
           <img alt v-if="item.verified" src="../assets/images/tick_green.svg"/>
         </div>
         <div class="upcoming-item_countdown">
-          <p>Countdown to IDO Date <img src="../assets/images/dot_green.svg"></p>
+          <p>Countdown to IGO Date <img src="../assets/images/dot_green.svg"></p>
           <countdown :deadline="item.deadline" mode="small"/>
         </div>
         <div v-if="item.sponsor" class="upcoming-item_sponsor">Sponsor</div>

@@ -200,6 +200,7 @@ class CampaignController {
     const campaign_id = params.campaign_id;
     const userWalletAddress = request.header('wallet_address');
     const amount = params.amount;
+    const token = params.token;
     const subBoxId = params.sub_box_id;
     if (!campaign_id) {
       return HelperUtils.responseBadRequest('Bad request with campaign_id');
@@ -293,7 +294,7 @@ class CampaignController {
 
       // get message hash
       const eventId = 0
-      const messageHash = web3.utils.soliditySha3(userWalletAddress, eventId, amount, subBoxId);
+      const messageHash = web3.utils.soliditySha3(userWalletAddress, eventId, token, amount, subBoxId);
       const privateKey = wallet.private_key;
       // create signature
       const account = web3.eth.accounts.privateKeyToAccount(privateKey);
@@ -301,7 +302,7 @@ class CampaignController {
       web3.eth.accounts.wallet.add(account);
       web3.eth.defaultAccount = accAddress;
       const signature = await web3.eth.sign(messageHash, accAddress);
-      return HelperUtils.responseSuccess({signature: signature, eventId: eventId, amount: amount, subBoxId: subBoxId});
+      return HelperUtils.responseSuccess({signature: signature, eventId: eventId, token: token, amount: amount, subBoxId: subBoxId});
     } catch (e) {
       console.log('Deposit box', e);
       return HelperUtils.responseErrorInternal();

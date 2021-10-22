@@ -19,6 +19,7 @@ import { Tooltip, useMediaQuery, useTheme } from "@material-ui/core";
 import withWidth, { isWidthDown } from "@material-ui/core/withWidth";
 import BN from 'bignumber.js'
 import clsx from 'clsx';
+import { ObjectType } from "@app-types";
 
 type ClaimTokenProps = {
   releaseTime: Date | undefined;
@@ -164,9 +165,9 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
     }
   };
 
-  const [progress, setProgress] = useState([
-    {},
-    { percent: 100, marked: true, tokenAmount: 10000, date: new Date(), showInfo: true },
+  const [progress, setProgress] = useState<ObjectType<any>[]>([
+    // {},
+    // { percent: 100, marked: true, tokenAmount: 10000, date: new Date(), showInfo: true },
   ]);
   const [policy, setPolicy] = useState("");
 
@@ -175,6 +176,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
     const userPurchased = userClaimInfo?.userPurchased || 0;
     const userClaimed = userClaimInfo?.userClaimed || 0;
     const percentClaimed = Math.ceil(+(new BN(userClaimed).dividedBy(new BN(userPurchased)).multipliedBy(100).toFixed(1)));
+    if (!poolDetails?.campaignClaimConfig?.length) return;
     let lastMaxPercent = 0;
     let nextClaim = poolDetails.campaignClaimConfig.reduce((next: number, cfg: any) => {
       return (+cfg.max_percent_claim <= percentClaimed) ? next + 1 : next
@@ -217,7 +219,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
       );
     setPolicy(policy);
   }, [poolDetails, userClaimInfo]);
-
+  
   if (!startBuyTimeInDate || (nowTime < startBuyTimeInDate)) {
     return <></>;
   }
@@ -247,105 +249,109 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
         currencyName={currencyName}
       />
 
-      <ul className={
-        // styles.poolDetailClaimProgress
-        clsx(styles.progressClaim,
-          { adjust: progress.length > 8 }
-        )
-      }
-      >
+      {
+        !!progress.length && <ul className={
+          // styles.poolDetailClaimProgress
+          clsx(styles.progressClaim,
+            { adjust: progress.length > 8 }
+          )
+        }
+        >
 
-        {
-          progress.map((p: any, idx: number) => {
-            return <li key={idx}
-              className={clsx({
-                active: ((idx === 0 && progress[idx + 1]?.marked) || progress[idx + 1]?.marked)
-              })}
-              style={
-                isSmScreen ?
-                  {
-                    width: '6px',
-                    height: idx !== progress.length - 1 ? `calc(${progress[idx + 1] ? progress[idx + 1].percent as number - (progress[idx].percent || 0) : 0}px + 50px)` : 0,
+          {
+            progress.map((p: any, idx: number) => {
+              return <li key={idx}
+                className={clsx({
+                  active: ((idx === 0 && progress[idx + 1]?.marked) || progress[idx + 1]?.marked)
+                })}
+                style={
+                  isSmScreen ?
+                    {
+                      width: '6px',
+                      height: idx !== progress.length - 1 ? `calc(${progress[idx + 1] ? progress[idx + 1].percent as number - (progress[idx].percent || 0) : 0}px + 50px)` : 0,
 
-                  } : {
-                    height: '6px',
-                    width: `${progress[idx + 1] ? progress[idx + 1].percent as number - (progress[idx].percent || 0) : 0}%`,
-                  }
-              }
-            >
-              <div className="mark">
-                {p.marked && <img src={tickIcon} alt="" />}
-              </div>
-              <div className="info">
-                <div>
-                  {p.percent || 0}%&nbsp;
-                  {(p.tokenAmount || p.tokenAmount === 0) && (
-                    <span>
-                      ({numberWithCommas(`${p.tokenAmount}`, 1)}{" "}
-                      {tokenDetails?.symbol})
-                    </span>
+                    } : {
+                      height: '6px',
+                      width: `${progress[idx + 1] ? progress[idx + 1].percent as number - (progress[idx].percent || 0) : 0}%`,
+                    }
+                }
+              >
+                <div className="mark">
+                  {p.marked && <img src={tickIcon} alt="" />}
+                </div>
+                <div className="info">
+                  <div>
+                    {p.percent || 0}%&nbsp;
+                    {(p.tokenAmount || p.tokenAmount === 0) && (
+                      <span>
+                        ({numberWithCommas(`${p.tokenAmount}`, 1)}{" "}
+                        {tokenDetails?.symbol})
+                      </span>
+                    )}
+                  </div>
+                  {!p.marked && (p.isDisplayDate || idx === progress.length - 1) && p.date && (
+                    <div>{
+                      // convertTimeToStringFormat(p.date) || 
+                      buildMomentTimezone(p.date).format('h:mm A, YYYY/MM/DD')}</div>
                   )}
                 </div>
-                {!p.marked && (p.isDisplayDate || idx === progress.length - 1) && p.date && (
-                  <div>{
-                    // convertTimeToStringFormat(p.date) || 
-                    buildMomentTimezone(p.date).format('h:mm A, YYYY/MM/DD')}</div>
+              </li>
+            })
+          }
+
+          {/* <li className={`first-item ${progress[0]?.marked ? "active" : ""}`}>
+            <div className="mark">
+              {progress[0]?.marked && <img src={tickIcon} alt=""/>}
+            </div>
+            <div className="info">
+              <div>
+                {progress[0]?.percent || 0}%&nbsp;
+                {(progress[0]?.tokenAmount || progress[0]?.tokenAmount === 0)  && (
+                  <span>
+                    ({numberWithCommas(`${progress[0].tokenAmount}`, 1)}{" "}
+                    {tokenDetails?.symbol})
+                  </span>
                 )}
               </div>
-            </li>
-          })
-        }
-
-        {/* <li className={`first-item ${progress[0]?.marked ? "active" : ""}`}>
-          <div className="mark">
-            {progress[0]?.marked && <img src={tickIcon} alt=""/>}
-          </div>
-          <div className="info">
-            <div>
-              {progress[0]?.percent || 0}%&nbsp;
-              {(progress[0]?.tokenAmount || progress[0]?.tokenAmount === 0)  && (
-                <span>
-                  ({numberWithCommas(`${progress[0].tokenAmount}`, 1)}{" "}
-                  {tokenDetails?.symbol})
-                </span>
+              {progress[0]?.date && (
+                <div>{convertTimeToStringFormat(progress[0].date) || buildMomentTimezone(progress[0].date).format('h:mm A, DD/MM/YYYY')}</div>
               )}
             </div>
-            {progress[0]?.date && (
-              <div>{convertTimeToStringFormat(progress[0].date) || buildMomentTimezone(progress[0].date).format('h:mm A, DD/MM/YYYY')}</div>
-            )}
-          </div>
-        </li>
-        {progress.slice(1, progress.length).map((item, index) => {
-          return (
-            <li key={index}
-                className={`item ${item.marked || (index === 0 && progress[0].marked) ? "active" : ""} ${progress.length === 2 ? "solo" : (index === progress.length-2) ? "last-item" : ""}`}>
-              <div className="mark">
-                {item.marked && <img src={tickIcon} alt="" />}
-              </div>
-              <div className={`info ${item.showInfo && !isWidthDown('xs', props.width) && progress.length > 2 ? "show" : ""}`}>
-                {item.showInfo || isWidthDown('xs', props.width) ?
-                  <>
-                    <div>
-                      {numberWithCommas((new BN((item?.percent || 0) as number).toFixed(1) + ''), 1)}% ({numberWithCommas(`${item?.tokenAmount + ''}`, 1)}{" "}
-                      {tokenDetails?.symbol})
-                    </div>
-                    <div>
-                      { !item.marked && item.date && convertTimeToStringFormat(item.date)}
-                    </div>
-                  </>
-                  :
-                  <Tooltip title={<div>
-                                    <p>{numberWithCommas(''+item.tokenAmount)} {tokenDetails?.symbol}</p>
-                                    <p>{item.date && convertTimeToStringFormat(item.date)}</p>
-                                  </div>}>
-                    <div>{numberWithCommas((item?.percent + ''), 1)}%</div>
-                  </Tooltip>
-                }
-              </div>
-            </li>
-          );
-        })} */}
-      </ul>
+          </li>
+          {progress.slice(1, progress.length).map((item, index) => {
+            return (
+              <li key={index}
+                  className={`item ${item.marked || (index === 0 && progress[0].marked) ? "active" : ""} ${progress.length === 2 ? "solo" : (index === progress.length-2) ? "last-item" : ""}`}>
+                <div className="mark">
+                  {item.marked && <img src={tickIcon} alt="" />}
+                </div>
+                <div className={`info ${item.showInfo && !isWidthDown('xs', props.width) && progress.length > 2 ? "show" : ""}`}>
+                  {item.showInfo || isWidthDown('xs', props.width) ?
+                    <>
+                      <div>
+                        {numberWithCommas((new BN((item?.percent || 0) as number).toFixed(1) + ''), 1)}% ({numberWithCommas(`${item?.tokenAmount + ''}`, 1)}{" "}
+                        {tokenDetails?.symbol})
+                      </div>
+                      <div>
+                        { !item.marked && item.date && convertTimeToStringFormat(item.date)}
+                      </div>
+                    </>
+                    :
+                    <Tooltip title={<div>
+                                      <p>{numberWithCommas(''+item.tokenAmount)} {tokenDetails?.symbol}</p>
+                                      <p>{item.date && convertTimeToStringFormat(item.date)}</p>
+                                    </div>}>
+                      <div>{numberWithCommas((item?.percent + ''), 1)}%</div>
+                    </Tooltip>
+                  }
+                </div>
+              </li>
+            );
+          })} */}
+        </ul>
+
+      }
+
 
       <Button
         style={{ marginTop: 8 }}

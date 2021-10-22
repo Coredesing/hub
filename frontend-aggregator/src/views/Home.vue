@@ -4,7 +4,11 @@
     <section style="margin-top: 100px">
       <h1 class="title">Top Favorites</h1>
       <div class="section-favorite">
-        <favorite v-for="(item, i) in listFavorite" :key="i" v-bind="item" @like="($event) => likeGame(item, $event)"/>
+        <favorite v-for="(item, i) in listFavorite" :key="i"
+                  :slug="item.slug" :game_name="item.game_name"
+                  :icon="item.icon" :verified="item.verified"
+                  :liked="item.liked" :likes="item.likes"
+                  @like="($event) => likeGame(item, $event)"/>
       </div>
       <mask-dot color="rgba(114, 243, 75)" top="200"/>
     </section>
@@ -23,7 +27,12 @@
           <img alt src="../assets/images/arrow-left_round.svg"/>
         </div>
         <div ref="latest" class="section-latest">
-          <latest-item v-for="(item, i) in listLatest" :key="i" v-bind="item"/>
+          <latest-item v-for="(item, i) in listLatest" :key="i"
+                       :game_name="item.game_name" :verified="item.verified"
+                       :desc="item.desc" :thumbnail="item.thumbnail" :ticker="item.ticker"
+                       :slug="item.slug" :sponsor="item.sponsor" :tokenomic="item.tokenomic"
+                       :token_price="item.token_price" :icon_token_link="item.icon_token_link"
+          />
         </div>
         <div class="next-btn" @click="nextLatest">
           <img alt src="../assets/images/arrow-right_round.svg"/>

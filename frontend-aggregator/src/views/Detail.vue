@@ -457,6 +457,9 @@ export default {
   },
   data() {
     return {
+      defaultTitle: 'GameFi Aggregator',
+      defaultPrefixBannerImage: 'https://gamefi-public.s3.amazonaws.com/aggregator/images/',
+      defaultBannerImage: 'https://gamefi-public.s3.amazonaws.com/aggregator/images/default.png',
       id: 0,
       show: {
         download: false,
@@ -465,6 +468,15 @@ export default {
       tab: 0,
       display: 0,
       playing: false,
+    }
+  },
+  head: {
+    // To use "this" in the component, it is necessary to return the object through a function
+    title () {
+      return this.getTitleFromPath()
+    },
+    meta () {
+      return this.getMetadata()
     }
   },
   async created() {
@@ -576,6 +588,59 @@ export default {
         slide.scroll({ left: (this.game.media.length - 1) * 118, behavior: 'smooth'})
         this.display = this.game.media.length - 1
       }
+    },
+    getDetailFromPath() {
+      const baseRoute = this.$route
+      if (!baseRoute || !baseRoute.params || !baseRoute.params.id) {
+        return ''
+      }
+      return baseRoute.params.id
+    },
+    getTitleFromPath() {
+      const name = this.getDetailFromPath()
+      if (!name) {
+        return {
+          inner: this.defaultTitle
+        }
+      }
+
+      const newTitle = name.split('-').map((data) => {
+        if (!data) {
+          return ''
+        }
+        return data.charAt(0).toUpperCase()+data.slice(1)
+      }).join(' ')
+
+      return {
+        inner: newTitle
+      }
+    },
+    getImageFromPath() {
+      const name = this.getDetailFromPath()
+      if (!name) {
+        return this.defaultBannerImage
+      }
+      return `${this.defaultPrefixBannerImage}${name.split('-').join('_')}.png`
+    },
+    getDescription() {
+      return 'GameFi description'
+    },
+    getMetadata() {
+      return [
+        { name: 'description', content: this.getDescription(), id: 'desc' },
+
+        // Twitter
+        { name: 'twitter:title', content: this.getTitleFromPath().inner },
+        { name: 'twitter:description', content: this.getDescription()},
+
+        // Google +
+        { itemprop: 'name', content: this.getTitleFromPath().inner },
+        { itemprop: 'description', content: this.getDescription() },
+
+        // Facebook
+        { property: 'og:title', content: this.getTitleFromPath().inner },
+        { property: 'og:image', content: this.getImageFromPath() }
+      ]
     }
   }
 }

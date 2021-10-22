@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     viewDetail(item) {
-      this.$router.push({ path: '/game/' + item.id})
+      this.$router.push({ path: '/game/' + item.slug})
     }
   }
 }

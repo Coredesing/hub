@@ -470,6 +470,7 @@ export default {
       playing: false,
     }
   },
+  // comment for testing
   head: {
     // To use "this" in the component, it is necessary to return the object through a function
     title () {

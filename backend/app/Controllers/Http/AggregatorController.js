@@ -119,7 +119,12 @@ class AggregatorController {
       const params = request.all();
       const aggregatorService = new AggregatorService()
       const aggregator = aggregatorService.setGame(params, false, 0)
-      return aggregator
+
+      if (!aggregator) {
+        return HelperUtils.responseNotFound();
+      }
+
+      return HelperUtils.responseSuccess(aggregator);
     } catch (e) {
       console.log(e);
       return HelperUtils.responseErrorInternal();
@@ -130,7 +135,12 @@ class AggregatorController {
       const params = request.all();
       const aggregatorService = new AggregatorService()
       const aggregator = aggregatorService.setGame(params, true, request.params.id)
-      return aggregator
+
+      if (!aggregator) {
+        return HelperUtils.responseNotFound();
+      }
+
+      return HelperUtils.responseSuccess(aggregator);
     } catch (e) {
       console.log(e);
       return HelperUtils.responseErrorInternal();
@@ -142,7 +152,12 @@ class AggregatorController {
       const params = request.all();
       const aggregatorService = new AggregatorService()
       const aggregator = aggregatorService.setTokenomic(request.params.id, params, true)
-      return aggregator
+
+      if (!aggregator) {
+        return HelperUtils.responseNotFound();
+      }
+
+      return HelperUtils.responseSuccess(aggregator);
     } catch (e) {
       return HelperUtils.responseErrorInternal();
     }
@@ -154,7 +169,12 @@ class AggregatorController {
       console.log(params)
       const aggregatorService = new AggregatorService()
       const aggregator = aggregatorService.setProjectInfo(request.params.id, params, true)
-      return aggregator
+
+      if (!aggregator) {
+        return HelperUtils.responseNotFound();
+      }
+
+      return HelperUtils.responseSuccess(aggregator);
     } catch (e) {
       console.log(e);
       return HelperUtils.responseErrorInternal();
@@ -166,7 +186,12 @@ class AggregatorController {
       const params = request.all();
       const aggregatorService = new AggregatorService()
       const aggregator = aggregatorService.setTokenomic(request.params.id, params, false)
-      return aggregator
+
+      if (!aggregator) {
+        return HelperUtils.responseNotFound();
+      }
+
+      return HelperUtils.responseSuccess(aggregator);
     } catch (e) {
       console.log(e);
       return HelperUtils.responseErrorInternal();
@@ -179,9 +204,13 @@ class AggregatorController {
       console.log(params)
       const aggregatorService = new AggregatorService()
       const aggregator = aggregatorService.setProjectInfo(request.params.id, params, false)
-      return aggregator
+
+      if (!aggregator) {
+        return HelperUtils.responseNotFound();
+      }
+
+      return HelperUtils.responseSuccess(aggregator);
     } catch (e) {
-      console.log(e);
       return HelperUtils.responseErrorInternal();
     }
   }
@@ -207,9 +236,8 @@ class AggregatorController {
 
       builder = builder.orderBy('created_at', 'DESC')
       const list = await builder.paginate(page, perPage)
-      return list
+      return HelperUtils.responseSuccess(list);
     }catch (e) {
-      console.log(e);
       return HelperUtils.responseErrorInternal();
     }
   }
@@ -243,8 +271,9 @@ class AggregatorController {
       }
 
       builder = builder.where('is_show', true)
+
       const list = await builder.paginate(page, perPage)
-      return list
+      return HelperUtils.responseSuccess(list);
     }catch (e) {
       console.log(e);
       return HelperUtils.responseErrorInternal();
@@ -253,48 +282,58 @@ class AggregatorController {
 
   async findAggregator({request}) {
     try {
-      let game = await GameInformation.find(request.params.id)
-      return game
+      let info = await GameInformation.find(request.params.id)
+      if (!info) {
+        return HelperUtils.responseNotFound();
+      }
+
+      return HelperUtils.responseSuccess(info);
     } catch (e) {
-      console.log(e);
       return HelperUtils.responseErrorInternal();
     }
   }
 
   async findAggregatorBySlug({request}) {
     try {
-      let game = await GameInformation.query()
+      const info = await GameInformation.query()
         .where('slug', request.params.slug)
         .with('tokenomic')
         .with('projectInformation')
         .first()
-      if (!game) {
+
+      if (!info) {
         return HelperUtils.responseNotFound();
       }
 
-      return game
+      return HelperUtils.responseSuccess(info);
     } catch (e) {
-      console.log(e);
       return HelperUtils.responseErrorInternal();
     }
   }
 
   async findProject({request}) {
     try {
-      let project = await ProjectInformation.findBy('game_id',request.params.id)
-      return project
+      const project = await ProjectInformation.findBy('game_id',request.params.id)
+
+      if (!project) {
+        return HelperUtils.responseNotFound();
+      }
+
+      return HelperUtils.responseSuccess(project);
     } catch (e) {
-      console.log(e);
       return HelperUtils.responseErrorInternal();
     }
   }
 
   async findTokenomic({request}) {
     try {
-      let tokenomic = await Tokenomic.findBy('game_id',request.params.id)
-      return tokenomic
+      const tokenomic = await Tokenomic.findBy('game_id',request.params.id)
+      if (!tokenomic) {
+        return HelperUtils.responseNotFound();
+      }
+
+      return HelperUtils.responseSuccess(tokenomic);
     } catch (e) {
-      console.log(e);
       return HelperUtils.responseErrorInternal();
     }
   }

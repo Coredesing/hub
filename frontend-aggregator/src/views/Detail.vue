@@ -2,48 +2,298 @@
   <div class="detail">
     <mask-dot color="rgba(114, 243, 75, 0.7)" top="140"/>
     <mask-dot color="rgba(115, 83, 229, 0.7)" bottom="100" right/>
-    <breadcrumb :items="breadcrumb"/>
-    <div class="detail-title">
-      {{ game.game_name }}
-      <img alt v-if="game.verified" src="../assets/images/tick_green.svg"/>
-    </div>
-    <div class="detail-main">
-      <div class="detail-main_content">
-        <div class="content-media">
-          <div :class="`content-media_main ${playing && 'playing'}`">
-            <template v-if="displayItem.type === 'video'">
-              <video ref="video" @ended="next" :controls="false" :src="displayItem.data" :poster="displayItem.thumbnail"/>
-              <div class="content-media_main--play" @click="toggleVideo">
-                <template v-if="playing">
-                  <img alt src="../assets/images/pause.png"/>
-                </template>
-                <template v-else>
-                  <img alt style="margin-left: 6px" src="../assets/images/play.png"/>
-                </template>
-              </div>
-            </template>
-            <template v-else>
-              <img alt :src="displayItem.data"/>
-            </template>
-          </div>
-          <div class="content-media_slide">
-            <div class="content-media_slide--prev" @click="prev">
-              <img alt src="../assets/images/arrow-left_round.svg"/>
+    <template v-if="game && game.id">
+      <breadcrumb :items="breadcrumb"/>
+      <div class="detail-title">
+        {{ game.game_name }}
+        <img alt v-if="game.verified" src="../assets/images/tick_green.svg"/>
+      </div>
+      <div class="detail-main">
+        <div class="detail-main_content">
+          <div class="content-media">
+            <div :class="`content-media_main ${playing && 'playing'}`">
+              <template v-if="displayItem.type === 'video'">
+                <video ref="video" @ended="next" :controls="false" :src="displayItem.data" :poster="displayItem.thumbnail"/>
+                <div class="content-media_main--play" @click="toggleVideo">
+                  <template v-if="playing">
+                    <img alt src="../assets/images/pause.png"/>
+                  </template>
+                  <template v-else>
+                    <img alt style="margin-left: 6px" src="../assets/images/play.png"/>
+                  </template>
+                </div>
+              </template>
+              <template v-else>
+                <img alt :src="displayItem.data"/>
+              </template>
             </div>
-            <div class="content-media_slide--main">
-              <div class="slide" ref="slide">
-                <div :class="`slide-item ${display === i ? 'selected' : ''}`"
-                     v-for="(item, i) in game.media" :key="i" @click="display = i">
-                  <img alt :src="item.type === 'video' ? item.thumbnail : item.data"/>
+            <div class="content-media_slide">
+              <div class="content-media_slide--prev" @click="prev">
+                <img alt src="../assets/images/arrow-left_round.svg"/>
+              </div>
+              <div class="content-media_slide--main">
+                <div class="slide" ref="slide">
+                  <div :class="`slide-item ${display === i ? 'selected' : ''}`"
+                       v-for="(item, i) in game.media" :key="i" @click="display = i">
+                    <img alt :src="item.type === 'video' ? item.thumbnail : item.data"/>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="content-media_slide--next" @click="next">
-              <img alt src="../assets/images/arrow-right_round.svg"/>
+              <div class="content-media_slide--next" @click="next">
+                <img alt src="../assets/images/arrow-right_round.svg"/>
+              </div>
             </div>
           </div>
+          <div class="detail-main_side mobile">
+            <template v-if="game.ido_type === 'launched'">
+              <div class="title">
+                Current Price
+                <a :href="game.coinmarketcap" target="_blank" class="btn btn-cmc">
+                  <img alt src="../assets/images/direct.svg">
+                </a>
+                <div class="tooltip">View on Coinmarketcap</div>
+              </div>
+              <div class="price" style="margin-bottom: 24px">
+                <img alt :src="game.token_icon"/>
+                <div class="price-detail_value">
+                  <span>$ {{ (+game.token_price).toFixed(3) }}</span>
+                  <span v-if="game.tokenChange"
+                        :class="game.tokenChange > 0 ? 'increased' : 'decreased'">
+                <img v-if="game.tokenChange > 0" src="../assets/images/up.svg"/>
+                <img v-if="game.tokenChange < 0" src="../assets/images/down.svg"/>
+                {{ Math.abs(game.tokenChange.toFixed(2)) }}%
+              </span>
+                </div>
+              </div>
+              <div v-if="game.tokenInfo" class="price-sub">
+                <span>&lt;{{ game.tokenInfo.btc.toFixed(9) }} BTC</span>
+                <span :class="game.tokenInfo.btcChange > 0 ? 'increased' : 'decreased'">
+              <template v-if="game.tokenInfo.btcChange > 0">
+                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                      d="M3.3962 0.514683C3.19605 0.254679 2.80395 0.254679 2.6038 0.514683L0.155585 3.695C-0.0975138 4.02379 0.136868 4.5 0.551788 4.5L5.44821 4.5C5.86313 4.5 6.09751 4.02379 5.84441 3.695L3.3962 0.514683Z"
+                      fill="#72F34B"/>
+                </svg>
+              </template>
+              <template v-else>
+                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                      d="M3.3962 4.48532C3.19605 4.74532 2.80395 4.74532 2.6038 4.48532L0.155585 1.305C-0.0975138 0.976212 0.136868 0.5 0.551788 0.5L5.44821 0.5C5.86313 0.5 6.09751 0.976213 5.84441 1.305L3.3962 4.48532Z"
+                      fill="#F24B4B"/>
+                </svg>
+              </template>
+              {{ Math.abs(game.tokenInfo.btcChange.toFixed(2)) }}%
+            </span>
+                <span>&lt;{{ game.tokenInfo.eth.toFixed(9) }} ETH</span>
+                <span :class="game.tokenInfo.ethChange > 0 ? 'increased' : 'decreased'">
+              <template v-if="game.tokenInfo.ethChange > 0">
+                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                      d="M3.3962 0.514683C3.19605 0.254679 2.80395 0.254679 2.6038 0.514683L0.155585 3.695C-0.0975138 4.02379 0.136868 4.5 0.551788 4.5L5.44821 4.5C5.86313 4.5 6.09751 4.02379 5.84441 3.695L3.3962 0.514683Z"
+                      fill="#72F34B"/>
+                </svg>
+              </template>
+              <template v-else>
+                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                      d="M3.3962 4.48532C3.19605 4.74532 2.80395 4.74532 2.6038 4.48532L0.155585 1.305C-0.0975138 0.976212 0.136868 0.5 0.551788 0.5L5.44821 0.5C5.86313 0.5 6.09751 0.976213 5.84441 1.305L3.3962 4.48532Z"
+                      fill="#F24B4B"/>
+                </svg>
+              </template>
+              {{ Math.abs(game.tokenInfo.ethChange.toFixed(2)) }}%
+            </span>
+              </div>
+              <div v-if="tokenInfo" class="price-range">
+                <span>Low: <b>${{ tokenInfo.low }}</b></span>
+                <div class="progress"></div>
+                <span>High: <b>${{ tokenInfo.high }}</b></span>
+              </div>
+              <div class="divider"/>
+              <div v-if="game.developer" class="info">
+                <div>Developer</div>
+                <div>{{ game.developer }}</div>
+              </div>
+              <div v-if="game.publisher" class="info">
+                <div>Publisher</div>
+                <div>{{ game.publisher }}</div>
+              </div>
+              <div v-if="game.category" class="info">
+                <div>Category</div>
+                <div>{{ game.category }}</div>
+              </div>
+              <div v-if="game.language" class="info">
+                <div>Language</div>
+                <div>{{ game.language }}</div>
+              </div>
+            </template>
+            <template v-else-if="game.ido">
+              <div class="ido-title">${{ game.token }} IDO on {{ game.ido.date }}</div>
+              <div class="ido-chain">{{ game.ido.chain }}</div>
+              <div class="ido-price">
+                Price per token: <span>$ {{ game.ido.price }}</span>
+                <div class="ido-price_currency">{{ game.ido.currency }}</div>
+              </div>
+              <div class="divider" style="margin-bottom: 40px"/>
+              <template v-if="game.ido.link.redkite || game.ido.link.gamefi">
+                <a v-if="game.ido.link.redkite" class="btn ido-redkite" :href="game.ido.link.redkite">
+                  <img alt src="../assets/images/redkite.svg"/>
+                </a>
+                <a v-if="game.ido.link.gamefi" class="btn ido-gamefi" :href="game.ido.link.gamefi">
+                  <img alt src="../assets/images/gamefi.svg"/>
+                </a>
+                <div class="divider" style="margin: 40px 0 28px"/>
+              </template>
+            </template>
+            <div :class="`btn btn-like ${game.liked ? 'liked' : ''}`" @click="like">
+              <template v-if="game.liked">
+                <img alt src="../assets/images/heart_black.svg"/>
+                <span>Remove from Favourite List</span>
+              </template>
+              <template v-else>
+                <img alt src="../assets/images/heart_green.svg"/>
+                <span>Add to Favourite List</span>
+              </template>
+            </div>
+            <template v-if="game.downloads && game.downloads.length && game.type === 'Launched'">
+              <div class="download">
+                <div class="btn btn-download" @click="show.download = !show.download">
+                  Download
+                  <img :style="!show.download && { transform: 'rotate(180deg)'}" alt src="../assets/images/up.svg"/>
+                </div>
+                <transition name="slide-down">
+                  <div v-show="show.download" class="download-list">
+                    <a v-for="(item, i) in game.downloads" :key="i" :href="item.link" target="_blank">Download for
+                      {{ item.type }}</a>
+                  </div>
+                </transition>
+              </div>
+            </template>
+          </div>
+          <div class="content-tab">
+            <div :class="`content-tab_item ${tab === 0 ? 'selected' : ''}`" @click="tab = 0">About game</div>
+            <div :class="`content-tab_item ${tab === 1 ? 'selected' : ''}`" @click="tab = 1">Tokenomics</div>
+            <div :class="`content-tab_item ${tab === 2 ? 'selected' : ''}`" @click="tab = 2">Team</div>
+          </div>
+          <div class="content-tab-view" :key="tab">
+            <template v-if="tab === 0 && game.information">
+              <div v-if="game.information.introduction">
+                <div class="title">Introduction</div>
+                <div class="info" v-html="game.information.introduction"></div>
+              </div>
+              <div v-if="game.information.highlightFeatures">
+                <div class="title">Highlight Features</div>
+                <div class="info" v-html="game.information.highlightFeatures"></div>
+              </div>
+              <div v-if="game.information.systemRequirement">
+                <div class="title">System Requirements</div>
+                <div class="info" v-html="game.information.systemRequirement"></div>
+              </div>
+              <div v-if="game.information.community && game.information.community.length">
+                <div class="title">Community Groups</div>
+                <div class="community">
+                  <a v-for="(item, i) in game.information.community" :key="i" :href="item.link" target="_blank">
+                    <img alt :src="getCommunityImg(item.type)"/>
+                  </a>
+                </div>
+              </div>
+              <div v-if="game.information.license">
+                <div class="title">Licensing Terms & Privacy Policy</div>
+                <div class="info" v-html="game.information.license"></div>
+              </div>
+              <div v-if="game.information.tags && game.information.tags.length">
+                <div class="title">Tags</div>
+                <div class="tags">
+                  <div class="tag" v-for="(item, i) in game.information.tags" :key="i">
+                    {{ item }}
+                  </div>
+                </div>
+              </div>
+            </template>
+            <template v-if="tab === 1 && game.tokenomic">
+              <div class="tokenomic" v-if="game.tokenomic.detail">
+                <div class="tokenomic-title">
+                  {{ game.game_name }} ({{ game.ticker }})
+                </div>
+                <div class="tokenomic-info">
+                  <span>Ticker:</span>
+                  <span>{{ game.ticker }}</span>
+                </div>
+                <div class="tokenomic-info">
+                  <span>Blockchain Network:</span>
+                  <span>{{ game.tokenomic.detail.network_chain }}</span>
+                </div>
+                <div class="tokenomic-info">
+                  <span>Token Supply:</span>
+                  <span>{{ game.tokenomic.detail.token_supply | displayNumber }}</span>
+                </div>
+                <div class="tokenomic-info">
+                  <span>Initial Project Valuation:</span>
+                  <span>{{ game.tokenomic.detail.project_valuation | displayNumber }}</span>
+                </div>
+                <div v-if="game.tokenomic.detail.initial_token_cir" class="tokenomic-info">
+                  <span>Initial Token Circulation:</span>
+                  <span>{{ game.tokenomic.detail.initial_token_cir | displayNumber }}</span>
+                </div>
+                <div v-if="game.tokenomic.detail.initial_token_market" class="tokenomic-info">
+                  <span>Initial Market Cap:</span>
+                  <span>${{ game.tokenomic.detail.initial_token_market | displayNumber }}</span>
+                </div>
+              </div>
+              <div v-if="game.tokenomic.usability">
+                <div class="title">How tokens are used in game</div>
+                <div class="info" v-html="game.tokenomic.usability"/>
+              </div>
+              <div v-if="game.tokenomic.economy">
+                <div class="title">Token Economy</div>
+                <div class="info" v-html="game.tokenomic.economy"/>
+              </div>
+              <div v-if="game.tokenomic.metric">
+                <div class="title">Token Metrics</div>
+                <div v-html="game.tokenomic.metric"></div>
+              </div>
+              <div v-if="game.tokenomic.distribution">
+                <div class="title">Token Distribution</div>
+                <div v-html="game.tokenomic.distribution"></div>
+              </div>
+              <div v-if="game.tokenomic.schedule && game.tokenomic.schedule.length">
+                <div class="title">Token Release Schedule</div>
+                <!--              <div class="schedule-header">-->
+                <!--                <span>Allocation</span>-->
+                <!--                <span>Vesting Schedule</span>-->
+                <!--              </div>-->
+                <!--              <div class="schedule-info" v-for="(item, i) in game.tokenomic.schedule" :key="i">-->
+                <!--                <span>{{ item.text }}</span>-->
+                <!--                <span>{{ item.value }}</span>-->
+                <!--              </div>-->
+                <div class="info" v-html="game.tokenomic.schedule"/>
+              </div>
+            </template>
+            <template v-if="tab === 2 && game.team">
+              <div v-if="game.team.roadmap">
+                <div class="title">Roadmap</div>
+                <img class="zoom" alt :src="game.team.roadmap"/>
+              </div>
+              <div v-if="game.team.partner">
+                <div class="title">Partner</div>
+                <!--              <img alt :src="game.team.partner"/>-->
+                <div class="info" v-html="game.team.partner"/>
+              </div>
+              <div v-if="game.team.technology">
+                <div class="title">Technology</div>
+                <div class="info" v-html="game.team.technology"/>
+              </div>
+              <div v-if="game.team.team">
+                <div class="title">Team</div>
+                <div class="info" v-html="game.team.team"/>
+              </div>
+              <div v-if="game.team.advisor">
+                <div class="title">Advisors</div>
+                <div class="info" v-html="game.team.advisor"/>
+              </div>
+            </template>
+          </div>
         </div>
-        <div class="detail-main_side mobile">
+        <div ref="side" class="detail-main_side">
           <template v-if="game.ido_type === 'launched'">
             <div class="title">
               Current Price
@@ -127,21 +377,27 @@
           </template>
           <template v-else-if="game.ido">
             <div class="ido-title">${{ game.token }} IDO on {{ game.ido.date }}</div>
+            <countdown :deadline="game.ido_date"/>
             <div class="ido-chain">{{ game.ido.chain }}</div>
             <div class="ido-price">
               Price per token: <span>$ {{ game.ido.price }}</span>
-              <div class="ido-price_currency">{{ game.ido.currency }}</div>
             </div>
             <div class="divider" style="margin-bottom: 40px"/>
-            <template v-if="game.ido.link.redkite || game.ido.link.gamefi">
-              <a v-if="game.ido.link.redkite" class="btn ido-redkite" :href="game.ido.link.redkite">
-                <img alt src="../assets/images/redkite.svg"/>
-              </a>
-              <a v-if="game.ido.link.gamefi" class="btn ido-gamefi" :href="game.ido.link.gamefi">
-                <img alt src="../assets/images/gamefi.svg"/>
-              </a>
-              <div class="divider" style="margin: 40px 0 28px"/>
-            </template>
+            <a v-if="game.ido.link.redkite" class="btn ido-redkite" target="_blank" :href="game.ido.link.redkite">
+              <img alt src="../assets/images/redkite.svg"/>
+              <div v-if="game.ido.link.redkite.total">
+                <p>Total Raise</p>
+                <p>$ {{ game.ido.link.redkite.total }}</p>
+              </div>
+            </a>
+            <a v-if="game.ido.link.gamefi" class="btn ido-gamefi" target="_blank" :href="game.ido.link.gamefi">
+              <img alt src="../assets/images/gamefi.svg"/>
+              <div v-if="game.ido.link.gamefi.total">
+                <p>Total Raise</p>
+                <p>$ {{ game.ido.link.gamefi.total }}</p>
+              </div>
+            </a>
+            <div class="divider" style="margin: 40px 0 28px"/>
           </template>
           <div :class="`btn btn-like ${game.liked ? 'liked' : ''}`" @click="like">
             <template v-if="game.liked">
@@ -168,272 +424,25 @@
             </div>
           </template>
         </div>
-        <div class="content-tab">
-          <div :class="`content-tab_item ${tab === 0 ? 'selected' : ''}`" @click="tab = 0">About game</div>
-          <div :class="`content-tab_item ${tab === 1 ? 'selected' : ''}`" @click="tab = 1">Tokenomics</div>
-          <div :class="`content-tab_item ${tab === 2 ? 'selected' : ''}`" @click="tab = 2">Team</div>
-        </div>
-        <div class="content-tab-view" :key="tab">
-          <template v-if="tab === 0 && game.information">
-            <div v-if="game.information.introduction">
-              <div class="title">Introduction</div>
-              <div class="info" v-html="game.information.introduction"></div>
-            </div>
-            <div v-if="game.information.highlightFeatures">
-              <div class="title">Highlight Features</div>
-              <div class="info" v-html="game.information.highlightFeatures"></div>
-            </div>
-            <div v-if="game.information.systemRequirement">
-              <div class="title">System Requirements</div>
-              <div class="info" v-html="game.information.systemRequirement"></div>
-            </div>
-            <div v-if="game.information.community && game.information.community.length">
-              <div class="title">Community Groups</div>
-              <div class="community">
-                <a v-for="(item, i) in game.information.community" :key="i" :href="item.link" target="_blank">
-                  <img alt :src="getCommunityImg(item.type)"/>
-                </a>
-              </div>
-            </div>
-            <div v-if="game.information.license">
-              <div class="title">Licensing Terms & Privacy Policy</div>
-              <div class="info" v-html="game.information.license"></div>
-            </div>
-            <div v-if="game.information.tags && game.information.tags.length">
-              <div class="title">Tags</div>
-              <div class="tags">
-                <div class="tag" v-for="(item, i) in game.information.tags" :key="i">
-                  {{ item }}
-                </div>
-              </div>
-            </div>
-          </template>
-          <template v-if="tab === 1 && game.tokenomic">
-            <div class="tokenomic" v-if="game.tokenomic.detail">
-              <div class="tokenomic-title">
-                {{ game.game_name }} ({{ game.ticker }})
-              </div>
-              <div class="tokenomic-info">
-                <span>Ticker:</span>
-                <span>{{ game.ticker }}</span>
-              </div>
-              <div class="tokenomic-info">
-                <span>Blockchain Network:</span>
-                <span>{{ game.tokenomic.detail.network_chain }}</span>
-              </div>
-              <div class="tokenomic-info">
-                <span>Token Supply:</span>
-                <span>{{ game.tokenomic.detail.token_supply | displayNumber }}</span>
-              </div>
-              <div class="tokenomic-info">
-                <span>Initial Project Valuation:</span>
-                <span>{{ game.tokenomic.detail.project_valuation | displayNumber }}</span>
-              </div>
-              <div v-if="game.tokenomic.detail.initial_token_cir" class="tokenomic-info">
-                <span>Initial Token Circulation:</span>
-                <span>{{ game.tokenomic.detail.initial_token_cir | displayNumber }}</span>
-              </div>
-              <div v-if="game.tokenomic.detail.initial_token_market" class="tokenomic-info">
-                <span>Initial Market Cap:</span>
-                <span>${{ game.tokenomic.detail.initial_token_market | displayNumber }}</span>
-              </div>
-            </div>
-            <div v-if="game.tokenomic.usability">
-              <div class="title">How tokens are used in game</div>
-              <div class="info" v-html="game.tokenomic.usability"/>
-            </div>
-            <div v-if="game.tokenomic.economy">
-              <div class="title">Token Economy</div>
-              <div class="info" v-html="game.tokenomic.economy"/>
-            </div>
-            <div v-if="game.tokenomic.metric">
-              <div class="title">Token Metrics</div>
-              <div v-html="game.tokenomic.metric"></div>
-            </div>
-            <div v-if="game.tokenomic.distribution">
-              <div class="title">Token Distribution</div>
-              <div v-html="game.tokenomic.distribution"></div>
-            </div>
-            <div v-if="game.tokenomic.schedule && game.tokenomic.schedule.length">
-              <div class="title">Token Release Schedule</div>
-<!--              <div class="schedule-header">-->
-<!--                <span>Allocation</span>-->
-<!--                <span>Vesting Schedule</span>-->
-<!--              </div>-->
-<!--              <div class="schedule-info" v-for="(item, i) in game.tokenomic.schedule" :key="i">-->
-<!--                <span>{{ item.text }}</span>-->
-<!--                <span>{{ item.value }}</span>-->
-<!--              </div>-->
-              <div class="info" v-html="game.tokenomic.schedule"/>
-            </div>
-          </template>
-          <template v-if="tab === 2 && game.team">
-            <div v-if="game.team.roadmap">
-              <div class="title">Roadmap</div>
-              <img class="zoom" alt :src="game.team.roadmap"/>
-            </div>
-            <div v-if="game.team.partner">
-              <div class="title">Partner</div>
-<!--              <img alt :src="game.team.partner"/>-->
-              <div class="info" v-html="game.team.partner"/>
-            </div>
-            <div v-if="game.team.technology">
-              <div class="title">Technology</div>
-              <div class="info" v-html="game.team.technology"/>
-            </div>
-            <div v-if="game.team.team">
-              <div class="title">Team</div>
-              <div class="info" v-html="game.team.team"/>
-            </div>
-            <div v-if="game.team.advisor">
-              <div class="title">Advisors</div>
-              <div class="info" v-html="game.team.advisor"/>
-            </div>
-          </template>
-        </div>
       </div>
-      <div ref="side" class="detail-main_side">
-        <template v-if="game.ido_type === 'launched'">
-          <div class="title">
-            Current Price
-            <a :href="game.coinmarketcap" target="_blank" class="btn btn-cmc">
-              <img alt src="../assets/images/direct.svg">
-            </a>
-            <div class="tooltip">View on Coinmarketcap</div>
-          </div>
-          <div class="price" style="margin-bottom: 24px">
-            <img alt :src="game.token_icon"/>
-            <div class="price-detail_value">
-              <span>$ {{ (+game.token_price).toFixed(3) }}</span>
-              <span v-if="game.tokenChange"
-                    :class="game.tokenChange > 0 ? 'increased' : 'decreased'">
-                <img v-if="game.tokenChange > 0" src="../assets/images/up.svg"/>
-                <img v-if="game.tokenChange < 0" src="../assets/images/down.svg"/>
-                {{ Math.abs(game.tokenChange.toFixed(2)) }}%
-              </span>
-            </div>
-          </div>
-          <div v-if="game.tokenInfo" class="price-sub">
-            <span>&lt;{{ game.tokenInfo.btc.toFixed(9) }} BTC</span>
-            <span :class="game.tokenInfo.btcChange > 0 ? 'increased' : 'decreased'">
-              <template v-if="game.tokenInfo.btcChange > 0">
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 0.514683C3.19605 0.254679 2.80395 0.254679 2.6038 0.514683L0.155585 3.695C-0.0975138 4.02379 0.136868 4.5 0.551788 4.5L5.44821 4.5C5.86313 4.5 6.09751 4.02379 5.84441 3.695L3.3962 0.514683Z"
-                      fill="#72F34B"/>
-                </svg>
-              </template>
-              <template v-else>
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 4.48532C3.19605 4.74532 2.80395 4.74532 2.6038 4.48532L0.155585 1.305C-0.0975138 0.976212 0.136868 0.5 0.551788 0.5L5.44821 0.5C5.86313 0.5 6.09751 0.976213 5.84441 1.305L3.3962 4.48532Z"
-                      fill="#F24B4B"/>
-                </svg>
-              </template>
-              {{ Math.abs(game.tokenInfo.btcChange.toFixed(2)) }}%
-            </span>
-            <span>&lt;{{ game.tokenInfo.eth.toFixed(9) }} ETH</span>
-            <span :class="game.tokenInfo.ethChange > 0 ? 'increased' : 'decreased'">
-              <template v-if="game.tokenInfo.ethChange > 0">
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 0.514683C3.19605 0.254679 2.80395 0.254679 2.6038 0.514683L0.155585 3.695C-0.0975138 4.02379 0.136868 4.5 0.551788 4.5L5.44821 4.5C5.86313 4.5 6.09751 4.02379 5.84441 3.695L3.3962 0.514683Z"
-                      fill="#72F34B"/>
-                </svg>
-              </template>
-              <template v-else>
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 4.48532C3.19605 4.74532 2.80395 4.74532 2.6038 4.48532L0.155585 1.305C-0.0975138 0.976212 0.136868 0.5 0.551788 0.5L5.44821 0.5C5.86313 0.5 6.09751 0.976213 5.84441 1.305L3.3962 4.48532Z"
-                      fill="#F24B4B"/>
-                </svg>
-              </template>
-              {{ Math.abs(game.tokenInfo.ethChange.toFixed(2)) }}%
-            </span>
-          </div>
-          <div v-if="tokenInfo" class="price-range">
-            <span>Low: <b>${{ tokenInfo.low }}</b></span>
-            <div class="progress"></div>
-            <span>High: <b>${{ tokenInfo.high }}</b></span>
-          </div>
-          <div class="divider"/>
-          <div v-if="game.developer" class="info">
-            <div>Developer</div>
-            <div>{{ game.developer }}</div>
-          </div>
-          <div v-if="game.publisher" class="info">
-            <div>Publisher</div>
-            <div>{{ game.publisher }}</div>
-          </div>
-          <div v-if="game.category" class="info">
-            <div>Category</div>
-            <div>{{ game.category }}</div>
-          </div>
-          <div v-if="game.language" class="info">
-            <div>Language</div>
-            <div>{{ game.language }}</div>
-          </div>
-        </template>
-        <template v-else-if="game.ido">
-          <div class="ido-title">${{ game.token }} IDO on {{ game.ido.date }}</div>
-          <countdown :deadline="game.ido_date"/>
-          <div class="ido-chain">{{ game.ido.chain }}</div>
-          <div class="ido-price">
-            Price per token: <span>$ {{ game.ido.price }}</span>
-          </div>
-          <div class="divider" style="margin-bottom: 40px"/>
-          <a v-if="game.ido.link.redkite" class="btn ido-redkite" target="_blank" :href="game.ido.link.redkite">
-            <img alt src="../assets/images/redkite.svg"/>
-            <div v-if="game.ido.link.redkite.total">
-              <p>Total Raise</p>
-              <p>$ {{ game.ido.link.redkite.total }}</p>
-            </div>
-          </a>
-          <a v-if="game.ido.link.gamefi" class="btn ido-gamefi" target="_blank" :href="game.ido.link.gamefi">
-            <img alt src="../assets/images/gamefi.svg"/>
-            <div v-if="game.ido.link.gamefi.total">
-              <p>Total Raise</p>
-              <p>$ {{ game.ido.link.gamefi.total }}</p>
-            </div>
-          </a>
-          <div class="divider" style="margin: 40px 0 28px"/>
-        </template>
-        <div :class="`btn btn-like ${game.liked ? 'liked' : ''}`" @click="like">
-          <template v-if="game.liked">
-            <img alt src="../assets/images/heart_black.svg"/>
-            <span>Remove from Favourite List</span>
-          </template>
-          <template v-else>
-            <img alt src="../assets/images/heart_green.svg"/>
-            <span>Add to Favourite List</span>
-          </template>
-        </div>
-        <template v-if="game.downloads && game.downloads.length && game.type === 'Launched'">
-          <div class="download">
-            <div class="btn btn-download" @click="show.download = !show.download">
-              Download
-              <img :style="!show.download && { transform: 'rotate(180deg)'}" alt src="../assets/images/up.svg"/>
-            </div>
-            <transition name="slide-down">
-              <div v-show="show.download" class="download-list">
-                <a v-for="(item, i) in game.downloads" :key="i" :href="item.link" target="_blank">Download for
-                  {{ item.type }}</a>
-              </div>
-            </transition>
-          </div>
-        </template>
+    </template>
+    <template v-else>
+      <div class="not-found">
+        <img alt src="../assets/images/404.png"/>
+        <h3>Sorry, we were unable to find that page</h3>
+        <a href="/" class="btn">Back to Home page</a>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
 <script>
 // import {gameSample} from "@/data/mock";
-import Breadcrumb from "@/components/Breadcrumb";
+import Breadcrumb from "../components/Breadcrumb";
 // import * as am4core from "@amcharts/amcharts4/core";
 // import * as am4charts from "@amcharts/amcharts4/charts";
-import MaskDot from "@/components/MaskDot";
-import Countdown from "@/components/Countdown";
+import MaskDot from "../components/MaskDot";
+import Countdown from "../components/Countdown";
 
 export default {
   name: "Detail",
@@ -448,6 +457,9 @@ export default {
   },
   data() {
     return {
+      defaultTitle: 'GameFi Aggregator',
+      defaultPrefixBannerImage: 'https://gamefi-public.s3.amazonaws.com/aggregator/images/',
+      defaultBannerImage: 'https://gamefi-public.s3.amazonaws.com/aggregator/images/default.png',
       id: 0,
       show: {
         download: false,
@@ -458,24 +470,22 @@ export default {
       playing: false,
     }
   },
+  // comment for testing
+  head: {
+    // To use "this" in the component, it is necessary to return the object through a function
+    title () {
+      return this.getTitleFromPath()
+    },
+    meta () {
+      return this.getMetadata()
+    },
+    link () {
+      return this.getLinks()
+    }
+  },
   async created() {
     this.id = this.$route.params.id
     await this.$store.dispatch('getGameDetail', this.id)
-  },
-  mounted() {
-    if(window.innerWidth > 600) {
-      const sideEl = this.$refs.side
-      const top = 254
-      document.addEventListener('scroll', (e) => {
-        const height = e.target.scrollingElement.scrollHeight,
-            scrollTop = e.target.scrollingElement.scrollTop
-        if(scrollTop > top && (window.innerHeight + scrollTop + 20) < height) {
-          sideEl.style.paddingTop = `${scrollTop - top}px`
-        } else if (scrollTop < top) {
-          sideEl.style.paddingTop = ''
-        }
-      })
-    }
   },
   computed: {
     user() {
@@ -522,6 +532,25 @@ export default {
     //     })
     //   }
     // }
+    game(val) {
+      if(val) {
+        this.$nextTick(() => {
+          const sideEl = this.$refs.side
+          if(window.innerWidth > 600 && sideEl) {
+            const top = 254
+            document.addEventListener('scroll', (e) => {
+              const height = e.target.scrollingElement.scrollHeight,
+                  scrollTop = e.target.scrollingElement.scrollTop
+              if(scrollTop > top && (window.innerHeight + scrollTop + 20) < height) {
+                sideEl.style.paddingTop = `${scrollTop - top}px`
+              } else if (scrollTop < top) {
+                sideEl.style.paddingTop = ''
+              }
+            })
+          }
+        })
+      }
+    }
   },
   methods: {
     async like() {
@@ -563,6 +592,65 @@ export default {
         slide.scroll({ left: (this.game.media.length - 1) * 118, behavior: 'smooth'})
         this.display = this.game.media.length - 1
       }
+    },
+    getLinks() {
+      return [
+        { rel: 'icon', href: 'https://gamefi.org/favicon.ico', sizes: '16x16', type: 'image/png' },
+        { rel: 'preload', href: this.getImageFromPath(), type: 'image/png' }
+      ]
+    },
+    getDetailFromPath() {
+      const baseRoute = this.$route
+      if (!baseRoute || !baseRoute.params || !baseRoute.params.id) {
+        return ''
+      }
+      return baseRoute.params.id
+    },
+    getTitleFromPath() {
+      const name = this.getDetailFromPath()
+      if (!name) {
+        return {
+          inner: this.defaultTitle
+        }
+      }
+
+      const newTitle = name.split('-').map((data) => {
+        if (!data) {
+          return ''
+        }
+        return data.charAt(0).toUpperCase()+data.slice(1)
+      }).join(' ')
+
+      return {
+        inner: newTitle
+      }
+    },
+    getImageFromPath() {
+      const name = this.getDetailFromPath()
+      if (!name) {
+        return this.defaultBannerImage
+      }
+      return `${this.defaultPrefixBannerImage}${name.split('-').join('_')}.png`
+    },
+    getDescription() {
+      return 'GameFi description'
+    },
+    getMetadata() {
+      return [
+        { name: 'description', content: this.getDescription(), id: 'desc' },
+
+        // Twitter
+        { name: 'twitter:title', content: this.getTitleFromPath().inner },
+        { name: 'twitter:description', content: this.getDescription()},
+
+        // Google +
+        { itemprop: 'name', content: this.getTitleFromPath().inner },
+        { itemprop: 'description', content: this.getDescription() },
+
+        // Facebook
+        { property: 'og:title', content: this.getTitleFromPath().inner },
+        { property: 'og:image', content: this.getImageFromPath() }
+      ]
     }
   }
 }
@@ -572,6 +660,7 @@ export default {
 .detail {
   padding: 40px var(--padding-section);
   position: relative;
+  overflow-x: hidden;
 
   &-title {
     margin: 48px 0 32px;
@@ -1107,6 +1196,28 @@ export default {
         }
       }
     }
+  }
+}
+
+.not-found{
+  height: calc(100vh - 540px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  h3 {
+    margin: 16px 0;
+    text-align: center;
+  }
+
+  .btn {
+    background: #72F34B;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
   }
 }
 

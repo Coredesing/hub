@@ -7,7 +7,12 @@
       <div class="list-main_content">
         <template v-if="list && list.length">
           <div class="grid">
-            <latest-item v-for="(item, i) in list" :key="i" v-bind="item"></latest-item>
+            <latest-item v-for="(item, i) in list" :key="i"
+                         :game_name="item.game_name" :verified="item.verified"
+                         :desc="item.desc" :thumbnail="item.thumbnail" :ticker="item.ticker"
+                         :slug="item.slug" :sponsor="item.sponsor" :tokenomic="item.tokenomic"
+                         :token_price="item.token_price" :icon_token_link="item.icon_token_link"
+            />
           </div>
           <div class="pagination">
             <div class="pagination-prev" @click="changePage(-1)">

@@ -33,7 +33,6 @@
 export default {
   name: "LatestItem",
   props: {
-    id: Number,
     game_name: String,
     thumbnail: null,
     desc: String,
@@ -42,12 +41,12 @@ export default {
     sponsor: Boolean,
     icon_token_link: null,
     token_price: [Number, String],
-    tokenChange: Number,
     tokenomic: Object,
+    slug: String
   },
   methods: {
     viewDetail() {
-      this.$router.push({ path: '/game/' + this.id})
+      this.$router.push({ path: '/game/' + this.slug})
     }
   }
 }

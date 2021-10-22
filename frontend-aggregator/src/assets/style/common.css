@@ -6,6 +6,7 @@ body {
     margin: 0;
     font-size: 14px;
     line-height: 24px;
+    background: #0A0A0A;
 }
 
 :root {
@@ -141,6 +142,12 @@ img {
 @media screen and (min-width: 1440px) {
     :root {
         --padding-section: calc(160px + calc(50% - 720px));
+    }
+}
+
+@media screen and (max-width: 1440px) {
+    :root {
+        --padding-section: calc(50% - 560px);
     }
 }
 

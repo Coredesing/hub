@@ -129,7 +129,7 @@ export default {
       await this.$store.dispatch('likeGame', { id: this.selectedItem.id, value: this.selectedItem.liked })
     },
     async viewMore(selectedItem) {
-      this.$router.push({ path: '/game/' + selectedItem.id})
+      this.$router.push({ path: '/game/' + selectedItem.slug})
     }
   }
 }

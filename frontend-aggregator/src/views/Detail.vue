@@ -226,7 +226,7 @@
                 <span>{{ game.tokenomic.detail.token_supply | displayNumber }}</span>
               </div>
               <div class="tokenomic-info">
-                <span>Project Valuation:</span>
+                <span>Initial Project Valuation:</span>
                 <span>{{ game.tokenomic.detail.project_valuation | displayNumber }}</span>
               </div>
               <div v-if="game.tokenomic.detail.initial_token_cir" class="tokenomic-info">

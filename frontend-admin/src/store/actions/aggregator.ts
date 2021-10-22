@@ -18,7 +18,11 @@ export const getAggregator = (id:any) => {
         try {
             const response = await baseRequest.get(url) as any;
             const resObject = await response.json();
-            const data = resObject;
+            if (!resObject || !resObject.data || resObject.status !== 200) {
+                return
+            }
+
+            const data = resObject.data;
             dispatch({
                 type: aggregatorAction.GET_AGGREGATOR_SUCCESS,
                 payload: {
@@ -46,7 +50,11 @@ export const getTokenomic = (id:number) => {
         try {
             const response = await baseRequest.get(url) as any;
             const resObject = await response.json();
-            const data = resObject;
+            if (!resObject || !resObject.data || resObject.status !== 200) {
+                return
+            }
+
+            const data = resObject.data;
             dispatch({
                 type: aggregatorAction.GET_TOKENOMIC_SUCCESS,
                 payload: {
@@ -74,7 +82,11 @@ export const getProjectInfo = (id:number) => {
         try {
             const response = await baseRequest.get(url) as any;
             const resObject = await response.json();
-            const data = resObject;
+            if (!resObject || !resObject.data || resObject.status !== 200) {
+                return
+            }
+
+            const data = resObject.data;
             dispatch({
                 type: aggregatorAction.GET_PROJECT_SUCCESS,
                 payload: {

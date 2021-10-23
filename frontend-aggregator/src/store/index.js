@@ -252,6 +252,7 @@ export default new Vuex.Store({
           token_price: detail.ido_type === 'upcoming' ? detail.token_price : tokenomic.price,
           token_icon: detail.icon_token_link,
           coinmarketcap: info.coinmartketcap_link,
+          short_description: detail.short_description,
           downloads: [
             {type: 'Browser Game', link: detail.web_game_link},
             {type: 'PC Game', link: detail.game_pc_link},

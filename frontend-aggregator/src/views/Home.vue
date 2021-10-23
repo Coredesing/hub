@@ -2,7 +2,10 @@
   <div class="home">
     <banner-slider />
     <section style="margin-top: 100px">
-      <h1 class="title">Top Favorites</h1>
+      <div class="row align-center justify-between">
+        <h1 class="title">Top Favorites</h1>
+        <div class="view-all" @click="openList">View all <img alt src="../assets/images/arrow_green.svg"/></div>
+      </div>
       <div class="section-favorite">
         <favorite v-for="(item, i) in listFavorite" :key="i"
                   :slug="item.slug" :game_name="item.game_name"
@@ -21,7 +24,10 @@
       <mask-dot color="rgba(115, 83, 229)" right/>
     </section>
     <section>
-      <h1 class="title">Latest</h1>
+      <div class="row align-center justify-between">
+        <h1 class="title">Latest</h1>
+        <div class="view-all" @click="openList">View all <img alt src="../assets/images/arrow_green.svg"/></div>
+      </div>
       <div class="row align-center">
         <div class="prev-btn" @click="prevLatest">
           <img alt src="../assets/images/arrow-left_round.svg"/>

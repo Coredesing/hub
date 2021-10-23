@@ -6,6 +6,7 @@ const GameFavourite = use('App/Models/GameFavourite');
 const ProjectInformation = use('App/Models/ProjectInformation');
 const Tokenomic = use('App/Models/Tokenomic');
 const HelperUtils = use('App/Common/HelperUtils');
+const RedisAggregatorUtils = use('App/Common/RedisAggregatorUtils');
 const CONFIGS_FOLDER = '../../../blockchain_configs/';
 const NETWORK_CONFIGS = require(`${CONFIGS_FOLDER}${process.env.NODE_ENV}`);
 const Web3 = require('web3');
@@ -26,6 +27,10 @@ class AggregatorController {
       }
       game.is_show = status
       await game.save()
+
+      if (game.slug) {
+        await RedisAggregatorUtils.deleteRedisAggregatorDetail(game.slug)
+      }
       return HelperUtils.responseSuccess('','Update successfully');
     } catch (e) {
       return HelperUtils.responseErrorInternal();
@@ -124,6 +129,9 @@ class AggregatorController {
         return HelperUtils.responseNotFound();
       }
 
+      if (aggregator && aggregator.slug) {
+        await RedisAggregatorUtils.deleteRedisAggregatorDetail(aggregator.slug)
+      }
       return HelperUtils.responseSuccess(aggregator);
     } catch (e) {
       console.log(e);
@@ -140,6 +148,9 @@ class AggregatorController {
         return HelperUtils.responseNotFound();
       }
 
+      if (aggregator && aggregator.slug) {
+        await RedisAggregatorUtils.deleteRedisAggregatorDetail(aggregator.slug)
+      }
       return HelperUtils.responseSuccess(aggregator);
     } catch (e) {
       console.log(e);
@@ -157,6 +168,9 @@ class AggregatorController {
         return HelperUtils.responseNotFound();
       }
 
+      if (aggregator && aggregator.slug) {
+        await RedisAggregatorUtils.deleteRedisAggregatorDetail(aggregator.slug)
+      }
       return HelperUtils.responseSuccess(aggregator);
     } catch (e) {
       return HelperUtils.responseErrorInternal();
@@ -174,6 +188,9 @@ class AggregatorController {
         return HelperUtils.responseNotFound();
       }
 
+      if (aggregator && aggregator.slug) {
+        await RedisAggregatorUtils.deleteRedisAggregatorDetail(aggregator.slug)
+      }
       return HelperUtils.responseSuccess(aggregator);
     } catch (e) {
       console.log(e);
@@ -191,6 +208,9 @@ class AggregatorController {
         return HelperUtils.responseNotFound();
       }
 
+      if (aggregator && aggregator.slug) {
+        await RedisAggregatorUtils.deleteRedisAggregatorDetail(aggregator.slug)
+      }
       return HelperUtils.responseSuccess(aggregator);
     } catch (e) {
       console.log(e);
@@ -209,6 +229,9 @@ class AggregatorController {
         return HelperUtils.responseNotFound();
       }
 
+      if (aggregator && aggregator.slug) {
+        await RedisAggregatorUtils.deleteRedisAggregatorDetail(aggregator.slug)
+      }
       return HelperUtils.responseSuccess(aggregator);
     } catch (e) {
       return HelperUtils.responseErrorInternal();
@@ -295,8 +318,17 @@ class AggregatorController {
 
   async findAggregatorBySlug({request}) {
     try {
+      const slug = request.params.slug
+      if (!slug) {
+        return HelperUtils.responseNotFound();
+      }
+
+      if (await RedisAggregatorUtils.checkExistRedisAggregatorDetail(slug)) {
+        return HelperUtils.responseSuccess(JSON.parse(await RedisAggregatorUtils.getRedisAggregatorDetail(slug)));
+      }
+
       const info = await GameInformation.query()
-        .where('slug', request.params.slug)
+        .where('slug', slug)
         .with('tokenomic')
         .with('projectInformation')
         .first()
@@ -346,6 +378,10 @@ class AggregatorController {
       if (project) await project.delete()
       const game = await GameInformation.findBy('id', request.params.id)
       if (game) game.delete()
+
+      if (game && game.slug) {
+        await RedisAggregatorUtils.deleteRedisAggregatorDetail(game.slug)
+      }
       return HelperUtils.responseSuccess();
     }catch (e) {
       return HelperUtils.responseErrorInternal();

@@ -127,7 +127,7 @@
               </div>
             </template>
             <template v-else-if="game.ido">
-              <div class="ido-title">${{ game.token }} IDO on {{ game.ido.date }}</div>
+              <div class="ido-title">${{ game.token }} IGO on {{ game.ido.date }}</div>
               <div class="ido-chain">{{ game.ido.chain }}</div>
               <div class="ido-price">
                 Price per token: <span>$ {{ game.ido.price }}</span>
@@ -376,7 +376,7 @@
             </div>
           </template>
           <template v-else-if="game.ido">
-            <div class="ido-title">${{ game.token }} IDO on {{ game.ido.date }}</div>
+            <div class="ido-title">${{ game.token }} IGO on {{ game.ido.date }}</div>
             <countdown :deadline="game.ido_date"/>
             <div class="ido-chain">{{ game.ido.chain }}</div>
             <div class="ido-price">
@@ -426,7 +426,7 @@
         </div>
       </div>
     </template>
-    <template v-else>
+    <template v-else-if="loading">
       <div class="not-found">
         <img alt src="../assets/images/404.png"/>
         <h3>Sorry, we were unable to find that page</h3>
@@ -459,7 +459,7 @@ export default {
     return {
       defaultTitle: 'GameFi Aggregator',
       defaultPrefixBannerImage: 'https://gamefi-public.s3.amazonaws.com/aggregator/images/',
-      defaultBannerImage: 'https://gamefi-public.s3.amazonaws.com/aggregator/images/default.png',
+      defaultBannerImage: 'https://gamefi-public.s3.amazonaws.com/aggregator/images/launchpad.png',
       id: 0,
       show: {
         download: false,
@@ -468,11 +468,10 @@ export default {
       tab: 0,
       display: 0,
       playing: false,
+      loading: false
     }
   },
-  // comment for testing
   head: {
-    // To use "this" in the component, it is necessary to return the object through a function
     title () {
       return this.getTitleFromPath()
     },
@@ -486,6 +485,9 @@ export default {
   async created() {
     this.id = this.$route.params.id
     await this.$store.dispatch('getGameDetail', this.id)
+
+    this.$emit('updateHead')
+    this.loading = true
   },
   computed: {
     user() {
@@ -614,7 +616,7 @@ export default {
         }
       }
 
-      const newTitle = name.split('-').map((data) => {
+      const newTitle = name.split(/[-_]+/).map((data) => {
         if (!data) {
           return ''
         }
@@ -626,6 +628,13 @@ export default {
       }
     },
     getImageFromPath() {
+      if (this.game && Array.isArray(this.game.media)) {
+        const firstItem = this.game.media.find((item) => { return item.type === 'image'})
+        if (firstItem && firstItem.data) {
+          return firstItem.data
+        }
+      }
+
       const name = this.getDetailFromPath()
       if (!name) {
         return this.defaultBannerImage
@@ -633,22 +642,31 @@ export default {
       return `${this.defaultPrefixBannerImage}${name.split('-').join('_')}.png`
     },
     getDescription() {
-      return 'GameFi description'
+      if (!this.game || !this.game.short_description) {
+        return this.defaultTitle
+      }
+
+      return this.game.short_description
     },
     getMetadata() {
       return [
         { name: 'description', content: this.getDescription(), id: 'desc' },
 
         // Twitter
-        { name: 'twitter:title', content: this.getTitleFromPath().inner },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}` },
         { name: 'twitter:description', content: this.getDescription()},
+        { name: 'twitter:image', content: this.getImageFromPath() },
+        { name: 'twitter:site', content: 'https://twitter.com/GameFi_Official' },
+        { name: 'twitter:creator', content: 'https://twitter.com/GameFi_Official' },
 
         // Google +
         { itemprop: 'name', content: this.getTitleFromPath().inner },
-        { itemprop: 'description', content: this.getDescription() },
+        { itemprop: 'og:description', content: this.getDescription(), id: 'desc' },
+        { itemprop: 'og:desc', content: this.getDescription(), id: 'desc' },
 
         // Facebook
-        { property: 'og:title', content: this.getTitleFromPath().inner },
+        { property: 'og:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}` },
         { property: 'og:image', content: this.getImageFromPath() }
       ]
     }

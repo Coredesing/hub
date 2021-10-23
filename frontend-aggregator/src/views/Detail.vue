@@ -486,6 +486,8 @@ export default {
   async created() {
     this.id = this.$route.params.id
     await this.$store.dispatch('getGameDetail', this.id)
+
+    this.$emit('updateHead')
   },
   computed: {
     user() {
@@ -626,6 +628,13 @@ export default {
       }
     },
     getImageFromPath() {
+      if (this.game && Array.isArray(this.game.media)) {
+        const firstItem = this.game.media.find((item) => { return item.type === 'image'})
+        if (firstItem && firstItem.data) {
+          return firstItem.data
+        }
+      }
+
       const name = this.getDetailFromPath()
       if (!name) {
         return this.defaultBannerImage
@@ -633,7 +642,11 @@ export default {
       return `${this.defaultPrefixBannerImage}${name.split('-').join('_')}.png`
     },
     getDescription() {
-      return 'GameFi description'
+      if (!this.game || !this.game.short_description) {
+        return 'GameFi Aggregator'
+      }
+
+      return this.game.short_description
     },
     getMetadata() {
       return [
@@ -645,7 +658,7 @@ export default {
 
         // Google +
         { itemprop: 'name', content: this.getTitleFromPath().inner },
-        { itemprop: 'description', content: this.getDescription() },
+        { itemprop: 'og:description', content: this.getDescription() },
 
         // Facebook
         { property: 'og:title', content: this.getTitleFromPath().inner },

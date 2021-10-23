@@ -616,7 +616,7 @@ export default {
         }
       }
 
-      const newTitle = name.split('-').map((data) => {
+      const newTitle = name.split(/[-_]+/).map((data) => {
         if (!data) {
           return ''
         }

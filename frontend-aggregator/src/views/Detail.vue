@@ -470,9 +470,7 @@ export default {
       playing: false,
     }
   },
-  // comment for testing
   head: {
-    // To use "this" in the component, it is necessary to return the object through a function
     title () {
       return this.getTitleFromPath()
     },
@@ -598,7 +596,7 @@ export default {
     getLinks() {
       return [
         { rel: 'icon', href: 'https://gamefi.org/favicon.ico', sizes: '16x16', type: 'image/png' },
-        { rel: 'preload', href: this.getImageFromPath(), type: 'image/png' }
+        { rel: 'preload', href: this.getImageFromPath(), type: 'image/png', sizes: '192x192' }
       ]
     },
     getDetailFromPath() {
@@ -653,7 +651,7 @@ export default {
         { name: 'description', content: this.getDescription(), id: 'desc' },
 
         // Twitter
-        { name: 'twitter:title', content: this.getTitleFromPath().inner },
+        { name: 'twitter:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}` },
         { name: 'twitter:description', content: this.getDescription()},
 
         // Google +
@@ -661,7 +659,7 @@ export default {
         { itemprop: 'og:description', content: this.getDescription() },
 
         // Facebook
-        { property: 'og:title', content: this.getTitleFromPath().inner },
+        { property: 'og:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}` },
         { property: 'og:image', content: this.getImageFromPath() }
       ]
     }

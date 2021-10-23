@@ -7,6 +7,10 @@ class Tokenomic extends Model {
   static get table() {
     return 'tokenomics';
   }
+
+  gameInfo() {
+    return this.hasOne('App/Models/GameInformation', 'game_id', 'id')
+  }
 }
 
 module.exports = Tokenomic

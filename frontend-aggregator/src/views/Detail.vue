@@ -596,7 +596,7 @@ export default {
     getLinks() {
       return [
         { rel: 'icon', href: 'https://gamefi.org/favicon.ico', sizes: '16x16', type: 'image/png' },
-        { rel: 'preload', href: this.getImageFromPath(), type: 'image/png', sizes: '192x192' }
+        { rel: 'preload', href: this.getImageFromPath(), type: 'image/png' }
       ]
     },
     getDetailFromPath() {
@@ -651,7 +651,7 @@ export default {
         { name: 'description', content: this.getDescription(), id: 'desc' },
 
         // Twitter
-        { name: 'twitter:card', content: 'summary' },
+        { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}` },
         { name: 'twitter:description', content: this.getDescription()},
         { name: 'twitter:image', content: this.getImageFromPath() },

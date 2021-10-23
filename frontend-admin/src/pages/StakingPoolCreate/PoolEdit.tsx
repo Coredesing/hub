@@ -28,7 +28,6 @@ const PoolEdit: React.FC<RouteComponentProps> = (props: RouteComponentProps) => 
     }
     try {
       const response = await getPoolBlockchainInfo(loginUser, data);
-      console.log('getPoolBlockchainInfo: ', response);
     } catch (e) {
       console.log('ERROR: ', e);
     }

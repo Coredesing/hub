@@ -46,8 +46,17 @@ Route.group(() => {
   // home
   Route.get('home/performance', 'HomeController.getPerformance');
   Route.post('home/subscribe', 'HomeController.subscribe');
-  Route.get('home/ip', 'HomeController.getIP');
   Route.get('/legend/:id', 'HomeController.getLegendImages');
+
+  // Aggregator
+  Route.get('aggregator', 'AggregatorController.getAggregator');
+  Route.get('aggregator/get-like', 'AggregatorController.getLikeById');
+  Route.get('aggregator/liked/:address', 'AggregatorController.getLikeByAddress');
+  Route.get('aggregator/slug/:slug', 'AggregatorController.findAggregatorBySlug');
+  Route.post('aggregator/like/:id', 'AggregatorController.setFavourite');
+  Route.get('aggregator/:id', 'AggregatorController.findAggregator');
+  Route.get('project-info/:id', 'AggregatorController.findProject');
+  Route.get('tokenomics/:id', 'AggregatorController.findTokenomic');
 
   // pool
   Route.get('pool/:campaignId', 'PoolController.getPoolPublic');
@@ -188,6 +197,20 @@ Route.group(() => {
   Route.get('staking-pool', 'StakingPoolController.getPoolList');
   Route.get('staking-pool/:stakingPoolId', 'StakingPoolController.getPool');
   Route.post('staking-pool/:stakingPoolId/change-display', 'StakingPoolController.changeDisplay');
+
+  // Aggregator
+  Route.post('aggregator/create', 'AggregatorController.aggregatorCreate');
+  Route.post('aggregator/set-show/:id', 'AggregatorController.setShowStatus');
+  Route.post('aggregator/tokenomic/:id', 'AggregatorController.tokenomicsInsert');
+  Route.post('aggregator/project/:id', 'AggregatorController.projectInsert');
+  Route.post('aggregator/tokenomic/update/:id', 'AggregatorController.tokenomicsUpdate');
+  Route.post('aggregator/project/update/:id', 'AggregatorController.projectUpdate');
+  Route.post('aggregator/:id', 'AggregatorController.aggregatorUpdate');
+  Route.get('aggregator', 'AggregatorController.getAggregatorAdmin');
+  Route.get('aggregator/:id', 'AggregatorController.findAggregator');
+  Route.get('project-info/:id', 'AggregatorController.findProject');
+  Route.get('tokenomics/:id', 'AggregatorController.findTokenomic');
+  Route.delete('aggregator/:id', 'AggregatorController.removeGame');
 }).prefix('api/v2/admin').middleware(['auth:admin', 'checkAdminJwtSecret']);
 
 Route.group(() => {

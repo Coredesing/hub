@@ -7,7 +7,6 @@ import FormKycUser from "./FormKycUser";
 const KycUserDetailPage = (props: any) => {
   const styles = useStyles();
   const { history, match, user, loading, failure, isCreate } = props;
-  console.log('isCreate', isCreate);
 
   const showFormCreate = () => {
     return (

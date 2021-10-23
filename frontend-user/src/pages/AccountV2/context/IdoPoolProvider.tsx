@@ -58,6 +58,11 @@ const IdoPoolProvider = (props: any) => {
             setLoadingPools(false);
         })
     }, [loadingPools, connectedAccount, filter, connector, wrongChain, appNetwork, appChainID]);
+
+    useEffect(() => {
+        setLoadingPools(true);
+    }, [connectedAccount]);
+
     const valueCtx = useMemo<IdoPoolContextType>(() => ({
         filter,
         data,

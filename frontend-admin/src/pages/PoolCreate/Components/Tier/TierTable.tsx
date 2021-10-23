@@ -70,7 +70,6 @@ function TierTable(props: any) {
   }, [poolDetail]);
 
   const openPopupEdit = (e: any, row: any, index: number) => {
-    console.log('ROW: ', row, index);
     setEditData(row);
     setEditRow(index);
     setIsEdit(true);
@@ -85,7 +84,6 @@ function TierTable(props: any) {
   };
 
   const handleCreateUpdateData = (responseData: any) => {
-    console.log('responseData', editRow, responseData);
     if (isEdit && editRow !== -1) {
       // Update
       // @ts-ignore
@@ -99,7 +97,6 @@ function TierTable(props: any) {
   };
 
   const deleteTier = (e: any, row: any, index: number) => {
-    console.log('ROW: ', row, index);
     // eslint-disable-next-line no-restricted-globals
     if (!confirm('Do you want delete this tier?')) {
       return false;

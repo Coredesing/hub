@@ -17,7 +17,6 @@ const WhitelistSubmissionService = use('App/Services/WhitelistSubmissionService'
 const UserService = use('App/Services/UserService');
 
 const TierService = use('App/Services/TierService');
-const ReservedListService = use('App/Services/ReservedListService');
 const UserModel = use('App/Models/User');
 const TierModel = use('App/Models/Tier');
 const ConfigModel = use('App/Models/Config');
@@ -31,6 +30,7 @@ const HelperUtils = use('App/Common/HelperUtils');
 const RedisUserUtils = use('App/Common/RedisUserUtils');
 const SendForgotPasswordJob = use('App/Jobs/SendForgotPasswordJob');
 const ExportUsersJob = use('App/Jobs/ExportUsers');
+const RedisUtils = use('App/Common/RedisUtils');
 
 class UserController {
   async userList({ request }) {
@@ -465,31 +465,40 @@ class UserController {
     try {
       const formatDataPrivateWinner = (new TierService).formatDataPrivateWinner;
       const { walletAddress, campaignId } = params;
-      const filterParams = {
-        wallet_address: walletAddress,
-        campaign_id: campaignId,
-      };
 
       // Check Public Winner Status
       const poolService = new PoolService;
-      const poolExist = await poolService.getPoolById(campaignId);
+      let camp = null
+      try {
+        if (await RedisUtils.checkExistRedisPoolDetail(campaignId)) {
+          const cachedPoolDetail = await RedisUtils.getRedisPoolDetail(campaignId);
+          camp = JSON.parse(cachedPoolDetail)
+        }
+      } catch (e) {
+        camp = null
+      }
 
-      if (!poolExist) {
+      if (!camp) {
+        camp = await poolService.buildQueryBuilder({ id: campaignId }).with('freeBuyTimeSetting').first();
+        camp = JSON.parse(JSON.stringify(camp))
+      }
+
+      if (!camp) {
         return HelperUtils.responseSuccess({
           min_buy: 0,
           max_buy: 0,
           start_time: 0,
           end_time: 0,
           level: 0,
+          exist_whitelist: false,
         });
       }
-      const isPublicWinner = (poolExist.public_winner_status === Const.PUBLIC_WINNER_STATUS.PUBLIC);
+      const isPublicWinner = (camp.public_winner_status === Const.PUBLIC_WINNER_STATUS.PUBLIC);
 
       // FREE BUY TIME: Check if current time is free to buy or not
-      const camp = await poolService.buildQueryBuilder({ id: campaignId }).with('freeBuyTimeSetting').first();
       const { maxBonus, isFreeBuyTime, existWhitelist } = await poolService.getFreeBuyTimeInfo(camp, walletAddress);
 
-      const isKYCRequired = poolExist.kyc_bypass === 0
+      const isKYCRequired = camp.kyc_bypass === 0
       let maxTotalBonus = 0;
       if (isFreeBuyTime) {
         if (!!existWhitelist) {
@@ -501,60 +510,50 @@ class UserController {
         }
       }
 
-      // Check user is in reserved list
-      const reserve = await (new ReservedListService).buildQueryBuilder(filterParams).first();
-      if (reserve) {
-        const tier = {
-          min_buy: reserve.min_buy,
-          max_buy: new BigNumber(reserve.max_buy).plus(maxTotalBonus).toFixed(),
-          start_time: reserve.start_time,
-          end_time: reserve.end_time,
-          level: 0
-        };
-        return HelperUtils.responseSuccess(formatDataPrivateWinner(tier, isPublicWinner));
-      } else {
-        // Get Tier in smart contract
-        const userTier = (await HelperUtils.getUserTierSmartWithCached(walletAddress))[0];
-        const tierDb = await TierModel.query().where('campaign_id', campaignId).where('level', userTier).first();
-        if (!tierDb) {
-          return HelperUtils.responseSuccess(formatDataPrivateWinner({
-            min_buy: 0,
-            max_buy: new BigNumber(maxTotalBonus).toFixed(),
-            start_time: 0,
-            end_time: 0,
-            level: 0,
-          }, isPublicWinner));
-        }
-        // get lottery ticket from winner list
-        const winner = await WinnerModel.query().where('campaign_id', campaignId).where('wallet_address', walletAddress).first();
-        if (winner) {
-          const tier = await TierModel.query().where('campaign_id', campaignId).where('level', winner.level).first();
-          if (!tier) {
-            return HelperUtils.responseBadRequest();
-          }
-
-          return HelperUtils.responseSuccess(formatDataPrivateWinner({
-            min_buy: tier.min_buy,
-            max_buy: new BigNumber(
-              new BigNumber(tier.max_buy).multipliedBy(winner.lottery_ticket)
-            ).plus(maxTotalBonus).toFixed(),
-            start_time: tier.start_time,
-            end_time: tier.end_time,
-            level: userTier
-          }, isPublicWinner));
-        }
-
-        const tier = {
+      // Get Tier in smart contract
+      const userTier = (await HelperUtils.getUserTierSmartWithCached(walletAddress))[0];
+      const tierDb = await TierModel.query().where('campaign_id', campaignId).where('level', userTier).first();
+      if (!tierDb) {
+        return HelperUtils.responseSuccess(formatDataPrivateWinner({
           min_buy: 0,
           max_buy: new BigNumber(maxTotalBonus).toFixed(),
-          start_time: tierDb.start_time,
-          end_time: tierDb.end_time,
-          level: userTier
+          start_time: 0,
+          end_time: 0,
+          level: 0,
+          exist_whitelist: !!existWhitelist,
+        }, isPublicWinner));
+      }
+      // get lottery ticket from winner list
+      const winner = await WinnerModel.query().where('campaign_id', campaignId).where('wallet_address', walletAddress).first();
+      if (winner) {
+        const tier = await TierModel.query().where('campaign_id', campaignId).where('level', winner.level).first();
+        if (!tier) {
+          return HelperUtils.responseBadRequest();
         }
 
-        // user not winner
-        return HelperUtils.responseSuccess(formatDataPrivateWinner(tier, isPublicWinner));
+        return HelperUtils.responseSuccess(formatDataPrivateWinner({
+          min_buy: tier.min_buy,
+          max_buy: new BigNumber(
+            new BigNumber(tier.max_buy).multipliedBy(winner.lottery_ticket)
+          ).plus(maxTotalBonus).toFixed(),
+          start_time: tier.start_time,
+          end_time: tier.end_time,
+          level: userTier,
+          exist_whitelist: !!existWhitelist,
+        }, isPublicWinner));
       }
+
+      const tier = {
+        min_buy: 0,
+        max_buy: new BigNumber(maxTotalBonus).toFixed(),
+        start_time: tierDb.start_time,
+        end_time: tierDb.end_time,
+        level: userTier,
+        exist_whitelist: !!existWhitelist,
+      }
+
+      // user not winner
+      return HelperUtils.responseSuccess(formatDataPrivateWinner(tier, isPublicWinner));
     } catch (e) {
       console.log(e);
       return HelperUtils.responseErrorInternal();

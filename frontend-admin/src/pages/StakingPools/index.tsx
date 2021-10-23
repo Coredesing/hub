@@ -33,7 +33,6 @@ const fetchListPool = async ()=> {
 
     if (resObject.status === 200) {
       const data = resObject.data;
-      console.log(data)
       return data
     }
   } catch (err: any) {

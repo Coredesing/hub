@@ -64,13 +64,6 @@ function UserReverse(props: any) {
   const [editData, setEditData] = useState({});
   const [editRow, setEditRow] = useState(0);
   const [isEdit, setIsEdit] = useState(true);
-  // const openPopupEdit = (e: any, row: any, index: number) => {
-  //   console.log('ROW: ', row, index);
-  //   setEditData(row);
-  //   setEditRow(index);
-  //   setIsEdit(true);
-  //   setIsOpenEditPopup(true);
-  // };
 
   const openPopupCreate = (e: any) => {
     setEditData({});

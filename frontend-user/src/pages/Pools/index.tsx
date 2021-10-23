@@ -1,22 +1,23 @@
-import {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
-import {withRouter} from 'react-router-dom';
-import {debounce} from 'lodash';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { debounce } from 'lodash';
 import DefaultLayout from '../../components/Layout/DefaultLayout';
 import useStyles from './style';
 import useCommonStyle from '../../styles/CommonStyle';
-import {convertFromWei, getContractInstance, getContractInstanceWeb3, getPoolContract} from '../../services/web3';
+import { convertFromWei, getContractInstance, getContractInstanceWeb3, getPoolContract } from '../../services/web3';
 import POOL_ABI from '../../abi/Pool.json';
 import Pool from './Pool';
-import withWidth, {isWidthDown, isWidthUp} from '@material-ui/core/withWidth';
+import withWidth, { isWidthDown, isWidthUp } from '@material-ui/core/withWidth';
 import useFetch from '../../hooks/useFetch';
 import useAuth from '../../hooks/useAuth';
 
 import Pagination from '@material-ui/lab/Pagination';
-import {getPoolStatusByPoolDetail} from "../../utils/getPoolStatusByPoolDetail";
-import {NETWORK_AVAILABLE, NFT_PLUS_AMOUNT_PRODUCTION} from "../../constants";
+import { getPoolStatusByPoolDetail } from "../../utils/getPoolStatusByPoolDetail";
+import { NETWORK_AVAILABLE, NFT_PLUS_AMOUNT_PRODUCTION } from "../../constants";
 import BigNumber from 'bignumber.js';
-import {getProgressWithPools} from "../../utils/campaign";
+import { getProgressWithPools } from "../../utils/campaign";
+import { SearchBox } from '@base-components/SearchBox';
 
 const iconSearch = 'images/icons/search.svg';
 
@@ -50,10 +51,10 @@ const Pools = (props: any) => {
   }
 
   const { data: poolsList, loading: loadingGetPool } = useFetch<any>(
-    `${getPoolsPrefixUri()}?page=${currentPage}&limit=10&title=${input}`
+    `${getPoolsPrefixUri()}?page=${currentPage}&limit=10&title=${input}&token_type=erc20`
   );
 
-  console.log('poolsList: ', poolsList);
+  // console.log('poolsList: ', poolsList);
 
   const handleInputChange = debounce((e: any) => {
     Promise.resolve().then(() => {
@@ -124,44 +125,45 @@ const Pools = (props: any) => {
             className={styles.btnTab + (tabActive === 1 ? ' active ' : ' ') + commonStyle.nnb1418d}
             onClick={() => handleChangeTab(1)}
           >All Pools</span>
-          <span
+          {/* <span
             className={styles.btnTab + (tabActive === 2 ? ' active ' : ' ') + commonStyle.nnb1418d}
             onClick={() => handleChangeTab(2)}
           >Top Pools</span>
           <span
             className={styles.btnTab + (tabActive === 3 ? ' active ' : ' ') + commonStyle.nnb1418d}
             onClick={() => handleChangeTab(3)}
-          >Pools Joined</span>
+          >Pools Joined</span> */}
         </div>
         <div className={styles.tabContent}>
           <h2>List Pools</h2>
           <div className={styles.searchGroup}>
-            <input
+            <SearchBox onChange={handleInputChange} placeholder="Search by Pool name" />
+            {/* <input
               type="text"
-              placeholder="Search by Pool name"
+              
               className={commonStyle.nnn1424h}
-              onChange={handleInputChange}
+              
             />
-            <img src={iconSearch}/>
+            <img src={iconSearch}/> */}
           </div>
           <table style={{ width: '100%' }} className={styles.listPools}>
             <thead className={styles.poolsHead}>
               {isWidthUp('md', props.width) && <tr>
-                <th style={{minWidth: '240px', width: '24%'}}>Pool Name</th>
-                <th style={{minWidth: '120px', width: '12%'}}>Ratio</th>
-                <th style={{minWidth: '120px', width: '12%'}}>Access</th>
-                <th style={{minWidth: '400px', width: '40%'}}>Progress</th>
-                <th style={{minWidth: '120px', width: '12%'}}>Status</th>
+                <th style={{ minWidth: '240px', width: '24%' }}>Pool Name</th>
+                <th style={{ minWidth: '120px', width: '12%' }}>Ratio</th>
+                <th style={{ minWidth: '120px', width: '12%' }}>Access</th>
+                <th style={{ minWidth: '400px', width: '40%' }}>Progress</th>
+                <th style={{ minWidth: '120px', width: '12%' }}>Status</th>
               </tr>}
               {isWidthDown('sm', props.width) && <tr>
-                <th style={{minWidth: '150px', width: '50%'}}>Pool Name</th>
-                <th style={{minWidth: '90px', width: '30%'}}>Progress</th>
-                <th style={{minWidth: '60px', width: '20%'}}>Status</th>
+                <th style={{ minWidth: '150px', width: '50%' }}>Pool Name</th>
+                <th style={{ minWidth: '90px', width: '30%' }}>Progress</th>
+                <th style={{ minWidth: '60px', width: '20%' }}>Status</th>
               </tr>}
             </thead>
             <tbody className={styles.poolsBody + (pools.length <= 0 ? ' loading' : '')}>
               {pools.length > 0 && pools.map((pool: any, index: number) => {
-                return <tr key={index}><Pool pool={pool}/></tr>
+                return <tr key={index}><Pool pool={pool} /></tr>
               })}
               {/* {pools.length <= 0 && <tr className="loading"><td><CircularProgress size={80} /></td></tr>} */}
             </tbody>
@@ -180,6 +182,9 @@ const Pools = (props: any) => {
                   }
                 }}
                 page={currentPage}
+                classes={{
+                  ul: styles.ulPagination
+                }}
               />
             }
           </div>

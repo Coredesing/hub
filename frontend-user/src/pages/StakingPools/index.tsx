@@ -53,6 +53,10 @@ import { getVectorIcon } from '@base-components/Icon';
 import { getContract } from '@utils/contract';
 import STAKING_POOL_ABI from '@abi/StakingPool.json';
 import clsx from 'clsx';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import { TIERS } from '@app-constants';
 
 const closeIcon = '/images/icons/close.svg';
 
@@ -298,6 +302,7 @@ const StakingPools = (props: any) => {
   }
 
   const onChangePool = (event: any) => {
+    event.stopPropagation();
     onSetCurrentTop(event.target.value);
   }
 
@@ -321,6 +326,14 @@ const StakingPools = (props: any) => {
     }
   }, [filteredLinearPools, connectedAccount, library]);
 
+
+  const [expandedEvent, setExpandEvent] = useState(true);
+  const [expandedRank, setExpandRank] = useState(false);
+  useEffect(() => {
+    if(listTopStaked && listTopStaked?.disable) {
+      setExpandRank(true);
+    }
+  }, [listTopStaked])
 
   return (
     <DefaultLayout>
@@ -408,150 +421,210 @@ const StakingPools = (props: any) => {
                 ))
               }
               {listTopStaked && !listTopStaked?.disable &&
-                <Box marginTop="30px" marginBottom="20px" className={styles.boxRank}>
-                  <Box className={styles.boxRankHeader}>
-                    <Box className={styles.boxListRank}>
-                      <Typography variant="h5" component="h5" className="text-uppercase">
-                        Gamefi stake event
-                      </Typography>
-                      <Box className={styles.list}>
-                        <Typography variant="h5" component="h5" className="item">
-                          1. TOP 12 RANKING will be given 1 NFT Legend
+                <Accordion expanded={expandedEvent} style={{ marginTop: "30px", marginBottom: "20px" }} className={styles.boxRank} classes={{ root: styles.accordionRoot }}>
+                  <AccordionSummary
+                    expandIcon={<svg width="16" height="9" viewBox="0 0 16 9" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                      <path id="Shape Copy 26" d="M7.99997 8.72727C7.71322 8.72727 7.4265 8.6225 7.20788 8.41341L0.328227 1.83028C-0.109409 1.41151 -0.109409 0.732549 0.328227 0.313949C0.765686 -0.10465 1.4751 -0.10465 1.91277 0.313949L7.99997 6.13907L14.0872 0.314153C14.5249 -0.104447 15.2342 -0.104447 15.6716 0.314153C16.1095 0.732752 16.1095 1.41171 15.6716 1.83048L8.79207 8.41361C8.57334 8.62274 8.28662 8.72727 7.99997 8.72727Z" fill="currentColor" />
+                    </svg>}
+                    aria-controls="panel1a-content"
+                    classes={{
+                      content: styles.accordionSummaryContent,
+                      expanded: styles.accordionSummaryExpanded,
+                      root: styles.accordionSummaryRoot
+                    }}
+                    onClick={() => setExpandEvent(b => !b)}
+                  >
+                    <Box className={styles.boxRankHeader}>
+                      <Box className={styles.boxListRank}>
+                        <Typography variant="h5" component="h5" className="text-uppercase">
+                          Gamefi stake event
                         </Typography>
-                        <Typography variant="h5" component="h5" className="item">
-                          2. The results will be updated every minute and will be announced after review
-                        </Typography>
-                      </Box>
-                    </Box>
-                    <Box className={styles.boxListRank} marginBottom="20px">
-                      <Box className={styles.endInText}>
-                        {eventTime.title}
-                      </Box>
-                      {
-                        !eventTime.isFinished && <Box>
-                          <CountDownTimeV1 time={eventTime.time}
-                            onFinish={onFinishCountdown} />
+                        <Box className={styles.list}>
+                          <Typography variant="h5" component="h5" className="item">
+                            1. TOP {listTopStaked?.limit} RANKING will be given 1 NFT Legend
+                          </Typography>
+                          <Typography variant="h5" component="h5" className="item">
+                            2. The results will be updated every minute and will be announced after review
+                          </Typography>
                         </Box>
-                      }
+                      </Box>
+                      <Box className={styles.boxListRank} marginBottom="20px">
+                        <Box className={styles.endInText}>
+                          {eventTime.title}
+                        </Box>
+                        {
+                          !eventTime.isFinished && <Box>
+                            <CountDownTimeV1 time={eventTime.time}
+                              onFinish={onFinishCountdown} />
+                          </Box>
+                        }
+                      </Box>
+                    </Box>
+                    <Box className="expanded-text" display="flex" justifyContent="flex-end" alignItems="center">
+                      Details
+                    </Box>
+                  </AccordionSummary>
+                  <AccordionDetails
+                    classes={{ root: styles.accordionDetailsRoot }}
+                  >
+                    <Box>
+                      <Typography variant="h5" component="h5" className="text-uppercase" style={{ marginBottom: '10px' }}>
+                        Ranking&nbsp;
+                        {
+                          recallTopStaking.isCall && <span style={{ fontFamily: 'Firs Neue', fontSize: '12px', fontWeight: 'normal', textTransform: 'none' }}>(The top will be update in {recallTopStaking.inSeconds} seconds)</span>
+                        }
+                      </Typography>
+                      <Box marginBottom="10px" width="50%">
+                        <SearchBox onChange={onSearchWallet} placeholder="Search first or last 14 digits of your wallet" />
+                      </Box>
+                      <TableContainer>
+                        <Table>
+                          <TableHead>
+                            <TableRowHead>
+                              <TableCell>No</TableCell>
+                              <TableCell align="left">Wallet Address</TableCell>
+                              <TableCell align="left">Current Staked</TableCell>
+                              <TableCell align="left">Last time Stake</TableCell>
+                            </TableRowHead>
+                          </TableHead>
+                          <TableBody>
+                            {topWalletRanking.map((row: any, idx: number) => (
+                              <TableRowBody key={idx}>
+                                <TableCell component="th" scope="row" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>
+                                  <Box >
+                                    <span>{row.idx + 1}</span>
+                                    {
+                                      row.idx + 1 <= listTopStaked?.limit && <Box width="40px" height="40px" marginLeft="10px">
+                                        <img src={TIERS.slice(-1)[0].icon} alt="" style={{ width: '40px', height: '40px' }} />
+                                      </Box>
+                                    }
+                                  </Box>
+                                </TableCell>
+                                <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{cvtAddressToStar(row.wallet_address)}</TableCell>
+                                <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{numberWithCommas((row.amount + '') || 0, 4)}</TableCell>
+                                <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{convertTimeToStringFormat(new Date(+row.last_time * 1000))}</TableCell>
+                              </TableRowBody>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Box>
+                  </AccordionDetails>
+                </Accordion>
+              }
+              <Accordion expanded={expandedRank} style={{ marginTop: "30px", marginBottom: "20px" }} className={styles.boxRank} classes={{ root: styles.accordionRoot }}>
+                <AccordionSummary
+                  expandIcon={<svg width="16" height="9" viewBox="0 0 16 9" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path id="Shape Copy 26" d="M7.99997 8.72727C7.71322 8.72727 7.4265 8.6225 7.20788 8.41341L0.328227 1.83028C-0.109409 1.41151 -0.109409 0.732549 0.328227 0.313949C0.765686 -0.10465 1.4751 -0.10465 1.91277 0.313949L7.99997 6.13907L14.0872 0.314153C14.5249 -0.104447 15.2342 -0.104447 15.6716 0.314153C16.1095 0.732752 16.1095 1.41171 15.6716 1.83048L8.79207 8.41361C8.57334 8.62274 8.28662 8.72727 7.99997 8.72727Z" fill="currentColor" />
+                  </svg>}
+                  aria-controls="panel1a-content"
+                  classes={{
+                    content: styles.accordionSummaryContent,
+                    expanded: styles.accordionSummaryExpanded,
+                    root: styles.accordionSummaryRoot
+                  }}
+                onClick={() => setExpandRank(b => !b)}
+                >
+                  <Box marginBottom="20px" gridGap="16px" display="flex" flexDirection="column">
+                    <Box marginRight="20px">
+                      <Box display="flex" gridGap="8px" flexWrap="wrap" marginBottom="10px">
+                        <Button className={clsx(styles.btnFilterPool, { active: currentTops.id === idForRealTime })} onClick={(e) => {
+                          e.stopPropagation();
+                          onSelectPool(idForRealTime);
+                        }}>
+                          Realtime
+                        </Button>
+                        <Button className={clsx(styles.btnFilterPool, { active: currentTops.id !== idForRealTime })} onClick={(e) => {
+                          e.stopPropagation();
+                          const id = topStakedsOver?.length ? topStakedsOver.slice(-1)[0].id : null;
+                          id && onSelectPool(id);
+                        }}>
+                          Snapshot
+                        </Button>
+                        {currentTops.id !== idForRealTime && <SelectBox
+                          items={(topsStaked || []).filter((t: any) => t.id !== idForRealTime).map((t: any) => ({ poolName: t.name, id: t.id }))}
+                          itemNameShowValue={'poolName'}
+                          itemNameValue={'id'}
+                          onChange={onChangePool}
+                          value={currentTops.id + ''}
+                          defaultValue={currentTops.id + ''}
+                        />}
+                      </Box>
+                    </Box>
+                    <Box>
+                      <h3 className="text-uppercase" style={{ fontSize: '24px', fontFamily: 'Firs Neue', color: '#fff' }}>
+                        {currentTops.id === idForRealTime ? 'LEGENDARY RANKING REALTIME' : (currentTops.name ? currentTops.name + ' - ' : '') + 'legendary SNAPSHOT'}
+                      </h3>
                     </Box>
                   </Box>
-
-                  <Typography variant="h5" component="h5" className="text-uppercase" style={{ marginBottom: '10px' }}>
-                    Ranking&nbsp;
-                    {
-                      recallTopStaking.isCall && <span style={{ fontFamily: 'Firs Neue', fontSize: '12px', fontWeight: 'normal', textTransform: 'none' }}>(The top will be update in {recallTopStaking.inSeconds} seconds)</span>
-                    }
-                  </Typography>
-                  <Box marginBottom="10px" width="50%">
-                    <SearchBox onChange={onSearchWallet} placeholder="Search first or last 14 digits of your wallet" />
+                  <Box className="expanded-text" display="flex" justifyContent="flex-end" alignItems="center">
+                    Details
                   </Box>
+                </AccordionSummary>
+                <AccordionDetails>
                   <TableContainer>
                     <Table>
                       <TableHead>
                         <TableRowHead>
-                          <TableCell>No</TableCell>
+                          <TableCell align="left">No</TableCell>
                           <TableCell align="left">Wallet Address</TableCell>
-                          <TableCell align="left">Current Staked</TableCell>
-                          <TableCell align="left">Last time Stake</TableCell>
+                          <TableCell align="left">Amount</TableCell>
+                          <TableCell align="left">{currentTops.id !== idForRealTime ? 'Snapshot Time' : 'Last Time Staked'}</TableCell>
                         </TableRowHead>
                       </TableHead>
                       <TableBody>
-                        {topWalletRanking.map((row: any, idx: number) => (
+                        {currentTops?.top?.map((row: any, idx: number) => (
                           <TableRowBody key={idx}>
-                            <TableCell component="th" scope="row" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>  {row.idx + 1} </TableCell>
-                            <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{cvtAddressToStar(row.wallet_address)}</TableCell>
-                            <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{numberWithCommas((row.amount + '') || 0, 4)}</TableCell>
-                            <TableCell align="left" className={row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined}>{convertTimeToStringFormat(new Date(+row.last_time * 1000))}</TableCell>
-                          </TableRowBody>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Box>
-              }
-              <Box marginBottom="20px" gridGap="16px" display="flex" flexDirection="column">
-                <Box marginRight="20px">
-                  <Box display="flex" gridGap="8px" flexWrap="wrap" marginBottom="10px">
-                    <Button className={clsx(styles.btnFilterPool, { active: currentTops.id === idForRealTime })} onClick={() => {
-                      onSelectPool(idForRealTime);
-                    }}>
-                      Realtime
-                    </Button>
-                    <Button className={clsx(styles.btnFilterPool, { active: currentTops.id !== idForRealTime })} onClick={() => {
-                      const id = topStakedsOver?.length ? topStakedsOver.slice(-1)[0].id : null;
-                      id && onSelectPool(id);
-                    }}>
-                      Snapshot
-                    </Button>
-                    {currentTops.id !== idForRealTime && <SelectBox
-                      items={(topsStaked || []).filter((t: any) => t.id !== idForRealTime).map((t: any) => ({ poolName: t.name, id: t.id }))}
-                      itemNameShowValue={'poolName'}
-                      itemNameValue={'id'}
-                      onChange={onChangePool}
-                      value={currentTops.id + ''}
-                      defaultValue={currentTops.id + ''}
-                    />}
-                  </Box>
-                </Box>
-                <Box>
-                  <h3 className="text-uppercase" style={{ fontSize: '24px', fontFamily: 'Firs Neue', color: '#fff' }}>
-                    {currentTops.id === idForRealTime ? 'LEGENDARY RANKING REALTIME' : (currentTops.name ? currentTops.name + ' - ' : '') + 'legendary SNAPSHOT'}
-                  </h3>
-                </Box>
-              </Box>
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRowHead>
-                      <TableCell align="left">No</TableCell>
-                      <TableCell align="left">Wallet Address</TableCell>
-                      <TableCell align="left">Amount</TableCell>
-                      <TableCell align="left">{currentTops.id !== idForRealTime ? 'Snapshot Time' : 'Last Time Staked'}</TableCell>
-                    </TableRowHead>
-                  </TableHead>
-                  <TableBody>
-                    {currentTops?.top?.map((row: any, idx: number) => (
-                      <TableRowBody key={idx}>
-                        <TableCell component="th" scope="row" className={clsx(row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined, {
-                          [styles.cellHighlight]: row.isHighlight
-                        })}>
-                          <div className={styles.cellRank}>
-                            {/* <div>
+                            <TableCell component="th" scope="row" className={clsx(row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined, {
+                              [styles.cellHighlight]: row.isHighlight
+                            })}>
+                              <div className={styles.cellRank}>
+                                {/* <div>
                               {row.isHighlight && <svg width="15" height="17" viewBox="0 0 15 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M15 8.5L0.749999 16.7272L0.75 0.272758L15 8.5Z" fill="#72F34B" />
                               </svg>}
                             </div> */}
 
-                            <div className="rank">
-                              <img src={`/images/icons/${!row.steps ? 'gray' : row.steps > 0 ? 'green' : 'red'}-rank.png`} alt="" />
-                              <span>{idx + 1}</span>
-                            </div>
-                            <div className="movement">
-                              {row.steps > 0 ? <span className="up icon">{getVectorIcon()}</span> : row.steps < 0 ? <span className="down icon">{getVectorIcon('#D01F36')}</span> : ''}
-                              <span>
-                                {(row.steps === 0 ? '-' : (row.steps > 0 ? row.steps : row.steps ? -row.steps : ''))}
-                              </span>
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell align="left" className={clsx(row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined, {
-                          [styles.cellHighlight]: row.isHighlight
-                        })}>{cvtAddressToStar(row.wallet_address)}</TableCell>
-                        <TableCell align="left" className={clsx(row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined, {
-                          [styles.cellHighlight]: row.isHighlight
-                        })}>{numberWithCommas((row.amount + '') || 0, 4)}</TableCell>
-                        <TableCell align="left" className={clsx(row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined, {
-                          [styles.cellHighlight]: row.isHighlight
-                        })}>{convertTimeToStringFormat(new Date((currentTops.id > 0 ? +row.snapshot_at : +row.last_time) * 1000))}</TableCell>
-                      </TableRowBody>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-
+                                <div className="rank">
+                                  <img src={`/images/icons/${!row.steps ? 'gray' : row.steps > 0 ? 'green' : 'red'}-rank.png`} alt="" />
+                                  <span>{idx + 1}</span>
+                                </div>
+                                <div className="movement">
+                                  {row.steps > 0 ? <span className="up icon">{getVectorIcon()}</span> : row.steps < 0 ? <span className="down icon">{getVectorIcon('#D01F36')}</span> : ''}
+                                  <span>
+                                    {(row.steps === 0 ? '-' : (row.steps > 0 ? row.steps : row.steps ? -row.steps : ''))}
+                                  </span>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell align="left" className={clsx(row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined, {
+                              [styles.cellHighlight]: row.isHighlight
+                            })}>{cvtAddressToStar(row.wallet_address)}</TableCell>
+                            <TableCell align="left" className={clsx(row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined, {
+                              [styles.cellHighlight]: row.isHighlight
+                            })}>{numberWithCommas((row.amount + '') || 0, 4)}</TableCell>
+                            <TableCell align="left" className={clsx(row.idx + 1 <= listTopStaked?.limit ? styles.cellActive : undefined, {
+                              [styles.cellHighlight]: row.isHighlight
+                            })}>{convertTimeToStringFormat(new Date((currentTops.id > 0 ? +row.snapshot_at : +row.last_time) * 1000))}</TableCell>
+                          </TableRowBody>
+                        ))}
+                        <TableRowBody>
+                          <TableCell colSpan={2}>
+                            <span style={{color: '#72F34B', fontSize: '16px', fontFamily: 'Firs Neue', fontWeight: 600}}>TOTAL GAFI</span>
+                          </TableCell>
+                          <TableCell colSpan={2}>
+                          <span style={{color: '#72F34B', fontSize: '16px', fontFamily: 'Firs Neue', fontWeight: 600}}>{numberWithCommas((currentTops?.top || []).reduce((r: any, n: any) => {
+                              r += +n.amount || 0;
+                              return r;
+                            }, 0), 4)}</span>
+                          </TableCell>
+                        </TableRowBody>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </AccordionDetails>
+              </Accordion>
             </div>
-
-
           </div>
 
           <Dialog

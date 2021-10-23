@@ -69,6 +69,10 @@ class Campaign extends Model {
   boxTypesConfig() {
     return this.hasMany('App/Models/BoxType')
   }
+
+  acceptedTokensConfig() {
+    return this.hasMany('App/Models/AcceptedToken')
+  }
 }
 
 module.exports = Campaign;

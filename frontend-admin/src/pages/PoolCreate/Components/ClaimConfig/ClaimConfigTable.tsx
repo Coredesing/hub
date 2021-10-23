@@ -51,7 +51,6 @@ function ClaimConfigTable(props: any) {
 
   useEffect(() => {
     if (poolDetail && poolDetail.campaignClaimConfig) {
-      console.log('poolDetail.campaignClaimConfig-->item', poolDetail.campaignClaimConfig);
       const dataFormatted = poolDetail.campaignClaimConfig.map((item: any, index: any) => {
         return createData(
           index + 1,
@@ -62,14 +61,12 @@ function ClaimConfigTable(props: any) {
           false,
         );
       });
-      console.log('dataFormatted-->item', dataFormatted);
 
       setRows(dataFormatted);
     }
   }, [poolDetail]);
 
   const openPopupEdit = (e: any, row: any, index: number) => {
-    console.log('ROW: ', row, index);
     setEditData(row);
     setEditRow(index);
     setIsEdit(true);
@@ -84,7 +81,6 @@ function ClaimConfigTable(props: any) {
   };
 
   const handleCreateUpdateData = (responseData: any) => {
-    console.log('responseData', editRow, responseData);
     if (isEdit && editRow !== -1) {
       // Update
       // @ts-ignore
@@ -99,7 +95,6 @@ function ClaimConfigTable(props: any) {
   };
 
   const deleteRecord = (e: any, row: any, index: number) => {
-    console.log('ROW: ', row, index);
     // eslint-disable-next-line no-restricted-globals
     if (!confirm('Do you want delete this record ?')) {
       return false;

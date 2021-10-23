@@ -43,7 +43,6 @@ const useContractDetail = (
       
       setLoading(false);
     } catch (err: any) {
-      console.log('[ERROR] - useContractDetail:', err);
       setLoading(false);
       // throw new Error(err.message);
     }

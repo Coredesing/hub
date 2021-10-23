@@ -92,6 +92,27 @@ export const renderErrorCreatePool = (errors: any, prop: string) => {
   return;
 };
 
+export const renderErrorCreateAggregator = (errors: any, prop: string) => {
+  if (errors[prop]) {
+    const errorName = prop.split("_").join(' ');
+    const errorType = errors[prop].type;
+
+    switch (errorType) {
+      case 'required': {
+        return 'This field is required';
+      }
+      case 'validAddress': {
+        return "Address receive is invalid.";
+      }
+      case 'invalidToken': {
+        return errors[prop].message;
+      }
+    };
+  }
+
+  return;
+};
+
 export const fieldMustBeGreaterThanZero = (value: any) => new BigNumber(value).gt(0);
 
 

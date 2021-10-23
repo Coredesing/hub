@@ -79,11 +79,11 @@ const MysteryBoxes = (props: any) => {
 
   return (
     <DefaultLayout hiddenFooter>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>GameFi - Mystery boxes</title>
-        <meta property="og:image" content="https://gamefi-public.s3.amazonaws.com/mech-banner-new.jpg" />
-      </Helmet>
+      {/*<Helmet>*/}
+      {/*  <meta charSet="utf-8" />*/}
+      {/*  <title>GameFi - Mystery boxes</title>*/}
+      {/*  <meta property="og:image" content="https://gamefi-public.s3.amazonaws.com/mech-banner-new.jpg" />*/}
+      {/*</Helmet>*/}
 
       <WrapperContent useShowBanner={false}>
         {loadingcompletePools && !currentBox?.title ?

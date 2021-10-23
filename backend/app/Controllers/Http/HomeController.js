@@ -74,16 +74,8 @@ class HomeController {
     }
   }
 
-  async getIP({request}) {
-    try {
-      return {
-        ip: request.ip(),
-        headers: request.headers()
-      };
-    } catch (e) {
-      return HelperUtils.responseErrorInternal();
-    }
-  }
+  // headers: cf-connecting-ip
+  // headers: x-forwarded-for
 }
 
 module.exports = HomeController

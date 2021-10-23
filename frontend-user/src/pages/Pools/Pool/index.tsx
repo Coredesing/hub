@@ -11,6 +11,7 @@ import {getIconCurrencyUsdt} from "../../../utils/usdt";
 import {PoolStatus} from "../../../utils/getPoolStatus";
 import {getAccessPoolText, getProgressWithPools, getTokenSold} from "../../../utils/campaign";
 import BigNumber from 'bignumber.js';
+import { getRoute } from '@pages/TicketSale/utils';
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -37,7 +38,7 @@ const Pool = (props: any): JSX.Element => {
         tokenSold: resTokenSold,
       });
       setProgress(parseFloat(progressPercent));
-      console.log('Progress: ', progressPercent);
+      // console.log('Progress: ', progressPercent);
     };
 
     getTokenSoldByPool();
@@ -100,7 +101,7 @@ const Pool = (props: any): JSX.Element => {
 
   return (
     <td>
-      <Link to={`/buy-token/${pool.id}`} className={styles.link}>
+      <Link to={`/${getRoute(pool.token_type)}/${pool.id}`} className={styles.link}>
         <div className={styles.row}>
           <div className={styles.name}>
             <img src={pool.token_images} />

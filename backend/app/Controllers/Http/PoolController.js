@@ -6,7 +6,6 @@ const WalletAccountService = use('App/Services/WalletAccountService');
 const PoolService = use('App/Services/PoolService');
 const HelperUtils = use('App/Common/HelperUtils');
 const RedisUtils = use('App/Common/RedisUtils');
-const Config = use('Config')
 const UserBalanceSnapshotModel = use('App/Models/UserBalanceSnapshot');
 const WhitelistUserModel = use('App/Models/WhitelistUser');
 const WhitelistService = use('App/Services/WhitelistUserService');
@@ -35,7 +34,7 @@ class PoolController {
       'claim_policy',
       'forbidden_countries',
       'freeBuyTimeSetting',
-      'seriesContentConfig', 'boxTypesConfig',
+      'seriesContentConfig', 'boxTypesConfig', 'acceptedTokensConfig'
     ]);
 
     const tokenInfo = inputParams.tokenInfo;
@@ -105,6 +104,7 @@ class PoolController {
 
       await poolService.updateSeriesContentConfig(campaign, inputParams.seriesContentConfig || [])
       await poolService.updateBoxTypesConfig(campaign, inputParams.boxTypesConfig || [])
+      await poolService.updateAcceptedTokensConfig(campaign, inputParams.acceptedTokensConfig || [])
 
       // Update Tier Config
       console.log('[createPool] - Update Tier Config - inputParams.tier_configuration', inputParams.tier_configuration);
@@ -177,6 +177,7 @@ class PoolController {
       'freeBuyTimeSetting',
       'seriesContentConfig',
       'boxTypesConfig',
+      'acceptedTokensConfig'
     ]);
 
     const tokenInfo = inputParams.tokenInfo;
@@ -241,6 +242,7 @@ class PoolController {
 
       await poolService.updateSeriesContentConfig(campaign, inputParams.seriesContentConfig || [])
       await poolService.updateBoxTypesConfig(campaign, inputParams.boxTypesConfig || [])
+      await poolService.updateAcceptedTokensConfig(campaign, inputParams.acceptedTokensConfig || [])
 
       // Update Tier Config
       if (!campaign.is_deploy) {
@@ -401,6 +403,7 @@ class PoolController {
         .with('freeBuyTimeSetting')
         .with('seriesContentConfig')
         .with('boxTypesConfig')
+        .with('acceptedTokensConfig')
         .where('id', poolId)
         .first();
       if (!pool) {
@@ -459,6 +462,7 @@ class PoolController {
         .with('freeBuyTimeSetting')
         .with('seriesContentConfig')
         .with('boxTypesConfig')
+        .with('acceptedTokensConfig')
         .where('id', poolId)
         .first();
 
@@ -521,6 +525,7 @@ class PoolController {
 
         'seriesContentConfig',
         'boxTypesConfig',
+        'acceptedTokensConfig',
       ]);
 
       if (publicPool && publicPool.token_type === CONST.TOKEN_TYPE.MYSTERY_BOX) {
@@ -559,42 +564,29 @@ class PoolController {
 
   async getPoolList({ request }) {
     const param = request.all();
-    const limit = param.limit ? param.limit : Config.get('const.limit_default');
-    const page = param.page ? param.page : Config.get('const.page_default');
+    const limit = param.limit ? param.limit : 10;
+    const page = param.page ? param.page : 1;
     param.limit = limit;
     param.page = page;
     param.is_search = true;
     console.log('Start Pool List with params: ', param);
 
     try {
-      // if (await RedisUtils.checkExistRedisPoolList(param)) {
-      //   const cachedPoolDetail = await RedisUtils.getRedisPoolList(param);
-      //   console.log('Exist cache data Public Pool List: ', cachedPoolDetail);
-      //   return HelperUtils.responseSuccess(JSON.parse(cachedPoolDetail));
-      // }
-
       let listData = (new PoolService).buildSearchQuery(param).with('campaignClaimConfig');
-      if (process.env.NODE_ENV === 'development') {
-        listData = listData.orderBy('id', 'DESC');
-      } else {
-        listData = listData.orderBy('id', 'ASC');
-      }
+      listData = listData.orderBy('id', 'DESC');
       listData = await listData.paginate(page, limit);
-
-      // // Cache data
-      // RedisUtils.createRedisPoolList(param, listData);
 
       return HelperUtils.responseSuccess(listData);
     } catch (e) {
       console.log(e)
-      return HelperUtils.responseErrorInternal('Get Pools Fail !!!');
+      return HelperUtils.responseErrorInternal();
     }
   }
 
   async getTopPools({ request }) {
     const inputParams = request.all();
-    const limit = inputParams.limit ? inputParams.limit : Config.get('const.limit_default');
-    const page = inputParams.page ? inputParams.page : Config.get('const.page_default');
+    const limit = inputParams.limit ? inputParams.limit : 10;
+    const page = inputParams.page ? inputParams.page : 1;
     inputParams.limit = limit;
     inputParams.page = page;
     inputParams.is_search = true;

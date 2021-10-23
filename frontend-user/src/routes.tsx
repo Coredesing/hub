@@ -55,6 +55,19 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
     const alertTypeIsPush = useSelector((state: any) => state.alertTypeIsPush);
     const { history } = props;
 
+    useEffect(() => {
+        history.listen((location) => {
+            const { gtag } = window as any;
+            if (gtag && location) {
+                gtag('event', 'page_view', {
+                    page_title: document.title,
+                    page_location: window.location.href,
+                    page_path: location.pathname,
+                    send_to: process.env.REACT_APP_GTAG_ID
+                })
+            }
+        })
+    }, [history])
     const { deactivate } = useWeb3React();
     const [binanceAvailable, setBinanceAvailable] = useState(false);
     const [openConnectWallet, setOpenConnectWallet] = useState<boolean>(false);

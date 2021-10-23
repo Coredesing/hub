@@ -650,21 +650,21 @@ export default {
     },
     getMetadata() {
       return [
-        { name: 'description', content: this.getDescription(), id: 'desc' },
+        { name: 'description', content: this.getDescription(), id: 'description' },
 
         // Twitter
-        { name: 'twitter:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}` },
-        { name: 'twitter:description', content: this.getDescription()},
-        { name: 'twitter:image', content: this.getImageFromPath() },
+        { name: 'twitter:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}`, id: 'twitter:title' },
+        { name: 'twitter:description', content: this.getDescription(), id: 'twitter:description' },
+        { name: 'twitter:image', content: this.getImageFromPath(), id: 'twitter:image' },
 
         // Google +
-        { itemprop: 'name', content: this.getTitleFromPath().inner },
-        { itemprop: 'og:description', content: this.getDescription(), id: 'desc' },
-        { itemprop: 'og:desc', content: this.getDescription(), id: 'desc' },
+        { itemprop: 'name', content: this.getTitleFromPath().inner, id: 'name' },
+        { itemprop: 'og:description', content: this.getDescription(), id: 'og:description' },
+        { itemprop: 'og:desc', content: this.getDescription(), id: 'og:desc' },
 
         // Facebook
-        { property: 'og:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}` },
-        { property: 'og:image', content: this.getImageFromPath(), id: 'desc' }
+        { property: 'og:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}`, id: 'og:title' },
+        { property: 'og:image', content: this.getImageFromPath(), id: 'og:image' }
       ]
     }
   }

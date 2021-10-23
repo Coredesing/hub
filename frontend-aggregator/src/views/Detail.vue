@@ -656,7 +656,8 @@ export default {
 
         // Google +
         { itemprop: 'name', content: this.getTitleFromPath().inner },
-        { itemprop: 'og:description', content: this.getDescription() },
+        { itemprop: 'og:description', content: this.getDescription(), id: 'desc' },
+        { itemprop: 'og:desc', content: this.getDescription(), id: 'desc' },
 
         // Facebook
         { property: 'og:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}` },

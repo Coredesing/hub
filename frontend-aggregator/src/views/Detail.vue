@@ -653,17 +653,17 @@ export default {
         { name: 'description', content: this.getDescription(), id: 'desc' },
 
         // Twitter
-        { name: 'twitter:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}`, id: 'desc' },
-        { name: 'twitter:description', content: this.getDescription(), id: 'desc'},
-        { name: 'twitter:image', content: this.getImageFromPath(), id: 'desc' },
+        { name: 'twitter:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}` },
+        { name: 'twitter:description', content: this.getDescription()},
+        { name: 'twitter:image', content: this.getImageFromPath() },
 
         // Google +
-        { itemprop: 'name', content: this.getTitleFromPath().inner, id: 'desc' },
+        { itemprop: 'name', content: this.getTitleFromPath().inner },
         { itemprop: 'og:description', content: this.getDescription(), id: 'desc' },
         { itemprop: 'og:desc', content: this.getDescription(), id: 'desc' },
 
         // Facebook
-        { property: 'og:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}`, id: 'desc' },
+        { property: 'og:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}` },
         { property: 'og:image', content: this.getImageFromPath(), id: 'desc' }
       ]
     }

@@ -653,21 +653,18 @@ export default {
         { name: 'description', content: this.getDescription(), id: 'desc' },
 
         // Twitter
-        { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}` },
-        { name: 'twitter:description', content: this.getDescription()},
-        { name: 'twitter:image', content: this.getImageFromPath() },
-        { name: 'twitter:site', content: 'https://twitter.com/GameFi_Official' },
-        { name: 'twitter:creator', content: 'https://twitter.com/GameFi_Official' },
+        { name: 'twitter:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}`, id: 'desc' },
+        { name: 'twitter:description', content: this.getDescription(), id: 'desc'},
+        { name: 'twitter:image', content: this.getImageFromPath(), id: 'desc' },
 
         // Google +
-        { itemprop: 'name', content: this.getTitleFromPath().inner },
+        { itemprop: 'name', content: this.getTitleFromPath().inner, id: 'desc' },
         { itemprop: 'og:description', content: this.getDescription(), id: 'desc' },
         { itemprop: 'og:desc', content: this.getDescription(), id: 'desc' },
 
         // Facebook
-        { property: 'og:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}` },
-        { property: 'og:image', content: this.getImageFromPath() }
+        { property: 'og:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}`, id: 'desc' },
+        { property: 'og:image', content: this.getImageFromPath(), id: 'desc' }
       ]
     }
   }

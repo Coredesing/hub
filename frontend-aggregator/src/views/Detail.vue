@@ -459,7 +459,7 @@ export default {
     return {
       defaultTitle: 'GameFi Aggregator',
       defaultPrefixBannerImage: 'https://gamefi-public.s3.amazonaws.com/aggregator/images/',
-      defaultBannerImage: 'https://gamefi-public.s3.amazonaws.com/aggregator/images/default.png',
+      defaultBannerImage: 'https://gamefi-public.s3.amazonaws.com/aggregator/images/launchpad.png',
       id: 0,
       show: {
         download: false,
@@ -641,7 +641,7 @@ export default {
     },
     getDescription() {
       if (!this.game || !this.game.short_description) {
-        return 'GameFi Aggregator'
+        return this.defaultTitle
       }
 
       return this.game.short_description

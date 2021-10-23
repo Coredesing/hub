@@ -127,7 +127,7 @@
               </div>
             </template>
             <template v-else-if="game.ido">
-              <div class="ido-title">${{ game.token }} IDO on {{ game.ido.date }}</div>
+              <div class="ido-title">${{ game.token }} IGO on {{ game.ido.date }}</div>
               <div class="ido-chain">{{ game.ido.chain }}</div>
               <div class="ido-price">
                 Price per token: <span>$ {{ game.ido.price }}</span>
@@ -376,7 +376,7 @@
             </div>
           </template>
           <template v-else-if="game.ido">
-            <div class="ido-title">${{ game.token }} IDO on {{ game.ido.date }}</div>
+            <div class="ido-title">${{ game.token }} IGO on {{ game.ido.date }}</div>
             <countdown :deadline="game.ido_date"/>
             <div class="ido-chain">{{ game.ido.chain }}</div>
             <div class="ido-price">
@@ -426,7 +426,7 @@
         </div>
       </div>
     </template>
-    <template v-else>
+    <template v-else-if="loading">
       <div class="not-found">
         <img alt src="../assets/images/404.png"/>
         <h3>Sorry, we were unable to find that page</h3>
@@ -468,6 +468,7 @@ export default {
       tab: 0,
       display: 0,
       playing: false,
+      loading: false
     }
   },
   head: {
@@ -486,6 +487,7 @@ export default {
     await this.$store.dispatch('getGameDetail', this.id)
 
     this.$emit('updateHead')
+    this.loading = true
   },
   computed: {
     user() {

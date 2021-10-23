@@ -651,8 +651,12 @@ export default {
         { name: 'description', content: this.getDescription(), id: 'desc' },
 
         // Twitter
+        { name: 'twitter:card', content: 'summary' },
         { name: 'twitter:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}` },
         { name: 'twitter:description', content: this.getDescription()},
+        { name: 'twitter:image', content: this.getImageFromPath() },
+        { name: 'twitter:site', content: 'https://twitter.com/GameFi_Official' },
+        { name: 'twitter:creator', content: 'https://twitter.com/GameFi_Official' },
 
         // Google +
         { itemprop: 'name', content: this.getTitleFromPath().inner },

@@ -21,6 +21,11 @@ class WinnerListUserController {
     const pageSize = request.input('limit') ? request.input('limit') : 10;
     const searchTerm = request.input('search_term') || '';
     try {
+      if (page < 2 && searchTerm === '' && await RedisWinnerUtils.checkExistRedisPoolWinners(campaign_id, page)) {
+        const data = JSON.parse(await RedisWinnerUtils.getRedisPoolWinners(campaign_id, page))
+        return HelperUtils.responseSuccess(data);
+      }
+
       let campaign = null;
       // Try get Campaign detail from Redis Cache
       if (await RedisUtils.checkExistRedisPoolDetail(campaign_id)) {
@@ -48,11 +53,6 @@ class WinnerListUserController {
         'search_term': searchTerm,
       };
 
-      if (page < 2 && searchTerm === '' && await RedisWinnerUtils.checkExistRedisPoolWinners(campaign_id, page)) {
-        const data = JSON.parse(await RedisWinnerUtils.getRedisPoolWinners(campaign_id, page))
-        return HelperUtils.responseSuccess(data);
-      }
-
       const winnerListService = new WinnerListService();
       // get winner list
       let winners = await winnerListService.findWinnerListUser(filterParams);
@@ -63,7 +63,7 @@ class WinnerListUserController {
 
       return HelperUtils.responseSuccess(winners);
     } catch (e) {
-      return HelperUtils.responseErrorInternal('Get Winner List Failed!');
+      return HelperUtils.responseErrorInternal();
     }
   }
 

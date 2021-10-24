@@ -19,7 +19,8 @@ function ClaimInfo(props: any) {
     nextClaimIndex,
     maximumTokenClaimUtilNow,
     currencyName,
-    policy
+    policy,
+    currentUserTier
   } = props;
 
   const {
@@ -28,13 +29,13 @@ function ClaimInfo(props: any) {
     // userPurchasedReturn = 0,
   } = (userClaimInfo || {});
 
-  const { account: connectedAccount } = useWeb3React();
-  const { id } = useParams() as any;
-  const { data: currentUserTier } = useFetch<any>(
-    id && connectedAccount ?
-      `pool/${id}/user/${connectedAccount}/current-tier`
-      : undefined,
-  );
+  // const { account: connectedAccount } = useWeb3React();
+  // const { id } = useParams() as any;
+  // const { data: currentUserTier } = useFetch<any>(
+  //   id && connectedAccount ?
+  //     `pool/${id}/user/${connectedAccount}/current-tier`
+  //     : undefined,
+  // );
   const userBuyLimit = currentUserTier?.max_buy || 0;
 
   return (

@@ -34,6 +34,7 @@ type ClaimTokenProps = {
   startBuyTimeInDate: any;
   width: any,
   isKyc?: boolean,
+  currentUserTier: any,
 };
 
 const tickIcon = "/images/icons/tick_claim.svg";
@@ -247,6 +248,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
         maximumTokenClaimUtilNow={maximumTokenClaimUtilNow}
         policy={policy}
         currencyName={currencyName}
+        currentUserTier={props.currentUserTier}
       />
 
       {

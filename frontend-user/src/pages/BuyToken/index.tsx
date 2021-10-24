@@ -17,7 +17,6 @@ import usePoolJoinAction from './hooks/usePoolJoinAction';
 import useWhitelistSubmissionDetail from './hooks/useWhitelistSubmissionDetail';
 import useFetch, { useFetchV1 } from '../../hooks/useFetch';
 
-import Tiers from '../AccountV2/Tiers';
 import LotteryWinners from './LotteryWinners';
 import PoolAbout from './PoolAbout';
 import ClaimToken from './ClaimToken';
@@ -578,7 +577,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
             />
           </div>
           {
-            ((+soldProgress < 100) && isSwap(poolDetails?.campaignStatus)) &&
+            ((+soldProgress < 100) && isSwap(poolDetails?.campaignStatus)) && !isPreOrderPool &&
             startBuyTimeInDate &&
             endBuyTimeInDate &&
             startBuyTimeInDate < new Date() && new Date() < endBuyTimeInDate &&

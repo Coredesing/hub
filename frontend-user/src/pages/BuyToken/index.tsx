@@ -577,7 +577,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
             />
           </div>
           {
-            ((+soldProgress < 100) && isSwap(poolDetails?.campaignStatus)) && !isPreOrderPool &&
+            ((+soldProgress < 100) && isSwap(poolDetails?.campaignStatus)) && !allowUserBuyPreOrder &&
             startBuyTimeInDate &&
             endBuyTimeInDate &&
             startBuyTimeInDate < new Date() && new Date() < endBuyTimeInDate &&

@@ -512,8 +512,9 @@ class UserController {
 
       // Get Tier in smart contract
       const userTier = (await HelperUtils.getUserTierSmartWithCached(walletAddress))[0];
+      let tierDb = null;
       if (Array.isArray(camp.tiers)) {
-        const tierDb = camp.tiers.find((data) => { return parseInt(data.level) === parseInt(userTier) })
+        tierDb = camp.tiers.find((data) => { return parseInt(data.level) === parseInt(userTier) })
         if (!tierDb) {
           return HelperUtils.responseSuccess(formatDataPrivateWinner({
             min_buy: 0,

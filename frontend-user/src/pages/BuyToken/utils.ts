@@ -1,6 +1,6 @@
 export const isSwap = (status?: string) => {
     status = String(status).toLowerCase();
-    return status === 'swap' || status === 'filled';
+    return status === 'upcoming' || status === 'swap' || status === 'filled';
 }
 
 export const isClaim = (status?: string) => {

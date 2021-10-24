@@ -479,7 +479,7 @@ class UserController {
       }
 
       if (!camp) {
-        camp = await poolService.buildQueryBuilder({ id: campaignId }).with('freeBuyTimeSetting').first();
+        camp = await poolService.buildQueryBuilder({ id: campaignId }).with('freeBuyTimeSetting').with('tiers').first();
         camp = JSON.parse(JSON.stringify(camp))
       }
 
@@ -512,21 +512,32 @@ class UserController {
 
       // Get Tier in smart contract
       const userTier = (await HelperUtils.getUserTierSmartWithCached(walletAddress))[0];
-      const tierDb = await TierModel.query().where('campaign_id', campaignId).where('level', userTier).first();
-      if (!tierDb) {
-        return HelperUtils.responseSuccess(formatDataPrivateWinner({
-          min_buy: 0,
-          max_buy: new BigNumber(maxTotalBonus).toFixed(),
-          start_time: 0,
-          end_time: 0,
-          level: 0,
-          exist_whitelist: !!existWhitelist,
-        }, isPublicWinner));
+      if (Array.isArray(camp.tiers)) {
+        const tierDB = camp.tiers.find((data) => { return parseInt(data.level) === parseInt(userTier) })
+        if (!tierDB) {
+          return HelperUtils.responseSuccess(formatDataPrivateWinner({
+            min_buy: 0,
+            max_buy: new BigNumber(maxTotalBonus).toFixed(),
+            start_time: 0,
+            end_time: 0,
+            level: 0,
+            exist_whitelist: !!existWhitelist,
+          }, isPublicWinner));
+        }
       }
+
       // get lottery ticket from winner list
       const winner = await WinnerModel.query().where('campaign_id', campaignId).where('wallet_address', walletAddress).first();
       if (winner) {
-        const tier = await TierModel.query().where('campaign_id', campaignId).where('level', winner.level).first();
+        let tier = null
+        if (Array.isArray(camp.tiers)) {
+          tier = camp.tiers.find((data) => { return parseInt(data.level) === parseInt(winner.level) })
+        }
+
+        if (!tier) {
+          tier = await TierModel.query().where('campaign_id', campaignId).where('level', winner.level).first();
+        }
+
         if (!tier) {
           return HelperUtils.responseBadRequest();
         }

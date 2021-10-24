@@ -158,7 +158,7 @@ function BannerNotification(props: any) {
       }
 
       {
-        isInBuying &&
+        isInBuying && poolDetails?.campaignStatus !== PoolStatus.Closed &&
         <WrapperAlert type="info" className="mb-6px" >
           {
             purchasableCurrency.toUpperCase() === ACCEPT_CURRENCY.ETH?.toUpperCase()

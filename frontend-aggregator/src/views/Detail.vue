@@ -154,19 +154,26 @@
                 <span>Add to Favourite List</span>
               </template>
             </div>
-            <template v-if="game.downloads && game.downloads.length && game.type === 'Launched'">
-              <div class="download">
-                <div class="btn btn-download" @click="show.download = !show.download">
+            <template v-if="game.downloads && game.downloads.length && game.ido_type === 'launched'">
+              <template v-if="game.downloads.length === 1">
+                <a class="btn btn-download" :href="game.downloads[0].link" target="_blank" style="text-decoration: none">
                   Download
-                  <img :style="!show.download && { transform: 'rotate(180deg)'}" alt src="../assets/images/up.svg"/>
-                </div>
-                <transition name="slide-down">
-                  <div v-show="show.download" class="download-list">
-                    <a v-for="(item, i) in game.downloads" :key="i" :href="item.link" target="_blank">Download for
-                      {{ item.type }}</a>
+                </a>
+              </template>
+              <template v-else>
+                <div class="download">
+                  <div class="btn btn-download" @click="show.download = !show.download">
+                    Download
+                    <img :style="!show.download && { transform: 'rotate(180deg)'}" alt src="../assets/images/up.svg"/>
                   </div>
-                </transition>
-              </div>
+                  <transition name="slide-down">
+                    <div v-show="show.download" class="download-list">
+                      <a v-for="(item, i) in game.downloads" :key="i" :href="item.link" target="_blank">Download for
+                        {{ item.type }}</a>
+                    </div>
+                  </transition>
+                </div>
+              </template>
             </template>
           </div>
           <div class="content-tab">

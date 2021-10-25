@@ -26,10 +26,11 @@ const useTokenAllowance = () => {
 
       if (contract) {
         const balance = await contract.methods.allowance(owner, spender).call();
-        const allowanceReturn = new BigNumber(balance).div(new BigNumber(10).pow(token?.decimals as number)).toNumber();
+        const allowanceReturn = new BigNumber(balance).div(new BigNumber(10).pow(token?.decimals as number || 0)).toNumber();
+        setTokenAllowanceLoading(false);
         return allowanceReturn;
       }
-
+      setTokenAllowanceLoading(false);
       return 0;
     }
   }, [appChainID, connector]);

@@ -34,7 +34,7 @@
         </div>
         <div ref="latest" class="section-latest">
           <latest-item v-for="(item, i) in listLatest" :key="i"
-                       :game_name="item.game_name" :verified="item.verified"
+                       :game_name="item.game_name" :verified="item.verified" :category="item.category"
                        :desc="item.desc" :thumbnail="item.thumbnail" :ticker="item.ticker"
                        :slug="item.slug" :sponsor="item.sponsor" :tokenomic="item.tokenomic"
                        :token_price="item.token_price" :icon_token_link="item.icon_token_link"

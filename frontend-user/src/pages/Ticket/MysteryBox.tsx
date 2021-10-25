@@ -390,11 +390,11 @@ const MysteryBox = ({ id, ...props }: any) => {
         setCollections([]);
         try {
             const Erc721contract = getContractInstance(Erc721Abi, infoTicket.token, connectorName, appChainID);
+            if(!Erc721contract) return;
             const isCallDefaultCollection = infoTicket.campaign_hash === infoTicket.token;
             const arrCollections = [];
             if (!connectedAccount) return;
             for (let id = 0; id < ownedBox; id++) {
-
                 if (isCallDefaultCollection) {
                     const idCollection = (await contractPreSaleWithAcc.tokenOfOwnerByIndex(connectedAccount, id)).toNumber();
                     const boxType = await contractPreSaleWithAcc.boxes(idCollection);
@@ -403,10 +403,10 @@ const MysteryBox = ({ id, ...props }: any) => {
                     const collection = infoBox && { ...infoBox, idCollection };
                     collection && arrCollections.push(collection);
                 } else {
-                    const idUri = id + 1;
-                    const tokenURI = await Erc721contract?.methods.tokenURI(idUri).call();
+                    const idCollection = await Erc721contract.methods.tokenOfOwnerByIndex(connectedAccount, id).call();
+                    const tokenURI = await Erc721contract?.methods.tokenURI(idCollection).call();
                     const collection: ObjectType<any> = {
-                        idCollection: idUri
+                        idCollection: idCollection
                     };
                     try {
                         const infoBoxType = (await axios.get(tokenURI)).data;

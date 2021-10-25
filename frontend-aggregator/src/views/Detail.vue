@@ -271,7 +271,7 @@
             <template v-if="tab === 2 && game.team">
               <div v-if="game.team.roadmap">
                 <div class="title">Roadmap</div>
-                <img class="zoom" alt :src="game.team.roadmap"/>
+                <img style="cursor: zoom-in" @click="show.bigImg = true" alt :src="game.team.roadmap"/>
               </div>
               <div v-if="game.team.partner">
                 <div class="title">Partner</div>
@@ -409,19 +409,26 @@
               <span>Add to Favourite List</span>
             </template>
           </div>
-          <template v-if="game.downloads && game.downloads.length && game.type === 'Launched'">
-            <div class="download">
-              <div class="btn btn-download" @click="show.download = !show.download">
+          <template v-if="game.downloads && game.downloads.length && game.ido_type === 'launched'">
+            <template v-if="game.downloads.length === 1">
+              <a class="btn btn-download" :href="game.downloads[0].link" target="_blank" style="text-decoration: none">
                 Download
-                <img :style="!show.download && { transform: 'rotate(180deg)'}" alt src="../assets/images/up.svg"/>
-              </div>
-              <transition name="slide-down">
-                <div v-show="show.download" class="download-list">
-                  <a v-for="(item, i) in game.downloads" :key="i" :href="item.link" target="_blank">Download for
-                    {{ item.type }}</a>
+              </a>
+            </template>
+            <template v-else>
+              <div class="download">
+                <div class="btn btn-download" @click="show.download = !show.download">
+                  Download
+                  <img :style="!show.download && { transform: 'rotate(180deg)'}" alt src="../assets/images/up.svg"/>
                 </div>
-              </transition>
-            </div>
+                <transition name="slide-down">
+                  <div v-show="show.download" class="download-list">
+                    <a v-for="(item, i) in game.downloads" :key="i" :href="item.link" target="_blank">Download for
+                      {{ item.type }}</a>
+                  </div>
+                </transition>
+              </div>
+            </template>
           </template>
         </div>
       </div>
@@ -433,6 +440,9 @@
         <a href="/" class="btn">Back to Home page</a>
       </div>
     </template>
+    <div v-if="show.bigImg" class="dialog-img" @click="show.bigImg = false">
+      <img alt :src="game.team.roadmap"/>
+    </div>
   </div>
 </template>
 
@@ -463,6 +473,7 @@ export default {
       id: 0,
       show: {
         download: false,
+        bigImg: false
       },
       tokenInfo: null,
       tab: 0,
@@ -1080,7 +1091,7 @@ export default {
 
           &_item {
             font-weight: 600;
-            font-size: 16px;
+            font-size: 18px;
             color: #AEAEAE;
             padding: 8px 16px;
             position: relative;
@@ -1110,6 +1121,8 @@ export default {
 
           &-view {
             min-height: 700px;
+            font-family: Helvetica, sans-serif;
+            font-size: 16px;
 
             & > div {
               margin-top: 32px;
@@ -1233,6 +1246,24 @@ export default {
     text-decoration: none;
     color: black;
     font-weight: 600;
+  }
+}
+
+.dialog-img {
+  position: fixed;
+  z-index: 10000;
+  background: #000a;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
   }
 }
 

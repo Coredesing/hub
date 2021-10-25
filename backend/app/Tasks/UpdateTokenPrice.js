@@ -3,6 +3,7 @@
 const Task = use('Task')
 const Tokenomic = use('App/Models/Tokenomic');
 const axios = use('axios');
+const RedisAggregatorUtils = use('App/Common/RedisAggregatorUtils');
 
 class UpdateTokenPrice extends Task {
   static get schedule () {
@@ -35,6 +36,9 @@ class UpdateTokenPrice extends Task {
         tokenRecord.price_eth = (tokenQuote.price / ETHQuote.price)
         tokenRecord.price_eth_change_24h = (tokenQuote.percent_change_24h - ETHQuote.percent_change_24h)
         await tokenRecord.save()
+
+        // coinmarketcap_slug
+        await RedisAggregatorUtils.deleteRedisAggregatorDetail(row.coinmarketcap_slug)
       })
     } catch (e) {
       console.log(e)

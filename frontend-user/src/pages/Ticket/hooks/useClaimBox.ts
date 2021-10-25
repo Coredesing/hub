@@ -6,9 +6,9 @@ import PreSaleBoxAbi from '@abi/PreSaleBox.json';
 import { getContract } from '@utils/contract';
 import _ from 'lodash';
 import useApiBoxSignature from './useApiBoxSignature';
-import {utils} from 'ethers'
+import { utils } from 'ethers'
 import BN from 'bignumber.js';
-import {handleErrMsg} from '../utils';
+import { handleErrMsg } from '../utils';
 import { TRANSACTION_ERROR_MESSAGE } from '../../../constants/alert';
 
 type PoolDepositActionParams = {
@@ -17,9 +17,10 @@ type PoolDepositActionParams = {
   eventId?: number;
   poolId?: number;
   priceOfBox: number;
+  tokenAddress?: string;
 }
 
-const useClaimBox = ({ subBoxId, poolAddress, eventId, poolId, priceOfBox }: PoolDepositActionParams) => {
+const useClaimBox = ({ subBoxId, poolAddress, eventId, poolId, priceOfBox, tokenAddress }: PoolDepositActionParams) => {
   const dispatch = useDispatch();
   const { account, library } = useWeb3React();
   const [claimTransactionHash, setClaimTransactionHash] = useState("");
@@ -38,7 +39,12 @@ const useClaimBox = ({ subBoxId, poolAddress, eventId, poolId, priceOfBox }: Poo
         setClaimBoxLoading(true);
 
         await apiSignMessage({
-          campaignId: poolId as number, captchaToken, amount, subBoxId: subBoxId as number, eventId
+          campaignId: poolId as number,
+          captchaToken,
+          amount,
+          subBoxId: subBoxId as number,
+          eventId,
+          tokenAddress,
         });
       } catch (err) {
         setClaimBoxLoading(false);
@@ -62,7 +68,7 @@ const useClaimBox = ({ subBoxId, poolAddress, eventId, poolId, priceOfBox }: Poo
         const options = {
           value: utils.parseEther((new BN(amount).multipliedBy(new BN(priceOfBox))).toString())
         }
-        const transaction = await contract.claimBox(eventId, amount, subBoxId, signature, options);
+        const transaction = await contract.claimBox(eventId, tokenAddress, amount, subBoxId, signature, options);
         setSignature("");
         setClaimTransactionHash(transaction.hash);
         dispatch(alertWarning("Request is processing!"));

@@ -12,6 +12,7 @@ type ApiSignatureType = {
   amount: number;
   subBoxId: number;
   eventId: number;
+  tokenAddress?: string;
 }
 
 const useApiSignature = () => {
@@ -27,7 +28,8 @@ const useApiSignature = () => {
     captchaToken,
     amount, 
     subBoxId,
-    eventId
+    eventId,
+    tokenAddress
   }: ApiSignatureType) => {
     try {
       error && setError('');
@@ -37,6 +39,7 @@ const useApiSignature = () => {
         sub_box_id: subBoxId,
         event_id: eventId,
         amount: amount,
+        token: tokenAddress,
       })
       await signMessage();
     } catch (error) {

@@ -318,6 +318,11 @@
                 "internalType": "address",
                 "name": "_externalRandom",
                 "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_externalMinted",
+                "type": "address"
             }
         ],
         "name": "__GameFiBox_init",
@@ -329,11 +334,6 @@
         "inputs": [{
                 "internalType": "uint256",
                 "name": "_maxSupply",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "salePrice",
                 "type": "uint256"
             },
             {
@@ -374,6 +374,11 @@
             {
                 "internalType": "bool",
                 "name": "useSubEvent",
+                "type": "bool"
+            },
+            {
+                "internalType": "bool",
+                "name": "useExternalMint",
                 "type": "bool"
             }
         ],
@@ -475,6 +480,11 @@
                 "type": "uint256"
             },
             {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            },
+            {
                 "internalType": "uint256",
                 "name": "amount",
                 "type": "uint256"
@@ -504,6 +514,17 @@
         "name": "claimNFT",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "externalMinted",
+        "outputs": [{
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+        }],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -780,11 +801,6 @@
             },
             {
                 "internalType": "uint256",
-                "name": "price",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
                 "name": "startTime",
                 "type": "uint256"
             },
@@ -826,6 +842,11 @@
             {
                 "internalType": "bool",
                 "name": "useSubEvent",
+                "type": "bool"
+            },
+            {
+                "internalType": "bool",
+                "name": "useExternalMint",
                 "type": "bool"
             }
         ],
@@ -874,6 +895,17 @@
     {
         "inputs": [{
             "internalType": "address",
+            "name": "_externalMinted",
+            "type": "address"
+        }],
+        "name": "setExternalMinted",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [{
+            "internalType": "address",
             "name": "_externalRandom",
             "type": "address"
         }],
@@ -889,6 +921,28 @@
             "type": "address"
         }],
         "name": "setFundWallet",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [{
+                "internalType": "address[]",
+                "name": "_tokens",
+                "type": "address[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "_rates",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "_decimals",
+                "type": "uint256[]"
+            }
+        ],
+        "name": "setPrices",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -940,11 +994,11 @@
             },
             {
                 "internalType": "bool",
-                "name": "useExternalRandom",
+                "name": "useExternalMint",
                 "type": "bool"
             }
         ],
-        "name": "setSaleEventExternalRandom",
+        "name": "setSaleEventExternalMint",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -956,12 +1010,12 @@
                 "type": "uint256"
             },
             {
-                "internalType": "uint256",
-                "name": "price",
-                "type": "uint256"
+                "internalType": "bool",
+                "name": "useExternalRandom",
+                "type": "bool"
             }
         ],
-        "name": "setSaleEventPrice",
+        "name": "setSaleEventExternalRandom",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -1034,6 +1088,23 @@
             }
         ],
         "name": "setSubBox",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [{
+                "internalType": "address[]",
+                "name": "users",
+                "type": "address[]"
+            },
+            {
+                "internalType": "uint256",
+                "name": "limit",
+                "type": "uint256"
+            }
+        ],
+        "name": "setSuperLimit",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -1244,6 +1315,11 @@
                 "internalType": "uint256",
                 "name": "eventId",
                 "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
             },
             {
                 "internalType": "uint256",

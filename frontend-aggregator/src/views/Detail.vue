@@ -53,7 +53,7 @@
                 </a>
                 <div class="tooltip">View on Coinmarketcap</div>
               </div>
-              <div class="price" style="margin-bottom: 24px">
+              <div class="price">
                 <img alt :src="game.token_icon"/>
                 <div class="price-detail_value">
                   <span>$ {{ (+game.token_price).toFixed(3) }}</span>
@@ -65,49 +65,46 @@
               </span>
                 </div>
               </div>
-              <div v-if="game.tokenInfo" class="price-sub">
-                <span>&lt;{{ game.tokenInfo.btc.toFixed(9) }} BTC</span>
-                <span :class="game.tokenInfo.btcChange > 0 ? 'increased' : 'decreased'">
-              <template v-if="game.tokenInfo.btcChange > 0">
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 0.514683C3.19605 0.254679 2.80395 0.254679 2.6038 0.514683L0.155585 3.695C-0.0975138 4.02379 0.136868 4.5 0.551788 4.5L5.44821 4.5C5.86313 4.5 6.09751 4.02379 5.84441 3.695L3.3962 0.514683Z"
-                      fill="#72F34B"/>
-                </svg>
+              <template v-if="game.tokenInfo" class="price-sub">
+                <div v-if="game.tokenInfo.ido_price" class="info">
+                  <div>IDO Price</div>
+                  <div>{{ game.tokenInfo.ido_price }}</div>
+                </div>
+                <div v-if="game.tokenInfo.ido_roi" class="info">
+                  <div>IDO ROI</div>
+                  <div>{{ game.tokenInfo.ido_roi.toFixed(2) }}x</div>
+                </div>
+                <div v-if="game.tokenInfo.market_cap" class="info">
+                  <div>Market Cap</div>
+                  <div>{{ game.tokenInfo.market_cap | displayNumber}}
+                    <span v-if="game.tokenInfo.market_cap_change"
+                          :style="{color: game.tokenInfo.market_cap_change > 0 ? '#458531' : '#F24B4B'}">
+                    {{ game.tokenInfo.market_cap_change > 0 ? '+' : ''}}
+                    {{ game.tokenInfo.market_cap_change.toFixed(2) }}%
+                  </span>
+                  </div>
+                </div>
+                <div v-if="game.tokenInfo.fully_diluted_market_cap" class="info">
+                  <div>Fully Diluted Market Cap</div>
+                  <div>{{ game.tokenInfo.fully_diluted_market_cap | displayNumber}}
+                    <span v-if="game.tokenInfo.fully_diluted_market_cap_change"
+                          :style="{color: game.tokenInfo.fully_diluted_market_cap_change > 0 ? '#458531' : '#F24B4B'}">
+                    {{ game.tokenInfo.fully_diluted_market_cap_change > 0 ? '+' : ''}}
+                    {{ game.tokenInfo.fully_diluted_market_cap_change.toFixed(2) }}%
+                  </span>
+                  </div>
+                </div>
+                <div v-if="game.tokenInfo.volume" class="info">
+                  <div>Volume (24h)</div>
+                  <div>{{ game.tokenInfo.volume | displayNumber}}
+                    <span v-if="game.tokenInfo.volume_change"
+                          :style="{color: game.tokenInfo.volume_change > 0 ? '#458531' : '#F24B4B'}">
+                    {{ game.tokenInfo.volume_change > 0 ? '+' : ''}}
+                    {{ game.tokenInfo.volume_change.toFixed(2) }}%
+                  </span>
+                  </div>
+                </div>
               </template>
-              <template v-else>
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 4.48532C3.19605 4.74532 2.80395 4.74532 2.6038 4.48532L0.155585 1.305C-0.0975138 0.976212 0.136868 0.5 0.551788 0.5L5.44821 0.5C5.86313 0.5 6.09751 0.976213 5.84441 1.305L3.3962 4.48532Z"
-                      fill="#F24B4B"/>
-                </svg>
-              </template>
-              {{ Math.abs(game.tokenInfo.btcChange.toFixed(2)) }}%
-            </span>
-                <span>&lt;{{ game.tokenInfo.eth.toFixed(9) }} ETH</span>
-                <span :class="game.tokenInfo.ethChange > 0 ? 'increased' : 'decreased'">
-              <template v-if="game.tokenInfo.ethChange > 0">
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 0.514683C3.19605 0.254679 2.80395 0.254679 2.6038 0.514683L0.155585 3.695C-0.0975138 4.02379 0.136868 4.5 0.551788 4.5L5.44821 4.5C5.86313 4.5 6.09751 4.02379 5.84441 3.695L3.3962 0.514683Z"
-                      fill="#72F34B"/>
-                </svg>
-              </template>
-              <template v-else>
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 4.48532C3.19605 4.74532 2.80395 4.74532 2.6038 4.48532L0.155585 1.305C-0.0975138 0.976212 0.136868 0.5 0.551788 0.5L5.44821 0.5C5.86313 0.5 6.09751 0.976213 5.84441 1.305L3.3962 4.48532Z"
-                      fill="#F24B4B"/>
-                </svg>
-              </template>
-              {{ Math.abs(game.tokenInfo.ethChange.toFixed(2)) }}%
-            </span>
-              </div>
-              <div v-if="tokenInfo" class="price-range">
-                <span>Low: <b>${{ tokenInfo.low }}</b></span>
-                <div class="progress"></div>
-                <span>High: <b>${{ tokenInfo.high }}</b></span>
-              </div>
               <div class="divider"/>
               <div v-if="game.developer" class="info">
                 <div>Developer</div>
@@ -157,18 +154,18 @@
             <template v-if="game.downloads && game.downloads.length && game.ido_type === 'launched'">
               <template v-if="game.downloads.length === 1">
                 <a class="btn btn-download" :href="game.downloads[0].link" target="_blank" style="text-decoration: none">
-                  Download
+                  Play
                 </a>
               </template>
               <template v-else>
                 <div class="download">
                   <div class="btn btn-download" @click="show.download = !show.download">
-                    Download
+                    Play
                     <img :style="!show.download && { transform: 'rotate(180deg)'}" alt src="../assets/images/up.svg"/>
                   </div>
                   <transition name="slide-down">
                     <div v-show="show.download" class="download-list">
-                      <a v-for="(item, i) in game.downloads" :key="i" :href="item.link" target="_blank">Download for
+                      <a v-for="(item, i) in game.downloads" :key="i" :href="item.link" target="_blank">
                         {{ item.type }}</a>
                     </div>
                   </transition>
@@ -309,7 +306,7 @@
               </a>
               <div class="tooltip">View on Coinmarketcap</div>
             </div>
-            <div class="price" style="margin-bottom: 24px">
+            <div class="price">
               <img alt :src="game.token_icon"/>
               <div class="price-detail_value">
                 <span>$ {{ (+game.token_price).toFixed(3) }}</span>
@@ -321,49 +318,46 @@
               </span>
               </div>
             </div>
-            <div v-if="game.tokenInfo" class="price-sub">
-              <span>&lt;{{ game.tokenInfo.btc.toFixed(9) }} BTC</span>
-              <span :class="game.tokenInfo.btcChange > 0 ? 'increased' : 'decreased'">
-              <template v-if="game.tokenInfo.btcChange > 0">
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 0.514683C3.19605 0.254679 2.80395 0.254679 2.6038 0.514683L0.155585 3.695C-0.0975138 4.02379 0.136868 4.5 0.551788 4.5L5.44821 4.5C5.86313 4.5 6.09751 4.02379 5.84441 3.695L3.3962 0.514683Z"
-                      fill="#72F34B"/>
-                </svg>
-              </template>
-              <template v-else>
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 4.48532C3.19605 4.74532 2.80395 4.74532 2.6038 4.48532L0.155585 1.305C-0.0975138 0.976212 0.136868 0.5 0.551788 0.5L5.44821 0.5C5.86313 0.5 6.09751 0.976213 5.84441 1.305L3.3962 4.48532Z"
-                      fill="#F24B4B"/>
-                </svg>
-              </template>
-              {{ Math.abs(game.tokenInfo.btcChange.toFixed(2)) }}%
-            </span>
-              <span>&lt;{{ game.tokenInfo.eth.toFixed(9) }} ETH</span>
-              <span :class="game.tokenInfo.ethChange > 0 ? 'increased' : 'decreased'">
-              <template v-if="game.tokenInfo.ethChange > 0">
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 0.514683C3.19605 0.254679 2.80395 0.254679 2.6038 0.514683L0.155585 3.695C-0.0975138 4.02379 0.136868 4.5 0.551788 4.5L5.44821 4.5C5.86313 4.5 6.09751 4.02379 5.84441 3.695L3.3962 0.514683Z"
-                      fill="#72F34B"/>
-                </svg>
-              </template>
-              <template v-else>
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 4.48532C3.19605 4.74532 2.80395 4.74532 2.6038 4.48532L0.155585 1.305C-0.0975138 0.976212 0.136868 0.5 0.551788 0.5L5.44821 0.5C5.86313 0.5 6.09751 0.976213 5.84441 1.305L3.3962 4.48532Z"
-                      fill="#F24B4B"/>
-                </svg>
-              </template>
-              {{ Math.abs(game.tokenInfo.ethChange.toFixed(2)) }}%
-            </span>
-            </div>
-            <div v-if="tokenInfo" class="price-range">
-              <span>Low: <b>${{ tokenInfo.low }}</b></span>
-              <div class="progress"></div>
-              <span>High: <b>${{ tokenInfo.high }}</b></span>
-            </div>
+            <template v-if="game.tokenInfo" class="price-sub">
+              <div v-if="game.tokenInfo.ido_price" class="info">
+                <div>IDO Price</div>
+                <div>{{ game.tokenInfo.ido_price }}</div>
+              </div>
+              <div v-if="game.tokenInfo.ido_roi" class="info">
+                <div>IDO ROI</div>
+                <div>{{ game.tokenInfo.ido_roi.toFixed(2) }}x</div>
+              </div>
+              <div v-if="game.tokenInfo.market_cap" class="info">
+                <div>Market Cap</div>
+                <div>{{ game.tokenInfo.market_cap | displayNumber}}
+                  <span v-if="game.tokenInfo.market_cap_change"
+                        :style="{color: game.tokenInfo.market_cap_change > 0 ? '#458531' : '#F24B4B'}">
+                    {{ game.tokenInfo.market_cap_change > 0 ? '+' : ''}}
+                    {{ game.tokenInfo.market_cap_change.toFixed(2) }}%
+                  </span>
+                </div>
+              </div>
+              <div v-if="game.tokenInfo.fully_diluted_market_cap" class="info">
+                <div>Fully Diluted Market Cap</div>
+                <div>{{ game.tokenInfo.fully_diluted_market_cap | displayNumber}}
+                  <span v-if="game.tokenInfo.fully_diluted_market_cap_change"
+                        :style="{color: game.tokenInfo.fully_diluted_market_cap_change > 0 ? '#458531' : '#F24B4B'}">
+                    {{ game.tokenInfo.fully_diluted_market_cap_change > 0 ? '+' : ''}}
+                    {{ game.tokenInfo.fully_diluted_market_cap_change.toFixed(2) }}%
+                  </span>
+                </div>
+              </div>
+              <div v-if="game.tokenInfo.volume" class="info">
+                <div>Volume (24h)</div>
+                <div>{{ game.tokenInfo.volume | displayNumber}}
+                  <span v-if="game.tokenInfo.volume_change"
+                        :style="{color: game.tokenInfo.volume_change > 0 ? '#458531' : '#F24B4B'}">
+                    {{ game.tokenInfo.volume_change > 0 ? '+' : ''}}
+                    {{ game.tokenInfo.volume_change.toFixed(2) }}%
+                  </span>
+                </div>
+              </div>
+            </template>
             <div class="divider"/>
             <div v-if="game.developer" class="info">
               <div>Developer</div>
@@ -419,18 +413,18 @@
           <template v-if="game.downloads && game.downloads.length && game.ido_type === 'launched'">
             <template v-if="game.downloads.length === 1">
               <a class="btn btn-download" :href="game.downloads[0].link" target="_blank" style="text-decoration: none">
-                Download
+                Play
               </a>
             </template>
             <template v-else>
               <div class="download">
                 <div class="btn btn-download" @click="show.download = !show.download">
-                  Download
+                  Play
                   <img :style="!show.download && { transform: 'rotate(180deg)'}" alt src="../assets/images/up.svg"/>
                 </div>
                 <transition name="slide-down">
                   <div v-show="show.download" class="download-list">
-                    <a v-for="(item, i) in game.downloads" :key="i" :href="item.link" target="_blank">Download for
+                    <a v-for="(item, i) in game.downloads" :key="i" :href="item.link" target="_blank">
                       {{ item.type }}</a>
                   </div>
                 </transition>
@@ -561,7 +555,7 @@ export default {
             document.addEventListener('scroll', (e) => {
               const height = e.target.scrollingElement.scrollHeight,
                   scrollTop = e.target.scrollingElement.scrollTop
-              if(scrollTop > top && (window.innerHeight + scrollTop + 20) < height) {
+              if(scrollTop > top && (window.innerHeight + scrollTop + 300) < height) {
                 sideEl.style.paddingTop = `${scrollTop - top}px`
               } else if (scrollTop < top) {
                 sideEl.style.paddingTop = ''
@@ -821,7 +815,7 @@ export default {
       .info {
         display: flex;
         justify-content: space-between;
-        margin: 16px 0;
+        margin: 8px 0;
 
         div:first-child {
           color: #AEAEAE;
@@ -830,6 +824,12 @@ export default {
         div:last-child {
           font-weight: 600;
           text-align: right;
+
+          span {
+            font-size: 10px;
+            font-weight: 400;
+            margin-left: 4px;
+          }
         }
       }
 
@@ -886,8 +886,8 @@ export default {
             text-decoration: none;
             color: #FFFFFF;
             font-weight: 600;
-            font-size: 16px;
-            padding: 16px;
+            font-size: 14px;
+            padding: 8px;
             border-bottom: 1px solid #44454B;
             text-align: center;
           }

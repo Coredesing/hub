@@ -14,8 +14,6 @@ class UpdateTokenPrice extends Task {
     try {
       console.log(`start craw token price`)
       const list_token_builder = Tokenomic.query()
-      const BTCQuote = await this.getQuote('bitcoin')
-      const ETHQuote = await this.getQuote('ethereum')
       const token_list = await list_token_builder.fetch()
       token_list.rows.map(async row => {
         if (!row.coinmarketcap_slug) {
@@ -31,10 +29,10 @@ class UpdateTokenPrice extends Task {
         tokenRecord.price = tokenQuote.price
         tokenRecord.price_change_24h = tokenQuote.percent_change_24h
         tokenRecord.market_cap = tokenQuote.market_cap
-        tokenRecord.price_btc = (tokenQuote.price / BTCQuote.price)
-        tokenRecord.price_btc_change_24h = (tokenQuote.percent_change_24h - BTCQuote.percent_change_24h)
-        tokenRecord.price_eth = (tokenQuote.price / ETHQuote.price)
-        tokenRecord.price_eth_change_24h = (tokenQuote.percent_change_24h - ETHQuote.percent_change_24h)
+        tokenRecord.volume_24h = tokenQuote.volume_24h
+        tokenRecord.volume_change_24h = tokenQuote.volume_change_24h
+        tokenRecord.fully_diluted_market_cap = tokenQuote.fully_diluted_market_cap
+
         await tokenRecord.save()
 
         // coinmarketcap_slug

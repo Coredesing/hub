@@ -13,7 +13,8 @@
           <div class="content-media">
             <div :class="`content-media_main ${playing && 'playing'}`">
               <template v-if="displayItem.type === 'video'">
-                <video ref="video" @ended="next" :controls="false" :src="displayItem.data" :poster="displayItem.thumbnail"/>
+                <video ref="video" @ended="next" :controls="false" :src="displayItem.data"
+                       :poster="displayItem.thumbnail"/>
                 <div class="content-media_main--play" @click="toggleVideo">
                   <template v-if="playing">
                     <img alt src="../assets/images/pause.png"/>
@@ -68,39 +69,39 @@
               <template v-if="game.tokenInfo" class="price-sub">
                 <div v-if="game.tokenInfo.ido_price" class="info">
                   <div>IDO Price</div>
-                  <div>{{ game.tokenInfo.ido_price }}</div>
+                  <div>$ {{ game.tokenInfo.ido_price }}</div>
                 </div>
                 <div v-if="game.tokenInfo.ido_roi" class="info">
                   <div>IDO ROI</div>
                   <div>{{ game.tokenInfo.ido_roi.toFixed(2) }}x</div>
                 </div>
+                <div v-if="game.tokenInfo.volume" class="info">
+                  <div>Volume (24h)</div>
+                  <div>$ {{ game.tokenInfo.volume | abbreviateNumber }}
+                    <span v-if="game.tokenInfo.volume_change"
+                          :style="{color: game.tokenInfo.volume_change > 0 ? '#458531' : '#F24B4B'}">
+                    {{ game.tokenInfo.volume_change > 0 ? '+' : '' }}
+                    {{ game.tokenInfo.volume_change.toFixed(2) }}%
+                  </span>
+                  </div>
+                </div>
                 <div v-if="game.tokenInfo.market_cap" class="info">
                   <div>Market Cap</div>
-                  <div>{{ game.tokenInfo.market_cap | displayNumber}}
+                  <div>$ {{ game.tokenInfo.market_cap | abbreviateNumber }}
                     <span v-if="game.tokenInfo.market_cap_change"
                           :style="{color: game.tokenInfo.market_cap_change > 0 ? '#458531' : '#F24B4B'}">
-                    {{ game.tokenInfo.market_cap_change > 0 ? '+' : ''}}
+                    {{ game.tokenInfo.market_cap_change > 0 ? '+' : '' }}
                     {{ game.tokenInfo.market_cap_change.toFixed(2) }}%
                   </span>
                   </div>
                 </div>
                 <div v-if="game.tokenInfo.fully_diluted_market_cap" class="info">
                   <div>Fully Diluted Market Cap</div>
-                  <div>{{ game.tokenInfo.fully_diluted_market_cap | displayNumber}}
+                  <div>$ {{ game.tokenInfo.fully_diluted_market_cap | abbreviateNumber }}
                     <span v-if="game.tokenInfo.fully_diluted_market_cap_change"
                           :style="{color: game.tokenInfo.fully_diluted_market_cap_change > 0 ? '#458531' : '#F24B4B'}">
-                    {{ game.tokenInfo.fully_diluted_market_cap_change > 0 ? '+' : ''}}
+                    {{ game.tokenInfo.fully_diluted_market_cap_change > 0 ? '+' : '' }}
                     {{ game.tokenInfo.fully_diluted_market_cap_change.toFixed(2) }}%
-                  </span>
-                  </div>
-                </div>
-                <div v-if="game.tokenInfo.volume" class="info">
-                  <div>Volume (24h)</div>
-                  <div>{{ game.tokenInfo.volume | displayNumber}}
-                    <span v-if="game.tokenInfo.volume_change"
-                          :style="{color: game.tokenInfo.volume_change > 0 ? '#458531' : '#F24B4B'}">
-                    {{ game.tokenInfo.volume_change > 0 ? '+' : ''}}
-                    {{ game.tokenInfo.volume_change.toFixed(2) }}%
                   </span>
                   </div>
                 </div>
@@ -153,7 +154,8 @@
             </div>
             <template v-if="game.downloads && game.downloads.length && game.ido_type === 'launched'">
               <template v-if="game.downloads.length === 1">
-                <a class="btn btn-download" :href="game.downloads[0].link" target="_blank" style="text-decoration: none">
+                <a class="btn btn-download" :href="game.downloads[0].link" target="_blank"
+                   style="text-decoration: none">
                   Play
                 </a>
               </template>
@@ -191,14 +193,6 @@
               <div v-if="game.information.systemRequirement">
                 <div class="title">System Requirements</div>
                 <div class="info" v-html="game.information.systemRequirement"></div>
-              </div>
-              <div v-if="game.information.community && game.information.community.length">
-                <div class="title">Community Groups</div>
-                <div class="community">
-                  <a v-for="(item, i) in game.information.community" :key="i" :href="item.link" target="_blank">
-                    <img alt :src="getCommunityImg(item.type)"/>
-                  </a>
-                </div>
               </div>
               <div v-if="game.information.license">
                 <div class="title">Licensing Terms & Privacy Policy</div>
@@ -300,7 +294,7 @@
         <div ref="side" class="detail-main_side">
           <template v-if="game.ido_type === 'launched'">
             <div class="title">
-              Current Price
+              Current Price (% Chg 24H)
               <a :href="game.coinmarketcap" target="_blank" class="btn btn-cmc">
                 <img alt src="../assets/images/direct.svg">
               </a>
@@ -321,39 +315,39 @@
             <template v-if="game.tokenInfo" class="price-sub">
               <div v-if="game.tokenInfo.ido_price" class="info">
                 <div>IDO Price</div>
-                <div>{{ game.tokenInfo.ido_price }}</div>
+                <div>$ {{ game.tokenInfo.ido_price }}</div>
               </div>
               <div v-if="game.tokenInfo.ido_roi" class="info">
                 <div>IDO ROI</div>
                 <div>{{ game.tokenInfo.ido_roi.toFixed(2) }}x</div>
               </div>
+              <div v-if="game.tokenInfo.volume" class="info">
+                <div>Volume (24h)</div>
+                <div>$ {{ game.tokenInfo.volume | abbreviateNumber }}
+                  <span v-if="game.tokenInfo.volume_change"
+                        :style="{color: game.tokenInfo.volume_change > 0 ? '#458531' : '#F24B4B'}">
+                    {{ game.tokenInfo.volume_change > 0 ? '+' : '' }}
+                    {{ game.tokenInfo.volume_change.toFixed(2) }}%
+                  </span>
+                </div>
+              </div>
               <div v-if="game.tokenInfo.market_cap" class="info">
                 <div>Market Cap</div>
-                <div>{{ game.tokenInfo.market_cap | displayNumber}}
+                <div>$ {{ game.tokenInfo.market_cap | abbreviateNumber }}
                   <span v-if="game.tokenInfo.market_cap_change"
                         :style="{color: game.tokenInfo.market_cap_change > 0 ? '#458531' : '#F24B4B'}">
-                    {{ game.tokenInfo.market_cap_change > 0 ? '+' : ''}}
+                    {{ game.tokenInfo.market_cap_change > 0 ? '+' : '' }}
                     {{ game.tokenInfo.market_cap_change.toFixed(2) }}%
                   </span>
                 </div>
               </div>
               <div v-if="game.tokenInfo.fully_diluted_market_cap" class="info">
                 <div>Fully Diluted Market Cap</div>
-                <div>{{ game.tokenInfo.fully_diluted_market_cap | displayNumber}}
+                <div>$ {{ game.tokenInfo.fully_diluted_market_cap | abbreviateNumber }}
                   <span v-if="game.tokenInfo.fully_diluted_market_cap_change"
                         :style="{color: game.tokenInfo.fully_diluted_market_cap_change > 0 ? '#458531' : '#F24B4B'}">
-                    {{ game.tokenInfo.fully_diluted_market_cap_change > 0 ? '+' : ''}}
+                    {{ game.tokenInfo.fully_diluted_market_cap_change > 0 ? '+' : '' }}
                     {{ game.tokenInfo.fully_diluted_market_cap_change.toFixed(2) }}%
-                  </span>
-                </div>
-              </div>
-              <div v-if="game.tokenInfo.volume" class="info">
-                <div>Volume (24h)</div>
-                <div>{{ game.tokenInfo.volume | displayNumber}}
-                  <span v-if="game.tokenInfo.volume_change"
-                        :style="{color: game.tokenInfo.volume_change > 0 ? '#458531' : '#F24B4B'}">
-                    {{ game.tokenInfo.volume_change > 0 ? '+' : ''}}
-                    {{ game.tokenInfo.volume_change.toFixed(2) }}%
                   </span>
                 </div>
               </div>
@@ -374,6 +368,14 @@
             <div v-if="game.language" class="info">
               <div>Language</div>
               <div>{{ game.language }}</div>
+            </div>
+            <div v-if="game.community && game.community.length" class="info">
+              <div>Community</div>
+              <div class="community">
+                <a v-for="(item, i) in game.community" :key="i" :href="item.link" target="_blank">
+                  <img alt :src="getCommunityImg(item.type)"/>
+                </a>
+              </div>
             </div>
           </template>
           <template v-else-if="game.ido">
@@ -464,6 +466,15 @@ export default {
         return ''
       }
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+    abbreviateNumber(num) {
+      if (num > 999 && num < 1000000) {
+        return (num / 1000).toFixed(2) + 'K';
+      } else if (num > 1000000) {
+        return (num / 1000000).toFixed(2) + 'M';
+      } else {
+        return num;
+      }
     }
   },
   data() {
@@ -484,13 +495,13 @@ export default {
     }
   },
   head: {
-    title () {
+    title() {
       return this.getTitleFromPath()
     },
-    meta () {
+    meta() {
       return this.getMetadata()
     },
-    link () {
+    link() {
       return this.getLinks()
     }
   },
@@ -509,7 +520,7 @@ export default {
       return this.$store.state.game
     },
     displayItem() {
-      if(this.game.media && this.game.media.length)
+      if (this.game.media && this.game.media.length)
         return this.game.media[this.display]
       return {}
     },
@@ -547,15 +558,15 @@ export default {
     //   }
     // }
     game(val) {
-      if(val) {
+      if (val) {
         this.$nextTick(() => {
           const sideEl = this.$refs.side
-          if(window.innerWidth > 600 && sideEl) {
+          if (window.innerWidth > 600 && sideEl) {
             const top = 254
             document.addEventListener('scroll', (e) => {
               const height = e.target.scrollingElement.scrollHeight,
                   scrollTop = e.target.scrollingElement.scrollTop
-              if(scrollTop > top && (window.innerHeight + scrollTop + 300) < height) {
+              if (scrollTop > top && (window.innerHeight + scrollTop + 100) < height) {
                 sideEl.style.paddingTop = `${scrollTop - top}px`
               } else if (scrollTop < top) {
                 sideEl.style.paddingTop = ''
@@ -568,8 +579,8 @@ export default {
   },
   methods: {
     async like() {
-      if(!this.user || !this.user.address) return
-      await this.$store.dispatch('likeGame', { id: this.game.id, value: !this.game.liked })
+      if (!this.user || !this.user.address) return
+      await this.$store.dispatch('likeGame', {id: this.game.id, value: !this.game.liked})
       const game = {...this.game, liked: !this.game.liked}
       this.$store.commit('setGame', game)
     },
@@ -589,28 +600,28 @@ export default {
     },
     next() {
       const slide = this.$refs.slide
-      if(this.display + 1 < this.game.media.length) {
-        slide.scroll({ left: (this.display + 1) * 118, behavior: 'smooth'})
+      if (this.display + 1 < this.game.media.length) {
+        slide.scroll({left: (this.display + 1) * 118, behavior: 'smooth'})
         this.display++
       } else {
-        slide.scroll({ left: 0, behavior: 'smooth'})
+        slide.scroll({left: 0, behavior: 'smooth'})
         this.display = 0
       }
     },
     prev() {
       const slide = this.$refs.slide
-      if(this.display - 1 >= 0) {
-        slide.scroll({ left: (this.display - 1) * 118, behavior: 'smooth'})
+      if (this.display - 1 >= 0) {
+        slide.scroll({left: (this.display - 1) * 118, behavior: 'smooth'})
         this.display--
       } else {
-        slide.scroll({ left: (this.game.media.length - 1) * 118, behavior: 'smooth'})
+        slide.scroll({left: (this.game.media.length - 1) * 118, behavior: 'smooth'})
         this.display = this.game.media.length - 1
       }
     },
     getLinks() {
       return [
-        { rel: 'icon', href: 'https://gamefi.org/favicon.ico', sizes: '16x16', type: 'image/png' },
-        { rel: 'preload', href: this.getImageFromPath(), type: 'image/png' }
+        {rel: 'icon', href: 'https://gamefi.org/favicon.ico', sizes: '16x16', type: 'image/png'},
+        {rel: 'preload', href: this.getImageFromPath(), type: 'image/png'}
       ]
     },
     getDetailFromPath() {
@@ -632,7 +643,7 @@ export default {
         if (!data) {
           return ''
         }
-        return data.charAt(0).toUpperCase()+data.slice(1)
+        return data.charAt(0).toUpperCase() + data.slice(1)
       }).join(' ')
 
       return {
@@ -641,7 +652,9 @@ export default {
     },
     getImageFromPath() {
       if (this.game && Array.isArray(this.game.media)) {
-        const firstItem = this.game.media.find((item) => { return item.type === 'image'})
+        const firstItem = this.game.media.find((item) => {
+          return item.type === 'image'
+        })
         if (firstItem && firstItem.data) {
           return firstItem.data
         }
@@ -662,21 +675,25 @@ export default {
     },
     getMetadata() {
       return [
-        { name: 'description', content: this.getDescription(), id: 'description' },
+        {name: 'description', content: this.getDescription(), id: 'description'},
 
         // Twitter
-        { name: 'twitter:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}`, id: 'twitter:title' },
-        { name: 'twitter:description', content: this.getDescription(), id: 'twitter:description' },
-        { name: 'twitter:image', content: this.getImageFromPath(), id: 'twitter:image' },
+        {
+          name: 'twitter:title',
+          content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}`,
+          id: 'twitter:title'
+        },
+        {name: 'twitter:description', content: this.getDescription(), id: 'twitter:description'},
+        {name: 'twitter:image', content: this.getImageFromPath(), id: 'twitter:image'},
 
         // Google +
-        { itemprop: 'name', content: this.getTitleFromPath().inner, id: 'name' },
-        { itemprop: 'og:description', content: this.getDescription(), id: 'og:description' },
-        { itemprop: 'og:desc', content: this.getDescription(), id: 'og:desc' },
+        {itemprop: 'name', content: this.getTitleFromPath().inner, id: 'name'},
+        {itemprop: 'og:description', content: this.getDescription(), id: 'og:description'},
+        {itemprop: 'og:desc', content: this.getDescription(), id: 'og:desc'},
 
         // Facebook
-        { property: 'og:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}`, id: 'og:title' },
-        { property: 'og:image', content: this.getImageFromPath(), id: 'og:image' }
+        {property: 'og:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}`, id: 'og:title'},
+        {property: 'og:image', content: this.getImageFromPath(), id: 'og:image'}
       ]
     }
   }
@@ -731,7 +748,7 @@ export default {
           display: none;
           position: absolute;
           top: -32px;
-          left: 12px;
+          left: 99px;
           background: #4F4F4F;
           border-radius: 4px;
           padding: 0 12px;
@@ -829,6 +846,27 @@ export default {
             font-size: 10px;
             font-weight: 400;
             margin-left: 4px;
+          }
+        }
+
+        .community {
+          display: flex;
+          align-items: center;
+
+          a {
+            width: 24px;
+            height: 24px;
+            border-radius: 24px;
+            background: #4F4F4F;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+
+            img {
+              max-width: 16px;
+              max-height: 16px;
+            }
           }
         }
       }
@@ -1141,22 +1179,6 @@ export default {
               margin-bottom: 12px;
             }
 
-            .community {
-              display: flex;
-              align-items: center;
-
-              a {
-                width: 32px;
-                height: 32px;
-                border-radius: 32px;
-                background: #4F4F4F;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-right: 16px;
-              }
-            }
-
             .tags {
               display: flex;
               align-items: center;
@@ -1234,7 +1256,7 @@ export default {
   }
 }
 
-.not-found{
+.not-found {
   height: calc(100vh - 540px);
   display: flex;
   flex-direction: column;

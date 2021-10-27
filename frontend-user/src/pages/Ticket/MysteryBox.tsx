@@ -844,7 +844,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                 }
                                                 <div className="item">
                                                     <label className="label text-uppercase">supported</label>
-                                                    <span className="text-uppercase icon"><img src={`/images/icons/${(infoTicket.network_available || '').toLowerCase()}.png`} className="icon" alt="" /> {infoTicket.network_available}</span>
+                                                    <span className="text-uppercase icon"> {infoTicket.network_available && <img src={`/images/icons/${(infoTicket.network_available || '').toLowerCase()}.png`} className="icon" alt="" />} {infoTicket.network_available}</span> 
                                                 </div>
                                                 <div className="item" >
                                                     <label className="label text-uppercase">MIN RANK</label>

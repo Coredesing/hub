@@ -254,9 +254,9 @@ export default new Vuex.Store({
           coinmarketcap: info.coinmartketcap_link,
           short_description: detail.short_description,
           downloads: [
-            {type: 'Browser Game', link: detail.web_game_link},
-            {type: 'PC Game', link: detail.game_pc_link},
-            {type: 'Mobile iOS', link: detail.ios_link},
+            {type: 'Browser', link: detail.web_game_link},
+            {type: 'PC', link: detail.game_pc_link},
+            {type: 'iOS', link: detail.ios_link},
             {type: 'Android', link: detail.android_link},
           ].filter(item => !!item.link),
           ido: {
@@ -273,18 +273,6 @@ export default new Vuex.Store({
             introduction: detail.game_intro,
             highlightFeatures: detail.game_features,
             systemRequirement: detail.system_require,
-            community: [
-              {type: 'website', link: info.official_website},
-              {type: 'discord', link: info.discord_link},
-              {type: 'telegram', link: info.official_telegram_link},
-              {type: 'twitter', link: info.twitter_link},
-              {type: 'facebook', link: info.facebook_link},
-              {type: 'instagram', link: info.instagram_link},
-              {type: 'tiktok', link: info.tiktok_link},
-              {type: 'youtube', link: info.youtube_link},
-              {type: 'twitch', link: info.twitch_link},
-              {type: 'reddit', link: info.reddit_link},
-            ].filter(item => !!item.link),
             license: detail.license,
             tags: detail.hashtags.split(',').map(item => item.replace('#', '')),
           },
@@ -339,12 +327,28 @@ export default new Vuex.Store({
           ].filter(item => !!item.data),
           liked: !!state.user.likes.find(id => id === detail.id),
           tokenInfo: {
-            btc: +tokenomic.price_btc,
-            btcChange: +tokenomic.price_btc_change_24h,
-            eth: +tokenomic.price_eth,
-            ethChange: +tokenomic.price_eth_change_24h
+            ido_price: +detail.token_price,
+            ido_roi: +tokenomic.price / +detail.token_price,
+            volume: +tokenomic.volume_24h,
+            volume_change: +tokenomic.volume_change_24h,
+            market_cap: +tokenomic.market_cap,
+            market_cap_change: +tokenomic.market_cap_change || +tokenomic.market_cap_change_24h,
+            fully_diluted_market_cap: +tokenomic.fully_diluted_market_cap,
+            fully_diluted_market_cap_change: +tokenomic.fully_diluted_market_cap_change || +tokenomic.fully_diluted_market_cap_change_24h
           },
-          tokenChange: +tokenomic.price_change_24h
+          tokenChange: +tokenomic.price_change_24h,
+          community: [
+            {type: 'website', link: info.official_website},
+            {type: 'discord', link: info.discord_link},
+            {type: 'telegram', link: info.official_telegram_link},
+            {type: 'twitter', link: info.twitter_link},
+            {type: 'facebook', link: info.facebook_link},
+            {type: 'instagram', link: info.instagram_link},
+            {type: 'tiktok', link: info.tiktok_link},
+            {type: 'youtube', link: info.youtube_link},
+            {type: 'twitch', link: info.twitch_link},
+            {type: 'reddit', link: info.reddit_link},
+          ].filter(item => !!item.link),
         }
         commit('setGame', game)
       }

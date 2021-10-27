@@ -9,6 +9,9 @@
         {{ game_name }}
         <img v-if="verified" src="../assets/images/tick_green.svg"/>
       </div>
+      <div class="item-detail_category">
+        {{ category.split(',').join(', ') }}
+      </div>
       <div class="price">
         <img alt :src="icon_token_link"/>
         <div class="price-detail">
@@ -42,6 +45,7 @@ export default {
     icon_token_link: null,
     token_price: [Number, String],
     tokenomic: Object,
+    category: String,
     slug: String
   },
   methods: {
@@ -96,6 +100,11 @@ export default {
         margin-left: 8px;
         display: block;
       }
+    }
+
+    &_category {
+      font-size: 12px;
+      color: #D1D1D1;
     }
   }
 }

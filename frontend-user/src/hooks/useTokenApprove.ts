@@ -52,9 +52,9 @@ const useTokenAllowance = (
           setTokenApproveLoading(false);
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.log('[ERROR] - useTokenAllowance:', err);
-      dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
+      dispatch(alertFailure(err.message || TRANSACTION_ERROR_MESSAGE));
       setTokenApproveLoading(false);
       throw new Error(err.message);
     }

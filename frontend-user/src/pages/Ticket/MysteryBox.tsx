@@ -27,7 +27,7 @@ import { HashLoader } from "react-spinners";
 import { numberWithCommas } from "../../utils/formatNumber";
 import { WrapperAlert } from "../../components/Base/WrapperAlert";
 import { pushMessage } from "../../store/actions/message";
-import { CountDownTimeType, TimelineType } from "./types";
+import { CountDownTimeType, TimelineType, TokenType } from "./types";
 import { CountDownEndTime } from "./components/CountDownEndTime";
 import { AscDescAmountBox } from "./components/AscDescAmountBox";
 import { ButtonBuy } from "./components/ButtonBuy";
@@ -51,8 +51,13 @@ import useClaimBox from "./hooks/useClaimBox";
 import { getContract } from "@utils/contract";
 import PreSaleBoxAbi from '@abi/PreSaleBox.json';
 import { useWeb3React } from "@web3-react/core";
-import BigNumber from 'bn.js';
+import BigNumber from 'bignumber.js';
 import { Box } from "@material-ui/core";
+import { ObjectType } from "@app-types";
+import { getContractInstance } from "@services/web3";
+import Erc20Abi from '@abi/Erc20.json';
+import { useTypedSelector } from "@hooks/useTypedSelector";
+import Erc721Abi from '@abi/Erc721.json';
 
 const MysteryBox = ({ id, ...props }: any) => {
     const styles = useStyles();
@@ -60,7 +65,7 @@ const MysteryBox = ({ id, ...props }: any) => {
     const dispatch = useDispatch();
     const { library } = useWeb3React();
     const { connectedAccount, wrongChain /*isAuth*/ } = useAuth();
-    // const alert = useSelector((state: any) => state.alert);
+    const connectorName = useTypedSelector(state => state.connector).data;
     const { appChainID } = useSelector((state: any) => state.appNetwork).data;
     const [numBoxBuy, setNumBoxBuy] = useState<number>(0);
     const [infoTicket, setInfoTicket] = useState<{ [k in string]: any }>({});
@@ -102,7 +107,8 @@ const MysteryBox = ({ id, ...props }: any) => {
 
     const [maxBoxCanBuy, setMaxBoxCanBuy] = useState(0);
     const [boxTypeSelected, setSelectBoxType] = useState<{ [k: string]: any }>({});
-
+    const [tokenSeletected, setTokenSelected] = useState<ObjectType<any>>({});
+    const [tokenToApprove, setTokenToApprove] = useState<TokenType & ObjectType<any> | undefined>();
     const handleLoadVideo = (boxType: { [k: string]: any }) => {
         const wrapperVideo = document.querySelector('.wrapperVideo');
         if (wrapperVideo) {
@@ -307,46 +313,61 @@ const MysteryBox = ({ id, ...props }: any) => {
         eventId,
         subBoxId: boxTypeSelected.subBoxId,
         priceOfBox: infoTicket.ether_conversion_rate,
+        tokenAddress: tokenSeletected.address,
     });
 
-    const [contractPreSale, setContractPreSale] = useState<any>();
+    const [contractPreSaleWithAcc, setContractPreSaleWithAcc] = useState<any>();
     useEffect(() => {
         if (infoTicket?.campaign_hash && connectedAccount) {
             const contract = getContract(infoTicket.campaign_hash, PreSaleBoxAbi, library, connectedAccount as string);
+            setContractPreSaleWithAcc(contract);
+        }
+    }, [infoTicket, connectedAccount]);
+
+    const [contractPreSale, setContractPreSale] = useState<any>();
+    useEffect(() => {
+        if (infoTicket?.campaign_hash) {
+            const contract = getContractInstance(PreSaleBoxAbi, infoTicket.campaign_hash, connectorName, appChainID);
             setContractPreSale(contract);
         }
-    }, [infoTicket, connectedAccount])
+    }, [infoTicket])
 
     const [lockWhenBuyBox, setLockWhenBuyBox] = useState(false);
     const [subBoxes, setSubBoxes] = useState<{ [k: string]: any }[]>([]);
     const [totalBoxesBought, setTotalBoxesBought] = useState(0);
     const [renewTotalBoxesBought, setRenewTotalBoxesBought] = useState(true);
     useEffect(() => {
-        if (infoTicket?.campaign_hash && renewTotalBoxesBought && contractPreSale) {
-            contractPreSale.saleEvents(eventId).then((res: any) => {
+        if (infoTicket?.campaign_hash && renewTotalBoxesBought && contractPreSaleWithAcc) {
+            contractPreSaleWithAcc.saleEvents(eventId).then((res: any) => {
                 const totalBought = res.currentSupply ? res.currentSupply.toNumber() : 0;
                 setTotalBoxesBought(totalBought);
             }).catch((err: any) => {
                 console.log('err', err);
             })
         }
-    }, [infoTicket, renewTotalBoxesBought, contractPreSale]);
+    }, [infoTicket, renewTotalBoxesBought, contractPreSaleWithAcc]);
 
     useEffect(() => {
         if (infoTicket?.boxTypesConfig?.length) {
             if (contractPreSale) {
+
+                // const isCallDefaultCollection = infoTicket.campaign_hash === infoTicket.token;
+
+                // contract?.methods.tokenURI(1).call().then((res: any) => {
+                //     console.log('tokenURI', res)
+                // })
+
                 Promise.all(infoTicket.boxTypesConfig.map((b: any, subBoxId: number) => new Promise(async (res, rej) => {
                     try {
-                        const response = await contractPreSale.subBoxes(eventId, subBoxId);
+                        const response = await contractPreSale.methods.subBoxes(eventId, subBoxId).call();
                         const result = {
-                            maxSupply: new BigNumber('maxSupply' in response ? response.maxSupply.toBigInt() : 0).toString(),
-                            totalSold: new BigNumber('totalSold' in response ? response.totalSold.toBigInt() : 0).toString(),
+                            maxSupply: new BigNumber('maxSupply' in response ? response.maxSupply : 0).toString(),
+                            totalSold: new BigNumber('totalSold' in response ? response.totalSold : 0).toString(),
                         }
                         res({ ...b, subBoxId, ...result });
                     } catch (error) {
                         rej(error)
                     }
-
                 })))
                     .then((arr) => {
                         setSelectBoxType(arr[0] as { [k: string]: any })
@@ -364,22 +385,43 @@ const MysteryBox = ({ id, ...props }: any) => {
     const [loadingCollection, setLoadingCollection] = useState(false);
     const [collections, setCollections] = useState<{ [k: string]: any }>([]);
     const handleSetCollections = async (ownedBox: number) => {
-        if (!contractPreSale) return;
+        if (!contractPreSaleWithAcc) return;
         setLoadingCollection(true);
         setCollections([]);
         try {
+            const Erc721contract = getContractInstance(Erc721Abi, infoTicket.token, connectorName, appChainID);
+            if(!Erc721contract) return;
+            const isCallDefaultCollection = infoTicket.campaign_hash === infoTicket.token;
             const arrCollections = [];
             if (!connectedAccount) return;
             for (let id = 0; id < ownedBox; id++) {
-                const idCollection = (await contractPreSale.tokenOfOwnerByIndex(connectedAccount, id)).toNumber();
-                const boxType = await contractPreSale.boxes(idCollection);
-                const idBoxType = boxType.subBoxId.toNumber();
-                const infoBox = subBoxes.find(b => b.subBoxId === idBoxType);
-                const collection = infoBox && { ...infoBox, idCollection };
-                collection && arrCollections.push(collection);
+                if (isCallDefaultCollection) {
+                    const idCollection = (await contractPreSaleWithAcc.tokenOfOwnerByIndex(connectedAccount, id)).toNumber();
+                    const boxType = await contractPreSaleWithAcc.boxes(idCollection);
+                    const idBoxType = boxType.subBoxId.toNumber();
+                    const infoBox = subBoxes.find(b => b.subBoxId === idBoxType);
+                    const collection = infoBox && { ...infoBox, idCollection };
+                    collection && arrCollections.push(collection);
+                } else {
+                    const idCollection = await Erc721contract.methods.tokenOfOwnerByIndex(connectedAccount, id).call();
+                    const tokenURI = await Erc721contract?.methods.tokenURI(idCollection).call();
+                    const collection: ObjectType<any> = {
+                        idCollection: idCollection
+                    };
+                    try {
+                        const infoBoxType = (await axios.get(tokenURI)).data;
+                        Object.assign(collection, infoBoxType);
+                        collection.icon = infoBoxType.image;
+                        collection.price = infoBoxType.price;
+                    } catch (error) {
+                        collection.icon = 'default.img';
+                    }
+                    arrCollections.push(collection);
+                }
             }
             setCollections(arrCollections);
         } catch (error) {
+            console.log('error', error)
             console.error('Something went wrong when show collections');
         } finally {
             setLoadingCollection(false);
@@ -390,7 +432,7 @@ const MysteryBox = ({ id, ...props }: any) => {
         if (ownedBox > 0 && subBoxes.length) {
             handleSetCollections(ownedBox);
         }
-    }, [ownedBox, subBoxes]);
+    }, [ownedBox, subBoxes.length]);
 
     useEffect(() => {
         if (ownedBox <= 0) {
@@ -545,7 +587,114 @@ const MysteryBox = ({ id, ...props }: any) => {
         }
     }
 
+    const [cachedDecimals, setCachedDecimals] = useState<ObjectType<string>>({});
+    const onSelectToken = async (token: ObjectType<any>) => {
+        if (token.address === tokenSeletected.address) return;
+        token.neededApprove = !(new BigNumber(token.address).isZero());
+        if (token.neededApprove) {
+            let decimals = cachedDecimals[token.address];
+            if (!decimals) {
+                const erc20Contract = getContractInstance(Erc20Abi, token.address, connectorName, appChainID);
+                decimals = erc20Contract ? await erc20Contract.methods.decimals().call() : null;
+                setCachedDecimals(c => ({ ...c, [token.address]: decimals }));
+            }
+            token.decimals = decimals;
+        }
+        setTokenSelected(token);
+        setTokenToApprove(token as TokenType & ObjectType<any>);
+    }
+    useEffect(() => {
+        if (infoTicket?.acceptedTokensConfig?.length) {
+            const token = infoTicket.acceptedTokensConfig[0];
+            onSelectToken(token);
+        }
+    }, [infoTicket])
+
+    const [isApproving, setIsApproving] = useState(false);
+
+    const { retrieveTokenAllowance, tokenAllowanceLoading } = useTokenAllowance();
+
+    const { approveToken /*tokenApproveLoading, transactionHash*/ } =
+        useTokenApprove(
+            tokenToApprove,
+            connectedAccount,
+            infoTicket.campaign_hash,
+            false
+        );
+    const [tokenAllowance, setTokenAllowance] = useState<number | undefined>(
+        undefined
+    );
+
+    const handleTokenApprove = async () => {
+        try {
+            if (isApproving) return;
+            setIsApproving(true);
+            await approveToken();
+            if (infoTicket.campaign_hash && connectedAccount && tokenToApprove) {
+                const numAllowance = await retrieveTokenAllowance(
+                    tokenToApprove,
+                    connectedAccount,
+                    infoTicket.campaign_hash
+                );
+                setTokenAllowance(numAllowance);
+                setIsApproving(false);
+            }
+        } catch (err) {
+            console.log('err', err)
+            // dispatch(alertFailure('Hmm, Something went wrong. Please try again'));
+            setIsApproving(false);
+        }
+    };
+
+    const getTokenAllowance = useCallback(async () => {
+        if (infoTicket.campaign_hash && connectedAccount && tokenToApprove?.neededApprove) {
+            const numAllowance = await retrieveTokenAllowance(
+                tokenToApprove,
+                connectedAccount,
+                infoTicket.campaign_hash
+            );
+            setTokenAllowance(numAllowance);
+        }
+    }, [
+        connectedAccount,
+        tokenToApprove,
+        infoTicket.campaign_hash,
+        retrieveTokenAllowance,
+    ]);
+
+    useEffect(() => {
+        connectedAccount &&
+            infoTicket.campaign_hash &&
+            getTokenAllowance();
+    }, [connectedAccount, infoTicket.campaign_hash, getTokenAllowance]);
+
+    const [listCurrencies, setListCurrencies] = useState<ObjectType<any>[]>([]);
+    useEffect(() => {
+        if (infoTicket.acceptedTokensConfig?.length) {
+            const list = infoTicket?.acceptedTokensConfig.map((t: ObjectType<any>) => ({
+                ...t,
+                style: {
+                    background: `linear-gradient(${Math.floor(Math.random() * 360)}deg, rgba(255,0,0,1), rgba(255,0,0,0) 70.71%),
+                linear-gradient(${Math.floor(Math.random() * 360)}deg, rgba(0,255,0,1), rgba(0,255,0,0) 70.71%),
+                linear-gradient(${Math.floor(Math.random() * 360)}deg, rgba(0,0,255,1), rgba(0,0,255,0) 70.71%)`,
+                    borderRadius: '50%',
+                    width: '20px',
+                    height: '20px',
+                }
+            }));
+            setListCurrencies(list);
+        }
+    }, [infoTicket]);
+
+    const isAccApproved = (tokenAllowance: number) => {
+        return +tokenAllowance > 0;
+    };
+
     const disabledBuyNow = +numBoxBuy < 1 || !isKYC || lockWhenBuyBox || !connectedAccount || loadingUserTier || !_.isNumber(userTier) || (infoTicket?.min_tier > 0 && (userTier < infoTicket.min_tier));
+    const isShowBtnApprove = connectedAccount && !tokenAllowanceLoading && tokenAllowance !== undefined && !isAccApproved(tokenAllowance as number) && tokenToApprove?.neededApprove;
+    const isShowBtnBuy =
+        (connectedAccount && !checkingKyc && !loadingJoinpool && countdown.isSale && ((countdown.isPhase1 && (alreadyJoinPool || joinPoolSuccess)) || countdown.isPhase2)) &&
+        (!tokenSeletected.neededApprove || (tokenSeletected.neededApprove && isAccApproved(tokenAllowance as number)));
 
     return (
         <>
@@ -563,7 +712,14 @@ const MysteryBox = ({ id, ...props }: any) => {
                         networkName={infoTicket?.network_available}
                     />
                     <ModalOrderBox open={openModalOrderBox} onClose={onCloseModalOrderBox} onConfirm={onOrderBox} isLoadingButton={orderBoxLoading} isSuccessOrderbox={statusOrderBox} defaultValue={boxesOrdered?.amount} />
-                    <ModalConfirmBuyBox open={openModalConfirmBuyBox} onClose={onCloseModalConfirmBuyBox} onConfirm={onBuyBox} infoBox={infoTicket} isLoadingButton={lockWhenBuyBox} amount={numBoxBuy} boxTypeSelected={boxTypeSelected} />
+                    <ModalConfirmBuyBox open={openModalConfirmBuyBox} onClose={onCloseModalConfirmBuyBox} onConfirm={onBuyBox}
+                        infoBox={infoTicket}
+                        isLoadingButton={lockWhenBuyBox}
+                        amount={numBoxBuy}
+                        boxTypeSelected={boxTypeSelected}
+                        tokenSeletected={tokenSeletected}
+                        isClaimedBoxSuccess={isClaimedBoxSuccess}
+                    />
                     <div className={styles.content}>
                         {
                             !connectedAccount && <WrapperAlert>
@@ -652,8 +808,27 @@ const MysteryBox = ({ id, ...props }: any) => {
                                         <div className="divider"></div>
                                         <div className={mysteryStyles.cardBodyDetail}>
                                             <div className={mysteryStyles.currency}>
-                                                <img className="icon" src={`/images/icons/${(infoTicket.network_available || '').toLowerCase()}.png`} alt="" />
-                                                <span className="text-uppercase">{infoTicket.token_conversion_rate} {getCurrencyByNetwork(infoTicket.network_available)}</span>
+                                                {/* <img className="icon" src={`/images/icons/${(infoTicket.network_available || '').toLowerCase()}.png`} alt="" /> */}
+                                                {/* <span className="text-uppercase">{infoTicket.token_conversion_rate} {getCurrencyByNetwork(infoTicket.network_available)}</span> */}
+                                                <div className={`wrapperIcon-${tokenSeletected.name}`} style={{ position: 'relative' }}>
+                                                    <img className="icon" src={tokenSeletected.icon} onLoad={(e: any) => {
+                                                        e.target.style.display = 'block';
+                                                        const wrapperImg = document.querySelector(`.wrapperIcon-${tokenSeletected.name}`) as any;
+                                                        wrapperImg.style = {};
+                                                    }} alt=""
+                                                        onError={(e: any) => {
+                                                            e.target.style.display = 'none';
+                                                            const wrapperImg = document.querySelector(`.wrapperIcon-${tokenSeletected.name}`) as any;
+                                                            for (const p in tokenSeletected.style) {
+                                                                wrapperImg.style[p as any] = tokenSeletected.style[p];
+                                                            }
+                                                            wrapperImg.style.width = '24px';
+                                                            wrapperImg.style.height = '24px';
+                                                        }}
+                                                    />
+                                                </div>
+                                                <span className="text-uppercase">{tokenSeletected.price} {tokenSeletected.name}</span>
+
                                             </div>
                                             <div className="detail-items">
                                                 <div className="item">
@@ -677,6 +852,27 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                         : <span>No Required</span>
                                                     }
                                                 </div>
+                                            </div>
+                                            <div className="box-type-wrapper">
+                                                <h4 className="text-uppercase">Currency</h4>
+                                                <Box className="box-types" gridTemplateColumns="repeat(auto-fill, minmax(80px,1fr)) !important">
+                                                    {
+                                                        (listCurrencies).map((t: any, idx: number) => <Box key={t.address} onClick={() => onSelectToken(t)} gridTemplateColumns="20px auto !important" className={clsx("box-type", { active: t.address === tokenSeletected.address })}>
+                                                            <div className={`wrapperImg-${idx}`} style={{ position: 'relative' }}>
+                                                                <img src={t.icon} className="icon" alt="" style={{ width: '20px', height: '20px' }}
+                                                                    onError={(e: any) => {
+                                                                        e.target.style.visibility = 'hidden';
+                                                                        const wrapperImg = document.querySelector(`.wrapperImg-${idx}`) as any;
+                                                                        for (const p in t.style) {
+                                                                            wrapperImg.style[p as any] = t.style[p];
+                                                                        }
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <span>{t.name}</span>
+                                                        </Box>)
+                                                    }
+                                                </Box>
                                             </div>
                                             <div className="box-type-wrapper">
                                                 <h4 className="text-uppercase">TYPE</h4>
@@ -761,7 +957,19 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                 </div>
                                             }
                                             {
-                                                (connectedAccount && !checkingKyc && !loadingJoinpool && countdown.isSale && ((countdown.isPhase1 && (alreadyJoinPool || joinPoolSuccess)) || countdown.isPhase2)) &&
+                                                isShowBtnApprove &&
+                                                <ButtonBase
+                                                    color="green"
+                                                    isLoading={isApproving}
+                                                    disabled={isApproving}
+                                                    onClick={handleTokenApprove}
+                                                    className="mt-0-important text-transform-unset w-full">
+                                                    Approve
+                                                </ButtonBase>
+                                            }
+
+                                            {
+                                                isShowBtnBuy &&
                                                 <ButtonBase
                                                     color="green"
                                                     isLoading={lockWhenBuyBox}

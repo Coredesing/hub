@@ -13,7 +13,8 @@
           <div class="content-media">
             <div :class="`content-media_main ${playing && 'playing'}`">
               <template v-if="displayItem.type === 'video'">
-                <video ref="video" @ended="next" :controls="false" :src="displayItem.data" :poster="displayItem.thumbnail"/>
+                <video ref="video" @ended="next" :controls="false" :src="displayItem.data"
+                       :poster="displayItem.thumbnail"/>
                 <div class="content-media_main--play" @click="toggleVideo">
                   <template v-if="playing">
                     <img alt src="../assets/images/pause.png"/>
@@ -53,7 +54,7 @@
                 </a>
                 <div class="tooltip">View on Coinmarketcap</div>
               </div>
-              <div class="price" style="margin-bottom: 24px">
+              <div class="price">
                 <img alt :src="game.token_icon"/>
                 <div class="price-detail_value">
                   <span>$ {{ (+game.token_price).toFixed(3) }}</span>
@@ -65,49 +66,46 @@
               </span>
                 </div>
               </div>
-              <div v-if="game.tokenInfo" class="price-sub">
-                <span>&lt;{{ game.tokenInfo.btc.toFixed(9) }} BTC</span>
-                <span :class="game.tokenInfo.btcChange > 0 ? 'increased' : 'decreased'">
-              <template v-if="game.tokenInfo.btcChange > 0">
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 0.514683C3.19605 0.254679 2.80395 0.254679 2.6038 0.514683L0.155585 3.695C-0.0975138 4.02379 0.136868 4.5 0.551788 4.5L5.44821 4.5C5.86313 4.5 6.09751 4.02379 5.84441 3.695L3.3962 0.514683Z"
-                      fill="#72F34B"/>
-                </svg>
+              <template v-if="game.tokenInfo" class="price-sub">
+                <div v-if="game.tokenInfo.ido_price" class="info">
+                  <div>IDO Price</div>
+                  <div>$ {{ game.tokenInfo.ido_price }}</div>
+                </div>
+                <div v-if="game.tokenInfo.ido_roi" class="info">
+                  <div>IDO ROI</div>
+                  <div>{{ game.tokenInfo.ido_roi.toFixed(2) }}x</div>
+                </div>
+                <div v-if="game.tokenInfo.volume" class="info">
+                  <div>Volume (24h)</div>
+                  <div>$ {{ game.tokenInfo.volume | abbreviateNumber }}
+                    <span v-if="game.tokenInfo.volume_change"
+                          :style="{color: game.tokenInfo.volume_change > 0 ? '#458531' : '#F24B4B'}">
+                    {{ game.tokenInfo.volume_change > 0 ? '+' : '' }}
+                    {{ game.tokenInfo.volume_change.toFixed(2) }}%
+                  </span>
+                  </div>
+                </div>
+                <div v-if="game.tokenInfo.market_cap" class="info">
+                  <div>Market Cap</div>
+                  <div>$ {{ game.tokenInfo.market_cap | abbreviateNumber }}
+                    <span v-if="game.tokenInfo.market_cap_change"
+                          :style="{color: game.tokenInfo.market_cap_change > 0 ? '#458531' : '#F24B4B'}">
+                    {{ game.tokenInfo.market_cap_change > 0 ? '+' : '' }}
+                    {{ game.tokenInfo.market_cap_change.toFixed(2) }}%
+                  </span>
+                  </div>
+                </div>
+                <div v-if="game.tokenInfo.fully_diluted_market_cap" class="info">
+                  <div>Fully Diluted Market Cap</div>
+                  <div>$ {{ game.tokenInfo.fully_diluted_market_cap | abbreviateNumber }}
+                    <span v-if="game.tokenInfo.fully_diluted_market_cap_change"
+                          :style="{color: game.tokenInfo.fully_diluted_market_cap_change > 0 ? '#458531' : '#F24B4B'}">
+                    {{ game.tokenInfo.fully_diluted_market_cap_change > 0 ? '+' : '' }}
+                    {{ game.tokenInfo.fully_diluted_market_cap_change.toFixed(2) }}%
+                  </span>
+                  </div>
+                </div>
               </template>
-              <template v-else>
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 4.48532C3.19605 4.74532 2.80395 4.74532 2.6038 4.48532L0.155585 1.305C-0.0975138 0.976212 0.136868 0.5 0.551788 0.5L5.44821 0.5C5.86313 0.5 6.09751 0.976213 5.84441 1.305L3.3962 4.48532Z"
-                      fill="#F24B4B"/>
-                </svg>
-              </template>
-              {{ Math.abs(game.tokenInfo.btcChange.toFixed(2)) }}%
-            </span>
-                <span>&lt;{{ game.tokenInfo.eth.toFixed(9) }} ETH</span>
-                <span :class="game.tokenInfo.ethChange > 0 ? 'increased' : 'decreased'">
-              <template v-if="game.tokenInfo.ethChange > 0">
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 0.514683C3.19605 0.254679 2.80395 0.254679 2.6038 0.514683L0.155585 3.695C-0.0975138 4.02379 0.136868 4.5 0.551788 4.5L5.44821 4.5C5.86313 4.5 6.09751 4.02379 5.84441 3.695L3.3962 0.514683Z"
-                      fill="#72F34B"/>
-                </svg>
-              </template>
-              <template v-else>
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 4.48532C3.19605 4.74532 2.80395 4.74532 2.6038 4.48532L0.155585 1.305C-0.0975138 0.976212 0.136868 0.5 0.551788 0.5L5.44821 0.5C5.86313 0.5 6.09751 0.976213 5.84441 1.305L3.3962 4.48532Z"
-                      fill="#F24B4B"/>
-                </svg>
-              </template>
-              {{ Math.abs(game.tokenInfo.ethChange.toFixed(2)) }}%
-            </span>
-              </div>
-              <div v-if="tokenInfo" class="price-range">
-                <span>Low: <b>${{ tokenInfo.low }}</b></span>
-                <div class="progress"></div>
-                <span>High: <b>${{ tokenInfo.high }}</b></span>
-              </div>
               <div class="divider"/>
               <div v-if="game.developer" class="info">
                 <div>Developer</div>
@@ -156,19 +154,20 @@
             </div>
             <template v-if="game.downloads && game.downloads.length && game.ido_type === 'launched'">
               <template v-if="game.downloads.length === 1">
-                <a class="btn btn-download" :href="game.downloads[0].link" target="_blank" style="text-decoration: none">
-                  Download
+                <a class="btn btn-download" :href="game.downloads[0].link" target="_blank"
+                   style="text-decoration: none">
+                  Play
                 </a>
               </template>
               <template v-else>
                 <div class="download">
                   <div class="btn btn-download" @click="show.download = !show.download">
-                    Download
+                    Play
                     <img :style="!show.download && { transform: 'rotate(180deg)'}" alt src="../assets/images/up.svg"/>
                   </div>
                   <transition name="slide-down">
                     <div v-show="show.download" class="download-list">
-                      <a v-for="(item, i) in game.downloads" :key="i" :href="item.link" target="_blank">Download for
+                      <a v-for="(item, i) in game.downloads" :key="i" :href="item.link" target="_blank">
                         {{ item.type }}</a>
                     </div>
                   </transition>
@@ -194,14 +193,6 @@
               <div v-if="game.information.systemRequirement">
                 <div class="title">System Requirements</div>
                 <div class="info" v-html="game.information.systemRequirement"></div>
-              </div>
-              <div v-if="game.information.community && game.information.community.length">
-                <div class="title">Community Groups</div>
-                <div class="community">
-                  <a v-for="(item, i) in game.information.community" :key="i" :href="item.link" target="_blank">
-                    <img alt :src="getCommunityImg(item.type)"/>
-                  </a>
-                </div>
               </div>
               <div v-if="game.information.license">
                 <div class="title">Licensing Terms & Privacy Policy</div>
@@ -303,13 +294,13 @@
         <div ref="side" class="detail-main_side">
           <template v-if="game.ido_type === 'launched'">
             <div class="title">
-              Current Price
+              Current Price (% Chg 24H)
               <a :href="game.coinmarketcap" target="_blank" class="btn btn-cmc">
                 <img alt src="../assets/images/direct.svg">
               </a>
               <div class="tooltip">View on Coinmarketcap</div>
             </div>
-            <div class="price" style="margin-bottom: 24px">
+            <div class="price">
               <img alt :src="game.token_icon"/>
               <div class="price-detail_value">
                 <span>$ {{ (+game.token_price).toFixed(3) }}</span>
@@ -321,49 +312,46 @@
               </span>
               </div>
             </div>
-            <div v-if="game.tokenInfo" class="price-sub">
-              <span>&lt;{{ game.tokenInfo.btc.toFixed(9) }} BTC</span>
-              <span :class="game.tokenInfo.btcChange > 0 ? 'increased' : 'decreased'">
-              <template v-if="game.tokenInfo.btcChange > 0">
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 0.514683C3.19605 0.254679 2.80395 0.254679 2.6038 0.514683L0.155585 3.695C-0.0975138 4.02379 0.136868 4.5 0.551788 4.5L5.44821 4.5C5.86313 4.5 6.09751 4.02379 5.84441 3.695L3.3962 0.514683Z"
-                      fill="#72F34B"/>
-                </svg>
-              </template>
-              <template v-else>
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 4.48532C3.19605 4.74532 2.80395 4.74532 2.6038 4.48532L0.155585 1.305C-0.0975138 0.976212 0.136868 0.5 0.551788 0.5L5.44821 0.5C5.86313 0.5 6.09751 0.976213 5.84441 1.305L3.3962 4.48532Z"
-                      fill="#F24B4B"/>
-                </svg>
-              </template>
-              {{ Math.abs(game.tokenInfo.btcChange.toFixed(2)) }}%
-            </span>
-              <span>&lt;{{ game.tokenInfo.eth.toFixed(9) }} ETH</span>
-              <span :class="game.tokenInfo.ethChange > 0 ? 'increased' : 'decreased'">
-              <template v-if="game.tokenInfo.ethChange > 0">
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 0.514683C3.19605 0.254679 2.80395 0.254679 2.6038 0.514683L0.155585 3.695C-0.0975138 4.02379 0.136868 4.5 0.551788 4.5L5.44821 4.5C5.86313 4.5 6.09751 4.02379 5.84441 3.695L3.3962 0.514683Z"
-                      fill="#72F34B"/>
-                </svg>
-              </template>
-              <template v-else>
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3.3962 4.48532C3.19605 4.74532 2.80395 4.74532 2.6038 4.48532L0.155585 1.305C-0.0975138 0.976212 0.136868 0.5 0.551788 0.5L5.44821 0.5C5.86313 0.5 6.09751 0.976213 5.84441 1.305L3.3962 4.48532Z"
-                      fill="#F24B4B"/>
-                </svg>
-              </template>
-              {{ Math.abs(game.tokenInfo.ethChange.toFixed(2)) }}%
-            </span>
-            </div>
-            <div v-if="tokenInfo" class="price-range">
-              <span>Low: <b>${{ tokenInfo.low }}</b></span>
-              <div class="progress"></div>
-              <span>High: <b>${{ tokenInfo.high }}</b></span>
-            </div>
+            <template v-if="game.tokenInfo" class="price-sub">
+              <div v-if="game.tokenInfo.ido_price" class="info">
+                <div>IDO Price</div>
+                <div>$ {{ game.tokenInfo.ido_price }}</div>
+              </div>
+              <div v-if="game.tokenInfo.ido_roi" class="info">
+                <div>IDO ROI</div>
+                <div>{{ game.tokenInfo.ido_roi.toFixed(2) }}x</div>
+              </div>
+              <div v-if="game.tokenInfo.volume" class="info">
+                <div>Volume (24h)</div>
+                <div>$ {{ game.tokenInfo.volume | abbreviateNumber }}
+                  <span v-if="game.tokenInfo.volume_change"
+                        :style="{color: game.tokenInfo.volume_change > 0 ? '#458531' : '#F24B4B'}">
+                    {{ game.tokenInfo.volume_change > 0 ? '+' : '' }}
+                    {{ game.tokenInfo.volume_change.toFixed(2) }}%
+                  </span>
+                </div>
+              </div>
+              <div v-if="game.tokenInfo.market_cap" class="info">
+                <div>Market Cap</div>
+                <div>$ {{ game.tokenInfo.market_cap | abbreviateNumber }}
+                  <span v-if="game.tokenInfo.market_cap_change"
+                        :style="{color: game.tokenInfo.market_cap_change > 0 ? '#458531' : '#F24B4B'}">
+                    {{ game.tokenInfo.market_cap_change > 0 ? '+' : '' }}
+                    {{ game.tokenInfo.market_cap_change.toFixed(2) }}%
+                  </span>
+                </div>
+              </div>
+              <div v-if="game.tokenInfo.fully_diluted_market_cap" class="info">
+                <div>Fully Diluted Market Cap</div>
+                <div>$ {{ game.tokenInfo.fully_diluted_market_cap | abbreviateNumber }}
+                  <span v-if="game.tokenInfo.fully_diluted_market_cap_change"
+                        :style="{color: game.tokenInfo.fully_diluted_market_cap_change > 0 ? '#458531' : '#F24B4B'}">
+                    {{ game.tokenInfo.fully_diluted_market_cap_change > 0 ? '+' : '' }}
+                    {{ game.tokenInfo.fully_diluted_market_cap_change.toFixed(2) }}%
+                  </span>
+                </div>
+              </div>
+            </template>
             <div class="divider"/>
             <div v-if="game.developer" class="info">
               <div>Developer</div>
@@ -380,6 +368,14 @@
             <div v-if="game.language" class="info">
               <div>Language</div>
               <div>{{ game.language }}</div>
+            </div>
+            <div v-if="game.community && game.community.length" class="info">
+              <div>Community</div>
+              <div class="community">
+                <a v-for="(item, i) in game.community" :key="i" :href="item.link" target="_blank">
+                  <img alt :src="getCommunityImg(item.type)"/>
+                </a>
+              </div>
             </div>
           </template>
           <template v-else-if="game.ido">
@@ -419,18 +415,18 @@
           <template v-if="game.downloads && game.downloads.length && game.ido_type === 'launched'">
             <template v-if="game.downloads.length === 1">
               <a class="btn btn-download" :href="game.downloads[0].link" target="_blank" style="text-decoration: none">
-                Download
+                Play
               </a>
             </template>
             <template v-else>
               <div class="download">
                 <div class="btn btn-download" @click="show.download = !show.download">
-                  Download
+                  Play
                   <img :style="!show.download && { transform: 'rotate(180deg)'}" alt src="../assets/images/up.svg"/>
                 </div>
                 <transition name="slide-down">
                   <div v-show="show.download" class="download-list">
-                    <a v-for="(item, i) in game.downloads" :key="i" :href="item.link" target="_blank">Download for
+                    <a v-for="(item, i) in game.downloads" :key="i" :href="item.link" target="_blank">
                       {{ item.type }}</a>
                   </div>
                 </transition>
@@ -470,6 +466,15 @@ export default {
         return ''
       }
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+    abbreviateNumber(num) {
+      if (num > 999 && num < 1000000) {
+        return (num / 1000).toFixed(2) + 'K';
+      } else if (num > 1000000) {
+        return (num / 1000000).toFixed(2) + 'M';
+      } else {
+        return num;
+      }
     }
   },
   data() {
@@ -490,13 +495,13 @@ export default {
     }
   },
   head: {
-    title () {
+    title() {
       return this.getTitleFromPath()
     },
-    meta () {
+    meta() {
       return this.getMetadata()
     },
-    link () {
+    link() {
       return this.getLinks()
     }
   },
@@ -515,7 +520,7 @@ export default {
       return this.$store.state.game
     },
     displayItem() {
-      if(this.game.media && this.game.media.length)
+      if (this.game.media && this.game.media.length)
         return this.game.media[this.display]
       return {}
     },
@@ -553,15 +558,15 @@ export default {
     //   }
     // }
     game(val) {
-      if(val) {
+      if (val) {
         this.$nextTick(() => {
           const sideEl = this.$refs.side
-          if(window.innerWidth > 600 && sideEl) {
+          if (window.innerWidth > 600 && sideEl) {
             const top = 254
             document.addEventListener('scroll', (e) => {
               const height = e.target.scrollingElement.scrollHeight,
                   scrollTop = e.target.scrollingElement.scrollTop
-              if(scrollTop > top && (window.innerHeight + scrollTop + 20) < height) {
+              if (scrollTop > top && (window.innerHeight + scrollTop + 100) < height) {
                 sideEl.style.paddingTop = `${scrollTop - top}px`
               } else if (scrollTop < top) {
                 sideEl.style.paddingTop = ''
@@ -574,8 +579,8 @@ export default {
   },
   methods: {
     async like() {
-      if(!this.user || !this.user.address) return
-      await this.$store.dispatch('likeGame', { id: this.game.id, value: !this.game.liked })
+      if (!this.user || !this.user.address) return
+      await this.$store.dispatch('likeGame', {id: this.game.id, value: !this.game.liked})
       const game = {...this.game, liked: !this.game.liked}
       this.$store.commit('setGame', game)
     },
@@ -595,28 +600,28 @@ export default {
     },
     next() {
       const slide = this.$refs.slide
-      if(this.display + 1 < this.game.media.length) {
-        slide.scroll({ left: (this.display + 1) * 118, behavior: 'smooth'})
+      if (this.display + 1 < this.game.media.length) {
+        slide.scroll({left: (this.display + 1) * 118, behavior: 'smooth'})
         this.display++
       } else {
-        slide.scroll({ left: 0, behavior: 'smooth'})
+        slide.scroll({left: 0, behavior: 'smooth'})
         this.display = 0
       }
     },
     prev() {
       const slide = this.$refs.slide
-      if(this.display - 1 >= 0) {
-        slide.scroll({ left: (this.display - 1) * 118, behavior: 'smooth'})
+      if (this.display - 1 >= 0) {
+        slide.scroll({left: (this.display - 1) * 118, behavior: 'smooth'})
         this.display--
       } else {
-        slide.scroll({ left: (this.game.media.length - 1) * 118, behavior: 'smooth'})
+        slide.scroll({left: (this.game.media.length - 1) * 118, behavior: 'smooth'})
         this.display = this.game.media.length - 1
       }
     },
     getLinks() {
       return [
-        { rel: 'icon', href: 'https://gamefi.org/favicon.ico', sizes: '16x16', type: 'image/png' },
-        { rel: 'preload', href: this.getImageFromPath(), type: 'image/png' }
+        {rel: 'icon', href: 'https://gamefi.org/favicon.ico', sizes: '16x16', type: 'image/png'},
+        {rel: 'preload', href: this.getImageFromPath(), type: 'image/png'}
       ]
     },
     getDetailFromPath() {
@@ -638,7 +643,7 @@ export default {
         if (!data) {
           return ''
         }
-        return data.charAt(0).toUpperCase()+data.slice(1)
+        return data.charAt(0).toUpperCase() + data.slice(1)
       }).join(' ')
 
       return {
@@ -647,7 +652,9 @@ export default {
     },
     getImageFromPath() {
       if (this.game && Array.isArray(this.game.media)) {
-        const firstItem = this.game.media.find((item) => { return item.type === 'image'})
+        const firstItem = this.game.media.find((item) => {
+          return item.type === 'image'
+        })
         if (firstItem && firstItem.data) {
           return firstItem.data
         }
@@ -668,21 +675,25 @@ export default {
     },
     getMetadata() {
       return [
-        { name: 'description', content: this.getDescription(), id: 'description' },
+        {name: 'description', content: this.getDescription(), id: 'description'},
 
         // Twitter
-        { name: 'twitter:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}`, id: 'twitter:title' },
-        { name: 'twitter:description', content: this.getDescription(), id: 'twitter:description' },
-        { name: 'twitter:image', content: this.getImageFromPath(), id: 'twitter:image' },
+        {
+          name: 'twitter:title',
+          content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}`,
+          id: 'twitter:title'
+        },
+        {name: 'twitter:description', content: this.getDescription(), id: 'twitter:description'},
+        {name: 'twitter:image', content: this.getImageFromPath(), id: 'twitter:image'},
 
         // Google +
-        { itemprop: 'name', content: this.getTitleFromPath().inner, id: 'name' },
-        { itemprop: 'og:description', content: this.getDescription(), id: 'og:description' },
-        { itemprop: 'og:desc', content: this.getDescription(), id: 'og:desc' },
+        {itemprop: 'name', content: this.getTitleFromPath().inner, id: 'name'},
+        {itemprop: 'og:description', content: this.getDescription(), id: 'og:description'},
+        {itemprop: 'og:desc', content: this.getDescription(), id: 'og:desc'},
 
         // Facebook
-        { property: 'og:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}`, id: 'og:title' },
-        { property: 'og:image', content: this.getImageFromPath(), id: 'og:image' }
+        {property: 'og:title', content: `${this.getTitleFromPath().inner} | ${this.defaultTitle}`, id: 'og:title'},
+        {property: 'og:image', content: this.getImageFromPath(), id: 'og:image'}
       ]
     }
   }
@@ -737,7 +748,7 @@ export default {
           display: none;
           position: absolute;
           top: -32px;
-          left: 12px;
+          left: 99px;
           background: #4F4F4F;
           border-radius: 4px;
           padding: 0 12px;
@@ -821,7 +832,7 @@ export default {
       .info {
         display: flex;
         justify-content: space-between;
-        margin: 16px 0;
+        margin: 8px 0;
 
         div:first-child {
           color: #AEAEAE;
@@ -830,6 +841,33 @@ export default {
         div:last-child {
           font-weight: 600;
           text-align: right;
+
+          span {
+            font-size: 10px;
+            font-weight: 400;
+            margin-left: 4px;
+          }
+        }
+
+        .community {
+          display: flex;
+          align-items: center;
+
+          a {
+            width: 24px;
+            height: 24px;
+            border-radius: 24px;
+            background: #4F4F4F;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+
+            img {
+              max-width: 16px;
+              max-height: 16px;
+            }
+          }
         }
       }
 
@@ -886,8 +924,8 @@ export default {
             text-decoration: none;
             color: #FFFFFF;
             font-weight: 600;
-            font-size: 16px;
-            padding: 16px;
+            font-size: 14px;
+            padding: 8px;
             border-bottom: 1px solid #44454B;
             text-align: center;
           }
@@ -1141,22 +1179,6 @@ export default {
               margin-bottom: 12px;
             }
 
-            .community {
-              display: flex;
-              align-items: center;
-
-              a {
-                width: 32px;
-                height: 32px;
-                border-radius: 32px;
-                background: #4F4F4F;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-right: 16px;
-              }
-            }
-
             .tags {
               display: flex;
               align-items: center;
@@ -1234,7 +1256,7 @@ export default {
   }
 }
 
-.not-found{
+.not-found {
   height: calc(100vh - 540px);
   display: flex;
   flex-direction: column;

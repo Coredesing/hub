@@ -292,10 +292,10 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
   /* (poolDetails?.method === 'whitelist' ? alreadyJoinPool: true); */
 
 
-  const poolStatus = getPoolStatusByPoolDetail(
-    poolDetails,
-    tokenSold
-  );
+  // const poolStatus = getPoolStatusByPoolDetail(
+  //   poolDetails,
+  //   tokenSold
+  // );
 
   const displayCountDownTime = useCallback((
     method: string | undefined,
@@ -313,7 +313,30 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
     );
   }, [poolDetails?.method, joinTimeInDate, endJoinTimeInDate, startBuyTimeInDate, endBuyTimeInDate]);
 
-  const { date: countDownDate, display } = displayCountDownTime(poolDetails?.method, joinTimeInDate, endJoinTimeInDate, startBuyTimeInDate, endBuyTimeInDate)
+  // const { date: countDownDate, display } = displayCountDownTime(poolDetails?.method, joinTimeInDate, endJoinTimeInDate, startBuyTimeInDate, endBuyTimeInDate)
+
+  const [infoCountdown, setInfoCountdown] = useState({
+    countDownDate: undefined, display: '', poolStatus: undefined
+  });
+
+  const [recallCountdown, setRecallCountdown] = useState(true);
+  const onFinishCountdown = () => {
+    setRecallCountdown(true);
+  }
+
+  useEffect(() => {
+    if (recallCountdown) {
+      const { date: countDownDate, display, poolStatus } = displayCountDownTime(poolDetails?.method, joinTimeInDate, endJoinTimeInDate, startBuyTimeInDate, endBuyTimeInDate)
+      setInfoCountdown({ countDownDate, display, poolStatus });
+      setRecallCountdown(false);
+    }
+  }, [recallCountdown]);
+
+  useEffect(() => {
+    if (+soldProgress > 0) {
+      setRecallCountdown(true);
+    }
+  }, [soldProgress])
 
   // const shortenAddress = (address: string, digits: number = 4) => {
   //   return `${address.substring(0, digits + 2)}...${address.substring(42 - digits)}`
@@ -460,9 +483,10 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
               tokenDetails={poolDetails?.tokenDetails}
               maximumBuy={userBuyLimit}
               isOverTimeApplyWhiteList={isOverTimeApplyWhiteList}
-              countDownDate={countDownDate}
+              countDownDate={infoCountdown.countDownDate}
               isPreOrderPool={isPreOrderPool}
               isInPreOrderTime={isInPreOrderTime}
+              poolStatus={infoCountdown.poolStatus}
             />
 
             <ByTokenHeader
@@ -566,10 +590,11 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
 
           <div className={styles.midPage}>
             <BuyTokenPoolTimeLine
-              currentStatus={poolStatus}
-              display={display}
+              currentStatus={infoCountdown.poolStatus}
+              display={infoCountdown.display}
               poolDetails={poolDetails}
-              countDownDate={countDownDate}
+              countDownDate={infoCountdown.countDownDate}
+              onFinishCountdown={onFinishCountdown}
             />
             <BuyTokenPoolSwapInfo
               poolDetails={poolDetails}
@@ -577,7 +602,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
             />
           </div>
           {
-            ((+soldProgress < 100) && isSwap(poolDetails?.campaignStatus)) && !allowUserBuyPreOrder &&
+            ((+soldProgress < 100) && isSwap(infoCountdown.poolStatus)) && !allowUserBuyPreOrder &&
             startBuyTimeInDate &&
             endBuyTimeInDate &&
             startBuyTimeInDate < new Date() && new Date() < endBuyTimeInDate &&
@@ -665,7 +690,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
           }
 
           {
-            ((+soldProgress === 100) || isClaim(poolDetails?.campaignStatus)) &&
+            ((+soldProgress === 100) || isClaim(infoCountdown.poolStatus)) &&
             <ClaimToken
               releaseTime={poolDetails?.releaseTime ? releaseTimeInDate : undefined}
               ableToFetchFromBlockchain={ableToFetchFromBlockchain}

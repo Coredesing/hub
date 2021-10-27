@@ -327,13 +327,13 @@ export default new Vuex.Store({
           ].filter(item => !!item.data),
           liked: !!state.user.likes.find(id => id === detail.id),
           tokenInfo: {
-            ido_price: detail.token_price,
+            ido_price: +detail.token_price,
             ido_roi: +tokenomic.price / +detail.token_price,
-            volume: tokenomic.volume_24h,
+            volume: +tokenomic.volume_24h,
             volume_change: +tokenomic.volume_change_24h,
-            market_cap: tokenomic.market_cap,
+            market_cap: +tokenomic.market_cap,
             market_cap_change: +tokenomic.market_cap_change || +tokenomic.market_cap_change_24h,
-            fully_diluted_market_cap: tokenomic.fully_diluted_market_cap,
+            fully_diluted_market_cap: +tokenomic.fully_diluted_market_cap,
             fully_diluted_market_cap_change: +tokenomic.fully_diluted_market_cap_change || +tokenomic.fully_diluted_market_cap_change_24h
           },
           tokenChange: +tokenomic.price_change_24h,

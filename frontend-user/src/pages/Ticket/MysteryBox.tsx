@@ -399,7 +399,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                     const idCollection = (await contractPreSaleWithAcc.tokenOfOwnerByIndex(connectedAccount, id)).toNumber();
                     const boxType = await contractPreSaleWithAcc.boxes(idCollection);
                     const idBoxType = boxType.subBoxId.toNumber();
-                    const infoBox = subBoxes.find(b => b.subBoxId === idBoxType);
+                    const infoBox = subBoxes.find((b, subBoxId) => subBoxId === idBoxType);
                     const collection = infoBox && { ...infoBox, idCollection };
                     collection && arrCollections.push(collection);
                 } else {

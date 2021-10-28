@@ -737,7 +737,6 @@ export default {
         display: flex;
         align-items: center;
         color: #AEAEAE;
-        margin-top: 40px;
         margin-bottom: 8px;
         position: relative;
 

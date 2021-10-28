@@ -4,7 +4,7 @@ export const SIGNATURE_MESSAGE = process.env.VUE_APP_SIGNATURE_MESSAGE
 
 export const URL = {
   DISPLAY: `${BASE_URL}aggregator?display_area=`,
-  CATEGORY: `${BASE_URL}aggregator?price=true&category=`,
+  CATEGORY: `${BASE_URL}aggregator?per_page=12&price=true&category=`,
   LATEST: `${BASE_URL}aggregator?price=true`,
   DETAIL: `${BASE_URL}aggregator/slug/`,
   INFO: `${BASE_URL}project-info/`,

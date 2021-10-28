@@ -18,7 +18,7 @@
             <div class="pagination-prev" @click="changePage(-1)">
               <img alt src="../assets/images/arrow_left.svg"/>
             </div>
-            <div :class="`pagination-item ${pagination === n-1 ? 'selected' : ''}`" v-for="n in total" :key="n" @click="pagination = (n - 1)">{{ n }}</div>
+            <div :class="`pagination-item ${pagination === n ? 'selected' : ''}`" v-for="n in total" :key="n" @click="selectPage(n)">{{ n }}</div>
             <div class="pagination-next" @click="changePage(1)">
               <img alt src="../assets/images/arrow_right.svg"/>
             </div>
@@ -68,45 +68,39 @@ export default {
         }
       ],
       searchText: '',
-      pagination: 0,
     }
   },
   async created() {
-    if((!this.listAll || this.listAll.length === 0) && !this.selectedCategory) {
-      await this.$store.dispatch('getListAll')
-    }
+    await this.$store.dispatch('changePage', 1)
   },
   computed: {
     selectedCategory() {
       return this.$store.state.category
     },
-    listAll() {
+    list() {
       return this.$store.state.listAll
     },
-    total() {
-      return Math.ceil(this.listAll.length / 12)
+    pagination() {
+      return this.$store.state.page
     },
-    list() {
-      const page = this.pagination * 12
-      let list = this.listAll
-      if(this.searchText) {
-        list = list.filter(item => (item.game_name.toLowerCase().includes(this.searchText.toLowerCase())))
-      }
-      return list.slice(page, page + 12)
-    }
+    total() {
+      return this.$store.state.totalPage
+    },
   },
   methods: {
     async selectCategory(item) {
       await this.$store.dispatch('searchByCategory', item)
     },
-    changePage(payload) {
-      const page = this.pagination + payload
+    async changePage(payload) {
+      let page = this.pagination + payload
       if(page <= 0)
-        this.pagination = 0
+        page = 0
       else if(page === this.total)
-        this.pagination = this.total - 1
-      else
-        this.pagination = page
+        page = this.total - 1
+      await this.selectPage(page)
+    },
+    async selectPage(page) {
+      await this.$store.dispatch('changePage', page)
     }
   }
 }

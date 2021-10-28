@@ -125,22 +125,28 @@
               </div>
             </template>
             <template v-else-if="game.ido">
-              <div class="ido-title">${{ game.token }} IGO on {{ game.ido.date }}</div>
-              <div class="ido-chain">{{ game.ido.chain }}</div>
-              <div class="ido-price">
+              <div v-if="game.ido.date" class="ido-title">${{ game.token }} IGO on {{ game.ido.date }}</div>
+              <countdown v-if="game.ido_date" :deadline="game.ido_date"/>
+              <div v-if="game.ido.chain" class="ido-chain">{{ game.ido.chain }}</div>
+              <div v-if="game.ido.price" class="ido-price">
                 Price per token: <span>$ {{ game.ido.price }}</span>
-                <div class="ido-price_currency">{{ game.ido.currency }}</div>
               </div>
               <div class="divider" style="margin-bottom: 40px"/>
-              <template v-if="game.ido.link.redkite || game.ido.link.gamefi">
-                <a v-if="game.ido.link.redkite" class="btn ido-redkite" :href="game.ido.link.redkite">
-                  <img alt src="../assets/images/redkite.svg"/>
-                </a>
-                <a v-if="game.ido.link.gamefi" class="btn ido-gamefi" :href="game.ido.link.gamefi">
-                  <img alt src="../assets/images/gamefi.svg"/>
-                </a>
-                <div class="divider" style="margin: 40px 0 28px"/>
-              </template>
+              <a v-if="game.ido.link.redkite" class="btn ido-redkite" target="_blank" :href="game.ido.link.redkite">
+                <img alt src="../assets/images/redkite.svg"/>
+                <div v-if="game.ido.link.redkite.total">
+                  <p>Total Raise</p>
+                  <p>$ {{ game.ido.link.redkite.total }}</p>
+                </div>
+              </a>
+              <a v-if="game.ido.link.gamefi" class="btn ido-gamefi" target="_blank" :href="game.ido.link.gamefi">
+                <img alt src="../assets/images/gamefi.svg"/>
+                <div v-if="game.ido.link.gamefi.total">
+                  <p>Total Raise</p>
+                  <p>$ {{ game.ido.link.gamefi.total }}</p>
+                </div>
+              </a>
+              <div class="divider" style="margin: 40px 0 28px"/>
             </template>
             <div :class="`btn btn-like ${game.liked ? 'liked' : ''}`" @click="like">
               <template v-if="game.liked">
@@ -379,10 +385,10 @@
             </div>
           </template>
           <template v-else-if="game.ido">
-            <div class="ido-title">${{ game.token }} IGO on {{ game.ido.date }}</div>
-            <countdown :deadline="game.ido_date"/>
-            <div class="ido-chain">{{ game.ido.chain }}</div>
-            <div class="ido-price">
+            <div v-if="game.ido.date" class="ido-title">${{ game.token }} IGO on {{ game.ido.date }}</div>
+            <countdown v-if="game.ido_date" :deadline="game.ido_date"/>
+            <div v-if="game.ido.chain" class="ido-chain">{{ game.ido.chain }}</div>
+            <div v-if="game.ido.price" class="ido-price">
               Price per token: <span>$ {{ game.ido.price }}</span>
             </div>
             <div class="divider" style="margin-bottom: 40px"/>
@@ -731,7 +737,6 @@ export default {
         display: flex;
         align-items: center;
         color: #AEAEAE;
-        margin-top: 40px;
         margin-bottom: 8px;
         position: relative;
 

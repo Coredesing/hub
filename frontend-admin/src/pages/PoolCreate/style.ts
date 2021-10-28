@@ -12,6 +12,12 @@ const useStyles = makeStyles(theme => ({
   boldText: {
     fontWeight: 'bold',
   },
+  listButton: {
+    display: 'flex',
+    '& a:first-child': {
+      marginRight: 10
+    }
+  },
   form: {
     backgroundColor: 'white',
     boxShadow: `0px 0px 15px rgba(0, 0, 0, 0.1)`,

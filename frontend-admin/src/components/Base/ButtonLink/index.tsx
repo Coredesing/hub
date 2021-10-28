@@ -5,7 +5,7 @@ import useStyles from './style'
 type IButton = {
   text: string;
   icon?: any;
-  to: string;
+  to: string | any;
   spacing?: number;
   className?: string;
   onClick?: any,

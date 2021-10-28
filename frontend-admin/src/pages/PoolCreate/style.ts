@@ -35,6 +35,9 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'space-between',
     alignItems: 'center'
   },
+  flexRow: {
+    display: 'flex',
+  },
   formCKEditor: {
     // minHeight: 300,
     // height: 300,

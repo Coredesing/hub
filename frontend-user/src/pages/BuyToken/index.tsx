@@ -72,6 +72,7 @@ import { WrapperAlert } from '../../components/Base/WrapperAlert';
 import { isClaim, isSwap } from './utils';
 import WrapperContent from '@base-components/WrapperContent';
 import axios from '@services/axios';
+import { ObjectType } from '@app-types';
 
 const copyImage = "/images/copy.svg";
 const poolImage = "/images/pool_circle.svg";
@@ -237,7 +238,13 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
   })();
   const ableToFetchFromBlockchain = appNetwork === poolDetails?.networkAvailable && !wrongChain;
 
-  const userBuyLimit = currentUserTier?.max_buy || 0;
+  const [userBuyLimit, setUserBuyLimit] = useState(0);
+  useEffect(() => {
+      if(currentUserTier?.max_buy) {
+        setUserBuyLimit(currentUserTier.max_buy)
+      }
+  }, [currentUserTier])
+
   const userBuyMinimum = currentUserTier?.min_buy || 0;
   const currentUserTierLevel = currentUserTier?.level || 0;
 
@@ -315,8 +322,8 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
 
   // const { date: countDownDate, display } = displayCountDownTime(poolDetails?.method, joinTimeInDate, endJoinTimeInDate, startBuyTimeInDate, endBuyTimeInDate)
 
-  const [infoCountdown, setInfoCountdown] = useState({
-    countDownDate: undefined, display: '', poolStatus: undefined
+  const [infoCountdown, setInfoCountdown] = useState<ObjectType<any>>({
+    countDownDate: undefined, display: '', poolStatus: undefined,
   });
 
   const [recallCountdown, setRecallCountdown] = useState(true);
@@ -325,9 +332,16 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
   }
 
   useEffect(() => {
+    if(infoCountdown.isSwapPhase2 && +currentUserTier?.max_bonus) {
+      const maxBuy = (+currentUserTier.max_buy) + (+currentUserTier.max_bonus);
+      setUserBuyLimit(maxBuy);
+    }
+  }, [infoCountdown, currentUserTier])
+
+  useEffect(() => {
     if (recallCountdown) {
-      const { date: countDownDate, display, poolStatus } = displayCountDownTime(poolDetails?.method, joinTimeInDate, endJoinTimeInDate, startBuyTimeInDate, endBuyTimeInDate)
-      setInfoCountdown({ countDownDate, display, poolStatus });
+      const { date: countDownDate, display, poolStatus, ...other } = displayCountDownTime(poolDetails?.method, joinTimeInDate, endJoinTimeInDate, startBuyTimeInDate, endBuyTimeInDate)
+      setInfoCountdown({ countDownDate, display, poolStatus, ...other });
       setRecallCountdown(false);
     }
   }, [recallCountdown]);

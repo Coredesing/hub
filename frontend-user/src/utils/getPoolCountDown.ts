@@ -71,7 +71,7 @@ export const getPoolCountDown = (
   poolStatus: any | undefined,
   poolDetails: any | undefined,
   soldProgress: any | undefined,
-): { date: Date | undefined, display: string | undefined, displayShort: string | undefined, poolStatus?: PoolStatus } => {
+): { date: Date | undefined, display: string | undefined, displayShort: string | undefined, poolStatus?: PoolStatus, [k: string]: any } => {
   const today = new Date().getTime();
   let date;
   let display;
@@ -90,7 +90,7 @@ export const getPoolCountDown = (
   const startDateFirstClaim = startTimeFirstClaim ? new Date(Number(startTimeFirstClaim)) : undefined;
   const endTimeFirstClaim = lastClaimRecord && ((lastClaimRecord.end_time || 0) * 1000);
   const endDateFirstClaim = endTimeFirstClaim ? new Date(Number(endTimeFirstClaim)) : undefined;
-  const endTimeClaim = lastClaimRecord && +(lastClaimRecord.end_time || lastClaimRecord.start_time) * 1000
+  const endTimeClaim = lastClaimRecord && +(lastClaimRecord.end_time || lastClaimRecord.start_time) * 1000;
 
   // if (method && method === "whitelist") {
   //   if (isUpcoming) {
@@ -206,7 +206,7 @@ export const getPoolCountDown = (
         date = endBuyTime;
         display = 'Token Swap Phase 2 ends in';
         displayShort = "End in";
-        return { date, display, displayShort, poolStatus: PoolStatus.Progress };
+        return { date, display, displayShort, poolStatus: PoolStatus.Progress, isSwapPhase2: true };
       }
     } else if (startBuyTime.getTime() < today && today < endBuyTime.getTime()) {
       date = endBuyTime;

@@ -28,6 +28,8 @@ export default new Vuex.Store({
       likes: []
     },
     category: '',
+    page: 1,
+    totalPage: 1,
     listAll: [],
     listTopGame: [],
     listFavorite: [],
@@ -85,6 +87,12 @@ export default new Vuex.Store({
     },
     changeLoadingStatus(state, payload) {
       state.loading = payload
+    },
+    changePage(state, payload) {
+      state.page = payload
+    },
+    updatePageTotal(state, payload) {
+      state.totalPage = payload
     }
   },
   actions: {
@@ -98,6 +106,9 @@ export default new Vuex.Store({
           verified: !!item.verified
         }))
         commit('updateListAll', list)
+
+        const total = response.data.data.lastPage
+        commit('updatePageTotal', total)
       }
     },
     async searchByCategory({ commit }, payload) {
@@ -111,6 +122,33 @@ export default new Vuex.Store({
         url = URL.CATEGORY + payload
       }
 
+      const response = await axios.get(url)
+      if (response && response.data) {
+        const list = response.data.data.data.map(item => ({
+          ...item,
+          thumbnail: item.screen_shots_1,
+          verified: !!item.verified
+        }))
+        commit('updateListAll', list)
+
+        const total = response.data.data.lastPage
+        commit('updatePageTotal', total)
+        commit('changePage', 1)
+      }
+      commit('changeLoadingStatus', false)
+    },
+    async changePage({ state, commit }, payload) {
+      commit('changeLoadingStatus', true)
+      commit('changePage', payload)
+
+      const category = state.category
+      let url = URL.CATEGORY
+      if(category) {
+        url += category
+      } else {
+        url = url.slice(0, URL.CATEGORY.length - 9)
+      }
+      url += `page=${payload}`
       const response = await axios.get(url)
       if (response && response.data) {
         const list = response.data.data.data.map(item => ({

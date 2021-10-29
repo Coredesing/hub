@@ -12,7 +12,7 @@
       <div class="item-detail_category">
         {{ category.split(',').join(', ') }}
       </div>
-      <div class="price">
+      <div v-if="token_price" class="price">
         <img alt :src="icon_token_link"/>
         <div class="price-detail">
           <div class="price-detail_token">{{ ticker }}</div>

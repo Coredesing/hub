@@ -490,6 +490,7 @@ class UserController {
           start_time: 0,
           end_time: 0,
           level: 0,
+          max_bonus: 0,
           exist_whitelist: false,
         });
       }
@@ -518,10 +519,11 @@ class UserController {
         if (!tierDb) {
           return HelperUtils.responseSuccess(formatDataPrivateWinner({
             min_buy: 0,
-            max_buy: new BigNumber(maxTotalBonus).toFixed(),
+            max_buy: 0,
             start_time: 0,
             end_time: 0,
             level: 0,
+            max_bonus: 0,
             exist_whitelist: !!existWhitelist,
           }, isPublicWinner));
         }
@@ -547,7 +549,8 @@ class UserController {
           min_buy: tier.min_buy,
           max_buy: new BigNumber(
             new BigNumber(tier.max_buy).multipliedBy(winner.lottery_ticket)
-          ).plus(maxTotalBonus).toFixed(),
+          ).toFixed(),
+          max_bonus: maxTotalBonus,
           start_time: tier.start_time,
           end_time: tier.end_time,
           level: userTier,
@@ -557,10 +560,11 @@ class UserController {
 
       const tier = {
         min_buy: 0,
-        max_buy: new BigNumber(maxTotalBonus).toFixed(),
+        max_buy: 0,
         start_time: tierDb.start_time,
         end_time: tierDb.end_time,
         level: userTier,
+        max_bonus: maxTotalBonus,
         exist_whitelist: !!existWhitelist,
       }
 

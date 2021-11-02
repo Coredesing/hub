@@ -93,10 +93,7 @@ export default {
     },
     async changePage(payload) {
       let page = this.pagination + payload
-      if(page <= 0)
-        page = 0
-      else if(page === this.total)
-        page = this.total - 1
+      if(page <= 0 || page > this.total) return
       await this.selectPage(page)
     },
     async selectPage(page) {

@@ -4,9 +4,7 @@ import { useSelector } from 'react-redux';
 import _ from 'lodash';
 import useStyles from './style';
 import useAuth from '../../../hooks/useAuth';
-import ModalVerifyEmail from '../../Account/ModalVerifyEmail';
 import { isWidthDown, isWidthUp, withWidth } from '@material-ui/core';
-import { trimMiddlePartAddress } from '../../../utils/accountAddress';
 import { POOL_IS_PRIVATE, POOL_STATUS_JOINED, USER_STATUS } from '../../../constants';
 import { TIERS } from '../../../constants';
 //@ts-ignore

@@ -7,38 +7,19 @@ import { settingAppNetwork, NetworkUpdateType } from './store/actions/appNetwork
 import { AppContext } from './AppContext';
 
 import { clearAlert } from './store/actions/alert'
-import ErrorPage from './pages/ErrorPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ErrorBoundary from './components/Base/ErrorBoundary';
-import PrivateRoute from './components/Base/PrivateRoute';
 
 import BuyToken from './pages/BuyToken';
 import Dashboard from './pages/Dashboard';
-import NetworkChange from './pages/NetworkChange';
-import ChangePassword from './pages/ChangePassword';
-import ConfirmEmail from './pages/ConfirmEmail';
 import AppContainer from "./AppContainer";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import Terms from "./pages/Terms";
-import PolkaSmithPrivacyPolicy from "./pages/PolkaSmithPrivacyPolicy";
-
-import InvestorRegister from "./pages/Register/InvestorRegister";
-import InvestorForgotPassword from "./pages/ForgotPassword/InvestorForgotPassword";
-import InvestorResetPassword from "./pages/ResetPassword/InvestorResetPassword";
-import InvestorLogin from "./pages/Login/InvestorLogin";
-
 import AccountV2 from "./pages/AccountV2";
-import Deposit from "./pages/AccountV2/Deposit";
-import Withdraw from "./pages/AccountV2/Withdraw";
-import Landing from "./pages/Landing";
 import Pools from "./pages/Pools";
 
-import JoinPolkaSmith from "./pages/JoinPolkaSmith"
 //@ts-ignore
 import { NotificationContainer, NotificationManager } from 'react-notifications'
 import 'react-notifications/lib/notifications.css';
 import { adminRoute, publicRoute } from "./utils";
-import ComingSoon from "./pages/ComingSoon/ComingSoon";
 import Ticket from './pages/Ticket';
 import Home from './pages/Home';
 import TicketSale from './pages/TicketSale';
@@ -147,27 +128,10 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                     <Route exact path={'/staking-pools'} component={StakingPools} />
                     <Route exact path={'/buy-nft/:id'} component={Ticket} />
                     <Route exact path={'/mystery-box/:id'} component={Ticket} />
-                    {/* <Route path={`${'/polkasmith-privacy'}`} component={PolkaSmithPrivacyPolicy} />
-                    <Route path={`${'/join-polkasmith'}`} component={JoinPolkaSmith} /> */}
                     <Route exact path={`${'/dashboard'}`} component={Dashboard} />
-                    {/* <Route exact path={`${'/'}`} component={Home} /> */}
                     <Route path={`${'/buy-token/:id'}`} component={BuyToken} />
-                    <Route path={'/register'} component={InvestorRegister} />
-                    <Route path={'/login'} component={InvestorLogin} />
-                    <Route path={'/forgot-password/investor'} exact component={InvestorForgotPassword} />
-                    <Route path={'/reset-password/investor/:token'} component={InvestorResetPassword} />
-                    <Route path={'/confirm-email/:token'} component={ConfirmEmail} />
-                    <Route path={'/network-change'} component={NetworkChange} />
-                    <Route path={'/change-password/:role?'} component={ChangePassword} />
                     <Route path={'/account'} component={AccountV2} />
-                    {/* <Route path={'/stake'} component={Deposit} />
-                    <Route path={'/unstake'} component={Withdraw} /> */}
                     <Route exact path={'/pools'} component={Pools} />
-                    {/* <Route path={'/privacy'} component={PrivacyPolicy} /> */}
-                    {/* <Route path={'/terms'} component={Terms} /> */}
-                    {/* <Route path={'/'} component={Landing} /> */}
-                    {/* <Route path={'/coming-soon'} component={ComingSoon} /> */}
-                    {/* <Route path={'/home'} component={Home} /> */}
                     <Route exact path={'/pools/:type'} component={TicketSale} />
                     <Route exact path={'/mystery-boxes'} component={MysteryBoxes} />
                     <Route exact path={'/'} component={Home} />

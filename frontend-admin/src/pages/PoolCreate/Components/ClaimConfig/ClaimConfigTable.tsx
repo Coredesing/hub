@@ -14,6 +14,8 @@ import {renderErrorCreatePool} from "../../../../utils/validate";
 import BigNumber from "bignumber.js";
 import CreateEditClaimConfigForm from "./CreateEditClaimConfigForm";
 import ClaimPolicy from "./ClaimPolicy";
+import { convertMomentObjectToDateTimeString } from '../../../../utils/convertDate';
+import RepeatClaimConfigForm from './RepeatClaimConfigForm';
 
 const useStylesTable = makeStyles({
   table: {
@@ -34,6 +36,13 @@ const createDefaultTiers = () => {
     // createData('Legend', moment().format(DATETIME_FORMAT), moment().add(1, 'd').format(DATETIME_FORMAT), 0, 5000, false),
   ];
 };
+type RepeatDataProps = {
+  fromDate: string,
+  toDate: string,
+  repeatEvery: number,
+  initialValue: number,
+  repeatValue: number
+}
 
 function ClaimConfigTable(props: any) {
   const classes = useStyles();
@@ -44,6 +53,7 @@ function ClaimConfigTable(props: any) {
   } = props;
   const renderError = renderErrorCreatePool;
   const [isOpenEditPopup, setIsOpenEditPopup] = useState(false);
+  const [isOpenRepeatPopup, setIsOpenRepeatPopup] = useState(false);
   const [editData, setEditData] = useState({});
   const [editRow, setEditRow] = useState(0);
   const [isEdit, setIsEdit] = useState(true);
@@ -94,6 +104,65 @@ function ClaimConfigTable(props: any) {
     setIsOpenEditPopup(false);
   };
 
+  const openPopupRepeat = (e: any) => {
+    setIsOpenRepeatPopup(true);
+  };
+
+  function monthDiff(dateFrom: Date, dateTo: Date) {
+    return dateTo.getMonth() - dateFrom.getMonth() + 
+      (12 * (dateTo.getFullYear() - dateFrom.getFullYear()))
+  }
+  
+  const handleCreateRepeatData = (repeatData: RepeatDataProps) => {
+    console.log('handleCreateRepeatData', repeatData)
+    let monthNumber = monthDiff(new Date(repeatData.fromDate), new Date(repeatData.toDate));
+    if (monthNumber < 1) {
+      return alert('To Date must be greater than From Date at least 1 month!');
+    }
+    let newRows = [...rows];
+    let maxIndex = Math.floor(monthNumber / repeatData.repeatEvery);
+    for (let index = 0; index <= maxIndex; index++){
+      let newRow: any = {
+        startTime: convertMomentObjectToDateTimeString(
+          moment(repeatData.fromDate).add(index * repeatData.repeatEvery, "M"),
+        ),
+        maxBuy:
+          repeatData.initialValue + Number(index * repeatData.repeatValue) + ""
+      }
+      // @ts-ignore
+      newRows.push(newRow);
+    }
+
+    // order by startTime
+    newRows = orderByDatetime(newRows);
+
+    console.log(newRows);
+    setValue('campaignClaimConfig', JSON.stringify(newRows));
+    setRows(newRows);
+    setIsOpenRepeatPopup(false);
+  }
+
+  const orderByDatetime: any = (arr: Array<any>) => {
+    // @ts-ignore
+    return arr.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+  }
+
+  const refreshRecords = () => {
+    const newRows = orderByDatetime([...rows]);
+    setRows(newRows);
+    setValue('campaignClaimConfig', JSON.stringify(newRows));
+    // alert('Sort all records by Start Time done.')
+  }
+
+  const deleteAllRecords = () => {
+    // eslint-disable-next-line no-restricted-globals
+    if (!confirm('Do you want delete all records ?')) {
+      return false;
+    }
+    setRows([]);
+    setValue('campaignClaimConfig', JSON.stringify([]));
+  }
+
   const deleteRecord = (e: any, row: any, index: number) => {
     // eslint-disable-next-line no-restricted-globals
     if (!confirm('Do you want delete this record ?')) {
@@ -120,6 +189,14 @@ function ClaimConfigTable(props: any) {
           handleCreateUpdateData={handleCreateUpdateData}
         />
       }
+      {isOpenRepeatPopup &&
+        <RepeatClaimConfigForm
+          isOpenRepeatPopup={isOpenRepeatPopup}
+          setIsOpenRepeatPopup={setIsOpenRepeatPopup}
+          // renderError={renderError}
+          handleCreateRepeatData={handleCreateRepeatData}
+        />
+      }
       <div><label className={classes.exchangeRateTitle}>Claim Configuration</label></div>
 
       <ClaimPolicy
@@ -131,12 +208,30 @@ function ClaimConfigTable(props: any) {
         watch={watch}
       />
 
-      <div className={classes.formControl}>
+      <div className={`${classes.formControl} ${classes.flexRow}`}>
         <Button
           variant="contained"
           color="primary"
           onClick={openPopupCreate}
         >Create</Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={openPopupRepeat}
+          style={{marginLeft: 10}}
+        >Repeat</Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={refreshRecords}
+          style={{marginLeft: 'auto'}}
+          >Refresh</Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={deleteAllRecords}
+          style={{marginLeft: 10}}
+        >Delete All</Button>
       </div>
       <TableContainer component={Paper}>
         <Table className={classesTable.table} aria-label="simple table">

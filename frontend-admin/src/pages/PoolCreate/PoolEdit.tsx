@@ -11,13 +11,16 @@ import {useDispatch, useSelector} from "react-redux";
 import {get} from 'lodash';
 import {getPoolBlockchainInfo} from "../../utils/blockchain";
 import {alertFailure} from "../../store/actions/alert";
+import ButtonLink from '../../components/Base/ButtonLink';
+import useStyles from './style';
 
 const PoolEdit: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
   const isEdit = true;
   const { match } = props;
   const dispatch = useDispatch();
+  const styles = useStyles();
   const { data: loginUser } = useSelector((state: any) => state.user);
-  const [poolDetail, setPoolDetail] = useState();
+  const [poolDetail, setPoolDetail] = useState({});
 
   // @ts-ignore
   const id = match.params?.id;
@@ -64,7 +67,19 @@ const PoolEdit: React.FC<RouteComponentProps> = (props: RouteComponentProps) => 
 
   return (
     <DefaultLayout>
+    <div className={styles.listButton}>
       <BackButton to={adminRoute('/campaigns')}/>
+      <ButtonLink
+        text='Clone Pool'
+        to={{
+          pathname: adminRoute('/campaigns/add'),
+          state: {
+            poolDetail: {...poolDetail, is_deploy: 0}
+          }
+        }}
+        spacing={6}
+      />
+    </div>
       <PoolForm
         isEdit={isEdit}
         poolDetail={poolDetail}

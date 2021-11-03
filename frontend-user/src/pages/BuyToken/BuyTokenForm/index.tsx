@@ -151,7 +151,9 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
   const { retrieveTokenAllowance } = useTokenAllowance();
   const { retrieveUserPurchased } = useUserPurchased(tokenDetails, poolAddress, ableToFetchFromBlockchain);
 
-  const tokenToApprove = getApproveToken(appChainID, purchasableCurrency);
+  const tokenToApprove = useMemo(() => {
+    return getApproveToken(appChainID, purchasableCurrency)
+  }, [appChainID, purchasableCurrency]);
 
   const { approveToken, tokenApproveLoading, transactionHash } = useTokenApprove(
     tokenToApprove,
@@ -251,20 +253,26 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
       && (purchasableCurrency && purchasableCurrency !== PurchaseCurrency.ETH)
       && !wrongChain && ableToFetchFromBlockchain && isDeployed
       // && (alreadyJoinPool || joinPoolSuccess)
-      && new BigNumber(maximumBuy).gt(0) && !disableAllButton
+      // && new BigNumber(maximumBuy).gt(0) 
+      && !disableAllButton
     ) {
       enableApprove = true;
     }
     const isAlreadyJoinPool = (alreadyJoinPool || joinPoolSuccess);
     if (isAlreadyJoinPool) {
-      if (new BigNumber(maximumBuy).gt(0)) {
-        if (new BigNumber(tokenAllowance).gt(0)) {
-          enableApprove = false;
-        } else {
-          enableApprove = true;
-        }
-      } else {
+      // if (new BigNumber(maximumBuy).gt(0)) {
+      //   if (new BigNumber(tokenAllowance).gt(0)) {
+      //     enableApprove = false;
+      //   } else {
+      //     enableApprove = true;
+      //   }
+      // } else {
+      //   enableApprove = false;
+      // }
+      if (new BigNumber(tokenAllowance).gt(0)) {
         enableApprove = false;
+      } else {
+        enableApprove = true;
       }
     }
     
@@ -301,12 +309,25 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
     if (tokenDetails && poolAddress && connectedAccount && tokenToApprove) {
       setTokenAllowance(await retrieveTokenAllowance(tokenToApprove, connectedAccount, poolAddress) as number);
       setUserPurchased(await retrieveUserPurchased(connectedAccount, poolAddress) as number);
-      setTokenBalance(await retrieveTokenBalance(tokenToApprove, connectedAccount) as number);
       setWalletBalance(await retrieveTokenBalance(tokenDetails, connectedAccount) as number);
       setPoolBalance(await retrieveTokenBalance(tokenDetails, poolAddress) as number);
     }
 
   }, [tokenDetails, connectedAccount, tokenToApprove, poolAddress]);
+
+  useEffect(() => {
+    if(connectedAccount && tokenToApprove) {
+      retrieveTokenBalance(tokenToApprove, connectedAccount).then(balance => {
+        setTokenBalance(balance as number);
+      })
+    }
+  }, [connectedAccount, tokenToApprove])
+
+  useEffect(() => {
+    if(!connectedAccount) {
+      setTokenBalance(0);
+    }
+  }, [connectedAccount])
 
   useEffect(() => {
     if (maximumBuy && userPurchased && rate) {

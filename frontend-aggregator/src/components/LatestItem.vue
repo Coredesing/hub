@@ -10,7 +10,7 @@
         <img v-if="verified" src="../assets/images/tick_green.svg"/>
       </div>
       <div class="item-detail_category">
-        {{ category.split(',').join(', ') }}
+        {{ category && category.split(',').join(', ') }}
       </div>
       <div v-if="token_price" class="price">
         <img alt :src="icon_token_link"/>

@@ -178,7 +178,6 @@ export default {
 
     &-latest {
       display: flex;
-      align-items: center;
       overflow: auto;
 
       & > div {

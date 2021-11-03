@@ -1,9 +1,10 @@
 <template>
   <div id="app">
     <Header/>
-    <router-view />
+    <router-view/>
     <Footer/>
     <Loading/>
+    <NotificationMessage/>
   </div>
 </template>
 
@@ -12,8 +13,9 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Loading from "@/components/Loading";
+import NotificationMessage from "@/components/NotificationMessage";
 export default {
-  components: {Loading, Footer, Header},
+  components: {NotificationMessage, Loading, Footer, Header},
 }
 </script>
 

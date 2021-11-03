@@ -40,6 +40,11 @@ export default new Vuex.Store({
     subUpcoming: [],
     game: {},
     loading: false,
+    notification: {
+      show: false,
+      message: '',
+      type: 'info'
+    }
   },
   mutations: {
     updateUser(state, payload) {
@@ -93,7 +98,18 @@ export default new Vuex.Store({
     },
     updatePageTotal(state, payload) {
       state.totalPage = payload
-    }
+    },
+    showNotification(state, payload) {
+      const {type, message} = payload
+      state.notification = {
+        show: true,
+        type,
+        message
+      }
+      setTimeout(() => {
+        state.notification.show = false
+      }, 5000)
+    },
   },
   actions: {
     async getListAll({ commit }) {

@@ -501,14 +501,12 @@ class UserController {
 
       const isKYCRequired = camp.kyc_bypass === 0
       let maxTotalBonus = 0;
-      if (isFreeBuyTime) {
-        if (!!existWhitelist) {
-          maxTotalBonus = maxBonus;
-        }
+      if (!!existWhitelist) {
+        maxTotalBonus = maxBonus
+      }
 
-        if (!isKYCRequired) {
-          maxTotalBonus = maxBonus
-        }
+      if (isFreeBuyTime && !isKYCRequired) {
+        maxTotalBonus = maxBonus
       }
 
       // Get Tier in smart contract

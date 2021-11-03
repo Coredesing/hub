@@ -49,6 +49,10 @@ export default new Vuex.Store({
   mutations: {
     updateUser(state, payload) {
       Object.assign(state.user, payload)
+      const { address } = payload
+      if(address) {
+        localStorage.setItem('gamefi-user-address', address)
+      }
     },
     selectCategory(state, payload) {
       state.category = payload
@@ -430,6 +434,7 @@ export default new Vuex.Store({
         signature: '',
         likes: []
       })
+      localStorage.removeItem('user-address')
     }
   },
   modules: {},

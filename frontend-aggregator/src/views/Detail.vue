@@ -623,6 +623,8 @@ export default {
         video.muted = false;
       }
 
+      this.muted = +val === 0
+
       video.volume = +val;
     },
     display() {

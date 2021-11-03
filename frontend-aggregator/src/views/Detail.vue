@@ -13,19 +13,38 @@
           <div class="content-media">
             <div :class="`content-media_main ${playing && 'playing'}`">
               <template v-if="displayItem.type === 'video'">
-                <video ref="video" @ended="next" :controls="false" :src="displayItem.data"
-                       :poster="displayItem.thumbnail"/>
-                <div class="content-media_main--play" @click="toggleVideo">
-                  <template v-if="playing">
-                    <img alt src="../assets/images/pause.png"/>
-                  </template>
-                  <template v-else>
+                <div id="video-container">
+                  <video ref="video" @ended="next" :controls="false" :src="displayItem.data"
+                         @timeupdate="runProgress" @loadedmetadata="initializeVideo"
+                         :poster="displayItem.thumbnail"/>
+                  <div v-if="!played" class="content-media_main--play" @click="playVideo">
                     <img alt style="margin-left: 6px" src="../assets/images/play.png"/>
-                  </template>
+                  </div>
+                  <div v-show="played" class="video-toolbar">
+                    <div class="video-progress">
+                      <progress ref="progress" value="0" min="0"></progress>
+                      <input class="seek" ref="seek" :value="time" @input="skipTo" min="0" type="range" step="1">
+                    </div>
+                    <div class="video-action">
+                      <img v-if="playing" alt src="../assets/images/pause.svg" @click="toggleVideo"/>
+                      <img v-else alt src="../assets/images/play.svg" @click="toggleVideo" style="width: 20px;margin-right: 12px"/>
+                      <img v-if="muted" alt src="../assets/images/mute.svg" @click="toggleMute"/>
+                      <img v-else alt src="../assets/images/speaker.svg" @click="toggleMute"/>
+                      <input class="volume" ref="volume" v-model="volume" min="0" type="range" step="0.01" max="1">
+                      <div class="time">
+                        <time ref="timer">00:00</time>
+                        <span> / </span>
+                        <time ref="duration">00:00</time>
+                      </div>
+                      <div class="spacer"></div>
+                      <img v-if="fullscreen" alt src="../assets/images/fullscreen-out.svg" style="width: 20px" @click="toggleFullScreen"/>
+                      <img v-else alt src="../assets/images/fullscreen-in.svg" style="width: 20px" @click="toggleFullScreen"/>
+                    </div>
+                  </div>
                 </div>
               </template>
               <template v-else>
-                <img alt :src="displayItem.data"/>
+                <img alt :src="displayItem.data" @click="openBigPicture(displayItem.data)" style="cursor: zoom-in"/>
               </template>
             </div>
             <div class="content-media_slide">
@@ -275,7 +294,7 @@
             <template v-if="tab === 2 && game.team">
               <div v-if="game.team.roadmap">
                 <div class="title">Roadmap</div>
-                <img style="cursor: zoom-in" @click="show.bigImg = true" alt :src="game.team.roadmap"/>
+                <img style="cursor: zoom-in" @click="openBigPicture(game.team.roadmap)" alt :src="game.team.roadmap"/>
               </div>
               <div v-if="game.team.partner">
                 <div class="title">Partner</div>
@@ -450,7 +469,7 @@
       </div>
     </template>
     <div v-if="show.bigImg" class="dialog-img" @click="show.bigImg = false">
-      <img alt :src="game.team.roadmap"/>
+      <img alt :src="bigPicture"/>
     </div>
   </div>
 </template>
@@ -462,6 +481,15 @@ import Breadcrumb from "../components/Breadcrumb";
 // import * as am4charts from "@amcharts/amcharts4/charts";
 import MaskDot from "../components/MaskDot";
 import Countdown from "../components/Countdown";
+
+function formatTime(timeInSeconds) {
+  const result = new Date(timeInSeconds * 1000).toISOString().substr(11, 8);
+
+  return {
+    minutes: result.substr(3, 2),
+    seconds: result.substr(6, 2),
+  };
+}
 
 export default {
   name: "Detail",
@@ -496,8 +524,15 @@ export default {
       tokenInfo: null,
       tab: 0,
       display: 0,
+      played: false,
       playing: false,
-      loading: false
+      muted: false,
+      loading: false,
+      bigPicture: '',
+      volume: 0.2,
+      tempVol: 0.2,
+      time: 0,
+      fullscreen: false,
     }
   },
   head: {
@@ -581,7 +616,27 @@ export default {
           }
         })
       }
-    }
+    },
+    volume(val) {
+      const video = this.$refs.video
+      if (video.muted) {
+        video.muted = false;
+      }
+
+      video.volume = +val;
+    },
+    display() {
+      if(this.displayItem.type === 'video') {
+        this.played = false
+        this.playing = false
+        const video = this.$refs.video
+        if(video) {
+          video.pause()
+          video.fastSeek(0)
+        }
+        this.time = 0;
+      }
+    },
   },
   methods: {
     async like() {
@@ -593,15 +648,79 @@ export default {
     getCommunityImg(name) {
       return require(`@/assets/images/community/${name}.svg`)
     },
+    initializeVideo() {
+      const video = this.$refs.video
+      if(video) {
+        const videoDuration = Math.round(video.duration)
+        const seek = this.$refs.seek
+        seek.setAttribute('max', videoDuration)
+        const progressBar = this.$refs.progress
+        progressBar.setAttribute('max', videoDuration)
+        const time = formatTime(videoDuration);
+        const duration = this.$refs.duration
+        duration.innerText = `${time.minutes}:${time.seconds}`
+        duration.setAttribute('datetime', `${time.minutes}m ${time.seconds}s`)
+      }
+    },
+    runProgress() {
+      const video = this.$refs.video
+      const progress = this.$refs.progress
+      const timeElapsed = this.$refs.timer
+      if(video && progress && timeElapsed) {
+        progress.value = Math.floor(video.currentTime)
+        this.time = progress.value
+        const time = formatTime(progress.value)
+        timeElapsed.innerText = `${time.minutes}:${time.seconds}`
+      }
+    },
+    playVideo() {
+      this.played = true
+      this.playing = true
+      const video = this.$refs.video
+      video.play();
+    },
+    skipTo(e) {
+      const value = e.target.value
+      this.time = value
+      const video = this.$refs.video
+      video.currentTime = value
+      const progress = this.$refs.progress
+      progress.value = value
+      const time = formatTime(value)
+      const timeElapsed = this.$refs.timer
+      timeElapsed.innerText = `${time.minutes}:${time.seconds}`
+    },
     toggleVideo() {
       const video = this.$refs.video
       if (video.paused || video.ended) {
-        video.volume = 0.1
-        video.play();
+        video.play()
         this.playing = true
       } else {
-        video.pause();
+        video.pause()
         this.playing = false
+      }
+    },
+    toggleMute() {
+      this.muted = !this.muted
+
+      if (this.muted) {
+        this.tempVol = +this.volume
+        this.volume = 0
+      } else {
+        this.volume = this.tempVol
+      }
+    },
+    toggleFullScreen() {
+      const videoContainer = document.getElementById('video-container')
+      this.fullscreen = !this.fullscreen
+      if(document.fullscreenElement) {
+        document.exitFullscreen();
+      } else if (document.webkitFullscreenElement) {
+        document.webkitExitFullscreen();
+      } else if (videoContainer.webkitRequestFullscreen) {
+        videoContainer.webkitRequestFullscreen();
+      } else {
+        videoContainer.requestFullscreen();
       }
     },
     next() {
@@ -613,6 +732,10 @@ export default {
         slide.scroll({left: 0, behavior: 'smooth'})
         this.display = 0
       }
+    },
+    openBigPicture(data) {
+      this.bigPicture = data
+      this.show.bigImg = true
     },
     prev() {
       const slide = this.$refs.slide
@@ -1041,6 +1164,11 @@ export default {
             background: linear-gradient(180deg, rgba(81, 81, 81, 0.43) 0%, rgba(81, 81, 81, 0) 100%);
             position: relative;
 
+            & > div {
+              width: 100%;
+              height: 100%;
+            }
+
             video,
             & > img {
               width: 100%;
@@ -1067,13 +1195,87 @@ export default {
               z-index: 2;
             }
 
-            &.playing > div {
+            &.playing div > div {
               opacity: 0;
               transition: opacity 0.2s;
             }
 
-            &.playing:hover > div {
+            &.playing:hover div > div {
               opacity: 1;
+            }
+
+            .video-toolbar {
+              position: absolute;
+              bottom: 20px;
+              left: 20px;
+              right: 20px;
+              background: #00000088;
+            }
+
+            .video-progress {
+              position: relative;
+
+              .video-progress {
+                position: relative;
+                height: 8.4px;
+                margin-bottom: 10px;
+              }
+
+              progress {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                border-radius: 2px;
+                width: 100%;
+                height: 8.4px;
+                pointer-events: none;
+                position: absolute;
+                top: 0;
+
+                &::-webkit-progress-bar {
+                  background-color: #474545;
+                  border-radius: 2px;
+                }
+
+                &::-webkit-progress-value {
+                  background: #72F34B;
+                  border-radius: 2px;
+                }
+
+                &::-moz-progress-bar {
+                  border: 1px solid #72F34B;
+                  background: #72F34B;
+                }
+              }
+
+              .seek {
+                position: absolute;
+                top: 0;
+                width: 100%;
+                cursor: pointer;
+                margin: 0;
+              }
+
+            }
+
+            .video-action {
+              display: flex;
+              align-items: center;
+              padding: 24px 8px 12px;
+
+              & > * {
+                margin-right: 8px;
+              }
+
+              img {
+                cursor: pointer;
+              }
+            }
+
+            #video-container:fullscreen .video-toolbar {
+              bottom: 0;
+              left: 0;
+              right: 0;
             }
           }
 

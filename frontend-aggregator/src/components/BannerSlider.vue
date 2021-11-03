@@ -53,6 +53,10 @@
 <!--          </template>-->
 <!--        </div>-->
       </div>
+      <div class="slider-volume" @click="toggleSound">
+        <img v-if="muted" src="../assets/images/mute.svg"/>
+        <img v-else src="../assets/images/speaker.svg"/>
+      </div>
     </template>
   </div>
 </template>
@@ -68,6 +72,7 @@ export default {
       },
       first: 0,
       last: 5,
+      muted: true
     }
   },
   async created() {
@@ -79,7 +84,7 @@ export default {
       return this.$store.state.listTopGame
     },
     selectedList() {
-      return this.list.slice(this.first, this.last)
+      return this.list
     }
   },
   watch: {
@@ -130,6 +135,11 @@ export default {
     },
     async viewMore(selectedItem) {
       this.$router.push({ path: '/game/' + selectedItem.slug})
+    },
+    toggleSound() {
+      const video = this.$refs.video
+      this.muted = !this.muted
+      video.muted = this.muted
     }
   }
 }
@@ -313,12 +323,21 @@ export default {
   }
 
   &:hover &-info,
-  &:hover &-delimiter {
+  &:hover &-delimiter,
+  &:hover &-volume {
     opacity: 1;
   }
 
   &:hover &-wrapper:before {
     content: '';
+  }
+
+  &-volume {
+    position: absolute;
+    top: 32px;
+    right: 32px;
+    cursor: pointer;
+    opacity: 0;
   }
 }
 

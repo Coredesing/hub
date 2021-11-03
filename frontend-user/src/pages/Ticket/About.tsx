@@ -381,6 +381,10 @@ export const AboutMysteryBox = ({
   const onCloseModalBox = useCallback(() => {
     setOpenModalBoxCollection(false);
   }, []);
+  const seriesContentConfig = (info.seriesContentConfig || []);
+  const firstSerie = seriesContentConfig[0];
+  const isShowRateSerie = firstSerie && +firstSerie.rate > 0;
+  const isShowAmountSerie = firstSerie && +firstSerie.amount > 0;
   return (
     <div className={classes.root}>
       <AppBar className={classes.appbar} position="static">
@@ -424,7 +428,13 @@ export const AboutMysteryBox = ({
         </ul>
       </TabPanel>
       <TabPanel value={tabCurrent} index={1}>
-        <ModalSeriesContent open={openModalSerieContent} current={currentSerie} seriesContent={info.seriesContentConfig || []} onClose={onCloseModalSerie} />
+        <ModalSeriesContent
+          open={openModalSerieContent}
+          current={currentSerie}
+          seriesContent={info.seriesContentConfig || []}
+          onClose={onCloseModalSerie}
+          isShowRateSerie={isShowRateSerie}
+          isShowAmountSerie={isShowAmountSerie} />
         <TableContainer style={{ background: '#171717', marginTop: '7px' }}>
           <Table>
             <TableHead>
@@ -432,11 +442,12 @@ export const AboutMysteryBox = ({
                 <TableCell width="80px" style={{ paddingLeft: '28px' }}>No</TableCell>
                 <TableCell width="300px" style={{ padding: '7px' }} align="left">Name</TableCell>
                 {/* <TableCell align="left">Amount</TableCell> */}
-                <TableCell align="left" style={{ padding: '7px' }}>Rare</TableCell>
+                {isShowRateSerie && <TableCell align="left" style={{ padding: '7px' }}>Rare</TableCell>}
+                {isShowAmountSerie && <TableCell align="left" style={{ padding: '7px' }}>Amount</TableCell>}
               </TableRowHead>
             </TableHead>
             <TableBody>
-              {(info.seriesContentConfig || []).map((row: any, idx: number) => (
+              {seriesContentConfig.map((row: any, idx: number) => (
                 <TableRowBody key={idx}>
                   <TableCell width="80px" component="th" scope="row" style={{ paddingLeft: '28px' }}> {idx + 1} </TableCell>
                   <TableCell align="left" style={{ padding: '7px' }} className="text-uppercase">
@@ -448,8 +459,8 @@ export const AboutMysteryBox = ({
 
                     </Box>
                   </TableCell>
-                  {/* <TableCell align="left">{numberWithCommas(row.amount)}</TableCell> */}
-                  <TableCell align="left" style={{ padding: '7px' }}>{row.rate}%</TableCell>
+                  {isShowRateSerie && <TableCell align="left" style={{ padding: '7px' }}>{row.rate}%</TableCell>}
+                  {isShowAmountSerie && <TableCell align="left" style={{ padding: '7px' }}>{numberWithCommas(row.amount)}</TableCell>}
                 </TableRowBody>
               ))}
             </TableBody>

@@ -1544,6 +1544,38 @@ export default {
               border-radius: 12px;
               max-width: 100%;
             }
+
+            .video-toolbar {
+              left: 8px;
+              right: 8px;
+              bottom: 8px;
+
+              progress,
+              input[type=range] {
+                height: 6px;
+              }
+            }
+
+            .video-action {
+              padding: 12px 8px 2px;
+
+              input.volume {
+                width: 60px;
+              }
+
+              img {
+                border-radius: unset;
+                width: 18px;
+
+                &:first-child {
+                  width: 14px !important;
+                }
+
+                &:last-child {
+                  display: none;
+                }
+              }
+            }
           }
 
           &_slide {

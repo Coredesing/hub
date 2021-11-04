@@ -8,6 +8,8 @@ import CurrencyInputWithValidate from "../CurrencyInputWithValidate";
 import {DATETIME_FORMAT} from "../../../../constants";
 import {fieldMustBeGreaterThanZero, renderErrorCreatePool} from "../../../../utils/validate";
 import {convertDateTimeStringToMomentObject, convertMomentObjectToDateTimeString} from "../../../../utils/convertDate";
+import { MenuItem, Select } from "@material-ui/core";
+import CLAIM_TYPES from "../../../../store/constants/claim_type"
 
 function CreateEditClaimConfigForm(props: any) {
   const classes = useStyles();
@@ -35,6 +37,8 @@ function CreateEditClaimConfigForm(props: any) {
       // startTime: data.startTime.format(DATETIME_FORMAT),
       startTime: convertMomentObjectToDateTimeString(data.startTime),
       maxBuy: data.maxBuy,
+      claimType: data.claimType,
+      claimUrl: data.claimUrl
     };
     handleCreateUpdateData && handleCreateUpdateData(responseData);
   };
@@ -131,6 +135,62 @@ function CreateEditClaimConfigForm(props: any) {
           </p>
         </div>
 
+        <div className={classes.formControl}>
+          <label className={classes.formControlLabel}>Claim Type</label>
+          <div style={{ marginBottom: 25 }}>
+            <Controller
+              control={control}
+              defaultValue={editData?.claimType || 0}
+              name="claimType"
+              render={(field) => {
+                return (
+                  <Select
+                    {...field}
+                    onChange={(event) => setValue(field.name, event.target.value)}
+                  >
+                    {
+                      CLAIM_TYPES.map((value, index) => {
+                        return (
+                          <MenuItem
+                            key={index}
+                            value={index}
+                          >
+                            {value}
+                          </MenuItem>
+                        )
+                      })
+                    }
+                  </Select>
+                )
+              }}
+            />
+            <p className={classes.formErrorMessage}>
+              {
+                renderError(errors, 'claimType')
+              }
+            </p>
+          </div>
+        </div>
+
+        <div className={classes.formControl}>
+          <label className={classes.formControlLabel}>Claim URL</label>
+          <Controller
+              control={control}
+              defaultValue={editData?.claimUrl}
+              name="claimUrl"
+              render={(field) => {
+                return (
+                  <input
+                    {...field}
+                    type="text"
+                    name={field.name}
+                    className={classes.formControlInput}
+                    onChange={(event) => setValue(field.name, event.target.value)}
+                  />
+                )
+              }}
+            />
+        </div>
 
       </ConfirmDialog>
 

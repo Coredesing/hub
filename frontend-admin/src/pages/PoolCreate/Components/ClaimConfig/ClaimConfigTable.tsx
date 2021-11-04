@@ -14,6 +14,7 @@ import {renderErrorCreatePool} from "../../../../utils/validate";
 import BigNumber from "bignumber.js";
 import CreateEditClaimConfigForm from "./CreateEditClaimConfigForm";
 import ClaimPolicy from "./ClaimPolicy";
+import CLAIM_TYPES from "../../../../store/constants/claim_type"
 
 const useStylesTable = makeStyles({
   table: {
@@ -21,8 +22,8 @@ const useStylesTable = makeStyles({
   },
 });
 
-const createData = (id: number, startTime: any, endTime: any, minBuy: number, maxBuy: number, isEdit: boolean) => {
-  return { id, startTime, endTime, minBuy, maxBuy, isEdit };
+const createData = (id: number, startTime: any, endTime: any, minBuy: number, maxBuy: number, isEdit: boolean, claimType: string, claimUrl: string) => {
+  return { id, startTime, endTime, minBuy, maxBuy, isEdit, claimType, claimUrl };
 };
 
 const createDefaultTiers = () => {
@@ -59,6 +60,8 @@ function ClaimConfigTable(props: any) {
           (new BigNumber(item.min_percent_claim)).toNumber(),
           (new BigNumber(item.max_percent_claim)).toNumber(),
           false,
+          item.claim_type,
+          item.claim_url
         );
       });
 
@@ -144,6 +147,8 @@ function ClaimConfigTable(props: any) {
             <TableRow>
               <TableCell>Start Time</TableCell>
               <TableCell align="right">Max Claim (%)</TableCell>
+              <TableCell align="right">Claim Type</TableCell>
+              <TableCell align="right">Claim URL</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -155,6 +160,8 @@ function ClaimConfigTable(props: any) {
                 <TableRow key={index}>
                   <TableCell>{startTime}</TableCell>
                   <TableCell align="right">{maxBuy} %</TableCell>
+                  <TableCell align="right">{CLAIM_TYPES[row.claimType]}</TableCell>
+                  <TableCell align="right">{row.claimUrl}</TableCell>
                   <TableCell align="right">
                     <Button
                       variant="contained"

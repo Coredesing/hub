@@ -33,7 +33,8 @@ import useTokenSold from "../hooks/useTokenSold";
 import { getEtherscanName } from "../../../utils/network";
 import { alertFailure } from "../../../store/actions/alert";
 import { Recapcha } from '../../../components/Base/Recapcha';
-import { getApproveToken } from '../../../utils';
+import { debounce, getApproveToken } from '../../../utils';
+import _ from 'lodash';
 
 const REGEX_NUMBER = /^-?[0-9]{0,}[.]{0,1}[0-9]{0,6}$/;
 
@@ -138,6 +139,14 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
     setVerifiedCapcha(token || '')
   }
 
+  const recaptchaRef: any = React.useRef();
+  const onRefreshRecaptcha = debounce(() => {
+    if (!verifiedCapcha) return;
+    if (typeof recaptchaRef?.current?.reset === 'function') {
+      recaptchaRef.current.reset();
+    }
+  }, 5000);
+
   const etherscanName = getEtherscanName({ networkAvailable });
   const {
     deposit,
@@ -145,7 +154,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
     tokenDepositTransaction,
     depositError,
     tokenDepositSuccess
-  } = usePoolDepositAction({ poolAddress, poolId, purchasableCurrency, amount: input, isClaimable, networkAvailable, captchaToken: verifiedCapcha});
+  } = usePoolDepositAction({ poolAddress, poolId, purchasableCurrency, amount: input, isClaimable, networkAvailable, captchaToken: verifiedCapcha });
 
   const { currencyIcon, currencyName } = getIconCurrencyUsdt({ purchasableCurrency, networkAvailable });
   const { retrieveTokenAllowance } = useTokenAllowance();
@@ -275,7 +284,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
         enableApprove = true;
       }
     }
-    
+
     if (tokenAllowance > 0) {
       activeDisableStep1 = true;
       activeStep2 = true;
@@ -316,7 +325,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
   }, [tokenDetails, connectedAccount, tokenToApprove, poolAddress]);
 
   useEffect(() => {
-    if(connectedAccount && tokenToApprove) {
+    if (connectedAccount && tokenToApprove) {
       retrieveTokenBalance(tokenToApprove, connectedAccount).then(balance => {
         setTokenBalance(balance as number);
       })
@@ -324,7 +333,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
   }, [connectedAccount, tokenToApprove])
 
   useEffect(() => {
-    if(!connectedAccount) {
+    if (!connectedAccount) {
       setTokenBalance(0);
     }
   }, [connectedAccount])
@@ -449,6 +458,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
     if (!isValid) {
       return false;
     }
+    onRefreshRecaptcha();
     try {
       if (purchasableCurrency && ableToFetchFromBlockchain) {
         setOpenSubmitModal(true);
@@ -606,7 +616,11 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
         }
         {
           !enableApprove && maximumBuy && maximumBuy > 0 &&
-          <Recapcha onChange={onVerifyCapcha} className={styles.captchaContainer} />
+          <Recapcha
+            onChange={onVerifyCapcha}
+            className={styles.captchaContainer}
+            ref={recaptchaRef}
+          />
         }
 
         <div className={styles.btnGroup}>

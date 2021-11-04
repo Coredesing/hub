@@ -11,7 +11,7 @@ export const checkIsInPreOrderTime = (params: any) => {
   if (!startPreOrderTime || !startBuyTime) return false;  // Not set PreOrder Time in Admin
 
   const now = unixTimeNow();
-  if (startPreOrderTime < now && now < startBuyTime) {
+  if (+startPreOrderTime < +startBuyTime && now < +startBuyTime) {
     return true;
   }
   return false;

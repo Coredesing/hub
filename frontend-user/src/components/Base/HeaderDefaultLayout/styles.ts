@@ -440,6 +440,20 @@ const useStyles = makeStyles((theme) => {
           textDecoration: 'underline'
         },
       },
+      '& a.new-link': {
+        position: 'relative',
+        '& .new-icon': {
+          display: 'block',
+          position: 'absolute',
+          padding: '0px 7px',
+          color: '#000',
+          background: '#72F34B',
+          top: '-15px',
+          right: '-35px',
+          fontSize: '10px',
+          borderRadius: '8px'
+        }
+      }
     },
     headerAccount: {
       ...typeDisplayFlex,

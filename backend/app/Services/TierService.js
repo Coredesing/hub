@@ -41,7 +41,8 @@ class TierService {
       start_time: isPublicWinner ? data.start_time : 0,
       end_time: isPublicWinner ? data.end_time : 0,
       level: data.level,
-      exist_whitelist: data.exist_whitelist
+      exist_whitelist: data.exist_whitelist,
+      max_bonus: isPublicWinner ? data.max_bonus : 0
     };
     return formattedData;
   }

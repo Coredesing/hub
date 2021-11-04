@@ -72,6 +72,7 @@ import { WrapperAlert } from '../../components/Base/WrapperAlert';
 import { isClaim, isSwap } from './utils';
 import WrapperContent from '@base-components/WrapperContent';
 import axios from '@services/axios';
+import { ObjectType } from '@app-types';
 
 const copyImage = "/images/copy.svg";
 const poolImage = "/images/pool_circle.svg";
@@ -223,7 +224,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
   // const countDown = useCountDownFreeBuyTime(poolDetails);
 
   // Use for check whether pool exist in selected network or not
-  const appNetwork = (() => {
+  const appNetwork = useMemo(() => {
     switch (appChainID) {
       case BSC_CHAIN_ID:
         return 'bsc';
@@ -234,41 +235,108 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
       case ETH_CHAIN_ID:
         return 'eth';
     }
-  })();
+  }, [appChainID]);
+
   const ableToFetchFromBlockchain = appNetwork === poolDetails?.networkAvailable && !wrongChain;
 
-  const userBuyLimit = currentUserTier?.max_buy || 0;
+  const [userBuyLimit, setUserBuyLimit] = useState(0);
+  useEffect(() => {
+    if (currentUserTier?.max_buy) {
+      setUserBuyLimit(currentUserTier.max_buy)
+    }
+  }, [currentUserTier])
+
   const userBuyMinimum = currentUserTier?.min_buy || 0;
   const currentUserTierLevel = currentUserTier?.level || 0;
 
   // Detect PreOrder
-  const isPreOrderPool = checkIsPoolPreOrder({ poolDetails, currentUserTierLevel });
-  const isEnoughTierPreOrder = checkIsEnoughTierPreOrder({ poolDetails, currentUserTierLevel });
-  const isInPreOrderTime = isPreOrderPool && checkIsInPreOrderTime({ poolDetails, currentUserTierLevel });
-  const allowUserBuyPreOrder = isPreOrderPool && checkAllowUserBuyPreOrder({
-    poolDetails,
-    currentUserTierLevel,
-    userJoined: (alreadyJoinPool || joinPoolSuccess),
-  });
+  // const isPreOrderPool = checkIsPoolPreOrder({ poolDetails, currentUserTierLevel });
+  // const isEnoughTierPreOrder = checkIsEnoughTierPreOrder({ poolDetails, currentUserTierLevel });
+  // const isInPreOrderTime = isPreOrderPool && checkIsInPreOrderTime({ poolDetails, currentUserTierLevel });
+  // const allowUserBuyPreOrder = isPreOrderPool && checkAllowUserBuyPreOrder({
+  //   poolDetails,
+  //   currentUserTierLevel,
+  //   userJoined: (alreadyJoinPool || joinPoolSuccess),
+  // });
 
   // With Whitelist situation, Enable when join time < current < end join time
   // With FCFS, always disable join button
-  const joinTimeInDate = poolDetails?.joinTime ? new Date(Number(poolDetails?.joinTime) * 1000) : undefined;
-  const endJoinTimeInDate = poolDetails?.endJoinTime ? new Date(Number(poolDetails?.endJoinTime) * 1000) : undefined;
-  // const startBuyTimeInDate = poolDetails?.startBuyTime ? new Date(Number(poolDetails?.startBuyTime) * 1000) : undefined;
-  // const endBuyTimeInDate = poolDetails?.endBuyTime ? new Date(Number(poolDetails?.endBuyTime) * 1000) : undefined;
+  // const joinTimeInDate = poolDetails?.joinTime ? new Date(Number(poolDetails?.joinTime) * 1000) : undefined;
+  // const endJoinTimeInDate = poolDetails?.endJoinTime ? new Date(Number(poolDetails?.endJoinTime) * 1000) : undefined;
+  // // const startBuyTimeInDate = poolDetails?.startBuyTime ? new Date(Number(poolDetails?.startBuyTime) * 1000) : undefined;
+  // // const endBuyTimeInDate = poolDetails?.endBuyTime ? new Date(Number(poolDetails?.endBuyTime) * 1000) : undefined;
 
-  const startStartTimePreOrder = (poolDetails?.startPreOrderTime ? new Date(Number(poolDetails?.startPreOrderTime) * 1000) : undefined);
-  const startBuyTimeNormal = (poolDetails?.startBuyTime ? new Date(Number(poolDetails?.startBuyTime) * 1000) : undefined);
-  const startBuyTimeInDate = isInPreOrderTime ? startStartTimePreOrder : startBuyTimeNormal;
+  // const startStartTimePreOrder = (poolDetails?.startPreOrderTime ? new Date(Number(poolDetails?.startPreOrderTime) * 1000) : undefined);
+  // const startBuyTimeNormal = (poolDetails?.startBuyTime ? new Date(Number(poolDetails?.startBuyTime) * 1000) : undefined);
+  // const startBuyTimeInDate = isInPreOrderTime ? startStartTimePreOrder : startBuyTimeNormal;
+  // console.log(startBuyTimeInDate, startStartTimePreOrder)
+  // const endStartTimePreOrder = (poolDetails?.startBuyTime ? new Date(Number(poolDetails?.startBuyTime) * 1000) : undefined);
+  // const endBuyTimeNormal = (poolDetails?.endBuyTime ? new Date(Number(poolDetails?.endBuyTime) * 1000) : undefined)
+  // const endBuyTimeInDate = isInPreOrderTime ? endStartTimePreOrder : endBuyTimeNormal;
+  // const announcementTime = poolDetails?.whitelistBannerSetting?.announcement_time ? new Date(Number(poolDetails?.whitelistBannerSetting?.announcement_time) * 1000) : undefined;
+  // /* const tierStartBuyInDate = new Date(Number(currentUserTier?.start_time) * 1000); */
+  // /* const tierEndBuyInDate = new Date(Number(currentUserTier?.end_time) * 1000); */
+  // const releaseTimeInDate = poolDetails?.releaseTime ? new Date(Number(poolDetails?.releaseTime) * 1000) : undefined;
+  const [timelineInPool, setTimelineInPool] = useState<ObjectType<any>>({});
+  useEffect(() => {
+    if (poolDetails) {
+      const isPreOrderPool = checkIsPoolPreOrder({ poolDetails, currentUserTierLevel });
+      const isEnoughTierPreOrder = checkIsEnoughTierPreOrder({ poolDetails, currentUserTierLevel });
+      const isInPreOrderTime = isPreOrderPool && checkIsInPreOrderTime({ poolDetails, currentUserTierLevel });
+      const allowUserBuyPreOrder = isPreOrderPool && checkAllowUserBuyPreOrder({
+        poolDetails,
+        currentUserTierLevel,
+        userJoined: (alreadyJoinPool || joinPoolSuccess),
+      });
+      const joinTimeInDate = poolDetails?.joinTime ? new Date(Number(poolDetails?.joinTime) * 1000) : undefined;
+      const endJoinTimeInDate = poolDetails?.endJoinTime ? new Date(Number(poolDetails?.endJoinTime) * 1000) : undefined;
+      // const startBuyTimeInDate = poolDetails?.startBuyTime ? new Date(Number(poolDetails?.startBuyTime) * 1000) : undefined;
+      // const endBuyTimeInDate = poolDetails?.endBuyTime ? new Date(Number(poolDetails?.endBuyTime) * 1000) : undefined;
 
-  const endStartTimePreOrder = (poolDetails?.startBuyTime ? new Date(Number(poolDetails?.startBuyTime) * 1000) : undefined);
-  const endBuyTimeNormal = (poolDetails?.endBuyTime ? new Date(Number(poolDetails?.endBuyTime) * 1000) : undefined)
-  const endBuyTimeInDate = isInPreOrderTime ? endStartTimePreOrder : endBuyTimeNormal;
-  const announcementTime = poolDetails?.whitelistBannerSetting?.announcement_time ? new Date(Number(poolDetails?.whitelistBannerSetting?.announcement_time) * 1000) : undefined;
-  /* const tierStartBuyInDate = new Date(Number(currentUserTier?.start_time) * 1000); */
-  /* const tierEndBuyInDate = new Date(Number(currentUserTier?.end_time) * 1000); */
-  const releaseTimeInDate = poolDetails?.releaseTime ? new Date(Number(poolDetails?.releaseTime) * 1000) : undefined;
+      const startStartTimePreOrder = (poolDetails?.startPreOrderTime ? new Date(Number(poolDetails?.startPreOrderTime) * 1000) : undefined);
+      const startBuyTimeNormal = (poolDetails?.startBuyTime ? new Date(Number(poolDetails?.startBuyTime) * 1000) : undefined);
+      const startBuyTimeInDate = isInPreOrderTime ? startStartTimePreOrder : startBuyTimeNormal;
+      const endStartTimePreOrder = (poolDetails?.startBuyTime ? new Date(Number(poolDetails?.startBuyTime) * 1000) : undefined);
+      const endBuyTimeNormal = (poolDetails?.endBuyTime ? new Date(Number(poolDetails?.endBuyTime) * 1000) : undefined)
+      const endBuyTimeInDate = isInPreOrderTime ? endStartTimePreOrder : endBuyTimeNormal;
+      const announcementTime = poolDetails?.whitelistBannerSetting?.announcement_time ? new Date(Number(poolDetails?.whitelistBannerSetting?.announcement_time) * 1000) : undefined;
+      /* const tierStartBuyInDate = new Date(Number(currentUserTier?.start_time) * 1000); */
+      /* const tierEndBuyInDate = new Date(Number(currentUserTier?.end_time) * 1000); */
+      const releaseTimeInDate = poolDetails?.releaseTime ? new Date(Number(poolDetails?.releaseTime) * 1000) : undefined;
+      setTimelineInPool({
+        isPreOrderPool,
+        isEnoughTierPreOrder,
+        joinTimeInDate,
+        isInPreOrderTime,
+        allowUserBuyPreOrder,
+        endJoinTimeInDate,
+        startStartTimePreOrder,
+        startBuyTimeNormal,
+        endStartTimePreOrder,
+        endBuyTimeNormal,
+        startBuyTimeInDate,
+        endBuyTimeInDate,
+        announcementTime,
+        releaseTimeInDate,
+      })
+    }
+  }, [poolDetails, currentUserTierLevel]);
+  const {
+    isPreOrderPool,
+    isEnoughTierPreOrder,
+    isInPreOrderTime,
+    allowUserBuyPreOrder,
+    joinTimeInDate,
+    endJoinTimeInDate,
+    startStartTimePreOrder,
+    startBuyTimeNormal,
+    endStartTimePreOrder,
+    endBuyTimeNormal,
+    startBuyTimeInDate,
+    endBuyTimeInDate,
+    announcementTime,
+    releaseTimeInDate,
+  } = timelineInPool;
 
   const [activeTabBottom, setActiveTabBottom] = useState('tab_pool_details')
   const [numberWiner, setNumberWiner] = useState(0);
@@ -292,10 +360,10 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
   /* (poolDetails?.method === 'whitelist' ? alreadyJoinPool: true); */
 
 
-  const poolStatus = getPoolStatusByPoolDetail(
-    poolDetails,
-    tokenSold
-  );
+  // const poolStatus = getPoolStatusByPoolDetail(
+  //   poolDetails,
+  //   tokenSold
+  // );
 
   const displayCountDownTime = useCallback((
     method: string | undefined,
@@ -304,16 +372,57 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
     startBuyTime: Date | undefined,
     endBuyTime: Date | undefined
   ) => {
-    if (isEnoughTierPreOrder && isInPreOrderTime) { // Pool is PreOrder Pool and Pool in PreOrder Time Actived
-      return getPoolCountDownPreOrder({ endBuyTime });
-    }
+    // if (isEnoughTierPreOrder && isInPreOrderTime) { // Pool is PreOrder Pool and Pool in PreOrder Time Actived
+    //   return getPoolCountDownPreOrder({ endBuyTime });
+    // }
 
     return getPoolCountDown(
       startJoinTime, endJoinTime, startBuyTime, endBuyTime, releaseTimeInDate, method, poolDetails?.campaignStatus, poolDetails, soldProgress
     );
-  }, [poolDetails?.method, joinTimeInDate, endJoinTimeInDate, startBuyTimeInDate, endBuyTimeInDate]);
+  }, [poolDetails?.method]);
 
-  const { date: countDownDate, display } = displayCountDownTime(poolDetails?.method, joinTimeInDate, endJoinTimeInDate, startBuyTimeInDate, endBuyTimeInDate)
+  // const { date: countDownDate, display } = displayCountDownTime(poolDetails?.method, joinTimeInDate, endJoinTimeInDate, startBuyTimeInDate, endBuyTimeInDate)
+
+  const [infoCountdown, setInfoCountdown] = useState<ObjectType<any>>({
+    countDownDate: undefined, display: '', poolStatus: undefined,
+  });
+
+  const [recallCountdown, setRecallCountdown] = useState(false);
+  const onFinishCountdown = () => {
+    setRecallCountdown(true);
+  }
+
+  useEffect(() => {
+    if (infoCountdown.isSwapPhase2 && +currentUserTier?.max_bonus) {
+      const maxBuy = (+currentUserTier.max_buy) + (+currentUserTier.max_bonus);
+      setUserBuyLimit(maxBuy);
+    }
+  }, [infoCountdown, currentUserTier])
+  useEffect(() => {
+    if (timelineInPool.startBuyTimeInDate) {
+      setRecallCountdown(true);
+    }
+  }, [timelineInPool]);
+
+  useEffect(() => {
+    if (recallCountdown && timelineInPool.startBuyTimeInDate) {
+      const { date: countDownDate, display, poolStatus, ...other } = displayCountDownTime(
+        poolDetails?.method,
+        timelineInPool.joinTimeInDate,
+        timelineInPool.endJoinTimeInDate,
+        timelineInPool.startBuyTimeInDate,
+        timelineInPool.endBuyTimeNormal
+      )
+      setInfoCountdown({ countDownDate, display, poolStatus, ...other });
+      setRecallCountdown(false);
+    }
+  }, [recallCountdown, timelineInPool]);
+
+  useEffect(() => {
+    if (+soldProgress > 0) {
+      setRecallCountdown(true);
+    }
+  }, [soldProgress])
 
   // const shortenAddress = (address: string, digits: number = 4) => {
   //   return `${address.substring(0, digits + 2)}...${address.substring(42 - digits)}`
@@ -460,9 +569,10 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
               tokenDetails={poolDetails?.tokenDetails}
               maximumBuy={userBuyLimit}
               isOverTimeApplyWhiteList={isOverTimeApplyWhiteList}
-              countDownDate={countDownDate}
+              countDownDate={infoCountdown.countDownDate}
               isPreOrderPool={isPreOrderPool}
               isInPreOrderTime={isInPreOrderTime}
+              poolStatus={infoCountdown.poolStatus}
             />
 
             <ByTokenHeader
@@ -566,10 +676,11 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
 
           <div className={styles.midPage}>
             <BuyTokenPoolTimeLine
-              currentStatus={poolStatus}
-              display={display}
+              currentStatus={infoCountdown.poolStatus}
+              display={infoCountdown.display}
               poolDetails={poolDetails}
-              countDownDate={countDownDate}
+              countDownDate={infoCountdown.countDownDate}
+              onFinishCountdown={onFinishCountdown}
             />
             <BuyTokenPoolSwapInfo
               poolDetails={poolDetails}
@@ -577,7 +688,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
             />
           </div>
           {
-            ((+soldProgress < 100) && isSwap(poolDetails?.campaignStatus)) && !allowUserBuyPreOrder &&
+            ((+soldProgress < 100) && isSwap(infoCountdown.poolStatus)) && !allowUserBuyPreOrder &&
             startBuyTimeInDate &&
             endBuyTimeInDate &&
             startBuyTimeInDate < new Date() && new Date() < endBuyTimeInDate &&
@@ -665,7 +776,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
           }
 
           {
-            ((+soldProgress === 100) || isClaim(poolDetails?.campaignStatus)) &&
+            ((+soldProgress === 100) || isClaim(infoCountdown.poolStatus)) &&
             <ClaimToken
               releaseTime={poolDetails?.releaseTime ? releaseTimeInDate : undefined}
               ableToFetchFromBlockchain={ableToFetchFromBlockchain}

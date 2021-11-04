@@ -89,8 +89,17 @@ export default {
     listSearch() {
       const searchText = this.searchText.toLowerCase()
       const listAll = this.$store.state.listAll
-      console.log(listAll)
       return listAll.filter(item => (item.game_name.toLowerCase().includes(searchText))).slice(0, 5)
+    }
+  },
+  async created() {
+    const address = localStorage.getItem('gamefi-user-address')
+    if(address) {
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const selectedAddress = window.ethereum.selectedAddress
+      if(selectedAddress === address) {
+        await this.$store.dispatch('updateUserInfo', { address })
+      }
     }
   },
   methods: {

@@ -26,7 +26,7 @@ const useDetectClaimConfigApplying = (
       let validIndex = -1;
       for (let i = 0; i < poolDetails.campaignClaimConfig.length; i++) {
         const row = poolDetails.campaignClaimConfig[i];
-        if (nowUnix < row.start_time) {
+        if (nowUnix < +row.start_time) {
           break;
         } else {
           validRow = row;

@@ -11,9 +11,10 @@ type Props = {
   display: string | undefined,
   poolDetails: any,
   countDownDate: Date | undefined,
+  onFinishCountdown?: Function
 };
 
-const BuyTokenPoolTimeLine: FC<Props> = ({currentStatus, display, poolDetails, countDownDate}) => {
+const BuyTokenPoolTimeLine: FC<Props> = ({currentStatus, display, poolDetails, countDownDate, onFinishCountdown}) => {
   const [avtiveTooltTip, setAvtiveTooltTip] = useState(-1);
   const [openToolTip, setOpenToolTip] = useState(false);
   const styles = useStyles();
@@ -127,7 +128,7 @@ const BuyTokenPoolTimeLine: FC<Props> = ({currentStatus, display, poolDetails, c
       { 
         display 
         ? 
-          <Countdown startDate={countDownDate} />
+          <Countdown startDate={countDownDate} onFinish={onFinishCountdown}/>
         : 
         (
           <>

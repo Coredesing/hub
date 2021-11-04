@@ -3,10 +3,11 @@ import useStyles from './style';
 
 type CountDownProps = {
   startDate?: Date,
-  getCurrentDateRealTime?: (currentDate: Date) => void
+  getCurrentDateRealTime?: (currentDate: Date) => void,
+  onFinish?: Function
 }
 
-const Countdown: React.FC<CountDownProps> = ({ startDate, getCurrentDateRealTime }: CountDownProps) => {
+const Countdown: React.FC<CountDownProps> = ({ startDate, getCurrentDateRealTime, onFinish }: CountDownProps) => {
   const styles = useStyles();
   const [second, setSecond] = useState('0');
   const [minute, setMinute] = useState('0');
@@ -47,7 +48,10 @@ const Countdown: React.FC<CountDownProps> = ({ startDate, getCurrentDateRealTime
         //do something later when date is reached
         if (distance <= 0 && countDownInterval) {
           clearInterval(countDownInterval);
-          window.location.reload();
+          if(typeof onFinish === 'function') {
+            onFinish();
+          }
+          // window.location.reload();
         }
         //seconds
       }, 0);

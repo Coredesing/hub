@@ -48,6 +48,7 @@ function BannerNotification(props: any) {
     maximumBuy,
     countDownDate,
     checkKyc,
+    poolStatus,
   } = props;
   const { appChainID, walletChainID } = useTypedSelector(state => state.appNetwork).data;
 
@@ -128,7 +129,7 @@ function BannerNotification(props: any) {
       }
 
       {
-        (poolDetails?.campaignStatus === PoolStatus.Closed) &&
+        (poolStatus === PoolStatus.Closed) &&
         <WrapperAlert type="info" className="mb-6px" >
           <span>
             The pool is over. Thank you for your participation
@@ -137,7 +138,7 @@ function BannerNotification(props: any) {
       }
 
       {
-        (poolDetails?.campaignStatus === PoolStatus.Filled) &&
+        (poolStatus === PoolStatus.Filled) &&
         <WrapperAlert type="info" className="mb-6px" >
           <span>
             The pool is full. Thank you for your participation. You can claim your token on {releaseTimeInDate && convertTimeToStringFormat(releaseTimeInDate)}.
@@ -146,7 +147,7 @@ function BannerNotification(props: any) {
       }
 
       {
-        (poolDetails?.campaignStatus === PoolStatus.Claimable)
+        (poolStatus === PoolStatus.Claimable)
         && new BigNumber(formatRoundDown(maximumTokenClaimUtilNow, 2)).gt(0)
         // && !!currentClaimIndex
         &&
@@ -158,7 +159,7 @@ function BannerNotification(props: any) {
       }
 
       {
-        isInBuying && poolDetails?.campaignStatus !== PoolStatus.Closed &&
+        isInBuying && poolStatus !== PoolStatus.Closed &&
         <WrapperAlert type="info" className="mb-6px" >
           {
             purchasableCurrency.toUpperCase() === ACCEPT_CURRENCY.ETH?.toUpperCase()

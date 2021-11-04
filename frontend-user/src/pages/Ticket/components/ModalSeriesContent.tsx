@@ -112,7 +112,7 @@ type Props = {
     [k: string]: any,
 }
 
-const ModalSeriesContent = ({ open, current = {}, seriesContent, ...props }: Props) => {
+const ModalSeriesContent = ({ open, current = {}, seriesContent, isShowRateSerie, isShowAmountSerie, ...props }: Props) => {
     const styles = useStyles();
     const [currentSerie, setCurrentSerie] = useState<ObjectType>({});
 
@@ -125,7 +125,7 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, ...props }: Pro
     }
     let isHandlingShowImg = false;
     const handleShowImg = (newSerie: ObjectType, from: 'right-to-left' | 'left-to-right') => {
-        if(isHandlingShowImg) return;
+        if (isHandlingShowImg) return;
         const wrapperImg = document.querySelector('.wrapper-img div');
         isHandlingShowImg = true;
         if (wrapperImg) {
@@ -175,7 +175,7 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, ...props }: Pro
                         </svg>
                     </span>
                     <Box className="content-body">
-                        <Box className="header">
+                        <Box className="header" style={isShowRateSerie && isShowAmountSerie ? { justifyContent: 'space-between', gridTemplateColumns: 'auto auto' } : {}}>
                             {/* <Box className={styles.boxItem}>
                                 <label>Amount</label>
                                 <span>{numberWithCommas(currentSerie.amount)}</span>
@@ -183,10 +183,22 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, ...props }: Pro
                             <Box className={styles.boxItem}>
                                 <span className="line"></span>
                             </Box> */}
-                            <Box className={styles.boxItem}>
-                                <label className="text-right">Rare</label>
-                                <span className="text-right">{currentSerie.rate}%</span>
-                            </Box>
+                            {
+                                isShowRateSerie &&
+                                <Box className={styles.boxItem}>
+                                    <label className="text-right">Rare</label>
+                                    <span className="text-right">{currentSerie.rate}%</span>
+                                </Box>
+                            }
+
+                            {
+                                isShowAmountSerie && 
+                                <Box className={styles.boxItem}>
+                                    <label className="text-center">Amount</label>
+                                    <span className="text-center">{currentSerie.amount}</span>
+                                </Box>
+                            }
+
                         </Box>
                         <Box className="wrapper-img" >
                             <div>

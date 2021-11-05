@@ -15,7 +15,7 @@ import ClaimInfo from "./ClaimInfo";
 import useDetectClaimConfigApplying from "../hooks/useDetectClaimConfigApplying";
 import BigNumber from "bignumber.js";
 import { updateUserClaimInfo } from "../../../store/actions/claim-user-info";
-import { Tooltip, useMediaQuery, useTheme } from "@material-ui/core";
+import { Link, Tooltip, useMediaQuery, useTheme } from "@material-ui/core";
 import withWidth, { isWidthDown } from "@material-ui/core/withWidth";
 import BN from 'bignumber.js'
 import clsx from 'clsx';
@@ -172,16 +172,24 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
   ]);
   const [policy, setPolicy] = useState("");
 
+  const claimOn = {
+    0: 'On GameFi',
+    1: 'Airdrop',
+    2: 'External Website',
+    3: 'TBA'
+  }
+
   useEffect(() => {
     //calculate progress
-    const userPurchased = userClaimInfo?.userPurchased || 0;
-    const userClaimed = userClaimInfo?.userClaimed || 0;
+    const userPurchased = 80 || userClaimInfo?.userPurchased || 0;
+    const userClaimed = 20 || userClaimInfo?.userClaimed || 0;
     const percentClaimed = Math.ceil(+(new BN(userClaimed).dividedBy(new BN(userPurchased)).multipliedBy(100).toFixed(1)));
     if (!poolDetails?.campaignClaimConfig?.length) return;
     let lastMaxPercent = 0;
     let nextClaim = poolDetails.campaignClaimConfig.reduce((next: number, cfg: any) => {
       return (+cfg.max_percent_claim <= percentClaimed) ? next + 1 : next
     }, 0);
+    console.log(poolDetails.campaignClaimConfig)
     const config = [
       {
         start_time: null,
@@ -196,7 +204,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
         showInfo = true;
       const isDisplayDate = index - 1 === nextClaim;
       // lastMaxPercent = +cfg.max_percent_claim;
-      return { percent, tokenAmount, date, marked, showInfo, isDisplayDate };
+      return { percent, tokenAmount, date, marked, showInfo, isDisplayDate, claimType: cfg.claim_type, claimUrl: cfg.claim_url };
     });
     // if (config.length === 1) {
     //   if (userClaimed > 0) {
@@ -220,7 +228,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
       );
     setPolicy(policy);
   }, [poolDetails, userClaimInfo]);
-  
+
   if (!startBuyTimeInDate || (nowTime < startBuyTimeInDate)) {
     return <></>;
   }
@@ -281,15 +289,40 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
                 <div className="mark">
                   {p.marked && <img src={tickIcon} alt="" />}
                 </div>
-                <div className="info">
-                  <div>
+                {
+                  idx !== 0 && <div className="wrap-claim-box">
+                    <div className={clsx("claim-at", {
+                      // show: (idx !== 0 && p.claimOn !== progress[idx - 1]?.claimOn) || (idx !== progress.length - 1 && p.claimOn !== progress[idx + 1]?.claimOn),
+                      show: !p.marked && (p.isDisplayDate),
+                      gamefi: +p.claimType === 0,
+                      airdrop: +p.claimType === 1,
+                      external: +p.claimType === 2,
+                      tba: +p.claimType === 3,
+                    })}>
+                      {
+                        p.claimUrl ?
+                          <Link href={p.claimUrl} target="_blank" >{claimOn[p.claimType as keyof typeof claimOn] || claimOn[0]}</Link>
+                          : (claimOn[p.claimType as keyof typeof claimOn] || claimOn[0])
+                      }
+                    </div>
+                  </div>
+                }
+
+                <div className={clsx("info", {
+                  isShowDetail: !p.marked && (p.isDisplayDate) && (idx !== progress.length - 1)
+                })}>
+                  <div className={clsx("percent", { active: p.marked })}
+                    style={{fontWeight: (p.marked || (progress[idx - 1]?.marked && !p.marked) ) ? 'bold' : 'normal'}}
+                  >
                     {p.percent || 0}%&nbsp;
-                    {(p.tokenAmount || p.tokenAmount === 0) && (
-                      <span>
-                        ({numberWithCommas(`${p.tokenAmount}`, 1)}{" "}
-                        {tokenDetails?.symbol})
-                      </span>
-                    )}
+                    {
+                      // (p.tokenAmount || p.tokenAmount === 0 || 
+                      (!p.marked && (p.isDisplayDate || idx === progress.length - 1)) && (
+                        <span >
+                          ({numberWithCommas(`${p.tokenAmount}`, 1)}{" "}
+                          {tokenDetails?.symbol})
+                        </span>
+                      )}
                   </div>
                   {!p.marked && (p.isDisplayDate || idx === progress.length - 1) && p.date && (
                     <div>{

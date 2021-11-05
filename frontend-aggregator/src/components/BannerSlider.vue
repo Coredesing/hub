@@ -364,7 +364,6 @@ export default {
       height: 54px;
 
       &_item {
-        flex: 1 1 0;
         margin-right: 8px;
       }
     }

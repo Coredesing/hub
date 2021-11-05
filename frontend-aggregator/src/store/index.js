@@ -216,7 +216,15 @@ export default new Vuex.Store({
           liked: !!state.user.likes.find(id => id === item.id),
           title: item.game_name,
           description: item.short_description
-        }))
+        })).sort((itemA, itemB) => {
+          if(itemA.id > itemB.id) {
+            return -1
+          }
+          if(itemA.id < itemB.id) {
+            return 1
+          }
+          return 0
+        })
         commit('updateListTopGame', list)
       }
 
@@ -230,7 +238,15 @@ export default new Vuex.Store({
           ...item,
           thumbnail: item.screen_shots_1,
           verified: !!item.verified
-        }))
+        })).sort((itemA, itemB) => {
+          if(itemA.id > itemB.id) {
+            return -1
+          }
+          if(itemA.id < itemB.id) {
+            return 1
+          }
+          return 0
+        })
         commit('updateListLatest', list)
       }
     },

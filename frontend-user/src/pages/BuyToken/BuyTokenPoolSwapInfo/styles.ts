@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme: any) => {
       left: 0,
       top: 0,
       height: '100%',
-      backgroundColor: '#232394',
+      backgroundColor: '#72F34B',
       borderRadius: 20,
     },
   };

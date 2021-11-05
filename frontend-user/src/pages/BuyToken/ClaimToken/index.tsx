@@ -181,15 +181,14 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
 
   useEffect(() => {
     //calculate progress
-    const userPurchased = 80 || userClaimInfo?.userPurchased || 0;
-    const userClaimed = 20 || userClaimInfo?.userClaimed || 0;
+    const userPurchased = userClaimInfo?.userPurchased || 0;
+    const userClaimed = userClaimInfo?.userClaimed || 0;
     const percentClaimed = Math.ceil(+(new BN(userClaimed).dividedBy(new BN(userPurchased)).multipliedBy(100).toFixed(1)));
     if (!poolDetails?.campaignClaimConfig?.length) return;
-    let lastMaxPercent = 0;
+    // let lastMaxPercent = 0;
     let nextClaim = poolDetails.campaignClaimConfig.reduce((next: number, cfg: any) => {
       return (+cfg.max_percent_claim <= percentClaimed) ? next + 1 : next
     }, 0);
-    console.log(poolDetails.campaignClaimConfig)
     const config = [
       {
         start_time: null,

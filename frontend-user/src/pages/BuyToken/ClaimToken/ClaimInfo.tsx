@@ -64,7 +64,7 @@ function ClaimInfo(props: any) {
         </div>}
 
         <div className={styles.poolDetailClaimInfoBlock}>
-          <span>You have claimed</span>
+          <span>Claimed on GameFi</span>
           <span className="text-blue">{numberWithCommas(`${userClaimed || 0}`, 2)}/{numberWithCommas(`${userPurchased || 0}`, 2)} {tokenDetails?.symbol}</span>
         </div>
       </div>

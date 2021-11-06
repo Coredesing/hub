@@ -36,7 +36,7 @@ function ClaimInfo(props: any) {
   //     `pool/${id}/user/${connectedAccount}/current-tier`
   //     : undefined,
   // );
-  const userBuyLimit = currentUserTier?.max_buy || 0;
+  const userBuyLimit = (+currentUserTier?.max_buy || 0) + ( +currentUserTier?.max_bonus || 0);
 
   return (
     <>

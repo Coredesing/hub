@@ -26,6 +26,12 @@ class WinnerListUserController {
         return HelperUtils.responseSuccess(data);
       }
 
+      // force for Oly pool
+      if ((campaign_id === 41 || campaign_id === '41') && await RedisWinnerUtils.checkExistRedisPoolWinners(campaign_id, page)) {
+        const data = JSON.parse(await RedisWinnerUtils.getRedisPoolWinners(campaign_id, page))
+        return HelperUtils.responseSuccess(data);
+      }
+
       let campaign = null;
       // Try get Campaign detail from Redis Cache
       if (await RedisUtils.checkExistRedisPoolDetail(campaign_id)) {
@@ -58,6 +64,11 @@ class WinnerListUserController {
       let winners = await winnerListService.findWinnerListUser(filterParams);
       winners = JSON.parse(JSON.stringify(winners))
       if (page < 2 && searchTerm === '') {
+        RedisWinnerUtils.setRedisPoolWinners(campaign_id, page, winners)
+      }
+
+      // force for Oly pool
+      if ((campaign_id === 41 || campaign_id === '41') && searchTerm === '') {
         RedisWinnerUtils.setRedisPoolWinners(campaign_id, page, winners)
       }
 

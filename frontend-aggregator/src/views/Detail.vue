@@ -150,6 +150,31 @@
               <div v-if="game.ido.price" class="ido-price">
                 Price per token: <span>$ {{ game.ido.price }}</span>
               </div>
+              <div class="divider" v-if="game.developer || game.publisher || game.category || game.language || game.community"></div>
+              <div v-if="game.developer" class="info">
+                <div>Developer</div>
+                <div>{{ game.developer }}</div>
+              </div>
+              <div v-if="game.publisher" class="info">
+                <div>Publisher</div>
+                <div>{{ game.publisher }}</div>
+              </div>
+              <div v-if="game.category" class="info">
+                <div>Category</div>
+                <div>{{ game.category }}</div>
+              </div>
+              <div v-if="game.language" class="info">
+                <div>Language</div>
+                <div>{{ game.language }}</div>
+              </div>
+              <div v-if="game.community && game.community.length" class="info">
+                <div>Community</div>
+                <div class="community">
+                  <a v-for="(item, i) in game.community" :key="i" :href="item.link" target="_blank">
+                    <img alt :src="getCommunityImg(item.type)"/>
+                  </a>
+                </div>
+              </div>
               <div class="divider" style="margin-bottom: 40px"/>
               <a v-if="game.ido.link.redkite" class="btn ido-redkite" target="_blank" :href="game.ido.link.redkite">
                 <img alt src="../assets/images/redkite.svg"/>
@@ -409,6 +434,31 @@
             <div v-if="game.ido.chain" class="ido-chain">{{ game.ido.chain }}</div>
             <div v-if="game.ido.price" class="ido-price">
               Price per token: <span>$ {{ game.ido.price }}</span>
+            </div>
+            <div class="divider" v-if="game.developer || game.publisher || game.category || game.language || game.community"></div>
+            <div v-if="game.developer" class="info">
+              <div>Developer</div>
+              <div>{{ game.developer }}</div>
+            </div>
+            <div v-if="game.publisher" class="info">
+              <div>Publisher</div>
+              <div>{{ game.publisher }}</div>
+            </div>
+            <div v-if="game.category" class="info">
+              <div>Category</div>
+              <div>{{ game.category }}</div>
+            </div>
+            <div v-if="game.language" class="info">
+              <div>Language</div>
+              <div>{{ game.language }}</div>
+            </div>
+            <div v-if="game.community && game.community.length" class="info">
+              <div>Community</div>
+              <div class="community">
+                <a v-for="(item, i) in game.community" :key="i" :href="item.link" target="_blank">
+                  <img alt :src="getCommunityImg(item.type)"/>
+                </a>
+              </div>
             </div>
             <div class="divider" style="margin-bottom: 40px"/>
             <a v-if="game.ido.link.redkite" class="btn ido-redkite" target="_blank" :href="game.ido.link.redkite">

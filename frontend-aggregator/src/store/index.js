@@ -177,6 +177,9 @@ export default new Vuex.Store({
           verified: !!item.verified
         }))
         commit('updateListAll', list)
+
+        const total = response.data.data.lastPage
+        commit('updatePageTotal', total)
       }
       commit('changeLoadingStatus', false)
     },

@@ -84,6 +84,7 @@ export default {
 
 <style scoped lang="scss">
 .upcoming {
+  padding-top: 24px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
@@ -109,6 +110,7 @@ export default {
     & > img {
       width: 100%;
       object-fit: fill;
+      border-radius: 18px;
     }
 
     &_title {
@@ -191,6 +193,7 @@ export default {
       width: 100%;
       height: 100%;
       object-fit: fill;
+      border-radius: 18px;
       image-rendering: pixelated
     }
 
@@ -265,6 +268,12 @@ export default {
     &-item {
       padding: 12px;
       border-radius: 12px;
+      height: 232px;
+
+      video,
+      & > img {
+        border-radius: 12px;
+      }
 
       &_title {
         top: 24px;

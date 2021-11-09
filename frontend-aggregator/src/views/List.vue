@@ -119,7 +119,7 @@ export default {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-rows: auto;
-        grid-gap: 48px 24px;
+        grid-gap: 34px 24px;
 
         .item ::v-deep .item-image {
           height: 168px;
@@ -135,6 +135,7 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
+        margin-top: 60px;
 
         div {
           width: 40px;
@@ -245,7 +246,11 @@ export default {
         .grid {
           display: flex;
           flex-direction: column;
-          gap: 12px;
+          gap: 24px;
+
+          .item ::v-deep .item-image {
+            height: 223px
+          }
         }
       }
     }

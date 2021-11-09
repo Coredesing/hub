@@ -89,14 +89,15 @@ export default {
 
     & > img {
       width: 100%;
-      opacity: 0.5;
       image-rendering: pixelated
     }
 
     &_detail {
       position: absolute;
       bottom: 0;
-      padding: 28px 16px;
+      padding: 48px 28px;
+      border-radius: inherit;
+      background: linear-gradient(0deg, rgba(0,0,0, .8) 15%, transparent 100%);
 
       &--title {
         font-weight: bold;
@@ -131,7 +132,7 @@ export default {
     display: flex;
     padding: 20px;
     border: 2px solid #d1d1d144;
-    border-radius: 32px;
+    border-radius: 18px;
     background: linear-gradient(180deg, rgba(81, 81, 81, 0.43) 0%, rgba(81, 81, 81, 0) 100%);
     cursor: pointer;
 
@@ -168,7 +169,7 @@ export default {
       .description {
         color: #C4C4C4;
         margin-bottom: 16px;
-        height: 72px;
+        height: 54px;
         overflow: hidden;
         display: -webkit-box;
         -webkit-line-clamp: 3;
@@ -196,7 +197,7 @@ export default {
       }
 
       &_detail {
-        padding: 24px;
+        padding: 32px;
         left: 0;
 
         &--title {
@@ -212,10 +213,10 @@ export default {
         &--desc {
           margin: 8px 0;
           line-height: 18px;
-          height: 72px;
+          height: 54px;
           overflow: hidden;
           display: -webkit-box;
-          -webkit-line-clamp: 4;
+          -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
         }
       }
@@ -238,7 +239,7 @@ export default {
       &_detail {
         position: absolute;
         bottom: 0;
-        padding: 0 8px 16px;
+        padding: 0 8px 32px;
 
         .name {
           font-size: 24px;

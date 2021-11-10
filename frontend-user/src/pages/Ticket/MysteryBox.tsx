@@ -880,9 +880,14 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                 <h4 className="text-uppercase">TYPE</h4>
                                                 <div className="box-types">
                                                     {
-                                                        (subBoxes).map((t: any) => <div key={t.id} onClick={() => onSelectBoxType(t)} className={clsx("box-type", { active: t.id === boxTypeSelected.id })}>
-                                                            <img src={t.icon} className="icon" alt="" />
-                                                            <span>{t.name} {t.totalSold || 0}/{t.maxSupply || t.limit}</span>
+                                                        (subBoxes).map((t: any) => <div key={t.id} onClick={() => onSelectBoxType(t)} className={clsx("box-type type", { active: t.id === boxTypeSelected.id })}>
+                                                            <div className="wrapper-icon">
+                                                                <img src={t.icon} className="icon" alt="" />
+                                                            </div>
+                                                            <span>
+                                                                {t.name} <br />
+                                                                {t.totalSold || 0}/{t.maxSupply || t.limit}
+                                                            </span>
                                                         </div>)
                                                     }
                                                 </div>

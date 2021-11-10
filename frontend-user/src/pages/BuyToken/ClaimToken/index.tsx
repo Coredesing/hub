@@ -15,7 +15,7 @@ import ClaimInfo from "./ClaimInfo";
 import useDetectClaimConfigApplying from "../hooks/useDetectClaimConfigApplying";
 import BigNumber from "bignumber.js";
 import { updateUserClaimInfo } from "../../../store/actions/claim-user-info";
-import { Link, Tooltip, useMediaQuery, useTheme } from "@material-ui/core";
+import { Box, Link, Tooltip, useMediaQuery, useTheme } from "@material-ui/core";
 import withWidth, { isWidthDown } from "@material-ui/core/withWidth";
 import BN from 'bignumber.js'
 import clsx from 'clsx';
@@ -179,6 +179,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
     3: 'TBA'
   }
 
+  const [infoNextClaim, setInfoNextClaim] = useState<ObjectType<any>>({});
   useEffect(() => {
     //calculate progress
     const userPurchased = userClaimInfo?.userPurchased || 0;
@@ -189,6 +190,10 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
     let nextClaim = poolDetails.campaignClaimConfig.reduce((next: number, cfg: any) => {
       return (+cfg.max_percent_claim <= percentClaimed) ? next + 1 : next
     }, 0);
+    if (nextClaim >= 0) {
+      setInfoNextClaim(poolDetails.campaignClaimConfig[nextClaim] || {});
+    }
+    console.log('nextClaim', nextClaim)
     const config = [
       {
         start_time: null,
@@ -205,6 +210,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
       // lastMaxPercent = +cfg.max_percent_claim;
       return { percent, tokenAmount, date, marked, showInfo, isDisplayDate, claimType: cfg.claim_type, claimUrl: cfg.claim_url };
     });
+
     // if (config.length === 1) {
     //   if (userClaimed > 0) {
     //     config.unshift({ marked: true });
@@ -311,7 +317,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
                   isShowDetail: !p.marked && (p.isDisplayDate) && (idx !== progress.length - 1)
                 })}>
                   <div className={clsx("percent", { active: p.marked })}
-                    style={{fontWeight: (p.marked || (progress[idx - 1]?.marked && !p.marked) ) ? 'bold' : 'normal'}}
+                    style={{ fontWeight: (p.marked || (progress[idx - 1]?.marked && !p.marked)) ? 'bold' : 'normal' }}
                   >
                     {p.percent || 0}%&nbsp;
                     {
@@ -386,18 +392,28 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
 
       }
 
-
-      <Button
-        style={{ marginTop: 8 }}
-        text={"Claim Tokens"}
-        backgroundColor={"#72F34B"}
-        disabled={!availableClaim || userPurchased <= 0 || disableAllButton}
-        // disabled={disableAllButton || !ableToFetchFromBlockchain} // If network is not correct, disable Claim Button
-        loading={loading}
-        // onClick={isKyc ? handleTokenClaim : undefined}
-        onClick={handleTokenClaim}
-      />
-
+      <Box display="flex" flexWrap="wrap" gridGap={8} marginTop="80px">
+        <Button
+          text={"Claim Tokens"}
+          backgroundColor={"#72F34B"}
+          disabled={!availableClaim || userPurchased <= 0 || disableAllButton || +infoNextClaim.claim_type !== 0}
+          // disabled={disableAllButton || !ableToFetchFromBlockchain} // If network is not correct, disable Claim Button
+          loading={loading}
+          // onClick={isKyc ? handleTokenClaim : undefined}
+          onClick={handleTokenClaim}
+        />
+        {
+          infoNextClaim.claim_url && +infoNextClaim.claim_type !== 0 && <Button
+            // style={{ backgroundColor: '#00E0FF !important' }}
+            text={"Claim on external website"}
+            backgroundColor={"#00E0FF"}
+            loading={loading}
+            onClick={() => {
+              window.open(infoNextClaim.claim_url);
+            }}
+          />
+        }
+      </Box>
       <TransactionSubmitModal
         opened={openClaimModal}
         handleClose={() => {

@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: any) => {
         borderRadius: 2,
         width: 240,
         maxWidth: '100%',
-        backgroundColor: '#72F34B !important',
+        backgroundColor: '#72F34B',
 
         [theme.breakpoints.down('sm')]: {
           marginTop: '30px !important',

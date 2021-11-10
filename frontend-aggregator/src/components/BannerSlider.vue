@@ -166,7 +166,7 @@ export default {
       appearance: none;
       display: block;
       width: 100%;
-      height: 6px;
+      height: 3px;
       color: #72F34B;
 
       &::-webkit-progress-bar {
@@ -262,7 +262,7 @@ export default {
   &-info {
     position: absolute;
     bottom: 88px;
-    left: 160px;
+    left: var(--padding-section);
     max-width: 550px;
     opacity: 0;
     transition: opacity 0.4s;
@@ -380,6 +380,10 @@ export default {
         img {
           width: 16px;
         }
+      }
+
+      .btn-like {
+        width: auto;
       }
     }
   }

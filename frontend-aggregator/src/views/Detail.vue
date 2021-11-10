@@ -67,7 +67,7 @@
           <div class="detail-main_side mobile">
             <template v-if="game.ido_type === 'launched'">
               <div class="title">
-                Current Price
+                Current Price (% Chg 24H)
                 <a :href="game.coinmarketcap" target="_blank" class="btn btn-cmc">
                   <img alt src="../assets/images/direct.svg">
                 </a>
@@ -950,7 +950,7 @@ export default {
       }
 
       .price {
-        margin-bottom: 8px;
+        margin-bottom: 16px;
 
         &-detail_value {
           margin-left: 4px;
@@ -1061,6 +1061,7 @@ export default {
           color: #72F34B;
           border: 1px solid #72F34B;
           margin-bottom: 16px;
+          margin-top: 32px;
 
           img {
             margin-right: 8px;
@@ -1199,6 +1200,10 @@ export default {
       &.mobile {
         display: none;
       }
+
+      .divider {
+        margin: 24px 0;
+      }
     }
 
     &_content {
@@ -1226,7 +1231,7 @@ export default {
               width: 100%;
               height: 100%;
               object-fit: fill;
-              border-radius: 2px;
+              border-radius: 18px;
               image-rendering: pixelated;
             }
 
@@ -1586,10 +1591,10 @@ export default {
         .content-media {
 
           &_main {
-            height: 184px;
-            padding: 8px;
+            height: 210px;
+            padding: 16px;
             max-width: calc(100vw - 24px);
-            border-radius: 12px;
+            border-radius: 24px;
 
             video,
             img {
@@ -1659,6 +1664,7 @@ export default {
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 16px;
           }
 
           &-view {

@@ -92,6 +92,9 @@ export default {
       return this.$store.state.listFavorite
     },
     listLatest() {
+      if(window.innerWidth < 600) {
+        return this.$store.state.listLatest.slice(0, 3)
+      }
       return this.$store.state.listLatest
     },
     mainUpcoming() {
@@ -151,14 +154,14 @@ export default {
       font-weight: bold;
       font-size: 28px;
       line-height: 36px;
-      margin-bottom: 24px;
+      margin-bottom: 12px;
     }
 
     .prev-btn,
     .next-btn {
       flex: 0 0 32px;
       padding: 4px;
-      margin-bottom: 99px;
+      margin-bottom: 140px;
       cursor: pointer;
 
       img {
@@ -230,6 +233,7 @@ export default {
 
         .item {
           margin-right: 0;
+          margin-bottom: 40px;
         }
       }
     }

@@ -179,89 +179,89 @@ export const login = (connectedAccount: string, library: Web3Provider) => {
   }
 }
 
-export const register = ({ email, address: connectedAccount, library }: UserRegisterProps) => {
-  return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
-    dispatch({
-      type: userActions.INVESTOR_REGISTER_LOADING
-    });
-    try {
-      const baseRequest = new BaseRequest();
+// export const register = ({ email, address: connectedAccount, library }: UserRegisterProps) => {
+//   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
+//     dispatch({
+//       type: userActions.INVESTOR_REGISTER_LOADING
+//     });
+//     try {
+//       const baseRequest = new BaseRequest();
 
-      const connector = getState().connector.data;
-      const paramsWithConnector = getParamsWithConnector(connectedAccount)[connector as connectorNames];
+//       const connector = getState().connector.data;
+//       const paramsWithConnector = getParamsWithConnector(connectedAccount)[connector as connectorNames];
 
-      if (connectedAccount && library && paramsWithConnector) {
-        const provider = library.provider;
-        provider && await (provider as any).sendAsync({
-            method: paramsWithConnector.method,
-            params: paramsWithConnector.params
-        }, async function(err: Error, result: any) {
-          if (err || result.error) {
-             const errMsg = (err.message || (err as any).error) || result.error.message
-              dispatchErrorWithMsg(dispatch, userActions.INVESTOR_REGISTER_FAILURE, errMsg);
-              return;
-          }
+//       if (connectedAccount && library && paramsWithConnector) {
+//         const provider = library.provider;
+//         provider && await (provider as any).sendAsync({
+//             method: paramsWithConnector.method,
+//             params: paramsWithConnector.params
+//         }, async function(err: Error, result: any) {
+//           if (err || result.error) {
+//              const errMsg = (err.message || (err as any).error) || result.error.message
+//               dispatchErrorWithMsg(dispatch, userActions.INVESTOR_REGISTER_FAILURE, errMsg);
+//               return;
+//           }
 
-          const response = await baseRequest.post(`/user/register/`, {
-            email,
-            wallet_address: connectedAccount,
-            signature: result.result,
-          }) as any;
+//           const response = await baseRequest.post(`/user/register/`, {
+//             email,
+//             wallet_address: connectedAccount,
+//             signature: result.result,
+//           }) as any;
 
-          const resObj = await response.json();
+//           const resObj = await response.json();
 
-          if (resObj.status && resObj.status === 200) {
+//           if (resObj.status && resObj.status === 200) {
 
-            if (resObj.data) {
-              const { token, user } = resObj.data;
+//             if (resObj.data) {
+//               const { token, user } = resObj.data;
 
-              localStorage.setItem('investor_access_token', token.token);
+//               localStorage.setItem('investor_access_token', token.token);
 
-              dispatch({ type: walletActions.WALLET_CONNECT_LAYER2_SUCCESS });
+//               dispatch({ type: walletActions.WALLET_CONNECT_LAYER2_SUCCESS });
 
-              dispatch({
-                type: alertActions.SUCCESS_MESSAGE,
-                payload: 'Register Account Successful'
-              });
+//               dispatch({
+//                 type: alertActions.SUCCESS_MESSAGE,
+//                 payload: 'Register Account Successful'
+//               });
 
-              dispatch({
-                type: userActions.INVESTOR_REGISTER_SUCCESS,
-                payload: user
-              });
+//               dispatch({
+//                 type: userActions.INVESTOR_REGISTER_SUCCESS,
+//                 payload: user
+//               });
 
-              dispatch({
-                type: userActions.INVESTOR_LOGIN_SUCCESS,
-                payload: user
-              });
+//               dispatch({
+//                 type: userActions.INVESTOR_LOGIN_SUCCESS,
+//                 payload: user
+//               });
 
-            } else {
-              dispatch({
-                type: alertActions.SUCCESS_MESSAGE,
-                payload: resObj.message
-              });
+//             } else {
+//               dispatch({
+//                 type: alertActions.SUCCESS_MESSAGE,
+//                 payload: resObj.message
+//               });
 
-              dispatch({
-                type: userActions.INVESTOR_REGISTER_SUCCESS,
-                payload: resObj.message
-              });
-            }
+//               dispatch({
+//                 type: userActions.INVESTOR_REGISTER_SUCCESS,
+//                 payload: resObj.message
+//               });
+//             }
 
-          }
+//           }
 
-          if (resObj.status && resObj.status !== 200) {
-            console.log('RESPONSE Register: ', resObj);
-            dispatch(alertFailure(resObj.message));
-            dispatchErrorWithMsg(dispatch, userActions.INVESTOR_REGISTER_FAILURE, '');
-          }
-        });
-      }
-    } catch (error) {
-      console.log('ERROR Register: ', error);
-      dispatch(alertFailure(error.message));
-      dispatchErrorWithMsg(dispatch, userActions.INVESTOR_REGISTER_FAILURE, '');
-    }
-  }
-};
+//           if (resObj.status && resObj.status !== 200) {
+//             console.log('RESPONSE Register: ', resObj);
+//             dispatch(alertFailure(resObj.message));
+//             dispatchErrorWithMsg(dispatch, userActions.INVESTOR_REGISTER_FAILURE, '');
+//           }
+//         });
+//       }
+//     } catch (error) {
+//       console.log('ERROR Register: ', error);
+//       dispatch(alertFailure(error.message));
+//       dispatchErrorWithMsg(dispatch, userActions.INVESTOR_REGISTER_FAILURE, '');
+//     }
+//   }
+// };
 
 export const connectWallet = () => {
   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {

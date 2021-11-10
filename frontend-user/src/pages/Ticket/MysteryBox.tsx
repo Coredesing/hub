@@ -137,7 +137,7 @@ const MysteryBox = ({ id, ...props }: any) => {
             };
         }
     }
-    const onSelectBoxType = (boxType: { [k: string]: any }) => {
+    const onSelectBoxType = (boxType: ObjectType<any>) => {
         setSelectBoxType(boxType);
         handleLoadVideo(boxType)
     }
@@ -157,7 +157,6 @@ const MysteryBox = ({ id, ...props }: any) => {
         }
 
     }, [infoTicket, userTier]);
-
 
     const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, [k: string]: any }>({ date1: 0, date2: 0, title: '' });
     const [timelines, setTimelines] = useState<TimelineType | {}>({});
@@ -390,7 +389,7 @@ const MysteryBox = ({ id, ...props }: any) => {
         setCollections([]);
         try {
             const Erc721contract = getContractInstance(Erc721Abi, infoTicket.token, connectorName, appChainID);
-            if(!Erc721contract) return;
+            if (!Erc721contract) return;
             const isCallDefaultCollection = infoTicket.campaign_hash === infoTicket.token;
             const arrCollections = [];
             if (!connectedAccount) return;
@@ -587,9 +586,30 @@ const MysteryBox = ({ id, ...props }: any) => {
         }
     }
 
+    const [listCurrencies, setListCurrencies] = useState<ObjectType<any>[]>([]);
+    useEffect(() => {
+        if (boxTypeSelected.currency_ids && infoTicket.acceptedTokensConfig?.length) {
+            const idsAllowed = boxTypeSelected.currency_ids.split(',').map((id: string) => id.trim());
+            const acceptedTokensConfig: ObjectType<any> = infoTicket.acceptedTokensConfig
+                .filter((t: any, id: number) => idsAllowed.includes(id + ''))
+            const list = acceptedTokensConfig.map((t: ObjectType<any>) => ({
+                ...t,
+                style: {
+                    background: `linear-gradient(${Math.floor(Math.random() * 360)}deg, rgba(255,0,0,1), rgba(255,0,0,0) 70.71%),
+                linear-gradient(${Math.floor(Math.random() * 360)}deg, rgba(0,255,0,1), rgba(0,255,0,0) 70.71%),
+                linear-gradient(${Math.floor(Math.random() * 360)}deg, rgba(0,0,255,1), rgba(0,0,255,0) 70.71%)`,
+                    borderRadius: '50%',
+                    width: '20px',
+                    height: '20px',
+                }
+            }));
+            setListCurrencies(list);
+        }
+    }, [infoTicket, boxTypeSelected.id]);
+
     const [cachedDecimals, setCachedDecimals] = useState<ObjectType<string>>({});
     const onSelectToken = async (token: ObjectType<any>) => {
-        if (token.address === tokenSeletected.address) return;
+        if (token.address === tokenSeletected.address && token.id === tokenSeletected.id) return;
         token.neededApprove = !(new BigNumber(token.address).isZero());
         if (token.neededApprove) {
             let decimals = cachedDecimals[token.address];
@@ -604,11 +624,11 @@ const MysteryBox = ({ id, ...props }: any) => {
         setTokenToApprove(token as TokenType & ObjectType<any>);
     }
     useEffect(() => {
-        if (infoTicket?.acceptedTokensConfig?.length) {
-            const token = infoTicket.acceptedTokensConfig[0];
+        if (listCurrencies.length) {
+            const token = listCurrencies[0];
             onSelectToken(token);
         }
-    }, [infoTicket])
+    }, [listCurrencies])
 
     const [isApproving, setIsApproving] = useState(false);
 
@@ -667,24 +687,6 @@ const MysteryBox = ({ id, ...props }: any) => {
             infoTicket.campaign_hash &&
             getTokenAllowance();
     }, [connectedAccount, infoTicket.campaign_hash, getTokenAllowance]);
-
-    const [listCurrencies, setListCurrencies] = useState<ObjectType<any>[]>([]);
-    useEffect(() => {
-        if (infoTicket.acceptedTokensConfig?.length) {
-            const list = infoTicket?.acceptedTokensConfig.map((t: ObjectType<any>) => ({
-                ...t,
-                style: {
-                    background: `linear-gradient(${Math.floor(Math.random() * 360)}deg, rgba(255,0,0,1), rgba(255,0,0,0) 70.71%),
-                linear-gradient(${Math.floor(Math.random() * 360)}deg, rgba(0,255,0,1), rgba(0,255,0,0) 70.71%),
-                linear-gradient(${Math.floor(Math.random() * 360)}deg, rgba(0,0,255,1), rgba(0,0,255,0) 70.71%)`,
-                    borderRadius: '50%',
-                    width: '20px',
-                    height: '20px',
-                }
-            }));
-            setListCurrencies(list);
-        }
-    }, [infoTicket]);
 
     const isAccApproved = (tokenAllowance: number) => {
         return +tokenAllowance > 0;
@@ -844,7 +846,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                 }
                                                 <div className="item">
                                                     <label className="label text-uppercase">supported</label>
-                                                    <span className="text-uppercase icon"> {infoTicket.network_available && <img src={`/images/icons/${(infoTicket.network_available || '').toLowerCase()}.png`} className="icon" alt="" />} {infoTicket.network_available}</span> 
+                                                    <span className="text-uppercase icon"> {infoTicket.network_available && <img src={`/images/icons/${(infoTicket.network_available || '').toLowerCase()}.png`} className="icon" alt="" />} {infoTicket.network_available}</span>
                                                 </div>
                                                 <div className="item" >
                                                     <label className="label text-uppercase">MIN RANK</label>
@@ -878,9 +880,14 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                 <h4 className="text-uppercase">TYPE</h4>
                                                 <div className="box-types">
                                                     {
-                                                        (subBoxes).map((t: any) => <div key={t.id} onClick={() => onSelectBoxType(t)} className={clsx("box-type", { active: t.id === boxTypeSelected.id })}>
-                                                            <img src={t.icon} className="icon" alt="" />
-                                                            <span>{t.name} {t.totalSold || 0}/{t.maxSupply || t.limit}</span>
+                                                        (subBoxes).map((t: any) => <div key={t.id} onClick={() => onSelectBoxType(t)} className={clsx("box-type type", { active: t.id === boxTypeSelected.id })}>
+                                                            <div className="wrapper-icon">
+                                                                <img src={t.icon} className="icon" alt="" />
+                                                            </div>
+                                                            <span>
+                                                                {t.name} <br />
+                                                                {t.totalSold || 0}/{t.maxSupply || t.limit}
+                                                            </span>
                                                         </div>)
                                                     }
                                                 </div>

@@ -96,13 +96,14 @@ const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, boxTy
 
     const [reloadBalance, setReloadBalance] = useState(true);
     useEffect(() => {
-        if (isClaimedBoxSuccess) {
+        if (isClaimedBoxSuccess || tokenSeletected?.id) {
             setReloadBalance(true);
         }
-    }, [isClaimedBoxSuccess]);
+    }, [isClaimedBoxSuccess, tokenSeletected?.id]);
 
     useEffect(() => {
-        if (tokenSeletected.neededApprove && currentAccount && reloadBalance) {
+        if (!currentAccount) return;
+        if (tokenSeletected.neededApprove && reloadBalance) {
             const contract = getContractInstance(Erc20Abi, tokenSeletected.address, connectorName, appChainID);
             if (contract) {
                 contract.methods.balanceOf(currentAccount).call().then((balance: string) => {
@@ -111,8 +112,13 @@ const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, boxTy
                     setReloadBalance(false);
                 })
             }
+            return;
         }
-    }, [tokenSeletected.neededApprove, appChainID, connectorName, currentAccount, reloadBalance]);
+        if (reloadBalance) {
+            setBalance(currentConnectedWallet?.balances?.[currentAccount] || 0);
+            setReloadBalance(false);
+        }
+    }, [tokenSeletected, appChainID, connectorName, currentAccount, reloadBalance]);
 
     useEffect(() => {
         if (!currentAccount) {

@@ -16,14 +16,18 @@ class CampaignClaimConfigService {
       builder = builder.where('start_time', '<=', params.current_time)
                        // .where('end_time', '>=', params.current_time)
     }
+
+    if (!isNaN(params.claim_type)) {
+      builder = builder.where('claim_type', params.claim_type);
+    }
+
     return builder;
   }
 
-  async findOneByFilters(params) {
-    return await this.buildQueryBuilder(params).first();
-  }
-
   async findLastClaimPhase(params) {
+    // default is GameFi
+    params.claim_type = 0
+
     return await this.buildQueryBuilder(params).orderBy('start_time', 'desc').first();
   }
 }

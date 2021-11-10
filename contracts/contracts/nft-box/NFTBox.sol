@@ -254,7 +254,7 @@ contract NFTBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgradeabl
         require(sale.currentSupply + amount <= sale.maxSupply, "NFTBox: sold out");
         require(msg.value == sale.price * amount, "NFTBox: invalid value");
         // TODO
-        require(verify(msg.sender, eventId, amount, subBoxId, signature), "NFTBox: verify error");
+//        require(verify(msg.sender, eventId, amount, subBoxId, signature), "NFTBox: verify error");
 
         if (sale.useSubEvent) {
             require(amount + subBoxes[eventId][subBoxId].totalSold <= subBoxes[eventId][subBoxId].maxSupply, "NFTBox: SubBox Rate limit exceeded");

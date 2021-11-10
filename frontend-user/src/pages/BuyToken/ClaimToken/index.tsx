@@ -394,7 +394,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
 
       <Box display="flex" flexWrap="wrap" gridGap={8} marginTop="80px">
         <Button
-          text={"Claim Tokens"}
+          text={"Claim on GameFi"}
           backgroundColor={"#72F34B"}
           disabled={!availableClaim || userPurchased <= 0 || disableAllButton || +infoNextClaim.claim_type !== 0}
           // disabled={disableAllButton || !ableToFetchFromBlockchain} // If network is not correct, disable Claim Button

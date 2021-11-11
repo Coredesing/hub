@@ -186,8 +186,8 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, isShowRateSerie
                             {
                                 isShowRateSerie &&
                                 <Box className={styles.boxItem}>
-                                    <label className="text-right">Rare</label>
-                                    <span className="text-right">{currentSerie.rate}%</span>
+                                    <label className="text-center">Rare</label>
+                                    <span className="text-center">{currentSerie.rate}%</span>
                                 </Box>
                             }
 

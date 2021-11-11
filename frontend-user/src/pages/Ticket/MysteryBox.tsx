@@ -1007,7 +1007,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                             <AboutMysteryBox
                                 info={infoTicket}
                                 timelines={timelines}
-                                defaultTab={2}
+                                defaultTab={1}
                                 ownedBox={ownedBox}
                                 collections={loadingCollection ? [] : collections}
                                 loadingCollection={loadingCollection} />

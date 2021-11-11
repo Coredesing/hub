@@ -17,11 +17,11 @@ interface IExternalRandom {
 }
 
 interface IExternalMinted {
-    function mintTokens(address owner, uint count, uint group) external;
+    function mintTokens(address owner, uint count) external;
     function mintToken(address owner) external;
 }
 
-contract GameFiBoxASPO is Initializable, OwnableUpgradeable, ERC721EnumerableUpgradeable, ERC721HolderUpgradeable {
+contract GameFiBoxOrigin is Initializable, OwnableUpgradeable, ERC721EnumerableUpgradeable, ERC721HolderUpgradeable {
     struct SaleEvent {
         uint256 currentSupply;
         uint256 maxSupply;
@@ -310,7 +310,7 @@ contract GameFiBoxASPO is Initializable, OwnableUpgradeable, ERC721EnumerableUpg
         _fowardFund(totalFund, token);
 
         if (sale.useExternalMint && externalMinted != address(0)) {
-            IExternalMinted(externalMinted).mintTokens(msg.sender, amount, subBoxId);
+            IExternalMinted(externalMinted).mintTokens(msg.sender, amount);
         } else {
             for (uint i = 0; i < amount; i++) {
                 uint256 boxId = _createBox(eventId, subBoxId);

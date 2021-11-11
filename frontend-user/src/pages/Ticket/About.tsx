@@ -414,8 +414,8 @@ export const AboutMysteryBox = ({
         return
       }
       const claimed = await contract.methods.claimAllNFT().call({ from: connectedAccount });
-
-      console.log('claimed', claimed)
+      // recall
+      // console.log('claimed', claimed)
     } catch (error) {
       console.error(error);
     }

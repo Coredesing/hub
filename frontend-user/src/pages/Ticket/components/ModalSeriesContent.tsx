@@ -76,7 +76,8 @@ const useStyles = makeStyles((theme) => ({
                         minHeight: '320px',
                         position: 'relative',
                         overflow: 'hidden',
-
+                        display: 'grid',
+                        placeItems: 'center',
                         [theme.breakpoints.down('xs')]: {
                             minWidth: '250px',
                             minHeight: '250px',

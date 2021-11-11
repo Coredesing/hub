@@ -117,7 +117,9 @@ const MysteryBoxes = (props: any) => {
                     </div>
                     <div className="item">
                       <label>PRICE</label>
-                      <span>{currentBox.token_conversion_rate} {getCurrencyByNetwork(currentBox.network_available)}</span>
+                      <span>{currentBox.token_conversion_rate} {currentBox.accept_currency} 
+                      {/* {getCurrencyByNetwork(currentBox.network_available)} */}
+                      </span>
                     </div>
                     <div className="item">
                       <label>SUPPORTED</label>

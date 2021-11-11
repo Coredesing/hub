@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import CustomModal from '@base-components/CustomModal';
 import { ButtonBase } from '@base-components/Buttons';
 import { Recapcha } from '@base-components/Recapcha';
-import { makeStyles, Box } from '@material-ui/core';
+import { makeStyles, Box, debounce } from '@material-ui/core';
 import { numberWithCommas } from '@utils/formatNumber';
 import BN from 'bignumber.js'
 import { getCurrencyByNetwork } from '@utils/index';
@@ -80,8 +80,17 @@ const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, boxTy
         props.onClose && props.onClose();
     }
 
+    const recaptchaRef: any = React.useRef();
+    const onRefreshRecaptcha = debounce(() => {
+        if (!isVerified) return;
+        if (typeof recaptchaRef?.current?.reset === 'function') {
+            recaptchaRef.current.reset();
+        }
+    }, 5000);
+
     const onConfirm = () => {
         if (new BN(balance).lt(totalBuy)) return;
+        onRefreshRecaptcha();
         props.onConfirm && props.onConfirm(isVerified);
     }
 
@@ -135,7 +144,7 @@ const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, boxTy
                     <label>Box Type</label>
                     <span className="text-uppercase">
                         <Box display="flex" alignItems="center" gridGap="4px">
-                            <img src={boxTypeSelected.icon} width="40" height="25" />
+                            <img src={boxTypeSelected.icon} width="40" height="25" style={{objectFit: 'contain'}} />
                             {boxTypeSelected.name}
                         </Box>
                     </span>
@@ -156,7 +165,7 @@ const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, boxTy
                     </span>
                 </Box>
                 <Box>
-                    <Recapcha onChange={onChangeRecapcha} />
+                    <Recapcha onChange={onChangeRecapcha} ref={recaptchaRef} />
                 </Box>
                 <ButtonBase color="green" onClick={onConfirm} className="w-full text-transform-unset" isLoading={isLoadingButton} disabled={isLoadingButton || !isVerified || new BN(balance).lt(totalBuy)}>
                     Confirm

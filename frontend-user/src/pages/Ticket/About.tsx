@@ -525,10 +525,10 @@ export const AboutMysteryBox = ({
       <TabPanel value={tabCurrent} index={3}>
         {/* <ModalBoxCollection open={openModalBoxCollection} current={currentBox} boxesContent={collections || []} onClose={onCloseModalBox} /> */}
         {
-          !!collections.length && <div className="wrapperHeader">
+          !!collections.length && timeClaim && <div className="wrapperHeader">
             <div className={classes.wrapperCountdownCollection}>
               {
-                (timeClaim && timeClaim > timeNow) ?
+                (timeClaim > timeNow) ?
                   <CountDownTimeV1 time={{ date1: timeClaim, date2: timeNow }} onFinish={onFinishCountdown} className="countdown" />
                   : <div className="title"><h3>You can claim now</h3></div>
               }

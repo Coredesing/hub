@@ -796,6 +796,7 @@ export const useAboutStyles = makeStyles((theme) => ({
           width: '100%',
           height: '100px',
           position: 'relative',
+          objectFit: 'contain'
         }
       },
       '& .id-box': {

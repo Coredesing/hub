@@ -37,8 +37,10 @@ import { CountDownTimeV1 } from '@base-components/CountDownTime'
 import { ButtonBase } from '@base-components/Buttons/ButtonBase'
 import PresaleBoxAbi from '@abi/PreSaleBox.json';
 import { useWeb3React } from "@web3-react/core";
-import { getContractInstance } from '@services/web3';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getContract } from "@utils/contract";
+import { alertSuccess, alertWarning } from "@store/actions/alert";
+import TransactionSubmitModal from "@base-components/TransactionSubmitModal";
 const shareIcon = "/images/icons/share.svg";
 const telegramIcon = "/images/icons/telegram-1.svg";
 const twitterIcon = "/images/icons/twitter-1.svg";
@@ -328,6 +330,7 @@ export const AboutMysteryBox = ({
   collections = [],
   loadingCollection,
   ...props }: Props) => {
+  const dispatch = useDispatch();
   const classes = useAboutStyles();
   const [tabCurrent, setTab] = React.useState(props.defaultTab || 0);
   const theme = useTheme();
@@ -404,20 +407,29 @@ export const AboutMysteryBox = ({
   }
 
   const { library, account: connectedAccount } = useWeb3React();
-  const { appChainID } = useSelector((state: any) => state.appNetwork).data;
+  const [txHash, setTxHash] = useState('');
+  const [isShowModalTx, setShowModalTx] = useState(false);
+  const onCloseModalTx = () => {
+    setShowModalTx(false);
+    setTxHash('');
+  }
   const onClaimBox = async () => {
     try {
       if (!isClaimed) return;
-      const contract = getContractInstance(PresaleBoxAbi, info.campaign_hash, undefined, appChainID);
+      const contract = getContract(info.campaign_hash, PresaleBoxAbi, library, connectedAccount as string);
       if (!contract) {
         console.error("Something went wrong");
         return
       }
-      const claimed = await contract.methods.claimAllNFT().call({ from: connectedAccount });
-      // recall
-      // console.log('claimed', claimed)
-    } catch (error) {
+      const tx = await contract.claimAllNFT();
+      setShowModalTx(true);
+      setTxHash(tx.hash);
+      dispatch(alertWarning("Request is processing!"));
+      await tx.wait(1);
+      dispatch(alertSuccess("Request is completed!"));
+    } catch (error: any) {
       console.error(error);
+      dispatch(alertSuccess(error.message));
     }
 
   }
@@ -524,6 +536,7 @@ export const AboutMysteryBox = ({
       </TabPanel>
       <TabPanel value={tabCurrent} index={3}>
         {/* <ModalBoxCollection open={openModalBoxCollection} current={currentBox} boxesContent={collections || []} onClose={onCloseModalBox} /> */}
+        <TransactionSubmitModal opened={isShowModalTx} handleClose={onCloseModalTx} transactionHash={txHash}  />
         {
           !!collections.length && timeClaim && <div className="wrapperHeader">
             <div className={classes.wrapperCountdownCollection}>

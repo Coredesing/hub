@@ -93,7 +93,7 @@ const useWalletSignature = () => {
             if (err || result.error) {
               const errMsg = (err.message || (err as any).error) || result.error.message
               console.log('Error when signing message: ', errMsg);
-              dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
+              dispatch(alertFailure(errMsg || TRANSACTION_ERROR_MESSAGE));
               setError(errMsg);
             } else {
               result.result && setSignature(result.result);
@@ -101,9 +101,9 @@ const useWalletSignature = () => {
           })
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.log('[ERROR] - signMessage:', err);
-      dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
+      dispatch(alertFailure(err.message || TRANSACTION_ERROR_MESSAGE));
       setError(err.message);
     }
   }, [library, connector, connectedAccount]);

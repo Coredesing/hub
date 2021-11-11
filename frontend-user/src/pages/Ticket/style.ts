@@ -816,6 +816,47 @@ export const useAboutStyles = makeStyles((theme) => ({
       }
 
     }
+  },
+  wrapperCountdownCollection: {
+    marginBottom: '20px',
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '8px',
+    alignItems: 'end',
+    [theme.breakpoints.down('xs')]: {
+      gridTemplateColumns: '1fr',
+      gap: '4px',
+    },
+    '& .countdown': {
+      height: '52px',
+      borderRadius: '2px',
+      background: '#000',
+      '& .time .number': {
+        fontSize: '24px',
+        lineHeight: '28px',
+        fontFamily: 'Space Ranger !important',
+        [theme.breakpoints.down('xs')]: {
+          fontSize: '20px',
+        },
+      }
+    },
+    '& .title': {
+      height: '52px',
+      background: '#000',
+      borderRadius: '2px',
+      display: 'grid',
+      alignItems: 'center',
+      '& h3': {
+        fontFamily: 'Firs Neue',
+        fontSize: '20px',
+        color: '#fff',
+        textTransform: 'uppercase',
+        textAlign: 'center',
+      }
+    },
+    '& button': {
+      marginTop: '0',
+    }
   }
 }));
 
@@ -1037,6 +1078,7 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
           '& .icon': {
             width: '35px',
             height: '20px',
+            objectFit: 'contain',
           },
 
           '& span': {
@@ -1145,5 +1187,5 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
         marginBottom: '6px',
       }
     }
-  }
+  },
 }));

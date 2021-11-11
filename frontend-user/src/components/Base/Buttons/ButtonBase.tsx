@@ -18,7 +18,9 @@ const useStyles = makeStyles((theme: any) => ({
         height: '52px',
         marginTop: '16px',
         '&.disabled': {
-            opacity: '.5'
+            opacity: '.5',
+            background: '#5d5d5d !important',
+            color: '#dfdfdf'
         },
         '&.grey': {
             background: '#727272 !important',
@@ -39,7 +41,7 @@ type Props = {
     disabled?: boolean,
     children: any,
     isLoading?: boolean,
-    color?: 'grey' | 'green' | 'yellow',
+    color?: 'grey' | 'green' | 'yellow' | 'disabled',
     [k: string]: any
 }
 export const ButtonBase = ({
@@ -54,7 +56,7 @@ export const ButtonBase = ({
     return (
         <button
             {...props}
-            className={clsx(styles.btn, color, className, {
+            className={clsx(styles.btn, (!disabled ? color : '') , className, {
                 disabled: disabled,
             })}
             onClick={onClick}

@@ -398,7 +398,7 @@ export const AboutMysteryBox = ({
   const timeNow = Date.now();
   timeClaim = timeClaim ? +timeClaim * 1000 : 0;
   useEffect(() => {
-    if (!timeClaim || timeClaim < timeNow) {
+    if (timeClaim && timeClaim < timeNow) {
       setClaim(true);
     }
   }, [timeClaim])
@@ -535,7 +535,7 @@ export const AboutMysteryBox = ({
         </div>
       </TabPanel>
       <TabPanel value={tabCurrent} index={3}>
-        {/* <ModalBoxCollection open={openModalBoxCollection} current={currentBox} boxesContent={collections || []} onClose={onCloseModalBox} /> */}
+        <ModalBoxCollection open={openModalBoxCollection} current={currentBox} boxesContent={collections || []} onClose={onCloseModalBox} />
         <TransactionSubmitModal opened={isShowModalTx} handleClose={onCloseModalTx} transactionHash={txHash}  />
         {
           !!collections.length && timeClaim && <div className="wrapperHeader">

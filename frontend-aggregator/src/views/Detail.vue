@@ -1232,7 +1232,6 @@ export default {
               height: 100%;
               object-fit: fill;
               border-radius: 18px;
-              image-rendering: pixelated;
             }
 
             &--play {

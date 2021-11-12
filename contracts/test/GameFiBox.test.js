@@ -57,8 +57,10 @@ describe("GameFi Box ", function () {
         (await time.latest()).toNumber() + duration.days(1).toNumber(), maxPerBatch,
         ZERO_ADDRESS, 0, 0, false, true, false
       );
-      await this.box.setSubBox(0, [30, 30, 30, 30, 30])
-      await this.box.setPrices([ZERO_ADDRESS], [utils.parseEther("0.1")], [0])
+      await this.box.setSubBox(0, [30, 30, 30, 30, 30],
+          [utils.parseEther("0.1"), utils.parseEther("0.1"), utils.parseEther("0.1"), utils.parseEther("0.1"), utils.parseEther("0.1")],
+          [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS])
+      // await this.box.setPrices([ZERO_ADDRESS], [utils.parseEther("0.1")], [0])
 
       // alice buy 10
       await expectRevert(
@@ -73,7 +75,7 @@ describe("GameFi Box ", function () {
       const messageError = web3.utils.soliditySha3(this.alice.address, 0, this.pkf.address, 10, 0);
       await expectRevert(
           this.box.connect(this.alice).claimBox(0, this.pkf.address, 10, 0, this.signer.signMessage(ethers.utils.arrayify(messageError))),
-          "NFTBox: invalid rate"
+          "NFTBox: invalid token"
       );
 
       await this.box.connect(this.alice).claimBox(0, ZERO_ADDRESS, 10, 0, this.signer.signMessage(ethers.utils.arrayify(message)),
@@ -227,7 +229,10 @@ describe("GameFi Box ", function () {
           (await time.latest()).toNumber() + duration.days(1).toNumber(), maxPerBatch,
           this.nft.address, 90, 90, false, true, false
       );
-      await this.box.setSubBox(1, [maxPerBatch, maxPerBatch, maxPerBatch, maxPerBatch, maxPerBatch])
+      await this.box.setSubBox(1, [maxPerBatch, maxPerBatch, maxPerBatch, maxPerBatch, maxPerBatch],
+        [utils.parseEther("0.1"), utils.parseEther("0.1"), utils.parseEther("0.1"), utils.parseEther("0.1"), utils.parseEther("0.1")],
+        [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+      )
 
       // alice buy 10
       await expectRevert(
@@ -351,8 +356,11 @@ describe("GameFi Box ", function () {
           (await time.latest()).toNumber() + duration.days(1).toNumber(), maxPerBatch,
           ZERO_ADDRESS, 0, 0, false, true, false
       );
-      await this.box.setSubBox(0, [30, 30, 30, 30, 30])
-      await this.box.setPrices([this.pkf.address], [utils.parseEther("0.1")], [0])
+      await this.box.setSubBox(0, [30, 30, 30, 30, 30],
+          [utils.parseEther("0.1"), utils.parseEther("0.1"), utils.parseEther("0.1"), utils.parseEther("0.1"), utils.parseEther("0.1")],
+          [this.pkf.address, this.pkf.address, this.pkf.address, this.pkf.address, this.pkf.address]
+      )
+      // await this.box.setPrices([this.pkf.address], [utils.parseEther("0.1")], [0])
 
       // alice buy 10
       await expectRevert(
@@ -368,7 +376,7 @@ describe("GameFi Box ", function () {
       await expectRevert(
           this.box.connect(this.alice).claimBox(0, ZERO_ADDRESS, 10, 0, this.signer.signMessage(ethers.utils.arrayify(messageError),
               { value: utils.parseEther("1") })),
-          "NFTBox: invalid rate"
+          "NFTBox: invalid token"
       );
 
       await this.box.connect(this.alice).claimBox(0, this.pkf.address, 10, 0, this.signer.signMessage(ethers.utils.arrayify(message)),
@@ -522,7 +530,10 @@ describe("GameFi Box ", function () {
           (await time.latest()).toNumber() + duration.days(1).toNumber(), maxPerBatch,
           this.nft.address, 90, 90, false, true, false
       );
-      await this.box.setSubBox(1, [maxPerBatch, maxPerBatch, maxPerBatch, maxPerBatch, maxPerBatch])
+      await this.box.setSubBox(1, [maxPerBatch, maxPerBatch, maxPerBatch, maxPerBatch, maxPerBatch],
+          [utils.parseEther("0.1"), utils.parseEther("0.1"), utils.parseEther("0.1"), utils.parseEther("0.1"), utils.parseEther("0.1")],
+          [this.pkf.address, this.pkf.address, this.pkf.address, this.pkf.address, this.pkf.address]
+      )
 
       // alice buy 10
       await expectRevert(

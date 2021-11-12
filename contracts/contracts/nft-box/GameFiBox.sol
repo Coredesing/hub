@@ -17,7 +17,7 @@ interface IExternalRandom {
 }
 
 interface IExternalMinted {
-    function mintTokens(address owner, uint count) external;
+    function mintTokens(address owner, uint count, uint group) external;
     function mintToken(address owner) external;
 }
 
@@ -30,11 +30,11 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         uint256 maxPerBatch;
         address NFT;
         uint256 startNFTId;
-        uint256 revealed;
-        uint256 startingBoxIndex;
+        bool revealed;
         bool useExternalRandom;
         bool useSubEvent;
         bool useExternalMint;
+        uint256 startingIndex;
     }
 
     struct Box {
@@ -49,17 +49,14 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         uint256 id;
         uint256 maxSupply;
         uint256 totalSold;
+        uint256 price;
+        address token;
     }
 
     struct RandomEvent {
         uint256 eventId;
         bool isRequest;
         bool isFulFill;
-    }
-
-    struct Rate {
-        uint256 rate;
-        uint256 decimal;
     }
 
     string public uri;
@@ -73,7 +70,6 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
     mapping(uint256 => mapping(uint256 => SubBox)) public subBoxes;
     mapping(uint256 => mapping(address => uint256)) public userBought;
     mapping(address => uint256) superLimit; // for Legends
-    mapping(address => Rate) prices;
     SaleEvent[] public saleEvents;
     Box[] public boxes;
 
@@ -84,9 +80,7 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
     event SaleEventRangeIdUpdated(uint256 id, uint256 startNFTId, uint256 maxSupply);
     event SaleEventNFTUpdated(uint256 id, address nft);
     event SaleEventExternalRandomUpdated(uint256 id, bool useExternalRandom);
-    event RandomBox(uint256 boxId, uint256 nftId);
-    event RandomSpecialBox(uint256 seed, uint256 boxId, uint256 nftId);
-    event SetRandomNumber(address sender, uint256 eventId, bytes32 requestId, uint256 randomness);
+    event NFTClaimed(address indexed user, uint256 boxId, uint256 nftId);
 
     function __GameFiBox_init(
         string memory name,
@@ -132,9 +126,9 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         fundWallet = _fundWallet;
     }
 
-    function setSubBox(uint256 eventID, uint256[] memory max) public onlyOwner {
+    function setSubBox(uint256 eventID, uint256[] memory max, uint256[] memory prices, address[] memory tokens) public onlyOwner {
         for (uint256 index = 0; index < max.length; index++) {
-            subBoxes[eventID][index] = SubBox(index, max[index], 0);
+            subBoxes[eventID][index] = SubBox(index, max[index], 0, prices[index], tokens[index]);
         }
     }
 
@@ -151,19 +145,6 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         saleEvent.startTime = startTime;
         saleEvent.endTime = endTime;
         emit SaleEventTimeUpdated(id, startTime, endTime);
-    }
-
-    function setPrices(
-        address[] memory _tokens,
-        uint256[] memory _rates,
-        uint256[] memory _decimals
-    ) external onlyOwner {
-        require(_tokens.length == _rates.length, "invalid length");
-        require(_tokens.length == _decimals.length, "invalid length");
-
-        for (uint256 index = 0; index < _tokens.length; index++) {
-            prices[_tokens[index]] = Rate(_rates[index], _decimals[index]);
-        }
     }
 
     function setSaleEventRangeId(
@@ -221,7 +202,6 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         uint256 maxPerBatch,
         address nft,
         uint256 startNFTId,
-        uint256 startingBoxIndex,
         bool useExternalRandom,
         bool useSubEvent,
         bool useExternalMint
@@ -233,7 +213,7 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
             require(latestSale.currentSupply == latestSale.maxSupply || block.timestamp > latestSale.endTime, "The current sale events has not sold out");
         }
 
-        saleEvents.push(SaleEvent(0, _maxSupply, startTime, endTime, maxPerBatch, nft, startNFTId, 0, startingBoxIndex, useExternalRandom, useSubEvent, useExternalMint));
+        saleEvents.push(SaleEvent(0, _maxSupply, startTime, endTime, maxPerBatch, nft, startNFTId, false, useExternalRandom, useSubEvent, useExternalMint, 0));
         emit NewSaleEventAdded(saleEvents.length);
     }
 
@@ -243,26 +223,16 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         SaleEvent memory sale = saleEvents[eventId];
         require(sale.startTime > 0, "event not found");
         require(sale.currentSupply == sale.maxSupply || block.timestamp > sale.endTime, "The current sale events has not sold out");
-        require(sale.revealed < sale.maxSupply, "The current sale has random successfully");
 
         uint256 seed = randomness % sale.maxSupply;
-        for (uint256 index = 0; index < sale.maxSupply; index++) {
-            uint256 length = 1;
-            if (sale.maxSupply > sale.revealed) {
-                length = sale.maxSupply - sale.revealed;
-            }
-            seed = uint256(keccak256(abi.encodePacked(seed, index))) % length;
-            _linkBox(eventId, index + sale.startingBoxIndex, seed);
-        }
-
-        emit SetRandomNumber(msg.sender, eventId, requestId, randomness);
+        _linkAllBoxes(eventId, seed);
     }
 
     function randomEvent(uint256 eventId) public onlyOwner {
         SaleEvent storage sale = saleEvents[eventId];
         require(sale.startTime > 0, "event not found");
         require(sale.currentSupply == sale.maxSupply || block.timestamp > sale.endTime, "The current sale events has not sold out");
-        require(sale.revealed < sale.maxSupply, "The current sale has random successfully");
+        require(!sale.revealed, "The current sale has random successfully");
 
         uint256 seed = 0;
         if (sale.useExternalRandom && externalRandom != address(0)) {
@@ -275,14 +245,7 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
             seed = uint256(keccak256(abi.encodePacked(block.difficulty, block.timestamp, eventId))) % sale.maxSupply;
         }
 
-        for (uint256 index = 0; index < sale.maxSupply; index++) {
-            uint256 length = 1;
-            if (sale.maxSupply > sale.revealed) {
-                length = sale.maxSupply - sale.revealed;
-            }
-            seed = uint256(keccak256(abi.encodePacked(seed, index))) % length;
-            _linkBox(eventId, index + sale.startingBoxIndex, seed);
-        }
+        _linkAllBoxes(eventId, seed);
     }
 
     function claimBox(uint256 eventId, address token, uint256 amount, uint256 subBoxId, bytes memory signature) public payable {
@@ -301,16 +264,15 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
             require(amount + subBoxes[eventId][subBoxId].totalSold <= subBoxes[eventId][subBoxId].maxSupply, "NFTBox: SubBox Rate limit exceeded");
         }
 
-        require(prices[token].rate > 0, "NFTBox: invalid rate");
-
-        uint256 totalFund = amount * prices[token].rate / (10 ** prices[token].decimal);
+        require(subBoxes[eventId][subBoxId].token == token, "NFTBox: invalid token");
+        uint256 totalFund = subBoxes[eventId][subBoxId].price * amount;
         if (token == address(0)) {
-            require(msg.value == totalFund, "NFTBox: invalid value");
+            require(totalFund == msg.value, "NFTBox: invalid value");
         }
         _fowardFund(totalFund, token);
 
         if (sale.useExternalMint && externalMinted != address(0)) {
-            IExternalMinted(externalMinted).mintTokens(msg.sender, amount);
+            IExternalMinted(externalMinted).mintTokens(msg.sender, amount, subBoxId);
         } else {
             for (uint i = 0; i < amount; i++) {
                 uint256 boxId = _createBox(eventId, subBoxId);
@@ -334,7 +296,7 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
             }
 
             uint256 boxId = tokenOfOwnerByIndex(msg.sender, currentBalance - 1);
-            if (!boxes[boxId].revealed) {
+            if (boxes[boxId].revealed) {
                 continue;
             }
 
@@ -343,27 +305,47 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
                 continue;
             }
 
+            uint256 nftId = sale.startNFTId + ((sale.startingIndex + boxId) % sale.maxSupply);
+
             // transfer NFT
-            IERC721(sale.NFT).safeTransferFrom(address(this), msg.sender, boxes[boxId].nftId);
+            IERC721(sale.NFT).safeTransferFrom(address(this), msg.sender, nftId);
             // reveal
             boxes[boxId].revealed = true;
             // burn box
             _burn(boxId);
+
+            // emit event claimed
+            emit NFTClaimed(msg.sender, boxId, nftId);
         }
     }
 
     function claimNFT(uint256 boxId) public {
         require(ownerOf(boxId) == msg.sender, "NFTBox: User must be owner of boxId");
-        require(boxes[boxId].revealed, "NFTBox: Box has not been revealed");
+        require(!boxes[boxId].revealed, "NFTBox: Box has not been revealed");
         SaleEvent memory sale = saleEvents[boxes[boxId].eventId];
         require(sale.NFT != address(0), "NFTBox: NFT not found");
 
+        uint256 nftId = sale.startNFTId + ((sale.startingIndex + boxId) % sale.maxSupply);
+
         // transfer NFT
-        IERC721(sale.NFT).safeTransferFrom(address(this), msg.sender, boxes[boxId].nftId);
+        IERC721(sale.NFT).safeTransferFrom(address(this), msg.sender, nftId);
         // reveal
         boxes[boxId].revealed = true;
         // burn box
         _burn(boxId);
+
+        // emit event claimed
+        emit NFTClaimed(msg.sender, boxId, nftId);
+    }
+
+    function getBoxDetail(uint256 eventId, uint256 boxId) public view returns (uint256, uint256, uint256, bool) {
+        if (boxes.length <= boxId) {
+            return (0, 0, 0, false);
+        }
+        SaleEvent memory sale = saleEvents[boxes[boxId].eventId];
+        uint256 nftId = sale.startNFTId + ((sale.startingIndex + boxId) % sale.maxSupply);
+
+        return (boxes[boxId].eventId, boxes[boxId].subBoxId, nftId, boxes[boxId].revealed);
     }
 
     function _fowardFund(uint256 amount, address token) internal {
@@ -384,49 +366,17 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         return id;
     }
 
-    function _linkBox(uint256 saleId, uint256 boxId, uint256 seed) internal {
+    function _linkAllBoxes(uint256 saleId, uint256 seed) internal {
         SaleEvent storage sale = saleEvents[saleId];
-        if (boxes.length <= boxId || boxes[boxId].revealed || sale.maxSupply < 1) {
-            return;
-        }
-        Box storage box = boxes[boxId];
+        uint256 startingIndex = seed % sale.maxSupply;
+        sale.startingIndex = startingIndex;
+        sale.revealed = true;
 
-        for (uint256 index = sale.startNFTId; index <= sale.startNFTId + sale.maxSupply - 1; index++) {
-            if (seed == 0 && !minted[index]) {
-                // update sale
-                minted[index] = true;
-                sale.revealed++;
-
-                // update box
-                box.nftId = index;
-                box.revealed =  true;
-                emit RandomBox(boxId, index);
-                return;
-            }
-
-            if (seed == 0 && minted[index]) {
-                continue;
-            }
-
-            if (seed > 0) {
-                seed = seed - 1;
-            }
-        }
-
-        // why it is here?
-        for (uint256 index = sale.startNFTId; index <= sale.startNFTId + sale.maxSupply - 1; index++) {
-            if (!minted[index]) {
-                // update sale
-                minted[index] = true;
-                sale.revealed++;
-
-                // update box
-                box.nftId = index;
-                box.revealed =  true;
-                emit RandomSpecialBox(seed, boxId, index);
-                return;
-            }
-        }
+//        for (uint256 index = 0; index < sale.maxSupply; index++) {
+//            Box storage box = boxes[index];
+//            box.nftId = sale.startNFTId + ((startingIndex + index) % sale.maxSupply);
+//            box.revealed =  true;
+//        }
     }
 
     function _beforeTokenTransfer(

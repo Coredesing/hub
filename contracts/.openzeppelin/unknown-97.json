@@ -44,6 +44,56 @@
       "address": "0x5a6608158abcfE5E64bfD3a96240E3bdc7d2B3c1",
       "txHash": "0xff58ca92806fb58bdfc247c25d5e1ee1464bad1c71c547b193f5e6b681248681",
       "kind": "transparent"
+    },
+    {
+      "address": "0x141F9b0c3579012C969ae0f9d726bC53A6D01870",
+      "txHash": "0xbd868487b6e63ad4d4937975cabec8cf586ee83c99dbc0311fcd26a31e68f416",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x2BBc8ffB57d5Dbfb3c6Cc0d7f3FE744f07612faf",
+      "txHash": "0xc2a340b49e89950138924596bafd96b9700d172762075d5b4a3a9fdf06781460",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xA888393c3f725E5CAbd56B96df2c57773c3D5119",
+      "txHash": "0x618a494601b474931477aaa0c45a6a2d4933b7cce1c57c94370132d88e70adae",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x2BBdDcaE198c1C73C557aF53f61AAEd25439e7EA",
+      "txHash": "0x4933e35bd123dc162bb0617a847ace43e11d942046b8545744bd84e8270de626",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xaC2DA722C705ea6a0b2cD17eAB2d37Ae643d4c7F",
+      "txHash": "0xf84d93a200e56ee61ba207d1375921938fceaf1a5154bf5f415f5077cedd6be4",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xfFD0e2bc4270FBe971Bc5cf9c7d973faC82B1867",
+      "txHash": "0x7ba6b175a0431049fd4d9c5e501b8cea5b90065c7dc4fb6f6e54f78abb9e0bc2",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xa95b2C891aE666D03Cc62024DeebA5251B6F89eb",
+      "txHash": "0x8d4b3d1a04398956401878d62b4e0b02f65a84f58bed28938ef8567fd4a52ee2",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x73D8CD94c4AD2ac7F19eE09F4b2E960Fba45FC68",
+      "txHash": "0x3facd577ba2bdc297b1957657056c7f939176d67728618265a6352dd2f2db0e1",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xd9fa4Aad401151738BBCa028F3dA53B14fdc95cF",
+      "txHash": "0x1c0b52533dc3165d4495a6b94ffee3248b7c5220a77fe5b65605226ab4146e6f",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x0bc363378Af7594d0D902A0488E7145e957c95cE",
+      "txHash": "0xb0d1594b06b9e1607bb1fc7a4735d5124b2ac7a2046edbcb178225ec7ba8fa61",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -373,6 +423,1850 @@
           },
           "t_struct(Box)8353_storage": {
             "label": "struct GameFiBoxASPO.Box",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256"
+              },
+              {
+                "label": "nftId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "eventId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "subBoxId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "revealed",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
+            "label": "mapping(address => mapping(uint256 => uint256))"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]"
+          },
+          "t_array(t_uint256)46_storage": {
+            "label": "uint256[46]"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_array(t_uint256)44_storage": {
+            "label": "uint256[44]"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          }
+        }
+      }
+    },
+    "1b780c3a37de90c3341a59108a3316fb8d7fa1419ab36afc0eaea82877307d1f": {
+      "address": "0x94B9a4612101166e553905B7bfecDD647e0C9edD",
+      "txHash": "0x423ba6b585c1323d51012f6ab5916fd7b4c54f8dea22c6e4575d759e0a520aaf",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:26"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:30"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:21"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:77"
+          },
+          {
+            "contract": "ERC165Upgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol:35"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_name",
+            "type": "t_string_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:24"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_symbol",
+            "type": "t_string_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:27"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_owners",
+            "type": "t_mapping(t_uint256,t_address)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:30"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_balances",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:33"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_tokenApprovals",
+            "type": "t_mapping(t_uint256,t_address)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:36"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_operatorApprovals",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:39"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)44_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:418"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_ownedTokens",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:24"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_ownedTokensIndex",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:27"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_allTokens",
+            "type": "t_array(t_uint256)dyn_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:30"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_allTokensIndex",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:33"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)46_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:171"
+          },
+          {
+            "contract": "ERC721HolderUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/utils/ERC721HolderUpgradeable.sol:34"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "uri",
+            "type": "t_string_storage",
+            "src": "contracts/nft-box/GameFiBox.sol:62"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "maxSupply",
+            "type": "t_uint256",
+            "src": "contracts/nft-box/GameFiBox.sol:63"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "fundWallet",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:64"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "signer",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:65"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "externalRandom",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:66"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "externalMinted",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:67"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "allowTransfer",
+            "type": "t_bool",
+            "src": "contracts/nft-box/GameFiBox.sol:68"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "minted",
+            "type": "t_mapping(t_uint256,t_bool)",
+            "src": "contracts/nft-box/GameFiBox.sol:69"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "subBoxes",
+            "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(SubBox)8723_storage))",
+            "src": "contracts/nft-box/GameFiBox.sol:70"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "userBought",
+            "type": "t_mapping(t_uint256,t_mapping(t_address,t_uint256))",
+            "src": "contracts/nft-box/GameFiBox.sol:71"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "superLimit",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "contracts/nft-box/GameFiBox.sol:72"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "saleEvents",
+            "type": "t_array(t_struct(SaleEvent)8701_storage)dyn_storage",
+            "src": "contracts/nft-box/GameFiBox.sol:73"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "boxes",
+            "type": "t_array(t_struct(Box)8712_storage)dyn_storage",
+            "src": "contracts/nft-box/GameFiBox.sol:74"
+          }
+        ],
+        "types": {
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_mapping(t_uint256,t_bool)": {
+            "label": "mapping(uint256 => bool)"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(SubBox)8723_storage))": {
+            "label": "mapping(uint256 => mapping(uint256 => struct GameFiBox.SubBox))"
+          },
+          "t_mapping(t_uint256,t_struct(SubBox)8723_storage)": {
+            "label": "mapping(uint256 => struct GameFiBox.SubBox)"
+          },
+          "t_struct(SubBox)8723_storage": {
+            "label": "struct GameFiBox.SubBox",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256"
+              },
+              {
+                "label": "maxSupply",
+                "type": "t_uint256"
+              },
+              {
+                "label": "totalSold",
+                "type": "t_uint256"
+              },
+              {
+                "label": "price",
+                "type": "t_uint256"
+              },
+              {
+                "label": "token",
+                "type": "t_address"
+              }
+            ]
+          },
+          "t_mapping(t_uint256,t_mapping(t_address,t_uint256))": {
+            "label": "mapping(uint256 => mapping(address => uint256))"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_array(t_struct(SaleEvent)8701_storage)dyn_storage": {
+            "label": "struct GameFiBox.SaleEvent[]"
+          },
+          "t_struct(SaleEvent)8701_storage": {
+            "label": "struct GameFiBox.SaleEvent",
+            "members": [
+              {
+                "label": "currentSupply",
+                "type": "t_uint256"
+              },
+              {
+                "label": "maxSupply",
+                "type": "t_uint256"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "endTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "maxPerBatch",
+                "type": "t_uint256"
+              },
+              {
+                "label": "NFT",
+                "type": "t_address"
+              },
+              {
+                "label": "startNFTId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "revealed",
+                "type": "t_uint256"
+              },
+              {
+                "label": "startingBoxIndex",
+                "type": "t_uint256"
+              },
+              {
+                "label": "useExternalRandom",
+                "type": "t_bool"
+              },
+              {
+                "label": "useSubEvent",
+                "type": "t_bool"
+              },
+              {
+                "label": "useExternalMint",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_array(t_struct(Box)8712_storage)dyn_storage": {
+            "label": "struct GameFiBox.Box[]"
+          },
+          "t_struct(Box)8712_storage": {
+            "label": "struct GameFiBox.Box",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256"
+              },
+              {
+                "label": "nftId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "eventId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "subBoxId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "revealed",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
+            "label": "mapping(address => mapping(uint256 => uint256))"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]"
+          },
+          "t_array(t_uint256)46_storage": {
+            "label": "uint256[46]"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_array(t_uint256)44_storage": {
+            "label": "uint256[44]"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          }
+        }
+      }
+    },
+    "b6e9f8080b7ab82d465d71a0fca21a4ead0275ae51edf47fe5c017577d8285a8": {
+      "address": "0x9114Ce0921c2ff0fBD1b8a9578b94f06757238DE",
+      "txHash": "0x92706e4aa2807b86941f85856a64ba1e475e3be3e0fea77be5b39faedd957820",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:26"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:30"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:21"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:77"
+          },
+          {
+            "contract": "ERC165Upgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol:35"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_name",
+            "type": "t_string_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:24"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_symbol",
+            "type": "t_string_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:27"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_owners",
+            "type": "t_mapping(t_uint256,t_address)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:30"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_balances",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:33"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_tokenApprovals",
+            "type": "t_mapping(t_uint256,t_address)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:36"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_operatorApprovals",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:39"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)44_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:418"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_ownedTokens",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:24"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_ownedTokensIndex",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:27"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_allTokens",
+            "type": "t_array(t_uint256)dyn_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:30"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_allTokensIndex",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:33"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)46_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:171"
+          },
+          {
+            "contract": "ERC721HolderUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/utils/ERC721HolderUpgradeable.sol:34"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "uri",
+            "type": "t_string_storage",
+            "src": "contracts/nft-box/GameFiBox.sol:62"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "maxSupply",
+            "type": "t_uint256",
+            "src": "contracts/nft-box/GameFiBox.sol:63"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "fundWallet",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:64"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "signer",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:65"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "externalRandom",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:66"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "externalMinted",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:67"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "allowTransfer",
+            "type": "t_bool",
+            "src": "contracts/nft-box/GameFiBox.sol:68"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "minted",
+            "type": "t_mapping(t_uint256,t_bool)",
+            "src": "contracts/nft-box/GameFiBox.sol:69"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "subBoxes",
+            "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(SubBox)8723_storage))",
+            "src": "contracts/nft-box/GameFiBox.sol:70"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "userBought",
+            "type": "t_mapping(t_uint256,t_mapping(t_address,t_uint256))",
+            "src": "contracts/nft-box/GameFiBox.sol:71"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "superLimit",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "contracts/nft-box/GameFiBox.sol:72"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "saleEvents",
+            "type": "t_array(t_struct(SaleEvent)8701_storage)dyn_storage",
+            "src": "contracts/nft-box/GameFiBox.sol:73"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "boxes",
+            "type": "t_array(t_struct(Box)8712_storage)dyn_storage",
+            "src": "contracts/nft-box/GameFiBox.sol:74"
+          }
+        ],
+        "types": {
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_mapping(t_uint256,t_bool)": {
+            "label": "mapping(uint256 => bool)"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(SubBox)8723_storage))": {
+            "label": "mapping(uint256 => mapping(uint256 => struct GameFiBox.SubBox))"
+          },
+          "t_mapping(t_uint256,t_struct(SubBox)8723_storage)": {
+            "label": "mapping(uint256 => struct GameFiBox.SubBox)"
+          },
+          "t_struct(SubBox)8723_storage": {
+            "label": "struct GameFiBox.SubBox",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256"
+              },
+              {
+                "label": "maxSupply",
+                "type": "t_uint256"
+              },
+              {
+                "label": "totalSold",
+                "type": "t_uint256"
+              },
+              {
+                "label": "price",
+                "type": "t_uint256"
+              },
+              {
+                "label": "token",
+                "type": "t_address"
+              }
+            ]
+          },
+          "t_mapping(t_uint256,t_mapping(t_address,t_uint256))": {
+            "label": "mapping(uint256 => mapping(address => uint256))"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_array(t_struct(SaleEvent)8701_storage)dyn_storage": {
+            "label": "struct GameFiBox.SaleEvent[]"
+          },
+          "t_struct(SaleEvent)8701_storage": {
+            "label": "struct GameFiBox.SaleEvent",
+            "members": [
+              {
+                "label": "currentSupply",
+                "type": "t_uint256"
+              },
+              {
+                "label": "maxSupply",
+                "type": "t_uint256"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "endTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "maxPerBatch",
+                "type": "t_uint256"
+              },
+              {
+                "label": "NFT",
+                "type": "t_address"
+              },
+              {
+                "label": "startNFTId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "revealed",
+                "type": "t_uint256"
+              },
+              {
+                "label": "startingBoxIndex",
+                "type": "t_uint256"
+              },
+              {
+                "label": "useExternalRandom",
+                "type": "t_bool"
+              },
+              {
+                "label": "useSubEvent",
+                "type": "t_bool"
+              },
+              {
+                "label": "useExternalMint",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_array(t_struct(Box)8712_storage)dyn_storage": {
+            "label": "struct GameFiBox.Box[]"
+          },
+          "t_struct(Box)8712_storage": {
+            "label": "struct GameFiBox.Box",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256"
+              },
+              {
+                "label": "nftId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "eventId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "subBoxId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "revealed",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
+            "label": "mapping(address => mapping(uint256 => uint256))"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]"
+          },
+          "t_array(t_uint256)46_storage": {
+            "label": "uint256[46]"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_array(t_uint256)44_storage": {
+            "label": "uint256[44]"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          }
+        }
+      }
+    },
+    "ddfb2cd4bffbd663338bfc5306c1646507c685a41a61adeca638d98aefe77591": {
+      "address": "0x238Fc8231D2229107594492699C631fDC74606BC",
+      "txHash": "0x7ce96187960b24b89e5a515b8862dc6aa5edea07d2463932acbacf920f67a31a",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:26"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:30"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:21"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:77"
+          },
+          {
+            "contract": "ERC165Upgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol:35"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_name",
+            "type": "t_string_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:24"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_symbol",
+            "type": "t_string_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:27"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_owners",
+            "type": "t_mapping(t_uint256,t_address)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:30"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_balances",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:33"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_tokenApprovals",
+            "type": "t_mapping(t_uint256,t_address)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:36"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_operatorApprovals",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:39"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)44_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:418"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_ownedTokens",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:24"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_ownedTokensIndex",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:27"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_allTokens",
+            "type": "t_array(t_uint256)dyn_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:30"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_allTokensIndex",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:33"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)46_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:171"
+          },
+          {
+            "contract": "ERC721HolderUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/utils/ERC721HolderUpgradeable.sol:34"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "uri",
+            "type": "t_string_storage",
+            "src": "contracts/nft-box/GameFiBox.sol:63"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "maxSupply",
+            "type": "t_uint256",
+            "src": "contracts/nft-box/GameFiBox.sol:64"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "fundWallet",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:65"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "signer",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:66"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "externalRandom",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:67"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "externalMinted",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:68"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "allowTransfer",
+            "type": "t_bool",
+            "src": "contracts/nft-box/GameFiBox.sol:69"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "minted",
+            "type": "t_mapping(t_uint256,t_bool)",
+            "src": "contracts/nft-box/GameFiBox.sol:70"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "subBoxes",
+            "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(SubBox)8725_storage))",
+            "src": "contracts/nft-box/GameFiBox.sol:71"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "userBought",
+            "type": "t_mapping(t_uint256,t_mapping(t_address,t_uint256))",
+            "src": "contracts/nft-box/GameFiBox.sol:72"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "superLimit",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "contracts/nft-box/GameFiBox.sol:73"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "saleEvents",
+            "type": "t_array(t_struct(SaleEvent)8703_storage)dyn_storage",
+            "src": "contracts/nft-box/GameFiBox.sol:74"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "boxes",
+            "type": "t_array(t_struct(Box)8714_storage)dyn_storage",
+            "src": "contracts/nft-box/GameFiBox.sol:75"
+          }
+        ],
+        "types": {
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_mapping(t_uint256,t_bool)": {
+            "label": "mapping(uint256 => bool)"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(SubBox)8725_storage))": {
+            "label": "mapping(uint256 => mapping(uint256 => struct GameFiBox.SubBox))"
+          },
+          "t_mapping(t_uint256,t_struct(SubBox)8725_storage)": {
+            "label": "mapping(uint256 => struct GameFiBox.SubBox)"
+          },
+          "t_struct(SubBox)8725_storage": {
+            "label": "struct GameFiBox.SubBox",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256"
+              },
+              {
+                "label": "maxSupply",
+                "type": "t_uint256"
+              },
+              {
+                "label": "totalSold",
+                "type": "t_uint256"
+              },
+              {
+                "label": "price",
+                "type": "t_uint256"
+              },
+              {
+                "label": "token",
+                "type": "t_address"
+              }
+            ]
+          },
+          "t_mapping(t_uint256,t_mapping(t_address,t_uint256))": {
+            "label": "mapping(uint256 => mapping(address => uint256))"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_array(t_struct(SaleEvent)8703_storage)dyn_storage": {
+            "label": "struct GameFiBox.SaleEvent[]"
+          },
+          "t_struct(SaleEvent)8703_storage": {
+            "label": "struct GameFiBox.SaleEvent",
+            "members": [
+              {
+                "label": "currentSupply",
+                "type": "t_uint256"
+              },
+              {
+                "label": "maxSupply",
+                "type": "t_uint256"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "endTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "maxPerBatch",
+                "type": "t_uint256"
+              },
+              {
+                "label": "NFT",
+                "type": "t_address"
+              },
+              {
+                "label": "startNFTId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "revealed",
+                "type": "t_uint256"
+              },
+              {
+                "label": "startingBoxIndex",
+                "type": "t_uint256"
+              },
+              {
+                "label": "useExternalRandom",
+                "type": "t_bool"
+              },
+              {
+                "label": "useSubEvent",
+                "type": "t_bool"
+              },
+              {
+                "label": "useExternalMint",
+                "type": "t_bool"
+              },
+              {
+                "label": "startingIndex",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_array(t_struct(Box)8714_storage)dyn_storage": {
+            "label": "struct GameFiBox.Box[]"
+          },
+          "t_struct(Box)8714_storage": {
+            "label": "struct GameFiBox.Box",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256"
+              },
+              {
+                "label": "nftId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "eventId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "subBoxId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "revealed",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
+            "label": "mapping(address => mapping(uint256 => uint256))"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]"
+          },
+          "t_array(t_uint256)46_storage": {
+            "label": "uint256[46]"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_array(t_uint256)44_storage": {
+            "label": "uint256[44]"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          }
+        }
+      }
+    },
+    "f46597e187f2789d1210784add7738ec41788c009fa6d50d507e42c8a4e2a6af": {
+      "address": "0xEBf9402A6117C5B807f263A2D9Fe3F3a2D714133",
+      "txHash": "0x3e58a97263cdbbe2d105677ef668c9ae74091c7932cd69bf3945de1e6c8372ab",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:26"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:30"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:21"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:77"
+          },
+          {
+            "contract": "ERC165Upgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol:35"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_name",
+            "type": "t_string_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:24"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_symbol",
+            "type": "t_string_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:27"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_owners",
+            "type": "t_mapping(t_uint256,t_address)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:30"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_balances",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:33"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_tokenApprovals",
+            "type": "t_mapping(t_uint256,t_address)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:36"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_operatorApprovals",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:39"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)44_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:418"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_ownedTokens",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:24"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_ownedTokensIndex",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:27"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_allTokens",
+            "type": "t_array(t_uint256)dyn_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:30"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_allTokensIndex",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:33"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)46_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:171"
+          },
+          {
+            "contract": "ERC721HolderUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/utils/ERC721HolderUpgradeable.sol:34"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "uri",
+            "type": "t_string_storage",
+            "src": "contracts/nft-box/GameFiBox.sol:62"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "maxSupply",
+            "type": "t_uint256",
+            "src": "contracts/nft-box/GameFiBox.sol:63"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "fundWallet",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:64"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "signer",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:65"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "externalRandom",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:66"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "externalMinted",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:67"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "allowTransfer",
+            "type": "t_bool",
+            "src": "contracts/nft-box/GameFiBox.sol:68"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "minted",
+            "type": "t_mapping(t_uint256,t_bool)",
+            "src": "contracts/nft-box/GameFiBox.sol:69"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "subBoxes",
+            "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(SubBox)8723_storage))",
+            "src": "contracts/nft-box/GameFiBox.sol:70"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "userBought",
+            "type": "t_mapping(t_uint256,t_mapping(t_address,t_uint256))",
+            "src": "contracts/nft-box/GameFiBox.sol:71"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "superLimit",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "contracts/nft-box/GameFiBox.sol:72"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "saleEvents",
+            "type": "t_array(t_struct(SaleEvent)8701_storage)dyn_storage",
+            "src": "contracts/nft-box/GameFiBox.sol:73"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "boxes",
+            "type": "t_array(t_struct(Box)8712_storage)dyn_storage",
+            "src": "contracts/nft-box/GameFiBox.sol:74"
+          }
+        ],
+        "types": {
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_mapping(t_uint256,t_bool)": {
+            "label": "mapping(uint256 => bool)"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(SubBox)8723_storage))": {
+            "label": "mapping(uint256 => mapping(uint256 => struct GameFiBox.SubBox))"
+          },
+          "t_mapping(t_uint256,t_struct(SubBox)8723_storage)": {
+            "label": "mapping(uint256 => struct GameFiBox.SubBox)"
+          },
+          "t_struct(SubBox)8723_storage": {
+            "label": "struct GameFiBox.SubBox",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256"
+              },
+              {
+                "label": "maxSupply",
+                "type": "t_uint256"
+              },
+              {
+                "label": "totalSold",
+                "type": "t_uint256"
+              },
+              {
+                "label": "price",
+                "type": "t_uint256"
+              },
+              {
+                "label": "token",
+                "type": "t_address"
+              }
+            ]
+          },
+          "t_mapping(t_uint256,t_mapping(t_address,t_uint256))": {
+            "label": "mapping(uint256 => mapping(address => uint256))"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_array(t_struct(SaleEvent)8701_storage)dyn_storage": {
+            "label": "struct GameFiBox.SaleEvent[]"
+          },
+          "t_struct(SaleEvent)8701_storage": {
+            "label": "struct GameFiBox.SaleEvent",
+            "members": [
+              {
+                "label": "currentSupply",
+                "type": "t_uint256"
+              },
+              {
+                "label": "maxSupply",
+                "type": "t_uint256"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "endTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "maxPerBatch",
+                "type": "t_uint256"
+              },
+              {
+                "label": "NFT",
+                "type": "t_address"
+              },
+              {
+                "label": "startNFTId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "revealed",
+                "type": "t_bool"
+              },
+              {
+                "label": "useExternalRandom",
+                "type": "t_bool"
+              },
+              {
+                "label": "useSubEvent",
+                "type": "t_bool"
+              },
+              {
+                "label": "useExternalMint",
+                "type": "t_bool"
+              },
+              {
+                "label": "startingIndex",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_array(t_struct(Box)8712_storage)dyn_storage": {
+            "label": "struct GameFiBox.Box[]"
+          },
+          "t_struct(Box)8712_storage": {
+            "label": "struct GameFiBox.Box",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256"
+              },
+              {
+                "label": "nftId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "eventId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "subBoxId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "revealed",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
+            "label": "mapping(address => mapping(uint256 => uint256))"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]"
+          },
+          "t_array(t_uint256)46_storage": {
+            "label": "uint256[46]"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_array(t_uint256)44_storage": {
+            "label": "uint256[44]"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          }
+        }
+      }
+    },
+    "219e2ac5fbe33f8357b4d6def31ea48613b82e10cea30975a84f889844fbb9c9": {
+      "address": "0x1f959e06e9360ca5dFFc150ed425ab04cBc4d0b2",
+      "txHash": "0x1a8d3cd9cbcca1770c4a3a4b71e2af1a2a0c7df081328fee7e876dfb7e10ccd9",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:26"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:30"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:21"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:77"
+          },
+          {
+            "contract": "ERC165Upgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol:35"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_name",
+            "type": "t_string_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:24"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_symbol",
+            "type": "t_string_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:27"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_owners",
+            "type": "t_mapping(t_uint256,t_address)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:30"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_balances",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:33"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_tokenApprovals",
+            "type": "t_mapping(t_uint256,t_address)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:36"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "_operatorApprovals",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:39"
+          },
+          {
+            "contract": "ERC721Upgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)44_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:418"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_ownedTokens",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:24"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_ownedTokensIndex",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:27"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_allTokens",
+            "type": "t_array(t_uint256)dyn_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:30"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "_allTokensIndex",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:33"
+          },
+          {
+            "contract": "ERC721EnumerableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)46_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:171"
+          },
+          {
+            "contract": "ERC721HolderUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/utils/ERC721HolderUpgradeable.sol:34"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "uri",
+            "type": "t_string_storage",
+            "src": "contracts/nft-box/GameFiBox.sol:62"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "maxSupply",
+            "type": "t_uint256",
+            "src": "contracts/nft-box/GameFiBox.sol:63"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "fundWallet",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:64"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "signer",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:65"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "externalRandom",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:66"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "externalMinted",
+            "type": "t_address",
+            "src": "contracts/nft-box/GameFiBox.sol:67"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "allowTransfer",
+            "type": "t_bool",
+            "src": "contracts/nft-box/GameFiBox.sol:68"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "minted",
+            "type": "t_mapping(t_uint256,t_bool)",
+            "src": "contracts/nft-box/GameFiBox.sol:69"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "subBoxes",
+            "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(SubBox)8723_storage))",
+            "src": "contracts/nft-box/GameFiBox.sol:70"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "userBought",
+            "type": "t_mapping(t_uint256,t_mapping(t_address,t_uint256))",
+            "src": "contracts/nft-box/GameFiBox.sol:71"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "superLimit",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "contracts/nft-box/GameFiBox.sol:72"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "saleEvents",
+            "type": "t_array(t_struct(SaleEvent)8701_storage)dyn_storage",
+            "src": "contracts/nft-box/GameFiBox.sol:73"
+          },
+          {
+            "contract": "GameFiBox",
+            "label": "boxes",
+            "type": "t_array(t_struct(Box)8712_storage)dyn_storage",
+            "src": "contracts/nft-box/GameFiBox.sol:74"
+          }
+        ],
+        "types": {
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_mapping(t_uint256,t_bool)": {
+            "label": "mapping(uint256 => bool)"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(SubBox)8723_storage))": {
+            "label": "mapping(uint256 => mapping(uint256 => struct GameFiBox.SubBox))"
+          },
+          "t_mapping(t_uint256,t_struct(SubBox)8723_storage)": {
+            "label": "mapping(uint256 => struct GameFiBox.SubBox)"
+          },
+          "t_struct(SubBox)8723_storage": {
+            "label": "struct GameFiBox.SubBox",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256"
+              },
+              {
+                "label": "maxSupply",
+                "type": "t_uint256"
+              },
+              {
+                "label": "totalSold",
+                "type": "t_uint256"
+              },
+              {
+                "label": "price",
+                "type": "t_uint256"
+              },
+              {
+                "label": "token",
+                "type": "t_address"
+              }
+            ]
+          },
+          "t_mapping(t_uint256,t_mapping(t_address,t_uint256))": {
+            "label": "mapping(uint256 => mapping(address => uint256))"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_array(t_struct(SaleEvent)8701_storage)dyn_storage": {
+            "label": "struct GameFiBox.SaleEvent[]"
+          },
+          "t_struct(SaleEvent)8701_storage": {
+            "label": "struct GameFiBox.SaleEvent",
+            "members": [
+              {
+                "label": "currentSupply",
+                "type": "t_uint256"
+              },
+              {
+                "label": "maxSupply",
+                "type": "t_uint256"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "endTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "maxPerBatch",
+                "type": "t_uint256"
+              },
+              {
+                "label": "NFT",
+                "type": "t_address"
+              },
+              {
+                "label": "startNFTId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "revealed",
+                "type": "t_bool"
+              },
+              {
+                "label": "useExternalRandom",
+                "type": "t_bool"
+              },
+              {
+                "label": "useSubEvent",
+                "type": "t_bool"
+              },
+              {
+                "label": "useExternalMint",
+                "type": "t_bool"
+              },
+              {
+                "label": "startingIndex",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_array(t_struct(Box)8712_storage)dyn_storage": {
+            "label": "struct GameFiBox.Box[]"
+          },
+          "t_struct(Box)8712_storage": {
+            "label": "struct GameFiBox.Box",
             "members": [
               {
                 "label": "id",

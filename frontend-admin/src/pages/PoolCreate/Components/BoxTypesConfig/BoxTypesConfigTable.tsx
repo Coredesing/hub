@@ -114,6 +114,7 @@ function BoxTypesConfigTable(props: any) {
               <TableCell>Icon</TableCell>
               <TableCell>Banner</TableCell>
               <TableCell>Loading Image</TableCell>
+              <TableCell>Currency Ids</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -126,6 +127,7 @@ function BoxTypesConfigTable(props: any) {
                   <TableCell>{row.icon}</TableCell>
                   <TableCell>{row.banner}</TableCell>
                   <TableCell>{row.image}</TableCell>
+                  <TableCell>{row.currency_ids}</TableCell>
                   <TableCell align="right">
                     <Button
                       variant="contained"

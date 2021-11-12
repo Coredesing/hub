@@ -17,6 +17,7 @@ import { Helmet } from "react-helmet";
 import { Swiper, SwiperSlide } from "swiper/react";
 import WrapperContent from '@base-components/WrapperContent';
 import { ObjectType } from '@app-types';
+import { getIconCurrencyUsdt } from '@utils/usdt';
 
 const MysteryBoxes = (props: any) => {
   const theme = useTheme();
@@ -35,6 +36,8 @@ const MysteryBoxes = (props: any) => {
   const [currentBox, setCurrentBox] = useState<{ [k: string]: any }>({ upcoming: true });
 
   const handleSelectBox = (box: { [k: string]: any }) => {
+    const { currencyIcon, currencyName } = getIconCurrencyUsdt({ purchasableCurrency: box.accept_currency, networkAvailable: box.network_available });
+    box.currencyName = currencyName;
     setCurrentBox(box);
   }
 
@@ -117,7 +120,9 @@ const MysteryBoxes = (props: any) => {
                     </div>
                     <div className="item">
                       <label>PRICE</label>
-                      <span>{currentBox.token_conversion_rate} {getCurrencyByNetwork(currentBox.network_available)}</span>
+                      <span>{currentBox.token_conversion_rate} {currentBox.currencyName} 
+                      {/* {getCurrencyByNetwork(currentBox.network_available)} */}
+                      </span>
                     </div>
                     <div className="item">
                       <label>SUPPORTED</label>

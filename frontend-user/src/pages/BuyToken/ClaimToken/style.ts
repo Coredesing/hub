@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: any) => {
         borderRadius: 2,
         width: 240,
         maxWidth: '100%',
-        backgroundColor: '#72F34B !important',
+        backgroundColor: '#72F34B',
 
         [theme.breakpoints.down('sm')]: {
           marginTop: '30px !important',
@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     poolDetailClaimInfo: {
-      marginBottom: 40,
+      marginBottom: '80px',
     },
 
     poolDetailClaimInfoBlock: {
@@ -150,6 +150,9 @@ const useStyles = makeStyles((theme: any) => {
           position: 'absolute',
         },
         '& .mark': {
+          '&:hover + .claim-at': {
+            display: 'block'
+          },
           position: 'absolute',
           top: '-5px',
           left: '-3px',
@@ -188,24 +191,150 @@ const useStyles = makeStyles((theme: any) => {
           flexDirection: 'column',
           justifyContent: 'flex-end',
           minHeight: '30px',
+          [theme.breakpoints.down('sm')]: {
+            top: '-12px',
+            display: 'block',
+          },
         },
         '& .info': {
           position: 'absolute',
-          top: '12px',
-          left: '-30px',
+          top: '15px',
+          left: '-5px',
           fontSize: 10,
           // lineHeight: '18px',
           width: '140px',
           wordBreak: 'break-word',
+          '&.isShowDetail': {
+            left: '-30px',
+            [theme.breakpoints.down('sm')]: {
+              top: '-15px',
+            },
+          },
           // marginTop: 12,
           [theme.breakpoints.down('sm')]: {
-            top: '-15px',
-            left: '20px',
+            top: '-12px',
+            left: '20px !important',
             textAlign: 'left',
           },
+          '& .percent.active': {
+            color: '#72F34B',
+          }
+        },
+        '&:nth-child(odd) .wrap-claim-box': {
+          top: 'unset',
+          bottom: '-75px',
+          '& .claim-at': {
+            top: 'unset',
+            bottom: 0,
+            '&::before': {
+              bottom: 'unset',
+              top: '-7px',
+              borderTop: 'unset',
+            },
+            '&.gamefi::before': {
+              borderBottom: '8px solid #72F34B',
+            },
+            '&.airdrop::before, &.tba::before': {
+              borderBottom: '8px solid #AEAEAE',
+            },
+            '&.external::before': {
+              borderBottom: '8px solid #00E0FF',
+            },
+          }
+        },
+        '& .wrap-claim-box': {
+          zIndex: 1,
+          position: 'absolute',
+          height: '90px',
+          left: '-70px',
+          top: '-75px',
+          width: '130px',
+          maxWidth: '130px',
+          '&:hover .claim-at': {
+            display: 'block',
+          },
+          [theme.breakpoints.down('sm')]: {
+            top: '-30px !important',
+            left: '-5px !important',
+            width: '250px',
+            maxWidth: 'unset',
+            height: '50px',
+          },
+        },
+        '& .claim-at': {
+          display: 'none',
+          position: 'absolute',
+          top: '0px',
+          minWidth: '102px',
+          width: 'max-content',
+          color: '#000',
+          borderRadius: '12px',
+          textAlign: 'center',
+          padding: '6px 12px',
+          fontFamily: 'Firs Neue',
+          fontSize: '12px',
+          fontWeight: 600,
+          fontStyle: 'normal',
+          letterSpacing: '0.5px',
+          left: '24px',
+          transition: 'opacity 1s ease-out',
+          '&.show': {
+            display: 'block'
+          },
+          [theme.breakpoints.down('sm')]: {
+            top: '10px !important',
+            left: '120px !important',
+            bottom: 'unset !important'
+          },
+          '& a': {
+            color: '#000',
+          },
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            width: '0',
+            bottom: '-7px',
+            left: '50%',
+            transform: 'translate(-50%)',
+            borderLeft: '4px solid transparent',
+            borderRight: '4px solid transparent',
+            [theme.breakpoints.down('sm')]: {
+              display: 'none',
+            },
+          },
+          '&.gamefi': {
+            background: '#72F34B',
+            '&::before': {
+              borderTop: '8px solid #72F34B',
+            }
+          },
+          '&.airdrop, &.tba': {
+            background: '#AEAEAE',
+            '&::before': {
+              borderTop: '8px solid #AEAEAE',
+            }
+          },
+          '&.external': {
+            left: 'calc(-130px / 2 + 4px)',
+            background: '#00E0FF',
+            '&::before': {
+              borderTop: '8px solid #00E0FF',
+            },
+          }
+        },
+        '&:last-child .claim-at': {
+          '&.gamefi, &.airdrop, &.tba': {
+            left: '-8px',
+          },
+          '&.external': {
+            left: '-40px',
+          },
+          '&::before': {
+            left: 'unset',
+            right: '12px',
+          }
         }
       },
-
     },
 
     poolDetailClaimProgress: {

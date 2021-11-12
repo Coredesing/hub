@@ -4,7 +4,7 @@ import {ThunkDispatch} from 'redux-thunk';
 import {convertFromWei, getContractInstance, getWeb3Instance, SmartContractMethod} from '../../services/web3';
 import erc20ABI from '../../abi/Erc20.json';
 import BigNumber from "bignumber.js";
-import {getEPkfBonusBalanceValue} from "../../utils/campaign";
+// import {getEPkfBonusBalanceValue} from "../../utils/campaign";
 
 const balanceOf = async (tokenAddress: string | undefined, appChainID: any, connector: any, loginUser: string) => {
   const tokenContract = getContractInstance(

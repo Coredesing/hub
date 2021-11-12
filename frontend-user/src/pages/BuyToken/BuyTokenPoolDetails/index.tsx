@@ -15,7 +15,9 @@ import {
 import useStyles from "./styles";
 import { ACCEPT_CURRENCY, POOL_STATUS } from "../../../constants";
 import BigNumber from "bignumber.js";
-import { getTotalRaiseByPool, showTotalRaisePrice } from "../../../utils/campaign";
+import { 
+  // getTotalRaiseByPool, 
+  showTotalRaisePrice } from "../../../utils/campaign";
 
 type Props = {
   poolDetails: any;

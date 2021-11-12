@@ -71,9 +71,10 @@ const useStyles = makeStyles((theme: any) => {
     cardImg: {
       "& img": {
         width: "100%",
-        maxHeight: "376px",
+        maxHeight: "461px",
         height: "100%",
         objectFit: "contain",
+        background: '#000',
       },
     },
     cardBody: {
@@ -795,6 +796,7 @@ export const useAboutStyles = makeStyles((theme) => ({
           width: '100%',
           height: '100px',
           position: 'relative',
+          objectFit: 'contain'
         }
       },
       '& .id-box': {
@@ -814,6 +816,47 @@ export const useAboutStyles = makeStyles((theme) => ({
         border: '1px solid #72F34B',
       }
 
+    }
+  },
+  wrapperCountdownCollection: {
+    marginBottom: '20px',
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '8px',
+    alignItems: 'end',
+    [theme.breakpoints.down('xs')]: {
+      gridTemplateColumns: '1fr',
+      gap: '4px',
+    },
+    '& .countdown': {
+      height: '52px',
+      borderRadius: '2px',
+      background: '#000',
+      '& .time .number': {
+        fontSize: '24px',
+        lineHeight: '28px',
+        fontFamily: 'Space Ranger !important',
+        [theme.breakpoints.down('xs')]: {
+          fontSize: '20px',
+        },
+      }
+    },
+    '& .title': {
+      height: '52px',
+      background: '#000',
+      borderRadius: '2px',
+      display: 'grid',
+      alignItems: 'center',
+      '& h3': {
+        fontFamily: 'Firs Neue',
+        fontSize: '20px',
+        color: '#fff',
+        textTransform: 'uppercase',
+        textAlign: 'center',
+      }
+    },
+    '& button': {
+      marginTop: '0',
     }
   }
 }));
@@ -1004,6 +1047,9 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
         gridAutoRows: 'minmax(42px, auto)',
         gap: '8px',
         '& .box-type': {
+          '&.type': {
+            placeContent: 'start',
+          },
           cursor: 'pointer',
           padding: '5px 4px',
           display: 'grid',
@@ -1011,20 +1057,29 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
           gap: '5px',
           alignItems: 'center',
           placeContent: 'center',
-          border: '1px solid #555',
+          border: '2px solid #555',
           borderRadius: '4px',
           transition: '0.3s',
+          position: 'relative',
           '&.active, &:hover': {
-            border: '1px solid #fff',
+            border: '2px solid #72F34B',
 
             '& span': {
               color: '#fff',
             }
           },
-
+          '& .wrapper-icon': {
+            height: '35px',
+            width: '35px',
+            background: '#000',
+            display: 'grid',
+            alignItems: 'center',
+            placeItems: 'center',
+          },
           '& .icon': {
-            width: '40px',
+            width: '35px',
             height: '20px',
+            objectFit: 'contain',
           },
 
           '& span': {
@@ -1133,5 +1188,5 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
         marginBottom: '6px',
       }
     }
-  }
+  },
 }));

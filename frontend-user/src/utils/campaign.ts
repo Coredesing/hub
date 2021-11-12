@@ -12,7 +12,7 @@ import {
 import { convertFromWei, getPoolContract } from "../services/web3";
 import axios from "axios";
 import { getRateSettings } from "../request/rate";
-import { getRates } from "../store/actions/sota-tiers";
+// import { getRates } from "../store/actions/sota-tiers";
 import {formatRoundUp, numberWithCommas} from "./formatNumber";
 import {getIconCurrencyUsdt} from "./usdt";
 
@@ -222,104 +222,81 @@ export const getRateSettingAPI = async () => {
   return rateSettings;
 };
 
-export const mappingRateSettingObjectToArray = (dataRateSettingAPI: any) => {
-  if (!dataRateSettingAPI) return [];
+// export const mappingRateSettingObjectToArray = (dataRateSettingAPI: any) => {
+//   if (!dataRateSettingAPI) return [];
 
-  // Get Rate from API data
-  let rateSetting = [...CONVERSION_RATE].map((item) => {
-    if (item.symbol === TOKEN_STAKE_SYMBOLS.LP_PKF) {
-      item.rate = dataRateSettingAPI.lp_pkf_rate;
-    } else if (item.symbol === TOKEN_STAKE_SYMBOLS.EPKF) {
-      item.rate = dataRateSettingAPI.epkf_rate;
-    } else if (item.symbol === TOKEN_STAKE_SYMBOLS.SPKF) {
-      item.rate = dataRateSettingAPI.spkf_rate;
-    }
-    return item;
-  });
-  return rateSetting;
-};
+//   // Get Rate from API data
+//   let rateSetting = [...CONVERSION_RATE].map((item) => {
+//     if (item.symbol === TOKEN_STAKE_SYMBOLS.LP_PKF) {
+//       item.rate = dataRateSettingAPI.lp_pkf_rate;
+//     } else if (item.symbol === TOKEN_STAKE_SYMBOLS.EPKF) {
+//       item.rate = dataRateSettingAPI.epkf_rate;
+//     } else if (item.symbol === TOKEN_STAKE_SYMBOLS.SPKF) {
+//       item.rate = dataRateSettingAPI.spkf_rate;
+//     }
+//     return item;
+//   });
+//   return rateSetting;
+// };
 
-export const mappingRateSettingArrayToObject = (rateSettings: any) => {
-  const rateObject: any = {
-    spkf_rate: 1,
-    lp_pkf_rate: 1,
-    epkf_rate: 1,
-  };
-  if (!rateSettings || rateSettings.length == 0) {
-    return rateObject;
-  }
 
-  for (let i = 0; i < rateSettings.length; i++) {
-    const rate = rateSettings[i];
-    if (rate.symbol == TOKEN_STAKE_SYMBOLS.SPKF) {
-      rateObject.spkf_rate = rate.rate || 1;
-    } else if (rate.symbol == TOKEN_STAKE_SYMBOLS.LP_PKF) {
-      rateObject.lp_pkf_rate = rate.rate || 1;
-    } else if (rate.symbol == TOKEN_STAKE_SYMBOLS.EPKF) {
-      rateObject.epkf_rate = rate.rate || 1;
-    }
-  }
+// export const getTokenStakeSmartContractInfo = async (
+//   contract: any,
+//   address: string
+// ) => {
+//   let result = {};
+//   const resultPkf = await contract?.methods
+//     .userInfo(address, process.env.REACT_APP_PKF)
+//     .call();
+//   const stakedPkf = convertFromWei(resultPkf.staked);
 
-  return rateObject;
-};
+//   const resultUni = await contract?.methods
+//     .userInfo(address, process.env.REACT_APP_UNI_LP)
+//     .call();
+//   const stakedUni = convertFromWei(resultUni.staked);
 
-export const getTokenStakeSmartContractInfo = async (
-  contract: any,
-  address: string
-) => {
-  let result = {};
-  const resultPkf = await contract?.methods
-    .userInfo(address, process.env.REACT_APP_PKF)
-    .call();
-  const stakedPkf = convertFromWei(resultPkf.staked);
+//   const resultMantra = await contract?.methods
+//     .userInfo(address, process.env.REACT_APP_MANTRA_LP)
+//     .call();
+//   const stakedMantra = convertFromWei(resultMantra.staked);
 
-  const resultUni = await contract?.methods
-    .userInfo(address, process.env.REACT_APP_UNI_LP)
-    .call();
-  const stakedUni = convertFromWei(resultUni.staked);
+//   let epkfStaked = 0 ?? await getEPkfBonusBalanceValue(address);
 
-  const resultMantra = await contract?.methods
-    .userInfo(address, process.env.REACT_APP_MANTRA_LP)
-    .call();
-  const stakedMantra = convertFromWei(resultMantra.staked);
+//   result = {
+//     ...result,
+//     resultPkf: resultPkf,
+//     pkfStaked: stakedPkf,
+//     resultUni: resultUni,
+//     uniStaked: stakedUni,
+//     resultMantra: resultMantra,
+//     mantraStaked: stakedMantra,
+//     ePkf: epkfStaked,
+//   };
 
-  let epkfStaked = 0 ?? await getEPkfBonusBalanceValue(address);
+//   let rateSettings;
+//   let rateObject;
 
-  result = {
-    ...result,
-    resultPkf: resultPkf,
-    pkfStaked: stakedPkf,
-    resultUni: resultUni,
-    uniStaked: stakedUni,
-    resultMantra: resultMantra,
-    mantraStaked: stakedMantra,
-    ePkf: epkfStaked,
-  };
+//   rateObject = await getRateSettingAPI();
+//   rateSettings = mappingRateSettingObjectToArray(rateObject);
+//   // console.log("epkfStaked", epkfStaked);
 
-  let rateSettings;
-  let rateObject;
+//   // Calculate totak stake balance
+//   const totalStaked = new BigNumber(stakedPkf)
+//     .plus(new BigNumber(stakedUni).multipliedBy(rateObject.lp_pkf_rate))
+//     .plus(new BigNumber(epkfStaked).multipliedBy(rateObject.epkf_rate))
+//     .toFixed();
 
-  rateObject = await getRateSettingAPI();
-  rateSettings = mappingRateSettingObjectToArray(rateObject);
-  // console.log("epkfStaked", epkfStaked);
+//   result = {
+//     ...result,
+//     totalStaked: totalStaked,
+//   };
 
-  // Calculate totak stake balance
-  const totalStaked = new BigNumber(stakedPkf)
-    .plus(new BigNumber(stakedUni).multipliedBy(rateObject.lp_pkf_rate))
-    .plus(new BigNumber(epkfStaked).multipliedBy(rateObject.epkf_rate))
-    .toFixed();
-
-  result = {
-    ...result,
-    totalStaked: totalStaked,
-  };
-
-  return {
-    tokenStakes: result,
-    rateSettings,
-    rateStakeInfo: rateObject,
-  };
-};
+//   return {
+//     tokenStakes: result,
+//     rateSettings,
+//     rateStakeInfo: rateObject,
+//   };
+// };
 
 export const findUserTier = async (contract: any, address: string) => {};
 

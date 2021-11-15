@@ -73,6 +73,12 @@ export default {
       line-height: 36px;
       font-weight: 600;
 
+      span {
+        white-space: normal;
+        max-width: 150px;
+        text-overflow: ellipsis;
+      }
+
       img {
         margin-left: 8px;
         display: inline;

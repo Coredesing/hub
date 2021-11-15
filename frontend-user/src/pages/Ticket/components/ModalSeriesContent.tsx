@@ -74,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
                     '& div': {
                         minWidth: '320px',
                         minHeight: '320px',
+                        maxHeight: '320px',
                         position: 'relative',
                         overflow: 'hidden',
                         display: 'grid',
@@ -81,6 +82,7 @@ const useStyles = makeStyles((theme) => ({
                         [theme.breakpoints.down('xs')]: {
                             minWidth: '250px',
                             minHeight: '250px',
+                            maxHeight: '250px',
                         },
                     },
                     '& img': {

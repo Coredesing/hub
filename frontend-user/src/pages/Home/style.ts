@@ -428,6 +428,133 @@ const useStyles = makeStyles((theme: any) => {
         },
       },
     },
+    performanceRanks: {
+      '& .header': {
+        background: '#2E2E2E',
+        padding: '24px',
+        marginBottom: '32px',
+        '& .top': {
+          marginBottom: '28px',
+          display: 'grid',
+          gridTemplateColumns: 'auto auto',
+          justifyContent: 'space-between',
+          '& .logo': {
+            display: 'grid',
+            gridTemplateColumns: '50px auto',
+            alignItems: 'center',
+            gap: '12px',
+            '& img': {
+              width: '50px',
+              height: '50px',
+            },
+            '& span': {
+              fontFamily: 'Firs Neue',
+              fontStyle: 'normal',
+              fontWeight: 'bold',
+              fontSize: '20px',
+              color: '#fff',
+            }
+          },
+          '& .socials': {
+            display: 'grid',
+            gridTemplateColumns: '24px 24px 24px',
+            gap: '8px',
+          }
+        },
+        '& .rate': {
+          display: 'flex',
+          flexWrap: 'wrap',
+          // gap: '10px',
+          alignItems: 'center',
+          '& .item': {
+            borderRight: '1px solid #44454B',
+            paddingLeft: '15px',
+            paddingRight: '15px',
+            marginBottom: '10px',
+            '& .sub-item:first-child': {
+              marginBottom: '8px'
+            },
+            '& .sub-item': {
+              display: 'flex',
+              alignItems: 'end',
+              '& .label': {
+                fontFamily: 'Firs Neue',
+                fontStyle: 'normal',
+                fontWeight: 'normal',
+                fontSize: '14px',
+                lineHeight: '18px',
+                color: '#fff',
+                display: 'block',
+                width: 'fit-content',
+                marginRight: '18px',
+              },
+              '& .percent': {
+                fontFamily: 'Firs Neue',
+                fontStyle: 'normal',
+                fontWeight: 'normal',
+                fontSize: '14px',
+                marginLeft: '8px',
+                width: 'fit-content',
+                display: 'grid',
+                gridTemplateColumns: '6px auto',
+                alignItems: 'center',
+                gap: '4px',
+                '&.up': {
+                  color: '#72F34B'
+                },
+                '&.down': {
+                  color: '#F24B4B',
+                }
+              },
+              '& .bold': {
+                fontFamily: 'Firs Neue',
+                fontStyle: 'normal',
+                fontWeight: 600,
+                fontSize: '14px',
+                color: '#fff',
+                display: 'block',
+                width: 'fit-content',
+              }
+            }
+          },
+          '& .item:last-child': {
+            borderRight: 'unset',
+            paddingRight: 'unset',
+          },
+          '& .current-price': {
+            '& .price': {
+              fontFamily: 'Firs Neue',
+              fontStyle: 'normal',
+              fontWeight: 'bold',
+              fontSize: '24px',
+              color: '#fff',
+            }
+          },
+          '& .foundation': {
+            '& .logo-foundation': {
+              display: 'grid !important',
+              gridTemplateColumns: '24px auto',
+              alignItems: 'center',
+              gap: '8px',
+              '& img': {
+                width: '24px',
+                height: '24px'
+              }
+
+            }
+          }
+        }
+      },
+      '& .filter': {
+        marginBottom: '8px',
+        '& .search': {
+          maxWidth: '400px',
+        }
+      },
+      '& .body': {
+
+      }
+    }
   };
 });
 

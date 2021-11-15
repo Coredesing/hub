@@ -104,7 +104,7 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
           </li>
         </ul>
         <ul className={styles.listContent}>
-          {<li className={styles.itemListContent}>
+          {/* {<li className={styles.itemListContent}>
             <span className={styles.nameItemListContent}>
               Schedule by Ranks
             </span>
@@ -114,7 +114,7 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
             >
               Click here to see details
             </span>
-          </li>}
+          </li>} */}
           <li className={styles.itemListContent}>
             <span className={styles.nameItemListContent}>Total Raise</span>
             <span>

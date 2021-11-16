@@ -75,7 +75,7 @@ class Campaign extends Model {
   }
 
   tokenomic() {
-    return this.hasOne('App/Models/Tokenomic', 'slug', 'slug')
+    return this.hasOne('App/Models/Tokenomic', 'slug', 'coinmarketcap_slug')
   }
 }
 

@@ -25,17 +25,20 @@ class HomeService {
       let performace = {
         rank: data.tokenomic.cmc_rank,
         name: name,
+        ticker: data.tokenomic.ticker,
         price: price.toFixed(),
         price_change_24h: data.tokenomic.price_change_24h,
         price_change_7d: data.tokenomic.price_change_7d,
         market_cap: data.tokenomic.market_cap,
         volume_24h: data.tokenomic.volume_24h,
         ido_price: idoPrice.toFixed(),
-        ido_roi: roi.toFixed()
+        ido_roi: roi.toFixed(),
+        image: `https://s2.coinmarketcap.com/static/img/coins/64x64/${data.tokenomic.cmc_id}.png`
       }
 
       if (data.tokenomic.ticker.toLowerCase() === 'gafi') {
         specialItem = performace
+        specialItem.raised = '$250K'
       }
 
       return performace

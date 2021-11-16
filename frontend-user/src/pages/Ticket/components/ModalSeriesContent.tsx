@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     bodyModal: {
-        maxWidth: '440px',
+        // maxWidth: '440px',
         '& .prev, & .next': {
             display: 'block',
             cursor: 'pointer',
@@ -66,23 +66,21 @@ const useStyles = makeStyles((theme) => ({
                     alignItems: 'center',
                     placeContent: 'center',
                     position: 'relative',
-                    height: '100%',
+                    // height: '100%',
                     // minHeight: '360px',
                     [theme.breakpoints.down('xs')]: {
                         // padding: '20px 30px',
                     },
                     '& div': {
                         minWidth: '320px',
-                        minHeight: '320px',
-                        maxHeight: '320px',
+                        height: '320px',
                         position: 'relative',
                         overflow: 'hidden',
-                        display: 'grid',
-                        placeItems: 'center',
+                        // display: 'grid',
+                        // placeItems: 'center',
                         [theme.breakpoints.down('xs')]: {
                             minWidth: '250px',
-                            minHeight: '250px',
-                            maxHeight: '250px',
+                            height: '250px',
                         },
                     },
                     '& img': {
@@ -108,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     paper: {
-        maxWidth: '440px',
+        // maxWidth: '440px',
     }
 }));
 type ObjectType = { [k: string]: any };

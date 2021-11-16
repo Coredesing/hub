@@ -46,11 +46,18 @@ class HomeService {
     })
 
     result = result.sort(function(a, b) {
-      if (a.rank === b.rank) {
-        return b.price - a.price
+      const roi_a = new BigNumber(a.ido_roi)
+      const roi_b = new BigNumber(b.ido_roi)
+
+      if (roi_a.gt(roi_b)) {
+        return -1
       }
 
-      return a.rank - b.rank
+      if (roi_a.eq(roi_b)) {
+        return a.rank - b.rank
+      }
+
+      return b.price - a.price
     })
 
     let data = {

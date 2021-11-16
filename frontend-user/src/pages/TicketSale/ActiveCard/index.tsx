@@ -83,7 +83,7 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
   }
 
   return (
-    <div className={clsx(styles.card, styles.cardActive, {
+    <Link href={`/#/${getRoute(card.token_type)}/${card.id}`} className={clsx(styles.card, styles.cardActive, styles.noUnderline, {
       [styles.cardActiveApproved]: card.isApproved
     })}>
       <div className={styles.cardImg}>
@@ -174,6 +174,6 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
         }
 
       </div>
-    </div>
+    </Link>
   );
 };

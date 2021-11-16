@@ -53,6 +53,10 @@ class HomeService {
         return -1
       }
 
+      if (roi_a.lt(roi_b)) {
+        return 1
+      }
+
       return a.rank - b.rank
     })
 

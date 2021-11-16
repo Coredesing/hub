@@ -44,7 +44,7 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
           setTitleTime('End Buy in');
           timer = +card.finish_time * 1000;
         }
-        if(finish_time <= Date.now()) {
+        if (finish_time <= Date.now()) {
           setTitleTime('Finished')
         }
       } else {
@@ -81,7 +81,7 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
   }
 
   return (
-    <div className={clsx(styles.card, styles.cardUpcoming)}>
+    <Link href={`/#/${getRoute(card.token_type)}/${card.id}`} className={clsx(styles.card, styles.cardUpcoming, styles.noUnderline)}>
       <div className={clsx(styles.cardImg, styles.cardImgUpcoming)}>
         <h4>{getSeedRound(card.is_private)} Sale</h4>
         <Image src={card.banner} />
@@ -112,9 +112,9 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
         }
         <div className={'cardBodyTimeEndItem'}>
           <img src='/images/icons/bright.svg' alt="" />
-          <span className={clsx(styles.text, 'sp1 text-uppercase')} style={{marginTop: 3}}>{titleTime}</span>
+          <span className={clsx(styles.text, 'sp1 text-uppercase')} style={{ marginTop: 3 }}>{titleTime}</span>
           <span className={styles.timeEnd}>
-            {(titleTime !== 'Coming soon' && titleTime !== 'Finished') && 
+            {(titleTime !== 'Coming soon' && titleTime !== 'Finished') &&
               <>
                 <span>&nbsp;</span>
                 {openTime.days > 1 && <span>{formatNumber(openTime.days)} days</span>}
@@ -142,6 +142,6 @@ export const UpcomingCard = ({ card, refresh, ...props }: Props) => {
           Detail
         </Link>
       </div>
-    </div>
+    </Link>
   );
 };

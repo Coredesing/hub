@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import PropTypes from "prop-types";
 // import SwipeableViews from 'react-swipeable-views';
@@ -39,7 +39,7 @@ import PresaleBoxAbi from '@abi/PreSaleBox.json';
 import { useWeb3React } from "@web3-react/core";
 import { useDispatch, useSelector } from "react-redux";
 import { getContract } from "@utils/contract";
-import { alertSuccess, alertWarning } from "@store/actions/alert";
+import { alertFailure, alertSuccess, alertWarning } from "@store/actions/alert";
 import TransactionSubmitModal from "@base-components/TransactionSubmitModal";
 const shareIcon = "/images/icons/share.svg";
 const telegramIcon = "/images/icons/telegram-1.svg";
@@ -395,6 +395,9 @@ export const AboutMysteryBox = ({
   const isShowAmountSerie = firstSerie && +firstSerie.amount > 0;
   const [isClaimed, setClaim] = useState(false);
   let timeClaim = info.campaignClaimConfig?.[0]?.start_time;
+  const claimType = info.campaignClaimConfig?.[0]?.claim_type;
+  const claimUrl = info.campaignClaimConfig?.[0]?.claim_url;
+  const isClaimedOnGF = !claimType || +claimType === 0;
   const timeNow = Date.now();
   timeClaim = timeClaim ? +timeClaim * 1000 : 0;
   useEffect(() => {
@@ -413,6 +416,13 @@ export const AboutMysteryBox = ({
     setShowModalTx(false);
     setTxHash('');
   }
+  const POOL_IDS_IS_CLAIMED_ONE_BY_ONE: any[] = useMemo(() => {
+    try {
+      return JSON.parse(process.env.REACT_APP_POOL_IDS_IS_CLAIMED_ONE_BY_ONE || '')
+    } catch (error) {
+      return [];
+    }
+  }, []);
   const onClaimBox = async () => {
     try {
       if (!isClaimed) return;
@@ -429,9 +439,27 @@ export const AboutMysteryBox = ({
       dispatch(alertSuccess("Request is completed!"));
     } catch (error: any) {
       console.error(error);
-      dispatch(alertSuccess(error.message));
+      dispatch(alertFailure(error?.data?.message || error.message));
     }
-
+  }
+  const onClaimBoxId = async (boxId: number) => {
+    try {
+      if (!isClaimed) return;
+      const contract = getContract(info.campaign_hash, PresaleBoxAbi, library, connectedAccount as string);
+      if (!contract) {
+        console.error("Something went wrong");
+        return
+      }
+      const tx = await contract.claimNFT(boxId);
+      setShowModalTx(true);
+      setTxHash(tx.hash);
+      dispatch(alertWarning("Request is processing!"));
+      await tx.wait(1);
+      dispatch(alertSuccess("Request is completed!"));
+    } catch (error: any) {
+      console.error(error);
+      dispatch(alertFailure(error?.data?.message || error.message));
+    }
   }
   return (
     <div className={classes.root}>
@@ -536,16 +564,22 @@ export const AboutMysteryBox = ({
       </TabPanel>
       <TabPanel value={tabCurrent} index={3}>
         <ModalBoxCollection open={openModalBoxCollection} current={currentBox} boxesContent={collections || []} onClose={onCloseModalBox} />
-        <TransactionSubmitModal opened={isShowModalTx} handleClose={onCloseModalTx} transactionHash={txHash}  />
+        <TransactionSubmitModal opened={isShowModalTx} handleClose={onCloseModalTx} transactionHash={txHash} />
         {
-          !!collections.length && timeClaim && <div className="wrapperHeader">
-            <div className={classes.wrapperCountdownCollection}>
+          !!collections.length && timeClaim &&
+          <div className="wrapperHeader">
+            <div className={classes.wrapperCountdownCollection} style={!POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(info.id) ? { gridTemplateColumns: '1fr 1fr' } : { gridTemplateColumns: '1fr' }}>
               {
                 (timeClaim > timeNow) ?
                   <CountDownTimeV1 time={{ date1: timeClaim, date2: timeNow }} onFinish={onFinishCountdown} className="countdown" />
                   : <div className="title"><h3>You can claim now</h3></div>
               }
-              <ButtonBase color="green" onClick={onClaimBox} disabled={!isClaimed}>Claim</ButtonBase>
+              {
+                !POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(info.id) &&
+                (isClaimedOnGF ?
+                  <ButtonBase color="green" onClick={onClaimBox} disabled={!isClaimed}>Claim on GameFi</ButtonBase> :
+                  claimUrl ? <ButtonBase color="blue" onClick={() => window.open(claimUrl)}>Claim on External</ButtonBase> : null)
+              }
             </div>
           </div>
         }
@@ -553,13 +587,42 @@ export const AboutMysteryBox = ({
         <div className={classes.wrapperBox}>
           {
             loadingCollection ? <HashLoader loading={true} color={'#72F34B'} /> : collections.map((b: any, id: number) =>
-              <div key={id} onClick={() => onSelectBox(b)} className={clsx("box", { active: currentBox.idCollection === b.idCollection })}>
+              <div key={id} onClick={(e) => {
+                e.stopPropagation();
+                onSelectBox(b)
+              }} className={clsx("box", { active: currentBox.idCollection === b.idCollection })}>
                 <div className="img-box">
                   <img src={b.icon} alt="" />
                 </div>
-                <span className="id-box">
-                  #{formatNumber(b.idCollection, 3)}
-                </span>
+                <div>
+                  <span className="id-box">
+                    #{formatNumber(b.idCollection, 3)}
+                  </span>
+                  {
+                    POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(info.id) &&
+                      isClaimedOnGF ?
+                      (<ButtonBase
+                        color="green"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onClaimBoxId(b.idCollection)
+                        }}
+                        className="btn-claim-box text-transform-unset"
+                        disabled={!isClaimed}
+                      >  Claim on GameFi </ButtonBase>) :
+                      (claimUrl ? <ButtonBase
+                        color="blue"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.open(claimUrl);
+                        }}
+                        className="btn-claim-box text-transform-unset"
+                      // disabled={!isClaimed}
+                      >
+                        Claim on External
+                      </ButtonBase> : null)
+                  }
+                </div>
               </div>
             )
           }

@@ -591,7 +591,17 @@ const Home = (props: any) => {
                   <Table stickyHeader>
                     <TableHead>
                       <TableRowHead>
-                        <TableCell>CMC Rank</TableCell>
+                        <TableCell>
+                          <TableSortLabel onClick={() => onSortListPerfomance("rank")}
+                            order={
+                              fieldSorted.field === "rank"
+                                ? fieldSorted.order
+                                : null
+                            }
+                          >
+                            CMC Rank
+                          </TableSortLabel>
+                        </TableCell>
                         <TableCell>Name</TableCell>
                         <TableCell>
                           <TableSortLabel onClick={() => onSortListPerfomance("price")}

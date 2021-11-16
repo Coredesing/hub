@@ -130,7 +130,7 @@ const Home = (props: any) => {
 
   const [listPerfomance, setListPerfomance] = useState<Data[]>([]);
 
-  const getLimitPerformances = (arr: any[] = [], limit = 10) => {
+  const getLimitPerformances = (arr: any[] = [], limit = 15) => {
     return arr.slice(0, limit);
   }
 

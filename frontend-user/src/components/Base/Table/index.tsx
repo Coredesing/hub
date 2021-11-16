@@ -86,10 +86,10 @@ interface ISortLabel {
   children?: any;
   [k: string]: any;
 }
-export const TableSortLabel = ({ children, order, ...props }: ISortLabel) => {
+export const TableSortLabel = ({ children, order, onClick, ...props }: ISortLabel) => {
   const classes = useTableStyles();
   return (
-    <div className={classes.labelSort}>
+    <div className={classes.labelSort} onClick={onClick}>
       {children}
       <span {...props} className={clsx(classes.sortIcon, props.className)}>
         <svg

@@ -15,6 +15,7 @@ import {adminRoute} from "../../utils";
 
 import KycRequired from "./Components/KycRequired";
 import PoolBanner from "./Components/PoolBanner";
+import PoolSlug from "./Components/PoolSlug";
 import PoolMiniBanner from "./Components/PoolMiniBanner";
 import TokenAddress from "./Components/TokenAddress";
 import TotalCoinSold from "./Components/TotalCoinSold";
@@ -162,6 +163,7 @@ function PoolForm(props: any) {
       website: data.website,
       banner: data.banner,
       mini_banner: data.mini_banner ?? '',
+      slug: data.slug ?? '',
       description: data.description,
       process: data.process,
       rule: data.rule ?? '',
@@ -171,6 +173,7 @@ function PoolForm(props: any) {
       token: data.token,
       token_images: data.tokenImages,
       total_sold_coin: data.totalSoldCoin,
+      token_type: data.token_type,
 
       token_by_eth: data.tokenRate,
       token_conversion_rate: data.tokenRate,
@@ -323,6 +326,7 @@ function PoolForm(props: any) {
       website: data.website,
       banner: data.banner,
       mini_baner: data.mini_banner,
+      slug: data.slug ?? '',
       description: data.description,
       process: data.process,
       rule: data.rule ?? '',
@@ -337,6 +341,7 @@ function PoolForm(props: any) {
       // Token
       token_images: data.tokenImages,
       total_sold_coin: data.totalSoldCoin,
+      token_type: data.token_type,
 
       // Claim Configuration
       claim_configuration: campaignClaimConfig,
@@ -515,6 +520,7 @@ function PoolForm(props: any) {
         website: data.website,
         banner: data.banner,
         mini_banner: data.mini_banner,
+        slug: data.slug ?? '',
         description: data.description,
         process: data.process,
         rule: data.rule ?? '',
@@ -524,6 +530,7 @@ function PoolForm(props: any) {
         token: data.token,
         token_images: data.tokenImages,
         total_sold_coin: data.totalSoldCoin,
+        token_type: data.token_type,
 
         // Rate
         token_by_eth: data.tokenRate,
@@ -661,6 +668,12 @@ function PoolForm(props: any) {
                 errors={errors}
               />
 
+              <PoolSlug
+                  poolDetail={poolDetail}
+                  register={register}
+                  setValue={setValue}
+                  errors={errors}
+              />
             </div>
 
             <div className={classes.exchangeRate}>

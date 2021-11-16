@@ -184,11 +184,19 @@ const deleteRedisRateSetting = () => {
   Home setting
  */
 const getRedisPerformanceSetting = () => {
-  return `home_performance`;
+  return `home_full_performances`;
 };
 
 const getRedisPerformanceDetail = async () => {
   return await Redis.get(getRedisPerformanceSetting());
+};
+
+const getRedisV1PerformanceDetail = async () => {
+  return await Redis.get('home_performance');
+};
+
+const checkExistV1PerformanceDetail = async () => {
+  return await Redis.exists('home_performance');
 };
 
 const checkExistPerformanceDetail = async () => {
@@ -294,6 +302,8 @@ module.exports = {
   // Home Setting
   checkExistPerformanceDetail,
   getRedisPerformanceDetail,
+  getRedisV1PerformanceDetail,
+  checkExistV1PerformanceDetail,
   setRedisPerformanceDetail,
 
   // Top Bid

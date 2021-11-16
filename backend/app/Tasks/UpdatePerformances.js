@@ -15,7 +15,7 @@ class UpdateTokenPrice extends Task {
       const homeService = new HomeService()
       await homeService.getPerformances()
     } catch (e) {
-      console.log(`Craw token price failed`, e)
+      console.log(`get performances failed`, e)
     }
   }
 }

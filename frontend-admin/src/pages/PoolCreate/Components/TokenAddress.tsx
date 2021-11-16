@@ -35,10 +35,13 @@ function TokenAddress(props: any) {
   const isDeployed = !!poolDetail?.is_deploy;
 
   useEffect(() => {
-    if (poolDetail && poolDetail.token) {
-      // First load when poolDetail change
-      setValue('token', poolDetail.token, { shouldValidate: true });
+    if (poolDetail && poolDetail.token_type) {
+      setValue('token_type', poolDetail.token_type);
+    }
 
+    if (poolDetail && poolDetail.token && poolDetail.token_type) {
+      // First load when poolDetail change
+      setValue('token', tokenAddressInputed, { shouldValidate: true });
       loadingTokenData(poolDetail.token, poolDetail.token_type);
     }
   }, [poolDetail]);
@@ -148,7 +151,7 @@ function TokenAddress(props: any) {
         <Controller
             rules={{ required: true }}
             control={control}
-            defaultValue={poolDetail ? poolDetail.token_type : ''}
+            defaultValue={TOKEN_TYPE.ERC20}
             name="token_type"
             as={
               <RadioGroup row>

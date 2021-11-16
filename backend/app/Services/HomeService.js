@@ -31,6 +31,7 @@ class HomeService {
         price_change_7d: data.tokenomic.price_change_7d,
         market_cap: data.tokenomic.market_cap,
         volume_24h: data.tokenomic.volume_24h,
+        volume_change_24h: data.tokenomic.volume_change_24h,
         ido_price: idoPrice.toFixed(),
         ido_roi: roi.toFixed(),
         image: `https://s2.coinmarketcap.com/static/img/coins/64x64/${data.tokenomic.cmc_id}.png`

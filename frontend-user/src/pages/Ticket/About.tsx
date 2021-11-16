@@ -395,6 +395,9 @@ export const AboutMysteryBox = ({
   const isShowAmountSerie = firstSerie && +firstSerie.amount > 0;
   const [isClaimed, setClaim] = useState(false);
   let timeClaim = info.campaignClaimConfig?.[0]?.start_time;
+  const claimType = info.campaignClaimConfig?.[0]?.claim_type;
+  const claimUrl = info.campaignClaimConfig?.[0]?.claim_url;
+  const isClaimedOnGF = !claimType || +claimType === 0;
   const timeNow = Date.now();
   timeClaim = timeClaim ? +timeClaim * 1000 : 0;
   useEffect(() => {
@@ -563,15 +566,19 @@ export const AboutMysteryBox = ({
         <ModalBoxCollection open={openModalBoxCollection} current={currentBox} boxesContent={collections || []} onClose={onCloseModalBox} />
         <TransactionSubmitModal opened={isShowModalTx} handleClose={onCloseModalTx} transactionHash={txHash} />
         {
-          !!collections.length && timeClaim && <div className="wrapperHeader">
-            <div className={classes.wrapperCountdownCollection}>
+          !!collections.length && timeClaim &&
+          <div className="wrapperHeader">
+            <div className={classes.wrapperCountdownCollection} style={!POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(info.id) ? { gridTemplateColumns: '1fr 1fr' } : { gridTemplateColumns: '1fr' }}>
               {
                 (timeClaim > timeNow) ?
                   <CountDownTimeV1 time={{ date1: timeClaim, date2: timeNow }} onFinish={onFinishCountdown} className="countdown" />
                   : <div className="title"><h3>You can claim now</h3></div>
               }
               {
-                !POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(info.id) && <ButtonBase color="green" onClick={onClaimBox} disabled={!isClaimed}>Claim</ButtonBase>
+                !POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(info.id) &&
+                (isClaimedOnGF ?
+                  <ButtonBase color="green" onClick={onClaimBox} disabled={!isClaimed}>Claim on GameFi</ButtonBase> :
+                  claimUrl ? <ButtonBase color="blue" onClick={() => window.open(claimUrl)}>Claim on External</ButtonBase> : null)
               }
             </div>
           </div>
@@ -593,24 +600,27 @@ export const AboutMysteryBox = ({
                   </span>
                   {
                     POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(info.id) &&
-                    <ButtonBase
-                      color="green"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onClaimBoxId(b.idCollection)
-                      }}
-                      style={{
-                        fontSize: '14px',
-                        padding: '4px',
-                        height: 'unset',
-                        marginTop: '4px',
-                        width: '100%',
-                        minWidth: 'unset',
-                      }}
-                    disabled={!isClaimed}
-                    >
-                      Claim
-                    </ButtonBase>
+                      isClaimedOnGF ?
+                      (<ButtonBase
+                        color="green"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onClaimBoxId(b.idCollection)
+                        }}
+                        className="btn-claim-box text-transform-unset"
+                        disabled={!isClaimed}
+                      >  Claim on GameFi </ButtonBase>) :
+                      (claimUrl ? <ButtonBase
+                        color="blue"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.open(claimUrl);
+                        }}
+                        className="btn-claim-box text-transform-unset"
+                      // disabled={!isClaimed}
+                      >
+                        Claim on External
+                      </ButtonBase> : null)
                   }
                 </div>
               </div>

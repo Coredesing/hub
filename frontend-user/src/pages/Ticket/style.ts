@@ -809,6 +809,14 @@ export const useAboutStyles = makeStyles((theme) => ({
         mixBlendMode: "normal",
         display: 'block',
         textAlign: 'left',
+      },
+      '& .btn-claim-box': {
+        fontSize: '14px',
+        padding: '4px',
+        height: 'unset',
+        marginTop: '4px',
+        width: '100%',
+        minWidth: 'unset',
       }
     },
     '& .box.active, & .box:hover': {
@@ -833,8 +841,8 @@ export const useAboutStyles = makeStyles((theme) => ({
       borderRadius: '2px',
       background: '#000',
       '& .time .number': {
-        fontSize: '24px',
-        lineHeight: '28px',
+        fontSize: '24px !important',
+        lineHeight: '28px !important',
         fontFamily: 'Space Ranger !important',
         [theme.breakpoints.down('xs')]: {
           fontSize: '20px',

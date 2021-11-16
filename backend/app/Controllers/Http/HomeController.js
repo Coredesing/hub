@@ -48,6 +48,28 @@ class HomeController {
     }
   }
 
+  async getPerformances({request}) {
+    try {
+      const param = request.all();
+      const limit = param.limit ? param.limit : 10;
+      const page = param.page ? param.page : 1;
+
+      // TODO: pagination
+      if (await RedisUtils.checkExistPerformanceDetail()) {
+        const result = await RedisUtils.getRedisPerformanceDetail()
+        if (result) {
+          return HelperUtils.responseSuccess(JSON.parse(result))
+        }
+      }
+
+      const homeService = new HomeService()
+      let data = await homeService.getPerformances()
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
   async getLegendImages({ request, auth, params }) {
     try {
       const nftId = parseInt(params.campaignId);

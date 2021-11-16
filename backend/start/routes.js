@@ -45,6 +45,7 @@ Route.post('block-pass', 'UserController.kycUpdateStatus').middleware('checkBloc
 Route.group(() => {
   // home
   Route.get('home/performance', 'HomeController.getPerformance');
+  Route.get('home/performances', 'HomeController.getPerformances');
   Route.post('home/subscribe', 'HomeController.subscribe');
   Route.get('/legend/:id', 'HomeController.getLegendImages');
 
@@ -121,6 +122,11 @@ Route.group(() => {
 
   // Tiers
   Route.get('get-tiers', 'TierSettingController.getTiersSetting');
+
+  // Marketplace
+  // list collections + search collections
+  //
+
 
 }).prefix('api/v1');
 

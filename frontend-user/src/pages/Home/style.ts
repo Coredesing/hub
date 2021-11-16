@@ -471,6 +471,9 @@ const useStyles = makeStyles((theme: any) => {
             paddingLeft: '15px',
             paddingRight: '15px',
             marginBottom: '10px',
+            [theme.breakpoints.down('xs')]: {
+              borderRight: 'unset',
+            },
             '& .sub-item:first-child': {
               marginBottom: '8px'
             },

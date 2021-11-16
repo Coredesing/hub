@@ -72,6 +72,22 @@ export default {
       font-size: 18px;
       line-height: 36px;
       font-weight: 600;
+      display: flex;
+      align-items: center;
+
+      span {
+        display:inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+        max-width: 150px;
+        text-overflow: ellipsis;
+      }
+
+      span {
+        white-space: normal;
+        max-width: 150px;
+        text-overflow: ellipsis;
+      }
 
       img {
         margin-left: 8px;

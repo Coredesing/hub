@@ -1,11 +1,11 @@
+import { FormControlLabel, MenuItem, Radio, RadioGroup, Select } from "@material-ui/core";
 import { DatePicker } from "antd";
 import moment from "moment";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import ConfirmDialog from "../../../../components/Base/ConfirmDialog";
-import {
-  convertMomentObjectToDateTimeString
-} from "../../../../utils/convertDate";
+import CLAIM_TYPES from "../../../../store/constants/claim_type";
+import { convertMomentObjectToDateTimeString } from "../../../../utils/convertDate";
 import {
   fieldMustBeGreaterThanZero,
   renderErrorCreatePool
@@ -15,11 +15,8 @@ import CurrencyInputWithValidate from "../CurrencyInputWithValidate";
 
 function RepeatClaimConfigForm(props: any) {
   const classes = useStyles();
-  const {
-    isOpenRepeatPopup,
-    setIsOpenRepeatPopup,
-    handleCreateRepeatData,
-  } = props;
+  const { isOpenRepeatPopup, setIsOpenRepeatPopup, handleCreateRepeatData } =
+    props;
   const renderError = renderErrorCreatePool;
   const {
     register,
@@ -29,6 +26,7 @@ function RepeatClaimConfigForm(props: any) {
     errors,
     handleSubmit,
     control,
+    watch,
     formState: { touched, isValid },
   } = useForm({
     mode: "onChange",
@@ -43,6 +41,9 @@ function RepeatClaimConfigForm(props: any) {
       repeatEvery: +data.repeatEvery,
       initialValue: +data.initialValue,
       repeatValue: +data.repeatValue,
+      repeatType: data.repeatType,
+      claimType: data.claimType,
+      claimUrl: data.claimUrl,
     };
     handleCreateRepeatData && handleCreateRepeatData(responseData);
   };
@@ -55,6 +56,7 @@ function RepeatClaimConfigForm(props: any) {
       }
     });
   };
+  const watchRepeatType = watch("repeatType");
 
   return (
     <>
@@ -69,7 +71,6 @@ function RepeatClaimConfigForm(props: any) {
         }}
         // btnLoading={true}
       >
-
         <div className={classes.flexRow}>
           <div className={classes.formControl}>
             <label className={classes.formControlLabel}>From Date</label>
@@ -140,8 +141,35 @@ function RepeatClaimConfigForm(props: any) {
         </div>
 
         <div className={classes.formControl}>
+          <Controller
+            rules={{ required: true }}
+            control={control}
+            defaultValue="month"
+            name="repeatType"
+            as={
+              <RadioGroup row>
+                <FormControlLabel value="day" control={<Radio />} label="Day" />
+                <FormControlLabel
+                  value="week"
+                  control={<Radio />}
+                  label="Week"
+                />
+                <FormControlLabel
+                  value="month"
+                  control={<Radio />}
+                  label="Month"
+                />
+              </RadioGroup>
+            }
+          />
+          <p className={classes.formErrorMessage}>
+            {renderError(errors, "repeatType")}
+          </p>
+        </div>
+
+        <div className={classes.formControl}>
           <label className={classes.formControlLabel}>
-            Repeat every (months)
+            {`Repeat every (${watchRepeatType}s)`}
           </label>
           <div>
             <CurrencyInputWithValidate
@@ -186,9 +214,7 @@ function RepeatClaimConfigForm(props: any) {
         </div>
 
         <div className={classes.formControl}>
-          <label className={classes.formControlLabel}>
-            Repeat Value (%)
-          </label>
+          <label className={classes.formControlLabel}>Repeat Value (%)</label>
           <div>
             <CurrencyInputWithValidate
               register={register}
@@ -206,6 +232,57 @@ function RepeatClaimConfigForm(props: any) {
           <p className={classes.formErrorMessage}>
             {renderError(errors, "greaterThanZero")}
           </p>
+        </div>
+
+        <div className={classes.formControl}>
+          <label className={classes.formControlLabel}>Claim Type</label>
+          <div style={{ marginBottom: 25 }}>
+            <Controller
+              control={control}
+              defaultValue={0}
+              name="claimType"
+              render={(field) => {
+                return (
+                  <Select
+                    {...field}
+                    onChange={(event) =>
+                      setValue(field.name, event.target.value)
+                    }
+                  >
+                    {CLAIM_TYPES.map((value, index) => {
+                      return (
+                        <MenuItem key={index} value={index}>
+                          {value}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                );
+              }}
+            />
+            <p className={classes.formErrorMessage}>
+              {renderError(errors, "claimType")}
+            </p>
+          </div>
+        </div>
+
+        <div className={classes.formControl}>
+          <label className={classes.formControlLabel}>Claim URL</label>
+          <Controller
+            control={control}
+            name="claimUrl"
+            render={(field) => {
+              return (
+                <input
+                  {...field}
+                  type="text"
+                  name={field.name}
+                  className={classes.formControlInput}
+                  onChange={(event) => setValue(field.name, event.target.value)}
+                />
+              );
+            }}
+          />
         </div>
       </ConfirmDialog>
     </>

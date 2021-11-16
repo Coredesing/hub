@@ -41,7 +41,7 @@ function TokenAddress(props: any) {
 
     if (poolDetail && poolDetail.token && poolDetail.token_type) {
       // First load when poolDetail change
-      setValue('token', tokenAddressInputed, { shouldValidate: true });
+      setValue('token', poolDetail.token, { shouldValidate: true });
       loadingTokenData(poolDetail.token, poolDetail.token_type);
     }
   }, [poolDetail]);

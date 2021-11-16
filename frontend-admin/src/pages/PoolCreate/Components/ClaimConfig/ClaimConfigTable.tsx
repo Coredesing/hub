@@ -1,22 +1,22 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from "react";
 import useStyles from "../../style";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import {Button, makeStyles} from "@material-ui/core";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+import { Button, makeStyles } from "@material-ui/core";
 import moment from "moment";
-import {DATETIME_FORMAT, TIERS} from "../../../../constants";
-import {renderErrorCreatePool} from "../../../../utils/validate";
+import { DATETIME_FORMAT, TIERS } from "../../../../constants";
+import { renderErrorCreatePool } from "../../../../utils/validate";
 import BigNumber from "bignumber.js";
 import CreateEditClaimConfigForm from "./CreateEditClaimConfigForm";
 import ClaimPolicy from "./ClaimPolicy";
-import CLAIM_TYPES from "../../../../store/constants/claim_type"
-import { convertMomentObjectToDateTimeString } from '../../../../utils/convertDate';
-import RepeatClaimConfigForm from './RepeatClaimConfigForm';
+import CLAIM_TYPES from "../../../../store/constants/claim_type";
+import { convertMomentObjectToDateTimeString } from "../../../../utils/convertDate";
+import RepeatClaimConfigForm from "./RepeatClaimConfigForm";
 
 const useStylesTable = makeStyles({
   table: {
@@ -24,8 +24,26 @@ const useStylesTable = makeStyles({
   },
 });
 
-const createData = (id: number, startTime: any, endTime: any, minBuy: number, maxBuy: number, isEdit: boolean, claimType: string, claimUrl: string) => {
-  return { id, startTime, endTime, minBuy, maxBuy, isEdit, claimType, claimUrl };
+const createData = (
+  id: number,
+  startTime: any,
+  endTime: any,
+  minBuy: number,
+  maxBuy: number,
+  isEdit: boolean,
+  claimType: string,
+  claimUrl: string
+) => {
+  return {
+    id,
+    startTime,
+    endTime,
+    minBuy,
+    maxBuy,
+    isEdit,
+    claimType,
+    claimUrl,
+  };
 };
 
 const createDefaultTiers = () => {
@@ -38,20 +56,20 @@ const createDefaultTiers = () => {
   ];
 };
 type RepeatDataProps = {
-  fromDate: string,
-  toDate: string,
-  repeatEvery: number,
-  initialValue: number,
-  repeatValue: number
-}
+  fromDate: string;
+  toDate: string;
+  repeatEvery: number;
+  initialValue: number;
+  repeatValue: number;
+  repeatType: string;
+  claimType: string;
+  claimUrl: string;
+};
 
 function ClaimConfigTable(props: any) {
   const classes = useStyles();
   const classesTable = useStylesTable();
-  const {
-    register, watch, setValue, control, errors,
-    poolDetail,
-  } = props;
+  const { register, watch, setValue, control, errors, poolDetail } = props;
   const renderError = renderErrorCreatePool;
   const [isOpenEditPopup, setIsOpenEditPopup] = useState(false);
   const [isOpenRepeatPopup, setIsOpenRepeatPopup] = useState(false);
@@ -62,18 +80,24 @@ function ClaimConfigTable(props: any) {
 
   useEffect(() => {
     if (poolDetail && poolDetail.campaignClaimConfig) {
-      const dataFormatted = poolDetail.campaignClaimConfig.map((item: any, index: any) => {
-        return createData(
-          index + 1,
-          item.start_time ? moment(item.start_time * 1000).format(DATETIME_FORMAT) : null,
-          item.end_time ? moment(item.end_time * 1000).format(DATETIME_FORMAT) : null,
-          (new BigNumber(item.min_percent_claim)).toNumber(),
-          (new BigNumber(item.max_percent_claim)).toNumber(),
-          false,
-          item.claim_type,
-          item.claim_url
-        );
-      });
+      const dataFormatted = poolDetail.campaignClaimConfig.map(
+        (item: any, index: any) => {
+          return createData(
+            index + 1,
+            item.start_time
+              ? moment(item.start_time * 1000).format(DATETIME_FORMAT)
+              : null,
+            item.end_time
+              ? moment(item.end_time * 1000).format(DATETIME_FORMAT)
+              : null,
+            new BigNumber(item.min_percent_claim).toNumber(),
+            new BigNumber(item.max_percent_claim).toNumber(),
+            false,
+            item.claim_type,
+            item.claim_url
+          );
+        }
+      );
 
       setRows(dataFormatted);
     }
@@ -103,7 +127,7 @@ function ClaimConfigTable(props: any) {
       // @ts-ignore
       rows.push(responseData);
     }
-    setValue('campaignClaimConfig', JSON.stringify(rows));
+    setValue("campaignClaimConfig", JSON.stringify(rows));
     setIsOpenEditPopup(false);
   };
 
@@ -112,26 +136,60 @@ function ClaimConfigTable(props: any) {
   };
 
   function monthDiff(dateFrom: Date, dateTo: Date) {
-    return dateTo.getMonth() - dateFrom.getMonth() + 
-      (12 * (dateTo.getFullYear() - dateFrom.getFullYear()))
+    return (
+      dateTo.getMonth() -
+      dateFrom.getMonth() +
+      12 * (dateTo.getFullYear() - dateFrom.getFullYear())
+    );
   }
-  
+
   const handleCreateRepeatData = (repeatData: RepeatDataProps) => {
-    console.log('handleCreateRepeatData', repeatData)
-    let monthNumber = monthDiff(new Date(repeatData.fromDate), new Date(repeatData.toDate));
-    if (monthNumber < 1) {
-      return alert('To Date must be greater than From Date at least 1 month!');
+    console.log("handleCreateRepeatData", repeatData);
+    let fromDate = new Date(repeatData.fromDate);
+    let toDate = new Date(repeatData.toDate);
+
+    let numberDiff = 0;
+    let keyDateShort: any = "M";
+    switch (repeatData.repeatType) {
+      case "day":
+        numberDiff = moment(toDate).diff(moment(fromDate), "days");
+        keyDateShort = "d";
+        break;
+      case "week":
+        numberDiff = moment(toDate).diff(moment(fromDate), "weeks");
+        keyDateShort = "w";
+        break;
+      case "month":
+        numberDiff = moment(toDate).diff(moment(fromDate), "months");
+        keyDateShort = "M";
+        break;
+      default:
+        keyDateShort = "M";
+        break;
+    }
+
+    if (numberDiff < 1) {
+      return alert(
+        `To Date must be greater than From Date at least 1 ${repeatData.repeatType}!`
+      );
     }
     let newRows = [...rows];
-    let maxIndex = Math.floor(monthNumber / repeatData.repeatEvery);
-    for (let index = 0; index <= maxIndex; index++){
+    let maxIndex = Math.floor(numberDiff / repeatData.repeatEvery);
+    for (let index = 0; index <= maxIndex; index++) {
       let newRow: any = {
         startTime: convertMomentObjectToDateTimeString(
-          moment(repeatData.fromDate).add(index * repeatData.repeatEvery, "M"),
+          moment(fromDate).add(
+            index * repeatData.repeatEvery,
+            keyDateShort
+          )
         ),
         maxBuy:
-          repeatData.initialValue + Number(index * repeatData.repeatValue) + ""
-      }
+          new BigNumber(repeatData.initialValue).plus(
+            new BigNumber(index).multipliedBy(repeatData.repeatValue)
+          ).toNumber() + '',
+        claimType: repeatData.claimType,
+        claimUrl: repeatData.claimUrl,
+      };
       // @ts-ignore
       newRows.push(newRow);
     }
@@ -140,35 +198,35 @@ function ClaimConfigTable(props: any) {
     newRows = orderByDatetime(newRows);
 
     console.log(newRows);
-    setValue('campaignClaimConfig', JSON.stringify(newRows));
+    setValue("campaignClaimConfig", JSON.stringify(newRows));
     setRows(newRows);
     setIsOpenRepeatPopup(false);
-  }
+  };
 
   const orderByDatetime: any = (arr: Array<any>) => {
     // @ts-ignore
     return arr.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
-  }
+  };
 
   const refreshRecords = () => {
     const newRows = orderByDatetime([...rows]);
     setRows(newRows);
-    setValue('campaignClaimConfig', JSON.stringify(newRows));
+    setValue("campaignClaimConfig", JSON.stringify(newRows));
     // alert('Sort all records by Start Time done.')
-  }
+  };
 
   const deleteAllRecords = () => {
     // eslint-disable-next-line no-restricted-globals
-    if (!confirm('Do you want delete all records ?')) {
+    if (!confirm("Do you want delete all records ?")) {
       return false;
     }
     setRows([]);
-    setValue('campaignClaimConfig', JSON.stringify([]));
-  }
+    setValue("campaignClaimConfig", JSON.stringify([]));
+  };
 
   const deleteRecord = (e: any, row: any, index: number) => {
     // eslint-disable-next-line no-restricted-globals
-    if (!confirm('Do you want delete this record ?')) {
+    if (!confirm("Do you want delete this record ?")) {
       return false;
     }
 
@@ -177,12 +235,12 @@ function ClaimConfigTable(props: any) {
       newRows.splice(index, 1);
     }
     setRows(newRows);
-    setValue('campaignClaimConfig', JSON.stringify(newRows));
+    setValue("campaignClaimConfig", JSON.stringify(newRows));
   };
 
   return (
     <>
-      {isOpenEditPopup &&
+      {isOpenEditPopup && (
         <CreateEditClaimConfigForm
           isOpenEditPopup={isOpenEditPopup}
           setIsOpenEditPopup={setIsOpenEditPopup}
@@ -191,16 +249,18 @@ function ClaimConfigTable(props: any) {
           isEdit={isEdit}
           handleCreateUpdateData={handleCreateUpdateData}
         />
-      }
-      {isOpenRepeatPopup &&
+      )}
+      {isOpenRepeatPopup && (
         <RepeatClaimConfigForm
           isOpenRepeatPopup={isOpenRepeatPopup}
           setIsOpenRepeatPopup={setIsOpenRepeatPopup}
           // renderError={renderError}
           handleCreateRepeatData={handleCreateRepeatData}
         />
-      }
-      <div><label className={classes.exchangeRateTitle}>Claim Configuration</label></div>
+      )}
+      <div>
+        <label className={classes.exchangeRateTitle}>Claim Configuration</label>
+      </div>
 
       <ClaimPolicy
         poolDetail={poolDetail}
@@ -212,29 +272,33 @@ function ClaimConfigTable(props: any) {
       />
 
       <div className={`${classes.formControl} ${classes.flexRow}`}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={openPopupCreate}
-        >Create</Button>
+        <Button variant="contained" color="primary" onClick={openPopupCreate}>
+          Create
+        </Button>
         <Button
           variant="contained"
           color="primary"
           onClick={openPopupRepeat}
-          style={{marginLeft: 10}}
-        >Repeat</Button>
+          style={{ marginLeft: 10 }}
+        >
+          Repeat
+        </Button>
         <Button
           variant="contained"
           color="primary"
           onClick={refreshRecords}
-          style={{marginLeft: 'auto'}}
-          >Refresh</Button>
+          style={{ marginLeft: "auto" }}
+        >
+          Refresh
+        </Button>
         <Button
           variant="contained"
           color="secondary"
           onClick={deleteAllRecords}
-          style={{marginLeft: 10}}
-        >Delete All</Button>
+          style={{ marginLeft: 10 }}
+        >
+          Delete All
+        </Button>
       </div>
       <TableContainer component={Paper}>
         <Table className={classesTable.table} aria-label="simple table">
@@ -249,30 +313,36 @@ function ClaimConfigTable(props: any) {
           </TableHead>
           <TableBody>
             {rows.map((row: any, index: number) => {
-              let startTime = row.startTime || '--';
-              let maxBuy = new BigNumber(row.maxBuy || '0').toFixed();
+              let startTime = row.startTime || "--";
+              let maxBuy = new BigNumber(row.maxBuy || "0").toFixed();
               return (
                 <TableRow key={index}>
                   <TableCell>{startTime}</TableCell>
                   <TableCell align="right">{maxBuy} %</TableCell>
-                  <TableCell align="right">{CLAIM_TYPES[row.claimType]}</TableCell>
+                  <TableCell align="right">
+                    {CLAIM_TYPES[row.claimType]}
+                  </TableCell>
                   <TableCell align="right">{row.claimUrl}</TableCell>
                   <TableCell align="right">
                     <Button
                       variant="contained"
                       color="primary"
                       onClick={(e) => openPopupEdit(e, row, index)}
-                    >Edit</Button>
+                    >
+                      Edit
+                    </Button>
 
                     <Button
                       variant="contained"
                       color="secondary"
                       onClick={(e) => deleteRecord(e, row, index)}
-                      style={{marginLeft: 10, marginTop: 0}}
-                    >Delete</Button>
+                      style={{ marginLeft: 10, marginTop: 0 }}
+                    >
+                      Delete
+                    </Button>
                   </TableCell>
                 </TableRow>
-              )
+              );
             })}
           </TableBody>
         </Table>

@@ -6,12 +6,21 @@
         <h1 class="title">Top Favorites</h1>
         <div class="view-all" @click="openList">View all <img alt src="../assets/images/arrow_green.svg"/></div>
       </div>
-      <div class="section-favorite">
-        <favorite v-for="(item, i) in listFavorite" :key="i"
-                  :slug="item.slug" :game_name="item.game_name"
-                  :icon="item.icon" :verified="item.verified"
-                  :liked="item.liked" :likes="item.likes"
-                  @like="($event) => likeGame(item, $event)"/>
+      <div class="row align-center">
+        <div class="prev-btn" style="margin: auto 0" @click="prevFav">
+          <img alt src="../assets/images/arrow-left_round.svg"/>
+        </div>
+        <div ref="favorite" class="section-favorite">
+          <div v-for="(item, i) in listFavorite" :key="i">
+            <favorite :slug="item.slug" :game_name="item.game_name"
+                      :icon="item.icon" :verified="item.verified"
+                      :liked="item.liked" :likes="item.likes"
+                      @like="($event) => likeGame(item, $event)"/>
+          </div>
+        </div>
+        <div class="next-btn" style="margin: auto 0" @click="nextFav">
+          <img alt src="../assets/images/arrow-right_round.svg"/>
+        </div>
       </div>
       <mask-dot color="rgba(114, 243, 75)" top="200"/>
     </section>
@@ -92,6 +101,9 @@ export default {
       return this.$store.state.listFavorite
     },
     listLatest() {
+      if(window.innerWidth < 600) {
+        return this.$store.state.listLatest.slice(0, 3)
+      }
       return this.$store.state.listLatest
     },
     mainUpcoming() {
@@ -135,6 +147,16 @@ export default {
       const latest = this.$refs.latest
       const left = latest.scrollLeft - (latest.offsetWidth + 23)
       latest.scroll({ left, behavior: 'smooth'})
+    },
+    nextFav() {
+      const favorite = this.$refs.favorite
+      const left = favorite.scrollLeft + (favorite.offsetWidth/5)
+      favorite.scroll({ left, behavior: 'smooth'})
+    },
+    prevFav() {
+      const favorite = this.$refs.favorite
+      const left = favorite.scrollLeft - (favorite.offsetWidth/5)
+      favorite.scroll({ left, behavior: 'smooth'})
     }
   }
 };
@@ -151,14 +173,14 @@ export default {
       font-weight: bold;
       font-size: 28px;
       line-height: 36px;
-      margin-bottom: 24px;
+      margin-bottom: 12px;
     }
 
     .prev-btn,
     .next-btn {
       flex: 0 0 32px;
       padding: 4px;
-      margin-bottom: 99px;
+      margin-bottom: 140px;
       cursor: pointer;
 
       img {
@@ -169,11 +191,21 @@ export default {
 
   .section {
     &-favorite {
+      flex: 1;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      overflow: auto;
       z-index: 2;
       padding-top: 24px;
+
+      & > div {
+        flex: 0 0 20%;
+      }
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
 
     &-latest {
@@ -230,6 +262,7 @@ export default {
 
         .item {
           margin-right: 0;
+          margin-bottom: 40px;
         }
       }
     }

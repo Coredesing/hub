@@ -33,6 +33,14 @@ import { TimelineType } from "./types";
 import ModalSeriesContent from "./components/ModalSeriesContent";
 import ModalBoxCollection from "./components/ModalBoxCollection";
 import { HashLoader } from "react-spinners";
+import { CountDownTimeV1 } from '@base-components/CountDownTime'
+import { ButtonBase } from '@base-components/Buttons/ButtonBase'
+import PresaleBoxAbi from '@abi/PreSaleBox.json';
+import { useWeb3React } from "@web3-react/core";
+import { useDispatch, useSelector } from "react-redux";
+import { getContract } from "@utils/contract";
+import { alertSuccess, alertWarning } from "@store/actions/alert";
+import TransactionSubmitModal from "@base-components/TransactionSubmitModal";
 const shareIcon = "/images/icons/share.svg";
 const telegramIcon = "/images/icons/telegram-1.svg";
 const twitterIcon = "/images/icons/twitter-1.svg";
@@ -316,13 +324,13 @@ export default React.memo(AboutTicket);
 
 export const AboutMysteryBox = ({
   info = {},
-  connectedAccount,
   token,
   timelines = {} as { [k: number]: TimelineType },
   ownedBox = 0,
   collections = [],
   loadingCollection,
   ...props }: Props) => {
+  const dispatch = useDispatch();
   const classes = useAboutStyles();
   const [tabCurrent, setTab] = React.useState(props.defaultTab || 0);
   const theme = useTheme();
@@ -385,6 +393,46 @@ export const AboutMysteryBox = ({
   const firstSerie = seriesContentConfig[0];
   const isShowRateSerie = firstSerie && +firstSerie.rate > 0;
   const isShowAmountSerie = firstSerie && +firstSerie.amount > 0;
+  const [isClaimed, setClaim] = useState(false);
+  let timeClaim = info.campaignClaimConfig?.[0]?.start_time;
+  const timeNow = Date.now();
+  timeClaim = timeClaim ? +timeClaim * 1000 : 0;
+  useEffect(() => {
+    if (timeClaim && timeClaim < timeNow) {
+      setClaim(true);
+    }
+  }, [timeClaim])
+  const onFinishCountdown = () => {
+    setClaim(true);
+  }
+
+  const { library, account: connectedAccount } = useWeb3React();
+  const [txHash, setTxHash] = useState('');
+  const [isShowModalTx, setShowModalTx] = useState(false);
+  const onCloseModalTx = () => {
+    setShowModalTx(false);
+    setTxHash('');
+  }
+  const onClaimBox = async () => {
+    try {
+      if (!isClaimed) return;
+      const contract = getContract(info.campaign_hash, PresaleBoxAbi, library, connectedAccount as string);
+      if (!contract) {
+        console.error("Something went wrong");
+        return
+      }
+      const tx = await contract.claimAllNFT();
+      setShowModalTx(true);
+      setTxHash(tx.hash);
+      dispatch(alertWarning("Request is processing!"));
+      await tx.wait(1);
+      dispatch(alertSuccess("Request is completed!"));
+    } catch (error: any) {
+      console.error(error);
+      dispatch(alertSuccess(error.message));
+    }
+
+  }
   return (
     <div className={classes.root}>
       <AppBar className={classes.appbar} position="static">
@@ -452,8 +500,8 @@ export const AboutMysteryBox = ({
                   <TableCell width="80px" component="th" scope="row" style={{ paddingLeft: '28px' }}> {idx + 1} </TableCell>
                   <TableCell align="left" style={{ padding: '7px' }} className="text-uppercase">
                     <Box display="flex" alignItems="center" gridGap="20px">
-                      <Box style={{ background: "#000", placeContent: 'center', borderRadius: '2px', padding: '5px', cursor: 'pointer' }} display="grid" onClick={() => onSelectSerie(row)}>
-                        <img src={row.icon} width='30' height="30" alt="" />
+                      <Box style={{ background: "#000", placeContent: 'center', borderRadius: '2px', cursor: 'pointer' }} display="grid" onClick={() => onSelectSerie(row)}>
+                        <img src={row.icon} width='30' height="30" alt="" style={{ objectFit: 'contain' }} />
                       </Box>
                       <span className="text-weight-600">{row.name}</span>
 
@@ -487,7 +535,21 @@ export const AboutMysteryBox = ({
         </div>
       </TabPanel>
       <TabPanel value={tabCurrent} index={3}>
-        {/* <ModalBoxCollection open={openModalBoxCollection} current={currentBox} boxesContent={collections || []} onClose={onCloseModalBox} /> */}
+        <ModalBoxCollection open={openModalBoxCollection} current={currentBox} boxesContent={collections || []} onClose={onCloseModalBox} />
+        <TransactionSubmitModal opened={isShowModalTx} handleClose={onCloseModalTx} transactionHash={txHash}  />
+        {
+          !!collections.length && timeClaim && <div className="wrapperHeader">
+            <div className={classes.wrapperCountdownCollection}>
+              {
+                (timeClaim > timeNow) ?
+                  <CountDownTimeV1 time={{ date1: timeClaim, date2: timeNow }} onFinish={onFinishCountdown} className="countdown" />
+                  : <div className="title"><h3>You can claim now</h3></div>
+              }
+              <ButtonBase color="green" onClick={onClaimBox} disabled={!isClaimed}>Claim</ButtonBase>
+            </div>
+          </div>
+        }
+
         <div className={classes.wrapperBox}>
           {
             loadingCollection ? <HashLoader loading={true} color={'#72F34B'} /> : collections.map((b: any, id: number) =>

@@ -10,6 +10,7 @@ import { utils } from 'ethers'
 import BN from 'bignumber.js';
 import { handleErrMsg } from '../utils';
 import { TRANSACTION_ERROR_MESSAGE } from '../../../constants/alert';
+import { ObjectType } from '@app-types';
 
 type PoolDepositActionParams = {
   subBoxId?: number;
@@ -47,6 +48,7 @@ const useClaimBox = ({ subBoxId, poolAddress, eventId, poolId, priceOfBox, token
           tokenAddress,
         });
       } catch (err) {
+        setSignature('');
         setClaimBoxLoading(false);
         dispatch(alertSuccess("Error when signing message"));
       }
@@ -65,8 +67,9 @@ const useClaimBox = ({ subBoxId, poolAddress, eventId, poolId, priceOfBox, token
     const handleClaimBox = async () => {
       try {
         const contract = getContract(poolAddress, PreSaleBoxAbi, library, account as string);
-        const options = {
-          value: utils.parseEther((new BN(amount).multipliedBy(new BN(priceOfBox))).toString())
+        const options: ObjectType<any> = {};
+        if (new BN(tokenAddress as string).isZero()) {
+          options.value = utils.parseEther((new BN(amount).multipliedBy(new BN(priceOfBox))).toString())
         }
         const transaction = await contract.claimBox(eventId, tokenAddress, amount, subBoxId, signature, options);
         setSignature("");
@@ -79,6 +82,7 @@ const useClaimBox = ({ subBoxId, poolAddress, eventId, poolId, priceOfBox, token
 
         setClaimBoxLoading(false);
       } catch (error: any) {
+        setSignature('');
         setClaimBoxLoading(false);
         const msgError = handleErrMsg(error) || TRANSACTION_ERROR_MESSAGE
         dispatch(alertFailure(msgError));

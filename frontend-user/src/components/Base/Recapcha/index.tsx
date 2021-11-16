@@ -11,7 +11,7 @@ type Props = {
     onChange?: ((token: string | null) => void) | undefined,
     [k: string]: any
 }
-export const Recapcha = ({ className, onChange }: Props) => {
+export const Recapcha = React.forwardRef(({ className, onChange, ...props }: Props, ref) => {
     return (
         ALLOW_RECAPCHA ? <div className={className}>
             <ReCAPTCHA
@@ -19,7 +19,9 @@ export const Recapcha = ({ className, onChange }: Props) => {
                 theme={"dark"}
                 sitekey={RECAPTCHA_SITE_KEY}
                 onChange={onChange}
+                {...props}
+                ref={ref as any}
             />
         </div> : null
     )
-}
+})

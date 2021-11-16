@@ -555,6 +555,200 @@ const useStyles = makeStyles((theme: any) => {
         color: '#F24B4B',
       }
     },
+    subBanners: {
+      '& .item': {
+        
+        margin: 'auto',
+        position: 'relative',
+        height: '80px',
+        maxWidth: '1120px',
+        width: '100%',
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        // background: '#fff',
+        borderRadius: '6px',
+        background: `linear-gradient(121.27deg, #BAEE4A -12.74%, #57E04B 52.95%)`,
+        [theme.breakpoints.down('md')]: {
+          gridTemplateColumns: '1fr',
+          height: 'unset',
+          padding: '5px',
+        },
+        '& .btn-close': {
+          position: 'absolute',
+          right: '10px',
+          top: '10px',
+          outline: 'none',
+          border: 'none',
+          background: `#D4D4D4`,
+          width: '18px',
+          height: '18px',
+          borderRadius: '50%',
+          display: 'grid',
+          placeContent: 'center',
+          cursor: 'pointer',
+          transition: '.3s',
+          zIndex: 100,
+          '&:hover': {
+            background: '#b4b4b4',
+          },
+
+        },
+        '& .wrapper-skew': {
+          '& .skew': {
+            transform: 'skew(-30deg)',
+            maxWidth: '445px',
+            width: '100%',
+            background: '#000',
+            color: '#fff',
+            height: '100%',
+            display: 'grid',
+            justifyContent: 'center',
+            alignItems: 'center',
+            [theme.breakpoints.down('md')]: {
+              transform: 'unset',
+              maxWidth: 'unset',
+              background: 'unset',
+              color: '#000',
+            },
+          },
+        },
+        '& .wrapper-countdown': {
+          display: 'grid',
+          placeItems: 'center',
+
+          '& .countdown': {
+
+            '& .times': {
+              transform: 'skew(30deg)',
+              background: 'none',
+              // paddingLeft: '20px',
+              // paddingRight: '20px',
+              [theme.breakpoints.down('md')]: {
+                transform: 'unset',
+              },
+              '& .number': {
+                fontSize: '36px',
+                lineHeight: '40px',
+                fontFamily: 'Firs Neue',
+                fontWeight: 'bold',
+                [theme.breakpoints.down('md')]: {
+                  color: '#000',
+                },
+                [theme.breakpoints.down('xs')]: {
+                  fontSize: '24px',
+                  lineHeight: '30px',
+                },
+              },
+              '& .dot': {
+                [theme.breakpoints.down('md')]: {
+                  color: '#000',
+                },
+              },
+              '& .text': {
+                fontSize: '10px',
+                fontFamily: 'Firs Neue',
+                fontWeight: 'normal',
+                [theme.breakpoints.down('md')]: {
+                  color: '#0e0e0e',
+                },
+                [theme.breakpoints.down('xs')]: {
+                  fontSize: '8px',
+                },
+              }
+            }
+          }
+        },
+        '& .title': {
+          '& h5, & h3': {
+            fontFamily: 'Firs Neue',
+            fontStyle: 'normal',
+            textTransform: 'uppercase',
+          },
+          '& h5': {
+            color: '#000000',
+            fontWeight: 'normal',
+            fontSize: '15px',
+            lineHeight: '30px',
+            [theme.breakpoints.down('xs')]: {
+              fontSize: '14px',
+            },
+          },
+          '& h3': {
+            color: '#000000',
+            fontWeight: 'bold',
+            fontSize: '28px',
+            [theme.breakpoints.down('xs')]: {
+              fontSize: '20px',
+            },
+          },
+          '& .skew h3': {
+            color: '#fff',
+            transform: 'skew(30deg)',
+            [theme.breakpoints.down('md')]: {
+              transform: 'unset',
+            },
+          }
+        },
+        '& .burnday': {
+          display: 'grid',
+          gridTemplateColumns: 'auto auto',
+          placeContent: 'center',
+          gap: '15px',
+          alignItems: 'center',
+          padding: '10px',
+          [theme.breakpoints.down('xs')]: {
+            gridTemplateColumns: '1fr',
+            placeItems: 'center',
+            gap: '2px',
+          },
+          '& h4': {
+            fontSize: '20px',
+            fontFamily: 'Firs Neue',
+            fontWeight: '600',
+            fontStyle: 'normal',
+          },
+          '& div': {
+            padding: '10px 26px',
+            background: '#000',
+            border: '1px solid #fff',
+            display: 'grid',
+            gridTemplateColumns: 'auto auto',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '6px',
+            borderRadius: '4px',
+            width: 'fit-content',
+            [theme.breakpoints.down('sm')]: {
+              padding: '10px 16px',
+            },
+            
+            '& span': {
+              fontSize: '13px',
+              fontFamily: 'Firs Neue',
+              fontWeight: 'normal',
+              letterSpacing: '2px',
+              color: '#fff',
+              textTransform: 'uppercase',
+            }
+          }
+        },
+        '& .title-countdown': {
+          ...typeDisplayFlex,
+          flexDirection: 'column',
+          justifyContent: 'center',
+
+          [theme.breakpoints.down('md')]: {
+            flexDirection: 'unset',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: '15px',
+          },
+          [theme.breakpoints.down('sm')]: {
+            gap: '2px',
+          },
+        }
+      }
+    }
   };
 });
 

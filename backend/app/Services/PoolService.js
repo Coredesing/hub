@@ -288,6 +288,8 @@ class PoolService {
         end_time: item.endTime,
         min_percent_claim: new BigNumber(item.minBuy || 0).toFixed(),
         max_percent_claim: new BigNumber(item.maxBuy || 0).toFixed(),
+        claim_type: item.claimType,
+        claim_url: item.claimUrl
       });
       return tierObj;
     });
@@ -322,6 +324,7 @@ class PoolService {
         icon: item.icon,
         banner: item.banner,
         image: item.image,
+        currency_ids: item.currency_ids
       });
       return data;
     });

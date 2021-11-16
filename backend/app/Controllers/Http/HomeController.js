@@ -3,7 +3,7 @@
 const RedisUtils = use('App/Common/RedisUtils');
 const HelperUtils = use('App/Common/HelperUtils');
 const SubscribeEmailService = use('App/Services/SubscribeEmailService');
-const PerformanceService = use('App/Services/PerformanceService');
+const HomeService = use('App/Services/HomeService');
 
 class HomeController {
   async subscribe({request}) {
@@ -28,6 +28,33 @@ class HomeController {
 
   async getPerformance({request}) {
     try {
+      const param = request.all();
+      const limit = param.limit ? param.limit : 10;
+      const page = param.page ? param.page : 1;
+
+      // TODO: pagination
+      if (await RedisUtils.checkExistV1PerformanceDetail()) {
+        const result = await RedisUtils.getRedisV1PerformanceDetail()
+        if (result) {
+          return HelperUtils.responseSuccess(JSON.parse(result))
+        }
+      }
+
+      const homeService = new HomeService()
+      let data = await homeService.getPerformances()
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
+  async getPerformances({request}) {
+    try {
+      const param = request.all();
+      const limit = param.limit ? param.limit : 10;
+      const page = param.page ? param.page : 1;
+
+      // TODO: pagination
       if (await RedisUtils.checkExistPerformanceDetail()) {
         const result = await RedisUtils.getRedisPerformanceDetail()
         if (result) {
@@ -35,12 +62,8 @@ class HomeController {
         }
       }
 
-      const performanceService = new PerformanceService();
-      let data = await performanceService.findAll({})
-      data = JSON.parse(JSON.stringify(data))
-      // Cache data
-      await RedisUtils.setRedisPerformanceDetail(data);
-
+      const homeService = new HomeService()
+      let data = await homeService.getPerformances()
       return HelperUtils.responseSuccess(data);
     } catch (e) {
       return HelperUtils.responseErrorInternal();
@@ -73,7 +96,6 @@ class HomeController {
       return HelperUtils.responseErrorInternal();
     }
   }
-
   // headers: cf-connecting-ip
   // headers: x-forwarded-for
 }

@@ -49,7 +49,7 @@ export default {
       box-sizing: border-box;
       width: 180px;
       height: 180px;
-      border-radius: 32px;
+      border-radius: 28px;
       background: linear-gradient(180deg, #303136 0%, rgba(48, 49, 54, 0) 100%);
       position: relative;
       border: 4px solid #d1d1d155;
@@ -72,6 +72,22 @@ export default {
       font-size: 18px;
       line-height: 36px;
       font-weight: 600;
+      display: flex;
+      align-items: center;
+
+      span {
+        display:inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+        max-width: 150px;
+        text-overflow: ellipsis;
+      }
+
+      span {
+        white-space: normal;
+        max-width: 150px;
+        text-overflow: ellipsis;
+      }
 
       img {
         margin-left: 8px;

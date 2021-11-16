@@ -73,6 +73,10 @@ class Campaign extends Model {
   acceptedTokensConfig() {
     return this.hasMany('App/Models/AcceptedToken')
   }
+
+  tokenomic() {
+    return this.hasOne('App/Models/Tokenomic', 'slug', 'coinmarketcap_slug')
+  }
 }
 
 module.exports = Campaign;

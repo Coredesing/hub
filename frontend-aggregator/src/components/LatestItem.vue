@@ -87,7 +87,7 @@ export default {
   }
 
   &-detail {
-    padding: 20px;
+    padding: 18px;
 
     &_title {
       font-weight: 600;
@@ -104,7 +104,12 @@ export default {
 
     &_category {
       font-size: 12px;
+      line-height: 20px;
       color: #D1D1D1;
+    }
+
+    .price {
+      margin-top: 12px;
     }
   }
 }

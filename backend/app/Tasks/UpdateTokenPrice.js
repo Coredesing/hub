@@ -21,7 +21,12 @@ class UpdateTokenPrice extends Task {
         }
         const symbol = row.coinmarketcap_slug
         console.log(`getting ${symbol} price`)
-        const tokenQuote = await this.getQuote(symbol)
+        const data = await this.getQuote(symbol)
+        if (!data) {
+          return
+        }
+
+        const tokenQuote = data.quote.USD
         const tokenRecord = await Tokenomic.findBy('game_id', row.game_id)
         if (!tokenRecord || !tokenQuote) {
           return
@@ -32,6 +37,10 @@ class UpdateTokenPrice extends Task {
         tokenRecord.volume_24h = tokenQuote.volume_24h
         tokenRecord.volume_change_24h = tokenQuote.volume_change_24h
         tokenRecord.fully_diluted_market_cap = tokenQuote.fully_diluted_market_cap
+        tokenRecord.price_change_7d = tokenQuote.percent_change_7d
+        tokenRecord.cmc_rank = data.cmc_rank
+        tokenRecord.token_address = data.platform ? data.platform.token_address : ''
+        tokenRecord.cmc_id = data.id
 
         await tokenRecord.save()
 
@@ -39,8 +48,7 @@ class UpdateTokenPrice extends Task {
         await RedisAggregatorUtils.deleteRedisAggregatorDetail(row.coinmarketcap_slug)
       })
     } catch (e) {
-      console.log(e)
-      console.log(`Craw token price failed`)
+      console.log(`Craw token price failed`, e)
     }
   }
   async getQuote(symbol) {
@@ -51,7 +59,8 @@ class UpdateTokenPrice extends Task {
     Object.entries(response?.data?.data).forEach(([key, value]) => {
       data = value
     })
-    return data?.quote.USD
+
+    return data
   }
 }
 

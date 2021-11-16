@@ -60,22 +60,28 @@ const useStyles = makeStyles((theme) => ({
                     placeContent: 'center',
                 },
                 '& .wrapper-img': {
-                    padding: '30px 60px',
+                    // padding: '30px 30px',
                     background: '#000',
                     display: 'grid',
                     alignItems: 'center',
                     placeContent: 'center',
                     position: 'relative',
                     height: '100%',
-                    minHeight: '360px',
+                    // minHeight: '360px',
                     [theme.breakpoints.down('xs')]: {
-                        padding: '20px 30px',
+                        // padding: '20px 30px',
                     },
                     '& div': {
-                        width: '196px',
-                        height: '298px',
+                        minWidth: '320px',
+                        minHeight: '320px',
                         position: 'relative',
                         overflow: 'hidden',
+                        display: 'grid',
+                        placeItems: 'center',
+                        [theme.breakpoints.down('xs')]: {
+                            minWidth: '250px',
+                            minHeight: '250px',
+                        },
                     },
                     '& img': {
 
@@ -186,13 +192,13 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, isShowRateSerie
                             {
                                 isShowRateSerie &&
                                 <Box className={styles.boxItem}>
-                                    <label className="text-right">Rare</label>
-                                    <span className="text-right">{currentSerie.rate}%</span>
+                                    <label className="text-center">Rare</label>
+                                    <span className="text-center">{currentSerie.rate}%</span>
                                 </Box>
                             }
 
                             {
-                                isShowAmountSerie && 
+                                isShowAmountSerie &&
                                 <Box className={styles.boxItem}>
                                     <label className="text-center">Amount</label>
                                     <span className="text-center">{currentSerie.amount}</span>

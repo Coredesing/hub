@@ -51,14 +51,14 @@ const useStyles = makeStyles((theme) => ({
             // },
 
             '& .content-body': {
-                maxWidth: '320px',
+                maxWidth: '400px',
                 [theme.breakpoints.down('xs')]: {
                     maxWidth: '220px',
                 },
                 '& .wrapper-img': {
                     // paddingTop: "30px",
-                    paddingLeft: '60px',
-                    paddingRight: '60px',
+                    // paddingLeft: '60px',
+                    // paddingRight: '60px',
                     display: 'grid',
                     alignItems: 'center',
                     placeContent: 'center',
@@ -70,14 +70,15 @@ const useStyles = makeStyles((theme) => ({
                         paddingRight: 0
                     },
                     '& div': {
-                        width: '287px',
-                        height: '158px',
+                        width: '360px',
+                        height: '360px',
                         position: 'relative',
                         overflow: 'hidden',
                         marginBottom: '40px',
+                        zIndex: 1,
                         [theme.breakpoints.down('xs')]: {
-                            width: '150px',
-                            height: '100px',
+                            width: '250px',
+                            height: '250px',
                             marginBottom: '20px'
                         },
                     },
@@ -85,6 +86,7 @@ const useStyles = makeStyles((theme) => ({
                         width: '100%',
                         height: '100%',
                         objectFit: 'contain',
+                        position: 'relative',
                         '&.h-r-t-l': {
                             animation: `hiddenRightToLeft 200ms forwards`,
                         },
@@ -134,7 +136,7 @@ const useStyles = makeStyles((theme) => ({
                         // zIndex: 10,
                         fontFamily: "Space Ranger",
                         "& .time .number": {
-                          transform: "skew(-20deg)",
+                            transform: "skew(-20deg)",
                         },
                         [theme.breakpoints.down('xs')]: {
                             paddingLeft: '10px',
@@ -147,17 +149,24 @@ const useStyles = makeStyles((theme) => ({
     },
     paper: {
         maxWidth: '480px',
-        maxHeight: '480px',
+        // maxHeight: '480px',
         padding: 0,
         borderRadius: '4px',
         backgroundColor: '#2E2E2E',
         [theme.breakpoints.down('sm')]: {
             maxHeight: '440px',
         },
-        [theme.breakpoints.down('xs')]: {
-            maxWidth: '300px',
-            maxHeight: '300px',
-        },
+        // [theme.breakpoints.down('xs')]: {
+        //     maxWidth: '300px',
+        //     maxHeight: '300px',
+        // },
+        '& > .MuiDialogContent-root': {
+            display: 'grid',
+            alignItems: 'center',
+            [theme.breakpoints.down('xs')]: {
+                padding: '8px 8px',
+            }
+        }
     }
 }));
 type ObjectType = { [k: string]: any };
@@ -182,7 +191,7 @@ const ModalBoxCollection = ({ open, current = {}, boxesContent, ...props }: Prop
     }
     let isHandlingShowImg = false;
     const handleShowImg = (newBox: ObjectType, from: 'right-to-left' | 'left-to-right') => {
-        if(isHandlingShowImg) return;
+        if (isHandlingShowImg) return;
         const wrapperImg = document.querySelector('.wrapper-img div');
         isHandlingShowImg = true;
         if (wrapperImg) {
@@ -205,7 +214,7 @@ const ModalBoxCollection = ({ open, current = {}, boxesContent, ...props }: Prop
                 wrapperImg.appendChild(newElmImg);
                 isHandlingShowImg = false;
             }, 200)
-            
+
         }
     }
 
@@ -214,7 +223,7 @@ const ModalBoxCollection = ({ open, current = {}, boxesContent, ...props }: Prop
         const newBox = idxCurr === 0 ? boxesContent.slice(-1)[0] : boxesContent[idxCurr - 1];
         handleShowImg(newBox, 'right-to-left');
     }
-    const onNextSerie = () => {     
+    const onNextSerie = () => {
         const idxCurr = boxesContent.findIndex(s => s.idCollection === currentBox.idCollection);
         const newBox = idxCurr === boxesContent.length - 1 ? boxesContent[0] : boxesContent[idxCurr + 1];
         handleShowImg(newBox, 'left-to-right');

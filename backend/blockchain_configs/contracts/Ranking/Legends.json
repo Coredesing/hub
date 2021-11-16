@@ -17,7 +17,7 @@
   {
     "id": 3,
     "wallet_address": "0x996131EEd1fc6f83F8245602c8D171227311ceAf",
-    "valid": true
+    "valid": false
   },
   {
     "id": 4,
@@ -37,7 +37,7 @@
   {
     "id": 7,
     "wallet_address": "0x0C5D8C995C19af7d5691082cB5Cca2622b2cFa42",
-    "valid": true
+    "valid": false
   },
   {
     "id": 8,
@@ -67,11 +67,16 @@
   {
     "id": 13,
     "wallet_address": "0x67f46a8e9d98ccb298aa630d779b0ae7c1e00023",
-    "valid": false
+    "valid": true
   },
   {
     "id": 14,
     "wallet_address": "0x59699cDbf6519042D6074FdbE2408ad993435bD8",
+    "valid": true
+  },
+  {
+    "id": 15,
+    "wallet_address": "0x420376e2fb2fF7Ce680C435b9c928a3A58BF1A79",
     "valid": true
   }
 ]

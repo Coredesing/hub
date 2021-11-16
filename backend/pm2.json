@@ -4,6 +4,9 @@
       "name": "GameFI",
       "script": "npm",
       "args": "start",
+      "env": {
+        "NODE_OPTIONS": "--max-old-space-size=4096"
+      },
       "exec_interpreter": "none",
       "exec_mode"  : "fork_mode",
       "watch": false
@@ -13,10 +16,10 @@
       "script": "adonis",
       "args": "kue:listen",
       "env": {
-        "KUE_RUNNING": "true",
+        "KUE_RUNNING": "true"
       },
       "exec_interpreter": "none",
-      "exec_mode"  : "fork_mode",
+      "exec_mode" : "fork_mode",
       "watch": false
     }
   ]

@@ -6,7 +6,8 @@
     <div :class="`header-nav ${show.nav ? 'show' : ''}`">
       <div class="header-list">
         <a class="header-list_item" href="https://hub.gamefi.org/" target="_blank">Launchpad</a>
-        <a class="header-list_item" href="https://hub.gamefi.org/#/mystery-boxes" target="_blank">Mystery Box</a>
+        <a class="header-list_item" href="https://hub.gamefi.org/#/mystery-boxes" target="_blank">Marketplace</a>
+        <a class="header-list_item link-disabled">Metaverse <span class="new-icon">New</span></a>
       </div>
       <div class="spacer"/>
 <!--      <div :class="`search ${show.search ? 'show' : ''}`">-->
@@ -369,5 +370,23 @@ export default {
         display: block;
       }
     }
+  }
+  
+  .header-list_item {
+    position: relative;
+    .new-icon {
+      display: block;
+      position: absolute;
+      padding: 0px 7px;
+      color: #000;
+      background: #72F34B;
+      top: -15px;
+      right: -35px;
+      font-size: 10px;
+      border-radius: 8px;
+    }
+  }
+  .link-disabled {
+    cursor: pointer;
   }
 </style>

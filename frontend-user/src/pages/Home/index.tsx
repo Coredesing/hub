@@ -27,6 +27,8 @@ import MysteryBoxes from "./MysteryBoxes";
 import { ObjectType } from "@app-types";
 import { getCountdownInfo } from "@pages/MysteryBoxes/utils";
 import { SearchBox } from "@base-components/SearchBox";
+import { numberWithCommas } from "@utils/formatNumber";
+const readableNumber = require("readable-numbers");
 
 type Data = { [k: string]: any };
 type ResponseData = {
@@ -84,8 +86,8 @@ const Home = (props: any) => {
     }
   }, [mysteryBoxes]);
 
-  const { data: perfomances = [] as Data[], loading: loadingcompletePools } =
-    useFetchV1("/home/performance");
+  const { data: performanceData = {} as ObjectType<any>, loading: loadingcompletePools } =
+    useFetchV1("/home/performances");
 
   const partnerships = [
     {
@@ -127,9 +129,14 @@ const Home = (props: any) => {
 
   const [listPerfomance, setListPerfomance] = useState<Data[]>([]);
 
+  const getLimitPerformances = (arr: any[] = [], limit = 10) => {
+    return arr.slice(0, limit);
+  }
+
   useEffect(() => {
-    if (!loadingcompletePools) {
-      perfomances.map((data) => {
+    if (!loadingcompletePools && Object.keys(performanceData).length) {
+      let performances = getLimitPerformances(performanceData?.performances);
+      performances = performances.map((data: ObjectType<any>) => {
         data.profit = "";
         if (data.ath === "N/A" || !data.ath || data.ath.length < 1) {
           return data;
@@ -153,17 +160,18 @@ const Home = (props: any) => {
         data.profit = profit;
         return data;
       });
-      setListPerfomance(perfomances);
+      setListPerfomance(performances);
     }
-  }, [perfomances, loadingcompletePools]);
+  }, [performanceData, loadingcompletePools]);
 
   const [fieldSorted, setFieldSorted] = useState<{
     field: keyof Data;
     order?: "asc" | "desc";
   }>({ field: "" });
   const onSortListPerfomance = (field: keyof Data) => {
+    const performances = getLimitPerformances(performanceData?.performances);
     if (field === fieldSorted.field) {
-      const sorted = perfomances.sort((a: any, b: any) => {
+      const sorted = performances.sort((a: any, b: any) => {
         const numA =
           +String(a[field]).replace(/\$/i, "").replace(/,/gi, "") || 0;
         const numB =
@@ -182,7 +190,7 @@ const Home = (props: any) => {
         order: fieldSorted.order === "asc" ? "desc" : "asc",
       });
     } else {
-      const sorted = perfomances.sort((a: any, b: any) => {
+      const sorted = performances.sort((a: any, b: any) => {
         const numA =
           +String(a[field]).replace(/\$/i, "").replace(/,/gi, "") || 0;
         const numB =
@@ -193,6 +201,24 @@ const Home = (props: any) => {
       setFieldSorted({ field, order: "desc" });
     }
   };
+
+  const formatChangePercent = (number: number) => {
+    if (!number || +number === 0) return <span style={{ color: '#fff', marginLeft: '5px' }}>0%</span>
+    if (+number > 0) {
+      return <span className={clsx(styles.percent, "up")}>
+        <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2.6038 0.514683C2.80395 0.254679 3.19605 0.254679 3.3962 0.514682L5.84442 3.695C6.09751 4.02379 5.86313 4.5 5.44821 4.5L0.551788 4.5C0.136869 4.5 -0.0975128 4.02379 0.155586 3.695L2.6038 0.514683Z" fill="#72F34B" />
+        </svg>
+        {numberWithCommas(number, 3)}%
+      </span>
+    }
+    return <span className={clsx(styles.percent, "down")}>
+      <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3.3962 4.48532C3.19605 4.74532 2.80395 4.74532 2.6038 4.48532L0.155585 1.305C-0.0975138 0.976212 0.136868 0.5 0.551788 0.5L5.44821 0.5C5.86313 0.5 6.09751 0.976213 5.84441 1.305L3.3962 4.48532Z" fill="#F24B4B" />
+      </svg>
+      {numberWithCommas(Math.abs(+number) + '', 3)}%
+    </span>
+  }
 
   return (
     <DefaultLayout style={{ background: "#0A0A0A" }}>
@@ -380,7 +406,7 @@ const Home = (props: any) => {
               <div className="header">
                 <div className="top">
                   <div className="logo">
-                    <img src="/images/gamefi-circle.png" alt="" />
+                    <img src={performanceData.gamefi?.image} alt="" />
                     <span>GameFi</span>
                   </div>
                   <div className="socials">
@@ -415,14 +441,10 @@ const Home = (props: any) => {
                     </div>
                     <div className="sub-item">
                       <span className="price">
-                        $74.81
+                        ${numberWithCommas(performanceData.gamefi?.price || 0, 3)}
                       </span>
-                      <span className="percent up">
-                        <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M2.6038 0.514683C2.80395 0.254679 3.19605 0.254679 3.3962 0.514682L5.84442 3.695C6.09751 4.02379 5.86313 4.5 5.44821 4.5L0.551788 4.5C0.136869 4.5 -0.0975128 4.02379 0.155586 3.695L2.6038 0.514683Z" fill="#72F34B" />
-                        </svg>
-                        6.69%
-                      </span>
+                      {formatChangePercent(performanceData.gamefi?.price_change_24h)}
+
                     </div>
                   </div>
                   <div className="item market-cap">
@@ -431,28 +453,23 @@ const Home = (props: any) => {
                         Market Cap:
                       </span>
                       <span className="bold">
-                        $63,964,933
+                        {+performanceData.gamefi?.market_cap ? '$' + readableNumber(+((+performanceData.gamefi?.market_cap).toFixed(0))) : 'N/A'}
                       </span>
-                      <span className="percent up">
+                      {/* <span className="percent up">
                         <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M2.6038 0.514683C2.80395 0.254679 3.19605 0.254679 3.3962 0.514682L5.84442 3.695C6.09751 4.02379 5.86313 4.5 5.44821 4.5L0.551788 4.5C0.136869 4.5 -0.0975128 4.02379 0.155586 3.695L2.6038 0.514683Z" fill="#72F34B" />
                         </svg>
                         2.32%
-                      </span>
+                      </span> */}
                     </div>
                     <div className="sub-item">
                       <span className="label">
                         Vol (24h):
                       </span>
                       <span className="bold">
-                        $63,964,933
+                        {+performanceData.gamefi?.market_cap ? '$' + readableNumber(+((+performanceData.gamefi?.volume_24h).toFixed(0))) : 'N/A'}
                       </span>
-                      <span className="percent down">
-                        <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M3.3962 4.48532C3.19605 4.74532 2.80395 4.74532 2.6038 4.48532L0.155585 1.305C-0.0975138 0.976212 0.136868 0.5 0.551788 0.5L5.44821 0.5C5.86313 0.5 6.09751 0.976213 5.84441 1.305L3.3962 4.48532Z" fill="#F24B4B" />
-                        </svg>
-                        2.32
-                      </span>
+                      {formatChangePercent(+performanceData.gamefi?.volume_change_24h)}
                     </div>
                   </div>
                   <div className="item raise">
@@ -461,7 +478,7 @@ const Home = (props: any) => {
                         Raised:
                       </span>
                       <span className="bold">
-                        $63,964,933
+                        {performanceData?.gamefi?.raised}
                       </span>
                     </div>
                     <div className="sub-item">
@@ -469,29 +486,30 @@ const Home = (props: any) => {
                         IDO Price:
                       </span>
                       <span className="bold">
-                        $63,964,933
+                        ${performanceData?.gamefi?.ido_price || 'N/A'}
                       </span>
                     </div>
                   </div>
-                  <div className="item roi">
+                  <div className="item roi foundation">
                     <div className="sub-item">
                       <span className="label">
                         IDO ROI:
                       </span>
                       <span className="bold">
-                        18.42x
+                        {numberWithCommas(performanceData?.gamefi?.ido_roi, 3)}x
                       </span>
                     </div>
                     <div className="sub-item">
                       <span className="label">
-                        IDO Price:
+                        Native Token:
                       </span>
-                      <span className="bold">
-                        18.42x
+                      <span className="bold logo-foundation">
+                        <img src={performanceData?.gamefi?.image} className="" alt="" />
+                        GAFI
                       </span>
                     </div>
                   </div>
-                  <div className="item foundation">
+                  {/* <div className="item foundation">
                     <div className="sub-item">
                       <span className="label">
                         Foundation Date:
@@ -500,37 +518,91 @@ const Home = (props: any) => {
                         4 Oct, 2021
                       </span>
                     </div>
-                    <div className="sub-item">
-                      <span className="label">
-                        Native Token:
-                      </span>
-                      <span className="bold logo-foundation">
-                        <img src="/images/gamefi-circle.png" className="" alt="" />
-                        GAFI
-                      </span>
-                    </div>
-                  </div>
+
+                  </div> */}
                 </div>
               </div>
-              <div className="filter">
+              {/* <div className="filter">
                 <div className="search">
                   <SearchBox placeholder="Search token" />
                 </div>
-              </div>
+              </div> */}
               <div className="body">
-                <TableContainer style={{ maxHeight: "calc(57px * 6)" }}>
+                <TableContainer
+                // style={{ maxHeight: "calc(57px * 10)" }}
+                >
                   <Table stickyHeader>
                     <TableHead>
                       <TableRowHead>
-                        <TableCell>Rank</TableCell>
+                        <TableCell>CMC Rank</TableCell>
                         <TableCell>Name</TableCell>
-                        <TableCell>Price</TableCell>
-                        <TableCell>Chg 24H</TableCell>
-                        <TableCell>Chg 7D</TableCell>
-                        <TableCell>Market Cap</TableCell>
-                        <TableCell>Vol (24h)</TableCell>
-                        <TableCell>IDO ROI</TableCell>
-                        <TableCell>ATH IDO ROI</TableCell>
+                        <TableCell>
+                          <TableSortLabel onClick={() => onSortListPerfomance("price")}
+                            order={
+                              fieldSorted.field === "price"
+                                ? fieldSorted.order
+                                : null
+                            }
+                          >
+                            Price
+                          </TableSortLabel>
+                        </TableCell>
+                        <TableCell>
+                          <TableSortLabel onClick={() => onSortListPerfomance("price_change_24h")}
+                            order={
+                              fieldSorted.field === "price_change_24h"
+                                ? fieldSorted.order
+                                : null
+                            }
+                          >
+                            Chg 24H
+                          </TableSortLabel>
+                        </TableCell>
+                        <TableCell>
+                          <TableSortLabel onClick={() => onSortListPerfomance("price_change_7d")}
+                            order={
+                              fieldSorted.field === "price_change_7d"
+                                ? fieldSorted.order
+                                : null
+                            }
+                          >
+                            Chg 7D
+                          </TableSortLabel>
+                        </TableCell>
+                        <TableCell>
+                          <TableSortLabel onClick={() => onSortListPerfomance("market_cap")}
+                            order={
+                              fieldSorted.field === "market_cap"
+                                ? fieldSorted.order
+                                : null
+                            }
+                          >
+                            Market Cap
+                          </TableSortLabel>
+                        </TableCell>
+                        <TableCell>
+                          <TableSortLabel onClick={() => onSortListPerfomance("volume_24h")}
+                            order={
+                              fieldSorted.field === "volume_24h"
+                                ? fieldSorted.order
+                                : null
+                            }
+                          >
+                            Vol (24h)
+                          </TableSortLabel>
+                        </TableCell>
+                        <TableCell>
+                          <TableSortLabel onClick={() => onSortListPerfomance("ido_roi")}
+                            order={
+                              fieldSorted.field === "ido_roi"
+                                ? fieldSorted.order
+                                : null
+                            }
+                          >
+                            IDO ROI
+                          </TableSortLabel>
+                        </TableCell>
+                        {/* <TableCell>ATH IDO ROI</TableCell>
                         <TableCell>IDO Date</TableCell>
                         <TableCell onClick={() => onSortListPerfomance("ath")}>
                           <TableSortLabel
@@ -542,39 +614,34 @@ const Home = (props: any) => {
                           >
                             Raised
                           </TableSortLabel>
-                        </TableCell>
+                        </TableCell> */}
                       </TableRowHead>
                     </TableHead>
                     <TableBody>
                       {listPerfomance.map((row, id) => (
                         <TableRowBody key={id}>
+                          <TableCell align="left">{row.rank}</TableCell>
                           <TableCell component="th" scope="row">
                             <div className={styles.tbCellProject}>
-                              <img src={row.logo} alt="" />
+                              <img src={row.image} alt="" />
                               <div>
                                 <h3>{row.symbol}</h3>
                                 <h5>{row.name}</h5>
                               </div>
                             </div>
                           </TableCell>
-                          <TableCell align="left">{row.price}</TableCell>
-                          {/*<TableCell align="left"> {row.ath} <span>{row.profit ? `(X ${row.profit})` : ''}</span></TableCell>*/}
-                          <TableCell align="left"> {row.ath}</TableCell>
-                          <TableCell align="left"> {row.volume} </TableCell>
-                          <TableCell align="left"> {row.volume} </TableCell>
-                          <TableCell align="left"> {row.volume} </TableCell>
-                          <TableCell align="left"> {row.volume} </TableCell>
-                          <TableCell align="left"> {row.volume} </TableCell>
-                          <TableCell align="left"> {row.volume} </TableCell>
-                          <TableCell align="left"> {row.volume} </TableCell>
-                          <TableCell align="left"> {row.volume} </TableCell>
+                          <TableCell align="left"> ${numberWithCommas(row.price, 3)} </TableCell>
+                          <TableCell align="left"> {formatChangePercent(row.price_change_24h)} </TableCell>
+                          <TableCell align="left"> {formatChangePercent(row.price_change_7d)} </TableCell>
+                          <TableCell align="left"> {+row.market_cap ? '$' + readableNumber(+((+row.market_cap).toFixed(0))) : 'N/A'} </TableCell>
+                          <TableCell align="left"> {+row.volume_24h ? '$' + readableNumber(+((+row.volume_24h).toFixed(0))) : 'N/A'} </TableCell>
+                          <TableCell align="left"> {numberWithCommas(row.ido_roi, 3)}x </TableCell>
                         </TableRowBody>
                       ))}
                     </TableBody>
                   </Table>
                 </TableContainer>
               </div>
-
             </div>
           </div>
         </div>

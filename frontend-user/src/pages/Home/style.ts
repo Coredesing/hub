@@ -399,8 +399,8 @@ const useStyles = makeStyles((theme: any) => {
       gridTemplateColumns: "40px auto",
 
       "& img": {
-        width: "40px",
-        height: "40px",
+        width: "30px",
+        height: "30px",
         objectFit: "cover",
       },
 
@@ -488,24 +488,6 @@ const useStyles = makeStyles((theme: any) => {
                 width: 'fit-content',
                 marginRight: '18px',
               },
-              '& .percent': {
-                fontFamily: 'Firs Neue',
-                fontStyle: 'normal',
-                fontWeight: 'normal',
-                fontSize: '14px',
-                marginLeft: '8px',
-                width: 'fit-content',
-                display: 'grid',
-                gridTemplateColumns: '6px auto',
-                alignItems: 'center',
-                gap: '4px',
-                '&.up': {
-                  color: '#72F34B'
-                },
-                '&.down': {
-                  color: '#F24B4B',
-                }
-              },
               '& .bold': {
                 fontFamily: 'Firs Neue',
                 fontStyle: 'normal',
@@ -554,7 +536,25 @@ const useStyles = makeStyles((theme: any) => {
       '& .body': {
 
       }
-    }
+    },
+    percent: {
+      fontFamily: 'Firs Neue',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: '14px',
+      marginLeft: '8px',
+      width: 'fit-content',
+      display: 'grid',
+      gridTemplateColumns: '6px auto',
+      alignItems: 'center',
+      gap: '4px',
+      '&.up': {
+        color: '#72F34B'
+      },
+      '&.down': {
+        color: '#F24B4B',
+      }
+    },
   };
 });
 

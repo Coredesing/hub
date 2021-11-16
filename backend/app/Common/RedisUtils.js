@@ -184,7 +184,7 @@ const deleteRedisRateSetting = () => {
   Home setting
  */
 const getRedisPerformanceSetting = () => {
-  return `home_performance`;
+  return `home_full_performances`;
 };
 
 const getRedisPerformanceDetail = async () => {

@@ -191,6 +191,14 @@ const getRedisPerformanceDetail = async () => {
   return await Redis.get(getRedisPerformanceSetting());
 };
 
+const getRedisV1PerformanceDetail = async () => {
+  return await Redis.get('home_performance');
+};
+
+const checkExistV1PerformanceDetail = async () => {
+  return await Redis.exists('home_performance');
+};
+
 const checkExistPerformanceDetail = async () => {
   return await Redis.exists(getRedisPerformanceSetting());
 };
@@ -294,6 +302,8 @@ module.exports = {
   // Home Setting
   checkExistPerformanceDetail,
   getRedisPerformanceDetail,
+  getRedisV1PerformanceDetail,
+  checkExistV1PerformanceDetail,
   setRedisPerformanceDetail,
 
   // Top Bid

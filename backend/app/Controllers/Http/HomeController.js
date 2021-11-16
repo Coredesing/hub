@@ -33,8 +33,8 @@ class HomeController {
       const page = param.page ? param.page : 1;
 
       // TODO: pagination
-      if (await RedisUtils.checkExistPerformanceDetail()) {
-        const result = await RedisUtils.getRedisPerformanceDetail()
+      if (await RedisUtils.checkExistV1PerformanceDetail()) {
+        const result = await RedisUtils.getRedisV1PerformanceDetail()
         if (result) {
           return HelperUtils.responseSuccess(JSON.parse(result))
         }

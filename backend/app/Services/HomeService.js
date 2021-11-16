@@ -47,10 +47,10 @@ class HomeService {
 
     result = result.sort(function(a, b) {
       if (a.rank === b.rank) {
-        return a.price > b.price
+        return b.price - a.price
       }
 
-      return a.rank < b.rank
+      return a.rank - b.rank
     })
 
     let data = {

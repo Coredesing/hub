@@ -545,9 +545,7 @@ class UserController {
           }, isPublicWinner));
         }
       }
-
-
-
+      
       // get lottery ticket from winner list
       const winner = await WinnerModel.query().where('campaign_id', campaignId).where('wallet_address', walletAddress).first();
       if (winner) {

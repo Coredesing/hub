@@ -501,6 +501,23 @@ class UserController {
       // FREE BUY TIME: Check if current time is free to buy or not
       const { maxBonus, isFreeBuyTime, existWhitelist } = await poolService.getFreeBuyTimeInfo(camp, walletAddress);
 
+      // If claim time --> return 0
+      if (camp && camp.campaignClaimConfig && camp.campaignClaimConfig.length > 0) {
+        const firstClaimTime = Number(camp.campaignClaimConfig[0].start_time) * 1000
+        let now = new Date()
+        if (!isNaN(firstClaimTime) && now.getTime() > firstClaimTime && firstClaimTime > 0) {
+          return HelperUtils.responseSuccess(formatDataPrivateWinner({
+            min_buy: 0,
+            max_buy: 0,
+            start_time: 0,
+            end_time: 0,
+            level: 0,
+            max_bonus: 0,
+            exist_whitelist: !!existWhitelist,
+          }, isPublicWinner));
+        }
+      }
+
       const isKYCRequired = camp.kyc_bypass === 0
       let maxTotalBonus = 0;
       if (!!existWhitelist) {
@@ -528,6 +545,8 @@ class UserController {
           }, isPublicWinner));
         }
       }
+
+
 
       // get lottery ticket from winner list
       const winner = await WinnerModel.query().where('campaign_id', campaignId).where('wallet_address', walletAddress).first();

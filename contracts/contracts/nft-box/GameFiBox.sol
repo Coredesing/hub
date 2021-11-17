@@ -21,6 +21,10 @@ interface IExternalMinted {
     function mintToken(address owner) external;
 }
 
+interface IStakingContract {
+    function linearBalanceOf(uint256 _poolId, address _account) external returns (uint128);
+}
+
 contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgradeable, ERC721HolderUpgradeable {
     struct SaleEvent {
         uint256 currentSupply;
@@ -31,9 +35,7 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         address NFT;
         uint256 startNFTId;
         bool revealed;
-        bool useExternalRandom;
         bool useSubEvent;
-        bool useExternalMint;
         uint256 startingIndex;
     }
 
@@ -59,6 +61,13 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         bool isFulFill;
     }
 
+    struct ExternalStakingContract {
+        address stakingAddress;
+        uint256 discountPerMile; // per thousand
+        uint256 threshold;
+        uint256 poolId;
+    }
+
     string public uri;
     uint256 public maxSupply;
     address public fundWallet;
@@ -72,6 +81,7 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
     mapping(address => uint256) superLimit; // for Legends
     SaleEvent[] public saleEvents;
     Box[] public boxes;
+    ExternalStakingContract public externalStakingContract;
 
     event BoxCreated(uint256 indexed id);
     event NewSaleEventAdded(uint256 indexed id);
@@ -79,7 +89,6 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
     event SaleEventPriceUpdated(uint256 id, uint256 price);
     event SaleEventRangeIdUpdated(uint256 id, uint256 startNFTId, uint256 maxSupply);
     event SaleEventNFTUpdated(uint256 id, address nft);
-    event SaleEventExternalRandomUpdated(uint256 id, bool useExternalRandom);
     event NFTClaimed(address indexed user, uint256 boxId, uint256 nftId);
 
     function __GameFiBox_init(
@@ -107,12 +116,17 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
     }
 
     function setExternalRandom(address _externalRandom) public onlyOwner {
-        require(_externalRandom != address(0), "invalid contract");
         externalRandom = _externalRandom;
     }
 
+    function setExternalStakingContract(address _externalStaking, uint256 _discountPerMile, uint256 _threshold, uint256 _poolId) public onlyOwner {
+        externalStakingContract.stakingAddress = _externalStaking;
+        externalStakingContract.discountPerMile = _discountPerMile;
+        externalStakingContract.threshold = _threshold;
+        externalStakingContract.poolId = _poolId;
+    }
+
     function setExternalMinted(address _externalMinted) public onlyOwner {
-        require(_externalMinted != address(0), "invalid contract");
         externalMinted = _externalMinted;
     }
 
@@ -169,23 +183,6 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         emit SaleEventNFTUpdated(id, nft);
     }
 
-    function setSaleEventExternalRandom(
-        uint256 id,
-        bool useExternalRandom
-    ) external onlyOwner {
-        SaleEvent storage saleEvent = saleEvents[id];
-        saleEvent.useExternalRandom = useExternalRandom;
-        emit SaleEventExternalRandomUpdated(id, useExternalRandom);
-    }
-
-    function setSaleEventExternalMint(
-        uint256 id,
-        bool useExternalMint
-    ) external onlyOwner {
-        SaleEvent storage saleEvent = saleEvents[id];
-        saleEvent.useExternalMint = useExternalMint;
-    }
-
     function setSuperLimit(
         address[] memory users,
         uint256 limit
@@ -202,9 +199,7 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         uint256 maxPerBatch,
         address nft,
         uint256 startNFTId,
-        bool useExternalRandom,
-        bool useSubEvent,
-        bool useExternalMint
+        bool useSubEvent
     ) external onlyOwner {
         require(_maxSupply > 0, "invalid number");
 
@@ -213,7 +208,7 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
             require(latestSale.currentSupply == latestSale.maxSupply || block.timestamp > latestSale.endTime, "The current sale events has not sold out");
         }
 
-        saleEvents.push(SaleEvent(0, _maxSupply, startTime, endTime, maxPerBatch, nft, startNFTId, false, useExternalRandom, useSubEvent, useExternalMint, 0));
+        saleEvents.push(SaleEvent(0, _maxSupply, startTime, endTime, maxPerBatch, nft, startNFTId, false, useSubEvent, 0));
         emit NewSaleEventAdded(saleEvents.length);
     }
 
@@ -235,7 +230,7 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         require(!sale.revealed, "The current sale has random successfully");
 
         uint256 seed = 0;
-        if (sale.useExternalRandom && externalRandom != address(0)) {
+        if (externalRandom != address(0)) {
             (uint256 randomness, bool isOk) = IExternalRandom(externalRandom).requestRandomNumber(eventId);
             if (!isOk) {
                 return;
@@ -266,12 +261,19 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
 
         require(subBoxes[eventId][subBoxId].token == token, "NFTBox: invalid token");
         uint256 totalFund = subBoxes[eventId][subBoxId].price * amount;
+        if (externalStakingContract.stakingAddress != address(0)) { // check discount code
+            if (uint256(IStakingContract(externalStakingContract.stakingAddress).linearBalanceOf(externalStakingContract.poolId, msg.sender))
+                >= externalStakingContract.threshold) {
+                totalFund = totalFund - totalFund * externalStakingContract.discountPerMile / 1000;
+            }
+        }
+
         if (token == address(0)) {
             require(totalFund == msg.value, "NFTBox: invalid value");
         }
         _fowardFund(totalFund, token);
 
-        if (sale.useExternalMint && externalMinted != address(0)) {
+        if (externalMinted != address(0)) {
             IExternalMinted(externalMinted).mintTokens(msg.sender, amount, subBoxId);
         } else {
             for (uint i = 0; i < amount; i++) {
@@ -301,9 +303,8 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
             }
 
             SaleEvent memory sale = saleEvents[boxes[boxId].eventId];
-            if(sale.NFT == address(0)) {
-                continue;
-            }
+            require(sale.revealed, "NFTBox: User must wait for claim time");
+            require(sale.NFT != address(0), "NFTBox: User must wait for claim time");
 
             uint256 nftId = sale.startNFTId + ((sale.startingIndex + boxId) % sale.maxSupply);
 

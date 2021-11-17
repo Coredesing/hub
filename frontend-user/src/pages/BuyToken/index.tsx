@@ -399,13 +399,13 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
     }
   }, [infoCountdown, currentUserTier])
   useEffect(() => {
-    if (timelineInPool.startBuyTimeInDate) {
+    if (timelineInPool.joinTimeInDate) {
       setRecallCountdown(true);
     }
   }, [timelineInPool]);
 
   useEffect(() => {
-    if (recallCountdown && timelineInPool.startBuyTimeInDate) {
+    if (recallCountdown && timelineInPool.joinTimeInDate) {
       const { date: countDownDate, display, poolStatus, ...other } = displayCountDownTime(
         poolDetails?.method,
         timelineInPool.joinTimeInDate,

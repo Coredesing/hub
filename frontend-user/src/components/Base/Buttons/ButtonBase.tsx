@@ -34,6 +34,10 @@ const useStyles = makeStyles((theme: any) => ({
             background: '#F3E24B !important',
             color: '#000',
         },
+        '&.blue': {
+            background: '#00E0FF !important',
+            color: '#000',
+        },
     },
 }));
 type Props = {
@@ -41,7 +45,7 @@ type Props = {
     disabled?: boolean,
     children: any,
     isLoading?: boolean,
-    color?: 'grey' | 'green' | 'yellow' | 'disabled',
+    color?: 'grey' | 'green' | 'yellow' | 'disabled' | 'blue',
     [k: string]: any
 }
 export const ButtonBase = ({

@@ -413,7 +413,6 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
         timelineInPool.startBuyTimeInDate,
         timelineInPool.endBuyTimeNormal
       )
-      console.log(countDownDate, display)
       setInfoCountdown({ countDownDate, display, poolStatus, ...other });
       setRecallCountdown(false);
     }

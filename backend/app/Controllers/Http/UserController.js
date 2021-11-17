@@ -172,6 +172,8 @@ class UserController {
 
       if (await RedisUserUtils.existRedisUserProfile(wallet_address)) {
         const user = JSON.parse(await RedisUserUtils.getRedisUserProfile(wallet_address))
+        user.user_twitter = '*****'
+        user.user_telegram = '*****'
         return HelperUtils.responseSuccess({user: user})
       }
 

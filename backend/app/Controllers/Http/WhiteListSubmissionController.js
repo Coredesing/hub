@@ -31,8 +31,11 @@ class WhiteListSubmissionController {
         campaign_id,
       }
       const submission = await whitelistSubmissionService.findSubmission(submissionParams)
-      submission.user_telegram = ''
-      submission.user_twitter = ''
+      if (submission) {
+        submission.user_telegram = ''
+        submission.user_twitter = ''
+      }
+
       return HelperUtils.responseSuccess(
         submission
       );

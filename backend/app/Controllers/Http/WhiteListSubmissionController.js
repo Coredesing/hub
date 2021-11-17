@@ -58,6 +58,8 @@ class WhiteListSubmissionController {
         wallet_address,
       }
       const submission = await whitelistSubmissionService.findSubmission(submissionParams)
+      submission.user_telegram = '*****'
+      submission.user_twitter = '*****'
       return HelperUtils.responseSuccess(
         submission
       );

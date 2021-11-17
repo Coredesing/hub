@@ -188,8 +188,8 @@ class UserController {
         id: findedUser.id,
         status: findedUser.status,
         is_kyc: findedUser.is_kyc,
-        user_twitter: whitelistSubmission && whitelistSubmission.user_twitter,
-        user_telegram: whitelistSubmission && whitelistSubmission.user_telegram,
+        user_twitter: '*****',
+        user_telegram: '*****',
       }
 
       if (user.is_kyc && user.status) {

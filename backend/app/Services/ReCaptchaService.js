@@ -25,7 +25,7 @@ class ReCaptchaService {
 
     if (!captchaToken) {
       return {
-        status: true,
+        status: false,
         message: 'token not found'
       }
     }

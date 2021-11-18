@@ -256,6 +256,10 @@ const MysteryBox = ({ id, ...props }: any) => {
     }, [setOpenModalTx]);
 
     useEffect(() => {
+        if(!connectedAccount) {
+            setOwnedBox(0);
+            return;
+        }
         const getMyNumBox = async () => {
             try {
                 const myNumBox = await getBalance(
@@ -270,7 +274,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                 console.log(error);
             }
         };
-        !isClaim && (recallMybox || connectedAccount) && dataTicket?.token && getMyNumBox();
+        !isClaim && recallMybox && dataTicket?.token && getMyNumBox();
     }, [connectedAccount, dataTicket, recallMybox, isClaim]);
 
     const ascAmount = () => {
@@ -425,6 +429,10 @@ const MysteryBox = ({ id, ...props }: any) => {
         } finally {
             setLoadingCollection(false);
         }
+    }
+
+    const handleRefreshCollection = () => {
+        setRecallMyBox(true);
     }
 
     useEffect(() => {
@@ -1010,7 +1018,9 @@ const MysteryBox = ({ id, ...props }: any) => {
                                 defaultTab={1}
                                 ownedBox={ownedBox}
                                 collections={loadingCollection ? [] : collections}
-                                loadingCollection={loadingCollection} />
+                                loadingCollection={loadingCollection}
+                                handleRefreshCollection={handleRefreshCollection}
+                            />
                         </div>
                     </div>
                 </>

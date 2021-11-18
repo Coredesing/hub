@@ -189,7 +189,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
   //   poolDetails?.method !== "whitelist"
   // );
 
-  const { data: alreadyJoinPool } = useFetch<boolean>(
+  const { data: alreadyJoinPool, loading: loadingJoinPool } = useFetch<boolean>(
     poolDetails && connectedAccount ?
       `/user/check-join-campaign/${poolDetails?.id}?wallet_address=${connectedAccount}`
       : undefined
@@ -216,7 +216,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
       setCheckKyc({ isKyc: currentUserTier.exist_whitelist })
     }
   }, [loadingCurrentTier, currentUserTier])
-  const { data: winnersList } = useFetch<any>(`/user/winner-list/${id}?page=1&limit=10&`);
+  const { data: winnersList, loading: loadingWinnerList } = useFetch<any>(`/user/winner-list/${id}?page=1&limit=10&`);
   const pickedWinner = !!(+winnersList?.total)
 
   const poolDetailsMapping = usePoolDetailsMapping(poolDetails);
@@ -573,6 +573,8 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
               isPreOrderPool={isPreOrderPool}
               isInPreOrderTime={isInPreOrderTime}
               poolStatus={infoCountdown.poolStatus}
+              loadingJoinPool={loadingJoinPool}
+              loadingWinnerList={loadingWinnerList}
             />
 
             <ByTokenHeader
@@ -581,7 +583,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
             />
 
             {
-              Number(poolDetails?.isPrivate || '0') !== POOL_IS_PRIVATE.COMMUNITY &&
+              !loadingJoinPool && Number(poolDetails?.isPrivate || '0') !== POOL_IS_PRIVATE.COMMUNITY &&
               joinTimeInDate && new Date() > joinTimeInDate && !(alreadyJoinPool || joinPoolSuccess) &&
               !(ableToFetchFromBlockchain && (winnersList && winnersList.total > 0)) &&
               !isOverTimeApplyWhiteList &&
@@ -608,7 +610,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
             }
 
             {
-              Number(poolDetails?.isPrivate || '0') === POOL_IS_PRIVATE.COMMUNITY &&
+              !loadingJoinPool && Number(poolDetails?.isPrivate || '0') === POOL_IS_PRIVATE.COMMUNITY &&
               poolDetails?.socialRequirement?.gleam_link &&
               joinTimeInDate && new Date() > joinTimeInDate && !(alreadyJoinPool || joinPoolSuccess) &&
               !(ableToFetchFromBlockchain && (winnersList && winnersList.total > 0)) &&
@@ -634,7 +636,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
             }
 
             {
-              Number(poolDetails?.isPrivate || '0') !== POOL_IS_PRIVATE.COMMUNITY &&
+              !loadingJoinPool && Number(poolDetails?.isPrivate || '0') !== POOL_IS_PRIVATE.COMMUNITY &&
               (alreadyJoinPool || joinPoolSuccess) && !whitelistCompleted && !whitelistLoading &&
               !(ableToFetchFromBlockchain && (winnersList && winnersList.total > 0)) &&
               <Button

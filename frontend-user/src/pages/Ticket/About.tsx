@@ -329,6 +329,7 @@ export const AboutMysteryBox = ({
   ownedBox = 0,
   collections = [],
   loadingCollection,
+  handleRefreshCollection,
   ...props }: Props) => {
   const dispatch = useDispatch();
   const classes = useAboutStyles();
@@ -437,6 +438,7 @@ export const AboutMysteryBox = ({
       dispatch(alertWarning("Request is processing!"));
       await tx.wait(1);
       dispatch(alertSuccess("Request is completed!"));
+      handleRefreshCollection();
     } catch (error: any) {
       console.error(error);
       dispatch(alertFailure(error?.data?.message || error.message));
@@ -456,6 +458,7 @@ export const AboutMysteryBox = ({
       dispatch(alertWarning("Request is processing!"));
       await tx.wait(1);
       dispatch(alertSuccess("Request is completed!"));
+      handleRefreshCollection();
     } catch (error: any) {
       console.error(error);
       dispatch(alertFailure(error?.data?.message || error.message));

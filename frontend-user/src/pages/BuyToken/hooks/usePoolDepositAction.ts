@@ -170,10 +170,11 @@ const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount
         setTokenDepositLoading(false);
         setTokenDepositSuccess(true);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.log('[ERROR] - depositWithSignature:', err);
-      dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
-      setDepositError(TRANSACTION_ERROR_MESSAGE);
+      const errMsg = err?.data?.message || err?.message || TRANSACTION_ERROR_MESSAGE;
+      dispatch(alertFailure(errMsg));
+      setDepositError(errMsg);
       setTokenDepositLoading(false);
       setSignature("");
       setUserPurchasedSignature("");
@@ -189,10 +190,11 @@ const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount
         setTokenDepositSuccess(false);
 
         await signMessage();
-      } catch (err) {
+      } catch (err: any) {
         console.log('[ERROR] - deposit:', err);
-        dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
-        setDepositError(TRANSACTION_ERROR_MESSAGE);
+        const errMsg = err?.data?.message || err?.message || TRANSACTION_ERROR_MESSAGE;
+        dispatch(alertFailure(errMsg));
+        setDepositError(errMsg);
         setSignature("");
         setTokenDepositLoading(false);
       }

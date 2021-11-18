@@ -311,7 +311,7 @@ const MysteryBox = ({ id, ...props }: any) => {
         poolId: infoTicket.id,
         eventId,
         subBoxId: boxTypeSelected.subBoxId,
-        priceOfBox: infoTicket.ether_conversion_rate,
+        priceOfBox: tokenSeletected.price,
         tokenAddress: tokenSeletected.address,
     });
 

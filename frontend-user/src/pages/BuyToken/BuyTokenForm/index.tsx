@@ -184,7 +184,7 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
     try {
       parsedFirstBuy = JSON.parse(firstBuy);
     }
-    catch (err) {
+    catch (err: any) {
       console.log(err.message);
     }
   }
@@ -449,7 +449,10 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
       dispatch(alertFailure(`Not enough token for sale, you can only buy up to ${numberWithCommas(remainToken, 2)} ${tokenDetails?.symbol}`));
       return false;
     }
-
+    if(+tokenBalance < +input) {
+      dispatch(alertFailure('Your balance is not enough'));
+      return false;
+    }
     return true;
   };
 

@@ -112,9 +112,9 @@ function BannerNotification(props: any) {
   const renderNotiWhiteList = () => {
     if (loadingJoinPool || whitelistLoading || loadingWinnerList) return;
     if (
-      (alreadyJoinPool || joinPoolSuccess) && !whitelistCompleted && (currentUserTier && currentUserTier.level < 3) 
-    // && !((winnersList && winnersList.total > 0) && (poolDetails?.publicWinnerStatus === PUBLIC_WINNER_STATUS.PUBLIC))
-      ) {
+      (alreadyJoinPool || joinPoolSuccess) && !whitelistCompleted && (currentUserTier && currentUserTier.level < 3) &&
+      !((winnersList && winnersList.total > 0) && (poolDetails?.publicWinnerStatus === PUBLIC_WINNER_STATUS.PUBLIC))
+    ) {
       return (
         <div className={styles.whitelistPending}>
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -132,9 +132,8 @@ function BannerNotification(props: any) {
       whitelistCompleted &&
       !whitelistLoading &&
       currentUserTier?.exist_whitelist &&
-      startBuyTimeInDate &&
-      // poolDetails?.publicWinnerStatus === PUBLIC_WINNER_STATUS.PUBLIC &&
-      // !(winnersList && winnersList.total > 0) &&
+      // startBuyTimeInDate &&
+      !((winnersList && winnersList.total > 0) && (poolDetails?.publicWinnerStatus === PUBLIC_WINNER_STATUS.PUBLIC)) &&
       !isOverTimeApplyWhiteList
     ) {
       return <div className={styles.whitelistSuccess}>

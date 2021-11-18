@@ -5,19 +5,29 @@ const CaptchaWhitelist = use('App/Models/CaptchaWhitelist');
 const RedisCaptchaWhitelistUser = use('App/Common/RedisCaptchaWhitelistUser');
 
 class ReCaptchaService {
-  async Verify(captchaToken, address) {
+  async Verify(captchaToken, address, start_time, start_preorder_time) {
     let status = false
+    let message = ''
     if (!address) {
-      return false;
+      return {
+        status: false,
+        message: 'address not found'
+      }
     }
 
     const isWhitelist = await this.isAllowRecaptcha(address)
     if (isWhitelist) {
-      return true
+      return {
+        status: true,
+        message: ''
+      }
     }
 
     if (!captchaToken) {
-      return false;
+      return {
+        status: false,
+        message: 'token not found'
+      }
     }
 
     const SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY
@@ -25,17 +35,35 @@ class ReCaptchaService {
     const url = `https://www.google.com/recaptcha/api/siteverify?secret=${SECRET_KEY}&response=${captchaToken}`;
     await axios.post(url)
       .then((response) => {
+        if (!response.data) {
+          message = 'request error'
+          return
+        }
+
+        // check with pool without preorder (first for community)
+        const ts = Date.parse(response.data.challenge_ts)
+        let loadingCaptchaTime = start_time
+        if ((isNaN(start_preorder_time) || start_preorder_time < 1) && !isNaN(loadingCaptchaTime) && ts < (loadingCaptchaTime * 1000)) {
+          message = 'load recaptcha before running time'
+          return
+        }
+
         if (response.data.success === true) {
           status = true
         } else {
           status = false
+          message = 'status failed'
         }
       })
       .catch((error) => {
         console.log(error);
+        message = 'internal server error'
       });
 
-    return status
+    return {
+      status: status,
+      message: message
+    }
   }
 
   async isAllowRecaptcha(wallet_address) {

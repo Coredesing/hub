@@ -207,12 +207,6 @@ class CampaignController {
     }
 
     try {
-      const captchaService = new ReCaptchaService()
-      const ReCaptchaVerified = await captchaService.Verify(params.captcha_token, userWalletAddress)
-      if (!ReCaptchaVerified) {
-        return HelperUtils.responseBadRequest('reCAPTCHA verification failed');
-      }
-
       // call to db get campaign info
       const campaignService = new PoolService();
       let camp = null
@@ -240,6 +234,12 @@ class CampaignController {
 
       if (camp.token_type !== Const.TOKEN_TYPE.MYSTERY_BOX) {
         return HelperUtils.responseBadRequest("Cannot buy");
+      }
+
+      const captchaService = new ReCaptchaService()
+      const verifiedData = await captchaService.Verify(params.captcha_token, userWalletAddress, camp.start_time, camp.start_pre_order_time)
+      if (!verifiedData.status) {
+        return HelperUtils.responseBadRequest(`reCAPTCHA verification failed: ${verifiedData.message}`);
       }
 
       if (!camp.kyc_bypass) {
@@ -319,12 +319,6 @@ class CampaignController {
     }
 
     try {
-      const captchaService = new ReCaptchaService()
-      const ReCaptchaVerified = await captchaService.Verify(params.captcha_token, userWalletAddress)
-      if (!ReCaptchaVerified) {
-        return HelperUtils.responseBadRequest('reCAPTCHA verification failed');
-      }
-
       // check campaign info
       const filterParams = {
         'campaign_id': campaign_id
@@ -356,6 +350,12 @@ class CampaignController {
 
       if (camp.process === Const.PROCESS.ONLY_CLAIM || camp.token_type === Const.TOKEN_TYPE.MYSTERY_BOX) {
         return HelperUtils.responseBadRequest("Cannot buy");
+      }
+
+      const captchaService = new ReCaptchaService()
+      const verifiedData = await captchaService.Verify(params.captcha_token, userWalletAddress, camp.start_time, camp.start_pre_order_time)
+      if (!verifiedData.status) {
+        return HelperUtils.responseBadRequest(`reCAPTCHA verification failed: ${verifiedData.message}`);
       }
 
       if (!camp.kyc_bypass) {

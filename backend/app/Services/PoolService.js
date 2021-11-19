@@ -19,6 +19,7 @@ const HelperUtils = use('App/Common/HelperUtils');
 const RedisUtils = use('App/Common/RedisUtils');
 const ConvertDateUtils = use('App/Common/ConvertDateUtils');
 const WhitelistService = use('App/Services/WhitelistUserService');
+const NFTOrderService = use('App/Services/NFTOrderService');
 
 class PoolService {
   buildQueryBuilder(params) {
@@ -561,6 +562,23 @@ class PoolService {
       }
 
       await CampaignModel.query().where('id', pool.id).update(dataUpdate);
+      if (pool && pool.token_type === Const.TOKEN_TYPE.MYSTERY_BOX && data.status === Const.POOL_STATUS.UPCOMING) {
+        let cachedPoolDetail = await RedisUtils.getRedisPoolDetail(pool.id);
+        const ntfService = new NFTOrderService();
+        const orders = await ntfService.sumOrderAndRegistered(pool.id);
+        let totalOrder = 0
+        let totalRegistered = 0
+        if (orders && orders.length > 0) {
+          totalOrder = parseInt(orders[0]['sum(`amount`)'])
+        }
+        if (orders && orders.length > 0) {
+          totalRegistered = parseInt(orders[0]['count(*)'])
+        }
+        cachedPoolDetail.totalOrder = isNaN(totalOrder) ? 0 : totalOrder
+        cachedPoolDetail.totalRegistered = isNaN(totalRegistered) ? 0 : totalRegistered
+        await RedisUtils.createRedisPoolDetail(pool.id, cachedPoolDetail)
+        return
+      }
 
       if (await RedisUtils.checkExistRedisPoolDetail(pool.id)) {
         let cachedPoolDetail = await RedisUtils.getRedisPoolDetail(pool.id);

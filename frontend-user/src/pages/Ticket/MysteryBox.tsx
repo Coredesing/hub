@@ -436,6 +436,7 @@ const MysteryBox = ({ id, ...props }: any) => {
     }
 
     useEffect(() => {
+
         if (ownedBox > 0 && subBoxes.length) {
             handleSetCollections(ownedBox);
         }
@@ -473,6 +474,7 @@ const MysteryBox = ({ id, ...props }: any) => {
             setNewTicket(true);
             setRenewTotalBoxesBought(true);
             setNumBoxBuy(0);
+            handleRefreshCollection();
         }
     }, [isClaimedBoxSuccess]);
 

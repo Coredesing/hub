@@ -142,8 +142,8 @@ const BuyTokenForm: React.FC<BuyTokenFormProps> = (props: any) => {
   const recaptchaRef: any = React.useRef();
   const onRefreshRecaptcha = debounce(() => {
     if (!verifiedCapcha) return;
-    if (typeof recaptchaRef?.current?.reset === 'function') {
-      recaptchaRef.current.reset();
+    if (typeof recaptchaRef?.current?.resetCaptcha === 'function') {
+      recaptchaRef.current.resetCaptcha();
     }
   }, 5000);
 

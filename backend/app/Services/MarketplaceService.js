@@ -86,7 +86,7 @@ class MarketplaceService {
       return data
     }
 
-    let data = await this.buildQueryCollectionBuilder(filterParams)
+    let data = await this.buildQueryCollectionBuilder(filterParams).fetch()
     data = JSON.parse(JSON.stringify(data))
     await RedisMarketplaceUtils.setRedisMarketplaceSupportCollections(data)
 

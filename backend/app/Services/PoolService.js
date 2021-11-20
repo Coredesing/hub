@@ -17,6 +17,7 @@ const FreeBuyTimeSettingModel = use('App/Models/FreeBuyTimeSetting');
 const Const = use('App/Common/Const');
 const HelperUtils = use('App/Common/HelperUtils');
 const RedisUtils = use('App/Common/RedisUtils');
+const RedisMysteriousBoxUtils = use('App/Common/RedisMysteriousBoxUtils');
 const ConvertDateUtils = use('App/Common/ConvertDateUtils');
 const WhitelistService = use('App/Services/WhitelistUserService');
 const NFTOrderService = use('App/Services/NFTOrderService');
@@ -180,6 +181,12 @@ class PoolService {
   }
 
   async getMysteriousBoxPoolsV3(filterParams) {
+    if (await RedisMysteriousBoxUtils.existRedisMysteriousBoxes()) {
+      let data = await RedisMysteriousBoxUtils.getRedisMysteriousBoxes()
+      data = JSON.parse(data)
+      return data
+    }
+
     const limit = filterParams.limit ? filterParams.limit : 20;
     const page = filterParams.page ? filterParams.page : 1;
     filterParams.limit = limit;
@@ -189,6 +196,10 @@ class PoolService {
       .orderBy('priority', 'DESC')
       .orderBy('start_time', 'ASC')
       .paginate(page, limit);
+
+    pools = JSON.parse(JSON.stringify(pools))
+    await RedisMysteriousBoxUtils.setRedisMysteriousBoxes(pools)
+
     return pools;
   }
 
@@ -541,6 +552,10 @@ class PoolService {
       // update priority
       if (data.status === Const.POOL_STATUS.ENDED) {
         dataUpdate.priority = 0
+
+        if (data.token_type === 'box') {
+          await RedisMysteriousBoxUtils.deleteRedisMysteriousBoxes();
+        }
       }
 
       await CampaignModel.query().where('id', pool.id).update(dataUpdate);

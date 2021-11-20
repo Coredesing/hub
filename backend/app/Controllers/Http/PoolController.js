@@ -6,6 +6,7 @@ const WalletAccountService = use('App/Services/WalletAccountService');
 const PoolService = use('App/Services/PoolService');
 const HelperUtils = use('App/Common/HelperUtils');
 const RedisUtils = use('App/Common/RedisUtils');
+const RedisMysteriousBoxUtils = use('App/Common/RedisMysteriousBoxUtils');
 const UserBalanceSnapshotModel = use('App/Models/UserBalanceSnapshot');
 const WhitelistUserModel = use('App/Models/WhitelistUser');
 const WhitelistService = use('App/Services/WhitelistUserService');
@@ -289,6 +290,10 @@ class PoolController {
       // Delete cache
       RedisUtils.deleteRedisPoolDetail(campaignId);
       RedisUtils.deleteRedisTierList(campaignId);
+
+      if (inputParams.token_type === 'box') {
+        RedisMysteriousBoxUtils.deleteRedisMysteriousBoxes();
+      }
 
       return HelperUtils.responseSuccess(campaign);
     } catch (e) {

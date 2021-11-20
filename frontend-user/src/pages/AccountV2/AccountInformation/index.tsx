@@ -38,7 +38,15 @@ const AccountInformation = (props: any) => {
     notEth,
     isKYC,
     setRenewUserProfile,
+    solanaWallet,
+    terraWallet,
   } = props;
+
+  const [ solanaAddress, setSolanaAddress] = useState(solanaWallet);
+
+  useEffect(() => {
+    setSolanaAddress(solanaWallet)
+  },[solanaWallet])
 
   useEffect(() => {
     if (!connectedAccount) {
@@ -74,11 +82,18 @@ const AccountInformation = (props: any) => {
         }
       }
 
+      let solanaSignature
+      if (!!solanaAddress) {
+        solanaSignature = await solanaSign()
+      }
+
       const response = await axios.put(`/user/update-profile`, {
         signature,
         wallet_address: account,
         user_twitter: data?.twitter,
         user_telegram: data?.telegram,
+        solana_address: solanaSignature?.publicKey ?? '',
+        solana_signature: solanaSignature?.signature  ?? '',
       }, config as any) as any;
 
       if (response.data) {
@@ -94,6 +109,57 @@ const AccountInformation = (props: any) => {
       }
     }
   }
+
+  const solanaSign = async () => {
+    const encodedMessage = new TextEncoder().encode(process.env.REACT_APP_MESSAGE_INVESTOR_SIGNATURE);
+    // @ts-ignore
+    const signedMessage = await window.solana.request({
+      method: "signMessage",
+      params: {
+        message: encodedMessage,
+        display: "utf8",
+      },
+    });
+    return signedMessage
+  }
+
+  const handleSolanaDisconnect = () => {
+    // @ts-ignore
+    if (!window.solana) {
+      return
+    }
+    // @ts-ignore
+    window.solana.request({ method: "disconnect" })
+    setSolanaAddress(null)
+  }
+
+  const handleSolanaConnect = async () => {
+    const provider = getSolanaProvider()
+    if (!provider) {
+      dispatch(alertFailure('Phantom extension is not installed!'))
+      return
+    }
+    try {
+      let resp
+      resp = await provider.connect()
+      if (!resp) {
+        resp = await provider.request({ method: "connect"});
+      }
+      setSolanaAddress(resp.publicKey.toString())
+    } catch (err) {
+      dispatch(alertFailure('User rejected the request!'))
+    }
+  }
+
+  const getSolanaProvider = () => {
+    if ("solana" in window) {
+      // @ts-ignore
+      const provider = window?.solana;
+      if (provider.isPhantom) {
+        return provider;
+      }
+    }
+  };
 
   const renderErrorRequired = (errors: any, prop: string) => {
     if (errors[prop]) {
@@ -242,6 +308,32 @@ const AccountInformation = (props: any) => {
                 </>
               }
             </div>
+
+            <div className={styles.inputGroup}>
+            <span>Solana Wallet Address<br/>(Optional)</span>
+            {
+              connectedAccount &&
+              <>
+                {
+                  onEditProfile ?
+                      <div className={styles.solanaGroup}>
+                        <span>{ !!solanaAddress ? solanaAddress : ''}</span>
+                        {
+                          !solanaAddress ?
+                              <div style={{position: "relative"}}>
+                              <button className={styles.connectBTN} type="button" onClick={handleSolanaConnect}>Connect</button>
+                              <div className={styles.getExtension}><a href="https://phantom.app/" style={{color: '#6398FF'}}>Get Phantom extension?</a></div>
+                              </div>
+                              :
+                              <button className={styles.disconnectBTN} type="button" onClick={handleSolanaDisconnect}>Disconnect</button>
+                        }
+                      </div>
+                      :
+                      <span>{ !!solanaAddress ? solanaAddress : 'Not Connected'}</span>
+                }
+              </>
+            }
+          </div>
           </form>
         }
 

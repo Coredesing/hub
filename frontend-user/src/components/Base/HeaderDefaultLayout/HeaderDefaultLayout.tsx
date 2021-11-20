@@ -48,9 +48,9 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
   const [openSideBar, setOpenSideBar] = useState(false);
   const [toggleNavbar, setToggleNavbar] = useState(false);
   const { data: message = "" } = useSelector((state: any) => state.messages);
-  const [chainLogo, setChainLogo] = useState<string>(ChainDefault.icon);
-  const [chainName, setChainName] = useState<string>(ChainDefault.name);
-  const [chainCurrency, setChainCurrency] = useState<string>(ChainDefault.currency || '');
+  const [chainLogo, setChainLogo] = useState<string>(ChainDefault?.icon);
+  const [chainName, setChainName] = useState<string>(ChainDefault?.name);
+  const [chainCurrency, setChainCurrency] = useState<string>(ChainDefault?.currency || '');
 
   const { connectedAccount } = useAuth();
 
@@ -263,7 +263,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
           </>
         ) : ( */}
         <>
-          
+
           <div className={styles.navBarGF} style={props.isShowBannerContract ? {top: props.heightBannerContract}: {}}>
             <div className="logo">
               <a href={"#/"}><img src={logo} alt="" /></a>

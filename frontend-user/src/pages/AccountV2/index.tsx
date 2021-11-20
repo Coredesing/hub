@@ -44,7 +44,7 @@ const AccountV2 = (props: any) => {
   const dispatch = useDispatch();
 
   const { data: balance = {} } = useSelector((state: any) => state.balance);
- 
+
   const { isAuth, connectedAccount, wrongChain } = useAuth();
   // const [loadingGetHistory, setLoadingGetHistory] = useState(false);
 
@@ -78,6 +78,8 @@ const AccountV2 = (props: any) => {
   // const { data: userInfo } = useSelector((state: any) => state.userInfo);
   const [userProfile, setUserProfile] = useState<{ [k in string]: any }>({});
   const [loadingUserProfile, setRenewUserProfile] = useState(false);
+  const [solanaAddress, setSolanaAddress] = useState<string>("");
+  const [terraAddress, setTerraAddress] = useState<string>("");
   useEffect(() => {
     dispatch(getUserTier(!wrongChain && connectedAccount ? connectedAccount : ''));
   }, [wrongChain, connectedAccount, dispatch]);
@@ -99,11 +101,15 @@ const AccountV2 = (props: any) => {
           setUserProfile({
             ...user,
           });
+          setSolanaAddress(user?.solana_address);
+          setTerraAddress(user?.terra_address);
           setIsKYC(user.is_kyc === 1);
           setEmailVeryfied(user.status);
         }).catch(() => {
           setUserProfile({});
           setIsKYC(false);
+          setSolanaAddress("");
+          setTerraAddress("");
           setEmailVeryfied(USER_STATUS.UNVERIFIED);
         }).finally(() => {
           setRenewUserProfile(false);
@@ -233,6 +239,8 @@ const AccountV2 = (props: any) => {
                 // setEmail={setEmail}
                 // setEmailVeryfied={setEmailVeryfied}
                 isKYC={isKYC}
+                solanaWallet={solanaAddress}
+                terraAddress={terraAddress}
                 kycStatus={userProfile.is_kyc}
                 setUpdatedSuccess={setUpdatedSuccess}
                 setRenewUserProfile={setRenewUserProfile}

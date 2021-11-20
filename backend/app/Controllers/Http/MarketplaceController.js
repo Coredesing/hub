@@ -38,7 +38,7 @@ class MarketplaceController {
 
   async getCollection({ request, auth, params }) {
     const id = params.id;
-    if (!isNaN(id)) {
+    if (isNaN(id)) {
       return HelperUtils.responseNotFound();
     }
 

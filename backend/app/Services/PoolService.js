@@ -546,6 +546,7 @@ class PoolService {
       await CampaignModel.query().where('id', pool.id).update(dataUpdate);
       if (pool && pool.token_type === Const.TOKEN_TYPE.MYSTERY_BOX && data.status === Const.POOL_STATUS.UPCOMING) {
         let cachedPoolDetail = await RedisUtils.getRedisPoolDetail(pool.id);
+        cachedPoolDetail = JSON.parse(cachedPoolDetail)
         const ntfService = new NFTOrderService();
         const orders = await ntfService.sumOrderAndRegistered(pool.id);
         let totalOrder = 0

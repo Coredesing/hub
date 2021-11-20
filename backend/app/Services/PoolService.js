@@ -252,15 +252,7 @@ class PoolService {
     const now = moment().unix();
     let pools = await this.buildQueryBuilder(filterParams)
       .with('campaignClaimConfig')
-      .where(builder => {
-        builder
-          .where('campaign_status', Const.POOL_STATUS.ENDED)
-          .orWhere(builder1 => {
-            builder1
-              .where('campaign_status', Const.POOL_STATUS.CLAIMABLE)
-              .where('actual_finish_time', '<', now);
-          });
-      })
+      .where('campaign_status', Const.POOL_STATUS.ENDED)
       .orderBy('priority', 'DESC')
       .orderBy('finish_time', 'DESC')
       .paginate(page, limit);

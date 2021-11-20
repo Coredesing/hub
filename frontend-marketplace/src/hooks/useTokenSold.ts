@@ -16,7 +16,7 @@ const useTokenSold = (
       if (contract) {
         result = await contract.methods.tokenSold().call();
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
     }
     return result;

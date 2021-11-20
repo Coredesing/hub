@@ -420,7 +420,7 @@ export const AboutMysteryBox = ({
   const POOL_IDS_IS_CLAIMED_ONE_BY_ONE: any[] = useMemo(() => {
     try {
       return JSON.parse(process.env.REACT_APP_POOL_IDS_IS_CLAIMED_ONE_BY_ONE || '')
-    } catch (error) {
+    } catch (error: any) {
       return [];
     }
   }, []);

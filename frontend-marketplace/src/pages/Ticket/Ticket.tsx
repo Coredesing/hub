@@ -277,7 +277,7 @@ const Ticket = ({ id, ...props }: any) => {
                 );
                 setOwnedTicket(+myNumTicket);
                 setNewBalance(false);
-            } catch (error) {
+            } catch (error: any) {
                 console.log(error);
             }
         };
@@ -494,7 +494,7 @@ const Ticket = ({ id, ...props }: any) => {
                 setIsApproving(false);
                 // setTokenBalance(await retrieveTokenBalance(tokenToApprove, connectedAccount) as number);
             }
-        } catch (err) {
+        } catch (error: any) {
             dispatch(alertFailure('Hmm, Something went wrong. Please try again'));
             setIsApproving(false);
             // setApproveModal(false);
@@ -564,7 +564,7 @@ const Ticket = ({ id, ...props }: any) => {
             if (numTicketBuy > 0) {
                 await deposit();
             }
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
         }
     };

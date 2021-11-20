@@ -47,7 +47,7 @@ const useClaimBox = ({ subBoxId, poolAddress, eventId, poolId, priceOfBox, token
           eventId,
           tokenAddress,
         });
-      } catch (err) {
+      } catch (error: any) {
         setSignature('');
         setClaimBoxLoading(false);
         dispatch(alertSuccess("Error when signing message"));

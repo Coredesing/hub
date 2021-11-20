@@ -43,7 +43,7 @@ export const walletConnect = new WalletConnectConnector({
   rpc: {[Number(ETH_CHAIN_ID)]: NETWORK_URL as string},
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
-  pollingInterval: 10000
+  // pollingInterval: 10000
 });
 
 export const walletConnectBsc = new WalletConnectConnector({
@@ -51,14 +51,14 @@ export const walletConnectBsc = new WalletConnectConnector({
   rpc: { [Number(BSC_CHAIN_ID)]: 'https://bsc-dataseed.binance.org/' },
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
-  pollingInterval: 10000
+  // pollingInterval: 10000
 });
 
 export const walletConnectPolygon = new WalletConnectConnector({
   rpc: { [Number(POLYGON_CHAIN_ID)]: POLYGON_RPC_URL },
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
-  pollingInterval: 10000
+  // pollingInterval: 10000
 });
 
 

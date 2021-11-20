@@ -96,7 +96,7 @@ export const getUserClaimInfoFromSmartContract = async (params: any) => {
         tokenDecimals: tokenDetails.decimals,
       }
     }
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
   }
 }

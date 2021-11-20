@@ -50,7 +50,7 @@ export const getTiers = (forceUsingEther: string = 'eth') => {
         payload: result?.delays || [],
       });
 
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: sotaTiersActions.TIERS_FAILURE,
         payload: error
@@ -87,7 +87,7 @@ export const getUserTier = (address: string, forceUsingEther: string = 'eth') =>
         payload: userInfo,
       });
 
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: sotaTiersActions.USER_TIER_FAILURE,
         payload: error
@@ -135,7 +135,7 @@ export const getUserInfo = (address: string, forceUsingEther: string = 'eth', to
       //   payload: tokenStakes,
       // });
 
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: sotaTiersActions.USER_INFO_FAILURE,
         payload: error
@@ -168,7 +168,7 @@ export const getUserInfo = (address: string, forceUsingEther: string = 'eth', to
 //         dispatch(getUserInfo(address || ''));
 //       }
 //       dispatch(alertSuccess('You have successfully staked.'));
-//     } catch (error) {
+//     } catch (error: any) {
 //       dispatch(alertFailure("Transaction submited failure"))
 
 //       dispatch({
@@ -202,7 +202,7 @@ export const getUserInfo = (address: string, forceUsingEther: string = 'eth', to
 //       }
 //       dispatch(alertSuccess('You have successfully unstaked.'));
 
-//     } catch (error) {
+//     } catch (error: any) {
 //       dispatch(alertFailure("Transaction submit failure"))
 //       dispatch({
 //         type: sotaTiersActions.WITHDRAW_FAILURE,
@@ -236,7 +236,7 @@ export const getUserInfo = (address: string, forceUsingEther: string = 'eth', to
 //         payload: result,
 //       });
 
-//     } catch (error) {
+//     } catch (error: any) {
 //       dispatch({
 //         type: sotaTiersActions.WITHDRAW_FEE_FAILURE,
 //         payload: error
@@ -279,7 +279,7 @@ export const getUserInfo = (address: string, forceUsingEther: string = 'eth', to
 //         payload: result,
 //       });
 
-//     } catch (error) {
+//     } catch (error: any) {
 //       dispatch({
 //         type: sotaTiersActions.WITHDRAW_PERCENT_FAILURE,
 //         payload: error
@@ -322,7 +322,7 @@ export const getUserInfo = (address: string, forceUsingEther: string = 'eth', to
 //         payload: result,
 //       });
 
-//     } catch (error) {
+//     } catch (error: any) {
 //       dispatch({
 //         type: sotaTiersActions.RATES_FAILURE,
 //         payload: error

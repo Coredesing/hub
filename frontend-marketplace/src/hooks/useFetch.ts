@@ -20,7 +20,7 @@ const useFetch = <T>(uri: string | undefined, suspendRender: any = false, config
       response.data && setData(response?.data?.data);
 
       setLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       setLoading(false);
       setError(error.message);
     }
@@ -43,14 +43,13 @@ export const useFetchV1 = <T>(uri: string | undefined, isCall: boolean = true, c
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<T | undefined>(undefined);
   const [error, setError] = useState<string>('');
-
   const fetchDataFromUri = useCallback(async () => {
     try {
       const response = await axios.get(uri as string, config) as any;
       response.data && ('data' in response.data) && setData(response?.data?.data);
 
       setLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       setLoading(false);
       setError(error.message);
     }

@@ -42,7 +42,7 @@ const useApiSignature = () => {
         token: tokenAddress,
       })
       await signMessage();
-    } catch (error) {
+    } catch (error: any) {
       dispath(alertFailure("Something went wrong when sign message"));
       setError("Something went wrong when sign message")
     }
@@ -64,7 +64,7 @@ const useApiSignature = () => {
         setError("Something went wrong when sign message")
       }
       setWalletSignature('')
-    } catch (error) {
+    } catch (error: any) {
       setWalletSignature('')
       dispath(alertFailure("Something went wrong when sign message"));
       setError("Something went wrong when sign message")

@@ -270,7 +270,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                 );
                 setOwnedBox(+myNumBox);
                 setRecallMyBox(false);
-            } catch (error) {
+            } catch (error: any) {
                 console.log(error);
             }
         };
@@ -368,7 +368,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                             totalSold: new BigNumber('totalSold' in response ? response.totalSold : 0).toString(),
                         }
                         res({ ...b, subBoxId, ...result });
-                    } catch (error) {
+                    } catch (error: any) {
                         rej(error)
                     }
                 })))
@@ -416,14 +416,14 @@ const MysteryBox = ({ id, ...props }: any) => {
                         Object.assign(collection, infoBoxType);
                         collection.icon = infoBoxType.image;
                         collection.price = infoBoxType.price;
-                    } catch (error) {
+                    } catch (error: any) {
                         collection.icon = 'default.img';
                     }
                     arrCollections.push(collection);
                 }
             }
             setCollections(arrCollections);
-        } catch (error) {
+        } catch (error: any) {
             console.log('error', error)
             console.error('Something went wrong when show collections');
         } finally {
@@ -500,7 +500,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                 dispatch(alertFailure(resObj.message))
                 setApplyingWhitelist(false);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
         }
     }
@@ -669,7 +669,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                 setTokenAllowance(numAllowance);
                 setIsApproving(false);
             }
-        } catch (err) {
+        } catch (err: any) {
             console.log('err', err)
             // dispatch(alertFailure('Hmm, Something went wrong. Please try again'));
             setIsApproving(false);

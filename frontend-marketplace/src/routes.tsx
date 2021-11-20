@@ -13,7 +13,9 @@ import ErrorBoundary from './components/Base/ErrorBoundary';
 //@ts-ignore
 import { NotificationContainer, NotificationManager } from 'react-notifications'
 import 'react-notifications/lib/notifications.css';
-import Ticket from './pages/Ticket';
+import Ticket from '@pages/Ticket';
+import Marketplace from '@pages/Marketplace';
+import Collection from '@pages/Collection';
 import AppContainer from './AppContainer';
 
 /**
@@ -115,7 +117,9 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
             render={() => <Redirect to={`${'/home'}`} />}
           /> */}
 
-                    <Route exact path={'/marketplace'} component={Ticket} />
+                    <Route exact path={'/collections/:id'} component={Ticket} />
+                    <Route exact path={'/collections'} component={Collection} />
+                    <Route exact path={'/'} component={Marketplace} />
                 </Switch>
             </div>
         </AppContext.Provider>

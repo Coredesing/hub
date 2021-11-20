@@ -43,7 +43,7 @@ const useUserRemainTokensClaim = (
           // tokenDecimals: tokenDetails.decimals,
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
     }
   }, [appChainID, connector, poolAddress, ableToFetchFromBlockchain]);

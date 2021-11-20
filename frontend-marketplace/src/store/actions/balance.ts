@@ -58,7 +58,7 @@ export const getBalance = (loginUser: string) => {
         payload: result,
       });
 
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: balanceActions.BALANCE_FAILURE,
         payload: error

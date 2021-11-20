@@ -174,7 +174,7 @@ export const getTokenSold = async (pool: any) => {
       result = await contract.methods.tokenSold().call();
       result = convertFromWei(result.toString());
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
   }
   return result;

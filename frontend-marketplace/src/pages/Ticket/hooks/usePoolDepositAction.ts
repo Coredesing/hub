@@ -170,7 +170,7 @@ const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount
         setTokenDepositSuccess(true);
 
       }
-    } catch (err) {
+    } catch (err: any) {
       console.log('[ERROR] - depositWithSignature:', err);
       const message = handleErrMsg(err) || TRANSACTION_ERROR_MESSAGE;
       dispatch(alertFailure(message));
@@ -190,7 +190,7 @@ const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount
         setTokenDepositSuccess(false);
 
         await signMessage();
-      } catch (err) {
+      } catch (err: any) {
         console.log('[ERROR] - deposit:', err);
         const message = handleErrMsg(err) || TRANSACTION_ERROR_MESSAGE;
         dispatch(alertFailure(message));

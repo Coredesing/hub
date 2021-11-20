@@ -30,7 +30,7 @@ export const settingAppNetwork = (networkType: string, updatedVal: string | unde
         throw new Error("Wrong update network type!");
       }
 
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: appNetworkActions.APP_NETWORKS_SETTING_ERROR,
         payload: error
@@ -46,7 +46,7 @@ export const settingCurrentConnector = (connectorName: string | undefined) => {
         type: appNetworkActions.CONNECTOR_SETTING_SUCCESS,
         payload: connectorName 
       })
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: appNetworkActions.CONNECTOR_SETTING_ERROR,
         payload: error

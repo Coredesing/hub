@@ -22,7 +22,8 @@ export const userAlreadyExists = async (ethAddress: string, isInvestor: boolean 
     }
     
     return false;
-  } catch (error) {
+  } catch (error: any) {
     return false;
   }
 };
+

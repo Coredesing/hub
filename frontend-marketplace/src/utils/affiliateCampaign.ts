@@ -22,7 +22,7 @@ export const isOwnerOfReferral = async (ethLink: string, tokenAddress: string, o
     }
 
     return registerCampaign.registeredBy.toLowerCase() === owner.toLowerCase();
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
   }
 }

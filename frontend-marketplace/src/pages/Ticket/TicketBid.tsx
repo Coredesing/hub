@@ -180,7 +180,7 @@ const ContentNFTBox = ({ id, ...props }: any) => {
                 );
                 setOwnedBidStaked(numStaked);
                 setRefreshNumStaked(false);
-            } catch (error) {
+            } catch (error: any) {
                 console.log(error);
             }
         };
@@ -324,7 +324,7 @@ const ContentNFTBox = ({ id, ...props }: any) => {
                 );
                 setIsApproving(false);
             }
-        } catch (err) {
+        } catch (error: any) {
             dispatch(alertFailure('Hmm, Something went wrong. Please try again'));
             setIsApproving(false);
         }

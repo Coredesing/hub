@@ -31,7 +31,7 @@ export const getAllowance = (owner: string) => {
         type: sotaTokenActions.ALLOWANCE_SUCCESS,
         payload: result,
       });
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: sotaTokenActions.ALLOWANCE_FAILURE,
         payload: error
@@ -57,7 +57,7 @@ export const approve = (address: string | null | undefined, library: Web3Provide
         dispatch(getAllowance(address || ''));
       }
 
-    } catch (error) {
+    } catch (error: any) {
       console.log(error)
       dispatch(alertFailure("Transaction submit failure"))
       dispatch({

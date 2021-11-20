@@ -29,7 +29,7 @@ const useOrderBox = ({ poolId }: PoolDepositActionParams) => {
         setOrderBoxLoading(true);
 
         await signMessage();
-      } catch (err) {
+      } catch (error: any) {
         setOrderBoxLoading(false);
         dispatch(alertSuccess("Error when signing message"));
       }

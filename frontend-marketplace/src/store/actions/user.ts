@@ -171,7 +171,7 @@ export const login = (connectedAccount: string, library: Web3Provider) => {
           console.log(signature);
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('ERROR Login: ', error);
       dispatch(alertFailure(error.message));
       dispatchErrorWithMsg(dispatch, userActions.INVESTOR_LOGIN_FAILURE, '');
@@ -255,7 +255,7 @@ export const login = (connectedAccount: string, library: Web3Provider) => {
 //           }
 //         });
 //       }
-//     } catch (error) {
+//     } catch (error: any) {
 //       console.log('ERROR Register: ', error);
 //       dispatch(alertFailure(error.message));
 //       dispatchErrorWithMsg(dispatch, userActions.INVESTOR_REGISTER_FAILURE, '');
@@ -280,7 +280,7 @@ export const connectWallet = () => {
       } else {
         dispatch(logout());
       }
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: userActions.USER_CONNECT_WALLET_FAILURE,
         payload: error
@@ -309,7 +309,7 @@ export const getUserDetail = () => {
           payload: resObj.message
         })
       }
-    } catch (error) {
+    } catch (error: any) {
       dispatch({
         type: userActions.USER_PROFILE_FAILURE,
         payload: error
@@ -370,7 +370,7 @@ export const updateUserProfile = (updatedUser: UserProfileProps) => {
           }
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       dispatchErrorWithMsg(dispatch, userActions.USER_PROFILE_UPDATE_FAILURE, error.message);
     }
   }
@@ -446,7 +446,7 @@ export const joinPool = (connectedAccount: string, library: Web3Provider, poolId
           console.log(signature);
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('ERROR Login: ', error);
       dispatch(alertFailure(error.message));
       dispatchErrorWithMsg(dispatch, userActions.INVESTOR_LOGIN_FAILURE, '');

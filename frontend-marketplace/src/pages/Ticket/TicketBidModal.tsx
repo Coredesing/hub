@@ -176,7 +176,7 @@ const TicketBidModal = ({ open, bidInfo = {}, ownedBidStaked = {}, token = {}, .
         balance = commaNumber(+(balance).toFixed(4) * 10000 / 10000) || '0';
         setBalance(balance);
         setRenewBalance(false);
-      } catch (error) {
+      } catch (error: any) {
         console.log(error);
       }
     }

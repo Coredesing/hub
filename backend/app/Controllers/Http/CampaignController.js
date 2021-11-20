@@ -384,20 +384,6 @@ class CampaignController {
 
         // if user not in winner list then check on reserved list
         if (!isFreeBuyTime && !winner) {
-        //   const reserved = await (new ReservedListService()).findOneByFilter({ wallet_address: userWalletAddress, campaign_id });
-        //   if (!reserved) {
-        //     return HelperUtils.responseBadRequest("You did not win this time");
-        //   }
-        //   // check time start buy for tier
-        //   if (reserved.start_time > current) {
-        //     return HelperUtils.responseBadRequest('Invalid time');
-        //   }
-        //   if (reserved.end_time < current) {
-        //     return HelperUtils.responseBadRequest("Invalid time");
-        //   }
-        //   // set min, max buy amount of user
-        //   minBuy = reserved.min_buy;
-        //   maxBuy = reserved.max_buy;
           return HelperUtils.responseBadRequest("You did not win this time");
         }
       }

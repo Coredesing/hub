@@ -256,7 +256,7 @@ const MysteryBox = ({ id, ...props }: any) => {
     }, [setOpenModalTx]);
 
     useEffect(() => {
-        if(!connectedAccount) {
+        if (!connectedAccount) {
             setOwnedBox(0);
             return;
         }
@@ -504,8 +504,18 @@ const MysteryBox = ({ id, ...props }: any) => {
             console.log(error)
         }
     }
+    const [isRedirectCompetition, setRedirectCompetition] = useState(false);
+    useEffect(() => {
+        if(countdown.isWhitelist || countdown.isUpcoming) {
+            setRedirectCompetition(false);
+        }
+    }, [connectedAccount, countdown]);
+    const onJoinCompetition = (link: string) => {
+        setRedirectCompetition(true);
+        window.open(link);
+    }
     const [recallBoxOrdered, setRecallBoxOrdered] = useState(true);
-    const { data: boxesOrdered = {} as any } = useFetchV1<boolean>(`/pool/${infoTicket?.id}/nft-order?wallet_address=${connectedAccount}`, !!(connectedAccount && 'id' in infoTicket) && recallBoxOrdered);
+    const { data: boxesOrdered = {} as any, loading: loadingBoxOrdered } = useFetchV1<boolean>(`/pool/${infoTicket?.id}/nft-order?wallet_address=${connectedAccount}`, !!(connectedAccount && 'id' in infoTicket) && recallBoxOrdered);
     useEffect(() => {
         if (boxesOrdered && 'amount' in boxesOrdered) {
             setRecallBoxOrdered(false);
@@ -702,7 +712,7 @@ const MysteryBox = ({ id, ...props }: any) => {
         return +tokenAllowance > 0;
     };
 
-    const disabledBuyNow = +numBoxBuy < 1 || !isKYC || lockWhenBuyBox || !connectedAccount || loadingUserTier || !_.isNumber(userTier) || (infoTicket?.min_tier > 0 && (userTier < infoTicket.min_tier));
+    const disabledBuyNow = +numBoxBuy < 1 || isKYC || lockWhenBuyBox || !connectedAccount || loadingUserTier || !_.isNumber(userTier) || (infoTicket?.min_tier > 0 && (userTier < infoTicket.min_tier));
     const isShowBtnApprove = connectedAccount && !tokenAllowanceLoading && tokenAllowance !== undefined && !isAccApproved(tokenAllowance as number) && tokenToApprove?.neededApprove;
     const isShowBtnBuy =
         (connectedAccount && !checkingKyc && !loadingJoinpool && countdown.isSale && ((countdown.isPhase1 && (alreadyJoinPool || joinPoolSuccess)) || countdown.isPhase2)) &&
@@ -927,17 +937,28 @@ const MysteryBox = ({ id, ...props }: any) => {
                                             }
 
                                             {
-                                                (connectedAccount && !checkingKyc && !loadingJoinpool && !alreadyJoinPool && !joinPoolSuccess) && (countdown.isWhitelist || countdown.isUpcoming) &&
-                                                <ButtonBase color="green"
-                                                    onClick={countdown.isWhitelist ? onApplyWhitelist : undefined}
-                                                    isLoading={isApplyingWhitelist}
-                                                    disabled={countdown.isUpcoming || alreadyJoinPool || poolJoinLoading || isApplyingWhitelist || !isKYC || (_.isNumber(userTier) && (userTier < infoTicket.min_tier))}
-                                                    className="mt-0-important text-transform-unset w-full">
-                                                    {(alreadyJoinPool) ? 'Applied Whitelist' : 'Apply Whitelist'}
-                                                </ButtonBase>
+                                                (countdown.isWhitelist || countdown.isUpcoming) && !loadingJoinpool && <>
+                                                    {
+                                                        !isRedirectCompetition && +infoTicket.is_private === 3 && infoTicket.socialRequirement?.gleam_link && !alreadyJoinPool && !joinPoolSuccess ?
+                                                            <ButtonBase color="red"
+                                                                onClick={() => onJoinCompetition(infoTicket.socialRequirement.gleam_link)}
+                                                                isLoading={isApplyingWhitelist}
+                                                                className="mt-0-important text-transform-unset w-full">
+                                                                Join Competition
+                                                            </ButtonBase> :
+                                                            (connectedAccount && !checkingKyc && !alreadyJoinPool && !joinPoolSuccess) &&
+                                                            <ButtonBase color="green"
+                                                                onClick={countdown.isWhitelist ? onApplyWhitelist : undefined}
+                                                                isLoading={isApplyingWhitelist}
+                                                                disabled={countdown.isUpcoming || alreadyJoinPool || poolJoinLoading || isApplyingWhitelist || !isKYC || (_.isNumber(userTier) && (userTier < infoTicket.min_tier))}
+                                                                className="mt-0-important text-transform-unset w-full">
+                                                                {(alreadyJoinPool) ? 'Applied Whitelist' : 'Apply Whitelist'}
+                                                            </ButtonBase>
+                                                    }
+                                                </>
                                             }
                                             {
-                                                (connectedAccount && !checkingKyc && !loadingJoinpool && (alreadyJoinPool || joinPoolSuccess)) && countdown.isWhitelist &&
+                                                (connectedAccount && !checkingKyc && !loadingBoxOrdered && !loadingJoinpool && (alreadyJoinPool || joinPoolSuccess)) && countdown.isWhitelist &&
                                                 <ButtonBase
                                                     color="green"
                                                     onClick={(alreadyJoinPool || joinPoolSuccess) && isKYC ? onShowModalOrderBox : undefined}

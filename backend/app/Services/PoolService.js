@@ -233,25 +233,15 @@ class PoolService {
   }
 
   async getCompleteSalePoolsV3(filterParams) {
-    const limit = filterParams.limit ? filterParams.limit : 100000;
+    const limit = filterParams.limit ? filterParams.limit : 20;
     const page = filterParams.page ? filterParams.page : 1;
     filterParams.limit = limit;
     filterParams.page = page;
+    if (filterParams.limit > 20) {
+      filterParams.limit = 20
+    }
 
-    // Sample Filter SQL: CompleteSalePools
-    // `actual_finish_time`: field will maintaining in /app/Tasks/UpdateClaimablePoolInformationTask
-    // select *
-    //   from `campaigns`
-    //   where
-    //     `is_display` = '1'
-    //     and (`campaign_status` in ('Filled', 'Ended'))
-    //     or (`campaign_status` = 'Claimable' and `actual_finish_time` < '1625336933')
-    //     order by `priority` DESC, `finish_time` ASC
-    //     limit 100000;
-
-    const now = moment().unix();
     let pools = await this.buildQueryBuilder(filterParams)
-      .with('campaignClaimConfig')
       .where('campaign_status', Const.POOL_STATUS.ENDED)
       .orderBy('priority', 'DESC')
       .orderBy('finish_time', 'DESC')

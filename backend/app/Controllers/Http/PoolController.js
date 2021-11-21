@@ -536,6 +536,7 @@ class PoolController {
         'seriesContentConfig',
         'boxTypesConfig',
         'acceptedTokensConfig',
+        'airdrop_network',
       ]);
 
       if (publicPool && publicPool.token_type === CONST.TOKEN_TYPE.MYSTERY_BOX) {

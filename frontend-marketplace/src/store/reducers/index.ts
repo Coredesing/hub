@@ -16,6 +16,7 @@ import {
 } from './sota-tiers'
 import { messageReducer } from './message';
 import {claimUserInfoReducer} from "./claim-user-info";
+import { assetsAccountReducer } from './asset-account';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
   messages: messageReducer,
   alertTypeIsPush: getTypeIsPushNotiReducer,
   delayTiers: getDelayTiersReducer,
+  assetsAccount: assetsAccountReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

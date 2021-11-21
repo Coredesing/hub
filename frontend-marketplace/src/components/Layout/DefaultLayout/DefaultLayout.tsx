@@ -6,7 +6,7 @@ import { useCommonStyle } from '../../../styles';
 import { Button, Link as LinkMui, useMediaQuery, useTheme } from "@material-ui/core";
 import useStyles from './styles';
 import { ChainDefault, GAMEFI_ADDRESS } from '../../../constants/network';
-import { getEtherscanTransactionAddress } from "../../../utils/network";
+import { getExplorerTransactionAddress } from "../../../utils/network";
 const DefaultLayout = ({ style, children, hiddenFooter = false, ...props }: any) => {
   const theme = useTheme();
   const matchXs = useMediaQuery(theme.breakpoints.down("xs"));
@@ -39,7 +39,7 @@ const DefaultLayout = ({ style, children, hiddenFooter = false, ...props }: any)
                 <h3>
                   <img src={ChainDefault.icon} alt="" />
                   <span>{ChainDefault.name} </span>
-                  <LinkMui className={styles.link} target="_blank" href={getEtherscanTransactionAddress({ appChainID: ChainDefault.id, address: GAMEFI_ADDRESS })}>{GAMEFI_ADDRESS}</LinkMui>
+                  <LinkMui className={styles.link} target="_blank" href={getExplorerTransactionAddress({ appChainID: ChainDefault.id, address: GAMEFI_ADDRESS })}>{GAMEFI_ADDRESS}</LinkMui>
                 </h3>
               </div>
             </div>

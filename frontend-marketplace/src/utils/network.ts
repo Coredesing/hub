@@ -27,7 +27,7 @@ export const getEtherscanTransactionLink = ({ appChainID, transactionHash }: any
   // }
 };
 
-export const getEtherscanTransactionAddress = ({ appChainID, address }: any) => {
+export const getExplorerTransactionAddress = ({ appChainID, address }: any) => {
   const info = getNetworkInfo(appChainID);
   const explorerUrl = info.details.blockExplorerUrls[0];
   return `${explorerUrl}/address/${address}`;

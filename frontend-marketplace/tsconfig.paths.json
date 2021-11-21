@@ -20,6 +20,7 @@
             "@hooks/*": [
                 "src/hooks/*"
             ],
+            "@utils/": ["src/utils/"],
             "@utils/*": ["src/utils/*"],
             "@pages/*": ["src/pages/*"],
             "@styles/*": ["src/styles/*"],

@@ -298,9 +298,12 @@ export const isErc721 = (type: string) => type === TOKEN_TYPE.ERC721;
 export const isErc20 = (type: string) => type === TOKEN_TYPE.ERC20;
 export const escapeRegExp = (string: string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-export const cvtAddressToStar = (address: string) => {
-  const stars = '**********';
-  return address.slice(0, 14) + stars + address.slice(-14);
+export const cvtAddressToStar = (address: string, symbol: string = '*', lengHide = 14) => {
+  let stars = '';
+  for(let i = 0; i < 10; i++) {
+    stars += symbol;
+  }
+  return address.slice(0, lengHide) + stars + address.slice(-(lengHide));
 }
 export const calcPercentRate = (input: number, total: number) => {
   const percent = ((input * 100) / total);

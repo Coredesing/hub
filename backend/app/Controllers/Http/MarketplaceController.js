@@ -44,9 +44,13 @@ class MarketplaceController {
 
     try {
       let data = await (new MarketplaceService).getCollectionByAddress(address);
-      return HelperUtils.responseSuccess(data);
+      if (!data) {
+        return HelperUtils.responseNotFound()
+      }
+
+      return HelperUtils.responseSuccess(data)
     } catch (e) {
-      return HelperUtils.responseErrorInternal();
+      return HelperUtils.responseErrorInternal()
     }
   }
 

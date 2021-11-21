@@ -3,10 +3,10 @@ const kue = use('Kue');
 const BigNumber = use('bignumber.js');
 const HelperUtils = use('App/Common/HelperUtils')
 const MarketplaceEventModel = use('App/Models/MarketplaceNFTListedEvent')
+const RedisMarketplaceUtils = use('App/Common/RedisMarketplaceUtils')
 
-
-const priority = 'high'; // Priority of job, can be low, normal, medium, high or critical
-const attempts = 5; // Number of times to attempt job if it fails
+const priority = 'medium'; // Priority of job, can be low, normal, medium, high or critical
+const attempts = 3; // Number of times to attempt job if it fails
 const remove = true; // Should jobs be automatically removed on completion
 const jobFn = job => {
   job.backoff();
@@ -17,6 +17,8 @@ const EVENT_TYPE_DELISTED = 'TokenDelisted'
 const EVENT_TYPE_BOUGHT = 'TokenBought'
 const EVENT_TYPE_OFFERED = 'TokenOffered'
 const EVENT_TYPE_CANCEL_OFFERED = 'TokenOfferCanceled'
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+const STEP = 5000
 
 // Listed:
 // - SC data: tokensOnSale[tokenContract][tokenId]
@@ -29,16 +31,11 @@ const EVENT_TYPE_CANCEL_OFFERED = 'TokenOfferCanceled'
 // - Event: TokenOffered(tokenContract, tokenId, buyer, currency, offerValue);
 // - Event: TokenOfferCanceled(tokenContract, tokenId, buyer);
 
-// Offers: tokenContract, tokenId, buyer, currency, value (time, hash, index)
-// List: tokenContract, tokenId, owner, currency, value
-// Buy: tokenContract, tokenId, owner, seller, currency, value
-// Delist: tokenContract, tokenId, owner, seller,
-
 class FetchMarketplaceEvent {
   // If this getter isn't provided, it will default to 1.
   // Increase this number to increase processing concurrency.
   static get concurrency() {
-    return 10
+    return 1
   }
 
   // This is required. This is a unique key used to identify this job.
@@ -49,103 +46,154 @@ class FetchMarketplaceEvent {
   // This is where the work is done.
   async handle({ event_type, from, to }) {
     try {
-      const provider = await HelperUtils.getStakingProvider()
-      console.log(`fetch ${event_type} from ${from} to ${to} in marketplace`)
-      const instance = await HelperUtils.getMarketplaceInstance()
-      const ONE_UNIT = new BigNumber(1e9).multipliedBy(new BigNumber(1e9))
-
-      const events = await instance.getPastEvents(event_type, {
-        fromBlock: from,
-        toBlock: to,
-      })
-      for (const event of events) {
-        try {
-          const blockData = await provider.eth.getBlock(event.blockNumber)
-
-          // event TokenListed(
-          //         address indexed tokenContract,
-          //         uint256 indexed tokenId,
-          //         address tokenOwner,
-          //         address currency,
-          //         uint256 price
-          //     );
-          //
-          //     event TokenDelisted(
-          //         address indexed tokenContract,
-          //         uint256 indexed tokenId,
-          //         address tokenOwner
-          //     );
-          // vent TokenBought(
-          //         address indexed tokenContract,
-          //         uint256 indexed tokenId,
-          //         address buyer,
-          //         address seller,
-          //         address currency,
-          //         uint256 price
-          //     );
-          //
-          //     event TokenOffered(
-          //         address indexed tokenContract,
-          //         uint256 indexed tokenId,
-          //         address buyer,
-          //         address currency,
-          //         uint256 amount
-          //     );
-          //
-          //     event TokenOfferCanceled(
-          //         address indexed tokenContract,
-          //         uint256 indexed tokenId,
-          //         address buyer
-          //     );
-
-          let data = new MarketplaceEventModel();
-          data.transaction_hash = event.transactionHash;
-          data.transaction_index = event.transactionIndex;
-
-          console.log('data', event)
-          switch(event_type) {
-            case EVENT_TYPE_LISTED:
-              break;
-            case EVENT_TYPE_DELISTED:
-              break;
-            case EVENT_TYPE_BOUGHT:
-              break;
-            case EVENT_TYPE_OFFERED:
-              break;
-            case EVENT_TYPE_CANCEL_OFFERED:
-              break;
-            default:
-              console.log('event not support', event_type)
-              return
-          }
-
-          // data.wallet_address = event.returnValues.account;
-          // data.event_type = event_type;
-          // data.block_number = event.blockNumber;
-          // data.dispatch_at = blockData.timestamp;
-          // data.raw_amount = event.returnValues.amount;
-          // data.amount = parseFloat(new BigNumber(data.raw_amount).dividedBy(ONE_UNIT).toFixed(6)) * sign;
-          //
-          // await data.save();
-          //
-          // const tierInfo = await HelperUtils.getUserTierSmart(event.returnValues.account);
-          // await RedisUtils.createRedisUserTierBalance(event.returnValues.account, tierInfo);
-          //
-          // if (HelperUtils.getLegendIdByOwner(event.returnValues.account)) {
-          //   await RedisLegendSnapshotUtils.setRedisLegendLastTime(event.returnValues.account, blockData.timestamp);
-          // }
-        }
-        catch (e) {}
+      if (!isNaN(from)) {
+        from = parseInt(from)
       }
+      if (!isNaN(to)) {
+        to = parseInt(to)
+      }
+
+      const provider = await HelperUtils.getStakingProvider()
+      const latestBlockNumber = (await provider.eth.getBlockNumber()) - 1
+      if (!to || to > latestBlockNumber || to < from) {
+        to = latestBlockNumber
+      }
+
+      if (from > latestBlockNumber) {
+        return
+      }
+
+      // fetch staking
+      for (let index = from; index < to; index += STEP) {
+        let tmp = index + STEP
+        if (tmp >= to) {
+          tmp = to
+        }
+
+        await this.fetchEvents(provider, event_type, index, tmp)
+      }
+
+      await RedisMarketplaceUtils.setRedisMarketplaceBlockNumber({current: to})
     }
     catch (e) {
+      console.log('exception', e)
     } finally {
+    }
+  }
+
+  async fetchEvents(provider, event_type, from, to) {
+    console.log(`fetch ${event_type} from ${from} to ${to} in marketplace`)
+    const instance = await HelperUtils.getMarketplaceInstance()
+    const events = await instance.getPastEvents(event_type, {
+      fromBlock: from,
+      toBlock: to,
+    })
+    for (const event of events) {
+      try {
+        const blockData = await provider.eth.getBlock(event.blockNumber)
+
+        let data = new MarketplaceEventModel();
+        data.transaction_hash = event.transactionHash;
+        data.transaction_index = event.transactionIndex;
+        data.block_number = event.blockNumber;
+        data.dispatch_at = blockData.timestamp;
+        data.event_type = event_type;
+        switch(event_type) {
+          case EVENT_TYPE_LISTED:
+            data.token_address = event.returnValues.tokenContract
+            data.buyer = ZERO_ADDRESS
+            data.seller = event.returnValues.tokenOwner
+            data.currency = event.returnValues.currency
+            data.token_id = parseInt(event.returnValues.tokenId)
+            data.raw_amount = event.returnValues.price
+            data.value = new BigNumber(data.raw_amount)
+            data.value = data.value.dividedBy(new BigNumber(1e9).multipliedBy(new BigNumber(1e9)))
+            data.value = data.value.toFixed(3)
+            try {
+              data.amount = parseFloat(data.value)
+            } catch (e) {
+              data.amount = 0.0
+            }
+            break;
+          case EVENT_TYPE_DELISTED:
+            data.token_address = event.returnValues.tokenContract
+            data.buyer = ZERO_ADDRESS
+            data.seller = event.returnValues.tokenOwner
+            data.currency = ZERO_ADDRESS
+            data.token_id = parseInt(event.returnValues.tokenId)
+            data.raw_amount = "0"
+            data.value = "0"
+            data.amount = 0.0
+
+            // clear finish
+            break;
+          case EVENT_TYPE_BOUGHT:
+            data.token_address = event.returnValues.tokenContract
+            data.buyer = event.returnValues.buyer
+            data.seller = event.returnValues.seller
+            data.currency = event.returnValues.currency
+            data.token_id = parseInt(event.returnValues.tokenId)
+            data.raw_amount = event.returnValues.price
+            data.value = new BigNumber(data.raw_amount)
+            data.value = data.value.dividedBy(new BigNumber(1e9).multipliedBy(new BigNumber(1e9)))
+            data.value = data.value.toFixed(3)
+            try {
+              data.amount = parseFloat(data.value)
+            } catch (e) {
+              data.amount = 0.0
+            }
+            break;
+          case EVENT_TYPE_OFFERED:
+            data.token_address = event.returnValues.tokenContract
+            data.buyer = event.returnValues.buyer
+            data.seller = ZERO_ADDRESS
+            data.currency = event.returnValues.currency
+            data.token_id = parseInt(event.returnValues.tokenId)
+            data.raw_amount = event.returnValues.amount
+            data.value = new BigNumber(data.raw_amount)
+            data.value = data.value.dividedBy(new BigNumber(1e9).multipliedBy(new BigNumber(1e9)))
+            data.value = data.value.toFixed(3)
+            try {
+              data.amount = parseFloat(data.value)
+            } catch (e) {
+              data.amount = 0.0
+            }
+            break;
+          case EVENT_TYPE_CANCEL_OFFERED:
+            data.token_address = event.returnValues.tokenContract
+            data.buyer = event.returnValues.buyer
+            data.seller = ZERO_ADDRESS
+            data.currency = ZERO_ADDRESS
+            data.token_id = parseInt(event.returnValues.tokenId)
+            data.raw_amount = "0"
+            data.value = "0"
+            data.amount = 0.0
+
+            // clear finish
+            break;
+          default:
+            console.log('event not supported', event_type)
+            return
+        }
+
+        // check existed before save
+        const tx = await MarketplaceEventModel.query()
+          .where('transaction_hash', data.transaction_hash)
+          .where('transaction_index', data.transaction_index)
+          .where('event_type', event_type).first()
+
+        if (!tx) {
+          await data.save();
+        }
+      }
+      catch (e) {
+        console.log('internal transaction', e)
+      }
     }
   }
 
   // Dispatch
   static doDispatch(data) {
-    console.log('Dispatch ExportUser: ', data);
     kue.dispatch(this.key, data, { priority, attempts, remove, jobFn });
   }
 }

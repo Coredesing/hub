@@ -92,6 +92,25 @@ const deleteRedisMarketplaceCollectionDetail = (id) => {
   }
 };
 
+/*
+  Marketplace block number
+ */
+const getRedisKeyMarketplaceBlockNumber = () => {
+  return `marketplace_block_number`;
+};
+
+const getRedisMarketplaceBlockNumber = async () => {
+  return await Redis.get(getRedisKeyMarketplaceBlockNumber());
+};
+
+const setRedisMarketplaceBlockNumber = async (data) => {
+  return await Redis.set(getRedisKeyMarketplaceBlockNumber(), JSON.stringify(data));
+};
+
+const existRedisMarketplaceBlockNumber = async () => {
+  return await Redis.exists(getRedisKeyMarketplaceBlockNumber());
+};
+
 module.exports = {
   // collections
   getRedisMarketplaceTopCollections,
@@ -109,4 +128,9 @@ module.exports = {
   setRedisMarketplaceCollectionDetail,
   existRedisMarketplaceCollectionDetail,
   deleteRedisMarketplaceCollectionDetail,
+
+  // marketplace block number
+  getRedisMarketplaceBlockNumber,
+  setRedisMarketplaceBlockNumber,
+  existRedisMarketplaceBlockNumber,
 };

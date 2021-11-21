@@ -25,6 +25,9 @@ class UserService {
     if (params.wallet_address) {
       builder = builder.where('wallet_address', params.wallet_address);
     }
+    if (params.solana_address) {
+      builder = builder.where('solana_address', params.solana_address);
+    }
     if (params.type) {
       builder = builder.where('type', params.type);
     }

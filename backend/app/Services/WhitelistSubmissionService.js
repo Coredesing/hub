@@ -75,6 +75,8 @@ class WhitelistSubmissionService {
       campaign_id: params.campaign_id,
       user_telegram: params.user_telegram,
       user_twitter: params.user_twitter,
+      solana_address: params.solana_address,
+      terra_address: params.terra_address,
       self_retweet_post_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
       partner_retweet_post_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
     });

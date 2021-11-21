@@ -140,7 +140,7 @@ const RejectedAlert = () => {
 }
 
 const ApplyWhitelistModal: React.FC<any> = (props: any) => {
-  const { poolDetails, connectedAccount, alreadyJoinPool, joinPoolSuccess, joinPool, handleClose, whitelistSubmission, previousWhitelistSubmission, onCheckKyc } = props
+  const { poolDetails, connectedAccount, alreadyJoinPool, joinPoolSuccess, joinPool, handleClose, whitelistSubmission, previousWhitelistSubmission, onCheckKyc, dataUser } = props
   const styles = useStyles()
 
   const dispatch = useDispatch()
@@ -153,6 +153,12 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
 
   const [invalidTwitter, setInvalidTwitter] = useState(false)
   const [invalidTelegram, setInvalidTelegram] = useState(false)
+
+  const [ solanaAddress, setSolanaAddress] = useState();
+  console.log(dataUser)
+  useEffect(() => {
+    setSolanaAddress(dataUser?.user?.solana_address)
+  },[dataUser])
 
   useEffect(() => {
     if (!alreadyJoinPool && !joinPoolSuccess) {
@@ -192,20 +198,72 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
     setLoading(true)
     setRejectedSubmission(undefined)
 
+    let solanaSignature
+    if (poolDetails.airdropNetwork === 'solana' && solanaAddress) {
+      solanaSignature = await solanaSign(solanaAddress)
+      if (!solanaSignature) {
+        return
+      }
+    }
+
     const response = await baseRequest.post(apiRoute(`/whitelist-apply/${poolDetails.id}`), {
       wallet_address: connectedAccount,
       user_twitter: inputTwitter,
       user_telegram: inputTelegram,
+      solana_address: solanaAddress,
+      solana_signature: solanaSignature?.signature
     }) as any
     const resObj = await response.json()
     setLoading(false)
 
     if (resObj.status && resObj.status === 200) {
       handleClose()
-      joinPool()
+      joinPool(solanaSignature)
     } else {
       dispatch(alertFailure(resObj.message))
       setRejectedSubmission(resObj.data)
+    }
+  }
+
+  const solanaSign = async (address:any) => {
+    const encodedMessage = new TextEncoder().encode(process.env.REACT_APP_MESSAGE_INVESTOR_SIGNATURE);
+    // @ts-ignore
+    const provider = window.solana
+    if (!provider) {
+      dispatch(alertFailure('Phantom extension not installed'))
+      return
+    }
+    let connectWallet = await provider.connect()
+    if (connectWallet?.publicKey?.toString() !== address) {
+      dispatch(alertFailure('You have not properly connected the linked solana wallet address.'))
+      return
+    }
+    const signedMessage = await provider.request({
+      method: "signMessage",
+      params: {
+        message: encodedMessage,
+        display: "utf8",
+      },
+    });
+    return signedMessage
+  }
+
+  const handleSolanaConnect = async () => {
+    // @ts-ignore
+    const provider = window?.solana
+    if (!provider) {
+      dispatch(alertFailure('Phantom extension is not installed!'))
+      return
+    }
+    try {
+      let resp
+      resp = await provider.connect()
+      if (!resp) {
+        resp = await provider.request({ method: "connect"});
+      }
+      setSolanaAddress(resp.publicKey.toString())
+    } catch (err) {
+      dispatch(alertFailure('User rejected the request!'))
     }
   }
 
@@ -300,6 +358,34 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
                 {invalidTelegram && <div style={{ color: '#D01F36' }}>Invalid username</div>}
               </div>
             </div>
+            { poolDetails.airdropNetwork === 'solana' &&
+            <div className="input-group d-block">
+              <div className="label">Your Solana Wallet Address (will receive the airdrop) <span style={{color: '#D01F36'}}>*</span><div style={{float:"right"}}><a href="https://phantom.app/" style={{color: '#6398FF'}}>Get Phantom extension?</a></div></div>
+              {
+                !solanaAddress ?
+                    <div><Button
+                        //backgroundColor={''}
+                        onClick={handleSolanaConnect}
+                        text={'Connect Solana Wallet'}
+                        style={{
+                          width: '100%',
+                          border: '1px solid #72F34B',
+                          color: '#72F34B',
+                          padding: '13px 30px',
+                        }}
+                    />
+                      </div>
+                    :
+                    (<input
+                        type="text"
+                        disabled={alreadyJoinPool || joinPoolSuccess}
+                        value={solanaAddress}
+                        readOnly={true}
+                        maxLength={60}
+                    />)
+              }
+            </div>
+            }
           </div>
         </div>
       </DialogContent>
@@ -310,7 +396,7 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
             text={'Submit'}
             onClick={verifyAndSubmit}
             loading={loading}
-            disabled={loading || !inputTelegram || !inputTwitter}
+            disabled={loading || !inputTelegram || !inputTwitter || (poolDetails.airdropNetwork === 'solana' && !solanaAddress)}
             backgroundColor={'#72F34B'}
             style={{
               minWidth: 200,

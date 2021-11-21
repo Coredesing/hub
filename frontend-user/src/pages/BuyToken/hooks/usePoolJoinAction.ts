@@ -9,7 +9,8 @@ import useWalletSignature from '../../../hooks/useWalletSignature';
 type PoolDepositActionParams = {
   poolId?: number;
   connectedAccount?: string;
-  poolDetails?: any
+  poolDetails?: any;
+  solanaSignature?: any
 }
 
 const usePoolJoinAction = ({ poolId, poolDetails }: PoolDepositActionParams) => {
@@ -17,13 +18,15 @@ const usePoolJoinAction = ({ poolId, poolDetails }: PoolDepositActionParams) => 
   const { account, library } = useWeb3React();
   const [joinPoolSuccess, setJoinPoolSuccess] = useState<boolean>(false);
   const [poolJoinLoading, setPoolJoinLoading] = useState<boolean>(false);
+  const [solanaSignature, setSolanaSignature] = useState({publicKey: '', signature: ''})
   const { signature, signMessage, setSignature, error } = useWalletSignature();
 
-  const joinPool = useCallback(async () => {
+  const joinPool = useCallback(async (solSign:any) => {
     if (account && poolId && library) {
       try {
         setPoolJoinLoading(true);
 
+        setSolanaSignature(solSign)
         await signMessage();
       } catch (err) {
         setPoolJoinLoading(false);
@@ -51,6 +54,8 @@ const usePoolJoinAction = ({ poolId, poolDetails }: PoolDepositActionParams) => 
           signature,
           wallet_address: account,
           campaign_id: poolId,
+          solana_signature: solanaSignature?.signature,
+          solana_address: solanaSignature?.publicKey
         }, config as any) as any;
 
         if (response.data) {

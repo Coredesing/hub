@@ -6,6 +6,7 @@ const WalletAccountService = use('App/Services/WalletAccountService');
 const PoolService = use('App/Services/PoolService');
 const HelperUtils = use('App/Common/HelperUtils');
 const RedisUtils = use('App/Common/RedisUtils');
+const RedisMysteriousBoxUtils = use('App/Common/RedisMysteriousBoxUtils');
 const UserBalanceSnapshotModel = use('App/Models/UserBalanceSnapshot');
 const WhitelistUserModel = use('App/Models/WhitelistUser');
 const WhitelistService = use('App/Services/WhitelistUserService');
@@ -34,7 +35,7 @@ class PoolController {
       'claim_policy',
       'forbidden_countries',
       'freeBuyTimeSetting',
-      'seriesContentConfig', 'boxTypesConfig', 'acceptedTokensConfig'
+      'seriesContentConfig', 'boxTypesConfig', 'acceptedTokensConfig', 'airdrop_network'
     ]);
 
     const tokenInfo = inputParams.tokenInfo;
@@ -85,6 +86,7 @@ class PoolController {
       'progress_display': inputParams.progress_display,
       'lock_schedule': inputParams.lock_schedule,
       'claim_policy': inputParams.claim_policy,
+      'airdrop_network': inputParams.airdrop_network,
 
       'forbidden_countries': JSON.stringify(inputParams && inputParams.forbidden_countries || []),
     };
@@ -178,7 +180,8 @@ class PoolController {
       'freeBuyTimeSetting',
       'seriesContentConfig',
       'boxTypesConfig',
-      'acceptedTokensConfig'
+      'acceptedTokensConfig',
+      'airdrop_network'
     ]);
 
     const tokenInfo = inputParams.tokenInfo;
@@ -226,6 +229,7 @@ class PoolController {
       'progress_display': inputParams.progress_display,
       'lock_schedule': inputParams.lock_schedule,
       'claim_policy': inputParams.claim_policy,
+      'airdrop_network': inputParams.airdrop_network,
 
       'forbidden_countries': JSON.stringify((inputParams && inputParams.forbidden_countries) || []),
     };
@@ -289,6 +293,10 @@ class PoolController {
       // Delete cache
       RedisUtils.deleteRedisPoolDetail(campaignId);
       RedisUtils.deleteRedisTierList(campaignId);
+
+      if (inputParams.token_type === 'box') {
+        RedisMysteriousBoxUtils.deleteRedisMysteriousBoxes();
+      }
 
       return HelperUtils.responseSuccess(campaign);
     } catch (e) {
@@ -528,6 +536,7 @@ class PoolController {
         'seriesContentConfig',
         'boxTypesConfig',
         'acceptedTokensConfig',
+        'airdrop_network',
       ]);
 
       if (publicPool && publicPool.token_type === CONST.TOKEN_TYPE.MYSTERY_BOX) {

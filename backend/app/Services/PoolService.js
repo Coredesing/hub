@@ -17,8 +17,10 @@ const FreeBuyTimeSettingModel = use('App/Models/FreeBuyTimeSetting');
 const Const = use('App/Common/Const');
 const HelperUtils = use('App/Common/HelperUtils');
 const RedisUtils = use('App/Common/RedisUtils');
+const RedisMysteriousBoxUtils = use('App/Common/RedisMysteriousBoxUtils');
 const ConvertDateUtils = use('App/Common/ConvertDateUtils');
 const WhitelistService = use('App/Services/WhitelistUserService');
+const NFTOrderService = use('App/Services/NFTOrderService');
 
 class PoolService {
   buildQueryBuilder(params) {
@@ -179,6 +181,12 @@ class PoolService {
   }
 
   async getMysteriousBoxPoolsV3(filterParams) {
+    if (await RedisMysteriousBoxUtils.existRedisMysteriousBoxes()) {
+      let data = await RedisMysteriousBoxUtils.getRedisMysteriousBoxes()
+      data = JSON.parse(data)
+      return data
+    }
+
     const limit = filterParams.limit ? filterParams.limit : 20;
     const page = filterParams.page ? filterParams.page : 1;
     filterParams.limit = limit;
@@ -188,6 +196,10 @@ class PoolService {
       .orderBy('priority', 'DESC')
       .orderBy('start_time', 'ASC')
       .paginate(page, limit);
+
+    pools = JSON.parse(JSON.stringify(pools))
+    await RedisMysteriousBoxUtils.setRedisMysteriousBoxes(pools)
+
     return pools;
   }
 
@@ -232,34 +244,16 @@ class PoolService {
   }
 
   async getCompleteSalePoolsV3(filterParams) {
-    const limit = filterParams.limit ? filterParams.limit : 100000;
+    const limit = filterParams.limit ? filterParams.limit : 20;
     const page = filterParams.page ? filterParams.page : 1;
     filterParams.limit = limit;
     filterParams.page = page;
+    if (filterParams.limit > 20) {
+      filterParams.limit = 20
+    }
 
-    // Sample Filter SQL: CompleteSalePools
-    // `actual_finish_time`: field will maintaining in /app/Tasks/UpdateClaimablePoolInformationTask
-    // select *
-    //   from `campaigns`
-    //   where
-    //     `is_display` = '1'
-    //     and (`campaign_status` in ('Filled', 'Ended'))
-    //     or (`campaign_status` = 'Claimable' and `actual_finish_time` < '1625336933')
-    //     order by `priority` DESC, `finish_time` ASC
-    //     limit 100000;
-
-    const now = moment().unix();
     let pools = await this.buildQueryBuilder(filterParams)
-      .with('campaignClaimConfig')
-      .where(builder => {
-        builder
-          .where('campaign_status', Const.POOL_STATUS.ENDED)
-          .orWhere(builder1 => {
-            builder1
-              .where('campaign_status', Const.POOL_STATUS.CLAIMABLE)
-              .where('actual_finish_time', '<', now);
-          });
-      })
+      .where('campaign_status', Const.POOL_STATUS.ENDED)
       .orderBy('priority', 'DESC')
       .orderBy('finish_time', 'DESC')
       .paginate(page, limit);
@@ -558,9 +552,31 @@ class PoolService {
       // update priority
       if (data.status === Const.POOL_STATUS.ENDED) {
         dataUpdate.priority = 0
+
+        if (data.token_type === 'box') {
+          await RedisMysteriousBoxUtils.deleteRedisMysteriousBoxes();
+        }
       }
 
       await CampaignModel.query().where('id', pool.id).update(dataUpdate);
+      if (pool && pool.token_type === Const.TOKEN_TYPE.MYSTERY_BOX && data.status === Const.POOL_STATUS.UPCOMING) {
+        let cachedPoolDetail = await RedisUtils.getRedisPoolDetail(pool.id);
+        cachedPoolDetail = JSON.parse(cachedPoolDetail)
+        const ntfService = new NFTOrderService();
+        const orders = await ntfService.sumOrderAndRegistered(pool.id);
+        let totalOrder = 0
+        let totalRegistered = 0
+        if (orders && orders.length > 0) {
+          totalOrder = parseInt(orders[0]['sum(`amount`)'])
+        }
+        if (orders && orders.length > 0) {
+          totalRegistered = parseInt(orders[0]['count(*)'])
+        }
+        cachedPoolDetail.totalOrder = isNaN(totalOrder) ? 0 : totalOrder
+        cachedPoolDetail.totalRegistered = isNaN(totalRegistered) ? 0 : totalRegistered
+        await RedisUtils.createRedisPoolDetail(pool.id, cachedPoolDetail)
+        return
+      }
 
       if (await RedisUtils.checkExistRedisPoolDetail(pool.id)) {
         let cachedPoolDetail = await RedisUtils.getRedisPoolDetail(pool.id);

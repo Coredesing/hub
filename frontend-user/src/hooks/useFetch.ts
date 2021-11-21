@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from '../services/axios';
 
-type useFetchReturnType<T> ={
+type useFetchReturnType<T> = {
   loading: boolean;
-  error: string;
-  data: T | undefined
+  error?: string;
+  data?: T
 }
 
 const useFetch = <T>(uri: string | undefined, suspendRender: any = false, config: any = {}): useFetchReturnType<T> => {
@@ -20,7 +20,7 @@ const useFetch = <T>(uri: string | undefined, suspendRender: any = false, config
       response.data && setData(response?.data?.data);
 
       setLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       setLoading(false);
       setError(error.message);
     }
@@ -40,29 +40,28 @@ const useFetch = <T>(uri: string | undefined, suspendRender: any = false, config
 export default useFetch;
 
 export const useFetchV1 = <T>(uri: string | undefined, isCall: boolean = true, config: any = {}): useFetchReturnType<T> => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [data, setData] = useState<T | undefined>(undefined);
-  const [error, setError] = useState<string>('');
+  // const [loading, setLoading] = useState<boolean>(true);
+  // const [data, setData] = useState<T | undefined>(undefined);
+  // const [error, setError] = useState<string>('');
+  const [response, setResponse] = useState<useFetchReturnType<T>>({ loading: true, error: '' });
 
   const fetchDataFromUri = useCallback(async () => {
     try {
+      // setResponse({ loading: true });
       const response = await axios.get(uri as string, config) as any;
-      response.data && ('data' in response.data) && setData(response?.data?.data);
-
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      setError(error.message);
+      setResponse({ loading: false, data: response?.data?.data });
+      // response.data && ('data' in response.data) && setData(response?.data?.data);
+      // setLoading(false);
+    } catch (error: any) {
+      setResponse({ loading: false, error: error.message });
+      // setLoading(false);
+      // setError(error.message);
     }
   }, [uri]);
 
   useEffect(() => {
-    if(uri && isCall) fetchDataFromUri();
+    if (uri && isCall) fetchDataFromUri();
   }, [uri, isCall, fetchDataFromUri]);
 
-  return {
-    loading,
-    error,
-    data
-  }
+  return response;
 }

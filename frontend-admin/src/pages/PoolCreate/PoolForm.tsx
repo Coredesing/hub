@@ -54,6 +54,8 @@ import SocialSetting from "./Components/SocialSetting/SocialSetting";
 import FreeTimeSetting from "./Components/FreeTimeSetting/FreeTimeSetting";
 import PoolRule from "./Components/PoolRule";
 import Process from "./Components/Process";
+import AirdropNetwork from "./Components/AirdropNetwork";
+
 import {POOL_IS_PRIVATE, TOKEN_TYPE} from "../../constants";
 
 function PoolForm(props: any) {
@@ -199,6 +201,7 @@ function PoolForm(props: any) {
       buy_type: data.buyType,
       pool_type: data.poolType,
       kyc_bypass: data.kyc_bypass,
+      airdrop_network: data.airdropNetwork,
 
       // Private Pool Setting
       is_private: data.isPrivate,
@@ -258,7 +261,7 @@ function PoolForm(props: any) {
         max_bonus_free_buy: data.max_bonus_free_buy,
       }
     };
-    
+
     let response = {};
     if (isEdit) {
       response = await updatePool(submitData, poolDetail.id);
@@ -337,6 +340,7 @@ function PoolForm(props: any) {
 
       // KYC required
       kyc_bypass: data.kyc_bypass,
+      airdrop_network: data.airdropNetwork,
 
       // Token
       token_images: data.tokenImages,
@@ -393,7 +397,7 @@ function PoolForm(props: any) {
         max_bonus_free_buy: data.max_bonus_free_buy,
       }
     };
-    
+
     let response = await updatePool(submitData, poolDetail.id);
 
     return response;
@@ -541,6 +545,7 @@ function PoolForm(props: any) {
         display_price_rate: data.display_price_rate,
 
         kyc_bypass: data.kyc_bypass,
+        airdrop_network: data.airdropNetwork,
 
         // TokenInfo
         tokenInfo,
@@ -712,6 +717,12 @@ function PoolForm(props: any) {
                 errors={errors}
                 control={control}
                 watch={watch}
+              />
+
+              <AirdropNetwork
+                  poolDetail={poolDetail}
+                  setValue={setValue}
+                  control={control}
               />
 
               <KycRequired

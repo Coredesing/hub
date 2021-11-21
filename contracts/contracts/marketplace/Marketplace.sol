@@ -12,6 +12,7 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeab
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "./interfaces/IMarketplace.sol";
+import "./interfaces/IStakingContract.sol";
 
 /**
  * @title An open marketplace, enabling collectors and curators to run their own auctions or normal listing
@@ -29,6 +30,11 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
     // The address which will receive the fee
     address public vault;
 
+    // The address of GameFi
+    address public gamefi;
+
+    IStakingContract.Ranking[] public rankings;
+
     // Mapping from id to the currently running auctions
     mapping(uint256 => IMarketplace.Auction) public auctions;
 
@@ -38,10 +44,11 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
     bytes4 constant interfaceId = 0x80ac58cd; // 721 interface id
 
     CountersUpgradeable.Counter private _auctionIdTracker;
-    
-    // A mapping from NFT address to accepted currency and its floor price. 
+
+    // A mapping from NFT address to accepted currency.
     // Used to limit NFT - currency pair on the marketplace
-    mapping(address => mapping(address => uint256)) public floorPrices;
+    mapping(address => mapping(address => bool)) public allowedCurrency;
+    mapping(address => bool) public defaultCurrency;
 
     // A mapping from NFT token to its listing information
     mapping(address => mapping(uint256 => IMarketplace.ListingToken)) public tokensOnSale;
@@ -67,6 +74,7 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
         vault = _vault;
         minBidIncrementPercentage = 5;
         feePercentage = 1;
+        defaultCurrency[address(0)] = true;
     }
 
     /**
@@ -81,6 +89,7 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
         uint256 reservePrice,
         address auctionCurrency
     ) public override nonReentrant returns (uint256) {
+        require(_isValidCurrency(tokenContract, auctionCurrency), "Invalid currency");
         uint auctionId = _createAuction(tokenId, tokenContract, duration, reservePrice, auctionCurrency);
         return auctionId;
     }
@@ -145,9 +154,7 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
         uint256 price,
         address currency
     ) external nonReentrant {
-        require(floorPrices[tokenContract][currency] > 0, "Token not allowed");
-        require(price >= floorPrices[tokenContract][currency], "Under floor price");
-
+        require(_isValidCurrency(tokenContract, currency), "Invalid currency");
         address tokenOwner = IERC721Upgradeable(tokenContract).ownerOf(tokenId);
         require(msg.sender == tokenOwner, "Not token owner");
 
@@ -182,6 +189,7 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
         uint256 price,
         address currency
     ) external payable nonReentrant {
+        require(_isValidCurrency(tokenContract, currency), "Invalid currency");
         ListingToken storage currentListing = tokensOnSale[tokenContract][tokenId];
 
         address buyer = msg.sender;
@@ -202,8 +210,12 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
 
         IERC721Upgradeable(tokenContract).safeTransferFrom(address(this), buyer, tokenId);
 
-        delete tokensWithOffers[tokenContract][tokenId][buyer];
-        
+        Offer storage currentOffer = tokensWithOffers[tokenContract][tokenId][buyer];
+        if (currentOffer.amount > 0) {
+            _handleOutgoingFund(buyer, currentOffer.amount, currentOffer.currency);
+            delete tokensWithOffers[tokenContract][tokenId][buyer];
+            emit TokenOfferCanceled(tokenContract, tokenId, buyer);
+        }
         emit TokenBought(tokenContract, tokenId, buyer, seller, currency, price);
     }
 
@@ -213,8 +225,8 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
         uint256 offerValue,
         address currency
     ) external nonReentrant payable {
-        require(floorPrices[tokenContract][currency] > 0, "Token not allowed");
-        require(offerValue >= floorPrices[tokenContract][currency], "Under floor price");
+        require(tokensOnSale[tokenContract][tokenId].tokenOwner != address(0), "Token must be listed");
+        require(_isValidCurrency(tokenContract, currency), "Invalid currency");
 
         address buyer = msg.sender;
         address tokenOwner = IERC721Upgradeable(tokenContract).ownerOf(tokenId);
@@ -254,7 +266,7 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
         address currency,
         address buyer
     ) external nonReentrant {
-        require(floorPrices[tokenContract][currency] > 0, "Token not allowed");
+        require(_isValidCurrency(tokenContract, currency), "Invalid currency");
 
         Offer memory currentOffer = tokensWithOffers[tokenContract][tokenId][buyer];
         ListingToken memory currentListing = tokensOnSale[tokenContract][tokenId];
@@ -264,7 +276,7 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
 
         require(seller == tokenOwner || seller == currentListing.tokenOwner, "Not token owner");
         require(currency == currentOffer.currency, "Invalid currency");
-        require(amount >= floorPrices[tokenContract][currency] && amount == currentOffer.amount, "Invalid amount");
+        require(amount == currentOffer.amount, "Invalid amount");
         require(buyer != seller, "Cannot buy your own token");
 
         uint256 fee = amount * feePercentage / 100;
@@ -370,8 +382,29 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
         vault = _vault;
     }
 
-    function setFloorPrice(address tokenContract, address currency, uint256 floorPrice) external nonReentrant onlyOwner {
-        floorPrices[tokenContract][currency] = floorPrice;
+    function setRankings(uint256[] memory threshold, uint256[] memory permile) external nonReentrant onlyOwner {
+        require(threshold.length == permile.length, "Length must be the same");
+
+        for (uint256 index = 0; index < threshold.length; index++) {
+            if (rankings.length <= index) {
+                rankings.push(IStakingContract.Ranking(threshold[index], permile[index]));
+            } else {
+                rankings[index].threshold = threshold[index];
+                rankings[index].permile = permile[index];
+            }
+        }
+    }
+
+    function setDefaultCurrencyStatus(address currency, bool status) external nonReentrant onlyOwner {
+        defaultCurrency[currency] = status;
+    }
+
+    function setTokenAllowedCurrency(address token, address currency, bool status) external nonReentrant onlyOwner {
+        allowedCurrency[token][currency] = status;
+    }
+
+    function collectTokenAsFee(IERC20Upgradeable token, address dest, uint256 amount) external nonReentrant onlyOwner {
+        token.safeTransfer(dest, amount);
     }
 
     function cancelAuction(uint256 auctionId) external override nonReentrant auctionExists(auctionId) {
@@ -469,6 +502,17 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
         emit AuctionCreated(auctionId, tokenId, tokenContract, duration, reservePrice, tokenOwner, auctionCurrency);
 
         return auctionId;
+    }
+
+    function _isValidCurrency(
+        address tokenContract,
+        address currency
+    ) public returns (bool) {
+        if (defaultCurrency[currency] || allowedCurrency[tokenContract][currency]) {
+            return true;
+        }
+
+        return false;
     }
 
     receive() external payable {}

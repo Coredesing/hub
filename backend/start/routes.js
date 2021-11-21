@@ -124,10 +124,16 @@ Route.group(() => {
   Route.get('get-tiers', 'TierSettingController.getTiersSetting');
 
   // Marketplace
-  // list collections + search collections
-  //
+  Route.get('marketplace/collections', 'MarketplaceController.getCollections');
+  Route.get('marketplace/offers', 'MarketplaceController.getOffers');
+  Route.get('marketplace/discover', 'MarketplaceController.discover');
+  Route.get('marketplace/activities', 'MarketplaceController.getCollectionActivities');
+  Route.get('marketplace/collections/support', 'MarketplaceController.getSupportCollections');
 
-
+  Route.get('marketplace/collection/:address', 'MarketplaceController.getCollection');
+  Route.get('marketplace/collection/:address/items', 'MarketplaceController.getCollectionItems');
+  Route.get('marketplace/offers/:address/:id', 'MarketplaceController.getOffersOfNFT');
+  Route.get('marketplace/offers/:address', 'MarketplaceController.getMyOffers');
 }).prefix('api/v1');
 
 // GameFI admin new route

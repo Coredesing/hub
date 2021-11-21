@@ -5,7 +5,7 @@ import { aggregatorAction } from '../constants/aggregator';
 import { BaseRequest } from '../../request/Request';
 import {alertActions} from "../constants/alert";
 
-export const getAggregator = (id:any) => {
+export const getAggregator = (id:any, page?: number) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
         const baseRequest = new BaseRequest();
 
@@ -14,6 +14,42 @@ export const getAggregator = (id:any) => {
         if (id) {
             url = `/admin/aggregator/${id}`
         }
+        if (page) {
+            url = `/admin/aggregator?page=${page}`
+        }
+
+        try {
+            const response = await baseRequest.get(url) as any;
+            const resObject = await response.json();
+            if (!resObject || !resObject.data || resObject.status !== 200) {
+                return
+            }
+
+            const data = resObject.data;
+            dispatch({
+                type: aggregatorAction.GET_AGGREGATOR_SUCCESS,
+                payload: {
+                    data
+                }
+            })
+        } catch (err: any) {
+            dispatch({
+                type: aggregatorAction.GET_AGGREGATOR_FAIL,
+                payload: err?.message
+            })
+        }
+
+    }
+}
+
+export const searchAggregator = (page?: number, search?: string) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
+        const baseRequest = new BaseRequest();
+
+        dispatch({ type: aggregatorAction.GET_AGGREGATOR_REQUEST });
+        let url = `/admin/aggregator?page=${page}`;
+
+        url += search ? `&search=${search}` : '';
 
         try {
             const response = await baseRequest.get(url) as any;

@@ -50,6 +50,15 @@ class WinnerListUserController {
         return HelperUtils.responseSuccess([]);
       }
 
+      // If claim time --> return 0
+      if (campaign && campaign.campaignClaimConfig && campaign.campaignClaimConfig.length > 0) {
+        const firstClaimTime = Number(campaign.campaignClaimConfig[0].start_time) * 1000
+        let now = new Date()
+        if (!isNaN(firstClaimTime) && now.getTime() > firstClaimTime && firstClaimTime > 0) {
+          return HelperUtils.responseSuccess([]);
+        }
+      }
+
       // if not existed winners on redis then get from db
       // create params to query to db
       const filterParams = {

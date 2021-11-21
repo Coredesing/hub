@@ -10,6 +10,8 @@ const ConvertDateUtils = use('App/Common/ConvertDateUtils');
 const HelperUtils = use('App/Common/HelperUtils');
 const Const = use('App/Common/Const');
 const CountryList = use('App/Common/Country');
+const bs58 = require('bs58');
+const nacl = require('tweetnacl');
 
 class WhiteListSubmissionController {
 
@@ -175,6 +177,8 @@ class WhiteListSubmissionController {
     const wallet_address = request.input('wallet_address');
     const user_telegram = request.input('user_telegram');
     const user_twitter = request.input('user_twitter');
+    const solana_address = request.input('solana_address');
+    const solana_signature = request.input('solana_signature');
     if (!campaign_id) {
       return HelperUtils.responseBadRequest('Bad request with campaign_id');
     }
@@ -187,6 +191,20 @@ class WhiteListSubmissionController {
       if (!camp || camp.buy_type !== Const.BUY_TYPE.WHITELIST_LOTTERY) {
         return HelperUtils.responseBadRequest(`Bad request with campaignId ${campaign_id}`)
       }
+
+      if (camp.airdrop_network === 'solana') {
+        if (!solana_address || !solana_signature) {
+          return HelperUtils.responseBadRequest('Invalid Solana Signature!');
+        }
+        const signatureUint8 = bs58.decode(solana_signature);
+        const nonceUint8 = new TextEncoder().encode(process.env.MESSAGE_INVESTOR_SIGNATURE);
+        const pubKeyUint8 = bs58.decode(solana_address);
+        const verified = nacl.sign.detached.verify(nonceUint8, signatureUint8, pubKeyUint8)
+        if (!verified) {
+          return HelperUtils.responseBadRequest('Invalid Solana Signature!');
+        }
+      }
+
       const currentDate = ConvertDateUtils.getDatetimeNowUTC();
       // check time to join campaign
       if (camp.start_join_pool_time > currentDate || camp.end_join_pool_time < currentDate) {
@@ -240,6 +258,7 @@ class WhiteListSubmissionController {
         campaign_id,
         user_telegram,
         user_twitter,
+        solana_address,
       }
       await whitelistSubmissionService.addWhitelistSubmission(submissionParams)
 

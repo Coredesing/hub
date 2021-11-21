@@ -242,7 +242,7 @@ class CampaignService {
   }
 
   // investor join campaign
-  async joinCampaign(campaign_id, wallet_address, email) {
+  async joinCampaign(campaign_id, wallet_address, solana_address, email) {
     // check exist whitelist with wallet and campaign
     const existWl = await WhitelistModel.query()
       .where('wallet_address', wallet_address)
@@ -260,6 +260,7 @@ class CampaignService {
     // insert to whitelist table
     const whitelist = new WhitelistModel();
     whitelist.wallet_address = wallet_address;
+    whitelist.solana_address = solana_address;
     whitelist.campaign_id = campaign_id;
     whitelist.email = email;
     await whitelist.save();

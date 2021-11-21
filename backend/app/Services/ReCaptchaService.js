@@ -1,8 +1,10 @@
 'use strict'
 
+const querystring = require('querystring');
 const axios = use('axios');
 const CaptchaWhitelist = use('App/Models/CaptchaWhitelist');
 const RedisCaptchaWhitelistUser = use('App/Common/RedisCaptchaWhitelistUser');
+const SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY
 
 class ReCaptchaService {
   async Verify(captchaToken, address, start_time, start_preorder_time) {
@@ -30,35 +32,46 @@ class ReCaptchaService {
       }
     }
 
-    const SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY
-    if (SECRET_KEY == null || !SECRET_KEY.length) return true;
-    const url = `https://www.google.com/recaptcha/api/siteverify?secret=${SECRET_KEY}&response=${captchaToken}`;
-    await axios.post(url)
-      .then((response) => {
-        if (!response.data) {
-          message = 'request error'
-          return
-        }
+    if (!SECRET_KEY) {
+      return {
+        status: true,
+        message: ''
+      }
+    }
+    // const url = `https://www.google.com/recaptcha/api/siteverify?secret=${SECRET_KEY}&response=${captchaToken}`;
+    const url = `https://hcaptcha.com/siteverify`;
+    await axios({
+      method: 'post',
+      url: url,
+      data: querystring.stringify({
+        response: captchaToken,
+        secret: SECRET_KEY
+      }),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).then((response) => {
+      if (!response || !response.data) {
+        message = 'request error'
+        return
+      }
 
-        // check with pool without preorder (first for community)
-        const ts = Date.parse(response.data.challenge_ts)
-        let loadingCaptchaTime = start_time
-        if ((isNaN(start_preorder_time) || start_preorder_time < 1) && !isNaN(loadingCaptchaTime) && ts < (loadingCaptchaTime * 1000)) {
-          message = 'load recaptcha before running time'
-          return
-        }
+      // check with pool without preorder (first for community)
+      const ts = Date.parse(response.data.challenge_ts)
+      let loadingCaptchaTime = start_time
+      if ((isNaN(start_preorder_time) || start_preorder_time < 1) && !isNaN(loadingCaptchaTime) && ts < (loadingCaptchaTime * 1000)) {
+        message = 'load captcha before running time'
+        return
+      }
 
-        if (response.data.success === true) {
-          status = true
-        } else {
-          status = false
-          message = 'status failed'
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        message = 'internal server error'
-      });
+      if (response.data.success === true) {
+        status = true
+      } else {
+        status = false
+        message = 'status failed'
+      }
+    }).catch((error) => {
+      console.log(error);
+      message = 'internal server error'
+    });
 
     return {
       status: status,

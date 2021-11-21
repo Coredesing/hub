@@ -43,10 +43,10 @@ const HeaderByToken: FC<Props> = ({ poolDetailsMapping, poolDetails }) => {
         appNetwork = 'eth';
         break;
     }
-    
+
     setDisableAllButton(appNetwork !== poolDetails?.networkAvailable);
   }, [appChainID, poolDetails])
-  
+
 
   var currentTime = new Date();
   var eventEndTime = new Date(Number(poolDetails?.startBuyTime) * 1000);
@@ -133,7 +133,7 @@ const HeaderByToken: FC<Props> = ({ poolDetailsMapping, poolDetails }) => {
             {/* {poolDetails?.networkAvailable === 'eth' ? 'Ethereum' : 'Binance Smart Chain'} */}
           </li>
         </Hidden>
-        
+
         <Hidden mdUp>
           <li className={styles.item}>
             <img
@@ -165,6 +165,16 @@ const HeaderByToken: FC<Props> = ({ poolDetailsMapping, poolDetails }) => {
             />
             Launching in {durationShow} day{durationShow > 1 ? 's' : ''}
           </li>
+        )}
+        {poolDetails.airdropNetwork === 'solana' && (
+            <li className={styles.item}>
+              <img
+                  className={styles.iconItem}
+                  src="/images/icons/solana-logo.svg"
+                  alt=""
+              />
+              Airdrop on Solana
+            </li>
         )}
       </ul>
 

@@ -131,6 +131,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
   const styles = useStyles();
 
   const [buyTokenSuccess, setBuyTokenSuccess] = useState<boolean>(false);
+  // const { solanaAddress, setSolanaAddress } = useState();
 
   // const [copiedAddress, setCopiedAddress] = useState(false);
   const [activeNav, setActiveNav] = useState(HeaderType.About);
@@ -158,7 +159,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
   //   poolDetails?.method !== "whitelist"
   // );
 
-  // const { data: dataUser } = useFetch<any>(connectedAccount ? `/user/profile?wallet_address=${connectedAccount}` : undefined);
+  const { data: dataUser } = useFetch<any>(connectedAccount ? `/user/profile?wallet_address=${connectedAccount}` : undefined);
   const [checkKyc, setCheckKyc] = useState<{ [k: string]: any }>({});
 
   useEffect(() => {
@@ -171,9 +172,9 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
       if (poolDetails?.kycBypass) {
         isKyc = true;
       } else {
-        const response = await axios.get(`/user/profile?wallet_address=${connectedAccount}`) as any;
-        const result = response.data.data;
-        isKyc = !!result?.user?.is_kyc;
+        //const response = await axios.get(`/user/profile?wallet_address=${connectedAccount}`) as any;
+        //const result = response.data.data;
+        isKyc = !!dataUser?.user?.is_kyc;
       }
       setCheckKyc({ checked: false, isKyc: isKyc });
       if (isKyc) {
@@ -436,7 +437,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
   //   if (pickedWinner && poolDetails) {
   //     const approximateValue = new BigNumber(userBuyLimit).dividedBy(poolDetails?.ethRate || 0);
   //     return `
-  //       *Individual caps: ${numberWithCommas(userBuyLimit.toString())} ${currencyName} - ${' '} 
+  //       *Individual caps: ${numberWithCommas(userBuyLimit.toString())} ${currencyName} - ${' '}
   //       Estimated equivalent of ${numberWithCommas(approximateValue.toFixed())} ${poolDetails?.tokenDetails?.symbol}
   //     `;
   //   }
@@ -575,6 +576,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
               poolStatus={infoCountdown.poolStatus}
               loadingJoinPool={loadingJoinPool}
               loadingWinnerList={loadingWinnerList}
+              dataUser={dataUser}
             />
 
             <ByTokenHeader
@@ -670,6 +672,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
                 joinPoolSuccess={joinPoolSuccess}
                 whitelistSubmission={whitelistSubmission}
                 previousWhitelistSubmission={previousWhitelistSubmission}
+                dataUser={dataUser}
                 handleClose={() => { setShowWhitelistFormModal(false) }}
               />
             }
@@ -800,7 +803,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
             <ul className={`${!!pickedWinner && 'multilTabBottom'} ${styles.navBottom}`}>
               <li onClick={() => setActiveTabBottom('tab_pool_details')} className={activeTabBottom === 'tab_pool_details' ? 'active' : ''}>Pool Details</li>
               {
-                !!pickedWinner &&
+                !isClaim(infoCountdown?.poolStatus) && !!pickedWinner &&
                 <li onClick={() => setActiveTabBottom('tab_winner')} className={activeTabBottom === 'tab_winner' ? 'active' : ''}>
                   Winners ({numberWiner})
                 </li>
@@ -813,19 +816,22 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
               />
             }
 
-            <div className={`${activeTabBottom === 'tab_winner' && 'show'} ${styles.hiddenTabWinner}`}>
-              <div ref={winnerListRef} />
-              <LotteryWinners
-                handleWiners={(total) => setNumberWiner(total)}
-                poolId={poolDetails?.id}
-                // userWinLottery={existedWinner ? true : false}
-                userWinLottery={userBuyLimit > 0}
-                pickedWinner={!!pickedWinner}
-                maximumBuy={userBuyLimit}
-                purchasableCurrency={poolDetails?.purchasableCurrency.toUpperCase()}
-              // verifiedEmail={verifiedEmail ? true : false}
-              />
-            </div>
+            {
+              !isClaim(infoCountdown?.poolStatus) &&
+              <div className={`${activeTabBottom === 'tab_winner' && 'show'} ${styles.hiddenTabWinner}`}>
+                <div ref={winnerListRef}/>
+                <LotteryWinners
+                    handleWiners={(total) => setNumberWiner(total)}
+                    poolId={poolDetails?.id}
+                    // userWinLottery={existedWinner ? true : false}
+                    userWinLottery={userBuyLimit > 0}
+                    pickedWinner={!!pickedWinner}
+                    maximumBuy={userBuyLimit}
+                    purchasableCurrency={poolDetails?.purchasableCurrency.toUpperCase()}
+                    // verifiedEmail={verifiedEmail ? true : false}
+                />
+              </div>
+            }
           </div>
           {
             // hidden when is commnunity pool

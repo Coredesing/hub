@@ -65,6 +65,7 @@ export type PoolDetails = {
   freeBuyTimeSetting?: any;
   preOrderMinTier?: any;  // pre_order_min_tier
   startPreOrderTime?: any; // start_pre_order_time
+  airdropNetwork?: any;
 }
 
 export type PoolDetailsReturnType ={
@@ -142,7 +143,7 @@ const usePoolDetails = (poolId : number): PoolDetailsReturnType => {
             return ETH_ICON;
         }
       })();
-      
+
 
       // console.log('data.campaignClaimConfig', data.campaignClaimConfig, campaignClaimConfig);
 
@@ -196,6 +197,7 @@ const usePoolDetails = (poolId : number): PoolDetailsReturnType => {
         freeBuyTimeSetting: data?.freeBuyTimeSetting,
         preOrderMinTier: data?.pre_order_min_tier,
         startPreOrderTime: data?.start_pre_order_time,
+        airdropNetwork: data?.airdrop_network,
       }
     }
 

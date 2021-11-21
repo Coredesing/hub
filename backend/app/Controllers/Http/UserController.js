@@ -31,6 +31,8 @@ const RedisUserUtils = use('App/Common/RedisUserUtils');
 const SendForgotPasswordJob = use('App/Jobs/SendForgotPasswordJob');
 const ExportUsersJob = use('App/Jobs/ExportUsers');
 const RedisUtils = use('App/Common/RedisUtils');
+const bs58 = require('bs58');
+const nacl = require('tweetnacl');
 
 class UserController {
   async userList({ request }) {
@@ -192,6 +194,8 @@ class UserController {
         is_kyc: findedUser.is_kyc,
         user_twitter: '*****',
         user_telegram: '*****',
+        solana_address: findedUser.solana_address,
+        terra_address: findedUser.terra_address,
       }
 
       if (user.is_kyc && user.status) {
@@ -211,11 +215,30 @@ class UserController {
     try {
       const userService = new UserService();
       const params = request.only(['user_twitter', 'user_telegram']);
+      const solana_signature = request.input('solana_signature')
+      const solana_address = request.input('solana_address')
       const wallet_address = request.header('wallet_address');
       const user = await userService.buildQueryBuilder({ wallet_address }).first();
       if (!user) {
         return HelperUtils.responseNotFound('User Not Found');
       }
+
+      if (!!solana_address) {
+        const signatureUint8 = bs58.decode(solana_signature);
+        const nonceUint8 = new TextEncoder().encode(process.env.MESSAGE_INVESTOR_SIGNATURE);
+        const pubKeyUint8 = bs58.decode(solana_address);
+        const verified = nacl.sign.detached.verify(nonceUint8, signatureUint8, pubKeyUint8)
+        if (!verified) {
+          return HelperUtils.responseBadRequest('Invalid Signature!');
+        }
+        const checkAddress = await userService.buildQueryBuilder({ solana_address }).first();
+
+        if (!!checkAddress && checkAddress?.wallet_address !== wallet_address) {
+          return HelperUtils.responseBadRequest('Duplicate solana address with another user!');
+        }
+      }
+      user.solana_address = solana_address
+      await user.save()
 
       const whitelistSubmission = JSON.parse(JSON.stringify(
         await (new WhitelistSubmissionService).findSubmission({ wallet_address })

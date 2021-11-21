@@ -35,7 +35,7 @@ class PoolController {
       'claim_policy',
       'forbidden_countries',
       'freeBuyTimeSetting',
-      'seriesContentConfig', 'boxTypesConfig', 'acceptedTokensConfig'
+      'seriesContentConfig', 'boxTypesConfig', 'acceptedTokensConfig', 'airdrop_network'
     ]);
 
     const tokenInfo = inputParams.tokenInfo;
@@ -86,6 +86,7 @@ class PoolController {
       'progress_display': inputParams.progress_display,
       'lock_schedule': inputParams.lock_schedule,
       'claim_policy': inputParams.claim_policy,
+      'airdrop_network': inputParams.airdrop_network,
 
       'forbidden_countries': JSON.stringify(inputParams && inputParams.forbidden_countries || []),
     };
@@ -179,7 +180,8 @@ class PoolController {
       'freeBuyTimeSetting',
       'seriesContentConfig',
       'boxTypesConfig',
-      'acceptedTokensConfig'
+      'acceptedTokensConfig',
+      'airdrop_network'
     ]);
 
     const tokenInfo = inputParams.tokenInfo;
@@ -227,6 +229,7 @@ class PoolController {
       'progress_display': inputParams.progress_display,
       'lock_schedule': inputParams.lock_schedule,
       'claim_policy': inputParams.claim_policy,
+      'airdrop_network': inputParams.airdrop_network,
 
       'forbidden_countries': JSON.stringify((inputParams && inputParams.forbidden_countries) || []),
     };
@@ -533,6 +536,7 @@ class PoolController {
         'seriesContentConfig',
         'boxTypesConfig',
         'acceptedTokensConfig',
+        'airdrop_network',
       ]);
 
       if (publicPool && publicPool.token_type === CONST.TOKEN_TYPE.MYSTERY_BOX) {

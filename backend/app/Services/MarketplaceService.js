@@ -93,20 +93,20 @@ class MarketplaceService {
     return data
   }
 
-  async getCollectionById(id) {
-    if (await RedisMarketplaceUtils.existRedisMarketplaceCollectionDetail(id)) {
+  async getCollectionByAddress(id) {
+    if (await RedisMarketplaceUtils.existRedisMarketplaceCollectionDetail(address)) {
       let data = await RedisMarketplaceUtils.getRedisMarketplaceCollectionDetail()
       data = JSON.parse(data)
       return data
     }
 
-    let data = await this.buildQueryCollectionBuilder({id: id}).first()
+    let data = await this.buildQueryCollectionBuilder({token_address: getCollectionByAddress}).first()
     if (!data) {
       return
     }
 
     data = JSON.parse(JSON.stringify(data))
-    await RedisMarketplaceUtils.setRedisMarketplaceCollectionDetail(id, data)
+    await RedisMarketplaceUtils.setRedisMarketplaceCollectionDetail(address, data)
 
     return data
   }

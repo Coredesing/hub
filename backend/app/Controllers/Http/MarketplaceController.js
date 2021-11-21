@@ -37,13 +37,13 @@ class MarketplaceController {
   }
 
   async getCollection({ request, auth, params }) {
-    const id = params.id;
-    if (isNaN(id)) {
+    const address = params.address;
+    if (!address) {
       return HelperUtils.responseNotFound();
     }
 
     try {
-      let data = await (new MarketplaceService).getCollectionById(id);
+      let data = await (new MarketplaceService).getCollectionByAddress(address);
       return HelperUtils.responseSuccess(data);
     } catch (e) {
       return HelperUtils.responseErrorInternal();

@@ -131,7 +131,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
   const styles = useStyles();
 
   const [buyTokenSuccess, setBuyTokenSuccess] = useState<boolean>(false);
-  const { solanaAddress, setSolanaAddress } = useState();
+  // const { solanaAddress, setSolanaAddress } = useState();
 
   // const [copiedAddress, setCopiedAddress] = useState(false);
   const [activeNav, setActiveNav] = useState(HeaderType.About);

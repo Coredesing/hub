@@ -114,7 +114,7 @@ class MarketplaceService {
   async getOffersOfNFT(address, id, filterParams) {
     filterParams = this.formatPaginate(filterParams)
     filterParams.token_id = id
-    filterParams.seller = address
+    filterParams.token_address = address
     filterParams.finish = false
     const data = await this.buildQueryNFTEventsBuilder(filterParams).fetch()
     return data

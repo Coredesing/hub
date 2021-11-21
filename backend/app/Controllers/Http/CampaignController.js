@@ -10,6 +10,8 @@ const WhitelistService = use('App/Services/WhitelistUserService');
 const WhitelistSubmissionService = use('App/Services/WhitelistSubmissionService');
 const CampaignClaimConfigService = use('App/Services/CampaignClaimConfigService');
 const ReCaptchaService = use("App/Services/ReCaptchaService");
+const bs58 = require('bs58');
+const nacl = require('tweetnacl');
 
 const UserService = use('App/Services/UserService');
 const Const = use('App/Common/Const');
@@ -144,13 +146,16 @@ class CampaignController {
         return HelperUtils.responseBadRequest("Invalid time");
       }
       let email = ''
+      const userService = new UserService();
+
+      const userParams = {
+        'wallet_address': wallet_address
+      }
+      const user = await userService.findUser(userParams);
+
       if (!camp.kyc_bypass) {
         // get user info
-        const userService = new UserService();
-        const userParams = {
-          'wallet_address': wallet_address
-        }
-        const user = await userService.findUser(userParams);
+
         if (!user || !user.email) {
           return HelperUtils.responseBadRequest("User not found");
         }
@@ -158,6 +163,29 @@ class CampaignController {
           return HelperUtils.responseBadRequest("Your KYC status is not verified");
         }
         email = user.email
+      }
+
+      const solana_address = request.input('solana_address');
+      if (camp.airdrop_network === 'solana') {
+        const solana_signature = request.input('solana_signature');
+        if (!solana_address || !solana_signature) {
+          return HelperUtils.responseBadRequest('Invalid Solana Signature or address!');
+        }
+        const signatureUint8 = bs58.decode(solana_signature);
+        const nonceUint8 = new TextEncoder().encode(process.env.MESSAGE_INVESTOR_SIGNATURE);
+        const pubKeyUint8 = bs58.decode(solana_address);
+        const verified = nacl.sign.detached.verify(nonceUint8, signatureUint8, pubKeyUint8)
+        if (!verified) {
+          return HelperUtils.responseBadRequest('Invalid Signature!');
+        }
+        const checkAddress = await userService.buildQueryBuilder({ solana_address }).first();
+        if (!!checkAddress && checkAddress?.wallet_address !== wallet_address) {
+          return HelperUtils.responseBadRequest('Duplicate solana address with another user!');
+        }
+        if (user.solana_address !== solana_address) {
+          user.solana_address = solana_address
+          await user.save()
+        }
       }
 
       // check if user submitted the whitelist form
@@ -187,9 +215,10 @@ class CampaignController {
         return HelperUtils.responseBadRequest("Ranking not found");
       }
       // call to join campaign
-      await campaignService.joinCampaign(campaign_id, wallet_address, email);
+      await campaignService.joinCampaign(campaign_id, wallet_address, solana_address, email);
       return HelperUtils.responseSuccess(null, "Apply Whitelist successful");
     } catch (e) {
+      console.log(e)
       return HelperUtils.responseErrorInternal();
     }
   }

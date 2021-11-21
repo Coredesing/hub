@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: any) => {
       '& img': {
         marginRight: 6,
       },
-      
+
       '&:disabled': {
         border: '1.4px solid #72F34B',
         background: 'transparent',
@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme: any) => {
         opacity: 0.5,
         cursor: 'not-allowed',
       },
-      
+
       '&:hover': {
         background: 'transparent',
         opacity: 0.85
@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme: any) => {
       [theme.breakpoints.down('sm')]: {
         marginTop: 32,
       },
-      
+
 
       '& .flex': {
         ...typeDisplayFlex,
@@ -169,7 +169,7 @@ const useStyles = makeStyles((theme: any) => {
       '&>div:before, &>div:after': {
         display: 'none'
       },
-  
+
       [theme.breakpoints.down('sm')]: {
         width: '100%',
         maxWidth: '100%',
@@ -186,13 +186,13 @@ const useStyles = makeStyles((theme: any) => {
         fontSize: 14,
         lineHeight: '20px',
         color: '#AEAEAE',
-  
+
         [theme.breakpoints.down('sm')]: {
           width: '100%',
           maxWidth: '100%',
           marginTop: 12,
         },
-  
+
         '&::placeholder': {
           fontFamily: 'Helvetica',
           fontSize: 14,
@@ -203,7 +203,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     nameSocial: {
-  
+
       [theme.breakpoints.down('sm')]: {
         marginTop: 8,
       },
@@ -230,6 +230,28 @@ const useStyles = makeStyles((theme: any) => {
           alignItems: 'flex-start',
         },
       },
+    },
+
+    solanaGroup: {
+      display: 'flex',
+      '& div' : {
+        '& span': {
+          fontSize: 13
+        }
+      }
+    },
+    connectBTN: {
+      width: 300
+    },
+    disconnectBTN: {
+      marginLeft: 10,
+      color: 'red !important',
+      border: 'none !important',
+    },
+    getExtension: {
+      position: 'absolute',
+      marginTop: 5,
+      right: 0,
     },
 
     walletInfo: {

@@ -80,6 +80,32 @@ class MarketplaceController {
       return HelperUtils.responseErrorInternal();
     }
   }
+
+  async getOffersOfNFT({ request, auth, params }) {
+    const address = params.address;
+    const id = params.id;
+    const inputParams = request.all();
+
+    try {
+      let data = await (new MarketplaceService).getOffersOfNFT(address, id, inputParams);
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
+  async getMyOffers({ request, auth, params }) {
+    const address = params.address;
+    const inputParams = request.all();
+
+    try {
+      let data = await (new MarketplaceService).getMyOffers(address, inputParams);
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      console.log('e', e)
+      return HelperUtils.responseErrorInternal();
+    }
+  }
 }
 
 module.exports = MarketplaceController;

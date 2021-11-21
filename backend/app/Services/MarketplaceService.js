@@ -111,6 +111,23 @@ class MarketplaceService {
     return data
   }
 
+  async getOffersOfNFT(address, id, filterParams) {
+    filterParams = this.formatPaginate(filterParams)
+    filterParams.token_id = id
+    filterParams.seller = address
+    filterParams.finish = false
+    const data = await this.buildQueryNFTEventsBuilder(filterParams).fetch()
+    return data
+  }
+
+  async getMyOffers(address, filterParams) {
+    filterParams = this.formatPaginate(filterParams)
+    filterParams.buyer = address
+    filterParams.finish = false
+    const data = await this.buildQueryNFTEventsBuilder(filterParams).fetch()
+    return data
+  }
+
   async getEvents(filterParams) {
     // if (await RedisMarketplaceUtils.existRedisMarketplaceTopCollections()) {
     //   let data = await RedisMarketplaceUtils.getRedisMarketplaceTopCollections()

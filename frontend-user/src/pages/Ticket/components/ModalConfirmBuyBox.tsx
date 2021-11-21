@@ -83,8 +83,8 @@ const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, boxTy
     const recaptchaRef: any = React.useRef();
     const onRefreshRecaptcha = debounce(() => {
         if (!isVerified) return;
-        if (typeof recaptchaRef?.current?.reset === 'function') {
-            recaptchaRef.current.reset();
+        if (typeof recaptchaRef?.current?.resetCaptcha === 'function') {
+            recaptchaRef.current.resetCaptcha();
         }
     }, 5000);
 
@@ -144,7 +144,7 @@ const ModalConfirmBuyBox = ({ open, isLoadingButton, amount, infoBox = {}, boxTy
                     <label>Box Type</label>
                     <span className="text-uppercase">
                         <Box display="flex" alignItems="center" gridGap="4px">
-                            <img src={boxTypeSelected.icon} width="40" height="25" style={{objectFit: 'contain'}} />
+                            <img src={boxTypeSelected.icon} width="40" height="25" style={{ objectFit: 'contain' }} />
                             {boxTypeSelected.name}
                         </Box>
                     </span>

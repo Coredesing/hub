@@ -1,15 +1,9 @@
 'use strict'
 const kue = use('Kue');
-const { Parser } = require('json2csv');
-const fs = require('fs')
 const BigNumber = use('bignumber.js');
-
-const UserModel = use('App/Models/User')
-const ExportUserModel = use('App/Models/ExportUser')
-const WhitelistModel = use('App/Models/WhitelistUser')
-const Database = use('Database');
 const HelperUtils = use('App/Common/HelperUtils')
-const Const = use('App/Common/Const')
+const MarketplaceEventModel = use('App/Models/MarketplaceNFTListedEvent')
+
 
 const priority = 'high'; // Priority of job, can be low, normal, medium, high or critical
 const attempts = 5; // Number of times to attempt job if it fails
@@ -18,6 +12,11 @@ const jobFn = job => {
   job.backoff();
 }; // Function to be run on the job before it is saved
 
+const EVENT_TYPE_LISTED = 'TokenListed'
+const EVENT_TYPE_DELISTED = 'TokenDelisted'
+const EVENT_TYPE_BOUGHT = 'TokenBought'
+const EVENT_TYPE_OFFERED = 'TokenOffered'
+const EVENT_TYPE_CANCEL_OFFERED = 'TokenOfferCanceled'
 
 // Listed:
 // - SC data: tokensOnSale[tokenContract][tokenId]
@@ -48,7 +47,7 @@ class FetchMarketplaceEvent {
   }
 
   // This is where the work is done.
-  async handle({ event_type, from, to  }) {
+  async handle({ event_type, from, to }) {
     try {
       const provider = await HelperUtils.getStakingProvider()
       console.log(`fetch ${event_type} from ${from} to ${to} in marketplace`)
@@ -102,21 +101,39 @@ class FetchMarketplaceEvent {
           let data = new MarketplaceEventModel();
           data.transaction_hash = event.transactionHash;
           data.transaction_index = event.transactionIndex;
-          data.wallet_address = event.returnValues.account;
-          data.event_type = event_type;
-          data.block_number = event.blockNumber;
-          data.dispatch_at = blockData.timestamp;
-          data.raw_amount = event.returnValues.amount;
-          data.amount = parseFloat(new BigNumber(data.raw_amount).dividedBy(ONE_UNIT).toFixed(6)) * sign;
 
-          await data.save();
-
-          const tierInfo = await HelperUtils.getUserTierSmart(event.returnValues.account);
-          await RedisUtils.createRedisUserTierBalance(event.returnValues.account, tierInfo);
-
-          if (HelperUtils.getLegendIdByOwner(event.returnValues.account)) {
-            await RedisLegendSnapshotUtils.setRedisLegendLastTime(event.returnValues.account, blockData.timestamp);
+          console.log('data', event)
+          switch(event_type) {
+            case EVENT_TYPE_LISTED:
+              break;
+            case EVENT_TYPE_DELISTED:
+              break;
+            case EVENT_TYPE_BOUGHT:
+              break;
+            case EVENT_TYPE_OFFERED:
+              break;
+            case EVENT_TYPE_CANCEL_OFFERED:
+              break;
+            default:
+              console.log('event not support', event_type)
+              return
           }
+
+          // data.wallet_address = event.returnValues.account;
+          // data.event_type = event_type;
+          // data.block_number = event.blockNumber;
+          // data.dispatch_at = blockData.timestamp;
+          // data.raw_amount = event.returnValues.amount;
+          // data.amount = parseFloat(new BigNumber(data.raw_amount).dividedBy(ONE_UNIT).toFixed(6)) * sign;
+          //
+          // await data.save();
+          //
+          // const tierInfo = await HelperUtils.getUserTierSmart(event.returnValues.account);
+          // await RedisUtils.createRedisUserTierBalance(event.returnValues.account, tierInfo);
+          //
+          // if (HelperUtils.getLegendIdByOwner(event.returnValues.account)) {
+          //   await RedisLegendSnapshotUtils.setRedisLegendLastTime(event.returnValues.account, blockData.timestamp);
+          // }
         }
         catch (e) {}
       }

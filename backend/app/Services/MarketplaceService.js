@@ -80,15 +80,15 @@ class MarketplaceService {
   }
 
   async getSupportCollections(filterParams) {
-    if (await RedisMarketplaceUtils.existRedisMarketplaceSupportCollections()) {
-      let data = await RedisMarketplaceUtils.getRedisMarketplaceSupportCollections()
-      data = JSON.parse(data)
-      return data
-    }
+    // if (await RedisMarketplaceUtils.existRedisMarketplaceSupportCollections()) {
+    //   let data = await RedisMarketplaceUtils.getRedisMarketplaceSupportCollections()
+    //   data = JSON.parse(data)
+    //   return data
+    // }
 
     let data = await this.buildQueryCollectionBuilder(filterParams).fetch()
-    data = JSON.parse(JSON.stringify(data))
-    await RedisMarketplaceUtils.setRedisMarketplaceSupportCollections(data)
+    // data = JSON.parse(JSON.stringify(data))
+    // await RedisMarketplaceUtils.setRedisMarketplaceSupportCollections(data)
 
     return data
   }

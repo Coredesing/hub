@@ -95,7 +95,7 @@ class MarketplaceService {
 
   async getCollectionByAddress(address) {
     if (await RedisMarketplaceUtils.existRedisMarketplaceCollectionDetail(address)) {
-      let data = await RedisMarketplaceUtils.getRedisMarketplaceCollectionDetail()
+      let data = await RedisMarketplaceUtils.getRedisMarketplaceCollectionDetail(address)
       data = JSON.parse(data)
       return data
     }

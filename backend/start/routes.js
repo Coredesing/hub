@@ -130,8 +130,8 @@ Route.group(() => {
   Route.get('marketplace/activities', 'MarketplaceController.getCollectionActivities');
   Route.get('marketplace/collections/support', 'MarketplaceController.getSupportCollections');
 
-  Route.get('marketplace/collection/:id', 'MarketplaceController.getCollection');
-  Route.get('marketplace/collection/:id/items', 'MarketplaceController.getCollectionItems');
+  Route.get('marketplace/collection/:address', 'MarketplaceController.getCollection');
+  Route.get('marketplace/collection/:address/items', 'MarketplaceController.getCollectionItems');
   Route.get('marketplace/offers/:address/:id', 'MarketplaceController.getOffersOfNFT');
   Route.get('marketplace/offers/:address', 'MarketplaceController.getMyOffers');
 }).prefix('api/v1');

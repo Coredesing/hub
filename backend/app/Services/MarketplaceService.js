@@ -1,8 +1,11 @@
 'use strict'
 
 const MarketplaceCollectionModel = use('App/Models/MarketplaceCollection');
+const MarketplaceAcceptedToken = use('App/Models/MarketplaceAcceptedToken');
 const MarketplaceNftEvent = use('App/Models/MarketplaceNFTListedEvent');
 const RedisMarketplaceUtils = use('App/Common/RedisMarketplaceUtils');
+const HelperUtils = use('App/Common/HelperUtils');
+const axios = use('axios');
 
 class MarketplaceService {
   buildQueryCollectionBuilder(params) {
@@ -61,6 +64,7 @@ class MarketplaceService {
     return builder
   }
 
+  // TODO: cached
   async getTopCollections(filterParams) {
     if (await RedisMarketplaceUtils.existRedisMarketplaceTopCollections()) {
       let data = await RedisMarketplaceUtils.getRedisMarketplaceTopCollections()
@@ -79,6 +83,7 @@ class MarketplaceService {
     return data
   }
 
+  // TODO: cached
   async getSupportCollections(filterParams) {
     // if (await RedisMarketplaceUtils.existRedisMarketplaceSupportCollections()) {
     //   let data = await RedisMarketplaceUtils.getRedisMarketplaceSupportCollections()
@@ -104,8 +109,12 @@ class MarketplaceService {
     if (!data) {
       return
     }
-
     data = JSON.parse(JSON.stringify(data))
+
+    let acceptedTokens = await MarketplaceAcceptedToken.query().whereIn('collection_id', [0, data.id]).fetch()
+    acceptedTokens = JSON.parse(JSON.stringify(acceptedTokens))
+    data.accepted_tokens = acceptedTokens
+
     await RedisMarketplaceUtils.setRedisMarketplaceCollectionDetail(address, data)
 
     return data
@@ -128,6 +137,7 @@ class MarketplaceService {
     return data
   }
 
+  // TODO: cached
   async getEvents(filterParams) {
     // if (await RedisMarketplaceUtils.existRedisMarketplaceTopCollections()) {
     //   let data = await RedisMarketplaceUtils.getRedisMarketplaceTopCollections()
@@ -141,6 +151,21 @@ class MarketplaceService {
       .paginate(filterParams.page, filterParams.limit);
 
     return data
+  }
+
+  async getNFTInfo(address, id) {
+    // TODO: filter whitelist address
+    const uri = await HelperUtils.getTokenURI({address: address, id: id})
+    if (!uri) {
+      return
+    }
+
+    return await axios.get(uri).then((response) => {
+      if (!response || !response.data) {
+        return
+      }
+      return response.data
+    }).catch((error) => {})
   }
 
   formatPaginate(filterParams) {

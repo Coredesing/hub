@@ -110,6 +110,22 @@ class MarketplaceController {
       return HelperUtils.responseErrorInternal();
     }
   }
+
+  async getNFTInfo({ request, auth, params }) {
+    const address = params.address;
+    const id = params.id;
+
+    try {
+      const data = await (new MarketplaceService).getNFTInfo(address, id);
+      if (!data) {
+        return HelperUtils.responseNotFound();
+      }
+
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
 }
 
 module.exports = MarketplaceController;

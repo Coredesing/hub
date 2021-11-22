@@ -9,39 +9,56 @@ import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow}
 import Skeleton from "@material-ui/lab/Skeleton";
 import Pagination from "@material-ui/lab/Pagination";
 import {Switch} from "antd";
+import SearchForm from '../UserList/SearchForm';
 
 const Aggregator: React.FC<any> = (props: any) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const { game_info, loading, failure } = useSelector(( state: any ) => state.game_info);
     const [currentPage, setCurrentPage] = useState(1);
+    const [query, setQuery] = useState('');
     const gameInfo = game_info?.data?.data
+    const lastPage = game_info?.data?.lastPage;
     const tableHeaders = ["ID", "Created at", "Game Name", "Category", "Hashtags", "Is Show", "Actions"];
     const handlePaginationChange = (event: any, page: number) => {
         setCurrentPage(page);
     }
-    useEffect(() => {
-        loadAggregator();
-    }, []);
 
-    const loadAggregator = () => {
-        dispatch(getAggregator(null))
+    useEffect(() => {
+        loadAggregator(currentPage, query);
+    }, [currentPage, query]);
+
+    const loadAggregator = (param: number, search?: any) => {
+        dispatch(getAggregator(null, param, search))
     }
+
     const removeGame = (id:number) => {
         const r = window.confirm("Do you really want to delete?");
         if(r){
             dispatch(deleteAggregator(id))
         }
     }
+
+    const handleSearch = (event: any) => {
+        setCurrentPage(1);
+        setQuery(event.target.value);
+    };
+
     const onChangeShowHide = (value:boolean, id:any) => {
         dispatch(setShowAggregator(id,value))
     }
+
     return (
         <DefaultLayout>
             <div className={classes.header}>
                 <div className="header-left">
                     <Button to={adminRoute('/aggregator/add')} text={'Add New Game'} icon={'icon_plus.svg'} />
                 </div>
+                <SearchForm
+                    seachValue={query}
+                    handleSearch={handleSearch}
+                    placeholder='Search'
+                />
             </div>
             <TableContainer component={Paper} className={classes.tableContainer}>
                 {
@@ -96,7 +113,7 @@ const Aggregator: React.FC<any> = (props: any) => {
                 {
                     failure ? <p className={classes.errorMessage}>{failure}</p> : ((!gameInfo || gameInfo.length === 0) && !loading)  ? <p className={classes.noDataMessage}>There is no data</p> : (
                         <>
-                            {gameInfo && Math.ceil(gameInfo.length / 10 ) > 1 && <Pagination page={currentPage} className={classes.pagination} count={Math.ceil(gameInfo.length / 10 )} onChange={handlePaginationChange} />}
+                            {gameInfo && lastPage > 1 && <Pagination page={currentPage} className={classes.pagination} count={lastPage} onChange={handlePaginationChange} />}
                         </>
                     )
                 }

@@ -4,7 +4,7 @@ import useStyles from './style';
 import DefaultLayout from "../../components/Layout/DefaultLayout";
 import Button from "../../components/Base/ButtonLink";
 import {adminRoute} from "../../utils";
-import {deleteAggregator, getAggregator, setShowAggregator, searchAggregator} from "../../store/actions/aggregator";
+import {deleteAggregator, getAggregator, setShowAggregator} from "../../store/actions/aggregator";
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Pagination from "@material-ui/lab/Pagination";
@@ -25,19 +25,11 @@ const Aggregator: React.FC<any> = (props: any) => {
     }
 
     useEffect(() => {
-        if (query) {
-            handleSearchAggregator(currentPage, query);
-        } else {
-            loadAggregator(currentPage);
-        }
+        loadAggregator(currentPage, query);
     }, [currentPage, query]);
 
-    const handleSearchAggregator = (page: number, search: string) => {
-        dispatch(searchAggregator(page, search));
-    }
-
-    const loadAggregator = (param: number) => {
-        dispatch(getAggregator(null, param))
+    const loadAggregator = (param: number, search?: any) => {
+        dispatch(getAggregator(null, param, search))
     }
 
     const removeGame = (id:number) => {
@@ -48,7 +40,8 @@ const Aggregator: React.FC<any> = (props: any) => {
     }
 
     const handleSearch = (event: any) => {
-      setQuery(event.target.value);
+        setCurrentPage(1);
+        setQuery(event.target.value);
     };
 
     const onChangeShowHide = (value:boolean, id:any) => {

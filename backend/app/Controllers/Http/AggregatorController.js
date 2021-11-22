@@ -244,9 +244,17 @@ class AggregatorController {
       const page = params?.page ? parseInt(params?.page) : 1
       const perPage = params?.per_page ? parseInt(params?.per_page) : 10
       const category = params?.category
+      const search = params?.search
       const display_area = params?.display_area
       const verified = params?.verified
       let builder = GameInformation.query()
+      if (search) {
+        builder = builder.where((q) => {
+          q.where('category', 'like', `%${search}%`)
+            .orWhere('game_name', 'like', `%${search}%`)
+            .orWhere('hashtags', 'like', `%${search}%`);
+        })
+      }
       if (category) {
         builder = builder.where(`category`, 'like', `%${category}%`)
       }
@@ -270,7 +278,6 @@ class AggregatorController {
       const params = request.all();
       const page = params?.page ? parseInt(params?.page) : 1
       const perPage = params?.per_page ? parseInt(params?.per_page) : 10
-      const search = params?.search
       const category = params?.category
       const display_area = params?.display_area
       const verified = params?.verified
@@ -278,9 +285,6 @@ class AggregatorController {
       const price = params?.price
 
       let builder = GameInformation.query()
-      if (search) {
-        builder = builder.where(`category`, 'like', `%${search}%`)
-      }
       if (category) {
         builder = builder.where(`category`, 'like', `%${category}%`)
       }

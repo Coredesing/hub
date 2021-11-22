@@ -7,6 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import { getEtherscanTransactionLink, getNetworkInfo } from '../../../utils/network';
+import { useTypedSelector } from '@hooks/useTypedSelector';
 const closeIcon = '/images/icons/close.svg';
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -78,15 +79,23 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const DialogTxSubmitted = ({ open, ...props }: any) => {
+type Props = {
+  open: boolean;
+  onClose?: () => void;
+  transaction?: string;
+  [k: string]: any;
+}
+
+const DialogTxSubmitted = ({ open, ...props }: Props) => {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleClose = () => {
-    props.onClose()
+    props.onClose && props.onClose()
   };
-  const info = getNetworkInfo(props.networkName);
+  const { appChainID } = useTypedSelector(state => state.appNetwork).data;
+  const info = getNetworkInfo(props.networkName || appChainID);
   const transactionLink = getEtherscanTransactionLink({
     appChainID: info.id,
     transactionHash: props.transaction,

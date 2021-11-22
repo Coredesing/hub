@@ -97,7 +97,7 @@ const TransferNFTModal = ({ open, isLoadingButton, defaultValue, ...props }: Pro
         <CustomModal open={open} onClose={onClose}
             actions={
                 <div className={styles.groupsButton}>
-                    <ButtonBase color="grey" onClick={onClose} className="w-full text-transform-unset" isLoading={isLoadingButton} disabled={isLoadingButton}>
+                    <ButtonBase color="grey" onClick={onClose} className="w-full text-transform-unset" >
                         Cancel
                     </ButtonBase>
                     <ButtonBase color="green" onClick={onConfirm} className="w-full text-transform-unset" isLoading={isLoadingButton} disabled={isLoadingButton}>

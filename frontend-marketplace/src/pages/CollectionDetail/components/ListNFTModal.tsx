@@ -102,7 +102,7 @@ const ListingNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isApp
         <CustomModal open={open} onClose={onClose}
             actions={
                 <div className={styles.groupsButton}>
-                    <ButtonBase color="grey" onClick={onClose} className="w-full text-transform-unset" isLoading={isLoadingButton} disabled={isLoadingButton}>
+                    <ButtonBase color="grey" onClick={onClose} className="w-full text-transform-unset">
                         Cancel
                     </ButtonBase>
                     {

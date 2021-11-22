@@ -8,11 +8,16 @@ import erc721ABI from '@abi/Erc721.json';
 import { getContractInstance } from '@services/web3';
 import { useDispatch, useSelector } from 'react-redux';
 import useAuth from '@hooks/useAuth';
-import BoxCard from '../components/BoxCard';
+import BoxCard, { getElmStr, useStyles as useCardStyles } from '../components/BoxCard';
 import { Link } from 'react-router-dom';
 import { setAssetsCollection } from '@store/actions/assets-account';
+import ReactDOM from 'react-dom';
+import { useHistory } from 'react-router-dom'
+import { Backdrop } from '@material-ui/core';
+import CircularProgress from '@base-components/CircularProgress';
 const Assets = () => {
     const styles = useStyles();
+    const history = useHistory();
     const dispatch = useDispatch();
     const tabNames: { [k: number]: any } = {
         0: {
@@ -39,16 +44,33 @@ const Assets = () => {
     const { appChainID } = useSelector((state: any) => state.appNetwork).data;
     const { connectedAccount, wrongChain /*isAuth*/ } = useAuth();
     const assetsAccount = useSelector((state: any) => state.assetsAccount).data || {};
+    const [assets, setAssets] = useState<ObjectType<any>>({});
 
+    const onRedirectDetail = (item: any) => {
+        console.log('ui', item)
+        history.push(`/collection/${item.project.token_address}/${item.id}`)
+    }
+
+    const renderBoxItem = (item: any, key: any) => {
+        return (
+            // <Link key={key} to={`/collection/${item.project.token_address}/${item.id}`}>
+            <BoxCard key={key} item={item} onClick={() => onRedirectDetail(item)} />
+            //  </Link>
+        )
+    }
+    const cardStyle = useCardStyles();
+    const [loadingAsset, setLoadingAsset] = useState(false);
     useEffect(() => {
         if (!appChainID || !connectedAccount) return;
         const type = tabNames[currentTab].type || tabNames[0].type;
-        if (!assetsAccount[type]?.array?.length) {
+        const wrapBoxElem = document.querySelector(`#${type}-cards`);
+        if (!assetsAccount[type]?.length) {
+            setLoadingAsset(true);
             axios.get(`/marketplace/collections/support?type=${type}`).then(async (res) => {
                 const arr = res.data.data || [];
                 if (arr.length) {
+                    if (!wrapBoxElem) return;
                     const collections: ObjectType<any>[] = [];
-                    const objectData: ObjectType<any> = {};
                     await Promise.all(arr.map((p: any) => new Promise(async (res) => {
                         try {
                             const contract = getContractInstance(erc721ABI, p.token_address, undefined, appChainID);
@@ -71,25 +93,36 @@ const Assets = () => {
                                 } catch (error: any) {
                                     collection.icon = 'default.img';
                                 }
-                                objectData[idCollection] = collection;
                                 collections.push(collection);
+                                wrapBoxElem.append(getElmStr({
+                                    item: collection, styles: cardStyle, onClick: () => {
+                                        onRedirectDetail(collection)
+                                    }
+                                }))
+                                setLoadingAsset(false);
+                                // ReactDOM.render(<>
+                                //     {renderBoxItem(collection, idCollection)}
+                                // </>, wrapBoxElem)
+
                             }
                             res('');
                         } catch (error) {
                             res('');
                         }
                     })));
-                    dispatch(setAssetsCollection({ [type]: {
-                        objects: objectData,
-                        array: collections,
-                    } }))
+                    dispatch(setAssetsCollection({ [type]: collections }))
+                } else {
+                    setLoadingAsset(false);
                 }
-
-                // setAssets(assets => ({ ...assets, [type]: res.data.data || [] }));
-                console.log('res', res.data)
             })
+        } else {
+            const collections = assetsAccount[type];
+            console.log('collections', collections)
+            ReactDOM.render(<>
+                {collections.map((c: any) => renderBoxItem(c, Math.floor(Math.random() + 10000) + (+c.id || 1)))}
+            </>, wrapBoxElem)
         }
-    }, [currentTab, assetsAccount, appChainID, connectedAccount]);
+    }, [currentTab, appChainID, connectedAccount]);
 
     return (
         <div>
@@ -98,18 +131,23 @@ const Assets = () => {
                 tabNames={[tabNames[0].name, tabNames[1].name, tabNames[2].name]}
                 onChange={onChangeTab}
             />
+            {
+                loadingAsset && <Backdrop open={loadingAsset} style={{ color: '#fff', zIndex: 1000, }}>
+                    <CircularProgress />
+                </Backdrop>
+            }
             <TabPanel value={currentTab} index={tabNames[0].value}>
-                <div className={styles.cards}>
-                    {(assetsAccount['nft']?.array || []).map((item: ObjectType<any>, key: number) => <Link key={key} to={`/collection/${item.project.token_address}/${item.id}`}>
+                <div className={styles.cards} id="nft-cards">
+                    {/* {(assetsAccount['nft']?.array || []).map((item: ObjectType<any>, key: number) => <Link key={key} to={`/collection/${item.project.token_address}/${item.id}`}>
                         <BoxCard key={key} item={item} />
-                    </Link>)}
+                    </Link>)} */}
                 </div>
             </TabPanel>
             <TabPanel value={currentTab} index={tabNames[1].value}>
-                <div className={styles.cards}>
-                    {(assetsAccount['box']?.array || []).map((item: ObjectType<any>, key: number) => <Link key={key} to={`/collection/${item.project.token_address}/${item.id}`}>
+                <div className={styles.cards} id="box-cards">
+                    {/* {(assetsAccount['box']?.array || []).map((item: ObjectType<any>, key: number) => <Link key={key} to={`/collection/${item.project.token_address}/${item.id}`}>
                         <BoxCard key={key} item={item} />
-                    </Link>)}
+                    </Link>)} */}
                 </div>
             </TabPanel>
             <TabPanel value={currentTab} index={tabNames[2].value}>

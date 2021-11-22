@@ -44,7 +44,7 @@ const styles = (theme: Theme) =>
 export interface DialogTitleProps extends WithStyles<typeof styles> {
   id: string;
   children: React.ReactNode;
-  onClose: () => void;
+  onClose?: () => void;
   customClass: string,
   networkAvailable?: string,
 }
@@ -80,11 +80,16 @@ const DialogContent = withStyles((theme: Theme) => ({
   },
 }))(MuiDialogContent);
 
-const TransactionSubmitModal: React.FC<any> = (props: any) => {
+const TransactionSubmitModal = (props: {
+  transactionHash?: string,
+  handleClose?: () => void,
+  opened?: boolean,
+  additionalText?: string,
+  [k: string]: any
+}) => {
   const styles = useStyles();
   const { appChainID } = useTypedSelector(state => state.appNetwork).data;
-  const { opened, handleClose, transactionHash, additionalText, networkAvailable } = props;
-
+  const { opened = false, handleClose, transactionHash, additionalText, networkAvailable } = props;
   const [explorerUrl, setExplorerUrl] = useState<String>(ETHERSCAN_URL);
   const [explorerName, setExplorerName] = useState<String>("Etherscan");
 

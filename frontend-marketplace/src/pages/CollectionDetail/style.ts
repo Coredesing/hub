@@ -1092,6 +1092,7 @@ export const useMarketplaceStyle = makeStyles((theme) => ({
   },
   cardImg: {
     width: '100%',
+    background: '#000',
     '& .wrapperVideo': {
       position: 'relative',
       height: '379px',

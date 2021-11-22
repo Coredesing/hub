@@ -23,6 +23,7 @@ import { useFetchV1 } from "@hooks/useFetch";
 import { ObjectType } from "@app-types";
 import { useWeb3React } from "@web3-react/core";
 import BN from 'bignumber.js'
+import axios from '@services/axios'
 type Props = {
     info: { [k: string]: any },
     [k: string]: any
@@ -34,9 +35,8 @@ export const AboutMarketplaceNFT = ({
     defaultTab,
     id,
     projectAddress,
-    isOwnerTokenNFT,
-    marketplaceContract,
-    handleTx,
+    isOwnerNFTOnSale,
+    reloadOfferList,
     ...props }: Props) => {
     const classes = useAboutStyles();
     const [currentTab, setCurrentTab] = useState<number>(defaultTab || 0);
@@ -65,20 +65,32 @@ export const AboutMarketplaceNFT = ({
         str += 'ago';
         return str;
     }
-
-    const { data: offers = [] as ObjectType<any> } = useFetchV1(`https://test-user.gamefi.org/api/v1/marketplace/offers/${projectAddress}/${id}?event_type=TokenOffered`)
-    console.log('offers', offers)
+    const [offerList, setOfferList] = useState<ObjectType<any>[]>([]);
+    useEffect(() => {
+        // update pagination
+        console.log('reloadOfferList', reloadOfferList)
+        if(reloadOfferList) {
+            axios.get(`https://test-user.gamefi.org/api/v1/marketplace/offers/${projectAddress}/${id}?event_type=TokenOffered`).then((res) => {
+                setOfferList(res.data?.data || []);
+            })
+        }
+    }, [reloadOfferList])
     const { account: connectedAccount } = useWeb3React();
-    const onAcceptOffer = async (item: ObjectType<any>) => {
-        if (!marketplaceContract) return;
-        const tx = await marketplaceContract.takeOffer(id, projectAddress, item.raw_amount, '0x0000000000000000000000000000000000000000', item.buyer);
-        handleTx(tx)
+
+    const formatTraitType = (item: any) => {
+        let traitType = item.trait_type || item.traitType || '';
+        traitType = typeof traitType === 'string' ? traitType : '';
+        let formatted = '';
+
+        formatted = traitType.split('_').map((w: string) => (w[0].toUpperCase() + w.slice(1))).join(' ');
+        return formatted;
     }
 
-    const onRejectOffer = async () => {
-        if (!marketplaceContract) return;
-        const tx = await marketplaceContract.cancelOffer(id, projectAddress);
-        handleTx(tx)
+    const formatValue = (item: any) => {
+        if(typeof item?.value !== 'object') {
+            return item.value;
+        }
+        return '';
     }
 
     return (
@@ -129,11 +141,11 @@ export const AboutMarketplaceNFT = ({
                 <TableContainer style={{ background: '#171717', marginTop: '7px' }}>
                     <Table>
                         <TableBody>
-                            {(info.atributes || []).map((row: any, idx: number) => (
+                            {(info.attributes || []).map((row: any, idx: number) => (
                                 <TableRowBody key={idx}>
                                     <TableCell width="80px" style={{ paddingLeft: '28px' }}>
                                         <div>
-                                            {row.trait_type}: <span>{row.value}</span>
+                                            {formatTraitType(row)}: <span>{formatValue(row)}</span>
                                         </div>
                                         {/* <div className={classes.tableCellOffer}>
                                             <h4>
@@ -152,13 +164,13 @@ export const AboutMarketplaceNFT = ({
                 <TableContainer style={{ background: '#171717', marginTop: '7px' }}>
                     <Table>
                         <TableBody>
-                            {offers.map((row: any, idx: number) => (
+                            {offerList.map((row: any, idx: number) => (
                                 <TableRowBody key={idx}>
                                     <TableCell width="200px" scope="row" style={{ paddingLeft: '28px' }}>
                                         <div className={classes.tableCellOffer}>
                                             <h4>
                                                 {row.buyer} <span>make a offer</span>
-                                            </h4>
+                                            </h4> 
                                             <h5 className="text-left">{formatTime(row.dispatch_at * 1000 || 0)}</h5 >
                                         </div>
                                     </TableCell>
@@ -173,14 +185,14 @@ export const AboutMarketplaceNFT = ({
                                     </TableCell>
                                     <TableCell align="left" style={{ padding: '7px' }}>
                                         {
-                                            row.event_type === 'TokenOffered' && (isOwnerTokenNFT ?
+                                            row.event_type === 'TokenOffered' && (isOwnerNFTOnSale ?
                                                 <ButtonBase color="green" onClick={() => {
-                                                    onAcceptOffer(row)
+                                                    props.onAcceptOffer(row)
                                                 }}>
                                                     Accept
                                                 </ButtonBase> :
                                                 row.buyer === connectedAccount &&
-                                                <ButtonBase color="green" onClick={onRejectOffer}>
+                                                <ButtonBase color="green" onClick={props.onRejectOffer}>
                                                     Cancel
                                                 </ButtonBase>)
                                         }

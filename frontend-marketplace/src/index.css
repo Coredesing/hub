@@ -310,3 +310,34 @@ body::-webkit-scrollbar-thumb,
 .firs-neue-font {
     font-family: 'Firs Neue';
 }
+
+.helvetica-font {
+    font-family: 'Helvetica';
+}
+
+.font-12px {
+    font-size: 12px;
+    line-height: 12px;
+}
+
+.text-grey {
+    color: #AEAEAE;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.font-600 {
+    font-weight: 600;
+}
+
+.font-16px {
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.font-14px {
+    font-size: 14px;
+    line-height: 20px;
+}

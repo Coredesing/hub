@@ -11,6 +11,7 @@ import { getVectorIcon } from '@base-components/Icon';
 import CardMarketplace from '@base-components/CardMarketplace';
 import { useFetchV1 } from '@hooks/useFetch';
 import { ObjectType } from '@app-types';
+
 const Marketplace = () => {
     const styles = useStyles();
     const cards = [
@@ -48,7 +49,7 @@ const Marketplace = () => {
         { name: 'Mech Master BOX', icon: '/images/icons/bsc.png', desc: 'Mech Master is a strategic turn-based RPG game where players are open to build ...', image: '/images/marketplace/character1.png' },
     ]
 
-    const {data: hostCollections = {} as ObjectType<any>, loading: loadingHostCollection} = useFetchV1('/marketplace/collections');
+    const { data: hostCollections = {} as ObjectType<any>, loading: loadingHostCollection } = useFetchV1('/marketplace/collections');
 
     return (
         <DefaultLayout>
@@ -145,20 +146,22 @@ const Marketplace = () => {
                                 </div>
                                 <div className={clsx(styles.hostCollections, "custom-scroll")}>
                                     {
-                                        (hostCollections?.data || []).map((p: ObjectType<any>, id: number) => <div className="collection" key={id}>
-                                            <div className="img">
-                                                <img src={p.image} alt="" />
-                                                <img src={p.logo} className="icon" alt="" />
+                                        (hostCollections?.data || []).map((p: ObjectType<any>, id: number) => <Link to={`/collection/${p.token_address}`}>
+                                            <div className="collection" key={id}>
+                                                <div className="img">
+                                                    <img src={p.image} alt="" />
+                                                    <img src={p.logo} className="icon" alt="" />
+                                                </div>
+                                                <div className="infor">
+                                                    <h3>{p.name}</h3>
+                                                    <p>{p.description}</p>
+                                                </div>
                                             </div>
-                                            <div className="infor">
-                                                <h3>{p.name}</h3>
-                                                <p>{p.description}</p>
-                                            </div>
-                                        </div>)
+                                        </Link>)
                                     }
                                 </div>
                             </div>
-                            <div className={styles.section}>
+                            {/* <div className={styles.section}>
                                 <div className="header">
                                     <h3>Hot Auction</h3>
                                     <div></div>
@@ -170,7 +173,7 @@ const Marketplace = () => {
                                         </Link>
                                         )}
                                 </div>
-                            </div>
+                            </div> */}
                             <div className={styles.section}>
                                 <div className="header">
                                     <h3>Big Offers</h3>

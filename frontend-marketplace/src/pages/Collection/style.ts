@@ -3,11 +3,12 @@ import { typeDisplayFlex } from "@styles/CommonStyle";
 
 const useStyles = makeStyles((theme: any) => ({
     page: {
-        padding: '28px 84px',
-        [theme.breakpoints.down('xs')]: {
-            padding: '28px 32px',
-        },
+
         '& .content-page': {
+            padding: '28px 84px',
+            [theme.breakpoints.down('xs')]: {
+                padding: '28px 32px',
+            },
             width: '100%',
             maxWidth: '1240px',
             margin: 'auto',
@@ -215,13 +216,18 @@ const useStyles = makeStyles((theme: any) => ({
         color: '#fff',
         textTransform: 'unset',
         background: '#2E2E2E',
-        borderRadius: '4px',
-        padding: '6px 14px',
+        padding: '6px 16px',
+        borderRadius: '22px',
+        '&.active': {
+            background: '#72F34B',
+            color: '#000',
+        },
         '& svg': {
             marginRight: '6px',
         },
         '&:hover': {
-            background: '#2E2E2E',
+            background: '#72F34B',
+            color: '#000',
         }
     },
     labelSwitch: {
@@ -241,6 +247,69 @@ const useStyles = makeStyles((theme: any) => ({
     },
     colorSwitch: {
         color: '#FFFFFF !important'
+    },
+    banner: {
+        
+        '& .wrapper-banner': {
+            marginBottom: '84px',
+            position: 'relative',
+            '& .img-banner': {
+                height: '340px',
+                width: '100%',
+                background: '100%',
+
+                '& img': {
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                },
+            },
+            '& .icon': {
+                width: '120px',
+                height: '120px',
+                borderRadius: '50%',
+                background: '#000',
+                overflow: 'hidden',
+                position: 'absolute',
+                left: '50%',
+                transform: 'translate(-50%)',
+                bottom: '-60px',
+                zIndex: 1000,
+                '& img': {
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '50%',
+                    objectFit: 'contain',
+                }
+            }
+        },
+        '& .infor': {
+            '& h3': {
+                fontFamily: 'Firs Neue',
+                fontStyle: 'normal',
+                fontWeight: 600,
+                fontSize: '28px',
+                lineHeight: '36px',
+                marginBottom: '8px',
+                textAlign: 'center',
+            },
+            '& p.desc': {
+                fontFamily: 'Helvetica',
+                fontStyle: 'normal',
+                fontWeight: 'normal',
+                fontSize: '16px',
+                lineHeight: '22px',
+                marginBottom: '24px',
+                textAlign: 'center',
+                color: '#AEAEAE'
+            },
+            '& .socials': {
+                ...typeDisplayFlex,
+                gap: '8px',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }
+        },
     }
 }));
 

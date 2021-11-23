@@ -24,6 +24,7 @@ import { ObjectType } from "@app-types";
 import { useWeb3React } from "@web3-react/core";
 import BN from 'bignumber.js'
 import axios from '@services/axios'
+import { getTimeStringPassed } from '@utils/index'
 type Props = {
     info: { [k: string]: any },
     [k: string]: any
@@ -46,31 +47,13 @@ export const AboutMarketplaceNFT = ({
 
     const [timenow] = useState(Date.now());
 
-    const formatTime = (time: number) => {
-        if (time >= timenow) return 'a few seconds ago';
-        const { days, hours, seconds, minutes } = getDiffTime(timenow, time);
-        let str = '';
-        if (days) {
-            str += `${days} day${days > 1 ? 's' : ''} `;
-        }
-        if (hours) {
-            str += `${hours} hour${hours > 1 ? 's' : ''} `;
-        }
-        if (minutes) {
-            str += `${minutes} minute${minutes > 1 ? 's' : ''} `;
-        }
-        if (seconds) {
-            str += `${seconds} second${seconds > 1 ? 's' : ''} `;
-        }
-        str += 'ago';
-        return str;
-    }
+
     const [offerList, setOfferList] = useState<ObjectType<any>[]>([]);
     useEffect(() => {
         // update pagination
         console.log('reloadOfferList', reloadOfferList)
-        if(reloadOfferList) {
-            axios.get(`https://test-user.gamefi.org/api/v1/marketplace/offers/${projectAddress}/${id}?event_type=TokenOffered`).then((res) => {
+        if (reloadOfferList) {
+            axios.get(`/marketplace/offers/${projectAddress}/${id}?event_type=TokenOffered`).then((res) => {
                 setOfferList(res.data?.data || []);
             })
         }
@@ -87,7 +70,7 @@ export const AboutMarketplaceNFT = ({
     }
 
     const formatValue = (item: any) => {
-        if(typeof item?.value !== 'object') {
+        if (typeof item?.value !== 'object') {
             return item.value;
         }
         return '';
@@ -170,8 +153,8 @@ export const AboutMarketplaceNFT = ({
                                         <div className={classes.tableCellOffer}>
                                             <h4>
                                                 {row.buyer} <span>make a offer</span>
-                                            </h4> 
-                                            <h5 className="text-left">{formatTime(row.dispatch_at * 1000 || 0)}</h5 >
+                                            </h4>
+                                            <h5 className="text-left">{getTimeStringPassed(row.dispatch_at * 1000 || 0, timenow)}</h5 >
                                         </div>
                                     </TableCell>
                                     <TableCell width="150px" align="left" style={{ padding: '7px' }} className="text-uppercase">

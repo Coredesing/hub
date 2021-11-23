@@ -319,6 +319,7 @@ class PoolService {
         icon: item.icon,
         banner: item.banner,
         image: item.image,
+        description: item.description,
         currency_ids: item.currency_ids
       });
       return data;

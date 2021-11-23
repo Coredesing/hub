@@ -61,6 +61,10 @@ class MarketplaceService {
       builder = builder.where('event_type', params.event_type)
     }
 
+    if (params.finish) {
+      builder = builder.where('finish', params.finish)
+    }
+
     return builder
   }
 

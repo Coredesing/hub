@@ -194,7 +194,7 @@ class FetchMarketplaceEvent {
               .where('finish', 0)
               .where('dispatch_at', '<', data.dispatch_at)
               .update({finish: 1})
-          // list --> done
+            break
           case EVENT_TYPE_CANCEL_OFFERED:
             await MarketplaceEventModel.query()
               .where('token_address', data.token_address)
@@ -203,7 +203,7 @@ class FetchMarketplaceEvent {
               .where('finish', 0)
               .where('dispatch_at', '<', data.dispatch_at)
               .update({finish: 1})
-          // offer --> done
+            break
           case EVENT_TYPE_BOUGHT:
             await MarketplaceEventModel.query()
               .where('token_address', data.token_address)
@@ -212,7 +212,8 @@ class FetchMarketplaceEvent {
               .where('finish', 0)
               .where('dispatch_at', '<', data.dispatch_at)
               .update({finish: 1})
-          // list --> done
+            break
+          default:
         }
       }
       catch (e) {

@@ -16,10 +16,10 @@ class MarketplaceController {
   }
 
   // filters: event_type
-  async getOffers({ request }) {
+  async getHotOffers({ request }) {
     try {
       const inputParams = request.all();
-      let data = await (new MarketplaceService).getEvents(inputParams);
+      let data = await (new MarketplaceService).getHotOffers(inputParams);
       return HelperUtils.responseSuccess(data);
     } catch (e) {
       return HelperUtils.responseErrorInternal();
@@ -54,20 +54,38 @@ class MarketplaceController {
     }
   }
 
-  // TODO:
-  async getCollectionItems({ request }) {
+  async getCollectionItems({ request, auth, params }) {
     try {
+      const address = params.address;
+      if (!address) {
+        return HelperUtils.responseNotFound();
+      }
 
-      return HelperUtils.responseSuccess('','Update successfully');
+      const inputParams = request.all();
+
+      let data = await (new MarketplaceService).getCollectionItems(address, inputParams);
+      if (!data) {
+        return HelperUtils.responseNotFound()
+      }
+      return HelperUtils.responseSuccess(data);
     } catch (e) {
       return HelperUtils.responseErrorInternal();
     }
   }
 
-  async getCollectionActivities({ request }) {
+  async getCollectionActivities({ request, auth, params }) {
     try {
+      const address = params.address;
+      if (!address) {
+        return HelperUtils.responseNotFound();
+      }
+
       const inputParams = request.all();
-      let data = await (new MarketplaceService).getEvents(inputParams);
+
+      let data = await (new MarketplaceService).getCollectionActivities(address, inputParams);
+      if (!data) {
+        return HelperUtils.responseNotFound()
+      }
       return HelperUtils.responseSuccess(data);
     } catch (e) {
       return HelperUtils.responseErrorInternal();
@@ -106,7 +124,6 @@ class MarketplaceController {
       let data = await (new MarketplaceService).getMyOffers(address, inputParams);
       return HelperUtils.responseSuccess(data);
     } catch (e) {
-      console.log('e', e)
       return HelperUtils.responseErrorInternal();
     }
   }

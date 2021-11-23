@@ -159,6 +159,42 @@ class StakingEventService {
     catch (e) {}
   }
 
+  async forceRun(fromBlock) {
+    try {
+      if (!fromBlock) {
+        return
+      }
+
+      console.log('fromblock', fromBlock)
+      const provider = await HelperUtils.getStakingProvider()
+      const latestBlockNumber = (await provider.eth.getBlockNumber()) - 1
+      let from = {
+        deposit: fromBlock,
+        withdraw: fromBlock,
+      }
+
+      // fetch staking
+      for (let index = from.deposit; index < latestBlockNumber; index += STEP) {
+        let to = index + STEP
+        if (to >= latestBlockNumber) {
+          to = latestBlockNumber
+        }
+
+        await this.run(provider, LINEAR_DEPOSIT_EVENT, index, to)
+      }
+
+      // fetch withdraw
+      for (let index = from.withdraw; index < latestBlockNumber; index += STEP) {
+        let to = index + STEP
+        if (to > latestBlockNumber) {
+          to = latestBlockNumber
+        }
+        await this.run(provider, LINEAR_WITHDRAW_EVENT, index, to)
+      }
+    }
+    catch (e) {}
+  }
+
   async run(provider, event_type, from, to) {
     console.log(`fetch ${event_type} from ${from} to ${to}`)
     const instance = await HelperUtils.getStakingPoolInstance()
@@ -183,7 +219,13 @@ class StakingEventService {
         data.raw_amount = event.returnValues.amount;
         data.amount = parseFloat(new BigNumber(data.raw_amount).dividedBy(ONE_UNIT).toFixed(6)) * sign;
 
-        await data.save();
+        const isExisted = await StakingEventModel.query().where('transaction_hash', data.transaction_hash)
+          .where('transaction_index', data.transaction_index)
+          .first()
+
+        if (!isExisted) {
+          await data.save();
+        }
 
         const tierInfo = await HelperUtils.getUserTierSmart(event.returnValues.account);
         await RedisUtils.createRedisUserTierBalance(event.returnValues.account, tierInfo);

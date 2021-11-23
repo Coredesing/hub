@@ -117,8 +117,8 @@ export const addAggregator = (gameData: any, tokenomicData: any, projectData: an
         try {
             const response = await baseRequest.post(url, gameData) as any;
             const resObject = await response.json();
-
-            const { id } = resObject;
+            
+            const { id } = resObject?.data;
             let tokenomicUrl = `/admin/aggregator/tokenomic/${id}`
             let projectUrl = `/admin/aggregator/project/${id}`
             const tkresponse = await baseRequest.post(tokenomicUrl, tokenomicData) as any;

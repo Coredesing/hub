@@ -6,7 +6,7 @@ import {renderErrorCreateAggregator} from "../../../../utils/validate";
 
 const Tokenomics: React.FC<any> = (props: any) => {
     const classes = useStyles();
-    const { register, errors, gameDetails, onChangeTokenomics } = props
+    const { register, errors, gameDetails, onChangeTokenomics, isEdit } = props
     const modules = {
         toolbar: [
             [{ 'header': [1, 2, false] }],
@@ -23,19 +23,24 @@ const Tokenomics: React.FC<any> = (props: any) => {
         'link', 'image'
     ]
 
+    const setStateDefault = (key: string) => {
+        if (!gameDetails) return null;
+        return isEdit ? gameDetails[key] : null;
+    }
+
     const [tokenomics, setTokenomics] = useState({
-        ticker: gameDetails?.ticker,
-        network_chain: gameDetails?.network_chain,
-        token_supply: gameDetails?.token_supply,
-        project_valuation: gameDetails?.project_valuation,
-        initial_token_cir: gameDetails?.initial_token_cir,
-        initial_token_market: gameDetails?.initial_token_market,
-        token_utilities: gameDetails?.token_utilities,
-        token_economy: gameDetails?.token_economy,
-        token_metrics: gameDetails?.token_metrics,
-        token_distribution: gameDetails?.token_distribution,
-        token_release: gameDetails?.token_release,
-        coinmarketcap_slug: gameDetails?.coinmarketcap_slug,
+        ticker: setStateDefault('ticker'),
+        network_chain: setStateDefault('network_chain'),
+        token_supply: setStateDefault('token_supply'),
+        project_valuation: setStateDefault('project_valuation'),
+        initial_token_cir: setStateDefault('initial_token_cir'),
+        initial_token_market: setStateDefault('initial_token_market'),
+        token_utilities: setStateDefault('token_utilities'),
+        token_economy: setStateDefault('token_economy'),
+        token_metrics: setStateDefault('token_metrics'),
+        token_distribution: setStateDefault('token_distribution'),
+        token_release: setStateDefault('token_release'),
+        coinmarketcap_slug: setStateDefault('coinmarketcap_slug'),
     });
 
     if (tokenomics) {

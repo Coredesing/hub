@@ -123,7 +123,7 @@ class AggregatorController {
     try {
       const params = request.all();
       const aggregatorService = new AggregatorService()
-      const aggregator = aggregatorService.setGame(params, false, 0)
+      const aggregator = await aggregatorService.setGame(params, false, 0)
 
       if (!aggregator) {
         return HelperUtils.responseNotFound();

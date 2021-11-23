@@ -6,7 +6,7 @@ import {renderErrorCreateAggregator} from "../../../../utils/validate";
 
 const ProjectInformation: React.FC<any> = (props: any) => {
     const classes = useStyles();
-    const { register, errors, gameDetails, onChangeProjectInfo } = props
+    const { register, errors, gameDetails, onChangeProjectInfo, isEdit } = props
     const modules = {
         toolbar: [
             [{ 'header': [1, 2, false] }],
@@ -23,23 +23,28 @@ const ProjectInformation: React.FC<any> = (props: any) => {
         'link', 'image'
     ]
 
+    const setStateDefault = (key: string) => {
+        if (!gameDetails) return null;
+        return isEdit ? gameDetails[key] : null;
+    }
+
     const [projectInfo, setProjectInfo] = useState({
-        roadmap: gameDetails?.roadmap,
-        technologist: gameDetails?.technologist,
-        investors: gameDetails?.investors,
-        official_website: gameDetails?.official_website,
-        discord_link: gameDetails?.discord_link,
-        official_telegram_link: gameDetails?.official_telegram_link,
-        twitter_link: gameDetails?.twitter_link,
-        facebook_link: gameDetails?.facebook_link,
-        youtube_link: gameDetails?.youtube_link,
-        twitch_link: gameDetails?.twitch_link,
-        tiktok_link: gameDetails?.tiktok_link,
-        reddit_link: gameDetails?.reddit_link,
-        instagram_link: gameDetails?.instagram_link,
-        medium_link: gameDetails?.medium_link,
-        announcement_telegram_link: gameDetails?.announcement_telegram_link,
-        coinmartketcap_link: gameDetails?.coinmartketcap_link,
+        roadmap: setStateDefault('roadmap'),
+        technologist: setStateDefault('technologist'),
+        investors: setStateDefault('investors'),
+        official_website: setStateDefault('official_website'),
+        discord_link: setStateDefault('discord_link'),
+        official_telegram_link: setStateDefault('official_telegram_link'),
+        twitter_link: setStateDefault('twitter_link'),
+        facebook_link: setStateDefault('facebook_link'),
+        youtube_link: setStateDefault('youtube_link'),
+        twitch_link: setStateDefault('twitch_link'),
+        tiktok_link: setStateDefault('tiktok_link'),
+        reddit_link: setStateDefault('reddit_link'),
+        instagram_link: setStateDefault('instagram_link'),
+        medium_link: setStateDefault('medium_link'),
+        announcement_telegram_link: setStateDefault('announcement_telegram_link'),
+        coinmartketcap_link: setStateDefault('coinmartketcap_link'),
     });
 
     if (projectInfo) {

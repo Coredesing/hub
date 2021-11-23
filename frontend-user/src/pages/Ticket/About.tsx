@@ -533,7 +533,7 @@ export const AboutMysteryBox = ({
       </TabPanel>
       {
         boxTypeSelected.description && <TabPanel value={tabCurrent} index={listIndex.boxInformation}>
-          <p style={{fontSize: '14px', fontFamily: 'Firs Neue', color: '#d1d1d1'}}>
+          <p style={{ fontSize: '14px', fontFamily: 'Firs Neue', color: '#d1d1d1' }}>
             {boxTypeSelected.description}
           </p>
         </TabPanel>
@@ -574,7 +574,16 @@ export const AboutMysteryBox = ({
                   </TableCell>
                   {isShowRateSerie && <TableCell align="left" style={{ padding: '7px' }}>{row.rate}%</TableCell>}
                   {isShowAmountSerie && <TableCell align="left" style={{ padding: '7px' }}>{numberWithCommas(row.amount)}</TableCell>}
-                  <TableCell align="left" style={{ padding: '7px' }}>{row.description}</TableCell>
+                  <TableCell align="left" style={{ padding: '7px' }}>
+                    <div style={{
+                      textOverflow: 'ellipsis',
+                      overflow: 'hidden',
+                      width: '160px',
+                      whiteSpace: 'nowrap',
+                    }}>
+                      {row.description}
+                    </div>
+                  </TableCell>
                 </TableRowBody>
               ))}
             </TableBody>

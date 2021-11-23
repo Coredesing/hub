@@ -116,6 +116,7 @@ function SeriesContentTable(props: any) {
               <TableCell>Rate</TableCell>
               <TableCell>Icon</TableCell>
               <TableCell>Banner</TableCell>
+              <TableCell>Description</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -128,6 +129,7 @@ function SeriesContentTable(props: any) {
                   <TableCell>{row.rate}%</TableCell>
                   <TableCell>{row.icon}</TableCell>
                   <TableCell>{row.banner}</TableCell>
+                  <TableCell>{row.description}</TableCell>
                   <TableCell align="right">
                     <Button
                       variant="contained"

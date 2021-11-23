@@ -33,6 +33,7 @@ function CreateEditSeriesContentForm(props: any) {
       rate: data.rate,
       icon: data.icon,
       banner: data.banner,
+      description: data.description,
     };
     handleCreateUpdateData && handleCreateUpdateData(responseData);
   };
@@ -147,6 +148,19 @@ function CreateEditSeriesContentForm(props: any) {
               />
           </div>
         </div>
+
+      <div className={classes.formControl}>
+          <label className={classes.formControlLabel}>Description</label>
+          <div>
+              <TextFieldWithValidate
+                  register={register}
+                  errors={errors}
+                  initValue={editData.description}
+                  controlName={'description'}
+                  validateRule={{}}
+              />
+          </div>
+      </div>
       </ConfirmDialog>
 
     </>

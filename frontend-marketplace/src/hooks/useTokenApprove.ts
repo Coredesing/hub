@@ -56,7 +56,7 @@ const useTokenAllowance = (
       console.log('[ERROR] - useTokenAllowance:', err);
       dispatch(alertFailure(err.message || TRANSACTION_ERROR_MESSAGE));
       setTokenApproveLoading(false);
-      throw new Error(err.message);
+      // throw new Error(err.message);
     }
   }, [owner, spender, token]);
 

@@ -81,7 +81,15 @@ type Props = {
     [k: string]: any,
 }
 
-const ListingNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isApproved, ...props }: Props) => {
+const ListingNFTModal = ({ open,
+    isLoadingButton,
+    defaultValue,
+    onApprove,
+    isApproved,
+    listAcceptTokens = [],
+    onSelectToken,
+    tokenSelected = {},
+    ...props }: Props) => {
     const styles = useStyles();
     const [inputPrice, setInputPrice] = useState(0);
     const onChangePrice = (event: any) => {
@@ -94,10 +102,13 @@ const ListingNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isApp
     const onConfirm = () => {
         props.onConfirm && props.onConfirm(inputPrice);
     }
-    const onChangeCurrency = (value: any) => {
-        console.log(value)
+    const onChangeCurrency = (e: any) => {
+        const address = e.target.value;
+        const tokenSelected = listAcceptTokens.find((t: any) => t.address === address)
+        onSelectToken(tokenSelected)
     }
 
+    console.log('listAcceptTokens', listAcceptTokens)
     return (
         <CustomModal open={open} onClose={onClose}
             actions={
@@ -124,12 +135,11 @@ const ListingNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isApp
                     <div className="form-input">
                         <FormInputNumber value={inputPrice} onChange={onChangePrice} isPositive allowZero />
                         <SelectBox
-                            items={[
-                                { name: 'BNB', icon: '/images/icons/bnb.png' }
-                            ]}
-                            itemNameValue="name"
+                            items={listAcceptTokens}
+                            itemNameValue="address"
                             itemNameShowValue="name"
                             onChange={onChangeCurrency}
+                            value={tokenSelected.address}
                         />
                     </div>
                 </div>

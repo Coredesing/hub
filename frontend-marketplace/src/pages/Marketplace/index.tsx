@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import DefaultLayout from '@layout-components/DefaultLayout'
 import WrapperContent from '@base-components/WrapperContent'
 import useStyles from './style';
@@ -11,6 +11,11 @@ import { getVectorIcon } from '@base-components/Icon';
 import CardMarketplace from '@base-components/CardMarketplace';
 import { useFetchV1 } from '@hooks/useFetch';
 import { ObjectType } from '@app-types';
+import axios from '@services/axios';
+import { getContractInstance } from '@services/web3';
+import erc721ABI from '@abi/Erc721.json';
+import { useSelector } from 'react-redux';
+import { useTypedSelector } from '@hooks/useTypedSelector';
 
 const Marketplace = () => {
     const styles = useStyles();
@@ -50,6 +55,64 @@ const Marketplace = () => {
     ]
 
     const { data: hostCollections = {} as ObjectType<any>, loading: loadingHostCollection } = useFetchV1('/marketplace/collections');
+    const perPage = 10;
+    const [offerData, setOfferData] = useState<any>({
+        page: 1,
+        total: 1,
+        data: {},
+    })
+    const { appChainID } = useSelector((state: any) => state.appNetwork).data;
+    const connectorName = useTypedSelector(state => state.connector).data;
+    const { data: hostOffer = {} as ObjectType<any>, loading: loadingHostOffer } = useFetchV1('/marketplace/hot-offers');
+    useEffect(() => {
+
+        if (hostOffer?.data?.length) {
+            const run = async () => {
+                const collections: ObjectType<any> = [];
+                await Promise.all(hostOffer.data.map((item: any) => new Promise(async (res) => {
+                    const result = await axios.get(`/marketplace/collection/${item.token_address}`);
+                    const projectInfo = result.data.data;
+                    if (!projectInfo) return;
+                    const useExternalUri = !!+projectInfo.use_external_uri;
+                    const erc721Contract = getContractInstance(erc721ABI, projectInfo.token_address, connectorName, appChainID);
+                    if (!erc721Contract) return;
+                    item.project = projectInfo;
+                    try {
+                        if (useExternalUri) {
+                            const result = await axios.post(`/marketplace/collection/${projectInfo.token_address}/${item.token_id}`);
+                            const info = result.data.data || {};
+                            Object.assign(item, info);
+                            res('');
+                        } else {
+                            const tokenURI = await erc721Contract.methods.tokenURI(item.token_id).call();
+                            const infoBoxType = (await axios.get(tokenURI)).data || {};
+                            Object.assign(item, infoBoxType);
+                            res('');
+                        }
+                        collections.push(item);
+                    } catch (error) {
+                        item.image = '';
+                        console.log('err', error)
+                        collections.push(item);
+                        res('')
+                    }
+                })));
+                const page = 1;
+                const total = +hostOffer.total || 0;
+                setOfferData((data: any) => ({
+                    page,
+                    total,
+                    data: {
+                        ...data.data,
+                        [page]: collections,
+                    }
+                }))
+            }
+            run();
+        }
+    }, [hostOffer, connectorName, appChainID]);
+
+    console.log('hostOffer', offerData)
 
     return (
         <DefaultLayout>
@@ -149,8 +212,8 @@ const Marketplace = () => {
                                         (hostCollections?.data || []).map((p: ObjectType<any>, id: number) => <Link to={`/collection/${p.token_address}`}>
                                             <div className="collection" key={id}>
                                                 <div className="img">
-                                                    <img src={p.image} alt="" />
-                                                    <img src={p.logo} className="icon" alt="" />
+                                                    {p.image && <img src={p.image} alt="" />}
+                                                    {p.logo && <img src={p.logo} className="icon" alt="" />}
                                                 </div>
                                                 <div className="infor">
                                                     <h3>{p.name}</h3>
@@ -204,8 +267,8 @@ const Marketplace = () => {
                                 </div>
                                 <div className={styles.cards}>
                                     {
-                                        cards.map((card, id) => <Link key={id} to={`/marketplace/${id}`}>
-                                            <CardMarketplace item={card} id={id} />
+                                        (offerData?.data?.[offerData.page] || []).map((item: any, id: number) => <Link key={id} to={`/collection/${item.project?.token_address}/${item.token_id}`}>
+                                            <CardMarketplace item={item} id={id} />
                                         </Link>
                                         )}
                                 </div>

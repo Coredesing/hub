@@ -25,8 +25,7 @@ import { TIERS } from "@app-constants";
 import { getContract } from "@utils/contract";
 import PreSaleBoxAbi from '@abi/PreSaleBox.json';
 import { useWeb3React } from "@web3-react/core";
-import BigNumber from 'bn.js';
-import BN from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 import { ButtonBase } from "@base-components/Buttons";
 import TransferNFTModal from "./components/TransferNFTModal";
 import { alertFailure, alertSuccess, alertWarning } from "@store/actions/alert";
@@ -124,11 +123,14 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
 
     const [addressOwnerOnSale, setAddressOwnerOnSale] = useState('');
     const [nftPrice, setNFTPrice] = useState('0');
+    const [addressCurrencyToBuy, setAddressCurrency] = useState('');
     const getTokenOnSale = async () => {
         try {
             const tokenOnSale = await marketplaceContract.tokensOnSale(projectAddress, id);
+            console.log('tokenOnSale', tokenOnSale)
             setAddressOwnerOnSale(tokenOnSale.tokenOwner);
             setNFTPrice(utils.formatEther(tokenOnSale.price))
+            setAddressCurrency(tokenOnSale.currency);
         } catch (error) {
             console.log('er', error)
         }
@@ -210,8 +212,8 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
         if (action === onRejectOffer.name) {
             setReloadOfferList(c => c + 1);
         }
-        if (action === onApprove.name) {
-            checkApprove();
+        if (action === onApproveToMarketplace.name) {
+            checkApproveMarketplace();
         }
         setLockingAction({ action: '', lock: false });
     }
@@ -235,11 +237,24 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
     const [openListingModal, setOpenListingModal] = useState(false);
     const [openOfferModal, setOpenOfferModal] = useState(false);
     const [openTransferModal, setOpenTransferModal] = useState(false);
+    useEffect(() => {
+        console.log('infoNFT', infoNFT)
+    }, [infoNFT])
+    const [tokenSelected, setTokenSeleted] = useState<ObjectType<any>>({});
+    useEffect(() => {
+        if (infoNFT?.project?.accepted_tokens?.length) {
+            setTokenSeleted(infoNFT.project.accepted_tokens[0]);
+        }
+    }, [infoNFT?.project?.accepted_tokens]);
+    const onSelectToken = (token: ObjectType<any>) => {
+        setTokenSeleted(token);
+        console.log('token', token)
+    }
 
     const onListingNFT = (price: number) => {
         handleCallContract(
             onListingNFT.name,
-            () => marketplaceContract.list(id, projectAddress, utils.parseEther(price + ''), '0x0000000000000000000000000000000000000000')
+            () => marketplaceContract.list(id, projectAddress, utils.parseEther(price + ''), tokenSelected.address)
         )
     }
 
@@ -259,46 +274,86 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
         const options = {
             value: utils.parseEther(offerPrice + '')
         }
-        handleCallContract(onOfferNFT.name, () => marketplaceContract.offer(id, projectAddress, options.value, '0x0000000000000000000000000000000000000000', options))
+        handleCallContract(onOfferNFT.name, () => marketplaceContract.offer(id, projectAddress, options.value, addressCurrencyToBuy, options))
     }
     const onBuyNFT = () => {
-        const options = {
-            value: utils.parseEther(nftPrice + '')
+        const options: ObjectType<any> = {}
+        if (new BigNumber(addressCurrencyToBuy).isZero()) {
+            options.value = utils.parseEther(nftPrice + '');
         }
-        handleCallContract(onBuyNFT.name, () => marketplaceContract.buy(id, projectAddress, options.value, '0x0000000000000000000000000000000000000000', options))
+        handleCallContract(onBuyNFT.name, () => marketplaceContract.buy(id, projectAddress, utils.parseEther(nftPrice + ''), addressCurrencyToBuy, options))
     }
 
     const onAcceptOffer = async (item: ObjectType<any>) => {
         console.log(item.raw_amount)
-        handleCallContract(onAcceptOffer.name, () => marketplaceContract.takeOffer(id, projectAddress, new BN(item.raw_amount).toFixed(), '0x0000000000000000000000000000000000000000', item.buyer));
+        handleCallContract(onAcceptOffer.name, () => marketplaceContract.takeOffer(id, projectAddress, new BigNumber(item.raw_amount).toFixed(), addressCurrencyToBuy, item.buyer));
     }
 
     const onRejectOffer = async () => {
         handleCallContract(onRejectOffer.name, () => marketplaceContract.cancelOffer(id, projectAddress));
     }
 
-    const onApprove = () => {
+    const onApproveToMarketplace = () => {
         if (!erc721Contract) return;
-        handleCallContract(onApprove.name, () => erc721Contract.setApprovalForAll(MARKETPLACE_SMART_CONTRACT, true))
+        handleCallContract(onApproveToMarketplace.name, () => erc721Contract.setApprovalForAll(MARKETPLACE_SMART_CONTRACT, true))
     }
 
-    const [isApproved, setApproved] = useState(false);
-    const checkApprove = async () => {
+    const [isApprovedMarketplace, setApprovedMarketplace] = useState(false);
+    const checkApproveMarketplace = async () => {
         try {
             if (!erc721Contract) return;
             const isApproved = await erc721Contract.isApprovedForAll(connectedAccount, MARKETPLACE_SMART_CONTRACT);
-            setApproved(isApproved)
+            setApprovedMarketplace(isApproved)
         } catch (error) {
             console.log('err', error)
         }
     }
     useEffect(() => {
         if (!library || !connectedAccount || !erc721Contract) return;
-        checkApprove();
-    }, [projectAddress, library, connectedAccount, erc721Contract])
+        checkApproveMarketplace();
+    }, [projectAddress, library, connectedAccount, erc721Contract]);
 
     const isOwnerNFT = connectedAccount && connectedAccount === addressOwnerNFT;
     const isOwnerNFTOnSale = connectedAccount && addressOwnerOnSale === connectedAccount;
+
+    const { retrieveTokenAllowance, tokenAllowanceLoading } = useTokenAllowance();
+    const { approveToken, setTokenApproveLoading, tokenApproveLoading, transactionHash } = useTokenApprove({ address: addressCurrencyToBuy } as any, infoNFT?.project?.token_address, connectedAccount, false);
+    const onApproveToken = () => {
+        try {
+            approveToken();
+        } catch (error) {
+            console.log('error', error);
+        }
+    }
+    const checkApproveToken = async () => {
+        try {
+            const allowance = await retrieveTokenAllowance({ address: addressCurrencyToBuy } as any, infoNFT.project.token_address, connectedAccount as string);
+            console.log(allowance);
+            setApprovedToken({ loading: false, ok: !new BigNumber(allowance || 0).isZero() });
+        } catch (error) {
+            console.log('err', error);
+        }
+    }
+    useEffect(() => {
+        if (transactionHash) {
+            setOpenTxModal(true);
+            setTxHash(transactionHash);
+            checkApproveToken();
+        }
+    }, [transactionHash]);
+
+
+
+    const [isApprovedToken, setApprovedToken] = useState({ loading: false, ok: false });
+    useEffect(() => {
+        if (isOwnerNFT || isOwnerNFTOnSale) return;
+        if (!addressCurrencyToBuy || !connectedAccount || !infoNFT?.project?.token_address) return;
+        if (addressCurrencyToBuy && !new BigNumber(addressCurrencyToBuy).isZero() && connectedAccount) {
+            setApprovedToken({ loading: true, ok: false });
+            checkApproveToken();
+        }
+    }, [addressCurrencyToBuy, connectedAccount, infoNFT?.project?.token_address, isOwnerNFT, isOwnerNFTOnSale]);
+
 
     return (
         <>
@@ -311,7 +366,17 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                 <DialogTxSubmitted open={openTxModal} onClose={() => setOpenTxModal(false)} transaction={txHash} />
                 <TransferNFTModal open={openTransferModal} onClose={() => setOpenTransferModal(false)} onConfirm={onTransferNFT} isLoadingButton={lockingAction.lock} />
                 <OfferNFTModal open={openOfferModal} onClose={() => setOpenOfferModal(false)} onConfirm={onOfferNFT} isLoadingButton={lockingAction.lock} />
-                <ListingNFTModal open={openListingModal} onClose={() => setOpenListingModal(false)} onConfirm={onListingNFT} onApprove={onApprove} isApproved={isApproved} isLoadingButton={lockingAction.lock} />
+                <ListingNFTModal
+                    open={openListingModal}
+                    onClose={() => setOpenListingModal(false)}
+                    onConfirm={onListingNFT}
+                    onApprove={onApproveToMarketplace}
+                    isApproved={isApprovedMarketplace}
+                    isLoadingButton={lockingAction.lock}
+                    listAcceptTokens={infoNFT?.project?.accepted_tokens}
+                    onSelectToken={onSelectToken}
+                    tokenSelected={tokenSelected}
+                />
                 {
                     infoNFT.loading ? <Backdrop open={infoNFT.loading} style={{ color: '#fff', zIndex: 1000, }}>
                         <CircularProgress color="inherit" />
@@ -389,7 +454,7 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                                                         </div>
                                                     </div>
                                                     {
-                                                        !(new BN(+addressOwnerOnSale || 0).isZero()) && <div className="item">
+                                                        !(new BigNumber(+addressOwnerOnSale || 0).isZero()) && <div className="item">
                                                             <label htmlFor="" className="label text-uppercase">Price</label>
                                                             <div className="text-white firs-neue-font">
                                                                 {nftPrice}
@@ -442,14 +507,25 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                                                                 Transfer
                                                             </ButtonBase>
                                                         }
+                                                        {/* {
+                                                            !isOwnerNFT && !isApprovedToken.ok && !isApprovedToken.loading && addressOwnerOnSale !== connectedAccount && !!+addressOwnerOnSale && !(new BigNumber(+addressOwnerOnSale).isZero()) &&
+                                                            <ButtonBase isLoading={checkFnIsLoading(onOfferNFT.name)} disabled={lockingAction.lock} color="yellow" className="w-full"
+                                                                onClick={onApproveToken}>
+                                                                Approve
+                                                            </ButtonBase>
+                                                        } */}
                                                         {
-                                                            !isOwnerNFT && addressOwnerOnSale !== connectedAccount && !!+addressOwnerOnSale && !(new BN(+addressOwnerOnSale).isZero()) &&
+                                                            !isOwnerNFT &&
+                                                            //  isApprovedToken.ok && 
+                                                            addressOwnerOnSale !== connectedAccount && !!+addressOwnerOnSale && !(new BigNumber(+addressOwnerOnSale).isZero()) &&
                                                             <ButtonBase isLoading={checkFnIsLoading(onOfferNFT.name)} disabled={lockingAction.lock} color="yellow" className="w-full" onClick={() => setOpenOfferModal(true)}>
                                                                 Offer
                                                             </ButtonBase>
                                                         }
                                                         {
-                                                            !isOwnerNFT && addressOwnerOnSale !== connectedAccount && !!+addressOwnerOnSale && !(new BN(+addressOwnerOnSale).isZero()) &&
+                                                            !isOwnerNFT && 
+                                                            // isApprovedToken.ok && 
+                                                            addressOwnerOnSale !== connectedAccount && !!+addressOwnerOnSale && !(new BigNumber(+addressOwnerOnSale).isZero()) &&
                                                             <ButtonBase isLoading={checkFnIsLoading(onBuyNFT.name)} disabled={lockingAction.lock} color="yellow" className="w-full" onClick={onBuyNFT}>
                                                                 Buy
                                                             </ButtonBase>

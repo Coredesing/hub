@@ -14,7 +14,6 @@ import {
     TableRowBody,
     TableRowHead
 } from '../../components/Base/Table';
-import { cvtAddressToStar, debounce, escapeRegExp, formatNumber, getDiffTime } from "../../utils";
 import { useAboutStyles } from "./style";
 import clsx from 'clsx';
 import ButtonBase from '@base-components/Buttons/ButtonBase'
@@ -51,7 +50,6 @@ export const AboutMarketplaceNFT = ({
     const [offerList, setOfferList] = useState<ObjectType<any>[]>([]);
     useEffect(() => {
         // update pagination
-        console.log('reloadOfferList', reloadOfferList)
         if (reloadOfferList) {
             axios.get(`/marketplace/offers/${projectAddress}/${id}?event_type=TokenOffered`).then((res) => {
                 setOfferList(res.data?.data || []);

@@ -3,17 +3,44 @@ import { ObjectType } from '@app-types'
 import { ButtonBase } from '@base-components/Buttons'
 import clsx from 'clsx';
 import useStyles from './style';
+import { Box } from '@material-ui/core';
+import { formatNumber, getCurrencyByNetwork } from '@utils/';
 
-const CardMarketplace = ({id, item, ...props}: ObjectType<any>) => {
+const CardMarketplace = ({ id, item, ...props }: ObjectType<any>) => {
     const styles = useStyles();
     return (
-        <div key={id} className={clsx(styles.card, { active: id === 0 })} >
-            <ButtonBase className="btn-buy" color="green">Buy Now</ButtonBase>
+        <div key={id} className={clsx(styles.card)} >
+            <ButtonBase className="btn-buy" color="green">Detail</ButtonBase>
             <div className={styles.cardImg}>
-                <img src={item.image} alt="" />
+                {item.image && <img src={item.image} alt="" />}
             </div>
             <div className={styles.cardBody}>
-                <h3>
+                <Box className="creator" display="grid" gridTemplateColumns="16px auto" gridGap={"6px"} alignItems="center" marginBottom={'6px'}>
+                    <img src={item?.project?.logo} style={{ width: '16px', height: '16px', borderRadius: '50%' }} alt="" />
+                    <span className="text-uppercase" style={{ color: '#AEAEAE', fontSize: '12px', fontFamily: 'Helvetica' }}>{item?.project?.name}</span>
+                </Box>
+                <Box marginBottom="12px">
+                    <h3>
+                        #{formatNumber(item.token_id, 3)}
+                    </h3>
+                </Box>
+                <Box className="bid" display="grid" gridTemplateColumns="1fr 1fr" gridGap="4px" justifyContent="space-between">
+                    <Box className="item" display="grid" gridGap="4px">
+                        <label className="helvetica-font font-12px text-grey" htmlFor="">Price floor</label>
+                        <span className="bold font-16px helvetica-font text-white">
+                            <img src="" alt="" />
+                            {item.value} {getCurrencyByNetwork(item.network)}
+                        </span>
+                    </Box>
+                    <Box className="item" display="grid" gridGap="4px" textAlign="right">
+                        <label className="helvetica-font font-12px text-grey" htmlFor="">Highest offer</label>
+                        <span className="bold font-16px helvetica-font text-white">
+                            <img src="" alt="" />
+                            -/- {getCurrencyByNetwork(item.network)}
+                        </span>
+                    </Box>
+                </Box>
+                {/* <h3>
                     {item.name}
                 </h3>
                 <div className="network">
@@ -32,9 +59,9 @@ const CardMarketplace = ({id, item, ...props}: ObjectType<any>) => {
                 </div>
                 <div className="tags">
                     {(item.tags || []).map((t: any) => <span key={t}>{t}</span>)}
-                </div>
+                </div> */}
             </div>
-            <div className={styles.cardFooter}>
+            {/* <div className={styles.cardFooter}>
                 <div className="logo">
                     <img src={item.iconToken} alt="" />
                     <span className="text-uppercase">{item.tokenName}</span>
@@ -53,7 +80,7 @@ const CardMarketplace = ({id, item, ...props}: ObjectType<any>) => {
                         <span>{item.interactions?.views}</span>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }

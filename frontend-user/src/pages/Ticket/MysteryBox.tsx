@@ -327,11 +327,11 @@ const MysteryBox = ({ id, ...props }: any) => {
 
     const [contractPreSaleWithAcc, setContractPreSaleWithAcc] = useState<any>();
     useEffect(() => {
-        if (infoTicket?.campaign_hash && connectedAccount) {
+        if (infoTicket?.campaign_hash && connectedAccount && library) {
             const contract = getContract(infoTicket.campaign_hash, PreSaleBoxAbi, library, connectedAccount as string);
             setContractPreSaleWithAcc(contract);
         }
-    }, [infoTicket, connectedAccount]);
+    }, [infoTicket, connectedAccount, library]);
 
     const [contractPreSale, setContractPreSale] = useState<any>();
     useEffect(() => {

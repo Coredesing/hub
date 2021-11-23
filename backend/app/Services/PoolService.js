@@ -301,6 +301,7 @@ class PoolService {
         rate: item.rate,
         icon: item.icon,
         banner: item.banner,
+        description: item.description,
       });
       return data;
     });

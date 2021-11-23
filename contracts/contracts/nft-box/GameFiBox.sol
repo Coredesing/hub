@@ -78,7 +78,7 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
     mapping(uint256 => bool) public minted; // check nftId is minted for saleId
     mapping(uint256 => mapping(uint256 => SubBox)) public subBoxes;
     mapping(uint256 => mapping(address => uint256)) public userBought;
-    mapping(address => uint256) superLimit; // for Legends
+    mapping(address => uint256) public superLimit; // for Legends
     SaleEvent[] public saleEvents;
     Box[] public boxes;
     ExternalStakingContract public externalStakingContract;

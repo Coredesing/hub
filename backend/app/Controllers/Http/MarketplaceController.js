@@ -124,7 +124,6 @@ class MarketplaceController {
       let data = await (new MarketplaceService).getMyOffers(address, inputParams);
       return HelperUtils.responseSuccess(data);
     } catch (e) {
-      console.log('e', e)
       return HelperUtils.responseErrorInternal();
     }
   }

@@ -125,7 +125,7 @@ Route.group(() => {
 
   // Marketplace
   Route.get('marketplace/collections', 'MarketplaceController.getCollections');
-  Route.get('marketplace/offers', 'MarketplaceController.getOffers');
+  Route.get('marketplace/hot-offers', 'MarketplaceController.getHotOffers');
   Route.get('marketplace/discover', 'MarketplaceController.discover');
   Route.get('marketplace/activities', 'MarketplaceController.getCollectionActivities');
   Route.get('marketplace/collections/support', 'MarketplaceController.getSupportCollections');

@@ -16,10 +16,10 @@ class MarketplaceController {
   }
 
   // filters: event_type
-  async getOffers({ request }) {
+  async getHotOffers({ request }) {
     try {
       const inputParams = request.all();
-      let data = await (new MarketplaceService).getEvents(inputParams);
+      let data = await (new MarketplaceService).getHotOffers(inputParams);
       return HelperUtils.responseSuccess(data);
     } catch (e) {
       return HelperUtils.responseErrorInternal();

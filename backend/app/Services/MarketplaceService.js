@@ -198,6 +198,19 @@ class MarketplaceService {
     return data
   }
 
+  async getHotOffers(filterParams) {
+    filterParams = this.formatPaginate(filterParams)
+    filterParams.event_type = 'TokenOffered'
+    filterParams.finish = 0
+
+    let data = await this.buildQueryNFTEventsBuilder(filterParams)
+      .orderBy('amount', 'DESC')
+      .orderBy('dispatch_at', 'DESC')
+      .paginate(filterParams.page, filterParams.limit);
+
+    return data
+  }
+
   formatPaginate(filterParams) {
     if (!filterParams.limit || isNaN(filterParams.limit) || filterParams.limit < 1) {
       filterParams.limit = 10

@@ -866,6 +866,14 @@ export const useAboutStyles = makeStyles((theme) => ({
     '& button': {
       marginTop: '0',
     }
+  },
+  tableCellDesc: {
+    [theme.breakpoints.down('xs')]: {
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      width: '160px',
+      whiteSpace: 'nowrap',
+    }
   }
 }));
 

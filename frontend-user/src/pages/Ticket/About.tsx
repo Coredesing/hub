@@ -330,6 +330,7 @@ export const AboutMysteryBox = ({
   collections = [],
   loadingCollection,
   handleRefreshCollection,
+  boxTypeSelected = {},
   ...props }: Props) => {
   const dispatch = useDispatch();
   const classes = useAboutStyles();
@@ -464,6 +465,23 @@ export const AboutMysteryBox = ({
       dispatch(alertFailure(error?.data?.message || error.message));
     }
   }
+  const listIndex = useMemo(() => {
+    if (boxTypeSelected?.description) {
+      return {
+        ruleIntroduce: 0,
+        boxInformation: 1,
+        seriesContent: 2,
+        timeline: 3,
+        collection: 4,
+      }
+    }
+    return {
+      ruleIntroduce: 0,
+      seriesContent: 1,
+      timeline: 2,
+      collection: 3,
+    }
+  }, [boxTypeSelected?.description])
   return (
     <div className={classes.root}>
       <AppBar className={classes.appbar} position="static">
@@ -476,28 +494,35 @@ export const AboutMysteryBox = ({
           scrollButtons={matchXS ? "auto" : undefined}
         >
           <Tab
-            className={clsx(classes.tabName, { active: tabCurrent === 0 })}
+            className={clsx(classes.tabName, { active: tabCurrent === listIndex.ruleIntroduce })}
             label="Rule Introduction"
             {...a11yProps(0)}
           />
+          {
+            boxTypeSelected?.description && <Tab
+              className={clsx(classes.tabName, { active: tabCurrent === listIndex.boxInformation })}
+              label="Box Information"
+              {...a11yProps(1)}
+            />
+          }
           <Tab
-            className={clsx(classes.tabName, { active: tabCurrent === 1 })}
+            className={clsx(classes.tabName, { active: tabCurrent === listIndex.seriesContent })}
             label="Series Content"
-            {...a11yProps(1)}
+            {...a11yProps(2)}
           />
           <Tab
-            className={clsx(classes.tabName, { active: tabCurrent === 2 })}
+            className={clsx(classes.tabName, { active: tabCurrent === listIndex.timeline })}
             label={"Timeline"}
-            {...a11yProps(1)}
+            {...a11yProps(3)}
           />
           <Tab
-            className={clsx(classes.tabName, { active: tabCurrent === 3 })}
+            className={clsx(classes.tabName, { active: tabCurrent === listIndex.collection })}
             label={`Collection (${ownedBox})`}
-            {...a11yProps(1)}
+            {...a11yProps(4)}
           />
         </AntTabs>
       </AppBar>
-      <TabPanel value={tabCurrent} index={0}>
+      <TabPanel value={tabCurrent} index={listIndex.ruleIntroduce}>
         <ul className={classes.tabPaneContent}>
           {getRules(info.rule).map((rule, idx) => (
             <li key={idx}>
@@ -506,7 +531,15 @@ export const AboutMysteryBox = ({
           ))}
         </ul>
       </TabPanel>
-      <TabPanel value={tabCurrent} index={1}>
+      {
+        boxTypeSelected.description && <TabPanel value={tabCurrent} index={listIndex.boxInformation}>
+          <p style={{ fontSize: '14px', fontFamily: 'Firs Neue', color: '#d1d1d1' }}>
+            {boxTypeSelected.description}
+          </p>
+        </TabPanel>
+      }
+
+      <TabPanel value={tabCurrent} index={listIndex.seriesContent}>
         <ModalSeriesContent
           open={openModalSerieContent}
           current={currentSerie}
@@ -523,15 +556,16 @@ export const AboutMysteryBox = ({
                 {/* <TableCell align="left">Amount</TableCell> */}
                 {isShowRateSerie && <TableCell align="left" style={{ padding: '7px' }}>Rare</TableCell>}
                 {isShowAmountSerie && <TableCell align="left" style={{ padding: '7px' }}>Amount</TableCell>}
+                {seriesContentConfig?.[0]?.description && <TableCell align="left" style={{ padding: '7px' }}>Description</TableCell>}
               </TableRowHead>
             </TableHead>
             <TableBody>
               {seriesContentConfig.map((row: any, idx: number) => (
                 <TableRowBody key={idx}>
                   <TableCell width="80px" component="th" scope="row" style={{ paddingLeft: '28px' }}> {idx + 1} </TableCell>
-                  <TableCell align="left" style={{ padding: '7px' }} className="text-uppercase">
-                    <Box display="flex" alignItems="center" gridGap="20px">
-                      <Box style={{ background: "#000", placeContent: 'center', borderRadius: '2px', cursor: 'pointer' }} display="grid" onClick={() => onSelectSerie(row)}>
+                  <TableCell align="left" style={{ padding: '7px', cursor: 'pointer' }} className="text-uppercase" onClick={() => onSelectSerie(row)}>
+                    <Box display="flex" alignItems="center" gridGap="20px" >
+                      <Box style={{ background: "#000", placeContent: 'center', borderRadius: '2px', cursor: 'pointer' }} display="grid">
                         <img src={row.icon} width='30' height="30" alt="" style={{ objectFit: 'contain' }} />
                       </Box>
                       <span className="text-weight-600">{row.name}</span>
@@ -540,6 +574,13 @@ export const AboutMysteryBox = ({
                   </TableCell>
                   {isShowRateSerie && <TableCell align="left" style={{ padding: '7px' }}>{row.rate}%</TableCell>}
                   {isShowAmountSerie && <TableCell align="left" style={{ padding: '7px' }}>{numberWithCommas(row.amount)}</TableCell>}
+                  {
+                    seriesContentConfig?.[0]?.description && <TableCell align="left" style={{ padding: '7px' }}>
+                      <div className={classes.tableCellDesc}>
+                        {row.description}
+                      </div>
+                    </TableCell>
+                  }
                 </TableRowBody>
               ))}
             </TableBody>
@@ -554,7 +595,7 @@ export const AboutMysteryBox = ({
           }}
         /> */}
       </TabPanel>
-      <TabPanel value={tabCurrent} index={2}>
+      <TabPanel value={tabCurrent} index={listIndex.timeline}>
         <div className={classes.wrapperBoxTimeLine}>
           {
             (Object.values(timelines) as TimelineType[]).map((timeline, idx: number) => <div key={idx} className={clsx("box", { active: timeline.current })}>
@@ -565,7 +606,7 @@ export const AboutMysteryBox = ({
           }
         </div>
       </TabPanel>
-      <TabPanel value={tabCurrent} index={3}>
+      <TabPanel value={tabCurrent} index={listIndex.collection}>
         <ModalBoxCollection open={openModalBoxCollection} current={currentBox} boxesContent={collections || []} onClose={onCloseModalBox} />
         <TransactionSubmitModal opened={isShowModalTx} handleClose={onCloseModalTx} transactionHash={txHash} />
         {

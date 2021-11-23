@@ -556,16 +556,16 @@ export const AboutMysteryBox = ({
                 {/* <TableCell align="left">Amount</TableCell> */}
                 {isShowRateSerie && <TableCell align="left" style={{ padding: '7px' }}>Rare</TableCell>}
                 {isShowAmountSerie && <TableCell align="left" style={{ padding: '7px' }}>Amount</TableCell>}
-                <TableCell align="left" style={{ padding: '7px' }}>Description</TableCell>
+                {seriesContentConfig?.[0]?.description && <TableCell align="left" style={{ padding: '7px' }}>Description</TableCell>}
               </TableRowHead>
             </TableHead>
             <TableBody>
               {seriesContentConfig.map((row: any, idx: number) => (
                 <TableRowBody key={idx}>
                   <TableCell width="80px" component="th" scope="row" style={{ paddingLeft: '28px' }}> {idx + 1} </TableCell>
-                  <TableCell align="left" style={{ padding: '7px' }} className="text-uppercase">
-                    <Box display="flex" alignItems="center" gridGap="20px">
-                      <Box style={{ background: "#000", placeContent: 'center', borderRadius: '2px', cursor: 'pointer' }} display="grid" onClick={() => onSelectSerie(row)}>
+                  <TableCell align="left" style={{ padding: '7px', cursor: 'pointer' }} className="text-uppercase" onClick={() => onSelectSerie(row)}>
+                    <Box display="flex" alignItems="center" gridGap="20px" >
+                      <Box style={{ background: "#000", placeContent: 'center', borderRadius: '2px', cursor: 'pointer' }} display="grid">
                         <img src={row.icon} width='30' height="30" alt="" style={{ objectFit: 'contain' }} />
                       </Box>
                       <span className="text-weight-600">{row.name}</span>
@@ -574,16 +574,13 @@ export const AboutMysteryBox = ({
                   </TableCell>
                   {isShowRateSerie && <TableCell align="left" style={{ padding: '7px' }}>{row.rate}%</TableCell>}
                   {isShowAmountSerie && <TableCell align="left" style={{ padding: '7px' }}>{numberWithCommas(row.amount)}</TableCell>}
-                  <TableCell align="left" style={{ padding: '7px' }}>
-                    <div style={{
-                      textOverflow: 'ellipsis',
-                      overflow: 'hidden',
-                      width: '160px',
-                      whiteSpace: 'nowrap',
-                    }}>
-                      {row.description}
-                    </div>
-                  </TableCell>
+                  {
+                    seriesContentConfig?.[0]?.description && <TableCell align="left" style={{ padding: '7px' }}>
+                      <div className={classes.tableCellDesc}>
+                        {row.description}
+                      </div>
+                    </TableCell>
+                  }
                 </TableRowBody>
               ))}
             </TableBody>

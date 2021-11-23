@@ -365,7 +365,7 @@ export default new Vuex.Store({
             economy: tokenomic.token_economy,
             distribution: tokenomic.token_distribution,
             schedule: tokenomic.token_release,
-            metric: tokenomic.token_metric
+            metric: tokenomic.token_metrics
           },
           team: {
             roadmap: info.roadmap ? info.roadmap.replace('<p>', '').replace('</p>', '') : '',

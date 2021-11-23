@@ -180,7 +180,7 @@ const MysteryBox = ({ id, ...props }: any) => {
             if (timeLine.freeBuyTime) {
                 timeLinesInfo[3] = {
                     title: 'BUY PHASE 1',
-                    desc: 'Whitelist registrants will be given favorable dealings to buy Mecha Boxes in phase 1, on a FCFS basis.'
+                    desc: 'Whitelist registrants will be given favorable dealings to buy Mystery Boxes in phase 1, on a FCFS basis.'
                 };
                 timeLinesInfo[4] = {
                     title: 'BUY PHASE 2',
@@ -193,7 +193,7 @@ const MysteryBox = ({ id, ...props }: any) => {
             } else {
                 timeLinesInfo[3] = {
                     title: 'BUY PHASE 1',
-                    desc: 'Whitelist registrants will be given favorable dealings to buy Mecha Boxes in phase 1, on a FCFS basis.'
+                    desc: 'Whitelist registrants will be given favorable dealings to buy Mystery Boxes in phase 1, on a FCFS basis.'
                 };
                 timeLinesInfo[4] = {
                     title: 'END',
@@ -1049,6 +1049,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                 collections={loadingCollection ? [] : collections}
                                 loadingCollection={loadingCollection}
                                 handleRefreshCollection={handleRefreshCollection}
+                                boxTypeSelected={boxTypeSelected}
                             />
                         </div>
                     </div>

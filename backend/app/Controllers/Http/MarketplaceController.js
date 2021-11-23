@@ -54,11 +54,20 @@ class MarketplaceController {
     }
   }
 
-  // TODO:
-  async getCollectionItems({ request }) {
+  async getCollectionItems({ request, auth, params }) {
     try {
+      const address = params.address;
+      if (!address) {
+        return HelperUtils.responseNotFound();
+      }
 
-      return HelperUtils.responseSuccess('','Update successfully');
+      const inputParams = request.all();
+
+      let data = await (new MarketplaceService).getCollectionItems(address, inputParams);
+      if (!data) {
+        return HelperUtils.responseNotFound()
+      }
+      return HelperUtils.responseSuccess(data);
     } catch (e) {
       return HelperUtils.responseErrorInternal();
     }

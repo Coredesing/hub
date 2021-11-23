@@ -168,9 +168,26 @@ class MarketplaceService {
     }).catch((error) => {})
   }
 
+  async getCollectionItems(address, filterParams) {
+    // TODO: filter whitelist address
+    filterParams = this.formatPaginate(filterParams)
+    filterParams.event_type = 'TokenListed'
+    filterParams.finish = 0
+
+    let data = await this.buildQueryNFTEventsBuilder(filterParams)
+      .orderBy('dispatch_at', 'DESC')
+      .paginate(filterParams.page, filterParams.limit);
+
+    return data
+  }
+
   formatPaginate(filterParams) {
-    if (!filterParams.limit || isNaN(filterParams.limit) || filterParams.limit < 1 || filterParams.limit > 10) {
+    if (!filterParams.limit || isNaN(filterParams.limit) || filterParams.limit < 1) {
       filterParams.limit = 10
+    }
+
+    if (filterParams.limit >= 20) {
+      filterParams.limit = 20
     }
 
     if (!filterParams.page || isNaN(filterParams.page) || filterParams.page < 0) {

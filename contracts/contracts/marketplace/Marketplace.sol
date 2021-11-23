@@ -202,7 +202,8 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
         // We can't transfer native token from buyer to seller directly
         _handleIncomingFund(price, currency);
 
-        uint256 fee = price * feePercentage / 100;
+//        uint256 fee = price * feePercentage / 100;
+        uint256 fee = calculateFee(seller, price);
         _handleOutgoingFund(vault, fee, currency);
 
         uint256 sellerProfit = price - fee;
@@ -279,7 +280,8 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
         require(amount == currentOffer.amount, "Invalid amount");
         require(buyer != seller, "Cannot buy your own token");
 
-        uint256 fee = amount * feePercentage / 100;
+//        uint256 fee = amount * feePercentage / 100;
+        uint256 fee = calculateFee(seller, amount);
         _handleOutgoingFund(vault, fee, currency);
 
         uint256 sellerProfit = amount - fee;
@@ -351,6 +353,7 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
         }
 
         uint256 totalFee = tokenOwnerProfit * feePercentage / 100;
+//        uint256 totalFee = calculateFee(auctionInfo.tokenOwner); tokenOwnerProfit * feePercentage / 100;
         _handleOutgoingFund(vault, totalFee, auctionInfo.auctionCurrency);
 
         tokenOwnerProfit -= totalFee;
@@ -513,6 +516,25 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
         }
 
         return false;
+    }
+
+    function calculateFee(
+        address user, // who must pay fee
+        uint256 amount
+    ) public returns (uint256) {
+        if (gamefi == address(0)) {
+            return feePercentage * amount / 100;
+        }
+
+        uint256 points = IStakingContract(gamefi).points(user);
+        uint256 fee = 0;
+        for (uint256 index = 0; index < rankings.length; index++) {
+            if (points >= rankings[index].threshold) {
+                fee = rankings[index].permile;
+            }
+        }
+
+        return fee * amount / 1000;
     }
 
     receive() external payable {}

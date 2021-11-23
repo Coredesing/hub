@@ -192,7 +192,9 @@ class StakingEventService {
         await this.run(provider, LINEAR_WITHDRAW_EVENT, index, to)
       }
     }
-    catch (e) {}
+    catch (e) {
+      console.log('err', e)
+    }
   }
 
   async run(provider, event_type, from, to) {

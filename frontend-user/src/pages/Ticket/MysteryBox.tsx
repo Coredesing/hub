@@ -210,8 +210,14 @@ const MysteryBox = ({ id, ...props }: any) => {
                 timeLinesInfo[1].current = true;
             }
             else if (timeLine.endJoinPoolTime > Date.now()) {
-                setCountdown({ date1: timeLine.endJoinPoolTime, date2: Date.now(), title: 'Whitelist Closes In', isWhitelist: true });
-                timeLinesInfo[2].current = true;
+                // check preorder
+                if (isAccIsBuyPreOrder && startBuyTime < Date.now()) {
+                    timeLinesInfo[3].current = true;
+                    setCountdown({ date1: timeLine?.freeBuyTime || timeLine?.finishTime, date2: Date.now(), title: 'Phase 1 Ends In', isSale: true, isPhase1: true });
+                } else {
+                    setCountdown({ date1: timeLine.endJoinPoolTime, date2: Date.now(), title: 'Whitelist Closes In', isWhitelist: true });
+                    timeLinesInfo[2].current = true;
+                }
             }
             else if (startBuyTime > Date.now()) {
                 timeLinesInfo[2].current = true;
@@ -713,7 +719,7 @@ const MysteryBox = ({ id, ...props }: any) => {
     };
 
     const disabledBuyNow = +numBoxBuy < 1 || !isKYC || lockWhenBuyBox || !connectedAccount || loadingUserTier || !_.isNumber(userTier) || (infoTicket?.min_tier > 0 && (userTier < infoTicket.min_tier));    
-    const isShowBtnApprove = connectedAccount && !tokenAllowanceLoading && tokenAllowance !== undefined && !isAccApproved(tokenAllowance as number) && tokenToApprove?.neededApprove;
+    const isShowBtnApprove = countdown?.isSale && connectedAccount && !tokenAllowanceLoading && tokenAllowance !== undefined && !isAccApproved(tokenAllowance as number) && tokenToApprove?.neededApprove;
     const isShowBtnBuy =
         (connectedAccount && !checkingKyc && !loadingJoinpool && countdown.isSale && ((countdown.isPhase1 && (alreadyJoinPool || joinPoolSuccess)) || countdown.isPhase2)) &&
         (!tokenSeletected.neededApprove || (tokenSeletected.neededApprove && isAccApproved(tokenAllowance as number)));

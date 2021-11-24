@@ -833,11 +833,20 @@ export default {
     },
     getImageFromPath() {
       if (this.game && Array.isArray(this.game.media)) {
-        const firstItem = this.game.media.find((item) => {
+        const firstVideoItem = this.game.media.find((item) => {
+          return item.type === 'video'
+        })
+
+        if (firstVideoItem && firstVideoItem.thumbnail) {
+          return firstVideoItem.thumbnail
+        }
+
+        const firstImageItem = this.game.media.find((item) => {
           return item.type === 'image'
         })
-        if (firstItem && firstItem.data) {
-          return firstItem.data
+
+        if (firstImageItem && firstImageItem.data) {
+          return firstImageItem.data
         }
       }
 
@@ -1120,7 +1129,7 @@ export default {
       .ido {
 
         &-title {
-          margin-top: 40px;
+          margin-top: 0;
           margin-bottom: 8px;
           font-weight: bold;
           font-size: 24px;
@@ -1583,6 +1592,11 @@ export default {
         &.mobile {
           display: block;
           margin: 0;
+          padding-top: 24px;
+
+          .btn-like {
+            margin-top: 40px;
+          }
         }
       }
 
@@ -1591,13 +1605,13 @@ export default {
 
           &_main {
             height: 210px;
-            padding: 16px;
+            padding: 24px;
             max-width: calc(100vw - 24px);
-            border-radius: 24px;
+            border-radius: 32px;
 
             video,
-            img {
-              border-radius: 12px;
+            & > img {
+              border-radius: 24px;
               max-width: 100%;
             }
 

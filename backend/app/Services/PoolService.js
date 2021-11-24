@@ -224,6 +224,10 @@ class PoolService {
   }
 
   async getUpcomingPoolsV3(filterParams) {
+    if (await RedisUtils.checkExistRedisUpcomingPools(filterParams.page)) {
+      const cachedPools = await RedisUtils.getRedisUpcomingPools(filterParams.page || 1)
+      return JSON.parse(cachedPools)
+    }
     const limit = filterParams.limit ? filterParams.limit : 100000;
     const page = filterParams.page ? filterParams.page : 1;
     filterParams.limit = limit;
@@ -240,6 +244,9 @@ class PoolService {
       .orderBy('priority', 'DESC')
       .orderBy('start_join_pool_time', 'ASC')
       .paginate(page, limit);
+
+    // cache data
+    await RedisUtils.createRedisUpcomingPools(filterParams.page, pools)
     return pools;
   }
 
@@ -534,6 +541,8 @@ class PoolService {
 
   async updatePoolInformation(pool) {
     try {
+      //clear cache
+      RedisUtils.deleteAllRedisUpcomingPools([1, 2])
       const tokenSold = await HelperUtils.getTokenSoldSmartContract(pool);
 
       const data = await HelperUtils.getPoolStatusByPoolDetail(pool, tokenSold);

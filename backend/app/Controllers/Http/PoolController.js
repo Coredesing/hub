@@ -152,6 +152,9 @@ class PoolController {
       const campaignId = campaign.id;
       const account = await (new WalletAccountService).createWalletAddress(campaignId);
       console.log('[createPool] - Create Walllet Account:', account.wallet_address);
+      
+      // Clear cache
+      RedisUtils.deleteAllRedisUpcomingPools([1, 2])
 
       return HelperUtils.responseSuccess(campaign);
     } catch (e) {
@@ -297,6 +300,9 @@ class PoolController {
       if (inputParams.token_type === 'box') {
         RedisMysteriousBoxUtils.deleteRedisMysteriousBoxes();
       }
+
+      // Clear cache
+      RedisUtils.deleteAllRedisUpcomingPools([1, 2])
 
       return HelperUtils.responseSuccess(campaign);
     } catch (e) {

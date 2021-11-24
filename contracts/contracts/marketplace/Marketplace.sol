@@ -217,6 +217,8 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
             delete tokensWithOffers[tokenContract][tokenId][buyer];
             emit TokenOfferCanceled(tokenContract, tokenId, buyer);
         }
+
+        delete tokensOnSale[tokenContract][tokenId];
         emit TokenBought(tokenContract, tokenId, buyer, seller, currency, price);
     }
 

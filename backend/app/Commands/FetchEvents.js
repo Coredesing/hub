@@ -24,7 +24,7 @@ class FetchEvents extends Command {
   async handle (args, options) {
     this.info('Implementation for fetch:events command');
     ARRAY_EVENTS.forEach((event_type) => {
-      FetchMarketplaceEventJob.doDispatch({ event_type: event_type, from: current_block })
+      FetchMarketplaceEventJob.doDispatch({ event_type: event_type, from: MARKETPLACE_START_BLOCK_NUMBER })
     })
     process.exit(0);
   }

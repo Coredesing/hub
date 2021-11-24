@@ -541,8 +541,6 @@ class PoolService {
 
   async updatePoolInformation(pool) {
     try {
-      //clear cache
-      RedisUtils.deleteAllRedisUpcomingPools([1, 2])
       const tokenSold = await HelperUtils.getTokenSoldSmartContract(pool);
 
       const data = await HelperUtils.getPoolStatusByPoolDetail(pool, tokenSold);
@@ -607,6 +605,9 @@ class PoolService {
         await RedisUtils.deleteRedisPoolDetail(pool.id);
       }
       console.log('[PoolService::updatePoolInformation] - ERROR: ', e);
+    } finally {
+      // Clear cache
+      RedisUtils.deleteAllRedisUpcomingPools([1, 2])
     }
   }
 

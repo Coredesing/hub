@@ -152,14 +152,14 @@ class PoolController {
       const campaignId = campaign.id;
       const account = await (new WalletAccountService).createWalletAddress(campaignId);
       console.log('[createPool] - Create Walllet Account:', account.wallet_address);
-      
-      // Clear cache
-      RedisUtils.deleteAllRedisUpcomingPools([1, 2])
 
       return HelperUtils.responseSuccess(campaign);
     } catch (e) {
       console.log('[PoolController::createPool] - ERROR: ', e);
       return HelperUtils.responseErrorInternal();
+    } finally {
+      // Clear cache
+      RedisUtils.deleteAllRedisUpcomingPools([1, 2])
     }
   }
 
@@ -301,13 +301,13 @@ class PoolController {
         RedisMysteriousBoxUtils.deleteRedisMysteriousBoxes();
       }
 
-      // Clear cache
-      RedisUtils.deleteAllRedisUpcomingPools([1, 2])
-
       return HelperUtils.responseSuccess(campaign);
     } catch (e) {
       console.log('[PoolController::updatePool] - ERROR: ', e);
       return HelperUtils.responseErrorInternal();
+    } finally {
+      // Clear cache
+      RedisUtils.deleteAllRedisUpcomingPools([1, 2])
     }
   }
 

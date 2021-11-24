@@ -2,7 +2,8 @@
 
 const Redis = use('Redis');
 const ENABLE_REDIS = true;
-const TIER_CACHED_TTL = 10 * 60; // 10 minutes
+const TIER_CACHED_TTL = 10 * 60; // 10 minutes'
+const UPCOMING_POOLS_CACHED_TTL = 30 // 30 seconds
 
 const logRedisUtil = (message) => {
   console.log(`[RedisUtils] - ${message}`);
@@ -121,7 +122,7 @@ const checkExistRedisUpcomingPools = async (page) => {
 const createRedisUpcomingPools = async (page, data) => {
   const redisKey = getRedisKeyUpcomingPools(page);
   logRedisUtil(`createRedisUpcomingPools - Create Cache data with key: ${redisKey}`);
-  return await Redis.set(redisKey, JSON.stringify(data));
+  return await Redis.setex(redisKey, UPCOMING_POOLS_CACHED_TTL, JSON.stringify(data));
 };
 
 const deleteRedisUpcomingPools = (page) => {

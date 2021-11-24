@@ -833,11 +833,20 @@ export default {
     },
     getImageFromPath() {
       if (this.game && Array.isArray(this.game.media)) {
-        const firstItem = this.game.media.find((item) => {
+        const firstVideoItem = this.game.media.find((item) => {
+          return item.type === 'video'
+        })
+
+        if (firstVideoItem && firstVideoItem.thumbnail) {
+          return firstVideoItem.thumbnail
+        }
+
+        const firstImageItem = this.game.media.find((item) => {
           return item.type === 'image'
         })
-        if (firstItem && firstItem.data) {
-          return firstItem.data
+
+        if (firstImageItem && firstImageItem.data) {
+          return firstImageItem.data
         }
       }
 

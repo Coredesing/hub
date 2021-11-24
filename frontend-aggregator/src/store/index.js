@@ -198,7 +198,7 @@ export default new Vuex.Store({
           liked: !!state.user.likes.find(id => id === item.id),
           likes: listLike.find(it => it.game_id === item.id)?.total_like || 0,
         }))
-        commit('updateListFavorite', list.splice(0, 6))
+        commit('updateListFavorite', list)
       }
     },
     async getListTopGame({ state, commit }) {
@@ -337,7 +337,7 @@ export default new Vuex.Store({
             {type: 'Android', link: detail.android_link},
           ].filter(item => !!item.link),
           ido: {
-            date: detail.ido_date ? dayjs(detail.ido_date).format('MMM DD, YYYY') : '',
+            date: detail.ido_date && detail.ido_date > new Date() ? dayjs(detail.ido_date).format('MMM DD, YYYY') : '',
             price: detail.token_price,
             chain: detail.network_available,
             currency: detail.accept_currency,

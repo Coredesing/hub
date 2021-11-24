@@ -62,7 +62,7 @@ export default {
         right: 0;
         width: 100%;
         height: auto;
-        border-radius: 30px;
+        border-radius: 24px;
         image-rendering: pixelated
       }
     }
@@ -79,12 +79,6 @@ export default {
         display:inline-block;
         overflow: hidden;
         white-space: nowrap;
-        max-width: 150px;
-        text-overflow: ellipsis;
-      }
-
-      span {
-        white-space: normal;
         max-width: 150px;
         text-overflow: ellipsis;
       }

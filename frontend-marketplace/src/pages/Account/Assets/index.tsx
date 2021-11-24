@@ -13,10 +13,14 @@ import { Link } from 'react-router-dom';
 import { setAssetsCollection } from '@store/actions/assets-account';
 import ReactDOM from 'react-dom';
 import { useHistory } from 'react-router-dom'
-import { Backdrop } from '@material-ui/core';
+import { Backdrop, Box, Button } from '@material-ui/core';
 import CircularProgress from '@base-components/CircularProgress';
+import clsx from 'clsx';
+import { useTabStyles } from '../style';
+import { SearchBox } from '@base-components/SearchBox';
 const Assets = () => {
     const styles = useStyles();
+    const tabStyles = useTabStyles();
     const history = useHistory();
     const dispatch = useDispatch();
     const tabNames: { [k: number]: any } = {
@@ -37,7 +41,7 @@ const Assets = () => {
         }
     }
     const [currentTab, setCurrentTab] = useState<number>(0);
-    const onChangeTab = (e: any, val: number) => {
+    const onChangeTab = (val: number) => {
         setCurrentTab(val);
     }
 
@@ -77,6 +81,11 @@ const Assets = () => {
                             if (!contract) return res('');
                             let myBoxes = await contract.methods.balanceOf(connectedAccount).call();
                             myBoxes = +myBoxes;
+                            if (!myBoxes) {
+                                setLoadingAsset(false);
+                                res('');
+                                return;
+                            }
                             for (let id = 0; id < myBoxes; id++) {
                                 const idCollection = await contract.methods.tokenOfOwnerByIndex(connectedAccount, id).call();
                                 const tokenURI = await contract.methods.tokenURI(idCollection).call();
@@ -100,10 +109,6 @@ const Assets = () => {
                                     }
                                 }))
                                 setLoadingAsset(false);
-                                // ReactDOM.render(<>
-                                //     {renderBoxItem(collection, idCollection)}
-                                // </>, wrapBoxElem)
-
                             }
                             res('');
                         } catch (error) {
@@ -113,6 +118,12 @@ const Assets = () => {
                     dispatch(setAssetsCollection({ [type]: collections }))
                 } else {
                     setLoadingAsset(false);
+                    if (wrapBoxElem) {
+                        ReactDOM.render(<div className="wrapper-not-found">
+                            <img src="/images/icons/item-not-found.svg" alt="" />
+                            <h4>No item found</h4>
+                        </div>, wrapBoxElem)
+                    }
                 }
             })
         } else {
@@ -126,11 +137,54 @@ const Assets = () => {
 
     return (
         <div>
-            <AppBar
+            {/* <AppBar
                 currentTab={currentTab}
                 tabNames={[tabNames[0].name, tabNames[1].name, tabNames[2].name]}
                 onChange={onChangeTab}
-            />
+            /> */}
+            <h3 className={styles.heading}>Assets</h3>
+            <Box display="flex" flexWrap="wrap" gridGap="20px" justifyContent="space-between">
+                <Box display="flex" gridGap="8px" alignItems="center">
+                    <Button
+                        onClick={() => {
+                            if (currentTab !== 0) {
+                                onChangeTab(0)
+                            }
+                        }}
+                        className={clsx(tabStyles.btnTab, {
+                            active: currentTab === 0,
+                        })}>
+                        {tabNames[0].name} ({assetsAccount[tabNames[0].type]?.length || 0})
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            if (currentTab !== 1) {
+                                onChangeTab(1)
+                            }
+                        }}
+                        className={clsx(tabStyles.btnTab, {
+                            active: currentTab === 1,
+                        })}>
+                        {tabNames[1].name} ({assetsAccount[tabNames[1].type]?.length || 0})
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            if (currentTab !== 2) {
+                                onChangeTab(2)
+                            }
+                        }}
+                        className={clsx(tabStyles.btnTab, {
+                            active: currentTab === 2,
+                        })}>
+                        {tabNames[2].name} ({assetsAccount[tabNames[2].type]?.length || 0})
+                    </Button>
+                </Box>
+                <Box>
+                    <SearchBox placeholder="Search"/>
+                </Box>
+            </Box>
+
+            <div className="divider"></div>
             {
                 loadingAsset && <Backdrop open={loadingAsset} style={{ color: '#fff', zIndex: 1000, }}>
                     <CircularProgress />
@@ -151,7 +205,7 @@ const Assets = () => {
                 </div>
             </TabPanel>
             <TabPanel value={currentTab} index={tabNames[2].value}>
-                <div>
+                <div className={styles.cards} id="equipment-cards">
                 </div>
             </TabPanel>
         </div>

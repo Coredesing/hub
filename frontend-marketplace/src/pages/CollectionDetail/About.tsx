@@ -21,7 +21,6 @@ import { AppBar, TabPanel } from "@base-components/Tabs";
 import { useFetchV1 } from "@hooks/useFetch";
 import { ObjectType } from "@app-types";
 import { useWeb3React } from "@web3-react/core";
-import BN from 'bignumber.js'
 import axios from '@services/axios'
 import { getTimeStringPassed } from '@utils/index'
 type Props = {
@@ -37,6 +36,8 @@ export const AboutMarketplaceNFT = ({
     projectAddress,
     isOwnerNFTOnSale,
     reloadOfferList,
+    getSymbolCurrency,
+    addressCurrencyToBuy,
     ...props }: Props) => {
     const classes = useAboutStyles();
     const [currentTab, setCurrentTab] = useState<number>(defaultTab || 0);
@@ -49,10 +50,24 @@ export const AboutMarketplaceNFT = ({
 
     const [offerList, setOfferList] = useState<ObjectType<any>[]>([]);
     useEffect(() => {
+        console.log('addressCurrencyToBuy', addressCurrencyToBuy)
         // update pagination
         if (reloadOfferList) {
-            axios.get(`/marketplace/offers/${projectAddress}/${id}?event_type=TokenOffered`).then((res) => {
-                setOfferList(res.data?.data || []);
+            const cachedCurrency: ObjectType<string> = {};
+            axios.get(`/marketplace/offers/${projectAddress}/${id}?event_type=TokenOffered`).then(async (res) => {
+                let offers = res.data?.data || [];
+                offers = await Promise.all(offers.map((item: any) => new Promise(async (res) => {
+                    if (!cachedCurrency[item.currency]) {
+                        const symbol = await getSymbolCurrency(item.currency);
+                        cachedCurrency[item.currency] = symbol;
+                        item.currencySymbol = symbol;
+                    } else {
+                        item.currencySymbol = cachedCurrency[item.currency];
+                    }
+                    res(item);
+                })));
+                console.log('offers', offers)
+                setOfferList(offers);
             })
         }
     }, [reloadOfferList])
@@ -150,7 +165,7 @@ export const AboutMarketplaceNFT = ({
                                     <TableCell width="200px" scope="row" style={{ paddingLeft: '28px' }}>
                                         <div className={classes.tableCellOffer}>
                                             <h4>
-                                                {row.buyer} <span>make a offer</span>
+                                                {row.buyer} <span>make an offer</span>
                                             </h4>
                                             <h5 className="text-left">{getTimeStringPassed(row.dispatch_at * 1000 || 0, timenow)}</h5 >
                                         </div>
@@ -158,22 +173,26 @@ export const AboutMarketplaceNFT = ({
                                     <TableCell width="150px" align="left" style={{ padding: '7px' }} className="text-uppercase">
                                         <div className={classes.tableCellOffer}>
                                             <h4 className="text-right flex">
-                                                <img src={`/images/icons/${row.network}.png`} alt="" />
-                                                {row.value}
+                                                {row.currencySymbol && <img src={`/images/icons/${(row.currencySymbol).toLowerCase()}.png`} alt="" />}
+                                                {+row.value || ''} {row.currencySymbol}
                                             </h4>
-                                            <h5 className="text-right">{row.usdPrice}</h5>
+                                            {/* <h5 className="text-right">{row.usdPrice}</h5> */}
                                         </div>
                                     </TableCell>
-                                    <TableCell align="left" style={{ padding: '7px' }}>
+                                    <TableCell align="right" style={{ padding: '7px', paddingRight: '20px' }}>
                                         {
-                                            row.event_type === 'TokenOffered' && (isOwnerNFTOnSale ?
-                                                <ButtonBase color="green" onClick={() => {
-                                                    props.onAcceptOffer(row)
-                                                }}>
+                                            row.event_type === 'TokenOffered' && addressCurrencyToBuy === row.currency && (isOwnerNFTOnSale ?
+                                                <ButtonBase color="green"
+                                                    className={clsx("text-transform-unset ", classes.btn)}
+                                                    onClick={() => {
+                                                        props.onAcceptOffer(row)
+                                                    }}>
                                                     Accept
                                                 </ButtonBase> :
                                                 row.buyer === connectedAccount &&
-                                                <ButtonBase color="green" onClick={props.onRejectOffer}>
+                                                <ButtonBase color="green"
+                                                    className={clsx("text-transform-unset", classes.btn)}
+                                                    onClick={props.onRejectOffer}>
                                                     Cancel
                                                 </ButtonBase>)
                                         }

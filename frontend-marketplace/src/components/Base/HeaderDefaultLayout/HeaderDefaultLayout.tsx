@@ -271,10 +271,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
             <nav className={`${styles.headerNav} ${toggleNavbar ? 'show' : ''}`}>
               <ul className={styles.headerLinks}>
                 <li className={styles.headerLink} onClick={hideNavMenu}><LinkMui href="https://gamefi.org/" target="_blank" rel="noreferrer">Aggregator</LinkMui></li>
-                {/* <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/ticket">Ticket sales</Link></li> */}
-                <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/token">Token sales</Link></li>
-                <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/mystery-boxes">Mystery boxes</Link></li>
-                <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/staking-pools">Staking</Link></li>
+                <li className={styles.headerLink} onClick={hideNavMenu}><LinkMui href="https://hub.gamefi.org" target="_blank">Launchpad</LinkMui></li>
                 <li className={styles.headerLink} onClick={hideNavMenu}><LinkMui href="javascript:void(0)" className="new-link">
                   Metaverse
                   <span className="new-icon">New</span>

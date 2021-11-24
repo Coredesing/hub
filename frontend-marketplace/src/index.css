@@ -275,8 +275,10 @@ body::-webkit-scrollbar-thumb,
 .divider {
     height: 1px;
     width: 100%;
-    opacity: 0.2;
+    opacity: 0.1;
     background: #fff;
+    margin-top: 14px;
+    margin-bottom: 14px;
 }
 
 .rounded {
@@ -340,4 +342,18 @@ body::-webkit-scrollbar-thumb,
 .font-14px {
     font-size: 14px;
     line-height: 20px;
+}
+
+.h-30px-imp {
+    height: 30px !important;
+}
+
+.py-8-imp {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+}
+
+.px-16-imp {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
 }

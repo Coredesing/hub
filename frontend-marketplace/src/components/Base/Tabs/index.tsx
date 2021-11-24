@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import useStyles from "./style";
 
 export function TabPanel(props: any) {
-    const { children, value, index, ...other } = props;
+    const { children, value, index, classChidlren, ...other } = props;
 
     return (
         <div
@@ -18,7 +18,7 @@ export function TabPanel(props: any) {
             {...other}
         >
             {value === index && (
-                <Box p={3}>
+                <Box>
                     {children}
                 </Box>
             )}

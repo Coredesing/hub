@@ -28,15 +28,9 @@ const AccountV2 = (props: any) => {
   const [tabAccount] = useState(Object.values(MenuLeft));
   const [activeMenuAccount, setActiveMenuAccount] = useState(currentTabMenu.key);
   const [updatedSuccess, setUpdatedSuccess] = useState(false);
-  const { data: userTier } = useSelector((state: any) => state.userTier);
-  const [loadingUserProfile, setRenewUserProfile] = useState(false);
   useEffect(() => {
     dispatch(getUserTier(!wrongChain && connectedAccount ? connectedAccount : ''));
   }, [wrongChain, connectedAccount, dispatch]);
-
-  useEffect(() => {
-    setRenewUserProfile(!!connectedAccount);
-  }, [connectedAccount]);
 
   useEffect(() => {
     if (isAuth && connectedAccount && !wrongChain) {
@@ -48,8 +42,6 @@ const AccountV2 = (props: any) => {
   useEffect(() => {
     setUpdatedSuccess(false);
   }, [activeMenuAccount]);
-
-
 
   const selectTab = (name: any) => {
     setActiveMenuAccount(name)

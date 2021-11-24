@@ -910,6 +910,14 @@ export const useAboutStyles = makeStyles((theme) => ({
     '& h5': {
       fontWeight: 'normal',
     }
+  },
+  btn: {
+    height: 'unset !important',
+    padding: '2px 16px !important',
+    minWidth: 'unset',
+    fontSize: '14px',
+    marginTop: 'unset',
+    fontFamily: 'Firs Neue'
   }
 }));
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import CustomModal from '@base-components/CustomModal';
 import { ButtonBase } from '@base-components/Buttons';
 import { FormInputNumber } from '@base-components/FormInputNumber';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Box } from '@material-ui/core';
 import SelectBox from '@base-components/SelectBox';
 const useStyles = makeStyles((theme) => ({
     wrapperContent: {
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
                 fontSize: '14px',
                 lineHeight: '24px',
                 color: '#FFFFFF',
-                marginBottom: '12px',
+                marginBottom: '8px',
             },
             '& .form-input': {
                 width: '100%',
@@ -79,7 +79,7 @@ type Props = {
     [k: string]: any,
 }
 
-const OfferNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isApproved, ...props }: Props) => {
+const OfferNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isApproved, currencySymbol, ...props }: Props) => {
     const styles = useStyles();
     const [inputPrice, setInputPrice] = useState(0);
     const onChangePrice = (event: any) => {
@@ -109,7 +109,10 @@ const OfferNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isAppro
             <div className={styles.wrapperContent}>
                 <h3>Offer NFT</h3>
                 <div className="content">
-                    <h4>Offer Price</h4>
+                    <h4 style={{display: 'flex',}}>Offer Price (Currency: {currencySymbol && <Box display="grid" marginLeft="4px" gridTemplateColumns="24px auto" gridGap="4px" alignItems="center">
+                        <img src={`/images/icons/${currencySymbol.toLowerCase()}.png`} style={{ width: '24px', height: '24px', background: '#000', borderRadius: '50%' }} alt="" />
+                        {currencySymbol}
+                    </Box>})</h4>
                     <div className="form-input">
                         <FormInputNumber value={inputPrice} onChange={onChangePrice} isPositive allowZero />
                     </div>

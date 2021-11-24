@@ -12,22 +12,22 @@ export const MenuLeft: IMenuLeft = {
     assets: {
         key: 'assets',
         name: 'Assets',
-        icon: '/images/account_v3/icons/icon_my_profile.svg',
+        icon: '/images/icons/dollar.svg',
     },
     listings: {
         key: 'listings',
         name: 'Listings',
-        icon: '/images/account_v3/icons/icon_my_tier.svg',
+        icon: '/images/icons/volume-level.svg',
     },
     auctions: {
-        key: 'auctions',
-        name: 'Auctions',
-        icon: '/images/icons/icon_my_pools.svg',
+        key: 'offers',
+        name: 'Offers',
+        icon: '/images/icons/start.svg',
     },
     favorites: {
         key: 'favorites',
         name: 'Favorites',
-        icon: '/images/icons/ticket.svg',
+        icon: '/images/icons/heart.svg',
     },
 }
 

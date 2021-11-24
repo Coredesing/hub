@@ -19,14 +19,12 @@ const useTokenAllowance = (
   spender: string | null | undefined,
   sotaABI: false
 ) => {
-  const [tokenApproveLoading, setTokenApproveLoading] = useState<boolean>(false);
-  const [transactionHash, setTransactionHash] = useState("");
+  const [response, setResponse] = useState<{ txHash?: string, loading?: boolean, error?: string }>({});
   const dispatch = useDispatch();
 
   const { library, account } = useWeb3React();
 
   const approveToken = useCallback(async () => {
-    setTransactionHash("");
 
     try {
       if (token && spender && owner
@@ -34,7 +32,8 @@ const useTokenAllowance = (
         && ethers.utils.isAddress(spender)
         && ethers.utils.isAddress(token.address)
       ) {
-        setTokenApproveLoading(true);
+        setResponse({ loading: true });
+        // setTokenApproveLoading(true);
 
         const contract = getContract(token.address, ERC20_ABI, library, account as string);
 
@@ -44,27 +43,25 @@ const useTokenAllowance = (
           const transaction = await contract.approve(spender, MAX_INT);
           console.log('Approve Token', transaction);
           dispatch(alertWarning("Approval is processing!"));
-          setTransactionHash(transaction.hash);
-
+          setResponse({ loading: true, txHash: transaction.hash })
           await transaction.wait(1);
-
+          setResponse({ loading: false, txHash: transaction.hash })
           dispatch(alertSuccess("Token Approve Successful!"));
-          setTokenApproveLoading(false);
+        } else {
+          setResponse({ loading: false })
         }
       }
     } catch (err: any) {
       console.log('[ERROR] - useTokenAllowance:', err);
-      dispatch(alertFailure(err.message || TRANSACTION_ERROR_MESSAGE));
-      setTokenApproveLoading(false);
-      // throw new Error(err.message);
+      const msgError = err.data?.message || err.message || TRANSACTION_ERROR_MESSAGE;
+      dispatch(alertFailure(msgError));
+      setResponse({ loading: false, error: msgError })
     }
   }, [owner, spender, token]);
 
   return {
-    tokenApproveLoading,
+    response,
     approveToken,
-    setTokenApproveLoading,
-    transactionHash
   }
 }
 

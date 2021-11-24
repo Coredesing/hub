@@ -7,7 +7,15 @@ const useStyles = makeStyles((theme: any) => ({
         gap: '20px',
         placeContent: 'center',
         transition: '.3s',
+        padding: '32px 0px',
     },
+    heading: {
+        color: '#fff',
+        fontSize: '28px',
+        fontFamily: 'Firs Neue',
+        fontWeight: 600,
+        marginBottom: '20px',
+    }
 }));
 
 export default useStyles;

@@ -19,8 +19,8 @@ const useStyles = makeStyles((theme: any) => {
       fontSize: 14,
       lineHeight: '20px',
       color: '#FFFFFF',
-      
-      
+
+
       [theme.breakpoints.down('sm')]: {
         alignItems: 'flex-start',
       },
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: any) => {
       marginBottom: 15,
       borderRadius: '8px',
       minHeight: 42,
-      
+
       [theme.breakpoints.down('sm')]: {
         alignItems: 'flex-start',
       },
@@ -149,7 +149,7 @@ const useStyles = makeStyles((theme: any) => {
         gap: '60px'
       },
     },
-    
+
     tier: {
       background: '#303035',
       borderRadius: '12px',
@@ -217,10 +217,12 @@ const useStyles = makeStyles((theme: any) => {
       fontWeight: 500,
       fontSize: 16,
       lineHeight: '24px',
-      color: '#AEAEAE',
+      color: '#fff',
       cursor: 'pointer',
       marginBottom: 12,
-
+      padding: '8px 12px',
+      borderRadius: '2px',
+      transition: '.3s',
       [theme.breakpoints.down('sm')]: {
         marginRight: 15,
         marginBottom: 15,
@@ -230,9 +232,12 @@ const useStyles = makeStyles((theme: any) => {
         }
       },
 
-      '&.active': {
-        color: '#72F34B',
-        cursor: 'inherit',
+      '&.active, &:hover': {
+        color: '#000',
+        background: '#72F34B',
+        '& div': {
+          background: '#000',
+        }
       }
     },
 
@@ -247,10 +252,10 @@ const useStyles = makeStyles((theme: any) => {
       maskRepeatY: 'no-repeat',
       maskOrigin: 'initial',
       maskClip: 'initial',
-      background: '#AEAEAE',
+      background: '#fff',
 
       '&.active': {
-        background: '#72F34B',
+        background: '#000',
       },
 
       [theme.breakpoints.down('sm')]: {
@@ -259,9 +264,29 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     rightAccount: {
-
+      background: 'radial-gradient(82.49% 167.56% at 15.32% 21.04%, rgba(217, 217, 217, 0.2) 0%, rgba(231, 245, 255, 0.0447917) 77.08%, rgba(255, 255, 255, 0) 100%)',
+      border: '1px solid #686868',
+      backdropFilter: 'blur(80px)',
+      borderRadius: '4px',
+      position: 'relative',
+      padding: '20px 30px',
+      [theme.breakpoints.up('md')]: {
+        minHeight: '500px',
+      },
+      '& .wrapper-not-found': {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        '& h4': {
+          color: '#fff',
+          fontFamily: 'Helvetica',
+          fontSize: '14px',
+          textAlign: 'center',
+        }
+      }
     },
-    
+
     backdrop: {
       zIndex: theme.zIndex.drawer + 1,
       color: '#fff',
@@ -319,4 +344,28 @@ export const useTabStyles = makeStyles((theme: any) => ({
   tabBody: {
 
   },
+  btnTab: {
+    ...typeDisplayFlex,
+    fontFamily: 'Firs Neue',
+    fontSize: '14px',
+    lineHeight: '24px',
+    fontStyle: 'normal',
+    fontWeight: 600,
+    color: '#fff',
+    textTransform: 'unset',
+    background: '#2E2E2E',
+    padding: '6px 16px',
+    borderRadius: '22px',
+    '&.active': {
+      background: '#72F34B',
+      color: '#000',
+    },
+    '& svg': {
+      marginRight: '6px',
+    },
+    '&:hover': {
+      background: '#72F34B',
+      color: '#000',
+    }
+  }
 }))

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import CustomModal from '@base-components/CustomModal';
 import { ButtonBase } from '@base-components/Buttons';
 import { FormInputNumber } from '@base-components/FormInputNumber';
-import { makeStyles } from '@material-ui/core';
+import { Box, makeStyles } from '@material-ui/core';
 import SelectBox from '@base-components/SelectBox';
+import clsx from 'clsx';
 const useStyles = makeStyles((theme) => ({
     wrapperContent: {
         width: '100%',
@@ -29,12 +30,12 @@ const useStyles = makeStyles((theme) => ({
                 fontSize: '14px',
                 lineHeight: '24px',
                 color: '#FFFFFF',
-                marginBottom: '12px',
+                marginBottom: '6px',
             },
             '& .form-input': {
                 width: '100%',
                 display: 'grid',
-                gridTemplateColumns: 'calc(100% - 150px) 120px',
+                // gridTemplateColumns: 'calc(100% - 150px) 120px',
                 '& input': {
                     width: '100%',
                     padding: '8px 30px 8px 12px',
@@ -61,6 +62,56 @@ const useStyles = makeStyles((theme) => ({
 
                     '&::placeholder': {
                         color: '#AEAEAE'
+                    }
+                }
+            },
+            '& .box-types': {
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(130px,1fr))',
+                gridAutoRows: 'minmax(42px, auto)',
+                gap: '8px',
+                '& .box-type': {
+                    '&.type': {
+                        placeContent: 'start',
+                    },
+                    cursor: 'pointer',
+                    padding: '5px 4px',
+                    display: 'grid',
+                    gridTemplateColumns: '40px auto',
+                    gap: '5px',
+                    alignItems: 'center',
+                    placeContent: 'center',
+                    border: '2px solid #555',
+                    borderRadius: '4px',
+                    transition: '0.3s',
+                    position: 'relative',
+                    '&.active, &:hover': {
+                        border: '2px solid #72F34B',
+
+                        '& span': {
+                            color: '#fff',
+                        }
+                    },
+                    '& .wrapper-icon': {
+                        height: '35px',
+                        width: '35px',
+                        background: '#000',
+                        display: 'grid',
+                        alignItems: 'center',
+                        placeItems: 'center',
+                    },
+                    '& .icon': {
+                        width: '35px',
+                        height: '20px',
+                        objectFit: 'contain',
+                    },
+
+                    '& span': {
+                        fontFamily: 'Firs Neue',
+                        fontStyle: 'normal',
+                        fontWeight: 600,
+                        fontSize: '12px',
+                        color: '#AEAEAE',
                     }
                 }
             }
@@ -102,13 +153,9 @@ const ListingNFTModal = ({ open,
     const onConfirm = () => {
         props.onConfirm && props.onConfirm(inputPrice);
     }
-    const onChangeCurrency = (e: any) => {
-        const address = e.target.value;
-        const tokenSelected = listAcceptTokens.find((t: any) => t.address === address)
+    const onChangeCurrency = (tokenSelected: any) => {
         onSelectToken(tokenSelected)
     }
-
-    console.log('listAcceptTokens', listAcceptTokens)
     return (
         <CustomModal open={open} onClose={onClose}
             actions={
@@ -131,17 +178,33 @@ const ListingNFTModal = ({ open,
             <div className={styles.wrapperContent}>
                 <h3>Listing your NFT</h3>
                 <div className="content">
-                    <h4>Total Price</h4>
-                    <div className="form-input">
-                        <FormInputNumber value={inputPrice} onChange={onChangePrice} isPositive allowZero />
-                        <SelectBox
-                            items={listAcceptTokens}
-                            itemNameValue="address"
-                            itemNameShowValue="name"
-                            onChange={onChangeCurrency}
-                            value={tokenSelected.address}
-                        />
-                    </div>
+                    <Box marginBottom="20px">
+                        <h4>Enter Price</h4>
+                        <div className="form-input">
+                            <FormInputNumber value={inputPrice} onChange={onChangePrice} isPositive allowZero />
+                        </div>
+                    </Box>
+                    <Box>
+                        <h4>Select currency</h4>
+                        <Box className="box-types" gridTemplateColumns="repeat(auto-fill, minmax(80px,1fr)) !important">
+                            {
+                                (listAcceptTokens).map((t: any, idx: number) => <Box
+                                    key={t.address}
+                                    onClick={() => onChangeCurrency(t)}
+                                    gridTemplateColumns="20px auto !important"
+                                    className={clsx("box-type", { active: t.address === tokenSelected.address })}>
+                                    <div className={`wrapperImg-${idx}`} style={{ position: 'relative' }}>
+                                        <img src={t.icon} className="icon" alt="" style={{ width: '20px', height: '20px' }}
+                                            onError={(e: any) => {
+                                                e.target.style.visibility = 'hidden';
+                                            }}
+                                        />
+                                    </div>
+                                    <span>{t.name}</span>
+                                </Box>)
+                            }
+                        </Box>
+                    </Box>
                 </div>
             </div>
         </CustomModal>

@@ -140,7 +140,7 @@ const Marketplace = () => {
                         </button>
                     </div>
                     <div className="content-page">
-                        <div className={styles.header}>
+                        {/* <div className={styles.header}>
                             <div className="title">
                                 <h3>Marketplace</h3>
                             </div>
@@ -159,14 +159,14 @@ const Marketplace = () => {
                                             itemNameValue="value"
                                             itemNameShowValue="name"
                                             defaultValue={selectType}
-                                            value={selectType} />
+                                            value={selectType} /> */}
                                         {/* <FormControlLabel
                                             classes={{ label: styles.labelSwitch }}
                                             control={<Switch checked={filterType} onChange={(e) => setFilterType(e.target.checked)} classes={{
                                                 track: clsx(styles.bgSwitch, { checked: filterType }),
                                                 checked: styles.colorSwitch,
                                             }} />} className="switch" label="My Listing" /> */}
-                                    </FormGroup>
+                                    {/* </FormGroup> */}
                                     {/* <FormGroup>
                                         <FormControlLabel
                                             classes={{ label: styles.labelSwitch }}
@@ -175,7 +175,7 @@ const Marketplace = () => {
                                                 checked: styles.colorSwitch,
                                             }} />} className="switch" label="My Auctions" />
                                      </FormGroup> */}
-                                </div>
+                                {/* </div>
                                 <div className="item">
                                     <div className="input-search">
                                         <SearchBox placeholder="Search NFT name - Creator" />
@@ -189,7 +189,7 @@ const Marketplace = () => {
                                         value={selectPrice} />
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                         <div className={styles.content}>
                             <div className={styles.section}>
                                 <div className="header">

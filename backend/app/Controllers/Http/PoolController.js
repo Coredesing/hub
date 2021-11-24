@@ -160,6 +160,7 @@ class PoolController {
     } finally {
       // Clear cache
       RedisUtils.deleteAllRedisUpcomingPools([1, 2])
+      RedisUtils.deleteAllRedisPoolByTokenType([1, 2])
     }
   }
 
@@ -308,6 +309,7 @@ class PoolController {
     } finally {
       // Clear cache
       RedisUtils.deleteAllRedisUpcomingPools([1, 2])
+      RedisUtils.deleteAllRedisPoolByTokenType([1, 2])
     }
   }
 

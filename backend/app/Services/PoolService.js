@@ -224,14 +224,15 @@ class PoolService {
   }
 
   async getUpcomingPoolsV3(filterParams) {
-    if (await RedisUtils.checkExistRedisUpcomingPools(filterParams.page)) {
-      const cachedPools = await RedisUtils.getRedisUpcomingPools(filterParams.page || 1)
-      return JSON.parse(cachedPools)
-    }
     const limit = filterParams.limit ? filterParams.limit : 100000;
     const page = filterParams.page ? filterParams.page : 1;
     filterParams.limit = limit;
     filterParams.page = page;
+
+    if (await RedisUtils.checkExistRedisUpcomingPools(page)) {
+      const cachedPools = await RedisUtils.getRedisUpcomingPools(page)
+      return JSON.parse(cachedPools)
+    }
 
     const now = moment().unix();
     let pools = await this.buildQueryBuilder(filterParams)
@@ -246,7 +247,9 @@ class PoolService {
       .paginate(page, limit);
 
     // cache data
-    await RedisUtils.createRedisUpcomingPools(filterParams.page, pools)
+    if (page <= 2) {
+      await RedisUtils.createRedisUpcomingPools(page, pools)
+    }
     return pools;
   }
 
@@ -608,6 +611,7 @@ class PoolService {
     } finally {
       // Clear cache
       RedisUtils.deleteAllRedisUpcomingPools([1, 2])
+      RedisUtils.deleteAllRedisPoolByTokenType([1, 2])
     }
   }
 
@@ -674,6 +678,11 @@ class PoolService {
     const page = filterParams.page ? filterParams.page : 1;
     const token_type = filterParams.token_type ? filterParams.token_type : 'erc20'
 
+    if (await RedisUtils.checkExistRedisPoolByTokenType(page)) {
+      const cachedPools = await RedisUtils.getRedisPoolByTokenType(page)
+      return JSON.parse(cachedPools)
+    }
+
     let pools = await this.buildQueryBuilder({})
       .where('token_type', token_type)
       .whereIn('campaign_status', [
@@ -689,6 +698,9 @@ class PoolService {
       .orderBy('id', 'DESC')
       .paginate(page, limit);
 
+    if (page <= 2) {
+      await RedisUtils.createRedisPoolByTokenType(filterParams.page, pools)
+    }
     return pools;
   }
 }

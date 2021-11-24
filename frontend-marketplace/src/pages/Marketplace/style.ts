@@ -4,9 +4,9 @@ import { typeDisplayFlex } from "@styles/CommonStyle";
 const useStyles = makeStyles((theme: any) => ({
     page: {
 
-        [theme.breakpoints.down('xs')]: {
-            padding: '28px 32px',
-        },
+        // [theme.breakpoints.down('xs')]: {
+        //     padding: '28px 32px',
+        // },
         '& .content-page': {
             width: '100%',
             maxWidth: '1240px',
@@ -14,11 +14,72 @@ const useStyles = makeStyles((theme: any) => ({
             padding: '28px 0px',
         }
     },
+    swiperSlide: {
+        '& .swiper-button-prev, & .swiper-button-next': {
+            width: '32px',
+            height: '32px',
+            backdropFilter: 'blur(80px)',
+            borderRadius: '50%',
+            // transform: 'matrix(-1, 0, 0, 1, 0, 0)',
+            background: 'rgba(255, 255, 255, 0.6)',
+            transition: '.3s',
+            '&:hover': {
+                background: '#fff',
+            }
+        },
+        '& .swiper-button-prev:after, & .swiper-button-next:after': {
+            display: 'none',
+        },
+        '& .swiper-button-prev:before': {
+            content: 'url(/images/icons/prev-icon.svg)',
+
+        },
+        '& .swiper-button-next:before': {
+            content: 'url(/images/icons/next-icon.svg)',
+        }
+    },
+    bannerSlide: {
+        '& .swiper-button-prev': {
+            left: '80px',
+        },
+        '& .swiper-button-next': {
+            right: '80px',
+        },
+        [theme.breakpoints.down('xs')]: {
+            '& .swiper-button-prev': {
+                left: '20px',
+            },
+            '& .swiper-button-next': {
+                right: '20px',
+            },
+        }
+    },
+    listCardsSlide: {
+        // [theme.breakpoints.up('md')]: {
+        //     '& .swiper-button-prev': {
+        //         left: '10px',
+        //     },
+        //     '& .swiper-button-next': {
+        //         right: '10px',
+        //     },
+        // },
+        '& > a': {
+            display: 'grid',
+            placeContent: 'center',
+        },
+        '& .swiper-button-prev': {
+            left: '10px',
+        },
+        '& .swiper-button-next': {
+            right: '10px',
+        },
+    },
     banner: {
         minHeight: '608px',
         background: '#000',
         position: 'relative',
         boxSizing: 'border-box',
+
         '& .btn-arrow': {
             position: 'absolute',
             top: '50%',
@@ -57,6 +118,7 @@ const useStyles = makeStyles((theme: any) => ({
             '& .img-banner': {
                 width: '100%',
                 height: '100%',
+                background: '#000',
                 '& img': {
                     width: '100%',
                     height: '100%',
@@ -70,7 +132,12 @@ const useStyles = makeStyles((theme: any) => ({
                 width: '360px',
                 padding: '24px',
                 borderRadius: '2px',
-                background: 'rgba(174, 174, 174, 0.3)',
+                background: 'rgb(31 31 31 / 70%)',
+                [theme.breakpoints.down('xs')]: {
+                    left: 0,
+                    width: '100%',
+                    bottom: 0
+                },
                 '& h3': {
                     fontStyle: 'normal',
                     fontWeight: 600,
@@ -125,7 +192,9 @@ const useStyles = makeStyles((theme: any) => ({
         }
     },
     content: {
-
+        [theme.breakpoints.down('xs')]: {
+            padding: '0px 20px',
+        }
     },
     section: {
         marginBottom: '80px',
@@ -174,11 +243,22 @@ const useStyles = makeStyles((theme: any) => ({
             }
         }
     },
+    swipeCard: {
+        width: '295px !important'
+    },
     hostCollections: {
         display: 'flex',
         gap: '20px',
         overflow: 'auto',
         paddingBottom: '10px',
+        // '& .swiper-slide': {
+        //     width: '295px !important',
+        //     minWidth: '295px',
+
+        //     [theme.breakpoints.down('xs')]: {
+        //         width: '295px !important',
+        //     }
+        // },
         '& .collection': {
             width: '295px',
             minWidth: '295px',
@@ -234,7 +314,7 @@ const useStyles = makeStyles((theme: any) => ({
     },
     cards: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, 295px)',
+        // gridTemplateColumns: 'repeat(auto-fit, 295px)',
         gap: '20px',
         placeContent: 'center',
         transition: '.3s',

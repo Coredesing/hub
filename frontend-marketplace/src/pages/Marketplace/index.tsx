@@ -3,7 +3,7 @@ import DefaultLayout from '@layout-components/DefaultLayout'
 import WrapperContent from '@base-components/WrapperContent'
 import useStyles from './style';
 import clsx from 'clsx';
-import { Button, Switch, FormGroup, FormControlLabel } from '@material-ui/core';
+import { Button, Switch, FormGroup, FormControlLabel, useTheme, useMediaQuery } from '@material-ui/core';
 import { SearchBox } from '@base-components/SearchBox';
 import SelectBox from '@base-components/SelectBox';
 import { Link } from 'react-router-dom';
@@ -16,22 +16,18 @@ import { getContractInstance } from '@services/web3';
 import erc721ABI from '@abi/Erc721.json';
 import { useSelector } from 'react-redux';
 import { useTypedSelector } from '@hooks/useTypedSelector';
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperCore, {
+    Navigation,
+    Pagination
+} from 'swiper';
+import "swiper/swiper.min.css";
+import 'swiper/swiper-bundle.css';
+// install Swiper modules
+SwiperCore.use([Navigation, Pagination]);
 
 const Marketplace = () => {
     const styles = useStyles();
-    const cards = [
-        { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-        { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-        { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-        { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-        { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-        { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-        // { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-        // { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-        // { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-        // { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-    ]
-
     const [filterType, setFilterType] = useState<boolean>(true);
     const [selectPrice, setSelectPrice] = useState('newest');
     const pricesFilter = useMemo(() => ([
@@ -45,14 +41,6 @@ const Marketplace = () => {
         { name: 'My Listing', value: 'mylisting' },
         { name: 'My Auctions', value: 'myauctions' },
     ]), [])
-
-    const projects = [
-        { name: 'Mech Master BOX', icon: '/images/icons/bsc.png', desc: 'Mech Master is a strategic turn-based RPG game where players are open to build ...', image: '/images/marketplace/character1.png' },
-        { name: 'Mech Master BOX', icon: '/images/icons/bsc.png', desc: 'Mech Master is a strategic turn-based RPG game where players are open to build ...', image: '/images/marketplace/character1.png' },
-        { name: 'Mech Master BOX', icon: '/images/icons/bsc.png', desc: 'Mech Master is a strategic turn-based RPG game where players are open to build ...', image: '/images/marketplace/character1.png' },
-        { name: 'Mech Master BOX', icon: '/images/icons/bsc.png', desc: 'Mech Master is a strategic turn-based RPG game where players are open to build ...', image: '/images/marketplace/character1.png' },
-        { name: 'Mech Master BOX', icon: '/images/icons/bsc.png', desc: 'Mech Master is a strategic turn-based RPG game where players are open to build ...', image: '/images/marketplace/character1.png' },
-    ]
 
     const { data: hostCollections = {} as ObjectType<any>, loading: loadingHostCollection } = useFetchV1('/marketplace/collections');
     const perPage = 10;
@@ -113,33 +101,48 @@ const Marketplace = () => {
     }, [hostOffer, connectorName, appChainID]);
 
     console.log('hostOffer', offerData)
+    const theme = useTheme();
+    const smScreen = useMediaQuery(theme.breakpoints.down('sm'))
+    const xsScreen = useMediaQuery(theme.breakpoints.down('xs'))
 
     return (
         <DefaultLayout>
             <WrapperContent useShowBanner={false}>
                 <div className={styles.page}>
-                    <div className={styles.banner}>
-                        <button className="btn btn-arrow btn-prev">
-                            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M7.70083 13.3731C7.30787 13.7642 6.67076 13.7642 6.27781 13.3731L0.585733 7.70798C0.192777 7.31689 0.192777 6.6828 0.585733 6.29171C0.595523 6.28196 0.605465 6.27246 0.615551 6.2632L6.27927 0.626327C6.67222 0.235234 7.30933 0.235234 7.70229 0.626327C8.09524 1.01742 8.09524 1.65151 7.70229 2.0426L2.72085 7.00043L7.70083 11.9568C8.09378 12.3479 8.09378 12.982 7.70083 13.3731Z" fill="black" />
-                            </svg>
-                        </button>
-                        <div className="desc">
-                            <div className="img-banner">
-                                <img src="/images/marketplace/banner.png" alt="" />
-                            </div>
-                            <div className="infor">
-                                <h3>Mech Master BOX</h3>
-                                <p>Mech Master is a strategic turn-based RPG game where players are open to build their own territory with future technologies and protect their homeland.</p>
-                            </div>
-                        </div>
-                        <button className="btn btn-arrow btn-next">
-                            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M0.299175 13.3731C0.69213 13.7642 1.32924 13.7642 1.72219 13.3731L7.41427 7.70798C7.80722 7.31689 7.80722 6.6828 7.41427 6.29171C7.40448 6.28196 7.39454 6.27246 7.38445 6.2632L1.72073 0.626327C1.32778 0.235234 0.690669 0.235234 0.297714 0.626327C-0.0952421 1.01742 -0.0952435 1.65151 0.297712 2.0426L5.27915 7.00043L0.299175 11.9568C-0.093781 12.3479 -0.0937806 12.982 0.299175 13.3731Z" fill="black" />
-                            </svg>
-                        </button>
-                    </div>
+                    <Swiper navigation={true} className={clsx(styles.swiperSlide, styles.bannerSlide)}>
+                        {
+                            (hostCollections?.data || []).map((card: any, id: number) => <SwiperSlide key={id}>
+                                <div className={styles.banner}>
+                                    {/* <button className="btn btn-arrow btn-prev">
+                                        <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M7.70083 13.3731C7.30787 13.7642 6.67076 13.7642 6.27781 13.3731L0.585733 7.70798C0.192777 7.31689 0.192777 6.6828 0.585733 6.29171C0.595523 6.28196 0.605465 6.27246 0.615551 6.2632L6.27927 0.626327C6.67222 0.235234 7.30933 0.235234 7.70229 0.626327C8.09524 1.01742 8.09524 1.65151 7.70229 2.0426L2.72085 7.00043L7.70083 11.9568C8.09378 12.3479 8.09378 12.982 7.70083 13.3731Z" fill="black" />
+                                        </svg>
+                                    </button> */}
+                                    <div className="desc">
+                                        <div className="img-banner">
+                                            {card.image && <img src={card.image} alt="" onError={(e: any) => {
+                                                e.target.style.visibility = 'hidden';
+                                            }} />}
+                                        </div>
+                                        <div className="infor">
+                                            <h3>{card.name}</h3>
+                                            <p>{card.description}</p>
+                                        </div>
+                                    </div>
+                                    {/* <button className="btn btn-arrow btn-next">
+                                        <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M0.299175 13.3731C0.69213 13.7642 1.32924 13.7642 1.72219 13.3731L7.41427 7.70798C7.80722 7.31689 7.80722 6.6828 7.41427 6.29171C7.40448 6.28196 7.39454 6.27246 7.38445 6.2632L1.72073 0.626327C1.32778 0.235234 0.690669 0.235234 0.297714 0.626327C-0.0952421 1.01742 -0.0952435 1.65151 0.297712 2.0426L5.27915 7.00043L0.299175 11.9568C-0.093781 12.3479 -0.0937806 12.982 0.299175 13.3731Z" fill="black" />
+                                        </svg>
+                                    </button> */}
+                                </div>
+                            </SwiperSlide>)
+                        }
+
+                    </Swiper>
+
+
                     <div className="content-page">
+
                         {/* <div className={styles.header}>
                             <div className="title">
                                 <h3>Marketplace</h3>
@@ -194,7 +197,7 @@ const Marketplace = () => {
                             <div className={styles.section}>
                                 <div className="header">
                                     <h3>Hot Collections</h3>
-                                    <div className="slide-actions">
+                                    {/* <div className="slide-actions">
                                         <button className="btn-prev">
                                             <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M5.77611 9.78015C5.48139 10.0735 5.00356 10.0735 4.70884 9.78014L0.439788 5.53133C0.145071 5.23801 0.145071 4.76244 0.439788 4.46912C0.448266 4.46068 0.456896 4.45249 0.465668 4.44453L4.71033 0.21999C5.00505 -0.0733301 5.48288 -0.0733303 5.77759 0.21999C6.07231 0.513309 6.07231 0.988875 5.77759 1.2822L2.04127 5.00081L5.77611 8.71794C6.07082 9.01126 6.07082 9.48682 5.77611 9.78015Z" fill="#000000" />
@@ -205,23 +208,39 @@ const Marketplace = () => {
                                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M0.223893 9.78015C0.51861 10.0735 0.99644 10.0735 1.29116 9.78014L5.56021 5.53133C5.85493 5.23801 5.85493 4.76244 5.56021 4.46912C5.55173 4.46068 5.5431 4.45249 5.53433 4.44453L1.28967 0.21999C0.994953 -0.0733301 0.517123 -0.0733303 0.222406 0.21999C-0.0723105 0.513309 -0.07231 0.988875 0.222407 1.2822L3.95873 5.00081L0.223893 8.71794C-0.0708241 9.01126 -0.0708241 9.48682 0.223893 9.78015Z" fill="#000000" />
                                             </svg>
                                         </button>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div className={clsx(styles.hostCollections, "custom-scroll")}>
-                                    {
-                                        (hostCollections?.data || []).map((p: ObjectType<any>, id: number) => <Link to={`/collection/${p.token_address}`}>
-                                            <div className="collection" key={id}>
-                                                <div className="img">
-                                                    {p.image && <img src={p.image} alt="" />}
-                                                    {p.logo && <img src={p.logo} className="icon" alt="" />}
-                                                </div>
-                                                <div className="infor">
-                                                    <h3>{p.name}</h3>
-                                                    <p>{p.description}</p>
-                                                </div>
-                                            </div>
-                                        </Link>)
-                                    }
+                                    <Swiper navigation={true}
+                                        slidesPerView={4}
+                                        spaceBetween={20}
+                                        slidesPerGroup={4}
+                                        loop={true}
+                                        loopFillGroupWithBlank={true}
+                                        // pagination={{
+                                        //     "clickable": true
+                                        // }}
+                                        className={clsx(styles.swiperSlide, styles.listCardsSlide)}
+                                    >
+                                        {
+                                            (hostCollections?.data || []).map((p: ObjectType<any>, id: number) =>
+                                                <SwiperSlide className={styles.swipeCard} style={{ width: '295px' }} key={id}>
+                                                    <Link to={`/collection/${p.token_address}`}>
+                                                        <div className="collection" key={id}>
+                                                            <div className="img">
+                                                                {p.image && <img src={p.image} alt="" />}
+                                                                {p.logo && <img src={p.logo} className="icon" alt="" />}
+                                                            </div>
+                                                            <div className="infor">
+                                                                <h3>{p.name}</h3>
+                                                                <p>{p.description}</p>
+                                                            </div>
+                                                        </div>
+                                                    </Link>
+                                                </SwiperSlide>
+                                            )
+                                        }
+                                    </Swiper>
                                 </div>
                             </div>
                             {/* <div className={styles.section}>
@@ -265,12 +284,27 @@ const Marketplace = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className={styles.cards}>
-                                    {
-                                        (offerData?.data?.[offerData.page] || []).map((item: any, id: number) => <Link key={id} to={`/collection/${item.project?.token_address}/${item.token_id}`}>
-                                            <CardMarketplace item={item} id={id} />
-                                        </Link>
-                                        )}
+                                <div className={""}>
+                                    <Swiper
+                                        navigation={true}
+                                        slidesPerView={4}
+                                        spaceBetween={20}
+                                        slidesPerGroup={4}
+                                        loop={true}
+                                        loopFillGroupWithBlank={true}
+                                        // pagination={{
+                                        //     "clickable": true
+                                        // }}
+                                        className={clsx(styles.swiperSlide, styles.listCardsSlide, styles.cards)}
+                                    >
+                                        {
+                                            (offerData?.data?.[offerData.page] || []).map((item: any, id: number) =>
+                                                <SwiperSlide style={{ width: '295px' }} className={styles.swipeCard} key={id}><Link key={id} to={`/collection/${item.project?.token_address}/${item.token_id}`}>
+                                                    <CardMarketplace item={item} id={id} />
+                                                </Link></SwiperSlide>
+                                            )
+                                        }
+                                    </Swiper>
                                 </div>
                             </div>
                         </div>

@@ -12,6 +12,8 @@ const useStyles = makeStyles<Theme>(props => ({
         transition: '.3s',
         cursor: 'pointer',
         position: 'relative',
+        maxWidth: '295px',
+        width: '295px',
         '&.active, &:hover': {
             border: '1px solid #72F34B',
         },

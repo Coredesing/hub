@@ -5,6 +5,17 @@ import { FormInputNumber } from '@base-components/FormInputNumber';
 import { Box, makeStyles } from '@material-ui/core';
 import SelectBox from '@base-components/SelectBox';
 import clsx from 'clsx';
+import BigNumber from 'bignumber.js';
+import useContract from '@hooks/useContract';
+import erc20ABI from '@abi/Erc20.json';
+import useAuth from '@hooks/useAuth';
+import { utils } from 'ethers'
+import { numberWithCommas } from '@utils/formatNumber';
+import useContractSigner from '@hooks/useContractSigner';
+import getAccountBalance from '@utils/getAccountBalance';
+import { useSelector } from 'react-redux';
+
+
 const useStyles = makeStyles((theme) => ({
     wrapperContent: {
         width: '100%',
@@ -140,9 +151,13 @@ const ListingNFTModal = ({ open,
     listAcceptTokens = [],
     onSelectToken,
     tokenSelected = {},
+    addressCurrencyToBuy,
+    currencySymbol,
     ...props }: Props) => {
     const styles = useStyles();
     const [inputPrice, setInputPrice] = useState(0);
+    const { connectedAccount } = useAuth();
+    const { appChainID } = useSelector((state: any) => state.appNetwork).data;
     const onChangePrice = (event: any) => {
         const { value } = event.target;
         setInputPrice(value);
@@ -156,6 +171,30 @@ const ListingNFTModal = ({ open,
     const onChangeCurrency = (tokenSelected: any) => {
         onSelectToken(tokenSelected)
     }
+    const [addressBalance, setAddressBalance] = useState('0');
+    const { contract: erc20Contract } = useContractSigner(erc20ABI, tokenSelected?.address, connectedAccount as string);
+    useEffect(() => {
+        if (!tokenSelected?.address || !connectedAccount) {
+            setAddressBalance('0');
+            return;
+        }
+        const getBalance = async () => {
+            try {
+                if (new BigNumber(tokenSelected.address).isZero()) {
+                    const balance = await getAccountBalance(appChainID, appChainID, connectedAccount, 'metamask')
+                    setAddressBalance(utils.formatEther(balance.toString()));
+                } else {
+                    if (!erc20Contract) return;
+                    const balance = await erc20Contract.balanceOf(connectedAccount);
+                    setAddressBalance(utils.formatEther(balance.toString()));
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getBalance();
+    }, [tokenSelected, erc20Contract, connectedAccount, appChainID]);
+
     return (
         <CustomModal open={open} onClose={onClose}
             actions={
@@ -204,6 +243,9 @@ const ListingNFTModal = ({ open,
                                 </Box>)
                             }
                         </Box>
+                    </Box>
+                    <Box marginTop="10px">
+                        (<span className="text-white firs-neue-font font-14px">Your Wallet Balance:</span> <span className="bold firs-neue-font font-14px text-white">{numberWithCommas(addressBalance, 4)} {tokenSelected?.name}</span>)
                     </Box>
                 </div>
             </div>

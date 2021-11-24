@@ -56,18 +56,21 @@ export const AboutMarketplaceNFT = ({
             const cachedCurrency: ObjectType<string> = {};
             axios.get(`/marketplace/offers/${projectAddress}/${id}?event_type=TokenOffered`).then(async (res) => {
                 let offers = res.data?.data || [];
-                offers = await Promise.all(offers.map((item: any) => new Promise(async (res) => {
-                    if (!cachedCurrency[item.currency]) {
-                        const symbol = await getSymbolCurrency(item.currency);
-                        cachedCurrency[item.currency] = symbol;
-                        item.currencySymbol = symbol;
-                    } else {
-                        item.currencySymbol = cachedCurrency[item.currency];
+                const offerList: ObjectType<any>[] = [];
+                await Promise.all(offers.map((item: any) => new Promise(async (res) => {
+                    if (item.currency === addressCurrencyToBuy) {
+                        if (!cachedCurrency[item.currency]) {
+                            const symbol = await getSymbolCurrency(item.currency);
+                            cachedCurrency[item.currency] = symbol;
+                            item.currencySymbol = symbol;
+                        } else {
+                            item.currencySymbol = cachedCurrency[item.currency];
+                        }
+                        offerList.push(item);
                     }
-                    res(item);
+                    res('');
                 })));
-                console.log('offers', offers)
-                setOfferList(offers);
+                setOfferList(offerList);
             })
         }
     }, [reloadOfferList])

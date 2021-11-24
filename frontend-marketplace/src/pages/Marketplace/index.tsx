@@ -160,14 +160,14 @@ const Marketplace = () => {
                                             itemNameShowValue="name"
                                             defaultValue={selectType}
                                             value={selectType} /> */}
-                                        {/* <FormControlLabel
+                        {/* <FormControlLabel
                                             classes={{ label: styles.labelSwitch }}
                                             control={<Switch checked={filterType} onChange={(e) => setFilterType(e.target.checked)} classes={{
                                                 track: clsx(styles.bgSwitch, { checked: filterType }),
                                                 checked: styles.colorSwitch,
                                             }} />} className="switch" label="My Listing" /> */}
-                                    {/* </FormGroup> */}
-                                    {/* <FormGroup>
+                        {/* </FormGroup> */}
+                        {/* <FormGroup>
                                         <FormControlLabel
                                             classes={{ label: styles.labelSwitch }}
                                             control={<Switch checked={filterType} onChange={(e) => setFilterType(e.target.checked)} classes={{
@@ -175,7 +175,7 @@ const Marketplace = () => {
                                                 checked: styles.colorSwitch,
                                             }} />} className="switch" label="My Auctions" />
                                      </FormGroup> */}
-                                {/* </div>
+                        {/* </div>
                                 <div className="item">
                                     <div className="input-search">
                                         <SearchBox placeholder="Search NFT name - Creator" />
@@ -197,12 +197,12 @@ const Marketplace = () => {
                                     <div className="slide-actions">
                                         <button className="btn-prev">
                                             <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.77611 9.78015C5.48139 10.0735 5.00356 10.0735 4.70884 9.78014L0.439788 5.53133C0.145071 5.23801 0.145071 4.76244 0.439788 4.46912C0.448266 4.46068 0.456896 4.45249 0.465668 4.44453L4.71033 0.21999C5.00505 -0.0733301 5.48288 -0.0733303 5.77759 0.21999C6.07231 0.513309 6.07231 0.988875 5.77759 1.2822L2.04127 5.00081L5.77611 8.71794C6.07082 9.01126 6.07082 9.48682 5.77611 9.78015Z" fill="white" />
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.77611 9.78015C5.48139 10.0735 5.00356 10.0735 4.70884 9.78014L0.439788 5.53133C0.145071 5.23801 0.145071 4.76244 0.439788 4.46912C0.448266 4.46068 0.456896 4.45249 0.465668 4.44453L4.71033 0.21999C5.00505 -0.0733301 5.48288 -0.0733303 5.77759 0.21999C6.07231 0.513309 6.07231 0.988875 5.77759 1.2822L2.04127 5.00081L5.77611 8.71794C6.07082 9.01126 6.07082 9.48682 5.77611 9.78015Z" fill="#000000" />
                                             </svg>
                                         </button>
                                         <button className="btn-next">
                                             <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M0.223893 9.78015C0.51861 10.0735 0.99644 10.0735 1.29116 9.78014L5.56021 5.53133C5.85493 5.23801 5.85493 4.76244 5.56021 4.46912C5.55173 4.46068 5.5431 4.45249 5.53433 4.44453L1.28967 0.21999C0.994953 -0.0733301 0.517123 -0.0733303 0.222406 0.21999C-0.0723105 0.513309 -0.07231 0.988875 0.222407 1.2822L3.95873 5.00081L0.223893 8.71794C-0.0708241 9.01126 -0.0708241 9.48682 0.223893 9.78015Z" fill="white" />
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M0.223893 9.78015C0.51861 10.0735 0.99644 10.0735 1.29116 9.78014L5.56021 5.53133C5.85493 5.23801 5.85493 4.76244 5.56021 4.46912C5.55173 4.46068 5.5431 4.45249 5.53433 4.44453L1.28967 0.21999C0.994953 -0.0733301 0.517123 -0.0733303 0.222406 0.21999C-0.0723105 0.513309 -0.07231 0.988875 0.222407 1.2822L3.95873 5.00081L0.223893 8.71794C-0.0708241 9.01126 -0.0708241 9.48682 0.223893 9.78015Z" fill="#000000" />
                                             </svg>
                                         </button>
                                     </div>

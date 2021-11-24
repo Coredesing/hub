@@ -15,6 +15,10 @@ const useContract = (abi: any, contractAddress: string): ReturnType => {
   // const connectorName = useTypedSelector(state => state.connector).data;
   const { appChainID } = useTypedSelector((state: any) => state.appNetwork).data;
   useEffect(() => {
+    if (!contractAddress) {
+      setContract(null);
+      return;
+    };
     const contract = getContractInstance(abi, contractAddress, undefined, appChainID || ChainDefault.id);
     if (!contract) return;
     setContract(contract);

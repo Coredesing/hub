@@ -161,9 +161,15 @@ const useStyles = makeStyles((theme: any) => ({
                     borderRadius: '50%',
                     outline: 'none',
                     border: '1px solid #686868',
-                    background: 'radial-gradient(82.49% 167.56% at 15.32% 21.04%, rgba(217, 217, 217, 0.2) 0%, rgba(231, 245, 255, 0.0447917) 77.08%, rgba(255, 255, 255, 0) 100%)',
+                    // background: 'radial-gradient(82.49% 167.56% at 15.32% 21.04%, rgba(217, 217, 217, 0.2) 0%, rgba(231, 245, 255, 0.0447917) 77.08%, rgba(255, 255, 255, 0) 100%)',
+                    background: 'rgba(255, 255, 255, 0.3)',
                     display: 'grid',
                     placeItems: 'center',
+                    cursor: 'pointer',
+                    '&:hover': {
+                        background: '#eee',
+                        color: '#000',
+                    }
                 }
             }
         }

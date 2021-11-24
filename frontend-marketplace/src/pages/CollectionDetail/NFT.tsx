@@ -314,7 +314,7 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
 
     const onApproveToken = () => {
         try {
-            setLockingAction({action: onApproveToken.name, lock: true});
+            setLockingAction({ action: onApproveToken.name, lock: true });
             approveToken();
         } catch (error) {
             console.log('error', error);
@@ -339,15 +339,15 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
     useEffect(() => {
         if (responseApproveToken.txHash && !responseApproveToken.loading) {
             checkApproveToken();
-            setLockingAction({lock: false, action: ''});
+            setLockingAction({ lock: false, action: '' });
             return;
         }
-        if(responseApproveToken.error) {
-            setLockingAction({lock: false, action: ''});
+        if (responseApproveToken.error) {
+            setLockingAction({ lock: false, action: '' });
         }
     }, [responseApproveToken])
 
-    
+
     useEffect(() => {
         if (isOwnerNFT || isOwnerNFTOnSale) return;
         if (!addressCurrencyToBuy || !connectedAccount || !infoNFT?.project?.token_address) return;
@@ -373,7 +373,9 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                     open={openOfferModal}
                     onClose={() => setOpenOfferModal(false)}
                     onConfirm={onOfferNFT}
-                    isLoadingButton={lockingAction.lock} />
+                    isLoadingButton={lockingAction.lock}
+                    addressCurrencyToBuy={addressCurrencyToBuy}
+                />
                 <ListingNFTModal
                     open={openListingModal}
                     onClose={() => setOpenListingModal(false)}
@@ -384,6 +386,8 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                     listAcceptTokens={infoNFT?.project?.accepted_tokens}
                     onSelectToken={onSelectToken}
                     tokenSelected={tokenSelected}
+                    addressCurrencyToBuy={addressCurrencyToBuy}
+                    currencySymbol={currencySymbol}
                 />
                 {
                     infoNFT.loading ? <Backdrop open={infoNFT.loading} style={{ color: '#fff', zIndex: 1000, }}>
@@ -516,7 +520,7 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                                                             </ButtonBase>
                                                         }
                                                         {
-                                                            !isOwnerNFT && !isApprovedToken.ok && !isApprovedToken.loading && addressOwnerOnSale !== connectedAccount && 
+                                                            !isOwnerNFT && !isApprovedToken.ok && !isApprovedToken.loading && addressOwnerOnSale !== connectedAccount &&
                                                             !!+addressOwnerOnSale && !(new BigNumber(+addressOwnerOnSale).isZero()) &&
                                                             <ButtonBase isLoading={checkFnIsLoading(onApproveToken.name)} disabled={lockingAction.lock} color="yellow" className="w-full"
                                                                 onClick={onApproveToken}>

@@ -157,6 +157,9 @@ class PoolController {
     } catch (e) {
       console.log('[PoolController::createPool] - ERROR: ', e);
       return HelperUtils.responseErrorInternal();
+    } finally {
+      // Clear cache
+      RedisUtils.deleteAllRedisUpcomingPools([1, 2])
     }
   }
 
@@ -302,6 +305,9 @@ class PoolController {
     } catch (e) {
       console.log('[PoolController::updatePool] - ERROR: ', e);
       return HelperUtils.responseErrorInternal();
+    } finally {
+      // Clear cache
+      RedisUtils.deleteAllRedisUpcomingPools([1, 2])
     }
   }
 

@@ -4,6 +4,7 @@ const Redis = use('Redis');
 const ENABLE_REDIS = true;
 const TIER_CACHED_TTL = 10 * 60; // 10 minutes'
 const UPCOMING_POOLS_CACHED_TTL = 30 // 30 seconds
+const POOL_BY_TOKEN_TYPEP_CACHED_TTL = 30 // 30 seconds
 
 const logRedisUtil = (message) => {
   console.log(`[RedisUtils] - ${message}`);
@@ -140,6 +141,54 @@ const deleteRedisUpcomingPools = (page) => {
 const deleteAllRedisUpcomingPools = (pages = []) => {
   pages.forEach(page => {
     deleteRedisUpcomingPools(page)
+  })
+};
+
+/**
+ * List Pool By Token Type
+ */
+ const getRedisKeyPoolByTokenType = (page = 1) => {
+  return `pool_by_token_type_${page}`;
+};
+
+const getRedisPoolByTokenType = async (page) => {
+  return await Redis.get(getRedisKeyPoolByTokenType(page));
+};
+
+const checkExistRedisPoolByTokenType = async (page) => {
+  let redisKey = getRedisKeyPoolByTokenType(page);
+  logRedisUtil(`checkExistRedisPoolByTokenType - redisKey: ${redisKey}`);
+
+  const isExistRedisData = await Redis.exists(redisKey);
+  if (isExistRedisData) {
+    logRedisUtil(`checkExistRedisPoolByTokenType - Exist Redis cache with key: ${redisKey}`);
+    return true;
+  }
+  logRedisUtil(`checkExistRedisPoolByTokenType - Not exist Redis cache with key: ${redisKey}`);
+  return false;
+};
+
+const createRedisPoolByTokenType = async (page, data) => {
+  const redisKey = getRedisKeyPoolByTokenType(page);
+  logRedisUtil(`createRedisPoolByTokenType - Create Cache data with key: ${redisKey}`);
+  return await Redis.setex(redisKey, POOL_BY_TOKEN_TYPEP_CACHED_TTL, JSON.stringify(data));
+};
+
+const deleteRedisPoolByTokenType = (page) => {
+  let redisKey = getRedisKeyPoolByTokenType(page);
+  if (Redis.exists(redisKey)) {
+    logRedisUtil(`deleteRedisPoolByTokenType - existed key ${redisKey} on redis`);
+    // remove old key
+    Redis.del(redisKey);
+    return true;
+  }
+  logRedisUtil(`deleteRedisPoolByTokenType - not exist key ${redisKey}`);
+  return false;
+};
+
+const deleteAllRedisPoolByTokenType = (pages = []) => {
+  pages.forEach(page => {
+    deleteRedisPoolByTokenType(page)
   })
 };
 
@@ -333,6 +382,14 @@ module.exports = {
   createRedisUpcomingPools,
   deleteRedisUpcomingPools,
   deleteAllRedisUpcomingPools,
+
+  // LIST POOL BY TOKEN TYPE
+  checkExistRedisPoolByTokenType,
+  getRedisKeyPoolByTokenType,
+  getRedisPoolByTokenType,
+  createRedisPoolByTokenType,
+  deleteRedisPoolByTokenType,
+  deleteAllRedisPoolByTokenType,
 
   // POOL DETAIL
   checkExistRedisPoolDetail,

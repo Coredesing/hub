@@ -451,7 +451,7 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
             (bool isSuccess,) = to.call{value: amount}("");
             require(isSuccess, "Transfer failed: gas error");
         } else {
-            IERC20Upgradeable(currency).safeTransferFrom(address(this), to, amount);
+            IERC20Upgradeable(currency).safeTransfer(to, amount);
         }
     }
 

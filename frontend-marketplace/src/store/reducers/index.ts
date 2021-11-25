@@ -17,6 +17,7 @@ import {
 import { messageReducer } from './message';
 import {claimUserInfoReducer} from "./claim-user-info";
 import { assetsAccountReducer } from './asset-account';
+import { hotCollectionReducer, bigOfferReducer } from './marketplace';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -35,6 +36,8 @@ const rootReducer = combineReducers({
   alertTypeIsPush: getTypeIsPushNotiReducer,
   delayTiers: getDelayTiersReducer,
   assetsAccount: assetsAccountReducer,
+  hotCollections: hotCollectionReducer,
+  bigOffers: bigOfferReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

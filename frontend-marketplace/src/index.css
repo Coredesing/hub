@@ -357,3 +357,23 @@ body::-webkit-scrollbar-thumb,
     padding-left: 16px !important;
     padding-right: 16px !important;
 }
+
+.outline-none {
+    outline: none;
+}
+
+.border-none {
+    border: none;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.bg-transparent {
+    background: transparent;
+}
+
+.border-grey-2px {
+    border: 2px solid #44454B;
+}

@@ -355,6 +355,14 @@ const useStyles = makeStyles((theme: any) => ({
     },
     colorSwitch: {
         color: '#FFFFFF !important'
+    },
+    btn: {
+        padding: '7px 12px',
+        height: '44px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '2px',
+        borderRadius: '4px'
     }
 }));
 

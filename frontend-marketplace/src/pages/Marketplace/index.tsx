@@ -14,7 +14,7 @@ import { ObjectType } from '@app-types';
 import axios from '@services/axios';
 import { getContractInstance } from '@services/web3';
 import erc721ABI from '@abi/Erc721.json';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTypedSelector } from '@hooks/useTypedSelector';
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, {
@@ -23,11 +23,13 @@ import SwiperCore, {
 } from 'swiper';
 import "swiper/swiper.min.css";
 import 'swiper/swiper-bundle.css';
+import { setBigOffer, setHotCollections } from '@store/actions/marketplace';
 // install Swiper modules
 SwiperCore.use([Navigation, Pagination]);
 
 const Marketplace = () => {
     const styles = useStyles();
+    const dispatch = useDispatch();
     const [filterType, setFilterType] = useState<boolean>(true);
     const [selectPrice, setSelectPrice] = useState('newest');
     const pricesFilter = useMemo(() => ([
@@ -41,66 +43,25 @@ const Marketplace = () => {
         { name: 'My Listing', value: 'mylisting' },
         { name: 'My Auctions', value: 'myauctions' },
     ]), [])
-
-    const { data: hostCollections = {} as ObjectType<any>, loading: loadingHostCollection } = useFetchV1('/marketplace/collections');
-    const perPage = 10;
-    const [offerData, setOfferData] = useState<any>({
-        page: 1,
-        total: 1,
-        data: {},
-    })
-    const { appChainID } = useSelector((state: any) => state.appNetwork).data;
-    const connectorName = useTypedSelector(state => state.connector).data;
-    const { data: hostOffer = {} as ObjectType<any>, loading: loadingHostOffer } = useFetchV1('/marketplace/hot-offers');
+    const listOfferFilter = useMemo(() => ([
+        { name: '7 Days', value: '7' },
+        { name: '1 Month', value: '1 month' },
+        { name: '3 Months', value: '3 months' },
+    ]), []);
+    const [timeFilter, setTimeFilter] = useState(listOfferFilter[0].value)
+    const hotCollections = useSelector((state: any) => state.hotCollections).data;
+    const bigOffers = useSelector((state: any) => state.bigOffers).data;
     useEffect(() => {
-
-        if (hostOffer?.data?.length) {
-            const run = async () => {
-                const collections: ObjectType<any> = [];
-                await Promise.all(hostOffer.data.map((item: any) => new Promise(async (res) => {
-                    const result = await axios.get(`/marketplace/collection/${item.token_address}`);
-                    const projectInfo = result.data.data;
-                    if (!projectInfo) return;
-                    const useExternalUri = !!+projectInfo.use_external_uri;
-                    const erc721Contract = getContractInstance(erc721ABI, projectInfo.token_address, connectorName, appChainID);
-                    if (!erc721Contract) return;
-                    item.project = projectInfo;
-                    try {
-                        if (useExternalUri) {
-                            const result = await axios.post(`/marketplace/collection/${projectInfo.token_address}/${item.token_id}`);
-                            const info = result.data.data || {};
-                            Object.assign(item, info);
-                            res('');
-                        } else {
-                            const tokenURI = await erc721Contract.methods.tokenURI(item.token_id).call();
-                            const infoBoxType = (await axios.get(tokenURI)).data || {};
-                            Object.assign(item, infoBoxType);
-                            res('');
-                        }
-                        collections.push(item);
-                    } catch (error) {
-                        item.image = '';
-                        console.log('err', error)
-                        collections.push(item);
-                        res('')
-                    }
-                })));
-                const page = 1;
-                const total = +hostOffer.total || 0;
-                setOfferData((data: any) => ({
-                    page,
-                    total,
-                    data: {
-                        ...data.data,
-                        [page]: collections,
-                    }
-                }))
-            }
-            run();
+        if (!hotCollections?.length) {
+            dispatch(setHotCollections());
         }
-    }, [hostOffer, connectorName, appChainID]);
+    }, []);
 
-    console.log('hostOffer', offerData)
+    useEffect(() => {
+        if (!bigOffers?.length) {
+            dispatch(setBigOffer());
+        }
+    }, []);
     const theme = useTheme();
     const smScreen = useMediaQuery(theme.breakpoints.down('sm'))
     const xsScreen = useMediaQuery(theme.breakpoints.down('xs'))
@@ -109,40 +70,38 @@ const Marketplace = () => {
         <DefaultLayout>
             <WrapperContent useShowBanner={false}>
                 <div className={styles.page}>
-                    <Swiper navigation={true} className={clsx(styles.swiperSlide, styles.bannerSlide)}>
+                    <Swiper navigation={true} className={clsx(styles.swiperSlide, styles.bannerSlide)} key="bannercollections">
                         {
-                            (hostCollections?.data || []).map((card: any, id: number) => <SwiperSlide key={id}>
-                                <div className={styles.banner}>
-                                    {/* <button className="btn btn-arrow btn-prev">
+                            (hotCollections || []).map((card: any, id: number) =>
+                                <SwiperSlide key={"bannercollections" + id}>
+                                    <div className={styles.banner}>
+                                        {/* <button className="btn btn-arrow btn-prev">
                                         <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path fill-rule="evenodd" clip-rule="evenodd" d="M7.70083 13.3731C7.30787 13.7642 6.67076 13.7642 6.27781 13.3731L0.585733 7.70798C0.192777 7.31689 0.192777 6.6828 0.585733 6.29171C0.595523 6.28196 0.605465 6.27246 0.615551 6.2632L6.27927 0.626327C6.67222 0.235234 7.30933 0.235234 7.70229 0.626327C8.09524 1.01742 8.09524 1.65151 7.70229 2.0426L2.72085 7.00043L7.70083 11.9568C8.09378 12.3479 8.09378 12.982 7.70083 13.3731Z" fill="black" />
                                         </svg>
                                     </button> */}
-                                    <div className="desc">
-                                        <div className="img-banner">
-                                            {card.image && <img src={card.image} alt="" onError={(e: any) => {
-                                                e.target.style.visibility = 'hidden';
-                                            }} />}
+                                        <div className="desc">
+                                            <div className="img-banner">
+                                                {card.image && <img src={card.image} alt="" onError={(e: any) => {
+                                                    e.target.style.visibility = 'hidden';
+                                                }} />}
+                                            </div>
+                                            <div className="infor">
+                                                <h3>{card.name}</h3>
+                                                <p>{card.description}</p>
+                                            </div>
                                         </div>
-                                        <div className="infor">
-                                            <h3>{card.name}</h3>
-                                            <p>{card.description}</p>
-                                        </div>
-                                    </div>
-                                    {/* <button className="btn btn-arrow btn-next">
+                                        {/* <button className="btn btn-arrow btn-next">
                                         <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path fill-rule="evenodd" clip-rule="evenodd" d="M0.299175 13.3731C0.69213 13.7642 1.32924 13.7642 1.72219 13.3731L7.41427 7.70798C7.80722 7.31689 7.80722 6.6828 7.41427 6.29171C7.40448 6.28196 7.39454 6.27246 7.38445 6.2632L1.72073 0.626327C1.32778 0.235234 0.690669 0.235234 0.297714 0.626327C-0.0952421 1.01742 -0.0952435 1.65151 0.297712 2.0426L5.27915 7.00043L0.299175 11.9568C-0.093781 12.3479 -0.0937806 12.982 0.299175 13.3731Z" fill="black" />
                                         </svg>
                                     </button> */}
-                                </div>
-                            </SwiperSlide>)
+                                    </div>
+                                </SwiperSlide>)
                         }
-
                     </Swiper>
 
-
                     <div className="content-page">
-
                         {/* <div className={styles.header}>
                             <div className="title">
                                 <h3>Marketplace</h3>
@@ -211,7 +170,8 @@ const Marketplace = () => {
                                     </div> */}
                                 </div>
                                 <div className={clsx(styles.hostCollections, "custom-scroll")}>
-                                    <Swiper navigation={true}
+                                    <Swiper
+                                        navigation={true}
                                         slidesPerView={4}
                                         spaceBetween={20}
                                         slidesPerGroup={4}
@@ -221,10 +181,11 @@ const Marketplace = () => {
                                         //     "clickable": true
                                         // }}
                                         className={clsx(styles.swiperSlide, styles.listCardsSlide)}
+                                        key="hostcollections"
                                     >
                                         {
-                                            (hostCollections?.data || []).map((p: ObjectType<any>, id: number) =>
-                                                <SwiperSlide className={styles.swipeCard} style={{ width: '295px' }} key={id}>
+                                            (hotCollections || []).map((p: ObjectType<any>, id: number) =>
+                                                <SwiperSlide key={"hostcollections" + id} className={styles.swipeCard} style={{ width: '295px' }}>
                                                     <Link to={`/collection/${p.token_address}`}>
                                                         <div className="collection" key={id}>
                                                             <div className="img">
@@ -243,19 +204,6 @@ const Marketplace = () => {
                                     </Swiper>
                                 </div>
                             </div>
-                            {/* <div className={styles.section}>
-                                <div className="header">
-                                    <h3>Hot Auction</h3>
-                                    <div></div>
-                                </div>
-                                <div className={styles.cards}>
-                                    {
-                                        cards.map((card, id) => <Link key={id} to={`/marketplace/${id}`}>
-                                            <CardMarketplace item={card} id={id} />
-                                        </Link>
-                                        )}
-                                </div>
-                            </div> */}
                             <div className={styles.section}>
                                 <div className="header">
                                     <h3>Big Offers</h3>
@@ -263,24 +211,21 @@ const Marketplace = () => {
                                         <div className="item">
                                             <FormGroup>
                                                 <SelectBox
-                                                    onChange={(e) => setSelectType(e.target.value as string)}
-                                                    items={listTypes}
+                                                    onChange={(e) => setTimeFilter(e.target.value as string)}
+                                                    items={listOfferFilter}
                                                     itemNameValue="value"
                                                     itemNameShowValue="name"
-                                                    defaultValue={selectType}
-                                                    value={selectType} />
+                                                    defaultValue={timeFilter}
+                                                    value={timeFilter} />
                                             </FormGroup>
                                         </div>
                                         <div className="item">
-                                            <FormGroup>
-                                                <SelectBox
-                                                    onChange={(e) => setSelectType(e.target.value as string)}
-                                                    items={listTypes}
-                                                    itemNameValue="value"
-                                                    itemNameShowValue="name"
-                                                    defaultValue={selectType}
-                                                    value={selectType} />
-                                            </FormGroup>
+                                            <button className={clsx("text-white firs-neue-font font-14px outline-none border-none pointer bg-transparent border-grey-2px", styles.btn)}>
+                                                Discover more NFTs
+                                                <svg width="13" height="10" viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.70343 1.6198C7.55962 1.48175 7.55962 1.24591 7.70343 1.10785C7.84148 0.964049 8.07732 0.964049 8.21537 1.10785L11.8968 4.78352C12.0348 4.92732 12.0348 5.15741 11.8968 5.30122L8.21537 8.97688C8.07732 9.12069 7.84148 9.12069 7.70343 8.97688C7.55962 8.83883 7.55962 8.60299 7.70343 8.46493L10.7578 5.41051L1.36239 5.36814C1.16106 5.36814 1 5.20133 1 5C1 4.79867 1.16106 4.63761 1.36239 4.63761L10.7578 4.67998L7.70343 1.6198Z" fill="white" stroke="white" stroke-width="0.5" />
+                                                </svg>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -296,12 +241,15 @@ const Marketplace = () => {
                                         //     "clickable": true
                                         // }}
                                         className={clsx(styles.swiperSlide, styles.listCardsSlide, styles.cards)}
+                                        key="bigoffers"
                                     >
                                         {
-                                            (offerData?.data?.[offerData.page] || []).map((item: any, id: number) =>
-                                                <SwiperSlide style={{ width: '295px' }} className={styles.swipeCard} key={id}><Link key={id} to={`/collection/${item.project?.token_address}/${item.token_id}`}>
-                                                    <CardMarketplace item={item} id={id} />
-                                                </Link></SwiperSlide>
+                                            (bigOffers || []).map((item: any, id: number) =>
+                                                <SwiperSlide style={{ width: '295px' }} className={styles.swipeCard} key={"bigoffers" + id}>
+                                                    <Link key={id} to={`/collection/${item.project?.token_address}/${item.token_id}`}>
+                                                        <CardMarketplace item={item} id={id} />
+                                                    </Link>
+                                                </SwiperSlide>
                                             )
                                         }
                                     </Swiper>

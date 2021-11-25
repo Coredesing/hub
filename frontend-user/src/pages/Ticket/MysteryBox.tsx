@@ -855,7 +855,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                         }}
                                                     />
                                                 </div>
-                                                <span className="text-uppercase">{tokenSeletected.price} {tokenSeletected.name}</span>
+                                                <span className="text-uppercase">{tokenSeletected.price} {tokenSeletected.name}/Box</span>
 
                                             </div>
                                             <div className="detail-items">

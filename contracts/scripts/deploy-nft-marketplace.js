@@ -12,6 +12,7 @@ async function main() {
 
   const fund = "0xB7cEd2807441B5c5FA7a40a97467F73275EdF73f";
   const gafi = "0xCc6aB3DDd713a612649B5A64C63F73e8255048d1";
+  const busd = "0x79c86934bE686B28b9aeeaFc42202907b06E3D7A";
 
   const ContractFactory = await hre.ethers.getContractFactory("Marketplace");
   const Contract = await upgrades.deployProxy(ContractFactory,
@@ -23,6 +24,10 @@ async function main() {
 
   // set default
   let data = await contract.setDefaultCurrencyStatus(gafi, true)
+  console.log('set default currency', data.hash)
+
+  // set default BUSD
+  data = await contract.setDefaultCurrencyStatus(busd, true)
   console.log('set default currency', data.hash)
 }
 

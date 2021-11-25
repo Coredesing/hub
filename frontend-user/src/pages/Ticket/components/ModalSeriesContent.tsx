@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import CustomModal from '@base-components/CustomModal';
-import { makeStyles, Box } from '@material-ui/core';
-import clsx from 'clsx';
+import { makeStyles, Box, Button } from '@material-ui/core';
+// import clsx from 'clsx';
 import '../style.css'
-import { numberWithCommas } from '@utils/formatNumber';
+// import { numberWithCommas } from '@utils/formatNumber';
 const useStyles = makeStyles((theme) => ({
     headerModal: {
 
@@ -72,20 +72,72 @@ const useStyles = makeStyles((theme) => ({
                     [theme.breakpoints.down('xs')]: {
                         // padding: '20px 30px',
                     },
-                    '& div': {
+                    '& .wrapperVideo': {
+                        width: '320px',
+                        height: '320px',
+                        '& .video': {
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            zIndex: 100,
+                            display: 'block',
+                            background: '#000',
+                        },
+
+                        '& video': {
+                            width: '100%',
+                            height: '100%',
+                            zIndex: 100,
+                        }
+                    },
+                    '& div.img': {
+                        cursor: 'zoom-in',
                         minWidth: '320px',
                         height: '320px',
                         position: 'relative',
                         overflow: 'hidden',
                         // display: 'grid',
                         // placeItems: 'center',
+
                         [theme.breakpoints.down('xs')]: {
                             minWidth: '250px',
                             height: '250px',
                         },
+                        '& button': {
+                            display: 'none',
+                        },
+                        '&.zoom-in': {
+                            transition: '.3s',
+                            background: 'rgba(0, 0, 0, 0.8)',
+                            cursor: 'zoom-out',
+                            position: 'fixed',
+                            width: '100%',
+                            height: '100%',
+                            top: 0,
+                            left: 0,
+                            bottom: 0,
+                            right: 0,
+                            display: 'grid',
+                            placeItems: 'center',
+                            '& button': {
+                                display: 'block',
+                            },
+                            '& img': {
+                                maxWidth: '720px',
+                                maxHeight: '640px',
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain',
+                                [theme.breakpoints.down('xs')]: {
+                                    maxWidth: '100%',
+                                    maxHeight: '320px',
+                                }
+                            }
+                        }
                     },
                     '& img': {
-
                         width: '100%',
                         height: '100%',
                         objectFit: 'contain',
@@ -108,6 +160,15 @@ const useStyles = makeStyles((theme) => ({
     },
     paper: {
         // maxWidth: '440px',
+    },
+    btnClose: {
+        position: 'absolute',
+        right: '30px',
+        top: '30px',
+        minWidth: 'unset',
+        width: '50px',
+        height: '50px',
+        borderRadius: '50%',
     }
 }));
 type ObjectType = { [k: string]: any };
@@ -132,30 +193,37 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, isShowRateSerie
     }
     let isHandlingShowImg = false;
     const handleShowImg = (newSerie: ObjectType, from: 'right-to-left' | 'left-to-right') => {
-        if (isHandlingShowImg) return;
-        const wrapperImg = document.querySelector('.wrapper-img div');
-        isHandlingShowImg = true;
-        if (wrapperImg) {
-            let elemImg: any = wrapperImg.querySelector('img');
-            if (!elemImg) return;
-            const newElmImg = document.createElement('img');
-            newElmImg.src = newSerie.banner;
-            if (from === 'right-to-left') {
-                elemImg.classList.remove('r-t-l');
-                elemImg.classList.add('h-r-t-l');
-                newElmImg.classList.add('r-t-l')
-            } else {
-                elemImg.classList.remove('l-t-r')
-                elemImg.classList.add('h-l-t-r');
-                newElmImg.classList.add('l-t-r')
-            }
-            setTimeout(() => {
-                setCurrentSerie(newSerie);
-                wrapperImg.removeChild(elemImg);
-                wrapperImg.appendChild(newElmImg);
-                isHandlingShowImg = false;
-            }, 200)
-        }
+        setCurrentSerie(newSerie);
+        // if (isHandlingShowImg) return;
+        // const wrapperImg = document.querySelector('.wrapper-img div.img');
+        // isHandlingShowImg = true;
+        // if (wrapperImg) {
+        //     let elemImg: any = wrapperImg.querySelector('img');
+        //     if (!elemImg) return;
+        //     const newElmImg = document.createElement('img');
+        //     newElmImg.src = newSerie.banner;
+        //     if (from === 'right-to-left') {
+        //         elemImg.classList.remove('r-t-l');
+        //         elemImg.classList.add('h-r-t-l');
+        //         newElmImg.classList.add('r-t-l')
+        //     } else {
+        //         elemImg.classList.remove('l-t-r')
+        //         elemImg.classList.add('h-l-t-r');
+        //         newElmImg.classList.add('l-t-r')
+        //     }
+        //     setTimeout(() => {
+        //         setCurrentSerie(newSerie);
+        //         try {
+        //             wrapperImg.removeChild(elemImg);
+        //             wrapperImg.appendChild(newElmImg);
+        //         } catch (error) {
+        //             console.log('err', error)
+        //         }
+        //         isHandlingShowImg = false;
+        //     }, 200)
+        // } else {
+        //     setCurrentSerie(newSerie);
+        // }
     }
 
     const onPrevSerie = () => {
@@ -168,6 +236,21 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, isShowRateSerie
         const newSerie = idxCurr === seriesContent.length - 1 ? seriesContent[0] : seriesContent[idxCurr + 1];
         handleShowImg(newSerie, 'left-to-right');
     }
+
+    const onZoom = (e: any) => {
+        e.stopPropagation();
+        const img = document.querySelector('.wrapper-img div.img');
+        if (img) {
+            if (img.classList.contains('zoom-in')) {
+                img.classList.remove('zoom-in');
+            } else {
+                img.classList.add('zoom-in');
+            }
+        }
+    }
+
+    let imgRef = useRef() as any;
+    let wrapVideoRef = useRef() as any;
 
     return (
         <CustomModal open={open} onClose={onClose} classes={{ paper: styles.paper }}>
@@ -207,7 +290,47 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, isShowRateSerie
                                 }
                             </Box>
                             <Box className="wrapper-img" >
-                                <div>
+                                {
+                                    currentSerie.video && <div className="wrapperVideo" ref={wrapVideoRef} style={{ display: 'none' }} >
+                                        <div className="video">
+                                            <video
+                                                preload="auto"
+                                                autoPlay
+                                                loop
+                                                muted
+                                                controls
+                                                key={currentSerie.video}
+                                                ref={(video) => {
+                                                    if (!video) return;
+                                                    if (imgRef?.current) {
+                                                        imgRef.current.style.display = 'block';
+                                                    }
+                                                    if (wrapVideoRef.current) {
+                                                        wrapVideoRef.current.style.display = 'none'
+                                                    }
+                                                    video.onloadeddata = function () {
+                                                        setTimeout(() => {
+                                                            if (wrapVideoRef.current) {
+                                                                wrapVideoRef.current.style.display = 'block'
+                                                            }
+                                                            if (imgRef?.current) {
+                                                                imgRef.current.style.display = 'none';
+                                                            }
+                                                            video.play();
+                                                        }, 500)
+                                                    }
+                                                }}
+                                            >
+                                                <source src={currentSerie.video} type="video/mp4" />
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        </div>
+                                    </div>
+                                }
+                                <div className="img" onClick={onZoom} ref={imgRef}>
+                                    <Button autoFocus onClick={onZoom} color="primary" className={styles.btnClose}>
+                                        <img src={'/images/icons/close.svg'} alt="" />
+                                    </Button>
                                     <img src={currentSerie.banner} alt="" />
                                 </div>
                             </Box>
@@ -219,14 +342,13 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, isShowRateSerie
                         </span>
                     </Box>
                     {
-                        currentSerie.description && <Box marginTop="20px" paddingLeft="36px" paddingRight="36px">
-                            <h4 className="text-white" style={{marginBottom: '8px', fontSize: '16px'}}>Description</h4>
-                            <p className="text-white" style={{lineHeight: '20px', fontSize: '14px', maxWidth: '320px'}}>
+                        currentSerie.description && <Box marginTop="20px" paddingLeft="36px" paddingRight="36px" maxHeight="150px" overflow="auto" className="custom-scroll">
+                            <h4 className="text-white" style={{ marginBottom: '8px', fontSize: '16px' }}>Description</h4>
+                            <p className="text-white" style={{ lineHeight: '20px', fontSize: '14px', maxWidth: '320px' }}>
                                 {currentSerie.description}
                             </p>
                         </Box>
                     }
-
                 </Box>
             </Box>
         </CustomModal>

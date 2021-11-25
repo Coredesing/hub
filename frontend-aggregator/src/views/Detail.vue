@@ -430,7 +430,7 @@
           </template>
           <template v-else-if="game.ido">
             <div v-if="game.ido.date" class="ido-title">${{ game.token }} IGO on {{ game.ido.date }}</div>
-            <countdown v-if="game.ido_date" :deadline="game.ido_date"/>
+            <countdown v-if="game.ido.date && game.ido_date" :deadline="game.ido_date"/>
             <div v-if="game.ido.chain" class="ido-chain">{{ game.ido.chain }}</div>
             <div v-if="game.ido.price" class="ido-price">
               Price per token: <span>$ {{ game.ido.price }}</span>

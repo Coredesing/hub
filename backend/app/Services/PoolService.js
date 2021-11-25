@@ -311,6 +311,7 @@ class PoolService {
         rate: item.rate,
         icon: item.icon,
         banner: item.banner,
+        video: item.video,
         description: item.description,
       });
       return data;

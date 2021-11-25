@@ -1,9 +1,9 @@
-import React, { createRef, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import CustomModal from '@base-components/CustomModal';
 import { makeStyles, Box, Button } from '@material-ui/core';
-import clsx from 'clsx';
+// import clsx from 'clsx';
 import '../style.css'
-import { numberWithCommas } from '@utils/formatNumber';
+// import { numberWithCommas } from '@utils/formatNumber';
 const useStyles = makeStyles((theme) => ({
     headerModal: {
 

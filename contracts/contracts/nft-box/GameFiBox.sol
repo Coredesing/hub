@@ -25,6 +25,10 @@ interface IStakingContract {
     function linearBalanceOf(uint256 _poolId, address _account) external returns (uint128);
 }
 
+interface IMatGameFiWhilelist {
+    function canBuy(address user) external view returns (bool);
+}
+
 contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgradeable, ERC721HolderUpgradeable {
     struct SaleEvent {
         uint256 currentSupply;
@@ -74,6 +78,7 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
     address public signer;
     address public externalRandom;
     address public externalMinted;
+    address public matWhitelist;
     bool public allowTransfer;
     mapping(uint256 => bool) public minted; // check nftId is minted for saleId
     mapping(uint256 => mapping(uint256 => SubBox)) public subBoxes;
@@ -138,6 +143,10 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
     function setFundWallet(address _fundWallet) public onlyOwner {
         require(_fundWallet != address(0), "invalid contract");
         fundWallet = _fundWallet;
+    }
+
+    function setMatWhitelist(address _whitelist) public onlyOwner {
+        matWhitelist = _whitelist;
     }
 
     function setSubBox(uint256 eventID, uint256[] memory max, uint256[] memory prices, address[] memory tokens) public onlyOwner {
@@ -257,6 +266,10 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         require(verify(msg.sender, eventId, token, amount, subBoxId, signature), "NFTBox: verify error");
         if (sale.useSubEvent) {
             require(amount + subBoxes[eventId][subBoxId].totalSold <= subBoxes[eventId][subBoxId].maxSupply, "NFTBox: SubBox Rate limit exceeded");
+        }
+
+        if (matWhitelist != address(0)) {
+            require(IMatGameFiWhilelist(matWhitelist).canBuy(msg.sender), "require staking condition");
         }
 
         require(subBoxes[eventId][subBoxId].token == token, "NFTBox: invalid token");

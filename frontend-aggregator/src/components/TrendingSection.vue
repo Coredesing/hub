@@ -88,6 +88,7 @@ export default {
     cursor: pointer;
 
     & > img {
+      border-radius: 24px;
       width: 100%;
       image-rendering: pixelated
     }
@@ -132,7 +133,7 @@ export default {
     display: flex;
     padding: 20px;
     border: 2px solid #d1d1d144;
-    border-radius: 18px;
+    border-radius: 32px;
     background: linear-gradient(180deg, rgba(81, 81, 81, 0.43) 0%, rgba(81, 81, 81, 0) 100%);
     cursor: pointer;
 
@@ -151,7 +152,7 @@ export default {
       }
 
       img {
-        border-radius: 2px;
+        border-radius: 24px;
         image-rendering: pixelated
       }
     }

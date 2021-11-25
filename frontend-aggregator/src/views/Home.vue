@@ -37,7 +37,7 @@
         <h1 class="title">Latest</h1>
         <div class="view-all" @click="openList">View all <img alt src="../assets/images/arrow_green.svg"/></div>
       </div>
-      <div class="row align-center">
+      <div class="row align-center outside">
         <div class="prev-btn" @click="prevLatest">
           <img alt src="../assets/images/arrow-left_round.svg"/>
         </div>
@@ -150,12 +150,12 @@ export default {
     },
     nextFav() {
       const favorite = this.$refs.favorite
-      const left = favorite.scrollLeft + (favorite.offsetWidth/5)
+      const left = favorite.scrollLeft + (favorite.offsetWidth)
       favorite.scroll({ left, behavior: 'smooth'})
     },
     prevFav() {
       const favorite = this.$refs.favorite
-      const left = favorite.scrollLeft - (favorite.offsetWidth/5)
+      const left = favorite.scrollLeft - (favorite.offsetWidth)
       favorite.scroll({ left, behavior: 'smooth'})
     }
   }
@@ -186,6 +186,10 @@ export default {
       img {
         width: 24px;
       }
+    }
+
+    .outside {
+      margin: 0 -32px;
     }
   }
 
@@ -244,6 +248,10 @@ export default {
       .prev-btn,
       .next-btn {
         display: none;
+      }
+
+      .outside {
+        margin: 0;
       }
     }
 

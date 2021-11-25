@@ -367,42 +367,42 @@ const Home = (props: any) => {
         </section>
       )}
 
-      {ticketSales?.data?.length && (
-        <section className={clsx(styles.ticketSales, styles.section)}>
-          <div className="rectangle gr">
-            <img src="/images/ticket-sale-text.svg" alt="" />
-          </div>
-          <div className={styles.wrapperContent}>
-            <div
-              className={clsx(styles.content, {
-                horizontal: !isMdScreen && !!(ticketSales.data || []).length,
-                vertical: isMdScreen || !(ticketSales.data || []).length,
-              })}
-            >
-              <div
-                className={clsx(styles.contentTitle, {
-                  left: !isMdScreen && !!(ticketSales.data || []).length,
-                  center: isMdScreen || !(ticketSales.data || []).length,
-                })}
-              >
-                <h3>Ticket Sales</h3>
-                <h5>
-                  To view information about other Ticket pools, click the
-                  Discover button below.
-                </h5>
-                <Link href="/#/pools/ticket" className={styles.btnDiscover}>
-                  Discover
-                </Link>
-              </div>
-              <div className={clsx(styles.cards, styles.cardsTicketSales)}>
-                {(ticketSales.data || []).map((card, id) => (
-                  <Card card={card} key={id} title={<h5>{card.title}</h5>} />
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
+      {/*{ticketSales?.data?.length && (*/}
+      {/*  <section className={clsx(styles.ticketSales, styles.section)}>*/}
+      {/*    <div className="rectangle gr">*/}
+      {/*      <img src="/images/ticket-sale-text.svg" alt="" />*/}
+      {/*    </div>*/}
+      {/*    <div className={styles.wrapperContent}>*/}
+      {/*      <div*/}
+      {/*        className={clsx(styles.content, {*/}
+      {/*          horizontal: !isMdScreen && !!(ticketSales.data || []).length,*/}
+      {/*          vertical: isMdScreen || !(ticketSales.data || []).length,*/}
+      {/*        })}*/}
+      {/*      >*/}
+      {/*        <div*/}
+      {/*          className={clsx(styles.contentTitle, {*/}
+      {/*            left: !isMdScreen && !!(ticketSales.data || []).length,*/}
+      {/*            center: isMdScreen || !(ticketSales.data || []).length,*/}
+      {/*          })}*/}
+      {/*        >*/}
+      {/*          <h3>Ticket Sales</h3>*/}
+      {/*          <h5>*/}
+      {/*            To view information about other Ticket pools, click the*/}
+      {/*            Discover button below.*/}
+      {/*          </h5>*/}
+      {/*          <Link href="/#/pools/ticket" className={styles.btnDiscover}>*/}
+      {/*            Discover*/}
+      {/*          </Link>*/}
+      {/*        </div>*/}
+      {/*        <div className={clsx(styles.cards, styles.cardsTicketSales)}>*/}
+      {/*          {(ticketSales.data || []).map((card, id) => (*/}
+      {/*            <Card card={card} key={id} title={<h5>{card.title}</h5>} />*/}
+      {/*          ))}*/}
+      {/*        </div>*/}
+      {/*      </div>*/}
+      {/*    </div>*/}
+      {/*  </section>*/}
+      {/*)}*/}
       {tokenSales?.data?.length && (
         <section className={clsx(styles.tokenSales, styles.section)}>
           <div className="rectangle bl">

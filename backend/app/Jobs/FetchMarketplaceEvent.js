@@ -185,6 +185,36 @@ class FetchMarketplaceEvent {
         if (!tx) {
           await data.save();
         }
+        switch(event_type) {
+          case EVENT_TYPE_DELISTED:
+            await MarketplaceEventModel.query()
+              .where('token_address', data.token_address)
+              .where('seller', data.seller)
+              .where('event_type', EVENT_TYPE_LISTED)
+              .where('finish', 0)
+              .where('dispatch_at', '<', data.dispatch_at)
+              .update({finish: 1})
+            break
+          case EVENT_TYPE_CANCEL_OFFERED:
+            await MarketplaceEventModel.query()
+              .where('token_address', data.token_address)
+              .where('buyer', data.buyer)
+              .where('event_type', EVENT_TYPE_OFFERED)
+              .where('finish', 0)
+              .where('dispatch_at', '<', data.dispatch_at)
+              .update({finish: 1})
+            break
+          case EVENT_TYPE_BOUGHT:
+            await MarketplaceEventModel.query()
+              .where('token_address', data.token_address)
+              .where('seller', data.seller)
+              .where('event_type', EVENT_TYPE_LISTED)
+              .where('finish', 0)
+              .where('dispatch_at', '<', data.dispatch_at)
+              .update({finish: 1})
+            break
+          default:
+        }
       }
       catch (e) {
         console.log('internal transaction', e)

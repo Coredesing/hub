@@ -68,8 +68,8 @@ const aliases = {
 |
 */
 const commands = [
-  // 'App/Commands/AutoJoinUser',
-  // 'App/Commands/SnapshotBalanceCommand',
+  'App/Commands/FetchEvents',
+  'App/Commands/FetchStakingEvents',
   // 'App/Commands/GetUserPurchasedBalanceCommand',
   // 'App/Commands/GetUserKycInformationCommand',
   // 'App/Commands/SignatureCommand',

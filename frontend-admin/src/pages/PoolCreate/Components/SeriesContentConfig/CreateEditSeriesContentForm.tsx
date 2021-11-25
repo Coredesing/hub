@@ -33,6 +33,7 @@ function CreateEditSeriesContentForm(props: any) {
       rate: data.rate,
       icon: data.icon,
       banner: data.banner,
+      video: data.video,
       description: data.description,
     };
     handleCreateUpdateData && handleCreateUpdateData(responseData);

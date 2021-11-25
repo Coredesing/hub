@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import _ from 'lodash';
-import {ADMIN_URL_PREFIX, API_URL_PREFIX, ETHERSCAN_BASE_URL, IMAGE_URL_PREFIX, NETWORK_AVAILABLE, TOKEN_TYPE} from "../constants";
+import { ADMIN_URL_PREFIX, API_URL_PREFIX, ETHERSCAN_BASE_URL, IMAGE_URL_PREFIX, NETWORK_AVAILABLE, TOKEN_TYPE } from "../constants";
 import axios from "axios";
 import { PurchaseCurrency } from '../constants/purchasableCurrency';
 import { getBUSDAddress, getUSDCAddress, getUSDTAddress } from './contractAddress/getAddresses';
@@ -38,7 +38,7 @@ export const checkIsLoginRoute = (pathname: string) => {
 };
 
 export const checkIsInvestorRoute = (pathname: string) => {
-  return (pathname.indexOf(`/buy-token`) !== -1) ||  (pathname === '/login');
+  return (pathname.indexOf(`/buy-token`) !== -1) || (pathname === '/login');
 };
 
 export const apiRoute = (url = '') => {
@@ -60,11 +60,11 @@ export const etherscanRoute = (address = '', poolDetail: any = null) => {
       case NETWORK_AVAILABLE.BSC:
         network = process.env.REACT_APP_BSC_CHAIN_ID + '';
         break;
-      
+
       case NETWORK_AVAILABLE.POLYGON:
         network = process.env.REACT_APP_POLYGON_CHAIN_ID + '';
         break;
-      
+
       case NETWORK_AVAILABLE.ETH:
         network = process.env.REACT_APP_ETH_CHAIN_ID + '';
         break;
@@ -173,7 +173,7 @@ export const disconnectWalletLink = (library: any) => {
 
 export const formatNumber = (num: number, range: number = 2) => {
   const lengNum = String(num).length;
-  if(lengNum < range) {
+  if (lengNum < range) {
     const arr = new Array(range - lengNum).fill('0', 0, range - lengNum);
     return arr.join('') + num;
   }
@@ -200,24 +200,24 @@ export const getDiffTime = (date1: Timestamp, date2: Timestamp) => {
 }
 
 
-export const caclDiffTime = (time: {[k in string]: any}): {[k in string]: any} => {
+export const caclDiffTime = (time: { [k in string]: any }): { [k in string]: any } => {
   if (time.seconds === 0) {
-      time.seconds = 59;
-      if (time.minutes === 0) {
-          time.minutes = 59;
-          if (time.hours === 0) {
-              if (time.days > 0) {
-                  time.days -= 1;
-                  time.hours = 23;
-              }
-          } else {
-              time.hours -= 1;
-          }
+    time.seconds = 59;
+    if (time.minutes === 0) {
+      time.minutes = 59;
+      if (time.hours === 0) {
+        if (time.days > 0) {
+          time.days -= 1;
+          time.hours = 23;
+        }
       } else {
-          time.minutes -= 1;
+        time.hours -= 1;
       }
+    } else {
+      time.minutes -= 1;
+    }
   } else {
-      time.seconds -= 1;
+    time.seconds -= 1;
   }
 
   return time;
@@ -240,22 +240,22 @@ export const debounce = (fn: Function, timer: number) => {
 
 export const formatCampaignStatus = (status: string) => {
   const stt = String(status).toLowerCase();
-  if(stt === 'filled' || stt === 'swap') return 'Opening';
-  if(stt === 'ended') return 'Ended';
-  if(stt === 'upcoming') return 'Upcoming';
+  if (stt === 'filled' || stt === 'swap') return 'Opening';
+  if (stt === 'ended') return 'Ended';
+  if (stt === 'upcoming') return 'Upcoming';
   return status;
 }
 
 export const getSeedRound = (key: 0 | 1 | 2 | number) => {
-  if(key === 0) return 'Public';
-  if(key === 1) return 'Private';
-  if(key === 2) return 'Seed';
-  if(key === 3) return 'Community';
+  if (key === 0) return 'Public';
+  if (key === 1) return 'Private';
+  if (key === 2) return 'Seed';
+  if (key === 3) return 'Community';
   return ''
 }
 
 export const getApproveToken = (appChainID: string, purchasableCurrency: string) => {
-  if(!purchasableCurrency) return;
+  if (!purchasableCurrency) return;
   purchasableCurrency = String(purchasableCurrency).toUpperCase();
   if (purchasableCurrency === PurchaseCurrency.USDT) {
     return {
@@ -300,14 +300,14 @@ export const escapeRegExp = (string: string) => string.replace(/[.*+?^${}()|[\]\
 
 export const cvtAddressToStar = (address: string, symbol: string = '*', lengHide = 14) => {
   let stars = '';
-  for(let i = 0; i < 10; i++) {
+  for (let i = 0; i < 10; i++) {
     stars += symbol;
   }
   return address.slice(0, lengHide) + stars + address.slice(-(lengHide));
 }
 export const calcPercentRate = (input: number, total: number) => {
   const percent = ((input * 100) / total);
-  if(!percent) return 0;
+  if (!percent) return 0;
   const split = percent.toString().split('.');
 
   return `${split[0]}${split[1] ? '.' + split[1].charAt(0) : ''}`;
@@ -317,7 +317,7 @@ export const isImageFile = (str: string) => (/\.(gif|jpe?g|tiff?|png|webp|bmp)$/
 export const isVideoFile = (str: string) => (/\.(mp4)$/i).test(str);
 export const getCurrencyByNetwork = (network: string) => {
   network = String(network).toLowerCase();
-  switch(network) {
+  switch (network) {
     case 'bsc': return 'BNB';
     case 'polygon': return 'MATIC';
     case 'eth': return 'ETH';
@@ -335,21 +335,25 @@ export const getTimelineOfPool = (pool: { [k: string]: any }) => {
   return { startJoinPooltime, endJoinPoolTime, startBuyTime, freeBuyTime, finishTime, startPreOrderTime }
 }
 
-export const getTimeStringPassed = (timeInput: number, timeToCheck: number) => {
+export const formatHumanReadableTime = (timeInput: number, timeToCheck: number) => {
   if (timeInput >= timeToCheck) return 'a few seconds ago';
   const { days, hours, seconds, minutes } = getDiffTime(timeToCheck, timeInput);
   let str = '';
+  if(days && days > 7) {
+    return new Date(timeInput).toUTCString();
+  }
   if (days) {
-      str += `${days} day${days > 1 ? 's' : ''} `;
-  }
-  if (hours) {
+    str += `${days} day${days > 1 ? 's' : ''} `;
+  } else {
+    if (hours) {
       str += `${hours} hour${hours > 1 ? 's' : ''} `;
-  }
-  if (minutes) {
+    }
+    if (minutes) {
       str += `${minutes} minute${minutes > 1 ? 's' : ''} `;
-  }
-  if (seconds) {
+    }
+    if (!hours && seconds) {
       str += `${seconds} second${seconds > 1 ? 's' : ''} `;
+    }
   }
   str += 'ago';
   return str;

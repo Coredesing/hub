@@ -3,7 +3,7 @@ import DefaultLayout from '@layout-components/DefaultLayout'
 import WrapperContent from '@base-components/WrapperContent'
 import useStyles from './style';
 import clsx from 'clsx';
-import { Button, Switch, FormGroup, FormControlLabel, Link as MuiLink, Box, TableBody } from '@material-ui/core';
+import { Button, Switch, FormGroup, FormControlLabel, Link as MuiLink, Box, TableBody, Backdrop } from '@material-ui/core';
 import { SearchBox } from '@base-components/SearchBox';
 import SelectBox from '@base-components/SelectBox';
 import { Link } from 'react-router-dom';
@@ -16,9 +16,9 @@ import { getContract } from "@utils/contract";
 import erc721ABI from '@abi/Erc721.json';
 import { useWeb3React } from '@web3-react/core';
 import { getContractInstance } from '@services/web3';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTypedSelector } from '@hooks/useTypedSelector';
-import { cvtAddressToStar, formatNumber, getCurrencyByNetwork, getTimeStringPassed } from '@utils/index';
+import { cvtAddressToStar, formatNumber, getCurrencyByNetwork, formatHumanReadableTime } from '@utils/index';
 import {
 
     TableContainer,
@@ -29,31 +29,13 @@ import {
     TableRowHead,
 } from '@base-components/Table';
 import { ActionSaleNFT } from './constants';
-
-
-type PaginationData = {
-    page: number;
-    total: number;
-    data: {
-        [k: number]: ObjectType<any>[]
-    }
-}
+import { setItemsProjectCollection, setProjectInfor, setActivitiesProjectCollection } from '@store/actions/project-collection';
+import CircularProgress from '@base-components/CircularProgress';
 
 const Marketplace = () => {
     const styles = useStyles();
     const { projectAddress } = useParams<ObjectType<any>>()
-    const cards = [
-        { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-        { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-        { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-        { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-        { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-        { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-        { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-        { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-        { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-        { name: 'Legion', image: '/images/marketplace/character1.png', network: 'eth', iconNetwork: '/images/icons/bsc.png', price: '0.11 ETH', usdPrice: '40.42', tags: ['Character', 'Fixed Price'], iconToken: '/images/icons/mech-master.png', tokenName: 'MECH MASTER', interactions: { views: 3100, hearts: 300 } },
-    ]
+    const dispatch = useDispatch()
 
     const filterTypes = useMemo(() => ({
         items: 'items',
@@ -72,85 +54,43 @@ const Marketplace = () => {
         { name: 'My Listing', value: 'mylisting' },
         // { name: 'My Auctions', value: 'myauctions' },
     ]), [])
-    const [projectInfo, setProjectInfo] = useState<ObjectType<any>>({});
-    const { appChainID } = useSelector((state: any) => state.appNetwork).data;
-    const connectorName = useTypedSelector(state => state.connector).data;
-    const [erc721Contract, setErc721Contract] = useState<any>(null);
-    useEffect(() => {
-        axios.get(`/marketplace/collection/${projectAddress}`).then(async (res) => {
-            setProjectInfo(res.data.data || {});
-        })
-    }, []);
     const perPage = 10;
-    const [itemData, setItemData] = useState<PaginationData>({
-        page: 1,
-        total: 1,
-        data: {},
-    })
-    const [itemActivity, setActivitiesData] = useState<PaginationData>({
-        page: 1,
-        total: 1,
-        data: {},
-    })
+    const projectInforsState = useSelector((state: any) => state.projectInfors);
+    const itemsProjectCollectionState = useSelector((state: any) => state.itemsProjectCollection);
+    const activitiesProjectCollectionState = useSelector((state: any) => state.activitiesProjectCollection);
+    const projectInfors = projectInforsState?.data;
+    const itemsProjectCollection = itemsProjectCollectionState?.data;
+    const activitiesProjectCollection = activitiesProjectCollectionState?.data;
+    const itemsProject = itemsProjectCollection?.[projectAddress] || {};
+    const activitiesProject = activitiesProjectCollection?.[projectAddress] || {};
+    const projectInfor = projectInfors?.[projectAddress] || {};
+    const [filterItem, setFilterItem] = useState({ page: 1, perPage, })
+    const [filterActivity, setFilterActivity] = useState({ page: 1, perPage, })
+
     useEffect(() => {
-        if (!connectorName || !appChainID) {
-            setErc721Contract(null);
-            return;
+        if (!projectInfor?.token_address) {
+            dispatch(setProjectInfor(projectAddress));
         }
-        const contract = getContractInstance(erc721ABI, projectAddress, connectorName, appChainID);
-        setErc721Contract(contract);
-    }, [connectorName, appChainID]);
-    const setDataFilter = async ({ filterType, ...filter }: ObjectType<any>, fnSetData: Function) => {
-        try {
-            const useExternalUri = !!+projectInfo.use_external_uri;
-            let result: any = await axios.get(`/marketplace/collection/${projectAddress}/${filterType}?page=${filter.page || 1}&limit=${perPage}`);
-            result = result.data?.data;
-            let collections = result?.data || [];
-            collections = await Promise.all(collections.map((col: any) => new Promise(async (res) => {
-                try {
-                    if (useExternalUri) {
-                        const result = await axios.post(`/marketplace/collection/${projectAddress}/${col.token_id}`);
-                        const info = result.data.data || {};
-                        Object.assign(col, info);
-                        res(col);
-                    } else {
-                        const tokenURI = await erc721Contract.methods.tokenURI(col.token_id).call();
-                        const infoBoxType = (await axios.get(tokenURI)).data || {};
-                        Object.assign(col, infoBoxType);
-                        res(col);
-                    }
-                } catch (error) {
-                    col.image = '';
-                    console.log('err', error)
-                    res(col)
-                }
-            })))
-            const page = +result.page || 1;
-            const total = +result.total || 0;
-            fnSetData((data: any) => ({
-                page,
-                total,
-                data: {
-                    ...data.data,
-                    [page]: collections
-                }
-            }))
-            console.log('collections', collections)
-        } catch (error) {
-            console.log('error', error);
-        }
-    }
+    }, [projectInfor?.token_address])
+
     useEffect(() => {
-        if (!projectInfo.name || !erc721Contract) {
-            return
+        if (projectInfor?.token_address) {
+            dispatch(setItemsProjectCollection({ projectAddress, filter: filterItem }));
         }
-        const fn = filterType === filterTypes.items ? setItemData : setActivitiesData;
-        setDataFilter({ filterType }, fn);
-    }, [projectInfo, erc721Contract, filterType])
+    }, [projectInfor?.token_address, filterItem])
+    useEffect(() => {
+        if (projectInfor?.token_address) {
+            dispatch(setActivitiesProjectCollection({ projectAddress, filter: filterActivity }));
+        }
+    }, [projectInfor?.token_address, filterActivity])
 
     const onSetPage = (page: number) => {
-        const fn = filterType === filterTypes.items ? setItemData : setActivitiesData;
-        setDataFilter({ filterType, page }, fn);
+        if (filterType === filterTypes.items) {
+            setFilterItem(t => ({ ...t, page }));
+        }
+        if (filterType === filterTypes.activities) {
+            setFilterActivity(t => ({ ...t, page }));
+        }
     }
 
     return (
@@ -158,22 +98,25 @@ const Marketplace = () => {
             <WrapperContent useShowBanner={false}>
                 <div className={styles.page}>
                     <div className={styles.banner}>
+                        {projectInforsState.loading && <Backdrop open={projectInforsState.loading} style={{ color: '#fff', zIndex: 1000, }}>
+                            <CircularProgress color="inherit" />
+                        </Backdrop>}
                         <div className="wrapper-banner">
                             <div className="img-banner">
-                                <img src={projectInfo.image} className="" alt="" />
+                                <img src={projectInfor.image} className="" alt="" />
                             </div>
                             <div className="icon">
-                                <img src={projectInfo.logo} alt="" />
+                                <img src={projectInfor.logo} alt="" />
                             </div>
                         </div>
                         <div className="infor">
-                            <h3 className="text-white">{projectInfo.name}</h3>
+                            <h3 className="text-white">{projectInfor.name}</h3>
                             <p className="desc">
-                                {projectInfo.description}
+                                {projectInfor.description}
                             </p>
                             <div className="socials">
                                 {
-                                    projectInfo.website && <MuiLink href={projectInfo.website} target="_blank">
+                                    projectInfor.website && <MuiLink href={projectInfor.website} target="_blank">
                                         <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M12 24.6694C18.6274 24.6694 24 19.1469 24 12.3347C24 5.52243 18.6274 0 12 0C5.37258 0 0 5.52243 0 12.3347C0 19.1469 5.37258 24.6694 12 24.6694Z" fill="#AEAEAE" fillOpacity="0.3" />
                                             <path d="M12.0028 5.39649C13.3383 5.39703 14.6436 5.80474 15.7535 6.56802C16.8635 7.33131 17.7283 8.41588 18.2384 9.6845C18.7485 10.9531 18.8811 12.3488 18.6194 13.6949C18.3576 15.0409 17.7133 16.277 16.768 17.2466C15.8226 18.2162 14.6187 18.8757 13.3086 19.1418C11.9985 19.4079 10.641 19.2686 9.40796 18.7414C8.17489 18.2143 7.12166 17.323 6.38153 16.1804C5.64139 15.0378 5.24761 13.6952 5.25001 12.3225C5.25091 11.4119 5.4263 10.5105 5.76616 9.6696C6.10602 8.82873 6.6037 8.06491 7.23076 7.42176C7.85783 6.7786 8.60201 6.26872 9.4208 5.92122C10.2396 5.57372 11.117 5.39542 12.0028 5.39649ZM7.12461 15.8582L8.69717 15.2166C8.59613 14.397 8.49492 13.5749 8.39353 12.7502H6.05688C6.12545 13.8679 6.49514 14.9441 7.12461 15.8582ZM8.39195 11.923C8.49756 11.0833 8.59736 10.2631 8.69717 9.45438L7.12461 8.81063C6.49384 9.72568 6.12422 10.8036 6.05741 11.923H8.39195ZM15.2973 15.2139L16.8704 15.8593C17.4998 14.9445 17.8693 13.8679 17.9376 12.7497H15.6026C15.4998 13.5819 15.3982 14.4034 15.2979 15.2139H15.2973ZM17.9376 11.923C17.8695 10.8039 17.4992 9.72645 16.8683 8.81172L15.2989 9.45384C15.3998 10.2751 15.5007 11.0952 15.6026 11.923H17.9376ZM14.491 9.66335L12.402 9.9049V11.9192H14.7703C14.7503 11.1596 14.6568 10.4039 14.491 9.66335ZM11.5914 11.9214V9.90544L9.50509 9.66227C9.33789 10.4036 9.24464 11.1606 9.22681 11.9214H11.5914ZM9.50457 15.0071L11.5941 14.7639V12.7502H9.22628C9.2452 13.5102 9.33843 14.2663 9.50457 15.0071ZM14.491 15.0071C14.6577 14.2662 14.7507 13.5099 14.7688 12.7497H12.4004V14.7634L14.491 15.0071ZM12.3994 9.06086C13.0264 9.04274 13.6509 8.97011 14.2661 8.84374C14.1019 8.31079 13.8689 7.80291 13.5732 7.3337C13.353 6.99337 13.098 6.68507 12.7585 6.46524C12.6497 6.39414 12.5303 6.3404 12.3994 6.26984V9.06086ZM11.5957 6.26495C10.52 6.7996 10.1124 7.8043 9.72001 8.84483C10.3381 8.97104 10.9657 9.04241 11.5957 9.05814V6.26495ZM12.4004 15.5852V18.3746C12.6507 18.3203 12.9924 18.075 13.2796 17.7325C13.7464 17.175 14.0363 16.522 14.2761 15.7974L12.4004 15.5852ZM9.73849 15.7942C9.83249 16.2572 10.2486 17.1153 10.5834 17.5615C10.7999 17.8492 11.046 18.1043 11.3602 18.279C11.4341 18.3198 11.5133 18.3502 11.5973 18.3876V15.5814L9.73849 15.7942ZM16.3598 16.5079L15.0497 15.9934C14.8004 16.756 14.491 17.4464 14.0496 18.0739C14.9309 17.7515 15.6839 17.2363 16.3572 16.5079H16.3598ZM15.0592 8.64942C15.4973 8.52551 15.922 8.35582 16.3265 8.143C15.8513 7.54593 14.5417 6.6639 14.068 6.60365C14.2476 6.92281 14.4493 7.24523 14.6151 7.58664C14.7809 7.92806 14.9103 8.28847 15.0592 8.64942ZM9.94972 6.59551C9.06469 6.9163 8.31274 7.43412 7.64052 8.16037L8.94641 8.67602C9.19512 7.9172 9.5014 7.22243 9.94972 6.59551ZM9.94972 18.0739C9.50034 17.4464 9.19618 16.7522 8.95486 16.014C8.50716 16.1404 8.07329 16.3137 7.66006 16.5313C8.29199 17.2266 9.07726 17.7557 9.94972 18.0739Z" fill="white" />
@@ -181,7 +124,7 @@ const Marketplace = () => {
                                     </MuiLink>
                                 }
                                 {
-                                    projectInfo.telegram && <MuiLink href={projectInfo.telegram} target="_blank">
+                                    projectInfor.telegram && <MuiLink href={projectInfor.telegram} target="_blank">
                                         <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M12 24.6694C18.6274 24.6694 24 19.1469 24 12.3347C24 5.52243 18.6274 0 12 0C5.37258 0 0 5.52243 0 12.3347C0 19.1469 5.37258 24.6694 12 24.6694Z" fill="#AEAEAE" fillOpacity="0.3" />
                                             <path d="M10.8347 14.1318L16.2578 18.3405L18.9952 6.3291L5.00488 11.9857L9.26199 13.4351L17.0313 8.07833L10.8347 14.1318Z" fill="white" />
@@ -189,8 +132,8 @@ const Marketplace = () => {
                                             <path d="M12.597 15.4997L10.4277 17.7477L10.8345 14.1318L12.597 15.4997Z" fill="#B9B9BE" />
                                         </svg>
                                     </MuiLink>}
-                                {projectInfo.twitter &&
-                                    <MuiLink href={projectInfo.twitter} target="_blank">
+                                {projectInfor.twitter &&
+                                    <MuiLink href={projectInfor.twitter} target="_blank">
                                         <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M24.2852 12C24.2852 18.6275 18.9127 24 12.2852 24C5.65765 24 0.285156 18.6275 0.285156 12C0.285156 5.3725 5.65765 0 12.2852 0C18.9127 0 24.2852 5.3725 24.2852 12Z" fill="#4F4F4F" />
                                             <path d="M24.2852 12C24.2852 18.6275 18.9127 24 12.2852 24C5.65765 24 0.285156 18.6275 0.285156 12C0.285156 5.3725 5.65765 0 12.2852 0C18.9127 0 24.2852 5.3725 24.2852 12Z" fill="#AEAEAE" fillOpacity="0.3" />
@@ -198,8 +141,8 @@ const Marketplace = () => {
                                         </svg>
                                     </MuiLink>
                                 }
-                                {projectInfo.medium &&
-                                    <MuiLink href={projectInfo.medium} target="_blank">
+                                {projectInfor.medium &&
+                                    <MuiLink href={projectInfor.medium} target="_blank">
                                         <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M12.5713 24.6694C19.1987 24.6694 24.5713 19.1469 24.5713 12.3347C24.5713 5.52243 19.1987 0 12.5713 0C5.94387 0 0.571289 5.52243 0.571289 12.3347C0.571289 19.1469 5.94387 24.6694 12.5713 24.6694Z" fill="#AEAEAE" fillOpacity="0.3" />
                                             <path d="M17.9497 8.62554L18.9711 7.6212V7.40137H15.4329L12.9113 13.8528L10.0424 7.40137H6.3325V7.6212L7.52558 9.09755C7.64185 9.20665 7.70265 9.36618 7.68719 9.52681V15.3286C7.72399 15.5375 7.65785 15.7524 7.51492 15.9042L6.1709 17.5785V17.7956H9.98162V17.5757L8.6376 15.9042C8.492 15.7518 8.4232 15.5408 8.45253 15.3286V10.3102L11.7976 17.7983H12.1864L15.0628 10.3102V16.2754C15.0628 16.4327 15.0627 16.4651 14.9625 16.5681L13.9278 17.5971V17.8175H18.9476V17.5977L17.9503 16.5939C17.8628 16.5259 17.8175 16.4119 17.8361 16.3011V8.91829C17.8175 8.807 17.8623 8.69297 17.9497 8.62554Z" fill="white" />
@@ -297,41 +240,51 @@ const Marketplace = () => {
                         <div className={styles.content}>
                             {
                                 filterType === filterTypes.items && <>
-                                    <div className={styles.cards}>
-                                        {
-                                            (itemData.data?.[itemData.page] || []).map((coll: any, id) => <Link key={id} to={`/collection/${projectAddress}/${coll.token_id}`}>
-                                                <div key={id} className={clsx(styles.card, { active: id === 0 })} >
-                                                    <ButtonBase className="btn-buy" color="green">Detail</ButtonBase>
-                                                    <div className={styles.cardImg}>
-                                                        {coll.image && <img src={coll.image} alt="" />}
-                                                    </div>
-                                                    <div className={styles.cardBody}>
-                                                        <Box className="creator" display="grid" gridTemplateColumns="16px auto" gridGap={"6px"} alignItems="center" marginBottom={'6px'}>
-                                                            <img src={projectInfo.logo} style={{ width: '16px', height: '16px', borderRadius: '50%' }} alt="" />
-                                                            <span className="text-uppercase" style={{ color: '#AEAEAE', fontSize: '12px', fontFamily: 'Helvetica' }}>MECH MASTER</span>
-                                                        </Box>
-                                                        <Box marginBottom="12px">
-                                                            <h3>
-                                                                #{formatNumber(coll.token_id, 3)}
-                                                            </h3>
-                                                        </Box>
-                                                        <Box className="bid" display="grid" gridTemplateColumns="1fr 1fr" gridGap="4px" justifyContent="space-between">
-                                                            <Box className="item" display="grid" gridGap="4px">
-                                                                <label className="helvetica-font font-12px text-grey" htmlFor="">Price floor</label>
-                                                                <span className="bold font-16px helvetica-font text-white">
-                                                                    <img src="" alt="" />
-                                                                    {coll.value} {getCurrencyByNetwork(coll.network)}
-                                                                </span>
-                                                            </Box>
-                                                            <Box className="item" display="grid" gridGap="4px" textAlign="right">
-                                                                <label className="helvetica-font font-12px text-grey" htmlFor="">Highest offer</label>
-                                                                <span className="bold font-16px helvetica-font text-white">
-                                                                    <img src="" alt="" />
-                                                                    -/- {getCurrencyByNetwork(coll.network)}
-                                                                </span>
-                                                            </Box>
-                                                        </Box>
-                                                        {/* <div className="network">
+                                    {itemsProjectCollectionState.loading && <Backdrop open={itemsProjectCollectionState.loading} style={{ color: '#fff', zIndex: 1000, }}>
+                                        <CircularProgress color="inherit" />
+                                    </Backdrop>}
+                                    {
+                                        itemsProjectCollectionState.data !== null && !itemsProjectCollectionState.loading && !itemsProject?.totalPage ?
+                                            <Box width="100%" textAlign="center">
+                                                <img src="/images/icons/item-not-found.svg" alt="" />
+                                                <h4 className="firs-neue-font font-16px bold text-white text-center">No item found</h4>
+                                            </Box> :
+                                            itemsProject?.totalPage && <>
+                                                <div className={styles.cards}>
+                                                    {
+                                                        (itemsProject?.currentList || []).map((coll: any, id: number) => <Link key={id} to={`/collection/${projectAddress}/${coll.token_id}`}>
+                                                            <div key={id} className={clsx(styles.card, { active: id === 0 })} >
+                                                                <ButtonBase className="btn-buy" color="green">Detail</ButtonBase>
+                                                                <div className={styles.cardImg}>
+                                                                    {coll.image && <img src={coll.image} alt="" />}
+                                                                </div>
+                                                                <div className={styles.cardBody}>
+                                                                    <Box className="creator" display="grid" gridTemplateColumns="16px auto" gridGap={"6px"} alignItems="center" marginBottom={'6px'}>
+                                                                        <img src={projectInfor.logo} style={{ width: '16px', height: '16px', borderRadius: '50%' }} alt="" />
+                                                                        <span className="text-uppercase" style={{ color: '#AEAEAE', fontSize: '12px', fontFamily: 'Helvetica' }}>MECH MASTER</span>
+                                                                    </Box>
+                                                                    <Box marginBottom="12px">
+                                                                        <h3>
+                                                                            #{formatNumber(coll.token_id, 3)}
+                                                                        </h3>
+                                                                    </Box>
+                                                                    <Box className="bid" display="grid" gridTemplateColumns="1fr 1fr" gridGap="4px" justifyContent="space-between">
+                                                                        <Box className="item" display="grid" gridGap="4px">
+                                                                            <label className="helvetica-font font-12px text-grey" htmlFor="">Price floor</label>
+                                                                            <span className="bold font-16px helvetica-font text-white">
+                                                                                <img src="" alt="" />
+                                                                                {coll.value} {coll.currencySymbol}
+                                                                            </span>
+                                                                        </Box>
+                                                                        <Box className="item" display="grid" gridGap="4px" textAlign="right">
+                                                                            <label className="helvetica-font font-12px text-grey" htmlFor="">Highest offer</label>
+                                                                            <span className="bold font-16px helvetica-font text-white">
+                                                                                <img src="" alt="" />
+                                                                                -/- {coll.currencySymbol}
+                                                                            </span>
+                                                                        </Box>
+                                                                    </Box>
+                                                                    {/* <div className="network">
                                                    <div className="exchange-rate">
                                                        <span className="current">
                                                            {card.price}
@@ -345,11 +298,11 @@ const Marketplace = () => {
                                                        <img src={`/images/icons/${card.network}.png`} alt="" />
                                                    </div>
                                                </div> */}
-                                                        {/* <div className="tags">
+                                                                    {/* <div className="tags">
                                                    {card.tags.map((t) => <span key={t}>{t}</span>)}
                                                </div> */}
-                                                    </div>
-                                                    {/* <div className={styles.cardFooter}>
+                                                                </div>
+                                                                {/* <div className={styles.cardFooter}>
                                                <div className="logo">
                                                    <img src={card.iconToken} alt="" />
                                                    <span className="text-uppercase">{card.tokenName}</span>
@@ -369,87 +322,104 @@ const Marketplace = () => {
                                                    </div>
                                                </div>
                                            </div> */}
+                                                            </div>
+                                                        </Link>
+                                                        )}
                                                 </div>
-                                            </Link>
-                                            )}
-                                    </div>
-                                    <Pagination
-                                        count={Math.ceil(itemData.total / perPage)}
-                                        page={itemData.page}
-                                        onChange={(e: any, page: any) => {
-                                            onSetPage(page)
-                                        }}
-                                    />
+                                                {itemsProject.totalPage &&
+                                                    <Pagination
+                                                        count={itemsProject.totalPage}
+                                                        page={itemsProject.currentPage}
+                                                        onChange={(e: any, page: any) => {
+                                                            onSetPage(page)
+                                                        }}
+                                                    />
+                                                }
+                                            </>
+                                    }
+
                                 </>
                             }
                             {
-                                filterType === filterTypes.activities && <TableContainer>
-                                    <Table>
-                                        <TableHead>
-                                            <TableRowHead>
-                                                <TableCell>ITEM</TableCell>
-                                                <TableCell>PRICE</TableCell>
-                                                <TableCell>TYPE</TableCell>
-                                                <TableCell>FROM</TableCell>
-                                                <TableCell>TO</TableCell>
-                                                <TableCell>DATE</TableCell>
-                                            </TableRowHead>
-                                        </TableHead>
-                                        <TableBody>
-                                            {
-                                                (itemActivity.data?.[itemActivity.page] || []).map((col, idx) => <TableRowBody key={idx}>
-                                                    <TableCell>
-                                                        <Box display="grid" gridTemplateColumns="56px auto" gridGap="8px" alignItems="center">
-                                                            <Box width="56px" height="56px" style={{ backgroundColor: "#000", borderRadius: '4px' }}>
-                                                                {col.image && <img src={col.image} alt="" width="56px" height="56px" />}
-                                                            </Box>
-                                                            <Box>
-                                                                <h4 className="firs-neue-font font-16px text-white">#{col.token_id}</h4>
-                                                                <span className="text-grey helvetica-font font-14px">{projectInfo.name}</span>
-                                                            </Box>
-                                                        </Box>
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <Box>
-                                                            <span>{col.value}{getCurrencyByNetwork(col.network)}</span>
-                                                        </Box>
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {ActionSaleNFT[col.event_type as keyof typeof ActionSaleNFT]}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            ActionSaleNFT[col.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenListed ||
-                                                                ActionSaleNFT[col.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenDelisted ?
-                                                                cvtAddressToStar(col.seller || '', '.', 10) :
-                                                                cvtAddressToStar(col.buyer || '', '.', 10)
-                                                        }
+                                filterType === filterTypes.activities && (
+                                    <>
+                                        {activitiesProjectCollectionState.loading && <Backdrop open={activitiesProjectCollectionState.loading} style={{ color: '#fff', zIndex: 1000, }}>
+                                            <CircularProgress color="inherit" />
+                                        </Backdrop>}
 
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            ActionSaleNFT[col.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenListed ||
-                                                                ActionSaleNFT[col.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenDelisted ?
-                                                                cvtAddressToStar(col.buyer || '', '.', 10) :
-                                                                cvtAddressToStar(col.seller || '', '.', 10)
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {col.dispatch_at && getTimeStringPassed(+col.dispatch_at * 1000, Date.now())}
-                                                    </TableCell>
-                                                </TableRowBody>)
-                                            }
-                                        </TableBody>
-                                    </Table>
-                                    <Pagination
-                                        count={Math.ceil(itemActivity.total / perPage)}
-                                        page={itemActivity.page}
-                                        onChange={(e: any, page: any) => {
-                                            onSetPage(page)
-                                        }}
-                                    />
-                                </TableContainer>
-                            }
+                                        {
+                                            activitiesProjectCollectionState.data !== null && !activitiesProjectCollectionState.loading && !activitiesProject?.totalPage ?
+                                                <Box width="100%" textAlign="center">
+                                                    <img src="/images/icons/item-not-found.svg" alt="" />
+                                                    <h4 className="firs-neue-font font-16px bold text-white text-center">No item found</h4>
+                                                </Box> :
+                                                activitiesProject?.totalPage && <TableContainer>
+                                                    <Table>
+                                                        <TableHead>
+                                                            <TableRowHead>
+                                                                <TableCell>ITEM</TableCell>
+                                                                <TableCell>PRICE</TableCell>
+                                                                <TableCell>TYPE</TableCell>
+                                                                <TableCell>FROM</TableCell>
+                                                                <TableCell>TO</TableCell>
+                                                                <TableCell>DATE</TableCell>
+                                                            </TableRowHead>
+                                                        </TableHead>
+                                                        <TableBody>
+                                                            {
+                                                                (activitiesProject?.currentList || []).map((col: any, idx: number) => <TableRowBody key={idx}>
+                                                                    <TableCell>
+                                                                        <Box display="grid" gridTemplateColumns="56px auto" gridGap="8px" alignItems="center">
+                                                                            <Box width="56px" height="56px" style={{ backgroundColor: "#000", borderRadius: '4px' }}>
+                                                                                {col.image && <img src={col.image} alt="" width="56px" height="56px" />}
+                                                                            </Box>
+                                                                            <Box>
+                                                                                <h4 className="firs-neue-font font-16px text-white">#{col.token_id}</h4>
+                                                                                <span className="text-grey helvetica-font font-14px">{projectInfor.name}</span>
+                                                                            </Box>
+                                                                        </Box>
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        <Box>
+                                                                            <span>{col.value} {col.currencySymbol}</span>
+                                                                        </Box>
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {ActionSaleNFT[col.event_type as keyof typeof ActionSaleNFT]}
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {
+                                                                            ActionSaleNFT[col.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenListed ||
+                                                                                ActionSaleNFT[col.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenDelisted ?
+                                                                                cvtAddressToStar(col.seller || '', '.', 5) :
+                                                                                cvtAddressToStar(col.buyer || '', '.', 5)
+                                                                        }
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {
+                                                                            ActionSaleNFT[col.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenListed ||
+                                                                                ActionSaleNFT[col.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenDelisted ?
+                                                                                cvtAddressToStar(col.buyer || '', '.', 5) :
+                                                                                cvtAddressToStar(col.seller || '', '.', 5)
+                                                                        }
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {col.dispatch_at && formatHumanReadableTime(+col.dispatch_at * 1000, Date.now())}
+                                                                    </TableCell>
+                                                                </TableRowBody>)
+                                                            }
+                                                        </TableBody>
+                                                    </Table>
+                                                    <Pagination
+                                                        count={activitiesProject?.totalPage}
+                                                        page={activitiesProject.currentPage}
+                                                        onChange={(e: any, page: any) => {
+                                                            onSetPage(page)
+                                                        }}
+                                                    />
+                                                </TableContainer>}
+                                    </>
+                                )}
                         </div>
                     </div>
                 </div>

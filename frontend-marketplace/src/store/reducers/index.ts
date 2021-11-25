@@ -18,6 +18,7 @@ import { messageReducer } from './message';
 import {claimUserInfoReducer} from "./claim-user-info";
 import { assetsAccountReducer } from './asset-account';
 import { hotCollectionReducer, bigOfferReducer } from './marketplace';
+import { projectInforsReducer, itemsProjectCollectionsReducer, activitiesProjectCollectionsReducer } from './project-collection';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -38,6 +39,10 @@ const rootReducer = combineReducers({
   assetsAccount: assetsAccountReducer,
   hotCollections: hotCollectionReducer,
   bigOffers: bigOfferReducer,
+  projectInfors: projectInforsReducer,
+  itemsProjectCollection: itemsProjectCollectionsReducer,
+  activitiesProjectCollection: activitiesProjectCollectionsReducer,
+  
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

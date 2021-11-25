@@ -22,7 +22,7 @@ import { useFetchV1 } from "@hooks/useFetch";
 import { ObjectType } from "@app-types";
 import { useWeb3React } from "@web3-react/core";
 import axios from '@services/axios'
-import { getTimeStringPassed } from '@utils/index'
+import { formatHumanReadableTime } from '@utils/index'
 type Props = {
     info: { [k: string]: any },
     [k: string]: any
@@ -170,7 +170,7 @@ export const AboutMarketplaceNFT = ({
                                             <h4>
                                                 {row.buyer} <span>make an offer</span>
                                             </h4>
-                                            <h5 className="text-left">{getTimeStringPassed(row.dispatch_at * 1000 || 0, timenow)}</h5 >
+                                            <h5 className="text-left">{formatHumanReadableTime(row.dispatch_at * 1000 || 0, timenow)}</h5 >
                                         </div>
                                     </TableCell>
                                     <TableCell width="150px" align="left" style={{ padding: '7px' }} className="text-uppercase">

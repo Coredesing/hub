@@ -303,7 +303,10 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, isShowRateSerie
                                                 ref={(video) => {
                                                     if (!video) return;
                                                     if (imgRef?.current) {
-                                                        imgRef.current.style.display = 'block';
+                                                        imgRef.current.style.display = 'grid';
+                                                        if(imgRef.current.classList.contains('zoom-in')) {
+                                                            imgRef.current.classList.remove('zoom-in')
+                                                        }
                                                     }
                                                     if (wrapVideoRef.current) {
                                                         wrapVideoRef.current.style.display = 'none'

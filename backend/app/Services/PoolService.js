@@ -262,12 +262,21 @@ class PoolService {
       filterParams.limit = 20
     }
 
+    if (await RedisUtils.checkExistRedisCompletedPools(page)) {
+      const cachedPools = await RedisUtils.getRedisCompletedPools(page)
+      return JSON.parse(cachedPools)
+    }
+
     let pools = await this.buildQueryBuilder(filterParams)
       .where('campaign_status', Const.POOL_STATUS.ENDED)
       .orderBy('priority', 'DESC')
       .orderBy('finish_time', 'DESC')
       .paginate(page, limit);
 
+    // cache data
+    if (page <= 2) {
+      await RedisUtils.createRedisCompletedPools(page, pools)
+    }
     return pools;
   }
 
@@ -678,7 +687,7 @@ class PoolService {
     const page = filterParams.page ? filterParams.page : 1;
     const token_type = filterParams.token_type ? filterParams.token_type : 'erc20'
 
-    if (await RedisUtils.checkExistRedisPoolByTokenType(page)) {
+    if (token_type === 'erc20' && await RedisUtils.checkExistRedisPoolByTokenType(page)) {
       const cachedPools = await RedisUtils.getRedisPoolByTokenType(page)
       return JSON.parse(cachedPools)
     }
@@ -698,7 +707,7 @@ class PoolService {
       .orderBy('id', 'DESC')
       .paginate(page, limit);
 
-    if (page <= 2) {
+    if (token_type === 'erc20' && page <= 2) {
       await RedisUtils.createRedisPoolByTokenType(filterParams.page, pools)
     }
     return pools;

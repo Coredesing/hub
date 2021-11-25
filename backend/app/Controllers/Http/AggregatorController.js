@@ -34,6 +34,8 @@ class AggregatorController {
       return HelperUtils.responseSuccess('','Update successfully');
     } catch (e) {
       return HelperUtils.responseErrorInternal();
+    } finally {
+      await RedisAggregatorUtils.deleteAllRedisAggregators([1, 2])
     }
   }
 
@@ -76,6 +78,8 @@ class AggregatorController {
     } catch (e) {
       console.log(e);
       return HelperUtils.responseErrorInternal();
+    } finally {
+      await RedisAggregatorUtils.deleteAllRedisAggregators([1, 2])
     }
   }
 
@@ -284,6 +288,11 @@ class AggregatorController {
       const ido_type = params?.ido_type
       const price = params?.price
 
+      if (await RedisAggregatorUtils.checkExistRedisAggregators(page)) {
+        const cachedList = await RedisAggregatorUtils.getRedisAggregators(page)
+        return JSON.parse(cachedList)
+      }
+
       let builder = GameInformation.query()
       if (category) {
         builder = builder.where(`category`, 'like', `%${category}%`)
@@ -304,6 +313,11 @@ class AggregatorController {
       builder = builder.where('is_show', true)
 
       const list = await builder.paginate(page, perPage)
+
+      // cache data
+      if (page <= 2) {
+        await RedisAggregatorUtils.setRedisAggregators(page, list)
+      }
       return HelperUtils.responseSuccess(list);
     }catch (e) {
       console.log(e);
@@ -393,6 +407,8 @@ class AggregatorController {
       return HelperUtils.responseSuccess();
     }catch (e) {
       return HelperUtils.responseErrorInternal();
+    } finally {
+      await RedisAggregatorUtils.deleteAllRedisAggregators([1, 2])
     }
   }
 }

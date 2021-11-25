@@ -3,6 +3,7 @@
 const GameInformation = use('App/Models/GameInformation');
 const ProjectInformation = use('App/Models/ProjectInformation');
 const Tokenomic = use('App/Models/Tokenomic');
+const RedisAggregatorUtils = use('App/Common/RedisAggregatorUtils');
 
 class AggregatorService {
   async setGame(param, isUpdate, id) {
@@ -45,6 +46,7 @@ class AggregatorService {
     gameProject.slug = param?.gameInfo.slug
 
     await gameProject.save();
+    await RedisAggregatorUtils.deleteAllRedisAggregators([1, 2])
     return gameProject;
   }
   async setProjectInfo(id, param, isUpdate) {
@@ -91,6 +93,7 @@ class AggregatorService {
     tokenomic.token_release = param.token_release
     tokenomic.coinmarketcap_slug = param.coinmarketcap_slug
     const insertStatus = await tokenomic.save()
+    await RedisAggregatorUtils.deleteAllRedisAggregators([1, 2])
     return insertStatus
   }
 }

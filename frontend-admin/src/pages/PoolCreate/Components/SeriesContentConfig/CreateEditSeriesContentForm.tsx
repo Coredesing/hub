@@ -150,7 +150,20 @@ function CreateEditSeriesContentForm(props: any) {
           </div>
         </div>
 
-      <div className={classes.formControl}>
+          <div className={classes.formControl}>
+              <label className={classes.formControlLabel}>Video</label>
+              <div>
+                  <TextFieldWithValidate
+                      register={register}
+                      errors={errors}
+                      initValue={editData.video}
+                      controlName={'video'}
+                      validateRule={{}}
+                  />
+              </div>
+          </div>
+
+        <div className={classes.formControl}>
           <label className={classes.formControlLabel}>Description</label>
           <div>
               <TextFieldWithValidate
@@ -161,7 +174,7 @@ function CreateEditSeriesContentForm(props: any) {
                   validateRule={{}}
               />
           </div>
-      </div>
+        </div>
       </ConfirmDialog>
 
     </>

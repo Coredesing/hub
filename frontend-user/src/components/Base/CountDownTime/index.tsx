@@ -69,7 +69,7 @@ export const CountDownTimeV1 = (props: Props) => {
         if (isFinish) {
             props.onFinish && props.onFinish();
         }
-    }, [isFinish, props]);
+    }, [isFinish, props.onFinish]);
 
     return (
         <div className={clsx(styles.cardBodyClock, props.className)}>

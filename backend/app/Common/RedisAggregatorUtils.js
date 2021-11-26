@@ -2,8 +2,6 @@
 
 const Redis = use('Redis');
 
-const AGGREGATORS_CACHED_TTL = 120 // 2 minutes
-
 /*
   Aggregator detail
  */
@@ -33,32 +31,38 @@ const deleteRedisAggregatorDetail = (slug) => {
 /*
   Aggregators
  */
-  const getRedisKeyAggregators = (page) => {
-    return `aggregators_${page}`;
+  const getRedisKeyAggregators = (params) => {
+    return `aggregators_${params?.page}_${params?.display_area}_${params?.ido_type}`;
   };
   
-  const getRedisAggregators = async (page) => {
-    return await Redis.get(getRedisKeyAggregators(page));
+  const getRedisAggregators = async (params) => {
+    return await Redis.get(getRedisKeyAggregators(params));
   };
   
-  const setRedisAggregators = async (page, data) => {
-    return await Redis.setex(getRedisKeyAggregators(page),AGGREGATORS_CACHED_TTL, JSON.stringify(data));
+  const setRedisAggregators = async (params, data) => {
+    return await Redis.set(getRedisKeyAggregators(params), JSON.stringify(data));
   };
   
-  const checkExistRedisAggregators = async (page) => {
-    return await Redis.exists(getRedisKeyAggregators(page));
+  const checkExistRedisAggregators = async (params) => {
+    return await Redis.exists(getRedisKeyAggregators(params));
   };
   
-  const deleteRedisAggregators = (page) => {
-    let redisKey = getRedisKeyAggregators(page);
+  const deleteRedisAggregators = (params) => {
+    let redisKey = getRedisKeyAggregators(params);
     if (Redis.exists(redisKey)) {
       Redis.del(redisKey);
     }
   };
 
-  const deleteAllRedisAggregators = (pages = []) => {
-    pages.forEach(page => {
-      deleteRedisAggregators(page)
+  const deleteAllRedisAggregators = () => {
+    Redis.keys('aggregators_*').then((keys) => {
+      const pipeline = Redis.pipeline()
+      keys.forEach((key) => {
+        console.log('del', key)
+        pipeline.del(key)
+      })
+
+      return pipeline.exec()
     })
   };
 

@@ -35,7 +35,7 @@ class AggregatorController {
     } catch (e) {
       return HelperUtils.responseErrorInternal();
     } finally {
-      await RedisAggregatorUtils.deleteAllRedisAggregators([1, 2])
+      await RedisAggregatorUtils.deleteAllRedisAggregators()
     }
   }
 
@@ -79,7 +79,7 @@ class AggregatorController {
       console.log(e);
       return HelperUtils.responseErrorInternal();
     } finally {
-      await RedisAggregatorUtils.deleteAllRedisAggregators([1, 2])
+      await RedisAggregatorUtils.deleteAllRedisAggregators()
     }
   }
 
@@ -288,7 +288,7 @@ class AggregatorController {
       const ido_type = params?.ido_type
       const price = params?.price
 
-      if (await RedisAggregatorUtils.checkExistRedisAggregators(page)) {
+      if (await RedisAggregatorUtils.checkExistRedisAggregators({ page, display_area, ido_type })) {
         const cachedList = await RedisAggregatorUtils.getRedisAggregators(page)
         return JSON.parse(cachedList)
       }
@@ -316,7 +316,7 @@ class AggregatorController {
 
       // cache data
       if (page <= 2) {
-        await RedisAggregatorUtils.setRedisAggregators(page, list)
+        await RedisAggregatorUtils.setRedisAggregators({ page, display_area, ido_type }, list)
       }
       return HelperUtils.responseSuccess(list);
     }catch (e) {
@@ -408,7 +408,7 @@ class AggregatorController {
     }catch (e) {
       return HelperUtils.responseErrorInternal();
     } finally {
-      await RedisAggregatorUtils.deleteAllRedisAggregators([1, 2])
+      await RedisAggregatorUtils.deleteAllRedisAggregators()
     }
   }
 }

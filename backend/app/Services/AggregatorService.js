@@ -46,7 +46,7 @@ class AggregatorService {
     gameProject.slug = param?.gameInfo.slug
 
     await gameProject.save();
-    await RedisAggregatorUtils.deleteAllRedisAggregators([1, 2])
+    await RedisAggregatorUtils.deleteAllRedisAggregators()
     return gameProject;
   }
   async setProjectInfo(id, param, isUpdate) {
@@ -93,7 +93,7 @@ class AggregatorService {
     tokenomic.token_release = param.token_release
     tokenomic.coinmarketcap_slug = param.coinmarketcap_slug
     const insertStatus = await tokenomic.save()
-    await RedisAggregatorUtils.deleteAllRedisAggregators([1, 2])
+    await RedisAggregatorUtils.deleteAllRedisAggregators()
     return insertStatus
   }
 }

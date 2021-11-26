@@ -22,7 +22,7 @@ const useContract = (abi: any, contractAddress: string): ReturnType => {
     const contract = getContractInstance(abi, contractAddress, undefined, appChainID || ChainDefault.id);
     if (!contract) return;
     setContract(contract);
-  }, [appChainID]);
+  }, [appChainID, contractAddress]);
 
 
   return { contract };

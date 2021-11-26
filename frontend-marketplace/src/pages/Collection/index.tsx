@@ -3,7 +3,7 @@ import DefaultLayout from '@layout-components/DefaultLayout'
 import WrapperContent from '@base-components/WrapperContent'
 import useStyles from './style';
 import clsx from 'clsx';
-import { Button, Switch, FormGroup, FormControlLabel, Link as MuiLink, Box, TableBody, Backdrop } from '@material-ui/core';
+import { Button, Switch, FormGroup, FormControlLabel, Link as MuiLink, Box, Backdrop } from '@material-ui/core';
 import { SearchBox } from '@base-components/SearchBox';
 import SelectBox from '@base-components/SelectBox';
 import { Link } from 'react-router-dom';
@@ -20,17 +20,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTypedSelector } from '@hooks/useTypedSelector';
 import { cvtAddressToStar, formatNumber, getCurrencyByNetwork, formatHumanReadableTime } from '@utils/index';
 import {
-
     TableContainer,
     Table,
     TableHead,
     TableCell,
     TableRowBody,
     TableRowHead,
+    TableBody,
 } from '@base-components/Table';
-import { ActionSaleNFT } from './constants';
+import { ActionSaleNFT } from '@app-constants';
 import { setItemsProjectCollection, setProjectInfor, setActivitiesProjectCollection } from '@store/actions/project-collection';
 import CircularProgress from '@base-components/CircularProgress';
+import CardMarketplace from '@base-components/CardMarketplace';
 
 const Marketplace = () => {
     const styles = useStyles();
@@ -95,7 +96,7 @@ const Marketplace = () => {
 
     return (
         <DefaultLayout>
-            <WrapperContent useShowBanner={false}>
+            <WrapperContent>
                 <div className={styles.page}>
                     <div className={styles.banner}>
                         {projectInforsState.loading && <Backdrop open={projectInforsState.loading} style={{ color: '#fff', zIndex: 1000, }}>
@@ -244,7 +245,7 @@ const Marketplace = () => {
                                         <CircularProgress color="inherit" />
                                     </Backdrop>}
                                     {
-                                        itemsProjectCollectionState.data !== null && !itemsProjectCollectionState.loading && !itemsProject?.totalPage ?
+                                        itemsProjectCollectionState.data !== null && (!itemsProjectCollectionState.loading && !itemsProject?.totalPage ?
                                             <Box width="100%" textAlign="center">
                                                 <img src="/images/icons/item-not-found.svg" alt="" />
                                                 <h4 className="firs-neue-font font-16px bold text-white text-center">No item found</h4>
@@ -252,78 +253,10 @@ const Marketplace = () => {
                                             itemsProject?.totalPage && <>
                                                 <div className={styles.cards}>
                                                     {
-                                                        (itemsProject?.currentList || []).map((coll: any, id: number) => <Link key={id} to={`/collection/${projectAddress}/${coll.token_id}`}>
-                                                            <div key={id} className={clsx(styles.card, { active: id === 0 })} >
-                                                                <ButtonBase className="btn-buy" color="green">Detail</ButtonBase>
-                                                                <div className={styles.cardImg}>
-                                                                    {coll.image && <img src={coll.image} alt="" />}
-                                                                </div>
-                                                                <div className={styles.cardBody}>
-                                                                    <Box className="creator" display="grid" gridTemplateColumns="16px auto" gridGap={"6px"} alignItems="center" marginBottom={'6px'}>
-                                                                        <img src={projectInfor.logo} style={{ width: '16px', height: '16px', borderRadius: '50%' }} alt="" />
-                                                                        <span className="text-uppercase" style={{ color: '#AEAEAE', fontSize: '12px', fontFamily: 'Helvetica' }}>MECH MASTER</span>
-                                                                    </Box>
-                                                                    <Box marginBottom="12px">
-                                                                        <h3>
-                                                                            #{formatNumber(coll.token_id, 3)}
-                                                                        </h3>
-                                                                    </Box>
-                                                                    <Box className="bid" display="grid" gridTemplateColumns="1fr 1fr" gridGap="4px" justifyContent="space-between">
-                                                                        <Box className="item" display="grid" gridGap="4px">
-                                                                            <label className="helvetica-font font-12px text-grey" htmlFor="">Price floor</label>
-                                                                            <span className="bold font-16px helvetica-font text-white">
-                                                                                <img src="" alt="" />
-                                                                                {coll.value} {coll.currencySymbol}
-                                                                            </span>
-                                                                        </Box>
-                                                                        <Box className="item" display="grid" gridGap="4px" textAlign="right">
-                                                                            <label className="helvetica-font font-12px text-grey" htmlFor="">Highest offer</label>
-                                                                            <span className="bold font-16px helvetica-font text-white">
-                                                                                <img src="" alt="" />
-                                                                                -/- {coll.currencySymbol}
-                                                                            </span>
-                                                                        </Box>
-                                                                    </Box>
-                                                                    {/* <div className="network">
-                                                   <div className="exchange-rate">
-                                                       <span className="current">
-                                                           {card.price}
-                                                       </span>
-                                                       <span className="seperate">~</span>
-                                                       <span className="usd">
-                                                           $ {card.usdPrice}
-                                                       </span>
-                                                   </div>
-                                                   <div className="icon">
-                                                       <img src={`/images/icons/${card.network}.png`} alt="" />
-                                                   </div>
-                                               </div> */}
-                                                                    {/* <div className="tags">
-                                                   {card.tags.map((t) => <span key={t}>{t}</span>)}
-                                               </div> */}
-                                                                </div>
-                                                                {/* <div className={styles.cardFooter}>
-                                               <div className="logo">
-                                                   <img src={card.iconToken} alt="" />
-                                                   <span className="text-uppercase">{card.tokenName}</span>
-                                               </div>
-                                               <div className="interactions">
-                                                   <div className="item">
-                                                       <svg width="10" height="9" viewBox="0 0 10 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                           <path d="M4.7782 8.74697C4.83696 8.8076 4.91696 8.84128 5.00072 8.84128C5.08447 8.84128 5.16447 8.8076 5.22323 8.74697L9.22096 4.6543C10.8881 2.94794 9.70349 0 7.33252 0C5.90868 0 5.25531 1.05716 5.00072 1.25462C4.74487 1.05632 4.09566 0 2.66891 0C0.30544 0 -0.893797 2.94036 0.780885 4.6543L4.7782 8.74697Z" fill="#7D7D7D" />
-                                                       </svg>
-                                                       <span>{card.interactions.hearts}</span>
-                                                   </div>
-                                                   <div className="item">
-                                                       <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                           <path d="M7 0.827148C4.32515 0.827148 1.89946 2.29058 0.109543 4.66759C-0.0365143 4.86233 -0.0365143 5.1344 0.109543 5.32914C1.89946 7.70901 4.32515 9.17245 7 9.17245C9.67485 9.17245 12.1005 7.70901 13.8905 5.332C14.0365 5.13726 14.0365 4.8652 13.8905 4.67045C12.1005 2.29058 9.67485 0.827148 7 0.827148ZM7.19188 7.93812C5.41628 8.04981 3.94998 6.58638 4.06168 4.80792C4.15332 3.34162 5.34182 2.15312 6.80812 2.06147C8.58372 1.94978 10.05 3.41322 9.93832 5.19168C9.84382 6.65511 8.65531 7.84361 7.19188 7.93812ZM7.1031 6.58065C6.14657 6.64079 5.35614 5.85323 5.41915 4.8967C5.46783 4.10627 6.10934 3.46763 6.89977 3.41608C7.8563 3.35594 8.64672 4.1435 8.58372 5.10003C8.53217 5.89332 7.89066 6.53196 7.1031 6.58065Z" fill="#7D7D7D" />
-                                                       </svg>
-                                                       <span>{card.interactions.views}</span>
-                                                   </div>
-                                               </div>
-                                           </div> */}
-                                                            </div>
-                                                        </Link>
+                                                        (itemsProject?.currentList || []).map((coll: any, id: number) =>
+                                                            <Link key={id} to={`/collection/${projectAddress}/${coll.token_id}`}>
+                                                                <CardMarketplace item={coll} key={id} />
+                                                            </Link>
                                                         )}
                                                 </div>
                                                 {itemsProject.totalPage &&
@@ -335,9 +268,8 @@ const Marketplace = () => {
                                                         }}
                                                     />
                                                 }
-                                            </>
+                                            </>)
                                     }
-
                                 </>
                             }
                             {
@@ -353,7 +285,7 @@ const Marketplace = () => {
                                                     <img src="/images/icons/item-not-found.svg" alt="" />
                                                     <h4 className="firs-neue-font font-16px bold text-white text-center">No item found</h4>
                                                 </Box> :
-                                                activitiesProject?.totalPage && <TableContainer>
+                                                activitiesProject?.totalPage && <TableContainer style={{ borderBottom: '1px solid #44454B' }} >
                                                     <Table>
                                                         <TableHead>
                                                             <TableRowHead>

@@ -17,8 +17,10 @@ import {
 import { messageReducer } from './message';
 import {claimUserInfoReducer} from "./claim-user-info";
 import { assetsAccountReducer } from './asset-account';
-import { hotCollectionReducer, bigOfferReducer } from './marketplace';
+import { hotCollectionReducer, listOfferReducer, itemsCollectionReducer, activitiesCollectionReducer } from './marketplace';
 import { projectInforsReducer, itemsProjectCollectionsReducer, activitiesProjectCollectionsReducer } from './project-collection';
+import { currenciesReducer } from './currency';
+import { tokenInforsReducer } from './tokenInfors';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -38,11 +40,14 @@ const rootReducer = combineReducers({
   delayTiers: getDelayTiersReducer,
   assetsAccount: assetsAccountReducer,
   hotCollections: hotCollectionReducer,
-  bigOffers: bigOfferReducer,
+  listOffer: listOfferReducer,
   projectInfors: projectInforsReducer,
   itemsProjectCollection: itemsProjectCollectionsReducer,
   activitiesProjectCollection: activitiesProjectCollectionsReducer,
-  
+  currencies: currenciesReducer,
+  itemsCollection: itemsCollectionReducer,
+  activitiesCollection: activitiesCollectionReducer,
+  tokenInfors: tokenInforsReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

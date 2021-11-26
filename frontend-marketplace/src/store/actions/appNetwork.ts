@@ -12,7 +12,6 @@ export enum NetworkUpdateType {
 export const settingAppNetwork = (networkType: string, updatedVal: string | undefined) => {
   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
     dispatch({ type: appNetworkActions.APP_NETWORKS_SETTING_LOADING });
-
     try {
       const { appChainID, walletChainID } = getState().appNetwork.data;
 
@@ -21,7 +20,6 @@ export const settingAppNetwork = (networkType: string, updatedVal: string | unde
           appChainID: networkType === NetworkUpdateType.App ? updatedVal: appChainID,
           walletChainID: networkType === NetworkUpdateType.Wallet ? updatedVal: walletChainID,
         }
-
         dispatch({
           type: appNetworkActions.APP_NETWORKS_SETTING_SUCCESS,
           payload: updatedNetworkData

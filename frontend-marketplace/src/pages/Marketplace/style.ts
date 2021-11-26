@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: any) => ({
         // },
         '& .content-page': {
             width: '100%',
-            maxWidth: '1240px',
+            maxWidth: '1280px',
             margin: 'auto',
             padding: '28px 0px',
         }
@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme: any) => ({
         }
     },
     bannerSlide: {
+        minHeight: '608px',
         '& .swiper-button-prev': {
             left: '80px',
         },
@@ -55,14 +56,6 @@ const useStyles = makeStyles((theme: any) => ({
         }
     },
     listCardsSlide: {
-        // [theme.breakpoints.up('md')]: {
-        //     '& .swiper-button-prev': {
-        //         left: '10px',
-        //     },
-        //     '& .swiper-button-next': {
-        //         right: '10px',
-        //     },
-        // },
         '& > a': {
             display: 'grid',
             placeContent: 'center',
@@ -72,6 +65,14 @@ const useStyles = makeStyles((theme: any) => ({
         },
         '& .swiper-button-next': {
             right: '10px',
+        },
+        [theme.breakpoints.down('xs')]: {
+            '& .swiper-button-prev': {
+                left: '0',
+            },
+            '& .swiper-button-next': {
+                right: '0',
+            },
         },
     },
     banner: {
@@ -192,6 +193,7 @@ const useStyles = makeStyles((theme: any) => ({
         }
     },
     content: {
+        padding: '0px 20px',
         [theme.breakpoints.down('xs')]: {
             padding: '0px 20px',
         }
@@ -362,8 +364,35 @@ const useStyles = makeStyles((theme: any) => ({
         display: 'flex',
         alignItems: 'center',
         gap: '2px',
-        borderRadius: '4px'
-    }
+        borderRadius: '4px',
+        '&:hover': {
+            color: '#fff',
+        }
+    },
+    btnFilterDiscover: {
+        ...typeDisplayFlex,
+        fontFamily: 'Firs Neue',
+        fontSize: '14px',
+        lineHeight: '24px',
+        fontStyle: 'normal',
+        fontWeight: 600,
+        color: '#fff',
+        textTransform: 'unset',
+        background: '#2E2E2E',
+        padding: '6px 16px',
+        borderRadius: '22px',
+        '&.active': {
+            background: '#72F34B',
+            color: '#000',
+        },
+        '& svg': {
+            marginRight: '6px',
+        },
+        '&:hover': {
+            background: '#72F34B',
+            color: '#000',
+        }
+    },
 }));
 
 export default useStyles;

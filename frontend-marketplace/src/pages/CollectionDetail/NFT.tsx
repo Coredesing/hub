@@ -531,16 +531,16 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                                                             !isOwnerNFT &&
                                                             isApprovedToken.ok &&
                                                             addressOwnerOnSale !== connectedAccount && !!+addressOwnerOnSale && !(new BigNumber(+addressOwnerOnSale).isZero()) &&
-                                                            <ButtonBase isLoading={checkFnIsLoading(onOfferNFT.name)} disabled={lockingAction.lock} color="green" className="w-full" onClick={() => setOpenOfferModal(true)}>
-                                                                Offer
+                                                            <ButtonBase isLoading={checkFnIsLoading(onOfferNFT.name)} disabled={lockingAction.lock} color="yellow" className="w-full" onClick={() => setOpenOfferModal(true)}>
+                                                                Make Offer
                                                             </ButtonBase>
                                                         }
                                                         {
                                                             !isOwnerNFT &&
                                                             isApprovedToken.ok &&
                                                             addressOwnerOnSale !== connectedAccount && !!+addressOwnerOnSale && !(new BigNumber(+addressOwnerOnSale).isZero()) &&
-                                                            <ButtonBase isLoading={checkFnIsLoading(onBuyNFT.name)} disabled={lockingAction.lock} color="yellow" className="w-full" onClick={onBuyNFT}>
-                                                                Buy
+                                                            <ButtonBase isLoading={checkFnIsLoading(onBuyNFT.name)} disabled={lockingAction.lock} color="green" className="w-full" onClick={onBuyNFT}>
+                                                                Buy Now
                                                             </ButtonBase>
                                                         }
                                                     </>

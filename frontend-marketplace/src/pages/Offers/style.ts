@@ -31,9 +31,6 @@ const useStyles = makeStyles((theme: any) => ({
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
             justifyContent: 'space-between',
-            [theme.breakpoints.down('xs')]: {
-                gridTemplateColumns: '1fr',
-            },
             '& .item': {
                 ...typeDisplayFlex,
                 flexWrap: 'wrap',

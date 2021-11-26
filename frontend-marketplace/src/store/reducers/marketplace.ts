@@ -1,80 +1,48 @@
-import { hotCollectionsActions, bigOfferActions } from '../constants/marketplace';
+import { hotCollectionsActions, listOfferActions, itemsCollectionActions, activitiesCollectionActions } from '../constants/marketplace';
 import { AnyAction } from 'redux';
+import { initReducer, StateType } from './utils';
 
-type StateType = {
-  data: null | object;
-  loading: boolean;
-  error: string;
+
+export const hotCollectionReducer = (state: StateType, action: AnyAction) => {
+  return initReducer(
+    state,
+    action,
+    {
+      loading: hotCollectionsActions.LOADING,
+      success: hotCollectionsActions.SUCCESS,
+      failure: hotCollectionsActions.FAILURE,
+    })
 };
 
-const initialState = {
-  data: null,
-  loading: false,
-  error: ''
+export const listOfferReducer = (state: StateType, action: AnyAction) => {
+  return initReducer(
+    state,
+    action,
+    {
+      loading: listOfferActions.LOADING,
+      success: listOfferActions.SUCCESS,
+      failure: listOfferActions.FAILURE,
+    })
 };
 
-
-export const hotCollectionReducer = (state: StateType = initialState, action: AnyAction) => {
-  switch (action.type) {
-
-    case hotCollectionsActions.HOT_COLLECTION_LOADING: {
-      return {
-        ...state,
-        loading: true
-      }
-    } 
-
-    case hotCollectionsActions.HOT_COLLECTION_SUCCESS: {
-      return {
-        ...state,
-        data: action.payload,
-        loading: false
-      }
-    }
-
-    case hotCollectionsActions.HOT_COLLECTION_FAILURE: {
-      return {
-        ...state,
-        error: action.payload,
-        loading: false
-      }
-    }
-
-    default: {
-      return state;
-    }
-  }
+export const itemsCollectionReducer = (state: StateType, action: AnyAction) => {
+  return initReducer(
+    state,
+    action,
+    {
+      loading: itemsCollectionActions.LOADING,
+      success: itemsCollectionActions.SUCCESS,
+      failure: itemsCollectionActions.FAILURE,
+    })
 };
 
-
-export const bigOfferReducer = (state: StateType = initialState, action: AnyAction) => {
-  switch (action.type) {
-
-    case bigOfferActions.BIG_OFFER_LOADING: {
-      return {
-        ...state,
-        loading: true
-      }
-    } 
-
-    case bigOfferActions.BIG_OFFER_SUCCESS: {
-      return {
-        ...state,
-        data: action.payload,
-        loading: false
-      }
-    }
-
-    case bigOfferActions.BIG_OFFER_FAILURE: {
-      return {
-        ...state,
-        error: action.payload,
-        loading: false
-      }
-    }
-
-    default: {
-      return state;
-    }
-  }
+export const activitiesCollectionReducer = (state: StateType, action: AnyAction) => {
+  return initReducer(
+    state,
+    action,
+    {
+      loading: activitiesCollectionActions.LOADING,
+      success: activitiesCollectionActions.SUCCESS,
+      failure: activitiesCollectionActions.FAILURE,
+    })
 };

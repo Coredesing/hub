@@ -3,7 +3,7 @@ import DefaultLayout from '@layout-components/DefaultLayout'
 import WrapperContent from '@base-components/WrapperContent'
 import useStyles from './style';
 import clsx from 'clsx';
-import { Button, Switch, FormGroup, FormControlLabel, useTheme, useMediaQuery } from '@material-ui/core';
+import { Button, Switch, FormGroup, FormControlLabel, useTheme, useMediaQuery, Backdrop, Box } from '@material-ui/core';
 import { SearchBox } from '@base-components/SearchBox';
 import SelectBox from '@base-components/SelectBox';
 import { Link } from 'react-router-dom';
@@ -19,18 +19,30 @@ import { useTypedSelector } from '@hooks/useTypedSelector';
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, {
     Navigation,
-    Pagination
+    Pagination as SwiperPagination
 } from 'swiper';
 import "swiper/swiper.min.css";
 import 'swiper/swiper-bundle.css';
-import { setBigOffer, setHotCollections } from '@store/actions/marketplace';
+import { setListOffer, setHotCollections, setItemsCollection, InputFilter, setActivitiesCollection } from '@store/actions/marketplace';
+import {
+    TableBody,
+    TableContainer,
+    Table,
+    TableHead,
+    TableCell,
+    TableRowBody,
+    TableRowHead,
+} from '@base-components/Table';
+import CircularProgress from '@base-components/CircularProgress';
+import Pagination from '@base-components/Pagination';
+import { cvtAddressToStar, formatHumanReadableTime } from '@utils/';
+import { ActionSaleNFT } from '@app-constants';
 // install Swiper modules
-SwiperCore.use([Navigation, Pagination]);
+SwiperCore.use([Navigation, SwiperPagination]);
 
 const Marketplace = () => {
     const styles = useStyles();
     const dispatch = useDispatch();
-    const [filterType, setFilterType] = useState<boolean>(true);
     const [selectPrice, setSelectPrice] = useState('newest');
     const pricesFilter = useMemo(() => ([
         { name: 'Newest', value: 'newest' },
@@ -50,7 +62,9 @@ const Marketplace = () => {
     ]), []);
     const [timeFilter, setTimeFilter] = useState(listOfferFilter[0].value)
     const hotCollections = useSelector((state: any) => state.hotCollections).data;
-    const bigOffers = useSelector((state: any) => state.bigOffers).data;
+    const listOffer = useSelector((state: any) => state.listOffer).data;
+    const itemsCollection = useSelector((state: any) => state.itemsCollection);
+    const activitiesCollection = useSelector((state: any) => state.activitiesCollection);
     useEffect(() => {
         if (!hotCollections?.length) {
             dispatch(setHotCollections());
@@ -58,13 +72,35 @@ const Marketplace = () => {
     }, []);
 
     useEffect(() => {
-        if (!bigOffers?.length) {
-            dispatch(setBigOffer());
-        }
+        dispatch(setListOffer({ page: 1 }));
     }, []);
+    const filterTypesDiscover = useMemo(() => ({
+        items: 'items',
+        activities: 'activities',
+    }), [])
+    const [itemsFilter, setItemsFilter] = useState<InputFilter>({ page: 1 });
+    const [activitiesFilter, setActivitiesFilter] = useState<InputFilter>({ page: 1 });
+    const [filterTypeDiscover, setFilterTypeDiscover] = useState<string>(filterTypesDiscover.items);
+    useEffect(() => {
+        dispatch(setItemsCollection(itemsFilter));
+    }, [itemsFilter]);
+    useEffect(() => {
+        if (filterTypeDiscover === filterTypesDiscover.activities) {
+            dispatch(setActivitiesCollection(activitiesFilter));
+        }
+    }, [activitiesFilter, filterTypeDiscover]);
     const theme = useTheme();
     const smScreen = useMediaQuery(theme.breakpoints.down('sm'))
     const xsScreen = useMediaQuery(theme.breakpoints.down('xs'))
+
+    const onSetPage = (page: number) => {
+        if (filterTypeDiscover === filterTypesDiscover.items && page !== itemsFilter.page) {
+            setItemsFilter(t => ({ ...t, page }));
+        }
+        if (filterTypeDiscover === filterTypesDiscover.activities && page !== activitiesFilter.page) {
+            setActivitiesFilter(t => ({ ...t, page }));
+        }
+    }
 
     return (
         <DefaultLayout>
@@ -172,14 +208,8 @@ const Marketplace = () => {
                                 <div className={clsx(styles.hostCollections, "custom-scroll")}>
                                     <Swiper
                                         navigation={true}
-                                        slidesPerView={4}
                                         spaceBetween={20}
-                                        slidesPerGroup={4}
-                                        loop={true}
-                                        loopFillGroupWithBlank={true}
-                                        // pagination={{
-                                        //     "clickable": true
-                                        // }}
+                                        slidesPerView={"auto"}
                                         className={clsx(styles.swiperSlide, styles.listCardsSlide)}
                                         key="hostcollections"
                                     >
@@ -189,7 +219,9 @@ const Marketplace = () => {
                                                     <Link to={`/collection/${p.token_address}`}>
                                                         <div className="collection" key={id}>
                                                             <div className="img">
-                                                                {p.image && <img src={p.image} alt="" />}
+                                                                {p.image && <img src={p.image} alt="" onError={(e: any) => {
+                                                                    e.target.style.visibility = 'hidden'
+                                                                }} />}
                                                                 {p.logo && <img src={p.logo} className="icon" alt="" />}
                                                             </div>
                                                             <div className="infor">
@@ -220,31 +252,25 @@ const Marketplace = () => {
                                             </FormGroup>
                                         </div>
                                         <div className="item">
-                                            <button className={clsx("text-white firs-neue-font font-14px outline-none border-none pointer bg-transparent border-grey-2px", styles.btn)}>
-                                                Discover more NFTs
+                                            <Link to="/offers" className={clsx("text-white firs-neue-font font-14px outline-none border-none pointer bg-transparent border-grey-2px", styles.btn)}>
+                                                Discover more
                                                 <svg width="13" height="10" viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M7.70343 1.6198C7.55962 1.48175 7.55962 1.24591 7.70343 1.10785C7.84148 0.964049 8.07732 0.964049 8.21537 1.10785L11.8968 4.78352C12.0348 4.92732 12.0348 5.15741 11.8968 5.30122L8.21537 8.97688C8.07732 9.12069 7.84148 9.12069 7.70343 8.97688C7.55962 8.83883 7.55962 8.60299 7.70343 8.46493L10.7578 5.41051L1.36239 5.36814C1.16106 5.36814 1 5.20133 1 5C1 4.79867 1.16106 4.63761 1.36239 4.63761L10.7578 4.67998L7.70343 1.6198Z" fill="white" stroke="white" strokeWidth="0.5" />
                                                 </svg>
-                                            </button>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>
                                 <div className={""}>
                                     <Swiper
                                         navigation={true}
-                                        slidesPerView={4}
                                         spaceBetween={20}
-                                        slidesPerGroup={4}
-                                        loop={true}
-                                        loopFillGroupWithBlank={true}
-                                        // pagination={{
-                                        //     "clickable": true
-                                        // }}
+                                        slidesPerView={"auto"}
                                         className={clsx(styles.swiperSlide, styles.listCardsSlide, styles.cards)}
                                         key="bigoffers"
                                     >
                                         {
-                                            (bigOffers || []).map((item: any, id: number) =>
+                                            (listOffer?.currentList || []).map((item: any, id: number) =>
                                                 <SwiperSlide style={{ width: '295px' }} className={styles.swipeCard} key={"bigoffers" + id}>
                                                     <Link key={id} to={`/collection/${item.project?.token_address}/${item.token_id}`}>
                                                         <CardMarketplace item={item} id={id} />
@@ -254,6 +280,155 @@ const Marketplace = () => {
                                         }
                                     </Swiper>
                                 </div>
+                            </div>
+
+                            <div className={styles.section}>
+                                <div className="header">
+                                    <h3>Discover</h3>
+                                </div>
+                                <Box>
+                                    <Box className="filter" display="flex" gridGap="8px">
+                                        <Button
+                                            onClick={() => {
+                                                if (filterTypeDiscover !== filterTypesDiscover.items) {
+                                                    setFilterTypeDiscover(filterTypesDiscover.items)
+                                                }
+                                            }}
+                                            className={clsx(styles.btnFilterDiscover, {
+                                                active: filterTypesDiscover.items === filterTypeDiscover,
+                                            })}>
+                                            Items
+                                        </Button>
+                                        <Button
+                                            onClick={() => {
+                                                if (filterTypeDiscover !== filterTypesDiscover.activities) {
+                                                    setFilterTypeDiscover(filterTypesDiscover.activities)
+                                                }
+                                            }}
+                                            className={clsx(styles.btnFilterDiscover, {
+                                                active: filterTypesDiscover.activities === filterTypeDiscover,
+                                            })}>
+                                            Activities
+                                        </Button>
+                                    </Box>
+                                    <div className="divider"></div>
+                                    {
+                                        filterTypeDiscover === filterTypesDiscover.items && <>
+                                            {itemsCollection.loading && <Backdrop open={itemsCollection.loading} style={{ color: '#fff', zIndex: 1000, }}>
+                                                <CircularProgress color="inherit" />
+                                            </Backdrop>}
+                                            {
+                                                itemsCollection.data !== null && !itemsCollection.loading && !itemsCollection?.data?.totalPage ?
+                                                    <Box width="100%" textAlign="center">
+                                                        <img src="/images/icons/item-not-found.svg" alt="" />
+                                                        <h4 className="firs-neue-font font-16px bold text-white text-center">No item found</h4>
+                                                    </Box> :
+                                                    itemsCollection?.data?.totalPage && <>
+                                                        <div className={styles.cards}>
+                                                            {
+                                                                (itemsCollection?.data?.currentList || []).map((coll: any, id: number) =>
+                                                                    <Link key={id} to={`/collection/${coll.token_address}/${coll.token_id}`}>
+                                                                        <CardMarketplace item={coll} key={id} />
+                                                                    </Link>
+                                                                )}
+                                                        </div>
+                                                        {itemsCollection?.data?.totalPage &&
+                                                            <Pagination
+                                                                count={itemsCollection.data.totalPage}
+                                                                page={itemsCollection.data.currentPage}
+                                                                onChange={(e: any, page: any) => {
+                                                                    onSetPage(page)
+                                                                }}
+                                                            />
+                                                        }
+                                                    </>
+                                            }
+                                        </>
+                                    }
+                                    {
+                                        filterTypeDiscover === filterTypesDiscover.activities && (
+                                            <>
+                                                {activitiesCollection.loading && <Backdrop open={activitiesCollection.loading} style={{ color: '#fff', zIndex: 1000, }}>
+                                                    <CircularProgress color="inherit" />
+                                                </Backdrop>}
+
+                                                {
+                                                    activitiesCollection.data !== null && !activitiesCollection.loading && !activitiesCollection?.data?.totalPage ?
+                                                        <Box width="100%" textAlign="center">
+                                                            <img src="/images/icons/item-not-found.svg" alt="" />
+                                                            <h4 className="firs-neue-font font-16px bold text-white text-center">No item found</h4>
+                                                        </Box> :
+                                                        activitiesCollection?.data?.totalPage &&
+                                                        <TableContainer style={{ borderBottom: '1px solid #44454B' }} >
+                                                            <Table style={{
+                                                                background: "radial-gradient(82.49% 167.56% at 15.32% 21.04%, rgba(217, 217, 217, 0.2) 0%, rgba(231, 245, 255, 0.0447917) 77.08%, rgba(255, 255, 255, 0) 100%)"
+                                                            }}>
+                                                                <TableHead>
+                                                                    <TableRowHead>
+                                                                        <TableCell>ITEM</TableCell>
+                                                                        <TableCell>PRICE</TableCell>
+                                                                        <TableCell>TYPE</TableCell>
+                                                                        <TableCell>FROM</TableCell>
+                                                                        <TableCell>TO</TableCell>
+                                                                        <TableCell>DATE</TableCell>
+                                                                    </TableRowHead>
+                                                                </TableHead>
+                                                                <TableBody>
+                                                                    {
+                                                                        (activitiesCollection?.data?.currentList || []).map((item: any, idx: number) => <TableRowBody key={idx}>
+                                                                            <TableCell>
+                                                                                <Box display="grid" gridTemplateColumns="56px auto" gridGap="8px" alignItems="center">
+                                                                                    <Box width="56px" height="56px" style={{ backgroundColor: "#000", borderRadius: '4px' }}>
+                                                                                        {item.image && <img src={item.image} alt="" width="56px" height="56px" />}
+                                                                                    </Box>
+                                                                                    <Box>
+                                                                                        <h4 className="firs-neue-font font-16px text-white">#{item.token_id}</h4>
+                                                                                        <span className="text-grey helvetica-font font-14px">{item?.project?.name}</span>
+                                                                                    </Box>
+                                                                                </Box>
+                                                                            </TableCell>
+                                                                            <TableCell>
+                                                                                <Box>
+                                                                                    <span>{item.value} {item.currencySymbol}</span>
+                                                                                </Box>
+                                                                            </TableCell>
+                                                                            <TableCell>
+                                                                                {ActionSaleNFT[item.event_type as keyof typeof ActionSaleNFT]}
+                                                                            </TableCell>
+                                                                            <TableCell>
+                                                                                {
+                                                                                    ActionSaleNFT[item.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenListed ||
+                                                                                        ActionSaleNFT[item.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenDelisted ?
+                                                                                        cvtAddressToStar(item.seller || '', '.', 5) :
+                                                                                        cvtAddressToStar(item.buyer || '', '.', 5)
+                                                                                }
+                                                                            </TableCell>
+                                                                            <TableCell>
+                                                                                {
+                                                                                    ActionSaleNFT[item.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenListed ||
+                                                                                        ActionSaleNFT[item.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenDelisted ?
+                                                                                        cvtAddressToStar(item.buyer || '', '.', 5) :
+                                                                                        cvtAddressToStar(item.seller || '', '.', 5)
+                                                                                }
+                                                                            </TableCell>
+                                                                            <TableCell>
+                                                                                {item.dispatch_at && formatHumanReadableTime(+item.dispatch_at * 1000, Date.now())}
+                                                                            </TableCell>
+                                                                        </TableRowBody>)
+                                                                    }
+                                                                </TableBody>
+                                                            </Table>
+                                                            <Pagination
+                                                                count={activitiesCollection?.data?.totalPage}
+                                                                page={activitiesCollection?.data.currentPage}
+                                                                onChange={(e: any, page: any) => {
+                                                                    onSetPage(page)
+                                                                }}
+                                                            />
+                                                        </TableContainer>}
+                                            </>
+                                        )}
+                                </Box>
                             </div>
                         </div>
                     </div>

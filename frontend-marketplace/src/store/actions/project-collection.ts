@@ -6,6 +6,8 @@ import erc721ABI from '@abi/Erc721.json';
 import { getContractInstance } from '@services/web3';
 import { getSymbolCurrency } from '@utils/getAccountBalance';
 import { ObjectType } from '@app-types';
+import { setCurrencyTokenAddress } from './currency';
+import { setTokenInfor } from './tokenInfor';
 
 type InputItemProjectCollection = {
     projectAddress: string;
@@ -16,57 +18,93 @@ type InputItemProjectCollection = {
     }
 }
 
-export const setProjectInfor = (projectAddress: string) => {
+export const setProjectInfor = (projectAddress: string, projectInfor?: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
         const oldData = getState().projectInfors?.data || {};
-        dispatch({ type: projectInforActions.PROJECT_INFOR_LOADING, payload: oldData });
+        dispatch({ type: projectInforActions.LOADING, payload: oldData });
         try {
+            if (projectInfor) {
+                dispatch({ type: projectInforActions.SUCCESS, payload: { ...oldData, [projectAddress]: projectInfor } });
+                return;
+            }
             const response = await axios.get(`/marketplace/collection/${projectAddress}`);
             const result = response.data.data || {};
-            console.log('result', result)
-            dispatch({ type: projectInforActions.PROJECT_INFOR_SUCCESS, payload: { ...oldData, [projectAddress]: result } });
+            dispatch({ type: projectInforActions.SUCCESS, payload: { ...oldData, [projectAddress]: result } });
         } catch (error) {
-            console.log('er', error);
             dispatch({
-                type: projectInforActions.PROJECT_INFOR_FAILURE,
+                type: projectInforActions.FAILURE,
                 payload: error
             });
         }
     }
 }
 
-const getInfoListData = async (listData: any[], projectAddress: string, useExternalUri: boolean, state: any) => {
+const getInfoListData = async (listData: any[], projectAddress: string, useExternalUri: boolean, getState: () => any, projectInfor?: any, dispatch?: Function) => {
     try {
+        const state = getState();
         const appNetwork = state.appNetwork?.data;
         const connectorName = state.connector?.data;
         const erc721Contract = getContractInstance(erc721ABI, projectAddress, connectorName, appNetwork?.appChainID);
-        const currencySymbolCached: ObjectType<any> = {};
-        const listItems = await Promise.all(listData.map((col: any) => new Promise(async (res) => {
-            // update get symbol currency
-            if(!currencySymbolCached[col.currency]) {
-                currencySymbolCached[col.currency] = await getSymbolCurrency(col.currency, { appChainId: appNetwork?.appChainID, connectorName });
+        const listItems: ObjectType<any>[] = [];
+        for (let i = 0, length = listData.length; i < length; i++) {
+            const item = listData[i];
+            item.project = projectInfor;
+            item.currencySymbol = (getState().currencies?.data || {})?.[item.currency];
+            if (!item.currencySymbol) {
+                item.currencySymbol = await getSymbolCurrency(item.currency, { appChainId: appNetwork?.appChainID, connectorName });
+                setCurrencyTokenAddress(item.currency, item.currencySymbol);
             }
-            col.currencySymbol = currencySymbolCached[col.currency];
-            try {
-                if (useExternalUri) {
-                    const result = await axios.post(`/marketplace/collection/${projectAddress}/${col.token_id}`);
-                    const info = result.data.data || {};
-                    Object.assign(col, info);
-                    res(col);
-                } else {
-                    if (erc721Contract) {
-                        const tokenURI = await erc721Contract.methods.tokenURI(col.token_id).call();
-                        const infoBoxType = (await axios.get(tokenURI)).data || {};
-                        Object.assign(col, infoBoxType);
+            item.value = !isNaN(+item.value) ? +item.value : '';
+            let tokenInfor = (getState().tokenInfors?.data || {})?.[item.token_id];
+            if (!tokenInfor) {
+                tokenInfor = {};
+                try {
+                    if (useExternalUri) {
+                        const result = await axios.post(`/marketplace/collection/${projectAddress}/${item.token_id}`);
+                        tokenInfor = result.data.data || {};
+                    } else {
+                        if (erc721Contract) {
+                            const tokenURI = await erc721Contract.methods.tokenURI(item.token_id).call();
+                            tokenInfor = (await axios.get(tokenURI)).data || {};
+                        }
                     }
-                    res(col);
+                } catch (error) {
+                    item.image = '';
+                    console.log('err', error)
                 }
-            } catch (error) {
-                col.image = '';
-                console.log('err', error)
-                res(col)
+                dispatch && dispatch(setTokenInfor(item.token_id, tokenInfor))
             }
-        })));
+            Object.assign(item, tokenInfor);
+            listItems.push(item);
+        }
+        // const listItems = await Promise.all(listData.map((item: any) => new Promise(async (res) => {
+        //     item.project = projectInfor;
+        //     item.currencySymbol = (getState().currencies?.data || {})?.[item.currency];
+        //     if (!item.currencySymbol) {
+        //         item.currencySymbol = await getSymbolCurrency(item.currency, { appChainId: appNetwork?.appChainID, connectorName });
+        //         setCurrencyTokenAddress(item.currency, item.currencySymbol);
+        //     }
+        //     item.value = !isNaN(+item.value) ? +item.value : '';
+        //     try {
+        //         if (useExternalUri) {
+        //             const result = await axios.post(`/marketplace/collection/${projectAddress}/${item.token_id}`);
+        //             const info = result.data.data || {};
+        //             Object.assign(item, info);
+        //             res(item);
+        //         } else {
+        //             if (erc721Contract) {
+        //                 const tokenURI = await erc721Contract.methods.tokenURI(item.token_id).call();
+        //                 const infoBoxType = (await axios.get(tokenURI)).data || {};
+        //                 Object.assign(item, infoBoxType);
+        //             }
+        //             res(item);
+        //         }
+        //     } catch (error) {
+        //         item.image = '';
+        //         console.log('err', error)
+        //         res(item)
+        //     }
+        // })));
         return listItems;
     } catch (error) {
         console.log('er', error)
@@ -77,7 +115,7 @@ const getInfoListData = async (listData: any[], projectAddress: string, useExter
 export const setItemsProjectCollection = (input: InputItemProjectCollection) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
         const oldData = getState().itemsProjectCollection?.data || {};
-        dispatch({ type: itemsProjectCollectionActions.ITEMS_PROJECT_COLLECTION_LOADING, payload: oldData });
+        dispatch({ type: itemsProjectCollectionActions.LOADING, payload: oldData });
         try {
             const perPage = input.filter?.perPage || 10;
             const oldDataByProject = oldData[input.projectAddress];
@@ -85,20 +123,20 @@ export const setItemsProjectCollection = (input: InputItemProjectCollection) => 
             if (oldDataByProject?.data?.[pageFilter]?.length) {
                 oldDataByProject.currentPage = pageFilter;
                 oldDataByProject.currentList = oldDataByProject?.data?.[pageFilter];
-                dispatch({ type: itemsProjectCollectionActions.ITEMS_PROJECT_COLLECTION_SUCCESS, payload: { ...oldData, ...oldDataByProject } });
+                dispatch({ type: itemsProjectCollectionActions.SUCCESS, payload: { ...oldData, ...oldDataByProject } });
                 return;
             }
             const response = await axios.get(`/marketplace/collection/${input.projectAddress}/items?page=${input.filter?.page || 1}&limit=${perPage}`);
             const result = response.data.data || null;
             if (!result) {
-                dispatch({ type: itemsProjectCollectionActions.ITEMS_PROJECT_COLLECTION_SUCCESS, payload: oldData });
+                dispatch({ type: itemsProjectCollectionActions.SUCCESS, payload: oldData });
                 return;
             }
 
             const listData = result.data || [];
-            const projectInfor = getState().projectInfor?.data || {};
+            const projectInfor = (getState().projectInfors?.data || {})?.[input.projectAddress] || {};
             const useExternalUri = !!+projectInfor.use_external_uri;
-            const listItems = await getInfoListData(listData, input.projectAddress, useExternalUri, getState());
+            const listItems = await getInfoListData(listData, input.projectAddress, useExternalUri, getState, projectInfor, dispatch);
             const totalRecords = +result.total || 0;
             const currentPage = +result.page || 1;
             const setData = {
@@ -113,10 +151,10 @@ export const setItemsProjectCollection = (input: InputItemProjectCollection) => 
                     }
                 }
             }
-            dispatch({ type: itemsProjectCollectionActions.ITEMS_PROJECT_COLLECTION_SUCCESS, payload: { ...oldData, ...setData } });
+            dispatch({ type: itemsProjectCollectionActions.SUCCESS, payload: { ...oldData, ...setData } });
         } catch (error: any) {
             dispatch({
-                type: itemsProjectCollectionActions.ITEMS_PROJECT_COLLECTION_FAILURE,
+                type: itemsProjectCollectionActions.FAILURE,
                 payload: error
             });
         }
@@ -126,7 +164,7 @@ export const setItemsProjectCollection = (input: InputItemProjectCollection) => 
 export const setActivitiesProjectCollection = (input: InputItemProjectCollection) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
         const oldData = getState().activitiesProjectCollection?.data || {};
-        dispatch({ type: activitiesProjectCollectionActions.ACTIVITIES_PROJECT_COLLECTION_LOADING, payload: oldData });
+        dispatch({ type: activitiesProjectCollectionActions.LOADING, payload: oldData });
         try {
             const perPage = input.filter?.perPage || 10;
             const oldDataByProject = oldData[input.projectAddress];
@@ -134,21 +172,20 @@ export const setActivitiesProjectCollection = (input: InputItemProjectCollection
             if (oldDataByProject?.data?.[pageFilter]?.length) {
                 oldDataByProject.currentPage = pageFilter;
                 oldDataByProject.currentList = oldDataByProject?.data?.[pageFilter];
-                dispatch({ type: activitiesProjectCollectionActions.ACTIVITIES_PROJECT_COLLECTION_SUCCESS, payload: { ...oldData, ...oldDataByProject } });
+                dispatch({ type: activitiesProjectCollectionActions.SUCCESS, payload: { ...oldData, ...oldDataByProject } });
                 return;
             }
             const response = await axios.get(`/marketplace/collection/${input.projectAddress}/activities?page=${input.filter?.page || 1}&limit=${perPage}`);
-            console.log('response', response)
             const result = response.data.data || null;
             if (!result) {
-                dispatch({ type: activitiesProjectCollectionActions.ACTIVITIES_PROJECT_COLLECTION_SUCCESS, payload: oldData });
+                dispatch({ type: activitiesProjectCollectionActions.SUCCESS, payload: oldData });
                 return;
             }
 
             const listData = result.data || [];
-            const projectInfor = getState().projectInfor?.data || {};
+            const projectInfor = (getState().projectInfors?.data || {})?.[input.projectAddress] || {};
             const useExternalUri = !!+projectInfor.use_external_uri;
-            const listItems = await getInfoListData(listData, input.projectAddress, useExternalUri, getState());
+            const listItems = await getInfoListData(listData, input.projectAddress, useExternalUri, getState, projectInfor, dispatch);
             const totalRecords = +result.total || 0;
             const currentPage = +result.page || 1;
             const setData = {
@@ -163,10 +200,10 @@ export const setActivitiesProjectCollection = (input: InputItemProjectCollection
                     }
                 }
             }
-            dispatch({ type: activitiesProjectCollectionActions.ACTIVITIES_PROJECT_COLLECTION_SUCCESS, payload: { ...oldData, ...setData } });
+            dispatch({ type: activitiesProjectCollectionActions.SUCCESS, payload: { ...oldData, ...setData } });
         } catch (error: any) {
             dispatch({
-                type: activitiesProjectCollectionActions.ACTIVITIES_PROJECT_COLLECTION_FAILURE,
+                type: activitiesProjectCollectionActions.FAILURE,
                 payload: error
             });
         }

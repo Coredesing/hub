@@ -4,7 +4,7 @@ import { ButtonBase } from '@base-components/Buttons'
 import clsx from 'clsx';
 import useStyles from './style';
 import { Box } from '@material-ui/core';
-import { formatNumber, getCurrencyByNetwork } from '@utils/';
+import { formatNumber } from '@utils/';
 
 const CardMarketplace = ({ id, item, ...props }: ObjectType<any>) => {
     const styles = useStyles();
@@ -29,14 +29,14 @@ const CardMarketplace = ({ id, item, ...props }: ObjectType<any>) => {
                         <label className="helvetica-font font-12px text-grey" htmlFor="">Price floor</label>
                         <span className="bold font-16px helvetica-font text-white">
                             <img src="" alt="" />
-                            {item.value} {getCurrencyByNetwork(item.network)}
+                            {item.value} {item.currencySymbol}
                         </span>
                     </Box>
                     <Box className="item" display="grid" gridGap="4px" textAlign="right">
                         <label className="helvetica-font font-12px text-grey" htmlFor="">Highest offer</label>
                         <span className="bold font-16px helvetica-font text-white">
                             <img src="" alt="" />
-                            -/- {getCurrencyByNetwork(item.network)}
+                            -/- {item.currencySymbol}
                         </span>
                     </Box>
                 </Box>

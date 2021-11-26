@@ -1,72 +1,221 @@
-import { hotCollectionsActions, bigOfferActions } from '../constants/marketplace';
+import { hotCollectionsActions, listOfferActions, activitiesCollectionActions, itemsCollectionActions } from '../constants/marketplace';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import axios from '@services/axios';
 import erc721ABI from '@abi/Erc721.json';
 import { getContractInstance } from '@services/web3';
+import { setProjectInfor } from './project-collection';
+import { setCurrencyTokenAddress } from './currency';
+import { getSymbolCurrency } from '@utils/getAccountBalance';
+import { ObjectType } from '@app-types';
+import { setTokenInfor } from './tokenInfor';
 
+export type InputFilter = {
+    page?: number;
+    perPage?: number;
+    [k: string]: any
+}
 export const setHotCollections = () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
         const oldData = getState().assetsAccount.data || {};
-        dispatch({ type: hotCollectionsActions.HOT_COLLECTION_LOADING, payload: oldData });
+        dispatch({ type: hotCollectionsActions.LOADING, payload: oldData });
         try {
             const result = await axios.get('/marketplace/collections');
             const data = result.data?.data?.data || [];
-            dispatch({ type: hotCollectionsActions.HOT_COLLECTION_SUCCESS, payload: data });
+            dispatch({ type: hotCollectionsActions.SUCCESS, payload: data });
         } catch (error: any) {
             dispatch({
-                type: hotCollectionsActions.HOT_COLLECTION_FAILURE,
+                type: hotCollectionsActions.FAILURE,
                 payload: error
             });
         }
     }
 };
 
-export const setBigOffer = () => {
-    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
-        const oldData = getState().assetsAccount.data || {};
-        dispatch({ type: bigOfferActions.BIG_OFFER_LOADING, payload: oldData });
-        try {
-            const result = await axios.get('/marketplace/hot-offers');
-            const data = result.data?.data?.data || [];
-            const appNetwork = getState().appNetwork?.data;
-            const connectorName = getState().connector?.data;
-            const offers: object[] = []
-            await Promise.all(data.map((item: any) => new Promise(async (res) => {
-                const result = await axios.get(`/marketplace/collection/${item.token_address}`);
-                const projectInfo = result.data.data;
-                if (!projectInfo) return;
-                const useExternalUri = !!+projectInfo.use_external_uri;
-                const erc721Contract = getContractInstance(erc721ABI, projectInfo.token_address, connectorName, appNetwork.appChainID);
-                if (!erc721Contract) return;
-                item.project = projectInfo;
+const getInfoListData = async (listData: any[], dispatch: Function, getState: () => any) => {
+    try {
+        const state = getState();
+        const appNetwork = state.appNetwork?.data;
+        const connectorName = state.connector?.data;
+        const listItems: ObjectType<any>[] = [];
+        for (let i = 0, length = listData.length; i < length; i++) {
+            const item = listData[i];
+            const projectAddress = item.token_address;
+            let projectInfor = (getState().projectInfors?.data || {})?.[projectAddress];
+            const erc721Contract = getContractInstance(erc721ABI, projectAddress, connectorName, appNetwork?.appChainID);
+            if (!projectInfor) {
+                const response = await axios.get(`/marketplace/collection/${projectAddress}`);
+                projectInfor = response.data.data;
+                if (projectInfor) {
+                    dispatch(setProjectInfor(projectAddress, projectInfor));
+                }
+            }
+            item.currencySymbol = (getState().currencies?.data || {})?.[item.currency];
+            if (!item.currencySymbol) {
+                item.currencySymbol = await getSymbolCurrency(item.currency, { appChainId: appNetwork?.appChainID, connectorName });
+                setCurrencyTokenAddress(item.currency, item.currencySymbol);
+            }
+            item.project = projectInfor || {};
+            item.value = !isNaN(+item.value) ? +item.value : '';
+            const useExternalUri = !!+projectInfor?.use_external_uri;
+            let tokenInfor = (getState().tokenInfors?.data || {})?.[item.token_id];
+            if (!tokenInfor) {
+                tokenInfor = {};
                 try {
                     if (useExternalUri) {
-                        const result = await axios.post(`/marketplace/collection/${projectInfo.token_address}/${item.token_id}`);
-                        const info = result.data.data || {};
-                        Object.assign(item, info);
-                        res('');
+                        const result = await axios.post(`/marketplace/collection/${projectAddress}/${item.token_id}`);
+                        tokenInfor = result.data.data || {};
+
                     } else {
-                        const tokenURI = await erc721Contract.methods.tokenURI(item.token_id).call();
-                        const infoBoxType = (await axios.get(tokenURI)).data || {};
-                        Object.assign(item, infoBoxType);
-                        res('');
+                        if (erc721Contract) {
+                            const tokenURI = await erc721Contract.methods.tokenURI(item.token_id).call();
+                            tokenInfor = (await axios.get(tokenURI)).data || {};
+                        }
                     }
-                    offers.push(item);
                 } catch (error) {
-                    item.image = '';
                     console.log('err', error)
-                    offers.push(item);
-                    res('')
                 }
-            })));
-            dispatch({ type: bigOfferActions.BIG_OFFER_SUCCESS, payload: offers });
+                dispatch && dispatch(setTokenInfor(item.token_id, tokenInfor))
+            }
+            Object.assign(item, tokenInfor);
+            listItems.push(item)
+        }
+        return listItems;
+    } catch (error) {
+        console.log('er', error)
+        return [];
+    }
+}
+
+export const setListOffer = (filter: InputFilter) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
+        const oldData = getState().listOffer?.data || {};
+        dispatch({ type: listOfferActions.LOADING, payload: oldData });
+        try {
+            const perPage = filter?.perPage || 10;
+            const pageFilter = filter?.page || 1;
+
+            if (oldData?.data?.[pageFilter]?.length) {
+                oldData.currentPage = pageFilter;
+                oldData.currentList = oldData?.data?.[pageFilter];
+                dispatch({ type: listOfferActions.SUCCESS, payload: oldData });
+                return;
+            }
+            const response = await axios.get(`/marketplace/hot-offers?limit=${perPage}&page=${pageFilter}`);
+            const result = response.data?.data;
+            if (!result) {
+                dispatch({ type: listOfferActions.SUCCESS, payload: oldData });
+                return;
+            }
+            const listData = result.data || [];
+            const listItems = await getInfoListData(listData, dispatch, getState);
+            const totalRecords = +result.total || 0;
+            const currentPage = +result.page || 1;
+            const setData = {
+                total: totalRecords,
+                currentPage,
+                totalPage: Math.ceil(totalRecords / perPage),
+                currentList: listItems,
+                data: {
+                    ...(oldData?.data || {}),
+                    [currentPage]: listItems
+                }
+            }
+            dispatch({ type: listOfferActions.SUCCESS, payload: { ...oldData, ...setData } });
         } catch (error: any) {
             dispatch({
-                type: bigOfferActions.BIG_OFFER_FAILURE,
+                type: listOfferActions.FAILURE,
                 payload: error
             });
         }
     }
 };
 
+export const setItemsCollection = (filter: InputFilter) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
+        const oldData = getState().itemsCollection?.data || {};
+        dispatch({ type: itemsCollectionActions.LOADING, payload: oldData });
+        try {
+            const perPage = filter?.perPage || 10;
+            const pageFilter = filter?.page || 1;
+            if (oldData?.data?.[pageFilter]?.length) {
+                oldData.currentPage = pageFilter;
+                oldData.currentList = oldData?.data?.[pageFilter];
+                dispatch({ type: itemsCollectionActions.SUCCESS, payload: oldData });
+                return;
+            }
+            const response = await axios.get(`/marketplace/collection/${"0x7D7A2adbb19d7A85742ce8A44cd7104076ab7E08"}/items?page=${filter?.page || 1}&limit=${perPage}`);
+            const result = response.data.data || null;
+            if (!result) {
+                dispatch({ type: itemsCollectionActions.SUCCESS, payload: oldData });
+                return;
+            }
+
+            const listData = result.data || [];
+            const listItems = await getInfoListData(listData, dispatch, getState);
+            const totalRecords = +result.total || 0;
+            const currentPage = +result.page || 1;
+            const setData = {
+                total: totalRecords,
+                currentPage,
+                totalPage: Math.ceil(totalRecords / perPage),
+                currentList: listItems,
+                data: {
+                    ...(oldData?.data || {}),
+                    [currentPage]: listItems
+                }
+            }
+            dispatch({ type: itemsCollectionActions.SUCCESS, payload: { ...oldData, ...setData } });
+        } catch (error: any) {
+            dispatch({
+                type: itemsCollectionActions.FAILURE,
+                payload: error
+            });
+        }
+    }
+};
+
+export const setActivitiesCollection = (filter: InputFilter) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
+        const oldData = getState().activitiesCollection?.data || {};
+        dispatch({ type: activitiesCollectionActions.LOADING, payload: oldData });
+        try {
+            const perPage = filter?.perPage || 10;
+            const pageFilter = filter?.page || 1;
+            if (oldData?.data?.[pageFilter]?.length) {
+                oldData.currentPage = pageFilter;
+                oldData.currentList = oldData?.data?.[pageFilter];
+                dispatch({ type: activitiesCollectionActions.SUCCESS, payload: oldData });
+                return;
+            }
+            // update here
+            const response = await axios.get(`/marketplace/collection/${"0x7D7A2adbb19d7A85742ce8A44cd7104076ab7E08"}/activities?page=${filter?.page || 1}&limit=${perPage}`);
+            const result = response.data.data || null;
+            if (!result) {
+                dispatch({ type: activitiesCollectionActions.SUCCESS, payload: oldData });
+                return;
+            }
+
+            const listData = result.data || [];
+            const listItems = await getInfoListData(listData, dispatch, getState);
+            const totalRecords = +result.total || 0;
+            const currentPage = +result.page || 1;
+            const setData = {
+                total: totalRecords,
+                currentPage,
+                totalPage: Math.ceil(totalRecords / perPage),
+                currentList: listItems,
+                data: {
+                    ...(oldData?.data || {}),
+                    [currentPage]: listItems
+                }
+            }
+            dispatch({ type: activitiesCollectionActions.SUCCESS, payload: { ...oldData, ...setData } });
+        } catch (error: any) {
+            dispatch({
+                type: activitiesCollectionActions.FAILURE,
+                payload: error
+            });
+        }
+    }
+};

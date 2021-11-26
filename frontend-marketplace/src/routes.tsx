@@ -18,6 +18,7 @@ import Marketplace from '@pages/Marketplace';
 import Collection from '@pages/Collection';
 import AppContainer from './AppContainer';
 import Account from '@pages/Account';
+import Offers from '@pages/Offers';
 
 /**
  * Main App routes.
@@ -116,6 +117,7 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                     <Route exact path={'/collection/:projectAddress/:id'} component={CollectionDetail} />
                     <Route exact path={'/collection/:projectAddress'} component={Collection} />
                     <Route exact path={'/collections'} component={Collection} />
+                    <Route exact path={'/offers'} component={Offers} />
                     <Route path={'/account'} component={Account} />
                     <Route exact path={'/'} component={Marketplace} />
                 </Switch>

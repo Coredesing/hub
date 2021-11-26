@@ -77,6 +77,11 @@
   {
     "id": 15,
     "wallet_address": "0x420376e2fb2fF7Ce680C435b9c928a3A58BF1A79",
+    "valid": false
+  },
+  {
+    "id": 16,
+    "wallet_address": "0x33b34ed6f2de26c2a413CaD15221A0FbA3545E60",
     "valid": true
   }
 ]

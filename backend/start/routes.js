@@ -48,6 +48,7 @@ Route.group(() => {
   Route.get('home/performances', 'HomeController.getPerformances');
   Route.post('home/subscribe', 'HomeController.subscribe');
   Route.get('/legend/:id', 'HomeController.getLegendImages');
+  Route.get('/boxes', 'HomeController.getNFTBox');
 
   // Aggregator
   Route.get('aggregator', 'AggregatorController.getAggregator');

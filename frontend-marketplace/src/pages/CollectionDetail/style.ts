@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme: any) => {
       // position: 'relative',
       // paddingLeft: 'calc(100% - (461px * 2))',
       // paddingRight: 'calc(100% - (461px * 2))'
+
     },
     contentCard: {
       width: '100%',
@@ -21,15 +22,21 @@ const useStyles = makeStyles((theme: any) => {
       width: '100%',
     },
     wrapperCardNft: {
-      margin: 'auto'
+      margin: 'auto',
+      background: 'radial-gradient(82.49% 167.56% at 15.32% 21.04%, rgba(217, 217, 217, 0.2) 0%, rgba(231, 245, 255, 0.0447917) 77.08%, rgba(255, 255, 255, 0) 100%)',
+      border: '1px solid #686868',
+      backdropFilter: 'blur(80px)',
+      borderRadius: '4px',
     },
     wrapperCard: {
       maxWidth: '1120px',
       width: '100%',
     },
     displayContent: {
-      paddingLeft: "calc((100% - (461px * 2 + 40px)) / 2)",
-      paddingRight: "calc((100% - (461px * 2 + 40px)) / 2)",
+      // paddingLeft: "calc((100% - (461px * 2 + 40px)) / 2)",
+      // paddingRight: "calc((100% - (461px * 2 + 40px)) / 2)",
+      maxWidth: '1120px',
+      margin: 'auto',
     },
     alert: {
       marginTop: "12px",
@@ -563,7 +570,9 @@ export default useStyles;
 export const useAboutStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: "#171717",
+    // backgroundColor: "#171717",
+    // background: 'radial-gradient(82.49% 167.56% at 15.32% 21.04%, rgba(217, 217, 217, 0.2) 0%, rgba(231, 245, 255, 0.0447917) 77.08%, rgba(255, 255, 255, 0) 100%)',
+    // backdropFilter: 'blur(80px)',
   },
   tabName: {
     fontFamily: "Firs Neue !important",

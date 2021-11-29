@@ -542,24 +542,26 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                                                 }
                                             </div>
                                         </div>
+
+                                    </div>
+                                    <div className={styles.displayContent}>
+                                        <AboutMarketplaceNFT
+                                            info={infoNFT}
+                                            id={id}
+                                            projectAddress={projectAddress}
+                                            defaultTab={1}
+                                            isOwnerNFTOnSale={isOwnerNFTOnSale}
+                                            isOwnerNFT={isOwnerNFT}
+                                            onAcceptOffer={onAcceptOffer}
+                                            onRejectOffer={onRejectOffer}
+                                            reloadOfferList={reloadOfferList}
+                                            getSymbolCurrency={getSymbolCurrency}
+                                            addressCurrencyToBuy={addressCurrencyToBuy}
+                                        />
                                     </div>
                                 </div>
                             </div>
-                            <div className={styles.displayContent}>
-                                <AboutMarketplaceNFT
-                                    info={infoNFT}
-                                    id={id}
-                                    projectAddress={projectAddress}
-                                    defaultTab={1}
-                                    isOwnerNFTOnSale={isOwnerNFTOnSale}
-                                    isOwnerNFT={isOwnerNFT}
-                                    onAcceptOffer={onAcceptOffer}
-                                    onRejectOffer={onRejectOffer}
-                                    reloadOfferList={reloadOfferList}
-                                    getSymbolCurrency={getSymbolCurrency}
-                                    addressCurrencyToBuy={addressCurrencyToBuy}
-                                />
-                            </div>
+
                         </>
                 }
             </div>

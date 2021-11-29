@@ -58,7 +58,7 @@ export const TableContainer = ({ children, ...props }: any) => {
       component={Paper}
       {...props}
       className={clsx(classes.wrapperTable, props.className)}
-      style={{ maxWidth: width - 50, ...(props.style && typeof props.style === 'object' ? props.style : {}) }}
+      style={props.style}
     >
       {children}
     </TableContainerMui>

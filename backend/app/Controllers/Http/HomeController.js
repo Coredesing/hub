@@ -99,7 +99,7 @@ class HomeController {
   // headers: cf-connecting-ip
   // headers: x-forwarded-for
 
-  async getNFTBox() {
+  async getNFTBox({ request, auth, params }) {
     const image = 'https://gamefi-public.s3.amazonaws.com/box.png'
     return {
       image: image,

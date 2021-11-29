@@ -679,10 +679,10 @@ class PoolService {
     const page = filterParams.page ? filterParams.page : 1;
     const token_type = filterParams.token_type ? filterParams.token_type : 'erc20'
 
-    if (await RedisUtils.checkExistRedisPoolByTokenType(page)) {
-      const cachedPools = await RedisUtils.getRedisPoolByTokenType(page)
-      return JSON.parse(cachedPools)
-    }
+    // if (await RedisUtils.checkExistRedisPoolByTokenType(page)) {
+    //   const cachedPools = await RedisUtils.getRedisPoolByTokenType(page)
+    //   return JSON.parse(cachedPools)
+    // }
 
     let pools = await this.buildQueryBuilder({})
       .where('token_type', token_type)

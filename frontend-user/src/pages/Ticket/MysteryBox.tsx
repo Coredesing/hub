@@ -347,15 +347,15 @@ const MysteryBox = ({ id, ...props }: any) => {
     const [totalBoxesBought, setTotalBoxesBought] = useState(0);
     const [renewTotalBoxesBought, setRenewTotalBoxesBought] = useState(true);
     useEffect(() => {
-        if (infoTicket?.campaign_hash && renewTotalBoxesBought && contractPreSaleWithAcc) {
-            contractPreSaleWithAcc.saleEvents(eventId).then((res: any) => {
-                const totalBought = res.currentSupply ? res.currentSupply.toNumber() : 0;
+        if (infoTicket?.campaign_hash && renewTotalBoxesBought && contractPreSale) {
+            contractPreSale.methods.saleEvents(eventId).call().then((res: any) => {
+                const totalBought = res.currentSupply ? res.currentSupply : 0;
                 setTotalBoxesBought(totalBought);
             }).catch((err: any) => {
                 console.log('err', err);
             })
         }
-    }, [infoTicket, renewTotalBoxesBought, contractPreSaleWithAcc]);
+    }, [infoTicket, renewTotalBoxesBought, contractPreSale]);
 
     useEffect(() => {
         if (infoTicket?.boxTypesConfig?.length) {

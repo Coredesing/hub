@@ -161,12 +161,13 @@ const MysteryBox = ({ id, ...props }: any) => {
     const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, [k: string]: any }>({ date1: 0, date2: 0, title: '' });
     const [timelines, setTimelines] = useState<TimelineType | {}>({});
     const { checkingKyc, isKYC } = useKyc(connectedAccount, (_.isNumber(infoTicket?.kyc_bypass) && !infoTicket?.kyc_bypass));
+    const [timelinePool, setTimelinePool] = useState<ObjectType<any>>({});
 
     const onSetCountdown = useCallback(() => {
         if (dataTicket) {
             const isAccIsBuyPreOrder = userTier >= dataTicket.pre_order_min_tier;
             const timeLine = getTimelineOfPool(dataTicket);
-
+            setTimelinePool(timeLine);
             const timeLinesInfo: { [k: string]: any } = {
                 1: {
                     title: 'UPCOMING',
@@ -512,7 +513,7 @@ const MysteryBox = ({ id, ...props }: any) => {
     }
     const [isRedirectCompetition, setRedirectCompetition] = useState(false);
     useEffect(() => {
-        if(countdown.isWhitelist || countdown.isUpcoming) {
+        if (countdown.isWhitelist || countdown.isUpcoming) {
             setRedirectCompetition(false);
         }
     }, [connectedAccount, countdown]);
@@ -599,7 +600,8 @@ const MysteryBox = ({ id, ...props }: any) => {
         }
         if ((alreadyJoinPool || joinPoolSuccess) && countdown.isWhitelist) {
             return <WrapperAlert type="info">
-                Congratulations! You have successfully applied whitelist.
+                You have successfully applied whitelist.
+                {timelinePool.freeBuyTime ? ' Please stay tuned, you can buy from Phase 1' : ' Please stay tuned and wait until time to buy Mystery boxes'}
             </WrapperAlert>
         }
         if ((alreadyJoinPool || joinPoolSuccess) && (countdown.isSale || countdown.isUpcomingSale)) {
@@ -607,8 +609,11 @@ const MysteryBox = ({ id, ...props }: any) => {
                 Congratulations! You have successfully applied whitelist and can buy Mystery boxes
             </WrapperAlert>
         }
-        if ((!loadingJoinpool && connectedAccount && countdown.isSale && !countdown.isPhase2) && !alreadyJoinPool) {
-            return <WrapperAlert type="error"> Sorry, you didn’t apply whitelist. </WrapperAlert>
+        if ((!loadingJoinpool && connectedAccount && (countdown.isSale || countdown.isUpcomingSale)) && !alreadyJoinPool) {
+            return <WrapperAlert type="error">
+                You have not applied whitelist.
+                {(timelinePool.freeBuyTime && !countdown.isPhase2) ? ' Please stay tuned, you can buy from Phase 2' : ' Please stay tuned and join other pools'}
+            </WrapperAlert>
         }
     }
 
@@ -718,7 +723,7 @@ const MysteryBox = ({ id, ...props }: any) => {
         return +tokenAllowance > 0;
     };
 
-    const disabledBuyNow = +numBoxBuy < 1 || !isKYC || lockWhenBuyBox || !connectedAccount || loadingUserTier || !_.isNumber(userTier) || (infoTicket?.min_tier > 0 && (userTier < infoTicket.min_tier));    
+    const disabledBuyNow = +numBoxBuy < 1 || !isKYC || lockWhenBuyBox || !connectedAccount || loadingUserTier || !_.isNumber(userTier) || (infoTicket?.min_tier > 0 && (userTier < infoTicket.min_tier));
     const isShowBtnApprove = countdown?.isSale && connectedAccount && !tokenAllowanceLoading && tokenAllowance !== undefined && !isAccApproved(tokenAllowance as number) && tokenToApprove?.neededApprove;
     const isShowBtnBuy =
         (connectedAccount && !checkingKyc && !loadingJoinpool && countdown.isSale && ((countdown.isPhase1 && (alreadyJoinPool || joinPoolSuccess)) || countdown.isPhase2)) &&

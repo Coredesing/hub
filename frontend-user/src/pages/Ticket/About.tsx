@@ -611,7 +611,7 @@ export const AboutMysteryBox = ({
         <TransactionSubmitModal opened={isShowModalTx} handleClose={onCloseModalTx} transactionHash={txHash} />
         {
           !!collections.length && timeClaim &&
-          <div className="wrapperHeader">
+          <Box className="wrapperHeader" >
             <div className={classes.wrapperCountdownCollection} style={!POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(info.id) ? { gridTemplateColumns: '1fr 1fr' } : { gridTemplateColumns: '1fr' }}>
               {
                 (timeClaim > timeNow) ?
@@ -625,10 +625,15 @@ export const AboutMysteryBox = ({
                   claimUrl ? <ButtonBase color="blue" onClick={() => window.open(claimUrl)}>Claim on External</ButtonBase> : null)
               }
             </div>
-          </div>
+          </Box>
         }
-
-        <div className={classes.wrapperBox}>
+        {
+          timeClaim && (timeClaim > timeNow) && isClaimedOnGF && claimUrl &&
+          <Box>
+            <ButtonBase href={claimUrl} target="_blank" color="green" className="font-14px firs-neue-font w-full">View your NFT</ButtonBase>
+          </Box>
+        }
+        <Box className={classes.wrapperBox} marginTop="20px">
           {
             loadingCollection ? <HashLoader loading={true} color={'#72F34B'} /> : collections.map((b: any, id: number) =>
               <div key={id} onClick={(e) => {
@@ -670,8 +675,7 @@ export const AboutMysteryBox = ({
               </div>
             )
           }
-
-        </div>
+        </Box>
       </TabPanel>
     </div>
   );

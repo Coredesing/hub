@@ -295,6 +295,10 @@ body::-webkit-scrollbar-thumb,
     color: #fff;
 }
 
+.text-white-imp {
+    color: #fff !important;
+}
+
 .text-right {
     text-align: right;
 }
@@ -305,4 +309,8 @@ body::-webkit-scrollbar-thumb,
 
 .mb-6px {
     margin-bottom: 6px;
+}
+
+.firs-neue-font {
+    font-family: 'Firs Neue';
 }

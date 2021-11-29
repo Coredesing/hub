@@ -827,7 +827,7 @@ export const useAboutStyles = makeStyles((theme) => ({
     }
   },
   wrapperCountdownCollection: {
-    marginBottom: '20px',
+    // marginBottom: '20px',
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
     gap: '8px',

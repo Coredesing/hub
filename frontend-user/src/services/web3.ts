@@ -1,7 +1,7 @@
 import Web3 from 'web3';
 import WalletLink from "walletlink";
 import { connectorNames, ConnectorNames, connectorsByName } from '../constants/connectors';
-import { ETH_CHAIN_ID, BSC_CHAIN_ID, POLYGON_CHAIN_ID } from '../constants/network';
+import { ETH_CHAIN_ID, BSC_CHAIN_ID, POLYGON_CHAIN_ID, ChainDefault } from '../constants/network';
 import {NETWORK_AVAILABLE} from "../constants";
 
 const POOL_ABI = require('../abi/Pool.json');
@@ -79,7 +79,7 @@ export const getContractInstance =
   (ABIContract: any,
    contractAddress: string,
    networkName: connectorNames = ConnectorNames.MetaMask,
-   appChainID: string = ETH_CHAIN_ID as string,
+   appChainID: string = ChainDefault.id as string,
    typeMethod: smartContractMethod = SmartContractMethod.Read,
    forceUsingEther: boolean = false
   ) => {

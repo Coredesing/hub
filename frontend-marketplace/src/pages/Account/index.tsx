@@ -2,11 +2,6 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Backdrop, CircularProgress } from '@material-ui/core';
 import { withRouter } from "react-router-dom";
-import { getBalance } from "../../store/actions/balance";
-import {
-  getUserTier,
-} from "@store/actions/sota-tiers";
-import { getAllowance } from "../../store/actions/sota-token";
 import DefaultLayout from "../../components/Layout/DefaultLayout";
 import useStyles from "./style";
 import useAuth from "../../hooks/useAuth";
@@ -21,23 +16,12 @@ import Assets from "./Assets";
 const AccountV2 = (props: any) => {
   const classes = useStyles();
   const dispatch = useDispatch(); 
-  const { isAuth, connectedAccount, wrongChain } = useAuth();
   const query = new URLSearchParams(props.location.search);
   const currentTab = query.get('tab') as string;
   const currentTabMenu = MenuLeft[currentTab] || MenuLeft.assets;
   const [tabAccount] = useState(Object.values(MenuLeft));
   const [activeMenuAccount, setActiveMenuAccount] = useState(currentTabMenu.key);
   const [updatedSuccess, setUpdatedSuccess] = useState(false);
-  useEffect(() => {
-    dispatch(getUserTier(!wrongChain && connectedAccount ? connectedAccount : ''));
-  }, [wrongChain, connectedAccount, dispatch]);
-
-  useEffect(() => {
-    if (isAuth && connectedAccount && !wrongChain) {
-      dispatch(getBalance(connectedAccount));
-      dispatch(getAllowance(connectedAccount));
-    }
-  }, [isAuth, wrongChain, connectedAccount, dispatch]);
 
   useEffect(() => {
     setUpdatedSuccess(false);

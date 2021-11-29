@@ -13,7 +13,6 @@ import { WrapperAlert } from "../../components/Base/WrapperAlert";
 import { pushMessage } from "../../store/actions/message";
 import Image from "../../components/Base/Image";
 import _ from 'lodash';
-import { getUserTier } from "@store/actions/sota-tiers";
 import { useWeb3React } from "@web3-react/core";
 import BigNumber from 'bignumber.js';
 import { ButtonBase } from "@base-components/Buttons";
@@ -132,10 +131,6 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
         if (!appChainID || !MARKETPLACE_SMART_CONTRACT || !marketplaceContract) return;
         getTokenOnSale();
     }, [id, appChainID, marketplaceContract])
-
-    useEffect(() => {
-        dispatch(getUserTier(!wrongChain && connectedAccount ? connectedAccount : ''));
-    }, [wrongChain, connectedAccount, dispatch]);
 
     const [allowNetwork, setAllowNetwork] = useState<{ ok: boolean, [k: string]: any }>({ ok: false });
     useEffect(() => {

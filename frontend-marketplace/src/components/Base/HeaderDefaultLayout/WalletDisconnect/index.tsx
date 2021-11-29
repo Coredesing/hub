@@ -11,9 +11,8 @@ import { ConnectorNames } from '../../../../constants/connectors';
 import { AppContext } from '../../../../AppContext';
 import {withWidth, isWidthDown, isWidthUp} from '@material-ui/core';
 import useStyles from './style';
-import { trimMiddlePartAddress } from '../../../../utils/accountAddress';
 import {useWeb3React} from "@web3-react/core";
-import {checkIsWalletLink, disconnectWalletLink} from "../../../../utils";
+import {checkIsWalletLink, cvtAddressToStar, disconnectWalletLink} from "../../../../utils";
 import { typeDisplayFlex } from '../../../../styles/CommonStyle';
 
 const linkIcon = '/images/hyperlink.svg';
@@ -149,7 +148,7 @@ const WalletDisconnect: React.FC<ComponentProps> = (props: any) => {
           }
           <span className={styles.accountDetailAddressText}>
             {isWidthUp('sm', props.width) && address}
-            {isWidthDown('xs', props.width) && trimMiddlePartAddress(address, 10)}
+            {isWidthDown('xs', props.width) && cvtAddressToStar(address || '', '.', 5)}
           </span>
         </div>
         <div className={styles.accountDetailCta}>

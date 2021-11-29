@@ -1,5 +1,4 @@
-import React from 'react';
-import { trimMiddlePartAddress } from '../../../utils/accountAddress';
+import { cvtAddressToStar } from '@utils/';
 import { WrapperAlert } from '../WrapperAlert';
 
 export const AlertKYC = ({ connectedAccount,...props }: { [k in string]: any }) => {
@@ -7,7 +6,7 @@ export const AlertKYC = ({ connectedAccount,...props }: { [k in string]: any }) 
         <WrapperAlert type="error">
             <span>
                 The connected wallet address (
-                {trimMiddlePartAddress(connectedAccount || '')}) is unverified.&nbsp;
+                {cvtAddressToStar(connectedAccount || '', '.', 5)}) is unverified.&nbsp;
                 <a
                     href="https://verify-with.blockpass.org/?clientId=red_kite_kyc_7a0e6&serviceName=Red%20Kite%20KYC&env=prod"
                     target="_blank"

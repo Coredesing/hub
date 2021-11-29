@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MainDefaultLayout from '../../Base/MainDefaultLayout';
 import HeaderDefaultLayout from '../../Base/HeaderDefaultLayout';
-import FooterLandingLayout from '../../Base/FooterLandingLayout';
+import FooterLayout from '../../Base/FooterLayout';
 import { useCommonStyle } from '../../../styles';
 import { Button, Link as LinkMui, useMediaQuery, useTheme } from "@material-ui/core";
 // import useStyles from './styles';
@@ -18,7 +18,7 @@ const DefaultLayout = ({ style, children, hiddenFooter = false, ...props }: any)
 
         <HeaderDefaultLayout />
         <MainDefaultLayout >{children}</MainDefaultLayout>
-        {!hiddenFooter && <FooterLandingLayout />}
+        {!hiddenFooter && <FooterLayout />}
 
       </div>
     </div>

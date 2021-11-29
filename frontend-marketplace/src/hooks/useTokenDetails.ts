@@ -17,8 +17,8 @@ const useTokenDetails = (address: string, networkAvailable: string) => {
   const [tokenDetails, setTokenDetails] = useState<TokenType | undefined>(undefined);
   const [tokenDetailsLoading, setTokenDetailsLoading] = useState<boolean>(false);
 
-  const { appChainID }  = useSelector((state: any) => state.appNetwork).data;
-  const connector  = useTypedSelector(state => state.connector).data;
+  const { appChainID } = useSelector((state: any) => state.appNetwork).data;
+  const connector = useTypedSelector(state => state.connector).data;
 
   useEffect(() => {
     const fetchTokenDetails = async (address: string) => {
@@ -26,11 +26,11 @@ const useTokenDetails = (address: string, networkAvailable: string) => {
 
       const contract = getContractInstance(
         ERC20_ABI,
-       address,
-       connector,
-       appChainID,
-       SmartContractMethod.Read,
-       networkAvailable === 'eth'
+        address,
+        connector,
+        appChainID,
+        SmartContractMethod.Read,
+        networkAvailable === 'eth'
       );
 
       if (contract) {
@@ -51,7 +51,7 @@ const useTokenDetails = (address: string, networkAvailable: string) => {
     }
 
     address && networkAvailable && ethers.utils.isAddress(address) && fetchTokenDetails(address);
-    if(address == 'TBD') {
+    if (address == 'TBD') {
       setTokenDetails({
         symbol: 'TBA',
         name: 'TBA',

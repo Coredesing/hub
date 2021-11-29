@@ -8,7 +8,7 @@ import thunk from 'redux-thunk';
 import rootReducer, { RootState } from './reducers';
 
 const initialState = {
-  user: {
+  appNetwork: {
     data: '',
     loading: false,
     error: '',

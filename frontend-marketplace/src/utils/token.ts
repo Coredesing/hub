@@ -1,8 +1,5 @@
 import { getContractInstance } from '../services/web3';
 import erc20ABI from '../abi/Erc20.json';
-import ethLinkABI from '../abi/Ethlink.json';
-
-const ETH_LINK_DEFAULT_ADDRESS = process.env.REACT_APP_SMART_CONTRACT_ETHLINK_ADDRESS || "";
 
 export type TokenType =  {
   name: string;
@@ -35,31 +32,3 @@ export const getTokenInfo = async (tokenAddress: string): Promise<ReturnType> =>
       throw new Error("Token address is invalid.");
     };
 }
-
-export const tokenAlreadyUsed = async (tokenAddress: string): Promise<boolean> => {
-  try {
-    const ethLinkContract = getContractInstance(ethLinkABI, ETH_LINK_DEFAULT_ADDRESS);
-
-    if (ethLinkContract) {
-      const tokenRegistered = await ethLinkContract.methods.tokens(tokenAddress).call();
-
-      if (Number(tokenRegistered.registeredBy) === 0) return false;
-
-      return Number(tokenRegistered.registeredBy) > 0;
-    }
-
-  } catch (e) {
-    return true;
-  }
-
-  return false;
-}
-
-export const getShortTokenSymbol = (tokenSymbol: string, yourLength = 10) => {
-  if (!tokenSymbol) tokenSymbol += '';
-  if (tokenSymbol.length <= yourLength) {
-    return tokenSymbol;
-  }
-
-  return `${tokenSymbol.substring(0, 10)}...`;
-};

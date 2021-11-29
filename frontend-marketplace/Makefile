@@ -1,3 +1,6 @@
+install:
+	npm install --legacy-peer-deps
+
 deploy-v2:
 	rsync -avhzL --delete \
 				--no-perms --no-owner --no-group \

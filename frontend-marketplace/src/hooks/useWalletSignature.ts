@@ -10,9 +10,9 @@ import { ConnectorNames, connectorNames } from '../constants/connectors';
 import Web3 from 'web3';
 const web3 = new Web3();
 
-const MESSAGE_INVESTOR_SIGNATURE = process.env.REACT_APP_MESSAGE_INVESTOR_SIGNATURE || "";
+const MESSAGE_SIGNATURE = process.env.REACT_APP_MESSAGE_SIGNATURE || "";
 
-const rawMessage = MESSAGE_INVESTOR_SIGNATURE;
+const rawMessage = MESSAGE_SIGNATURE;
 const rawMessageLength = new Blob([rawMessage]).size
 const message = ethers.utils.toUtf8Bytes("\x19Ethereum Signed Message:\n" + rawMessageLength + rawMessage)
 const messageHash = ethers.utils.keccak256(message);
@@ -20,23 +20,23 @@ const messageHash = ethers.utils.keccak256(message);
 export const getParamsWithConnector = (connectedAccount: string) => ({
   [ConnectorNames.BSC]: {
     method: 'eth_sign',
-    params: [connectedAccount, MESSAGE_INVESTOR_SIGNATURE]
+    params: [connectedAccount, MESSAGE_SIGNATURE]
   },
   [ConnectorNames.WalletConnect]: {
     method: 'eth_sign',
-    params: [connectedAccount, MESSAGE_INVESTOR_SIGNATURE]
+    params: [connectedAccount, MESSAGE_SIGNATURE]
   },
   [ConnectorNames.WalletLinkConnect]: {
     method: 'eth_sign',
-    params: [connectedAccount, MESSAGE_INVESTOR_SIGNATURE]
+    params: [connectedAccount, MESSAGE_SIGNATURE]
   },
   [ConnectorNames.Fortmatic]: {
     method: 'personal_sign',
-    params: [MESSAGE_INVESTOR_SIGNATURE, connectedAccount]
+    params: [MESSAGE_SIGNATURE, connectedAccount]
   },
   [ConnectorNames.MetaMask]: {
     method: 'personal_sign',
-    params: [MESSAGE_INVESTOR_SIGNATURE, connectedAccount]
+    params: [MESSAGE_SIGNATURE, connectedAccount]
   },
 })
 
@@ -68,7 +68,7 @@ const useWalletSignature = () => {
         } else if (connector === ConnectorNames.WalletLinkConnect) {
           console.log('WalletLinkConnect Provider===========>', provider, ConnectorNames);
           const params = [
-            MESSAGE_INVESTOR_SIGNATURE,
+            MESSAGE_SIGNATURE,
             connectedAccount,
           ]
           await (library as any).provider.enable();
@@ -81,7 +81,7 @@ const useWalletSignature = () => {
         } else {
           if ((window as any).ethereum?.isCoin98 || (window as any).coin98) {
             web3.setProvider(provider);
-            const signature = await web3.eth.personal.sign(MESSAGE_INVESTOR_SIGNATURE, connectedAccount, '');
+            const signature = await web3.eth.personal.sign(MESSAGE_SIGNATURE, connectedAccount, '');
             setSignature(signature);
             return;
           }

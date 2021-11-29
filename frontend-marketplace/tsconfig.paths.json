@@ -26,7 +26,6 @@
             "@styles/*": ["src/styles/*"],
             "@store/*": ["src/store/*"],
             "@app-constants": ["src/constants"],
-            "@request/*": ["src/request/*"],
             "@app-types": ["src/types"],
             "@app-types/*": ["src/types/*"]
         }

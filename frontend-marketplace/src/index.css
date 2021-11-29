@@ -297,6 +297,10 @@ body::-webkit-scrollbar-thumb,
     color: #fff;
 }
 
+.text-white-imp {
+    color: #fff !important;
+}
+
 .text-right {
     text-align: right;
 }
@@ -376,4 +380,16 @@ body::-webkit-scrollbar-thumb,
 
 .border-grey-2px {
     border: 2px solid #44454B;
+}
+
+.flex {
+    display: flex;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.gap-4px {
+    gap: 4px;
 }

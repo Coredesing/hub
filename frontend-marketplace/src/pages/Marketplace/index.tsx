@@ -3,7 +3,7 @@ import DefaultLayout from '@layout-components/DefaultLayout'
 import WrapperContent from '@base-components/WrapperContent'
 import useStyles from './style';
 import clsx from 'clsx';
-import { Button, Switch, FormGroup, FormControlLabel, useTheme, useMediaQuery, Backdrop, Box } from '@material-ui/core';
+import { Button, Switch, FormGroup, FormControlLabel, useTheme, useMediaQuery, Backdrop, Box, Link as MuiLink } from '@material-ui/core';
 import { SearchBox } from '@base-components/SearchBox';
 import SelectBox from '@base-components/SelectBox';
 import { Link } from 'react-router-dom';
@@ -23,7 +23,7 @@ import SwiperCore, {
 } from 'swiper';
 import "swiper/swiper.min.css";
 import 'swiper/swiper-bundle.css';
-import { setListOffer, setHotCollections, setItemsCollection, InputFilter, setActivitiesCollection } from '@store/actions/marketplace';
+import { setListOffer, setListCollection, setItemsCollection, InputFilter, setActivitiesCollection } from '@store/actions/marketplace';
 import {
     TableBody,
     TableContainer,
@@ -37,6 +37,9 @@ import CircularProgress from '@base-components/CircularProgress';
 import Pagination from '@base-components/Pagination';
 import { cvtAddressToStar, formatHumanReadableTime } from '@utils/';
 import { ActionSaleNFT } from '@app-constants';
+import { getExplorerTransactionLink, getNetworkInfo } from '@utils/network';
+import ActivitiesMarketplace from '@base-components/ActivitiesMarketplace';
+import CollectionCard from '@base-components/CollectionCard';
 // install Swiper modules
 SwiperCore.use([Navigation, SwiperPagination]);
 
@@ -61,14 +64,12 @@ const Marketplace = () => {
         { name: '3 Months', value: '3 months' },
     ]), []);
     const [timeFilter, setTimeFilter] = useState(listOfferFilter[0].value)
-    const hotCollections = useSelector((state: any) => state.hotCollections).data;
+    const listCollection = useSelector((state: any) => state.listCollection).data;
     const listOffer = useSelector((state: any) => state.listOffer).data;
     const itemsCollection = useSelector((state: any) => state.itemsCollection);
     const activitiesCollection = useSelector((state: any) => state.activitiesCollection);
     useEffect(() => {
-        if (!hotCollections?.length) {
-            dispatch(setHotCollections());
-        }
+        dispatch(setListCollection({ page: 1 }));
     }, []);
 
     useEffect(() => {
@@ -89,10 +90,6 @@ const Marketplace = () => {
             dispatch(setActivitiesCollection(activitiesFilter));
         }
     }, [activitiesFilter, filterTypeDiscover]);
-    const theme = useTheme();
-    const smScreen = useMediaQuery(theme.breakpoints.down('sm'))
-    const xsScreen = useMediaQuery(theme.breakpoints.down('xs'))
-
     const onSetPage = (page: number) => {
         if (filterTypeDiscover === filterTypesDiscover.items && page !== itemsFilter.page) {
             setItemsFilter(t => ({ ...t, page }));
@@ -108,7 +105,7 @@ const Marketplace = () => {
                 <div className={styles.page}>
                     <Swiper navigation={true} className={clsx(styles.swiperSlide, styles.bannerSlide)} key="bannercollections">
                         {
-                            (hotCollections || []).map((card: any, id: number) =>
+                            (listCollection?.currentList || []).map((card: any, id: number) =>
                                 <SwiperSlide key={"bannercollections" + id}>
                                     <div className={styles.banner}>
                                         {/* <button className="btn btn-arrow btn-prev">
@@ -204,6 +201,16 @@ const Marketplace = () => {
                                             </svg>
                                         </button>
                                     </div> */}
+                                    <div className="filter">
+                                        <div className="item">
+                                            <Link to="/collections" className={clsx("text-white firs-neue-font font-14px outline-none border-none pointer bg-transparent border-grey-2px", styles.btn)}>
+                                                Discover more
+                                                <svg width="13" height="10" viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.70343 1.6198C7.55962 1.48175 7.55962 1.24591 7.70343 1.10785C7.84148 0.964049 8.07732 0.964049 8.21537 1.10785L11.8968 4.78352C12.0348 4.92732 12.0348 5.15741 11.8968 5.30122L8.21537 8.97688C8.07732 9.12069 7.84148 9.12069 7.70343 8.97688C7.55962 8.83883 7.55962 8.60299 7.70343 8.46493L10.7578 5.41051L1.36239 5.36814C1.16106 5.36814 1 5.20133 1 5C1 4.79867 1.16106 4.63761 1.36239 4.63761L10.7578 4.67998L7.70343 1.6198Z" fill="white" stroke="white" strokeWidth="0.5" />
+                                                </svg>
+                                            </Link>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className={clsx(styles.hostCollections, "custom-scroll")}>
                                     <Swiper
@@ -214,21 +221,10 @@ const Marketplace = () => {
                                         key="hostcollections"
                                     >
                                         {
-                                            (hotCollections || []).map((p: ObjectType<any>, id: number) =>
+                                            (listCollection?.currentList || []).map((p: ObjectType<any>, id: number) =>
                                                 <SwiperSlide key={"hostcollections" + id} className={styles.swipeCard} style={{ width: '295px' }}>
                                                     <Link to={`/collection/${p.token_address}`}>
-                                                        <div className="collection" key={id}>
-                                                            <div className="img">
-                                                                {p.image && <img src={p.image} alt="" onError={(e: any) => {
-                                                                    e.target.style.visibility = 'hidden'
-                                                                }} />}
-                                                                {p.logo && <img src={p.logo} className="icon" alt="" />}
-                                                            </div>
-                                                            <div className="infor">
-                                                                <h3>{p.name}</h3>
-                                                                <p>{p.description}</p>
-                                                            </div>
-                                                        </div>
+                                                        <CollectionCard item={p} />
                                                     </Link>
                                                 </SwiperSlide>
                                             )
@@ -351,7 +347,6 @@ const Marketplace = () => {
                                                 {activitiesCollection.loading && <Backdrop open={activitiesCollection.loading} style={{ color: '#fff', zIndex: 1000, }}>
                                                     <CircularProgress color="inherit" />
                                                 </Backdrop>}
-
                                                 {
                                                     activitiesCollection.data !== null && !activitiesCollection.loading && !activitiesCollection?.data?.totalPage ?
                                                         <Box width="100%" textAlign="center">
@@ -359,73 +354,14 @@ const Marketplace = () => {
                                                             <h4 className="firs-neue-font font-16px bold text-white text-center">No item found</h4>
                                                         </Box> :
                                                         activitiesCollection?.data?.totalPage &&
-                                                        <TableContainer style={{ borderBottom: '1px solid #44454B' }} >
-                                                            <Table style={{
-                                                                background: "radial-gradient(82.49% 167.56% at 15.32% 21.04%, rgba(217, 217, 217, 0.2) 0%, rgba(231, 245, 255, 0.0447917) 77.08%, rgba(255, 255, 255, 0) 100%)"
-                                                            }}>
-                                                                <TableHead>
-                                                                    <TableRowHead>
-                                                                        <TableCell>ITEM</TableCell>
-                                                                        <TableCell>PRICE</TableCell>
-                                                                        <TableCell>TYPE</TableCell>
-                                                                        <TableCell>FROM</TableCell>
-                                                                        <TableCell>TO</TableCell>
-                                                                        <TableCell>DATE</TableCell>
-                                                                    </TableRowHead>
-                                                                </TableHead>
-                                                                <TableBody>
-                                                                    {
-                                                                        (activitiesCollection?.data?.currentList || []).map((item: any, idx: number) => <TableRowBody key={idx}>
-                                                                            <TableCell>
-                                                                                <Box display="grid" gridTemplateColumns="56px auto" gridGap="8px" alignItems="center">
-                                                                                    <Box width="56px" height="56px" style={{ backgroundColor: "#000", borderRadius: '4px' }}>
-                                                                                        {item.image && <img src={item.image} alt="" width="56px" height="56px" />}
-                                                                                    </Box>
-                                                                                    <Box>
-                                                                                        <h4 className="firs-neue-font font-16px text-white">#{item.token_id}</h4>
-                                                                                        <span className="text-grey helvetica-font font-14px">{item?.project?.name}</span>
-                                                                                    </Box>
-                                                                                </Box>
-                                                                            </TableCell>
-                                                                            <TableCell>
-                                                                                <Box>
-                                                                                    <span>{item.value} {item.currencySymbol}</span>
-                                                                                </Box>
-                                                                            </TableCell>
-                                                                            <TableCell>
-                                                                                {ActionSaleNFT[item.event_type as keyof typeof ActionSaleNFT]}
-                                                                            </TableCell>
-                                                                            <TableCell>
-                                                                                {
-                                                                                    ActionSaleNFT[item.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenListed ||
-                                                                                        ActionSaleNFT[item.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenDelisted ?
-                                                                                        cvtAddressToStar(item.seller || '', '.', 5) :
-                                                                                        cvtAddressToStar(item.buyer || '', '.', 5)
-                                                                                }
-                                                                            </TableCell>
-                                                                            <TableCell>
-                                                                                {
-                                                                                    ActionSaleNFT[item.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenListed ||
-                                                                                        ActionSaleNFT[item.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenDelisted ?
-                                                                                        cvtAddressToStar(item.buyer || '', '.', 5) :
-                                                                                        cvtAddressToStar(item.seller || '', '.', 5)
-                                                                                }
-                                                                            </TableCell>
-                                                                            <TableCell>
-                                                                                {item.dispatch_at && formatHumanReadableTime(+item.dispatch_at * 1000, Date.now())}
-                                                                            </TableCell>
-                                                                        </TableRowBody>)
-                                                                    }
-                                                                </TableBody>
-                                                            </Table>
-                                                            <Pagination
-                                                                count={activitiesCollection?.data?.totalPage}
-                                                                page={activitiesCollection?.data.currentPage}
-                                                                onChange={(e: any, page: any) => {
-                                                                    onSetPage(page)
-                                                                }}
-                                                            />
-                                                        </TableContainer>}
+                                                        <ActivitiesMarketplace
+                                                            data={activitiesCollection?.data?.currentList}
+                                                            totalPage={activitiesCollection?.data?.totalPage}
+                                                            currentPage={activitiesCollection?.data?.currentPage}
+                                                            onChangePage={onSetPage}
+                                                        />
+                                                }
+
                                             </>
                                         )}
                                 </Box>

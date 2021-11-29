@@ -32,6 +32,7 @@ import { ActionSaleNFT } from '@app-constants';
 import { setItemsProjectCollection, setProjectInfor, setActivitiesProjectCollection } from '@store/actions/project-collection';
 import CircularProgress from '@base-components/CircularProgress';
 import CardMarketplace from '@base-components/CardMarketplace';
+import ActivitiesMarketplace from '@base-components/ActivitiesMarketplace';
 
 const Marketplace = () => {
     const styles = useStyles();
@@ -285,71 +286,14 @@ const Marketplace = () => {
                                                     <img src="/images/icons/item-not-found.svg" alt="" />
                                                     <h4 className="firs-neue-font font-16px bold text-white text-center">No item found</h4>
                                                 </Box> :
-                                                activitiesProject?.totalPage && <TableContainer style={{ borderBottom: '1px solid #44454B' }} >
-                                                    <Table>
-                                                        <TableHead>
-                                                            <TableRowHead>
-                                                                <TableCell>ITEM</TableCell>
-                                                                <TableCell>PRICE</TableCell>
-                                                                <TableCell>TYPE</TableCell>
-                                                                <TableCell>FROM</TableCell>
-                                                                <TableCell>TO</TableCell>
-                                                                <TableCell>DATE</TableCell>
-                                                            </TableRowHead>
-                                                        </TableHead>
-                                                        <TableBody>
-                                                            {
-                                                                (activitiesProject?.currentList || []).map((col: any, idx: number) => <TableRowBody key={idx}>
-                                                                    <TableCell>
-                                                                        <Box display="grid" gridTemplateColumns="56px auto" gridGap="8px" alignItems="center">
-                                                                            <Box width="56px" height="56px" style={{ backgroundColor: "#000", borderRadius: '4px' }}>
-                                                                                {col.image && <img src={col.image} alt="" width="56px" height="56px" />}
-                                                                            </Box>
-                                                                            <Box>
-                                                                                <h4 className="firs-neue-font font-16px text-white">#{col.token_id}</h4>
-                                                                                <span className="text-grey helvetica-font font-14px">{projectInfor.name}</span>
-                                                                            </Box>
-                                                                        </Box>
-                                                                    </TableCell>
-                                                                    <TableCell>
-                                                                        <Box>
-                                                                            <span>{col.value} {col.currencySymbol}</span>
-                                                                        </Box>
-                                                                    </TableCell>
-                                                                    <TableCell>
-                                                                        {ActionSaleNFT[col.event_type as keyof typeof ActionSaleNFT]}
-                                                                    </TableCell>
-                                                                    <TableCell>
-                                                                        {
-                                                                            ActionSaleNFT[col.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenListed ||
-                                                                                ActionSaleNFT[col.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenDelisted ?
-                                                                                cvtAddressToStar(col.seller || '', '.', 5) :
-                                                                                cvtAddressToStar(col.buyer || '', '.', 5)
-                                                                        }
-                                                                    </TableCell>
-                                                                    <TableCell>
-                                                                        {
-                                                                            ActionSaleNFT[col.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenListed ||
-                                                                                ActionSaleNFT[col.event_type as keyof typeof ActionSaleNFT] === ActionSaleNFT.TokenDelisted ?
-                                                                                cvtAddressToStar(col.buyer || '', '.', 5) :
-                                                                                cvtAddressToStar(col.seller || '', '.', 5)
-                                                                        }
-                                                                    </TableCell>
-                                                                    <TableCell>
-                                                                        {col.dispatch_at && formatHumanReadableTime(+col.dispatch_at * 1000, Date.now())}
-                                                                    </TableCell>
-                                                                </TableRowBody>)
-                                                            }
-                                                        </TableBody>
-                                                    </Table>
-                                                    <Pagination
-                                                        count={activitiesProject?.totalPage}
-                                                        page={activitiesProject.currentPage}
-                                                        onChange={(e: any, page: any) => {
-                                                            onSetPage(page)
-                                                        }}
-                                                    />
-                                                </TableContainer>}
+                                                activitiesProject?.totalPage &&
+                                                <ActivitiesMarketplace
+                                                    data={activitiesProject?.currentList}
+                                                    totalPage={activitiesProject?.totalPage}
+                                                    currentPage={activitiesProject?.currentPage}
+                                                    onChangePage={onSetPage}
+                                                />
+                                        }
                                     </>
                                 )}
                         </div>

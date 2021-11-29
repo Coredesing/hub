@@ -1,16 +1,16 @@
-import { hotCollectionsActions, listOfferActions, itemsCollectionActions, activitiesCollectionActions } from '../constants/marketplace';
+import { listCollectionActions, listOfferActions, itemsCollectionActions, activitiesCollectionActions } from '../constants/marketplace';
 import { AnyAction } from 'redux';
 import { initReducer, StateType } from './utils';
 
 
-export const hotCollectionReducer = (state: StateType, action: AnyAction) => {
+export const listCollectionReducer = (state: StateType, action: AnyAction) => {
   return initReducer(
     state,
     action,
     {
-      loading: hotCollectionsActions.LOADING,
-      success: hotCollectionsActions.SUCCESS,
-      failure: hotCollectionsActions.FAILURE,
+      loading: listCollectionActions.LOADING,
+      success: listCollectionActions.SUCCESS,
+      failure: listCollectionActions.FAILURE,
     })
 };
 

@@ -1,4 +1,4 @@
-import { hotCollectionsActions, listOfferActions, activitiesCollectionActions, itemsCollectionActions } from '../constants/marketplace';
+import { listCollectionActions, listOfferActions, activitiesCollectionActions, itemsCollectionActions } from '../constants/marketplace';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import axios from '@services/axios';
@@ -15,22 +15,6 @@ export type InputFilter = {
     perPage?: number;
     [k: string]: any
 }
-export const setHotCollections = () => {
-    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
-        const oldData = getState().assetsAccount.data || {};
-        dispatch({ type: hotCollectionsActions.LOADING, payload: oldData });
-        try {
-            const result = await axios.get('/marketplace/collections');
-            const data = result.data?.data?.data || [];
-            dispatch({ type: hotCollectionsActions.SUCCESS, payload: data });
-        } catch (error: any) {
-            dispatch({
-                type: hotCollectionsActions.FAILURE,
-                payload: error
-            });
-        }
-    }
-};
 
 const getInfoListData = async (listData: any[], dispatch: Function, getState: () => any) => {
     try {
@@ -86,6 +70,50 @@ const getInfoListData = async (listData: any[], dispatch: Function, getState: ()
         return [];
     }
 }
+
+export const setListCollection = (filter: InputFilter) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
+        const oldData = getState().listCollection?.data || {};
+        dispatch({ type: listCollectionActions.LOADING, payload: oldData });
+        try {
+            const perPage = filter?.perPage || 10;
+            const pageFilter = filter?.page || 1;
+
+            if (oldData?.data?.[pageFilter]?.length) {
+                oldData.currentPage = pageFilter;
+                oldData.currentList = oldData?.data?.[pageFilter];
+                dispatch({ type: listCollectionActions.SUCCESS, payload: oldData });
+                return;
+            }
+            const response = await axios.get(`/marketplace/collections?limit=${perPage}&page=${pageFilter}`);
+            const result = response.data?.data;
+            if (!result) {
+                dispatch({ type: listCollectionActions.SUCCESS, payload: oldData });
+                return;
+            }
+            const listData = result.data || [];
+            const totalRecords = +result.total || 0;
+            const currentPage = +result.page || 1;
+            const setData = {
+                total: totalRecords,
+                currentPage,
+                totalPage: Math.ceil(totalRecords / perPage),
+                currentList: listData,
+                data: {
+                    ...(oldData?.data || {}),
+                    [currentPage]: listData
+                }
+            }
+            dispatch({ type: listCollectionActions.SUCCESS, payload: { ...oldData, ...setData } });
+        } catch (error: any) {
+            dispatch({
+                type: listCollectionActions.FAILURE,
+                payload: error
+            });
+        }
+    }
+};
+
 
 export const setListOffer = (filter: InputFilter) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {

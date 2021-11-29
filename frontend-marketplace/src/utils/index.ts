@@ -348,10 +348,10 @@ export const formatHumanReadableTime = (timeInput: number, timeToCheck: number) 
     if (hours) {
       str += `${hours} hour${hours > 1 ? 's' : ''} `;
     }
-    if (minutes) {
+    else if (minutes) {
       str += `${minutes} minute${minutes > 1 ? 's' : ''} `;
     }
-    if (!hours && seconds) {
+    else if (seconds) {
       str += `${seconds} second${seconds > 1 ? 's' : ''} `;
     }
   }

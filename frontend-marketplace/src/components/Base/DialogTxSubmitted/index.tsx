@@ -6,7 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
-import { getEtherscanTransactionLink, getNetworkInfo } from '../../../utils/network';
+import { getExplorerTransactionLink, getNetworkInfo } from '../../../utils/network';
 import { useTypedSelector } from '@hooks/useTypedSelector';
 const closeIcon = '/images/icons/close.svg';
 const useStyles = makeStyles((theme) => ({
@@ -96,7 +96,7 @@ const DialogTxSubmitted = ({ open, ...props }: Props) => {
   };
   const { appChainID } = useTypedSelector(state => state.appNetwork).data;
   const info = getNetworkInfo(props.networkName || appChainID);
-  const transactionLink = getEtherscanTransactionLink({
+  const transactionLink = getExplorerTransactionLink({
     appChainID: info.id,
     transactionHash: props.transaction,
   })

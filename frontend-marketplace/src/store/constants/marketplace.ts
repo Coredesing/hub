@@ -1,7 +1,7 @@
-export const hotCollectionsActions = {
-  LOADING: 'HOT_COLLECTION_LOADING',
-  SUCCESS: 'HOT_COLLECTION_SUCCESS',
-  FAILURE: 'HOT_COLLECTION_FAILURE',
+export const listCollectionActions = {
+  LOADING: 'LIST_COLLECTION_LOADING',
+  SUCCESS: 'LIST_COLLECTION_SUCCESS',
+  FAILURE: 'LIST_COLLECTION_FAILURE',
 };
 
 export const listOfferActions = {

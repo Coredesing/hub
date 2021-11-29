@@ -337,7 +337,7 @@ export default new Vuex.Store({
             {type: 'Android', link: detail.android_link},
           ].filter(item => !!item.link),
           ido: {
-            date: detail.ido_date && detail.ido_date > new Date() ? dayjs(detail.ido_date).format('MMM DD, YYYY') : '',
+            date: detail.ido_date && new Date(detail.ido_date) > new Date() ? dayjs(detail.ido_date).format('MMM DD, YYYY') : '',
             price: detail.token_price,
             chain: detail.network_available,
             currency: detail.accept_currency,

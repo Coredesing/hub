@@ -630,7 +630,9 @@ export const AboutMysteryBox = ({
         {
           timeClaim && (timeClaim < timeNow) && isClaimedOnGF && claimUrl &&
           <Box>
-            <ButtonBase href={claimUrl} target="_blank" color="green" className="font-14px firs-neue-font w-full">View your NFT</ButtonBase>
+            <ButtonBase onClick={() => {
+              window.open(claimUrl)
+            }} color="green" className="font-14px firs-neue-font w-full">View your NFT</ButtonBase>
           </Box>
         }
         <Box className={classes.wrapperBox} marginTop="20px">

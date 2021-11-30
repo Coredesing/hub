@@ -7,14 +7,15 @@ import clsx from 'clsx';
 import useStyles from "./style";
 
 export function TabPanel(props: any) {
-    const { children, value, index, classChidlren, ...other } = props;
-
+    const { children, value, index, classChidlren, className, ...other } = props;
+    const style = useStyles();
     return (
         <div
             role="tabpanel"
             hidden={value !== index}
             id={`full-width-tabpanel-${index}`}
             aria-labelledby={`full-width-tab-${index}`}
+            className={clsx(className, style.tabPanel)}
             {...other}
         >
             {value === index && (

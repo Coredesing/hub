@@ -22,7 +22,9 @@ import { useFetchV1 } from "@hooks/useFetch";
 import { ObjectType } from "@app-types";
 import { useWeb3React } from "@web3-react/core";
 import axios from '@services/axios'
-import { formatHumanReadableTime } from '@utils/index'
+import { cvtAddressToStar, formatHumanReadableTime } from '@utils/index'
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrencyTokenAddress } from "@store/actions/currency";
 type Props = {
     info: { [k: string]: any },
     [k: string]: any
@@ -38,33 +40,34 @@ export const AboutMarketplaceNFT = ({
     reloadOfferList,
     getSymbolCurrency,
     addressCurrencyToBuy,
+    checkFnIsLoading,
+    lockingAction,
     ...props }: Props) => {
+
+    const { account: connectedAccount } = useWeb3React();
+    const dispatch = useDispatch()
     const classes = useAboutStyles();
     const [currentTab, setCurrentTab] = useState<number>(defaultTab || 0);
     const onChangeTab = (e: any, val: number) => {
         setCurrentTab(val);
     }
-
+    const currencies = useSelector((state: any) => state.currencies)?.data || {};
     const [timenow] = useState(Date.now());
-
-
     const [offerList, setOfferList] = useState<ObjectType<any>[]>([]);
     useEffect(() => {
-        console.log('addressCurrencyToBuy', addressCurrencyToBuy)
         // update pagination
         if (reloadOfferList) {
-            const cachedCurrency: ObjectType<string> = {};
             axios.get(`/marketplace/offers/${projectAddress}/${id}?event_type=TokenOffered`).then(async (res) => {
                 let offers = res.data?.data || [];
                 const offerList: ObjectType<any>[] = [];
                 await Promise.all(offers.map((item: any) => new Promise(async (res) => {
                     if (item.currency === addressCurrencyToBuy) {
-                        if (!cachedCurrency[item.currency]) {
+                        if (!currencies[item.currency]) {
                             const symbol = await getSymbolCurrency(item.currency);
-                            cachedCurrency[item.currency] = symbol;
                             item.currencySymbol = symbol;
+                            dispatch(setCurrencyTokenAddress(item.currency, symbol));
                         } else {
-                            item.currencySymbol = cachedCurrency[item.currency];
+                            item.currencySymbol = currencies[item.currency];
                         }
                         offerList.push(item);
                     }
@@ -74,7 +77,6 @@ export const AboutMarketplaceNFT = ({
             })
         }
     }, [reloadOfferList])
-    const { account: connectedAccount } = useWeb3React();
 
     const formatTraitType = (item: any) => {
         let traitType = item.trait_type || item.traitType || '';
@@ -137,38 +139,25 @@ export const AboutMarketplaceNFT = ({
                 </div>
             </TabPanel> */}
             <TabPanel value={currentTab} index={0}>
-                <TableContainer style={{ background: '#171717', marginTop: '7px' }}>
-                    <Table>
-                        <TableBody>
-                            {(info.attributes || []).map((row: any, idx: number) => (
-                                <TableRowBody key={idx}>
-                                    <TableCell width="80px" style={{ paddingLeft: '28px' }}>
-                                        <div>
-                                            {formatTraitType(row)}: <span>{formatValue(row)}</span>
-                                        </div>
-                                        {/* <div className={classes.tableCellOffer}>
-                                            <h4>
-                                                <span>Listed by @</span>{row.origin}
-                                            </h4>
-                                            <h5>{new Date(row.time).toDateString()}</h5>
-                                        </div> */}
-                                    </TableCell>
-                                </TableRowBody>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                <Box className={classes.activities}>
+                    {(info.attributes || []).map((row: any, idx: number) => (
+                        <div className="item" key={idx}>
+                            <label className="text-white" htmlFor="">{formatTraitType(row)}</label>
+                            <span className="text-grey">{formatValue(row)}</span>
+                        </div>
+                    ))}
+                </Box>
             </TabPanel>
             <TabPanel value={currentTab} index={1}>
-                <TableContainer style={{ background: '#171717', marginTop: '7px' }}>
+                <TableContainer style={{ background: '#171717', marginTop: '24px', marginBottom: '24px' }}>
                     <Table>
                         <TableBody>
                             {offerList.map((row: any, idx: number) => (
                                 <TableRowBody key={idx}>
-                                    <TableCell width="200px" scope="row" style={{ paddingLeft: '28px' }}>
-                                        <div className={classes.tableCellOffer}>
-                                            <h4>
-                                                {row.buyer} <span>make an offer</span>
+                                    <TableCell scope="row" width="300px" style={{ paddingLeft: '28px' }}>
+                                        <div className={classes.tableCellOffer} style={{ maxWidth: '300px' }}>
+                                            <h4 style={{ width: 'fit-content' }}>
+                                                {cvtAddressToStar(row.buyer || '', '*', 5)} <span style={{ marginLeft: '4px' }}> make an offer</span>
                                             </h4>
                                             <h5 className="text-left">{formatHumanReadableTime(row.dispatch_at * 1000 || 0, timenow)}</h5 >
                                         </div>
@@ -182,10 +171,12 @@ export const AboutMarketplaceNFT = ({
                                             {/* <h5 className="text-right">{row.usdPrice}</h5> */}
                                         </div>
                                     </TableCell>
-                                    <TableCell align="right" style={{ padding: '7px', paddingRight: '20px' }}>
+                                    <TableCell width="150px" align="right" style={{ padding: '7px', paddingRight: '20px' }}>
                                         {
                                             row.event_type === 'TokenOffered' && addressCurrencyToBuy === row.currency && (isOwnerNFTOnSale ?
                                                 <ButtonBase color="green"
+                                                    isLoading={checkFnIsLoading(props.onAcceptOffer.name)}
+                                                    disabled={lockingAction.lock}
                                                     className={clsx("text-transform-unset ", classes.btn)}
                                                     onClick={() => {
                                                         props.onAcceptOffer(row)
@@ -194,6 +185,7 @@ export const AboutMarketplaceNFT = ({
                                                 </ButtonBase> :
                                                 row.buyer === connectedAccount &&
                                                 <ButtonBase color="green"
+                                                    isLoading={checkFnIsLoading(props.onRejectOffer.name)} disabled={lockingAction.lock}
                                                     className={clsx("text-transform-unset", classes.btn)}
                                                     onClick={props.onRejectOffer}>
                                                     Cancel

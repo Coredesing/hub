@@ -570,6 +570,8 @@ export default useStyles;
 export const useAboutStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    paddingLeft: '32px',
+    paddingRight: '32px',
     // backgroundColor: "#171717",
     // background: 'radial-gradient(82.49% 167.56% at 15.32% 21.04%, rgba(217, 217, 217, 0.2) 0%, rgba(231, 245, 255, 0.0447917) 77.08%, rgba(255, 255, 255, 0) 100%)',
     // backdropFilter: 'blur(80px)',
@@ -653,127 +655,6 @@ export const useAboutStyles = makeStyles((theme) => ({
       display: "inline-flex",
       gap: "7px",
     },
-  },
-  socials: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, 28px)",
-    gap: "10px",
-    "& a": {
-      display: "grid",
-      "& img": {
-        width: "24px",
-        height: "24px",
-      },
-    },
-  },
-  paginationNav: {
-    marginTop: '32px',
-    marginBottom: '10px',
-    background: 'transparent',
-  },
-  ulPagination: {
-    color: '#AEAEAE',
-    '& li div': {
-      color: '#AEAEAE',
-    },
-    '& button': {
-      background: 'transparent',
-      color: '#AEAEAE',
-      fontSize: '14px',
-      lineHeight: '24px',
-      fontFamily: 'Firs Neue',
-      fontStyle: 'normal',
-      fontWeight: 600,
-
-      '&[aria-label^="page"]': {
-        background: '#72F34B',
-        color: '#000000',
-        '&:hover': {
-          background: '#4fa934',
-        }
-      }
-    }
-  },
-  wrapperBoxTimeLine: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(180px, calc(100% / 5)))',
-    gridAutoRows: 'minmax(max-content, 1fr)',
-    placeContent: 'center',
-    [theme.breakpoints.down('xs')]: {
-      gridTemplateColumns: '220px',
-    },
-    '& .box': {
-      border: '1px solid rgba(255, 255, 255, 0.2)',
-      // borderRight: 'unset',
-      padding: '20px',
-      textAlign: 'center',
-      background: '#000000',
-      // '&:last-child': {
-      //   borderRight: '1px solid rgba(255, 255, 255, 0.2)',
-      // },
-      '&.active': {
-        borderRadius: '4px',
-        background: '#72F34B',
-        '& .step span': {
-          background: '#000',
-        },
-        ' & .title, & .desc': {
-          color: ' #000',
-        },
-      },
-      '& .step': {
-        marginBottom: '15px',
-        display: 'grid',
-        alignItems: 'center',
-        placeContent: 'center',
-        '& span': {
-          background: '#2E2E2E',
-          display: 'grid',
-          alignItems: 'center',
-          width: '29px',
-          height: '29px',
-          borderRadius: '50%',
-          fontFamily: 'Firs Neue',
-          fontStyle: 'normal',
-          fontWeight: 600,
-          fontSize: '14px',
-          lineHeight: '24px',
-          color: ' #fff',
-        }
-      },
-      '& .title': {
-        fontFamily: 'Firs Neue',
-        fontStyle: 'normal',
-        fontWeight: 600,
-        fontSize: '16px',
-        lineHeight: '22px',
-        color: ' #fff',
-        marginBottom: '6px',
-        textTransform: 'uppercase',
-      },
-      '& .desc': {
-        fontFamily: 'Firs Neue',
-        fontStyle: 'normal',
-        fontWeight: 'normal',
-        fontSize: '12px',
-        lineHeight: '16px',
-        color: ' #fff',
-        marginBottom: '15px',
-        textAlign: 'center',
-      },
-
-    },
-    '& .box:first-child': {
-      // borderRight: 'unset',
-      borderTopLeftRadius: '4px',
-      borderBottomLeftRadius: '4px',
-    },
-    '& .box:last-child': {
-      borderRight: 'unset',
-      borderTopRightRadius: '4px',
-      borderBottomRightRadius: '4px',
-    }
-
   },
   wrapperBox: {
     display: 'grid',
@@ -897,7 +778,6 @@ export const useAboutStyles = makeStyles((theme) => ({
   tableCellOffer: {
     display: 'grid',
     gridTemplateColumns: '1fr',
-
     '& h4': {
       fontWeight: 600,
       fontSize: '14px',
@@ -922,11 +802,39 @@ export const useAboutStyles = makeStyles((theme) => ({
   },
   btn: {
     height: 'unset !important',
-    padding: '2px 16px !important',
+    padding: '6px 16px !important',
     minWidth: 'unset',
     fontSize: '14px',
     marginTop: 'unset',
     fontFamily: 'Firs Neue'
+  },
+  activities: {
+    marginTop:'24px',
+    marginBottom:'24px',
+    display: 'grid',
+    gap: '8px',
+    gridTemplateColumns: 'repeat(auto-fit, 300px)',
+    '& .item': {
+      display: 'grid',
+      gridTemplateColumns: '150px auto',
+      gap: '20px',
+      '& label': {
+        fontFamily: 'Helvetica',
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: '14px',
+        textTransform: 'uppercase',
+        lineHeight: '24px'
+      },
+      '& span': {
+        fontFamily: 'Helvetica',
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: '14px',
+        lineHeight: '24px',
+        wordBreak: 'break-all'
+      }
+    }
   }
 }));
 
@@ -1045,6 +953,24 @@ export const useMarketplaceStyle = makeStyles((theme) => ({
             borderRadius: '50%',
             marginRight: '6px',
           }
+        },
+        '&.price': {
+          '& label': {
+            fontWeight: 'bold',
+            fontSize: '16px',
+            textTransform: 'unset',
+          },
+          '& div': {
+            fontSize: '24px',
+            display: 'grid',
+            gridTemplateColumns: '32px auto',
+            gap: '12px',
+            alignItems: 'center',
+            '& img': {
+              width: '32px',
+              height: '32px',
+            }
+          }
         }
       }
     },
@@ -1110,6 +1036,8 @@ export const useMarketplaceStyle = makeStyles((theme) => ({
   cardImg: {
     width: '100%',
     background: '#000',
+    display: 'grid',
+    alignItems: 'center',
     '& .wrapperVideo': {
       position: 'relative',
       height: '379px',
@@ -1188,7 +1116,7 @@ export const useMarketplaceStyle = makeStyles((theme) => ({
   },
   boxesBodyHeader: {
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr 1fr',
+    gridTemplateColumns: '1fr',
     gap: '6px',
     '& .box-icon': {
       display: 'grid',
@@ -1199,7 +1127,7 @@ export const useMarketplaceStyle = makeStyles((theme) => ({
         height: '32px',
       },
       '& .text': {
-        textTransform: 'uppercase',
+        // textTransform: 'uppercase',
         color: '#fff',
         fontSize: '14px',
         fontFamily: 'Firs Neue',

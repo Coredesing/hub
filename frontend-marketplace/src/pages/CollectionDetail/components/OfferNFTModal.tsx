@@ -137,13 +137,13 @@ const OfferNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isAppro
                         Cancel
                     </ButtonBase>
                     <ButtonBase color="green" onClick={onConfirm} className="w-full text-transform-unset" isLoading={isLoadingButton} disabled={isLoadingButton}>
-                        Offer
+                        Confirm
                     </ButtonBase>
                 </div>
             }
         >
             <div className={styles.wrapperContent}>
-                <h3>Offer NFT</h3>
+                <h3>Make Offer</h3>
                 <div className="content">
                     <h4 style={{ display: 'flex', }}>Offer Price (Currency: {currencySymbol && <Box display="grid" marginLeft="4px" gridTemplateColumns="24px auto" gridGap="4px" alignItems="center">
                         <img src={`/images/icons/${currencySymbol.toLowerCase()}.png`} style={{ width: '24px', height: '24px', background: '#000', borderRadius: '50%' }} alt="" />

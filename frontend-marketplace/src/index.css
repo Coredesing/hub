@@ -393,3 +393,11 @@ body::-webkit-scrollbar-thumb,
 .gap-4px {
     gap: 4px;
 }
+
+.pd-16px {
+    padding: 16px;
+}
+
+.bg-black {
+    background: #000;
+}

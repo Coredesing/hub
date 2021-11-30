@@ -29,6 +29,9 @@ export const useTableStyles = makeStyles((theme: any) => {
                 padding: '14px 19px',
                 background: '#171717',
                 border: 'none',
+            },
+            [theme.breakpoints.down('xs')]: {
+                tableLayout: 'fixed',
             }
         },
         textGreen: {

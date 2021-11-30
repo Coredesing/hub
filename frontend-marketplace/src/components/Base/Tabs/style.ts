@@ -36,6 +36,16 @@ export const useStyles = makeStyles((theme) => ({
         paddingRight: '16px',
       },
     },
+    tabPanel: {
+      [theme.breakpoints.down("sm")]: {
+        paddingLeft: "24px",
+        paddingRight: "24px",
+      },
+      [theme.breakpoints.down("xs")]: {
+        paddingLeft: '16px',
+        paddingRight: '16px',
+      },
+    },
     tabPaneContent: {
       fontFamily: "Firs Neue",
       fontWeight: "normal",

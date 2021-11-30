@@ -1,0 +1,6 @@
+export const tokenInforsActions = {
+  LOADING: 'TOKEN_INFORS_LOADING',
+  SUCCESS: 'TOKEN_INFORS_SUCCESS',
+  FAILURE: 'TOKEN_INFORS_FAILURE',
+};
+

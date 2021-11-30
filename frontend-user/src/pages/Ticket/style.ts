@@ -827,7 +827,7 @@ export const useAboutStyles = makeStyles((theme) => ({
     }
   },
   wrapperCountdownCollection: {
-    marginBottom: '20px',
+    // marginBottom: '20px',
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
     gap: '8px',
@@ -865,6 +865,14 @@ export const useAboutStyles = makeStyles((theme) => ({
     },
     '& button': {
       marginTop: '0',
+    }
+  },
+  tableCellDesc: {
+    [theme.breakpoints.down('xs')]: {
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      width: '160px',
+      whiteSpace: 'nowrap',
     }
   }
 }));

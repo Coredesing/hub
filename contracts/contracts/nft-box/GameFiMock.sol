@@ -19,6 +19,7 @@ contract GameFIMock is ERC721Enumerable, AccessControl, ERC721Holder {
 
     uint256 public maxSupply;
     uint256 public tokenSold;
+    string public baseURI;
 
     struct GF {
         uint256 unique;
@@ -34,6 +35,7 @@ contract GameFIMock is ERC721Enumerable, AccessControl, ERC721Holder {
     ) ERC721(name, symbol) {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(MINTER_ROLE, msg.sender);
+        baseURI = "https://data.mechmaster.io/api/mecha/";
     }
 
     function grantMinterRole(address account) onlyRole(DEFAULT_ADMIN_ROLE) external {
@@ -59,5 +61,13 @@ contract GameFIMock is ERC721Enumerable, AccessControl, ERC721Holder {
 
         emit NFTCreated(id);
         return id;
+    }
+
+    function setBaseURI(string memory uri) onlyRole(DEFAULT_ADMIN_ROLE) external {
+        baseURI = uri;
+    }
+
+    function _baseURI() internal view override returns (string memory) {
+        return baseURI;
     }
 }

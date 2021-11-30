@@ -803,7 +803,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
             <ul className={`${!!pickedWinner && 'multilTabBottom'} ${styles.navBottom}`}>
               <li onClick={() => setActiveTabBottom('tab_pool_details')} className={activeTabBottom === 'tab_pool_details' ? 'active' : ''}>Pool Details</li>
               {
-                !!pickedWinner &&
+                !isClaim(infoCountdown?.poolStatus) && !!pickedWinner &&
                 <li onClick={() => setActiveTabBottom('tab_winner')} className={activeTabBottom === 'tab_winner' ? 'active' : ''}>
                   Winners ({numberWiner})
                 </li>
@@ -816,19 +816,22 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
               />
             }
 
-            <div className={`${activeTabBottom === 'tab_winner' && 'show'} ${styles.hiddenTabWinner}`}>
-              <div ref={winnerListRef} />
-              <LotteryWinners
-                handleWiners={(total) => setNumberWiner(total)}
-                poolId={poolDetails?.id}
-                // userWinLottery={existedWinner ? true : false}
-                userWinLottery={userBuyLimit > 0}
-                pickedWinner={!!pickedWinner}
-                maximumBuy={userBuyLimit}
-                purchasableCurrency={poolDetails?.purchasableCurrency.toUpperCase()}
-              // verifiedEmail={verifiedEmail ? true : false}
-              />
-            </div>
+            {
+              !isClaim(infoCountdown?.poolStatus) &&
+              <div className={`${activeTabBottom === 'tab_winner' && 'show'} ${styles.hiddenTabWinner}`}>
+                <div ref={winnerListRef}/>
+                <LotteryWinners
+                    handleWiners={(total) => setNumberWiner(total)}
+                    poolId={poolDetails?.id}
+                    // userWinLottery={existedWinner ? true : false}
+                    userWinLottery={userBuyLimit > 0}
+                    pickedWinner={!!pickedWinner}
+                    maximumBuy={userBuyLimit}
+                    purchasableCurrency={poolDetails?.purchasableCurrency.toUpperCase()}
+                    // verifiedEmail={verifiedEmail ? true : false}
+                />
+              </div>
+            }
           </div>
           {
             // hidden when is commnunity pool

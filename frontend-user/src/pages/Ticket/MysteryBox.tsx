@@ -58,6 +58,7 @@ import { getContractInstance } from "@services/web3";
 import Erc20Abi from '@abi/Erc20.json';
 import { useTypedSelector } from "@hooks/useTypedSelector";
 import Erc721Abi from '@abi/Erc721.json';
+import { getNetworkInfo } from "@utils/network";
 
 const MysteryBox = ({ id, ...props }: any) => {
     const styles = useStyles();
@@ -86,9 +87,9 @@ const MysteryBox = ({ id, ...props }: any) => {
         if (!networkInfo || !infoTicket?.network_available) {
             return;
         }
-        const ok = String(networkInfo.name).toLowerCase() === (infoTicket.network_available || "").toLowerCase();
+        const ok = String(networkInfo.shortName).toLowerCase() === (infoTicket.network_available || "").toLowerCase();
         if (!ok) {
-            dispatch(pushMessage(`Please switch to ${(infoTicket.network_available || '').toLocaleUpperCase()} network to do Apply Whitelist, Approve/Buy tokens.`))
+            dispatch(pushMessage(`Please switch to ${(infoTicket.network_available || '').toLocaleUpperCase()} network to do Apply Whitelist, Approve/Buy Mystery Box.`))
         } else {
             dispatch(pushMessage(''));
         }
@@ -161,12 +162,13 @@ const MysteryBox = ({ id, ...props }: any) => {
     const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, [k: string]: any }>({ date1: 0, date2: 0, title: '' });
     const [timelines, setTimelines] = useState<TimelineType | {}>({});
     const { checkingKyc, isKYC } = useKyc(connectedAccount, (_.isNumber(infoTicket?.kyc_bypass) && !infoTicket?.kyc_bypass));
+    const [timelinePool, setTimelinePool] = useState<ObjectType<any>>({});
 
     const onSetCountdown = useCallback(() => {
         if (dataTicket) {
             const isAccIsBuyPreOrder = userTier >= dataTicket.pre_order_min_tier;
             const timeLine = getTimelineOfPool(dataTicket);
-
+            setTimelinePool(timeLine);
             const timeLinesInfo: { [k: string]: any } = {
                 1: {
                     title: 'UPCOMING',
@@ -180,7 +182,7 @@ const MysteryBox = ({ id, ...props }: any) => {
             if (timeLine.freeBuyTime) {
                 timeLinesInfo[3] = {
                     title: 'BUY PHASE 1',
-                    desc: 'Whitelist registrants will be given favorable dealings to buy Mecha Boxes in phase 1, on a FCFS basis.'
+                    desc: 'Whitelist registrants will be given favorable dealings to buy Mystery Boxes in phase 1, on a FCFS basis.'
                 };
                 timeLinesInfo[4] = {
                     title: 'BUY PHASE 2',
@@ -193,7 +195,7 @@ const MysteryBox = ({ id, ...props }: any) => {
             } else {
                 timeLinesInfo[3] = {
                     title: 'BUY PHASE 1',
-                    desc: 'Whitelist registrants will be given favorable dealings to buy Mecha Boxes in phase 1, on a FCFS basis.'
+                    desc: 'Whitelist registrants will be given favorable dealings to buy Mystery Boxes in phase 1, on a FCFS basis.'
                 };
                 timeLinesInfo[4] = {
                     title: 'END',
@@ -210,8 +212,14 @@ const MysteryBox = ({ id, ...props }: any) => {
                 timeLinesInfo[1].current = true;
             }
             else if (timeLine.endJoinPoolTime > Date.now()) {
-                setCountdown({ date1: timeLine.endJoinPoolTime, date2: Date.now(), title: 'Whitelist Closes In', isWhitelist: true });
-                timeLinesInfo[2].current = true;
+                // check preorder
+                if (isAccIsBuyPreOrder && startBuyTime < Date.now()) {
+                    timeLinesInfo[3].current = true;
+                    setCountdown({ date1: timeLine?.freeBuyTime || timeLine?.finishTime, date2: Date.now(), title: 'Phase 1 Ends In', isSale: true, isPhase1: true });
+                } else {
+                    setCountdown({ date1: timeLine.endJoinPoolTime, date2: Date.now(), title: 'Whitelist Closes In', isWhitelist: true });
+                    timeLinesInfo[2].current = true;
+                }
             }
             else if (startBuyTime > Date.now()) {
                 timeLinesInfo[2].current = true;
@@ -321,16 +329,17 @@ const MysteryBox = ({ id, ...props }: any) => {
 
     const [contractPreSaleWithAcc, setContractPreSaleWithAcc] = useState<any>();
     useEffect(() => {
-        if (infoTicket?.campaign_hash && connectedAccount) {
+        if (infoTicket?.campaign_hash && connectedAccount && library) {
             const contract = getContract(infoTicket.campaign_hash, PreSaleBoxAbi, library, connectedAccount as string);
             setContractPreSaleWithAcc(contract);
         }
-    }, [infoTicket, connectedAccount]);
+    }, [infoTicket, connectedAccount, library]);
 
     const [contractPreSale, setContractPreSale] = useState<any>();
     useEffect(() => {
         if (infoTicket?.campaign_hash) {
-            const contract = getContractInstance(PreSaleBoxAbi, infoTicket.campaign_hash, connectorName, appChainID);
+            const networkInfo = getNetworkInfo(infoTicket.network_available);
+            const contract = getContractInstance(PreSaleBoxAbi, infoTicket.campaign_hash, connectorName, networkInfo?.id);
             setContractPreSale(contract);
         }
     }, [infoTicket])
@@ -340,26 +349,19 @@ const MysteryBox = ({ id, ...props }: any) => {
     const [totalBoxesBought, setTotalBoxesBought] = useState(0);
     const [renewTotalBoxesBought, setRenewTotalBoxesBought] = useState(true);
     useEffect(() => {
-        if (infoTicket?.campaign_hash && renewTotalBoxesBought && contractPreSaleWithAcc) {
-            contractPreSaleWithAcc.saleEvents(eventId).then((res: any) => {
-                const totalBought = res.currentSupply ? res.currentSupply.toNumber() : 0;
+        if (infoTicket?.campaign_hash && renewTotalBoxesBought && contractPreSale) {
+            contractPreSale.methods.saleEvents(eventId).call().then((res: any) => {
+                const totalBought = res.currentSupply ? res.currentSupply : 0;
                 setTotalBoxesBought(totalBought);
             }).catch((err: any) => {
                 console.log('err', err);
             })
         }
-    }, [infoTicket, renewTotalBoxesBought, contractPreSaleWithAcc]);
+    }, [infoTicket, renewTotalBoxesBought, contractPreSale]);
 
     useEffect(() => {
         if (infoTicket?.boxTypesConfig?.length) {
             if (contractPreSale) {
-
-                // const isCallDefaultCollection = infoTicket.campaign_hash === infoTicket.token;
-
-                // contract?.methods.tokenURI(1).call().then((res: any) => {
-                //     console.log('tokenURI', res)
-                // })
-
                 Promise.all(infoTicket.boxTypesConfig.map((b: any, subBoxId: number) => new Promise(async (res, rej) => {
                     try {
                         const response = await contractPreSale.methods.subBoxes(eventId, subBoxId).call();
@@ -506,7 +508,7 @@ const MysteryBox = ({ id, ...props }: any) => {
     }
     const [isRedirectCompetition, setRedirectCompetition] = useState(false);
     useEffect(() => {
-        if(countdown.isWhitelist || countdown.isUpcoming) {
+        if (countdown.isWhitelist || countdown.isUpcoming) {
             setRedirectCompetition(false);
         }
     }, [connectedAccount, countdown]);
@@ -593,7 +595,8 @@ const MysteryBox = ({ id, ...props }: any) => {
         }
         if ((alreadyJoinPool || joinPoolSuccess) && countdown.isWhitelist) {
             return <WrapperAlert type="info">
-                Congratulations! You have successfully applied whitelist.
+                You have successfully applied whitelist.
+                {timelinePool.freeBuyTime ? ' Please stay tuned, you can buy from Phase 1' : ' Please stay tuned and wait until time to buy Mystery boxes'}
             </WrapperAlert>
         }
         if ((alreadyJoinPool || joinPoolSuccess) && (countdown.isSale || countdown.isUpcomingSale)) {
@@ -601,8 +604,11 @@ const MysteryBox = ({ id, ...props }: any) => {
                 Congratulations! You have successfully applied whitelist and can buy Mystery boxes
             </WrapperAlert>
         }
-        if ((!loadingJoinpool && connectedAccount && countdown.isSale && !countdown.isPhase2) && !alreadyJoinPool) {
-            return <WrapperAlert type="error"> Sorry, you didn’t apply whitelist. </WrapperAlert>
+        if ((!loadingJoinpool && connectedAccount && (countdown.isSale || countdown.isUpcomingSale)) && !alreadyJoinPool) {
+            return <WrapperAlert type="error">
+                You have not applied whitelist.
+                {(timelinePool.freeBuyTime && !countdown.isPhase2) ? ' Please stay tuned, you can buy from Phase 2' : ' Please stay tuned and join other pools'}
+            </WrapperAlert>
         }
     }
 
@@ -634,7 +640,8 @@ const MysteryBox = ({ id, ...props }: any) => {
         if (token.neededApprove) {
             let decimals = cachedDecimals[token.address];
             if (!decimals) {
-                const erc20Contract = getContractInstance(Erc20Abi, token.address, connectorName, appChainID);
+                const networkInfo = getNetworkInfo(infoTicket.network_available);
+                const erc20Contract = getContractInstance(Erc20Abi, token.address, connectorName, networkInfo?.id);
                 decimals = erc20Contract ? await erc20Contract.methods.decimals().call() : null;
                 setCachedDecimals(c => ({ ...c, [token.address]: decimals }));
             }
@@ -712,8 +719,8 @@ const MysteryBox = ({ id, ...props }: any) => {
         return +tokenAllowance > 0;
     };
 
-    const disabledBuyNow = +numBoxBuy < 1 || isKYC || lockWhenBuyBox || !connectedAccount || loadingUserTier || !_.isNumber(userTier) || (infoTicket?.min_tier > 0 && (userTier < infoTicket.min_tier));
-    const isShowBtnApprove = connectedAccount && !tokenAllowanceLoading && tokenAllowance !== undefined && !isAccApproved(tokenAllowance as number) && tokenToApprove?.neededApprove;
+    const disabledBuyNow = !allowNetwork.ok || +numBoxBuy < 1 || !isKYC || lockWhenBuyBox || !connectedAccount || loadingUserTier || !_.isNumber(userTier) || (infoTicket?.min_tier > 0 && (userTier < infoTicket.min_tier));
+    const isShowBtnApprove = allowNetwork.ok && countdown?.isSale && connectedAccount && !tokenAllowanceLoading && tokenAllowance !== undefined && !isAccApproved(tokenAllowance as number) && tokenToApprove?.neededApprove;
     const isShowBtnBuy =
         (connectedAccount && !checkingKyc && !loadingJoinpool && countdown.isSale && ((countdown.isPhase1 && (alreadyJoinPool || joinPoolSuccess)) || countdown.isPhase2)) &&
         (!tokenSeletected.neededApprove || (tokenSeletected.neededApprove && isAccApproved(tokenAllowance as number)));
@@ -849,7 +856,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                         }}
                                                     />
                                                 </div>
-                                                <span className="text-uppercase">{tokenSeletected.price} {tokenSeletected.name}</span>
+                                                <span className="text-uppercase">{tokenSeletected.price} {tokenSeletected.name}/Box</span>
 
                                             </div>
                                             <div className="detail-items">
@@ -1043,6 +1050,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                 collections={loadingCollection ? [] : collections}
                                 loadingCollection={loadingCollection}
                                 handleRefreshCollection={handleRefreshCollection}
+                                boxTypeSelected={boxTypeSelected}
                             />
                         </div>
                     </div>

@@ -1,4 +1,4 @@
-import { ETH_CHAIN_ID } from '../../constants/network';
+import { ChainDefault } from '../../constants/network';
 import { appNetworkActions } from '../constants/appNetwork';
 import { AnyAction } from 'redux';
 
@@ -20,7 +20,7 @@ type ConnectorState = {
 
 const initialState = {
   data: {
-    appChainID: ETH_CHAIN_ID,
+    appChainID: ChainDefault.id,
     walletChainID: undefined,
     currentConnector: undefined
   },

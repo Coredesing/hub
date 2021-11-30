@@ -21,17 +21,6 @@ class WinnerListUserController {
     const pageSize = request.input('limit') ? request.input('limit') : 10;
     const searchTerm = request.input('search_term') || '';
     try {
-      if (page < 2 && searchTerm === '' && await RedisWinnerUtils.checkExistRedisPoolWinners(campaign_id, page)) {
-        const data = JSON.parse(await RedisWinnerUtils.getRedisPoolWinners(campaign_id, page))
-        return HelperUtils.responseSuccess(data);
-      }
-
-      // force for Oly pool
-      if ((campaign_id === 41 || campaign_id === '41') && await RedisWinnerUtils.checkExistRedisPoolWinners(campaign_id, page)) {
-        const data = JSON.parse(await RedisWinnerUtils.getRedisPoolWinners(campaign_id, page))
-        return HelperUtils.responseSuccess(data);
-      }
-
       let campaign = null;
       // Try get Campaign detail from Redis Cache
       if (await RedisUtils.checkExistRedisPoolDetail(campaign_id)) {
@@ -48,6 +37,26 @@ class WinnerListUserController {
 
       if (campaign && (campaign.public_winner_status === Const.PUBLIC_WINNER_STATUS.PRIVATE)) {
         return HelperUtils.responseSuccess([]);
+      }
+
+      // If claim time --> return 0
+      if (campaign && campaign.campaignClaimConfig && campaign.campaignClaimConfig.length > 0) {
+        const firstClaimTime = Number(campaign.campaignClaimConfig[0].start_time) * 1000
+        let now = new Date()
+        if (!isNaN(firstClaimTime) && now.getTime() > firstClaimTime && firstClaimTime > 0) {
+          return HelperUtils.responseSuccess([]);
+        }
+      }
+
+      if (page < 2 && searchTerm === '' && await RedisWinnerUtils.checkExistRedisPoolWinners(campaign_id, page)) {
+        const data = JSON.parse(await RedisWinnerUtils.getRedisPoolWinners(campaign_id, page))
+        return HelperUtils.responseSuccess(data);
+      }
+
+      // force for Oly pool
+      if ((campaign_id === 41 || campaign_id === '41') && await RedisWinnerUtils.checkExistRedisPoolWinners(campaign_id, page)) {
+        const data = JSON.parse(await RedisWinnerUtils.getRedisPoolWinners(campaign_id, page))
+        return HelperUtils.responseSuccess(data);
       }
 
       // if not existed winners on redis then get from db

@@ -5,7 +5,7 @@ import { aggregatorAction } from '../constants/aggregator';
 import { BaseRequest } from '../../request/Request';
 import {alertActions} from "../constants/alert";
 
-export const getAggregator = (id:any) => {
+export const getAggregator = (id:any, page?: number, search?: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
         const baseRequest = new BaseRequest();
 
@@ -13,6 +13,9 @@ export const getAggregator = (id:any) => {
         let url = `/admin/aggregator`;
         if (id) {
             url = `/admin/aggregator/${id}`
+        }
+        if (page) {
+            url = `/admin/aggregator?page=${page}` + (search ? `&search=${search}` : '');
         }
 
         try {
@@ -114,8 +117,8 @@ export const addAggregator = (gameData: any, tokenomicData: any, projectData: an
         try {
             const response = await baseRequest.post(url, gameData) as any;
             const resObject = await response.json();
-
-            const { id } = resObject;
+            
+            const { id } = resObject?.data;
             let tokenomicUrl = `/admin/aggregator/tokenomic/${id}`
             let projectUrl = `/admin/aggregator/project/${id}`
             const tkresponse = await baseRequest.post(tokenomicUrl, tokenomicData) as any;

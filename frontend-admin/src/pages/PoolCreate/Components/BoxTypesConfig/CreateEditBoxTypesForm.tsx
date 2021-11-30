@@ -31,6 +31,7 @@ function CreateEditBoxTypesForm(props: any) {
       icon: data.icon,
       banner: data.banner,
       image: data.image,
+      description: data.description,
       currency_ids: data.currency_ids
     };
     handleCreateUpdateData && handleCreateUpdateData(responseData);
@@ -148,6 +149,19 @@ function CreateEditBoxTypesForm(props: any) {
                       errors={errors}
                       initValue={editData.image}
                       controlName={'image'}
+                      validateRule={{}}
+                  />
+              </div>
+          </div>
+
+          <div className={classes.formControl}>
+              <label className={classes.formControlLabel}>Description</label>
+              <div>
+                  <TextFieldWithValidate
+                      register={register}
+                      errors={errors}
+                      initValue={editData.description}
+                      controlName={'description'}
                       validateRule={{}}
                   />
               </div>

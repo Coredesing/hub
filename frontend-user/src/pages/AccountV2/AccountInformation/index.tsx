@@ -310,29 +310,30 @@ const AccountInformation = (props: any) => {
             </div>
 
             <div className={styles.inputGroup}>
-            <span>Solana Wallet Address<br/>(Optional)</span>
-            {
-              connectedAccount &&
-              <>
-                {
-                  onEditProfile ?
-                      <div className={styles.solanaGroup}>
-                        <span>{ !!solanaAddress ? solanaAddress : ''}</span>
-                        {
-                          !solanaAddress ?
-                              <div style={{position: "relative"}}>
-                              <button className={styles.connectBTN} type="button" onClick={handleSolanaConnect}>Connect</button>
-                              <div className={styles.getExtension}><a href="https://phantom.app/" style={{color: '#6398FF'}}>Get Phantom extension?</a></div>
-                              </div>
-                              :
-                              <button className={styles.disconnectBTN} type="button" onClick={handleSolanaDisconnect}>Disconnect</button>
-                        }
-                      </div>
-                      :
-                      <span>{ !!solanaAddress ? solanaAddress : 'Not Connected'}</span>
-                }
-              </>
-            }
+            {/*  TODO: update solana */}
+            {/*<span>Solana Wallet Address<br/>(Optional)</span>*/}
+            {/*{*/}
+            {/*  connectedAccount &&*/}
+            {/*  <>*/}
+            {/*    {*/}
+            {/*      onEditProfile ?*/}
+            {/*          <div className={styles.solanaGroup}>*/}
+            {/*            <span>{ !!solanaAddress ? solanaAddress : ''}</span>*/}
+            {/*            {*/}
+            {/*              !solanaAddress ?*/}
+            {/*                  <div style={{position: "relative"}}>*/}
+            {/*                  <button className={styles.connectBTN} type="button" onClick={handleSolanaConnect}>Connect</button>*/}
+            {/*                  <div className={styles.getExtension}><a href="https://phantom.app/" style={{color: '#6398FF'}}>Get Phantom extension?</a></div>*/}
+            {/*                  </div>*/}
+            {/*                  :*/}
+            {/*                  <button className={styles.disconnectBTN} type="button" onClick={handleSolanaDisconnect}>Disconnect</button>*/}
+            {/*            }*/}
+            {/*          </div>*/}
+            {/*          :*/}
+            {/*          <span>{ !!solanaAddress ? solanaAddress : 'Not Connected'}</span>*/}
+            {/*    }*/}
+            {/*  </>*/}
+            {/*}*/}
           </div>
           </form>
         }

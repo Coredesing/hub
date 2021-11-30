@@ -33,6 +33,8 @@ function CreateEditSeriesContentForm(props: any) {
       rate: data.rate,
       icon: data.icon,
       banner: data.banner,
+      video: data.video,
+      description: data.description,
     };
     handleCreateUpdateData && handleCreateUpdateData(responseData);
   };
@@ -143,6 +145,32 @@ function CreateEditSeriesContentForm(props: any) {
                   errors={errors}
                   initValue={editData.banner}
                   controlName={'banner'}
+                  validateRule={{}}
+              />
+          </div>
+        </div>
+
+          <div className={classes.formControl}>
+              <label className={classes.formControlLabel}>Video</label>
+              <div>
+                  <TextFieldWithValidate
+                      register={register}
+                      errors={errors}
+                      initValue={editData.video}
+                      controlName={'video'}
+                      validateRule={{}}
+                  />
+              </div>
+          </div>
+
+        <div className={classes.formControl}>
+          <label className={classes.formControlLabel}>Description</label>
+          <div>
+              <TextFieldWithValidate
+                  register={register}
+                  errors={errors}
+                  initValue={editData.description}
+                  controlName={'description'}
                   validateRule={{}}
               />
           </div>

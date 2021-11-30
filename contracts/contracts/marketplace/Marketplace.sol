@@ -157,6 +157,7 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
         require(_isValidCurrency(tokenContract, currency), "Invalid currency");
         address tokenOwner = IERC721Upgradeable(tokenContract).ownerOf(tokenId);
         require(msg.sender == tokenOwner, "Not token owner");
+        require(price > 1e9, "Price is too low");
 
         IERC721Upgradeable(tokenContract).safeTransferFrom(tokenOwner, address(this), tokenId);
         tokensOnSale[tokenContract][tokenId] = ListingToken({
@@ -234,6 +235,7 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
         address buyer = msg.sender;
         address tokenOwner = IERC721Upgradeable(tokenContract).ownerOf(tokenId);
         require(buyer != tokenOwner, "Owner cannot offer");
+        require(offerValue > 1e9, "Price is too low");
 
         Offer storage currentOffer = tokensWithOffers[tokenContract][tokenId][buyer];
 

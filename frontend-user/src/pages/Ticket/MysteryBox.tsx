@@ -58,6 +58,7 @@ import { getContractInstance } from "@services/web3";
 import Erc20Abi from '@abi/Erc20.json';
 import { useTypedSelector } from "@hooks/useTypedSelector";
 import Erc721Abi from '@abi/Erc721.json';
+import { getNetworkInfo } from "@utils/network";
 
 const MysteryBox = ({ id, ...props }: any) => {
     const styles = useStyles();
@@ -86,9 +87,9 @@ const MysteryBox = ({ id, ...props }: any) => {
         if (!networkInfo || !infoTicket?.network_available) {
             return;
         }
-        const ok = String(networkInfo.name).toLowerCase() === (infoTicket.network_available || "").toLowerCase();
+        const ok = String(networkInfo.shortName).toLowerCase() === (infoTicket.network_available || "").toLowerCase();
         if (!ok) {
-            dispatch(pushMessage(`Please switch to ${(infoTicket.network_available || '').toLocaleUpperCase()} network to do Apply Whitelist, Approve/Buy tokens.`))
+            dispatch(pushMessage(`Please switch to ${(infoTicket.network_available || '').toLocaleUpperCase()} network to do Apply Whitelist, Approve/Buy Mystery Box.`))
         } else {
             dispatch(pushMessage(''));
         }
@@ -337,7 +338,8 @@ const MysteryBox = ({ id, ...props }: any) => {
     const [contractPreSale, setContractPreSale] = useState<any>();
     useEffect(() => {
         if (infoTicket?.campaign_hash) {
-            const contract = getContractInstance(PreSaleBoxAbi, infoTicket.campaign_hash, connectorName, appChainID);
+            const networkInfo = getNetworkInfo(infoTicket.network_available);
+            const contract = getContractInstance(PreSaleBoxAbi, infoTicket.campaign_hash, connectorName, networkInfo?.id);
             setContractPreSale(contract);
         }
     }, [infoTicket])
@@ -360,13 +362,6 @@ const MysteryBox = ({ id, ...props }: any) => {
     useEffect(() => {
         if (infoTicket?.boxTypesConfig?.length) {
             if (contractPreSale) {
-
-                // const isCallDefaultCollection = infoTicket.campaign_hash === infoTicket.token;
-
-                // contract?.methods.tokenURI(1).call().then((res: any) => {
-                //     console.log('tokenURI', res)
-                // })
-
                 Promise.all(infoTicket.boxTypesConfig.map((b: any, subBoxId: number) => new Promise(async (res, rej) => {
                     try {
                         const response = await contractPreSale.methods.subBoxes(eventId, subBoxId).call();
@@ -645,7 +640,8 @@ const MysteryBox = ({ id, ...props }: any) => {
         if (token.neededApprove) {
             let decimals = cachedDecimals[token.address];
             if (!decimals) {
-                const erc20Contract = getContractInstance(Erc20Abi, token.address, connectorName, appChainID);
+                const networkInfo = getNetworkInfo(infoTicket.network_available);
+                const erc20Contract = getContractInstance(Erc20Abi, token.address, connectorName, networkInfo?.id);
                 decimals = erc20Contract ? await erc20Contract.methods.decimals().call() : null;
                 setCachedDecimals(c => ({ ...c, [token.address]: decimals }));
             }
@@ -723,8 +719,8 @@ const MysteryBox = ({ id, ...props }: any) => {
         return +tokenAllowance > 0;
     };
 
-    const disabledBuyNow = +numBoxBuy < 1 || !isKYC || lockWhenBuyBox || !connectedAccount || loadingUserTier || !_.isNumber(userTier) || (infoTicket?.min_tier > 0 && (userTier < infoTicket.min_tier));
-    const isShowBtnApprove = countdown?.isSale && connectedAccount && !tokenAllowanceLoading && tokenAllowance !== undefined && !isAccApproved(tokenAllowance as number) && tokenToApprove?.neededApprove;
+    const disabledBuyNow = !allowNetwork.ok || +numBoxBuy < 1 || !isKYC || lockWhenBuyBox || !connectedAccount || loadingUserTier || !_.isNumber(userTier) || (infoTicket?.min_tier > 0 && (userTier < infoTicket.min_tier));
+    const isShowBtnApprove = allowNetwork.ok && countdown?.isSale && connectedAccount && !tokenAllowanceLoading && tokenAllowance !== undefined && !isAccApproved(tokenAllowance as number) && tokenToApprove?.neededApprove;
     const isShowBtnBuy =
         (connectedAccount && !checkingKyc && !loadingJoinpool && countdown.isSale && ((countdown.isPhase1 && (alreadyJoinPool || joinPoolSuccess)) || countdown.isPhase2)) &&
         (!tokenSeletected.neededApprove || (tokenSeletected.neededApprove && isAccApproved(tokenAllowance as number)));

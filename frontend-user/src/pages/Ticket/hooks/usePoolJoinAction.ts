@@ -29,7 +29,7 @@ const usePoolJoinAction = ({ poolId, connectedAccount }: PoolDepositActionParams
         setPoolJoinLoading(true);
 
         await signMessage();
-      } catch (err) {
+      } catch (err: any) {
         setPoolJoinLoading(false);
         console.log('Error when signing: ', err.message);
       }

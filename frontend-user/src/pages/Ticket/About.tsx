@@ -628,7 +628,7 @@ export const AboutMysteryBox = ({
           </Box>
         }
         {
-          timeClaim && (timeClaim > timeNow) && isClaimedOnGF && claimUrl &&
+          timeClaim && (timeClaim < timeNow) && isClaimedOnGF && claimUrl &&
           <Box>
             <ButtonBase href={claimUrl} target="_blank" color="green" className="font-14px firs-neue-font w-full">View your NFT</ButtonBase>
           </Box>

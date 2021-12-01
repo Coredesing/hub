@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import useAuth from '@hooks/useAuth';
 import BoxCard, { getElmStr, useStyles as useCardStyles } from '../components/BoxCard';
 import { Link } from 'react-router-dom';
-import { setAssetsCollection } from '@store/actions/assets-account';
+import { setAssetsCollection } from '@store/actions/inventory';
 import ReactDOM from 'react-dom';
 import { useHistory } from 'react-router-dom'
 import { Backdrop, Box, Button } from '@material-ui/core';
@@ -18,6 +18,8 @@ import CircularProgress from '@base-components/CircularProgress';
 import clsx from 'clsx';
 import { useTabStyles } from '../style';
 import { SearchBox } from '@base-components/SearchBox';
+import { getNetworkInfo } from '@utils/network';
+import { useTypedSelector } from '@hooks/useTypedSelector';
 const Assets = () => {
     const styles = useStyles();
     const tabStyles = useTabStyles();
@@ -51,7 +53,6 @@ const Assets = () => {
     const [assets, setAssets] = useState<ObjectType<any>>({});
 
     const onRedirectDetail = (item: any) => {
-        console.log('ui', item)
         history.push(`/collection/${item.project.token_address}/${item.id}`)
     }
 
@@ -64,6 +65,8 @@ const Assets = () => {
     }
     const cardStyle = useCardStyles();
     const [loadingAsset, setLoadingAsset] = useState(false);
+    const connectorName = useTypedSelector(state => state.connector).data;
+
     useEffect(() => {
         if (!appChainID || !connectedAccount) return;
         const type = tabNames[currentTab].type || tabNames[0].type;
@@ -86,28 +89,38 @@ const Assets = () => {
                                 res('');
                                 return;
                             }
+                            const useExternalUri = !!+p?.use_external_uri;
+                            const projectAddress = p?.token_address;
+                            const networkInfo = getNetworkInfo(p?.network);
+                            const erc721Contract = getContractInstance(erc721ABI, projectAddress, connectorName, networkInfo.id);
                             for (let id = 0; id < myBoxes; id++) {
                                 const idCollection = await contract.methods.tokenOfOwnerByIndex(connectedAccount, id).call();
-                                const tokenURI = await contract.methods.tokenURI(idCollection).call();
                                 const collection: ObjectType<any> = {
                                     id: idCollection,
                                     creator: p.name,
                                     project: p,
+                                    token_id: idCollection,
                                 };
                                 try {
-                                    const infoBoxType = (await axios.get(tokenURI)).data;
-                                    Object.assign(collection, infoBoxType);
-                                    collection.icon = infoBoxType.image;
-                                    collection.price = infoBoxType.price;
+                                    if (useExternalUri) {
+                                        const result = await axios.post(`/marketplace/collection/${projectAddress}/${idCollection}`);
+                                        const infor = result.data?.data || {};
+                                        Object.assign(collection, infor);
+                                    } else {
+                                        if (erc721Contract) {
+                                            const tokenURI = await erc721Contract.methods.tokenURI(collection.token_id).call();
+                                            const infor = (await axios.get(tokenURI)).data || {};
+                                            Object.assign(collection, infor);
+                                        }
+                                    }
                                 } catch (error: any) {
                                     collection.icon = 'default.img';
                                 }
+                                collection.value = collection.value || collection.price;
                                 collections.push(collection);
-                                wrapBoxElem.append(getElmStr({
-                                    item: collection, styles: cardStyle, onClick: () => {
-                                        onRedirectDetail(collection)
-                                    }
-                                }))
+                                ReactDOM.render(<>
+                                    {collections.map((c: any) => renderBoxItem(c, Math.floor(Math.random() + 10000) + (+c.id || 1)))}
+                                </>, wrapBoxElem)
                                 setLoadingAsset(false);
                             }
                             res('');
@@ -128,7 +141,6 @@ const Assets = () => {
             })
         } else {
             const collections = assetsAccount[type];
-            console.log('collections', collections)
             ReactDOM.render(<>
                 {collections.map((c: any) => renderBoxItem(c, Math.floor(Math.random() + 10000) + (+c.id || 1)))}
             </>, wrapBoxElem)
@@ -154,7 +166,7 @@ const Assets = () => {
                         className={clsx(tabStyles.btnTab, {
                             active: currentTab === 0,
                         })}>
-                        {tabNames[0].name} ({assetsAccount[tabNames[0].type]?.length || 0})
+                        {tabNames[0].name} {!!assetsAccount[tabNames[0].type]?.length && `(${assetsAccount[tabNames[0].type]?.length})`}
                     </Button>
                     <Button
                         onClick={() => {
@@ -165,7 +177,7 @@ const Assets = () => {
                         className={clsx(tabStyles.btnTab, {
                             active: currentTab === 1,
                         })}>
-                        {tabNames[1].name} ({assetsAccount[tabNames[1].type]?.length || 0})
+                        {tabNames[1].name} {!!assetsAccount[tabNames[1].type]?.length && `(${assetsAccount[tabNames[1].type]?.length})`}
                     </Button>
                     <Button
                         onClick={() => {
@@ -176,11 +188,11 @@ const Assets = () => {
                         className={clsx(tabStyles.btnTab, {
                             active: currentTab === 2,
                         })}>
-                        {tabNames[2].name} ({assetsAccount[tabNames[2].type]?.length || 0})
+                        {tabNames[2].name} {!!assetsAccount[tabNames[2].type]?.length && `(${assetsAccount[tabNames[2].type]?.length})`}
                     </Button>
                 </Box>
                 <Box>
-                    <SearchBox placeholder="Search"/>
+                    <SearchBox placeholder="Search" />
                 </Box>
             </Box>
 

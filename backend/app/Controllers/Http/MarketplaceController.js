@@ -98,6 +98,20 @@ class MarketplaceController {
     }
   }
 
+  async getActivities({ request, auth, params }) {
+    try {
+      const inputParams = request.all();
+
+      let data = await (new MarketplaceService).getActivities(inputParams);
+      if (!data) {
+        return HelperUtils.responseNotFound()
+      }
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
   // filters: type
   async getSupportCollections({ request }) {
     try {

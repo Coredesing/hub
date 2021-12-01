@@ -216,6 +216,17 @@ class MarketplaceService {
     return data
   }
 
+  async getActivities(address, filterParams) {
+    // TODO: filter whitelist address
+    filterParams = this.formatPaginate(filterParams)
+
+    let data = await this.buildQueryNFTEventsBuilder(filterParams)
+      .orderBy('dispatch_at', 'DESC')
+      .paginate(filterParams.page, filterParams.limit);
+
+    return data
+  }
+
   async getHotOffers(filterParams) {
     filterParams = this.formatPaginate(filterParams)
     filterParams.event_type = 'TokenOffered'

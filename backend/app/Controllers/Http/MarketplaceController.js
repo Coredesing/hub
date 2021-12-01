@@ -128,6 +128,18 @@ class MarketplaceController {
     }
   }
 
+  async getMyListings({ request, auth, params }) {
+    const address = params.address;
+    const inputParams = request.all();
+
+    try {
+      let data = await (new MarketplaceService).getMyListings(address, inputParams);
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
   async getNFTInfo({ request, auth, params }) {
     const address = params.address;
     const id = params.id;

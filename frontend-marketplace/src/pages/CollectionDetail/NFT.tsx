@@ -159,8 +159,8 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
     const [allowNetwork, setAllowNetwork] = useState<{ ok: boolean, [k: string]: any }>({ ok: false });
     useEffect(() => {
         if (!infoNFT.project?.network) return;
-        const networkInfo = getNetworkInfo(infoNFT.project?.network)
-        const ok = chainId === networkInfo.id;
+        const networkInfo = getNetworkInfo(infoNFT.project?.network);
+        const ok = chainId == networkInfo.id;
         setAllowNetwork({ ok, ...networkInfo });
     }, [infoNFT, chainId]);
 

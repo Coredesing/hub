@@ -1047,7 +1047,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                             }
 
                                             {
-                                                isShowBtnBuy &&
+                                                isShowBtnBuy && getRemainingBox() &&
                                                 <ButtonBase
                                                     color="green"
                                                     isLoading={lockWhenBuyBox}

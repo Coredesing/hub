@@ -1,0 +1,1 @@
+export type ObjectType<T> = { [k: string]: T };

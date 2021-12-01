@@ -70,6 +70,7 @@ const aliases = {
 const commands = [
   'App/Commands/FetchEvents',
   'App/Commands/FetchStakingEvents',
+  'App/Commands/RefetchEvents',
   // 'App/Commands/GetUserPurchasedBalanceCommand',
   // 'App/Commands/GetUserKycInformationCommand',
   // 'App/Commands/SignatureCommand',
@@ -83,6 +84,7 @@ const jobs = [
   // 'App/Jobs/GetUserKycInformationJob',
   'App/Jobs/ExportUsers',
   'App/Jobs/FetchMarketplaceEvent',
+  'App/Jobs/RefetchMarketplaceEvent',
 ];
 
 module.exports = { providers, aceProviders, aliases, commands, jobs }

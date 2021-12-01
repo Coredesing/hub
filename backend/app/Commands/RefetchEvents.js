@@ -1,7 +1,7 @@
 'use strict'
 
 const { Command } = require('@adonisjs/ace');
-const RefetchMarketplaceEventJob = use('App/Jobs/RefetchMarketplaceEvent');
+const FetchMarketplaceEventJob = use('App/Jobs/FetchMarketplaceEvent');
 const EVENT_TYPE_LISTED = 'TokenListed'
 const EVENT_TYPE_DELISTED = 'TokenDelisted'
 const EVENT_TYPE_BOUGHT = 'TokenBought'
@@ -27,9 +27,10 @@ class RefetchEvents extends Command {
 
   async handle (args, options) {
     this.info('Implementation for refetch:events command');
-    const fromBlock = MARKETPLACE_START_BLOCK_NUMBER - REFETCH_EVENTS_DELAY_BLOCKS
+    const latestBlockNumber = (await provider.eth.getBlockNumber()) - 1
+    const fromBlock = latestBlockNumber - REFETCH_EVENTS_DELAY_BLOCKS
     ARRAY_EVENTS.forEach((event_type) => {
-      RefetchMarketplaceEventJob.doDispatch({ event_type: event_type, from: fromBlock, MARKETPLACE_START_BLOCK_NUMBER })
+      FetchMarketplaceEventJob.doDispatch({ event_type: event_type, from: fromBlock, latestBlockNumber, notCached: true })
     })
 
     await sleep(5000)

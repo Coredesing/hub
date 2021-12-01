@@ -1,10 +1,8 @@
 'use strict'
 
 const Task = use('Task')
-const RefetchMarketplaceEventJob = use('App/Jobs/RefetchMarketplaceEvent');
-const RedisMarketplaceUtils = use('App/Common/RedisMarketplaceUtils')
+const FetchMarketplaceEventJob = use('App/Jobs/FetchMarketplaceEvent');
 const MARKETPLACE_START_BLOCK_NUMBER = process.env.MARKETPLACE_START_BLOCK
-const REFETCH_EVENTS_DELAY_BLOCKS = process.env.REFETCH_EVENTS_DELAY_BLOCKS
 const EVENT_TYPE_LISTED = 'TokenListed'
 const EVENT_TYPE_DELISTED = 'TokenDelisted'
 const EVENT_TYPE_BOUGHT = 'TokenBought'
@@ -14,15 +12,15 @@ let ARRAY_EVENTS = [
   EVENT_TYPE_LISTED, EVENT_TYPE_DELISTED, EVENT_TYPE_BOUGHT, EVENT_TYPE_OFFERED, EVENT_TYPE_CANCEL_OFFERED
 ]
 
-class RefetchMarketplaceEvents extends Task {
+class FetchMarketplaceEvents extends Task {
   isRunning = false;
 
   static get schedule () {
     console.log('[RefetchMarketplaceEvents] - ACTIVE - process.env.NODE_ENV', process.env.NODE_ENV);
     if (process.env.NODE_ENV === 'development') {
-      return '*/15 * * * * *';
+      return '0 */5 * * * *';
     } else {
-      return '*/15 * * * * *';
+      return '0 */5 * * * *';
     }
   }
 
@@ -36,19 +34,10 @@ class RefetchMarketplaceEvents extends Task {
     }
 
     try {
-      let current_block = MARKETPLACE_START_BLOCK_NUMBER
-      if (await RedisMarketplaceUtils.existRedisMarketplaceBlockNumber()) {
-        let data = await RedisMarketplaceUtils.getRedisMarketplaceBlockNumber()
-        data = JSON.parse(data)
-        if (data && data.current) {
-          current_block = data.current
-        }
-      }
-
-      const fromBlock = current_block - REFETCH_EVENTS_DELAY_BLOCKS
+      let current_block = (await provider.eth.getBlockNumber()) - 1
 
       ARRAY_EVENTS.forEach((event_type) => {
-        RefetchMarketplaceEventJob.doDispatch({ event_type: event_type, from: fromBlock, to: current_block })
+        FetchMarketplaceEventJob.doDispatch({ event_type: event_type, from: current_block - 3000, to: current_block, notCached: true })
       })
     }
     catch (e) {
@@ -60,4 +49,4 @@ class RefetchMarketplaceEvents extends Task {
   }
 }
 
-module.exports = RefetchMarketplaceEvents;
+module.exports = FetchMarketplaceEvents;

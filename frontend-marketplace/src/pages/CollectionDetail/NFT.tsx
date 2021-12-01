@@ -179,6 +179,7 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
         return lockingAction.action === fnName && lockingAction.lock;
     }
     const [reloadOfferList, setReloadOfferList] = useState(1);
+    const [reloadedBalance, setReloadBalance] = useState(false);
     const handleTx = async (tx: any, action?: string) => {
         dispatch(alertWarning("Request is processing!"));
         setTxHash(tx.hash)
@@ -206,6 +207,7 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
         }
         if (action === onOfferNFT.name) {
             setReloadOfferList(c => c + 1);
+            setReloadBalance(true);
         }
         if (action === onRejectOffer.name) {
             setReloadOfferList(c => c + 1);
@@ -377,6 +379,8 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                     onConfirm={onOfferNFT}
                     isLoadingButton={lockingAction.lock}
                     addressCurrencyToBuy={addressCurrencyToBuy}
+                    reloadedBalance={reloadedBalance}
+                    setReloadBalance={setReloadBalance}
                 />
                 <ListingNFTModal
                     open={openListingModal}

@@ -33,7 +33,7 @@ const Offers = () => {
     // const offerListAccount = useSelector((state: any) => state.offerListAccount)?.data || {};
 
     const onRedirectDetail = (item: any) => {
-        history.push(`/collection/${item.project.token_address}/${item.id}`)
+        history.push(`/collection/${item.project.token_address}/${item.token_id}`)
     }
 
     const renderBoxItem = (item: any, key: any) => {
@@ -104,7 +104,7 @@ const Offers = () => {
                     Object.assign(item, tokenInfor);
                     collections.push(item);
                     ReactDOM.render(<>
-                        {collections.map((c: any) => renderBoxItem(c, Math.floor(Math.random() + 10000) + (+c.id || 1)))}
+                        {collections.map((c: any, id) => renderBoxItem(c, Math.floor(Math.random() + 10000) + (+c.id + id || 1)))}
                     </>, wrapBoxElem)
                 }
                 // dispatch(setAssetsCollection({ [type]: collections }))

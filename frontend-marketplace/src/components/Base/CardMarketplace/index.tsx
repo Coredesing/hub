@@ -9,7 +9,7 @@ import { formatNumber } from '@utils/';
 const CardMarketplace = ({ id, item, ...props }: ObjectType<any>) => {
     const styles = useStyles();
     return (
-        <div key={id} className={clsx(styles.card)} >
+        <div key={id} className={clsx(styles.card)} {...props}>
             {/* <ButtonBase className="btn-buy" color="green">Detail</ButtonBase> */}
             <div className={styles.cardImg}>
                 {item.image && <img src={item.image} alt="" />}

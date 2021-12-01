@@ -12,6 +12,7 @@ import { MenuLeft } from "./constants";
 import clsx from 'clsx';
 import _ from 'lodash';
 import Assets from "./Assets";
+import Offers from "./Offers";
 
 const AccountV2 = (props: any) => {
   const classes = useStyles();
@@ -29,7 +30,7 @@ const AccountV2 = (props: any) => {
 
   const selectTab = (name: any) => {
     setActiveMenuAccount(name)
-    props.history.push('/account?tab=' + name)
+    props.history.push('/inventory?tab=' + name)
   }
 
   return (
@@ -72,10 +73,8 @@ const AccountV2 = (props: any) => {
           </div>
 
           <div className={classes.rightAccount}>
-            {activeMenuAccount === MenuLeft.assets.key && <>
-              <Assets />
-              {/* <CardsTicket /> */}
-            </>}
+            {activeMenuAccount === MenuLeft.assets.key && <Assets />}
+            {activeMenuAccount === MenuLeft.offers.key && <Offers />}
           </div>
         </div>
       </div>

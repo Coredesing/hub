@@ -144,7 +144,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
             <div className={styles.headerAccount} onClick={hideNavMenu}>
               <LinkMui className={styles.headerAccText} href={LINK_SWAP_TOKEN} target="_blank" rel="noreferrer">Buy GAFI</LinkMui>
               {connectedAccount &&
-                <Link to="/account" className={styles.headerAccText}>My Account </Link>
+                <Link to="/inventory" className={styles.headerAccText}>Inventory</Link>
               }
 
               <div className={styles.headerAccBtn}>

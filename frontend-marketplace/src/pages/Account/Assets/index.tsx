@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import useAuth from '@hooks/useAuth';
 import BoxCard, { getElmStr, useStyles as useCardStyles } from '../components/BoxCard';
 import { Link } from 'react-router-dom';
-import { setAssetsCollection } from '@store/actions/assets-account';
+import { setAssetsCollection } from '@store/actions/inventory';
 import ReactDOM from 'react-dom';
 import { useHistory } from 'react-router-dom'
 import { Backdrop, Box, Button } from '@material-ui/core';
@@ -166,7 +166,7 @@ const Assets = () => {
                         className={clsx(tabStyles.btnTab, {
                             active: currentTab === 0,
                         })}>
-                        {tabNames[0].name} ({assetsAccount[tabNames[0].type]?.length || 0})
+                        {tabNames[0].name} {!!assetsAccount[tabNames[0].type]?.length && `(${assetsAccount[tabNames[0].type]?.length})`}
                     </Button>
                     <Button
                         onClick={() => {
@@ -177,7 +177,7 @@ const Assets = () => {
                         className={clsx(tabStyles.btnTab, {
                             active: currentTab === 1,
                         })}>
-                        {tabNames[1].name} ({assetsAccount[tabNames[1].type]?.length || 0})
+                        {tabNames[1].name} {!!assetsAccount[tabNames[1].type]?.length && `(${assetsAccount[tabNames[1].type]?.length})`}
                     </Button>
                     <Button
                         onClick={() => {
@@ -188,11 +188,11 @@ const Assets = () => {
                         className={clsx(tabStyles.btnTab, {
                             active: currentTab === 2,
                         })}>
-                        {tabNames[2].name} ({assetsAccount[tabNames[2].type]?.length || 0})
+                        {tabNames[2].name} {!!assetsAccount[tabNames[2].type]?.length && `(${assetsAccount[tabNames[2].type]?.length})`}
                     </Button>
                 </Box>
                 <Box>
-                    <SearchBox placeholder="Search"/>
+                    <SearchBox placeholder="Search" />
                 </Box>
             </Box>
 

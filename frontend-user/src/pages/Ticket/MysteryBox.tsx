@@ -348,6 +348,16 @@ const MysteryBox = ({ id, ...props }: any) => {
     const [subBoxes, setSubBoxes] = useState<{ [k: string]: any }[]>([]);
     const [totalBoxesBought, setTotalBoxesBought] = useState(0);
     const [renewTotalBoxesBought, setRenewTotalBoxesBought] = useState(true);
+    const getRemainingBox = () => {
+        if (subBoxes?.length) {
+            const remaining = subBoxes.reduce((total, item) => {
+                total -= +(item.totalSold) || 0;
+                return total;
+            }, (+infoTicket.total_sold_coin || 0));
+            return remaining < 0 ? 0 : remaining;
+        }
+        return infoTicket.total_sold_coin;
+    }
     useEffect(() => {
         if (infoTicket?.campaign_hash && renewTotalBoxesBought && contractPreSale) {
             contractPreSale.methods.saleEvents(eventId).call().then((res: any) => {
@@ -868,7 +878,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     !countdown.isUpcoming && !countdown.isWhitelist && !countdown.isUpcomingSale &&
                                                     <div className="item">
                                                         <label className="label text-uppercase">REMAINING</label>
-                                                        <span>{numberWithCommas(getRemaining(infoTicket.total_sold_coin, infoTicket.token_sold) + '')}</span>
+                                                        <span>{numberWithCommas(getRemainingBox() + '')}</span>
                                                     </div>
                                                 }
                                                 <div className="item">
@@ -1029,7 +1039,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                     {countdown.isFinished && <div className="img-finished">
                                                         <img src={"/images/finished.png"} alt="" />
                                                     </div>}
-                                                    {!loadingTicket && !getRemaining(infoTicket.total_sold_coin, infoTicket.token_sold) && (
+                                                    {!loadingTicket && !getRemainingBox() && (
                                                         <div className="soldout">
                                                             <img src={"/images/soldout.png"} alt="" />
                                                         </div>

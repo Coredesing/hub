@@ -252,7 +252,7 @@ const useStyles = makeStyles((theme: any) => ({
         color: '#FFFFFF !important'
     },
     banner: {
-        
+
         '& .wrapper-banner': {
             marginBottom: '84px',
             position: 'relative',
@@ -268,19 +268,21 @@ const useStyles = makeStyles((theme: any) => ({
                 },
             },
             '& .icon': {
-                width: '120px',
-                height: '120px',
+                width: '132px',
+                height: '132px',
                 borderRadius: '50%',
-                background: '#000',
+                background: '#171717',
                 overflow: 'hidden',
                 position: 'absolute',
                 left: '50%',
                 transform: 'translate(-50%)',
                 bottom: '-60px',
                 zIndex: 1000,
+                display: 'grid',
+                placeItems: 'center',
                 '& img': {
-                    width: '100%',
-                    height: '100%',
+                    width: '120px',
+                    height: '120px',
                     borderRadius: '50%',
                     objectFit: 'contain',
                 }
@@ -296,15 +298,20 @@ const useStyles = makeStyles((theme: any) => ({
                 marginBottom: '8px',
                 textAlign: 'center',
             },
-            '& p.desc': {
-                fontFamily: 'Helvetica',
-                fontStyle: 'normal',
-                fontWeight: 'normal',
-                fontSize: '16px',
-                lineHeight: '22px',
-                marginBottom: '24px',
-                textAlign: 'center',
-                color: '#AEAEAE'
+            '& .desc': {
+                display: 'grid',
+                justifyContent: 'center',
+                '& p': {
+                    fontFamily: 'Helvetica',
+                    fontStyle: 'normal',
+                    fontWeight: 'normal',
+                    fontSize: '16px',
+                    lineHeight: '22px',
+                    marginBottom: '24px',
+                    textAlign: 'center',
+                    color: '#AEAEAE',
+                    maxWidth: '755px',
+                }
             },
             '& .socials': {
                 ...typeDisplayFlex,

@@ -113,9 +113,9 @@ const Marketplace = () => {
                         </div>
                         <div className="infor">
                             <h3 className="text-white">{projectInfor.name}</h3>
-                            <p className="desc">
-                                {projectInfor.description}
-                            </p>
+                            <div className="desc">
+                                <p>{projectInfor.description}</p>
+                            </div>
                             <div className="socials">
                                 {
                                     projectInfor.website && <MuiLink href={projectInfor.website} target="_blank">

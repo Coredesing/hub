@@ -26,6 +26,9 @@ const DefaultLayout = ({ style, children, hiddenFooter = false, ...props }: any)
   };
   return (
     <div className={commonStyle.DefaultLayout} style={style}>
+      {/* <div className="bg" style={{position: 'absolute', width: '100%', height: '100%'}}>
+        <img src="/images/bg.jpg" alt="" style={{width: '100%', height: '100%', objectFit: 'cover'}}/>
+      </div> */}
       <div className={commonStyle.bgBody}>
         {/* <Particles
           id="tsparticles"

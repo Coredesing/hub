@@ -4,13 +4,14 @@ import { NONAME } from "dns";
 const useCommonStyle = makeStyles((theme) => {
   return {
     DefaultLayout: {
-      background: "url(/images/bg.jpg), #000",
+      background: "url(/images/bg.jpg), #171717",
       backgroundRepeat: 'no-repeat',
-      backgroundSize: 'cover',
+      backgroundSize: 'contain',
       // background: 'radial-gradient(50% 50% at 50% 50%, rgb(34, 34, 40) 0%, rgb(4, 7, 25) 100%)',
       minHeight: "100vh",
       /* grid container settings */
       display: "grid",
+      position: 'relative',
       gridTemplateRows: "auto 1fr auto",
       gridTemplateAreas: `'header'
         'main'

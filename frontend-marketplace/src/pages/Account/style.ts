@@ -275,7 +275,7 @@ const useStyles = makeStyles((theme: any) => {
       position: 'relative',
       padding: '20px 30px',
       [theme.breakpoints.up('xs')]: {
-        minHeight: '500px',
+        minHeight: 'calc(100vh - 200px)',
       },
       [theme.breakpoints.down('xs')]: {
         minHeight: '300px',

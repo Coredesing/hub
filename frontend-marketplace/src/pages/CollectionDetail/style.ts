@@ -31,6 +31,8 @@ const useStyles = makeStyles((theme: any) => {
     wrapperCard: {
       maxWidth: '1120px',
       width: '100%',
+      marginTop: '40px',
+      marginBottom: '40px',
     },
     displayContent: {
       // paddingLeft: "calc((100% - (461px * 2 + 40px)) / 2)",

@@ -38,6 +38,11 @@ export const TableRowBody = withStyles((theme) => ({
       alignItems: "center",
       gap: "8px",
     },
+    '&:first-child': {
+        '& td, & th': {
+          borderTop: '1px solid #44454B',
+        }
+    },
     "& td, & th ": {
       borderBottom: "1px solid #44454B",
       color: theme.palette.common.white,

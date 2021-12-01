@@ -249,11 +249,11 @@ const useStyles = makeStyles((theme: any) => ({
         width: '295px !important'
     },
     hostCollections: {
-        display: 'flex',
-        gap: '20px',
-        overflow: 'auto',
-        paddingBottom: '10px',
-        justifyContent: 'start',
+        // display: 'flex',
+        // gap: '20px',
+        // overflow: 'auto',
+        // paddingBottom: '10px',
+        // justifyContent: 'start',
         // '& .swiper-slide': {
         //     width: '295px !important',
         //     minWidth: '295px',
@@ -264,6 +264,24 @@ const useStyles = makeStyles((theme: any) => ({
         // },
         '& .swiper-container': {
             marginRight: 'auto',
+            marginLeft: 'unset'
+        },
+        '& .swiper-button-prev': {
+            right: '60px',
+            top: '28px',
+            left: 'unset',
+        },
+        '& .swiper-button-next': {
+            right: '10px',
+            top: '28px'
+        },
+        [theme.breakpoints.down('xs')]: {
+            '& .swiper-button-prev': {
+                left: '0',
+            },
+            '& .swiper-button-next': {
+                right: '0',
+            },
         },
         '& .collection': {
             width: '295px',

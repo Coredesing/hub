@@ -237,7 +237,7 @@ const Marketplace = () => {
                                 <div className="header">
                                     <h3>Big Offers</h3>
                                     <div className="filter">
-                                        <div className="item">
+                                        {/* <div className="item">
                                             <FormGroup>
                                                 <SelectBox
                                                     onChange={(e) => setTimeFilter(e.target.value as string)}
@@ -247,7 +247,7 @@ const Marketplace = () => {
                                                     defaultValue={timeFilter}
                                                     value={timeFilter} />
                                             </FormGroup>
-                                        </div>
+                                        </div> */}
                                         <div className="item">
                                             <Link to="/offers" className={clsx("text-white firs-neue-font font-14px outline-none border-none pointer bg-transparent border-grey-2px", styles.btn)}>
                                                 Discover more

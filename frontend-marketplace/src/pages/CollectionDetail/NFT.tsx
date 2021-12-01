@@ -44,7 +44,7 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
     const marketplaceStyle = useMarketplaceStyle();
     const dispatch = useDispatch();
     const { library, chainId } = useWeb3React();
-    const { connectedAccount, wrongChain } = useAuth();
+    const { connectedAccount, wrongChain,  } = useAuth();
     const { appChainID } = useSelector((state: any) => state.appNetwork).data;
     const [infoNFT, setInfoNFT] = useState<ObjectType<any>>({});
     const [addressOwnerNFT, setAddressOwnerNFT] = useState('');
@@ -364,11 +364,11 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
     return (
         <>
             <div className={styles.content}>
-                {
+                {/* {
                     !connectedAccount && <WrapperAlert>
                         Please connect to wallet
                     </WrapperAlert>
-                }
+                } */}
                 <DialogTxSubmitted open={openTxModal} onClose={() => setOpenTxModal(false)} transaction={txHash} />
                 <TransferNFTModal open={openTransferModal} onClose={() => setOpenTransferModal(false)} onConfirm={onTransferNFT} isLoadingButton={lockingAction.lock} />
                 <OfferNFTModal

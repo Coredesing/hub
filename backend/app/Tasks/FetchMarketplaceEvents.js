@@ -53,6 +53,7 @@ class FetchMarketplaceEvents extends Task {
     }
     finally {
       this.isRunning = false
+      await sleep(5000)
     }
   }
 }

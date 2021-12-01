@@ -2,6 +2,7 @@
 
 const Task = use('Task')
 const FetchMarketplaceEventJob = use('App/Jobs/FetchMarketplaceEvent');
+const HelperUtils = use('App/Common/HelperUtils')
 const MARKETPLACE_START_BLOCK_NUMBER = process.env.MARKETPLACE_START_BLOCK
 const EVENT_TYPE_LISTED = 'TokenListed'
 const EVENT_TYPE_DELISTED = 'TokenDelisted'
@@ -34,6 +35,7 @@ class FetchMarketplaceEvents extends Task {
     }
 
     try {
+      const provider = await HelperUtils.getStakingProvider()
       let current_block = (await provider.eth.getBlockNumber()) - 1
 
       ARRAY_EVENTS.forEach((event_type) => {
@@ -45,6 +47,7 @@ class FetchMarketplaceEvents extends Task {
     }
     finally {
       this.isRunning = false
+      await sleep(5000)
     }
   }
 }

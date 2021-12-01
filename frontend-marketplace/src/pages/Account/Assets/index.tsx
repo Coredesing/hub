@@ -68,10 +68,10 @@ const Assets = () => {
     const connectorName = useTypedSelector(state => state.connector).data;
 
     useEffect(() => {
-        if (!appChainID || !connectedAccount) return;
+        if (!connectedAccount) return;
         const type = tabNames[currentTab].type || tabNames[0].type;
         const wrapBoxElem = document.querySelector(`#${type}-cards`);
-        if (!assetsAccount[type]?.length) {
+        if (!assetsAccount[connectedAccount]?.[type]?.length) {
             setLoadingAsset(true);
             axios.get(`/marketplace/collections/support?type=${type}`).then(async (res) => {
                 const arr = res.data.data || [];
@@ -80,21 +80,27 @@ const Assets = () => {
                     const collections: ObjectType<any>[] = [];
                     await Promise.all(arr.map((p: any) => new Promise(async (res) => {
                         try {
-                            const contract = getContractInstance(erc721ABI, p.token_address, undefined, appChainID);
-                            if (!contract) return res('');
-                            let myBoxes = await contract.methods.balanceOf(connectedAccount).call();
+                            const projectAddress = p?.token_address;
+                            const networkInfo = getNetworkInfo(p?.network);
+                            const erc721Contract = getContractInstance(erc721ABI, projectAddress, connectorName, networkInfo.id);
+                            if (!erc721Contract) return res('');
+                            let myBoxes = await erc721Contract.methods.balanceOf(connectedAccount).call();
                             myBoxes = +myBoxes;
                             if (!myBoxes) {
                                 setLoadingAsset(false);
                                 res('');
+                                if (wrapBoxElem) {
+                                    ReactDOM.render(<div className="wrapper-not-found">
+                                        <img src="/images/icons/item-not-found.svg" alt="" />
+                                        <h4>No item found</h4>
+                                    </div>, wrapBoxElem)
+                                }
                                 return;
                             }
                             const useExternalUri = !!+p?.use_external_uri;
-                            const projectAddress = p?.token_address;
-                            const networkInfo = getNetworkInfo(p?.network);
-                            const erc721Contract = getContractInstance(erc721ABI, projectAddress, connectorName, networkInfo.id);
+
                             for (let id = 0; id < myBoxes; id++) {
-                                const idCollection = await contract.methods.tokenOfOwnerByIndex(connectedAccount, id).call();
+                                const idCollection = await erc721Contract.methods.tokenOfOwnerByIndex(connectedAccount, id).call();
                                 const collection: ObjectType<any> = {
                                     id: idCollection,
                                     creator: p.name,
@@ -128,7 +134,12 @@ const Assets = () => {
                             res('');
                         }
                     })));
-                    dispatch(setAssetsCollection({ [type]: collections }))
+                    dispatch(setAssetsCollection({
+                        [connectedAccount]: {
+                            ...(assetsAccount[connectedAccount] || {}),
+                            [type]: collections
+                        }
+                    }))
                 } else {
                     setLoadingAsset(false);
                     if (wrapBoxElem) {
@@ -140,12 +151,12 @@ const Assets = () => {
                 }
             })
         } else {
-            const collections = assetsAccount[type];
+            const collections = assetsAccount[connectedAccount][type];
             ReactDOM.render(<>
                 {collections.map((c: any) => renderBoxItem(c, Math.floor(Math.random() + 10000) + (+c.id || 1)))}
             </>, wrapBoxElem)
         }
-    }, [currentTab, appChainID, connectedAccount]);
+    }, [currentTab, connectedAccount]);
 
     return (
         <div>
@@ -166,7 +177,7 @@ const Assets = () => {
                         className={clsx(tabStyles.btnTab, {
                             active: currentTab === 0,
                         })}>
-                        {tabNames[0].name} {!!assetsAccount[tabNames[0].type]?.length && `(${assetsAccount[tabNames[0].type]?.length})`}
+                        {tabNames[0].name} {!!assetsAccount[connectedAccount as string]?.[tabNames[0].type]?.length && `(${assetsAccount[connectedAccount as string]?.[tabNames[0].type]?.length})`}
                     </Button>
                     <Button
                         onClick={() => {
@@ -177,7 +188,7 @@ const Assets = () => {
                         className={clsx(tabStyles.btnTab, {
                             active: currentTab === 1,
                         })}>
-                        {tabNames[1].name} {!!assetsAccount[tabNames[1].type]?.length && `(${assetsAccount[tabNames[1].type]?.length})`}
+                        {tabNames[1].name} {!!assetsAccount[connectedAccount as string]?.[tabNames[1].type]?.length && `(${assetsAccount[connectedAccount as string]?.[tabNames[1].type]?.length})`}
                     </Button>
                     <Button
                         onClick={() => {
@@ -188,7 +199,7 @@ const Assets = () => {
                         className={clsx(tabStyles.btnTab, {
                             active: currentTab === 2,
                         })}>
-                        {tabNames[2].name} {!!assetsAccount[tabNames[2].type]?.length && `(${assetsAccount[tabNames[2].type]?.length})`}
+                        {tabNames[2].name} {!!assetsAccount[connectedAccount as string]?.[tabNames[2].type]?.length && `(${assetsAccount[connectedAccount as string]?.[tabNames[2].type]?.length})`}
                     </Button>
                 </Box>
                 <Box>

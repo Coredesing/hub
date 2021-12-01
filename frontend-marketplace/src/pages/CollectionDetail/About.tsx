@@ -43,6 +43,7 @@ export const AboutMarketplaceNFT = ({
     checkFnIsLoading,
     lockingAction,
     setReloadOfferList,
+    validChain,
     ...props }: Props) => {
 
     const { account: connectedAccount } = useWeb3React();
@@ -175,7 +176,7 @@ export const AboutMarketplaceNFT = ({
                                     </TableCell>
                                     <TableCell width="150px" align="right" style={{ padding: '7px', paddingRight: '20px' }}>
                                         {
-                                            row.event_type === 'TokenOffered' && addressCurrencyToBuy === row.currency && (isOwnerNFTOnSale ?
+                                            row.event_type === 'TokenOffered' && validChain && addressCurrencyToBuy === row.currency && (isOwnerNFTOnSale ?
                                                 <ButtonBase color="green"
                                                     isLoading={checkFnIsLoading(props.onAcceptOffer.name)}
                                                     disabled={lockingAction.lock}

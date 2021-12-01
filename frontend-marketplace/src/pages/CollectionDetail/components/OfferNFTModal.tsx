@@ -88,7 +88,7 @@ type Props = {
     [k: string]: any,
 }
 
-const OfferNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isApproved, currencySymbol, addressCurrencyToBuy, reloadedBalance, setReloadBalance, ...props }: Props) => {
+const OfferNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isApproved, currencySymbol, addressCurrencyToBuy, reloadedBalance, setReloadBalance, validChain, ...props }: Props) => {
     const styles = useStyles();
     const [inputPrice, setInputPrice] = useState(0);
     const { connectedAccount } = useAuth();
@@ -124,7 +124,7 @@ const OfferNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isAppro
     }
 
     useEffect(() => {
-        if (!addressCurrencyToBuy || !connectedAccount) {
+        if (!addressCurrencyToBuy || !connectedAccount || !validChain) {
             setAddressBalance('0');
             return;
         }

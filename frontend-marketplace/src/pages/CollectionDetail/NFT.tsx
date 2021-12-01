@@ -38,7 +38,6 @@ import useContract from "@hooks/useContract";
 import useContractSigner from "@hooks/useContractSigner";
 
 const MARKETPLACE_SMART_CONTRACT = process.env.REACT_APP_MARKETPLACE_SMART_CONTRACT as string;
-console.log('MARKETPLACE_SMART_CONTRACT', MARKETPLACE_SMART_CONTRACT)
 
 const MysteryBox = ({ id, projectAddress, ...props }: any) => {
     const styles = useStyles();
@@ -178,7 +177,7 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
     const checkFnIsLoading = (fnName: string): boolean => {
         return lockingAction.action === fnName && lockingAction.lock;
     }
-    const [reloadOfferList, setReloadOfferList] = useState(1);
+    const [reloadOfferList, setReloadOfferList] = useState(true);
     const [reloadedBalance, setReloadBalance] = useState(false);
     const handleTx = async (tx: any, action?: string) => {
         dispatch(alertWarning("Request is processing!"));
@@ -206,11 +205,11 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
             getAddresssOwnerNFT();
         }
         if (action === onOfferNFT.name) {
-            setReloadOfferList(c => c + 1);
+            setReloadOfferList(true);
             setReloadBalance(true);
         }
         if (action === onRejectOffer.name) {
-            setReloadOfferList(c => c + 1);
+            setReloadOfferList(true);
         }
         if (action === onApproveToMarketplace.name) {
             checkApproveMarketplace();
@@ -573,6 +572,7 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                                             checkFnIsLoading={checkFnIsLoading}
                                             lockingAction={lockingAction}
                                             reloadOfferList={reloadOfferList}
+                                            setReloadOfferList={setReloadOfferList}
                                             getSymbolCurrency={getSymbolCurrency}
                                             addressCurrencyToBuy={addressCurrencyToBuy}
                                         />

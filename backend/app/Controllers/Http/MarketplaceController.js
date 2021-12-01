@@ -29,8 +29,14 @@ class MarketplaceController {
   // TODO:
   async discover({ request }) {
     try {
+      const inputParams = request.all();
 
-      return HelperUtils.responseSuccess('','Update successfully');
+      try {
+        let data = await (new MarketplaceService).getListings(inputParams);
+        return HelperUtils.responseSuccess(data);
+      } catch (e) {
+        return HelperUtils.responseErrorInternal();
+      }
     } catch (e) {
       return HelperUtils.responseErrorInternal();
     }

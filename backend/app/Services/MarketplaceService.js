@@ -151,6 +151,14 @@ class MarketplaceService {
     return data
   }
 
+  async getListings(address, filterParams) {
+    filterParams = this.formatPaginate(filterParams)
+    filterParams.event_type = 'TokenListed'
+    filterParams.finish = false
+    const data = await this.buildQueryNFTEventsBuilder(filterParams).fetch()
+    return data
+  }
+
   // TODO: cached
   async getEvents(filterParams) {
     // if (await RedisMarketplaceUtils.existRedisMarketplaceTopCollections()) {

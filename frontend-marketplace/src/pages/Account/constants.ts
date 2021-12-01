@@ -24,11 +24,11 @@ export const MenuLeft: IMenuLeft = {
         name: 'Offers',
         icon: '/images/icons/start.svg',
     },
-    favorites: {
-        key: 'favorites',
-        name: 'Favorites',
-        icon: '/images/icons/heart.svg',
-    },
+    // favorites: {
+    //     key: 'favorites',
+    //     name: 'Favorites',
+    //     icon: '/images/icons/heart.svg',
+    // },
 }
 
 export const listStatuses = [

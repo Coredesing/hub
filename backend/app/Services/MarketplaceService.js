@@ -151,6 +151,16 @@ class MarketplaceService {
     return data
   }
 
+  async getListings(address, filterParams) {
+    filterParams = this.formatPaginate(filterParams)
+    filterParams.event_type = 'TokenListed'
+    filterParams.finish = false
+    const data = await this.buildQueryNFTEventsBuilder(filterParams)
+      .orderBy('dispatch_at', 'DESC')
+      .paginate(filterParams.page, filterParams.limit);
+    return data
+  }
+
   // TODO: cached
   async getEvents(filterParams) {
     // if (await RedisMarketplaceUtils.existRedisMarketplaceTopCollections()) {
@@ -208,6 +218,17 @@ class MarketplaceService {
     return data
   }
 
+  async getActivities(address, filterParams) {
+    // TODO: filter whitelist address
+    filterParams = this.formatPaginate(filterParams)
+
+    let data = await this.buildQueryNFTEventsBuilder(filterParams)
+      .orderBy('dispatch_at', 'DESC')
+      .paginate(filterParams.page, filterParams.limit);
+
+    return data
+  }
+
   async getHotOffers(filterParams) {
     filterParams = this.formatPaginate(filterParams)
     filterParams.event_type = 'TokenOffered'
@@ -222,6 +243,10 @@ class MarketplaceService {
   }
 
   formatPaginate(filterParams) {
+    if (!filterParams) {
+      filterParams = {}
+    }
+
     if (!filterParams.limit || isNaN(filterParams.limit) || filterParams.limit < 1) {
       filterParams.limit = 10
     }

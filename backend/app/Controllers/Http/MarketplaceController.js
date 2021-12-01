@@ -29,8 +29,9 @@ class MarketplaceController {
   // TODO:
   async discover({ request }) {
     try {
-
-      return HelperUtils.responseSuccess('','Update successfully');
+      const inputParams = request.all();
+      let data = await (new MarketplaceService).getListings(inputParams);
+      return HelperUtils.responseSuccess(data);
     } catch (e) {
       return HelperUtils.responseErrorInternal();
     }
@@ -83,6 +84,20 @@ class MarketplaceController {
       const inputParams = request.all();
 
       let data = await (new MarketplaceService).getCollectionActivities(address, inputParams);
+      if (!data) {
+        return HelperUtils.responseNotFound()
+      }
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
+  async getActivities({ request, auth, params }) {
+    try {
+      const inputParams = request.all();
+
+      let data = await (new MarketplaceService).getActivities(inputParams);
       if (!data) {
         return HelperUtils.responseNotFound()
       }

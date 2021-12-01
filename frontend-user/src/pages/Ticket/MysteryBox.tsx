@@ -263,8 +263,6 @@ const MysteryBox = ({ id, ...props }: any) => {
         setOpenModalTx(false);
     }, [setOpenModalTx]);
 
-
-
     const ascAmount = () => {
         if (!isKYC) return;
         const ticketCanBuy = getMaxTicketBuy(
@@ -408,7 +406,8 @@ const MysteryBox = ({ id, ...props }: any) => {
                     }
                 })))
                     .then((arr) => {
-                        setSelectBoxType(arr[0] as { [k: string]: any })
+                        const boxNotSoldout = arr.find((b: any) => b.totalSold !== b.maxSupply);
+                        setSelectBoxType((boxNotSoldout || arr[0]) as { [k: string]: any })
                         setSubBoxes(arr as any[])
                     }).catch((err) => {
                         console.log('err', err)
@@ -618,6 +617,12 @@ const MysteryBox = ({ id, ...props }: any) => {
             claimBox(numBoxBuy, captcha, eventId);
         }
     }, [numBoxBuy, boxTypeSelected]);
+
+    useEffect(() => {
+        if(getMaxTicketBuy(myBoxThisPool, maxBoxCanBuy)) {
+            setNumBoxBuy(1);
+        }
+    }, [myBoxThisPool, maxBoxCanBuy])
 
     const renderMsg = () => {
         if (

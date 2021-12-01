@@ -304,9 +304,9 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
         }
     }
     useEffect(() => {
-        if (!library || !connectedAccount || !erc721ContractWithSigner) return;
+        if (!library || !connectedAccount || !erc721ContractWithSigner || !allowNetwork.ok) return;
         checkApproveMarketplace();
-    }, [projectAddress, library, connectedAccount, erc721ContractWithSigner]);
+    }, [projectAddress, library, connectedAccount, erc721ContractWithSigner, allowNetwork]);
 
     const isOwnerNFT = connectedAccount && connectedAccount === addressOwnerNFT;
     const isOwnerNFTOnSale = connectedAccount && addressOwnerOnSale === connectedAccount;
@@ -352,14 +352,14 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
 
 
     useEffect(() => {
-        if (isOwnerNFT || isOwnerNFTOnSale) return;
+        if (isOwnerNFT || isOwnerNFTOnSale || !allowNetwork.ok) return;
         if (!addressCurrencyToBuy || !connectedAccount || !infoNFT?.project?.token_address) return;
         if (addressCurrencyToBuy && !new BigNumber(addressCurrencyToBuy).isZero() && connectedAccount) {
             checkApproveToken();
         } else {
             setApprovedToken({ loading: false, ok: true });
         }
-    }, [addressCurrencyToBuy, connectedAccount, infoNFT?.project?.token_address, isOwnerNFT, isOwnerNFTOnSale]);
+    }, [addressCurrencyToBuy, connectedAccount, infoNFT?.project?.token_address, isOwnerNFT, isOwnerNFTOnSale, allowNetwork]);
 
     return (
         <>
@@ -380,6 +380,7 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                     addressCurrencyToBuy={addressCurrencyToBuy}
                     reloadedBalance={reloadedBalance}
                     setReloadBalance={setReloadBalance}
+                    validChain={allowNetwork.ok}
                 />
                 <ListingNFTModal
                     open={openListingModal}
@@ -393,6 +394,7 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                     tokenSelected={tokenSelected}
                     addressCurrencyToBuy={addressCurrencyToBuy}
                     currencySymbol={currencySymbol}
+                    validChain={allowNetwork.ok}
                 />
                 {
                     infoNFT.loading ? <Backdrop open={infoNFT.loading} style={{ color: '#fff', zIndex: 1000, }}>
@@ -575,6 +577,7 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                                             setReloadOfferList={setReloadOfferList}
                                             getSymbolCurrency={getSymbolCurrency}
                                             addressCurrencyToBuy={addressCurrencyToBuy}
+                                            validChain={allowNetwork.ok}
                                         />
                                     </div>
                                 </div>

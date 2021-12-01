@@ -153,6 +153,7 @@ const ListingNFTModal = ({ open,
     tokenSelected = {},
     addressCurrencyToBuy,
     currencySymbol,
+    validChain,
     ...props }: Props) => {
     const styles = useStyles();
     const [inputPrice, setInputPrice] = useState(0);
@@ -174,7 +175,7 @@ const ListingNFTModal = ({ open,
     const [addressBalance, setAddressBalance] = useState('0');
     const { contract: erc20Contract } = useContractSigner(erc20ABI, tokenSelected?.address, connectedAccount as string);
     useEffect(() => {
-        if (!tokenSelected?.address || !connectedAccount) {
+        if (!tokenSelected?.address || !connectedAccount || !validChain) {
             setAddressBalance('0');
             return;
         }

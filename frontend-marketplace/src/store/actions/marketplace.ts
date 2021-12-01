@@ -173,7 +173,7 @@ export const setItemsCollection = (filter: InputFilter) => {
                 dispatch({ type: itemsCollectionActions.SUCCESS, payload: oldData });
                 return;
             }
-            const response = await axios.get(`/marketplace/collection/${"0x7D7A2adbb19d7A85742ce8A44cd7104076ab7E08"}/items?page=${filter?.page || 1}&limit=${perPage}`);
+            const response = await axios.get(`/marketplace/discover?page=${filter?.page || 1}&limit=${perPage}`);
             const result = response.data.data || null;
             if (!result) {
                 dispatch({ type: itemsCollectionActions.SUCCESS, payload: oldData });
@@ -218,7 +218,7 @@ export const setActivitiesCollection = (filter: InputFilter) => {
                 return;
             }
             // update here
-            const response = await axios.get(`/marketplace/collection/${"0x7D7A2adbb19d7A85742ce8A44cd7104076ab7E08"}/activities?page=${filter?.page || 1}&limit=${perPage}`);
+            const response = await axios.get(`/marketplace/activities?page=${filter?.page || 1}&limit=${perPage}`);
             const result = response.data.data || null;
             if (!result) {
                 dispatch({ type: activitiesCollectionActions.SUCCESS, payload: oldData });

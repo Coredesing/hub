@@ -311,6 +311,14 @@ body::-webkit-scrollbar-thumb,
     margin-bottom: 6px;
 }
 
+.mb-8px {
+    margin-bottom: 8px;
+}
+
 .firs-neue-font {
     font-family: 'Firs Neue';
+}
+
+.h-full {
+    height: 100%;
 }

@@ -27,10 +27,12 @@ class FetchMarketplaceEvents extends Task {
 
   async handle () {
     if (this.isRunning) {
-      console.log('stop FetchMarketplaceEvents')
       return
     }
     this.isRunning = true
+    if (!MARKETPLACE_START_BLOCK_NUMBER) {
+      return
+    }
 
     try {
       let current_block = MARKETPLACE_START_BLOCK_NUMBER

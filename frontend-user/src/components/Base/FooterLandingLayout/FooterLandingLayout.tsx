@@ -50,7 +50,7 @@ const FooterLandingLayout = () => {
             <h4>TOKEN</h4>
             <ul className="link">
               <li><Link href="https://docsend.com/view/wg9czts7ugkvrp99" target="_blank">Token Metrics</Link></li>
-              <li><Link href="https://docsend.com/view/wg9czts7ugkvrp99" target="_blank">Token Utilities</Link></li>
+              <li><Link href="https://docsend.com/view/uhfgt9kc6x53vb7d" target="_blank">Token Utilities</Link></li>
             </ul>
           </div>
           <div className={styles.navLinks}>

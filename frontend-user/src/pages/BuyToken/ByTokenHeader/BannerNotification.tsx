@@ -173,13 +173,12 @@ function BannerNotification(props: any) {
           <span>
             You haven't achieved min tier (
             {TIERS[poolDetails?.minTier]?.name || ''}
-            ) to apply for Whitelist yet. To upgrade your Tier, please click&nbsp;
+            ) to apply for Whitelist yet. To upgrade your Rank, please click&nbsp;
             <Link
               to="/staking-pools"
               style={{ color: 'white', textDecoration: 'underline', fontWeight: 600 }}
-            > here </Link>
+            >here</Link>
           </span>
-          {' '}.
         </WrapperAlert>
       }
 

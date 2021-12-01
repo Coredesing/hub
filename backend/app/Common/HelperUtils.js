@@ -946,6 +946,16 @@ const checkIsInPreOrderTime = (poolDetails, currentUserTierLevel) => {
   return false;
 };
 
+const getTokenURI = async ({ address, id, network = Const.NETWORK_AVAILABLE.BSC }) => {
+  try {
+    const contractToken = new networkToWeb3[network].eth.Contract(ERC721_ABI, address);
+    return await contractToken.methods.tokenURI(id).call()
+  }
+  catch (e) {
+    return ''
+  }
+}
+
 module.exports = {
   randomString,
   doMask,
@@ -986,4 +996,5 @@ module.exports = {
   getLegendIdByOwner,
 
   getMarketplaceInstance,
+  getTokenURI,
 };

@@ -98,6 +98,16 @@ class HomeController {
   }
   // headers: cf-connecting-ip
   // headers: x-forwarded-for
+
+  async getNFTBox({ request, auth, params }) {
+    const image = 'https://gamefi-public.s3.amazonaws.com/box.png'
+    return {
+      image: image,
+      external_url: image,
+      description: 'GameFi Box',
+      name: 'GameFi-Box',
+    };
+  }
 }
 
 module.exports = HomeController

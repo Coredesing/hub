@@ -17,10 +17,14 @@ import {
     getTokenomic,
     updateAggregator
 } from "../../../store/actions/aggregator";
+import {useCommonStyle} from '../../../styles';
+import ButtonLink from '../../../components/Base/ButtonLink';
+import {adminRoute} from "../../../utils";
 
 // @ts-ignore
 const AggregatorCreate: React.FC<any> = (props: any) => {
     const classes = useStyles();
+    const commonStyle = useCommonStyle();
     const [ isReady, setIsReady] = useState(true);
     const dispatch = useDispatch();
     const { match } = props;
@@ -90,6 +94,13 @@ const AggregatorCreate: React.FC<any> = (props: any) => {
     }
     return (
         <DefaultLayout>
+            <div className={commonStyle.headPage}>
+            <div className={commonStyle.headPageLeft}>
+                <ButtonLink to={adminRoute('/aggregator')} text="Back" icon="icon-arrow-left.svg">
+                <img className="icon-back" src="/images/icon-arrow-left.svg" alt=""/>Back
+                </ButtonLink>
+            </div>
+            </div>
             <div className={classes.infoBox}>
             <nav className={classes.tabsHeader}>
                 <TabSelector

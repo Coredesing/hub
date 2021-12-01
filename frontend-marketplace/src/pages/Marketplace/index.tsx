@@ -214,6 +214,7 @@ const Marketplace = () => {
                                 </div>
                                 <div className={clsx(styles.hostCollections, "custom-scroll")}>
                                     <Swiper
+                                        
                                         navigation={true}
                                         spaceBetween={20}
                                         slidesPerView={"auto"}
@@ -222,7 +223,7 @@ const Marketplace = () => {
                                     >
                                         {
                                             (listCollection?.currentList || []).map((p: ObjectType<any>, id: number) =>
-                                                <SwiperSlide key={"hostcollections" + id} className={styles.swipeCard} style={{ width: '295px' }}>
+                                                <SwiperSlide key={"hostcollections" + id} className={styles.swipeCard}>
                                                     <Link to={`/collection/${p.token_address}`}>
                                                         <CollectionCard item={p} />
                                                     </Link>

@@ -10,7 +10,12 @@ const Content: React.FC<any> = (props: any) => {
 
   return (
     <div className={styles.mainLayout}>
-      {props.children}
+      <div className="page-content">
+        {props.children}
+      </div>
+      <div className="rectangle">
+        <img src="/images/rectangle.png" alt="" />
+      </div>
     </div>
   );
 };

@@ -30,13 +30,8 @@ class MarketplaceController {
   async discover({ request }) {
     try {
       const inputParams = request.all();
-
-      try {
-        let data = await (new MarketplaceService).getListings(inputParams);
-        return HelperUtils.responseSuccess(data);
-      } catch (e) {
-        return HelperUtils.responseErrorInternal();
-      }
+      let data = await (new MarketplaceService).getListings(inputParams);
+      return HelperUtils.responseSuccess(data);
     } catch (e) {
       return HelperUtils.responseErrorInternal();
     }

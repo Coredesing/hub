@@ -241,6 +241,10 @@ class MarketplaceService {
   }
 
   formatPaginate(filterParams) {
+    if (!filterParams) {
+      filterParams = {}
+    }
+
     if (!filterParams.limit || isNaN(filterParams.limit) || filterParams.limit < 1) {
       filterParams.limit = 10
     }

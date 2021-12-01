@@ -136,6 +136,16 @@ class MarketplaceService {
   async getMyOffers(address, filterParams) {
     filterParams = this.formatPaginate(filterParams)
     filterParams.buyer = address
+    filterParams.event_type = 'TokenOffered'
+    filterParams.finish = false
+    const data = await this.buildQueryNFTEventsBuilder(filterParams).fetch()
+    return data
+  }
+
+  async getMyListings(address, filterParams) {
+    filterParams = this.formatPaginate(filterParams)
+    filterParams.seller = address
+    filterParams.event_type = 'TokenListed'
     filterParams.finish = false
     const data = await this.buildQueryNFTEventsBuilder(filterParams).fetch()
     return data

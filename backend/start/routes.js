@@ -136,6 +136,7 @@ Route.group(() => {
   Route.post('marketplace/collection/:address/:id', 'MarketplaceController.getNFTInfo');
   Route.get('marketplace/offers/:address/:id', 'MarketplaceController.getOffersOfNFT');
   Route.get('marketplace/offers/:address', 'MarketplaceController.getMyOffers');
+  Route.get('marketplace/listings/:address', 'MarketplaceController.getMyListings');
 
   Route.get('/boxes:id([0-9]+)', 'HomeController.getNFTBox');
   Route.get('/boxes/:id([0-9]+)', 'HomeController.getNFTBox');

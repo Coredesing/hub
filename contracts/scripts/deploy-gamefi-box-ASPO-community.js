@@ -14,7 +14,7 @@ async function main() {
   // await hre.run('compile');
   const zeroAddress = "0x0000000000000000000000000000000000000000" // testnet-mumbai
 
-  // We get the contract to deploy
+  // We get the contract to deploy: 0xF6805968E6412C3C514912815FE2f32336828399
   // pool 68 for community: 0x0866703DF4c264281B4ff89999cA9A708F851C6b
   // pool 61 for private: 0x84aF440fFa51b3DAcD065FD772F6d682D28C0A6d
   const signer = '0x0866703DF4c264281B4ff89999cA9A708F851C6b'
@@ -35,7 +35,7 @@ async function main() {
       4499, // max supply
       1638342000, // start
       1638455400, // end
-      20, // limit
+      10, // limit
       zeroAddress, // nft
       0, // start nft
       true // sub event

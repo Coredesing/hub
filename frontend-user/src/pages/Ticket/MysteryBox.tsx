@@ -268,7 +268,7 @@ const MysteryBox = ({ id, ...props }: any) => {
     const ascAmount = () => {
         if (!isKYC) return;
         const ticketCanBuy = getMaxTicketBuy(
-            ownedBox,
+            myBoxThisPool,
             maxBoxCanBuy
         );
         if (numBoxBuy >= ticketCanBuy) {
@@ -285,14 +285,14 @@ const MysteryBox = ({ id, ...props }: any) => {
 
     const ascMaxAmount = () => {
         if (!isKYC) return;
-        const maxTicket = getMaxTicketBuy(ownedBox, maxBoxCanBuy);
+        const maxTicket = getMaxTicketBuy(myBoxThisPool, maxBoxCanBuy);
         if (maxTicket === 0) return;
         setNumBoxBuy(maxTicket);
     };
 
     const descMinAmount = () => {
         if (!isKYC) return;
-        const maxTicket = getMaxTicketBuy(ownedBox, maxBoxCanBuy);
+        const maxTicket = getMaxTicketBuy(myBoxThisPool, maxBoxCanBuy);
         if (maxTicket === 0) return;
         setNumBoxBuy(1);
     };
@@ -329,10 +329,10 @@ const MysteryBox = ({ id, ...props }: any) => {
             setOwnedBox(0);
             return;
         }
-        // if(!contractPreSale) return;
+
         const getMyNumBox = async () => {
             try {
-                // const myBox = await contractPreSale.methods.userBought(eventId, connectedAccount).call();
+
                 const myNumBox = await getBalance(
                     connectedAccount,
                     dataTicket.token,
@@ -347,6 +347,24 @@ const MysteryBox = ({ id, ...props }: any) => {
         };
         !isClaim && recallMybox && dataTicket?.token && getMyNumBox();
     }, [connectedAccount, dataTicket, recallMybox, isClaim]);
+
+    const [myBoxThisPool, setMyBoxThisPool] = useState(0);
+    useEffect(() => {
+        if (!contractPreSale || !connectedAccount) {
+            setMyBoxThisPool(0);
+            return;
+        }
+        const getMyBoxThisPool = async () => {
+            try {
+                const myBox = await contractPreSale.methods.userBought(eventId, connectedAccount).call();
+                setMyBoxThisPool(+myBox);
+            } catch (error) {
+                console.log('er', error);
+            }
+
+        }
+        getMyBoxThisPool();
+    }, [contractPreSale]);
 
     const [lockWhenBuyBox, setLockWhenBuyBox] = useState(false);
     const [subBoxes, setSubBoxes] = useState<{ [k: string]: any }[]>([]);
@@ -944,15 +962,15 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                         ascAmount={ascAmount}
                                                         ascMaxAmount={ascMaxAmount}
                                                         value={numBoxBuy}
-                                                        disabledMin={!getMaxTicketBuy(ownedBox, maxBoxCanBuy) || numBoxBuy === 1}
-                                                        disabledSub={!getMaxTicketBuy(ownedBox, maxBoxCanBuy) || numBoxBuy === 0}
-                                                        disabledAdd={!getMaxTicketBuy(ownedBox, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(ownedBox, maxBoxCanBuy)}
-                                                        disabledMax={!getMaxTicketBuy(ownedBox, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(ownedBox, maxBoxCanBuy)}
+                                                        disabledMin={!getMaxTicketBuy(myBoxThisPool, maxBoxCanBuy) || numBoxBuy === 1}
+                                                        disabledSub={!getMaxTicketBuy(myBoxThisPool, maxBoxCanBuy) || numBoxBuy === 0}
+                                                        disabledAdd={!getMaxTicketBuy(myBoxThisPool, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(myBoxThisPool, maxBoxCanBuy)}
+                                                        disabledMax={!getMaxTicketBuy(myBoxThisPool, maxBoxCanBuy) || numBoxBuy === getMaxTicketBuy(myBoxThisPool, maxBoxCanBuy)}
                                                     />
                                                     <div className="bought" >
                                                         <h4 className="text-uppercase">BOUGHT/MAX</h4>
                                                         <span className={styles.textBold}>
-                                                            {ownedBox}/{maxBoxCanBuy || 0}
+                                                            {myBoxThisPool}/{maxBoxCanBuy || 0}
                                                         </span>
                                                     </div>
                                                 </div>

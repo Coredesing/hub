@@ -610,31 +610,41 @@ export const AboutMysteryBox = ({
         <ModalBoxCollection open={openModalBoxCollection} current={currentBox} boxesContent={collections || []} onClose={onCloseModalBox} />
         <TransactionSubmitModal opened={isShowModalTx} handleClose={onCloseModalTx} transactionHash={txHash} />
         {
-          !!collections.length && timeClaim &&
+          timeClaim &&
           <Box className="wrapperHeader" >
-            <div className={classes.wrapperCountdownCollection} style={!POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(info.id) ? { gridTemplateColumns: '1fr 1fr' } : { gridTemplateColumns: '1fr' }}>
+            <div
+              className={classes.wrapperCountdownCollection}
+              style={!POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(info.id) && !!collections.length ? { gridTemplateColumns: '1fr 1fr' } : { gridTemplateColumns: '1fr' }}>
               {
-                (timeClaim > timeNow) ?
-                  <CountDownTimeV1 time={{ date1: timeClaim, date2: timeNow }} onFinish={onFinishCountdown} className="countdown" />
-                  : <div className="title"><h3>You can claim now</h3></div>
+                !!collections.length &&
+                <Box display="grid" alignItems="center" className="h-full" bgcolor="#000">
+                  {
+                    (timeClaim > timeNow) ?
+                      <CountDownTimeV1 time={{ date1: timeClaim, date2: timeNow }} onFinish={onFinishCountdown} className="countdown" />
+                      : <div className="title"><h3>You can claim now</h3></div>
+                  }
+                </Box>
               }
-              {
-                !POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(info.id) &&
-                (isClaimedOnGF ?
-                  <ButtonBase color="green" onClick={onClaimBox} disabled={!isClaimed}>Claim on GameFi</ButtonBase> :
-                  claimUrl ? <ButtonBase color="blue" onClick={() => window.open(claimUrl)}>Claim on External</ButtonBase> : null)
-              }
+              <Box>
+                {
+                  !!collections.length &&
+                  (!POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(info.id) && (isClaimedOnGF ?
+                    <ButtonBase color="green" onClick={onClaimBox} disabled={!isClaimed} className="w-full font-14px firs-neue-font mb-8px">Claim on GameFi</ButtonBase> :
+                    claimUrl ? <ButtonBase color="blue" onClick={() => window.open(claimUrl)} className="w-full font-14px firs-neue-font mb-8px">Claim on External</ButtonBase> : null))
+                }
+                {
+                  (timeClaim < timeNow) && isClaimedOnGF && claimUrl &&
+                  <ButtonBase
+                    onClick={() => {
+                      window.open(claimUrl)
+                    }}
+                    color="green"
+                    className="font-14px firs-neue-font w-full">View your NFT</ButtonBase>}
+              </Box>
             </div>
           </Box>
         }
-        {
-          timeClaim && (timeClaim < timeNow) && isClaimedOnGF && claimUrl &&
-          <Box>
-            <ButtonBase onClick={() => {
-              window.open(claimUrl)
-            }} color="green" className="font-14px firs-neue-font w-full">View your NFT</ButtonBase>
-          </Box>
-        }
+
         <Box className={classes.wrapperBox} marginTop="20px">
           {
             loadingCollection ? <HashLoader loading={true} color={'#72F34B'} /> : collections.map((b: any, id: number) =>

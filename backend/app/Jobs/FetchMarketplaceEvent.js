@@ -44,7 +44,7 @@ class FetchMarketplaceEvent {
   }
 
   // This is where the work is done.
-  async handle({ event_type, from, to }) {
+  async handle({ event_type, from, to, notCached }) {
     try {
       if (!isNaN(from)) {
         from = parseInt(from)
@@ -71,6 +71,10 @@ class FetchMarketplaceEvent {
         }
 
         await this.fetchEvents(provider, event_type, index, tmp)
+      }
+
+      if (notCached) {
+        return
       }
 
       await RedisMarketplaceUtils.setRedisMarketplaceBlockNumber({current: to})
@@ -191,6 +195,7 @@ class FetchMarketplaceEvent {
               .where('token_address', data.token_address)
               .where('seller', data.seller)
               .where('event_type', EVENT_TYPE_LISTED)
+              .where('token_id', data.token_id)
               .where('finish', 0)
               .where('dispatch_at', '<', data.dispatch_at)
               .update({finish: 1})
@@ -200,6 +205,7 @@ class FetchMarketplaceEvent {
               .where('token_address', data.token_address)
               .where('buyer', data.buyer)
               .where('event_type', EVENT_TYPE_OFFERED)
+              .where('token_id', data.token_id)
               .where('finish', 0)
               .where('dispatch_at', '<', data.dispatch_at)
               .update({finish: 1})
@@ -209,6 +215,27 @@ class FetchMarketplaceEvent {
               .where('token_address', data.token_address)
               .where('seller', data.seller)
               .where('event_type', EVENT_TYPE_LISTED)
+              .where('token_id', data.token_id)
+              .where('finish', 0)
+              .where('dispatch_at', '<', data.dispatch_at)
+              .update({finish: 1})
+            break
+          case EVENT_TYPE_OFFERED:
+            await MarketplaceEventModel.query()
+              .where('token_address', data.token_address)
+              .where('buyer', data.buyer)
+              .where('event_type', EVENT_TYPE_OFFERED)
+              .where('token_id', data.token_id)
+              .where('finish', 0)
+              .where('dispatch_at', '<', data.dispatch_at)
+              .update({finish: 1})
+            break
+          case EVENT_TYPE_LISTED:
+            await MarketplaceEventModel.query()
+              .where('token_address', data.token_address)
+              .where('seller', data.seller)
+              .where('event_type', EVENT_TYPE_LISTED)
+              .where('token_id', data.token_id)
               .where('finish', 0)
               .where('dispatch_at', '<', data.dispatch_at)
               .update({finish: 1})

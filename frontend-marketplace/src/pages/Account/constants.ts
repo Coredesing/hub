@@ -19,7 +19,7 @@ export const MenuLeft: IMenuLeft = {
         name: 'Listings',
         icon: '/images/icons/volume-level.svg',
     },
-    auctions: {
+    offers: {
         key: 'offers',
         name: 'Offers',
         icon: '/images/icons/start.svg',

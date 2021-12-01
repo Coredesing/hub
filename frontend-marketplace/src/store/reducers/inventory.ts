@@ -1,4 +1,4 @@
-import { assetsAccountActions } from '../constants/asset-account';
+import { assetsAccountActions } from '../constants/inventory';
 import { AnyAction } from 'redux';
 
 type StateType = {
@@ -16,14 +16,14 @@ const initialState = {
 export const assetsAccountReducer = (state: StateType = initialState, action: AnyAction) => {
   switch (action.type) {
 
-    case assetsAccountActions.ASSETS_ACCOUNT_LOADING: {
+    case assetsAccountActions.LOADING: {
       return {
         ...state,
         loading: true
       }
     } 
 
-    case assetsAccountActions.ASSETS_ACCOUNT_SUCCESS: {
+    case assetsAccountActions.SUCCESS: {
       return {
         ...state,
         data: action.payload,
@@ -31,7 +31,7 @@ export const assetsAccountReducer = (state: StateType = initialState, action: An
       }
     }
 
-    case assetsAccountActions.ASSETS_ACCOUNT_FAILURE: {
+    case assetsAccountActions.FAILURE: {
       return {
         ...state,
         error: action.payload,

@@ -8,6 +8,7 @@ import { getSymbolCurrency } from '@utils/getAccountBalance';
 import { ObjectType } from '@app-types';
 import { setCurrencyTokenAddress } from './currency';
 import { setTokenInfor } from './tokenInfor';
+import { getNetworkInfo } from '@utils/network';
 
 type InputItemProjectCollection = {
     projectAddress: string;
@@ -42,16 +43,16 @@ export const setProjectInfor = (projectAddress: string, projectInfor?: any) => {
 const getInfoListData = async (listData: any[], projectAddress: string, useExternalUri: boolean, getState: () => any, projectInfor?: any, dispatch?: Function) => {
     try {
         const state = getState();
-        const appNetwork = state.appNetwork?.data;
         const connectorName = state.connector?.data;
-        const erc721Contract = getContractInstance(erc721ABI, projectAddress, connectorName, appNetwork?.appChainID);
         const listItems: ObjectType<any>[] = [];
         for (let i = 0, length = listData.length; i < length; i++) {
             const item = listData[i];
+            const networkInfo = getNetworkInfo(item.network);
+            const erc721Contract = getContractInstance(erc721ABI, projectAddress, connectorName, networkInfo.id);
             item.project = projectInfor;
             item.currencySymbol = (getState().currencies?.data || {})?.[item.currency];
             if (!item.currencySymbol) {
-                item.currencySymbol = await getSymbolCurrency(item.currency, { appChainId: appNetwork?.appChainID, connectorName });
+                item.currencySymbol = await getSymbolCurrency(item.currency, { appChainId: networkInfo.id, connectorName });
                 setCurrencyTokenAddress(item.currency, item.currencySymbol);
             }
             item.value = !isNaN(+item.value) ? +item.value : '';

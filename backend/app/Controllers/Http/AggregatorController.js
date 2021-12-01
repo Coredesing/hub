@@ -288,9 +288,9 @@ class AggregatorController {
       const ido_type = params?.ido_type
       const price = params?.price
 
-      if (await RedisAggregatorUtils.checkExistRedisAggregators({ page, display_area, ido_type })) {
-        const cachedList = await RedisAggregatorUtils.getRedisAggregators(page)
-        return JSON.parse(cachedList)
+      if (await RedisAggregatorUtils.checkExistRedisAggregators({ page, display_area, ido_type, category })) {
+        const cachedList = await RedisAggregatorUtils.getRedisAggregators({ page, display_area, ido_type, category })
+        return HelperUtils.responseSuccess(JSON.parse(cachedList))
       }
 
       let builder = GameInformation.query()
@@ -316,7 +316,7 @@ class AggregatorController {
 
       // cache data
       if (page <= 2) {
-        await RedisAggregatorUtils.setRedisAggregators({ page, display_area, ido_type }, list)
+        await RedisAggregatorUtils.setRedisAggregators({ page, display_area, ido_type, category }, list)
       }
       return HelperUtils.responseSuccess(list);
     }catch (e) {

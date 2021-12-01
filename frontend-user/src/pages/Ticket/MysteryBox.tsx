@@ -163,7 +163,6 @@ const MysteryBox = ({ id, ...props }: any) => {
     const [timelines, setTimelines] = useState<TimelineType | {}>({});
     const { checkingKyc, isKYC } = useKyc(connectedAccount, (_.isNumber(infoTicket?.kyc_bypass) && !infoTicket?.kyc_bypass));
     const [timelinePool, setTimelinePool] = useState<ObjectType<any>>({});
-
     const onSetCountdown = useCallback(() => {
         if (dataTicket) {
             const isAccIsBuyPreOrder = userTier >= dataTicket.pre_order_min_tier;
@@ -264,27 +263,7 @@ const MysteryBox = ({ id, ...props }: any) => {
         setOpenModalTx(false);
     }, [setOpenModalTx]);
 
-    useEffect(() => {
-        if (!connectedAccount) {
-            setOwnedBox(0);
-            return;
-        }
-        const getMyNumBox = async () => {
-            try {
-                const myNumBox = await getBalance(
-                    connectedAccount,
-                    dataTicket.token,
-                    dataTicket.network_available,
-                    dataTicket.accept_currency
-                );
-                setOwnedBox(+myNumBox);
-                setRecallMyBox(false);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        !isClaim && recallMybox && dataTicket?.token && getMyNumBox();
-    }, [connectedAccount, dataTicket, recallMybox, isClaim]);
+
 
     const ascAmount = () => {
         if (!isKYC) return;
@@ -345,6 +324,30 @@ const MysteryBox = ({ id, ...props }: any) => {
         }
     }, [infoTicket])
 
+    useEffect(() => {
+        if (!connectedAccount) {
+            setOwnedBox(0);
+            return;
+        }
+        // if(!contractPreSale) return;
+        const getMyNumBox = async () => {
+            try {
+                // const myBox = await contractPreSale.methods.userBought(eventId, connectedAccount).call();
+                const myNumBox = await getBalance(
+                    connectedAccount,
+                    dataTicket.token,
+                    dataTicket.network_available,
+                    dataTicket.accept_currency
+                );
+                setOwnedBox(+myNumBox || 0);
+                setRecallMyBox(false);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        !isClaim && recallMybox && dataTicket?.token && getMyNumBox();
+    }, [connectedAccount, dataTicket, recallMybox, isClaim]);
+
     const [lockWhenBuyBox, setLockWhenBuyBox] = useState(false);
     const [subBoxes, setSubBoxes] = useState<{ [k: string]: any }[]>([]);
     const [totalBoxesBought, setTotalBoxesBought] = useState(0);
@@ -359,6 +362,7 @@ const MysteryBox = ({ id, ...props }: any) => {
         }
         return infoTicket.total_sold_coin;
     }
+
     useEffect(() => {
         if (infoTicket?.campaign_hash && renewTotalBoxesBought && contractPreSale) {
             contractPreSale.methods.saleEvents(eventId).call().then((res: any) => {
@@ -615,7 +619,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                 Congratulations! You have successfully applied whitelist and can buy Mystery boxes
             </WrapperAlert>
         }
-        if ((!loadingJoinpool && connectedAccount && (countdown.isSale || countdown.isUpcomingSale)) && !alreadyJoinPool) {
+        if ((!loadingJoinpool && connectedAccount && (countdown.isSale || countdown.isUpcomingSale)) && !countdown.isPhase2 && !alreadyJoinPool) {
             return <WrapperAlert type="error">
                 You have not applied whitelist.
                 {(timelinePool.freeBuyTime && !countdown.isPhase2) ? ' Please stay tuned, you can buy from Phase 2' : ' Please stay tuned and join other pools'}

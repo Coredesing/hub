@@ -223,7 +223,7 @@ class FetchMarketplaceEvent {
           case EVENT_TYPE_OFFERED:
             await MarketplaceEventModel.query()
               .where('token_address', data.token_address)
-              .where('buyer', data.seller)
+              .where('buyer', data.buyer)
               .where('event_type', EVENT_TYPE_OFFERED)
               .where('token_id', data.token_id)
               .where('finish', 0)

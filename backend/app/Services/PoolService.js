@@ -320,6 +320,7 @@ class PoolService {
         rate: item.rate,
         icon: item.icon,
         banner: item.banner,
+        video: item.video,
         description: item.description,
       });
       return data;
@@ -687,10 +688,10 @@ class PoolService {
     const page = filterParams.page ? filterParams.page : 1;
     const token_type = filterParams.token_type ? filterParams.token_type : 'erc20'
 
-    if (token_type === 'erc20' && await RedisUtils.checkExistRedisPoolByTokenType(page)) {
-      const cachedPools = await RedisUtils.getRedisPoolByTokenType(page)
-      return JSON.parse(cachedPools)
-    }
+    // if (await RedisUtils.checkExistRedisPoolByTokenType(page)) {
+    //   const cachedPools = await RedisUtils.getRedisPoolByTokenType(page)
+    //   return JSON.parse(cachedPools)
+    // }
 
     let pools = await this.buildQueryBuilder({})
       .where('token_type', token_type)

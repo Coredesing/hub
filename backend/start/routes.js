@@ -136,6 +136,9 @@ Route.group(() => {
   Route.post('marketplace/collection/:address/:id', 'MarketplaceController.getNFTInfo');
   Route.get('marketplace/offers/:address/:id', 'MarketplaceController.getOffersOfNFT');
   Route.get('marketplace/offers/:address', 'MarketplaceController.getMyOffers');
+
+  Route.get('/boxes:id([0-9]+)', 'HomeController.getNFTBox');
+  Route.get('/boxes/:id([0-9]+)', 'HomeController.getNFTBox');
 }).prefix('api/v1');
 
 // GameFI admin new route

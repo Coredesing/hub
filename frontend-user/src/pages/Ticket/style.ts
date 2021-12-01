@@ -827,13 +827,13 @@ export const useAboutStyles = makeStyles((theme) => ({
     }
   },
   wrapperCountdownCollection: {
-    marginBottom: '20px',
+    // marginBottom: '20px',
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
     gap: '8px',
     alignItems: 'end',
     [theme.breakpoints.down('xs')]: {
-      gridTemplateColumns: '1fr',
+      gridTemplateColumns: '1fr !important',
       gap: '4px',
     },
     '& .countdown': {

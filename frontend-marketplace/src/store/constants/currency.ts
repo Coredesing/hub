@@ -1,0 +1,6 @@
+export const currencyActions = {
+  LOADING: 'CURRENCY_LOADING',
+  SUCCESS: 'CURRENCY_SUCCESS',
+  FAILURE: 'CURRENCY_FAILURE',
+};
+

@@ -25,6 +25,10 @@ interface IStakingContract {
     function linearBalanceOf(uint256 _poolId, address _account) external returns (uint128);
 }
 
+//interface IMatGameFiWhilelist {
+//    function canBuy(address user) external view returns (bool);
+//}
+
 contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgradeable, ERC721HolderUpgradeable {
     struct SaleEvent {
         uint256 currentSupply;
@@ -140,6 +144,10 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         fundWallet = _fundWallet;
     }
 
+//    function setMatWhitelist(address _whitelist) public onlyOwner {
+//        matWhitelist = _whitelist;
+//    }
+
     function setSubBox(uint256 eventID, uint256[] memory max, uint256[] memory prices, address[] memory tokens) public onlyOwner {
         for (uint256 index = 0; index < max.length; index++) {
             subBoxes[eventID][index] = SubBox(index, max[index], 0, prices[index], tokens[index]);
@@ -148,6 +156,12 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
 
     function setAllowTransfer(bool allow) public onlyOwner {
         allowTransfer = allow;
+    }
+
+    function emergencyWithdrawNFT(uint256 eventId, uint256 id, address to) public onlyOwner {
+        SaleEvent memory sale = saleEvents[eventId];
+        // transfer NFT
+        IERC721(sale.NFT).safeTransferFrom(address(this), to, id);
     }
 
     function setSaleEventTime(
@@ -226,7 +240,7 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
     function randomEvent(uint256 eventId) public onlyOwner {
         SaleEvent storage sale = saleEvents[eventId];
         require(sale.startTime > 0, "event not found");
-        require(sale.currentSupply == sale.maxSupply || block.timestamp > sale.endTime, "The current sale events has not sold out");
+//        require(sale.currentSupply == sale.maxSupply || block.timestamp > sale.endTime, "The current sale events has not sold out");
         require(!sale.revealed, "The current sale has random successfully");
 
         uint256 seed = 0;
@@ -258,6 +272,10 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         if (sale.useSubEvent) {
             require(amount + subBoxes[eventId][subBoxId].totalSold <= subBoxes[eventId][subBoxId].maxSupply, "NFTBox: SubBox Rate limit exceeded");
         }
+
+//        if (matWhitelist != address(0)) {
+//            require(IMatGameFiWhilelist(matWhitelist).canBuy(msg.sender), "User must stake at least 100 MAT");
+//        }
 
         require(subBoxes[eventId][subBoxId].token == token, "NFTBox: invalid token");
         uint256 totalFund = subBoxes[eventId][subBoxId].price * amount;
@@ -372,12 +390,6 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         uint256 startingIndex = seed % sale.maxSupply;
         sale.startingIndex = startingIndex;
         sale.revealed = true;
-
-//        for (uint256 index = 0; index < sale.maxSupply; index++) {
-//            Box storage box = boxes[index];
-//            box.nftId = sale.startNFTId + ((startingIndex + index) % sale.maxSupply);
-//            box.revealed =  true;
-//        }
     }
 
     function _beforeTokenTransfer(

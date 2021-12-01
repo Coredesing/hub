@@ -44,7 +44,7 @@ class FetchMarketplaceEvent {
   }
 
   // This is where the work is done.
-  async handle({ event_type, from, to }) {
+  async handle({ event_type, from, to, notCached }) {
     try {
       if (!isNaN(from)) {
         from = parseInt(from)
@@ -71,6 +71,10 @@ class FetchMarketplaceEvent {
         }
 
         await this.fetchEvents(provider, event_type, index, tmp)
+      }
+
+      if (notCached) {
+        return
       }
 
       await RedisMarketplaceUtils.setRedisMarketplaceBlockNumber({current: to})

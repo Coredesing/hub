@@ -2,7 +2,7 @@
 
 const Task = use('Task')
 const FetchMarketplaceEventJob = use('App/Jobs/FetchMarketplaceEvent');
-const RedisMarketplaceUtils = use('App/Common/RedisMarketplaceUtils')
+const HelperUtils = use('App/Common/HelperUtils')
 const MARKETPLACE_START_BLOCK_NUMBER = process.env.MARKETPLACE_START_BLOCK
 const EVENT_TYPE_LISTED = 'TokenListed'
 const EVENT_TYPE_DELISTED = 'TokenDelisted'
@@ -17,11 +17,11 @@ class FetchMarketplaceEvents extends Task {
   isRunning = false;
 
   static get schedule () {
-    console.log('[FetchMarketplaceEvents] - ACTIVE - process.env.NODE_ENV', process.env.NODE_ENV);
+    console.log('[RefetchMarketplaceEvents] - ACTIVE - process.env.NODE_ENV', process.env.NODE_ENV);
     if (process.env.NODE_ENV === 'development') {
-      return '*/15 * * * * *';
+      return '0 */5 * * * *';
     } else {
-      return '*/15 * * * * *';
+      return '0 */5 * * * *';
     }
   }
 
@@ -35,17 +35,11 @@ class FetchMarketplaceEvents extends Task {
     }
 
     try {
-      let current_block = MARKETPLACE_START_BLOCK_NUMBER
-      if (await RedisMarketplaceUtils.existRedisMarketplaceBlockNumber()) {
-        let data = await RedisMarketplaceUtils.getRedisMarketplaceBlockNumber()
-        data = JSON.parse(data)
-        if (data && data.current) {
-          current_block = data.current
-        }
-      }
+      const provider = await HelperUtils.getStakingProvider()
+      let current_block = (await provider.eth.getBlockNumber()) - 1
 
       ARRAY_EVENTS.forEach((event_type) => {
-        FetchMarketplaceEventJob.doDispatch({ event_type: event_type, from: current_block })
+        FetchMarketplaceEventJob.doDispatch({ event_type: event_type, from: current_block - 3000, to: current_block, notCached: true })
       })
     }
     catch (e) {

@@ -155,7 +155,9 @@ class MarketplaceService {
     filterParams = this.formatPaginate(filterParams)
     filterParams.event_type = 'TokenListed'
     filterParams.finish = false
-    const data = await this.buildQueryNFTEventsBuilder(filterParams).fetch()
+    const data = await this.buildQueryNFTEventsBuilder(filterParams)
+      .orderBy('dispatch_at', 'DESC')
+      .paginate(filterParams.page, filterParams.limit);
     return data
   }
 

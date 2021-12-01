@@ -11,7 +11,9 @@ const CollectionCard = ({ item, ...props }: Props) => {
                 {item.image && <img src={item.image} alt="" onError={(e: any) => {
                     e.target.style.visibility = 'hidden'
                 }} />}
-                {item.logo && <img src={item.logo} className="icon" alt="" />}
+                <div className="wr-icon">
+                    {item.logo && <img src={item.logo} className="icon" alt="" />}
+                </div>
             </div>
             <div className="infor">
                 <h3>{item.name}</h3>

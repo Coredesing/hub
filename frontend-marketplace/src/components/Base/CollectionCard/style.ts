@@ -6,7 +6,8 @@ const useStyles = makeStyles((theme: any) => ({
         width: '295px',
         minWidth: '295px',
         padding: '11px',
-        background: ' radial-gradient(102.65% 160.75% at 15.32% 21.04%, rgba(217, 217, 217, 0.2) 0%, rgba(231, 245, 255, 0.0447917) 77.08%, rgba(70, 144, 213, 0) 100%)',
+        background: 'radial-gradient(102.65% 160.75% at 15.32% 21.04%, rgba(217, 217, 217, 0.2) 0%, rgba(231, 245, 255, 0.0447917) 77.08%, rgba(70, 144, 213, 0) 100%)',
+        // background: '#686868',
         borderRadius: '4px',
         backgroundBlendMode: 'overlay, normal',
         filter: 'drop-shadow(2px 16px 19px rgba(0, 0, 0, 0.09))',
@@ -18,18 +19,31 @@ const useStyles = makeStyles((theme: any) => ({
             height: '100px',
             background: '#000',
             marginBottom: '31px',
+            borderRadius: '4px',
             '& img': {
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
+                borderRadius: '4px',
             },
-            '& .icon': {
+            '& .wr-icon': {
                 position: 'absolute',
                 bottom: '-21px',
                 left: '50%',
-                width: '42px',
-                height: '42px',
-                transform: 'translate(-50%)'
+                width: '48px',
+                height: '48px',
+                transform: 'translate(-50%)',
+                // background: 'radial-gradient(102.65% 160.75% at 15.32% 21.04%, rgba(217, 217, 217, 0.2) 0%, rgba(231, 245, 255, 0.0447917) 77.08%, rgba(70, 144, 213, 0) 100%)',
+                background: '#686868',
+                borderRadius: '50%',
+                display: 'grid',
+                placeContent: 'center',
+            },
+            '& .icon': {
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                // background: '#000',
             }
         },
         '& .infor': {
@@ -51,6 +65,13 @@ const useStyles = makeStyles((theme: any) => ({
                 lineHeight: '20px',
                 color: '#fff',
                 textAlign: 'center',
+                maxHeight: '40px',
+                overflow: 'hidden',
+                whiteSpace: 'initial',
+                textOverflow: 'ellipsis',
+                display: '-webkit-box',
+                '-webkit-line-clamp': 2,
+                '-webkit-box-orient': 'vertical',
             }
         }
     },

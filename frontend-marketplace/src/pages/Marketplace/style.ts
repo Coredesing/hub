@@ -253,6 +253,7 @@ const useStyles = makeStyles((theme: any) => ({
         gap: '20px',
         overflow: 'auto',
         paddingBottom: '10px',
+        justifyContent: 'start',
         // '& .swiper-slide': {
         //     width: '295px !important',
         //     minWidth: '295px',
@@ -261,6 +262,9 @@ const useStyles = makeStyles((theme: any) => ({
         //         width: '295px !important',
         //     }
         // },
+        '& .swiper-container': {
+            marginRight: 'auto',
+        },
         '& .collection': {
             width: '295px',
             minWidth: '295px',
@@ -316,9 +320,9 @@ const useStyles = makeStyles((theme: any) => ({
     },
     cards: {
         display: 'grid',
-        // gridTemplateColumns: 'repeat(auto-fit, 295px)',
+        gridTemplateColumns: 'repeat(auto-fit, 295px)',
         gap: '20px',
-        placeContent: 'center',
+        // placeContent: 'center',
         transition: '.3s',
     },
     btnFilter: {

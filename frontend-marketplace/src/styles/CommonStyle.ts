@@ -4,9 +4,9 @@ import { NONAME } from "dns";
 const useCommonStyle = makeStyles((theme) => {
   return {
     DefaultLayout: {
-      background: "url(/images/background.png), #000",
+      background: "url(/images/bg.jpg), #000",
       backgroundRepeat: 'no-repeat',
-      backgroundSize: 'contain',
+      backgroundSize: 'cover',
       // background: 'radial-gradient(50% 50% at 50% 50%, rgb(34, 34, 40) 0%, rgb(4, 7, 25) 100%)',
       minHeight: "100vh",
       /* grid container settings */

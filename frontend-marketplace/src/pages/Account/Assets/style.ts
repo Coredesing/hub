@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme: any) => ({
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, 295px)',
         gap: '20px',
-        placeContent: 'center',
+        // placeContent: 'center',
         transition: '.3s',
         padding: '32px 0px',
     },

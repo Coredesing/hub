@@ -34,14 +34,14 @@ const AccountV2 = (props: any) => {
 
   return (
     <DefaultLayout>
-      <div className={classes.accountContainer}>
+      <div className={clsx(classes.accountContainer,  'custom-scroll')}>
         {updatedSuccess &&
           <div className={classes.messageUpdateSuccess}>
             <img src="/images/account_v3/icons/icon_updated_success.svg" alt="" />
             Your profile has been updated successfully
           </div>
         }
-        <div className={classes.bodyContentMyAccount}>
+        <div className={clsx(classes.bodyContentMyAccount, 'custom-scroll')}>
           <div className={classes.leftAccount}>
             <div className={classes.titlLeft}>My Account</div>
             <nav className={classes.tabAccount}>

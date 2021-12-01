@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core';
 import { typeDisplayFlex } from '@styles/CommonStyle';
 import { ObjectType } from '@app-types';
 import { formatNumber } from '@utils/index';
+import CardMarketplace from '@base-components/CardMarketplace';
+import { Link } from 'react-router-dom';
 
 export const useStyles = makeStyles((theme) => ({
     card: {
@@ -12,6 +14,10 @@ export const useStyles = makeStyles((theme) => ({
         backdropFilter: 'blur(80px)',
         borderRadius: '4px',
         padding: '10px',
+        transition: '.3s',
+        '&.active, &:hover': {
+            border: '1px solid #72F34B',
+        },
         '& .img': {
             width: '100%',
             height: '275px',
@@ -63,25 +69,8 @@ type Props = ObjectType<any> & {
 }
 
 const BoxCard = ({ item, ...props }: Props) => {
-    const styles = useStyles();
     return (
-        <div {...props} className={styles.card}>
-            <div className="img">
-                {item.image && <img src={item.image} alt="" />}
-            </div>
-            <div className="infor">
-                <h3>#{formatNumber(item.id, 3)}</h3>
-                <div className="item">
-                    <span className="prop">Price</span>
-                    <span className="value">{item.price}</span>
-                </div>
-                <div className="item">
-                    <span className="prop">Creator</span>
-                    <span className="value">{item.creator}</span>
-                </div>
-
-            </div>
-        </div>
+        <CardMarketplace item={item} {...props} />
     )
 }
 
@@ -98,7 +87,7 @@ export const getElmStr = ({ item, styles, ...props }: Props) => {
     }
 
     const wrapperInfor = document.createElement('div');
-    
+
     wrapperInfor.classList.add('infor');
     const h3 = document.createElement('h3')
     h3.append(`#${formatNumber(item.id, 3)}`);
@@ -106,7 +95,7 @@ export const getElmStr = ({ item, styles, ...props }: Props) => {
     const wrapperItem = document.createElement('div');
     wrapperItem.classList.add('item')
     const spanPropPrice = document.createElement('span');
-    spanPropPrice.append('Price');
+    spanPropPrice.append('Price floor');
     spanPropPrice.classList.add('prop');
     wrapperItem.append(spanPropPrice)
     const spanValuePrice = document.createElement('span');
@@ -114,17 +103,17 @@ export const getElmStr = ({ item, styles, ...props }: Props) => {
     spanValuePrice.classList.add('value');
     wrapperItem.append(spanValuePrice);
     wrapperInfor.appendChild(wrapperItem);
-    const wrapperItemCreator = document.createElement('div');
-    wrapperItemCreator.classList.add('item')
-    const spanPropCreator = document.createElement('span');
-    spanPropCreator.append('Creator');
-    spanPropCreator.classList.add('prop');
-    wrapperItemCreator.append(spanPropCreator)
+    const wrapperItemHighestOffer = document.createElement('div');
+    wrapperItemHighestOffer.classList.add('item')
+    const spanPropHighestOffer = document.createElement('span');
+    spanPropHighestOffer.append('Highest offer');
+    spanPropHighestOffer.classList.add('prop');
+    wrapperItemHighestOffer.append(spanPropHighestOffer)
     const spanValueCreator = document.createElement('span');
     spanValueCreator.append(item.creator || '');
     spanValueCreator.classList.add('value');
-    wrapperItemCreator.append(spanValueCreator);
-    wrapperInfor.appendChild(wrapperItemCreator);
+    wrapperItemHighestOffer.append(spanValueCreator);
+    wrapperInfor.appendChild(wrapperItemHighestOffer);
     wrapper.appendChild(wrapperImg);
     wrapper.appendChild(wrapperInfor);
     return wrapper;

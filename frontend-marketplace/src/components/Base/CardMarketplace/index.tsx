@@ -10,7 +10,7 @@ const CardMarketplace = ({ id, item, ...props }: ObjectType<any>) => {
     const styles = useStyles();
     return (
         <div key={id} className={clsx(styles.card)} >
-            <ButtonBase className="btn-buy" color="green">Detail</ButtonBase>
+            {/* <ButtonBase className="btn-buy" color="green">Detail</ButtonBase> */}
             <div className={styles.cardImg}>
                 {item.image && <img src={item.image} alt="" />}
             </div>
@@ -32,12 +32,14 @@ const CardMarketplace = ({ id, item, ...props }: ObjectType<any>) => {
                             {item.value} {item.currencySymbol}
                         </span>
                     </Box>
-                    <Box className="item" display="grid" gridGap="4px" textAlign="right">
-                        <label className="helvetica-font font-12px text-grey" htmlFor="">Highest offer</label>
-                        <span className="bold font-16px helvetica-font text-white">
-                            <img src="" alt="" />
-                            -/- {item.currencySymbol}
-                        </span>
+                    <Box className="item" display="grid" gridGap="4px" justifyContent="end">
+                        <Box display="grid" width="fit-content">
+                            <label className="helvetica-font font-12px text-grey" htmlFor="">Highest offer</label>
+                            <span className="bold font-16px helvetica-font text-white">
+                                <img src="" alt="" />
+                                -/- {item.currencySymbol}
+                            </span>
+                        </Box>
                     </Box>
                 </Box>
                 {/* <h3>

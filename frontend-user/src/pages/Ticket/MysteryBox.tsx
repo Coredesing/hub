@@ -329,24 +329,24 @@ const MysteryBox = ({ id, ...props }: any) => {
             setOwnedBox(0);
             return;
         }
-        if(!contractPreSale) return;
+        // if(!contractPreSale) return;
         const getMyNumBox = async () => {
             try {
-                const myBox = await contractPreSale.methods.userBought(eventId, connectedAccount).call();
-                // const myNumBox = await getBalance(
-                //     connectedAccount,
-                //     dataTicket.token,
-                //     dataTicket.network_available,
-                //     dataTicket.accept_currency
-                // );
-                setOwnedBox(+myBox || 0);
+                // const myBox = await contractPreSale.methods.userBought(eventId, connectedAccount).call();
+                const myNumBox = await getBalance(
+                    connectedAccount,
+                    dataTicket.token,
+                    dataTicket.network_available,
+                    dataTicket.accept_currency
+                );
+                setOwnedBox(+myNumBox || 0);
                 setRecallMyBox(false);
             } catch (error) {
                 console.log(error);
             }
         };
         !isClaim && recallMybox && dataTicket?.token && getMyNumBox();
-    }, [connectedAccount, dataTicket, recallMybox, isClaim, contractPreSale]);
+    }, [connectedAccount, dataTicket, recallMybox, isClaim]);
 
     const [lockWhenBuyBox, setLockWhenBuyBox] = useState(false);
     const [subBoxes, setSubBoxes] = useState<{ [k: string]: any }[]>([]);
@@ -619,7 +619,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                 Congratulations! You have successfully applied whitelist and can buy Mystery boxes
             </WrapperAlert>
         }
-        if ((!loadingJoinpool && connectedAccount && (countdown.isSale || countdown.isUpcomingSale)) && !alreadyJoinPool) {
+        if ((!loadingJoinpool && connectedAccount && (countdown.isSale || countdown.isUpcomingSale)) && !countdown.isPhase2 && !alreadyJoinPool) {
             return <WrapperAlert type="error">
                 You have not applied whitelist.
                 {(timelinePool.freeBuyTime && !countdown.isPhase2) ? ' Please stay tuned, you can buy from Phase 2' : ' Please stay tuned and join other pools'}

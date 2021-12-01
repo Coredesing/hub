@@ -13,6 +13,7 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import Assets from "./Assets";
 import Offers from "./Offers";
+import Listings from "./Listings";
 
 const AccountV2 = (props: any) => {
   const classes = useStyles();
@@ -74,6 +75,7 @@ const AccountV2 = (props: any) => {
 
           <div className={classes.rightAccount}>
             {activeMenuAccount === MenuLeft.assets.key && <Assets />}
+            {activeMenuAccount === MenuLeft.listings.key && <Listings />}
             {activeMenuAccount === MenuLeft.offers.key && <Offers />}
           </div>
         </div>

@@ -115,8 +115,8 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
         >
             <div>
                 <Switch>
-                    <Route exact path={'/collection/:projectAddress/:id'} component={CollectionDetail} />
-                    <Route exact path={'/collection/:projectAddress'} component={Collection} />
+                    <Route exact path={'/collection/:project/:id'} component={CollectionDetail} />
+                    <Route exact path={'/collection/:project'} component={Collection} />
                     <Route exact path={'/collections'} component={Collections} />
                     <Route exact path={'/offers'} component={Offers} />
                     <Route path={'/inventory'} component={Account} />

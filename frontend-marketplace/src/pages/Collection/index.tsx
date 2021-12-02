@@ -36,7 +36,7 @@ import ActivitiesMarketplace from '@base-components/ActivitiesMarketplace';
 
 const Marketplace = () => {
     const styles = useStyles();
-    const { projectAddress } = useParams<ObjectType<any>>()
+    const { project } = useParams<ObjectType<any>>()
     const dispatch = useDispatch()
 
     const filterTypes = useMemo(() => ({
@@ -63,26 +63,26 @@ const Marketplace = () => {
     const projectInfors = projectInforsState?.data;
     const itemsProjectCollection = itemsProjectCollectionState?.data;
     const activitiesProjectCollection = activitiesProjectCollectionState?.data;
-    const itemsProject = itemsProjectCollection?.[projectAddress] || {};
-    const activitiesProject = activitiesProjectCollection?.[projectAddress] || {};
-    const projectInfor = projectInfors?.[projectAddress] || {};
+    const itemsProject = itemsProjectCollection?.[project] || {};
+    const activitiesProject = activitiesProjectCollection?.[project] || {};
+    const projectInfor = projectInfors?.[project] || {};
     const [filterItem, setFilterItem] = useState({ page: 1, perPage, })
     const [filterActivity, setFilterActivity] = useState({ page: 1, perPage, })
 
     useEffect(() => {
         if (!projectInfor?.token_address) {
-            dispatch(setProjectInfor(projectAddress));
+            dispatch(setProjectInfor(project));
         }
     }, [projectInfor?.token_address])
 
     useEffect(() => {
         if (projectInfor?.token_address) {
-            dispatch(setItemsProjectCollection({ projectAddress, filter: filterItem }));
+            dispatch(setItemsProjectCollection({ project: project, filter: filterItem }));
         }
     }, [projectInfor?.token_address, filterItem])
     useEffect(() => {
         if (projectInfor?.token_address) {
-            dispatch(setActivitiesProjectCollection({ projectAddress, filter: filterActivity }));
+            dispatch(setActivitiesProjectCollection({ project: project, filter: filterActivity }));
         }
     }, [projectInfor?.token_address, filterActivity])
 
@@ -257,7 +257,7 @@ const Marketplace = () => {
                                                 <div className={styles.cards}>
                                                     {
                                                         (itemsProject?.currentList || []).map((coll: any, id: number) =>
-                                                            <Link key={id} to={`/collection/${projectAddress}/${coll.token_id}`}>
+                                                            <Link key={id} to={`/collection/${project}/${coll.token_id}`}>
                                                                 <CardMarketplace item={coll} key={id} />
                                                             </Link>
                                                         )}

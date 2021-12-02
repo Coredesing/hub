@@ -201,7 +201,7 @@ class MarketplaceService {
     filterParams = this.formatPaginate(filterParams)
     filterParams.event_type = 'TokenListed'
     filterParams.finish = 0
-    filterParams.token_address = address
+    filterParams.slug = address
 
     let data = await this.buildQueryNFTEventsBuilder(filterParams)
       .orderBy('dispatch_at', 'DESC')
@@ -213,7 +213,7 @@ class MarketplaceService {
   async getCollectionActivities(address, filterParams) {
     // TODO: filter whitelist address
     filterParams = this.formatPaginate(filterParams)
-    filterParams.token_address = address
+    filterParams.slug = address
 
     let data = await this.buildQueryNFTEventsBuilder(filterParams)
       .orderBy('dispatch_at', 'DESC')

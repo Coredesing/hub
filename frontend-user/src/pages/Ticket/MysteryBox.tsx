@@ -139,7 +139,7 @@ const MysteryBox = ({ id, ...props }: any) => {
             if (dataTicket?.boxTypesConfig?.length) {
                 const networkInfo = getNetworkInfo(dataTicket.network_available);
                 const contractPreSale = getContractInstance(PreSaleBoxAbi, dataTicket.campaign_hash, connectorName, networkInfo?.id);
-                if (contractPreSale) {
+                if (contractPreSale && dataTicket?.campaign_hash) {
                     Promise.all(dataTicket.boxTypesConfig.map((b: any, subBoxId: number) => new Promise(async (res, rej) => {
                         try {
                             const response = await contractPreSale.methods.subBoxes(eventId, subBoxId).call();

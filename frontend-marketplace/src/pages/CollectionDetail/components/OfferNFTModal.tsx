@@ -92,7 +92,20 @@ type Props = {
     [k: string]: any,
 }
 
-const OfferNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isApproved, currencySymbol, addressCurrencyToBuy, reloadedBalance, setReloadBalance, validChain, ...props }: Props) => {
+const OfferNFTModal = ({ open,
+    isLoadingButton,
+    defaultValue,
+    onApprove,
+    currencySymbol,
+    addressCurrencyToBuy,
+    reloadedBalance,
+    setReloadBalance,
+    validChain,
+    isApprovedToken,
+    onApproveToken,
+    lockingAction,
+    checkFnIsLoading,
+    ...props }: Props) => {
     const styles = useStyles();
     const [inputPrice, setInputPrice] = useState(0);
     const { connectedAccount } = useAuth();
@@ -126,14 +139,13 @@ const OfferNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isAppro
             console.log(error)
         }
     }
-
     useEffect(() => {
         if (!addressCurrencyToBuy || !connectedAccount || !validChain) {
             setAddressBalance('0');
             return;
         }
         getBalance();
-    }, [addressCurrencyToBuy, erc20Contract, connectedAccount]);
+    }, [addressCurrencyToBuy, validChain, connectedAccount, erc20Contract]);
 
     useEffect(() => {
         if (reloadedBalance) {
@@ -143,7 +155,7 @@ const OfferNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isAppro
 
     return (
         <CustomModal
-            classes={{paper: styles.paper}}
+            classes={{ paper: styles.paper }}
             open={open}
             onClose={onClose}
             actions={
@@ -151,9 +163,23 @@ const OfferNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isAppro
                     <ButtonBase color="grey" onClick={onClose} className="w-full text-transform-unset mt-0-important" >
                         Cancel
                     </ButtonBase>
-                    <ButtonBase color="green" onClick={onConfirm} className="w-full text-transform-unset mt-0-important" isLoading={isLoadingButton} disabled={isLoadingButton}>
-                        Confirm
-                    </ButtonBase>
+                    {
+                        !isApprovedToken.ok ?
+                            <ButtonBase
+                                isLoading={checkFnIsLoading(onApproveToken.name)}
+                                disabled={lockingAction.lock} color="green"
+                                className="w-full text-transform-unset mt-0-important"
+                                onClick={onApproveToken}>
+                                Approve
+                            </ButtonBase> :
+                            <ButtonBase color="green" onClick={onConfirm}
+                                className="w-full text-transform-unset mt-0-important"
+                                isLoading={isLoadingButton} disabled={isLoadingButton}>
+                                Confirm
+                            </ButtonBase>
+                    }
+
+
                 </div>
             }
         >

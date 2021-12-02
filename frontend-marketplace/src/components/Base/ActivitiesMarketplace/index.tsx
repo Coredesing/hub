@@ -52,15 +52,15 @@ const ActivitiesMarketplace = ({ data = [], disabledFields, ...props }: Props) =
                                     <TableCell>
                                         <Box display="grid" gridTemplateColumns="56px auto" gridGap="8px" alignItems="center">
                                             <Box width="56px" height="56px" style={{ backgroundColor: "#000", borderRadius: '4px' }}>
-                                                <Link className="width-fit" to={item.project?.token_address ? `/collection/${item.project?.token_address}/${item.token_id}` : '#'}>
+                                                <Link className="width-fit" to={item.slug ? `/collection/${item.slug}/${item.token_id}` : '#'}>
                                                     {item.image && <img src={item.image} alt="" width="56px" height="56px" />}
                                                 </Link>
                                             </Box>
                                             <Box>
-                                                <Link className="width-fit hover-underline" to={item.project?.token_address ? `/collection/${item.project?.token_address}/${item.token_id}` : '#'}>
+                                                <Link className="width-fit hover-underline" to={item.slug ? `/collection/${item.slug}/${item.token_id}` : '#'}>
                                                     <h4 className="firs-neue-font font-16px text-white width-fit display-block">{item.name || `#${formatNumber(item.token_id, 3)}`}</h4>
                                                 </Link>
-                                                <Link  className="width-fit hover-underline" to={item.project?.token_address ? `/collection/${item.project?.token_address}` : '#'}>
+                                                <Link  className="width-fit hover-underline" to={item.slug ? `/collection/${item.slug}` : '#'}>
                                                     <span className="text-grey helvetica-font font-14px width-fit">{item?.project?.name}</span>
                                                 </Link>
                                             </Box>

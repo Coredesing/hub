@@ -36,11 +36,13 @@ import { Backdrop, Box } from "@material-ui/core";
 import { useTypedSelector } from "@hooks/useTypedSelector";
 import useContract from "@hooks/useContract";
 import useContractSigner from "@hooks/useContractSigner";
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { setProjectInfor as setProjectInforState } from '@store/actions/project-collection';
+import { setTokenInfor } from "@store/actions/tokenInfor";
 
 const MARKETPLACE_SMART_CONTRACT = process.env.REACT_APP_MARKETPLACE_SMART_CONTRACT as string;
 
-const MysteryBox = ({ id, projectAddress, ...props }: any) => {
+const MysteryBox = ({ id, project, ...props }: any) => {
     const styles = useStyles();
     const marketplaceStyle = useMarketplaceStyle();
     const dispatch = useDispatch();
@@ -49,16 +51,16 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
     const { appChainID } = useSelector((state: any) => state.appNetwork).data;
     const [infoNFT, setInfoNFT] = useState<ObjectType<any>>({});
     const [addressOwnerNFT, setAddressOwnerNFT] = useState('');
+    const [projectInfor, setProjectInfor] = useState<any>(null);
+    const projectAddress = projectInfor?.token_address;
     const connectorName = useTypedSelector(state => state.connector).data;
     const { contract: erc721ContractWithSigner } = useContractSigner(erc721ABI, projectAddress, connectedAccount as string);
     const { contract: marketplaceContractWithSigner } = useContractSigner(marketplaceABI, MARKETPLACE_SMART_CONTRACT, connectedAccount as string);
-    const [projectInfor, setProjectInfor] = useState<any>(null);
     const [erc721Contract, setErc721Contract] = useState<any>(null);
     const [marketplaceContract, setMarketplaceContract] = useState<any>(null);
-
     useEffect(() => {
         setInfoNFT({ loading: true });
-        axios.get(`/marketplace/collection/${projectAddress}`).then(async (res) => {
+        axios.get(`/marketplace/collection/${project}`).then(async (res) => {
             const infoProject = res.data.data;
             if (!infoProject) {
                 setInfoNFT({});
@@ -66,15 +68,17 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
             }
             if (infoProject) {
                 setProjectInfor(infoProject);
+                dispatch(setProjectInforState(project, infoProject));
             }
         })
-    }, [projectAddress]);
+    }, [project]);
 
     const getInfoCollection = async () => {
         try {
             getAddresssOwnerNFT();
             if (+projectInfor.use_external_uri === 1) {
                 const result = await axios.post(`/marketplace/collection/${projectAddress}/${id}`);
+                dispatch(setTokenInfor(id, result))
                 setInfoNFT({
                     ...(result.data.data || {}),
                     id: id,
@@ -416,7 +420,7 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                                                     </h3>
                                                     <div className={marketplaceStyle.boxesBodyHeader}>
                                                         {
-                                                            infoNFT.project?.token_address && <Link to={`/collection/${infoNFT.project?.token_address}`}>
+                                                            infoNFT.project?.slug && <Link to={`/collection/${infoNFT.project?.slug}`}>
                                                                 <div className="box box-icon" style={{ alignItems: 'center' }}>
 
                                                                     {infoNFT.project?.logo && <img src={infoNFT.project?.logo} className="icon rounded" alt="" />}
@@ -585,7 +589,8 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                                         <AboutMarketplaceNFT
                                             info={infoNFT}
                                             id={id}
-                                            projectAddress={projectAddress}
+                                            project={project}
+                                            projectInfor={projectInfor}
                                             defaultTab={1}
                                             isOwnerNFTOnSale={isOwnerNFTOnSale}
                                             isOwnerNFT={isOwnerNFT}

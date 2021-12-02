@@ -45,7 +45,7 @@ const AccountV2 = (props: any) => {
         }
         <div className={clsx(classes.bodyContentMyAccount, 'custom-scroll')}>
           <div className={classes.leftAccount}>
-            <div className={classes.titlLeft}>My Account</div>
+            <div className={classes.titlLeft}>Inventory</div>
             <nav className={classes.tabAccount}>
               {
                 tabAccount.map((item, index) => {

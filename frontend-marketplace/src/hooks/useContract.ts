@@ -3,6 +3,7 @@ import { useTypedSelector } from '../hooks/useTypedSelector';
 import { useWeb3React } from '@web3-react/core';
 import { getContractInstance } from '@services/web3';
 import { ChainDefault } from '../constants/network';
+import { utils } from 'ethers';
 
 type ReturnType = {
   contract: any,
@@ -16,7 +17,7 @@ const useContract = (abi: any, contractAddress: string, appChainId?: string): Re
   const { appChainID } = useTypedSelector((state: any) => state.appNetwork).data;
   appChainId = appChainId || appChainID
   useEffect(() => {
-    if (!contractAddress) {
+    if (!utils.isAddress(contractAddress)) {
       setContract(null);
       return;
     };

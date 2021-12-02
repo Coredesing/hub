@@ -15,28 +15,30 @@ const CardMarketplace = ({ id, item, ...props }: ObjectType<any>) => {
                 {item.image && <img src={item.image} alt="" />}
             </div>
             <div className={styles.cardBody}>
-                <Box className="creator" display="grid" gridTemplateColumns="16px auto" gridGap={"6px"} alignItems="center" marginBottom={'6px'}>
-                    <img src={item?.project?.logo} style={{ width: '16px', height: '16px', borderRadius: '50%' }} alt="" />
+                <Box className="creator" display="grid" gridTemplateColumns="16px auto" gridGap={"10px"} alignItems="center" marginBottom={'6px'}>
+                    <Box className="bg-white" width="20px" height="20px" display="grid" justifyContent="center" alignItems="center" borderRadius="50%" >
+                        <img src={item?.project?.logo} style={{ width: '16px', height: '16px', borderRadius: '50%' }} alt="" />
+                    </Box>
                     <span className="text-uppercase" style={{ color: '#AEAEAE', fontSize: '12px', fontFamily: 'Helvetica' }}>{item?.project?.name}</span>
                 </Box>
                 <Box marginBottom="12px">
                     <h3>
-                        #{formatNumber(item.token_id, 3)}
+                        {item.name || `#${formatNumber(item.token_id, 3)}`}
                     </h3>
                 </Box>
                 <Box className="bid" display="grid" gridTemplateColumns="1fr 1fr" gridGap="4px" justifyContent="space-between">
                     <Box className="item" display="grid" gridGap="4px">
-                        <label className="helvetica-font font-12px text-grey" htmlFor="">Price floor</label>
-                        <span className="bold font-16px helvetica-font text-white">
-                            <img src="" alt="" />
-                            {item.value} {item.currencySymbol}
+                        <label className="helvetica-font font-12px text-grey" htmlFor="">Listing price</label>
+                        <span className="bold font-16px helvetica-font text-white" style={{ display: 'grid', alignItems: 'center', gridTemplateColumns: '18px auto', gap: '8px' }}>
+                            {item.currencySymbol && <img width="18px" height="18px" src={`/images/icons/${item.currencySymbol.toLowerCase()}.png`} alt="" />}
+                            {item.value || '-/-'} {item.currencySymbol}
                         </span>
                     </Box>
                     <Box className="item" display="grid" gridGap="4px" justifyContent="end">
                         <Box display="grid" width="fit-content">
                             <label className="helvetica-font font-12px text-grey" htmlFor="">Highest offer</label>
-                            <span className="bold font-16px helvetica-font text-white">
-                                <img src="" alt="" />
+                            <span className="bold font-16px helvetica-font text-white" style={{ display: 'grid', alignItems: 'center', gridTemplateColumns: '18px auto', gap: '8px' }}>
+                                {item.currencySymbol && <img width="18px" height="18px" src={`/images/icons/${item.currencySymbol.toLowerCase()}.png`} alt="" />}
                                 -/- {item.currencySymbol}
                             </span>
                         </Box>

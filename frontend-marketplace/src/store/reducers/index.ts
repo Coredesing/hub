@@ -5,7 +5,7 @@ import { walletReducer } from './wallet';
 import { messageReducer } from './message';
 import { assetsAccountReducer, listOffersAccountReducer, listingsAccountReducer } from './inventory';
 import { listCollectionReducer, listOfferReducer, itemsCollectionReducer, activitiesCollectionReducer } from './marketplace';
-import { projectInforsReducer, itemsProjectCollectionsReducer, activitiesProjectCollectionsReducer } from './project-collection';
+import { projectInforsReducer, itemsProjectCollectionsReducer, activitiesProjectCollectionsReducer, activitiesDetailCollectionsReducer } from './project-collection';
 import { currenciesReducer } from './currency';
 import { tokenInforsReducer } from './tokenInfors';
 
@@ -28,6 +28,8 @@ const rootReducer = combineReducers({
   itemsCollection: itemsCollectionReducer,
   activitiesCollection: activitiesCollectionReducer,
   tokenInfors: tokenInforsReducer,
+  activitiesDetailCollection: activitiesDetailCollectionsReducer,
+
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

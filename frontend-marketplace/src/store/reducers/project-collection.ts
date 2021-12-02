@@ -1,4 +1,4 @@
-import { itemsProjectCollectionActions, projectInforActions, activitiesProjectCollectionActions } from '../constants/project-collection';
+import { itemsProjectCollectionActions, projectInforActions, activitiesProjectCollectionActions, activitiesDetailCollectionActions } from '../constants/project-collection';
 import { AnyAction } from 'redux';
 import { initReducer, StateType } from './utils';
 
@@ -34,5 +34,16 @@ export const activitiesProjectCollectionsReducer = (state: StateType, action: An
             loading: activitiesProjectCollectionActions.LOADING,
             success: activitiesProjectCollectionActions.SUCCESS,
             failure: activitiesProjectCollectionActions.FAILURE,
+        })
+};
+
+export const activitiesDetailCollectionsReducer = (state: StateType, action: AnyAction) => {
+    return initReducer(
+        state,
+        action,
+        {
+            loading: activitiesDetailCollectionActions.LOADING,
+            success: activitiesDetailCollectionActions.SUCCESS,
+            failure: activitiesDetailCollectionActions.FAILURE,
         })
 };

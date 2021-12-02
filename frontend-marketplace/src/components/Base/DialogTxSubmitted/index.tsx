@@ -8,17 +8,18 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import { getExplorerTransactionLink, getNetworkInfo } from '../../../utils/network';
 import { useTypedSelector } from '@hooks/useTypedSelector';
+import CustomModal from '@base-components/CustomModal';
 const closeIcon = '/images/icons/close.svg';
 const useStyles = makeStyles((theme) => ({
   paper: {
-    maxWidth: 'unset',
-    minWidth: '300px',
-    position: 'relative',
-    background: '#171717',
-    fontFamily: 'Firs Neue',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    padding: '20px 10px'
+    // maxWidth: 'unset',
+    // minWidth: '300px',
+    // position: 'relative',
+    // background: '#171717',
+    // fontFamily: 'Firs Neue',
+    // fontStyle: 'normal',
+    // fontWeight: 'normal',
+    // padding: '20px 10px'
   },
   btnClose: {
     position: 'absolute',
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   content: {
-    marginTop: '45px',
+    // marginTop: '45px',
     [theme.breakpoints.down('xs')]: {
       flex: 'unset',
     },
@@ -102,8 +103,8 @@ const DialogTxSubmitted = ({ open, ...props }: Props) => {
   })
 
   return (
-    <Dialog
-      fullScreen={fullScreen}
+    <CustomModal
+      // fullScreen={fullScreen}
       open={open}
       onClose={handleClose}
       aria-labelledby="responsive-dialog-title"
@@ -111,21 +112,17 @@ const DialogTxSubmitted = ({ open, ...props }: Props) => {
         paper: classes.paper
       }}
     >
-      <Button autoFocus onClick={handleClose} color="primary" className={classes.btnClose}>
-        <img src={closeIcon} alt="" />
-      </Button>
-      <DialogContent className={classes.content}>
+      <div className={classes.content}>
         <h3>Transaction Submitted</h3>
         <h5>Tx Hash</h5>
         <p>{props.transaction}</p>
-
-      </DialogContent>
+      </div>
       <DialogActions className={classes.actions}>
         <Link href={transactionLink} target="_blank" className={classes.btnView}>
           View on {info.explorerName}
         </Link>
       </DialogActions>
-    </Dialog>
+    </CustomModal>
   );
 }
 

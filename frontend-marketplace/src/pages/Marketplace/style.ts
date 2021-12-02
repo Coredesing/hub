@@ -15,20 +15,32 @@ const useStyles = makeStyles((theme: any) => ({
         }
     },
     swiperSlide: {
+        '& .swiper-button-disabled': {
+            border: '2px solid rgba(104, 104, 104, 0.4) !important',
+            background:'#555555 !important',
+        },
         '& .swiper-button-prev, & .swiper-button-next': {
+            background: 'radial-gradient(82.49% 167.56% at 15.32% 21.04%, rgba(217, 217, 217, 0.2) 0%, rgba(231, 245, 255, 0.0447917) 77.08%, rgba(255, 255, 255, 0) 100%)',
+            display: 'grid',
+            placeItems: 'center',
+            border: '2px solid #686868',
             width: '32px',
             height: '32px',
             backdropFilter: 'blur(80px)',
             borderRadius: '50%',
             // transform: 'matrix(-1, 0, 0, 1, 0, 0)',
-            background: 'rgba(255, 255, 255, 0.6)',
+            // background: 'rgba(217, 217, 217, 0.9)',
             transition: '.3s',
             '&:hover': {
-                background: '#fff',
+                border: '2px solid #686868',
+                background: '#c6c2c2',
             }
         },
         '& .swiper-button-prev:after, & .swiper-button-next:after': {
             display: 'none',
+        },
+        '& .swiper-button-prev:before, & .swiper-button-next:before': {
+            
         },
         '& .swiper-button-prev:before': {
             content: 'url(/images/icons/prev-icon.svg)',
@@ -249,11 +261,11 @@ const useStyles = makeStyles((theme: any) => ({
         width: '295px !important'
     },
     hostCollections: {
-        display: 'flex',
-        gap: '20px',
-        overflow: 'auto',
-        paddingBottom: '10px',
-        justifyContent: 'start',
+        // display: 'flex',
+        // gap: '20px',
+        // overflow: 'auto',
+        // paddingBottom: '10px',
+        // justifyContent: 'start',
         // '& .swiper-slide': {
         //     width: '295px !important',
         //     minWidth: '295px',
@@ -264,7 +276,25 @@ const useStyles = makeStyles((theme: any) => ({
         // },
         '& .swiper-container': {
             marginRight: 'auto',
+            marginLeft: 'unset'
         },
+        '& .swiper-button-prev': {
+            right: '60px',
+            top: '28px',
+            left: 'unset',
+        },
+        '& .swiper-button-next': {
+            right: '10px',
+            top: '28px'
+        },
+        // [theme.breakpoints.down('xs')]: {
+        //     '& .swiper-button-prev': {
+        //         left: '0',
+        //     },
+        //     '& .swiper-button-next': {
+        //         right: '0',
+        //     },
+        // },
         '& .collection': {
             width: '295px',
             minWidth: '295px',

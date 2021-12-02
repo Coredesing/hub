@@ -87,14 +87,7 @@ const Assets = () => {
                             let myBoxes = await erc721Contract.methods.balanceOf(connectedAccount).call();
                             myBoxes = +myBoxes;
                             if (!myBoxes) {
-                                setLoadingAsset(false);
                                 res('');
-                                if (wrapBoxElem) {
-                                    ReactDOM.render(<div className="wrapper-not-found">
-                                        <img src="/images/icons/item-not-found.svg" alt="" />
-                                        <h4>No item found</h4>
-                                    </div>, wrapBoxElem)
-                                }
                                 return;
                             }
                             const useExternalUri = !!+p?.use_external_uri;
@@ -134,6 +127,15 @@ const Assets = () => {
                             res('');
                         }
                     })));
+                    if (!collections.length) {
+                        setLoadingAsset(false);
+                        if (wrapBoxElem) {
+                            ReactDOM.render(<div className="wrapper-not-found">
+                                <img src="/images/icons/item-not-found.svg" alt="" />
+                                <h4>No item found</h4>
+                            </div>, wrapBoxElem)
+                        }
+                    }
                     dispatch(setAssetsCollection({
                         [connectedAccount]: {
                             ...(assetsAccount[connectedAccount] || {}),

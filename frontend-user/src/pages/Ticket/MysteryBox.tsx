@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import clsx from "clsx";
 import useStyles, { useMysteyBoxStyles } from "./style";
 import { AboutMysteryBox } from "./About";
-import { apiRoute, getApproveToken, getCurrencyByNetwork, getDiffTime, getTimelineOfPool, isImageFile, isVideoFile } from "../../utils";
+import { getTimelineOfPool, isImageFile, isVideoFile } from "../../utils";
 import { Progress } from "@base-components/Progress";
 import { useFetchV1 } from "../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,27 +12,18 @@ import {
 import useKyc from "../../hooks/useKyc";
 import useAuth from "../../hooks/useAuth";
 import { AlertKYC } from "../../components/Base/AlertKYC";
-import { calcProgress, getBalance, getRemaining, isEndPool } from "./utils";
-import usePoolDepositAction from "./hooks/usePoolDepositAction";
-import { caclDiffTime } from "./getDiffTime";
+import { calcProgress, getBalance } from "./utils";
 import useTokenAllowance from "../../hooks/useTokenAllowance";
 import useTokenApprove from "../../hooks/useTokenApprove";
-import useUserPurchased from "./hooks/useUserPurchased";
 import TicketModal from "./TicketModal";
-import useTokenClaim from "./hooks/useTokenClaim";
 import axios from "../../services/axios";
-import useUserRemainTokensClaim from "./hooks/useUserRemainTokensClaim";
-import { alertFailure, alertSuccess, setTypeIsPushNoti } from "../../store/actions/alert";
+import { alertFailure } from "../../store/actions/alert";
 import { HashLoader } from "react-spinners";
 import { numberWithCommas } from "../../utils/formatNumber";
 import { WrapperAlert } from "../../components/Base/WrapperAlert";
 import { pushMessage } from "../../store/actions/message";
-import { CountDownTimeType, TimelineType, TokenType } from "./types";
-import { CountDownEndTime } from "./components/CountDownEndTime";
+import { TimelineType, TokenType } from "./types";
 import { AscDescAmountBox } from "./components/AscDescAmountBox";
-import { ButtonBuy } from "./components/ButtonBuy";
-import { ButtonApprove } from "./components/ButtonApprove";
-import { ButtonClaim } from "./components/ButtonClaim";
 import Image from "../../components/Base/Image";
 import usePoolJoinAction from './hooks/usePoolJoinAction';
 import { ButtonBase } from "@base-components/Buttons";
@@ -40,9 +31,7 @@ import CountDownTimeV1, { CountDownTimeType as CountDownTimeTypeV1 } from "@base
 import { BaseRequest } from "../../request/Request";
 import ModalOrderBox from './components/ModalOrderBox';
 import useOrderBox from "./hooks/useOrderBox";
-import { convertTimeToStringFormat } from "@utils/convertDate";
 import ModalConfirmBuyBox from "./components/ModalConfirmBuyBox";
-import WrapperContent from "@base-components/WrapperContent";
 import _ from 'lodash';
 import { getUserTier } from "@store/actions/sota-tiers";
 import { Link } from "react-router-dom";
@@ -105,7 +94,7 @@ const MysteryBox = ({ id, ...props }: any) => {
     // useEffect(() => {
     //     dispatch(setTypeIsPushNoti({ failed: false }));
     // }, [dispatch]);
-
+    const [checkSoldout, setCheckSoldout] = useState({ loading: true, soldout: false });
     const [maxBoxCanBuy, setMaxBoxCanBuy] = useState(0);
     const [boxTypeSelected, setSelectBoxType] = useState<{ [k: string]: any }>({});
     const [tokenSeletected, setTokenSelected] = useState<ObjectType<any>>({});
@@ -147,8 +136,45 @@ const MysteryBox = ({ id, ...props }: any) => {
         if (!loadingTicket && dataTicket) {
             setNewTicket(false);
             setInfoTicket(dataTicket);
+            if (dataTicket?.boxTypesConfig?.length) {
+                const networkInfo = getNetworkInfo(dataTicket.network_available);
+                const contractPreSale = getContractInstance(PreSaleBoxAbi, dataTicket.campaign_hash, connectorName, networkInfo?.id);
+                if (contractPreSale) {
+                    Promise.all(dataTicket.boxTypesConfig.map((b: any, subBoxId: number) => new Promise(async (res, rej) => {
+                        try {
+                            const response = await contractPreSale.methods.subBoxes(eventId, subBoxId).call();
+                            const result = {
+                                maxSupply: new BigNumber('maxSupply' in response ? response.maxSupply : 0).toString(),
+                                totalSold: new BigNumber('totalSold' in response ? response.totalSold : 0).toString(),
+                            }
+                            res({ ...b, subBoxId, ...result });
+                        } catch (error) {
+                            rej(error)
+                        }
+                    })))
+                        .then((arr) => {
+                            const boxNotSoldout = arr.find((b: any) => b.totalSold !== b.maxSupply);
+                            setSelectBoxType((boxNotSoldout || arr[0]) as { [k: string]: any })
+                            setSubBoxes(arr as any[])
+                            const totalSold = arr.reduce((total: number, item: any) => {
+                                total += +item.totalSold;
+                                return total;
+                            }, 0)
+                            setCheckSoldout({ loading: false, soldout: totalSold === +dataTicket.total_sold_coin });
+                        }).catch((err) => {
+                            setCheckSoldout({ loading: false, soldout: false });
+                            console.log('err', err)
+                        })
+                } else {
+                    setSubBoxes(dataTicket.boxTypesConfig);
+                    setSelectBoxType(dataTicket.boxTypesConfig[0])
+                    setCheckSoldout({ loading: false, soldout: false });
+                }
+            } else {
+                setCheckSoldout({ loading: false, soldout: false });
+            }
         }
-    }, [dataTicket, loadingTicket, isClaim]);
+    }, [dataTicket, loadingTicket]);
 
     useEffect(() => {
 
@@ -160,7 +186,7 @@ const MysteryBox = ({ id, ...props }: any) => {
     }, [infoTicket, userTier]);
 
     const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, [k: string]: any }>({ date1: 0, date2: 0, title: '' });
-    const [timelines, setTimelines] = useState<TimelineType | {}>({});
+    const [timelines, setTimelines] = useState<ObjectType<TimelineType>>({});
     const { checkingKyc, isKYC } = useKyc(connectedAccount, (_.isNumber(infoTicket?.kyc_bypass) && !infoTicket?.kyc_bypass));
     const [timelinePool, setTimelinePool] = useState<ObjectType<any>>({});
     const onSetCountdown = useCallback(() => {
@@ -202,12 +228,11 @@ const MysteryBox = ({ id, ...props }: any) => {
                 }
             }
             const startBuyTime = isAccIsBuyPreOrder && timeLine.startPreOrderTime ? timeLine.startPreOrderTime : timeLine.startBuyTime;
-            // const soldOut = !getRemaining(dataTicket.total_sold_coin, dataTicket.token_sold);
-            // if (soldOut) {
-            //     setCountdown({ date1: 0, date2: 0, title: 'Finished', isFinished: true });
-            //     timeLine.freeBuyTime ? (timeLinesInfo[5].current = true) : (timeLinesInfo[4].current = true);
-            // } else 
-            if (timeLine.startJoinPooltime > Date.now()) {
+            const soldOut = checkSoldout.soldout;
+            if (soldOut) {
+                setCountdown({ date1: 0, date2: 0, title: 'Finished', isFinished: true });
+                timeLine.freeBuyTime ? (timeLinesInfo[5].current = true) : (timeLinesInfo[4].current = true);
+            } else if (timeLine.startJoinPooltime > Date.now()) {
                 setCountdown({ date1: timeLine.startJoinPooltime, date2: Date.now(), title: 'Whitelist Opens In', isUpcoming: true });
                 timeLinesInfo[1].current = true;
             }
@@ -248,13 +273,13 @@ const MysteryBox = ({ id, ...props }: any) => {
             }
             setTimelines(timeLinesInfo);
         }
-    }, [dataTicket, userTier]);
+    }, [dataTicket, userTier, checkSoldout]);
 
     useEffect(() => {
-        if (!loadingTicket && dataTicket && _.isNumber(userTier)) {
+        if (!loadingTicket && infoTicket && _.isNumber(userTier) && !checkSoldout.loading) {
             onSetCountdown();
         }
-    }, [dataTicket, loadingTicket, userTier])
+    }, [infoTicket, loadingTicket, userTier, checkSoldout])
 
     const [recallMybox, setRecallMyBox] = useState(true);
     const [ownedBox, setOwnedBox] = useState(0);
@@ -389,36 +414,6 @@ const MysteryBox = ({ id, ...props }: any) => {
             })
         }
     }, [infoTicket, renewTotalBoxesBought, contractPreSale]);
-
-    useEffect(() => {
-        if (infoTicket?.boxTypesConfig?.length) {
-            if (contractPreSale) {
-                Promise.all(infoTicket.boxTypesConfig.map((b: any, subBoxId: number) => new Promise(async (res, rej) => {
-                    try {
-                        const response = await contractPreSale.methods.subBoxes(eventId, subBoxId).call();
-                        const result = {
-                            maxSupply: new BigNumber('maxSupply' in response ? response.maxSupply : 0).toString(),
-                            totalSold: new BigNumber('totalSold' in response ? response.totalSold : 0).toString(),
-                        }
-                        res({ ...b, subBoxId, ...result });
-                    } catch (error) {
-                        rej(error)
-                    }
-                })))
-                    .then((arr) => {
-                        const boxNotSoldout = arr.find((b: any) => b.totalSold !== b.maxSupply);
-                        setSelectBoxType((boxNotSoldout || arr[0]) as { [k: string]: any })
-                        setSubBoxes(arr as any[])
-                    }).catch((err) => {
-                        console.log('err', err)
-                    })
-            } else {
-                setSubBoxes(infoTicket.boxTypesConfig);
-                setSelectBoxType(infoTicket.boxTypesConfig[0])
-            }
-        }
-    }, [infoTicket, contractPreSale]);
-
     const [loadingCollection, setLoadingCollection] = useState(false);
     const [collections, setCollections] = useState<{ [k: string]: any }>([]);
     const handleSetCollections = async (ownedBox: number) => {
@@ -834,7 +829,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                     </div>
                                     <div className="box-countdown">
                                         <h4 className="text-uppercase">{countdown.title}</h4>
-                                        {!countdown.isFinished && <CountDownTimeV1 time={countdown} className={"countdown"} onFinish={onSetCountdown} />}
+                                        {!countdown.isFinished && countdown.date1 && countdown.date2 && <CountDownTimeV1 time={countdown} className={"countdown"} onFinish={onSetCountdown} />}
                                     </div>
                                 </div>
                                 <div className={styles.card}>
@@ -1052,7 +1047,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                             }
 
                                             {
-                                                isShowBtnBuy && getRemainingBox() &&
+                                                isShowBtnBuy && !!getRemainingBox() &&
                                                 <ButtonBase
                                                     color="green"
                                                     isLoading={lockWhenBuyBox}

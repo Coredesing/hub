@@ -3,6 +3,7 @@ const kue = use('Kue');
 const BigNumber = use('bignumber.js');
 const HelperUtils = use('App/Common/HelperUtils')
 const MarketplaceEventModel = use('App/Models/MarketplaceNFTListedEvent')
+const MarketplaceCollectionModel = use('App/Models/MarketplaceCollection')
 const RedisMarketplaceUtils = use('App/Common/RedisMarketplaceUtils')
 
 const priority = 'medium'; // Priority of job, can be low, normal, medium, high or critical
@@ -178,6 +179,12 @@ class FetchMarketplaceEvent {
           default:
             console.log('event not supported', event_type)
             return
+        }
+
+        // get slug -> by cached
+        const slug = await MarketplaceCollectionModel.query().where('token_address', data.token_address).first()
+        if (slug && slug.slug) {
+          data.slug = slug.slug
         }
 
         // check existed before save

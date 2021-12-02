@@ -239,21 +239,17 @@ class FetchMarketplaceEvent {
 
             const currentListed = await MarketplaceEventModel.query()
               .where('token_address', data.token_address)
-              .where('buyer', data.buyer)
               .where('event_type', EVENT_TYPE_LISTED)
               .where('token_id', data.token_id)
-              .where('finish', 0)
-              .where('dispatch_at', '<', data.dispatch_at)
-            
-            if (data.highest_offer > currentListed?.highest_offer) {
+              .where('finish', 0).first()
+
+            if (currentListed && (!currentListed.highest_offer || data.raw_amount > currentListed.highest_offer)) {
               await MarketplaceEventModel.query()
                 .where('token_address', data.token_address)
-                .where('buyer', data.buyer)
-                .where('event_type', EVENT_TYPE_OFFERED)
+                .where('event_type', EVENT_TYPE_LISTED)
                 .where('token_id', data.token_id)
                 .where('finish', 0)
-                .where('dispatch_at', '<', data.dispatch_at)
-                .update({highest_offer: data.highest_offer})
+                .update({highest_offer: data.raw_amount})
             }
             break
           case EVENT_TYPE_LISTED:

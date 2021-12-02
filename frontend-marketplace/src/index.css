@@ -425,3 +425,7 @@ body::-webkit-scrollbar-thumb,
 .hover-underline:hover {
     text-decoration: underline;
 }
+
+.mb-20px {
+    margin-bottom: 20px;
+}

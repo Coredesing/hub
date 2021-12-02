@@ -268,7 +268,7 @@ const useStyles = makeStyles((theme: any) => {
     },
 
     rightAccount: {
-      background: 'radial-gradient(82.49% 167.56% at 15.32% 21.04%, rgba(217, 217, 217, 0.2) 0%, rgba(231, 245, 255, 0.0447917) 77.08%, rgba(255, 255, 255, 0) 100%)',
+      // background: 'radial-gradient(82.49% 167.56% at 15.32% 21.04%, rgba(217, 217, 217, 0.2) 0%, rgba(231, 245, 255, 0.0447917) 77.08%, rgba(255, 255, 255, 0) 100%)',
       border: '1px solid #686868',
       backdropFilter: 'blur(80px)',
       borderRadius: '4px',
@@ -374,5 +374,20 @@ export const useTabStyles = makeStyles((theme: any) => ({
       background: '#72F34B',
       color: '#000',
     }
+  },
+  cards: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, 295px)',
+    gap: '15px',
+    // placeContent: 'center',
+    transition: '.3s',
+    padding: '32px 0px',
+  },
+  heading: {
+    color: '#fff',
+    fontSize: '28px',
+    fontFamily: 'Firs Neue',
+    fontWeight: 600,
+    marginBottom: '6px',
   }
 }))

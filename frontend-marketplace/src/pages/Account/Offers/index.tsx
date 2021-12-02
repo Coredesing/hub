@@ -3,7 +3,6 @@ import { AppBar, TabPanel } from '@base-components/Tabs';
 import CardMarketplace from '@base-components/CardMarketplace';
 import axios from '@services/axios';
 import { ObjectType } from '@app-types';
-import useStyles from './style';
 import erc721ABI from '@abi/Erc721.json';
 import { getContractInstance } from '@services/web3';
 import { useDispatch, useSelector } from 'react-redux';
@@ -25,15 +24,13 @@ import { setTokenInfor } from '@store/actions/tokenInfor';
 import { getSymbolCurrency } from '@utils/getAccountBalance';
 import { setCurrencyTokenAddress } from '@store/actions/currency';
 const Offers = () => {
-    const styles = useStyles();
+    const styles = useTabStyles();
     const history = useHistory();
     const dispatch = useDispatch();
-    // const { appChainID } = useSelector((state: any) => state.appNetwork).data;
     const { connectedAccount, wrongChain /*isAuth*/ } = useAuth();
-    // const offerListAccount = useSelector((state: any) => state.offerListAccount)?.data || {};
 
     const onRedirectDetail = (item: any) => {
-        history.push(`/collection/${item.project.token_address}/${item.token_id}`)
+        history.push(`/collection/${item.slug}/${item.token_id}`)
     }
 
     const renderBoxItem = (item: any, key: any) => {
@@ -68,12 +65,12 @@ const Offers = () => {
                         dispatch(setCurrencyTokenAddress(item.currency, item.currencySymbol));
                     }
                     const projectAddress = item.token_address;
-                    let project = projectInfors[projectAddress];
+                    let project = projectInfors[item.slug];
                     if (!project) {
                         try {
-                            const response = await axios.get(`/marketplace/collection/${projectAddress}`);
+                            const response = await axios.get(`/marketplace/collection/${item.slug}`);
                             project = response.data.data || {};
-                            dispatch(setProjectInfor(projectAddress, project));
+                            dispatch(setProjectInfor(item.slug, project));
                         } catch (error) {
 
                         }
@@ -128,8 +125,8 @@ const Offers = () => {
 
     return (
         <div>
-
             <h3 className={styles.heading}>Offers</h3>
+            {/* <p className="text-grey font-12px firs-neue-font mb-20px">Only NFTs selected by GameFi will be shown.</p> */}
             {/* <Box display="flex" flexWrap="wrap" gridGap="20px" justifyContent="space-between">
                 <Box>
                     <SearchBox placeholder="Search" />

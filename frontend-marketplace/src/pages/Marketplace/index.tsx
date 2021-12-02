@@ -119,7 +119,7 @@ const Marketplace = () => {
                                                     e.target.style.visibility = 'hidden';
                                                 }} />}
                                             </div>
-                                            <Link to={card.token_address ? `/collection/${card.token_address}` : '#'}>
+                                            <Link to={card.slug ? `/collection/${card.slug}` : '#'}>
                                                 <div className="infor">
                                                     <h3>{card.name}</h3>
                                                     <p>{card.description}</p>
@@ -227,7 +227,7 @@ const Marketplace = () => {
                                         {
                                             (listCollection?.currentList || []).map((p: ObjectType<any>, id: number) =>
                                                 <SwiperSlide key={"hostcollections" + id} className={styles.swipeCard}>
-                                                    <Link to={`/collection/${p.token_address}`}>
+                                                    <Link to={`/collection/${p.slug}`}>
                                                         <CollectionCard item={p} />
                                                     </Link>
                                                 </SwiperSlide>
@@ -272,7 +272,7 @@ const Marketplace = () => {
                                         {
                                             (listOffer?.currentList || []).map((item: any, id: number) =>
                                                 <SwiperSlide style={{ width: '295px' }} className={styles.swipeCard} key={"bigoffers" + id}>
-                                                    <Link key={id} to={`/collection/${item.project?.token_address}/${item.token_id}`}>
+                                                    <Link key={id} to={`/collection/${item?.slug}/${item.token_id}`}>
                                                         <CardMarketplace item={item} id={id} />
                                                     </Link>
                                                 </SwiperSlide>
@@ -327,7 +327,7 @@ const Marketplace = () => {
                                                         <div className={styles.cards}>
                                                             {
                                                                 (itemsCollection?.data?.currentList || []).map((coll: any, id: number) =>
-                                                                    <Link key={id} to={`/collection/${coll.token_address}/${coll.token_id}`}>
+                                                                    <Link key={id} to={coll.slug ? `/collection/${coll.slug}/${coll.token_id}` : '#'}>
                                                                         <CardMarketplace item={coll} key={id} />
                                                                     </Link>
                                                                 )}

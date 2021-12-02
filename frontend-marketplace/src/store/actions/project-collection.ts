@@ -11,7 +11,7 @@ import { setTokenInfor } from './tokenInfor';
 import { getNetworkInfo } from '@utils/network';
 
 export type InputItemProjectCollection = {
-    projectAddress: string;
+    project: string;
     filter?: {
         page?: number,
         search?: string,
@@ -19,18 +19,18 @@ export type InputItemProjectCollection = {
     }
 }
 
-export const setProjectInfor = (projectAddress: string, projectInfor?: any) => {
+export const setProjectInfor = (project: string, projectInfor?: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
         const oldData = getState().projectInfors?.data || {};
         dispatch({ type: projectInforActions.LOADING, payload: oldData });
         try {
             if (projectInfor) {
-                dispatch({ type: projectInforActions.SUCCESS, payload: { ...oldData, [projectAddress]: projectInfor } });
+                dispatch({ type: projectInforActions.SUCCESS, payload: { ...oldData, [project]: projectInfor } });
                 return;
             }
-            const response = await axios.get(`/marketplace/collection/${projectAddress}`);
+            const response = await axios.get(`/marketplace/collection/${project}`);
             const result = response.data.data || {};
-            dispatch({ type: projectInforActions.SUCCESS, payload: { ...oldData, [projectAddress]: result } });
+            dispatch({ type: projectInforActions.SUCCESS, payload: { ...oldData, [project]: result } });
         } catch (error) {
             dispatch({
                 type: projectInforActions.FAILURE,
@@ -119,7 +119,7 @@ export const setItemsProjectCollection = (input: InputItemProjectCollection) => 
         dispatch({ type: itemsProjectCollectionActions.LOADING, payload: oldData });
         try {
             const perPage = input.filter?.perPage || 10;
-            const oldDataByProject = oldData[input.projectAddress];
+            const oldDataByProject = oldData[input.project];
             const pageFilter = input.filter?.page || 1;
             if (oldDataByProject?.data?.[pageFilter]?.length) {
                 oldDataByProject.currentPage = pageFilter;
@@ -127,7 +127,7 @@ export const setItemsProjectCollection = (input: InputItemProjectCollection) => 
                 dispatch({ type: itemsProjectCollectionActions.SUCCESS, payload: { ...oldData, ...oldDataByProject } });
                 return;
             }
-            const response = await axios.get(`/marketplace/collection/${input.projectAddress}/items?page=${input.filter?.page || 1}&limit=${perPage}`);
+            const response = await axios.get(`/marketplace/collection/${input.project}/items?page=${pageFilter}&limit=${perPage}`);
             const result = response.data.data || null;
             if (!result) {
                 dispatch({ type: itemsProjectCollectionActions.SUCCESS, payload: oldData });
@@ -135,13 +135,21 @@ export const setItemsProjectCollection = (input: InputItemProjectCollection) => 
             }
 
             const listData = result.data || [];
-            const projectInfor = (getState().projectInfors?.data || {})?.[input.projectAddress] || {};
-            const useExternalUri = !!+projectInfor.use_external_uri;
-            const listItems = await getInfoListData(listData, input.projectAddress, useExternalUri, getState, projectInfor, dispatch);
+            let projectInfor = (getState().projectInfors?.data || {})?.[input.project] || null;;
+            if (!projectInfor) {
+                const response = await axios.get(`/marketplace/collection/${input.project}`);
+                projectInfor = response.data.data || {};
+                if (projectInfor.token_address) {
+                    dispatch(setProjectInfor(projectInfor.token_address, projectInfor));
+                }
+
+            }
+            const useExternalUri = !!+projectInfor?.use_external_uri;
+            const listItems = await getInfoListData(listData, projectInfor.token_address, useExternalUri, getState, projectInfor, dispatch);
             const totalRecords = +result.total || 0;
             const currentPage = +result.page || 1;
             const setData = {
-                [input.projectAddress]: {
+                [input.project]: {
                     total: totalRecords,
                     currentPage,
                     totalPage: Math.ceil(totalRecords / perPage),
@@ -168,7 +176,7 @@ export const setActivitiesProjectCollection = (input: InputItemProjectCollection
         dispatch({ type: activitiesProjectCollectionActions.LOADING, payload: oldData });
         try {
             const perPage = input.filter?.perPage || 10;
-            const oldDataByProject = oldData[input.projectAddress];
+            const oldDataByProject = oldData[input.project];
             const pageFilter = input.filter?.page || 1;
             if (oldDataByProject?.data?.[pageFilter]?.length) {
                 oldDataByProject.currentPage = pageFilter;
@@ -176,7 +184,7 @@ export const setActivitiesProjectCollection = (input: InputItemProjectCollection
                 dispatch({ type: activitiesProjectCollectionActions.SUCCESS, payload: { ...oldData, ...oldDataByProject } });
                 return;
             }
-            const response = await axios.get(`/marketplace/collection/${input.projectAddress}/activities?page=${pageFilter}&limit=${perPage}`);
+            const response = await axios.get(`/marketplace/collection/${input.project}/activities?page=${pageFilter}&limit=${perPage}`);
             const result = response.data.data || null;
             if (!result) {
                 dispatch({ type: activitiesProjectCollectionActions.SUCCESS, payload: oldData });
@@ -184,13 +192,21 @@ export const setActivitiesProjectCollection = (input: InputItemProjectCollection
             }
 
             const listData = result.data || [];
-            const projectInfor = (getState().projectInfors?.data || {})?.[input.projectAddress] || {};
-            const useExternalUri = !!+projectInfor.use_external_uri;
-            const listItems = await getInfoListData(listData, input.projectAddress, useExternalUri, getState, projectInfor, dispatch);
+            let projectInfor = (getState().projectInfors?.data || {})?.[input.project] || null;;
+            if (!projectInfor) {
+                const response = await axios.get(`/marketplace/collection/${input.project}`);
+                projectInfor = response.data.data || {};
+                if (projectInfor.token_address) {
+                    dispatch(setProjectInfor(projectInfor.token_address, projectInfor));
+                }
+
+            }
+            const useExternalUri = !!+projectInfor?.use_external_uri;
+            const listItems = await getInfoListData(listData, projectInfor?.token_address, useExternalUri, getState, projectInfor, dispatch);
             const totalRecords = +result.total || 0;
             const currentPage = +result.page || 1;
             const setData = {
-                [input.projectAddress]: {
+                [input.project]: {
                     total: totalRecords,
                     currentPage,
                     totalPage: Math.ceil(totalRecords / perPage),
@@ -225,18 +241,18 @@ export const setActivitiesDetailCollection = (input: InputItemProjectCollection 
                 dispatch({ type: activitiesDetailCollectionActions.SUCCESS, payload: { ...oldData, ...oldDataByDetail } });
                 return;
             }
-            let projectInfor = (getState().projectInfors?.data || {})?.[input.projectAddress] || null;
+            let projectInfor = (getState().projectInfors?.data || {})?.[input.project] || null;
             if (!projectInfor) {
                 try {
-                    const responseProject = await axios.get(`/marketplace/collection/${input.projectAddress}`);
+                    const responseProject = await axios.get(`/marketplace/collection/${input.project}`);
                     projectInfor = responseProject.data.data || {};
-                    setProjectInfor(input.projectAddress, projectInfor);
+                    setProjectInfor(input.project, projectInfor);
                 } catch (error) {
                     console.log('error', error);
                 }
             }
 
-            const response = await axios.get(`/marketplace/collection/${input.projectAddress}/activities?page=${pageFilter}&limit=${perPage}&token_id=${input.tokenId}`);
+            const response = await axios.get(`/marketplace/collection/${input.project}/activities?page=${pageFilter}&limit=${perPage}&token_id=${input.tokenId}`);
             const result = response.data.data || null;
             if (!result) {
                 dispatch({ type: activitiesDetailCollectionActions.SUCCESS, payload: oldData });
@@ -246,7 +262,7 @@ export const setActivitiesDetailCollection = (input: InputItemProjectCollection 
             const listData = result.data || [];
 
             const useExternalUri = !!+projectInfor.use_external_uri;
-            const listItems = await getInfoListData(listData, input.projectAddress, useExternalUri, getState, projectInfor, dispatch);
+            const listItems = await getInfoListData(listData, projectInfor?.token_address, useExternalUri, getState, projectInfor, dispatch);
             const totalRecords = +result.total || 0;
             const currentPage = +result.page || 1;
             const setData = {
@@ -261,7 +277,6 @@ export const setActivitiesDetailCollection = (input: InputItemProjectCollection 
                     }
                 }
             }
-            console.log('setData', setData)
             dispatch({ type: activitiesDetailCollectionActions.SUCCESS, payload: { ...oldData, ...setData } });
         } catch (error: any) {
             dispatch({

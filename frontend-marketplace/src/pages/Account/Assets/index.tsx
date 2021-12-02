@@ -3,7 +3,6 @@ import { AppBar, TabPanel } from '@base-components/Tabs';
 import CardMarketplace from '@base-components/CardMarketplace';
 import axios from '@services/axios';
 import { ObjectType } from '@app-types';
-import useStyles from './style';
 import erc721ABI from '@abi/Erc721.json';
 import { getContractInstance } from '@services/web3';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,7 +20,6 @@ import { SearchBox } from '@base-components/SearchBox';
 import { getNetworkInfo } from '@utils/network';
 import { useTypedSelector } from '@hooks/useTypedSelector';
 const Assets = () => {
-    const styles = useStyles();
     const tabStyles = useTabStyles();
     const history = useHistory();
     const dispatch = useDispatch();
@@ -53,7 +51,7 @@ const Assets = () => {
     const [assets, setAssets] = useState<ObjectType<any>>({});
 
     const onRedirectDetail = (item: any) => {
-        history.push(`/collection/${item.project.token_address}/${item.id}`)
+        history.push(`/collection/${item.project.slug}/${item.id}`)
     }
 
     const renderBoxItem = (item: any, key: any) => {
@@ -167,7 +165,8 @@ const Assets = () => {
                 tabNames={[tabNames[0].name, tabNames[1].name, tabNames[2].name]}
                 onChange={onChangeTab}
             /> */}
-            <h3 className={styles.heading}>Assets</h3>
+            <h3 className={tabStyles.heading}>Assets</h3>
+            <p className="text-grey font-12px firs-neue-font mb-20px">Only NFTs selected by GameFi will be shown.</p>
             <Box display="flex" flexWrap="wrap" gridGap="20px" justifyContent="space-between">
                 <Box display="flex" gridGap="8px" alignItems="center">
                     <Button
@@ -216,21 +215,21 @@ const Assets = () => {
                 </Backdrop>
             }
             <TabPanel value={currentTab} index={tabNames[0].value}>
-                <div className={styles.cards} id="nft-cards">
+                <div className={tabStyles.cards} id="nft-cards">
                     {/* {(assetsAccount['nft']?.array || []).map((item: ObjectType<any>, key: number) => <Link key={key} to={`/collection/${item.project.token_address}/${item.id}`}>
                         <BoxCard key={key} item={item} />
                     </Link>)} */}
                 </div>
             </TabPanel>
             <TabPanel value={currentTab} index={tabNames[1].value}>
-                <div className={styles.cards} id="box-cards">
+                <div className={tabStyles.cards} id="box-cards">
                     {/* {(assetsAccount['box']?.array || []).map((item: ObjectType<any>, key: number) => <Link key={key} to={`/collection/${item.project.token_address}/${item.id}`}>
                         <BoxCard key={key} item={item} />
                     </Link>)} */}
                 </div>
             </TabPanel>
             <TabPanel value={currentTab} index={tabNames[2].value}>
-                <div className={styles.cards} id="equipment-cards">
+                <div className={tabStyles.cards} id="equipment-cards">
                 </div>
             </TabPanel>
         </div>

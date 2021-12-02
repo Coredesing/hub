@@ -38,7 +38,7 @@ export const AboutMarketplaceNFT = ({
     token,
     defaultTab,
     id,
-    projectAddress,
+    project,
     isOwnerNFTOnSale,
     reloadOfferList,
     getSymbolCurrency,
@@ -47,6 +47,7 @@ export const AboutMarketplaceNFT = ({
     lockingAction,
     setReloadOfferList,
     validChain,
+    projectInfor,
     ...props }: Props) => {
 
     const { account: connectedAccount } = useWeb3React();
@@ -95,8 +96,8 @@ export const AboutMarketplaceNFT = ({
 
     useEffect(() => {
         // update pagination
-        if (reloadOfferList && addressCurrencyToBuy) {
-            axios.get(`/marketplace/offers/${projectAddress}/${id}?event_type=TokenOffered`).then(async (res) => {
+        if (reloadOfferList && addressCurrencyToBuy && projectInfor) {
+            axios.get(`/marketplace/offers/${project}/${id}?event_type=TokenOffered`).then(async (res) => {
                 let offers = res.data?.data || [];
                 const offerList: ObjectType<any>[] = [];
                 await Promise.all(offers.map((item: any) => new Promise(async (res) => {
@@ -116,15 +117,16 @@ export const AboutMarketplaceNFT = ({
                 setReloadOfferList(false)
             })
         }
-    }, [reloadOfferList, addressCurrencyToBuy])
+    }, [reloadOfferList, addressCurrencyToBuy, projectInfor])
 
     const activitiesDetailCollection = useSelector((state: any) => state.activitiesDetailCollection);
     const activitiesDetail = activitiesDetailCollection?.data?.[id] || {};
     const [activitiesFilter, setActivitiesFilter] = useState<ObjectType<any>>({ page: 1 });
 
     useEffect(() => {
-        dispatch(setActivitiesDetailCollection({ projectAddress, tokenId: id, filter: activitiesFilter }));
-    }, [activitiesFilter]);
+        if(!projectInfor) return;
+        dispatch(setActivitiesDetailCollection({ project: project, tokenId: id, filter: activitiesFilter }));
+    }, [activitiesFilter, projectInfor]);
     const onSetPage = (page: number) => {
         setActivitiesFilter(t => ({ ...t, page }));
     }

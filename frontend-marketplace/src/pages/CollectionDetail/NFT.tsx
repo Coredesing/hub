@@ -386,6 +386,10 @@ const MysteryBox = ({ id, project, ...props }: any) => {
                     reloadedBalance={reloadedBalance}
                     setReloadBalance={setReloadBalance}
                     validChain={allowNetwork.ok}
+                    isApprovedToken={isApprovedToken}
+                    onApproveToken={onApproveToken}
+                    lockingAction={lockingAction}
+                    checkFnIsLoading={checkFnIsLoading}
                 />
                 <ListingNFTModal
                     open={openListingModal}
@@ -554,30 +558,51 @@ const MysteryBox = ({ id, project, ...props }: any) => {
                                                                     Transfer
                                                                 </ButtonBase>
                                                             }
-                                                            {
+                                                            {/* {
                                                                 !isOwnerNFT && !isApprovedToken.ok && !isApprovedToken.loading && addressOwnerOnSale !== connectedAccount &&
                                                                 !!+addressOwnerOnSale && !(new BigNumber(+addressOwnerOnSale).isZero()) &&
                                                                 <ButtonBase isLoading={checkFnIsLoading(onApproveToken.name)} disabled={lockingAction.lock} color="yellow" className="w-full"
                                                                     onClick={onApproveToken}>
                                                                     Approve
                                                                 </ButtonBase>
-                                                            }
+                                                            } */}
                                                             {
                                                                 !isOwnerNFT &&
-                                                                isApprovedToken.ok &&
+                                                                // isApprovedToken.ok &&
                                                                 addressOwnerOnSale !== connectedAccount && !!+addressOwnerOnSale && !(new BigNumber(+addressOwnerOnSale).isZero()) &&
-                                                                <ButtonBase isLoading={checkFnIsLoading(onOfferNFT.name)} disabled={lockingAction.lock} color="yellow" className="w-full" onClick={() => setOpenOfferModal(true)}>
+                                                                <ButtonBase isLoading={checkFnIsLoading(onOfferNFT.name)} disabled={lockingAction.lock} color="yellow" onClick={() => setOpenOfferModal(true)}>
                                                                     Make Offer
                                                                 </ButtonBase>
                                                             }
                                                             {
+                                                                !isOwnerNFT && !!+addressOwnerOnSale && !(new BigNumber(+addressOwnerOnSale).isZero()) && addressOwnerOnSale !== connectedAccount && (
+                                                                    isApprovedToken.ok ?
+                                                                        <ButtonBase
+                                                                            disabled={lockingAction.lock}
+                                                                            isLoading={checkFnIsLoading(onBuyNFT.name)}
+                                                                            color="green"
+                                                                            onClick={onBuyNFT}
+                                                                        >
+                                                                            Buy Now
+                                                                        </ButtonBase> :
+                                                                        !isApprovedToken.ok && !isApprovedToken.loading &&
+                                                                        <ButtonBase
+                                                                            disabled={lockingAction.lock}
+                                                                            isLoading={checkFnIsLoading(onApproveToken.name)}
+                                                                            color="green"
+                                                                            onClick={onApproveToken}>
+                                                                            Approve to Buy
+                                                                        </ButtonBase>
+                                                                )
+                                                            }
+                                                            {/* {
                                                                 !isOwnerNFT &&
                                                                 isApprovedToken.ok &&
                                                                 addressOwnerOnSale !== connectedAccount && !!+addressOwnerOnSale && !(new BigNumber(+addressOwnerOnSale).isZero()) &&
                                                                 <ButtonBase isLoading={checkFnIsLoading(onBuyNFT.name)} disabled={lockingAction.lock} color="green" className="w-full" onClick={onBuyNFT}>
                                                                     Buy Now
                                                                 </ButtonBase>
-                                                            }
+                                                            } */}
                                                         </>
                                                     }
                                                 </div>

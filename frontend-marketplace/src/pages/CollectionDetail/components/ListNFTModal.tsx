@@ -194,7 +194,7 @@ const ListingNFTModal = ({ open,
             }
         }
         getBalance();
-    }, [tokenSelected, erc20Contract, connectedAccount, appChainID]);
+    }, [tokenSelected, erc20Contract, connectedAccount, appChainID, validChain]);
 
     return (
         <CustomModal open={open} onClose={onClose}

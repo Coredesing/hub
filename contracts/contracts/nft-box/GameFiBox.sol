@@ -18,7 +18,7 @@ interface IExternalRandom {
 
 interface IExternalMinted {
     function mintTokens(address owner, uint count, uint group) external;
-    function mintToken(address owner) external;
+    function mintWhitelist(address user, uint256 amount) external;
 }
 
 interface IStakingContract {
@@ -292,7 +292,7 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         _fowardFund(totalFund, token);
 
         if (externalMinted != address(0)) {
-            IExternalMinted(externalMinted).mintTokens(msg.sender, amount, subBoxId);
+            IExternalMinted(externalMinted).mintWhitelist(msg.sender, amount);
         } else {
             for (uint i = 0; i < amount; i++) {
                 uint256 boxId = _createBox(eventId, subBoxId);

@@ -29,8 +29,9 @@ class MarketplaceController {
   // TODO:
   async discover({ request }) {
     try {
-
-      return HelperUtils.responseSuccess('','Update successfully');
+      const inputParams = request.all();
+      let data = await (new MarketplaceService).getListings(inputParams);
+      return HelperUtils.responseSuccess(data);
     } catch (e) {
       return HelperUtils.responseErrorInternal();
     }
@@ -92,6 +93,20 @@ class MarketplaceController {
     }
   }
 
+  async getActivities({ request, auth, params }) {
+    try {
+      const inputParams = request.all();
+
+      let data = await (new MarketplaceService).getActivities(inputParams);
+      if (!data) {
+        return HelperUtils.responseNotFound()
+      }
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
   // filters: type
   async getSupportCollections({ request }) {
     try {
@@ -122,6 +137,18 @@ class MarketplaceController {
 
     try {
       let data = await (new MarketplaceService).getMyOffers(address, inputParams);
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
+  async getMyListings({ request, auth, params }) {
+    const address = params.address;
+    const inputParams = request.all();
+
+    try {
+      let data = await (new MarketplaceService).getMyListings(address, inputParams);
       return HelperUtils.responseSuccess(data);
     } catch (e) {
       return HelperUtils.responseErrorInternal();

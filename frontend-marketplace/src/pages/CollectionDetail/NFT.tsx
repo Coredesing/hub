@@ -36,14 +36,14 @@ import { Backdrop, Box } from "@material-ui/core";
 import { useTypedSelector } from "@hooks/useTypedSelector";
 import useContract from "@hooks/useContract";
 import useContractSigner from "@hooks/useContractSigner";
+
 const MARKETPLACE_SMART_CONTRACT = process.env.REACT_APP_MARKETPLACE_SMART_CONTRACT as string;
-console.log('MARKETPLACE_SMART_CONTRACT', MARKETPLACE_SMART_CONTRACT)
 
 const MysteryBox = ({ id, projectAddress, ...props }: any) => {
     const styles = useStyles();
     const marketplaceStyle = useMarketplaceStyle();
     const dispatch = useDispatch();
-    const { library } = useWeb3React();
+    const { library, chainId } = useWeb3React();
     const { connectedAccount, wrongChain } = useAuth();
     const { appChainID } = useSelector((state: any) => state.appNetwork).data;
     const [infoNFT, setInfoNFT] = useState<ObjectType<any>>({});
@@ -51,14 +51,11 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
     const connectorName = useTypedSelector(state => state.connector).data;
     const { contract: erc721ContractWithSigner } = useContractSigner(erc721ABI, projectAddress, connectedAccount as string);
     const { contract: marketplaceContractWithSigner } = useContractSigner(marketplaceABI, MARKETPLACE_SMART_CONTRACT, connectedAccount as string);
-    const { contract: erc721Contract } = useContract(erc721ABI, projectAddress);
-    const { contract: marketplaceContract } = useContract(marketplaceABI, MARKETPLACE_SMART_CONTRACT);
+    const [projectInfor, setProjectInfor] = useState<any>(null);
+    const [erc721Contract, setErc721Contract] = useState<any>(null);
+    const [marketplaceContract, setMarketplaceContract] = useState<any>(null);
 
     useEffect(() => {
-        if (!appChainID || !erc721Contract) {
-            setInfoNFT({});
-            return;
-        }
         setInfoNFT({ loading: true });
         axios.get(`/marketplace/collection/${projectAddress}`).then(async (res) => {
             const infoProject = res.data.data;
@@ -66,32 +63,57 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                 setInfoNFT({});
                 return;
             }
-            try {
-                getAddresssOwnerNFT();
-                if (+infoProject.use_external_uri === 1) {
-                    const result = await axios.post(`/marketplace/collection/${projectAddress}/${id}`);
-                    setInfoNFT({
-                        ...(result.data.data || {}),
-                        id: id,
-                        project: infoProject,
-                        success: true,
-                    })
-                } else {
-                    const tokenURI = await erc721Contract.methods.tokenURI(id).call();
-                    const infoBoxType = (await axios.get(tokenURI)).data || {};
-                    setInfoNFT({
-                        ...infoBoxType,
-                        id: id,
-                        project: infoProject,
-                        success: true,
-                    })
-                }
-            } catch (error: any) {
-                console.log('err', error)
-                setInfoNFT({ error: true, project: infoProject, });
+            if (infoProject) {
+                setProjectInfor(infoProject);
             }
         })
-    }, [id, projectAddress, appChainID, erc721Contract])
+    }, [projectAddress]);
+
+    const getInfoCollection = async () => {
+        try {
+            getAddresssOwnerNFT();
+            if (+projectInfor.use_external_uri === 1) {
+                const result = await axios.post(`/marketplace/collection/${projectAddress}/${id}`);
+                setInfoNFT({
+                    ...(result.data.data || {}),
+                    id: id,
+                    project: projectInfor,
+                    success: true,
+                })
+            } else {
+                const tokenURI = await erc721Contract.methods.tokenURI(id).call();
+                const infoBoxType = (await axios.get(tokenURI)).data || {};
+                setInfoNFT({
+                    ...infoBoxType,
+                    id: id,
+                    project: projectInfor,
+                    success: true,
+                })
+            }
+        } catch (error: any) {
+            console.log('err', error)
+            setInfoNFT({ error: true, project: projectInfor, });
+        }
+    }
+
+    useEffect(() => {
+        if (!projectInfor) {
+            setErc721Contract(null);
+            setMarketplaceContract(null);
+            return;
+        };
+        const networkInfor = getNetworkInfo(projectInfor.network);
+        const erc721Contract = getContractInstance(erc721ABI, projectAddress, undefined, networkInfor.id);
+        const marketplaceContract = getContractInstance(marketplaceABI, MARKETPLACE_SMART_CONTRACT, undefined, networkInfor.id);
+        erc721Contract && setErc721Contract(erc721Contract);
+        marketplaceContract && setMarketplaceContract(marketplaceContract);
+    }, [projectInfor]);
+
+    useEffect(() => {
+        if (projectInfor && erc721Contract) {
+            getInfoCollection();
+        }
+    }, [projectInfor, erc721Contract])
 
     const getAddresssOwnerNFT = async () => {
         if (!erc721Contract) {
@@ -109,7 +131,8 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
         if (new BigNumber(currencyAddress || 0).isZero() && allowShowDefaultCurrency) {
             return ChainDefault.currency as string;
         }
-        const erc20Contract = getContractInstance(erc20ABI, currencyAddress, connectorName, appChainID);
+        const networkInfor = getNetworkInfo(projectInfor?.network);
+        const erc20Contract = getContractInstance(erc20ABI, currencyAddress, connectorName, networkInfor.id);
         if (!erc20Contract) return;
         const symbol = await erc20Contract.methods.symbol().call();
         return symbol;
@@ -117,7 +140,6 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
     const getTokenOnSale = async () => {
         try {
             const tokenOnSale = await marketplaceContract.methods.tokensOnSale(projectAddress, id).call();
-            console.log('tokenOnSale', tokenOnSale)
             setAddressOwnerOnSale(tokenOnSale.tokenOwner);
             const price = (+utils.formatEther(tokenOnSale.price) || '') + '';
             setNFTPrice(price)
@@ -129,31 +151,17 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
         }
     }
     useEffect(() => {
-        if (!appChainID || !MARKETPLACE_SMART_CONTRACT || !marketplaceContract) return;
+        if (!MARKETPLACE_SMART_CONTRACT || !marketplaceContract) return;
         getTokenOnSale();
-    }, [id, appChainID, marketplaceContract])
+    }, [marketplaceContract])
 
     const [allowNetwork, setAllowNetwork] = useState<{ ok: boolean, [k: string]: any }>({ ok: false });
     useEffect(() => {
-        // const networkInfo = APP_NETWORKS_SUPPORT[Number(appChainID)];
         if (!infoNFT.project?.network) return;
-        const networkInfo = getNetworkInfo(infoNFT.project?.network)
-        // if (!networkInfo || !infoNFT?.network_available) {
-        //     return;
-        // }
-        const ok = String(networkInfo.name).toLowerCase() === (infoNFT.network || "").toLowerCase();
-        // if (!ok) {
-        //     dispatch(pushMessage(`Please switch to ${(infoNFT.network_available || '').toLocaleUpperCase()} network to do Apply Whitelist, Approve/Buy tokens.`))
-        // } else {
-        //     dispatch(pushMessage(''));
-        // }
-        setAllowNetwork(
-            {
-                ok,
-                ...networkInfo,
-            }
-        );
-    }, [infoNFT, appChainID, dispatch]);
+        const networkInfo = getNetworkInfo(infoNFT.project?.network);
+        const ok = chainId == networkInfo.id;
+        setAllowNetwork({ ok, ...networkInfo });
+    }, [infoNFT, chainId]);
 
     // const tagTypes = ['Character', 'Sales'];
     // const tagCategories = ['Fighting', 'Strategy'];
@@ -169,7 +177,8 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
     const checkFnIsLoading = (fnName: string): boolean => {
         return lockingAction.action === fnName && lockingAction.lock;
     }
-    const [reloadOfferList, setReloadOfferList] = useState(1);
+    const [reloadOfferList, setReloadOfferList] = useState(true);
+    const [reloadedBalance, setReloadBalance] = useState(false);
     const handleTx = async (tx: any, action?: string) => {
         dispatch(alertWarning("Request is processing!"));
         setTxHash(tx.hash)
@@ -196,10 +205,11 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
             getAddresssOwnerNFT();
         }
         if (action === onOfferNFT.name) {
-            setReloadOfferList(c => c + 1);
+            setReloadOfferList(true);
+            setReloadBalance(true);
         }
         if (action === onRejectOffer.name) {
-            setReloadOfferList(c => c + 1);
+            setReloadOfferList(true);
         }
         if (action === onApproveToMarketplace.name) {
             checkApproveMarketplace();
@@ -225,9 +235,7 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
     const [openListingModal, setOpenListingModal] = useState(false);
     const [openOfferModal, setOpenOfferModal] = useState(false);
     const [openTransferModal, setOpenTransferModal] = useState(false);
-    useEffect(() => {
-        console.log('infoNFT', infoNFT)
-    }, [infoNFT])
+
     const [tokenSelected, setTokenSeleted] = useState<ObjectType<any>>({});
     useEffect(() => {
         if (infoNFT?.project?.accepted_tokens?.length) {
@@ -296,9 +304,9 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
         }
     }
     useEffect(() => {
-        if (!library || !connectedAccount || !erc721ContractWithSigner) return;
+        if (!library || !connectedAccount || !erc721ContractWithSigner || !allowNetwork.ok) return;
         checkApproveMarketplace();
-    }, [projectAddress, library, connectedAccount, erc721ContractWithSigner]);
+    }, [projectAddress, library, connectedAccount, erc721ContractWithSigner, allowNetwork]);
 
     const isOwnerNFT = connectedAccount && connectedAccount === addressOwnerNFT;
     const isOwnerNFTOnSale = connectedAccount && addressOwnerOnSale === connectedAccount;
@@ -344,14 +352,14 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
 
 
     useEffect(() => {
-        if (isOwnerNFT || isOwnerNFTOnSale) return;
+        if (isOwnerNFT || isOwnerNFTOnSale || !allowNetwork.ok) return;
         if (!addressCurrencyToBuy || !connectedAccount || !infoNFT?.project?.token_address) return;
         if (addressCurrencyToBuy && !new BigNumber(addressCurrencyToBuy).isZero() && connectedAccount) {
             checkApproveToken();
         } else {
             setApprovedToken({ loading: false, ok: true });
         }
-    }, [addressCurrencyToBuy, connectedAccount, infoNFT?.project?.token_address, isOwnerNFT, isOwnerNFTOnSale]);
+    }, [addressCurrencyToBuy, connectedAccount, infoNFT?.project?.token_address, isOwnerNFT, isOwnerNFTOnSale, allowNetwork]);
 
     return (
         <>
@@ -370,6 +378,9 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                     onConfirm={onOfferNFT}
                     isLoadingButton={lockingAction.lock}
                     addressCurrencyToBuy={addressCurrencyToBuy}
+                    reloadedBalance={reloadedBalance}
+                    setReloadBalance={setReloadBalance}
+                    validChain={allowNetwork.ok}
                 />
                 <ListingNFTModal
                     open={openListingModal}
@@ -383,6 +394,7 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                     tokenSelected={tokenSelected}
                     addressCurrencyToBuy={addressCurrencyToBuy}
                     currencySymbol={currencySymbol}
+                    validChain={allowNetwork.ok}
                 />
                 {
                     infoNFT.loading ? <Backdrop open={infoNFT.loading} style={{ color: '#fff', zIndex: 1000, }}>
@@ -503,7 +515,7 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                                             <div className="divider"></div>
                                             <div className={marketplaceStyle.actions}>
                                                 {
-                                                    connectedAccount && infoNFT.success && <>
+                                                    connectedAccount && infoNFT.success && allowNetwork.ok && <>
                                                         {
                                                             isOwnerNFT && <ButtonBase isLoading={checkFnIsLoading(onListingNFT.name)} disabled={lockingAction.lock} color="yellow" className="w-full" onClick={() => setOpenListingModal(true)}>
                                                                 List
@@ -562,8 +574,10 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                                             checkFnIsLoading={checkFnIsLoading}
                                             lockingAction={lockingAction}
                                             reloadOfferList={reloadOfferList}
+                                            setReloadOfferList={setReloadOfferList}
                                             getSymbolCurrency={getSymbolCurrency}
                                             addressCurrencyToBuy={addressCurrencyToBuy}
+                                            validChain={allowNetwork.ok}
                                         />
                                     </div>
                                 </div>

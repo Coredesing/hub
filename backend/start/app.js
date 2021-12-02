@@ -70,6 +70,7 @@ const aliases = {
 const commands = [
   'App/Commands/FetchEvents',
   'App/Commands/FetchStakingEvents',
+  'App/Commands/RefetchEvents',
   // 'App/Commands/GetUserPurchasedBalanceCommand',
   // 'App/Commands/GetUserKycInformationCommand',
   // 'App/Commands/SignatureCommand',

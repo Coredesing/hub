@@ -3,7 +3,7 @@ import { alertReducer, getTypeIsPushNotiReducer } from './alert'
 import { appNetworkReducer, connectorReducer } from './appNetwork';
 import { walletReducer } from './wallet';
 import { messageReducer } from './message';
-import { assetsAccountReducer } from './asset-account';
+import { assetsAccountReducer, listOffersAccountReducer, listingsAccountReducer } from './inventory';
 import { listCollectionReducer, listOfferReducer, itemsCollectionReducer, activitiesCollectionReducer } from './marketplace';
 import { projectInforsReducer, itemsProjectCollectionsReducer, activitiesProjectCollectionsReducer } from './project-collection';
 import { currenciesReducer } from './currency';
@@ -17,6 +17,8 @@ const rootReducer = combineReducers({
   messages: messageReducer,
   alertTypeIsPush: getTypeIsPushNotiReducer,
   assetsAccount: assetsAccountReducer,
+  listOffersAccount: listOffersAccountReducer,
+  listingsAccount: listingsAccountReducer,
   listCollection: listCollectionReducer,
   listOffer: listOfferReducer,
   projectInfors: projectInforsReducer,

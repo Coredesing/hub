@@ -7,7 +7,7 @@ const useStyles = makeStyles<Theme>(props => ({
     card: {
         padding: '20px',
         borderRadius: '4px',
-        background: 'radial-gradient(102.65% 160.75% at 15.32% 21.04%, rgba(217, 217, 217, 0.2) 0%, rgba(231, 245, 255, 0.0447917) 77.08%, rgba(70, 144, 213, 0) 100%)',
+        background: 'rgba(45,46,46, 0.9)',
         border: '1px solid #515151',
         transition: '.3s',
         cursor: 'pointer',
@@ -43,10 +43,11 @@ const useStyles = makeStyles<Theme>(props => ({
         display: 'grid',
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: '15px',
+        borderRadius: '4px',
         '& img': {
             width: '100%',
             height: '100%',
+            borderRadius: '4px',
         },
     },
     cardBody: {

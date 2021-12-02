@@ -88,7 +88,7 @@ type Props = {
     [k: string]: any,
 }
 
-const OfferNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isApproved, currencySymbol, addressCurrencyToBuy, ...props }: Props) => {
+const OfferNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isApproved, currencySymbol, addressCurrencyToBuy, reloadedBalance, setReloadBalance, validChain, ...props }: Props) => {
     const styles = useStyles();
     const [inputPrice, setInputPrice] = useState(0);
     const { connectedAccount } = useAuth();
@@ -106,28 +106,36 @@ const OfferNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isAppro
 
     const [addressBalance, setAddressBalance] = useState('0');
     const { contract: erc20Contract } = useContract(erc20ABI, addressCurrencyToBuy);
+    const getBalance = async () => {
+        try {
+            if (new BigNumber(addressCurrencyToBuy).isZero()) {
+                const balance = await getAccountBalance(appChainID, appChainID, connectedAccount as string, 'metamask')
+                setAddressBalance(utils.formatEther(balance.toString()));
+            } else {
+                if (!erc20Contract) return;
+                const balance = await erc20Contract.methods.balanceOf(connectedAccount).call();
+                setAddressBalance(utils.formatEther(balance.toString()));
+            }
+            setReloadBalance(false);
+            setInputPrice(0);
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     useEffect(() => {
-        if (!addressCurrencyToBuy || !connectedAccount) {
+        if (!addressCurrencyToBuy || !connectedAccount || !validChain) {
             setAddressBalance('0');
             return;
         }
-        const getBalance = async () => {
-            try {
-                if (new BigNumber(addressCurrencyToBuy).isZero()) {
-                    const balance = await getAccountBalance(appChainID, appChainID, connectedAccount, 'metamask')
-                    setAddressBalance(utils.formatEther(balance.toString()));
-                } else {
-                    if (!erc20Contract) return;
-                    const balance = await erc20Contract.methods.balanceOf(connectedAccount).call();
-                    setAddressBalance(utils.formatEther(balance.toString()));
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        }
         getBalance();
     }, [addressCurrencyToBuy, erc20Contract, connectedAccount]);
+
+    useEffect(() => {
+        if (reloadedBalance) {
+            getBalance();
+        }
+    }, [reloadedBalance])
 
     return (
         <CustomModal open={open} onClose={onClose}

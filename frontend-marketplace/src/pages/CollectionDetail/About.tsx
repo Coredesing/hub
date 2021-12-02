@@ -42,6 +42,8 @@ export const AboutMarketplaceNFT = ({
     addressCurrencyToBuy,
     checkFnIsLoading,
     lockingAction,
+    setReloadOfferList,
+    validChain,
     ...props }: Props) => {
 
     const { account: connectedAccount } = useWeb3React();
@@ -56,7 +58,7 @@ export const AboutMarketplaceNFT = ({
     const [offerList, setOfferList] = useState<ObjectType<any>[]>([]);
     useEffect(() => {
         // update pagination
-        if (reloadOfferList) {
+        if (reloadOfferList && addressCurrencyToBuy) {
             axios.get(`/marketplace/offers/${projectAddress}/${id}?event_type=TokenOffered`).then(async (res) => {
                 let offers = res.data?.data || [];
                 const offerList: ObjectType<any>[] = [];
@@ -74,9 +76,10 @@ export const AboutMarketplaceNFT = ({
                     res('');
                 })));
                 setOfferList(offerList);
+                setReloadOfferList(false)
             })
         }
-    }, [reloadOfferList])
+    }, [reloadOfferList, addressCurrencyToBuy])
 
     const formatTraitType = (item: any) => {
         let traitType = item.trait_type || item.traitType || '';
@@ -173,7 +176,7 @@ export const AboutMarketplaceNFT = ({
                                     </TableCell>
                                     <TableCell width="150px" align="right" style={{ padding: '7px', paddingRight: '20px' }}>
                                         {
-                                            row.event_type === 'TokenOffered' && addressCurrencyToBuy === row.currency && (isOwnerNFTOnSale ?
+                                            row.event_type === 'TokenOffered' && validChain && addressCurrencyToBuy === row.currency && (isOwnerNFTOnSale ?
                                                 <ButtonBase color="green"
                                                     isLoading={checkFnIsLoading(props.onAcceptOffer.name)}
                                                     disabled={lockingAction.lock}

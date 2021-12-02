@@ -12,6 +12,8 @@ import { MenuLeft } from "./constants";
 import clsx from 'clsx';
 import _ from 'lodash';
 import Assets from "./Assets";
+import Offers from "./Offers";
+import Listings from "./Listings";
 
 const AccountV2 = (props: any) => {
   const classes = useStyles();
@@ -29,19 +31,19 @@ const AccountV2 = (props: any) => {
 
   const selectTab = (name: any) => {
     setActiveMenuAccount(name)
-    props.history.push('/account?tab=' + name)
+    props.history.push('/inventory?tab=' + name)
   }
 
   return (
     <DefaultLayout>
-      <div className={classes.accountContainer}>
+      <div className={clsx(classes.accountContainer,  'custom-scroll')}>
         {updatedSuccess &&
           <div className={classes.messageUpdateSuccess}>
             <img src="/images/account_v3/icons/icon_updated_success.svg" alt="" />
             Your profile has been updated successfully
           </div>
         }
-        <div className={classes.bodyContentMyAccount}>
+        <div className={clsx(classes.bodyContentMyAccount, 'custom-scroll')}>
           <div className={classes.leftAccount}>
             <div className={classes.titlLeft}>My Account</div>
             <nav className={classes.tabAccount}>
@@ -72,10 +74,9 @@ const AccountV2 = (props: any) => {
           </div>
 
           <div className={classes.rightAccount}>
-            {activeMenuAccount === MenuLeft.assets.key && <>
-              <Assets />
-              {/* <CardsTicket /> */}
-            </>}
+            {activeMenuAccount === MenuLeft.assets.key && <Assets />}
+            {activeMenuAccount === MenuLeft.listings.key && <Listings />}
+            {activeMenuAccount === MenuLeft.offers.key && <Offers />}
           </div>
         </div>
       </div>

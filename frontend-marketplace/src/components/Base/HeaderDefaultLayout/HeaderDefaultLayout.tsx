@@ -136,15 +136,15 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
             <ul className={styles.headerLinks}>
               <li className={styles.headerLink} onClick={hideNavMenu}><LinkMui href="https://gamefi.org/" target="_blank" rel="noreferrer">Aggregator</LinkMui></li>
               <li className={styles.headerLink} onClick={hideNavMenu}><LinkMui href="https://hub.gamefi.org" target="_blank">Launchpad</LinkMui></li>
-              <li className={styles.headerLink} onClick={hideNavMenu}><LinkMui href="javascript:void(0)" className="new-link">
+              {/* <li className={styles.headerLink} onClick={hideNavMenu}><LinkMui href="javascript:void(0)" className="new-link">
                 Metaverse
                 <span className="new-icon">New</span>
-              </LinkMui></li>
+              </LinkMui></li> */}
             </ul>
             <div className={styles.headerAccount} onClick={hideNavMenu}>
-              <LinkMui className={styles.headerAccText} href={LINK_SWAP_TOKEN} target="_blank" rel="noreferrer">Buy GAFI</LinkMui>
+              {/* <LinkMui className={styles.headerAccText} href={LINK_SWAP_TOKEN} target="_blank" rel="noreferrer">Buy GAFI</LinkMui> */}
               {connectedAccount &&
-                <Link to="/account" className={styles.headerAccText}>My Account </Link>
+                <Link to="/inventory" className={styles.headerAccText}>Inventory</Link>
               }
 
               <div className={styles.headerAccBtn}>

@@ -49,6 +49,8 @@ class UpdateTokenPrice extends Task {
       })
     } catch (e) {
       console.log(`Craw token price failed`, e)
+    } finally {
+      await RedisAggregatorUtils.deleteAllRedisAggregators()
     }
   }
   async getQuote(symbol) {

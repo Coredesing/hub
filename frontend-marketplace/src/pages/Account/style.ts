@@ -130,16 +130,17 @@ const useStyles = makeStyles((theme: any) => {
       width: '100%',
     },
     accountContainer: {
-      padding: '10px 0 80px 0',
-      width: 1040,
+      padding: '30px 0 30px 0',
+      width: '100%',
       minHeight: 'calc(100vh - 400px)',
-      maxWidth: 'calc(100vw - 80px)',
+      maxWidth: '1240px',
       margin: 'auto',
 
       [theme.breakpoints.down('xs')]: {
         width: 'calc(100% - 36px)',
         maxWidth: 'calc(100vw - 36px)',
         margin: 'auto',
+        overflow: 'auto',
       }
     },
     [theme.breakpoints.down('xs')]: {
@@ -172,6 +173,8 @@ const useStyles = makeStyles((theme: any) => {
 
       [theme.breakpoints.down('sm')]: {
         gridTemplateColumns: '1fr',
+        paddingRight: '10px',
+        paddingLeft: '10px',
       },
     },
 
@@ -202,8 +205,9 @@ const useStyles = makeStyles((theme: any) => {
       flexDirection: 'column',
 
       [theme.breakpoints.down('sm')]: {
-        flexWrap: 'wrap',
+        // flexWrap: 'wrap',
         flexDirection: 'row',
+        overflow: 'auto',
         // display: 'grid',
         // gridTemplateColumns: '1fr 1fr 1fr 1fr',
       },
@@ -270,8 +274,11 @@ const useStyles = makeStyles((theme: any) => {
       borderRadius: '4px',
       position: 'relative',
       padding: '20px 30px',
-      [theme.breakpoints.up('md')]: {
+      [theme.breakpoints.up('xs')]: {
         minHeight: '500px',
+      },
+      [theme.breakpoints.down('xs')]: {
+        minHeight: '300px',
       },
       '& .wrapper-not-found': {
         position: 'absolute',

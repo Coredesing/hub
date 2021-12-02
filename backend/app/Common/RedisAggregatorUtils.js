@@ -3,7 +3,7 @@
 const Redis = use('Redis');
 
 /*
-  Aggregators
+  Aggregator detail
  */
 const getRedisKeyAggregatorDetail = (slug) => {
   return `aggregator_detail_${slug}`;
@@ -28,9 +28,56 @@ const deleteRedisAggregatorDetail = (slug) => {
   }
 };
 
+/*
+  Aggregators
+ */
+  const getRedisKeyAggregators = (params) => {
+    return `aggregators_${params?.page || 1}_${params?.display_area || ''}_${params?.ido_type || ''}_${params?.category || ''}`;
+  };
+  
+  const getRedisAggregators = async (params) => {
+    return await Redis.get(getRedisKeyAggregators(params));
+  };
+  
+  const setRedisAggregators = async (params, data) => {
+    return await Redis.set(getRedisKeyAggregators(params), JSON.stringify(data));
+  };
+  
+  const checkExistRedisAggregators = async (params) => {
+    return await Redis.exists(getRedisKeyAggregators(params));
+  };
+  
+  const deleteRedisAggregators = (params) => {
+    let redisKey = getRedisKeyAggregators(params);
+    if (Redis.exists(redisKey)) {
+      Redis.del(redisKey);
+    }
+  };
+
+  const deleteAllRedisAggregators = () => {
+    Redis.keys('aggregators_*').then((keys) => {
+      const pipeline = Redis.pipeline()
+      keys.forEach((key) => {
+        console.log('del', key)
+        pipeline.del(key)
+      })
+
+      return pipeline.exec()
+    })
+  };
+
 module.exports = {
+  // Aggregator detail
   getRedisAggregatorDetail,
   setRedisAggregatorDetail,
   checkExistRedisAggregatorDetail,
   deleteRedisAggregatorDetail,
+
+
+  // Aggregators
+  getRedisAggregators,
+  setRedisAggregators,
+  checkExistRedisAggregators,
+  deleteRedisAggregators,
+  deleteAllRedisAggregators,
 };

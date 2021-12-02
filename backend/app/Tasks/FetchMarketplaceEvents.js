@@ -13,6 +13,10 @@ let ARRAY_EVENTS = [
   EVENT_TYPE_LISTED, EVENT_TYPE_DELISTED, EVENT_TYPE_BOUGHT, EVENT_TYPE_OFFERED, EVENT_TYPE_CANCEL_OFFERED
 ]
 
+const sleep = (milliseconds) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+
 class FetchMarketplaceEvents extends Task {
   isRunning = false;
 
@@ -53,6 +57,7 @@ class FetchMarketplaceEvents extends Task {
     }
     finally {
       this.isRunning = false
+      await sleep(5000)
     }
   }
 }

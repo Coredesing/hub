@@ -239,7 +239,7 @@ class MarketplaceService {
 
   async getHotOffers(filterParams) {
     filterParams = this.formatPaginate(filterParams)
-    filterParams.event_type = 'TokenOffered'
+    filterParams.event_type = 'TokenListed'
     filterParams.finish = 0
 
     let data = await this.buildQueryNFTEventsBuilder(filterParams)

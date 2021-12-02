@@ -35,7 +35,7 @@ const Page: React.FC<any> = (props: any) => {
   // }, [loadingTicket, dataTicket]);
 
   const render = useCallback(() => {
-    return <MarketplaceNFT id={params.id} projectAddress={params.projectAddress} />
+    return <MarketplaceNFT id={params.id} project={params.project} />
   }, [params]);
   return (
     <DefaultLayout className={style.backgroundLayout}>

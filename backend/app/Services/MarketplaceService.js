@@ -159,7 +159,7 @@ class MarketplaceService {
     return data
   }
 
-  async getListings(address, filterParams) {
+  async getListings(filterParams) {
     filterParams = this.formatPaginate(filterParams)
     filterParams.event_type = 'TokenListed'
     filterParams.finish = false

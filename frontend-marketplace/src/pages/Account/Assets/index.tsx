@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { AppBar, TabPanel } from '@base-components/Tabs';
 import CardMarketplace from '@base-components/CardMarketplace';
 import axios from '@services/axios';
@@ -19,6 +19,7 @@ import { useTabStyles } from '../style';
 import { SearchBox } from '@base-components/SearchBox';
 import { getNetworkInfo } from '@utils/network';
 import { useTypedSelector } from '@hooks/useTypedSelector';
+import { debounce, escapeRegExp } from '@utils/index'
 const Assets = () => {
     const tabStyles = useTabStyles();
     const history = useHistory();
@@ -64,6 +65,21 @@ const Assets = () => {
     const cardStyle = useCardStyles();
     const [loadingAsset, setLoadingAsset] = useState(false);
     const connectorName = useTypedSelector(state => state.connector).data;
+
+    const renderNotFoundCollection = useCallback((elem: any) => {
+        if (!elem) return;
+        ReactDOM.render(<div className="wrapper-not-found">
+            <img src="/images/icons/item-not-found.svg" alt="" />
+            <h4>No item found</h4>
+        </div>, elem)
+    }, [])
+
+    const renderCollectionItem = (elem: any, collections: any[]) => {
+        if (!elem) return;
+        ReactDOM.render(<>
+            {collections.map((c: any) => renderBoxItem(c, c.key))}
+        </>, elem)
+    };
 
     useEffect(() => {
         if (!connectedAccount) return;
@@ -113,11 +129,10 @@ const Assets = () => {
                                 } catch (error: any) {
                                     collection.icon = 'default.img';
                                 }
+                                collection.key = Math.floor(Math.random() + 10000) + (+collection.id || 1);
                                 collection.value = collection.value || collection.price;
                                 collections.push(collection);
-                                ReactDOM.render(<>
-                                    {collections.map((c: any) => renderBoxItem(c, Math.floor(Math.random() + 10000) + (+c.id || 1)))}
-                                </>, wrapBoxElem)
+                                renderCollectionItem(wrapBoxElem, collections);
                                 setLoadingAsset(false);
                             }
                             res('');
@@ -127,12 +142,7 @@ const Assets = () => {
                     })));
                     if (!collections.length) {
                         setLoadingAsset(false);
-                        if (wrapBoxElem) {
-                            ReactDOM.render(<div className="wrapper-not-found">
-                                <img src="/images/icons/item-not-found.svg" alt="" />
-                                <h4>No item found</h4>
-                            </div>, wrapBoxElem)
-                        }
+                        renderNotFoundCollection(wrapBoxElem)
                     }
                     dispatch(setAssetsCollection({
                         [connectedAccount]: {
@@ -142,21 +152,41 @@ const Assets = () => {
                     }))
                 } else {
                     setLoadingAsset(false);
-                    if (wrapBoxElem) {
-                        ReactDOM.render(<div className="wrapper-not-found">
-                            <img src="/images/icons/item-not-found.svg" alt="" />
-                            <h4>No item found</h4>
-                        </div>, wrapBoxElem)
-                    }
+                    renderNotFoundCollection(wrapBoxElem)
                 }
             })
         } else {
             const collections = assetsAccount[connectedAccount][type];
-            ReactDOM.render(<>
-                {collections.map((c: any) => renderBoxItem(c, Math.floor(Math.random() + 10000) + (+c.id || 1)))}
-            </>, wrapBoxElem)
+            renderCollectionItem(wrapBoxElem, collections);
         }
     }, [currentTab, connectedAccount]);
+
+    const [search, setSearch] = useState<ObjectType<string>>({});
+    useEffect(() => {
+        setSearch({});
+    }, [currentTab])
+    const type = tabNames[currentTab].type || tabNames[0].type;
+    const handleSearchCollection = (event: any) => {
+        const value = event.target?.value;
+        const type = tabNames[currentTab].type || tabNames[0].type;
+        const collections = assetsAccount?.[connectedAccount as string]?.[type] || [];
+        const regex = new RegExp(escapeRegExp(value), 'i');
+        const wrapBoxElem = document.querySelector(`#${type}-cards`);
+        const listFilterd = collections.filter((item: any) => {
+            return regex.test(item.name || '') || regex.test(item.token_id) || regex.test(item.project?.name);
+        });
+        if (wrapBoxElem) {
+            if (listFilterd.length) {
+                renderCollectionItem(wrapBoxElem, listFilterd);
+            } else {
+                renderNotFoundCollection(wrapBoxElem)
+            }
+
+        }
+        setSearch(t => ({ ...t, [type]: value }));
+    }
+
+    const onSearchCollection = debounce(handleSearchCollection, 1000);
 
     return (
         <div>
@@ -204,7 +234,7 @@ const Assets = () => {
                     </Button>
                 </Box>
                 <Box>
-                    <SearchBox placeholder="Search" />
+                    <SearchBox placeholder="Search" key={'search' + type} defaultValue={search?.[type]} onChange={onSearchCollection} />
                 </Box>
             </Box>
 

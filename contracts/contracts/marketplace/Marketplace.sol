@@ -535,7 +535,7 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
             return feePercentage * amount / 100;
         }
 
-        uint256 points = IStakingContract(gamefi).points(user);
+        uint256 points = IStakingContract(gamefi).linearBalanceOf(0, user);
         uint256 fee = 0;
         bool flag = false;
 

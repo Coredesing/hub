@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import useStyles from './style';
 import { Box } from '@material-ui/core';
 import { formatNumber } from '@utils/';
+import { ethers } from 'ethers';
 
 const CardMarketplace = ({ id, item, ...props }: ObjectType<any>) => {
     const styles = useStyles();
@@ -39,7 +40,7 @@ const CardMarketplace = ({ id, item, ...props }: ObjectType<any>) => {
                             <label className="helvetica-font font-12px text-grey" htmlFor="">Highest offer</label>
                             <span className="bold font-16px helvetica-font text-white" style={{ display: 'grid', alignItems: 'center', gridTemplateColumns: '18px auto', gap: '8px' }}>
                                 {item.currencySymbol && <img width="18px" height="18px" src={`/images/icons/${item.currencySymbol.toLowerCase()}.png`} alt="" />}
-                                -/- {item.currencySymbol}
+                                {item.highest_offer ? ethers.utils.formatEther(item.highest_offer) : '-/-'} {item.currencySymbol}
                             </span>
                         </Box>
                     </Box>

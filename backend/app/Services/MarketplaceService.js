@@ -135,7 +135,7 @@ class MarketplaceService {
   async getOffersOfNFT(address, id, filterParams) {
     filterParams = this.formatPaginate(filterParams)
     filterParams.token_id = id
-    filterParams.token_address = address
+    filterParams.slug = address
     filterParams.finish = false
     const data = await this.buildQueryNFTEventsBuilder(filterParams).fetch()
     return data
@@ -159,7 +159,7 @@ class MarketplaceService {
     return data
   }
 
-  async getListings(address, filterParams) {
+  async getListings(filterParams) {
     filterParams = this.formatPaginate(filterParams)
     filterParams.event_type = 'TokenListed'
     filterParams.finish = false
@@ -239,7 +239,7 @@ class MarketplaceService {
 
   async getHotOffers(filterParams) {
     filterParams = this.formatPaginate(filterParams)
-    filterParams.event_type = 'TokenOffered'
+    filterParams.event_type = 'TokenListed'
     filterParams.finish = 0
 
     let data = await this.buildQueryNFTEventsBuilder(filterParams)

@@ -15,6 +15,12 @@ export const useStyles = makeStyles((theme) => ({
       mixBlendMode: "normal",
       textTransform: "unset",
       justifyContent: "space-between",
+      width: 'fit-content !important',
+      minWidth: 'unset !important',
+      paddingLeft: '0 !important',
+      paddingRight: '0 !important',
+      marginRight: '32px',
+      flexGrow: 'unset',
       '&.active': {
         color: "#72F34B !important"
       },
@@ -23,6 +29,12 @@ export const useStyles = makeStyles((theme) => ({
         fontSize: "14px",
         lineHeight: "24px",
       },
+      '& span.MuiTab-wrapper': {
+        width: 'fit-content',
+      },
+      // '& .MuiTouchRipple-root': {
+      //   display: 'none',
+      // }
     },
     appbar: {
       background: "transparent !important",

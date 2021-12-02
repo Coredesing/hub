@@ -3,6 +3,11 @@ import { typeDisplayFlex } from "../../styles/CommonStyle";
 
 const useStyles = makeStyles((theme: any) => {
   return {
+    backgroundLayout: {
+      background: "url(/images/bg-1140x1161.png)",
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'cover',
+    },
     content: {
       // display: 'grid',
       // gap: '45px',
@@ -25,7 +30,7 @@ const useStyles = makeStyles((theme: any) => {
       margin: 'auto',
       background: 'radial-gradient(82.49% 167.56% at 15.32% 21.04%, rgba(217, 217, 217, 0.2) 0%, rgba(231, 245, 255, 0.0447917) 77.08%, rgba(255, 255, 255, 0) 100%)',
       border: '1px solid #686868',
-      backdropFilter: 'blur(80px)',
+      backdropFilter: 'blur(10px)',
       borderRadius: '4px',
     },
     wrapperCard: {
@@ -72,16 +77,17 @@ const useStyles = makeStyles((theme: any) => {
       // marginTop: "35px",
       marginBottom: "32px",
       display: "grid",
-      gridTemplateColumns: "522px auto",
+      gridTemplateColumns: "522px minmax(350px, 1fr)",
       // placeContent: "center",
       gap: "30px",
       [theme.breakpoints.down("sm")]: {
         placeItems: "center",
         gap: "20px",
+        gridTemplateColumns: "1fr",
       },
       [theme.breakpoints.down("xs")]: {
-        gridTemplateColumns: "300px",
-        marginTop: "28px",
+        // gridTemplateColumns: "300px",
+        // marginTop: "28px",
       },
     },
     cardImg: {
@@ -752,7 +758,7 @@ export const useAboutStyles = makeStyles((theme) => ({
         padding: '6px 10px',
         background: '#373737',
         borderRadius: '4px',
-        width: 'fit-content',
+        width: '100%',
 
         '& .name, & .address, & a': {
           lineHeight: 'unset',
@@ -784,14 +790,14 @@ export const useAboutStyles = makeStyles((theme) => ({
     gridTemplateColumns: '1fr',
     '& h4': {
       fontWeight: 600,
-      fontSize: '14px',
+      fontSize: '16px',
       '&.flex': {
         ...typeDisplayFlex,
         // alignItems: 'center',
         justifyContent: 'flex-end',
         '& img': {
-          width: '14px',
-          height: '14px',
+          width: '18px',
+          height: '18px',
           marginRight: '8px',
           marginTop: '3px'
         }
@@ -805,22 +811,25 @@ export const useAboutStyles = makeStyles((theme) => ({
     }
   },
   btn: {
-    height: 'unset !important',
-    padding: '6px 16px !important',
-    minWidth: 'unset',
-    fontSize: '14px',
+    // height: 'unset !important',
+    // padding: '6px 16px !important',
+    fontSize: '14px !important',
     marginTop: 'unset',
-    fontFamily: 'Firs Neue'
+    fontFamily: 'Firs Neue',
+    minWidth: '100px !important',
+    height: '32px !important',
+    padding: 'unset !important',
   },
   activities: {
     marginTop:'24px',
     marginBottom:'24px',
     display: 'grid',
     gap: '8px',
-    gridTemplateColumns: 'repeat(auto-fit, calc(45%))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 45%))',
     '& .item': {
       display: 'grid',
-      gridTemplateColumns: '150px auto',
+      
+      gridTemplateColumns: 'minmax(200px, 50%) auto',
       gap: '20px',
       '& label': {
         fontFamily: 'Helvetica',
@@ -844,15 +853,15 @@ export const useAboutStyles = makeStyles((theme) => ({
 
 export const useMarketplaceStyle = makeStyles((theme) => ({
   cardBodyHeader: {
-    marginBottom: '14px',
+    marginBottom: '16px',
     '& h3': {
       fontFamily: 'Firs Neue',
       fontStyle: 'normal',
       fontWeight: 600,
-      fontSize: '24px',
+      fontSize: '36px',
       lineHeight: '32px',
       color: '#fff',
-      marginBottom: '5px',
+      marginBottom: '24px',
     },
     '& h4': {
       display: 'grid',
@@ -872,6 +881,8 @@ export const useMarketplaceStyle = makeStyles((theme) => ({
   },
   carBodyInfo: {
     width: '100%',
+    display: 'grid',
+    alignItems: 'center'
   },
   cardBodyDetail: {
     marginTop: '14px',
@@ -881,18 +892,55 @@ export const useMarketplaceStyle = makeStyles((theme) => ({
     gap: '20px',
     '& .detail-items': {
       display: 'grid',
-      gap: '25px',
+      gap: '24px',
       gridTemplateColumns: '1fr',
+
+      '& .wrapper-contract-info': {
+        background:'#1d1d1d',
+        '& .item': {
+          '&:first-child': {
+            marginBottom: '12px'
+          },
+          '& .label': {
+            marginBottom:'2px',
+          }
+        }
+      },
 
       '& .item': {
         '& .label': {
           fontFamily: 'Firs Neue',
           fontStyle: 'normal',
           fontWeight: 'normal',
-          fontSize: '12px',
+          fontSize: '14px',
           color: '#AEAEAE',
           marginBottom: '5px',
           display: 'block',
+          '&.contract': {
+            display: 'flex',
+            alignItems: 'center',
+            gap: '18px',
+            '& span': {
+              display: 'block',
+              borderRadius: '2px',
+              background: '#5A5B5B',
+              padding: '5px 10px',
+              fontSize: '14px',
+              fontFamily: 'Helvetica',
+              fontWeight: 'normal',
+            }
+          }
+        },
+        '& div.address a': {
+          fontFamily: 'Helvetica',
+          fontStyle: 'normal',
+          fontWeight: 'bold',
+          fontSize: '16px',
+          color: '#fff',
+          lineBreak: 'anywhere',
+          '&:hover': {
+            textDecoration: 'underline'
+          }
         },
         '& span': {
           fontFamily: 'Firs Neue',
@@ -930,12 +978,15 @@ export const useMarketplaceStyle = makeStyles((theme) => ({
         },
         '& .network': {
           ...typeDisplayFlex,
-          alignItems: 'center',
+          // alignItems: 'center',
           padding: '6px 10px',
           background: '#373737',
           borderRadius: '4px',
-          width: 'fit-content',
-
+          width: '100%',
+          justifyContent: 'center',
+          [theme.breakpoints.down('sm')]: {
+            width: 'fit-content'
+          },
           '& .name, & .address, & a': {
             lineHeight: 'unset',
             display: 'block',
@@ -964,9 +1015,10 @@ export const useMarketplaceStyle = makeStyles((theme) => ({
             fontWeight: 'bold',
             fontSize: '16px',
             textTransform: 'unset',
+            marginBottom: '13px',
           },
           '& div': {
-            fontSize: '24px',
+            fontSize: '36px',
             display: 'grid',
             gridTemplateColumns: '32px auto',
             gap: '12px',
@@ -1011,6 +1063,7 @@ export const useMarketplaceStyle = makeStyles((theme) => ({
   },
   actions: {
     ...typeDisplayFlex,
+    marginTop: '38px',
     gap: '12px',
     [theme.breakpoints.down('xs')]: {
       gap: '4px',
@@ -1044,6 +1097,9 @@ export const useMarketplaceStyle = makeStyles((theme) => ({
     display: 'grid',
     alignItems: 'center',
     height: '522px',
+    [theme.breakpoints.down('sm')]: {
+      height: '375px',
+    },
     '& .wrapperVideo': {
       position: 'relative',
       height: '379px',
@@ -1126,24 +1182,27 @@ export const useMarketplaceStyle = makeStyles((theme) => ({
     gap: '6px',
     '& .box-icon': {
       display: 'grid',
-      gap: '6px',
-      gridTemplateColumns: '32px auto',
+      gap: '12px',
+      gridTemplateColumns: '46px auto',
       '& img.icon': {
-        width: '32px',
-        height: '32px',
+        width: '46px',
+        height: '46px',
       },
       '& .text': {
         // textTransform: 'uppercase',
         color: '#fff',
         fontSize: '14px',
-        fontFamily: 'Firs Neue',
+        // fontFamily: 'Firs Neue',
         fontWeight: 'normal',
         '& span': {
           display: 'block',
-          color: '#AEAEAE',
-          fontSize: '12px',
-          lineHeight: '16px',
-        }
+          // color: '#AEAEAE',
+          // fontSize: '12px',
+          // lineHeight: '16px',
+        },
+        // '& .collection': {
+        //   marginBottom: '6px'
+        // }
       }
     },
     '& .interactions': {

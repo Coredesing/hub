@@ -36,6 +36,7 @@ import { Backdrop, Box } from "@material-ui/core";
 import { useTypedSelector } from "@hooks/useTypedSelector";
 import useContract from "@hooks/useContract";
 import useContractSigner from "@hooks/useContractSigner";
+import { Link } from 'react-router-dom'
 
 const MARKETPLACE_SMART_CONTRACT = process.env.REACT_APP_MARKETPLACE_SMART_CONTRACT as string;
 
@@ -44,7 +45,7 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
     const marketplaceStyle = useMarketplaceStyle();
     const dispatch = useDispatch();
     const { library, chainId } = useWeb3React();
-    const { connectedAccount, wrongChain,  } = useAuth();
+    const { connectedAccount, wrongChain, } = useAuth();
     const { appChainID } = useSelector((state: any) => state.appNetwork).data;
     const [infoNFT, setInfoNFT] = useState<ObjectType<any>>({});
     const [addressOwnerNFT, setAddressOwnerNFT] = useState('');
@@ -408,21 +409,27 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                                             <Image src={infoNFT.image} />
                                         </div>
                                         <div className={marketplaceStyle.carBodyInfo}>
-                                            <div className={marketplaceStyle.cardBodyHeader}>
-                                                <h3 className="text-uppercase">
-                                                    {infoNFT.title || infoNFT.name}
-                                                </h3>
-                                                <div className={marketplaceStyle.boxesBodyHeader}>
-                                                    <div className="box box-icon" style={{ alignItems: 'center' }}>
-                                                        {infoNFT.project?.logo && <img src={infoNFT.project?.logo} className="icon rounded" alt="" />}
-                                                        <div className="text">
-                                                            <span className="text-transform-unset">Collection</span>
-                                                            <span className="text-uppercase text-white-imp bold">
-                                                                {infoNFT.project?.name}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    {/* <div className="text-uppercase box box-icon">
+                                            <Box>
+                                                <div className={marketplaceStyle.cardBodyHeader}>
+                                                    <h3 className="">
+                                                        {infoNFT.title || infoNFT.name}
+                                                    </h3>
+                                                    <div className={marketplaceStyle.boxesBodyHeader}>
+                                                        {
+                                                            infoNFT.project?.token_address && <Link to={`/collection/${infoNFT.project?.token_address}`}>
+                                                                <div className="box box-icon" style={{ alignItems: 'center' }}>
+
+                                                                    {infoNFT.project?.logo && <img src={infoNFT.project?.logo} className="icon rounded" alt="" />}
+                                                                    <div className="text">
+                                                                        <span className="text-transform-unset font-14px collection text-grey helvetica-font">Collection</span>
+                                                                        <span className="text-white-imp bold font-16px firs-neue-font">
+                                                                            {infoNFT.project?.name}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </Link>
+                                                        }
+                                                        {/* <div className="text-uppercase box box-icon">
                                          <img src={infoNFT.token_images} className="icon rounded" alt="" />
                                          <div className="text">
                                              <span className="text-uppercase">
@@ -445,119 +452,132 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                                              <span>{4000}</span>
                                          </div>
                                      </div> */}
-                                                </div>
-                                            </div>
-                                            <div className="divider"></div>
-                                            <div className={marketplaceStyle.cardBodyDetail}>
-                                                <div className="detail-items">
-                                                    {/* <div className="item">
-                                         <label htmlFor="" className="label text-uppercase">PRICE</label>
-                                         <div className={marketplaceStyle.currency}>
-                                             <img className="icon" src={`/images/icons/${(infoNFT.network_available || '').toLowerCase()}.png`} alt="" />
-                                             <span className="text-uppercase">{infoNFT.token_conversion_rate} {getCurrencyByNetwork(infoNFT.network_available)}</span>
-                                         </div>
-                                     </div> */}
-                                                    {
-                                                        !(new BigNumber(+addressOwnerOnSale || 0).isZero()) && <div className="item price">
-                                                            <label htmlFor="" className="label bold text-white-imp">Price</label>
-                                                            <div className="text-white firs-neue-font bold">
-                                                                {currencySymbol && <img src={`/images/icons/${currencySymbol.toLowerCase()}.png`} onError={(e: any) => {
-                                                                    e.target.style.visibility = 'hidden'
-                                                                }} alt="" />}
-                                                                {nftPrice} {currencySymbol}/Box
-                                                            </div>
-                                                        </div>
-                                                    }
-                                                    <div className="pd-16px bg-black">
-                                                        <Box className="item" marginBottom="12px">
-                                                            <label htmlFor="" className="label text-uppercase">CONTRACT ADDRESS</label>
-                                                            <div className="network">
-                                                                {allowNetwork.icon && <img src={allowNetwork.icon} alt="" className="icon" />}
-                                                                {allowNetwork.name && <span className="name"> {allowNetwork.name}: </span>}
-                                                                <span className="address">{cvtAddressToStar(infoNFT.project?.token_address || '', '.', 10)}</span>
-                                                                {
-                                                                    infoNFT.project?.token_address && <a href={`${getExplorerTransactionAddress({ appChainID, address: infoNFT.project?.token_address })}`} rel="noreferrer" target="_blank">
-                                                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                            <path d="M13.8424 3.67302L10.3071 0.155337C10.1543 0.00325498 9.92514 -0.041861 9.72652 0.0409337C9.52755 0.123537 9.39803 0.317727 9.39803 0.533053V2.12986C7.64542 2.24568 6.77025 2.97233 6.61213 3.11711C4.41287 4.94753 4.65609 7.44348 4.73 7.94006C4.73106 7.94717 4.73213 7.95444 4.73336 7.96155L4.80442 8.37017C4.84262 8.58976 5.013 8.76227 5.23188 8.80295C5.26455 8.809 5.29725 8.812 5.3296 8.812C5.51455 8.812 5.68919 8.7157 5.78653 8.55315L5.99953 8.19818C7.16391 6.26169 8.60278 5.9499 9.398 5.94722V7.60391C9.398 7.81975 9.52823 8.01413 9.72792 8.09655C9.9276 8.17879 10.157 8.13261 10.309 7.97982L13.8444 4.42665C14.0519 4.21807 14.051 3.88052 13.8424 3.67302ZM10.4642 6.3125V5.45422C10.4642 5.19252 10.2745 4.96957 10.0161 4.92801C9.40106 4.82905 7.46526 4.70984 5.79348 6.6609C5.90132 5.86462 6.25806 4.79441 7.30412 3.92829C7.31692 3.91763 7.32135 3.91407 7.33308 3.90234C7.3409 3.89507 8.13576 3.18016 9.8777 3.18016H9.931C10.2254 3.18016 10.464 2.94156 10.464 2.64719V1.81522L12.7128 4.05251L10.4642 6.3125Z" fill="#AEAEAE" />
-                                                                            <path d="M11.9032 10.3399C11.6089 10.3399 11.3703 10.5785 11.3703 10.8729V12.383H1.06597V4.56594H4.26385C4.55822 4.56594 4.79682 4.32735 4.79682 4.03297C4.79682 3.7386 4.55822 3.5 4.26385 3.5H0.53297C0.238595 3.49997 0 3.73857 0 4.03294V12.916C0 13.2103 0.238595 13.4489 0.53297 13.4489H11.9032C12.1976 13.4489 12.4362 13.2103 12.4362 12.916V10.8729C12.4362 10.5785 12.1976 10.3399 11.9032 10.3399Z" fill="#AEAEAE" />
-                                                                        </svg>
-                                                                    </a>
-                                                                }
-                                                            </div>
-                                                        </Box>
-                                                        <Box className="item">
-                                                            <label htmlFor="" className="label text-uppercase">TOKEN ID</label>
-                                                            <div className="text-white firs-neue-font bold">
-                                                                #{id}
-                                                            </div>
-                                                        </Box>
                                                     </div>
-                                                    {/* <div className="item">
+                                                </div>
+                                                <div className="divider"></div>
+                                                <div className={marketplaceStyle.cardBodyDetail}>
+                                                    <div className="detail-items">
+                                                        {
+                                                            !(new BigNumber(+addressOwnerOnSale || 0).isZero()) && <div className="item price">
+                                                                <label htmlFor="" className="label bold text-white-imp">Listing price</label>
+                                                                <div className="text-white firs-neue-font bold">
+                                                                    {currencySymbol && <img src={`/images/icons/${currencySymbol.toLowerCase()}.png`} onError={(e: any) => {
+                                                                        e.target.style.visibility = 'hidden'
+                                                                    }} alt="" />}
+                                                                    {nftPrice} {currencySymbol}
+                                                                    {/* /Box */}
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        <div className="pd-16px wrapper-contract-info">
+                                                            <Box className="item" marginBottom="12px">
+                                                                <label htmlFor="" className="label contract">
+                                                                    Contract Address
+                                                                    <span>
+                                                                        {allowNetwork.name}
+                                                                    </span>
+                                                                </label>
+                                                                <div className="address">
+                                                                    {infoNFT.project?.token_address &&
+                                                                        <a href={`${getExplorerTransactionAddress({ appChainID, address: infoNFT.project?.token_address })}`} rel="noreferrer" target="_blank">
+                                                                            {cvtAddressToStar(infoNFT.project?.token_address || '', '.', 16)}
+                                                                        </a>}
+                                                                </div>
+                                                                {/* <div className="network">
+                                                                <div className="flex items-center height-fit">
+                                                                    {allowNetwork.icon && <img src={allowNetwork.icon} alt="" className="icon" />}
+                                                                    {allowNetwork.name && <span className="name"> {allowNetwork.name}: </span>}
+                                                                </div>
+                                                                <div className="flex items-center height-fit">
+                                                                    <span className="address">
+                                                                        {cvtAddressToStar(infoNFT.project?.token_address || '', '.', 13)}
+                                                                    </span>
+                                                                    {
+                                                                        infoNFT.project?.token_address && <a href={`${getExplorerTransactionAddress({ appChainID, address: infoNFT.project?.token_address })}`} rel="noreferrer" target="_blank">
+                                                                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <path d="M13.8424 3.67302L10.3071 0.155337C10.1543 0.00325498 9.92514 -0.041861 9.72652 0.0409337C9.52755 0.123537 9.39803 0.317727 9.39803 0.533053V2.12986C7.64542 2.24568 6.77025 2.97233 6.61213 3.11711C4.41287 4.94753 4.65609 7.44348 4.73 7.94006C4.73106 7.94717 4.73213 7.95444 4.73336 7.96155L4.80442 8.37017C4.84262 8.58976 5.013 8.76227 5.23188 8.80295C5.26455 8.809 5.29725 8.812 5.3296 8.812C5.51455 8.812 5.68919 8.7157 5.78653 8.55315L5.99953 8.19818C7.16391 6.26169 8.60278 5.9499 9.398 5.94722V7.60391C9.398 7.81975 9.52823 8.01413 9.72792 8.09655C9.9276 8.17879 10.157 8.13261 10.309 7.97982L13.8444 4.42665C14.0519 4.21807 14.051 3.88052 13.8424 3.67302ZM10.4642 6.3125V5.45422C10.4642 5.19252 10.2745 4.96957 10.0161 4.92801C9.40106 4.82905 7.46526 4.70984 5.79348 6.6609C5.90132 5.86462 6.25806 4.79441 7.30412 3.92829C7.31692 3.91763 7.32135 3.91407 7.33308 3.90234C7.3409 3.89507 8.13576 3.18016 9.8777 3.18016H9.931C10.2254 3.18016 10.464 2.94156 10.464 2.64719V1.81522L12.7128 4.05251L10.4642 6.3125Z" fill="#AEAEAE" />
+                                                                                <path d="M11.9032 10.3399C11.6089 10.3399 11.3703 10.5785 11.3703 10.8729V12.383H1.06597V4.56594H4.26385C4.55822 4.56594 4.79682 4.32735 4.79682 4.03297C4.79682 3.7386 4.55822 3.5 4.26385 3.5H0.53297C0.238595 3.49997 0 3.73857 0 4.03294V12.916C0 13.2103 0.238595 13.4489 0.53297 13.4489H11.9032C12.1976 13.4489 12.4362 13.2103 12.4362 12.916V10.8729C12.4362 10.5785 12.1976 10.3399 11.9032 10.3399Z" fill="#AEAEAE" />
+                                                                            </svg>
+                                                                        </a>
+                                                                    }
+                                                                </div>
+                                                            </div> */}
+                                                            </Box>
+                                                            <Box className="item">
+                                                                <label htmlFor="" className="label">Token ID</label>
+                                                                <div className="text-white firs-neue-font bold">
+                                                                    #{id}
+                                                                </div>
+                                                            </Box>
+                                                        </div>
+                                                        {/* <div className="item">
                                                         <label htmlFor="" className="label text-uppercase">Description</label>
                                                         <div className="text-white firs-neue-font">
                                                             <p>{infoNFT.project?.description}</p>
                                                         </div>
                                                     </div> */}
-                                                    {/* <div className="item">
+                                                        {/* <div className="item">
                                          <label className="label text-uppercase">TYPE</label>
                                          <div className="tags">
                                              {tagTypes.map(t => <span key={t}>{t}</span>)}
                                          </div>
                                      </div> */}
-                                                    {/* <div className="item">
+                                                        {/* <div className="item">
                                          <label className="label text-uppercase">Category</label>
                                          <div className="tags">
                                              {tagTypes.map(t => <span key={t}>{t}</span>)}
                                          </div>
                                      </div> */}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className="divider"></div>
-                                            <div className={marketplaceStyle.actions}>
-                                                {
-                                                    connectedAccount && infoNFT.success && allowNetwork.ok && <>
-                                                        {
-                                                            isOwnerNFT && <ButtonBase isLoading={checkFnIsLoading(onListingNFT.name)} disabled={lockingAction.lock} color="yellow" className="w-full" onClick={() => setOpenListingModal(true)}>
-                                                                List
-                                                            </ButtonBase>
-                                                        }
-                                                        {
-                                                            isOwnerNFTOnSale && <ButtonBase isLoading={checkFnIsLoading(onDelistNFT.name)} disabled={lockingAction.lock} color="yellow" className="w-full" onClick={onDelistNFT}>
-                                                                Delist
-                                                            </ButtonBase>
-                                                        }
-                                                        {
-                                                            isOwnerNFT && <ButtonBase isLoading={checkFnIsLoading(onTransferNFT.name)} disabled={lockingAction.lock} color="green" className="w-full" onClick={() => setOpenTransferModal(true)}>
-                                                                Transfer
-                                                            </ButtonBase>
-                                                        }
-                                                        {
-                                                            !isOwnerNFT && !isApprovedToken.ok && !isApprovedToken.loading && addressOwnerOnSale !== connectedAccount &&
-                                                            !!+addressOwnerOnSale && !(new BigNumber(+addressOwnerOnSale).isZero()) &&
-                                                            <ButtonBase isLoading={checkFnIsLoading(onApproveToken.name)} disabled={lockingAction.lock} color="yellow" className="w-full"
-                                                                onClick={onApproveToken}>
-                                                                Approve
-                                                            </ButtonBase>
-                                                        }
-                                                        {
-                                                            !isOwnerNFT &&
-                                                            isApprovedToken.ok &&
-                                                            addressOwnerOnSale !== connectedAccount && !!+addressOwnerOnSale && !(new BigNumber(+addressOwnerOnSale).isZero()) &&
-                                                            <ButtonBase isLoading={checkFnIsLoading(onOfferNFT.name)} disabled={lockingAction.lock} color="yellow" className="w-full" onClick={() => setOpenOfferModal(true)}>
-                                                                Make Offer
-                                                            </ButtonBase>
-                                                        }
-                                                        {
-                                                            !isOwnerNFT &&
-                                                            isApprovedToken.ok &&
-                                                            addressOwnerOnSale !== connectedAccount && !!+addressOwnerOnSale && !(new BigNumber(+addressOwnerOnSale).isZero()) &&
-                                                            <ButtonBase isLoading={checkFnIsLoading(onBuyNFT.name)} disabled={lockingAction.lock} color="green" className="w-full" onClick={onBuyNFT}>
-                                                                Buy Now
-                                                            </ButtonBase>
-                                                        }
-                                                    </>
-                                                }
-                                            </div>
+                                                {/* <div className="divider"></div> */}
+                                                <div className={marketplaceStyle.actions}>
+                                                    {
+                                                        connectedAccount && infoNFT.success && allowNetwork.ok && <>
+                                                            {
+
+                                                                isOwnerNFT && <ButtonBase isLoading={checkFnIsLoading(onListingNFT.name)} disabled={lockingAction.lock} color="yellow" className="w-full" onClick={() => setOpenListingModal(true)}>
+                                                                    List
+                                                                </ButtonBase>
+                                                            }
+                                                            {
+                                                                isOwnerNFTOnSale && <ButtonBase isLoading={checkFnIsLoading(onDelistNFT.name)} disabled={lockingAction.lock} color="yellow" className="w-full" onClick={onDelistNFT}>
+                                                                    Delist
+                                                                </ButtonBase>
+                                                            }
+                                                            {
+                                                                isOwnerNFT && <ButtonBase isLoading={checkFnIsLoading(onTransferNFT.name)} disabled={lockingAction.lock} color="green" className="w-full" onClick={() => setOpenTransferModal(true)}>
+                                                                    Transfer
+                                                                </ButtonBase>
+                                                            }
+                                                            {
+                                                                !isOwnerNFT && !isApprovedToken.ok && !isApprovedToken.loading && addressOwnerOnSale !== connectedAccount &&
+                                                                !!+addressOwnerOnSale && !(new BigNumber(+addressOwnerOnSale).isZero()) &&
+                                                                <ButtonBase isLoading={checkFnIsLoading(onApproveToken.name)} disabled={lockingAction.lock} color="yellow" className="w-full"
+                                                                    onClick={onApproveToken}>
+                                                                    Approve
+                                                                </ButtonBase>
+                                                            }
+                                                            {
+                                                                !isOwnerNFT &&
+                                                                isApprovedToken.ok &&
+                                                                addressOwnerOnSale !== connectedAccount && !!+addressOwnerOnSale && !(new BigNumber(+addressOwnerOnSale).isZero()) &&
+                                                                <ButtonBase isLoading={checkFnIsLoading(onOfferNFT.name)} disabled={lockingAction.lock} color="yellow" className="w-full" onClick={() => setOpenOfferModal(true)}>
+                                                                    Make Offer
+                                                                </ButtonBase>
+                                                            }
+                                                            {
+                                                                !isOwnerNFT &&
+                                                                isApprovedToken.ok &&
+                                                                addressOwnerOnSale !== connectedAccount && !!+addressOwnerOnSale && !(new BigNumber(+addressOwnerOnSale).isZero()) &&
+                                                                <ButtonBase isLoading={checkFnIsLoading(onBuyNFT.name)} disabled={lockingAction.lock} color="green" className="w-full" onClick={onBuyNFT}>
+                                                                    Buy Now
+                                                                </ButtonBase>
+                                                            }
+                                                        </>
+                                                    }
+                                                </div>
+                                            </Box>
                                         </div>
 
                                     </div>

@@ -14,16 +14,20 @@ import getAccountBalance from '@utils/getAccountBalance';
 import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
+    paper: {
+        maxWidth: '440px !important',
+    },
     wrapperContent: {
+
         width: '100%',
         '& h3': {
             fontFamily: 'Firs Neue',
             fontStyle: 'normal',
             fontWeight: 600,
-            fontSize: '18px',
-            lineHeight: '24px',
+            fontSize: '24px',
+            lineHeight: '36px',
             color: '#FFFFFF',
-            marginBottom: '12px',
+            marginBottom: '24px',
         },
         '& .input': {
             background: '#171717',
@@ -138,13 +142,16 @@ const OfferNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isAppro
     }, [reloadedBalance])
 
     return (
-        <CustomModal open={open} onClose={onClose}
+        <CustomModal
+            classes={{paper: styles.paper}}
+            open={open}
+            onClose={onClose}
             actions={
                 <div className={styles.groupsButton}>
-                    <ButtonBase color="grey" onClick={onClose} className="w-full text-transform-unset" >
+                    <ButtonBase color="grey" onClick={onClose} className="w-full text-transform-unset mt-0-important" >
                         Cancel
                     </ButtonBase>
-                    <ButtonBase color="green" onClick={onConfirm} className="w-full text-transform-unset" isLoading={isLoadingButton} disabled={isLoadingButton}>
+                    <ButtonBase color="green" onClick={onConfirm} className="w-full text-transform-unset mt-0-important" isLoading={isLoadingButton} disabled={isLoadingButton}>
                         Confirm
                     </ButtonBase>
                 </div>
@@ -153,7 +160,7 @@ const OfferNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isAppro
             <div className={styles.wrapperContent}>
                 <h3>Make Offer</h3>
                 <div className="content">
-                    <h4 style={{ display: 'flex', }}>Offer Price (Currency: {currencySymbol && <Box display="grid" marginLeft="4px" gridTemplateColumns="24px auto" gridGap="4px" alignItems="center">
+                    <h4 style={{ display: 'flex', }}>You will offer (Currency: {currencySymbol && <Box display="grid" marginLeft="4px" gridTemplateColumns="24px auto" gridGap="4px" alignItems="center">
                         <img src={`/images/icons/${currencySymbol.toLowerCase()}.png`} style={{ width: '24px', height: '24px', background: '#000', borderRadius: '50%' }} alt="" />
                         {currencySymbol}
                     </Box>})</h4>
@@ -161,7 +168,10 @@ const OfferNFTModal = ({ open, isLoadingButton, defaultValue, onApprove, isAppro
                         <FormInputNumber value={inputPrice} onChange={onChangePrice} isPositive allowZero />
                     </div>
                     <Box marginTop="10px">
-                        (<span className="text-white firs-neue-font font-14px">Your Wallet Balance:</span> <span className="bold firs-neue-font font-14px text-white">{numberWithCommas(addressBalance, 4)} {currencySymbol}</span>)
+                        <span className="text-grey firs-neue-font font-12px">Your Wallet Balance:</span> <span className="bold firs-neue-font font-12px text-white">{numberWithCommas(addressBalance, 4)} {currencySymbol}</span>
+                    </Box>
+                    <Box marginTop="12px">
+                        <p className="font-14px helvetica-font text-white">Once the offer becomes successful, you will own this product directly.</p>
                     </Box>
                 </div>
             </div>

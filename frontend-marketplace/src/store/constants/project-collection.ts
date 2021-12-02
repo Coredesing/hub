@@ -16,3 +16,8 @@ export const projectInforActions = {
     FAILURE: 'PROJECT_INFOR_FAILURE',
 };
 
+export const activitiesDetailCollectionActions = {
+    LOADING: 'ACTIVITIES_DETAIL_COLLECTION_LOADING',
+    SUCCESS: 'ACTIVITIES_DETAIL_COLLECTION_SUCCESS',
+    FAILURE: 'ACTIVITIES_DETAIL_COLLECTION_FAILURE',
+};

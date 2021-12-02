@@ -28,7 +28,7 @@ export const TableCell = withStyles((theme) => ({
 
 export const TableRowBody = withStyles((theme) => ({
   root: {
-    background: "#171717",
+    background: "#1d1d1d",
     transition: '.3s',
     '&:hover': {
       background: 'linear-gradient(270.02deg, rgba(79, 79, 79, 0.3) 0.02%, #676767 44.61%, rgba(79, 79, 79, 0.3) 99.99%)'

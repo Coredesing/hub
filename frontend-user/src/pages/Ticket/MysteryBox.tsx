@@ -414,7 +414,6 @@ const MysteryBox = ({ id, ...props }: any) => {
             })
         }
     }, [infoTicket, renewTotalBoxesBought, contractPreSale]);
-
     const [loadingCollection, setLoadingCollection] = useState(false);
     const [collections, setCollections] = useState<{ [k: string]: any }>([]);
     const handleSetCollections = async (ownedBox: number) => {
@@ -615,7 +614,7 @@ const MysteryBox = ({ id, ...props }: any) => {
     }, [numBoxBuy, boxTypeSelected]);
 
     useEffect(() => {
-        if (getMaxTicketBuy(myBoxThisPool, maxBoxCanBuy)) {
+        if(getMaxTicketBuy(myBoxThisPool, maxBoxCanBuy)) {
             setNumBoxBuy(1);
         }
     }, [myBoxThisPool, maxBoxCanBuy])

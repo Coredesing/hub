@@ -181,9 +181,8 @@ class FetchMarketplaceEvent {
             return
         }
 
-        // get slug
+        // get slug -> by cached
         const slug = await MarketplaceCollectionModel.query().where('token_address', data.token_address).first()
-        console.log('slug', slug)
         if (slug && slug.slug) {
           data.slug = slug.slug
         }

@@ -259,7 +259,9 @@ const useStyles = makeStyles((theme: any) => ({
             '& .img-banner': {
                 height: '340px',
                 width: '100%',
-                background: '100%',
+                // background: '100%',
+                background: '#171717',
+                border: '1px solid #686868',
 
                 '& img': {
                     width: '100%',

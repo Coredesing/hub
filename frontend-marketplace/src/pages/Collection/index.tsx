@@ -100,12 +100,14 @@ const Marketplace = () => {
             <WrapperContent>
                 <div className={styles.page}>
                     <div className={styles.banner}>
-                        {projectInforsState.loading && <Backdrop open={projectInforsState.loading} style={{ color: '#fff', zIndex: 1000, }}>
+                        {/* {projectInforsState.loading && <Backdrop open={projectInforsState.loading} style={{ color: '#fff', zIndex: 1000, }}>
                             <CircularProgress color="inherit" />
-                        </Backdrop>}
+                        </Backdrop>} */}
                         <div className="wrapper-banner">
                             <div className="img-banner">
-                                <img src={projectInfor.image} className="" alt="" />
+                                <img src={projectInfor.image} className="" alt="" onError={(e: any) => {
+                                    e.target.style.visibility = 'hidden'
+                                }} />
                             </div>
                             <div className="icon">
                                 <img src={projectInfor.logo} alt="" />

@@ -10,8 +10,9 @@ import {
     TableRowHead,
 } from '@base-components/Table';
 import { Box, Link as MuiLink } from '@material-ui/core';
-import { cvtAddressToStar, formatHumanReadableTime } from '@utils/';
+import { cvtAddressToStar, formatHumanReadableTime, formatNumber } from '@utils/';
 import { getExplorerTransactionLink, getNetworkInfo } from '@utils/network';
+import { Link } from 'react-router-dom';
 type Props = {
     data: any[];
     totalPage?: number;
@@ -36,10 +37,7 @@ const ActivitiesMarketplace = ({ data = [], disabledFields, ...props }: Props) =
                 }}>
                     <TableHead>
                         <TableRowHead>
-                            {
-                                !disabledFields?.item && <TableCell>ITEM</TableCell>
-                            }
-
+                            {!disabledFields?.item && <TableCell>ITEM</TableCell>}
                             <TableCell>TYPE</TableCell>
                             <TableCell>PRICE</TableCell>
                             <TableCell>FROM</TableCell>
@@ -54,11 +52,17 @@ const ActivitiesMarketplace = ({ data = [], disabledFields, ...props }: Props) =
                                     <TableCell>
                                         <Box display="grid" gridTemplateColumns="56px auto" gridGap="8px" alignItems="center">
                                             <Box width="56px" height="56px" style={{ backgroundColor: "#000", borderRadius: '4px' }}>
-                                                {item.image && <img src={item.image} alt="" width="56px" height="56px" />}
+                                                <Link className="width-fit" to={item.project?.token_address ? `/collection/${item.project?.token_address}/${item.token_id}` : '#'}>
+                                                    {item.image && <img src={item.image} alt="" width="56px" height="56px" />}
+                                                </Link>
                                             </Box>
                                             <Box>
-                                                <h4 className="firs-neue-font font-16px text-white">#{item.token_id}</h4>
-                                                <span className="text-grey helvetica-font font-14px">{item?.project?.name}</span>
+                                                <Link className="width-fit hover-underline" to={item.project?.token_address ? `/collection/${item.project?.token_address}/${item.token_id}` : '#'}>
+                                                    <h4 className="firs-neue-font font-16px text-white width-fit display-block">{item.name || `#${formatNumber(item.token_id, 3)}`}</h4>
+                                                </Link>
+                                                <Link  className="width-fit hover-underline" to={item.project?.token_address ? `/collection/${item.project?.token_address}` : '#'}>
+                                                    <span className="text-grey helvetica-font font-14px width-fit">{item?.project?.name}</span>
+                                                </Link>
                                             </Box>
                                         </Box>
                                     </TableCell>
@@ -89,7 +93,7 @@ const ActivitiesMarketplace = ({ data = [], disabledFields, ...props }: Props) =
                                 </TableCell>
                                 <TableCell>
                                     <MuiLink
-                                        className="text-white-imp flex items-center gap-4px"
+                                        className="text-white-imp flex items-center gap-4px width-fit"
                                         target="_blank"
                                         href={`${getExplorerTransactionLink({ appChainID: getNetworkInfo(item.network).id, transactionHash: item.transaction_hash })}`}>
                                         {item.dispatch_at && formatHumanReadableTime(+item.dispatch_at * 1000, Date.now())}

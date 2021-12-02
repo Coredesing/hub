@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import useStyles, { useMarketplaceStyle } from "./style";
 import { AboutMarketplaceNFT } from "./About";
-import { apiRoute, cvtAddressToStar } from "../../utils";
+import { apiRoute, cvtAddressToStar, formatNumber } from "../../utils";
 import { useDispatch, useSelector } from "react-redux";
 import {
     APP_NETWORKS_SUPPORT, ChainDefault,
@@ -412,7 +412,7 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                                             <Box>
                                                 <div className={marketplaceStyle.cardBodyHeader}>
                                                     <h3 className="">
-                                                        {infoNFT.title || infoNFT.name}
+                                                        {infoNFT.title || infoNFT.name || `#${formatNumber(id, 3)}`}
                                                     </h3>
                                                     <div className={marketplaceStyle.boxesBodyHeader}>
                                                         {
@@ -506,7 +506,7 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                                                             <Box className="item">
                                                                 <label htmlFor="" className="label">Token ID</label>
                                                                 <div className="text-white firs-neue-font bold">
-                                                                    #{id}
+                                                                    #{formatNumber(id, 3)}
                                                                 </div>
                                                             </Box>
                                                         </div>

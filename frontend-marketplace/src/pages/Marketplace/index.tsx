@@ -40,6 +40,7 @@ import { ActionSaleNFT } from '@app-constants';
 import { getExplorerTransactionLink, getNetworkInfo } from '@utils/network';
 import ActivitiesMarketplace from '@base-components/ActivitiesMarketplace';
 import CollectionCard from '@base-components/CollectionCard';
+
 // install Swiper modules
 SwiperCore.use([Navigation, SwiperPagination]);
 
@@ -79,7 +80,7 @@ const Marketplace = () => {
         items: 'items',
         activities: 'activities',
     }), [])
-    const [itemsFilter, setItemsFilter] = useState<InputFilter>({ page: 1 });
+    const [itemsFilter, setItemsFilter] = useState<InputFilter>({ page: 1, perPage: 8 });
     const [activitiesFilter, setActivitiesFilter] = useState<InputFilter>({ page: 1 });
     const [filterTypeDiscover, setFilterTypeDiscover] = useState<string>(filterTypesDiscover.items);
     useEffect(() => {
@@ -98,7 +99,6 @@ const Marketplace = () => {
             setActivitiesFilter(t => ({ ...t, page }));
         }
     }
-
     return (
         <DefaultLayout>
             <WrapperContent useShowBanner={false}>
@@ -115,14 +115,16 @@ const Marketplace = () => {
                                     </button> */}
                                         <div className="desc">
                                             <div className="img-banner">
-                                                {card.image && <img src={card.image} alt="" onError={(e: any) => {
+                                                {card.banner && <img src={card.banner} alt="" onError={(e: any) => {
                                                     e.target.style.visibility = 'hidden';
                                                 }} />}
                                             </div>
-                                            <div className="infor">
-                                                <h3>{card.name}</h3>
-                                                <p>{card.description}</p>
-                                            </div>
+                                            <Link to={card.token_address ? `/collection/${card.token_address}` : '#'}>
+                                                <div className="infor">
+                                                    <h3>{card.name}</h3>
+                                                    <p>{card.description}</p>
+                                                </div>
+                                            </Link>
                                         </div>
                                         {/* <button className="btn btn-arrow btn-next">
                                         <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -190,7 +192,7 @@ const Marketplace = () => {
 
                                 <div className={clsx(styles.hostCollections, "custom-scroll")}>
                                     <Swiper
-                                        style={{display: 'flex', flexDirection: 'column-reverse'}}
+                                        style={{ display: 'flex', flexDirection: 'column-reverse' }}
                                         navigation={true || (listCollection?.currentList || []).length > 1}
                                         spaceBetween={20}
                                         slidesPerView={"auto"}
@@ -249,14 +251,14 @@ const Marketplace = () => {
                                                     value={timeFilter} />
                                             </FormGroup>
                                         </div> */}
-                                        <div className="item">
+                                        {/* <div className="item">
                                             <Link to="/offers" className={clsx("text-white firs-neue-font font-14px outline-none border-none pointer bg-transparent border-grey-2px", styles.btn)}>
                                                 Discover more
                                                 <svg width="13" height="10" viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M7.70343 1.6198C7.55962 1.48175 7.55962 1.24591 7.70343 1.10785C7.84148 0.964049 8.07732 0.964049 8.21537 1.10785L11.8968 4.78352C12.0348 4.92732 12.0348 5.15741 11.8968 5.30122L8.21537 8.97688C8.07732 9.12069 7.84148 9.12069 7.70343 8.97688C7.55962 8.83883 7.55962 8.60299 7.70343 8.46493L10.7578 5.41051L1.36239 5.36814C1.16106 5.36814 1 5.20133 1 5C1 4.79867 1.16106 4.63761 1.36239 4.63761L10.7578 4.67998L7.70343 1.6198Z" fill="white" stroke="white" strokeWidth="0.5" />
                                                 </svg>
                                             </Link>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                                 <div className={""}>

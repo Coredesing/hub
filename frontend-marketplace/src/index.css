@@ -409,3 +409,19 @@ body::-webkit-scrollbar-thumb,
 .text-green-imp {
     color: #72F34B !important;
 }
+
+.bg-white {
+    background: #fff;
+}
+
+.width-fit {
+    width: fit-content;
+}
+
+.display-block {
+    display: block;
+}
+
+.hover-underline:hover {
+    text-decoration: underline;
+}

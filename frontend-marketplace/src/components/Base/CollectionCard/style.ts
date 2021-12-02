@@ -15,6 +15,10 @@ const useStyles = makeStyles((theme: any) => ({
         borderRadius: '4px',
         backgroundBlendMode: 'overlay, normal',
         filter: 'drop-shadow(2px 16px 19px rgba(0, 0, 0, 0.09))',
+        transition: '.3s',
+        '&.active, &:hover': {
+            border: '1px solid #72F34B',
+        },
         '& .img': {
             position: 'relative',
             width: '100%',
@@ -39,11 +43,21 @@ const useStyles = makeStyles((theme: any) => ({
                 background: 'rgb(45,46,46)',
                 borderRadius: '50%',
                 display: 'grid',
-                placeContent: 'center',
+                // placeContent: 'center',
+                justifyContent: 'center',
+                alignItems: 'center',
+                '& div': {
+                    width: '39px',
+                    height: '39px',
+                    borderRadius: '50%',
+                    background: '#fff',
+                    display: 'grid',
+                    placeItems: 'center',
+                },
             },
             '& .icon': {
-                width: '40px',
-                height: '40px',
+                width: '32px',
+                height: '32px',
                 borderRadius: '50%',
                 // background: '#000',
             }

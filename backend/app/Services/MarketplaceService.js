@@ -28,6 +28,10 @@ class MarketplaceService {
       builder = builder.where('type', params.type)
     }
 
+    if (params.slug) {
+      builder = builder.where('slug', params.slug)
+    }
+
     return builder
   }
 
@@ -102,14 +106,14 @@ class MarketplaceService {
     return data
   }
 
-  async getCollectionByAddress(address) {
+  async getCollectionBySlug(address) {
     if (await RedisMarketplaceUtils.existRedisMarketplaceCollectionDetail(address)) {
       let data = await RedisMarketplaceUtils.getRedisMarketplaceCollectionDetail(address)
       data = JSON.parse(data)
       return data
     }
 
-    let data = await this.buildQueryCollectionBuilder({token_address: address}).first()
+    let data = await this.buildQueryCollectionBuilder({slug: address}).first()
     if (!data) {
       return
     }

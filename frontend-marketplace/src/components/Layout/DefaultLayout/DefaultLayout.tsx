@@ -4,6 +4,7 @@ import HeaderDefaultLayout from '../../Base/HeaderDefaultLayout';
 import FooterLayout from '../../Base/FooterLayout';
 import { useCommonStyle } from '../../../styles';
 import { Button, Link as LinkMui, useMediaQuery, useTheme } from "@material-ui/core";
+import clsx from 'clsx';
 // import Particles from "react-tsparticles";
 // import { ParticlesOptions } from './constant';
 
@@ -25,7 +26,10 @@ const DefaultLayout = ({ style, children, hiddenFooter = false, ...props }: any)
     // console.log(container);
   };
   return (
-    <div className={commonStyle.DefaultLayout} style={style}>
+    <div className={clsx(commonStyle.DefaultLayout, props.className)} style={style}>
+      {/* <div className="bg" style={{position: 'absolute', width: '100%', height: '100%'}}>
+        <img src="/images/bg.jpg" alt="" style={{width: '100%', height: '100%', objectFit: 'cover'}}/>
+      </div> */}
       <div className={commonStyle.bgBody}>
         {/* <Particles
           id="tsparticles"

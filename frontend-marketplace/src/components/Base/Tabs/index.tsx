@@ -50,6 +50,7 @@ const AntTabs = withStyles({
     root: {
         borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
     },
+
     indicator: {
         backgroundColor: "#72F34B",
         height: "3px",
@@ -70,7 +71,7 @@ export const AppBar = (props: AppBarType) => {
     const matchSM = useMediaQuery(theme.breakpoints.down("sm"));
     return <AppBarMui className={classes.appbar} position="static">
         <AntTabs
-            centered={matchSM ? true : false}
+            centered={false}
             value={props.currentTab}
             onChange={props.onChange}
             aria-label="simple tabs"

@@ -7,9 +7,11 @@ import NotFoundPage from "../NotFoundPage/ContentPage";
 import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
 import MarketplaceNFT from './NFT';
 import WrapperContent from "@base-components/WrapperContent";
+import useStyles from './style';
 
 const Page: React.FC<any> = (props: any) => {
   const params = useParams<{ [k: string]: any }>();
+  const style = useStyles();
   // const id = params.id;
   // const theme = useTheme();
   // const [checkParamType, setCheckParamType] = useState({
@@ -36,7 +38,7 @@ const Page: React.FC<any> = (props: any) => {
     return <MarketplaceNFT id={params.id} projectAddress={params.projectAddress} />
   }, [params]);
   return (
-    <DefaultLayout>
+    <DefaultLayout className={style.backgroundLayout}>
       <WrapperContent useShowBanner={false}>
         {/* {
           checkParamType.checking ?

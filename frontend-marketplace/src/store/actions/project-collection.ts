@@ -1,4 +1,4 @@
-import { activitiesProjectCollectionActions, itemsProjectCollectionActions, projectInforActions } from '../constants/project-collection';
+import { activitiesDetailCollectionActions, activitiesProjectCollectionActions, itemsProjectCollectionActions, projectInforActions } from '../constants/project-collection';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import axios from '@services/axios';
@@ -10,7 +10,7 @@ import { setCurrencyTokenAddress } from './currency';
 import { setTokenInfor } from './tokenInfor';
 import { getNetworkInfo } from '@utils/network';
 
-type InputItemProjectCollection = {
+export type InputItemProjectCollection = {
     projectAddress: string;
     filter?: {
         page?: number,
@@ -176,7 +176,7 @@ export const setActivitiesProjectCollection = (input: InputItemProjectCollection
                 dispatch({ type: activitiesProjectCollectionActions.SUCCESS, payload: { ...oldData, ...oldDataByProject } });
                 return;
             }
-            const response = await axios.get(`/marketplace/collection/${input.projectAddress}/activities?page=${input.filter?.page || 1}&limit=${perPage}`);
+            const response = await axios.get(`/marketplace/collection/${input.projectAddress}/activities?page=${pageFilter}&limit=${perPage}`);
             const result = response.data.data || null;
             if (!result) {
                 dispatch({ type: activitiesProjectCollectionActions.SUCCESS, payload: oldData });
@@ -205,6 +205,67 @@ export const setActivitiesProjectCollection = (input: InputItemProjectCollection
         } catch (error: any) {
             dispatch({
                 type: activitiesProjectCollectionActions.FAILURE,
+                payload: error
+            });
+        }
+    }
+};
+
+export const setActivitiesDetailCollection = (input: InputItemProjectCollection & { tokenId: string }) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: () => any) => {
+        const oldData = getState().activitiesDetailCollection?.data || {};
+        dispatch({ type: activitiesDetailCollectionActions.LOADING, payload: oldData });
+        try {
+            const perPage = input.filter?.perPage || 10;
+            const oldDataByDetail = oldData[input.tokenId];
+            const pageFilter = input.filter?.page || 1;
+            if (oldDataByDetail?.data?.[pageFilter]?.length) {
+                oldDataByDetail.currentPage = pageFilter;
+                oldDataByDetail.currentList = oldDataByDetail?.data?.[pageFilter];
+                dispatch({ type: activitiesDetailCollectionActions.SUCCESS, payload: { ...oldData, ...oldDataByDetail } });
+                return;
+            }
+            let projectInfor = (getState().projectInfors?.data || {})?.[input.projectAddress] || null;
+            if (!projectInfor) {
+                try {
+                    const responseProject = await axios.get(`/marketplace/collection/${input.projectAddress}`);
+                    projectInfor = responseProject.data.data || {};
+                    setProjectInfor(input.projectAddress, projectInfor);
+                } catch (error) {
+                    console.log('error', error);
+                }
+            }
+
+            const response = await axios.get(`/marketplace/collection/${input.projectAddress}/activities?page=${pageFilter}&limit=${perPage}&token_id=${input.tokenId}`);
+            const result = response.data.data || null;
+            if (!result) {
+                dispatch({ type: activitiesDetailCollectionActions.SUCCESS, payload: oldData });
+                return;
+            }
+
+            const listData = result.data || [];
+
+            const useExternalUri = !!+projectInfor.use_external_uri;
+            const listItems = await getInfoListData(listData, input.projectAddress, useExternalUri, getState, projectInfor, dispatch);
+            const totalRecords = +result.total || 0;
+            const currentPage = +result.page || 1;
+            const setData = {
+                [input.tokenId]: {
+                    total: totalRecords,
+                    currentPage,
+                    totalPage: Math.ceil(totalRecords / perPage),
+                    currentList: listItems,
+                    data: {
+                        ...(oldDataByDetail?.data || {}),
+                        [currentPage]: listItems
+                    }
+                }
+            }
+            console.log('setData', setData)
+            dispatch({ type: activitiesDetailCollectionActions.SUCCESS, payload: { ...oldData, ...setData } });
+        } catch (error: any) {
+            dispatch({
+                type: activitiesDetailCollectionActions.FAILURE,
                 payload: error
             });
         }

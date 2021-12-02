@@ -277,8 +277,8 @@ body::-webkit-scrollbar-thumb,
     width: 100%;
     opacity: 0.1;
     background: #fff;
-    margin-top: 14px;
-    margin-bottom: 14px;
+    margin-top: 26px;
+    margin-bottom: 24px;
 }
 
 .rounded {
@@ -306,7 +306,7 @@ body::-webkit-scrollbar-thumb,
 }
 
 .mt-0-important {
-    margin-top: 0;
+    margin-top: 0 !important;
 }
 
 .mb-6px {
@@ -400,4 +400,28 @@ body::-webkit-scrollbar-thumb,
 
 .bg-black {
     background: #000;
+}
+
+.height-fit {
+    height: fit-content;
+}
+
+.text-green-imp {
+    color: #72F34B !important;
+}
+
+.bg-white {
+    background: #fff;
+}
+
+.width-fit {
+    width: fit-content;
+}
+
+.display-block {
+    display: block;
+}
+
+.hover-underline:hover {
+    text-decoration: underline;
 }

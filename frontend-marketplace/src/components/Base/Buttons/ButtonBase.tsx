@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: any) => ({
         textAlign: 'center',
         padding: '13px 20px',
         textTransform: 'uppercase',
-        minWidth: '200px',
+        minWidth: '176px',
         cursor: 'pointer',
         height: '52px',
         marginTop: '16px',

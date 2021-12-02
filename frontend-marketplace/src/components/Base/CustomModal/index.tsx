@@ -14,11 +14,13 @@ const useStyles = makeStyles({
         maxWidth: 'unset',
         minWidth: '300px',
         position: 'relative',
-        background: '#171717',
+        background: 'rgba(29, 29, 29, 1)',
+        // backdropFilter: 'blur(80px)',
         fontFamily: 'Firs Neue',
         fontStyle: 'normal',
         fontWeight: 'normal',
-        padding: '20px 10px'
+        padding: '40px',
+        border: '1px solid #686868'
     },
     btnClose: {
         position: 'absolute',
@@ -42,7 +44,8 @@ const useStyles = makeStyles({
         }
     },
     content: {
-        marginTop: '45px',
+        // marginTop: '45px',
+        padding: 'unset',
         '& h3': {
             textAlign: 'center',
             fontSize: '24px',
@@ -71,6 +74,7 @@ const useStyles = makeStyles({
     actions: {
         // display: 'grid',
         // justifyContent: 'center',
+        padding: 'unset',
     },
     mb0: {
         marginBottom: '0px !important',
@@ -137,6 +141,14 @@ const useStyles = makeStyles({
     btnBid: {
         textTransform: 'unset',
         width: '100%'
+    },
+    divider: {
+        height: '1px',
+        width: '100%',
+        opacity: '0.1',
+        background: '#fff',
+        marginTop: '20px',
+        marginBottom: '20px',
     }
 })
 
@@ -144,7 +156,7 @@ type Props = {
     open: boolean,
     actions?: Element | ReactNode,
     onClose?: Function,
-    classes?: {[k: string]: any},
+    classes?: { [k: string]: any },
     [k: string]: any
 }
 const CustomModal = ({ open, actions, classes = {}, ...props }: Props) => {
@@ -174,6 +186,7 @@ const CustomModal = ({ open, actions, classes = {}, ...props }: Props) => {
                 {props.children}
 
             </DialogContent>
+            {actions && <div className={styles.divider}></div>}
             <DialogActions className={styles.actions}>
                 {actions}
             </DialogActions>

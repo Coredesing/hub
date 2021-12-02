@@ -6,9 +6,13 @@ import { typeDisplayFlex } from '../../../styles/CommonStyle';
 const useStyles = makeStyles<Theme>(props => ({
     card: {
         padding: '20px',
+        paddingBottom: '24px',
         borderRadius: '4px',
-        background: 'rgba(45,46,46, 0.9)',
-        border: '1px solid #515151',
+        // background: 'rgba(45,46,46, 0.9)',
+        background: 'radial-gradient(82.49% 167.56% at 15.32% 21.04%, rgba(217, 217, 217, 0.2) 0%, rgba(231, 245, 255, 0.0447917) 77.08%, rgba(255, 255, 255, 0) 100%)',
+        border: '1px solid #686868',
+        backdropFilter: 'blur(10px)',
+        // border: '1px solid #515151',
         transition: '.3s',
         cursor: 'pointer',
         position: 'relative',
@@ -51,8 +55,8 @@ const useStyles = makeStyles<Theme>(props => ({
         },
     },
     cardBody: {
-        paddingBottom: '16px',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        // paddingBottom: '16px',
+        // borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
         '& h3': {
             fontFamily: 'Firs Neue',
             fontSize: '20px',

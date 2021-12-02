@@ -12,7 +12,9 @@ const CollectionCard = ({ item, ...props }: Props) => {
                     e.target.style.visibility = 'hidden'
                 }} />}
                 <div className="wr-icon">
-                    {item.logo && <img src={item.logo} className="icon" alt="" />}
+                    <div className="">
+                        {item.logo && <img src={item.logo} className="icon" alt="" />}
+                    </div>
                 </div>
             </div>
             <div className="infor">

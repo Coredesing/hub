@@ -29,10 +29,11 @@ const useStyles = makeStyles((theme: any) => {
       borderRadius: '4px',
     },
     wrapperCard: {
-      maxWidth: '1120px',
+      maxWidth: '1020px',
       width: '100%',
       marginTop: '40px',
       marginBottom: '40px',
+      padding: '28px',
     },
     displayContent: {
       // paddingLeft: "calc((100% - (461px * 2 + 40px)) / 2)",
@@ -68,11 +69,11 @@ const useStyles = makeStyles((theme: any) => {
       },
     },
     card: {
-      marginTop: "35px",
-      marginBottom: "40px",
+      // marginTop: "35px",
+      marginBottom: "32px",
       display: "grid",
-      gridTemplateColumns: "repeat(auto-fit, 461px)",
-      placeContent: "center",
+      gridTemplateColumns: "522px auto",
+      // placeContent: "center",
       gap: "30px",
       [theme.breakpoints.down("sm")]: {
         placeItems: "center",
@@ -766,6 +767,7 @@ export const useAboutStyles = makeStyles((theme) => ({
         },
         '& .address': {
           marginRight: '8px',
+          lineBreak: 'anywhere'
         },
 
         '& img': {
@@ -815,7 +817,7 @@ export const useAboutStyles = makeStyles((theme) => ({
     marginBottom:'24px',
     display: 'grid',
     gap: '8px',
-    gridTemplateColumns: 'repeat(auto-fit, 300px)',
+    gridTemplateColumns: 'repeat(auto-fit, calc(45%))',
     '& .item': {
       display: 'grid',
       gridTemplateColumns: '150px auto',
@@ -947,6 +949,7 @@ export const useMarketplaceStyle = makeStyles((theme) => ({
           },
           '& .address': {
             marginRight: '8px',
+            lineBreak: 'anywhere'
           },
 
           '& img': {
@@ -1040,6 +1043,7 @@ export const useMarketplaceStyle = makeStyles((theme) => ({
     background: '#000',
     display: 'grid',
     alignItems: 'center',
+    height: '522px',
     '& .wrapperVideo': {
       position: 'relative',
       height: '379px',

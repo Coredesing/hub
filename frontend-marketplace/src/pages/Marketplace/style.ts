@@ -275,14 +275,14 @@ const useStyles = makeStyles((theme: any) => ({
             right: '10px',
             top: '28px'
         },
-        [theme.breakpoints.down('xs')]: {
-            '& .swiper-button-prev': {
-                left: '0',
-            },
-            '& .swiper-button-next': {
-                right: '0',
-            },
-        },
+        // [theme.breakpoints.down('xs')]: {
+        //     '& .swiper-button-prev': {
+        //         left: '0',
+        //     },
+        //     '& .swiper-button-next': {
+        //         right: '0',
+        //     },
+        // },
         '& .collection': {
             width: '295px',
             minWidth: '295px',

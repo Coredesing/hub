@@ -492,12 +492,12 @@ const MysteryBox = ({ id, projectAddress, ...props }: any) => {
                                                             </div>
                                                         </Box>
                                                     </div>
-                                                    <div className="item">
+                                                    {/* <div className="item">
                                                         <label htmlFor="" className="label text-uppercase">Description</label>
                                                         <div className="text-white firs-neue-font">
                                                             <p>{infoNFT.project?.description}</p>
                                                         </div>
-                                                    </div>
+                                                    </div> */}
                                                     {/* <div className="item">
                                          <label className="label text-uppercase">TYPE</label>
                                          <div className="tags">

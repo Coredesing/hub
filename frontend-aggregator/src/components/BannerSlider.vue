@@ -158,7 +158,7 @@ export default {
       width: 100%;
       height: 100%;
       display: block;
-      object-fit: fill;
+      object-fit: cover;
       image-rendering: pixelated
     }
 

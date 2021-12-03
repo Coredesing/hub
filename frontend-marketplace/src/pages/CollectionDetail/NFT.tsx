@@ -544,9 +544,14 @@ const MysteryBox = ({ id, project, ...props }: any) => {
                                                         connectedAccount && infoNFT.success && allowNetwork.ok && <>
                                                             {
 
-                                                                isOwnerNFT && <ButtonBase isLoading={checkFnIsLoading(onListingNFT.name)} disabled={lockingAction.lock} color="yellow" className="w-full" onClick={() => setOpenListingModal(true)}>
-                                                                    List
-                                                                </ButtonBase>
+                                                                isOwnerNFT && (!isApprovedMarketplace ?
+                                                                    <ButtonBase color="yellow" onClick={onApproveToken} className="w-full text-transform-unset" isLoading={checkFnIsLoading(onApproveToken.name)} disabled={lockingAction.lock}>
+                                                                        Approve to List
+                                                                    </ButtonBase> :
+                                                                    <ButtonBase isLoading={checkFnIsLoading(onListingNFT.name)} disabled={lockingAction.lock} color="yellow" className="w-full" onClick={() => setOpenListingModal(true)}>
+                                                                        List
+                                                                    </ButtonBase>
+                                                                )
                                                             }
                                                             {
                                                                 isOwnerNFTOnSale && <ButtonBase isLoading={checkFnIsLoading(onDelistNFT.name)} disabled={lockingAction.lock} color="yellow" className="w-full" onClick={onDelistNFT}>

@@ -28,6 +28,10 @@ class MarketplaceService {
       builder = builder.where('type', params.type)
     }
 
+    if (params.slug) {
+      builder = builder.where('slug', params.slug)
+    }
+
     return builder
   }
 
@@ -59,6 +63,10 @@ class MarketplaceService {
 
     if (params.event_type) {
       builder = builder.where('event_type', params.event_type)
+    }
+
+    if (params.slug) {
+      builder = builder.where('slug', params.slug)
     }
 
     if (params.finish !== null && params.finish !== undefined) {
@@ -102,14 +110,14 @@ class MarketplaceService {
     return data
   }
 
-  async getCollectionByAddress(address) {
+  async getCollectionBySlug(address) {
     if (await RedisMarketplaceUtils.existRedisMarketplaceCollectionDetail(address)) {
       let data = await RedisMarketplaceUtils.getRedisMarketplaceCollectionDetail(address)
       data = JSON.parse(data)
       return data
     }
 
-    let data = await this.buildQueryCollectionBuilder({token_address: address}).first()
+    let data = await this.buildQueryCollectionBuilder({slug: address}).first()
     if (!data) {
       return
     }
@@ -127,7 +135,7 @@ class MarketplaceService {
   async getOffersOfNFT(address, id, filterParams) {
     filterParams = this.formatPaginate(filterParams)
     filterParams.token_id = id
-    filterParams.token_address = address
+    filterParams.slug = address
     filterParams.finish = false
     const data = await this.buildQueryNFTEventsBuilder(filterParams).fetch()
     return data
@@ -136,8 +144,28 @@ class MarketplaceService {
   async getMyOffers(address, filterParams) {
     filterParams = this.formatPaginate(filterParams)
     filterParams.buyer = address
+    filterParams.event_type = 'TokenOffered'
     filterParams.finish = false
     const data = await this.buildQueryNFTEventsBuilder(filterParams).fetch()
+    return data
+  }
+
+  async getMyListings(address, filterParams) {
+    filterParams = this.formatPaginate(filterParams)
+    filterParams.seller = address
+    filterParams.event_type = 'TokenListed'
+    filterParams.finish = false
+    const data = await this.buildQueryNFTEventsBuilder(filterParams).fetch()
+    return data
+  }
+
+  async getListings(filterParams) {
+    filterParams = this.formatPaginate(filterParams)
+    filterParams.event_type = 'TokenListed'
+    filterParams.finish = false
+    const data = await this.buildQueryNFTEventsBuilder(filterParams)
+      .orderBy('dispatch_at', 'DESC')
+      .paginate(filterParams.page, filterParams.limit);
     return data
   }
 
@@ -177,7 +205,7 @@ class MarketplaceService {
     filterParams = this.formatPaginate(filterParams)
     filterParams.event_type = 'TokenListed'
     filterParams.finish = 0
-    filterParams.token_address = address
+    filterParams.slug = address
 
     let data = await this.buildQueryNFTEventsBuilder(filterParams)
       .orderBy('dispatch_at', 'DESC')
@@ -189,7 +217,18 @@ class MarketplaceService {
   async getCollectionActivities(address, filterParams) {
     // TODO: filter whitelist address
     filterParams = this.formatPaginate(filterParams)
-    filterParams.token_address = address
+    filterParams.slug = address
+
+    let data = await this.buildQueryNFTEventsBuilder(filterParams)
+      .orderBy('dispatch_at', 'DESC')
+      .paginate(filterParams.page, filterParams.limit);
+
+    return data
+  }
+
+  async getActivities(filterParams) {
+    // TODO: filter whitelist address
+    filterParams = this.formatPaginate(filterParams)
 
     let data = await this.buildQueryNFTEventsBuilder(filterParams)
       .orderBy('dispatch_at', 'DESC')
@@ -200,7 +239,7 @@ class MarketplaceService {
 
   async getHotOffers(filterParams) {
     filterParams = this.formatPaginate(filterParams)
-    filterParams.event_type = 'TokenOffered'
+    filterParams.event_type = 'TokenListed'
     filterParams.finish = 0
 
     let data = await this.buildQueryNFTEventsBuilder(filterParams)
@@ -212,6 +251,10 @@ class MarketplaceService {
   }
 
   formatPaginate(filterParams) {
+    if (!filterParams) {
+      filterParams = {}
+    }
+
     if (!filterParams.limit || isNaN(filterParams.limit) || filterParams.limit < 1) {
       filterParams.limit = 10
     }

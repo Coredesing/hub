@@ -8,5 +8,7 @@ interface IStakingContract {
     }
 
     // calculate staking points from proxy contract (Linear pool, LP pool and bonus)
-    function points(address _account) external returns (uint256);
+    function points(address _account) external view returns (uint256);
+
+    function linearBalanceOf(uint256 _poolId, address _account) external view returns (uint128);
 }

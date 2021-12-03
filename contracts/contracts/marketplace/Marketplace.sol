@@ -357,7 +357,8 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
         }
 
         uint256 totalFee = tokenOwnerProfit * feePercentage / 100;
-//        uint256 totalFee = calculateFee(auctionInfo.tokenOwner); tokenOwnerProfit * feePercentage / 100;
+        // check if auction is done
+//        uint256 totalFee = calculateFee(auctionInfo.tokenOwner);
         _handleOutgoingFund(vault, totalFee, auctionInfo.auctionCurrency);
 
         tokenOwnerProfit -= totalFee;
@@ -387,6 +388,10 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
 
     function setVault(address _vault) external nonReentrant onlyOwner {
         vault = _vault;
+    }
+
+    function setGameFi(address _gamefi) external nonReentrant onlyOwner {
+        gamefi = _gamefi;
     }
 
     function setRankings(uint256[] memory threshold, uint256[] memory permile) external nonReentrant onlyOwner {
@@ -530,12 +535,19 @@ contract Marketplace is Initializable, OwnableUpgradeable, ERC721HolderUpgradeab
             return feePercentage * amount / 100;
         }
 
-        uint256 points = IStakingContract(gamefi).points(user);
+        uint256 points = IStakingContract(gamefi).linearBalanceOf(0, user);
         uint256 fee = 0;
+        bool flag = false;
+
         for (uint256 index = 0; index < rankings.length; index++) {
             if (points >= rankings[index].threshold) {
                 fee = rankings[index].permile;
+                flag = true;
             }
+        }
+
+        if (!flag) {
+            return feePercentage * amount / 100;
         }
 
         return fee * amount / 1000;

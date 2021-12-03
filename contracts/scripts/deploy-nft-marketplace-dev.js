@@ -10,10 +10,9 @@ async function main() {
   console.log("Deploying contracts with the account:", deployer.address);
   console.log("Account balance:", (await deployer.getBalance()).toString());
 
-  // deploy: 0x10B95B7B86F7128613277ACB1be89fbc4AFfdEAc
-  const fund = "0x2EE206A3872b17f91071A003dA20c345bD0488d1";
-  const gafi = "0x89af13a10b32f1b2f8d1588f93027f69b6f4e27e";
-  const busd = "0xe9e7cea3dedca5984780bafc599bd69add087d56";
+  const fund = "0xB7cEd2807441B5c5FA7a40a97467F73275EdF73f";
+  const gafi = "0xCc6aB3DDd713a612649B5A64C63F73e8255048d1";
+  const busd = "0x79c86934bE686B28b9aeeaFc42202907b06E3D7A";
 
   const ContractFactory = await hre.ethers.getContractFactory("Marketplace");
   const Contract = await upgrades.deployProxy(ContractFactory,
@@ -25,15 +24,11 @@ async function main() {
 
   // set default
   let data = await contract.setDefaultCurrencyStatus(gafi, true)
-  console.log('set default gafi currency', data.hash)
+  console.log('set default currency', data.hash)
 
   // set default BUSD
   data = await contract.setDefaultCurrencyStatus(busd, true)
-  console.log('set default busd currency', data.hash)
-
-  // set ranking GAFI
-  data = await contract.setRankings(["1000000000000000000"], ["0"])
-  console.log('set rankings', data.hash)
+  console.log('set default currency', data.hash)
 }
 
 // We recommend this pattern to be able to use async/await everywhere

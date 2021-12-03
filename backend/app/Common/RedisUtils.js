@@ -3,8 +3,9 @@
 const Redis = use('Redis');
 const ENABLE_REDIS = true;
 const TIER_CACHED_TTL = 10 * 60; // 10 minutes'
-const UPCOMING_POOLS_CACHED_TTL = 30 // 30 seconds
-const POOL_BY_TOKEN_TYPEP_CACHED_TTL = 30 // 30 seconds
+const UPCOMING_POOLS_CACHED_TTL = 120 // 2 minutes
+const POOL_BY_TOKEN_TYPEP_CACHED_TTL = 120 // 2 minutes
+const COMPLETED_POOLS_CACHED_TTL = 120 // 2 minutes
 
 const logRedisUtil = (message) => {
   console.log(`[RedisUtils] - ${message}`);
@@ -141,6 +142,54 @@ const deleteRedisUpcomingPools = (page) => {
 const deleteAllRedisUpcomingPools = (pages = []) => {
   pages.forEach(page => {
     deleteRedisUpcomingPools(page)
+  })
+};
+
+/**
+ * COMPLETED POOLS
+ */
+ const getRedisKeyCompletedPools = (page = 1) => {
+  return `completed_pools_${page}`;
+};
+
+const getRedisCompletedPools = async (page) => {
+  return await Redis.get(getRedisKeyCompletedPools(page));
+};
+
+const checkExistRedisCompletedPools = async (page) => {
+  let redisKey = getRedisKeyCompletedPools(page);
+  logRedisUtil(`checkExistRedisCompletedPools - redisKey: ${redisKey}`);
+
+  const isExistRedisData = await Redis.exists(redisKey);
+  if (isExistRedisData) {
+    logRedisUtil(`checkExistRedisCompletedPools - Exist Redis cache with key: ${redisKey}`);
+    return true;
+  }
+  logRedisUtil(`checkExistRedisCompletedPools - Not exist Redis cache with key: ${redisKey}`);
+  return false;
+};
+
+const createRedisCompletedPools = async (page, data) => {
+  const redisKey = getRedisKeyCompletedPools(page);
+  logRedisUtil(`createRedisCompletedPools - Create Cache data with key: ${redisKey}`);
+  return await Redis.setex(redisKey, COMPLETED_POOLS_CACHED_TTL, JSON.stringify(data));
+};
+
+const deleteRedisCompletedPools = (page) => {
+  let redisKey = getRedisKeyCompletedPools(page);
+  if (Redis.exists(redisKey)) {
+    logRedisUtil(`deleteRedisCompletedPools - existed key ${redisKey} on redis`);
+    // remove old key
+    Redis.del(redisKey);
+    return true;
+  }
+  logRedisUtil(`deleteRedisCompletedPools - not exist key ${redisKey}`);
+  return false;
+};
+
+const deleteAllRedisCompletedPools = (pages = []) => {
+  pages.forEach(page => {
+    deleteRedisCompletedPools(page)
   })
 };
 
@@ -390,6 +439,14 @@ module.exports = {
   createRedisPoolByTokenType,
   deleteRedisPoolByTokenType,
   deleteAllRedisPoolByTokenType,
+  
+  // COMPLETED POOL
+  checkExistRedisCompletedPools,
+  getRedisKeyCompletedPools,
+  getRedisCompletedPools,
+  createRedisCompletedPools,
+  deleteRedisCompletedPools,
+  deleteAllRedisCompletedPools,
 
   // POOL DETAIL
   checkExistRedisPoolDetail,

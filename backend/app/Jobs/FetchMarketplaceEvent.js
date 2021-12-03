@@ -3,6 +3,7 @@ const kue = use('Kue');
 const BigNumber = use('bignumber.js');
 const HelperUtils = use('App/Common/HelperUtils')
 const MarketplaceEventModel = use('App/Models/MarketplaceNFTListedEvent')
+const MarketplaceCollectionModel = use('App/Models/MarketplaceCollection')
 const RedisMarketplaceUtils = use('App/Common/RedisMarketplaceUtils')
 
 const priority = 'medium'; // Priority of job, can be low, normal, medium, high or critical
@@ -44,7 +45,7 @@ class FetchMarketplaceEvent {
   }
 
   // This is where the work is done.
-  async handle({ event_type, from, to }) {
+  async handle({ event_type, from, to, notCached }) {
     try {
       if (!isNaN(from)) {
         from = parseInt(from)
@@ -71,6 +72,10 @@ class FetchMarketplaceEvent {
         }
 
         await this.fetchEvents(provider, event_type, index, tmp)
+      }
+
+      if (notCached) {
+        return
       }
 
       await RedisMarketplaceUtils.setRedisMarketplaceBlockNumber({current: to})
@@ -176,6 +181,12 @@ class FetchMarketplaceEvent {
             return
         }
 
+        // get slug -> by cached
+        const slug = await MarketplaceCollectionModel.query().where('token_address', data.token_address).first()
+        if (slug && slug.slug) {
+          data.slug = slug.slug
+        }
+
         // check existed before save
         const tx = await MarketplaceEventModel.query()
           .where('transaction_hash', data.transaction_hash)
@@ -191,6 +202,7 @@ class FetchMarketplaceEvent {
               .where('token_address', data.token_address)
               .where('seller', data.seller)
               .where('event_type', EVENT_TYPE_LISTED)
+              .where('token_id', data.token_id)
               .where('finish', 0)
               .where('dispatch_at', '<', data.dispatch_at)
               .update({finish: 1})
@@ -200,6 +212,7 @@ class FetchMarketplaceEvent {
               .where('token_address', data.token_address)
               .where('buyer', data.buyer)
               .where('event_type', EVENT_TYPE_OFFERED)
+              .where('token_id', data.token_id)
               .where('finish', 0)
               .where('dispatch_at', '<', data.dispatch_at)
               .update({finish: 1})
@@ -209,6 +222,42 @@ class FetchMarketplaceEvent {
               .where('token_address', data.token_address)
               .where('seller', data.seller)
               .where('event_type', EVENT_TYPE_LISTED)
+              .where('token_id', data.token_id)
+              .where('finish', 0)
+              .where('dispatch_at', '<', data.dispatch_at)
+              .update({finish: 1})
+            break
+          case EVENT_TYPE_OFFERED:
+            await MarketplaceEventModel.query()
+              .where('token_address', data.token_address)
+              .where('buyer', data.buyer)
+              .where('event_type', EVENT_TYPE_OFFERED)
+              .where('token_id', data.token_id)
+              .where('finish', 0)
+              .where('dispatch_at', '<', data.dispatch_at)
+              .update({finish: 1})
+
+            const currentListed = await MarketplaceEventModel.query()
+              .where('token_address', data.token_address)
+              .where('event_type', EVENT_TYPE_LISTED)
+              .where('token_id', data.token_id)
+              .where('finish', 0).first()
+
+            if (currentListed && (!currentListed.highest_offer || data.raw_amount > currentListed.highest_offer)) {
+              await MarketplaceEventModel.query()
+                .where('token_address', data.token_address)
+                .where('event_type', EVENT_TYPE_LISTED)
+                .where('token_id', data.token_id)
+                .where('finish', 0)
+                .update({highest_offer: data.raw_amount})
+            }
+            break
+          case EVENT_TYPE_LISTED:
+            await MarketplaceEventModel.query()
+              .where('token_address', data.token_address)
+              .where('seller', data.seller)
+              .where('event_type', EVENT_TYPE_LISTED)
+              .where('token_id', data.token_id)
               .where('finish', 0)
               .where('dispatch_at', '<', data.dispatch_at)
               .update({finish: 1})

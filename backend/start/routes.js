@@ -127,7 +127,7 @@ Route.group(() => {
   Route.get('marketplace/collections', 'MarketplaceController.getCollections');
   Route.get('marketplace/hot-offers', 'MarketplaceController.getHotOffers');
   Route.get('marketplace/discover', 'MarketplaceController.discover');
-  Route.get('marketplace/activities', 'MarketplaceController.getCollectionActivities');
+  Route.get('marketplace/activities', 'MarketplaceController.getActivities');
   Route.get('marketplace/collections/support', 'MarketplaceController.getSupportCollections');
 
   Route.get('marketplace/collection/:address', 'MarketplaceController.getCollection');
@@ -136,6 +136,7 @@ Route.group(() => {
   Route.post('marketplace/collection/:address/:id', 'MarketplaceController.getNFTInfo');
   Route.get('marketplace/offers/:address/:id', 'MarketplaceController.getOffersOfNFT');
   Route.get('marketplace/offers/:address', 'MarketplaceController.getMyOffers');
+  Route.get('marketplace/listings/:address', 'MarketplaceController.getMyListings');
 
   Route.get('/boxes:id([0-9]+)', 'HomeController.getNFTBox');
   Route.get('/boxes/:id([0-9]+)', 'HomeController.getNFTBox');

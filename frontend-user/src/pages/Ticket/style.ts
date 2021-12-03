@@ -833,7 +833,7 @@ export const useAboutStyles = makeStyles((theme) => ({
     gap: '8px',
     alignItems: 'end',
     [theme.breakpoints.down('xs')]: {
-      gridTemplateColumns: '1fr',
+      gridTemplateColumns: '1fr !important',
       gap: '4px',
     },
     '& .countdown': {

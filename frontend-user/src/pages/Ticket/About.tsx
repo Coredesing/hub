@@ -652,12 +652,12 @@ export const AboutMysteryBox = ({
                 e.stopPropagation();
                 onSelectBox(b)
               }} className={clsx("box", { active: currentBox.idCollection === b.idCollection })}>
-                <div className="img-box">
-                  <img src={b.icon} alt="" />
+                <div className="img-box bg-black">
+                  <img src={b.icon} alt="" onError={(e: any) => {e.target.style.visibility = 'hidden'}} />
                 </div>
                 <div>
                   <span className="id-box">
-                    #{formatNumber(b.idCollection, 3)}
+                    #{formatNumber(b.idCollection, 3) || '-/-'}
                   </span>
                   {
                     POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(info.id) &&

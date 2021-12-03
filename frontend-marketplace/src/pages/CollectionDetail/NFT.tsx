@@ -39,6 +39,7 @@ import useContractSigner from "@hooks/useContractSigner";
 import { Link } from 'react-router-dom';
 import { setProjectInfor as setProjectInforState } from '@store/actions/project-collection';
 import { setTokenInfor } from "@store/actions/tokenInfor";
+import { setCurrencyTokenAddress } from "@store/actions/currency";
 
 const MARKETPLACE_SMART_CONTRACT = process.env.REACT_APP_MARKETPLACE_SMART_CONTRACT as string;
 
@@ -270,10 +271,10 @@ const MysteryBox = ({ id, project, ...props }: any) => {
         handleCallContract(onTransferNFT.name, () => erc721ContractWithSigner.transferFrom(connectedAccount, receiverAddress, id))
     }
 
-    const onOfferNFT = async (offerPrice: number) => {
+    const onOfferNFT = async (offerPrice: number, value: number) => {
         const options: ObjectType<any> = {}
         if (new BigNumber(addressCurrencyToBuy).isZero()) {
-            options.value = utils.parseEther(offerPrice + '');
+            options.value = utils.parseEther(value + '');
         }
         handleCallContract(onOfferNFT.name, () => marketplaceContractWithSigner.offer(id, projectAddress, utils.parseEther(offerPrice + ''), addressCurrencyToBuy, options))
     }
@@ -366,6 +367,44 @@ const MysteryBox = ({ id, project, ...props }: any) => {
         }
     }, [addressCurrencyToBuy, connectedAccount, infoNFT?.project?.token_address, isOwnerNFT, isOwnerNFTOnSale, allowNetwork]);
 
+    const [offerList, setOfferList] = useState<ObjectType<any>[]>([]);
+    const currencies = useSelector((state: any) => state.currencies)?.data || {};
+    useEffect(() => {
+        // update pagination
+        if (reloadOfferList && addressCurrencyToBuy && projectInfor) {
+            axios.get(`/marketplace/offers/${project}/${id}?event_type=TokenOffered`).then(async (res) => {
+                let offers = res.data?.data || [];
+                const offerList: ObjectType<any>[] = [];
+                await Promise.all(offers.map((item: any) => new Promise(async (res) => {
+                    if (item.currency === addressCurrencyToBuy) {
+                        if (!currencies[item.currency]) {
+                            const symbol = await getSymbolCurrency(item.currency);
+                            item.currencySymbol = symbol;
+                            dispatch(setCurrencyTokenAddress(item.currency, symbol));
+                        } else {
+                            item.currencySymbol = currencies[item.currency];
+                        }
+                        offerList.push(item);
+                    }
+                    res('');
+                })));
+                setOfferList(offerList);
+                setReloadOfferList(false)
+            }).catch(err => {
+                console.log('err', err)
+                setReloadOfferList(false)
+            })
+        }
+    }, [reloadOfferList, addressCurrencyToBuy, projectInfor]);
+
+    const [lastOffer, setLastOffer] = useState<ObjectType<any> | null>(null);
+    useEffect(() => {
+        if(offerList.length && connectedAccount) {
+            const myLastOffer = offerList.find(item => item.buyer === connectedAccount);
+            setLastOffer(myLastOffer as any);
+        }
+    }, [offerList, connectedAccount])
+
     return (
         <>
             <div className={styles.content}>
@@ -390,6 +429,7 @@ const MysteryBox = ({ id, project, ...props }: any) => {
                     onApproveToken={onApproveToken}
                     lockingAction={lockingAction}
                     checkFnIsLoading={checkFnIsLoading}
+                    lastOffer={lastOffer}
                 />
                 <ListingNFTModal
                     open={openListingModal}
@@ -633,6 +673,7 @@ const MysteryBox = ({ id, project, ...props }: any) => {
                                             getSymbolCurrency={getSymbolCurrency}
                                             addressCurrencyToBuy={addressCurrencyToBuy}
                                             validChain={allowNetwork.ok}
+                                            offerList={offerList}
                                         />
                                     </div>
                                 </div>

@@ -48,6 +48,7 @@ export const AboutMarketplaceNFT = ({
     setReloadOfferList,
     validChain,
     projectInfor,
+    offerList = [],
     ...props }: Props) => {
 
     const { account: connectedAccount } = useWeb3React();
@@ -57,10 +58,7 @@ export const AboutMarketplaceNFT = ({
     const onChangeTab = (e: any, val: number) => {
         setCurrentTab(val);
     }
-    const currencies = useSelector((state: any) => state.currencies)?.data || {};
     const [timenow] = useState(Date.now());
-    const [offerList, setOfferList] = useState<ObjectType<any>[]>([]);
-
     const formatTraitType = (item: any) => {
         let traitType = item.trait_type || item.traitType || '';
         traitType = typeof traitType === 'string' ? traitType : '';
@@ -93,35 +91,6 @@ export const AboutMarketplaceNFT = ({
         setAttrLinks(attrLinks);
         return arr;
     }, [info.attributes]);
-
-    useEffect(() => {
-        // update pagination
-        if (reloadOfferList && addressCurrencyToBuy && projectInfor) {
-            axios.get(`/marketplace/offers/${project}/${id}?event_type=TokenOffered`).then(async (res) => {
-                let offers = res.data?.data || [];
-                const offerList: ObjectType<any>[] = [];
-                await Promise.all(offers.map((item: any) => new Promise(async (res) => {
-                    if (item.currency === addressCurrencyToBuy) {
-                        if (!currencies[item.currency]) {
-                            const symbol = await getSymbolCurrency(item.currency);
-                            item.currencySymbol = symbol;
-                            dispatch(setCurrencyTokenAddress(item.currency, symbol));
-                        } else {
-                            item.currencySymbol = currencies[item.currency];
-                        }
-                        offerList.push(item);
-                    }
-                    res('');
-                })));
-                setOfferList(offerList);
-                setReloadOfferList(false)
-            }).catch(err => {
-                console.log('err', err)
-                setReloadOfferList(false)
-            })
-        }
-    }, [reloadOfferList, addressCurrencyToBuy, projectInfor])
-
     const activitiesDetailCollection = useSelector((state: any) => state.activitiesDetailCollection);
     const activitiesDetail = activitiesDetailCollection?.data?.[id] || {};
     const [activitiesFilter, setActivitiesFilter] = useState<ObjectType<any>>({ page: 1 });

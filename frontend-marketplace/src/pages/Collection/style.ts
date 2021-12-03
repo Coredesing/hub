@@ -261,7 +261,7 @@ const useStyles = makeStyles((theme: any) => ({
                 width: '100%',
                 // background: '100%',
                 background: '#171717',
-                border: '1px solid #686868',
+                // border: '1px solid #686868',
 
                 '& img': {
                     width: '100%',
@@ -270,8 +270,8 @@ const useStyles = makeStyles((theme: any) => ({
                 },
             },
             '& .icon': {
-                width: '132px',
-                height: '132px',
+                width: '140px',
+                height: '140px',
                 borderRadius: '50%',
                 background: '#171717',
                 overflow: 'hidden',
@@ -282,9 +282,17 @@ const useStyles = makeStyles((theme: any) => ({
                 zIndex: 1000,
                 display: 'grid',
                 placeItems: 'center',
+                '& .wr-icon': {
+                    width: '125px',
+                    height: '125px',
+                    borderRadius: '50%',
+                    background: '#fff',
+                    display: 'grid',
+                    placeItems: 'center',
+                },
                 '& img': {
-                    width: '120px',
-                    height: '120px',
+                    width: '108px',
+                    height: '108px',
                     borderRadius: '50%',
                     objectFit: 'contain',
                 }

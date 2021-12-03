@@ -12,6 +12,7 @@ import { utils } from 'ethers'
 import { numberWithCommas } from '@utils/formatNumber';
 import getAccountBalance from '@utils/getAccountBalance';
 import { useSelector } from 'react-redux';
+import { debounce } from '@utils/';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -105,20 +106,52 @@ const OfferNFTModal = ({ open,
     onApproveToken,
     lockingAction,
     checkFnIsLoading,
+    lastOffer,
     ...props }: Props) => {
     const styles = useStyles();
     const [inputPrice, setInputPrice] = useState(0);
     const { connectedAccount } = useAuth();
     const { appChainID } = useSelector((state: any) => state.appNetwork).data;
+    const [notiMsg, setNotiMsg] = useState('');
+
+    useEffect(() => {
+        if (lastOffer) {
+            setNotiMsg(` You already placed an offer for this hero with ${+lastOffer.amount} ${currencySymbol}.`)
+        }
+    }, [lastOffer])
+
     const onChangePrice = (event: any) => {
         const { value } = event.target;
+        // if (lastOffer) {
+        //     if (+value > +lastOffer.amount) {
+        //         const numExceed = +value - +lastOffer.amount;
+        //         setNotiMsg(` You already placed an offer for this hero with ${+lastOffer.amount} ${currencySymbol}. This offer will need ${numExceed} ${currencySymbol} more.`)
+        //     } else {
+        //         const numReturned = +lastOffer.amount - +value;
+        //         if (numReturned) {
+        //             setNotiMsg(`You had an offer at higher price of ${+lastOffer.amount} ${currencySymbol}. By placing this new offer, ${numReturned} ${currencySymbol} will be returned to your address.`);
+        //         } else {
+        //             setNotiMsg(` You already placed an offer for this hero with ${+lastOffer.amount} ${currencySymbol}.`)
+        //         }
+        //     }
+        // }
         setInputPrice(value);
-    }
+    };
     const onClose = () => {
         props.onClose && props.onClose();
     }
     const onConfirm = () => {
-        props.onConfirm && props.onConfirm(inputPrice);
+        let valueOffer = new BigNumber(inputPrice);
+        let currentOffer = new BigNumber(inputPrice);
+        if(lastOffer) {
+            const lastPriceOffer = new BigNumber(+lastOffer.amount);
+            if(lastPriceOffer.lt(currentOffer)) {
+                valueOffer = currentOffer.minus(lastPriceOffer);
+            } else {
+                valueOffer = new BigNumber(0);
+            }
+        }
+        props.onConfirm && props.onConfirm(inputPrice, valueOffer.toString());
     }
 
     const [addressBalance, setAddressBalance] = useState('0');
@@ -174,12 +207,10 @@ const OfferNFTModal = ({ open,
                             </ButtonBase> :
                             <ButtonBase color="green" onClick={onConfirm}
                                 className="w-full text-transform-unset mt-0-important"
-                                isLoading={isLoadingButton} disabled={isLoadingButton}>
+                                isLoading={isLoadingButton} disabled={isLoadingButton || !(+inputPrice)}>
                                 Confirm
                             </ButtonBase>
                     }
-
-
                 </div>
             }
         >
@@ -197,7 +228,12 @@ const OfferNFTModal = ({ open,
                         <span className="text-grey firs-neue-font font-12px">Your Wallet Balance:</span> <span className="bold firs-neue-font font-12px text-white">{numberWithCommas(addressBalance, 4)} {currencySymbol}</span>
                     </Box>
                     <Box marginTop="12px">
-                        <p className="font-14px helvetica-font text-white">Once the offer becomes successful, you will own this product directly.</p>
+                        {!lastOffer ?
+                            <p className="font-14px helvetica-font text-white">Once the offer becomes successful, you will own this product directly.</p> :
+                            <p className="font-14px helvetica-font text-green-imp">
+                                {notiMsg}
+                            </p>
+                        }
                     </Box>
                 </div>
             </div>

@@ -226,7 +226,7 @@ class MarketplaceService {
     return data
   }
 
-  async getActivities(address, filterParams) {
+  async getActivities(filterParams) {
     // TODO: filter whitelist address
     filterParams = this.formatPaginate(filterParams)
 

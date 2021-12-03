@@ -243,8 +243,9 @@ class MarketplaceService {
     filterParams.finish = 0
 
     let data = await this.buildQueryNFTEventsBuilder(filterParams)
-      .orderBy('amount', 'DESC')
+      .orderBy('highest_offer', 'DESC')
       .orderBy('dispatch_at', 'DESC')
+      .whereNotNull('highest_offer')
       .paginate(filterParams.page, filterParams.limit);
 
     return data

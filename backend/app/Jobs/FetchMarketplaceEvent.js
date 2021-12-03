@@ -243,7 +243,7 @@ class FetchMarketplaceEvent {
               .where('token_id', data.token_id)
               .where('finish', 0).first()
 
-            if (currentListed && (!currentListed.highest_offer || data.raw_amount > currentListed.highest_offer)) {
+            if (currentListed && (!currentListed.highest_offer || BigNumber.from(data.raw_amount).gt(BigNumber.from(currentListed.highest_offer)))) {
               await MarketplaceEventModel.query()
                 .where('token_address', data.token_address)
                 .where('event_type', EVENT_TYPE_LISTED)

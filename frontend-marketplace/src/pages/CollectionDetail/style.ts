@@ -920,6 +920,7 @@ export const useMarketplaceStyle = makeStyles((theme) => ({
             display: 'flex',
             alignItems: 'center',
             gap: '18px',
+            marginBottom: '6px !important',
             '& span': {
               display: 'block',
               borderRadius: '2px',

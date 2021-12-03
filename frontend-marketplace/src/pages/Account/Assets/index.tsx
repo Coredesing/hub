@@ -20,6 +20,7 @@ import { SearchBox } from '@base-components/SearchBox';
 import { getNetworkInfo } from '@utils/network';
 import { useTypedSelector } from '@hooks/useTypedSelector';
 import { debounce, escapeRegExp } from '@utils/index'
+import NotfoundItem from '../components/NotfoundItem';
 const Assets = () => {
     const tabStyles = useTabStyles();
     const history = useHistory();
@@ -49,7 +50,6 @@ const Assets = () => {
     const { appChainID } = useSelector((state: any) => state.appNetwork).data;
     const { connectedAccount, wrongChain /*isAuth*/ } = useAuth();
     const assetsAccount = useSelector((state: any) => state.assetsAccount).data || {};
-    const [assets, setAssets] = useState<ObjectType<any>>({});
 
     const onRedirectDetail = (item: any) => {
         history.push(`/collection/${item.project.slug}/${item.id}`)
@@ -68,10 +68,7 @@ const Assets = () => {
 
     const renderNotFoundCollection = useCallback((elem: any) => {
         if (!elem) return;
-        ReactDOM.render(<div className="wrapper-not-found">
-            <img src="/images/icons/item-not-found.svg" alt="" />
-            <h4>No item found</h4>
-        </div>, elem)
+        ReactDOM.render(<NotfoundItem />, elem)
     }, [])
 
     const renderCollectionItem = (elem: any, collections: any[]) => {

@@ -110,7 +110,9 @@ const Marketplace = () => {
                                 }} />
                             </div>
                             <div className="icon">
-                                <img src={projectInfor.logo} alt="" />
+                                <div className="wr-icon">
+                                    <img src={projectInfor.logo} alt="" />
+                                </div>
                             </div>
                         </div>
                         <div className="infor">

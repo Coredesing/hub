@@ -322,3 +322,7 @@ body::-webkit-scrollbar-thumb,
 .h-full {
     height: 100%;
 }
+
+.bg-black {
+    background: #000000;
+}

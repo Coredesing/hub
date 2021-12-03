@@ -428,27 +428,31 @@ const MysteryBox = ({ id, ...props }: any) => {
             if (!connectedAccount) return;
             for (let id = 0; id < ownedBox; id++) {
                 if (isCallDefaultCollection) {
-                    const idCollection = (await contractPreSaleWithAcc.tokenOfOwnerByIndex(connectedAccount, id)).toNumber();
-                    const boxType = await contractPreSaleWithAcc.boxes(idCollection);
-                    const idBoxType = boxType.subBoxId.toNumber();
-                    const infoBox = subBoxes.find((b, subBoxId) => subBoxId === idBoxType);
-                    const collection = infoBox && { ...infoBox, idCollection };
-                    collection && arrCollections.push(collection);
-                } else {
-                    const idCollection = await Erc721contract.methods.tokenOfOwnerByIndex(connectedAccount, id).call();
-                    const tokenURI = await Erc721contract?.methods.tokenURI(idCollection).call();
-                    const collection: ObjectType<any> = {
-                        idCollection: idCollection
-                    };
                     try {
+                        const collection: ObjectType<any> = {};
+                        const idCollection = (await contractPreSaleWithAcc.tokenOfOwnerByIndex(connectedAccount, id)).toNumber();
+                        const boxType = await contractPreSaleWithAcc.boxes(idCollection);
+                        const idBoxType = boxType.subBoxId.toNumber();
+                        const infoBox = subBoxes.find((b, subBoxId) => subBoxId === idBoxType);
+                        infoBox && Object.assign(collection, infoBox);
+                        arrCollections.push(collection);
+                    } catch (error) {
+                        console.log('error', error);
+                    }
+                } else {
+                    const collection: ObjectType<any> = {};
+                    try {
+                        const idCollection = await Erc721contract.methods.tokenOfOwnerByIndex(connectedAccount, id).call();
+                        const tokenURI = await Erc721contract?.methods.tokenURI(idCollection).call();
+                        collection.idCollection = idCollection;
                         const infoBoxType = (await axios.get(tokenURI)).data;
                         Object.assign(collection, infoBoxType);
                         collection.icon = infoBoxType.image;
                         collection.price = infoBoxType.price;
+                        arrCollections.push(collection);
                     } catch (error) {
-                        collection.icon = 'default.img';
+                        console.log('error', error)
                     }
-                    arrCollections.push(collection);
                 }
             }
             setCollections(arrCollections);
@@ -614,7 +618,7 @@ const MysteryBox = ({ id, ...props }: any) => {
     }, [numBoxBuy, boxTypeSelected]);
 
     useEffect(() => {
-        if(getMaxTicketBuy(myBoxThisPool, maxBoxCanBuy)) {
+        if (getMaxTicketBuy(myBoxThisPool, maxBoxCanBuy)) {
             setNumBoxBuy(1);
         }
     }, [myBoxThisPool, maxBoxCanBuy])
@@ -889,7 +893,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                                                         }}
                                                     />
                                                 </div>
-                                                <span className="text-uppercase">{tokenSeletected.price} {tokenSeletected.name}/Box</span>
+                                                <span className="text-uppercase">{Number(tokenSeletected.price) || ''} {tokenSeletected.name}/Box</span>
 
                                             </div>
                                             <div className="detail-items">

@@ -247,7 +247,7 @@ const ModalBoxCollection = ({ open, current = {}, boxesContent, ...props }: Prop
                                 <img src={currentBox.icon} alt="" />
                             </div>
                             <span className="box-name">{currentBox.name}</span>
-                            <span className="box-id">#{formatNumber(currentBox.idCollection, 3)}</span>
+                            <span className="box-id">#{formatNumber(currentBox.idCollection, 3) || '-/-'}</span>
                         </Box>
                         {/* <Box className="wrapper-countdown">
                             <CountDownTimeV1

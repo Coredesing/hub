@@ -545,7 +545,7 @@ const MysteryBox = ({ id, project, ...props }: any) => {
                                                             {
 
                                                                 isOwnerNFT && (!isApprovedMarketplace ?
-                                                                    <ButtonBase color="yellow" onClick={onApproveToken} className="w-full text-transform-unset" isLoading={checkFnIsLoading(onApproveToken.name)} disabled={lockingAction.lock}>
+                                                                    <ButtonBase color="yellow" onClick={onApproveToMarketplace} className="w-full text-transform-unset" isLoading={checkFnIsLoading(onApproveToMarketplace.name)} disabled={lockingAction.lock}>
                                                                         Approve to List
                                                                     </ButtonBase> :
                                                                     <ButtonBase isLoading={checkFnIsLoading(onListingNFT.name)} disabled={lockingAction.lock} color="yellow" className="w-full" onClick={() => setOpenListingModal(true)}>

@@ -435,6 +435,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                         const idBoxType = boxType.subBoxId.toNumber();
                         const infoBox = subBoxes.find((b, subBoxId) => subBoxId === idBoxType);
                         infoBox && Object.assign(collection, infoBox);
+                        collection.idCollection = idCollection;
                         arrCollections.push(collection);
                     } catch (error) {
                         console.log('error', error);

@@ -4,6 +4,7 @@ const RedisUtils = use('App/Common/RedisUtils');
 const HelperUtils = use('App/Common/HelperUtils');
 const SubscribeEmailService = use('App/Services/SubscribeEmailService');
 const HomeService = use('App/Services/HomeService');
+const GameFiVestingService = use('App/Services/GameFiVestingService');
 
 class HomeController {
   async subscribe({request}) {
@@ -107,6 +108,40 @@ class HomeController {
       description: 'GameFi Box',
       name: 'GameFi-Box',
     };
+  }
+
+  async getVestingOption({request}) {
+    try {
+      const wallet = request.params.address
+
+      const service = new GameFiVestingService()
+      let data = await service.getWallet(wallet)
+      if (!data) {
+        return HelperUtils.responseNotFound()
+      }
+
+      return HelperUtils.responseSuccess(data)
+    } catch (e) {
+      return HelperUtils.responseErrorInternal()
+    }
+  }
+
+  async createVestingOption({request}) {
+    try {
+      const wallet = request.header('wallet_address')
+      const param = request.all();
+
+      const service = new GameFiVestingService()
+      const data = await service.insertOption({
+        wallet: wallet,
+        option: param.option,
+        pools: param.pools
+      })
+
+      return HelperUtils.responseSuccess(data)
+    } catch (e) {
+      return HelperUtils.responseErrorInternal()
+    }
   }
 }
 

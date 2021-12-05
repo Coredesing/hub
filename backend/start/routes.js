@@ -47,8 +47,8 @@ Route.group(() => {
   Route.get('home/performance', 'HomeController.getPerformance');
   Route.get('home/performances', 'HomeController.getPerformances');
   Route.post('home/subscribe', 'HomeController.subscribe');
-  Route.post('vesting/gamefi', 'HomeController.createVestingOption');
-  Route.post('vesting/gamefi/:address', 'HomeController.getVestingOption').middleware(['checkSignature']);
+  Route.post('vesting/gamefi', 'HomeController.createVestingOption').middleware(['checkSignature']);
+  Route.post('vesting/gamefi/:address', 'HomeController.getVestingOption');
   Route.get('legend/:id', 'HomeController.getLegendImages');
 
   // Aggregator

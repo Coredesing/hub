@@ -63,6 +63,8 @@ Route.group(() => {
 
   // pool
   Route.get('pool/:campaignId', 'PoolController.getPoolPublic');
+  Route.get('pool/owner/:address', 'MarketplaceController.getMyNFTByAddress');
+
   Route.get('pool/:campaignId/top-bid', 'PoolController.getTopBid');
   Route.get('pool/:campaignId/tiers', 'TierController.getTiers');
   Route.get('pool/:campaignId/winners', 'WinnerListUserController.getWinnerAndReserveList');

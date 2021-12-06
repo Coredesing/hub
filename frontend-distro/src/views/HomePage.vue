@@ -189,12 +189,12 @@
             @click.prevent="state.showConnectWallet = true">
             Connect Wallet
           </button>
-          <div v-else class="flex align-middle items-center mt-4">
-            <div class="px-2 py-1 lg:px-4 lg:py-2 bg-gray-900 rounded-sm flex align-middle items-center">
-              <img src="@/assets/images/icons/bsc.svg" class="mr-2 w-4 h-4 lg:w-6 lg:h-6">
-              {{wallet}}
+          <div v-else class="flex w-full flex-col lg:flex-row align-middle items-center text-2xs lg:text-sm mt-4">
+            <div class="text-2xs lg:text-sm px-2 py-1 lg:px-4 lg:py-2 bg-gray-900 rounded-sm flex align-middle items-center">
+              <img src="@/assets/images/icons/bsc.svg" class="mr-1 lg:mr-2 w-4 h-4 lg:w-6 lg:h-6">
+              {{ wallet }}
             </div>
-            <button class="text-sm font-medium text-gamefiGreen-400 ml-2" @click.prevent="logout">Disconnect</button>
+            <button class="text-sm font-medium text-gamefiGreen-400 lg:ml-2" @click.prevent="logout">Disconnect</button>
           </div>
           <hr class="mt-5 border-gray-600">
           <div class="mt-5 font-medium">

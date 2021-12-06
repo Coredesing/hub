@@ -29,7 +29,7 @@
     </template>
     <template v-else #body>
       <div class="mt-4">
-        <div class="px-2 py-1 lg:px-4 lg:py-2 bg-gray-900 rounded-lg flex align-middle items-center">
+        <div class="text-xs lg:text-sm px-2 py-1 lg:px-4 lg:py-2 bg-gray-900 rounded-lg flex align-middle items-center">
           <img src="@/assets/images/metamask.svg" class="mr-2 w-6 h-6 lg:w-8 lg:h-8">
           {{wallet}}
         </div>

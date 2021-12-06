@@ -3,7 +3,7 @@
 const Task = use('Task')
 const FetchLFWEventJob = use('App/Jobs/FetchLFWEventJob');
 const RedisLFWUtils = use('App/Common/RedisLFWUtils')
-const LFW_START_BLOCK_NUMBER = process.env.MARKETPLACE_START_BLOCK
+const LFW_START_BLOCK_NUMBER = process.env.LFW_START_BLOCK_NUMBER
 
 const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))

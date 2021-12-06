@@ -12,7 +12,7 @@
           You are choosing <span class="font-medium text-gamefiGreen-400">Option 1</span>
           <ul class="list-disc mx-4 mt-2">
             <li><div class="text-white font-light">December 10, 2021: Claim 25%</div></li>
-            <li><div class="text-white mt-1 font-light">The remaining 50% will claim block-by-block in 6 months</div></li>
+            <li><div class="text-white mt-1 font-light">The remaining 50% will claim block-by-block in 6 months starting on December 10, 2021</div></li>
           </ul>
           <hr class="mt-5 border-gray-600">
           <label class="inline-flex items-center">
@@ -42,7 +42,13 @@
       </template>
     </modal>
     <!-- confirm option 2 -->
-    <modal :show="state.showConfirmOption2" @close="state.showConfirmOption2 = false">
+    <modal
+      :show="state.showConfirmOption2"
+      @close="() => {
+        state.showConfirmOption2 = false
+        state.reconfirm = false
+      }"
+    >
       <template #header>
         <div>Confirm vesting option</div>
       </template>
@@ -51,7 +57,7 @@
           You are choosing <span class="font-medium text-gamefiGreen-400">Option 2</span>
           <ul class="list-disc mx-4 mt-2">
             <li><div class="text-white font-light">December 10, 2021: Claim 25%</div></li>
-            <li><div class="text-white mt-1 font-light">After that, get 25% Airdrop immediately and the remaining 25% will be burned</div></li>
+            <li><div class="text-white mt-1 font-light">After that, get 25% Airdrop within 3 days and the remaining 25% will be burned</div></li>
           </ul>
           <hr class="mt-5 border-gray-600">
           <label class="inline-flex items-center">
@@ -66,7 +72,13 @@
       </template>
       <template v-else #body>
         <div>
-          By choosing this option, the remain 25% will be <span class="uppercase">burned</span>. Are you sure?
+          You are choosing <span class="font-medium text-gamefiGreen-400">Option 2</span>
+          <ul class="list-disc mx-4 mt-2">
+            <li><div class="text-white font-light">December 10, 2021: Claim 25%</div></li>
+            <li><div class="text-white mt-1 font-light">After that, get 25% Airdrop within 3 days and <span class="text-gamefiGreen-400 font-bold">the remaining 25% will be burned</span></div></li>
+          </ul>
+          <hr class="mt-5 border-gray-600">
+          <div class="mt-5">Are you sure with your choice?</div>
         </div>
       </template>
       <template #footer>
@@ -78,7 +90,7 @@
               state.reconfirm = false
             }"
           >
-            Cancel
+            {{!state.reconfirm ? 'Cancel' : `No, I'm not`}}
           </button>
           <button
             :disabled="!state.reconfirm && !state.agree2"
@@ -86,7 +98,7 @@
             :class="{'bg-gray-600 cursor-not-allowed text-white hover:opacity-100': !state.agree2}"
             @click.prevent="confirmOption(2)"
           >
-            Confirm
+            {{!state.reconfirm ? 'Confirm' : `Yes, I'm sure`}}
           </button>
         </div>
       </template>
@@ -99,17 +111,17 @@
         src="@/assets/images/icons/dot.svg"
       >
     </div>
-    <countdown :deadline="new Date('2021/12/07 23:59:59')" />
+    <countdown :deadline="new Date(END_DATE)" />
     <div class="main-content">
       <gamefi-box>
         <template #body>
-          <div class="font-bold">
+          <div class="text-2xl font-medium">
             Changing the vesting schedule of $GAFI Public Sale
           </div>
-          <div class="text-sm mt-5 font-medium">
+          <div class="mt-5 font-medium">
             Step 1: Select launchpad
           </div>
-          <div class="text-sm">
+          <div class="text-sm mt-3">
             <ul class="list-disc mx-4">
               <li><div class="text-white">Select <span class="text-gamefiGreen-400">all the launchpads</span> that you will claim $GAFI.</div></li>
               <li><div class="text-white">Your wallet address on these launchpads must be the same.</div></li>
@@ -119,7 +131,7 @@
             <div class="flex items-center align-middle">
               <div class="mr-3">
                 <button
-                  class="cursor-pointer h-10 bg-gray-900 rounded flex flex-col items-center align-middle justify-center select-none"
+                  class="cursor-pointer h-10 bg-gray-900 rounded overflow-hidden flex flex-col items-center align-middle justify-center select-none"
                   :class="{
                     'border border-gamefiGreen-400 hover:opacity-90': isActivePool('GameFi'),
                     'border border-gray-700 hover:opacity-90': !isActivePool('GameFi'),
@@ -133,7 +145,7 @@
               </div>
               <div class="mr-3">
                 <button
-                  class="cursor-pointer h-10 bg-gray-900 rounded flex flex-col items-center align-middle justify-center select-none"
+                  class="cursor-pointer h-10 bg-gray-900 rounded overflow-hidden flex flex-col items-center align-middle justify-center select-none"
                   :class="{
                     'border border-gamefiGreen-400 hover:opacity-90': isActivePool('RedKite'),
                     'border border-gray-700 hover:opacity-90': !isActivePool('RedKite'),
@@ -147,7 +159,7 @@
               </div>
               <div class="mr-3">
                 <button
-                  class="cursor-pointer h-10 bg-gray-900 rounded flex flex-col items-center align-middle justify-center select-none"
+                  class="cursor-pointer h-10 bg-gray-900 rounded overflow-hidden flex flex-col items-center align-middle justify-center select-none"
                   :class="{
                     'border border-gamefiGreen-400 hover:opacity-90': isActivePool('DAO'),
                     'border border-gray-700 hover:opacity-90': !isActivePool('DAO'),
@@ -162,12 +174,12 @@
             </div>
           </div>
           <hr class="mt-5 border-gray-600">
-          <div class="text-sm mt-5 font-medium">
+          <div class="mt-5 font-medium">
             Step 2: Connect wallet
           </div>
           <div class="text-sm mt-2">
             <ul class="list-disc mx-4">
-              <li><div class="text-white">Connect the correct wallet that you use on the launchpads.</div></li>
+              <li><div class="text-white">Connect the wallet that you will use on selected launchpads.</div></li>
               <li><div class="text-white">If you use different wallets on different launchpads, disconnect the current wallet, then repeat from Step 1.</div></li>
             </ul>
           </div>
@@ -185,47 +197,49 @@
             <button class="text-sm font-medium text-gamefiGreen-400 ml-2" @click.prevent="logout">Disconnect</button>
           </div>
           <hr class="mt-5 border-gray-600">
-          <div class="text-sm mt-5 font-medium">
-            Step 3: Choose new vesting schedule
+          <div class="mt-5 font-medium">
+            Step 3: Choose a new vesting schedule
           </div>
           <div class="text-sm mt-2">
             <ul class="list-disc mx-4">
               <li><div class="text-white">Please read carefully the information about the two new vesting options  and choose one of them. You will not be able to change the selected option after signing confirmation.</div></li>
-              <li><div class="text-white">After the registration period expires, if you do not choose any option, we will default to change your vesting schedule according to <span class="text-gamefiGreen-400">Option 1</span></div></li>
+              <li><div class="text-white">After the registration period expires, if you do not choose any options, we will default to change your vesting schedule according to <span class="text-gamefiGreen-400 font-bold">Option 1</span>.</div></li>
             </ul>
           </div>
-          <div v-if="!selectedInfo" class="font-medium mt-5">Select Option</div>
-          <div v-else class="font-medium mt-5">Your chosen vesting option: <span class="uppercase text-gamefiGreen-400">option {{selectedInfo.option}}</span></div>
+          <!-- <div v-if="!selectedInfo" class="font-medium mt-5">Select Option</div> -->
+          <div v-if="selectedInfo" class="font-medium mt-5">Your chosen vesting option: <span class="uppercase text-gamefiGreen-400">option {{selectedInfo.option}}</span></div>
           <div class="grid lg:grid-cols-2 mt-4 gap-4">
             <!-- option 1 -->
-            <box-option :class="{'opacity-50': selectedInfo && state.activeOption !== 1}" :is-active="state.activeOption === 1">
+            <box-option :class="{'opacity-50': selectedInfo && state.activeOption !== 1}" :active="state.activeOption === 1">
               <template #header>
                 <div>New vesting schedule</div>
-                <div class="text-gamefiGreen-400 font-bold text-2xl">
+                <div class="text-gamefiGreen-400 font-bold text-xl">
                   Option 1
                 </div>
               </template>
               <template #body>
-                <div>
-                  <div class="inline-flex">
-                    <img
-                      class="w-2 h-2 lg:w-4 lg:h-4"
-                      src="@/assets/images/icons/tick.svg"
-                    >
-                    <div class="ml-2">
-                      December 10, 2021: Claim 25% on GameFi
+                <div class="text-sm font-light flex flex-col justify-between" :class="{'h-40': !selectedInfo, 'h-36': selectInfo}">
+                  <div>
+                    <div class="inline-flex">
+                      <img
+                        class="w-2 h-2 lg:w-4 lg:h-4"
+                        src="@/assets/images/icons/tick.svg"
+                      >
+                      <div class="ml-2">
+                        December 10, 2021: Claim 25%
+                      </div>
+                    </div>
+                    <div class="inline-flex mt-2">
+                      <img
+                        class="w-2 h-2 lg:w-4 lg:h-4"
+                        src="@/assets/images/icons/tick.svg"
+                      >
+                      <div class="ml-2">
+                        The remaining 50% will claim block-by-block in 6 months starting on December 10, 2021
+                      </div>
                     </div>
                   </div>
-                  <div class="inline-flex mt-2">
-                    <img
-                      class="w-2 h-2 lg:w-4 lg:h-4"
-                      src="@/assets/images/icons/tick.svg"
-                    >
-                    <div class="ml-2">
-                      The ramaining 50% will claim block-by-block in 6 months start in 10/12/2021
-                    </div>
-                  </div>
-                  <div class="flex items-center justify-center mt-5 w-full">
+                  <div class="flex items-center justify-center w-full">
                     <button
                       v-if="!selectedInfo"
                       class="px-2 py-1 lg:px-4 lg:py-2 w-full font-medium rounded-sm hover:opacity-90"
@@ -243,36 +257,38 @@
               </template>
             </box-option>
             <!-- option 2 -->
-            <box-option :class="{'opacity-50': selectedInfo && state.activeOption !== 2}" :is-active="state.activeOption === 2">
+            <box-option :class="{'opacity-50': selectedInfo && state.activeOption !== 2}" :active="state.activeOption === 2">
               <template #header>
                 <div>New vesting schedule</div>
-                <div class="text-gamefiGreen-400 font-bold text-2xl">
+                <div class="text-gamefiGreen-400 font-bold text-xl">
                   Option 2
                 </div>
               </template>
               <template #body>
-                <div>
-                  <div class="inline-flex">
-                    <img
-                      class="w-2 h-2 lg:w-4 lg:h-4"
-                      src="@/assets/images/icons/tick.svg"
-                    >
-                    <div class="ml-2">
-                      December 10, 2021: Claim 25% on GameFi
+                <div class="text-sm font-light flex flex-col justify-between" :class="{'h-40': !selectedInfo, 'h-36': selectInfo}">
+                  <div>
+                    <div class="inline-flex">
+                      <img
+                        class="w-2 h-2 lg:w-4 lg:h-4"
+                        src="@/assets/images/icons/tick.svg"
+                      >
+                      <div class="ml-2">
+                        December 10, 2021: Claim 25%
+                      </div>
+                    </div>
+                    <div class="inline-flex mt-2">
+                      <img
+                        class="w-2 h-2 lg:w-4 lg:h-4"
+                        src="@/assets/images/icons/tick.svg"
+                      >
+                      <div class="ml-2">
+                        After that, get 25% Airdrop within 3 days and the remaining 25% will be burned
+                      </div>
                     </div>
                   </div>
-                  <div class="inline-flex mt-2">
-                    <img
-                      class="w-2 h-2 lg:w-4 lg:h-4"
-                      src="@/assets/images/icons/tick.svg"
-                    >
-                    <div class="ml-2">
-                      After that, get 25% Airdrop within 3 days and the remaining 25% will be burned
-                    </div>
-                  </div>
-                  <div class="flex items-center justify-center mt-5 w-full">
+                  <div class="flex items-center justify-center w-full">
                     <button
-                     v-if="!selectedInfo"
+                      v-if="!selectedInfo"
                       class="px-2 py-1 lg:px-4 lg:py-2 w-full font-medium rounded-sm hover:opacity-90"
                       :class="{
                         'bg-gray-500 text-white cursor-not-allowed hover:opacity-100': selectedInfo,
@@ -308,6 +324,7 @@ import axios from 'axios'
 
 const BASE_URL = import.meta.env.VITE_BASE_URL
 const USER_MESSAGE_SIGNATURE = import.meta.env.VITE_USER_MESSAGE_SIGNATURE
+const END_DATE = import.meta.env.VITE_END_DATE
 
 const toast = useToast()
 const store = useStore()
@@ -320,10 +337,10 @@ const state = reactive({
   showConfirmOption2: false,
   agree1: false,
   agree2: false,
-  activeOption: 1,
+  activeOption: 0,
   reconfirm: false,
   showConnectWallet: false,
-  pools: ['GameFi'],
+  pools: [],
   rawSignature: ''
 })
 
@@ -334,7 +351,7 @@ onMounted(async () => {
 })
 watch([selectedInfo], () => {
   state.pools = (selectedInfo && selectedInfo.value && selectedInfo.value.pools.split(',')) || []
-  state.activeOption = selectedInfo && selectedInfo.value && selectedInfo.value.option
+  state.activeOption = (selectedInfo && selectedInfo.value && selectedInfo.value.option) || null
 })
 function selectPool (pool) {
   if (selectedInfo && selectedInfo.value) {
@@ -371,6 +388,7 @@ async function confirmOption (option) {
       await submitOption(2)
 
       state.showConfirmOption2 = false
+      state.reconfirm = false
       break
     default:
       break
@@ -380,6 +398,11 @@ async function confirmOption (option) {
 function toggleOptionModal (option) {
   if (!walletShort.value) {
     state.showConnectWallet = true
+    return
+  }
+
+  if (!state.pools.length) {
+    toast.error('Please select at least one launchpad!')
     return
   }
 
@@ -412,7 +435,8 @@ async function getSelectedOption () {
 
 async function submitOption (option) {
   if (!state.pools.length) {
-    toast.error('Choose at least one pool!')
+    toast.error('Choose at least one launchpad!')
+    state.reconfirm = false
     return
   }
 
@@ -420,6 +444,7 @@ async function submitOption (option) {
     state.rawSignature = rawSignature
   }).catch(e => {
     toast.error(e.message)
+    state.reconfirm = false
   })
 
   const payload = {
@@ -436,8 +461,9 @@ async function submitOption (option) {
   toast.info('Submitting...')
   await axios.post(`${BASE_URL}/api/v1/vesting/gamefi?signature=${state.rawSignature}&wallet_address=${wallet.value}`, payload, config)
     .then(res => {
-      if (!res || res.status !== 200) {
-        toast.error('Something wrong')
+      if (!res || !res.data || res.data.status !== 200) {
+        toast.error(res.data.message || 'Something wrong')
+        state.reconfirm = false
         return
       }
 
@@ -456,7 +482,7 @@ async function submitOption (option) {
 }
 
 .main-content {
-  max-width: 50rem;
+  max-width: 55rem;
 }
 
 .list-disc {

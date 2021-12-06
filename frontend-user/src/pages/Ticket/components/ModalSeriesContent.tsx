@@ -334,7 +334,7 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, isShowRateSerie
                                     <Button autoFocus onClick={onZoom} color="primary" className={styles.btnClose}>
                                         <img src={'/images/icons/close.svg'} alt="" />
                                     </Button>
-                                    <img src={currentSerie.banner} alt="" />
+                                    <img src={currentSerie.banner} key={currentSerie.banner} alt="" />
                                 </div>
                             </Box>
                         </Box>

@@ -3,7 +3,7 @@
     <template #header>
       <div class="font-medium uppercase text-lg">Connect Wallet</div>
     </template>
-    <template #body>
+    <template v-if="!wallet" #body>
       <!-- <div class="font-medium">Choose wallet</div> -->
       <div class="mx-auto grid md:grid-cols-3 gap-4 mt-4">
         <button
@@ -27,6 +27,22 @@
         </button>
       </div>
     </template>
+    <template v-else #body>
+      <div class="mt-4">
+        <div class="px-2 py-1 lg:px-4 lg:py-2 bg-gray-900 rounded-lg flex align-middle items-center">
+          <img src="@/assets/images/metamask.svg" class="mr-2 w-6 h-6 lg:w-8 lg:h-8">
+          {{wallet}}
+        </div>
+      </div>
+      <div class="w-full flex items-center align-middle justify-center mt-4">
+        <button
+          class="text-sm font-medium text-gamefiGreen-400 flex items-center align-middle"
+          @click.prevent="logout"
+        >
+          <img src="@/assets/images/icons/logout.svg" class="mr-1"> Disconnect
+        </button>
+      </div>
+    </template>
   </modal>
 </template>
 
@@ -40,7 +56,7 @@ import axios from 'axios'
 
 const BASE_URL = import.meta.env.VITE_BASE_URL
 const store = useStore()
-const { login, error } = useWeb3()
+const { login, logout, error } = useWeb3()
 const { wallet } = storeToRefs(store)
 
 const { active, account, chainId } = useWeb3()

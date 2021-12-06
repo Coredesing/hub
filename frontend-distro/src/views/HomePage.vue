@@ -106,23 +106,20 @@
           <div class="font-bold">
             Changing the vesting schedule of $GAFI Public Sale
           </div>
-          <div class="text-sm mt-3">
-            Please read carefully the information about the two new vesting options and choose one of them. You will not be able to change the selected option after signing confirmation.
+          <div class="text-sm mt-5 font-medium">
+            Step 1: Select launchpad
           </div>
-          <div class="text-sm mt-2">
-            After the registration period expires, if you do not choose any option, we will default to change your vesting schedule according to <span class="text-gamefiGreen-400 font-medium">Option 1</span>
+          <div class="text-sm">
+            <ul class="list-disc mx-4">
+              <li><div class="text-white">Select <span class="text-gamefiGreen-400">all the launchpads</span> that you will claim $GAFI.</div></li>
+              <li><div class="text-white">Your wallet address on these launchpads must be the same.</div></li>
+            </ul>
           </div>
-          <div class="font-medium mt-4">Select Pool (Only pools you have claimable GAFI)</div>
           <div class="mt-4">
-            <!-- <div>Your current options:</div>
-            <ul class="list-disc text-xs">
-              <li><div>Option 1: {{state.selectedOption.option1 }}</div></li>
-              <li><div>Option 2: {{ state.selectedOption.option2 }}</div></li>
-            </ul> -->
             <div class="flex items-center align-middle">
               <div class="mr-3">
                 <button
-                  class="cursor-pointer h-12 p-4 bg-gray-900 rounded flex flex-col items-center align-middle justify-center select-none"
+                  class="cursor-pointer h-10 bg-gray-900 rounded flex flex-col items-center align-middle justify-center select-none"
                   :class="{
                     'border border-gamefiGreen-400 hover:opacity-90': isActivePool('GameFi'),
                     'border border-gray-700 hover:opacity-90': !isActivePool('GameFi'),
@@ -130,12 +127,12 @@
                   }"
                   @click.prevent="selectPool('GameFi')"
                 >
-                  <img class="h-full" src="@/assets/images/gamefi.png">
+                  <img class="h-full" src="@/assets/images/GameFi.png">
                 </button>
               </div>
               <div class="mr-3">
                 <button
-                  class="cursor-pointer h-12 p-3 bg-gray-900 rounded flex flex-col items-center align-middle justify-center select-none"
+                  class="cursor-pointer h-10 bg-gray-900 rounded flex flex-col items-center align-middle justify-center select-none"
                   :class="{
                     'border border-gamefiGreen-400 hover:opacity-90': isActivePool('RedKite'),
                     'border border-gray-700 hover:opacity-90': !isActivePool('RedKite'),
@@ -143,12 +140,12 @@
                   }"
                   @click.prevent="selectPool('RedKite')"
                 >
-                  <img class="h-full" src="@/assets/images/logo-red-kite.svg">
+                  <img class="h-full" src="@/assets/images/RedKite.png">
                 </button>
               </div>
               <div class="mr-3">
                 <button
-                  class="cursor-pointer h-12 p-3 bg-gray-900 rounded flex flex-col items-center align-middle justify-center select-none"
+                  class="cursor-pointer h-10 bg-gray-900 rounded flex flex-col items-center align-middle justify-center select-none"
                   :class="{
                     'border border-gamefiGreen-400 hover:opacity-90': isActivePool('DAO'),
                     'border border-gray-700 hover:opacity-90': !isActivePool('DAO'),
@@ -156,15 +153,47 @@
                   }"
                   @click.prevent="selectPool('DAO')"
                 >
-                  <img class="h-full" src="@/assets/images/DAO-Maker.svg">
+                  <img class="h-full" src="@/assets/images/DAO.png">
                 </button>
               </div>
             </div>
           </div>
-          <div class="font-medium mt-4">Select Option</div>
+          <div class="text-sm mt-5 font-medium">
+            Step 2: Connect wallet
+          </div>
+          <div class="text-sm mt-2">
+            <ul class="list-disc mx-4">
+              <li><div class="text-white">Connect the correct wallet that you use on the launchpads.</div></li>
+              <li><div class="text-white">If you use different wallets on different launchpads, disconnect the current wallet, then repeat from Step 1.</div></li>
+            </ul>
+          </div>
+          <button
+            v-if="!wallet"
+            class="mt-4 px-2 py-1 lg:px-4 lg:py-2 text-sm font-medium rounded-sm bg-gamefiGreen-400 text-black hover:opacity-90"
+            @click.prevent="state.showConnectWallet = true">
+            Connect Wallet
+          </button>
+          <div v-else class="flex align-middle items-center mt-4">
+            <div class="px-2 py-1 lg:px-4 lg:py-2 bg-gray-900 rounded-sm flex align-middle items-center">
+              <img src="@/assets/images/icons/bsc.svg" class="mr-2 w-4 h-4 lg:w-6 lg:h-6">
+              {{wallet}}
+            </div>
+            <button class="text-sm font-medium text-gamefiGreen-400 ml-2" @click.prevent="logout">Disconnect</button>
+          </div>
+          <div class="text-sm mt-5 font-medium">
+            Step 3: Choose new vesting schedule
+          </div>
+          <div class="text-sm mt-2">
+            <ul class="list-disc mx-4">
+              <li><div class="text-white">Please read carefully the information about the two new vesting options  and choose one of them. You will not be able to change the selected option after signing confirmation.</div></li>
+              <li><div class="text-white">After the registration period expires, if you do not choose any option, we will default to change your vesting schedule according to <span class="text-gamefiGreen-400">Option 1</span></div></li>
+            </ul>
+          </div>
+          <div v-if="!selectedInfo" class="font-medium mt-5">Select Option</div>
+          <div v-else class="font-medium mt-5">Your chosen vesting option: <span class="uppercase text-gamefiGreen-400">option {{selectedInfo.option}}</span></div>
           <div class="grid lg:grid-cols-2 mt-4 gap-4">
             <!-- option 1 -->
-            <box-option :is-active="state.activeOption === 1">
+            <box-option :class="{'opacity-50': selectedInfo && state.activeOption !== 1}" :is-active="state.activeOption === 1">
               <template #header>
                 <div>New vesting schedule</div>
                 <div class="text-gamefiGreen-400 font-bold text-2xl">
@@ -208,7 +237,7 @@
               </template>
             </box-option>
             <!-- option 2 -->
-            <box-option :is-active="state.activeOption === 2">
+            <box-option :class="{'opacity-50': selectedInfo && state.activeOption !== 2}" :is-active="state.activeOption === 2">
               <template #header>
                 <div>New vesting schedule</div>
                 <div class="text-gamefiGreen-400 font-bold text-2xl">
@@ -263,7 +292,7 @@ import BoxOption from '@/components/BoxOption.vue'
 import Countdown from '@/components/Countdown.vue'
 import Modal from '@/components/Modal.vue'
 import WalletConnector from '@/components/WalletConnector.vue'
-import { reactive, watch } from 'vue'
+import { reactive, watch, onMounted } from 'vue'
 import useStore from '@/composables/useStore'
 import { storeToRefs } from 'pinia'
 import useWeb3 from '@/composables/useWeb3'
@@ -277,7 +306,7 @@ const toast = useToast()
 const store = useStore()
 const { wallet, walletShort, selectedInfo } = storeToRefs(store)
 
-const { account, library } = useWeb3()
+const { account, library, logout } = useWeb3()
 
 const state = reactive({
   showConfirmOption1: false,
@@ -291,6 +320,11 @@ const state = reactive({
   rawSignature: ''
 })
 
+onMounted(async () => {
+  if (wallet && wallet.value) {
+    await getSelectedOption()
+  }
+})
 watch([selectedInfo], () => {
   state.pools = (selectedInfo && selectedInfo.value && selectedInfo.value.pools.split(',')) || []
   state.activeOption = selectedInfo && selectedInfo.value && selectedInfo.value.option

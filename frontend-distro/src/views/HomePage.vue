@@ -12,7 +12,7 @@
           You are choosing <span class="font-medium text-gamefiGreen-400">Option 1</span>
           <ul class="list-disc mx-4 mt-2">
             <li><div class="text-white font-light">December 10, 2021: Claim 25%</div></li>
-            <li><div class="text-white mt-1 font-light">The ramaining 50% will claim block-by-block in 6 months starting on December 10, 2021</div></li>
+            <li><div class="text-white mt-1 font-light">The remaining 50% will claim block-by-block in 6 months starting on December 10, 2021</div></li>
           </ul>
           <hr class="mt-5 border-gray-600">
           <label class="inline-flex items-center">
@@ -179,7 +179,7 @@
           </div>
           <div class="text-sm mt-2">
             <ul class="list-disc mx-4">
-              <li><div class="text-white">Connect the correct wallet that you will use on selected launchpads.</div></li>
+              <li><div class="text-white">Connect the wallet that you will use on selected launchpads.</div></li>
               <li><div class="text-white">If you use different wallets on different launchpads, disconnect the current wallet, then repeat from Step 1.</div></li>
             </ul>
           </div>
@@ -340,7 +340,7 @@ const state = reactive({
   activeOption: 0,
   reconfirm: false,
   showConnectWallet: false,
-  pools: ['GameFi'],
+  pools: [],
   rawSignature: ''
 })
 
@@ -401,6 +401,11 @@ function toggleOptionModal (option) {
     return
   }
 
+  if (!state.pools.length) {
+    toast.error('Please select at least one launchpad!')
+    return
+  }
+
   switch (option) {
     case 1:
       state.showConfirmOption1 = true
@@ -456,8 +461,8 @@ async function submitOption (option) {
   toast.info('Submitting...')
   await axios.post(`${BASE_URL}/api/v1/vesting/gamefi?signature=${state.rawSignature}&wallet_address=${wallet.value}`, payload, config)
     .then(res => {
-      if (!res || res.status !== 200) {
-        toast.error('Something wrong')
+      if (!res || !res.data || res.data.status !== 200) {
+        toast.error(res.data.message || 'Something wrong')
         state.reconfirm = false
         return
       }

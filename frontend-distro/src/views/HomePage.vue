@@ -461,8 +461,8 @@ async function submitOption (option) {
   toast.info('Submitting...')
   await axios.post(`${BASE_URL}/api/v1/vesting/gamefi?signature=${state.rawSignature}&wallet_address=${wallet.value}`, payload, config)
     .then(res => {
-      if (!res || res.status !== 200) {
-        toast.error('Something wrong')
+      if (!res || !res.data || res.data.status !== 200) {
+        toast.error(res.data.message || 'Something wrong')
         state.reconfirm = false
         return
       }

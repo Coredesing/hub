@@ -47,7 +47,9 @@ Route.group(() => {
   Route.get('home/performance', 'HomeController.getPerformance');
   Route.get('home/performances', 'HomeController.getPerformances');
   Route.post('home/subscribe', 'HomeController.subscribe');
-  Route.get('/legend/:id', 'HomeController.getLegendImages');
+  Route.post('vesting/gamefi', 'HomeController.createVestingOption').middleware(['checkSignature']);
+  Route.post('vesting/gamefi/:address', 'HomeController.getVestingOption');
+  Route.get('legend/:id', 'HomeController.getLegendImages');
 
   // Aggregator
   Route.get('aggregator', 'AggregatorController.getAggregator');
@@ -137,6 +139,7 @@ Route.group(() => {
   Route.get('marketplace/offers/:address/:id', 'MarketplaceController.getOffersOfNFT');
   Route.get('marketplace/offers/:address', 'MarketplaceController.getMyOffers');
   Route.get('marketplace/listings/:address', 'MarketplaceController.getMyListings');
+  Route.get('marketplace/owner/:slug', 'MarketplaceController.getMyNFT');
 
   Route.get('/boxes:id([0-9]+)', 'HomeController.getNFTBox');
   Route.get('/boxes/:id([0-9]+)', 'HomeController.getNFTBox');

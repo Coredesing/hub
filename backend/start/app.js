@@ -71,19 +71,15 @@ const commands = [
   'App/Commands/FetchEvents',
   'App/Commands/FetchStakingEvents',
   'App/Commands/RefetchEvents',
-  // 'App/Commands/GetUserPurchasedBalanceCommand',
+  'App/Commands/FetchLFWEvents',
   // 'App/Commands/GetUserKycInformationCommand',
   // 'App/Commands/SignatureCommand',
 ];
 
 const jobs = [
-  // 'App/Jobs/CheckTxStatus',
-  // 'App/Jobs/SendForgotPasswordJob',
-  // 'App/Jobs/SendConfirmationEmailJob',
-  // 'App/Jobs/GetUserPurchasedBalanceJob',
-  // 'App/Jobs/GetUserKycInformationJob',
   'App/Jobs/ExportUsers',
   'App/Jobs/FetchMarketplaceEvent',
+  'App/Jobs/FetchLFWEventJob',
 ];
 
 module.exports = { providers, aceProviders, aliases, commands, jobs }

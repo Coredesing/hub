@@ -1,0 +1,16 @@
+@import url('./font.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html body {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-family: Firs Neue;
+  background: url('./images/bg.png');
+  background-repeat: no-repeat;
+  background-position: top left;
+  background-size: cover;
+  color: #ffffff;
+}

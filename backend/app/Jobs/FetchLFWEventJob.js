@@ -1,8 +1,8 @@
 'use strict'
 const kue = use('Kue');
-const BigNumber = use('bignumber.js');
 const HelperUtils = use('App/Common/HelperUtils')
 const LFWModel = use('App/Models/LFW_NFT')
+const RedisLFWUtils = use('App/Common/RedisLFWUtils')
 
 const priority = 'medium'; // Priority of job, can be low, normal, medium, high or critical
 const attempts = 3; // Number of times to attempt job if it fails
@@ -12,8 +12,9 @@ const jobFn = job => {
 }; // Function to be run on the job before it is saved
 
 const STEP = 5000
+const SLUG = 'legend-of-fantasy-war'
 
-class FetchLFWEvent {
+class FetchLFWEventJob {
   // If this getter isn't provided, it will default to 1.
   // Increase this number to increase processing concurrency.
   static get concurrency() {
@@ -22,11 +23,11 @@ class FetchLFWEvent {
 
   // This is required. This is a unique key used to identify this job.
   static get key() {
-    return 'FetchMarketPlaceEvent-job'
+    return 'FetchLFWEvent-job'
   }
 
   // This is where the work is done.
-  async handle({ event_type, from, to, notCached }) {
+  async handle({ from, to, notCached }) {
     try {
       if (!isNaN(from)) {
         from = parseInt(from)
@@ -52,14 +53,14 @@ class FetchLFWEvent {
           tmp = to
         }
 
-        await this.fetchEvents(provider, event_type, index, tmp)
+        await this.fetchEvents(provider, index, tmp)
       }
 
       if (notCached) {
         return
       }
 
-      await RedisMarketplaceUtils.setRedisMarketplaceBlockNumber({current: to})
+      await RedisLFWUtils.setRedisLFWBlockNumber({current: to})
     }
     catch (e) {
       console.log('exception', e)
@@ -67,10 +68,10 @@ class FetchLFWEvent {
     }
   }
 
-  async fetchEvents(provider, event_type, from, to) {
-    console.log(`fetch ${event_type} from ${from} to ${to} in LFW`)
-    const instance = await HelperUtils.getMarketplaceInstance()
-    const events = await instance.getPastEvents(event_type, {
+  async fetchEvents(provider, from, to) {
+    console.log(`fetch events from ${from} to ${to} in LFW`)
+    const instance = await HelperUtils.getLFWInstance()
+    const events = await instance.getPastEvents('Transfer', {
       fromBlock: from,
       toBlock: to,
     })
@@ -86,7 +87,8 @@ class FetchLFWEvent {
         data.owner = true;
         data.from = event.returnValues.from;
         data.to = event.returnValues.to;
-        data.token_id = event.returnValues.token_id;
+        data.slug = SLUG;
+        data.token_id = parseInt(event.returnValues.tokenId);
 
         // check existed before save
         const tx = await LFWModel.query()
@@ -119,4 +121,4 @@ class FetchLFWEvent {
   }
 }
 
-module.exports = FetchLFWEvent
+module.exports = FetchLFWEventJob

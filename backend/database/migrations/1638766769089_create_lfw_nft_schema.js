@@ -13,6 +13,7 @@ class CreateLfwNftSchema extends Schema {
       table.integer('transaction_index').unsigned().nullable();
       table.integer('block_number').unsigned().nullable();
       table.integer('dispatch_at').notNullable();
+      table.string('slug').defaultTo('');
       table.bool('owner').defaultTo(true)
 
       // tokenContract, tokenId, owner, seller, currency, value
@@ -21,12 +22,13 @@ class CreateLfwNftSchema extends Schema {
       table.integer('token_id');
 
       // indexes
-      table.unique(['transaction_hash', 'transaction_index']);
+      table.unique(['transaction_hash', 'transaction_index', 'token_id']);
       table.index('block_number');
       table.index('from');
       table.index('to');
       table.index('owner');
       table.index('dispatch_at');
+      table.index('slug');
       table.index(['to', 'token_id', 'owner', 'dispatch_at']);
     })
   }

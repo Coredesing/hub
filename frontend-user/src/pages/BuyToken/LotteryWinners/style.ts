@@ -104,7 +104,7 @@ const useStyles = makeStyles((theme: any) => {
           fontWeight: 'bold',
         },
       },
-      
+
       '& tr th:first-child': {
         width: 80,
         textAlign: 'center',
@@ -158,7 +158,7 @@ const useStyles = makeStyles((theme: any) => {
 
       '&::placeholder': {
         color: '#999999',
-        fontWeight:  400,
+        fontWeight: 400,
         fontSize: 15
       }
     },
@@ -183,7 +183,7 @@ const useStyles = makeStyles((theme: any) => {
         fontFamily: 'Firs Neue',
         fontStyle: 'normal',
         fontWeight: 600,
-  
+
         '&[aria-label^="page"]': {
           background: '#72F34B',
           color: '#000000',
@@ -191,6 +191,37 @@ const useStyles = makeStyles((theme: any) => {
             background: '#4fa934',
           }
         }
+      }
+    },
+    boxContentWinner: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1px 1fr',
+      overflow: 'auto',
+      [theme.breakpoints.down('sm')]: {
+        gridTemplateColumns: '1fr',
+        gap: '20px',
+      },
+      '& .divider': {
+        width: '1px',
+        height: '100%',
+        opacity: '0.2',
+        background: '#fff',
+        [theme.breakpoints.down('sm')]: {
+          height: '1px',
+          width: '100%',
+        },
+      },
+      '& .search-box': {
+        paddingRight: '120px',
+        [theme.breakpoints.down('sm')]: {
+          paddingRight: '0',
+        },
+      },
+      '& .search-result': {
+        paddingLeft: '50px',
+        [theme.breakpoints.down('sm')]: {
+          paddingLeft: '0',
+        },
       }
     }
   };

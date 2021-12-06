@@ -279,6 +279,13 @@ body::-webkit-scrollbar-thumb,
     background: #fff;
 }
 
+.divider-vertical {
+    width: 1px;
+    height: 100%;
+    opacity: 0.2;
+    background: #fff;
+}
+
 .rounded {
     border-radius: 50%;
 }
@@ -304,7 +311,7 @@ body::-webkit-scrollbar-thumb,
 }
 
 .mt-0-important {
-    margin-top: 0;
+    margin-top: 0 !important;
 }
 
 .mb-6px {
@@ -325,4 +332,20 @@ body::-webkit-scrollbar-thumb,
 
 .bg-black {
     background: #000000;
+}
+
+.mb-12px {
+    margin-bottom: 12px;
+}
+
+.mb-16px {
+    margin-bottom: 16px;
+}
+
+.pd-0-imp {
+    padding: 0 !important;
+}
+
+.pt-0-imp {
+    padding-top: 0 !important;
 }

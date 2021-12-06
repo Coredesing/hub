@@ -1,11 +1,14 @@
 'use strict'
 
 const MarketplaceCollectionModel = use('App/Models/MarketplaceCollection');
+const LFWModel = use('App/Models/LFW_NFT')
 const MarketplaceAcceptedToken = use('App/Models/MarketplaceAcceptedToken');
 const MarketplaceNftEvent = use('App/Models/MarketplaceNFTListedEvent');
 const RedisMarketplaceUtils = use('App/Common/RedisMarketplaceUtils');
 const HelperUtils = use('App/Common/HelperUtils');
 const axios = use('axios');
+
+const SLUG_LFW = 'legend-of-fantasy-war'
 
 class MarketplaceService {
   buildQueryCollectionBuilder(params) {
@@ -156,6 +159,44 @@ class MarketplaceService {
     filterParams.event_type = 'TokenListed'
     filterParams.finish = false
     const data = await this.buildQueryNFTEventsBuilder(filterParams).fetch()
+    return data
+  }
+
+  async getMyNFT(slug, filterParams) {
+    filterParams = this.formatPaginate(filterParams)
+    let query = null
+
+    switch (slug) {
+      case SLUG_LFW:
+        query = LFWModel.query()
+          .where('to', filterParams.wallet)
+          .where('owner', 1)
+          .select('token_id')
+        break;
+      default:
+        return null
+    }
+
+    const data = await query.paginate(filterParams.page, filterParams.limit)
+    return data
+  }
+
+  async getMyNFTByAddress(address, filterParams) {
+    filterParams = this.formatPaginate(filterParams)
+    let query = null
+
+    switch (address) {
+      case process.env.LFW_SMART_CONTRACT:
+        query = LFWModel.query()
+          .where('to', filterParams.wallet)
+          .where('owner', 1)
+          .select('token_id')
+        break;
+      default:
+        return null
+    }
+
+    const data = await query.paginate(filterParams.page, filterParams.limit)
     return data
   }
 

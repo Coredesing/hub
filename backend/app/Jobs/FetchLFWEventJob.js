@@ -3,6 +3,7 @@ const kue = use('Kue');
 const HelperUtils = use('App/Common/HelperUtils')
 const LFWModel = use('App/Models/LFW_NFT')
 const RedisLFWUtils = use('App/Common/RedisLFWUtils')
+const LFW_START_BLOCK_NUMBER = process.env.LFW_START_BLOCK_NUMBER
 
 const priority = 'medium'; // Priority of job, can be low, normal, medium, high or critical
 const attempts = 3; // Number of times to attempt job if it fails
@@ -29,6 +30,10 @@ class FetchLFWEventJob {
   // This is where the work is done.
   async handle({ from, to, notCached }) {
     try {
+      if (!LFW_START_BLOCK_NUMBER) {
+        return
+      }
+
       if (!isNaN(from)) {
         from = parseInt(from)
       }

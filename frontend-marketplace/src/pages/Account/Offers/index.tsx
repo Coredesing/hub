@@ -27,7 +27,7 @@ const Offers = () => {
     }
     const listOffersAccount = useSelector((state: any) => state.listOffersAccount);
     useEffect(() => {
-        if (listOffersAccount.loading) return;
+        if (listOffersAccount.loading || listOffersAccount.data == null) return;
         const collections = listOffersAccount?.data?.[connectedAccount as string];
         const wrapBoxElem = document.querySelector(`#offers-list`);
         if (!wrapBoxElem) return;

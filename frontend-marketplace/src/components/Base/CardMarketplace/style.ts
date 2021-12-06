@@ -44,7 +44,7 @@ const useStyles = makeStyles<Theme>(props => ({
         background: '#000',
         marginBottom: '10px',
         padding: '10px',
-        display: 'grid',
+        display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: '4px',

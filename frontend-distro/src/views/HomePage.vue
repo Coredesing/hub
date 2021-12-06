@@ -1,5 +1,5 @@
 <template>
-  <div class="home-wrapper flex flex-col justify-center items-center">
+  <div class="home-wrapper flex flex-col justify-center items-center pb-5">
     <!-- connect wallet -->
     <wallet-connector :show="state.showConnectWallet" @close="state.showConnectWallet = false"/>
     <!-- confirm option 1 -->
@@ -128,7 +128,7 @@
                   }"
                   @click.prevent="selectPool('GameFi')"
                 >
-                  <img class="h-full" src="@/assets/images/GameFi.png">
+                  <img class="h-full" src="@/assets/images/gamefi.png">
                 </button>
               </div>
               <div class="mr-3">
@@ -161,6 +161,7 @@
               </div>
             </div>
           </div>
+          <hr class="mt-5 border-gray-600">
           <div class="text-sm mt-5 font-medium">
             Step 2: Connect wallet
           </div>
@@ -183,6 +184,7 @@
             </div>
             <button class="text-sm font-medium text-gamefiGreen-400 ml-2" @click.prevent="logout">Disconnect</button>
           </div>
+          <hr class="mt-5 border-gray-600">
           <div class="text-sm mt-5 font-medium">
             Step 3: Choose new vesting schedule
           </div>

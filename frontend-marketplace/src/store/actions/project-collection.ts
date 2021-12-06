@@ -142,7 +142,6 @@ export const setItemsProjectCollection = (input: InputItemProjectCollection) => 
                 if (projectInfor.token_address) {
                     dispatch(setProjectInfor(projectInfor.token_address, projectInfor));
                 }
-
             }
             const useExternalUri = !!+projectInfor?.use_external_uri;
             const listItems = await getInfoListData(listData, projectInfor.token_address, useExternalUri, getState, projectInfor, dispatch);
@@ -199,7 +198,6 @@ export const setActivitiesProjectCollection = (input: InputItemProjectCollection
                 if (projectInfor.token_address) {
                     dispatch(setProjectInfor(projectInfor.token_address, projectInfor));
                 }
-
             }
             const useExternalUri = !!+projectInfor?.use_external_uri;
             const listItems = await getInfoListData(listData, projectInfor?.token_address, useExternalUri, getState, projectInfor, dispatch);

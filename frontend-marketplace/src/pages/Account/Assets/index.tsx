@@ -89,54 +89,81 @@ const Assets = () => {
                 if (arr.length) {
                     if (!wrapBoxElem) return;
                     const collections: ObjectType<any>[] = [];
-                    await Promise.all(arr.map((p: any) => new Promise(async (res) => {
+                    for (let i = 0; i < arr.length; i++) {
+                        const p = arr[i];
+
                         try {
                             const projectAddress = p?.token_address;
                             const networkInfo = getNetworkInfo(p?.network);
                             const erc721Contract = getContractInstance(erc721ABI, projectAddress, connectorName, networkInfo.id);
-                            if (!erc721Contract) return res('');
+                            if (!erc721Contract) continue;
                             let myBoxes = await erc721Contract.methods.balanceOf(connectedAccount).call();
                             myBoxes = +myBoxes;
                             if (!myBoxes) {
-                                res('');
-                                return;
+                                continue;
                             }
                             const useExternalUri = !!+p?.use_external_uri;
-
-                            for (let id = 0; id < myBoxes; id++) {
-                                const idCollection = await erc721Contract.methods.tokenOfOwnerByIndex(connectedAccount, id).call();
-                                const collection: ObjectType<any> = {
-                                    id: idCollection,
-                                    creator: p.name,
-                                    project: p,
-                                    token_id: idCollection,
-                                };
-                                try {
-                                    if (useExternalUri) {
-                                        const result = await axios.post(`/marketplace/collection/${projectAddress}/${idCollection}`);
-                                        const infor = result.data?.data || {};
-                                        Object.assign(collection, infor);
-                                    } else {
-                                        if (erc721Contract) {
+                            const useExternalApi = !!+p?.use_external_api;
+                            if (useExternalApi) {
+                                const result = await axios.get(`/marketplace/owner/${p.slug}?wallet=${connectedAccount}&limit=100`);
+                                const array = result.data.data?.data || [];
+                                for (let j = 0; j < array.length; j++) {
+                                    const collection: ObjectType<any> = {
+                                        creator: p.name,
+                                        project: p,
+                                    };
+                                    const item = array[j];
+                                    collection.id = item.token_id;
+                                    collection.token_id = item.token_id;
+                                    if (erc721Contract) {
+                                        try {
                                             const tokenURI = await erc721Contract.methods.tokenURI(collection.token_id).call();
                                             const infor = (await axios.get(tokenURI)).data || {};
                                             Object.assign(collection, infor);
+                                        } catch (error) {
+                                            console.log('err', error);
                                         }
                                     }
-                                } catch (error: any) {
-                                    collection.icon = 'default.img';
+                                    collection.key = Math.floor(Math.random() + 10000) + (+collection.id || 1);
+                                    collection.value = collection.value || collection.price;
+                                    collections.push(collection);
+                                    renderCollectionItem(wrapBoxElem, collections);
+                                    setLoadingAsset(false);
                                 }
-                                collection.key = Math.floor(Math.random() + 10000) + (+collection.id || 1);
-                                collection.value = collection.value || collection.price;
-                                collections.push(collection);
-                                renderCollectionItem(wrapBoxElem, collections);
-                                setLoadingAsset(false);
+                            } else {
+                                for (let id = 0; id < myBoxes; id++) {
+                                    const idCollection = await erc721Contract.methods.tokenOfOwnerByIndex(connectedAccount, id).call();
+                                    const collection: ObjectType<any> = {
+                                        id: idCollection,
+                                        creator: p.name,
+                                        project: p,
+                                        token_id: idCollection,
+                                    };
+                                    try {
+                                        if (useExternalUri) {
+                                            const result = await axios.post(`/marketplace/collection/${projectAddress}/${idCollection}`);
+                                            const infor = result.data?.data || {};
+                                            Object.assign(collection, infor);
+                                        } else {
+                                            if (erc721Contract) {
+                                                const tokenURI = await erc721Contract.methods.tokenURI(collection.token_id).call();
+                                                const infor = (await axios.get(tokenURI)).data || {};
+                                                Object.assign(collection, infor);
+                                            }
+                                        }
+                                    } catch (error: any) {
+                                        collection.icon = 'default.img';
+                                    }
+                                    collection.key = Math.floor(Math.random() + 10000) + (+collection.id || 1);
+                                    collection.value = collection.value || collection.price;
+                                    collections.push(collection);
+                                    renderCollectionItem(wrapBoxElem, collections);
+                                    setLoadingAsset(false);
+                                }
                             }
-                            res('');
                         } catch (error) {
-                            res('');
                         }
-                    })));
+                    }
                     if (!collections.length) {
                         setLoadingAsset(false);
                         renderNotFoundCollection(wrapBoxElem)

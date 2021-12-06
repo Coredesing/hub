@@ -123,7 +123,8 @@
                   :class="{
                     'border border-gamefiGreen-400 hover:opacity-90': isActivePool('GameFi'),
                     'border border-gray-700 hover:opacity-90': !isActivePool('GameFi'),
-                    'border border-gamefiGreen-400 opacity-50 cursor-not-allowed': selectedInfo
+                    'border border-gamefiGreen-400 cursor-not-allowed': selectedInfo,
+                    'opacity-50': selectedInfo && !isActivePool('GameFi')
                   }"
                   @click.prevent="selectPool('GameFi')"
                 >
@@ -136,7 +137,8 @@
                   :class="{
                     'border border-gamefiGreen-400 hover:opacity-90': isActivePool('RedKite'),
                     'border border-gray-700 hover:opacity-90': !isActivePool('RedKite'),
-                    'border border-gamefiGreen-400 opacity-50 cursor-not-allowed': selectedInfo
+                    'border border-gamefiGreen-400 cursor-not-allowed': selectedInfo,
+                    'opacity-50': selectedInfo && !isActivePool('RedKite')
                   }"
                   @click.prevent="selectPool('RedKite')"
                 >
@@ -149,7 +151,8 @@
                   :class="{
                     'border border-gamefiGreen-400 hover:opacity-90': isActivePool('DAO'),
                     'border border-gray-700 hover:opacity-90': !isActivePool('DAO'),
-                    'border border-gamefiGreen-400 opacity-50 cursor-not-allowed hover:opacity-10': selectedInfo
+                    'border border-gamefiGreen-400 cursor-not-allowed': selectedInfo,
+                    'opacity-50': selectedInfo && !isActivePool('DAO')
                   }"
                   @click.prevent="selectPool('DAO')"
                 >
@@ -222,6 +225,7 @@
                   </div>
                   <div class="flex items-center justify-center mt-5 w-full">
                     <button
+                      v-if="!selectedInfo"
                       class="px-2 py-1 lg:px-4 lg:py-2 w-full font-medium rounded-sm hover:opacity-90"
                       :class="{
                         'bg-gray-500 text-white cursor-not-allowed hover:opacity-100': selectedInfo,
@@ -266,6 +270,7 @@
                   </div>
                   <div class="flex items-center justify-center mt-5 w-full">
                     <button
+                     v-if="!selectedInfo"
                       class="px-2 py-1 lg:px-4 lg:py-2 w-full font-medium rounded-sm hover:opacity-90"
                       :class="{
                         'bg-gray-500 text-white cursor-not-allowed hover:opacity-100': selectedInfo,

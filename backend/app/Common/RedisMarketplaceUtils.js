@@ -123,7 +123,7 @@ const getRedisMarketplaceSlug = async (token_address) => {
 };
 
 const setRedisMarketplaceSlug = async (token_address, slug) => {
-  if (!data || data.length < 1) {
+  if (!token_address) {
     return
   }
 

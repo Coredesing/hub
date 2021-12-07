@@ -53,7 +53,7 @@ class WinnerListUserService {
     return builder;
   }
 
-  async findWinnerListUser(params) {
+  async findWinnerListAdmin(params) {
     let builder = this.buildQueryBuilder(params);
     if (params.page && params.pageSize) {
       // pagination
@@ -61,6 +61,38 @@ class WinnerListUserService {
     }
     // return all result
     return await builder.fetch();
+  }
+
+  async findWinnerListUser(params) {
+    let builder = this.buildQueryBuilder(params);
+    if (builder.wallet_address) {
+      const data = await builder.first();
+      if (!data) {
+        return {
+          data: [],
+          total: 0
+        }
+      }
+
+      return {
+        data: [builder.wallet_address],
+        total: 1
+      }
+    }
+
+    let result = await builder.count('* as sum').first()
+    if (!result) {
+      return {
+        data: [],
+        total: 0
+      }
+    }
+
+    result = JSON.parse(JSON.stringify(result))
+    return {
+      data: [],
+      total: result.sum ? result.sum : 0
+    }
   }
 
   async findOneByFilters(params) {

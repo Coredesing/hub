@@ -166,25 +166,6 @@ class WhiteListUserController {
     }
   }
 
-  async search({request}) {
-    // get request params
-    const searchParams = {
-      'campaign_id': request.params.campaignId,
-      'email': request.input('email'),
-      'wallet_address': request.input('wallet_address'),
-      'page': request.input('page'),
-      'pageSize': request.input('limit') ? request.input('limit') : 10
-    }
-    try {
-      const whitelistService = new WhitelistService();
-      const result = await whitelistService.search(searchParams);
-      return HelperUtils.responseSuccess(result);
-    } catch (e) {
-      console.log(e);
-      return HelperUtils.responseErrorInternal('Find Whitelist Error !');
-    }
-  }
-
   async addWhitelistUser({request}) {
     try {
       const inputParams = request.only(['wallet_address', 'email', 'campaign_id']);

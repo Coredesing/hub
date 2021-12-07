@@ -7,6 +7,7 @@ const RedisUtils = use('App/Common/RedisUtils');
 const RedisWinnerUtils = use('App/Common/RedisWinnerUtils');
 
 const WinnerListService = use('App/Services/WinnerListUserService');
+const CaptchaService = use('App/Services/ReCaptchaService');
 const ReservedListService = use('App/Services/ReservedListService');
 const PoolService = use('App/Services/PoolService');
 const WhitelistModel = use('App/Models/WhitelistUser');
@@ -17,8 +18,7 @@ class WinnerListUserController {
   async getWinnerListPublic({request}) {
     // get request params
     const campaign_id = request.params.campaignId;
-    const page = request.input('page');
-    const pageSize = request.input('limit') ? request.input('limit') : 10;
+    const captcha_token = request.input('captcha_token') || '';
     const searchTerm = request.input('search_term') || '';
     try {
       let campaign = null;
@@ -36,52 +36,44 @@ class WinnerListUserController {
       }
 
       if (campaign && (campaign.public_winner_status === Const.PUBLIC_WINNER_STATUS.PRIVATE)) {
-        return HelperUtils.responseSuccess([]);
+        return HelperUtils.responseSuccess({data: [], total: 0});
       }
 
-      // If claim time --> return 0
-      if (campaign && campaign.campaignClaimConfig && campaign.campaignClaimConfig.length > 0) {
-        const firstClaimTime = Number(campaign.campaignClaimConfig[0].start_time) * 1000
-        let now = new Date()
-        if (!isNaN(firstClaimTime) && now.getTime() > firstClaimTime && firstClaimTime > 0) {
-          return HelperUtils.responseSuccess([]);
+      // total & data
+      if (searchTerm === '' && await RedisWinnerUtils.checkExistRedisPoolWinners(campaign_id)) {
+        const data = JSON.parse(await RedisWinnerUtils.getRedisPoolWinners(campaign_id))
+        return HelperUtils.responseSuccess(data);
+      }
+
+      // If claim time > return 0
+      // if (campaign && campaign.campaignClaimConfig && campaign.campaignClaimConfig.length > 0) {
+      //   const firstClaimTime = Number(campaign.campaignClaimConfig[0].start_time) * 1000
+      //     let now = new Date()
+      //     if (!isNaN(firstClaimTime) && now.getTime() > firstClaimTime && firstClaimTime > 0) {
+      //       return HelperUtils.responseSuccess({data: [], total: 0});
+      //     }
+      // }
+
+      if (searchTerm && searchTerm !== '') {
+        // pass recaptcha
+        const captchaService = new CaptchaService()
+        const verifiedData = await captchaService.VerifySearch(captcha_token, searchTerm)
+        if (!verifiedData.status) {
+          return HelperUtils.responseBadRequest(`Captcha verification failed: ${verifiedData.message}`);
         }
       }
 
-      if (page < 2 && searchTerm === '' && await RedisWinnerUtils.checkExistRedisPoolWinners(campaign_id, page)) {
-        const data = JSON.parse(await RedisWinnerUtils.getRedisPoolWinners(campaign_id, page))
-        return HelperUtils.responseSuccess(data);
-      }
-
-      // force for Oly pool
-      if ((campaign_id === 41 || campaign_id === '41') && await RedisWinnerUtils.checkExistRedisPoolWinners(campaign_id, page)) {
-        const data = JSON.parse(await RedisWinnerUtils.getRedisPoolWinners(campaign_id, page))
-        return HelperUtils.responseSuccess(data);
-      }
-
-      // if not existed winners on redis then get from db
-      // create params to query to db
-      const filterParams = {
-        'campaign_id': campaign_id,
-        'page': page,
-        'pageSize': pageSize,
-        'search_term': searchTerm,
-      };
-
       const winnerListService = new WinnerListService();
       // get winner list
-      let winners = await winnerListService.findWinnerListUser(filterParams);
-      winners = JSON.parse(JSON.stringify(winners))
-      if (page < 2 && searchTerm === '') {
-        RedisWinnerUtils.setRedisPoolWinners(campaign_id, page, winners)
-      }
+      let data = await winnerListService.findWinnerListUser({
+        'campaign_id': campaign_id,
+        'wallet_address': searchTerm,
+      })
 
-      // force for Oly pool
-      if ((campaign_id === 41 || campaign_id === '41') && searchTerm === '') {
-        RedisWinnerUtils.setRedisPoolWinners(campaign_id, page, winners)
+      if (searchTerm === '') {
+        await RedisWinnerUtils.setRedisPoolWinners(campaign_id, data)
       }
-
-      return HelperUtils.responseSuccess(winners);
+      return HelperUtils.responseSuccess(data);
     } catch (e) {
       return HelperUtils.responseErrorInternal();
     }
@@ -121,7 +113,7 @@ class WinnerListUserController {
       };
       const winnerListService = new WinnerListService();
       // get winner list
-      const winners = await winnerListService.findWinnerListUser(filterParams);
+      const winners = await winnerListService.findWinnerListAdmin(filterParams);
 
       return HelperUtils.responseSuccess(winners);
     } catch (e) {
@@ -152,25 +144,6 @@ class WinnerListUserController {
     } catch (e) {
       console.log(e);
       return HelperUtils.responseErrorInternal('Get Winner List Failed !');
-    }
-  }
-
-  async search({request}) {
-    // get request params
-    const searchParams = {
-      'campaign_id': request.params.campaignId,
-      'email': request.input('email'),
-      'search': request.input('search'),
-      'page': request.input('page'),
-      'pageSize': request.input('limit') ? request.input('limit') : 10
-    }
-    try {
-      const winnerListService = new WinnerListService();
-      const result = await winnerListService.search(searchParams);
-      return HelperUtils.responseSuccess(result);
-    } catch (e) {
-      console.log(e);
-      return HelperUtils.responseErrorInternal('Find Whitelist Error !');
     }
   }
 

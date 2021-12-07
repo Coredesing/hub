@@ -135,7 +135,7 @@
                   :class="{
                     'border border-gamefiGreen-400 hover:opacity-90': isActivePool('GameFi'),
                     'border border-gray-700 hover:opacity-90': !isActivePool('GameFi'),
-                    'border border-gamefiGreen-400 cursor-not-allowed': selectedInfo,
+                    'border =cursor-not-allowed': selectedInfo,
                     'opacity-50': selectedInfo && !isActivePool('GameFi')
                   }"
                   @click.prevent="selectPool('GameFi')"
@@ -149,7 +149,7 @@
                   :class="{
                     'border border-gamefiGreen-400 hover:opacity-90': isActivePool('RedKite'),
                     'border border-gray-700 hover:opacity-90': !isActivePool('RedKite'),
-                    'border border-gamefiGreen-400 cursor-not-allowed': selectedInfo,
+                    'border cursor-not-allowed': selectedInfo,
                     'opacity-50': selectedInfo && !isActivePool('RedKite')
                   }"
                   @click.prevent="selectPool('RedKite')"
@@ -163,7 +163,7 @@
                   :class="{
                     'border border-gamefiGreen-400 hover:opacity-90': isActivePool('DAO'),
                     'border border-gray-700 hover:opacity-90': !isActivePool('DAO'),
-                    'border border-gamefiGreen-400 cursor-not-allowed': selectedInfo,
+                    'border cursor-not-allowed': selectedInfo,
                     'opacity-50': selectedInfo && !isActivePool('DAO')
                   }"
                   @click.prevent="selectPool('DAO')"

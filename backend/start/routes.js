@@ -102,12 +102,12 @@ Route.group(() => {
   Route.get('user/check-wallet-address', 'UserAuthController.checkWalletAddress');
   Route.post('user/check-active', 'UserController.checkUserActive');
   Route.post('user/join-campaign', 'CampaignController.joinCampaign').middleware(['checkSignature']);
-  Route.get('user/whitelist-search/:campaignId', 'WhiteListUserController.search');
+  // Route.get('user/whitelist-search/:campaignId', 'WhiteListUserController.search');
   Route.get('user/whitelist-apply/previous', 'WhiteListSubmissionController.getPreviousWhitelistSubmission');
   Route.get('user/whitelist-apply/:campaignId', 'WhiteListSubmissionController.getWhitelistSubmission');
   Route.post('user/whitelist-apply/:campaignId', 'WhiteListSubmissionController.addWhitelistSubmission');
   Route.get('user/winner-list/:campaignId', 'WinnerListUserController.getWinnerListPublic').middleware(['maskEmailAndWallet']);
-  Route.get('user/winner-search/:campaignId', 'WinnerListUserController.search').middleware(['maskEmailAndWallet']);
+  // Route.get('user/winner-search/:campaignId', 'WinnerListUserController.search').middleware(['maskEmailAndWallet']);
   Route.get('user/counting/:campaignId', 'CampaignController.countingJoinedCampaign');
   Route.get('user/check-join-campaign/:campaignId', 'CampaignController.checkJoinedCampaign');
 

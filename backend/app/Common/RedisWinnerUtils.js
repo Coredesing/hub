@@ -1,24 +1,25 @@
 'use strict'
 
 const Redis = use('Redis');
+const WINNER_POOLS_CACHED_TTL = 43200 // 12 hours
 
 /*
   Pool winners
  */
-const getRedisKeyPoolWinners = (campaign_id, page) => {
-  return `pool_${campaign_id}_winners_${page}`;
+const getRedisKeyPoolWinners = (campaign_id) => {
+  return `pool_${campaign_id}_winners`;
 };
 
-const getRedisPoolWinners = async (campaign_id, page) => {
-  return await Redis.get(getRedisKeyPoolWinners(campaign_id, page));
+const getRedisPoolWinners = async (campaign_id) => {
+  return await Redis.get(getRedisKeyPoolWinners(campaign_id));
 };
 
-const setRedisPoolWinners = async (campaign_id, page, data) => {
-  return await Redis.set(getRedisKeyPoolWinners(campaign_id, page), JSON.stringify(data));
+const setRedisPoolWinners = async (campaign_id, data) => {
+  return await Redis.setex(getRedisKeyPoolWinners(campaign_id), WINNER_POOLS_CACHED_TTL, JSON.stringify(data));
 };
 
-const checkExistRedisPoolWinners = async (campaign_id, page) => {
-  return await Redis.exists(getRedisKeyPoolWinners(campaign_id, page));
+const checkExistRedisPoolWinners = async (campaign_id) => {
+  return await Redis.exists(getRedisKeyPoolWinners(campaign_id));
 };
 
 module.exports = {

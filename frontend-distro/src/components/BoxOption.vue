@@ -25,7 +25,6 @@ const { selectedInfo } = storeToRefs(store)
 <style lang="scss" scoped>
 .box-option-wrapper {
   background: #1D1D1D;
-  border: 1px solid #686868;
 }
 
 .active {

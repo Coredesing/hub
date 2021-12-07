@@ -181,10 +181,20 @@ class FetchMarketplaceEvent {
             return
         }
 
-        // get slug -> by cached
-        const slug = await MarketplaceCollectionModel.query().where('token_address', data.token_address).first()
-        if (slug && slug.slug) {
-          data.slug = slug.slug
+        //check exist cached here
+        if (await RedisMarketplaceUtils.existRedisMarketplaceSlug(data.token_address)) {
+          const slug = await RedisMarketplaceUtils.getRedisMarketplaceSlug(data.token_address)
+          if (slug && slug.slug) {
+            data.slug = slug.slug
+          }
+        } else {
+          const slug = await MarketplaceCollectionModel.query().where('token_address', data.token_address).first()
+          if (slug && slug.slug) {
+            data.slug = slug.slug
+          }
+
+          //set cached here
+          await RedisMarketplaceUtils.setRedisMarketplaceSlug(data.token_address, slug)
         }
 
         // check existed before save

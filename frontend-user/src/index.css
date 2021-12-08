@@ -349,3 +349,7 @@ body::-webkit-scrollbar-thumb,
 .pt-0-imp {
     padding-top: 0 !important;
 }
+
+.mt-6px {
+    margin-top: 6px;
+}

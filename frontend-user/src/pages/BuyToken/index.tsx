@@ -803,7 +803,8 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
             <ul className={`${!!pickedWinner && 'multilTabBottom'} ${styles.navBottom}`}>
               <li onClick={() => setActiveTabBottom('tab_pool_details')} className={activeTabBottom === 'tab_pool_details' ? 'active' : ''}>Pool Details</li>
               {
-                !isClaim(infoCountdown?.poolStatus) && !!pickedWinner &&
+                // !isClaim(infoCountdown?.poolStatus) && 
+                !!pickedWinner &&
                 <li onClick={() => setActiveTabBottom('tab_winner')} className={activeTabBottom === 'tab_winner' ? 'active' : ''}>
                   Winners ({numberWiner})
                 </li>
@@ -817,7 +818,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
             }
 
             {
-              !isClaim(infoCountdown?.poolStatus) &&
+              // !isClaim(infoCountdown?.poolStatus) &&
               <div className={`${activeTabBottom === 'tab_winner' && 'show'} ${styles.hiddenTabWinner}`}>
                 <div ref={winnerListRef}/>
                 <LotteryWinners

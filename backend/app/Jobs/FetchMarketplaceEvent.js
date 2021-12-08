@@ -182,20 +182,20 @@ class FetchMarketplaceEvent {
         }
 
         //check exist cached here
-        if (await RedisMarketplaceUtils.existRedisMarketplaceSlug(data.token_address)) {
-          const slug = await RedisMarketplaceUtils.getRedisMarketplaceSlug(data.token_address)
-          if (slug && slug.slug) {
-            data.slug = slug.slug
-          }
-        } else {
-          const slug = await MarketplaceCollectionModel.query().where('token_address', data.token_address).first()
-          if (slug && slug.slug) {
-            data.slug = slug.slug
-          }
-
-          //set cached here
-          await RedisMarketplaceUtils.setRedisMarketplaceSlug(data.token_address, slug)
+        // if (await RedisMarketplaceUtils.existRedisMarketplaceSlug(data.token_address)) {
+        //   const slug = await RedisMarketplaceUtils.getRedisMarketplaceSlug(data.token_address)
+        //   if (slug && slug.slug) {
+        //     data.slug = slug.slug
+        //   }
+        // } else {
+        const slug = await MarketplaceCollectionModel.query().where('token_address', data.token_address).first()
+        if (slug && slug.slug) {
+          data.slug = slug.slug
         }
+
+          // //set cached here
+          // await RedisMarketplaceUtils.setRedisMarketplaceSlug(data.token_address, slug)
+        // }
 
         // check existed before save
         const tx = await MarketplaceEventModel.query()
@@ -253,7 +253,7 @@ class FetchMarketplaceEvent {
               .where('token_id', data.token_id)
               .where('finish', 0).first()
 
-            if (currentListed && (!currentListed.highest_offer || BigNumber.from(data.raw_amount).gt(BigNumber.from(currentListed.highest_offer)))) {
+            if (currentListed && (!currentListed.highest_offer || new BigNumber(data.raw_amount).gt(new BigNumber(currentListed.highest_offer)))) {
               await MarketplaceEventModel.query()
                 .where('token_address', data.token_address)
                 .where('event_type', EVENT_TYPE_LISTED)

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import PropTypes from "prop-types";
 // import SwipeableViews from 'react-swipeable-views';
-import { withStyles, useMediaQuery } from "@material-ui/core";
+import { withStyles, useMediaQuery, Backdrop } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import MuiLink from "@material-ui/core/Link";
@@ -28,6 +28,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrencyTokenAddress } from "@store/actions/currency";
 import ActivitiesMarketplace from "@base-components/ActivitiesMarketplace";
 import { setActivitiesDetailCollection, InputItemProjectCollection } from "@store/actions/project-collection";
+import CircularProgress from "@base-components/CircularProgress";
+import { utils } from 'ethers';
 type Props = {
     info: { [k: string]: any },
     [k: string]: any
@@ -205,7 +207,7 @@ export const AboutMarketplaceNFT = ({
                                                             <div className={classes.tableCellOffer}>
                                                                 <h4 className="text-right flex">
                                                                     {row.currencySymbol && <img src={`/images/icons/${(row.currencySymbol).toLowerCase()}.png`} alt="" />}
-                                                                    {+row.value || ''} {row.currencySymbol}
+                                                                    {+row.raw_amount ? utils.formatEther(row.raw_amount) : '-/-'} {row.currencySymbol}
                                                                 </h4>
                                                             </div>
                                                         </TableCell>
@@ -242,7 +244,12 @@ export const AboutMarketplaceNFT = ({
 
             </TabPanel>
             <TabPanel value={currentTab} index={2}>
-                <Box marginTop="24px">
+                <Box marginTop="24px" position="relative">
+                    {
+                        <Backdrop open={activitiesDetailCollection.loading} style={{ color: '#fff', zIndex: 1000, position: 'absolute' }}>
+                            <CircularProgress color="inherit" />
+                        </Backdrop>
+                    }
                     {
                         activitiesDetailCollection.data !== null && !activitiesDetailCollection.loading && !activitiesDetail?.totalPage ?
                             <Box width="100%" textAlign="center">

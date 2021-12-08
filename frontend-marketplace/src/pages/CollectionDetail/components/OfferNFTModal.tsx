@@ -112,29 +112,31 @@ const OfferNFTModal = ({ open,
     const [inputPrice, setInputPrice] = useState(0);
     const { connectedAccount } = useAuth();
     const { appChainID } = useSelector((state: any) => state.appNetwork).data;
-    const [notiMsg, setNotiMsg] = useState('');
+    const [notiMsg, setNotiMsg] = useState<{ type: 'info' | 'error', msg: string }>({ type: 'info', msg: '' });
 
     useEffect(() => {
         if (lastOffer) {
-            setNotiMsg(` You already placed an offer for this hero with ${+lastOffer.amount} ${currencySymbol}.`)
+            setNotiMsg({ type: 'info', msg: `You already placed an offer for this hero with ${+lastOffer.amount} ${currencySymbol}.` })
         }
     }, [lastOffer])
 
     const onChangePrice = (event: any) => {
         const { value } = event.target;
-        // if (lastOffer) {
-        //     if (+value > +lastOffer.amount) {
-        //         const numExceed = +value - +lastOffer.amount;
-        //         setNotiMsg(` You already placed an offer for this hero with ${+lastOffer.amount} ${currencySymbol}. This offer will need ${numExceed} ${currencySymbol} more.`)
-        //     } else {
-        //         const numReturned = +lastOffer.amount - +value;
-        //         if (numReturned) {
-        //             setNotiMsg(`You had an offer at higher price of ${+lastOffer.amount} ${currencySymbol}. By placing this new offer, ${numReturned} ${currencySymbol} will be returned to your address.`);
-        //         } else {
-        //             setNotiMsg(` You already placed an offer for this hero with ${+lastOffer.amount} ${currencySymbol}.`)
-        //         }
-        //     }
-        // }
+        if (new BigNumber(addressBalance).lt(value)) {
+            setNotiMsg({ type: 'error', msg: 'Insufficient balance' })
+        } else if (lastOffer) {
+            if (+value > +lastOffer.amount) {
+                const numExceed = +value - +lastOffer.amount;
+                setNotiMsg({ type: 'info', msg: `You already placed an offer for this hero with ${+lastOffer.amount} ${currencySymbol}. This offer will need ${numExceed} ${currencySymbol} more.` })
+            } else {
+                const numReturned = +lastOffer.amount - +value;
+                if (+value && numReturned) {
+                    setNotiMsg({ type: 'info', msg: `You had an offer at higher price of ${+lastOffer.amount} ${currencySymbol}. By placing this new offer, ${numReturned} ${currencySymbol} will be returned to your address.` });
+                } else {
+                    setNotiMsg({ type: 'info', msg: `You already placed an offer for this hero with ${+lastOffer.amount} ${currencySymbol}.` })
+                }
+            }
+        }
         setInputPrice(value);
     };
     const onClose = () => {
@@ -143,14 +145,15 @@ const OfferNFTModal = ({ open,
     const onConfirm = () => {
         let valueOffer = new BigNumber(inputPrice);
         let currentOffer = new BigNumber(inputPrice);
-        if(lastOffer) {
+        if (lastOffer) {
             const lastPriceOffer = new BigNumber(+lastOffer.amount);
-            if(lastPriceOffer.lt(currentOffer)) {
+            if (lastPriceOffer.lt(currentOffer)) {
                 valueOffer = currentOffer.minus(lastPriceOffer);
             } else {
                 valueOffer = new BigNumber(0);
             }
         }
+        if (new BigNumber(addressBalance).lt(inputPrice)) return;
         props.onConfirm && props.onConfirm(inputPrice, valueOffer.toString());
     }
 
@@ -207,7 +210,7 @@ const OfferNFTModal = ({ open,
                             </ButtonBase> :
                             <ButtonBase color="green" onClick={onConfirm}
                                 className="w-full text-transform-unset mt-0-important"
-                                isLoading={isLoadingButton} disabled={isLoadingButton || !(+inputPrice)}>
+                                isLoading={isLoadingButton} disabled={isLoadingButton || !(+inputPrice) || (new BigNumber(addressBalance).lt(inputPrice))}>
                                 Confirm
                             </ButtonBase>
                     }
@@ -227,12 +230,15 @@ const OfferNFTModal = ({ open,
                     <Box marginTop="10px">
                         <span className="text-grey firs-neue-font font-12px">Your Wallet Balance:</span> <span className="bold firs-neue-font font-12px text-white">{numberWithCommas(addressBalance, 4)} {currencySymbol}</span>
                     </Box>
-                    <Box marginTop="12px">
+                    <Box marginTop="12px" minHeight="40px">
                         {!lastOffer ?
                             <p className="font-14px helvetica-font text-white">Once the offer becomes successful, you will own this product directly.</p> :
-                            <p className="font-14px helvetica-font text-green-imp">
-                                {notiMsg}
-                            </p>
+                            (
+                                notiMsg.type === 'error' ?
+                                    <p className="font-14px helvetica-font text-danger"> {notiMsg.msg} </p> :
+                                    <p className="font-14px helvetica-font text-green-imp"> {notiMsg.msg} </p>
+                            )
+
                         }
                     </Box>
                 </div>

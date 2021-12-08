@@ -326,8 +326,8 @@ const MysteryBox = ({ id, ...props }: any) => {
         poolId: infoTicket.id,
         eventId,
         subBoxId: boxTypeSelected.subBoxId,
-        priceOfBox: tokenSeletected.price,
-        tokenAddress: tokenSeletected.address,
+        // priceOfBox: tokenSeletected.price,
+        // tokenAddress: tokenSeletected.address,
     });
 
     const [contractPreSaleWithAcc, setContractPreSaleWithAcc] = useState<any>();
@@ -636,9 +636,9 @@ const MysteryBox = ({ id, ...props }: any) => {
     const onBuyBox = useCallback((captcha: string) => {
         if (boxTypeSelected) {
             setLockWhenBuyBox(true);
-            claimBox(numBoxBuy, captcha, eventId);
+            claimBox(numBoxBuy, captcha, eventId, tokenSeletected.price, tokenSeletected.address);
         }
-    }, [numBoxBuy, boxTypeSelected]);
+    }, [numBoxBuy, boxTypeSelected, tokenSeletected]);
 
     useEffect(() => {
         if (getMaxTicketBuy(myBoxThisPool, maxBoxCanBuy)) {

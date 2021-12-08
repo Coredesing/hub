@@ -17,11 +17,11 @@ type PoolDepositActionParams = {
   poolAddress: string;
   eventId?: number;
   poolId?: number;
-  priceOfBox: number;
+  priceOfBox?: number;
   tokenAddress?: string;
 }
 
-const useClaimBox = ({ subBoxId, poolAddress, eventId, poolId, priceOfBox, tokenAddress }: PoolDepositActionParams) => {
+const useClaimBox = ({ subBoxId, poolAddress, eventId, poolId }: PoolDepositActionParams) => {
   const dispatch = useDispatch();
   const { account, library } = useWeb3React();
   const [claimTransactionHash, setClaimTransactionHash] = useState("");
@@ -29,12 +29,16 @@ const useClaimBox = ({ subBoxId, poolAddress, eventId, poolId, priceOfBox, token
   const [claimBoxLoading, setClaimBoxLoading] = useState<boolean>(false);
   const { apiSignMessage, signature, setSignature, error } = useApiBoxSignature()
   const [amount, setAmount] = useState(0);
+  const [priceOfBox, setPriceOfBox] = useState<string | number>(0);
+  const [tokenAddress, setTokenAddress] = useState<string>('');
 
-  const claimBox = useCallback(async (amount: number, captchaToken: string, eventId: number) => {
+  const claimBox = useCallback(async (amount: number, captchaToken: string, eventId: number, priceOfBox: string | number, tokenAddress: string) => {
     setClaimedSuccess(false);
     setClaimTransactionHash('');
     if (!amount) return dispatch(alertFailure("Amount must be greater than zero"));
     setAmount(amount);
+    setTokenAddress(tokenAddress);
+    setPriceOfBox(priceOfBox);
     if (account && _.isNumber(subBoxId) && library) {
       try {
         setClaimBoxLoading(true);

@@ -79,15 +79,9 @@ class ReCaptchaService {
     }
   }
 
-  async VerifySearch(captchaToken, address) {
+  async VerifySearch(captchaToken) {
     let status = false
     let message = ''
-    if (!address) {
-      return {
-        status: false,
-        message: 'address not found'
-      }
-    }
 
     if (!captchaToken) {
       return {

@@ -333,14 +333,14 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
                     style={{ fontWeight: (p.marked || (progress[idx - 1]?.marked && !p.marked)) ? 'bold' : 'normal' }}
                   >
                     {p.percent || 0}%&nbsp;
-                    {
+                    {/* {
                       // (p.tokenAmount || p.tokenAmount === 0 || 
                       (!p.marked && (p.isDisplayDate || idx === progress.length - 1)) && (
                         <span >
                           ({numberWithCommas(`${p.tokenAmount}`, 1)}{" "}
                           {tokenDetails?.symbol})
                         </span>
-                      )}
+                      )} */}
                   </div>
                   {!p.marked && (p.isDisplayDate || idx === progress.length - 1) && p.date && (
                     <div>{

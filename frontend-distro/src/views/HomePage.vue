@@ -122,7 +122,7 @@
             Step 1: Select launchpad
           </div>
           <div class="text-sm mt-3">
-            <ul class="list-disc mx-4">
+            <ul class="list-disc mx-4 space-y-2">
               <li><div class="text-white">Select <span class="text-gamefiGreen-400">all the launchpads</span> that you will claim $GAFI.</div></li>
               <li><div class="text-white">Your wallet address on these launchpads must be the same.</div></li>
             </ul>
@@ -135,7 +135,7 @@
                   :class="{
                     'border border-gamefiGreen-400 hover:opacity-90': isActivePool('GameFi'),
                     'border border-gray-700 hover:opacity-90': !isActivePool('GameFi'),
-                    'border border-gamefiGreen-400 cursor-not-allowed': selectedInfo,
+                    'border =cursor-not-allowed': selectedInfo,
                     'opacity-50': selectedInfo && !isActivePool('GameFi')
                   }"
                   @click.prevent="selectPool('GameFi')"
@@ -149,7 +149,7 @@
                   :class="{
                     'border border-gamefiGreen-400 hover:opacity-90': isActivePool('RedKite'),
                     'border border-gray-700 hover:opacity-90': !isActivePool('RedKite'),
-                    'border border-gamefiGreen-400 cursor-not-allowed': selectedInfo,
+                    'border cursor-not-allowed': selectedInfo,
                     'opacity-50': selectedInfo && !isActivePool('RedKite')
                   }"
                   @click.prevent="selectPool('RedKite')"
@@ -163,7 +163,7 @@
                   :class="{
                     'border border-gamefiGreen-400 hover:opacity-90': isActivePool('DAO'),
                     'border border-gray-700 hover:opacity-90': !isActivePool('DAO'),
-                    'border border-gamefiGreen-400 cursor-not-allowed': selectedInfo,
+                    'border cursor-not-allowed': selectedInfo,
                     'opacity-50': selectedInfo && !isActivePool('DAO')
                   }"
                   @click.prevent="selectPool('DAO')"
@@ -178,18 +178,18 @@
             Step 2: Connect wallet
           </div>
           <div class="text-sm mt-2">
-            <ul class="list-disc mx-4">
+            <ul class="list-disc mx-4 space-y-2">
               <li><div class="text-white">Connect the wallet that you will use on selected launchpads.</div></li>
               <li><div class="text-white">If you use different wallets on different launchpads, disconnect the current wallet, then repeat from Step 1.</div></li>
             </ul>
           </div>
           <button
             v-if="!wallet"
-            class="mt-4 px-2 py-1 lg:px-4 lg:py-2 text-sm font-medium rounded-sm bg-gamefiGreen-400 text-black hover:opacity-90"
+            class="mt-5 px-2 py-1 lg:px-4 lg:py-2 text-sm font-medium rounded-sm bg-gamefiGreen-400 text-black hover:opacity-90"
             @click.prevent="state.showConnectWallet = true">
             Connect Wallet
           </button>
-          <div v-else class="flex w-full flex-col lg:flex-row align-middle items-center text-2xs lg:text-sm mt-4">
+          <div v-else class="flex w-full flex-col lg:flex-row align-middle items-center text-2xs lg:text-sm mt-5">
             <div class="text-2xs lg:text-sm px-2 py-1 lg:px-4 lg:py-2 bg-gray-900 rounded-sm flex align-middle items-center">
               <img src="@/assets/images/icons/bsc.svg" class="mr-1 lg:mr-2 w-4 h-4 lg:w-6 lg:h-6">
               {{ wallet }}
@@ -201,7 +201,7 @@
             Step 3: Choose a new vesting schedule
           </div>
           <div class="text-sm mt-2">
-            <ul class="list-disc mx-4">
+            <ul class="list-disc mx-4 space-y-2">
               <li><div class="text-white">Please read carefully the information about the two new vesting options  and choose one of them. You will not be able to change the selected option after signing confirmation.</div></li>
               <li><div class="text-white">After the registration period expires, if you do not choose any options, we will default to change your vesting schedule according to <span class="text-gamefiGreen-400 font-bold">Option 1</span>.</div></li>
             </ul>
@@ -218,8 +218,9 @@
                 </div>
               </template>
               <template #body>
-                <div class="text-sm font-light flex flex-col justify-between" :class="{'h-40': !selectedInfo, 'h-36': selectInfo}">
+                <div class="text-sm font-light text-gray-300 flex flex-col justify-between" :class="{'h-56': !selectedInfo, 'h-40': selectInfo}">
                   <div>
+                    <div class="Text-white mb-4 font-medium">At TGE (September 10, 2021) users were able to claim 25%. The remaining 75% will be distributed according to the new vesting schedule as below:</div>
                     <div class="inline-flex">
                       <img
                         class="w-2 h-2 lg:w-4 lg:h-4"
@@ -265,8 +266,9 @@
                 </div>
               </template>
               <template #body>
-                <div class="text-sm font-light flex flex-col justify-between" :class="{'h-40': !selectedInfo, 'h-36': selectInfo}">
+                <div class="text-sm text-gray-300 font-light flex flex-col justify-between" :class="{'h-56': !selectedInfo, 'h-36': selectInfo}">
                   <div>
+                    <div class="Text-white mb-4 font-medium">At TGE (September 10, 2021) users were able to claim 25%. The remaining 75% will be distributed according to the new vesting schedule as below:</div>
                     <div class="inline-flex">
                       <img
                         class="w-2 h-2 lg:w-4 lg:h-4"

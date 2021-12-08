@@ -43,6 +43,11 @@ class WinnerListUserController {
         return HelperUtils.responseSuccess({data: [], total: 0});
       }
 
+      // Hardcode for Oly community
+      if (campaign_id === 41 || campaign_id === '41') {
+        return HelperUtils.responseSuccess({data: [], total: 500});
+      }
+
       // If claim time > return 0
       // if (campaign && campaign.campaignClaimConfig && campaign.campaignClaimConfig.length > 0) {
       //   const firstClaimTime = Number(campaign.campaignClaimConfig[0].start_time) * 1000

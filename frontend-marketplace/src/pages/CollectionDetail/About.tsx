@@ -29,6 +29,7 @@ import { setCurrencyTokenAddress } from "@store/actions/currency";
 import ActivitiesMarketplace from "@base-components/ActivitiesMarketplace";
 import { setActivitiesDetailCollection, InputItemProjectCollection } from "@store/actions/project-collection";
 import CircularProgress from "@base-components/CircularProgress";
+import { utils } from 'ethers';
 type Props = {
     info: { [k: string]: any },
     [k: string]: any
@@ -206,7 +207,7 @@ export const AboutMarketplaceNFT = ({
                                                             <div className={classes.tableCellOffer}>
                                                                 <h4 className="text-right flex">
                                                                     {row.currencySymbol && <img src={`/images/icons/${(row.currencySymbol).toLowerCase()}.png`} alt="" />}
-                                                                    {+row.value || ''} {row.currencySymbol}
+                                                                    {+row.raw_amount ? utils.formatEther(row.raw_amount) : '-/-'} {row.currencySymbol}
                                                                 </h4>
                                                             </div>
                                                         </TableCell>

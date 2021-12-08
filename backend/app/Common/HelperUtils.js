@@ -27,6 +27,7 @@ const GAFI_SMART_CONTRACT_ADDRESS = process.env.GAFI_SMART_CONTRACT_ADDRESS
 const UNI_LP_GAFI_SMART_CONTRACT_ADDRESS = process.env.UNI_LP_GAFI_SMART_CONTRACT_ADDRESS
 const STAKING_POOL_SMART_CONTRACT = process.env.STAKING_POOL_SMART_CONTRACT
 const MARKETPLACE_SMART_CONTRACT = process.env.MARKETPLACE_SMART_CONTRACT
+const LFW_SMART_CONTRACT = process.env.LFW_SMART_CONTRACT
 const LEGEND_DATA = NETWORK_CONFIGS.contracts[Const.CONTRACTS.Legend].DATA;
 const BONUS_DATA = NETWORK_CONFIGS.contracts[Const.CONTRACTS.STAKING_POOL].BONUS;
 const ONE_UNIT = new BigNumber(Math.pow(10, 18))
@@ -271,6 +272,20 @@ const getMarketplaceInstance = async () => {
   }
 
   const instance = new networkToWeb3[Const.NETWORK_AVAILABLE.BSC].eth.Contract(MARKETPLACE_ABI, pool);
+  if (!instance) {
+    return null
+  }
+
+  return instance
+}
+
+const getLFWInstance = async () => {
+  const pool = LFW_SMART_CONTRACT
+  if (!pool) {
+    return null
+  }
+
+  const instance = new networkToWeb3[Const.NETWORK_AVAILABLE.BSC].eth.Contract(ERC721_ABI, pool);
   if (!instance) {
     return null
   }
@@ -996,5 +1011,6 @@ module.exports = {
   getLegendIdByOwner,
 
   getMarketplaceInstance,
+  getLFWInstance,
   getTokenURI,
 };

@@ -132,6 +132,11 @@ class HomeController {
       const param = request.all();
 
       const service = new GameFiVestingService()
+      let instance = await service.getWallet(wallet)
+      if (instance) {
+        return HelperUtils.responseBadRequest(`You can't change vesting option`)
+      }
+
       const data = await service.insertOption({
         wallet: wallet,
         option: param.option,

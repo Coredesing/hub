@@ -63,6 +63,8 @@ Route.group(() => {
 
   // pool
   Route.get('pool/:campaignId', 'PoolController.getPoolPublic');
+  Route.get('pool/owner/:address', 'MarketplaceController.getMyNFTByAddress');
+
   Route.get('pool/:campaignId/top-bid', 'PoolController.getTopBid');
   Route.get('pool/:campaignId/tiers', 'TierController.getTiers');
   Route.get('pool/:campaignId/winners', 'WinnerListUserController.getWinnerAndReserveList');
@@ -100,7 +102,7 @@ Route.group(() => {
   Route.get('user/check-wallet-address', 'UserAuthController.checkWalletAddress');
   Route.post('user/check-active', 'UserController.checkUserActive');
   Route.post('user/join-campaign', 'CampaignController.joinCampaign').middleware(['checkSignature']);
-  Route.get('user/whitelist-search/:campaignId', 'WhiteListUserController.search');
+  // Route.get('user/whitelist-search/:campaignId', 'WhiteListUserController.search');
   Route.get('user/whitelist-apply/previous', 'WhiteListSubmissionController.getPreviousWhitelistSubmission');
   Route.get('user/whitelist-apply/:campaignId', 'WhiteListSubmissionController.getWhitelistSubmission');
   Route.post('user/whitelist-apply/:campaignId', 'WhiteListSubmissionController.addWhitelistSubmission');
@@ -139,6 +141,7 @@ Route.group(() => {
   Route.get('marketplace/offers/:address/:id', 'MarketplaceController.getOffersOfNFT');
   Route.get('marketplace/offers/:address', 'MarketplaceController.getMyOffers');
   Route.get('marketplace/listings/:address', 'MarketplaceController.getMyListings');
+  Route.get('marketplace/owner/:slug', 'MarketplaceController.getMyNFT');
 
   Route.get('/boxes:id([0-9]+)', 'HomeController.getNFTBox');
   Route.get('/boxes/:id([0-9]+)', 'HomeController.getNFTBox');

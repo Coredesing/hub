@@ -79,6 +79,56 @@ class ReCaptchaService {
     }
   }
 
+  async VerifySearch(captchaToken) {
+    let status = false
+    let message = ''
+
+    if (!captchaToken) {
+      return {
+        status: false,
+        message: 'token not found'
+      }
+    }
+
+    if (!SECRET_KEY) {
+      return {
+        status: true,
+        message: ''
+      }
+    }
+    // const url = `https://www.google.com/recaptcha/api/siteverify?secret=${SECRET_KEY}&response=${captchaToken}`;
+    const url = `https://hcaptcha.com/siteverify`;
+    await axios({
+      method: 'post',
+      url: url,
+      data: querystring.stringify({
+        response: captchaToken,
+        secret: SECRET_KEY
+      }),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).then((response) => {
+      if (!response || !response.data) {
+        message = 'request error'
+        return
+      }
+
+      if (response.data.success === true) {
+        status = true
+      } else {
+        status = false
+        message = 'status failed'
+      }
+    }).catch((error) => {
+      console.log(error);
+      message = 'internal server error'
+    });
+
+    return {
+      status: status,
+      message: message
+    }
+  }
+
   async isAllowRecaptcha(wallet_address) {
     try {
       if (!wallet_address) {

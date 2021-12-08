@@ -229,7 +229,7 @@ class CampaignController {
     const campaign_id = params.campaign_id;
     const userWalletAddress = request.header('wallet_address');
     const amount = params.amount;
-    const token = params.token;
+    const token = params.token ? params.token : '0x0000000000000000000000000000000000000000';
     const subBoxId = params.sub_box_id;
     if (!campaign_id) {
       return HelperUtils.responseBadRequest('Bad request with campaign_id');

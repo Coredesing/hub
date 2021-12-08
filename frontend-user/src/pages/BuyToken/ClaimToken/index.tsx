@@ -190,7 +190,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
     let nextClaim = poolDetails.campaignClaimConfig.reduce((next: number, cfg: any) => {
       return (+cfg.max_percent_claim <= percentClaimed) ? next + 1 : next
     }, 0);
-    
+
     const config = [
       {
         start_time: null,
@@ -219,7 +219,19 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
     //     config.unshift({});
     //   }
     // } //add 0% start for only 1 time claim
-    setProgress(config);
+    if (config.length >= 10) {
+      const filtered = config.filter((item, id) => {
+        if (id === 0) return true;
+        if (item.marked && config[id + 1]?.isDisplayDate) return true;
+        if (item.isDisplayDate || id === config.length - 1) return true;
+        return false;
+      })
+      setProgress(filtered);
+    } else {
+      setProgress(config);
+    }
+
+
     //calculate policy
     //TODO: get policy from backend
     let policy =
@@ -321,14 +333,14 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
                     style={{ fontWeight: (p.marked || (progress[idx - 1]?.marked && !p.marked)) ? 'bold' : 'normal' }}
                   >
                     {p.percent || 0}%&nbsp;
-                    {
+                    {/* {
                       // (p.tokenAmount || p.tokenAmount === 0 || 
                       (!p.marked && (p.isDisplayDate || idx === progress.length - 1)) && (
                         <span >
                           ({numberWithCommas(`${p.tokenAmount}`, 1)}{" "}
                           {tokenDetails?.symbol})
                         </span>
-                      )}
+                      )} */}
                   </div>
                   {!p.marked && (p.isDisplayDate || idx === progress.length - 1) && p.date && (
                     <div>{

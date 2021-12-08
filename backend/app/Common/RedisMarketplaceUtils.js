@@ -111,6 +111,36 @@ const existRedisMarketplaceBlockNumber = async () => {
   return await Redis.exists(getRedisKeyMarketplaceBlockNumber());
 };
 
+/*
+  Marketplace slug
+*/
+const getRedisKeyMarketplaceSlug = (token_address) => {
+  return `marketplace_slug_${token_address}`;
+};
+
+const getRedisMarketplaceSlug = async (token_address) => {
+  return await Redis.get(getRedisKeyMarketplaceSlug(token_address));
+};
+
+const setRedisMarketplaceSlug = async (token_address, slug) => {
+  if (!token_address) {
+    return
+  }
+
+  await Redis.set(getRedisKeyMarketplaceSlug(token_address), JSON.stringify(slug));
+};
+
+const existRedisMarketplaceSlug = async (token_address) => {
+  return await Redis.exists(getRedisKeyMarketplaceSlug(token_address));
+};
+
+const deleteRedisMarketplaceSlug = (token_address) => {
+  let redisKey = getRedisKeyMarketplaceSlug(token_address);
+  if (Redis.exists(redisKey)) {
+    Redis.del(redisKey);
+  }
+};
+
 module.exports = {
   // collections
   getRedisMarketplaceTopCollections,
@@ -133,4 +163,11 @@ module.exports = {
   getRedisMarketplaceBlockNumber,
   setRedisMarketplaceBlockNumber,
   existRedisMarketplaceBlockNumber,
+
+  // marketplace slug
+  getRedisKeyMarketplaceSlug,
+  getRedisMarketplaceSlug,
+  setRedisMarketplaceSlug,
+  existRedisMarketplaceSlug,
+  deleteRedisMarketplaceSlug,
 };

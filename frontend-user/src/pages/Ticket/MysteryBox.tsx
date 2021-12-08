@@ -326,8 +326,8 @@ const MysteryBox = ({ id, ...props }: any) => {
         poolId: infoTicket.id,
         eventId,
         subBoxId: boxTypeSelected.subBoxId,
-        priceOfBox: tokenSeletected.price,
-        tokenAddress: tokenSeletected.address,
+        // priceOfBox: tokenSeletected.price,
+        // tokenAddress: tokenSeletected.address,
     });
 
     const [contractPreSaleWithAcc, setContractPreSaleWithAcc] = useState<any>();
@@ -426,33 +426,55 @@ const MysteryBox = ({ id, ...props }: any) => {
             const isCallDefaultCollection = infoTicket.campaign_hash === infoTicket.token;
             const arrCollections = [];
             if (!connectedAccount) return;
-            for (let id = 0; id < ownedBox; id++) {
-                if (isCallDefaultCollection) {
+            const callWithExternalApi = !!infoTicket.use_external_api;
+            const handleInfoTokenExternal = async (idCollection: number, collection: ObjectType<any>) => {
+                const tokenURI = await Erc721contract?.methods.tokenURI(idCollection).call();
+                collection.idCollection = idCollection;
+                const infoBoxType = (await axios.get(tokenURI)).data;
+                Object.assign(collection, infoBoxType);
+                collection.icon = infoBoxType.image;
+                collection.price = infoBoxType.price;
+                return collection;
+            }
+            if (callWithExternalApi) {
+                const result = await axios.get(`pool/owner/${infoTicket.token}?wallet=${connectedAccount}&limit=100`);
+                const arr = result.data.data?.data || [];
+                for (let i = 0; i < arr.length; i++) {
+                    const idCollection = arr[i]?.token_id;
+                    const collection: ObjectType<any> = {
+                        idCollection
+                    };
                     try {
-                        const collection: ObjectType<any> = {};
-                        const idCollection = (await contractPreSaleWithAcc.tokenOfOwnerByIndex(connectedAccount, id)).toNumber();
-                        const boxType = await contractPreSaleWithAcc.boxes(idCollection);
-                        const idBoxType = boxType.subBoxId.toNumber();
-                        const infoBox = subBoxes.find((b, subBoxId) => subBoxId === idBoxType);
-                        infoBox && Object.assign(collection, infoBox);
-                        collection.idCollection = idCollection;
-                        arrCollections.push(collection);
+                        handleInfoTokenExternal(idCollection, collection);
                     } catch (error) {
-                        console.log('error', error);
+                        console.log('err', error);
                     }
-                } else {
-                    const collection: ObjectType<any> = {};
-                    try {
-                        const idCollection = await Erc721contract.methods.tokenOfOwnerByIndex(connectedAccount, id).call();
-                        const tokenURI = await Erc721contract?.methods.tokenURI(idCollection).call();
-                        collection.idCollection = idCollection;
-                        const infoBoxType = (await axios.get(tokenURI)).data;
-                        Object.assign(collection, infoBoxType);
-                        collection.icon = infoBoxType.image;
-                        collection.price = infoBoxType.price;
-                        arrCollections.push(collection);
-                    } catch (error) {
-                        console.log('error', error)
+                    arrCollections.push(collection);
+                }
+            } else {
+                for (let id = 0; id < ownedBox; id++) {
+                    if (isCallDefaultCollection) {
+                        try {
+                            const collection: ObjectType<any> = {};
+                            const idCollection = (await contractPreSaleWithAcc.tokenOfOwnerByIndex(connectedAccount, id)).toNumber();
+                            const boxType = await contractPreSaleWithAcc.boxes(idCollection);
+                            const idBoxType = boxType.subBoxId.toNumber();
+                            const infoBox = subBoxes.find((b, subBoxId) => subBoxId === idBoxType);
+                            infoBox && Object.assign(collection, infoBox);
+                            collection.idCollection = idCollection;
+                            arrCollections.push(collection);
+                        } catch (error) {
+                            console.log('error', error);
+                        }
+                    } else {
+                        const collection: ObjectType<any> = {};
+                        try {
+                            const idCollection = await Erc721contract.methods.tokenOfOwnerByIndex(connectedAccount, id).call();
+                            handleInfoTokenExternal(idCollection, collection);
+                            arrCollections.push(collection);
+                        } catch (error) {
+                            console.log('error', error)
+                        }
                     }
                 }
             }
@@ -614,9 +636,9 @@ const MysteryBox = ({ id, ...props }: any) => {
     const onBuyBox = useCallback((captcha: string) => {
         if (boxTypeSelected) {
             setLockWhenBuyBox(true);
-            claimBox(numBoxBuy, captcha, eventId);
+            claimBox(numBoxBuy, captcha, eventId, tokenSeletected.price, tokenSeletected.address);
         }
-    }, [numBoxBuy, boxTypeSelected]);
+    }, [numBoxBuy, boxTypeSelected, tokenSeletected]);
 
     useEffect(() => {
         if (getMaxTicketBuy(myBoxThisPool, maxBoxCanBuy)) {

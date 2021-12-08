@@ -211,11 +211,15 @@ const MysteryBox = ({ id, project, ...props }: any) => {
             getAddresssOwnerNFT();
         }
         if (action === onOfferNFT.name) {
-            setReloadOfferList(true);
+            setTimeout(() => {
+                setReloadOfferList(true);
+            }, 2000)
             setReloadBalance(true);
         }
         if (action === onRejectOffer.name) {
-            setReloadOfferList(true);
+            setTimeout(() => {
+                setReloadOfferList(true);
+            }, 2000)
         }
         if (action === onApproveToMarketplace.name) {
             checkApproveMarketplace();
@@ -399,7 +403,7 @@ const MysteryBox = ({ id, project, ...props }: any) => {
 
     const [lastOffer, setLastOffer] = useState<ObjectType<any> | null>(null);
     useEffect(() => {
-        if(offerList.length && connectedAccount) {
+        if (offerList.length && connectedAccount) {
             const myLastOffer = offerList.find(item => item.buyer === connectedAccount);
             setLastOffer(myLastOffer as any);
         }

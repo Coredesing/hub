@@ -155,6 +155,38 @@ class MarketplaceController {
     }
   }
 
+  async getMyNFT({ request, auth, params }) {
+    const slug = params.slug;
+    const inputParams = request.all();
+
+    try {
+      let data = await (new MarketplaceService).getMyNFT(slug, inputParams);
+      if (!data) {
+        return HelperUtils.responseNotFound();
+      }
+
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
+  async getMyNFTByAddress({ request, auth, params }) {
+    const address = params.address;
+    const inputParams = request.all();
+
+    try {
+      let data = await (new MarketplaceService).getMyNFTByAddress(address, inputParams);
+      if (!data) {
+        return HelperUtils.responseNotFound();
+      }
+
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
   async getNFTInfo({ request, auth, params }) {
     const address = params.address;
     const id = params.id;

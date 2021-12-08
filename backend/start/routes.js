@@ -107,7 +107,7 @@ Route.group(() => {
   Route.get('user/whitelist-apply/:campaignId', 'WhiteListSubmissionController.getWhitelistSubmission');
   Route.post('user/whitelist-apply/:campaignId', 'WhiteListSubmissionController.addWhitelistSubmission');
   Route.get('user/winner-list/:campaignId', 'WinnerListUserController.getWinnerListPublic').middleware(['maskEmailAndWallet']);
-  // Route.get('user/winner-search/:campaignId', 'WinnerListUserController.search').middleware(['maskEmailAndWallet']);
+  Route.get('user/winner-search/:campaignId', 'WinnerListUserController.search').middleware(['maskEmailAndWallet']);
   Route.get('user/counting/:campaignId', 'CampaignController.countingJoinedCampaign');
   Route.get('user/check-join-campaign/:campaignId', 'CampaignController.checkJoinedCampaign');
 

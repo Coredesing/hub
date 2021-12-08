@@ -63,23 +63,8 @@ class WinnerListUserService {
     return await builder.fetch();
   }
 
-  async findWinnerListUser(params) {
+  async countTotalWinner(params) {
     let builder = this.buildQueryBuilder(params);
-    if (builder.wallet_address) {
-      const data = await builder.first();
-      if (!data) {
-        return {
-          data: [],
-          total: 0
-        }
-      }
-
-      return {
-        data: [builder.wallet_address],
-        total: 1
-      }
-    }
-
     let result = await builder.count('* as sum').first()
     if (!result) {
       return {

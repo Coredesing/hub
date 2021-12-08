@@ -18,9 +18,13 @@ class WinnerListUserController {
   async getWinnerListPublic({request}) {
     // get request params
     const campaign_id = request.params.campaignId;
-    const captcha_token = request.input('captcha_token') || '';
-    const searchTerm = request.input('search_term') || '';
     try {
+      // total & data
+      if (await RedisWinnerUtils.checkExistRedisPoolWinners(campaign_id)) {
+        const data = JSON.parse(await RedisWinnerUtils.getRedisPoolWinners(campaign_id))
+        return HelperUtils.responseSuccess(data);
+      }
+
       let campaign = null;
       // Try get Campaign detail from Redis Cache
       if (await RedisUtils.checkExistRedisPoolDetail(campaign_id)) {
@@ -39,12 +43,6 @@ class WinnerListUserController {
         return HelperUtils.responseSuccess({data: [], total: 0});
       }
 
-      // total & data
-      if (searchTerm === '' && await RedisWinnerUtils.checkExistRedisPoolWinners(campaign_id)) {
-        const data = JSON.parse(await RedisWinnerUtils.getRedisPoolWinners(campaign_id))
-        return HelperUtils.responseSuccess(data);
-      }
-
       // If claim time > return 0
       // if (campaign && campaign.campaignClaimConfig && campaign.campaignClaimConfig.length > 0) {
       //   const firstClaimTime = Number(campaign.campaignClaimConfig[0].start_time) * 1000
@@ -54,28 +52,48 @@ class WinnerListUserController {
       //     }
       // }
 
-      if (searchTerm && searchTerm !== '') {
-        // pass recaptcha
-        const captchaService = new CaptchaService()
-        const verifiedData = await captchaService.VerifySearch(captcha_token, searchTerm)
-        if (!verifiedData.status) {
-          return HelperUtils.responseBadRequest(`Captcha verification failed: ${verifiedData.message}`);
-        }
+      const winnerListService = new WinnerListService();
+      const data = await winnerListService.countTotalWinner({'campaign_id': campaign_id})
+      await RedisWinnerUtils.setRedisPoolWinners(campaign_id, data)
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
+  async search({request}) {
+    const campaign_id = request.params.campaignId;
+    const wallet = request.input('wallet_address') || '';
+    const captcha_token = request.input('captcha_token') || '';
+    if (!wallet || wallet === '') {
+      return HelperUtils.responseNotFound('Wallet not found');
+    }
+    if (!captcha_token || captcha_token === '') {
+      return HelperUtils.responseNotFound('Token not found');
+    }
+
+    try {
+      // check recaptcha
+      const captchaService = new CaptchaService()
+      const verifiedData = await captchaService.VerifySearch(captcha_token)
+      if (!verifiedData.status) {
+        return HelperUtils.responseBadRequest(`Captcha verification failed: ${verifiedData.message}`);
       }
 
       const winnerListService = new WinnerListService();
       // get winner list
-      let data = await winnerListService.findWinnerListUser({
+      const result = await winnerListService.findOneByFilters({
         'campaign_id': campaign_id,
-        'wallet_address': searchTerm,
+        'wallet_address': wallet,
       })
 
-      if (searchTerm === '') {
-        await RedisWinnerUtils.setRedisPoolWinners(campaign_id, data)
+      if (!result) {
+        return HelperUtils.responseSuccess({data: []});
       }
-      return HelperUtils.responseSuccess(data);
+
+      return HelperUtils.responseSuccess({data: [wallet]});
     } catch (e) {
-      return HelperUtils.responseErrorInternal();
+      return HelperUtils.responseErrorInternal('search winner error');
     }
   }
 

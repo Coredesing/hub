@@ -10,7 +10,7 @@ export const useSearchBoxStyles = makeStyles((theme: any) => {
     },
     input: {
       width: '100%',
-      padding: '8px 30px 8px 12px',
+      padding: '8px 54px 8px 12px',
       fontFamily: 'Firs Neue',
       fontStyle: 'normal',
       fontWeight: 'normal',
@@ -41,6 +41,19 @@ export const useSearchBoxStyles = makeStyles((theme: any) => {
       right: '12px',
       top: '50%',
       transform: 'translate(0,-50%)',
+    },
+    btnReload: {
+      cursor: 'pointer',
+      position: 'absolute',
+      right: '30px',
+      height: '100%',
+      width: '20px',
+      color: 'white',
+      outline: 'none',
+      border: 'none',
+      background: 'transparent',
+      textAlign: 'center',
+      overflow: 'hidden',
     }
   };
 });

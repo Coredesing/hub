@@ -35,3 +35,5 @@ export const Recapcha = React.forwardRef(({ className, onChange, ...props }: Pro
         </div> : null
     )
 })
+
+export default React.memo(Recapcha);

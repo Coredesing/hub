@@ -73,6 +73,33 @@ class WinnerListUserController {
     }
 
     try {
+      let campaign = null;
+      // Try get Campaign detail from Redis Cache
+      if (await RedisUtils.checkExistRedisPoolDetail(campaign_id)) {
+        let cachedPoolDetail = await RedisUtils.getRedisPoolDetail(campaign_id);
+        if (cachedPoolDetail) {
+          campaign = JSON.parse(cachedPoolDetail);
+        }
+      } else {
+        campaign = await CampaignModel.query().where('id', campaign_id).first();
+      }
+      if (!campaign) {
+        return HelperUtils.responseNotFound('Campaign not found');
+      }
+
+      if (campaign && (campaign.public_winner_status === Const.PUBLIC_WINNER_STATUS.PRIVATE)) {
+        return HelperUtils.responseNotFound('Searching is not available');
+      }
+
+      // If claim time > return 0
+      // if (campaign && campaign.campaignClaimConfig && campaign.campaignClaimConfig.length > 0) {
+      //   const firstClaimTime = Number(campaign.campaignClaimConfig[0].start_time) * 1000
+      //     let now = new Date()
+      //     if (!isNaN(firstClaimTime) && now.getTime() > firstClaimTime && firstClaimTime > 0) {
+      //       return HelperUtils.responseNotFound('');
+      //     }
+      // }
+
       // check recaptcha
       const captchaService = new CaptchaService()
       const verifiedData = await captchaService.VerifySearch(captcha_token)
@@ -93,7 +120,7 @@ class WinnerListUserController {
 
       return HelperUtils.responseSuccess(true);
     } catch (e) {
-      return HelperUtils.responseErrorInternal('search winner error');
+      return HelperUtils.responseErrorInternal();
     }
   }
 

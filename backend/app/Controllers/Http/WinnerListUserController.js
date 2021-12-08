@@ -88,10 +88,10 @@ class WinnerListUserController {
       })
 
       if (!result) {
-        return HelperUtils.responseSuccess({data: []});
+        return HelperUtils.responseSuccess({data: false});
       }
 
-      return HelperUtils.responseSuccess({data: [wallet]});
+      return HelperUtils.responseSuccess({data: true});
     } catch (e) {
       return HelperUtils.responseErrorInternal('search winner error');
     }

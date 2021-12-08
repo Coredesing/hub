@@ -207,7 +207,7 @@ export const AboutMarketplaceNFT = ({
                                                             <div className={classes.tableCellOffer}>
                                                                 <h4 className="text-right flex">
                                                                     {row.currencySymbol && <img src={`/images/icons/${(row.currencySymbol).toLowerCase()}.png`} alt="" />}
-                                                                    {+row.raw_amount ? utils.formatEther(row.raw_amount) : ''} {row.currencySymbol}
+                                                                    {+row.raw_amount ? utils.formatEther(row.raw_amount) : '-/-'} {row.currencySymbol}
                                                                 </h4>
                                                             </div>
                                                         </TableCell>

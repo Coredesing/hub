@@ -13,6 +13,7 @@ import { Box, Link as MuiLink } from '@material-ui/core';
 import { cvtAddressToStar, formatHumanReadableTime, formatNumber } from '@utils/';
 import { getExplorerTransactionLink, getNetworkInfo } from '@utils/network';
 import { Link } from 'react-router-dom';
+import { utils } from 'ethers';
 type Props = {
     data: any[];
     totalPage?: number;
@@ -60,7 +61,7 @@ const ActivitiesMarketplace = ({ data = [], disabledFields, ...props }: Props) =
                                                 <Link className="width-fit hover-underline" to={item.slug ? `/collection/${item.slug}/${item.token_id}` : '#'}>
                                                     <h4 className="firs-neue-font font-16px text-white width-fit display-block">{item.name || `#${formatNumber(item.token_id, 3)}`}</h4>
                                                 </Link>
-                                                <Link  className="width-fit hover-underline" to={item.slug ? `/collection/${item.slug}` : '#'}>
+                                                <Link className="width-fit hover-underline" to={item.slug ? `/collection/${item.slug}` : '#'}>
                                                     <span className="text-grey helvetica-font font-14px width-fit">{item?.project?.name}</span>
                                                 </Link>
                                             </Box>
@@ -72,7 +73,7 @@ const ActivitiesMarketplace = ({ data = [], disabledFields, ...props }: Props) =
                                 </TableCell>
                                 <TableCell>
                                     <Box>
-                                        <span>{item.value} {item.currencySymbol}</span>
+                                        <span>{item.raw_amount ? utils.formatEther(item.raw_amount) : '-/-'} {item.currencySymbol}</span>
                                     </Box>
                                 </TableCell>
                                 <TableCell>

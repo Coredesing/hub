@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'box-option-wrapper rounded-sm': true, 'hover-active': !selectedInfo, 'active': props.active }">
+  <div :class="{ 'box-option-wrapper rounded-sm border border-transparent': true, 'hover-active': !selectedInfo , 'active': props.active }">
     <div class="option-header text-sm px-4 py-2 lg:px-6 lg:py-4">
       <slot name="header" />
     </div>

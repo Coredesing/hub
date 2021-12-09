@@ -111,7 +111,7 @@
         src="@/assets/images/icons/dot.svg"
       >
     </div>
-    <countdown :deadline="new Date(END_DATE)" />
+    <countdown :deadline="new Date(END_DATE)" @timeout="timeout" />
     <div class="main-content">
       <gamefi-box>
         <template #body>
@@ -133,10 +133,10 @@
                 <button
                   class="cursor-pointer h-10 bg-gray-900 rounded overflow-hidden flex flex-col items-center align-middle justify-center select-none"
                   :class="{
-                    'border border-gamefiGreen-400 hover:opacity-90': isActivePool('GameFi'),
-                    'border border-gray-700 hover:opacity-90': !isActivePool('GameFi'),
-                    'border =cursor-not-allowed': selectedInfo,
-                    'opacity-50': selectedInfo && !isActivePool('GameFi')
+                    'border border-gamefiGreen-400': isActivePool('GameFi'),
+                    'border border-gray-700': !isActivePool('GameFi'),
+                    'border cursor-not-allowed': selectedInfo || state.isTimeout,
+                    'opacity-50 border-transparent': (state.isTimeout && !selectedInfo) || (selectedInfo && !isActivePool('GameFi'))
                   }"
                   @click.prevent="selectPool('GameFi')"
                 >
@@ -147,10 +147,10 @@
                 <button
                   class="cursor-pointer h-10 bg-gray-900 rounded overflow-hidden flex flex-col items-center align-middle justify-center select-none"
                   :class="{
-                    'border border-gamefiGreen-400 hover:opacity-90': isActivePool('RedKite'),
-                    'border border-gray-700 hover:opacity-90': !isActivePool('RedKite'),
-                    'border cursor-not-allowed': selectedInfo,
-                    'opacity-50': selectedInfo && !isActivePool('RedKite')
+                    'border border-gamefiGreen-400': isActivePool('RedKite'),
+                    'border border-gray-700': !isActivePool('RedKite'),
+                    'border cursor-not-allowed': state.isTimeout || selectedInfo,
+                    'opacity-50 border-transparent': (state.isTimeout && !selectedInfo) || (selectedInfo && !isActivePool('RedKite'))
                   }"
                   @click.prevent="selectPool('RedKite')"
                 >
@@ -161,10 +161,10 @@
                 <button
                   class="cursor-pointer h-10 bg-gray-900 rounded overflow-hidden flex flex-col items-center align-middle justify-center select-none"
                   :class="{
-                    'border border-gamefiGreen-400 hover:opacity-90': isActivePool('DAO'),
-                    'border border-gray-700 hover:opacity-90': !isActivePool('DAO'),
-                    'border cursor-not-allowed': selectedInfo,
-                    'opacity-50': selectedInfo && !isActivePool('DAO')
+                    'border border-gamefiGreen-400': isActivePool('DAO'),
+                    'border border-gray-700': !isActivePool('DAO'),
+                    'border cursor-not-allowed': state.isTimeout || selectedInfo,
+                    'opacity-50 border-transparent': (state.isTimeout && !selectedInfo) || (selectedInfo && !isActivePool('DAO'))
                   }"
                   @click.prevent="selectPool('DAO')"
                 >
@@ -207,10 +207,10 @@
             </ul>
           </div>
           <!-- <div v-if="!selectedInfo" class="font-medium mt-5">Select Option</div> -->
-          <div v-if="selectedInfo" class="font-medium mt-5">Your chosen vesting option: <span class="uppercase text-gamefiGreen-400">option {{selectedInfo.option}}</span></div>
+          <div v-if="state.activeOption" class="font-medium mt-5">Your chosen vesting option: <span class="uppercase text-gamefiGreen-400">option {{state.activeOption}}</span></div>
           <div class="grid lg:grid-cols-2 mt-4 gap-4">
             <!-- option 1 -->
-            <box-option :class="{'opacity-50': selectedInfo && state.activeOption !== 1}" :active="state.activeOption === 1">
+            <box-option :class="{'opacity-50': (selectedInfo || state.isTimeout) && state.activeOption !== 1}" :active="state.activeOption === 1">
               <template #header>
                 <div>New vesting schedule</div>
                 <div class="text-gamefiGreen-400 font-bold text-xl">
@@ -218,7 +218,7 @@
                 </div>
               </template>
               <template #body>
-                <div class="text-sm font-light text-gray-300 flex flex-col justify-between" :class="{'h-56': !selectedInfo, 'h-40': selectInfo}">
+                <div class="text-sm font-light text-gray-300 flex flex-col justify-between h-40" :class="{'h-56': !selectedInfo && !state.isTimeout}">
                   <div>
                     <div class="Text-white mb-4 font-medium">At TGE (September 10, 2021) users were able to claim 25%. The remaining 75% will be distributed according to the new vesting schedule as below:</div>
                     <div class="inline-flex">
@@ -242,7 +242,7 @@
                   </div>
                   <div class="flex items-center justify-center w-full">
                     <button
-                      v-if="!selectedInfo"
+                      v-if="!selectedInfo && !state.isTimeout"
                       class="px-2 py-1 lg:px-4 lg:py-2 w-full font-medium rounded-sm hover:opacity-90"
                       :class="{
                         'bg-gray-500 text-white cursor-not-allowed hover:opacity-100': selectedInfo,
@@ -258,7 +258,7 @@
               </template>
             </box-option>
             <!-- option 2 -->
-            <box-option :class="{'opacity-50': selectedInfo && state.activeOption !== 2}" :active="state.activeOption === 2">
+            <box-option :class="{'opacity-50': (selectedInfo || state.isTimeout) && state.activeOption !== 2}" :active="state.activeOption === 2">
               <template #header>
                 <div>New vesting schedule</div>
                 <div class="text-gamefiGreen-400 font-bold text-xl">
@@ -266,7 +266,7 @@
                 </div>
               </template>
               <template #body>
-                <div class="text-sm text-gray-300 font-light flex flex-col justify-between" :class="{'h-56': !selectedInfo, 'h-36': selectInfo}">
+                <div class="text-sm text-gray-300 font-light flex flex-col justify-between h-40" :class="{'h-56': !selectedInfo && !state.isTimeout}">
                   <div>
                     <div class="Text-white mb-4 font-medium">At TGE (September 10, 2021) users were able to claim 25%. The remaining 75% will be distributed according to the new vesting schedule as below:</div>
                     <div class="inline-flex">
@@ -290,7 +290,7 @@
                   </div>
                   <div class="flex items-center justify-center w-full">
                     <button
-                      v-if="!selectedInfo"
+                      v-if="!selectedInfo && !state.isTimeout"
                       class="px-2 py-1 lg:px-4 lg:py-2 w-full font-medium rounded-sm hover:opacity-90"
                       :class="{
                         'bg-gray-500 text-white cursor-not-allowed hover:opacity-100': selectedInfo,
@@ -343,17 +343,34 @@ const state = reactive({
   reconfirm: false,
   showConnectWallet: false,
   pools: [],
-  rawSignature: ''
+  rawSignature: '',
+  isTimeout: false
 })
 
 onMounted(async () => {
-  if (wallet && wallet.value) {
-    await getSelectedOption()
+  if (!wallet || !wallet.value) {
+    state.activeOption = 0
+    state.pools = []
+    return
+  }
+  await getSelectedOption()
+
+  if ((state.isTimeout && !selectedInfo.value)) {
+    state.activeOption = 1
   }
 })
-watch([selectedInfo], () => {
+watch([selectedInfo, wallet], () => {
+  if (!wallet || !wallet.value) {
+    state.activeOption = 0
+    state.pools = []
+    return
+  }
   state.pools = (selectedInfo && selectedInfo.value && selectedInfo.value.pools.split(',')) || []
-  state.activeOption = (selectedInfo && selectedInfo.value && selectedInfo.value.option) || null
+  if ((state.isTimeout && !selectedInfo.value)) {
+    state.activeOption = 1
+    return
+  }
+  state.activeOption = (selectedInfo && selectedInfo.value && selectedInfo.value.option) || 0
 })
 function selectPool (pool) {
   if (selectedInfo && selectedInfo.value) {
@@ -475,6 +492,10 @@ async function submitOption (option) {
     .catch(e => {
       toast.error(e.message)
     })
+}
+
+function timeout () {
+  state.isTimeout = true
 }
 </script>
 

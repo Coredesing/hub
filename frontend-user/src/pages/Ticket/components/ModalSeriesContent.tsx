@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import CustomModal from '@base-components/CustomModal';
 import { makeStyles, Box, Button } from '@material-ui/core';
 // import clsx from 'clsx';
@@ -121,6 +121,21 @@ const useStyles = makeStyles((theme) => ({
                             right: 0,
                             display: 'grid',
                             placeItems: 'center',
+                            '& .btn-prev, & .btn-next': {
+                                position: 'absolute',
+                            },
+                            '& .btn-prev': {
+                                left: '100px',
+                                [theme.breakpoints.down('sm')]: {
+                                    left: '20px',
+                                }
+                            },
+                            '& .btn-next': {
+                                right: '100px',
+                                [theme.breakpoints.down('sm')]: {
+                                    right: '20px',
+                                }
+                            },
                             '& button': {
                                 display: 'block',
                             },
@@ -226,12 +241,18 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, isShowRateSerie
         // }
     }
 
-    const onPrevSerie = () => {
+    const onPrevSerie = (e?: any) => {
+        if (e) {
+            e.stopPropagation()
+        }
         const idxCurr = seriesContent.findIndex(s => s.id === currentSerie.id);
         const newSerie = idxCurr === 0 ? seriesContent.slice(-1)[0] : seriesContent[idxCurr - 1];
         handleShowImg(newSerie, 'right-to-left');
     }
-    const onNextSerie = () => {
+    const onNextSerie = (e?: any) => {
+        if (e) {
+            e.stopPropagation()
+        }
         const idxCurr = seriesContent.findIndex(s => s.id === currentSerie.id);
         const newSerie = idxCurr === seriesContent.length - 1 ? seriesContent[0] : seriesContent[idxCurr + 1];
         handleShowImg(newSerie, 'left-to-right');
@@ -251,6 +272,23 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, isShowRateSerie
 
     let imgRef = useRef() as any;
     let wrapVideoRef = useRef() as any;
+
+    const onKeyUp = useCallback((e: any) => {
+        if (!open) {
+            return;
+        }
+        if (e.key === 'ArrowLeft') {
+            onPrevSerie()
+        }
+        if (e.key === 'ArrowRight') {
+            onNextSerie()
+        }
+    }, [open, currentSerie]);
+
+    useEffect(() => {
+        window.onkeyup = onKeyUp;
+    }, [onKeyUp])
+
 
     return (
         <CustomModal open={open} onClose={onClose} classes={{ paper: styles.paper }}>
@@ -304,7 +342,7 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, isShowRateSerie
                                                     if (!video) return;
                                                     if (imgRef?.current) {
                                                         imgRef.current.style.display = 'grid';
-                                                        if(imgRef.current.classList.contains('zoom-in')) {
+                                                        if (imgRef.current.classList.contains('zoom-in')) {
                                                             imgRef.current.classList.remove('zoom-in')
                                                         }
                                                     }
@@ -334,7 +372,17 @@ const ModalSeriesContent = ({ open, current = {}, seriesContent, isShowRateSerie
                                     <Button autoFocus onClick={onZoom} color="primary" className={styles.btnClose}>
                                         <img src={'/images/icons/close.svg'} alt="" />
                                     </Button>
+                                    <Button className="btn-prev" onClick={onPrevSerie}>
+                                        <svg width="40" height="40" viewBox="0 0 20 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M0.11586 4.14412L4.56019 0.0931301C4.68368 -0.00716257 4.81867 -0.0264591 4.9653 0.0352813C5.11176 0.0971028 5.1853 0.208908 5.1853 0.371023V2.96363H19.6296C19.7377 2.96363 19.8265 2.99829 19.8959 3.06774C19.9652 3.13714 20 3.22592 20 3.33391V5.55608C20 5.66404 19.9653 5.75282 19.8959 5.82214C19.8264 5.89154 19.7376 5.9262 19.6297 5.9262H5.18522V8.51877C5.18522 8.6733 5.11156 8.78511 4.96518 8.85435C4.81843 8.91633 4.68343 8.8929 4.55995 8.78511L0.115616 4.68758C0.0384712 4.61048 0 4.51805 0 4.40993C0 4.30988 0.0387135 4.22126 0.11586 4.14412Z" fill="#72F34B" />
+                                        </svg>
+                                    </Button>
                                     <img src={currentSerie.banner} key={currentSerie.banner} alt="" />
+                                    <Button className="btn-next" onClick={onNextSerie}>
+                                        <svg width="40" height="40" viewBox="0 0 20 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M19.8841 4.14412L15.4398 0.0931301C15.3163 -0.00716257 15.1813 -0.0264591 15.0347 0.0352813C14.8882 0.0971028 14.8147 0.208908 14.8147 0.371023V2.96363H0.370361C0.262285 2.96363 0.173506 2.99829 0.104144 3.06774C0.0348227 3.13714 0 3.22592 0 3.33391V5.55608C0 5.66404 0.0346606 5.75282 0.104103 5.82214C0.173627 5.89154 0.262407 5.9262 0.370321 5.9262H14.8148V8.51877C14.8148 8.6733 14.8884 8.78511 15.0348 8.85435C15.1816 8.91633 15.3166 8.8929 15.44 8.78511L19.8844 4.68758C19.9615 4.61048 20 4.51805 20 4.40993C20 4.30988 19.9613 4.22126 19.8841 4.14412Z" fill="#72F34B" />
+                                        </svg>
+                                    </Button>
                                 </div>
                             </Box>
                         </Box>

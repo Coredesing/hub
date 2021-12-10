@@ -2,11 +2,12 @@ import { Card } from "../Card";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/swiper.min.css";
+import 'swiper/swiper-bundle.css';
 import useStyles from "./style";
 
-import SwiperCore, { Pagination } from "swiper";
+import SwiperCore, { Pagination, Navigation } from "swiper";
 import { getSeedRound } from "../../../utils";
-SwiperCore.use([Pagination]);
+SwiperCore.use([Pagination, Navigation]);
 
 const TicketSlide = ({ data }: any) => {
   const styles = { ...useStyles() };
@@ -14,12 +15,11 @@ const TicketSlide = ({ data }: any) => {
   return (
     <div className={styles.container}>
       <Swiper
+        navigation={true}
         slidesPerView={"auto"}
         spaceBetween={10}
         freeMode={true}
-        pagination={{
-          clickable: true,
-        }}
+        className={styles.swiperSlide}
       >
         {(data || []).map((card: any, id: any) => (
           <SwiperSlide key={id}>

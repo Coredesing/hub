@@ -22,55 +22,54 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Countdown',
-  props: {
-    deadline: String,
-    mode: {
-      type: String,
-      default: 'normal'
-    }
-  },
-  data () {
-    return {
-      now: new Date(),
-      interval: null
-    }
-  },
-  computed: {
-    diff () {
-      if (new Date(this.deadline) <= this.now) return 0
-      return Math.trunc((new Date(this.deadline) - this.now) / 1000)
-    },
-    second () {
-      return this.twoDigits(Math.trunc(this.diff) % 60)
-    },
-    minute () {
-      return this.twoDigits(Math.trunc(this.diff / 60) % 60)
-    },
-    hour () {
-      return this.twoDigits(Math.trunc(this.diff / 60 / 60) % 24)
-    },
-    day () {
-      return this.twoDigits(Math.trunc(this.diff / 60 / 60 / 24))
-    }
-  },
-  created () {
-    this.interval = setInterval(() => {
-      this.now = new Date()
-    }, 1000)
-  },
-  beforeUnmount () {
-    clearInterval(this.interval)
-  },
-  methods: {
-    twoDigits (v) {
-      if (v < 10) return '0' + v
-      return v
-    }
+<script setup>
+import { computed, onBeforeUnmount, onMounted, reactive, watch } from 'vue'
+const emit = defineEmits(['timeout'])
+
+const props = defineProps({
+  deadline: String,
+  mode: {
+    type: String,
+    default: 'normal'
   }
+})
+
+const state = reactive({
+  now: new Date(),
+  interval: null
+})
+
+function twoDigits (v) {
+  if (v < 10) return '0' + v
+  return v
 }
+
+const diff = computed(() => new Date(props.deadline) <= state.now ? 0 : Math.trunc((new Date(props.deadline) - state.now) / 1000))
+const second = computed(() => twoDigits(Math.trunc(diff.value) % 60))
+const minute = computed(() => twoDigits(Math.trunc(diff.value / 60) % 60))
+const hour = computed(() => twoDigits(Math.trunc(diff.value / 60 / 60) % 24))
+const day = computed(() => twoDigits(Math.trunc(diff.value / 60 / 60 / 24)))
+
+watch([diff], () => {
+  if (diff.value === 0) {
+    emit('timeout')
+  }
+})
+
+onMounted(() => {
+  if (diff.value === 0) {
+    emit('timeout')
+    return
+  }
+
+  state.interval = setInterval(() => {
+    state.now = new Date()
+  }, 1000)
+})
+
+onBeforeUnmount(() => {
+  clearInterval(state.interval)
+})
 </script>
 
 <style scoped lang="scss">

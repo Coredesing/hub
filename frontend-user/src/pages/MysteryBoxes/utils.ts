@@ -5,11 +5,12 @@ import BN from 'bignumber.js';
 
 export const getCountdownInfo = (pool: ObjectType<any>, compareTime: number = Date.now()) => {
     const time = getTimelineOfPool(pool);
-    // const ended = POOL_STATUS_TEXT[POOL_STATUS.CLOSED] === pool.campaign_status;
+    const ended = POOL_STATUS_TEXT[POOL_STATUS.CLOSED] === pool.campaign_status;
     // const isSoldOut = new BN(pool.token_sold).plus(+pool.token_sold_display || 0).gte(pool.total_sold_coin);
-    // if (ended || isSoldOut) {
-    //     return { date1: 0, date2: 0, title: 'Finished', isFinished: true };
-    // }
+    const isSoldOut = false
+    if (ended || isSoldOut) {
+        return { date1: 0, date2: 0, title: 'Finished', isFinished: true };
+    }
     if (time.startJoinPooltime > compareTime) {
         return { date1: time.startJoinPooltime, date2: compareTime, title: 'Whitelist starts in', isUpcoming: true }
     }

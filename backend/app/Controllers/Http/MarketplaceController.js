@@ -2,7 +2,7 @@
 
 const HelperUtils = use('App/Common/HelperUtils');
 const MarketplaceService = use('App/Services/MarketplaceService');
-
+const MarketplaceCollections = use('App/Models/MarketplaceCollections');
 
 class MarketplaceController {
   async getCollections({ request }) {
@@ -199,6 +199,118 @@ class MarketplaceController {
 
       return HelperUtils.responseSuccess(data);
     } catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
+  async getCollectionsAdmin({ request }) {
+    try {
+      const params = request.all();
+      const page = params?.page ? parseInt(params?.page) : 1
+      const perPage = params?.per_page ? parseInt(params?.per_page) : 10
+      const name = params?.name
+      const search = params?.search
+      const priority = params?.priority
+      const type = params?.type
+      let builder = MarketplaceCollections.query()
+      if (search) {
+        builder = builder.where((q) => {
+          q.where('priority', 'like', `%${search}%`)
+            .orWhere('name', 'like', `%${search}%`)
+            .orWhere('type', 'like', `%${search}%`);
+        })
+      }
+      if (name) {
+        builder = builder.where(``, 'name', `%${category}%`)
+      }
+      if (type) {
+        builder = builder.where('type', 'like', `%${display_area}%`)
+      }
+      if (priority) {
+        builder = builder.where('priority', verified)
+      }
+
+      builder = builder.orderBy('created_at', 'DESC')
+      const list = await builder.paginate(page, perPage)
+      return HelperUtils.responseSuccess(list);
+    }catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
+  async collectionCreate({request}) {
+    try {
+      const params = request.all();
+      const marketplaceService = new MarketplaceService()
+      const collection = await marketplaceService.setCollection(params, false, 0)
+
+      if (!collection) {
+        return HelperUtils.responseNotFound();
+      }
+
+      // if (collection && collection.slug) {
+      //   await RedisAggregatorUtils.deleteRedisAggregatorDetail(aggregator.slug)
+      // }
+      return HelperUtils.responseSuccess(collection);
+    } catch (e) {
+      console.log(e);
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
+  async collectionUpdate({ request }) {
+    try {
+      const params = request.all();
+      const marketplaceService = new MarketplaceService()
+      const collection = marketplaceService.setCollection(params, true, request.params.id)
+
+      if (!collection) {
+        return HelperUtils.responseNotFound();
+      }
+
+      // if (collection && collection.slug) {
+      //   await RedisAggregatorUtils.deleteRedisAggregatorDetail(collection.slug)
+      // }
+      return HelperUtils.responseSuccess(collection);
+    } catch (e) {
+      console.log(e);
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
+  async findCollection({request}) {
+    try {
+      let info = await MarketplaceCollections.find(request.params.id)
+      if (!info) {
+        return HelperUtils.responseNotFound();
+      }
+
+      return HelperUtils.responseSuccess(info);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
+  async changeDisplay({ request, auth, params }) {
+    const inputParams = request.only([
+      'status'
+    ]);
+
+    console.log('Update Show with data: ', inputParams);
+    const id = params.id;
+    try {
+      const collection = await MarketplaceCollections.query().where('id', id).first();
+      if (!collection) {
+        return HelperUtils.responseNotFound('Collection not found');
+      }
+      await MarketplaceCollections.query().where('id', id).update({
+        is_show: inputParams.status,
+      });
+
+      // await RedisStakingPoolUtils.deleteRedisStakingPoolsDetail()
+      return HelperUtils.responseSuccess();
+    } catch (e) {
+      console.log(e)
       return HelperUtils.responseErrorInternal();
     }
   }

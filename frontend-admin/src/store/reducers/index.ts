@@ -39,6 +39,7 @@ import { balanceReducer } from './balance';
 import { usdtDetailReducer } from './usdt-detail';
 import { whitelistReducer, whitelistCreateReducer, whitelistRemoveReducer } from './whitelist'
 import { gameInfoReducer, tokenomicReducer, projectInfoReducer, aggregatorCreateReducer, aggregatorRemoveReducer } from "./aggregator";
+import { collectionInfoReducer, collectionCreateReducer, collectionRemoveReducer } from "./collection";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -87,7 +88,10 @@ const rootReducer = combineReducers({
   tokenomic: tokenomicReducer,
   project_info: projectInfoReducer,
   aggregatorCreate: aggregatorCreateReducer,
-  aggregatorRemove: aggregatorRemoveReducer
+  aggregatorRemove: aggregatorRemoveReducer,
+  collection_info: collectionInfoReducer,
+  collectionCreate: collectionCreateReducer,
+  collectionRemove: collectionRemoveReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

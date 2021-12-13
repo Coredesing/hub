@@ -41,6 +41,8 @@ import KycUserEdit from "./pages/KycUserList/KycUserDetail/KycUserEdit";
 import KycUserCreate from "./pages/KycUserList/KycUserDetail/KycUserCreate";
 import Aggregator from "./pages/Aggregator";
 import AggregatorCreate from "./pages/Aggregator/AggregatorCreate";
+import Collections from "./pages/Collections";
+import CollectionCreate from "./pages/Collections/CollectionCreate";
 
 /**
  * Main App routes.
@@ -104,6 +106,9 @@ const Routes: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
         <Route path={adminRoute('/aggregator')} exact component={Aggregator} />
         <Route path={adminRoute('/aggregator/add')} exact component={AggregatorCreate} />
         <Route path={adminRoute('/aggregator/:id')} exact component={AggregatorCreate} />
+        <Route path={adminRoute('/collections')} exact component={Collections} />
+        <Route path={adminRoute('/collections/add')} exact component={CollectionCreate} />
+        <Route path={adminRoute('/collections/:id')} exact component={CollectionCreate} />
 
         <Route path={adminRoute('/network-change')} component={NetworkChange} />
         <Route path={adminRoute('/captcha-whitelist')} component={CaptchaWhitelist} />

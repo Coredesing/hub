@@ -62,13 +62,16 @@ const useStyles = makeStyles((theme: any) => ({
     ...typeDisplayFlex,
     justifyContent: 'center',
     alignItems: 'center',
+    transition: '.3s',
     '&:hover': {
       textDecoration: 'unset',
-    },
-    '&.approved': {
-      color: '#000',
+      color: '#000 !important',
       background: '#72f348',
     },
+    // '&.approved': {
+    //   color: '#000',
+    //   background: '#72f348',
+    // },
     '&.not-approved': {
       border: '1px solid #72F34B',
       color: '#72F34B',

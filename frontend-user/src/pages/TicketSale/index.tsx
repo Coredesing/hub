@@ -11,7 +11,7 @@ import { useFetchV1 } from '../../hooks/useFetch';
 import { PaginationResult } from '../../types/Pagination';
 import ContactForm from '../../components/Base/ContactForm';
 import NotFoundPage from '../NotFoundPage';
-import { Backdrop, CircularProgress, Link, useTheme } from '@material-ui/core';
+import { Backdrop, Box, CircularProgress, Link, useTheme } from '@material-ui/core';
 import { getFilterTokenType, getRoute } from './utils';
 import { ACCEPT_ROUTES } from './ contants';
 import { ObjectType } from '@app-types';
@@ -42,28 +42,41 @@ const TicketSale = (props: any) => {
     loading: loadingActivePools
   } = useFetchV1(`/pools/active-pools?token_type=${tokenType}&limit=20&page=1`, recall && checkParamType.valid);
   const {
-    data: upcomingPools = {} as PaginationResult,
-    loading: loadingUpcomingPools
-  } = useFetchV1(`/pools/upcoming-pools?token_type=${tokenType}&limit=20&page=1`, recall && checkParamType.valid);
+    data: upcomingPublicPools = {} as PaginationResult,
+    loading: loadingUpcomingPublicPools
+  } = useFetchV1(`/pools/upcoming-pools?token_type=${tokenType}&limit=20&page=1&is_private=0`, recall && checkParamType.valid);
+
+  const {
+    data: upcomingCommunityPools = {} as PaginationResult,
+    loading: loadingUpcomingCommunityPools
+  } = useFetchV1(`/pools/upcoming-pools?token_type=${tokenType}&limit=20&page=1&is_private=3`, recall && checkParamType.valid);
   const {
     data: compeltePools = {} as PaginationResult,
     loading: loadingcompletePools
   } = useFetchV1(`/pools/complete-sale-pools?token_type=${tokenType}&limit=10&page=1`, recall && checkParamType.valid);
 
   useEffect(() => {
-    if (!loadingActivePools && !loadingUpcomingPools && !loadingcompletePools) {
+    if (!loadingActivePools && !loadingUpcomingPublicPools && !loadingcompletePools && !loadingUpcomingCommunityPools) {
       setRecall(false);
     }
-  }, [loadingActivePools, loadingUpcomingPools, loadingcompletePools]);
+  }, [loadingActivePools, loadingUpcomingPublicPools, loadingcompletePools, loadingUpcomingCommunityPools]);
 
-  const [upcomingPoolsList, setUpcomingPoolsList] = useState<ObjectType<any>[]>([]);
+  const [upcomingPublicPoolsList, setUpcomingPublicPoolsList] = useState<ObjectType<any>[]>([]);
+  const [upcomingComPoolsList, setUpcomingComPoolsList] = useState<ObjectType<any>[]>([]);
 
   useEffect(() => {
-    if (upcomingPools.data?.length) {
-      const sorted = upcomingPools.data.sort((a) => a.campaign_status === 'TBA' ? 1 : -1);
-      setUpcomingPoolsList(sorted);
+    if (upcomingPublicPools.data?.length) {
+      const sorted = upcomingPublicPools.data.sort((a) => a.campaign_status === 'TBA' ? 1 : -1);
+      setUpcomingPublicPoolsList(sorted);
     }
-  }, [upcomingPools])
+  }, [upcomingPublicPools])
+
+  useEffect(() => {
+    if (upcomingCommunityPools.data?.length) {
+      const sorted = upcomingCommunityPools.data.sort((a) => a.campaign_status === 'TBA' ? 1 : -1);
+      setUpcomingComPoolsList(sorted);
+    }
+  }, [upcomingCommunityPools])
 
   return (
     checkParamType.checking ?
@@ -89,14 +102,39 @@ const TicketSale = (props: any) => {
             }
 
             {
-              !!(upcomingPools?.data || []).length && <div className={styles.poolItem}>
+              (!!(upcomingPublicPools?.data || []).length || !!(upcomingCommunityPools?.data || []).length) &&
+              <div className={styles.poolItem}>
                 <h3>Upcoming</h3>
-
-                <div className={clsx(styles.cards, styles.cardsUpcoming)}>
+                <Box display="grid" gridGap="80px" gridTemplateColumns="1fr">
                   {
-                    upcomingPoolsList.map((card, id: number) => <UpcomingCard key={id} card={card} refresh={refresh} />)
+                    !!upcomingPublicPoolsList.length && <Box width="100%" maxWidth="1140px" paddingLeft="10px" paddingRight="10px" margin="auto">
+                      <div className={styles.subTitle}>
+                        <span></span>
+                        <h4 className="text-uppercase firs-neue-font font-20px text-white text-center font-weight-normal">Pool IGO</h4>
+                        <span></span>
+                      </div>
+                      <div className={clsx(styles.cards, styles.cardsUpcoming)}>
+                        {
+                          upcomingPublicPoolsList.map((card, id: number) => <UpcomingCard key={id} card={card} refresh={refresh} />)
+                        }
+                      </div>
+                    </Box>
                   }
-                </div>
+                  {
+                    !!upcomingComPoolsList.length && <Box width="100%" margin="auto" maxWidth="1140px" paddingLeft="10px" paddingRight="10px">
+                      <div className={styles.subTitle}>
+                        <span></span>
+                        <h4 className="text-uppercase firs-neue-font font-20px text-white text-center font-weight-normal">Pool Community</h4>
+                        <span></span>
+                      </div>
+                      <div className={clsx(styles.cards, styles.cardsUpcoming)}>
+                        {
+                          upcomingComPoolsList.map((card, id: number) => <UpcomingCard key={id} card={card} refresh={refresh} />)
+                        }
+                      </div>
+                    </Box>
+                  }
+                </Box>
               </div>
             }
 

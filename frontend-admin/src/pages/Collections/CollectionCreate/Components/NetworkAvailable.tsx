@@ -5,7 +5,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import { Controller } from "react-hook-form";
-import {renderErrorCreatePool} from "../../../../utils/validate";
+import {renderErrorCreateCollections} from "../../../../utils/validate";
 import { NETWORK_AVAILABLE } from "../../../../constants";
 
 function NetworkAvailable(props: any) {
@@ -15,7 +15,7 @@ function NetworkAvailable(props: any) {
     collectionDetail,
     register,
   } = props;
-  const renderError = renderErrorCreatePool;
+  const renderError = renderErrorCreateCollections;
 
   useEffect(() => {
     if (collectionDetail && collectionDetail.network) {

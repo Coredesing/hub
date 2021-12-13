@@ -98,50 +98,58 @@ const deleteRedisPoolList = (params) => {
 };
 
 /**
- * UPCOMING POOLS
+ * UPCOMING COMMUNITY & IGO POOLS
  */
- const getRedisKeyUpcomingPools = (page = 1) => {
-  return `upcoming_pools_${page}`;
+ const getRedisKeyUpcomingPools = (page = 1, isCommunity) => {
+  let poolType = 'all'
+  if (isCommunity === undefined || isCommunity === null) {
+    poolType = 'all'
+  }
+
+  if (isCommunity === true) {
+    poolType = 'community'
+  }
+
+  if (isCommunity === false) {
+    poolType = 'igo'
+  }
+
+  return `upcoming_pools_${poolType}_${page}`;
 };
 
-const getRedisUpcomingPools = async (page) => {
-  return await Redis.get(getRedisKeyUpcomingPools(page));
+const getRedisUpcomingPools = async (page, isCommunity) => {
+  return await Redis.get(getRedisKeyUpcomingPools(page, isCommunity));
 };
 
-const checkExistRedisUpcomingPools = async (page) => {
-  let redisKey = getRedisKeyUpcomingPools(page);
-  logRedisUtil(`checkExistRedisUpcomingPools - redisKey: ${redisKey}`);
-
-  const isExistRedisData = await Redis.exists(redisKey);
+const checkExistRedisUpcomingPools = async (page, isCommunity) => {
+  let redisKey = getRedisKeyUpcomingPools(page, isCommunity);
+  const isExistRedisData = await Redis.exists(redisKey, isCommunity);
   if (isExistRedisData) {
-    logRedisUtil(`checkExistRedisUpcomingPools - Exist Redis cache with key: ${redisKey}`);
     return true;
   }
-  logRedisUtil(`checkExistRedisUpcomingPools - Not exist Redis cache with key: ${redisKey}`);
   return false;
 };
 
-const createRedisUpcomingPools = async (page, data) => {
-  const redisKey = getRedisKeyUpcomingPools(page);
-  logRedisUtil(`createRedisUpcomingPools - Create Cache data with key: ${redisKey}`);
+const createRedisUpcomingPools = async (page, isCommunity, data) => {
+  const redisKey = getRedisKeyUpcomingPools(page, isCommunity);
   return await Redis.setex(redisKey, UPCOMING_POOLS_CACHED_TTL, JSON.stringify(data));
 };
 
-const deleteRedisUpcomingPools = (page) => {
-  let redisKey = getRedisKeyUpcomingPools(page);
+const deleteRedisUpcomingPools = (page, isCommunity) => {
+  let redisKey = getRedisKeyUpcomingPools(page, isCommunity);
   if (Redis.exists(redisKey)) {
-    logRedisUtil(`deleteRedisUpcomingPools - existed key ${redisKey} on redis`);
     // remove old key
     Redis.del(redisKey);
     return true;
   }
-  logRedisUtil(`deleteRedisUpcomingPools - not exist key ${redisKey}`);
   return false;
 };
 
 const deleteAllRedisUpcomingPools = (pages = []) => {
   pages.forEach(page => {
-    deleteRedisUpcomingPools(page)
+    deleteRedisUpcomingPools(page, null)
+    deleteRedisUpcomingPools(page, true)
+    deleteRedisUpcomingPools(page, false)
   })
 };
 
@@ -439,7 +447,7 @@ module.exports = {
   createRedisPoolByTokenType,
   deleteRedisPoolByTokenType,
   deleteAllRedisPoolByTokenType,
-  
+
   // COMPLETED POOL
   checkExistRedisCompletedPools,
   getRedisKeyCompletedPools,

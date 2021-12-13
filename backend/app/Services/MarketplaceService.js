@@ -311,6 +311,35 @@ class MarketplaceService {
 
     return filterParams
   }
+
+  async setCollection(param, isUpdate, id) {
+    let collection = new MarketplaceCollectionModel()
+    if (isUpdate) {
+      collection = await MarketplaceCollectionModel.find(id)
+    }
+
+    collection.token_address = param?.token_address
+    collection.name = param?.name
+    collection.description = param?.description
+    collection.logo = param?.logo
+    collection.banner = param?.banner
+    collection.image = param?.image
+    collection.default_image = param?.default_image
+    collection.website = param?.website
+    collection.telegram = param?.telegram
+    collection.twitter = param?.twitter
+    collection.medium = param?.medium
+    collection.type = param?.type
+    collection.is_show = param?.is_show
+    collection.priority = param?.priority
+    collection.network = param?.network
+    collection.use_external_uri = param?.use_external_uri
+    collection.slug = param?.slug
+
+    await collection.save();
+    // delete cache here
+    return collection;
+  }
 }
 
 module.exports = MarketplaceService;

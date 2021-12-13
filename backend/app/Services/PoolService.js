@@ -64,6 +64,10 @@ class PoolService {
       builder = builder.where('token_type', params.token_type)
     }
 
+    if (params.is_private) {
+      builder = builder.where('is_private', params.is_private)
+    }
+
     return builder;
   }
 

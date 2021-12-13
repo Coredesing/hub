@@ -166,6 +166,7 @@ function PoolForm(props: any) {
                 collectionDetail={collectionDetail}
                 register={register}
                 setValue={setValue}
+                watch={watch}
                 errors={errors}
               />
               <CollectionSlug

@@ -1,6 +1,6 @@
 import React from 'react';
 import useStyles from "../style";
-import {renderErrorCreatePool} from "../../../../utils/validate";
+import {renderErrorCreateCollections} from "../../../../utils/validate";
 
 function CollectionSlug(props: any) {
   const classes = useStyles();
@@ -10,7 +10,7 @@ function CollectionSlug(props: any) {
     collectionDetail,
     isEdit
   } = props;
-  const renderError = renderErrorCreatePool;
+  const renderError = renderErrorCreateCollections;
 
   return (
     <>

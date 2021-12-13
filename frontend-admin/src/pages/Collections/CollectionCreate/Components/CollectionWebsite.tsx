@@ -1,6 +1,6 @@
 import React from 'react';
 import useStyles from "../style";
-import {renderErrorCreatePool} from "../../../../utils/validate";
+import {renderErrorCreateCollections} from "../../../../utils/validate";
 
 function CollectionWebsite(props: any) {
   const classes = useStyles();
@@ -8,7 +8,7 @@ function CollectionWebsite(props: any) {
     register, errors,
     collectionDetail,
   } = props;
-  const renderError = renderErrorCreatePool;
+  const renderError = renderErrorCreateCollections;
 
   return (
     <>

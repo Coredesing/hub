@@ -1,22 +1,27 @@
 import React, {useEffect, useState} from 'react';
 import useStyles from "../style";
 import {Checkbox} from "@material-ui/core";
-import {renderErrorCreatePool} from "../../../../utils/validate";
+import {renderErrorCreateCollections} from "../../../../utils/validate";
 
 function UseExternalURI(props: any) {
   const classes = useStyles();
   const {
     register, errors, setValue,
-    collectionDetail,
+    watch, collectionDetail,
   } = props;
-  const renderError = renderErrorCreatePool;
+  const renderError = renderErrorCreateCollections;
+  const [checked, setChecked] = useState(false)
+
+  useEffect(() => {
+    setChecked(Number(watch('use_external_uri')) > 0)
+  })
 
   return (
     <>
       <div className={classes.formControl}>
         <label className={classes.formControlLabel}>Use External URI</label>
         <Checkbox 
-          checked={!!collectionDetail?.use_external_uri}
+          checked={checked}
           onChange={(event) => {
             setValue('use_external_uri', event.target.checked ? 1 : 0)
           }}

@@ -40,11 +40,11 @@ const TicketSale = (props: any) => {
   const {
     data: activePools = {} as PaginationResult,
     loading: loadingActivePools
-  } = useFetchV1(`/pools/active-pools?token_type=${tokenType}&limit=10&page=1`, recall && checkParamType.valid);
+  } = useFetchV1(`/pools/active-pools?token_type=${tokenType}&limit=20&page=1`, recall && checkParamType.valid);
   const {
     data: upcomingPools = {} as PaginationResult,
     loading: loadingUpcomingPools
-  } = useFetchV1(`/pools/upcoming-pools?token_type=${tokenType}&limit=10&page=1`, recall && checkParamType.valid);
+  } = useFetchV1(`/pools/upcoming-pools?token_type=${tokenType}&limit=20&page=1`, recall && checkParamType.valid);
   const {
     data: compeltePools = {} as PaginationResult,
     loading: loadingcompletePools

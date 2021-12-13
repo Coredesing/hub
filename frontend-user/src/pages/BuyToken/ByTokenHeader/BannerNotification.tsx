@@ -250,13 +250,37 @@ function BannerNotification(props: any) {
       {
         ableToFetchFromBlockchain &&
         (winnersList && +winnersList.total > 0) &&
-        currentUserTier?.exist_whitelist &&
+        // currentUserTier?.exist_whitelist &&
         // && verifiedEmail 
         (poolDetails?.publicWinnerStatus == PUBLIC_WINNER_STATUS.PUBLIC) &&
         (now.valueOf() < startBuyTimeInDate.valueOf()) &&
+        connectedAccount &&
         // (currentUserTier && currentUserTier.level == TIER_LEVELS.DOVE) &&
         <>
-          {connectedAccount && (userBuyLimit > 0 ? <WrapperAlert type="info">
+          {
+            (currentUserTier?.exist_whitelist && userBuyLimit > 0) ? <WrapperAlert type="info">
+              <span>
+                The whitelist winners are out! Congratulations on your&nbsp;
+                <span style={{ color: '#ff673e' }}>{numberWithCommas(`${userBuyLimit}`)} {currencyName} </span>
+                allocation for {poolDetails?.title}. {' '}
+                You can view the list of winners&nbsp;
+                <LinkMui
+                  style={{
+                    color: '#72F34B',
+                    textDecoration: 'underline',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => {
+                    scrollToWinner();
+                  }}
+                >here</LinkMui>.
+              </span>
+            </WrapperAlert> :
+              isDisplayDefaultMessage && <WrapperAlert type="error" className="mb-6px">
+                Sorry, you have not been chosen as whitelist winner.
+              </WrapperAlert>
+          }
+          {/* {currentUserTier?.exist_whitelist && (userBuyLimit > 0 ? <WrapperAlert type="info">
             <span>
               The whitelist winners are out! Congratulations on your&nbsp;
               <span style={{ color: '#ff673e' }}>{numberWithCommas(`${userBuyLimit}`)} {currencyName} </span>
@@ -279,7 +303,7 @@ function BannerNotification(props: any) {
                 Sorry, you have not been chosen as whitelist winner.
               </span>
             </WrapperAlert>
-          )}
+          )} */}
 
         </>
       }

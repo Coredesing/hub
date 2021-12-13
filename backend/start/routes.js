@@ -234,6 +234,13 @@ Route.group(() => {
   Route.get('project-info/:id', 'AggregatorController.findProject');
   Route.get('tokenomics/:id', 'AggregatorController.findTokenomic');
   Route.delete('aggregator/:id', 'AggregatorController.removeGame');
+
+  // Marketplace Collections
+  Route.post('collections/create', 'MarketplaceController.collectionCreate');
+  Route.post('collections/:id', 'MarketplaceController.collectionUpdate');
+  Route.get('collections', 'MarketplaceController.getCollectionsAdmin');
+  Route.get('collections/:id', 'MarketplaceController.findCollection');
+  Route.post('collections/change-display/:id', 'MarketplaceController.changeDisplay');
 }).prefix('api/v2/admin').middleware(['auth:admin', 'checkAdminJwtSecret']);
 
 Route.group(() => {

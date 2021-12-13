@@ -537,7 +537,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
         <>
           <section className={styles.headerComponent}>
             {
-              !connectedAccount && <WrapperAlert>
+              !connectedAccount && <WrapperAlert className="mb-6px">
                 Please connect to wallet
               </WrapperAlert>
             }

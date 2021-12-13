@@ -353,3 +353,16 @@ body::-webkit-scrollbar-thumb,
 .mt-6px {
     margin-top: 6px;
 }
+
+.text-green-imp {
+    color: #72F34B !important;
+}
+
+.font-weight-normal {
+    font-weight: normal;
+}
+
+.font-20px {
+    font-size: 20px;
+    line-height: 24px;
+}

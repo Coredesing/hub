@@ -166,7 +166,7 @@ export const ActiveCard = ({ card, refresh, ...props }: Props) => {
                   )}
               </span>
             </div>
-            <Link href={`/#/${getRoute(card.token_type)}/${card.id}`} className={clsx(styles.btnDetail, 'not-approved')}>
+            <Link href={`/#/${getRoute(card.token_type)}/${card.id}`} className={clsx(styles.btnDetail, 'btn-detail', 'not-approved')}>
               {/* {card.isApproved ? 'Buy Now' : 'Approve'} */}
               Detail
             </Link>

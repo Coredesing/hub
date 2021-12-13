@@ -49,6 +49,18 @@ const useStyles = makeStyles((theme: any) => {
     completePools: {
       background: '#0A0A0A',
     },
+    subTitle: {
+      display: 'grid',
+      gridTemplateColumns: 'minmax(50px, 40%) minmax(200px, 20%) minmax(50px, 40%)',
+      alignItems: 'center',
+      marginBottom: '16px',
+      '& span': {
+        width: '100%',
+        height: '1px',
+        background: '#fff',
+        opacity: 0.3
+      },
+    }
     // contact: {
     //   background: '#72F34B',
     //   padding: '0px calc((100% - 800px) / 2)',
@@ -197,7 +209,11 @@ export const useCardStyles = makeStyles((theme) => ({
     '&:hover': {
       border: '1px solid #72F34B',
       boxShadow: '0px 4px 40px rgba(114, 243, 75, 0.12)',
-      background: '#000000'
+      background: '#000000',
+      '& .btn-detail': {
+        color: '#000 !important',
+        background: '#72f348',
+      }
     }
   },
   cardImg: {

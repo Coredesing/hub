@@ -1,10 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {getTokenInfo} from "../../../../utils/token";
-import {CircularProgress, Tooltip} from "@material-ui/core";
+import React from 'react'
 import useStyles from "../style";
-import {debounce} from "lodash";
-import {renderErrorCreatePool} from "../../../../utils/validate";
-import {CHAIN_ID_NAME_MAPPING} from "../../../../constants";
 
 
 function TokenAddress(props: any) {

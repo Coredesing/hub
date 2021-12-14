@@ -3,13 +3,14 @@ import useStyles from './style';
 import usePoolStyles from '../Pool/style';
 import useCommonStyle from '../../../styles/CommonStyle';
 import Button from '../Button';
-import { Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Link } from '@material-ui/core';
 import { BigNumber, utils } from 'ethers';
 import Progress from '@base-components/Progress'
 import { numberWithCommas } from '@utils/formatNumber';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserTier } from '@store/actions/sota-tiers';
 import useAuth from '@hooks/useAuth';
+import clsx from 'clsx';
 const closeIcon = '/images/icons/close.svg';
 const ONE_DAY_IN_SECONDS = 86400;
 
@@ -31,6 +32,7 @@ const ModalStake = (props: any) => {
     tokenDetails,
     stakingAmount,
     logo,
+    onBack,
   } = props;
 
   const { data: userTier } = useSelector((state: any) => state.userTier);
@@ -53,12 +55,12 @@ const ModalStake = (props: any) => {
       keepMounted
       aria-labelledby="alert-dialog-slide-title"
       aria-describedby="alert-dialog-slide-description"
-      className={commonStyles.modal + ' ' + styles.modalStake}
+      className={clsx(commonStyles.modal, styles.modalStake)}
       classes={{
         paper: 'paperModal'
       }}
     >
-      <div className="modal-content">
+      <div className="modal-content custom-scroll">
         <DialogTitle id="alert-dialog-slide-title" className="modal-content__head">
           <img src={closeIcon} alt="" onClick={onClose} className="btn-close" />
           <div className="title">Unstake</div>
@@ -180,6 +182,11 @@ const ModalStake = (props: any) => {
               <li style={{ marginTop: '10px' }}>
                 Staking Rewards will stop being earned for the amount you unstake as soon as you click "<strong>Unstake</strong>" and initiate the Unstaking process
               </li>
+              <li style={{ marginTop: '10px', listStyle: 'none' }}>
+                <Link href="https://medium.com/gamefi-official/new-staking-and-unstaking-policy-updates-on-gamefi-launchpad-77c67c536627" target={"_blank"} className="text-green-imp bold">
+                  Read more Policy
+                </Link>
+              </li>
             </ul>
           }
           {/* <div className="delay-notes">
@@ -191,13 +198,27 @@ const ModalStake = (props: any) => {
         </DialogContent>
         <DialogActions className="modal-content__foot">
           <Button
-            text="Unstake"
-            onClick={onConfirm}
-            backgroundColor="transparent"
+            text="Back"
+            onClick={onBack}
+            backgroundColor="#1e1e1e"
             style={{
               height: '42px',
               width: '280px',
-              color: '#72F34B',
+              color: '#fff',
+              // border: '1px solid #72F34B',
+              margin: 'auto 0px 10px 10px',
+              borderRadius: '36px',
+              padding: '12px 30px',
+            }}
+          />
+          <Button
+            text="Unstake"
+            onClick={onConfirm}
+            backgroundColor="#72F34B"
+            style={{
+              height: '42px',
+              width: '280px',
+              color: '#000',
               border: '1px solid #72F34B',
               margin: 'auto 0px 10px 10px',
               borderRadius: '36px',

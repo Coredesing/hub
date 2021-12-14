@@ -21,33 +21,36 @@ const useLinearStake = (
 
   const { library, account } = useWeb3React();
 
-    const linearStakeToken = useCallback(async () => {
-      setTransactionHash("");
+  const linearStakeToken = useCallback(async () => {
+    setTransactionHash("");
 
-      try {
-        if (poolAddress && ethers.utils.isAddress(poolAddress)) {
-            setTokenStakeLoading(true);
+    try {
+      if (poolAddress && ethers.utils.isAddress(poolAddress)) {
+        setTokenStakeLoading(true);
 
-             const contract = getContract(poolAddress, STAKING_POOL_ABI, library, account as string);
+        const contract = getContract(poolAddress, STAKING_POOL_ABI, library, account as string);
 
-             if (contract && amount) {
-               const transaction = await contract.linearDeposit(poolId, ethers.utils.parseEther(amount));
-               console.log('Stake Token', transaction);
+        if (contract && amount) {
+          const transaction = await contract.linearDeposit(poolId, ethers.utils.parseEther(amount));
+          console.log('Stake Token', transaction);
 
-              setTransactionHash(transaction.hash);
+          setTransactionHash(transaction.hash);
 
-               await transaction.wait(1);
-
-              dispatch(alertSuccess("Token Staked Successful!"));
-              setTokenStakeLoading(false);
-             }
-           }
-      } catch (err) {
-        console.log('[ERROR] - useLinearStake:', err);
-        dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
-        setTokenStakeLoading(false);
-        throw new Error(err.message);
+          const result = await transaction.wait(1);
+          setTokenStakeLoading(false);
+          if (+result?.status === 1) {
+            dispatch(alertSuccess("Token Staked Successful!"));
+          } else {
+            dispatch(alertFailure("Token Stake Failed"));
+          }
+        }
       }
+    } catch (err: any) {
+      console.log('[ERROR] - useLinearStake:', err);
+      dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
+      setTokenStakeLoading(false);
+      throw new Error(err.message);
+    }
   }, [poolAddress, poolId, amount, library, account, dispatch]);
 
   return {

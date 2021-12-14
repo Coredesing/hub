@@ -9,7 +9,7 @@ import { handleErrMsg } from '../utils';
 import BigNumber from 'bignumber.js';
 type PoolDepositActionParams = {
   poolAddress?: string;
-  token?: {[k: string]: any}
+  token?: { [k: string]: any }
 }
 
 const useTicketBid = ({ poolAddress, token }: PoolDepositActionParams) => {
@@ -28,16 +28,21 @@ const useTicketBid = ({ poolAddress, token }: PoolDepositActionParams) => {
         const transaction = await contract.stake(_amount);
         dispatch(alertWarning("Request is processing!"));
         setResultBid({ loading: true, transaction: transaction.hash });
-        await transaction.wait(1);
-        setResultBid(data => ({...data, loading: false, success: true }));
-        dispatch(alertSuccess("Request is completed!"));
-        return {success: true};
+        const result = await transaction.wait(1);
+        if (+result?.status === 1) {
+          setResultBid(data => ({ ...data, loading: false, success: true }));
+          dispatch(alertSuccess("Request is completed!"));
+          return { success: true };
+        }
+        setResultBid(data => ({ ...data, loading: false, success: false }));
+        dispatch(alertFailure("Request Failed"));
+        return { success: false };
       }
-      return {success: false, error: "The amount must be greater than zero"};
+      return { success: false, error: "The amount must be greater than zero" };
     } catch (error: any) {
       setResultBid({ loading: false, success: false });
       const message = handleErrMsg(error) || TRANSACTION_ERROR_MESSAGE;
-      return {success: false, error: message};
+      return { success: false, error: message };
     }
 
   }, [dispatch, poolAddress, account, library, token]);
@@ -51,15 +56,20 @@ const useTicketBid = ({ poolAddress, token }: PoolDepositActionParams) => {
       const transaction = await contract.claim();
       dispatch(alertWarning("Request is processing!"));
       setResultBid({ loading: true, transaction: transaction.hash });
-      await transaction.wait(1);
-      dispatch(alertSuccess("Request is completed!"));
-      setResultBid(data => ({...data, loading: false, success: true }));
-      return {success: true};
+      const result = await transaction.wait(1);
+      if (+result?.status === 1) {
+        dispatch(alertSuccess("Request is completed!"));
+        setResultBid(data => ({ ...data, loading: false, success: true }));
+        return { success: true };
+      }
+      dispatch(alertSuccess("Request Failed"));
+      setResultBid(data => ({ ...data, loading: false, success: false }));
+      return { success: false };
     } catch (error: any) {
       setResultBid({ loading: false, success: false });
       const message = handleErrMsg(error) || TRANSACTION_ERROR_MESSAGE;
       dispatch(alertFailure(message))
-      return {success: false, error: message};
+      return { success: false, error: message };
     }
 
   }, [dispatch, poolAddress, account, library, token])

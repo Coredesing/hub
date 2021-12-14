@@ -42,6 +42,11 @@ const nav = [
     icon: 'icon-users',
   },
   {
+    title: 'Collections',
+    part: adminRoute('/collections'),
+    icon: 'icon-users',
+  },
+  {
     title: 'Setting',
     part: adminRoute('/setting'),
     icon: 'icon-setting',

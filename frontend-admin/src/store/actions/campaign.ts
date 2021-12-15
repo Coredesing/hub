@@ -297,7 +297,7 @@ export const getCampaignDetail = (id: string, isInvestor: boolean = false) => {
           const affiliate = await isReferral(campaignDetail[3], campaignDetail[8], id);
           let isOwnerReferral = false;
 
-          if (Number(campaignDetail[3] != 0)) {
+          if (Number(campaignDetail[3]) !== 0) {
             isOwnerReferral = await isOwnerOfReferral(campaignDetail[3], campaignDetail[8], !isInvestor ? loginUser: loginInvestor) as boolean;
           }
 

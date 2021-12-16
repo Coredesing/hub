@@ -21,33 +21,36 @@ const useLinearUnstake = (
 
   const { library, account } = useWeb3React();
 
-    const linearUnstakeToken = useCallback(async () => {
-      setTransactionHash("");
+  const linearUnstakeToken = useCallback(async () => {
+    setTransactionHash("");
 
-      try {
-        if (poolAddress && ethers.utils.isAddress(poolAddress)) {
-            setTokenUnstakeLoading(true);
+    try {
+      if (poolAddress && ethers.utils.isAddress(poolAddress)) {
+        setTokenUnstakeLoading(true);
 
-             const contract = getContract(poolAddress, STAKING_POOL_ABI, library, account as string);
+        const contract = getContract(poolAddress, STAKING_POOL_ABI, library, account as string);
 
-             if (contract && amount) {
-               const transaction = await contract.linearWithdraw(poolId, ethers.utils.parseEther(amount));
-               console.log('Unstaked Token', transaction);
+        if (contract && amount) {
+          const transaction = await contract.linearWithdraw(poolId, ethers.utils.parseEther(amount));
+          console.log('Unstaked Token', transaction);
 
-              setTransactionHash(transaction.hash);
+          setTransactionHash(transaction.hash);
 
-               await transaction.wait(1);
-
-              dispatch(alertSuccess("Token Unstaked Successful!"));
-              setTokenUnstakeLoading(false);
-             }
-           }
-      } catch (err: any) {
-        console.log('[ERROR] - useLinearUnstake:', err);
-        dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
-        setTokenUnstakeLoading(false);
-        throw new Error(err.message);
+          const result = await transaction.wait(1);
+          setTokenUnstakeLoading(false);
+          if (+result?.status === 1) {
+            dispatch(alertSuccess("Token Unstaked Successful!"));
+          } else {
+            dispatch(alertFailure("Token Unstake Failed"));
+          }
+        }
       }
+    } catch (err: any) {
+      console.log('[ERROR] - useLinearUnstake:', err);
+      dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
+      setTokenUnstakeLoading(false);
+      throw new Error(err.message);
+    }
   }, [poolAddress, poolId, amount, library, account, dispatch]);
 
   return {

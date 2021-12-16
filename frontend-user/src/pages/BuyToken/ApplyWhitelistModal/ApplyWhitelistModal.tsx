@@ -157,7 +157,7 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
   const [ solanaAddress, setSolanaAddress] = useState();
   console.log(dataUser)
   useEffect(() => {
-    setSolanaAddress(dataUser?.user?.solana_address)
+    setSolanaAddress(whitelistSubmission?.solana_address)
   },[dataUser])
 
   useEffect(() => {
@@ -267,6 +267,16 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
     }
   }
 
+  const handleSolanaDisconnect = () => {
+    // @ts-ignore
+    if (!window.solana) {
+      return
+    }
+    // @ts-ignore
+    window.solana.request({ method: "disconnect" })
+    setSolanaAddress(undefined)
+  }
+
   return (
     <Dialog open fullWidth={true} maxWidth={'md'} className={styles.socialDialog}>
       <DialogTitle id="customized-dialog-title" onClose={handleClose} customClass={styles.dialogTitle} >
@@ -362,27 +372,50 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
             <div className="input-group d-block">
               <div className="label">Your Solana Wallet Address (will receive the airdrop) <span style={{color: '#D01F36'}}>*</span><div style={{float:"right"}}><a href="https://phantom.app/" style={{color: '#6398FF'}}>Get Phantom extension?</a></div></div>
               {
-                !solanaAddress ?
-                    <div><Button
-                        //backgroundColor={''}
-                        onClick={handleSolanaConnect}
-                        text={'Connect Solana Wallet'}
-                        style={{
-                          width: '100%',
-                          border: '1px solid #72F34B',
-                          color: '#72F34B',
-                          padding: '13px 30px',
-                        }}
+                alreadyJoinPool || joinPoolSuccess ? (
+                  <div>
+                    <input
+                      type="text"
+                      disabled={alreadyJoinPool || joinPoolSuccess}
+                      value={solanaAddress || ''}
+                      readOnly={true}
+                      maxLength={60}
                     />
-                      </div>
+                  </div>
+                ) : (!solanaAddress ?
+                    <div>
+                      <button
+                        onClick={handleSolanaConnect}
+                        style={{
+                          background: '#72F34B',
+                          color: '#000',
+                          padding: '13px 30px',
+                          cursor: 'pointer',
+                          borderRadius: '4px',
+                          outline: 'none',
+                          border: 'none'
+                        }}
+                      >
+                        Connect Solana Wallet
+                      </button>
+                    </div>
                     :
-                    (<input
-                        type="text"
-                        disabled={alreadyJoinPool || joinPoolSuccess}
-                        value={solanaAddress}
-                        readOnly={true}
-                        maxLength={60}
-                    />)
+                    (
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        verticalAlign: 'middle'
+                      }}>
+                        <input
+                          type="text"
+                          disabled={alreadyJoinPool || joinPoolSuccess}
+                          value={solanaAddress}
+                          readOnly={true}
+                          maxLength={60}
+                        />
+                        <div style={{ color: 'red', marginLeft: '0.75em', cursor: 'pointer' }} onClick={handleSolanaDisconnect}>Disconnect</div>
+                      </div>
+                    ))
               }
             </div>
             }

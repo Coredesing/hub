@@ -171,7 +171,7 @@ export const login = (connectedAccount: string, library: Web3Provider) => {
           console.log(signature);
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('ERROR Login: ', error);
       dispatch(alertFailure(error.message));
       dispatchErrorWithMsg(dispatch, userActions.INVESTOR_LOGIN_FAILURE, '');
@@ -370,7 +370,7 @@ export const updateUserProfile = (updatedUser: UserProfileProps) => {
           }
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       dispatchErrorWithMsg(dispatch, userActions.USER_PROFILE_UPDATE_FAILURE, error.message);
     }
   }
@@ -446,7 +446,7 @@ export const joinPool = (connectedAccount: string, library: Web3Provider, poolId
           console.log(signature);
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('ERROR Login: ', error);
       dispatch(alertFailure(error.message));
       dispatchErrorWithMsg(dispatch, userActions.INVESTOR_LOGIN_FAILURE, '');

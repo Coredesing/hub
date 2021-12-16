@@ -45,7 +45,7 @@ const useUserClaimSignature = (connectedAccount: string | undefined | null, camp
             }
           }
           setLoadingClaim(false);
-        } catch (err) {
+        } catch (err: any) {
           setError(err.message);
           setSignature("");
           setLoadingClaim(false);

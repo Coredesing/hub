@@ -577,6 +577,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
               loadingJoinPool={loadingJoinPool}
               loadingWinnerList={loadingWinnerList}
               dataUser={dataUser}
+              solanaAddress={whitelistSubmission?.solana_address}
             />
 
             <ByTokenHeader

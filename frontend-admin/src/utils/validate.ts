@@ -3,7 +3,7 @@ import BigNumber from "bignumber.js";
 
 export const renderError = (errors: any, prop: string) => {
   if (errors[prop]) {
-    const errorName = prop?.split("_").join(' ');
+    const errorName = prop && prop.split("_").join(' ');
     const errorType = errors[prop]?.type;
 
     switch (errorType) {
@@ -36,7 +36,7 @@ export const renderError = (errors: any, prop: string) => {
 
 export const renderErrorCreatePool = (errors: any, prop: string) => {
   if (errors[prop]) {
-    const errorName = prop.split("_").join(' ');
+    const errorName = prop && prop.split("_").join(' ');
     const errorType = errors[prop].type;
 
     switch (errorType) {
@@ -94,7 +94,7 @@ export const renderErrorCreatePool = (errors: any, prop: string) => {
 
 export const renderErrorCreateAggregator = (errors: any, prop: string) => {
   if (errors[prop]) {
-    const errorName = prop.split("_").join(' ');
+    const errorName = prop && prop.split("_").join(' ');
     const errorType = errors[prop].type;
 
     switch (errorType) {

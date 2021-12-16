@@ -241,6 +241,7 @@ Route.group(() => {
   Route.get('collections', 'MarketplaceController.getCollectionsAdmin');
   Route.get('collections/:id', 'MarketplaceController.findCollection');
   Route.post('collections/change-display/:id', 'MarketplaceController.changeDisplay');
+  Route.delete('collections/:id', 'MarketplaceController.removeCollection');
 }).prefix('api/v2/admin').middleware(['auth:admin', 'checkAdminJwtSecret']);
 
 Route.group(() => {

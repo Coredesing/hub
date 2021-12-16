@@ -36,7 +36,7 @@ const useUserPurchased = (
 
            return 0;
          }
-    } catch (err) {
+    } catch (err: any) {
       console.log(err.message);
     }
   }, [appChainID, connector, poolAddress, ableToFetchFromBlockchain]);

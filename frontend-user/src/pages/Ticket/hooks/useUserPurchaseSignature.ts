@@ -44,7 +44,7 @@ const useUserPurchaseSignature = (connectedAccount: string | undefined | null, c
               setSignature("");
             }
           } 
-        } catch (err) {
+        } catch (err: any) {
           setError(err.message);
           setSignature("");
         }

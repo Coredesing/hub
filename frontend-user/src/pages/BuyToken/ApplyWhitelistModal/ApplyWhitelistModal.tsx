@@ -157,7 +157,7 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
   const [ solanaAddress, setSolanaAddress] = useState();
   console.log(dataUser)
   useEffect(() => {
-    setSolanaAddress(dataUser?.user?.solana_address)
+    setSolanaAddress(whitelistSubmission?.solana_address)
   },[dataUser])
 
   useEffect(() => {
@@ -372,7 +372,17 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
             <div className="input-group d-block">
               <div className="label">Your Solana Wallet Address (will receive the airdrop) <span style={{color: '#D01F36'}}>*</span><div style={{float:"right"}}><a href="https://phantom.app/" style={{color: '#6398FF'}}>Get Phantom extension?</a></div></div>
               {
-                !solanaAddress ?
+                alreadyJoinPool || joinPoolSuccess ? (
+                  <div>
+                    <input
+                      type="text"
+                      disabled={alreadyJoinPool || joinPoolSuccess}
+                      value={solanaAddress || ''}
+                      readOnly={true}
+                      maxLength={60}
+                    />
+                  </div>
+                ) : (!solanaAddress ?
                     <div>
                       <button
                         onClick={handleSolanaConnect}
@@ -405,7 +415,7 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
                         />
                         <div style={{ color: 'red', marginLeft: '0.75em', cursor: 'pointer' }} onClick={handleSolanaDisconnect}>Disconnect</div>
                       </div>
-                    )
+                    ))
               }
             </div>
             }

@@ -20,33 +20,36 @@ const useAllocClaimPendingWithdraw = (
 
   const { library, account } = useWeb3React();
 
-    const allocClaimPendingWithdraw = useCallback(async () => {
-      setTransactionHash("");
+  const allocClaimPendingWithdraw = useCallback(async () => {
+    setTransactionHash("");
 
-      try {
-        if (poolAddress && ethers.utils.isAddress(poolAddress)) {
-            setLoading(true);
+    try {
+      if (poolAddress && ethers.utils.isAddress(poolAddress)) {
+        setLoading(true);
 
-             const contract = getContract(poolAddress, STAKING_POOL_ABI, library, account as string);
+        const contract = getContract(poolAddress, STAKING_POOL_ABI, library, account as string);
 
-             if (contract) {
-               const transaction = await contract.allocClaimPendingWithdraw(poolId);
-               console.log('allocClaimPendingWithdraw Token', transaction);
+        if (contract) {
+          const transaction = await contract.allocClaimPendingWithdraw(poolId);
+          console.log('allocClaimPendingWithdraw Token', transaction);
 
-              setTransactionHash(transaction.hash);
+          setTransactionHash(transaction.hash);
 
-               await transaction.wait(1);
-
-              dispatch(alertSuccess("Claim Pending Withdraw Successful!"));
-              setLoading(false);
-             }
-           }
-      } catch (err: any) {
-        console.log('[ERROR] - allocClaimPendingWithdraw:', err);
-        dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
-        setLoading(false);
-        throw new Error(err.message);
+          const result = await transaction.wait(1);
+          setLoading(false);
+          if (+result?.status === 1) {
+            dispatch(alertSuccess("Claim Pending Withdraw Successful!"));
+          } else {
+            dispatch(alertFailure("Claim Pending Withdraw Failed"));
+          }
+        }
       }
+    } catch (err: any) {
+      console.log('[ERROR] - allocClaimPendingWithdraw:', err);
+      dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
+      setLoading(false);
+      throw new Error(err.message);
+    }
   }, [poolAddress, poolId, library, account, dispatch]);
 
   return {

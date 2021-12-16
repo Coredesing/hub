@@ -68,11 +68,15 @@ const useTokenClaim = (poolAddress: string | undefined, poolId: number | undefin
             setUserClaimSignature("");
             setClaimTransactionHash(transaction.hash);
             dispatch(alertWarning("Request is processing!"));
-            await transaction.wait(1);
-
-            setClaimTokenSuccess(true);
+            const result = await transaction.wait(1);
             setClaimTokenLoading(false);
-            dispatch(alertSuccess("Token Claim Successful"));
+            if (+result?.status === 1) {
+              setClaimTokenSuccess(true);
+              dispatch(alertSuccess("Token Claim Successful"));
+            } else {
+              dispatch(alertFailure("Token Claim Failed"));
+              setClaimTokenSuccess(false);
+            }
           }
         } catch (err: any) {
           const message = handleErrMsg(err) || err.message;

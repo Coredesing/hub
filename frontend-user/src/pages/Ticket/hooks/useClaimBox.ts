@@ -79,12 +79,15 @@ const useClaimBox = ({ subBoxId, poolAddress, eventId, poolId }: PoolDepositActi
         setSignature("");
         setClaimTransactionHash(transaction.hash);
         dispatch(alertWarning("Request is processing!"));
-        await transaction.wait(1);
-
-        setClaimedSuccess(true);
-        dispatch(alertSuccess("Box Claimed Successful"));
-
+        const result = await transaction.wait(1);
         setClaimBoxLoading(false);
+        if (+result?.status === 1) {
+          dispatch(alertSuccess("Box Claimed Successful"));
+          setClaimedSuccess(true);
+        } else {
+          dispatch(alertFailure("Box Claim Failed"));
+          setClaimedSuccess(false);
+        }
       } catch (error: any) {
         setSignature('');
         setClaimBoxLoading(false);

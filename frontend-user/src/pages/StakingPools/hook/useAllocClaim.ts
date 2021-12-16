@@ -20,33 +20,36 @@ const useAllocClaim = (
 
   const { library, account } = useWeb3React();
 
-    const allocClaimToken = useCallback(async () => {
-      setTransactionHash("");
+  const allocClaimToken = useCallback(async () => {
+    setTransactionHash("");
 
-      try {
-        if (poolAddress && ethers.utils.isAddress(poolAddress)) {
-          setTokenClaimLoading(true);
+    try {
+      if (poolAddress && ethers.utils.isAddress(poolAddress)) {
+        setTokenClaimLoading(true);
 
-             const contract = getContract(poolAddress, STAKING_POOL_ABI, library, account as string);
+        const contract = getContract(poolAddress, STAKING_POOL_ABI, library, account as string);
 
-             if (contract) {
-               const transaction = await contract.allocClaimReward(poolId);
-               console.log('Unstake Token', transaction);
+        if (contract) {
+          const transaction = await contract.allocClaimReward(poolId);
+          console.log('Unstake Token', transaction);
 
-              setTransactionHash(transaction.hash);
+          setTransactionHash(transaction.hash);
 
-               await transaction.wait(1);
-
-              dispatch(alertSuccess("Token Claimed Successful!"));
-              setTokenClaimLoading(false);
-             }
-           }
-      } catch (err: any) {
-        console.log('[ERROR] - useAllocClaim:', err);
-        dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
-        setTokenClaimLoading(false);
-        throw new Error(err.message);
+          const result = await transaction.wait(1);
+          setTokenClaimLoading(false);
+          if (+result?.status === 1) {
+            dispatch(alertSuccess("Token Claimed Successful!"));
+          } else {
+            dispatch(alertFailure("Token Claim Failed"));
+          }
+        }
       }
+    } catch (err: any) {
+      console.log('[ERROR] - useAllocClaim:', err);
+      dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
+      setTokenClaimLoading(false);
+      throw new Error(err.message);
+    }
   }, [poolAddress, poolId, library, account, dispatch]);
 
   return {

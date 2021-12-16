@@ -20,33 +20,36 @@ const useLinearClaimPendingWithdraw = (
 
   const { library, account } = useWeb3React();
 
-    const linearClaimPendingWithdraw = useCallback(async () => {
-      setTransactionHash("");
+  const linearClaimPendingWithdraw = useCallback(async () => {
+    setTransactionHash("");
 
-      try {
-        if (poolAddress && ethers.utils.isAddress(poolAddress)) {
-            setLoading(true);
+    try {
+      if (poolAddress && ethers.utils.isAddress(poolAddress)) {
+        setLoading(true);
 
-             const contract = getContract(poolAddress, STAKING_POOL_ABI, library, account as string);
+        const contract = getContract(poolAddress, STAKING_POOL_ABI, library, account as string);
 
-             if (contract) {
-               const transaction = await contract.linearClaimPendingWithdraw(poolId);
-               console.log('linearClaimPendingWithdraw Token', transaction);
+        if (contract) {
+          const transaction = await contract.linearClaimPendingWithdraw(poolId);
+          console.log('linearClaimPendingWithdraw Token', transaction);
 
-              setTransactionHash(transaction.hash);
+          setTransactionHash(transaction.hash);
 
-               await transaction.wait(1);
-
-              dispatch(alertSuccess("Claim Pending Withdraw Successful!"));
-              setLoading(false);
-             }
-           }
-      } catch (err) {
-        console.log('[ERROR] - linearClaimPendingWithdraw:', err);
-        dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
-        setLoading(false);
-        throw new Error(err.message);
+          const result = await transaction.wait(1);
+          setLoading(false);
+          if (+result?.status === 1) {
+            dispatch(alertSuccess("Claim Pending Withdraw Successful!"));
+          } else {
+            dispatch(alertFailure("Claim Pending Withdraw Failed"));
+          }
+        }
       }
+    } catch (err: any) {
+      console.log('[ERROR] - linearClaimPendingWithdraw:', err);
+      dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
+      setLoading(false);
+      throw new Error(err.message);
+    }
   }, [poolAddress, poolId, library, account, dispatch]);
 
   return {

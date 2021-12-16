@@ -33,10 +33,13 @@ const useSwitchPool = (
 
           setTransactionHash(transaction.hash);
 
-          await transaction.wait(1);
-
-          dispatch(alertSuccess("Switch Staking Pool Successful!"));
+          const result = await transaction.wait(1);
           setSwitchPoolLoading(false);
+          if (+result?.status === 1) {
+            dispatch(alertSuccess("Switch Staking Pool Successful!"));
+          } else {
+            dispatch(alertFailure("Switch Staking Pool Failed"));
+          }
         }
       }
     } catch (err: any) {

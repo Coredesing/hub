@@ -253,7 +253,6 @@ class MarketplaceController {
       // }
       return HelperUtils.responseSuccess(collection);
     } catch (e) {
-      console.log(e);
       return HelperUtils.responseErrorInternal();
     }
   }
@@ -312,6 +311,20 @@ class MarketplaceController {
     } catch (e) {
       console.log(e)
       return HelperUtils.responseErrorInternal();
+    }
+  }
+
+  async removeCollection({request}) {
+    try {
+      const collection = await MarketplaceCollections.findBy('id', request.params.id)
+      if (collection) collection.delete()
+
+      // if (collection && collection.slug) {
+      //   await RedisAggregatorUtils.deleteRedisAggregatorDetail(collection.slug)
+      // }
+      return HelperUtils.responseSuccess();
+    }catch (e) {
+      return HelperUtils.responseErrorInternal(e);
     }
   }
 }

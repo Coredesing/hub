@@ -163,12 +163,15 @@ const usePoolDepositAction = ({ poolAddress, poolId, purchasableCurrency, amount
         setSignature("");
         setTokenDepositTransaction(transaction.hash);
         dispatch(alertWarning("Request is processing!"));
-        await transaction.wait(1);
-
-        dispatch(alertSuccess("Request is completed!"));
+        const result = await transaction.wait(1);
         setTokenDepositLoading(false);
-        setTokenDepositSuccess(true);
-
+        if (+result?.status === 1) {
+          dispatch(alertSuccess("Request is completed!"));
+          setTokenDepositSuccess(true);
+        } else {
+          dispatch(alertFailure("Request Failed"));
+          setTokenDepositSuccess(false);
+        }
       }
     } catch (err) {
       console.log('[ERROR] - depositWithSignature:', err);

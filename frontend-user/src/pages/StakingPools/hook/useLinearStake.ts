@@ -42,7 +42,7 @@ const useLinearStake = (
               setTokenStakeLoading(false);
              }
            }
-      } catch (err) {
+      } catch (err: any) {
         console.log('[ERROR] - useLinearStake:', err);
         dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
         setTokenStakeLoading(false);

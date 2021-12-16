@@ -41,7 +41,7 @@ const useAllocClaimPendingWithdraw = (
               setLoading(false);
              }
            }
-      } catch (err) {
+      } catch (err: any) {
         console.log('[ERROR] - allocClaimPendingWithdraw:', err);
         dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
         setLoading(false);

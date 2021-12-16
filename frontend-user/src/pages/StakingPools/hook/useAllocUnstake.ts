@@ -42,7 +42,7 @@ const useAllocUnstake = (
               setTokenUnstakeLoading(false);
              }
            }
-      } catch (err) {
+      } catch (err: any) {
         console.log('[ERROR] - useAllocUnstake:', err);
         dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
         setTokenUnstakeLoading(false);

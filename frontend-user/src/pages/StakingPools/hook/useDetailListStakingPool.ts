@@ -130,7 +130,7 @@ const useDetailListStakingPool = (
       setAllocPools(allocs);
       setLinearPools(linears);
       setLoading(false);
-    } catch (err) {
+    } catch (err: any) {
       console.log('[ERROR] - useTokenAllowance:', err);
       setLoading(false);
       // throw new Error(err.message);

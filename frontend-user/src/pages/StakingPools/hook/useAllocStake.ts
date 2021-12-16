@@ -42,7 +42,7 @@ const useAllocStake = (
               setTokenStakeLoading(false);
              }
            }
-      } catch (err) {
+      } catch (err: any) {
         console.log('[ERROR] - useAllocStake:', err);
         dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
         setTokenStakeLoading(false);

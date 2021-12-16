@@ -41,7 +41,7 @@ const useLinearClaim = (
               setTokenClaimLoading(false);
              }
            }
-      } catch (err) {
+      } catch (err: any) {
         console.log('[ERROR] - useLinearClaim:', err);
         dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
         setTokenClaimLoading(false);

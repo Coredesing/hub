@@ -12,7 +12,7 @@ export const requestSupportNetwork = async (chainId: string, walletName: string)
             method: 'wallet_switchEthereumChain',
             params: [{ chainId: networkInfo.details?.chainId }],
           });
-        } catch (error) {
+        } catch (error: any) {
           // This error code indicates that the chain has not been added to MetaMask.
           if (error.code === 4902) {
             try {
@@ -35,7 +35,7 @@ export const requestSupportNetwork = async (chainId: string, walletName: string)
     }
 
       return true
-    } catch (error) {
+    } catch (error: any) {
       console.log(error.message);
       return false;
     }

@@ -41,7 +41,7 @@ const useAllocClaim = (
               setTokenClaimLoading(false);
              }
            }
-      } catch (err) {
+      } catch (err: any) {
         console.log('[ERROR] - useAllocClaim:', err);
         dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
         setTokenClaimLoading(false);

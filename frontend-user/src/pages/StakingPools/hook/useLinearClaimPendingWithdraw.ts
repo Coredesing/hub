@@ -41,7 +41,7 @@ const useLinearClaimPendingWithdraw = (
               setLoading(false);
              }
            }
-      } catch (err) {
+      } catch (err: any) {
         console.log('[ERROR] - linearClaimPendingWithdraw:', err);
         dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
         setLoading(false);

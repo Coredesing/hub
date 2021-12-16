@@ -151,11 +151,11 @@ const CardActive = (props: any): JSX.Element => {
             <h3 className={styles.title}>{pool.title}</h3>
           </Tooltip>
           {
-            {
+            pool?.network_available ? {
               'eth': <img className={styles.iconCoin} src={EthereumIcon} alt=""/>,
               'bsc': <img className={styles.iconCoin} src={BSCIcon} alt=""/>,
               'polygon': <img className={styles.iconCoin} src={PolygonIcon} alt=""/>,
-            }[`${pool?.network_available}`] || <img className={styles.iconCoin} src={EthereumIcon} alt=""/>
+            } : <img className={styles.iconCoin} src={EthereumIcon} alt=""/>
           }
         </div>
 

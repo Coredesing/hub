@@ -73,7 +73,7 @@ const useTokenClaim = (poolAddress: string | undefined, poolId: number | undefin
            setClaimTokenLoading(false);
            dispatch(alertSuccess("Token Claim Successful"));
          }
-      } catch (err) {
+      } catch (err: any) {
         dispatch(alertFailure(err.message));
         setClaimTokenLoading(false);
         setClaimError(err.message);
@@ -92,7 +92,7 @@ const useTokenClaim = (poolAddress: string | undefined, poolId: number | undefin
         setClaimTokenSuccess(false);
 
         await signMessage();
-      } catch (err) {
+      } catch (err: any) {
         dispatch(alertFailure(err.message));
         setClaimTokenLoading(false);
         setClaimError(err.message);

@@ -156,7 +156,7 @@ function BannerNotification(props: any) {
             <path d="M10 8.75L11.2446 7.29703C11.6487 6.82517 12.217 6.5245 12.8345 6.45589L12.87 6.45195C13.3996 6.39391 13.8978 6.17157 14.2947 5.8161C14.6916 5.46063 14.9673 4.98985 15.0831 4.46979V4.46978C15.1523 4.15827 15.3053 3.87157 15.5255 3.64062C15.7457 3.40966 16.0248 3.24323 16.3327 3.15926L18.75 2.5L19.0625 3.75L17.3726 4.12553C17.0389 4.19969 16.734 4.36952 16.4952 4.61424C16.2564 4.85896 16.0942 5.16796 16.0282 5.50344L16.0194 5.54859C15.9085 6.11265 15.619 6.62606 15.1938 7.01291C14.7686 7.39975 14.2301 7.63949 13.6581 7.69669L13.6212 7.70038C12.9035 7.77041 12.2424 8.12036 11.7809 8.67442C11.3713 9.16689 10.9375 9.6875 10.9375 9.6875L10 8.75Z" fill="#FB6A83" />
           </svg>
           <p>
-            You have successfully applied the whitelist {solanaAddress && <span>with solana address: {solanaAddress}</span>}. Please stay tuned for the winner announcement on {momentTimezone.tz(announcementTime, moment.tz.guess()).format("dddd, MMMM DD, YYYY")}.
+            You have successfully applied the whitelist {solanaAddress && <span>with Solana wallet address: {solanaAddress}</span>}. Please stay tuned for the winner announcement on {momentTimezone.tz(announcementTime, moment.tz.guess()).format("dddd, MMMM DD, YYYY")}.
           </p>
 
       </div>

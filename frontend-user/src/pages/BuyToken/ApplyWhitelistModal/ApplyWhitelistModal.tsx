@@ -280,7 +280,7 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
   return (
     <Dialog open fullWidth={true} maxWidth={'md'} className={styles.socialDialog}>
       <DialogTitle id="customized-dialog-title" onClose={handleClose} customClass={styles.dialogTitle} >
-        Welcome to {poolDetails?.title} IGO on GameFi
+        Welcome to {poolDetails?.title} on GameFi
       </DialogTitle>
       <DialogContent>
         <div>

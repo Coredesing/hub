@@ -98,10 +98,10 @@ const StakingHeader = (props: any) => {
               All
             </option>
             <option value="ido-only">
-              With IDO
+              With IGO
             </option>
             <option value="reward-only">
-              Without IDO
+              Without IGO
             </option>
           </select>
         </div> */}

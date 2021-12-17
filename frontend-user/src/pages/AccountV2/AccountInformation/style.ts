@@ -234,6 +234,8 @@ const useStyles = makeStyles((theme: any) => {
 
     solanaGroup: {
       display: 'flex',
+      alignItems: 'center',
+      verticalAlign: 'middle',
       '& div' : {
         '& span': {
           fontSize: 13

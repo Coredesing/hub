@@ -230,7 +230,7 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
     // @ts-ignore
     const provider = window.solana
     if (!provider) {
-      dispatch(alertFailure('Phantom extension not installed'))
+      dispatch(alertFailure('No phantom wallet found!'))
       return
     }
     let connectWallet = await provider.connect()
@@ -252,7 +252,7 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
     // @ts-ignore
     const provider = window?.solana
     if (!provider) {
-      dispatch(alertFailure('Phantom extension is not installed!'))
+      dispatch(alertFailure('No phantom wallet found!'))
       return
     }
     try {
@@ -280,7 +280,7 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
   return (
     <Dialog open fullWidth={true} maxWidth={'md'} className={styles.socialDialog}>
       <DialogTitle id="customized-dialog-title" onClose={handleClose} customClass={styles.dialogTitle} >
-        Welcome to {poolDetails?.title} IDO on GameFi
+        Welcome to {poolDetails?.title} IGO on GameFi
       </DialogTitle>
       <DialogContent>
         <div>
@@ -305,7 +305,7 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
                     <a target="_blank" rel="noopener noreferrer"
                       className={styles.socialAnchorlink}
                       href={poolDetails?.socialRequirement?.self_retweet_post}>
-                      {poolDetails?.title} IDO announcement
+                      {poolDetails?.title} IGO announcement
                     </a> on GameFi’s Twitter
                     {
                       poolDetails?.socialRequirement?.self_retweet_post_hashtag &&
@@ -329,7 +329,7 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
                     <a target="_blank" rel="noopener noreferrer"
                       className={styles.socialAnchorlink}
                       href={poolDetails?.socialRequirement?.partner_retweet_post}>
-                      {poolDetails?.title} IDO announcement
+                      {poolDetails?.title} IGO announcement
                     </a> on {poolDetails?.title}’s Twitter
                     {
                       poolDetails?.socialRequirement?.partner_retweet_post_hashtag &&
@@ -370,7 +370,7 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
             </div>
             { poolDetails.airdropNetwork === 'solana' &&
             <div className="input-group d-block">
-              <div className="label">Your Solana Wallet Address (will receive the airdrop) <span style={{color: '#D01F36'}}>*</span><div style={{float:"right"}}><a href="https://phantom.app/" style={{color: '#6398FF'}}>Get Phantom extension?</a></div></div>
+              <div className="label">Your Solana Wallet Address (will receive the airdrop) <span style={{color: '#D01F36'}}>*</span><div style={{float:"right"}}><a href="https://phantom.app/" target="_blank" rel="noreferrer" style={{color: '#6398FF'}}>Get Phantom extension?</a></div></div>
               {
                 alreadyJoinPool || joinPoolSuccess ? (
                   <div>

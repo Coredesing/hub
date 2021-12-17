@@ -311,7 +311,7 @@ const AccountInformation = (props: any) => {
 
             <div className={styles.inputGroup}>
              {/* TODO: update solana */}
-            <span>Solana Wallet Address<br/>(Optional)</span>
+            <span>Solana Wallet Address</span>
             {
             connectedAccount &&
              <>

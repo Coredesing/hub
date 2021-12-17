@@ -31,7 +31,7 @@ const FooterDefaultLayout = () => {
               <a className={styles.link} href="/">About</a>
             </li>
             <li>
-              <a className={styles.link} href="/">Apply for IDO</a>
+              <a className={styles.link} href="/">Apply for IGO</a>
             </li>
           </ul>
         </div>

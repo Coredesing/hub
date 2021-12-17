@@ -6,7 +6,7 @@ function WhiteListGuideText(props: any) {
   return (
     <>
       <p style={{ paddingBottom: 10, color: '#FFFFFF' }}>
-        In order to participate in the IDO, you must fullfil requirements as below. 
+        In order to participate in the IGO, you must fullfil requirements as below. 
       </p>
       <div className={styles.whitelistContentModal}>
         <p>

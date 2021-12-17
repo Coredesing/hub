@@ -1,6 +1,6 @@
 export const partnerships = [
     {
-        banner: "/images/partnerships/kaby-arena.png",
+        banner: "https://imgur.com/YmIeppP.png",
         name: "Kaby Arena",
         website: "https://kabyarena.com/",
     },
@@ -162,7 +162,7 @@ export const partnerships = [
     {
         banner: "https://imgur.com/pZzh6By.png",
         name: "Chimeras",
-        website: "https://dinox.io/",
+        website: "https://chimeras.io/",
     },
     {
         banner: "https://imgur.com/kaahNTu.png",

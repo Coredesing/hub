@@ -540,7 +540,7 @@ const Home = (props: any) => {
                     </div>
                     <div className="sub-item">
                       <span className="label">
-                        IDO Price:
+                        IGO Price:
                       </span>
                       <span className="bold">
                         ${performanceData?.gamefi?.ido_price || 'N/A'}
@@ -550,7 +550,7 @@ const Home = (props: any) => {
                   <div className="item roi foundation">
                     <div className="sub-item">
                       <span className="label">
-                        IDO ROI:
+                        IGO ROI:
                       </span>
                       <span className="bold">
                         {numberWithCommas(performanceData?.gamefi?.ido_roi, 3)}x
@@ -666,11 +666,11 @@ const Home = (props: any) => {
                                 : null
                             }
                           >
-                            IDO ROI
+                            IGO ROI
                           </TableSortLabel>
                         </TableCell>
-                        {/* <TableCell>ATH IDO ROI</TableCell>
-                        <TableCell>IDO Date</TableCell>
+                        {/* <TableCell>ATH IGO ROI</TableCell>
+                        <TableCell>IGO Date</TableCell>
                         <TableCell onClick={() => onSortListPerfomance("ath")}>
                           <TableSortLabel
                             order={

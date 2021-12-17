@@ -332,8 +332,8 @@ const AllocationPool = (props: any) => {
           <div className={styles.textSecondary + ' mobile-hidden'}>
             {
               poolDetail?.rkp_rate > 0 ? 
-              <span>With IDO</span> : 
-              <span style={{color: '#D0AA4D'}}>Without IDO</span>
+              <span>With IGO</span> : 
+              <span style={{color: '#D0AA4D'}}>Without IGO</span>
             }
           </div>
         </div>

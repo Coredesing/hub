@@ -96,7 +96,7 @@ const Collections: React.FC<any> = (props: any) => {
                                             /></TableCell>
                                             <TableCell style={{display: 'flex'}}>
                                                 <Button text={'Edit'}
-                                                    to={adminRoute('/collections/' + item.id)}
+                                                    to={adminRoute(`/collections/${item.id}?edit=true`)}
                                                     className={classes.editButton}
                                                 />
                                                 <button

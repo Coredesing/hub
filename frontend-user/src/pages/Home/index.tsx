@@ -29,6 +29,7 @@ import { getCountdownInfo } from "@pages/MysteryBoxes/utils";
 import { SearchBox } from "@base-components/SearchBox";
 import { numberWithCommas } from "@utils/formatNumber";
 import CountDownTimeV1 from "@base-components/CountDownTime";
+import { partnerships } from "./constant";
 const readableNumber = require("readable-numbers");
 
 type Data = { [k: string]: any };
@@ -89,39 +90,6 @@ const Home = (props: any) => {
 
   const { data: performanceData = {} as ObjectType<any>, loading: loadingcompletePools } =
     useFetchV1("/home/performances");
-
-  const partnerships = [
-    {
-      banner: "/images/partnerships/kaby-arena.png",
-      name: "Kaby Arena",
-      website: "https://kabyarena.com/",
-    },
-    // {
-    //   banner: "/images/partnerships/bunicorn.png",
-    //   name: "Bunicorn",
-    //   website: "https://buni.finance/",
-    // },
-    {
-      banner: "/images/partnerships/mechmaster.png",
-      name: "Mech Master",
-      website: "https://mechmaster.io/",
-    },
-    {
-      banner: "/images/partnerships/deathroad.jpg",
-      name: "Death Road",
-      website: "https://deathroad.io/",
-    },
-    {
-      banner: "/images/partnerships/heroverse.png",
-      name: "Heroverse",
-      website: "https://heroverse.io/",
-    },
-    {
-      banner: "/images/partnerships/darkfrontier.png",
-      name: "Dark Frontier",
-      website: "https://www.darkfrontiers.com/",
-    },
-  ];
 
   const [isShowImgBanner, setIsShowImgModal] = useState(true);
   const onCloseImgBanner = () => {
@@ -268,7 +236,7 @@ const Home = (props: any) => {
 
         <div className={styles.subBanners}>
           {
-            !countdownTime.isFinish && isShowSubBanner && 
+            !countdownTime.isFinish && isShowSubBanner &&
             <div className="item">
               <button className="btn-close" onClick={onCloseSubBanner}>
                 <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -285,7 +253,7 @@ const Home = (props: any) => {
             </div>
           }
           {
-            countdownTime.isFinish && isShowSubBanner && 
+            countdownTime.isFinish && isShowSubBanner &&
             <div className="item">
               <button className="btn-close" onClick={onCloseSubBanner}>
                 <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">

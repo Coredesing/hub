@@ -790,9 +790,9 @@ export const useCardStyles = makeStyles((theme) => ({
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, 201px)",
     placeContent: "center",
-    gap: "80px",
+    gap: "20px",
     [theme.breakpoints.down("sm")]: {
-      gap: "40px",
+      gap: "20px",
     },
     [theme.breakpoints.down("xs")]: {
       gap: "7px",

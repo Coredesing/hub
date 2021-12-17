@@ -157,7 +157,7 @@ const ApplyWhitelistModal: React.FC<any> = (props: any) => {
   const [ solanaAddress, setSolanaAddress] = useState();
   console.log(dataUser)
   useEffect(() => {
-    setSolanaAddress(whitelistSubmission?.solana_address)
+    whitelistSubmission?.solana_address ? setSolanaAddress(whitelistSubmission?.solana_address) : setSolanaAddress(dataUser?.user?.solana_address)
   },[dataUser])
 
   useEffect(() => {

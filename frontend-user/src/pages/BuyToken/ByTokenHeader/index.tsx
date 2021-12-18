@@ -178,7 +178,7 @@ const HeaderByToken: FC<Props> = ({ poolDetailsMapping, poolDetails, solanaAddre
                   src="/images/icons/solana-logo.svg"
                   alt=""
               />
-              Airdrop on Solana {solanaAddress && <>(<span style={{ fontWeight: '700', color: '#72F34B' }}>{shortWallet(solanaAddress)}</span>)</>}
+              Airdrop on Solana {solanaAddress && <>(<span style={{ color: '#72F34B' }}>{shortWallet(solanaAddress)}</span>)</>}
             </li>
         )}
       </ul>

@@ -802,7 +802,9 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
     }
   }
 
-  if (releaseTime && today > releaseTime.getTime()) {
+  if (releaseTime && endBuyTime &&
+    endBuyTime.getTime() < releaseTime.getTime() &&
+    today > releaseTime.getTime()) {
     return {
       status: PoolStatus.ENDED,
       tokenSold: tokenSold

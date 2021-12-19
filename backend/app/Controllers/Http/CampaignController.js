@@ -10,6 +10,7 @@ const WhitelistService = use('App/Services/WhitelistUserService');
 const WhitelistSubmissionService = use('App/Services/WhitelistSubmissionService');
 const CampaignClaimConfigService = use('App/Services/CampaignClaimConfigService');
 const ReCaptchaService = use("App/Services/ReCaptchaService");
+const RedisUserUtils = use('App/Common/RedisUserUtils');
 const bs58 = require('bs58');
 const nacl = require('tweetnacl');
 
@@ -155,7 +156,6 @@ class CampaignController {
 
       if (!camp.kyc_bypass) {
         // get user info
-
         if (!user || !user.email) {
           return HelperUtils.responseBadRequest("User not found");
         }
@@ -182,9 +182,11 @@ class CampaignController {
         if (!!checkAddress && checkAddress?.wallet_address !== wallet_address) {
           return HelperUtils.responseBadRequest('Duplicate solana address with another user!');
         }
-        if (user.solana_address !== solana_address) {
+
+        if (user && user.solana_address !== solana_address) {
           user.solana_address = solana_address
           await user.save()
+          await RedisUserUtils.deleteRedisUserProfile(wallet_address)
         }
       }
 
@@ -691,7 +693,6 @@ class CampaignController {
       return HelperUtils.responseErrorInternal();
     }
   }
-
 }
 
 module.exports = CampaignController;

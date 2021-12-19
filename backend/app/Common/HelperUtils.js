@@ -707,12 +707,6 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
   const firstClaimConfig = () => {
     return getFirstClaimConfig(poolDetails);
   };
-  const lastClaimConfig = () => {
-    return getLastClaimConfig(poolDetails);
-  };
-  const lastClaimConfigTime = () => {
-    return getLastClaimConfigTime(poolDetails);
-  };
 
   const startBuyTimeField = () => {
     return poolDetails.start_time;
@@ -734,27 +728,13 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
     }
     return releaseTime;
   };
-  const amountField = () => {
-    return poolDetails.total_sold_coin;
-  };
-
-  const poolTypeField = () => {
-    return poolDetails.pool_type;
-  };
-  const buyTypeField = () => {
-    return poolDetails.buy_type;
-  };
 
   const startBuyTime = startBuyTimeField() ? new Date(Number(startBuyTimeField()) * 1000) : undefined;
   const endBuyTime = endBuyTimeField() ? new Date(Number(endBuyTimeField()) * 1000) : undefined;
   const startJoinTime = startJoinTimeField() ? new Date(Number(startJoinTimeField()) * 1000) : undefined;
   const endJoinTime = endJoinTimeField() ? new Date(Number(endJoinTimeField()) * 1000) : undefined;
   const releaseTime = releaseTimeField() ? new Date(Number(releaseTimeField()) * 1000) : undefined;
-  const isClaimable = poolTypeField() !== Const.POOL_TYPE.SWAP;
-  const buyType = buyTypeField();
 
-  // const soldProgress = new BigNumber(tokenSold).div(amountField() || 1).toFixed();
-  // const soldProgress = new BigNumber(tokenSold).div(amountField() || 1).multipliedBy(100).toFixed();
   let data = getProgressWithPools({
     ...poolDetails,
     tokenSold: tokenSold || poolDetails.tokenSold || poolDetails.token_sold || '0',
@@ -764,22 +744,18 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
   const soldProgress = data.progress
   const today = new Date().getTime()
 
-  // Check TBA Status
-  if ((!startJoinTime || !endJoinTime) && buyType === Const.BUY_TYPE.WHITELIST_LOTTERY) {
+  if (!startJoinTime || !endJoinTime) {
     return {
       status: PoolStatus.TBA,
       tokenSold: tokenSold
     }
   }
 
-  if ((!startBuyTime || !endBuyTime) && buyType === Const.BUY_TYPE.FCFS) {
-    return {
-      status: PoolStatus.TBA,
-      tokenSold: tokenSold
-    }
-  }
-
-  // Check Upcoming Status
+  // Upcoming in case:
+  // today < startJoin: wait for whitelist
+  // today < endJoin: in whitelist phase
+  // today < startBuy: wait for buying
+  // buying time: TBA
   if (startJoinTime && today < startJoinTime.getTime()) {
     return {
       status: PoolStatus.UPCOMING,
@@ -787,67 +763,34 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
     }
   }
 
-  // exist start_join_time
-  // but don't exist start_buy_time
-  if (startJoinTime && !startBuyTime) {
+  if (endJoinTime && today < endJoinTime.getTime()) {
     return {
       status: PoolStatus.UPCOMING,
       tokenSold: tokenSold
     }
   }
 
-  // or current time < start buy time
   if (startBuyTime && today < startBuyTime.getTime()) {
     return {
       status: PoolStatus.UPCOMING,
       tokenSold: tokenSold
     }
   }
-  if (startJoinTime && endJoinTime && today > startJoinTime.getTime() && today < endJoinTime.getTime()) {
-    return {
-      status: PoolStatus.UPCOMING,
-      tokenSold: tokenSold
-    }
-  }
-  if (endJoinTime && startBuyTime && today > endJoinTime.getTime() && today < startBuyTime.getTime()) {
+
+  if (!startBuyTime || !endBuyTime) {
     return {
       status: PoolStatus.UPCOMING,
       tokenSold: tokenSold
     }
   }
 
-  // Check Claimable Status
-  const lastClaimTime = lastClaimConfigTime();
-  if (!lastClaimTime && poolDetails.process && poolDetails.process === Const.PROCESS.ONLY_CLAIM) {
+  // Close in case:
+  // today > endBuyTime: wait to claim
+  // today > releaseTime:
+  // Full pool:
+  if (endBuyTime && today > endBuyTime.getTime()) {
     return {
-      status: PoolStatus.FILLED,
-      tokenSold: tokenSold
-    }
-  }
-
-  if (
-    isClaimable &&
-    releaseTime && lastClaimTime &&
-    releaseTime.getTime() <= today && today < (lastClaimTime * 1000)
-  ) {
-    if (poolDetails.process && poolDetails.process === Const.PROCESS.ONLY_CLAIM) {
-      return {
-        status: PoolStatus.FILLED,
-        tokenSold: tokenSold
-      }
-    }
-
-    return {
-      status: PoolStatus.CLAIMABLE,
-      tokenSold: tokenSold
-    }
-  }
-
-  const actualFinishTime = getLastActualFinishTime(poolDetails);
-  const now = moment().unix();
-  if (actualFinishTime && actualFinishTime < now) {
-    return {
-      status: PoolStatus.CLOSED,
+      status: PoolStatus.ENDED,
       tokenSold: tokenSold
     }
   }
@@ -859,34 +802,15 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
     }
   }
 
-  if (releaseTime && actualFinishTime && actualFinishTime > now) {
-    // Check Filled Status
-    // if (new BigNumber(soldProgress || 0).gte(99)) { // soldProgress >=99
-    //   return PoolStatus.FILLED;
-    // }
-    if (
-      endBuyTime &&
-      endBuyTime.getTime() <= today && today < releaseTime.getTime()
-    ) {
-      return {
-        status: PoolStatus.FILLED,
-        tokenSold: tokenSold
-      }
-    }
-
-    // Check Progress Status
-    if (
-      releaseTime && today < releaseTime.getTime()
-    ) {
-      return {
-        status: PoolStatus.SWAP, // In Progress
-        tokenSold: tokenSold
-      }
+  if (releaseTime && today > releaseTime.getTime()) {
+    return {
+      status: PoolStatus.ENDED,
+      tokenSold: tokenSold
     }
   }
 
   return {
-    status: PoolStatus.CLOSED,
+    status: PoolStatus.SWAP,
     tokenSold: tokenSold
   }
 };

@@ -14,7 +14,7 @@ class HomeService {
       .fetch()
 
     pools = JSON.parse(JSON.stringify(pools))
-    pools = pools.filter((data) => data.tokenomic)
+    pools = pools.filter((data) => data.tokenomic && data.tokenomic.ticker)
     let specialItem = {}
 
     let result = pools.map((data) => {

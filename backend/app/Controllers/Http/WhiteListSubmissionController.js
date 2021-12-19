@@ -183,7 +183,6 @@ class WhiteListSubmissionController {
       return HelperUtils.responseBadRequest('Bad request with campaign_id');
     }
 
-    console.log('Submit social submission for campain with params: ', campaign_id, wallet_address);
     try {
       // check campaign
       const campaignService = new CampaignService();

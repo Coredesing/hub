@@ -53,7 +53,8 @@ const useStyles = makeStyles((theme: any) => {
     banner: {
       background: "#0A0A0A",
       paddingTop: "90px",
-      paddingBottom: "130px",
+      // paddingBottom: "130px",
+      paddingBottom: "60px",
       "& .large-text": {
         ...typeDisplayFlex,
         gap: "10px",

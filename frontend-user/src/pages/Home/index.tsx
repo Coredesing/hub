@@ -20,7 +20,7 @@ import {
   TableRowHead,
   TableSortLabel,
 } from "../../components/Base/Table";
-import { TOKEN_TYPE } from "../../constants";
+import { GATE_GAFI_SWAP_URL, KUCOIN_GAFI_SWAP_URL, LINK_SWAP_TOKEN, TOKEN_TYPE } from "../../constants";
 import Instruction from "./Instruction";
 import TicketSlide from "./TicketSlide";
 import MysteryBoxes from "./MysteryBoxes";
@@ -233,7 +233,7 @@ const Home = (props: any) => {
             </div>
           </div>
         )} */}
-
+        {/* 
         <div className={styles.subBanners}>
           {
             !countdownTime.isFinish && isShowSubBanner &&
@@ -277,10 +277,10 @@ const Home = (props: any) => {
               </div>
             </div>
           }
-        </div>
+        </div> */}
 
         <div
-          className={styles.wrapperContent}
+          className={clsx(styles.wrapperContent, styles.wrapperBannerContent)}
         // style={!isShowImgBanner ? { marginTop: -50 } : {}}
         >
           <div className={clsx(styles.bannerContent)}>
@@ -292,6 +292,22 @@ const Home = (props: any) => {
               <span className="launchpad">first IGO launchpad</span>, with tools
               to facilitate the success of games.
             </h4>
+          </div>
+          <div className={styles.buyLinksBanner}>
+            <div className="links">
+              {/* <Link>
+                Apply As A Project
+              </Link> */}
+              <Link href={LINK_SWAP_TOKEN} target="_blank">
+                Buy on Pancakeswap
+              </Link>
+              <Link href={KUCOIN_GAFI_SWAP_URL} target="_blank">
+                Buy on KuCoin
+              </Link>
+              <Link href={GATE_GAFI_SWAP_URL} target="_blank">
+                Buy on Gate.io
+              </Link>
+            </div>
           </div>
         </div>
       </section>

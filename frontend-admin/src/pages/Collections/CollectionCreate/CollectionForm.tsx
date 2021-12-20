@@ -5,7 +5,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Switch from "react-switch";
 import { createCollection, getCollectionDetail, updateCollection } from '../../../request/collections';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useStore } from 'react-redux';
 import { alertFailure, alertSuccess } from '../../../store/actions/alert';
 import { CircularProgress } from '@material-ui/core';
 
@@ -35,7 +35,6 @@ const GameInformation: React.FC<any> = (props: any) => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-      console.log(isEdit)
         if (!isEdit) {
             return
         }
@@ -49,7 +48,6 @@ const GameInformation: React.FC<any> = (props: any) => {
           const data = res.data;
 
           setCollectionInfo(data);
-          console.log(collectionInfo)
 
           return res.data;
         })
@@ -97,7 +95,7 @@ const GameInformation: React.FC<any> = (props: any) => {
         'link', 'image'
     ]
 
-    const handleGameCreateUpdate = async () => {
+    const handleCollectionCreateUpdate = async () => {
       setLoading(true)
       if (!isEdit) {
         await createCollection(collectionInfo).then(res => {
@@ -208,9 +206,9 @@ const GameInformation: React.FC<any> = (props: any) => {
       setCollectionInfo(newData)
     }
     const onChangeDescription = (event: any) => {
-      console.log('des', event)
       let newData = {...collectionInfo}
       newData.description = event?.target?.value
+      console.log(event?.target?.value)
       setCollectionInfo(newData)
     }
     return (
@@ -371,23 +369,14 @@ const GameInformation: React.FC<any> = (props: any) => {
                     </div>
 
                     <div className={classes.formControlFull}>
-                        <label className={classes.formControlLabel}>Description</label>
-                        <ReactQuill
-                            className={classes.textEditor}
-                            theme="snow"
-                            value={collectionInfo?.description ? collectionInfo.description : ''}
-                            onChange={onChangeDescription}
-                            modules={modules}
-                            formats={formats}
-                            placeholder={'Enter description for the collection'}
-
-                        />
+                        <label className={classes.formControlLabel} defaultValue={collectionInfo?.description} onChange={onChangeDescription}>Description</label>
+                        <textarea className={classes.formControlInput} rows={5} defaultValue={collectionInfo?.description} onChange={onChangeDescription}></textarea>
                     </div>
                 </div>
                 <button
                   disabled={loading}
                   className={classes.formButtonUpdatePool}
-                  onClick={handleGameCreateUpdate}
+                  onClick={handleCollectionCreateUpdate}
                 >
                     {
                         (loading) ? <CircularProgress size={25} /> : (isEdit ? 'Update' : 'Create')

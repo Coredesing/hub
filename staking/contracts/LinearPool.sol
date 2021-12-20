@@ -95,6 +95,7 @@ contract LinearPool is
         uint128 updatedTime;
         uint128 reward;
         uint256 exp;
+        uint128 lastWithdrawalTime;
     }
 
     struct LinearPendingWithdrawal {
@@ -409,6 +410,7 @@ contract LinearPool is
 
         if (delayDuration == 0) {
             linearAcceptedToken.safeTransfer(account, _amount);
+            stakingData.lastWithdrawalTime = block.timestamp.toUint128();
             emit LinearWithdraw(_poolId, account, _amount);
             return;
         }
@@ -422,6 +424,25 @@ contract LinearPool is
     }
 
     /**
+     * @notice Withdraw token from a pool
+     * @param _poolId id of the pool
+     * @param _amount amount to withdraw
+     */
+    function linearReStake(uint256 _poolId)
+    external
+    nonReentrant
+    linearValidatePoolById(_poolId)
+    {
+        address account = msg.sender;
+        LinearPendingWithdrawal storage pending = linearPendingWithdrawals[_poolId][account];
+        require(pending.amount > 0, "LinearStakingPool: nothing is currently pending");
+
+        _linearDeposit(_poolId, pending.amount, account);
+
+        delete linearPendingWithdrawals[_poolId][account];
+    }
+
+    /**
      * @notice Claim pending withdrawal
      * @param _poolId id of the pool
      */
@@ -431,9 +452,9 @@ contract LinearPool is
         linearValidatePoolById(_poolId)
     {
         address account = msg.sender;
-        LinearPendingWithdrawal storage pending = linearPendingWithdrawals[
-            _poolId
-        ][account];
+        LinearPendingWithdrawal storage pending = linearPendingWithdrawals[_poolId][account];
+        LinearStakingData storage stakingData = linearStakingData[_poolId][account];
+
         uint128 amount = pending.amount;
         require(amount > 0, "LinearStakingPool: nothing is currently pending");
         require(
@@ -442,6 +463,8 @@ contract LinearPool is
         );
         delete linearPendingWithdrawals[_poolId][account];
         linearAcceptedToken.safeTransfer(account, amount);
+        stakingData.lastWithdrawalTime = block.timestamp.toUint128();
+
         emit LinearWithdraw(_poolId, account, amount);
     }
 

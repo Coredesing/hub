@@ -3,6 +3,7 @@
 const HelperUtils = use('App/Common/HelperUtils');
 const MarketplaceService = use('App/Services/MarketplaceService');
 const MarketplaceCollections = use('App/Models/MarketplaceCollections');
+const RedisMarketplaceUtils = use('App/Common/RedisMarketplaceUtils');
 
 class MarketplaceController {
   async getCollections({ request }) {

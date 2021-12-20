@@ -426,7 +426,6 @@ contract LinearPool is
     /**
      * @notice Withdraw token from a pool
      * @param _poolId id of the pool
-     * @param _amount amount to withdraw
      */
     function linearReStake(uint256 _poolId)
     external
@@ -453,7 +452,6 @@ contract LinearPool is
     {
         address account = msg.sender;
         LinearPendingWithdrawal storage pending = linearPendingWithdrawals[_poolId][account];
-        LinearStakingData storage stakingData = linearStakingData[_poolId][account];
 
         uint128 amount = pending.amount;
         require(amount > 0, "LinearStakingPool: nothing is currently pending");
@@ -463,7 +461,7 @@ contract LinearPool is
         );
         delete linearPendingWithdrawals[_poolId][account];
         linearAcceptedToken.safeTransfer(account, amount);
-        stakingData.lastWithdrawalTime = block.timestamp.toUint128();
+        linearStakingData[_poolId][account].lastWithdrawalTime = block.timestamp.toUint128();
 
         emit LinearWithdraw(_poolId, account, amount);
     }
@@ -555,21 +553,6 @@ contract LinearPool is
     }
 
     /**
-     * @notice Gets number of deposited tokens in a pool
-     * @param _poolId id of the pool
-     * @param _account address of a user
-     * @return total token deposited in a pool by a user
-     */
-    function linearExpOf(uint256 _poolId, address _account)
-        external
-        view
-        linearValidatePoolById(_poolId)
-        returns (uint256)
-    {
-        return linearStakingData[_poolId][_account].exp;
-    }
-
-    /**
      * @notice Gets the delay duration in a pool by a user
      * @param _poolId id of the pool
      * @param _account address of a user
@@ -624,35 +607,35 @@ contract LinearPool is
      * @notice Withdraw without caring about rewards. EMERGENCY ONLY.
      * @param _poolId id of the pool
      */
-    function linearEmergencyWithdraw(uint256 _poolId)
-        external
-        nonReentrant
-        linearValidatePoolById(_poolId)
-    {
-        require(
-            linearAllowEmergencyWithdraw,
-            "LinearStakingPool: emergency withdrawal is not allowed yet"
-        );
-
-        address account = msg.sender;
-        LinearStakingData storage stakingData = linearStakingData[_poolId][
-            account
-        ];
-
-        require(
-            stakingData.balance > 0,
-            "LinearStakingPool: nothing to withdraw"
-        );
-
-        uint128 amount = stakingData.balance;
-
-        stakingData.balance = 0;
-        stakingData.reward = 0;
-        stakingData.updatedTime = block.timestamp.toUint128();
-
-        linearAcceptedToken.safeTransfer(account, amount);
-        emit LinearEmergencyWithdraw(_poolId, account, amount);
-    }
+//    function linearEmergencyWithdraw(uint256 _poolId)
+//        external
+//        nonReentrant
+//        linearValidatePoolById(_poolId)
+//    {
+//        require(
+//            linearAllowEmergencyWithdraw,
+//            "LinearStakingPool: emergency withdrawal is not allowed yet"
+//        );
+//
+//        address account = msg.sender;
+//        LinearStakingData storage stakingData = linearStakingData[_poolId][
+//            account
+//        ];
+//
+//        require(
+//            stakingData.balance > 0,
+//            "LinearStakingPool: nothing to withdraw"
+//        );
+//
+//        uint128 amount = stakingData.balance;
+//
+//        stakingData.balance = 0;
+//        stakingData.reward = 0;
+//        stakingData.updatedTime = block.timestamp.toUint128();
+//
+//        linearAcceptedToken.safeTransfer(account, amount);
+//        emit LinearEmergencyWithdraw(_poolId, account, amount);
+//    }
 
     function _linearDeposit(
         uint256 _poolId,

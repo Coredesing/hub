@@ -7,6 +7,7 @@ import { TRANSACTION_ERROR_MESSAGE } from '../../../constants/alert';
 import { alertSuccess, alertFailure } from '../../../store/actions/alert';
 import { getContract } from '../../../utils/contract';
 import STAKING_POOL_ABI from '../../../abi/StakingPool.json';
+import { handleErrMsg } from '../utils';
 
 const useReStake = (
   poolAddress: string | null | undefined,
@@ -41,7 +42,7 @@ const useReStake = (
       }
     } catch (err: any) {
       console.log('[ERROR] - Restake:', err);
-      dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
+      dispatch(alertFailure(handleErrMsg(err) || TRANSACTION_ERROR_MESSAGE));
       setReStakeLoading(false);
       throw new Error(err.message);
     }

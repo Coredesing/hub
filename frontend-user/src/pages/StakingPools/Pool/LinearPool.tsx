@@ -40,6 +40,7 @@ import clsx from 'clsx';
 import { Box } from '@material-ui/core';
 import STAKING_POOL_ABI from '@abi/StakingPool.json';
 import { getContractInstance, SmartContractMethod } from '@services/web3';
+import ModalPolicy from '../ModalPolicy';
 
 const ONE_DAY_IN_SECONDS = 86400;
 const ONE_YEAR_IN_SECONDS = '31536000';
@@ -70,6 +71,7 @@ const LinearPool = (props: any) => {
   const [showUnstakeModal, setShowUnstakeModal] = useState(false);
   const [unstakeAmount, setUnstakeAmount] = useState('0');
   const [showClaimModal, setShowClaimModal] = useState(false);
+  const [policyModal, setShowPolicyModal] = useState(false);
   // const [showSwitchModal, setShowSwitchModal] = useState(false);
 
   const { linearStakeToken, transactionHash: stakeTransactionHash } = useLinearStake(poolAddress, poolDetail?.pool_id, stakeAmount);
@@ -713,7 +715,7 @@ const LinearPool = (props: any) => {
                   BigNumber.from(poolDetail?.stakingAmount || '0').gt(BigNumber.from('0')) &&
                   <Button
                     text="Unstake"
-                    onClick={() => setShowUnstakeModal(true)}
+                    onClick={() => setShowPolicyModal(true)}
                     backgroundColor="#191920"
                     style={{
                       color: '#72F34B',
@@ -833,6 +835,10 @@ const LinearPool = (props: any) => {
         open={showUnstakeModal}
         onClose={() => setShowUnstakeModal(false)}
         onConfirm={handleUnstake}
+        onBack={() => {
+          setShowUnstakeModal(false)
+          setShowPolicyModal(true)
+        }}
       />
 
       <ModalClaim
@@ -858,6 +864,14 @@ const LinearPool = (props: any) => {
         rewardToken={tokenDetails}
         acceptedToken={tokenDetails}
         onClose={() => setShowROIModal(false)}
+      />
+      <ModalPolicy
+        open={policyModal}
+        onClose={() => setShowPolicyModal(false)}
+        onConfirm={() => {
+          setShowUnstakeModal(true);
+          setShowPolicyModal(false);
+        }}
       />
     </Accordion>
   )

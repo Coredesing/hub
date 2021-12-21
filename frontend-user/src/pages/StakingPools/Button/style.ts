@@ -34,8 +34,11 @@ const useStyles = makeStyles((theme: any) => {
       },
 
       '&:disabled': {
+        opacity: '.5',
+        background: '#5d5d5d !important',
+        color: '#dfdfdf !important',
         cursor: 'not-allowed !important',
-        opacity: .6
+        border: 'none !important'
       }
     }
   };

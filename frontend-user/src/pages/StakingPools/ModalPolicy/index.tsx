@@ -122,7 +122,7 @@ const ModalPolicy = (props: Props) => {
                 <ListItemText primary={<>
                   <span className='firs-neue-font font-14px'>
                     I have read full policy at&nbsp;
-                    <Link href="https://medium.com/gamefi-official/new-staking-and-unstaking-policy-updates-on-gamefi-launchpad-77c67c536627" target={"_blank"} className="text-green-imp bold">
+                    <Link onClick={(e) => {e.stopPropagation()}} href="https://medium.com/gamefi-official/new-staking-and-unstaking-policy-updates-on-gamefi-launchpad-77c67c536627" target={"_blank"} className="text-green-imp bold">
                       New staking policy
                     </Link>.
                   </span>

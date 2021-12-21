@@ -3,5 +3,5 @@ export const handleErrMsg = (err: any) => {
     if(message.includes('invalid new pool')) {
         return 'Cannot switch to this pool.';
     }
-    return '';
+    return err?.data?.message || err?.message || '';
 }

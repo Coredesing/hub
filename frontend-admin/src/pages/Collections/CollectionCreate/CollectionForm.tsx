@@ -7,7 +7,7 @@ import Switch from "react-switch";
 import { createCollection, getCollectionDetail, updateCollection } from '../../../request/collections';
 import { useDispatch, useStore } from 'react-redux';
 import { alertFailure, alertSuccess } from '../../../store/actions/alert';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@material-ui/core';
 
 const GameInformation: React.FC<any> = (props: any) => {
     const classes = useStyles();
@@ -208,13 +208,17 @@ const GameInformation: React.FC<any> = (props: any) => {
     const onChangeDescription = (event: any) => {
       let newData = {...collectionInfo}
       newData.description = event?.target?.value
-      console.log(event?.target?.value)
+      setCollectionInfo(newData)
+    }
+    const onChangeType = (event: any) => {
+      let newData = {...collectionInfo}
+      newData.type = event?.target?.value
       setCollectionInfo(newData)
     }
     return (
             <div className={classes.infoBox}>
                 <div className={classes.infoForm}>
-                    <div className={classes.formControlFullWidth}>
+                    <div className={classes.formControl}>
                         <label className={classes.formControlLabel}>Name of Collection</label>
                         <input
                             type="text"
@@ -223,6 +227,15 @@ const GameInformation: React.FC<any> = (props: any) => {
                             defaultValue={collectionInfo?.name}
                             className={classes.formControlInput}
                         />
+                    </div>
+                    <div className={classes.formControl}>
+                    <FormControl component="fieldset">
+                    <label className={classes.formControlLabel}>Type</label>
+                      <RadioGroup value={collectionInfo?.type} onChange={onChangeType} row aria-label="Type" name="row-radio-buttons-group">
+                        <FormControlLabel value="nft" control={<Radio />} label="NFT" />
+                        <FormControlLabel value="box" control={<Radio />} label="Box" />
+                      </RadioGroup>
+                    </FormControl>
                     </div>
 
                     <div className={classes.formControl}>

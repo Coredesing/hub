@@ -3,6 +3,7 @@
 const HelperUtils = use('App/Common/HelperUtils');
 const MarketplaceService = use('App/Services/MarketplaceService');
 const MarketplaceCollections = use('App/Models/MarketplaceCollections');
+const RedisMarketplaceUtils = use('App/Common/RedisMarketplaceUtils');
 
 class MarketplaceController {
   async getCollections({ request }) {
@@ -267,9 +268,6 @@ class MarketplaceController {
         return HelperUtils.responseNotFound();
       }
 
-      // if (collection && collection.slug) {
-      //   await RedisAggregatorUtils.deleteRedisAggregatorDetail(collection.slug)
-      // }
       return HelperUtils.responseSuccess(collection);
     } catch (e) {
       console.log(e);
@@ -305,8 +303,8 @@ class MarketplaceController {
       await MarketplaceCollections.query().where('id', id).update({
         is_show: inputParams.status,
       });
-
-      // await RedisStakingPoolUtils.deleteRedisStakingPoolsDetail()
+      
+      await RedisMarketplaceUtils.deleteRedisMarketplaceTopCollections()
       return HelperUtils.responseSuccess();
     } catch (e) {
       console.log(e)
@@ -319,9 +317,10 @@ class MarketplaceController {
       const collection = await MarketplaceCollections.findBy('id', request.params.id)
       if (collection) collection.delete()
 
-      // if (collection && collection.slug) {
-      //   await RedisAggregatorUtils.deleteRedisAggregatorDetail(collection.slug)
-      // }
+      if (collection && collection.slug) {
+        await RedisMarketplaceUtils.deleteRedisMarketplaceTopCollections()
+        await RedisMarketplaceUtils.deleteRedisMarketplaceCollectionDetail(params?.token_address)
+      }
       return HelperUtils.responseSuccess();
     }catch (e) {
       return HelperUtils.responseErrorInternal(e);

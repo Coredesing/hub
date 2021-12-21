@@ -338,6 +338,8 @@ class MarketplaceService {
 
     await collection.save();
     // delete cache here
+    await RedisMarketplaceUtils.deleteRedisMarketplaceTopCollections()
+    await RedisMarketplaceUtils.deleteRedisMarketplaceCollectionDetail(params?.token_address)
     return collection;
   }
 }

@@ -437,9 +437,13 @@ export const AboutMysteryBox = ({
       setShowModalTx(true);
       setTxHash(tx.hash);
       dispatch(alertWarning("Request is processing!"));
-      await tx.wait(1);
-      dispatch(alertSuccess("Request is completed!"));
-      handleRefreshCollection();
+      const result = await tx.wait(1);
+      if (+result?.status === 1) {
+        dispatch(alertSuccess("Request is completed!"));
+        handleRefreshCollection();
+      } else {
+        dispatch(alertFailure("Request Failed"));
+      }
     } catch (error: any) {
       console.error(error);
       dispatch(alertFailure(error?.data?.message || error.message));
@@ -457,9 +461,13 @@ export const AboutMysteryBox = ({
       setShowModalTx(true);
       setTxHash(tx.hash);
       dispatch(alertWarning("Request is processing!"));
-      await tx.wait(1);
-      dispatch(alertSuccess("Request is completed!"));
-      handleRefreshCollection();
+      const result = await tx.wait(1);
+      if (+result?.status === 1) {
+        dispatch(alertSuccess("Request is completed!"));
+        handleRefreshCollection();
+      } else {
+        dispatch(alertFailure("Request Failed"));
+      }
     } catch (error: any) {
       console.error(error);
       dispatch(alertFailure(error?.data?.message || error.message));
@@ -653,7 +661,7 @@ export const AboutMysteryBox = ({
                 onSelectBox(b)
               }} className={clsx("box", { active: currentBox.idCollection === b.idCollection })}>
                 <div className="img-box bg-black">
-                  <img src={b.icon} alt="" onError={(e: any) => {e.target.style.visibility = 'hidden'}} />
+                  <img src={b.icon} alt="" onError={(e: any) => { e.target.style.visibility = 'hidden' }} />
                 </div>
                 <div>
                   <span className="id-box">

@@ -313,7 +313,7 @@ const IdoPools = (props: any) => {
 
   return (
     <div className={styles.pageMyPools}>
-      <h2 className={styles.tabTitle}>IDO Pools</h2>
+      <h2 className={styles.tabTitle}>IGO Pools</h2>
       <div className={styles.tabHeader}>
         <div className="filter">
           {/* <SelectBox

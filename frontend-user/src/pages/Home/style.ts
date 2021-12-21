@@ -53,7 +53,8 @@ const useStyles = makeStyles((theme: any) => {
     banner: {
       background: "#0A0A0A",
       paddingTop: "90px",
-      paddingBottom: "130px",
+      // paddingBottom: "130px",
+      paddingBottom: "60px",
       "& .large-text": {
         ...typeDisplayFlex,
         gap: "10px",
@@ -114,7 +115,33 @@ const useStyles = makeStyles((theme: any) => {
     bannerContent: {
       width: "100%",
       maxWidth: "1120px",
+      margin: 'auto',
+      marginTop: '72px',
       [theme.breakpoints.down("xs")]: {},
+    },
+    wrapperBannerContent: {
+      flexDirection: 'column',
+    },
+    buyLinksBanner: {
+      marginTop: '42px',
+      '& .links': {
+        width: '100%',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, 180px)',
+        gap: '8px',
+        justifyContent: 'center',
+        '& a': {
+          border: '1px solid #72F34B',
+          borderRadius: '4px',
+          color: '#72F34B !important',
+          fontSize: '14px',
+          fontWeight: 600,
+          fontFamily: 'Firs Neue',
+          mixBlendMode: 'normal',
+          padding: '9px',
+          textAlign: 'center',
+        }
+      }
     },
     wrapperImgBanner: {
       width: "100%",
@@ -790,9 +817,9 @@ export const useCardStyles = makeStyles((theme) => ({
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, 201px)",
     placeContent: "center",
-    gap: "80px",
+    gap: "20px",
     [theme.breakpoints.down("sm")]: {
-      gap: "40px",
+      gap: "20px",
     },
     [theme.breakpoints.down("xs")]: {
       gap: "7px",

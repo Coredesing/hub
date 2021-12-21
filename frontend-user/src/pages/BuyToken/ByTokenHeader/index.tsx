@@ -14,9 +14,10 @@ const copyImage = "/images/copy.svg";
 type Props = {
   poolDetailsMapping: any;
   poolDetails: any;
+  solanaAddress: any;
 };
 
-const HeaderByToken: FC<Props> = ({ poolDetailsMapping, poolDetails }) => {
+const HeaderByToken: FC<Props> = ({ poolDetailsMapping, poolDetails, solanaAddress }) => {
   const styles = useStyles();
   // const [copiedAddress, setCopiedAddress] = useState(false);
   const navHeader = useState(poolDetailsMapping);
@@ -46,6 +47,10 @@ const HeaderByToken: FC<Props> = ({ poolDetailsMapping, poolDetails }) => {
 
     setDisableAllButton(appNetwork !== poolDetails?.networkAvailable);
   }, [appChainID, poolDetails])
+
+  const shortWallet = (wallet: any) => {
+    return wallet ? `${wallet.substring(0, 6)}...${wallet.substring(wallet.length - 3, wallet.length)}` : ''
+  }
 
 
   var currentTime = new Date();
@@ -173,7 +178,7 @@ const HeaderByToken: FC<Props> = ({ poolDetailsMapping, poolDetails }) => {
                   src="/images/icons/solana-logo.svg"
                   alt=""
               />
-              Airdrop on Solana
+              Airdrop on Solana {solanaAddress && <>(<span style={{ color: '#72F34B' }}>{shortWallet(solanaAddress)}</span>)</>}
             </li>
         )}
       </ul>

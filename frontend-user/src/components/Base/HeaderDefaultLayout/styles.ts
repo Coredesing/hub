@@ -445,13 +445,14 @@ const useStyles = makeStyles((theme) => {
         '& .new-icon': {
           display: 'block',
           position: 'absolute',
-          padding: '0px 7px',
+          padding: '0px 5px',
           color: '#000',
           background: '#72F34B',
-          top: '-15px',
-          right: '-35px',
+          top: '-18px',
+          right: '-38px',
           fontSize: '10px',
-          borderRadius: '8px'
+          borderRadius: '2px',
+          textTransform: 'uppercase',
         }
       }
     },

@@ -233,7 +233,7 @@ const useProviderConnect = (
               })
           }
         }
-      } catch (error) {
+      } catch (error: any) {
         console.log(error.message);
         setLoginError(error.message);
         setCurrentConnector(undefined);

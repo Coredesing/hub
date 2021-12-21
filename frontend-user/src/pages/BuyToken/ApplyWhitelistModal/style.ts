@@ -294,6 +294,11 @@ const useStyles = makeStyles((theme) => {
     whitelistContentModal: {
       ...typeDisplayFlex, marginTop: '.75rem',
       marginBottom: '2rem', color: '#AEAEAE'
+    },
+    disconnectBTN: {
+      marginLeft: 10,
+      color: 'red !important',
+      border: 'none !important',
     }
   };
 });

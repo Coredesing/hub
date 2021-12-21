@@ -69,10 +69,10 @@ function HowToParticipant(props: any) {
                     {whitelistCompleted &&
                     <>
                       {announcementTimeDisplay &&
-                      `You are ready for the IDO. Please stay tune for winner annoucement on ${announcementTimeDisplay}`
+                      `You are ready for the IGO. Please stay tune for winner annoucement on ${announcementTimeDisplay}`
                       }
                       {!announcementTimeDisplay &&
-                      `You are ready for the IDO. Please stay tune for winner annoucement on ${endJoinTimeDisplay}`
+                      `You are ready for the IGO. Please stay tune for winner annoucement on ${endJoinTimeDisplay}`
                       }
                     </>
                     }

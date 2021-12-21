@@ -20,7 +20,7 @@ import {
   TableRowHead,
   TableSortLabel,
 } from "../../components/Base/Table";
-import { TOKEN_TYPE } from "../../constants";
+import { GATE_GAFI_SWAP_URL, KUCOIN_GAFI_SWAP_URL, LINK_SWAP_TOKEN, TOKEN_TYPE } from "../../constants";
 import Instruction from "./Instruction";
 import TicketSlide from "./TicketSlide";
 import MysteryBoxes from "./MysteryBoxes";
@@ -29,6 +29,7 @@ import { getCountdownInfo } from "@pages/MysteryBoxes/utils";
 import { SearchBox } from "@base-components/SearchBox";
 import { numberWithCommas } from "@utils/formatNumber";
 import CountDownTimeV1 from "@base-components/CountDownTime";
+import { partnerships } from "./constant";
 const readableNumber = require("readable-numbers");
 
 type Data = { [k: string]: any };
@@ -89,39 +90,6 @@ const Home = (props: any) => {
 
   const { data: performanceData = {} as ObjectType<any>, loading: loadingcompletePools } =
     useFetchV1("/home/performances");
-
-  const partnerships = [
-    {
-      banner: "/images/partnerships/kaby-arena.png",
-      name: "Kaby Arena",
-      website: "https://kabyarena.com/",
-    },
-    // {
-    //   banner: "/images/partnerships/bunicorn.png",
-    //   name: "Bunicorn",
-    //   website: "https://buni.finance/",
-    // },
-    {
-      banner: "/images/partnerships/mechmaster.png",
-      name: "Mech Master",
-      website: "https://mechmaster.io/",
-    },
-    {
-      banner: "/images/partnerships/deathroad.jpg",
-      name: "Death Road",
-      website: "https://deathroad.io/",
-    },
-    {
-      banner: "/images/partnerships/heroverse.png",
-      name: "Heroverse",
-      website: "https://heroverse.io/",
-    },
-    {
-      banner: "/images/partnerships/darkfrontier.png",
-      name: "Dark Frontier",
-      website: "https://www.darkfrontiers.com/",
-    },
-  ];
 
   const [isShowImgBanner, setIsShowImgModal] = useState(true);
   const onCloseImgBanner = () => {
@@ -210,14 +178,14 @@ const Home = (props: any) => {
         <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M2.6038 0.514683C2.80395 0.254679 3.19605 0.254679 3.3962 0.514682L5.84442 3.695C6.09751 4.02379 5.86313 4.5 5.44821 4.5L0.551788 4.5C0.136869 4.5 -0.0975128 4.02379 0.155586 3.695L2.6038 0.514683Z" fill="#72F34B" />
         </svg>
-        {numberWithCommas(number, 3)}%
+        {numberWithCommas(number, 2)}%
       </span>
     }
     return <span className={clsx(styles.percent, "down")}>
       <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M3.3962 4.48532C3.19605 4.74532 2.80395 4.74532 2.6038 4.48532L0.155585 1.305C-0.0975138 0.976212 0.136868 0.5 0.551788 0.5L5.44821 0.5C5.86313 0.5 6.09751 0.976213 5.84441 1.305L3.3962 4.48532Z" fill="#F24B4B" />
       </svg>
-      {numberWithCommas(Math.abs(+number) + '', 3)}%
+      {numberWithCommas(Math.abs(+number) + '', 2)}%
     </span>
   }
   // 11: 11 am utc
@@ -265,10 +233,10 @@ const Home = (props: any) => {
             </div>
           </div>
         )} */}
-
+        {/* 
         <div className={styles.subBanners}>
           {
-            !countdownTime.isFinish && isShowSubBanner && 
+            !countdownTime.isFinish && isShowSubBanner &&
             <div className="item">
               <button className="btn-close" onClick={onCloseSubBanner}>
                 <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -285,7 +253,7 @@ const Home = (props: any) => {
             </div>
           }
           {
-            countdownTime.isFinish && isShowSubBanner && 
+            countdownTime.isFinish && isShowSubBanner &&
             <div className="item">
               <button className="btn-close" onClick={onCloseSubBanner}>
                 <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -309,10 +277,10 @@ const Home = (props: any) => {
               </div>
             </div>
           }
-        </div>
+        </div> */}
 
         <div
-          className={styles.wrapperContent}
+          className={clsx(styles.wrapperContent, styles.wrapperBannerContent)}
         // style={!isShowImgBanner ? { marginTop: -50 } : {}}
         >
           <div className={clsx(styles.bannerContent)}>
@@ -324,6 +292,22 @@ const Home = (props: any) => {
               <span className="launchpad">first IGO launchpad</span>, with tools
               to facilitate the success of games.
             </h4>
+          </div>
+          <div className={styles.buyLinksBanner}>
+            <div className="links">
+              {/* <Link>
+                Apply As A Project
+              </Link> */}
+              <Link href={LINK_SWAP_TOKEN} target="_blank">
+                Buy on Pancakeswap
+              </Link>
+              <Link href={KUCOIN_GAFI_SWAP_URL} target="_blank">
+                Buy on KuCoin
+              </Link>
+              <Link href={GATE_GAFI_SWAP_URL} target="_blank">
+                Buy on Gate.io
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -540,7 +524,7 @@ const Home = (props: any) => {
                     </div>
                     <div className="sub-item">
                       <span className="label">
-                        IDO Price:
+                        IGO Price:
                       </span>
                       <span className="bold">
                         ${performanceData?.gamefi?.ido_price || 'N/A'}
@@ -550,7 +534,7 @@ const Home = (props: any) => {
                   <div className="item roi foundation">
                     <div className="sub-item">
                       <span className="label">
-                        IDO ROI:
+                        IGO ROI:
                       </span>
                       <span className="bold">
                         {numberWithCommas(performanceData?.gamefi?.ido_roi, 3)}x
@@ -666,11 +650,11 @@ const Home = (props: any) => {
                                 : null
                             }
                           >
-                            IDO ROI
+                            IGO ROI
                           </TableSortLabel>
                         </TableCell>
-                        {/* <TableCell>ATH IDO ROI</TableCell>
-                        <TableCell>IDO Date</TableCell>
+                        {/* <TableCell>ATH IGO ROI</TableCell>
+                        <TableCell>IGO Date</TableCell>
                         <TableCell onClick={() => onSortListPerfomance("ath")}>
                           <TableSortLabel
                             order={

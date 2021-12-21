@@ -582,6 +582,7 @@ const ContentToken = ({ id, poolDetails, ...props }: any) => {
             <ByTokenHeader
               poolDetailsMapping={poolDetailsMapping}
               poolDetails={poolDetails}
+              solanaAddress={whitelistSubmission?.solana_address}
             />
 
             {

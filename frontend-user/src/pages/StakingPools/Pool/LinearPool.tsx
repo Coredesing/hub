@@ -26,6 +26,7 @@ import useLinearStake from '../hook/useLinearStake';
 import useLinearUnstake from '../hook/useLinearUnstake';
 import useLinearClaim from '../hook/useLinearClaim';
 import useLinearClaimPendingWithdraw from '../hook/useLinearClaimPendingWithdraw';
+import useReStake from '../hook/useReStake';
 
 import { ChainDefault, ETH_CHAIN_ID } from '../../../constants/network'
 import { useTypedSelector } from '../../../hooks/useTypedSelector';
@@ -77,6 +78,8 @@ const LinearPool = (props: any) => {
   const { linearClaimToken, transactionHash: unstakeTransactionHash } = useLinearClaim(poolAddress, poolDetail?.pool_id);
   const { linearUnstakeToken, transactionHash: claimTransactionHash } = useLinearUnstake(poolAddress, poolDetail?.pool_id, unstakeAmount);
   const { linearClaimPendingWithdraw, transactionHash: claimPendingTransactionHash } = useLinearClaimPendingWithdraw(poolAddress, poolDetail?.pool_id);
+  const { reStakeToken, transactionHash: reStakeTransactionHash } = useReStake(poolAddress, poolDetail?.pool_id);
+
 
   const [progress, setProgress] = useState('0');
   const [showROIModal, setShowROIModal] = useState(false);
@@ -282,6 +285,35 @@ const LinearPool = (props: any) => {
     setTransactionHashes([{ tnx: claimPendingTransactionHash, isApprove: false }])
   }, [claimPendingTransactionHash, setOpenModalTransactionSubmitting, setTransactionHashes])
 
+  const handleReStake = async () => {
+    try {
+      if (Number(poolDetail?.pendingWithdrawal?.applicableAt) < moment().unix()) {
+        dispatch(alertFailure("Restake error. Please refresh the website and try again"));
+        return;
+      }
+      if (BigNumber.from(poolDetail?.pendingWithdrawal?.amount || 0).lte(BigNumber.from('0'))) {
+        dispatch(alertFailure("Insufficient balance to restake"));
+        return;
+      }
+
+      setOpenModalTransactionSubmitting(true);
+      await reStakeToken();
+      setOpenModalTransactionSubmitting(false);
+      reload && reload();
+    } catch (err) {
+      setOpenModalTransactionSubmitting(false);
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    if (!reStakeTransactionHash) {
+      return
+    }
+    setOpenModalTransactionSubmitting(false);
+    setTransactionHashes([{ tnx: reStakeTransactionHash, isApprove: false }])
+  }, [reStakeTransactionHash, setOpenModalTransactionSubmitting, setTransactionHashes])
+
   // const onShowSwitchPoolModal = () => {
   //   setShowSwitchModal(true);
   // }
@@ -356,8 +388,8 @@ const LinearPool = (props: any) => {
               <div className={styles.textSecondary + ' mobile-hidden'}>
                 {
                   poolDetail?.rkp_rate > 0 ?
-                    <span>With IDO</span> :
-                    <span style={{ color: '#D0AA4D' }}>Without IDO</span>
+                    <span>With IGO</span> :
+                    <span style={{ color: '#D0AA4D' }}>Without IGO</span>
                 }
               </div>
             </div>
@@ -739,14 +771,30 @@ const LinearPool = (props: any) => {
                   </div>
                 </div>
               </div>
-
-              <Button
-                text="Withdraw"
-                onClick={handleClaimPendingWithdraw}
-                backgroundColor="#72F34B"
-                style={{ color: '#000' }}
-                disabled={Number(poolDetail?.pendingWithdrawal?.applicableAt) > moment().unix() || wrongChain}
-              />
+              <div className="xs-flex-row justify-between" style={{ marginTop: 'auto' }}>
+                <Button
+                  text="Withdraw"
+                  onClick={handleClaimPendingWithdraw}
+                  backgroundColor="#72F34B"
+                  style={{ color: '#000' }}
+                  disabled={Number(poolDetail?.pendingWithdrawal?.applicableAt) > moment().unix() || wrongChain}
+                />
+                {
+                  Number(poolDetail?.pendingWithdrawal?.applicableAt) > moment().unix() &&
+                  BigNumber.from(poolDetail?.pendingWithdrawal?.amount || 0).gt(BigNumber.from('0')) &&
+                  <Button
+                    text="Restake"
+                    onClick={handleReStake}
+                    backgroundColor="#191920"
+                    style={{
+                      color: '#72F34B',
+                      border: '1px solid #72F34B',
+                      margin: 'auto 0px 10px 6px',
+                    }}
+                    disabled={wrongChain}
+                  />
+                }
+              </div>
             </div>
           }
         </div>

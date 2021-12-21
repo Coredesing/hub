@@ -195,11 +195,11 @@ const Card = (props: any): JSX.Element => {
             </div>
             <div className={styles.network}>
               {
-                {
+                pool?.network_available ? {
                   'eth': <img src={EthereumIcon} alt="" />,
                   'bsc': <img src={BSCIcon} alt="" />,
                   'polygon': <img src={PolygonIcon} alt="" />,
-                }[`${pool?.network_available}`] || <img src={EthereumIcon} alt="" />
+                } : <img src={EthereumIcon} alt="" />
               }
             </div>
           </div>

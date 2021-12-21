@@ -19,6 +19,7 @@ interface IExternalRandom {
 interface IExternalMinted {
     function mintTokens(address owner, uint count, uint group) external;
     function mintWhitelist(address user, uint256 amount) external;
+    function mintFor(address buyer, uint amount, uint rarityPackage) external;
 }
 
 interface IStakingContract {
@@ -206,6 +207,13 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         }
     }
 
+    function setMaxPerBatch(
+        uint256 eventId,
+        uint256 limit
+    ) external onlyOwner {
+        saleEvents[eventId].maxPerBatch = limit;
+    }
+
     function addSaleEvent(
         uint256 _maxSupply,
         uint256 startTime,
@@ -292,7 +300,7 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         _fowardFund(totalFund, token);
 
         if (externalMinted != address(0)) {
-            IExternalMinted(externalMinted).mintWhitelist(msg.sender, amount);
+            IExternalMinted(externalMinted).mintFor(msg.sender, amount, subBoxId + 1);
         } else {
             for (uint i = 0; i < amount; i++) {
                 uint256 boxId = _createBox(eventId, subBoxId);
@@ -357,7 +365,7 @@ contract GameFiBox is Initializable, OwnableUpgradeable, ERC721EnumerableUpgrade
         emit NFTClaimed(msg.sender, boxId, nftId);
     }
 
-    function getBoxDetail(uint256 eventId, uint256 boxId) public view returns (uint256, uint256, uint256, bool) {
+    function getBoxDetail(uint256 boxId) public view returns (uint256, uint256, uint256, bool) {
         if (boxes.length <= boxId) {
             return (0, 0, 0, false);
         }

@@ -46,10 +46,14 @@ const useTokenAllowance = (
           dispatch(alertWarning("Approval is processing!"));
           setTransactionHash(transaction.hash);
 
-          await transaction.wait(1);
-
-          dispatch(alertSuccess("Token Approve Successful!"));
-          setTokenApproveLoading(false);
+          const result = await transaction.wait(1);
+          if(+result?.status === 1) {
+            dispatch(alertSuccess("Token Approve Successful!"));
+            setTokenApproveLoading(false);
+          } else {
+            dispatch(alertFailure("Token Approve Failed"));
+            setTokenApproveLoading(false);
+          }
         }
       }
     } catch (err: any) {

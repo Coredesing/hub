@@ -5,9 +5,9 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Switch from "react-switch";
 import { createCollection, getCollectionDetail, updateCollection } from '../../../request/collections';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useStore } from 'react-redux';
 import { alertFailure, alertSuccess } from '../../../store/actions/alert';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@material-ui/core';
 
 const GameInformation: React.FC<any> = (props: any) => {
     const classes = useStyles();
@@ -35,7 +35,6 @@ const GameInformation: React.FC<any> = (props: any) => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-      console.log(isEdit)
         if (!isEdit) {
             return
         }
@@ -49,7 +48,6 @@ const GameInformation: React.FC<any> = (props: any) => {
           const data = res.data;
 
           setCollectionInfo(data);
-          console.log(collectionInfo)
 
           return res.data;
         })
@@ -97,7 +95,7 @@ const GameInformation: React.FC<any> = (props: any) => {
         'link', 'image'
     ]
 
-    const handleGameCreateUpdate = async () => {
+    const handleCollectionCreateUpdate = async () => {
       setLoading(true)
       if (!isEdit) {
         await createCollection(collectionInfo).then(res => {
@@ -208,15 +206,19 @@ const GameInformation: React.FC<any> = (props: any) => {
       setCollectionInfo(newData)
     }
     const onChangeDescription = (event: any) => {
-      console.log('des', event)
       let newData = {...collectionInfo}
       newData.description = event?.target?.value
+      setCollectionInfo(newData)
+    }
+    const onChangeType = (event: any) => {
+      let newData = {...collectionInfo}
+      newData.type = event?.target?.value
       setCollectionInfo(newData)
     }
     return (
             <div className={classes.infoBox}>
                 <div className={classes.infoForm}>
-                    <div className={classes.formControlFullWidth}>
+                    <div className={classes.formControl}>
                         <label className={classes.formControlLabel}>Name of Collection</label>
                         <input
                             type="text"
@@ -225,6 +227,15 @@ const GameInformation: React.FC<any> = (props: any) => {
                             defaultValue={collectionInfo?.name}
                             className={classes.formControlInput}
                         />
+                    </div>
+                    <div className={classes.formControl}>
+                    <FormControl component="fieldset">
+                    <label className={classes.formControlLabel}>Type</label>
+                      <RadioGroup value={collectionInfo?.type} onChange={onChangeType} row aria-label="Type" name="row-radio-buttons-group">
+                        <FormControlLabel value="nft" control={<Radio />} label="NFT" />
+                        <FormControlLabel value="box" control={<Radio />} label="Box" />
+                      </RadioGroup>
+                    </FormControl>
                     </div>
 
                     <div className={classes.formControl}>
@@ -371,23 +382,14 @@ const GameInformation: React.FC<any> = (props: any) => {
                     </div>
 
                     <div className={classes.formControlFull}>
-                        <label className={classes.formControlLabel}>Description</label>
-                        <ReactQuill
-                            className={classes.textEditor}
-                            theme="snow"
-                            value={collectionInfo?.description ? collectionInfo.description : ''}
-                            onChange={onChangeDescription}
-                            modules={modules}
-                            formats={formats}
-                            placeholder={'Enter description for the collection'}
-
-                        />
+                        <label className={classes.formControlLabel} defaultValue={collectionInfo?.description} onChange={onChangeDescription}>Description</label>
+                        <textarea className={classes.formControlInput} rows={5} defaultValue={collectionInfo?.description} onChange={onChangeDescription}></textarea>
                     </div>
                 </div>
                 <button
                   disabled={loading}
                   className={classes.formButtonUpdatePool}
-                  onClick={handleGameCreateUpdate}
+                  onClick={handleCollectionCreateUpdate}
                 >
                     {
                         (loading) ? <CircularProgress size={25} /> : (isEdit ? 'Update' : 'Create')

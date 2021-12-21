@@ -331,17 +331,17 @@ const useStyles = makeStyles((theme: any) => ({
   btnJoin: {
     padding: '14px 30px',
     border: '1px solid #72F34B',
-    color: '#72F34B',
+    color: '#000',
     textTransform: 'uppercase',
     fontFamily: 'Firs Neue',
     fontStyle: 'normal',
     fontWeight: 600,
     fontSize: '14px',
-    background: '#000000',
+    background: '#72F34B',
     display: 'grid',
     placeContent: 'center',
     borderRadius: '2px',
-    transition: '0.3s',
+    transition: '0.3',
     maxWidth: '180px',
     width: '100%',
     [theme.breakpoints.down('sm')]: {
@@ -350,7 +350,6 @@ const useStyles = makeStyles((theme: any) => ({
     '&:hover': {
       color: '#000',
       background: '#72F34B',
-      transition: '0.3',
     }
   },
 

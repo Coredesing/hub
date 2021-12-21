@@ -120,8 +120,8 @@ const MysteryBoxes = (props: any) => {
                     </div>
                     <div className="item">
                       <label>PRICE</label>
-                      <span>{currentBox.token_conversion_rate} {currentBox.currencyName} 
-                      {/* {getCurrencyByNetwork(currentBox.network_available)} */}
+                      <span>{currentBox.token_conversion_rate} {currentBox.currencyName}
+                        {/* {getCurrencyByNetwork(currentBox.network_available)} */}
                       </span>
                     </div>
                     <div className="item">
@@ -134,9 +134,9 @@ const MysteryBoxes = (props: any) => {
                   </Link>
                 </div>
               </div>
-              <div className="detail-countdown-box">
+              <div className="detail-countdown-box" style={!time.date1 ? { height: '30px' } : {}}>
                 <div className="wrapper-countdown">
-                  <span>{time.title}</span>
+                  <span style={time.isFinished ? {fontWeight: 600, color: '#F24B4B'} : {}}>{time.title}</span>
                   {
                     !!time.date1 &&
                     <CountDownTimeV1 time={{ date1: time.date1, date2: time.date2 }} className="countdown" />

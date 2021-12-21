@@ -138,7 +138,7 @@ const MysteryBoxes = (props: any) => {
                 <div className="wrapper-countdown">
                   <span>{time.title}</span>
                   {
-                    !!time.date1 &&
+                    time.date1 &&
                     <CountDownTimeV1 time={{ date1: time.date1, date2: time.date2 }} className="countdown" />
                   }
                 </div>

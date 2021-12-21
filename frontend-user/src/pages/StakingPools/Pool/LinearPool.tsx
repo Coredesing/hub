@@ -312,7 +312,23 @@ const LinearPool = (props: any) => {
     }
     setOpenModalTransactionSubmitting(false);
     setTransactionHashes([{ tnx: reStakeTransactionHash, isApprove: false }])
-  }, [reStakeTransactionHash, setOpenModalTransactionSubmitting, setTransactionHashes])
+  }, [reStakeTransactionHash, setOpenModalTransactionSubmitting, setTransactionHashes]);
+
+  useEffect(() => {
+    if(!reload) return;
+    let interval: any = null;
+    if(+poolDetail?.pendingWithdrawal?.applicableAt > 0 && moment().unix() < +poolDetail?.pendingWithdrawal?.applicableAt) {
+      interval = setInterval(() => {
+        if(moment().unix() > +poolDetail?.pendingWithdrawal?.applicableAt) {
+          clearInterval(interval);
+          reload && reload();
+        }
+      }, 1000);
+    }
+    return () => {
+      clearInterval(interval);
+    }
+  }, [poolDetail?.pendingWithdrawal?.applicableAt, reload])
 
   // const onShowSwitchPoolModal = () => {
   //   setShowSwitchModal(true);

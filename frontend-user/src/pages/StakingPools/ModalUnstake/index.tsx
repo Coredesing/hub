@@ -50,6 +50,19 @@ const ModalStake = (props: any) => {
     setProgress((Number(amount) / Number(utils.formatEther(stakingAmount)) * 100).toFixed(0))
   }, [amount, stakingAmount, setProgress])
 
+  const [error, setError] = useState('');
+  const onChangeAmount = (e: any) => {
+    const amount = e.target.value;
+    setAmount(amount)
+    if (isNaN(amount)) {
+      setError('Amount invalid');
+    } else if (new BN(amount).gt(utils.formatEther(stakingAmount))) {
+      setError('Insufficient balance');
+    } else {
+      setError('');
+    }
+  }
+
   return (
     <Dialog
       open={open}
@@ -111,12 +124,16 @@ const ModalStake = (props: any) => {
           <div className="input-group">
             <input
               value={amount}
-              onChange={(event) => setAmount(event.target.value)}
+              onChange={onChangeAmount}
               type="number"
               min="0"
             />
           </div>
-
+          {
+            error && <div className='text-danger font-12px firs-neue-font mt-6px'>
+              {error}
+            </div>
+          }
           <div className={poolStyles.progressArea} style={{ width: '100%', marginTop: '20px' }}>
             <Progress progress={+progress} />
             <div className={poolStyles.currentPercentage}>({Number(+progress || 0).toFixed(0)}%)</div>

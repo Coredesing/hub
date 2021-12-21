@@ -214,7 +214,7 @@ const useCommonStyle = makeStyles((theme) => {
 
       "& .content": {
         padding: "60px",
-        background: "#020616",
+        background: "#171717",
         borderRadius: "4px",
         ...typeDisplayFlex,
         flexDirection: "column",

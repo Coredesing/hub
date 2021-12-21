@@ -637,8 +637,8 @@ const StakingPools = (props: any) => {
           >
             <DialogContent className="content">
               <img src={closeIcon} alt="" onClick={() => setOpenModalTransactionSubmitting(false)} />
-              <span className={commonStyles.nnb1824d}>Transaction Submitting</span>
-              <CircularProgress color="primary" />
+              <span className={clsx(commonStyles.nnb1824d, 'firs-neue-font')}>Transaction Submitting</span>
+              <CircularProgress className="text-white-imp" />
             </DialogContent>
           </Dialog>
 

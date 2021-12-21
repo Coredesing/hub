@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUserTier } from '@store/actions/sota-tiers';
 import useAuth from '@hooks/useAuth';
 import clsx from 'clsx';
+import BN from 'bignumber.js';
 const closeIcon = '/images/icons/close.svg';
 const ONE_DAY_IN_SECONDS = 86400;
 
@@ -224,7 +225,7 @@ const ModalStake = (props: any) => {
               borderRadius: '36px',
               padding: '12px 30px',
             }}
-            disabled={isNaN(amount) || Number(amount) <= 0}
+            disabled={isNaN(amount) || Number(amount) <= 0 || new BN(amount).gt(utils.formatEther(stakingAmount))}
           />
         </DialogActions>
         {/* {transactionHashes[0].isApprove && <p className={styles.notice}>Please be patient and no need to approve again, you can check the transaction status on Etherscan.</p>} */}

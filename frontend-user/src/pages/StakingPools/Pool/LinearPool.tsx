@@ -204,9 +204,9 @@ const LinearPool = (props: any) => {
         const contract = getContractInstance(STAKING_POOL_ABI, poolDetail.pool_address, connector, appChainID, SmartContractMethod.Read, false);
         const delayDuration = await contract?.methods.linearDurationOf(poolDetail.pool_id, connectedAccount).call();
         if (Number(poolDetail?.pendingWithdrawal?.applicableAt) > moment().unix()) {
-          setConfirmationText(`You currently have ${tokenDetails?.symbol} waiting to be withdrawn. If you continue to withdraw tokens, the withdrawal delay time will be extended until ${moment.unix(moment().unix() + Number(delayDuration)).format("YYYY-MM-DD HH:mm:ss ([GMT]Z)")}`);
+          setConfirmationText(`You currently have ${tokenDetails?.symbol} waiting to be withdrawn. If you continue to unstake tokens, the withdrawal delay time will be extended until ${moment.unix(moment().unix() + Number(delayDuration)).format("YYYY-MM-DD HH:mm:ss ([GMT]Z)")}`);
         } else {
-          setConfirmationText(`You currently have ${tokenDetails?.symbol} available for withdrawal. If you continue to withdraw tokens, the withdrawal delay time will be extended until ${moment.unix(moment().unix() + Number(delayDuration)).format("YYYY-MM-DD HH:mm:ss ([GMT]Z)")}`);
+          setConfirmationText(`You currently have ${tokenDetails?.symbol} available for withdrawal. If you continue to unstake tokens, the withdrawal delay time will be extended until ${moment.unix(moment().unix() + Number(delayDuration)).format("YYYY-MM-DD HH:mm:ss ([GMT]Z)")}`);
         }
         setShowConfirmModal(true);
         setShowUnstakeModal(false);

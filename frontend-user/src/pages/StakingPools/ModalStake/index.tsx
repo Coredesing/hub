@@ -32,7 +32,6 @@ const ModalStake = (props: any) => {
     logo,
   } = props;
 
-
   const [progress, setProgress] = useState('0');
   useEffect(() => {
     if (new BigNumber(tokenBalance).gt(0)) {
@@ -182,7 +181,7 @@ const ModalStake = (props: any) => {
               color: '#000',
               // marginRight: '5px'
             }}
-            disabled={isNaN(amount) || Number(amount) <= 0}
+            disabled={isNaN(amount) || Number(amount) <= 0 || new BigNumber(amount).gt(tokenBalance)}
           />
           <Link href={LINK_SWAP_TOKEN} target="_blank" rel="noreferrer" style={{
             height: '42px',

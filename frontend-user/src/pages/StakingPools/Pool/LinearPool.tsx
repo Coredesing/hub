@@ -115,12 +115,17 @@ const LinearPool = (props: any) => {
     setProgress(prg.toFixed(1))
   }, [poolDetail])
 
+  const [actionLoading, setActionLoading] = useState<{loading: boolean, actionName?: string}>({loading: false, actionName: ''});
+
   const handleApprove = async () => {
     try {
       setOpenModalTransactionSubmitting(true);
+      setActionLoading({loading: true, actionName: handleApprove.name});
       await approveToken()
       setOpenModalTransactionSubmitting(false);
+      setActionLoading({loading: false});
     } catch (err) {
+      setActionLoading({loading: false});
       setOpenModalTransactionSubmitting(false);
       console.log(err)
     }
@@ -166,17 +171,19 @@ const LinearPool = (props: any) => {
 
       setShowStakeModal(false);
       setOpenModalTransactionSubmitting(true);
+      setActionLoading({loading: true, actionName: handleStake.name});
       await linearStakeToken();
       setStakeAmount('0');
       setOpenModalTransactionSubmitting(false);
       setConfirmationText('');
       dispatch(getUserTier(connectedAccount))
+      setActionLoading({loading: false});
       reload && reload();
     } catch (err) {
       setConfirmed(false);
       setPreviousStep('');
       setConfirmationText('');
-
+      setActionLoading({loading: false});
       setOpenModalTransactionSubmitting(false);
       console.log(err)
     }
@@ -214,7 +221,7 @@ const LinearPool = (props: any) => {
       }
       setConfirmed(false);
       setPreviousStep('');
-
+      setActionLoading({loading: true, actionName: handleUnstake.name});
       setShowUnstakeModal(false);
       setOpenModalTransactionSubmitting(true);
       await linearUnstakeToken();
@@ -222,12 +229,13 @@ const LinearPool = (props: any) => {
       setOpenModalTransactionSubmitting(false);
       setConfirmationText('');
       dispatch(getUserTier(connectedAccount))
+      setActionLoading({loading: false});
       reload && reload();
     } catch (err) {
       setConfirmed(false);
       setPreviousStep('');
       setConfirmationText('');
-
+      setActionLoading({loading: false});
       setOpenModalTransactionSubmitting(false);
       console.log(err)
     }
@@ -246,12 +254,15 @@ const LinearPool = (props: any) => {
     try {
       setShowClaimModal(false);
       setOpenModalTransactionSubmitting(true);
+      setActionLoading({loading: true, actionName: handleClaim.name});
       await linearClaimToken();
       setOpenModalTransactionSubmitting(false);
+      setActionLoading({loading: false});
       reload && reload();
     } catch (err) {
       setShowClaimModal(false);
       setOpenModalTransactionSubmitting(false);
+      setActionLoading({loading: false});
       console.log(err)
     }
   }
@@ -268,11 +279,14 @@ const LinearPool = (props: any) => {
   const handleClaimPendingWithdraw = async () => {
     try {
       setOpenModalTransactionSubmitting(true);
+      setActionLoading({loading: true, actionName: handleClaimPendingWithdraw.name});
       await linearClaimPendingWithdraw();
       setOpenModalTransactionSubmitting(false);
+      setActionLoading({loading: false});
       reload && reload();
     } catch (err) {
       setOpenModalTransactionSubmitting(false);
+      setActionLoading({loading: false});
       console.log(err)
     }
   }
@@ -295,13 +309,15 @@ const LinearPool = (props: any) => {
         dispatch(alertFailure("Insufficient balance to restake"));
         return;
       }
-
+      setActionLoading({loading: true, actionName: handleReStake.name});
       setOpenModalTransactionSubmitting(true);
       await reStakeToken();
       setOpenModalTransactionSubmitting(false);
+      setActionLoading({loading: false});
       reload && reload();
     } catch (err) {
       setOpenModalTransactionSubmitting(false);
+      setActionLoading({loading: false});
       console.log(err)
     }
   }
@@ -693,6 +709,7 @@ const LinearPool = (props: any) => {
                   disabled={wrongChain}
                   backgroundColor="#72F34B"
                   style={{ color: '#000' }}
+                  loading={actionLoading.loading && handleApprove.name === actionLoading.actionName}
                 />
               </div>
             </div>
@@ -720,6 +737,7 @@ const LinearPool = (props: any) => {
                     onClick={() => setShowStakeModal(true)}
                     backgroundColor="#72F34B"
                     style={{ color: '#000' }}
+                    loading={actionLoading.loading && handleStake.name === actionLoading.actionName}
                     disabled={
                       wrongChain ||
                       (Number(poolDetail?.startJoinTime) > 0 && Number(poolDetail?.startJoinTime) > moment().unix()) ||
@@ -738,6 +756,7 @@ const LinearPool = (props: any) => {
                       border: '1px solid #72F34B',
                       margin: 'auto 0px 10px 6px',
                     }}
+                    loading={actionLoading.loading && handleUnstake.name === actionLoading.actionName}
                     disabled={
                       wrongChain ||
                       poolDetail?.stakingAmount === "0" ||
@@ -793,6 +812,7 @@ const LinearPool = (props: any) => {
                   onClick={handleClaimPendingWithdraw}
                   backgroundColor="#72F34B"
                   style={{ color: '#000' }}
+                  loading={actionLoading.loading && handleClaimPendingWithdraw.name === actionLoading.actionName}
                   disabled={Number(poolDetail?.pendingWithdrawal?.applicableAt) > moment().unix() || wrongChain}
                 />
                 {
@@ -801,6 +821,7 @@ const LinearPool = (props: any) => {
                   <Button
                     text="Restake"
                     onClick={handleReStake}
+                    loading={actionLoading.loading && handleReStake.name === actionLoading.actionName}
                     backgroundColor="#191920"
                     style={{
                       color: '#72F34B',

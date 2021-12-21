@@ -12,6 +12,7 @@ import { getUserTier } from '@store/actions/sota-tiers';
 import useAuth from '@hooks/useAuth';
 import clsx from 'clsx';
 import BN from 'bignumber.js';
+import { FormInputNumber } from '@base-components/FormInputNumber';
 const closeIcon = '/images/icons/close.svg';
 const ONE_DAY_IN_SECONDS = 86400;
 
@@ -119,14 +120,14 @@ const ModalStake = (props: any) => {
             </div>
           }
           <div className="subtitle">
-            Unstake Amount
+            Unstake Amount {amount}
           </div>
           <div className="input-group">
-            <input
+            <FormInputNumber
               value={amount}
               onChange={onChangeAmount}
-              type="number"
-              min="0"
+              min={0}
+              isPositive
             />
           </div>
           {

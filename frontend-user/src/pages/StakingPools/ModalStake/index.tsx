@@ -10,6 +10,7 @@ import Progress from '@base-components/Progress';
 import { LINK_SWAP_TOKEN } from '@app-constants';
 import BigNumber from 'bignumber.js';
 import { calcPercentRate } from '@utils/index';
+import { FormInputNumber } from '@base-components/FormInputNumber';
 
 const closeIcon = '/images/icons/close.svg'
 
@@ -114,11 +115,11 @@ const ModalStake = (props: any) => {
             Stake Amount
           </div>
           <div className="input-group">
-            <input
+            <FormInputNumber
               value={amount}
               onChange={onChangeAmount}
-              type="number"
-              min="0"
+              min={0}
+              isPositive
             />
           </div>
           {

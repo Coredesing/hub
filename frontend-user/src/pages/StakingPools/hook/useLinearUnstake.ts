@@ -8,6 +8,7 @@ import { alertSuccess, alertFailure } from '../../../store/actions/alert';
 import { getContract } from '../../../utils/contract';
 
 import STAKING_POOL_ABI from '../../../abi/StakingPool.json';
+import { handleErrMsg } from '../utils';
 
 
 const useLinearUnstake = (
@@ -47,7 +48,7 @@ const useLinearUnstake = (
       }
     } catch (err: any) {
       console.log('[ERROR] - useLinearUnstake:', err);
-      dispatch(alertFailure(TRANSACTION_ERROR_MESSAGE));
+      dispatch(alertFailure(handleErrMsg(err) || TRANSACTION_ERROR_MESSAGE));
       setTokenUnstakeLoading(false);
       throw new Error(err.message);
     }

@@ -366,3 +366,24 @@ body::-webkit-scrollbar-thumb,
     font-size: 20px;
     line-height: 24px;
 }
+
+.font-14px {
+    font-size: 14px;
+    line-height: 16px;
+}
+
+.grid {
+    display: grid;
+}
+
+.grid-c-1fr {
+    grid-template-columns: 1fr;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.pointer {
+    cursor: pointer;
+}

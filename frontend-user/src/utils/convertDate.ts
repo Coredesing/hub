@@ -4,20 +4,20 @@ import {DATETIME_FORMAT} from "../constants";
 
 export const convertTimeToStringFormat = (date: Date) => {
   const timezone = momentTimezone.tz(date, moment.tz.guess());
-  return timezone.format("h:mm A, DD MMMM YYYY ([GMT]Z)");
+  return timezone.format("HH:mm A, DD MMMM YYYY ([GMT]Z)");
 }
 
 export const convertTimeToStringFormatWithoutGMT = (date: Date) => {
   const timezone = momentTimezone.tz(date, moment.tz.guess());
-  return timezone.format("h:mm A, DD MMMM YYYY");
+  return timezone.format("HH:mm A, DD MMMM YYYY");
 }
 
 export const convertUnixTimeToDateTime = (time: number, formatType = 2) => {
   let type;
   if (formatType == 1) {
-    type = "h:mm A, DD MMMM YYYY ([GMT]Z)";
+    type = "HH:mm A, DD MMMM YYYY ([GMT]Z)";
   } else if (formatType == 2) {
-    type = "hh:mm:ss A MM/DD/yyyy [GMT]ZZ";
+    type = "HH:mm:ss A MM/DD/yyyy [GMT]ZZ";
   }
   return moment.unix(time).format(type);
 }
@@ -38,7 +38,7 @@ export const buildMomentTimezone = (datetime: any): any => {
 
 export const convertDateLocalWithTimezone = (datetime: any): string => {
   if (!datetime) return '';
-  const date = buildMomentTimezone(datetime).format("hh:mm:ss A");
+  const date = buildMomentTimezone(datetime).format("HH:mm:ss A");
   return date;
 }
 

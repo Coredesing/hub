@@ -120,7 +120,7 @@ const ModalStake = (props: any) => {
             </div>
           }
           <div className="subtitle">
-            Unstake Amount {amount}
+            Unstake Amount
           </div>
           <div className="input-group">
             <FormInputNumber

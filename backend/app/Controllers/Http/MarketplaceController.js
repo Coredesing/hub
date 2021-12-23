@@ -31,7 +31,7 @@ class MarketplaceController {
   async discover({ request }) {
     try {
       const inputParams = request.all();
-      let data = await (new MarketplaceService).getListings(inputParams);
+      let data = await (new MarketplaceService).getDiscoverableCollections(inputParams);
       return HelperUtils.responseSuccess(data);
     } catch (e) {
       return HelperUtils.responseErrorInternal();

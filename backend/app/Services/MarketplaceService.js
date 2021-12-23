@@ -200,12 +200,19 @@ class MarketplaceService {
     return data
   }
 
-  async getListings(filterParams) {
+  async getDiscoverableCollections(filterParams) {
     filterParams = this.formatPaginate(filterParams)
-    filterParams.event_type = 'TokenListed'
+    if (!filterParams?.event_type) {
+      filterParams.event_type = 'TokenListed'
+    }
     filterParams.finish = false
+
+
+    let order = filterParams.sort_by || 'dispatch_at'
+    let by = filterParams.sort_desc === 'false' ? 'ASC' : 'DESC'
+
     const data = await this.buildQueryNFTEventsBuilder(filterParams)
-      .orderBy('dispatch_at', 'DESC')
+      .orderBy(order, by)
       .paginate(filterParams.page, filterParams.limit);
     return data
   }
@@ -244,12 +251,17 @@ class MarketplaceService {
   async getCollectionItems(address, filterParams) {
     // TODO: filter whitelist address
     filterParams = this.formatPaginate(filterParams)
-    filterParams.event_type = 'TokenListed'
+    if (!filterParams?.event_type) {
+      filterParams.event_type = 'TokenListed'
+    }
     filterParams.finish = 0
     filterParams.slug = address
 
+    let order = filterParams.sort_by || 'dispatch_at'
+    let by = filterParams.sort_desc === 'false' ? 'ASC' : 'DESC'
+    
     let data = await this.buildQueryNFTEventsBuilder(filterParams)
-      .orderBy('dispatch_at', 'DESC')
+      .orderBy(order, by)
       .paginate(filterParams.page, filterParams.limit);
 
     return data
@@ -260,8 +272,11 @@ class MarketplaceService {
     filterParams = this.formatPaginate(filterParams)
     filterParams.slug = address
 
+    let order = filterParams.sort_by || 'dispatch_at'
+    let by = filterParams.sort_desc === 'false' ? 'ASC' : 'DESC'
+
     let data = await this.buildQueryNFTEventsBuilder(filterParams)
-      .orderBy('dispatch_at', 'DESC')
+      .orderBy(order, by)
       .paginate(filterParams.page, filterParams.limit);
 
     return data
@@ -271,8 +286,11 @@ class MarketplaceService {
     // TODO: filter whitelist address
     filterParams = this.formatPaginate(filterParams)
 
+    let order = filterParams.sort_by || 'dispatch_at'
+    let by = filterParams.sort_desc === 'false' ? 'ASC' : 'DESC'
+
     let data = await this.buildQueryNFTEventsBuilder(filterParams)
-      .orderBy('dispatch_at', 'DESC')
+      .orderBy(order, by)
       .paginate(filterParams.page, filterParams.limit);
 
     return data

@@ -98,7 +98,7 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
             <span className={styles.nameItemListContent}>Token Claim Time</span>
             <span>
               {releaseTimeInDate
-                ? convertTimeToStringFormatWithoutGMT(releaseTimeInDate)
+                ? convertTimeToStringFormat(releaseTimeInDate)
                 : "TBA"}{" "}
             </span>
           </li>

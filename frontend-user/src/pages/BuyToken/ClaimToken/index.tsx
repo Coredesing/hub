@@ -345,7 +345,7 @@ const ClaimToken: React.FC<ClaimTokenProps> = (props: ClaimTokenProps) => {
                   {!p.marked && (p.isDisplayDate || idx === progress.length - 1) && p.date && (
                     <div>{
                       // convertTimeToStringFormat(p.date) || 
-                      buildMomentTimezone(p.date).format('h:mm A, YYYY/MM/DD')}</div>
+                      buildMomentTimezone(p.date).format('HH:mm, YYYY/MM/DD')}</div>
                   )}
                 </div>
               </li>

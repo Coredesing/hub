@@ -665,7 +665,7 @@ const MysteryBox = ({ id, project, ...props }: any) => {
                                             id={id}
                                             project={project}
                                             projectInfor={projectInfor}
-                                            defaultTab={1}
+                                            defaultTab={offerList?.length ? 1 : 0}
                                             isOwnerNFTOnSale={isOwnerNFTOnSale}
                                             isOwnerNFT={isOwnerNFT}
                                             onAcceptOffer={onAcceptOffer}

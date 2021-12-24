@@ -188,7 +188,7 @@ export const AboutMarketplaceNFT = ({
                                 !offerList.length ?
                                     <Box width="100%" textAlign="center">
                                         <img src="/images/icons/item-not-found.svg" alt="" />
-                                        <h4 className="firs-neue-font font-16px bold text-white text-center">No item found</h4>
+                                        <h4 className="firs-neue-font font-16px bold text-white text-center">There are no offers available</h4>
                                     </Box> :
                                     <TableContainer style={{ background: '#171717' }}>
                                         <Table>
@@ -244,7 +244,7 @@ export const AboutMarketplaceNFT = ({
 
             </TabPanel>
             <TabPanel value={currentTab} index={2}>
-                <Box marginTop="24px" position="relative">
+                <Box marginTop="24px" marginBottom="24px" position="relative">
                     {
                         <Backdrop open={activitiesDetailCollection.loading} style={{ color: '#fff', zIndex: 1000, position: 'absolute' }}>
                             <CircularProgress color="inherit" />
@@ -254,7 +254,7 @@ export const AboutMarketplaceNFT = ({
                         activitiesDetailCollection.data !== null && !activitiesDetailCollection.loading && !activitiesDetail?.totalPage ?
                             <Box width="100%" textAlign="center">
                                 <img src="/images/icons/item-not-found.svg" alt="" />
-                                <h4 className="firs-neue-font font-16px bold text-white text-center">No item found</h4>
+                                <h4 className="firs-neue-font font-16px bold text-white text-center">There are no activities available</h4>
                             </Box> :
                             activitiesDetail?.totalPage &&
                             <ActivitiesMarketplace

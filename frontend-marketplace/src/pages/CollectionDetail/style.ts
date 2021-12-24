@@ -1180,6 +1180,9 @@ export const useMarketplaceStyle = makeStyles((theme) => ({
   boxesBodyHeader: {
     display: 'grid',
     gridTemplateColumns: '1fr',
+    '&.grid-2fr': {
+      gridTemplateColumns: '1fr 1fr',
+    },
     gap: '6px',
     '& .box-icon': {
       display: 'grid',

@@ -95,6 +95,7 @@ contract LinearPool is
         uint128 updatedTime;
         uint128 reward;
         uint256 exp;
+        uint128 unStakedTime;
         uint128 lastWithdrawalTime;
     }
 
@@ -724,7 +725,7 @@ contract LinearPool is
     linearValidatePoolById(_poolId)
     {
         require(
-            linearAllowEmergencyTransfer[msg.sender],
+            linearAllowEmergencyTransfer[msg.sender] || linearAllowEmergencyWithdraw,
             "LinearStakingPool: emergency transfer is not allowed yet"
         );
 
@@ -745,5 +746,6 @@ contract LinearPool is
         stakingData.updatedTime = block.timestamp.toUint128();
 
         linearAcceptedToken.safeTransfer(_recipient, amount);
+        emit LinearEmergencyWithdraw(_poolId, account, amount);
     }
 }

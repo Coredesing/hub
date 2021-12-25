@@ -30,10 +30,10 @@ const ModalStake = (props: any) => {
           <img src={closeIcon} alt="" onClick={onClose} className="btn-close"/>
         </DialogTitle>
         <DialogContent className="modal-content__body">
-          <div style={{textAlign: 'center'}}>
+          <div className='firs-neue-font mb-12px' style={{textAlign: 'center'}}>
             {text}
           </div>
-          <div style={{textAlign: 'center'}}>
+          <div className='firs-neue-font bold' style={{textAlign: 'center'}}>
             Are you sure you want to continue? 
           </div>
 
@@ -42,12 +42,13 @@ const ModalStake = (props: any) => {
           <Button
             text="Yes, Sure"
             onClick={onConfirm}
-            backgroundColor="#3232DC"
+            backgroundColor="#72F34B"
             style={{
               height: '42px',
               width: '144px',
               margin: 'auto 0px 10px',
               borderRadius: '36px',
+              color: '#000',
               padding: '12px 30px',
             }}
           />

@@ -10,6 +10,7 @@ import Progress from '@base-components/Progress';
 import { LINK_SWAP_TOKEN } from '@app-constants';
 import BigNumber from 'bignumber.js';
 import { calcPercentRate } from '@utils/index';
+import { FormInputNumber } from '@base-components/FormInputNumber';
 
 const closeIcon = '/images/icons/close.svg'
 
@@ -32,13 +33,25 @@ const ModalStake = (props: any) => {
     logo,
   } = props;
 
-
   const [progress, setProgress] = useState('0');
   useEffect(() => {
     if (new BigNumber(tokenBalance).gt(0)) {
       setProgress(calcPercentRate(amount, tokenBalance) + '')
     }
   }, [amount, tokenBalance, setProgress])
+
+  const [error, setError] = useState('');
+  const onChangeAmount = (e: any) => {
+    const amount = e.target.value;
+    setAmount(amount)
+    if (isNaN(amount)) {
+      setError('Amount invalid');
+    } else if (new BigNumber(amount).gt(tokenBalance)) {
+      setError('Insufficient balance');
+    } else {
+      setError('');
+    }
+  }
 
   return (
     <Dialog
@@ -102,13 +115,18 @@ const ModalStake = (props: any) => {
             Stake Amount
           </div>
           <div className="input-group">
-            <input
+            <FormInputNumber
               value={amount}
-              onChange={(event) => setAmount(event.target.value)}
-              type="number"
-              min="0"
+              onChange={onChangeAmount}
+              min={0}
+              isPositive
             />
           </div>
+          {
+            error && <div className='text-danger font-12px firs-neue-font mt-6px'>
+              {error}
+            </div>
+          }
           <div className="token-balance">Balance: {numberWithCommas(tokenBalance, 4)} {tokenDetails?.symbol}</div>
 
           <div className={poolStyles.progressArea} style={{ width: '100%', marginTop: '20px' }}>
@@ -182,7 +200,7 @@ const ModalStake = (props: any) => {
               color: '#000',
               // marginRight: '5px'
             }}
-            disabled={isNaN(amount) || Number(amount) <= 0}
+            disabled={isNaN(amount) || Number(amount) <= 0 || new BigNumber(amount).gt(tokenBalance)}
           />
           <Link href={LINK_SWAP_TOKEN} target="_blank" rel="noreferrer" style={{
             height: '42px',

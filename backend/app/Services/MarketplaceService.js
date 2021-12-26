@@ -84,6 +84,14 @@ class MarketplaceService {
       builder.where('dispatch_at', '<=', params.end)
     }
 
+    if (params.min_price) {
+      builder.where('amount', '>=', params.min_price)
+    }
+
+    if (params.max_price) {
+      builder.where('amount', '<=', params.max_price)
+    }
+
     return builder
   }
 

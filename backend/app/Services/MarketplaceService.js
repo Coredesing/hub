@@ -76,6 +76,14 @@ class MarketplaceService {
       builder = builder.where('finish', params.finish)
     }
 
+    if (params.start) {
+      builder.where('dispatch_at', '>=', params.start)
+    }
+
+    if (params.end) {
+      builder.where('dispatch_at', '<=', params.end)
+    }
+
     return builder
   }
 

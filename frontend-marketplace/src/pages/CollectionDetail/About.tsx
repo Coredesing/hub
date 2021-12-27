@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 import PropTypes from "prop-types";
 // import SwipeableViews from 'react-swipeable-views';
@@ -30,6 +30,7 @@ import ActivitiesMarketplace from "@base-components/ActivitiesMarketplace";
 import { setActivitiesDetailCollection, InputItemProjectCollection } from "@store/actions/project-collection";
 import CircularProgress from "@base-components/CircularProgress";
 import { utils } from 'ethers';
+import { AppContext } from "../../AppContext";
 type Props = {
     info: { [k: string]: any },
     [k: string]: any
@@ -52,6 +53,9 @@ export const AboutMarketplaceNFT = ({
     projectInfor,
     offerList = [],
     ...props }: Props) => {
+    const {
+        setOpenConnectWallet,
+    } = useContext(AppContext);
 
     const { account: connectedAccount } = useWeb3React();
     const dispatch = useDispatch()
@@ -104,6 +108,9 @@ export const AboutMarketplaceNFT = ({
     const onSetPage = (page: number) => {
         setActivitiesFilter(t => ({ ...t, page }));
     }
+    const handleConnectWalletOpen = () => {
+        setOpenConnectWallet && setOpenConnectWallet(true);
+    };
 
     return (
         <div className={classes.root}>
@@ -183,62 +190,67 @@ export const AboutMarketplaceNFT = ({
             <TabPanel value={currentTab} index={1}>
                 <Box marginTop="24px" marginBottom="24px">
                     {
-                        !reloadOfferList && <>
-                            {
-                                !offerList.length ?
-                                    <Box width="100%" textAlign="center">
-                                        <img src="/images/icons/item-not-found.svg" alt="" />
-                                        <h4 className="firs-neue-font font-16px bold text-white text-center">There are no offers available</h4>
-                                    </Box> :
-                                    <TableContainer style={{ background: '#171717' }}>
-                                        <Table>
-                                            <TableBody>
-                                                {offerList.map((row: any, idx: number) => (
-                                                    <TableRowBody key={idx}>
-                                                        <TableCell scope="row" width="280px" style={{ paddingLeft: '28px' }}>
-                                                            <div className={classes.tableCellOffer}>
-                                                                <h4 style={{ width: 'fit-content' }}>
-                                                                    {cvtAddressToStar(row.buyer || '', '*', 5)} <span style={{ marginLeft: '4px' }}> make an offer</span>
-                                                                </h4>
-                                                                <h5 className="text-left">{formatHumanReadableTime(row.dispatch_at * 1000 || 0, timenow)}</h5 >
-                                                            </div>
-                                                        </TableCell>
-                                                        <TableCell width="100px" align="left" style={{ padding: '7px' }} className="text-uppercase">
-                                                            <div className={classes.tableCellOffer}>
-                                                                <h4 className="text-right flex">
-                                                                    {row.currencySymbol && <img src={`/images/icons/${(row.currencySymbol).toLowerCase()}.png`} alt="" />}
-                                                                    {+row.raw_amount ? utils.formatEther(row.raw_amount) : '-/-'} {row.currencySymbol}
-                                                                </h4>
-                                                            </div>
-                                                        </TableCell>
-                                                        <TableCell width="150px" align="right" style={{ padding: '7px', paddingRight: '20px' }}>
-                                                            {
-                                                                row.event_type === 'TokenOffered' && validChain && addressCurrencyToBuy === row.currency && (isOwnerNFTOnSale ?
-                                                                    <ButtonBase color="green"
-                                                                        isLoading={checkFnIsLoading(props.onAcceptOffer.name)}
-                                                                        disabled={lockingAction.lock}
-                                                                        className={clsx("text-transform-unset mt-0-important font-14px", classes.btn)}
-                                                                        onClick={() => {
-                                                                            props.onAcceptOffer(row)
-                                                                        }}>
-                                                                        Accept
-                                                                    </ButtonBase> :
-                                                                    row.buyer === connectedAccount &&
-                                                                    <ButtonBase color="green"
-                                                                        isLoading={checkFnIsLoading(props.onRejectOffer.name)} disabled={lockingAction.lock}
-                                                                        className={clsx("text-transform-unset mt-0-important font-14px", classes.btn)}
-                                                                        onClick={props.onRejectOffer}>
-                                                                        Cancel
-                                                                    </ButtonBase>)
-                                                            }
-                                                        </TableCell>
-                                                    </TableRowBody>
-                                                ))}
-                                            </TableBody>
-                                        </Table>
-                                    </TableContainer>
-                            }
-                        </>
+                        !connectedAccount ? <Box display={"grid"} justifyContent="center">
+                            <ButtonBase color="green" className="text-transform-unset" onClick={handleConnectWalletOpen}>
+                                Connect Wallet
+                            </ButtonBase>
+                        </Box> :
+                            !reloadOfferList && <>
+                                {
+                                    !offerList.length ?
+                                        <Box width="100%" textAlign="center">
+                                            <img src="/images/icons/item-not-found.svg" alt="" />
+                                            <h4 className="firs-neue-font font-16px bold text-white text-center">There are no offers available</h4>
+                                        </Box> :
+                                        <TableContainer style={{ background: '#171717' }}>
+                                            <Table>
+                                                <TableBody>
+                                                    {offerList.map((row: any, idx: number) => (
+                                                        <TableRowBody key={idx}>
+                                                            <TableCell scope="row" width="280px" style={{ paddingLeft: '28px' }}>
+                                                                <div className={classes.tableCellOffer}>
+                                                                    <h4 style={{ width: 'fit-content' }}>
+                                                                        {cvtAddressToStar(row.buyer || '', '*', 5)} <span style={{ marginLeft: '4px' }}> make an offer</span>
+                                                                    </h4>
+                                                                    <h5 className="text-left">{formatHumanReadableTime(row.dispatch_at * 1000 || 0, timenow)}</h5 >
+                                                                </div>
+                                                            </TableCell>
+                                                            <TableCell width="100px" align="left" style={{ padding: '7px' }} className="text-uppercase">
+                                                                <div className={classes.tableCellOffer}>
+                                                                    <h4 className="text-right flex">
+                                                                        {row.currencySymbol && <img src={`/images/icons/${(row.currencySymbol).toLowerCase()}.png`} alt="" />}
+                                                                        {+row.raw_amount ? utils.formatEther(row.raw_amount) : '-/-'} {row.currencySymbol}
+                                                                    </h4>
+                                                                </div>
+                                                            </TableCell>
+                                                            <TableCell width="150px" align="right" style={{ padding: '7px', paddingRight: '20px' }}>
+                                                                {
+                                                                    row.event_type === 'TokenOffered' && validChain && addressCurrencyToBuy === row.currency && (isOwnerNFTOnSale ?
+                                                                        <ButtonBase color="green"
+                                                                            isLoading={checkFnIsLoading(props.onAcceptOffer.name)}
+                                                                            disabled={lockingAction.lock}
+                                                                            className={clsx("text-transform-unset mt-0-important font-14px", classes.btn)}
+                                                                            onClick={() => {
+                                                                                props.onAcceptOffer(row)
+                                                                            }}>
+                                                                            Accept
+                                                                        </ButtonBase> :
+                                                                        row.buyer === connectedAccount &&
+                                                                        <ButtonBase color="green"
+                                                                            isLoading={checkFnIsLoading(props.onRejectOffer.name)} disabled={lockingAction.lock}
+                                                                            className={clsx("text-transform-unset mt-0-important font-14px", classes.btn)}
+                                                                            onClick={props.onRejectOffer}>
+                                                                            Cancel
+                                                                        </ButtonBase>)
+                                                                }
+                                                            </TableCell>
+                                                        </TableRowBody>
+                                                    ))}
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
+                                }
+                            </>
                     }
                 </Box>
 

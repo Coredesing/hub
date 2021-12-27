@@ -1,7 +1,7 @@
 import React from 'react';
 import useStyles from "../style";
 
-function PoolSlug(props: any) {
+function AggregatorSlug(props: any) {
   const classes = useStyles();
   const {
     register, poolDetail,
@@ -10,12 +10,12 @@ function PoolSlug(props: any) {
   return (
     <>
       <div className={classes.formControl}>
-        <label className={classes.formControlLabel}>Pool Slug</label>
+        <label className={classes.formControlLabel}>Aggregator Slug</label>
         <input
           type="text"
-          name='slug'
-          defaultValue={poolDetail?.slug}
-          ref={register({ required: true })}
+          name='aggregator_slug'
+          defaultValue={poolDetail?.aggregator_slug}
+          ref={register({ required: false })}
           className={classes.formControlInput}
         />
       </div>
@@ -23,4 +23,4 @@ function PoolSlug(props: any) {
   );
 }
 
-export default PoolSlug;
+export default AggregatorSlug;

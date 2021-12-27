@@ -182,6 +182,18 @@ const BuyTokenPoolDetails: FC<Props> = ({ poolDetails }) => {
               </a>
             </div>
           </li>
+          <li className={styles.itemListContent}>
+            <span className={styles.nameItemListContent}>Aggregator</span>
+            {poolDetails?.aggregatorSlug ? <a
+              className={styles.btnOpenModal}
+              target="_blank"
+              href={`https://gamefi.org/game/${poolDetails?.aggregatorSlug}`}
+              style={{ color: "#72F34B" }}
+              rel="noreferrer"
+            >
+              View project aggregator
+            </a> : <div>The project does not have aggregator yet.</div>}
+          </li>
         </ul>
       </div>
 

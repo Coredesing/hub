@@ -57,6 +57,7 @@ import Process from "./Components/Process";
 import AirdropNetwork from "./Components/AirdropNetwork";
 
 import {POOL_IS_PRIVATE, TOKEN_TYPE} from "../../constants";
+import AggregatorSlug from './Components/AggregatorSlug';
 
 function PoolForm(props: any) {
   const classes = useStyles();
@@ -166,6 +167,7 @@ function PoolForm(props: any) {
       banner: data.banner,
       mini_banner: data.mini_banner ?? '',
       slug: data.slug ?? '',
+      aggregator_slug: data.aggregator_slug ?? '',
       description: data.description,
       process: data.process,
       rule: data.rule ?? '',
@@ -330,6 +332,7 @@ function PoolForm(props: any) {
       banner: data.banner,
       mini_baner: data.mini_banner,
       slug: data.slug ?? '',
+      aggregator_slug: data.aggregator_slug ?? '',
       description: data.description,
       process: data.process,
       rule: data.rule ?? '',
@@ -525,6 +528,7 @@ function PoolForm(props: any) {
         banner: data.banner,
         mini_banner: data.mini_banner,
         slug: data.slug ?? '',
+        aggregator_slug: data.aggregator_slug ?? '',
         description: data.description,
         process: data.process,
         rule: data.rule ?? '',
@@ -674,6 +678,13 @@ function PoolForm(props: any) {
               />
 
               <PoolSlug
+                  poolDetail={poolDetail}
+                  register={register}
+                  setValue={setValue}
+                  errors={errors}
+              />
+
+              <AggregatorSlug
                   poolDetail={poolDetail}
                   register={register}
                   setValue={setValue}

@@ -66,6 +66,8 @@ export type PoolDetails = {
   preOrderMinTier?: any;  // pre_order_min_tier
   startPreOrderTime?: any; // start_pre_order_time
   airdropNetwork?: any;
+  slug?: any;
+  aggregatorSlug?: any;
 }
 
 export type PoolDetailsReturnType ={
@@ -198,6 +200,8 @@ const usePoolDetails = (poolId : number): PoolDetailsReturnType => {
         preOrderMinTier: data?.pre_order_min_tier,
         startPreOrderTime: data?.start_pre_order_time,
         airdropNetwork: data?.airdrop_network,
+        slug: data?.slug,
+        aggregatorSlug: data?.aggregator_slug
       }
     }
 

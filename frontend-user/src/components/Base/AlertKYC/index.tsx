@@ -14,7 +14,7 @@ export const AlertKYC = ({ connectedAccount,...props }: { [k in string]: any }) 
                     rel="noreferrer"
                     className="kyc-link"
                 >
-                    Please sumbit KYC now
+                    Please submit KYC now
                 </a>
                 &nbsp;or switch to a verified address.
             </span>

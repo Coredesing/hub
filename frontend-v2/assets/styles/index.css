@@ -1,0 +1,42 @@
+/* purgecss start ignore */
+@tailwind base;
+@tailwind components;
+/* purgecss end ignore */
+
+@tailwind utilities;
+
+@font-face {
+  font-family: Rajdhani;
+  src: url('../fonts/Rajdhani/Rajdhani-Bold.ttf');
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: Rajdhani;
+  src: url('../fonts/Rajdhani/Rajdhani-SemiBold.ttf');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: Rajdhani;
+  src: url('../fonts/Rajdhani/Rajdhani-Medium.ttf');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: Rajdhani;
+  src: url('../fonts/Rajdhani/Rajdhani-Regular.ttf');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: Rajdhani;
+  src: url('../fonts/Rajdhani/Rajdhani-Light.ttf');
+  font-weight: 300;
+}
+
+html, body {
+  margin: 0;
+  font-family: Rajdhani;
+  line-height: 17px;
+}

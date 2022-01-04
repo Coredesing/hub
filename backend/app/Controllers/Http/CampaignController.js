@@ -603,7 +603,11 @@ class CampaignController {
     if (!campaign_id) {
       return HelperUtils.responseBadRequest('Bad request with campaign_id');
     }
-    console.log('Claim token with params: ', params, campaign_id, userWalletAddress);
+
+    // blacklist
+    if (!userWalletAddress || userWalletAddress.toLowerCase() === '0xbc28a600176f8c529d7b186c014d97bdce5d6b8f') {
+      return HelperUtils.responseBadRequest("Wallet not found");
+    }
 
     try {
       // check campaign info

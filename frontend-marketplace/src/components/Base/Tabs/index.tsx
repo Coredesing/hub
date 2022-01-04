@@ -75,7 +75,7 @@ export const AppBar = (props: AppBarType) => {
             value={props.currentTab}
             onChange={props.onChange}
             aria-label="simple tabs"
-            variant={matchSM ? "fullWidth" : "standard"}
+            variant={matchSM ? "scrollable" : "standard"}
         >
             {
                 props.tabNames.map((name, idx) => <Tab

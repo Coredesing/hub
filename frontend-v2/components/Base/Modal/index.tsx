@@ -13,11 +13,11 @@ type Props = {
 const Modal = ({ children, show, toggle, className }: Props) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
 
-  const handleClose = () => {
-    toggle(false)
-  }
-
   useEffect(() => {
+    const handleClose = () => {
+      toggle(false)
+    }
+
     function handleClick(event: any) {
       if (wrapperRef?.current && !wrapperRef?.current?.contains(event.target)) {
         handleClose()
@@ -33,7 +33,7 @@ const Modal = ({ children, show, toggle, className }: Props) => {
     return () => {
       document.removeEventListener('click', handleClick, { capture: true })
     }
-  }, [wrapperRef, show])
+  }, [wrapperRef, show, toggle])
 
   return (
     show && 

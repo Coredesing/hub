@@ -6,14 +6,17 @@ type Props = {
   children?: ReactNode
   path?: string
 }
-const SidebarLink = ({children, path}: Props) => {
+const MenuLink = ({children, path}: Props) => {
   const router = useRouter()
   return (
     <Link href={path} passHref>
       <div
-        className={`relative w-full py-4 flex flex-col align-middle items-center justify-center uppercase text-xs font-semibold cursor-pointer ${
-          router.asPath === path ? 'dark:bg-gamefiDark-900 opacity-100' : 'opacity-40'
+        className={`relative w-full py-4 flex align-middle items-center pl-5 uppercase gap-5 text-sm font-semibold cursor-pointer ${
+          router.asPath === path ? 'opacity-100' : 'opacity-40'
         }`}
+        style={router.asPath === path ? {
+          background: 'linear-gradient(90.53deg, #282B38 1.72%, #15171e 80%)'
+        } : {}}
       >
         {router.asPath === path && <span
           style={{
@@ -34,4 +37,4 @@ const SidebarLink = ({children, path}: Props) => {
   )
 }
 
-export default SidebarLink
+export default MenuLink

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Layout from '../components/Layout'
 
-const IndexPage = () => (
+const Aggregator = () => (
   <Layout title="GameFi Aggregator">
     <div>
       <h1>Aggregator</h1>
@@ -9,4 +9,4 @@ const IndexPage = () => (
   </Layout>
 )
 
-export default IndexPage
+export default Aggregator

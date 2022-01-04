@@ -40,3 +40,16 @@ html, body {
   font-family: Rajdhani;
   line-height: 17px;
 }
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.menu-slide-up > .h-full {
+  transition: height 0.4ms ease-out;
+}

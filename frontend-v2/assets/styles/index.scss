@@ -53,3 +53,48 @@ html, body {
 .menu-slide-up > .h-full {
   transition: height 0.4ms ease-out;
 }
+
+.clipped-t-r {
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%, 0 0);
+}
+
+.clipped-t-r-lg {
+  clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 0 100%, 0 0);
+}
+
+.thumbs {
+  @apply px-14;
+}
+
+.thumb {
+  border: none !important;
+  height: 80px !important;
+}
+
+.thumbs-wrapper {
+  margin: 5px 0 !important;
+  .selected {
+    border: 1px solid #72F34B !important;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .slider-image {
+    max-height: 280px;
+    width: auto;
+  }
+}
+
+@media only screen and (min-width: 1025px) {
+  .slider-image {
+    max-height: 400px;
+    width: auto;
+  }
+}
+
+@media only screen and (min-width: 1440px) {
+  .slider-image {
+    max-height: 480px;
+    width: auto;
+  }
+}

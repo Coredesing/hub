@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react'
 import { useEffect } from 'react'
 import { useRef } from 'react'
-import styles from './style.module.scss'
 
 type Props = {
   children?: ReactNode,

@@ -6,7 +6,7 @@ import Image from 'next/image'
 const Topbar = () => {
   return (
     <>
-      <div className="hidden w-full md:flex md:h-22 lg:h-24 py-4 px-8">
+      <div className="hidden w-full md:container md:mx-auto md:flex md:h-22 lg:h-24 py-4 px-8">
         <div>
           <div className="flex align-middle items-center cursor-pointer">
             <Image src={require('assets/images/icons/search.svg')} alt='search'></Image>

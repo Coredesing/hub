@@ -1,5 +1,4 @@
-import Link from 'next/link'
-import Layout from '../components/Layout'
+import Layout from 'components/Layout'
 
 const Aggregator = () => (
   <Layout title="GameFi Aggregator">

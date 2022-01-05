@@ -19,11 +19,22 @@ module.exports = {
         900: '#15171E'
       },
       'gamefiGreen': {
-        400: '#72F34B',
-        500: '#6CDB00',
+        DEFAULT: '#72F34B',
+        '50': '#F9FEF7',
+        '100': '#EAFDE4',
+        '200': '#CCFBBE',
+        '300': '#AEF898',
+        '400': '#90F671',
+        '500': '#72F34B',
+        '600': '#49EF16',
+        '700': '#37C10D',
+        '800': '#288C09',
+        '900': '#195806'
       },
       ...colors
     }
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms')
+  ],
 }

@@ -1,11 +1,29 @@
-import Layout from '../components/Layout'
+import Layout from 'components/Layout'
+import { useWeb3Default } from 'components/web3'
 
-const IndexPage = () => (
+// example of default provider
+function ChainId() {
+  const { chainId } = useWeb3Default()
+
+  return (
+    <>
+      <span>Chain Id</span>
+      <span role="img" aria-label="chain">
+        ⛓
+      </span>
+      <span>{chainId ?? ''}</span>
+    </>
+  )
+}
+
+const PageIndex = () => {
+  return (
   <Layout title="GameFi">
     <div>
       <h1>Home</h1>
+      <ChainId />
     </div>
-  </Layout>
-)
+  </Layout>)
+}
 
-export default IndexPage
+export default PageIndex

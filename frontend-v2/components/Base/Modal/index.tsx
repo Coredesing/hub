@@ -38,7 +38,7 @@ const Modal = ({ children, show, toggle, className }: Props) => {
     show && 
     <>
       <div className="fixed z-10 inset-0 overflow-y-auto">
-        <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
             {/* Background overlay, show/hide based on modal state.
 
             Entering: "ease-out duration-300"
@@ -61,10 +61,8 @@ const Modal = ({ children, show, toggle, className }: Props) => {
               From: "opacity-100 translate-y-0 sm:scale-100"
               To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" */}
 
-          <div ref={wrapperRef} className="dark:bg-gamefiDark-400 inline-block align-bottom rounded-sm text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-            <div className={className}>
-              {children}
-            </div>
+          <div ref={wrapperRef} className={`dark:bg-gamefiDark-400 inline-block align-bottom rounded-sm text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl w-full ${className}`}>
+            {children}
           </div>
         </div>
       </div>

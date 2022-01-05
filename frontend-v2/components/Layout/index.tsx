@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react'
 import Head from 'next/head'
-import Link from 'next/link'
 import Sidebar from 'components/Base/Sidebar'
 import Topbar from 'components/Base/Topbar'
 import Toolbox from 'components/Base/Toolbox'

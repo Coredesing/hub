@@ -3,6 +3,22 @@ import Layout from 'components/Layout'
 import Image from 'next/image'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import { Carousel } from 'react-responsive-carousel'
+import { useWeb3Default } from 'components/web3'
+
+// example of default provider
+function ChainId() {
+  const { chainId } = useWeb3Default()
+
+  return (
+    <>
+      <span>Chain Id</span>
+      <span role="img" aria-label="chain">
+        ⛓
+      </span>
+      <span>{chainId ?? ''}</span>
+    </>
+  )
+}
 
 const items = [
   {
@@ -56,9 +72,10 @@ const items = [
   }
 ]
 
-const IndexPage = () => {
+const PageIndex = () => {
   return (
     <Layout title="GameFi">
+      <ChainId />
       <div className="px-16 container mx-auto hidden lg:block">
         <Carousel
           showStatus={false}
@@ -134,4 +151,4 @@ const IndexPage = () => {
   )
 }
 
-export default IndexPage
+export default PageIndex

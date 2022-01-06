@@ -62,6 +62,10 @@ html, body {
   clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 0 100%, 0 0);
 }
 
+.clipped-b-r-full {
+  clip-path: polygon(0 0, 100% 0%, calc(100% - 30px) 100%, 0% 100%);
+}
+
 .thumbs {
   @apply px-14;
 }
@@ -78,23 +82,15 @@ html, body {
   }
 }
 
-@media only screen and (min-width: 600px) {
-  .slider-image {
-    max-height: 280px;
-    width: auto;
-  }
+::-webkit-scrollbar {
+  width: 5px;
 }
 
-@media only screen and (min-width: 1025px) {
-  .slider-image {
-    max-height: 400px;
-    width: auto;
-  }
+::-webkit-scrollbar-track {
+  background-color: transparent;
 }
 
-@media only screen and (min-width: 1440px) {
-  .slider-image {
-    max-height: 480px;
-    width: auto;
-  }
+::-webkit-scrollbar-thumb {
+  @apply bg-gamefiDark-500;
+  @apply rounded;
 }

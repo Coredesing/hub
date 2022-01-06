@@ -1,10 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import Layout from 'components/Layout'
-import Image from 'next/image'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import { Carousel } from 'react-responsive-carousel'
 import { useWeb3Default } from 'components/web3'
-import GameCarousel from 'components/Pages/Home/Carousel'
+import GameCarousel from 'components/Pages/Home/GameCarousel'
 
 // example of default provider
 function ChainId() {
@@ -76,7 +74,7 @@ const items = [
 const PageIndex = () => {
   return (
     <Layout title="GameFi">
-      <div className="px-2 md:px-4 lg:px-16 container mx-auto hidden lg:block">
+      <div className="md:px-4 lg:px-16 md:container mx-auto lg:block">
         <GameCarousel items={items}></GameCarousel>
       </div>
     </Layout>

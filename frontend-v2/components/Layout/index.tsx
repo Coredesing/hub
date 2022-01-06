@@ -23,7 +23,7 @@ const Layout = ({ children, title }: Props) => {
         <div>
           <Sidebar></Sidebar>
         </div>
-        <div className="w-full overflow-hidden">
+        <div className="w-full overflow-auto">
           <Topbar></Topbar>
           {children}
         </div>

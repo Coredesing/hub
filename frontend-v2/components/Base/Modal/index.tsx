@@ -1,11 +1,11 @@
-import React, { ReactNode } from 'react'
-import { useEffect } from 'react'
-import { useRef } from 'react'
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+import React, { ReactNode, useEffect, useRef } from 'react'
 
 type Props = {
   children?: ReactNode,
   show?: boolean,
-  toggle?: Function,
+  toggle?: any,
   className?: any
 }
 
@@ -18,7 +18,7 @@ const Modal = ({ children, show, toggle, className }: Props) => {
     }
 
     function handleClick(event: any) {
-      if (wrapperRef?.current && !wrapperRef?.current?.contains(event.target)) {
+      if (wrapperRef?.current && !wrapperRef?.current?.contains(event?.target)) {
         handleClose()
       }
     }

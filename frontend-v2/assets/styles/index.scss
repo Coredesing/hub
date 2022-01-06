@@ -67,7 +67,7 @@ html, body {
 }
 
 .thumbs {
-  @apply px-14;
+  @apply lg:px-14;
 }
 
 .thumb {
@@ -91,6 +91,5 @@ html, body {
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gamefiDark-500;
-  @apply rounded;
+  @apply bg-gamefiDark-500 rounded;
 }

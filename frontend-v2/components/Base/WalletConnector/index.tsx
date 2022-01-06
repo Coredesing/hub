@@ -38,13 +38,13 @@ const WalletConnector = () => {
   const [showModal, setShowModal] = useState(false)
 
   const [agreed, setAgreed] = useState(false)
-  function handleAgreement(event: MouseEvent) {
+  function handleAgreement(event: any) {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     setAgreed(value)
   }
 
-  const [networkChosen, setNetworkChosen] = useState()
+  const [networkChosen, setNetworkChosen] = useState({id: null})
   const chooseNetwork = network => {
     if (!agreed) {
       return
@@ -53,7 +53,7 @@ const WalletConnector = () => {
     setNetworkChosen(network)
   }
 
-  const [walletChosen, setWalletChosen] = useState()
+  const [walletChosen, setWalletChosen] = useState({id: null})
   const walletsAvailable = useMemo(() => {
     if (!networkChosen) {
       return wallets
@@ -113,7 +113,7 @@ const WalletConnector = () => {
             <div className="flex gap-x-2">
               {walletsAvailable.map(wallet => {
                 const available = !!agreed && !!networkChosen
-                const chosen = available && wallet.id === walletChosen?.id
+                const chosen = available && walletChosen && wallet.id === walletChosen.id
 
                 return <div key={wallet.id} className={`flex-1 relative cursor-pointer flex flex-col items-center justify-between bg-gray-700 py-4 border border-transparent ${chosen ? 'border-gamefiGreen-500' : ''}`} onClick={() => chooseWallet(wallet)}>
                   <Image src={wallet.image} className={available ? 'filter-none' : 'grayscale'} alt={wallet.name} />

@@ -5,7 +5,7 @@ import { useRef } from 'react'
 type Props = {
   children?: ReactNode,
   show?: boolean,
-  toggle?: any,
+  toggle?: Function,
   className?: any
 }
 

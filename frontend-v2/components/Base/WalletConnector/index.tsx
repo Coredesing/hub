@@ -38,13 +38,13 @@ const WalletConnector = () => {
   const [showModal, setShowModal] = useState(false)
 
   const [agreed, setAgreed] = useState(false)
-  function handleAgreement(event: MouseEvent) {
+  function handleAgreement(event: any) {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     setAgreed(value)
   }
 
-  const [networkChosen, setNetworkChosen] = useState()
+  const [networkChosen, setNetworkChosen] = useState({id: null})
   const chooseNetwork = network => {
     if (!agreed) {
       return
@@ -53,7 +53,7 @@ const WalletConnector = () => {
     setNetworkChosen(network)
   }
 
-  const [walletChosen, setWalletChosen] = useState()
+  const [walletChosen, setWalletChosen] = useState({id: null})
   const walletsAvailable = useMemo(() => {
     if (!networkChosen) {
       return wallets
@@ -74,8 +74,7 @@ const WalletConnector = () => {
   return (
     <>
       <button
-        style={{ clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%, 0 0)' }}
-        className='overflow-hidden py-2 px-6 bg-gamefiGreen-500 text-gamefiDark-900 font-semibold text-sm rounded-sm hover:opacity-95 cursor-pointer w-full'
+        className='overflow-hidden py-2 px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-semibold text-sm rounded-xs hover:opacity-95 cursor-pointer w-full clipped-t-r'
         onClick={() => setShowModal(true)}
       >
         Connect Wallet
@@ -113,7 +112,7 @@ const WalletConnector = () => {
             <div className="flex gap-x-2">
               {walletsAvailable.map(wallet => {
                 const available = !!agreed && !!networkChosen
-                const chosen = available && wallet.id === walletChosen?.id
+                const chosen = available && walletChosen && wallet.id === walletChosen.id
 
                 return <div key={wallet.id} className={`flex-1 relative cursor-pointer flex flex-col items-center justify-between bg-gray-700 py-4 border border-transparent ${chosen ? 'border-gamefiGreen-500' : ''}`} onClick={() => chooseWallet(wallet)}>
                   <Image src={wallet.image} className={available ? 'filter-none' : 'grayscale'} alt={wallet.name} />

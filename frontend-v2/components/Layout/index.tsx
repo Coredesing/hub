@@ -20,8 +20,10 @@ const Layout = ({ children, title }: Props) => {
           <link rel="shortcut icon" href="/favicon.ico" />
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         </Head>
-        <Sidebar></Sidebar>
-        <div className="w-full">
+        <div>
+          <Sidebar></Sidebar>
+        </div>
+        <div className="w-full overflow-hidden">
           <Topbar></Topbar>
           {children}
         </div>

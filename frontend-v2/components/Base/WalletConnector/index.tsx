@@ -44,7 +44,7 @@ const WalletConnector = () => {
     setAgreed(value)
   }
 
-  const [networkChosen, setNetworkChosen] = useState({id: null})
+  const [networkChosen, setNetworkChosen] = useState<{ id: any } | undefined>()
   const chooseNetwork = network => {
     if (!agreed) {
       return
@@ -53,7 +53,7 @@ const WalletConnector = () => {
     setNetworkChosen(network)
   }
 
-  const [walletChosen, setWalletChosen] = useState({id: null})
+  const [walletChosen, setWalletChosen] = useState<{ id: any } | undefined>()
   const walletsAvailable = useMemo(() => {
     if (!networkChosen) {
       return wallets
@@ -70,6 +70,9 @@ const WalletConnector = () => {
 
     setWalletChosen(wallet)
   }
+  useEffect(() => {
+    setWalletChosen()
+  }, [networkChosen])
 
   return (
     <>
@@ -112,7 +115,7 @@ const WalletConnector = () => {
             <div className="flex gap-x-2">
               {walletsAvailable.map(wallet => {
                 const available = !!agreed && !!networkChosen
-                const chosen = available && walletChosen && wallet.id === walletChosen.id
+                const chosen = available && wallet.id === walletChosen?.id
 
                 return <div key={wallet.id} className={`flex-1 relative cursor-pointer flex flex-col items-center justify-between bg-gray-700 py-4 border border-transparent ${chosen ? 'border-gamefiGreen-500' : ''}`} onClick={() => chooseWallet(wallet)}>
                   <Image src={wallet.image} className={available ? 'filter-none' : 'grayscale'} alt={wallet.name} />

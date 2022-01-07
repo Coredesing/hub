@@ -1,10 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import Layout from 'components/Layout'
-import Image from 'next/image'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import { Carousel } from 'react-responsive-carousel'
 import { useWeb3Default } from 'components/web3'
-import GameCarousel from 'components/Pages/Home/Carousel'
+import GameCarousel from 'components/Pages/Home/GameCarousel'
+
+import axios from 'axios'
+import { GetStaticProps } from 'next'
 
 // example of default provider
 function ChainId() {
@@ -21,66 +22,43 @@ function ChainId() {
   )
 }
 
-const items = [
-  {
-    title: 'LOREM IPSUM DOLOR SIT AMET',
-    favorites: 1024000,
-    type: 'game studio',
-    description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores ullam id fugit alias obcaecati dolores qui eos recusandae magni. Veritatis officia omnis necessitatibus pariatur, odio earum! Quae evenie',
-    img: 'https://i.imgur.com/dhatsJO.jpeg'
-  },
-  {
-    title: 'LOREM IPSUM DOLOR SIT AMET',
-    favorites: 1024000,
-    type: 'game studio',
-    description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores ullam id fugit alias obcaecati dolores qui eos recusandae magni. Veritatis officia omnis necessitatibus pariatur, odio earum! Quae evenie',
-    img: 'https://i.imgur.com/4rav4Pk.jpeg'
-  },
-  {
-    title: 'LOREM IPSUM DOLOR SIT AMET',
-    favorites: 1024000,
-    type: 'game studio',
-    description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores ullam id fugit alias obcaecati dolores qui eos recusandae magni. Veritatis officia omnis necessitatibus pariatur, odio earum! Quae evenie',
-    img: 'https://i.imgur.com/mAMucft.png'
-  },
-  {
-    title: 'LOREM IPSUM DOLOR SIT AMET',
-    favorites: 1024000,
-    type: 'game studio',
-    description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores ullam id fugit alias obcaecati dolores qui eos recusandae magni. Veritatis officia omnis necessitatibus pariatur, odio earum! Quae evenie',
-    img: 'https://i.imgur.com/u1NM6S6.jpeg'
-  },
-  {
-    title: 'LOREM IPSUM DOLOR SIT AMET',
-    favorites: 1024000,
-    type: 'game studio',
-    description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores ullam id fugit alias obcaecati dolores qui eos recusandae magni. Veritatis officia omnis necessitatibus pariatur, odio earum! Quae evenie',
-    img: 'https://i.imgur.com/9lfkSWM.jpeg'
-  },
-  {
-    title: 'LOREM IPSUM DOLOR SIT AMET',
-    favorites: 1024000,
-    type: 'game studio',
-    description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores ullam id fugit alias obcaecati dolores qui eos recusandae magni. Veritatis officia omnis necessitatibus pariatur, odio earum! Quae evenie',
-    img: 'https://i.imgur.com/yFevUKf.jpeg'
-  },
-  {
-    title: 'LOREM IPSUM DOLOR SIT AMET',
-    favorites: 1024000,
-    type: 'game studio',
-    description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores ullam id fugit alias obcaecati dolores qui eos recusandae magni. Veritatis officia omnis necessitatibus pariatur, odio earum! Quae evenie',
-    img: 'https://i.imgur.com/rCPySIK.jpeg'
-  }
-]
+const BASE_URL = process.env.NEXT_BASE_URL
 
-const PageIndex = () => {
+const PageIndex = ({ topGames, likes }) => {
   return (
     <Layout title="GameFi">
-      <div className="px-2 md:px-4 lg:px-16 container mx-auto hidden lg:block">
-        <GameCarousel items={items}></GameCarousel>
+      <div className="md:px-4 lg:px-16 md:container mx-auto lg:block">
+        {/* Load error here */}
+        {/* Loading here */}
+        {topGames === []}
+        {topGames && <GameCarousel likes={likes} items={topGames}></GameCarousel>}
       </div>
     </Layout>
   )
+}
+
+export const getStaticProps: GetStaticProps = async () => {
+  const topGames = await axios.get(`${BASE_URL}/aggregator?display_area=Top Game`).then(res => {
+    return res?.data?.data?.data
+  }).catch(e => console.log(e))
+  if (!topGames || !topGames.length) return {
+    props: {
+      topGames: [],
+      likes: []
+    }
+  }
+
+  const topGameIds = topGames.map(game => game.id)
+  const likes = await axios.get(`${BASE_URL}/aggregator/get-like?ids=${topGameIds.join(',')}`).then(res => {
+    return res?.data?.data
+  })
+
+  return {
+    props: {
+      topGames,
+      likes
+    }
+  }
 }
 
 export default PageIndex

@@ -938,10 +938,10 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
         gap: '0',
       },
       '& h4': {
-        fontFamily: 'Firs Neue',
+        fontFamily: 'Poppins',
         fontStyle: 'normal',
-        fontWeight: 'normal',
-        fontSize: '12px',
+        fontWeight: 'bold',
+        fontSize: '14px',
         lineHeight: '16px',
         color: '#AEAEAE',
         transform: 'skew(20deg)',
@@ -949,9 +949,13 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
           transform: 'unset',
           marginTop: '10px',
         },
+        '&.finished': {
+          color: '#F34B4B',
+          textTransform: 'unset',
+        }
       },
       '& .countdown': {
-        fontFamily: 'Space Ranger',
+        fontFamily: 'Rajdhani',
         background: '#000',
         transform: 'skew(20deg)',
 
@@ -964,7 +968,8 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
         },
 
         '& .time .number': {
-          transform: 'skew(-20deg)',
+          // transform: 'skew(-20deg)',
+          // fontWeight: 'bold !important',
           fontSize: '36px',
           lineHeight: '40px',
           [theme.breakpoints.down('xs')]: {

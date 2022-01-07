@@ -230,7 +230,7 @@ const MysteryBox = ({ id, ...props }: any) => {
             const startBuyTime = isAccIsBuyPreOrder && timeLine.startPreOrderTime ? timeLine.startPreOrderTime : timeLine.startBuyTime;
             const soldOut = checkSoldout.soldout;
             if (soldOut) {
-                setCountdown({ date1: 0, date2: 0, title: 'Finished', isFinished: true });
+                setCountdown({ date1: 0, date2: 0, title: 'This pool is over. See you in the next pool.', isFinished: true });
                 timeLine.freeBuyTime ? (timeLinesInfo[5].current = true) : (timeLinesInfo[4].current = true);
             } else if (timeLine.startJoinPooltime > Date.now()) {
                 setCountdown({ date1: timeLine.startJoinPooltime, date2: Date.now(), title: 'Whitelist Opens In', isUpcoming: true });
@@ -268,7 +268,7 @@ const MysteryBox = ({ id, ...props }: any) => {
                 }
             }
             else {
-                setCountdown({ date1: 0, date2: 0, title: 'Finished', isFinished: true });
+                setCountdown({ date1: Date.now() + 1000* 6000, date2: Date.now(), title: 'Whitelist Closes In', isFinished: false });
                 timeLine.freeBuyTime ? (timeLinesInfo[5].current = true) : (timeLinesInfo[4].current = true);
             }
             setTimelines(timeLinesInfo);
@@ -855,7 +855,13 @@ const MysteryBox = ({ id, ...props }: any) => {
                                         </div>
                                     </div>
                                     <div className="box-countdown">
-                                        <h4 className="text-uppercase">{countdown.title}</h4>
+                                        <h4 className={clsx(
+                                            {
+                                                finished: countdown.isFinished
+                                            }
+                                        )}>
+                                            {countdown.title}
+                                        </h4>
                                         {!countdown.isFinished && countdown.date1 && countdown.date2 && <CountDownTimeV1 time={countdown} className={"countdown"} onFinish={onSetCountdown} />}
                                     </div>
                                 </div>

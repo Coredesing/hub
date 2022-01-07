@@ -41,7 +41,7 @@ const Ticket: React.FC<any> = (props: any) => {
     return <ContentTicket id={id} />;
   }, []);
   return (
-    <DefaultLayout>
+    <DefaultLayout style={{background: '#15171E'}}>
       <WrapperContent useShowBanner={false}>
         {
           checkParamType.checking ?

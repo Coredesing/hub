@@ -113,6 +113,76 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'Rajdhani';
+    src: url("./styles/fonts/Rajdhani/Rajdhani-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Rajdhani';
+    src: url("./styles/fonts/Rajdhani/Rajdhani-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Rajdhani';
+    src: url("./styles/fonts/Rajdhani/Rajdhani-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Rajdhani';
+    src: url("./styles/fonts/Rajdhani/Rajdhani-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Rajdhani';
+    src: url("./styles/fonts/Rajdhani/Rajdhani-Bold.ttf") format("truetype");
+    font-weight: 'bold';
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url("./styles/fonts/Poppins/Poppins-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url("./styles/fonts/Poppins/Poppins-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url("./styles/fonts/Poppins/Poppins-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url("./styles/fonts/Poppins/Poppins-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url("./styles/fonts/Poppins/Poppins-Bold.ttf") format("truetype");
+    font-weight: 'bold';
+    font-style: normal;
+}
+
 [class^="custom-icon-"],
 [class*=" custom-icon-"] {
     /* use !important to prevent issues with browser extensions that change fonts */

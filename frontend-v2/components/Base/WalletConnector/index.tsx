@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useLayoutEffect, useMemo, ReactNode, RefObject, FormEvent } from 'react'
+import React, { useState, useEffect, useCallback, useRef, useLayoutEffect, useMemo, ReactNode, RefObject, FormEvent } from 'react'
 import useResizeObserver, { UseResizeObserverCallback } from '@react-hook/resize-observer'
 import { useWeb3React, Web3ReactManagerReturn, AbstractConnector } from '@web3-react/core'
 import { networks, wallets, connectorFromWallet, useEagerConnect } from 'components/web3'

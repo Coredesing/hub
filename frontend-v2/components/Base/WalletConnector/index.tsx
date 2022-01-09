@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef, useLayoutEffect, useMemo, ReactNode, RefObject, MouseEvent } from 'react'
+import React, { useState, useEffect, useRef, useLayoutEffect, useMemo, ReactNode, RefObject, FormEvent } from 'react'
 import useResizeObserver, { UseResizeObserverCallback } from '@react-hook/resize-observer'
-import { useWeb3React } from '@web3-react/core'
-import { networks, wallets } from 'components/web3'
+import { useWeb3React, Web3ReactManagerReturn, AbstractConnector } from '@web3-react/core'
+import { networks, wallets, connectorFromWallet, useEagerConnect } from 'components/web3'
+import { useMyWeb3, Action as MyAction } from 'components/web3/context'
 import Image from 'next/image'
 import Modal from '../Modal'
 
@@ -24,26 +25,27 @@ const useSize = (target: RefObject<HTMLElement>) => {
 }
 
 const WalletConnector = () => {
-  const context = useWeb3React()
-  const { connector } = context
-  // const { connector, library, chainId, account, activate, deactivate, active, error } = context
-
-  const [activatingConnector, setActivatingConnector] = React.useState<any>()
-  useEffect(() => {
-    if (activatingConnector && activatingConnector === connector) {
-      setActivatingConnector(undefined)
-    }
-  }, [activatingConnector, connector])
-
   const [showModal, setShowModal] = useState(false)
 
+  const triedEager = useEagerConnect()
+  const context: Web3ReactManagerReturn = useWeb3React()
+  const myContext = useMyWeb3()
+  const { library, chainId: _chainID, account: _account, activate, active, error: _error } = context
+  const { account, error, dispatch } = myContext
+  useEffect(() => {
+    const action: MyAction = { type: 'SET_ERROR', payload: _error }
+    dispatch(action)
+  }, [_error, dispatch])
+  useEffect(() => {
+    console.log('err', error)
+  }, [error])
+
   const [agreed, setAgreed] = useState(false)
-  function handleAgreement(event: any) {
+  function handleAgreement(event: FormEvent<HTMLInputElement>) {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     setAgreed(value)
   }
-
   const [networkChosen, setNetworkChosen] = useState<{ id: any } | undefined>()
   const chooseNetwork = network => {
     if (!agreed) {
@@ -52,8 +54,8 @@ const WalletConnector = () => {
 
     setNetworkChosen(network)
   }
-
   const [walletChosen, setWalletChosen] = useState<{ id: any } | undefined>()
+  const [connectorChosen, setConnectorChosen] = useState<AbstractConnector | undefined>()
   const walletsAvailable = useMemo(() => {
     if (!networkChosen) {
       return wallets
@@ -69,19 +71,74 @@ const WalletConnector = () => {
     }
 
     setWalletChosen(wallet)
+    setConnectorChosen(connectorFromWallet(wallet))
   }
+  const [activating, setActivating] = useState<boolean>(false)
+  const tryActivate = useCallback(async () => {
+    if (active) {
+      return
+    }
+
+    if (!connectorChosen) {
+      return
+    }
+
+    try {
+      setActivating(true)
+      await activate(connectorChosen)
+    } finally {
+      setActivating(false)
+      setConnectorChosen()
+    }
+  }, [active, connectorChosen, setActivating, activate, setConnectorChosen])
+
   useEffect(() => {
+    if (networkChosen?.id !== undefined) {
+      dispatch({ type: 'SET_CHAINID', payload: networkChosen?.id })
+    }
+
     setWalletChosen()
-  }, [networkChosen])
+  }, [networkChosen, dispatch])
+  useEffect(() => {
+    if (!triedEager) {
+      return
+    }
+
+    if (active) {
+      dispatch({ type: 'INIT', payload: {
+        chainID: _chainID,
+        account: _account,
+        provider: library.provider
+      } })
+      setShowModal(false)
+      return
+    }
+  }, [active, _chainID, _account, library, triedEager, dispatch])
+  useEffect(() => {
+    if (!connectorChosen) {
+      return
+    }
+
+    tryActivate()
+    .catch(err => {
+      console.debug(err)
+    })
+  }, [connectorChosen, tryActivate])
 
   return (
     <>
-      <button
-        className='overflow-hidden py-2 px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-semibold text-sm rounded-xs hover:opacity-95 cursor-pointer w-full clipped-t-r'
-        onClick={() => setShowModal(true)}
-      >
-        Connect Wallet
-      </button>
+      { (!active || !account) &&
+        <button
+          className='overflow-hidden py-2 px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-semibold text-sm rounded-xs hover:opacity-95 cursor-pointer w-full clipped-t-r'
+          onClick={() => setShowModal(true)}
+        >
+          Connect Wallet
+        </button>
+      }
+      {
+        active && account &&
+        <span>{account}</span>
+      }
       <Modal show={showModal} toggle={setShowModal} className='dark:bg-transparent'>
         <ModalConnect close={() => setShowModal(false)}>
           <div className="font-bold text-2xl uppercase mb-5">Connect Wallet</div>
@@ -119,7 +176,7 @@ const WalletConnector = () => {
 
                 return <div key={wallet.id} className={`flex-1 relative cursor-pointer flex flex-col items-center justify-between bg-gray-700 py-4 border border-transparent ${chosen ? 'border-gamefiGreen-500' : ''}`} onClick={() => chooseWallet(wallet)}>
                   <Image src={wallet.image} className={available ? 'filter-none' : 'grayscale'} alt={wallet.name} />
-                  <span className={`text-sm ${available ? 'text-white' : 'text-gray-100'}`}>{wallet.name}</span>
+                  <span className={`text-sm ${available ? 'text-white' : 'text-gray-100'}`}>{ (activating && chosen) ? 'Loading...' : wallet.name}</span>
 
                   { chosen && <svg className="w-6 absolute top-0 left-0" viewBox="0 0 23 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0 1C0 0.447715 0.447715 0 1 0H21.0144C21.7241 0 22.208 0.718806 21.9408 1.37638L16.2533 15.3764C16.1002 15.7534 15.7338 16 15.3269 16H8H1C0.447715 16 0 15.5523 0 15V1Z" fill="#6CDB00"/>

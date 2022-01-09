@@ -23,17 +23,4 @@ export const walletconnect = new WalletConnectConnector({
   qrcode: true
 })
 
-enum ConnectorNames {
-  Injected = 'Injected',
-  Network = 'Network',
-  WalletConnect = 'WalletConnect',
-}
-
-const connectorsByName: { [connectorName in ConnectorNames]: any } = {
-  [ConnectorNames.Injected]: injected,
-  [ConnectorNames.Network]: network,
-  [ConnectorNames.WalletConnect]: walletconnect,
-}
-
 export const POLLING_INTERVAL = 12000
-export default connectorsByName

@@ -1,7 +1,7 @@
-import { useWeb3React, createWeb3ReactRoot } from '@web3-react/core'
+import { useWeb3React, createWeb3ReactRoot, AbstractConnector } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
-import React, { ReactNode, useEffect } from 'react'
-import { network, POLLING_INTERVAL } from './connectors'
+import React, { ReactNode, useEffect, useState } from 'react'
+import { network, injected, walletconnect, POLLING_INTERVAL } from './connectors'
 
 export function getLibrary(provider: any): Web3Provider {
   const library = new Web3Provider(provider)
@@ -45,13 +45,14 @@ export class ErrorBoundaryWeb3ProviderNetwork extends React.Component<PropsType,
     return { hasError: true }
   }
   render() {
+    if (this.state.hasError) {
+      return <>{this.props.children}</>
+    }
+    
     let Web3ReactProviderDefault
     try {
       Web3ReactProviderDefault = createWeb3ReactRoot(DEFAULT_WEB3)
     } catch (e) {
-      return <>{this.props.children}</>
-    }
-    if (this.state.hasError) {
       return <>{this.props.children}</>
     }
     return <Web3ReactProviderDefault getLibrary={this.props.getLibrary}>
@@ -76,7 +77,14 @@ export const networks = [{
   image: require('assets/images/icons/polygon.svg')
 }]
 
-export const wallets = [{
+interface Wallet {
+  id: string
+  name: string
+  networks: number[]
+  image: any
+}
+
+export const wallets: Wallet[] = [{
   id: 'metamask',
   name: 'MetaMask',
   networks: [5, 56, 137],
@@ -92,3 +100,47 @@ export const wallets = [{
   networks: [5, 56, 137],
   image: require('assets/images/icons/walletconnect.svg')
 }]
+
+export function connectorFromWallet(wallet: Wallet): AbstractConnector {
+  if (!wallet) {
+    return
+  }
+
+  if (wallet.id === 'metamask' || wallet.id === 'bsc-wallet') {
+    return injected
+  }
+
+  if (wallet.id === 'walletconnect') {
+    return walletconnect
+  }
+
+  return network
+}
+
+export function useEagerConnect() {
+  const { activate, active } = useWeb3React<Web3Provider>()
+  const [tried, setTried] = useState<boolean>(false)
+
+  useEffect(() => {
+    injected.isAuthorized().then((isAuthorized: boolean) => {
+      if (isAuthorized) {
+        activate(injected, undefined, true).catch(() => {
+          setTried(true)
+        })
+      } else {
+        setTried(true)
+      }
+    }).catch(err => {
+      console.debug(err)
+      setTried(true)
+    })
+  }, [activate])
+
+  useEffect(() => {
+    if (!tried && active) {
+      setTried(true)
+    }
+  }, [tried, active])
+
+  return tried
+}

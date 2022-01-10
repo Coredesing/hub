@@ -15,11 +15,12 @@ const useStyles = makeStyles((theme: any) => {
     contentCard: {
       width: '100%',
       display: 'grid',
-      placeContent: 'center'
+      // placeContent: 'center'
     },
     wrapperCard: {
       maxWidth: '1120px',
       width: '100%',
+      margin: 'auto'
     },
     displayContent: {
       paddingLeft: "calc((100% - (461px * 2 + 40px)) / 2)",
@@ -1210,4 +1211,34 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
       }
     }
   },
+}));
+
+export const useAuctionBoxStyles = makeStyles((theme) => ({
+  
+  wrapperCountdown: {
+    borderRadius: '4px',
+    background: '#000000',
+    display: 'grid',
+    placeContent: 'center',
+    '& h4': {
+      fontSize: '14px',
+      fontWeight: 'bold',
+      fontFamily: 'Firs Neue',
+      fontStyle: 'normal',
+      color: '#fff',
+      padding: '5px',
+      textAlign: 'center',
+    },
+    '& .countdown': {
+      background: '#000',
+
+      '&  .times .time .number': {
+        fontSize: '28px',
+      },
+      '&  .times .time .text': {
+        fontSize: '10px',
+      }
+    }
+  }
+  
 }));

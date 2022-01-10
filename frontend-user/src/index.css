@@ -404,6 +404,10 @@ body::-webkit-scrollbar-thumb,
     background: #000000;
 }
 
+.bg-black-imp {
+    background: #000000 !important;
+}
+
 .mb-12px {
     margin-bottom: 12px;
 }
@@ -442,6 +446,11 @@ body::-webkit-scrollbar-thumb,
     line-height: 16px;
 }
 
+.font-14px-imp {
+    font-size: 14px !important;
+    line-height: 16px !important;
+}
+
 .grid {
     display: grid;
 }
@@ -456,4 +465,32 @@ body::-webkit-scrollbar-thumb,
 
 .pointer {
     cursor: pointer;
+}
+
+.mt-16px-imp {
+    margin-top: 16px !important;
+}
+
+.mb-16px-imp {
+    margin-bottom: 16px !important;
+}
+
+.mb-7px-imp {
+    margin-bottom: 7px !important;
+}
+
+.flex {
+    display: flex;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.font-weight-600 {
+    font-weight: 600;
+}
+
+.font-24px-imp {
+    font-size: 24px !important;
 }

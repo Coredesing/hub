@@ -8,7 +8,8 @@ import { Backdrop, CircularProgress, useTheme } from '@material-ui/core';
 import ContentTicket from './Ticket';
 import TicketBid from './TicketBid';
 import MysteryBox from './MysteryBox';
-import { isBidorStake, isMysteryBox } from "./utils";
+import AuctionBox from './AuctionBox';
+import { isAuctionBox, isBidorStake, isMysteryBox } from "./utils";
 import WrapperContent from "@base-components/WrapperContent";
 
 const Ticket: React.FC<any> = (props: any) => {
@@ -36,12 +37,15 @@ const Ticket: React.FC<any> = (props: any) => {
   }, [loadingTicket, dataTicket]);
 
   const render = useCallback((processType, tokenType, id) => {
+    if (isAuctionBox('auction-box')) {
+      return <AuctionBox id={id} infoTicket={dataTicket} />
+    }
     if (isMysteryBox(tokenType)) return <MysteryBox id={id} />;
     if (isBidorStake(processType)) return <TicketBid id={id} />;
     return <ContentTicket id={id} />;
-  }, []);
+  }, [dataTicket]);
   return (
-    <DefaultLayout style={{background: '#15171E'}}>
+    <DefaultLayout style={{ background: '#15171E' }}>
       <WrapperContent useShowBanner={false}>
         {
           checkParamType.checking ?

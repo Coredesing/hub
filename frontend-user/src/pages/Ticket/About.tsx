@@ -7,7 +7,7 @@ import { useTheme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
+import MuiLink from "@material-ui/core/Link";
 import Box from "@material-ui/core/Box";
 import Pagination from '@material-ui/lab/Pagination';
 import { useFetchV1 } from "../../hooks/useFetch";
@@ -584,9 +584,33 @@ export const AboutMysteryBox = ({
                   {isShowAmountSerie && <TableCell align="left" style={{ padding: '7px' }}>{numberWithCommas(row.amount)}</TableCell>}
                   {
                     seriesContentConfig?.[0]?.description && <TableCell align="left" style={{ padding: '7px' }}>
-                      <div className={classes.tableCellDesc}>
+                      <div className={classes.tableCellDesc} style={{
+                        wordWrap: 'break-word',
+                        wordBreak: 'break-all',
+                        //  whiteSpace: 'pre-line',
+                        textOverflow: 'ellipsis',
+                        overflow: 'hidden',
+                        // width: '160px',
+                        // height: '80px',
+                        // whiteSpace: 'nowrap',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        // '-webkit-box-orient': 'vertical',
+                      }}>
                         {row.description}
                       </div>
+                      <MuiLink 
+                      className="text-green-imp pointer"
+                        style={{
+                          fontFamily: 'Poppins',
+                          fontSize: '13px',
+                          fontStyle: 'normal',
+                          fontWeight: 600,
+                        }}
+                      >
+                        Read more
+                      </MuiLink>
                     </TableCell>
                   }
                 </TableRowBody>

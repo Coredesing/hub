@@ -154,12 +154,20 @@ const useStyles = makeStyles((theme: any) => {
         marginBottom: 8,
       }
     },
-
-    iconToken: {
-      width: 40,
-      height: 40,
-      borderRadius: '50%',
+    wrapperIconToken: {
+      width: '42px',
+      height: '42px',
+      borderRadius: '10px',
+      background: '#fff',
+      display: 'grid',
+      placeItems: 'center',
       marginRight: 12,
+    },
+    iconToken: {
+      width: 36,
+      height: 36,
+      borderRadius: '50%',
+      objectFit: 'contain'
     },
 
     title: {

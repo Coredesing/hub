@@ -34,7 +34,7 @@ module.exports = {
         '900': '#195806'
       },
       'gamefiYellow': {
-        DEFAULT: '#FFA800'
+        DEFAULT: '#FFB800'
       },
       ...colors
     }

@@ -63,11 +63,15 @@ html, body {
 }
 
 .clipped-b-r-full {
-  clip-path: polygon(0 0, 100% 0%, calc(100% - 30px) 100%, 0% 100%);
+  clip-path: polygon(0 0, 100% 0%, calc(100% - 20px) 100%, 0% 100%);
 }
 
 .clipped-b {
   clip-path: polygon(0 0, 100% 0, calc(100% - 15px) 100%, 15px 100%);
+}
+
+.clipped-b-l {
+  clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 20px 100%, 0 calc(100% - 20px));
 }
 
 .thumbs {
@@ -75,7 +79,7 @@ html, body {
 }
 
 .thumb {
-  border: none !important;
+  border: 1px solid transparent !important;
   height: 80px !important;
 }
 
@@ -96,4 +100,10 @@ html, body {
 
 ::-webkit-scrollbar-thumb {
   @apply bg-gamefiDark-500 rounded;
+}
+
+@media screen and (max-width: 1308px) {
+  .clipped-b-l {
+    clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 15px 100%, 0 calc(100% - 15px));
+  }
 }

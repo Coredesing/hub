@@ -9,6 +9,15 @@ type Props = {
   likes?: any[]
 }
 
+const VideoSlider = (props: any) => {
+  const {url, poster, isSelected} = props
+
+  return (
+    <video className='clipped-t-r-lg w-full h-full' autoPlay={isSelected} muted controls poster={poster}>
+      <source src={url} type="video/mp4"></source>
+    </video>
+  )
+}
 const GameCarousel = ( { items, likes }: Props ) => {
   const isMobile = useMediaQuery({ query: `(max-width: 1000px)` })
 
@@ -62,10 +71,10 @@ const GameCarousel = ( { items, likes }: Props ) => {
       {items.map(item => (
         <div key={`game-${item.id}`} className="px-14 mx-auto grid grid-cols-12 gap-4">
           <div className="col-span-7 xl:col-span-8 relative">
-            <div className="absolute z-10 top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-left bg-gamefiDark-900 w-1/2 md:pb-1 lg:pb-2 clipped-b-r-full"><span className="text-gamefiGreen-500">Featured</span> games</div>
-            <video key={`video-${item.id}`} className='clipped-t-r-lg w-full h-full' muted controls poster={item.screen_shots_1}>
-              <source src={item.intro_video} type="video/mp4"></source>
-            </video>
+            <div className="absolute z-10 top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-left bg-gamefiDark-900 w-1/2 md:pb-1 lg:pb-2 clipped-b-r-full">
+              <span className="text-gamefiGreen-500">Featured</span> games
+            </div>
+            <VideoSlider key={`video-${item.id}`} url={item.intro_video} poster={item.screen_shots_1}></VideoSlider>
           </div>
           <div className="col-span-5 xl:col-span-4 2xl:pt-14 w-full px-4">
             <div className="lg:text-lg xl:text-xl 2xl:text-3xl font-bold uppercase text-left">{item.game_name}</div>

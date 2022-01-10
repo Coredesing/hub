@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const colors = require('tailwindcss/colors')
 
 module.exports = {
@@ -10,13 +11,14 @@ module.exports = {
     extend: {},
     colors: {
       'gamefiDark': {
-        300: '#555d78',
-        400: '#4a5169',
-        500: '#40465a',
-        600: '#353a4b',
-        700: '#1B1D26',
-        800: '#20232d',
-        900: '#15171E'
+        DEFAULT: '#15171E',
+        '300': '#555d78',
+        '400': '#4a5169',
+        '500': '#40465a',
+        '600': '#353a4b',
+        '700': '#24262F',
+        '800': '#20232d',
+        '900': '#15171E'
       },
       'gamefiGreen': {
         DEFAULT: '#72F34B',
@@ -30,6 +32,9 @@ module.exports = {
         '700': '#37C10D',
         '800': '#288C09',
         '900': '#195806'
+      },
+      'gamefiYellow': {
+        DEFAULT: '#FFB800'
       },
       ...colors
     }

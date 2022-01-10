@@ -2,6 +2,7 @@
 import React from 'react'
 import Image from 'next/image'
 import { Carousel } from 'react-responsive-carousel'
+import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import { useMediaQuery } from 'react-responsive'
 
 type Props = {
@@ -128,7 +129,7 @@ const GameCarousel = ( { items, likes }: Props ) => {
         <div key={`mobile-game-${item.id}`}>
           <div className="w-full">
             <div className="absolute z-10 top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-center md:text-left bg-gamefiDark-900 w-1/2 md:pb-1 lg:pb-2 clipped-b-r-full"><span className="text-gamefiGreen-500">Featured</span> games</div>
-            <video key={`video-${item.id}`} className='clipped-t-r-lg' autoPlay muted controls>
+            <video key={`video-${item.id}`} className='clipped-t-r-lg' muted controls poster={item.screen_shots_1}>
               <source src={item.intro_video} type="video/mp4"></source>
             </video>
           </div>

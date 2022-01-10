@@ -2,8 +2,11 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 
-const PoolBanner = (props: any) => {
-  const { item, color } = props
+type Props = {
+  item?: any,
+  color?: string
+}
+const PoolBanner = ({ item, color = 'gamefiGreen' } : Props ) => {
 
   const [distance, setDistance] = useState(0)
   const [days, setDays] = useState('00')
@@ -14,10 +17,10 @@ const PoolBanner = (props: any) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setDistance(new Date(item.start_time * 1000).getTime() - new Date().getTime())
-      setDays(('0' + Math.floor(distance / (1000 * 60 * 60 * 24)).toString()).slice(-2))
-      setHours(('0' + Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString()).slice(-2))
-      setMinutes(('0' + Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString()).slice(-2))
-      setSeconds(('0' + Math.floor((distance % (1000 * 60)) / 1000).toString()).slice(-2))
+      setDays(distance > 0 ? ('0' + Math.floor(distance / (1000 * 60 * 60 * 24)).toString()).slice(-2) : '00')
+      setHours(distance > 0 ? ('0' + Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString()).slice(-2) : '00')
+      setMinutes(distance > 0 ? ('0' + Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString()).slice(-2) : '00')
+      setSeconds(distance > 0 ? ('0' + Math.floor((distance % (1000 * 60)) / 1000).toString()).slice(-2) : '00')
     }, 1000)
 
     return (() => {
@@ -47,12 +50,17 @@ const PoolBanner = (props: any) => {
             <span className="ml-2 font-bold">{poolStatus(item.is_private)}</span>
           </div>
             <img src={item.banner} alt="banner" className="w-full"></img>
-            <div className={`w-full h-24 flex align-middle items-center justify-center uppercase font-bold md:text-lg xl:text-2xl bg-${color || 'gamefiGreen'}`}>
-              <div className={`px-8 overflow-hidden overflow-ellipsis ${!color || color === 'gamefiGreen' ? 'text-gamefiDark-900' : 'text-white'}`}>{item.title}</div>
+            <div className={`relative w-full h-24 flex align-middle items-center justify-center uppercase font-bold md:text-lg xl:text-2xl ${color === 'yellow' && 'bg-gamefiYellow'} ${!color || color === 'green' && 'bg-gamefiGreen-700'}`}>
+              {/* <div
+                className={`absolute -top-7 right-0 ${color ? `bg-${color}` : 'bg-gamefiGreen'} text-gamefiDark-900 h-12 w-2/3 flex pt-2 justify-center text-center text-sm font-semibold clipped-t-l-full uppercase`}
+              >
+                BUY NFT GET BONUS IGO TICKET
+              </div> */}
+              <div className={`px-8 overflow-hidden overflow-ellipsis text-gamefiDark-900`}>{item.title}</div>
             </div>
           </div>
         </div>
-        <div className={`w-full relative text-${color || 'gamefiGreen'}`}>
+        <div className={`w-full relative ${color === 'yellow' && 'text-gamefiYellow'} ${!color || color === 'green' && 'text-gamefiGreen-700'}`}>
           {item.start_time ? (
             <div className="w-full h-full flex flex-col align-middle items-center justify-center absolute mt-1">
               <div className="uppercase font-semibold text-sm 2xl:text-base">Countdown to IGO date</div>
@@ -85,7 +93,7 @@ const PoolBanner = (props: any) => {
               <div className="uppercase font-bold text-2xl 2xl:text-3xl">Coming Soon</div>
             </div>
           )}
-          <Image src={require(`assets/images/countdown-box-${color || 'gamefiGreen'}.png`)} alt="countdown" className="w-full h-auto"></Image>
+          <Image src={require(`assets/images/countdown-box-${color || 'green'}.png`)} alt="countdown" className="w-full h-auto"></Image>
         </div>
       </div>
     </>

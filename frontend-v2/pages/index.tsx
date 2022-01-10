@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import Layout from 'components/Layout'
-import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import { useWeb3Default } from 'components/web3'
 import GameCarousel from 'components/Pages/Home/GameCarousel'
 import Image from 'next/image'
@@ -49,7 +48,7 @@ const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs }) => {
         {
           isMobile ? <></> : <div className="grid grid-cols-3 gap-x-6 gap-y-12 container mt-14 md:px-4 lg:px-16">
             {upcomingIGOs && upcomingIGOs.length && upcomingIGOs.map(item => (
-              <PoolBanner key={item.id} item={item} color="gamefiYellow"></PoolBanner>
+              <PoolBanner key={item.id} item={item} color="yellow"></PoolBanner>
             ))}
           </div>
         }
@@ -64,9 +63,9 @@ const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs }) => {
           </div>
         </div>
         {
-          isMobile ? <></> : <div className="grid grid-cols-3 gap-x-6 gap-y-12 container mt-14 md:px-4 lg:px-16">
+          isMobile ? <div></div> : <div className="grid grid-cols-3 gap-x-6 gap-y-12 container mt-14 md:px-4 lg:px-16">
             {upcomingINOs && upcomingINOs.length && upcomingINOs.map(item => (
-              <PoolBanner key={item.id} item={item} color="gamefiGreen"></PoolBanner>
+              <PoolBanner key={item.id} item={item} color="green"></PoolBanner>
             ))}
           </div>
         }

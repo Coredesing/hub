@@ -2,15 +2,117 @@ import { makeStyles } from '@material-ui/core';
 import { typeDisplayFlex } from '../../styles/CommonStyle';
 
 const useStyles = makeStyles((theme: any) => ({
-  section: {
-
-    width: '100%',
-    minHeight: 'calc(100vh - 80px)',
+  carouselContent: {
+    paddingLeft: '3.5rem',
+    paddingRight: '3.5rem',
+    gap: '1rem',
     display: 'grid',
-    gridTemplateColumns: 'auto 280px',
-    [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: '1fr',
+    gridTemplateColumns: 'repeat(12, minmax(0, 1fr))',
+    marginLeft: 'auto',
+    marginRight: 'auto'
+  },
+  carouselContentInner: {
+    position: 'relative',
+    gridColumn: 'span 7 / span 7',
+    [theme.breakpoints.up('lg')]: {
+      gridColumn: 'span 8 / span 8'
+    }
+  },
+  carouselContentRight: {
+    paddingLeft: '1rem',
+    paddingRight: '1rem',
+    width: '100%',
+    gridColumn: 'span 5 / span 5',
+    [theme.breakpoints.up('lg')]: {
+      paddingTop: '3.5rem'
     },
+    [theme.breakpoints.up('sm')]: {
+      gridColumn: 'span 4 / span 4'
+    }
+  },
+  carouselTitle: {
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+    textAlign: 'left',
+    color: 'white',
+    [theme.breakpoints.up('md')]: {
+      fontSize: '1.125rem',
+      lineHeight: '1.75rem'
+    },
+    [theme.breakpoints.up('lg')]: {
+      fontSize: '1.25rem',
+      lineHeight: '1.75rem'
+    },
+    [theme.breakpoints.up('xl')]: {
+      fontSize: '1.875rem',
+      lineHeight: '2.25rem'
+    }
+  },
+  carouselMeta: {
+    display: 'flex',
+    verticalAlign: 'middle',
+    alignItems: 'center',
+    width: '100%',
+    marginTop: '0.75rem',
+    [theme.breakpoints.up('md')]: {
+      marginTop: '1.25rem'
+    }
+  },
+  carouselMetaP: {
+    marginTop: '0.75rem',
+    [theme.breakpoints.up('lg')]: {
+      marginTop: '1.25rem'
+    }
+  },
+  carouselDescription: {
+    textAlign: 'left',
+    lineHeight: '1.25rem',
+    color: '#ccc',
+    maxHeight: '6rem',
+    overflowY: 'auto',
+  },
+  carouselButton: {
+    backgroundColor: 'rgb(114 243 75)',
+    color: 'rgb(21 23 30)',
+    clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%, 0 0)',
+    verticalAlign: 'middle',
+    paddingTop: '0.5rem',
+    paddingBottom: '0.5rem',
+    paddingLeft: '1.5rem',
+    paddingRight: '1.5rem',
+    display: 'flex',
+    alignItems: 'center',
+    border: 'none',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    fontSize: '0.75rem',
+    lineHeight: '1rem',
+    cursor: 'pointer',
+    '&:hover': {
+      opacity: '0.9'
+    }
+  },
+  carouselVideo: {
+    clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 0 100%, 0 0)'
+  },
+  section: {
+    marginTop: '2rem',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    [theme.breakpoints.up('sm')]: {
+      paddingLeft: '1rem',
+      paddingRight: '1rem',
+      maxWidth: '1280px'
+    }
+    // 'md:px-4 lg:px-16 md:container mx-auto lg:block'
+
+    // width: '100%',
+    // minHeight: 'calc(100vh - 80px)',
+    // display: 'grid',
+    // gridTemplateColumns: 'auto 280px',
+    // [theme.breakpoints.down('sm')]: {
+    //   gridTemplateColumns: '1fr',
+    // },
   },
   contentBox: {
     position: 'relative',

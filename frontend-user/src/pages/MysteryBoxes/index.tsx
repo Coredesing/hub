@@ -6,7 +6,7 @@ import DefaultLayout from '../../components/Layout/DefaultLayout'
 import withWidth from '@material-ui/core/withWidth';
 import { useFetchV1 } from '../../hooks/useFetch';
 import { TOKEN_TYPE } from '../../constants';
-import { PaginationResult } from '../../types/Pagination';
+import { PaginationResult, Item } from '../../types/Pagination';
 import { Backdrop, CircularProgress, useTheme, Button, useMediaQuery } from '@material-ui/core';
 import CountDownTimeV1, { CountDonwRanges } from '@base-components/CountDownTime';
 import SlideCard from './components/SlideCard';
@@ -18,6 +18,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import WrapperContent from '@base-components/WrapperContent';
 import { ObjectType } from '@app-types';
 import { getIconCurrencyUsdt } from '@utils/usdt';
+import Carousel from './components/Carousel'
 
 const MysteryBoxes = (props: any) => {
   const theme = useTheme();
@@ -54,13 +55,13 @@ const MysteryBoxes = (props: any) => {
   }, [currentBox]);
 
 
-  const [mysteryBoxList, setMysteryBoxList] = useState<ObjectType<any>[]>([]);
+  const [mysteryBoxList, setMysteryBoxList] = useState<Item[]>([]);
   useEffect(() => {
     if (misteryBoxes?.data) {
-      const listOnSale: ObjectType<any>[] = [];
-      const listUpComing: ObjectType<any>[] = [];
-      const listFinished: ObjectType<any>[] = [];
-      misteryBoxes.data.forEach((pool) => {
+      const listOnSale: Item[] = [];
+      const listUpComing: Item[] = [];
+      const listFinished: Item[] = [];
+      misteryBoxes.data.forEach((pool: Item) => {
         const time = getCountdownInfo(pool, compareTime);
         if (time.isOnsale) {
           listOnSale.push(pool);
@@ -94,73 +95,7 @@ const MysteryBoxes = (props: any) => {
             <CircularProgress color="inherit" />
           </Backdrop> :
           <section className={styles.section}>
-            <div className={styles.contentBox}>
-              <div className="banner" style={{ backgroundImage: `url(${currentBox.banner})` }}>
-              </div>
-              <div className={styles.content}>
-                <div className="detail-box">
-                  <h1>
-                    {currentBox.title}
-                  </h1>
-                  <div className={clsx("status", { upcoming: time.isUpcoming, sale: time.isOnsale, over: time.isFinished })}>
-                    <span>
-                      {time.isUpcoming && 'Upcoming'}
-                      {time.isOnsale && 'ON SALE'}
-                      {time.isFinished && 'Sold Out'}
-                    </span>
-                  </div>
-                  <div className="desc">
-                    {currentBox.description}
-                  </div>
-
-                  <div className="detail-items">
-                    <div className="item">
-                      <label>TOTAL SALE</label>
-                      <span>{numberWithCommas(currentBox.total_sold_coin || 0)} Boxes</span>
-                    </div>
-                    <div className="item">
-                      <label>PRICE</label>
-                      <span>{currentBox.token_conversion_rate} {currentBox.currencyName}
-                        {/* {getCurrencyByNetwork(currentBox.network_available)} */}
-                      </span>
-                    </div>
-                    <div className="item">
-                      <label>SUPPORTED</label>
-                      <span className="icon">{currentBox.network_available} <img src={`/images/icons/${(currentBox.network_available || '').toLowerCase()}.png`} alt="" /></span>
-                    </div>
-                  </div>
-                  <Link to={`/mystery-box/${currentBox.id}`} className={styles.btnJoin}>
-                    JOIN NOW
-                  </Link>
-                </div>
-              </div>
-              <div className="detail-countdown-box" style={!time.date1 ? { height: '30px' } : {}}>
-                <div className="wrapper-countdown">
-                  <span style={time.isFinished ? {fontWeight: 600, color: '#F24B4B'} : {}}>{time.title}</span>
-                  {
-                    !!time.date1 &&
-                    <CountDownTimeV1 time={{ date1: time.date1, date2: time.date2 }} className="countdown" />
-                  }
-                </div>
-              </div>
-            </div>
-            <div className={styles.wrapperSlideBoxes}>
-              <div className="slides custom-scroll">
-                {
-                  isSmScreen ? <Swiper
-                    slidesPerView={"auto"}
-                    spaceBetween={6}
-                    freeMode={true}
-                    pagination={{
-                      clickable: true,
-                    }}
-                  >
-                    {mysteryBoxList.map((item) => <SwiperSlide style={{ width: '220px' }} key={item.id}> <SlideCard onSelectItem={onSelectBox} key={item.id} active={currentBox.id === item.id} item={item} compareTime={compareTime} /> </SwiperSlide>)}
-                  </Swiper> :
-                    mysteryBoxList.map((item) => <SlideCard onSelectItem={onSelectBox} key={item.id} active={currentBox.id === item.id} item={item} compareTime={compareTime} />)
-                }
-              </div>
-            </div>
+            <Carousel items={mysteryBoxList}></Carousel>
           </section>
         }
       </WrapperContent>

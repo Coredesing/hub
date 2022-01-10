@@ -387,3 +387,24 @@ body::-webkit-scrollbar-thumb,
 .pointer {
     cursor: pointer;
 }
+
+img, video {
+  max-width: 100%;
+}
+
+.slide {
+    padding: 0 3rem!important;
+}
+
+.carousel .thumb {
+    border-width: 2px!important;
+    border-color: transparent!important;
+    border-radius: 2px;
+    opacity: 0.9;
+    cursor: pointer;
+}
+
+.carousel .thumb.selected {
+    border-color: #6CDB00!important;
+    opacity: 1;
+}

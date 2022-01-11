@@ -68,14 +68,6 @@ class PoolService {
       builder = builder.where('is_private', params.is_private)
     }
 
-    if (params.campaign_status) {
-      builder = builder.where('campaign_status', params.campaign_status)
-    }
-
-    if (params.network_available) {
-      builder = builder.where('network_available', params.network_available)
-    }
-
     return builder;
   }
 
@@ -193,16 +185,16 @@ class PoolService {
   }
 
   async getMysteriousBoxPoolsV3(filterParams) {
-    if (await RedisMysteriousBoxUtils.existRedisMysteriousBoxes()) {
-      let data = await RedisMysteriousBoxUtils.getRedisMysteriousBoxes()
-      data = JSON.parse(data)
-      return data
-    }
-
     const limit = filterParams.limit ? filterParams.limit : 20;
     const page = filterParams.page ? filterParams.page : 1;
     filterParams.limit = limit;
     filterParams.page = page;
+
+    if (await RedisMysteriousBoxUtils.existRedisMysteriousBoxes(filterParams)) {
+      let data = await RedisMysteriousBoxUtils.getRedisMysteriousBoxes(filterParams)
+      data = JSON.parse(data)
+      return data
+    }
 
     let pools = await this.buildQueryBuilder(filterParams)
       .orderBy('priority', 'DESC')
@@ -210,7 +202,7 @@ class PoolService {
       .paginate(page, limit);
 
     pools = JSON.parse(JSON.stringify(pools))
-    await RedisMysteriousBoxUtils.setRedisMysteriousBoxes(pools)
+    await RedisMysteriousBoxUtils.setRedisMysteriousBoxes(filterParams, pools)
 
     return pools;
   }
@@ -597,7 +589,7 @@ class PoolService {
         dataUpdate.priority = 0
 
         if (data.token_type === 'box') {
-          await RedisMysteriousBoxUtils.deleteRedisMysteriousBoxes();
+          await RedisMysteriousBoxUtils.deleteAllRedisMysteriousBoxes();
         }
       }
 

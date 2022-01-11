@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import useStyles from './style';
 import DefaultLayout from '../../components/Layout/DefaultLayout'
 import withWidth from '@material-ui/core/withWidth';
-import { useFetchV1 } from '../../hooks/useFetch';
+import useFetch from '../../hooks/useFetch';
 import { TOKEN_TYPE } from '../../constants';
 import { PaginationResult, Item } from '../../types/Pagination';
 import { Backdrop, CircularProgress, useTheme, Button, useMediaQuery } from '@material-ui/core';
@@ -19,6 +19,7 @@ import WrapperContent from '@base-components/WrapperContent';
 import { ObjectType } from '@app-types';
 import { getIconCurrencyUsdt } from '@utils/usdt';
 import Carousel from './components/Carousel'
+import List from './components/List'
 
 const MysteryBoxes = (props: any) => {
   const theme = useTheme();
@@ -29,10 +30,12 @@ const MysteryBoxes = (props: any) => {
     setRecall(true);
   }, [setRecall]);
 
+  const [url, setURL] = useState<string>(`/pools/mysterious-box?token_type=${TOKEN_TYPE.Box}&limit=10`)
+
   const {
     data: misteryBoxes = {} as PaginationResult,
     loading: loadingcompletePools
-  } = useFetchV1(`/pools/mysterious-box?token_type=${TOKEN_TYPE.Box}&limit=10`);
+  } = useFetch(url)
 
   const [currentBox, setCurrentBox] = useState<{ [k: string]: any }>({ upcoming: true });
 
@@ -82,7 +85,7 @@ const MysteryBoxes = (props: any) => {
   }, [mysteryBoxList]);
 
   return (
-    <DefaultLayout hiddenFooter>
+    <DefaultLayout hiddenFooter style={{backgroundColor: '#15171E'}}>
       {/*<Helmet>*/}
       {/*  <meta charSet="utf-8" />*/}
       {/*  <title>GameFi - Mystery boxes</title>*/}
@@ -94,9 +97,11 @@ const MysteryBoxes = (props: any) => {
           <Backdrop open={loadingcompletePools} style={{ color: '#fff', zIndex: theme.zIndex.drawer + 1, }}>
             <CircularProgress color="inherit" />
           </Backdrop> :
-          <section className={styles.section}>
+          <>
             <Carousel items={mysteryBoxList}></Carousel>
-          </section>
+            <div style={{ backgroundColor: '#000', height: '8rem' }}></div>
+            <List />
+          </>
         }
       </WrapperContent>
     </DefaultLayout>

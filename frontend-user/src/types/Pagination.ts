@@ -11,12 +11,16 @@ export type Item = {
   campaign_status: string
   token_type: string
   start_pre_order_time: number
+  is_private: number
 }
 
-export type PaginationResult = {
-    data: Item[],
-    lastPage: number,
-    page: number,
-    perPage: number,
-    total: number
+export type Pagination = {
+  lastPage: number,
+  page: number,
+  perPage: number,
+  total: number
+}
+
+export interface PaginationResult extends Pagination {
+  data: Item[],
 }

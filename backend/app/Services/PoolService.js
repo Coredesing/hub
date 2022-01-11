@@ -25,7 +25,6 @@ const NFTOrderService = use('App/Services/NFTOrderService');
 class PoolService {
   buildQueryBuilder(params) {
     let builder = CampaignModel.query();
-    builder = builder.where('is_display', Const.POOL_DISPLAY.DISPLAY)
 
     if (params.id) {
       builder = builder.where('id', params.id);
@@ -201,6 +200,7 @@ class PoolService {
     let pools = await this.buildQueryBuilder(filterParams)
       .orderBy('priority', 'DESC')
       .orderBy('start_time', 'ASC')
+      .where('is_display', Const.POOL_DISPLAY.DISPLAY)
       .paginate(page, limit);
 
     pools = JSON.parse(JSON.stringify(pools))

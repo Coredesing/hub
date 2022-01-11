@@ -7,28 +7,27 @@ import Image from 'next/image'
 import axios from 'axios'
 import { GetStaticProps } from 'next'
 import PoolBanner from 'components/Base/PoolBanner'
-import { useMediaQuery } from 'react-responsive'
 import { Carousel } from 'react-responsive-carousel'
+import { IsMobile } from 'constant/media'
 
 // example of default provider
-function ChainId() {
-  const { chainId } = useWeb3Default()
+// function ChainId() {
+//   const { chainId } = useWeb3Default()
 
-  return (
-    <>
-      <span>Chain Id</span>
-      <span role="img" aria-label="chain">
-        ⛓
-      </span>
-      <span>{chainId ?? ''}</span>
-    </>
-  )
-}
+//   return (
+//     <>
+//       <span>Chain Id</span>
+//       <span role="img" aria-label="chain">
+//         ⛓
+//       </span>
+//       <span>{chainId ?? ''}</span>
+//     </>
+//   )
+// }
 
 const BASE_URL = process.env.NEXT_BASE_URL
 
 const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs }) => {
-  const isMobile = useMediaQuery({ query: `(max-width: 1000px)` })
 
   return (
     <Layout title="GameFi">
@@ -37,7 +36,8 @@ const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs }) => {
         {/* Loading here */}
         {topGames && topGames.length && <GameCarousel likes={likes} items={topGames}></GameCarousel>}
       </div>
-      <div className="md:px-4 lg:px-16 mx-auto bg-gamefiDark-700 mt-20 pb-14">
+      {
+        upcomingIGOs && upcomingIGOs.length && <div className="md:px-4 lg:px-16 mx-auto bg-gamefiDark-700 mt-20 pb-14">
         <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
           <div className="block top-0 left-0 right-0 uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl">
             Upcoming IGOs
@@ -47,7 +47,7 @@ const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs }) => {
           </div>
         </div>
         {
-          isMobile ? 
+          IsMobile ? 
             <div className='mt-14'>
               <Carousel
                 showIndicators={false}
@@ -69,38 +69,41 @@ const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs }) => {
           </div>
         }
       </div>
-      <div className="md:px-4 lg:px-16 mx-auto mt-20 pb-14">
-      <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
-          <div className="uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl">
-            Upcoming INOs
-          </div>
-          <div className="absolute -bottom-5 left-0 right-0">
-            <Image src={require('assets/images/under-stroke-green.svg')} alt="understroke"></Image>
-          </div>
-        </div>
-        {
-          isMobile ?
-            <div className='mt-14'>
-              <Carousel
-                showIndicators={false}
-                showStatus={false}
-                infiniteLoop
-                centerMode
-                centerSlidePercentage={80}
-                showArrows={false}
-              >
-                {upcomingINOs && upcomingINOs.length && upcomingINOs.map(item => (
-                  <PoolBanner key={item.id} item={item} color="green"></PoolBanner>
-                ))}
-              </Carousel>
+      }
+      {
+        upcomingINOs && upcomingINOs.length && <div className="md:px-4 lg:px-16 mx-auto mt-20 pb-14">
+        <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
+            <div className="uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl">
+              Upcoming INOs
             </div>
-          : <div className="grid grid-cols-3 gap-x-4 2xl:gap-x-6 gap-y-12 container mt-14 2xl:px-16">
-            {upcomingINOs && upcomingINOs.length && upcomingINOs.map(item => (
-              <PoolBanner key={item.id} item={item} color="green"></PoolBanner>
-            ))}
+            <div className="absolute -bottom-5 left-0 right-0">
+              <Image src={require('assets/images/under-stroke-green.svg')} alt="understroke"></Image>
+            </div>
           </div>
-        }
-      </div>
+          {
+            IsMobile ?
+              <div className='mt-14'>
+                <Carousel
+                  showIndicators={false}
+                  showStatus={false}
+                  infiniteLoop
+                  centerMode
+                  centerSlidePercentage={80}
+                  showArrows={false}
+                >
+                  {upcomingINOs && upcomingINOs.length && upcomingINOs.map(item => (
+                    <PoolBanner key={item.id} item={item} color="green"></PoolBanner>
+                  ))}
+                </Carousel>
+              </div>
+            : <div className="grid grid-cols-3 gap-x-4 2xl:gap-x-6 gap-y-12 container mt-14 2xl:px-16">
+              {upcomingINOs && upcomingINOs.length && upcomingINOs.map(item => (
+                <PoolBanner key={item.id} item={item} color="green"></PoolBanner>
+              ))}
+            </div>
+          }
+        </div>
+      }
     </Layout>
   )
 }

@@ -42,7 +42,7 @@ const PoolBanner = ({ item, color = 'gamefiGreen' } : Props ) => {
 
   return (
     <>
-      <div className="w-full px-3 md:px-0">
+      <div className="w-full px-3 lg:px-0">
         <div className="flex flex-col clipped-b-l rounded-tr overflow-hidden">
           <div className="w-full h-full relative">
           <div className="absolute h-7 flex align-middle items-center justify-center top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-left bg-gamefiDark-900 w-36 clipped-b-r-full">

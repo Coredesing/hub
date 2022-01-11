@@ -3,7 +3,7 @@ import React from 'react'
 import Image from 'next/image'
 import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import { useMediaQuery } from 'react-responsive'
+import { IsMobile } from 'constant/media'
 
 type Props = {
   items?: any[],
@@ -20,14 +20,13 @@ const VideoSlider = (props: any) => {
   )
 }
 const GameCarousel = ( { items, likes }: Props ) => {
-  const isMobile = useMediaQuery({ query: `(max-width: 1000px)` })
 
   const getLikeById = (id: any) => {
     return likes.find(item => item.game_id === id)
   }
 
   return (
-    !isMobile ?
+    !IsMobile ?
     <Carousel
       showStatus={false}
       showIndicators={false}

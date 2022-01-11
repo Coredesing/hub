@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Layout from 'components/Layout'
-import { useWeb3Default } from 'components/web3'
+// import { useWeb3Default } from 'components/web3'
 import GameCarousel from 'components/Pages/Home/GameCarousel'
 import Image from 'next/image'
 
@@ -8,7 +8,8 @@ import axios from 'axios'
 import { GetStaticProps } from 'next'
 import PoolBanner from 'components/Base/PoolBanner'
 import { Carousel } from 'react-responsive-carousel'
-import { IsMobile } from 'constant/media'
+import { useMediaQuery } from 'react-responsive'
+import TopGame from 'components/Pages/Home/TopGame'
 
 // example of default provider
 // function ChainId() {
@@ -27,7 +28,8 @@ import { IsMobile } from 'constant/media'
 
 const BASE_URL = process.env.NEXT_BASE_URL
 
-const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs }) => {
+const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs, topFavorites }) => {
+  const isMobile = useMediaQuery({maxWidth: '1000px'})
 
   return (
     <Layout title="GameFi">
@@ -47,7 +49,7 @@ const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs }) => {
           </div>
         </div>
         {
-          IsMobile ? 
+          isMobile ? 
             <div className='mt-14'>
               <Carousel
                 showIndicators={false}
@@ -81,7 +83,7 @@ const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs }) => {
             </div>
           </div>
           {
-            IsMobile ?
+            isMobile ?
               <div className='mt-14'>
                 <Carousel
                   showIndicators={false}
@@ -96,12 +98,26 @@ const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs }) => {
                   ))}
                 </Carousel>
               </div>
-            : <div className="grid grid-cols-3 gap-x-4 2xl:gap-x-6 gap-y-12 container mt-14 2xl:px-16">
+            : <div className="grid grid-cols-3 gap-x-4 gap-y-12 container mt-14 2xl:gap-x-6 2xl:px-16">
               {upcomingINOs && upcomingINOs.length && upcomingINOs.map(item => (
                 <PoolBanner key={item.id} item={item} color="green"></PoolBanner>
               ))}
             </div>
           }
+        </div>
+      }
+      {
+        topFavorites && topFavorites.length &&
+        <div className="md:px-4 lg:px-16 2xl:px-32 mx-auto mt-20 pb-14">
+          <div className="md:text-lg 2xl:text-3xl uppercase font-bold">Top Favorite Games</div>
+          <div className="w-full relative bg-gamefiDark-600" style={{height: '4px'}}>
+            <div className="absolute bottom-0 right-0 dark:bg-gamefiDark-900 clipped-t-l-full-sm" style={{height: '3px', width: 'calc(100% - 60px)'}}></div>
+          </div>
+          <div className="">
+            {topFavorites.map(item => (
+              <TopGame key={item.id} item={item}></TopGame>
+            ))}
+          </div>
         </div>
       }
     </Layout>
@@ -132,12 +148,17 @@ export const getStaticProps: GetStaticProps = async () => {
     return res?.data?.data?.data
   }).catch(e => console.log(e))
 
+  const topFavorites = await axios.get(`https://aggregator.gamefi.org/api/v1/aggregator?display_area=Trending&price=true`).then(res => {
+    return res?.data?.data?.data
+  }).catch(e => console.log(e))
+
   return {
     props: {
       topGames,
       likes,
       upcomingIGOs,
-      upcomingINOs
+      upcomingINOs,
+      topFavorites
     }
   }
 }

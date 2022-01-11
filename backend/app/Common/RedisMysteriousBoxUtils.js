@@ -21,12 +21,12 @@ const getRedisKeyMysteriousBoxes = (filterParams) => {
     }`
 };
 
-const getRedisMysteriousBoxes = async () => {
-  return await Redis.get(getRedisKeyMysteriousBoxes());
+const getRedisMysteriousBoxes = async (filterParams) => {
+  return await Redis.get(getRedisKeyMysteriousBoxes(filterParams));
 };
 
 const setRedisMysteriousBoxes = async (filterParams, data) => {
-  if (!data || data.length < 1) {
+  if (!data) {
     return
   }
 

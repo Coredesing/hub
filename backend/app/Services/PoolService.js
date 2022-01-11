@@ -68,6 +68,14 @@ class PoolService {
       builder = builder.where('is_private', params.is_private)
     }
 
+    if (params.campaign_status) {
+      builder = builder.where('campaign_status', params.campaign_status)
+    }
+
+    if (params.network_available) {
+      builder = builder.where('network_available', params.network_available)
+    }
+
     return builder;
   }
 

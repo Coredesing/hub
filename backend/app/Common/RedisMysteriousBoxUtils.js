@@ -8,22 +8,16 @@ const Redis = use('Redis');
 const getRedisKeyMysteriousBoxes = (filterParams) => {
   return `mysterious_boxes_${
       filterParams.limit
-    }_${filterParams.page}_${
-      filterParams.title
+    }_${
+      filterParams.page
     }_${
       filterParams.campaign_status
     }_${
       filterParams.network_available
     }_${
-      filterParams.symbol
-    }_${
       filterParams.start_time
     }_${
       filterParams.finish_time
-    }_${
-      filterParams.registed_by
-    }_${
-      filterParams.is_display
     }`
 };
 

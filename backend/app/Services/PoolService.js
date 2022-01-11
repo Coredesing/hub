@@ -25,6 +25,8 @@ const NFTOrderService = use('App/Services/NFTOrderService');
 class PoolService {
   buildQueryBuilder(params) {
     let builder = CampaignModel.query();
+    builder = builder.where('is_display', Const.POOL_DISPLAY.DISPLAY)
+
     if (params.id) {
       builder = builder.where('id', params.id);
     }
@@ -54,11 +56,11 @@ class PoolService {
       builder = builder.where('registed_by', '=', params.registed_by)
     }
 
-    if (params.is_display === undefined) {
-      builder = builder.where('is_display', '=', Const.POOL_DISPLAY.DISPLAY);
-    } else {
-      builder = builder.where('is_display', '=', params.is_display);
-    }
+    // if (params.is_display === undefined) {
+    //   builder = builder.where('is_display', '=', Const.POOL_DISPLAY.DISPLAY);
+    // } else {
+    //   builder = builder.where('is_display', '=', params.is_display);
+    // }
 
     if (params.token_type) {
       builder = builder.where('token_type', params.token_type)

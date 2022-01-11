@@ -114,9 +114,13 @@ const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs, topFavorites }
             <div className="absolute bottom-0 right-0 dark:bg-gamefiDark-900 clipped-t-l-full-sm" style={{height: '3px', width: 'calc(100% - 60px)'}}></div>
           </div>
           <div className="">
-            {topFavorites.map(item => (
-              <TopGame key={item.id} item={item}></TopGame>
-            ))}
+            <div className="flex">
+              {
+                topFavorites.map(item => (
+                  <TopGame key={item.id} item={item}></TopGame>
+                ))
+              }
+            </div>
           </div>
         </div>
       }

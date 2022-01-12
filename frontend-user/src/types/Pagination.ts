@@ -10,8 +10,11 @@ export type Item = {
   total_sold_coin: string
   campaign_status: string
   token_type: string
-  start_pre_order_time: number
+  start_join_pool_time: string
+  start_pre_order_time: number | null
   is_private: number
+  start_time: string
+  finish_time: string
 }
 
 export type Pagination = {

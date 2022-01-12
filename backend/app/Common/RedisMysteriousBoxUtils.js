@@ -48,7 +48,6 @@ const deleteAllRedisMysteriousBoxes = () => {
   Redis.keys('mysterious_boxes_*').then((keys) => {
     const pipeline = Redis.pipeline()
     keys.forEach((key) => {
-      console.log('del', key)
       pipeline.del(key)
     })
 

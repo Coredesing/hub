@@ -76,6 +76,10 @@ class FetchLFWEventJob {
   async fetchEvents(provider, from, to) {
     console.log(`fetch events from ${from} to ${to} in LFW`)
     const instance = await HelperUtils.getLFWInstance()
+    if (!instance) {
+      return
+    }
+
     const events = await instance.getPastEvents('Transfer', {
       fromBlock: from,
       toBlock: to,

@@ -25,6 +25,7 @@ const NFTOrderService = use('App/Services/NFTOrderService');
 class PoolService {
   buildQueryBuilder(params) {
     let builder = CampaignModel.query();
+
     if (params.id) {
       builder = builder.where('id', params.id);
     }
@@ -54,11 +55,11 @@ class PoolService {
       builder = builder.where('registed_by', '=', params.registed_by)
     }
 
-    if (params.is_display === undefined) {
-      builder = builder.where('is_display', '=', Const.POOL_DISPLAY.DISPLAY);
-    } else {
-      builder = builder.where('is_display', '=', params.is_display);
-    }
+    // if (params.is_display === undefined) {
+    //   builder = builder.where('is_display', '=', Const.POOL_DISPLAY.DISPLAY);
+    // } else {
+    //   builder = builder.where('is_display', '=', params.is_display);
+    // }
 
     if (params.token_type) {
       builder = builder.where('token_type', params.token_type)
@@ -66,6 +67,10 @@ class PoolService {
 
     if (params.is_private) {
       builder = builder.where('is_private', params.is_private)
+    }
+
+    if(params.network_available) {
+      builder = builder.where('network_available', params.network_available)
     }
 
     return builder;
@@ -176,7 +181,8 @@ class PoolService {
             builderClaim
               .where('campaign_status', Const.POOL_STATUS.CLAIMABLE)
               .where('actual_finish_time', '>', now)
-          });
+          })
+          .where('is_display', Const.POOL_DISPLAY.DISPLAY)
       })
       .orderBy('priority', 'DESC')
       .orderBy('start_time', 'ASC')
@@ -185,24 +191,26 @@ class PoolService {
   }
 
   async getMysteriousBoxPoolsV3(filterParams) {
-    if (await RedisMysteriousBoxUtils.existRedisMysteriousBoxes()) {
-      let data = await RedisMysteriousBoxUtils.getRedisMysteriousBoxes()
-      data = JSON.parse(data)
-      return data
-    }
-
     const limit = filterParams.limit ? filterParams.limit : 20;
     const page = filterParams.page ? filterParams.page : 1;
     filterParams.limit = limit;
     filterParams.page = page;
 
+    if (!filterParams.title && !filterParams.network_available && !filterParams.campaign_status && await RedisMysteriousBoxUtils.existRedisMysteriousBoxes(filterParams)) {
+      console.log('existed')
+      let data = await RedisMysteriousBoxUtils.getRedisMysteriousBoxes(filterParams)
+      data = JSON.parse(data)
+      return data
+    }
+
     let pools = await this.buildQueryBuilder(filterParams)
       .orderBy('priority', 'DESC')
       .orderBy('start_time', 'ASC')
-      .paginate(page, limit);
+      .where('is_display', 1)
+      .paginate(page, limit)
 
     pools = JSON.parse(JSON.stringify(pools))
-    await RedisMysteriousBoxUtils.setRedisMysteriousBoxes(pools)
+    await RedisMysteriousBoxUtils.setRedisMysteriousBoxes(filterParams, pools)
 
     return pools;
   }
@@ -589,7 +597,7 @@ class PoolService {
         dataUpdate.priority = 0
 
         if (data.token_type === 'box') {
-          await RedisMysteriousBoxUtils.deleteRedisMysteriousBoxes();
+          await RedisMysteriousBoxUtils.deleteAllRedisMysteriousBoxes();
         }
       }
 

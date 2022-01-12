@@ -13,6 +13,10 @@ const getRedisKeyMysteriousBoxes = (filterParams) => {
     }_${
       filterParams.campaign_status
     }_${
+      filterParams.token_type
+    }_${
+      filterParams.process
+    }_${
       filterParams.network_available
     }_${
       filterParams.start_time

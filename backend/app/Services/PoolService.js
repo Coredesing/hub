@@ -708,6 +708,7 @@ class PoolService {
 
     let pools = await this.buildQueryBuilder({})
       .where('token_type', token_type)
+      .where('is_display', 1)
       .whereIn('campaign_status', [
         Const.POOL_STATUS.TBA,
         Const.POOL_STATUS.UPCOMING,

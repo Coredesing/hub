@@ -7,7 +7,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import styles from './Carousel.module.scss'
 import stylesList from './List.module.scss'
 import { Item } from '../../../types/Pagination'
-import { networkImage, currency, currencyNative, currencyStable } from './List'
+import { networkImage, currency } from './List'
 
 type Props = {
   items: Item[],

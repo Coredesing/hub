@@ -86,6 +86,7 @@ export const useAxiosFetch = (url: string, timeout?: number) => {
     useEffect(() => {
         let unmounted = false;
         let source = axios.CancelToken.source();
+        setLoading(true)
         axios.get(url, {
             baseURL: API_BASE_URL,
             cancelToken: source.token,

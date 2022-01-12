@@ -1,9 +1,7 @@
-import { useMemo, useState, useRef, useEffect, useCallback } from 'react'
-import axios, { CancelTokenSource } from 'axios'
+import { useMemo, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Item, PaginationResult, Pagination } from '../../../types/Pagination'
+import { Item } from '../../../types/Pagination'
 import styles from './List.module.scss'
-import { useFetchV1 } from '../../../hooks/useFetch'
 import { TOKEN_TYPE } from '../../../constants'
 import { paginator, useAxiosFetch } from '../utils'
 
@@ -135,11 +133,20 @@ const List = () => {
           </div>
         </div>
       </div>
-      { items.map(item => {
+      { loading && (
+        <div className={styles.loaderWrapper}>
+          <svg className={styles.loader} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Loading...
+        </div>
+      ) }
+      { !loading && items.map(item => {
         return (
           <div className={styles.row} key={item.id}>
             <Link to={`/mystery-box/${item.id}`} className={styles.link}>
-              <img src={item.mini_banner} />
+              <img src={item.mini_banner} alt={item.title} />
               <div className={styles.title}>
                 <h4>{item.title}</h4>
                 <p>{visibility(item)}</p>
@@ -147,7 +154,7 @@ const List = () => {
             </Link>
             <div className={styles.info}>
               <span>Network</span>
-              <p><img src={networkImage(item.network_available)} style={{ marginRight: '0.5em' }} /> {item.network_available}</p>
+              <p><img src={networkImage(item.network_available)} style={{ marginRight: '0.5em' }} alt={item.network_available} /> {item.network_available}</p>
             </div>
             <div className={styles.info}>
               <span>Total Raise</span>

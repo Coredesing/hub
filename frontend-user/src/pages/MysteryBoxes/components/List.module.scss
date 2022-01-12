@@ -246,3 +246,42 @@ $list-heading: 4rem;
         max-width: 1280px;
     }
 }
+
+.loaderWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    color: #fff;
+    font-family: Rajdhani;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    text-transform: uppercase;
+    color: #FFFFFF;
+}
+
+.loader {
+    width: 1.25em;
+    height: 1.25em;
+    margin-right: 0.5em;
+    circle {
+        opacity: 0.25;
+    }
+
+    path {
+        opacity: 0.75;
+    }
+
+    animation: spin 1s linear infinite;
+}
+
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

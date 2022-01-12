@@ -19,6 +19,8 @@ const getRedisKeyMysteriousBoxes = (filterParams) => {
     }_${
       filterParams.network_available
     }_${
+      filterParams.is_featured
+    }_${
       filterParams.start_time
     }_${
       filterParams.finish_time

@@ -5,7 +5,11 @@ import styles from './List.module.scss'
 import { TOKEN_TYPE } from '../../../constants'
 import { paginator, useAxiosFetch } from '../utils'
 
-const visibility = (item: Item) => {
+export const visibility = (item: Item) => {
+  if (item.process === 'only-auction') {
+    return 'Auction'
+  }
+
   if (item.is_private === 1) {
     return 'Private'
   }

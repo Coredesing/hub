@@ -15,6 +15,7 @@ export type Item = {
   is_private: number
   start_time: string
   finish_time: string
+  process: string
 }
 
 export type Pagination = {

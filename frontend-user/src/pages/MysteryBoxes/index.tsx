@@ -7,6 +7,7 @@ import withWidth from '@material-ui/core/withWidth';
 import useFetch from '../../hooks/useFetch';
 import { TOKEN_TYPE } from '../../constants';
 import { PaginationResult, Item } from '../../types/Pagination';
+import { useRef } from 'react'
 import { Backdrop, CircularProgress, useTheme, Button, useMediaQuery } from '@material-ui/core';
 import CountDownTimeV1, { CountDonwRanges } from '@base-components/CountDownTime';
 import SlideCard from './components/SlideCard';
@@ -20,6 +21,7 @@ import { ObjectType } from '@app-types';
 import { getIconCurrencyUsdt } from '@utils/usdt';
 import Carousel from './components/Carousel'
 import List from './components/List'
+import ListAuction from './components/ListAuction'
 
 const MysteryBoxes = (props: any) => {
   const theme = useTheme();
@@ -30,7 +32,7 @@ const MysteryBoxes = (props: any) => {
     setRecall(true);
   }, [setRecall]);
 
-  const [url, setURL] = useState<string>(`/pools/mysterious-box?token_type=${TOKEN_TYPE.Box}&limit=10`)
+  const [url, setURL] = useState<string>(`/pools/mysterious-box?token_type=${TOKEN_TYPE.Box}&limit=10&is_featured=1`)
 
   const {
     data: misteryBoxes = {} as PaginationResult,
@@ -84,6 +86,13 @@ const MysteryBoxes = (props: any) => {
     }
   }, [mysteryBoxList]);
 
+  const [now, setNow] = useState<Date>(new Date())
+  let interval = useRef<number | undefined>()
+  useEffect(() => {
+    interval.current = window.setInterval(() => setNow(new Date()), 1000)
+    return () => window.clearInterval(interval.current)
+  }, [])
+
   return (
     <DefaultLayout hiddenFooter style={{backgroundColor: '#15171E'}}>
       {/*<Helmet>*/}
@@ -98,8 +107,8 @@ const MysteryBoxes = (props: any) => {
             <CircularProgress color="inherit" />
           </Backdrop> :
           <>
-            <Carousel items={mysteryBoxList}></Carousel>
-            <div style={{ backgroundColor: '#000', height: '8rem' }}></div>
+            <Carousel items={mysteryBoxList} style={{paddingBottom: '2rem'}} now={now}></Carousel>
+            <ListAuction now={now} />
             <List />
           </>
         }

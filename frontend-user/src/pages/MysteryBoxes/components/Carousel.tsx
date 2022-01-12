@@ -12,6 +12,8 @@ import { intervalToDuration } from 'date-fns'
 
 type Props = {
   items: Item[],
+  style?: Object,
+  now: Date
 }
 
 const CarouselAction = ({ item, now }: { item: Item, now: Date }) => {
@@ -72,7 +74,7 @@ const CarouselAction = ({ item, now }: { item: Item, now: Date }) => {
       return 'Starts in'
     }
 
-    return 'Closes in'
+    return 'Ends in'
   }, [stages, now])
 
   if (item.campaign_status === 'Ended' || now > stages.timeFinish) {
@@ -115,22 +117,15 @@ const CarouselAction = ({ item, now }: { item: Item, now: Date }) => {
   )
 }
 
-const _Carousel = ( { items }: Props ) => {
+const _Carousel = ( { items, style, now }: Props ) => {
   const isMobile = useMediaQuery({ query: `(max-width: 1000px)` });
 
   if (!items) {
     items = []
   }
 
-  const [now, setNow] = useState<Date>(new Date())
-  let interval = useRef<number | undefined>()
-  useEffect(() => {
-    interval.current = window.setInterval(() => setNow(new Date()), 1000)
-    return () => window.clearInterval(interval.current)
-  }, [])
-
   return (
-    <div className={stylesList.container} style={{marginTop: '2rem'}}>
+    <div className={stylesList.container} style={{marginTop: '2rem', ...(style || {})}}>
       <div className={styles.heading}>
         <span>Featured</span> INOs
       </div>

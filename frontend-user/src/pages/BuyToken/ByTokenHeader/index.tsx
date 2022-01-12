@@ -61,15 +61,18 @@ const HeaderByToken: FC<Props> = ({ poolDetailsMapping, poolDetails, solanaAddre
   // console.log('durationShow', durationShow)
 
   return (
-  <>
-    {/*<section className={styles.headerComponent}>*/}
+    <>
+      {/*<section className={styles.headerComponent}>*/}
 
       <div className={`${styles.top}`} >
-        <img
-          className={styles.iconToken}
-          src={poolDetails?.banner || poolImage}
-          alt=""
-        />
+        <div className={styles.wrapperIconToken}>
+          <img
+            className={styles.iconToken}
+            src={poolDetails?.banner || poolImage}
+            alt=""
+          />
+        </div>
+
         <h2 className={styles.title}>{poolDetails?.title}</h2>
       </div>
 
@@ -172,19 +175,19 @@ const HeaderByToken: FC<Props> = ({ poolDetailsMapping, poolDetails, solanaAddre
           </li>
         )}
         {poolDetails.airdropNetwork === 'solana' && (
-            <li className={styles.item}>
-              <img
-                  className={styles.iconItem}
-                  src="/images/icons/solana-logo.svg"
-                  alt=""
-              />
-              Airdrop on Solana {solanaAddress && <>(<span style={{ color: '#72F34B' }}>{shortWallet(solanaAddress)}</span>)</>}
-            </li>
+          <li className={styles.item}>
+            <img
+              className={styles.iconItem}
+              src="/images/icons/solana-logo.svg"
+              alt=""
+            />
+            Airdrop on Solana {solanaAddress && <>(<span style={{ color: '#72F34B' }}>{shortWallet(solanaAddress)}</span>)</>}
+          </li>
         )}
       </ul>
 
-    {/*</section>*/}
-  </>
+      {/*</section>*/}
+    </>
   );
 };
 

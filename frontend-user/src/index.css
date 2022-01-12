@@ -113,6 +113,76 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'Rajdhani';
+    src: url("./styles/fonts/Rajdhani/Rajdhani-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Rajdhani';
+    src: url("./styles/fonts/Rajdhani/Rajdhani-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Rajdhani';
+    src: url("./styles/fonts/Rajdhani/Rajdhani-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Rajdhani';
+    src: url("./styles/fonts/Rajdhani/Rajdhani-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Rajdhani';
+    src: url("./styles/fonts/Rajdhani/Rajdhani-Bold.ttf") format("truetype");
+    font-weight: 'bold';
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url("./styles/fonts/Poppins/Poppins-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url("./styles/fonts/Poppins/Poppins-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url("./styles/fonts/Poppins/Poppins-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url("./styles/fonts/Poppins/Poppins-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url("./styles/fonts/Poppins/Poppins-Bold.ttf") format("truetype");
+    font-weight: 'bold';
+    font-style: normal;
+}
+
 [class^="custom-icon-"],
 [class*=" custom-icon-"] {
     /* use !important to prevent issues with browser extensions that change fonts */
@@ -334,6 +404,10 @@ body::-webkit-scrollbar-thumb,
     background: #000000;
 }
 
+.bg-black-imp {
+    background: #000000 !important;
+}
+
 .mb-12px {
     margin-bottom: 12px;
 }
@@ -372,6 +446,11 @@ body::-webkit-scrollbar-thumb,
     line-height: 16px;
 }
 
+.font-14px-imp {
+    font-size: 14px !important;
+    line-height: 16px !important;
+}
+
 .grid {
     display: grid;
 }
@@ -384,10 +463,15 @@ body::-webkit-scrollbar-thumb,
     font-weight: bold;
 }
 
+.bold-imp {
+    font-weight: bold !important;
+}
+
 .pointer {
     cursor: pointer;
 }
 
+<<<<<<< HEAD
 img, video {
   max-width: 100%;
 }
@@ -408,4 +492,39 @@ img, video {
 .carousel .thumb.selected {
     border-color: #6CDB00!important;
     opacity: 1;
+}
+.mt-16px-imp {
+    margin-top: 16px !important;
+}
+
+.mb-16px-imp {
+    margin-bottom: 16px !important;
+}
+
+.mb-7px-imp {
+    margin-bottom: 7px !important;
+}
+
+.flex {
+    display: flex;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.font-weight-600 {
+    font-weight: 600;
+}
+
+.font-24px-imp {
+    font-size: 24px !important;
+}
+
+.font-rajdhani-imp {
+    font-family: 'Rajdhani' !important;
+}
+
+.font-poppins-imp {
+    font-family: 'Poppins' !important;
 }

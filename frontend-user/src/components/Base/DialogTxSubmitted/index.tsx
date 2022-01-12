@@ -78,15 +78,22 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const DialogTxSubmitted = ({ open, ...props }: any) => {
+type Props = {
+  open: boolean;
+  onClose?: () => void;
+  networkName?: string;
+  transaction?: string;
+}
+
+const DialogTxSubmitted = ({ open, ...props }: Props) => {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleClose = () => {
-    props.onClose()
+    props.onClose && props.onClose();
   };
-  const info = getNetworkInfo(props.networkName);
+  const info = getNetworkInfo(props.networkName as string);
   const transactionLink = getEtherscanTransactionLink({
     appChainID: info.id,
     transactionHash: props.transaction,

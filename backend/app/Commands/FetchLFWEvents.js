@@ -21,6 +21,10 @@ class FetchLFWEvents extends Command {
   async handle (args, options) {
     this.info('Implementation for fetch:events:lfw command');
     const provider = await HelperUtils.getLFWInstance()
+    if (!provider) {
+      return
+    }
+
     const latestBlockNumber = (await provider.eth.getBlockNumber()) - 1
     if (latestBlockNumber < REFETCH_EVENTS_DELAY_BLOCKS) {
       return

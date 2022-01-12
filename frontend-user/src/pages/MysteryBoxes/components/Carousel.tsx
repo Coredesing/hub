@@ -72,9 +72,9 @@ const _Carousel = ( { items }: Props ) => {
         {items.map(item => {
           return (
             <div key={`ino-${item.id}`} className={styles.item}>
-              <img src={item.banner} className={styles.image} />
+              <img src={item.banner} className={styles.image} alt={item.title} />
               <div className={styles.information}>
-                <h3 className={styles.title}>{item.title} <img src={networkImage(item.network_available)} /></h3>
+                <h3 className={styles.title}>{item.title} <img src={networkImage(item.network_available)} alt={item.network_available} /></h3>
                 <p className={styles.description}>{item.description}</p>
                 <div className={styles.informationPurchase}>
                   <div>
@@ -105,7 +105,7 @@ const _Carousel = ( { items }: Props ) => {
                     <text fill="white" xmlSpace="preserve" style={{whiteSpace: 'pre'}} fontSize="10" fontWeight="600"><tspan x="203.972" y="50.92">SECONDS</tspan></text>
                   </svg>
                   <div className={styles.actionBtn}>
-                    Join Now <img src="/images/icons-new/arrow-right-dark.svg" />
+                    Join Now <img src="/images/icons-new/arrow-right-dark.svg" alt="go" />
                   </div>
                 </div>
               </div>

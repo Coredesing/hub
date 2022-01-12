@@ -72,6 +72,10 @@ class PoolService {
       builder = builder.where('is_private', params.is_private)
     }
 
+    if (params.is_featured) {
+      builder = builder.where('is_featured', params.is_featured)
+    }
+
     if(params.network_available) {
       builder = builder.where('network_available', params.network_available)
     }

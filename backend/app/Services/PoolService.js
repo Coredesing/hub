@@ -73,6 +73,13 @@ class PoolService {
       builder = builder.where('network_available', params.network_available)
     }
 
+    if (params.process) {
+      builder = builder.where('process', params.process);
+    }
+
+    builder.join('social_network_settings', 'campaigns.id', 'social_network_settings.campaign_id')
+      .select('*', 'twitter_link', 'telegram_link', 'medium_link');
+
     return builder;
   }
 

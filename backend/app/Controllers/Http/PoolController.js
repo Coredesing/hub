@@ -301,7 +301,7 @@ class PoolController {
       RedisUtils.deleteRedisTierList(campaignId);
 
       if (inputParams.token_type === 'box') {
-        RedisMysteriousBoxUtils.deleteRedisMysteriousBoxes();
+        RedisMysteriousBoxUtils.deleteAllRedisMysteriousBoxes();
       }
 
       return HelperUtils.responseSuccess(campaign);

@@ -89,6 +89,10 @@ class FetchMarketplaceEvent {
   async fetchEvents(provider, event_type, from, to) {
     console.log(`fetch ${event_type} from ${from} to ${to} in marketplace`)
     const instance = await HelperUtils.getMarketplaceInstance()
+    if (!instance) {
+      return
+    }
+
     const events = await instance.getPastEvents(event_type, {
       fromBlock: from,
       toBlock: to,

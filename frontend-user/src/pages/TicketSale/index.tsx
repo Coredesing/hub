@@ -47,6 +47,16 @@ const TicketSale = (props: any) => {
   } = useFetchV1(`/pools/upcoming-pools?token_type=${tokenType}&limit=20&page=1&is_private=0`, recall && checkParamType.valid);
 
   const {
+    data: upcomingPrivatePools = {} as PaginationResult,
+    loading: loadingUpcomingPrivatePools
+  } = useFetchV1(`/pools/upcoming-pools?token_type=${tokenType}&limit=20&page=1&is_private=1`, recall && checkParamType.valid);
+
+  const {
+    data: upcomingSeedPools = {} as PaginationResult,
+    loading: loadingUpcomingSeedPools
+  } = useFetchV1(`/pools/upcoming-pools?token_type=${tokenType}&limit=20&page=1&is_private=2`, recall && checkParamType.valid);
+
+  const {
     data: upcomingCommunityPools = {} as PaginationResult,
     loading: loadingUpcomingCommunityPools
   } = useFetchV1(`/pools/upcoming-pools?token_type=${tokenType}&limit=20&page=1&is_private=3`, recall && checkParamType.valid);
@@ -56,13 +66,15 @@ const TicketSale = (props: any) => {
   } = useFetchV1(`/pools/complete-sale-pools?token_type=${tokenType}&limit=10&page=1`, recall && checkParamType.valid);
 
   useEffect(() => {
-    if (!loadingActivePools && !loadingUpcomingPublicPools && !loadingcompletePools && !loadingUpcomingCommunityPools) {
+    if (!loadingActivePools && !loadingUpcomingPublicPools && !loadingcompletePools && !loadingUpcomingCommunityPools && !loadingUpcomingPrivatePools && !loadingUpcomingSeedPools) {
       setRecall(false);
     }
-  }, [loadingActivePools, loadingUpcomingPublicPools, loadingcompletePools, loadingUpcomingCommunityPools]);
+  }, [loadingActivePools, loadingUpcomingPublicPools, loadingcompletePools, loadingUpcomingCommunityPools, loadingUpcomingPrivatePools, loadingUpcomingSeedPools]);
 
   const [upcomingPublicPoolsList, setUpcomingPublicPoolsList] = useState<ObjectType<any>[]>([]);
   const [upcomingComPoolsList, setUpcomingComPoolsList] = useState<ObjectType<any>[]>([]);
+  const [upcomingPrivatePoolsList, setUpcomingPrivatePoolsList] = useState<ObjectType<any>[]>([]);
+  const [upcomingSeedPoolsList, setUpcomingSeedPoolsList] = useState<ObjectType<any>[]>([]);
 
   useEffect(() => {
     if (upcomingPublicPools.data?.length) {
@@ -70,6 +82,27 @@ const TicketSale = (props: any) => {
       setUpcomingPublicPoolsList(sorted);
     }
   }, [upcomingPublicPools])
+
+  useEffect(() => {
+    if (upcomingCommunityPools.data?.length) {
+      const sorted = upcomingCommunityPools.data.sort((a) => a.campaign_status === 'TBA' ? 1 : -1);
+      setUpcomingComPoolsList(sorted);
+    }
+  }, [upcomingCommunityPools])
+
+  useEffect(() => {
+    if (upcomingPrivatePools.data?.length) {
+      const sorted = upcomingPrivatePools.data.sort((a) => a.campaign_status === 'TBA' ? 1 : -1);
+      setUpcomingPrivatePoolsList(sorted);
+    }
+  }, [upcomingPrivatePools])
+
+  useEffect(() => {
+    if (upcomingSeedPools.data?.length) {
+      const sorted = upcomingSeedPools.data.sort((a) => a.campaign_status === 'TBA' ? 1 : -1);
+      setUpcomingSeedPoolsList(sorted);
+    }
+  }, [upcomingSeedPools])
 
   useEffect(() => {
     if (upcomingCommunityPools.data?.length) {
@@ -106,6 +139,34 @@ const TicketSale = (props: any) => {
               <div className={styles.poolItem}>
                 <h3>Upcoming</h3>
                 <Box display="grid" gridGap="80px" gridTemplateColumns="1fr">
+                {
+                    !!upcomingSeedPoolsList.length && <Box width="100%" maxWidth="1140px" paddingLeft="10px" paddingRight="10px" margin="auto">
+                      <div className={styles.subTitle}>
+                        <span></span>
+                        <h4 className="text-uppercase firs-neue-font font-20px text-white text-center font-weight-normal">Pool Seed</h4>
+                        <span></span>
+                      </div>
+                      <div className={clsx(styles.cards, styles.cardsUpcoming)}>
+                        {
+                          upcomingSeedPoolsList.map((card, id: number) => <UpcomingCard key={id} card={card} refresh={refresh} />)
+                        }
+                      </div>
+                    </Box>
+                  }
+                  {
+                    !!upcomingPrivatePoolsList.length && <Box width="100%" maxWidth="1140px" paddingLeft="10px" paddingRight="10px" margin="auto">
+                      <div className={styles.subTitle}>
+                        <span></span>
+                        <h4 className="text-uppercase firs-neue-font font-20px text-white text-center font-weight-normal">Pool Private</h4>
+                        <span></span>
+                      </div>
+                      <div className={clsx(styles.cards, styles.cardsUpcoming)}>
+                        {
+                          upcomingPrivatePoolsList.map((card, id: number) => <UpcomingCard key={id} card={card} refresh={refresh} />)
+                        }
+                      </div>
+                    </Box>
+                  }
                   {
                     !!upcomingPublicPoolsList.length && <Box width="100%" maxWidth="1140px" paddingLeft="10px" paddingRight="10px" margin="auto">
                       <div className={styles.subTitle}>

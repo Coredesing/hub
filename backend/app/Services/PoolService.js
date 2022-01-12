@@ -238,20 +238,12 @@ class PoolService {
   async getUpcomingPoolsV3(filterParams) {
     const limit = filterParams.limit ? filterParams.limit : 100000;
     const page = filterParams.page ? filterParams.page : 1;
-    let isCommunity = null;
 
-    if (filterParams.is_private === undefined || filterParams.is_private === null) {
-      isCommunity = null
-    } else if (filterParams.is_private === 3 || filterParams.is_private === '3') {
-      isCommunity = true
-    } else {
-      isCommunity = false
-    }
     filterParams.limit = limit;
     filterParams.page = page;
 
-    if (await RedisUtils.checkExistRedisUpcomingPools(page, isCommunity)) {
-      const cachedPools = await RedisUtils.getRedisUpcomingPools(page, isCommunity)
+    if (await RedisUtils.checkExistRedisUpcomingPools(page, filterParams.is_private)) {
+      const cachedPools = await RedisUtils.getRedisUpcomingPools(page, filterParams.is_private)
       return JSON.parse(cachedPools)
     }
 
@@ -269,7 +261,7 @@ class PoolService {
 
     // cache data
     if (page <= 2) {
-      await RedisUtils.createRedisUpcomingPools(page, isCommunity, pools)
+      await RedisUtils.createRedisUpcomingPools(page, filterParams.is_private, pools)
     }
     return pools;
   }

@@ -224,7 +224,7 @@ const AuctionBoxModal = ({ open, bidInfo = {}, token = {}, auctionLoading, lastB
   };
 
 
-  const [isVerified, setVerify] = useState<string | null>('bbb');
+  const [isVerified, setVerify] = useState<string | null>('');
   const recaptchaRef: any = React.useRef();
   const onChangeRecapcha = (value: string | null) => {
     setVerify(value);
@@ -259,14 +259,18 @@ const AuctionBoxModal = ({ open, bidInfo = {}, token = {}, auctionLoading, lastB
   )
 
   const [minimumMarkup, setMinimumMarkup] = useState<any>();
+  const [minimumBid, setMinimumBid] = useState<any>();
   useEffect(() => {
     if(!rateEachBid) return;
     if(lastBidder) {
       console.log('lastBidder', lastBidder)
-      // const minimum = utils.formatEther(lastBidder.amount);
-      // console.log('minimum', minimum)
+      const minimumMarkup = +lastBidder.amount * +rateEachBid
+      const minimumBid = +lastBidder.amount + minimumMarkup;
+      console.log('minimumBid', minimumBid)
+      setMinimumMarkup(minimumMarkup);
+      setMinimumBid(minimumBid);
     } else {
-      setMinimumMarkup(currencyPool?.price)
+      setMinimumBid(currencyPool?.price)
     }
   }, [lastBidder, currencyPool?.price, rateEachBid ])
 
@@ -294,7 +298,7 @@ const AuctionBoxModal = ({ open, bidInfo = {}, token = {}, auctionLoading, lastB
         </div>
         <div className={classes.boxGroup}>
           <label>{lastBidder ? 'Minimum markup' : 'Starting price'}</label>
-          <span>{lastBidder ? 0 : currencyPool?.price} {token.name}</span>
+          <span>{ lastBidder ? minimumMarkup : minimumBid} {token.name}</span>
         </div>
         <div className={`${classes.boxGroup} mb-7px-imp flex items-center`}>
           <label>Your bid</label>
@@ -308,7 +312,7 @@ const AuctionBoxModal = ({ open, bidInfo = {}, token = {}, auctionLoading, lastB
             }
             <span>{token.name}</span>
           </div>
-          <span>Minimum bid value: <span className='text-green-imp font-weight-600'>{+token.price || ''} {token.name}</span></span>
+          <span>Minimum bid value: <span className='text-green-imp font-weight-600'>{minimumBid} {token.name}</span></span>
         </div>
         {error && <AlertMsg message={error} />}
         <div className="divider mt-16px-imp mb-16px-imp"></div>

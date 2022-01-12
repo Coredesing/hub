@@ -83,5 +83,5 @@ export const isMysteryBox = (type: string) => {
 }
 
 export const isAuctionBox = (type: string) => {
-    return type === 'auction-box';
+    return type === 'only-auction';
 }

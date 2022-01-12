@@ -463,6 +463,10 @@ body::-webkit-scrollbar-thumb,
     font-weight: bold;
 }
 
+.bold-imp {
+    font-weight: bold !important;
+}
+
 .pointer {
     cursor: pointer;
 }
@@ -493,4 +497,12 @@ body::-webkit-scrollbar-thumb,
 
 .font-24px-imp {
     font-size: 24px !important;
+}
+
+.font-rajdhani-imp {
+    font-family: 'Rajdhani' !important;
+}
+
+.font-poppins-imp {
+    font-family: 'Poppins' !important;
 }

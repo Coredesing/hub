@@ -4,9 +4,6 @@ import PropTypes from "prop-types";
 // import SwipeableViews from 'react-swipeable-views';
 import { withStyles, useMediaQuery } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
 import MuiLink from "@material-ui/core/Link";
 import Box from "@material-ui/core/Box";
 import Pagination from '@material-ui/lab/Pagination';
@@ -41,61 +38,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { getContract } from "@utils/contract";
 import { alertFailure, alertSuccess, alertWarning } from "@store/actions/alert";
 import TransactionSubmitModal from "@base-components/TransactionSubmitModal";
+import { AntTabs, AppBar, a11yProps, Tab, TabPanel } from './components/TabPanel'
 const shareIcon = "/images/icons/share.svg";
 const telegramIcon = "/images/icons/telegram-1.svg";
 const twitterIcon = "/images/icons/twitter-1.svg";
 const mediumIcon = "/images/icons/medium-1.svg";
-function TabPanel(props: any) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-function a11yProps(index: any) {
-  return {
-    id: `full-width-tab-${index}`,
-    "aria-controls": `full-width-tabpanel-${index}`,
-  };
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-const AntTabs = withStyles({
-  root: {
-    borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
-  },
-  indicator: {
-    backgroundColor: "#72F34B",
-    height: "3px",
-    borderRadius: "20px",
-  },
-})(Tabs);
-
-
 
 type Props = {
   info: { [k: string]: any },
@@ -600,8 +547,8 @@ export const AboutMysteryBox = ({
                       }}>
                         {row.description}
                       </div>
-                      <MuiLink 
-                      className="text-green-imp pointer"
+                      <MuiLink
+                        className="text-green-imp pointer"
                         style={{
                           fontFamily: 'Poppins',
                           fontSize: '13px',

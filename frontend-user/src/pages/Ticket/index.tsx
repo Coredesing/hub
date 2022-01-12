@@ -37,7 +37,7 @@ const Ticket: React.FC<any> = (props: any) => {
   }, [loadingTicket, dataTicket]);
 
   const render = useCallback((processType, tokenType, id) => {
-    if (isAuctionBox('auction-box')) {
+    if (isAuctionBox(processType)) {
       return <AuctionBox id={id} infoTicket={dataTicket} />
     }
     if (isMysteryBox(tokenType)) return <MysteryBox id={id} />;

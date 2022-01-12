@@ -23,8 +23,11 @@ const useStyles = makeStyles((theme: any) => {
       margin: 'auto'
     },
     displayContent: {
-      paddingLeft: "calc((100% - (461px * 2 + 40px)) / 2)",
-      paddingRight: "calc((100% - (461px * 2 + 40px)) / 2)",
+      // paddingLeft: "calc((100% - (461px * 2 + 40px)) / 2)",
+      // paddingRight: "calc((100% - (461px * 2 + 40px)) / 2)",
+      maxWidth: '1180px',
+      width: '100%',
+      margin: 'auto'
     },
     alert: {
       marginTop: "12px",
@@ -875,6 +878,141 @@ export const useAboutStyles = makeStyles((theme) => ({
       width: '160px',
       whiteSpace: 'nowrap',
     }
+  },
+  ruleFooter: {
+    marginTop: '25px',
+    fontFamily: 'Firs Neue',
+    '& .item-group': {
+      display: 'grid',
+      gridTemplateColumns: '90px auto',
+      gap: '8px',
+      marginBottom: '20px',
+      alignItems: 'center',
+      '& label': {
+        fontFamily: 'inherit',
+        fontSize: '14px',
+        fontStyle: 'normal',
+      },
+      '& div': {
+        display: 'inline-block',
+        '& a': {
+          display: 'inline',
+          marginRight: '10px',
+          '&:hover': {
+            color: '#fff',
+          },
+          '&:last-child': {
+            marginRight: 'unset',
+          },
+        },
+        '& a.gf-link': {
+          display: 'grid',
+          gridTemplateColumns: 'auto auto',
+          alignItems: 'center',
+          gap: '4px',
+          padding: '2px 10px',
+          background: 'rgba(255, 255, 255, 0.2)',
+          width: 'fit-content',
+          borderRadius: '4px',
+
+        }
+      }
+    },
+    '& .full-research': {
+      display: 'grid',
+      gridTemplateColumns: 'auto auto',
+      alignItems: 'center',
+      gap: '4px',
+      padding: '7px 20px',
+      width: 'fit-content',
+      fontWeight: 500,
+      fontSize: '14px',
+      fontFamily: 'inherit',
+      background: 'rgba(255, 255, 255, 0.2)',
+      borderRadius: '4px',
+    }
+  },
+  serieGridView: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, 280px)',
+    gap: '20px',
+    '& .item': {
+      position: 'relative',
+      background: '#23252B',
+      minHeight: '500px',
+      '& .image': {
+        width: '100%',
+        height: '100%',
+        maxHeight: '290px',
+        marginBottom: '15px',
+        position: 'relative',
+        '& img': {
+          width: '100%',
+          height: '100%',
+          // objectFit: 'contain',
+        }
+      },
+      '& .rarity': {
+        // borderTopLeftRadius: '20px',
+        borderLeft: '25px solid transparent',
+        borderBottom: '30px solid #000',
+        width: 'calc(100% / 2)',
+        position: 'absolute',
+        height: '30px',
+        display: 'flex',
+        // gridTemplateColumns: 'auto auto',
+        gap: '10px',
+        alignItems: 'center',
+        justifyContent: 'center',
+        bottom: 0,
+        right: 0,
+        // background: '#000',
+        '& div': {
+          position: 'absolute',
+          top: "5px",
+        },
+        '& label, & span': {
+          fontFamily: 'Poppins',
+          fontSize: '13px',
+          fontWeight: 'normal',
+        },
+        '& label': {
+          color: 'rgba(255, 255, 255, 0.5)',
+          textAlign: 'right',
+          marginRight: '5px',
+        },
+        '& span': {
+          textAlign: 'left',
+
+        },
+        '& span.green': {
+          color: '#6CDB00',
+        }
+      },
+      '& .info': {
+        paddingLeft: '16px',
+        paddingRight: '16px',
+        marginBottom: '24px',
+        '& h4': {
+          fontSize: '16px',
+          color: '#FFFFFF',
+          fontFamily: 'Poppins',
+        },
+        '& h5': {
+          color: 'rgba(255, 255, 255, 0.3)',
+          fontSize: '16px',
+          fontFamily: 'Poppins',
+        }
+      },
+      '& .desc': {
+        paddingLeft: '16px',
+        paddingRight: '16px',
+        fontFamily: 'Poppins',
+        fontSize: '13px',
+        color: '#F4F4F4',
+        fontStyle: 'normal',
+      }
+    },
   }
 }));
 
@@ -1214,24 +1352,28 @@ export const useMysteyBoxStyles = makeStyles((theme) => ({
 }));
 
 export const useAuctionBoxStyles = makeStyles((theme) => ({
-  
+
   wrapperCountdown: {
     borderRadius: '4px',
-    background: '#000000',
+    background: 'linear-gradient(269.48deg, #000000 5.39%, rgba(0, 0, 0, 0) 94.78%)',
     display: 'grid',
     placeContent: 'center',
+    gridTemplateColumns: 'auto auto',
+    alignItems: 'center',
+    padding: '5px',
+    width: '100%',
     '& h4': {
       fontSize: '14px',
       fontWeight: 'bold',
-      fontFamily: 'Firs Neue',
+      fontFamily: 'Rajdhani',
       fontStyle: 'normal',
       color: '#fff',
       padding: '5px',
       textAlign: 'center',
     },
     '& .countdown': {
-      background: '#000',
-
+      background: 'transparent',
+      fontFamily: 'Rajdhani',
       '&  .times .time .number': {
         fontSize: '28px',
       },
@@ -1239,6 +1381,9 @@ export const useAuctionBoxStyles = makeStyles((theme) => ({
         fontSize: '10px',
       }
     }
+  },
+  mt50px: {
+    marginTop: '50px',
   }
-  
+
 }));

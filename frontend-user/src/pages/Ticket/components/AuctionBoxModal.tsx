@@ -17,6 +17,9 @@ import BigNumber from 'bignumber.js';
 import DialogBidStatus, { StatusType } from './DialogBidStatus';
 import ButtonBase from '@base-components/Buttons/ButtonBase';
 import Recapcha from '@base-components/Recapcha';
+import { debounce } from '@utils/index';
+import { utils } from 'ethers';
+import { numberWithCommas } from '@utils/formatNumber';
 
 const commaNumber = require('comma-number');
 const closeIcon = '/images/icons/close.svg';
@@ -178,10 +181,9 @@ const useStyles = makeStyles({
 type Props = {
   open: boolean,
   bidInfo: { [k: string]: any },
-  ownedBidStaked: ResultStaked,
   [k: string]: any
 }
-const AuctionBoxModal = ({ open, bidInfo = {}, ownedBidStaked = {}, token = {}, ...props }: Props) => {
+const AuctionBoxModal = ({ open, bidInfo = {}, token = {}, auctionLoading, lastBidder = {}, rateEachBid, currencyPool, ...props }: Props) => {
   const { library, account } = useWeb3React();
   const classes = useStyles();
   const theme = useTheme();
@@ -192,22 +194,21 @@ const AuctionBoxModal = ({ open, bidInfo = {}, ownedBidStaked = {}, token = {}, 
   const [renewBalance, setRenewBalance] = useState(true);
 
   useEffect(() => {
-    if (!account) return setBalance('0');
+    if (!account || !token) return setBalance('0');
     const getBalance = async () => {
       try {
-        const contract = getContract(bidInfo.token, Erc20Json, library, account);
+        const contract = getContract(token.address, Erc20Json, library, account);
         let balance = await contract.balanceOf(account);
-        balance = balance.toBigInt();
-        balance = new BigNumber(balance).dividedBy(new BigNumber(10 ** bidInfo.decimals));
-        balance = commaNumber(+(balance).toFixed(4) * 10000 / 10000) || '0';
-        setBalance(balance);
+        balance = utils.formatEther(balance.toString());
+        balance = new BigNumber(balance).toFixed(4);
+        setBalance(numberWithCommas(balance, 4));
         setRenewBalance(false);
       } catch (error) {
         console.log(error);
       }
     }
-    (renewBalance || account) && library && bidInfo?.token && getBalance();
-  }, [library, account, bidInfo, renewBalance]);
+    (renewBalance || account) && library && token && getBalance();
+  }, [library, account, token, renewBalance]);
 
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -222,18 +223,32 @@ const AuctionBoxModal = ({ open, bidInfo = {}, ownedBidStaked = {}, token = {}, 
     props.onClose && props.onClose();
   };
 
+
+  const [isVerified, setVerify] = useState<string | null>('bbb');
+  const recaptchaRef: any = React.useRef();
+  const onChangeRecapcha = (value: string | null) => {
+    setVerify(value);
+  }
+  const onRefreshRecaptcha = debounce(() => {
+    if (!isVerified) return;
+    if (typeof recaptchaRef?.current?.resetCaptcha === 'function') {
+      recaptchaRef.current.resetCaptcha();
+    }
+  }, 5000);
+
   const [openStatusModal, setOpenStatusModal] = useState<{ status?: StatusType, open: boolean, subTitle?: string, title?: string, data?: { [k: string]: any } }>({ open: false });
   const onPlaceBid = async () => {
     if (!props.onClick || !account) return;
-    setOpenStatusModal({ status: 'processing', open: true, title: 'Adding', data: { value } });
-    const result = await props.onClick(+value);
-    if (result?.success) {
-      setValue('');
-      setRenewBalance(true);
-      setOpenStatusModal({ status: 'success', open: true, title: 'Success add', data: { value } });
-    } else {
-      setOpenStatusModal({ status: 'failed', open: true, title: 'Failed add', subTitle: result?.error || '' });
-    }
+    onRefreshRecaptcha();
+    // setOpenStatusModal({ status: 'processing', open: true, title: 'Adding', data: { value } });
+    const result = await props.onClick(+value, isVerified);
+    // if (result?.success) {
+    //   setValue('');
+    //   setRenewBalance(true);
+    //   setOpenStatusModal({ status: 'success', open: true, title: 'Success add', data: { value } });
+    // } else {
+    //   setOpenStatusModal({ status: 'failed', open: true, title: 'Failed add', subTitle: result?.error || '' });
+    // }
   };
 
   const onCloseStatusModal = useCallback(
@@ -242,6 +257,19 @@ const AuctionBoxModal = ({ open, bidInfo = {}, ownedBidStaked = {}, token = {}, 
     },
     [setOpenStatusModal],
   )
+
+  const [minimumMarkup, setMinimumMarkup] = useState<any>();
+  useEffect(() => {
+    if(!rateEachBid) return;
+    if(lastBidder) {
+      console.log('lastBidder', lastBidder)
+      // const minimum = utils.formatEther(lastBidder.amount);
+      // console.log('minimum', minimum)
+    } else {
+      setMinimumMarkup(currencyPool?.price)
+    }
+  }, [lastBidder, currencyPool?.price, rateEachBid ])
+
 
   return (
     <Dialog
@@ -261,31 +289,33 @@ const AuctionBoxModal = ({ open, bidInfo = {}, ownedBidStaked = {}, token = {}, 
         <h3>BID CONFIRMATION</h3>
 
         <div className={classes.boxGroup}>
-          <label>Current bid</label>
-          <span>0 {bidInfo.symbol}</span>
+          <label>Highest bid</label>
+          <span>{lastBidder?.amount || '0'} {token.name}</span>
         </div>
         <div className={classes.boxGroup}>
-          <label>Minimum markup</label>
-          <span>0 {bidInfo.symbol}</span>
+          <label>{lastBidder ? 'Minimum markup' : 'Starting price'}</label>
+          <span>{lastBidder ? 0 : currencyPool?.price} {token.name}</span>
         </div>
         <div className={`${classes.boxGroup} mb-7px-imp flex items-center`}>
           <label>Your bid</label>
-          <span className='font-14px-imp text-transform-unset'>(Your Balance: {balance} {bidInfo.symbol})</span>
+          <span className='font-14px-imp text-transform-unset'>(Your Balance: {balance} {token.name})</span>
         </div>
         <div className={classes.formGroup}>
           <FormInputNumber className="mb-7px-imp bg-black-imp font-24px-imp text-white-imp" value={value} onChange={onChangeValue} isPositive allowZero placeholder="Enter your amount" />
           <div className="icon">
-            <img src="/images/icons/bnb.png" alt="" />
-            <span>BNB</span>
+            {
+              token.name && <img src={`/images/icons/${(token.name || '').toLowerCase()}.png`} alt="" />
+            }
+            <span>{token.name}</span>
           </div>
-          <span>Minimum bid value: <span className='text-green-imp font-weight-600'>0.15 BNB</span></span>
+          <span>Minimum bid value: <span className='text-green-imp font-weight-600'>{+token.price || ''} {token.name}</span></span>
         </div>
         {error && <AlertMsg message={error} />}
         <div className="divider mt-16px-imp mb-16px-imp"></div>
-        <Recapcha />
+        <Recapcha onChange={onChangeRecapcha} ref={recaptchaRef} />
       </DialogContent>
       <DialogActions className={classes.actions}>
-        <ButtonBase color='green' onClick={onPlaceBid} className={classes.btnBid} disabled={!account}>
+        <ButtonBase color='green' onClick={onPlaceBid} className={classes.btnBid} disabled={!account || !isVerified || auctionLoading} isLoading={auctionLoading}>
           Place a Bid
         </ButtonBase>
       </DialogActions>

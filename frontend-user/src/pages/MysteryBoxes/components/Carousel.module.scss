@@ -76,7 +76,6 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;  
     overflow: hidden;
-    margin-bottom: 1rem;
 }
 
 .informationPurchase {
@@ -167,4 +166,25 @@
     span {
         color: #6CDB00;
     }
+}
+
+.socials {
+    display: flex;
+    gap: 1.5em;
+    margin: 1.5rem 0;
+    svg {
+        display: block;
+        width: 1rem;
+        height: 1rem;
+        color: #fff;
+        &:hover {
+            color: #ddd;
+        }
+    }
+}
+
+.social {
+    display: block;
+    border-radius: 4px;
+    cursor: pointer;
 }

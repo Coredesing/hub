@@ -275,7 +275,7 @@ const HeaderDefaultLayout: React.FC<any> = (props: any) => {
                 <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/pools/token">Token sales</Link></li>
                 <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/mystery-boxes">Mystery boxes</Link></li>
                 <li className={styles.headerLink} onClick={hideNavMenu}><Link to="/staking-pools">Staking</Link></li>
-                <li className={styles.headerLink} onClick={hideNavMenu}><LinkMui href="javascript:void(0)" className="new-link">
+                <li className={styles.headerLink} onClick={hideNavMenu}><LinkMui href="#" onClick={(e) => e.preventDefault()} className="new-link">
                   Metaverse
                   <span className="new-icon">New</span>
                 </LinkMui></li>

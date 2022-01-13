@@ -4,10 +4,7 @@ import PropTypes from "prop-types";
 // import SwipeableViews from 'react-swipeable-views';
 import { withStyles, useMediaQuery } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
+import MuiLink from "@material-ui/core/Link";
 import Box from "@material-ui/core/Box";
 import Pagination from '@material-ui/lab/Pagination';
 import { useFetchV1 } from "../../hooks/useFetch";
@@ -41,61 +38,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { getContract } from "@utils/contract";
 import { alertFailure, alertSuccess, alertWarning } from "@store/actions/alert";
 import TransactionSubmitModal from "@base-components/TransactionSubmitModal";
+import { AntTabs, AppBar, a11yProps, Tab, TabPanel } from './components/TabPanel'
 const shareIcon = "/images/icons/share.svg";
 const telegramIcon = "/images/icons/telegram-1.svg";
 const twitterIcon = "/images/icons/twitter-1.svg";
 const mediumIcon = "/images/icons/medium-1.svg";
-function TabPanel(props: any) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-function a11yProps(index: any) {
-  return {
-    id: `full-width-tab-${index}`,
-    "aria-controls": `full-width-tabpanel-${index}`,
-  };
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-const AntTabs = withStyles({
-  root: {
-    borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
-  },
-  indicator: {
-    backgroundColor: "#72F34B",
-    height: "3px",
-    borderRadius: "20px",
-  },
-})(Tabs);
-
-
 
 type Props = {
   info: { [k: string]: any },
@@ -584,9 +531,33 @@ export const AboutMysteryBox = ({
                   {isShowAmountSerie && <TableCell align="left" style={{ padding: '7px' }}>{numberWithCommas(row.amount)}</TableCell>}
                   {
                     seriesContentConfig?.[0]?.description && <TableCell align="left" style={{ padding: '7px' }}>
-                      <div className={classes.tableCellDesc}>
+                      <div className={classes.tableCellDesc} style={{
+                        wordWrap: 'break-word',
+                        wordBreak: 'break-all',
+                        //  whiteSpace: 'pre-line',
+                        textOverflow: 'ellipsis',
+                        overflow: 'hidden',
+                        // width: '160px',
+                        // height: '80px',
+                        // whiteSpace: 'nowrap',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        // '-webkit-box-orient': 'vertical',
+                      }}>
                         {row.description}
                       </div>
+                      <MuiLink
+                        className="text-green-imp pointer"
+                        style={{
+                          fontFamily: 'Poppins',
+                          fontSize: '13px',
+                          fontStyle: 'normal',
+                          fontWeight: 600,
+                        }}
+                      >
+                        Read more
+                      </MuiLink>
                     </TableCell>
                   }
                 </TableRowBody>

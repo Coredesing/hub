@@ -8,7 +8,11 @@ module.exports = {
     './components/**/*.{js,jsx,ts,tsx,vue}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'casual': ['Poppins']
+      }
+    },
     colors: {
       'gamefiDark': {
         DEFAULT: '#15171E',

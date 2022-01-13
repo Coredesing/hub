@@ -2,6 +2,7 @@ import { useWeb3React, createWeb3ReactRoot, AbstractConnector } from '@web3-reac
 import { Web3Provider } from '@ethersproject/providers'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { network, injected, walletconnect, POLLING_INTERVAL } from './connectors'
+export { NoEthereumProviderError } from '@web3-react/injected-connector'
 
 export function getLibrary(provider: any): Web3Provider {
   const library = new Web3Provider(provider)
@@ -13,6 +14,38 @@ export const DEFAULT_WEB3 = 'NETWORK'
 export const DEFAULT_CONNECTOR = network
 export function useWeb3Default () {
   return useWeb3React<Web3Provider>(DEFAULT_WEB3)
+}
+
+export function useEagerConnect() {
+  const { activate, active } = useWeb3React<Web3Provider>()
+  const [tried, setTried] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (tried) {
+      return
+    }
+
+    injected.isAuthorized().then((isAuthorized: boolean) => {
+      if (isAuthorized) {
+        activate(injected, undefined, true).catch(() => {
+          setTried(true)
+        })
+      } else {
+        setTried(true)
+      }
+    }).catch(err => {
+      console.debug(err)
+      setTried(true)
+    })
+  }, [activate, tried])
+
+  useEffect(() => {
+    if (!tried && active) {
+      setTried(true)
+    }
+  }, [tried, active])
+
+  return tried
 }
 
 const DefaultConnector = ({ children }) => {
@@ -34,19 +67,18 @@ interface PropsType {
   getLibrary (provider: any): Web3Provider
 }
 
-export class ErrorBoundaryWeb3ProviderNetwork extends React.Component<PropsType, { hasError: boolean }> {
+export class ErrorBoundaryWeb3ProviderNetwork extends React.Component<PropsType, { error: Error | undefined }> {
   constructor(props) {
     super(props)
-    this.state = { hasError: false }
+    this.state = {}
   }
 
-  static getDerivedStateFromError() {
-    // Update state so the next render will show the fallback UI.
-    return { hasError: true }
+  static getDerivedStateFromError(error) {
+    return { error }
   }
   render() {
-    if (this.state.hasError) {
-      return <>{this.props.children}</>
+    if (this.state.error) {
+      return <>{error.message}</>
     }
     
     let Web3ReactProviderDefault
@@ -55,6 +87,7 @@ export class ErrorBoundaryWeb3ProviderNetwork extends React.Component<PropsType,
     } catch (e) {
       return <>{this.props.children}</>
     }
+
     return <Web3ReactProviderDefault getLibrary={this.props.getLibrary}>
       <DefaultConnector>
         {this.props.children}
@@ -66,15 +99,24 @@ export class ErrorBoundaryWeb3ProviderNetwork extends React.Component<PropsType,
 export const networks = [{
   id: 5,
   name: 'Ethereum',
-  image: require('assets/images/icons/ethereum.svg')
+  currency: 'ETH',
+  image: require('assets/images/icons/ethereum.svg'),
+  color: '#546BC7',
+  colorText: '#fff'
 }, {
   id: 56,
   name: 'BSC',
-  image: require('assets/images/icons/bsc.svg')
+  currency: 'BNB',
+  image: require('assets/images/icons/bsc.svg'),
+  color: '#FFC700',
+  colorText: '#28282E'
 }, {
   id: 137,
   name: 'Polygon',
-  image: require('assets/images/icons/polygon.svg')
+  currency: 'MATIC',
+  image: require('assets/images/icons/polygon.svg'),
+  color: '#A06EF4',
+  colorText: '#fff'
 }]
 
 interface Wallet {
@@ -115,32 +157,4 @@ export function connectorFromWallet(wallet: Wallet): AbstractConnector {
   }
 
   return network
-}
-
-export function useEagerConnect() {
-  const { activate, active } = useWeb3React<Web3Provider>()
-  const [tried, setTried] = useState<boolean>(false)
-
-  useEffect(() => {
-    injected.isAuthorized().then((isAuthorized: boolean) => {
-      if (isAuthorized) {
-        activate(injected, undefined, true).catch(() => {
-          setTried(true)
-        })
-      } else {
-        setTried(true)
-      }
-    }).catch(err => {
-      console.debug(err)
-      setTried(true)
-    })
-  }, [activate])
-
-  useEffect(() => {
-    if (!tried && active) {
-      setTried(true)
-    }
-  }, [tried, active])
-
-  return tried
 }

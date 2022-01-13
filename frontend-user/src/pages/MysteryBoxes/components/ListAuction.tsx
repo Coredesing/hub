@@ -1,10 +1,9 @@
-import { useMemo, useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useMemo } from 'react'
 import { Item } from '../../../types/Pagination'
 import stylesList from './List.module.scss'
 import styles from './ListAuction.module.scss'
 import { TOKEN_TYPE } from '../../../constants'
-import { paginator, useAxiosFetch } from '../utils'
+import { useAxiosFetch } from '../utils'
 import CardSlim from './CardSlim'
 
 type Props = {
@@ -33,8 +32,17 @@ const List = ({ now }: Props) => {
             <path d="M118 5H78L76 7H118V5Z" fill="currentColor"/>
           </svg>
         </div>
+        { loading && (
+          <div className={stylesList.loaderWrapper}>
+            <svg className={stylesList.loader} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Loading...
+          </div>
+        ) }
         <div className={styles.cards}>
-          { items.map(item => {
+          { !loading && items.map(item => {
             return (
               <CardSlim key={item.id} item={item} now={now} />
             )

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import React, { useState, useRef, useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { Carousel } from 'react-responsive-carousel'
 import { useMediaQuery } from 'react-responsive'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
@@ -27,7 +27,7 @@ const CarouselAction = ({ item, now }: { item: Item, now: Date }) => {
     }
 
     return { timeJoin, timeBuy, timeFinish, timePreorder }
-  }, [item, now])
+  }, [item])
 
   const duration = useMemo(() => {
     const { timeJoin, timeBuy, timeFinish, timePreorder } = stages
@@ -57,10 +57,10 @@ const CarouselAction = ({ item, now }: { item: Item, now: Date }) => {
       start: now,
       end: timeFinish
     })
-  }, [item, now])
+  }, [now, stages])
 
   const text = useMemo(() => {
-    const { timeJoin, timeBuy, timeFinish, timePreorder } = stages
+    const { timeJoin, timeBuy, timePreorder } = stages
 
     if (now < timeJoin) {
       return 'Whitelist opens in'
@@ -118,7 +118,7 @@ const CarouselAction = ({ item, now }: { item: Item, now: Date }) => {
 }
 
 const _Carousel = ( { items, style, now }: Props ) => {
-  const isMobile = useMediaQuery({ query: `(max-width: 1000px)` });
+  // const isMobile = useMediaQuery({ query: `(max-width: 1000px)` });
 
   if (!items) {
     items = []

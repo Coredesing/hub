@@ -1,7 +1,6 @@
 import { POOL_STATUS_TEXT, POOL_STATUS } from "@app-constants";
 import { ObjectType } from "@app-types";
 import { getTimelineOfPool } from "@utils/index";
-import BN from 'bignumber.js';
 import {useState, useEffect} from "react";
 import axios, {AxiosResponse} from "axios";
 import { API_BASE_URL } from '../../services/axios'

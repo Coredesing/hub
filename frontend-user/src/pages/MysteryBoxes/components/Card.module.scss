@@ -58,6 +58,11 @@
 	img {
 		width: 1.75rem;
 	}
+
+	&:hover {
+		color: #ddd;
+		text-decoration: underline;
+	}
 }
 
 
@@ -104,4 +109,25 @@
 	letter-spacing: 0.04em;
 	text-transform: uppercase;
 	color: rgba(255, 255, 255, 0.5);
+}
+
+.socials {
+	display: flex;
+	gap: 1em;
+	svg {
+		display: block;
+		width: 1rem;
+		height: 1rem;
+	}
+}
+
+.social {
+	display: block;
+	padding: .5rem;
+	background: #000;
+	border-radius: 4px;
+	cursor: pointer;
+	&:hover {
+		background-color: rgba(0, 0, 0, 0.3);
+	}
 }

@@ -16,6 +16,10 @@ export type Item = {
   start_time: string
   finish_time: string
   process: string
+  website: string | null
+  telegram_link: string | null
+  twitter_link: string | null
+  medium_link: string | null
 }
 
 export type Pagination = {

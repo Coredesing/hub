@@ -63,14 +63,25 @@ class PoolService {
 
     if (params.token_type) {
       builder = builder.where('token_type', params.token_type)
+      if (params.token_type === 'box') {
+        builder = builder.join('social_network_settings', 'campaigns.id', 'social_network_settings.campaign_id')
+      }
     }
 
     if (params.is_private) {
       builder = builder.where('is_private', params.is_private)
     }
 
+    if (params.is_featured) {
+      builder = builder.where('is_featured', params.is_featured)
+    }
+
     if(params.network_available) {
       builder = builder.where('network_available', params.network_available)
+    }
+
+    if (params.process) {
+      builder = builder.where('process', params.process);
     }
 
     return builder;

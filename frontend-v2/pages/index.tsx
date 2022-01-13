@@ -59,13 +59,13 @@ const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs, topFavorites }
                 centerSlidePercentage={80}
                 showArrows={false}
               >
-                {upcomingIGOs && upcomingIGOs.length && upcomingIGOs.map(item => (
+                {upcomingIGOs.map(item => (
                   <PoolBanner key={item.id} item={item} color="yellow"></PoolBanner>
                 ))}
               </Carousel>
             </div>
           : <div className="grid grid-cols-3 gap-x-4 2xl:gap-x-6 gap-y-12 container mt-14 2xl:px-16">
-            {upcomingIGOs && upcomingIGOs.length && upcomingIGOs.map(item => (
+            {upcomingIGOs.map(item => (
               <PoolBanner key={item.id} item={item} color="yellow"></PoolBanner>
             ))}
           </div>
@@ -93,13 +93,13 @@ const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs, topFavorites }
                   centerSlidePercentage={80}
                   showArrows={false}
                 >
-                  {upcomingINOs && upcomingINOs.length && upcomingINOs.map(item => (
+                  { upcomingINOs.map(item => (
                     <PoolBanner key={item.id} item={item} color="green"></PoolBanner>
                   ))}
                 </Carousel>
               </div>
             : <div className="grid grid-cols-3 gap-x-4 gap-y-12 container mt-14 2xl:gap-x-6 2xl:px-16">
-              {upcomingINOs && upcomingINOs.length && upcomingINOs.map(item => (
+              {upcomingINOs.map(item => (
                 <PoolBanner key={item.id} item={item} color="green"></PoolBanner>
               ))}
             </div>
@@ -114,13 +114,30 @@ const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs, topFavorites }
             <div className="absolute bottom-0 right-0 dark:bg-gamefiDark-900 clipped-t-l-full-sm" style={{height: '3px', width: 'calc(100% - 60px)'}}></div>
           </div>
           <div className="mt-12">
-            <div className="grid grid-cols-5 gap-4">
+            {
+              isMobile ?
+              <>
+                <div className="w-full">
+                  <TopGame item={topFavorites[0]} like={likes.find(like => like?.game_id === topFavorites[0].id)} isTop={true}></TopGame>
+                </div>
+                <div className="mt-4 flex w-full overflow-x-auto hide-scrollbar">
+                  {topFavorites.map((item, i) => (
+                    i!== 0 ? <div style={{minWidth: '250px'}} key={item.id}>
+                      <TopGame item={item} like={likes.find(like => like?.game_id === item.id)} isTop={false}></TopGame>
+                    </div> : <></>
+                  ))}
+                </div>
+              </> :
+              <div className="grid grid-cols-5 gap-4">
               {
                 topFavorites.map((item, i) => (
-                  <TopGame key={item.id} item={item} isTop={i === 0}></TopGame>
+                  <div className={`${i === 0 ? 'col-span-2' : ''}`} key={item.id}>
+                    <TopGame item={item} like={likes.find(like => like?.game_id === item.id)} isTop={i === 0}></TopGame>
+                  </div>
                 ))
               }
             </div>
+            }
           </div>
         </div> : <></>
       }
@@ -129,6 +146,7 @@ const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs, topFavorites }
 }
 
 export const getStaticProps: GetStaticProps = async () => {
+  const gameLikeIds = []
   const topGames = await axios.get(`${BASE_URL}/aggregator?display_area=Top Game`).then(res => {
     return res?.data?.data?.data
   }).catch(e => console.log(e))
@@ -139,25 +157,26 @@ export const getStaticProps: GetStaticProps = async () => {
     }
   }
 
-  const topGameIds = topGames.map(game => game.id)
-  const likes = await axios.get(`${BASE_URL}/aggregator/get-like?ids=${topGameIds.join(',')}`).then(res => {
-    return res?.data?.data
-  }).catch(e => console.log(e))
+  topGames.map(game => gameLikeIds.indexOf(game.id) === -1 ? gameLikeIds.push(game.id) : null)
 
   const upcomingIGOs = await axios.get(`${BASE_URL}/pools/upcoming-pools?token_type=erc20&limit=20&page=1&is_private=0`).then(res => {
     return res?.data?.data?.data
-  }).catch(e => console.log(e))
+  }).catch(e => console.log(e)) || []
 
   const upcomingINOs = await axios.get(`${BASE_URL}/pools/upcoming-pools?token_type=box&limit=20&page=1&is_private=0`).then(res => {
     console.log('INO', res?.data?.data?.data)
     return res?.data?.data?.data
-  }).catch(e => console.log(e))
+  }).catch(e => console.log(e)) || []
 
   const topFavorites = await axios.get(`${BASE_URL}/aggregator?display_area=Top Favourite&price=true&limit=4`).then(res => {
     return res?.data?.data?.data
-  }).catch(e => console.log(e))
+  }).catch(e => console.log(e)) || []
 
-  // console.log(upcomingINOs)
+  topFavorites.map(game => gameLikeIds.indexOf(game.id) === -1 ? gameLikeIds.push(game.id) : null)
+
+  const likes = await axios.get(`${BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`).then(res => {
+    return res?.data?.data
+  }).catch(e => console.log(e)) || []
 
   return {
     props: {

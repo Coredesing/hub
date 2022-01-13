@@ -64,11 +64,11 @@ export const partnerships = [
         name: "World of Cryptia",
         website: "https://cryptia.io/landing",
     },
-    {
-        banner: "https://imgur.com/wJ4MY3I.png",
-        name: "Sin City",
-        website: "https://sin-city.io",
-    },
+    // {
+    //     banner: "https://imgur.com/wJ4MY3I.png",
+    //     name: "Sin City",
+    //     website: "https://sin-city.io",
+    // },
     {
         banner: "https://imgur.com/RAFf0bU.png",
         name: "GameStation",
@@ -119,66 +119,66 @@ export const partnerships = [
         name: "Polkapet World",
         website: "https://polkapet.world/",
     },
-    {
-        banner: "https://imgur.com/1rKxmXO.png",
-        name: "Faraland",
-        website: "https://faraland.io/",
-    },
-    {
-        banner: "https://i.imgur.com/oxlSmSL.png",
-        name: "Step Hero",
-        website: "https://www.stephero.io/",
-    },
-    {
-        banner: "https://imgur.com/tclEErE.png",
-        name: "DeFi Warrior",
-        website: "https://defiwarrior.io/",
-    },
-    {
-        banner: "https://imgur.com/jYxwVZd.png",
-        name: "Monsters Clan",
-        website: "https://www.monstersclan.com/",
-    },
+    // {
+    //     banner: "https://imgur.com/1rKxmXO.png",
+    //     name: "Faraland",
+    //     website: "https://faraland.io/",
+    // },
+    // {
+    //     banner: "https://i.imgur.com/oxlSmSL.png",
+    //     name: "Step Hero",
+    //     website: "https://www.stephero.io/",
+    // },
+    // {
+    //     banner: "https://imgur.com/tclEErE.png",
+    //     name: "DeFi Warrior",
+    //     website: "https://defiwarrior.io/",
+    // },
+    // {
+    //     banner: "https://imgur.com/jYxwVZd.png",
+    //     name: "Monsters Clan",
+    //     website: "https://www.monstersclan.com/",
+    // },
     {
         banner: "https://imgur.com/Ai05C5W.png",
         name: "Dreams Quest",
         website: "https://dreams.quest/",
     },
-    {
-        banner: "https://imgur.com/yhBPIRI.png",
-        name: "Kryptomon",
-        website: "https://kryptomon.co/",
-    },
-    {
-        banner: "https://imgur.com/hDs6VI0.png",
-        name: "Legend of Fantasy War",
-        website: "https://legendfantasywar.com/",
-    },
-    {
-        banner: "https://imgur.com/KEdA0TV.png",
-        name: "DINOX World",
-        website: "https://dinox.io/",
-    },
-    {
-        banner: "https://imgur.com/pZzh6By.png",
-        name: "Chimeras",
-        website: "https://chimeras.io/",
-    },
-    {
-        banner: "https://imgur.com/kaahNTu.png",
-        name: "Mytheria - Clash of Pantheons",
-        website: "https://mytheria.io/",
-    },
+    // {
+    //     banner: "https://imgur.com/yhBPIRI.png",
+    //     name: "Kryptomon",
+    //     website: "https://kryptomon.co/",
+    // },
+    // {
+    //     banner: "https://imgur.com/hDs6VI0.png",
+    //     name: "Legend of Fantasy War",
+    //     website: "https://legendfantasywar.com/",
+    // },
+    // {
+    //     banner: "https://imgur.com/KEdA0TV.png",
+    //     name: "DINOX World",
+    //     website: "https://dinox.io/",
+    // },
+    // {
+    //     banner: "https://imgur.com/pZzh6By.png",
+    //     name: "Chimeras",
+    //     website: "https://chimeras.io/",
+    // },
+    // {
+    //     banner: "https://imgur.com/kaahNTu.png",
+    //     name: "Mytheria - Clash of Pantheons",
+    //     website: "https://mytheria.io/",
+    // },
     {
         banner: "https://imgur.com/gMIR2pR.png",
         name: "Gunstar Metaverse",
         website: "https://gunstar.io/",
     },
-    {
-        banner: "https://imgur.com/bAgdilj.png",
-        name: "DeRace",
-        website: "https://www.derace.com/",
-    },
+    // {
+    //     banner: "https://imgur.com/bAgdilj.png",
+    //     name: "DeRace",
+    //     website: "https://www.derace.com/",
+    // },
     {
         banner: "https://imgur.com/KFyv9jV.png",
         name: "Sidus Heroes",
@@ -203,5 +203,25 @@ export const partnerships = [
         banner: "https://imgur.com/EMnQTn9.png",
         name: "Space Crypto",
         website: "https://www.spacecrypto.io/",
+    },
+    {
+        banner: "https://imgur.com/ui3d0uw.png",
+        name: "Ertha",
+        website: "https://ertha.io/",
+    },
+    {
+        banner: "https://imgur.com/w8GRi3A.png",
+        name: "Mitra",
+        website: "https://legendsofmitra.com/",
+    },
+    {
+        banner: "https://imgur.com/OUOTh9t.png",
+        name: "Kingdom Karnage",
+        website: "https://kingdomkarnage.com/",
+    },
+    {
+        banner: "https://imgur.com/enXbzVz.png",
+        name: "Metarun",
+        website: "https://gofungibles.com/",
     },
 ];

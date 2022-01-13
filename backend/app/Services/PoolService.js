@@ -64,7 +64,8 @@ class PoolService {
     if (params.token_type) {
       builder = builder.where('token_type', params.token_type)
       if (params.token_type === 'box') {
-        builder = builder.join('social_network_settings', 'campaigns.id', 'social_network_settings.campaign_id')
+        // builder = builder.join('social_network_settings', 'campaigns.id', 'social_network_settings.campaign_id')
+        builder = builder.with('socialNetworkSetting')
       }
     }
 

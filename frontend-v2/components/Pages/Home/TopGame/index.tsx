@@ -8,7 +8,7 @@ type Props = {
   like?: any
 }
 const TopGame = ({ item, isTop, like }: Props) => {
-  return <div className={`w-full mx-4 lg:h-64 flex flex-col overflow-hidden rounded ${isTop ? 'h-96' : 'px-3 h-auto'}`}>
+  return <div className={`w-full px-3 md:px-0 lg:h-64 flex flex-col overflow-hidden rounded ${isTop ? 'h-96' : 'h-auto'}`}>
     <div className={`w-full md:h-3/4 relative overflow-hidden`}>
       <div className="absolute -top-1 -right-1 h-7 w-32 clipped-b-l-full bg-gamefiDark-900 flex align-middle items-center justify-center">
         <Image src={require('assets/images/icons/red-heart.svg')} alt=""></Image>

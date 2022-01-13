@@ -55,11 +55,11 @@ class PoolService {
       builder = builder.where('registed_by', '=', params.registed_by)
     }
 
-    // if (params.is_display === undefined) {
-    //   builder = builder.where('is_display', '=', Const.POOL_DISPLAY.DISPLAY);
-    // } else {
-    //   builder = builder.where('is_display', '=', params.is_display);
-    // }
+    if (params.is_display === undefined) {
+      builder = builder.where('is_display', '=', Const.POOL_DISPLAY.DISPLAY);
+    } else {
+      builder = builder.where('is_display', '=', params.is_display);
+    }
 
     if (params.token_type) {
       builder = builder.where('token_type', params.token_type)
@@ -206,7 +206,7 @@ class PoolService {
     let pools = await this.buildQueryBuilder(filterParams)
       .orderBy('priority', 'DESC')
       .orderBy('start_time', 'ASC')
-      .where('is_display', 1)
+      // .where('is_display', 1)
       .paginate(page, limit)
 
     pools = JSON.parse(JSON.stringify(pools))

@@ -11,13 +11,24 @@ type Props = {
 }
 
 const List = ({ now }: Props) => {
-  // const url = `/pools/upcoming-pools?token_type=${TOKEN_TYPE.Box}&is_display=1&limit=6`
-  const url = `/pools/mysterious-box?token_type=${TOKEN_TYPE.Box}&campaign_status=Ended&limit=6&is_search=1`
+  const url = `/pools/upcoming-pools?token_type=${TOKEN_TYPE.Box}&is_display=1&limit=6`
 
   const {data, loading} = useAxiosFetch(url)
   const items = useMemo<Item[]>(() => {
     return data?.data?.data || []
   }, [data])
+
+  const itemsExclusive = useMemo<Item[]>(() => {
+    return items.filter(item => {
+      return item.is_private !== 3
+    })
+  }, [items])
+
+  const itemsOpen = useMemo<Item[]>(() => {
+    return items.filter(item => {
+      return item.is_private === 3
+    })
+  }, [items])
 
   return (
     <div className={`${styles.section} ${styles.black}`}>
@@ -42,8 +53,22 @@ const List = ({ now }: Props) => {
             Loading...
           </div>
         ) }
+        <div className={styles.subheading}>
+          POOL INO <span>(Staking $GAFI required)</span>
+        </div>
         <div className={styles.cards}>
-          { !loading && items.map(item => {
+          { !loading && itemsExclusive.map(item => {
+            return (
+              <CardSlim key={item.id} item={item} now={now} />
+            )
+          }) }
+        </div>
+
+        <div className={styles.subheading} style={{marginTop: '2rem'}}>
+          POOL Community <span>(Staking $GAFI not required)</span>
+        </div>
+        <div className={styles.cards}>
+          { !loading && itemsOpen.map(item => {
             return (
               <CardSlim key={item.id} item={item} now={now} />
             )

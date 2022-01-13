@@ -40,6 +40,28 @@
     background-color: #000;
 }
 
+.subheading {
+    font-family: Rajdhani;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 100%;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    margin: 1rem 0;
+
+    span {
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 18px;
+        line-height: 100%;
+        color: #FFFFFF;
+        opacity: 0.6;
+        text-transform: none;
+    }
+}
+
 .cards {
     display: grid;
     grid-template-columns: repeat(6, 1fr);

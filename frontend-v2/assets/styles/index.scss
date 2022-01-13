@@ -58,12 +58,24 @@ html, body {
   clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%, 0 0);
 }
 
+.clipped-t-l-full {
+  clip-path: polygon(30px 0, 100% 0%, 100% 100%, 0% 100%);
+}
+
+.clipped-t-l-full-sm {
+  clip-path: polygon(5px 0, 100% 0%, 100% 100%, 0% 100%);
+}
+
 .clipped-t-r-lg {
   clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 0 100%, 0 0);
 }
 
 .clipped-b-r-full {
   clip-path: polygon(0 0, 100% 0%, calc(100% - 20px) 100%, 0% 100%);
+}
+
+.clipped-b-l-full {
+  clip-path: polygon(0 0, 100% 0%, 100% 100%, 20px 100%);
 }
 
 .clipped-b {
@@ -90,6 +102,10 @@ html, body {
   }
 }
 
+.aspect-half {
+  aspect-ratio: 2/1;
+}
+
 ::-webkit-scrollbar {
   width: 5px;
 }
@@ -100,6 +116,11 @@ html, body {
 
 ::-webkit-scrollbar-thumb {
   @apply bg-gamefiDark-500 rounded;
+}
+
+video[poster] {
+  height:100% !important;
+  width:100% !important;
 }
 
 @media screen and (max-width: 1308px) {

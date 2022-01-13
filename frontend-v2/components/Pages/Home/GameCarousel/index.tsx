@@ -2,6 +2,7 @@
 import React from 'react'
 import Image from 'next/image'
 import { Carousel } from 'react-responsive-carousel'
+import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import { useMediaQuery } from 'react-responsive'
 
 type Props = {
@@ -19,8 +20,7 @@ const VideoSlider = (props: any) => {
   )
 }
 const GameCarousel = ( { items, likes }: Props ) => {
-  const isMobile = useMediaQuery({ query: `(max-width: 1000px)` })
-
+  const isMobile = useMediaQuery({maxWidth: '1000px'})
   const getLikeById = (id: any) => {
     return likes.find(item => item.game_id === id)
   }
@@ -36,7 +36,7 @@ const GameCarousel = ( { items, likes }: Props ) => {
       thumbWidth={170}
       swipeable={true}
       infiniteLoop={true}
-      interval={5000}
+      interval={3000}
       renderThumbs={() => {
         return items && items.length > 1 && items.map((item) => {
           return <img key={`thumb-${item.id}`} src={item.screen_shots_1} alt="img" />
@@ -81,7 +81,7 @@ const GameCarousel = ( { items, likes }: Props ) => {
             <div className="flex align-middle items-center w-full mt-3 xl:mt-5">
               <div className="flex align-middle items-center text-sm">
                 <Image src={require('assets/images/icons/heart.svg')} alt="heart"/>
-                <p className="ml-2 tracking-widest text-gray-200">{getLikeById(item.id).total_like}</p>
+                <p className="ml-2 tracking-widest text-gray-200">{getLikeById(item.id)?.total_like}</p>
               </div>
               <div className="flex align-middle items-center ml-4 text-left">
                 <Image src={require('assets/images/icons/game-console.svg')} alt="game-console"/>
@@ -128,7 +128,7 @@ const GameCarousel = ( { items, likes }: Props ) => {
         <div key={`mobile-game-${item.id}`}>
           <div className="w-full">
             <div className="absolute z-10 top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-center md:text-left bg-gamefiDark-900 w-1/2 md:pb-1 lg:pb-2 clipped-b-r-full"><span className="text-gamefiGreen-500">Featured</span> games</div>
-            <video key={`video-${item.id}`} className='clipped-t-r-lg' autoPlay muted controls>
+            <video key={`video-${item.id}`} className='clipped-t-r-lg' muted controls poster={item.screen_shots_1}>
               <source src={item.intro_video} type="video/mp4"></source>
             </video>
           </div>
@@ -137,7 +137,7 @@ const GameCarousel = ( { items, likes }: Props ) => {
             <div className="flex align-middle items-center w-full mt-3 xl:mt-5">
               <div className="flex align-middle items-center text-sm">
                 <Image src={require('assets/images/icons/heart.svg')} alt="heart"/>
-                <p className="ml-2 tracking-widest text-gray-200">{getLikeById(item.id).total_like}</p>
+                <p className="ml-2 tracking-widest text-gray-200">{getLikeById(item.id)?.total_like}</p>
               </div>
               <div className="flex align-middle items-center ml-4">
                 <Image src={require('assets/images/icons/game-console.svg')} alt="game-console"/>

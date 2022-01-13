@@ -100,7 +100,7 @@ const deleteRedisPoolList = (params) => {
 /**
  * UPCOMING COMMUNITY & IGO POOLS
  */
- const getRedisKeyUpcomingPools = (page = 1, type) => {
+ const getRedisKeyUpcomingPools = (page = 1, type, token_type) => {
   let poolType = 'all'
   if (type === undefined || type === null) {
     poolType = 'all'
@@ -122,15 +122,15 @@ const deleteRedisPoolList = (params) => {
     poolType = 'community'
   }
 
-  return `upcoming_pools_${poolType}_${page}`;
+  return `upcoming_pools_${poolType}_${page}_${token_type}`;
 };
 
-const getRedisUpcomingPools = async (page, type) => {
-  return await Redis.get(getRedisKeyUpcomingPools(page, type));
+const getRedisUpcomingPools = async (page, type, token_type) => {
+  return await Redis.get(getRedisKeyUpcomingPools(page, type, token_type));
 };
 
-const checkExistRedisUpcomingPools = async (page, type) => {
-  let redisKey = getRedisKeyUpcomingPools(page, type);
+const checkExistRedisUpcomingPools = async (page, type, token_type) => {
+  let redisKey = getRedisKeyUpcomingPools(page, type, token_type);
   const isExistRedisData = await Redis.exists(redisKey, type);
   if (isExistRedisData) {
     return true;
@@ -138,13 +138,13 @@ const checkExistRedisUpcomingPools = async (page, type) => {
   return false;
 };
 
-const createRedisUpcomingPools = async (page, type, data) => {
-  const redisKey = getRedisKeyUpcomingPools(page, type);
+const createRedisUpcomingPools = async (page, type, token_type, data) => {
+  const redisKey = getRedisKeyUpcomingPools(page, type, token_type);
   return await Redis.setex(redisKey, UPCOMING_POOLS_CACHED_TTL, JSON.stringify(data));
 };
 
-const deleteRedisUpcomingPools = (page, type) => {
-  let redisKey = getRedisKeyUpcomingPools(page, type);
+const deleteRedisUpcomingPools = (page, type, token_type) => {
+  let redisKey = getRedisKeyUpcomingPools(page, type, token_type);
   if (Redis.exists(redisKey)) {
     // remove old key
     Redis.del(redisKey);

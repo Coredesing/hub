@@ -63,14 +63,25 @@ class PoolService {
 
     if (params.token_type) {
       builder = builder.where('token_type', params.token_type)
+      if (params.token_type === 'box') {
+        builder = builder.join('social_network_settings', 'campaigns.id', 'social_network_settings.campaign_id')
+      }
     }
 
     if (params.is_private) {
       builder = builder.where('is_private', params.is_private)
     }
 
+    if (params.is_featured) {
+      builder = builder.where('is_featured', params.is_featured)
+    }
+
     if(params.network_available) {
       builder = builder.where('network_available', params.network_available)
+    }
+
+    if (params.process) {
+      builder = builder.where('process', params.process);
     }
 
     return builder;
@@ -238,20 +249,12 @@ class PoolService {
   async getUpcomingPoolsV3(filterParams) {
     const limit = filterParams.limit ? filterParams.limit : 100000;
     const page = filterParams.page ? filterParams.page : 1;
-    let isCommunity = null;
 
-    if (filterParams.is_private === undefined || filterParams.is_private === null) {
-      isCommunity = null
-    } else if (filterParams.is_private === 3 || filterParams.is_private === '3') {
-      isCommunity = true
-    } else {
-      isCommunity = false
-    }
     filterParams.limit = limit;
     filterParams.page = page;
 
-    if (await RedisUtils.checkExistRedisUpcomingPools(page, isCommunity)) {
-      const cachedPools = await RedisUtils.getRedisUpcomingPools(page, isCommunity)
+    if (await RedisUtils.checkExistRedisUpcomingPools(page, filterParams.is_private, filterParams.token_type || 'erc20')) {
+      const cachedPools = await RedisUtils.getRedisUpcomingPools(page, filterParams.is_private, filterParams.token_type || 'erc20')
       return JSON.parse(cachedPools)
     }
 
@@ -269,7 +272,7 @@ class PoolService {
 
     // cache data
     if (page <= 2) {
-      await RedisUtils.createRedisUpcomingPools(page, isCommunity, pools)
+      await RedisUtils.createRedisUpcomingPools(page, filterParams.is_private, filterParams.token_type || 'erc20', pools)
     }
     return pools;
   }
@@ -716,6 +719,7 @@ class PoolService {
 
     let pools = await this.buildQueryBuilder({})
       .where('token_type', token_type)
+      .where('is_display', 1)
       .whereIn('campaign_status', [
         Const.POOL_STATUS.TBA,
         Const.POOL_STATUS.UPCOMING,

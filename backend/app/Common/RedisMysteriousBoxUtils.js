@@ -13,7 +13,13 @@ const getRedisKeyMysteriousBoxes = (filterParams) => {
     }_${
       filterParams.campaign_status
     }_${
+      filterParams.token_type
+    }_${
+      filterParams.process
+    }_${
       filterParams.network_available
+    }_${
+      filterParams.is_featured
     }_${
       filterParams.start_time
     }_${
@@ -48,7 +54,6 @@ const deleteAllRedisMysteriousBoxes = () => {
   Redis.keys('mysterious_boxes_*').then((keys) => {
     const pipeline = Redis.pipeline()
     keys.forEach((key) => {
-      console.log('del', key)
       pipeline.del(key)
     })
 

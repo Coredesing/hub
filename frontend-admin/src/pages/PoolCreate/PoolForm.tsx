@@ -55,6 +55,7 @@ import FreeTimeSetting from "./Components/FreeTimeSetting/FreeTimeSetting";
 import PoolRule from "./Components/PoolRule";
 import Process from "./Components/Process";
 import AirdropNetwork from "./Components/AirdropNetwork";
+import IsFeatured from './Components/IsFeatured';
 
 import {POOL_IS_PRIVATE, TOKEN_TYPE} from "../../constants";
 import AggregatorSlug from './Components/AggregatorSlug';
@@ -172,6 +173,9 @@ function PoolForm(props: any) {
       process: data.process,
       rule: data.rule ?? '',
       address_receiver: data.addressReceiver,
+
+      // Is featured
+      is_featured: data.is_featured ? data.is_featured : false,
 
       // Token
       token: data.token,
@@ -336,6 +340,9 @@ function PoolForm(props: any) {
       description: data.description,
       process: data.process,
       rule: data.rule ?? '',
+
+      // Is featured
+      is_featured: data.is_featured ? data.is_featured : false,
 
       // USDT Price
       price_usdt: data.price_usdt, // Do not check isAcceptEth
@@ -690,6 +697,14 @@ function PoolForm(props: any) {
                   setValue={setValue}
                   errors={errors}
               />
+
+              <IsFeatured
+                  poolDetail={poolDetail}
+                  setValue={setValue}
+                  errors={errors}
+                  control={control}
+                  watch={watch}
+                />
             </div>
 
             <div className={classes.exchangeRate}>

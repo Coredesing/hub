@@ -254,8 +254,8 @@ class PoolService {
     filterParams.limit = limit;
     filterParams.page = page;
 
-    if (await RedisUtils.checkExistRedisUpcomingPools(page, filterParams.is_private)) {
-      const cachedPools = await RedisUtils.getRedisUpcomingPools(page, filterParams.is_private)
+    if (await RedisUtils.checkExistRedisUpcomingPools(page, filterParams.is_private, filterParams.token_type || 'erc20')) {
+      const cachedPools = await RedisUtils.getRedisUpcomingPools(page, filterParams.is_private, filterParams.token_type || 'erc20')
       return JSON.parse(cachedPools)
     }
 
@@ -273,7 +273,7 @@ class PoolService {
 
     // cache data
     if (page <= 2) {
-      await RedisUtils.createRedisUpcomingPools(page, filterParams.is_private, pools)
+      await RedisUtils.createRedisUpcomingPools(page, filterParams.is_private, filterParams.token_type || 'erc20', pools)
     }
     return pools;
   }

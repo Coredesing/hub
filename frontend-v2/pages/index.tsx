@@ -39,7 +39,7 @@ const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs, topFavorites }
         {topGames && topGames.length && <GameCarousel likes={likes} items={topGames}></GameCarousel>}
       </div>
       {
-        upcomingIGOs && upcomingIGOs.length && <div className="md:px-4 lg:px-16 mx-auto bg-gamefiDark-700 mt-20 pb-14">
+        upcomingIGOs && upcomingIGOs.length ? <div className="md:px-4 lg:px-16 mx-auto bg-gamefiDark-700 mt-20 pb-14">
         <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
           <div className="block top-0 left-0 right-0 uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl">
             Upcoming IGOs
@@ -70,10 +70,10 @@ const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs, topFavorites }
             ))}
           </div>
         }
-      </div>
+      </div> : <></>
       }
       {
-        upcomingINOs && upcomingINOs.length && <div className="md:px-4 lg:px-16 mx-auto mt-20 pb-14">
+        upcomingINOs && upcomingINOs.length ? <div className="md:px-4 lg:px-16 mx-auto mt-20 pb-14">
         <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
             <div className="uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl">
               Upcoming INOs
@@ -104,25 +104,25 @@ const PageIndex = ({ topGames, likes, upcomingIGOs, upcomingINOs, topFavorites }
               ))}
             </div>
           }
-        </div>
+        </div> : <></>
       }
       {
-        topFavorites && topFavorites.length &&
+        topFavorites && topFavorites.length ?
         <div className="md:px-4 lg:px-16 2xl:px-32 mx-auto mt-20 pb-14">
           <div className="md:text-lg 2xl:text-3xl uppercase font-bold">Top Favorite Games</div>
           <div className="w-full relative bg-gamefiDark-600" style={{height: '4px'}}>
             <div className="absolute bottom-0 right-0 dark:bg-gamefiDark-900 clipped-t-l-full-sm" style={{height: '3px', width: 'calc(100% - 60px)'}}></div>
           </div>
-          <div className="">
-            <div className="flex">
+          <div className="mt-12">
+            <div className="grid grid-cols-5 gap-4">
               {
-                topFavorites.map(item => (
-                  <TopGame key={item.id} item={item}></TopGame>
+                topFavorites.map((item, i) => (
+                  <TopGame key={item.id} item={item} isTop={i === 0}></TopGame>
                 ))
               }
             </div>
           </div>
-        </div>
+        </div> : <></>
       }
     </Layout>
   )
@@ -144,17 +144,20 @@ export const getStaticProps: GetStaticProps = async () => {
     return res?.data?.data
   }).catch(e => console.log(e))
 
-  const upcomingIGOs = await axios.get(`https://hub.gamefi.org/api/v1/pools/upcoming-pools?token_type=erc20&limit=20&page=1&is_private=0`).then(res => {
+  const upcomingIGOs = await axios.get(`${BASE_URL}/pools/upcoming-pools?token_type=erc20&limit=20&page=1&is_private=0`).then(res => {
     return res?.data?.data?.data
   }).catch(e => console.log(e))
 
-  const upcomingINOs = await axios.get(`https://hub.gamefi.org/api/v1/pools/upcoming-pools?token_type=box&limit=20&page=1&is_private=0`).then(res => {
+  const upcomingINOs = await axios.get(`${BASE_URL}/pools/upcoming-pools?token_type=box&limit=20&page=1&is_private=0`).then(res => {
+    console.log('INO', res?.data?.data?.data)
     return res?.data?.data?.data
   }).catch(e => console.log(e))
 
-  const topFavorites = await axios.get(`https://aggregator.gamefi.org/api/v1/aggregator?display_area=Trending&price=true`).then(res => {
+  const topFavorites = await axios.get(`${BASE_URL}/aggregator?display_area=Top Favourite&price=true&limit=4`).then(res => {
     return res?.data?.data?.data
   }).catch(e => console.log(e))
+
+  // console.log(upcomingINOs)
 
   return {
     props: {

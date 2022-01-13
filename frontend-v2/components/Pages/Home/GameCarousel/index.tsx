@@ -36,7 +36,7 @@ const GameCarousel = ( { items, likes }: Props ) => {
       thumbWidth={170}
       swipeable={true}
       infiniteLoop={true}
-      interval={5000}
+      interval={3000}
       renderThumbs={() => {
         return items && items.length > 1 && items.map((item) => {
           return <img key={`thumb-${item.id}`} src={item.screen_shots_1} alt="img" />
@@ -81,7 +81,7 @@ const GameCarousel = ( { items, likes }: Props ) => {
             <div className="flex align-middle items-center w-full mt-3 xl:mt-5">
               <div className="flex align-middle items-center text-sm">
                 <Image src={require('assets/images/icons/heart.svg')} alt="heart"/>
-                <p className="ml-2 tracking-widest text-gray-200">{getLikeById(item.id).total_like}</p>
+                <p className="ml-2 tracking-widest text-gray-200">{getLikeById(item.id)?.total_like}</p>
               </div>
               <div className="flex align-middle items-center ml-4 text-left">
                 <Image src={require('assets/images/icons/game-console.svg')} alt="game-console"/>
@@ -137,7 +137,7 @@ const GameCarousel = ( { items, likes }: Props ) => {
             <div className="flex align-middle items-center w-full mt-3 xl:mt-5">
               <div className="flex align-middle items-center text-sm">
                 <Image src={require('assets/images/icons/heart.svg')} alt="heart"/>
-                <p className="ml-2 tracking-widest text-gray-200">{getLikeById(item.id).total_like}</p>
+                <p className="ml-2 tracking-widest text-gray-200">{getLikeById(item.id)?.total_like}</p>
               </div>
               <div className="flex align-middle items-center ml-4">
                 <Image src={require('assets/images/icons/game-console.svg')} alt="game-console"/>

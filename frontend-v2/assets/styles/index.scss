@@ -74,6 +74,10 @@ html, body {
   clip-path: polygon(0 0, 100% 0%, calc(100% - 20px) 100%, 0% 100%);
 }
 
+.clipped-b-l-full {
+  clip-path: polygon(0 0, 100% 0%, 100% 100%, 20px 100%);
+}
+
 .clipped-b {
   clip-path: polygon(0 0, 100% 0, calc(100% - 15px) 100%, 15px 100%);
 }
@@ -96,6 +100,10 @@ html, body {
   .selected {
     border: 1px solid #72F34B !important;
   }
+}
+
+.aspect-half {
+  aspect-ratio: 2/1;
 }
 
 ::-webkit-scrollbar {

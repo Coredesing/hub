@@ -10,10 +10,62 @@ export function getLibrary(provider: any): Web3Provider {
   return library
 }
 
+const DEACTIVATION_PERSISTENCE_KEY = 'WEB3_DEACTIVATION'
 export const DEFAULT_WEB3 = 'NETWORK'
 export const DEFAULT_CONNECTOR = network
 export function useWeb3Default () {
   return useWeb3React<Web3Provider>(DEFAULT_WEB3)
+}
+
+export function activated (account) {
+  account = account.toLowerCase()
+  console.debug('activated', account)
+
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  const deactivationRaw = localStorage.getItem(DEACTIVATION_PERSISTENCE_KEY)
+  if (!deactivationRaw) {
+    return
+  }
+
+  const deactivation = JSON.parse(deactivationRaw)
+  if (deactivation?.[account]) {
+    delete deactivation[account]
+    localStorage.setItem(DEACTIVATION_PERSISTENCE_KEY, JSON.stringify(deactivation))
+  }
+}
+export function deactivated (account) {
+  account = account.toLowerCase()
+  console.debug('deactivated', account)
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  const deactivationRaw = localStorage.getItem(DEACTIVATION_PERSISTENCE_KEY)
+  if (!deactivationRaw) {
+    localStorage.setItem(DEACTIVATION_PERSISTENCE_KEY, JSON.stringify({ [account]: true }))
+  }
+}
+
+function isSignedOut (account) {
+  account = account.toLowerCase()
+  if (typeof window === 'undefined') {
+    return true
+  }
+
+  const deactivationRaw = localStorage.getItem(DEACTIVATION_PERSISTENCE_KEY)
+  if (!deactivationRaw) {
+    return false
+  }
+
+  const deactivation = JSON.parse(deactivationRaw)
+  if (deactivation?.[account]) {
+    return true
+  }
+
+  return false
 }
 
 export function useEagerConnect() {
@@ -27,12 +79,23 @@ export function useEagerConnect() {
 
     injected.isAuthorized().then((isAuthorized: boolean) => {
       if (isAuthorized) {
-        activate(injected, undefined, true).catch(() => {
-          setTried(true)
-        })
-      } else {
-        setTried(true)
+        injected.getAccount()
+          .then(acc => {
+            if (isSignedOut(acc)) {
+              return
+            }
+
+            activate(injected, undefined, true).catch(() => {
+              setTried(true)
+            })
+          })
+          .catch(() => {
+            setTried(true)
+          })
+        return
       }
+
+      setTried(true)
     }).catch(err => {
       console.debug(err)
       setTried(true)

@@ -63,7 +63,7 @@ function reducer(state: Context, { type, payload }: Action): Context {
   switch (type) {
     case 'INIT': {
       const { provider, chainID, account, error } = payload
-      return { provider, chainID, account, error }
+      return { ...state, provider, chainID, account, error }
     }
 
     case 'SET_CHAINID': {

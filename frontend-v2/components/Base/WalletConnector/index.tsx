@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef, useLayoutEffect, useMemo, ReactNode, RefObject, FormEvent } from 'react'
 import useResizeObserver, { UseResizeObserverCallback } from '@react-hook/resize-observer'
 import { useWeb3React, Web3ReactManagerReturn, AbstractConnector } from '@web3-react/core'
-import { networks, wallets, connectorFromWallet } from 'components/web3'
+import { networks, wallets, connectorFromWallet, activated, deactivated } from 'components/web3'
 import { useMyWeb3 } from 'components/web3/context'
 import Image from 'next/image'
 import Modal from '../Modal'
@@ -86,12 +86,28 @@ const WalletConnector = () => {
       await activate(connectorChosen)
     } catch(err) {
       console.debug(err)
-    }
-    finally {
+    } finally {
       setActivating(false)
       setConnectorChosen()
     }
   }, [active, connectorChosen, setActivating, activate, setConnectorChosen])
+
+  const tryDeactivate = useCallback(async () => {
+    if (!active) {
+      return
+    }
+
+    try {
+      const acc = account
+      await deactivate()
+      deactivated(acc)
+    } catch (err) {
+      console.debug(err)
+    } finally {
+      setShowModal(false)
+      setConnectorChosen()
+    }
+  }, [active, deactivate, setConnectorChosen, account])
 
   // activation when user select a connector in the modal
   useEffect(() => {
@@ -132,6 +148,7 @@ const WalletConnector = () => {
         provider: library.provider
       } })
       setShowModal(false)
+      activated(_account)
       return
     }
   }, [active, _chainID, _account, library, triedEager, dispatch])
@@ -209,7 +226,7 @@ const WalletConnector = () => {
                   <path d="M5.5 12.5H9.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
-              <p className="inline-flex items-center mt-4 justify-center w-full text-red-400 font-medium cursor-pointer hover:text-red-500" onClick={() => { deactivate(); setShowModal(false) }}>
+              <p className="inline-flex items-center mt-4 justify-center w-full text-red-400 font-medium cursor-pointer hover:text-red-500" onClick={tryDeactivate}>
                 Disconnect
                 <svg className="w-6 h-6 ml-2" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M11 12.414L15.414 8L11 3.586L9.586 5L11.586 7H5V9H11.586L9.586 11L11 12.414Z" fill="currentColor"/>

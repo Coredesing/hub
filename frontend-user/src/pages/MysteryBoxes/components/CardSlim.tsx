@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Item } from '../../../types/Pagination'
 import { networkImage, currency, visibility } from './List'
-import styles from './Card.module.scss'
+import styles from './ListCard.module.scss'
 import stylesCarousel from './Carousel.module.scss'
 import { intervalToDuration } from 'date-fns'
 import { Link } from 'react-router-dom'
@@ -50,10 +50,10 @@ const CardSlim = ({ item, now }: Props) => {
       <div className={styles.visibility}>
         { visibility(item) === 'Auction' &&
         <svg className={styles.visibilityIcon} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M1 15H15" stroke="#F3BA2F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M9.86621 9.86667L13.1329 13.1333L14.9995 11.2667L11.7329 8" stroke="#F3BA2F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M10.334 0.999939L2.86719 8.4668L5.66742 11.267L13.1343 3.80018L10.334 0.999939Z" stroke="#F3BA2F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M1 12.2002H2.86667" stroke="#F3BA2F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M1 15H15" stroke="#F3BA2F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M9.86621 9.86667L13.1329 13.1333L14.9995 11.2667L11.7329 8" stroke="#F3BA2F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M10.334 0.999939L2.86719 8.4668L5.66742 11.267L13.1343 3.80018L10.334 0.999939Z" stroke="#F3BA2F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M1 12.2002H2.86667" stroke="#F3BA2F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
         }
         {visibility(item)}

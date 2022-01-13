@@ -11,6 +11,8 @@ import WrapperContent from '@base-components/WrapperContent';
 import Carousel from './components/Carousel'
 import List from './components/List'
 import ListAuction from './components/ListAuction'
+import ListOpening from './components/ListOpening'
+import ListUpcoming from './components/ListUpcoming'
 
 const MysteryBoxes = (props: any) => {
   const theme = useTheme();
@@ -40,6 +42,8 @@ const MysteryBoxes = (props: any) => {
           <>
             <Carousel items={misteryBoxes?.data} style={{paddingBottom: '2rem'}} now={now}></Carousel>
             <ListAuction now={now} />
+            <ListOpening now={now} />
+            <ListUpcoming now={now} />
             <List />
           </>
         }

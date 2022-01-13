@@ -11,7 +11,8 @@ type Props = {
 }
 
 const List = ({ now }: Props) => {
-  const url = `/pools/mysterious-box?token_type=${TOKEN_TYPE.Box}&process=only-auction&is_display=1&limit=6`
+  // const url = `/pools/upcoming-pools?token_type=${TOKEN_TYPE.Box}&is_display=1&limit=6`
+  const url = `/pools/mysterious-box?token_type=${TOKEN_TYPE.Box}&campaign_status=Ended&limit=6&is_search=1`
 
   const {data, loading} = useAxiosFetch(url)
   const items = useMemo<Item[]>(() => {
@@ -23,7 +24,7 @@ const List = ({ now }: Props) => {
       <div className={stylesList.container}>
         <div className={styles.header}>
           <div className={styles.heading}>
-            AUCTIONS
+            Upcoming Projects
           </div>
 
           <svg viewBox="0 0 118 18" fill="none" xmlns="http://www.w3.org/2000/svg">

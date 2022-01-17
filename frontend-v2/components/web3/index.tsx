@@ -1,23 +1,28 @@
-import { useWeb3React, createWeb3ReactRoot, AbstractConnector } from '@web3-react/core'
+import { useWeb3React, createWeb3ReactRoot } from '@web3-react/core'
+import { AbstractConnector } from '@web3-react/abstract-connector'
 import { Web3Provider } from '@ethersproject/providers'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { network, injected, walletconnect, POLLING_INTERVAL, RPC_URLS } from './connectors'
 import type { AddEthereumChainParameter } from '@web3-react/metamask'
-export { NoEthereumProviderError } from '@web3-react/injected-connector'
 
+export { NoEthereumProviderError } from '@web3-react/injected-connector'
 export function getLibrary(provider: any): Web3Provider {
   const library = new Web3Provider(provider)
   library.pollingInterval = POLLING_INTERVAL
   return library
 }
-
-const DEACTIVATION_PERSISTENCE_KEY = 'WEB3_DEACTIVATION'
 export const DEFAULT_WEB3 = 'NETWORK'
 export const DEFAULT_CONNECTOR = network
 export function useWeb3Default () {
   return useWeb3React<Web3Provider>(DEFAULT_WEB3)
 }
+export interface ProviderRpcError extends Error {
+  message: string
+  code: number
+  data?: unknown
+}
 
+const DEACTIVATION_PERSISTENCE_KEY = 'WEB3_DEACTIVATION'
 export function activated (account) {
   account = account.toLowerCase()
   console.debug('activated', account)
@@ -48,6 +53,10 @@ export function deactivated (account) {
   if (!deactivationRaw) {
     localStorage.setItem(DEACTIVATION_PERSISTENCE_KEY, JSON.stringify({ [account]: true }))
   }
+
+  const deactivation = JSON.parse(deactivationRaw)
+  deactivation?.[account] = true
+  localStorage.setItem(DEACTIVATION_PERSISTENCE_KEY, JSON.stringify(deactivation))
 }
 
 function isSignedOut (account) {
@@ -70,7 +79,6 @@ function isSignedOut (account) {
 }
 
 export function switchNetwork(provider: any, chainId: number) {
-  console.log(chainId)
   return Promise.all([
     provider.request({ method: 'eth_chainId' }) as Promise<string>,
     provider.request({ method: 'eth_requestAccounts' }) as Promise<string[]>,
@@ -92,7 +100,7 @@ export function switchNetwork(provider: any, chainId: number) {
       }
 
       const chain = getAddChainParameters(chainId)
-      if (!chain.chainId) {
+      if (!chain) {
         return
       }
 
@@ -169,7 +177,9 @@ interface PropsType {
 export class ErrorBoundaryWeb3ProviderNetwork extends React.Component<PropsType, { error: Error | undefined }> {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      error: null
+    }
   }
 
   static getDerivedStateFromError(error) {
@@ -177,7 +187,7 @@ export class ErrorBoundaryWeb3ProviderNetwork extends React.Component<PropsType,
   }
   render() {
     if (this.state.error) {
-      return <>{error.message}</>
+      return <>{this.state.error.message}</>
     }
     
     let Web3ReactProviderDefault
@@ -214,6 +224,16 @@ const BNB: AddEthereumChainParameter['nativeCurrency'] = {
 }
 
 const currencies = [ETH, MATIC, BNB]
+
+export type Network = {
+  id: number
+  name: string
+  currency: string
+  blockExplorerUrls: string[]
+  image: any
+  color: string
+  colorText: string
+}
 
 export const networks = [{
   id: 1,
@@ -281,15 +301,15 @@ export function connectorFromWallet(wallet: Wallet): AbstractConnector {
   return network
 }
 
-export function getAddChainParameters(chainId: number): AddEthereumChainParameter {
+export function getAddChainParameters(chainId: number): AddEthereumChainParameter | null {
   const chain = networks.find(x => x.id === chainId)
   if (!chain) {
-    return {}
+    return null
   }
 
   const nativeCurrency = currencies.find(x => x.symbol = chain.currency)
   if (!nativeCurrency) {
-    return {}
+    return null
   }
 
   return {

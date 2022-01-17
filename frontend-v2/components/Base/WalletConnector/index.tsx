@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useCallback, useRef, useLayoutEffect, useMemo, ReactNode, RefObject, FormEvent } from 'react'
+import React, { useState, useEffect, useCallback, useRef, useLayoutEffect, useMemo, ReactNode, RefObject, ChangeEvent } from 'react'
 import useResizeObserver, { UseResizeObserverCallback } from '@react-hook/resize-observer'
-import { useWeb3React, Web3ReactManagerReturn, AbstractConnector } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core'
+import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
+import { AbstractConnector } from '@web3-react/abstract-connector'
 import { networks, wallets, connectorFromWallet, activated, deactivated, switchNetwork } from 'components/web3'
 import { injected } from 'components/web3/connectors'
 import { useMyWeb3 } from 'components/web3/context'
@@ -33,16 +35,16 @@ const useSize = (target: RefObject<HTMLElement>) => {
 const WalletConnector = () => {
   const [showModal, setShowModal] = useState(false)
 
-  const contextWeb3: Web3ReactManagerReturn = useWeb3React()
+  const contextWeb3: Web3ReactContextInterface = useWeb3React()
   const contextWeb3App = useMyWeb3()
 
   const { library, chainId: _chainID, account: _account, activate, deactivate, active, error: _error } = contextWeb3
   const { network, account, balance, currencyNative, triedEager, dispatch } = contextWeb3App
   
   const [agreed, setAgreed] = useState(false)
-  function handleAgreement(event: FormEvent<HTMLInputElement>) {
+  function handleAgreement(event: ChangeEvent<HTMLInputElement>) {
     const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const value = target.type === 'checkbox' ? target.checked : !!target.value;
     setAgreed(value)
   }
   const [networkChosen, setNetworkChosen] = useState<{ id: any } | undefined>()
@@ -84,32 +86,32 @@ const WalletConnector = () => {
 
     try {
       setActivating(true)
-      if (connectorChosen === injected) {
-        await switchNetwork(window.ethereum, networkChosen?.id)
+      if (connectorChosen === injected && (window as any).ethereum) {
+        await switchNetwork((window as any).ethereum, networkChosen?.id)
       }
       await activate(connectorChosen)
     } catch(err) {
       console.debug(err)
     } finally {
       setActivating(false)
-      setConnectorChosen()
+      setConnectorChosen(undefined)
     }
   }, [active, connectorChosen, networkChosen, setActivating, activate, setConnectorChosen])
 
-  const tryDeactivate = useCallback(async () => {
+  const tryDeactivate = useCallback(() => {
     if (!active) {
       return
     }
 
     try {
       const acc = account
-      await deactivate()
+      deactivate()
       deactivated(acc)
     } catch (err) {
       console.debug(err)
     } finally {
       setShowModal(false)
-      setConnectorChosen()
+      setConnectorChosen(undefined)
     }
   }, [active, deactivate, setConnectorChosen, account])
 
@@ -127,16 +129,16 @@ const WalletConnector = () => {
 
   // sync error from current context -> app context
   useEffect(() => {
-    dispatch({ type: 'SET_ERROR', payload: _error })
+    dispatch({ type: 'SET_ERROR', payload: { error: _error } })
   }, [_error, dispatch])
 
   // sync chainID from user choice -> app context
   useEffect(() => {
     if (networkChosen?.id !== undefined) {
-      dispatch({ type: 'SET_CHAINID', payload: networkChosen?.id })
+      dispatch({ type: 'SET_CHAINID', payload: { chainID: networkChosen?.id } })
     }
 
-    setWalletChosen()
+    setWalletChosen(undefined)
   }, [networkChosen, dispatch])
 
   // sync auth from current context -> app context only when eager attempts made

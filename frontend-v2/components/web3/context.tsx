@@ -1,10 +1,21 @@
 import { createContext, useContext, useReducer, useMemo } from 'react'
-import { networks } from './index'
+import { networks, Network } from './index'
 
 const Context = createContext<Context>(undefined)
 
 export function MyWeb3Provider({ children }) {
-  const [state, dispatch] = useReducer<Context>(reducer, {})
+  const [state, dispatch] = useReducer(reducer, {
+    provider: null,
+    chainID: null,
+    account: null,
+    error: null,
+    balance: null,
+    triedEager: false,
+
+    currencyNative: '',
+    network: null,
+    dispatch: () => {}
+  })
   const network = useMemo(() => {
     if (!state?.chainID) {
       return
@@ -23,9 +34,9 @@ export function MyWeb3Provider({ children }) {
   return (
     <Context.Provider
       value={{
+        ...state,
         currencyNative,
         network,
-        ...state,
         dispatch
       }}
     >
@@ -40,14 +51,16 @@ type Context = {
   account: string
   error: Error
   balance: any
-  currencyNative: string
   triedEager: boolean
+
+  currencyNative: string
+  network: Network
   dispatch: (a: Action) => void
 }
 
 export type Action = {
   type: string
-  payload: Context
+  payload: Partial<Context>
 }
 
 export function useMyWeb3(): Context {
@@ -67,7 +80,7 @@ function reducer(state: Context, { type, payload }: Action): Context {
     }
 
     case 'SET_CHAINID': {
-      const chainID = payload
+      const { chainID } = payload
       return {
         ...state,
         chainID
@@ -75,7 +88,7 @@ function reducer(state: Context, { type, payload }: Action): Context {
     }
 
     case 'SET_ERROR': {
-      const error = payload
+      const { error } = payload
       return {
         ...state,
         error
@@ -83,18 +96,18 @@ function reducer(state: Context, { type, payload }: Action): Context {
     }
 
     case 'UPDATE_BALANCE': {
-      const balanceBN = payload
+      const { balance } = payload
       return {
         ...state,
-        balance: balanceBN
+        balance
       }
     }
 
     case 'SET_TRIED_EAGER': {
-      const tried = payload
+      const { triedEager } = payload
       return {
         ...state,
-        triedEager: tried
+        triedEager
       }
     }
 

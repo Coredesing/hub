@@ -4,7 +4,7 @@ import { useMyWeb3 } from 'components/web3/context'
 import toast from 'react-hot-toast'
 
 export default function WalletProvider({ children }) {
-  const contextWeb3Default: Web3ReactManagerReturn = useWeb3Default()
+  const contextWeb3Default = useWeb3Default()
   const contextWeb3App = useMyWeb3()
 
   const { account, dispatch, error } = contextWeb3App
@@ -12,7 +12,7 @@ export default function WalletProvider({ children }) {
 
   const tried = useEagerConnect()
   useEffect(() => {
-    dispatch({ type: 'SET_TRIED_EAGER', payload: tried })
+    dispatch({ type: 'SET_TRIED_EAGER', payload: { triedEager: tried } })
   }, [tried, dispatch])
 
   useEffect(() => {
@@ -30,12 +30,14 @@ export default function WalletProvider({ children }) {
 
   useEffect(() => {
     if (!activeDefault || !account) {
-      dispatch({ type: 'UPDATE_BALANCE', payload: 0 })
+      dispatch({ type: 'UPDATE_BALANCE', payload: { balance: 0 } })
       return
     }
 
-    libraryDefault.getBalance(account).then(x => {
-      dispatch({ type: 'UPDATE_BALANCE', payload: x })
+    libraryDefault.getBalance(account).then(balance => {
+      dispatch({ type: 'UPDATE_BALANCE', payload: { balance } })
+    }).catch(() => {
+      toast.error('Could not load user\'s balance')
     })
   }, [activeDefault, libraryDefault, account, dispatch])
 

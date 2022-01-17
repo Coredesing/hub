@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef, useLayoutEffect, useMemo, ReactNode, RefObject, FormEvent } from 'react'
 import useResizeObserver, { UseResizeObserverCallback } from '@react-hook/resize-observer'
 import { useWeb3React, Web3ReactManagerReturn, AbstractConnector } from '@web3-react/core'
-import { networks, wallets, connectorFromWallet, activated, deactivated } from 'components/web3'
+import { networks, wallets, connectorFromWallet, activated, deactivated, switchNetwork } from 'components/web3'
+import { injected } from 'components/web3/connectors'
 import { useMyWeb3 } from 'components/web3/context'
 import Image from 'next/image'
 import Modal from '../Modal'
@@ -83,6 +84,9 @@ const WalletConnector = () => {
 
     try {
       setActivating(true)
+      if (connectorChosen === injected) {
+        await switchNetwork(window.ethereum, networkChosen?.id)
+      }
       await activate(connectorChosen)
     } catch(err) {
       console.debug(err)
@@ -90,7 +94,7 @@ const WalletConnector = () => {
       setActivating(false)
       setConnectorChosen()
     }
-  }, [active, connectorChosen, setActivating, activate, setConnectorChosen])
+  }, [active, connectorChosen, networkChosen, setActivating, activate, setConnectorChosen])
 
   const tryDeactivate = useCallback(async () => {
     if (!active) {

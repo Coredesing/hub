@@ -1,7 +1,8 @@
 import { useWeb3React, createWeb3ReactRoot, AbstractConnector } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
 import React, { ReactNode, useEffect, useState } from 'react'
-import { network, injected, walletconnect, POLLING_INTERVAL } from './connectors'
+import { network, injected, walletconnect, POLLING_INTERVAL, RPC_URLS } from './connectors'
+import type { AddEthereumChainParameter } from '@web3-react/metamask'
 export { NoEthereumProviderError } from '@web3-react/injected-connector'
 
 export function getLibrary(provider: any): Web3Provider {
@@ -66,6 +67,41 @@ function isSignedOut (account) {
   }
 
   return false
+}
+
+export function switchNetwork(provider: any, chainId: number) {
+  console.log(chainId)
+  return Promise.all([
+    provider.request({ method: 'eth_chainId' }) as Promise<string>,
+    provider.request({ method: 'eth_requestAccounts' }) as Promise<string[]>,
+  ])
+ .then(([_chainId]) => {
+    const receivedChainId = parseChainId(_chainId)
+    if (receivedChainId === chainId) {
+      return
+    }
+
+    const desiredChainIdHex = `0x${chainId.toString(16)}`
+
+    return provider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: desiredChainIdHex }],
+    }).catch((error: ProviderRpcError) => {
+      if (error.code !== 4902) {
+        return
+      }
+
+      const chain = getAddChainParameters(chainId)
+      if (!chain.chainId) {
+        return
+      }
+
+      return provider.request({
+        method: 'wallet_addEthereumChain',
+        params: [{ ...chain, chainId: desiredChainIdHex }],
+      })
+    })
+ })
 }
 
 export function useEagerConnect() {
@@ -159,24 +195,47 @@ export class ErrorBoundaryWeb3ProviderNetwork extends React.Component<PropsType,
   }
 }
 
+const ETH: AddEthereumChainParameter['nativeCurrency'] = {
+  name: 'Ether',
+  symbol: 'ETH',
+  decimals: 18,
+}
+
+const MATIC: AddEthereumChainParameter['nativeCurrency'] = {
+  name: 'Matic',
+  symbol: 'MATIC',
+  decimals: 18,
+}
+
+const BNB: AddEthereumChainParameter['nativeCurrency'] = {
+  name: 'Binance Coin',
+  symbol: 'BNB',
+  decimals: 18,
+}
+
+const currencies = [ETH, MATIC, BNB]
+
 export const networks = [{
-  id: 5,
+  id: 1,
   name: 'Ethereum',
-  currency: 'ETH',
+  currency: ETH.symbol,
+  blockExplorerUrls: ['https://etherscan.com'],
   image: require('assets/images/icons/ethereum.svg'),
   color: '#546BC7',
   colorText: '#fff'
 }, {
   id: 56,
   name: 'BSC',
-  currency: 'BNB',
+  currency: BNB.symbol,
+  blockExplorerUrls: ['https://bscscan.com'],
   image: require('assets/images/icons/bsc.svg'),
   color: '#FFC700',
   colorText: '#28282E'
 }, {
   id: 137,
   name: 'Polygon',
-  currency: 'MATIC',
+  currency: MATIC.symbol,
+  blockExplorerUrls: ['https://polygonscan.com'],
   image: require('assets/images/icons/polygon.svg'),
   color: '#A06EF4',
   colorText: '#fff'
@@ -220,4 +279,28 @@ export function connectorFromWallet(wallet: Wallet): AbstractConnector {
   }
 
   return network
+}
+
+export function getAddChainParameters(chainId: number): AddEthereumChainParameter {
+  const chain = networks.find(x => x.id === chainId)
+  if (!chain) {
+    return {}
+  }
+
+  const nativeCurrency = currencies.find(x => x.symbol = chain.currency)
+  if (!nativeCurrency) {
+    return {}
+  }
+
+  return {
+    chainId,
+    chainName: chain.name,
+    nativeCurrency,
+    rpcUrls: [RPC_URLS[chainId]],
+    blockExplorerUrls: chain.blockExplorerUrls,
+  }
+}
+
+function parseChainId(chainId: string) {
+  return Number.parseInt(chainId, 16)
 }

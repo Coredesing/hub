@@ -1,3 +1,4 @@
+import ListSwiper, { SwiperItem } from 'components/Base/ListSwiper'
 import Layout from 'components/Layout'
 import Image from 'next/image'
 
@@ -19,6 +20,22 @@ const Market = () => (
       </div>
       <div className="md:px-4 lg:px-16 md:container mx-auto lg:block">
         <Image src={require('assets/images/market-banner.png')} alt=""></Image>
+      </div>
+      <div>
+        <div className="md:px-4 lg:px-16 md:container mx-auto mt-20 pb-14">
+          <ListSwiper showItemsNumber={4} step={4} transition='0.5s'>
+            <SwiperItem>1</SwiperItem>
+            <SwiperItem>2</SwiperItem>
+            <SwiperItem>3</SwiperItem>
+            <SwiperItem>4</SwiperItem>
+            <SwiperItem>5</SwiperItem>
+            <SwiperItem>6</SwiperItem>
+            <SwiperItem>7</SwiperItem>
+            <SwiperItem>8</SwiperItem>
+            <SwiperItem>9</SwiperItem>
+            <SwiperItem>10</SwiperItem>
+          </ListSwiper>
+        </div>
       </div>
     </div>
   </Layout>

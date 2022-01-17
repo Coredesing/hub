@@ -1,0 +1,16 @@
+.carousel {
+  overflow: hidden;
+}
+
+.inner {
+  white-space: nowrap;
+  transition: transform 0.3s;
+}
+
+.swiperItem {
+  height: 200px;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  border: 1px solid #fff;
+}

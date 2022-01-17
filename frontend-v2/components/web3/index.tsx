@@ -54,8 +54,12 @@ export function deactivated (account) {
     localStorage.setItem(DEACTIVATION_PERSISTENCE_KEY, JSON.stringify({ [account]: true }))
   }
 
-  const deactivation = JSON.parse(deactivationRaw)
-  deactivation?.[account] = true
+  let deactivation = JSON.parse(deactivationRaw)
+  if (!deactivation) {
+    deactivation = {}
+  }
+
+  deactivation[account] = true
   localStorage.setItem(DEACTIVATION_PERSISTENCE_KEY, JSON.stringify(deactivation))
 }
 

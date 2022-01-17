@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import Layout from 'components/Layout'
 import { useMyWeb3 } from 'components/web3/context'
 import { shorten } from 'components/Base/WalletConnector'
+import { formatEther } from '@ethersproject/units'
 
 function ChainID() {
   const { network, chainID } = useMyWeb3()
@@ -9,7 +10,7 @@ function ChainID() {
   return (
     <div>
       <span className="block">Network</span>
-      <span>{network.name} ({chainID ?? ''})</span>
+      <span>{network?.name} ({chainID ?? ''})</span>
     </div>
   )
 }

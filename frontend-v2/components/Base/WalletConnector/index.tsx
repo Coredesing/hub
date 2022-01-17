@@ -10,7 +10,7 @@ import Image from 'next/image'
 import Modal from '../Modal'
 import { formatEther } from '@ethersproject/units'
 
-export function shorten (s: string, max: number) {
+export function shorten (s: string, max: number = 12) {
   return s.length > max ? s.substring(0, (max / 2) - 1) + '…' + s.substring(s.length - (max / 2) + 2, s.length) : s
 }
 
@@ -151,7 +151,7 @@ const WalletConnector = () => {
       dispatch({ type: 'INIT', payload: {
         chainID: _chainID,
         account: _account,
-        provider: library.provider
+        library: library
       } })
       setShowModal(false)
       activated(_account)

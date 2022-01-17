@@ -5,7 +5,7 @@ const Context = createContext<Context>(undefined)
 
 export function MyWeb3Provider({ children }) {
   const [state, dispatch] = useReducer(reducer, {
-    provider: null,
+    library: null,
     chainID: null,
     account: null,
     error: null,
@@ -46,7 +46,7 @@ export function MyWeb3Provider({ children }) {
 }
 
 type Context = {
-  provider: any
+  library: any
   chainID: any
   account: string
   error: Error
@@ -75,8 +75,8 @@ export function useMyWeb3(): Context {
 function reducer(state: Context, { type, payload }: Action): Context {
   switch (type) {
     case 'INIT': {
-      const { provider, chainID, account, error } = payload
-      return { ...state, provider, chainID, account, error }
+      const { library, chainID, account, error } = payload
+      return { ...state, library, chainID, account, error }
     }
 
     case 'SET_CHAINID': {

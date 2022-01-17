@@ -23,6 +23,81 @@ export interface ProviderRpcError extends Error {
 }
 
 const DEACTIVATION_PERSISTENCE_KEY = 'WEB3_DEACTIVATION'
+
+export function switchNetwork(provider: any, chainId: number) {
+  return provider.request({ method: 'eth_chainId' })
+    .then((_chainId) => {
+      const receivedChainId = parseChainId(_chainId)
+      if (receivedChainId === chainId) {
+        return
+      }
+
+      const desiredChainIdHex = `0x${chainId.toString(16)}`
+
+      return provider.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: desiredChainIdHex }],
+      }).catch((error: ProviderRpcError) => {
+        if (error.code !== 4902) {
+          return
+        }
+
+        const chain = getAddChainParameters(chainId)
+        if (!chain) {
+          return
+        }
+
+        return provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [{ ...chain, chainId: desiredChainIdHex }],
+        })
+      })
+    })
+}
+
+export function useEagerConnect() {
+  const { activate, active } = useWeb3React<Web3Provider>()
+  const [tried, setTried] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (tried) {
+      return
+    }
+
+    injected.isAuthorized().then((isAuthorized: boolean) => {
+      if (isAuthorized) {
+        injected.getAccount()
+          .then(acc => {
+            if (isSignedOut(acc)) {
+              return
+            }
+
+            activate(injected, undefined, true).catch(() => {
+              setTried(true)
+            })
+          })
+          .catch(() => {
+            setTried(true)
+          })
+        return
+      }
+
+      setTried(true)
+    }).catch(err => {
+      console.debug(err)
+      setTried(true)
+    })
+  }, [activate, tried])
+
+  useEffect(() => {
+    if (!tried && active) {
+      setTried(true)
+    }
+  }, [tried, active])
+
+  return tried
+}
+
 export function activated (account) {
   account = account.toLowerCase()
   console.debug('activated', account)
@@ -80,83 +155,6 @@ function isSignedOut (account) {
   }
 
   return false
-}
-
-export function switchNetwork(provider: any, chainId: number) {
-  return Promise.all([
-    provider.request({ method: 'eth_chainId' }) as Promise<string>,
-    provider.request({ method: 'eth_requestAccounts' }) as Promise<string[]>,
-  ])
- .then(([_chainId]) => {
-    const receivedChainId = parseChainId(_chainId)
-    if (receivedChainId === chainId) {
-      return
-    }
-
-    const desiredChainIdHex = `0x${chainId.toString(16)}`
-
-    return provider.request({
-      method: 'wallet_switchEthereumChain',
-      params: [{ chainId: desiredChainIdHex }],
-    }).catch((error: ProviderRpcError) => {
-      if (error.code !== 4902) {
-        return
-      }
-
-      const chain = getAddChainParameters(chainId)
-      if (!chain) {
-        return
-      }
-
-      return provider.request({
-        method: 'wallet_addEthereumChain',
-        params: [{ ...chain, chainId: desiredChainIdHex }],
-      })
-    })
- })
-}
-
-export function useEagerConnect() {
-  const { activate, active } = useWeb3React<Web3Provider>()
-  const [tried, setTried] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (tried) {
-      return
-    }
-
-    injected.isAuthorized().then((isAuthorized: boolean) => {
-      if (isAuthorized) {
-        injected.getAccount()
-          .then(acc => {
-            if (isSignedOut(acc)) {
-              return
-            }
-
-            activate(injected, undefined, true).catch(() => {
-              setTried(true)
-            })
-          })
-          .catch(() => {
-            setTried(true)
-          })
-        return
-      }
-
-      setTried(true)
-    }).catch(err => {
-      console.debug(err)
-      setTried(true)
-    })
-  }, [activate, tried])
-
-  useEffect(() => {
-    if (!tried && active) {
-      setTried(true)
-    }
-  }, [tried, active])
-
-  return tried
 }
 
 const DefaultConnector = ({ children }) => {

@@ -10,7 +10,7 @@ import Image from 'next/image'
 import Modal from '../Modal'
 import { formatEther } from '@ethersproject/units'
 
-export function shorten (s: string, max: number = 12) {
+export function shorten (s: string, max = 12) {
   return s.length > max ? s.substring(0, (max / 2) - 1) + '…' + s.substring(s.length - (max / 2) + 2, s.length) : s
 }
 

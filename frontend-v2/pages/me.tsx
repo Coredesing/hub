@@ -1,8 +1,10 @@
 import { useState, useEffect, useMemo } from 'react'
 import Layout from 'components/Layout'
+import { useWeb3Default } from 'components/web3'
 import { useMyWeb3 } from 'components/web3/context'
 import { shorten } from 'components/Base/WalletConnector'
 import { formatEther } from '@ethersproject/units'
+import { Contract } from '@ethersproject/contracts'
 
 function ChainID() {
   const { network, chainID } = useMyWeb3()
@@ -41,32 +43,100 @@ function Balance() {
   }, [balance])
 
   useEffect((): any => {
-    if (!!account && !!library) {
-      let stale = false
+    if (!account || !library) {
+      return
+    }
 
-      library
-        .getBalance(account)
-        .then((balance: any) => {
-          if (!stale) {
-            setBalance(balance)
-          }
-        })
-        .catch(() => {
-          if (!stale) {
-            setBalance(null)
-          }
-        })
+    let stale = false
 
-      return () => {
-        stale = true
-        setBalance(undefined)
-      }
+    library
+      .getBalance(account)
+      .then((balance: any) => {
+        if (!stale) {
+          setBalance(balance)
+        }
+      })
+      .catch(() => {
+        if (!stale) {
+          setBalance(null)
+        }
+      })
+
+    return () => {
+      stale = true
+      setBalance(undefined)
     }
   }, [account, library, chainID]) // ensures refresh if referential identity of library doesn't change across chainIds
 
   return (
     <div>
       <span className="block">Balance</span>
+      <span>{balance === null ? 'Error' : balanceShort}</span>
+    </div>
+  )
+}
+
+function BalanceGAFI() {
+  const { library } = useWeb3Default()
+  const { account } = useMyWeb3()
+
+  const [balance, setBalance] = useState()
+  const balanceShort = useMemo(() => {
+    if (!balance) {
+      return '0'
+    }
+
+    return parseFloat(formatEther(balance)).toFixed(4)
+  }, [balance])
+
+  useEffect((): any => {
+    if (!account || !library) {
+      return
+    }
+
+    let stale = false
+    const contractGAFIReadOnly = new Contract('0x89af13a10b32f1b2f8d1588f93027f69b6f4e27e', [{
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_owner",
+                "type": "address"
+            }
+        ],
+        "name": "balanceOf",
+        "outputs": [
+            {
+                "name": "balance",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    }], library)
+
+    contractGAFIReadOnly
+      .balanceOf(account)
+      .then((balance: any) => {
+        if (!stale) {
+          setBalance(balance)
+        }
+      })
+      .catch(() => {
+        if (!stale) {
+          setBalance(null)
+        }
+      })
+
+    return () => {
+      stale = true
+      setBalance(undefined)
+    }
+  }, [account, library])
+
+  return (
+    <div>
+      <span className="block">Balance $GAFI</span>
       <span>{balance === null ? 'Error' : balanceShort}</span>
     </div>
   )
@@ -82,6 +152,7 @@ const MyAccount = () => (
         <ChainID />
         <Account />
         <Balance />
+        <BalanceGAFI />
       </div>
     </div>
   </Layout>

@@ -9,6 +9,7 @@
     "tsc": "tsc"
   },
   "dependencies": {
+    "@ethersproject/contracts": "^5.5.0",
     "@ethersproject/providers": "^5.5.1",
     "@ethersproject/units": "^5.5.0",
     "@react-hook/resize-observer": "^1.2.5",

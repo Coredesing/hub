@@ -45,7 +45,7 @@ const PoolBanner = ({ item, color = 'gamefiGreen' } : Props ) => {
       <div className="w-full px-3 lg:px-0">
         <div className="flex flex-col clipped-b-l rounded-tr overflow-hidden">
           <div className="w-full h-full relative">
-          <div className="absolute h-7 flex align-middle items-center justify-center top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-left bg-gamefiDark-900 w-36 clipped-b-r-full">
+          <div className="absolute h-7 w-36 flex align-middle items-center justify-center -top-1 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-left bg-gamefiDark-900 clipped-b-r-full">
             <Image src={require('assets/images/icons/lock.svg')} alt="lock"></Image>
             <span className="ml-2 font-bold">{poolStatus(item.is_private)}</span>
           </div>

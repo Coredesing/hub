@@ -12,10 +12,10 @@ const SidebarLink = ({children, path}: Props) => {
     <Link href={path} passHref>
       <div
         className={`relative w-full py-4 flex flex-col align-middle items-center justify-center uppercase text-xs font-semibold cursor-pointer ${
-          router.asPath === path ? 'dark:bg-gamefiDark-900 opacity-100' : 'opacity-40'
+          router.pathname === path ? 'dark:bg-gamefiDark-900 opacity-100' : 'opacity-40'
         }`}
       >
-        {router.asPath === path && <span
+        {router.pathname === path && <span
           style={{
             position: 'absolute',
             width: '3px',

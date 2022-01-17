@@ -10,19 +10,10 @@ type Props = {
   likes?: any[]
 }
 
-const VideoSlider = (props: any) => {
-  const {url, poster, isSelected} = props
-
-  return (
-    <video className='clipped-t-r-lg w-full h-full' autoPlay={isSelected} muted controls poster={poster}>
-      <source src={url} type="video/mp4"></source>
-    </video>
-  )
-}
 const GameCarousel = ( { items, likes }: Props ) => {
   const isMobile = useMediaQuery({maxWidth: '1000px'})
   const getLikeById = (id: any) => {
-    return likes.find(item => item.game_id === id)
+    return likes && likes.find(item => item.game_id === id)
   }
 
   return (
@@ -74,14 +65,17 @@ const GameCarousel = ( { items, likes }: Props ) => {
             <div className="absolute z-10 top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-left bg-gamefiDark-900 w-1/2 md:pb-1 lg:pb-2 clipped-b-r-full">
               <span className="text-gamefiGreen-500">Featured</span> games
             </div>
-            <VideoSlider key={`video-${item.id}`} url={item.intro_video} poster={item.screen_shots_1}></VideoSlider>
+            <video className='clipped-t-r-lg' muted controls poster={item.screen_shots_1}>
+              <source src={item.intro_video} type="video/mp4"></source>
+              Your browser does not support the video tag.
+            </video>
           </div>
           <div className="col-span-5 xl:col-span-4 2xl:pt-14 w-full px-4">
             <div className="lg:text-lg xl:text-xl 2xl:text-3xl font-bold uppercase text-left">{item.game_name}</div>
             <div className="flex align-middle items-center w-full mt-3 xl:mt-5">
               <div className="flex align-middle items-center text-sm">
                 <Image src={require('assets/images/icons/heart.svg')} alt="heart"/>
-                <p className="ml-2 tracking-widest text-gray-200">{getLikeById(item.id)?.total_like}</p>
+                <p className="ml-2 tracking-widest text-gray-200">{getLikeById(item.id)?.total_like || 0}</p>
               </div>
               <div className="flex align-middle items-center ml-4 text-left">
                 <Image src={require('assets/images/icons/game-console.svg')} alt="game-console"/>
@@ -137,7 +131,7 @@ const GameCarousel = ( { items, likes }: Props ) => {
             <div className="flex align-middle items-center w-full mt-3 xl:mt-5">
               <div className="flex align-middle items-center text-sm">
                 <Image src={require('assets/images/icons/heart.svg')} alt="heart"/>
-                <p className="ml-2 tracking-widest text-gray-200">{getLikeById(item.id)?.total_like}</p>
+                <p className="ml-2 tracking-widest text-gray-200">{getLikeById(item.id)?.total_like || 0}</p>
               </div>
               <div className="flex align-middle items-center ml-4">
                 <Image src={require('assets/images/icons/game-console.svg')} alt="game-console"/>

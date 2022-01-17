@@ -76,6 +76,12 @@ contract LinearPool is
         uint256 amount
     );
 
+    event LinearRestake(
+        uint256 indexed poolId,
+        address indexed account,
+        uint256 amount
+    );
+
     struct LinearPoolInfo {
         uint128 cap;
         uint128 totalStaked;
@@ -435,10 +441,13 @@ contract LinearPool is
     {
         address account = msg.sender;
         LinearPendingWithdrawal storage pending = linearPendingWithdrawals[_poolId][account];
-        require(pending.amount > 0, "LinearStakingPool: nothing is currently pending");
+        uint128 _amount = pending.amount;
+        require(_amount > 0, "LinearStakingPool: nothing is currently pending");
 
-        _linearDeposit(_poolId, pending.amount, account);
+        _linearDeposit(_poolId, _amount, account);
 
+        emit LinearDeposit(_poolId, account, _amount);
+        emit LinearRestake(_poolId, account, _amount);
         delete linearPendingWithdrawals[_poolId][account];
     }
 

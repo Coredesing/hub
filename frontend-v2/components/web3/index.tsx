@@ -26,6 +26,9 @@ export interface ProviderRpcError extends Error {
 
 const DEACTIVATION_PERSISTENCE_KEY = 'WEB3_DEACTIVATION'
 
+function parseChainId (chainId: string) {
+  return Number.parseInt(chainId, 16)
+}
 export function switchNetwork (provider: any, chainId: number) {
   return provider.request({ method: 'eth_chainId' })
     .then((_chainId) => {
@@ -159,7 +162,7 @@ function isSignedOut (account) {
   return false
 }
 
-const DefaultConnector = ({ children }) => {
+export const DefaultConnector = ({ children }) => {
   const contextDefault = useWeb3Default()
   const { active: activeDefault, activate: activateDefault } = contextDefault
   useEffect(() => {
@@ -178,35 +181,23 @@ interface PropsType {
   getLibrary (provider: any): Web3Provider
 }
 
-export class ErrorBoundaryWeb3ProviderNetwork extends React.Component<PropsType, { error: Error | undefined }> {
-  constructor (props) {
-    super(props)
-    this.state = {
-      error: null
-    }
-  }
+let Web3ReactProviderDefault
 
-  static getDerivedStateFromError (error) {
-    return { error }
-  }
-
+export class Web3ProviderNetwork extends React.Component<PropsType> {
   render () {
-    if (this.state.error) {
-      return <>{this.state.error.message}</>
-    }
-
-    let Web3ReactProviderDefault
     try {
-      Web3ReactProviderDefault = createWeb3ReactRoot(DEFAULT_WEB3)
-    } catch (e) {
-      return <>{this.props.children}</>
-    }
+      if (!Web3ReactProviderDefault) {
+        Web3ReactProviderDefault = createWeb3ReactRoot(DEFAULT_WEB3)
+      }
 
-    return <Web3ReactProviderDefault getLibrary={this.props.getLibrary}>
-      <DefaultConnector>
-        {this.props.children}
-      </DefaultConnector>
-    </Web3ReactProviderDefault>
+      return <Web3ReactProviderDefault getLibrary={this.props.getLibrary}>
+        <DefaultConnector>
+          {this.props.children}
+        </DefaultConnector>
+      </Web3ReactProviderDefault>
+    } catch (e) {
+      return this.props.children
+    }
   }
 }
 
@@ -233,6 +224,7 @@ const currencies = [ETH, MATIC, BNB]
 export type Network = {
   id: number
   name: string
+  alias: string
   currency: string
   blockExplorerUrls: string[]
   image: any
@@ -243,6 +235,7 @@ export type Network = {
 export const networks = [{
   id: 1,
   name: 'Ethereum',
+  alias: 'eth',
   currency: ETH.symbol,
   blockExplorerUrls: ['https://etherscan.io'],
   image: require('assets/images/icons/ethereum.svg'),
@@ -251,6 +244,7 @@ export const networks = [{
 }, {
   id: 5,
   name: 'Goerli',
+  alias: 'eth',
   currency: ETH.symbol,
   blockExplorerUrls: ['https://goerli.etherscan.io'],
   image: require('assets/images/icons/ethereum.svg'),
@@ -260,6 +254,7 @@ export const networks = [{
 }, {
   id: 56,
   name: 'BSC',
+  alias: 'bsc',
   currency: BNB.symbol,
   blockExplorerUrls: ['https://bscscan.com'],
   image: require('assets/images/icons/bsc.svg'),
@@ -268,6 +263,7 @@ export const networks = [{
 }, {
   id: 97,
   name: 'BSC Testnet',
+  alias: 'bsc',
   currency: BNB.symbol,
   blockExplorerUrls: ['https://testnet.bscscan.com'],
   image: require('assets/images/icons/bsc.svg'),
@@ -277,6 +273,7 @@ export const networks = [{
 }, {
   id: 137,
   name: 'Polygon',
+  alias: 'polygon',
   currency: MATIC.symbol,
   blockExplorerUrls: ['https://polygonscan.com'],
   image: require('assets/images/icons/polygon.svg'),
@@ -285,6 +282,7 @@ export const networks = [{
 }, {
   id: 80001,
   name: 'Polygon Testnet',
+  alias: 'polygon',
   currency: MATIC.symbol,
   blockExplorerUrls: ['https://mumbai.polygonscan.com'],
   image: require('assets/images/icons/polygon.svg'),
@@ -353,6 +351,8 @@ export function getAddChainParameters (chainId: number): AddEthereumChainParamet
   }
 }
 
-function parseChainId (chainId: string) {
-  return Number.parseInt(chainId, 16)
+export function getNetworkByAlias (alias: string): Network | null {
+  return networks.find(x => {
+    return (IS_TESTNET ? x.testnet : !x.testnet) && x.alias === alias
+  })
 }

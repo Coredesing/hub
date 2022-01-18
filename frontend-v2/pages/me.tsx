@@ -6,7 +6,7 @@ import { shorten } from 'components/Base/WalletConnector'
 import { formatEther } from '@ethersproject/units'
 import { Contract } from '@ethersproject/contracts'
 
-function ChainID ({ default: isDefault }: { default: boolean }) {
+function ChainID ({ default: isDefault }: { default?: boolean }) {
   const { network, chainID } = useMyWeb3()
   const { chainId: chainIdDefault } = useWeb3Default()
 

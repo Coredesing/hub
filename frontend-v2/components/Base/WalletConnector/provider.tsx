@@ -4,7 +4,7 @@ import { useMyWeb3 } from 'components/web3/context'
 import toast from 'react-hot-toast'
 
 export default function WalletProvider ({ children }) {
-  const { dispatch, error, updateBalance } = useMyWeb3()
+  const { dispatch, error, updateBalance, library } = useMyWeb3()
   const tried = useEagerConnect()
   useEffect(() => {
     dispatch({ type: 'SET_TRIED_EAGER', payload: { triedEager: tried } })
@@ -22,6 +22,23 @@ export default function WalletProvider ({ children }) {
 
     toast.error(error.message)
   }, [error])
+
+  useEffect(() => {
+    if (!library) {
+      return
+    }
+
+    library.on('block', () => {
+      updateBalance()
+    })
+    return () => {
+      if (!library) {
+        return
+      }
+
+      library.removeAllListeners()
+    }
+  }, [library, updateBalance])
 
   useEffect(() => {
     updateBalance()

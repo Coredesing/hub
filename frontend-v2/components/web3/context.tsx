@@ -18,6 +18,7 @@ type Context = {
   currencyNative: string
   network: Network
   dispatch: (a: Action<Context>) => void
+  updateBalance: () => void
 }
 
 const Context = createContext<Context>(undefined)

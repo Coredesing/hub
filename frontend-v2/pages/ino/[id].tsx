@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState, useMemo } from 'react'
 import Layout from 'components/Layout'
 import clsx from 'clsx'
 import { getTimelineOfPool } from 'utils/pool'
@@ -23,8 +23,7 @@ import AuctionPoolAbi from '@/abi/AuctionPool.json'
 import useAuctionBox from '@/hooks/useAuctionBox'
 import { utils } from 'ethers'
 import { getSymbolCurrency } from 'utils/wallet'
-import { getContract } from 'utils/web3'
-import useContract from '@/hooks/useContract'
+// import { getContract } from 'utils/web3'
 import isNumber from 'is-number'
 import { useMyWeb3 } from '@/components/web3/context'
 import { GetStaticProps } from 'next'
@@ -37,14 +36,33 @@ import PoolDetail from 'components/Base/PoolDetail'
 import DialogTxSubmitted from '@/components/Base/DialogTxSubmitted'
 import Pagination from '@/components/Base/Pagination'
 
+import { useWeb3Default } from 'components/web3'
+import { Contract } from '@ethersproject/contracts'
+
 const PageContent = ({ id, poolInfo, ...props }: any) => {
   const tiersState = useAppContext()?.tiers
   const { account: connectedAccount, chainID, network, ...context } = useMyWeb3()
+  const { library: libraryDefault } = useWeb3Default()
   const [currencyPool, setCurrencyPool] = useState<TokenType & ObjectType<any> | undefined>()
   const [lastBidder, setLastBidder] = useState<null | { wallet: string, amount: string, currency: string }>(null)
   const [resetLastBidder, setResetLastBidder] = useState(true)
   const [rateEachBid, setRateEachBid] = useState<string>('')
-  const { contract: contractAuctionPool } = useContract(AuctionPoolAbi, poolInfo?.campaign_hash)
+
+  const contractAuctionPool = useMemo(() => {
+    if (!poolInfo?.campaign_hash || !libraryDefault) {
+      return
+    }
+
+    return new Contract(poolInfo?.campaign_hash, AuctionPoolAbi, libraryDefault)
+  }, [poolInfo, libraryDefault])
+  const contractToken = useMemo(() => {
+    if (!poolInfo?.acceptedTokensConfig?.[0] || !libraryDefault) {
+      return
+    }
+
+    return new Contract(poolInfo?.acceptedTokensConfig?.[0], Erc20Abi)
+  }, [poolInfo, libraryDefault])
+
   const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, [k: string]: any }>({ date1: 0, date2: 0, title: '' })
   const { checkingKyc, isKYC } = useKyc(connectedAccount, (isNumber(poolInfo?.kyc_bypass) && !poolInfo?.kyc_bypass))
   const [allowNetwork, setAllowNetwork] = useState<{ ok: boolean, [k: string]: any }>({ ok: false })
@@ -99,13 +117,13 @@ const PageContent = ({ id, poolInfo, ...props }: any) => {
           const infoToken = poolInfo.acceptedTokensConfig[0]
           infoToken.neededApprove = !(new BigNumber(infoToken.address).isZero())
           if (infoToken.neededApprove) {
-            const networkInfo = getNetworkInfo(poolInfo.network_available)
-            const erc20Contract = getContract(infoToken.address, Erc20Abi, { network: { chainId: networkInfo.id as any, name: networkInfo.name } })
+            const erc20Contract = contractToken
             const decimals = erc20Contract ? await erc20Contract.decimals() : null
             infoToken.decimals = decimals
           }
           setCurrencyPool(infoToken)
         } catch (error) {
+          console.error(error)
           console.log('error', error)
         }
       }
@@ -138,6 +156,8 @@ const PageContent = ({ id, poolInfo, ...props }: any) => {
     if (contractAuctionPool) {
       contractAuctionPool.minBidIncrementPerMile().then((num: any) => {
         setRateEachBid(+(+num / 1000).toFixed(2) + '')
+      }).catch(err => {
+        console.debug(err)
       })
     }
   }, [contractAuctionPool])
@@ -218,13 +238,18 @@ const PageContent = ({ id, poolInfo, ...props }: any) => {
       setIsApproving(true)
       await approveToken()
       if (poolInfo.campaign_hash && connectedAccount && currencyPool) {
-        const numAllowance = await retrieveTokenAllowance(
-          currencyPool,
-          connectedAccount,
-          poolInfo.campaign_hash
-        )
-        setTokenApproved(new BigNumber(numAllowance).gt(0))
-        setIsApproving(false)
+        try {
+          const numAllowance = await retrieveTokenAllowance(
+            currencyPool,
+            connectedAccount,
+            poolInfo.campaign_hash
+          )
+          setTokenApproved(new BigNumber(numAllowance).gt(0))
+        } catch (err) {
+          console.debug(err)
+        } finally {
+          setIsApproving(false)
+        }
       }
     } catch (err) {
       console.log('err', err)
@@ -234,12 +259,16 @@ const PageContent = ({ id, poolInfo, ...props }: any) => {
 
   const getTokenAllowance = useCallback(async () => {
     if (poolInfo.campaign_hash && connectedAccount && currencyPool?.neededApprove) {
-      const numAllowance = await retrieveTokenAllowance(
-        currencyPool,
-        connectedAccount,
-        poolInfo.campaign_hash
-      )
-      setTokenApproved(new BigNumber(numAllowance).gt(0))
+      try {
+        const numAllowance = await retrieveTokenAllowance(
+          currencyPool,
+          connectedAccount,
+          poolInfo.campaign_hash
+        )
+        setTokenApproved(new BigNumber(numAllowance).gt(0))
+      } catch (err) {
+        console.debug(err)
+      }
     }
   }, [
     connectedAccount,

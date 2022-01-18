@@ -36,32 +36,43 @@ import PoolDetail from 'components/Base/PoolDetail'
 import DialogTxSubmitted from '@/components/Base/DialogTxSubmitted'
 import Pagination from '@/components/Base/Pagination'
 
-import { useWeb3Default } from 'components/web3'
+import { useWeb3Default, getNetworkByAlias } from 'components/web3'
+import { networkConnector } from 'components/web3/connectors'
 import { Contract } from '@ethersproject/contracts'
+import { Web3Provider } from '@ethersproject/providers'
 
 const PageContent = ({ id, poolInfo, ...props }: any) => {
   const tiersState = useAppContext()?.tiers
   const { account: connectedAccount, chainID, network, ...context } = useMyWeb3()
-  const { library: libraryDefault } = useWeb3Default()
+  const { library: libraryDefault, connector } = useWeb3Default()
   const [currencyPool, setCurrencyPool] = useState<TokenType & ObjectType<any> | undefined>()
   const [lastBidder, setLastBidder] = useState<null | { wallet: string, amount: string, currency: string }>(null)
   const [resetLastBidder, setResetLastBidder] = useState(true)
   const [rateEachBid, setRateEachBid] = useState<string>('')
 
+  // this is a hack because of temporary to avoid changing libraryDefault
+  const libraryDefaultTemporary = useMemo(() => {
+    const network = getNetworkByAlias(poolInfo?.network_available)
+    if (!network) {
+      return libraryDefault
+    }
+
+    return connector?.providers?.[network.id] ? new Web3Provider(connector.providers[network.id]) : libraryDefault
+  }, [libraryDefault, poolInfo, connector])
   const contractAuctionPool = useMemo(() => {
-    if (!poolInfo?.campaign_hash || !libraryDefault) {
+    if (!poolInfo?.campaign_hash || !libraryDefaultTemporary) {
       return
     }
 
-    return new Contract(poolInfo?.campaign_hash, AuctionPoolAbi, libraryDefault)
-  }, [poolInfo, libraryDefault])
+    return new Contract(poolInfo?.campaign_hash, AuctionPoolAbi, libraryDefaultTemporary)
+  }, [poolInfo, libraryDefaultTemporary])
   const contractToken = useMemo(() => {
-    if (!poolInfo?.acceptedTokensConfig?.[0] || !libraryDefault) {
+    if (!poolInfo?.acceptedTokensConfig?.[0]?.address || !libraryDefaultTemporary) {
       return
     }
 
-    return new Contract(poolInfo?.acceptedTokensConfig?.[0], Erc20Abi)
-  }, [poolInfo, libraryDefault])
+    return new Contract(poolInfo?.acceptedTokensConfig?.[0]?.address, Erc20Abi, libraryDefaultTemporary)
+  }, [poolInfo, libraryDefaultTemporary])
 
   const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, [k: string]: any }>({ date1: 0, date2: 0, title: '' })
   const { checkingKyc, isKYC } = useKyc(connectedAccount, (isNumber(poolInfo?.kyc_bypass) && !poolInfo?.kyc_bypass))
@@ -123,7 +134,6 @@ const PageContent = ({ id, poolInfo, ...props }: any) => {
           }
           setCurrencyPool(infoToken)
         } catch (error) {
-          console.error(error)
           console.log('error', error)
         }
       }

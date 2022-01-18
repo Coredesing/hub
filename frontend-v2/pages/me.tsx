@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import Layout from 'components/Layout'
-import { useWeb3Default } from 'components/web3'
+import { useWeb3Default, TOKEN_CONTRACT } from 'components/web3'
 import { useMyWeb3 } from 'components/web3/context'
 import { shorten } from 'components/Base/WalletConnector'
 import { formatEther } from '@ethersproject/units'
@@ -71,7 +71,7 @@ function BalanceGAFI () {
     }
 
     let stale = false
-    const contractGAFIReadOnly = new Contract('0x89af13a10b32f1b2f8d1588f93027f69b6f4e27e', [{
+    const contractGAFIReadOnly = new Contract(TOKEN_CONTRACT, [{
       constant: true,
       inputs: [
         {
@@ -117,7 +117,7 @@ function BalanceGAFI () {
   return (
     <div>
       <span className="block">Balance $GAFI</span>
-      <span>{balance === null ? 'Error' : balanceShort}</span>
+      <span>{balance === null ? 'N/A' : balanceShort}</span>
     </div>
   )
 }

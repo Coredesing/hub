@@ -2,7 +2,7 @@ import { useWeb3React, createWeb3ReactRoot } from '@web3-react/core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { Web3Provider } from '@ethersproject/providers'
 import React, { ReactNode, useEffect, useState } from 'react'
-import { network, injected, walletconnect, POLLING_INTERVAL, RPC_URLS } from './connectors'
+import { network, injected, walletconnect, POLLING_INTERVAL, RPC_URLS, IS_TESTNET } from './connectors'
 import type { AddEthereumChainParameter } from '@web3-react/metamask'
 
 export { NoEthereumProviderError } from '@web3-react/injected-connector'
@@ -13,6 +13,7 @@ export function getLibrary (provider: any): Web3Provider {
 }
 export const DEFAULT_WEB3 = 'NETWORK'
 export const DEFAULT_CONNECTOR = network
+export const TOKEN_CONTRACT = IS_TESTNET ? process.env.NEXT_PUBLIC_TOKEN_CONTRACT_97 : process.env.NEXT_PUBLIC_TOKEN_CONTRACT_56
 
 export function useWeb3Default () {
   return useWeb3React<Web3Provider>(DEFAULT_WEB3)

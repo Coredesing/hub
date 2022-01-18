@@ -6,13 +6,15 @@ import { shorten } from 'components/Base/WalletConnector'
 import { formatEther } from '@ethersproject/units'
 import { Contract } from '@ethersproject/contracts'
 
-function ChainID () {
+function ChainID ({ default: isDefault }: { default?: boolean }) {
   const { network, chainID } = useMyWeb3()
+  const { chainId: chainIdDefault } = useWeb3Default()
 
   return (
     <div>
-      <span className="block">Network</span>
-      <span>{network?.name} ({chainID ?? ''})</span>
+      <span className="block">Network {isDefault ? 'Default' : ''}</span>
+      { isDefault && <span>{chainIdDefault}</span> }
+      { !isDefault && <span>{network?.name} ({chainID ?? ''})</span> }
     </div>
   )
 }
@@ -31,9 +33,8 @@ function Account () {
 }
 
 function Balance () {
-  const { account, library, chainID } = useMyWeb3()
+  const { account, library, chainID, balance, updateBalance } = useMyWeb3()
 
-  const [balance, setBalance] = useState()
   const balanceShort = useMemo(() => {
     if (!balance) {
       return '0'
@@ -42,36 +43,11 @@ function Balance () {
     return parseFloat(formatEther(balance)).toFixed(4)
   }, [balance])
 
-  useEffect((): any => {
-    if (!account || !library) {
-      return
-    }
-
-    let stale = false
-
-    library
-      .getBalance(account)
-      .then((balance: any) => {
-        if (!stale) {
-          setBalance(balance)
-        }
-      })
-      .catch(() => {
-        if (!stale) {
-          setBalance(null)
-        }
-      })
-
-    return () => {
-      stale = true
-      setBalance(undefined)
-    }
-  }, [account, library, chainID]) // ensures refresh if referential identity of library doesn't change across chainIds
-
   return (
     <div>
       <span className="block">Balance</span>
       <span>{balance === null ? 'Error' : balanceShort}</span>
+      <button className="border bg-gray-500 px-2 ml-4" onClick={() => updateBalance()}>Force Reload</button>
     </div>
   )
 }
@@ -118,14 +94,18 @@ function BalanceGAFI () {
     contractGAFIReadOnly
       .balanceOf(account)
       .then((balance: any) => {
-        if (!stale) {
-          setBalance(balance)
+        if (stale) {
+          return
         }
+
+        setBalance(balance)
       })
       .catch(() => {
-        if (!stale) {
-          setBalance(null)
+        if (stale) {
+          return
         }
+
+        setBalance(null)
       })
 
     return () => {
@@ -153,6 +133,10 @@ const MyAccount = () => (
         <Account />
         <Balance />
         <BalanceGAFI />
+      </div>
+
+      <div className="flex w-full justify-between mt-6">
+        <ChainID default={true} />
       </div>
     </div>
   </Layout>

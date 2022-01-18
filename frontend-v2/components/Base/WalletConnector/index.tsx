@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { networks, wallets, connectorFromWallet, activated, deactivated, switchNetwork } from 'components/web3'
-import { injected } from 'components/web3/connectors'
+import { injected, IS_TESTNET } from 'components/web3/connectors'
 import { useMyWeb3 } from 'components/web3/context'
 import Image from 'next/image'
 import Modal from '../Modal'
@@ -255,7 +255,7 @@ const WalletConnector = () => {
               <div className="mb-7">
                 <div className={`font-bold text-sm uppercase mb-2 ${agreed ? 'text-white' : 'text-gray-400'}`}>2. Choose Network</div>
                 <div className="flex gap-x-2">
-                  {networks.map(network => {
+                  {networks.filter(x => IS_TESTNET ? x.testnet : !x.testnet).map(network => {
                     const available = !!agreed
                     const chosen = available && network.id === networkChosen?.id
 

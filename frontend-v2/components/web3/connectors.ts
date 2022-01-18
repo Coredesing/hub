@@ -2,6 +2,7 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { NetworkConnector } from '@web3-react/network-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 
+export const IS_TESTNET = !!process.env.NEXT_PUBLIC_TESTNET
 export const RPC_URLS: { [chainId: number]: string } = {
   1: process.env.NEXT_PUBLIC_RPC_URL_1,
   5: process.env.NEXT_PUBLIC_RPC_URL_5,
@@ -15,7 +16,7 @@ export const injected = new InjectedConnector({ supportedChainIds: [1, 5, 56, 97
 
 export const network = new NetworkConnector({
   urls: RPC_URLS,
-  defaultChainId: 56
+  defaultChainId: IS_TESTNET ? 97 : 56
 })
 
 export const walletconnect = new WalletConnectConnector({

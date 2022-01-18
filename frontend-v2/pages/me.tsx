@@ -6,13 +6,15 @@ import { shorten } from 'components/Base/WalletConnector'
 import { formatEther } from '@ethersproject/units'
 import { Contract } from '@ethersproject/contracts'
 
-function ChainID () {
+function ChainID ({ default: isDefault }: { default: boolean }) {
   const { network, chainID } = useMyWeb3()
+  const { chainId: chainIdDefault } = useWeb3Default()
 
   return (
     <div>
-      <span className="block">Network</span>
-      <span>{network?.name} ({chainID ?? ''})</span>
+      <span className="block">Network {isDefault ? 'Default' : ''}</span>
+      { isDefault && <span>{chainIdDefault}</span> }
+      { !isDefault && <span>{network?.name} ({chainID ?? ''})</span> }
     </div>
   )
 }
@@ -153,6 +155,10 @@ const MyAccount = () => (
         <Account />
         <Balance />
         <BalanceGAFI />
+      </div>
+
+      <div className="flex w-full justify-between mt-6">
+        <ChainID default={true} />
       </div>
     </div>
   </Layout>

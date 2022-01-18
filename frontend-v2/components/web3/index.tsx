@@ -290,7 +290,7 @@ export const networks = [{
   color: '#A06EF4',
   colorText: '#fff',
   testnet: true
-}].filter(x => IS_TESTNET ? x.testnet : !x.testnet)
+}]
 
 interface Wallet {
   id: string

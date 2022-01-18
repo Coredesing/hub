@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
+import { ObjectType } from '@/common/types'
 import React, { ReactNode, useEffect, useRef } from 'react'
 
 type Props = {
@@ -7,14 +8,14 @@ type Props = {
   show?: boolean,
   toggle?: any,
   className?: any
-}
+} & ObjectType
 
-const Modal = ({ children, show, toggle, className }: Props) => {
+const Modal = ({ children, show, toggle, className, ...props }: Props) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleClose = () => {
-      toggle(false)
+      toggle && toggle(false)
     }
 
     function handleClick(event: any) {
@@ -35,8 +36,8 @@ const Modal = ({ children, show, toggle, className }: Props) => {
   }, [wrapperRef, show, toggle])
 
   return (
-    show && 
-    <>
+    show ?
+    <div>
       <div className="fixed z-10 inset-0 overflow-y-auto">
         <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
             {/* Background overlay, show/hide based on modal state.
@@ -61,12 +62,12 @@ const Modal = ({ children, show, toggle, className }: Props) => {
               From: "opacity-100 translate-y-0 sm:scale-100"
               To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" */}
 
-          <div ref={wrapperRef} className={`dark:bg-gamefiDark-400 inline-block align-bottom rounded-sm text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl w-full ${className}`}>
+          <div ref={wrapperRef} {...props} className={`dark:bg-gamefiDark-400 inline-block align-bottom rounded-sm text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl w-full ${className}`}>
             {children}
           </div>
         </div>
       </div>
-    </>
+    </div> : <></>
   )
 }
 

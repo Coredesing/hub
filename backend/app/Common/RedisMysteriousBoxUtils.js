@@ -1,6 +1,7 @@
 'use strict'
 
 const Redis = use('Redis');
+const MYSTERIOUS_BOXES_TTL = 60 * 60 * 1000   //1hrs
 
 /*
   Mysterious Box
@@ -36,7 +37,7 @@ const setRedisMysteriousBoxes = async (filterParams, data) => {
     return
   }
 
-  await Redis.set(getRedisKeyMysteriousBoxes(filterParams), JSON.stringify(data));
+  await Redis.setex(getRedisKeyMysteriousBoxes(filterParams), MYSTERIOUS_BOXES_TTL, JSON.stringify(data));
 };
 
 const existRedisMysteriousBoxes = async (filterParams) => {

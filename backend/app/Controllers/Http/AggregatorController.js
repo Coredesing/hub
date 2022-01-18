@@ -312,7 +312,7 @@ class AggregatorController {
 
       builder = builder.where('is_show', true)
 
-      const list = await builder.paginate(page, perPage)
+      const list = await builder.paginate(page, params?.limit ? params.limit : perPage)
 
       // cache data
       if (page <= 2) {

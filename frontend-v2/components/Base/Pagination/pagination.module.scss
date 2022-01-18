@@ -1,0 +1,10 @@
+.pages {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 40px);
+    gap: 8px;
+}
+
+.page-active {
+    background: #72F34B;
+    color: #000;
+}

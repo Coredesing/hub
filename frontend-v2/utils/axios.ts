@@ -1,0 +1,17 @@
+import axios from 'axios';
+
+const instance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_BASE_API_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    }
+})
+
+export default instance;
+
+
+export const HeadersSignature = {
+    headers: {
+        msgSignature: process.env.NEXT_PUBLIC_MESSAGE_INVESTOR_SIGNATURE
+    }
+}

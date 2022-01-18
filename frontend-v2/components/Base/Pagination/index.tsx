@@ -8,65 +8,65 @@ type Props = {
 }
 
 const Pagination = ({ totalPage, currentPage, onChange }: Props) => {
-    const handleChangePage = (p: number) => {
-        if (currentPage === p) return;
-        onChange && onChange(p);
-    }
-    const renderPageElm = (p: number) => (<div
+  const handleChangePage = (p: number) => {
+    if (currentPage === p) return
+    onChange && onChange(p)
+  }
+  const renderPageElm = (p: number) => (<div
         key={p}
-        className={clsx("page rounded w-10 h-10 bg-gamefiDark-500 p-1 grid place-items-center font-bold transition ease-in-out delay-150", {
-            'cursor-pointer': currentPage !== p,
-            [styles['page-active']]: currentPage === p,
+        className={clsx('page rounded w-10 h-10 bg-gamefiDark-500 p-1 grid place-items-center font-bold transition ease-in-out delay-150', {
+          'cursor-pointer': currentPage !== p,
+          [styles['page-active']]: currentPage === p
         })}
         onClick={() => handleChangePage(p)}
     >
         {p}
     </div>)
-    const renderEmptyPage = (k: any) => (<div
+  const renderEmptyPage = (k: any) => (<div
         key={k}
-        className={clsx("page w-10 h-10 p-1 grid place-items-center font-bold bg-transparent tracking-widest")}
+        className={clsx('page w-10 h-10 p-1 grid place-items-center font-bold bg-transparent tracking-widest')}
     >
         ...
     </div>)
-    const renderPage = () => {
-        const pages: any[] = [];
-        if (totalPage > 5) {
-            if (currentPage === 1 || currentPage === 2 || currentPage === 3) {
-                [1, 2, 3, 4].map(p => {
-                    pages.push(renderPageElm(p));
-                })
-                pages.push(renderEmptyPage('...'));
-                pages.push(renderPageElm(totalPage));
-            } else if (currentPage === totalPage || currentPage === totalPage - 1 || currentPage === totalPage - 2) {
-                pages.push(renderPageElm(1));
-                pages.push(renderEmptyPage('...'));
-                [3, 2, 1, 0].map(p => {
-                    pages.push(renderPageElm(totalPage - p));
-                })
-            } else {
-                pages.push(renderPageElm(1));
-                pages.push(renderEmptyPage('...1'));
-                pages.push(renderPageElm(currentPage - 1));
-                pages.push(renderPageElm(currentPage));
-                pages.push(renderPageElm(currentPage + 1));
-                pages.push(renderEmptyPage('...2'));
-                pages.push(renderPageElm(totalPage));
-            }
-        } else {
-            for (let p = 1; p < totalPage + 1; p++) {
-                pages.push(
-                    renderPageElm(p)
-                )
-            }
-        }
-        return pages;
+  const renderPage = () => {
+    const pages: any[] = []
+    if (totalPage > 5) {
+      if (currentPage === 1 || currentPage === 2 || currentPage === 3) {
+        [1, 2, 3, 4].forEach(p => {
+          pages.push(renderPageElm(p))
+        })
+        pages.push(renderEmptyPage('...'))
+        pages.push(renderPageElm(totalPage))
+      } else if (currentPage === totalPage || currentPage === totalPage - 1 || currentPage === totalPage - 2) {
+        pages.push(renderPageElm(1))
+        pages.push(renderEmptyPage('...'));
+        [3, 2, 1, 0].forEach(p => {
+          pages.push(renderPageElm(totalPage - p))
+        })
+      } else {
+        pages.push(renderPageElm(1))
+        pages.push(renderEmptyPage('...1'))
+        pages.push(renderPageElm(currentPage - 1))
+        pages.push(renderPageElm(currentPage))
+        pages.push(renderPageElm(currentPage + 1))
+        pages.push(renderEmptyPage('...2'))
+        pages.push(renderPageElm(totalPage))
+      }
+    } else {
+      for (let p = 1; p < totalPage + 1; p++) {
+        pages.push(
+          renderPageElm(p)
+        )
+      }
     }
-    return (
+    return pages
+  }
+  return (
         <div>
             <div className={clsx(styles.pages)}>
                 <div
-                    className={clsx("page rounded w-10 h-10 bg-gamefiDark-500 p-1 grid place-items-center font-bold transition ease-in-out delay-150", {
-                        'cursor-pointer': currentPage !== 1,
+                    className={clsx('page rounded w-10 h-10 bg-gamefiDark-500 p-1 grid place-items-center font-bold transition ease-in-out delay-150', {
+                      'cursor-pointer': currentPage !== 1
                     })}
                     onClick={() => (currentPage - 1 > 0) && handleChangePage(currentPage - 1)}
                 >
@@ -74,8 +74,8 @@ const Pagination = ({ totalPage, currentPage, onChange }: Props) => {
                 </div>
                 {renderPage()}
                 <div
-                    className={clsx("page rounded w-10 h-10 bg-gamefiDark-500 p-1 grid place-items-center font-bold transition ease-in-out delay-150", {
-                        'cursor-pointer': currentPage !== totalPage,
+                    className={clsx('page rounded w-10 h-10 bg-gamefiDark-500 p-1 grid place-items-center font-bold transition ease-in-out delay-150', {
+                      'cursor-pointer': currentPage !== totalPage
                     })}
                     onClick={() => (currentPage + 1 <= totalPage) && handleChangePage(currentPage + 1)}
                 >
@@ -83,7 +83,7 @@ const Pagination = ({ totalPage, currentPage, onChange }: Props) => {
                 </div>
             </div>
         </div>
-    )
+  )
 }
 
 export default Pagination

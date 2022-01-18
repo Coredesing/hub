@@ -13,7 +13,7 @@ type Props = {
 const List = ({ now }: Props) => {
   const url = `/pools/mysterious-box?token_type=${TOKEN_TYPE}&process=only-auction&is_display=1&limit=6`
 
-  const {data, loading} = useAxiosFetch(url)
+  const { data, loading } = useAxiosFetch(url)
   const items = useMemo<Item[]>(() => {
     return data?.data?.data || []
   }, [data])

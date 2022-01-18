@@ -6,7 +6,7 @@ import WalletProvider from 'components/Base/WalletConnector/provider'
 import '../assets/styles/index.scss'
 import { Toaster } from 'react-hot-toast'
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp ({ Component, pageProps }: AppProps) {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       <ErrorBoundaryWeb3ProviderNetwork getLibrary={getLibrary}>

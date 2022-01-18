@@ -6,7 +6,7 @@ import { network, injected, walletconnect, POLLING_INTERVAL, RPC_URLS } from './
 import type { AddEthereumChainParameter } from '@web3-react/metamask'
 
 export { NoEthereumProviderError } from '@web3-react/injected-connector'
-export function getLibrary(provider: any): Web3Provider {
+export function getLibrary (provider: any): Web3Provider {
   const library = new Web3Provider(provider)
   library.pollingInterval = POLLING_INTERVAL
   return library
@@ -24,7 +24,7 @@ export interface ProviderRpcError extends Error {
 
 const DEACTIVATION_PERSISTENCE_KEY = 'WEB3_DEACTIVATION'
 
-export function switchNetwork(provider: any, chainId: number) {
+export function switchNetwork (provider: any, chainId: number) {
   return provider.request({ method: 'eth_chainId' })
     .then((_chainId) => {
       const receivedChainId = parseChainId(_chainId)
@@ -36,7 +36,7 @@ export function switchNetwork(provider: any, chainId: number) {
 
       return provider.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: desiredChainIdHex }],
+        params: [{ chainId: desiredChainIdHex }]
       }).catch((error: ProviderRpcError) => {
         if (error.code !== 4902) {
           return
@@ -49,13 +49,13 @@ export function switchNetwork(provider: any, chainId: number) {
 
         return provider.request({
           method: 'wallet_addEthereumChain',
-          params: [{ ...chain, chainId: desiredChainIdHex }],
+          params: [{ ...chain, chainId: desiredChainIdHex }]
         })
       })
     })
 }
 
-export function useEagerConnect() {
+export function useEagerConnect () {
   const { activate, active } = useWeb3React<Web3Provider>()
   const [tried, setTried] = useState<boolean>(false)
 
@@ -177,21 +177,22 @@ interface PropsType {
 }
 
 export class ErrorBoundaryWeb3ProviderNetwork extends React.Component<PropsType, { error: Error | undefined }> {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       error: null
     }
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError (error) {
     return { error }
   }
-  render() {
+
+  render () {
     if (this.state.error) {
       return <>{this.state.error.message}</>
     }
-    
+
     let Web3ReactProviderDefault
     try {
       Web3ReactProviderDefault = createWeb3ReactRoot(DEFAULT_WEB3)
@@ -210,19 +211,19 @@ export class ErrorBoundaryWeb3ProviderNetwork extends React.Component<PropsType,
 const ETH: AddEthereumChainParameter['nativeCurrency'] = {
   name: 'Ether',
   symbol: 'ETH',
-  decimals: 18,
+  decimals: 18
 }
 
 const MATIC: AddEthereumChainParameter['nativeCurrency'] = {
   name: 'Matic',
   symbol: 'MATIC',
-  decimals: 18,
+  decimals: 18
 }
 
 const BNB: AddEthereumChainParameter['nativeCurrency'] = {
   name: 'Binance Coin',
   symbol: 'BNB',
-  decimals: 18,
+  decimals: 18
 }
 
 const currencies = [ETH, MATIC, BNB]
@@ -287,7 +288,7 @@ export const wallets: Wallet[] = [{
   image: require('assets/images/icons/walletconnect.svg')
 }]
 
-export function connectorFromWallet(wallet: Wallet): AbstractConnector {
+export function connectorFromWallet (wallet: Wallet): AbstractConnector {
   if (!wallet) {
     return
   }
@@ -303,13 +304,13 @@ export function connectorFromWallet(wallet: Wallet): AbstractConnector {
   return network
 }
 
-export function getAddChainParameters(chainId: number): AddEthereumChainParameter | null {
+export function getAddChainParameters (chainId: number): AddEthereumChainParameter | null {
   const chain = networks.find(x => x.id === chainId)
   if (!chain) {
     return null
   }
 
-  const nativeCurrency = currencies.find(x => x.symbol = chain.currency)
+  const nativeCurrency = currencies.find(x => x.symbol === chain.currency)
   if (!nativeCurrency) {
     return null
   }
@@ -319,10 +320,10 @@ export function getAddChainParameters(chainId: number): AddEthereumChainParamete
     chainName: chain.name,
     nativeCurrency,
     rpcUrls: [RPC_URLS[chainId]],
-    blockExplorerUrls: chain.blockExplorerUrls,
+    blockExplorerUrls: chain.blockExplorerUrls
   }
 }
 
-function parseChainId(chainId: string) {
+function parseChainId (chainId: string) {
   return Number.parseInt(chainId, 16)
 }

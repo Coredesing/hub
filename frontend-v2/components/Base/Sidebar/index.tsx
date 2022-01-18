@@ -4,10 +4,9 @@ import Link from 'next/link'
 import SidebarLink from './SidebarLink'
 
 const Sidebar = () => {
-
   return (
     <>
-      <div className="hidden h-full w-20 md:block md:w-24 lg:w-28 dark:bg-gamefiDark-700 overflow-y-auto hide-scrollbar" style={{boxShadow: 'inset -1px 0px 0px #303442'}}>
+      <div className="hidden h-full w-20 md:block md:w-24 lg:w-28 dark:bg-gamefiDark-700 overflow-y-auto hide-scrollbar" style={{ boxShadow: 'inset -1px 0px 0px #303442' }}>
         <Link href="/" passHref>
           <div className="w-full md:py-7 lg:py-9 flex align-middle items-center justify-center cursor-pointer">
             <Image src={require('assets/images/gamefi.svg')} alt='gamefi'></Image>

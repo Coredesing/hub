@@ -17,7 +17,7 @@ const Modal = ({ children, show, toggle, className }: Props) => {
       toggle(false)
     }
 
-    function handleClick(event: any) {
+    function handleClick (event: any) {
       if (wrapperRef?.current && !wrapperRef?.current?.contains(event?.target)) {
         handleClose()
       }
@@ -35,7 +35,7 @@ const Modal = ({ children, show, toggle, className }: Props) => {
   }, [wrapperRef, show, toggle])
 
   return (
-    show && 
+    show &&
     <>
       <div className="fixed z-10 inset-0 overflow-y-auto">
         <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">

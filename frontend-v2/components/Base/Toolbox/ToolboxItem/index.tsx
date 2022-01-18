@@ -6,7 +6,7 @@ type Props = {
   children?: ReactNode
   path?: string
 }
-const ToolboxItem = ({children, path}: Props) => {
+const ToolboxItem = ({ children, path }: Props) => {
   const router = useRouter()
   return (
     <Link href={path} passHref>

@@ -40,11 +40,11 @@ const WalletConnector = () => {
 
   const { library, chainId: _chainID, account: _account, activate, deactivate, active, error: _error } = contextWeb3
   const { network, account, balance, currencyNative, triedEager, dispatch } = contextWeb3App
-  
+
   const [agreed, setAgreed] = useState(false)
-  function handleAgreement(event: ChangeEvent<HTMLInputElement>) {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : !!target.value;
+  function handleAgreement (event: ChangeEvent<HTMLInputElement>) {
+    const target = event.target
+    const value = target.type === 'checkbox' ? target.checked : !!target.value
     setAgreed(value)
   }
   const [networkChosen, setNetworkChosen] = useState<{ id: any } | undefined>()
@@ -90,7 +90,7 @@ const WalletConnector = () => {
         await switchNetwork((window as any).ethereum, networkChosen?.id)
       }
       await activate(connectorChosen)
-    } catch(err) {
+    } catch (err) {
       console.debug(err)
     } finally {
       setActivating(false)
@@ -122,9 +122,9 @@ const WalletConnector = () => {
     }
 
     tryActivate()
-    .catch(err => {
-      console.debug(err)
-    })
+      .catch(err => {
+        console.debug(err)
+      })
   }, [connectorChosen, tryActivate])
 
   // sync error from current context -> app context
@@ -148,14 +148,16 @@ const WalletConnector = () => {
     }
 
     if (active) {
-      dispatch({ type: 'INIT', payload: {
-        chainID: _chainID,
-        account: _account,
-        library: library
-      } })
+      dispatch({
+        type: 'INIT',
+        payload: {
+          chainID: _chainID,
+          account: _account,
+          library: library
+        }
+      })
       setShowModal(false)
       activated(_account)
-      return
     }
   }, [active, _chainID, _account, library, triedEager, dispatch])
 
@@ -197,9 +199,9 @@ const WalletConnector = () => {
         </div>
       }
       <Modal show={showModal} toggle={setShowModal} className='dark:bg-transparent font-casual'>
-        <ModalConnect close={() => setShowModal(false)} style={{color: network?.colorText || ''}}>
+        <ModalConnect close={() => setShowModal(false)} style={{ color: network?.colorText || '' }}>
           { active && <>
-            <div className="p-6 pt-10" style={{backgroundColor: network?.color || 'transparent'}}>
+            <div className="p-6 pt-10" style={{ backgroundColor: network?.color || 'transparent' }}>
               <div className="font-bold text-2xl uppercase mb-5">Account</div>
               <div className="flex items-center w-full text-base">
                 <span className="w-14 h-14 mr-4"><Image src={ require('assets/images/avatar.png') } alt="avatar" /></span>
@@ -224,7 +226,7 @@ const WalletConnector = () => {
             <div className="p-6 text-white">
               <div className="p-4 bg-gray-700 rounded flex justify-between">
                 <div>{account}</div>
-                <svg style={{height: '1em'}} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="cursor-pointer hover:text-gray-300">
+                <svg style={{ height: '1em' }} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="cursor-pointer hover:text-gray-300">
                   <path d="M12.5 3.5H2.5V15.5H12.5V3.5Z" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M4.5 0.5H15.5V13.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M5.5 6.5H9.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
@@ -242,7 +244,7 @@ const WalletConnector = () => {
             </div>
           </> }
 
-          { !active && 
+          { !active &&
             <div className="p-6 pt-10 text-white">
               <div className="font-bold text-2xl uppercase mb-5">Connect Wallet</div>
               <div className="font-bold text-sm uppercase">1. Agreement</div>
@@ -251,7 +253,7 @@ const WalletConnector = () => {
                 I have read and agreed with the <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">Terms of Service</a> and <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">Privacy Policy</a>.
               </label>
               <div className="mb-7">
-                <div className={`font-bold text-sm uppercase mb-2 ${agreed ? `text-white` : 'text-gray-400'}`}>2. Choose Network</div>
+                <div className={`font-bold text-sm uppercase mb-2 ${agreed ? 'text-white' : 'text-gray-400'}`}>2. Choose Network</div>
                 <div className="flex gap-x-2">
                   {networks.map(network => {
                     const available = !!agreed
@@ -270,7 +272,7 @@ const WalletConnector = () => {
                   })}
                 </div>
               </div>
-              <div className={agreed ? `text-white` : 'text-gray-400'}>
+              <div className={agreed ? 'text-white' : 'text-gray-400'}>
                 <div className="font-bold text-sm uppercase mb-2">3. Choose Wallet</div>
                 <div className="flex gap-x-2">
                   {walletsAvailable.map(wallet => {
@@ -323,12 +325,12 @@ const ModalConnect = ({ children, close, style }: Props) => {
     const toRight = size.width - start
     const toBottom = size.height
     const toLeft = size.width
-    return `m${start} 0 h${toRight} v${toBottom} h${-toLeft} v${bar-toBottom} h${start - qux} l${qux} ${-bar} z`
+    return `m${start} 0 h${toRight} v${toBottom} h${-toLeft} v${bar - toBottom} h${start - qux} l${qux} ${-bar} z`
   }, [size])
 
   return (
-    <div ref={target} style={{clipPath: `path('${path}')`, position: 'relative', ...style}}>
-      {viewBox && <svg className="absolute inset-0" viewBox={viewBox} fill="none" xmlns="http://www.w3.org/2000/svg" style={{zIndex: -1}}>
+    <div ref={target} style={{ clipPath: `path('${path}')`, position: 'relative', ...style }}>
+      {viewBox && <svg className="absolute inset-0" viewBox={viewBox} fill="none" xmlns="http://www.w3.org/2000/svg" style={{ zIndex: -1 }}>
         <path fillRule="evenodd" clipRule="evenodd" d={path} fill="currentColor" className="text-gray-800"/>
       </svg>}
       {children}

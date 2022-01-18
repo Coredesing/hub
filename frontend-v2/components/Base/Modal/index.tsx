@@ -18,7 +18,7 @@ const Modal = ({ children, show, toggle, className, ...props }: Props) => {
       toggle && toggle(false)
     }
 
-    function handleClick(event: any) {
+    function handleClick (event: any) {
       if (wrapperRef?.current && !wrapperRef?.current?.contains(event?.target)) {
         handleClose()
       }

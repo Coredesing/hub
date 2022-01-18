@@ -1,9 +1,27 @@
 import { createContext, useContext, useReducer, useMemo } from 'react'
 import { networks, Network } from './index'
 
+export type Action<T> = {
+  type: string
+  payload: Partial<T>
+}
+
+type Context = {
+  library: any
+  chainID: any
+  account: string
+  error: Error
+  balance: any
+  triedEager: boolean
+
+  currencyNative: string
+  network: Network
+  dispatch: (a: Action<Context>) => void
+}
+
 const Context = createContext<Context>(undefined)
 
-export function MyWeb3Provider({ children }) {
+export function MyWeb3Provider ({ children }) {
   const [state, dispatch] = useReducer(reducer, {
     library: null,
     chainID: null,
@@ -45,34 +63,15 @@ export function MyWeb3Provider({ children }) {
   )
 }
 
-type Context = {
-  library: any
-  chainID: any
-  account: string
-  error: Error
-  balance: any
-  triedEager: boolean
-
-  currencyNative: string
-  network: Network
-  dispatch: (a: Action) => void
-}
-
-export type Action = {
-  type: string
-  payload: Partial<Context>
-}
-
-export function useMyWeb3(): Context {
+export function useMyWeb3 (): Context {
   const context = useContext(Context)
 
-  if (!context)
-    throw new Error('useMyWeb3 must be used inside a `MyWeb3Provider`')
+  if (!context) { throw new Error('useMyWeb3 must be used inside a `MyWeb3Provider`') }
 
   return context
 }
 
-function reducer(state: Context, { type, payload }: Action): Context {
+function reducer (state: Context, { type, payload }: Action<Context>): Context {
   switch (type) {
     case 'INIT': {
       const { library, chainID, account, error } = payload

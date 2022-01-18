@@ -25,7 +25,7 @@ const useKyc = (connectedAccount: string | null | undefined, isCheckKyc?: boolea
     });
     useEffect(() => {
         const run = async () => {
-            const response = await axios.get(`/user/profile?wallet_address=${connectedAccount}`) as any;
+            const response = await axios.get(`/user/profile?wallet_address=${connectedAccount}`)
             const result = response.data.data;
             setInfo({
                 emailVerified: result?.user?.status,

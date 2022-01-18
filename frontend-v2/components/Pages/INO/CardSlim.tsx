@@ -59,7 +59,7 @@ const CardSlim = ({ item, now }: Props) => {
         }
         {visibility(item)}
       </div>
-      {/*eslint-disable-next-line @next/next/no-img-element*/}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={item.mini_banner} alt={item.title} className={styles.banner} />
       <div className={styles.information}>
         <Link href={`/ino/${item.id}`} passHref={true}>
@@ -73,13 +73,12 @@ const CardSlim = ({ item, now }: Props) => {
               <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM13.9 7H12C11.9 5.5 11.6 4.1 11.2 2.9C12.6 3.8 13.6 5.3 13.9 7ZM8 14C7.4 14 6.2 12.1 6 9H10C9.8 12.1 8.6 14 8 14ZM6 7C6.2 3.9 7.3 2 8 2C8.7 2 9.8 3.9 10 7H6ZM4.9 2.9C4.4 4.1 4.1 5.5 4 7H2.1C2.4 5.3 3.4 3.8 4.9 2.9ZM2.1 9H4C4.1 10.5 4.4 11.9 4.8 13.1C3.4 12.2 2.4 10.7 2.1 9ZM11.1 13.1C11.6 11.9 11.8 10.5 11.9 9H13.8C13.6 10.7 12.6 12.2 11.1 13.1Z" fill="white"/>
             </svg>
           </a> }
-          
+
           { item?.socialNetworkSetting?.telegram_link && <a href={item?.socialNetworkSetting?.telegram_link} className={styles.social} target="_blank" rel="noopenner noreferrer">
             <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M15.9683 0.684219C15.9557 0.625173 15.9276 0.570567 15.8868 0.526075C15.846 0.481584 15.794 0.44883 15.7363 0.431219C15.526 0.389298 15.3084 0.404843 15.1063 0.476219C15.1063 0.476219 1.08725 5.51422 0.286252 6.07222C0.114252 6.19322 0.056252 6.26222 0.027252 6.34422C-0.110748 6.74422 0.320252 6.91722 0.320252 6.91722L3.93325 8.09422C3.99426 8.10522 4.05701 8.10145 4.11625 8.08322C4.93825 7.56422 12.3863 2.86122 12.8163 2.70322C12.8843 2.68322 12.9343 2.70322 12.9163 2.75222C12.7443 3.35222 6.31025 9.07122 6.27525 9.10622C6.25818 9.12048 6.2448 9.13866 6.23627 9.15921C6.22774 9.17975 6.2243 9.20206 6.22625 9.22422L5.88925 12.7522C5.88925 12.7522 5.74725 13.8522 6.84525 12.7522C7.62425 11.9732 8.37225 11.3272 8.74525 11.0142C9.98725 11.8722 11.3243 12.8202 11.9013 13.3142C11.9979 13.4083 12.1125 13.4819 12.2383 13.5305C12.3641 13.5792 12.4985 13.6018 12.6333 13.5972C12.7992 13.5767 12.955 13.5062 13.0801 13.3952C13.2051 13.2841 13.2934 13.1376 13.3333 12.9752C13.3333 12.9752 15.8943 2.70022 15.9793 1.31722C15.9873 1.18222 16.0003 1.10022 16.0003 1.00022C16.0039 0.893924 15.9931 0.787623 15.9683 0.684219Z" fill="white"/>
             </svg>
           </a> }
-
 
           { item?.socialNetworkSetting?.twitter_link && <a href={item?.socialNetworkSetting?.twitter_link} className={styles.social} target="_blank" rel="noopenner noreferrer">
             <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -96,10 +95,10 @@ const CardSlim = ({ item, now }: Props) => {
         <div className={styles.description}>
           {item.description}
         </div>
-        <div className={stylesCarousel.informationPurchase} style={{marginBottom: '1rem'}}>
+        <div className={stylesCarousel.informationPurchase} style={{ marginBottom: '1rem' }}>
           <div>
             <p>Starting Price</p>
-            <span style={{color: '#72F34B'}}>{item.ether_conversion_rate} {currency(item)}</span>
+            <span style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {currency(item)}</span>
           </div>
           <div>
             <p>Total Sale</p>
@@ -107,7 +106,7 @@ const CardSlim = ({ item, now }: Props) => {
           </div>
         </div>
         <div className={styles.informationStage}>
-          { item.campaign_status === 'Ended' && <span style={{padding: '0.6rem 0'}}>Ended</span> }
+          { item.campaign_status === 'Ended' && <span style={{ padding: '0.6rem 0' }}>Ended</span> }
           { item.campaign_status !== 'Ended' && (
             <>
               <div className={styles.informationLabel}>{text}</div>

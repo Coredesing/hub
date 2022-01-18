@@ -10,15 +10,15 @@ type Props = {
   likes?: any[]
 }
 
-const GameCarousel = ( { items, likes }: Props ) => {
-  const isMobile = useMediaQuery({maxWidth: '1000px'})
+const GameCarousel = ({ items, likes }: Props) => {
+  const isMobile = useMediaQuery({ maxWidth: '1000px' })
   const getLikeById = (id: any) => {
     return likes && likes.find(item => item.game_id === id)
   }
 
   return (
-    !isMobile ?
-    <Carousel
+    !isMobile
+      ? <Carousel
       showStatus={false}
       showIndicators={false}
       autoPlay={true}
@@ -97,8 +97,8 @@ const GameCarousel = ( { items, likes }: Props ) => {
           </div>
         </div>
       ))}
-    </Carousel> :
-    <Carousel
+    </Carousel>
+      : <Carousel
       key="mobile"
       showStatus={false}
       showIndicators={false}
@@ -108,7 +108,7 @@ const GameCarousel = ( { items, likes }: Props ) => {
       showThumbs={true}
       thumbWidth={170}
       swipeable={true}
-      // dynamicHeight={true} 
+      // dynamicHeight={true}
       infiniteLoop={true}
       interval={5000}
 

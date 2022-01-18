@@ -106,7 +106,7 @@ const List = () => {
     return `/pools/mysterious-box?token_type=${TOKEN_TYPE}&campaign_status=Ended&network_available=${network}&title=${title}&is_display=1&page=${page}&limit=6&is_search=1`
   }, [network, title, page])
 
-  const {data, loading} = useAxiosFetch(url)
+  const { data, loading } = useAxiosFetch(url)
   useEffect(() => {
     setPageLast(data?.data?.lastPage)
   }, [data])
@@ -116,7 +116,7 @@ const List = () => {
   }, [data])
 
   return (
-    <div className={styles.container} style={{marginBottom: '2rem'}}>
+    <div className={styles.container} style={{ marginBottom: '2rem' }}>
       <div className={styles.header}>
         <div className={styles.heading}>Previous Projects</div>
         <div className={styles.filters}>
@@ -153,7 +153,7 @@ const List = () => {
           <div className={styles.row} key={item.id}>
             <Link href={`/ino/${item.id}`} passHref={true}>
               <a className={styles.link}>
-                {/*eslint-disable-next-line @next/next/no-img-element*/}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={item.mini_banner} alt={item.title} />
                 <div className={styles.title}>
                   <h4>{item.title}</h4>
@@ -171,13 +171,13 @@ const List = () => {
             </div>
             <div className={styles.info}>
               <span>Price</span>
-              <p style={{color: '#72F34B'}}>{item.ether_conversion_rate} {currency(item)}/BOX</p>
+              <p style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {currency(item)}/BOX</p>
             </div>
           </div>
         )
       }) }
 
-      <div className={styles.pagination} style={{marginTop: '2rem'}}>
+      <div className={styles.pagination} style={{ marginTop: '2rem' }}>
         <span onClick={() => { setPage(1) }}>
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M5.25 1.25L2 5L5.25 8.75" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>

@@ -13,7 +13,7 @@ type Props = {
 const List = ({ now }: Props) => {
   const url = `/pools/upcoming-pools?token_type=${TOKEN_TYPE}&is_display=1&limit=6`
 
-  const {data, loading} = useAxiosFetch(url)
+  const { data, loading } = useAxiosFetch(url)
   const items = useMemo<Item[]>(() => {
     return data?.data?.data || []
   }, [data])
@@ -64,7 +64,7 @@ const List = ({ now }: Props) => {
           }) }
         </div>
 
-        <div className={styles.subheading} style={{marginTop: '2rem'}}>
+        <div className={styles.subheading} style={{ marginTop: '2rem' }}>
           POOL Community <span>(Staking $GAFI not required)</span>
         </div>
         <div className={styles.cards}>

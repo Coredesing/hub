@@ -1,4 +1,4 @@
-import {createContext} from 'react'
+import {createContext, useContext} from 'react'
 
 type ValueOfContext = {
     [k: string]: {
@@ -12,3 +12,8 @@ type ValueOfContext = {
 const appContext = createContext<ValueOfContext>({});
 
 export default appContext;
+
+export const useAppContext = () => {
+    const context = useContext(appContext);
+    return context;
+}

@@ -6,7 +6,7 @@ import { shorten } from 'components/Base/WalletConnector'
 import { formatEther } from '@ethersproject/units'
 import { Contract } from '@ethersproject/contracts'
 
-function ChainID() {
+function ChainID () {
   const { network, chainID } = useMyWeb3()
 
   return (
@@ -17,20 +17,20 @@ function ChainID() {
   )
 }
 
-function Account() {
+function Account () {
   const { account } = useMyWeb3()
 
   return (
     <div>
       <span className="block">Account</span>
       <span>
-        {!account ? '-' : (account ? shorten(account): '')}
+        {!account ? '-' : (account ? shorten(account) : '')}
       </span>
     </div>
   )
 }
 
-function Balance() {
+function Balance () {
   const { account, library, chainID } = useMyWeb3()
 
   const [balance, setBalance] = useState()
@@ -76,7 +76,7 @@ function Balance() {
   )
 }
 
-function BalanceGAFI() {
+function BalanceGAFI () {
   const { library } = useWeb3Default()
   const { account } = useMyWeb3()
 
@@ -96,23 +96,23 @@ function BalanceGAFI() {
 
     let stale = false
     const contractGAFIReadOnly = new Contract('0x89af13a10b32f1b2f8d1588f93027f69b6f4e27e', [{
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_owner",
-                "type": "address"
-            }
-        ],
-        "name": "balanceOf",
-        "outputs": [
-            {
-                "name": "balance",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
+      constant: true,
+      inputs: [
+        {
+          name: '_owner',
+          type: 'address'
+        }
+      ],
+      name: 'balanceOf',
+      outputs: [
+        {
+          name: 'balance',
+          type: 'uint256'
+        }
+      ],
+      payable: false,
+      stateMutability: 'view',
+      type: 'function'
     }], library)
 
     contractGAFIReadOnly

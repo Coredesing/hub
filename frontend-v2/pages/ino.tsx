@@ -16,12 +16,12 @@ const INO = () => {
     return () => window.clearInterval(interval.current)
   }, [])
 
-  const {data, loading} = useAxiosFetch(`/pools/mysterious-box?token_type=${TOKEN_TYPE}&limit=10&is_featured=1&is_display=1`)
+  const { data, loading } = useAxiosFetch(`/pools/mysterious-box?token_type=${TOKEN_TYPE}&limit=10&is_featured=1&is_display=1`)
 
   return (
     <Layout title="GameFi INO">
       <>
-        <Carousel items={data?.data?.data || []} style={{paddingBottom: '2rem'}} now={now}></Carousel>
+        <Carousel items={data?.data?.data || []} style={{ paddingBottom: '2rem' }} now={now}></Carousel>
         <ListAuction now={now} />
         <ListOpening now={now} />
         <ListUpcoming now={now} />

@@ -17,7 +17,7 @@ const Topbar = () => {
           <WalletConnector></WalletConnector>
         </div>
       </div>
-      <div className="z-20 h-16 md:hidden flex align-middle items-center justify-between w-full py-4 px-6" style={{boxShadow: 'inset -1px 0px 0px #303442'}}>
+      <div className="z-20 h-16 md:hidden flex align-middle items-center justify-between w-full py-4 px-6" style={{ boxShadow: 'inset -1px 0px 0px #303442' }}>
         <Link href="/" passHref>
           <div className="flex align-middle items-center cursor-pointer">
             <Image src={require('assets/images/gamefi.svg')} alt='gamefi'></Image>

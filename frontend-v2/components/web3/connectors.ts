@@ -8,7 +8,7 @@ export const RPC_URLS: { [chainId: number]: string } = {
   56: process.env.NEXT_PUBLIC_RPC_URL_56,
   97: process.env.NEXT_PUBLIC_RPC_URL_97,
   137: process.env.NEXT_PUBLIC_RPC_URL_137,
-  80001: process.env.NEXT_PUBLIC_RPC_URL_80001,
+  80001: process.env.NEXT_PUBLIC_RPC_URL_80001
 }
 // ETH Mainnet, ETH Goerli, BSC Mainnet, BSC Testnet, Polygon Mainnet, Polygon Mumbai
 export const injected = new InjectedConnector({ supportedChainIds: [1, 5, 56, 97, 137, 80001] })

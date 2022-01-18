@@ -32,14 +32,14 @@ import { GetStaticProps } from "next";
 import useGetPoolDetail from "@/hooks/useGetPoolDetail";
 import { TabPanel, Tabs } from "@/components/Base/Tabs";
 import { MediumIcon, TelegramIcon, TwitterIcon } from "components/Base/Icon";
-import appContext from "@/context";
+import { useAppContext } from "@/context";
 import { Table, TableCellHead, TableHead, TableRow, TableBody, TableCell } from "components/Base/Table";
 import PoolDetail from "components/Base/PoolDetail";
 import DialogTxSubmitted from "@/components/Base/DialogTxSubmitted";
 import Pagination from "@/components/Base/Pagination";
 
 const PageContent = ({ id, poolInfo, ...props }: any) => {
-    const tiersState = useContext(appContext)?.tiers;
+    const tiersState = useAppContext()?.tiers;
     const { account: connectedAccount, chainID, network, ...context } = useMyWeb3();
     const [currencyPool, setCurrencyPool] = useState<TokenType & ObjectType<any> | undefined>();
     const [lastBidder, setLastBidder] = useState<null | { wallet: string, amount: string, currency: string }>(null);

@@ -78,7 +78,7 @@ const CarouselAction = ({ item, now }: { item: Item, now: Date }) => {
   if (item.campaign_status === 'Ended' || now > stages.timeFinish) {
     return (
       <>
-        <div style={{marginTop: 'auto', position: 'relative'}}>
+        <div style={{ marginTop: 'auto', position: 'relative' }}>
           <div className={styles.actionBtn}>
             Details <Image src={require('assets/images/icons/arrow-right-dark.svg')} alt="right" />
           </div>
@@ -89,23 +89,23 @@ const CarouselAction = ({ item, now }: { item: Item, now: Date }) => {
 
   return (
     <>
-      <div style={{marginTop: 'auto', position: 'relative'}}>
+      <div style={{ marginTop: 'auto', position: 'relative' }}>
         <p style={{ textTransform: 'uppercase', fontWeight: 'bold' }}>{text}</p>
         <svg viewBox="0 0 273 65" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.countdown} fontSize="28" fontWeight="bold">
           <path opacity="0.12" d="M20.516 0.5H271.5V48.5V63.5H0.5V0.5H20.516Z" fill="#525252" stroke="#525252"/>
           <path d="M20.3801 0.5H272.5V49.5V64.5H0.5V8.73149L10.2016 0.5H20.3801Z" stroke="#525252"/>
           <rect x="263" y="4" width="6" height="21" fill="#525252"/>
-          <text fill="white" xmlSpace="preserve" style={{whiteSpace: 'pre'}}><tspan x="55.1426" y="32.176">:</tspan></text>
-          <text fill="white" xmlSpace="preserve" style={{whiteSpace: 'pre'}}><tspan x="121.143" y="32.176">:</tspan></text>
-          <text fill="white" xmlSpace="preserve" style={{whiteSpace: 'pre'}}><tspan x="187.143" y="32.176">:</tspan></text>
-          <text fill="white" xmlSpace="preserve" style={{whiteSpace: 'pre'}}><tspan x="12.8184" y="32.176">{duration.days}</tspan></text>
-          <text fill="white" xmlSpace="preserve" style={{whiteSpace: 'pre'}} fontSize="10" fontWeight="600"><tspan x="14.209" y="50.92">DAYS</tspan></text>
-          <text fill="white" xmlSpace="preserve" style={{whiteSpace: 'pre'}}><tspan x="79.4199" y="32.176">{duration.hours}</tspan></text>
-          <text fill="white" xmlSpace="preserve" style={{whiteSpace: 'pre'}} fontSize="10" fontWeight="600"><tspan x="77.1377" y="50.92">HOURS</tspan></text>
-          <text fill="white" xmlSpace="preserve" style={{whiteSpace: 'pre'}}><tspan x="142.344" y="32.176">{duration.minutes}</tspan></text>
-          <text fill="white" xmlSpace="preserve" style={{whiteSpace: 'pre'}} fontSize="10" fontWeight="600"><tspan x="139.153" y="50.92">MINUTES</tspan></text>
-          <text fill="white" xmlSpace="preserve" style={{whiteSpace: 'pre'}}><tspan x="208.344" y="32.176">{duration.seconds}</tspan></text>
-          <text fill="white" xmlSpace="preserve" style={{whiteSpace: 'pre'}} fontSize="10" fontWeight="600"><tspan x="203.972" y="50.92">SECONDS</tspan></text>
+          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="55.1426" y="32.176">:</tspan></text>
+          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="121.143" y="32.176">:</tspan></text>
+          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="187.143" y="32.176">:</tspan></text>
+          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="12.8184" y="32.176">{duration.days}</tspan></text>
+          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }} fontSize="10" fontWeight="600"><tspan x="14.209" y="50.92">DAYS</tspan></text>
+          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="79.4199" y="32.176">{duration.hours}</tspan></text>
+          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }} fontSize="10" fontWeight="600"><tspan x="77.1377" y="50.92">HOURS</tspan></text>
+          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="142.344" y="32.176">{duration.minutes}</tspan></text>
+          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }} fontSize="10" fontWeight="600"><tspan x="139.153" y="50.92">MINUTES</tspan></text>
+          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="208.344" y="32.176">{duration.seconds}</tspan></text>
+          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }} fontSize="10" fontWeight="600"><tspan x="203.972" y="50.92">SECONDS</tspan></text>
         </svg>
         <div className={styles.actionBtn}>
           Join Now <Image src={require('assets/images/icons/arrow-right-dark.svg')} alt="right" />
@@ -115,13 +115,13 @@ const CarouselAction = ({ item, now }: { item: Item, now: Date }) => {
   )
 }
 
-const _Carousel = ( { items, style, now }: Props ) => {
+const _Carousel = ({ items, style, now }: Props) => {
   if (!items) {
     items = []
   }
 
   return (
-    <div className={stylesList.container} style={{marginTop: '2rem', ...(style || {})}}>
+    <div className={stylesList.container} style={{ marginTop: '2rem', ...(style || {}) }}>
       <div className={styles.heading}>
         <span>Featured</span> INOs
       </div>
@@ -138,10 +138,8 @@ const _Carousel = ( { items, style, now }: Props ) => {
 
         renderThumbs={() => {
           const thumbs = (items && items.length) ? items : []
-          return thumbs.map((item) => {
-            {/*eslint-disable-next-line @next/next/no-img-element*/}
-            return <img key={`thumb-${item.id}`} src={item.mini_banner} alt="img" className={styles.thumbnail} />
-          })
+          /* eslint-disable-next-line @next/next/no-img-element */
+          return thumbs.map((item) => <img key={`thumb-${item.id}`} src={item.mini_banner} alt="img" className={styles.thumbnail} />)
         }}
         renderArrowPrev={(onClickHandler, hasPrev, label) => {
           return (
@@ -172,7 +170,7 @@ const _Carousel = ( { items, style, now }: Props ) => {
           return (
             <div key={`ino-${item.id}`} className="px-14 mx-auto grid grid-cols-12 gap-4">
               <div className="col-span-7 xl:col-span-8 relative">
-                {/*eslint-disable-next-line @next/next/no-img-element*/}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={item.banner} alt={item.title} className="clipped-t-r-lg" />
               </div>
               <div className="relative col-span-5 xl:col-span-4 w-full px-4 flex flex-col">
@@ -191,7 +189,6 @@ const _Carousel = ( { items, style, now }: Props ) => {
                     </svg>
                   </a> }
 
-
                   { item?.socialNetworkSetting?.twitter_link && <a href={item?.socialNetworkSetting?.twitter_link} className={styles.social} target="_blank" rel="noopenner noreferrer">
                     <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M16 2C15.4 2.3 14.8 2.4 14.1 2.5C14.8 2.1 15.3 1.5 15.5 0.7C14.9 1.1 14.2 1.3 13.4 1.5C12.8 0.9 11.9 0.5 11 0.5C9.3 0.5 7.8 2 7.8 3.8C7.8 4.1 7.8 4.3 7.9 4.5C5.2 4.4 2.7 3.1 1.1 1.1C0.8 1.6 0.7 2.1 0.7 2.8C0.7 3.9 1.3 4.9 2.2 5.5C1.7 5.5 1.2 5.3 0.7 5.1C0.7 6.7 1.8 8 3.3 8.3C3 8.4 2.7 8.4 2.4 8.4C2.2 8.4 2 8.4 1.8 8.3C2.2 9.6 3.4 10.6 4.9 10.6C3.8 11.5 2.4 12 0.8 12C0.5 12 0.3 12 0 12C1.5 12.9 3.2 13.5 5 13.5C11 13.5 14.3 8.5 14.3 4.2C14.3 4.1 14.3 3.9 14.3 3.8C15 3.3 15.6 2.7 16 2Z" fill="currentColor"/>
@@ -207,7 +204,7 @@ const _Carousel = ( { items, style, now }: Props ) => {
                 <div className={styles.informationPurchase}>
                   <div>
                     <p>Price</p>
-                    <span style={{color: '#72F34B'}}>{item.ether_conversion_rate} {currency(item)}</span>
+                    <span style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {currency(item)}</span>
                   </div>
                   <div>
                     <p>Total Sale</p>

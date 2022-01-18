@@ -14,7 +14,7 @@ const SidebarLink = ({ children, path, external }: Props) => {
     return (
       <a href={path} target="_blank" rel="noreferrer">
         <div
-          className={`relative w-full py-4 flex flex-col align-middle items-center justify-center uppercase text-xs font-semibold cursor-pointer opacity-40`}
+          className={'relative w-full py-4 flex flex-col align-middle items-center justify-center uppercase text-xs font-semibold cursor-pointer opacity-40'}
         >
           {children}
         </div>

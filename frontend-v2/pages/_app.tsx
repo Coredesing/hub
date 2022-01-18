@@ -7,7 +7,7 @@ import '../assets/styles/index.scss'
 import { Toaster } from 'react-hot-toast'
 import AppProvider from '@/context/provider'
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp ({ Component, pageProps }: AppProps) {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       <ErrorBoundaryWeb3ProviderNetwork getLibrary={getLibrary}>

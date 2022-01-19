@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react'
-import { utils, Contract, BigNumber } from 'ethers'
+import { useState, useCallback, useEffect } from 'react'
+import { utils, Contract, BigNumber, providers } from 'ethers'
 import { networkConnector } from 'components/web3/connectors'
 import { Token, useWeb3Default, getNetworkByAlias, getLibrary } from 'components/web3'
 import { useMyWeb3 } from 'components/web3/context'
@@ -9,7 +9,7 @@ export const useTokenAllowance = (token?: Token, owner?: string, spender?: strin
   const [loading, setLoading] = useState<boolean>(false)
   const [allowance, setAllowance] = useState<BigNumber | null>(null)
   const [error, setError] = useState<Error>()
-  const { connector, library } = useWeb3Default()
+  const { provider } = useLibraryDefaultFlexible(networkAlias)
 
   const load = useCallback(async () => {
     setError(null)
@@ -26,8 +26,8 @@ export const useTokenAllowance = (token?: Token, owner?: string, spender?: strin
       return
     }
 
-    if (!connector || !library) {
-      setError(new Error('Invalid connector or library'))
+    if (!provider) {
+      setError(new Error('Invalid provider'))
       setAllowance(null)
       return
     }
@@ -35,16 +35,6 @@ export const useTokenAllowance = (token?: Token, owner?: string, spender?: strin
     setLoading(true)
 
     try {
-      let provider = library
-      const network = getNetworkByAlias(networkAlias)
-      if (network) {
-        const connector = networkConnector(network.id)
-        if (connector) {
-          const update = await connector.activate()
-          provider = getLibrary(update.provider)
-        }
-      }
-
       const contract = new Contract(token.address, ERC20, provider)
       const approved = await contract.allowance(owner, spender)
       setAllowance(approved)
@@ -53,7 +43,7 @@ export const useTokenAllowance = (token?: Token, owner?: string, spender?: strin
     } finally {
       setLoading(false)
     }
-  }, [token, owner, spender, connector, library, networkAlias])
+  }, [token, owner, spender, provider])
 
   return {
     load,
@@ -82,7 +72,7 @@ export const useTokenApproval = (token?: Token, spender?: string) => {
     }
 
     if (!library) {
-      setError(new Error('Invalid library'))
+      setError(new Error('Invalid provider'))
       return
     }
 
@@ -104,5 +94,39 @@ export const useTokenApproval = (token?: Token, spender?: string) => {
     approve,
     loading,
     error
+  }
+}
+
+export function useLibraryDefaultFlexible (networkAlias?: string) {
+  const { library } = useWeb3Default()
+  const [provider, setProvider] = useState<providers.Web3Provider | null>(null)
+
+  useEffect(() => {
+    if (!networkAlias) {
+      setProvider(library)
+      return
+    }
+
+    const network = getNetworkByAlias(networkAlias)
+    if (!network) {
+      setProvider(null)
+      return
+    }
+
+    const connector = networkConnector(network.id)
+    if (!connector) {
+      setProvider(null)
+      return
+    }
+
+    connector.activate().then(update => {
+      setProvider(getLibrary(update.provider))
+    }).catch(err => {
+      console.debug(err)
+    })
+  }, [networkAlias, library])
+
+  return {
+    provider
   }
 }

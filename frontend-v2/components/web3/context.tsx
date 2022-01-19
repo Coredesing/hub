@@ -1,6 +1,7 @@
 import { createContext, useContext, useReducer, useMemo, useCallback } from 'react'
-import { networks, Network } from './index'
 import toast from 'react-hot-toast'
+import { utils } from 'ethers'
+import { networks, Network } from './index'
 
 export type Action<T> = {
   type: string
@@ -15,6 +16,7 @@ type Context = {
   balance: any
   triedEager: boolean
 
+  balanceShort: string
   currencyNative: string
   network: Network
   dispatch: (a: Action<Context>) => void
@@ -32,11 +34,13 @@ export function MyWeb3Provider ({ children }) {
     balance: null,
     triedEager: false,
 
+    balanceShort: '',
     currencyNative: '',
     network: null,
     dispatch: () => {},
     updateBalance: () => {}
   })
+
   const network = useMemo(() => {
     if (!state?.chainID) {
       return
@@ -44,6 +48,7 @@ export function MyWeb3Provider ({ children }) {
 
     return networks.find(nw => nw.id === state.chainID)
   }, [state])
+
   const currencyNative = useMemo(() => {
     if (!network) {
       return ''
@@ -51,7 +56,9 @@ export function MyWeb3Provider ({ children }) {
 
     return network.currency
   }, [network])
-  const { library, account, chainID } = state
+
+  const { library, account, chainID, balance } = state
+
   const updateBalance = useCallback(() => {
     if (!library || !account || !chainID) {
       dispatch({ type: 'UPDATE_BALANCE', payload: { balance: 0 } })
@@ -65,10 +72,19 @@ export function MyWeb3Provider ({ children }) {
     })
   }, [library, account, chainID, dispatch])
 
+  const balanceShort = useMemo(() => {
+    if (!balance) {
+      return '0'
+    }
+
+    return parseFloat(utils.formatEther(balance)).toFixed(4)
+  }, [balance])
+
   return (
     <Context.Provider
       value={{
         ...state,
+        balanceShort,
         currencyNative,
         network,
         updateBalance,

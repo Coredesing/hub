@@ -9,7 +9,7 @@ import Modal from '@/components/Base/Modal'
 import classes from './c.module.scss'
 import { getNetworkByAlias } from 'components/web3'
 import { useMyWeb3 } from 'components/web3/context'
-import BigNumber from 'bignumber.js';
+import BigNumber from 'bignumber.js'
 
 type Props = {
   open: boolean,
@@ -29,7 +29,7 @@ const AuctionBoxModal = ({ open, poolInfo = {}, token = {}, auctionLoading, last
       try {
         const handleSetBalance = (balance: any) => {
           balance = utils.formatEther(balance.toString())
-          balance = new BigNumber(balance).toFixed(4).toString();
+          balance = new BigNumber(balance).toFixed(4).toString()
           setBalance(balance)
         }
         if (new BigNumber(token.address).isZero()) {
@@ -67,7 +67,6 @@ const AuctionBoxModal = ({ open, poolInfo = {}, token = {}, auctionLoading, last
       setMinimumMarkup(minimumMarkup)
       setMinimumBid(minimumBid)
     }
-
   }, [lastBidder, currencyPool?.price, rateEachBid])
 
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {

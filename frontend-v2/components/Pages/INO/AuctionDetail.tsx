@@ -28,285 +28,284 @@ import { Contract } from '@ethersproject/contracts'
 import { getNetworkByAlias } from 'components/web3'
 import toast from 'react-hot-toast'
 
-
 const AuctionDetail = ({ poolInfo }: any) => {
-    const tiersState = useAppContext()?.tiers
-    const { account: connectedAccount, chainID, network, ...context } = useMyWeb3()
-    const [currencyPool, setCurrencyPool] = useState<TokenType & ObjectType<any> | undefined>()
-    const [lastBidder, setLastBidder] = useState<null | { wallet: string, amount: string, currency: string }>(null)
-    const [resetLastBidder, setResetLastBidder] = useState(true)
-    const [rateEachBid, setRateEachBid] = useState<string>('')
+  const tiersState = useAppContext()?.tiers
+  const { account: connectedAccount, chainID, network, ...context } = useMyWeb3()
+  const [currencyPool, setCurrencyPool] = useState<TokenType & ObjectType<any> | undefined>()
+  const [lastBidder, setLastBidder] = useState<null | { wallet: string, amount: string, currency: string }>(null)
+  const [resetLastBidder, setResetLastBidder] = useState(true)
+  const [rateEachBid, setRateEachBid] = useState<string>('')
 
-    const { provider: libraryDefaultTemporary } = useLibraryDefaultFlexible(poolInfo?.network_available)
+  const { provider: libraryDefaultTemporary } = useLibraryDefaultFlexible(poolInfo?.network_available)
 
-    const contractAuctionPool = useMemo(() => {
-        if (!poolInfo?.campaign_hash || !libraryDefaultTemporary) {
-            return
+  const contractAuctionPool = useMemo(() => {
+    if (!poolInfo?.campaign_hash || !libraryDefaultTemporary) {
+      return
+    }
+
+    return new Contract(poolInfo?.campaign_hash, AuctionPoolAbi, libraryDefaultTemporary)
+  }, [poolInfo, libraryDefaultTemporary])
+  const contractToken = useMemo(() => {
+    if (!poolInfo?.acceptedTokensConfig?.[0]?.address || !libraryDefaultTemporary) {
+      return
+    }
+
+    return new Contract(poolInfo?.acceptedTokensConfig?.[0]?.address, Erc20Abi, libraryDefaultTemporary)
+  }, [poolInfo, libraryDefaultTemporary])
+
+  const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, [k: string]: any }>({ date1: 0, date2: 0, title: '' })
+  const { checkingKyc, isKYC } = useKyc(connectedAccount, (isNumber(poolInfo?.kyc_bypass) && !poolInfo?.kyc_bypass))
+  const [allowNetwork, setAllowNetwork] = useState<{ ok: boolean, [k: string]: any }>({ ok: false })
+  const [boxTypeSelected, setSelectBoxType] = useState<{ [k: string]: any }>({})
+  useEffect(() => {
+    const networkInfo = getNetworkByAlias(poolInfo?.network_available)
+    const ok = chainID === networkInfo?.id
+    setAllowNetwork(
+      {
+        ok,
+        ...networkInfo
+      }
+    )
+  }, [poolInfo, chainID])
+
+  useEffect(() => {
+    if (!connectedAccount) return
+    tiersState.actions.getUserTier(connectedAccount)
+  }, [connectedAccount])
+
+  const onSetCountdown = useCallback(() => {
+    if (poolInfo) {
+      const timeLine = getTimelineOfPool(poolInfo)
+      if (timeLine.startBuyTime > Date.now()) {
+        setCountdown({ date1: timeLine.startBuyTime, date2: Date.now(), title: 'Auction Starts In', isUpcomingAuction: true })
+      } else if (timeLine.finishTime > Date.now()) {
+        setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Auction Ends In', isAuction: true })
+      } else {
+        setCountdown({ date1: 0, date2: 0, title: 'Auction Ended', isFinished: true })
+      }
+    }
+  }, [poolInfo])
+
+  useEffect(() => {
+    if (poolInfo) {
+      onSetCountdown()
+    }
+  }, [poolInfo])
+
+  useEffect(() => {
+    if (poolInfo?.acceptedTokensConfig?.length) {
+      const handleSetToken = async () => {
+        try {
+          const infoToken = poolInfo.acceptedTokensConfig[0]
+          infoToken.neededApprove = !(BigNumber.from(infoToken.address).isZero())
+          if (infoToken.neededApprove) {
+            const erc20Contract = contractToken
+            const decimals = erc20Contract ? await erc20Contract.decimals() : null
+            infoToken.decimals = decimals
+          }
+          setCurrencyPool(infoToken)
+        } catch (error) {
+          console.log('error', error)
         }
+      }
+      handleSetToken()
+    }
+  }, [poolInfo])
 
-        return new Contract(poolInfo?.campaign_hash, AuctionPoolAbi, libraryDefaultTemporary)
-    }, [poolInfo, libraryDefaultTemporary])
-    const contractToken = useMemo(() => {
-        if (!poolInfo?.acceptedTokensConfig?.[0]?.address || !libraryDefaultTemporary) {
-            return
-        }
-
-        return new Contract(poolInfo?.acceptedTokensConfig?.[0]?.address, Erc20Abi, libraryDefaultTemporary)
-    }, [poolInfo, libraryDefaultTemporary])
-
-    const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, [k: string]: any }>({ date1: 0, date2: 0, title: '' })
-    const { checkingKyc, isKYC } = useKyc(connectedAccount, (isNumber(poolInfo?.kyc_bypass) && !poolInfo?.kyc_bypass))
-    const [allowNetwork, setAllowNetwork] = useState<{ ok: boolean, [k: string]: any }>({ ok: false })
-    const [boxTypeSelected, setSelectBoxType] = useState<{ [k: string]: any }>({})
-    useEffect(() => {
-        const networkInfo = getNetworkByAlias(poolInfo?.network_available);
-        const ok = chainID === networkInfo?.id;
-        setAllowNetwork(
-            {
-                ok,
-                ...networkInfo
-            }
-        )
-    }, [poolInfo, chainID])
-
-    useEffect(() => {
-        if (!connectedAccount) return
-        tiersState.actions.getUserTier(connectedAccount)
-    }, [connectedAccount])
-
-    const onSetCountdown = useCallback(() => {
-        if (poolInfo) {
-            const timeLine = getTimelineOfPool(poolInfo)
-            if (timeLine.startBuyTime > Date.now()) {
-                setCountdown({ date1: timeLine.startBuyTime, date2: Date.now(), title: 'Auction Starts In', isUpcomingAuction: true })
-            } else if (timeLine.finishTime > Date.now()) {
-                setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Auction Ends In', isAuction: true })
-            } else {
-                setCountdown({ date1: 0, date2: 0, title: 'Auction Ended', isFinished: true })
-            }
-        }
-    }, [poolInfo])
-
-    useEffect(() => {
-        if (poolInfo) {
-            onSetCountdown()
-        }
-    }, [poolInfo])
-
-    useEffect(() => {
-        if (poolInfo?.acceptedTokensConfig?.length) {
-            const handleSetToken = async () => {
-                try {
-                    const infoToken = poolInfo.acceptedTokensConfig[0]
-                    infoToken.neededApprove = !(BigNumber.from(infoToken.address).isZero())
-                    if (infoToken.neededApprove) {
-                        const erc20Contract = contractToken
-                        const decimals = erc20Contract ? await erc20Contract.decimals() : null
-                        infoToken.decimals = decimals
-                    }
-                    setCurrencyPool(infoToken)
-                } catch (error) {
-                    console.log('error', error)
-                }
-            }
-            handleSetToken()
-        }
-    }, [poolInfo])
-
-    useEffect(() => {
-        if (contractAuctionPool && resetLastBidder) {
-            const getLastBidder = async () => {
-                try {
-                    const result = await contractAuctionPool.lastBidder()
-                    if (!BigNumber.from(result.wallet).isZero()) {
-                        setLastBidder({
-                            wallet: result.wallet,
-                            currency: result.token,
-                            amount: utils.formatEther(result.amount)
-                        })
-                    }
-                    setResetLastBidder(false)
-                } catch (error) {
-
-                }
-            }
-            getLastBidder()
-        }
-    }, [contractAuctionPool, resetLastBidder])
-
-    useEffect(() => {
-        if (contractAuctionPool) {
-            contractAuctionPool.minBidIncrementPerMile().then((num: any) => {
-                setRateEachBid(+(+num / 1000).toFixed(2) + '')
-            }).catch(err => {
-                console.debug(err)
+  useEffect(() => {
+    if (contractAuctionPool && resetLastBidder) {
+      const getLastBidder = async () => {
+        try {
+          const result = await contractAuctionPool.lastBidder()
+          if (!BigNumber.from(result.wallet).isZero()) {
+            setLastBidder({
+              wallet: result.wallet,
+              currency: result.token,
+              amount: utils.formatEther(result.amount)
             })
+          }
+          setResetLastBidder(false)
+        } catch (error) {
+
         }
-    }, [contractAuctionPool])
-
-    // const [subBoxes, setSubBoxes] = useState<{ [k: string]: any }[]>([]);
-
-    useEffect(() => {
-        if (poolInfo && poolInfo.boxTypesConfig?.length) {
-            const boxes = poolInfo.boxTypesConfig.map((b: any, subBoxId: number) => ({ ...b, subBoxId }))
-            setSelectBoxType(boxes[0])
-            // setSubBoxes(boxes)
-        }
-    }, [poolInfo])
-
-    const [openModalPlaceBidBox, setOpenModalPlaceBidBox] = useState(false)
-    const [openModalTx, setOpenModalTx] = useState(false)
-    const onShowModalPlaceBidBox = () => {
-        setOpenModalPlaceBidBox(true)
+      }
+      getLastBidder()
     }
-    const onCloseModalPlaceBidBox = useCallback(() => {
-        setOpenModalPlaceBidBox(false)
-    }, [])
+  }, [contractAuctionPool, resetLastBidder])
 
-    const { auctionBox, auctionLoading, auctionSuccess, auctionTxHash } = useAuctionBox({
-        poolId: poolInfo.id,
-        poolAddress: poolInfo.campaign_hash,
-        currencyInfo: currencyPool,
-        subBoxId: boxTypeSelected?.subBoxId as number
-    })
-
-    useEffect(() => {
-        if (auctionTxHash) {
-            setOpenModalTx(true)
-        }
-    }, [auctionTxHash])
-    useEffect(() => {
-        if (auctionSuccess) {
-            onCloseModalPlaceBidBox()
-            setResetLastBidder(true)
-            getTotalBidHistories()
-        }
-    }, [auctionSuccess])
-
-    const onPlaceBid = useCallback(async (numberBox: number, captcha: string) => {
-        auctionBox(numberBox, captcha)
-    }, [poolInfo, connectedAccount, currencyPool])
-
-    const [isApprovedToken, setTokenApproved] = useState<boolean | null>(null);
-    const { approve, loading: loadingApproveToken } = useTokenApproval(currencyPool, poolInfo.campaign_hash);
-    const { allowance, load: getAllowance, loading: loadingAllowance } = useTokenAllowance(currencyPool, connectedAccount, poolInfo.campaign_hash, poolInfo.network_available);
-    useEffect(() => {
-        if (currencyPool && connectedAccount) {
-            getAllowance();
-        }
-    }, [getAllowance, currencyPool, connectedAccount]);
-    useEffect(() => {
-        if (!allowance) {
-            setTokenApproved(null)
-        } else {
-            setTokenApproved(!BigNumber.from(allowance).isZero());
-        }
-    }, [allowance]);
-    const handleApproveToken = async () => {
-        await approve(MAX_INT);
-        toast.success('Approve token succesfully');
-        setTokenApproved(true);
+  useEffect(() => {
+    if (contractAuctionPool) {
+      contractAuctionPool.minBidIncrementPerMile().then((num: any) => {
+        setRateEachBid(+(+num / 1000).toFixed(2) + '')
+      }).catch(err => {
+        console.debug(err)
+      })
     }
+  }, [contractAuctionPool])
 
-    const perPageBidHistory = 10
-    const [filterBidHistory, setFilterBidHistory] = useState<{ from?: number, page?: number, perPage: number }>({ perPage: perPageBidHistory, page: 1 })
-    const [bidHistores, setBidHistories] = useState<ObjectType<any>[]>([])
-    const [cachedSymbolCurrency, setCachedSymbolCurrency] = useState<ObjectType<string>>({})
-    const [totalBidHistories, setTotalBidHistories] = useState(0)
-    const [totalVolumeBid, setTotalTotalVolume] = useState('')
-    const [loadingGetBidHistory, setLoadingBidHistory] = useState(false)
-    useEffect(() => {
-        if (totalBidHistories) {
-            if (totalBidHistories <= perPageBidHistory) {
-                setFilterBidHistory({ from: 0, page: 1, perPage: perPageBidHistory })
+  // const [subBoxes, setSubBoxes] = useState<{ [k: string]: any }[]>([]);
+
+  useEffect(() => {
+    if (poolInfo && poolInfo.boxTypesConfig?.length) {
+      const boxes = poolInfo.boxTypesConfig.map((b: any, subBoxId: number) => ({ ...b, subBoxId }))
+      setSelectBoxType(boxes[0])
+      // setSubBoxes(boxes)
+    }
+  }, [poolInfo])
+
+  const [openModalPlaceBidBox, setOpenModalPlaceBidBox] = useState(false)
+  const [openModalTx, setOpenModalTx] = useState(false)
+  const onShowModalPlaceBidBox = () => {
+    setOpenModalPlaceBidBox(true)
+  }
+  const onCloseModalPlaceBidBox = useCallback(() => {
+    setOpenModalPlaceBidBox(false)
+  }, [])
+
+  const { auctionBox, auctionLoading, auctionSuccess, auctionTxHash } = useAuctionBox({
+    poolId: poolInfo.id,
+    poolAddress: poolInfo.campaign_hash,
+    currencyInfo: currencyPool,
+    subBoxId: boxTypeSelected?.subBoxId as number
+  })
+
+  useEffect(() => {
+    if (auctionTxHash) {
+      setOpenModalTx(true)
+    }
+  }, [auctionTxHash])
+  useEffect(() => {
+    if (auctionSuccess) {
+      onCloseModalPlaceBidBox()
+      setResetLastBidder(true)
+      getTotalBidHistories()
+    }
+  }, [auctionSuccess])
+
+  const onPlaceBid = useCallback(async (numberBox: number, captcha: string) => {
+    auctionBox(numberBox, captcha)
+  }, [poolInfo, connectedAccount, currencyPool])
+
+  const [isApprovedToken, setTokenApproved] = useState<boolean | null>(null)
+  const { approve, loading: loadingApproveToken } = useTokenApproval(currencyPool, poolInfo.campaign_hash)
+  const { allowance, load: getAllowance, loading: loadingAllowance } = useTokenAllowance(currencyPool, connectedAccount, poolInfo.campaign_hash, poolInfo.network_available)
+  useEffect(() => {
+    if (currencyPool && connectedAccount) {
+      getAllowance()
+    }
+  }, [getAllowance, currencyPool, connectedAccount])
+  useEffect(() => {
+    if (!allowance) {
+      setTokenApproved(null)
+    } else {
+      setTokenApproved(!BigNumber.from(allowance).isZero())
+    }
+  }, [allowance])
+  const handleApproveToken = async () => {
+    await approve(MAX_INT)
+    toast.success('Approve token succesfully')
+    setTokenApproved(true)
+  }
+
+  const perPageBidHistory = 10
+  const [filterBidHistory, setFilterBidHistory] = useState<{ from?: number, page?: number, perPage: number }>({ perPage: perPageBidHistory, page: 1 })
+  const [bidHistores, setBidHistories] = useState<ObjectType<any>[]>([])
+  const [cachedSymbolCurrency, setCachedSymbolCurrency] = useState<ObjectType<string>>({})
+  const [totalBidHistories, setTotalBidHistories] = useState(0)
+  const [totalVolumeBid, setTotalTotalVolume] = useState('')
+  const [loadingGetBidHistory, setLoadingBidHistory] = useState(false)
+  useEffect(() => {
+    if (totalBidHistories) {
+      if (totalBidHistories <= perPageBidHistory) {
+        setFilterBidHistory({ from: 0, page: 1, perPage: perPageBidHistory })
+      } else {
+        setFilterBidHistory({ from: totalBidHistories - perPageBidHistory, page: 1, perPage: perPageBidHistory })
+      }
+    }
+  }, [totalBidHistories])
+  const getListBidHistories = async () => {
+    try {
+      if (!filterBidHistory) return
+      setLoadingBidHistory(true)
+      const result = await contractAuctionPool.bidHistory(filterBidHistory.from, filterBidHistory.perPage)
+      const leng = result[0].length
+      const arr: ObjectType<any>[] = []
+      const keys = ['address', 'currency', 'amount', 'created_at']
+      for (let i = leng - 1; i >= 0; i--) {
+        const obj: ObjectType<any> = {}
+        for (const prop in result) {
+          obj[keys[prop as unknown as number]] = result[prop][i].toString()
+          if (+prop === 1) {
+            if (!cachedSymbolCurrency[obj.currency]) {
+              const networkInfo = getNetworkByAlias(poolInfo.network_available)
+              try {
+                const contractToken = new Contract(obj.currency, Erc20Abi, libraryDefaultTemporary)
+                const symbol = await contractToken.symbol()
+                obj.symbol = symbol
+                setCachedSymbolCurrency(s => ({ ...s, [obj.currency]: symbol }))
+              } catch (error) {
+              }
             } else {
-                setFilterBidHistory({ from: totalBidHistories - perPageBidHistory, page: 1, perPage: perPageBidHistory })
+              obj.symbol = cachedSymbolCurrency[obj.currency]
             }
+          }
         }
-    }, [totalBidHistories])
-    const getListBidHistories = async () => {
-        try {
-            if (!filterBidHistory) return
-            setLoadingBidHistory(true)
-            const result = await contractAuctionPool.bidHistory(filterBidHistory.from, filterBidHistory.perPage)
-            const leng = result[0].length
-            const arr: ObjectType<any>[] = []
-            const keys = ['address', 'currency', 'amount', 'created_at']
-            for (let i = leng - 1; i >= 0; i--) {
-                const obj: ObjectType<any> = {}
-                for (const prop in result) {
-                    obj[keys[prop as unknown as number]] = result[prop][i].toString()
-                    if (+prop === 1) {
-                        if (!cachedSymbolCurrency[obj.currency]) {
-                            const networkInfo = getNetworkByAlias(poolInfo.network_available)
-                            try {
-                                const contractToken = new Contract(obj.currency, Erc20Abi, libraryDefaultTemporary);
-                                const symbol = await contractToken.symbol();
-                                obj.symbol = symbol
-                                setCachedSymbolCurrency(s => ({ ...s, [obj.currency]: symbol }))
-                            } catch (error) {
-                            }
-                        } else {
-                            obj.symbol = cachedSymbolCurrency[obj.currency]
-                        }
-                    }
-                }
-                arr.push(obj)
-            }
-            setBidHistories(arr)
-            setLoadingBidHistory(false)
-        } catch (error) {
-            console.log('error', error)
-            setLoadingBidHistory(false)
-        }
+        arr.push(obj)
+      }
+      setBidHistories(arr)
+      setLoadingBidHistory(false)
+    } catch (error) {
+      console.log('error', error)
+      setLoadingBidHistory(false)
     }
-    useEffect(() => {
-        if (!contractAuctionPool || !poolInfo || !filterBidHistory.hasOwnProperty('from')) return
-        getListBidHistories()
-    }, [contractAuctionPool, filterBidHistory, poolInfo])
+  }
+  useEffect(() => {
+    if (!contractAuctionPool || !poolInfo || !filterBidHistory.hasOwnProperty('from')) return
+    getListBidHistories()
+  }, [contractAuctionPool, filterBidHistory, poolInfo])
 
-    const getTotalBidHistories = async () => {
-        try {
-            const totalNumberBid = await contractAuctionPool.numberOfBid()
-            setTotalBidHistories(+totalNumberBid)
-            const totalVolume = await contractAuctionPool.totalBid()
-            setTotalTotalVolume(utils.formatEther(totalVolume))
-        } catch (error) {
-            console.log('error', error)
-        }
+  const getTotalBidHistories = async () => {
+    try {
+      const totalNumberBid = await contractAuctionPool.numberOfBid()
+      setTotalBidHistories(+totalNumberBid)
+      const totalVolume = await contractAuctionPool.totalBid()
+      setTotalTotalVolume(utils.formatEther(totalVolume))
+    } catch (error) {
+      console.log('error', error)
     }
-    useEffect(() => {
-        if (!contractAuctionPool || !poolInfo) return
-        getTotalBidHistories()
-    }, [contractAuctionPool, poolInfo])
+  }
+  useEffect(() => {
+    if (!contractAuctionPool || !poolInfo) return
+    getTotalBidHistories()
+  }, [contractAuctionPool, poolInfo])
 
-    const onChangePageBidHistory = (page: number) => {
-        if (filterBidHistory?.page === page) return
-        let from = totalBidHistories - (perPageBidHistory * page)
-        let perPage = perPageBidHistory
-        if (from < 0) {
-            perPage = perPage + from
-            from = 0
-        }
-        setFilterBidHistory({ page, from, perPage })
+  const onChangePageBidHistory = (page: number) => {
+    if (filterBidHistory?.page === page) return
+    let from = totalBidHistories - (perPageBidHistory * page)
+    let perPage = perPageBidHistory
+    if (from < 0) {
+      perPage = perPage + from
+      from = 0
     }
-    const showTypes = { table: 'table', grid: 'grid' };
-    const [showTypeSerieContent, setShowTypeSerieContent] = useState<typeof showTypes[keyof typeof showTypes]>(showTypes.table);
-    const onSelectShowSerieContent = (type: typeof showTypes[keyof typeof showTypes]) => {
-        setShowTypeSerieContent(type);
-    }
-    const disabledBuyNow = !allowNetwork.ok || !isKYC || loadingAllowance || auctionLoading || !connectedAccount || tiersState?.state?.loading || !isNumber(tiersState?.state?.data?.tier) || (poolInfo?.min_tier > 0 && (tiersState?.state?.data?.tier < poolInfo.min_tier))
-    const isShowBtnApprove = allowNetwork.ok && countdown?.isAuction && connectedAccount && isApprovedToken !== null && !isApprovedToken && currencyPool?.neededApprove
-    const isShowBtnBuy = connectedAccount && !checkingKyc && countdown.isAuction && isApprovedToken
-    const getRules = (rule = '') => {
-        if (typeof rule !== 'string') return []
-        return rule.split('\n').filter((r) => r.trim())
-    }
-    const [currentTab, setCurrentTab] = useState(0)
-    const onChangeTab = (val: any) => {
-        setCurrentTab(val)
-    }
-    return (
+    setFilterBidHistory({ page, from, perPage })
+  }
+  const showTypes = { table: 'table', grid: 'grid' }
+  const [showTypeSerieContent, setShowTypeSerieContent] = useState<typeof showTypes[keyof typeof showTypes]>(showTypes.table)
+  const onSelectShowSerieContent = (type: typeof showTypes[keyof typeof showTypes]) => {
+    setShowTypeSerieContent(type)
+  }
+  const disabledBuyNow = !allowNetwork.ok || !isKYC || loadingAllowance || auctionLoading || !connectedAccount || tiersState?.state?.loading || !isNumber(tiersState?.state?.data?.tier) || (poolInfo?.min_tier > 0 && (tiersState?.state?.data?.tier < poolInfo.min_tier))
+  const isShowBtnApprove = allowNetwork.ok && countdown?.isAuction && connectedAccount && isApprovedToken !== null && !isApprovedToken && currencyPool?.neededApprove
+  const isShowBtnBuy = connectedAccount && !checkingKyc && countdown.isAuction && isApprovedToken
+  const getRules = (rule = '') => {
+    if (typeof rule !== 'string') return []
+    return rule.split('\n').filter((r) => r.trim())
+  }
+  const [currentTab, setCurrentTab] = useState(0)
+  const onChangeTab = (val: any) => {
+    setCurrentTab(val)
+  }
+  return (
         <>
             <DialogTxSubmitted
                 transaction={auctionTxHash}
@@ -438,10 +437,10 @@ const AuctionDetail = ({ poolInfo }: any) => {
                 footerContent={<>
                     <Tabs
                         titles={[
-                            'Rule Introduction',
-                            'Box Infomation',
-                            'Series Content',
-                            'Bid History'
+                          'Rule Introduction',
+                          'Box Infomation',
+                          'Series Content',
+                          'Bid History'
                         ]}
                         currentValue={currentTab}
                         onChange={onChangeTab}
@@ -498,10 +497,10 @@ const AuctionDetail = ({ poolInfo }: any) => {
                                 <div className="view-mode flex gap-5" style={{ position: 'absolute', right: '15px', top: '18px' }}>
                                     <span>View</span>
                                     <span className="cursor-pointer">
-                                        <BulletListIcon color={showTypeSerieContent === showTypes.table ? "#6CDB00" : "#6C6D71"} className="pointer" onClick={() => onSelectShowSerieContent(showTypes.table)} />
+                                        <BulletListIcon color={showTypeSerieContent === showTypes.table ? '#6CDB00' : '#6C6D71'} className="pointer" onClick={() => onSelectShowSerieContent(showTypes.table)} />
                                     </span>
                                     <span className="cursor-pointer">
-                                        <GridIcon color={showTypeSerieContent === showTypes.grid ? "#6CDB00" : "#6C6D71"} className="pointer" onClick={() => onSelectShowSerieContent(showTypes.grid)} />
+                                        <GridIcon color={showTypeSerieContent === showTypes.grid ? '#6CDB00' : '#6C6D71'} className="pointer" onClick={() => onSelectShowSerieContent(showTypes.grid)} />
                                     </span>
                                 </div>
                                 <div className="mb-3">
@@ -543,8 +542,8 @@ const AuctionDetail = ({ poolInfo }: any) => {
                                                                 <span
                                                                     className="break-words break-all text-ellipsis overflow-hidden text-sm"
                                                                     style={{
-                                                                        WebkitLineClamp: 2,
-                                                                        WebkitBoxOrient: 'vertical',
+                                                                      WebkitLineClamp: 2,
+                                                                      WebkitBoxOrient: 'vertical'
                                                                     }}>
                                                                     {b.description} Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy ...
                                                                 </span>
@@ -628,7 +627,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
                 </>}
             />
         </>
-    )
+  )
 }
 
 export default AuctionDetail

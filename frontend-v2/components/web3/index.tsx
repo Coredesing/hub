@@ -380,8 +380,8 @@ export function getNetworkByAlias (alias: string): Network | null {
 }
 
 export const getTXLink = (networkName: string, txHash: string) => {
-  const info = getNetworkByAlias(networkName);
-  if(!info) return '';
-  const explorerUrl = info.blockExplorerUrls[0];
-  return `${explorerUrl}/tx/${txHash}`;
-};
+  const info = getNetworkByAlias(networkName)
+  if (!info) return ''
+  const explorerUrl = info.blockExplorerUrls[0]
+  return `${explorerUrl}/tx/${txHash}`
+}

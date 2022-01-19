@@ -92,9 +92,9 @@ export const useAxiosFetch = (url: string, timeout?: number) => {
 }
 
 export const isMysteryBox = (type: string) => {
-  return type === 'box';
+  return type === 'box'
 }
 
 export const isAuctionBox = (type: string) => {
-  return type === 'only-auction';
+  return type === 'only-auction'
 }

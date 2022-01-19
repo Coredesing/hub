@@ -209,19 +209,19 @@ export type Token = {
   address?: string
 }
 
-const ETH: Token = {
+export const ETH: Token = {
   name: 'Ether',
   symbol: 'ETH',
   decimals: 18
 }
 
-const MATIC: Token = {
+export const MATIC: Token = {
   name: 'Matic',
   symbol: 'MATIC',
   decimals: 18
 }
 
-const BNB: Token = {
+export const BNB: Token = {
   name: 'Binance Coin',
   symbol: 'BNB',
   decimals: 18
@@ -234,14 +234,28 @@ export const GAFI: Token = {
   address: TOKEN_CONTRACT
 }
 
-export const BUSD: Token = {
+export const BUSD_BSC: Token = {
   name: 'BUSD',
   symbol: 'BUSD',
   decimals: 18,
-  address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56'
+  address: IS_TESTNET ? process.env.NEXT_PUBLIC_BUSD_56 : process.env.NEXT_PUBLIC_BUSD_97
 }
 
-const currencies = [ETH, MATIC, BNB, BUSD]
+export const USDT_ERC: Token = {
+  name: 'USDT',
+  symbol: 'USDT',
+  decimals: 6,
+  address: IS_TESTNET ? process.env.NEXT_PUBLIC_USDT_5 : process.env.NEXT_PUBLIC_USDT_1
+}
+
+export const USDT_POLYGON: Token = {
+  name: 'USDT',
+  symbol: 'USDT',
+  decimals: 6,
+  address: IS_TESTNET ? process.env.NEXT_PUBLIC_USDT_80001 : process.env.NEXT_PUBLIC_USDT_137
+}
+
+const currencies = [ETH, MATIC, BNB, USDT_ERC, USDT_POLYGON, BUSD_BSC]
 
 export type Network = {
   id: number

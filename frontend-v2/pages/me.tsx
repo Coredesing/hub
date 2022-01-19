@@ -5,7 +5,7 @@ import { useMyWeb3 } from 'components/web3/context'
 import { shorten } from 'components/Base/WalletConnector'
 import { utils, Contract, constants } from 'ethers'
 
-import { useTokenAllowance, useTokenApproval } from 'components/web3/utils'
+import { useTokenAllowance, useTokenApproval, useBalanceToken } from 'components/web3/utils'
 
 function ChainID ({ default: isDefault }: { default?: boolean }) {
   const { network, chainID } = useMyWeb3()
@@ -34,15 +34,7 @@ function Account () {
 }
 
 function Balance () {
-  const { balance, updateBalance } = useMyWeb3()
-
-  const balanceShort = useMemo(() => {
-    if (!balance) {
-      return '0'
-    }
-
-    return parseFloat(utils.formatEther(balance)).toFixed(4)
-  }, [balance])
+  const { balance, balanceShort, updateBalance } = useMyWeb3()
 
   return (
     <div>
@@ -54,70 +46,11 @@ function Balance () {
 }
 
 function BalanceGAFI () {
-  const { library } = useWeb3Default()
-  const { account } = useMyWeb3()
-
-  const [balance, setBalance] = useState()
-  const balanceShort = useMemo(() => {
-    if (!balance) {
-      return '0'
-    }
-
-    return parseFloat(utils.formatEther(balance)).toFixed(4)
-  }, [balance])
-
-  useEffect((): any => {
-    if (!account || !library) {
-      return
-    }
-
-    let stale = false
-    const contractGAFIReadOnly = new Contract(TOKEN_CONTRACT, [{
-      constant: true,
-      inputs: [
-        {
-          name: '_owner',
-          type: 'address'
-        }
-      ],
-      name: 'balanceOf',
-      outputs: [
-        {
-          name: 'balance',
-          type: 'uint256'
-        }
-      ],
-      payable: false,
-      stateMutability: 'view',
-      type: 'function'
-    }], library)
-
-    contractGAFIReadOnly
-      .balanceOf(account)
-      .then((balance: any) => {
-        if (stale) {
-          return
-        }
-
-        setBalance(balance)
-      })
-      .catch(() => {
-        if (stale) {
-          return
-        }
-
-        setBalance(null)
-      })
-
-    return () => {
-      stale = true
-      setBalance(undefined)
-    }
-  }, [account, library])
+  const { balance, balanceShort } = useBalanceToken(GAFI)
 
   return (
     <div>
-      <span className="block">Balance $GAFI</span>
+      <span className="block">Balance ${GAFI.symbol}</span>
       <span>{balance === null ? 'N/A' : balanceShort}</span>
     </div>
   )

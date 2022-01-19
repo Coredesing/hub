@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import AuctionPoolAbi from '@/abi/AuctionPool.json';
+import AuctionPoolAbi from 'components/web3/abis/AuctionPool.json';
 import BN from 'bignumber.js';
 import { ObjectType } from '@/common/types';
 import { utils, Contract } from 'ethers';

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FormInputNumber } from '@/components/Base/FormInputNumber'
-import Erc20Json from '@/abi/Erc20.json'
+import Erc20Json from 'components/web3/abis/ERC20.json'
 import ButtonBase from '@/components/Base/Buttons/ButtonBase'
 import Recaptcha from '@/components/Base/Recaptcha'
 import { debounce } from '@/utils/index'

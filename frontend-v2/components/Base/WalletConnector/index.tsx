@@ -39,7 +39,32 @@ const WalletConnector = () => {
   const contextWeb3App = useMyWeb3()
 
   const { library, chainId: _chainID, account: _account, activate, deactivate, active, error: _error } = contextWeb3
-  const { network, account, balance, currencyNative, triedEager, dispatch } = contextWeb3App
+  const { network, account, balance, currencyNative, dispatch } = contextWeb3App
+
+  useEffect(() => {
+    dispatch({
+      type: 'SET_CHAINID',
+      payload: { chainID: _chainID }
+    })
+  }, [_chainID, dispatch])
+
+  useEffect(() => {
+    dispatch({
+      type: 'SET_ACCOUNT',
+      payload: { account: _account }
+    })
+
+    if (_account) {
+      activated(_account)
+    }
+  }, [_account, dispatch])
+
+  useEffect(() => {
+    dispatch({
+      type: 'SET_LIBRARY',
+      payload: { library }
+    })
+  }, [library, dispatch])
 
   const [agreed, setAgreed] = useState(false)
   function handleAgreement (event: ChangeEvent<HTMLInputElement>) {
@@ -93,6 +118,7 @@ const WalletConnector = () => {
     } catch (err) {
       console.debug(err)
     } finally {
+      setShowModal(false)
       setActivating(false)
       setConnectorChosen(undefined)
     }
@@ -140,26 +166,6 @@ const WalletConnector = () => {
 
     setWalletChosen(undefined)
   }, [networkChosen, dispatch])
-
-  // sync auth from current context -> app context only when eager attempts made
-  useEffect(() => {
-    if (!triedEager) {
-      return
-    }
-
-    if (active) {
-      dispatch({
-        type: 'INIT',
-        payload: {
-          chainID: _chainID,
-          account: _account,
-          library: library
-        }
-      })
-      setShowModal(false)
-      activated(_account)
-    }
-  }, [active, _chainID, _account, library, triedEager, dispatch])
 
   const accountShort = useMemo(() => {
     if (!active || !account) {

@@ -90,9 +90,20 @@ export function useMyWeb3 (): Context {
 
 function reducer (state: Context, { type, payload }: Action<Context>): Context {
   switch (type) {
-    case 'INIT': {
-      const { library, chainID, account, error } = payload
-      return { ...state, library, chainID, account, error }
+    case 'SET_LIBRARY': {
+      const { library } = payload
+      return {
+        ...state,
+        library
+      }
+    }
+
+    case 'SET_ACCOUNT': {
+      const { account } = payload
+      return {
+        ...state,
+        account
+      }
     }
 
     case 'SET_CHAINID': {

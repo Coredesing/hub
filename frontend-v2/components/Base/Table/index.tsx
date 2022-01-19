@@ -25,7 +25,7 @@ export const TableCellHead = (props: any) => {
 }
 
 export const TableCell = (props: any) => {
-    return <td className={clsx('py-3 px-4 text-left text-lg font-casual', styles['table-cell'])}>{props.children}</td>
+    return <td className={clsx('py-3 px-4 text-left text-sm font-casual', styles['table-cell'])}>{props.children}</td>
 }
 
 export const TableHead = (props: any) => {

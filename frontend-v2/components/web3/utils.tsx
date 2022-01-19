@@ -131,8 +131,8 @@ export const useLibraryDefaultFlexible = (networkAlias?: string) => {
   }
 }
 
-export const useBalanceToken = (token?: Token) => {
-  const { library } = useWeb3Default()
+export const useBalanceToken = (token?: Token, networkAlias?: string) => {
+  const { provider } = useLibraryDefaultFlexible(networkAlias)
   const { account } = useMyWeb3()
 
   const [balance, setBalance] = useState()
@@ -146,13 +146,13 @@ export const useBalanceToken = (token?: Token) => {
   }, [balance])
 
   useEffect((): any => {
-    if (!account || !library || !token?.address) {
+    if (!account || !provider || !token?.address) {
       setBalance(null)
       return
     }
 
     let stale = false
-    const contractReadOnly = new Contract(token.address, ERC20, library)
+    const contractReadOnly = new Contract(token.address, ERC20, provider)
 
     setLoading(true)
     contractReadOnly
@@ -179,7 +179,7 @@ export const useBalanceToken = (token?: Token) => {
       stale = true
       setBalance(null)
     }
-  }, [account, library, token])
+  }, [account, provider, token])
 
   return {
     balance,

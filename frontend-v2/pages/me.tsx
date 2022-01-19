@@ -1,10 +1,11 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import Layout from 'components/Layout'
-import { useWeb3Default, TOKEN_CONTRACT } from 'components/web3'
+import { useWeb3Default, TOKEN_CONTRACT, STAKING_CONTRACT, GAFI } from 'components/web3'
 import { useMyWeb3 } from 'components/web3/context'
 import { shorten } from 'components/Base/WalletConnector'
-import { formatEther } from '@ethersproject/units'
-import { Contract } from '@ethersproject/contracts'
+import { utils, Contract, constants } from 'ethers'
+
+import { useTokenAllowance, useTokenApproval } from 'components/web3/utils'
 
 function ChainID ({ default: isDefault }: { default?: boolean }) {
   const { network, chainID } = useMyWeb3()
@@ -33,14 +34,14 @@ function Account () {
 }
 
 function Balance () {
-  const { account, library, chainID, balance, updateBalance } = useMyWeb3()
+  const { balance, updateBalance } = useMyWeb3()
 
   const balanceShort = useMemo(() => {
     if (!balance) {
       return '0'
     }
 
-    return parseFloat(formatEther(balance)).toFixed(4)
+    return parseFloat(utils.formatEther(balance)).toFixed(4)
   }, [balance])
 
   return (
@@ -62,7 +63,7 @@ function BalanceGAFI () {
       return '0'
     }
 
-    return parseFloat(formatEther(balance)).toFixed(4)
+    return parseFloat(utils.formatEther(balance)).toFixed(4)
   }, [balance])
 
   useEffect((): any => {
@@ -122,11 +123,47 @@ function BalanceGAFI () {
   )
 }
 
+function Allowance () {
+  const { account } = useMyWeb3()
+  const { allowance, load, loading, error } = useTokenAllowance(GAFI, account, STAKING_CONTRACT)
+  const { approve, loading: loadingApproval, error: errorApproval } = useTokenApproval(GAFI, STAKING_CONTRACT)
+  useEffect(() => {
+    load().catch(err => {
+      console.debug(err)
+    })
+  }, [load])
+
+  const approveAndReload = useCallback((amount) => {
+    approve(amount).finally(() => {
+      load().catch(err => {
+        console.debug(err)
+      })
+    })
+  }, [load, approve])
+
+  const isMax = useMemo(() => {
+    return allowance && allowance.eq(constants.MaxUint256)
+  }, [allowance])
+  return <div>
+    <div>
+      Allowance of GAFI on BSC (mainnet/testnet): { loading ? 'Loading...' : null }
+      { !loading && <>
+        <p>{allowance && allowance.toString()}</p>
+        { error ? <p>Allowance Error: {error.message}</p> : null }
+        { !loadingApproval && errorApproval ? <p>Approval Error: {errorApproval.message}</p> : null }
+        { isMax && <button className="border bg-gray-500 px-2" onClick={() => approveAndReload(0)}>{ loadingApproval ? 'Approving...' : 'Revoke' }</button> }
+        { !isMax && <button className="border bg-gray-500 px-2" onClick={() => approveAndReload(constants.MaxUint256)}>{ loadingApproval ? 'Approving...' : 'Approve' }</button> }
+        </>
+      }
+    </div>
+  </div>
+}
+
 const MyAccount = () => (
   <Layout title="MyAccount">
-    <div className="md:px-4 lg:px-16 md:container mx-auto lg:block">
-      <h1>MyAccount</h1>
-      <p className="mb-6">This is the demonstration of interation with the contract</p>
+    <div className="md:px-4 lg:px-16 md:container mx-auto lg:block mb-6">
+      <h2 className="text-2xl font-bold">MyAccount</h2>
+      <p className="mb-6">Current Network & Account</p>
 
       <div className="flex w-full justify-between">
         <ChainID />
@@ -137,6 +174,15 @@ const MyAccount = () => (
 
       <div className="flex w-full justify-between mt-6">
         <ChainID default={true} />
+      </div>
+    </div>
+
+    <div className="md:px-4 lg:px-16 md:container mx-auto lg:block">
+      <h2 className="text-2xl font-bold">Staking</h2>
+      <p className="mb-6">GAFI Staking</p>
+
+      <div className="flex w-full justify-between">
+        <Allowance />
       </div>
     </div>
   </Layout>

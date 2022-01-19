@@ -2,7 +2,7 @@ import { useWeb3React, createWeb3ReactRoot } from '@web3-react/core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { Web3Provider } from '@ethersproject/providers'
 import React, { ReactNode, useEffect, useState } from 'react'
-import { network, injected, walletconnect, POLLING_INTERVAL, RPC_URLS } from './connectors'
+import { network, injected, walletconnect, POLLING_INTERVAL, RPC_URLS, IS_TESTNET } from './connectors'
 import type { AddEthereumChainParameter } from '@web3-react/metamask'
 
 export { NoEthereumProviderError } from '@web3-react/injected-connector'
@@ -13,6 +13,8 @@ export function getLibrary (provider: any): Web3Provider {
 }
 export const DEFAULT_WEB3 = 'NETWORK'
 export const DEFAULT_CONNECTOR = network
+export const TOKEN_CONTRACT = IS_TESTNET ? process.env.NEXT_PUBLIC_TOKEN_CONTRACT_97 : process.env.NEXT_PUBLIC_TOKEN_CONTRACT_56
+
 export function useWeb3Default () {
   return useWeb3React<Web3Provider>(DEFAULT_WEB3)
 }
@@ -24,6 +26,9 @@ export interface ProviderRpcError extends Error {
 
 const DEACTIVATION_PERSISTENCE_KEY = 'WEB3_DEACTIVATION'
 
+function parseChainId (chainId: string) {
+  return Number.parseInt(chainId, 16)
+}
 export function switchNetwork (provider: any, chainId: number) {
   return provider.request({ method: 'eth_chainId' })
     .then((_chainId) => {
@@ -157,7 +162,7 @@ function isSignedOut (account) {
   return false
 }
 
-const DefaultConnector = ({ children }) => {
+export const DefaultConnector = ({ children }) => {
   const contextDefault = useWeb3Default()
   const { active: activeDefault, activate: activateDefault } = contextDefault
   useEffect(() => {
@@ -176,35 +181,23 @@ interface PropsType {
   getLibrary (provider: any): Web3Provider
 }
 
-export class ErrorBoundaryWeb3ProviderNetwork extends React.Component<PropsType, { error: Error | undefined }> {
-  constructor (props) {
-    super(props)
-    this.state = {
-      error: null
-    }
-  }
+let Web3ReactProviderDefault
 
-  static getDerivedStateFromError (error) {
-    return { error }
-  }
-
+export class Web3ProviderNetwork extends React.Component<PropsType> {
   render () {
-    if (this.state.error) {
-      return <>{this.state.error.message}</>
-    }
-
-    let Web3ReactProviderDefault
     try {
-      Web3ReactProviderDefault = createWeb3ReactRoot(DEFAULT_WEB3)
-    } catch (e) {
-      return <>{this.props.children}</>
-    }
+      if (!Web3ReactProviderDefault) {
+        Web3ReactProviderDefault = createWeb3ReactRoot(DEFAULT_WEB3)
+      }
 
-    return <Web3ReactProviderDefault getLibrary={this.props.getLibrary}>
-      <DefaultConnector>
-        {this.props.children}
-      </DefaultConnector>
-    </Web3ReactProviderDefault>
+      return <Web3ReactProviderDefault getLibrary={this.props.getLibrary}>
+        <DefaultConnector>
+          {this.props.children}
+        </DefaultConnector>
+      </Web3ReactProviderDefault>
+    } catch (e) {
+      return this.props.children
+    }
   }
 }
 
@@ -231,6 +224,7 @@ const currencies = [ETH, MATIC, BNB]
 export type Network = {
   id: number
   name: string
+  alias: string
   currency: string
   blockExplorerUrls: string[]
   image: any
@@ -241,27 +235,60 @@ export type Network = {
 export const networks = [{
   id: 1,
   name: 'Ethereum',
+  alias: 'eth',
   currency: ETH.symbol,
-  blockExplorerUrls: ['https://etherscan.com'],
+  blockExplorerUrls: ['https://etherscan.io'],
   image: require('assets/images/icons/ethereum.svg'),
   color: '#546BC7',
   colorText: '#fff'
 }, {
+  id: 5,
+  name: 'Goerli',
+  alias: 'eth',
+  currency: ETH.symbol,
+  blockExplorerUrls: ['https://goerli.etherscan.io'],
+  image: require('assets/images/icons/ethereum.svg'),
+  color: '#546BC7',
+  colorText: '#fff',
+  testnet: true
+}, {
   id: 56,
   name: 'BSC',
+  alias: 'bsc',
   currency: BNB.symbol,
   blockExplorerUrls: ['https://bscscan.com'],
   image: require('assets/images/icons/bsc.svg'),
   color: '#FFC700',
   colorText: '#28282E'
 }, {
+  id: 97,
+  name: 'BSC Testnet',
+  alias: 'bsc',
+  currency: BNB.symbol,
+  blockExplorerUrls: ['https://testnet.bscscan.com'],
+  image: require('assets/images/icons/bsc.svg'),
+  color: '#FFC700',
+  colorText: '#28282E',
+  testnet: true
+}, {
   id: 137,
   name: 'Polygon',
+  alias: 'polygon',
   currency: MATIC.symbol,
   blockExplorerUrls: ['https://polygonscan.com'],
   image: require('assets/images/icons/polygon.svg'),
   color: '#A06EF4',
   colorText: '#fff'
+}, {
+  id: 80001,
+  name: 'Polygon Testnet',
+  alias: 'polygon',
+  currency: MATIC.symbol,
+  blockExplorerUrls: ['https://mumbai.polygonscan.com'],
+  image: require('assets/images/icons/polygon.svg'),
+  color: '#A06EF4',
+  colorText: '#fff',
+  testnet: true
 }]
 
 interface Wallet {
@@ -274,17 +301,17 @@ interface Wallet {
 export const wallets: Wallet[] = [{
   id: 'metamask',
   name: 'MetaMask',
-  networks: [5, 56, 137],
+  networks: [1, 56, 137, 5, 97, 80001],
   image: require('assets/images/icons/metamask.svg')
 }, {
   id: 'bsc-wallet',
   name: 'BSC Wallet',
-  networks: [5, 56],
+  networks: [1, 56, 5, 97],
   image: require('assets/images/icons/bsc.svg')
 }, {
   id: 'walletconnect',
   name: 'WalletConnect',
-  networks: [5, 56, 137],
+  networks: [1, 56, 137, 5, 97, 80001],
   image: require('assets/images/icons/walletconnect.svg')
 }]
 
@@ -324,6 +351,15 @@ export function getAddChainParameters (chainId: number): AddEthereumChainParamet
   }
 }
 
-function parseChainId (chainId: string) {
-  return Number.parseInt(chainId, 16)
+export function getNetworkByAlias (alias: string): Network | null {
+  return networks.find(x => {
+    return (IS_TESTNET ? x.testnet : !x.testnet) && x.alias === alias
+  })
 }
+
+export const getTXLink = (networkName: string, txHash: string) => {
+  const info = getNetworkByAlias(networkName);
+  if(!info) return '';
+  const explorerUrl = info.blockExplorerUrls[0];
+  return `${explorerUrl}/tx/${txHash}`;
+};

@@ -1,23 +1,26 @@
 import React from 'react'
-import { RECAPTCHA_SITE_KEY } from '@/constants';
-import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { RECAPTCHA_SITE_KEY } from '@/constants'
+import HCaptcha from '@hcaptcha/react-hcaptcha'
 
 type Props = {
     className?: string,
     onChange?: ((token: string | null) => void) | undefined,
     [k: string]: any
 }
-export const Recaptcha = React.forwardRef(({ className, onChange, ...props }: Props, ref) => {
-    return (
-        RECAPTCHA_SITE_KEY ? <div className={className}>
+const Recaptcha = ({ className, onChange, ...props }: Props, ref) => {
+  return (
+    RECAPTCHA_SITE_KEY
+      ? <div className={className}>
             <HCaptcha
                 {...props}
                 sitekey={RECAPTCHA_SITE_KEY}
                 onVerify={onChange}
-                ref={ref as any}
+                ref={ref }
             > </HCaptcha>
-        </div> : null
-    )
-})
+        </div>
+      : null
+  )
+}
+export const _Recaptcha = React.forwardRef(Recaptcha)
 
-export default React.memo(Recaptcha);
+export default React.memo(_Recaptcha)

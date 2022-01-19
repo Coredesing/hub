@@ -1,5 +1,6 @@
-import { createContext, useContext, useReducer, useMemo } from 'react'
+import { createContext, useContext, useReducer, useMemo, useCallback } from 'react'
 import { networks, Network } from './index'
+import toast from 'react-hot-toast'
 
 export type Action<T> = {
   type: string
@@ -17,6 +18,7 @@ type Context = {
   currencyNative: string
   network: Network
   dispatch: (a: Action<Context>) => void
+  updateBalance: () => void
 }
 
 const Context = createContext<Context>(undefined)
@@ -32,7 +34,8 @@ export function MyWeb3Provider ({ children }) {
 
     currencyNative: '',
     network: null,
-    dispatch: () => {}
+    dispatch: () => {},
+    updateBalance: () => {}
   })
   const network = useMemo(() => {
     if (!state?.chainID) {
@@ -48,6 +51,19 @@ export function MyWeb3Provider ({ children }) {
 
     return network.currency
   }, [network])
+  const { library, account, chainID } = state
+  const updateBalance = useCallback(() => {
+    if (!library || !account || !chainID) {
+      dispatch({ type: 'UPDATE_BALANCE', payload: { balance: 0 } })
+      return
+    }
+
+    library.getBalance(account).then(balance => {
+      dispatch({ type: 'UPDATE_BALANCE', payload: { balance } })
+    }).catch(() => {
+      toast.error('Could not load user\'s balance')
+    })
+  }, [library, account, chainID, dispatch])
 
   return (
     <Context.Provider
@@ -55,6 +71,7 @@ export function MyWeb3Provider ({ children }) {
         ...state,
         currencyNative,
         network,
+        updateBalance,
         dispatch
       }}
     >

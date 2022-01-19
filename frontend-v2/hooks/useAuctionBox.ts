@@ -1,13 +1,13 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useWeb3React } from '@web3-react/core';
 import AuctionPoolAbi from '@/abi/AuctionPool.json';
-import { getContract } from '@/utils/web3';
 import BN from 'bignumber.js';
 import { ObjectType } from '@/common/types';
-import { utils } from 'ethers';
+import { utils, Contract } from 'ethers';
 import useApiBoxSignature from './useApiBoxSignature';
 import toast from 'react-hot-toast';
 import { handleErrMsg } from '@/utils/handleErrorContract';
+import { useWeb3Default } from 'components/web3';
+import { useMyWeb3 } from 'components/web3/context';
 
 type PoolDepositActionParams = {
     poolId?: number;
@@ -19,7 +19,7 @@ type PoolDepositActionParams = {
 }
 
 const useAuctionBox = ({ poolId, currencyInfo, poolAddress, subBoxId }: PoolDepositActionParams) => {
-    const { account, library } = useWeb3React();
+    const { library, account } = useMyWeb3()
     const { walletSignMessage, signature, setSignature, error } = useApiBoxSignature('/user/auction-box')
     const [amount, setAmount] = useState(0);
     const [auctionTxHash, setAuctionTxHash] = useState("");
@@ -31,7 +31,6 @@ const useAuctionBox = ({ poolId, currencyInfo, poolAddress, subBoxId }: PoolDepo
         setAuctionSuccess(false);
         // if (!amount) return dispatch(alertFailure("Amount must be greater than zero"));
         setAmount(amount);
-        debugger
         if (account && poolId && library) {
             try {
                 setAuctionLoading(true);
@@ -61,7 +60,7 @@ const useAuctionBox = ({ poolId, currencyInfo, poolAddress, subBoxId }: PoolDepo
         if (!signature || !auctionLoading || !currencyInfo) return;
         const handleAuctionBox = async () => {
             try {
-                const contract = getContract(poolAddress as string, AuctionPoolAbi, { accountSigner: account });
+                const contract = new Contract(poolAddress as string, AuctionPoolAbi, library);
                 const options: ObjectType = {};
                 if (new BN(currencyInfo.address as string).isZero()) {
                     options.value = utils.parseEther((new BN(amount)).toString())

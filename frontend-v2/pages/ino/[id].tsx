@@ -36,29 +36,19 @@ import PoolDetail from 'components/Base/PoolDetail'
 import DialogTxSubmitted from '@/components/Base/DialogTxSubmitted'
 import Pagination from '@/components/Base/Pagination'
 
-import { useWeb3Default, getNetworkByAlias } from 'components/web3'
-import { networkConnector } from 'components/web3/connectors'
+import { useLibraryDefaultFlexible } from 'components/web3/utils'
 import { Contract } from '@ethersproject/contracts'
-import { Web3Provider } from '@ethersproject/providers'
 
 const PageContent = ({ id, poolInfo, ...props }: any) => {
   const tiersState = useAppContext()?.tiers
   const { account: connectedAccount, chainID, network, ...context } = useMyWeb3()
-  const { library: libraryDefault, connector } = useWeb3Default()
   const [currencyPool, setCurrencyPool] = useState<TokenType & ObjectType<any> | undefined>()
   const [lastBidder, setLastBidder] = useState<null | { wallet: string, amount: string, currency: string }>(null)
   const [resetLastBidder, setResetLastBidder] = useState(true)
   const [rateEachBid, setRateEachBid] = useState<string>('')
 
-  // this is a hack because of temporary to avoid changing libraryDefault
-  const libraryDefaultTemporary = useMemo(() => {
-    const network = getNetworkByAlias(poolInfo?.network_available)
-    if (!network) {
-      return libraryDefault
-    }
+  const { provider: libraryDefaultTemporary } = useLibraryDefaultFlexible(poolInfo?.network_available)
 
-    return connector?.providers?.[network.id] ? new Web3Provider(connector.providers[network.id]) : libraryDefault
-  }, [libraryDefault, poolInfo, connector])
   const contractAuctionPool = useMemo(() => {
     if (!poolInfo?.campaign_hash || !libraryDefaultTemporary) {
       return
@@ -139,7 +129,7 @@ const PageContent = ({ id, poolInfo, ...props }: any) => {
       }
       handleSetToken()
     }
-  }, [poolInfo])
+  }, [poolInfo, contractToken])
 
   useEffect(() => {
     if (contractAuctionPool && resetLastBidder) {

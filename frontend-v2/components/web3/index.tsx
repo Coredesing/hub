@@ -14,6 +14,7 @@ export function getLibrary (provider: any): Web3Provider {
 export const DEFAULT_WEB3 = 'NETWORK'
 export const DEFAULT_CONNECTOR = network
 export const TOKEN_CONTRACT = IS_TESTNET ? process.env.NEXT_PUBLIC_TOKEN_CONTRACT_97 : process.env.NEXT_PUBLIC_TOKEN_CONTRACT_56
+export const STAKING_CONTRACT = IS_TESTNET ? process.env.NEXT_PUBLIC_STAKING_CONTRACT_97 : process.env.NEXT_PUBLIC_STAKING_CONTRACT_56
 
 export function useWeb3Default () {
   return useWeb3React<Web3Provider>(DEFAULT_WEB3)
@@ -201,25 +202,46 @@ export class Web3ProviderNetwork extends React.Component<PropsType> {
   }
 }
 
-const ETH: AddEthereumChainParameter['nativeCurrency'] = {
+export type Token = {
+  name: string
+  symbol: string
+  decimals: number
+  address?: string
+}
+
+const ETH: Token = {
   name: 'Ether',
   symbol: 'ETH',
   decimals: 18
 }
 
-const MATIC: AddEthereumChainParameter['nativeCurrency'] = {
+const MATIC: Token = {
   name: 'Matic',
   symbol: 'MATIC',
   decimals: 18
 }
 
-const BNB: AddEthereumChainParameter['nativeCurrency'] = {
+const BNB: Token = {
   name: 'Binance Coin',
   symbol: 'BNB',
   decimals: 18
 }
 
-const currencies = [ETH, MATIC, BNB]
+export const GAFI: Token = {
+  name: 'GameFi',
+  symbol: 'GAFI',
+  decimals: 18,
+  address: TOKEN_CONTRACT
+}
+
+export const BUSD: Token = {
+  name: 'BUSD',
+  symbol: 'BUSD',
+  decimals: 18,
+  address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56'
+}
+
+const currencies = [ETH, MATIC, BNB, BUSD]
 
 export type Network = {
   id: number
@@ -345,7 +367,7 @@ export function getAddChainParameters (chainId: number): AddEthereumChainParamet
   return {
     chainId,
     chainName: chain.name,
-    nativeCurrency,
+    nativeCurrency: (nativeCurrency as AddEthereumChainParameter['nativeCurrency']),
     rpcUrls: [RPC_URLS[chainId]],
     blockExplorerUrls: chain.blockExplorerUrls
   }

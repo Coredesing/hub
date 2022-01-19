@@ -9,6 +9,7 @@ const useGetPoolDetail = ({ id }: Props) => {
     const [loading, setLoading] = useState(true);
     const [poolInfo, setPoolInfo] = useState<null | ObjectType>(null);
     useEffect(() => {
+        if(!id) return;
         axios.get(`/pool/${id}`).then((res) => {
             const pool = res.data.data;
             setPoolInfo(pool);

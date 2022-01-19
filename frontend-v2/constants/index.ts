@@ -1,21 +1,4 @@
 export const MAX_INT = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
-export const POOL_STATUS = {
-    TBA: 0,
-    UPCOMING: 1,
-    JOINING: 2,
-    IN_PROGRESS: 3,
-    FILLED: 4,
-    CLOSED: 5,
-    CLAIMABLE: 6
-};
-export const POOL_STATUS_TEXT = {
-    [POOL_STATUS.TBA]: 'TBA',
-    [POOL_STATUS.UPCOMING]: 'Upcoming',
-    [POOL_STATUS.FILLED]: 'Filled',
-    [POOL_STATUS.IN_PROGRESS]: 'Swap',
-    [POOL_STATUS.CLAIMABLE]: 'Claimable',
-    [POOL_STATUS.CLOSED]: 'Ended',
-};
 
 export const POOL_TYPE = {
     PUBLIC: 0,
@@ -29,18 +12,6 @@ export const USER_STATUS = {
     ACTIVE: 1,
     BLOCKED: 2,
     DELETED: 3
-  };
-
-export const NETWORK = {
-    ETHEREUM: 'eth',
-    BSC: 'bsc',
-    POLYGON: 'polygon'
-};
-
-export const ACCEPT_CURRENCY = {
-    ETH: 'eth',
-    USDT: 'usdt',
-    USDC: 'usdc',
 };
 
 const tiers = ['Start', 'Rookie', 'Elite', 'Pro', 'Legend']
@@ -82,12 +53,6 @@ export const TIER_NAMES = {
     2: tiers[2],
     3: tiers[3],
     4: tiers[4],
-};
-
-export const NETWORK_AVAILABLE = {
-    ETH: 'eth',
-    BSC: 'bsc',
-    POLYGON: 'polygon'
 };
 
 export enum TOKEN_TYPE {

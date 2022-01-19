@@ -4,6 +4,6 @@ export const getTimelineOfPool = (pool: { [k: string]: any }) => {
     const startBuyTime = +pool.start_time * 1000;
     const startPreOrderTime = +pool.start_pre_order_time * 1000 || null;
     const freeBuyTime = +pool.freeBuyTimeSetting?.start_buy_time * 1000 || null;
-    const finishTime = +pool.finish_time * 1000;
+    const finishTime = +pool.finish_time * 1000 + Date.now();
     return { startJoinPooltime, endJoinPoolTime, startBuyTime, freeBuyTime, finishTime, startPreOrderTime }
 }

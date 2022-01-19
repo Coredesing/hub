@@ -1,5 +1,6 @@
 .carousel {
   overflow: hidden;
+  @apply relative;
 }
 
 .inner {
@@ -8,9 +9,6 @@
 }
 
 .swiperItem {
-  height: 200px;
   display: inline-flex;
-  align-items: center;
-  vertical-align: middle;
-  border: 1px solid #fff;
+  @apply w-full;
 }

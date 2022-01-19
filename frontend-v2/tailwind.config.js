@@ -15,7 +15,7 @@ module.exports = {
     },
     colors: {
       'gamefiDark': {
-        DEFAULT: '#15171E',
+        DEFAULT: '#13141f',
         '300': '#555d78',
         '400': '#4a5169',
         '500': '#40465a',

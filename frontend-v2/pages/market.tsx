@@ -24,7 +24,9 @@ const Market = () => (
       <div>
         <div className="md:px-4 lg:px-16 md:container mx-auto mt-20 pb-14">
           <ListSwiper showItemsNumber={4} step={4} transition='0.5s'>
-            <SwiperItem>1</SwiperItem>
+            <SwiperItem>
+              <div className="border border-gamefiGreen-50" style={{ height: '236px' }}>1</div>
+            </SwiperItem>
             <SwiperItem>2</SwiperItem>
             <SwiperItem>3</SwiperItem>
             <SwiperItem>4</SwiperItem>

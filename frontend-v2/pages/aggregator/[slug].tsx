@@ -2,16 +2,44 @@ import { fetchOneWithSlug } from 'pages/api/aggregator'
 import Layout from 'components/Layout'
 import { formatterUSD, formatPrice } from 'utils'
 import PriceChange from 'components/Pages/Aggregator/PriceChange'
+import Image from 'next/image'
+import { Carousel } from 'react-responsive-carousel'
+import 'react-responsive-carousel/lib/styles/carousel.min.css'
 
 const GameDetails = ({ data }) => {
   const roi = ((parseFloat(data.tokenomic?.price) || 0) / parseFloat(data.token_price)).toFixed(2)
-
+  const items = [data.screen_shots_1, data.screen_shots_2, data.screen_shots_3, data.screen_shots_4, data.screen_shots_5].filter(x => !!x)
   return (
     <Layout title={data.game_name}>
       <div className="md:px-4 lg:px-16 md:container mx-auto lg:block">
         <div className="uppercase font-bold text-3xl">{data.game_name}</div>
-        <div className="flex font-casual">
-          <div className="w-8/12">Left</div>
+        <div className="flex font-casual gap-10">
+          <div className="w-8/12 relative">
+            <Carousel
+              showStatus={false}
+              showIndicators={false}
+              showArrows={false}
+              autoPlay={true}
+              stopOnHover={true}
+              showThumbs={true}
+              thumbWidth={170}
+              swipeable={true}
+              infiniteLoop={true}
+              interval={3000}
+              renderThumbs={() => {
+                return items && items.length > 1 && items.map((item) => {
+                  return <img key={item} src={item} alt="img" />
+                })
+              }}
+            >
+              {items.map(item => (
+                <div key={item} className="px-px">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={item} className="w-full" style={{'aspect-ratio': '16/9'}}/>
+                </div>
+              ))}
+            </Carousel>
+          </div>
           <div className="w-4/12">
             <p className="text-sm mb-2">Current Price (% Chg 24H)</p>
             <div className="inline-flex items-center mb-8">
@@ -36,12 +64,12 @@ const GameDetails = ({ data }) => {
               <span className="font-medium text-base">{formatterUSD.format(data.tokenomic?.volume_24h)}</span>
             </div>
 
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between">
               <span className="text-sm text-gray-300">Fully Diluted Market Cap</span>
               <span className="font-medium text-base">{formatterUSD.format(data.tokenomic?.fully_diluted_market_cap)}</span>
             </div>
 
-            <div className="h-px bg-gradient-to-r from-gray-300 mb-4"></div>
+            <div className="h-px bg-gradient-to-r from-gray-300 my-8"></div>
 
             <div className="flex items-center justify-between mb-4">
               <span className="text-sm text-gray-300">Developer</span>
@@ -50,7 +78,7 @@ const GameDetails = ({ data }) => {
 
             <div className="flex items-center justify-between mb-4">
               <span className="text-sm text-gray-300 flex-none">Category</span>
-              <span className="font-medium text-base">{data.category.split(',').join(', ')}</span>
+              <span className="font-medium text-base truncate max-w-xs">{data.category.split(',').join(', ')}</span>
             </div>
 
             <div className="flex items-center justify-between mb-4">

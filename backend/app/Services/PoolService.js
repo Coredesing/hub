@@ -82,7 +82,7 @@ class PoolService {
     }
 
     if (params.process) {
-      builder = builder.where('process', params.process);
+      builder = builder.whereIn('process', params.process.split(','));
     }
 
     return builder;

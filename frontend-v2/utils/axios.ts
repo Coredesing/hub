@@ -8,10 +8,3 @@ const instance = axios.create({
 })
 
 export default instance;
-
-
-export const HeadersSignature = {
-    headers: {
-        msgSignature: process.env.NEXT_PUBLIC_MESSAGE_INVESTOR_SIGNATURE
-    }
-}

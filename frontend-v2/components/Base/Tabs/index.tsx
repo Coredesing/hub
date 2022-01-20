@@ -6,14 +6,8 @@ type TabsProps = {
     currentValue?: any;
     onChange?: (value: any) => void;
 }
-export const Tabs = (props: TabsProps) => {
-  const titles = [
-    'Rule Introduction',
-    'Box Infomation',
-    'Series Content',
-    'Bid History'
-  ]
-  return (
+export const Tabs = ({ titles, ...props }: TabsProps) => {
+    return (
         <div className='my-1 w-full'>
             <div className={styles.menus}>
                 {
@@ -26,7 +20,7 @@ export const Tabs = (props: TabsProps) => {
                 }
             </div>
         </div>
-  )
+    )
 }
 
 type TabPanelProps = {
@@ -35,7 +29,7 @@ type TabPanelProps = {
     children?: any;
 }
 export const TabPanel = (props: TabPanelProps) => {
-  return (
-    props.value === props.index ? <div>{props.children}</div> : <></>
-  )
+    return (
+        props.value === props.index ? <div>{props.children}</div> : <></>
+    )
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { caclDiffTime, formatNumber, getDiffTime } from '@/utils/index'
+import clsx from 'clsx';
 
 type TimeStamp = number;
 
@@ -21,6 +22,7 @@ type Props = {
     time: CountDownTimeType;
     onFinish?: () => void;
     title?: string;
+    background?: string;
     [k: string]: any;
 }
 
@@ -67,7 +69,7 @@ export const CountDownTimeV1 = (props: Props) => {
   }, [isFinish, onFinish])
 
   return (
-        <div className='w-full bg-black rounded'>
+        <div className={clsx('w-full rounded', props.background ? props.background : 'bg-black')}>
             {
                 props.title && <div className='font-bold text-sm text-white pt-1 text-center'>
                     {props.title}

@@ -9,6 +9,7 @@ type Props = {
     children: any,
     isLoading?: boolean,
     color?: 'grey' | 'green' | 'yellow' | 'disabled' | 'blue' | 'red',
+    notClipPath?:boolean,
     [k: string]: any
 }
 export const ButtonBase = ({
@@ -18,12 +19,14 @@ export const ButtonBase = ({
   className,
   isLoading,
   color = 'grey',
+  notClipPath,
   ...props
 }: Props) => {
   return (
         <button
             {...props}
             className={clsx(styles.base, (!disabled ? styles[color] : ''), className, {
+              [styles['clip-path-t-r']]: !notClipPath,
               [styles.disabled]: disabled
             })}
             onClick={onClick}

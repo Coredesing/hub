@@ -3,6 +3,7 @@ import Layout from 'components/Layout'
 import { GetStaticProps } from 'next'
 import useGetPoolDetail from '@/hooks/useGetPoolDetail'
 import AuctionDetail from 'components/Pages/INO/AuctionDetail'
+import MysteryBoxDetail from 'components/Pages/INO/MysteryBoxDetail'
 import { isAuctionBox, isMysteryBox } from 'components/Pages/INO/utils'
 
 const AuctionBox = (props: any) => {
@@ -12,8 +13,8 @@ const AuctionBox = (props: any) => {
     if (isAuctionBox(poolInfo.process)) {
       return <AuctionDetail poolInfo={poolInfo} />
     }
-    if (isMysteryBox(poolInfo.process)) {
-      return <AuctionDetail poolInfo={poolInfo} />
+    if (isMysteryBox(poolInfo.token_type)) {
+      return <MysteryBoxDetail poolInfo={poolInfo} />
     }
   }
   return <Layout title="GameFi Aggregator">

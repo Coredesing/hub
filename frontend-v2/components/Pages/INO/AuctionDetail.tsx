@@ -294,6 +294,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
   const onSelectShowSerieContent = (type: typeof showTypes[keyof typeof showTypes]) => {
     setShowTypeSerieContent(type)
   }
+  console.log('auctionLoading', allowNetwork)
   const disabledBuyNow = !allowNetwork.ok || !isKYC || loadingAllowance || auctionLoading || !connectedAccount || tiersState?.state?.loading || !isNumber(tiersState?.state?.data?.tier) || (poolInfo?.min_tier > 0 && (tiersState?.state?.data?.tier < poolInfo.min_tier))
   const isShowBtnApprove = allowNetwork.ok && countdown?.isAuction && connectedAccount && isApprovedToken !== null && !isApprovedToken && currencyPool?.neededApprove
   const isShowBtnBuy = connectedAccount && !checkingKyc && countdown.isAuction && isApprovedToken

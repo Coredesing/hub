@@ -44,3 +44,8 @@
     background: #F24B4B !important;
     color: #fff;
 }
+
+.clip-path-t-r {
+    -webkit-clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%, 0 0);
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%, 0 0);
+}

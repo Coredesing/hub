@@ -1,0 +1,10 @@
+.alert {
+    border-radius: 2px;
+    padding: 12px;
+    &.info {
+        background: linear-gradient(90deg, rgba(28, 45, 102, 0) 0%, #1C2D66 24.78%, #1C2D66 50.41%, #1C2D66 75.81%, rgba(28, 45, 102, 0) 100%);
+    }
+    &.danger {
+        background: linear-gradient(90deg, rgba(28, 45, 102, 0) 0%, #1C2D66 24.78%, #1C2D66 50.41%, #1C2D66 75.81%, rgba(28, 45, 102, 0) 100%);
+    }
+}

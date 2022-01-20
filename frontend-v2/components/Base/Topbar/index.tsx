@@ -24,8 +24,8 @@ const Topbar = () => {
           </div>
         </Link>
         <div className="flex align-middle items-center cursor-pointer">
-            <Image src={require('assets/images/icons/search.svg')} alt='search'></Image>
-          </div>
+          <Image src={require('assets/images/icons/search.svg')} alt='search'></Image>
+        </div>
       </div>
     </>
   )

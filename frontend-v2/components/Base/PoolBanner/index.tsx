@@ -29,13 +29,13 @@ const PoolBanner = ({ item, color = 'gamefiGreen' } : Props) => {
 
   const poolStatus = (status: any) => {
     switch (status) {
-      case 1:
-        return 'private'
-      case 2:
-        return 'community'
-      case 0:
-      default:
-        return 'public'
+    case 1:
+      return 'private'
+    case 2:
+      return 'community'
+    case 0:
+    default:
+      return 'public'
     }
   }
 
@@ -44,10 +44,10 @@ const PoolBanner = ({ item, color = 'gamefiGreen' } : Props) => {
       <div className="w-full px-3 lg:px-0">
         <div className="flex flex-col clipped-b-l rounded-tr overflow-hidden">
           <div className="w-full h-full relative">
-          <div className="absolute h-7 w-36 flex align-middle items-center justify-center -top-1 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-left bg-gamefiDark-900 clipped-b-r-full">
-            <Image src={require('assets/images/icons/lock.svg')} alt="lock"></Image>
-            <span className="ml-2 font-bold">{poolStatus(item.is_private)}</span>
-          </div>
+            <div className="absolute h-7 w-36 flex align-middle items-center justify-center -top-1 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-left bg-gamefiDark-900 clipped-b-r-full">
+              <Image src={require('assets/images/icons/lock.svg')} alt="lock"></Image>
+              <span className="ml-2 font-bold">{poolStatus(item.is_private)}</span>
+            </div>
             <img src={item.banner} alt="banner" className="w-full"></img>
             <div className={`relative w-full h-24 flex align-middle items-center justify-center uppercase font-bold md:text-lg xl:text-2xl ${color === 'yellow' && 'bg-gamefiYellow'} ${(!color || color === 'green') && 'bg-gamefiGreen-700'}`}>
               {/* <div
@@ -62,38 +62,38 @@ const PoolBanner = ({ item, color = 'gamefiGreen' } : Props) => {
         <div className={`w-full relative ${color === 'yellow' && 'text-gamefiYellow'} ${(!color || color === 'green') && 'text-gamefiGreen-700'}`}>
           {item.start_time
             ? (
-            <div className="w-full h-full flex flex-col align-middle items-center justify-center absolute mt-1">
-              <div className="uppercase font-semibold text-sm 2xl:text-base">Countdown to IGO date</div>
-              <div className="uppercase font-bold mt-2 flex tracking-widest">
-                <div className="flex flex-col text-center w-10">
-                  <div className="text-2xl leading-4 2xl:text-3xl 2xl:leading-6">{days}</div>
-                  <div className="text-xs 2xl:text-sm uppercase">days</div>
-                </div>
-                <span className="text-2xl leading-4 2xl:text-3xl 2xl:leading-6 mx-1">:</span>
-                <div className="flex flex-col text-center w-10">
-                  <div className="text-2xl leading-4 2xl:text-3xl 2xl:leading-6">{hours}</div>
-                  <div className="text-xs 2xl:text-sm uppercase">hrs</div>
-                </div>
+              <div className="w-full h-full flex flex-col align-middle items-center justify-center absolute mt-1">
+                <div className="uppercase font-semibold text-sm 2xl:text-base">Countdown to IGO date</div>
+                <div className="uppercase font-bold mt-2 flex tracking-widest">
+                  <div className="flex flex-col text-center w-10">
+                    <div className="text-2xl leading-4 2xl:text-3xl 2xl:leading-6">{days}</div>
+                    <div className="text-xs 2xl:text-sm uppercase">days</div>
+                  </div>
+                  <span className="text-2xl leading-4 2xl:text-3xl 2xl:leading-6 mx-1">:</span>
+                  <div className="flex flex-col text-center w-10">
+                    <div className="text-2xl leading-4 2xl:text-3xl 2xl:leading-6">{hours}</div>
+                    <div className="text-xs 2xl:text-sm uppercase">hrs</div>
+                  </div>
 
-                <span className="text-2xl leading-4 2xl:text-3xl 2xl:leading-6 mx-1">:</span>
-                <div className="flex flex-col text-center w-10">
-                  <div className="text-2xl leading-4 2xl:text-3xl 2xl:leading-6">{minutes}</div>
-                  <div className="text-xs 2xl:text-sm uppercase">min</div>
-                </div>
+                  <span className="text-2xl leading-4 2xl:text-3xl 2xl:leading-6 mx-1">:</span>
+                  <div className="flex flex-col text-center w-10">
+                    <div className="text-2xl leading-4 2xl:text-3xl 2xl:leading-6">{minutes}</div>
+                    <div className="text-xs 2xl:text-sm uppercase">min</div>
+                  </div>
 
-                <span className="text-2xl leading-4 2xl:text-3xl 2xl:leading-6 mx-1">:</span>
-                <div className="flex flex-col text-center w-10">
-                  <div className="text-2xl leading-4 2xl:text-3xl 2xl:leading-6">{seconds}</div>
-                  <div className="text-xs 2xl:text-sm uppercase">sec</div>
+                  <span className="text-2xl leading-4 2xl:text-3xl 2xl:leading-6 mx-1">:</span>
+                  <div className="flex flex-col text-center w-10">
+                    <div className="text-2xl leading-4 2xl:text-3xl 2xl:leading-6">{seconds}</div>
+                    <div className="text-xs 2xl:text-sm uppercase">sec</div>
+                  </div>
                 </div>
               </div>
-            </div>
-              )
+            )
             : (
-            <div className="w-full h-full flex flex-col align-middle items-center justify-center absolute">
-              <div className="uppercase font-bold text-2xl 2xl:text-3xl">Coming Soon</div>
-            </div>
-              )}
+              <div className="w-full h-full flex flex-col align-middle items-center justify-center absolute">
+                <div className="uppercase font-bold text-2xl 2xl:text-3xl">Coming Soon</div>
+              </div>
+            )}
           <Image src={require(`assets/images/countdown-box-${color || 'green'}.png`)} alt="countdown" className="w-full h-auto"></Image>
         </div>
       </div>

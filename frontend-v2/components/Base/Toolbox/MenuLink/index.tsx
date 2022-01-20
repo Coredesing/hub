@@ -16,8 +16,8 @@ const MenuLink = ({ children, path }: Props) => {
         }`}
         style={router.asPath === path
           ? {
-              background: 'linear-gradient(90.53deg, #282B38 1.72%, #15171e 80%)'
-            }
+            background: 'linear-gradient(90.53deg, #282B38 1.72%, #15171e 80%)'
+          }
           : {}}
       >
         {router.asPath === path && <span

@@ -21,18 +21,18 @@ export const networkConnector = (chainId?: number) => {
 
   if (IS_TESTNET) {
     switch (chainId) {
-      case 1: {
-        chainId = 5
-        break
-      }
-      case 56: {
-        chainId = 97
-        break
-      }
-      case 137: {
-        chainId = 80001
-        break
-      }
+    case 1: {
+      chainId = 5
+      break
+    }
+    case 56: {
+      chainId = 97
+      break
+    }
+    case 137: {
+      chainId = 80001
+      break
+    }
     }
   }
 

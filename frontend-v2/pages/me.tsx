@@ -86,7 +86,7 @@ function Allowance () {
         { !loadingApproval && errorApproval ? <p>Approval Error: {errorApproval.message}</p> : null }
         { isMax && <button className="border bg-gray-500 px-2" onClick={() => approveAndReload(0)}>{ loadingApproval ? 'Approving...' : 'Revoke' }</button> }
         { !isMax && <button className="border bg-gray-500 px-2" onClick={() => approveAndReload(constants.MaxUint256)}>{ loadingApproval ? 'Approving...' : 'Approve' }</button> }
-        </>
+      </>
       }
     </div>
   </div>

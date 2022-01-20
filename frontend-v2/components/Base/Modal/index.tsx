@@ -39,7 +39,7 @@ const Modal = ({ children, show, toggle, className }: Props) => {
     <>
       <div className="fixed z-10 inset-0 overflow-y-auto">
         <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            {/* Background overlay, show/hide based on modal state.
+          {/* Background overlay, show/hide based on modal state.
 
             Entering: "ease-out duration-300"
               From: "opacity-0"
@@ -52,7 +52,7 @@ const Modal = ({ children, show, toggle, className }: Props) => {
           {/* This element is to trick the browser into centering the modal contents. */}
           <span className="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
 
-            {/* Modal panel, show/hide based on modal state.
+          {/* Modal panel, show/hide based on modal state.
 
             Entering: "ease-out duration-300"
               From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"

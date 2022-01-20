@@ -50,13 +50,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }, [account])
 
   const { provider: libraryDefaultTemporary } = useLibraryDefaultFlexible(poolInfo?.network_available)
-  const contractPresale = useMemo(() => {
-    if (!libraryDefaultTemporary) {
-      return
-    }
-
-    return new Contract(poolInfo.campaign_hash, PresaleBoxAbi, libraryDefaultTemporary)
-  }, [poolInfo, PresaleBoxAbi, libraryDefaultTemporary])
+  const [contractPresale, setContractPresale] = useState<any>(null);
 
   const onSetCountdown = useCallback(() => {
     if (poolInfo) {
@@ -149,12 +143,10 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }, [poolInfo])
 
   useEffect(() => {
-    if (!contractPresale) {
-      return
-    }
-
     const boxes = poolInfo.boxTypesConfig || []
-    if (poolInfo.campaign_hash) {
+    if (poolInfo.campaign_hash && libraryDefaultTemporary) {
+      const contractPresale = new Contract(poolInfo.campaign_hash, PresaleBoxAbi, libraryDefaultTemporary)
+      setContractPresale(contractPresale);
       Promise
         .all(boxes.map((b, subBoxId) => new Promise(async (res, rej) => {
           try {
@@ -179,7 +171,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       setBoxTypes(boxes)
       setBoxSelected(boxes[0])
     }
-  }, [poolInfo, contractPresale])
+  }, [poolInfo, libraryDefaultTemporary])
 
   const onSelectCurrency = (t: ObjectType) => {
     if (t.address === currencySelected.address) return
@@ -231,7 +223,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
 
       <div className={clsx('rounded mb-5', styles.headPool)}>
         <Alert className='mb-10'>
-                    Congratulations! You have successfully applied whitelist and can buy Mystery boxes from <b>Phase 1</b>
+            Congratulations! You have successfully applied whitelist and can buy Mystery boxes from <b>Phase 1</b>
         </Alert>
         <div className={'grid grid-cols-2'}>
           <div className={clsx('flex', styles.headInfoBoxOrder)}>

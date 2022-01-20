@@ -7,7 +7,7 @@ type TabsProps = {
     onChange?: (value: any) => void;
 }
 export const Tabs = ({ titles, ...props }: TabsProps) => {
-    return (
+  return (
         <div className='my-1 w-full'>
             <div className={styles.menus}>
                 {
@@ -20,7 +20,7 @@ export const Tabs = ({ titles, ...props }: TabsProps) => {
                 }
             </div>
         </div>
-    )
+  )
 }
 
 type TabPanelProps = {
@@ -29,7 +29,7 @@ type TabPanelProps = {
     children?: any;
 }
 export const TabPanel = (props: TabPanelProps) => {
-    return (
-        props.value === props.index ? <div>{props.children}</div> : <></>
-    )
+  return (
+    props.value === props.index ? <div>{props.children}</div> : <></>
+  )
 }

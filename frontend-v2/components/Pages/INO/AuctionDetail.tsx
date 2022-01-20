@@ -7,12 +7,12 @@ import { HashLoader } from 'react-spinners'
 import { TokenType, ObjectType } from 'common/types'
 import { ButtonBase } from '@/components/Base/Buttons'
 import CountDownTimeV1, { CountDownTimeType as CountDownTimeTypeV1 } from '@/components/Base/CountDownTime'
-import { MAX_INT, TIERS } from '@/constants'
+import { TIERS } from '@/constants'
 import Erc20Abi from 'components/web3/abis/ERC20.json'
 import AuctionBoxModal from '@/components/Pages/Auction/AuctionBoxModal'
 import AuctionPoolAbi from 'components/web3/abis/AuctionPool.json'
 import useAuctionBox from '@/hooks/useAuctionBox'
-import { utils, BigNumber } from 'ethers'
+import { utils, constants, BigNumber } from 'ethers'
 import isNumber from 'is-number'
 import { useMyWeb3 } from '@/components/web3/context'
 import { TabPanel, Tabs } from '@/components/Base/Tabs'
@@ -202,7 +202,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
     }
   }, [allowance])
   const handleApproveToken = async () => {
-    await approve(MAX_INT)
+    await approve(constants.MaxUint256)
     toast.success('Approve token succesfully')
     setTokenApproved(true)
   }

@@ -1,6 +1,6 @@
-import clsx from 'clsx';
-import { FormInputNumber } from 'components/Base/FormInputNumber';
-import React from 'react';
+import clsx from 'clsx'
+import { FormInputNumber } from 'components/Base/FormInputNumber'
+import React from 'react'
 import styles from './AscDescAmount.module.scss'
 type Props = {
   value: number;
@@ -9,23 +9,22 @@ type Props = {
   bought: number;
 }
 const AscDescAmount = ({ value, maxBuy, onChangeValue, bought }: Props) => {
-  const remaining = +maxBuy - +bought || 0;
+  const remaining = +maxBuy - +bought || 0
   const onDesc = () => {
-    onChangeValue(value - 1 > -1 ? value - 1 : 0);
+    onChangeValue(value - 1 > -1 ? value - 1 : 0)
   }
   const onAsc = () => {
-    if (value + 1 <= remaining)
-      onChangeValue(value + 1);
+    if (value + 1 <= remaining) { onChangeValue(value + 1) }
   }
   const onSetMax = () => {
-    onChangeValue(remaining);
+    onChangeValue(remaining)
   }
   const onSetMin = () => {
-    onChangeValue(1);
+    onChangeValue(1)
   }
   const onChangeInput = (event: any) => {
-    const value = +event.target.value || 0;
-    onChangeValue(value);
+    const value = +event.target.value || 0
+    onChangeValue(value)
   }
   return <>
     <div className='mb-1'>
@@ -47,7 +46,7 @@ const AscDescAmount = ({ value, maxBuy, onChangeValue, bought }: Props) => {
       <div
         className={clsx('px-2 text-lg font-semibold border-t border-b border-white/50 border-r flex items-center w-8 justify-center cursor-pointer', styles['h-30px'])}
         onClick={onDesc}>-</div>
-      <div className={clsx('px-5 text-lg font-bold border-t border-b border-r  border-white/50 flex items-center w-20 justify-center cursor-pointer', styles['h-30px'],)}>
+      <div className={clsx('px-5 text-lg font-bold border-t border-b border-r  border-white/50 flex items-center w-20 justify-center cursor-pointer', styles['h-30px'])}>
         <FormInputNumber
           value={value}
           onChange={onChangeInput}
@@ -70,7 +69,7 @@ const AscDescAmount = ({ value, maxBuy, onChangeValue, bought }: Props) => {
       <span className='text-white/80 uppercase text-xs  font-casual'>BOUGHT/MAX</span>
       <span className='text-xs font-casual'>{bought}/{maxBuy}</span>
     </div>
-  </>;
-};
+  </>
+}
 
-export default AscDescAmount;
+export default AscDescAmount

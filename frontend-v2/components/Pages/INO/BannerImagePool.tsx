@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 type Props = {
   src: string;
@@ -7,7 +7,7 @@ type Props = {
 const BannerImagePool = (props: Props) => {
   return <>
     <img className="w-full h-full object-contain" src={props.src} />
-  </>;
-};
+  </>
+}
 
-export default BannerImagePool;
+export default BannerImagePool

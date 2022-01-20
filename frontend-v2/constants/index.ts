@@ -1,5 +1,3 @@
-export const MAX_INT = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
-
 export const POOL_TYPE = {
     PUBLIC: 0,
     PRIVATE: 1,

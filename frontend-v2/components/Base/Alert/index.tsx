@@ -1,7 +1,7 @@
-import clsx from 'clsx';
-import React, { ReactNode } from 'react';
-import { QuestionIcon } from '../Icon';
-import styles from './Alert.module.scss';
+import clsx from 'clsx'
+import React, { ReactNode } from 'react'
+import { QuestionIcon } from '../Icon'
+import styles from './Alert.module.scss'
 type Props = {
   type?: 'danger' | 'info' | 'warn',
   children?: string | ReactNode;
@@ -16,7 +16,7 @@ const Alert = ({ type = 'info', children, className }: Props) => {
       { type === 'warn' && <QuestionIcon /> }
       {children}
     </div>
-  </div>;
-};
+  </div>
+}
 
-export default React.memo(Alert);
+export default React.memo(Alert)

@@ -1,7 +1,7 @@
-import React from 'react';
-import clsx from 'clsx';
-import { ObjectType } from '@/common/types';
-import styles from './TokenItem.module.scss';
+import React from 'react'
+import clsx from 'clsx'
+import { ObjectType } from '@/common/types'
+import styles from './TokenItem.module.scss'
 type Props = {
   onClick?: (value: any) => any;
   selected?: boolean;
@@ -20,7 +20,7 @@ const TokenItem = ({ item, ...props }: Props) => {
     )}>
     <img src={item.icon} alt="" className='rounded-full w-4 h-4' width={16} height={16} />
     <span className='font-semibold text-base'>{item.name}</span>
-  </div>;
-};
+  </div>
+}
 
-export default TokenItem;
+export default TokenItem

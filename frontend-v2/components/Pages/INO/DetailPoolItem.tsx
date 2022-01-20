@@ -1,6 +1,6 @@
-import React from 'react';
-import busdIcon from 'assets/images/icons/busd.png';
-import Image from 'next/image';
+import React from 'react'
+import busdIcon from 'assets/images/icons/busd.png'
+import Image from 'next/image'
 type Props = {
   label: string;
   value: string;
@@ -14,7 +14,7 @@ const DetailPoolItem = ({ label, value, icon }: Props) => {
       {icon && <Image src={icon} className='w-4 h-4 rounded' width={16} height={16}/>}
       <span className="uppercase font-semibold text-white text-base">{value}</span>
     </div>
-  </div>;
-};
+  </div>
+}
 
-export default DetailPoolItem;
+export default DetailPoolItem

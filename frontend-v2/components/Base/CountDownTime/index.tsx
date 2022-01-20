@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { caclDiffTime, formatNumber, getDiffTime } from '@/utils/index'
-import clsx from 'clsx';
+import clsx from 'clsx'
 
 type TimeStamp = number;
 

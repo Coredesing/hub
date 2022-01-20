@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 type Props = {
   label: string;
@@ -10,7 +10,7 @@ const InfoBoxOrderItem = (props: Props) => {
       {props.label}
     </span>
     <span className='font-bold text-2xl'>{props.value}</span>
-  </div>;
-};
+  </div>
+}
 
-export default InfoBoxOrderItem;
+export default InfoBoxOrderItem

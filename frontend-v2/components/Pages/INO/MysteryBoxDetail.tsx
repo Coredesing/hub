@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import PoolDetail from 'components/Base/PoolDetail'
-import clsx from 'clsx';
+import clsx from 'clsx'
 import styles from './MysteryBoxDetail.module.scss'
 import { ButtonBase } from 'components/Base/Buttons'
 import CountDownTimeV1, { CountDownTimeType } from 'components/Base/CountDownTime'
 import { TabPanel, Tabs } from 'components/Base/Tabs'
-import PresaleBoxAbi from '@/components/web3/abis/PreSaleBox.json';
+import PresaleBoxAbi from '@/components/web3/abis/PreSaleBox.json'
 import { Contract, BigNumber } from 'ethers'
 import { ObjectType } from '@/common/types'
 import TokenItem from './TokenItem'
@@ -14,205 +14,199 @@ import DetailPoolItem from './DetailPoolItem'
 import RuleIntroduce from './RuleIntroduce'
 import SerieContent from './SerieContent'
 import { useMyWeb3 } from 'components/web3/context'
-import axios from '@/utils/axios';
+import axios from '@/utils/axios'
 import { useCheckJoinPool, useJoinPool } from '@/hooks/useJoinPool'
 import Alert from 'components/Base/Alert'
-import { TIERS } from '@/constants';
-import InfoBoxOrderItem from './InfoBoxOrderItem';
-import BannerImagePool from './BannerImagePool';
-import AscDescAmount from './AscDescAmount';
-import TimeLine from './TimeLine';
-import { getTimelineOfPool } from '@/utils/pool';
-import { useAppContext } from '@/context';
+import { TIERS } from '@/constants'
+import InfoBoxOrderItem from './InfoBoxOrderItem'
+import BannerImagePool from './BannerImagePool'
+import AscDescAmount from './AscDescAmount'
+import TimeLine from './TimeLine'
+import { getTimelineOfPool } from '@/utils/pool'
+import { useAppContext } from '@/context'
 
 const MysteryBoxDetail = ({ poolInfo }: any) => {
-    const eventId = 0;
-    const tiersState = useAppContext()?.tiers;
-    const userTier = tiersState?.state?.data?.tier || 0;
-    const { account } = useMyWeb3();
-    const [boxTypes, setBoxTypes] = useState<any[]>([]);
-    const [boxSelected, setBoxSelected] = useState<ObjectType>({});
-    const [currencySelected, setCurrencySelected] = useState<ObjectType>({});
-    const [myBoxOrdered, setMyBoxOrdered] = useState(0);
-    const [currentTab, setCurrentTab] = useState(0);
-    const [numBoxOrder, setNumBoxOrder] = useState(0);
-    const [countdown, setCountdown] = useState<CountDownTimeType & { title: string, [k: string]: any }>({ date1: 0, date2: 0, title: '' });
-    const [timelinePool, setTimelinePool] = useState<ObjectType>({});
-    const [timelines, setTimelines] = useState<ObjectType<{
+  const eventId = 0
+  const tiersState = useAppContext()?.tiers
+  const userTier = tiersState?.state?.data?.tier || 0
+  const { account } = useMyWeb3()
+  const [boxTypes, setBoxTypes] = useState<any[]>([])
+  const [boxSelected, setBoxSelected] = useState<ObjectType>({})
+  const [currencySelected, setCurrencySelected] = useState<ObjectType>({})
+  const [myBoxOrdered, setMyBoxOrdered] = useState(0)
+  const [currentTab, setCurrentTab] = useState(0)
+  const [numBoxOrder, setNumBoxOrder] = useState(0)
+  const [countdown, setCountdown] = useState<CountDownTimeType & { title: string, [k: string]: any }>({ date1: 0, date2: 0, title: '' })
+  const [timelinePool, setTimelinePool] = useState<ObjectType>({})
+  const [timelines, setTimelines] = useState<ObjectType<{
         title: string;
         desc: string;
         current?: boolean;
     }>>({})
-    useEffect(() => {
-        if (!account) return
-        tiersState.actions.getUserTier(account)
-    }, [account])
+  useEffect(() => {
+    if (!account) return
+    tiersState.actions.getUserTier(account)
+  }, [account])
 
-    const onSetCountdown = useCallback(() => {
-        if (poolInfo) {
-            const isAccIsBuyPreOrder = userTier >= poolInfo.pre_order_min_tier;
-            const timeLine = getTimelineOfPool(poolInfo);
-            setTimelinePool(timeLine);
-            const timeLinesInfo: { [k: string]: any } = {
-                1: {
-                    title: 'UPCOMING',
-                    desc: `Stay tuned and prepare to APPLY WHITELIST.`
-                },
-                2: {
-                    title: 'WHITELIST',
-                    desc: 'Click the [APPLY WHITELIST] button to register for Phase 1.'
-                }
-            };
-            if (timeLine.freeBuyTime) {
-                timeLinesInfo[3] = {
-                    title: 'BUY PHASE 1',
-                    desc: 'Whitelist registrants will be given favorable dealings to buy Mystery Boxes in phase 1, on a FCFS basis.'
-                };
-                timeLinesInfo[4] = {
-                    title: 'BUY PHASE 2',
-                    desc: 'The whitelist of phase 2 will be started right after phase 1 ends. Remaining boxes left in phase 1 will be transferred to phase 2.'
-                };
-                timeLinesInfo[5] = {
-                    title: 'END',
-                    desc: 'Thank you for watching.'
-                }
-            } else {
-                timeLinesInfo[3] = {
-                    title: 'BUY PHASE 1',
-                    desc: 'Whitelist registrants will be given favorable dealings to buy Mystery Boxes in phase 1, on a FCFS basis.'
-                };
-                timeLinesInfo[4] = {
-                    title: 'END',
-                    desc: 'Thank you for watching.'
-                }
-            }
-            const startBuyTime = isAccIsBuyPreOrder && timeLine.startPreOrderTime ? timeLine.startPreOrderTime : timeLine.startBuyTime;
-            const soldOut = false;
-            if (soldOut) {
-                setCountdown({ date1: 0, date2: 0, title: 'This pool is over. See you in the next pool.', isFinished: true });
-                timeLine.freeBuyTime ? (timeLinesInfo[5].current = true) : (timeLinesInfo[4].current = true);
-            } else if (timeLine.startJoinPooltime > Date.now()) {
-                setCountdown({ date1: timeLine.startJoinPooltime, date2: Date.now(), title: 'Whitelist Opens In', isUpcoming: true });
-                timeLinesInfo[1].current = true;
-            }
-            else if (timeLine.endJoinPoolTime > Date.now()) {
-                if (isAccIsBuyPreOrder && startBuyTime < Date.now()) {
-                    timeLinesInfo[3].current = true;
-                    setCountdown({ date1: timeLine?.freeBuyTime || timeLine?.finishTime, date2: Date.now(), title: 'Phase 1 Ends In', isSale: true, isPhase1: true });
-                } else {
-                    setCountdown({ date1: timeLine.endJoinPoolTime, date2: Date.now(), title: 'Whitelist Closes In', isWhitelist: true });
-                    timeLinesInfo[2].current = true;
-                }
-            }
-            else if (startBuyTime > Date.now()) {
-                timeLinesInfo[2].current = true;
-                if (timeLine.freeBuyTime) {
-                    setCountdown({ date1: startBuyTime, date2: Date.now(), title: 'Sale Phase 1 Starts In', isUpcomingSale: true, isMultiPhase: true });
-                } else {
-                    setCountdown({ date1: startBuyTime, date2: Date.now(), title: 'Sale Starts In', isUpcomingSale: true });
-                }
-            }
-            else if (timeLine.freeBuyTime && timeLine.freeBuyTime > Date.now()) {
-                timeLinesInfo[3].current = true;
-                setCountdown({ date1: timeLine.freeBuyTime, date2: Date.now(), title: 'Phase 1 Ends In', isSale: true, isPhase1: true });
-            }
-            else if (timeLine.finishTime > Date.now()) {
-                if (timeLine.freeBuyTime) {
-                    timeLinesInfo[4].current = true;
-                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Phase 2 Ends In', isSale: true, isPhase2: true });
-                } else {
-                    timeLinesInfo[3].current = true;
-                    setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Sale Ends In', isSale: true, isPhase1: true });
-                }
-            }
-            else {
-                setCountdown({ date1: 0, date2: 0, title: 'Finished', isFinished: true });
-                timeLine.freeBuyTime ? (timeLinesInfo[5].current = true) : (timeLinesInfo[4].current = true);
-            }
-            setTimelines(timeLinesInfo);
+  const onSetCountdown = useCallback(() => {
+    if (poolInfo) {
+      const isAccIsBuyPreOrder = userTier >= poolInfo.pre_order_min_tier
+      const timeLine = getTimelineOfPool(poolInfo)
+      setTimelinePool(timeLine)
+      const timeLinesInfo: { [k: string]: any } = {
+        1: {
+          title: 'UPCOMING',
+          desc: 'Stay tuned and prepare to APPLY WHITELIST.'
+        },
+        2: {
+          title: 'WHITELIST',
+          desc: 'Click the [APPLY WHITELIST] button to register for Phase 1.'
         }
-    }, [poolInfo, userTier]);
-
-    useEffect(() => {
-        onSetCountdown();
-    }, [onSetCountdown])
-
-
-    const listTokens = useMemo(() => {
-        const arr = poolInfo.acceptedTokensConfig || [];
-        setCurrencySelected(arr[0] || {});
-        return arr;
-    }, [poolInfo])
-
-    useEffect(() => {
-        const boxes = poolInfo.boxTypesConfig || [];
-        if (poolInfo.campaign_hash) {
-            const contractPresale = new Contract(poolInfo.campaign_hash, PresaleBoxAbi);
-            Promise.
-                all(boxes.map((b, subBoxId) => new Promise(async (res, rej) => {
-                    try {
-                        const response = await contractPresale.subBoxes(eventId, subBoxId);
-                        const result = {
-                            maxSupply: response.maxSupply || 0,
-                            totalSold: response.totalSold || 0,
-                        }
-                        res({ ...b, subBoxId, ...result });
-                    } catch (error) {
-                        rej(error)
-                    }
-                })))
-                .then((boxes) => {
-                    setBoxTypes(boxes);
-                    setBoxSelected(boxes[0])
-                })
-                .catch(err => {
-                    console.log('err', err)
-                })
+      }
+      if (timeLine.freeBuyTime) {
+        timeLinesInfo[3] = {
+          title: 'BUY PHASE 1',
+          desc: 'Whitelist registrants will be given favorable dealings to buy Mystery Boxes in phase 1, on a FCFS basis.'
+        }
+        timeLinesInfo[4] = {
+          title: 'BUY PHASE 2',
+          desc: 'The whitelist of phase 2 will be started right after phase 1 ends. Remaining boxes left in phase 1 will be transferred to phase 2.'
+        }
+        timeLinesInfo[5] = {
+          title: 'END',
+          desc: 'Thank you for watching.'
+        }
+      } else {
+        timeLinesInfo[3] = {
+          title: 'BUY PHASE 1',
+          desc: 'Whitelist registrants will be given favorable dealings to buy Mystery Boxes in phase 1, on a FCFS basis.'
+        }
+        timeLinesInfo[4] = {
+          title: 'END',
+          desc: 'Thank you for watching.'
+        }
+      }
+      const startBuyTime = isAccIsBuyPreOrder && timeLine.startPreOrderTime ? timeLine.startPreOrderTime : timeLine.startBuyTime
+      const soldOut = false
+      if (soldOut) {
+        setCountdown({ date1: 0, date2: 0, title: 'This pool is over. See you in the next pool.', isFinished: true })
+        timeLine.freeBuyTime ? (timeLinesInfo[5].current = true) : (timeLinesInfo[4].current = true)
+      } else if (timeLine.startJoinPooltime > Date.now()) {
+        setCountdown({ date1: timeLine.startJoinPooltime, date2: Date.now(), title: 'Whitelist Opens In', isUpcoming: true })
+        timeLinesInfo[1].current = true
+      } else if (timeLine.endJoinPoolTime > Date.now()) {
+        if (isAccIsBuyPreOrder && startBuyTime < Date.now()) {
+          timeLinesInfo[3].current = true
+          setCountdown({ date1: timeLine?.freeBuyTime || timeLine?.finishTime, date2: Date.now(), title: 'Phase 1 Ends In', isSale: true, isPhase1: true })
         } else {
-            setBoxTypes(boxes);
-            setBoxSelected(boxes[0])
+          setCountdown({ date1: timeLine.endJoinPoolTime, date2: Date.now(), title: 'Whitelist Closes In', isWhitelist: true })
+          timeLinesInfo[2].current = true
         }
-    }, [poolInfo]);
-
-    const onSelectCurrency = (t: ObjectType) => {
-        if (t.address === currencySelected.address) return;
-        setCurrencySelected(t);
-    }
-
-    const onSelectBoxType = (b: ObjectType) => {
-        if (b.id === boxSelected.id) return;
-        setBoxSelected(b);
-    }
-
-    const onChangeTab = (val: any) => {
-        setCurrentTab(val)
-    }
-
-    const getBoxOrderd = useCallback(async () => {
-        if (!account) {
-            setMyBoxOrdered(0);
-            return
+      } else if (startBuyTime > Date.now()) {
+        timeLinesInfo[2].current = true
+        if (timeLine.freeBuyTime) {
+          setCountdown({ date1: startBuyTime, date2: Date.now(), title: 'Sale Phase 1 Starts In', isUpcomingSale: true, isMultiPhase: true })
+        } else {
+          setCountdown({ date1: startBuyTime, date2: Date.now(), title: 'Sale Starts In', isUpcomingSale: true })
         }
-        try {
-            const res = await axios.get(`/pool/${poolInfo?.id}/nft-order?wallet_address=${account}`);
-            const amount = res.data.data?.amount;
-            setMyBoxOrdered(amount);
-        } catch (error) {
-            console.log('error', error)
+      } else if (timeLine.freeBuyTime && timeLine.freeBuyTime > Date.now()) {
+        timeLinesInfo[3].current = true
+        setCountdown({ date1: timeLine.freeBuyTime, date2: Date.now(), title: 'Phase 1 Ends In', isSale: true, isPhase1: true })
+      } else if (timeLine.finishTime > Date.now()) {
+        if (timeLine.freeBuyTime) {
+          timeLinesInfo[4].current = true
+          setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Phase 2 Ends In', isSale: true, isPhase2: true })
+        } else {
+          timeLinesInfo[3].current = true
+          setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Sale Ends In', isSale: true, isPhase1: true })
         }
-    }, [account, poolInfo])
-
-    useEffect(() => {
-        getBoxOrderd();
-    }, [getBoxOrderd]);
-    const { isJoinPool, loading: loadingCheckJPool } = useCheckJoinPool(poolInfo?.id, account);
-    const { joinPool, loading: loadingJPool, success: isJoinSuccess } = useJoinPool(poolInfo?.id, account);
-
-    const onChangeNumberBoxOrder = (num: number) => {
-        setNumBoxOrder(num);
+      } else {
+        setCountdown({ date1: 0, date2: 0, title: 'Finished', isFinished: true })
+        timeLine.freeBuyTime ? (timeLinesInfo[5].current = true) : (timeLinesInfo[4].current = true)
+      }
+      setTimelines(timeLinesInfo)
     }
+  }, [poolInfo, userTier])
 
-    return (
+  useEffect(() => {
+    onSetCountdown()
+  }, [onSetCountdown])
+
+  const listTokens = useMemo(() => {
+    const arr = poolInfo.acceptedTokensConfig || []
+    setCurrencySelected(arr[0] || {})
+    return arr
+  }, [poolInfo])
+
+  useEffect(() => {
+    const boxes = poolInfo.boxTypesConfig || []
+    if (poolInfo.campaign_hash) {
+      const contractPresale = new Contract(poolInfo.campaign_hash, PresaleBoxAbi)
+      Promise
+        .all(boxes.map((b, subBoxId) => new Promise(async (res, rej) => {
+          try {
+            const response = await contractPresale.subBoxes(eventId, subBoxId)
+            const result = {
+              maxSupply: response.maxSupply || 0,
+              totalSold: response.totalSold || 0
+            }
+            res({ ...b, subBoxId, ...result })
+          } catch (error) {
+            rej(error)
+          }
+        })))
+        .then((boxes) => {
+          setBoxTypes(boxes)
+          setBoxSelected(boxes[0])
+        })
+        .catch(err => {
+          console.log('err', err)
+        })
+    } else {
+      setBoxTypes(boxes)
+      setBoxSelected(boxes[0])
+    }
+  }, [poolInfo])
+
+  const onSelectCurrency = (t: ObjectType) => {
+    if (t.address === currencySelected.address) return
+    setCurrencySelected(t)
+  }
+
+  const onSelectBoxType = (b: ObjectType) => {
+    if (b.id === boxSelected.id) return
+    setBoxSelected(b)
+  }
+
+  const onChangeTab = (val: any) => {
+    setCurrentTab(val)
+  }
+
+  const getBoxOrderd = useCallback(async () => {
+    if (!account) {
+      setMyBoxOrdered(0)
+      return
+    }
+    try {
+      const res = await axios.get(`/pool/${poolInfo?.id}/nft-order?wallet_address=${account}`)
+      const amount = res.data.data?.amount
+      setMyBoxOrdered(amount)
+    } catch (error) {
+      console.log('error', error)
+    }
+  }, [account, poolInfo])
+
+  useEffect(() => {
+    getBoxOrderd()
+  }, [getBoxOrderd])
+  const { isJoinPool, loading: loadingCheckJPool } = useCheckJoinPool(poolInfo?.id, account)
+  const { joinPool, loading: loadingJPool, success: isJoinSuccess } = useJoinPool(poolInfo?.id, account)
+
+  const onChangeNumberBoxOrder = (num: number) => {
+    setNumBoxOrder(num)
+  }
+
+  return (
         <>
             {/* <DialogTxSubmitted
                 transaction={auctionTxHash}
@@ -299,10 +293,10 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
                 footerContent={<>
                     <Tabs
                         titles={[
-                            'Rule Introduction',
-                            'Box Infomation',
-                            'Series Content',
-                            'TimeLine'
+                          'Rule Introduction',
+                          'Box Infomation',
+                          'Series Content',
+                          'TimeLine'
                         ]}
                         currentValue={currentTab}
                         onChange={onChangeTab}
@@ -324,7 +318,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
                 </>}
             />
         </>
-    )
+  )
 }
 
 export default MysteryBoxDetail

@@ -1,27 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import { BulletListIcon, GridIcon, MediumIcon, TelegramIcon, TwitterIcon } from 'components/Base/Icon'
 import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from 'components/Base/Table'
-import { ObjectType } from '@/common/types';
+import { ObjectType } from '@/common/types'
 
 type Props = {
   poolInfo: ObjectType
 }
 const SerieContent = ({ poolInfo }: Props) => {
-
-  const showTypes = { table: 'table', grid: 'grid' };
-  const [showTypeSerieContent, setShowTypeSerieContent] = useState<typeof showTypes[keyof typeof showTypes]>(showTypes.table);
+  const showTypes = { table: 'table', grid: 'grid' }
+  const [showTypeSerieContent, setShowTypeSerieContent] = useState<typeof showTypes[keyof typeof showTypes]>(showTypes.table)
   const onSelectShowSerieContent = (type: typeof showTypes[keyof typeof showTypes]) => {
-    setShowTypeSerieContent(type);
+    setShowTypeSerieContent(type)
   }
 
   return <div className="relative">
     <div className="view-mode flex gap-5" style={{ position: 'absolute', right: '15px', top: '18px' }}>
       <span>View</span>
       <span className="cursor-pointer">
-        <BulletListIcon color={showTypeSerieContent === showTypes.table ? "#6CDB00" : "#6C6D71"} className="pointer" onClick={() => onSelectShowSerieContent(showTypes.table)} />
+        <BulletListIcon color={showTypeSerieContent === showTypes.table ? '#6CDB00' : '#6C6D71'} className="pointer" onClick={() => onSelectShowSerieContent(showTypes.table)} />
       </span>
       <span className="cursor-pointer">
-        <GridIcon color={showTypeSerieContent === showTypes.grid ? "#6CDB00" : "#6C6D71"} className="pointer" onClick={() => onSelectShowSerieContent(showTypes.grid)} />
+        <GridIcon color={showTypeSerieContent === showTypes.grid ? '#6CDB00' : '#6C6D71'} className="pointer" onClick={() => onSelectShowSerieContent(showTypes.grid)} />
       </span>
     </div>
     <div className="mb-3">
@@ -64,7 +63,7 @@ const SerieContent = ({ poolInfo }: Props) => {
                       className="break-words break-all text-ellipsis overflow-hidden text-sm"
                       style={{
                         WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
+                        WebkitBoxOrient: 'vertical'
                       }}>
                       {b.description} Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy ...
                     </span>
@@ -91,7 +90,7 @@ const SerieContent = ({ poolInfo }: Props) => {
         </div>
       }
     </div>
-  </div>;
-};
+  </div>
+}
 
-export default SerieContent;
+export default SerieContent

@@ -1,6 +1,6 @@
-import { ObjectType } from '@/common/types';
-import { MediumIcon, TelegramIcon, TwitterIcon } from 'components/Base/Icon';
-import React from 'react';
+import { ObjectType } from '@/common/types'
+import { MediumIcon, TelegramIcon, TwitterIcon } from 'components/Base/Icon'
+import React from 'react'
 
 type Props = {
   poolInfo: ObjectType
@@ -52,7 +52,7 @@ const RuleIntroduce = ({ poolInfo }: Props) => {
         </svg>
       </a>
     </div>
-  </div>;
-};
+  </div>
+}
 
-export default RuleIntroduce;
+export default RuleIntroduce

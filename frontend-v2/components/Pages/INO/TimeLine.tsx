@@ -1,7 +1,7 @@
-import { ObjectType } from '@/common/types';
-import { formatNumber } from '@/utils/index';
-import clsx from 'clsx';
-import React, { useMemo } from 'react';
+import { ObjectType } from '@/common/types'
+import { formatNumber } from '@/utils/index'
+import clsx from 'clsx'
+import React, { useMemo } from 'react'
 import styles from './Timeline.module.scss'
 
 type Props = {
@@ -14,16 +14,15 @@ type Props = {
 
 const TimeLine = ({ timelines }: Props) => {
   const currentTimeline = useMemo(() => {
-    const num = Object.keys(timelines).reverse()[0];
-    return +num || 0;
-  }, [timelines]);
-
+    const num = Object.keys(timelines).reverse()[0]
+    return +num || 0
+  }, [timelines])
 
   return <div className='flex'>
     {
       Object.keys(timelines).map((id) => (<div className={clsx(styles.timeline, styles.lineBright, {
         [styles.active]: +id <= currentTimeline || timelines[id].current,
-        [styles.lineBrightActive]: +id < currentTimeline,
+        [styles.lineBrightActive]: +id < currentTimeline
 
       })} key={timelines[id].title}>
         <div className='relative w-fit z-50'>
@@ -42,7 +41,7 @@ const TimeLine = ({ timelines }: Props) => {
         </div>
       </div>))
     }
-  </div>;
-};
+  </div>
+}
 
-export default TimeLine;
+export default TimeLine

@@ -17,7 +17,7 @@ const SlideCard = ({ item = {}, active, onSelectItem, compareTime }: Props) => {
         if ('id' in item) {
             setTime(getCountdownInfo(item, compareTime))
         }
-    }, [item]);
+    }, [item, compareTime]);
     return (
         <div className={clsx("slide", { active })} onClick={() => onSelectItem && onSelectItem(item)}>
             <div className="img-slide">

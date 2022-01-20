@@ -331,3 +331,27 @@ export const getTimelineOfPool = (pool: { [k: string]: any }) => {
   const finishTime = +pool.finish_time * 1000;
   return { startJoinPooltime, endJoinPoolTime, startBuyTime, freeBuyTime, finishTime, startPreOrderTime }
 }
+
+export const formatHumanReadableTime = (timeInput: number, timeToCheck: number) => {
+  if (timeInput >= timeToCheck) return 'a few seconds ago';
+  const { days, hours, seconds, minutes } = getDiffTime(timeToCheck, timeInput);
+  let str = '';
+  if(days && days > 7) {
+    return new Date(timeInput).toUTCString();
+  }
+  if (days) {
+    str += `${days} day${days > 1 ? 's' : ''} `;
+  } else {
+    if (hours) {
+      str += `${hours} hour${hours > 1 ? 's' : ''} `;
+    }
+    else if (minutes) {
+      str += `${minutes} minute${minutes > 1 ? 's' : ''} `;
+    }
+    else if (seconds) {
+      str += `${seconds} second${seconds > 1 ? 's' : ''} `;
+    }
+  }
+  str += 'ago';
+  return str;
+}

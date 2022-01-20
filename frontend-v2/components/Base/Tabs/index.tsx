@@ -8,7 +8,7 @@ type TabsProps = {
 }
 export const Tabs = ({ titles, ...props }: TabsProps) => {
   return (
-    <div className='my-1 w-full'>
+    <div className={`my-1 w-full font-mechanic uppercase font-semibold text-gray-300 ${props.className}`}>
       <div className={styles.menus}>
         {
           titles.map((title, id) =>

@@ -14,6 +14,7 @@ import DetailPoolItem from './DetailPoolItem'
 import RuleIntroduce from './RuleIntroduce'
 import SerieContent from './SerieContent'
 import { useMyWeb3 } from 'components/web3/context'
+import { useLibraryDefaultFlexible } from 'components/web3/utils'
 import axios from '@/utils/axios'
 import { useCheckJoinPool, useJoinPool } from '@/hooks/useJoinPool'
 import Alert from 'components/Base/Alert'
@@ -47,6 +48,15 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     if (!account) return
     tiersState.actions.getUserTier(account)
   }, [account])
+
+  const { provider: libraryDefaultTemporary } = useLibraryDefaultFlexible(poolInfo?.network_available)
+  const contractPresale = useMemo(() => {
+    if (!libraryDefaultTemporary) {
+      return
+    }
+
+    return new Contract(poolInfo.campaign_hash, PresaleBoxAbi, libraryDefaultTemporary)
+  }, [poolInfo, PresaleBoxAbi, libraryDefaultTemporary])
 
   const onSetCountdown = useCallback(() => {
     if (poolInfo) {
@@ -139,9 +149,12 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }, [poolInfo])
 
   useEffect(() => {
+    if (!contractPresale) {
+      return
+    }
+
     const boxes = poolInfo.boxTypesConfig || []
     if (poolInfo.campaign_hash) {
-      const contractPresale = new Contract(poolInfo.campaign_hash, PresaleBoxAbi)
       Promise
         .all(boxes.map((b, subBoxId) => new Promise(async (res, rej) => {
           try {
@@ -166,7 +179,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       setBoxTypes(boxes)
       setBoxSelected(boxes[0])
     }
-  }, [poolInfo])
+  }, [poolInfo, contractPresale])
 
   const onSelectCurrency = (t: ObjectType) => {
     if (t.address === currencySelected.address) return

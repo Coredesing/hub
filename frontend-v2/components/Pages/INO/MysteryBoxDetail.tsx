@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
-import { HashLoader } from 'react-spinners'
 import PoolDetail from 'components/Base/PoolDetail'
-import { isImageFile, isVideoFile } from '@/utils/index'
 import clsx from 'clsx';
 import styles from './MysteryBoxDetail.module.scss'
 import { ButtonBase } from 'components/Base/Buttons'

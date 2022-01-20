@@ -1,16 +1,21 @@
-function fetchData (page = 1, category = '', perPage = 12) {
-  return fetch(`https://aggregator.gamefi.org/api/v1/aggregator?per_page=${perPage}&page=${page}&price=true&category=${category}`)
+import { fetcher } from 'utils'
+
+function fetchAll (page = 1, category = '', perPage = 12) {
+  return fetcher(`https://aggregator.gamefi.org/api/v1/aggregator?per_page=${perPage}&page=${page}&price=true&category=${category}`)
 }
 
-export async function fetchDataWithQueries (query) {
+export function fetchOneWithSlug (slug) {
+  return fetcher(`https://aggregator.gamefi.org/api/v1/aggregator/slug/${slug}`)
+}
+
+export async function fetchAllWithQueries (query) {
   const { page, category } = query
-  const result = await fetchData(page, category)
-  return await result.json()
+  return await fetchAll(page, category)
 }
 
 export default async function handler (req, res) {
   try {
-    const data = await fetchDataWithQueries(req.query)
+    const data = await fetchAllWithQueries(req.query)
     if (!data?.data) {
       throw new Error('Invalid response')
     }

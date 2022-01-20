@@ -10,7 +10,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'casual': ['Poppins']
+        'casual': ['Poppins'],
+        'mechanic': ['Rajdhani'],
       }
     },
     colors: {

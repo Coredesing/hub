@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
 
 type Props = {
   children?: ReactNode
@@ -22,14 +22,18 @@ const SidebarLink = ({ children, path, external }: Props) => {
     )
   }
 
+  const isActive = useMemo(() => {
+    return router.pathname === path || router.asPath.indexOf(path) === 0 && path !== '/'
+  }, [router, path])
+
   return (
     <Link href={path} passHref>
       <div
         className={`relative w-full py-4 flex flex-col align-middle items-center justify-center uppercase text-xs font-semibold cursor-pointer ${
-          router.pathname === path ? 'dark:bg-gamefiDark-900 opacity-100' : 'opacity-40'
+          isActive ? 'dark:bg-gamefiDark-900 opacity-100' : 'opacity-40'
         }`}
       >
-        {router.pathname === path && <span
+        {isActive && <span
           style={{
             position: 'absolute',
             width: '3px',

@@ -8,18 +8,18 @@ type TabsProps = {
 }
 export const Tabs = ({ titles, ...props }: TabsProps) => {
   return (
-        <div className='my-1 w-full'>
-            <div className={styles.menus}>
-                {
-                    titles.map((title, id) =>
-                        <div onClick={() => id !== props.currentValue && props.onChange && props.onChange(id)} key={title} className={clsx(styles.menu, 'text-base font-semibold', { [styles.active]: id === props.currentValue })}>
-                            <span>
-                                {title}
-                            </span>
-                        </div>)
-                }
-            </div>
-        </div>
+    <div className='my-1 w-full'>
+      <div className={styles.menus}>
+        {
+          titles.map((title, id) =>
+            <div onClick={() => id !== props.currentValue && props.onChange && props.onChange(id)} key={title} className={clsx(styles.menu, 'text-base font-semibold', { [styles.active]: id === props.currentValue })}>
+              <span>
+                {title}
+              </span>
+            </div>)
+        }
+      </div>
+    </div>
   )
 }
 

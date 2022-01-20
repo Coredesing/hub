@@ -23,22 +23,22 @@ export const ButtonBase = ({
   ...props
 }: Props) => {
   return (
-        <button
-            {...props}
-            className={clsx(styles.base, (!disabled ? styles[color] : ''), className, {
-              [styles['clip-path-t-r']]: !notClipPath,
-              [styles.disabled]: disabled
-            })}
-            onClick={onClick}
-            disabled={disabled}
-        >
-            {isLoading
-              ? <div style={{ display: 'grid', gridTemplateColumns: '28px auto', gap: '5px', placeContent: 'center' }}>
-                <ClipLoader size={28} color='#fff' />
-                {children}
-            </div>
-              : children}
-        </button>
+    <button
+      {...props}
+      className={clsx(styles.base, (!disabled ? styles[color] : ''), className, {
+        [styles['clip-path-t-r']]: !notClipPath,
+        [styles.disabled]: disabled
+      })}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      {isLoading
+        ? <div style={{ display: 'grid', gridTemplateColumns: '28px auto', gap: '5px', placeContent: 'center' }}>
+          <ClipLoader size={28} color='#fff' />
+          {children}
+        </div>
+        : children}
+    </button>
   )
 }
 

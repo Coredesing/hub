@@ -18,16 +18,16 @@ const AuctionBox = (props: any) => {
     }
   }
   return <Layout title="GameFi Aggregator">
-        {
-            loading
-              ? <h1 className="text-white">Loading...</h1>
-              : (
-                  !poolInfo
-                    ? <h1 className="text-white">Page not found</h1>
-                    : renderContent()
-                )
-        }
-    </Layout>
+    {
+      loading
+        ? <h1 className="text-white">Loading...</h1>
+        : (
+          !poolInfo
+            ? <h1 className="text-white">Page not found</h1>
+            : renderContent()
+        )
+    }
+  </Layout>
 }
 
 export default AuctionBox

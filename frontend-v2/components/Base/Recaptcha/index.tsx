@@ -11,13 +11,13 @@ const Recaptcha = ({ className, onChange, ...props }: Props, ref) => {
   return (
     RECAPTCHA_SITE_KEY
       ? <div className={className}>
-            <HCaptcha
-                {...props}
-                sitekey={RECAPTCHA_SITE_KEY}
-                onVerify={onChange}
-                ref={ref }
-            > </HCaptcha>
-        </div>
+        <HCaptcha
+          {...props}
+          sitekey={RECAPTCHA_SITE_KEY}
+          onVerify={onChange}
+          ref={ref }
+        > </HCaptcha>
+      </div>
       : null
   )
 }

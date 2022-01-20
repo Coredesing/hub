@@ -9,19 +9,19 @@ type Props = {
 }
 const PoolDetail = (props: Props) => {
   return (
-        <div className={styles.contentPage}>
-            <div className={clsx(styles.body, 'lg:grid-cols-2', 'grid-cols-1')}>
-                <div className={styles.banner}>
-                    {props.bodyBannerContent}
-                </div>
-                <div>
-                    {props.bodyDetailContent}
-                </div>
-            </div>
-            <div className={clsx(styles.footer, 'w-full')} style={{ minHeight: '300px' }}>
-                {props.footerContent}
-            </div>
+    <div className={styles.contentPage}>
+      <div className={clsx(styles.body, 'lg:grid-cols-2', 'grid-cols-1')}>
+        <div className={styles.banner}>
+          {props.bodyBannerContent}
         </div>
+        <div>
+          {props.bodyDetailContent}
+        </div>
+      </div>
+      <div className={clsx(styles.footer, 'w-full')} style={{ minHeight: '300px' }}>
+        {props.footerContent}
+      </div>
+    </div>
   )
 }
 

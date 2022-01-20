@@ -11,7 +11,7 @@ const GameDetails = ({ data }) => {
   const items = [data.screen_shots_1, data.screen_shots_2, data.screen_shots_3, data.screen_shots_4, data.screen_shots_5].filter(x => !!x)
   return (
     <Layout title={data.game_name}>
-      <div className="md:px-4 lg:px-16 md:container mx-auto lg:block">
+      <div className="md:px-4 lg:px-24 md:container mx-auto lg:block">
         <div className="uppercase font-bold text-3xl">{data.game_name}</div>
         <div className="flex font-casual gap-10">
           <div className="w-8/12 relative">
@@ -73,7 +73,7 @@ const GameDetails = ({ data }) => {
 
             <div className="flex items-center justify-between mb-4">
               <span className="text-sm text-gray-300">Developer</span>
-              <span className="font-medium text-base">{data.developer}</span>
+              <span className="font-medium text-base truncate max-w-xs">{data.developer}</span>
             </div>
 
             <div className="flex items-center justify-between mb-4">

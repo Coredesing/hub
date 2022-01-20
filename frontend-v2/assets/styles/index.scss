@@ -60,6 +60,10 @@ html, body {
   clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%, 0 0);
 }
 
+.clipped-t-l {
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px, 10px 0);
+}
+
 .clipped-t-l-full {
   clip-path: polygon(30px 0, 100% 0%, 100% 100%, 0% 100%);
 }
@@ -70,6 +74,10 @@ html, body {
 
 .clipped-t-r-lg {
   clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 0 100%, 0 0);
+}
+
+.clipped-b-r {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 0);
 }
 
 .clipped-b-r-full {
@@ -86,10 +94,6 @@ html, body {
 
 .clipped-b-l {
   clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 20px 100%, 0 calc(100% - 20px));
-}
-
-.thumbs {
-  @apply lg:px-14;
 }
 
 .thumb {
@@ -128,5 +132,12 @@ video[poster] {
 @media screen and (max-width: 1308px) {
   .clipped-b-l {
     clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 15px 100%, 0 calc(100% - 15px));
+  }
+}
+
+.editor-content {
+  p {
+    margin-top: 1em;
+    margin-bottom: 1em;
   }
 }

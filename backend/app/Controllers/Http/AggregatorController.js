@@ -296,7 +296,7 @@ class AggregatorController {
 
       let builder = GameInformation.query()
       if (category) {
-        builder = builder.whereIn('category', params.process.split(','));
+        builder = builder.whereIn('category', params.category.split(','));
       }
       if (display_area) {
         builder = builder.where('display_area', 'like', `%${display_area}%`)

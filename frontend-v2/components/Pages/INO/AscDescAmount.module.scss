@@ -8,6 +8,21 @@
     clip-path: polygon(0 0, 100% 0, 100% 100%, 8px 100%, 0 calc(100% - 8px));
 }
 
-.change-amount {
+.h-30px {
     height: 30px;
+}
+
+.disabled {
+    background: #565656;
+    cursor: not-allowed;
+}
+
+.input {
+    background: transparent !important;
+    padding: 0;
+    border: none;
+    outline: none;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
 }

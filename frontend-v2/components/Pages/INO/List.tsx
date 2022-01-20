@@ -29,17 +29,17 @@ export const visibility = (item: Item) => {
 
 export const networkImage = (network: string) => {
   switch (network) {
-    case 'bsc': {
-      return require('assets/images/networks/bsc.svg')
-    }
+  case 'bsc': {
+    return require('assets/images/networks/bsc.svg')
+  }
 
-    case 'eth': {
-      return require('assets/images/networks/eth.svg')
-    }
+  case 'eth': {
+    return require('assets/images/networks/eth.svg')
+  }
 
-    case 'polygon': {
-      return require('assets/images/networks/polygon.svg')
-    }
+  case 'polygon': {
+    return require('assets/images/networks/polygon.svg')
+  }
   }
 }
 
@@ -57,33 +57,33 @@ export const currency = (item: Item) => {
 
 export const currencyNative = (network: string) => {
   switch (network) {
-    case 'bsc': {
-      return 'BNB'
-    }
+  case 'bsc': {
+    return 'BNB'
+  }
 
-    case 'eth': {
-      return 'ETH'
-    }
+  case 'eth': {
+    return 'ETH'
+  }
 
-    case 'polygon': {
-      return 'MATIC'
-    }
+  case 'polygon': {
+    return 'MATIC'
+  }
   }
 }
 
 export const currencyStable = (network: string) => {
   switch (network) {
-    case 'bsc': {
-      return 'BUSD'
-    }
+  case 'bsc': {
+    return 'BUSD'
+  }
 
-    case 'eth': {
-      return 'USDT'
-    }
+  case 'eth': {
+    return 'USDT'
+  }
 
-    case 'polygon': {
-      return 'USDT'
-    }
+  case 'polygon': {
+    return 'USDT'
+  }
   }
 }
 
@@ -186,27 +186,27 @@ const List = () => {
         </span>
         <span onClick={() => { page > 1 && setPage(page - 1) }}>
           <svg width="6" height="8" viewBox="0 0 6 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4.75 0.25L1 4L4.75 7.75" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M4.75 0.25L1 4L4.75 7.75" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </span>
         { pages && (
           <>
-          <span className={pages.current === pages.first ? styles.paginationActive : ''} onClick={() => { setPage(pages.first) }}>{pages.first}</span>
-          { pages.leftCluster && <span>...</span> }
-          { pages.pages.map(page => <span key={page} className={pages.current === page ? styles.paginationActive : ''} onClick={() => { setPage(page) }}>{page}</span>) }
-          { pages.rightCluster && <span>...</span> }
-          { pages.last > pages.first && <span className={pages.current === pages.last ? styles.paginationActive : ''} onClick={() => { setPage(pageLast) }}>{pages.last}</span> }
+            <span className={pages.current === pages.first ? styles.paginationActive : ''} onClick={() => { setPage(pages.first) }}>{pages.first}</span>
+            { pages.leftCluster && <span>...</span> }
+            { pages.pages.map(page => <span key={page} className={pages.current === page ? styles.paginationActive : ''} onClick={() => { setPage(page) }}>{page}</span>) }
+            { pages.rightCluster && <span>...</span> }
+            { pages.last > pages.first && <span className={pages.current === pages.last ? styles.paginationActive : ''} onClick={() => { setPage(pageLast) }}>{pages.last}</span> }
           </>
         )}
         <span onClick={() => { page < pageLast && setPage(page + 1) }}>
           <svg width="6" height="8" viewBox="0 0 6 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M1.25 0.25L5 4L1.25 7.75" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M1.25 0.25L5 4L1.25 7.75" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </span>
         <span onClick={() => { setPage(pageLast) }}>
           <svg width="8" height="10" viewBox="0 0 8 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3.75 8.75L7 5L3.75 1.25" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M0.75 8.75L4 5L0.750001 1.25" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M3.75 8.75L7 5L3.75 1.25" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M0.75 8.75L4 5L0.750001 1.25" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </span>
       </div>

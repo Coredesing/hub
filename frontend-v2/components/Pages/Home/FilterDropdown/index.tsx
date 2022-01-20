@@ -54,7 +54,7 @@ const FilterDropdown = ({ items, selected, onChange }: Props) => {
           {
             availableOptions().length
               ? availableOptions().map(item =>
-              <button key={item.key} onClick={() => handleChangeFilter(item)} className="cursor-pointer hover:bg-gamefiDark-600 px-4 py-1 w-full text-left">{item.label}</button>
+                <button key={item.key} onClick={() => handleChangeFilter(item)} className="cursor-pointer hover:bg-gamefiDark-600 px-4 py-1 w-full text-left">{item.label}</button>
               )
               : <></>
           }

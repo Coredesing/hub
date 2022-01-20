@@ -106,56 +106,56 @@ export function useMyWeb3 (): Context {
 
 function reducer (state: Context, { type, payload }: Action<Context>): Context {
   switch (type) {
-    case 'SET_LIBRARY': {
-      const { library } = payload
-      return {
-        ...state,
-        library
-      }
+  case 'SET_LIBRARY': {
+    const { library } = payload
+    return {
+      ...state,
+      library
     }
+  }
 
-    case 'SET_ACCOUNT': {
-      const { account } = payload
-      return {
-        ...state,
-        account
-      }
+  case 'SET_ACCOUNT': {
+    const { account } = payload
+    return {
+      ...state,
+      account
     }
+  }
 
-    case 'SET_CHAINID': {
-      const { chainID } = payload
-      return {
-        ...state,
-        chainID
-      }
+  case 'SET_CHAINID': {
+    const { chainID } = payload
+    return {
+      ...state,
+      chainID
     }
+  }
 
-    case 'SET_ERROR': {
-      const { error } = payload
-      return {
-        ...state,
-        error
-      }
+  case 'SET_ERROR': {
+    const { error } = payload
+    return {
+      ...state,
+      error
     }
+  }
 
-    case 'UPDATE_BALANCE': {
-      const { balance } = payload
-      return {
-        ...state,
-        balance
-      }
+  case 'UPDATE_BALANCE': {
+    const { balance } = payload
+    return {
+      ...state,
+      balance
     }
+  }
 
-    case 'SET_TRIED_EAGER': {
-      const { triedEager } = payload
-      return {
-        ...state,
-        triedEager
-      }
+  case 'SET_TRIED_EAGER': {
+    const { triedEager } = payload
+    return {
+      ...state,
+      triedEager
     }
+  }
 
-    default: {
-      return state
-    }
+  default: {
+    return state
+  }
   }
 }

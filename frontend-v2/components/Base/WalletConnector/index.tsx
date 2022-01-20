@@ -198,7 +198,7 @@ const WalletConnector = () => {
         <div className="font-casual leading-6 text-sm">
           <div className="bg-gray-700 clipped-t-r px-6 py-2 rounded inline-flex cursor-pointer" onClick={() => setShowModal(true)}>
             <div className="font-bold mr-2">
-            {balance && balanceShort} {currencyNative}
+              {balance && balanceShort} {currencyNative}
             </div>
             <span className="bg-gamefiDark-900 px-2 rounded">{accountShort}</span>
           </div>
@@ -222,7 +222,7 @@ const WalletConnector = () => {
                     <strong className="block text-lg">{network?.name}</strong>
                   </div>
 
-                   <div>
+                  <div>
                     <span>Wallet</span>
                     <strong className="block text-lg">Web3</strong>
                   </div>
@@ -243,8 +243,8 @@ const WalletConnector = () => {
               <p className="inline-flex items-center mt-4 justify-center w-full text-red-400 font-medium cursor-pointer hover:text-red-500" onClick={tryDeactivate}>
                 Disconnect
                 <svg className="w-6 h-6 ml-2" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M11 12.414L15.414 8L11 3.586L9.586 5L11.586 7H5V9H11.586L9.586 11L11 12.414Z" fill="currentColor"/>
-                <path d="M12 14H3V2H12V0H2C1.448 0 1 0.448 1 1V15C1 15.552 1.448 16 2 16H12V14Z" fill="currentColor"/>
+                  <path d="M11 12.414L15.414 8L11 3.586L9.586 5L11.586 7H5V9H11.586L9.586 11L11 12.414Z" fill="currentColor"/>
+                  <path d="M12 14H3V2H12V0H2C1.448 0 1 0.448 1 1V15C1 15.552 1.448 16 2 16H12V14Z" fill="currentColor"/>
                 </svg>
               </p>
             </div>

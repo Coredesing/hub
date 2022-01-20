@@ -9,6 +9,9 @@ type Props = {
 }
 const SidebarLink = ({ children, path, external }: Props) => {
   const router = useRouter()
+  const isActive = useMemo(() => {
+    return router.pathname === path || (router.asPath.indexOf(path) === 0 && path !== '/')
+  }, [router, path])
 
   if (external) {
     return (
@@ -21,10 +24,6 @@ const SidebarLink = ({ children, path, external }: Props) => {
       </a>
     )
   }
-
-  const isActive = useMemo(() => {
-    return router.pathname === path || router.asPath.indexOf(path) === 0 && path !== '/'
-  }, [router, path])
 
   return (
     <Link href={path} passHref>

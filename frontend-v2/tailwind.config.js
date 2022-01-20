@@ -10,7 +10,8 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                'casual': ['Poppins']
+                'casual': ['Poppins'],
+                'mechanic': ['Rajdhani'],
             }
         },
         colors: {
@@ -61,6 +62,7 @@ module.exports = {
         },
     },
     plugins: [
+        require('@tailwindcss/line-clamp'),
         require('@tailwindcss/forms'),
         require("@tailwindcss/aspect-ratio")
     ],

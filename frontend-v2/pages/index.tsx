@@ -117,7 +117,7 @@ const PageIndex = () => {
                     ))}
                   </Carousel>
                 </div>
-                : <div className="mx-auto grid grid-cols-3 gap-x-4 2xl:gap-x-6 gap-y-12 container mt-14 2xl:px-16">
+                : <div className="mx-auto md:container mt-14 2xl:px-16">
                   {upcomingIGOs?.length
                     ? <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
                       {upcomingIGOs.map(item => (
@@ -196,10 +196,16 @@ const PageIndex = () => {
                     ))}
                   </Carousel>
                 </div>
-                : <div className="mx-auto grid grid-cols-3 gap-x-4 gap-y-12 container mt-14 2xl:gap-x-6 2xl:px-16">
-                  {upcomingINOs.map(item => (
-                    <PoolBanner key={item.id} item={item} color="green"></PoolBanner>
-                  ))}
+                : <div className="mx-auto md:container mt-14 2xl:gap-x-6 2xl:px-16">
+                  {upcomingINOs?.length
+                    ? <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
+                      {upcomingINOs.map(item => (
+                        <SwiperItem key={item.id}>
+                          <PoolBanner item={item} className="mx-3"></PoolBanner>
+                        </SwiperItem>
+                      ))}
+                    </ListSwiper>
+                    : <></>}
                 </div>
             }
           </div>

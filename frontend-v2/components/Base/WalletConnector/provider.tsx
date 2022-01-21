@@ -3,8 +3,8 @@ import { useEagerConnect, NoEthereumProviderError } from 'components/web3'
 import { useMyWeb3 } from 'components/web3/context'
 import toast from 'react-hot-toast'
 
-export default function WalletProvider({ children }) {
-  const { account, dispatch, error, library, chainID } = useMyWeb3()
+export default function WalletProvider ({ children }) {
+  const { dispatch, error, updateBalance, library } = useMyWeb3()
   const tried = useEagerConnect()
   useEffect(() => {
     dispatch({ type: 'SET_TRIED_EAGER', payload: { triedEager: tried } })
@@ -24,17 +24,25 @@ export default function WalletProvider({ children }) {
   }, [error])
 
   useEffect(() => {
-    if (!account || !library || !chainID) {
-      dispatch({ type: 'UPDATE_BALANCE', payload: { balance: 0 } })
+    if (!library) {
       return
     }
 
-    library.getBalance(account).then(balance => {
-      dispatch({ type: 'UPDATE_BALANCE', payload: { balance } })
-    }).catch(() => {
-      toast.error('Could not load user\'s balance')
+    library.on('block', () => {
+      updateBalance()
     })
-  }, [library, account, dispatch, chainID])
+    return () => {
+      if (!library) {
+        return
+      }
+
+      library.removeAllListeners()
+    }
+  }, [library, updateBalance])
+
+  useEffect(() => {
+    updateBalance()
+  }, [updateBalance])
 
   return children
 }

@@ -10,7 +10,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'casual': ['Poppins']
+        'casual': ['Poppins'],
+        'mechanic': ['Rajdhani'],
       }
     },
     colors: {
@@ -39,12 +40,23 @@ module.exports = {
         '900': '#195806'
       },
       'gamefiYellow': {
-        DEFAULT: '#FFB800'
+        DEFAULT: '#FFB800',
+        '50': '#FFEBB8',
+        '100': '#FFE5A3',
+        '200': '#FFDA7A',
+        '300': '#FFCF52',
+        '400': '#FFC329',
+        '500': '#FFB800',
+        '600': '#C79000',
+        '700': '#8F6700',
+        '800': '#573F00',
+        '900': '#1F1600'
       },
       ...colors
     }
   },
   plugins: [
+    require('@tailwindcss/line-clamp'),
     require('@tailwindcss/forms'),
     require("@tailwindcss/aspect-ratio")
   ],

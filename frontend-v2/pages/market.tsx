@@ -6,7 +6,7 @@ import Layout from 'components/Layout'
 import Image from 'next/image'
 import useSWR from 'swr'
 import Link from 'next/link'
-import Dropdown from '../components/Base/Dropdown'
+import Layout from 'components/Layout'
 
 const Market = () => {
   const [hotCollections, setHotCollections] = useState([])

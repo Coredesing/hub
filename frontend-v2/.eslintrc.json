@@ -29,6 +29,7 @@
   // all configs (eslint-config-xxx) go here:
   "extends": [
     "eslint:recommended",
+    "standard",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking", // contains rules that specifically require type information
@@ -37,6 +38,7 @@
     "next/core-web-vitals"
   ],
   "rules": {
+    "indent": ["error", 2],
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unsafe-argument": "off",
     "@typescript-eslint/no-unsafe-assignment": "off",

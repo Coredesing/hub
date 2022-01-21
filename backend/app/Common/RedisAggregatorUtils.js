@@ -32,7 +32,7 @@ const deleteRedisAggregatorDetail = (slug) => {
   Aggregators
  */
   const getRedisKeyAggregators = (params) => {
-    return `aggregators_${params?.page || 1}_${params?.display_area || ''}_${params?.ido_type || ''}_${params?.category || ''}`;
+    return `aggregators_${params?.page || 1}_${params?.perPage || ''}_${params?.display_area || ''}_${params?.ido_type || ''}_${params?.category || ''}_${params?.gameLaunchStatus || ''}`;
   };
 
   const getRedisAggregators = async (params) => {

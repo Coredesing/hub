@@ -1,14 +1,22 @@
+import { ObjectType } from '@/common/types'
 import clsx from 'clsx'
 import { FormInputNumber } from 'components/Base/FormInputNumber'
+import { useBalanceToken } from 'components/web3/utils'
+import { BigNumber } from 'ethers'
 import React from 'react'
+import { BeatLoader } from 'react-spinners'
 import styles from './AscDescAmount.module.scss'
 type Props = {
   value: number;
   maxBuy: number;
   onChangeValue: (val: any) => any;
   bought: number;
+  poolInfo: ObjectType;
+  currencyInfo: ObjectType;
 }
-const AscDescAmount = ({ value, maxBuy, onChangeValue, bought }: Props) => {
+const AscDescAmount = ({ value, maxBuy, onChangeValue, bought, poolInfo, currencyInfo }: Props) => {
+  const { balanceShort, loading } = useBalanceToken(BigNumber.from(currencyInfo?.address || 0).isZero() ? undefined : currencyInfo as any, poolInfo.network_available)
+
   const remaining = +maxBuy - +bought || 0
   const onDesc = () => {
     onChangeValue(value - 1 > -1 ? value - 1 : 0)
@@ -30,7 +38,7 @@ const AscDescAmount = ({ value, maxBuy, onChangeValue, bought }: Props) => {
     <div className='mb-1'>
       <div className='flex justify-between gap-2 w-60 items-baseline'>
         <h4 className='font-bold text-base uppercase'>AMOUNT</h4>
-        <span className='text-white/50 text-xs font-medium font-casual'>(Balance: 0.343 BNB)</span>
+        <span className='text-white/50 text-xs font-medium font-casual'>(Balance: {loading ? <BeatLoader size={10} color='white' /> : +balanceShort || 0} {currencyInfo?.name})</span>
       </div>
     </div>
     <div className='flex items-center mb-2'>

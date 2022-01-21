@@ -6,7 +6,7 @@ import { ButtonBase } from 'components/Base/Buttons'
 import CountDownTimeV1, { CountDownTimeType } from 'components/Base/CountDownTime'
 import { TabPanel, Tabs } from 'components/Base/Tabs'
 import PresaleBoxAbi from '@/components/web3/abis/PreSaleBox.json'
-import { Contract, BigNumber } from 'ethers'
+import { Contract, BigNumber, constants } from 'ethers'
 import { ObjectType } from '@/common/types'
 import TokenItem from './TokenItem'
 import BoxTypeItem from './BoxTypeItem'
@@ -14,7 +14,7 @@ import DetailPoolItem from './DetailPoolItem'
 import RuleIntroduce from './RuleIntroduce'
 import SerieContent from './SerieContent'
 import { useMyWeb3 } from 'components/web3/context'
-import { useLibraryDefaultFlexible } from 'components/web3/utils'
+import { useLibraryDefaultFlexible, useTokenAllowance, useTokenApproval } from 'components/web3/utils'
 import axios from '@/utils/axios'
 import { useCheckJoinPool, useJoinPool } from '@/hooks/useJoinPool'
 import Alert from 'components/Base/Alert'
@@ -25,6 +25,9 @@ import AscDescAmount from './AscDescAmount'
 import TimeLine from './TimeLine'
 import { getTimelineOfPool } from '@/utils/pool'
 import { useAppContext } from '@/context'
+import PlaceOrderModal from './PlaceOrderModal'
+import toast from 'react-hot-toast'
+import BuyBoxModal from './BuyBoxModal'
 
 const MysteryBoxDetail = ({ poolInfo }: any) => {
   const eventId = 0
@@ -36,21 +39,46 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const [currencySelected, setCurrencySelected] = useState<ObjectType>({})
   const [myBoxOrdered, setMyBoxOrdered] = useState(0)
   const [currentTab, setCurrentTab] = useState(0)
-  const [numBoxOrder, setNumBoxOrder] = useState(0)
+  const [amountBoxBuy, setAmountBoxBuy] = useState(0)
   const [countdown, setCountdown] = useState<CountDownTimeType & { title: string, [k: string]: any }>({ date1: 0, date2: 0, title: '' })
   const [timelinePool, setTimelinePool] = useState<ObjectType>({})
   const [timelines, setTimelines] = useState<ObjectType<{
-        title: string;
-        desc: string;
-        current?: boolean;
-    }>>({})
+    title: string;
+    desc: string;
+    current?: boolean;
+  }>>({})
+  const [openPlaceOrderModal, setOpenPlaceOrderModal] = useState(false)
+  const [openBuyBoxModal, setOpenBuyBoxModal] = useState(false)
+
   useEffect(() => {
     if (!account) return
     tiersState.actions.getUserTier(account)
   }, [account])
 
   const { provider: libraryDefaultTemporary } = useLibraryDefaultFlexible(poolInfo?.network_available)
-  const [contractPresale, setContractPresale] = useState<any>(null);
+  const [contractPresale, setContractPresale] = useState<any>(null)
+  const [myBoxThisPool, setMyBoxThisPool] = useState(0)
+  const maxBoxCanBuy = useMemo(() => {
+    const currentTier = poolInfo.tiers.find(t => t.level === userTier)
+    return currentTier?.ticket_allow || 0
+  }, [poolInfo, userTier])
+
+  useEffect(() => {
+    if (!contractPresale || !account) {
+      setMyBoxThisPool(0)
+      return
+    }
+    const getMyBoxThisPool = async () => {
+      try {
+        const myBox = await contractPresale.userBought(eventId, account)
+        console.log('myBox', myBox)
+        setMyBoxThisPool(myBox.toNumber())
+      } catch (error) {
+        console.log('er', error)
+      }
+    }
+    getMyBoxThisPool()
+  }, [contractPresale, account])
 
   const onSetCountdown = useCallback(() => {
     if (poolInfo) {
@@ -138,7 +166,11 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
 
   const listTokens = useMemo(() => {
     const arr = poolInfo.acceptedTokensConfig || []
-    setCurrencySelected(arr[0] || {})
+    const token = arr[0] || {}
+    if (token.address && !BigNumber.from(token.address).isZero()) {
+      token.neededApprove = true
+    }
+    setCurrencySelected(token)
     return arr
   }, [poolInfo])
 
@@ -146,14 +178,14 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     const boxes = poolInfo.boxTypesConfig || []
     if (poolInfo.campaign_hash && libraryDefaultTemporary) {
       const contractPresale = new Contract(poolInfo.campaign_hash, PresaleBoxAbi, libraryDefaultTemporary)
-      setContractPresale(contractPresale);
+      setContractPresale(contractPresale)
       Promise
         .all(boxes.map((b, subBoxId) => new Promise(async (res, rej) => {
           try {
             const response = await contractPresale.subBoxes(eventId, subBoxId)
             const result = {
-              maxSupply: response.maxSupply || 0,
-              totalSold: response.totalSold || 0
+              maxSupply: response.maxSupply ? response.maxSupply.toNumber() : 0,
+              totalSold: response.totalSold ? response.totalSold.toNumber() : 0
             }
             res({ ...b, subBoxId, ...result })
           } catch (error) {
@@ -207,10 +239,34 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const { isJoinPool, loading: loadingCheckJPool } = useCheckJoinPool(poolInfo?.id, account)
   const { joinPool, loading: loadingJPool, success: isJoinSuccess } = useJoinPool(poolInfo?.id, account)
 
-  const onChangeNumberBoxOrder = (num: number) => {
-    setNumBoxOrder(num)
+  const onChangeNumBuyBox = (num: number) => {
+    setAmountBoxBuy(num)
   }
 
+  const [isApprovedToken, setTokenApproved] = useState<boolean | null>(null)
+  const { approve, loading: loadingApproveToken } = useTokenApproval(currencySelected as any, poolInfo.campaign_hash)
+  const { allowance, load: getAllowance, loading: loadingAllowance } = useTokenAllowance(currencySelected as any, account, poolInfo.campaign_hash, poolInfo.network_available)
+  useEffect(() => {
+    if (currencySelected && account) {
+      getAllowance()
+    }
+  }, [getAllowance, currencySelected, account])
+  useEffect(() => {
+    if (!allowance) {
+      setTokenApproved(null)
+    } else {
+      setTokenApproved(!BigNumber.from(allowance).isZero())
+    }
+  }, [allowance])
+  const handleApproveToken = async () => {
+    await approve(constants.MaxUint256)
+    toast.success('Approve token succesfully')
+    setTokenApproved(true)
+  }
+
+  const isAppliedWhitelist = isJoinPool || isJoinSuccess
+  const isShowBtnApprove = currencySelected.neededApprove && !isApprovedToken && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && (!currencySelected.neededApprove || (currencySelected.neededApprove && !isApprovedToken))
+  const isShowBtnBuy = isAppliedWhitelist && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken));
   return (
     <>
       {/* <DialogTxSubmitted
@@ -220,11 +276,22 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
                 networkName={allowNetwork.shortName}
             />
             */}
-
+      <PlaceOrderModal open={openPlaceOrderModal} onClose={() => setOpenPlaceOrderModal(false)} poolId={poolInfo.id} getBoxOrderd={getBoxOrderd} />
+      <BuyBoxModal
+        open={openBuyBoxModal}
+        onClose={() => setOpenBuyBoxModal(false)}
+        amountBoxBuy={amountBoxBuy}
+        boxTypeBuy={boxSelected}
+        currencyInfo={currencySelected}
+        poolInfo={poolInfo}
+        eventId={eventId}
+      />
       <div className={clsx('rounded mb-5', styles.headPool)}>
-        <Alert className='mb-10'>
+        {
+          isAppliedWhitelist && (countdown.isUpcomingSale || countdown.isWhitelist) && <Alert className='mb-10'>
             Congratulations! You have successfully applied whitelist and can buy Mystery boxes from <b>Phase 1</b>
-        </Alert>
+          </Alert>
+        }
         <div className={'grid grid-cols-2'}>
           <div className={clsx('flex', styles.headInfoBoxOrder)}>
             <InfoBoxOrderItem label='Registered Users' value={poolInfo.totalOrder || 0} />
@@ -236,7 +303,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               {countdown.title}
             </div>
             <div className={clsx(styles.countdown)} >
-              { countdown.date2 !== 0 && !countdown.isFinished && <CountDownTimeV1 time={{ date1: countdown.date1, date2: countdown.date2 }} className="bg-transparent" background='bg-transparent' onFinish={onSetCountdown} />}
+              {countdown.date2 !== 0 && !countdown.isFinished && <CountDownTimeV1 time={{ date1: countdown.date1, date2: countdown.date2 }} className="bg-transparent" background='bg-transparent' onFinish={onSetCountdown} />}
             </div>
           </div>
         </div>
@@ -275,24 +342,54 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           </div>
           <div className='mb-8'>
             <div> <h4 className='font-bold text-base mb-1 uppercase'>Type</h4></div>
-            <div className='flex gap-2'>
+            <div className='flex gap-2 flex-wrap'>
               {boxTypes.map((b) => <BoxTypeItem key={b.id} item={b} onClick={onSelectBoxType} selected={boxSelected.id === b.id} />)}
             </div>
           </div>
-          <div className='mb-8'>
-            <AscDescAmount value={numBoxOrder} maxBuy={10} bought={3} onChangeValue={onChangeNumberBoxOrder} />
-          </div>
+          {
+            countdown.isSale && 
+            <div className='mb-8'>
+              <AscDescAmount value={amountBoxBuy} maxBuy={maxBoxCanBuy} bought={myBoxThisPool} onChangeValue={onChangeNumBuyBox} poolInfo={poolInfo} currencyInfo={currencySelected} />
+            </div>
+          }
           <div>
-            <ButtonBase
-              color={(isJoinPool || isJoinSuccess) ? 'blue' : 'green'}
-              isLoading={loadingJPool || loadingCheckJPool}
-              disabled={isJoinPool || isJoinSuccess || loadingCheckJPool || loadingJPool}
-              onClick={joinPool}
-              className={clsx('w-full mt-4 uppercase clipped-t-r ')}>
-              {
-                (isJoinPool || isJoinSuccess) ? 'Applied Whitelist' : 'Apply Whitelist'
-              }
-            </ButtonBase>
+            {
+              !isAppliedWhitelist && countdown.isWhitelist && <ButtonBase
+                color={'green'}
+                isLoading={loadingJPool || loadingCheckJPool}
+                disabled={loadingCheckJPool || loadingJPool}
+                onClick={joinPool}
+                className={clsx('w-full mt-4 uppercase')}>
+                Apply Whitelist
+              </ButtonBase>
+            }
+            {
+              isAppliedWhitelist && countdown.isWhitelist &&
+              <ButtonBase
+                color={'green'}
+                onClick={() => setOpenPlaceOrderModal(true)}
+                className={clsx('w-full mt-4 uppercase')}>
+                Place Order
+              </ButtonBase>
+            }
+            {
+              isShowBtnApprove &&
+              <ButtonBase
+                color={'green'}
+                onClick={handleApproveToken}
+                className={clsx('w-full mt-4 uppercase')}>
+                Approve
+              </ButtonBase>
+            }
+            {
+              isShowBtnBuy &&
+              <ButtonBase
+                color={'green'}
+                onClick={() => setOpenBuyBoxModal(true)}
+                className={clsx('w-full mt-4 uppercase')}>
+                Buy Box
+              </ButtonBase>
+            }
           </div>
         </>}
         footerContent={<>
@@ -317,7 +414,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               <SerieContent poolInfo={poolInfo} />
             </TabPanel>
             <TabPanel value={currentTab} index={3}>
-              <TimeLine timelines={timelines}/>
+              <TimeLine timelines={timelines} />
             </TabPanel>
           </div>
         </>}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { BulletListIcon, GridIcon, MediumIcon, TelegramIcon, TwitterIcon } from 'components/Base/Icon'
+import { BulletListIcon, GridIcon } from 'components/Base/Icon'
 import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from 'components/Base/Table'
 import { ObjectType } from '@/common/types'
 
@@ -19,9 +19,9 @@ const SerieContent = ({ poolInfo }: Props) => {
       <span className="cursor-pointer">
         <BulletListIcon color={showTypeSerieContent === showTypes.table ? '#6CDB00' : '#6C6D71'} className="pointer" onClick={() => onSelectShowSerieContent(showTypes.table)} />
       </span>
-      <span className="cursor-pointer">
+      {/* <span className="cursor-pointer">
         <GridIcon color={showTypeSerieContent === showTypes.grid ? '#6CDB00' : '#6C6D71'} className="pointer" onClick={() => onSelectShowSerieContent(showTypes.grid)} />
-      </span>
+      </span> */}
     </div>
     <div className="mb-3">
       {showTypeSerieContent === showTypes.table &&
@@ -37,9 +37,10 @@ const SerieContent = ({ poolInfo }: Props) => {
               <TableCellHead>
                 Rarity
               </TableCellHead>
-              <TableCellHead>
+              {poolInfo.seriesContentConfig?.[0]?.description && <TableCellHead>
                 Description
               </TableCellHead>
+              }
             </TableRow>
           </TableHead>
           <TableBody>
@@ -57,23 +58,25 @@ const SerieContent = ({ poolInfo }: Props) => {
                 <TableCell>
                   {b.rate}
                 </TableCell>
-                <TableCell>
-                  <div>
-                    <span
-                      className="break-words break-all text-ellipsis overflow-hidden text-sm"
-                      style={{
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical'
-                      }}>
-                      {b.description} Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy ...
-                    </span>
-                    <span
-                      className="text-gamefiGreen font-casual font-semibold ml-1 cursor-pointer text-sm"
-                    >
-                      Read more
-                    </span>
-                  </div>
-                </TableCell>
+                {
+                  poolInfo.seriesContentConfig?.[0]?.description && <TableCell>
+                    <div>
+                      <span
+                        className="break-words break-all text-ellipsis overflow-hidden text-sm"
+                        style={{
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical'
+                        }}>
+                        {b.description}
+                      </span>
+                      <span
+                        className="text-gamefiGreen font-casual font-semibold ml-1 cursor-pointer text-sm"
+                      >
+                        Read more
+                      </span>
+                    </div>
+                  </TableCell>
+                }
               </TableRow>)
             }
           </TableBody>

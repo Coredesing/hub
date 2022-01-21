@@ -34,10 +34,10 @@ const useApiSignature = (url: string) => {
         ...data,
       }, HeadersSignature);
       const result = response.data;
-      if (!result.data?.signature) {
-        throw new Error(result?.message)
+      if (result.status === 200 && result.data) {
+        return result.data.signature;
       }
-      return result.data.signature;
+      throw new Error(result?.message)
     } catch (error) {
       throw new Error(error?.message || 'Something went wrong when sign message')
     }

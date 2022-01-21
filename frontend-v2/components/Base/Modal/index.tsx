@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { ObjectType } from '@/common/types'
-import React, { ReactNode, useEffect, useRef } from 'react'
+import React, { ReactNode, useCallback, useEffect, useRef } from 'react'
+import { CloseIcon } from '../Icon'
+import styles from './Modal.module.scss'
 
 type Props = {
   children?: ReactNode,
@@ -12,12 +14,11 @@ type Props = {
 
 const Modal = ({ children, show, toggle, className, ...props }: Props) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const handleClose = useCallback(() => {
+    toggle && toggle(false)
+  }, [toggle])
 
   useEffect(() => {
-    const handleClose = () => {
-      toggle && toggle(false)
-    }
-
     function handleClick (event: any) {
       if (wrapperRef?.current && !wrapperRef?.current?.contains(event?.target)) {
         handleClose()
@@ -33,11 +34,12 @@ const Modal = ({ children, show, toggle, className, ...props }: Props) => {
     return () => {
       document.removeEventListener('click', handleClick, { capture: true })
     }
-  }, [wrapperRef, show, toggle])
+  }, [wrapperRef, show, toggle, handleClose])
 
   return (
     show
-      ? <div>
+      ? <div className={styles.modal}>
+
         <div className="fixed z-10 inset-0 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
             {/* Background overlay, show/hide based on modal state.
@@ -62,7 +64,10 @@ const Modal = ({ children, show, toggle, className, ...props }: Props) => {
               From: "opacity-100 translate-y-0 sm:scale-100"
               To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" */}
 
-            <div ref={wrapperRef} {...props} className={`dark:bg-gamefiDark-400 inline-block align-bottom rounded-sm text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl w-full ${className}`}>
+            <div ref={wrapperRef} {...props} className={`dark:bg-gamefiDark-400 inline-block align-bottom rounded-sm text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl w-full relative ${styles.modalContent} ${className}`}>
+              <button onClick={handleClose} className='absolute right-4 top-4 cursor-pointer'>
+                <CloseIcon />
+              </button>
               {children}
             </div>
           </div>

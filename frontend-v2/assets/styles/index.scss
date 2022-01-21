@@ -5,40 +5,12 @@
 
 @tailwind utilities;
 
-@font-face {
-  font-family: Rajdhani;
-  src: url('../fonts/Rajdhani/Rajdhani-Bold.ttf');
-  font-weight: 700;
-}
-
-@font-face {
-  font-family: Rajdhani;
-  src: url('../fonts/Rajdhani/Rajdhani-SemiBold.ttf');
-  font-weight: 600;
-}
-
-@font-face {
-  font-family: Rajdhani;
-  src: url('../fonts/Rajdhani/Rajdhani-Medium.ttf');
-  font-weight: 500;
-}
-
-@font-face {
-  font-family: Rajdhani;
-  src: url('../fonts/Rajdhani/Rajdhani-Regular.ttf');
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: Rajdhani;
-  src: url('../fonts/Rajdhani/Rajdhani-Light.ttf');
-  font-weight: 300;
-}
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap');
 
 html, body {
-  margin: 0;
+  margin: 0 !important;
+  padding: 0 !important;
   font-family: Rajdhani;
   line-height: 17px;
 }

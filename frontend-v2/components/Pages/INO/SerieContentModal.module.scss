@@ -1,0 +1,17 @@
+.content {
+    background: rgba(40, 40, 46, 1);
+}
+
+.itemSlide {
+    flex-basis: 138px;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 48px 100%, 39px calc(100% - 9px), 0% calc(100% - 9px));
+}
+
+.thumbs {
+    .thumb4s {
+        li {
+            width: unset !important;
+            height: unset !important;
+        }
+    }
+}

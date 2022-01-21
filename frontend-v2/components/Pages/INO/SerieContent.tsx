@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { BulletListIcon, GridIcon } from 'components/Base/Icon'
 import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from 'components/Base/Table'
 import { ObjectType } from '@/common/types'
+import SerieContentModal from './SerieContentModal'
 
 type Props = {
   poolInfo: ObjectType
@@ -13,7 +14,21 @@ const SerieContent = ({ poolInfo }: Props) => {
     setShowTypeSerieContent(type)
   }
 
+  const [openSerieContentModal, setOpenSerieContentModal] = useState(true);
+
+  const [idSerie, setIdSerie] = useState(0);
+  const onShhowSerieModal = (id: number) => {
+    setIdSerie(id);
+    setOpenSerieContentModal(true);
+  }
+
   return <div className="relative">
+    {/* <SerieContentModal
+      open={openSerieContentModal}
+      onClose={() => setOpenSerieContentModal(false)}
+      serieContents={poolInfo.seriesContentConfig || []}
+      idShow={idSerie}
+    /> */}
     <div className="view-mode flex gap-5" style={{ position: 'absolute', right: '15px', top: '18px' }}>
       <span>View</span>
       <span className="cursor-pointer">
@@ -47,7 +62,7 @@ const SerieContent = ({ poolInfo }: Props) => {
             {
               poolInfo.seriesContentConfig.map((b, id) => <TableRow key={id}>
                 <TableCell>
-                  <div className="flex gap-3 items-center uppercase text-sm font-semibold">
+                  <div onClick={() => onShhowSerieModal(id)} className="flex gap-3 items-center uppercase text-sm font-semibold cursor-pointer">
                     <img src={b.icon} alt="" className="w-12 h-14" />
                     <span>{b.name}</span>
                   </div>

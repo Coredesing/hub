@@ -20,7 +20,7 @@ const INO = () => {
   return (
     <Layout title="GameFi INO">
       <>
-        <Carousel items={data?.data?.data || []} style={{ paddingBottom: '2rem' }} now={now}></Carousel>
+        {data?.data?.data?.length ? <Carousel items={data?.data?.data || []} style={{ paddingBottom: '2rem' }} now={now}></Carousel> : <></>}
         <ListAuction now={now} />
         <ListOpening now={now} />
         <ListUpcoming now={now} />

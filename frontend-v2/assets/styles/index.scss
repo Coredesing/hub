@@ -96,6 +96,18 @@ html, body {
   clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 20px 100%, 0 calc(100% - 20px));
 }
 
+.clipped-b-r {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0% 50%);
+}
+
+.clipped-b-r-sm {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0% 50%);
+}
+
+.thumbs {
+  @apply lg:px-14;
+}
+
 .thumb {
   border: 1px solid transparent !important;
   height: 80px !important;

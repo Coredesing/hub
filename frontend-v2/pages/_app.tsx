@@ -3,7 +3,7 @@ import { Web3ReactProvider } from '@web3-react/core'
 import { getLibrary, Web3ProviderNetwork } from 'components/web3'
 import { MyWeb3Provider } from 'components/web3/context'
 import WalletProvider from 'components/Base/WalletConnector/provider'
-import '/assets/styles/index.scss'
+import 'assets/styles/index.scss'
 import { Toaster } from 'react-hot-toast'
 
 function MyApp ({ Component, pageProps }: AppProps) {

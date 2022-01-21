@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import style from './style.module.scss'
 import { useSwipeable } from 'react-swipeable'
 
@@ -23,7 +22,7 @@ export const SwiperItem = ({ children, width }: any) => {
 }
 
 const ListSwiper = ({ children, transition = '0.3s', showItemsNumber, step }: Props) => {
-  const [activeIndex, setActiveIndex] = useState({from: 0, to: step - 1})
+  const [activeIndex, setActiveIndex] = useState({ from: 0, to: step - 1 })
   const totalItems = React.Children.count(children)
 
   const updateIndex = (newIndex: number) => {
@@ -57,21 +56,25 @@ const ListSwiper = ({ children, transition = '0.3s', showItemsNumber, step }: Pr
   const handlerSwiper = useSwipeable({
     onSwipedLeft: (eventData) => updateIndex(activeIndex.from + step),
     onSwipedRight: (eventData) => updateIndex(activeIndex.from - step)
-  });
+  })
 
   return (
     <>
       <div className="md:text-lg 2xl:text-3xl uppercase font-bold">
         Hot Collection
       </div>
-      <div className="w-full relative bg-gamefiDark-600" style={{height: '4px'}}>
-        <div className="absolute bottom-0 right-0 dark:bg-gamefiDark-900 clipped-t-l-full-sm" style={{height: '3px', width: 'calc(100% - 60px)'}}></div>
+      <div className="w-full relative bg-gamefiDark-600" style={{ height: '4px' }}>
+        <div className="absolute bottom-0 right-0 dark:bg-gamefiDark-900 clipped-t-l-full-sm" style={{ height: '3px', width: 'calc(100% - 60px)' }}></div>
         {
-          showItemsNumber === step ? <div className="absolute top-0 right-0 w-1/4 grid grid-flow-col gap-2 bg-gamefiDark-900" style={{height: '1px'}}>
-          {pages && pages().length ? pages().map((page: Page) => (
-            <div key={page.page} className={`h-full ${activeIndex.to >= page.fromIndex && activeIndex.to <= page.toIndex  ? 'bg-gamefiGreen-700' : 'bg-white'}`}></div>
-          )) : <></>}
-        </div> : <></>
+          showItemsNumber === step
+            ? <div className="absolute top-0 right-0 w-1/4 grid grid-flow-col gap-2 bg-gamefiDark-900" style={{ height: '1px' }}>
+              {pages && pages().length
+                ? pages().map((page: Page) => (
+                  <div key={page.page} className={`h-full ${activeIndex.to >= page.fromIndex && activeIndex.to <= page.toIndex ? 'bg-gamefiGreen-700' : 'bg-white'}`}></div>
+                ))
+                : <></>}
+            </div>
+            : <></>
         }
       </div>
       <div {...handlerSwiper} className="relative mt-14">

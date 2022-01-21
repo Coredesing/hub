@@ -42,7 +42,7 @@ const PageIndex = () => {
   ]
   const [gameFilterOption, setGameFilterOption] = useState(gameFilterOptions[0].value)
 
-  const { data: fetchTopGamesResponse, error: fetchTopGamesError } = useSWR(`${BASE_URL}/aggregator?display_area=${router?.query?.topGames?.toString() || 'Top Favourite'}&price=true&limit=4`, fetcher)
+  const { data: fetchTopGamesResponse, error: fetchTopGamesError } = useSWR(`${BASE_URL}/aggregator?display_area=${router?.query?.topGames?.toString() || 'Top Favourite'}&price=true&perPage=4`, fetcher)
   const { data: fetchFeaturedGamesResponse, error: fetchFeaturedGamesError } = useSWR(`${BASE_URL}/aggregator?display_area=Top Game`, fetcher)
   const { data: fetchUpcomingIGOsResponse, error: fetchUpcompingIGOsError } = useSWR(`${BASE_URL}/pools/upcoming-pools?token_type=erc20&limit=20&page=1&is_private=0`, fetcher)
   const { data: fetchUpcomingINOsResponse, error: fetchUpcomingINOsError } = useSWR(`${BASE_URL}/pools/upcoming-pools?token_type=box&limit=20&page=1&is_private=0`, fetcher)

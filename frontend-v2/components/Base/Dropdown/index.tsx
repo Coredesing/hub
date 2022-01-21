@@ -21,16 +21,15 @@ const Dropdown = ({ items, selected, onChange }: Props) => {
   const handleClickOutside = (e: any) => {
     if (show === true && wrapperRef.current && !wrapperRef.current.contains(e?.target)) {
       setShow(false)
-      return
     }
   }
 
   useEffect(() => {
     window && window.addEventListener('click', handleClickOutside)
 
-    return (() => {
+    return () => {
       window && window.removeEventListener('click', handleClickOutside)
-    })
+    }
   })
 
   const availableOptions = () => {
@@ -50,14 +49,17 @@ const Dropdown = ({ items, selected, onChange }: Props) => {
           <path d="M15.5 4.5L8 12L0.5 4.5" stroke="#ffffff" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       </button>
-      {show ?
-        <div ref={wrapperRef} className="origin-top-right right-0 absolute mt-2 z-10 w-52 rounded-sm py-1 shadow-lg focus:outline-none text-base bg-gamefiDark-500">
+      {show
+        ? <div ref={wrapperRef} className="origin-top-right right-0 absolute mt-2 z-10 w-52 rounded-sm py-1 shadow-lg focus:outline-none text-base bg-gamefiDark-500">
           {
-            availableOptions() && availableOptions().length ? availableOptions().map(item =>
-              <button key={item.key} onClick={() => handleChangeFilter(item)} className="cursor-pointer hover:bg-gamefiDark-600 px-4 py-1 w-full text-left">{item.label}</button>
-            ) : <></>
+            availableOptions() && availableOptions().length
+              ? availableOptions().map(item =>
+                <button key={item.key} onClick={() => handleChangeFilter(item)} className="cursor-pointer hover:bg-gamefiDark-600 px-4 py-1 w-full text-left">{item.label}</button>
+              )
+              : <></>
           }
-        </div> : <></>}
+        </div>
+        : <></>}
     </div>
   )
 }

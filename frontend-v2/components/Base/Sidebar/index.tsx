@@ -1,14 +1,12 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import SidebarLink from './SidebarLink'
 
 const Sidebar = () => {
-
   return (
     <>
-      <div className="hidden h-full w-20 md:block md:w-24 lg:w-28 dark:bg-gamefiDark-700 overflow-y-auto hide-scrollbar" style={{boxShadow: 'inset -1px 0px 0px #303442'}}>
+      <div className="hidden h-full w-20 md:block md:w-24 lg:w-28 dark:bg-gamefiDark-700 overflow-y-auto hide-scrollbar" style={{ boxShadow: 'inset -1px 0px 0px #303442' }}>
         <Link href="/" passHref>
           <div className="w-full md:py-7 lg:py-9 flex align-middle items-center justify-center cursor-pointer">
             <Image src={require('assets/images/gamefi.svg')} alt='gamefi'></Image>
@@ -22,9 +20,13 @@ const Sidebar = () => {
           <Image src={require('assets/images/icons/controller.svg')} alt='aggregator'></Image>
           <span className="mt-2">Aggregator</span>
         </SidebarLink>
-        <SidebarLink path='/launchpad'>
-          <Image src={require('assets/images/icons/spaceship.svg')}alt='launchpad'></Image>
-          <span className="mt-2">Launchpad</span>
+        <SidebarLink path='https://hub.gamefi.org/#/pools/token' external={true}>
+          <Image src={require('assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
+          <span className="mt-2">IGO</span>
+        </SidebarLink>
+        <SidebarLink path='/ino'>
+          <Image src={require('assets/images/icons/spaceship.svg')} alt='INO'></Image>
+          <span className="mt-2">INO</span>
         </SidebarLink>
         <SidebarLink path='/market'>
           <Image src={require('assets/images/icons/shop.svg')} alt='market'></Image>

@@ -3,17 +3,16 @@ import Layout from 'components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { paginator, fetcher, formatterUSD, formatPrice } from 'utils'
+import { paginator, formatterUSD, formatPrice } from 'utils'
 import { useMemo, useState, useEffect } from 'react'
-import useSWR from 'swr'
 import PriceChange from 'components/Pages/Aggregator/PriceChange'
 
-const Pagination = ({ page, pageLast, setPage = () => {} }: { page: number, pageLast: number, setPage: (number) => void }) => {
+const Pagination = ({ page, pageLast, setPage = () => {}, className }: { page: number, pageLast: number, setPage: (number) => void, className: string }) => {
   const pages = useMemo(() => {
     return paginator({ current: page, last: pageLast })
   }, [page, pageLast])
 
-  return <div className="inline-flex gap-1 text-white font-casual text-sm" style={{ marginTop: '2rem' }}>
+  return <div className={`inline-flex gap-1 text-white font-casual text-sm ${className}`}>
     <span className="inline-flex w-6 h-6 bg-gamefiDark-700 justify-center items-center rounded cursor-pointer border-transparent" onClick={() => { setPage(1) }}>
       <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M5.25 1.25L2 5L5.25 8.75" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
@@ -50,48 +49,43 @@ const Pagination = ({ page, pageLast, setPage = () => {} }: { page: number, page
 
 const Aggregator = ({ data }) => {
   const router = useRouter()
-  const [page, setPage] = useState<number>(data.page || 1)
-  const [cached, setCached] = useState(data)
-
-  const url = useMemo(() => {
-    if (page === data.page) {
-      return null
+  const [page, setPage] = useState<number>(data.page)
+  const [category, setCategory] = useState<string>(data.category)
+  const [loading, setLoading] = useState(false)
+  const params = useMemo(() => {
+    const params = new URLSearchParams()
+    if (page) {
+      params.set('page', page)
     }
 
-    const params = new URLSearchParams(router.query)
-    return `/api/aggregator?${params}`
-  }, [router, page, data])
-
-  const { data: result, error } = useSWR(url, fetcher)
+    if (category) {
+      params.set('category', category)
+    }
+    return `${params}`
+  }, [page, category])
   useEffect(() => {
-    if (!result?.data) {
-      return
-    }
+    setPage(data.page)
+    setCategory(data.category)
+  }, [data])
 
-    setCached(result.data)
-  }, [result])
   useEffect(() => {
-    if (page === data.page) {
-      setCached(data)
-    }
-  }, [page, data])
+    setPage(1)
+  }, [category])
 
-  const loading = useMemo(() => {
-    return page !== data.page && !result?.data && !error
-  }, [page, data, result, error])
-
-  function updatePage (number) {
-    setPage(number)
-    router.push(`?page=${number}`, undefined, { shallow: true })
-      .catch(err => {
-        console.debug(err)
+  useEffect(() => {
+    setLoading(true)
+    router.push(`?${params}`)
+      .finally(() => {
+        setLoading(false)
       })
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params])
 
   return (
     <Layout title="GameFi Aggregator">
       <div className="md:px-4 lg:px-16 md:container mx-auto lg:block">
         <div className="uppercase font-bold text-3xl">Game List</div>
+        <p>Demo Only: <button onClick={() => setCategory('MMORPG')}>Click here to change category to MMORPG</button></p>
         <div className="mt-6 relative">
           <div className="flex mb-2">
             <div className="uppercase text-gray-400 font-bold text-sm flex-1">Game</div>
@@ -100,7 +94,7 @@ const Aggregator = ({ data }) => {
             <div className="uppercase text-gray-400 font-bold text-sm w-40 xl:w-48">Token Price</div>
             <div className="uppercase text-gray-400 font-bold text-sm w-32 xl:w-48 hidden xl:block">Last 7 days</div>
           </div>
-          <div className="relative">
+          <div className="relative mb-8">
             { loading && (
               <div className="flex gap-2 justify-center items-center uppercase font-casual font-semibold absolute z-10 inset-0 bg-gamefiDark-900 bg-opacity-90">
                 <svg className="animate-spin w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -111,10 +105,10 @@ const Aggregator = ({ data }) => {
               </div>
             ) }
 
-            { cached.data && cached.data.map(item => {
+            { data.data && data.data.map(item => {
               const roi = ((parseFloat(item.tokenomic?.price) || 0) / parseFloat(item.token_price)).toFixed(2)
               return (
-                <Link href={`aggregator/${item.slug}`} key={item.id}>
+                <Link href={`/aggregator/${item.slug}`} key={item.id} passHref={true}>
                   <div className="flex items-center bg-gamefiDark-700 hover:bg-gamefiDark-600 mb-4 cursor-pointer">
                     <div className="flex-1 flex items-center">
                       <div className="flex-none relative w-48 h-28">
@@ -144,7 +138,7 @@ const Aggregator = ({ data }) => {
               )
             }) }
           </div>
-          <Pagination page={cached.page} pageLast={cached.lastPage} setPage={updatePage} />
+          <Pagination page={data.page} pageLast={data.lastPage} setPage={setPage} className="w-full justify-end mb-8" />
         </div>
       </div>
     </Layout>
@@ -161,7 +155,7 @@ export async function getServerSideProps ({ query }) {
     }
   }
 
-  return { props: { data: data.data } }
+  return { props: { data: { ...data.data, category: query.category || null } } }
 }
 
 export default Aggregator

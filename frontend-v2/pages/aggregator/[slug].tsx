@@ -1,17 +1,127 @@
 import { fetchOneWithSlug } from 'pages/api/aggregator'
 import Layout from 'components/Layout'
-import { formatterUSD, formatPrice } from 'utils'
+import { formatterUSD, formatPrice, fetcher } from 'utils'
 import PriceChange from 'components/Pages/Aggregator/PriceChange'
+import Link from 'next/link'
+import { Carousel } from 'react-responsive-carousel'
+import 'react-responsive-carousel/lib/styles/carousel.min.css'
+import { TabPanel, Tabs } from 'components/Base/Tabs'
+import { useState, useCallback, useMemo } from 'react'
+import { useMyWeb3 } from 'components/web3/context'
+import useSWR, { useSWRConfig } from 'swr'
 
 const GameDetails = ({ data }) => {
   const roi = ((parseFloat(data.tokenomic?.price) || 0) / parseFloat(data.token_price)).toFixed(2)
+  const items = [data.screen_shots_1, data.screen_shots_2, data.screen_shots_3, data.screen_shots_4, data.screen_shots_5].filter(x => !!x)
+  const [tab, setTab] = useState(0)
+
+  const { account, library } = useMyWeb3()
+  const [signature, setSignature] = useState('')
+  const { mutate } = useSWRConfig()
+  const { data: likes } = useSWR(account ? `/api/aggregator/liked/${account}` : null, fetcher)
+  const liked = useMemo(() => {
+    if (!likes?.data) {
+      return false
+    }
+
+    return !!likes.data.find(x => x.game_id === data.id)
+  }, [data, likes])
+  const like = useCallback(async (game) => {
+    if (!library) {
+      return
+    }
+
+    let sign = signature
+    if (!sign) {
+      const signer = library.getSigner()
+      sign = await signer.signMessage('GameFi User Message')
+    }
+
+    setSignature(sign)
+    await fetcher(`/api/aggregator/like/${game.id}`, { method: 'POST', body: JSON.stringify({ address: account, signature: sign, status: !liked }) })
+    await mutate(`/api/aggregator/liked/${account}`)
+  }, [library, liked, mutate, signature, account])
 
   return (
     <Layout title={data.game_name}>
-      <div className="md:px-4 lg:px-16 md:container mx-auto lg:block">
-        <div className="uppercase font-bold text-3xl">{data.game_name}</div>
-        <div className="flex font-casual">
-          <div className="w-8/12">Left</div>
+      <div className="md:px-4 lg:px-24 md:container mx-auto lg:block">
+        <Link href="/aggregator" passHref={true}>
+          <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">
+            <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10"/>
+              <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square"/>
+            </svg>
+            Back {liked}
+          </a>
+        </Link>
+        <div className="uppercase font-bold text-3xl mb-6">{data.game_name}</div>
+        <div className="flex font-casual gap-10">
+          <div className="w-8/12 relative">
+            <Carousel
+              showStatus={false}
+              showIndicators={false}
+              showArrows={false}
+              autoPlay={true}
+              stopOnHover={true}
+              showThumbs={true}
+              thumbWidth={170}
+              swipeable={true}
+              infiniteLoop={true}
+              interval={3000}
+              renderThumbs={() => {
+                /* eslint-disable-next-line @next/next/no-img-element */
+                return items && items.length > 1 && items.map((item) => <img key={item} src={item} alt="img" />)
+              }}
+            >
+              {items.map(item => (
+                <div key={item} className="px-px">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={item} className="w-full" style={{ aspectRatio: '16/9' }} alt={data.game_name} />
+                </div>
+              ))}
+            </Carousel>
+
+            <Tabs
+              titles={[
+                'About Game',
+                'Tokenomics',
+                'Team'
+              ]}
+              currentValue={tab}
+              onChange={setTab}
+              className="mt-10"
+            />
+
+            <div className="mt-6 mb-10 editor-content text-gray-200 leading-6">
+              <TabPanel value={tab} index={0}>
+                <p><strong>Introduction</strong></p>
+                <div dangerouslySetInnerHTML={{ __html: data.game_intro }}></div>
+                { data.game_features && <>
+                  <p><strong>Highlight Features</strong></p>
+                  <div dangerouslySetInnerHTML={{ __html: data.game_features }}></div>
+                </>
+                }
+
+                { data.system_require && <>
+                  <p><strong>System Requirements</strong></p>
+                  <div dangerouslySetInnerHTML={{ __html: data.system_require }}></div>
+                </>
+                }
+
+                <div className="h-px bg-gradient-to-r from-gray-300 my-8"></div>
+
+                { data.hashtags && <>
+                  <p><strong>Tags</strong></p>
+                  {data.hashtags.split(',').map(tag => <div key={tag} className="m-1 inline-block px-3 py-1 bg-gamefiDark-500 rounded text-sm">{tag}</div>)}
+                </>
+                }
+              </TabPanel>
+              <TabPanel value={tab} index={1}>
+              </TabPanel>
+              <TabPanel value={tab} index={2}>
+              </TabPanel>
+            </div>
+          </div>
           <div className="w-4/12">
             <p className="text-sm mb-2">Current Price (% Chg 24H)</p>
             <div className="inline-flex items-center mb-8">
@@ -36,21 +146,21 @@ const GameDetails = ({ data }) => {
               <span className="font-medium text-base">{formatterUSD.format(data.tokenomic?.volume_24h)}</span>
             </div>
 
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between">
               <span className="text-sm text-gray-300">Fully Diluted Market Cap</span>
               <span className="font-medium text-base">{formatterUSD.format(data.tokenomic?.fully_diluted_market_cap)}</span>
             </div>
 
-            <div className="h-px bg-gradient-to-r from-gray-300 mb-4"></div>
+            <div className="h-px bg-gradient-to-r from-gray-300 my-8"></div>
 
             <div className="flex items-center justify-between mb-4">
               <span className="text-sm text-gray-300">Developer</span>
-              <span className="font-medium text-base">{data.developer}</span>
+              <span className="font-medium text-base truncate max-w-xs">{data.developer}</span>
             </div>
 
             <div className="flex items-center justify-between mb-4">
               <span className="text-sm text-gray-300 flex-none">Category</span>
-              <span className="font-medium text-base">{data.category.split(',').join(', ')}</span>
+              <span className="font-medium text-base truncate max-w-xs">{data.category.split(',').join(', ')}</span>
             </div>
 
             <div className="flex items-center justify-between mb-4">
@@ -58,7 +168,7 @@ const GameDetails = ({ data }) => {
               <span className="font-medium text-base">{data.language}</span>
             </div>
 
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-8">
               <span className="text-sm text-gray-300">Community</span>
               <p className="inline-flex gap-6">
                 { data?.projectInformation?.official_website && <a href={data?.projectInformation?.official_website} className="hover:text-gray-300" target="_blank" rel="noopenner noreferrer">
@@ -85,6 +195,21 @@ const GameDetails = ({ data }) => {
                   </svg>
                 </a> }
               </p>
+            </div>
+
+            <div className="font-mechanic font-bold uppercase text-center text-sm">
+              <div className={`cursor-pointer clipped-t-l p-px mb-4 ${liked ? 'bg-gamefiYellow-500 text-gamefiYellow-500 hover:bg-gamefiYellow-600 hover:text-gamefiYellow-600' : 'bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700'}`} onClick={() => like(data)}>
+                <div className="clipped-t-l bg-gamefiDark-900 p-4 flex justify-center items-center">
+                  <svg className="w-4 h-4 mr-2" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 9.625H12.25V7.875H10.5V9.625H8.75V11.375H10.5V13.125H12.25V11.375H14V9.625Z" fill="currentColor"/>
+                    <path d="M7.00003 10.7161L2.37565 6.34462C1.53828 5.48975 1.54265 4.11338 2.39053 3.2655C2.80353 2.8525 3.35303 2.625 3.93753 2.625C4.6244 2.625 5.24653 2.95575 5.52828 3.32675C5.69103 3.53675 6.8189 4.69 7.00003 4.9175C7.18115 4.69 8.30903 3.53675 8.47178 3.32675C8.75178 2.95837 9.38003 2.625 10.0625 2.625C10.647 2.625 11.1965 2.8525 11.6095 3.2655C12.3892 4.046 12.4469 5.26837 11.8003 6.125H13.762C14.252 4.739 13.9554 3.13688 12.8468 2.02825C12.0777 1.25913 11.0705 0.875 10.0625 0.875C9.05453 0.875 8.0474 1.25913 7.27828 2.02825C7.1724 2.13413 7.09103 2.25488 7.00003 2.36863C6.90903 2.25488 6.82765 2.13413 6.72178 2.02825C5.95265 1.25913 4.94553 0.875 3.93753 0.875C2.92953 0.875 1.9224 1.25913 1.15328 2.02825C-0.3841 3.56562 -0.3841 6.05938 1.15328 7.59675L7.00003 13.125V10.7161Z" fill="currentColor"/>
+                  </svg>
+                  { liked ? 'Remove from favourite List' : 'Add to favourite List'}
+                </div>
+              </div>
+              { data.web_game_link && <Link href={data.web_game_link} passHref={true}><a target="_blank" rel="noopenner noreferrer" className="block cursor-pointer clipped-b-r bg-gamefiGreen-500 hover:bg-gamefiGreen-700 p-4 text-gamefiDark-900">
+                Play
+              </a></Link> }
             </div>
           </div>
         </div>

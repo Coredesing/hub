@@ -22,7 +22,9 @@ const PageIndex = () => {
 
   const [featuredGames, setFeaturedGames] = useState([])
   const [upcomingIGOs, setUpcomingIGOs] = useState([])
+  const [latestIGOs, setLatestIGOs] = useState([])
   const [upcomingINOs, setUpcomingINOs] = useState([])
+  const [latestINOs, setLatestINOs] = useState([])
   const [topGames, setTopGames] = useState([])
   const [gameLikeIds, setGameLikesIds] = useState([])
   const [likes, setLikes] = useState([])
@@ -42,16 +44,24 @@ const PageIndex = () => {
   ]
   const [gameFilterOption, setGameFilterOption] = useState(gameFilterOptions[0].value)
 
-  const { data: fetchTopGamesResponse, error: fetchTopGamesError } = useSWR(`${BASE_URL}/aggregator?display_area=${router?.query?.topGames?.toString() || 'Top Favourite'}&price=true&limit=4`, fetcher)
+  const { data: fetchTopGamesResponse, error: fetchTopGamesError } = useSWR(`${BASE_URL}/aggregator?display_area=${router?.query?.topGames?.toString() || 'Top Favourite'}&price=true&per_page=4`, fetcher)
   const { data: fetchFeaturedGamesResponse, error: fetchFeaturedGamesError } = useSWR(`${BASE_URL}/aggregator?display_area=Top Game`, fetcher)
   const { data: fetchUpcomingIGOsResponse, error: fetchUpcompingIGOsError } = useSWR(`${BASE_URL}/pools/upcoming-pools?token_type=erc20&limit=20&page=1&is_private=0`, fetcher)
+  const { data: fetchLatestIGOsResponse, error: fetchLatestIGOsError } = useSWR(`${BASE_URL}/pools?token_type=erc20&limit=5&page=1&is_private=0`, fetcher)
   const { data: fetchUpcomingINOsResponse, error: fetchUpcomingINOsError } = useSWR(`${BASE_URL}/pools/upcoming-pools?token_type=box&limit=20&page=1&is_private=0`, fetcher)
+  const { data: fetchLatestINOsResponse, error: fetchLatestINOsError } = useSWR(`${BASE_URL}/pools?token_type=erc20&limit=5&page=1&is_private=0`, fetcher)
   const { data: fetchLikesResponse, error: fetchLikesError } = useSWR(`${BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`, fetcher)
 
   useEffect(() => {
     setFeaturedGames(fetchFeaturedGamesResponse?.data?.data)
     setUpcomingIGOs(fetchUpcomingIGOsResponse?.data?.data)
+    if (!upcomingIGOs.length) {
+      setLatestIGOs(fetchLatestIGOsResponse?.data?.data)
+    }
     setUpcomingINOs(fetchUpcomingINOsResponse?.data?.data)
+    if (!upcomingINOs.length) {
+      setLatestINOs(fetchLatestINOsResponse?.data?.data)
+    }
     setTopGames(fetchTopGamesResponse?.data?.data)
 
     if (router?.query?.topGames) {
@@ -149,7 +159,38 @@ const PageIndex = () => {
                 </div>
             }
           </div>
-          : <></>
+          : <div className="md:px-4 lg:px-16 mx-auto mt-20 pb-14">
+            <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
+              <div className="uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl">
+              Latest INOs
+              </div>
+              <div className="absolute -bottom-5 left-0 right-0">
+                <Image src={require('assets/images/under-stroke-green.svg')} alt="understroke"></Image>
+              </div>
+            </div>
+            {
+              isMobile
+                ? <div className='mt-14'>
+                  <Carousel
+                    showIndicators={false}
+                    showStatus={false}
+                    infiniteLoop
+                    centerMode
+                    centerSlidePercentage={80}
+                    showArrows={false}
+                  >
+                    { latestINOs.length && latestINOs.map(item => (
+                      <PoolBanner key={item.id} item={item} color="green"></PoolBanner>
+                    ))}
+                  </Carousel>
+                </div>
+                : <div className="mx-auto grid grid-cols-3 gap-x-4 gap-y-12 container mt-14 2xl:gap-x-6 2xl:px-16">
+                  {latestINOs.length && latestINOs.map(item => (
+                    <PoolBanner key={item.id} item={item} color="green"></PoolBanner>
+                  ))}
+                </div>
+            }
+          </div>
       }
       {
         topGames && topGames.length

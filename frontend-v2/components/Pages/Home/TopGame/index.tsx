@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 type Props = {
   item: any,
@@ -22,7 +23,11 @@ const TopGame = ({ item, isTop, like }: Props) => {
           <img src={item.screen_shots_1} alt="" style={{ width: '4rem', height: '4rem' }}></img>
         </div>
       }
-      <div className={`${isTop ? 'ml-24' : 'justify-center'} h-full flex items-center align-middle font-semibold py-4`}>{item.game_name}</div>
+      <Link href={`/aggregator/${item.slug}`} passHref>
+        <div className={`${isTop ? 'ml-24' : 'justify-center'} h-full flex items-center align-middle font-semibold py-4 cursor-pointer hover:underline`}>
+          {item.game_name}
+        </div>
+      </Link>
     </div>
   </div>
 }

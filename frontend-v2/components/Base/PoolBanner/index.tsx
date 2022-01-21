@@ -1,14 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 type Props = {
   item?: any,
   color?: string,
   className?: string,
-  countdownStatus?: string
+  countdownStatus?: string,
+  url?: string
 }
-const PoolBanner = ({ item, color = 'green', className, countdownStatus } : Props) => {
+const PoolBanner = ({ item, color = 'green', className, countdownStatus, url } : Props) => {
   const [distance, setDistance] = useState(0)
   const [days, setDays] = useState('00')
   const [hours, setHours] = useState('00')
@@ -60,7 +62,9 @@ const PoolBanner = ({ item, color = 'green', className, countdownStatus } : Prop
               >
                 BUY NFT GET BONUS IGO TICKET
               </div> */}
-              <div className={'px-8 overflow-hidden overflow-ellipsis text-gamefiDark-900'}>{item.title}</div>
+              <Link href={url || '#' }>
+                <a target="_blank" rel="noopener" className={'px-8 overflow-hidden overflow-ellipsis text-gamefiDark-900 cursor-pointer hover:underline'}>{item.title}</a>
+              </Link>
             </div>
           </div>
         </div>

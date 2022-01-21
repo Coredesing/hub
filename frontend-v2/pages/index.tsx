@@ -113,7 +113,7 @@ const PageIndex = () => {
                     showArrows={false}
                   >
                     {upcomingIGOs.map(item => (
-                      <PoolBanner key={item.id} item={item} color="yellow"></PoolBanner>
+                      <PoolBanner key={item.id} item={item} color="yellow" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
                     ))}
                   </Carousel>
                 </div>
@@ -122,7 +122,7 @@ const PageIndex = () => {
                     ? <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
                       {upcomingIGOs.map(item => (
                         <SwiperItem key={item.id}>
-                          <PoolBanner item={item} color="yellow" className="mx-3"></PoolBanner>
+                          <PoolBanner item={item} color="yellow" className="mx-3" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
                         </SwiperItem>
                       ))}
                     </ListSwiper>
@@ -151,7 +151,7 @@ const PageIndex = () => {
                     showArrows={false}
                   >
                     {latestIGOs?.length && latestIGOs.map(item => (
-                      <PoolBanner key={item.id} item={item} color="yellow" countdownStatus="ended"></PoolBanner>
+                      <PoolBanner key={item.id} item={item} color="yellow" countdownStatus="ended" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
                     ))}
                   </Carousel>
                 </div>
@@ -160,7 +160,7 @@ const PageIndex = () => {
                     ? <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
                       {latestIGOs.map(item => (
                         <SwiperItem key={item.id}>
-                          <PoolBanner item={item} color="yellow" className="mx-3" countdownStatus="Ended"></PoolBanner>
+                          <PoolBanner item={item} color="yellow" className="mx-3" countdownStatus="Ended" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
                         </SwiperItem>
                       ))}
                     </ListSwiper>
@@ -192,7 +192,7 @@ const PageIndex = () => {
                     showArrows={false}
                   >
                     { upcomingINOs.map(item => (
-                      <PoolBanner key={item.id} item={item} color="green"></PoolBanner>
+                      <PoolBanner key={item.id} item={item} url={`https://hub.gamefi.org/#/mystery-box/${item.id}`}></PoolBanner>
                     ))}
                   </Carousel>
                 </div>
@@ -201,7 +201,7 @@ const PageIndex = () => {
                     ? <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
                       {upcomingINOs.map(item => (
                         <SwiperItem key={item.id}>
-                          <PoolBanner item={item} className="mx-3"></PoolBanner>
+                          <PoolBanner item={item} className="mx-3" url={`https://hub.gamefi.org/#/mystery-box/${item.id}`}></PoolBanner>
                         </SwiperItem>
                       ))}
                     </ListSwiper>
@@ -230,7 +230,7 @@ const PageIndex = () => {
                     showArrows={false}
                   >
                     { latestINOs?.length && latestINOs.map(item => (
-                      <PoolBanner key={item.id} item={item} color="green" countdownStatus="ended"></PoolBanner>
+                      <PoolBanner key={item.id} item={item} countdownStatus="ended" url={`https://hub.gamefi.org/#/mystery-box/${item.id}`}></PoolBanner>
                     ))}
                   </Carousel>
                 </div>
@@ -239,7 +239,7 @@ const PageIndex = () => {
                     ? <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
                       {latestINOs.map(item => (
                         <SwiperItem key={item.id}>
-                          <PoolBanner item={item} className="mx-3" countdownStatus="Ended"></PoolBanner>
+                          <PoolBanner item={item} className="mx-3" countdownStatus="Ended" url={`https://hub.gamefi.org/#/mystery-box/${item.id}`}></PoolBanner>
                         </SwiperItem>
                       ))}
                     </ListSwiper>

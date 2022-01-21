@@ -34,7 +34,7 @@ const FilterDropdown = ({ items, selected, onChange }: Props) => {
   })
 
   const availableOptions = () => {
-    return items.filter(item => item.value !== selected)
+    return items?.filter(item => item.value !== selected)
   }
 
   const handleChangeFilter = (item: Item) => {

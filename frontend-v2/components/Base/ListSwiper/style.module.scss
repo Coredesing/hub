@@ -6,6 +6,7 @@
 .inner {
   white-space: nowrap;
   transition: transform 0.3s;
+  @apply items-center justify-center align-middle;
 }
 
 .swiperItem {

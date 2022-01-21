@@ -39,7 +39,7 @@ const Market = () => {
         <div>
           <div className="md:px-4 lg:px-16 md:container mx-auto mt-20">
             {hotCollections && hotCollections.length > 0
-              ? <ListSwiper showItemsNumber={4} step={4} transition='0.5s'>
+              ? <ListSwiper showItemsNumber={4} step={4} transition='0.5s' hasHeader={true}>
                 {hotCollections.map(collection => (
                   <SwiperItem key={collection.id}>
                     <div className={'w-full px-3 md:px-0 flex flex-col overflow-hidden rounded-sm mx-2 cursor-pointer'} style={{ height: '240px' }}>

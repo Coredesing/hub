@@ -10,7 +10,7 @@ type Props = {
   selected?: any,
   onChange?: any
 }
-const FilterDropdown = ({ items, selected, onChange }: Props) => {
+const Dropdown = ({ items, selected, onChange }: Props) => {
   const [show, setShow] = useState(false)
   const wrapperRef = useRef(null)
 
@@ -42,17 +42,17 @@ const FilterDropdown = ({ items, selected, onChange }: Props) => {
   }
 
   return (
-    <div className="relative inline-block text-left">
-      <button className="flex align-middle items-center text-gamefiGreen font-bold uppercase" onClick={() => setShow(!show)}>
-        {getSelectedItem(selected)?.label}
-        <svg className="ml-2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M15.5 4.5L8 12L0.5 4.5" stroke="#6CDB00" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+    <div className="relative inline-block text-sm">
+      <button className="flex align-middle items-center bg-gamefiDark-900 text-white font-bold uppercase px-4 py-2 rounded" onClick={() => setShow(!show)}>
+        Last 7 days
+        <svg className="ml-2" width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15.5 4.5L8 12L0.5 4.5" stroke="#ffffff" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       </button>
       {show
-        ? <div ref={wrapperRef} className="origin-top-left absolute mt-2 z-10 left-0 w-52 rounded-sm py-1 shadow-lg focus:outline-none text-base bg-gamefiDark-500">
+        ? <div ref={wrapperRef} className="origin-top-right right-0 absolute mt-2 z-10 w-52 rounded-sm py-1 shadow-lg focus:outline-none text-base bg-gamefiDark-500">
           {
-            availableOptions().length
+            availableOptions() && availableOptions().length
               ? availableOptions().map(item =>
                 <button key={item.key} onClick={() => handleChangeFilter(item)} className="cursor-pointer hover:bg-gamefiDark-600 px-4 py-1 w-full text-left">{item.label}</button>
               )
@@ -64,4 +64,4 @@ const FilterDropdown = ({ items, selected, onChange }: Props) => {
   )
 }
 
-export default FilterDropdown
+export default Dropdown

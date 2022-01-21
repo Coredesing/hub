@@ -45,7 +45,7 @@ export const paginator = (options: PaginatorInput): Paginator | null => {
   }
 }
 
-export const fetcher = (...args) => fetch(...args).then(res => res.json())
+export const fetcher = (url, ...args) => fetch(url, ...args).then(res => res.json())
 
 export const formatterUSD = new Intl.NumberFormat('en-US', {
   style: 'currency',

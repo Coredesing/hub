@@ -55,7 +55,7 @@ const Aggregator = ({ data }) => {
   const params = useMemo(() => {
     const params = new URLSearchParams()
     if (page) {
-      params.set('page', page)
+      params.set('page', page.toString())
     }
 
     if (category) {

@@ -25,7 +25,7 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
   const { account } = useMyWeb3()
   const { balanceShort, loading, balance } = useBalanceToken(BigNumber.from(currencyInfo?.address || 0).isZero() ? undefined : currencyInfo as any, poolInfo.network_available)
   const [isVerified, setVerify] = useState<string | null>('')
-  const totalBuy = BigNumber.from(amountBoxBuy).mul(utils.parseEther(currencyInfo?.price)).toString()
+  const totalBuy = currencyInfo?.price ? BigNumber.from(amountBoxBuy).mul(utils.parseEther(currencyInfo?.price)).toString() : 0;
   const recaptchaRef: any = React.useRef()
   const onRefreshRecaptcha = debounce(() => {
     if (!isVerified) return

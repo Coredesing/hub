@@ -28,6 +28,8 @@ import { useAppContext } from '@/context'
 import PlaceOrderModal from './PlaceOrderModal'
 import toast from 'react-hot-toast'
 import BuyBoxModal from './BuyBoxModal'
+import stylesBoxType from './BoxTypeItem.module.scss';
+import BoxInformation from './BoxInformation'
 
 const MysteryBoxDetail = ({ poolInfo }: any) => {
   const eventId = 0
@@ -71,7 +73,6 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     const getMyBoxThisPool = async () => {
       try {
         const myBox = await contractPresale.userBought(eventId, account)
-        console.log('myBox', myBox)
         setMyBoxThisPool(myBox.toNumber())
       } catch (error) {
         console.log('er', error)
@@ -165,14 +166,22 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }, [onSetCountdown])
 
   const listTokens = useMemo(() => {
-    const arr = poolInfo.acceptedTokensConfig || []
-    const token = arr[0] || {}
-    if (token.address && !BigNumber.from(token.address).isZero()) {
-      token.neededApprove = true
+    if (!boxSelected.currency_ids) {
+      return []
     }
+    const currency_ids = boxSelected.currency_ids.split(',').map(id => +id)
+    const listCurrencies = (poolInfo.acceptedTokensConfig || [])
+      .filter((c, id) => currency_ids.includes(id))
+      .map(token => {
+        if (token.address && !BigNumber.from(token.address).isZero()) {
+          token.neededApprove = true
+        }
+        return token
+      })
+    const token = listCurrencies[0] || {}
     setCurrencySelected(token)
-    return arr
-  }, [poolInfo])
+    return listCurrencies
+  }, [poolInfo, boxSelected])
 
   useEffect(() => {
     const boxes = poolInfo.boxTypesConfig || []
@@ -204,6 +213,10 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       setBoxSelected(boxes[0])
     }
   }, [poolInfo, libraryDefaultTemporary])
+
+  useEffect(() => {
+
+  }, [listTokens, boxSelected]);
 
   const onSelectCurrency = (t: ObjectType) => {
     if (t.address === currencySelected.address) return
@@ -310,7 +323,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
 
       </div>
       <PoolDetail
-        bodyBannerContent={<BannerImagePool src={poolInfo.banner} />}
+        bodyBannerContent={<BannerImagePool src={boxSelected.banner} />}
         bodyDetailContent={<>
           <h2 className="font-semibold text-4xl mb-2 uppercase">{poolInfo.title || poolInfo.name}</h2>
           <div className="creator flex items-center gap-1">
@@ -342,12 +355,12 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           </div>
           <div className='mb-8'>
             <div> <h4 className='font-bold text-base mb-1 uppercase'>Type</h4></div>
-            <div className='flex gap-2 flex-wrap'>
+            <div className={clsx('gap-2', stylesBoxType.boxTypes)}>
               {boxTypes.map((b) => <BoxTypeItem key={b.id} item={b} onClick={onSelectBoxType} selected={boxSelected.id === b.id} />)}
             </div>
           </div>
           {
-            countdown.isSale && 
+            countdown.isSale &&
             <div className='mb-8'>
               <AscDescAmount value={amountBoxBuy} maxBuy={maxBoxCanBuy} bought={myBoxThisPool} onChangeValue={onChangeNumBuyBox} poolInfo={poolInfo} currencyInfo={currencySelected} />
             </div>
@@ -396,7 +409,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           <Tabs
             titles={[
               'Rule Introduction',
-              'Box Infomation',
+              boxSelected?.description ? 'Box Infomation' : undefined,
               'Series Content',
               'TimeLine'
             ]}
@@ -407,9 +420,11 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             <TabPanel value={currentTab} index={0}>
               <RuleIntroduce poolInfo={poolInfo} />
             </TabPanel>
-            <TabPanel value={currentTab} index={1}>
-
-            </TabPanel>
+            {
+              boxSelected?.description && <TabPanel value={currentTab} index={1}>
+                <BoxInformation boxes={boxTypes} />
+              </TabPanel>
+            }
             <TabPanel value={currentTab} index={2}>
               <SerieContent poolInfo={poolInfo} />
             </TabPanel>

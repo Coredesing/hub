@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import style from './style.module.scss'
-import Image from 'next/image'
+import { useSwipeable } from 'react-swipeable'
 
 type Props = {
   children: any,
@@ -10,28 +10,54 @@ type Props = {
   step?: number
 }
 
+type Page = {
+  fromIndex: number,
+  toIndex: number,
+  page: number
+}
+
 export const SwiperItem = ({ children, width }: any) => {
   return <div className={style.swiperItem} style={{ width: width }}>
-    <div className="w-full">
-      { children }
-    </div>
+    { children }
   </div>
 }
 
-const ListSwiper = ({ children, transition = '0.3s', showItemsNumber = 1, step = 1 }: Props) => {
-  const [activeIndex, setActiveIndex] = useState(0)
+const ListSwiper = ({ children, transition = '0.3s', showItemsNumber, step }: Props) => {
+  const [activeIndex, setActiveIndex] = useState({from: 0, to: step - 1})
+  const totalItems = React.Children.count(children)
 
   const updateIndex = (newIndex: number) => {
     if (newIndex < 0) {
       newIndex = 0
     }
 
-    if (newIndex >= React.Children.count(children) - showItemsNumber) {
-      newIndex = React.Children.count(children) - showItemsNumber
+    if (newIndex >= totalItems - showItemsNumber) {
+      newIndex = totalItems - showItemsNumber
     }
 
-    setActiveIndex(newIndex)
+    setActiveIndex({
+      from: newIndex,
+      to: newIndex + step - 1 >= totalItems ? totalItems - 1 : newIndex + step - 1
+    })
   }
+
+  const pages = () => {
+    const pages : Page[] = []
+
+    for (let i = 0; i < totalItems; i += step) {
+      pages.push({
+        fromIndex: i,
+        toIndex: i + step >= totalItems ? totalItems - 1 : i + step - 1,
+        page: Math.floor(i / step) + 1
+      } as Page)
+    }
+    return pages
+  }
+
+  const handlerSwiper = useSwipeable({
+    onSwipedLeft: (eventData) => updateIndex(activeIndex.from + step),
+    onSwipedRight: (eventData) => updateIndex(activeIndex.from - step)
+  });
 
   return (
     <>
@@ -40,15 +66,21 @@ const ListSwiper = ({ children, transition = '0.3s', showItemsNumber = 1, step =
       </div>
       <div className="w-full relative bg-gamefiDark-600" style={{height: '4px'}}>
         <div className="absolute bottom-0 right-0 dark:bg-gamefiDark-900 clipped-t-l-full-sm" style={{height: '3px', width: 'calc(100% - 60px)'}}></div>
-        <div className="absolute top-0 right-0 h-1 bg-gamefiGreen w-28"></div>
+        {
+          showItemsNumber === step ? <div className="absolute top-0 right-0 w-1/4 grid grid-flow-col gap-2 bg-gamefiDark-900" style={{height: '1px'}}>
+          {pages && pages().length ? pages().map((page: Page) => (
+            <div key={page.page} className={`h-full ${activeIndex.to >= page.fromIndex && activeIndex.to <= page.toIndex  ? 'bg-gamefiGreen-700' : 'bg-white'}`}></div>
+          )) : <></>}
+        </div> : <></>
+        }
       </div>
-      <div className="relative mt-14">
+      <div {...handlerSwiper} className="relative mt-14">
         <div className={style.carousel}>
-          <div className={style.inner} style={{ transform: `translateX(-${activeIndex / showItemsNumber * 100}%)`, transition: `transform ${transition}` }}>
+          <div className={style.inner} style={{ transform: `translateX(-${activeIndex.from / showItemsNumber * 100}%)`, transition: `transform ${transition}` }}>
             {React.Children.map(children, (child, index) => React.cloneElement(child, { width: `${100 / showItemsNumber}%` }))}
           </div>
         </div>
-        <button className="absolute -left-12 top-0 bottom-0" onClick={() => updateIndex(activeIndex - step)}>
+        <button className={`absolute -left-12 top-0 bottom-0 ${activeIndex.from === 0 ? 'opacity-20' : ''}`} onClick={() => updateIndex(activeIndex.from - step)}>
           <svg width="32" height="122" viewBox="0 0 32 122" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.5 61.5H2.5" stroke="white" strokeMiterlimit="10"/>
             <path d="M9.5 68.5L2.5 61.5L9.5 54.5" stroke="white" strokeMiterlimit="10" strokeLinecap="square"/>
@@ -58,7 +90,7 @@ const ListSwiper = ({ children, transition = '0.3s', showItemsNumber = 1, step =
             <path d="M31 122V114" stroke="white"/>
           </svg>
         </button>
-        <button className="absolute -right-12 top-0 bottom-0" onClick={() => updateIndex(activeIndex + step)}>
+        <button className={`absolute -right-12 top-0 bottom-0 ${activeIndex.to === totalItems - 1 ? 'opacity-20' : ''}`} onClick={() => updateIndex(activeIndex.from + step)}>
           <svg width="32" height="122" viewBox="0 0 32 122" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.5 60.5L29.5 60.5" stroke="white" strokeMiterlimit="10"/>
             <path d="M22.5 53.5L29.5 60.5L22.5 67.5" stroke="white" strokeMiterlimit="10" strokeLinecap="square"/>

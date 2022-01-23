@@ -58,7 +58,7 @@ export function formatPrice (price: string): string {
     return `$${priceInFloat.toFixed(4)}`
   }
 
-  const matches = price.match(/(\.([0])*)/)
+  const matches = price?.match(/(\.([0])*)/)
   if (!matches?.[0]) {
     return price
   }

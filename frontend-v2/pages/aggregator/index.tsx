@@ -91,7 +91,7 @@ const Aggregator = ({ data }) => {
             <div className="uppercase text-gray-400 font-bold text-sm flex-1">Game</div>
             <div className="uppercase text-gray-400 font-bold text-sm w-48 hidden lg:block">Category</div>
             <div className="uppercase text-gray-400 font-bold text-sm w-32 xl:w-48">Volume 24h</div>
-            <div className="uppercase text-gray-400 font-bold text-sm w-32 xl:w-32">Token Price</div>
+            <div className="uppercase text-gray-400 font-bold text-sm w-40 xl:w-48">Token Price</div>
             <div className="uppercase text-gray-400 font-bold text-sm w-32 xl:w-48">CMC Rank</div>
             <div className="uppercase text-gray-400 font-bold text-sm w-32 xl:w-48 hidden xl:block">Last 7 days</div>
           </div>
@@ -124,7 +124,7 @@ const Aggregator = ({ data }) => {
                       <p className="text-sm line-clamp-1 text-gray-300">{item.category.split(',').join(', ')}</p>
                     </div>
                     <div className="font-casual text-sm w-32 xl:w-48">
-                      <p>{formatterUSD.format(item.tokenomic?.volume_24h)}</p>
+                      <p>{formatterUSD.format(item.tokenomic?.volume_24h || 0)}</p>
                     </div>
                     <div className="font-casual text-sm w-40 xl:w-48">
                       <p className="font-semibold inline-flex items-center">{formatPrice(item.tokenomic?.price)} <PriceChange className="ml-2 text-xs" tokenomic={item.tokenomic} /></p>

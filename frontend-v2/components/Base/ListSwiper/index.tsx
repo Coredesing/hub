@@ -7,7 +7,8 @@ type Props = {
   transition?: string,
   showItemsNumber?: number,
   step?: number,
-  hasHeader?: boolean
+  hasHeader?: boolean,
+  title?: string
 }
 
 type Page = {
@@ -22,55 +23,55 @@ export const SwiperItem = ({ children, width }: any) => {
   </div>
 }
 
-const ListSwiper = ({ children, transition = '0.3s', showItemsNumber, step, hasHeader }: Props) => {
-  const [activeIndex, setActiveIndex] = useState({ from: 0, to: step - 1 })
-  const totalItems = React.Children.count(children)
+const ListSwiper = ({ ...props }: Props) => {
+  const [activeIndex, setActiveIndex] = useState({ from: 0, to: props.step - 1 })
+  const totalItems = React.Children.count(props.children)
 
   const updateIndex = (newIndex: number) => {
     if (newIndex < 0) {
       newIndex = 0
     }
 
-    if (newIndex >= totalItems - showItemsNumber) {
-      newIndex = totalItems - showItemsNumber
+    if (newIndex >= totalItems - props.showItemsNumber) {
+      newIndex = totalItems - props.showItemsNumber
     }
 
     setActiveIndex({
       from: newIndex,
-      to: newIndex + step - 1 >= totalItems ? totalItems - 1 : newIndex + step - 1
+      to: newIndex + props.step - 1 >= totalItems ? totalItems - 1 : newIndex + props.step - 1
     })
   }
 
   const pages = () => {
     const pages : Page[] = []
 
-    for (let i = 0; i < totalItems; i += step) {
+    for (let i = 0; i < totalItems; i += props.step) {
       pages.push({
         fromIndex: i,
-        toIndex: i + step >= totalItems ? totalItems - 1 : i + step - 1,
-        page: Math.floor(i / step) + 1
+        toIndex: i + props.step >= totalItems ? totalItems - 1 : i + props.step - 1,
+        page: Math.floor(i / props.step) + 1
       } as Page)
     }
     return pages
   }
 
   const handlerSwiper = useSwipeable({
-    onSwipedLeft: (eventData) => updateIndex(activeIndex.from + step),
-    onSwipedRight: (eventData) => updateIndex(activeIndex.from - step)
+    onSwipedLeft: (eventData) => updateIndex(activeIndex.from + props.step),
+    onSwipedRight: (eventData) => updateIndex(activeIndex.from - props.step)
   })
 
   return (
     <>
       {
-        hasHeader
+        props.hasHeader
           ? <>
             <div className="md:text-lg 2xl:text-3xl uppercase font-bold">
-            Hot Collection
+              {props.title || ''}
             </div>
-            <div className="w-full relative bg-gamefiDark-600" style={{ height: '4px' }}>
-              <div className="absolute bottom-0 right-0 dark:bg-gamefiDark-900 clipped-t-l-full-sm" style={{ height: '3px', width: 'calc(100% - 60px)' }}></div>
+            <div className="w-full relative bg-gamefiDark-600" style={{ height: '1px' }}>
+              <div className="absolute top-0 left-0 bg-gamefiDark-600 clipped-b-r-full-sm" style={{ height: '4px', width: '60px' }}></div>
               {
-                showItemsNumber === step
+                props.showItemsNumber === props.step
                   ? <div className="absolute top-0 right-0 w-1/4 grid grid-flow-col gap-2 bg-gamefiDark-900" style={{ height: '1px' }}>
                     {pages && pages().length
                       ? pages().map((page: Page) => (
@@ -86,11 +87,11 @@ const ListSwiper = ({ children, transition = '0.3s', showItemsNumber, step, hasH
       }
       <div {...handlerSwiper} className="relative mt-14 w-full">
         <div className={style.carousel}>
-          <div className={style.inner} style={{ transform: `translateX(-${activeIndex.from / showItemsNumber * 100}%)`, transition: `transform ${transition}`, display: `${totalItems < showItemsNumber ? 'flex' : ''}` }}>
-            {React.Children.map(children, (child, index) => React.cloneElement(child, { width: `${100 / showItemsNumber}%` }))}
+          <div className={style.inner} style={{ transform: `translateX(-${activeIndex.from / props.showItemsNumber * 100}%)`, transition: `transform ${props.transition}`, display: `${totalItems < props.showItemsNumber ? 'flex' : ''}` }}>
+            {React.Children.map(props.children, (child, index) => React.cloneElement(child, { width: `${100 / props.showItemsNumber}%` }))}
           </div>
         </div>
-        <button className={`absolute -left-12 top-0 bottom-0 ${activeIndex.from <= 0 ? 'opacity-20' : ''}`} onClick={() => updateIndex(activeIndex.from - step)}>
+        <button className={`absolute -left-12 top-0 bottom-0 ${activeIndex.from <= 0 ? 'opacity-20' : ''}`} onClick={() => updateIndex(activeIndex.from - props.step)}>
           <svg width="32" height="122" viewBox="0 0 32 122" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.5 61.5H2.5" stroke="white" strokeMiterlimit="10"/>
             <path d="M9.5 68.5L2.5 61.5L9.5 54.5" stroke="white" strokeMiterlimit="10" strokeLinecap="square"/>
@@ -100,7 +101,7 @@ const ListSwiper = ({ children, transition = '0.3s', showItemsNumber, step, hasH
             <path d="M31 122V114" stroke="white"/>
           </svg>
         </button>
-        <button className={`absolute -right-12 top-0 bottom-0 ${activeIndex.to >= totalItems - 1 ? 'opacity-20' : ''}`} onClick={() => updateIndex(activeIndex.from + step)}>
+        <button className={`absolute -right-12 top-0 bottom-0 ${activeIndex.to >= totalItems - 1 ? 'opacity-20' : ''}`} onClick={() => updateIndex(activeIndex.from + props.step)}>
           <svg width="32" height="122" viewBox="0 0 32 122" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.5 60.5L29.5 60.5" stroke="white" strokeMiterlimit="10"/>
             <path d="M22.5 53.5L29.5 60.5L22.5 67.5" stroke="white" strokeMiterlimit="10" strokeLinecap="square"/>

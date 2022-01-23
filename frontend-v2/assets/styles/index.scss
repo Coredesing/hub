@@ -1,10 +1,8 @@
 /* purgecss start ignore */
 @tailwind base;
 @tailwind components;
-/* purgecss end ignore */
-
 @tailwind utilities;
-
+/* purgecss end ignore */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap');
 
@@ -76,6 +74,10 @@ html, body {
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0% 50%);
 }
 
+.clipped-b-r-full-sm {
+  clip-path: polygon(0 0, 100% 0%, calc(100% - 5px) 100%, 0% 100%);
+}
+
 .thumbs {
   @apply lg:px-14;
 }
@@ -111,6 +113,60 @@ html, body {
 video[poster] {
   height:100% !important;
   width:100% !important;
+}
+
+.loader-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  color: #fff;
+  font-family: Rajdhani;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  text-transform: uppercase;
+  color: #FFFFFF;
+}
+
+.loader {
+  width: 1.25em;
+  height: 1.25em;
+  margin-right: 0.5em;
+  circle {
+      opacity: 0.25;
+  }
+
+  path {
+      opacity: 0.75;
+  }
+
+  animation: spin 1s linear infinite;
+}
+
+.big-loader {
+  width: 2.5em;
+  height: 2.5em;
+  margin-right: 0.5em;
+  circle {
+      opacity: 0.25;
+  }
+
+  path {
+      opacity: 0.75;
+  }
+
+  animation: spin 1s linear infinite;
+}
+
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @media screen and (max-width: 1308px) {

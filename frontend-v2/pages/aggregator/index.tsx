@@ -91,7 +91,8 @@ const Aggregator = ({ data }) => {
             <div className="uppercase text-gray-400 font-bold text-sm flex-1">Game</div>
             <div className="uppercase text-gray-400 font-bold text-sm w-48 hidden lg:block">Category</div>
             <div className="uppercase text-gray-400 font-bold text-sm w-32 xl:w-48">Volume 24h</div>
-            <div className="uppercase text-gray-400 font-bold text-sm w-40 xl:w-48">Token Price</div>
+            <div className="uppercase text-gray-400 font-bold text-sm w-32 xl:w-32">Token Price</div>
+            <div className="uppercase text-gray-400 font-bold text-sm w-32 xl:w-48">CMC Rank</div>
             <div className="uppercase text-gray-400 font-bold text-sm w-32 xl:w-48 hidden xl:block">Last 7 days</div>
           </div>
           <div className="relative mb-8">
@@ -128,6 +129,9 @@ const Aggregator = ({ data }) => {
                     <div className="font-casual text-sm w-40 xl:w-48">
                       <p className="font-semibold inline-flex items-center">{formatPrice(item.tokenomic?.price)} <PriceChange className="ml-2 text-xs" tokenomic={item.tokenomic} /></p>
                       <p className="text-gray-300"><strong>{roi}x</strong> IDO ROI</p>
+                    </div>
+                    <div className="font-casual text-sm w-40 xl:w-48">
+                      <p className="font-semibold inline-flex items-center">{item.cmc_rank}</p>
                     </div>
                     <div className="font-casual text-sm w-32 xl:w-48 hidden xl:block">
                       {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -1,11 +1,12 @@
+import { API_BASE_URL } from 'constants/api'
 import { fetcher } from 'utils'
 
 function fetchAll (page = 1, category = '', perPage = 12) {
-  return fetcher(`https://aggregator.gamefi.org/api/v1/aggregator?per_page=${perPage}&page=${page}&price=true&category=${category}`)
+  return fetcher(`${API_BASE_URL}/aggregator?per_page=${perPage}&page=${page}&price=true&category=${category}`)
 }
 
 export function fetchOneWithSlug (slug) {
-  return fetcher(`https://aggregator.gamefi.org/api/v1/aggregator/slug/${slug}`)
+  return fetcher(`${API_BASE_URL}/aggregator/slug/${slug}`)
 }
 
 export async function fetchAllWithQueries (query) {

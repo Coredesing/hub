@@ -37,6 +37,7 @@
         "react-responsive": "^9.0.0-beta.5",
         "react-responsive-carousel": "^3.2.22",
         "react-spinners": "^0.11.0",
+        "react-swipeable": "^6.2.0",
         "remove-trailing-zeros": "^1.0.3",
         "sass": "^1.45.2",
         "swr": "^1.1.2",

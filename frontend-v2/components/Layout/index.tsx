@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Sidebar from 'components/Base/Sidebar'
 import Topbar from 'components/Base/Topbar'
 import Toolbox from 'components/Base/Toolbox'
+import Footer from 'components/Base/Footer'
 
 type Props = {
   children?: ReactNode
@@ -23,9 +24,10 @@ const Layout = ({ children, title }: Props) => {
         <div>
           <Sidebar></Sidebar>
         </div>
-        <div className="w-full overflow-auto">
+        <div className="w-full h-full overflow-auto">
           <Topbar></Topbar>
           {children}
+          <Footer></Footer>
         </div>
         <Toolbox></Toolbox>
       </div>

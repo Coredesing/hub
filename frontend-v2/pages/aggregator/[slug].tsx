@@ -1,6 +1,6 @@
 import { fetchOneWithSlug } from 'pages/api/aggregator'
 import Layout from 'components/Layout'
-import { formatterUSD, formatPrice, fetcher } from 'utils'
+import { formatterUSD, formatPrice, fetcher, printNumber } from 'utils'
 import PriceChange from 'components/Pages/Aggregator/PriceChange'
 import Link from 'next/link'
 import { Carousel } from 'react-responsive-carousel'
@@ -94,16 +94,16 @@ const GameDetails = ({ data }) => {
 
             <div className="mt-6 mb-10 editor-content text-gray-200 leading-6">
               <TabPanel value={tab} index={0}>
-                <p><strong>Introduction</strong></p>
+                <div className="mt-6"><strong>Introduction</strong></div>
                 <div dangerouslySetInnerHTML={{ __html: data.game_intro }}></div>
                 { data.game_features && <>
-                  <p><strong>Highlight Features</strong></p>
+                  <div className="mt-6"><strong>Highlight Features</strong></div>
                   <div dangerouslySetInnerHTML={{ __html: data.game_features }}></div>
                 </>
                 }
 
                 { data.system_require && <>
-                  <p><strong>System Requirements</strong></p>
+                  <div className="mt-6"><strong>System Requirements</strong></div>
                   <div dangerouslySetInnerHTML={{ __html: data.system_require }}></div>
                 </>
                 }
@@ -111,14 +111,89 @@ const GameDetails = ({ data }) => {
                 <div className="h-px bg-gradient-to-r from-gray-300 my-8"></div>
 
                 { data.hashtags && <>
-                  <p><strong>Tags</strong></p>
+                  <div className="mt-6"><strong>Tags</strong></div>
                   {data.hashtags.split(',').map(tag => <div key={tag} className="m-1 inline-block px-3 py-1 bg-gamefiDark-500 rounded text-sm">{tag}</div>)}
                 </>
                 }
               </TabPanel>
               <TabPanel value={tab} index={1}>
+                <div className="text-xl mb-4">{data.game_name} ({data?.tokenomic?.ticker})</div>
+                <div className="flex w-full leading-7">
+                  <div className="mr-2">Network</div>
+                  <div className="flex-1 border-dotted border-b-2 border-gamefiDark-500"></div>
+                  <div className="ml-2">{data?.tokenomic?.network_chain}</div>
+                </div>
+                <div className="flex w-full leading-7">
+                  <div className="mr-2">Token Supply</div>
+                  <div className="flex-1 border-dotted border-b-2 border-gamefiDark-500"></div>
+                  <div className="ml-2">{(data?.tokenomic?.token_supply && printNumber(data?.tokenomic?.token_supply)) || 'N/A'}</div>
+                </div>
+                <div className="flex w-full leading-7">
+                  <div className="mr-2">Project Valuation</div>
+                  <div className="flex-1 border-dotted border-b-2 border-gamefiDark-500"></div>
+                  <div className="ml-2">{(data?.tokenomic?.project_valuation && printNumber(data?.tokenomic?.project_valuation)) || 'N/A'}</div>
+                </div>
+                <div className="flex w-full leading-7">
+                  <div className="mr-2">Initial Circulating Supply</div>
+                  <div className="flex-1 border-dotted border-b-2 border-gamefiDark-500"></div>
+                  <div className="ml-2">{(data?.tokenomic?.initial_token_cir && printNumber(data?.tokenomic?.initial_token_cir)) || 'N/A'}</div>
+                </div>
+                <div className="flex w-full leading-7">
+                  <div className="mr-2">Initial Market Cap</div>
+                  <div className="flex-1 border-dotted border-b-2 border-gamefiDark-500"></div>
+                  <div className="ml-2">{(data?.tokenomic?.initial_token_market && printNumber(data?.tokenomic?.initial_token_market)) || 'N/A'}</div>
+                </div>
+
+                { data?.tokenomic?.token_utilities && <>
+                  <div className="mt-6"><strong>How tokens are used in game</strong></div>
+                  <div dangerouslySetInnerHTML={{ __html: data?.tokenomic?.token_utilities }}></div>
+                </>
+                }
+
+                { data?.tokenomic?.token_economy && <>
+                  <div className="mt-6"><strong>Token Economy</strong></div>
+                  <div dangerouslySetInnerHTML={{ __html: data?.tokenomic?.token_economy }}></div>
+                </>
+                }
+
+                { data?.tokenomic?.token_metrics && <>
+                  <div className="mt-6"><strong>Token Metrics</strong></div>
+                  <div dangerouslySetInnerHTML={{ __html: data?.tokenomic?.token_metrics }}></div>
+                </>
+                }
+
+                { data?.tokenomic?.token_metrics && <>
+                  <div className="mt-6"><strong>Token Distribution</strong></div>
+                  <div dangerouslySetInnerHTML={{ __html: data?.tokenomic?.token_distribution }}></div>
+                </>
+                }
+
+                { data?.tokenomic?.token_release && <>
+                  <div className="mt-6"><strong>Token Release Schedule</strong></div>
+                  <div dangerouslySetInnerHTML={{ __html: data?.tokenomic?.token_release }}></div>
+                </>
+                }
               </TabPanel>
               <TabPanel value={tab} index={2}>
+                { data?.projectInformation?.roadmap.replace(/(<([^>]+)>)/gi, '') && <>
+                  <div className="mt-6"><strong>Roadmap</strong></div>
+                  <div>
+                    <img src={data?.projectInformation?.roadmap.replace(/(<([^>]+)>)/gi, '')} />
+                  </div>
+                </>
+                }
+
+                { data?.projectInformation?.investors && <>
+                  <div className="mt-6"><strong>Partners</strong></div>
+                  <div dangerouslySetInnerHTML={{ __html: data?.projectInformation?.investors }}></div>
+                </>
+                }
+
+                { data?.projectInformation?.technologist && <>
+                  <div className="mt-6"><strong>Technology</strong></div>
+                  <div dangerouslySetInnerHTML={{ __html: data?.projectInformation?.technologist }}></div>
+                </>
+                }
               </TabPanel>
             </div>
           </div>

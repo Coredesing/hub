@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from 'react'
 import styles from './WrapperAccount.module.scss'
 type Props = {
   children: ReactNode
@@ -6,7 +6,7 @@ type Props = {
 const WrapperAccount = ({ children }: Props) => {
   return <div className={styles.wrapperAccount}>
     {children}
-  </div>;
-};
+  </div>
+}
 
-export default WrapperAccount;
+export default WrapperAccount

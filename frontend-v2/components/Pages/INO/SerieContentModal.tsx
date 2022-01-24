@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import Modal from '@/components/Base/Modal';
-import styles from './SerieContentModal.module.scss';
-import clsx from 'clsx';
+import Modal from '@/components/Base/Modal'
+import styles from './SerieContentModal.module.scss'
+import clsx from 'clsx'
 import { Carousel } from 'react-responsive-carousel'
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+import 'react-responsive-carousel/lib/styles/carousel.min.css'
 
 type Props = {
   open?: boolean;
@@ -13,13 +13,13 @@ type Props = {
 }
 
 const SerieContentModal = ({ open, onClose, serieContents, idShow }: Props) => {
-  const [current, setCurrent] = useState(serieContents[0]);
+  const [current, setCurrent] = useState(serieContents[0])
   useEffect(() => {
     setCurrent(serieContents[idShow])
   }, [idShow])
 
   const onSelectItem = (id: number) => {
-    setCurrent(serieContents[id]);
+    setCurrent(serieContents[id])
   }
   return <Modal show={open} toggle={onClose}>
     <div className={clsx('px-8 pt-14 pb-8', styles.content)}>
@@ -68,7 +68,7 @@ const SerieContentModal = ({ open, onClose, serieContents, idShow }: Props) => {
       </Carousel>
       {/* </div> */}
     </div>
-  </Modal>;
-};
+  </Modal>
+}
 
-export default SerieContentModal;
+export default SerieContentModal

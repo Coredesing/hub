@@ -51,4 +51,4 @@ const BoxInformation = ({ boxes }: Props) => {
   </div>
 }
 
-export default BoxInformation;
+export default BoxInformation

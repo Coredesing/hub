@@ -28,7 +28,7 @@ import { useAppContext } from '@/context'
 import PlaceOrderModal from './PlaceOrderModal'
 import toast from 'react-hot-toast'
 import BuyBoxModal from './BuyBoxModal'
-import stylesBoxType from './BoxTypeItem.module.scss';
+import stylesBoxType from './BoxTypeItem.module.scss'
 import BoxInformation from './BoxInformation'
 
 const MysteryBoxDetail = ({ poolInfo }: any) => {
@@ -216,7 +216,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
 
   useEffect(() => {
 
-  }, [listTokens, boxSelected]);
+  }, [listTokens, boxSelected])
 
   const onSelectCurrency = (t: ObjectType) => {
     if (t.address === currencySelected.address) return
@@ -279,7 +279,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
 
   const isAppliedWhitelist = isJoinPool || isJoinSuccess
   const isShowBtnApprove = currencySelected.neededApprove && !isApprovedToken && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && (!currencySelected.neededApprove || (currencySelected.neededApprove && !isApprovedToken))
-  const isShowBtnBuy = isAppliedWhitelist && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken));
+  const isShowBtnBuy = isAppliedWhitelist && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken))
   return (
     <>
       {/* <DialogTxSubmitted

@@ -1,5 +1,5 @@
-import clsx from 'clsx';
-import React from 'react';
+import clsx from 'clsx'
+import React from 'react'
 import styles from './TabMenus.module.scss'
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 
 const TabMenus = ({ value = 0, onChange, menus }: Props) => {
   const handleChange = (val: number) => {
-    if (val === value) return;
+    if (val === value) return
     onChange && onChange(val)
   }
   return <div className='flex'>
@@ -24,7 +24,7 @@ const TabMenus = ({ value = 0, onChange, menus }: Props) => {
         <span className='uppercase text-sm font-bold'>{m}</span>
       </div>))
     }
-  </div>;
-};
+  </div>
+}
 
-export default TabMenus;
+export default TabMenus

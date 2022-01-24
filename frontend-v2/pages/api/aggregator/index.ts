@@ -1,8 +1,8 @@
 import { API_BASE_URL } from 'constants/api'
 import { fetcher } from 'utils'
 
-function fetchAll (page = 1, category = '', perPage = 12) {
-  return fetcher(`${API_BASE_URL}/aggregator?per_page=${perPage}&page=${page}&price=true&category=${category}`)
+function fetchAll (page = 1, category = '', sort_by = 'cmc_rank', sort_order = 'asc', perPage = 10) {
+  return fetcher(`${API_BASE_URL}/aggregator?per_page=${perPage}&page=${page}&price=true&category=${category}&sort_by=${sort_by}&sort_order=${sort_order}`)
 }
 
 export function fetchOneWithSlug (slug) {
@@ -10,8 +10,8 @@ export function fetchOneWithSlug (slug) {
 }
 
 export async function fetchAllWithQueries (query) {
-  const { page, category } = query
-  return await fetchAll(page, category)
+  const { page, category, sort_by, sort_order } = query
+  return await fetchAll(page, category, sort_by, sort_order)
 }
 
 export default async function handler (req, res) {

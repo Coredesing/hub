@@ -341,6 +341,11 @@ class AggregatorController {
         'cmc_id',
         'token_address',
         'game_informations.created_at',
+        'discord_link',
+        'official_telegram_link',
+        'official_website',
+        'twitter_link',
+        'medium_link'
         // 'price / token_price as roi',
       ];
       let builder = GameInformation.query()
@@ -364,7 +369,9 @@ class AggregatorController {
       builder = builder.where('is_show', true)
 
       builder = builder.join('tokenomics as token', 'game_informations.id', 'token.game_id')
-        .select(selectColumn);
+      builder = builder.join('project_informations as project', 'game_informations.id', 'project.game_id')
+
+      builder = builder.select(selectColumn);
 
       const list = await builder.paginate(page, perPage)
 

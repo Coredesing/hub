@@ -28,7 +28,7 @@ const LeftSideBar = () => {
         <div className='flex gap-2 items-center'>
           <img src="" alt="" className='w-4 h-4 bg-black rounded-full' />
           <div className='flex gap-2 items-center justify-between'>
-            <Link href={'/account/profile'}>
+            <Link href={'/account/collections/assets'}>
               <a className='uppercase text-sm font-bold block'>Collections</a>
             </Link>
           </div>

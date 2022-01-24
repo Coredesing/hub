@@ -1,7 +1,7 @@
-import clsx from 'clsx';
+import clsx from 'clsx'
 import React from 'react'
-import styles from './LeftSideBar.module.scss';
-import Link from 'next/link';
+import styles from './LeftSideBar.module.scss'
+import Link from 'next/link'
 const LeftSideBar = () => {
   return <div className={clsx('px-7 py-12', styles.leftSideBar)}>
     <h3 className='mb-11 font-bold text-2xl'>My Account</h3>
@@ -46,7 +46,7 @@ const LeftSideBar = () => {
         </div>
       </div>
     </div>
-  </div>;
-};
+  </div>
+}
 
-export default LeftSideBar;
+export default LeftSideBar

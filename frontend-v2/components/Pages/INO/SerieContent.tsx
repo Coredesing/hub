@@ -14,12 +14,12 @@ const SerieContent = ({ poolInfo }: Props) => {
     setShowTypeSerieContent(type)
   }
 
-  const [openSerieContentModal, setOpenSerieContentModal] = useState(true);
+  const [openSerieContentModal, setOpenSerieContentModal] = useState(true)
 
-  const [idSerie, setIdSerie] = useState(0);
+  const [idSerie, setIdSerie] = useState(0)
   const onShhowSerieModal = (id: number) => {
-    setIdSerie(id);
-    setOpenSerieContentModal(true);
+    setIdSerie(id)
+    setOpenSerieContentModal(true)
   }
 
   return <div className="relative">

@@ -28,16 +28,21 @@ const GameList = () => {
   const likesURL = `/aggregator/get-like?ids=${gameLikeIds.join(',')}`
   const { response: topGamesResponse, loading: topGamesLoading } = useAxiosFetch(topGamesUrl)
   const { response: likesResponse, loading: likesLoading } = useAxiosFetch(likesURL)
-  const [topGames, setTopGames] = useState([])
+  const [topGames, setTopGames] = useState(topGamesResponse?.data?.data?.data || [])
 
   useEffect(() => {
-    if (router?.query?.topGames) {
-      setGameFilterOption(router?.query?.topGames?.toString())
+    let unmounted = false
+    if (!unmounted) {
+      if (router?.query?.topGames) {
+        setGameFilterOption(router?.query?.topGames?.toString())
+      }
+      topGames?.map(game => gameLikeIds?.indexOf(game.id) === -1 ? gameLikeIds.push(game.id) : null)
+      setGameLikesIds(gameLikeIds)
+      setLikes(likesResponse?.data?.data)
     }
-    setTopGames(topGamesResponse?.data?.data?.data || [])
-    topGames?.map(game => gameLikeIds?.indexOf(game.id) === -1 ? gameLikeIds.push(game.id) : null)
-    setGameLikesIds(gameLikeIds)
-    setLikes(likesResponse?.data?.data)
+    return function () {
+      unmounted = true
+    }
   }, [gameLikeIds, likesResponse, router, topGames, topGamesResponse])
 
   const [gameFilterOption, setGameFilterOption] = useState(gameFilterOptions[0].value)

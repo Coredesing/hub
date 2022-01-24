@@ -138,7 +138,7 @@ export const paginator = (options: PaginatorInput): Paginator | null => {
   }
 }
 
-export const fetcher = (...args) => fetch(...args).then(res => res.json())
+export const fetcher = (url, ...args) => fetch(url, ...args).then(res => res.json())
 
 export const formatterUSD = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -151,7 +151,7 @@ export function formatPrice (price: string): string {
     return `$${priceInFloat.toFixed(4)}`
   }
 
-  const matches = price.match(/(\.([0])*)/)
+  const matches = price?.match(/(\.([0])*)/)
   if (!matches?.[0]) {
     return price
   }

@@ -13,6 +13,7 @@ import FilterDropdown from 'components/Pages/Home/FilterDropdown'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
+import ListSwiper, { SwiperItem } from 'components/Base/ListSwiper'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
 
@@ -22,7 +23,9 @@ const PageIndex = () => {
 
   const [featuredGames, setFeaturedGames] = useState([])
   const [upcomingIGOs, setUpcomingIGOs] = useState([])
+  const [latestIGOs, setLatestIGOs] = useState([])
   const [upcomingINOs, setUpcomingINOs] = useState([])
+  const [latestINOs, setLatestINOs] = useState([])
   const [topGames, setTopGames] = useState([])
   const [gameLikeIds, setGameLikesIds] = useState([])
   const [likes, setLikes] = useState([])
@@ -42,22 +45,30 @@ const PageIndex = () => {
   ]
   const [gameFilterOption, setGameFilterOption] = useState(gameFilterOptions[0].value)
 
-  const { data: fetchTopGamesResponse, error: fetchTopGamesError } = useSWR(`${BASE_URL}/aggregator?display_area=${router?.query?.topGames?.toString() || 'Top Favourite'}&price=true&limit=4`, fetcher)
+  const { data: fetchTopGamesResponse, error: fetchTopGamesError } = useSWR(`${BASE_URL}/aggregator?display_area=${router?.query?.topGames?.toString() || 'Top Favourite'}&price=true&per_page=4`, fetcher)
   const { data: fetchFeaturedGamesResponse, error: fetchFeaturedGamesError } = useSWR(`${BASE_URL}/aggregator?display_area=Top Game`, fetcher)
   const { data: fetchUpcomingIGOsResponse, error: fetchUpcompingIGOsError } = useSWR(`${BASE_URL}/pools/upcoming-pools?token_type=erc20&limit=20&page=1&is_private=0`, fetcher)
+  const { data: fetchLatestIGOsResponse, error: fetchLatestIGOsError } = useSWR(`${BASE_URL}/pools?token_type=erc20&limit=5&page=1&is_private=0`, fetcher)
   const { data: fetchUpcomingINOsResponse, error: fetchUpcomingINOsError } = useSWR(`${BASE_URL}/pools/upcoming-pools?token_type=box&limit=20&page=1&is_private=0`, fetcher)
+  const { data: fetchLatestINOsResponse, error: fetchLatestINOsError } = useSWR(`${BASE_URL}/pools?token_type=box&limit=5&page=1&is_private=0`, fetcher)
   const { data: fetchLikesResponse, error: fetchLikesError } = useSWR(`${BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`, fetcher)
 
   useEffect(() => {
     setFeaturedGames(fetchFeaturedGamesResponse?.data?.data)
     setUpcomingIGOs(fetchUpcomingIGOsResponse?.data?.data)
+    if (!upcomingIGOs?.length) {
+      setLatestIGOs(fetchLatestIGOsResponse?.data?.data)
+    }
     setUpcomingINOs(fetchUpcomingINOsResponse?.data?.data)
+    if (!upcomingINOs?.length) {
+      setLatestINOs(fetchLatestINOsResponse?.data?.data)
+    }
     setTopGames(fetchTopGamesResponse?.data?.data)
 
     if (router?.query?.topGames) {
       setGameFilterOption(router?.query?.topGames?.toString())
     }
-  }, [featuredGames, fetchFeaturedGamesResponse?.data?.data, fetchLikesResponse?.data, fetchTopGamesResponse, fetchUpcomingIGOsResponse?.data?.data, fetchUpcomingINOsResponse?.data?.data, gameLikeIds, router?.query?.topGames, topGames])
+  }, [featuredGames, fetchFeaturedGamesResponse, fetchLatestIGOsResponse, fetchLatestINOsResponse, fetchLikesResponse, fetchTopGamesResponse, fetchUpcomingIGOsResponse, fetchUpcomingINOsResponse, gameLikeIds, router, topGames, upcomingIGOs, upcomingINOs])
 
   useEffect(() => {
     featuredGames?.map(game => gameLikeIds?.indexOf(game.id) === -1 ? gameLikeIds.push(game.id) : null)
@@ -102,18 +113,61 @@ const PageIndex = () => {
                     showArrows={false}
                   >
                     {upcomingIGOs.map(item => (
-                      <PoolBanner key={item.id} item={item} color="yellow"></PoolBanner>
+                      <PoolBanner key={item.id} item={item} color="yellow" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
                     ))}
                   </Carousel>
                 </div>
-                : <div className="mx-auto grid grid-cols-3 gap-x-4 2xl:gap-x-6 gap-y-12 container mt-14 2xl:px-16">
-                  {upcomingIGOs.map(item => (
-                    <PoolBanner key={item.id} item={item} color="yellow"></PoolBanner>
-                  ))}
+                : <div className="mx-auto md:container mt-14 2xl:px-16">
+                  {upcomingIGOs?.length
+                    ? <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
+                      {upcomingIGOs.map(item => (
+                        <SwiperItem key={item.id}>
+                          <PoolBanner item={item} color="yellow" className="mx-3" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
+                        </SwiperItem>
+                      ))}
+                    </ListSwiper>
+                    : <></>}
                 </div>
             }
           </div>
-          : <></>
+          : <div className="md:px-4 lg:px-16 mx-auto bg-gamefiDark-700 mt-20 pb-14">
+            <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
+              <div className="block top-0 left-0 right-0 uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl">
+            Latest IGOs
+              </div>
+              <div className="absolute -bottom-5 left-0 right-0">
+                <Image src={require('assets/images/under-stroke-yellow.svg')} alt="understroke"></Image>
+              </div>
+            </div>
+            {
+              isMobile
+                ? <div className='mt-14'>
+                  <Carousel
+                    showIndicators={false}
+                    showStatus={false}
+                    infiniteLoop
+                    centerMode
+                    centerSlidePercentage={80}
+                    showArrows={false}
+                  >
+                    {latestIGOs?.length && latestIGOs.map(item => (
+                      <PoolBanner key={item.id} item={item} color="yellow" countdownStatus="ended" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
+                    ))}
+                  </Carousel>
+                </div>
+                : <div className="mx-auto flex container mt-14 2xl:px-16">
+                  {latestIGOs?.length
+                    ? <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
+                      {latestIGOs.map(item => (
+                        <SwiperItem key={item.id}>
+                          <PoolBanner item={item} color="yellow" className="mx-3" countdownStatus="Ended" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
+                        </SwiperItem>
+                      ))}
+                    </ListSwiper>
+                    : <></>}
+                </div>
+            }
+          </div>
       }
       {
         upcomingINOs && upcomingINOs.length
@@ -138,18 +192,61 @@ const PageIndex = () => {
                     showArrows={false}
                   >
                     { upcomingINOs.map(item => (
-                      <PoolBanner key={item.id} item={item} color="green"></PoolBanner>
+                      <PoolBanner key={item.id} item={item} url={`https://hub.gamefi.org/#/mystery-box/${item.id}`}></PoolBanner>
                     ))}
                   </Carousel>
                 </div>
-                : <div className="mx-auto grid grid-cols-3 gap-x-4 gap-y-12 container mt-14 2xl:gap-x-6 2xl:px-16">
-                  {upcomingINOs.map(item => (
-                    <PoolBanner key={item.id} item={item} color="green"></PoolBanner>
-                  ))}
+                : <div className="mx-auto md:container mt-14 2xl:gap-x-6 2xl:px-16">
+                  {upcomingINOs?.length
+                    ? <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
+                      {upcomingINOs.map(item => (
+                        <SwiperItem key={item.id}>
+                          <PoolBanner item={item} className="mx-3" url={`https://hub.gamefi.org/#/mystery-box/${item.id}`}></PoolBanner>
+                        </SwiperItem>
+                      ))}
+                    </ListSwiper>
+                    : <></>}
                 </div>
             }
           </div>
-          : <></>
+          : <div className="md:px-4 lg:px-16 mx-auto mt-20 pb-14">
+            <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
+              <div className="uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl">
+              Latest INOs
+              </div>
+              <div className="absolute -bottom-5 left-0 right-0">
+                <Image src={require('assets/images/under-stroke-green.svg')} alt="understroke"></Image>
+              </div>
+            </div>
+            {
+              isMobile
+                ? <div className='mt-14'>
+                  <Carousel
+                    showIndicators={false}
+                    showStatus={false}
+                    infiniteLoop
+                    centerMode
+                    centerSlidePercentage={80}
+                    showArrows={false}
+                  >
+                    { latestINOs?.length && latestINOs.map(item => (
+                      <PoolBanner key={item.id} item={item} countdownStatus="ended" url={`https://hub.gamefi.org/#/mystery-box/${item.id}`}></PoolBanner>
+                    ))}
+                  </Carousel>
+                </div>
+                : <div className="mx-auto md:container mt-14 2xl:px-16">
+                  {latestINOs?.length
+                    ? <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
+                      {latestINOs.map(item => (
+                        <SwiperItem key={item.id}>
+                          <PoolBanner item={item} className="mx-3" countdownStatus="Ended" url={`https://hub.gamefi.org/#/mystery-box/${item.id}`}></PoolBanner>
+                        </SwiperItem>
+                      ))}
+                    </ListSwiper>
+                    : <></>}
+                </div>
+            }
+          </div>
       }
       {
         topGames && topGames.length

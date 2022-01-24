@@ -4,6 +4,7 @@ import clsx from 'clsx'
 type TabsProps = {
     titles: string[];
     currentValue?: any;
+    className?: string;
     onChange?: (value: any) => void;
     className?: string;
 }

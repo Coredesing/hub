@@ -1,7 +1,7 @@
 import { API_BASE_URL } from 'constants/api'
 import { fetcher } from 'utils'
 
-function fetchAll (page = 1, category = '', perPage = 12) {
+function fetchAll (page = 1, category = '', perPage = 10) {
   return fetcher(`${API_BASE_URL}/aggregator?per_page=${perPage}&page=${page}&price=true&category=${category}`)
 }
 

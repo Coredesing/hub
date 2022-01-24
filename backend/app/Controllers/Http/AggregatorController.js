@@ -334,6 +334,7 @@ class AggregatorController {
         'game_launch_status',
         'price',
         'price_change_24h',
+        'price_change_7d',
         'market_cap',
         'coinmarketcap_slug',
         'cmc_rank',

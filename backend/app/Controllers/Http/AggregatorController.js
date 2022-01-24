@@ -335,6 +335,7 @@ class AggregatorController {
         'price',
         'price_change_24h',
         'price_change_7d',
+        'volume_24h',
         'market_cap',
         'coinmarketcap_slug',
         'cmc_rank',

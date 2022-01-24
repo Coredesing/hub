@@ -5,6 +5,7 @@ import { MyWeb3Provider } from 'components/web3/context'
 import WalletProvider from 'components/Base/WalletConnector/provider'
 import 'assets/styles/index.scss'
 import { Toaster } from 'react-hot-toast'
+import AppProvider from '@/context/provider'
 import Router, { useRouter } from 'next/router'
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
@@ -36,11 +37,14 @@ function MyApp ({ Component, pageProps }: AppProps) {
     <Web3ReactProvider getLibrary={getLibrary}>
       <Web3ProviderNetwork getLibrary={getLibrary}>
         <MyWeb3Provider>
-          <WalletProvider>
-            <Component {...pageProps} />
-          </WalletProvider>
-          <Toaster />
-          <LoadingOverlay loading={loading}></LoadingOverlay>
+          <AppProvider>
+            <WalletProvider>
+              <Component {...pageProps} />
+            </WalletProvider>
+            <Toaster />
+            <LoadingOverlay loading={loading}></LoadingOverlay>
+          </AppProvider>
+
         </MyWeb3Provider>
       </Web3ProviderNetwork>
     </Web3ReactProvider>

@@ -1,0 +1,51 @@
+.base {
+    outline: none;
+    border: none;
+    border-radius: 2px;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 28px;
+    text-align: center;
+    padding: 13px 20px;
+    /* text-transform: uppercase; */
+    min-width: 200px;
+    cursor: pointer;
+    height: 52px;
+}
+
+.disabled {
+    opacity: .5;
+    background: #5d5d5d !important;
+    color: #dfdfdf;
+    cursor: not-allowed;
+}
+
+.grey {
+    background: #727272 !important;
+    color: #fff;
+}
+
+.green {
+    background: #72F34B !important;
+    color: #000;
+}
+
+.yellow {
+    background: #F3E24B !important;
+    color: #000;
+}
+
+.blue {
+    background: #00E0FF !important;
+    color: #000;
+}
+
+.red {
+    background: #F24B4B !important;
+    color: #fff;
+}
+
+.clip-path-t-r {
+    -webkit-clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%, 0 0);
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%, 0 0);
+}

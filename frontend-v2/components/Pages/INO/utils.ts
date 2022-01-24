@@ -90,3 +90,11 @@ export const useAxiosFetch = (url: string, timeout?: number) => {
 
   return { data, loading, error, errorMessage }
 }
+
+export const isMysteryBox = (type: string) => {
+  return type === 'box'
+}
+
+export const isAuctionBox = (type: string) => {
+  return type === 'only-auction'
+}

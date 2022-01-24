@@ -10,6 +10,36 @@
       ],
       "assets/*": [
         "assets/*"
+      ],
+      "@/components/*": [
+        "components/*"
+      ],
+      "@/constants": [
+        "constants/"
+      ],
+      "@/constants/*": [
+        "constants/*"
+      ],
+      "@/utils": [
+        "utils/*"
+      ],
+      "@/utils/*": [
+        "utils/*"
+      ],
+      "@/common/*": [
+        "common/*"
+      ],
+      "@/hooks/*": [
+        "hooks/*"
+      ],
+      "@/abi/*": [
+        "abi/*"
+      ],
+      "@/context": [
+        "context/"
+      ],
+      "@/context/*": [
+        "context/*"
       ]
     },
   }

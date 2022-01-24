@@ -392,3 +392,10 @@ export function getNetworkByAlias (alias: string): Network | null {
     return (IS_TESTNET ? x.testnet : !x.testnet) && x.alias === alias
   })
 }
+
+export const getTXLink = (networkName: string, txHash: string) => {
+  const info = getNetworkByAlias(networkName)
+  if (!info) return ''
+  const explorerUrl = info.blockExplorerUrls[0]
+  return `${explorerUrl}/tx/${txHash}`
+}

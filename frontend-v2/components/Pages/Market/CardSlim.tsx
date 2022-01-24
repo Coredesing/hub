@@ -22,20 +22,20 @@ const CardSlim = ({ item }: Props) => {
         {visibility(item)}
       </div> */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="https://aspo.gsscdn.com/storage/box/box_2.png" alt={item?.title} className={styles.banner} />
+      <img src={item.image || item.icon} alt={item?.title} className={styles.banner} />
       <div className={styles.information}>
         <div className="mb-2">
           <Link href="#" passHref>
             <a className="flex align-middle items-center">
               <span className="w-6 h-6 relative mr-2"><Image src={networkImage('bsc')} alt={item?.network_available} /></span>
-              <span className="font-semibold opacity-50 uppercase">Mech Master</span>
+              <span className="font-semibold opacity-50 uppercase">{item.project?.name}</span>
             </a>
           </Link>
         </div>
         <div>
           <Link href="#" passHref>
             <a className={styles.title}>
-              #1
+              #{item.id}
             </a>
           </Link>
         </div>

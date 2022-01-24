@@ -1,0 +1,13 @@
+.content {
+    background: #000;
+    padding: 30px 36px;
+}
+
+.collectionList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 280px);
+    gap: 20px;
+    &>div {
+        grid-column: unset !important;
+    }
+}

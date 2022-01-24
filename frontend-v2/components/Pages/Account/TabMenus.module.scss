@@ -1,0 +1,22 @@
+.tabMenu {
+    position: relative;
+    background: #0D0F14;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+    cursor: pointer;
+    &:not(:first-child) {
+        // margin-left: -5px;
+    }
+    &.active {
+        background: #000000;
+        &::before {
+            content: "";
+            position: absolute;
+            width: 3px;
+            height: calc(100% - 16px);
+            background: #72F34B;
+            box-shadow: 5px 0px 16px #72F34B;
+            transform: translate(50%);
+            left: 0;
+        }
+    }
+}

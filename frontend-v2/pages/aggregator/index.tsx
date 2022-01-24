@@ -52,6 +52,8 @@ const Aggregator = ({ data }) => {
   const router = useRouter()
   const [page, setPage] = useState<number>(data.page)
   const [category, setCategory] = useState<string>(data.category)
+  const [sortBy, setSortBy] = useState<string>(data.sortBy)
+  const [sortOrder, setSortOrder] = useState<string>(data.sortOrder)
   const [loading, setLoading] = useState(false)
   const params = useMemo(() => {
     const params = new URLSearchParams()
@@ -62,8 +64,32 @@ const Aggregator = ({ data }) => {
     if (category) {
       params.set('category', category)
     }
+
+    if (sortBy) {
+      params.set('sort_by', sortBy)
+    }
+
+    if (sortOrder) {
+      params.set('sort_order', sortOrder)
+    }
+
     return `${params}`
-  }, [page, category])
+  }, [page, category, sortBy, sortOrder])
+
+  const sort = useMemo(() => {
+    return `${sortBy}|${sortOrder}`
+  }, [sortBy, sortOrder])
+  const updateSort = (value) => {
+    const parts = value.split('|')
+    if (parts[0]) {
+      setSortBy(parts[0])
+    }
+
+    if (parts[1]) {
+      setSortOrder(parts[1])
+    }
+  }
+
   useEffect(() => {
     setPage(data.page)
     setCategory(data.category)
@@ -74,6 +100,7 @@ const Aggregator = ({ data }) => {
   }, [category])
 
   useEffect(() => {
+    console.log(params)
     setLoading(true)
     router.push(`?${params}`)
       .finally(() => {
@@ -85,8 +112,14 @@ const Aggregator = ({ data }) => {
   return (
     <Layout title="GameFi Aggregator">
       <div className="md:px-4 lg:px-16 md:container mx-auto lg:block">
-        <div className="uppercase font-bold text-3xl">Game List</div>
-        <p>Demo Only: <button onClick={() => setCategory('MMORPG')}>Click here to change category to MMORPG</button></p>
+        <div className="flex items-center">
+          <div className="uppercase font-bold text-3xl mr-auto">Game List</div>
+          <select value={sort} onChange={ e => { updateSort(e.target.value) } } className="bg-gamefiDark-800 border-gamefiDark-600 rounded py-1">
+            <option value="created_at|desc">Newest</option>
+            <option value="roi|desc">High ROI</option>
+            <option value="cmc_rank|asc">Top Rank</option>
+          </select>
+        </div>
         <div className="mt-6 relative">
           <div className="flex mb-2">
             <div className="uppercase text-gray-400 font-bold text-sm flex-1">Game</div>
@@ -119,11 +152,11 @@ const Aggregator = ({ data }) => {
                       </div>
                       <div className="p-4 flex-1 overflow-hidden">
                         <div className="uppercase font-bold text-lg flex justify-between items-center">
-                          { network && <div className="flex-none w-5 h-5 relative mr-2"><Image layout="fill" src={network.image} /></div> }
                           <div className="flex-1 truncate">{item.game_name}</div>
                         </div>
                         <p className="font-casual text-sm line-clamp-1 text-gray-300">{item.short_description}</p>
-                        <p className="inline-flex gap-3 mt-2">
+                        <p className="flex gap-3 mt-2 items-center">
+                          { network && <div className="flex-none w-6 h-6 relative mr-4"><Image layout="fill" src={network.image} /></div> }
                           { item?.official_website && <a href={item?.official_website} className="hover:text-gray-300" target="_blank" rel="noopenner noreferrer">
                             <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM13.9 7H12C11.9 5.5 11.6 4.1 11.2 2.9C12.6 3.8 13.6 5.3 13.9 7ZM8 14C7.4 14 6.2 12.1 6 9H10C9.8 12.1 8.6 14 8 14ZM6 7C6.2 3.9 7.3 2 8 2C8.7 2 9.8 3.9 10 7H6ZM4.9 2.9C4.4 4.1 4.1 5.5 4 7H2.1C2.4 5.3 3.4 3.8 4.9 2.9ZM2.1 9H4C4.1 10.5 4.4 11.9 4.8 13.1C3.4 12.2 2.4 10.7 2.1 9ZM11.1 13.1C11.6 11.9 11.8 10.5 11.9 9H13.8C13.6 10.7 12.6 12.2 11.1 13.1Z" fill="currentColor"/>
@@ -189,7 +222,7 @@ export async function getServerSideProps ({ query }) {
     }
   }
 
-  return { props: { data: { ...data.data, category: query.category || null } } }
+  return { props: { data: { ...data.data, category: query.category || null, sortBy: query.sort_by || 'cmc_rank', sortOrder: query.sort_order || 'asc' } } }
 }
 
 export default Aggregator

@@ -6,7 +6,7 @@ const Schema = use('Schema')
 class TokenomicsCmcRankDefaultValueSchema extends Schema {
   up () {
     this.table('tokenomics', (table) => {
-      table.integer('cmc_rank').default(99999).alter();
+      table.integer('cmc_rank').default(999999).alter();
     })
   }
 

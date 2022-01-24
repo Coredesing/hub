@@ -346,7 +346,6 @@ class AggregatorController {
         'official_website',
         'twitter_link',
         'medium_link'
-        // 'price / token_price as roi',
       ];
       let builder = GameInformation.query()
       if (category) {
@@ -372,6 +371,7 @@ class AggregatorController {
       builder = builder.join('project_informations as project', 'game_informations.id', 'project.game_id')
 
       builder = builder.select(selectColumn);
+      builder = builder.select(builder.db.knex.raw('price / token_price as roi'));
 
       const list = await builder.paginate(page, perPage)
 

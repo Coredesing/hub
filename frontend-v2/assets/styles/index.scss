@@ -48,10 +48,14 @@ html, body {
 }
 
 .clipped-b-r {
+  margin-top: -1px;
+  margin-left: -1px;
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 0);
 }
 
 .clipped-b-r-full {
+  margin-top: -1px;
+  margin-left: -1px;
   clip-path: polygon(0 0, 100% 0%, calc(100% - 20px) 100%, 0% 100%);
 }
 
@@ -60,6 +64,7 @@ html, body {
 }
 
 .clipped-b {
+  margin-top: -1px;
   clip-path: polygon(0 0, 100% 0, calc(100% - 15px) 100%, 15px 100%);
 }
 
@@ -67,15 +72,15 @@ html, body {
   clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 20px 100%, 0 calc(100% - 20px));
 }
 
-.clipped-b-r {
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0% 50%);
-}
-
 .clipped-b-r-sm {
+  margin-top: -1px;
+  margin-left: -1px;
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0% 50%);
 }
 
 .clipped-b-r-full-sm {
+  margin-top: -1px;
+  margin-left: -1px;
   clip-path: polygon(0 0, 100% 0%, calc(100% - 5px) 100%, 0% 100%);
 }
 

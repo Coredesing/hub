@@ -62,7 +62,7 @@ const GameCarousel = ({ items, likes }: Props) => {
         {items.map(item => (
           <div key={`game-${item.id}`} className="px-14 mx-auto grid grid-cols-12 gap-4">
             <div className="col-span-7 xl:col-span-8 relative">
-              <div className="absolute z-10 top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-left bg-gamefiDark-900 w-1/2 md:pb-1 lg:pb-2 clipped-b-r-full">
+              <div className="absolute z-10 top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-left bg-gamefiDark-900 w-1/2 md:pb-1 lg:pb-2 clipped-b-r-full inline-block">
                 <span className="text-gamefiGreen-500">Featured</span> games
               </div>
               <video className='clipped-t-r-lg' muted controls poster={item.screen_shots_1}>
@@ -121,7 +121,7 @@ const GameCarousel = ({ items, likes }: Props) => {
         {items.map(item => (
           <div key={`mobile-game-${item.id}`}>
             <div className="w-full">
-              <div className="absolute z-10 top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-center md:text-left bg-gamefiDark-900 w-1/2 md:pb-1 lg:pb-2 clipped-b-r-full"><span className="text-gamefiGreen-500">Featured</span> games</div>
+              <div className="absolute z-10 top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-center md:text-left bg-gamefiDark-900 w-1/2 md:pb-1 lg:pb-2 clipped-b-r-full inline-block"><span className="text-gamefiGreen-500">Featured</span> games</div>
               <video key={`video-${item.id}`} className='clipped-t-r-lg' muted controls poster={item.screen_shots_1}>
                 <source src={item.intro_video} type="video/mp4"></source>
               </video>

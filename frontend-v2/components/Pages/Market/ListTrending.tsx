@@ -25,7 +25,7 @@ const ListTrending = () => {
           </div>
           <div className="relative">
             <div className="bg-gamefiDark-600" style={{ height: '1px', width: 'calc(100% - 150px)' }}></div>
-            <div className="absolute top-0 left-0 bg-gamefiDark-600 clipped-b-r-full-sm" style={{ height: '4px', width: '60px' }}></div>
+            <div className="absolute top-0 left-0 bg-gamefiDark-600 clipped-b-r-full-sm inline-block" style={{ height: '4px', width: '60px' }}></div>
             <div className="absolute bottom-0 right-0 grid grid-flow-col gap-2">
               <div className={'h-full'}>
                 <Dropdown></Dropdown>

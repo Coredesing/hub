@@ -7,8 +7,7 @@ import MysteryBoxDetail from 'components/Pages/INO/MysteryBoxDetail'
 import { isAuctionBox, isMysteryBox } from 'components/Pages/INO/utils'
 
 const AuctionBox = (props: any) => {
-  const { params } = props
-  const { loading, poolInfo } = useGetPoolDetail({ id: params?.id })
+  const { loading, poolInfo } = useGetPoolDetail({ id: props?.id })
   const renderContent = () => {
     if (isAuctionBox(poolInfo.process)) {
       return <AuctionDetail poolInfo={poolInfo} />
@@ -32,21 +31,10 @@ const AuctionBox = (props: any) => {
 
 export default AuctionBox
 
-export async function getStaticPaths () {
-  return {
-    paths: [
-      { params: { id: '' } }
-    ],
-    fallback: true
+export async function getServerSideProps ({ params }) {
+  if (!params?.id) {
+    return { props: { id: '' } }
   }
-}
 
-export const getStaticProps: GetStaticProps = async (context) => {
-  try {
-    return {
-      props: { params: context.params }
-    }
-  } catch (error) {
-    return { props: {} }
-  }
+  return { props: { id: params.id } }
 }

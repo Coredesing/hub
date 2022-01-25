@@ -6,7 +6,6 @@ type TabsProps = {
     currentValue?: any;
     className?: string;
     onChange?: (value: any) => void;
-    className?: string;
 }
 export const Tabs = ({ titles, ...props }: TabsProps) => {
   return (

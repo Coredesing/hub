@@ -3,7 +3,6 @@ import Modal from '@/components/Base/Modal'
 import styles from './SerieContentModal.module.scss'
 import clsx from 'clsx'
 import { Carousel } from 'react-responsive-carousel'
-import 'react-responsive-carousel/lib/styles/carousel.min.css'
 
 type Props = {
   open?: boolean;

@@ -5,7 +5,7 @@ import { API_BASE_URL } from 'constants/api'
 
 import { Contract } from '@ethersproject/contracts'
 import ERC721Abi from 'components/web3/abis/Erc721.json'
-import { useMyWeb3 } from 'components/web3/context'
+import { useLibraryDefaultFlexible } from 'components/web3/utils'
 
 type PaginatorInput = {
     current: number;
@@ -70,7 +70,7 @@ export const paginator = (options: PaginatorInput): Paginator | null => {
   }
 }
 
-export const useAxiosFetch = (url: string, timeout?: number) => {
+export const useFetch = (url: string, timeout?: number) => {
   const [data, setData] = useState<AxiosResponse | null>(null)
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
@@ -81,7 +81,6 @@ export const useAxiosFetch = (url: string, timeout?: number) => {
   }, [])
   const fetcher = async url => await axios.get(url, {
     baseURL: API_BASE_URL,
-    signal: controller.signal,
     timeout: timeout
   })
 
@@ -110,9 +109,6 @@ export const useAxiosFetch = (url: string, timeout?: number) => {
 
     return function () {
       setLoading(false)
-      if (unmounted) {
-        controller.abort()
-      }
       unmounted = true
     }
   }, [url, timeout, fetchResponse, fetchError, controller])
@@ -121,7 +117,7 @@ export const useAxiosFetch = (url: string, timeout?: number) => {
 }
 
 export const useNFTInfos = (listData: any[]) => {
-  const { library } = useMyWeb3()
+  const { provider } = useLibraryDefaultFlexible()
   const [data, setData] = useState<AxiosResponse[]>([])
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
@@ -136,7 +132,7 @@ export const useNFTInfos = (listData: any[]) => {
     const list = []
     listData && listData.map(async item => {
       const tokenAddress = item?.token_address
-      const erc721Contract = new Contract(tokenAddress, ERC721Abi, library)
+      const erc721Contract = new Contract(tokenAddress, ERC721Abi, provider)
       if (!erc721Contract) return null
       const tokenURI = await erc721Contract.functions?.tokenURI(item.id).then(res => res[0]).catch(e => console.log(e?.message))
       tokenURI && axios.get(tokenURI, {
@@ -171,7 +167,7 @@ export const useNFTInfos = (listData: any[]) => {
       }
       unmounted = true
     }
-  }, [controller, library, listData, listData.length])
+  }, [controller, provider, listData, listData.length])
 
   return { data, error, loading, errorMessage }
 }

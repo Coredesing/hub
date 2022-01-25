@@ -4,11 +4,11 @@ import Link from 'next/link'
 import React, { useMemo } from 'react'
 import CardSlim from './CardSlim'
 import { Item } from './types'
-import { useAxiosFetch, useNFTInfos } from './utils'
+import { useFetch, useNFTInfos } from './utils'
 
 const ListTrending = () => {
   const url = '/marketplace/hot-offers?limit=10&page=1'
-  const { data, loading } = useAxiosFetch(url)
+  const { data, loading } = useFetch(url)
 
   const hotItems = useMemo<Item[]>(() => {
     console.log('trending', data?.data?.data?.data)

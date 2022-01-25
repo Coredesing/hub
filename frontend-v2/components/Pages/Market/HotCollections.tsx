@@ -6,11 +6,11 @@ import { Collection } from './types'
 
 const HotCollections = () => {
   const url = '/marketplace/collections?limit=10&page=1'
-  const { data, loading } = useFetch(url)
+  const { response, loading } = useFetch(url)
 
   const hotCollections = useMemo<Collection[]>(() => {
-    return data?.data?.data?.data || []
-  }, [data])
+    return response?.data?.data || []
+  }, [response])
   return (
     <div className="md:px-4 lg:px-16 md:container mx-auto mt-20">
       {!loading && hotCollections?.length

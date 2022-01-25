@@ -5,7 +5,6 @@ import Image from 'next/image'
 import HotCollections from 'components/Pages/Market/HotCollections'
 // import HotAuctions from 'components/Pages/Market/HotAuctions'
 import ListTrending from 'components/Pages/Market/ListTrending'
-import HotAuctions from 'components/Pages/Market/HotAuctions'
 
 const Market = () => {
   return (
@@ -28,7 +27,7 @@ const Market = () => {
           <Image src={require('assets/images/market-banner.png')} alt=""></Image>
         </div>
         <HotCollections></HotCollections>
-        <HotAuctions></HotAuctions>
+        {/* <HotAuctions></HotAuctions> */}
         <ListTrending></ListTrending>
       </div>
     </Layout>

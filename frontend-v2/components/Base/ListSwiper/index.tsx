@@ -72,10 +72,10 @@ const ListSwiper = ({ ...props }: Props) => {
               <div className="absolute top-0 left-0 bg-gamefiDark-600 clipped-b-r-full-sm inline-block" style={{ height: '4px', width: '60px' }}></div>
               {
                 props.showItemsNumber === props.step
-                  ? <div className="absolute top-0 right-0 w-1/4 grid grid-flow-col gap-2 bg-gamefiDark-900" style={{ height: '1px' }}>
+                  ? <div className="absolute top-0 right-0 w-1/5 grid grid-flow-col gap-2 bg-gamefiDark-900" style={{ height: '1px' }}>
                     {pages && pages().length
                       ? pages().map((page: Page) => (
-                        <div key={page.page} className={`h-full ${activeIndex.to >= page.fromIndex && activeIndex.to <= page.toIndex ? 'bg-gamefiGreen-700' : 'bg-white'}`}></div>
+                        <div key={page.page} className={`h-full ${(activeIndex.to >= page.fromIndex && activeIndex.to <= page.toIndex) || pages.length <= 1 ? 'bg-gamefiGreen-700' : 'bg-white'}`}></div>
                       ))
                       : <></>}
                   </div>

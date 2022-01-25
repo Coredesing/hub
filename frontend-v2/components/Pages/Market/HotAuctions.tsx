@@ -2,7 +2,6 @@ import Dropdown from 'components/Base/Dropdown'
 import ListSwiper, { SwiperItem } from 'components/Base/ListSwiper'
 import Link from 'next/link'
 import React from 'react'
-import CardSlim from './CardSlim'
 
 const HotAuctions = () => {
   return (
@@ -21,38 +20,6 @@ const HotAuctions = () => {
             </div>
           </div>
         </div>
-        <ListSwiper showItemsNumber={4} step={4} transition='0.5s'>
-          <SwiperItem>
-            <div className={'w-full px-3 md:px-0 mx-2'} style={{ minHeight: '300px' }}>
-              <CardSlim item={{}}></CardSlim>
-            </div>
-          </SwiperItem>
-          <SwiperItem>
-            <div className={'w-full px-3 md:px-0 mx-2'} style={{ minHeight: '300px' }}>
-              <CardSlim item={{}}></CardSlim>
-            </div>
-          </SwiperItem>
-          <SwiperItem>
-            <div className={'w-full px-3 md:px-0 mx-2'} style={{ minHeight: '300px' }}>
-              <CardSlim item={{}}></CardSlim>
-            </div>
-          </SwiperItem>
-          <SwiperItem>
-            <div className={'w-full px-3 md:px-0 mx-2'} style={{ minHeight: '300px' }}>
-              <CardSlim item={{}}></CardSlim>
-            </div>
-          </SwiperItem>
-          <SwiperItem>
-            <div className={'w-full px-3 md:px-0 mx-2'} style={{ minHeight: '300px' }}>
-              <CardSlim item={{}}></CardSlim>
-            </div>
-          </SwiperItem>
-          <SwiperItem>
-            <div className={'w-full px-3 md:px-0 mx-2'} style={{ minHeight: '300px' }}>
-              <CardSlim item={{}}></CardSlim>
-            </div>
-          </SwiperItem>
-        </ListSwiper>
       </div>
     </div>
   )

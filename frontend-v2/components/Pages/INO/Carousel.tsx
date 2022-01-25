@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import React, { useMemo, CSSProperties } from 'react'
 import { Carousel } from 'react-responsive-carousel'
-import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import styles from './Carousel.module.scss'
 import stylesList from './List.module.scss'
 import { Item } from './types'

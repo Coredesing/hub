@@ -4,7 +4,7 @@ import Link from 'next/link'
 import React, { useMemo } from 'react'
 import CardSlim from './CardSlim'
 import { Item } from './types'
-import { useAxiosFetch } from './utils'
+import { useAxiosFetch, useNFTInfos } from './utils'
 
 const ListTrending = () => {
   const url = '/marketplace/hot-offers?limit=10&page=1'
@@ -14,6 +14,9 @@ const ListTrending = () => {
     console.log('trending', data?.data?.data?.data)
     return data?.data?.data?.data || []
   }, [data])
+
+  const { data: items } = useNFTInfos(hotItems)
+  console.log('items', items)
 
   return (
     <div className="w-full">
@@ -32,11 +35,15 @@ const ListTrending = () => {
               </div>
             </div>
           </div>
-          <ListSwiper showItemsNumber={4} step={4} transition='0.5s'>
-            <SwiperItem>
-              <CardSlim item={{}}></CardSlim>
-            </SwiperItem>
-          </ListSwiper>
+          {items && items.length > 0
+            ? <ListSwiper showItemsNumber={4} step={4} transition='0.5s'>
+              {
+                items.map((item, i) => <SwiperItem key={`hot-offers-${i}`}>
+                  <CardSlim item={item}></CardSlim>
+                </SwiperItem>)
+              }
+            </ListSwiper>
+            : <></>}
           </>
           : <></>}
         { loading && (

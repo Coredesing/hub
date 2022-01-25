@@ -31,6 +31,7 @@ const List = ({ now }: Props) => {
   }, [items])
 
   return (
+    items && items.length > 0 ? <>
     <div className={styles.section}>
       <div className={stylesList.container}>
         <div className={styles.header}>
@@ -53,7 +54,7 @@ const List = ({ now }: Props) => {
             Loading...
           </div>
         ) }
-        <div className={styles.subheading}>
+        {itemsExclusive && itemsExclusive.length > 0 ? <><div className={styles.subheading}>
           POOL INO <span>(Staking $GAFI required)</span>
         </div>
         <div className={styles.cards}>
@@ -62,9 +63,11 @@ const List = ({ now }: Props) => {
               <CardSlim key={item.id} item={item} now={now} />
             )
           }) }
-        </div>
+        </div></> : <></>}
 
-        <div className={styles.subheading} style={{marginTop: '2rem'}}>
+        {
+          itemsOpen && itemsOpen.length > 0 ? <>
+          <div className={styles.subheading} style={{marginTop: '2rem'}}>
           POOL Community <span>(Staking $GAFI not required)</span>
         </div>
         <div className={styles.cards}>
@@ -73,9 +76,9 @@ const List = ({ now }: Props) => {
               <CardSlim key={item.id} item={item} now={now} />
             )
           }) }
-        </div>
+        </div></> : <></>}
       </div>
-    </div>
+    </div></> : <></>
   )
 }
 

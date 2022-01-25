@@ -7,7 +7,7 @@ type Item = {
 }
 type Props = {
   items?: Array<Item>,
-  selected?: any,
+  selected?: Item,
   onChange?: any
 }
 const Dropdown = ({ items, selected, onChange }: Props) => {
@@ -33,18 +33,18 @@ const Dropdown = ({ items, selected, onChange }: Props) => {
   })
 
   const availableOptions = () => {
-    return items?.filter(item => item.value !== selected)
+    return items?.filter(item => item.value !== selected?.value)
   }
 
   const handleChangeFilter = (item: Item) => {
-    onChange(item)
+    onChange && onChange(item)
     setShow(false)
   }
 
   return (
     <div className="relative inline-block text-sm">
       <button className="flex align-middle items-center bg-gamefiDark-650 text-white font-bold uppercase px-4 py-2 rounded" onClick={() => setShow(!show)}>
-        Last 7 days
+        {selected?.label || 'No Item chose'}
         <svg className="ml-2" width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M15.5 4.5L8 12L0.5 4.5" stroke="#ffffff" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>

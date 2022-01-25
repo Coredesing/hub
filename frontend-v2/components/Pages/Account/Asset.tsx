@@ -7,6 +7,7 @@ import axios from 'axios';
 import { Contract } from '@ethersproject/contracts';
 import ERC721Abi from 'components/web3/abis/Erc721.json'
 import LoadingOverlay from 'components/Base/LoadingOverlay';
+import Dropdown from 'components/Base/Dropdown';
 
 const Asset = () => {
   const assetTypes = useMemo(() => ({
@@ -130,6 +131,7 @@ const Asset = () => {
           }
         }
         setAssets(collections)
+        console.log('collections', collections)
 
       } else {
         setAssets([]);
@@ -145,6 +147,23 @@ const Asset = () => {
     </div>
     <div className={styles.content}>
       <LoadingOverlay loading={assetLoading}></LoadingOverlay>
+      <div className='flex gap-2 flex-wrap mb-10'>
+        <Dropdown
+          selected={{ value: 'Listing', key: 'listing', label: 'Listing' }}
+          items={[
+            { value: '', key: 'all-status', label: 'All Status' },
+            { value: 'Listing', key: 'listing', label: 'Listing' },
+          ]}
+        />
+        <Dropdown
+          selected={{ value: 'Listing', key: 'listing', label: 'Listing' }}
+          items={[
+            { value: '', key: 'all-status', label: 'All Status' },
+            { value: 'Listing', key: 'listing', label: 'Listing' },
+          ]}
+        />
+      </div>
+
       <div className={styles.collectionList}>
         {assets.map((c) => (<CardSlim item={c} key={c.id} />))}
       </div>

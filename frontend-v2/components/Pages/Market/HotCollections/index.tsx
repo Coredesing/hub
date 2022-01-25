@@ -1,8 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
 import ListSwiper, { SwiperItem } from 'components/Base/ListSwiper'
 import React, { useMemo } from 'react'
-import { useFetch } from './utils'
-import { Collection } from './types'
+import { useFetch } from '../utils'
+import { Collection } from '../types'
 
 const HotCollections = () => {
   const url = '/marketplace/collections?limit=10&page=1'

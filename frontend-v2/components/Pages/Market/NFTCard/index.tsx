@@ -1,7 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
 import Image from 'next/image'
-import { networkImage } from './utils'
+import { networkImage } from '../utils'
 import { BigNumber, ethers } from 'ethers'
 import { getCurrencyByTokenAddress } from 'components/web3'
 

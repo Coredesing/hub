@@ -69,7 +69,7 @@ const ListSwiper = ({ ...props }: Props) => {
               {props.title || ''}
             </div>
             <div className="w-full relative bg-gamefiDark-600" style={{ height: '1px' }}>
-              <div className="absolute top-0 left-0 bg-gamefiDark-600 clipped-b-r-full-sm inline-block" style={{ height: '4px', width: '60px' }}></div>
+              <div className="absolute top-0 left-0 bg-gamefiDark-600 clipped-b-r-full-sm inline-block" style={{ height: '4px', width: '60px', marginTop: '0', marginLeft: '0' }}></div>
               {
                 props.showItemsNumber === props.step
                   ? <div className="absolute top-0 right-0 w-1/5 grid grid-flow-col gap-2 bg-gamefiDark-900" style={{ height: '1px' }}>

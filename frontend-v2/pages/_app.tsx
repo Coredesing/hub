@@ -6,7 +6,7 @@ import WalletProvider from 'components/Base/WalletConnector/provider'
 import 'assets/styles/index.scss'
 import { Toaster } from 'react-hot-toast'
 import AppProvider from '@/context/provider'
-import Router, { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
@@ -20,7 +20,7 @@ function MyApp ({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     const handleStart = (url) => (url !== router.asPath) && setLoading(true)
-    const handleComplete = (url) => setLoading(false)
+    const handleComplete = () => setLoading(false)
 
     router.events.on('routeChangeStart', handleStart)
     router.events.on('routeChangeComplete', handleComplete)

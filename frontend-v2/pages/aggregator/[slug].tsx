@@ -177,7 +177,8 @@ const GameDetails = ({ data }) => {
                 { data?.projectInformation?.roadmap.replace(/(<([^>]+)>)/gi, '') && <>
                   <div className="mt-6"><strong>Roadmap</strong></div>
                   <div>
-                    <img src={data?.projectInformation?.roadmap.replace(/(<([^>]+)>)/gi, '')} />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={data?.projectInformation?.roadmap.replace(/(<([^>]+)>)/gi, '')} alt={data?.game_name} />
                   </div>
                 </>
                 }

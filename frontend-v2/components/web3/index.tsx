@@ -391,7 +391,7 @@ export function getNetworkByAlias (alias: string): Network | null {
   if (!alias) {
     return null
   }
-  
+
   return networks.find(x => {
     return (IS_TESTNET ? x.testnet : !x.testnet) && x.alias.toLowerCase() === alias.toLowerCase()
   })

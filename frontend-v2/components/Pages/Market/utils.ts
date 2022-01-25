@@ -3,8 +3,6 @@ import axios, { AxiosResponse } from 'axios'
 import useSWR from 'swr'
 import erc721ABI from 'components/web3/abis/Erc721.json'
 import { API_BASE_URL } from 'constants/api'
-import { getNetworkInfo } from 'components/web3/network'
-import { getContractInstance } from 'components/web3'
 import { Item } from './types'
 
 type PaginatorInput = {

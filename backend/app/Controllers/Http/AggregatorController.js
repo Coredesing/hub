@@ -362,7 +362,8 @@ class AggregatorController {
 
       let builder = GameInformation.query()
       if (category) {
-        builder = builder.whereIn('category', params.category.split(','));
+        let categorySplit = params.category.split(',');
+        builder = builder.where((group) => this.categorySearch(group, categorySplit));
       }
       if (display_area) {
         builder = builder.where('display_area', 'like', `%${display_area}%`)
@@ -398,6 +399,13 @@ class AggregatorController {
       console.log(e);
       return HelperUtils.responseErrorInternal();
     }
+  }
+
+  categorySearch(builder, categories) {
+    categories.forEach(function(value, index, categories) {
+      builder.orWhere('category', 'like', `%${value}%`);
+    });
+    return builder;
   }
 
   async findAggregator({request}) {

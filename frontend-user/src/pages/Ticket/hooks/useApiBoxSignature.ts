@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import useWalletSignature from '../../../hooks/useWalletSignature';
 import axios, { HeadersSignature } from '@services/axios';
 import { useWeb3React } from '@web3-react/core';
+import { ObjectType } from '@app-types';
 
 type ApiSignatureType = {
   campaignId: string | number;
@@ -15,7 +16,7 @@ type ApiSignatureType = {
   tokenAddress?: string;
 }
 
-const useApiSignature = () => {
+const useApiSignature = (apiUrl = '/user/deposit-box') => {
   const dispath = useDispatch();
   const { account } = useWeb3React()
   const { signature: walletSignature, signMessage, setSignature: setWalletSignature, error: errorWalletSignature } = useWalletSignature();
@@ -48,9 +49,20 @@ const useApiSignature = () => {
     }
   }
 
+  const walletSignMessage = async (data: ObjectType<any>) => {
+    try {
+      error && setError('');
+      setDataSignToApi(data)
+      await signMessage();
+    } catch (error) {
+      dispath(alertFailure("Something went wrong when sign message"));
+      setError("Something went wrong when sign message")
+    }
+  }
+
   const getSignatureFromApi = async (walletSignature: string) => {
     try {
-      const response = await axios.post('/user/deposit-box', {
+      const response = await axios.post(apiUrl, {
         wallet_address: account,
         signature: walletSignature,
         ...dataSignToApi,        
@@ -82,6 +94,7 @@ const useApiSignature = () => {
     setSignature,
     apiSignMessage,
     error: errorWalletSignature || error,
+    walletSignMessage,
   }
 }
 

@@ -287,15 +287,16 @@ class AggregatorController {
       const verified = params?.verified
       const ido_type = params?.ido_type
       const price = params?.price
-
-      if (await RedisAggregatorUtils.checkExistRedisAggregators({ page, display_area, ido_type, category })) {
-        const cachedList = await RedisAggregatorUtils.getRedisAggregators({ page, display_area, ido_type, category })
+      const gameLaunchStatus = params?.game_launch_status
+      const cacheKey = { page, perPage, display_area, ido_type, category, gameLaunchStatus }
+      if (await RedisAggregatorUtils.checkExistRedisAggregators(cacheKey)) {
+        const cachedList = await RedisAggregatorUtils.getRedisAggregators(cacheKey)
         return HelperUtils.responseSuccess(JSON.parse(cachedList))
       }
 
       let builder = GameInformation.query()
       if (category) {
-        builder = builder.where(`category`, 'like', `%${category}%`)
+        builder = builder.whereIn('category', params.category.split(','));
       }
       if (display_area) {
         builder = builder.where('display_area', 'like', `%${display_area}%`)
@@ -305,6 +306,9 @@ class AggregatorController {
       }
       if (ido_type) {
         builder = builder.where('ido_type', ido_type)
+      }
+      if (gameLaunchStatus) {
+        builder = builder.where('game_launch_status', gameLaunchStatus);
       }
       if (price) {
         builder = builder.with('tokenomic')
@@ -316,7 +320,7 @@ class AggregatorController {
 
       // cache data
       if (page <= 2) {
-        await RedisAggregatorUtils.setRedisAggregators({ page, display_area, ido_type, category }, list)
+        await RedisAggregatorUtils.setRedisAggregators(cacheKey, list)
       }
       return HelperUtils.responseSuccess(list);
     }catch (e) {

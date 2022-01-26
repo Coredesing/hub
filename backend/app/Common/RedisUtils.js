@@ -6,6 +6,9 @@ const TIER_CACHED_TTL = 10 * 60; // 10 minutes'
 const UPCOMING_POOLS_CACHED_TTL = 120 // 2 minutes
 const POOL_BY_TOKEN_TYPEP_CACHED_TTL = 120 // 2 minutes
 const COMPLETED_POOLS_CACHED_TTL = 120 // 2 minutes
+const LATEST_POOLS_CACHED_TTL = 600 // 10 minutes
+
+const LATEST_POOL_KEY = 'latest_pools';
 
 const logRedisUtil = (message) => {
   console.log(`[RedisUtils] - ${message}`);
@@ -162,6 +165,28 @@ const deleteAllRedisUpcomingPools = (pages = []) => {
     deleteRedisUpcomingPools(page, 3)
   })
 };
+
+/**
+ * LATEST POOLS
+ */
+const getRedisKeyLatestPools = (limit) => {
+  return `${LATEST_POOL_KEY}_${limit}`;
+}
+
+const getRedisLatestPools = async (limit) => {
+  const redisKey = getRedisKeyLatestPools(limit);
+  return await Redis.get(redisKey);
+}
+
+const createRedisLatestPools = async (limit, data) => {
+  const redisKey = getRedisKeyLatestPools(limit);
+  return await Redis.setex(redisKey, LATEST_POOLS_CACHED_TTL, JSON.stringify(data));
+}
+
+const checkExistRedisLatestPools = async (limit) => {
+  const redisKey = getRedisKeyLatestPools(limit);
+  return Redis.exists(redisKey);
+}
 
 /**
  * COMPLETED POOLS
@@ -449,6 +474,12 @@ module.exports = {
   createRedisUpcomingPools,
   deleteRedisUpcomingPools,
   deleteAllRedisUpcomingPools,
+
+  // LATEST POOLS
+  checkExistRedisLatestPools,
+  getRedisLatestPools,
+  createRedisLatestPools,
+
 
   // LIST POOL BY TOKEN TYPE
   checkExistRedisPoolByTokenType,

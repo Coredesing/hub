@@ -6,6 +6,7 @@ import axios from 'utils/axios'
 import { Contract } from '@ethersproject/contracts'
 import ERC721Abi from 'components/web3/abis/Erc721.json'
 import { useWeb3Default } from 'components/web3'
+import LoadingOverlay from 'components/Base/LoadingOverlay'
 
 const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
   const [loading, setLoading] = useState(true)
@@ -42,9 +43,9 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
 
   return <Layout title="GameFi Market">
     {
-      loading
-        ? <h2>Loading...</h2>
-        : (
+      loading ?
+        <LoadingOverlay loading></LoadingOverlay> :
+        (
           !projectInfo || !tokenInfo ? <h1>Not Found</h1> : <MarketplaceDetail projectInfo={projectInfo} tokenInfo={tokenInfo} />
         )
     }
@@ -53,7 +54,7 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
 
 export default MarketplaceDetailPage
 
-export async function getServerSideProps ({ params }) {
+export async function getServerSideProps({ params }) {
   if (!params?.slug) {
     return { props: { projectInfo: null } }
   }

@@ -9,6 +9,7 @@ import { useWeb3Default } from 'components/web3'
 import WrapperAccount from 'components/Pages/Account/WrapperAccount'
 import LeftSideBar from 'components/Pages/Account/LeftSideBar'
 import AccountContent from 'components/Pages/Account/AccountContent'
+import LoadingOverlay from 'components/Base/LoadingOverlay'
 
 const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
   const [loading, setLoading] = useState(true)
@@ -48,9 +49,9 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
       <LeftSideBar />
       <AccountContent>
         {
-          loading
-            ? <h2>Loading...</h2>
-            : (
+          loading ?
+            <LoadingOverlay loading></LoadingOverlay> :
+            (
               !projectInfo || !tokenInfo ? <h1>Not Found</h1> : <MarketplaceDetail projectInfo={projectInfo} tokenInfo={tokenInfo} />
             )
         }
@@ -62,7 +63,7 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
 
 export default MarketplaceDetailPage
 
-export async function getServerSideProps ({ params }) {
+export async function getServerSideProps({ params }) {
   if (!params?.slug) {
     return { props: { projectInfo: null } }
   }

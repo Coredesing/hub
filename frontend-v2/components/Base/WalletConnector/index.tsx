@@ -195,9 +195,17 @@ const WalletConnector = () => {
       }
       {
         active && account &&
-        <div className="font-casual leading-6 text-sm">
-          <div className="bg-gray-700 clipped-t-r px-6 py-2 rounded inline-flex cursor-pointer" onClick={() => setShowModal(true)}>
-            <div className="font-bold mr-2">
+        <div className="font-casual leading-6 text-sm flex items-center justify-center">
+          <a className="bg-gamefiGreen-600 clipped-b-l p-px rounded inline-flex cursor-pointer mr-1 text-xs text-gamefiGreen-500 hover:text-gamefiGreen-200" href="https://pancakeswap.finance/swap?outputCurrency=0x89af13a10b32f1b2f8d1588f93027f69b6f4e27e&inputCurrency=0xe9e7cea3dedca5984780bafc599bd69add087d56" target="_blank" rel="noreferrer">
+            <span className="bg-gamefiDark-900 clipped-b-l py-2 px-6 rounded leading-5 uppercase font-bold">
+              Buy $GAFI
+            </span>
+          </a>
+          <div className="bg-gray-700 clipped-t-r py-2 px-6 rounded inline-flex cursor-pointer" onClick={() => setShowModal(true)}>
+            <div className="inline-flex font-bold mr-2 items-center">
+              <div className="inline-flex w-5 h-5 relative mr-1">
+                <Image src={network.image} layout="fill" alt={network.name}/>
+              </div>
               {balance && balanceShort} {currencyNative}
             </div>
             <span className="bg-gamefiDark-900 px-2 rounded">{accountShort}</span>
@@ -341,7 +349,7 @@ const ModalConnect = ({ children, close, style }: Props) => {
       </svg>}
       {children}
 
-      <svg onClick={close} className="absolute right-1 top-1 w-6 h-6 cursor-pointer hover:opacity-50 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg onClick={close} className="absolute right-1 top-1 w-6 h-6 cursor-pointer hover:opacity-50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
         <path d="M6 6L9 9L12 12M18 18L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>

@@ -195,9 +195,17 @@ const WalletConnector = () => {
       }
       {
         active && account &&
-        <div className="font-casual leading-6 text-sm">
-          <div className="bg-gray-700 clipped-t-r px-6 py-2 rounded inline-flex cursor-pointer" onClick={() => setShowModal(true)}>
-            <div className="font-bold mr-2">
+        <div className="font-casual leading-6 text-sm flex items-center justify-center">
+          <a className="bg-gamefiGreen-600 clipped-b-l p-px rounded inline-flex cursor-pointer mr-1 text-xs text-gamefiGreen-500 hover:text-gamefiGreen-200" href="https://pancakeswap.finance/swap?outputCurrency=0x89af13a10b32f1b2f8d1588f93027f69b6f4e27e&inputCurrency=0xe9e7cea3dedca5984780bafc599bd69add087d56" target="_blank" rel="noreferrer">
+            <span className="bg-gamefiDark-900 clipped-b-l py-2 px-6 rounded leading-5 uppercase font-bold">
+              Buy $GAFI
+            </span>
+          </a>
+          <div className="bg-gray-700 clipped-t-r py-2 px-6 rounded inline-flex cursor-pointer" onClick={() => setShowModal(true)}>
+            <div className="inline-flex font-bold mr-2 items-center">
+              <div className="inline-flex w-5 h-5 relative mr-1">
+                <Image src={network.image} layout="fill" alt={network.name}/>
+              </div>
               {balance && balanceShort} {currencyNative}
             </div>
             <span className="bg-gamefiDark-900 px-2 rounded">{accountShort}</span>
@@ -266,7 +274,7 @@ const WalletConnector = () => {
                     const chosen = available && network.id === networkChosen?.id
 
                     return <div key={network.id} className={`flex-1 relative cursor-pointer flex flex-col items-center justify-between bg-gray-700 py-4 border border-transparent ${chosen ? 'border-gamefiGreen-500' : ''}`} onClick={() => chooseNetwork(network)}>
-                      <Image src={network.image} className={available ? 'filter-none' : 'grayscale'} alt={network.name} />
+                      <div className="w-11 h-11 relative"><Image src={network.image2} className={available ? 'filter-none' : 'grayscale'} alt={network.name} layout="fill"/></div>
                       <span className={`text-sm ${available ? 'text-white' : 'text-gray-100'}`}>{network.name}</span>
 
                       { chosen && <svg className="w-6 absolute top-0 left-0" viewBox="0 0 23 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -346,6 +354,47 @@ const ModalConnect = ({ children, close, style }: Props) => {
         <path d="M6 6L9 9L12 12M18 18L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
 
+    </div>
+  )
+}
+
+export const NetworkSelector = ({ onChange }: { onChange: (network) => void }) => {
+  const _networks = networks.filter(x => !x.testnet)
+  const defaultValue = _networks.reduce((acc, val) => {
+    acc[val.alias] = true
+    return acc
+  }, {})
+  const [selected, setSelected] = useState(defaultValue)
+  const isActive = useCallback((network) => {
+    if (!selected) {
+      return true
+    }
+
+    return !!selected[network?.alias]
+  }, [selected])
+  const toggle = network => {
+    const update = { ...selected }
+    update[network?.alias] = !update?.[network?.alias]
+    setSelected(update)
+  }
+  useEffect(() => {
+    if (!onChange) {
+      return
+    }
+
+    onChange(selected)
+  }, [onChange, selected])
+
+  return (
+    <div className="font-casual">
+      <div className="flex gap-x-1.5 bg-gamefiDark-700 rounded p-1.5">
+        {_networks.map(network => {
+          return <div key={network.alias} className={`flex items-center rounded flex-none cursor-pointer py-1 px-2`} onClick={() => toggle(network)} style={{ backgroundColor: isActive(network) ? (network.colorAlt || network.color) : 'transparent' }}>
+            <div className={`flex-none w-6 h-6 relative contrast-200 brightness-200 grayscale ${isActive(network) ? 'opacity-100' : 'opacity-50'} hover:opacity-100`}><Image src={network.image2} alt={network.name} layout="fill"/></div>
+            { isActive(network) && <span className={'ml-2 text-sm'}>{network.name}</span> }
+          </div>
+        })}
+      </div>
     </div>
   )
 }

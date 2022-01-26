@@ -1,11 +1,13 @@
 import { useState, useEffect, useMemo } from 'react'
 import axios, { AxiosResponse } from 'axios'
-import useSWR from 'swr'
-import erc721ABI from 'components/web3/abis/Erc721.json'
+import useSWR, { SWRResponse } from 'swr'
 import { API_BASE_URL } from 'constants/api'
-import { getNetworkInfo } from 'components/web3/network'
-import { getContractInstance } from 'components/web3'
-import { Item } from './types'
+
+import { Contract } from '@ethersproject/contracts'
+import ERC721Abi from 'components/web3/abis/Erc721.json'
+import { useLibraryDefaultFlexible } from 'components/web3/utils'
+import { fetcher } from 'utils'
+import { useMyWeb3 } from 'components/web3/context'
 
 type PaginatorInput = {
     current: number;
@@ -21,8 +23,6 @@ type Paginator = {
     leftCluster: boolean;
     rightCluster: boolean;
 };
-
-type ObjectType<T> = { [k: string]: T };
 
 export const networkImage = (network: string) => {
   switch (network) {
@@ -72,106 +72,79 @@ export const paginator = (options: PaginatorInput): Paginator | null => {
   }
 }
 
-export const useAxiosFetch = (url: string, timeout?: number) => {
-  const [data, setData] = useState<AxiosResponse | null>(null)
+export const useFetch = (url: string, timeout?: number) => {
+  const [response, setResponse] = useState<SWRResponse | null>(null)
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  const controller = useMemo(() => {
-    const a = new AbortController()
-    return a
-  }, [])
-  const fetcher = url => axios.get(url, {
-    baseURL: API_BASE_URL,
-    signal: controller.signal,
-    timeout: timeout
-  })
-
-  const { data: fetchHotCollectionsResponse, error: fetchHotCollectionsError } = useSWR(`https://hub.gamefi.org/api/v1${url}`, fetcher)
+  const { data: fetchResponse, error: fetchError } = useSWR(`https://hub.gamefi.org/api/v1${url}`, fetcher)
 
   useEffect(() => {
-    let unmounted = false
-    if (!unmounted) {
-      setLoading(true)
-      setData(fetchHotCollectionsResponse)
-      if (fetchHotCollectionsResponse?.data) {
-        setLoading(false)
-      }
+    setLoading(true)
+    setResponse(fetchResponse)
+    if (fetchResponse?.data) {
+      setLoading(false)
+    }
 
-      if (fetchHotCollectionsError) {
-        setError(true)
-        setErrorMessage(fetchHotCollectionsError.message)
-        setLoading(false)
-        if (axios.isCancel(fetchHotCollectionsError)) {
-          console.log(`request cancelled:${fetchHotCollectionsError.message}`)
-        } else {
-          console.log('another error happened:' + (fetchHotCollectionsError.message as string))
-        }
-      }
+    if (fetchError) {
+      setError(true)
+      setErrorMessage(fetchError.message)
+      setLoading(false)
     }
 
     return function () {
       setLoading(false)
-      unmounted = true
-      controller.abort()
     }
-  }, [url, timeout, fetchHotCollectionsResponse, fetchHotCollectionsError, controller])
+  }, [url, timeout, fetchResponse, fetchError])
 
-  console.log(data)
-
-  return { data, loading, error, errorMessage }
+  return { response, loading, error, errorMessage }
 }
 
-// export const getAllNFTInfo = async (listData: any[]) => {
-//   try {
-//     const connectorName = state.connector?.data
-//     const listItems: ObjectType<any>[] = []
-//     for (let i = 0, length = listData.length; i < length; i++) {
-//       const item = listData[i]
-//       const networkInfo = getNetworkInfo(item.network)
-//       const projectAddress = item.token_address
-//       let projectInfor = (getState().projectInfors?.data || {})?.[projectAddress]
-//       const erc721Contract = getContractInstance(erc721ABI, projectAddress, networkInfo.id)
-//       if (!projectInfor) {
-//         const response = await axios.get(`/marketplace/collection/${projectAddress}`)
-//         projectInfor = response.data.data
-//         if (projectInfor) {
-//           dispatch(setProjectInfor(projectAddress, projectInfor))
-//         }
-//       }
-//       item.currencySymbol = (getState().currencies?.data || {})?.[item.currency]
-//       if (!item.currencySymbol) {
-//         item.currencySymbol = await getSymbolCurrency(item.currency, { appChainId: networkInfo.id, connectorName })
-//         setCurrencyTokenAddress(item.currency, item.currencySymbol)
-//       }
-//       item.project = projectInfor || {}
-//       item.value = !isNaN(+item.value) ? +item.value : ''
-//       const useExternalUri = !!+projectInfor?.use_external_uri
-//       let tokenInfor = (getState().tokenInfors?.data || {})?.[item.token_id]
-//       if (!tokenInfor) {
-//         tokenInfor = {}
-//         try {
-//           if (useExternalUri) {
-//             const result = await axios.post(`/marketplace/collection/${projectAddress}/${item.token_id}`)
-//             tokenInfor = result.data.data || {}
-//           } else {
-//             if (erc721Contract) {
-//               const tokenURI = await erc721Contract.methods.tokenURI(item.token_id).call()
-//               tokenInfor = (await axios.get(tokenURI)).data || {}
-//             }
-//           }
-//         } catch (error) {
-//           console.log('err', error)
-//         }
-//         dispatch && dispatch(setTokenInfor(item.token_id, tokenInfor))
-//       }
-//       Object.assign(item, tokenInfor)
-//       listItems.push(item)
-//     }
-//     return listItems
-//   } catch (error) {
-//     console.log('er', error)
-//     return []
-//   }
-// }
+export const useNFTInfos = (listData: any[]) => {
+  const { provider } = useLibraryDefaultFlexible('bsc')
+  const [data, setData] = useState<AxiosResponse[]>([])
+  const [error, setError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    setLoading(true)
+    const list = []
+    const fetchDatas = async () => {
+      for (let i = 0; i < listData?.length || 0; i++) {
+        let item = listData[i]
+        const tokenAddress = item?.token_address
+        const erc721Contract = new Contract(tokenAddress, ERC721Abi, provider)
+        if (!erc721Contract) return null
+        const tokenURI = await erc721Contract.functions?.tokenURI(item.id).then(res => res[0]).catch(e => console.log(e?.message))
+        await fetcher(tokenURI)
+          .then(data => {
+            item = {
+              token_info: data,
+              ...item
+            }
+          }).catch(function (e) {
+            setError(true)
+            setErrorMessage(e.message)
+            setLoading(false)
+          })
+        const collectionInfo = await fetcher(`https://hub.gamefi.org/api/v1/marketplace/collection/${item?.token_address}`).then(res => res?.data)
+        item = {
+          collection_info: collectionInfo,
+          ...item
+        }
+        list.push(item)
+      }
+      setData(list)
+      setLoading(false)
+    }
+
+    fetchDatas().catch(e => console.log(e))
+    return function () {
+      setLoading(false)
+    }
+  }, [provider, listData])
+
+  return { data, error, loading, errorMessage }
+}

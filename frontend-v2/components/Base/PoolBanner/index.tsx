@@ -1,21 +1,24 @@
-/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useScreens } from 'components/Pages/Home/utils'
 
 type Props = {
   item?: any,
   color?: string,
   className?: string,
   countdownStatus?: string,
-  url?: string
+  url?: string,
+  tagColor?: string
 }
-const PoolBanner = ({ item, color = 'green', className, countdownStatus, url } : Props) => {
+const PoolBanner = ({ item, color = 'green', className, countdownStatus, url, tagColor = 'gamefiDark-900' } : Props) => {
   const [distance, setDistance] = useState(0)
   const [days, setDays] = useState('00')
   const [hours, setHours] = useState('00')
   const [minutes, setMinutes] = useState('00')
   const [seconds, setSeconds] = useState('00')
+
+  const screens = useScreens()
 
   useEffect(() => {
     if (countdownStatus) {
@@ -48,14 +51,16 @@ const PoolBanner = ({ item, color = 'green', className, countdownStatus, url } :
 
   return (
     <>
-      <div className={`w-full px-3 lg:px-0 ${className}`}>
-        <div className="flex flex-col clipped-b-l rounded-tr overflow-hidden">
-          <div className="w-full h-full relative overflow-hidden">
-            <div className="absolute h-7 w-36 flex align-middle items-center justify-center top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-left bg-gamefiDark-900 clipped-b-r-full">
+      <div className={`mx-auto px-3 lg:px-0 ${className}`} style={{ width: '100%' }}>
+        <div className="flex flex-col clipped-b-l rounded-tr overflow-hidden border border-transparent">
+          <div className="w-full h-full relative">
+            <div className={`absolute h-8 w-2/5 inline-flex align-middle items-center justify-center top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-left bg-gamefiDark-900 clipped-b-r-full bg-${tagColor}`}>
               <Image src={require('assets/images/icons/lock.svg')} alt="lock"></Image>
               <span className="ml-2 font-bold">{poolStatus(item.is_private)}</span>
             </div>
-            <img src={item.banner} alt="banner" className="w-full" style={{ height: '220px' }}></img>
+            <div className="">
+              <img src={item.banner} alt="banner" className="w-full" style={{ height: `${screens.mobile ? '180px' : ''} ${screens.tablet ? '230px' : ''} ${screens.lg || screens.xl ? '240px' : ''} ${screens.md ? '220px' : ''}`, objectFit: 'cover' }}></img>
+            </div>
             <div className={`relative w-full h-24 flex align-middle items-center justify-center uppercase font-bold md:text-lg xl:text-2xl ${color === 'yellow' && 'bg-gamefiYellow'} ${(!color || color === 'green') && 'bg-gamefiGreen-700'}`}>
               {/* <div
                 className={`absolute -top-7 right-0 ${color ? `bg-${color}` : 'bg-gamefiGreen'} text-gamefiDark-900 h-12 w-2/3 flex pt-2 justify-center text-center text-sm font-semibold clipped-t-l-full uppercase`}

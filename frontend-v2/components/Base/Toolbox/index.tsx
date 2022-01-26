@@ -57,7 +57,7 @@ const Toolbox = () => {
           <Image src={require('assets/images/icons/planet.svg')} alt='metaverse'></Image>
           <span>Metaverse</span>
         </MenuLink>
-        <div className="px-5 mt-14">
+        <div className="px-1 mt-14">
           <WalletConnector></WalletConnector>
         </div>
         <div className="mx-2"></div>

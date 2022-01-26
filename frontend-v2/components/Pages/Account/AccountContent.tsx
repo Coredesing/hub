@@ -1,11 +1,11 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from 'react'
 type Props = {
   children: ReactNode
 }
-const AccountContent = ({children}: Props) => {
+const AccountContent = ({ children }: Props) => {
   return <div>
     {children}
-  </div>;
-};
+  </div>
+}
 
-export default AccountContent;
+export default AccountContent

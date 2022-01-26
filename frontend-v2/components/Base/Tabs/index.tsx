@@ -6,19 +6,19 @@ type TabsProps = {
     currentValue?: any;
     className?: string;
     onChange?: (value: any) => void;
-    className?: string;
 }
 export const Tabs = ({ titles, ...props }: TabsProps) => {
   return (
     <div className={`my-1 w-full font-mechanic uppercase font-semibold text-gray-300 ${props.className || ''}`}>
       <div className={styles.menus}>
         {
-          titles.map((title, id) => title ?
-            <div onClick={() => id !== props.currentValue && props.onChange && props.onChange(id)} key={title} className={clsx(styles.menu, 'text-base font-semibold', { [styles.active]: id === props.currentValue })}>
+          titles.map((title, id) => title
+            ? <div onClick={() => id !== props.currentValue && props.onChange && props.onChange(id)} key={title} className={clsx(styles.menu, 'text-base font-semibold', { [styles.active]: id === props.currentValue })}>
               <span>
                 {title}
               </span>
-            </div> : null)
+            </div>
+            : null)
         }
       </div>
     </div>

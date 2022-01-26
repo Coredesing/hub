@@ -14,7 +14,7 @@ const Asset = () => {
     0: {
       name: 'Items',
       value: 0,
-      type: 'nft',
+      type: 'nft'
     },
     1: {
       name: 'Mystery Box',
@@ -43,8 +43,8 @@ const Asset = () => {
       const array = result.data.data?.data || []
       for (let j = 0; j < array.length; j++) {
         const collection: any = {
-          project: prjInfo,
-        };
+          project: prjInfo
+        }
         const item = array[j]
         collection.id = item.token_id
         collection.token_id = item.token_id
@@ -75,7 +75,7 @@ const Asset = () => {
       const collection: any = {
         id: idCollection.toNumber(),
         token_id: idCollection.toNumber(),
-        project: prjInfo,
+        project: prjInfo
       }
       try {
         if (useExternalUri) {
@@ -90,7 +90,7 @@ const Asset = () => {
           }
         }
       } catch (error: any) {
-        collection.icon = 'default.img';
+        collection.icon = 'default.img'
       }
       collection.value = collection.value || collection.price
       collections.push(collection)
@@ -98,9 +98,8 @@ const Asset = () => {
     return collections
   }
 
-
   useEffect(() => {
-    if (!account || !library) return;
+    if (!account || !library) return
     const type = assetTypes[currentTab].type || assetTypes[0].type
     setAssetLoading(true)
     axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/marketplace/collections/support?type=${type}`).then(async (res) => {
@@ -112,7 +111,7 @@ const Asset = () => {
           try {
             const projectAddress = p?.token_address
             const erc721Contract = new Contract(projectAddress, ERC721Abi, library)
-            if (!erc721Contract) continue;
+            if (!erc721Contract) continue
             let myBoxes = await erc721Contract.balanceOf(account)
             myBoxes = myBoxes.toNumber()
             if (!myBoxes) {

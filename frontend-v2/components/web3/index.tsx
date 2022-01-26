@@ -4,6 +4,7 @@ import { Web3Provider } from '@ethersproject/providers'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { network, injected, walletconnect, POLLING_INTERVAL, RPC_URLS, IS_TESTNET } from './connectors'
 import type { AddEthereumChainParameter } from '@web3-react/metamask'
+import { ethers } from 'ethers'
 
 export { NoEthereumProviderError } from '@web3-react/injected-connector'
 export function getLibrary (provider: any): Web3Provider {
@@ -257,7 +258,7 @@ export const USDT_POLYGON: Token = {
 
 export const MARKETPLACE_CONTRACT =  IS_TESTNET ? process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT_97 : process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT_56
 
-const currencies = [ETH, MATIC, BNB, USDT_ERC, USDT_POLYGON, BUSD_BSC]
+const currencies = [ETH, MATIC, BNB, USDT_ERC, USDT_POLYGON, BUSD_BSC, GAFI]
 
 export type Network = {
   id: number
@@ -267,6 +268,7 @@ export type Network = {
   blockExplorerUrls: string[]
   image: any
   color: string
+  colorAlt?: string
   colorText: string
 }
 
@@ -276,7 +278,8 @@ export const networks = [{
   alias: 'eth',
   currency: ETH.symbol,
   blockExplorerUrls: ['https://etherscan.io'],
-  image: require('assets/images/icons/ethereum.svg'),
+  image: require('assets/images/networks/eth.svg'),
+  image2: require('assets/images/icons/ethereum.svg'),
   color: '#546BC7',
   colorText: '#fff'
 }, {
@@ -285,7 +288,8 @@ export const networks = [{
   alias: 'eth',
   currency: ETH.symbol,
   blockExplorerUrls: ['https://goerli.etherscan.io'],
-  image: require('assets/images/icons/ethereum.svg'),
+  image: require('assets/images/networks/eth.svg'),
+  image2: require('assets/images/icons/ethereum.svg'),
   color: '#546BC7',
   colorText: '#fff',
   testnet: true
@@ -295,8 +299,10 @@ export const networks = [{
   alias: 'bsc',
   currency: BNB.symbol,
   blockExplorerUrls: ['https://bscscan.com'],
-  image: require('assets/images/icons/bsc.svg'),
+  image: require('assets/images/networks/bsc.svg'),
+  image2: require('assets/images/icons/bsc.svg'),
   color: '#FFC700',
+  colorAlt: '#e6b300',
   colorText: '#28282E'
 }, {
   id: 97,
@@ -304,8 +310,10 @@ export const networks = [{
   alias: 'bsc',
   currency: BNB.symbol,
   blockExplorerUrls: ['https://testnet.bscscan.com'],
-  image: require('assets/images/icons/bsc.svg'),
+  image: require('assets/images/networks/bsc.svg'),
+  image2: require('assets/images/icons/bsc.svg'),
   color: '#FFC700',
+  colorAlt: '#e6b300',
   colorText: '#28282E',
   testnet: true
 }, {
@@ -314,7 +322,8 @@ export const networks = [{
   alias: 'polygon',
   currency: MATIC.symbol,
   blockExplorerUrls: ['https://polygonscan.com'],
-  image: require('assets/images/icons/polygon.svg'),
+  image: require('assets/images/networks/polygon.svg'),
+  image2: require('assets/images/icons/polygon.svg'),
   color: '#A06EF4',
   colorText: '#fff'
 }, {
@@ -323,7 +332,8 @@ export const networks = [{
   alias: 'polygon',
   currency: MATIC.symbol,
   blockExplorerUrls: ['https://mumbai.polygonscan.com'],
-  image: require('assets/images/icons/polygon.svg'),
+  image: require('assets/images/networks/polygon.svg'),
+  image2: require('assets/images/icons/polygon.svg'),
   color: '#A06EF4',
   colorText: '#fff',
   testnet: true
@@ -390,8 +400,12 @@ export function getAddChainParameters (chainId: number): AddEthereumChainParamet
 }
 
 export function getNetworkByAlias (alias: string): Network | null {
+  if (!alias) {
+    return null
+  }
+
   return networks.find(x => {
-    return (IS_TESTNET ? x.testnet : !x.testnet) && x.alias === alias
+    return (IS_TESTNET ? x.testnet : !x.testnet) && x.alias.toLowerCase() === alias.toLowerCase()
   })
 }
 
@@ -400,4 +414,20 @@ export const getTXLink = (networkName: string, txHash: string) => {
   if (!info) return ''
   const explorerUrl = info.blockExplorerUrls[0]
   return `${explorerUrl}/tx/${txHash}`
+}
+
+export function getCurrencyByTokenAddress (tokenAddress: string, networkAlias: string): Token | null {
+  if (tokenAddress === ethers.constants.AddressZero) {
+    const chain = getNetworkByAlias(networkAlias)
+    if (!chain) {
+      return null
+    }
+
+    const nativeCurrency = currencies.find(x => x.symbol === chain.currency)
+    if (!nativeCurrency) {
+      return null
+    }
+    return nativeCurrency
+  }
+  return currencies.find(x => x.address === tokenAddress)
 }

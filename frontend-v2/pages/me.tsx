@@ -46,12 +46,13 @@ function Balance () {
 }
 
 function BalanceGAFI () {
-  const { balance, balanceShort } = useBalanceToken(GAFI)
+  const { balance, balanceShort, updateBalance } = useBalanceToken(GAFI)
 
   return (
     <div>
       <span className="block">Balance ${GAFI.symbol}</span>
       <span>{balance === null ? 'N/A' : balanceShort}</span>
+      <button className="border bg-gray-500 px-2 ml-4" onClick={() => updateBalance()}>Force Reload</button>
     </div>
   )
 }

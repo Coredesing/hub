@@ -159,3 +159,16 @@ export function formatPrice (price: string): string {
   const position = price.indexOf(matches[0])
   return `$${price.slice(0, position + matches[0].length + 4)}`
 }
+
+export function printNumber (_n: string | number): string {
+  if (typeof _n === 'number') {
+    return _n.toLocaleString()
+  }
+
+  const n = parseInt(_n)
+  if (!n) {
+    return _n
+  }
+
+  return n.toLocaleString()
+}

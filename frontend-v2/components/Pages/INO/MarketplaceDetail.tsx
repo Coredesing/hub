@@ -57,13 +57,13 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   }, [projectInfo])
 
   const ERC721Contract = useMemo(() => {
-    if (!libraryDefaultTemporary) return;
+    if (!libraryDefaultTemporary) return
     const erc721Contract = new Contract(projectInfo.token_address, ERC721ABI, libraryDefaultTemporary)
     return erc721Contract
   }, [projectInfo.token_adress, libraryDefaultTemporary])
 
   const MarketplaceContract = useMemo(() => {
-    if (!libraryDefaultTemporary || !MARKETPLACE_CONTRACT) return;
+    if (!libraryDefaultTemporary || !MARKETPLACE_CONTRACT) return
     const contract = new Contract(MARKETPLACE_CONTRACT, MarketplaceABI, libraryDefaultTemporary)
     return contract
   }, [libraryDefaultTemporary])
@@ -125,12 +125,12 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   const getTokenOnSale = useCallback(async () => {
     if (!MarketplaceContract) return
     try {
-      const tokenOnSale = await MarketplaceContract.tokensOnSale(projectInfo.token_address, tokenInfo.id);
+      const tokenOnSale = await MarketplaceContract.tokensOnSale(projectInfo.token_address, tokenInfo.id)
       const info = {
         owner: tokenOnSale.tokenOwner,
         currency: tokenOnSale.currency,
         price: tokenOnSale.price.toString(),
-        symbol: null,
+        symbol: null
       }
       if (!BigNumber.from(info.price).isZero()) {
         if (BigNumber.from(info.currency).isZero()) {
@@ -149,12 +149,12 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   useEffect(() => {
     if (reloadOfferList && tokenOnSale.currency) {
       axios.get(`/marketplace/offers/${projectInfo.slug}/${tokenInfo.id}?event_type=TokenOffered`).then(async (res) => {
-        let offers = res.data?.data || []
+        const offers = res.data?.data || []
         const offerList: ObjectType<any>[] = []
         await Promise.all(offers.map((item: any) => new Promise(async (res) => {
           if (item.currency === tokenOnSale.currency) {
             if (!currencies[item.currency]) {
-              const erc20Contract = new Contract(item.currency, ERC20ABI, libraryDefaultTemporary);
+              const erc20Contract = new Contract(item.currency, ERC20ABI, libraryDefaultTemporary)
               item.currencySymbol = await erc20Contract.symbol()
             } else {
               item.currencySymbol = currencyNative(projectInfo.network)?.symbol
@@ -162,7 +162,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
             offerList.push(item)
           }
           res('')
-        })));
+        })))
         setOfferList(offerList)
         setReloadOfferList(false);
       }).catch(err => {
@@ -173,8 +173,8 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
 
   useEffect(() => {
     if (offerList.length && account) {
-      const myLastOffer = offerList.find(item => item.buyer === account);
-      setLastOffer(myLastOffer as any);
+      const myLastOffer = offerList.find(item => item.buyer === account)
+      setLastOffer(myLastOffer as any)
     }
   }, [offerList, account])
 
@@ -212,7 +212,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
         toast.error('Approval failed')
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message)
     }
   }
 
@@ -223,7 +223,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   }, [isAllowBuyOffer, tokenOnSale, account, checkAllowance])
 
   const handleOpenModalAuctionNFT = () => {
-    setOpenSellNFTModal(true);
+    setOpenSellNFTModal(true)
     setMethodSellNFT('auction')
   }
 
@@ -239,20 +239,19 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   }
   const [lockingAction, setLockingAction] = useState({
     action: '',
-    lock: false,
+    lock: false
   })
   const checkFnIsLoading = (fnName: string): boolean => {
     return lockingAction.action === fnName && lockingAction.lock
   }
 
   const handleTx = async (tx: any, action?: string) => {
-
     setTxHash(tx.hash)
     setOpenTxModal(true)
     if (action === onTransferNFT.name) {
       setOpenTransferModal(false)
     }
-    const result = await tx.wait(1);
+    const result = await tx.wait(1)
     if (+result?.status !== 1) {
       toast.error('Request Failed')
       return
@@ -264,8 +263,8 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
       onTransferNFT.name,
       onBuyNFT.name,
       onAcceptOffer.name
-    ].includes(action as string)) {
-      getTokenOnSale();
+    ].includes(action)) {
+      getTokenOnSale()
       getAddresssOwnerNFT()
     }
     if (action === onOfferNFT.name || action === onRejectOffer.name) {
@@ -289,7 +288,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   }
 
   const onListingNFT = (price: string, tokenAddress: string) => {
-    if (!ERC721ContractSigner) return;
+    if (!ERC721ContractSigner) return
     handleCallContract(
       onListingNFT.name,
       () => MarketplaceContractSigner.list(tokenInfo.id, projectInfo.token_address, utils.parseEther(price + ''), tokenAddress)
@@ -304,7 +303,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   }
 
   const onTransferNFT = (receiverAddress: string) => {
-    if (!ERC721ContractSigner) return;
+    if (!ERC721ContractSigner) return
     handleCallContract(onTransferNFT.name, () => ERC721ContractSigner.transferFrom(account, receiverAddress, tokenInfo.id))
   }
 
@@ -318,7 +317,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   const onBuyNFT = () => {
     const options: ObjectType<any> = {}
     if (BigNumber.from(tokenOnSale.currency).isZero()) {
-      options.value = utils.parseEther(tokenOnSale.price);
+      options.value = utils.parseEther(tokenOnSale.price)
     }
     return handleCallContract(onBuyNFT.name, () => MarketplaceContractSigner.buy(tokenInfo.id, projectInfo.token_address, tokenOnSale.price, tokenOnSale.currency, options))
   }
@@ -332,7 +331,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   }
 
   const onApproveToMarketplace = async () => {
-    if (!ERC721ContractSigner) return;
+    if (!ERC721ContractSigner) return
     const ok = await handleCallContract(onApproveToMarketplace.name, () => ERC721ContractSigner.setApprovalForAll(MARKETPLACE_CONTRACT, true))
     if (ok) {
       setApprovedMarketplace(true)
@@ -343,8 +342,8 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   const [isApprovedMarketplace, setApprovedMarketplace] = useState(false)
   const checkApproveMarketplace = useCallback(async () => {
     try {
-      if (!ERC721ContractSigner) return;
-      const isApproved = await ERC721ContractSigner.isApprovedForAll(account, MARKETPLACE_CONTRACT);
+      if (!ERC721ContractSigner) return
+      const isApproved = await ERC721ContractSigner.isApprovedForAll(account, MARKETPLACE_CONTRACT)
       setApprovedMarketplace(isApproved)
     } catch (error) {
       console.log('err', error)
@@ -460,19 +459,19 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
               onClick={() => setOpenMakeOfferModal(true)}
               className={clsx(
                 styles.btnClipPathBottomLeft,
-                `p-px`,
+                'p-px',
                 {
                   'bg-gamefiGreen-900 text-gamefiGreen-900 hover:bg-gamefiGreen-900 hover:text-gamefiGreen-900 cursor-not-allowed': !isApprovedToken,
                   'cursor-pointer bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700': isApprovedToken
                 }
               )}>
-              <div className={clsx(styles.btn, styles.btnClipPathBottomLeft, "bg-gamefiDark-900 h-9 text-13px flex justify-center items-center rounded-sm font-bold uppercase")}>
+              <div className={clsx(styles.btn, styles.btnClipPathBottomLeft, 'bg-gamefiDark-900 h-9 text-13px flex justify-center items-center rounded-sm font-bold uppercase')}>
                 Make Offer
               </div>
             </button>
             {
-              !isApprovedToken ?
-                <ButtonBase
+              !isApprovedToken
+                ? <ButtonBase
                   noneStyle
                   isLoading={loadingApproveToken || loadingAllowance}
                   disabled={loadingApproveToken || loadingAllowance}
@@ -481,8 +480,8 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
                   onClick={onApproveToken}
                 >
                   {loadingAllowance ? 'Checking Approval' : 'Approve to Buy'}
-                </ButtonBase> :
-                <ButtonBase
+                </ButtonBase>
+                : <ButtonBase
                   noneStyle
                   isLoading={loadingApproveToken || loadingAllowance}
                   disabled={loadingApproveToken || loadingAllowance}
@@ -504,10 +503,10 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
                 onClick={handleOpenModalAuctionNFT}
                 className={clsx(
                   styles.btnClipPathBottomLeft,
-                  `cursor-pointer p-px bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700`,
+                  'cursor-pointer p-px bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700'
 
                 )}>
-                <div className={clsx(styles.btn, styles.btnClipPathBottomLeft, "bg-gamefiDark-900 h-9 text-13px flex justify-center items-center rounded-sm font-bold uppercase")}>
+                <div className={clsx(styles.btn, styles.btnClipPathBottomLeft, 'bg-gamefiDark-900 h-9 text-13px flex justify-center items-center rounded-sm font-bold uppercase')}>
                   Auction
                 </div>
               </button>
@@ -530,9 +529,9 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
                 onClick={() => setOpenTransferModal(true)}
                 className={clsx(
                   styles.btnClipPathTopRightBottomLeft,
-                  `cursor-pointer p-px mb-4 bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700`,
+                  'cursor-pointer p-px mb-4 bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700'
                 )}>
-                <div className={clsx(styles.btn, styles.btnClipPathTopRightBottomLeft, "bg-gamefiDark-900 h-9 text-13px flex justify-center items-center rounded-sm font-bold uppercase")}>
+                <div className={clsx(styles.btn, styles.btnClipPathTopRightBottomLeft, 'bg-gamefiDark-900 h-9 text-13px flex justify-center items-center rounded-sm font-bold uppercase')}>
                   Transfer
                 </div>
               </button>

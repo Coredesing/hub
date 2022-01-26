@@ -1,20 +1,20 @@
-import Layout from 'components/Layout';
-import React, { useCallback, useEffect, useState } from 'react';
+import Layout from 'components/Layout'
+import React, { useCallback, useEffect, useState } from 'react'
 import MarketplaceDetail from 'components/Pages/INO/MarketplaceDetail'
-import { fetchOneCollection } from 'pages/api/market/collection/[slug]';
-import axios from 'utils/axios';
+import { fetchOneCollection } from 'pages/api/market/collection/[slug]'
+import axios from 'utils/axios'
 import { Contract } from '@ethersproject/contracts'
 import ERC721Abi from 'components/web3/abis/Erc721.json'
-import { useWeb3Default } from 'components/web3';
-import WrapperAccount from 'components/Pages/Account/WrapperAccount';
-import LeftSideBar from 'components/Pages/Account/LeftSideBar';
-import AccountContent from 'components/Pages/Account/AccountContent';
-import LoadingOverlay from 'components/Base/LoadingOverlay';
+import { useWeb3Default } from 'components/web3'
+import WrapperAccount from 'components/Pages/Account/WrapperAccount'
+import LeftSideBar from 'components/Pages/Account/LeftSideBar'
+import AccountContent from 'components/Pages/Account/AccountContent'
+import LoadingOverlay from 'components/Base/LoadingOverlay'
 
 const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
-  const [loading, setLoading] = useState(true);
-  const { library } = useWeb3Default();
-  const [tokenInfo, setTokenInfo] = useState<any>(null);
+  const [loading, setLoading] = useState(true)
+  const { library } = useWeb3Default()
+  const [tokenInfo, setTokenInfo] = useState<any>(null)
   const getTokenInfo = useCallback(async () => {
     try {
       if (!projectInfo) {
@@ -49,9 +49,11 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
       <LeftSideBar />
       <AccountContent>
         {
-          loading ? <LoadingOverlay loading></LoadingOverlay> : (
-            !projectInfo || !tokenInfo ? <h1>Not Found</h1> : <MarketplaceDetail projectInfo={projectInfo} tokenInfo={tokenInfo} />
-          )
+          loading ?
+            <LoadingOverlay loading></LoadingOverlay> :
+            (
+              !projectInfo || !tokenInfo ? <h1>Not Found</h1> : <MarketplaceDetail projectInfo={projectInfo} tokenInfo={tokenInfo} />
+            )
         }
       </AccountContent>
     </WrapperAccount>
@@ -59,10 +61,9 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
   </Layout>
 }
 
-export default MarketplaceDetailPage;
+export default MarketplaceDetailPage
 
 export async function getServerSideProps({ params }) {
-
   if (!params?.slug) {
     return { props: { projectInfo: null } }
   }

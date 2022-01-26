@@ -665,6 +665,20 @@ class PoolController {
     }
   }
 
+  async getLatestPools({ request }) {
+    const inputParams = request.all();
+    console.log('[getLatestPools] - inputParams: ', inputParams);
+    try {
+      let listData = await (new PoolService).getLatestPools(inputParams);
+
+      console.log('listData', listData);
+      return HelperUtils.responseSuccess(listData);
+    } catch (e) {
+      console.log(e);
+      return HelperUtils.responseErrorInternal('Get Latest Pools Fail !!!');
+    }
+  }
+
   async getFeaturedPools({ request }) {
     const inputParams = request.all();
     console.log('[getFeaturedPools] - inputParams: ', inputParams);

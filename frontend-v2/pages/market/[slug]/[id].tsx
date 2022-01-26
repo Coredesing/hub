@@ -1,17 +1,17 @@
-import Layout from 'components/Layout';
-import React, { useCallback, useEffect, useState } from 'react';
+import Layout from 'components/Layout'
+import React, { useCallback, useEffect, useState } from 'react'
 import MarketplaceDetail from 'components/Pages/INO/MarketplaceDetail'
-import { fetchOneCollection } from 'pages/api/market/collection/[slug]';
-import axios from 'utils/axios';
+import { fetchOneCollection } from 'pages/api/market/collection/[slug]'
+import axios from 'utils/axios'
 import { Contract } from '@ethersproject/contracts'
 import ERC721Abi from 'components/web3/abis/Erc721.json'
-import { useWeb3Default } from 'components/web3';
-import LoadingOverlay from 'components/Base/LoadingOverlay';
+import { useWeb3Default } from 'components/web3'
+import LoadingOverlay from 'components/Base/LoadingOverlay'
 
 const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
-  const [loading, setLoading] = useState(true);
-  const { library } = useWeb3Default();
-  const [tokenInfo, setTokenInfo] = useState<any>(null);
+  const [loading, setLoading] = useState(true)
+  const { library } = useWeb3Default()
+  const [tokenInfo, setTokenInfo] = useState<any>(null)
   const getTokenInfo = useCallback(async () => {
     try {
       if (!projectInfo) {
@@ -43,17 +43,18 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
 
   return <Layout title="GameFi Market">
     {
-      loading ? <LoadingOverlay loading></LoadingOverlay> : (
-        !projectInfo || !tokenInfo ? <h1>Not Found</h1> : <MarketplaceDetail projectInfo={projectInfo} tokenInfo={tokenInfo} />
-      )
+      loading ?
+        <LoadingOverlay loading></LoadingOverlay> :
+        (
+          !projectInfo || !tokenInfo ? <h1>Not Found</h1> : <MarketplaceDetail projectInfo={projectInfo} tokenInfo={tokenInfo} />
+        )
     }
   </Layout>
 }
 
-export default MarketplaceDetailPage;
+export default MarketplaceDetailPage
 
 export async function getServerSideProps({ params }) {
-
   if (!params?.slug) {
     return { props: { projectInfo: null } }
   }

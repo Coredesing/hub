@@ -21,7 +21,7 @@ type Props = {
 }
 
 const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isLoadingButton, disabledButton, onListingNFT, onApproveMarket, isApprovedMarketplace, ...props }: Props) => {
-  const isAuction = method === 'auction';
+  const isAuction = method === 'auction'
   const isFixedPrice = method === 'fixed-price'
   const { account } = useMyWeb3()
   const [currency, setCurrency] = useState<ObjectType>({})
@@ -81,7 +81,7 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isL
               'bg-black': !isAuction,
               'text-white/50': !isAuction,
               'bg-gamefiGreen-700': isAuction,
-              'text-black': isAuction,
+              'text-black': isAuction
             })}>
             Auction
           </button>
@@ -102,7 +102,7 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isL
       <div className={clsx('mb-8 flex items-center gap-3 justify-between')}>
         <label htmlFor="" className='text-sm block mb-2 font-casual'>Total Price</label>
         <div className='flex gap-2'>
-          <Input classes={{ input: "font-casual text-sm rounded-sm px-4 py-2", formInput: 'w-40' }} onChange={onChangePriceAuction} value={auctionPrice} />
+          <Input classes={{ input: 'font-casual text-sm rounded-sm px-4 py-2', formInput: 'w-40' }} onChange={onChangePriceAuction} value={auctionPrice} />
           <Dropdown onChange={onChangeCurrency} items={currencies} selected={currency} propLabel='name' propValue='address' />
         </div>
       </div>
@@ -149,7 +149,7 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isL
             disabled={disabledButton}
             color='green'
             onClick={handleApproveToken}
-            className={clsx("uppercase", styles.btnSubmit)}>
+            className={clsx('uppercase', styles.btnSubmit)}>
             Approve
           </ButtonBase>
         }
@@ -158,7 +158,7 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isL
           <ButtonBase
             color='green'
             onClick={handleListingNFT}
-            className={clsx("uppercase", styles.btnSubmit)}
+            className={clsx('uppercase', styles.btnSubmit)}
             isLoading={isLoadingButton}
             disabled={disabledButton || !currency.address}>
             Submit

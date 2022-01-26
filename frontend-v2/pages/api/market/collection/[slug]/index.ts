@@ -1,5 +1,5 @@
-import { API_BASE_URL } from "constants/api";
-import { fetcher } from "utils";
+import { API_BASE_URL } from 'constants/api'
+import { fetcher } from 'utils'
 
 export function fetchOneCollection (slug) {
   return fetcher(`${API_BASE_URL}/marketplace/collection/${slug}`)

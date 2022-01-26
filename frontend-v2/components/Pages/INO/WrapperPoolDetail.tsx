@@ -6,7 +6,6 @@ type Props = {
 }
 const WrapperPoolDetail = ({ children }: Props) => {
   const router = useRouter()
-  console.log('router', router)
   return <div>
     <div className={` ${styles.backLink}`}>
       <a onClick={() => router.back()} className='flex items-center gap-2 text-13px font-casual w-fit cursor-pointer'>

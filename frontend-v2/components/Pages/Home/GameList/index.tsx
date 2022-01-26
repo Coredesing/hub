@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '@/constants/api'
+import { fetcher } from 'utils'
 import ShadowLoader from 'components/Base/ShadowLoader'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -27,9 +29,7 @@ const GameList = () => {
   const [gameFilterOption, setGameFilterOption] = useState(router?.query?.topGames?.toString() || gameFilterOptions[0].value)
 
   const topGamesUrl = `/aggregator?display_area=${gameFilterOption}&price=true&per_page=4`
-  const likesURL = `/aggregator/get-like?ids=${gameLikeIds.join(',')}`
   const { response: topGamesResponse, loading: topGamesLoading } = useFetch(topGamesUrl)
-  const { response: likesResponse, loading: likesLoading } = useFetch(likesURL)
 
   const topGames = useMemo(() => {
     return topGamesResponse?.data?.data || []
@@ -40,9 +40,15 @@ const GameList = () => {
       setGameFilterOption(router?.query?.topGames?.toString())
     }
     topGames?.map(game => gameLikeIds?.indexOf(game.id) === -1 ? gameLikeIds.push(game.id) : null)
+    console.log('likes', gameLikeIds)
     setGameLikesIds(gameLikeIds)
-    setLikes(likesResponse?.data)
-  }, [gameLikeIds, likesResponse?.data, router?.query?.topGames, topGames])
+    const getLikes = async () => {
+      const res = await fetcher(`${API_BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`)
+      setLikes(res?.data)
+    }
+
+    getLikes().catch(e => console.log(e?.message))
+  }, [gameLikeIds, router?.query?.topGames, topGames])
 
   const handleChangeGameFilter = async (item: any) => {
     setGameFilterOption(item?.value)

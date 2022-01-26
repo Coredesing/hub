@@ -98,7 +98,6 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
 
   const [attrLinks, setAttrLinks] = useState<ObjectType<any>>({});
   const attributes = useMemo(() => {
-    console.log('tokenInfo', tokenInfo, projectInfo)
     const attrLinks: ObjectType<any> = {};
     const arr = (tokenInfo.attributes || []).reduce((arr: any[], item: any) => {
       const strValue = (item.value || '').toString();

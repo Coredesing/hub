@@ -67,9 +67,12 @@
 }
 
 .actionBtn {
-    position: absolute;
+    position: relative;
     right: 0;
     bottom: 0;
+    @media (min-width: 1280px) {
+        position: absolute;
+    }
 
     background-color: #6CDB00;
     clip-path: polygon(0 5px, 5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);

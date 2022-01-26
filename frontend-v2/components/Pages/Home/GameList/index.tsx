@@ -1,9 +1,9 @@
 import ShadowLoader from 'components/Base/ShadowLoader'
 import { useRouter } from 'next/router'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import FilterDropdown from '../FilterDropdown'
 import TopGame from '../TopGame'
-import { useAxiosFetch, useScreens } from '../utils'
+import { useFetch, useScreens } from '../utils'
 
 const gameFilterOptions = [
   {
@@ -24,38 +24,34 @@ const GameList = () => {
   const [gameLikeIds, setGameLikesIds] = useState([])
   const [likes, setLikes] = useState([])
   const screens = useScreens()
-  const topGamesUrl = `/aggregator?display_area=${router?.query?.topGames?.toString() || 'Top Favourite'}&price=true&per_page=4`
+  const [gameFilterOption, setGameFilterOption] = useState(router?.query?.topGames?.toString() || gameFilterOptions[0].value)
+
+  const topGamesUrl = `/aggregator?display_area=${gameFilterOption}&price=true&per_page=4`
   const likesURL = `/aggregator/get-like?ids=${gameLikeIds.join(',')}`
-  const { response: topGamesResponse, loading: topGamesLoading } = useAxiosFetch(topGamesUrl)
-  const { response: likesResponse, loading: likesLoading } = useAxiosFetch(likesURL)
-  const [topGames, setTopGames] = useState(topGamesResponse?.data?.data?.data || [])
+  const { response: topGamesResponse, loading: topGamesLoading } = useFetch(topGamesUrl)
+  const { response: likesResponse, loading: likesLoading } = useFetch(likesURL)
+
+  const topGames = useMemo(() => {
+    return topGamesResponse?.data?.data || []
+  }, [topGamesResponse])
 
   useEffect(() => {
-    let unmounted = false
-    if (!unmounted) {
-      if (router?.query?.topGames) {
-        setGameFilterOption(router?.query?.topGames?.toString())
-      }
-      topGames?.map(game => gameLikeIds?.indexOf(game.id) === -1 ? gameLikeIds.push(game.id) : null)
-      setGameLikesIds(gameLikeIds)
-      setLikes(likesResponse?.data?.data)
+    if (router?.query?.topGames) {
+      setGameFilterOption(router?.query?.topGames?.toString())
     }
-    return function () {
-      unmounted = true
-    }
-  }, [gameLikeIds, likesResponse, router, topGames, topGamesResponse])
-
-  const [gameFilterOption, setGameFilterOption] = useState(gameFilterOptions[0].value)
+    topGames?.map(game => gameLikeIds?.indexOf(game.id) === -1 ? gameLikeIds.push(game.id) : null)
+    setGameLikesIds(gameLikeIds)
+    setLikes(likesResponse?.data)
+  }, [gameLikeIds, likesResponse?.data, router?.query?.topGames, topGames])
 
   const handleChangeGameFilter = async (item: any) => {
-    await router.push({ query: { topGames: item.value || 'Top Favourite' } }, undefined, { shallow: true })
     setGameFilterOption(item?.value)
-    setTopGames(topGamesResponse?.data?.data?.data || [])
+    await router.push({ query: { topGames: item.value || 'Top Favourite' } }, undefined, { shallow: true })
   }
 
   return <>
     {
-      topGames && topGames.length
+      topGames && topGames.length > 0
         ? <div className="md:px-4 lg:px-16 md:container mx-auto mt-20 pb-14">
           <div className="md:text-lg 2xl:text-3xl uppercase font-bold flex">
             <FilterDropdown items={gameFilterOptions} selected={gameFilterOption} onChange={handleChangeGameFilter}></FilterDropdown> <span className="ml-2">Games</span>

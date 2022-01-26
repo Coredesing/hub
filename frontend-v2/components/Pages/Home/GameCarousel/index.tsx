@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import React from 'react'
 import Image from 'next/image'
 import { Carousel } from 'react-responsive-carousel'
@@ -20,7 +19,7 @@ const GameCarousel = ({ items, likes }: Props) => {
       ? <Carousel
         showStatus={false}
         showIndicators={false}
-        autoPlay={true}
+        // autoPlay={true}
         stopOnHover={true}
         showThumbs={true}
         thumbWidth={170}
@@ -64,7 +63,7 @@ const GameCarousel = ({ items, likes }: Props) => {
               <div className="absolute z-10 top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-left bg-gamefiDark-900 w-1/2 md:pb-1 lg:pb-2 clipped-b-r-full inline-block">
                 <span className="text-gamefiGreen-500">Featured</span> games
               </div>
-              <video className='clipped-t-r-lg' muted controls poster={item.screen_shots_1}>
+              <video className="clipped-t-r-lg" style={{ aspectRatio: '16/9', objectFit: 'fill' }} muted controls poster={item.screen_shots_1}>
                 <source src={item.intro_video} type="video/mp4"></source>
               Your browser does not support the video tag.
               </video>
@@ -121,7 +120,7 @@ const GameCarousel = ({ items, likes }: Props) => {
           <div key={`mobile-game-${item.id}`}>
             <div className="w-full">
               <div className="absolute z-10 top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-center md:text-left bg-gamefiDark-900 w-1/2 md:pb-1 lg:pb-2 clipped-b-r-full inline-block"><span className="text-gamefiGreen-500">Featured</span> games</div>
-              <video key={`video-${item.id}`} className='clipped-t-r-lg' muted controls poster={item.screen_shots_1}>
+              <video key={`video-${item.id}`} className='clipped-t-r-lg' style={{ aspectRatio: '16/9', objectFit: 'fill' }} muted controls poster={item.screen_shots_1}>
                 <source src={item.intro_video} type="video/mp4"></source>
               </video>
             </div>

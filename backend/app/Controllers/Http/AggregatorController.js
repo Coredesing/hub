@@ -289,13 +289,8 @@ class AggregatorController {
       const price = params?.price
       const gameLaunchStatus = params?.game_launch_status
       const sort_by = params?.sort_by ? params?.sort_by : 'cmc_rank'
-      const sort_order = params?.sort_order ? params?.sort_order : 'asc'
+      const sort_order = params?.sort_order ? params?.sort_order.toUpperCase() : 'ASC'
       const cacheKey = { page, perPage, display_area, ido_type, category, gameLaunchStatus, sort_by, sort_order }
-      if (await RedisAggregatorUtils.checkExistRedisAggregators(cacheKey)) {
-        const cachedList = await RedisAggregatorUtils.getRedisAggregators(cacheKey)
-        return HelperUtils.responseSuccess(JSON.parse(cachedList))
-      }
-
       const selectColumn = [
         'game_informations.id',
         'category',
@@ -338,7 +333,6 @@ class AggregatorController {
         'volume_24h',
         'market_cap',
         'coinmarketcap_slug',
-        'cmc_rank',
         'cmc_id',
         'token_address',
         'game_informations.created_at',
@@ -348,9 +342,28 @@ class AggregatorController {
         'twitter_link',
         'medium_link'
       ];
+
+      const aliasCol = [
+        'id',
+        'created_at',
+        'roi',
+        'cmc_rank'
+      ];
+      const sortByAllowance = aliasCol.concat(selectColumn);
+
+      if (!sortByAllowance.includes(sort_by) || !['ASC', 'DESC'].includes(sort_order)) {
+        return HelperUtils.responseBadRequest();
+      }
+
+      if (await RedisAggregatorUtils.checkExistRedisAggregators(cacheKey)) {
+        const cachedList = await RedisAggregatorUtils.getRedisAggregators(cacheKey)
+        return HelperUtils.responseSuccess(JSON.parse(cachedList))
+      }
+
       let builder = GameInformation.query()
       if (category) {
-        builder = builder.whereIn('category', params.category.split(','));
+        let categorySplit = params.category.split(',');
+        builder = builder.where((group) => this.categorySearch(group, categorySplit));
       }
       if (display_area) {
         builder = builder.where('display_area', 'like', `%${display_area}%`)
@@ -373,6 +386,7 @@ class AggregatorController {
 
       builder = builder.select(selectColumn);
       builder = builder.select(builder.db.knex.raw('price / token_price as roi'));
+      builder = builder.select(builder.db.knex.raw('COALESCE(cmc_rank, 999999) as cmc_rank'));
 
       const list = await builder.paginate(page, perPage)
 
@@ -385,6 +399,13 @@ class AggregatorController {
       console.log(e);
       return HelperUtils.responseErrorInternal();
     }
+  }
+
+  categorySearch(builder, categories) {
+    categories.forEach(function(value, index, categories) {
+      builder.orWhere('category', 'like', `%${value}%`);
+    });
+    return builder;
   }
 
   async findAggregator({request}) {

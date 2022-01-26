@@ -4,6 +4,7 @@ import { Web3Provider } from '@ethersproject/providers'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { network, injected, walletconnect, POLLING_INTERVAL, RPC_URLS, IS_TESTNET } from './connectors'
 import type { AddEthereumChainParameter } from '@web3-react/metamask'
+import { ethers } from 'ethers'
 
 export { NoEthereumProviderError } from '@web3-react/injected-connector'
 export function getLibrary (provider: any): Web3Provider {
@@ -255,7 +256,7 @@ export const USDT_POLYGON: Token = {
   address: IS_TESTNET ? process.env.NEXT_PUBLIC_USDT_80001 : process.env.NEXT_PUBLIC_USDT_137
 }
 
-const currencies = [ETH, MATIC, BNB, USDT_ERC, USDT_POLYGON, BUSD_BSC]
+const currencies = [ETH, MATIC, BNB, USDT_ERC, USDT_POLYGON, BUSD_BSC, GAFI]
 
 export type Network = {
   id: number
@@ -402,4 +403,20 @@ export const getTXLink = (networkName: string, txHash: string) => {
   if (!info) return ''
   const explorerUrl = info.blockExplorerUrls[0]
   return `${explorerUrl}/tx/${txHash}`
+}
+
+export function getCurrencyByTokenAddress (tokenAddress: string, networkAlias: string): Token | null {
+  if (tokenAddress === ethers.constants.AddressZero) {
+    const chain = getNetworkByAlias(networkAlias)
+    if (!chain) {
+      return null
+    }
+
+    const nativeCurrency = currencies.find(x => x.symbol === chain.currency)
+    if (!nativeCurrency) {
+      return null
+    }
+    return nativeCurrency
+  }
+  return currencies.find(x => x.address === tokenAddress)
 }

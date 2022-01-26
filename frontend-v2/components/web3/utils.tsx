@@ -60,7 +60,6 @@ export const useTokenApproval = (token?: Token, spender?: string) => {
 
   const approve = useCallback(async (amount) => {
     setError(null)
-
     if (!token || !account || !spender) {
       setError(new Error('Invalid token or owner or spender'))
       return
@@ -83,6 +82,7 @@ export const useTokenApproval = (token?: Token, spender?: string) => {
       const contract = new Contract(token.address, ERC20, signer)
       const tx = await contract.approve(spender, amount)
       await tx.wait(1)
+      return true
     } catch (err) {
       setError(err)
     } finally {
@@ -211,7 +211,7 @@ export const useCurrency = (item?: Item) => {
   return { currency }
 }
 
-const currencyNative = (network: string) => {
+export const currencyNative = (network: string) => {
   switch (network) {
   case 'bsc': {
     return BNB

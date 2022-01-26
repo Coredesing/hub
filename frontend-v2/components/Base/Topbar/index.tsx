@@ -14,7 +14,12 @@ const Topbar = () => {
           </div>
         </div>
         <div className="ml-auto">
-          <WalletConnector></WalletConnector>
+          <div className='flex items-center gap-2'>
+            <Link href="/account">
+              <a className='font-bold uppercase text-sm'>My Account</a>
+            </Link>
+            <WalletConnector></WalletConnector>
+          </div>
         </div>
       </div>
       <div className="z-20 h-16 md:hidden flex align-middle items-center justify-between w-full py-4 px-6" style={{ boxShadow: 'inset -1px 0px 0px #303442' }}>

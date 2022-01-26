@@ -41,3 +41,13 @@
     -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 16px 100%, 0 calc(100% - 16px), 0 0);
     clip-path: polygon(0 0, 100% 0, 100% 100%, 16px 100%, 0 calc(100% - 16px), 0 0);
 }
+
+.btnTransfer {
+    height: unset !important;
+    padding: 8px 22px !important;
+    background: #15171E !important;
+    font-size: 13px !important;
+    line-height: 18px !important;
+    min-width: unset !important;
+    border: none !important;
+}

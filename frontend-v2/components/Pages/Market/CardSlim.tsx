@@ -4,10 +4,11 @@ import { networkImage } from './utils'
 import styles from './styles.module.scss'
 
 type Props = {
-  item: any
+  item: any;
+  detailLink?: string;
 }
 
-const CardSlim = ({ item }: Props) => {
+const CardSlim = ({ item, detailLink }: Props) => {
   return (
     <div className={`${styles.card} ${styles.slim}`}>
       {/* <div className={styles.visibility}>
@@ -36,7 +37,7 @@ const CardSlim = ({ item }: Props) => {
           </Link>
         </div>
         <div>
-          <Link href="#" passHref>
+          <Link href={detailLink || `/market/${item.project?.slug}/${item.id}`} passHref>
             <a className={styles.title}>
               #{item.id}
             </a>

@@ -3,57 +3,75 @@ import Layout from 'components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { paginator, formatterUSD, formatPrice } from 'utils'
+import { formatterUSD, formatPrice } from 'utils'
 import { useMemo, useState, useEffect } from 'react'
 import PriceChange from 'components/Pages/Aggregator/PriceChange'
+import Pagination from 'components/Pages/Aggregator/Pagination'
 import { getNetworkByAlias } from 'components/web3'
 
-const Pagination = ({ page, pageLast, setPage = () => {}, className }: { page: number, pageLast: number, setPage: (number) => void, className: string }) => {
-  const pages = useMemo(() => {
-    return paginator({ current: page, last: pageLast })
-  }, [page, pageLast])
-
-  return <div className={`inline-flex gap-1 text-white font-casual text-sm ${className}`}>
-    <span className="inline-flex w-6 h-6 bg-gamefiDark-700 justify-center items-center rounded cursor-pointer border-transparent" onClick={() => { setPage(1) }}>
-      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M5.25 1.25L2 5L5.25 8.75" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M8.25 1.25L5 5L8.25 8.75" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    </span>
-    <span className="inline-flex w-6 h-6 bg-gamefiDark-700 justify-center items-center rounded cursor-pointer border-transparent" onClick={() => { page > 1 && setPage(page - 1) }}>
-      <svg width="6" height="8" viewBox="0 0 6 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4.75 0.25L1 4L4.75 7.75" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    </span>
-    { pages && (
-      <>
-        <span className={`inline-flex w-6 h-6 bg-gamefiDark-700 justify-center items-center rounded cursor-pointer border border-transparent ${pages.current === pages.first ? 'border-gamefiGreen-600 text-gamefiGreen-600' : ''}`} onClick={() => { setPage(pages.first) }}>{pages.first}</span>
-        { pages.leftCluster && <span className={'inline-flex w-6 h-6 bg-gamefiDark-700 justify-center items-center rounded cursor-pointer border border-transparent'}>...</span> }
-        { pages.pages.map(page => <span className={`inline-flex w-6 h-6 bg-gamefiDark-700 justify-center items-center rounded cursor-pointer border border-transparent ${pages.current === page ? 'border-gamefiGreen-600 text-gamefiGreen-600' : ''}`} key={page} onClick={() => { setPage(page) }}>{page}</span>) }
-        { pages.rightCluster && <span className={'inline-flex w-6 h-6 bg-gamefiDark-700 justify-center items-center rounded cursor-pointer border border-transparent'}>...</span> }
-        { pages.last > pages.first && <span className={`inline-flex w-6 h-6 bg-gamefiDark-700 justify-center items-center rounded cursor-pointer border border-transparent ${pages.current === pages.last ? 'border-gamefiGreen-600 text-gamefiGreen-600' : ''}`} onClick={() => { setPage(pageLast) }}>{pages.last}</span> }
-      </>
-    )}
-    <span className="inline-flex w-6 h-6 bg-gamefiDark-700 justify-center items-center rounded cursor-pointer border border-transparent" onClick={() => { page < pageLast && setPage(page + 1) }}>
-      <svg width="6" height="8" viewBox="0 0 6 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M1.25 0.25L5 4L1.25 7.75" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    </span>
-    <span className="inline-flex w-6 h-6 bg-gamefiDark-700 justify-center items-center rounded cursor-pointer border border-transparent" onClick={() => { setPage(pageLast) }}>
-      <svg width="8" height="10" viewBox="0 0 8 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3.75 8.75L7 5L3.75 1.25" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M0.75 8.75L4 5L0.750001 1.25" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    </span>
-  </div>
-}
+export const CATEGORY_LIST = [
+  'Action',
+  'Adventure',
+  'Card',
+  'Metaverse',
+  'MMORPG',
+  'Puzzle',
+  'Racing',
+  'Simulation',
+  'Sports',
+  'Strategy',
+  'Real-time Strategy',
+  'Turn-based Strategy',
+  'Others'
+]
 
 const Aggregator = ({ data }) => {
   const router = useRouter()
+  const [filterShown, setFilterShown] = useState<boolean>(false)
   const [page, setPage] = useState<number>(data.page)
   const [category, setCategory] = useState<string>(data.category)
+  const [idoType, setIDOType] = useState<string>(data.idoType)
+  const [launchStatus, setLaunchStatus] = useState<string>(data.launchStatus)
   const [sortBy, setSortBy] = useState<string>(data.sortBy)
   const [sortOrder, setSortOrder] = useState<string>(data.sortOrder)
+  const categories = useMemo(() => {
+    if (!category) {
+      return []
+    }
+
+    return category.split(',')
+  }, [category])
+  const handleCategory = (c) => {
+    const checked = categories.indexOf(c) > -1
+    if (checked) {
+      setCategory(categories.filter(x => x !== c).join(','))
+      return
+    }
+
+    setCategory([...categories, c].join(','))
+  }
+  const handleIDOType = (v) => {
+    setIDOType(v)
+  }
+  const handleLaunchStatus = (v) => {
+    setLaunchStatus(v)
+  }
+  const handleSort = (value) => {
+    const parts = value.split('|')
+    if (parts[0]) {
+      setSortBy(parts[0])
+    }
+
+    if (parts[1]) {
+      setSortOrder(parts[1])
+    }
+  }
+  const resetFilters = () => {
+    setCategory(null)
+    setIDOType(null)
+    setLaunchStatus(null)
+  }
+
   const [loading, setLoading] = useState(false)
   const params = useMemo(() => {
     const params = new URLSearchParams()
@@ -65,6 +83,14 @@ const Aggregator = ({ data }) => {
       params.set('category', category)
     }
 
+    if (idoType) {
+      params.set('ido_type', idoType)
+    }
+
+    if (launchStatus) {
+      params.set('launch_status', launchStatus)
+    }
+
     if (sortBy) {
       params.set('sort_by', sortBy)
     }
@@ -74,21 +100,11 @@ const Aggregator = ({ data }) => {
     }
 
     return `${params}`
-  }, [page, category, sortBy, sortOrder])
+  }, [page, category, idoType, launchStatus, sortBy, sortOrder])
 
   const sort = useMemo(() => {
     return `${sortBy}|${sortOrder}`
   }, [sortBy, sortOrder])
-  const updateSort = (value) => {
-    const parts = value.split('|')
-    if (parts[0]) {
-      setSortBy(parts[0])
-    }
-
-    if (parts[1]) {
-      setSortOrder(parts[1])
-    }
-  }
 
   useEffect(() => {
     setPage(data.page)
@@ -100,7 +116,6 @@ const Aggregator = ({ data }) => {
   }, [category])
 
   useEffect(() => {
-    console.log(params)
     setLoading(true)
     router.push(`?${params}`)
       .finally(() => {
@@ -111,23 +126,89 @@ const Aggregator = ({ data }) => {
 
   return (
     <Layout title="GameFi Aggregator">
-      <div className="md:px-4 lg:px-16 md:container mx-auto lg:block">
+      <div className="px-1 md:px-4 lg:px-16 md:container mx-auto lg:block" onClick={() => setFilterShown(false)}>
         <div className="flex items-center">
           <div className="uppercase font-bold text-3xl mr-auto">Game List</div>
-          <select value={sort} onChange={ e => { updateSort(e.target.value) } } className="bg-gamefiDark-800 border-gamefiDark-600 rounded py-1">
+          <select value={sort} onChange={ e => { handleSort(e.target.value) } } className="bg-gamefiDark-800 border-gamefiDark-600 rounded py-1 leading-6 shadow-lg">
             <option value="created_at|desc">Newest</option>
             <option value="roi|desc">High ROI</option>
             <option value="cmc_rank|asc">Top Rank</option>
           </select>
+          <div className="relative inline-block text-left ml-4">
+            <div>
+              <button type="button" className="inline-flex justify-center w-full bg-gamefiDark-800 border border-gamefiDark-600 rounded py-1 leading-6 px-4 shadow-lg" id="menu-button" aria-expanded="true" aria-haspopup="true" onClick={(e) => {
+                e.stopPropagation()
+                setFilterShown(!filterShown)
+              }}>
+                Filters
+              </button>
+            </div>
+            <div className={`z-50 origin-top-right absolute right-0 mt-2 min-w-max border border-gamefiDark-600 rounded shadow-lg bg-gamefiDark-800 ${filterShown ? 'visible' : 'invisible'}`} role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex={-1} onClick={(e) => e.stopPropagation()}>
+              <div className="p-4 text-base leading-6" role="none">
+                <div className="uppercase font-bold text-2xl mb-6">Filters</div>
+                <div className="flex gap-10 mb-6">
+                  <div>
+                    <div className="uppercase font-bold text-lg">IGO Status</div>
+                    <div className="mb-6">
+                      <label className="inline-flex items-center mr-4">
+                        <input type="radio" onChange={(e) => handleIDOType(e.target.value)} value="" checked={!idoType} />
+                        <span className="ml-1">All</span>
+                      </label>
+                      <label className="inline-flex items-center mr-4">
+                        <input type="radio" onChange={(e) => handleIDOType(e.target.value)} value="launched" checked={idoType === 'launched'} />
+                        <span className="ml-1">Launched</span>
+                      </label>
+                      <label className="inline-flex items-center">
+                        <input type="radio" onChange={(e) => handleIDOType(e.target.value)} value="upcoming" checked={idoType === 'upcoming'} />
+                        <span className="ml-1">Upcoming</span>
+                      </label>
+                    </div>
+
+                    <div className="uppercase font-bold text-lg">Game Release</div>
+                    <div>
+                      <label className="inline-flex items-center mr-4">
+                        <input type="radio" disabled value="" onChange={(e) => handleLaunchStatus(e.target.value)} checked={!launchStatus} />
+                        <span className="ml-1">All</span>
+                      </label>
+                      <label className="inline-flex items-center mr-4">
+                        <input type="radio" disabled value="released" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'released'}/>
+                        <span className="ml-1">Released</span>
+                      </label>
+                      <label className="inline-flex items-center">
+                        <input type="radio" disabled value="upcoming" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'upcoming'}/>
+                        <span className="ml-1">Upcoming</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="uppercase font-bold text-lg">Categories ({categories.length})</div>
+                    <div style={{ minWidth: '10rem' }}>
+                      { CATEGORY_LIST.map(c => {
+                        return (
+                          <label className="flex items-center font-casual text-sm leading-6" key={c}>
+                            <input type="checkbox" value={c} onChange={() => handleCategory(c)} checked={!category || categories.indexOf(c) > -1} />
+                            <span className="ml-2">{c}</span>
+                          </label>
+                        )
+                      }) }
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <button className="hover:underline" onClick={() => resetFilters()}>Reset Filters</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="mt-6 relative">
           <div className="flex mb-2">
             <div className="uppercase text-gray-400 font-bold text-sm flex-1">Game</div>
             <div className="uppercase text-gray-400 font-bold text-sm w-48 hidden lg:block">Category</div>
-            <div className="uppercase text-gray-400 font-bold text-sm w-32 xl:w-48">Volume 24h</div>
-            <div className="uppercase text-gray-400 font-bold text-sm w-40 xl:w-48">Token Price</div>
-            <div className="uppercase text-gray-400 font-bold text-sm w-32 xl:w-48">CMC Rank</div>
-            <div className="uppercase text-gray-400 font-bold text-sm w-32 xl:w-48 hidden xl:block">Last 7 days</div>
+            <div className="uppercase text-gray-400 font-bold text-sm xl:w-36 sm:w-32 hidden sm:block">Volume 24h</div>
+            <div className="uppercase text-gray-400 font-bold text-sm w-20 xl:w-36">Token Price</div>
+            <div className="uppercase text-gray-400 font-bold text-sm w-16 xl:w-32">CMC Rank</div>
+            <div className="uppercase text-gray-400 font-bold text-sm w-48 hidden 2xl:block">Last 7 days</div>
           </div>
           <div className="relative mb-8">
             { loading && (
@@ -147,16 +228,16 @@ const Aggregator = ({ data }) => {
                 <Link href={`/aggregator/${item.slug}`} key={item.id} passHref={true}>
                   <div className="flex items-center bg-gamefiDark-700 hover:bg-gamefiDark-600 mb-4 cursor-pointer">
                     <div className="flex-1 flex items-center overflow-hidden">
-                      <div className="flex-none relative w-48 h-28">
+                      <div className="flex-none relative hidden sm:block sm:w-48 sm:h-28">
                         <Image src={item.screen_shots_1} layout="fill" alt={item.game_name} />
                       </div>
                       <div className="p-4 flex-1 overflow-hidden">
-                        <div className="uppercase font-bold text-lg flex justify-between items-center">
-                          <div className="flex-1 truncate">{item.game_name}</div>
+                        <div className="uppercase font-bold text-lg flex items-center">
+                          <div className="truncate">{item.game_name}</div>
+                          { network && <div className="flex-none w-6 h-6 relative ml-2"><Image layout="fill" src={network.image} alt={item.network_available} /></div> }
                         </div>
                         <p className="font-casual text-sm line-clamp-1 text-gray-300">{item.short_description}</p>
                         <p className="flex gap-3 mt-2 items-center">
-                          { network && <div className="flex-none w-6 h-6 relative mr-4"><Image layout="fill" src={network.image} /></div> }
                           { item?.official_website && <a href={item?.official_website} className="hover:text-gray-300" target="_blank" rel="noopenner noreferrer">
                             <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM13.9 7H12C11.9 5.5 11.6 4.1 11.2 2.9C12.6 3.8 13.6 5.3 13.9 7ZM8 14C7.4 14 6.2 12.1 6 9H10C9.8 12.1 8.6 14 8 14ZM6 7C6.2 3.9 7.3 2 8 2C8.7 2 9.8 3.9 10 7H6ZM4.9 2.9C4.4 4.1 4.1 5.5 4 7H2.1C2.4 5.3 3.4 3.8 4.9 2.9ZM2.1 9H4C4.1 10.5 4.4 11.9 4.8 13.1C3.4 12.2 2.4 10.7 2.1 9ZM11.1 13.1C11.6 11.9 11.8 10.5 11.9 9H13.8C13.6 10.7 12.6 12.2 11.1 13.1Z" fill="currentColor"/>
@@ -183,20 +264,20 @@ const Aggregator = ({ data }) => {
                         </p>
                       </div>
                     </div>
-                    <div className="flex-none font-casual text-sm w-48 px-2 hidden lg:block">
+                    <div className="flex-none font-casual text-sm pr-2 w-48 hidden lg:block">
                       <p className="text-sm line-clamp-1 text-gray-300">{item.category.split(',').join(', ')}</p>
                     </div>
-                    <div className="flex-none font-casual text-sm w-32 xl:w-48">
+                    <div className="flex-none font-casual text-sm xl:w-36 sm:w-32 hidden sm:block">
                       <p>{formatterUSD.format(item.volume_24h || 0)}</p>
                     </div>
-                    <div className="flex-none font-casual text-sm w-40 xl:w-48">
+                    <div className="flex-none font-casual text-sm w-20 xl:w-36">
                       <p className="font-semibold inline-flex items-center text-base">{formatPrice(item.price)} <PriceChange className="ml-2 text-xs" tokenomic={item.tokenomic} /></p>
                       <p className="text-gray-300 text-xs"><strong>{roi}x</strong> IDO ROI</p>
                     </div>
-                    <div className="flex-none font-casual text-sm w-40 xl:w-48">
+                    <div className="flex-none font-casual text-sm w-16 xl:w-32 text-center xl:text-left">
                       <p className="font-semibold inline-flex items-center">{item.cmc_rank}</p>
                     </div>
-                    <div className="flex-none font-casual text-sm w-32 xl:w-48 hidden xl:block">
+                    <div className="flex-none font-casual text-sm w-48 hidden 2xl:block">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       { item.price_change_7d && <img src={`https://s3.coinmarketcap.com/generated/sparklines/web/7d/usd/${item.cmc_id}.svg`} alt={`CoinMarketCap ${item.game_name}`} className={parseFloat(item.price_change_7d || 0) > 0 ? 'hue-rotate-90' : '-hue-rotate-60 -saturate-150 contrast-150 brightness-75'} /> }
                     </div>
@@ -222,7 +303,18 @@ export async function getServerSideProps ({ query }) {
     }
   }
 
-  return { props: { data: { ...data.data, category: query.category || null, sortBy: query.sort_by || 'cmc_rank', sortOrder: query.sort_order || 'asc' } } }
+  return {
+    props: {
+      data: {
+        ...data.data,
+        category: query.category ? decodeURI(query.category) : null,
+        idoType: query.ido_type || null,
+        launchStatus: query.launch_status || null,
+        sortBy: query.sort_by || 'cmc_rank',
+        sortOrder: query.sort_order || 'asc'
+      }
+    }
+  }
 }
 
 export default Aggregator

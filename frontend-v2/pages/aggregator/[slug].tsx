@@ -43,7 +43,7 @@ const GameDetails = ({ data }) => {
 
   return (
     <Layout title={data.game_name}>
-      <div className="md:px-4 lg:px-24 md:container mx-auto lg:block">
+      <div className="px-2 md:px-4 lg:px-24 md:container mx-auto lg:block">
         <Link href="/aggregator" passHref={true}>
           <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">
             <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -54,8 +54,8 @@ const GameDetails = ({ data }) => {
           </a>
         </Link>
         <div className="uppercase font-bold text-3xl mb-6">{data.game_name}</div>
-        <div className="flex font-casual gap-10">
-          <div className="w-8/12 relative">
+        <div className="flex flex-col md:flex-row font-casual gap-10">
+          <div className="md:w-8/12 relative">
             <Carousel
               showStatus={false}
               showIndicators={false}
@@ -177,7 +177,8 @@ const GameDetails = ({ data }) => {
                 { data?.projectInformation?.roadmap.replace(/(<([^>]+)>)/gi, '') && <>
                   <div className="mt-6"><strong>Roadmap</strong></div>
                   <div>
-                    <img src={data?.projectInformation?.roadmap.replace(/(<([^>]+)>)/gi, '')} />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={data?.projectInformation?.roadmap.replace(/(<([^>]+)>)/gi, '')} alt={data?.game_name} />
                   </div>
                 </>
                 }
@@ -196,7 +197,7 @@ const GameDetails = ({ data }) => {
               </TabPanel>
             </div>
           </div>
-          <div className="w-4/12">
+          <div className="">
             <p className="text-sm mb-2">Current Price (% Chg 24H)</p>
             <div className="inline-flex items-center mb-8">
               {/* eslint-disable-next-line @next/next/no-img-element */}

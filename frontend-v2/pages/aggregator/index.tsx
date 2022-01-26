@@ -143,7 +143,7 @@ const Aggregator = ({ data }) => {
                 Filters
               </button>
             </div>
-            <div className={`z-50 origin-top-right absolute right-0 mt-2 min-w-max border border-gamefiDark-600 rounded shadow-lg bg-gamefiDark-800 ${filterShown ? 'visible' : 'invisible'}`} role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex="-1" onClick={(e) => e.stopPropagation()}>
+            <div className={`z-50 origin-top-right absolute right-0 mt-2 min-w-max border border-gamefiDark-600 rounded shadow-lg bg-gamefiDark-800 ${filterShown ? 'visible' : 'invisible'}`} role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex={-1} onClick={(e) => e.stopPropagation()}>
               <div className="p-4 text-base leading-6" role="none">
                 <div className="uppercase font-bold text-2xl mb-6">Filters</div>
                 <div className="flex gap-10 mb-6">

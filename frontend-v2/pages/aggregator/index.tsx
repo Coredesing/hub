@@ -126,7 +126,7 @@ const Aggregator = ({ data }) => {
 
   return (
     <Layout title="GameFi Aggregator">
-      <div className="md:px-4 lg:px-16 md:container mx-auto lg:block" onClick={() => setFilterShown(false)}>
+      <div className="px-1 md:px-4 lg:px-16 md:container mx-auto lg:block" onClick={() => setFilterShown(false)}>
         <div className="flex items-center">
           <div className="uppercase font-bold text-3xl mr-auto">Game List</div>
           <select value={sort} onChange={ e => { handleSort(e.target.value) } } className="bg-gamefiDark-800 border-gamefiDark-600 rounded py-1 leading-6 shadow-lg">
@@ -205,10 +205,10 @@ const Aggregator = ({ data }) => {
           <div className="flex mb-2">
             <div className="uppercase text-gray-400 font-bold text-sm flex-1">Game</div>
             <div className="uppercase text-gray-400 font-bold text-sm w-48 hidden lg:block">Category</div>
-            <div className="uppercase text-gray-400 font-bold text-sm w-32 xl:w-48">Volume 24h</div>
-            <div className="uppercase text-gray-400 font-bold text-sm w-40 xl:w-48">Token Price</div>
-            <div className="uppercase text-gray-400 font-bold text-sm w-32 xl:w-48">CMC Rank</div>
-            <div className="uppercase text-gray-400 font-bold text-sm w-32 xl:w-48 hidden xl:block">Last 7 days</div>
+            <div className="uppercase text-gray-400 font-bold text-sm xl:w-36 sm:w-32 hidden sm:block">Volume 24h</div>
+            <div className="uppercase text-gray-400 font-bold text-sm w-20 xl:w-36">Token Price</div>
+            <div className="uppercase text-gray-400 font-bold text-sm w-16 xl:w-32">CMC Rank</div>
+            <div className="uppercase text-gray-400 font-bold text-sm w-48 hidden 2xl:block">Last 7 days</div>
           </div>
           <div className="relative mb-8">
             { loading && (
@@ -228,7 +228,7 @@ const Aggregator = ({ data }) => {
                 <Link href={`/aggregator/${item.slug}`} key={item.id} passHref={true}>
                   <div className="flex items-center bg-gamefiDark-700 hover:bg-gamefiDark-600 mb-4 cursor-pointer">
                     <div className="flex-1 flex items-center overflow-hidden">
-                      <div className="flex-none relative w-48 h-28">
+                      <div className="flex-none relative hidden sm:block sm:w-48 sm:h-28">
                         <Image src={item.screen_shots_1} layout="fill" alt={item.game_name} />
                       </div>
                       <div className="p-4 flex-1 overflow-hidden">
@@ -264,20 +264,20 @@ const Aggregator = ({ data }) => {
                         </p>
                       </div>
                     </div>
-                    <div className="flex-none font-casual text-sm w-48 px-2 hidden lg:block">
+                    <div className="flex-none font-casual text-sm pr-2 w-48 hidden lg:block">
                       <p className="text-sm line-clamp-1 text-gray-300">{item.category.split(',').join(', ')}</p>
                     </div>
-                    <div className="flex-none font-casual text-sm w-32 xl:w-48">
+                    <div className="flex-none font-casual text-sm xl:w-36 sm:w-32 hidden sm:block">
                       <p>{formatterUSD.format(item.volume_24h || 0)}</p>
                     </div>
-                    <div className="flex-none font-casual text-sm w-40 xl:w-48">
+                    <div className="flex-none font-casual text-sm w-20 xl:w-36">
                       <p className="font-semibold inline-flex items-center text-base">{formatPrice(item.price)} <PriceChange className="ml-2 text-xs" tokenomic={item.tokenomic} /></p>
                       <p className="text-gray-300 text-xs"><strong>{roi}x</strong> IDO ROI</p>
                     </div>
-                    <div className="flex-none font-casual text-sm w-40 xl:w-48">
+                    <div className="flex-none font-casual text-sm w-16 xl:w-32 text-center xl:text-left">
                       <p className="font-semibold inline-flex items-center">{item.cmc_rank}</p>
                     </div>
-                    <div className="flex-none font-casual text-sm w-32 xl:w-48 hidden xl:block">
+                    <div className="flex-none font-casual text-sm w-48 hidden 2xl:block">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       { item.price_change_7d && <img src={`https://s3.coinmarketcap.com/generated/sparklines/web/7d/usd/${item.cmc_id}.svg`} alt={`CoinMarketCap ${item.game_name}`} className={parseFloat(item.price_change_7d || 0) > 0 ? 'hue-rotate-90' : '-hue-rotate-60 -saturate-150 contrast-150 brightness-75'} /> }
                     </div>

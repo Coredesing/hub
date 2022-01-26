@@ -59,7 +59,7 @@ const PoolBanner = ({ item, color = 'green', className, countdownStatus, url, ta
               <span className="ml-2 font-bold">{poolStatus(item.is_private)}</span>
             </div>
             <div className="">
-              <img src={item.banner} alt="banner" className="w-full" style={{ height: `${screens.mobile ? '180px' : ''} ${screens.tablet ? '230px' : ''} ${screens.lg || screens.xl ? '240px' : ''} ${screens.md ? '220px' : ''}` }}></img>
+              <img src={item.banner} alt="banner" className="w-full" style={{ height: `${screens.mobile ? '180px' : ''} ${screens.tablet ? '230px' : ''} ${screens.lg || screens.xl ? '240px' : ''} ${screens.md ? '220px' : ''}`, objectFit: 'cover' }}></img>
             </div>
             <div className={`relative w-full h-24 flex align-middle items-center justify-center uppercase font-bold md:text-lg xl:text-2xl ${color === 'yellow' && 'bg-gamefiYellow'} ${(!color || color === 'green') && 'bg-gamefiGreen-700'}`}>
               {/* <div

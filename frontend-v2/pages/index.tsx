@@ -8,6 +8,7 @@ import useSWR from 'swr'
 import IGOList from 'components/Pages/Home/IGOList'
 import INOList from 'components/Pages/Home/INOList'
 import GameList from 'components/Pages/Home/GameList'
+import NFTList from 'components/Pages/Home/NFTList'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
 
@@ -42,6 +43,7 @@ const PageIndex = () => {
       <IGOList></IGOList>
       <INOList></INOList>
       <GameList></GameList>
+      <NFTList></NFTList>
     </Layout>
   )
 }

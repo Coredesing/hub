@@ -52,7 +52,7 @@ const GameList = () => {
   return <>
     {
       topGames && topGames.length > 0
-        ? <div className="md:px-4 lg:px-16 md:container mx-auto mt-20 pb-14">
+        ? <div className="px-4 lg:px-16 md:container mx-auto mt-20 pb-14">
           <div className="md:text-lg 2xl:text-3xl uppercase font-bold flex">
             <FilterDropdown items={gameFilterOptions} selected={gameFilterOption} onChange={handleChangeGameFilter}></FilterDropdown> <span className="ml-2">Games</span>
           </div>

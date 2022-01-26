@@ -1,13 +1,13 @@
-import clsx from 'clsx';
-import ButtonBase from 'components/Base/Buttons/ButtonBase';
-import Dropdown from 'components/Base/Dropdown';
-import Modal from 'components/Base/Modal';
-import styles from './SellNFTModal.module.scss';
-import martketStyles from './MarketplaceDetail.module.scss';
-import Input from 'components/Base/Input';
-import { ObjectType } from '@/common/types';
-import { useState } from 'react';
-import { useMyWeb3 } from 'components/web3/context';
+import clsx from 'clsx'
+import ButtonBase from 'components/Base/Buttons/ButtonBase'
+import Dropdown from 'components/Base/Dropdown'
+import Modal from 'components/Base/Modal'
+import styles from './SellNFTModal.module.scss'
+import martketStyles from './MarketplaceDetail.module.scss'
+import Input from 'components/Base/Input'
+import { ObjectType } from '@/common/types'
+import { useState } from 'react'
+import { useMyWeb3 } from 'components/web3/context'
 
 type Props = {
   open?: boolean;
@@ -43,14 +43,14 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isL
   }
 
   const onChangePriceAuction = (e: any) => {
-    const val = e.target.value;
-    setAuctionPrice(val);
+    const val = e.target.value
+    setAuctionPrice(val)
     if (!val) {
       setFeeAuction(0)
       return
     }
-    const fee = +val * feePlatform;
-    setFeeAuction(fee);
+    const fee = +val * feePlatform
+    setFeeAuction(fee)
   }
 
   // const onChangeExpire = (e: any) => {
@@ -62,11 +62,11 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isL
   }
 
   const onChangeCurrency = (val: ObjectType) => {
-    console.log(val);
-    setCurrency(val);
+    console.log(val)
+    setCurrency(val)
   }
 
-  const isAllowedApprove = !!account && !isApprovedMarketplace;
+  const isAllowedApprove = !!account && !isApprovedMarketplace
 
   // const tags = ['Category a', 'Category b', 'category c'];
 
@@ -167,7 +167,7 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isL
 
       </div>
     </div>
-  </Modal>;
-};
+  </Modal>
+}
 
-export default SellNFTModal;
+export default SellNFTModal

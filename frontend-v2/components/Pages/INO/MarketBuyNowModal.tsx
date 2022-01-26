@@ -32,6 +32,7 @@ const BuyNowModal = ({ tokenOnSale, projectInfo, ...props }: Props) => {
     }
   }
   const disabledBuy = !balance || BigNumber.from(balance).lt(tokenOnSale.price)
+
   return <Modal show={props.open} toggle={props.onClose}>
     <div className={styles.content}>
       <h3 className='font-bold text-2xl mb-7 uppercase'>Payment</h3>

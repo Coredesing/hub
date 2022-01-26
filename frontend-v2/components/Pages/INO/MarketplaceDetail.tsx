@@ -195,7 +195,6 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   const handleOpenModalFixPriceNFT = () => {
     setOpenSellNFTModal(true)
     setMethodSellNFT('fixed-price')
-
   }
 
   const handleError = (error: any) => {
@@ -550,10 +549,9 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
             </div>
           </TabPanel>
         </div>
-
       </>}
     />
-  </WrapperPoolDetail>;
-};
+  </WrapperPoolDetail>
+}
 
-export default MarketplaceDetail;
+export default MarketplaceDetail

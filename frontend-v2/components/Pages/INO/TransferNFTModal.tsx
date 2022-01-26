@@ -13,7 +13,6 @@ type Props = {
 }
 
 const TransferNFTModal = (props: Props) => {
-
   const [receiver, setReceiver] = useState('')
   const onChangeReceiver = (e: any) => {
     const val = e.target.value
@@ -40,7 +39,7 @@ const TransferNFTModal = (props: Props) => {
       </div>
       <div className='flex justify-end gap-8'>
         <button className='uppercase text-white/50 font-bold' onClick={props.onClose}>Cancel</button>
-        <ButtonBase disabled={props.disabledButton} isLoading={props.isLoadingButton} color='green' onClick={handleTransfer} className={clsx("uppercase", styles.btnTransfer)}>
+        <ButtonBase disabled={props.disabledButton} isLoading={props.isLoadingButton} color='green' onClick={handleTransfer} className={clsx('uppercase', styles.btnTransfer)}>
           Transfer
         </ButtonBase>
       </div>

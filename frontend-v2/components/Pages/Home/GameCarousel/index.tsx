@@ -19,7 +19,7 @@ const GameCarousel = ({ items, likes }: Props) => {
       ? <Carousel
         showStatus={false}
         showIndicators={false}
-        // autoPlay={true}
+        autoPlay={true}
         stopOnHover={true}
         showThumbs={true}
         thumbWidth={170}

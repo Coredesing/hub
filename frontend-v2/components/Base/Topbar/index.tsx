@@ -35,7 +35,7 @@ const Topbar = () => {
         <div className="ml-auto">
           <div className='flex items-center gap-2'>
             <Link href="/account">
-              <a className='font-bold uppercase text-sm'>My Account</a>
+              <a className='font-bold uppercase text-sm flex-none'>My Account</a>
             </Link>
             <WalletConnector></WalletConnector>
           </div>

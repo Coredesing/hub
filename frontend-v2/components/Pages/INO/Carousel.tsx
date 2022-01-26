@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import React, { useMemo, CSSProperties } from 'react'
 import { Carousel } from 'react-responsive-carousel'
 import styles from './Carousel.module.scss'
@@ -77,10 +78,12 @@ const CarouselAction = ({ item, now }: { item: Item, now: Date }) => {
   if (item.campaign_status === 'Ended' || now > stages.timeFinish) {
     return (
       <>
-        <div style={{ marginTop: 'auto', position: 'relative' }}>
-          <div className={styles.actionBtn}>
-            Details <Image src={require('assets/images/icons/arrow-right-dark.svg')} alt="right" />
-          </div>
+        <div className="relative mt-2 lg:mt-auto">
+          <Link href={`/ino/${item.id}`} passHref={true}>
+            <div className={styles.actionBtn}>
+              Details <Image src={require('assets/images/icons/arrow-right-dark.svg')} alt="right" />
+            </div>
+          </Link>
         </div>
       </>
     )
@@ -168,11 +171,11 @@ const _Carousel = ({ items, style, now }: Props) => {
         {items.map(item => {
           return (
             <div key={`ino-${item.id}`} className="px-14 mx-auto grid grid-cols-12 gap-4">
-              <div className="col-span-7 xl:col-span-8 relative">
+              <div className="col-span-12 md:col-span-7 lg:col-span-8 relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={item.banner} alt={item.title} className="clipped-t-r-lg" />
+                <img src={item.banner} alt={item.title} className="clipped-t-r-lg" style={{ aspectRatio: '16 / 9' }} />
               </div>
-              <div className="relative col-span-5 xl:col-span-4 w-full px-4 flex flex-col">
+              <div className="relative col-span-12 md:col-span-5 lg:col-span-4 w-full px-4 flex flex-col">
                 <h3 className={styles.title}>{item.title} <span className="inline-flex items-center justify-center ml-2"><span className="w-6 h-6 relative"><Image src={networkImage(item.network_available)} alt={item.network_available} layout="fill" objectFit="cover" /></span></span></h3>
                 <p className={styles.description}>{item.description}</p>
                 <div className={styles.socials}>

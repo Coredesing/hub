@@ -51,3 +51,46 @@
     min-width: unset !important;
     border: none !important;
 }
+
+.offerList {
+    display: grid;
+    gap: 36px;
+    .offerItem {
+        display: grid;
+        grid-template-columns: 400px auto;
+    }
+    .offerMaker {
+        &>div {
+            padding: 2px 12px;
+            position: relative;
+        }
+        &>div::before {
+            content: "";
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: #6CDB00;
+            border-radius: 50%;
+            left: 0;
+            top: 50%;
+            transform: translate(0, -50%);
+        }
+        span {
+            display: block;
+            padding-left: 12px;
+        }
+    }
+}
+
+.attributes {
+    margin-top: 24px;
+    margin-bottom: 24px;
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 45%));
+    div {
+        display: grid;
+        grid-template-columns: minmax(200px, 50%) auto;
+        gap: 20px;
+    }
+}

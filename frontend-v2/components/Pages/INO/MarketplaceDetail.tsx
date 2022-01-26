@@ -41,7 +41,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   const [txHash, setTxHash] = useState('')
   const [openTxModal, setOpenTxModal] = useState(false)
   const [methodSellNFT, setMethodSellNFT] = useState('')
-  const [reloadOfferList, setReloadOfferList] = useState(true);
+  const [reloadOfferList, setReloadOfferList] = useState(true)
   const [offerList, setOfferList] = useState<ObjectType<any>[]>([])
   const [lastOffer, setLastOffer] = useState<ObjectType<any> | null>(null)
   const [tokenOnSale, setTokenOnSale] = useState<ObjectType>({})
@@ -81,37 +81,37 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   }, [MarketplaceContract, account, library])
 
   const formatTraitType = (item: any) => {
-    let traitType = item.trait_type || item.traitType || '';
-    traitType = typeof traitType === 'string' ? traitType : '';
-    let formatted = '';
+    let traitType = item.trait_type || item.traitType || ''
+    traitType = typeof traitType === 'string' ? traitType : ''
+    let formatted = ''
 
-    formatted = traitType.split('_').map((w: string) => (w[0].toUpperCase() + w.slice(1))).join(' ');
-    return formatted;
+    formatted = traitType.split('_').map((w: string) => (w[0].toUpperCase() + w.slice(1))).join(' ')
+    return formatted
   }
 
   const formatValueAttribute = (item: any) => {
     if (typeof item?.value !== 'object') {
-      return item.value;
+      return item.value
     }
-    return '';
+    return ''
   }
 
-  const [attrLinks, setAttrLinks] = useState<ObjectType<any>>({});
+  const [attrLinks, setAttrLinks] = useState<ObjectType<any>>({})
   const attributes = useMemo(() => {
-    const attrLinks: ObjectType<any> = {};
+    const attrLinks: ObjectType<any> = {}
     const arr = (tokenInfo.attributes || []).reduce((arr: any[], item: any) => {
-      const strValue = (item.value || '').toString();
+      const strValue = (item.value || '').toString()
       if (strValue.includes('https://') || strValue.includes('http://')) {
-        const propName = formatTraitType(item);
-        attrLinks[propName] = item.value;
+        const propName = formatTraitType(item)
+        attrLinks[propName] = item.value
       } else {
         arr.push(item)
       }
-      return arr;
-    }, []);
-    setAttrLinks(attrLinks);
-    return arr;
-  }, [tokenInfo.attributes]);
+      return arr
+    }, [])
+    setAttrLinks(attrLinks)
+    return arr
+  }, [tokenInfo.attributes])
 
   const getAddresssOwnerNFT = useCallback(async () => {
     if (!ERC721Contract) {
@@ -163,7 +163,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
           res('')
         })))
         setOfferList(offerList)
-        setReloadOfferList(false);
+        setReloadOfferList(false)
       }).catch(err => {
         console.log('err', err)
       })
@@ -268,7 +268,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
     }
     if (action === onOfferNFT.name || action === onRejectOffer.name) {
       setTimeout(() => {
-        setReloadOfferList(true);
+        setReloadOfferList(true)
       }, 2000)
     }
     setLockingAction({ action: '', lock: false })
@@ -326,7 +326,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   }
 
   const onRejectOffer = () => {
-    handleCallContract(onRejectOffer.name, () => MarketplaceContractSigner.cancelOffer(tokenInfo.id, projectInfo.token_address));
+    handleCallContract(onRejectOffer.name, () => MarketplaceContractSigner.cancelOffer(tokenInfo.id, projectInfo.token_address))
   }
 
   const onApproveToMarketplace = async () => {
@@ -589,11 +589,11 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
             <div className='mb-8'>
               {
                 Object.keys(attrLinks).map(key => <div key={key}>
-                  <a 
-                  style={{ display: 'grid', gridTemplateColumns: 'auto auto', gap: '4px', alignItems: 'center', width: 'fit-content' }} 
-                  href={attrLinks[key]} 
-                  target="_blank" 
-                  className="font-casual text-sm text-gamefiGreen-700">
+                  <a
+                    style={{ display: 'grid', gridTemplateColumns: 'auto auto', gap: '4px', alignItems: 'center', width: 'fit-content' }}
+                    href={attrLinks[key]}
+                    target="_blank"
+                    className="font-casual text-sm text-gamefiGreen-700" rel="noreferrer">
                     {key}
                     <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <mask id="path-1-inside-1_410_33686" fill="white">
@@ -620,7 +620,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
                     </div>
                     <span className='text-white/50 text-13px'>
                       {
-                        formatHumanReadableTime(+offer.dispatch_at * 1000, Date.now() )
+                        formatHumanReadableTime(+offer.dispatch_at * 1000, Date.now())
                       }
                     </span>
                   </div>

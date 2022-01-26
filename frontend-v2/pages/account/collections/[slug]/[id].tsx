@@ -49,9 +49,9 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
       <LeftSideBar />
       <AccountContent>
         {
-          loading ?
-            <LoadingOverlay loading></LoadingOverlay> :
-            (
+          loading
+            ? <LoadingOverlay loading></LoadingOverlay>
+            : (
               !projectInfo || !tokenInfo ? <h1>Not Found</h1> : <MarketplaceDetail projectInfo={projectInfo} tokenInfo={tokenInfo} />
             )
         }
@@ -63,7 +63,7 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
 
 export default MarketplaceDetailPage
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps ({ params }) {
   if (!params?.slug) {
     return { props: { projectInfo: null } }
   }

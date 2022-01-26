@@ -72,6 +72,10 @@ html, body {
   clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 10px 100%, 0 calc(100% - 10px));
 }
 
+.clipped-b-l-sm {
+  clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 5px 100%, 0 calc(100% - 5px));
+}
+
 .clipped-b-r-sm {
   margin-top: -1px;
   margin-left: -1px;
@@ -191,4 +195,24 @@ video[poster] {
     padding-left: 2em;
     list-style: disc;
   }
+}
+
+input[type="radio"] + label span {
+  transition: background .2s,
+    transform .2s;
+}
+
+input[type="radio"] + label span:hover,
+input[type="radio"] + label:hover span{
+transform: scale(1.2);
+} 
+
+input[type="radio"]:checked + label span {
+background-color: #6cdb00; //bg-blue
+box-shadow: 0px 0px 0px 1px black inset;
+border: 2px solid #6cdb00;
+}
+
+input[type="radio"]:checked + label{
+ color: #6cdb00; //text-blue
 }

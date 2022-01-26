@@ -2,12 +2,13 @@ import ListSwiper, { SwiperItem } from 'components/Base/ListSwiper'
 import React, { useMemo } from 'react'
 import { useFetch } from '../utils'
 import { Collection } from '../types'
+import Link from 'next/link'
 
 const HotCollections = () => {
   const url = '/marketplace/collections?limit=10&page=1'
   const { response, loading } = useFetch(url)
 
-  const hotCollections = useMemo<Collection[]>(() => {
+  const hotCollections = useMemo<any[]>(() => {
     return response?.data?.data || []
   }, [response])
   return (
@@ -16,17 +17,19 @@ const HotCollections = () => {
         ? <ListSwiper title="Hot Collections" showItemsNumber={4} step={4} transition='0.5s' hasHeader={true}>
           {hotCollections.map(collection => (
             <SwiperItem key={collection.id}>
-              <div className={'w-full px-3 md:px-0 flex flex-col overflow-hidden rounded-sm mx-2 cursor-pointer'} style={{ height: '240px' }}>
-                <div className={'w-full relative'} style={{ height: '150px' }}>
-                  <div className="absolute left-0 right-0 mx-auto w-14 -bottom-6 rounded-full border-2 border-gamefiDark-900 bg-gamefiDark-900" style={{ zIndex: '1' }}>
-                    <img src={collection.logo} alt="" className="w-14 rounded-full"></img>
+              <Link href={`/market/collection/${collection.slug}`} passHref>
+                <div className={'w-full px-3 md:px-0 flex flex-col overflow-hidden rounded-sm mx-2 cursor-pointer hover:underline'} style={{ height: '240px' }}>
+                  <div className={'w-full relative'} style={{ height: '150px' }}>
+                    <div className="absolute left-0 right-0 mx-auto w-14 -bottom-6 rounded-full border-2 border-gamefiDark-900 bg-gamefiDark-900" style={{ zIndex: '1' }}>
+                      <img src={collection.logo} alt="" className="w-14 rounded-full"></img>
+                    </div>
+                    <img src={collection.banner} alt='favorite-img' style={{ width: '100%', height: '150px' }} />
                   </div>
-                  <img src={collection.banner} alt='favorite-img' style={{ width: '100%', height: '150px' }} />
+                  <div className="relative bg-gamefiDark-650 w-full clipped-b-r-sm" style={{ height: '90px' }}>
+                    <div className={'h-full flex items-center align-middle justify-center font-semibold py-4'}>{collection.name}</div>
+                  </div>
                 </div>
-                <div className="relative bg-gamefiDark-650 w-full clipped-b-r-sm" style={{ height: '90px' }}>
-                  <div className={'h-full flex items-center align-middle justify-center font-semibold py-4'}>{collection.name}</div>
-                </div>
-              </div>
+              </Link>
             </SwiperItem>
           ))}
         </ListSwiper>

@@ -18,7 +18,6 @@ type Props = {
 } & ObjectType;
 
 const BuyNowModal = ({ tokenOnSale, projectInfo, ...props }: Props) => {
-
   const token = useMemo(() => {
     return { address: tokenOnSale.currency }
   }, [tokenOnSale])
@@ -59,7 +58,7 @@ const BuyNowModal = ({ tokenOnSale, projectInfo, ...props }: Props) => {
           isLoading={props.isLoadingButton}
           color='green'
           onClick={handleBuyNow}
-          className={clsx("uppercase", styles.btnOffer)}
+          className={clsx('uppercase', styles.btnOffer)}
         >
           Buy now
         </ButtonBase>
@@ -68,4 +67,4 @@ const BuyNowModal = ({ tokenOnSale, projectInfo, ...props }: Props) => {
   </Modal>
 }
 
-export default BuyNowModal;
+export default BuyNowModal

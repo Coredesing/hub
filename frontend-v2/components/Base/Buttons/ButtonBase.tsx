@@ -4,13 +4,14 @@ import styles from './button.module.scss'
 import { ClipLoader } from 'react-spinners'
 
 type Props = {
-    onClick?: MouseEventHandler,
-    disabled?: boolean,
-    children: any,
-    isLoading?: boolean,
-    color?: 'grey' | 'green' | 'yellow' | 'disabled' | 'blue' | 'red',
-    notClipPath?:boolean,
-    [k: string]: any
+  onClick?: MouseEventHandler,
+  disabled?: boolean,
+  children: any,
+  isLoading?: boolean,
+  color?: 'grey' | 'green' | 'yellow' | 'disabled' | 'blue' | 'red',
+  notClipPath?: boolean,
+  noneStyle?: boolean;
+  [k: string]: any
 }
 export const ButtonBase = ({
   disabled,
@@ -20,21 +21,26 @@ export const ButtonBase = ({
   isLoading,
   color = 'grey',
   notClipPath,
+  noneStyle,
   ...props
 }: Props) => {
   return (
     <button
       {...props}
-      className={clsx(styles.base, (!disabled ? styles[color] : ''), className, {
-        [styles['clip-path-t-r']]: !notClipPath,
-        [styles.disabled]: disabled
-      })}
+      className={clsx(
+        (!disabled ? styles[color] : ''), className,
+        {
+          [styles.base]: !noneStyle,
+          [styles['clip-path-t-r']]: !notClipPath,
+          [styles.disabled]: disabled
+        })
+      }
       onClick={onClick}
       disabled={disabled}
     >
       {isLoading
-        ? <div style={{ display: 'grid', gridTemplateColumns: '28px auto', gap: '5px', placeContent: 'center' }}>
-          <ClipLoader size={28} color='#fff' />
+        ? <div className='grid items-center' style={{ gridTemplateColumns: '28px auto', gap: '5px', placeContent: 'center' }}>
+          <ClipLoader size={20} color='#fff' />
           {children}
         </div>
         : children}

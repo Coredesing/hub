@@ -4,10 +4,11 @@ import { networkImage } from '../utils'
 import styles from './styles.module.scss'
 
 type Props = {
-  item: any
+  item: any;
+  detailLink?: string;
 }
 
-const CardSlim = ({ item }: Props) => {
+const CardSlim = ({ item, detailLink }: Props) => {
   return (
     <div className={`${styles.card} ${styles.slim}`}>
       {/* <div className={styles.visibility}>
@@ -22,18 +23,21 @@ const CardSlim = ({ item }: Props) => {
         {visibility(item)}
       </div> */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={item.image || item.icon} alt={item?.title} className={styles.banner} />
+      <img src={item.image || item.icon} alt={item?.title} className={styles.banner}/>
       <div className={styles.information}>
         <div className="mb-2">
           <Link href="#" passHref>
             <a className="flex align-middle items-center">
-              <span className="w-6 h-6 relative mr-2"><Image src={networkImage('bsc')} alt={item?.network_available} /></span>
+              <span className="w-6 h-6 relative mr-2">
+                {/* <Image src={networkImage('bsc')} alt={item?.network_available} /> */}
+                <img src={item.project?.logo} alt="" />
+              </span>
               <span className="font-semibold opacity-50 uppercase">{item.project?.name}</span>
             </a>
           </Link>
         </div>
         <div>
-          <Link href="#" passHref>
+          <Link href={detailLink || `/market/${item.project?.slug}/${item.id}`} passHref>
             <a className={styles.title}>
               #{item.id}
             </a>
@@ -42,7 +46,9 @@ const CardSlim = ({ item }: Props) => {
         <div className={styles.informationPurchase} style={{ marginBottom: '1rem' }}>
           <div>
             <p>Listing Price</p>
-            <span style={{ color: '#72F34B' }}>-</span>
+            <span style={{ color: '#72F34B' }}>
+              {item.price || '-'}
+            </span>
           </div>
         </div>
       </div>

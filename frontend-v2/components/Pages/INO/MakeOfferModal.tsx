@@ -22,7 +22,7 @@ const MakeOfferModal = ({ tokenOnSale, projectInfo, lastOffer, ...props }: Props
     return { address: tokenOnSale.currency }
   }, [tokenOnSale])
 
-  const { balanceShort, balance, loading: loadingBalance } = useBalanceToken(token as any, projectInfo.network)
+  const { balanceShort, balance, loading: loadingBalance, updateBalance } = useBalanceToken(token as any, projectInfo.network)
   const [offerPrice, setOfferPrice] = useState('')
   const [notiMsg, setNotiMsg] = useState<{ type: 'info' | 'error', msg: string | ReactNode }>({ type: 'info', msg: '' })
 
@@ -47,16 +47,11 @@ const MakeOfferModal = ({ tokenOnSale, projectInfo, lastOffer, ...props }: Props
     }
   }
 
-  const onChangePrice = (event: any) => {
-    const { value } = event.target;
-
-  };
-
   const handleOffer = async () => {
     let valueOffer = BigNumber.from(utils.parseEther(offerPrice))
     let currentOffer = valueOffer
     if (lastOffer) {
-      const lastPriceOffer = BigNumber.from(lastOffer.raw_amount);
+      const lastPriceOffer = BigNumber.from(lastOffer.raw_amount)
       if (lastPriceOffer.lt(currentOffer)) {
         valueOffer = currentOffer.sub(lastPriceOffer)
       } else {
@@ -66,7 +61,7 @@ const MakeOfferModal = ({ tokenOnSale, projectInfo, lastOffer, ...props }: Props
     if (BigNumber.from(balance).lt(utils.parseEther(offerPrice))) return
     const ok = props.onSubmit && await props.onSubmit(valueOffer.toString(), valueOffer.toString())
     if (ok) {
-      // recall balances
+      updateBalance()
     }
   }
 

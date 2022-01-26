@@ -22,7 +22,7 @@ import ButtonBase from 'components/Base/Buttons/ButtonBase'
 import DialogTxSubmitted from 'components/Base/DialogTxSubmitted'
 import { currencyNative, useTokenAllowance, useTokenApproval } from 'components/web3/utils'
 import axios from 'utils/axios'
-import BuyNowModal from './BuyNowModal'
+import BuyNowModal from './MarketBuyNowModal'
 
 type Props = {
   projectInfo: ObjectType;

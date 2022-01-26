@@ -339,7 +339,6 @@ interface Wallet {
   name: string
   networks: number[]
   image: any
-  image2: any
 }
 
 export const wallets: Wallet[] = [{

@@ -1,7 +1,6 @@
 import { fetcher } from 'utils'
 
 export function send (id, body) {
-  console.log(body)
   return fetcher(`https://aggregator.gamefi.org/api/v1/aggregator/like/${id}`, { method: 'POST', body, headers: { 'content-type': 'application/json' } })
 }
 

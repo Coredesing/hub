@@ -174,11 +174,11 @@ const GameDetails = ({ data }) => {
                 }
               </TabPanel>
               <TabPanel value={tab} index={2}>
-                { data?.projectInformation?.roadmap.replace(/(<([^>]+)>)/gi, '') && <>
+                { data?.projectInformation?.roadmap?.replace(/(<([^>]+)>)/gi, '') && <>
                   <div className="mt-6"><strong>Roadmap</strong></div>
                   <div>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={data?.projectInformation?.roadmap.replace(/(<([^>]+)>)/gi, '')} alt={data?.game_name} />
+                    <img src={data?.projectInformation?.roadmap?.replace(/(<([^>]+)>)/gi, '')} alt={data?.game_name} />
                   </div>
                 </>
                 }

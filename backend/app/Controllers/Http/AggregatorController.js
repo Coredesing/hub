@@ -379,6 +379,7 @@ class AggregatorController {
       }
 
       builder.orderBy(sort_by, sort_order);
+      builder.orderBy('game_informations.id', 'DESC');
       builder = builder.where('is_show', true)
 
       builder = builder.join('tokenomics as token', 'game_informations.id', 'token.game_id')

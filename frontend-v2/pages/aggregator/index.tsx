@@ -27,6 +27,7 @@ export const CATEGORY_LIST = [
 
 const Aggregator = ({ data }) => {
   const router = useRouter()
+  const [filterShown, setFilterShown] = useState<boolean>(false)
   const [page, setPage] = useState<number>(data.page)
   const [category, setCategory] = useState<string>(data.category)
   const [idoType, setIDOType] = useState<string>(data.idoType)
@@ -125,7 +126,7 @@ const Aggregator = ({ data }) => {
 
   return (
     <Layout title="GameFi Aggregator">
-      <div className="md:px-4 lg:px-16 md:container mx-auto lg:block">
+      <div className="md:px-4 lg:px-16 md:container mx-auto lg:block" onClick={() => setFilterShown(false)}>
         <div className="flex items-center">
           <div className="uppercase font-bold text-3xl mr-auto">Game List</div>
           <select value={sort} onChange={ e => { handleSort(e.target.value) } } className="bg-gamefiDark-800 border-gamefiDark-600 rounded py-1 leading-6 shadow-lg">
@@ -135,11 +136,14 @@ const Aggregator = ({ data }) => {
           </select>
           <div className="relative inline-block text-left ml-4">
             <div>
-              <button type="button" className="inline-flex justify-center w-full bg-gamefiDark-800 border border-gamefiDark-600 rounded py-1 leading-6 px-4 shadow-lg" id="menu-button" aria-expanded="true" aria-haspopup="true">
+              <button type="button" className="inline-flex justify-center w-full bg-gamefiDark-800 border border-gamefiDark-600 rounded py-1 leading-6 px-4 shadow-lg" id="menu-button" aria-expanded="true" aria-haspopup="true" onClick={(e) => {
+                e.stopPropagation()
+                setFilterShown(!filterShown)
+              }}>
                 Filters
               </button>
             </div>
-            <div className="z-50 origin-top-right absolute right-0 mt-2 min-w-max border border-gamefiDark-600 rounded shadow-lg bg-gamefiDark-800" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex="-1">
+            <div className={`z-50 origin-top-right absolute right-0 mt-2 min-w-max border border-gamefiDark-600 rounded shadow-lg bg-gamefiDark-800 ${filterShown ? 'visible' : 'invisible'}`} role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex="-1" onClick={(e) => e.stopPropagation()}>
               <div className="p-4 text-base leading-6" role="none">
                 <div className="uppercase font-bold text-2xl mb-6">Filters</div>
                 <div className="flex gap-10 mb-6">
@@ -163,15 +167,15 @@ const Aggregator = ({ data }) => {
                     <div className="uppercase font-bold text-lg">Game Release</div>
                     <div>
                       <label className="inline-flex items-center mr-4">
-                        <input type="radio" value="" onChange={(e) => handleLaunchStatus(e.target.value)} checked={!launchStatus} />
+                        <input type="radio" disabled value="" onChange={(e) => handleLaunchStatus(e.target.value)} checked={!launchStatus} />
                         <span className="ml-1">All</span>
                       </label>
                       <label className="inline-flex items-center mr-4">
-                        <input type="radio" value="released" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'released'}/>
+                        <input type="radio" disabled value="released" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'released'}/>
                         <span className="ml-1">Released</span>
                       </label>
                       <label className="inline-flex items-center">
-                        <input type="radio" value="upcoming" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'upcoming'}/>
+                        <input type="radio" disabled value="upcoming" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'upcoming'}/>
                         <span className="ml-1">Upcoming</span>
                       </label>
                     </div>

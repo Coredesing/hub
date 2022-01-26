@@ -20,7 +20,7 @@ const TopGame = ({ item, isTop, like }: Props) => {
     </div>
     <div className="md:h-1/4 relative py-4 bg-gamefiDark-650">
       {
-        isTop && <div className="absolute left-3 -top-8 rounded border-2 bg-black border-gamefiDark-900 w-14 h-14 flex items-center justify-center">
+        isTop && <div className="absolute left-3 -top-6 rounded border-2 bg-black border-gamefiDark-900 w-16 h-16 flex items-center justify-center">
           <img src={item?.icon_token_link} alt="" style={{ width: '2rem', objectFit: 'cover' }}></img>
         </div>
       }

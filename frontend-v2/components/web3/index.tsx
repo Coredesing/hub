@@ -276,6 +276,7 @@ export const networks = [{
   currency: ETH.symbol,
   blockExplorerUrls: ['https://etherscan.io'],
   image: require('assets/images/networks/eth.svg'),
+  image2: require('assets/images/icons/ethereum.svg'),
   color: '#546BC7',
   colorText: '#fff'
 }, {
@@ -285,6 +286,7 @@ export const networks = [{
   currency: ETH.symbol,
   blockExplorerUrls: ['https://goerli.etherscan.io'],
   image: require('assets/images/networks/eth.svg'),
+  image2: require('assets/images/icons/ethereum.svg'),
   color: '#546BC7',
   colorText: '#fff',
   testnet: true
@@ -295,6 +297,7 @@ export const networks = [{
   currency: BNB.symbol,
   blockExplorerUrls: ['https://bscscan.com'],
   image: require('assets/images/networks/bsc.svg'),
+  image2: require('assets/images/icons/bsc.svg'),
   color: '#FFC700',
   colorText: '#28282E'
 }, {
@@ -304,6 +307,7 @@ export const networks = [{
   currency: BNB.symbol,
   blockExplorerUrls: ['https://testnet.bscscan.com'],
   image: require('assets/images/networks/bsc.svg'),
+  image2: require('assets/images/icons/bsc.svg'),
   color: '#FFC700',
   colorText: '#28282E',
   testnet: true
@@ -314,6 +318,7 @@ export const networks = [{
   currency: MATIC.symbol,
   blockExplorerUrls: ['https://polygonscan.com'],
   image: require('assets/images/networks/polygon.svg'),
+  image2: require('assets/images/icons/polygon.svg'),
   color: '#A06EF4',
   colorText: '#fff'
 }, {
@@ -323,6 +328,7 @@ export const networks = [{
   currency: MATIC.symbol,
   blockExplorerUrls: ['https://mumbai.polygonscan.com'],
   image: require('assets/images/networks/polygon.svg'),
+  image2: require('assets/images/icons/polygon.svg'),
   color: '#A06EF4',
   colorText: '#fff',
   testnet: true
@@ -333,6 +339,7 @@ interface Wallet {
   name: string
   networks: number[]
   image: any
+  image2: any
 }
 
 export const wallets: Wallet[] = [{

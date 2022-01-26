@@ -266,7 +266,7 @@ const WalletConnector = () => {
                     const chosen = available && network.id === networkChosen?.id
 
                     return <div key={network.id} className={`flex-1 relative cursor-pointer flex flex-col items-center justify-between bg-gray-700 py-4 border border-transparent ${chosen ? 'border-gamefiGreen-500' : ''}`} onClick={() => chooseNetwork(network)}>
-                      <Image src={network.image} className={available ? 'filter-none' : 'grayscale'} alt={network.name} />
+                      <div className="w-11 h-11 relative"><Image src={network.image2} className={available ? 'filter-none' : 'grayscale'} alt={network.name} layout="fill"/></div>
                       <span className={`text-sm ${available ? 'text-white' : 'text-gray-100'}`}>{network.name}</span>
 
                       { chosen && <svg className="w-6 absolute top-0 left-0" viewBox="0 0 23 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -341,7 +341,7 @@ const ModalConnect = ({ children, close, style }: Props) => {
       </svg>}
       {children}
 
-      <svg onClick={close} className="absolute right-1 top-1 w-6 h-6 cursor-pointer hover:opacity-50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg onClick={close} className="absolute right-1 top-1 w-6 h-6 cursor-pointer hover:opacity-50 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
         <path d="M6 6L9 9L12 12M18 18L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>

@@ -16,7 +16,7 @@ const NFTCard = ({ item, ...props }: Props) => {
       <div className="w-full">
         <div className="bg-black flex items-center justify-center p-4" style={{ width: 'full', aspectRatio: '1' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={item?.token_info?.image || item?.token_info?.icon} alt={item?.token_info?.title} className="w-full h-full" />
+          <img src={item?.token_info?.image || item?.token_info?.icon} alt={item?.token_info?.title} className="w-full object-cover" />
         </div>
       </div>
       <div className="bg-gamefiDark-650 w-full clipped-b-l px-5 pt-5 pb-2">

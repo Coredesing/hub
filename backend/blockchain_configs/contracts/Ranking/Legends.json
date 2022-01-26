@@ -62,12 +62,12 @@
   {
     "id": 12,
     "wallet_address": "0xc924df9194e93dffbb4bdb386e13062a0217476f",
-    "valid": false
+    "valid": true
   },
   {
     "id": 13,
     "wallet_address": "0x67f46a8e9d98ccb298aa630d779b0ae7c1e00023",
-    "valid": true
+    "valid": false
   },
   {
     "id": 14,

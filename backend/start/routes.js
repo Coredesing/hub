@@ -88,6 +88,7 @@ Route.group(() => {
   Route.get('pools/active-pools', 'PoolController.getActivePoolsV3');
   Route.get('pools/next-to-launch-pools', 'PoolController.getNextToLaunchPoolsV3');
   Route.get('pools/upcoming-pools', 'PoolController.getUpcomingPoolsV3');
+  Route.get('pools/latest-pools', 'PoolController.getLatestPools');
   Route.get('pools/complete-sale-pools', 'PoolController.getCompleteSalePoolsV3');
   Route.get('pools/mysterious-box', 'PoolController.getMysteriousBoxPoolsV3');
 

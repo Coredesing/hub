@@ -358,4 +358,45 @@ const ModalConnect = ({ children, close, style }: Props) => {
   )
 }
 
+export const NetworkSelector = ({ onChange }: { onChange: (network) => void }) => {
+  const _networks = networks.filter(x => !x.testnet)
+  const defaultValue = _networks.reduce((acc, val) => {
+    acc[val.alias] = true
+    return acc
+  }, {})
+  const [selected, setSelected] = useState(defaultValue)
+  const isActive = useCallback((network) => {
+    if (!selected) {
+      return true
+    }
+
+    return !!selected[network?.alias]
+  }, [selected])
+  const toggle = network => {
+    const update = { ...selected }
+    update[network?.alias] = !update?.[network?.alias]
+    setSelected(update)
+  }
+  useEffect(() => {
+    if (!onChange) {
+      return
+    }
+
+    onChange(selected)
+  }, [onChange, selected])
+
+  return (
+    <div className="font-casual">
+      <div className="flex gap-x-1.5 bg-gamefiDark-700 rounded p-1.5">
+        {_networks.map(network => {
+          return <div key={network.alias} className={`flex items-center rounded flex-none cursor-pointer py-1 px-2`} onClick={() => toggle(network)} style={{ backgroundColor: isActive(network) ? (network.colorAlt || network.color) : 'transparent' }}>
+            <div className={`flex-none w-6 h-6 relative contrast-200 brightness-200 grayscale ${isActive(network) ? 'opacity-100' : 'opacity-50'} hover:opacity-100`}><Image src={network.image2} alt={network.name} layout="fill"/></div>
+            { isActive(network) && <span className={'ml-2 text-sm'}>{network.name}</span> }
+          </div>
+        })}
+      </div>
+    </div>
+  )
+}
+
 export default WalletConnector

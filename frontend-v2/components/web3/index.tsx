@@ -266,6 +266,7 @@ export type Network = {
   blockExplorerUrls: string[]
   image: any
   color: string
+  colorAlt?: string
   colorText: string
 }
 
@@ -299,6 +300,7 @@ export const networks = [{
   image: require('assets/images/networks/bsc.svg'),
   image2: require('assets/images/icons/bsc.svg'),
   color: '#FFC700',
+  colorAlt: '#e6b300',
   colorText: '#28282E'
 }, {
   id: 97,
@@ -309,6 +311,7 @@ export const networks = [{
   image: require('assets/images/networks/bsc.svg'),
   image2: require('assets/images/icons/bsc.svg'),
   color: '#FFC700',
+  colorAlt: '#e6b300',
   colorText: '#28282E',
   testnet: true
 }, {

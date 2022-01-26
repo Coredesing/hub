@@ -49,8 +49,21 @@ const Footer = () => {
           </div>
         </div>
         <div className="text-center lg:text-left mt-8 lg:mt-0">
-          <div className="text-sm uppercase text-white opacity-50">Our Team</div>
-          <div className="mt-3 lg:mt-8 flex flex-col text-xs leading-7 font-extralight">
+          <div className="font-mechanic font-bold text-base uppercase text-white opacity-50">About</div>
+          <div className="mt-3 lg:mt-4 flex flex-col text-base leading-7 font-extralight">
+            <Link href="/press" passHref><a className="hover:underline cursor-pointer">Press</a></Link>
+            <Link href="/careers" passHref><a className="hover:underline cursor-pointer">Careers</a></Link>
+            <Link href="/" passHref><a className="hover:underline cursor-pointer">Business Contacts</a></Link>
+            <Link href="/" passHref><a className="hover:underline cursor-pointer">GameFi.org News</a></Link>
+            <Link href="/" passHref><a className="hover:underline cursor-pointer">Terms of Use</a></Link>
+            <Link href="/" passHref><a className="hover:underline cursor-pointer">Privacy</a></Link>
+            <Link href="/disclaimer" passHref><a className="hover:underline cursor-pointer">Disclaimer</a></Link>
+            <Link href="/" passHref><a className="hover:underline cursor-pointer">Help Center</a></Link>
+          </div>
+        </div>
+        <div className="text-center lg:text-left mt-8 lg:mt-0">
+          <div className="font-mechanic font-bold text-base uppercase text-white opacity-50">OUR TEAM</div>
+          <div className="mt-3 lg:mt-4 flex flex-col text-base leading-7 font-extralight">
             <Link href="/" passHref><a className="hover:underline cursor-pointer">Features</a></Link>
             <Link href="/" passHref><a className="hover:underline cursor-pointer">Roadmap</a></Link>
             <Link href="/" passHref><a className="hover:underline cursor-pointer">Our Team</a></Link>
@@ -58,16 +71,10 @@ const Footer = () => {
           </div>
         </div>
         <div className="text-center lg:text-left mt-8 lg:mt-0">
-          <div className="text-sm uppercase text-white opacity-50">Token</div>
-          <div className="mt-3 lg:mt-8 flex flex-col text-xs leading-7 font-extralight">
+          <div className="font-mechanic font-bold text-base uppercase text-white opacity-50">TOKEN</div>
+          <div className="mt-3 lg:mt-4 flex flex-col text-base leading-7 font-extralight">
             <Link href="/" passHref><a className="hover:underline cursor-pointer">Token Metrics</a></Link>
             <Link href="/" passHref><a className="hover:underline cursor-pointer">Token Utilities</a></Link>
-          </div>
-        </div>
-        <div className="text-center lg:text-left mt-8 lg:mt-0">
-          <div className="text-sm uppercase text-white opacity-50">Contact</div>
-          <div className="mt-3 lg:mt-8 flex flex-col text-xs leading-7 font-extralight">
-            <Link href="/" passHref><a className="hover:underline cursor-pointer">Contact Us</a></Link>
           </div>
         </div>
       </div>

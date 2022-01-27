@@ -14,6 +14,7 @@ const IGOList = () => {
   const { response: latestData, loading: latestLoading } = useFetch(latestUrl)
 
   const listUpcoming = useMemo<any[]>(() => {
+    console.log('upcoming', upcomingData)
     return upcomingData?.data?.data || []
   }, [upcomingData])
 
@@ -55,7 +56,7 @@ const IGOList = () => {
                     ? <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
                       {listUpcoming.map(item => (
                         <SwiperItem key={item.id}>
-                          <PoolBanner item={item} color="yellow" tagColor="gamefiDark-700" className="mx-3 lg:mx-auto" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
+                          <PoolBanner item={item} color="yellow" tagColor="gamefiDark-700" className="mx-3" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
                         </SwiperItem>
                       ))}
                     </ListSwiper>

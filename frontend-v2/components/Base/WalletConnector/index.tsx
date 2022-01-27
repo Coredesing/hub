@@ -196,19 +196,22 @@ const WalletConnector = () => {
       {
         active && account &&
         <div className="font-casual leading-6 text-sm flex items-center justify-center">
-          <a className="bg-gamefiGreen-600 clipped-b-l p-px rounded inline-flex cursor-pointer mr-1 text-xs text-gamefiGreen-500 hover:text-gamefiGreen-200" href="https://pancakeswap.finance/swap?outputCurrency=0x89af13a10b32f1b2f8d1588f93027f69b6f4e27e&inputCurrency=0xe9e7cea3dedca5984780bafc599bd69add087d56" target="_blank" rel="noreferrer">
-            <span className="bg-gamefiDark-900 clipped-b-l py-2 px-6 rounded leading-5 uppercase font-bold">
+          <a className="inline-flex bg-gamefiGreen-600 clipped-b-l p-px rounded cursor-pointer mr-1" href="https://pancakeswap.finance/swap?outputCurrency=0x89af13a10b32f1b2f8d1588f93027f69b6f4e27e&inputCurrency=0xe9e7cea3dedca5984780bafc599bd69add087d56" target="_blank" rel="noreferrer">
+            <span className="bg-gamefiDark-900 text-gamefiGreen-500 hover:text-gamefiGreen-200 clipped-b-l py-2 px-6 rounded leading-5 uppercase font-bold text-xs">
               Buy $GAFI
             </span>
           </a>
-          <div className="bg-gray-700 clipped-t-r py-2 px-6 rounded inline-flex cursor-pointer" onClick={() => setShowModal(true)}>
-            <div className="inline-flex font-bold mr-2 items-center">
-              <div className="inline-flex w-5 h-5 relative mr-1">
+          <a className="flex py-2 px-4 bg-gray-700 mr-1 rounded" href="https://hub.gamefi.org/#/account" target="_blank" rel="noreferrer">
+            My Account
+          </a>
+          <div className="bg-gray-700 clipped-t-r py-2 px-4 rounded inline-flex cursor-pointer" onClick={() => setShowModal(true)}>
+            <div className="inline-flex font-medium mr-2 items-center">
+              <div className="inline-flex w-5 h-5 relative mr-2">
                 <Image src={network.image} layout="fill" alt={network.name}/>
               </div>
               {balance && balanceShort} {currencyNative}
             </div>
-            <span className="bg-gamefiDark-900 px-2 rounded">{accountShort}</span>
+            <span className="font-bold">{accountShort}</span>
           </div>
         </div>
       }

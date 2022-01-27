@@ -19,9 +19,9 @@ const Dropdown = ({ items, selected, onChange, propLabel, propValue, isFilter, c
   const [show, setShow] = useState(false)
   const wrapperRef = useRef(null)
 
-  const getSelectedItem = (value: any) => {
-    return items.find(item => item.value === value)
-  }
+  // const getSelectedItem = (value: any) => {
+  //   return items.find(item => item.value === value)
+  // }
 
   const handleClickOutside = (e: any) => {
     if (show === true && wrapperRef.current && !wrapperRef.current.contains(e?.target)) {

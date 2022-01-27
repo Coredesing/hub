@@ -33,7 +33,7 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
       recaptchaRef.current.resetCaptcha()
     }
   }, 5000)
-  const { buyBox } = useBuyBox({
+  const { buyBox, loading: loadingBuyBox } = useBuyBox({
     poolId: poolInfo.id,
     eventId,
     currencyInfo,
@@ -51,7 +51,7 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
     setVerify(value)
   }
 
-  const disabledBuy = insufficientBalance || !isVerified
+  const disabledBuy = insufficientBalance || !isVerified || loadingBuyBox
 
   return <Modal show={open} toggle={onClose}>
     <div className='px-8 pt-11 pb-8' style={{ background: 'rgb(31 31 35)' }}>
@@ -88,6 +88,7 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
           color={'green'}
           onClick={onBuyBox}
           disabled={disabledBuy}
+          isLoading={loadingBuyBox}
           className={clsx('mt-4 uppercase w-40 ')}>
           Buy Box
         </ButtonBase>

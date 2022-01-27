@@ -53,12 +53,8 @@ const Footer = () => {
           <div className="mt-3 lg:mt-4 flex flex-col text-base leading-7 font-extralight">
             <Link href="/press" passHref><a className="hover:underline cursor-pointer">Press</a></Link>
             <Link href="/careers" passHref><a className="hover:underline cursor-pointer">Careers</a></Link>
-            <Link href="/" passHref><a className="hover:underline cursor-pointer">Business Contacts</a></Link>
-            <Link href="/" passHref><a className="hover:underline cursor-pointer">GameFi.org News</a></Link>
-            <Link href="/" passHref><a className="hover:underline cursor-pointer">Terms of Use</a></Link>
-            <Link href="/" passHref><a className="hover:underline cursor-pointer">Privacy</a></Link>
-            <Link href="/disclaimer" passHref><a className="hover:underline cursor-pointer">Disclaimer</a></Link>
-            <Link href="/" passHref><a className="hover:underline cursor-pointer">Help Center</a></Link>
+            <a href="https://t.me/GameFi_OfficialANN" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Business Contacts</a>
+            <a href="https://gamefi.ghost.io" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">GameFi.org News</a>
           </div>
         </div>
         <div className="text-center lg:text-left mt-8 lg:mt-0">
@@ -80,8 +76,17 @@ const Footer = () => {
       </div>
     </div>
     <div className="md:container md:px-4 lg:px-16 mx-auto lg:block">
-      <div className="flex align-middle items-center justify-center text-xs font-light pt-6 pb-8 border-t border-gray-700">
-        &#169; Icetea Labs, 2021
+      <div className="flex align-middle items-center justify-between text-base font-light pt-6 pb-8 border-t border-gray-700 text-gray-400">
+        <div>&#169; Icetea Labs, 2021</div>
+        <div className="flex gap-x-4 items-center">
+          <Link href="/tos" passHref><a className="hover:underline cursor-pointer">Terms of Use</a></Link>
+          <div className="h-4 w-px bg-gray-600"></div>
+          <Link href="/privacy" passHref><a className="hover:underline cursor-pointer">Privacy</a></Link>
+          <div className="h-4 w-px bg-gray-600"></div>
+          <Link href="/disclaimer" passHref><a className="hover:underline cursor-pointer">Disclaimer</a></Link>
+          <div className="h-4 w-px bg-gray-600"></div>
+          <a href="https://faq.gamefi.org/"target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Help Center</a>
+        </div>
       </div>
     </div>
   </div>

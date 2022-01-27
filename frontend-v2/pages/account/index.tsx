@@ -6,7 +6,7 @@ import AccountContent from 'components/Pages/Account/AccountContent'
 const Account = () => {
   return <Layout title="My Account">
     <WrapperAccount>
-      <LeftSideBar />
+      {/* <LeftSideBar /> */}
       <AccountContent>
 
       </AccountContent>

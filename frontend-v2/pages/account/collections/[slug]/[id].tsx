@@ -48,7 +48,7 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
 
   return <Layout title="GameFi Market">
     <WrapperAccount>
-      <LeftSideBar />
+      {/* <LeftSideBar /> */}
       <AccountContent>
         {
           loading

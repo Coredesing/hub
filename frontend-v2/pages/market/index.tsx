@@ -1,6 +1,7 @@
 import React from 'react'
 import Layout from 'components/Layout'
 import Image from 'next/image'
+import Link from 'next/link'
 import HotCollections from 'components/Pages/Market/HotCollections'
 // import HotAuctions from 'components/Pages/Market/HotAuctions'
 import ListTrending from 'components/Pages/Market/ListTrending'
@@ -23,8 +24,11 @@ const Market = () => {
         <div className="absolute bottom-0 right-0">
           <Image src={require('assets/images/bg-item-market.png')} width="221" height="247" alt=""></Image>
         </div>
-        <div className="md:px-4 lg:px-16 md:container mx-auto lg:block">
+        <div className="md:px-4 lg:px-16 md:container mx-auto lg:block text-center">
           <Image src={require('assets/images/market-banner.png')} alt="" className="-z-0"></Image>
+          <Link href="/account/collections/assets">
+            <a className="inline-block px-4 py-2 border border-gamefiGreen-500 text-gamefiGreen-500 bg-gamefiDark-800 hover:text-gamefiGreen-300 rounded-lg text-base font-semibold">Your Assets</a>
+          </Link>
         </div>
         <HotCollections></HotCollections>
         {/* <HotAuctions></HotAuctions> */}

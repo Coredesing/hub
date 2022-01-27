@@ -49,9 +49,9 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
       <LeftSideBar />
       <AccountContent>
         {
-          loading ?
-            <LoadingOverlay loading></LoadingOverlay> :
-            (
+          loading
+            ? <LoadingOverlay loading></LoadingOverlay>
+            : (
               !projectInfo || !tokenInfo ? <h1>Not Found</h1> : <MarketplaceDetail projectInfo={projectInfo} tokenInfo={tokenInfo} />
             )
         }

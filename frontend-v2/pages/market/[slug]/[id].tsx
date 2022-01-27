@@ -43,9 +43,9 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
 
   return <Layout title="GameFi Market">
     {
-      loading ?
-        <LoadingOverlay loading></LoadingOverlay> :
-        (
+      loading
+        ? <LoadingOverlay loading></LoadingOverlay>
+        : (
           !projectInfo || !tokenInfo ? <h1>Not Found</h1> : <MarketplaceDetail projectInfo={projectInfo} tokenInfo={tokenInfo} />
         )
     }

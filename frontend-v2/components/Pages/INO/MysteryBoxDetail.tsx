@@ -55,7 +55,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   useEffect(() => {
     if (!account) return
     tiersState.actions.getUserTier(account)
-  }, [account])
+  }, [account, tiersState.actions])
 
   const { provider: libraryDefaultTemporary } = useLibraryDefaultFlexible(poolInfo?.network_available)
   const [contractPresale, setContractPresale] = useState<any>(null)
@@ -169,9 +169,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     if (!boxSelected.currency_ids) {
       return []
     }
-    const currency_ids = boxSelected.currency_ids.split(',').map(id => +id)
+    const currencyIds = boxSelected.currency_ids.split(',').map(id => +id)
     const listCurrencies = (poolInfo.acceptedTokensConfig || [])
-      .filter((c, id) => currency_ids.includes(id))
+      .filter((c, id) => currencyIds.includes(id))
       .map(token => {
         if (token.address && !BigNumber.from(token.address).isZero()) {
           token.neededApprove = true
@@ -189,16 +189,16 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       const contractPresale = new Contract(poolInfo.campaign_hash, PresaleBoxAbi, libraryDefaultTemporary)
       setContractPresale(contractPresale)
       Promise
-        .all(boxes.map((b, subBoxId) => new Promise(async (res, rej) => {
+        .all(boxes.map((b, subBoxId) => new Promise(async (resolve, reject) => {
           try {
             const response = await contractPresale.subBoxes(eventId, subBoxId)
             const result = {
               maxSupply: response.maxSupply ? response.maxSupply.toNumber() : 0,
               totalSold: response.totalSold ? response.totalSold.toNumber() : 0
             }
-            res({ ...b, subBoxId, ...result })
+            resolve({ ...b, subBoxId, ...result })
           } catch (error) {
-            rej(error)
+            reject(error)
           }
         })))
         .then((boxes) => {

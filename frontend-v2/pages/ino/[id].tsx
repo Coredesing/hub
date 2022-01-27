@@ -4,6 +4,7 @@ import useGetPoolDetail from '@/hooks/useGetPoolDetail'
 import AuctionDetail from 'components/Pages/INO/AuctionDetail'
 import MysteryBoxDetail from 'components/Pages/INO/MysteryBoxDetail'
 import { isAuctionBox, isMysteryBox } from 'components/Pages/INO/utils'
+import LoadingOverlay from 'components/Base/LoadingOverlay'
 
 const AuctionBox = (props: any) => {
   const { loading, poolInfo } = useGetPoolDetail({ id: props?.id })
@@ -15,10 +16,13 @@ const AuctionBox = (props: any) => {
       return <MysteryBoxDetail poolInfo={poolInfo} />
     }
   }
-  return <Layout title="GameFi Aggregator">
+  return <Layout title="GameFi INO">
     {
       loading
-        ? <h1 className="text-white">Loading...</h1>
+        ? <>
+          <LoadingOverlay loading></LoadingOverlay>
+          <div className='h-52 w-full'></div>
+        </>
         : (
           !poolInfo
             ? <h1 className="text-white">Page not found</h1>

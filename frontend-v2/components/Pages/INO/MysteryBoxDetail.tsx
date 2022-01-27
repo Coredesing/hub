@@ -30,6 +30,7 @@ import toast from 'react-hot-toast'
 import BuyBoxModal from './BuyBoxModal'
 import stylesBoxType from './BoxTypeItem.module.scss'
 import BoxInformation from './BoxInformation'
+import WrapperPoolDetail from './WrapperPoolDetail'
 
 const MysteryBoxDetail = ({ poolInfo }: any) => {
   const eventId = 0
@@ -55,8 +56,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   useEffect(() => {
     if (!account) return
     tiersState.actions.getUserTier(account)
-  }, [account, tiersState.actions])
-
+  }, [account])
   const { provider: libraryDefaultTemporary } = useLibraryDefaultFlexible(poolInfo?.network_available)
   const [contractPresale, setContractPresale] = useState<any>(null)
   const [myBoxThisPool, setMyBoxThisPool] = useState(0)
@@ -277,164 +277,176 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     setTokenApproved(true)
   }
 
+  const onJoinCompetition = (link: string) => {
+    window.open(link)
+  }
+
   const isAppliedWhitelist = isJoinPool || isJoinSuccess
   const isShowBtnApprove = currencySelected.neededApprove && !isApprovedToken && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && (!currencySelected.neededApprove || (currencySelected.neededApprove && !isApprovedToken))
   const isShowBtnBuy = isAppliedWhitelist && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken))
-  return (
-    <>
-      {/* <DialogTxSubmitted
+  const isAllowedJoinCompetive = (countdown.isWhitelist || countdown.isUpcoming) && +poolInfo.is_private === 3 && poolInfo.socialRequirement?.gleam_link && !isAppliedWhitelist
+  return (<WrapperPoolDetail>
+    {/* <DialogTxSubmitted
                 transaction={auctionTxHash}
                 open={openModalTx}
                 onClose={() => setOpenModalTx(false)}
                 networkName={allowNetwork.shortName}
             />
             */}
-      <PlaceOrderModal open={openPlaceOrderModal} onClose={() => setOpenPlaceOrderModal(false)} poolId={poolInfo.id} getBoxOrderd={getBoxOrderd} />
-      <BuyBoxModal
-        open={openBuyBoxModal}
-        onClose={() => setOpenBuyBoxModal(false)}
-        amountBoxBuy={amountBoxBuy}
-        boxTypeBuy={boxSelected}
-        currencyInfo={currencySelected}
-        poolInfo={poolInfo}
-        eventId={eventId}
-      />
-      <div className={clsx('rounded mb-5', styles.headPool)}>
-        {
-          isAppliedWhitelist && (countdown.isUpcomingSale || countdown.isWhitelist) && <Alert className='mb-10'>
-            Congratulations! You have successfully applied whitelist and can buy Mystery boxes from <b>Phase 1</b>
-          </Alert>
-        }
-        <div className={'grid grid-cols-2'}>
-          <div className={clsx('flex', styles.headInfoBoxOrder)}>
-            <InfoBoxOrderItem label='Registered Users' value={poolInfo.totalOrder || 0} />
-            <InfoBoxOrderItem label='Ordered Boxes' value={poolInfo.totalRegistered || 0} />
-            <InfoBoxOrderItem label='Your Ordered' value={myBoxOrdered} />
+    <PlaceOrderModal open={openPlaceOrderModal} onClose={() => setOpenPlaceOrderModal(false)} poolId={poolInfo.id} getBoxOrderd={getBoxOrderd} />
+    <BuyBoxModal
+      open={openBuyBoxModal}
+      onClose={() => setOpenBuyBoxModal(false)}
+      amountBoxBuy={amountBoxBuy}
+      boxTypeBuy={boxSelected}
+      currencyInfo={currencySelected}
+      poolInfo={poolInfo}
+      eventId={eventId}
+    />
+    <div className={clsx('rounded mb-5', styles.headPool)}>
+      {
+        isAppliedWhitelist && (countdown.isUpcomingSale || countdown.isWhitelist) && <Alert className='mb-10'>
+          Congratulations! You have successfully applied whitelist and can buy Mystery boxes from <b>Phase 1</b>
+        </Alert>
+      }
+      <div className={'grid grid-cols-2'}>
+        <div className={clsx('flex', styles.headInfoBoxOrder)}>
+          <InfoBoxOrderItem label='Registered Users' value={poolInfo.totalOrder || 0} />
+          <InfoBoxOrderItem label='Ordered Boxes' value={poolInfo.totalRegistered || 0} />
+          <InfoBoxOrderItem label='Your Ordered' value={myBoxOrdered} />
+        </div>
+        <div className={clsx('bg-black flex justify-center items-center gap-2', styles.headCountdown)} >
+          <div className={clsx('font-bold text-sm uppercase', styles.titleCountdown)}>
+            {countdown.title}
           </div>
-          <div className={clsx('bg-black flex justify-center items-center gap-2', styles.headCountdown)} >
-            <div className={clsx('font-bold text-sm uppercase', styles.titleCountdown)}>
-              {countdown.title}
-            </div>
-            <div className={clsx(styles.countdown)} >
-              {countdown.date2 !== 0 && !countdown.isFinished && <CountDownTimeV1 time={{ date1: countdown.date1, date2: countdown.date2 }} className="bg-transparent" background='bg-transparent' onFinish={onSetCountdown} />}
+          <div className={clsx(styles.countdown)} >
+            {countdown.date2 !== 0 && !countdown.isFinished && <CountDownTimeV1 time={{ date1: countdown.date1, date2: countdown.date2 }} className="bg-transparent" background='bg-transparent' onFinish={onSetCountdown} />}
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <PoolDetail
+      bodyBannerContent={<BannerImagePool src={boxSelected.banner} />}
+      bodyDetailContent={<>
+        <h2 className="font-semibold text-4xl mb-2 uppercase">{poolInfo.title || poolInfo.name}</h2>
+        <div className="creator flex items-center gap-1">
+          <img src={poolInfo.token_images} className="icon rounded-full w-5 -h-5" alt="" />
+          <span className="text-white/70 uppercase text-sm">{poolInfo.symbol}</span>
+        </div>
+        <div className="divider bg-white/20 w-full mt-3 mb-8" style={{ height: '1px' }}></div>
+        <div className='mb-4'>
+          <div className="grid gap-1">
+            <div className="flex items-center gap-2">
+              <img src={currencySelected?.icon} className="icon rounded-full w-5 -h-5" alt="" />
+              <span className="uppercase font-bold text-white text-2xl">{Number(currencySelected?.price) || ''} {currencySelected?.name}</span>
             </div>
           </div>
         </div>
-
-      </div>
-      <PoolDetail
-        bodyBannerContent={<BannerImagePool src={boxSelected.banner} />}
-        bodyDetailContent={<>
-          <h2 className="font-semibold text-4xl mb-2 uppercase">{poolInfo.title || poolInfo.name}</h2>
-          <div className="creator flex items-center gap-1">
-            <img src={poolInfo.token_images} className="icon rounded-full w-5 -h-5" alt="" />
-            <span className="text-white/70 uppercase text-sm">{poolInfo.symbol}</span>
+        <div className="flex gap-6 mb-8">
+          <DetailPoolItem label='TOTAL SALE' value={`${poolInfo.total_sold_coin} Boxes`} />
+          <DetailPoolItem label='SUPPORTED'
+            icon={require(`assets/images/icons/${poolInfo.network_available}.svg`)}
+            value={poolInfo.network_available} />
+          <DetailPoolItem label='Min Rank'
+            value={poolInfo.min_tier > 0 ? TIERS[poolInfo.min_tier].name : 'No Required'} />
+        </div>
+        <div className='mb-8'>
+          <div> <h4 className='font-bold text-base mb-1 uppercase'>Currency</h4> </div>
+          <div className='flex gap-1'>
+            {listTokens.map((t) => <TokenItem key={t.address} item={t} onClick={onSelectCurrency} selected={currencySelected?.address === t.address} />)}
           </div>
-          <div className="divider bg-white/20 w-full mt-3 mb-8" style={{ height: '1px' }}></div>
-          <div className='mb-4'>
-            <div className="grid gap-1">
-              <div className="flex items-center gap-2">
-                <img src={currencySelected?.icon} className="icon rounded-full w-5 -h-5" alt="" />
-                <span className="uppercase font-bold text-white text-2xl">{Number(currencySelected?.price) || ''} {currencySelected?.name}</span>
-              </div>
-            </div>
+        </div>
+        <div className='mb-8'>
+          <div> <h4 className='font-bold text-base mb-1 uppercase'>Type</h4></div>
+          <div className={clsx('gap-2', stylesBoxType.boxTypes)}>
+            {boxTypes.map((b) => <BoxTypeItem key={b.id} item={b} onClick={onSelectBoxType} selected={boxSelected.id === b.id} />)}
           </div>
-          <div className="flex gap-6 mb-8">
-            <DetailPoolItem label='TOTAL SALE' value='5,000 Boxes' />
-            <DetailPoolItem label='SUPPORTED'
-              icon={require(`assets/images/icons/${poolInfo.network_available}.svg`)}
-              value={poolInfo.network_available} />
-            <DetailPoolItem label='Min Rank'
-              value={poolInfo.min_tier > 0 ? TIERS[poolInfo.min_tier].name : 'No Required'} />
-          </div>
+        </div>
+        {
+          countdown.isSale &&
           <div className='mb-8'>
-            <div> <h4 className='font-bold text-base mb-1 uppercase'>Currency</h4> </div>
-            <div className='flex gap-1'>
-              {listTokens.map((t) => <TokenItem key={t.address} item={t} onClick={onSelectCurrency} selected={currencySelected?.address === t.address} />)}
-            </div>
+            <AscDescAmount value={amountBoxBuy} maxBuy={maxBoxCanBuy} bought={myBoxThisPool} onChangeValue={onChangeNumBuyBox} poolInfo={poolInfo} currencyInfo={currencySelected} />
           </div>
-          <div className='mb-8'>
-            <div> <h4 className='font-bold text-base mb-1 uppercase'>Type</h4></div>
-            <div className={clsx('gap-2', stylesBoxType.boxTypes)}>
-              {boxTypes.map((b) => <BoxTypeItem key={b.id} item={b} onClick={onSelectBoxType} selected={boxSelected.id === b.id} />)}
-            </div>
-          </div>
-          {
-            countdown.isSale &&
-            <div className='mb-8'>
-              <AscDescAmount value={amountBoxBuy} maxBuy={maxBoxCanBuy} bought={myBoxThisPool} onChangeValue={onChangeNumBuyBox} poolInfo={poolInfo} currencyInfo={currencySelected} />
-            </div>
+        }
+        <div>
+          {isAllowedJoinCompetive && <ButtonBase color="red"
+            onClick={() => onJoinCompetition(poolInfo.socialRequirement.gleam_link)}
+            className={clsx('w-full mt-4 uppercase')}>
+            Join Competition
+          </ButtonBase>
           }
-          <div>
-            {
-              !isAppliedWhitelist && countdown.isWhitelist && <ButtonBase
-                color={'green'}
-                isLoading={loadingJPool || loadingCheckJPool}
-                disabled={loadingCheckJPool || loadingJPool}
-                onClick={joinPool}
-                className={clsx('w-full mt-4 uppercase')}>
-                Apply Whitelist
-              </ButtonBase>
-            }
-            {
-              isAppliedWhitelist && countdown.isWhitelist &&
-              <ButtonBase
-                color={'green'}
-                onClick={() => setOpenPlaceOrderModal(true)}
-                className={clsx('w-full mt-4 uppercase')}>
-                Place Order
-              </ButtonBase>
-            }
-            {
-              isShowBtnApprove &&
-              <ButtonBase
-                color={'green'}
-                onClick={handleApproveToken}
-                className={clsx('w-full mt-4 uppercase')}>
-                Approve
-              </ButtonBase>
-            }
-            {
-              isShowBtnBuy &&
-              <ButtonBase
-                color={'green'}
-                onClick={() => setOpenBuyBoxModal(true)}
-                className={clsx('w-full mt-4 uppercase')}>
-                Buy Box
-              </ButtonBase>
-            }
-          </div>
-        </>}
-        footerContent={<>
-          <Tabs
-            titles={[
-              'Rule Introduction',
-              boxSelected?.description ? 'Box Infomation' : undefined,
-              'Series Content',
-              'TimeLine'
-            ]}
-            currentValue={currentTab}
-            onChange={onChangeTab}
-          />
-          <div className="mt-6 mb-10">
-            <TabPanel value={currentTab} index={0}>
-              <RuleIntroduce poolInfo={poolInfo} />
+          {
+            !isAppliedWhitelist && countdown.isWhitelist && <ButtonBase
+              color={'green'}
+              isLoading={loadingJPool || loadingCheckJPool}
+              disabled={loadingCheckJPool || loadingJPool}
+              onClick={joinPool}
+              className={clsx('w-full mt-4 uppercase')}>
+              Apply Whitelist
+            </ButtonBase>
+          }
+          {
+            isAppliedWhitelist && countdown.isWhitelist &&
+            <ButtonBase
+              color={'green'}
+              onClick={() => setOpenPlaceOrderModal(true)}
+              className={clsx('w-full mt-4 uppercase')}>
+              Place Order
+            </ButtonBase>
+          }
+          {
+            isShowBtnApprove &&
+            <ButtonBase
+              color={'green'}
+              isLoading={loadingApproveToken || loadingAllowance}
+              disabled={loadingApproveToken || loadingAllowance}
+              onClick={handleApproveToken}
+              className={clsx('w-full mt-4 uppercase')}>
+              {loadingAllowance ? 'Checking Approval' : 'Approve'}
+            </ButtonBase>
+          }
+          {
+            isShowBtnBuy &&
+            <ButtonBase
+              color={'green'}
+              onClick={() => setOpenBuyBoxModal(true)}
+              className={clsx('w-full mt-4 uppercase')}>
+              Buy Box
+            </ButtonBase>
+          }
+        </div>
+      </>}
+      footerContent={<>
+        <Tabs
+          titles={[
+            'Rule Introduction',
+            boxSelected?.description ? 'Box Infomation' : undefined,
+            'Series Content',
+            'TimeLine'
+          ]}
+          currentValue={currentTab}
+          onChange={onChangeTab}
+        />
+        <div className="mt-6 mb-10">
+          <TabPanel value={currentTab} index={0}>
+            <RuleIntroduce poolInfo={poolInfo} />
+          </TabPanel>
+          {
+            boxSelected?.description && <TabPanel value={currentTab} index={1}>
+              <BoxInformation boxes={boxTypes} />
             </TabPanel>
-            {
-              boxSelected?.description && <TabPanel value={currentTab} index={1}>
-                <BoxInformation boxes={boxTypes} />
-              </TabPanel>
-            }
-            <TabPanel value={currentTab} index={2}>
-              <SerieContent poolInfo={poolInfo} />
-            </TabPanel>
-            <TabPanel value={currentTab} index={3}>
-              <TimeLine timelines={timelines} />
-            </TabPanel>
-          </div>
-        </>}
-      />
-    </>
+          }
+          <TabPanel value={currentTab} index={2}>
+            <SerieContent poolInfo={poolInfo} />
+          </TabPanel>
+          <TabPanel value={currentTab} index={3}>
+            <TimeLine timelines={timelines} />
+          </TabPanel>
+        </div>
+      </>}
+    />
+  </WrapperPoolDetail>
   )
 }
 

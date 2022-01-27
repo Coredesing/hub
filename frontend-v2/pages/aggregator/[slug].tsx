@@ -50,7 +50,7 @@ const GameDetails = ({ data }) => {
               <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10"/>
               <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square"/>
             </svg>
-            Back {liked}
+            Back
           </a>
         </Link>
         <div className="uppercase font-bold text-3xl mb-6">{data.game_name}</div>

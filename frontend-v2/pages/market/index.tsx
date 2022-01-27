@@ -4,11 +4,12 @@ import Image from 'next/image'
 import HotCollections from 'components/Pages/Market/HotCollections'
 // import HotAuctions from 'components/Pages/Market/HotAuctions'
 import ListTrending from 'components/Pages/Market/ListTrending'
+import Discover from 'components/Pages/Market/Discover'
 
 const Market = () => {
   return (
     <Layout title="GameFi Market">
-      <div className="relative w-full min-h-full">
+      <div className="relative w-full min-h-full pt-28">
         <div
           className="absolute top-0 right-0"
           style={{
@@ -23,11 +24,12 @@ const Market = () => {
           <Image src={require('assets/images/bg-item-market.png')} width="221" height="247" alt=""></Image>
         </div>
         <div className="md:px-4 lg:px-16 md:container mx-auto lg:block">
-          <Image src={require('assets/images/market-banner.png')} alt=""></Image>
+          <Image src={require('assets/images/market-banner.png')} alt="" className="-z-0"></Image>
         </div>
         <HotCollections></HotCollections>
         {/* <HotAuctions></HotAuctions> */}
         <ListTrending></ListTrending>
+        <Discover></Discover>
       </div>
     </Layout>
   )

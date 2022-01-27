@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { networkImage } from '../utils'
-import { BigNumber, ethers } from 'ethers'
+import { ethers } from 'ethers'
 import { getCurrencyByTokenAddress } from 'components/web3'
 
 type Props = {
@@ -12,16 +12,15 @@ type Props = {
 
 const NFTCard = ({ item, ...props }: Props) => {
   return (
-    <div className="w-full rounded overflow-hidden">
+    <div className="w-full rounded overflow-hidden border border-transparent hover:border-gamefiGreen-700 hover:shadow hover:shadow-gamefiGreen-700">
       <div className="w-full">
         <div className="bg-black flex items-center justify-center p-4" style={{ width: 'full', aspectRatio: '1' }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={item?.token_info?.image || item?.token_info?.icon} alt={item?.token_info?.title} className="w-full object-cover" />
         </div>
       </div>
       <div className="bg-gamefiDark-650 w-full clipped-b-l px-5 pt-5 pb-2">
         <div className="mb-2">
-          <Link href="#" passHref>
+          <Link href={`/market/collection/${item?.slug}`} passHref>
             <a className="flex align-middle items-center cursor-pointer hover:underline">
               <span className="w-6 h-6 relative mr-2 rounded-full overflow-hidden"><img src={item?.collection_info?.logo} alt="collection"></img></span>
               <span className="font-semibold opacity-50 uppercase text-sm">{item?.collection_info?.name}</span>
@@ -29,9 +28,9 @@ const NFTCard = ({ item, ...props }: Props) => {
           </Link>
         </div>
         <div>
-          <Link href="#" passHref>
+          <Link href={`/market/${item?.slug}/${item?.id}`} passHref>
             <a className="font-bold text-xl tracking-wide cursor-pointer hover:underline">
-              #{item?.token_info?.id || 0}
+              #{item?.id || 0}
             </a>
           </Link>
         </div>

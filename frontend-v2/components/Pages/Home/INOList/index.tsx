@@ -8,7 +8,7 @@ import ShadowLoader from 'components/Base/ShadowLoader'
 
 const INOList = () => {
   const screens = useScreens()
-  const upcomingUrl = '/pools/upcoming-pools?token_type=box&limit=20&page=1&is_private=0'
+  const upcomingUrl = 'pools/upcoming-pools?token_type=box&limit=20&page=1&is_private=0'
   const latestUrl = '/pools?token_type=box&limit=5&page=1&is_private=0'
   const { response: upcomingData, loading: upcomingLoading } = useFetch(upcomingUrl)
   const { response: latestData, loading: latestLoading } = useFetch(latestUrl)

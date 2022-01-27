@@ -60,7 +60,9 @@ const CardSlim = ({ item, now }: Props) => {
         {visibility(item)}
       </div>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={item.mini_banner} alt={item.title} className={styles.banner} />
+      <Link href={`/ino/${item.id}`} passHref>
+        <img src={item.mini_banner} alt={item.title} className={`${styles.banner} hover:cursor-pointer`} />
+      </Link>
       <div className={styles.information}>
         <Link href={`/ino/${item.id}`} passHref={true}>
           <a className={styles.title}>

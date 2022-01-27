@@ -171,12 +171,15 @@ const _Carousel = ({ items, style, now }: Props) => {
         {items.map(item => {
           return (
             <div key={`ino-${item.id}`} className="px-14 mx-auto grid grid-cols-12 gap-4">
-              <div className="col-span-12 md:col-span-7 lg:col-span-8 relative">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={item.banner} alt={item.title} className="clipped-t-r-lg" style={{ aspectRatio: '16 / 9' }} />
-              </div>
+              <Link href={`/ino/${item.id}`} passHref>
+                <div className="col-span-12 md:col-span-7 lg:col-span-8 relative hover:cursor-pointer">
+                  <img src={item.banner} alt={item.title} className="clipped-t-r-lg" style={{ aspectRatio: '16 / 9' }} />
+                </div>
+              </Link>
               <div className="relative col-span-12 md:col-span-5 lg:col-span-4 w-full px-4 flex flex-col">
-                <h3 className={styles.title}>{item.title} <span className="inline-flex items-center justify-center ml-2"><span className="w-6 h-6 relative"><Image src={networkImage(item.network_available)} alt={item.network_available} layout="fill" objectFit="cover" /></span></span></h3>
+                <Link href={`/ino/${item.id}`} passHref>
+                  <h3 className={`${styles.title} hover:cursor-pointer hover:underline`}>{item.title} <span className="inline-flex items-center justify-center ml-2"><span className="w-6 h-6 relative"><Image src={networkImage(item.network_available)} alt={item.network_available} layout="fill" objectFit="cover" /></span></span></h3>
+                </Link>
                 <p className={styles.description}>{item.description}</p>
                 <div className={styles.socials}>
                   { item.website && <a href={item.website} className={styles.social} target="_blank" rel="noopenner noreferrer">

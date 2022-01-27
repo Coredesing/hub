@@ -23,8 +23,6 @@ const BannerImagePool = (props: Props) => {
       </div>
     }
 
-
-
   </>
 }
 

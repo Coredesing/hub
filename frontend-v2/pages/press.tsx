@@ -87,14 +87,14 @@ const PressKit = () => (
       <p className="font-casual text-sm leading-6 opacity-80">Do not edit, change, distort or color the GameFi.org Press kit</p>
       <div className="flex gap-x-4">
         <div className="w-full text-center pb-4">
-          <div className="py-2 flex items-center justify-center h-full rounded-lg border border-gamefiDark-500 bg-black">
-            <Image src={require('assets/images/logo-color.png')} alt="gamefi.org logo color" />
+          <div className="flex items-center justify-center h-full rounded-lg border border-gamefiDark-500 bg-black">
+            <Image src={require('assets/images/logo-color.png')} alt="gamefi.org logo color" width={190} height={20} />
           </div>
           <div className="uppercase text-gamefiDark-100 font-bold text-sm">logo color</div>
         </div>
         <div className="w-full text-center pb-4">
-          <div className="py-2 flex items-center justify-center h-full rounded-lg border border-gamefiDark-500 bg-gamefiDark-700">
-            <Image src={require('assets/images/logo-white.png')} alt="gamefi.org logo white" />
+          <div className="flex items-center justify-center h-full rounded-lg border border-gamefiDark-500 bg-gamefiDark-700">
+            <Image src={require('assets/images/logo-white.png')} alt="gamefi.org logo white" width={190} height={20} />
           </div>
           <div className="uppercase text-gamefiDark-100 font-bold text-sm">logo white</div>
         </div>

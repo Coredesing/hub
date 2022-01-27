@@ -19,7 +19,7 @@ const Career = ({ data }) => {
         </a>
       </Link>
 
-      <div className="uppercase font-bold text-4xl">{data.title} – {data.level} – {data.location}</div>
+      <div className="uppercase font-bold text-4xl">{data.title}</div>
 
       <div className="uppercase font-bold text-2xl mb-2 mt-8">ABOUT OUR COMPANY</div>
       <p className="font-casual text-sm leading-6 opacity-80 mb-8">We are proudly one of the top blockchain companies in Vietnam. Our ecosystem includes one Venture Capital, Icetea Labs; a blockchain platform with its own cryptocurrency, PolkaFoundry; and a launchpad named Red Kite.</p>

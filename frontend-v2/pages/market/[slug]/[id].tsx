@@ -31,10 +31,10 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
         const info = (await axios.get(tokenURI)).data || {}
         setTokenInfo({ ...info, id: params.id })
       }
-      setLoading(false)
     } catch (error) {
       console.log('error', error)
     }
+    setLoading(false)
   }, [projectInfo, params, library])
 
   useEffect(() => {
@@ -48,7 +48,9 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
       loading
         ? <LoadingOverlay loading></LoadingOverlay>
         : (
-          !projectInfo || !tokenInfo ? <h1>Not Found</h1> : <MarketplaceDetail projectInfo={projectInfo} tokenInfo={tokenInfo} />
+          !projectInfo || !tokenInfo
+            ? <div className='h-60 w-full flex items-center justify-center'> <h1 className='text-6xl text-center uppercase font-bold'>Not Found</h1> </div>
+            : <MarketplaceDetail projectInfo={projectInfo} tokenInfo={tokenInfo} />
         )
     }
   </Layout>
@@ -56,14 +58,13 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
 
 export default MarketplaceDetailPage
 
-export async function getServerSideProps ({ params }) {
+export async function getServerSideProps({ params }) {
   if (!params?.slug) {
     return { props: { projectInfo: null } }
   }
   if (!params?.id) {
     return { props: { projectInfo: null } }
   }
-
   const data = await fetchOneCollection(params.slug)
   if (!data?.data) {
     return { props: { projectInfo: null } }

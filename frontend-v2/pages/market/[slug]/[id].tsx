@@ -9,6 +9,7 @@ import { useWeb3Default } from 'components/web3'
 import LoadingOverlay from 'components/Base/LoadingOverlay'
 
 const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
+  console.log('projectInfo', projectInfo)
   const [loading, setLoading] = useState(true)
   const { library } = useWeb3Default()
   const [tokenInfo, setTokenInfo] = useState<any>(null)
@@ -27,14 +28,15 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
         }
       } else {
         const erc721Contract = new Contract(projectInfo.token_address, ERC721Abi, library)
+        console.log('params.id', params.id)
         const tokenURI = await erc721Contract.tokenURI(params.id)
         const info = (await axios.get(tokenURI)).data || {}
         setTokenInfo({ ...info, id: params.id })
       }
-      setLoading(false)
     } catch (error) {
       console.log('error', error)
     }
+    setLoading(false)
   }, [projectInfo, params, library])
 
   useEffect(() => {
@@ -46,7 +48,9 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
       loading
         ? <LoadingOverlay loading></LoadingOverlay>
         : (
-          !projectInfo || !tokenInfo ? <h1>Not Found</h1> : <MarketplaceDetail projectInfo={projectInfo} tokenInfo={tokenInfo} />
+          !projectInfo || !tokenInfo
+            ? <div className='h-60 w-full flex items-center justify-center'> <h1 className='text-6xl text-center uppercase font-bold'>Not Found</h1> </div>
+            : <MarketplaceDetail projectInfo={projectInfo} tokenInfo={tokenInfo} />
         )
     }
   </Layout>
@@ -54,14 +58,13 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
 
 export default MarketplaceDetailPage
 
-export async function getServerSideProps ({ params }) {
+export async function getServerSideProps({ params }) {
   if (!params?.slug) {
     return { props: { projectInfo: null } }
   }
   if (!params?.id) {
     return { props: { projectInfo: null } }
   }
-
   const data = await fetchOneCollection(params.slug)
   if (!data?.data) {
     return { props: { projectInfo: null } }

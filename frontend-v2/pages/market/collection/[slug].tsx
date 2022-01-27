@@ -2,11 +2,9 @@ import Layout from 'components/Layout'
 import { fetchOneCollection } from 'pages/api/market/collection/[slug]'
 import React from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 import Discover from 'components/Pages/Market/Discover'
 
 const CollectionDetail = ({ data }) => {
-  console.log(data)
   return (
     <Layout title="Market - GameFi">
       {data?.id

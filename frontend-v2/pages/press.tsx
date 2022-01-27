@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import Image from 'next/image'
 import Layout from 'components/Layout'
 
@@ -71,7 +70,7 @@ const PressKit = () => (
       </p>
       <ul className="font-casual text-sm leading-6 opacity-80 list-disc pl-8">
         <li>Easy onboarding of scholars</li>
-        <li>First access to major games' tokens</li>
+        <li>First access to major games&apos; tokens</li>
         <li>Better liquidity for game assets</li>
       </ul>
 
@@ -89,19 +88,19 @@ const PressKit = () => (
       <div className="flex gap-x-4">
         <div className="w-full text-center pb-4">
           <div className="py-2 flex items-center justify-center h-full rounded-lg border border-gamefiDark-500 bg-black">
-            <Image src={require('assets/images/logo-color.png')} />
+            <Image src={require('assets/images/logo-color.png')} alt="gamefi.org logo color" />
           </div>
           <div className="uppercase text-gamefiDark-100 font-bold text-sm">logo color</div>
         </div>
         <div className="w-full text-center pb-4">
           <div className="py-2 flex items-center justify-center h-full rounded-lg border border-gamefiDark-500 bg-gamefiDark-700">
-            <Image src={require('assets/images/logo-white.png')} />
+            <Image src={require('assets/images/logo-white.png')} alt="gamefi.org logo white" />
           </div>
           <div className="uppercase text-gamefiDark-100 font-bold text-sm">logo white</div>
         </div>
         <div className="w-full text-center pb-4">
           <div className="py-2 flex items-center justify-center h-full rounded-lg border border-gamefiDark-500 bg-white">
-            <Image src={require('assets/images/logo-isotype.png')} />
+            <Image src={require('assets/images/logo-isotype.png')} alt="gamefi.org logo isotype" />
           </div>
           <div className="uppercase text-gamefiDark-100 font-bold text-sm">Gafi isotype</div>
         </div>

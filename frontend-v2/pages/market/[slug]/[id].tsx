@@ -38,7 +38,9 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
   }, [projectInfo, params, library])
 
   useEffect(() => {
-    getTokenInfo()
+    getTokenInfo().catch(err => {
+      console.debug(err)
+    })
   }, [getTokenInfo])
 
   return <Layout title="GameFi Market">

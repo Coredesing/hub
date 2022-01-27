@@ -1,6 +1,5 @@
 import React from 'react'
 import Layout from 'components/Layout'
-import { GetStaticProps } from 'next'
 import useGetPoolDetail from '@/hooks/useGetPoolDetail'
 import AuctionDetail from 'components/Pages/INO/AuctionDetail'
 import MysteryBoxDetail from 'components/Pages/INO/MysteryBoxDetail'
@@ -31,7 +30,7 @@ const AuctionBox = (props: any) => {
 
 export default AuctionBox
 
-export async function getServerSideProps ({ params }) {
+export function getServerSideProps ({ params }) {
   if (!params?.id) {
     return { props: { id: '' } }
   }

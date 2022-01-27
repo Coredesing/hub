@@ -3,6 +3,7 @@ import { fetchOneCollection } from 'pages/api/market/collection/[slug]'
 import React from 'react'
 import Image from 'next/image'
 import Discover from 'components/Pages/Market/Discover'
+import CollectionItems from 'components/Pages/Market/CollectionItems'
 
 const CollectionDetail = ({ data }) => {
   return (
@@ -10,8 +11,8 @@ const CollectionDetail = ({ data }) => {
       {data?.id
         ? <div className="container w-full mx-auto">
           <div className="relative w-full mt-14 rounded-xs flex" style={{ height: '300px' }}>
-            <img src={data?.default_image} alt="banner" style={{ width: '100%', height: '100%', objectFit: 'cover' }}></img>
-            <img src={data?.logo} alt="logo" className="absolute -bottom-8 w-20 h-20 left-0 right-0 mx-auto border-4 border-gamefiDark-900 rounded-full"></img>
+            <img src={data?.default_image || data?.banner} alt="banner" style={{ width: '100%', height: '100%', objectFit: 'cover' }}></img>
+            <img src={data?.logo} alt="logo" className="absolute -bottom-8 w-20 h-20 left-0 right-0 mx-auto border-4 border-gamefiDark-900 bg-gamefiDark-900 rounded-full"></img>
           </div>
           <div className="w-full text-center font-bold text-2xl mt-14">{data?.name}</div>
           <div className="w-full flex items-center justify-center mt-4">
@@ -36,9 +37,9 @@ const CollectionDetail = ({ data }) => {
               </a>
             </div>
           </div>
-          <div className="w-full text-center font-medium mt-6">{data?.description}</div>
+          <div className="md:w-2/3 mx-auto text-center font-medium mt-6">{data?.description}</div>
           <div className="w-full mt-14">
-            <Discover></Discover>
+            <CollectionItems slug={data?.slug}></CollectionItems>
           </div>
         </div>
         : <div className="container w-full mx-auto flex items-center justify-center uppercase font-bold text-3xl" style={{ height: 'calc(100vh - 400px)' }}>Collection Not Found!</div>}

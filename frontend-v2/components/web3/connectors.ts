@@ -15,27 +15,6 @@ export const RPC_URLS: { [chainId: number]: string } = {
 export const injected = new InjectedConnector({ supportedChainIds: [1, 5, 56, 97, 137, 80001] })
 
 export const networkConnector = (chainId?: number) => {
-  if (!chainId) {
-    chainId = 56
-  }
-
-  if (IS_TESTNET) {
-    switch (chainId) {
-    case 1: {
-      chainId = 5
-      break
-    }
-    case 56: {
-      chainId = 97
-      break
-    }
-    case 137: {
-      chainId = 80001
-      break
-    }
-    }
-  }
-
   if (!RPC_URLS?.[chainId]) {
     return
   }
@@ -46,7 +25,7 @@ export const networkConnector = (chainId?: number) => {
   })
 }
 
-export const network = networkConnector()
+export const network = IS_TESTNET ? networkConnector(97) : networkConnector(56)
 
 export const walletconnect = new WalletConnectConnector({
   rpc: RPC_URLS,

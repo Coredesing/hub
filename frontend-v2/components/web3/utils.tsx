@@ -97,7 +97,7 @@ export const useTokenApproval = (token?: Token, spender?: string) => {
   }
 }
 
-export const useLibraryDefaultFlexible = (networkAlias?: string) => {
+export const useLibraryDefaultFlexible = (networkAlias?: string, mainnet = false) => {
   const { library } = useWeb3Default()
   const [provider, setProvider] = useState<providers.Web3Provider | null>(null)
 
@@ -107,7 +107,7 @@ export const useLibraryDefaultFlexible = (networkAlias?: string) => {
       return
     }
 
-    const network = getNetworkByAlias(networkAlias)
+    const network = getNetworkByAlias(networkAlias, mainnet)
     if (!network) {
       setProvider(null)
       return
@@ -124,7 +124,7 @@ export const useLibraryDefaultFlexible = (networkAlias?: string) => {
     }).catch(err => {
       console.debug(err)
     })
-  }, [networkAlias, library])
+  }, [networkAlias, library, mainnet])
 
   return {
     provider

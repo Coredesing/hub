@@ -399,13 +399,13 @@ export function getAddChainParameters (chainId: number): AddEthereumChainParamet
   }
 }
 
-export function getNetworkByAlias (alias: string): Network | null {
+export function getNetworkByAlias (alias: string, mainnet: false): Network | null {
   if (!alias) {
     return null
   }
 
   return networks.find(x => {
-    return (IS_TESTNET ? x.testnet : !x.testnet) && x.alias.toLowerCase() === alias.toLowerCase()
+    return ((IS_TESTNET && !mainnet) ? x.testnet : !x.testnet) && x.alias.toLowerCase() === alias.toLowerCase()
   })
 }
 

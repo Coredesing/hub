@@ -102,7 +102,7 @@ export const useFetch = (url: string, timeout?: number) => {
 }
 
 export const useNFTInfos = (listData: any[]) => {
-  const { provider } = useLibraryDefaultFlexible('bsc')
+  const { provider } = useLibraryDefaultFlexible('bsc', true)
   const [data, setData] = useState<AxiosResponse[]>([])
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)

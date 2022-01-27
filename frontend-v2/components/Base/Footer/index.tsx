@@ -60,17 +60,17 @@ const Footer = () => {
         <div className="text-center lg:text-left mt-8 lg:mt-0">
           <div className="font-mechanic font-bold text-base uppercase text-white opacity-50">OUR TEAM</div>
           <div className="mt-3 lg:mt-4 flex flex-col text-base leading-7 font-extralight">
-            <Link href="/" passHref><a className="hover:underline cursor-pointer">Features</a></Link>
-            <Link href="/" passHref><a className="hover:underline cursor-pointer">Roadmap</a></Link>
-            <Link href="/" passHref><a className="hover:underline cursor-pointer">Our Team</a></Link>
-            <Link href="/" passHref><a className="hover:underline cursor-pointer">Advisors</a></Link>
+            <a href="https://about.gamefi.org/#features" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Features</a>
+            <a href="https://about.gamefi.org/#roadmap" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Roadmap</a>
+            <a href="https://about.gamefi.org/#ourteam" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Our Team</a>
+            <a href="https://about.gamefi.org/#advisors" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Advisors</a>
           </div>
         </div>
         <div className="text-center lg:text-left mt-8 lg:mt-0">
           <div className="font-mechanic font-bold text-base uppercase text-white opacity-50">TOKEN</div>
           <div className="mt-3 lg:mt-4 flex flex-col text-base leading-7 font-extralight">
-            <Link href="/" passHref><a className="hover:underline cursor-pointer">Token Metrics</a></Link>
-            <Link href="/" passHref><a className="hover:underline cursor-pointer">Token Utilities</a></Link>
+            <a href="https://docsend.com/view/wg9czts7ugkvrp99" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Token Metrics</a>
+            <a href="https://about.gamefi.org/#token" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Token Utilities</a>
           </div>
         </div>
       </div>
@@ -79,10 +79,10 @@ const Footer = () => {
       <div className="flex align-middle items-center justify-between text-base font-light pt-6 pb-8 border-t border-gray-700 text-gray-400">
         <div>&#169; Icetea Labs, 2021</div>
         <div className="flex gap-x-4 items-center">
-          <Link href="/tos" passHref><a className="hover:underline cursor-pointer">Terms of Use</a></Link>
+          {/* <Link href="#" passHref><a className="hover:underline cursor-pointer">Terms of Use</a></Link>
           <div className="h-4 w-px bg-gray-600"></div>
           <Link href="/privacy" passHref><a className="hover:underline cursor-pointer">Privacy</a></Link>
-          <div className="h-4 w-px bg-gray-600"></div>
+          <div className="h-4 w-px bg-gray-600"></div> */}
           <Link href="/disclaimer" passHref><a className="hover:underline cursor-pointer">Disclaimer</a></Link>
           <div className="h-4 w-px bg-gray-600"></div>
           <a href="https://faq.gamefi.org/"target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Help Center</a>

@@ -32,7 +32,7 @@ const IGOList = () => {
               Upcoming IGOs
               </div>
               <div className="absolute -bottom-5 left-0 right-0">
-                <Image src={require('assets/images/under-stroke-yellow.svg')} alt="understroke"></Image>
+                <Image src={require('assets/images/under-stroke-green.svg')} alt="understroke"></Image>
               </div>
             </div>
             {
@@ -47,7 +47,7 @@ const IGOList = () => {
                     infiniteLoop={true}
                   >
                     {listUpcoming.map(item => (
-                      <PoolBanner key={item.id} item={item} color="yellow" tagColor="gamefiDark-700" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
+                      <PoolBanner key={item.id} item={item} color="green" tagColor="gamefiDark-700" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
                     ))}
                   </Carousel>
                 </div>
@@ -56,7 +56,7 @@ const IGOList = () => {
                     ? <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
                       {listUpcoming.map(item => (
                         <SwiperItem key={item.id}>
-                          <PoolBanner item={item} color="yellow" tagColor="gamefiDark-700" className="mx-3" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
+                          <PoolBanner item={item} color="green" tagColor="gamefiDark-700" className="mx-3" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
                         </SwiperItem>
                       ))}
                     </ListSwiper>
@@ -85,7 +85,7 @@ const IGOList = () => {
               Latest IGOs
               </div>
               <div className="absolute -bottom-5 left-0 right-0">
-                <Image src={require('assets/images/under-stroke-yellow.svg')} alt="understroke"></Image>
+                <Image src={require('assets/images/under-stroke-green.svg')} alt="understroke"></Image>
               </div>
             </div>
             {
@@ -100,7 +100,7 @@ const IGOList = () => {
                     infiniteLoop={true}
                   >
                     {listLatest?.length && listLatest.map(item => (
-                      <PoolBanner key={item.id} item={item} color="yellow" tagColor="gamefiDark-700" countdownStatus="ended" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
+                      <PoolBanner key={item.id} item={item} color="green" tagColor="gamefiDark-700" countdownStatus="ended" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
                     ))}
                   </Carousel>
                 </div>
@@ -109,7 +109,7 @@ const IGOList = () => {
                     ? <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
                       {listLatest.map(item => (
                         <SwiperItem key={item.id}>
-                          <PoolBanner item={item} color="yellow" tagColor="gamefiDark-700" className="mx-3" countdownStatus="Ended" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
+                          <PoolBanner item={item} color="green" tagColor="gamefiDark-700" className="mx-3" countdownStatus="Ended" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
                         </SwiperItem>
                       ))}
                     </ListSwiper>

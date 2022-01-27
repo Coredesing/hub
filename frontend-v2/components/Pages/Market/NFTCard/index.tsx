@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { networkImage } from '../utils'
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { getCurrencyByTokenAddress } from 'components/web3'
 
 type Props = {
@@ -14,8 +14,10 @@ const NFTCard = ({ item, ...props }: Props) => {
   return (
     <div className="w-full rounded overflow-hidden border border-transparent hover:border-gamefiGreen-700 hover:shadow hover:shadow-gamefiGreen-700">
       <div className="w-full">
-        <div className="bg-black flex items-center justify-center p-4" style={{ width: 'full', aspectRatio: '1' }}>
-          <img src={item?.token_info?.image || item?.token_info?.icon} alt={item?.token_info?.title} className="w-full object-cover" />
+        <div className="bg-black flex items-center justify-center p-4 cursor-pointer" style={{ width: 'full', aspectRatio: '1' }}>
+          <Link href={`/market/${item?.slug}/${item?.id}`} passHref>
+            <img src={item?.token_info?.image || item?.token_info?.icon} alt={item?.token_info?.title} className="w-full object-cover" />
+          </Link>
         </div>
       </div>
       <div className="bg-gamefiDark-650 w-full clipped-b-l px-5 pt-5 pb-2">

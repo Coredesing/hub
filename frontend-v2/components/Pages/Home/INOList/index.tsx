@@ -31,7 +31,7 @@ const INOList = () => {
               Upcoming INOs
               </div>
               <div className="absolute -bottom-5 left-0 right-0">
-                <Image src={require('assets/images/under-stroke-green.svg')} alt="understroke"></Image>
+                <Image src={require('assets/images/under-stroke-yellow.svg')} alt="understroke"></Image>
               </div>
             </div>
             {
@@ -46,7 +46,7 @@ const INOList = () => {
                     infiniteLoop={true}
                   >
                     {listUpcoming.map(item => (
-                      <PoolBanner key={item.id} item={item} color="green" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
+                      <PoolBanner key={item.id} item={item} color="yellow" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
                     ))}
                   </Carousel>
                 </div>
@@ -55,7 +55,7 @@ const INOList = () => {
                     ? <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
                       {listUpcoming.map(item => (
                         <SwiperItem key={item.id}>
-                          <PoolBanner item={item} color="green" className="mx-3 lg:mx-auto" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
+                          <PoolBanner item={item} color="yellow" className="mx-3 lg:mx-auto" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
                         </SwiperItem>
                       ))}
                     </ListSwiper>
@@ -84,7 +84,7 @@ const INOList = () => {
               Latest INOs
               </div>
               <div className="absolute -bottom-5 left-0 right-0">
-                <Image src={require('assets/images/under-stroke-green.svg')} alt="understroke"></Image>
+                <Image src={require('assets/images/under-stroke-yellow.svg')} alt="understroke"></Image>
               </div>
             </div>
             {
@@ -99,7 +99,7 @@ const INOList = () => {
                     infiniteLoop={true}
                   >
                     {listLatest?.length && listLatest.map(item => (
-                      <PoolBanner key={item.id} item={item} color="green" countdownStatus="ended" url={`/ino/${item.id}`}></PoolBanner>
+                      <PoolBanner key={item.id} item={item} color="yellow" countdownStatus="ended" url={`/ino/${item.id}`}></PoolBanner>
                     ))}
                   </Carousel>
                 </div>
@@ -108,7 +108,7 @@ const INOList = () => {
                     ? <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
                       {listLatest.map(item => (
                         <SwiperItem key={item.id}>
-                          <PoolBanner item={item} color="green" className="mx-3" countdownStatus="Ended" url={`/ino/${item.id}`}></PoolBanner>
+                          <PoolBanner item={item} color="yellow" className="mx-3" countdownStatus="Ended" url={`/ino/${item.id}`}></PoolBanner>
                         </SwiperItem>
                       ))}
                     </ListSwiper>

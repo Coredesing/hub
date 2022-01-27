@@ -9,7 +9,6 @@ import { useWeb3Default } from 'components/web3'
 import LoadingOverlay from 'components/Base/LoadingOverlay'
 
 const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
-  console.log('projectInfo', projectInfo)
   const [loading, setLoading] = useState(true)
   const { library } = useWeb3Default()
   const [tokenInfo, setTokenInfo] = useState<any>(null)
@@ -28,7 +27,6 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
         }
       } else {
         const erc721Contract = new Contract(projectInfo.token_address, ERC721Abi, library)
-        console.log('params.id', params.id)
         const tokenURI = await erc721Contract.tokenURI(params.id)
         const info = (await axios.get(tokenURI)).data || {}
         setTokenInfo({ ...info, id: params.id })

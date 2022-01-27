@@ -399,7 +399,7 @@ export function getAddChainParameters (chainId: number): AddEthereumChainParamet
   }
 }
 
-export function getNetworkByAlias (alias: string, mainnet: false): Network | null {
+export function getNetworkByAlias (alias: string, mainnet?: boolean): Network | null {
   if (!alias) {
     return null
   }

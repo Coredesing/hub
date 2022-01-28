@@ -38,7 +38,7 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isL
         onClose && onClose()
       }
     } catch (error) {
-      console.log('error', error)
+      console.debug('error', error)
     }
   }
 

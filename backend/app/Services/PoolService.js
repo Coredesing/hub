@@ -142,9 +142,10 @@ class PoolService {
   async getLatestPools(filterParams) {
     filterParams.page = 1;
     const limit = filterParams.limit ? filterParams.limit : Const.DEFAULT_LIMIT;
+    const token_type = filterParams?.token_type;
 
-    if (await RedisUtils.checkExistRedisLatestPools(limit)) {
-      return RedisUtils.getRedisLatestPools(limit);
+    if (await RedisUtils.checkExistRedisLatestPools(limit, token_type)) {
+      return JSON.parse(await RedisUtils.getRedisLatestPools(limit, token_type));
     }
 
     let upcomingPool = await this.getUpcomingPools(filterParams);
@@ -166,12 +167,12 @@ class PoolService {
         .orderBy('start_join_pool_time', 'DESC')
         .orderBy('priority', 'DESC')
         .orderBy('id', 'DESC')
-        .paginate(1, limit);
+        .paginate(1, remainingLimit);
 
       result = result.concat(latestPools.rows)
     }
 
-    await RedisUtils.createRedisLatestPools(limit, result);
+    await RedisUtils.createRedisLatestPools(limit, token_type, result);
 
     return result;
   }

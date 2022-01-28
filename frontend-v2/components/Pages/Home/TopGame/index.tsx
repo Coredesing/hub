@@ -16,7 +16,9 @@ const TopGame = ({ item, isTop, like }: Props) => {
         <Image src={require('assets/images/icons/red-heart.svg')} alt=""></Image>
         <div className="ml-2">{like?.total_like || 0}</div>
       </div>
-      <img src={item?.top_favourite_link} alt='favorite-img' style={{ width: '100%', height: screens.mobile ? '180px' : '100%', objectFit: 'cover' }} />
+      <Link href={`/aggregator/${item.slug}`} passHref>
+        <img src={item?.top_favourite_link} alt='favorite-img' style={{ width: '100%', height: screens.mobile ? '180px' : '100%', objectFit: 'cover' }} className="hover:cursor-pointer" />
+      </Link>
     </div>
     <div className="md:h-1/4 relative py-4 bg-gamefiDark-650">
       {

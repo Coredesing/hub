@@ -143,7 +143,7 @@ export const useNFTInfos = (listData: any[]) => {
       setLoading(false)
     }
 
-    fetchDatas().catch(e => console.log(e))
+    fetchDatas().catch(e => console.debug(e))
     return function () {
       setLoading(false)
     }

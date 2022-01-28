@@ -46,7 +46,7 @@ const GameList = () => {
       setLikes(res?.data)
     }
 
-    getLikes().catch(e => console.log(e?.message))
+    getLikes().catch(e => console.debug(e?.message))
   }, [gameLikeIds, router?.query?.topGames, topGames])
 
   const handleChangeGameFilter = async (item: any) => {

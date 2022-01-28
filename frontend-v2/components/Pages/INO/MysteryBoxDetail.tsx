@@ -75,7 +75,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         const myBox = await contractPresale.userBought(eventId, account)
         setMyBoxThisPool(myBox.toNumber())
       } catch (error) {
-        console.log('er', error)
+        console.debug('er', error)
       }
     }
     getMyBoxThisPool()
@@ -206,7 +206,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           setBoxSelected(boxes[0])
         })
         .catch(err => {
-          console.log('err', err)
+          console.debug('err', err)
         })
     } else {
       setBoxTypes(boxes)
@@ -242,7 +242,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       const amount = res.data.data?.amount
       setMyBoxOrdered(amount)
     } catch (error) {
-      console.log('error', error)
+      console.debug('error', error)
     }
   }, [account, poolInfo])
 

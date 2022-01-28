@@ -106,7 +106,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
           }
           setCurrencyPool(infoToken)
         } catch (error) {
-          console.log('error', error)
+          console.debug('error', error)
         }
       }
       handleSetToken()
@@ -183,7 +183,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
     }
   }, [auctionSuccess])
 
-  const onPlaceBid = useCallback(async (numberBox: number, captcha: string) => {
+  const onPlaceBid = useCallback((numberBox: number, captcha: string) => {
     auctionBox(numberBox, captcha)
   }, [poolInfo, connectedAccount, currencyPool])
 
@@ -256,7 +256,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
       setBidHistories(arr)
       setLoadingBidHistory(false)
     } catch (error) {
-      console.log('error', error)
+      console.debug('error', error)
       setLoadingBidHistory(false)
     }
   }
@@ -272,7 +272,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
       const totalVolume = await contractAuctionPool.totalBid()
       setTotalTotalVolume(utils.formatEther(totalVolume))
     } catch (error) {
-      console.log('error', error)
+      console.debug('error', error)
     }
   }
   useEffect(() => {

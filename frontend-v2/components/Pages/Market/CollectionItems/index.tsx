@@ -36,7 +36,6 @@ const CollectionItems = ({ slug } : {slug: string}) => {
     // if (active.join(',') !== activeNetworks) {
     //   await router.push({ query: { activeNetworks: active.join(',') } }, undefined, { shallow: true })
     // }
-    console.log(network)
   }
 
   const url = `/marketplace/collection/${slug}/items?limit=8&page=1`

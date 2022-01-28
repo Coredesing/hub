@@ -43,7 +43,7 @@ const AuctionBoxModal = ({ open, poolInfo = {}, token = {}, auctionLoading, last
         }
         setRenewBalance(false)
       } catch (error) {
-        console.log(error)
+        console.debug(error)
       }
     }
     renewBalance && getBalance()

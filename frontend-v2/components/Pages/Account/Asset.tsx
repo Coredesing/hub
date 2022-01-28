@@ -54,7 +54,7 @@ const Asset = () => {
             const infor = (await axios.get(tokenURI)).data || {}
             Object.assign(collection, infor)
           } catch (error) {
-            console.log('err', error)
+            console.debug('err', error)
           }
         }
         collection.value = collection.value || collection.price
@@ -62,7 +62,7 @@ const Asset = () => {
       }
       return collections
     } catch (error) {
-      console.log('errr', error)
+      console.debug('errr', error)
       return []
     }
   }

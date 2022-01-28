@@ -58,9 +58,11 @@ const PoolBanner = ({ item, color = 'green', className, countdownStatus, url, ta
               <Image src={require('assets/images/icons/lock.svg')} alt="lock"></Image>
               <span className="ml-2 font-bold">{poolStatus(item.is_private)}</span>
             </div>
-            <div className="">
-              <img src={item.banner} alt="banner" className="w-full" style={{ height: `${screens.mobile ? '180px' : ''} ${screens.tablet ? '230px' : ''} ${screens.lg || screens.xl ? '240px' : ''} ${screens.md ? '220px' : ''}`, objectFit: 'cover' }}></img>
+            <Link href={url || '#' }>
+            <div className={`hover:cursor-pointer border-2 border-transparent ${color === 'green' ? 'hover:border-gamefiGreen-500' : 'hover:border-gamefiYellow-500'}`}>
+                <img src={item.banner} alt="banner" className="w-full" style={{ height: `${screens.mobile ? '180px' : ''} ${screens.tablet ? '230px' : ''} ${screens.lg || screens.xl ? '240px' : ''} ${screens.md ? '220px' : ''}`, objectFit: 'cover' }}></img>
             </div>
+            </Link>
             <div className={`relative w-full h-24 flex align-middle items-center justify-center uppercase font-bold md:text-lg xl:text-2xl ${color === 'yellow' && 'bg-gamefiYellow'} ${(!color || color === 'green') && 'bg-gamefiGreen-700'}`}>
               {/* <div
                 className={`absolute -top-7 right-0 ${color ? `bg-${color}` : 'bg-gamefiGreen'} text-gamefiDark-900 h-12 w-2/3 flex pt-2 justify-center text-center text-sm font-semibold clipped-t-l-full uppercase`}

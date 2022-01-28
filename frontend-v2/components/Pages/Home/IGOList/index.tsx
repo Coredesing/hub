@@ -7,13 +7,13 @@ import ListSwiper, { SwiperItem } from 'components/Base/ListSwiper'
 
 const IGOList = () => {
   const screens = useScreens()
-  const upcomingUrl = '/pools/latest-pools?token_type=erc20&limit=4&page=1&is_private=0'
+  const upcomingUrl = '/pools/latest-pools?token_type=erc20&limit=6&page=1&is_private=0'
   const latestUrl = '/pools?token_type=erc20&limit=5&page=1&is_private=0'
   const { response: upcomingData, loading: upcomingLoading } = useFetch(upcomingUrl)
   const { response: latestData, loading: latestLoading } = useFetch(latestUrl)
 
   const listUpcoming = useMemo<any[]>(() => {
-    return upcomingData?.data || []
+    return upcomingData?.data?.data || []
   }, [upcomingData])
 
   const listLatest = useMemo<any[]>(() => {

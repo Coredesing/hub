@@ -21,7 +21,7 @@ export const useFetch = (url: string, timeout?: number) => {
   const [loading, setLoading] = useState(true)
 
   console.log(url)
-  const { data: fetchResponse, error: fetchError } = useSWR(`${API_BASE_URL}/${url}`, fetcher)
+  const { data: fetchResponse, error: fetchError } = useSWR(`${API_BASE_URL}${url}`, fetcher)
 
   useEffect(() => {
     setLoading(true)

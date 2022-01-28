@@ -2,7 +2,6 @@ import Layout from 'components/Layout'
 import { fetchOneCollection } from 'pages/api/market/collection/[slug]'
 import React from 'react'
 import Image from 'next/image'
-import Discover from 'components/Pages/Market/Discover'
 import CollectionItems from 'components/Pages/Market/CollectionItems'
 
 const CollectionDetail = ({ data }) => {

@@ -62,7 +62,6 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isL
   }
 
   const onChangeCurrency = (val: ObjectType) => {
-    console.log(val)
     setCurrency(val)
   }
 

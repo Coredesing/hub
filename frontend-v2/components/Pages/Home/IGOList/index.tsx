@@ -4,18 +4,16 @@ import { Carousel } from 'react-responsive-carousel'
 import { useFetch, useScreens } from '../utils'
 import Image from 'next/image'
 import ListSwiper, { SwiperItem } from 'components/Base/ListSwiper'
-import ShadowLoader from 'components/Base/ShadowLoader'
 
 const IGOList = () => {
   const screens = useScreens()
-  const upcomingUrl = '/pools/upcoming-pools?token_type=erc20&limit=20&page=1&is_private=0'
+  const upcomingUrl = '/pools/latest-pools?token_type=erc20&limit=4&page=1&is_private=0'
   const latestUrl = '/pools?token_type=erc20&limit=5&page=1&is_private=0'
   const { response: upcomingData, loading: upcomingLoading } = useFetch(upcomingUrl)
   const { response: latestData, loading: latestLoading } = useFetch(latestUrl)
 
   const listUpcoming = useMemo<any[]>(() => {
-    console.log('upcoming', upcomingData)
-    return upcomingData?.data?.data || []
+    return upcomingData?.data || []
   }, [upcomingData])
 
   const listLatest = useMemo<any[]>(() => {
@@ -29,7 +27,7 @@ const IGOList = () => {
           ? <div className="md:px-4 lg:px-16 mx-auto bg-gamefiDark-700 mt-20 pb-14">
             <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
               <div className="inline-block top-0 left-0 right-0 uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
-              Upcoming IGOs
+              Latest IGOs
               </div>
               <div className="absolute -bottom-5 left-0 right-0">
                 <Image src={require('assets/images/under-stroke-green.svg')} alt="understroke"></Image>
@@ -63,17 +61,13 @@ const IGOList = () => {
                     : <></>}
                   {
                     upcomingLoading || latestLoading
-                      ? <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
-                        <SwiperItem>
-                          <ShadowLoader className="mx-3"></ShadowLoader>
-                        </SwiperItem>
-                        <SwiperItem>
-                          <ShadowLoader className="mx-3"></ShadowLoader>
-                        </SwiperItem>
-                        <SwiperItem>
-                          <ShadowLoader className="mx-3"></ShadowLoader>
-                        </SwiperItem>
-                      </ListSwiper>
+                      ? <div className="loader-wrapper mx-auto mt-14">
+                        <svg className="loader" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                  Loading...
+                      </div>
                       : <></>
                   }
                 </div>

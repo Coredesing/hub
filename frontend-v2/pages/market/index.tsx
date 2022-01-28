@@ -21,19 +21,19 @@ const Market = () => {
             filter: 'blur(184px)'
           }}
         ></div>
-        <div className="absolute bottom-0 right-0">
+        {/* <div className="absolute bottom-0 right-0">
           <Image src={require('assets/images/bg-item-market.png')} width="221" height="247" alt=""></Image>
-        </div>
+        </div> */}
         <div className="md:px-4 lg:px-16 md:container mx-auto lg:block text-center">
           <Image src={require('assets/images/market-banner.png')} alt="" className="-z-0"></Image>
-          <Link href="/account/collections/assets">
+          {/* <Link href="/account/collections/assets">
             <a className="inline-block px-4 py-2 border border-gamefiGreen-500 text-gamefiGreen-500 bg-gamefiDark-800 hover:text-gamefiGreen-300 rounded text-base font-semibold">Your Assets</a>
-          </Link>
+          </Link> */}
         </div>
-        <HotCollections></HotCollections>
+        {/* <HotCollections></HotCollections> */}
         {/* <HotAuctions></HotAuctions> */}
-        <ListTrending></ListTrending>
-        <Discover></Discover>
+        {/* <ListTrending></ListTrending> */}
+        {/* <Discover></Discover> */}
       </div>
     </Layout>
   )

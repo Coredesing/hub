@@ -11,12 +11,13 @@ type Props = {
   url?: string,
   tagColor?: string
 }
-const PoolBanner = ({ item, color = 'green', className, countdownStatus, url, tagColor = 'gamefiDark-900' } : Props) => {
+const PoolBanner = ({ item, color = 'green', className, url, tagColor = 'gamefiDark-900' } : Props) => {
   const [distance, setDistance] = useState(0)
   const [days, setDays] = useState('00')
   const [hours, setHours] = useState('00')
   const [minutes, setMinutes] = useState('00')
   const [seconds, setSeconds] = useState('00')
+  const [countdownStatus, setCountdownStatus] = useState('')
 
   const screens = useScreens()
 
@@ -26,6 +27,10 @@ const PoolBanner = ({ item, color = 'green', className, countdownStatus, url, ta
     }
     const interval = setInterval(() => {
       setDistance(new Date(item.start_time * 1000).getTime() - new Date().getTime())
+      if (distance <= 0) {
+        setCountdownStatus('ended')
+        return
+      }
       setDays(distance > 0 ? ('0' + Math.floor(distance / (1000 * 60 * 60 * 24)).toString()).slice(-2) : '00')
       setHours(distance > 0 ? ('0' + Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString()).slice(-2) : '00')
       setMinutes(distance > 0 ? ('0' + Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString()).slice(-2) : '00')
@@ -73,17 +78,17 @@ const PoolBanner = ({ item, color = 'green', className, countdownStatus, url, ta
             </div>
           </div>
         </div>
-        {countdownStatus
-          ? <div className={`w-full relative ${color === 'yellow' && 'text-gamefiYellow'} ${(!color || color === 'green') && 'text-gamefiGreen-700'}`}>
-            <div className="w-full h-full flex flex-col align-middle items-center justify-center absolute">
-              <div className="uppercase font-bold text-xl">{countdownStatus}</div>
-            </div>
-            <Image src={require(`assets/images/countdown-box-${color || 'green'}.png`)} alt="countdown" className="w-full h-auto"></Image>
-          </div>
-          : <div className={`w-full relative ${color === 'yellow' && 'text-gamefiYellow'} ${(!color || color === 'green') && 'text-gamefiGreen-700'}`}>
-            {item.start_time
-              ? (
-                <div className="w-full h-full flex flex-col align-middle items-center justify-center absolute mt-1">
+        <div className={`w-full relative ${color === 'yellow' && 'text-gamefiYellow'} ${(!color || color === 'green') && 'text-gamefiGreen-700'}`}>
+          {item.start_time
+            ? (
+              countdownStatus
+                ? <div className={`w-full relative ${color === 'yellow' && 'text-gamefiYellow'} ${(!color || color === 'green') && 'text-gamefiGreen-700'}`}>
+                  <div className="w-full h-full flex flex-col align-middle items-center justify-center absolute">
+                    <div className="uppercase font-bold text-xl">{countdownStatus}</div>
+                  </div>
+                  <Image src={require(`assets/images/countdown-box-${color || 'green'}.png`)} alt="countdown" className="w-full h-auto"></Image>
+                </div>
+                : <div className="w-full h-full flex flex-col align-middle items-center justify-center absolute mt-1">
                   <div className="uppercase font-semibold text-sm 2xl:text-base">Countdown to IGO date</div>
                   <div className="uppercase font-bold mt-2 flex tracking-widest">
                     <div className="flex flex-col text-center w-10">
@@ -109,14 +114,16 @@ const PoolBanner = ({ item, color = 'green', className, countdownStatus, url, ta
                     </div>
                   </div>
                 </div>
-              )
-              : (
+            )
+            : (
+              <>
                 <div className="w-full h-full flex flex-col align-middle items-center justify-center absolute">
-                  <div className="uppercase font-bold text-2xl 2xl:text-3xl">Coming Soon</div>
+                  <div className="uppercase font-bold text-xl">Coming Soon</div>
                 </div>
-              )}
-            <Image src={require(`assets/images/countdown-box-${color || 'green'}.png`)} alt="countdown" className="w-full h-auto"></Image>
-          </div>}
+                <Image src={require(`assets/images/countdown-box-${color || 'green'}.png`)} alt="countdown" className="w-full h-auto"></Image>
+              </>
+            )}
+        </div>
       </div>
     </>
   )

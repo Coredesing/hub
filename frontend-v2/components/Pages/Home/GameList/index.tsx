@@ -40,7 +40,6 @@ const GameList = () => {
       setGameFilterOption(router?.query?.topGames?.toString())
     }
     topGames?.map(game => gameLikeIds?.indexOf(game.id) === -1 ? gameLikeIds.push(game.id) : null)
-    console.log('likes', gameLikeIds)
     setGameLikesIds(gameLikeIds)
     const getLikes = async () => {
       const res = await fetcher(`${API_BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`)

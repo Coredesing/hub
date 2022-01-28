@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { ObjectType } from 'common/types'
 import PoolDetail from 'components/Base/PoolDetail'
 import { TabPanel, Tabs } from 'components/Base/Tabs'
-import { MARKETPLACE_CONTRACT, useWeb3Default } from 'components/web3'
+import { getTXLink, MARKETPLACE_CONTRACT, useWeb3Default } from 'components/web3'
 import { useMyWeb3 } from 'components/web3/context'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { formatHumanReadableTime, formatNumber, shortenAddress } from 'utils'
@@ -23,6 +23,11 @@ import DialogTxSubmitted from 'components/Base/DialogTxSubmitted'
 import { currencyNative, useTokenAllowance, useTokenApproval } from 'components/web3/utils'
 import axios from 'utils/axios'
 import BuyNowModal from './MarketBuyNowModal'
+import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from 'components/Base/Table'
+import { useAppContext } from '@/context/index'
+import { MARKET_ACTIVITIES } from '../Market/constant'
+import Pagination from 'components/Base/Pagination'
+import LoadingOverlay from 'components/Base/LoadingOverlay'
 
 type Props = {
   projectInfo: ObjectType;
@@ -45,6 +50,9 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   const [offerList, setOfferList] = useState<ObjectType<any>[]>([])
   const [lastOffer, setLastOffer] = useState<ObjectType<any> | null>(null)
   const [tokenOnSale, setTokenOnSale] = useState<ObjectType>({})
+  const { marketActivities: marketActivitiesState } = useAppContext()
+  const activities = marketActivitiesState.state?.data?.[tokenInfo.id] || {}
+  const [filterActivities, setFilterActivities] = useState({ page: 1, tokenId: tokenInfo.id, project: projectInfo.slug })
   // user approve token to buy or offer
   const [isApprovedToken, setApproveToken] = useState(false)
   const isAllowedTransfer = !!account && account === addressOwnerNFT
@@ -256,6 +264,9 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
       return
     }
     toast.success('Request Successfuly')
+    setTimeout(() => {
+      setFilterActivities(f => ({ ...f, page: 1, force: true }))
+    }, 2000)
     if ([
       onListingNFT.name,
       onDelistNFT.name,
@@ -278,7 +289,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   const handleCallContract = async (action: string, fnCallContract: () => Promise<any>) => {
     try {
       setLockingAction({ action, lock: true })
-      toast.loading('Request is processing!', { duration: 5000 })
+      toast.loading('Request is processing!', { duration: 3000 })
       const tx = await fnCallContract()
       return handleTx(tx, action)
     } catch (error) {
@@ -359,6 +370,14 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
     setCurrentTab(val)
   }
 
+  useEffect(() => {
+    if (!libraryDefaultTemporary) return
+    marketActivitiesState.actions.setActivitiesMarketDetail(filterActivities, libraryDefaultTemporary)
+  }, [filterActivities, libraryDefaultTemporary])
+
+  const onChangePageActivities = (page: number) => {
+    setFilterActivities(f => ({ ...f, page }))
+  }
   return <WrapperPoolDetail>
     <DialogTxSubmitted
       transaction={txHash}
@@ -491,7 +510,6 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
                   Buy Now
                 </ButtonBase>
             }
-
           </div>
         }
         {
@@ -637,6 +655,82 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
                 </div>)
               }
             </div>
+          </TabPanel>
+          <TabPanel value={currentTab} index={3}>
+            <Table >
+              <LoadingOverlay loading={marketActivitiesState.state?.loading} />
+              <TableHead>
+                <TableRow>
+                  <TableCellHead className={styles.activityTableCellHead}>
+                    <span className="text-13px font-bold">Type</span>
+                  </TableCellHead>
+                  <TableCellHead className={styles.activityTableCellHead}>
+                    <span className="text-13px font-bold">Price</span>
+                  </TableCellHead>
+                  <TableCellHead className={styles.activityTableCellHead}>
+                    <span className="text-13px font-bold">From</span>
+                  </TableCellHead>
+                  <TableCellHead className={styles.activityTableCellHead}>
+                    <span className="text-13px font-bold">To</span>
+                  </TableCellHead>
+                  <TableCellHead className={styles.activityTableCellHead}>
+                    <span className="text-13px font-bold">Date</span>
+                  </TableCellHead>
+                </TableRow>
+              </TableHead>
+              <TableBody className={styles.activityTableBody}>
+                {
+                  (activities.currentList || []).map((item, id) => <TableRow key={id}>
+                    <TableCell className={styles.activityTableCell}>
+                      <span className='text-13px font-semibold'>
+                        {MARKET_ACTIVITIES[item.event_type] || '-/-'}
+                      </span>
+                    </TableCell>
+                    <TableCell className={styles.activityTableCell}>
+                      <span className='text-13px'>
+                        {item.raw_amount ? utils.formatEther(item.raw_amount) : '-/-'} {item.currencySymbol}
+                      </span>
+                    </TableCell>
+                    <TableCell className={styles.activityTableCell}>
+                      <span className='text-13px'>
+                        {
+                          MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenListed ||
+                            MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenDelisted
+                            ? shortenAddress(item.seller || '', '.', 5)
+                            : shortenAddress(item.buyer || '', '.', 5)
+                        }
+                      </span>
+                    </TableCell>
+                    <TableCell className={styles.activityTableCell}>
+                      <span className='text-13px'>
+                        {
+                          MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenListed ||
+                            MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenDelisted
+                            ? shortenAddress(item.buyer || '', '.', 5)
+                            : shortenAddress(item.seller || '', '.', 5)
+                        }
+                      </span>
+                    </TableCell>
+                    <TableCell className={styles.activityTableCell}>
+                      <a href={getTXLink(item.network, item.transaction_hash)} target={'_blank'} rel='noreferrer' className='flex items-center gap-2 text-13px'>
+                        {formatHumanReadableTime(+item.dispatch_at * 1000, Date.now())}
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M11.5 8.5V10C11.5 10.3978 11.342 10.7794 11.0607 11.0607C10.7794 11.342 10.3978 11.5 10 11.5H2C1.60218 11.5 1.22064 11.342 0.93934 11.0607C0.658035 10.7794 0.5 10.3978 0.5 10V2C0.5 1.60218 0.658035 1.22064 0.93934 0.93934C1.22064 0.658035 1.60218 0.5 2 0.5H3.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M6.5 0.5H11.5V5.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M11.5 0.5L5.5 6.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </a>
+                    </TableCell>
+                  </TableRow>)
+                }
+              </TableBody>
+            </Table>
+            <Pagination
+              className='mt-4 mb-8'
+              currentPage={activities.currentPage || 1}
+              totalPage={activities.totalPage || 0}
+              onChange={onChangePageActivities}
+            />
           </TabPanel>
         </div>
       </>}

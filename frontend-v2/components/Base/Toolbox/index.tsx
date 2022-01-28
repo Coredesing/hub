@@ -3,6 +3,7 @@ import Image from 'next/image'
 import ToolboxItem from './ToolboxItem'
 import MenuLink from './MenuLink'
 import WalletConnector from '../WalletConnector'
+import Topbar from '../Topbar'
 
 const Toolbox = () => {
   const [showMenu, setShowMenu] = useState(false)
@@ -28,7 +29,8 @@ const Toolbox = () => {
           <Image src={require('assets/images/icons/menuToggler.svg')} alt='menu'></Image>
         </button>
       </div>
-      <div className={`fixed left-0 top-16 bottom-0 right-0 md:hidden dark:bg-gamefiDark-900 overflow-auto hide-scrollbar menu-slide-up ${showMenu ? 'h-full' : 'h-0'}`} style={{ boxShadow: 'inset -1px 0px 0px #303442' }}>
+      <div className={`fixed z-50 left-0 top-0 bottom-0 right-0 md:hidden dark:bg-gamefiDark-900 overflow-auto hide-scrollbar menu-slide-up ${showMenu ? 'h-full' : 'h-0'}`} style={{ boxShadow: 'inset -1px 0px 0px #303442' }}>
+        <Topbar></Topbar>
         <MenuLink path='/'>
           <Image src={require('assets/images/icons/home.svg')} alt='home'></Image>
           <span>Home</span>

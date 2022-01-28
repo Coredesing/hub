@@ -56,15 +56,15 @@ const PoolBanner = ({ item, color = 'green', className, url, tagColor = 'gamefiD
 
   return (
     <>
-      <div className={`mx-auto px-3 lg:px-0 ${className}`} style={{ width: '100%' }}>
-        <div className="flex flex-col clipped-b-l rounded-tr overflow-hidden border border-transparent">
+      <div className={`mx-auto overflow-hidden px-3 lg:px-0 ${className}`} style={{ width: '100%' }}>
+        <div className="flex flex-col clipped-b-l rounded-tr">
           <div className="w-full h-full relative">
             <div className={`absolute h-8 w-2/5 inline-flex align-middle items-center justify-center top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-left bg-gamefiDark-900 clipped-b-r-full bg-${tagColor}`}>
               <Image src={require('assets/images/icons/lock.svg')} alt="lock"></Image>
               <span className="ml-2 font-bold">{poolStatus(item.is_private)}</span>
             </div>
             <Link href={url || '#' } passHref>
-              <div className={`hover:cursor-pointer border-2 border-transparent ${color === 'green' ? 'hover:border-gamefiGreen-500' : 'hover:border-gamefiYellow-500'}`}>
+              <div className={`hover:cursor-pointer ${color === 'green' ? 'hover:border-gamefiGreen-500' : 'hover:border-gamefiYellow-500'}`}>
                 <img src={item.banner} alt="banner" className="w-full" style={{ height: `${screens.mobile ? '180px' : ''} ${screens.tablet ? '230px' : ''} ${screens.lg || screens.xl ? '240px' : ''} ${screens.md ? '220px' : ''}`, objectFit: 'cover' }}></img>
               </div>
             </Link>

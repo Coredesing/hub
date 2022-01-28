@@ -35,15 +35,15 @@ const PageIndex = () => {
 
   return (
     <Layout title="GameFi">
-      <div className="md:px-4 lg:px-16 md:container mx-auto lg:block">
+      <div className="md:px-4 lg:px-16 mt-14 md:container mx-auto lg:block">
         {/* Load error here */}
         {/* Loading here */}
-        {featuredGames && featuredGames.length && <GameCarousel likes={likes} items={featuredGames}></GameCarousel>}
+        {featuredGames && featuredGames.length ? <GameCarousel likes={likes} items={featuredGames}></GameCarousel> : <></>}
       </div>
       <IGOList></IGOList>
       <INOList></INOList>
       <GameList></GameList>
-      <NFTList></NFTList>
+      {/* <NFTList></NFTList> */}
     </Layout>
   )
 }

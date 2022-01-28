@@ -14,7 +14,6 @@ const IGOList = () => {
   const { response: latestData, loading: latestLoading } = useFetch(latestUrl)
 
   const listUpcoming = useMemo<any[]>(() => {
-    console.log('upcoming', upcomingData)
     return upcomingData?.data?.data || []
   }, [upcomingData])
 

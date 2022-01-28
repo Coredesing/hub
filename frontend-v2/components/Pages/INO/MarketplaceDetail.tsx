@@ -141,7 +141,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
       }
       setTokenOnSale(info)
     } catch (error) {
-      console.log('er', error)
+      console.debug('er', error)
     }
   }, [MarketplaceContract, libraryDefaultTemporary, projectInfo, tokenInfo])
 
@@ -165,7 +165,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
         setOfferList(offerList)
         setReloadOfferList(false)
       }).catch(err => {
-        console.log('err', err)
+        console.debug('err', err)
       })
     }
   }, [tokenOnSale, reloadOfferList, libraryDefaultTemporary, projectInfo, tokenInfo, currencies])
@@ -345,7 +345,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
       const isApproved = await ERC721ContractSigner.isApprovedForAll(account, MARKETPLACE_CONTRACT)
       setApprovedMarketplace(isApproved)
     } catch (error) {
-      console.log('err', error)
+      console.debug('err', error)
     }
   }, [account, ERC721ContractSigner])
 

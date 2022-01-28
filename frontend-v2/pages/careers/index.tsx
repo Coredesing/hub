@@ -146,7 +146,7 @@ const Careers = () => (
               color = 'text-indigo-400'
             }
 
-            return <span className={color}>{l}</span>
+            return <span key={l} className={color}>{l}</span>
           })}</div>
         </div>
       </Link>) }

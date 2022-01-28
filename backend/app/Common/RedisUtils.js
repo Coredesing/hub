@@ -169,22 +169,22 @@ const deleteAllRedisUpcomingPools = (pages = []) => {
 /**
  * LATEST POOLS
  */
-const getRedisKeyLatestPools = (limit) => {
-  return `${LATEST_POOL_KEY}_${limit}`;
+const getRedisKeyLatestPools = (limit, token_type) => {
+  return `${LATEST_POOL_KEY}_${limit}_${token_type}`;
 }
 
-const getRedisLatestPools = async (limit) => {
-  const redisKey = getRedisKeyLatestPools(limit);
+const getRedisLatestPools = async (limit, token_type) => {
+  const redisKey = getRedisKeyLatestPools(limit, token_type);
   return await Redis.get(redisKey);
 }
 
-const createRedisLatestPools = async (limit, data) => {
-  const redisKey = getRedisKeyLatestPools(limit);
+const createRedisLatestPools = async (limit, token_type, data) => {
+  const redisKey = getRedisKeyLatestPools(limit, token_type);
   return await Redis.setex(redisKey, LATEST_POOLS_CACHED_TTL, JSON.stringify(data));
 }
 
-const checkExistRedisLatestPools = async (limit) => {
-  const redisKey = getRedisKeyLatestPools(limit);
+const checkExistRedisLatestPools = async (limit, token_type) => {
+  const redisKey = getRedisKeyLatestPools(limit, token_type);
   return Redis.exists(redisKey);
 }
 

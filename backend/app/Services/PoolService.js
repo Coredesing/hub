@@ -144,7 +144,7 @@ class PoolService {
     const limit = filterParams.limit ? filterParams.limit : Const.DEFAULT_LIMIT;
 
     if (await RedisUtils.checkExistRedisLatestPools(limit)) {
-      return RedisUtils.getRedisLatestPools(limit);
+      return JSON.parse(await RedisUtils.getRedisLatestPools(limit));
     }
 
     let upcomingPool = await this.getUpcomingPools(filterParams);

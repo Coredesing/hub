@@ -13,7 +13,7 @@ const Toolbox = () => {
         <ToolboxItem path='/aggregator'>
           <Image src={require('assets/images/icons/controller.svg')} alt='aggregator'></Image>
         </ToolboxItem>
-        <ToolboxItem path='/launchpad'>
+        <ToolboxItem path='https://hub.gamefi.org'>
           <Image src={require('assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
         </ToolboxItem>
         <ToolboxItem path='/market'>
@@ -39,7 +39,7 @@ const Toolbox = () => {
           <Image src={require('assets/images/icons/controller.svg')} alt='aggregator'></Image>
           <span>Aggregator</span>
         </MenuLink>
-        <MenuLink path='/launchpad'>
+        <MenuLink path='https://hub.gamefi.org'>
           <Image src={require('assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
           <span>Launchpad</span>
         </MenuLink>

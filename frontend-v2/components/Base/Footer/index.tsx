@@ -67,7 +67,7 @@ const Footer = () => {
             <Link href="/press" passHref><a className="hover:underline cursor-pointer">Press</a></Link>
             <Link href="/careers" passHref><a className="hover:underline cursor-pointer">Careers</a></Link>
             <a href="https://t.me/GameFi_OfficialANN" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Business Contacts</a>
-            <a href="https://gamefi.ghost.io" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">GameFi.org News</a>
+            <a href="https://news.gamefi.org" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">GameFi.org News</a>
           </div>
         </div>
         <div className="text-center lg:text-left mt-8 lg:mt-0">

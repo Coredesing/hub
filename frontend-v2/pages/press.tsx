@@ -20,9 +20,6 @@ const PressKit = () => (
         <li>Marketplace: <a href="https://hub.gamefi.org/#/mystery-boxes" className="text-gamefiGreen-500 hover:text-gamefiGreen-800" target="_blank" rel="noreferrer">https://hub.gamefi.org/#/mystery-boxes</a></li>
       </ul>
       <p className="font-casual text-sm leading-6 opacity-80">
-        Business Contact: ???
-      </p>
-      <p className="font-casual text-sm leading-6 opacity-80">
         Social:
       </p>
       <ul className="font-casual text-sm leading-6 opacity-80 list-disc pl-8">

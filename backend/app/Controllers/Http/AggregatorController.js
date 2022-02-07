@@ -389,9 +389,9 @@ class AggregatorController {
       builder = builder.join('tokenomics as token', 'game_informations.id', 'token.game_id')
       builder = builder.join('project_informations as project', 'game_informations.id', 'project.game_id')
 
+      selectColumn.push(builder.db.knex.raw('price / token_price as roi'));
+      selectColumn.push(builder.db.knex.raw('COALESCE(cmc_rank, 999999) as cmc_rank'))
       builder = builder.select(selectColumn);
-      builder = builder.select(builder.db.knex.raw('price / token_price as roi'));
-      builder = builder.select(builder.db.knex.raw('COALESCE(cmc_rank, 999999) as cmc_rank'));
 
       const list = await builder.paginate(page, perPage)
 

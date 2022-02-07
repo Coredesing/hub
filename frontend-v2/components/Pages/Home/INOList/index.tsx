@@ -16,7 +16,7 @@ const INOList = () => {
 
   return (
     <>
-      <div className="md:px-4 lg:px-16 mx-auto bg-gamefiDark-700 mt-20 pb-14">
+      <div className="md:px-4 lg:px-16 mx-auto mt-20 pb-14">
         <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
           <div className="inline-block top-0 left-0 right-0 uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
               Latest INOs

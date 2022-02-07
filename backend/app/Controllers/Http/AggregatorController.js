@@ -367,6 +367,10 @@ class AggregatorController {
       }
       if (display_area) {
         builder = builder.where('display_area', 'like', `%${display_area}%`)
+        if (display_area === 'Top Favorite' || display_area === 'Top Favourite') {
+          selectColumn.push(builder.db.knex.raw('(select count(*) from game_favourites where game_id = `game_informations`.`id`) AS like_count'));
+          builder.orderBy('like_count', 'DESC');
+        }
       }
       if (verified) {
         builder = builder.where('verified', verified)

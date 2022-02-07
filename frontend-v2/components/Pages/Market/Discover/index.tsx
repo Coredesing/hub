@@ -1,11 +1,12 @@
 import Dropdown from 'components/Base/Dropdown'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import { NetworkSelector } from 'components/Base/WalletConnector'
 import { useRouter } from 'next/router'
 import DiscoverFilter from './DiscoverFilter'
 import { useFetch, useNFTInfos } from '../utils'
 import NFTCard from '../NFTCard'
+import Pagination from '../Pagination'
 
 const filterOptions = [
   {
@@ -28,20 +29,22 @@ const Discover = () => {
   const [showDiscover, setShowDiscover] = useState('items')
   const router = useRouter()
   const activeNetworks = router?.query?.activeNetworks?.toString()
-  // console.log('active', activeNetworks)
   const handleChangeNetwork = (network: any) => {
-    // const active = []
-    // network && Object.keys(network).forEach(key => network?.[key] ? active.push(key) : null)
-    // // console.log(active)
-    // if (active.join(',') !== activeNetworks) {
-    //   await router.push({ query: { activeNetworks: active.join(',') } }, undefined, { shallow: true })
-    // }
+    console.log(network)
   }
 
   const url = '/marketplace/discover?limit=8&page=1'
   const { response, loading } = useFetch(url)
   const [infos, setInfos] = useState([])
+  const [page, setPage] = useState<number>(response?.data?.page || 1)
+  const params = useMemo(() => {
+    const params = new URLSearchParams()
+    if (page) {
+      params.set('page', page.toString())
+    }
 
+    return `${params}`
+  }, [page])
   const { data: items, loading: infoLoading } = useNFTInfos(response?.data?.data)
   useEffect(() => {
     if (response) {
@@ -65,13 +68,20 @@ const Discover = () => {
             <div className="mt-14 flex items-center justify-between">
               <div className="flex">
                 <div className="relative" style={{ marginRight: '-6px' }}>
-                  <div className={`absolute top-0 bottom-0 w-full flex items-center justify-center pr-2 font-semibold uppercase ${showDiscover === 'items' ? 'text-black' : 'text-white opacity-50'}`}>Items</div>
+                  <button
+                    className={`absolute top-0 bottom-0 w-full flex items-center justify-center pr-2 font-semibold uppercase ${showDiscover === 'items' ? 'text-black' : 'text-white opacity-50'}`}
+                    onClick={() => setShowDiscover('items')}
+                  >Items
+                  </button>
                   <svg width="142" height="38" viewBox="0 0 142 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0 2C0 0.89543 0.895431 0 2 0H66H130.458C131.367 0 132.161 0.612387 132.392 1.49101L142 38H8.82843C8.298 38 7.78929 37.7893 7.41421 37.4142L0.585786 30.5858C0.210713 30.2107 0 29.702 0 29.1716V2Z" fill={showDiscover === 'items' ? '#6CDB00' : '#242732'}/>
                   </svg>
                 </div>
                 <div className="relative">
-                  <div className={`absolute top-0 bottom-0 w-full flex items-center justify-center pr-2 font-semibold uppercase ${showDiscover === 'activities' ? 'text-black' : 'text-white opacity-50'}`}>Activities</div>
+                  <button
+                    className={`absolute top-0 bottom-0 w-full flex items-center justify-center pr-2 font-semibold uppercase ${showDiscover === 'activities' ? 'text-black' : 'text-white opacity-50'}`}
+                    onClick={() => setShowDiscover('activities')}
+                  >Activities</button>
                   <svg width="142" height="38" viewBox="0 0 142 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0 0H133.172C133.702 0 134.211 0.210714 134.586 0.585786L141.414 7.41421C141.789 7.78929 142 8.29799 142 8.82843V36C142 37.1046 141.105 38 140 38H11.5418C10.6332 38 9.83885 37.3876 9.60763 36.509L0 0Z" fill={showDiscover === 'activities' ? '#6CDB00' : '#242732'}/>
                   </svg>
@@ -92,6 +102,7 @@ const Discover = () => {
                   : <></>
               }
             </div>
+            <Pagination page={response?.data?.page} pageLast={response?.data?.lastPage} setPage={setPage} className="w-full justify-start mt-8 mb-8" />
           </>
           : <></>}
         { (loading || infoLoading)

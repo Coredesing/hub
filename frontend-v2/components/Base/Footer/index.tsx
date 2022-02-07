@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 const Footer = () => {
-  return <div className="w-full mt-20" style={{ backgroundColor: '#0E0F14', fontFamily: 'Poppins' }}>
+  return <div className="w-full" style={{ backgroundColor: '#0E0F14', fontFamily: 'Poppins' }}>
     <div className="md:container px-4 text-center lg:text-left lg:px-16 mx-auto lg:block py-20">
       <div className="flex flex-col align-middle items-center justify-center lg:items-start lg:grid lg:grid-cols-5 lg:gap-2 zl:gap-4">
         <div className="col-span-2 flex flex-col items-center lg:block">
@@ -67,7 +67,7 @@ const Footer = () => {
             <Link href="/press" passHref><a className="hover:underline cursor-pointer">Press</a></Link>
             <Link href="/careers" passHref><a className="hover:underline cursor-pointer">Careers</a></Link>
             <a href="https://t.me/GameFi_OfficialANN" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Business Contacts</a>
-            <a href="https://gamefi.ghost.io" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">GameFi.org News</a>
+            <a href="https://news.gamefi.org" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">GameFi.org News</a>
           </div>
         </div>
         <div className="text-center lg:text-left mt-8 lg:mt-0">

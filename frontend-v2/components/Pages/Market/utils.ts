@@ -118,6 +118,9 @@ export const useNFTInfos = (listData: any[]) => {
         const erc721Contract = new Contract(tokenAddress, ERC721Abi, provider)
         if (!erc721Contract) return null
         const tokenURI = await erc721Contract.functions?.tokenURI(item.id).then(res => res[0]).catch(e => console.log(e?.message))
+        if (!tokenURI) {
+          return null
+        }
         await fetcher(tokenURI)
           .then(data => {
             item = {
@@ -129,7 +132,7 @@ export const useNFTInfos = (listData: any[]) => {
             setErrorMessage(e.message)
             setLoading(false)
           })
-        const collectionInfo = await fetcher(`https://hub.gamefi.org/api/v1/marketplace/collection/${item?.token_address}`).then(res => res?.data)
+        const collectionInfo = await fetcher(`${API_BASE_URL}/marketplace/collection/${item?.token_address}`).then(res => res?.data)
         item = {
           collection_info: collectionInfo,
           ...item

@@ -310,8 +310,8 @@ export async function getServerSideProps ({ query }) {
         category: query.category ? decodeURI(query.category) : null,
         idoType: query.ido_type || null,
         launchStatus: query.launch_status || null,
-        sortBy: query.sort_by || 'cmc_rank',
-        sortOrder: query.sort_order || 'asc'
+        sortBy: query.sort_by || 'roi',
+        sortOrder: query.sort_order || 'desc'
       }
     }
   }

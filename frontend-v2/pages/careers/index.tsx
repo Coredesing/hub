@@ -125,17 +125,17 @@ const Careers = () => (
 
       <div className="flex w-full px-4 mb-2">
         <div className="text-xs text-gamefiDark-50 uppercase flex-1">Title</div>
-        <div className="text-xs text-gamefiDark-50 uppercase w-48 text-center">Location</div>
-        <div className="text-xs text-gamefiDark-50 uppercase w-48 text-center">Job Type</div>
-        <div className="text-xs text-gamefiDark-50 uppercase w-48 text-center">Level</div>
+        <div className="hidden md:inline-block text-xs text-gamefiDark-50 uppercase w-48 text-center">Location</div>
+        <div className="hidden md:inline-block text-xs text-gamefiDark-50 uppercase w-48 text-center">Job Type</div>
+        <div className="inline-flex justify-end md:justify-center text-xs text-gamefiDark-50 uppercase w-48">Level</div>
       </div>
 
       { jobs.map((job) => <Link href={`/careers/${job.id}`} key={job.id} passHref={true}>
         <div className="flex w-full text-sm font-casual hover:bg-gamefiDark-700 cursor-pointer p-4 mb-2">
-          <div className="flex-1 text-base">{job.title}</div>
-          <div className="w-48 text-center opacity-75">{job.location}</div>
-          <div className="w-48 text-center opacity-75">{job.type}</div>
-          <div className="w-48 items-center justify-center inline-flex gap-x-2">{job.level.split(',').map(l => {
+          <div className="flex-1 text-base">{job.title}<p className="md:hidden text-xs">{job.location}</p><p className="md:hidden text-xs">{job.type}</p></div>
+          <div className="hidden md:inline-block w-48 text-center opacity-75">{job.location}</div>
+          <div className="hidden md:inline-block w-48 text-center opacity-75">{job.type}</div>
+          <div className="md:w-48 items-center justify-center inline-flex gap-x-2">{job.level.split(',').map(l => {
             l = l.trim()
             let color = 'text-white'
             if (l === 'Senior') {

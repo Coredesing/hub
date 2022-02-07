@@ -28,14 +28,8 @@ const CollectionItems = ({ slug } : {slug: string}) => {
   const [showDiscover, setShowDiscover] = useState('items')
   const router = useRouter()
   const activeNetworks = router?.query?.activeNetworks?.toString()
-  // console.log('active', activeNetworks)
   const handleChangeNetwork = (network: any) => {
-    // const active = []
-    // network && Object.keys(network).forEach(key => network?.[key] ? active.push(key) : null)
-    // // console.log(active)
-    // if (active.join(',') !== activeNetworks) {
-    //   await router.push({ query: { activeNetworks: active.join(',') } }, undefined, { shallow: true })
-    // }
+    console.log(network)
   }
 
   const url = `/marketplace/collection/${slug}/items?limit=8&page=1`

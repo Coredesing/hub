@@ -1,6 +1,7 @@
 import { ObjectType } from '@/common/types'
 import clsx from 'clsx'
 import { FormInputNumber } from 'components/Base/FormInputNumber'
+import { useMyWeb3 } from 'components/web3/context'
 import { useBalanceToken } from 'components/web3/utils'
 import { BigNumber } from 'ethers'
 import React from 'react'
@@ -15,7 +16,7 @@ type Props = {
   currencyInfo: ObjectType;
 }
 const AscDescAmount = ({ value, maxBuy, onChangeValue, bought, poolInfo, currencyInfo }: Props) => {
-  const { balanceShort, loading } = useBalanceToken(BigNumber.from(currencyInfo?.address || 0).isZero() ? undefined : currencyInfo as any, poolInfo.network_available)
+  const { balanceShort, loading }: any = BigNumber.from(currencyInfo?.address || 0).isZero() ? useMyWeb3() : useBalanceToken(currencyInfo as any, poolInfo.network_available)
 
   const remaining = +maxBuy - +bought || 0
   const onDesc = () => {

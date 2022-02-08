@@ -278,8 +278,8 @@ export const networks = [{
   alias: 'eth',
   currency: ETH.symbol,
   blockExplorerUrls: ['https://etherscan.io'],
-  image: require('assets/images/networks/eth.svg'),
-  image2: require('assets/images/icons/ethereum.svg'),
+  image: require('@/assets/images/networks/eth.svg'),
+  image2: require('@/assets/images/icons/ethereum.svg'),
   color: '#546BC7',
   colorText: '#fff'
 }, {
@@ -288,8 +288,8 @@ export const networks = [{
   alias: 'eth',
   currency: ETH.symbol,
   blockExplorerUrls: ['https://goerli.etherscan.io'],
-  image: require('assets/images/networks/eth.svg'),
-  image2: require('assets/images/icons/ethereum.svg'),
+  image: require('@/assets/images/networks/eth.svg'),
+  image2: require('@/assets/images/icons/ethereum.svg'),
   color: '#546BC7',
   colorText: '#fff',
   testnet: true
@@ -299,8 +299,8 @@ export const networks = [{
   alias: 'bsc',
   currency: BNB.symbol,
   blockExplorerUrls: ['https://bscscan.com'],
-  image: require('assets/images/networks/bsc.svg'),
-  image2: require('assets/images/icons/bsc.svg'),
+  image: require('@/assets/images/networks/bsc.svg'),
+  image2: require('@/assets/images/icons/bsc.svg'),
   color: '#FFC700',
   colorAlt: '#e6b300',
   colorText: '#28282E'
@@ -310,8 +310,8 @@ export const networks = [{
   alias: 'bsc',
   currency: BNB.symbol,
   blockExplorerUrls: ['https://testnet.bscscan.com'],
-  image: require('assets/images/networks/bsc.svg'),
-  image2: require('assets/images/icons/bsc.svg'),
+  image: require('@/assets/images/networks/bsc.svg'),
+  image2: require('@/assets/images/icons/bsc.svg'),
   color: '#FFC700',
   colorAlt: '#e6b300',
   colorText: '#28282E',
@@ -322,8 +322,8 @@ export const networks = [{
   alias: 'polygon',
   currency: MATIC.symbol,
   blockExplorerUrls: ['https://polygonscan.com'],
-  image: require('assets/images/networks/polygon.svg'),
-  image2: require('assets/images/icons/polygon.svg'),
+  image: require('@/assets/images/networks/polygon.svg'),
+  image2: require('@/assets/images/icons/polygon.svg'),
   color: '#A06EF4',
   colorText: '#fff'
 }, {
@@ -332,8 +332,8 @@ export const networks = [{
   alias: 'polygon',
   currency: MATIC.symbol,
   blockExplorerUrls: ['https://mumbai.polygonscan.com'],
-  image: require('assets/images/networks/polygon.svg'),
-  image2: require('assets/images/icons/polygon.svg'),
+  image: require('@/assets/images/networks/polygon.svg'),
+  image2: require('@/assets/images/icons/polygon.svg'),
   color: '#A06EF4',
   colorText: '#fff',
   testnet: true
@@ -350,17 +350,17 @@ export const wallets: Wallet[] = [{
   id: 'metamask',
   name: 'MetaMask',
   networks: [1, 56, 137, 5, 97, 80001],
-  image: require('assets/images/icons/metamask.svg')
+  image: require('@/assets/images/icons/metamask.svg')
 }, {
   id: 'bsc-wallet',
   name: 'BSC Wallet',
   networks: [1, 56, 5, 97],
-  image: require('assets/images/icons/bsc.svg')
+  image: require('@/assets/images/icons/bsc.svg')
 }, {
   id: 'walletconnect',
   name: 'WalletConnect',
   networks: [1, 56, 137, 5, 97, 80001],
-  image: require('assets/images/icons/walletconnect.svg')
+  image: require('@/assets/images/icons/walletconnect.svg')
 }]
 
 export function connectorFromWallet (wallet: Wallet): AbstractConnector {

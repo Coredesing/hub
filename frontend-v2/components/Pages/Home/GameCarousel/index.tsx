@@ -40,7 +40,7 @@ const GameCarousel = ({ items, likes }: Props) => {
               title={label}
               style={{ position: 'absolute', zIndex: '2', top: 'calc(50% - 170px)', cursor: 'pointer', left: '0', opacity: !hasPrev && '50%' }}
             >
-              <Image src={require('assets/images/icons/arrow-left.png')} alt="left" className="w-1/2 h-auto"/>
+              <Image src={require('@/assets/images/icons/arrow-left.png')} alt="left" className="w-1/2 h-auto"/>
             </button>
           )
         }
@@ -53,7 +53,7 @@ const GameCarousel = ({ items, likes }: Props) => {
               title={label}
               style={{ position: 'absolute', zIndex: '2', top: 'calc(50% - 170px)', cursor: 'pointer', right: '0', opacity: !hasNext && '50%' }}
             >
-              <Image src={require('assets/images/icons/arrow-right.png')} alt="right" className="w-1/2 h-auto"/>
+              <Image src={require('@/assets/images/icons/arrow-right.png')} alt="right" className="w-1/2 h-auto"/>
             </button>
           )
         }
@@ -73,11 +73,11 @@ const GameCarousel = ({ items, likes }: Props) => {
               <div className="lg:text-lg xl:text-xl 2xl:text-3xl font-bold uppercase text-left">{item.game_name}</div>
               <div className="flex align-middle items-center w-full mt-3 xl:mt-5">
                 <div className="flex align-middle items-center text-sm">
-                  <Image src={require('assets/images/icons/heart.svg')} alt="heart"/>
+                  <Image src={require('@/assets/images/icons/heart.svg')} alt="heart"/>
                   <p className="ml-2 tracking-widest text-gray-200">{getLikeById(item.id)?.total_like || 0}</p>
                 </div>
                 <div className="flex align-middle items-center ml-4 text-left">
-                  <Image src={require('assets/images/icons/game-console.svg')} alt="game-console"/>
+                  <Image src={require('@/assets/images/icons/game-console.svg')} alt="game-console"/>
                   <p
                     className="ml-2 tracking-widest uppercase text-gray-200 text-sm whitespace-nowrap overflow-hidden overflow-ellipsis text-left"
                     style={{ maxWidth: '180px' }}
@@ -92,7 +92,7 @@ const GameCarousel = ({ items, likes }: Props) => {
                   <div className="bg-gamefiGreen-500 text-gamefiDark-900 py-2 px-6 rounded-xs clipped-t-r hover:opacity-90 w-36 cursor-pointer">
                     <a className="flex align-middle items-center">
                       <div className="mr-2 uppercase font-bold text-xs">View more</div>
-                      <Image src={require('assets/images/icons/arrow-right-dark.svg')} alt="right" />
+                      <Image src={require('@/assets/images/icons/arrow-right-dark.svg')} alt="right" />
                     </a>
                   </div>
                 </Link>
@@ -133,11 +133,11 @@ const GameCarousel = ({ items, likes }: Props) => {
               <div className="lg:text-lg xl:text-xl 2xl:text-3xl font-bold uppercase text-left">{item.game_name}</div>
               <div className="flex align-middle items-center w-full mt-3 xl:mt-5">
                 <div className="flex align-middle items-center text-sm">
-                  <Image src={require('assets/images/icons/heart.svg')} alt="heart"/>
+                  <Image src={require('@/assets/images/icons/heart.svg')} alt="heart"/>
                   <p className="ml-2 tracking-widest text-gray-200">{getLikeById(item.id)?.total_like || 0}</p>
                 </div>
                 <div className="flex align-middle items-center ml-4">
-                  <Image src={require('assets/images/icons/game-console.svg')} alt="game-console"/>
+                  <Image src={require('@/assets/images/icons/game-console.svg')} alt="game-console"/>
                   <p
                     className="ml-2 tracking-widest uppercase text-gray-200 whitespace-nowrap overflow-hidden overflow-ellipsis"
                   >{item.developer}</p>
@@ -149,7 +149,7 @@ const GameCarousel = ({ items, likes }: Props) => {
               <div className="mt-3">
                 <button className="bg-gamefiGreen-500 text-gamefiDark-900 py-2 px-6 flex align-middle items-center rounded-xs clipped-t-r hover:opacity-90">
                   <div className="mr-2 uppercase font-bold text-xs">View more</div>
-                  <Image src={require('assets/images/icons/arrow-right-dark.svg')} alt="right" />
+                  <Image src={require('@/assets/images/icons/arrow-right-dark.svg')} alt="right" />
                 </button>
               </div>
             </div>

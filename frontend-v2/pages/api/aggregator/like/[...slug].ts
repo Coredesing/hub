@@ -1,7 +1,7 @@
-import { fetcher } from 'utils'
+import { fetcher } from '@/utils'
 
 export function send (id, body) {
-  return fetcher(`https://aggregator.gamefi.org/api/v1/aggregator/like/${id}`, { method: 'POST', body, headers: { 'content-type': 'application/json' } })
+  return fetcher(`https://hub-v2.gamefi.org/api/v1/aggregator/like/${id}`, { method: 'POST', body, headers: { 'content-type': 'application/json' } })
 }
 
 export default async function handler (req, res) {

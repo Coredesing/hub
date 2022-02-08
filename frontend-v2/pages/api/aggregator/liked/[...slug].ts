@@ -1,7 +1,7 @@
-import { fetcher } from 'utils'
+import { fetcher } from '@/utils'
 
 export function fetchWithWallet (wallet) {
-  return fetcher(`https://aggregator.gamefi.org/api/v1/aggregator/liked/${wallet}`)
+  return fetcher(`https://hub-v2.gamefi.org/api/v1/aggregator/liked/${wallet}`)
 }
 
 export default async function handler (req, res) {

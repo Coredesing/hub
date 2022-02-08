@@ -1,5 +1,4 @@
-import Dropdown from 'components/Base/Dropdown'
-import ListSwiper, { SwiperItem } from 'components/Base/ListSwiper'
+import Dropdown from '@/components/Base/Dropdown'
 import Link from 'next/link'
 import React from 'react'
 

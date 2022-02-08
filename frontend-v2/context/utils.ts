@@ -6,10 +6,10 @@ export type StateType = {
 };
 
 const initialState = {
-    data: null,
-    loading: false,
-    error: ''
-};
+  data: null,
+  loading: false,
+  error: ''
+}
 
 type ActionReducer = {
     loading: string;
@@ -23,31 +23,31 @@ type ActionType = {
 }
 
 export const initReducer = (state: StateType = initialState, action: ActionType, actionReducer: ActionReducer) => {
-    switch (action.type) {
-        case actionReducer.loading: {
-            return {
-                ...state,
-                loading: true
-            }
-        }
-
-        case actionReducer.success: {
-            return {
-                ...state,
-                data: action.payload,
-                loading: false
-            }
-        }
-
-        case actionReducer.failure: {
-            return {
-                ...state,
-                error: action.payload,
-                loading: false
-            }
-        }
-        default: {
-            return state;
-        }
+  switch (action.type) {
+  case actionReducer.loading: {
+    return {
+      ...state,
+      loading: true
     }
+  }
+
+  case actionReducer.success: {
+    return {
+      ...state,
+      data: action.payload,
+      loading: false
+    }
+  }
+
+  case actionReducer.failure: {
+    return {
+      ...state,
+      error: action.payload,
+      loading: false
+    }
+  }
+  default: {
+    return state
+  }
+  }
 }

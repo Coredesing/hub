@@ -1,4 +1,4 @@
-import { ObjectType } from '@/common/types'
+import { ObjectType } from '@/utils/types'
 import { formatNumber } from '@/utils/index'
 import clsx from 'clsx'
 import React, { useMemo } from 'react'
@@ -14,10 +14,9 @@ type Props = {
 
 const TimeLine = ({ timelines }: Props) => {
   const currentTimeline = useMemo(() => {
-    const num = Object.keys(timelines).reverse()[0]
+    const num = Object.keys(timelines).reverse().find(k => timelines[k].current)
     return +num || 0
   }, [timelines])
-
   return <div className='flex'>
     {
       Object.keys(timelines).map((id) => (<div className={clsx(styles.timeline, styles.lineBright, {

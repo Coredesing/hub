@@ -1,5 +1,5 @@
 import React from 'react'
-import { RECAPTCHA_SITE_KEY } from '@/constants'
+import { RECAPTCHA_SITE_KEY } from '@/utils/constants'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 
 type Props = {

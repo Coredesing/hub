@@ -1,12 +1,13 @@
-import Dropdown from 'components/Base/Dropdown'
+import Dropdown from '@/components/Base/Dropdown'
 import React, { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
-import { NetworkSelector } from 'components/Base/WalletConnector'
+import { NetworkSelector } from '@/components/Base/WalletConnector'
 import { useRouter } from 'next/router'
 import DiscoverFilter from './DiscoverFilter'
-import { useFetch, useNFTInfos } from '../utils'
+import { useNFTInfos } from '../utils'
 import NFTCard from '../NFTCard'
 import Pagination from '../Pagination'
+import { useFetch } from '@/utils'
 
 const filterOptions = [
   {
@@ -45,6 +46,7 @@ const Discover = () => {
 
     return `${params}`
   }, [page])
+  console.log(params)
   const { data: items, loading: infoLoading } = useNFTInfos(response?.data?.data)
   useEffect(() => {
     if (response) {
@@ -62,7 +64,7 @@ const Discover = () => {
           Discover
               </div>
               <div className="absolute -bottom-5 left-0 right-0">
-                <Image src={require('assets/images/under-stroke-yellow.svg')} alt="understroke"></Image>
+                <Image src={require('@/assets/images/under-stroke-yellow.svg')} alt="understroke"></Image>
               </div>
             </div>
             <div className="mt-14 flex items-center justify-between">

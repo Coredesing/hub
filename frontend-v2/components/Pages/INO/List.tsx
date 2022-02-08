@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { useMemo, useState, useEffect } from 'react'
 import { Item } from './types'
 import styles from './List.module.scss'
-import { paginator, useAxiosFetch } from './utils'
+import { paginator, useFetch } from '@/utils'
 
 export const TOKEN_TYPE = 'box'
 
@@ -30,15 +30,15 @@ export const visibility = (item: Item) => {
 export const networkImage = (network: string) => {
   switch (network) {
   case 'bsc': {
-    return require('assets/images/networks/bsc.svg')
+    return require('@/assets/images/networks/bsc.svg')
   }
 
   case 'eth': {
-    return require('assets/images/networks/eth.svg')
+    return require('@/assets/images/networks/eth.svg')
   }
 
   case 'polygon': {
-    return require('assets/images/networks/polygon.svg')
+    return require('@/assets/images/networks/polygon.svg')
   }
   }
 }
@@ -106,14 +106,14 @@ const List = () => {
     return `/pools/mysterious-box?token_type=${TOKEN_TYPE}&campaign_status=Ended&network_available=${network}&title=${title}&is_display=1&page=${page}&limit=6&is_search=1`
   }, [network, title, page])
 
-  const { data, loading } = useAxiosFetch(url)
+  const { response, loading } = useFetch(url)
   useEffect(() => {
-    setPageLast(data?.data?.lastPage)
-  }, [data])
+    setPageLast(response?.data?.lastPage)
+  }, [response])
 
   const items = useMemo<Item[]>(() => {
-    return data?.data?.data || []
-  }, [data])
+    return response?.data?.data || []
+  }, [response])
 
   return (
     <div className={styles.container} style={{ marginBottom: '2rem' }}>

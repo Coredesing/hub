@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { FormInputNumber } from '@/components/Base/FormInputNumber'
-import Erc20Json from 'components/web3/abis/ERC20.json'
+import Erc20Json from '@/components/web3/abis/ERC20.json'
 import ButtonBase from '@/components/Base/Buttons/ButtonBase'
 import Recaptcha from '@/components/Base/Recaptcha'
 import { debounce } from '@/utils/index'
 import { utils, Contract } from 'ethers'
 import Modal from '@/components/Base/Modal'
 import classes from './c.module.scss'
-import { getNetworkByAlias } from 'components/web3'
-import { useMyWeb3 } from 'components/web3/context'
+import { getNetworkByAlias } from '@/components/web3'
+import { useMyWeb3 } from '@/components/web3/context'
 import BigNumber from 'bignumber.js'
 
 type Props = {

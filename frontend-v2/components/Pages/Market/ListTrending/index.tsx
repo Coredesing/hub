@@ -1,10 +1,8 @@
-import Dropdown from 'components/Base/Dropdown'
-import ListSwiper, { SwiperItem } from 'components/Base/ListSwiper'
-import Link from 'next/link'
-import React, { useEffect, useMemo, useState } from 'react'
+import ListSwiper, { SwiperItem } from '@/components/Base/ListSwiper'
+import React, { useEffect, useState } from 'react'
 import NFTCard from '../NFTCard'
-import { Item } from '../types'
-import { useFetch, useNFTInfos } from '../utils'
+import { useNFTInfos } from '../utils'
+import { useFetch } from '@/utils'
 
 const ListTrending = () => {
   const url = '/marketplace/hot-offers?limit=10&page=1'

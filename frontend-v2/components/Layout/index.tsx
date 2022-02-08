@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react'
 import Head from 'next/head'
-import Sidebar from 'components/Base/Sidebar'
-import Topbar from 'components/Base/Topbar'
-import Toolbox from 'components/Base/Toolbox'
-import Footer from 'components/Base/Footer'
+import Sidebar from '@/components/Base/Sidebar'
+import Topbar from '@/components/Base/Topbar'
+import Toolbox from '@/components/Base/Toolbox'
+import Footer from '@/components/Base/Footer'
 
 type Props = {
   children?: ReactNode

@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import Modal from '@/components/Base/Modal'
-import { FormInputNumber } from 'components/Base/FormInputNumber'
+import { FormInputNumber } from '@/components/Base/FormInputNumber'
 import styles from './PlaceOrderModal.module.scss'
 import clsx from 'clsx'
-import ButtonBase from 'components/Base/Buttons/ButtonBase'
+import ButtonBase from '@/components/Base/Buttons/ButtonBase'
 import { useOrderBox } from '@/hooks/useOrderBox'
-import { useMyWeb3 } from 'components/web3/context'
+import { useMyWeb3 } from '@/components/web3/context'
 import toast from 'react-hot-toast'
 
 type Props = {

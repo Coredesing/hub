@@ -1,11 +1,11 @@
 
-import { useCallback, useEffect, useState } from 'react';
-import useWalletSignature from './useWalletSignature';
-import axios from '@/utils/axios';
-import { useWeb3React } from '@web3-react/core';
-import { ObjectType } from '@/common/types';
-import toast from 'react-hot-toast';
-import { useMyWeb3 } from 'components/web3/context';
+import { useCallback, useEffect, useState } from 'react'
+import useWalletSignature from './useWalletSignature'
+import axios from '@/utils/axios'
+import { useWeb3React } from '@web3-react/core'
+import { ObjectType } from '@/utils/types'
+import toast from 'react-hot-toast'
+import { useMyWeb3 } from '@/components/web3/context'
 
 export const HeadersSignature = {
   headers: {
@@ -23,19 +23,19 @@ type ApiSignatureType = {
 }
 
 const useApiSignature = (url: string) => {
-  const { signMessage } = useWalletSignature();
-  const { account } = useMyWeb3();
+  const { signMessage } = useWalletSignature()
+  const { account } = useMyWeb3()
   const apiSignMessgae = useCallback(async (data: ObjectType) => {
     try {
-      const signature = await signMessage();
+      const signature = await signMessage()
       const response = await axios.post(url, {
         wallet_address: account,
         signature,
-        ...data,
-      }, HeadersSignature);
-      const result = response.data;
+        ...data
+      }, HeadersSignature)
+      const result = response.data
       if (result.status === 200 && result.data) {
-        return result.data.signature;
+        return result.data.signature
       }
       throw new Error(result?.message)
     } catch (error) {
@@ -46,7 +46,6 @@ const useApiSignature = (url: string) => {
   return {
     apiSignMessgae
   }
-
 }
 
-export default useApiSignature;
+export default useApiSignature

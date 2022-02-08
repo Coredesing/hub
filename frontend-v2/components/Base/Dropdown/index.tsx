@@ -1,4 +1,4 @@
-import { ObjectType } from '@/common/types'
+import { ObjectType } from '@/utils/types'
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
 
 type Item = {

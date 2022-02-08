@@ -1,5 +1,5 @@
 import React from 'react'
-import busdIcon from 'assets/images/icons/busd.png'
+import busdIcon from '@/assets/images/icons/busd.png'
 import Image from 'next/image'
 type Props = {
   label: string;

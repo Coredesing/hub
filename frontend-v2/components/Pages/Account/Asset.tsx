@@ -2,12 +2,13 @@ import React, { useEffect, useMemo, useState } from 'react'
 import TabMenus from './TabMenus'
 import styles from './Asset.module.scss'
 import CardSlim from '../Market/CardSlim'
-import { useMyWeb3 } from 'components/web3/context'
+import { useMyWeb3 } from '@/components/web3/context'
 import axios from 'axios'
 import { Contract } from '@ethersproject/contracts'
-import ERC721Abi from 'components/web3/abis/Erc721.json'
-import LoadingOverlay from 'components/Base/LoadingOverlay'
-import Dropdown from 'components/Base/Dropdown'
+import ERC721Abi from '@/components/web3/abis/Erc721.json'
+import LoadingOverlay from '@/components/Base/LoadingOverlay'
+import Dropdown from '@/components/Base/Dropdown'
+import { API_BASE_URL } from '@/utils/constants'
 
 const Asset = () => {
   const assetTypes = useMemo(() => ({
@@ -39,7 +40,7 @@ const Asset = () => {
   const getMyListAsset = async (account: string, erc721Contract: any, prjInfo: any) => {
     try {
       const collections: any[] = []
-      const result = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/marketplace/owner/${prjInfo.slug}?wallet=${account}`)
+      const result = await axios.get(`${API_BASE_URL}/marketplace/owner/${prjInfo.slug}?wallet=${account}`)
       const array = result.data.data?.data || []
       for (let j = 0; j < array.length; j++) {
         const collection: any = {
@@ -79,7 +80,7 @@ const Asset = () => {
       }
       try {
         if (useExternalUri) {
-          const result = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/marketplace/collection/${prjInfo.token_address}/${idCollection}`)
+          const result = await axios.post(`${API_BASE_URL}/marketplace/collection/${prjInfo.token_address}/${idCollection}`)
           const infor = result.data?.data || {}
           Object.assign(collection, infor)
         } else {
@@ -102,7 +103,7 @@ const Asset = () => {
     if (!account || !library) return
     const type = assetTypes[currentTab].type || assetTypes[0].type
     setAssetLoading(true)
-    axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/marketplace/collections/support?type=${type}`).then(async (res) => {
+    axios.get(`${API_BASE_URL}/marketplace/collections/support?type=${type}`).then(async (res) => {
       const arr = res.data.data || []
       if (arr.length) {
         let collections: any[] = []

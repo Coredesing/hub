@@ -1,11 +1,12 @@
-import Dropdown from 'components/Base/Dropdown'
-import ListSwiper, { SwiperItem } from 'components/Base/ListSwiper'
+import Dropdown from '@/components/Base/Dropdown'
+import ListSwiper, { SwiperItem } from '@/components/Base/ListSwiper'
 import React, { useEffect, useState } from 'react'
-import NFTCard from 'components/Pages/Market/NFTCard'
-import { useFetch, useNFTInfos } from 'components/Pages/Market/utils'
+import NFTCard from '@/components/Pages/Market/NFTCard'
+import { useNFTInfos } from '@/components/Pages/Market/utils'
 import FilterDropdown from '../FilterDropdown'
 import { useRouter } from 'next/router'
-import ShadowLoader from 'components/Base/ShadowLoader'
+import ShadowLoader from '@/components/Base/ShadowLoader'
+import { useFetch } from '@/utils'
 
 const NFTFilterOptions = [
   {

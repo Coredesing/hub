@@ -2,7 +2,8 @@ const path = require('path')
 
 module.exports = {
   eslint: {
-    ignoreDuringBuilds: true
+    ignoreDuringBuilds: true,
+    dirs: ['pages', 'components', 'utils', 'hooks', 'context']
   },
   sassOptions: {
     includePaths: [path.join(__dirname, 'styles'), path.join(__dirname, 'node_modules')]

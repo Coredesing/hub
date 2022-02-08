@@ -1,5 +1,5 @@
-import { ObjectType } from '@/common/types'
-import { MediumIcon, TelegramIcon, TwitterIcon } from 'components/Base/Icon'
+import { ObjectType } from '@/utils/types'
+import { MediumIcon, TelegramIcon, TwitterIcon } from '@/components/Base/Icon'
 import React from 'react'
 
 type Props = {
@@ -36,9 +36,9 @@ const RuleIntroduce = ({ poolInfo }: Props) => {
       <div className="item-group flex gap-10 items-center font-casual text-sm">
         <label className="text-white" htmlFor="">Social</label>
         <div className="flex gap-2">
-          <a href={poolInfo.socialNetworkSetting?.telegram_link || 'javascript:void(0);'}><TelegramIcon /></a>
-          <a href={poolInfo.socialNetworkSetting?.twitter_link || 'javascript:void(0);'}><TwitterIcon /></a>
-          <a href={poolInfo.socialNetworkSetting?.medium_link || 'javascript:void(0);'}><MediumIcon color="white" /></a>
+          <a href={poolInfo.socialNetworkSetting?.telegram_link || '#'}><TelegramIcon /></a>
+          <a href={poolInfo.socialNetworkSetting?.twitter_link || '#'}><TwitterIcon /></a>
+          <a href={poolInfo.socialNetworkSetting?.medium_link || '#'}><MediumIcon color="white" /></a>
         </div>
       </div>
       <a href="" className="flex gap-1 items-center text-gamefiGreen-700 font-semibold bg-white/10 rounded px-3 py-2 w-fit text-sm font-casual">

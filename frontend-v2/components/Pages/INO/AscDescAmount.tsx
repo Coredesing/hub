@@ -2,8 +2,9 @@ import { ObjectType } from '@/utils/types'
 import clsx from 'clsx'
 import { FormInputNumber } from '@/components/Base/FormInputNumber'
 import { useBalanceToken } from '@/components/web3/utils'
+import { useMyWeb3 } from '@/components/web3/context'
 import { BigNumber } from 'ethers'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { BeatLoader } from 'react-spinners'
 import styles from './AscDescAmount.module.scss'
 type Props = {
@@ -15,12 +16,19 @@ type Props = {
   currencyInfo: ObjectType;
 }
 const AscDescAmount = ({ value, maxBuy, onChangeValue, bought, poolInfo, currencyInfo }: Props) => {
-  const { balanceShort, loading } = useBalanceToken(BigNumber.from(currencyInfo?.address || 0).isZero() ? undefined : currencyInfo as any, poolInfo.network_available)
+  const useHookBalance: any = useMemo(() => {
+    if (BigNumber.from(currencyInfo?.address || 0).isZero()) {
+      return useMyWeb3
+    }
+    return useBalanceToken
+  }, [currencyInfo, poolInfo])
+  const { balanceShort, loading }: any = useHookBalance(currencyInfo as any, poolInfo.network_available)
 
   const remaining = +maxBuy - +bought || 0
   const onDesc = () => {
     onChangeValue(value - 1 > -1 ? value - 1 : 0)
   }
+
   const onAsc = () => {
     if (value + 1 <= remaining) { onChangeValue(value + 1) }
   }

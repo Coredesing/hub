@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react'
 import { NetworkSelector } from '@/components/Base/WalletConnector'
 import { useRouter } from 'next/router'
 import DiscoverFilter from './ItemsFilter'
-import { useFetch, useNFTInfos } from '../utils'
+import { useNFTInfos } from '../utils'
 import NFTCard from '../NFTCard'
+import { useFetch } from '@/utils'
 
 const filterOptions = [
   {

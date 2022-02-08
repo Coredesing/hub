@@ -1,9 +1,10 @@
 import PoolBanner from '@/components/Base/PoolBanner'
 import React, { useMemo } from 'react'
 import { Carousel } from 'react-responsive-carousel'
-import { useFetch, useScreens } from '../utils'
+import { useScreens } from '../utils'
 import Image from 'next/image'
 import ListSwiper, { SwiperItem } from '@/components/Base/ListSwiper'
+import { useFetch } from '@/utils'
 
 const IGOList = () => {
   const screens = useScreens()

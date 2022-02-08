@@ -1,7 +1,8 @@
 import ListSwiper, { SwiperItem } from '@/components/Base/ListSwiper'
 import React, { useEffect, useState } from 'react'
 import NFTCard from '../NFTCard'
-import { useFetch, useNFTInfos } from '../utils'
+import { useNFTInfos } from '../utils'
+import { useFetch } from '@/utils'
 
 const ListTrending = () => {
   const url = '/marketplace/hot-offers?limit=10&page=1'

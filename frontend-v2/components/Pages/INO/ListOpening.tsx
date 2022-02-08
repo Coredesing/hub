@@ -3,7 +3,7 @@ import { Item } from './types'
 import stylesList from './List.module.scss'
 import styles from './ListCard.module.scss'
 import { TOKEN_TYPE } from './List'
-import { useAxiosFetch } from './utils'
+import { useFetch } from '@/utils'
 import CardSlim from './CardSlim'
 
 type Props = {
@@ -13,10 +13,10 @@ type Props = {
 const List = ({ now }: Props) => {
   const url = `/pools/active-pools?token_type=${TOKEN_TYPE}&is_display=1&limit=6`
 
-  const { data, loading } = useAxiosFetch(url)
+  const { response, loading } = useFetch(url)
   const items = useMemo<Item[]>(() => {
-    return data?.data?.data || []
-  }, [data])
+    return response?.data?.data || []
+  }, [response])
 
   const itemsExclusive = useMemo<Item[]>(() => {
     return items.filter(item => {

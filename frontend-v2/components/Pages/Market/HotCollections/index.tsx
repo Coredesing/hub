@@ -1,6 +1,6 @@
 import ListSwiper, { SwiperItem } from '@/components/Base/ListSwiper'
 import React, { useMemo } from 'react'
-import { useFetch } from '../utils'
+import { useFetch } from '@/utils'
 import Link from 'next/link'
 
 const HotCollections = () => {

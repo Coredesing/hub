@@ -9,6 +9,7 @@ import IGOList from 'components/Pages/Home/IGOList'
 import INOList from 'components/Pages/Home/INOList'
 import GameList from 'components/Pages/Home/GameList'
 import NFTList from 'components/Pages/Home/NFTList'
+import Instruction from 'components/Pages/Home/Instruction'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
 
@@ -40,6 +41,7 @@ const PageIndex = () => {
         {/* Loading here */}
         {featuredGames && featuredGames.length ? <GameCarousel likes={likes} items={featuredGames}></GameCarousel> : <></>}
       </div>
+      <Instruction></Instruction>
       <IGOList></IGOList>
       <INOList></INOList>
       <GameList></GameList>

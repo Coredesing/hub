@@ -70,7 +70,7 @@ class PoolService {
     }
 
     if (params.is_private) {
-      builder = builder.where('is_private', params.is_private)
+      builder = builder.whereIn('is_private', params.is_private.split(','))
     }
 
     if (params.is_featured) {

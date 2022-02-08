@@ -1,9 +1,12 @@
 import React from 'react'
 import Image from 'next/image'
+import { useScreens } from '../utils'
 
 const Instruction = () => {
-  return (
-    <div className="md:px-4 lg:px-16 mx-auto py-28 container relative">
+  const screens = useScreens()
+  return ((screens && (screens.tablet || screens.mobile))
+    ? <div className="w-full flex justify-center mt-20"><Image src={require('assets/images/instruction.png')} alt=""></Image></div>
+    : <div className="md:px-4 lg:px-16 mx-auto py-28 container relative">
       <div className="absolute bottom-0 left-4 lg:left-10">
         <Image src={require('assets/images/home-widget-1.png')} alt=''></Image>
       </div>

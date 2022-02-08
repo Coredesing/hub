@@ -12,6 +12,8 @@ import NFTList from 'components/Pages/Home/NFTList'
 import Instruction from 'components/Pages/Home/Instruction'
 
 import { API_BASE_URL } from '@/utils/constants'
+import Partners from '@/components/Pages/Home/Partners'
+import Performance from '@/components/Pages/Home/Performance'
 
 const PageIndex = () => {
   const router = useRouter()
@@ -43,9 +45,13 @@ const PageIndex = () => {
       </div>
       <Instruction></Instruction>
       <IGOList></IGOList>
-      <INOList></INOList>
-      <GameList></GameList>
-      {/* <NFTList></NFTList> */}
+      <div className="bg-gamefiDark-800">
+        <INOList></INOList>
+        <GameList></GameList>
+        {/* <NFTList></NFTList> */}
+        <Partners></Partners>
+      </div>
+      <Performance></Performance>
     </Layout>
   )
 }

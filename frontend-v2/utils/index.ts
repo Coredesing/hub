@@ -169,3 +169,19 @@ export function printNumber (_n: string | number): string {
 
   return n.toLocaleString()
 }
+
+export const networkImage = (network: string) => {
+  switch (network) {
+  case 'bsc': {
+    return require('assets/images/networks/bsc.svg')
+  }
+
+  case 'eth': {
+    return require('assets/images/networks/eth.svg')
+  }
+
+  case 'polygon': {
+    return require('assets/images/networks/polygon.svg')
+  }
+  }
+}

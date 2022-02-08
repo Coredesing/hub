@@ -1,18 +1,20 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import { useScreens } from '../utils'
 
 type Props = {
   item: any,
   showOffer?: boolean,
-  showListing?: boolean
+  showListing?: boolean,
+  className?: string
 }
 
 const poolStatus = (status: any) => {
   switch (status) {
   case 1:
     return 'private'
-  case 2:
+  case 3:
     return 'community'
   case 0:
   default:
@@ -28,16 +30,14 @@ const CardItem = ({ item, ...props }: Props) => {
   const [seconds, setSeconds] = useState('00')
   const [countdownStatus, setCountdownStatus] = useState('')
 
+  const screens = useScreens()
+
   useEffect(() => {
     if (countdownStatus) {
       return
     }
     const interval = setInterval(() => {
       setDistance(new Date(item.start_time * 1000).getTime() - new Date().getTime())
-      if (distance <= 0) {
-        setCountdownStatus('ended')
-        return
-      }
       setDays(distance > 0 ? ('0' + Math.floor(distance / (1000 * 60 * 60 * 24)).toString()).slice(-2) : '00')
       setHours(distance > 0 ? ('0' + Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString()).slice(-2) : '00')
       setMinutes(distance > 0 ? ('0' + Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString()).slice(-2) : '00')
@@ -50,7 +50,7 @@ const CardItem = ({ item, ...props }: Props) => {
   }, [item.start_time, distance, countdownStatus])
 
   return (
-    <div className="w-full rounded overflow-hidden border border-transparent hover:border-gamefiGreen-700 hover:shadow hover:shadow-gamefiGreen-700">
+    <div className={`rounded overflow-hidden border border-transparent hover:border-gamefiGreen-700 hover:shadow hover:shadow-gamefiGreen-700 ${props.className}`} style={{ maxWidth: (screens.md || screens.lg || screens.xl) ? '350px' : '100%' }}>
       <div className="w-full relative">
         <div className="absolute h-6 w-2/5 inline-flex align-middle items-center top-0 left-0 uppercase text-xs text-left bg-black clipped-b-r-full">
           <Image src={require('assets/images/icons/lock.svg')} alt="lock"></Image>

@@ -1,26 +1,10 @@
 import { useState, useEffect } from 'react'
-import useSWR, { SWRResponse } from 'swr'
 import { API_BASE_URL } from '@/utils/constants'
 
 import { Contract } from '@ethersproject/contracts'
 import ERC721Abi from '@/components/web3/abis/Erc721.json'
 import { useLibraryDefaultFlexible } from '@/components/web3/utils'
 import { fetcher } from '@/utils'
-
-type PaginatorInput = {
-    current: number;
-    last: number;
-    betweenFirstAndLast?: number;
-};
-
-type Paginator = {
-    first: number;
-    current: number;
-    last: number;
-    pages: Array<number>;
-    leftCluster: boolean;
-    rightCluster: boolean;
-};
 
 export const networkImage = (network: string) => {
   switch (network) {
@@ -36,67 +20,6 @@ export const networkImage = (network: string) => {
     return require('@/assets/images/networks/polygon.svg')
   }
   }
-}
-
-export const paginator = (options: PaginatorInput): Paginator | null => {
-  const current = options.current
-  const total = options.last
-  const center = [current - 2, current - 1, current, current + 1, current + 2]
-  const filteredCenter: number[] = center.filter((p) => p > 1 && p < total)
-  const includeThreeLeft = current === 5
-  const includeThreeRight = current === total - 4
-  const includeLeftDots = current > 5
-  const includeRightDots = current < total - 4
-
-  if (includeThreeLeft) filteredCenter.unshift(2)
-  if (includeThreeRight) filteredCenter.push(total - 1)
-
-  let leftCluster = false; let rightCluster = false
-  if (includeLeftDots) {
-    leftCluster = true
-  }
-
-  if (includeRightDots) {
-    rightCluster = true
-  }
-
-  return {
-    current,
-    first: 1,
-    pages: filteredCenter,
-    last: total,
-    leftCluster,
-    rightCluster
-  }
-}
-
-export const useFetch = (url: string, timeout?: number) => {
-  const [response, setResponse] = useState<SWRResponse | null>(null)
-  const [error, setError] = useState(false)
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  const { data: fetchResponse, error: fetchError } = useSWR(`https://hub.gamefi.org/api/v1${url}`, fetcher)
-
-  useEffect(() => {
-    setLoading(true)
-    setResponse(fetchResponse)
-    if (fetchResponse?.data) {
-      setLoading(false)
-    }
-
-    if (fetchError) {
-      setError(true)
-      setErrorMessage(fetchError.message)
-      setLoading(false)
-    }
-
-    return function () {
-      setLoading(false)
-    }
-  }, [url, timeout, fetchResponse, fetchError])
-
-  return { response, loading, error, errorMessage }
 }
 
 export const useNFTInfos = (listData: any[]) => {

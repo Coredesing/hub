@@ -1,3 +1,7 @@
+import { useState, useEffect } from 'react'
+import useSWR, { SWRResponse } from 'swr'
+import { API_BASE_URL } from '@/utils/constants'
+
 export const isImageFile = (str: string) => (/\.(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(str)
 export const isVideoFile = (str: string) => (/\.(mp4)$/i).test(str)
 
@@ -60,7 +64,7 @@ export const formatHumanReadableTime = (timeInput: number, timeToCheck: number) 
   return str
 }
 
-export const debounce = (fn: Function, timer: number) => {
+export const debounce = (fn: (any) => void, timer: number) => {
   let timeout: any
   return function (args?: any) {
     clearTimeout(timeout)
@@ -184,4 +188,32 @@ export const networkImage = (network: string) => {
     return require('assets/images/networks/polygon.svg')
   }
   }
+}
+export const useFetch = (url: string, timeout?: number) => {
+  const [response, setResponse] = useState<SWRResponse | null>(null)
+  const [error, setError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  const { data: fetchResponse, error: fetchError } = useSWR(`${API_BASE_URL}${url}`, fetcher)
+
+  useEffect(() => {
+    setLoading(true)
+    setResponse(fetchResponse)
+    if (fetchResponse?.data) {
+      setLoading(false)
+    }
+
+    if (fetchError) {
+      setError(true)
+      setErrorMessage(fetchError.message)
+      setLoading(false)
+    }
+
+    return function () {
+      setLoading(false)
+    }
+  }, [url, timeout, fetchResponse, fetchError])
+
+  return { response, loading, error, errorMessage }
 }

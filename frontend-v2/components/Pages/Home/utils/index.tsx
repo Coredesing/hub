@@ -1,8 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
-import useSWR, { SWRResponse } from 'swr'
-import { API_BASE_URL } from '@/utils/constants'
 import { useMediaQuery } from 'react-responsive'
-import { fetcher } from '@/utils'
 
 export const useScreens = () => {
   const screens = {
@@ -13,38 +9,6 @@ export const useScreens = () => {
     xl: useMediaQuery({ minWidth: '1920px' })
   }
   return screens
-}
-export const useFetch = (url: string, timeout?: number) => {
-  const [response, setResponse] = useState<SWRResponse | null>(null)
-  const [error, setError] = useState(false)
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [pagination, setPagination] = useState(null)
-
-  const { data: fetchResponse, error: fetchError } = useSWR(`${API_BASE_URL}${url}`, fetcher)
-
-  useEffect(() => {
-    setLoading(true)
-    setResponse(fetchResponse)
-    if (fetchResponse?.page) {
-      setPagination({ page: fetchResponse.page, lastPage: fetchResponse.lastPage })
-    }
-    if (fetchResponse?.data) {
-      setLoading(false)
-    }
-
-    if (fetchError) {
-      setError(true)
-      setErrorMessage(fetchError.message)
-      setLoading(false)
-    }
-
-    return function () {
-      setLoading(false)
-    }
-  }, [url, timeout, fetchResponse, fetchError])
-
-  return { response, pagination, loading, error, errorMessage }
 }
 
 export const prettyPrice = (input: any) => {

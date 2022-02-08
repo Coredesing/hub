@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react'
 import Image from 'next/image'
 import GameFiPerformance from './GameFiPerformance'
-import { prettyPrice, priceChange, useFetch } from '../utils'
+import { prettyPrice, priceChange } from '../utils'
+import { useFetch } from '@/utils'
 
 const Performance = () => {
   const url = '/home/performances'

@@ -15,10 +15,10 @@ import RuleIntroduce from './RuleIntroduce'
 import SerieContent from './SerieContent'
 import { useMyWeb3 } from '@/components/web3/context'
 import { useLibraryDefaultFlexible, useTokenAllowance, useTokenApproval } from '@/components/web3/utils'
-import axios from '@/utils/axios'
+import { fetcher } from '@/utils'
+import { API_BASE_URL, TIERS } from '@/utils/constants'
 import { useCheckJoinPool, useJoinPool } from '@/hooks/useJoinPool'
 import Alert from '@/components/Base/Alert'
-import { TIERS } from '@/utils/constants'
 import InfoBoxOrderItem from './InfoBoxOrderItem'
 import BannerImagePool from './BannerImagePool'
 import AscDescAmount from './AscDescAmount'
@@ -238,8 +238,8 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       return
     }
     try {
-      const res = await axios.get(`/pool/${poolInfo?.id}/nft-order?wallet_address=${account}`)
-      const amount = res.data.data?.amount
+      const res = await fetcher(`/pool/${poolInfo?.id}/nft-order?wallet_address=${account}`)
+      const amount = res.data?.amount
       setMyBoxOrdered(amount)
     } catch (error) {
       console.debug('error', error)

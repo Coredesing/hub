@@ -1,7 +1,6 @@
 import Layout from '@/components/Layout'
 import GameCarousel from '@/components/Pages/Home/GameCarousel'
 
-import axios from 'axios'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
@@ -14,6 +13,7 @@ import Instruction from 'components/Pages/Home/Instruction'
 import { API_BASE_URL } from '@/utils/constants'
 import Partners from '@/components/Pages/Home/Partners'
 import Performance from '@/components/Pages/Home/Performance'
+import { fetcher } from '@/utils'
 
 const PageIndex = () => {
   const router = useRouter()
@@ -21,7 +21,6 @@ const PageIndex = () => {
   const [featuredGames, setFeaturedGames] = useState([])
   const [gameLikeIds, setGameLikesIds] = useState([])
   const [likes, setLikes] = useState([])
-  const fetcher = url => axios.get(url).then(res => res?.data)
 
   const { data: fetchFeaturedGamesResponse, error: fetchFeaturedGamesError } = useSWR(`${API_BASE_URL}/aggregator?display_area=Top Game`, fetcher)
   const { data: fetchLikesResponse, error: fetchLikesError } = useSWR(`${API_BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`, fetcher)

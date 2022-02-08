@@ -1,11 +1,11 @@
 import { API_BASE_URL } from '@/utils/constants'
-import { fetcher } from '@/utils'
+import { fetcher, useFetch } from '@/utils'
 import ShadowLoader from '@/components/Base/ShadowLoader'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import FilterDropdown from '../FilterDropdown'
 import TopGame from '../TopGame'
-import { useFetch, useScreens } from '../utils'
+import { useScreens } from '../utils'
 
 const gameFilterOptions = [
   {

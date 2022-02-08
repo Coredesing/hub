@@ -16,6 +16,7 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
   const { library } = useWeb3Default()
   const [tokenInfo, setTokenInfo] = useState<any>(null)
   const getTokenInfo = useCallback(async () => {
+    console.log(projectInfo)
     try {
       if (!projectInfo) {
         setLoading(false)

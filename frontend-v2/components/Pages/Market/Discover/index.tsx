@@ -4,9 +4,10 @@ import Image from 'next/image'
 import { NetworkSelector } from '@/components/Base/WalletConnector'
 import { useRouter } from 'next/router'
 import DiscoverFilter from './DiscoverFilter'
-import { useFetch, useNFTInfos } from '../utils'
+import { useNFTInfos } from '../utils'
 import NFTCard from '../NFTCard'
 import Pagination from '../Pagination'
+import { useFetch } from '@/utils'
 
 const filterOptions = [
   {

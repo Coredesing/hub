@@ -1,4 +1,4 @@
-import PoolBanner from 'components/Base/PoolBanner'
+import PoolBanner from '@/components/Base/PoolBanner'
 import React, { useMemo } from 'react'
 import { Carousel } from 'react-responsive-carousel'
 import { useFetch, useScreens } from '../utils'
@@ -22,7 +22,7 @@ const IGOList = () => {
               Upcoming IGOs
           </div>
           <div className="absolute -bottom-5 left-0 right-0">
-            <Image src={require('assets/images/under-stroke-green.svg')} alt="understroke"></Image>
+            <Image src={require('@/assets/images/under-stroke-green.svg')} alt="understroke"></Image>
           </div>
         </div>
         {

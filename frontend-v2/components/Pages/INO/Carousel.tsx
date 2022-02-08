@@ -81,7 +81,7 @@ const CarouselAction = ({ item, now }: { item: Item, now: Date }) => {
         <div className="relative mt-2 lg:mt-auto">
           <Link href={`/ino/${item.id}`} passHref={true}>
             <div className={styles.actionBtn}>
-              Details <Image src={require('assets/images/icons/arrow-right-dark.svg')} alt="right" />
+              Details <Image src={require('@/assets/images/icons/arrow-right-dark.svg')} alt="right" />
             </div>
           </Link>
         </div>
@@ -110,7 +110,7 @@ const CarouselAction = ({ item, now }: { item: Item, now: Date }) => {
           <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }} fontSize="10" fontWeight="600"><tspan x="203.972" y="50.92">SECONDS</tspan></text>
         </svg>
         <div className={styles.actionBtn}>
-          Join Now <Image src={require('assets/images/icons/arrow-right-dark.svg')} alt="right" />
+          Join Now <Image src={require('@/assets/images/icons/arrow-right-dark.svg')} alt="right" />
         </div>
       </div>
     </>
@@ -151,7 +151,7 @@ const _Carousel = ({ items, style, now }: Props) => {
               title={label}
               style={{ position: 'absolute', zIndex: '2', top: 'calc(50% - 170px)', cursor: 'pointer', left: '0', opacity: !hasPrev && '50%' }}
             >
-              <Image src={require('assets/images/icons/arrow-left.png')} alt="left" className="w-1/2 h-auto"/>
+              <Image src={require('@/assets/images/icons/arrow-left.png')} alt="left" className="w-1/2 h-auto"/>
             </button>
           )
         }}
@@ -163,7 +163,7 @@ const _Carousel = ({ items, style, now }: Props) => {
               title={label}
               style={{ position: 'absolute', zIndex: '2', top: 'calc(50% - 170px)', cursor: 'pointer', right: '0', opacity: !hasNext && '50%' }}
             >
-              <Image src={require('assets/images/icons/arrow-right.png')} alt="right" className="w-1/2 h-auto"/>
+              <Image src={require('@/assets/images/icons/arrow-right.png')} alt="right" className="w-1/2 h-auto"/>
             </button>
           )
         }

@@ -1,13 +1,13 @@
 import clsx from 'clsx'
-import ButtonBase from 'components/Base/Buttons/ButtonBase'
-import Dropdown from 'components/Base/Dropdown'
-import Modal from 'components/Base/Modal'
+import ButtonBase from '@/components/Base/Buttons/ButtonBase'
+import Dropdown from '@/components/Base/Dropdown'
+import Modal from '@/components/Base/Modal'
 import styles from './SellNFTModal.module.scss'
 import martketStyles from './MarketplaceDetail.module.scss'
-import Input from 'components/Base/Input'
-import { ObjectType } from '@/common/types'
+import Input from '@/components/Base/Input'
+import { ObjectType } from '@/utils/types'
 import { useState } from 'react'
-import { useMyWeb3 } from 'components/web3/context'
+import { useMyWeb3 } from '@/components/web3/context'
 
 type Props = {
   open?: boolean;

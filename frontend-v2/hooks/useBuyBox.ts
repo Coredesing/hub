@@ -1,11 +1,11 @@
 import { useState, useCallback } from 'react';
-import AuctionPoolAbi from 'components/web3/abis/AuctionPool.json';
-import { ObjectType } from '@/common/types';
+import AuctionPoolAbi from '@/components/web3/abis/AuctionPool.json';
+import { ObjectType } from '@/utils/types';
 import { utils, Contract, BigNumber } from 'ethers';
 import useApiSignature from './useApiSignature';
 import toast from 'react-hot-toast';
 import { handleErrMsg } from '@/utils/handleErrorContract';
-import { useMyWeb3 } from 'components/web3/context';
+import { useMyWeb3 } from '@/components/web3/context';
 
 type PoolDepositActionParams = {
     poolId?: number;

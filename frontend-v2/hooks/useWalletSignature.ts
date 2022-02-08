@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useMyWeb3 } from 'components/web3/context';
+import { useMyWeb3 } from '@/components/web3/context';
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || "";
 

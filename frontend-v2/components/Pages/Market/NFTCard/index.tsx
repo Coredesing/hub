@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { networkImage } from '../utils'
-import { BigNumber, ethers } from 'ethers'
-import { getCurrencyByTokenAddress } from 'components/web3'
+import { ethers } from 'ethers'
+import { getCurrencyByTokenAddress } from '@/components/web3'
 
 type Props = {
   item: any,

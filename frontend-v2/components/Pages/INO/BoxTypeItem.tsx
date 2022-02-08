@@ -1,6 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-import { ObjectType } from '@/common/types'
+import { ObjectType } from '@/utils/types'
 import styles from './BoxTypeItem.module.scss'
 type Props = {
   onClick?: (value: any) => any;

@@ -1,8 +1,8 @@
 import { AppProps } from 'next/app'
 import { Web3ReactProvider } from '@web3-react/core'
-import { getLibrary, Web3ProviderNetwork } from 'components/web3'
-import { MyWeb3Provider } from 'components/web3/context'
-import WalletProvider from 'components/Base/WalletConnector/provider'
+import { getLibrary, Web3ProviderNetwork } from '@/components/web3'
+import { MyWeb3Provider } from '@/components/web3/context'
+import WalletProvider from '@/components/Base/WalletConnector/provider'
 import 'assets/styles/index.scss'
 import { Toaster } from 'react-hot-toast'
 import AppProvider from '@/context/provider'
@@ -11,7 +11,7 @@ import { useRouter } from 'next/router'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
 import { useEffect, useState } from 'react'
-import LoadingOverlay from 'components/Base/LoadingOverlay'
+import LoadingOverlay from '@/components/Base/LoadingOverlay'
 
 function MyApp ({ Component, pageProps }: AppProps) {
   const router = useRouter()

@@ -1,13 +1,11 @@
-import { useState, useEffect, useMemo } from 'react'
-import axios, { AxiosResponse } from 'axios'
+import { useState, useEffect } from 'react'
 import useSWR, { SWRResponse } from 'swr'
-import { API_BASE_URL } from 'constants/api'
+import { API_BASE_URL } from '@/utils/constants'
 
 import { Contract } from '@ethersproject/contracts'
-import ERC721Abi from 'components/web3/abis/Erc721.json'
-import { useLibraryDefaultFlexible } from 'components/web3/utils'
-import { fetcher } from 'utils'
-import { useMyWeb3 } from 'components/web3/context'
+import ERC721Abi from '@/components/web3/abis/Erc721.json'
+import { useLibraryDefaultFlexible } from '@/components/web3/utils'
+import { fetcher } from '@/utils'
 
 type PaginatorInput = {
     current: number;
@@ -27,15 +25,15 @@ type Paginator = {
 export const networkImage = (network: string) => {
   switch (network) {
   case 'bsc': {
-    return require('assets/images/networks/bsc.svg')
+    return require('@/assets/images/networks/bsc.svg')
   }
 
   case 'eth': {
-    return require('assets/images/networks/eth.svg')
+    return require('@/assets/images/networks/eth.svg')
   }
 
   case 'polygon': {
-    return require('assets/images/networks/polygon.svg')
+    return require('@/assets/images/networks/polygon.svg')
   }
   }
 }
@@ -103,7 +101,7 @@ export const useFetch = (url: string, timeout?: number) => {
 
 export const useNFTInfos = (listData: any[]) => {
   const { provider } = useLibraryDefaultFlexible('bsc', true)
-  const [data, setData] = useState<AxiosResponse[]>([])
+  const [data, setData] = useState<any[]>([])
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
   const [loading, setLoading] = useState(true)

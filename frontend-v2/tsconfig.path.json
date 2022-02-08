@@ -2,44 +2,29 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "pages/*": [
-        "pages/*"
-      ],
-      "components/*": [
-        "components/*"
-      ],
-      "assets/*": [
-        "assets/*"
-      ],
       "@/components/*": [
         "components/*"
       ],
-      "@/constants": [
-        "constants/"
-      ],
-      "@/constants/*": [
-        "constants/*"
-      ],
       "@/utils": [
-        "utils/*"
+        "utils"
       ],
       "@/utils/*": [
         "utils/*"
       ],
-      "@/common/*": [
-        "common/*"
+      "@/pages/*": [
+        "pages/*"
       ],
       "@/hooks/*": [
         "hooks/*"
-      ],
-      "@/abi/*": [
-        "abi/*"
       ],
       "@/context": [
         "context/"
       ],
       "@/context/*": [
         "context/*"
+      ],
+      "@/assets/*": [
+        "assets/*"
       ]
     },
   }

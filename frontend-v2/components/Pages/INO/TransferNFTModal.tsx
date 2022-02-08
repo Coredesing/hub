@@ -1,6 +1,6 @@
 import clsx from 'clsx'
-import ButtonBase from 'components/Base/Buttons/ButtonBase'
-import Modal from 'components/Base/Modal'
+import ButtonBase from '@/components/Base/Buttons/ButtonBase'
+import Modal from '@/components/Base/Modal'
 import { useState } from 'react'
 import styles from './TransferNFTModal.module.scss'
 

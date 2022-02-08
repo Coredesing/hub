@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ObjectType } from '@/common/types';
+import { ObjectType } from '@/utils/types';
 import axios from '@/utils/axios';
 
 type Props = {

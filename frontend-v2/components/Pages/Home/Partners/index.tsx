@@ -5,9 +5,9 @@ import { useScreens } from '../utils'
 const Partners = () => {
   const screens = useScreens()
   return (
-    <div className="md:px-4 lg:px-16 mx-auto mt-20 pb-14 relative">
+    <div className="px-4 lg:px-16 mx-auto mt-20 pb-14 relative">
       {(screens.md || screens.lg || screens.xl) && <>
-        <div className="absolute left-0 top-0 bottom-0 flex items-center">
+        <div className="absolute left-4 lg:left-10 xl:left-14 2xl:left-24 top-0 bottom-0 flex items-center">
           <svg width="37" height="347" viewBox="0 0 37 347" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clipPath="url(#clip0_1834_3595)">
               <path opacity="0.1" d="M8 0H24.8824L29 5L24.8824 10H8V0Z" fill="#C4C4C4"/>

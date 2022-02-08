@@ -8,7 +8,7 @@ import { useFetch } from '@/utils'
 
 const INOList = () => {
   const screens = useScreens()
-  const url = '/pools/latest-pools?token_type=box&limit=6&page=1&is_private=0,1,2,3'
+  const url = '/pools/upcoming-pools?token_type=box&limit=6&page=1&is_private=0,1,2,3'
   const { response, loading } = useFetch(url)
 
   const listUpcoming = useMemo<any[]>(() => {
@@ -38,7 +38,7 @@ const INOList = () => {
                 infiniteLoop={true}
               >
                 {listUpcoming.map(item => (
-                  <PoolBanner key={item.id} item={item} color="yellow" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
+                  <PoolBanner key={item.id} item={item} color="yellow" url={`/ino/${item.id}`}></PoolBanner>
                 ))}
               </Carousel>
             </div>
@@ -46,7 +46,7 @@ const INOList = () => {
               <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
                 {listUpcoming.map(item => (
                   <SwiperItem key={item.id}>
-                    <PoolBanner item={item} color="yellow" tagColor="gamefiDark-700" className="mx-3" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
+                    <PoolBanner item={item} color="yellow" tagColor="gamefiDark-700" className="mx-3" url={`/ino/${item.id}`}></PoolBanner>
                   </SwiperItem>
                 ))}
               </ListSwiper>

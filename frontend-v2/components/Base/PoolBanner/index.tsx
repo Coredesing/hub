@@ -46,7 +46,7 @@ const PoolBanner = ({ item, color = 'green', className, url, tagColor = 'gamefiD
     switch (status) {
     case 1:
       return 'private'
-    case 2:
+    case 3:
       return 'community'
     case 0:
     default:

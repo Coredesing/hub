@@ -1,10 +1,10 @@
 import React from 'react'
-import Layout from 'components/Layout'
+import Layout from '@/components/Layout'
 import useGetPoolDetail from '@/hooks/useGetPoolDetail'
-import AuctionDetail from 'components/Pages/INO/AuctionDetail'
-import MysteryBoxDetail from 'components/Pages/INO/MysteryBoxDetail'
-import { isAuctionBox, isMysteryBox } from 'components/Pages/INO/utils'
-import LoadingOverlay from 'components/Base/LoadingOverlay'
+import AuctionDetail from '@/components/Pages/INO/AuctionDetail'
+import MysteryBoxDetail from '@/components/Pages/INO/MysteryBoxDetail'
+import { isAuctionBox, isMysteryBox } from '@/components/Pages/INO/utils'
+import LoadingOverlay from '@/components/Base/LoadingOverlay'
 
 const AuctionBox = (props: any) => {
   const { loading, poolInfo } = useGetPoolDetail({ id: props?.id })

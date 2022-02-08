@@ -1,8 +1,8 @@
-import Layout from 'components/Layout'
-import { fetchOneCollection } from 'pages/api/market/collection/[slug]'
+import Layout from '@/components/Layout'
+import { fetchOneCollection } from '@/pages/api/market/collection/[slug]'
 import React from 'react'
 import Image from 'next/image'
-import CollectionItems from 'components/Pages/Market/CollectionItems'
+import CollectionItems from '@/components/Pages/Market/CollectionItems'
 
 const CollectionDetail = ({ data }) => {
   return (
@@ -17,22 +17,22 @@ const CollectionDetail = ({ data }) => {
           <div className="w-full flex items-center justify-center mt-4">
             <div className="mr-4">
               <a href={data?.website || '#'} target="_blank" rel="noopener noreferrer">
-                <Image src={require('assets/images/icons/website.svg')} alt="website"></Image>
+                <Image src={require('@/assets/images/icons/website.svg')} alt="website"></Image>
               </a>
             </div>
             <div className="mr-4">
               <a href={data?.telegram || '#'} target="_blank" rel="noopener noreferrer">
-                <Image src={require('assets/images/icons/telegram.svg')} alt="telegram"></Image>
+                <Image src={require('@/assets/images/icons/telegram.svg')} alt="telegram"></Image>
               </a>
             </div>
             <div className="mr-4">
               <a href={data?.twitter || '#'} target="_blank" rel="noopener noreferrer">
-                <Image src={require('assets/images/icons/twitter.svg')} alt="twitter"></Image>
+                <Image src={require('@/assets/images/icons/twitter.svg')} alt="twitter"></Image>
               </a>
             </div>
             <div>
               <a href={data?.medium || '#'} target="_blank" rel="noopener noreferrer">
-                <Image src={require('assets/images/icons/medium.svg')} alt="medium"></Image>
+                <Image src={require('@/assets/images/icons/medium.svg')} alt="medium"></Image>
               </a>
             </div>
           </div>

@@ -7,7 +7,7 @@ const Footer = () => {
     <div className="md:container px-4 text-center lg:text-left lg:px-16 mx-auto lg:block py-20">
       <div className="flex flex-col align-middle items-center justify-center lg:items-start lg:grid lg:grid-cols-5 lg:gap-2 zl:gap-4">
         <div className="col-span-2 flex flex-col items-center lg:block">
-          <Image src={require('assets/images/logo-color.png')} alt="gamefi" width={291.75} height={30}></Image>
+          <Image src={require('@/assets/images/logo-color.png')} alt="gamefi" width={291.75} height={30}></Image>
           <div className="mt-8 font-thin text-sm">From the labs behind Red Kite launchpad and several NFT games</div>
           <div className="flex mt-6">
             <div className="mr-3 cursor-pointer">

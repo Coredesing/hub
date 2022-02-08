@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import useSWR, { SWRResponse } from 'swr'
-import { API_BASE_URL } from 'constants/api'
+import { API_BASE_URL } from '@/utils/constants'
 import { useMediaQuery } from 'react-responsive'
-import { fetcher } from 'utils'
+import { fetcher } from '@/utils'
 
 export const useScreens = () => {
   const screens = {

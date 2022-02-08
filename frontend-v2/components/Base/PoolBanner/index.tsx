@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useScreens } from 'components/Pages/Home/utils'
+import { useScreens } from '@/components/Pages/Home/utils'
 
 type Props = {
   item?: any,
@@ -60,7 +60,7 @@ const PoolBanner = ({ item, color = 'green', className, url, tagColor = 'gamefiD
         <div className="flex flex-col clipped-b-l rounded-tr">
           <div className="w-full h-full relative">
             <div className={`absolute h-8 w-2/5 inline-flex align-middle items-center justify-center top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-left bg-gamefiDark-900 clipped-b-r-full bg-${tagColor}`}>
-              <Image src={require('assets/images/icons/lock.svg')} alt="lock"></Image>
+              <Image src={require('@/assets/images/icons/lock.svg')} alt="lock"></Image>
               <span className="ml-2 font-bold">{poolStatus(item.is_private)}</span>
             </div>
             <Link href={url || '#' } passHref>

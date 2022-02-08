@@ -1,6 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
-import { networkImage } from '../utils'
 import styles from './styles.module.scss'
 
 type Props = {

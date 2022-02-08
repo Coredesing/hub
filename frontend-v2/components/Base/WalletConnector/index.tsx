@@ -3,9 +3,9 @@ import useResizeObserver, { UseResizeObserverCallback } from '@react-hook/resize
 import { useWeb3React } from '@web3-react/core'
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { networks, wallets, connectorFromWallet, activated, deactivated, switchNetwork } from 'components/web3'
-import { injected, IS_TESTNET } from 'components/web3/connectors'
-import { useMyWeb3 } from 'components/web3/context'
+import { networks, wallets, connectorFromWallet, activated, deactivated, switchNetwork } from '@/components/web3'
+import { injected, IS_TESTNET } from '@/components/web3/connectors'
+import { useMyWeb3 } from '@/components/web3/context'
 import Image from 'next/image'
 import Modal from '../Modal'
 import { formatEther } from '@ethersproject/units'
@@ -221,7 +221,7 @@ const WalletConnector = () => {
             <div className="p-6 pt-10" style={{ backgroundColor: network?.color || 'transparent' }}>
               <div className="font-bold text-2xl uppercase mb-5">Account</div>
               <div className="flex items-center w-full text-base">
-                <span className="w-14 h-14 mr-4"><Image src={ require('assets/images/avatar.png') } alt="avatar" /></span>
+                <span className="w-14 h-14 mr-4"><Image src={ require('@/assets/images/avatar.png') } alt="avatar" /></span>
                 <div className="flex-1 flex justify-between">
                   <div>
                     <span>Balance</span>

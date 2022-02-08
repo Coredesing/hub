@@ -1,12 +1,12 @@
-import { fetchOneWithSlug } from 'pages/api/aggregator'
-import Layout from 'components/Layout'
-import { formatterUSD, formatPrice, fetcher, printNumber } from 'utils'
-import PriceChange from 'components/Pages/Aggregator/PriceChange'
+import { fetchOneWithSlug } from '@/pages/api/aggregator'
+import Layout from '@/components/Layout'
+import { formatterUSD, formatPrice, fetcher, printNumber } from '@/utils'
+import PriceChange from '@/components/Pages/Aggregator/PriceChange'
 import Link from 'next/link'
 import { Carousel } from 'react-responsive-carousel'
-import { TabPanel, Tabs } from 'components/Base/Tabs'
+import { TabPanel, Tabs } from '@/components/Base/Tabs'
 import { useState, useCallback, useMemo } from 'react'
-import { useMyWeb3 } from 'components/web3/context'
+import { useMyWeb3 } from '@/components/web3/context'
 import useSWR, { useSWRConfig } from 'swr'
 
 const GameDetails = ({ data }) => {

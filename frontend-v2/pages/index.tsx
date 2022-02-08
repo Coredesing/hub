@@ -1,16 +1,16 @@
-import Layout from 'components/Layout'
-import GameCarousel from 'components/Pages/Home/GameCarousel'
+import Layout from '@/components/Layout'
+import GameCarousel from '@/components/Pages/Home/GameCarousel'
 
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
-import IGOList from 'components/Pages/Home/IGOList'
-import INOList from 'components/Pages/Home/INOList'
-import GameList from 'components/Pages/Home/GameList'
-import NFTList from 'components/Pages/Home/NFTList'
+import IGOList from '@/components/Pages/Home/IGOList'
+import INOList from '@/components/Pages/Home/INOList'
+import GameList from '@/components/Pages/Home/GameList'
+import NFTList from '@/components/Pages/Home/NFTList'
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
+import { API_BASE_URL } from '@/utils/constants'
 
 const PageIndex = () => {
   const router = useRouter()
@@ -20,8 +20,8 @@ const PageIndex = () => {
   const [likes, setLikes] = useState([])
   const fetcher = url => axios.get(url).then(res => res?.data)
 
-  const { data: fetchFeaturedGamesResponse, error: fetchFeaturedGamesError } = useSWR(`${BASE_URL}/aggregator?display_area=Top Game`, fetcher)
-  const { data: fetchLikesResponse, error: fetchLikesError } = useSWR(`${BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`, fetcher)
+  const { data: fetchFeaturedGamesResponse, error: fetchFeaturedGamesError } = useSWR(`${API_BASE_URL}/aggregator?display_area=Top Game`, fetcher)
+  const { data: fetchLikesResponse, error: fetchLikesError } = useSWR(`${API_BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`, fetcher)
 
   useEffect(() => {
     setFeaturedGames(fetchFeaturedGamesResponse?.data?.data)

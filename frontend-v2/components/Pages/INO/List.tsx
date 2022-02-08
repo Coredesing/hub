@@ -30,15 +30,15 @@ export const visibility = (item: Item) => {
 export const networkImage = (network: string) => {
   switch (network) {
   case 'bsc': {
-    return require('assets/images/networks/bsc.svg')
+    return require('@/assets/images/networks/bsc.svg')
   }
 
   case 'eth': {
-    return require('assets/images/networks/eth.svg')
+    return require('@/assets/images/networks/eth.svg')
   }
 
   case 'polygon': {
-    return require('assets/images/networks/polygon.svg')
+    return require('@/assets/images/networks/polygon.svg')
   }
   }
 }

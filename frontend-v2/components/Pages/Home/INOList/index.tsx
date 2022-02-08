@@ -1,9 +1,9 @@
-import PoolBanner from 'components/Base/PoolBanner'
+import PoolBanner from '@/components/Base/PoolBanner'
 import React, { useMemo } from 'react'
 import { Carousel } from 'react-responsive-carousel'
 import { useFetch, useScreens } from '../utils'
 import Image from 'next/image'
-import ListSwiper, { SwiperItem } from 'components/Base/ListSwiper'
+import ListSwiper, { SwiperItem } from '@/components/Base/ListSwiper'
 
 const INOList = () => {
   const screens = useScreens()
@@ -22,7 +22,7 @@ const INOList = () => {
               Latest INOs
           </div>
           <div className="absolute -bottom-5 left-0 right-0">
-            <Image src={require('assets/images/under-stroke-yellow.svg')} alt="understroke"></Image>
+            <Image src={require('@/assets/images/under-stroke-yellow.svg')} alt="understroke"></Image>
           </div>
         </div>
         {

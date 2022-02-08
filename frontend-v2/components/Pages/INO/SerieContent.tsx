@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { BulletListIcon, GridIcon } from 'components/Base/Icon'
-import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from 'components/Base/Table'
-import { ObjectType } from '@/common/types'
+import { BulletListIcon, GridIcon } from '@/components/Base/Icon'
+import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from '@/components/Base/Table'
+import { ObjectType } from '@/utils/types'
 import SerieContentModal from './SerieContentModal'
 
 type Props = {

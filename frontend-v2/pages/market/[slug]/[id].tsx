@@ -1,12 +1,12 @@
-import Layout from 'components/Layout'
+import Layout from '@/components/Layout'
 import React, { useCallback, useEffect, useState } from 'react'
-import MarketplaceDetail from 'components/Pages/INO/MarketplaceDetail'
-import { fetchOneCollection } from 'pages/api/market/collection/[slug]'
-import axios from 'utils/axios'
+import MarketplaceDetail from '@/components/Pages/INO/MarketplaceDetail'
+import { fetchOneCollection } from '@/pages/api/market/collection/[slug]'
+import axios from '@/utils/axios'
 import { Contract } from '@ethersproject/contracts'
-import ERC721Abi from 'components/web3/abis/Erc721.json'
-import { useWeb3Default } from 'components/web3'
-import LoadingOverlay from 'components/Base/LoadingOverlay'
+import ERC721Abi from '@/components/web3/abis/Erc721.json'
+import { useWeb3Default } from '@/components/web3'
+import LoadingOverlay from '@/components/Base/LoadingOverlay'
 
 const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
   const [loading, setLoading] = useState(true)

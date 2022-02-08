@@ -13,7 +13,7 @@ const TopGame = ({ item, isTop, like }: Props) => {
   return <div className={`w-full md:px-0 xl:h-64 lg:h-48 flex flex-col overflow-hidden rounded ${isTop ? `${screens.tablet && 'h-96'} h-auto` : 'h-auto'}`}>
     <div className={'w-full md:h-3/4 relative overflow-hidden'}>
       <div className="absolute -top-1 -right-1 h-7 w-32 clipped-b-l-full bg-gamefiDark-900 flex align-middle items-center justify-center">
-        <Image src={require('assets/images/icons/red-heart.svg')} alt=""></Image>
+        <Image src={require('@/assets/images/icons/red-heart.svg')} alt=""></Image>
         <div className="ml-2">{like?.total_like || 0}</div>
       </div>
       <div className="w-full">

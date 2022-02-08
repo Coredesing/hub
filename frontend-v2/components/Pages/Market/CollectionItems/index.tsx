@@ -1,7 +1,6 @@
-import Dropdown from 'components/Base/Dropdown'
+import Dropdown from '@/components/Base/Dropdown'
 import React, { useEffect, useState } from 'react'
-import Image from 'next/image'
-import { NetworkSelector } from 'components/Base/WalletConnector'
+import { NetworkSelector } from '@/components/Base/WalletConnector'
 import { useRouter } from 'next/router'
 import DiscoverFilter from './ItemsFilter'
 import { useFetch, useNFTInfos } from '../utils'
@@ -25,7 +24,7 @@ const filterOptions = [
   }
 ]
 const CollectionItems = ({ slug } : {slug: string}) => {
-  const [showDiscover, setShowDiscover] = useState('items')
+  const [showDiscover] = useState('items')
   const router = useRouter()
   const activeNetworks = router?.query?.activeNetworks?.toString()
   const handleChangeNetwork = (network: any) => {

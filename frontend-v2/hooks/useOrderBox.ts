@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Address } from "@/common/types"
+import { Address } from "utils/types"
 import useApiSignature from './useApiSignature';
 import toast from 'react-hot-toast';
 

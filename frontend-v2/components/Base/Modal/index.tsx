@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { ObjectType } from '@/common/types'
+import { ObjectType } from '@/utils/types'
 import React, { ReactNode, useCallback, useEffect, useRef } from 'react'
 import { CloseIcon } from '../Icon'
 import styles from './Modal.module.scss'

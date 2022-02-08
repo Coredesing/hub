@@ -1,4 +1,4 @@
-import { ObjectType } from '@/common/types'
+import { ObjectType } from '@/utils/types'
 import { formatNumber } from '@/utils/index'
 import clsx from 'clsx'
 import React, { useMemo } from 'react'

@@ -1,13 +1,13 @@
-import { fetchAllWithQueries } from 'pages/api/aggregator'
-import Layout from 'components/Layout'
+import { fetchAllWithQueries } from '@/pages/api/aggregator'
+import Layout from '@/components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { formatterUSD, formatPrice } from 'utils'
+import { formatterUSD, formatPrice } from '@/utils'
 import { useMemo, useState, useEffect } from 'react'
-import PriceChange from 'components/Pages/Aggregator/PriceChange'
-import Pagination from 'components/Pages/Aggregator/Pagination'
-import { getNetworkByAlias } from 'components/web3'
+import PriceChange from '@/components/Pages/Aggregator/PriceChange'
+import Pagination from '@/components/Pages/Aggregator/Pagination'
+import { getNetworkByAlias } from '@/components/web3'
 
 export const CATEGORY_LIST = [
   'Action',

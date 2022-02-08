@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import { utils, Contract, BigNumber, providers } from 'ethers'
-import { networkConnector } from 'components/web3/connectors'
-import { useWeb3Default, getNetworkByAlias, getLibrary, ETH, MATIC, BNB, USDT_ERC, USDT_POLYGON, BUSD_BSC, Token } from 'components/web3'
-import { useMyWeb3 } from 'components/web3/context'
-import ERC20 from 'components/web3/abis/ERC20.json'
+import { networkConnector } from '@/components/web3/connectors'
+import { useWeb3Default, getNetworkByAlias, getLibrary, ETH, MATIC, BNB, USDT_ERC, USDT_POLYGON, BUSD_BSC, Token } from '@/components/web3'
+import { useMyWeb3 } from '@/components/web3/context'
+import ERC20 from '@/components/web3/abis/ERC20.json'
 
 export const useTokenAllowance = (token?: Token, owner?: string, spender?: string, networkAlias?: string) => {
   const [loading, setLoading] = useState<boolean>(false)

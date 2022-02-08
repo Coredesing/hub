@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from 'components/Base/Table'
+import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from '@/components/Base/Table'
 
 type Props = {
   boxes: any[];

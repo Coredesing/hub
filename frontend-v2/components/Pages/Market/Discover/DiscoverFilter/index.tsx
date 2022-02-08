@@ -1,4 +1,4 @@
-import Dropdown from 'components/Base/Dropdown'
+import Dropdown from '@/components/Base/Dropdown'
 import React, { useState } from 'react'
 
 const DiscoverFilter = () => {
@@ -35,22 +35,22 @@ const DiscoverFilter = () => {
         </div>
         <div className="mt-4 flex items-center align-middle">
           <div className="font-medium w-20 mr-6">Currency</div>
-          <button className="flex items-center mr-4" onClick={(e: any) => setCurrency('bnb')}>
-            <input id="bnb" type="radio" name="radio" className="hidden" checked={currency === 'bnb'} onChange={(e: any) => setCurrency('bnb')}/>
+          <button className="flex items-center mr-4" onClick={() => setCurrency('bnb')}>
+            <input id="bnb" type="radio" name="radio" className="hidden" checked={currency === 'bnb'} onChange={() => setCurrency('bnb')}/>
             <label htmlFor="bnb" className="flex items-center cursor-pointer">
               <span className="w-4 h-4 inline-block mr-2 rounded-full border border-grey flex-no-shrink"></span>
               BNB
             </label>
           </button>
-          <button className="flex items-center mr-4" onClick={(e: any) => setCurrency('busd')}>
-            <input id="busd" type="radio" name="radio" className="hidden" checked={currency === 'busd'} onChange={(e: any) => setCurrency('busd')} />
+          <button className="flex items-center mr-4" onClick={() => setCurrency('busd')}>
+            <input id="busd" type="radio" name="radio" className="hidden" checked={currency === 'busd'} onChange={() => setCurrency('busd')} />
             <label htmlFor="busd" className="flex items-center cursor-pointer">
               <span className="w-4 h-4 inline-block mr-2 rounded-full border border-grey flex-no-shrink"></span>
               BUSD
             </label>
           </button>
-          <button className="flex items-center mr-4" onClick={(e: any) => { setCurrency('gafi') }}>
-            <input id="gafi" type="radio" name="radio" className="hidden" checked={currency === 'gafi'} onChange={(e: any) => setCurrency('gafi')} />
+          <button className="flex items-center mr-4" onClick={() => { setCurrency('gafi') }}>
+            <input id="gafi" type="radio" name="radio" className="hidden" checked={currency === 'gafi'} onChange={() => setCurrency('gafi')} />
             <label htmlFor="gafi" className="flex items-center cursor-pointer">
               <span className="w-4 h-4 inline-block mr-2 rounded-full border border-grey flex-no-shrink"></span>
               GAFI

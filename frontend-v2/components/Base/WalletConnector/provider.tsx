@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import { useEagerConnect, NoEthereumProviderError } from 'components/web3'
-import { useMyWeb3 } from 'components/web3/context'
+import { useEagerConnect, NoEthereumProviderError } from '@/components/web3'
+import { useMyWeb3 } from '@/components/web3/context'
 import toast from 'react-hot-toast'
 
 export default function WalletProvider ({ children }) {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { USER_STATUS } from '@/constants';
+import { USER_STATUS } from '@/utils/constants';
 import axios from '@/utils/axios';
 const isRequiredKyc = process.env.REACT_APP_APP_KYC_REQUIRED === 'true';
 

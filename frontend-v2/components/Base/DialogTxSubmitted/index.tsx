@@ -1,6 +1,6 @@
 import React from 'react'
 import Modal from '@/components/Base/Modal'
-import { getNetworkByAlias, getTXLink } from 'components/web3'
+import { getNetworkByAlias, getTXLink } from '@/components/web3'
 
 type Props = {
   open: boolean;

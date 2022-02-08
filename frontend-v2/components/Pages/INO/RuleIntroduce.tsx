@@ -1,5 +1,5 @@
-import { ObjectType } from '@/common/types'
-import { MediumIcon, TelegramIcon, TwitterIcon } from 'components/Base/Icon'
+import { ObjectType } from '@/utils/types'
+import { MediumIcon, TelegramIcon, TwitterIcon } from '@/components/Base/Icon'
 import React from 'react'
 
 type Props = {

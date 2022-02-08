@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Modal from '@/components/Base/Modal'
 import styles from './SerieContentModal.module.scss'
 import clsx from 'clsx'
@@ -13,9 +13,10 @@ type Props = {
 
 const SerieContentModal = ({ open, onClose, serieContents, idShow }: Props) => {
   const [current, setCurrent] = useState(serieContents[0])
+  console.log(current)
   useEffect(() => {
     setCurrent(serieContents[idShow])
-  }, [idShow])
+  }, [idShow, serieContents])
 
   const onSelectItem = (id: number) => {
     setCurrent(serieContents[id])

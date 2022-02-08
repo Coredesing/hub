@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
-import Layout from 'components/Layout'
-import Carousel from 'components/Pages/INO/Carousel'
-import List, { TOKEN_TYPE } from 'components/Pages/INO/List'
-import ListAuction from 'components/Pages/INO/ListAuction'
-import ListOpening from 'components/Pages/INO/ListOpening'
-import ListUpcoming from 'components/Pages/INO/ListUpcoming'
-import { useAxiosFetch } from 'components/Pages/INO/utils'
+import Layout from '@/components/Layout'
+import Carousel from '@/components/Pages/INO/Carousel'
+import List, { TOKEN_TYPE } from '@/components/Pages/INO/List'
+import ListAuction from '@/components/Pages/INO/ListAuction'
+import ListOpening from '@/components/Pages/INO/ListOpening'
+import ListUpcoming from '@/components/Pages/INO/ListUpcoming'
+import { useAxiosFetch } from '@/components/Pages/INO/utils'
 
 const INO = () => {
   const [now, setNow] = useState<Date>(new Date())

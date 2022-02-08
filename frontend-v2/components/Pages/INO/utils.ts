@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios, { AxiosResponse } from 'axios'
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
+import { API_BASE_URL } from '@/utils/constants'
 
 type PaginatorInput = {
     current: number;

@@ -3,9 +3,9 @@ import { useCallback, useEffect, useState } from 'react';
 import useWalletSignature from './useWalletSignature';
 import axios from '@/utils/axios';
 import { useWeb3React } from '@web3-react/core';
-import { ObjectType } from '@/common/types';
+import { ObjectType } from '@/utils/types';
 import toast from 'react-hot-toast';
-import { useMyWeb3 } from 'components/web3/context';
+import { useMyWeb3 } from '@/components/web3/context';
 
 export const HeadersSignature = {
   headers: {

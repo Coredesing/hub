@@ -64,7 +64,7 @@ export const formatHumanReadableTime = (timeInput: number, timeToCheck: number) 
   return str
 }
 
-export const debounce = (fn: Function, timer: number) => {
+export const debounce = (fn: (any) => void, timer: number) => {
   let timeout: any
   return function (args?: any) {
     clearTimeout(timeout)

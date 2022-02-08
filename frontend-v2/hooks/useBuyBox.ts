@@ -18,8 +18,8 @@ type PoolDepositActionParams = {
 }
 
 const useBuyBox = ({ poolId, currencyInfo, poolAddress, subBoxId, eventId }: PoolDepositActionParams) => {
-  const { library, account } = useMyWeb3()
-  const { apiSignMessgae } = useApiSignature('/user/deposit-box')
+  const { library } = useMyWeb3()
+  const { apiSignMessage } = useApiSignature('/user/deposit-box')
   const [txHash, setTxHash] = useState('')
   const [success, setSuccess] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
@@ -28,7 +28,7 @@ const useBuyBox = ({ poolId, currencyInfo, poolAddress, subBoxId, eventId }: Poo
     try {
       setLoading(false)
       setSuccess(false)
-      const signature = await apiSignMessgae({
+      const signature = await apiSignMessage({
         campaign_id: poolId,
         captcha_token: captchaToken,
         sub_box_id: subBoxId,
@@ -61,7 +61,7 @@ const useBuyBox = ({ poolId, currencyInfo, poolAddress, subBoxId, eventId }: Poo
       const msgError = handleErrMsg(error)
       toast.error(msgError)
     }
-  }, [poolId, account, library, currencyInfo, poolAddress, subBoxId])
+  }, [poolId, library, currencyInfo, poolAddress, subBoxId, apiSignMessage, eventId])
 
   return {
     buyBox,

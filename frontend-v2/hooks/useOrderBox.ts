@@ -4,7 +4,7 @@ import useApiSignature from './useApiSignature'
 import toast from 'react-hot-toast'
 
 export const useOrderBox = (poolId: string | number, account: Address) => {
-  const { apiSignMessgae } = useApiSignature(`/pool/${poolId}/nft-order`)
+  const { apiSignMessage } = useApiSignature(`/pool/${poolId}/nft-order`)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   useEffect(() => {
@@ -13,7 +13,7 @@ export const useOrderBox = (poolId: string | number, account: Address) => {
   const orderBox = useCallback(async (amount: number) => {
     try {
       setLoading(true)
-      await apiSignMessgae({
+      await apiSignMessage({
         campaign_id: poolId,
         amount,
         account
@@ -27,7 +27,7 @@ export const useOrderBox = (poolId: string | number, account: Address) => {
       toast.error(error.message)
       setLoading(false)
     }
-  }, [poolId, account])
+  }, [poolId, account, apiSignMessage])
 
   return { orderBox, loading, success }
 }

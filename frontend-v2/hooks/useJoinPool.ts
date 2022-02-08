@@ -6,7 +6,7 @@ import useApiSignature from './useApiSignature'
 import toast from 'react-hot-toast'
 
 export const useJoinPool = (poolId: string | number, account: Address) => {
-  const { apiSignMessgae } = useApiSignature('/user/join-campaign')
+  const { apiSignMessage } = useApiSignature('/user/join-campaign')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   useEffect(() => {
@@ -15,7 +15,7 @@ export const useJoinPool = (poolId: string | number, account: Address) => {
   const joinPool = useCallback(async () => {
     try {
       setLoading(true)
-      const signature = await apiSignMessgae({
+      const signature = await apiSignMessage({
         campaign_id: poolId
       })
       console.log('signature', signature)
@@ -26,7 +26,7 @@ export const useJoinPool = (poolId: string | number, account: Address) => {
       toast.error(error.message)
     }
     setLoading(false)
-  }, [poolId])
+  }, [poolId, apiSignMessage])
 
   return { joinPool, loading, success }
 }

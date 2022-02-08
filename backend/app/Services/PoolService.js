@@ -139,6 +139,43 @@ class PoolService {
     return pools;
   }
 
+  async getLatestPools(filterParams) {
+    filterParams.page = 1;
+    const limit = filterParams.limit ? filterParams.limit : Const.DEFAULT_LIMIT;
+
+    if (await RedisUtils.checkExistRedisLatestPools(limit)) {
+      return JSON.parse(await RedisUtils.getRedisLatestPools(limit));
+    }
+
+    let upcomingPool = await this.getUpcomingPools(filterParams);
+
+    const count = upcomingPool.pages.total;
+    let result = [];
+    const upcomingRows = upcomingPool.rows;
+    const remainingLimit = limit - count;
+
+    result = result.concat(upcomingRows);
+    if (remainingLimit > 0) {
+      // Get latest launch pool
+      let latestPools = await this.buildQueryBuilder(filterParams)
+        .whereIn('campaign_status', [
+          Const.POOL_STATUS.CLAIMABLE,
+          Const.POOL_STATUS.ENDED,
+          Const.POOL_STATUS.CLOSED,
+        ])
+        .orderBy('start_join_pool_time', 'DESC')
+        .orderBy('priority', 'DESC')
+        .orderBy('id', 'DESC')
+        .paginate(1, limit);
+
+      result = result.concat(latestPools.rows)
+    }
+
+    await RedisUtils.createRedisLatestPools(limit, result);
+
+    return result;
+  }
+
   async getFeaturedPools(filterParams) {
     const limit = filterParams.limit ? filterParams.limit : Const.DEFAULT_LIMIT;
     const page = filterParams.page ? filterParams.page : 1;

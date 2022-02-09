@@ -94,3 +94,22 @@
         gap: 20px;
     }
 }
+
+.activityTableCellHead {
+    background: transparent !important;
+    border-bottom: unset !important;
+}
+
+.activityTableCell {
+    padding: 17px;
+    background: #191B23 !important;
+    border-bottom: 4px solid #13141f !important;
+}
+
+.activityTableBody tr:hover {
+    background: rgba(36, 39, 50, 1) !important;
+}
+
+.activityTableBody tr:hover td {
+    background: transparent !important;
+}

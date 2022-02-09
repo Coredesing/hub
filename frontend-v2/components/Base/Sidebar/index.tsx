@@ -32,14 +32,14 @@ const Sidebar = () => {
           <Image src={require('@/assets/images/icons/shop.svg')} alt='market'></Image>
           <span className="mt-2">Market</span>
         </SidebarLink>
-        {/* <SidebarLink path='/staking'>
+        <SidebarLink path='/staking'>
           <Image src={require('@/assets/images/icons/coin.svg')} alt='staking'></Image>
           <span className="mt-2">Staking</span>
         </SidebarLink>
-        <SidebarLink path='/week'>
+        {/*<SidebarLink path='/week'>
           <Image src={require('@/assets/images/icons/bookmark.svg')} alt='week'></Image>
           <span className="mt-2">Week</span>
-        </SidebarLink> */}
+        </SidebarLink>*/}
         <SidebarLink path='/metaverse'>
           <Image src={require('@/assets/images/icons/planet.svg')}alt='metaverse'></Image>
           <span className="mt-2">Metaverse</span>

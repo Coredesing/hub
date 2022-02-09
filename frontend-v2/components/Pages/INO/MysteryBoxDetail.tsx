@@ -34,7 +34,7 @@ import WrapperPoolDetail from './WrapperPoolDetail'
 
 const MysteryBoxDetail = ({ poolInfo }: any) => {
   const eventId = 0
-  const tiersState = useAppContext()?.tiers
+  const tiersState = useAppContext()?.$tiers
   const userTier = tiersState?.state?.data?.tier || 0
   const { account } = useMyWeb3()
   const [boxTypes, setBoxTypes] = useState<any[]>([])
@@ -43,7 +43,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const [myBoxOrdered, setMyBoxOrdered] = useState(0)
   const [currentTab, setCurrentTab] = useState(0)
   const [amountBoxBuy, setAmountBoxBuy] = useState(0)
-  const [countdown, setCountdown] = useState<CountDownTimeType & { title: string, [k: string]: any }>({ date1: 0, date2: 0, title: '' })
+  const [countdown, setCountdown] = useState<CountDownTimeType & { title: string; [k: string]: any }>({ date1: 0, date2: 0, title: '' })
   const [timelinePool, setTimelinePool] = useState<ObjectType>({})
   const [timelines, setTimelines] = useState<ObjectType<{
     title: string;

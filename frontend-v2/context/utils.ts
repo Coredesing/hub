@@ -1,9 +1,8 @@
-
-export type StateType = {
-    data: null | object;
-    loading: boolean;
-    error: string;
-};
+type StateType = {
+  data: null | object;
+  loading: boolean;
+  error: string;
+}
 
 const initialState = {
   data: null,
@@ -12,14 +11,14 @@ const initialState = {
 }
 
 type ActionReducer = {
-    loading: string;
-    success: string;
-    failure: string;
+  loading: string;
+  success: string;
+  failure: string;
 }
 
 type ActionType = {
-    type: string;
-    [k: string]: any;
+  type: string;
+  [k: string]: any;
 }
 
 export const initReducer = (state: StateType = initialState, action: ActionType, actionReducer: ActionReducer) => {

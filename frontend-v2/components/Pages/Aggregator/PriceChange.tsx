@@ -1,4 +1,4 @@
-const PriceChange = ({ tokenomic, className } : { tokenomic: { price_change_24h: string }, className: string }) => {
+const PriceChange = ({ tokenomic, className } : { tokenomic: { price_change_24h: string }; className: string }) => {
   if (!tokenomic?.price_change_24h) {
     return null
   }

@@ -4,6 +4,7 @@ import { networkConnector } from '@/components/web3/connectors'
 import { useWeb3Default, getNetworkByAlias, getLibrary, ETH, MATIC, BNB, USDT_ERC, USDT_POLYGON, BUSD_BSC, Token } from '@/components/web3'
 import { useMyWeb3 } from '@/components/web3/context'
 import ERC20 from '@/components/web3/abis/ERC20.json'
+import { safeToFixed } from '@/utils'
 
 export const useTokenAllowance = (token?: Token, owner?: string, spender?: string, networkAlias?: string) => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -84,6 +85,11 @@ export const useTokenApproval = (token?: Token, spender?: string) => {
       await tx.wait(1)
       return true
     } catch (err) {
+      if (err.code === 4001) {
+        setError(new Error('User denied transaction'))
+        return
+      }
+
       setError(err)
     } finally {
       setLoading(false)
@@ -142,7 +148,7 @@ export const useBalanceToken = (token?: Token, networkAlias?: string) => {
       return '0'
     }
 
-    return parseFloat(utils.formatEther(balance)).toFixed(4)
+    return safeToFixed(parseFloat(utils.formatEther(balance)), 4)
   }, [balance])
   const updateBalance = useCallback(() => {
     if (!account || !provider || !token?.address) {
@@ -179,8 +185,8 @@ export const useBalanceToken = (token?: Token, networkAlias?: string) => {
 }
 
 interface Item {
-  accept_currency?: string
-  network_available?: string
+  accept_currency?: string;
+  network_available?: string;
 }
 
 export const useCurrency = (item?: Item) => {

@@ -21,9 +21,9 @@ export function useWeb3Default () {
   return useWeb3React<Web3Provider>(DEFAULT_WEB3)
 }
 export interface ProviderRpcError extends Error {
-  message: string
-  code: number
-  data?: unknown
+  message: string;
+  code: number;
+  data?: unknown;
 }
 
 const DEACTIVATION_PERSISTENCE_KEY = 'WEB3_DEACTIVATION'
@@ -179,8 +179,8 @@ export const DefaultConnector = ({ children }) => {
 }
 
 interface PropsType {
-  children?: ReactNode
-  getLibrary (provider: any): Web3Provider
+  children?: ReactNode;
+  getLibrary (provider: any): Web3Provider;
 }
 
 let Web3ReactProviderDefault
@@ -204,10 +204,10 @@ export class Web3ProviderNetwork extends React.Component<PropsType> {
 }
 
 export type Token = {
-  name: string
-  symbol: string
-  decimals: number
-  address?: string
+  name: string;
+  symbol: string;
+  decimals: number;
+  address?: string;
 }
 
 export const ETH: Token = {
@@ -261,15 +261,15 @@ export const MARKETPLACE_CONTRACT = IS_TESTNET ? process.env.NEXT_PUBLIC_MARKETP
 const currencies = [ETH, MATIC, BNB, USDT_ERC, USDT_POLYGON, BUSD_BSC, GAFI]
 
 export type Network = {
-  id: number
-  name: string
-  alias: string
-  currency: string
-  blockExplorerUrls: string[]
-  image: any
-  color: string
-  colorAlt?: string
-  colorText: string
+  id: number;
+  name: string;
+  alias: string;
+  currency: string;
+  blockExplorerUrls: string[];
+  image: any;
+  color: string;
+  colorAlt?: string;
+  colorText: string;
 }
 
 export const networks = [{
@@ -340,10 +340,10 @@ export const networks = [{
 }]
 
 interface Wallet {
-  id: string
-  name: string
-  networks: number[]
-  image: any
+  id: string;
+  name: string;
+  networks: number[];
+  image: any;
 }
 
 export const wallets: Wallet[] = [{

@@ -4,12 +4,12 @@ import Link from 'next/link'
 import { useScreens } from '@/components/Pages/Home/utils'
 
 type Props = {
-  item?: any,
-  color?: string,
-  className?: string,
-  countdownStatus?: string,
-  url?: string,
-  tagColor?: string
+  item?: any;
+  color?: string;
+  className?: string;
+  countdownStatus?: string;
+  url?: string;
+  tagColor?: string;
 }
 const PoolBanner = ({ item, color = 'green', className, url, tagColor = 'gamefiDark-900' } : Props) => {
   const [distance, setDistance] = useState(0)

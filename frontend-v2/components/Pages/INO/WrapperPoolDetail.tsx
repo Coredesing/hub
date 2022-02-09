@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import React, { ReactNode } from 'react'
 import styles from './WrapperPoolDetail.module.scss'
 type Props = {
-  children: ReactNode
+  children: ReactNode;
 }
 const WrapperPoolDetail = ({ children }: Props) => {
   const router = useRouter()

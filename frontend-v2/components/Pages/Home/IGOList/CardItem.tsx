@@ -4,10 +4,10 @@ import Image from 'next/image'
 import { useScreens } from '../utils'
 
 type Props = {
-  item: any,
-  showOffer?: boolean,
-  showListing?: boolean,
-  className?: string
+  item: any;
+  showOffer?: boolean;
+  showListing?: boolean;
+  className?: string;
 }
 
 const poolStatus = (status: any) => {

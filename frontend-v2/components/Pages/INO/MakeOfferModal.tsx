@@ -24,7 +24,7 @@ const MakeOfferModal = ({ tokenOnSale, projectInfo, lastOffer, ...props }: Props
 
   const { balanceShort, balance, loading: loadingBalance, updateBalance } = useBalanceToken(token as any, projectInfo.network)
   const [offerPrice, setOfferPrice] = useState('')
-  const [notiMsg, setNotiMsg] = useState<{ type: 'info' | 'error', msg: string | ReactNode }>({ type: 'info', msg: '' })
+  const [notiMsg, setNotiMsg] = useState<{ type: 'info' | 'error'; msg: string | ReactNode }>({ type: 'info', msg: '' })
 
   const onChangeOfferPrice = (e: any) => {
     const val = e.target.value

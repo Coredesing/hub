@@ -3,18 +3,18 @@ import style from './style.module.scss'
 import { useSwipeable } from 'react-swipeable'
 
 type Props = {
-  children: any,
-  transition?: string,
-  showItemsNumber?: number,
-  step?: number,
-  hasHeader?: boolean,
-  title?: string
+  children: any;
+  transition?: string;
+  showItemsNumber?: number;
+  step?: number;
+  hasHeader?: boolean;
+  title?: string;
 }
 
 type Page = {
-  fromIndex: number,
-  toIndex: number,
-  page: number
+  fromIndex: number;
+  toIndex: number;
+  page: number;
 }
 
 export const SwiperItem = ({ children, width }: any) => {

@@ -18,7 +18,7 @@ type Props = {
   amountBoxBuy: number;
   currencyInfo: ObjectType;
   poolInfo: ObjectType;
-  [k: string]: any
+  [k: string]: any;
 }
 
 const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, poolInfo, eventId }: Props) => {

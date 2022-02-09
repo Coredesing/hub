@@ -8,8 +8,8 @@ import stylesCarousel from './Carousel.module.scss'
 import { intervalToDuration } from 'date-fns'
 
 type Props = {
-  item: Item,
-  now: Date
+  item: Item;
+  now: Date;
 }
 
 const CardSlim = ({ item, now }: Props) => {

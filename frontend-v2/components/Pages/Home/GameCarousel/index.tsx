@@ -5,8 +5,8 @@ import { useMediaQuery } from 'react-responsive'
 import Link from 'next/link'
 
 type Props = {
-  items?: any[],
-  likes?: any[]
+  items?: any[];
+  likes?: any[];
 }
 
 const GameCarousel = ({ items, likes }: Props) => {

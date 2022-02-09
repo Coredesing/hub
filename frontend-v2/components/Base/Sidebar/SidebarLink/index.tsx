@@ -3,9 +3,9 @@ import { useRouter } from 'next/router'
 import { ReactNode, useMemo } from 'react'
 
 type Props = {
-  children?: ReactNode
-  path?: string
-  external?: boolean
+  children?: ReactNode;
+  path?: string;
+  external?: boolean;
 }
 const SidebarLink = ({ children, path, external }: Props) => {
   const router = useRouter()

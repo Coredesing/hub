@@ -4,14 +4,14 @@ import isNumber from 'is-number'
 import styles from './form-input.module.scss'
 
 interface IProps {
-  value: any,
-  onChange: (event: any) => void,
-  isInteger?: boolean,
-  isPositive?: boolean,
-  allowZero?: boolean,
-  min?: number,
-  max?: number,
-  [k: string]: any
+  value: any;
+  onChange: (event: any) => void;
+  isInteger?: boolean;
+  isPositive?: boolean;
+  allowZero?: boolean;
+  min?: number;
+  max?: number;
+  [k: string]: any;
 }
 export const FormInputNumber = (props: IProps) => {
   const { value, onChange, allowZero, isPositive, isInteger, className, ...otherProps } =

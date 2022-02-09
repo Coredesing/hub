@@ -1,10 +1,26 @@
 import { useReducer } from 'react'
-import { tiersActions } from './constant'
-import tiersReducer from './reducer'
 import { fetcher } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
+import { initReducer } from './utils'
 
-const tiersContext = () => {
+const tiersActions = {
+  LOADING: 'TIERS_LOADING',
+  SUCCESS: 'TIERS_SUCCESS',
+  FAILURE: 'TIERS_FAILURE'
+}
+
+const tiersReducer = (state, action) => {
+  return initReducer(
+    state,
+    action,
+    {
+      loading: tiersActions.LOADING,
+      success: tiersActions.SUCCESS,
+      failure: tiersActions.FAILURE
+    })
+}
+
+const useTiersContext = () => {
   const initState = {
     data: null,
     loading: false,
@@ -30,10 +46,6 @@ const tiersContext = () => {
     }
   }
 
-  const setData = (data: any) => {
-    dispatch({ type: tiersActions.SUCCESS, payload: data })
-  }
-
   return {
     state,
     actions: {
@@ -42,4 +54,4 @@ const tiersContext = () => {
   }
 }
 
-export default tiersContext
+export default useTiersContext

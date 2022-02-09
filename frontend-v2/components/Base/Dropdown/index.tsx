@@ -2,18 +2,18 @@ import { ObjectType } from '@/utils/types'
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
 
 type Item = {
-  key: any,
-  label: string,
-  value: any
+  key: any;
+  label: string;
+  value: any;
 } | ObjectType;
 type Props = {
-  items?: Array<Item>,
-  selected?: Item,
-  onChange?: any,
-  propLabel?: string,
-  propValue?: string,
-  isFilter?: boolean,
-  children?: ReactNode,
+  items?: Array<Item>;
+  selected?: Item;
+  onChange?: any;
+  propLabel?: string;
+  propValue?: string;
+  isFilter?: boolean;
+  children?: ReactNode;
 }
 const Dropdown = ({ items, selected, onChange, propLabel, propValue, isFilter, children }: Props) => {
   const [show, setShow] = useState(false)

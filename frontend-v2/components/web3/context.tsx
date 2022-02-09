@@ -4,26 +4,26 @@ import { utils } from 'ethers'
 import { networks, Network } from './index'
 
 export type Action<T> = {
-  type: string
-  payload: Partial<T>
+  type: string;
+  payload: Partial<T>;
 }
 
 type Context = {
-  library: any
-  chainID: any
-  account: string
-  error: Error
-  balance: any
-  triedEager: boolean
+  library: any;
+  chainID: any;
+  account: string;
+  error: Error;
+  balance: any;
+  triedEager: boolean;
 
-  balanceShort: string
-  currencyNative: string
-  network: Network
-  dispatch: (a: Action<Context>) => void
-  updateBalance: () => void
+  balanceShort: string;
+  currencyNative: string;
+  network: Network;
+  dispatch: (a: Action<Context>) => void;
+  updateBalance: () => void;
 }
 
-const Context = createContext<Context>(undefined)
+const MyContext = createContext<Context>(undefined)
 
 export function MyWeb3Provider ({ children }) {
   const [state, dispatch] = useReducer(reducer, {
@@ -81,7 +81,7 @@ export function MyWeb3Provider ({ children }) {
   }, [balance])
 
   return (
-    <Context.Provider
+    <MyContext.Provider
       value={{
         ...state,
         balanceShort,
@@ -92,12 +92,12 @@ export function MyWeb3Provider ({ children }) {
       }}
     >
       {children}
-    </Context.Provider>
+    </MyContext.Provider>
   )
 }
 
 export function useMyWeb3 (): Context {
-  const context = useContext(Context)
+  const context = useContext(MyContext)
 
   if (!context) { throw new Error('useMyWeb3 must be used inside a `MyWeb3Provider`') }
 

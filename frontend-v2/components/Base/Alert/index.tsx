@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react'
 import { QuestionIcon } from '../Icon'
 import styles from './Alert.module.scss'
 type Props = {
-  type?: 'danger' | 'info' | 'warn',
+  type?: 'danger' | 'info' | 'warn';
   children?: string | ReactNode;
   className?: string;
 }

@@ -9,12 +9,12 @@ import { networkImage, currency } from './List'
 import { intervalToDuration } from 'date-fns'
 
 type Props = {
-  items: Item[],
-  style?: CSSProperties,
-  now: Date
+  items: Item[];
+  style?: CSSProperties;
+  now: Date;
 }
 
-const CarouselAction = ({ item, now }: { item: Item, now: Date }) => {
+const CarouselAction = ({ item, now }: { item: Item; now: Date }) => {
   const stages = useMemo(() => {
     const timeJoin = new Date(parseInt(item.start_join_pool_time) * 1000)
     const timeBuy = new Date(parseInt(item.start_time) * 1000)

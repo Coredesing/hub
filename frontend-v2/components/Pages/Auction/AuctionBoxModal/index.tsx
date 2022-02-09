@@ -12,9 +12,9 @@ import { useMyWeb3 } from '@/components/web3/context'
 import BigNumber from 'bignumber.js'
 
 type Props = {
-  open: boolean,
-  poolInfo: { [k: string]: any },
-  [k: string]: any
+  open: boolean;
+  poolInfo: { [k: string]: any };
+  [k: string]: any;
 }
 const AuctionBoxModal = ({ open, poolInfo = {}, token = {}, auctionLoading, lastBidder = {}, rateEachBid, currencyPool, ...props }: Props) => {
   const { library, account, balance: balanceOnChain } = useMyWeb3()

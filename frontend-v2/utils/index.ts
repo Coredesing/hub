@@ -189,6 +189,7 @@ export const networkImage = (network: string) => {
   }
   }
 }
+
 export const useFetch = (url: string, timeout?: number) => {
   const [response, setResponse] = useState<SWRResponse | null>(null)
   const [error, setError] = useState(false)
@@ -216,4 +217,9 @@ export const useFetch = (url: string, timeout?: number) => {
   }, [url, timeout, fetchResponse, fetchError])
 
   return { response, loading, error, errorMessage }
+}
+
+export function safeToFixed (num: number | string, fixed: number): string {
+  const re = new RegExp(`^-?\\d+(?:.\\d{0,${(fixed || -1)}})?`)
+  return num.toString().match(re)?.[0] || `${num}`
 }

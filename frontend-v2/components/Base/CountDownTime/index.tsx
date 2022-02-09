@@ -5,15 +5,15 @@ import clsx from 'clsx'
 type TimeStamp = number;
 
 export type CountDonwRanges = {
-  date1: TimeStamp,
-  date2: TimeStamp,
+  date1: TimeStamp;
+  date2: TimeStamp;
 }
 
 export type DHMSType = {
-  days: number,
-  hours: number,
-  minutes: number,
-  seconds: number,
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
 }
 
 export type CountDownTimeType = DHMSType | CountDonwRanges

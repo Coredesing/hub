@@ -5,7 +5,7 @@ import { ObjectType } from '@/utils/types'
 import SerieContentModal from './SerieContentModal'
 
 type Props = {
-  poolInfo: ObjectType
+  poolInfo: ObjectType;
 }
 const SerieContent = ({ poolInfo }: Props) => {
   const showTypes = { table: 'table', grid: 'grid' }

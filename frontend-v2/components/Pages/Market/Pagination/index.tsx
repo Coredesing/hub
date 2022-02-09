@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { paginator } from '@/utils'
 
-const Pagination = ({ page, pageLast, setPage = () => {}, className }: { page: number, pageLast: number, setPage: (number) => void, className: string }) => {
+const Pagination = ({ page, pageLast, setPage = () => {}, className }: { page: number; pageLast: number; setPage: (number) => void; className: string }) => {
   const pages = useMemo(() => {
     return paginator({ current: page, last: pageLast })
   }, [page, pageLast])

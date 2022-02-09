@@ -7,7 +7,7 @@ type Props = {
   selected?: boolean;
   icon?: string;
   name?: string;
-  item: ObjectType
+  item: ObjectType;
 }
 
 const BoxTypeItem = ({ item, ...props }: Props) => {

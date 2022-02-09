@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 type Props = {
-  children: ReactNode
+  children: ReactNode;
 }
 const AccountContent = ({ children }: Props) => {
   return <div>

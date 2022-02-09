@@ -9,7 +9,7 @@ export const useWalletSignature = () => {
     if (!library || !account) {
       throw new Error('Please connect wallet to sign')
     }
-    
+
     return new Promise(async (resolve, reject) => {
       try {
         const message = await library.getSigner().signMessage(MESSAGE_SIGNATURE)

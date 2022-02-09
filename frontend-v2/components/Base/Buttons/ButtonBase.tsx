@@ -4,14 +4,14 @@ import styles from './button.module.scss'
 import { ClipLoader } from 'react-spinners'
 
 type Props = {
-  onClick?: MouseEventHandler,
-  disabled?: boolean,
-  children: any,
-  isLoading?: boolean,
-  color?: 'grey' | 'green' | 'yellow' | 'disabled' | 'blue' | 'red',
-  notClipPath?: boolean,
+  onClick?: MouseEventHandler;
+  disabled?: boolean;
+  children: any;
+  isLoading?: boolean;
+  color?: 'grey' | 'green' | 'yellow' | 'disabled' | 'blue' | 'red';
+  notClipPath?: boolean;
   noneStyle?: boolean;
-  [k: string]: any
+  [k: string]: any;
 }
 export const ButtonBase = ({
   disabled,

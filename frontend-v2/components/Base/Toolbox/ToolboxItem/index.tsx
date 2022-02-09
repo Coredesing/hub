@@ -3,8 +3,8 @@ import { useRouter } from 'next/router'
 import React, { ReactNode } from 'react'
 
 type Props = {
-  children?: ReactNode
-  path?: string
+  children?: ReactNode;
+  path?: string;
 }
 const ToolboxItem = ({ children, path }: Props) => {
   const router = useRouter()

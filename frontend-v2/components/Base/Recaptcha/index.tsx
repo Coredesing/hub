@@ -3,9 +3,9 @@ import { RECAPTCHA_SITE_KEY } from '@/utils/constants'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 
 type Props = {
-    className?: string,
-    onChange?: ((token: string | null) => void) | undefined,
-    [k: string]: any
+    className?: string;
+    onChange?: ((token: string | null) => void) | undefined;
+    [k: string]: any;
 }
 const Recaptcha = ({ className, onChange, ...props }: Props, ref) => {
   return (

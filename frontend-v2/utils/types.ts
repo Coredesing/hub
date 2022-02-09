@@ -1,5 +1,5 @@
 export type ObjectType<V = any> = {
-    [k: string]: V
+    [k: string]: V;
 }
 
 export type Address = string;

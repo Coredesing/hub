@@ -179,12 +179,6 @@ video[poster] {
   }
 }
 
-@media screen and (max-width: 1308px) {
-  .clipped-b-l {
-    clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 15px 100%, 0 calc(100% - 15px));
-  }
-}
-
 .editor-content {
   p {
     margin-top: 1em;

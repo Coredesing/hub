@@ -5,9 +5,9 @@ import { ethers } from 'ethers'
 import { getCurrencyByTokenAddress } from '@/components/web3'
 
 type Props = {
-  item: any,
-  showOffer?: boolean,
-  showListing?: boolean
+  item: any;
+  showOffer?: boolean;
+  showListing?: boolean;
 }
 
 const NFTCard = ({ item, ...props }: Props) => {

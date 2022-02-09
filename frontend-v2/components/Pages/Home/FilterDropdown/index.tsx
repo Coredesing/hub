@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 type Item = {
-  key: any,
-  label: string,
-  value: any
+  key: any;
+  label: string;
+  value: any;
 }
 type Props = {
-  items?: Array<Item>,
-  selected?: any,
-  onChange?: any
+  items?: Array<Item>;
+  selected?: any;
+  onChange?: any;
 }
 const FilterDropdown = ({ items, selected, onChange }: Props) => {
   const [show, setShow] = useState(false)

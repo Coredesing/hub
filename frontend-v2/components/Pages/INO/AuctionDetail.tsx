@@ -30,10 +30,10 @@ import RuleIntroduce from './RuleIntroduce'
 import DetailPoolItem from './DetailPoolItem'
 
 const AuctionDetail = ({ poolInfo }: any) => {
-  const tiersState = useAppContext()?.tiers
+  const tiersState = useAppContext()?.$tiers
   const { account: connectedAccount, chainID, network, ...context } = useMyWeb3()
   const [currencyPool, setCurrencyPool] = useState<TokenType & ObjectType<any> | undefined>()
-  const [lastBidder, setLastBidder] = useState<null | { wallet: string, amount: string, currency: string }>(null)
+  const [lastBidder, setLastBidder] = useState<null | { wallet: string; amount: string; currency: string }>(null)
   const [resetLastBidder, setResetLastBidder] = useState(true)
   const [rateEachBid, setRateEachBid] = useState<string>('')
 
@@ -54,9 +54,9 @@ const AuctionDetail = ({ poolInfo }: any) => {
     return new Contract(poolInfo?.acceptedTokensConfig?.[0]?.address, Erc20Abi, libraryDefaultTemporary)
   }, [poolInfo, libraryDefaultTemporary])
 
-  const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string, [k: string]: any }>({ date1: 0, date2: 0, title: '' })
+  const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string; [k: string]: any }>({ date1: 0, date2: 0, title: '' })
   const { checkingKyc, isKYC } = useKyc(connectedAccount, (isNumber(poolInfo?.kyc_bypass) && !poolInfo?.kyc_bypass))
-  const [allowNetwork, setAllowNetwork] = useState<{ ok: boolean, [k: string]: any }>({ ok: false })
+  const [allowNetwork, setAllowNetwork] = useState<{ ok: boolean; [k: string]: any }>({ ok: false })
   const [boxTypeSelected, setSelectBoxType] = useState<{ [k: string]: any }>({})
   useEffect(() => {
     const networkInfo = getNetworkByAlias(poolInfo?.network_available)
@@ -209,7 +209,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
   }
 
   const perPageBidHistory = 10
-  const [filterBidHistory, setFilterBidHistory] = useState<{ from?: number, page?: number, perPage: number }>({ perPage: perPageBidHistory, page: 1 })
+  const [filterBidHistory, setFilterBidHistory] = useState<{ from?: number; page?: number; perPage: number }>({ perPage: perPageBidHistory, page: 1 })
   const [bidHistores, setBidHistories] = useState<ObjectType<any>[]>([])
   const [cachedSymbolCurrency, setCachedSymbolCurrency] = useState<ObjectType<string>>({})
   const [totalBidHistories, setTotalBidHistories] = useState(0)

@@ -3,7 +3,7 @@ import { MediumIcon, TelegramIcon, TwitterIcon } from '@/components/Base/Icon'
 import React from 'react'
 
 type Props = {
-  poolInfo: ObjectType
+  poolInfo: ObjectType;
 }
 const RuleIntroduce = ({ poolInfo }: Props) => {
   const getRules = (rule = '') => {

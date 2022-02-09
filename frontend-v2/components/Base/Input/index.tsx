@@ -6,7 +6,7 @@ type Props = {
     formInput: string;
     input: string;
   };
-  [k: string]: any
+  [k: string]: any;
 };
 
 const Input = ({ classes, ...props }: Props) => {

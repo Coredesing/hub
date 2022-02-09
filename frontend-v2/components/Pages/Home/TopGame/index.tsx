@@ -4,9 +4,9 @@ import Link from 'next/link'
 import { useScreens } from '../utils'
 
 type Props = {
-  item: any,
-  isTop?: boolean,
-  like?: any
+  item: any;
+  isTop?: boolean;
+  like?: any;
 }
 const TopGame = ({ item, isTop, like }: Props) => {
   const screens = useScreens()

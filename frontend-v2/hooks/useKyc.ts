@@ -4,10 +4,10 @@ import { fetcher } from '@/utils'
 const isRequiredKyc = process.env.REACT_APP_APP_KYC_REQUIRED === 'true'
 
 type ReturnType = {
-    emailVerified: number,
+    emailVerified: number;
     email: string | null | undefined;
-    isKYC: boolean,
-    checkingKyc: boolean
+    isKYC: boolean;
+    checkingKyc: boolean;
 }
 /**
  *

@@ -5,7 +5,7 @@ import styles from './TabMenus.module.scss'
 type Props = {
   value?: number;
   onChange?: (val: number) => any;
-  menus: string[],
+  menus: string[];
 }
 
 const TabMenus = ({ value = 0, onChange, menus }: Props) => {

@@ -9,6 +9,7 @@ import { useMyWeb3 } from '@/components/web3/context'
 import Image from 'next/image'
 import Modal from '../Modal'
 import { formatEther } from '@ethersproject/units'
+import copy from 'copy-to-clipboard'
 import Link from 'next/link'
 
 export function shorten (s: string, max = 12) {
@@ -33,7 +34,7 @@ const useSize = (target: RefObject<HTMLElement>) => {
   return size
 }
 
-const WalletConnector = () => {
+const WalletConnector = (props) => {
   const [showModal, setShowModal] = useState(false)
 
   const contextWeb3: Web3ReactContextInterface = useWeb3React()
@@ -183,12 +184,15 @@ const WalletConnector = () => {
 
     return parseFloat(formatEther(balance)).toFixed(4)
   }, [balance])
+  const btnClass = useMemo(() => {
+    return props.buttonClassName || ''
+  }, [props])
 
   return (
     <>
       { (!active || !account) &&
         <button
-          className='overflow-hidden py-2 px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-semibold text-sm rounded-xs hover:opacity-95 cursor-pointer w-full clipped-t-r'
+          className={`overflow-hidden py-2 px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-bold text-sm rounded-xs hover:opacity-95 cursor-pointer w-full md:w-auto clipped-t-r ${btnClass}`}
           onClick={() => setShowModal(true)}
         >
           Connect Wallet
@@ -218,7 +222,7 @@ const WalletConnector = () => {
           </div>
         </div>
       }
-      <Modal show={showModal} toggle={setShowModal} className='dark:bg-transparent font-casual'>
+      <Modal show={showModal} toggle={setShowModal} className='dark:bg-transparent font-casual fixed z-50'>
         <ModalConnect close={() => setShowModal(false)} style={{ color: network?.colorText || '' }}>
           { active && <>
             <div className="p-6 pt-10" style={{ backgroundColor: network?.color || 'transparent' }}>
@@ -246,7 +250,7 @@ const WalletConnector = () => {
             <div className="p-6 text-white">
               <div className="p-4 bg-gray-700 rounded flex justify-between">
                 <div>{account}</div>
-                <svg style={{ height: '1em' }} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="cursor-pointer hover:text-gray-300">
+                <svg style={{ height: '1em' }} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="cursor-pointer hover:text-gray-300" onClick={() => copy(account)}>
                   <path d="M12.5 3.5H2.5V15.5H12.5V3.5Z" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M4.5 0.5H15.5V13.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M5.5 6.5H9.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
@@ -269,7 +273,7 @@ const WalletConnector = () => {
               <div className="font-bold text-2xl uppercase mb-5">Connect Wallet</div>
               <div className="font-bold text-sm uppercase">1. Agreement</div>
               <label className="py-2 leading-relaxed mb-5 inline-block">
-                <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-500 mr-2" checked={agreed} onChange={handleAgreement} />
+                <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 mr-2" checked={agreed} onChange={handleAgreement} />
                 I have read and agreed with the <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">Terms of Service</a> and <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">Privacy Policy</a>.
               </label>
               <div className="mb-7">
@@ -320,9 +324,9 @@ const WalletConnector = () => {
 }
 
 type Props = {
-  children?: ReactNode,
-  close: () => void
-  style: any
+  children?: ReactNode;
+  close: () => void;
+  style: any;
 }
 
 const ModalConnect = ({ children, close, style }: Props) => {
@@ -364,7 +368,7 @@ const ModalConnect = ({ children, close, style }: Props) => {
   )
 }
 
-export const NetworkSelector = ({ onChange, ...props }: { onChange: (network) => void, selected?: any }) => {
+export const NetworkSelector = ({ onChange, ...props }: { onChange: (network) => void; selected?: any }) => {
   const _networks = networks.filter(x => !x.testnet)
   const defaultValue = _networks.reduce((acc, val) => {
     acc[val.alias] = true

@@ -1,7 +1,7 @@
 import React from 'react'
 
 type Props = {
-  loading: boolean
+  loading: boolean;
 }
 const LoadingOverlay = ({ ...props } : Props) => {
   return (

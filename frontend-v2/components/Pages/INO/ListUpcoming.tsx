@@ -7,7 +7,7 @@ import { useFetch } from '@/utils'
 import CardSlim from './CardSlim'
 
 type Props = {
-  now: Date
+  now: Date;
 }
 
 const List = ({ now }: Props) => {

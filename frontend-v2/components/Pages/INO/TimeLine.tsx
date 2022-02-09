@@ -9,7 +9,7 @@ type Props = {
     title: string;
     desc: string;
     current?: boolean;
-  }>
+  }>;
 }
 
 const TimeLine = ({ timelines }: Props) => {

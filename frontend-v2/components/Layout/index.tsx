@@ -6,8 +6,8 @@ import Toolbox from '@/components/Base/Toolbox'
 import Footer from '@/components/Base/Footer'
 
 type Props = {
-  children?: ReactNode
-  title?: string
+  children?: ReactNode;
+  title?: string;
 }
 
 const Layout = ({ children, title }: Props) => {

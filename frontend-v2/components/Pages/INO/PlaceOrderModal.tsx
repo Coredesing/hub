@@ -12,7 +12,7 @@ type Props = {
   open?: boolean;
   onClose?: () => any;
   poolId: number | string;
-  [k: string]: any
+  [k: string]: any;
 }
 
 const PlaceOrderModal = ({ open, onClose, poolId, getBoxOrderd }: Props) => {

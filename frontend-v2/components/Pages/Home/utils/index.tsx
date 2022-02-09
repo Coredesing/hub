@@ -77,7 +77,7 @@ export const priceChangeTag = (input) => {
           </clipPath>
         </defs>
       </svg>
-      <div className="ml-1">{rate.toFixed(2)}%</div>
+      <div className="ml-1 text-black">{rate.toFixed(2)}%</div>
     </div>
   }
 

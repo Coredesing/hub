@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect, useState } from 'react'
 import { DocumentCopyIcon, SolanaIcon, TerraIcon } from 'components/Base/Icon'
 import styles from './Profile.module.scss'
@@ -5,11 +7,24 @@ import clsx from 'clsx'
 import { useAppContext } from '@/context/index'
 import { useMyWeb3 } from '@/components/web3/context'
 import axios from '@/utils/axios'
+import toast from 'react-hot-toast'
+import useWalletSignature from 'hooks/useWalletSignature'
+import { fetcher } from '@/utils'
+import { API_BASE_URL } from '@/utils/constants'
+import { useRouter } from 'next/router'
 
 const Profile = () => {
-
   const tiers = useAppContext()?.tiers
   const { account } = useMyWeb3()
+  const [isEdit, setIsEdit] = useState(false)
+  const [newTwitter, setNewTwitter] = useState('')
+  const [newTelegram, setnewTelegram] = useState('')
+  const [newSolanaWallet, setNewSolanaWallet] = useState('')
+  const [newTerraWallet, setNewTerraWallet] = useState('')
+  const [signature, setSignature] = useState('')
+  const { signMessage } = useWalletSignature()
+
+  const router = useRouter()
 
   useEffect(() => {
     if (account) {
@@ -23,7 +38,7 @@ const Profile = () => {
     if (!account) return
     const getUserInfo = async () => {
       const response = await axios.get(`/user/profile?wallet_address=${account}`)
-      setUserInfo(response.data.data?.user || {});
+      setUserInfo(response.data.data?.user || {})
     }
     getUserInfo().catch(console.debug).finally(() =>
       setLoadingUserInfo(false)
@@ -34,6 +49,109 @@ const Profile = () => {
     navigator.clipboard.writeText(val)
   }
 
+  const handleEdit = async () => {
+    const data = await signMessage()
+    if (!data) return
+    setSignature(data.toString())
+
+    setIsEdit(true)
+    setNewTwitter(userInfo?.user_twitter || '')
+    setnewTelegram(userInfo?.user_telegram || '')
+    setNewSolanaWallet(userInfo?.solana_address || '')
+  }
+
+  const handleSave = async () => {
+    let solanaSignature
+    // if (newSolanaWallet) {
+    //   solanaSignature = await solanaSign()
+    // }
+
+    const httpConfig = {
+      headers: {
+        msgSignature: process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        signature,
+        wallet_address: account,
+        user_twitter: newTwitter,
+        user_telegram: newTelegram
+        // solana_address: solanaSignature?.publicKey ?? '',
+        // solana_signature: solanaSignature?.signature ?? ''
+      }),
+      method: 'PUT'
+    }
+
+    const response = await fetcher(`${API_BASE_URL}/user/update-profile`, httpConfig as any)
+
+    if (response.data) {
+      if (response.data.status === 200) {
+        setIsEdit(false)
+        toast.success('Update Profile Successfully')
+        router.reload()
+      }
+
+      if (response.data.status !== 200) {
+        toast.error(response.data.message)
+      }
+    }
+  }
+
+  const solanaSign = async () => {
+    const encodedMessage = new TextEncoder().encode(process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE)
+    try {
+      // @ts-ignore
+      const signedMessage = await window?.solana.request({
+        method: 'signMessage',
+        params: {
+          message: encodedMessage,
+          display: 'utf8'
+        }
+      })
+      return signedMessage
+    } catch (e: any) {
+      toast.error(e?.message)
+    }
+  }
+
+  const getSolanaProvider = () => {
+    if ('solana' in window) {
+      // @ts-ignore
+      const provider = window?.solana
+      if (provider.isPhantom) {
+        return provider
+      }
+    }
+  }
+
+  const handleSolanaDisconnect = () => {
+    // @ts-ignore
+    if (!window.solana) {
+      return
+    }
+    // @ts-ignore
+    window.solana.request({ method: 'disconnect' })
+    setNewSolanaWallet('')
+  }
+
+  const handleSolanaConnect = async () => {
+    const provider = getSolanaProvider()
+    if (!provider) {
+      toast.error('Phantom extension is not installed!')
+      return
+    }
+    try {
+      let resp
+      resp = await provider.connect()
+      if (!resp) {
+        resp = await provider.request({ method: 'connect' })
+      }
+      setNewSolanaWallet(resp.publicKey.toString())
+    } catch (err) {
+      toast.error('User rejected the request!')
+    }
+  }
+
   const loadingTier = tiers?.state?.data === null || tiers?.state.loading
   const isStaked = +tiers?.state?.data?.tier > 0
   const isKyc = !loadingUserInfo && userInfo?.is_kyc === 1
@@ -41,16 +159,25 @@ const Profile = () => {
   return <div className='py-10 px-9'>
     <div className='flex items-center justify-between'>
       <h3 className='uppercase font-bold text-2xl mb-7'>My Profile</h3>
-      <button className='flex gap-2 items-center'>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M10 3L13 6" stroke="#6CDB00" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M12 1L15 4L5 14L1 15L2 11L12 1Z" stroke="#6CDB00" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-        <span className='uppercase font-bold text-13px text-gamefiGreen-700'>Edit profile</span>
-      </button>
+      {isEdit
+        ? <div className="flex">
+          <button className='flex gap-2 items-center' onClick={() => setIsEdit(false)}>
+            <span className='uppercase font-bold text-13px text-gamefiRed outline-none focus:outline-none'>Cancel</span>
+          </button>
+          <button className='flex gap-2 items-center ml-3 bg-gamefiGreen-700 px-8 py-2 rounded-sm clipped-t-r' onClick={() => handleSave()}>
+            <span className='uppercase font-bold text-13px text-gamefiDark-900 outline-none focus:outline-none'>Save</span>
+          </button>
+        </div>
+        : <button className='flex gap-2 items-center' onClick={() => handleEdit()}>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 3L13 6" stroke="#6CDB00" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M12 1L15 4L5 14L1 15L2 11L12 1Z" stroke="#6CDB00" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <span className='uppercase font-bold text-13px text-gamefiGreen-700 outline-none focus:outline-none'>Edit profile</span>
+        </button>}
     </div>
-    <div className='w-full flex lg:flex-row flex-col gap-5 mb-16'>
-      <div className={clsx(styles.box, 'lg:w-2/3 w-full p-7 rounded-sm')}>
+    <div className='w-full flex xl:flex-row flex-col gap-5 mb-16'>
+      <div className={clsx(styles.box, 'xl:w-2/3 w-full p-7 rounded-sm')}>
         <h3 className='font-bold text-base mb-2 uppercase'>Wallet Addresses</h3>
         <div className='font-casual text-sm mb-7'>
           Your wallets linked to GameFi are listed below.
@@ -63,12 +190,12 @@ const Profile = () => {
               <div className='w-8 h-8 rounded-full'>
                 <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <circle cx="17" cy="17" r="16" fill="#546BC7" stroke="#282A33" strokeWidth="2" />
-                  <path d="M17.1092 8.6875L17 9.07713V20.3833L17.1092 20.4978L22.1072 17.3956L17.1092 8.6875Z" fill="white" fill-opacity="0.3" />
-                  <path d="M17 8.6875L11.8928 17.3955L17 20.4978V15.0101V8.6875Z" fill="white" fill-opacity="0.5" />
-                  <path d="M17.0621 21.3416L17 21.4198V25.4179L17.0621 25.6052L22.1072 18.2637L17.0621 21.3416Z" fill="white" fill-opacity="0.3" />
-                  <path d="M17 25.6052V21.3416L11.8928 18.2637L17 25.6052Z" fill="white" fill-opacity="0.5" />
-                  <path d="M17 20.4976L22.1072 17.4301L17 15.0713V20.4976Z" fill="white" fill-opacity="0.6" />
-                  <path d="M11.8928 17.4301L17 20.4976V15.0713L11.8928 17.4301Z" fill="white" fill-opacity="0.3" />
+                  <path d="M17.1092 8.6875L17 9.07713V20.3833L17.1092 20.4978L22.1072 17.3956L17.1092 8.6875Z" fill="white" fillOpacity="0.3" />
+                  <path d="M17 8.6875L11.8928 17.3955L17 20.4978V15.0101V8.6875Z" fill="white" fillOpacity="0.5" />
+                  <path d="M17.0621 21.3416L17 21.4198V25.4179L17.0621 25.6052L22.1072 18.2637L17.0621 21.3416Z" fill="white" fillOpacity="0.3" />
+                  <path d="M17 25.6052V21.3416L11.8928 18.2637L17 25.6052Z" fill="white" fillOpacity="0.5" />
+                  <path d="M17 20.4976L22.1072 17.4301L17 15.0713V20.4976Z" fill="white" fillOpacity="0.6" />
+                  <path d="M11.8928 17.4301L17 20.4976V15.0713L11.8928 17.4301Z" fill="white" fillOpacity="0.3" />
                 </svg>
               </div>
               <div className='w-8 h-8 rounded-full'>
@@ -100,21 +227,42 @@ const Profile = () => {
             <div className='w-8 h-8 rounded-full bg-black'>
               <SolanaIcon />
             </div>
-            <div className='flex justify-between gap-2 w-full items-center'>
-              <div className='grid'>
-                <span className='font-bold text-xs uppercase text-white/50'>Solana Wallet</span>
-                {
-                  userInfo?.solana_address ?
-                    <span className='font-casual text-13px text-white/80 break-words break-all text-ellipsis'>{userInfo?.solana_address}</span> :
-                    <span className='text-white/40 italic text-13px font-casual'>Not connected</span>
-                }
-              </div>
-              {userInfo?.solana_address &&
-                <span className='cursor-pointer' onClick={() => onCopy(userInfo?.solana_addres)}>
-                  <DocumentCopyIcon />
-                </span>
-              }
-            </div>
+            {
+              isEdit
+                ? <div className='flex justify-between gap-2 w-full items-center'>
+                  <div className='grid'>
+                    <span className='font-bold text-xs uppercase text-white/50'>Solana Wallet</span>
+                    {
+                      newSolanaWallet
+                        ? <span className='font-casual text-13px text-white/80 break-words break-all text-ellipsis'>{newSolanaWallet}</span>
+                        : <span className='text-white/40 italic text-13px font-casual'>Not connected</span>
+                    }
+                  </div>
+                  {newSolanaWallet
+                    ? <span className='cursor-pointer text-gamefiRed' onClick={() => handleSolanaDisconnect()}>
+                        Disconnect
+                    </span>
+                    : <span className='cursor-pointer text-gamefiGreen-700' onClick={() => handleSolanaConnect()}>
+                      Connect
+                    </span>
+                  }
+                </div>
+                : <div className='flex justify-between gap-2 w-full items-center'>
+                  <div className='grid'>
+                    <span className='font-bold text-xs uppercase text-white/50'>Solana Wallet</span>
+                    {
+                      userInfo?.solana_address
+                        ? <span className='font-casual text-13px text-white/80 break-words break-all text-ellipsis'>{userInfo?.solana_address}</span>
+                        : <span className='text-white/40 italic text-13px font-casual'>Not connected</span>
+                    }
+                  </div>
+                  {userInfo?.solana_address &&
+              <span className='cursor-pointer' onClick={() => onCopy(userInfo?.solana_address)}>
+                <DocumentCopyIcon />
+              </span>
+                  }
+                </div>
+            }
           </div>
           <div className={clsx(styles.walletBox, 'flex gap-2 items-center mb-2 py-3 pl-2 pr-4 rounded-sm')}>
             <div className='w-8 h-8 rounded-full bg-black'>
@@ -124,9 +272,9 @@ const Profile = () => {
               <div className='grid'>
                 <span className='font-bold text-xs uppercase text-white/50'>Terra Wallet</span>
                 {
-                  userInfo?.terra_address ?
-                    <span className='font-casual text-13px text-white/80 break-words break-all text-ellipsis'>{userInfo?.terra_address}</span> :
-                    <span className='text-white/40 italic text-13px font-casual'>Not connected</span>
+                  userInfo?.terra_address
+                    ? <span className='font-casual text-13px text-white/80 break-words break-all text-ellipsis'>{userInfo?.terra_address}</span>
+                    : <span className='text-white/40 italic text-13px font-casual'>Not connected</span>
                 }
               </div>
               {userInfo?.terra_address &&
@@ -138,7 +286,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <div className={clsx(styles.box, 'lg:w-1/3 w-ful rounded-sm p-7 h-fit')}>
+      <div className={clsx(styles.box, 'xl:w-1/3 w-ful rounded-sm p-7 h-fit')}>
         <h3 className='font-bold text-base mb-4 uppercase'>Wallet Addresses</h3>
         <div className='grid grid-cols-2 items-center justify-between gap-2 mb-4'>
           <label className='text-sm font-casual' htmlFor="">KYC Status</label>
@@ -165,13 +313,27 @@ const Profile = () => {
         {
           userInfo?.user_telegram && <div className='grid grid-cols-2 items-center justify-between mb-4'>
             <label className='text-sm font-casual' htmlFor="">Twitter Account</label>
-            <div className='text-sm font-casual text-white/50 text-right'>{userInfo?.user_telegram}</div>
+            {isEdit
+              ? <input
+                type="text"
+                className="bg-gamefiDark-900 text-sm rounded-sm border-none outline-none focus:outline-none focus:border-none"
+                value={newTwitter}
+                onChange={(e) => setNewTwitter(e?.target?.value)}
+              ></input>
+              : <div className='text-sm font-casual text-white/50 text-right'>{userInfo?.user_telegram}</div>}
           </div>
         }
         {
           userInfo?.user_twitter && <div className='grid grid-cols-2 items-center justify-between mb-4'>
             <label className='text-sm font-casual' htmlFor="">Telegram Account</label>
-            <div className='text-sm font-casual text-white/50 text-right'>{userInfo?.user_twitter}</div>
+            {isEdit
+              ? <input
+                type="text"
+                className="bg-gamefiDark-900 text-sm rounded-sm border-none outline-none focus:outline-none focus:border-none"
+                value={newTelegram}
+                onChange={(e) => setnewTelegram(e?.target?.value)}
+              ></input>
+              : <div className='text-sm font-casual text-white/50 text-right'>{userInfo?.user_twitter}</div>}
           </div>
         }
         {
@@ -216,6 +378,6 @@ const Profile = () => {
       </div>
     </div>
   </div>
-};
+}
 
-export default Profile;
+export default Profile

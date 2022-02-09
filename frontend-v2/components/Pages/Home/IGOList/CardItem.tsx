@@ -62,7 +62,7 @@ const CardItem = ({ item, ...props }: Props) => {
       </div>
       <div className="bg-gamefiDark-650 w-full clipped-b-l pb-2">
         <div className="w-full flex items-center justify-center border-b border-gamefiDark-600" style={{ height: '80px' }}>
-          <Link href={`https://hub.gamefi.org/buy-token/${item.id}`} passHref>
+          <Link href={`https://hub.gamefi.org/#/buy-token/${item.id}`} passHref>
             <a className="text-center font-semibold text-lg cursor-pointer hover:underline">
               {item?.title || ''}
             </a>

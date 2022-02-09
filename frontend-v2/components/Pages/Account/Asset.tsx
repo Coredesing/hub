@@ -3,7 +3,7 @@ import TabMenus from './TabMenus'
 import styles from './Asset.module.scss'
 import CardSlim from '../Market/CardSlim'
 import { useMyWeb3 } from '@/components/web3/context'
-import axios from 'axios'
+import { fetcher } from '@/utils'
 import { Contract } from '@ethersproject/contracts'
 import ERC721Abi from '@/components/web3/abis/Erc721.json'
 import LoadingOverlay from '@/components/Base/LoadingOverlay'
@@ -40,8 +40,8 @@ const Asset = () => {
   const getMyListAsset = async (account: string, erc721Contract: any, prjInfo: any) => {
     try {
       const collections: any[] = []
-      const result = await axios.get(`${API_BASE_URL}/marketplace/owner/${prjInfo.slug}?wallet=${account}`)
-      const array = result.data.data?.data || []
+      const result = await fetcher(`${API_BASE_URL}/marketplace/owner/${prjInfo.slug}?wallet=${account}`)
+      const array = result.data?.data || []
       for (let j = 0; j < array.length; j++) {
         const collection: any = {
           project: prjInfo
@@ -52,7 +52,7 @@ const Asset = () => {
         if (erc721Contract) {
           try {
             const tokenURI = await erc721Contract.tokenURI(collection.token_id)
-            const infor = (await axios.get(tokenURI)).data || {}
+            const infor = (await fetcher(tokenURI)) || {}
             Object.assign(collection, infor)
           } catch (error) {
             console.debug('err', error)
@@ -80,13 +80,13 @@ const Asset = () => {
       }
       try {
         if (useExternalUri) {
-          const result = await axios.post(`${API_BASE_URL}/marketplace/collection/${prjInfo.token_address}/${idCollection}`)
+          const result = await fetcher(`${API_BASE_URL}/marketplace/collection/${prjInfo.token_address}/${idCollection}`, { method: 'POST' })
           const infor = result.data?.data || {}
           Object.assign(collection, infor)
         } else {
           if (erc721Contract) {
             const tokenURI = await erc721Contract.tokenURI(collection.token_id)
-            const infor = (await axios.get(tokenURI)).data || {}
+            const infor = (await fetcher(tokenURI)) || {}
             Object.assign(collection, infor)
           }
         }
@@ -103,8 +103,8 @@ const Asset = () => {
     if (!account || !library) return
     const type = assetTypes[currentTab].type || assetTypes[0].type
     setAssetLoading(true)
-    axios.get(`${API_BASE_URL}/marketplace/collections/support?type=${type}`).then(async (res) => {
-      const arr = res.data.data || []
+    fetcher(`${API_BASE_URL}/marketplace/collections/support?type=${type}`).then(async (res) => {
+      const arr = res.data || []
       if (arr.length) {
         let collections: any[] = []
         for (let i = 0; i < arr.length; i++) {

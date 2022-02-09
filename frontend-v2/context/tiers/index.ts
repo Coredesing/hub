@@ -1,7 +1,9 @@
 import { useReducer } from 'react'
 import { tiersActions } from './constant'
 import tiersReducer from './reducer'
-import axios from '@/utils/axios'
+import { fetcher } from '@/utils'
+import { API_BASE_URL } from '@/utils/constants'
+
 const tiersContext = () => {
   const initState = {
     data: null,
@@ -13,8 +15,8 @@ const tiersContext = () => {
   const getUserTier = async (walletAddress: string) => {
     dispatch({ type: tiersActions.LOADING, payload: state })
     try {
-      const response = await axios.get(`/user/tier-info?wallet_address=${walletAddress}`)
-      const data = response.data.data
+      const response = await fetcher(`${API_BASE_URL}/user/tier-info?wallet_address=${walletAddress}`)
+      const data = response.data
       dispatch({
         type: tiersActions.SUCCESS,
         payload: {

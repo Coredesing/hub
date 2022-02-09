@@ -4,12 +4,15 @@ import GameCarousel from '@/components/Pages/Home/GameCarousel'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
-import IGOList from '@/components/Pages/Home/IGOList'
-import INOList from '@/components/Pages/Home/INOList'
-import GameList from '@/components/Pages/Home/GameList'
-import NFTList from '@/components/Pages/Home/NFTList'
+import IGOList from 'components/Pages/Home/IGOList'
+import INOList from 'components/Pages/Home/INOList'
+import GameList from 'components/Pages/Home/GameList'
+import NFTList from 'components/Pages/Home/NFTList'
+import Instruction from 'components/Pages/Home/Instruction'
 
 import { API_BASE_URL } from '@/utils/constants'
+import Partners from '@/components/Pages/Home/Partners'
+import Performance from '@/components/Pages/Home/Performance'
 import { fetcher } from '@/utils'
 
 const PageIndex = () => {
@@ -39,10 +42,15 @@ const PageIndex = () => {
         {/* Loading here */}
         {featuredGames && featuredGames.length ? <GameCarousel likes={likes} items={featuredGames}></GameCarousel> : <></>}
       </div>
+      <Instruction></Instruction>
       <IGOList></IGOList>
-      <INOList></INOList>
-      <GameList></GameList>
-      {/* <NFTList></NFTList> */}
+      <div className="bg-gamefiDark-800">
+        <INOList></INOList>
+        <GameList></GameList>
+        {/* <NFTList></NFTList> */}
+        <Partners></Partners>
+      </div>
+      <Performance></Performance>
     </Layout>
   )
 }

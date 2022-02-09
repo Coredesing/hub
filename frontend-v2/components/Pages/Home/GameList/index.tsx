@@ -57,7 +57,7 @@ const GameList = () => {
   return <>
     {
       topGames && topGames.length > 0
-        ? <div className="px-4 lg:px-16 md:container mx-auto mt-20 pb-14">
+        ? <div className="px-4 lg:px-16 md:container mx-auto pt-20 pb-14">
           <div className="md:text-lg 2xl:text-3xl uppercase font-bold flex">
             <FilterDropdown items={gameFilterOptions} selected={gameFilterOption} onChange={handleChangeGameFilter}></FilterDropdown> <span className="ml-2">Games</span>
           </div>
@@ -74,7 +74,7 @@ const GameList = () => {
                   <div className="mt-4 flex w-full overflow-x-auto hide-scrollbar">
                     {topGames.map((item, i) => (
                       i !== 0
-                        ? <div className="mx-2" style={{ minWidth: '300px' }} key={`game-${item.id}`}>
+                        ? <div className="mx-2" style={{ minWidth: '300px' }} key={`game-list-${item.id}`}>
                           <TopGame item={item} like={likes?.find(like => like?.game_id === item.id)} isTop={false}></TopGame>
                         </div>
                         : <></>

@@ -64,7 +64,7 @@ export const formatHumanReadableTime = (timeInput: number, timeToCheck: number) 
   return str
 }
 
-export const debounce = (fn: Function, timer: number) => {
+export const debounce = (fn: (any) => void, timer: number) => {
   let timeout: any
   return function (args?: any) {
     clearTimeout(timeout)
@@ -174,6 +174,21 @@ export function printNumber (_n: string | number): string {
   return n.toLocaleString()
 }
 
+export const networkImage = (network: string) => {
+  switch (network) {
+  case 'bsc': {
+    return require('assets/images/networks/bsc.svg')
+  }
+
+  case 'eth': {
+    return require('assets/images/networks/eth.svg')
+  }
+
+  case 'polygon': {
+    return require('assets/images/networks/polygon.svg')
+  }
+  }
+}
 export const useFetch = (url: string, timeout?: number) => {
   const [response, setResponse] = useState<SWRResponse | null>(null)
   const [error, setError] = useState(false)

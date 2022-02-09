@@ -43,18 +43,22 @@ const Toolbox = () => {
           <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
           <span>Launchpad</span>
         </MenuLink>
+        <MenuLink path='/ino'>
+          <Image src={require('@/assets/images/icons/spaceship.svg')} alt='ino'></Image>
+          <span>INO</span>
+        </MenuLink>
         <MenuLink path='/market'>
           <Image src={require('@/assets/images/icons/shop.svg')} alt='market'></Image>
           <span>Market</span>
         </MenuLink>
-        <MenuLink path='/staking'>
+        {/* <MenuLink path='/staking'>
           <Image src={require('@/assets/images/icons/coin.svg')} alt='staking'></Image>
           <span>Staking</span>
-        </MenuLink>
-        <MenuLink path='/week'>
+        </MenuLink> */}
+        {/* <MenuLink path='/week'>
           <Image src={require('@/assets/images/icons/bookmark.svg')} alt='week'></Image>
           <span>Week</span>
-        </MenuLink>
+        </MenuLink> */}
         <MenuLink path='/metaverse'>
           <Image src={require('@/assets/images/icons/planet.svg')} alt='metaverse'></Image>
           <span>Metaverse</span>

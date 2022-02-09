@@ -104,26 +104,27 @@ const deleteRedisPoolList = (params) => {
  * UPCOMING COMMUNITY & IGO POOLS
  */
  const getRedisKeyUpcomingPools = (page = 1, type, token_type) => {
-  let poolType = 'all'
+  let poolType = type;
   if (type === undefined || type === null) {
     poolType = 'all'
   }
 
-  if (type === 0 || type === '0') {
-    poolType = 'igo'
-  }
-
-  if (type === 1 || type === '1') {
-    poolType = 'private'
-  }
-
-  if (type === 2 || type === '2') {
-    poolType = 'seed'
-  }
-
-  if (type === 3 || type === '3') {
-    poolType = 'community'
-  }
+  // Change to support filter by multiple value
+  // if (type === 0 || type === '0') {
+  //   poolType = 'igo'
+  // }
+  //
+  // if (type === 1 || type === '1') {
+  //   poolType = 'private'
+  // }
+  //
+  // if (type === 2 || type === '2') {
+  //   poolType = 'seed'
+  // }
+  //
+  // if (type === 3 || type === '3') {
+  //   poolType = 'community'
+  // }
 
   return `upcoming_pools_${poolType}_${page}_${token_type}`;
 };

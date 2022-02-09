@@ -5,7 +5,7 @@ import { TabPanel, Tabs } from '@/components/Base/Tabs'
 import { getTXLink, MARKETPLACE_CONTRACT, useWeb3Default } from '@/components/web3'
 import { useMyWeb3 } from '@/components/web3/context'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { formatHumanReadableTime, formatNumber, shortenAddress } from '@/utils'
+import { formatHumanReadableTime, formatNumber, shortenAddress, fetcher } from '@/utils'
 import BannerImagePool from './BannerImagePool'
 import styles from './MarketplaceDetail.module.scss'
 import SellNFTModal from './SellNFTModal'
@@ -21,7 +21,7 @@ import { BigNumber, constants, utils } from 'ethers'
 import ButtonBase from '@/components/Base/Buttons/ButtonBase'
 import DialogTxSubmitted from '@/components/Base/DialogTxSubmitted'
 import { currencyNative, useTokenAllowance, useTokenApproval } from '@/components/web3/utils'
-import axios from '@/utils/axios'
+import { API_BASE_URL } from '@/utils/constants'
 import BuyNowModal from './MarketBuyNowModal'
 import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from 'components/Base/Table'
 import { useAppContext } from '@/context/index'
@@ -155,8 +155,8 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
 
   useEffect(() => {
     if (reloadOfferList && tokenOnSale.currency) {
-      axios.get(`/marketplace/offers/${projectInfo.slug}/${tokenInfo.id}?event_type=TokenOffered`).then(async (res) => {
-        const offers = res.data?.data || []
+      fetcher(`${API_BASE_URL}/marketplace/offers/${projectInfo.slug}/${tokenInfo.id}?event_type=TokenOffered`).then(async (res) => {
+        const offers = res?.data || []
         const offerList: ObjectType<any>[] = []
         await Promise.all(offers.map((item: any) => new Promise(async (resolve) => {
           if (item.currency === tokenOnSale.currency) {

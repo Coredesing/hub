@@ -3,24 +3,24 @@ import React, { useMemo } from 'react'
 import { Carousel } from 'react-responsive-carousel'
 import { useScreens } from '../utils'
 import Image from 'next/image'
-import ListSwiper, { SwiperItem } from '@/components/Base/ListSwiper'
+import CardItem from './CardItem'
 import { useFetch } from '@/utils'
 
 const IGOList = () => {
   const screens = useScreens()
-  const url = '/pools/latest-pools?token_type=erc20&limit=6&page=1&is_private=0'
+  const url = '/pools/upcoming-pools?token_type=erc20&limit=6&page=1&is_private=0,1,2,3'
   const { response, loading } = useFetch(url)
 
   const listUpcoming = useMemo<any[]>(() => {
-    return response?.data || []
+    return response?.data?.data || []
   }, [response])
 
-  return (
-    <>
-      <div className="md:px-4 lg:px-16 mx-auto bg-gamefiDark-700 mt-20 pb-14">
+  return (listUpcoming && listUpcoming.length > 0
+    ? <>
+      <div className="md:px-4 lg:px-16 mx-auto bg-black mt-20 pb-32">
         <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
           <div className="inline-block top-0 left-0 right-0 uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
-              Latest IGOs
+              Upcoming IGOs
           </div>
           <div className="absolute -bottom-5 left-0 right-0">
             <Image src={require('@/assets/images/under-stroke-green.svg')} alt="understroke"></Image>
@@ -37,21 +37,17 @@ const IGOList = () => {
                 showArrows={false}
                 infiniteLoop={true}
               >
-                {listUpcoming && listUpcoming.length > 0 && listUpcoming.map(item => (
-                  <PoolBanner key={item.id} item={item} color="green" tagColor="gamefiDark-700" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
+                {listUpcoming.map(item => (
+                  <CardItem key={item.id} item={item} className="px-3"></CardItem>
                 ))}
               </Carousel>
             </div>
             : <div className="mx-auto md:container 2xl:px-16">
-              {listUpcoming?.length
-                ? <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
-                  {listUpcoming.map(item => (
-                    <SwiperItem key={item.id}>
-                      <PoolBanner item={item} color="green" tagColor="gamefiDark-700" className="mx-3" url={`https://hub.gamefi.org/#/buy-token/${item.id}`}></PoolBanner>
-                    </SwiperItem>
-                  ))}
-                </ListSwiper>
-                : <></>}
+              <div className={`text-center justify-center ${listUpcoming.length > 2 ? 'grid grid-cols-2' : 'flex'} lg:${listUpcoming.length >= 3 ? 'grid grid-cols-3' : 'flex'} xl:${listUpcoming.length >= 4 ? 'grid grid-cols-4' : 'flex'} gap-4 xl:gap-6 mt-14`}>
+                {listUpcoming.map(item => (
+                  <CardItem key={item.id} item={item}></CardItem>
+                ))}
+              </div>
               {
                 loading
                   ? <div className="loader-wrapper mx-auto mt-14">
@@ -67,6 +63,7 @@ const IGOList = () => {
         }
       </div>
     </>
+    : <></>
   )
 }
 

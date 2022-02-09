@@ -26,7 +26,7 @@ module.exports = {
         600: '#34344A',
         650: '#23252B',
         700: '#24262F',
-        800: '#20232d',
+        800: '#191C25',
         900: '#13141f'
       },
       gamefiGreen: {
@@ -55,22 +55,25 @@ module.exports = {
         800: '#573F00',
         900: '#1F1600'
       },
+      gamefiRed: {
+        DEFAULT: '#DE4343'
+      },
       ...colors
     },
     screens: {
-      'sm': '640px',
+      sm: '640px',
       // => @media (min-width: 640px) { ... }
 
-      'md': '960px',
+      md: '960px',
       // => @media (min-width: 960px) { ... }
 
-      'lg': '1024px',
+      lg: '1024px',
       // => @media (min-width: 1024px) { ... }
 
-      'xl': '1280px',
+      xl: '1280px',
       // => @media (min-width: 1280px) { ... }
 
-      '2xl': '1536px',
+      '2xl': '1536px'
       // => @media (min-width: 1536px) { ... }
     },
     fontSize: {
@@ -88,7 +91,7 @@ module.exports = {
       '8xl': ['6rem', { lineHeight: '1' }],
       '9xl': ['8rem', { lineHeight: '1' }],
       '13px': ['13px', { lineHeight: '18px' }]
-    },
+    }
   },
   plugins: [
     require('@tailwindcss/line-clamp'),

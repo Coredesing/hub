@@ -9,12 +9,13 @@ export const useWalletSignature = () => {
     if (!library || !account) {
       throw new Error('Please connect wallet to sign')
     }
-    return new Promise(async (res, rej) => {
+    
+    return new Promise(async (resolve, reject) => {
       try {
         const message = await library.getSigner().signMessage(MESSAGE_SIGNATURE)
-        res(message)
+        resolve(message)
       } catch (error) {
-        rej(error.message || 'Something went wrong when sign message')
+        reject(error.message || 'Something went wrong when sign message')
       }
     })
   }, [library, account])

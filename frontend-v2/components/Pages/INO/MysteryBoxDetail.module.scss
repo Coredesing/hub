@@ -18,10 +18,17 @@
 }
 
 .headCountdown {
-    transform: skew(-30deg);
-    width: calc(100% + 40px);
-    .countdown,
-    .titleCountdown {
-        transform: skew(30deg);
+    @media all and (min-width: 1024px) {
+        -webkit-clip-path: polygon(30px 0, 100% 0, 100% 100%, 0% 100%);
+        clip-path: polygon(30px 0, 100% 0, 100% 100%, 0% 100%);
+        width: calc(100% + 20px);
+        margin-left: -20px;
+        padding-left: 20px;
     }
+    // transform: skew(-30deg);
+    // width: calc(100% + 40px);
+    // .countdown,
+    // .titleCountdown {
+    //     transform: skew(30deg);
+    // }
 }

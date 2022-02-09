@@ -30,6 +30,10 @@ const Profile = () => {
     )
   }, [account])
 
+  const onCopy = (val: any) => {
+    navigator.clipboard.writeText(val)
+  }
+
   const loadingTier = tiers?.state?.data === null || tiers?.state.loading
   const isStaked = +tiers?.state?.data?.tier > 0
   const isKyc = !loadingUserInfo && userInfo?.is_kyc === 1
@@ -84,7 +88,7 @@ const Profile = () => {
             </div>
             <div className='flex justify-between gap-2 w-full items-center'>
               <span className='font-casual text-13px text-white/80 break-words break-all text-ellipsis'>{account}</span>
-              <span className='cursor-pointer'>
+              <span className='cursor-pointer' onClick={() => onCopy(account)}>
                 <DocumentCopyIcon />
               </span>
             </div>
@@ -106,7 +110,7 @@ const Profile = () => {
                 }
               </div>
               {userInfo?.solana_address &&
-                <span className='cursor-pointer'>
+                <span className='cursor-pointer' onClick={() => onCopy(userInfo?.solana_addres)}>
                   <DocumentCopyIcon />
                 </span>
               }
@@ -126,7 +130,7 @@ const Profile = () => {
                 }
               </div>
               {userInfo?.terra_address &&
-                <span className='cursor-pointer'>
+                <span className='cursor-pointer' onClick={() => onCopy(userInfo?.terra_address)}>
                   <DocumentCopyIcon />
                 </span>
               }

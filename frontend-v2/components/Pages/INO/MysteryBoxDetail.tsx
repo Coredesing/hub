@@ -238,7 +238,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       return
     }
     try {
-      const res = await fetcher(`/pool/${poolInfo?.id}/nft-order?wallet_address=${account}`)
+      const res = await fetcher(`${API_BASE_URL}/pool/${poolInfo?.id}/nft-order?wallet_address=${account}`)
       const amount = res.data?.amount
       setMyBoxOrdered(amount)
     } catch (error) {
@@ -309,7 +309,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           Congratulations! You have successfully applied whitelist and can buy Mystery boxes from <b>Phase 1</b>
         </Alert>
       }
-      <div className={'grid grid-cols-2'}>
+      <div className={'grid lg:grid-cols-2'}>
         <div className={clsx('flex', styles.headInfoBoxOrder)}>
           <InfoBoxOrderItem label='Registered Users' value={poolInfo.totalOrder || 0} />
           <InfoBoxOrderItem label='Ordered Boxes' value={poolInfo.totalRegistered || 0} />

@@ -20,8 +20,8 @@ const LeftSideBar = () => {
       <div className='mb-6'>
         <div className='flex gap-2 items-center'>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 9.5C10.4853 9.5 12.5 7.48528 12.5 5C12.5 2.51472 10.4853 0.5 8 0.5C5.51472 0.5 3.5 2.51472 3.5 5C3.5 7.48528 5.51472 9.5 8 9.5Z" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M11.5 10.5V15.5L8 13.5L4.5 15.5V10.5" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M8 9.5C10.4853 9.5 12.5 7.48528 12.5 5C12.5 2.51472 10.4853 0.5 8 0.5C5.51472 0.5 3.5 2.51472 3.5 5C3.5 7.48528 5.51472 9.5 8 9.5Z" stroke="white" strokeMiterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M11.5 10.5V15.5L8 13.5L4.5 15.5V10.5" stroke="white" strokeMiterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
           <Link href={'/account/profile'}><a className='uppercase text-sm font-bold'>My Tier</a></Link>
         </div>
@@ -29,9 +29,9 @@ const LeftSideBar = () => {
       <div className='mb-6'>
         <div className='flex gap-2 items-center'>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13.5 0.5H2.5C1.948 0.5 1.5 0.948 1.5 1.5V15.5L4 13.5L6 15.5L8 13.5L10 15.5L12 13.5L14.5 15.5V1.5C14.5 0.948 14.052 0.5 13.5 0.5Z" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M4.5 5.5H11.5" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M4.5 9.5H11.5" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M13.5 0.5H2.5C1.948 0.5 1.5 0.948 1.5 1.5V15.5L4 13.5L6 15.5L8 13.5L10 15.5L12 13.5L14.5 15.5V1.5C14.5 0.948 14.052 0.5 13.5 0.5Z" stroke="white" strokeMiterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M4.5 5.5H11.5" stroke="white" strokeMiterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M4.5 9.5H11.5" stroke="white" strokeMiterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
           <Link href={'/account/profile'}><a className='uppercase text-sm font-bold'>IGO Pools</a></Link>
         </div>

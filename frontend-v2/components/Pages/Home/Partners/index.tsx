@@ -74,7 +74,7 @@ const Partners = () => {
           <Image src={require('assets/images/partners/kryptomon.png')} alt=""></Image>
         </div>
       </>}
-      
+
       {(screens.mobile || screens.tablet) &&
         <>
           <div className="mx-auto relative" style={{ maxWidth: '600px' }}>

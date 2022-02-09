@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import Layout from '@/components/Layout'
 import imgNA from '@/assets/images/ranks/na.png'
 import { API_BASE_URL } from '@/utils/constants'
@@ -14,6 +14,12 @@ import TabStake from '@/components/Pages/Staking/TabStake'
 import TabUnstake from '@/components/Pages/Staking/TabUnstake'
 
 const Staking = ({ data }) => {
+  const mounted = useRef(false)
+  useEffect(() => {
+    mounted.current = true
+    return () => { mounted.current = false }
+  }, [])
+
   const pool = useMemo(() => data.pool, [data])
   const { tiers, myTier } = useAppContext()
   useEffect(() => {
@@ -79,6 +85,10 @@ const Staking = ({ data }) => {
     }
 
     contractStakingReadonly.linearPendingWithdrawals(pool.pool_id, account).then(x => {
+      if (!mounted.current) {
+        return
+      }
+
       const time = x.applicableAt.toNumber()
       const amount = x.amount
 
@@ -95,7 +105,7 @@ const Staking = ({ data }) => {
         amount
       })
     })
-  }, [account, contractStakingReadonly, pool, setPendingWithdrawal])
+  }, [account, contractStakingReadonly, pool, setPendingWithdrawal, mounted])
 
   useEffect(() => {
     if (!contractStakingReadonly) {
@@ -108,11 +118,15 @@ const Staking = ({ data }) => {
     }
 
     contractStakingReadonly.linearTotalStaked(pool.pool_id).then(x => {
+      if (!mounted.current) {
+        return
+      }
+
       setTotalStaked(x)
     })
 
     loadMyPending()
-  }, [contractStakingReadonly, pool, loadMyPending])
+  }, [contractStakingReadonly, pool, loadMyPending, mounted])
 
   const [tab, setTab] = useState(0)
 

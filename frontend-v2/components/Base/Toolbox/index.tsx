@@ -51,10 +51,10 @@ const Toolbox = () => {
           <Image src={require('@/assets/images/icons/shop.svg')} alt='market'></Image>
           <span>Market</span>
         </MenuLink>
-        {/* <MenuLink path='/staking'>
+        <MenuLink path='/staking'>
           <Image src={require('@/assets/images/icons/coin.svg')} alt='staking'></Image>
           <span>Staking</span>
-        </MenuLink> */}
+        </MenuLink>
         {/* <MenuLink path='/week'>
           <Image src={require('@/assets/images/icons/bookmark.svg')} alt='week'></Image>
           <span>Week</span>

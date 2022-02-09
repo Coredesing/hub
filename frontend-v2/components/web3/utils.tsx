@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useMemo } from 'react'
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import { utils, Contract, BigNumber, providers } from 'ethers'
 import { networkConnector } from '@/components/web3/connectors'
 import { useWeb3Default, getNetworkByAlias, getLibrary, ETH, MATIC, BNB, USDT_ERC, USDT_POLYGON, BUSD_BSC, Token } from '@/components/web3'
@@ -7,6 +7,12 @@ import ERC20 from '@/components/web3/abis/ERC20.json'
 import { safeToFixed } from '@/utils'
 
 export const useTokenAllowance = (token?: Token, owner?: string, spender?: string, networkAlias?: string) => {
+  const mounted = useRef(false)
+  useEffect(() => {
+    mounted.current = true
+    return () => { mounted.current = false }
+  }, [])
+
   const [loading, setLoading] = useState<boolean>(false)
   const [allowance, setAllowance] = useState<BigNumber | null>(null)
   const [error, setError] = useState<Error>()
@@ -38,13 +44,25 @@ export const useTokenAllowance = (token?: Token, owner?: string, spender?: strin
     try {
       const contract = new Contract(token.address, ERC20, provider)
       const approved = await contract.allowance(owner, spender)
+      if (!mounted.current) {
+        return
+      }
+
       setAllowance(approved)
     } catch (err) {
+      if (!mounted.current) {
+        return
+      }
+
       setError(err)
     } finally {
+      if (!mounted.current) {
+        return
+      }
+
       setLoading(false)
     }
-  }, [token, owner, spender, provider])
+  }, [token, owner, spender, provider, mounted])
 
   return {
     load,
@@ -138,6 +156,12 @@ export const useLibraryDefaultFlexible = (networkAlias?: string, mainnet = false
 }
 
 export const useBalanceToken = (token?: Token, networkAlias?: string) => {
+  const mounted = useRef(false)
+  useEffect(() => {
+    mounted.current = true
+    return () => { mounted.current = false }
+  }, [])
+
   const { provider } = useLibraryDefaultFlexible(networkAlias)
   const { account } = useMyWeb3()
 
@@ -162,15 +186,27 @@ export const useBalanceToken = (token?: Token, networkAlias?: string) => {
     contractReadOnly
       .balanceOf(account)
       .then((balance: any) => {
+        if (!mounted.current) {
+          return
+        }
+
         setBalance(balance)
       })
       .catch(() => {
+        if (!mounted.current) {
+          return
+        }
+
         setBalance(null)
       })
       .finally(() => {
+        if (!mounted.current) {
+          return
+        }
+
         setLoading(false)
       })
-  }, [account, provider, token, setBalance, setLoading])
+  }, [account, provider, token, setBalance, setLoading, mounted])
 
   useEffect((): any => {
     updateBalance()

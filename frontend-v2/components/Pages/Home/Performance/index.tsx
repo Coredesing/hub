@@ -63,25 +63,25 @@ const Performance = () => {
                     # {item.rank}
                 </div>
                 <div className="flex-1 font-casual text-sm pr-2">
-                  <p className="text-sm line-clamp-1 text-gray-300">{item.name}</p>
+                  <div className="text-sm line-clamp-1 text-gray-300">{item.name}</div>
                 </div>
                 <div className="flex-none font-casual text-sm pr-2 xl:w-36 w-20">
-                  <p className="text-sm line-clamp-1 text-gray-300">${parseFloat(item.price).toFixed(2)}</p>
+                  <div className="text-sm line-clamp-1 text-gray-300">${parseFloat(item.price).toFixed(2)}</div>
                 </div>
                 <div className="flex-none font-casual text-sm pr-2 w-20 xl:w-36 hidden lg:block">
-                  <p className="text-sm line-clamp-1 text-gray-300">{priceChange(item.price_change_24h || 0)}</p>
+                  <div className="text-sm line-clamp-1 text-gray-300">{priceChange(item.price_change_24h || 0)}</div>
                 </div>
                 <div className="flex-none font-casual text-sm pr-2 w-16 xl:w-32 hidden xl:block">
-                  <p className="text-sm line-clamp-1 text-gray-300">{priceChange(item.price_change_7d || 0)}</p>
+                  <div className="text-sm line-clamp-1 text-gray-300">{priceChange(item.price_change_7d || 0)}</div>
                 </div>
                 <div className="flex-none font-casual text-sm pr-2 w-48 hidden 2xl:block">
-                  <p className="text-sm line-clamp-1 text-gray-300">{prettyPrice(item.market_cap || 0)}</p>
+                  <div className="text-sm line-clamp-1 text-gray-300">{prettyPrice(item.market_cap || 0)}</div>
                 </div>
                 <div className="flex-none font-casual text-sm pr-2 w-48 hidden lg:block">
-                  <p className="text-sm line-clamp-1 text-gray-300">{prettyPrice(item.volume_24h || 0)}</p>
+                  <div className="text-sm line-clamp-1 text-gray-300">{prettyPrice(item.volume_24h || 0)}</div>
                 </div>
                 <div className="flex-none font-casual text-sm pr-2 w-20">
-                  <p className="text-sm line-clamp-1 text-gray-300">{parseFloat(item.ido_roi).toFixed(2)}x</p>
+                  <div className="text-sm line-clamp-1 text-gray-300">{parseFloat(item.ido_roi).toFixed(2)}x</div>
                 </div>
               </div>
             </div>

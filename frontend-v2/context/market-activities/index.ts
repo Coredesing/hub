@@ -2,7 +2,7 @@ import { useReducer } from 'react'
 import { marketActivitiesActions } from './constant';
 import tiersReducer from './reducer'
 import axios from '@/utils/axios'
-import { ObjectType } from '@/common/types'
+// import { ObjectType } from '@/common/types'
 import { BigNumber, Contract } from 'ethers'
 import ERC721ABI from 'components/web3/abis/Erc721.json'
 import ERC20ABI from 'components/web3/abis/ERC20.json'

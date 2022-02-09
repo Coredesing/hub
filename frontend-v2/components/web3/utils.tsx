@@ -44,23 +44,17 @@ export const useTokenAllowance = (token?: Token, owner?: string, spender?: strin
     try {
       const contract = new Contract(token.address, ERC20, provider)
       const approved = await contract.allowance(owner, spender)
-      if (!mounted.current) {
-        return
+      if (mounted.current) {
+        setAllowance(approved)
       }
-
-      setAllowance(approved)
     } catch (err) {
-      if (!mounted.current) {
-        return
+      if (mounted.current) {
+        setError(err)
       }
-
-      setError(err)
     } finally {
-      if (!mounted.current) {
-        return
+      if (mounted.current) {
+        setLoading(false)
       }
-
-      setLoading(false)
     }
   }, [token, owner, spender, provider, mounted])
 
@@ -186,25 +180,19 @@ export const useBalanceToken = (token?: Token, networkAlias?: string) => {
     contractReadOnly
       .balanceOf(account)
       .then((balance: any) => {
-        if (!mounted.current) {
-          return
+        if (mounted.current) {
+          setBalance(balance)
         }
-
-        setBalance(balance)
       })
       .catch(() => {
-        if (!mounted.current) {
-          return
+        if (mounted.current) {
+          setBalance(null)
         }
-
-        setBalance(null)
       })
       .finally(() => {
-        if (!mounted.current) {
-          return
+        if (mounted.current) {
+          setLoading(false)
         }
-
-        setLoading(false)
       })
   }, [account, provider, token, setBalance, setLoading, mounted])
 

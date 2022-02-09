@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useCallback } from 'react'
 
 type Item = {
   key: any;
@@ -14,9 +14,15 @@ const FilterDropdown = ({ items, selected, onChange }: Props) => {
   const [show, setShow] = useState(false)
   const wrapperRef = useRef(null)
 
-  const getSelectedItem = (value: any) => {
-    return items.find(item => item.value === value)
-  }
+  const getSelectedItem = useCallback((value: any) => {
+    return items.find(item => {
+      if (typeof item.value === 'object' && typeof value === 'object') {
+        return JSON.stringify(item.value) === JSON.stringify(value)
+      }
+
+      return item.value === value
+    })
+  }, [items])
 
   const handleClickOutside = (e: any) => {
     if (show === true && wrapperRef.current && !wrapperRef.current.contains(e?.target)) {

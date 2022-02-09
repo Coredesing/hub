@@ -127,7 +127,7 @@ export default function StakeRight ({ pool, contractStaking, loadMyStaking, load
     <div className="p-4 rounded bg-gray-500 bg-opacity-20 bg-gradient-to-l from-gamefiDark-800 mt-6">
       <span className="font-bold text-sm uppercase text-white opacity-50">Pending Withdrawal</span>
       { account && <p className="font-semibold text-2xl text-white leading-6">{pendingWithdrawal.amount === null ? 'Loading...' : `${pendingAmount} $GAFI`}</p>}
-      { !!pendingWithdrawal?.time && <p className="mt-4 font-casual text-xs opacity-50">Withdrawable at: <br />{pendingWithdrawal.time.toLocaleString('en-CA', { timeZoneName: 'short', hour12: false })}</p> }
+      { !!pendingWithdrawal?.time && <p className="mt-4 font-casual text-xs opacity-50">Withdrawable at: <br />{pendingWithdrawal.time.toLocaleString('en-ZA', { timeZoneName: 'short', hour12: false })}</p> }
       { !!pendingWithdrawal.amount && <div className="font-mechanic font-bold uppercase text-center text-sm mt-4">
         <div className={`cursor-pointer clipped-t-r p-px mt-2 bg-gamefiGreen-500 ${!canWithdraw ? 'grayscale' : 'grayscale-0'}`} onClick={withdraw}>
           <div className={'clipped-t-r p-2 flex justify-center items-center bg-gamefiGreen-500 text-gamefiDark-900'}>

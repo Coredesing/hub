@@ -12,6 +12,7 @@ import { TabPanel, Tabs } from '@/components/Base/Tabs'
 import Image from 'next/image'
 import TabStake from '@/components/Pages/Staking/TabStake'
 import TabUnstake from '@/components/Pages/Staking/TabUnstake'
+import FilterDropdown from '@/components/Pages/Home/FilterDropdown'
 
 const Staking = ({ data }) => {
   const mounted = useRef(false)
@@ -130,6 +131,41 @@ const Staking = ({ data }) => {
 
   const [tab, setTab] = useState(0)
 
+  const [rankingSelected, setRankingSelected] = useState()
+  const [isLive, setIsLive] = useState(null)
+  const rankingOptions = useMemo(() => {
+    let all = (data?.legendSnapshots || []).sort((a, b) => b.s - a.s).map(s => {
+      return {
+        key: s.id,
+        label: s.name,
+        value: s.top.map(x => ({ ...x, snapshot_at: x.snapshot_at ? new Date(x.snapshot_at * 1000) : null }))
+      }
+    })
+
+    if (data?.legendCurrent) {
+      all = [{
+        key: 0,
+        label: 'Realtime',
+        value: data.legendCurrent.map(x => ({ wallet_address: x.wallet_address, amount: parseFloat(x.amount), snapshot_at: x.last_time ? new Date(x.last_time * 1000) : null }))
+      }, ...all]
+    }
+
+    return all
+  }, [data])
+  useEffect(() => {
+    if (!rankingSelected) {
+      setRankingSelected(rankingOptions?.[0].value)
+    }
+
+    if (isLive === null) {
+      setIsLive(!rankingOptions?.[0]?.key)
+    }
+  }, [rankingOptions, rankingSelected, isLive])
+  const handleRankingOption = (item: any) => {
+    setIsLive(!item?.key)
+    setRankingSelected(item?.value)
+  }
+
   if (!pool) {
     return (<Layout title="GameFi Staking">
       <div className="px-1 md:px-4 lg:px-16 md:container mx-auto lg:block pb-4">
@@ -229,7 +265,49 @@ const Staking = ({ data }) => {
           <TabPanel value={tab} index={1}>
             <TabUnstake {...{ pool, contractStaking, loadMyStaking, stakingMine, loadMyPending, pendingWithdrawal, goStake: () => { setTab(0) } }} />
           </TabPanel>
-          <TabPanel value={tab} index={2}>Legendary Ranking</TabPanel>
+          <TabPanel value={tab} index={2}>
+            <div className="md:text-lg 2xl:text-2xl uppercase font-bold flex mt-6 items-center">
+              <span className="mr-2">Ranking</span><FilterDropdown items={rankingOptions} selected={rankingSelected} onChange={handleRankingOption}></FilterDropdown>
+            </div>
+            <div className="w-full relative bg-gamefiDark-600" style={{ height: '1px' }}>
+              <div className="absolute top-0 left-0 bg-gamefiDark-600 clipped-b-r-full-sm inline-block" style={{ height: '4px', width: '60px', marginTop: '0', marginLeft: '0' }}></div>
+            </div>
+
+            <table className="mt-4 w-full">
+              <thead>
+                <tr>
+                  <th scope="col" className="py-3 px-4 font-bold text-xs md:text-sm uppercase text-white opacity-50 text-left">
+                    Rank
+                  </th>
+                  <th scope="col" className="py-3 px-4 font-bold text-xs md:text-sm uppercase text-white opacity-50 text-left">
+                    Wallet Address
+                  </th>
+                  <th scope="col" className="py-3 px-4 font-bold text-xs md:text-sm uppercase text-white opacity-50 text-left">
+                    Amount ($GAFI)
+                  </th>
+                  <th scope="col" className="py-3 px-4 font-bold text-xs md:text-sm uppercase text-white opacity-50 text-left">
+                    { isLive ? 'Last Staking' : 'Snapshot Time' }
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                { (rankingSelected || []).map((x, index) => <tr key={index} className="border-b border-gamefiDark-600 font-casual">
+                  <td className="py-4 px-4 text-sm whitespace-nowrap">
+                    {index + 1}
+                  </td>
+                  <td className="py-4 px-4 text-sm whitespace-nowrap">
+                    {x.wallet_address}
+                  </td>
+                  <td className="py-4 px-4 text-sm whitespace-nowrap">
+                    {x.amount}
+                  </td>
+                  <td className="py-4 px-4 text-sm whitespace-nowrap">
+                    {x.snapshot_at ? x.snapshot_at.toLocaleString('en-ZA', { timeZoneName: 'short', hour12: false }) : '—'}
+                  </td>
+                </tr>) }
+              </tbody>
+            </table>
+          </TabPanel>
         </div>
       </div>
     </Layout>
@@ -239,16 +317,20 @@ const Staking = ({ data }) => {
 export default Staking
 
 export async function getServerSideProps () {
-  const [pools, tierConfigs] = await Promise.all([
+  const [pools, tierConfigs, legendSnapshots, legendCurrent] = await Promise.all([
     fetcher(`${API_BASE_URL}/staking-pool`),
-    fetcher(`${API_BASE_URL}/get-tiers`)
+    fetcher(`${API_BASE_URL}/get-tiers`),
+    fetcher(`${API_BASE_URL}/staking-pool/legend-snapshots`),
+    fetcher(`${API_BASE_URL}/staking-pool/legend-current`)
   ])
 
   return {
     props: {
       data: {
         pool: pools?.data?.[0] || null,
-        tierConfigs: tierConfigs?.data || null
+        tierConfigs: tierConfigs?.data || null,
+        legendSnapshots: legendSnapshots?.data || null,
+        legendCurrent: legendCurrent?.data || null
       }
     }
   }

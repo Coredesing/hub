@@ -72,7 +72,9 @@ const Partners = () => {
           <Image src={require('assets/images/partners/gunstar.png')} alt=""></Image>
           <Image src={require('assets/images/partners/lfw.png')} alt=""></Image>
           <Image src={require('assets/images/partners/kryptomon.png')} alt=""></Image>
-        </div></>}
+        </div>
+      </>}
+      
       {(screens.mobile || screens.tablet) &&
         <>
           <div className="mx-auto relative" style={{ maxWidth: '600px' }}>

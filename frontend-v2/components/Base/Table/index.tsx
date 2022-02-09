@@ -21,17 +21,17 @@ export const TableRow = (props: any) => {
 }
 
 export const TableCellHead = (props: any) => {
-  return <th className={clsx('uppercase py-3 px-4 font-semibold text-lg text-left', styles['table-cell'])}>{props.children}</th>
+  return <th className={clsx('uppercase py-3 px-4 font-semibold text-lg text-left', styles['table-cell'], props.className)}>{props.children}</th>
 }
 
 export const TableCell = (props: any) => {
-  return <td className={clsx('py-3 px-4 text-left text-sm font-casual', styles['table-cell'])}>{props.children}</td>
+  return <td className={clsx('py-3 px-4 text-left text-sm font-casual', styles['table-cell'], props.className)}>{props.children}</td>
 }
 
 export const TableHead = (props: any) => {
-  return <thead className={clsx(styles['table-head'])}>{props.children}</thead>
+  return <thead className={clsx(styles['table-head'], props.className)}>{props.children}</thead>
 }
 
 export const TableBody = (props: any) => {
-  return <tbody className={clsx(styles['table-body'])}>{props.children}</tbody>
+  return <tbody className={clsx(styles['table-body'], props.className)}>{props.children}</tbody>
 }

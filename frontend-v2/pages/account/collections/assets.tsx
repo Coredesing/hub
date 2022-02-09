@@ -7,7 +7,7 @@ import WrapperAccount from '@/components/Pages/Account/WrapperAccount'
 const Account = () => {
   return <Layout title="My Account">
     <WrapperAccount>
-      {/* <LeftSideBar /> */}
+      <LeftSideBar />
       <AccountContent>
         <Asset />
       </AccountContent>

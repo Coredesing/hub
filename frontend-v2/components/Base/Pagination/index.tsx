@@ -5,9 +5,10 @@ type Props = {
     totalPage: number;
     currentPage: number;
     onChange?: (page: number) => any;
+    className?: string;
 }
 
-const Pagination = ({ totalPage, currentPage, onChange }: Props) => {
+const Pagination = ({ totalPage, currentPage, onChange, className }: Props) => {
   const handleChangePage = (p: number) => {
     if (currentPage === p) return
     onChange && onChange(p)
@@ -62,7 +63,7 @@ const Pagination = ({ totalPage, currentPage, onChange }: Props) => {
     return pages
   }
   return (
-    <div>
+    <div className={className}>
       <div className={clsx(styles.pages)}>
         <div
           className={clsx('page rounded w-10 h-10 bg-gamefiDark-500 p-1 grid place-items-center font-bold transition ease-in-out delay-150', {

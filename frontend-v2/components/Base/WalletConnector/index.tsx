@@ -9,6 +9,7 @@ import { useMyWeb3 } from '@/components/web3/context'
 import Image from 'next/image'
 import Modal from '../Modal'
 import { formatEther } from '@ethersproject/units'
+import Link from 'next/link'
 
 export function shorten (s: string, max = 12) {
   return s.length > max ? s.substring(0, (max / 2) - 1) + '…' + s.substring(s.length - (max / 2) + 2, s.length) : s
@@ -201,9 +202,11 @@ const WalletConnector = () => {
               Buy $GAFI
             </span>
           </a>
-          <a className="flex py-2 px-4 bg-gray-700 mr-1 rounded" href="https://hub.gamefi.org/#/account" target="_blank" rel="noreferrer">
-            My Account
-          </a>
+          <Link href="/account">
+            <a className="flex py-2 px-4 bg-gray-700 mr-1 rounded" href="">
+              My Account
+            </a>
+          </Link>
           <div className="bg-gray-700 clipped-t-r py-2 px-4 rounded inline-flex cursor-pointer" onClick={() => setShowModal(true)}>
             <div className="inline-flex font-medium mr-2 items-center">
               <div className="inline-flex w-5 h-5 relative mr-2">

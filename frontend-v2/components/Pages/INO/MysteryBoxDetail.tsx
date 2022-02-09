@@ -238,7 +238,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       return
     }
     try {
-      const res = await fetcher(`/pool/${poolInfo?.id}/nft-order?wallet_address=${account}`)
+      const res = await fetcher(`${API_BASE_URL}/pool/${poolInfo?.id}/nft-order?wallet_address=${account}`)
       const amount = res.data?.amount
       setMyBoxOrdered(amount)
     } catch (error) {

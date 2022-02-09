@@ -24,7 +24,7 @@ const useApiSignature = (url: string) => {
         }
       })
       const result = response.data
-      if (result.status === 200 && result.data) {
+      if (result?.status === 200 && result.data) {
         return result.data.signature
       }
       throw new Error(result?.message)

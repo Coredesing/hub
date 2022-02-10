@@ -2,9 +2,9 @@ import Link from 'next/link'
 import WalletConnector from '../WalletConnector'
 import Image from 'next/image'
 
-const Topbar = () => {
+const Topbar = ({ className }) => {
   return (
-    <>
+    <div className={className}>
       <div className="hidden w-full md:container md:mx-auto md:flex justify-between items-center md:h-22 lg:h-24 py-8 px-8">
         <div>
           <div className="flex align-middle items-center cursor-pointer">
@@ -26,7 +26,7 @@ const Topbar = () => {
           <Image src={require('@/assets/images/icons/search.svg')} alt='search'></Image>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

@@ -200,7 +200,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
 
   return <>
     <div className="md:px-10 md:py-8 bg-gradient-to-t from-gamefiDark-800">
-      <div className="md:w-7/12 mx-auto relative mb-4 md:mb-10 overflow-x-hidden">
+      <div className="md:w-7/12 mx-auto relative mb-4 md:mb-10 overflow-hidden">
         <div className="flex gap-1 absolute top-3.5 w-full">
           <div className={`w-[12.5%] h-[2px] ${lineActive(1) ? 'bg-gradient-to-l from-gamefiGreen-500' : 'bg-gamefiDark-500'}`}></div>
           <div className={`w-[25%] h-[2px] ${lineActive(2) ? 'bg-gamefiGreen-500' : 'bg-gamefiDark-500'}`}></div>

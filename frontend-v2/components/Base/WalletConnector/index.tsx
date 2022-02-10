@@ -192,7 +192,7 @@ const WalletConnector = (props) => {
     <>
       { (!active || !account) &&
         <button
-          className={`overflow-hidden py-2 px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-bold text-sm rounded-xs hover:opacity-95 cursor-pointer w-full md:w-auto clipped-t-r ${btnClass}`}
+          className={`uppercase overflow-hidden py-3 px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-bold text-[13px] rounded-xs hover:opacity-95 cursor-pointer w-full md:w-auto rounded-sm clipped-t-r ${btnClass}`}
           onClick={() => setShowModal(true)}
         >
           Connect Wallet
@@ -200,25 +200,20 @@ const WalletConnector = (props) => {
       }
       {
         active && account &&
-        <div className="font-casual leading-6 text-sm flex items-center justify-center">
-          <a className="inline-flex bg-gamefiGreen-600 clipped-b-l p-px rounded cursor-pointer mr-1" href="https://pancakeswap.finance/swap?outputCurrency=0x89af13a10b32f1b2f8d1588f93027f69b6f4e27e&inputCurrency=0xe9e7cea3dedca5984780bafc599bd69add087d56" target="_blank" rel="noreferrer">
-            <span className="bg-gamefiDark-900 text-gamefiGreen-500 hover:text-gamefiGreen-200 clipped-b-l py-2 px-6 rounded leading-5 uppercase font-bold text-xs">
+        <div className="font-casual leading-6 text-sm flex items-center justify-center w-full">
+          <a className="hidden sm:inline-flex bg-gamefiGreen-600 clipped-b-l p-px rounded cursor-pointer mr-1" href="https://pancakeswap.finance/swap?outputCurrency=0x89af13a10b32f1b2f8d1588f93027f69b6f4e27e&inputCurrency=0xe9e7cea3dedca5984780bafc599bd69add087d56" target="_blank" rel="noreferrer">
+            <span className="font-mechanic bg-gamefiDark-900 text-gamefiGreen-500 hover:text-gamefiGreen-200 clipped-b-l py-2 px-6 rounded leading-5 uppercase font-bold text-[13px]">
               Buy $GAFI
             </span>
           </a>
-          <Link href="/account">
-            <a className="flex py-2 px-4 bg-gray-700 mr-1 rounded" href="">
-              My Account
-            </a>
-          </Link>
-          <div className="bg-gray-700 clipped-t-r py-2 px-4 rounded inline-flex cursor-pointer" onClick={() => setShowModal(true)}>
-            <div className="inline-flex font-medium mr-2 items-center">
+          <div className="w-full sm:w-auto bg-gray-700 clipped-t-r py-2 px-6 rounded inline-flex justify-center cursor-pointer text-[13px]" onClick={() => setShowModal(true)}>
+            <div className="inline-flex font-bold mr-2 items-center">
               <div className="inline-flex w-5 h-5 relative mr-2">
                 <Image src={network.image} layout="fill" alt={network.name}/>
               </div>
               {balance && balanceShort} {currencyNative}
             </div>
-            <span className="font-bold">{accountShort}</span>
+            <span className="bg-gray-800 px-2 rounded-sm">{accountShort}</span>
           </div>
         </div>
       }
@@ -258,12 +253,19 @@ const WalletConnector = (props) => {
                   <path d="M5.5 12.5H9.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
-              <p className="inline-flex items-center mt-4 justify-center w-full text-red-400 font-medium cursor-pointer hover:text-red-500" onClick={tryDeactivate}>
-                Disconnect
-                <svg className="w-6 h-6 ml-2" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M11 12.414L15.414 8L11 3.586L9.586 5L11.586 7H5V9H11.586L9.586 11L11 12.414Z" fill="currentColor"/>
-                  <path d="M12 14H3V2H12V0H2C1.448 0 1 0.448 1 1V15C1 15.552 1.448 16 2 16H12V14Z" fill="currentColor"/>
-                </svg>
+              <p className="flex mt-4 justify-between w-full font-medium cursor-pointer" onClick={tryDeactivate}>
+                <Link href="/account" passHref={true}>
+                  <a className="text-white hover:text-gray-400 underline">
+                    My Account
+                  </a>
+                </Link>
+                <span className="inline-flex items-center text-red-400 hover:text-red-500">
+                  Disconnect
+                  <svg className="w-5 h-5 ml-2" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11 12.414L15.414 8L11 3.586L9.586 5L11.586 7H5V9H11.586L9.586 11L11 12.414Z" fill="currentColor"/>
+                    <path d="M12 14H3V2H12V0H2C1.448 0 1 0.448 1 1V15C1 15.552 1.448 16 2 16H12V14Z" fill="currentColor"/>
+                  </svg>
+                </span>
               </p>
             </div>
           </div> }

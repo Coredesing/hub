@@ -42,7 +42,7 @@ const GameDetails = ({ data }) => {
     setSignature(sign)
     await fetcher(`/api/aggregator/like/${game.id}`, { method: 'POST', body: JSON.stringify({ address: account, signature: sign, status: !liked }) })
     await mutate(`/api/aggregator/liked/${account}`)
-  }, [library, liked, mutate, signature, account])
+  }, [library, liked, mutate, signature, account, setShowModal])
 
   return (
     <Layout title={data.game_name}>

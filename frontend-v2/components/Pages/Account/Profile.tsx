@@ -14,7 +14,7 @@ import { API_BASE_URL } from '@/utils/constants'
 import { useRouter } from 'next/router'
 
 const Profile = () => {
-  const tiers = useAppContext()?.tiers
+  const tiers = useAppContext()?.$tiers
   const { account } = useMyWeb3()
   const [isEdit, setIsEdit] = useState(false)
   const [newTwitter, setNewTwitter] = useState('')
@@ -85,15 +85,13 @@ const Profile = () => {
     const response = await fetcher(`${API_BASE_URL}/user/update-profile`, httpConfig as any)
 
     if (response.data) {
-      if (response.data.status === 200) {
+      if (response.data.status === 200 || response.data.user) {
         setIsEdit(false)
         toast.success('Update Profile Successfully')
         router.reload()
+        return
       }
-
-      if (response.data.status !== 200) {
-        toast.error(response.data.message)
-      }
+      toast.error(response.data.message || 'Update failed')
     }
   }
 
@@ -240,7 +238,7 @@ const Profile = () => {
                   </div>
                   {newSolanaWallet
                     ? <span className='cursor-pointer text-gamefiRed' onClick={() => handleSolanaDisconnect()}>
-                        Disconnect
+                      Disconnect
                     </span>
                     : <span className='cursor-pointer text-gamefiGreen-700' onClick={() => handleSolanaConnect()}>
                       Connect
@@ -257,9 +255,9 @@ const Profile = () => {
                     }
                   </div>
                   {userInfo?.solana_address &&
-              <span className='cursor-pointer' onClick={() => onCopy(userInfo?.solana_address)}>
-                <DocumentCopyIcon />
-              </span>
+                    <span className='cursor-pointer' onClick={() => onCopy(userInfo?.solana_address)}>
+                      <DocumentCopyIcon />
+                    </span>
                   }
                 </div>
             }

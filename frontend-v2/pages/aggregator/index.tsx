@@ -222,7 +222,7 @@ const Aggregator = ({ data }) => {
             ) }
 
             { data.data && data.data.map(item => {
-              const roi = ((parseFloat(item.price) || 0) / parseFloat(item.token_price)).toFixed(2)
+              const roi = ((parseFloat(item.price) || 0) / (parseFloat(item.token_price) || 1)).toFixed(2)
               const network = getNetworkByAlias(item.network_available)
               return (
                 <Link href={`/aggregator/${item.slug}`} key={item.id} passHref={true}>

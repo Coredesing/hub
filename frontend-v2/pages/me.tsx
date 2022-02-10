@@ -2,7 +2,7 @@ import { useEffect, useMemo, useCallback } from 'react'
 import Layout from '@/components/Layout'
 import { useWeb3Default, STAKING_CONTRACT, GAFI } from '@/components/web3'
 import { useMyWeb3 } from '@/components/web3/context'
-import { shorten } from '@/components/Base/WalletConnector'
+import { shorten } from '@/utils'
 import { constants } from 'ethers'
 
 import { useTokenAllowance, useTokenApproval, useBalanceToken } from '@/components/web3/utils'

@@ -267,6 +267,7 @@ export type Network = {
   currency: string;
   blockExplorerUrls: string[];
   image: any;
+  image2: any;
   color: string;
   colorAlt?: string;
   colorText: string;
@@ -399,13 +400,17 @@ export function getAddChainParameters (chainId: number): AddEthereumChainParamet
   }
 }
 
+export function getNetworkAvailable (mainnet?: boolean): Network[] {
+  return networks.filter(x => (IS_TESTNET && !mainnet) ? x.testnet : !x.testnet)
+}
+
 export function getNetworkByAlias (alias: string, mainnet?: boolean): Network | null {
   if (!alias) {
     return null
   }
 
-  return networks.find(x => {
-    return ((IS_TESTNET && !mainnet) ? x.testnet : !x.testnet) && x.alias.toLowerCase() === alias.toLowerCase()
+  return getNetworkAvailable(mainnet).find(x => {
+    return x.alias.toLowerCase() === alias.toLowerCase()
   })
 }
 

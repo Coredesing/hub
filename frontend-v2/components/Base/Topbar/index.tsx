@@ -2,7 +2,7 @@ import Link from 'next/link'
 import WalletConnector from '../WalletConnector'
 import Image from 'next/image'
 
-const Topbar = ({ className }) => {
+const Topbar = ({ className }: { className?: string }) => {
   return (
     <div className={className}>
       <div className="hidden w-full md:container md:mx-auto md:flex justify-between items-center md:h-22 lg:h-24 py-8 px-8">

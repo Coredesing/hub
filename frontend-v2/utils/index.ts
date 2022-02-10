@@ -92,6 +92,10 @@ export const shortenAddress = (address: string, symbol = '*', lengHide = 14) => 
   return address.slice(0, lengHide) + stars + address.slice(-(lengHide))
 }
 
+export function shorten (s: string, max = 12) {
+  return s.length > max ? s.substring(0, (max / 2) - 1) + '…' + s.substring(s.length - (max / 2) + 2, s.length) : s
+}
+
 type PaginatorInput = {
     current: number;
     last: number;

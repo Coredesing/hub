@@ -15,6 +15,12 @@ export const useJoinPool = (poolId: string | number, account: Address) => {
   const joinPool = useCallback(async () => {
     try {
       setLoading(true)
+      const res = await fetcher(`${API_BASE_URL}/pool/${poolId}/whitelist-apply-box`, { method: 'POST', body: JSON.stringify({ wallet_address: account }), headers: { 'content-type': 'application/json' } })
+      if (res?.status !== 200) {
+        toast.error((res?.status < 500 && res?.message) || 'Could not apply for whitelisting')
+        return
+      }
+
       const signature = await apiSignMessage({
         campaign_id: poolId
       })
@@ -24,9 +30,10 @@ export const useJoinPool = (poolId: string | number, account: Address) => {
       return true
     } catch (error) {
       toast.error(error.message)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
-  }, [poolId, apiSignMessage])
+  }, [poolId, apiSignMessage, account])
 
   return { joinPool, loading, success }
 }

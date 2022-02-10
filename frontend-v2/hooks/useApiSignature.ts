@@ -11,7 +11,7 @@ const useApiSignature = (url: string) => {
   const apiSignMessage = useCallback(async (data: ObjectType) => {
     try {
       const signature = await signMessage()
-      const response = await fetcher(`${API_BASE_URL}${url}`, {
+      const result = await fetcher(`${API_BASE_URL}${url}`, {
         method: 'POST',
         body: JSON.stringify({
           wallet_address: account,
@@ -23,13 +23,16 @@ const useApiSignature = (url: string) => {
           msgSignature: process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE
         }
       })
-      const result = response.data
-      if (result?.status === 200 && result.data) {
-        return result.data.signature
+      if (result?.status === 200) {
+        return result.data?.signature
       }
       throw new Error(result?.message)
     } catch (error) {
-      throw new Error(error?.message || 'Something went wrong when sign message')
+      if (error?.code === 4001) {
+        throw new Error('User denied message signature')
+      }
+
+      throw new Error('Something went wrong when signing message')
     }
   }, [account, signMessage, url])
 

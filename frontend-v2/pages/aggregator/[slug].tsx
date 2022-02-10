@@ -199,7 +199,7 @@ const GameDetails = ({ data }) => {
                 </TabPanel>
               </div>
             </div>
-            <div className="">
+            <div className="flex-1 overflow-x-hidden">
               <p className="text-sm mb-2">Current Price (% Chg 24H)</p>
               <div className="inline-flex items-center mb-8">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -208,17 +208,17 @@ const GameDetails = ({ data }) => {
                 <PriceChange className="ml-3 py-1 text-xs font-medium" tokenomic={data.tokenomic} />
               </div>
 
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 gap-2">
                 <span className="text-sm text-gray-300">IGO Price</span>
                 <span className="font-medium text-base">{formatPrice(data.token_price)}</span>
               </div>
 
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 gap-2">
                 <span className="text-sm text-gray-300">IGO ROI</span>
                 <span className="font-medium text-base">{roi}x</span>
               </div>
 
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 gap-2">
                 <span className="text-sm text-gray-300">Volume (24H)</span>
                 <span className="font-medium text-base">{formatterUSD.format(data.tokenomic?.volume_24h)}</span>
               </div>
@@ -230,17 +230,17 @@ const GameDetails = ({ data }) => {
 
               <div className="h-px bg-gradient-to-r from-gray-300 my-8"></div>
 
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 gap-2">
                 <span className="text-sm text-gray-300">Developer</span>
                 <span className="font-medium text-base truncate max-w-xs">{data.developer}</span>
               </div>
 
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 gap-2">
                 <span className="text-sm text-gray-300 flex-none pr-4">Category</span>
                 <span className="font-medium text-base truncate max-w-xs">{data.category?.split(',').join(', ')}</span>
               </div>
 
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 gap-2">
                 <span className="text-sm text-gray-300">Language</span>
                 <span className="font-medium text-base">{data.language}</span>
               </div>

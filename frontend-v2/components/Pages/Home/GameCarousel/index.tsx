@@ -85,7 +85,7 @@ const GameCarousel = ({ items, likes }: Props) => {
                 </div>
               </div>
               <div className="mt-3 xl:mt-5">
-                <p className="text-left leading-5 md:text-xs lg:text-base text-gray-300 max-h-24 2xl:max-h-32 overflow-y-scroll">{item.short_description}</p>
+                <p className="font-casual text-left leading-5 md:text-xs lg:text-base text-gray-300 max-h-24 2xl:max-h-32 overflow-y-scroll">{item.short_description}</p>
               </div>
               <div className="mt-3 xl:mt-5">
                 <Link href={`/aggregator/${item?.slug}`} passHref>
@@ -144,7 +144,7 @@ const GameCarousel = ({ items, likes }: Props) => {
                 </div>
               </div>
               <div className="mt-3">
-                <p className="text-left leading-5 md:text-xs lg:text-base text-gray-300 max-h-24 overflow-y-scroll">{item.short_description}</p>
+                <p className="font-casual text-left leading-5 md:text-xs lg:text-base text-gray-300 max-h-24 overflow-y-scroll">{item.short_description}</p>
               </div>
               <div className="mt-3">
                 <Link href={`/aggregator/${item?.slug}`} passHref>

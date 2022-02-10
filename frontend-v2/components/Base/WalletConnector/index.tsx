@@ -222,9 +222,9 @@ const WalletConnector = (props) => {
           </div>
         </div>
       }
-      <Modal show={showModal} toggle={setShowModal} className='dark:bg-transparent font-casual fixed z-50'>
+      <Modal show={showModal} toggle={setShowModal} className='dark:bg-transparent fixed z-50'>
         <ModalConnect close={() => setShowModal(false)} style={{ color: network?.colorText || '' }}>
-          { active && <>
+          { active && <div className="font-casual">
             <div className="p-6 pt-10" style={{ backgroundColor: network?.color || 'transparent' }}>
               <div className="font-bold text-2xl uppercase mb-5">Account</div>
               <div className="flex items-center w-full text-base">
@@ -266,26 +266,26 @@ const WalletConnector = (props) => {
                 </svg>
               </p>
             </div>
-          </> }
+          </div> }
 
           { !active &&
             <div className="p-6 pt-10 text-white">
               <div className="font-bold text-2xl uppercase mb-5">Connect Wallet</div>
               <div className="font-bold text-sm uppercase">1. Agreement</div>
-              <label className="py-2 leading-relaxed mb-5 inline-block">
+              <label className="py-2 leading-relaxed mb-5 inline-block font-casual text-sm">
                 <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 mr-2" checked={agreed} onChange={handleAgreement} />
                 I have read and agreed with the <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">Terms of Service</a> and <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">Privacy Policy</a>.
               </label>
               <div className="mb-7">
                 <div className={`font-bold text-sm uppercase mb-2 ${agreed ? 'text-white' : 'text-gray-400'}`}>2. Choose Network</div>
-                <div className="flex gap-x-2">
+                <div className="flex gap-x-2 font-casual">
                   {networks.filter(x => IS_TESTNET ? x.testnet : !x.testnet).map(network => {
                     const available = !!agreed
                     const chosen = available && network.id === networkChosen?.id
 
-                    return <div key={network.id} className={`flex-1 relative cursor-pointer flex flex-col items-center justify-between bg-gray-700 py-4 border border-transparent ${chosen ? 'border-gamefiGreen-500' : ''}`} onClick={() => chooseNetwork(network)}>
+                    return <div key={network.id} className={`flex-1 relative cursor-pointer flex flex-col items-center justify-between py-4 border border-transparent ${chosen ? 'border-gamefiGreen-500 bg-gray-800' : 'bg-gray-700'}`} onClick={() => chooseNetwork(network)}>
                       <div className="w-11 h-11 relative"><Image src={network.image2} className={available ? 'filter-none' : 'grayscale'} alt={network.name} layout="fill"/></div>
-                      <span className={`text-sm ${available ? 'text-white' : 'text-gray-100'}`}>{network.name}</span>
+                      <span className={`text-[13px] leading-6 ${available ? 'text-white' : 'text-gray-100'}`}>{network.name}</span>
 
                       { chosen && <svg className="w-6 absolute top-0 left-0" viewBox="0 0 23 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0 1C0 0.447715 0.447715 0 1 0H21.0144C21.7241 0 22.208 0.718806 21.9408 1.37638L16.2533 15.3764C16.1002 15.7534 15.7338 16 15.3269 16H8H1C0.447715 16 0 15.5523 0 15V1Z" fill="#6CDB00"/>
@@ -298,14 +298,14 @@ const WalletConnector = (props) => {
               </div>
               <div className={agreed ? 'text-white' : 'text-gray-400'}>
                 <div className="font-bold text-sm uppercase mb-2">3. Choose Wallet</div>
-                <div className="flex gap-x-2">
+                <div className="flex gap-x-2 font-casual">
                   {walletsAvailable.map(wallet => {
                     const available = !!agreed && !!networkChosen
                     const chosen = available && wallet.id === walletChosen?.id
 
-                    return <div key={wallet.id} className={`flex-1 relative cursor-pointer flex flex-col items-center justify-between bg-gray-700 py-4 border border-transparent ${chosen ? 'border-gamefiGreen-500' : ''}`} onClick={() => chooseWallet(wallet)}>
+                    return <div key={wallet.id} className={`flex-1 relative cursor-pointer flex flex-col items-center justify-between py-6 border border-transparent ${chosen ? 'border-gamefiGreen-500 bg-gray-800' : 'bg-gray-700'}`} onClick={() => chooseWallet(wallet)}>
                       <Image src={wallet.image} className={available ? 'filter-none' : 'grayscale'} alt={wallet.name} />
-                      <span className={`text-sm ${available ? 'text-white' : 'text-gray-100'}`}>{ (activating && chosen) ? 'Loading...' : wallet.name}</span>
+                      <span className={`text-[13px] leading-6 ${available ? 'text-white' : 'text-gray-100'}`}>{ (activating && chosen) ? 'Loading...' : wallet.name}</span>
 
                       { chosen && <svg className="w-6 absolute top-0 left-0" viewBox="0 0 23 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0 1C0 0.447715 0.447715 0 1 0H21.0144C21.7241 0 22.208 0.718806 21.9408 1.37638L16.2533 15.3764C16.1002 15.7534 15.7338 16 15.3269 16H8H1C0.447715 16 0 15.5523 0 15V1Z" fill="#6CDB00"/>

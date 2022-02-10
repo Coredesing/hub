@@ -4,11 +4,11 @@ import Link from 'next/link'
 
 const Footer = () => {
   return <div className="w-full" style={{ backgroundColor: '#0E0F14', fontFamily: 'Poppins' }}>
-    <div className="md:container px-4 text-center lg:text-left lg:px-16 mx-auto lg:block py-20">
-      <div className="flex flex-col align-middle items-center justify-center lg:items-start lg:grid lg:grid-cols-5 lg:gap-2 zl:gap-4">
-        <div className="col-span-2 flex flex-col items-center lg:block">
+    <div className="md:container px-4 py-10 text-center lg:text-left lg:px-16 lg:py-20 mx-auto lg:block">
+      <div className="flex flex-wrap align-middle items-start justify-center lg:items-start lg:grid lg:grid-cols-5 lg:gap-2 zl:gap-4">
+        <div className="basis-full lg:col-span-2 flex flex-col items-center lg:block">
           <Image src={require('@/assets/images/logo-color.png')} alt="gamefi" width={291.75} height={30}></Image>
-          <div className="mt-8 font-thin text-sm">From the labs behind Red Kite launchpad and several NFT games</div>
+          <div className="mt-8 font-thin text-base">From the labs behind Red Kite launchpad and several NFT games</div>
           <div className="flex mt-6">
             <div className="mr-3 cursor-pointer">
               <a href="https://gamefi.org/" target="_blank" rel="noreferrer">
@@ -61,29 +61,29 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <div className="text-center lg:text-left mt-8 lg:mt-0">
+        <div className="basis-1/3 text-center lg:text-left mt-8 lg:mt-0">
           <div className="font-mechanic font-bold text-base uppercase text-white opacity-50">About</div>
           <div className="mt-3 lg:mt-4 flex flex-col text-base leading-7 font-extralight">
-            <Link href="/press" passHref><a className="hover:underline cursor-pointer">Press</a></Link>
-            <Link href="/careers" passHref><a className="hover:underline cursor-pointer">Careers</a></Link>
-            <a href="https://t.me/GameFi_OfficialANN" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Business Contacts</a>
-            <a href="https://news.gamefi.org" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">GameFi.org News</a>
+            <Link href="/press" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Press</a></Link>
+            <Link href="/careers" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Careers</a></Link>
+            <a href="https://t.me/GameFi_OfficialANN" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Business Contacts</a>
+            <a href="https://news.gamefi.org" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">GameFi.org News</a>
           </div>
         </div>
-        <div className="text-center lg:text-left mt-8 lg:mt-0">
+        <div className="basis-1/3 text-center lg:text-left mt-8 lg:mt-0">
           <div className="font-mechanic font-bold text-base uppercase text-white opacity-50">OUR TEAM</div>
           <div className="mt-3 lg:mt-4 flex flex-col text-base leading-7 font-extralight">
-            <a href="https://about.gamefi.org/#features" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Features</a>
-            <a href="https://about.gamefi.org/#roadmap" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Roadmap</a>
-            <a href="https://about.gamefi.org/#ourteam" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Our Team</a>
-            <a href="https://about.gamefi.org/#advisors" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Advisors</a>
+            <a href="https://about.gamefi.org/#features" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Features</a>
+            <a href="https://about.gamefi.org/#roadmap" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Roadmap</a>
+            <a href="https://about.gamefi.org/#ourteam" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Our Team</a>
+            <a href="https://about.gamefi.org/#advisors" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Advisors</a>
           </div>
         </div>
-        <div className="text-center lg:text-left mt-8 lg:mt-0">
+        <div className="basis-1/3 text-center lg:text-left mt-8 lg:mt-0">
           <div className="font-mechanic font-bold text-base uppercase text-white opacity-50">TOKEN</div>
           <div className="mt-3 lg:mt-4 flex flex-col text-base leading-7 font-extralight">
-            <a href="https://docsend.com/view/wg9czts7ugkvrp99" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Token Metrics</a>
-            <a href="https://about.gamefi.org/#token" target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Token Utilities</a>
+            <a href="https://docsend.com/view/wg9czts7ugkvrp99" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Token Metrics</a>
+            <a href="https://about.gamefi.org/#token" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Token Utilities</a>
           </div>
         </div>
       </div>
@@ -92,13 +92,13 @@ const Footer = () => {
       <div className="flex align-middle items-center justify-between text-base font-light pt-6 pb-8 border-t border-gray-700 text-gray-400">
         <div>&#169; Icetea Labs, 2021</div>
         <div className="flex gap-x-4 items-center">
-          {/* <Link href="#" passHref><a className="hover:underline cursor-pointer">Terms of Use</a></Link>
+          {/* <Link href="#" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Terms of Use</a></Link>
           <div className="h-4 w-px bg-gray-600"></div>
-          <Link href="/privacy" passHref><a className="hover:underline cursor-pointer">Privacy</a></Link>
+          <Link href="/privacy" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Privacy</a></Link>
           <div className="h-4 w-px bg-gray-600"></div> */}
-          <Link href="/disclaimer" passHref><a className="hover:underline cursor-pointer">Disclaimer</a></Link>
+          <Link href="/disclaimer" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Disclaimer</a></Link>
           <div className="h-4 w-px bg-gray-600"></div>
-          <a href="https://faq.gamefi.org/"target="_blank" className="hover:underline cursor-pointer" rel="noreferrer">Help Center</a>
+          <a href="https://faq.gamefi.org/"target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Help Center</a>
         </div>
       </div>
     </div>

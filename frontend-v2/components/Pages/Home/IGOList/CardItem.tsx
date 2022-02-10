@@ -57,7 +57,9 @@ const CardItem = ({ item, ...props }: Props) => {
           <span className="ml-2 font-medium tracking-widest">{poolStatus(item.is_private)}</span>
         </div>
         <div className="cursor-pointer">
-          <img src={item?.banner} alt="" style={{ width: '100%', objectFit: 'cover', aspectRatio: '4/3' }} />
+          <Link href={`https://hub.gamefi.org/#/buy-token/${item.id}`} passHref>
+            <img src={item?.banner} alt="" style={{ width: '100%', objectFit: 'cover', aspectRatio: '4/3' }} />
+          </Link>
         </div>
       </div>
       <div className="bg-gamefiDark-650 w-full clipped-b-l pb-2">

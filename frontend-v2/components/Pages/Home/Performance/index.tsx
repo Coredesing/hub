@@ -17,7 +17,7 @@ const Performance = () => {
   }, [response])
 
   return (
-    <div className="container md:px-4 lg:px-16 mx-auto mt-20 pb-14 relative">
+    <div className="container px-4 lg:px-16 mx-auto mt-20 pb-14 relative">
       <div className="mx-auto relative" style={{ maxWidth: '600px' }}>
         <Image src={require('assets/images/performance.png')} alt=""></Image>
         <div className="text-3xl font-bold uppercase absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center">Performance</div>

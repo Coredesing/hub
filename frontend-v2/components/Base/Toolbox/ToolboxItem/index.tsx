@@ -8,14 +8,15 @@ type Props = {
 }
 const ToolboxItem = ({ children, path }: Props) => {
   const router = useRouter()
+  console.log(router.asPath.length)
   return (
     <Link href={path} passHref>
       <div
         className={`relative w-full py-4 flex flex-col align-middle items-center justify-center uppercase text-xs lg:text-sm font-semibold cursor-pointer ${
-          router.asPath.includes(path) ? 'dark:bg-gamefiDark-900 opacity-100' : 'opacity-40'
+          ((path.length === 1 && router.asPath === path) || (path.length > 1 && router.asPath.includes(path))) ? 'dark:bg-gamefiDark-900 opacity-100' : 'opacity-40'
         }`}
       >
-        {router.asPath.includes(path) && <span
+        {((path.length === 1 && router.asPath === path) || (path.length > 1 && router.asPath.includes(path))) && <span
           style={{
             position: 'absolute',
             width: '60%',

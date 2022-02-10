@@ -256,7 +256,7 @@ const WalletConnector = (props) => {
               <p className="flex mt-4 justify-between w-full font-medium cursor-pointer" onClick={tryDeactivate}>
                 <Link href="/account" passHref={true}>
                   <a className="text-white hover:text-gray-400 underline">
-                    My Account
+                    View My Account
                   </a>
                 </Link>
                 <span className="inline-flex items-center text-red-400 hover:text-red-500">

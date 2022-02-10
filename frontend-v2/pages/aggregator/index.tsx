@@ -146,10 +146,10 @@ const Aggregator = ({ data }) => {
             <div className={`z-50 origin-top-right absolute right-0 mt-2 min-w-max border border-gamefiDark-600 rounded shadow-lg bg-gamefiDark-800 ${filterShown ? 'visible' : 'invisible'}`} role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex={-1} onClick={(e) => e.stopPropagation()}>
               <div className="p-4 text-base leading-6" role="none">
                 <div className="uppercase font-bold text-2xl mb-6">Filters</div>
-                <div className="flex gap-10 mb-6">
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-10 mb-6">
                   <div>
                     <div className="uppercase font-bold text-lg">IGO Status</div>
-                    <div className="mb-6">
+                    <div className="mb-6 font-casual text-sm">
                       <label className="inline-flex items-center mr-4">
                         <input type="radio" onChange={(e) => handleIDOType(e.target.value)} value="" checked={!idoType} />
                         <span className="ml-1">All</span>
@@ -165,7 +165,7 @@ const Aggregator = ({ data }) => {
                     </div>
 
                     <div className="uppercase font-bold text-lg">Game Release</div>
-                    <div>
+                    <div className="font-casual text-sm">
                       <label className="inline-flex items-center mr-4">
                         <input type="radio" disabled value="" onChange={(e) => handleLaunchStatus(e.target.value)} checked={!launchStatus} />
                         <span className="ml-1">All</span>

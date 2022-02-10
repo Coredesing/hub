@@ -8,7 +8,6 @@ type Props = {
 }
 const ToolboxItem = ({ children, path }: Props) => {
   const router = useRouter()
-  console.log(router.asPath.length)
   return (
     <Link href={path} passHref>
       <div

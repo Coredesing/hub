@@ -64,9 +64,6 @@ export function switchNetwork (provider: any, chainId: number) {
         })
       })
     })
-    .catch(err => {
-      window.alert(err)
-    })
 }
 
 export function useEagerConnect () {

@@ -4,6 +4,7 @@ import imgNA from '@/assets/images/ranks/na.png'
 import { API_BASE_URL } from '@/utils/constants'
 import { fetcher } from '@/utils'
 import ABIStakingPool from '@/components/web3/abis/StakingPool.json'
+import ABIERC20 from '@/components/web3/abis/ERC20.json'
 import { useWeb3Default, GAFI } from '@/components/web3'
 import { Contract, BigNumber, utils } from 'ethers'
 import { useAppContext } from '@/context'
@@ -64,6 +65,13 @@ const Staking = ({ data }) => {
 
     return new Contract(pool.pool_address, ABIStakingPool, libraryDefault)
   }, [libraryDefault, pool])
+  const contractGÀIReadonly = useMemo(() => {
+    if (!libraryDefault) {
+      return null
+    }
+
+    return new Contract(GAFI.address, ABIERC20, libraryDefault)
+  }, [libraryDefault])
   const contractStaking = useMemo(() => {
     if (!library || !pool) {
       return null
@@ -123,19 +131,23 @@ const Staking = ({ data }) => {
   }, [account, contractStakingReadonly, pool, setPendingWithdrawal, mounted])
 
   useEffect(() => {
-    if (!contractStakingReadonly) {
+    if (!contractGÀIReadonly) {
       setTotalStaked(null)
       return
     }
 
-    contractStakingReadonly.linearTotalStaked(pool.pool_id).then(x => {
+    if (!pool?.pool_address) {
+      return
+    }
+
+    contractGÀIReadonly.balanceOf(pool.pool_address).then(x => {
       if (!mounted.current) {
         return
       }
 
       setTotalStaked(x)
     })
-  }, [contractStakingReadonly, pool, mounted])
+  }, [contractGÀIReadonly, pool, mounted])
 
   useEffect(() => {
     loadMyPending()

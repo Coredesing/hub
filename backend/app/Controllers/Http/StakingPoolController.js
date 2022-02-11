@@ -246,7 +246,7 @@ class StakingPoolController {
         data = JSON.parse(data)
 	data.map((item) => {
           if (item && item.wallet_address) {
-            item.wallet_address = HelperUtils.maskWalletAddress(item.wallet_address)
+            item.wallet_address = await HelperUtils.maskWalletAddress(item.wallet_address)
           }
 
           return item

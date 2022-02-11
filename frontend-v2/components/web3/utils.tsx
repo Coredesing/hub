@@ -208,6 +208,78 @@ export const useBalanceToken = (token?: Token, networkAlias?: string) => {
   }
 }
 
+export const useMyBalance = (token?: Token, networkAlias?: string) => {
+  // maintain here
+  const mounted = useRef(false)
+  useEffect(() => {
+    mounted.current = true
+    return () => { mounted.current = false }
+  }, [])
+
+  const { provider } = useLibraryDefaultFlexible(networkAlias)
+  const { account } = useMyWeb3()
+
+  const [balance, setBalance] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const balanceShort = useMemo(() => {
+    if (!balance) {
+      return '0'
+    }
+
+    return safeToFixed(parseFloat(utils.formatEther(balance)), 4)
+  }, [balance])
+  const updateBalance = useCallback(() => {
+    if (!account || !provider) {
+      setBalance(null)
+      return
+    }
+
+    if (!token?.address || BigNumber.from(token.address).isZero()) {
+      setLoading(true)
+      provider.getBalance(account).then(balance => {
+        setBalance(balance)
+      }).catch(() => {
+        console.error('Could not load user\'s balance')
+      }).finally(() => {
+        setLoading(false)
+      })
+      return
+    }
+
+    const contractReadOnly = new Contract(token.address, ERC20, provider)
+    setLoading(true)
+
+    contractReadOnly
+      .balanceOf(account)
+      .then((balance: any) => {
+        if (mounted.current) {
+          setBalance(balance)
+        }
+      })
+      .catch(() => {
+        if (mounted.current) {
+          setBalance(null)
+        }
+      })
+      .finally(() => {
+        if (mounted.current) {
+          setLoading(false)
+        }
+      })
+  }, [account, provider, token, setBalance, setLoading, mounted])
+
+  useEffect((): any => {
+    updateBalance()
+  }, [updateBalance])
+
+  return {
+    balance,
+    balanceShort,
+    loading,
+    updateBalance
+  }
+}
+
 interface Item {
   accept_currency?: string;
   network_available?: string;
@@ -237,40 +309,40 @@ export const useCurrency = (item?: Item) => {
 
 export const currencyNative = (network: string) => {
   switch (network) {
-  case 'bsc': {
-    return BNB
-  }
+    case 'bsc': {
+      return BNB
+    }
 
-  case 'eth': {
-    return ETH
-  }
+    case 'eth': {
+      return ETH
+    }
 
-  case 'polygon': {
-    return MATIC
-  }
+    case 'polygon': {
+      return MATIC
+    }
 
-  default: {
-    return null
-  }
+    default: {
+      return null
+    }
   }
 }
 
 const currencyStable = (network: string) => {
   switch (network) {
-  case 'bsc': {
-    return BUSD_BSC
-  }
+    case 'bsc': {
+      return BUSD_BSC
+    }
 
-  case 'eth': {
-    return USDT_ERC
-  }
+    case 'eth': {
+      return USDT_ERC
+    }
 
-  case 'polygon': {
-    return USDT_POLYGON
-  }
+    case 'polygon': {
+      return USDT_POLYGON
+    }
 
-  default: {
-    return null
-  }
+    default: {
+      return null
+    }
   }
 }

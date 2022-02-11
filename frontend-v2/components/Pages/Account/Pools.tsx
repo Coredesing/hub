@@ -144,12 +144,14 @@ const Pools = () => {
             }
           </TableBody>
         </Table>
-        <Pagination
-          className='mt-4 mb-8'
-          currentPage={filter.page}
-          totalPage={pools.total}
-          onChange={onChangePage}
-        />
+        {
+          !!pools.total && <Pagination
+            className='mt-4 mb-8'
+            currentPage={filter.page}
+            totalPage={pools.total}
+            onChange={onChangePage}
+          />
+        }
       </div>
     </div>
   )

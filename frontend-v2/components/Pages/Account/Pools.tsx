@@ -28,7 +28,7 @@ const Pools = () => {
         total: +res.data.lastPage || 0,
         data: res.data.data || []
       })
-      console.log('res', res)
+      // console.log('res', res)
     }
     getPools().catch(console.error).finally(() => setLoadingPools(false))
   }, [account, filter])

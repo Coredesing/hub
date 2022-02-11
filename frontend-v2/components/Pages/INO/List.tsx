@@ -117,23 +117,25 @@ const List = () => {
 
   return (
     <div className={styles.container} style={{ marginBottom: '2rem' }}>
-      <div className={styles.header}>
-        <div className={styles.heading}>Previous Projects</div>
-        <div className={styles.filters}>
-          <div className={styles.filter}>
-            <select value={network} onChange={ e => { setNetwork(e.target.value) } }>
+      <div className="bg-gamefiDark-900 lg:flex">
+        <div className="relative flex-none inline-block">
+          <div className="absolute w-screen h-full block bg-black" style={{ left: '-100vw' }}></div>
+          <div className="inline-block py-2 md:py-3 pl-2 pr-20 font-bold text-2xl sm:text-3xl md:text-4xl uppercase bg-black relative" style={{
+            clipPath: 'polygon(0 0, 100% 0, calc(100% - 30px) 100%, 0 100%)'
+          }}>Previous Projects</div>
+        </div>
+        <div className="flex-1 flex gap-x-4 p-2 md:py-3 md:px-8 lg:px-10 xl:pl-20">
+          <div className="w-full lg:w-auto lg:min-w-fit">
+            <select value={network} onChange={ e => { setNetwork(e.target.value) } } className="rounded bg-gamefiDark-700 w-full h-10 border-none font-casual align-middle">
               <option value="bsc">BSC</option>
               <option value="eth">ETH</option>
               <option value="polygon">POLYGON</option>
               <option value="">All Networks</option>
             </select>
-            <svg viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12.625 1.375L7 7L1.375 1.375" stroke="white" strokeWidth="1.4" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
           </div>
-          <div className={styles.filter}>
-            <input placeholder="Search" value={title} onChange={e => { setTitle(e.target.value) }} />
-            <svg viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.filterIconLeft}>
+          <div className="w-full lg:w-auto relative">
+            <input placeholder="Search" value={title} onChange={e => { setTitle(e.target.value) }} className="rounded bg-gamefiDark-700 w-full h-10 pl-10 placeholder:text-gray-400 font-casual" />
+            <svg viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 absolute inset-y-0 left-3 top-3">
               <path d="M12.6092 12.1123L9.64744 9.03184C10.409 8.12657 10.8262 6.98755 10.8262 5.80178C10.8262 3.03135 8.57221 0.777344 5.80178 0.777344C3.03135 0.777344 0.777344 3.03135 0.777344 5.80178C0.777344 8.57222 3.03135 10.8262 5.80178 10.8262C6.84184 10.8262 7.83297 10.5125 8.68035 9.91702L11.6646 13.0208C11.7894 13.1504 11.9572 13.2218 12.1369 13.2218C12.3071 13.2218 12.4686 13.1569 12.5911 13.0389C12.8515 12.7884 12.8598 12.3729 12.6092 12.1123ZM5.80178 2.08807C7.84957 2.08807 9.5155 3.754 9.5155 5.80178C9.5155 7.84957 7.84957 9.5155 5.80178 9.5155C3.754 9.5155 2.08807 7.84957 2.08807 5.80178C2.08807 3.754 3.754 2.08807 5.80178 2.08807Z" fill="white"/>
             </svg>
           </div>

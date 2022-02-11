@@ -288,7 +288,73 @@ class AggregatorController {
       const ido_type = params?.ido_type
       const price = params?.price
       const gameLaunchStatus = params?.game_launch_status
-      const cacheKey = { page, perPage, display_area, ido_type, category, gameLaunchStatus }
+      const sort_by = params?.sort_by ? params?.sort_by : 'cmc_rank'
+      const sort_order = params?.sort_order ? params?.sort_order.toUpperCase() : 'ASC'
+      const cacheKey = { page, perPage, display_area, ido_type, category, gameLaunchStatus, sort_by, sort_order }
+      const selectColumn = [
+        'game_informations.id',
+        'category',
+        'developer',
+        'hashtags',
+        'game_name',
+        'language',
+        'system_require',
+        'game_intro',
+        'game_features',
+        'android_link',
+        'game_pc_link',
+        'ios_link',
+        'display_area',
+        'intro_video',
+        'screen_shots_1',
+        'screen_shots_2',
+        'screen_shots_3',
+        'screen_shots_4',
+        'screen_shots_5',
+        'web_game_link',
+        'top_favourite_link',
+        'upload_video',
+        'verified',
+        'accept_currency',
+        'ido_date',
+        'ido_image',
+        'ido_type',
+        'network_available',
+        'token_price',
+        'short_description',
+        'icon_token_link',
+        'redkite_ido_link',
+        'gamefi_ido_link',
+        'slug',
+        'game_launch_status',
+        'price',
+        'price_change_24h',
+        'price_change_7d',
+        'volume_24h',
+        'market_cap',
+        'coinmarketcap_slug',
+        'cmc_id',
+        'token_address',
+        'game_informations.created_at',
+        'discord_link',
+        'official_telegram_link',
+        'official_website',
+        'twitter_link',
+        'medium_link'
+      ];
+
+      const aliasCol = [
+        'id',
+        'created_at',
+        'roi',
+        'cmc_rank'
+      ];
+      const sortByAllowance = aliasCol.concat(selectColumn);
+
+      if (!sortByAllowance.includes(sort_by) || !['ASC', 'DESC'].includes(sort_order)) {
+        return HelperUtils.responseBadRequest();
+      }
+
       if (await RedisAggregatorUtils.checkExistRedisAggregators(cacheKey)) {
         const cachedList = await RedisAggregatorUtils.getRedisAggregators(cacheKey)
         return HelperUtils.responseSuccess(JSON.parse(cachedList))
@@ -296,10 +362,15 @@ class AggregatorController {
 
       let builder = GameInformation.query()
       if (category) {
-        builder = builder.whereIn('category', params.category.split(','));
+        let categorySplit = params.category.split(',');
+        builder = builder.where((group) => this.categorySearch(group, categorySplit));
       }
       if (display_area) {
         builder = builder.where('display_area', 'like', `%${display_area}%`)
+        if (display_area === 'Top Favorite' || display_area === 'Top Favourite') {
+          selectColumn.push(builder.db.knex.raw('(select count(*) from game_favourites where game_id = `game_informations`.`id`) AS like_count'));
+          builder.orderBy('like_count', 'DESC');
+        }
       }
       if (verified) {
         builder = builder.where('verified', verified)
@@ -310,11 +381,17 @@ class AggregatorController {
       if (gameLaunchStatus) {
         builder = builder.where('game_launch_status', gameLaunchStatus);
       }
-      if (price) {
-        builder = builder.with('tokenomic')
-      }
 
+      builder.orderBy(sort_by, sort_order);
+      builder.orderBy('game_informations.id', 'DESC');
       builder = builder.where('is_show', true)
+
+      builder = builder.join('tokenomics as token', 'game_informations.id', 'token.game_id')
+      builder = builder.join('project_informations as project', 'game_informations.id', 'project.game_id')
+
+      selectColumn.push(builder.db.knex.raw('price / token_price as roi'));
+      selectColumn.push(builder.db.knex.raw('COALESCE(cmc_rank, 999999) as cmc_rank'))
+      builder = builder.select(selectColumn);
 
       const list = await builder.paginate(page, perPage)
 
@@ -327,6 +404,13 @@ class AggregatorController {
       console.log(e);
       return HelperUtils.responseErrorInternal();
     }
+  }
+
+  categorySearch(builder, categories) {
+    categories.forEach(function(value, index, categories) {
+      builder.orWhere('category', 'like', `%${value}%`);
+    });
+    return builder;
   }
 
   async findAggregator({request}) {

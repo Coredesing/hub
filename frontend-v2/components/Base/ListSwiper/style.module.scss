@@ -1,0 +1,15 @@
+.carousel {
+  overflow: hidden;
+  @apply relative;
+}
+
+.inner {
+  white-space: nowrap;
+  transition: transform 0.3s;
+  @apply items-center justify-center align-middle;
+}
+
+.swiperItem {
+  display: inline-flex;
+  @apply w-full;
+}

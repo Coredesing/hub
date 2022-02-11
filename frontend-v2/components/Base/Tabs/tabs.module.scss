@@ -1,0 +1,27 @@
+.menus {
+    display: flex;
+    gap: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.menu {
+    position: relative;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    cursor: pointer;
+    transition: .3s;
+    &.active {
+        color: #72F34B;
+        transition: .3s;
+        &:before {
+            content: "";
+            position: absolute;
+            height: 3px;
+            width: 100%;
+            border-radius: 20px;
+            bottom: 0;
+            background-color: #72F34B;
+            transition: .3s;
+        }
+    }
+}

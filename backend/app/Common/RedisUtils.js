@@ -104,26 +104,27 @@ const deleteRedisPoolList = (params) => {
  * UPCOMING COMMUNITY & IGO POOLS
  */
  const getRedisKeyUpcomingPools = (page = 1, type, token_type) => {
-  let poolType = 'all'
+  let poolType = type;
   if (type === undefined || type === null) {
     poolType = 'all'
   }
 
-  if (type === 0 || type === '0') {
-    poolType = 'igo'
-  }
-
-  if (type === 1 || type === '1') {
-    poolType = 'private'
-  }
-
-  if (type === 2 || type === '2') {
-    poolType = 'seed'
-  }
-
-  if (type === 3 || type === '3') {
-    poolType = 'community'
-  }
+  // Change to support filter by multiple value
+  // if (type === 0 || type === '0') {
+  //   poolType = 'igo'
+  // }
+  //
+  // if (type === 1 || type === '1') {
+  //   poolType = 'private'
+  // }
+  //
+  // if (type === 2 || type === '2') {
+  //   poolType = 'seed'
+  // }
+  //
+  // if (type === 3 || type === '3') {
+  //   poolType = 'community'
+  // }
 
   return `upcoming_pools_${poolType}_${page}_${token_type}`;
 };
@@ -169,22 +170,22 @@ const deleteAllRedisUpcomingPools = (pages = []) => {
 /**
  * LATEST POOLS
  */
-const getRedisKeyLatestPools = (limit) => {
-  return `${LATEST_POOL_KEY}_${limit}`;
+const getRedisKeyLatestPools = (limit, token_type) => {
+  return `${LATEST_POOL_KEY}_${limit}_${token_type}`;
 }
 
-const getRedisLatestPools = async (limit) => {
-  const redisKey = getRedisKeyLatestPools(limit);
+const getRedisLatestPools = async (limit, token_type) => {
+  const redisKey = getRedisKeyLatestPools(limit, token_type);
   return await Redis.get(redisKey);
 }
 
-const createRedisLatestPools = async (limit, data) => {
-  const redisKey = getRedisKeyLatestPools(limit);
+const createRedisLatestPools = async (limit, token_type, data) => {
+  const redisKey = getRedisKeyLatestPools(limit, token_type);
   return await Redis.setex(redisKey, LATEST_POOLS_CACHED_TTL, JSON.stringify(data));
 }
 
-const checkExistRedisLatestPools = async (limit) => {
-  const redisKey = getRedisKeyLatestPools(limit);
+const checkExistRedisLatestPools = async (limit, token_type) => {
+  const redisKey = getRedisKeyLatestPools(limit, token_type);
   return Redis.exists(redisKey);
 }
 

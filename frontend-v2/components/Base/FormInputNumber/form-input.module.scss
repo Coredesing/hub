@@ -1,0 +1,23 @@
+.input {
+    width: 100%;
+    font-size: 14px;
+    line-height: 24px;
+    font-weight: 400;
+    background: #F7F7FF;
+    border-radius: 4px;
+    padding: 8px 12px;
+    outline: none;
+    box-sizing: border-box;
+    border: 1px solid #E7E6FF;
+    font-family: 'Rajdhani';
+}
+
+.hide-arrow-number::-webkit-outer-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+}
+
+.hide-arrow-number::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+}

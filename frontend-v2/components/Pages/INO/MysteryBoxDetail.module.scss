@@ -1,0 +1,34 @@
+.headPool {
+    max-width: 1120px;
+    width: 100%;
+    margin: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.headInfoBoxOrder {
+    background: linear-gradient(91.55deg, rgba(255, 255, 255, 0.3) -7.35%, rgba(255, 255, 255, 0) 52.92%);
+    border: 1px solid linear-gradient(91.55deg, rgba(255, 255, 255, 0.3) -7.35%, rgba(255, 255, 255, 0) 52.92%);
+    div:nth-child(2) {
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+.headCountdown {
+    @media all and (min-width: 1024px) {
+        -webkit-clip-path: polygon(30px 0, 100% 0, 100% 100%, 0% 100%);
+        clip-path: polygon(30px 0, 100% 0, 100% 100%, 0% 100%);
+        width: calc(100% + 20px);
+        margin-left: -20px;
+        padding-left: 20px;
+    }
+    // transform: skew(-30deg);
+    // width: calc(100% + 40px);
+    // .countdown,
+    // .titleCountdown {
+    //     transform: skew(30deg);
+    // }
+}

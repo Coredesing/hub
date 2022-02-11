@@ -1,0 +1,115 @@
+.btn {
+    padding: 8px 22px;
+    text-align: center;
+    box-sizing: border-box;
+    min-width: 120px;
+}
+
+.btnBordered {
+    border: 1px solid #6CDB00;
+    background: #15171E;
+    box-shadow: inset -1px -1px 0px #6CDB00, inset 0px 1px 0px #6CDB00;
+    border-radius: 0px 2px 2px 0px;
+}
+
+.btnClipPathTopRight {
+    -webkit-clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%, 0 0);
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%, 0 0);
+}
+
+.btnClipPathBottomLeft {
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px), 0 0);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px), 0 0);
+}
+
+.btnClipPathTopRightBottomLeft {
+    -webkit-clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px), 0 0);
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px), 0 0);
+}
+
+.box {
+    background: #1B1D26;
+    border-radius: 2px;
+}
+
+.boxCPTopRight {
+    -webkit-clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%, 0 0);
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%, 0 0);
+}
+
+.boxCPBottomLeft {
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 16px 100%, 0 calc(100% - 16px), 0 0);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 16px 100%, 0 calc(100% - 16px), 0 0);
+}
+
+.btnTransfer {
+    height: unset !important;
+    padding: 8px 22px !important;
+    background: #15171E !important;
+    font-size: 13px !important;
+    line-height: 18px !important;
+    min-width: unset !important;
+    border: none !important;
+}
+
+.offerList {
+    display: grid;
+    gap: 36px;
+    .offerItem {
+        display: grid;
+        grid-template-columns: 400px auto;
+    }
+    .offerMaker {
+        &>div {
+            padding: 2px 12px;
+            position: relative;
+        }
+        &>div::before {
+            content: "";
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: #6CDB00;
+            border-radius: 50%;
+            left: 0;
+            top: 50%;
+            transform: translate(0, -50%);
+        }
+        span {
+            display: block;
+            padding-left: 12px;
+        }
+    }
+}
+
+.attributes {
+    margin-top: 24px;
+    margin-bottom: 24px;
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 45%));
+    div {
+        display: grid;
+        grid-template-columns: minmax(200px, 50%) auto;
+        gap: 20px;
+    }
+}
+
+.activityTableCellHead {
+    background: transparent !important;
+    border-bottom: unset !important;
+}
+
+.activityTableCell {
+    padding: 17px;
+    background: #191B23 !important;
+    border-bottom: 4px solid #13141f !important;
+}
+
+.activityTableBody tr:hover {
+    background: rgba(36, 39, 50, 1) !important;
+}
+
+.activityTableBody tr:hover td {
+    background: transparent !important;
+}

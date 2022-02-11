@@ -22,7 +22,7 @@ const DialogTxSubmitted = ({ open, ...props }: Props) => {
       toggle={handleClose}
       className={'bg-slate-800'}
     >
-      <div className='p-9'>
+      <div className='p-9' style={{ background: 'rgb(31 31 35)' }}>
         <h3 className='text-3xl font-bold text-center mb-4'>Transaction Submitted</h3>
         <h5 className='text-center text-xl font-semibold mb-2'>Tx Hash</h5>
         <p className='bg-gamefiDark-400 text-white text-sm p-1 text-center mb-2 rounded font-semibold'>{props.transaction}</p>

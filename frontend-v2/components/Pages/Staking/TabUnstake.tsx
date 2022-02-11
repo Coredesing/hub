@@ -3,7 +3,6 @@ import { safeToFixed } from '@/utils'
 import { useWeb3Default, switchNetwork, GAFI } from '@/components/web3'
 import { utils } from 'ethers'
 import { useMyWeb3 } from '@/components/web3/context'
-import { useBalanceToken } from '@/components/web3/utils'
 import WalletConnector from '@/components/Base/WalletConnector'
 import StakeRight from '@/components/Pages/Staking/StakeRight'
 import { useAppContext } from '@/context'
@@ -24,8 +23,6 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
 
     return network?.id === chainIDDefault
   }, [network, chainIDDefault])
-
-  const { balance: balanceGAFI } = useBalanceToken(GAFI)
 
   const balanceOK = useMemo(() => {
     if (!balance) {
@@ -79,9 +76,9 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
   }
 
   const [amount, setAmount] = useState('')
-  const setAmountMax = () => {
+  const setAmountMax = useCallback(() => {
     setAmount(stakingMine?.tokenStaked)
-  }
+  }, [stakingMine])
 
   function handleAmount (event: ChangeEvent<HTMLInputElement>) {
     const target = event.target
@@ -92,8 +89,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
     }
 
     try {
-      const valueInWei = utils.parseUnits(value, GAFI.decimals)
-      if (valueInWei.gt(balanceGAFI)) {
+      if (parseFloat(value) > parseFloat(stakingMine?.tokenStaked)) {
         setAmountMax()
         return
       }
@@ -113,8 +109,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
 
   const stepOK2 = useMemo(() => {
     try {
-      const valueInWei = utils.parseUnits(amount, GAFI.decimals)
-      if (valueInWei.gt(balanceGAFI)) {
+      if (parseFloat(amount) > parseFloat(stakingMine?.tokenStaked)) {
         return false
       }
 
@@ -122,7 +117,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
     } catch (err) {
       return false
     }
-  }, [amount, balanceGAFI])
+  }, [amount, stakingMine])
 
   const stepOK3 = useMemo(() => {
     return confirmed
@@ -191,12 +186,19 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
     })()
   }, [confirmed, confirming, contractStaking, pool, amount, setConfirmed, setConfirming, setStep, setTx, loadMyStaking, loadMyPending])
 
-  const unstakeMore = () => {
+  const unstakeMore = useCallback(() => {
     setTx('')
     setConfirmed(false)
     setAmount('')
-    chooseStep(2)
-  }
+    setStep(2)
+  }, [setTx, setConfirmed, setAmount, setStep])
+
+  useEffect(() => {
+    setTx('')
+    setConfirmed(false)
+    setAmount('')
+    setStep(1)
+  }, [account, setTx, setConfirmed, setAmount, setStep])
 
   return <>
     <div className="md:px-10 md:py-8 bg-gradient-to-t from-gamefiDark-800">
@@ -355,7 +357,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
         onClick={() => chooseStep(2)}
         className={`flex-none ml-auto py-2 px-10 font-bold font-mechanic text-sm rounded-xs hover:opacity-95 cursor-pointer clipped-t-r text-gamefiDark-900 ${stepOK1 ? 'bg-gamefiGreen-500' : 'bg-gray-500 bg-opacity-70'}`}
       >
-        Next
+        { balanceOK ? 'Next' : `Insufficient ${network?.currency}`}
       </button> }
     </div>}
 

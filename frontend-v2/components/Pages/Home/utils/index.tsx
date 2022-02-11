@@ -14,6 +14,10 @@ export const useScreens = () => {
 export const prettyPrice = (input: any) => {
   const price = parseFloat(input)
 
+  if (!price || price === 0) {
+    return 'N/A'
+  }
+
   if (price / Math.pow(10, 9) > 1) {
     return `$${(price / Math.pow(10, 9)).toFixed(1)}B`
   }

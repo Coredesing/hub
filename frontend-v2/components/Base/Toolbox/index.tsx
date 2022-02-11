@@ -9,7 +9,7 @@ const Toolbox = () => {
   const [showMenu, setShowMenu] = useState(false)
   return (
     <>
-      <div className="fixed w-full bottom-0 grid grid-cols-5 md:hidden dark:bg-gamefiDark-700" style={{ boxShadow: 'inset -1px 0px 0px #303442' }}>
+      <div className="fixed w-full bottom-0 grid grid-cols-5 md:hidden dark:bg-gamefiDark-700" style={{ boxShadow: 'inset -1px 0px 0px #303442', zIndex: '99' }}>
         <ToolboxItem path='/'>
           <Image src={require('@/assets/images/icons/home.svg')} alt='home'></Image>
         </ToolboxItem>
@@ -17,7 +17,7 @@ const Toolbox = () => {
           <Image src={require('@/assets/images/icons/controller.svg')} alt='aggregator'></Image>
         </ToolboxItem>
         <ToolboxItem path='/ino'>
-          <Image src={require('@/assets/images/icons/spaceship.svg')} alt='ino'></Image>
+          <Image src={require('@/assets/images/icons/nft.svg')} alt='ino'></Image>
         </ToolboxItem>
         <ToolboxItem path='https://hub.gamefi.org'>
           <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
@@ -35,7 +35,7 @@ const Toolbox = () => {
           <Image src={require('@/assets/images/icons/menuToggler.svg')} alt='menu'></Image>
         </button>
       </div>
-      <div className={`flex flex-col fixed z-40 left-0 top-0 bottom-0 right-0 md:hidden dark:bg-gamefiDark-900 overflow-auto hide-scrollbar menu-slide-up ${showMenu ? 'h-full' : 'h-0'}`} style={{ boxShadow: 'inset -1px 0px 0px #303442' }}>
+      <div className={`flex flex-col fixed left-0 top-0 bottom-0 right-0 md:hidden dark:bg-gamefiDark-900 overflow-auto hide-scrollbar menu-slide-up ${showMenu ? 'h-full' : 'h-0'}`} style={{ boxShadow: 'inset -1px 0px 0px #303442', zIndex: '99' }}>
         <Topbar className="flex-none"></Topbar>
         <div className="flex-1 overflow-y-auto">
           <MenuLink path='/'>
@@ -51,7 +51,7 @@ const Toolbox = () => {
             <span>Launchpad</span>
           </MenuLink>
           <MenuLink path='/ino'>
-            <Image src={require('@/assets/images/icons/spaceship.svg')} alt='ino'></Image>
+            <Image src={require('@/assets/images/icons/nft.svg')} alt='ino'></Image>
             <span>INO</span>
           </MenuLink>
           <MenuLink path='/market'>

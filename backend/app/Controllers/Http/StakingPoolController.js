@@ -244,13 +244,20 @@ class StakingPoolController {
       if (await RedisLegendSnapshotUtils.existRedisLegendCurrentStaked()) {
         let data = await RedisLegendSnapshotUtils.getRedisLegendCurrentStaked()
         data = JSON.parse(data)
+	data.map(async (item) => {
+          if (item && item.wallet_address) {
+            item.wallet_address = await HelperUtils.maskWalletAddress(item.wallet_address)
+          }
+
+          return item
+        })
 
         return HelperUtils.responseSuccess(data)
       }
 
-      return HelperUtils.responseSuccess([]);
+      return HelperUtils.responseSuccess([])
     } catch (e) {
-      return HelperUtils.responseErrorInternal();
+      return HelperUtils.responseErrorInternal()
     }
   }
 }

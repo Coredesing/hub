@@ -23,9 +23,7 @@ const List = ({ now }: Props) => {
       ? <div className={`${styles.section} ${styles.black}`}>
         <div className={stylesList.container}>
           <div className={styles.header}>
-            <div className={styles.heading}>
-          AUCTIONS
-            </div>
+            <div className={`${styles.heading} font-bold text-2xl sm:text-3xl md:text-4xl`}>AUCTIONS</div>
 
             <svg viewBox="0 0 118 18" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M59 18L51.2058 4.5L66.7942 4.5L59 18Z" fill="currentColor"/>
@@ -42,7 +40,7 @@ const List = ({ now }: Props) => {
           Loading...
             </div>
           ) }
-          <div className={styles.cards}>
+          <div className={'grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10'}>
             { !loading && items.map(item => {
               return (
                 <CardSlim key={item.id} item={item} now={now} />

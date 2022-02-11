@@ -226,13 +226,16 @@ export default function WalletProvider ({ children }) {
                 <path d="M5.5 12.5H9.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <p className="flex mt-4 justify-between w-full font-medium cursor-pointer" onClick={tryDeactivate}>
-              <Link href="/account" passHref={true}>
-                <a className="text-white hover:text-gray-400 underline">
+            <p className="flex mt-4 justify-between w-full font-medium cursor-pointer">
+              <Link href="https://hub.gamefi.org/#/account" passHref={true}>
+                <a className="text-white hover:text-gray-400 underline" onClick={() => {
+                  setShowModal(false)
+                  setConnectorChosen(undefined)
+                }}>
                   View My Account
                 </a>
               </Link>
-              <span className="inline-flex items-center text-red-400 hover:text-red-500">
+              <span className="inline-flex items-center text-red-400 hover:text-red-500" onClick={tryDeactivate}>
                 Disconnect
                 <svg className="w-5 h-5 ml-2" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M11 12.414L15.414 8L11 3.586L9.586 5L11.586 7H5V9H11.586L9.586 11L11 12.414Z" fill="currentColor"/>

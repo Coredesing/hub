@@ -31,7 +31,7 @@ const tiers = [{
 }, {
   id: 1,
   name: 'Rookie',
-  method: 'Lotery',
+  method: 'Lottery',
   image: require('@/assets/images/ranks/rookie.png'),
   config: {
     max: 60
@@ -39,7 +39,7 @@ const tiers = [{
 }, {
   id: 2,
   name: 'Elite',
-  method: 'Lotery',
+  method: 'Lottery',
   image: require('@/assets/images/ranks/elite.png'),
   config: {
     max: 300
@@ -47,7 +47,7 @@ const tiers = [{
 }, {
   id: 3,
   name: 'Pro',
-  method: 'Lotery',
+  method: 'Lottery',
   image: require('@/assets/images/ranks/pro.png'),
   config: {
     max: 700

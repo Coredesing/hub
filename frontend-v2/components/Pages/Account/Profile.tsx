@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { DocumentCopyIcon, SolanaIcon, TerraIcon } from 'components/Base/Icon'
 import styles from './Profile.module.scss'
 import clsx from 'clsx'
@@ -9,7 +9,7 @@ import { useMyWeb3 } from '@/components/web3/context'
 import axios from '@/utils/axios'
 import toast from 'react-hot-toast'
 import useWalletSignature from 'hooks/useWalletSignature'
-import { fetcher } from '@/utils'
+import { fetcher, useFetch } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 import { useRouter } from 'next/router'
 
@@ -24,26 +24,18 @@ const Profile = () => {
   const [signature, setSignature] = useState('')
   const { signMessage } = useWalletSignature()
 
+  const { response, loading: loadingUserInfo } = useFetch(`/user/profile?wallet_address=${account}`)
+  const userInfo = useMemo(() => {
+    return response?.data?.user
+  }, [response])
+
   const router = useRouter()
 
-  useEffect(() => {
-    if (account) {
-      tiers?.actions.getUserTier && tiers.actions.getUserTier(account)
-    }
-  }, [account])
-
-  const [userInfo, setUserInfo] = useState<any>()
-  const [loadingUserInfo, setLoadingUserInfo] = useState(false)
-  useEffect(() => {
-    if (!account) return
-    const getUserInfo = async () => {
-      const response = await axios.get(`/user/profile?wallet_address=${account}`)
-      setUserInfo(response.data.data?.user || {})
-    }
-    getUserInfo().catch(console.debug).finally(() =>
-      setLoadingUserInfo(false)
-    )
-  }, [account])
+  // useEffect(() => {
+  //   if (account) {
+  //     tiers?.actions.getUserTier && tiers.actions.getUserTier(account)
+  //   }
+  // }, [account, tiers])
 
   const onCopy = (val: any) => {
     navigator.clipboard.writeText(val)
@@ -359,7 +351,7 @@ const Profile = () => {
           <div className='text-sm text-white/80 font-casual mb-6'>
             Check out GameFi's ranking system: Legend, Pro, Elite, Rookie. <a href='https://faq.gamefi.org/#1.2.-stake' rel='noreferrer' target={'_blank'} className={clsx(styles.link, 'font-bold text-sm font-casual')}>Read more</a>
           </div>
-          <button className={clsx(styles.btnclippart, 'bg-gamefiGreen-700 text-black uppercase py-2 px-3 w-28 text-13px font-bold rounded-sm')}>Stake Now</button>
+          <button onClick={() => router.push('/staking')} className={clsx(styles.btnclippart, 'bg-gamefiGreen-700 text-black uppercase py-2 px-3 w-28 text-13px font-bold rounded-sm')}>Stake Now</button>
         </div>
         <div className={clsx(styles.step)}>
           <div className={clsx(styles.index, 'text-2xl font-bold rounded-full grid place-items-center')}>2</div>

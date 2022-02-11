@@ -25,7 +25,7 @@ const Sidebar = () => {
           <span className="mt-2">IGO</span>
         </SidebarLink>
         <SidebarLink path='/ino'>
-          <Image src={require('@/assets/images/icons/spaceship.svg')} alt='INO'></Image>
+          <Image src={require('@/assets/images/icons/nft.svg')} alt='INO'></Image>
           <span className="mt-2">INO</span>
         </SidebarLink>
         <SidebarLink path='/market'>

@@ -60,7 +60,7 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
     setVerify(value)
   }
 
-  const [openTxModal, setOpenTxModal] = useState(false);
+  const [openTxModal, setOpenTxModal] = useState(false)
   useEffect(() => {
     if (txHash) {
       setOpenTxModal(true)

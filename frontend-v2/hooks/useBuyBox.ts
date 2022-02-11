@@ -28,6 +28,7 @@ const useBuyBox = ({ poolId, currencyInfo, poolAddress, subBoxId, eventId }: Poo
     try {
       setLoading(false)
       setSuccess(false)
+      setTxHash('')
       const signature = await apiSignMessage({
         campaign_id: poolId,
         captcha_token: captchaToken,

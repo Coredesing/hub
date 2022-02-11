@@ -25,7 +25,7 @@ export default function Ranks () {
                 <svg className="w-4 h-4 ml-2" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM9 12H7V7H9V12ZM8 6C7.4 6 7 5.6 7 5C7 4.4 7.4 4 8 4C8.6 4 9 4.4 9 5C9 5.6 8.6 6 8 6Z" fill="#858689"/>
                 </svg>
-                <div className="absolute inset-x-0 bottom-0 z-50 flex flex-col items-center hidden mb-6 group-hover:flex">
+                <div className="absolute inset-x-0 bottom-0 z-40 flex flex-col items-center hidden mb-6 group-hover:flex">
                   <span className="relative z-10 p-4 text-xs leading-5 text-white whitespace-no-wrap bg-black w-96">{tier.config.requirementDescription}</span>
                   <div className="w-3 h-3 -mt-2 rotate-45 bg-black"></div>
                 </div>

@@ -222,7 +222,7 @@ const Staking = ({ data }) => {
           ]}
           currentValue={tab}
           onChange={setTab}
-          className="mt-2 sm:mt-6 lg:mt-10"
+          className="mt-2 sm:mt-6 lg:mt-10 sticky top-0 bg-gamefiDark-900 z-50"
         />
 
         <div>

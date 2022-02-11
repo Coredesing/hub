@@ -43,7 +43,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const [myBoxOrdered, setMyBoxOrdered] = useState(0)
   const [currentTab, setCurrentTab] = useState(0)
   const [amountBoxBuy, setAmountBoxBuy] = useState(0)
-  const [countdown, setCountdown] = useState<CountDownTimeType & { title: string; [k: string]: any }>({ date1: 0, date2: 0, title: '' })
+  const [countdown, setCountdown] = useState<CountDownTimeType & { title: string;[k: string]: any }>({ date1: 0, date2: 0, title: '' })
   const [timelinePool, setTimelinePool] = useState<ObjectType>({})
   const [timelines, setTimelines] = useState<ObjectType<{
     title: string;
@@ -283,16 +283,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
 
   const isAppliedWhitelist = isJoinPool || isJoinSuccess
   const isShowBtnApprove = currencySelected.neededApprove && !isApprovedToken && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && (!currencySelected.neededApprove || (currencySelected.neededApprove && !isApprovedToken))
-  const isShowBtnBuy = isAppliedWhitelist && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken))
+  const isShowBtnBuy = ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && countdown.isSale && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken))
   const isAllowedJoinCompetive = (countdown.isWhitelist || countdown.isUpcoming) && +poolInfo.is_private === 3 && poolInfo.socialRequirement?.gleam_link && !isAppliedWhitelist
   return (<WrapperPoolDetail>
-    {/* <DialogTxSubmitted
-                transaction={auctionTxHash}
-                open={openModalTx}
-                onClose={() => setOpenModalTx(false)}
-                networkName={allowNetwork.shortName}
-            />
-            */}
     <PlaceOrderModal open={openPlaceOrderModal} onClose={() => setOpenPlaceOrderModal(false)} poolId={poolInfo.id} getBoxOrderd={getBoxOrderd} />
     <BuyBoxModal
       open={openBuyBoxModal}

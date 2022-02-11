@@ -1,12 +1,7 @@
 import { createContext, useContext } from 'react'
 
 type ValueOfContext = {
-    [k: string]: {
-        state?: any;
-        actions?: {
-            [k: string]: (...args: any[]) => void;
-        };
-    };
+    [k: string]: any;
 }
 
 const AppContext = createContext<ValueOfContext>({})

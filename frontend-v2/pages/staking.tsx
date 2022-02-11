@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import Layout from '@/components/Layout'
 import imgNA from '@/assets/images/ranks/na.png'
 import { API_BASE_URL } from '@/utils/constants'
-import { fetcher } from '@/utils'
+import { fetcher, safeToFixed } from '@/utils'
 import ABIStakingPool from '@/components/web3/abis/StakingPool.json'
 import ABIERC20 from '@/components/web3/abis/ERC20.json'
 import { useWeb3Default, GAFI } from '@/components/web3'
@@ -24,7 +24,7 @@ const Staking = ({ data }) => {
   }, [])
 
   const pool = useMemo(() => data.pool, [data])
-  const { tiers, myTier } = useAppContext()
+  const { tiers, myTier, loadMyStakingData } = useAppContext()
   useEffect(() => {
     tiers.actions.setConfigs(data.tierConfigs)
   }, [data, tiers])
@@ -32,19 +32,10 @@ const Staking = ({ data }) => {
   const tierMine = useMemo(() => myTier.state.tier, [myTier])
   const stakingMine = useMemo(() => myTier.state.staking, [myTier])
   const loadMyStaking = useCallback(() => {
-    if (!myTier?.actions?.loadData) {
-      return
-    }
-
-    myTier.actions.loadData()
-  }, [myTier])
+    return loadMyStakingData(pool)
+  }, [loadMyStakingData, pool])
   useEffect(() => {
-    if (!loadMyStaking) {
-      return
-    }
-
-    const interval = setInterval(loadMyStaking, 10000)
-    return () => clearInterval(interval)
+    loadMyStaking()
   }, [loadMyStaking])
 
   const [totalStaked, setTotalStaked] = useState<BigNumber | null>(null)
@@ -216,14 +207,14 @@ const Staking = ({ data }) => {
               <div>
                 <span className="font-bold text-xs md:text-sm uppercase text-white opacity-50">Your Stake</span>
                 { !account && <p className="sm:font-casual font-medium text-xs md:text-sm text-gamefiGreen-500 leading-6">Connect Wallet</p>}
-                { account && <p className="font-semibold text-lg md:text-2xl text-white leading-6">{stakingMine?.tokenStaked !== undefined ? stakingMine?.tokenStaked : 'Loading...'}</p>}
+                { account && <p className="font-semibold text-lg md:text-2xl text-white leading-6">{stakingMine?.tokenStaked !== undefined ? safeToFixed(stakingMine?.tokenStaked, 4) : 'Loading...'}</p>}
               </div>
             </div>
             <div className="px-1 md:px-10 sm:px-2 flex-1 md:flex-initial flex items-center border-r border-gamefiDark-700">
               <div>
                 <span className="font-bold text-xs md:text-sm uppercase text-white opacity-50"><span className="hidden sm:inline">$GAFI Left To</span> Next Rank</span>
                 { !account && <p className="sm:font-casual font-medium text-xs md:text-sm text-gamefiGreen-500 leading-6">Connect Wallet</p>}
-                { account && <p className="font-semibold text-lg md:text-2xl text-white leading-6">{stakingMine?.nextTokens !== null ? stakingMine?.nextTokens : 'Loading...'}</p>}
+                { account && <p className="font-semibold text-lg md:text-2xl text-white leading-6">{stakingMine?.nextTokens !== null ? safeToFixed(stakingMine?.nextTokens, 4) : 'Loading...'}</p>}
               </div>
             </div>
             <div className="px-1 md:px-10 sm:px-2 flex-1 md:flex-initial flex items-center">

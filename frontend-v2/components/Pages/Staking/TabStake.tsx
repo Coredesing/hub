@@ -195,11 +195,12 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
         setConfirming(true)
         await contractStaking.linearDeposit(pool.pool_id, utils.parseUnits(amount, GAFI.decimals))
           .then(tx => {
-            tx.wait(2).then(loadMyStaking)
+            tx.wait(2).then()
             setTx(tx.hash)
             return tx.wait(1).then(() => {
               setConfirmed(true)
               setStep(5)
+              loadMyStaking()
               updateBalance()
               toast.success('Successfully Staked Your $GAFI')
             })
@@ -486,7 +487,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
       <button onClick={() => chooseStep(2)} className="ml-auto text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline">Back</button>
       <button
         onClick={approveOrNext}
-        className={`flex-none ml-4 py-2 px-10 font-bold font-mechanic text-sm rounded-xs hover:opacity-95 cursor-pointer clipped-t-r text-gamefiDark-900 ${stepOK3 ? 'bg-gamefiGreen-500' : 'bg-gray-500 bg-opacity-70'}`}
+        className={`flex-none ml-4 py-2 px-10 font-bold font-mechanic text-sm rounded-xs hover:opacity-95 cursor-pointer clipped-t-r text-gamefiDark-900 ${stepOK2 ? 'bg-gamefiGreen-500' : 'bg-gray-500 bg-opacity-70'}`}
       >
         {(loadingAllowance || loadingApproval) ? 'Loading...' : (allowanceEnough ? 'Approved. Next' : 'Approve')}
       </button>

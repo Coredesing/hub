@@ -2,10 +2,13 @@ import { useState, useEffect, useMemo, useCallback } from 'react'
 import toast from 'react-hot-toast'
 import { utils } from 'ethers'
 import { GAFI } from '@/components/web3'
+import { useBalanceToken } from '@/components/web3/utils'
+import { safeToFixed } from '@/utils'
 
 export default function StakeRight ({ pool, contractStaking, loadMyStaking, loadMyPending, account, stakingMine, pendingWithdrawal, className }) {
   const [withdrawing, setWithdrawing] = useState(false)
   const [restaking, setRestaking] = useState(false)
+  const { updateBalance } = useBalanceToken(GAFI)
 
   const pendingAmount = useMemo(() => {
     if (!pendingWithdrawal?.amount) {
@@ -31,6 +34,7 @@ export default function StakeRight ({ pool, contractStaking, loadMyStaking, load
           .then(tx => {
             return tx.wait(1).then(() => {
               loadMyPending()
+              updateBalance()
               toast.success('Successfully Claimed Your $GAFI')
             })
           })
@@ -48,7 +52,7 @@ export default function StakeRight ({ pool, contractStaking, loadMyStaking, load
         setWithdrawing(false)
       }
     })()
-  }, [contractStaking, pool, loadMyPending, setWithdrawing])
+  }, [contractStaking, pool, loadMyPending, setWithdrawing, updateBalance])
   const onRestake = useCallback(() => {
     if (!contractStaking) {
       return
@@ -59,8 +63,8 @@ export default function StakeRight ({ pool, contractStaking, loadMyStaking, load
         setRestaking(true)
         await contractStaking.linearReStake(pool.pool_id)
           .then(tx => {
-            tx.wait(2).then(loadMyStaking)
             return tx.wait(1).then(() => {
+              loadMyStaking()
               loadMyPending()
               toast.success('Successfully Restaked Your $GAFI')
             })
@@ -121,7 +125,9 @@ export default function StakeRight ({ pool, contractStaking, loadMyStaking, load
   return <div className={`w-full md:w-60 ${className || ''}`}>
     <div className="p-4 rounded bg-gray-500 bg-opacity-20 bg-gradient-to-l from-gamefiDark-800">
       <span className="font-bold text-sm uppercase text-white opacity-50">Current Staking</span>
-      { account && <p className="font-semibold text-2xl text-white leading-6">{stakingMine?.tokenStaked !== undefined ? `${stakingMine?.tokenStaked} $GAFI` : 'Loading...'}</p>}
+      { account && <p className="font-semibold text-2xl text-white leading-6">
+        {stakingMine?.loading || (stakingMine?.tokenStaked === undefined) ? 'Loading...' : `${safeToFixed(stakingMine?.tokenStaked, 4)} $GAFI`}
+      </p>}
     </div>
 
     <div className="p-4 rounded bg-gray-500 bg-opacity-20 bg-gradient-to-l from-gamefiDark-800 mt-6">

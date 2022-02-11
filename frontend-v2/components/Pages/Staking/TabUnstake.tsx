@@ -109,6 +109,10 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
 
   const stepOK2 = useMemo(() => {
     try {
+      if (!parseFloat(amount)) {
+        return false
+      }
+
       if (parseFloat(amount) > parseFloat(stakingMine?.tokenStaked)) {
         return false
       }
@@ -158,9 +162,9 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
         setConfirming(true)
         await contractStaking.linearWithdraw(pool.pool_id, utils.parseUnits(amount, GAFI.decimals))
           .then(tx => {
-            tx.wait(2).then(loadMyStaking)
             setTx(tx.hash)
             return tx.wait(1).then(() => {
+              loadMyStaking()
               loadMyPending()
               setConfirmed(true)
               setStep(4)
@@ -273,7 +277,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
               <p className="flex items-center font-casual text-sm w-full">
                 <span className="truncate">Enter the amount of $GAFI you want to unstake</span>
                 <span className="flex-none ml-auto text-xs">Current Staking:</span>
-                <strong className="flex-none ml-2 text-xs">{stakingMine?.tokenStaked !== undefined ? `${stakingMine?.tokenStaked} $GAFI` : 'Loading...'}</strong>
+                <strong className="flex-none ml-2 text-xs">{stakingMine?.tokenStaked !== undefined ? `${safeToFixed(stakingMine?.tokenStaked, 4)} $GAFI` : 'Loading...'}</strong>
               </p>
               <div className="relative font-casual text-sm mt-2">
                 <input className={`bg-transparent border w-full pl-4 ${stepOK2 ? 'border-gamefiGreen-700' : 'border-gamefiDark-400'}`} type="text" value={amount} onChange={handleAmount} />

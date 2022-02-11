@@ -30,7 +30,7 @@ const Profile = () => {
     if (account) {
       tiers?.actions.getUserTier && tiers.actions.getUserTier(account)
     }
-  }, [account])
+  }, [account, tiers.actions])
 
   const [userInfo, setUserInfo] = useState<any>()
   const [loadingUserInfo, setLoadingUserInfo] = useState(false)
@@ -359,7 +359,7 @@ const Profile = () => {
           <div className='text-sm text-white/80 font-casual mb-6'>
             Check out GameFi's ranking system: Legend, Pro, Elite, Rookie. <a href='https://faq.gamefi.org/#1.2.-stake' rel='noreferrer' target={'_blank'} className={clsx(styles.link, 'font-bold text-sm font-casual')}>Read more</a>
           </div>
-          <button className={clsx(styles.btnclippart, 'bg-gamefiGreen-700 text-black uppercase py-2 px-3 w-28 text-13px font-bold rounded-sm')}>Stake Now</button>
+          <button onClick={() => router.push('/staking')} className={clsx(styles.btnclippart, 'bg-gamefiGreen-700 text-black uppercase py-2 px-3 w-28 text-13px font-bold rounded-sm')}>Stake Now</button>
         </div>
         <div className={clsx(styles.step)}>
           <div className={clsx(styles.index, 'text-2xl font-bold rounded-full grid place-items-center')}>2</div>

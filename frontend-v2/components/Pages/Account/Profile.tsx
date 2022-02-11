@@ -28,9 +28,9 @@ const Profile = () => {
 
   useEffect(() => {
     if (account) {
-      tiers.actions.getUserTier(account)
+      tiers?.actions.getUserTier && tiers.actions.getUserTier(account)
     }
-  }, [account])
+  }, [account, tiers?.actions])
 
   const [userInfo, setUserInfo] = useState<any>()
   const [loadingUserInfo, setLoadingUserInfo] = useState(false)

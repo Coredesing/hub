@@ -253,7 +253,8 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
               <h3 className="text-lg font-bold uppercase mt-6 mb-2">2. Withdraw delay time</h3>
               { tierMine && <label className="leading-relaxed inline-block align-middle font-casual text-sm text-gray-300">
                 <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 mr-2" checked={agreed2a} onChange={handleAgreement(setAgreed2a)} />
-                Your current rank is <strong>{tierMine.name}</strong>, withdraw delay time is <strong>{tierMine.config.delay ? `${tierMine.config.delay} days` : '—'}</strong>. After <strong>{tierMine.config.delay ? `${tierMine.config.delay} days` : '—'}</strong>, you will be allowed to withdraw your $GAFI.
+                { tierMine.id === 0 && <span>Your current rank is Start. You can withdraw after unstake</span> }
+                { tierMine.id !== 0 && <span>Your current rank is <strong>{tierMine.name}</strong>, withdraw delay time is <strong>{tierMine.config.delay ? `${tierMine.config.delay} days` : '—'}</strong>. After <strong>{tierMine.config.delay ? `${tierMine.config.delay} days` : '—'}</strong>, you will be allowed to withdraw your $GAFI.</span> }
               </label> }
             </div>
           </div>

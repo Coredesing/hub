@@ -244,7 +244,7 @@ class StakingPoolController {
       if (await RedisLegendSnapshotUtils.existRedisLegendCurrentStaked()) {
         let data = await RedisLegendSnapshotUtils.getRedisLegendCurrentStaked()
         data = JSON.parse(data)
-	data.map((item) => {
+	data.map(async (item) => {
           if (item && item.wallet_address) {
             item.wallet_address = await HelperUtils.maskWalletAddress(item.wallet_address)
           }

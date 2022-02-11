@@ -89,7 +89,8 @@ export default function WalletProvider ({ children }) {
     const value = target.type === 'checkbox' ? target.checked : !!target.value
     setAgreed(value)
   }
-  const [networkChosen, setNetworkChosen] = useState<{ id: any } | undefined>()
+  const defaultNetwork = getNetworkAvailable().find(x => x.alias === 'bsc')
+  const [networkChosen, setNetworkChosen] = useState<{ id: any } | undefined>(defaultNetwork)
   const chooseNetwork = network => {
     if (!agreed) {
       return

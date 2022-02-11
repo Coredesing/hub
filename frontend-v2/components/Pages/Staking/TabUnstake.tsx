@@ -3,7 +3,6 @@ import { safeToFixed } from '@/utils'
 import { useWeb3Default, switchNetwork, GAFI } from '@/components/web3'
 import { utils } from 'ethers'
 import { useMyWeb3 } from '@/components/web3/context'
-import { useBalanceToken } from '@/components/web3/utils'
 import WalletConnector from '@/components/Base/WalletConnector'
 import StakeRight from '@/components/Pages/Staking/StakeRight'
 import { useAppContext } from '@/context'
@@ -24,8 +23,6 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
 
     return network?.id === chainIDDefault
   }, [network, chainIDDefault])
-
-  const { balance: balanceGAFI } = useBalanceToken(GAFI)
 
   const balanceOK = useMemo(() => {
     if (!balance) {
@@ -79,9 +76,9 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
   }
 
   const [amount, setAmount] = useState('')
-  const setAmountMax = () => {
+  const setAmountMax = useCallback(() => {
     setAmount(stakingMine?.tokenStaked)
-  }
+  }, [stakingMine])
 
   function handleAmount (event: ChangeEvent<HTMLInputElement>) {
     const target = event.target
@@ -92,8 +89,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
     }
 
     try {
-      const valueInWei = utils.parseUnits(value, GAFI.decimals)
-      if (valueInWei.gt(balanceGAFI)) {
+      if (parseFloat(value) > parseFloat(stakingMine?.tokenStaked)) {
         setAmountMax()
         return
       }
@@ -113,8 +109,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
 
   const stepOK2 = useMemo(() => {
     try {
-      const valueInWei = utils.parseUnits(amount, GAFI.decimals)
-      if (valueInWei.gt(balanceGAFI)) {
+      if (parseFloat(amount) > parseFloat(stakingMine?.tokenStaked)) {
         return false
       }
 
@@ -122,7 +117,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
     } catch (err) {
       return false
     }
-  }, [amount, balanceGAFI])
+  }, [amount, stakingMine])
 
   const stepOK3 = useMemo(() => {
     return confirmed
@@ -191,12 +186,19 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
     })()
   }, [confirmed, confirming, contractStaking, pool, amount, setConfirmed, setConfirming, setStep, setTx, loadMyStaking, loadMyPending])
 
-  const unstakeMore = () => {
+  const unstakeMore = useCallback(() => {
     setTx('')
     setConfirmed(false)
     setAmount('')
-    chooseStep(2)
-  }
+    setStep(2)
+  }, [setTx, setConfirmed, setAmount, setStep])
+
+  useEffect(() => {
+    setTx('')
+    setConfirmed(false)
+    setAmount('')
+    setStep(1)
+  }, [account, setTx, setConfirmed, setAmount, setStep])
 
   return <>
     <div className="md:px-10 md:py-8 bg-gradient-to-t from-gamefiDark-800">
@@ -236,24 +238,25 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
           <div className="flex-1">
             <div className="bg-gray-500 bg-opacity-20 p-4 md:px-6 md:py-5 rounded w-full">
               <h3 className="text-lg font-bold uppercase mb-2">1. Unstaking Policies</h3>
-              <label className="leading-relaxed inline-block align-middle font-casual text-sm text-gray-300">
-                <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 mr-2" checked={agreed1a} onChange={handleAgreement(setAgreed1a)} />
-                You will <strong>get a refund</strong> if you <strong>lose all future token releases in an IGO pool</strong> due to an unstake lowering your rank. The refund is calculated based on the number of tokens left in the pool, which you are not eligible to claim, and the token’s IGO price.
+              <label className="leading-relaxed inline-block align-middle font-casual text-sm text-gray-300 flex items-start">
+                <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed1a} onChange={handleAgreement(setAgreed1a)} />
+                <p className="-mt-1">You will <strong>get a refund</strong> if you <strong>lose all future token releases in an IGO pool</strong> due to an unstake lowering your rank. The refund is calculated based on the number of tokens left in the pool, which you are not eligible to claim, and the token’s IGO price.</p>
               </label>
-              <label className="leading-relaxed inline-block align-middle font-casual text-sm text-gray-300 mt-4">
-                <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 mr-2" checked={agreed1b} onChange={handleAgreement(setAgreed1b)} />
-                Within the last three working days of the month that you lost your ability to claim, <strong>this refund will be airdropped directly to your wallet address</strong>.
+              <label className="leading-relaxed inline-block align-middle font-casual text-sm text-gray-300 flex items-start mt-4">
+                <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed1b} onChange={handleAgreement(setAgreed1b)} />
+                <p className="-mt-1">Within the last three working days of the month that you lost your ability to claim, <strong>this refund will be airdropped directly to your wallet address</strong>.</p>
               </label>
 
-              <label className="leading-relaxed inline-block align-middle font-casual text-sm text-gray-300 mt-4">
-                <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 mr-2" checked={agreed1c} onChange={handleAgreement(setAgreed1c)} />
-                The forfeited token vestings will be redistributed to the GameFi Development fund, further developing the GameFi platform and ecosystem.
+              <label className="leading-relaxed inline-block align-middle font-casual text-sm text-gray-300 flex items-start mt-4">
+                <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed1c} onChange={handleAgreement(setAgreed1c)} />
+                <p className="-mt-1">The forfeited token vestings will be redistributed to the GameFi Development fund, further developing the GameFi platform and ecosystem.</p>
               </label>
 
               <h3 className="text-lg font-bold uppercase mt-6 mb-2">2. Withdraw delay time</h3>
-              { tierMine && <label className="leading-relaxed inline-block align-middle font-casual text-sm text-gray-300">
-                <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 mr-2" checked={agreed2a} onChange={handleAgreement(setAgreed2a)} />
-                Your current rank is <strong>{tierMine.name}</strong>, withdraw delay time is <strong>{tierMine.config.delay ? `${tierMine.config.delay} days` : '—'}</strong>. After <strong>{tierMine.config.delay ? `${tierMine.config.delay} days` : '—'}</strong>, you will be allowed to withdraw your $GAFI.
+              { tierMine && <label className="leading-relaxed inline-block align-middle font-casual text-sm text-gray-300 flex items-start">
+                <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed2a} onChange={handleAgreement(setAgreed2a)} />
+                <p className="-mt-1">{ tierMine.id === 0 && <span>Your current rank is Start. You can withdraw after unstake</span> }
+                  { tierMine.id !== 0 && <span>Your current rank is <strong>{tierMine.name}</strong>, withdraw delay time is <strong>{tierMine.config.delay ? `${tierMine.config.delay} days` : '—'}</strong>. After <strong>{tierMine.config.delay ? `${tierMine.config.delay} days` : '—'}</strong>, you will be allowed to withdraw your $GAFI.</span> }</p>
               </label> }
             </div>
           </div>
@@ -340,7 +343,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
 
     { step === 1 && <div className="p-4 md:px-10 md:py-4 md:bg-gamefiDark-700 font-casual text-sm flex items-center">
       <label className="leading-relaxed inline-block align-middle">
-        <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 mr-2" checked={agreed} onChange={handleAgreement(setAgreed)} />
+        <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed} onChange={handleAgreement(setAgreed)} />
         I fully understand and agree with all policies.
       </label>
       { !account && <WalletConnector buttonClassName="ml-auto font-mechanic"></WalletConnector> }
@@ -354,7 +357,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
         onClick={() => chooseStep(2)}
         className={`flex-none ml-auto py-2 px-10 font-bold font-mechanic text-sm rounded-xs hover:opacity-95 cursor-pointer clipped-t-r text-gamefiDark-900 ${stepOK1 ? 'bg-gamefiGreen-500' : 'bg-gray-500 bg-opacity-70'}`}
       >
-        Next
+        { balanceOK ? 'Next' : `Insufficient ${network?.currency}`}
       </button> }
     </div>}
 

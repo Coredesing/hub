@@ -32,6 +32,10 @@ function parseChainId (chainId: string) {
   return Number.parseInt(chainId, 16)
 }
 export function switchNetwork (provider: any, chainId: number) {
+  if (!chainId) {
+    return
+  }
+
   return provider.request({ method: 'eth_chainId' })
     .then((_chainId) => {
       const receivedChainId = parseChainId(_chainId)
@@ -45,7 +49,7 @@ export function switchNetwork (provider: any, chainId: number) {
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: desiredChainIdHex }]
       }).catch((error: ProviderRpcError) => {
-        if (error.code !== 4902) {
+        if (error.code !== 4902 && error.code !== -32603) {
           return
         }
 

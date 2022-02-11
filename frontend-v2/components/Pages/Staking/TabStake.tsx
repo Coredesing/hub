@@ -21,7 +21,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
     return network?.id === chainIDDefault
   }, [network, chainIDDefault])
 
-  const { balance: balanceGAFI, balanceShort: balanceGAFIShort } = useBalanceToken(GAFI)
+  const { balance: balanceGAFI, balanceShort: balanceGAFIShort, updateBalance } = useBalanceToken(GAFI)
   const balanceGAFIOK = useMemo(() => {
     if (!balanceGAFI) {
       return false
@@ -84,7 +84,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
 
   const { allowance, load: loadAllowance, loading: loadingAllowance } = useTokenAllowance(GAFI, account, pool.pool_address)
   const { approve, loading: loadingApproval, error: errorApproval } = useTokenApproval(GAFI, pool.pool_address)
-  const isEnough = useMemo(() => {
+  const allowanceEnough = useMemo(() => {
     try {
       const valueInWei = utils.parseUnits(amount, GAFI.decimals)
       return allowance && allowance.gte(valueInWei)
@@ -137,8 +137,8 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
   }, [amount, balanceGAFI])
 
   const stepOK3 = useMemo(() => {
-    return isEnough
-  }, [isEnough])
+    return allowanceEnough
+  }, [allowanceEnough])
 
   const stepOK4 = useMemo(() => {
     return confirmed
@@ -169,13 +169,13 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
       return
     }
 
-    if (isEnough) {
+    if (allowanceEnough) {
       chooseStep(4)
       return
     }
 
     approveAndReload(constants.MaxUint256)
-  }, [loadingAllowance, loadingApproval, isEnough, chooseStep, approveAndReload])
+  }, [loadingAllowance, loadingApproval, allowanceEnough, chooseStep, approveAndReload])
   const confirmOrNext = useCallback(() => {
     if (confirmed) {
       setStep(5)
@@ -200,6 +200,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
             return tx.wait(1).then(() => {
               setConfirmed(true)
               setStep(5)
+              updateBalance()
               toast.success('Successfully Staked Your $GAFI')
             })
           })
@@ -220,14 +221,21 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
         setConfirming(false)
       }
     })()
-  }, [confirmed, confirming, contractStaking, pool, amount, setConfirmed, setConfirming, setStep, setTx, loadMyStaking])
+  }, [confirmed, confirming, contractStaking, pool, amount, setConfirmed, setConfirming, setStep, setTx, loadMyStaking, updateBalance])
 
-  const stakeMore = () => {
+  const stakeMore = useCallback(() => {
     setTx('')
     setConfirmed(false)
     setAmount('')
-    chooseStep(2)
-  }
+    setStep(2)
+  }, [setTx, setConfirmed, setAmount, setStep])
+
+  useEffect(() => {
+    setTx('')
+    setConfirmed(false)
+    setAmount('')
+    setStep(1)
+  }, [account, setTx, setConfirmed, setAmount, setStep])
 
   return <>
     <div className="md:px-10 md:py-8 bg-gradient-to-t from-gamefiDark-800">
@@ -298,7 +306,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
               <span className="font-casual text-xs sm:text-sm md:text-base">Switch to the BSC network</span>
               { account && !chainOK && <button
                 onClick={() => switchNetwork(library.provider, chainIDDefault)}
-                className='flex-none ml-auto py-3 px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-bold text-[13px] uppercase rounded-xs hover:opacity-95 cursor-pointer clipped-t-r'
+                className='flex-none ml-auto py-2 px-4 md:py-3 md:px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-bold text-[13px] uppercase rounded-xs hover:opacity-95 cursor-pointer clipped-t-r'
               >
                 Switch Network
               </button> }
@@ -318,7 +326,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
               { account && chainOK && balanceGAFI !== null && !balanceGAFIOK && <a
                 href="https://pancakeswap.finance/swap?outputCurrency=0x89af13a10b32f1b2f8d1588f93027f69b6f4e27e&inputCurrency=0xe9e7cea3dedca5984780bafc599bd69add087d56"
                 target="_blank"
-                className='flex-none ml-auto py-2 px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-bold text-sm rounded-xs hover:opacity-95 cursor-pointer clipped-t-r' rel="noreferrer"
+                className='flex-none ml-auto py-2 px-4 md:py-3 md:px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-bold text-sm rounded-xs hover:opacity-95 cursor-pointer clipped-t-r' rel="noreferrer"
               >
                 Buy $GAFI
               </a> }
@@ -335,8 +343,8 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
                 <path d="M24 12L12 24" stroke="#1A1C23" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M12 12L15 15L18 18M24 24L21 21" stroke="#1A1C23" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg> }
-              <span className="font-casual text-xs sm:text-sm md:text-base">BNB available in wallet </span>
-              { account && chainOK && balance !== null && !balanceOK && <span className="font-casual text-xs md:text-sm opacity-50 ml-auto">BNB is required to pay transaction fees on the BSC network</span> }
+              <span className="font-casual text-xs sm:text-sm md:text-base">{network?.currency} available in wallet </span>
+              { account && chainOK && balance !== null && !balanceOK && <span className="font-casual text-xs md:text-sm opacity-50 ml-auto">{network.currency} is required to pay transaction fees on the BSC network</span> }
               { account && chainOK && balanceOK && <span className="font-casual text-xs md:text-sm opacity-50 ml-auto">{balanceShort} {network.currency}</span> }
             </div>
           </div>
@@ -453,7 +461,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
 
     { step === 1 && <div className="p-4 md:px-10 md:py-4 md:bg-gamefiDark-700 font-casual text-sm flex items-center">
       <label className="leading-relaxed inline-block align-middle">
-        <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 mr-2" checked={agreed} onChange={handleAgreement} />
+        <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed} onChange={handleAgreement} />
         I fully understand and agree with the <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">Ranking System</a> and <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">New Staking and Unstaking Policy</a>
       </label>
       <button
@@ -478,9 +486,9 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
       <button onClick={() => chooseStep(2)} className="ml-auto text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline">Back</button>
       <button
         onClick={approveOrNext}
-        className={`flex-none ml-4 py-2 px-10 font-bold font-mechanic text-sm rounded-xs hover:opacity-95 cursor-pointer clipped-t-r text-gamefiDark-900 ${stepOK2 ? 'bg-gamefiGreen-500' : 'bg-gray-500 bg-opacity-70'}`}
+        className={`flex-none ml-4 py-2 px-10 font-bold font-mechanic text-sm rounded-xs hover:opacity-95 cursor-pointer clipped-t-r text-gamefiDark-900 ${stepOK3 ? 'bg-gamefiGreen-500' : 'bg-gray-500 bg-opacity-70'}`}
       >
-        {(loadingAllowance || loadingApproval) ? 'Loading...' : (isEnough ? 'Approved. Next' : 'Approve')}
+        {(loadingAllowance || loadingApproval) ? 'Loading...' : (allowanceEnough ? 'Approved. Next' : 'Approve')}
       </button>
     </div>}
 
@@ -488,7 +496,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
       <button onClick={() => chooseStep(3)} className="ml-auto text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline">Back</button>
       <button
         onClick={confirmOrNext}
-        className={`flex-none ml-4 py-2 px-10 font-bold font-mechanic text-sm rounded-xs hover:opacity-95 cursor-pointer clipped-t-r text-gamefiDark-900 ${stepOK2 ? 'bg-gamefiGreen-500' : 'bg-gray-500 bg-opacity-70'}`}
+        className={`flex-none ml-4 py-2 px-10 font-bold font-mechanic text-sm rounded-xs hover:opacity-95 cursor-pointer clipped-t-r text-gamefiDark-900 ${stepOK3 ? 'bg-gamefiGreen-500' : 'bg-gray-500 bg-opacity-70'}`}
       >
         {confirming ? 'Confirming...' : (confirmed ? 'Confirmed. Next' : 'Confirm')}
       </button>
@@ -497,7 +505,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
     { step === 5 && <div className="p-4 md:px-10 md:py-4 md:bg-gamefiDark-700 font-casual text-sm flex items-center">
       <button
         onClick={stakeMore}
-        className={`flex-none ml-auto py-2 px-10 font-bold font-mechanic text-sm rounded-xs hover:opacity-95 cursor-pointer clipped-t-r text-gamefiDark-900 ${stepOK2 ? 'bg-gamefiGreen-500' : 'bg-gray-500 bg-opacity-70'}`}
+        className={`flex-none ml-auto py-2 px-10 font-bold font-mechanic text-sm rounded-xs hover:opacity-95 cursor-pointer clipped-t-r text-gamefiDark-900 ${stepOK4 ? 'bg-gamefiGreen-500' : 'bg-gray-500 bg-opacity-70'}`}
       >
         I want to stake more
       </button>

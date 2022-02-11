@@ -237,40 +237,40 @@ export const useCurrency = (item?: Item) => {
 
 export const currencyNative = (network: string) => {
   switch (network) {
-    case 'bsc': {
-      return BNB
-    }
+  case 'bsc': {
+    return BNB
+  }
 
-    case 'eth': {
-      return ETH
-    }
+  case 'eth': {
+    return ETH
+  }
 
-    case 'polygon': {
-      return MATIC
-    }
+  case 'polygon': {
+    return MATIC
+  }
 
-    default: {
-      return null
-    }
+  default: {
+    return null
+  }
   }
 }
 
 const currencyStable = (network: string) => {
   switch (network) {
-    case 'bsc': {
-      return BUSD_BSC
-    }
+  case 'bsc': {
+    return BUSD_BSC
+  }
 
-    case 'eth': {
-      return USDT_ERC
-    }
+  case 'eth': {
+    return USDT_ERC
+  }
 
-    case 'polygon': {
-      return USDT_POLYGON
-    }
+  case 'polygon': {
+    return USDT_POLYGON
+  }
 
-    default: {
-      return null
-    }
+  default: {
+    return null
+  }
   }
 }

@@ -86,6 +86,19 @@ const Staking = ({ data }) => {
       return
     }
 
+    if (!contractStakingReadonly) {
+      setPendingWithdrawal({
+        time: 0,
+        amount: 0
+      })
+      return
+    }
+
+    setPendingWithdrawal({
+      time: null,
+      amount: null
+    })
+
     contractStakingReadonly.linearPendingWithdrawals(pool.pool_id, account).then(x => {
       if (!mounted.current) {
         return
@@ -112,10 +125,6 @@ const Staking = ({ data }) => {
   useEffect(() => {
     if (!contractStakingReadonly) {
       setTotalStaked(null)
-      setPendingWithdrawal({
-        time: 0,
-        amount: 0
-      })
       return
     }
 
@@ -126,9 +135,11 @@ const Staking = ({ data }) => {
 
       setTotalStaked(x)
     })
+  }, [contractStakingReadonly, pool, mounted])
 
+  useEffect(() => {
     loadMyPending()
-  }, [contractStakingReadonly, pool, loadMyPending, mounted])
+  }, [loadMyPending])
 
   const [tab, setTab] = useState(0)
 
@@ -222,7 +233,7 @@ const Staking = ({ data }) => {
           ]}
           currentValue={tab}
           onChange={setTab}
-          className="mt-2 sm:mt-6 lg:mt-10"
+          className="mt-2 sm:mt-6 lg:mt-10 sticky top-0 bg-gamefiDark-900 z-50"
         />
 
         <div>

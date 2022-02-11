@@ -1,7 +1,8 @@
 import { fetcher } from '@/utils'
+import { API_BASE_URL } from '@/utils/constants'
 
 export function fetchOneCollection (slug) {
-  return fetcher(`https://hub-v2.gamefi.org/api/v1/marketplace/collection/${slug}`)
+  return fetcher(`${API_BASE_URL}/marketplace/collection/${slug}`)
 }
 
 export default async function handler (req, res) {

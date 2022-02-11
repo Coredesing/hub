@@ -56,19 +56,19 @@ const useMyTier = (tiers) => {
   }, [loadData])
   const tierNextTokens = useMemo(() => {
     if (!data || !tiers.state.all || !tier) {
-      return null
+      return 0
     }
 
     const t = tiers.state.all.find(x => x.id === data.tier + 1)
     if (!t) {
-      return null
-    }
-
-    if (!t.config?.tokens || t.config?.requirement) {
       return 0
     }
 
-    return (parseInt(t.config?.tokens) - parseInt(tier.config?.tokens)) || 0
+    if (!data?.stakedInfo?.tokenStaked) {
+      return 0
+    }
+
+    return parseFloat(t.config?.tokens) - parseFloat(data?.stakedInfo?.tokenStaked)
   }, [data, tiers, tier])
 
   return {

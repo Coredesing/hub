@@ -21,7 +21,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
     return network?.id === chainIDDefault
   }, [network, chainIDDefault])
 
-  const { balance: balanceGAFI, balanceShort: balanceGAFIShort } = useBalanceToken(GAFI)
+  const { balance: balanceGAFI, balanceShort: balanceGAFIShort, updateBalance } = useBalanceToken(GAFI)
   const balanceGAFIOK = useMemo(() => {
     if (!balanceGAFI) {
       return false
@@ -200,6 +200,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
             return tx.wait(1).then(() => {
               setConfirmed(true)
               setStep(5)
+              updateBalance()
               toast.success('Successfully Staked Your $GAFI')
             })
           })
@@ -220,7 +221,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
         setConfirming(false)
       }
     })()
-  }, [confirmed, confirming, contractStaking, pool, amount, setConfirmed, setConfirming, setStep, setTx, loadMyStaking])
+  }, [confirmed, confirming, contractStaking, pool, amount, setConfirmed, setConfirming, setStep, setTx, loadMyStaking, updateBalance])
 
   const stakeMore = () => {
     setTx('')

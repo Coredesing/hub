@@ -245,18 +245,19 @@ class PoolService {
     filterParams.limit = limit;
     filterParams.page = page;
 
-    if (!filterParams.title && !filterParams.network_available && !filterParams.campaign_status && await RedisMysteriousBoxUtils.existRedisMysteriousBoxes(filterParams)) {
-      console.log('existed')
+    if (await RedisMysteriousBoxUtils.existRedisMysteriousBoxes(filterParams)) {
       let data = await RedisMysteriousBoxUtils.getRedisMysteriousBoxes(filterParams)
       data = JSON.parse(data)
       return data
     }
-
-    let pools = await this.buildQueryBuilder(filterParams)
+    let queryBuilder = this.buildQueryBuilder(filterParams)
       .orderBy('priority', 'DESC')
       .orderBy('start_time', 'ASC')
-      // .where('is_display', 1)
-      .paginate(page, limit)
+
+    if(filterParams.campaign_status) {
+      queryBuilder = queryBuilder.where('campaign_status', filterParams.campaign_status);
+    }
+    let pools = await queryBuilder.paginate(page, limit);
 
     pools = JSON.parse(JSON.stringify(pools))
     await RedisMysteriousBoxUtils.setRedisMysteriousBoxes(filterParams, pools)

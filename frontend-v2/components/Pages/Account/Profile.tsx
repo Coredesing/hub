@@ -30,7 +30,7 @@ const Profile = () => {
     if (account) {
       tiers?.actions.getUserTier && tiers.actions.getUserTier(account)
     }
-  }, [account, tiers?.actions])
+  }, [account])
 
   const [userInfo, setUserInfo] = useState<any>()
   const [loadingUserInfo, setLoadingUserInfo] = useState(false)

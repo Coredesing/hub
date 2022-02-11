@@ -168,7 +168,7 @@ const List = () => {
               <div className="inline-flex items-center"><div className="w-6 h-6 mr-2 relative inline-block"><Image src={networkImage(item.network_available)} alt={item.network_available} layout="fill" objectFit="cover" /></div> {item.network_available}</div>
             </div>
             <div className={styles.info}>
-              <span>Total Raise</span>
+              <span>Total Sale</span>
               <p>{item.total_sold_coin}</p>
             </div>
             <div className={styles.info}>

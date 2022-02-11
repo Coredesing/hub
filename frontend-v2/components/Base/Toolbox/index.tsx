@@ -35,7 +35,7 @@ const Toolbox = () => {
           <Image src={require('@/assets/images/icons/menuToggler.svg')} alt='menu'></Image>
         </button>
       </div>
-      <div className={`flex flex-col fixed z-50 left-0 top-0 bottom-0 right-0 md:hidden dark:bg-gamefiDark-900 overflow-auto hide-scrollbar menu-slide-up ${showMenu ? 'h-full' : 'h-0'}`} style={{ boxShadow: 'inset -1px 0px 0px #303442' }}>
+      <div className={`flex flex-col fixed z-40 left-0 top-0 bottom-0 right-0 md:hidden dark:bg-gamefiDark-900 overflow-auto hide-scrollbar menu-slide-up ${showMenu ? 'h-full' : 'h-0'}`} style={{ boxShadow: 'inset -1px 0px 0px #303442' }}>
         <Topbar className="flex-none"></Topbar>
         <div className="flex-1 overflow-y-auto">
           <MenuLink path='/'>

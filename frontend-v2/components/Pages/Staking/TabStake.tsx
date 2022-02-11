@@ -306,7 +306,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
               <span className="font-casual text-xs sm:text-sm md:text-base">Switch to the BSC network</span>
               { account && !chainOK && <button
                 onClick={() => switchNetwork(library.provider, chainIDDefault)}
-                className='flex-none ml-auto py-3 px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-bold text-[13px] uppercase rounded-xs hover:opacity-95 cursor-pointer clipped-t-r'
+                className='flex-none ml-auto py-2 px-4 md:py-3 md:px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-bold text-[13px] uppercase rounded-xs hover:opacity-95 cursor-pointer clipped-t-r'
               >
                 Switch Network
               </button> }
@@ -326,7 +326,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
               { account && chainOK && balanceGAFI !== null && !balanceGAFIOK && <a
                 href="https://pancakeswap.finance/swap?outputCurrency=0x89af13a10b32f1b2f8d1588f93027f69b6f4e27e&inputCurrency=0xe9e7cea3dedca5984780bafc599bd69add087d56"
                 target="_blank"
-                className='flex-none ml-auto py-2 px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-bold text-sm rounded-xs hover:opacity-95 cursor-pointer clipped-t-r' rel="noreferrer"
+                className='flex-none ml-auto py-2 px-4 md:py-3 md:px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-bold text-sm rounded-xs hover:opacity-95 cursor-pointer clipped-t-r' rel="noreferrer"
               >
                 Buy $GAFI
               </a> }

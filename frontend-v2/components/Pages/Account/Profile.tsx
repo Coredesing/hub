@@ -12,6 +12,7 @@ import useWalletSignature from 'hooks/useWalletSignature'
 import { fetcher } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 const Profile = () => {
   const tiers = useAppContext()?.$tiers
@@ -339,12 +340,18 @@ const Profile = () => {
           </div>
         }
         {
-          !isStaked && !loadingTier && <div>
+          !isStaked && !loadingTier &&
+          <div>
             <div className='font-casual mb-8 text-sm text-white/80'>You must stake $GAFI to achieve min Rank before KYC.</div>
-            <button className={clsx(styles.btnclippart, 'bg-gamefiGreen-700 uppercase text-13px w-full text-center py-2 px-2 text-black font-bold mb-6')}>
-              Stake Now
-            </button>
-            <a href="" className={clsx(styles.link, 'text-sm font-bold text-center block font-casual')}>Learn about Ranking System</a>
+            <Link href={'/staking'}>
+              <a className={clsx(styles.btnclippart, 'bg-gamefiGreen-700 uppercase text-13px w-full block text-center py-2 px-2 text-black font-bold mb-6')}>
+                Stake Now
+              </a>
+            </Link>
+            <a
+              href='https://medium.com/gamefi-official/announcement-of-gamefi-launchpad-ranking-system-6fc9f52c91ea'
+              rel='noreferrer' target={'_blank'}
+              className={clsx(styles.link, 'text-sm font-bold text-center block font-casual')}>Learn about Ranking System</a>
           </div>
         }
       </div>
@@ -359,7 +366,9 @@ const Profile = () => {
           <div className='text-sm text-white/80 font-casual mb-6'>
             Check out GameFi's ranking system: Legend, Pro, Elite, Rookie. <a href='https://faq.gamefi.org/#1.2.-stake' rel='noreferrer' target={'_blank'} className={clsx(styles.link, 'font-bold text-sm font-casual')}>Read more</a>
           </div>
-          <button className={clsx(styles.btnclippart, 'bg-gamefiGreen-700 text-black uppercase py-2 px-3 w-28 text-13px font-bold rounded-sm')}>Stake Now</button>
+          <Link href={'/staking'}>
+            <a className={clsx(styles.btnclippart, 'bg-gamefiGreen-700 block text-center text-black uppercase py-2 px-3 w-28 text-13px font-bold rounded-sm')}>Stake Now</a>
+          </Link>
         </div>
         <div className={clsx(styles.step)}>
           <div className={clsx(styles.index, 'text-2xl font-bold rounded-full grid place-items-center')}>2</div>

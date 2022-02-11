@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { DocumentCopyIcon, SolanaIcon, TerraIcon } from 'components/Base/Icon'
 import styles from './Profile.module.scss'
 import clsx from 'clsx'
@@ -9,7 +9,7 @@ import { useMyWeb3 } from '@/components/web3/context'
 import axios from '@/utils/axios'
 import toast from 'react-hot-toast'
 import useWalletSignature from 'hooks/useWalletSignature'
-import { fetcher } from '@/utils'
+import { fetcher, useFetch } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 import { useRouter } from 'next/router'
 
@@ -24,26 +24,18 @@ const Profile = () => {
   const [signature, setSignature] = useState('')
   const { signMessage } = useWalletSignature()
 
+  const { response, loading: loadingUserInfo } = useFetch(`/user/profile?wallet_address=${account}`)
+  const userInfo = useMemo(() => {
+    return response?.data?.user
+  }, [response])
+
   const router = useRouter()
 
-  useEffect(() => {
-    if (account) {
-      tiers?.actions.getUserTier && tiers.actions.getUserTier(account)
-    }
-  }, [account, tiers.actions])
-
-  const [userInfo, setUserInfo] = useState<any>()
-  const [loadingUserInfo, setLoadingUserInfo] = useState(false)
-  useEffect(() => {
-    if (!account) return
-    const getUserInfo = async () => {
-      const response = await axios.get(`/user/profile?wallet_address=${account}`)
-      setUserInfo(response.data.data?.user || {})
-    }
-    getUserInfo().catch(console.debug).finally(() =>
-      setLoadingUserInfo(false)
-    )
-  }, [account])
+  // useEffect(() => {
+  //   if (account) {
+  //     tiers?.actions.getUserTier && tiers.actions.getUserTier(account)
+  //   }
+  // }, [account, tiers])
 
   const onCopy = (val: any) => {
     navigator.clipboard.writeText(val)

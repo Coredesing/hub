@@ -227,7 +227,7 @@ export default function WalletProvider ({ children }) {
               </svg>
             </div>
             <p className="flex mt-4 justify-between w-full font-medium cursor-pointer">
-              <Link href="/account" passHref={true}>
+              <Link href="https://hub.gamefi.org/#/account" passHref={true}>
                 <a className="text-white hover:text-gray-400 underline" onClick={() => {
                   setShowModal(false)
                   setConnectorChosen(undefined)

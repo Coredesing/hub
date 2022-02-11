@@ -461,7 +461,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
 
     { step === 1 && <div className="p-4 md:px-10 md:py-4 md:bg-gamefiDark-700 font-casual text-sm flex items-center">
       <label className="leading-relaxed inline-block align-middle">
-        <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 mr-2" checked={agreed} onChange={handleAgreement} />
+        <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed} onChange={handleAgreement} />
         I fully understand and agree with the <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">Ranking System</a> and <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">New Staking and Unstaking Policy</a>
       </label>
       <button

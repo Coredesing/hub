@@ -247,7 +247,7 @@ export default function WalletProvider ({ children }) {
             <div className="font-bold text-2xl uppercase mb-5">Connect Wallet</div>
             <div className="font-bold text-sm uppercase">1. Agreement</div>
             <label className="py-2 leading-relaxed mb-5 inline-block font-casual text-sm">
-              <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 mr-2" checked={agreed} onChange={handleAgreement} />
+              <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed} onChange={handleAgreement} />
               I have read and agreed with the <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">Terms of Service</a> and <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">Privacy Policy</a>.
             </label>
             <div className="mb-7">

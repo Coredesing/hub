@@ -157,22 +157,26 @@ const Profile = () => {
   return <div className='py-10 px-9'>
     <div className='flex items-center justify-between'>
       <h3 className='uppercase font-bold text-2xl mb-7'>My Profile</h3>
-      {isEdit
-        ? <div className="flex">
-          <button className='flex gap-2 items-center' onClick={() => setIsEdit(false)}>
-            <span className='uppercase font-bold text-13px text-gamefiRed outline-none focus:outline-none'>Cancel</span>
-          </button>
-          <button className='flex gap-2 items-center ml-3 bg-gamefiGreen-700 px-8 py-2 rounded-sm clipped-t-r' onClick={() => handleSave()}>
-            <span className='uppercase font-bold text-13px text-gamefiDark-900 outline-none focus:outline-none'>Save</span>
-          </button>
-        </div>
-        : <button className='flex gap-2 items-center' onClick={() => handleEdit()}>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 3L13 6" stroke="#6CDB00" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M12 1L15 4L5 14L1 15L2 11L12 1Z" stroke="#6CDB00" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          <span className='uppercase font-bold text-13px text-gamefiGreen-700 outline-none focus:outline-none'>Edit profile</span>
-        </button>}
+      {
+        userInfo
+          ? <div>{isEdit
+            ? <div className="flex">
+              <button className='flex gap-2 items-center' onClick={() => setIsEdit(false)}>
+                <span className='uppercase font-bold text-13px text-gamefiRed outline-none focus:outline-none'>Cancel</span>
+              </button>
+              <button className='flex gap-2 items-center ml-3 bg-gamefiGreen-700 px-8 py-2 rounded-sm clipped-t-r' onClick={() => handleSave()}>
+                <span className='uppercase font-bold text-13px text-gamefiDark-900 outline-none focus:outline-none'>Save</span>
+              </button>
+            </div>
+            : <button className='flex gap-2 items-center' onClick={() => handleEdit()}>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 3L13 6" stroke="#6CDB00" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M12 1L15 4L5 14L1 15L2 11L12 1Z" stroke="#6CDB00" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span className='uppercase font-bold text-13px text-gamefiGreen-700 outline-none focus:outline-none'>Edit profile</span>
+            </button>}</div>
+          : <></>
+      }
     </div>
     <div className='w-full flex xl:flex-row flex-col gap-5 mb-16'>
       <div className={clsx(styles.box, 'xl:w-2/3 w-full p-7 rounded-sm')}>

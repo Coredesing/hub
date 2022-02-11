@@ -80,7 +80,7 @@ const GameDetails = ({ data }) => {
                 {items.map(item => (
                   <div key={item} className="px-px">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={item} className="w-full" style={{ aspectRatio: '16/9' }} alt={data.game_name} />
+                    <img src={item} className="w-full" style={{ aspectRatio: '16/9' }} alt="" />
                   </div>
                 ))}
               </Carousel>

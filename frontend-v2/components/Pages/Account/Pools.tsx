@@ -15,7 +15,7 @@ import { useRouter } from 'next/router'
 const Pools = () => {
   const { account } = useMyWeb3()
   const router = useRouter()
-  const [loadingPools, setLoadingPools] = useState(false);
+  const [loadingPools, setLoadingPools] = useState(false)
   const [pools, setPools] = useState({ total: 0, data: [] })
   const [filter, setFilter] = useState({ page: 1, limit: 10, search: '', type: '', status: '' })
 
@@ -64,7 +64,7 @@ const Pools = () => {
     }
 
     if (!pool.allowcation_amount) return '-'
-    let allowcationAmount = pool.allowcation_amount || 0
+    const allowcationAmount = pool.allowcation_amount || 0
     if (BigNumber.from(allowcationAmount).lte(0)) return '-'
 
     const allowcationAmountText = `${allowcationAmount} ${currency?.symbol || ''}`
@@ -77,14 +77,14 @@ const Pools = () => {
 
   const redirectPool = (pool: any) => {
     switch (pool.token_type) {
-      case TOKEN_TYPE.ERC20: {
-        window.open(`https://hub.gamefi.org/#/buy-token/${pool.id}`)
-        return
-      }
+    case TOKEN_TYPE.ERC20: {
+      window.open(`https://hub.gamefi.org/#/buy-token/${pool.id}`)
+      return
+    }
 
-      default: {
-        router.push(`/ino/${pool.id}`)
-      }
+    default: {
+      router.push(`/ino/${pool.id}`)
+    }
     }
   }
 

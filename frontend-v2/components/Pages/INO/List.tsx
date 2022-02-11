@@ -52,7 +52,7 @@ export const currency = (item: Item) => {
     return currencyStable(item.network_available)
   }
 
-  return ''
+  return item.accept_currency
 }
 
 export const currencyNative = (network: string) => {
@@ -117,7 +117,7 @@ const List = () => {
 
   return (
     <div className={styles.container} style={{ marginBottom: '2rem' }}>
-      <div className="bg-gamefiDark-900 lg:flex">
+      <div className="bg-gamefiDark-900 lg:flex mb-4">
         <div className="relative flex-none inline-block">
           <div className="absolute w-screen h-full block bg-black" style={{ left: '-100vw' }}></div>
           <div className="inline-block py-2 md:py-3 pl-2 pr-20 font-bold text-2xl sm:text-3xl md:text-4xl uppercase bg-black relative" style={{
@@ -152,28 +152,31 @@ const List = () => {
       ) }
       { !loading && items.map(item => {
         return (
-          <div className={styles.row} key={item.id}>
+          <div className="sm:flex mb-4 p-4 border-b border-gamefiDark-600" key={item.id}>
             <Link href={`/ino/${item.id}`} passHref={true}>
-              <a className={styles.link}>
+              <a className="flex gap-x-2 sm:gap-x-4 items-center sm:w-2/3 md:w-1/2 lg:w-5/12">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={item.mini_banner} alt={item.title} />
+                <img src={item.mini_banner} alt={item.title} className="flex-none w-28 sm:w-36 md:w-40 aspect-[16/9]" />
                 <div className={styles.title}>
-                  <h4>{item.title}</h4>
-                  <p>{visibility(item)}</p>
+                  <h4 className="font-casual text-sm sm:text-base md:text-lg leading-normal font-semibold uppercase">{item.title}</h4>
+                  <p className="font-casual text-[13px] md:text-base font-medium opacity-50">{visibility(item)}</p>
+                  <p className="mt-2 md:hidden uppercase font-casual font-medium text-base" style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {currency(item)}/BOX</p>
                 </div>
               </a>
             </Link>
-            <div className={styles.info}>
-              <span>Network</span>
-              <div className="inline-flex items-center"><div className="w-6 h-6 mr-2 relative inline-block"><Image src={networkImage(item.network_available)} alt={item.network_available} layout="fill" objectFit="cover" /></div> {item.network_available}</div>
-            </div>
-            <div className={styles.info}>
-              <span>Total Sale</span>
-              <p>{item.total_sold_coin}</p>
-            </div>
-            <div className={styles.info}>
-              <span>Price</span>
-              <p style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {currency(item)}/BOX</p>
+            <div className="flex-1 flex mt-4 md:mt-0">
+              <div className="flex-1 flex flex-col">
+                <span className="text-[13px] font-bold opacity-50 tracking-wide uppercase">Network</span>
+                <div className="inline-flex items-center uppercase font-casual font-medium text-base"><div className="w-6 h-6 mr-2 relative inline-block"><Image src={networkImage(item.network_available)} alt={item.network_available} layout="fill" objectFit="cover" /></div> {item.network_available}</div>
+              </div>
+              <div className="flex-1 flex flex-col">
+                <span className="text-[13px] font-bold opacity-50 tracking-wide uppercase">Total Sale</span>
+                <p className="uppercase font-casual font-medium text-base">{item.total_sold_coin}</p>
+              </div>
+              <div className="hidden md:block flex-1 flex flex-col">
+                <span className="text-[13px] font-bold opacity-50 tracking-wide uppercase">Price</span>
+                <p className="uppercase font-casual font-medium text-base" style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {currency(item)}/BOX</p>
+              </div>
             </div>
           </div>
         )

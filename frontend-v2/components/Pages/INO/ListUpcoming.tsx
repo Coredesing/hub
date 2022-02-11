@@ -35,7 +35,7 @@ const List = ({ now }: Props) => {
       ? <div className={`${styles.section} ${styles.black}`}>
         <div className={stylesList.container}>
           <div className={styles.header}>
-            <div className={styles.heading}>
+            <div className={`${styles.heading} font-bold text-2xl sm:text-3xl md:text-4xl`}>
           Upcoming Projects
             </div>
 
@@ -59,7 +59,7 @@ const List = ({ now }: Props) => {
               <div className={styles.subheading}>
         POOL INO <span>(Staking $GAFI required)</span>
               </div>
-              <div className={styles.cards}>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
                 { !loading && itemsExclusive.map(item => {
                   return (
                     <CardSlim key={item.id} item={item} now={now} />
@@ -73,7 +73,7 @@ const List = ({ now }: Props) => {
               <div className={styles.subheading} style={{ marginTop: '2rem' }}>
         POOL Community <span>(Staking $GAFI not required)</span>
               </div>
-              <div className={styles.cards}>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
                 { !loading && itemsOpen.map(item => {
                   return (
                     <CardSlim key={item.id} item={item} now={now} />

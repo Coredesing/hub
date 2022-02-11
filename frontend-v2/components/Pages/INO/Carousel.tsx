@@ -150,6 +150,7 @@ const _Carousel = ({ items, style, now }: Props) => {
               onClick={onClickHandler}
               title={label}
               style={{ position: 'absolute', zIndex: '2', top: 'calc(50% - 170px)', cursor: 'pointer', left: '0', opacity: !hasPrev && '50%' }}
+              className="hidden sm:block"
             >
               <Image src={require('@/assets/images/icons/arrow-left.png')} alt="left" className="w-1/2 h-auto"/>
             </button>
@@ -162,6 +163,7 @@ const _Carousel = ({ items, style, now }: Props) => {
               onClick={onClickHandler}
               title={label}
               style={{ position: 'absolute', zIndex: '2', top: 'calc(50% - 170px)', cursor: 'pointer', right: '0', opacity: !hasNext && '50%' }}
+              className="hidden sm:block"
             >
               <Image src={require('@/assets/images/icons/arrow-right.png')} alt="right" className="w-1/2 h-auto"/>
             </button>
@@ -170,7 +172,7 @@ const _Carousel = ({ items, style, now }: Props) => {
       >
         {items.map(item => {
           return (
-            <div key={`ino-${item.id}`} className="px-14 mx-auto grid grid-cols-12 gap-4">
+            <div key={`ino-${item.id}`} className="sm:px-14 mx-auto grid grid-cols-12 gap-4">
               <Link href={`/ino/${item.id}`} passHref>
                 <div className="col-span-12 md:col-span-7 lg:col-span-8 relative hover:cursor-pointer">
                   <img src={item.banner} alt={item.title} className="clipped-t-r-lg" style={{ aspectRatio: '16 / 9' }} />

@@ -12,7 +12,8 @@ type Props = {
 
 const Layout = ({ children, title }: Props) => {
   const theme = 'dark'
-  return (
+  console.log(typeof window)
+  return (typeof window !== undefined &&
     <div className={`flex w-full h-screen ${theme}`}>
       <div className="dark:bg-gamefiDark-900 dark:text-white w-full h-full flex flex-col md:flex-row">
         <Head>
@@ -26,7 +27,7 @@ const Layout = ({ children, title }: Props) => {
         </div>
         <div className="w-full h-full overflow-auto">
           <Topbar></Topbar>
-          {children}
+          {typeof window !== undefined && children}
           <Footer></Footer>
         </div>
         <Toolbox></Toolbox>

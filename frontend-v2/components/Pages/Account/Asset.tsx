@@ -140,7 +140,7 @@ const Asset = () => {
 
   return <div>
     <div className='header px-9 '>
-      <h3 className='font-bold text-2xl uppercase'>Assets ({assets.length})</h3>
+      <h3 className='mt-14 lg:mt-0 font-bold text-2xl uppercase'>Assets ({assets.length})</h3>
       <TabMenus value={currentTab} menus={[assetTypes[0].name, assetTypes[1].name, assetTypes[2].name]} onChange={onChangeTab} />
     </div>
     <div className={styles.content}>

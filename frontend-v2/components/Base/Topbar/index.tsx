@@ -7,10 +7,10 @@ const Topbar = ({ className }: { className?: string }) => {
     <div className={className}>
       <div className="hidden w-full md:container md:mx-auto md:flex justify-between items-center md:h-22 lg:h-24 py-8 px-8">
         <div>
-          <div className="flex align-middle items-center cursor-pointer">
+          {/* <div className="flex align-middle items-center cursor-pointer">
             <Image src={require('@/assets/images/icons/search.svg')} alt='search'></Image>
             <input placeholder='Search' className="bg-transparent outline-none focus:outline-none ml-4"></input>
-          </div>
+          </div> */}
         </div>
         <div className="ml-auto">
           <WalletConnector></WalletConnector>

@@ -148,7 +148,7 @@ const Profile = () => {
 
   return <div className='py-10 px-9'>
     <div className='flex items-center justify-between'>
-      <h3 className='uppercase font-bold text-2xl mb-7'>My Profile</h3>
+      <h3 className='hidden lg:block uppercase font-bold text-2xl mb-7'>My Profile</h3>
       {
         userInfo
           ? <div>{isEdit

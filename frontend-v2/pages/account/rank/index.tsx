@@ -1,18 +1,13 @@
 import React from 'react'
-import LeftSideBar from 'components/Pages/Account/LeftSideBar'
 import Layout from 'components/Layout'
-import WrapperAccount from 'components/Pages/Account/WrapperAccount'
-import AccountContent from 'components/Pages/Account/AccountContent'
 import Rank from 'components/Pages/Account/Rank'
+import AccountLayout from '@/components/Pages/Account/AccountLayout'
 
 const RankPage = () => {
-  return <Layout title="My Account: Rank">
-    <WrapperAccount>
-      <LeftSideBar />
-      <AccountContent>
-        <Rank />
-      </AccountContent>
-    </WrapperAccount>
+  return <Layout title="My Account">
+    <AccountLayout>
+      <Rank></Rank>
+    </AccountLayout>
   </Layout>
 }
 

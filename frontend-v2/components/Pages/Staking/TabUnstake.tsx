@@ -299,7 +299,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
               <p className="flex items-center font-casual text-sm w-full">
                 <span className="truncate">Enter the amount of $GAFI you want to unstake</span>
                 <span className="flex-none ml-auto text-xs">Current Staking:</span>
-                <strong className="flex-none ml-2 text-xs">{stakingMine?.tokenStaked !== undefined ? `${stakingMine?.tokenStaked} $GAFI` : 'Loading...'}</strong>
+                <strong className="flex-none ml-2 text-xs">{stakingMine?.tokenStaked !== undefined ? `${safeToFixed(stakingMine?.tokenStaked, 4)} $GAFI` : 'Loading...'}</strong>
               </p>
               <div className="relative font-casual text-sm mt-2">
                 <input className={'bg-transparent border w-full pl-4'} type="text" value={amount} readOnly disabled />

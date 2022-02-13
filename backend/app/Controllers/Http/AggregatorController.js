@@ -284,13 +284,14 @@ class AggregatorController {
       const perPage = params?.per_page ? parseInt(params?.per_page) : 10
       const category = params?.category
       const display_area = params?.display_area
+      const game_name = params?.game_name
       const verified = params?.verified
       const ido_type = params?.ido_type
       const price = params?.price
       const gameLaunchStatus = params?.game_launch_status
       const sort_by = params?.sort_by ? params?.sort_by : 'cmc_rank'
       const sort_order = params?.sort_order ? params?.sort_order.toUpperCase() : 'ASC'
-      const cacheKey = { page, perPage, display_area, ido_type, category, gameLaunchStatus, sort_by, sort_order }
+      const cacheKey = { page, perPage, display_area, game_name, ido_type, category, gameLaunchStatus, sort_by, sort_order }
       const selectColumn = [
         'game_informations.id',
         'category',
@@ -371,6 +372,9 @@ class AggregatorController {
           selectColumn.push(builder.db.knex.raw('(select count(*) from game_favourites where game_id = `game_informations`.`id`) AS like_count'));
           builder.orderBy('like_count', 'DESC');
         }
+      }
+      if (game_name) {
+        builder = builder.where('game_name', 'like', `%${game_name}%`)
       }
       if (verified) {
         builder = builder.where('verified', verified)

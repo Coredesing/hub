@@ -167,15 +167,15 @@ const Aggregator = ({ data }) => {
                     <div className="uppercase font-bold text-lg">Game Release</div>
                     <div className="font-casual text-sm">
                       <label className="inline-flex items-center mr-4">
-                        <input type="radio" disabled value="" onChange={(e) => handleLaunchStatus(e.target.value)} checked={!launchStatus} />
+                        <input type="radio" value="" onChange={(e) => handleLaunchStatus(e.target.value)} checked={!launchStatus} />
                         <span className="ml-1">All</span>
                       </label>
                       <label className="inline-flex items-center mr-4">
-                        <input type="radio" disabled value="released" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'released'}/>
+                        <input type="radio" value="released" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'released'}/>
                         <span className="ml-1">Released</span>
                       </label>
                       <label className="inline-flex items-center">
-                        <input type="radio" disabled value="upcoming" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'upcoming'}/>
+                        <input type="radio" value="upcoming" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'upcoming'}/>
                         <span className="ml-1">Upcoming</span>
                       </label>
                     </div>

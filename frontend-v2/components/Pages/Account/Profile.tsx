@@ -12,6 +12,7 @@ import useWalletSignature from 'hooks/useWalletSignature'
 import { fetcher, useFetch } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 const Profile = () => {
   const tiers = useAppContext()?.$tiers
@@ -331,12 +332,18 @@ const Profile = () => {
           </div>
         }
         {
-          !isStaked && !loadingTier && <div>
+          !isStaked && !loadingTier &&
+          <div>
             <div className='font-casual mb-8 text-sm text-white/80'>You must stake $GAFI to achieve min Rank before KYC.</div>
-            <button className={clsx(styles.btnclippart, 'bg-gamefiGreen-700 uppercase text-13px w-full text-center py-2 px-2 text-black font-bold mb-6')}>
-              Stake Now
-            </button>
-            <a href="" className={clsx(styles.link, 'text-sm font-bold text-center block font-casual')}>Learn about Ranking System</a>
+            <Link href={'/staking'}>
+              <a className={clsx(styles.btnclippart, 'bg-gamefiGreen-700 uppercase text-13px w-full block text-center py-2 px-2 text-black font-bold mb-6')}>
+                Stake Now
+              </a>
+            </Link>
+            <a
+              href='https://medium.com/gamefi-official/announcement-of-gamefi-launchpad-ranking-system-6fc9f52c91ea'
+              rel='noreferrer' target={'_blank'}
+              className={clsx(styles.link, 'text-sm font-bold text-center block font-casual')}>Learn about Ranking System</a>
           </div>
         }
       </div>

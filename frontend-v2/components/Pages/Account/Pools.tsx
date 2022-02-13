@@ -6,38 +6,63 @@ import { fetcher } from '@/utils'
 import { API_BASE_URL, TOKEN_TYPE } from '@/utils/constants'
 import { formatPoolStatus, formatPoolType } from '@/utils/pool'
 import { useCallback, useEffect, useState } from 'react'
-import { BigNumber } from 'ethers'
+import { Contract, utils } from 'ethers'
 import styles from './Pools.module.scss'
 import { getCurrency } from '@/components/web3/utils'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { ObjectType } from '@/utils/types'
+import BigNumber from 'bignumber.js'
+import Pool_ABI from '@/components/web3/abis/PreSalePool.json'
+
 
 const Pools = () => {
-  const { account } = useMyWeb3()
+  const { account, library } = useMyWeb3()
   const router = useRouter()
   const [loadingPools, setLoadingPools] = useState(false)
   const [pools, setPools] = useState({ total: 0, data: [] })
   const [filter, setFilter] = useState({ page: 1, limit: 10, search: '', type: '', status: '' })
 
   useEffect(() => {
-    if (!account) return
+    if (!account || !library) return
     const getPools = async () => {
       setLoadingPools(true)
       const res = await fetcher(`${API_BASE_URL}/pools/user/${account}/joined-pools?page=${filter.page || 1}&limit=${filter.limit}&title=${filter.search || ''}&type=${filter.type ?? ''}&status=${filter.status || ''}`)
+      const getPoolsAllowcation = async (pools: ObjectType[], account: string) => {
+        const data = await Promise.all(pools.map((pool) => new Promise(async (resolve) => {
+          try {
+            const contract = new Contract(pool.campaign_hash, Pool_ABI, library)
+            if (contract) {
+              const userPurchased = await contract.userPurchased(account)
+              const userClaimed = await contract.userClaimed(account)
+              const numToken = parseFloat(utils.formatEther(userPurchased.toString())).toFixed(4)
+              const allowcation = new BigNumber(numToken).multipliedBy(pool.token_conversion_rate).toFixed(0)
+              pool.allowcation = allowcation
+              pool.user_purchased = new BigNumber(userPurchased.toString()).div(new BigNumber(10).pow(pool.decimals)).toFixed()
+              pool.user_claimed = new BigNumber(userClaimed.toString()).div(new BigNumber(10).pow(pool.decimals)).toFixed()
+            }
+          } catch (error) {
+            pool.allowcation = 0
+          }
+          resolve(pool)
+        })))
+        return data
+      }
+
+      const pools = await getPoolsAllowcation(res.data.data || [], account)
       setPools({
         total: +res.data.lastPage || 0,
-        data: res.data.data || []
+        data: pools
       })
       // console.log('res', res)
     }
     getPools().catch(console.error).finally(() => setLoadingPools(false))
-  }, [account, filter])
+  }, [account, filter, library])
 
   useEffect(() => {
-    if (!account) {
+    if (!account || !library) {
       setPools({ total: 0, data: [] })
     }
-  }, [account])
+  }, [account, library])
 
   const allocationAmount = useCallback((pool: any) => {
     if (!pool) return null
@@ -51,24 +76,16 @@ const Pools = () => {
     if (pool.token_type === TOKEN_TYPE.ERC721) {
       const isClaim = pool.process === 'only-claim'
       if (isClaim) {
-        amount = pool.userClaimInfo?.user_claimed || 0
+        amount = pool.user_claimed || 0
       } else {
-        amount = pool.userClaimInfo?.user_purchased || 0
+        amount = pool.user_purchased || 0
       }
-      return `${amount} ${pool.symbol?.toUpperCase()}`
+      return `${amount} ${pool?.symbol?.toUpperCase() || ''}`
     }
     if (pool.token_type === TOKEN_TYPE.ERC20) {
-      amount = pool.userClaimInfo?.user_purchased || 0
-      const ethRate = pool.accept_currency === 'eth' ? pool.ether_conversion_rate : pool.token_conversion_rate
-      return `${(+amount * +ethRate) || 0} ${currency?.symbol || ''}`
+      return `${pool.allowcation || 0} ${currency?.symbol || ''}`
     }
-
-    if (!pool.allowcation_amount) return '-'
-    const allowcationAmount = pool.allowcation_amount || 0
-    if (BigNumber.from(allowcationAmount).lte(0)) return '-'
-
-    const allowcationAmountText = `${allowcationAmount} ${currency?.symbol || ''}`
-    return allowcationAmountText
+    return `${pool.allowcation || '-/-'} ${currency?.symbol || ''}`
   }, [])
 
   const onChangePage = (page: number) => {
@@ -77,14 +94,14 @@ const Pools = () => {
 
   const redirectPool = (pool: any) => {
     switch (pool.token_type) {
-    case TOKEN_TYPE.ERC20: {
-      window.open(`https://hub.gamefi.org/#/buy-token/${pool.id}`)
-      return
-    }
+      case TOKEN_TYPE.ERC20: {
+        window.open(`https://hub.gamefi.org/#/buy-token/${pool.id}`)
+        return
+      }
 
-    default: {
-      router.push(`/ino/${pool.id}`)
-    }
+      default: {
+        router.push(`/ino/${pool.id}`)
+      }
     }
   }
 
@@ -145,7 +162,7 @@ const Pools = () => {
           </TableBody>
         </Table>
         {
-          !!pools.total && <Pagination
+          !!pools.total && pools.total > 1 && <Pagination
             className='mt-4 mb-8'
             currentPage={filter.page}
             totalPage={pools.total}

@@ -174,6 +174,10 @@ const Aggregator = ({ data }) => {
                         <input type="radio" value="released" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'released'}/>
                         <span className="ml-1">Released</span>
                       </label>
+                      <label className="inline-flex items-center mr-4">
+                        <input type="radio" value="testnet" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'released'}/>
+                        <span className="ml-1">Testnet</span>
+                      </label>
                       <label className="inline-flex items-center">
                         <input type="radio" value="upcoming" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'upcoming'}/>
                         <span className="ml-1">Upcoming</span>
@@ -264,7 +268,7 @@ const Aggregator = ({ data }) => {
                         </p>
                       </div>
                     </div>
-                    <div className="flex-none font-casual text-sm pr-2 w-48 hidden lg:block">
+                    <div className="flex-none font-casual text-sm pr-2 w-36 xl:w-48 hidden lg:block">
                       <p className="text-sm line-clamp-1 text-gray-300">{item.category.split(',').join(', ')}</p>
                     </div>
                     <div className="flex-none font-casual text-sm xl:w-36 sm:w-32 hidden sm:block">
@@ -272,7 +276,7 @@ const Aggregator = ({ data }) => {
                     </div>
                     <div className="flex-none font-casual text-sm w-20 xl:w-36">
                       <p className="font-semibold inline-flex items-center text-base">{formatPrice(item.price)} <PriceChange className="ml-2 text-xs" tokenomic={item.tokenomic} /></p>
-                      <p className="text-gray-300 text-xs"><strong>{roi}x</strong> IDO ROI</p>
+                      <p className="text-gray-300 text-xs"><strong>{roi}x</strong> IDO <span className="hidden xl:inline">ROI</span></p>
                     </div>
                     <div className="flex-none font-casual text-sm w-16 xl:w-32 text-center xl:text-left">
                       <p className="font-semibold inline-flex items-center">{item.cmc_rank}</p>

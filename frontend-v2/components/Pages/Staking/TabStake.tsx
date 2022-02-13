@@ -289,7 +289,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
                 <path d="M24 12L12 24" stroke="#1A1C23" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M12 12L15 15L18 18M24 24L21 21" stroke="#1A1C23" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg> }
-              <span className="font-casual text-xs sm:text-sm md:text-base">Connect Your Wallet</span>
+              <span className="font-casual text-xs sm:text-sm md:text-base">Connect your wallet</span>
               { !account && <WalletConnector buttonClassName="ml-auto"></WalletConnector> }
               { account && <span className="font-casual text-xs md:text-sm opacity-50 ml-auto">{shorten(account)}</span> }
             </div>
@@ -323,7 +323,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
                 <path d="M24 12L12 24" stroke="#1A1C23" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M12 12L15 15L18 18M24 24L21 21" stroke="#1A1C23" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg> }
-              <span className="font-casual text-xs sm:text-sm md:text-base">$GAFI available to stake </span>
+              <span className="font-casual text-xs sm:text-sm md:text-base">$GAFI available to stake</span>
               { account && chainOK && balanceGAFI !== null && !balanceGAFIOK && <a
                 href="https://pancakeswap.finance/swap?outputCurrency=0x89af13a10b32f1b2f8d1588f93027f69b6f4e27e&inputCurrency=0xe9e7cea3dedca5984780bafc599bd69add087d56"
                 target="_blank"
@@ -344,7 +344,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
                 <path d="M24 12L12 24" stroke="#1A1C23" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M12 12L15 15L18 18M24 24L21 21" stroke="#1A1C23" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg> }
-              <span className="font-casual text-xs sm:text-sm md:text-base">{network?.currency} available in wallet </span>
+              <span className="font-casual text-xs sm:text-sm md:text-base">{network?.currency} available in wallet</span>
               { account && chainOK && balance !== null && !balanceOK && <span className="font-casual text-xs md:text-sm opacity-50 ml-auto">{network.currency} is required to pay transaction fees on the BSC network</span> }
               { account && chainOK && balanceOK && <span className="font-casual text-xs md:text-sm opacity-50 ml-auto">{balanceShort} {network.currency}</span> }
             </div>

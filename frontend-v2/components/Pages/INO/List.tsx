@@ -152,7 +152,7 @@ const List = () => {
       ) }
       { !loading && items.map(item => {
         return (
-          <div className="sm:flex mb-4 p-4 border-b border-gamefiDark-600" key={item.id}>
+          <div className="sm:flex p-4 border-b border-gamefiDark-600" key={item.id}>
             <Link href={`/ino/${item.id}`} passHref={true}>
               <a className="flex gap-x-2 sm:gap-x-4 items-center sm:w-2/3 md:w-1/2 lg:w-5/12">
                 {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -37,7 +37,7 @@ const TimeLine = ({ timelines }: Props) => {
         </div>
         <div className='lg:mt-10 lg:ml-0 ml-8'>
           <h3 className={clsx('text-base font-semibold mb-2', {
-            'text-white/70' : !timelines[id].current,
+            'text-white/70': !timelines[id].current,
             'text-gamefiGreen-700': timelines[id].current
           })}>{timelines[id].title}</h3>
           <div className="desc pr-10 text-white"

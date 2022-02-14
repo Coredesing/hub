@@ -245,7 +245,7 @@ const GameRight = ({ data, liked, account, className, like }) => {
 
     <div className="flex items-center justify-between mb-4 gap-2">
       <span className="text-sm text-gray-300">Game Release Status</span>
-      <span className="font-medium text-base truncate">{data.game_launch_status || 'N/A'}</span>
+      <span className="font-medium text-base truncate capitalize">{data.game_launch_status || 'Coming Soon'}</span>
     </div>
 
     <div className="h-px bg-gradient-to-r from-gray-300 my-8"></div>

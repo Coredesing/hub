@@ -14,7 +14,6 @@ import { ObjectType } from '@/utils/types'
 import BigNumber from 'bignumber.js'
 import Pool_ABI from '@/components/web3/abis/PreSalePool.json'
 
-
 const Pools = () => {
   const { account, library } = useMyWeb3()
   const router = useRouter()
@@ -94,14 +93,14 @@ const Pools = () => {
 
   const redirectPool = (pool: any) => {
     switch (pool.token_type) {
-      case TOKEN_TYPE.ERC20: {
-        window.open(`https://hub.gamefi.org/#/buy-token/${pool.id}`)
-        return
-      }
+    case TOKEN_TYPE.ERC20: {
+      window.open(`https://hub.gamefi.org/#/buy-token/${pool.id}`)
+      return
+    }
 
-      default: {
-        router.push(`/ino/${pool.id}`)
-      }
+    default: {
+      router.push(`/ino/${pool.id}`)
+    }
     }
   }
 

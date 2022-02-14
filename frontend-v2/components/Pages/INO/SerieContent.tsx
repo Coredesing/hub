@@ -22,9 +22,9 @@ const SerieContent = ({ poolInfo }: Props) => {
     setOpenSerieContentModal(true)
   }
 
-  const firstSerie = poolInfo.seriesContentConfig[0];
-  const isShowRateSerie = firstSerie && +firstSerie.rate > 0;
-  const isShowAmountSerie = firstSerie && +firstSerie.amount > 0;
+  const firstSerie = poolInfo.seriesContentConfig[0]
+  const isShowRateSerie = firstSerie && +firstSerie.rate > 0
+  const isShowAmountSerie = firstSerie && +firstSerie.amount > 0
 
   return <div className="relative">
     {/* <SerieContentModal
@@ -76,8 +76,8 @@ const SerieContent = ({ poolInfo }: Props) => {
                   </div>
                 </TableCell>
                 {isShowAmountSerie && <TableCell>
-                    {b.amount}
-                  </TableCell>
+                  {b.amount}
+                </TableCell>
                 }
                 {isShowRateSerie && <TableCell>
                   {b.rate}

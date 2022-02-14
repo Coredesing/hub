@@ -3,7 +3,7 @@ import Layout from '@/components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { formatterUSD, formatPrice } from '@/utils'
+import { formatPrice } from '@/utils'
 import { useMemo, useState, useEffect } from 'react'
 import PriceChange from '@/components/Pages/Aggregator/PriceChange'
 import Pagination from '@/components/Pages/Aggregator/Pagination'
@@ -29,8 +29,10 @@ const Aggregator = ({ data }) => {
   const router = useRouter()
   const [filterShown, setFilterShown] = useState<boolean>(false)
   const [page, setPage] = useState<number>(data.page)
+  const [perPage, setPerPage] = useState<string>(data.perPage)
   const [category, setCategory] = useState<string>(data.category)
   const [idoType, setIDOType] = useState<string>(data.idoType)
+  const [name, setName] = useState<string>(data.name)
   const [launchStatus, setLaunchStatus] = useState<string>(data.launchStatus)
   const [sortBy, setSortBy] = useState<string>(data.sortBy)
   const [sortOrder, setSortOrder] = useState<string>(data.sortOrder)
@@ -79,6 +81,10 @@ const Aggregator = ({ data }) => {
       params.set('page', page.toString())
     }
 
+    if (perPage) {
+      params.set('per_page', perPage)
+    }
+
     if (category) {
       params.set('category', category)
     }
@@ -91,6 +97,10 @@ const Aggregator = ({ data }) => {
       params.set('launch_status', launchStatus)
     }
 
+    if (name) {
+      params.set('name', name)
+    }
+
     if (sortBy) {
       params.set('sort_by', sortBy)
     }
@@ -100,7 +110,7 @@ const Aggregator = ({ data }) => {
     }
 
     return `${params}`
-  }, [page, category, idoType, launchStatus, sortBy, sortOrder])
+  }, [page, perPage, category, idoType, launchStatus, name, sortBy, sortOrder])
 
   const sort = useMemo(() => {
     return `${sortBy}|${sortOrder}`
@@ -126,21 +136,34 @@ const Aggregator = ({ data }) => {
 
   return (
     <Layout title="GameFi Aggregator">
-      <div className="px-1 md:px-4 lg:px-16 md:container mx-auto lg:block" onClick={() => setFilterShown(false)}>
-        <div className="flex items-center">
-          <div className="uppercase font-bold text-3xl mr-auto">Game List</div>
-          <select value={sort} onChange={ e => { handleSort(e.target.value) } } className="bg-gamefiDark-800 border-gamefiDark-600 rounded py-1 leading-6 shadow-lg">
+      <div className="px-2 md:px-4 lg:px-16 md:container mx-auto lg:block" onClick={() => setFilterShown(false)}>
+        <div className="m-4 flex items-center justify-center">
+          <Image src={require('@/assets/images/aggregator/banner.png')} alt="" />
+        </div>
+        <div className="flex items-center flex-wrap sm:flex-nowrap gap-4">
+          <div className="w-full sm:w-auto sm:mr-auto relative font-casual text-sm">
+            <input value={name} onChange={e => setName(e.target.value)} type="text" className="w-full bg-gamefiDark-800 border-gamefiDark-600 rounded py-1 leading-6 shadow-lg pl-8" placeholder="Search" />
+            <svg viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 absolute inset-y-0 left-2 top-2"><path d="M12.6092 12.1123L9.64744 9.03184C10.409 8.12657 10.8262 6.98755 10.8262 5.80178C10.8262 3.03135 8.57221 0.777344 5.80178 0.777344C3.03135 0.777344 0.777344 3.03135 0.777344 5.80178C0.777344 8.57222 3.03135 10.8262 5.80178 10.8262C6.84184 10.8262 7.83297 10.5125 8.68035 9.91702L11.6646 13.0208C11.7894 13.1504 11.9572 13.2218 12.1369 13.2218C12.3071 13.2218 12.4686 13.1569 12.5911 13.0389C12.8515 12.7884 12.8598 12.3729 12.6092 12.1123ZM5.80178 2.08807C7.84957 2.08807 9.5155 3.754 9.5155 5.80178C9.5155 7.84957 7.84957 9.5155 5.80178 9.5155C3.754 9.5155 2.08807 7.84957 2.08807 5.80178C2.08807 3.754 3.754 2.08807 5.80178 2.08807Z" fill="white"></path></svg>
+          </div>
+          <p className="flex-1 font-casual text-sm text-right"><span className="opacity-60 hidden md:inline">Show</span> <select value={perPage} onChange={ e => { setPerPage(e.target.value) } } className="font-casual text-sm w-full md:w-auto bg-gamefiDark-800 border-gamefiDark-600 rounded py-1 leading-6 shadow-lg">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select> <span className="opacity-60 hidden md:inline">items per page</span></p>
+          <select value={sort} onChange={ e => { handleSort(e.target.value) } } className="font-casual text-sm flex-1 sm:flex-none bg-gamefiDark-800 border-gamefiDark-600 rounded py-1 leading-6 shadow-lg">
             <option value="created_at|desc">Newest</option>
             <option value="roi|desc">High ROI</option>
             <option value="cmc_rank|asc">Top Rank</option>
           </select>
-          <div className="relative inline-block text-left ml-4">
+          <div className="flex-1 sm:flex-none relative inline-block text-left">
             <div>
-              <button type="button" className="inline-flex justify-center w-full bg-gamefiDark-800 border border-gamefiDark-600 rounded py-1 leading-6 px-4 shadow-lg" id="menu-button" aria-expanded="true" aria-haspopup="true" onClick={(e) => {
+              <button type="button" className="inline-flex justify-center w-full bg-gamefiDark-800 border border-gamefiDark-600 rounded py-2 leading-6 px-4 shadow-lg" id="menu-button" aria-expanded="true" aria-haspopup="true" onClick={(e) => {
                 e.stopPropagation()
                 setFilterShown(!filterShown)
               }}>
-                Filters
+                <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14.9084 1.48387C14.7596 1.18725 14.4569 1 14.1252 1H1.87476C1.54313 1 1.24036 1.18725 1.09161 1.48387C0.944602 1.7805 0.976103 2.13488 1.17474 2.4L6.24993 9.16638V14.125C6.24993 14.6089 6.64107 15 7.12497 15H8.87503C9.35893 15 9.75007 14.6089 9.75007 14.125V9.16638L14.8253 2.4C15.0239 2.13488 15.0554 1.7805 14.9084 1.48387Z" fill="white"/>
+                </svg>
               </button>
             </div>
             <div className={`z-50 origin-top-right absolute right-0 mt-2 min-w-max border border-gamefiDark-600 rounded shadow-lg bg-gamefiDark-800 ${filterShown ? 'visible' : 'invisible'}`} role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex={-1} onClick={(e) => e.stopPropagation()}>
@@ -166,19 +189,19 @@ const Aggregator = ({ data }) => {
 
                     <div className="uppercase font-bold text-lg">Game Release</div>
                     <div className="font-casual text-sm">
-                      <label className="inline-flex items-center mr-4">
+                      <label className="block sm:inline-flex items-center mr-4">
                         <input type="radio" value="" onChange={(e) => handleLaunchStatus(e.target.value)} checked={!launchStatus} />
                         <span className="ml-1">All</span>
                       </label>
-                      <label className="inline-flex items-center mr-4">
+                      <label className="block sm:inline-flex items-center mr-4">
                         <input type="radio" value="released" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'released'}/>
                         <span className="ml-1">Released</span>
                       </label>
-                      <label className="inline-flex items-center mr-4">
-                        <input type="radio" value="testnet" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'released'}/>
+                      <label className="block sm:inline-flex items-center mr-4">
+                        <input type="radio" value="testnet" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'testnet'}/>
                         <span className="ml-1">Testnet</span>
                       </label>
-                      <label className="inline-flex items-center">
+                      <label className="block sm:inline-flex items-center">
                         <input type="radio" value="upcoming" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'upcoming'}/>
                         <span className="ml-1">Upcoming</span>
                       </label>
@@ -209,7 +232,7 @@ const Aggregator = ({ data }) => {
           <div className="flex mb-2">
             <div className="uppercase text-gray-400 font-bold text-sm flex-1">Game</div>
             <div className="uppercase text-gray-400 font-bold text-sm w-48 hidden lg:block">Category</div>
-            <div className="uppercase text-gray-400 font-bold text-sm xl:w-36 sm:w-32 hidden sm:block">Volume 24h</div>
+            <div className="uppercase text-gray-400 font-bold text-sm xl:w-36 sm:w-32 hidden sm:block">Game Release</div>
             <div className="uppercase text-gray-400 font-bold text-sm w-20 xl:w-36">Token Price</div>
             <div className="uppercase text-gray-400 font-bold text-sm w-16 xl:w-32">CMC Rank</div>
             <div className="uppercase text-gray-400 font-bold text-sm w-48 hidden 2xl:block">Last 7 days</div>
@@ -272,14 +295,14 @@ const Aggregator = ({ data }) => {
                       <p className="text-sm line-clamp-1 text-gray-300">{item.category.split(',').join(', ')}</p>
                     </div>
                     <div className="flex-none font-casual text-sm xl:w-36 sm:w-32 hidden sm:block">
-                      <p>{formatterUSD.format(item.volume_24h || 0)}</p>
+                      <p>{item.game_launch_status || 'Coming Soon'}</p>
                     </div>
                     <div className="flex-none font-casual text-sm w-20 xl:w-36">
                       <p className="font-semibold inline-flex items-center text-base">{formatPrice(item.price)} <PriceChange className="ml-2 text-xs" tokenomic={item.tokenomic} /></p>
                       <p className="text-gray-300 text-xs"><strong>{roi}x</strong> IDO <span className="hidden xl:inline">ROI</span></p>
                     </div>
                     <div className="flex-none font-casual text-sm w-16 xl:w-32 text-center xl:text-left">
-                      <p className="font-semibold inline-flex items-center">{item.cmc_rank}</p>
+                      <p className="font-semibold inline-flex items-center">{item.cmc_rank === '999999' ? 'N/A' : item.cmc_rank}</p>
                     </div>
                     <div className="flex-none font-casual text-sm w-48 hidden 2xl:block">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -314,7 +337,8 @@ export async function getServerSideProps ({ query }) {
         category: query.category ? decodeURI(query.category) : null,
         idoType: query.ido_type || null,
         launchStatus: query.launch_status || null,
-        sortBy: query.sort_by || 'roi',
+        name: query.name || '',
+        sortBy: query.sort_by || 'created_at',
         sortOrder: query.sort_order || 'desc'
       }
     }

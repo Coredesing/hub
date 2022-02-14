@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 const Footer = () => {
-  return <div className="w-full" style={{ backgroundColor: '#0E0F14', fontFamily: 'Poppins' }}>
+  return <div className="w-full mb-10 lg:mb-0" style={{ backgroundColor: '#0E0F14', fontFamily: 'Poppins' }}>
     <div className="md:container px-4 py-10 text-center lg:text-left lg:px-16 lg:py-20 mx-auto lg:block">
       <div className="flex flex-wrap align-middle items-start justify-center lg:items-start lg:grid lg:grid-cols-5 lg:gap-2 zl:gap-4">
         <div className="basis-full lg:col-span-2 flex flex-col items-center lg:block">

@@ -14,7 +14,6 @@ type Props = {
   currencyInfo: ObjectType;
 }
 const AscDescAmount = ({ value, maxBuy, onChangeValue, bought, poolInfo, currencyInfo }: Props) => {
-
   const { balanceShort, loading }: any = useMyBalance(currencyInfo as any, poolInfo.network_available)
 
   const remaining = +maxBuy - +bought || 0

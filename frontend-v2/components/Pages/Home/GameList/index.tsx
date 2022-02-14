@@ -9,12 +9,12 @@ import { useScreens } from '../utils'
 
 const gameFilterOptions = [
   {
-    key: 1,
+    key: 'filter-top-favorite',
     label: 'Top Favorite',
     value: 'Top Favourite'
   },
   {
-    key: 2,
+    key: 'filter-top-trending',
     label: 'Top Trending',
     value: 'Trending'
   }
@@ -74,17 +74,17 @@ const GameList = () => {
                   <div className="mt-4 flex w-full overflow-x-auto hide-scrollbar">
                     {topGames.map((item, i) => (
                       i !== 0
-                        ? <div className="mx-2" style={{ minWidth: '300px' }} key={`game-list-${item.id}`}>
+                        ? <div className="mr-4" style={{ minWidth: '300px' }} key={`game-list-${i}`}>
                           <TopGame item={item} like={likes?.find(like => like?.game_id === item.id)} isTop={false}></TopGame>
                         </div>
-                        : <></>
+                        : <div key={`game-list-${i}`}></div>
                     ))}
                   </div>
                 </>
-                : <div className="grid grid-cols-5 gap-4">
+                : <div className="flex">
                   {
                     topGames.map((item, i) => (
-                      <div className={`${i === 0 ? 'col-span-2' : ''}`} key={item.id}>
+                      <div style={{ width: i === 0 ? 'calc(40% - 1.2rem)' : 'calc(20% + 0.3rem)', paddingLeft: i === 0 ? '' : '0.9rem' }} key={`game-mobile-${i}`}>
                         <TopGame item={item} like={likes?.find(like => like?.game_id === item.id)} isTop={i === 0}></TopGame>
                       </div>
                     ))

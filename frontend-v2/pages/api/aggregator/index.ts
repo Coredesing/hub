@@ -1,8 +1,9 @@
 import { fetcher } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 
-function fetchAll (page = 1, category = '', idoType = '', launchStatus = '', sortBy = 'cmc_rank', sortOrder = 'asc', perPage = 10) {
-  return fetcher(`${API_BASE_URL}/aggregator?per_page=${perPage}&page=${page}&price=true&category=${category}&ido_type=${idoType}&game_launch_status=${launchStatus}&sort_by=${sortBy}&sort_order=${sortOrder}`)
+function fetchAll (page = 1, category = '', idoType = '', launchStatus = '', name = '', sortBy = 'cmc_rank', sortOrder = 'asc', perPage = 10) {
+  const url = `${API_BASE_URL}/aggregator?per_page=${perPage}&page=${page}&price=true&category=${category}&ido_type=${idoType}&game_launch_status=${launchStatus}&game_name=${name}&sort_by=${sortBy}&sort_order=${sortOrder}`
+  return fetcher(url)
 }
 
 export function fetchOneWithSlug (slug) {
@@ -10,8 +11,8 @@ export function fetchOneWithSlug (slug) {
 }
 
 export async function fetchAllWithQueries (query) {
-  const { page, category, sort_by: sortBy, sort_order: sortOrder, ido_type: idoType, launch_status: launchStatus } = query
-  return await fetchAll(page, category, idoType, launchStatus, sortBy, sortOrder)
+  const { page, per_page: perPage, category, sort_by: sortBy, sort_order: sortOrder, ido_type: idoType, launch_status: launchStatus, name } = query
+  return await fetchAll(page, category, idoType, launchStatus, name, sortBy, sortOrder, perPage)
 }
 
 export default async function handler (req, res) {

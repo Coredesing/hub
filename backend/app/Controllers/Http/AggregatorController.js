@@ -291,7 +291,7 @@ class AggregatorController {
       const gameLaunchStatus = params?.game_launch_status
       const sort_by = params?.sort_by ? params?.sort_by : 'cmc_rank'
       const sort_order = params?.sort_order ? params?.sort_order.toUpperCase() : 'ASC'
-      const cacheKey = { page, perPage, display_area, game_name, ido_type, category, gameLaunchStatus, sort_by, sort_order }
+      const cacheKey = [ page, perPage, display_area, game_name, ido_type, category, gameLaunchStatus, sort_by, sort_order ]
       const selectColumn = [
         'game_informations.id',
         'category',

@@ -4,9 +4,12 @@ import ToolboxItem from './ToolboxItem'
 import MenuLink from './MenuLink'
 import WalletConnector from '../WalletConnector'
 import Topbar from '../Topbar'
+import Link from 'next/link'
+import { useMyWeb3 } from '@/components/web3/context'
 
 const Toolbox = () => {
   const [showMenu, setShowMenu] = useState(false)
+  const { account } = useMyWeb3()
   return (
     <>
       <div className="fixed w-full bottom-0 grid grid-cols-5 md:hidden dark:bg-gamefiDark-700" style={{ boxShadow: 'inset -1px 0px 0px #303442', zIndex: '99' }}>
@@ -71,6 +74,9 @@ const Toolbox = () => {
             <span>Metaverse</span>
           </MenuLink>
         </div>
+        {account && <Link href="/account" passHref>
+          <a className="rounded-sm text-center my-2 mx-6 px-5 py-3 bg-gamefiGreen-700 hover:opacity-95 clipped-t-r text-black font-semibold">View My Account</a>
+        </Link>}
         <div className="px-6">
           <WalletConnector></WalletConnector>
         </div>

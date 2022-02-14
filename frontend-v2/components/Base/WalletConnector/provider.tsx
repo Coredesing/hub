@@ -227,9 +227,9 @@ export default function WalletProvider ({ children }) {
                 <path d="M5.5 12.5H9.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <p className="flex mt-4 justify-between w-full font-medium cursor-pointer">
+            <p className="flex mt-4 justify-center md:justify-between w-full font-medium cursor-pointer">
               <Link href="/account" passHref={true}>
-                <a className="text-white hover:text-gray-400 underline" onClick={() => {
+                <a className="text-white hover:text-gray-400 underline hidden md:block" onClick={() => {
                   setShowModal(false)
                   setConnectorChosen(undefined)
                 }}>

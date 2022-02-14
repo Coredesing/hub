@@ -4,6 +4,7 @@ import ToolboxItem from './ToolboxItem'
 import MenuLink from './MenuLink'
 import WalletConnector from '../WalletConnector'
 import Topbar from '../Topbar'
+import Link from 'next/link'
 
 const Toolbox = () => {
   const [showMenu, setShowMenu] = useState(false)
@@ -71,6 +72,9 @@ const Toolbox = () => {
             <span>Metaverse</span>
           </MenuLink>
         </div>
+        <Link href="/account" passHref>
+          <a className="rounded-sm text-center my-2 mx-6 px-5 py-3 bg-gamefiGreen-700 hover:opacity-95 clipped-t-r text-black font-semibold">View My Account</a>
+        </Link>
         <div className="px-6">
           <WalletConnector></WalletConnector>
         </div>

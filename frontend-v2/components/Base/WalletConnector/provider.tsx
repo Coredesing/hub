@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { useWeb3React } from '@web3-react/core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import copy from 'copy-to-clipboard'
+import { shorten } from '@/utils'
 
 export const ctx = createContext<{ setShowModal:(any) => void }>({
   setShowModal () {}
@@ -217,7 +218,7 @@ export default function WalletProvider ({ children }) {
           </div>
           <div className="p-6 text-white">
             <div className="p-4 bg-gray-700 rounded flex justify-between">
-              <div>{account}</div>
+              <div>{shorten(account, 18)}</div>
               <svg style={{ height: '1em' }} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="cursor-pointer hover:text-gray-300" onClick={() => copy(account)}>
                 <path d="M12.5 3.5H2.5V15.5H12.5V3.5Z" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M4.5 0.5H15.5V13.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
@@ -263,7 +264,7 @@ export default function WalletProvider ({ children }) {
 
                   return <div key={network.id} className={`flex-1 relative cursor-pointer flex flex-col items-center justify-between py-4 border border-transparent ${chosen ? 'border-gamefiGreen-500 bg-gray-800' : 'bg-gray-700'}`} onClick={() => chooseNetwork(network)}>
                     <div className="w-11 h-11 relative"><Image src={network.image2} className={available ? 'filter-none' : 'grayscale'} alt={network.name} layout="fill"/></div>
-                    <span className={`text-[13px] leading-6 ${available ? 'text-white' : 'text-gray-100'}`}>{network.name}</span>
+                    <span className={`text-xs md:text-[13px] leading-6 ${available ? 'text-white' : 'text-gray-100'}`}>{network.name}</span>
 
                     { chosen && <svg className="w-6 absolute top-0 left-0" viewBox="0 0 23 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M0 1C0 0.447715 0.447715 0 1 0H21.0144C21.7241 0 22.208 0.718806 21.9408 1.37638L16.2533 15.3764C16.1002 15.7534 15.7338 16 15.3269 16H8H1C0.447715 16 0 15.5523 0 15V1Z" fill="#6CDB00"/>
@@ -281,9 +282,9 @@ export default function WalletProvider ({ children }) {
                   const available = !!agreed && !!networkChosen
                   const chosen = available && wallet.id === walletChosen?.id
 
-                  return <div key={wallet.id} className={`flex-1 relative cursor-pointer flex flex-col items-center justify-between py-6 border border-transparent ${chosen ? 'border-gamefiGreen-500 bg-gray-800' : 'bg-gray-700'}`} onClick={() => chooseWallet(wallet)}>
+                  return <div key={wallet.id} className={`flex-1 relative cursor-pointer flex flex-col items-center justify-between py-4 md:py-6 border border-transparent ${chosen ? 'border-gamefiGreen-500 bg-gray-800' : 'bg-gray-700'}`} onClick={() => chooseWallet(wallet)}>
                     <Image src={wallet.image} className={available ? 'filter-none' : 'grayscale'} alt={wallet.name} />
-                    <span className={`text-[13px] leading-6 ${available ? 'text-white' : 'text-gray-100'}`}>{ (activating && chosen) ? 'Loading...' : wallet.name}</span>
+                    <span className={`text-xs md:text-[13px] leading-6 ${available ? 'text-white' : 'text-gray-100'}`}>{ (activating && chosen) ? 'Loading...' : wallet.name}</span>
 
                     { chosen && <svg className="w-6 absolute top-0 left-0" viewBox="0 0 23 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M0 1C0 0.447715 0.447715 0 1 0H21.0144C21.7241 0 22.208 0.718806 21.9408 1.37638L16.2533 15.3764C16.1002 15.7534 15.7338 16 15.3269 16H8H1C0.447715 16 0 15.5523 0 15V1Z" fill="#6CDB00"/>

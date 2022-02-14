@@ -229,7 +229,7 @@ class CampaignController {
     // get all request params
     const params = request.all();
     const campaign_id = params.campaign_id;
-    const userWalletAddress = request.header('wallet_address');
+    const userWalletAddress = request.header('wallet_address') ? request.header('wallet_address') : params.wallet_address;
     const amount = params.amount;
     const token = params.token ? params.token : '0x0000000000000000000000000000000000000000';
     const subBoxId = params.sub_box_id;
@@ -238,6 +238,10 @@ class CampaignController {
     }
 
     try {
+      if(!userWalletAddress) {
+        return HelperUtils.responseBadRequest("Wallet address not found");
+      }
+
       // call to db get campaign info
       const campaignService = new PoolService();
       let camp = null

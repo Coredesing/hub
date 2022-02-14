@@ -22,6 +22,10 @@ const SerieContent = ({ poolInfo }: Props) => {
     setOpenSerieContentModal(true)
   }
 
+  const firstSerie = poolInfo.seriesContentConfig[0];
+  const isShowRateSerie = firstSerie && +firstSerie.rate > 0;
+  const isShowAmountSerie = firstSerie && +firstSerie.amount > 0;
+
   return <div className="relative">
     {/* <SerieContentModal
       open={openSerieContentModal}
@@ -46,12 +50,16 @@ const SerieContent = ({ poolInfo }: Props) => {
               <TableCellHead>
                 Name
               </TableCellHead>
-              <TableCellHead>
+              {isShowAmountSerie && <TableCellHead>
                 Amount
               </TableCellHead>
-              <TableCellHead>
-                Rarity
-              </TableCellHead>
+              }
+              {
+                isShowRateSerie && <TableCellHead>
+                  Rarity
+                </TableCellHead>
+              }
+
               {poolInfo.seriesContentConfig?.[0]?.description && <TableCellHead>
                 Description
               </TableCellHead>
@@ -67,12 +75,14 @@ const SerieContent = ({ poolInfo }: Props) => {
                     <span>{b.name}</span>
                   </div>
                 </TableCell>
-                <TableCell>
-                  {b.amount}
-                </TableCell>
-                <TableCell>
+                {isShowAmountSerie && <TableCell>
+                    {b.amount}
+                  </TableCell>
+                }
+                {isShowRateSerie && <TableCell>
                   {b.rate}
                 </TableCell>
+                }
                 {
                   poolInfo.seriesContentConfig?.[0]?.description && <TableCell>
                     <div>
@@ -84,11 +94,11 @@ const SerieContent = ({ poolInfo }: Props) => {
                         }}>
                         {b.description}
                       </span>
-                      <span
+                      {/* <span
                         className="text-gamefiGreen font-casual font-semibold ml-1 cursor-pointer text-sm"
                       >
                         Read more
-                      </span>
+                      </span> */}
                     </div>
                   </TableCell>
                 }

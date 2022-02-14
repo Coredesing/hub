@@ -21,7 +21,7 @@ export const TableRow = (props: any) => {
 }
 
 export const TableCellHead = (props: any) => {
-  return <th className={clsx('uppercase py-3 px-4 font-semibold text-lg text-left', styles['table-cell'], props.className)}>{props.children}</th>
+  return <th className={clsx('uppercase py-3 px-4 font-bold text-base text-left text-white/50', styles['table-cell'], props.className)}>{props.children}</th>
 }
 
 export const TableCell = (props: any) => {

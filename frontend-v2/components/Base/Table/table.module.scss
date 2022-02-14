@@ -1,5 +1,6 @@
 .table-cell {
-    background-color: #1D1D1D;
+    // background-color: #1D1D1D;
+    background: #15171E;
 }
 
 .table-head th {
@@ -11,7 +12,8 @@
 }
 
 .table-body tr:hover {
-    background: linear-gradient(270.02deg, rgba(79, 79, 79, 0.3) 0.02%, #676767 44.61%, rgba(79, 79, 79, 0.3) 99.99%);
+    // background: linear-gradient(270.02deg, rgba(79, 79, 79, 0.3) 0.02%, #676767 44.61%, rgba(79, 79, 79, 0.3) 99.99%);
+    background: linear-gradient(90.17deg, #2B2C30 -2.1%, #15171E 70.41%);
 }
 
 .table-body tr:hover td {

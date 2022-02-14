@@ -3,6 +3,7 @@ import { formatNumber } from '@/utils/index'
 import clsx from 'clsx'
 import React, { useMemo } from 'react'
 import styles from './Timeline.module.scss'
+import { useMediaQuery } from 'react-responsive'
 
 type Props = {
   timelines: ObjectType<{
@@ -13,13 +14,15 @@ type Props = {
 }
 
 const TimeLine = ({ timelines }: Props) => {
+  const isLgScreen = useMediaQuery({ maxWidth: '1024px' })
+
   const currentTimeline = useMemo(() => {
     const num = Object.keys(timelines).reverse().find(k => timelines[k].current)
     return +num || 0
   }, [timelines])
-  return <div className='flex'>
+  return <div className='flex lg:flex-row lg:ml-2 ml-8 flex-col'>
     {
-      Object.keys(timelines).map((id) => (<div className={clsx(styles.timeline, styles.lineBright, {
+      Object.keys(timelines).map((id) => (<div className={clsx('lg:block flex', styles.timeline, styles.lineBright, {
         [styles.active]: +id <= currentTimeline || timelines[id].current,
         [styles.lineBrightActive]: +id < currentTimeline
 
@@ -32,9 +35,11 @@ const TimeLine = ({ timelines }: Props) => {
               }
             )}>{formatNumber(id as any)}</span>
         </div>
-        <div className='mt-10'>
+        <div className='lg:mt-10 lg:ml-0 ml-8'>
           <h3 className='text-base font-semibold mb-2 text-white/70'>{timelines[id].title}</h3>
-          <div className="desc pr-10 text-white" style={{ width: `calc(1080px / ${Object.keys(timelines).length})` }}>
+          <div className="desc pr-10 text-white"
+            style={isLgScreen ? { width: '100%', height: '150px' } : { width: `calc(1080px / ${Object.keys(timelines).length})` }}
+          >
             {timelines[id].desc}
           </div>
         </div>

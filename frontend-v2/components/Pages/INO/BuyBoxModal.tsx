@@ -7,7 +7,7 @@ import { debounce } from '@/utils/index'
 import { BigNumber, utils } from 'ethers'
 import Recaptcha from '@/components/Base/Recaptcha'
 import { ObjectType } from '@/utils/types'
-import { useBalanceToken } from '@/components/web3/utils'
+import { useMyBalance } from '@/components/web3/utils'
 import { BeatLoader } from 'react-spinners'
 import useBuyBox from '@/hooks/useBuyBox'
 import DialogTxSubmitted from '@/components/Base/DialogTxSubmitted'
@@ -24,13 +24,8 @@ type Props = {
 
 const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, poolInfo, eventId }: Props) => {
   const { account } = useMyWeb3()
-  const useHookBalance: any = useMemo(() => {
-    if (BigNumber.from(currencyInfo?.address || 0).isZero()) {
-      return useMyWeb3
-    }
-    return useBalanceToken
-  }, [currencyInfo, poolInfo])
-  const { balanceShort, loading, balance }: any = useHookBalance(currencyInfo as any, poolInfo.network_available)
+
+  const { balanceShort, loading, balance } = useMyBalance(currencyInfo as any, poolInfo.network_available)
 
   // const { balanceShort, loading, balance } = useBalanceToken(BigNumber.from(currencyInfo?.address || 0).isZero() ? undefined : currencyInfo as any, poolInfo.network_available)
   const [isVerified, setVerify] = useState<string | null>('')

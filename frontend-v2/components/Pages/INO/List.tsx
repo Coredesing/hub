@@ -116,15 +116,15 @@ const List = () => {
   }, [response])
 
   return (
-    <div className={styles.container} style={{ marginBottom: '2rem' }}>
+    <div className={styles.container} style={{ marginBottom: '2rem', marginTop: '2rem' }}>
       <div className="bg-gamefiDark-900 lg:flex mb-4">
         <div className="relative flex-none inline-block">
           <div className="absolute w-screen h-full block bg-black" style={{ left: '-100vw' }}></div>
           <div className="inline-block py-2 md:py-3 pl-2 pr-20 font-bold text-2xl sm:text-3xl md:text-4xl uppercase bg-black relative" style={{
             clipPath: 'polygon(0 0, 100% 0, calc(100% - 30px) 100%, 0 100%)'
-          }}>Previous Projects</div>
+          }}>Completed Sales</div>
         </div>
-        <div className="flex-1 flex gap-x-4 p-2 md:py-3 md:px-8 lg:px-10 xl:pl-20">
+        <div className="ml-auto flex-1 justify-end flex gap-x-4 md:py-3 mt-6 md:mt-0">
           <div className="w-full lg:w-auto lg:min-w-fit">
             <select value={network} onChange={ e => { setNetwork(e.target.value) } } className="rounded bg-gamefiDark-700 w-full h-10 border-none font-casual align-middle">
               <option value="bsc">BSC</option>
@@ -154,7 +154,7 @@ const List = () => {
         return (
           <div className="sm:flex p-4 border-b border-gamefiDark-600" key={item.id}>
             <Link href={`/ino/${item.id}`} passHref={true}>
-              <a className="flex gap-x-2 sm:gap-x-4 items-center sm:w-2/3 md:w-1/2 lg:w-5/12">
+              <a className="flex gap-x-5 sm:gap-x-4 items-center sm:w-2/3 md:w-1/2 lg:w-5/12">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={item.mini_banner} alt={item.title} className="flex-none w-28 sm:w-36 md:w-40 aspect-[16/9]" />
                 <div className={styles.title}>

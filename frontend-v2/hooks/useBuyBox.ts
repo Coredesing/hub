@@ -26,7 +26,7 @@ const useBuyBox = ({ poolId, currencyInfo, poolAddress, subBoxId, eventId }: Poo
 
   const buyBox = useCallback(async (amount: number, captchaToken: string) => {
     try {
-      setLoading(false)
+      setLoading(true)
       setSuccess(false)
       setTxHash('')
       const signature = await apiSignMessage({
@@ -57,7 +57,6 @@ const useBuyBox = ({ poolId, currencyInfo, poolAddress, subBoxId, eventId }: Poo
         setSuccess(false)
       }
     } catch (error: any) {
-      console.log(';error', error)
       setLoading(false)
       const msgError = handleErrMsg(error)
       toast.error(msgError)

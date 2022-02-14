@@ -145,11 +145,11 @@ const Aggregator = ({ data }) => {
             <input value={name} onChange={e => setName(e.target.value)} type="text" className="w-full bg-gamefiDark-800 border-gamefiDark-600 rounded py-1 leading-6 shadow-lg pl-8" placeholder="Search" />
             <svg viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 absolute inset-y-0 left-2 top-2"><path d="M12.6092 12.1123L9.64744 9.03184C10.409 8.12657 10.8262 6.98755 10.8262 5.80178C10.8262 3.03135 8.57221 0.777344 5.80178 0.777344C3.03135 0.777344 0.777344 3.03135 0.777344 5.80178C0.777344 8.57222 3.03135 10.8262 5.80178 10.8262C6.84184 10.8262 7.83297 10.5125 8.68035 9.91702L11.6646 13.0208C11.7894 13.1504 11.9572 13.2218 12.1369 13.2218C12.3071 13.2218 12.4686 13.1569 12.5911 13.0389C12.8515 12.7884 12.8598 12.3729 12.6092 12.1123ZM5.80178 2.08807C7.84957 2.08807 9.5155 3.754 9.5155 5.80178C9.5155 7.84957 7.84957 9.5155 5.80178 9.5155C3.754 9.5155 2.08807 7.84957 2.08807 5.80178C2.08807 3.754 3.754 2.08807 5.80178 2.08807Z" fill="white"></path></svg>
           </div>
-          <p className="font-casual text-sm"><span className="opacity-60">Show</span> <select value={perPage} onChange={ e => { setPerPage(e.target.value) } } className="font-casual text-sm flex-1 sm:flex-none bg-gamefiDark-800 border-gamefiDark-600 rounded py-1 leading-6 shadow-lg">
+          <p className="flex-1 font-casual text-sm text-right"><span className="opacity-60 hidden md:inline">Show</span> <select value={perPage} onChange={ e => { setPerPage(e.target.value) } } className="font-casual text-sm w-full md:w-auto bg-gamefiDark-800 border-gamefiDark-600 rounded py-1 leading-6 shadow-lg">
             <option value="10">10</option>
             <option value="20">20</option>
             <option value="50">50</option>
-          </select> <span className="opacity-60">items per page</span></p>
+          </select> <span className="opacity-60 hidden md:inline">items per page</span></p>
           <select value={sort} onChange={ e => { handleSort(e.target.value) } } className="font-casual text-sm flex-1 sm:flex-none bg-gamefiDark-800 border-gamefiDark-600 rounded py-1 leading-6 shadow-lg">
             <option value="created_at|desc">Newest</option>
             <option value="roi|desc">High ROI</option>

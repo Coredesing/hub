@@ -20,7 +20,8 @@ const useApiSignature = (url: string) => {
         }),
         headers: {
           'Content-Type': 'application/json',
-          msgSignature: process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE
+          msgSignature: process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE,
+          wallet_address: account
         }
       })
       if (result?.status === 200) {

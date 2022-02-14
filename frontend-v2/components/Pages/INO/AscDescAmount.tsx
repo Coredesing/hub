@@ -28,7 +28,7 @@ const AscDescAmount = ({ value, maxBuy, onChangeValue, bought, poolInfo, currenc
     onChangeValue(remaining)
   }
   const onSetMin = () => {
-    onChangeValue(1)
+    onChangeValue(remaining >= 1 ? 1 : 0)
   }
   const onChangeInput = (event: any) => {
     const value = +event.target.value || 0

@@ -70,20 +70,29 @@ const CardItem = ({ item, ...props }: Props) => {
             </a>
           </Link>
         </div>
-        <div className="mt-4 mb-2 flex justify-between">
-          <div className="w-full h-full flex flex-col align-middle items-center justify-center mt-1">
-            <div className="uppercase font-bold text-xs text-gray-500">Countdown to IGO date</div>
-            <div className="mt-2 flex font-medium">
-              <div className="text-center">{days}d</div>
-              <span className="mx-1">:</span>
-              <div className="text-center">{hours}h</div>
-              <span className="mx-1">:</span>
-              <div className="text-center">{minutes}m</div>
-              <span className="mx-1">:</span>
-              <div className="text-center">{seconds}s</div>
+        {distance <= 0
+          ? <div className="mt-4 mb-2 flex justify-between">
+            <div className="w-full h-full flex flex-col align-middle items-center justify-center mt-1">
+              <div className="uppercase font-bold text-xs text-gray-500">Countdown to IGO date</div>
+              <div className="mt-2 font-medium text-center">
+                TBA
+              </div>
             </div>
           </div>
-        </div>
+          : <div className="mt-4 mb-2 flex justify-between">
+            <div className="w-full h-full flex flex-col align-middle items-center justify-center mt-1">
+              <div className="uppercase font-bold text-xs text-gray-500">Countdown to IGO date</div>
+              <div className="mt-2 flex font-medium">
+                <div className="text-center">{days}d</div>
+                <span className="mx-1">:</span>
+                <div className="text-center">{hours}h</div>
+                <span className="mx-1">:</span>
+                <div className="text-center">{minutes}m</div>
+                <span className="mx-1">:</span>
+                <div className="text-center">{seconds}s</div>
+              </div>
+            </div>
+          </div>}
       </div>
     </div>
   )

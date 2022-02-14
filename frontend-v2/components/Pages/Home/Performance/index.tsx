@@ -36,7 +36,7 @@ const Performance = () => {
       </div>
       <div className="mt-14 relative">
         <div className="flex mb-2 px-6">
-          <div className="uppercase text-gray-400 font-bold text-sm w-20">CMC Rank</div>
+          <div className="uppercase text-gray-400 font-bold text-sm w-20 hidden md:block">CMC Rank</div>
           <div className="uppercase text-gray-400 font-bold text-sm flex-1 text-left">Name</div>
           <div className="uppercase text-gray-400 font-bold text-sm xl:w-36 w-20">Price</div>
           <div className="uppercase text-gray-400 font-bold text-sm w-20 xl:w-36 hidden lg:block">CHG 24H</div>
@@ -59,7 +59,7 @@ const Performance = () => {
           { performances && performances.map(item =>
             <div key={`performances-${item.rank}`}>
               <div className="flex items-center bg-gamefiDark-800 rounded-xs mb-2 px-6 py-8">
-                <div className="w-20 items-center">
+                <div className="w-20 items-center hidden md:block">
                     # {item.rank}
                 </div>
                 <div className="flex-1 font-casual text-sm pr-2">

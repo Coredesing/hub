@@ -52,26 +52,27 @@ const Partners = () => {
           <div className="text-3xl font-bold uppercase absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center">Our Partners</div>
         </div>
         <div className="container mx-auto xl:px-16 flex items-center justify-between mt-14">
-          <Image src={require('assets/images/partners/mech.png')} alt="" ></Image>
-          <Image src={require('assets/images/partners/derace.png')} alt=""></Image>
-          <Image src={require('assets/images/partners/kaby.png')} alt=""></Image>
-          <Image src={require('assets/images/partners/dreams.png')} alt=""></Image>
-          <Image src={require('assets/images/partners/dark.png')} alt=""></Image>
-          <Image src={require('assets/images/partners/psb.png')} alt=""></Image>
+          <Image src={require('assets/images/partners/spg.png')} alt="" ></Image>
+          <Image src={require('assets/images/partners/sidus.png')} alt=""></Image>
+          <Image src={require('assets/images/partners/solice.png')} alt=""></Image>
+          <Image src={require('assets/images/partners/mgod.png')} alt=""></Image>
+          <Image src={require('assets/images/partners/war.png')} alt=""></Image>
+          <Image src={require('assets/images/partners/ertha.png')} alt=""></Image>
         </div>
         <div className="container mx-auto xl:px-32 flex items-center justify-between mt-14">
-          <Image src={require('assets/images/partners/drace.png')} alt="" ></Image>
-          <Image src={require('assets/images/partners/mat.png')} alt=""></Image>
-          <Image src={require('assets/images/partners/w.png')} alt=""></Image>
-          <Image src={require('assets/images/partners/polkapet.png')} alt=""></Image>
-          <Image src={require('assets/images/partners/defi-warrior.png')} alt=""></Image>
+          <Image src={require('assets/images/partners/shill.png')} alt="" ></Image>
+          <Image src={require('assets/images/partners/gunstar.png')} alt=""></Image>
+          <Image src={require('assets/images/partners/titan.png')} alt=""></Image>
+          <Image src={require('assets/images/partners/dark.png')} alt=""></Image>
+          <Image src={require('assets/images/partners/bemil.png')} alt=""></Image>
         </div>
         <div className="container mx-auto xl:px-16 flex items-center justify-between mt-14">
-          <Image src={require('assets/images/partners/dinox.png')} alt="" ></Image>
-          <Image src={require('assets/images/partners/spg.png')} alt=""></Image>
-          <Image src={require('assets/images/partners/gunstar.png')} alt=""></Image>
-          <Image src={require('assets/images/partners/lfw.png')} alt=""></Image>
-          <Image src={require('assets/images/partners/kryptomon.png')} alt=""></Image>
+          <Image src={require('assets/images/partners/w.png')} alt="" ></Image>
+          <Image src={require('assets/images/partners/pog.png')} alt=""></Image>
+          <Image src={require('assets/images/partners/aspo.png')} alt=""></Image>
+          <Image src={require('assets/images/partners/psb.png')} alt=""></Image>
+          <Image src={require('assets/images/partners/dreams.png')} alt=""></Image>
+          <Image src={require('assets/images/partners/place.png')} alt=""></Image>
         </div>
       </>}
 
@@ -82,22 +83,23 @@ const Partners = () => {
             <div className="text-3xl font-bold uppercase absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center">Our Partners</div>
           </div>
           <div className="mt-14 grid grid-cols-3 gap-3">
-            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/mech.png')} alt="" ></Image></div>
-            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/derace.png')} alt=""></Image></div>
-            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/kaby.png')} alt=""></Image></div>
-            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/dreams.png')} alt=""></Image></div>
-            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/dark.png')} alt=""></Image></div>
-            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/psb.png')} alt=""></Image></div>
-            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/drace.png')} alt="" ></Image></div>
-            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/mat.png')} alt=""></Image></div>
-            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/w.png')} alt=""></Image></div>
-            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/polkapet.png')} alt=""></Image></div>
-            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/defi-warrior.png')} alt=""></Image></div>
-            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/dinox.png')} alt="" ></Image></div>
-            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/spg.png')} alt=""></Image></div>
+            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/spg.png')} alt="" ></Image></div>
+            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/sidus.png')} alt=""></Image></div>
+            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/solice.png')} alt=""></Image></div>
+            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/mgod.png')} alt=""></Image></div>
+            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/war.png')} alt=""></Image></div>
+            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/ertha.png')} alt=""></Image></div>
+            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/shill.png')} alt="" ></Image></div>
             <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/gunstar.png')} alt=""></Image></div>
-            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/lfw.png')} alt=""></Image></div>
-            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/kryptomon.png')} alt=""></Image></div>
+            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/titan.png')} alt=""></Image></div>
+            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/dark.png')} alt=""></Image></div>
+            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/bemil.png')} alt=""></Image></div>
+            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/w.png')} alt="" ></Image></div>
+            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/pog.png')} alt=""></Image></div>
+            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/aspo.png')} alt=""></Image></div>
+            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/psb.png')} alt=""></Image></div>
+            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/dreams.png')} alt=""></Image></div>
+            <div className="w-full flex items-center justify-center"><Image src={require('assets/images/partners/place.png')} alt=""></Image></div>
           </div>
         </>}
     </div>

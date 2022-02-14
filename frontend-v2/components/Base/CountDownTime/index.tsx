@@ -65,6 +65,7 @@ export const CountDownTimeV1 = (props: Props) => {
   useEffect(() => {
     if (isFinish) {
       onFinish && onFinish()
+      setFinish(false)
     }
   }, [isFinish, onFinish])
 

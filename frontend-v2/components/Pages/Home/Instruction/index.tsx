@@ -13,8 +13,8 @@ const Instruction = () => {
       <div className="absolute bottom-0 right-4 lg:right-10">
         <Image src={require('assets/images/home-widget-2.png')} alt=''></Image>
       </div>
-      <div className="uppercase font-bold text-center text-2xl">Easy to join INO & IGO with 5 steps</div>
-      <div className="mt-4 mx-auto relative flex justify-between" style={{ maxWidth: '800px' }}>
+      <div className="uppercase font-bold text-center text-3xl">Easy to join INO & IGO with 5 steps</div>
+      <div className="mt-14 mx-auto relative flex justify-between" style={{ maxWidth: '800px' }}>
         <div className="absolute bg-gamefiGreen-700 rounded w-full top-4" style={{ height: '2px', top: 'calc(50% - 2px)' }}></div>
         <svg width="63" height="63" viewBox="0 0 63 63" className="bg-gamefiDark-900" style={{ zIndex: '1' }} fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="31.5" cy="31.5" r="29" fill="#6CDB00" stroke="#15171E" strokeWidth="5"/>

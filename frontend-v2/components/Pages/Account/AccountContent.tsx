@@ -3,7 +3,7 @@ type Props = {
   children: ReactNode;
 }
 const AccountContent = ({ children }: Props) => {
-  return <div>
+  return <div className="w-full">
     {children}
   </div>
 }

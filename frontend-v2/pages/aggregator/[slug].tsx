@@ -84,7 +84,7 @@ const GameDetails = ({ data }) => {
                 ))}
               </Carousel>
 
-              <GameRight data={data} liked={liked} account={account} className="mt-6 md:hidden" />
+              <GameRight data={data} liked={liked} account={account} like={like} className="mt-6 md:hidden" />
 
               <Tabs
                 titles={[
@@ -203,7 +203,7 @@ const GameDetails = ({ data }) => {
                 </TabPanel>
               </div>
             </div>
-            <GameRight data={data} liked={liked} account={account} className="hidden md:block" />
+            <GameRight data={data} liked={liked} account={account} like={like} className="hidden md:block" />
           </div>
         </> }
       </div>
@@ -211,7 +211,7 @@ const GameDetails = ({ data }) => {
   )
 }
 
-const GameRight = ({ data, liked, account, className }) => {
+const GameRight = ({ data, liked, account, className, like }) => {
   const roi = ((parseFloat(data.tokenomic?.price) || 0) / parseFloat(data.token_price)).toFixed(2)
 
   return <div className={`flex-1 overflow-x-hidden ${className || ''}`}>

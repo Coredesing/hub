@@ -32,7 +32,8 @@ const deleteRedisAggregatorDetail = (slug) => {
   Aggregators
  */
   const getRedisKeyAggregators = (params) => {
-    return `aggregators_${params?.page || 1}_${params?.perPage || ''}_${params?.display_area || ''}_${params?.ido_type || ''}_${params?.category || ''}_${params?.gameLaunchStatus || ''}_${params?.sort_by || ''}_${params?.sort_order || ''}`;
+    console.log(`aggregators_${params && params.map(key => `${key}_`)}`)
+    return `aggregators_${params && params.map(key => `${key}_`)}`;
   };
 
   const getRedisAggregators = async (params) => {

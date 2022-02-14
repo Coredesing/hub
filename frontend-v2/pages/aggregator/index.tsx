@@ -198,7 +198,7 @@ const Aggregator = ({ data }) => {
                         <span className="ml-1">Released</span>
                       </label>
                       <label className="block sm:inline-flex items-center mr-4">
-                        <input type="radio" value="testnet" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'released'}/>
+                        <input type="radio" value="testnet" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'testnet'}/>
                         <span className="ml-1">Testnet</span>
                       </label>
                       <label className="block sm:inline-flex items-center">

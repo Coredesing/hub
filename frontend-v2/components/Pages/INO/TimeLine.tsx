@@ -20,7 +20,7 @@ const TimeLine = ({ timelines }: Props) => {
     const num = Object.keys(timelines).reverse().find(k => timelines[k].current)
     return +num || 0
   }, [timelines])
-  return <div className='flex lg:flex-row lg:ml-2 ml-8 flex-col'>
+  return <div className='flex lg:flex-row lg:ml-2 ml-8 flex-col lg: mt-12'>
     {
       Object.keys(timelines).map((id) => (<div className={clsx('lg:block flex', styles.timeline, styles.lineBright, {
         [styles.active]: +id <= currentTimeline || timelines[id].current,
@@ -36,7 +36,10 @@ const TimeLine = ({ timelines }: Props) => {
             )}>{formatNumber(id as any)}</span>
         </div>
         <div className='lg:mt-10 lg:ml-0 ml-8'>
-          <h3 className='text-base font-semibold mb-2 text-white/70'>{timelines[id].title}</h3>
+          <h3 className={clsx('text-base font-semibold mb-2', {
+            'text-white/70' : !timelines[id].current,
+            'text-gamefiGreen-700': timelines[id].current
+          })}>{timelines[id].title}</h3>
           <div className="desc pr-10 text-white"
             style={isLgScreen ? { width: '100%', height: '150px' } : { width: `calc(1080px / ${Object.keys(timelines).length})` }}
           >

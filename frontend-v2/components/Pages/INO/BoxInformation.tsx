@@ -37,11 +37,11 @@ const BoxInformation = ({ boxes }: Props) => {
                   }}>
                   {b.description}
                 </span>
-                <span
+                {/* <span
                   className="text-gamefiGreen font-casual font-semibold ml-1 cursor-pointer text-sm"
                 >
                   Read more
-                </span>
+                </span> */}
               </div>
             </TableCell>
           </TableRow>)

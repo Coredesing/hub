@@ -302,7 +302,7 @@ const Aggregator = ({ data }) => {
                       <p className="text-gray-300 text-xs"><strong>{roi}x</strong> IDO <span className="hidden xl:inline">ROI</span></p>
                     </div>
                     <div className="flex-none font-casual text-sm w-16 xl:w-32 text-center xl:text-left">
-                      <p className="font-semibold inline-flex items-center">{item.cmc_rank}</p>
+                      <p className="font-semibold inline-flex items-center">{item.cmc_rank === '999999' ? 'N/A' : item.cmc_rank}</p>
                     </div>
                     <div className="flex-none font-casual text-sm w-48 hidden 2xl:block">
                       {/* eslint-disable-next-line @next/next/no-img-element */}

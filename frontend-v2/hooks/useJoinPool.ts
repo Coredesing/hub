@@ -47,6 +47,7 @@ export const useCheckJoinPool = (poolId: string | number, account: Address) => {
         setJoinPool(false)
         return
       }
+      setLoading(true)
       const res = await fetcher(`${API_BASE_URL}/user/check-join-campaign/${poolId}?wallet_address=${account}`)
       const isJoin = res.data
       setJoinPool(isJoin)

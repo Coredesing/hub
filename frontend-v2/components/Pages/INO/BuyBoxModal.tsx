@@ -35,6 +35,7 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
     if (!isVerified) return
     if (typeof recaptchaRef?.current?.resetCaptcha === 'function') {
       recaptchaRef.current.resetCaptcha()
+      setVerify('')
     }
   }, 5000)
   const { buyBox, loading: loadingBuyBox, txHash } = useBuyBox({

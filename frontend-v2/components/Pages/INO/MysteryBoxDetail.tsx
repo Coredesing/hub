@@ -31,6 +31,8 @@ import BuyBoxModal from './BuyBoxModal'
 import stylesBoxType from './BoxTypeItem.module.scss'
 import BoxInformation from './BoxInformation'
 import WrapperPoolDetail from './WrapperPoolDetail'
+import isNumber from 'is-number'
+import Link from 'next/link'
 
 const MysteryBoxDetail = ({ poolInfo }: any) => {
   const eventId = 0
@@ -121,37 +123,38 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       }
       const startBuyTime = isAccIsBuyPreOrder && timeLine.startPreOrderTime ? timeLine.startPreOrderTime : timeLine.startBuyTime
       const soldOut = false
+      const currentTime = Date.now()
       if (soldOut) {
         setCountdown({ date1: 0, date2: 0, title: 'This pool is over. See you in the next pool.', isFinished: true })
         timeLine.freeBuyTime ? (timeLinesInfo[5].current = true) : (timeLinesInfo[4].current = true)
-      } else if (timeLine.startJoinPooltime > Date.now()) {
-        setCountdown({ date1: timeLine.startJoinPooltime, date2: Date.now(), title: 'Whitelist Opens In', isUpcoming: true })
+      } else if (timeLine.startJoinPooltime > currentTime) {
+        setCountdown({ date1: timeLine.startJoinPooltime, date2: currentTime, title: 'Whitelist Opens In', isUpcoming: true })
         timeLinesInfo[1].current = true
-      } else if (timeLine.endJoinPoolTime > Date.now()) {
-        if (isAccIsBuyPreOrder && startBuyTime < Date.now()) {
+      } else if (timeLine.endJoinPoolTime > currentTime) {
+        if (isAccIsBuyPreOrder && startBuyTime < currentTime) {
           timeLinesInfo[3].current = true
-          setCountdown({ date1: timeLine?.freeBuyTime || timeLine?.finishTime, date2: Date.now(), title: 'Phase 1 Ends In', isSale: true, isPhase1: true })
+          setCountdown({ date1: timeLine?.freeBuyTime || timeLine?.finishTime, date2: currentTime, title: 'Phase 1 Ends In', isSale: true, isPhase1: true })
         } else {
-          setCountdown({ date1: timeLine.endJoinPoolTime, date2: Date.now(), title: 'Whitelist Closes In', isWhitelist: true })
+          setCountdown({ date1: timeLine.endJoinPoolTime, date2: currentTime, title: 'Whitelist Closes In', isWhitelist: true })
           timeLinesInfo[2].current = true
         }
-      } else if (startBuyTime > Date.now()) {
+      } else if (startBuyTime > currentTime) {
         timeLinesInfo[2].current = true
         if (timeLine.freeBuyTime) {
-          setCountdown({ date1: startBuyTime, date2: Date.now(), title: 'Sale Phase 1 Starts In', isUpcomingSale: true, isMultiPhase: true })
+          setCountdown({ date1: startBuyTime, date2: currentTime, title: 'Sale Phase 1 Starts In', isUpcomingSale: true, isMultiPhase: true })
         } else {
-          setCountdown({ date1: startBuyTime, date2: Date.now(), title: 'Sale Starts In', isUpcomingSale: true })
+          setCountdown({ date1: startBuyTime, date2: currentTime, title: 'Sale Starts In', isUpcomingSale: true })
         }
-      } else if (timeLine.freeBuyTime && timeLine.freeBuyTime > Date.now()) {
+      } else if (timeLine.freeBuyTime && timeLine.freeBuyTime > currentTime) {
         timeLinesInfo[3].current = true
-        setCountdown({ date1: timeLine.freeBuyTime, date2: Date.now(), title: 'Phase 1 Ends In', isSale: true, isPhase1: true })
-      } else if (timeLine.finishTime > Date.now()) {
+        setCountdown({ date1: timeLine.freeBuyTime, date2: currentTime, title: 'Phase 1 Ends In', isSale: true, isPhase1: true })
+      } else if (timeLine.finishTime > currentTime) {
         if (timeLine.freeBuyTime) {
           timeLinesInfo[4].current = true
-          setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Phase 2 Ends In', isSale: true, isPhase2: true })
+          setCountdown({ date1: timeLine.finishTime, date2: currentTime, title: 'Phase 2 Ends In', isSale: true, isPhase2: true })
         } else {
           timeLinesInfo[3].current = true
-          setCountdown({ date1: timeLine.finishTime, date2: Date.now(), title: 'Sale Ends In', isSale: true, isPhase1: true })
+          setCountdown({ date1: timeLine.finishTime, date2: currentTime, title: 'Sale Ends In', isSale: true, isPhase1: true })
         }
       } else {
         setCountdown({ date1: 0, date2: 0, title: 'Finished', isFinished: true })
@@ -209,8 +212,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           console.debug('err', err)
         })
     } else {
-      setBoxTypes(boxes)
-      setBoxSelected(boxes[0])
+      const _boxes = boxes.map((b, subBoxId) => ({ ...b, subBoxId }))
+      setBoxTypes(_boxes)
+      setBoxSelected(_boxes[0])
     }
   }, [poolInfo, libraryDefaultTemporary])
 
@@ -257,7 +261,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }
 
   const [isApprovedToken, setTokenApproved] = useState<boolean | null>(null)
-  const { approve, loading: loadingApproveToken } = useTokenApproval(currencySelected as any, poolInfo.campaign_hash)
+  const { approve, loading: loadingApproveToken, error: approvalError } = useTokenApproval(currencySelected as any, poolInfo.campaign_hash)
   const { allowance, load: getAllowance, loading: loadingAllowance } = useTokenAllowance(currencySelected as any, account, poolInfo.campaign_hash, poolInfo.network_available)
   useEffect(() => {
     if (currencySelected && account) {
@@ -271,20 +275,54 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       setTokenApproved(!BigNumber.from(allowance).isZero())
     }
   }, [allowance])
+  useEffect(() => {
+    if (approvalError) {
+      approvalError?.message && toast.error(approvalError?.message)
+    }
+  }, [approvalError])
   const handleApproveToken = async () => {
-    await approve(constants.MaxUint256)
-    toast.success('Approve token succesfully')
-    setTokenApproved(true)
+    const ok = await approve(constants.MaxUint256)
+    if (ok) {
+      toast.success('Approve token succesfully')
+      setTokenApproved(true)
+    }
   }
 
   const onJoinCompetition = (link: string) => {
     window.open(link)
   }
-
   const isAppliedWhitelist = isJoinPool || isJoinSuccess
-  const isShowBtnApprove = currencySelected.neededApprove && !isApprovedToken && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && (!currencySelected.neededApprove || (currencySelected.neededApprove && !isApprovedToken))
-  const isShowBtnBuy = ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && countdown.isSale && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken))
+  const isDepoyedPool = !!+poolInfo.is_deploy
+  const isShowBtnApprove = isDepoyedPool && currencySelected.neededApprove && !isApprovedToken && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2)
+  const isShowBtnBuy = isDepoyedPool && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && countdown.isSale && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken))
   const isAllowedJoinCompetive = (countdown.isWhitelist || countdown.isUpcoming) && +poolInfo.is_private === 3 && poolInfo.socialRequirement?.gleam_link && !isAppliedWhitelist
+
+  const renderMsg = () => {
+    if (
+      account && poolInfo.min_tier > 0 && isNumber(userTier) && (userTier < poolInfo.min_tier)
+    ) {
+      return <Alert>
+        <span>You haven't achieved min rank ({TIERS[poolInfo.min_tier]?.name}) to apply for Whitelist yet. To upgrade your Rank, please click <Link href="/staking"><a className="font-semibold link">here</a></Link></span></Alert>
+    }
+    if (isAppliedWhitelist && countdown.isWhitelist) {
+      return <Alert type="info">
+        You have successfully applied whitelist.
+        {timelinePool.freeBuyTime ? <>&nbsp;Please stay tuned, you can buy from Phase 1 <b>Phase 1</b></> : ' Please stay tuned and wait until time to buy Mystery boxes'}
+      </Alert>
+    }
+    if (isAppliedWhitelist && (countdown.isSale || countdown.isUpcomingSale)) {
+      return <Alert type="info">
+        Congratulations! You have successfully applied whitelist and can buy Mystery boxes
+      </Alert>
+    }
+    if (((!loadingCheckJPool && !loadingJPool) && account && (countdown.isSale || countdown.isUpcomingSale)) && !countdown.isPhase2 && !isAppliedWhitelist) {
+      return <Alert type="danger">
+        You have not applied whitelist.
+        {(timelinePool.freeBuyTime && !countdown.isPhase2) ? ' Please stay tuned, you can buy from Phase 2' : ' Please stay tuned and join other pools'}
+      </Alert>
+    }
+  }
+
   return (<WrapperPoolDetail>
     <PlaceOrderModal open={openPlaceOrderModal} onClose={() => setOpenPlaceOrderModal(false)} poolId={poolInfo.id} getBoxOrderd={getBoxOrderd} />
     <BuyBoxModal
@@ -298,9 +336,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     />
     <div className={clsx('rounded mb-5', styles.headPool)}>
       {
-        isAppliedWhitelist && (countdown.isUpcomingSale || countdown.isWhitelist) && <Alert className='mb-10'>
-          Congratulations! You have successfully applied whitelist and can buy Mystery boxes from <b>Phase 1</b>
-        </Alert>
+        <div className='mb-10'>{renderMsg()}</div>
       }
       <div className={'grid lg:grid-cols-2'}>
         <div className={clsx('flex', styles.headInfoBoxOrder)}>
@@ -313,7 +349,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             {countdown.title}
           </div>
           <div className={clsx(styles.countdown)} >
-            {countdown.date2 !== 0 && !countdown.isFinished && <CountDownTimeV1 time={{ date1: countdown.date1, date2: countdown.date2 }} className="bg-transparent" background='bg-transparent' onFinish={onSetCountdown} />}
+            {countdown.date2 !== 0 && !countdown.isFinished && <CountDownTimeV1 time={countdown} className="bg-transparent" background='bg-transparent' onFinish={onSetCountdown} />}
           </div>
         </div>
       </div>
@@ -403,6 +439,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             isShowBtnBuy &&
             <ButtonBase
               color={'green'}
+              disabled={+amountBoxBuy < 1}
               onClick={() => setOpenBuyBoxModal(true)}
               className={clsx('w-full mt-4 uppercase')}>
               Buy Box

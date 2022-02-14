@@ -94,7 +94,10 @@ export const useTokenApproval = (token?: Token, spender?: string) => {
       const signer = library.getSigner()
       const contract = new Contract(token.address, ERC20, signer)
       const tx = await contract.approve(spender, amount)
-      await tx.wait(1)
+      const result = await tx.wait(1)
+      if (+result?.status !== 1) {
+        throw new Error('Approve failed')
+      }
       return true
     } catch (err) {
       if (err.code === 4001) {

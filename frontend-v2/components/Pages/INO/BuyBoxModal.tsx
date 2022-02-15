@@ -46,6 +46,7 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
   const insufficientBalance = !balanceInfo?.balance || BigNumber.from(balanceInfo?.balance).lt(totalBuy)
   const onBuyBox = () => {
     if (insufficientBalance) return
+    setOpenTxModal(false)
     onRefreshRecaptcha()
     buyBox(amountBoxBuy, isVerified)
   }

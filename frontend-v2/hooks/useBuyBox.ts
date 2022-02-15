@@ -6,18 +6,21 @@ import useApiSignature from './useApiSignature'
 import toast from 'react-hot-toast'
 import { handleErrMsg } from '@/utils/handleErrorContract'
 import { useMyWeb3 } from '@/components/web3/context'
+import BigNumberJs from 'bignumber.js'
 
 type PoolDepositActionParams = {
-    poolId?: number;
-    connectedAccount?: string;
-    poolDetails?: any;
-    currencyInfo?: any;
-    poolAddress?: string;
-    subBoxId?: number;
-    eventId: number;
+  poolId?: number;
+  connectedAccount?: string;
+  poolDetails?: any;
+  currencyInfo?: any;
+  poolAddress?: string;
+  subBoxId?: number;
+  priceOfBox: number;
+  eventId: number;
 }
 
-const useBuyBox = ({ poolId, currencyInfo, poolAddress, subBoxId, eventId }: PoolDepositActionParams) => {
+const useBuyBox = ({ poolId, currencyInfo, poolAddress, subBoxId, eventId, priceOfBox }: PoolDepositActionParams) => {
+
   const { library } = useMyWeb3()
   const { apiSignMessage } = useApiSignature('/user/deposit-box')
   const [txHash, setTxHash] = useState('')
@@ -40,11 +43,11 @@ const useBuyBox = ({ poolId, currencyInfo, poolAddress, subBoxId, eventId }: Poo
 
       const contract = new Contract(poolAddress, PresaleBoxAbi, library.getSigner())
       const options: ObjectType = {}
-      const _amount = utils.parseEther(BigNumber.from(amount).toString()).toString()
       if (BigNumber.from(currencyInfo.address as string).isZero()) {
-        options.value = _amount
+        options.value = utils.parseEther((new BigNumberJs(amount).multipliedBy(new BigNumberJs(priceOfBox))).toString())
       }
-      const tx = await contract.claimBox(eventId, currencyInfo.address, _amount, subBoxId, signature, options);
+
+      const tx = await contract.claimBox(eventId, currencyInfo.address, amount, subBoxId, signature, options)
       setTxHash(tx.hash)
       toast.loading('Request is processing!')
       const result = await tx.wait(1)

@@ -20,7 +20,6 @@ type PoolDepositActionParams = {
 }
 
 const useBuyBox = ({ poolId, currencyInfo, poolAddress, subBoxId, eventId, priceOfBox }: PoolDepositActionParams) => {
-
   const { library } = useMyWeb3()
   const { apiSignMessage } = useApiSignature('/user/deposit-box')
   const [txHash, setTxHash] = useState('')
@@ -49,14 +48,14 @@ const useBuyBox = ({ poolId, currencyInfo, poolAddress, subBoxId, eventId, price
 
       const tx = await contract.claimBox(eventId, currencyInfo.address, amount, subBoxId, signature, options)
       setTxHash(tx.hash)
-      toast.loading('Request is processing!')
+      toast.loading('Request is processing!', { duration: 2000 })
       const result = await tx.wait(1)
       setLoading(false)
       if (+result?.status === 1) {
-        toast.success('Buy Box Successful')
+        toast.success('Buy box successfully')
         setSuccess(true)
       } else {
-        toast.error('Buy Box Failed')
+        toast.error('Buy box failed')
         setSuccess(false)
       }
     } catch (error: any) {

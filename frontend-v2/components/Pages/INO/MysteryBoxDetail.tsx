@@ -33,12 +33,13 @@ import BoxInformation from './BoxInformation'
 import WrapperPoolDetail from './WrapperPoolDetail'
 import isNumber from 'is-number'
 import Link from 'next/link'
+import { getNetworkByAlias } from '@/components/web3'
 
 const MysteryBoxDetail = ({ poolInfo }: any) => {
   const eventId = 0
   const tiersState = useAppContext()?.$tiers
   const userTier = tiersState?.state?.data?.tier || 0
-  const { account } = useMyWeb3()
+  const { account, chainID } = useMyWeb3()
   const [boxTypes, setBoxTypes] = useState<any[]>([])
   const [boxSelected, setBoxSelected] = useState<ObjectType>({})
   const [currencySelected, setCurrencySelected] = useState<ObjectType>({})
@@ -54,6 +55,14 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }>>({})
   const [openPlaceOrderModal, setOpenPlaceOrderModal] = useState(false)
   const [openBuyBoxModal, setOpenBuyBoxModal] = useState(false)
+  const networkPool = useMemo(() => {
+    const network = getNetworkByAlias(poolInfo.network_available)
+    return network
+  }, [poolInfo])
+
+  const isValidChain = useMemo(() => {
+    return networkPool?.id == chainID
+  }, [networkPool, chainID])
 
   useEffect(() => {
     if (!account) return
@@ -293,11 +302,21 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }
   const isAppliedWhitelist = isJoinPool || isJoinSuccess
   const isDepoyedPool = !!+poolInfo.is_deploy
-  const isShowBtnApprove = isDepoyedPool && currencySelected.neededApprove && !isApprovedToken && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2)
-  const isShowBtnBuy = isDepoyedPool && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && countdown.isSale && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken))
+  const isShowBtnApprove = !!account && isDepoyedPool && currencySelected.neededApprove && !isApprovedToken && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2)
+  const isShowBtnBuy = !!account && isDepoyedPool && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && countdown.isSale && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken))
   const isAllowedJoinCompetive = (countdown.isWhitelist || countdown.isUpcoming) && +poolInfo.is_private === 3 && poolInfo.socialRequirement?.gleam_link && !isAppliedWhitelist
 
   const renderMsg = () => {
+    if (!account) {
+      return <Alert type="danger">
+        Please connect your wallet
+      </Alert>
+    }
+    if (!isValidChain && networkPool && account) {
+      return <Alert type="danger">
+        Please switch to <b>{networkPool.name}</b>
+      </Alert>
+    }
     if (
       account && poolInfo.min_tier > 0 && isNumber(userTier) && (userTier < poolInfo.min_tier)
     ) {
@@ -333,6 +352,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       currencyInfo={currencySelected}
       poolInfo={poolInfo}
       eventId={eventId}
+      isValidChain={isValidChain}
     />
     <div className={clsx('rounded mb-5', styles.headPool)}>
       {
@@ -395,7 +415,14 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         {
           countdown.isSale &&
           <div className='mb-8'>
-            <AscDescAmount value={amountBoxBuy} maxBuy={maxBoxCanBuy} bought={myBoxThisPool} onChangeValue={onChangeNumBuyBox} poolInfo={poolInfo} currencyInfo={currencySelected} />
+            <AscDescAmount
+              disabled={!isShowBtnBuy}
+              value={amountBoxBuy}
+              maxBuy={maxBoxCanBuy}
+              bought={myBoxThisPool}
+              onChangeValue={onChangeNumBuyBox}
+              poolInfo={poolInfo}
+              currencyInfo={currencySelected} />
           </div>
         }
         <div>
@@ -429,7 +456,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             <ButtonBase
               color={'green'}
               isLoading={loadingApproveToken || loadingAllowance}
-              disabled={loadingApproveToken || loadingAllowance}
+              disabled={loadingApproveToken || loadingAllowance || !isValidChain}
               onClick={handleApproveToken}
               className={clsx('w-full mt-4 uppercase')}>
               {loadingAllowance ? 'Checking Approval' : 'Approve'}
@@ -439,7 +466,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             isShowBtnBuy &&
             <ButtonBase
               color={'green'}
-              disabled={+amountBoxBuy < 1}
+              disabled={+amountBoxBuy < 1 || !isValidChain}
               onClick={() => setOpenBuyBoxModal(true)}
               className={clsx('w-full mt-4 uppercase')}>
               Buy Box

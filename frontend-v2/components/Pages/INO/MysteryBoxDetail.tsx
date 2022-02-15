@@ -14,7 +14,7 @@ import DetailPoolItem from './DetailPoolItem'
 import RuleIntroduce from './RuleIntroduce'
 import SerieContent from './SerieContent'
 import { useMyWeb3 } from '@/components/web3/context'
-import { useLibraryDefaultFlexible, useTokenAllowance, useTokenApproval } from '@/components/web3/utils'
+import { useLibraryDefaultFlexible, useMyBalance, useTokenAllowance, useTokenApproval } from '@/components/web3/utils'
 import { fetcher } from '@/utils'
 import { API_BASE_URL, TIERS } from '@/utils/constants'
 import { useCheckJoinPool, useJoinPool } from '@/hooks/useJoinPool'
@@ -55,6 +55,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }>>({})
   const [openPlaceOrderModal, setOpenPlaceOrderModal] = useState(false)
   const [openBuyBoxModal, setOpenBuyBoxModal] = useState(false)
+  const balanceInfo = useMyBalance(currencySelected as any, poolInfo.network_available)
   const networkPool = useMemo(() => {
     const network = getNetworkByAlias(poolInfo.network_available)
     return network
@@ -76,21 +77,29 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     return currentTier?.ticket_allow || 0
   }, [poolInfo, userTier])
 
+  const getMyBoxThisPool = useCallback(async () => {
+    try {
+      const myBox = await contractPresale.userBought(eventId, account)
+      setMyBoxThisPool(myBox.toNumber())
+    } catch (error) {
+      console.debug('er', error)
+    }
+  }, [contractPresale])
+
   useEffect(() => {
     if (!contractPresale || !account) {
       setMyBoxThisPool(0)
       return
     }
-    const getMyBoxThisPool = async () => {
-      try {
-        const myBox = await contractPresale.userBought(eventId, account)
-        setMyBoxThisPool(myBox.toNumber())
-      } catch (error) {
-        console.debug('er', error)
-      }
-    }
     getMyBoxThisPool()
-  }, [contractPresale, account])
+  }, [contractPresale, account, getMyBoxThisPool])
+
+  const onCloseBuyBoxModal = useCallback((isReset?: boolean) => {
+    setOpenBuyBoxModal(false)
+    if (isReset) {
+      getMyBoxThisPool()
+    }
+  }, [getMyBoxThisPool])
 
   const onSetCountdown = useCallback(() => {
     if (poolInfo) {
@@ -346,13 +355,14 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     <PlaceOrderModal open={openPlaceOrderModal} onClose={() => setOpenPlaceOrderModal(false)} poolId={poolInfo.id} getBoxOrderd={getBoxOrderd} />
     <BuyBoxModal
       open={openBuyBoxModal}
-      onClose={() => setOpenBuyBoxModal(false)}
+      onClose={onCloseBuyBoxModal}
       amountBoxBuy={amountBoxBuy}
       boxTypeBuy={boxSelected}
       currencyInfo={currencySelected}
       poolInfo={poolInfo}
       eventId={eventId}
       isValidChain={isValidChain}
+      balanceInfo={balanceInfo}
     />
     <div className={clsx('rounded mb-5', styles.headPool)}>
       {
@@ -422,7 +432,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               bought={myBoxThisPool}
               onChangeValue={onChangeNumBuyBox}
               poolInfo={poolInfo}
-              currencyInfo={currencySelected} />
+              currencyInfo={currencySelected}
+              balanceInfo={balanceInfo}
+            />
           </div>
         }
         <div>

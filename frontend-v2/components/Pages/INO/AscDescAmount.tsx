@@ -12,8 +12,9 @@ type Props = {
   bought: number;
   poolInfo: ObjectType;
   currencyInfo: ObjectType;
+  disabled?: boolean;
 }
-const AscDescAmount = ({ value, maxBuy, onChangeValue, bought, poolInfo, currencyInfo }: Props) => {
+const AscDescAmount = ({ value, maxBuy, onChangeValue, bought, poolInfo, currencyInfo, disabled }: Props) => {
   const { balanceShort, loading }: any = useMyBalance(currencyInfo as any, poolInfo.network_available)
 
   const remaining = +maxBuy - +bought || 0
@@ -47,31 +48,36 @@ const AscDescAmount = ({ value, maxBuy, onChangeValue, bought, poolInfo, currenc
           styles['h-30px'],
           styles['clip-path-b-l'],
           {
-            [styles.disabled]: !remaining || value === 1
+            [styles.disabled]: !remaining || value === 1 || disabled,
           }
         )}
-        onClick={onSetMin}>Min</div>
+        onClick={disabled ? undefined : onSetMin}>Min</div>
       <div
-        className={clsx('px-2 text-lg font-semibold border-t border-b border-white/50 border-r flex items-center w-8 justify-center cursor-pointer', styles['h-30px'])}
-        onClick={onDesc}>-</div>
+        className={clsx('px-2 text-lg font-semibold border-t border-b border-white/50 border-r flex items-center w-8 justify-center cursor-pointer', styles['h-30px'], {
+          'cursor-not-allowed': disabled
+        })}
+        onClick={disabled ? undefined : onDesc}>-</div>
       <div className={clsx('px-5 text-lg font-bold border-t border-b border-r  border-white/50 flex items-center w-20 justify-center cursor-pointer', styles['h-30px'])}>
         <FormInputNumber
           value={value}
+          disabled={disabled}
           onChange={onChangeInput}
           isPositive isInteger
           max={remaining}
           className={clsx(styles.input)} />
       </div>
-      <div className={clsx('px-2 text-lg font-semibold border-t border-b border-white/50 border-r flex items-center w-8 justify-center cursor-pointer', styles['h-30px'])} onClick={onAsc}>+</div>
+      <div className={clsx('px-2 text-lg font-semibold border-t border-b border-white/50 border-r flex items-center w-8 justify-center cursor-pointer', styles['h-30px'], {
+          'cursor-not-allowed': disabled
+        })} onClick={disabled ? undefined : onAsc}>+</div>
       <div
         className={clsx('px-3 uppercase text-xs bg-gamefiGreen-700 text-black font-medium flex items-center justify-center w-12 cursor-pointer',
           styles['h-30px'],
           styles['clip-path-t-r'],
           {
-            [styles.disabled]: value === remaining
+            [styles.disabled]: value === remaining || disabled,
           }
         )}
-        onClick={onSetMax}>Max</div>
+        onClick={disabled ? undefined : onSetMax}>Max</div>
     </div>
     <div className='flex justify-between gap-2 w-60'>
       <span className='text-white/80 uppercase text-xs  font-casual'>BOUGHT/MAX</span>

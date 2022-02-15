@@ -22,7 +22,7 @@ type Props = {
   [k: string]: any;
 }
 
-const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, poolInfo, eventId }: Props) => {
+const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, poolInfo, eventId, isValidChain }: Props) => {
   const { account } = useMyWeb3()
 
   const { balanceShort, loading, balance } = useMyBalance(currencyInfo as any, poolInfo.network_available)
@@ -39,7 +39,7 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
     }
   }, 5000)
 
-  const { buyBox, loading: loadingBuyBox, txHash } = useBuyBox({
+  const { buyBox, loading: loadingBuyBox, txHash, success } = useBuyBox({
     poolId: poolInfo.id,
     eventId,
     currencyInfo,
@@ -53,6 +53,12 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
     onRefreshRecaptcha()
     buyBox(amountBoxBuy, isVerified)
   }
+
+  useEffect(() => {
+    if (success) {
+      onClose && onClose()
+    }
+  }, [success])
 
   const onChangeRecapcha = (value: string | null) => {
     setVerify(value)
@@ -109,7 +115,7 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
             <ButtonBase
               color={'green'}
               onClick={onBuyBox}
-              disabled={disabledBuy}
+              disabled={disabledBuy || !isValidChain}
               isLoading={loadingBuyBox}
               className={clsx('mt-4 uppercase w-40 ')}>
               Buy Box

@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import AuctionPoolAbi from '@/components/web3/abis/AuctionPool.json'
+import PresaleBoxAbi from '@/components/web3/abis/PreSaleBox.json'
 import { ObjectType } from '@/utils/types'
 import { utils, Contract, BigNumber } from 'ethers'
 import useApiSignature from './useApiSignature'
@@ -38,13 +38,13 @@ const useBuyBox = ({ poolId, currencyInfo, poolAddress, subBoxId, eventId }: Poo
         token: currencyInfo.address
       })
 
-      const contract = new Contract(poolAddress, AuctionPoolAbi, library.getSigner())
+      const contract = new Contract(poolAddress, PresaleBoxAbi, library.getSigner())
       const options: ObjectType = {}
       const _amount = utils.parseEther(BigNumber.from(amount).toString()).toString()
       if (BigNumber.from(currencyInfo.address as string).isZero()) {
         options.value = _amount
       }
-      const tx = await contract.bid(currencyInfo.address, _amount, subBoxId, signature, options)
+      const tx = await contract.claimBox(eventId, currencyInfo.address, _amount, subBoxId, signature, options);
       setTxHash(tx.hash)
       toast.loading('Request is processing!')
       const result = await tx.wait(1)

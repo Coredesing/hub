@@ -194,8 +194,8 @@ const Aggregator = ({ data }) => {
                         <span className="ml-1">All</span>
                       </label>
                       <label className="block sm:inline-flex items-center mr-4">
-                        <input type="radio" value="released" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'released'}/>
-                        <span className="ml-1">Released</span>
+                        <input type="radio" value="official" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'official'}/>
+                        <span className="ml-1">Official</span>
                       </label>
                       <label className="block sm:inline-flex items-center mr-4">
                         <input type="radio" value="testnet" onChange={(e) => handleLaunchStatus(e.target.value)} checked={launchStatus === 'testnet'}/>
@@ -294,11 +294,11 @@ const Aggregator = ({ data }) => {
                     <div className="flex-none font-casual text-sm pr-2 w-36 xl:w-48 hidden lg:block">
                       <p className="text-sm line-clamp-1 text-gray-300">{item.category.split(',').join(', ')}</p>
                     </div>
-                    <div className="flex-none font-casual text-sm xl:w-36 sm:w-32 hidden sm:block">
+                    <div className="flex-none font-casual text-sm xl:w-36 sm:w-32 hidden sm:block capitalize">
                       <p>{item.game_launch_status || 'Coming Soon'}</p>
                     </div>
                     <div className="flex-none font-casual text-sm w-20 xl:w-36">
-                      <p className="font-semibold inline-flex items-center text-base">{formatPrice(item.price)} <PriceChange className="ml-2 text-xs" tokenomic={item.tokenomic} /></p>
+                      <p className="font-semibold inline-flex items-center text-base">{formatPrice(item.price) || '0'} <PriceChange className="ml-2 text-xs" tokenomic={item.tokenomic} /></p>
                       <p className="text-gray-300 text-xs"><strong>{roi}x</strong> IDO <span className="hidden xl:inline">ROI</span></p>
                     </div>
                     <div className="flex-none font-casual text-sm w-16 xl:w-32 text-center xl:text-left">

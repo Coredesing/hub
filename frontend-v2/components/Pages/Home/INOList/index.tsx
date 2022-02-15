@@ -12,7 +12,7 @@ const INOList = () => {
   const { response, loading } = useFetch(url)
 
   const listUpcoming = useMemo<any[]>(() => {
-    return response?.data || []
+    return response?.data?.data || []
   }, [response])
 
   return (listUpcoming && listUpcoming.length > 0

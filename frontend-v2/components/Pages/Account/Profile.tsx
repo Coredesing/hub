@@ -219,7 +219,7 @@ const Profile = () => {
         <div>
           <h4 className='text-base font-bold mb-1 flex items-center'><span className='uppercase'>Sub-Wallet Address</span>&nbsp;<span className='font-casual text-sm font-normal text-white/60'>(Optional)</span></h4>
           <div className={clsx(styles.walletBox, 'flex gap-2 items-center mb-2 py-3 pl-2 pr-4 rounded-sm')}>
-            <div className='w-8 h-8 rounded-full bg-black'>
+            <div className='w-8 h-8 rounded-full bg-black flex-none'>
               <SolanaIcon />
             </div>
             {
@@ -260,7 +260,7 @@ const Profile = () => {
             }
           </div>
           <div className={clsx(styles.walletBox, 'flex gap-2 items-center mb-2 py-3 pl-2 pr-4 rounded-sm')}>
-            <div className='w-8 h-8 rounded-full bg-black'>
+            <div className='w-8 h-8 rounded-full bg-black flex-none'>
               <TerraIcon />
             </div>
             <div className='flex justify-between gap-2 w-full items-center'>

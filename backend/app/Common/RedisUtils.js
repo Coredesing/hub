@@ -4,6 +4,7 @@ const Redis = use('Redis');
 const ENABLE_REDIS = true;
 const TIER_CACHED_TTL = 10 * 60; // 10 minutes'
 const UPCOMING_POOLS_CACHED_TTL = 120 // 2 minutes
+const CURRENT_POOLS_CACHED_TTL = 120 // 2 minutes
 const POOL_BY_TOKEN_TYPEP_CACHED_TTL = 120 // 2 minutes
 const COMPLETED_POOLS_CACHED_TTL = 120 // 2 minutes
 const LATEST_POOLS_CACHED_TTL = 600 // 10 minutes
@@ -188,6 +189,57 @@ const checkExistRedisLatestPools = async (limit, token_type) => {
   const redisKey = getRedisKeyLatestPools(limit, token_type);
   return Redis.exists(redisKey);
 }
+
+/**
+ * CURRENT POOLS
+ */
+
+ const getRedisKeyCurrentPools = (page = 1, type, token_type) => {
+  let poolType = type;
+  if (type === undefined || type === null) {
+    poolType = 'all'
+  }
+
+  return `current_pools_${poolType}_${page}_${token_type}`;
+};
+
+const getRedisCurrentPools = async (page, type, token_type) => {
+  return await Redis.get(getRedisKeyCurrentPools(page, type, token_type));
+};
+
+const checkExistRedisCurrentPools = async (page, type, token_type) => {
+  let redisKey = getRedisKeyCurrentPools(page, type, token_type);
+  const isExistRedisData = await Redis.exists(redisKey, type);
+  if (isExistRedisData) {
+    return true;
+  }
+  return false;
+};
+
+const createRedisCurrentPools = async (page, type, token_type, data) => {
+  const redisKey = getRedisKeyCurrentPools(page, type, token_type);
+  return await Redis.setex(redisKey, CURRENT_POOLS_CACHED_TTL, JSON.stringify(data));
+};
+
+const deleteRedisCurrentPools = (page, type, token_type) => {
+  let redisKey = getRedisKeyCurrentPools(page, type, token_type);
+  if (Redis.exists(redisKey)) {
+    // remove old key
+    Redis.del(redisKey);
+    return true;
+  }
+  return false;
+};
+
+const deleteAllRedisCurrentPools = (pages = []) => {
+  pages.forEach(page => {
+    deleteRedisCurrentPools(page, null)
+    deleteRedisCurrentPools(page, 0)
+    deleteRedisCurrentPools(page, 1)
+    deleteRedisCurrentPools(page, 2)
+    deleteRedisCurrentPools(page, 3)
+  })
+};
 
 /**
  * COMPLETED POOLS
@@ -475,6 +527,14 @@ module.exports = {
   createRedisUpcomingPools,
   deleteRedisUpcomingPools,
   deleteAllRedisUpcomingPools,
+
+  // CURRENT POOLS
+  checkExistRedisCurrentPools,
+  getRedisKeyCurrentPools,
+  getRedisCurrentPools,
+  createRedisCurrentPools,
+  deleteRedisCurrentPools,
+  deleteAllRedisCurrentPools,
 
   // LATEST POOLS
   checkExistRedisLatestPools,

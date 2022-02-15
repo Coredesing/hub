@@ -163,6 +163,7 @@ class PoolController {
     } finally {
       // Clear cache
       RedisUtils.deleteAllRedisUpcomingPools([1, 2])
+      RedisUtils.deleteAllRedisCurrentPools([1, 2])
       RedisUtils.deleteAllRedisPoolByTokenType([1, 2])
     }
   }
@@ -314,6 +315,7 @@ class PoolController {
     } finally {
       // Clear cache
       RedisUtils.deleteAllRedisUpcomingPools([1, 2])
+      RedisUtils.deleteAllRedisCurrentPools([1, 2])
       RedisUtils.deleteAllRedisPoolByTokenType([1, 2])
     }
   }
@@ -724,6 +726,18 @@ class PoolController {
     } catch (e) {
       console.log(e);
       return HelperUtils.responseErrorInternal('getUpcomingPoolsV3 Fail !!!');
+    }
+  }
+
+  async getCurrentPoolsV3({ request }) {
+    const inputParams = request.all();
+    console.log('[getCurrentPoolsV3] - inputParams: ', inputParams);
+    try {
+      let listData = await (new PoolService).getCurrentPoolsV3(inputParams);
+      return HelperUtils.responseSuccess(listData);
+    } catch (e) {
+      console.log(e);
+      return HelperUtils.responseErrorInternal('getCurrentPoolsV3 Fail !!!');
     }
   }
 

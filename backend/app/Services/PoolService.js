@@ -317,6 +317,39 @@ class PoolService {
     return pools;
   }
 
+  async getCurrentPoolsV3(filterParams) {
+    const limit = filterParams.limit ? filterParams.limit : 100000;
+    const page = filterParams.page ? filterParams.page : 1;
+
+    filterParams.limit = limit;
+    filterParams.page = page;
+
+    if (await RedisUtils.checkExistRedisCurrentPools(page, filterParams.is_private, filterParams.token_type || 'erc20')) {
+      const cachedPools = await RedisUtils.getRedisCurrentPools(page, filterParams.is_private, filterParams.token_type || 'erc20')
+      return JSON.parse(cachedPools)
+    }
+
+    // const now = moment().unix();
+    let pools = await this.buildQueryBuilder(filterParams)
+      .with('campaignClaimConfig')
+      .where('is_display', Const.POOL_DISPLAY.DISPLAY)
+      .whereIn('campaign_status', [
+        Const.POOL_STATUS.TBA,
+        Const.POOL_STATUS.UPCOMING,
+        Const.POOL_STATUS.FILLED,
+        Const.POOL_STATUS.SWAP
+      ])
+      .orderBy('priority', 'DESC')
+      .orderBy('start_join_pool_time', 'ASC')
+      .paginate(page, limit);
+
+    // cache data
+    if (page <= 2) {
+      await RedisUtils.createRedisCurrentPools(page, filterParams.is_private, filterParams.token_type || 'erc20', pools)
+    }
+    return pools;
+  }
+
   async getCompleteSalePoolsV3(filterParams) {
     const limit = filterParams.limit ? filterParams.limit : 20;
     const page = filterParams.page ? filterParams.page : 1;
@@ -685,6 +718,7 @@ class PoolService {
     } finally {
       // Clear cache
       RedisUtils.deleteAllRedisUpcomingPools([1, 2])
+      RedisUtils.deleteAllRedisCurrentPools([1, 2])
       RedisUtils.deleteAllRedisPoolByTokenType([1, 2])
     }
   }

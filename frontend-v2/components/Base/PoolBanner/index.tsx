@@ -28,7 +28,12 @@ const PoolBanner = ({ item, color = 'green', className, url, tagColor = 'gamefiD
     const interval = setInterval(() => {
       setDistance(new Date(item.start_time * 1000).getTime() - new Date().getTime())
       if (distance <= 0) {
-        setCountdownStatus('ended')
+        if (item.campaign_status.toLowerCase() === 'swap' || item.campaign_status.toLowerCase() === 'filled') {
+          setCountdownStatus('Buying Time')
+          return
+        }
+
+        setCountdownStatus(item.campaign_status)
         return
       }
       setDays(distance > 0 ? ('0' + Math.floor(distance / (1000 * 60 * 60 * 24)).toString()).slice(-2) : '00')

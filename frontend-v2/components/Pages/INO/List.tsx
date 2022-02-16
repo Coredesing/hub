@@ -116,7 +116,7 @@ const List = () => {
   }, [response])
 
   return (
-    <div className={styles.container} style={{ marginBottom: '2rem', marginTop: '2rem' }}>
+    <div className={styles.container} style={{ marginBottom: '2rem' }}>
       <div className="bg-gamefiDark-900 lg:flex mb-4">
         <div className="relative flex-none inline-block">
           <div className="absolute w-screen h-full block bg-black" style={{ left: '-100vw' }}></div>

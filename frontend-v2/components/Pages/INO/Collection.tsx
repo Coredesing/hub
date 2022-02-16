@@ -106,9 +106,9 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT 
                 </div>
               </div>
               <div>
-                <div className='flex flex-wrap gap-5'>
+                <div className='flex flex-wrap gap-5 lg:justify-start justify-center'>
                   {
-                    collections.map((b, id) => <div key={id} className={clsx(styles.collection, 'border border-gamefiDark-900 cursor-pointer')} style={{ background: '#23252B' }}>
+                    collections.map((b, id) => <div key={id} className={clsx(styles.collection, ' cursor-pointer')} style={{ background: '#23252B' }}>
                       <div className={clsx(styles.collectionImage, 'w-full')}>
                         <img src={b.image} className='w-full h-full object-cover bg-gamefiDark-900' alt="" />
                       </div>

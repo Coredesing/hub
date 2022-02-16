@@ -322,7 +322,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     }
   }
 
-  const [isClickedCompetition, setClickedCompetition] = useState(false);
+  const [isClickedCompetition, setClickedCompetition] = useState(false)
   const onJoinCompetition = (link: string) => {
     setClickedCompetition(true)
     window.open(link)

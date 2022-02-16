@@ -78,7 +78,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const [presaleContract, setPresaleContract] = useState<any>(null)
   const [myBoxThisPool, setMyBoxThisPool] = useState(0)
   const erc721Contract = useMemo(() => {
-    if (!libraryDefaultTemporary) return
+    if (!libraryDefaultTemporary || !poolInfo.token) return
     const contract = new Contract(poolInfo.token, Erc721Abi, libraryDefaultTemporary)
     return contract
   }, [libraryDefaultTemporary, poolInfo])

@@ -374,11 +374,10 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             try {
               const collectionId = await presaleContract.tokenOfOwnerByIndex(account, id)
               collection.collectionId = collectionId.toNumber()
-              const boxType = await presaleContract.boxes(collectionId.toNumber())
+              const boxType = await presaleContract.boxes(collection.collectionId)
               const idBoxType = boxType.subBoxId.toNumber()
-              const infoBox = boxTypes.find((b, subBoxId) => subBoxId === idBoxType)
+              const infoBox = boxTypes.find((b, subBoxId) => subBoxId === idBoxType) || {}
               infoBox && Object.assign(collection, infoBox)
-              collection.collectionId = collectionId
             } catch (error) {
               console.log('error', error)
             }

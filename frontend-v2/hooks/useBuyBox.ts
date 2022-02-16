@@ -20,7 +20,6 @@ type PoolDepositActionParams = {
 }
 
 const useBuyBox = ({ poolId, currencyInfo, poolAddress, subBoxId, eventId, priceOfBox }: PoolDepositActionParams) => {
-
   const { library } = useMyWeb3()
   const { apiSignMessage } = useApiSignature('/user/deposit-box')
   const [txHash, setTxHash] = useState('')

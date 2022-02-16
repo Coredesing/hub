@@ -132,7 +132,7 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT 
             </div>
           </>
           : <div className='flex items-center w-full h-32 justify-center'>
-            <h1 className='uppercase text-4xl text-center font-bold'>No NFT Found</h1>
+            <h1 className='uppercase text-4xl text-center font-bold'>No Box Found</h1>
           </div>
       }
     </div>

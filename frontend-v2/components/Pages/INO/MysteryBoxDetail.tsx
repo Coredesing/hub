@@ -322,7 +322,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     }
   }
 
+  const [isClickedCompetition, setClickedCompetition] = useState(false);
   const onJoinCompetition = (link: string) => {
+    setClickedCompetition(true)
     window.open(link)
   }
 
@@ -571,14 +573,14 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           </div>
         }
         <div>
-          {isAllowedJoinCompetive && <ButtonBase color="red"
+          {isAllowedJoinCompetive && !isClickedCompetition && <ButtonBase color="red"
             onClick={() => onJoinCompetition(poolInfo.socialRequirement.gleam_link)}
             className={clsx('w-full mt-4 uppercase')}>
             Join Competition
           </ButtonBase>
           }
           {
-            !isAppliedWhitelist && !isCommunityPool && countdown.isWhitelist && <ButtonBase
+            !isAppliedWhitelist && (!isCommunityPool || (isCommunityPool && isClickedCompetition)) && countdown.isWhitelist && <ButtonBase
               color={'green'}
               isLoading={loadingJPool || loadingCheckJPool}
               disabled={loadingCheckJPool || loadingJPool}

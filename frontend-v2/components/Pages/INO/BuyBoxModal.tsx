@@ -14,7 +14,7 @@ import DialogTxSubmitted from '@/components/Base/DialogTxSubmitted'
 
 type Props = {
   open?: boolean;
-  onClose?: () => any;
+  onClose?: (isReset?: boolean) => any;
   boxTypeBuy: ObjectType;
   amountBoxBuy: number;
   currencyInfo: ObjectType;
@@ -22,12 +22,8 @@ type Props = {
   [k: string]: any;
 }
 
-const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, poolInfo, eventId, isValidChain }: Props) => {
+const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, poolInfo, eventId, isValidChain, balanceInfo }: Props) => {
   const { account } = useMyWeb3()
-
-  const { balanceShort, loading, balance } = useMyBalance(currencyInfo as any, poolInfo.network_available)
-
-  // const { balanceShort, loading, balance } = useBalanceToken(BigNumber.from(currencyInfo?.address || 0).isZero() ? undefined : currencyInfo as any, poolInfo.network_available)
   const [isVerified, setVerify] = useState<string | null>('')
   const totalBuy = currencyInfo?.price ? BigNumber.from(amountBoxBuy).mul(utils.parseEther(currencyInfo?.price)).toString() : 0
   const recaptchaRef: any = React.useRef()
@@ -47,16 +43,18 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
     subBoxId: boxTypeBuy.subBoxId,
     priceOfBox: currencyInfo.price
   })
-  const insufficientBalance = !balance || BigNumber.from(balance).lt(totalBuy)
+  const insufficientBalance = !balanceInfo?.balance || BigNumber.from(balanceInfo?.balance).lt(totalBuy)
   const onBuyBox = () => {
     if (insufficientBalance) return
+    setOpenTxModal(false)
     onRefreshRecaptcha()
     buyBox(amountBoxBuy, isVerified)
   }
 
   useEffect(() => {
     if (success) {
-      onClose && onClose()
+      balanceInfo?.updateBalance && balanceInfo.updateBalance()
+      onClose && onClose(true)
     }
   }, [success])
 
@@ -99,7 +97,7 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
           </div>
           <div className='flex justify-between mb-6'>
             <label className='text-base font-casual'>Your balance</label>
-            <span className='font-semibold text-base'>{loading ? <BeatLoader size={10} color='white' /> : +balanceShort || 0} {currencyInfo?.name}</span>
+            <span className='font-semibold text-base'>{balanceInfo?.loading ? <BeatLoader size={10} color='white' /> : +balanceInfo?.balanceShort || 0} {currencyInfo?.name}</span>
           </div>
           <div className='flex justify-between mb-4'>
             <label className='text-base font-casual'>Total</label>

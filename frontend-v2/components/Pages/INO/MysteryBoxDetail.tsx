@@ -6,6 +6,7 @@ import { ButtonBase } from '@/components/Base/Buttons'
 import CountDownTimeV1, { CountDownTimeType } from '@/components/Base/CountDownTime'
 import { TabPanel, Tabs } from '@/components/Base/Tabs'
 import PresaleBoxAbi from '@/components/web3/abis/PreSaleBox.json'
+import Erc721Abi from '@/components/web3/abis/Erc721.json'
 import { Contract, BigNumber, constants } from 'ethers'
 import { ObjectType } from '@/utils/types'
 import TokenItem from './TokenItem'
@@ -14,7 +15,7 @@ import DetailPoolItem from './DetailPoolItem'
 import RuleIntroduce from './RuleIntroduce'
 import SerieContent from './SerieContent'
 import { useMyWeb3 } from '@/components/web3/context'
-import { useLibraryDefaultFlexible, useTokenAllowance, useTokenApproval } from '@/components/web3/utils'
+import { useLibraryDefaultFlexible, useMyBalance, useTokenAllowance, useTokenApproval } from '@/components/web3/utils'
 import { fetcher } from '@/utils'
 import { API_BASE_URL, TIERS } from '@/utils/constants'
 import { useCheckJoinPool, useJoinPool } from '@/hooks/useJoinPool'
@@ -34,6 +35,7 @@ import WrapperPoolDetail from './WrapperPoolDetail'
 import isNumber from 'is-number'
 import Link from 'next/link'
 import { getNetworkByAlias } from '@/components/web3'
+import Collection from './Collection'
 
 const MysteryBoxDetail = ({ poolInfo }: any) => {
   const eventId = 0
@@ -55,13 +57,17 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }>>({})
   const [openPlaceOrderModal, setOpenPlaceOrderModal] = useState(false)
   const [openBuyBoxModal, setOpenBuyBoxModal] = useState(false)
+  const [loadingCollection, setLoadingCollection] = useState(false)
+  const [collections, setCollections] = useState<ObjectType[]>([])
+  const [ownedBox, setOwnedBox] = useState(0)
+  const balanceInfo = useMyBalance(currencySelected as any, poolInfo.network_available)
   const networkPool = useMemo(() => {
     const network = getNetworkByAlias(poolInfo.network_available)
     return network
   }, [poolInfo])
 
   const isValidChain = useMemo(() => {
-    return networkPool?.id == chainID
+    return networkPool?.id === chainID
   }, [networkPool, chainID])
 
   useEffect(() => {
@@ -69,28 +75,51 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     tiersState.actions.getUserTier(account)
   }, [account])
   const { provider: libraryDefaultTemporary } = useLibraryDefaultFlexible(poolInfo?.network_available)
-  const [contractPresale, setContractPresale] = useState<any>(null)
+  const [presaleContract, setPresaleContract] = useState<any>(null)
   const [myBoxThisPool, setMyBoxThisPool] = useState(0)
+  const erc721Contract = useMemo(() => {
+    if (!libraryDefaultTemporary) return
+    const contract = new Contract(poolInfo.token, Erc721Abi, libraryDefaultTemporary)
+    return contract
+  }, [libraryDefaultTemporary, poolInfo])
   const maxBoxCanBuy = useMemo(() => {
     const currentTier = poolInfo.tiers.find(t => t.level === userTier)
     return currentTier?.ticket_allow || 0
   }, [poolInfo, userTier])
 
+  const getMyBoxThisPool = useCallback(async () => {
+    try {
+      const myBox = await presaleContract.userBought(eventId, account)
+      setMyBoxThisPool(myBox.toNumber())
+    } catch (error) {
+      console.debug('er', error)
+    }
+  }, [presaleContract, account])
+
+  const getMyNumBox = useCallback(async () => {
+    try {
+      const myNumBox = await erc721Contract.balanceOf(account)
+      setOwnedBox(myNumBox.toString() || 0)
+    } catch (error) {
+      console.log(error)
+    }
+  }, [erc721Contract, account])
+
   useEffect(() => {
-    if (!contractPresale || !account) {
+    if (!presaleContract || !account) {
       setMyBoxThisPool(0)
       return
     }
-    const getMyBoxThisPool = async () => {
-      try {
-        const myBox = await contractPresale.userBought(eventId, account)
-        setMyBoxThisPool(myBox.toNumber())
-      } catch (error) {
-        console.debug('er', error)
-      }
-    }
     getMyBoxThisPool()
-  }, [contractPresale, account])
+  }, [presaleContract, account, getMyBoxThisPool])
+
+  const onCloseBuyBoxModal = useCallback((isReset?: boolean) => {
+    setOpenBuyBoxModal(false)
+    if (isReset) {
+      getMyBoxThisPool()
+      getMyNumBox()
+    }
+  }, [getMyBoxThisPool, getMyNumBox])
 
   const onSetCountdown = useCallback(() => {
     if (poolInfo) {
@@ -199,7 +228,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     const boxes = poolInfo.boxTypesConfig || []
     if (poolInfo.campaign_hash && libraryDefaultTemporary) {
       const contractPresale = new Contract(poolInfo.campaign_hash, PresaleBoxAbi, libraryDefaultTemporary)
-      setContractPresale(contractPresale)
+      setPresaleContract(contractPresale)
       Promise
         .all(boxes.map((b, subBoxId) => new Promise(async (resolve, reject) => {
           try {
@@ -226,10 +255,6 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       setBoxSelected(_boxes[0])
     }
   }, [poolInfo, libraryDefaultTemporary])
-
-  useEffect(() => {
-
-  }, [listTokens, boxSelected])
 
   const onSelectCurrency = (t: ObjectType) => {
     if (t.address === currencySelected.address) return
@@ -300,6 +325,126 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const onJoinCompetition = (link: string) => {
     window.open(link)
   }
+
+  useEffect(() => {
+    if (!account || !erc721Contract) {
+      setOwnedBox(0)
+      return
+    }
+    getMyNumBox()
+  }, [account, erc721Contract, getMyNumBox])
+
+  const handleSetCollections = useCallback(async (ownedBox: number) => {
+    if (!presaleContract) return
+    setLoadingCollection(true)
+    setCollections([])
+    try {
+      if (!erc721Contract) return
+      const isCallDefaultCollection = poolInfo.campaign_hash === poolInfo.token
+      const arrCollections = []
+      if (!account) return
+      const callWithExternalApi = !!poolInfo.use_external_api
+      const handleInfoTokenExternal = async (collectionId: number, collection: ObjectType) => {
+        const tokenURI = await erc721Contract.tokenURI(collectionId)
+        collection.collectionId = collectionId
+        let infoBoxType = await fetcher(tokenURI)
+        infoBoxType = infoBoxType?.data || {}
+        Object.assign(collection, infoBoxType)
+        return collection
+      }
+      if (callWithExternalApi) {
+        const result = await fetcher(`${API_BASE_URL}/pool/owner/${poolInfo.token}?wallet=${account}&limit=100`)
+        const arr = result.data.data?.data || []
+        for (let i = 0; i < arr.length; i++) {
+          const collectionId = arr[i]?.token_id
+          const collection: ObjectType = {
+            collectionId
+          }
+          try {
+            handleInfoTokenExternal(collectionId, collection)
+          } catch (error) {
+            console.log('err', error)
+          }
+          arrCollections.push(collection)
+        }
+      } else {
+        for (let id = 0; id < ownedBox; id++) {
+          if (isCallDefaultCollection) {
+            try {
+              const collection: ObjectType = {}
+              const collectionId = (await presaleContract.tokenOfOwnerByIndex(account, id)).toNumber()
+              const boxType = await presaleContract.boxes(collectionId)
+              const idBoxType = boxType.subBoxId.toNumber()
+              const infoBox = boxTypes.find((b, subBoxId) => subBoxId === idBoxType)
+              infoBox && Object.assign(collection, infoBox)
+              collection.collectionId = collectionId
+              arrCollections.push(collection)
+            } catch (error) {
+              console.log('error', error)
+            }
+          } else {
+            const collection: ObjectType = {}
+            try {
+              const collectionId = await erc721Contract.tokenOfOwnerByIndex(account, id)
+              handleInfoTokenExternal(collectionId.toNumber(), collection)
+              arrCollections.push(collection)
+            } catch (error) {
+              console.log('error', error)
+            }
+          }
+        }
+      }
+      setCollections(arrCollections)
+    } catch (error) {
+      console.log('error', error)
+      console.error('Something went wrong when show collections')
+    } finally {
+      setLoadingCollection(false)
+    }
+  }, [presaleContract, erc721Contract, boxTypes, poolInfo, account])
+
+  useEffect(() => {
+    if (+ownedBox > 0 && boxTypes.length) {
+      handleSetCollections(ownedBox)
+    }
+  }, [ownedBox, boxTypes.length, handleSetCollections])
+  const onClaimAllNFT = async () => {
+    try {
+      const tx = await presaleContract.claimAllNFT()
+      // setShowModalTx(true)
+      // setTxHash(tx.hash)
+      toast.loading('Request is processing!', { duration: 2000 })
+      const result = await tx.wait(1)
+      if (+result?.status === 1) {
+        toast.success('Request is completed!')
+        getMyNumBox()
+      } else {
+        toast.error('Request Failed')
+      }
+    } catch (error: any) {
+      console.error(error)
+      toast.error(error?.data?.message || error.message)
+    }
+  }
+  const onClaimNFT = async (boxId: number) => {
+    try {
+      const tx = await presaleContract.claimNFT(boxId)
+      // setShowModalTx(true)
+      // setTxHash(tx.hash)
+      toast.loading('Request is processing!', { duration: 2000 })
+      const result = await tx.wait(1)
+      if (+result?.status === 1) {
+        toast.success('Request is completed!')
+        getMyNumBox()
+      } else {
+        toast.error('Request Failed')
+      }
+    } catch (error: any) {
+      console.error(error)
+      toast.error(error?.data?.message || error.message)
+    }
+  }
+
   const isAppliedWhitelist = isJoinPool || isJoinSuccess
   const isDepoyedPool = !!+poolInfo.is_deploy
   const isShowBtnApprove = !!account && isDepoyedPool && currencySelected.neededApprove && !isApprovedToken && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2)
@@ -321,7 +466,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       account && poolInfo.min_tier > 0 && isNumber(userTier) && (userTier < poolInfo.min_tier)
     ) {
       return <Alert>
-        <span>You haven't achieved min rank ({TIERS[poolInfo.min_tier]?.name}) to apply for Whitelist yet. To upgrade your Rank, please click <Link href="/staking"><a className="font-semibold link">here</a></Link></span></Alert>
+        <span>{`You haven't achieved min rank (${TIERS[poolInfo.min_tier]?.name}) to apply for Whitelist yet. To upgrade your Rank, please click`} <Link href="/staking"><a className="font-semibold link">here</a></Link></span></Alert>
     }
     if (isAppliedWhitelist && countdown.isWhitelist) {
       return <Alert type="info">
@@ -346,13 +491,14 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     <PlaceOrderModal open={openPlaceOrderModal} onClose={() => setOpenPlaceOrderModal(false)} poolId={poolInfo.id} getBoxOrderd={getBoxOrderd} />
     <BuyBoxModal
       open={openBuyBoxModal}
-      onClose={() => setOpenBuyBoxModal(false)}
+      onClose={onCloseBuyBoxModal}
       amountBoxBuy={amountBoxBuy}
       boxTypeBuy={boxSelected}
       currencyInfo={currencySelected}
       poolInfo={poolInfo}
       eventId={eventId}
       isValidChain={isValidChain}
+      balanceInfo={balanceInfo}
     />
     <div className={clsx('rounded mb-5', styles.headPool)}>
       {
@@ -373,7 +519,6 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           </div>
         </div>
       </div>
-
     </div>
     <PoolDetail
       bodyBannerContent={<BannerImagePool src={boxSelected.banner} />}
@@ -422,7 +567,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               bought={myBoxThisPool}
               onChangeValue={onChangeNumBuyBox}
               poolInfo={poolInfo}
-              currencyInfo={currencySelected} />
+              currencyInfo={currencySelected}
+              balanceInfo={balanceInfo}
+            />
           </div>
         }
         <div>
@@ -480,7 +627,8 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             'Rule Introduction',
             boxSelected?.description ? 'Box Infomation' : undefined,
             'Series Content',
-            'TimeLine'
+            'TimeLine',
+            'Collection'
           ]}
           currentValue={currentTab}
           onChange={onChangeTab}
@@ -499,6 +647,15 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           </TabPanel>
           <TabPanel value={currentTab} index={3}>
             <TimeLine timelines={timelines} />
+          </TabPanel>
+          <TabPanel value={currentTab} index={4}>
+            <Collection
+              poolInfo={poolInfo}
+              collections={collections}
+              loading={loadingCollection}
+              onClaimAllNFT={onClaimAllNFT}
+              onClaimNFT={onClaimNFT}
+            />
           </TabPanel>
         </div>
       </>}

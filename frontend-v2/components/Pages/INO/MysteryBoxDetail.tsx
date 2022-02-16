@@ -368,7 +368,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           arrCollections.push(collection)
         }
       } else {
-        for (let id = 0; id < 10; id++) {
+        for (let id = 0; id < ownedBox; id++) {
           if (isCallDefaultCollection) {
             const collection: ObjectType = {}
             try {

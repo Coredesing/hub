@@ -15,7 +15,6 @@ type Props = {
   [k: string]: any;
 }
 const AscDescAmount = ({ value, maxBuy, onChangeValue, bought, currencyInfo, disabled, balanceInfo }: Props) => {
-
   const remaining = +maxBuy - +bought || 0
   const onDesc = () => {
     onChangeValue(value - 1 > -1 ? value - 1 : 0)

@@ -109,9 +109,9 @@ const CarouselAction = ({ item, now }: { item: Item; now: Date }) => {
           <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="208.344" y="32.176">{duration.seconds}</tspan></text>
           <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }} fontSize="10" fontWeight="600"><tspan x="203.972" y="50.92">SECONDS</tspan></text>
         </svg>
-        <div className={styles.actionBtn}>
-          Join Now <Image src={require('@/assets/images/icons/arrow-right-dark.svg')} alt="right" />
-        </div>
+        <Link href={`/ino/${item.id}`} passHref={true}>
+          <a className={styles.actionBtn}>Join Now <Image src={require('@/assets/images/icons/arrow-right-dark.svg')} alt="right" /></a>
+        </Link>
       </div>
     </>
   )

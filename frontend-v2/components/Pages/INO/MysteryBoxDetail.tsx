@@ -507,8 +507,8 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         {<div className='mb-10'>{renderMsg()}</div>}
         <div className={'grid lg:grid-cols-2'}>
           <div className={clsx('flex mb-2 lg:mb-0', styles.headInfoBoxOrder)}>
-            <InfoBoxOrderItem label='Registered Users' value={poolInfo.totalOrder || 0} />
-            <InfoBoxOrderItem label='Ordered Boxes' value={poolInfo.totalRegistered || 0} />
+            <InfoBoxOrderItem label='Registered Users' value={poolInfo.totalRegistered || 0} />
+            <InfoBoxOrderItem label='Ordered Boxes' value={poolInfo.totalOrder || 0} />
             <InfoBoxOrderItem label='Your Ordered' value={myBoxOrdered} />
           </div>
           <div className={clsx('bg-black flex justify-center items-center gap-2', styles.headCountdown)} >

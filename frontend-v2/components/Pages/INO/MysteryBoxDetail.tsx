@@ -628,7 +628,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             boxSelected?.description ? 'Box Infomation' : undefined,
             'Series Content',
             'TimeLine',
-            'Collection'
+            `Collection ${collections.length ? `(${collections.length})` : ''}`
           ]}
           currentValue={currentTab}
           onChange={onChangeTab}

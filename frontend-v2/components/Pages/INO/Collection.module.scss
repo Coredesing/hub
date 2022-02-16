@@ -2,7 +2,7 @@
     width: 280px;
     transition: .3s;
     &:hover {
-        border: 1px solid #6CDB00;
+        // border: 1px solid #6CDB00;
     }
     .collectionImage {
         height: 190px;
@@ -37,6 +37,9 @@
     grid-template-columns: 100px auto;
     place-content: flex-start;
     gap: 4px;
+    @media (max-width: 640px) {
+        grid-template-columns: 1fr;
+    }
 }
 
 .countdown {

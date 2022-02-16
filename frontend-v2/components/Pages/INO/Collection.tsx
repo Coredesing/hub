@@ -7,6 +7,7 @@ import clsx from 'clsx'
 import React, { useEffect, useMemo, useState } from 'react'
 import styles from './Collection.module.scss'
 import { PropagateLoader } from 'react-spinners'
+import gamfiBoxImg from '@/assets/images/gamefi-box.png'
 
 type Props = {
   poolInfo: ObjectType;
@@ -75,7 +76,7 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT 
                       )}>
                       {
                         isClaimedOnGF
-                          ? <div
+                          ? isClaimed && <div
                             onClick={isClaimed ? handleClaimAllNFT : undefined}
                             className={clsx(styles.btnClaimAll,
                               'bg-gamefiDark-900 w-40 text-13px flex justify-center items-center rounded-sm font-bold uppercase',
@@ -108,9 +109,13 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT 
               <div>
                 <div className='flex flex-wrap gap-5 lg:justify-start justify-center'>
                   {
-                    collections.map((b, id) => <div key={id} className={clsx(styles.collection, ' cursor-pointer')} style={{ background: '#23252B' }}>
+                    collections.map((b, id) => <div key={id} className={clsx(styles.collection, 'cursor-pointer')} style={{ background: '#23252B' }}>
                       <div className={clsx(styles.collectionImage, 'w-full')}>
-                        <img src={b.image} className='w-full h-full object-cover bg-gamefiDark-900' alt="" />
+                        <img src={b.image || gamfiBoxImg.src} className='w-full h-full object-cover bg-gamefiDark-900' alt=""
+                          onError={(e: any) => {
+                            e.target.src = gamfiBoxImg.src
+                          }}
+                        />
                       </div>
                       <div className={clsx(styles.collectionDetail, 'w-full flex items-center')}>
                         <div className='w-2/5 font-casual text-13px text-center'>
@@ -121,7 +126,7 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT 
                           className={clsx(styles.btnClaim,
                             'w-3/5 text-black font-bold text-13px text-center h-full flex items-center justify-center',
                             {
-                              'bg-gamefeGreen-700': isClaimed && POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id),
+                              'bg-gamefiGreen-700': isClaimed && POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id),
                               'bg-gamefiDark-900': !isClaimed || !POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id)
                             }
                           )}>

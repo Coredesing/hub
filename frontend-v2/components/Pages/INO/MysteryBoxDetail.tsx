@@ -370,18 +370,18 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       } else {
         for (let id = 0; id < ownedBox; id++) {
           if (isCallDefaultCollection) {
+            const collection: ObjectType = {}
             try {
-              const collection: ObjectType = {}
-              const collectionId = (await presaleContract.tokenOfOwnerByIndex(account, id)).toNumber()
-              const boxType = await presaleContract.boxes(collectionId)
+              const collectionId = await presaleContract.tokenOfOwnerByIndex(account, id)
+              collection.collectionId = collectionId.toNumber()
+              const boxType = await presaleContract.boxes(collection.collectionId)
               const idBoxType = boxType.subBoxId.toNumber()
-              const infoBox = boxTypes.find((b, subBoxId) => subBoxId === idBoxType)
+              const infoBox = boxTypes.find((b, subBoxId) => subBoxId === idBoxType) || {}
               infoBox && Object.assign(collection, infoBox)
-              collection.collectionId = collectionId
-              arrCollections.push(collection)
             } catch (error) {
               console.log('error', error)
             }
+            arrCollections.push(collection)
           } else {
             const collection: ObjectType = {}
             try {
@@ -628,7 +628,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             boxSelected?.description ? 'Box Infomation' : undefined,
             'Series Content',
             'TimeLine',
-            `Collection ${collections.length ? `(${collections.length})` : ''}`
+            `Collection ${ownedBox ? `(${ownedBox})` : ''}`
           ]}
           currentValue={currentTab}
           onChange={onChangeTab}

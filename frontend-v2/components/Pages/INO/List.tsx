@@ -170,7 +170,7 @@ const List = () => {
                 <div className="inline-flex items-center uppercase font-casual font-medium text-base"><div className="w-6 h-6 mr-2 relative inline-block"><Image src={networkImage(item.network_available)} alt={item.network_available} layout="fill" objectFit="cover" /></div> {item.network_available}</div>
               </div>
               <div className="flex-1 flex flex-col">
-                <span className="text-[13px] font-bold opacity-50 tracking-wide uppercase">Total Sale</span>
+                <span className="text-[13px] font-bold opacity-50 tracking-wide uppercase">Total Sales</span>
                 <p className="uppercase font-casual font-medium text-base">{item.total_sold_coin}</p>
               </div>
               <div className="hidden md:block flex-1 flex flex-col">

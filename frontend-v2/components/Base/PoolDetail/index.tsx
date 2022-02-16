@@ -3,13 +3,19 @@ import clsx from 'clsx'
 import styles from './pool.module.scss'
 
 type Props = {
-    bodyBannerContent: ReactNode;
-    bodyDetailContent: ReactNode;
-    footerContent?: ReactNode;
+  headContent?: ReactNode;
+  bodyBannerContent: ReactNode;
+  bodyDetailContent: ReactNode;
+  footerContent?: ReactNode;
 }
 const PoolDetail = (props: Props) => {
   return (
     <div className={styles.contentPage}>
+      {
+        props.headContent && <div className='mb-5'>
+          {props.headContent}
+        </div>
+      }
       <div className={clsx(styles.body, 'lg:grid-cols-2', 'grid-cols-1')}>
         <div className={styles.banner}>
           {props.bodyBannerContent}

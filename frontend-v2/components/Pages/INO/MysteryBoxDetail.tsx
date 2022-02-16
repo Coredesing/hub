@@ -322,7 +322,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     }
   }
 
+  const [isClickedCompetition, setClickedCompetition] = useState(false)
   const onJoinCompetition = (link: string) => {
+    setClickedCompetition(true)
     window.open(link)
   }
 
@@ -444,12 +446,12 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       toast.error(error?.data?.message || error.message)
     }
   }
-
+  const isCommunityPool = +poolInfo.is_private === 3
   const isAppliedWhitelist = isJoinPool || isJoinSuccess
   const isDepoyedPool = !!+poolInfo.is_deploy
   const isShowBtnApprove = !!account && isDepoyedPool && currencySelected.neededApprove && !isApprovedToken && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2)
   const isShowBtnBuy = !!account && isDepoyedPool && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && countdown.isSale && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken))
-  const isAllowedJoinCompetive = (countdown.isWhitelist || countdown.isUpcoming) && +poolInfo.is_private === 3 && poolInfo.socialRequirement?.gleam_link && !isAppliedWhitelist
+  const isAllowedJoinCompetive = (countdown.isWhitelist || countdown.isUpcoming) && isCommunityPool && poolInfo.socialRequirement?.gleam_link && !isAppliedWhitelist
 
   const renderMsg = () => {
     if (!account) {
@@ -500,27 +502,25 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       isValidChain={isValidChain}
       balanceInfo={balanceInfo}
     />
-    <div className={clsx('rounded mb-5', styles.headPool)}>
-      {
-        <div className='mb-10'>{renderMsg()}</div>
-      }
-      <div className={'grid lg:grid-cols-2'}>
-        <div className={clsx('flex', styles.headInfoBoxOrder)}>
-          <InfoBoxOrderItem label='Registered Users' value={poolInfo.totalOrder || 0} />
-          <InfoBoxOrderItem label='Ordered Boxes' value={poolInfo.totalRegistered || 0} />
-          <InfoBoxOrderItem label='Your Ordered' value={myBoxOrdered} />
-        </div>
-        <div className={clsx('bg-black flex justify-center items-center gap-2', styles.headCountdown)} >
-          <div className={clsx('font-bold text-sm uppercase', styles.titleCountdown)}>
-            {countdown.title}
-          </div>
-          <div className={clsx(styles.countdown)} >
-            {countdown.date2 !== 0 && !countdown.isFinished && <CountDownTimeV1 time={countdown} className="bg-transparent" background='bg-transparent' onFinish={onSetCountdown} />}
-          </div>
-        </div>
-      </div>
-    </div>
     <PoolDetail
+      headContent={<div className={clsx(styles.headPool)}>
+        {<div className='mb-10'>{renderMsg()}</div>}
+        <div className={'grid lg:grid-cols-2'}>
+          <div className={clsx('flex mb-2 lg:mb-0', styles.headInfoBoxOrder)}>
+            <InfoBoxOrderItem label='Registered Users' value={poolInfo.totalRegistered || 0} />
+            <InfoBoxOrderItem label='Ordered Boxes' value={poolInfo.totalOrder || 0} />
+            <InfoBoxOrderItem label='Your Ordered' value={myBoxOrdered} />
+          </div>
+          <div className={clsx('bg-black flex justify-center items-center gap-2', styles.headCountdown)} >
+            <div className={clsx('font-bold text-sm uppercase', styles.titleCountdown)}>
+              {countdown.title}
+            </div>
+            <div className={clsx(styles.countdown)} >
+              {countdown.date2 !== 0 && !countdown.isFinished && <CountDownTimeV1 time={countdown} className="bg-transparent" background='bg-transparent' onFinish={onSetCountdown} />}
+            </div>
+          </div>
+        </div>
+      </div>}
       bodyBannerContent={<BannerImagePool src={boxSelected.banner} />}
       bodyDetailContent={<>
         <h2 className="font-semibold text-4xl mb-2 uppercase">{poolInfo.title || poolInfo.name}</h2>
@@ -573,14 +573,14 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           </div>
         }
         <div>
-          {isAllowedJoinCompetive && <ButtonBase color="red"
+          {isAllowedJoinCompetive && !isClickedCompetition && <ButtonBase color="red"
             onClick={() => onJoinCompetition(poolInfo.socialRequirement.gleam_link)}
             className={clsx('w-full mt-4 uppercase')}>
             Join Competition
           </ButtonBase>
           }
           {
-            !isAppliedWhitelist && countdown.isWhitelist && <ButtonBase
+            !isAppliedWhitelist && (!isCommunityPool || (isCommunityPool && isClickedCompetition)) && countdown.isWhitelist && <ButtonBase
               color={'green'}
               isLoading={loadingJPool || loadingCheckJPool}
               disabled={loadingCheckJPool || loadingJPool}

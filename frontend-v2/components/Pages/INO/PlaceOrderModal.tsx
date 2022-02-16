@@ -42,8 +42,8 @@ const PlaceOrderModal = ({ open, onClose, poolId, getBoxOrderd }: Props) => {
     <div className='px-8 pt-11 pb-8' style={{ background: 'rgb(31 31 35)' }}>
       <h3 className='uppercase text-2xl font-bold mb-4'>Buy Boxes </h3>
       <div>
-        <h4 className='font-casual text-sm text-white/70 mb-2'>Number of boxes you want to buy? (Maximum: 10)</h4>
-        <FormInputNumber value={numberBox} isPositive isInteger onChange={onChangeNumberBox} max={10} className={clsx(styles.input, 'text-sm font-casual')} placeholder="Amout. Eg: 50" />
+        <h4 className='font-casual text-sm text-white/70 mb-2'>Number of boxes you want to buy? (Maximum: 100)</h4>
+        <FormInputNumber value={numberBox} isPositive isInteger onChange={onChangeNumberBox} max={100} className={clsx(styles.input, 'text-sm font-casual')} placeholder="Amout. Eg: 50" />
       </div>
       <div className='grid justify-center'>
         <ButtonBase

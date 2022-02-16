@@ -108,7 +108,7 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT 
               <div>
                 <div className='flex flex-wrap gap-5 lg:justify-start justify-center'>
                   {
-                    collections.map((b, id) => <div key={id} className={clsx(styles.collection, ' cursor-pointer')} style={{ background: '#23252B' }}>
+                    collections.map((b, id) => <div key={id} className={clsx(styles.collection, 'cursor-pointer')} style={{ background: '#23252B' }}>
                       <div className={clsx(styles.collectionImage, 'w-full')}>
                         <img src={b.image} className='w-full h-full object-cover bg-gamefiDark-900' alt="" />
                       </div>
@@ -121,7 +121,7 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT 
                           className={clsx(styles.btnClaim,
                             'w-3/5 text-black font-bold text-13px text-center h-full flex items-center justify-center',
                             {
-                              'bg-gamefeGreen-700': isClaimed && POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id),
+                              'bg-gamefiGreen-700': isClaimed && POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id),
                               'bg-gamefiDark-900': !isClaimed || !POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id)
                             }
                           )}>

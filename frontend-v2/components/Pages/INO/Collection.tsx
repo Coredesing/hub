@@ -63,7 +63,7 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT 
                   <div className='text-sm font-bold uppercase'>
                     {(timeClaim > timeNow) ? 'Claim starts in' : 'You can claim now'}
                   </div>
-                  {!isClaimed && <CountDownTimeV1 background='bg-transparent' time={{ date1: timeClaim, date2: timeNow }} onFinish={onFinishCountdown} />}
+                  {!isClaimed && timeClaim > timeNow && <CountDownTimeV1 background='bg-transparent' time={{ date1: timeClaim, date2: timeNow }} onFinish={onFinishCountdown} />}
                 </div>
                 <div className='flex gap-2 flex-wrap'>
                   {

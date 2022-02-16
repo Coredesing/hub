@@ -1,0 +1,44 @@
+.collection {
+    width: 280px;
+    transition: .3s;
+    &:hover {
+        border: 1px solid #6CDB00;
+    }
+    .collectionImage {
+        height: 190px;
+        padding: 37px 29px;
+    }
+    .collectionDetail {
+        height: 25px;
+    }
+}
+
+.btnClaim {
+    -webkit-clip-path: polygon(20px 0, 100% 0, 100% 100%, 0 100%);
+    clip-path: polygon(20px 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.btnClaimAll {
+    // height: 34px;
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    div {
+        height: 34px;
+    }
+}
+
+.btnViewNft {
+    -webkit-clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+}
+
+.wrapperCountdown {
+    display: grid;
+    grid-template-columns: 100px auto;
+    place-content: flex-start;
+    gap: 4px;
+}
+
+.countdown {
+    background: transparent;
+}

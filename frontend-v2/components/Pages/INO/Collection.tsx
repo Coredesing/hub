@@ -6,6 +6,7 @@ import { ObjectType } from '@/utils/types'
 import clsx from 'clsx'
 import React, { useEffect, useMemo, useState } from 'react'
 import styles from './Collection.module.scss'
+import { PropagateLoader } from 'react-spinners'
 
 type Props = {
   poolInfo: ObjectType;
@@ -53,87 +54,88 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT 
   return (
     <div>
       {
-        !!collections.length && account
-          ? <>
-            <div className='flex gap-3 justify-between flex-wrap items-center mb-9'>
-              <div className={clsx(styles.wrapperCountdown, 'items-center')}>
-                <div className='text-sm font-bold uppercase'>
-                  {(timeClaim > timeNow) ? 'Claim starts in' : 'You can claim now'}
+        loading
+          ? <div className='flex items-center w-full h-32 justify-center'><PropagateLoader color='#fff'></PropagateLoader></div>
+          : !!collections.length && account
+            ? <>
+              <div className='flex gap-3 justify-between flex-wrap items-center mb-9'>
+                <div className={clsx(styles.wrapperCountdown, 'items-center')}>
+                  <div className='text-sm font-bold uppercase'>
+                    {(timeClaim > timeNow) ? 'Claim starts in' : 'You can claim now'}
+                  </div>
+                  {!isClaimed && timeClaim > timeNow && <CountDownTimeV1 background='bg-transparent' time={{ date1: timeClaim, date2: timeNow }} onFinish={onFinishCountdown} />}
                 </div>
-                {!isClaimed && <CountDownTimeV1 background='bg-transparent' time={{ date1: timeClaim, date2: timeNow }} onFinish={onFinishCountdown} />}
+                <div className='flex gap-2 flex-wrap'>
+                  {
+                    !POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id) &&
+                    <button
+                      className={clsx(
+                        styles.btnClaimAll,
+                        'p-px cursor-pointer bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700 rounded-sm'
+                      )}>
+                      {
+                        isClaimedOnGF
+                          ? <div
+                            onClick={isClaimed ? handleClaimAllNFT : undefined}
+                            className={clsx(styles.btnClaimAll,
+                              'bg-gamefiDark-900 w-40 text-13px flex justify-center items-center rounded-sm font-bold uppercase',
+                              {
+                                'cursor-not-allowed': !isClaimed
+                              }
+                            )}
+                          >
+                            Claim all on GameFi
+                          </div>
+                          : (claimUrl && <div
+                            className={clsx(styles.btnClaimAll, 'bg-gamefiDark-900 w-40 text-13px flex justify-center items-center rounded-sm font-bold uppercase')}
+                            onClick={() => window.open(claimUrl)}
+                          >
+                            Claim all on External
+                          </div>)
+                      }
+                    </button>
+                  }
+                  {
+                    (timeClaim < timeNow) && claimUrl && <button
+                      className={clsx(styles.btnViewNft, 'text-black uppercase bg-gamefiGreen-700 font-bold text-13px h-9 w-40 rounded-sm')}
+                      onClick={() => window.open(claimUrl)}
+                    >
+                      View your nft
+                    </button>
+                  }
+                </div>
               </div>
-              <div className='flex gap-2 flex-wrap'>
-                {
-                  !POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id) &&
-                  <button
-                    className={clsx(
-                      styles.btnClaimAll,
-                      'p-px cursor-pointer bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700 rounded-sm'
-                    )}>
-                    {
-                      isClaimedOnGF
-                        ? <div
-                          onClick={isClaimed ? handleClaimAllNFT : undefined}
-                          className={clsx(styles.btnClaimAll,
-                            'bg-gamefiDark-900 w-40 text-13px flex justify-center items-center rounded-sm font-bold uppercase',
-                            {
-                              'cursor-not-allowed': !isClaimed
-                            }
-                          )}
-                        >
-                          Claim all on GameFi
+              <div>
+                <div className='flex flex-wrap gap-5'>
+                  {
+                    collections.map((b, id) => <div key={id} className={clsx(styles.collection, 'border border-gamefiDark-900 cursor-pointer')} style={{ background: '#23252B' }}>
+                      <div className={clsx(styles.collectionImage, 'w-full')}>
+                        <img src={b.image} className='w-full h-full object-cover bg-gamefiDark-900' alt="" />
+                      </div>
+                      <div className={clsx(styles.collectionDetail, 'w-full flex items-center')}>
+                        <div className='w-2/5 font-casual text-13px text-center'>
+                          #{formatNumber(b.collectionId, 3) || '-/-'}
                         </div>
-                        : (claimUrl && <div
-                          className={clsx(styles.btnClaimAll, 'bg-gamefiDark-900 w-40 text-13px flex justify-center items-center rounded-sm font-bold uppercase')}
-                          onClick={() => window.open(claimUrl)}
-                        >
-                          Claim all on External
-                        </div>)
-                    }
-                  </button>
-                }
-                {
-                  (timeClaim < timeNow) && claimUrl && <button
-                    className={clsx(styles.btnViewNft, 'text-black uppercase bg-gamefiGreen-700 font-bold text-13px h-9 w-40 rounded-sm')}
-                    onClick={() => window.open(claimUrl)}
-                  >
-                    View your nft
-                  </button>
-                }
-              </div>
-            </div>
-            <div>
-              <LoadingOverlay loading={loading}></LoadingOverlay>
-              <div className='flex flex-wrap gap-5'>
-                {
-                  collections.map((b, id) => <div key={id} className={clsx(styles.collection, 'border border-gamefiDark-900 cursor-pointer')} style={{ background: '#23252B' }}>
-                    <div className={clsx(styles.collectionImage, 'w-full')}>
-                      <img src={b.image} className='w-full h-full object-cover bg-gamefiDark-900' alt="" />
-                    </div>
-                    <div className={clsx(styles.collectionDetail, 'w-full flex items-center')}>
-                      <div className='w-2/5 font-casual text-13px text-center'>
-                        #{formatNumber(b.collectionId, 3) || '-/-'}
+                        <div
+                          onClick={isClaimed ? () => handleClaimNFT(b.collectionId) : undefined}
+                          className={clsx(styles.btnClaim,
+                            'w-3/5 text-black font-bold text-13px text-center h-full flex items-center justify-center',
+                            {
+                              'bg-gamefeGreen-700': isClaimed && POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id),
+                              'bg-gamefiDark-900': !isClaimed || !POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id)
+                            }
+                          )}>
+                          {isClaimed ? 'Claim' : ''}
+                        </div>
                       </div>
-                      <div
-                        onClick={isClaimed ? () => handleClaimNFT(b.collectionId) : undefined}
-                        className={clsx(styles.btnClaim,
-                          'w-3/5 text-black font-bold text-13px text-center h-full flex items-center justify-center',
-                          {
-                            'bg-gamefeGreen-700': isClaimed && POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id),
-                            'bg-gamefiDark-900': !isClaimed || !POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id)
-                          }
-                        )}>
-                        {isClaimed ? 'Claim' : ''}
-                      </div>
-                    </div>
-                  </div>)
-                }
+                    </div>)
+                  }
+                </div>
               </div>
+            </>
+            : <div className='flex items-center w-full h-32 justify-center'>
+              <h1 className='uppercase text-4xl text-center font-bold'>No Box Found</h1>
             </div>
-          </>
-          : <div className='flex items-center w-full h-32 justify-center'>
-            <h1 className='uppercase text-4xl text-center font-bold'>No Box Found</h1>
-          </div>
       }
     </div>
   )

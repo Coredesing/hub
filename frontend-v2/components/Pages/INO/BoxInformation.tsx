@@ -14,6 +14,12 @@ const BoxInformation = ({ boxes }: Props) => {
             Name
           </TableCellHead>
           <TableCellHead>
+            Total Sale
+          </TableCellHead>
+          <TableCellHead>
+            Remaining
+          </TableCellHead>
+          <TableCellHead>
             Description
           </TableCellHead>
         </TableRow>
@@ -26,6 +32,12 @@ const BoxInformation = ({ boxes }: Props) => {
                 <img src={b.icon} alt="" className="w-14 h-12 object-contain" />
                 <span>{b.name}</span>
               </div>
+            </TableCell>
+            <TableCell>
+              {b.maxSupply || b.limit}
+            </TableCell>
+            <TableCell>
+              {(+(b.maxSupply || b.limit) - (+b.totalSold || 0)) || (b.maxSupply || b.limit)}
             </TableCell>
             <TableCell>
               <div>

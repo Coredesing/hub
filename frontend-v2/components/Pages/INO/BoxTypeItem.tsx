@@ -19,7 +19,7 @@ const BoxTypeItem = ({ item, ...props }: Props) => {
     <img src={item.icon} alt="" className='rounded-full w-10 object-contain' />
     <span className='font-casual text-sm flex gap-1 flex-col'>
       <span>{item.name}</span>
-      <span className='font-semibold'>{item.maxSupply ? `${item.totalSold}/${item.maxSupply}` : ''}</span>
+      <span className='font-semibold'>{(item.maxSupply || item.limit) ? `${item.totalSold || 0}/${item.maxSupply || item.limit}` : ''}</span>
     </span>
   </div>
 }

@@ -52,7 +52,7 @@ const Layout = ({ children, title }: Props) => {
           </svg>
           <span className="hidden sm:inline">This is the beta version of GameFi.org.</span>
           <span className="hidden md:inline ml-1">If you encounter any potential technical problem, you can</span>
-          <a href="https://hub.gamefi.org" target="_blank" className="ml-auto sm:ml-1 uppercase md:normal-case font-semibold hover:underline" rel="noreferrer">go back to the old version</a>
+          <a href="https://hub.gamefi.org" target="_blank" className="ml-auto sm:ml-1 uppercase md:normal-case font-semibold hover:underline" rel="noreferrer">go back to the former version</a>
           <svg xmlns="http://www.w3.org/2000/svg" className="ml-auto h-4 w-4 inline flex-none cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor" onClick={suppress}>
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
           </svg>

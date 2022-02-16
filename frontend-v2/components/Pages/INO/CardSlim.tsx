@@ -103,7 +103,7 @@ const CardSlim = ({ item, now }: Props) => {
             <span style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {currency(item)}</span>
           </div>
           <div>
-            <p>Total Sale</p>
+            <p>Total Sales</p>
             {item.total_sold_coin} Boxes
           </div>
         </div>

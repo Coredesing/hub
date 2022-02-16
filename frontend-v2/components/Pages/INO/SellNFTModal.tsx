@@ -109,7 +109,7 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isL
         <label htmlFor="" className='text-sm block mb-2 font-casual'>Fee</label>
         <div className='grid gap-1 justify-end'>
           <span className='block text-right text-base font-medium font-casual'>{feeAuction} {currency.name}</span>
-          <span className='block text-right font-casual text-white/50 text-xs'>1% of the total sale will be paid to GameFi as a Platform fee.</span>
+          <span className='block text-right font-casual text-white/50 text-xs'>1% of the total sales will be paid to GameFi as a Platform fee.</span>
         </div>
       </div>
       {/* <div className={clsx('mb-8 flex gap-3 justify-between items-center', styles.formInput)}>

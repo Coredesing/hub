@@ -352,11 +352,11 @@ const AuctionDetail = ({ poolInfo }: any) => {
           <div className="divider bg-white/20 w-full mt-3 mb-8" style={{ height: '1px' }}></div>
           <div>
             <div className="flex gap-8 mb-8">
-              <DetailPoolItem label='SUPPORTED'
+              <DetailPoolItem label='NETWORK'
                 icon={require(`assets/images/icons/${poolInfo.network_available}.svg`)}
                 value={poolInfo.network_available} />
               <DetailPoolItem label='Min Rank'
-                value={poolInfo.min_tier > 0 ? TIERS[poolInfo.min_tier].name : 'No Required'} />
+                value={poolInfo.min_tier > 0 ? TIERS[poolInfo.min_tier].name : 'Not Required'} />
             </div>
             <div className="grid grid-cols-2">
               {

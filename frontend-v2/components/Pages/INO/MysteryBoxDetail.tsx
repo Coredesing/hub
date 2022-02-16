@@ -128,35 +128,35 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       setTimelinePool(timeLine)
       const timeLinesInfo: { [k: string]: any } = {
         1: {
-          title: 'UPCOMING',
+          title: 'INTRODUCTION',
           desc: 'Stay tuned and prepare to APPLY WHITELIST.'
         },
         2: {
-          title: 'WHITELIST',
+          title: 'WHITELISTING',
           desc: 'Click the [APPLY WHITELIST] button to register for Phase 1.'
         }
       }
       if (timeLine.freeBuyTime) {
         timeLinesInfo[3] = {
-          title: 'BUY PHASE 1',
-          desc: 'Whitelist registrants will be given favorable dealings to buy Mystery Boxes in phase 1, on a FCFS basis.'
+          title: 'BUYING - PHASE 1',
+          desc: 'Whitelist registrants will be given favorable deals to buy Mystery Boxes on a First-Come First-Served basis.'
         }
         timeLinesInfo[4] = {
-          title: 'BUY PHASE 2',
-          desc: 'The whitelist of phase 2 will be started right after phase 1 ends. Remaining boxes left in phase 1 will be transferred to phase 2.'
+          title: 'BUYING - PHASE 2',
+          desc: 'Phase 2 will start right after Phase 1 ends. Remaining boxes in Phase 1 will be transferred to Phase 2.'
         }
         timeLinesInfo[5] = {
           title: 'END',
-          desc: 'Thank you for watching.'
+          desc: 'Thank you for your participation.'
         }
       } else {
         timeLinesInfo[3] = {
-          title: 'BUY PHASE 1',
-          desc: 'Whitelist registrants will be given favorable dealings to buy Mystery Boxes in phase 1, on a FCFS basis.'
+          title: 'BUYING - PHASE 1',
+          desc: 'Whitelist registrants will be given favorable deals to buy Mystery Boxes in Phase 1, on a First-Come First-Served basis.'
         }
         timeLinesInfo[4] = {
           title: 'END',
-          desc: 'Thank you for watching.'
+          desc: 'Thank you for your participation.'
         }
       }
       const startBuyTime = isAccIsBuyPreOrder && timeLine.startPreOrderTime ? timeLine.startPreOrderTime : timeLine.startBuyTime
@@ -538,12 +538,12 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           </div>
         </div>
         <div className="flex gap-6 mb-8">
-          <DetailPoolItem label='TOTAL SALE' value={`${poolInfo.total_sold_coin} Boxes`} />
-          <DetailPoolItem label='SUPPORTED'
+          <DetailPoolItem label='TOTAL SALES' value={`${poolInfo.total_sold_coin} Boxes`} />
+          <DetailPoolItem label='NETWORK'
             icon={require(`assets/images/icons/${poolInfo.network_available}.svg`)}
             value={poolInfo.network_available} />
           <DetailPoolItem label='Min Rank'
-            value={poolInfo.min_tier > 0 ? TIERS[poolInfo.min_tier].name : 'No Required'} />
+            value={poolInfo.min_tier > 0 ? TIERS[poolInfo.min_tier].name : 'Not Required'} />
         </div>
         <div className='mb-8'>
           <div> <h4 className='font-bold text-base mb-1 uppercase'>Currency</h4> </div>
@@ -633,7 +633,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           currentValue={currentTab}
           onChange={onChangeTab}
         />
-        <div className="mt-6 mb-10">
+        <div className="mt-6 mb-10 font-casual text-sm leading-6 font-light">
           <TabPanel value={currentTab} index={0}>
             <RuleIntroduce poolInfo={poolInfo} />
           </TabPanel>

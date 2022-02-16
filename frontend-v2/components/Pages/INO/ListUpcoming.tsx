@@ -83,7 +83,7 @@ const List = ({ now }: Props) => {
             : <></>}
         </div>
       </div>
-      : <></>
+      : <div className={`${styles.section} ${styles.black}`}></div>
   )
 }
 

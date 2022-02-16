@@ -246,11 +246,12 @@ class PoolService {
     filterParams.limit = limit;
     filterParams.page = page;
 
-    if (await RedisMysteriousBoxUtils.existRedisMysteriousBoxes(filterParams)) {
+    if (!filterParams.is_search && await RedisMysteriousBoxUtils.existRedisMysteriousBoxes(filterParams)) {
       let data = await RedisMysteriousBoxUtils.getRedisMysteriousBoxes(filterParams)
       data = JSON.parse(data)
       return data
     }
+
     let queryBuilder = this.buildQueryBuilder(filterParams)
       .orderBy('priority', 'DESC')
       .orderBy('start_time', 'ASC')
@@ -259,10 +260,13 @@ class PoolService {
       queryBuilder = queryBuilder.where('campaign_status', filterParams.campaign_status);
     }
     let pools = await queryBuilder.paginate(page, limit);
-
     pools = JSON.parse(JSON.stringify(pools))
-    await RedisMysteriousBoxUtils.setRedisMysteriousBoxes(filterParams, pools)
 
+    if (filterParams.is_search) {
+      return pools;
+    }
+
+    await RedisMysteriousBoxUtils.setRedisMysteriousBoxes(filterParams, pools)
     return pools;
   }
 

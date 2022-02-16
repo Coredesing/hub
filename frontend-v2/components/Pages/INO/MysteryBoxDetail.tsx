@@ -67,7 +67,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }, [poolInfo])
 
   const isValidChain = useMemo(() => {
-    return networkPool?.id == chainID
+    return networkPool?.id === chainID
   }, [networkPool, chainID])
 
   useEffect(() => {
@@ -94,7 +94,16 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     } catch (error) {
       console.debug('er', error)
     }
-  }, [presaleContract])
+  }, [presaleContract, account])
+
+  const getMyNumBox = useCallback(async () => {
+    try {
+      const myNumBox = await erc721Contract.balanceOf(account)
+      setOwnedBox(myNumBox.toString() || 0)
+    } catch (error) {
+      console.log(error)
+    }
+  }, [erc721Contract, account])
 
   useEffect(() => {
     if (!presaleContract || !account) {
@@ -110,7 +119,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       getMyBoxThisPool()
       getMyNumBox()
     }
-  }, [getMyBoxThisPool])
+  }, [getMyBoxThisPool, getMyNumBox])
 
   const onSetCountdown = useCallback(() => {
     if (poolInfo) {
@@ -317,21 +326,13 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     window.open(link)
   }
 
-  const getMyNumBox = useCallback(async () => {
-    try {
-      const myNumBox = await erc721Contract.balanceOf(account)
-      setOwnedBox(myNumBox.toString() || 0)
-    } catch (error) {
-      console.log(error)
-    }
-  }, [erc721Contract, account])
   useEffect(() => {
     if (!account || !erc721Contract) {
-      setOwnedBox(0);
-      return;
+      setOwnedBox(0)
+      return
     }
     getMyNumBox()
-  }, [account, erc721Contract, getMyNumBox]);
+  }, [account, erc721Contract, getMyNumBox])
 
   const handleSetCollections = useCallback(async (ownedBox: number) => {
     if (!presaleContract) return
@@ -358,7 +359,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           const collectionId = arr[i]?.token_id
           const collection: ObjectType = {
             collectionId
-          };
+          }
           try {
             handleInfoTokenExternal(collectionId, collection)
           } catch (error) {
@@ -400,7 +401,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     } finally {
       setLoadingCollection(false)
     }
-  }, [presaleContract, erc721Contract])
+  }, [presaleContract, erc721Contract, boxTypes, poolInfo, account])
 
   useEffect(() => {
     if (+ownedBox > 0 && boxTypes.length) {
@@ -409,38 +410,38 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }, [ownedBox, boxTypes.length, handleSetCollections])
   const onClaimAllNFT = async () => {
     try {
-      const tx = await presaleContract.claimAllNFT();
-      // setShowModalTx(true);
-      // setTxHash(tx.hash);
+      const tx = await presaleContract.claimAllNFT()
+      // setShowModalTx(true)
+      // setTxHash(tx.hash)
       toast.loading('Request is processing!', { duration: 2000 })
-      const result = await tx.wait(1);
+      const result = await tx.wait(1)
       if (+result?.status === 1) {
         toast.success('Request is completed!')
-        getMyNumBox();
+        getMyNumBox()
       } else {
         toast.error('Request Failed')
       }
     } catch (error: any) {
-      console.error(error);
+      console.error(error)
       toast.error(error?.data?.message || error.message)
     }
   }
   const onClaimNFT = async (boxId: number) => {
     try {
-      const tx = await presaleContract.claimNFT(boxId);
-      // setShowModalTx(true);
-      // setTxHash(tx.hash);
+      const tx = await presaleContract.claimNFT(boxId)
+      // setShowModalTx(true)
+      // setTxHash(tx.hash)
       toast.loading('Request is processing!', { duration: 2000 })
-      const result = await tx.wait(1);
+      const result = await tx.wait(1)
       if (+result?.status === 1) {
         toast.success('Request is completed!')
-        getMyNumBox();
+        getMyNumBox()
       } else {
         toast.error('Request Failed')
       }
     } catch (error: any) {
-      console.error(error);
-      toast.error(error?.data?.message || error.message);
+      console.error(error)
+      toast.error(error?.data?.message || error.message)
     }
   }
 
@@ -465,7 +466,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       account && poolInfo.min_tier > 0 && isNumber(userTier) && (userTier < poolInfo.min_tier)
     ) {
       return <Alert>
-        <span>You haven't achieved min rank ({TIERS[poolInfo.min_tier]?.name}) to apply for Whitelist yet. To upgrade your Rank, please click <Link href="/staking"><a className="font-semibold link">here</a></Link></span></Alert>
+        <span>{`You haven't achieved min rank (${TIERS[poolInfo.min_tier]?.name}) to apply for Whitelist yet. To upgrade your Rank, please click`} <Link href="/staking"><a className="font-semibold link">here</a></Link></span></Alert>
     }
     if (isAppliedWhitelist && countdown.isWhitelist) {
       return <Alert type="info">

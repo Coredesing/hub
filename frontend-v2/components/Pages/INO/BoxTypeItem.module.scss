@@ -2,6 +2,15 @@
     color: #AEAEAE;
     border: 1px solid #44454B;
     background: transparent;
+    padding: 4px 12px;
+    img {
+        height: 26px;
+        width: auto;
+        max-width: 40px;
+    }
+    .name {
+        max-width: 140px;
+    }
 }
 
 .active {
@@ -11,7 +20,7 @@
 }
 
 .boxTypes {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 200px);
-    grid-auto-rows: minmax(min-content, max-content);
+    //     display: grid;
+    //     grid-template-columns: repeat(auto-fill, minmax(138px, 138px));
+    //     grid-auto-rows: minmax(min-content, max-content);
 }

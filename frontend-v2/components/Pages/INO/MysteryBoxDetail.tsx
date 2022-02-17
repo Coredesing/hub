@@ -473,7 +473,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     if (isAppliedWhitelist && countdown.isWhitelist) {
       return <Alert type="info">
         You have successfully applied whitelist.
-        {timelinePool.freeBuyTime ? <>&nbsp;Please stay tuned, you can buy from Phase 1 <b>Phase 1</b></> : ' Please stay tuned and wait until time to buy Mystery boxes'}
+        {timelinePool.freeBuyTime ? <>&nbsp;Please stay tuned, you can buy from <b>Phase 1</b></> : ' Please stay tuned and wait until time to buy Mystery boxes'}
       </Alert>
     }
     if (isAppliedWhitelist && (countdown.isSale || countdown.isUpcomingSale)) {
@@ -490,7 +490,13 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }
 
   return (<WrapperPoolDetail>
-    <PlaceOrderModal open={openPlaceOrderModal} onClose={() => setOpenPlaceOrderModal(false)} poolId={poolInfo.id} getBoxOrderd={getBoxOrderd} />
+    <PlaceOrderModal
+      open={openPlaceOrderModal}
+      onClose={() => setOpenPlaceOrderModal(false)}
+      poolId={poolInfo.id}
+      getBoxOrderd={getBoxOrderd}
+      maxBoxOrdered={maxBoxCanBuy}
+    />
     <BuyBoxModal
       open={openBuyBoxModal}
       onClose={onCloseBuyBoxModal}
@@ -506,13 +512,21 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       headContent={<div className={clsx(styles.headPool)}>
         {<div className='mb-10'>{renderMsg()}</div>}
         <div className={'grid lg:grid-cols-2'}>
-          <div className={clsx('flex mb-2 lg:mb-0', styles.headInfoBoxOrder)}>
+          <div className={clsx('flex mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}>
             <InfoBoxOrderItem label='Registered Users' value={poolInfo.totalRegistered || 0} />
             <InfoBoxOrderItem label='Ordered Boxes' value={poolInfo.totalOrder || 0} />
             <InfoBoxOrderItem label='Your Ordered' value={myBoxOrdered} />
           </div>
-          <div className={clsx('bg-black flex justify-center items-center gap-2', styles.headCountdown)} >
-            <div className={clsx('font-bold text-sm uppercase', styles.titleCountdown)}>
+          <div className={clsx('flex items-center gap-2', styles.headCountdown,
+            {
+              'bg-black justify-center': !countdown.isFinished,
+              [`${styles.countdownFinished} justify-center lg:justify-end`]: countdown.isFinished
+            })} >
+            <div className={clsx('', styles.titleCountdown,
+              {
+                'font-bold text-sm uppercase': !countdown.isFinished,
+                'font-casual text-base font-normal': countdown.isFinished
+              })}>
               {countdown.title}
             </div>
             <div className={clsx(styles.countdown)} >
@@ -537,13 +551,13 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             </div>
           </div>
         </div>
-        <div className="flex gap-6 mb-8">
+        <div className="flex gap-12 mb-8">
           <DetailPoolItem label='TOTAL SALES' value={`${poolInfo.total_sold_coin} Boxes`} />
-          <DetailPoolItem label='NETWORK'
+          <DetailPoolItem label='SUPPORTED'
             icon={require(`assets/images/icons/${poolInfo.network_available}.svg`)}
             value={poolInfo.network_available} />
           <DetailPoolItem label='Min Rank'
-            value={poolInfo.min_tier > 0 ? TIERS[poolInfo.min_tier].name : 'Not Required'} />
+            value={poolInfo.min_tier > 0 ? TIERS[poolInfo.min_tier].name : 'No Required'} />
         </div>
         <div className='mb-8'>
           <div> <h4 className='font-bold text-base mb-1 uppercase'>Currency</h4> </div>
@@ -553,7 +567,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         </div>
         <div className='mb-8'>
           <div> <h4 className='font-bold text-base mb-1 uppercase'>Type</h4></div>
-          <div className={clsx('gap-2', stylesBoxType.boxTypes)}>
+          <div className={clsx('gap-2 flex flex-wrap', stylesBoxType.boxTypes)}>
             {boxTypes.map((b) => <BoxTypeItem key={b.id} item={b} onClick={onSelectBoxType} selected={boxSelected.id === b.id} />)}
           </div>
         </div>

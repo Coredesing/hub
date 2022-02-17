@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from '@/components/Base/Table'
 import { ObjectType } from '@/utils/types'
+import SerieContentModal from './SerieContentModal'
 
 type Props = {
   poolInfo: ObjectType;
@@ -47,6 +48,12 @@ const rankMapping = {
 }
 
 const SerieContent = ({ poolInfo, selected }: Props) => {
+  const [openSerieContentModal, setOpenSerieContentModal] = useState(false)
+  const [idSerie, setIdSerie] = useState(0)
+  const onShhowSerieModal = (id: number) => {
+    setIdSerie(id)
+    setOpenSerieContentModal(true)
+  }
   const showTypes = { table: 'table', grid: 'grid' }
   const [showTypeSerieContent] = useState<typeof showTypes[keyof typeof showTypes]>(showTypes.table)
   const firstSerie = poolInfo?.seriesContentConfig?.[0]
@@ -104,6 +111,21 @@ const SerieContent = ({ poolInfo, selected }: Props) => {
   const showNewCategory = configs?.[0]?.category
 
   return <div className="relative">
+    <SerieContentModal
+      open={openSerieContentModal}
+      onClose={() => setOpenSerieContentModal(false)}
+      serieContents={poolInfo.seriesContentConfig || []}
+      idShow={idSerie}
+    />
+    <div className="view-mode flex gap-5 items-center" style={{ position: 'absolute', right: '15px', top: '18px' }}>
+      {/* <span className='text-white/70 font-casual text-sm'>View</span> */}
+      {/* <span className="cursor-pointer">
+        <BulletListIcon color={showTypeSerieContent === showTypes.table ? '#6CDB00' : '#6C6D71'} className="pointer" onClick={() => onSelectShowSerieContent(showTypes.table)} />
+      </span> */}
+      {/* <span className="cursor-pointer">
+        <GridIcon color={showTypeSerieContent === showTypes.grid ? '#6CDB00' : '#6C6D71'} className="pointer" onClick={() => onSelectShowSerieContent(showTypes.grid)} />
+      </span> */}
+    </div>
     <div className="mb-3">
       {showTypeSerieContent === showTypes.table &&
         <Table >
@@ -124,12 +146,14 @@ const SerieContent = ({ poolInfo, selected }: Props) => {
             {
               configs.map((b, id) => <TableRow key={id}>
                 <TableCell>
-                  <div className="flex gap-3 items-center uppercase text-[12px] sm:text-sm font-semibold cursor-pointer">
-                    <img src={b.icon} alt="" className="w-12 h-14" />
-                    <div>
-                      <span>{b.name}</span>
-                      {showNewRarity ? <div className="sm:hidden">{b.rarity && <span className={`font-semibold uppercase leading-loose ml-auto ${b.rarityMapping?.style || ''}`}>{b.rarity}</span>}</div> : null }
-                      {showNewCategory ? <div className="sm:hidden text-[11px] opacity-75 capitalize">{b.category}</div> : null }
+                  <div onClick={() => onShhowSerieModal(id)} className="flex gap-3 items-center uppercase text-sm font-semibold cursor-pointer w-fit">
+                    <div className="flex gap-3 items-center uppercase text-[12px] sm:text-sm font-semibold cursor-pointer">
+                      <img src={b.icon} alt="" className="w-12 h-14" />
+                      <div>
+                        <span>{b.name}</span>
+                        {showNewRarity ? <div className="sm:hidden">{b.rarity && <span className={`font-semibold uppercase leading-loose ml-auto ${b.rarityMapping?.style || ''}`}>{b.rarity}</span>}</div> : null}
+                        {showNewCategory ? <div className="sm:hidden text-[11px] opacity-75 capitalize">{b.category}</div> : null}
+                      </div>
                     </div>
                   </div>
                 </TableCell>
@@ -151,9 +175,9 @@ const SerieContent = ({ poolInfo, selected }: Props) => {
                   : null}
                 {useNewFormat && !useNewFormatExtended ? <TableCell>{b.metadata?.raw}</TableCell> : null}
                 {showNewCategory ? <TableCell className="hidden md:table-cell text-[12px] sm:text-[13px] md:text-base capitalize">{b.category}</TableCell> : null}
-                {showNewRarity ? <TableCell className="hidden sm:table-cell">{b.rarity && <span className={`font-semibold uppercase leading-loose ml-auto ${b.rarityMapping?.style || ''}`}>{b.rarity}</span>}</TableCell> : null }
-                {useNewFormatExtended ? <TableCell className="text-[12px] sm:text-sm"> {b.metadata?.[selected?.name]?.probability ? `${b.metadata?.[selected?.name]?.probability}%` : ''} </TableCell> : null }
-                {showNewAmount ? <TableCell className="hidden md:table-cell text-[12px] sm:text-[13px] md:text-base"> {b.metadata?.[selected?.name]?.amount || ''} </TableCell> : null }
+                {showNewRarity ? <TableCell className="hidden sm:table-cell">{b.rarity && <span className={`font-semibold uppercase leading-loose ml-auto ${b.rarityMapping?.style || ''}`}>{b.rarity}</span>}</TableCell> : null}
+                {useNewFormatExtended ? <TableCell className="text-[12px] sm:text-sm"> {b.metadata?.[selected?.name]?.probability ? `${b.metadata?.[selected?.name]?.probability}%` : ''} </TableCell> : null}
+                {showNewAmount ? <TableCell className="hidden md:table-cell text-[12px] sm:text-[13px] md:text-base"> {b.metadata?.[selected?.name]?.amount || ''} </TableCell> : null}
               </TableRow>)
             }
           </TableBody>

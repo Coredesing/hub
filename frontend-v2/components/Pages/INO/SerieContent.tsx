@@ -33,8 +33,8 @@ const SerieContent = ({ poolInfo }: Props) => {
       serieContents={poolInfo.seriesContentConfig || []}
       idShow={idSerie}
     /> */}
-    <div className="view-mode flex gap-5" style={{ position: 'absolute', right: '15px', top: '18px' }}>
-      <span>View</span>
+    <div className="view-mode flex gap-5 items-center" style={{ position: 'absolute', right: '15px', top: '18px' }}>
+      <span className='text-white/70 font-casual text-sm'>View</span>
       <span className="cursor-pointer">
         <BulletListIcon color={showTypeSerieContent === showTypes.table ? '#6CDB00' : '#6C6D71'} className="pointer" onClick={() => onSelectShowSerieContent(showTypes.table)} />
       </span>

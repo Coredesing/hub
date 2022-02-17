@@ -24,7 +24,7 @@ const PoolDetail = (props: Props) => {
           {props.bodyDetailContent}
         </div>
       </div>
-      <div className={clsx(styles.footer, 'w-full')} style={{ minHeight: '300px' }}>
+      <div className={clsx(styles.footer, 'w-full')}>
         {props.footerContent}
       </div>
     </div>

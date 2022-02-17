@@ -551,9 +551,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             </div>
           </div>
         </div>
-        <div className="flex gap-6 mb-8">
+        <div className="flex gap-12 mb-8">
           <DetailPoolItem label='TOTAL SALES' value={`${poolInfo.total_sold_coin} Boxes`} />
-          <DetailPoolItem label='NETWORK'
+          <DetailPoolItem label='SUPPORTED'
             icon={require(`assets/images/icons/${poolInfo.network_available}.svg`)}
             value={poolInfo.network_available} />
           <DetailPoolItem label='Min Rank'

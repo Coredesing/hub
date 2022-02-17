@@ -473,7 +473,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     if (isAppliedWhitelist && countdown.isWhitelist) {
       return <Alert type="info">
         You have successfully applied whitelist.
-        {timelinePool.freeBuyTime ? <>&nbsp;Please stay tuned, you can buy from Phase 1 <b>Phase 1</b></> : ' Please stay tuned and wait until time to buy Mystery boxes'}
+        {timelinePool.freeBuyTime ? <>&nbsp;Please stay tuned, you can buy from <b>Phase 1</b></> : ' Please stay tuned and wait until time to buy Mystery boxes'}
       </Alert>
     }
     if (isAppliedWhitelist && (countdown.isSale || countdown.isUpcomingSale)) {
@@ -557,7 +557,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             icon={require(`assets/images/icons/${poolInfo.network_available}.svg`)}
             value={poolInfo.network_available} />
           <DetailPoolItem label='Min Rank'
-            value={poolInfo.min_tier > 0 ? TIERS[poolInfo.min_tier].name : 'Not Required'} />
+            value={poolInfo.min_tier > 0 ? TIERS[poolInfo.min_tier].name : 'No Required'} />
         </div>
         <div className='mb-8'>
           <div> <h4 className='font-bold text-base mb-1 uppercase'>Currency</h4> </div>

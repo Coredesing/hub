@@ -27,12 +27,12 @@ const SerieContent = ({ poolInfo }: Props) => {
   const isShowAmountSerie = firstSerie && +firstSerie.amount > 0
 
   return <div className="relative">
-    {/* <SerieContentModal
+    <SerieContentModal
       open={openSerieContentModal}
       onClose={() => setOpenSerieContentModal(false)}
       serieContents={poolInfo.seriesContentConfig || []}
       idShow={idSerie}
-    /> */}
+    />
     <div className="view-mode flex gap-5 items-center" style={{ position: 'absolute', right: '15px', top: '18px' }}>
       <span className='text-white/70 font-casual text-sm'>View</span>
       <span className="cursor-pointer">
@@ -70,7 +70,7 @@ const SerieContent = ({ poolInfo }: Props) => {
             {
               poolInfo.seriesContentConfig.map((b, id) => <TableRow key={id}>
                 <TableCell>
-                  <div onClick={() => onShhowSerieModal(id)} className="flex gap-3 items-center uppercase text-sm font-semibold cursor-pointer">
+                  <div onClick={() => onShhowSerieModal(id)} className="flex gap-3 items-center uppercase text-sm font-semibold cursor-pointer w-fit">
                     <img src={b.icon} alt="" className="w-12 h-14" />
                     <span>{b.name}</span>
                   </div>

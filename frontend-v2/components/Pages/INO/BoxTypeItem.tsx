@@ -13,12 +13,12 @@ type Props = {
 const BoxTypeItem = ({ item, ...props }: Props) => {
   return <div
     onClick={() => props.onClick && props.onClick(item)}
-    className={clsx('px-5 py-2 flex gap-2 rounded cursor-pointer items-center ', styles.boxType, {
+    className={clsx('flex gap-2 rounded cursor-pointer items-center ', styles.boxType, {
       [styles.active]: props.selected
     })} >
-    <img src={item.icon} alt="" className='rounded-full w-10 object-contain' />
-    <span className='font-casual text-sm flex gap-1 flex-col'>
-      <span>{item.name}</span>
+    <img src={item.icon} alt="" className='rounded object-contain' />
+    <span className='font-casual text-sm flex gap-1 items-center'>
+      <span className={clsx(styles.name, 'block')}>{item.name}</span>
       <span className='font-semibold'>{(item.maxSupply || item.limit) ? `${item.totalSold || 0}/${item.maxSupply || item.limit}` : ''}</span>
     </span>
   </div>

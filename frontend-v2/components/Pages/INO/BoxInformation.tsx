@@ -1,12 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from '@/components/Base/Table'
+import BoxesInformationModal from './BoxesInformationModal'
 
 type Props = {
   boxes: any[];
 }
 
 const BoxInformation = ({ boxes }: Props) => {
+  const [idSelected, setIdSelected] = useState(0)
+  const [openModal, setOpenModal] = useState(false)
+  const onShhowSerieModal = (id: number) => {
+    setIdSelected(id)
+    setOpenModal(true)
+  }
+
   return <div>
+    <BoxesInformationModal
+      items={boxes}
+      open={openModal}
+      idShow={idSelected}
+      onClose={() => setOpenModal(false)}
+    />
     <Table >
       <TableHead>
         <TableRow>
@@ -28,7 +42,7 @@ const BoxInformation = ({ boxes }: Props) => {
         {
           boxes.map((b, id) => <TableRow key={id}>
             <TableCell>
-              <div className="flex gap-3 items-center text-sm font-semibold">
+              <div className="flex gap-3 items-center text-sm font-semibold w-fit cursor-pointer" onClick={() => onShhowSerieModal(id)}>
                 <img src={b.icon} alt="" className="w-14 h-12 object-contain" />
                 <span>{b.name}</span>
               </div>

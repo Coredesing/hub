@@ -4,7 +4,7 @@ import { ObjectType } from '@/utils/types'
 
 type Props = {
   poolInfo: ObjectType;
-  selected: ObjectType;
+  selected?: ObjectType;
 }
 
 const rankMapping = {

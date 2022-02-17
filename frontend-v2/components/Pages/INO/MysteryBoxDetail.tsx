@@ -643,7 +643,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             </TabPanel>
           }
           <TabPanel value={currentTab} index={2}>
-            <SerieContent poolInfo={poolInfo} />
+            <SerieContent poolInfo={poolInfo} selected={boxSelected} />
           </TabPanel>
           <TabPanel value={currentTab} index={3}>
             <TimeLine timelines={timelines} />

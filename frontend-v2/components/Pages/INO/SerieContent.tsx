@@ -14,8 +14,7 @@ const SerieContent = ({ poolInfo }: Props) => {
     setShowTypeSerieContent(type)
   }
 
-  const [openSerieContentModal, setOpenSerieContentModal] = useState(true)
-
+  const [openSerieContentModal, setOpenSerieContentModal] = useState(false)
   const [idSerie, setIdSerie] = useState(0)
   const onShhowSerieModal = (id: number) => {
     setIdSerie(id)

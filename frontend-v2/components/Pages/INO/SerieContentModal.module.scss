@@ -1,8 +1,5 @@
 .modal {
     max-width: 715px !important;
-    @media screen and (max-width: 1024px) {
-        max-width: unset;
-    }
 }
 
 .content {
@@ -81,14 +78,5 @@
     &:-webkit-scrollbar-thumb {
         background-color: #FFFFFF;
         border-radius: 12px;
-    }
-}
-
-.btnClaimAll {
-    // height: 34px;
-    -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-    div {
-        height: 34px;
     }
 }

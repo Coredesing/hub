@@ -34,7 +34,7 @@
 
 .wrapperCountdown {
     display: grid;
-    grid-template-columns: 100px auto;
+    grid-template-columns: auto auto;
     place-content: flex-start;
     gap: 4px;
     @media (max-width: 640px) {

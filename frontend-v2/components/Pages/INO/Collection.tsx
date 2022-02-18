@@ -1,5 +1,4 @@
 import CountDownTimeV1 from '@/components/Base/CountDownTime'
-import LoadingOverlay from '@/components/Base/LoadingOverlay'
 import { useMyWeb3 } from '@/components/web3/context'
 import { formatNumber } from '@/utils'
 import { ObjectType } from '@/utils/types'
@@ -7,7 +6,7 @@ import clsx from 'clsx'
 import React, { useEffect, useMemo, useState } from 'react'
 import styles from './Collection.module.scss'
 import { PropagateLoader } from 'react-spinners'
-import gamfiBoxImg from '@/assets/images/gamefi-box.png'
+import gamefiBoxImg from '@/assets/images/gamefi-box.png'
 
 type Props = {
   poolInfo: ObjectType;
@@ -61,7 +60,7 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT 
             ? <>
               <div className='flex gap-3 justify-between flex-wrap items-center mb-9'>
                 <div className={clsx(styles.wrapperCountdown, 'items-center')}>
-                  <div className='text-sm font-bold uppercase'>
+                  <div className='text-sm font-bold uppercase w-max'>
                     {(timeClaim > timeNow) ? 'Claim starts in' : 'You can claim now'}
                   </div>
                   {!isClaimed && timeClaim > timeNow && <CountDownTimeV1 background='bg-transparent' time={{ date1: timeClaim, date2: timeNow }} onFinish={onFinishCountdown} />}
@@ -111,14 +110,14 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT 
                   {
                     collections.map((b, id) => <div key={id} className={clsx(styles.collection, 'cursor-pointer')} style={{ background: '#23252B' }}>
                       <div className={clsx(styles.collectionImage, 'w-full')}>
-                        <img src={b.image || gamfiBoxImg.src} className='w-full h-full object-cover bg-gamefiDark-900' alt=""
+                        <img src={b.image || gamefiBoxImg.src} className='w-full h-full object-contain' alt=""
                           onError={(e: any) => {
-                            e.target.src = gamfiBoxImg.src
+                            e.target.src = gamefiBoxImg.src
                           }}
                         />
                       </div>
                       <div className={clsx(styles.collectionDetail, 'w-full flex items-center')}>
-                        <div className='w-2/5 font-casual text-13px text-center'>
+                        <div className='w-2/5 font-casual text-13px text-center font-semibold'>
                           #{formatNumber(b.collectionId, 3) || '-/-'}
                         </div>
                         <div

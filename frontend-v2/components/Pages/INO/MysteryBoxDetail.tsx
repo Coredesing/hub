@@ -347,12 +347,16 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       if (!account) return
       const callWithExternalApi = !!poolInfo.use_external_api
       const handleInfoTokenExternal = async (collectionId: number, collection: ObjectType) => {
-        const tokenURI = await erc721Contract.tokenURI(collectionId)
-        collection.collectionId = collectionId
-        let infoBoxType = await fetcher(tokenURI)
-        infoBoxType = infoBoxType?.data || {}
-        Object.assign(collection, infoBoxType)
-        return collection
+        try {
+          const tokenURI = await erc721Contract.tokenURI(collectionId)
+          collection.collectionId = collectionId
+          let infoBoxType = await fetcher(tokenURI)
+          infoBoxType = infoBoxType?.data || {}
+          Object.assign(collection, infoBoxType)
+          return collection
+        } catch (error) {
+          console.debug('error', error)
+        }
       }
       if (callWithExternalApi) {
         const result = await fetcher(`${API_BASE_URL}/pool/owner/${poolInfo.token}?wallet=${account}&limit=100`)
@@ -363,7 +367,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             collectionId
           }
           try {
-            handleInfoTokenExternal(collectionId, collection)
+            await handleInfoTokenExternal(collectionId, collection)
           } catch (error) {
             console.log('err', error)
           }
@@ -388,7 +392,8 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             const collection: ObjectType = {}
             try {
               const collectionId = await erc721Contract.tokenOfOwnerByIndex(account, id)
-              handleInfoTokenExternal(collectionId.toNumber(), collection)
+              collection.collectionId = collectionId.toNumber()
+              await handleInfoTokenExternal(collection.collectionId, collection)
               arrCollections.push(collection)
             } catch (error) {
               console.log('error', error)

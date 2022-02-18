@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import styles from './Notfound.module.scss'
 
-const NotFound = () => {
+const NotFound = ({ backLink }: { backLink?: string }) => {
   const router = useRouter()
 
   return (
@@ -14,9 +14,9 @@ const NotFound = () => {
       </div>
       <h3 className='mb-3 uppercase text-lg lg:text-3xl font-medium text-center'>Sorry, we were unable to find that page</h3>
       <button
-        onClick={() => router.push('/')}
+        onClick={() => router.push(backLink || '/')}
         className={clsx(styles.button, 'uppercase bg-gamefiGreen-700 px-4 py-2 text-black font-semibold')}>
-        Back to home page
+        Go back
       </button>
     </div>
   )

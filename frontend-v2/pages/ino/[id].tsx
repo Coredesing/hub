@@ -16,7 +16,7 @@ const AuctionBox = (props: any) => {
     if (isMysteryBox(poolInfo.token_type)) {
       return <MysteryBoxDetail poolInfo={poolInfo} />
     }
-    return <NotFound />
+    return <NotFound backLink='/ino' />
   }
   return <Layout title="GameFi INO">
     {
@@ -27,7 +27,7 @@ const AuctionBox = (props: any) => {
         </>
         : (
           !poolInfo
-            ? <h1 className="text-white">Page not found</h1>
+            ? <NotFound backLink='/ino' />
             : renderContent()
         )
     }

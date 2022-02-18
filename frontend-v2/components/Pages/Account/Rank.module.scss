@@ -1,0 +1,40 @@
+.myRank {
+    display: grid;
+    grid-template-columns: 30% 70%;
+    gap: 12px;
+    margin-bottom: 60px;
+    @media screen and (max-width: 1024px) {
+        grid-template-columns: 1fr;
+        margin-bottom: 30px
+    }
+}
+
+.boxRadient {
+    background: linear-gradient(91.55deg, rgba(255, 255, 255, 30%) -7.35%, rgba(255, 255, 255, 0) 70.92%);
+    padding: 1px;
+    // height: 112px;
+    &>div {
+        background: linear-gradient(91.55deg, rgba(0, 0, 0, 40%) -7.35%, rgba(255, 255, 255, 0) 52.92%);
+        padding: 25px 30px;
+        @media screen and (max-width: 640px) {
+            padding: 15px 20px;
+        }
+    }
+}
+
+.btnUnstake {
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px), 0 0);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px), 0 0);
+    div {
+        height: 34px;
+        min-width: 126px;
+        -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px), 0 0);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px), 0 0);
+    }
+}
+
+.btnStakeMore {
+    -webkit-clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%, 0 0);
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%, 0 0);
+    min-width: 126px;
+}

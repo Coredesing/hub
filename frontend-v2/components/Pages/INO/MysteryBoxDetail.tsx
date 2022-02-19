@@ -83,7 +83,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }, [libraryDefaultTemporary, poolInfo])
 
   const presaleContract = useMemo(() => {
-    if (!poolInfo.campaign_hash) return
+    if (!poolInfo.campaign_hash || !libraryDefaultTemporary) return
     const contract = new Contract(poolInfo.campaign_hash, PresaleBoxAbi, libraryDefaultTemporary)
     return contract
   }, [poolInfo, libraryDefaultTemporary])

@@ -75,13 +75,19 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     tiersState.actions.getUserTier(account)
   }, [account])
   const { provider: libraryDefaultTemporary } = useLibraryDefaultFlexible(poolInfo?.network_available)
-  const [presaleContract, setPresaleContract] = useState<any>(null)
   const [myBoxThisPool, setMyBoxThisPool] = useState(0)
   const erc721Contract = useMemo(() => {
     if (!libraryDefaultTemporary || !poolInfo.token) return
     const contract = new Contract(poolInfo.token, Erc721Abi, libraryDefaultTemporary)
     return contract
   }, [libraryDefaultTemporary, poolInfo])
+
+  const presaleContract = useMemo(() => {
+    if (!poolInfo.campaign_hash) return
+    const contract = new Contract(poolInfo.campaign_hash, PresaleBoxAbi, libraryDefaultTemporary)
+    return contract
+  }, [poolInfo, libraryDefaultTemporary])
+
   const maxBoxCanBuy = useMemo(() => {
     const currentTier = poolInfo.tiers.find(t => t.level === userTier)
     return currentTier?.ticket_allow || 0
@@ -105,6 +111,31 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     }
   }, [erc721Contract, account])
 
+  const getSupplyBoxes = useCallback(() => {
+    const boxes = poolInfo.boxTypesConfig || []
+    if (!presaleContract) return
+    Promise
+      .all(boxes.map((b, subBoxId) => new Promise(async (resolve, reject) => {
+        try {
+          const response = await presaleContract.subBoxes(eventId, subBoxId)
+          const result = {
+            maxSupply: response.maxSupply ? response.maxSupply.toNumber() : 0,
+            totalSold: response.totalSold ? response.totalSold.toNumber() : 0
+          }
+          resolve({ ...b, subBoxId, ...result })
+        } catch (error) {
+          reject(error)
+        }
+      })))
+      .then((boxes) => {
+        setBoxTypes(boxes)
+        setBoxSelected(boxes[0])
+      })
+      .catch(err => {
+        console.debug('err', err)
+      })
+  }, [poolInfo, presaleContract])
+
   useEffect(() => {
     if (!presaleContract || !account) {
       setMyBoxThisPool(0)
@@ -118,8 +149,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     if (isReset) {
       getMyBoxThisPool()
       getMyNumBox()
+      getSupplyBoxes()
     }
-  }, [getMyBoxThisPool, getMyNumBox])
+  }, [getMyBoxThisPool, getMyNumBox, getSupplyBoxes])
 
   const onSetCountdown = useCallback(() => {
     if (poolInfo) {
@@ -225,36 +257,17 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }, [poolInfo, boxSelected])
 
   useEffect(() => {
+    getSupplyBoxes()
+  }, [getSupplyBoxes])
+
+  useEffect(() => {
     const boxes = poolInfo.boxTypesConfig || []
-    if (poolInfo.campaign_hash && libraryDefaultTemporary) {
-      const contractPresale = new Contract(poolInfo.campaign_hash, PresaleBoxAbi, libraryDefaultTemporary)
-      setPresaleContract(contractPresale)
-      Promise
-        .all(boxes.map((b, subBoxId) => new Promise(async (resolve, reject) => {
-          try {
-            const response = await contractPresale.subBoxes(eventId, subBoxId)
-            const result = {
-              maxSupply: response.maxSupply ? response.maxSupply.toNumber() : 0,
-              totalSold: response.totalSold ? response.totalSold.toNumber() : 0
-            }
-            resolve({ ...b, subBoxId, ...result })
-          } catch (error) {
-            reject(error)
-          }
-        })))
-        .then((boxes) => {
-          setBoxTypes(boxes)
-          setBoxSelected(boxes[0])
-        })
-        .catch(err => {
-          console.debug('err', err)
-        })
-    } else {
+    if (!poolInfo.campaign_hash) {
       const _boxes = boxes.map((b, subBoxId) => ({ ...b, subBoxId }))
       setBoxTypes(_boxes)
       setBoxSelected(_boxes[0])
     }
-  }, [poolInfo, libraryDefaultTemporary])
+  }, [poolInfo])
 
   const onSelectCurrency = (t: ObjectType) => {
     if (t.address === currencySelected.address) return
@@ -347,12 +360,16 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       if (!account) return
       const callWithExternalApi = !!poolInfo.use_external_api
       const handleInfoTokenExternal = async (collectionId: number, collection: ObjectType) => {
-        const tokenURI = await erc721Contract.tokenURI(collectionId)
-        collection.collectionId = collectionId
-        let infoBoxType = await fetcher(tokenURI)
-        infoBoxType = infoBoxType?.data || {}
-        Object.assign(collection, infoBoxType)
-        return collection
+        try {
+          const tokenURI = await erc721Contract.tokenURI(collectionId)
+          collection.collectionId = collectionId
+          let infoBoxType = await fetcher(tokenURI)
+          infoBoxType = infoBoxType?.data || infoBoxType || {}
+          Object.assign(collection, infoBoxType)
+          return collection
+        } catch (error) {
+          console.debug('error', error)
+        }
       }
       if (callWithExternalApi) {
         const result = await fetcher(`${API_BASE_URL}/pool/owner/${poolInfo.token}?wallet=${account}&limit=100`)
@@ -363,7 +380,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             collectionId
           }
           try {
-            handleInfoTokenExternal(collectionId, collection)
+            await handleInfoTokenExternal(collectionId, collection)
           } catch (error) {
             console.log('err', error)
           }
@@ -388,7 +405,8 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             const collection: ObjectType = {}
             try {
               const collectionId = await erc721Contract.tokenOfOwnerByIndex(account, id)
-              handleInfoTokenExternal(collectionId.toNumber(), collection)
+              collection.collectionId = collectionId.toNumber()
+              await handleInfoTokenExternal(collection.collectionId, collection)
               arrCollections.push(collection)
             } catch (error) {
               console.log('error', error)

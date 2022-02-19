@@ -107,7 +107,7 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
             insufficient balance
           </div>}
           <div className='flex justify-center'>
-            <Recaptcha onChange={onChangeRecapcha} ref={recaptchaRef} size='compact'/>
+            <Recaptcha onChange={onChangeRecapcha} ref={recaptchaRef}/>
           </div>
           <div className='grid justify-center grid-cols-1'>
             <ButtonBase

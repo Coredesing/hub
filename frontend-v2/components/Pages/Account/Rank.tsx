@@ -1,158 +1,140 @@
-import React from 'react'
+import { useMyWeb3 } from '@/components/web3/context'
+import { useAppContext } from '@/context/index'
+import { ObjectType } from '@/utils/types'
+import clsx from 'clsx'
+import { BigNumber, utils } from 'ethers'
+import Image from 'next/image'
+import { useRouter } from 'next/router'
+import React, { useEffect, useMemo, useState } from 'react'
+import FilterDropdown from '../Home/FilterDropdown'
+import Ranks from '../Staking/Ranks'
+import TopRanking from '../Staking/TopRanking'
+import styles from './Rank.module.scss'
 
-const Rank = () => {
+const Rank = ({ data }) => {
+  const router = useRouter()
+  const { account } = useMyWeb3()
+  const { tiers, $tiers } = useAppContext()
+  useEffect(() => {
+    $tiers.actions.getUserTier(account)
+  }, [account])
+  useEffect(() => {
+    tiers.actions.setConfigs(data.tierConfigs)
+  }, [data])
+
+  const myRank = useMemo(() => {
+    const currentTier = $tiers.state?.data || {}
+    const tiersConfig = tiers.state?.all || []
+    const noTier = (currentTier?.tier || 0)
+    const tokenStaked = +currentTier?.tokenStaked || 0
+    const me = tiersConfig.find(t => t.id === noTier) || {}
+    const requireNextRank: ObjectType = {}
+    if (tiersConfig.length) {
+      const nextTier = tiersConfig.find(t => t.id === (noTier + 1))
+      if (!nextTier) {
+        requireNextRank.requirementNextTier = 0
+      } else if (nextTier.config.requirement) {
+        requireNextRank.requirementNextTier = nextTier.config.requirement
+      } else {
+        const nextAmount = utils.parseEther(String(nextTier.config.tokens)).toString()
+        const currentAmount = utils.parseEther(tokenStaked.toString())
+        requireNextRank.requirementNextTier = `${+utils.formatEther(BigNumber.from(nextAmount).sub(BigNumber.from(currentAmount)))} GAFI`
+      }
+    }
+    return { ...me, ...currentTier, ...requireNextRank }
+  }, [$tiers, tiers.state?.all])
+
+  const [rankingSelected, setRankingSelected] = useState()
+  const [isLive, setIsLive] = useState(null)
+  const rankingOptions = useMemo(() => {
+    let all = (data?.legendSnapshots || []).sort((a, b) => b.snapshot_at - a.snapshot_at).map(s => {
+      return {
+        key: s.id,
+        label: s.name,
+        value: s.top.map(x => ({ ...x, snapshot_at: x.snapshot_at ? new Date(x.snapshot_at * 1000) : null }))
+      }
+    })
+
+    if (data?.legendCurrent) {
+      all.unshift({
+        key: 0,
+        label: 'Realtime',
+        value: data.legendCurrent.map(x => ({ wallet_address: x.wallet_address, amount: parseFloat(x.amount), snapshot_at: x.last_time ? new Date(x.last_time * 1000) : null }))
+      })
+    }
+
+    return all
+  }, [data])
+  useEffect(() => {
+    if (!rankingSelected) {
+      setRankingSelected(rankingOptions?.[0]?.value)
+    }
+
+    if (isLive === null) {
+      setIsLive(!rankingOptions?.[0]?.key)
+    }
+  }, [rankingOptions, rankingSelected, isLive])
+  const handleRankingOption = (item: any) => {
+    setIsLive(!item?.key)
+    setRankingSelected(item?.value)
+  }
+
   return (
     <div className='py-10 px-9'>
       <div className='flex items-center justify-between'>
         <h3 className='hidden lg:block uppercase font-bold text-2xl mb-7'>My Rank</h3>
       </div>
-      <div className='w-full h-96 flex items-center justify-center'>
+      {/* <div className='w-full h-96 flex items-center justify-center'>
         <h1 className='text-6xl uppercase font-bold'>Coming Soon</h1>
-      </div>
-      {/* <div>
-        <div>
-          <img src="" alt="" />
-          <div>
-            <span className='uppercase font-bold text-white/50 text-13px'>CURRENT RANK</span>
-            <h4>Start</h4>
-          </div>
-        </div>
-        <div>
-          <div>
-            <span className='uppercase font-bold text-white/50 text-13px'>CURRENT Staked</span>
-            <span>60.00 GAFI</span>
-          </div>
-          <div>
-            <span className='uppercase font-bold text-white/50 text-13px'>$GAFI LEFT TO NEXT RANK</span>
-            <span>60.00 GAFI</span>
-          </div>
-          <div>
-            <button className='uppercase font-bold text-white/50 text-13px'>Unkstake</button>
-            <button>Stake more</button>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div>
-          <div></div>
-          <div>
-            <img src="" alt="" />
-            <span>Start</span>
-          </div>
-          <div></div>
-          <div>
-            <img src="" alt="" />
-            <span>Rookie</span>
-          </div>
-          <div></div>
-          <div>
-            <img src="" alt="" />
-            <span>Elite</span>
-          </div>
-          <div></div>
-          <div>
-            <img src="" alt="" />
-            <span>Pro</span>
-          </div>
-          <div></div>
-          <div>
-            <img src="" alt="" />
-            <span>Legend</span>
-          </div>
-        </div>
-        <div>
-          <div>$GAFI need to stake</div>
-          <div>
-            0 $GAFI
-          </div>
-          <div></div>
-          <div>
-            Min 20 $GAFI
-          </div>
-          <div></div>
-          <div>
-            Min 500 $GAFI
-          </div>
-          <div></div>
-          <div>
-            Min 500 $GAFI
-          </div>
-          <div></div>
-          <div>
-            Auction NFT required
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM9 12H7V7H9V12ZM8 6C7.4 6 7 5.6 7 5C7 4.4 7.4 4 8 4C8.6 4 9 4.4 9 5C9 5.6 8.6 6 8 6Z" fill="#858689" />
-            </svg>
-          </div>
-        </div>
-        <div>
-          <div>Method</div>
-          <div>
-            --
-          </div>
-          <div></div>
-          <div>
-            Lottery
-          </div>
-          <div></div>
-          <div>
-            Lottery
-          </div>
-          <div></div>
-          <div>
-            Lottery
-          </div>
-          <div></div>
-          <div>
-            Guaranteed 20% Pool
-          </div>
-        </div>
-        <div>
-          <div>Max individual alloc</div>
-          <div>
-            --
-          </div>
-          <div></div>
-          <div>
-            $60
-          </div>
-          <div></div>
-          <div>
-            $300
-          </div>
-          <div></div>
-          <div>
-            $700
-          </div>
-          <div></div>
-          <div>
-            --
-          </div>
-        </div>
-        <div>
-          <div>Withdrawal delay</div>
-          <div>
-            --
-          </div>
-          <div></div>
-          <div>
-            5 days
-          </div>
-          <div></div>
-          <div>
-            8 days
-          </div>
-          <div></div>
-          <div>
-            12 days
-          </div>
-          <div></div>
-          <div>
-            30 days
-          </div>
-        </div>
       </div> */}
+      <div>
+        <div className={styles.myRank}>
+          <div className={clsx(styles.boxRadient, 'rounded')}>
+            <div className='rounded w-full h-full flex items-center gap-4'>
+              {myRank.image && <Image src={myRank.image} width={60} height={60} className='object-cover' />}
+              <div>
+                <span className='uppercase text-13px text-white/50 font-bold block'>Current Rank</span>
+                <span className='text-2xl block font-medium'>{myRank.name}</span>
+              </div>
+            </div>
+          </div>
+          <div className={clsx(styles.boxRadient, 'rounded')}>
+            <div className='rounded w-full h-full gap-3 flex items-center flex-col sm:flex-row'>
+              <div className='w-full flex flex-col justify-center'>
+                <span className='uppercase text-13px text-white/50 font-bold block'>Current Staked</span>
+                <span className='text-2xl block font-medium'>{+myRank.tokenStaked || 0} GAFI</span>
+              </div>
+              <div className='w-full flex flex-col justify-center'>
+                <span className='uppercase text-13px text-white/50 font-bold block'>$GAFI LEFT TO NEXT RANK</span>
+                <span className='text-2xl block font-medium'>{myRank.requirementNextTier}</span>
+              </div>
+              <div className='w-full flex items-center gap-1'>
+                <button
+                  onClick={() => router.push('/staking')}
+                  className={clsx(
+                    styles.btnUnstake,
+                    'p-px h-9 cursor-pointer bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700 rounded-sm',
+                  )}>
+                  <div className={'py-2 px-5 bg-gamefiDark-900 text-13px flex justify-center items-center rounded-sm font-bold uppercase'}>
+                    Unstake
+                  </div>
+                </button>
 
+                <button
+                  onClick={() => router.push('/staking')}
+                  className={clsx(styles.btnStakeMore, 'bg-gamefiGreen-700 py-2 px-5 text-black uppercase font-bold text-13px h-9 rounded-sm')}>Stake More</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <Ranks />
+        <div>
+          <div className="md:text-lg 2xl:text-2xl uppercase font-bold flex mt-6 items-center">
+            <span className="mr-2">Ranking</span><FilterDropdown items={rankingOptions} selected={rankingSelected} onChange={handleRankingOption}></FilterDropdown>
+          </div>
+          <TopRanking isLive={isLive} rankings={rankingSelected} />
+        </div>
+      </div>
     </div>
   )
 }

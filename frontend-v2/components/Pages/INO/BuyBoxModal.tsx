@@ -106,16 +106,16 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
           {insufficientBalance && <div className='text-red-600 text-lg mb-4'>
             insufficient balance
           </div>}
-          <div>
-            <Recaptcha onChange={onChangeRecapcha} ref={recaptchaRef} />
+          <div className='flex justify-center'>
+            <Recaptcha onChange={onChangeRecapcha} ref={recaptchaRef} size='compact'/>
           </div>
-          <div className='grid justify-center'>
+          <div className='grid justify-center grid-cols-1'>
             <ButtonBase
               color={'green'}
               onClick={onBuyBox}
               disabled={disabledBuy || !isValidChain}
               isLoading={loadingBuyBox}
-              className={clsx('mt-4 uppercase w-40 ')}>
+              className={clsx('mt-4 uppercase w-full ')}>
               Buy Box
             </ButtonBase>
           </div>

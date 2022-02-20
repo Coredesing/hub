@@ -2,7 +2,7 @@ import { fetcher } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 
 export function fetchWithWallet (wallet) {
-  return fetcher(`${API_BASE_URL}/aggregator/liked/${wallet}`)
+  return fetcher(encodeURI(`${API_BASE_URL}/aggregator/liked/${wallet}`))
 }
 
 export default async function handler (req, res) {

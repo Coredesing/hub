@@ -14,6 +14,7 @@ import { API_BASE_URL } from '@/utils/constants'
 import Partners from '@/components/Pages/Home/Partners'
 import Performance from '@/components/Pages/Home/Performance'
 import { fetcher } from '@/utils'
+import GameFiCarousel from '@/components/Base/GameFiCarousel'
 
 const PageIndex = () => {
   const router = useRouter()
@@ -37,6 +38,7 @@ const PageIndex = () => {
 
   return (
     <Layout title="GameFi">
+      {/* <GameFiCarousel likes={likes} items={featuredGames}></GameFiCarousel> */}
       <div className="md:px-4 lg:px-16 mt-14 md:container mx-auto lg:block">
         {/* Load error here */}
         {/* Loading here */}

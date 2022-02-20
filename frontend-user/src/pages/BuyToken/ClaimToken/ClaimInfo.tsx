@@ -43,13 +43,22 @@ function ClaimInfo(props: any) {
       <div className={styles.poolDetailClaimInfo}>
         <div className={styles.poolDetailClaimInfoBlock}>
           <span>Total bought tokens</span>
-          <span className="text-blue">{numberWithCommas(`${userPurchased || 0}`, 2)} {tokenDetails?.symbol}</span>
+          <span className="text-blue">{
+          (poolDetails?.id === 99 || poolDetails?.id === '99' || poolDetails?.id === 100 || poolDetails?.id === '100')
+          ? numberWithCommas(`${formatRoundUp(new BigNumber(userPurchased).dividedBy(10 ** 10) || 0)}`, 2)
+          : numberWithCommas(`${userPurchased || 0}`, 2)} {tokenDetails?.symbol}</span>
         </div>
 
         <div className={styles.poolDetailClaimInfoBlock}>
           <span>Have bought</span>
           <span>{
-            numberWithCommas(`${
+            (poolDetails?.id === 99 || poolDetails?.id === '99' || poolDetails?.id === 100 || poolDetails?.id === '100')
+            ? numberWithCommas(`${
+              formatRoundUp(
+                new BigNumber(userPurchased).dividedBy(10 ** 10).multipliedBy(poolDetails?.ethRate || 0)
+              )
+            }`, 2)
+            : numberWithCommas(`${
               formatRoundUp(
                 new BigNumber(userPurchased).multipliedBy(poolDetails?.ethRate || 0)
               )
@@ -65,7 +74,13 @@ function ClaimInfo(props: any) {
 
         <div className={styles.poolDetailClaimInfoBlock}>
           <span>Claimed on GameFi</span>
-          <span className="text-blue">{numberWithCommas(`${userClaimed || 0}`, 2)}/{numberWithCommas(`${userPurchased || 0}`, 2)} {tokenDetails?.symbol}</span>
+          <span className="text-blue">{
+          (poolDetails?.id === 99 || poolDetails?.id === '99' || poolDetails?.id === 100 || poolDetails?.id === '100')
+          ? numberWithCommas(`${formatRoundUp(new BigNumber(userClaimed).dividedBy(10 ** 10) || 0)}`, 2)
+          : numberWithCommas(`${userClaimed || 0}`, 2)}/{
+          (poolDetails?.id === 99 || poolDetails?.id === '99' || poolDetails?.id === 100 || poolDetails?.id === '100')
+          ? numberWithCommas(`${formatRoundUp(new BigNumber(userPurchased).dividedBy(10 ** 10) || 0)}`, 2)
+          : numberWithCommas(`${formatRoundUp(new BigNumber(userPurchased) || 0)}`, 2)} {tokenDetails?.symbol}</span>
         </div>
       </div>
 

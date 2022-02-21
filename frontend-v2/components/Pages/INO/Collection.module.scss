@@ -1,8 +1,22 @@
 .collection {
     width: 280px;
     transition: .3s;
+    padding: 1px;
+    border-radius: 2px;
+    &>div {
+        background: #23252B;
+    }
+    &.clippedpath {
+        -webkit-clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - (280px / 5 * 3) + 20px) calc(100% - 25px), calc(100% - (280px / 5 * 3)) 100%, 0 100%);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - (280px / 5 * 3) + 20px) calc(100% - 25px), calc(100% - (280px / 5 * 3)) 100%, 0 100%);
+        &>div {
+            border-radius: 2px;
+            -webkit-clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - (280px / 5 * 3) + 20px) calc(100% - 25px), calc(100% - (280px / 5 * 3)) 100%, 0 100%);
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - (280px / 5 * 3) + 20px) calc(100% - 25px), calc(100% - (280px / 5 * 3)) 100%, 0 100%);
+        }
+    }
     &:hover {
-        // border: 1px solid #6CDB00;
+        background: #6CDB00;
     }
     .collectionImage {
         height: 190px;

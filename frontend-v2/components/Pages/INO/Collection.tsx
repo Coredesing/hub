@@ -15,9 +15,9 @@ type Props = {
   loading?: boolean;
   onClaimAllNFT: () => any;
   onClaimNFT: (tokenId: number) => any;
-}
+} & ObjectType
 
-const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT }: Props) => {
+const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT, isValidChain }: Props) => {
   const POOL_IDS_IS_CLAIMED_ONE_BY_ONE: any[] = useMemo(() => {
     try {
       return JSON.parse(process.env.NEXT_PUBLIC_POOL_IDS_IS_CLAIMED_ONE_BY_ONE || '')
@@ -88,11 +88,11 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT 
                       {
                         isClaimedOnGF
                           ? isClaimed && <div
-                            onClick={isClaimed ? handleClaimAllNFT : undefined}
+                            onClick={(isClaimed && isValidChain) ? handleClaimAllNFT : undefined}
                             className={clsx(styles.btnClaimAll,
                               'bg-gamefiDark-900 w-40 text-13px flex justify-center items-center rounded-sm font-bold uppercase',
                               {
-                                'cursor-not-allowed': !isClaimed
+                                'cursor-not-allowed': !isClaimed || !isValidChain
                               }
                             )}
                           >
@@ -120,28 +120,33 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT 
               <div>
                 <div className='flex flex-wrap gap-5 lg:justify-start justify-center'>
                   {
-                    listCollections.map((b, id) => <div key={id} className={clsx(styles.collection, 'cursor-pointer')} style={{ background: '#23252B' }}>
-                      <div className={clsx(styles.collectionImage, 'w-full')}>
-                        <img src={b.image || gamefiBoxImg.src} className='w-full h-full object-contain' alt=""
-                          onError={(e: any) => {
-                            e.target.src = gamefiBoxImg.src
-                          }}
-                        />
-                      </div>
-                      <div className={clsx(styles.collectionDetail, 'w-full flex items-center')}>
-                        <div className='w-2/5 font-casual text-13px text-center font-semibold'>
-                          #{formatNumber(b.collectionId, 3) || '-/-'}
+                    listCollections.map((b, id) => <div key={id} className={clsx(styles.collection, {
+                      [styles.clippedpath]: !isClaimed || !POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id)
+                    })}>
+                      <div className={clsx('cursor-pointer')}>
+                        <div className={clsx(styles.collectionImage, 'w-full')}>
+                          <img src={b.image || gamefiBoxImg.src} className='w-full h-full object-contain' alt=""
+                            onError={(e: any) => {
+                              e.target.src = gamefiBoxImg.src
+                            }}
+                          />
                         </div>
-                        <div
-                          onClick={isClaimed ? () => handleClaimNFT(b.collectionId) : undefined}
-                          className={clsx(styles.btnClaim,
-                            'w-3/5 text-black font-bold text-13px text-center h-full flex items-center justify-center',
-                            {
-                              'bg-gamefiGreen-700': isClaimed && POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id),
-                              'bg-gamefiDark-900': !isClaimed || !POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id)
-                            }
-                          )}>
-                          {isClaimed ? 'Claim' : ''}
+                        <div className={clsx(styles.collectionDetail, 'w-full flex items-center')}>
+                          <div className='w-2/5 font-casual text-13px text-center font-semibold'>
+                            #{formatNumber(b.collectionId, 3) || '-/-'}
+                          </div>
+                          <div
+                            onClick={(isClaimed && isValidChain) ? () => handleClaimNFT(b.collectionId) : undefined}
+                            className={clsx(styles.btnClaim,
+                              'w-3/5 text-black font-bold text-13px text-center h-full flex items-center justify-center',
+                              {
+                                'bg-gamefiGreen-700': isClaimed && POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id),
+                                'bg-gamefiDark-900': !isClaimed || !POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id),
+                                'cursor-not-allowed': !isValidChain
+                              }
+                            )}>
+                            {isClaimed ? 'Claim' : ''}
+                          </div>
                         </div>
                       </div>
                     </div>)

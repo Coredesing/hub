@@ -41,7 +41,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const eventId = 0
   const tiersState = useAppContext()?.$tiers
   const userTier = tiersState?.state?.data?.tier || 0
-  const { account, chainID } = useMyWeb3()
+  const { account, chainID, library } = useMyWeb3()
   const [boxTypes, setBoxTypes] = useState<any[]>([])
   const [boxSelected, setBoxSelected] = useState<ObjectType>({})
   const [currencySelected, setCurrencySelected] = useState<ObjectType>({})
@@ -430,7 +430,16 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }, [ownedBox, boxTypes.length, handleSetCollections])
   const onClaimAllNFT = async () => {
     try {
-      const tx = await presaleContract.claimAllNFT()
+      if (!library || !account) {
+        toast.error('Please connect your wallet')
+        return
+      }
+      if (!isValidChain) {
+        toast.error(`Network invalid. Please switch to ${networkPool.name}`)
+        return
+      }
+      const contractSigner = presaleContract.connect(library.getSigner(account).connectUnchecked())
+      const tx = await contractSigner.claimAllNFT()
       // setShowModalTx(true)
       // setTxHash(tx.hash)
       toast.loading('Request is processing!', { duration: 2000 })
@@ -448,7 +457,16 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }
   const onClaimNFT = async (boxId: number) => {
     try {
-      const tx = await presaleContract.claimNFT(boxId)
+      if (!library || !account) {
+        toast.error('Please connect your wallet')
+        return
+      }
+      if (!isValidChain) {
+        toast.error(`Network invalid. Please switch to ${networkPool.name}`)
+        return
+      }
+      const contractSigner = presaleContract.connect(library.getSigner(account).connectUnchecked())
+      const tx = await contractSigner.claimNFT(boxId)
       // setShowModalTx(true)
       // setTxHash(tx.hash)
       toast.loading('Request is processing!', { duration: 2000 })
@@ -687,6 +705,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               loading={loadingCollection}
               onClaimAllNFT={onClaimAllNFT}
               onClaimNFT={onClaimNFT}
+              isValidChain={isValidChain}
             />
           </TabPanel>
         </div>

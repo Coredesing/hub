@@ -39,7 +39,7 @@ const FilterDropdown = ({ items, selected, onChange }: Props) => {
   })
 
   const availableOptions = () => {
-    console.log(items?.filter(item => item.value !== selected))
+    // console.log(items?.filter(item => item.value !== selected))
     return items?.filter(item => item.value !== selected)
   }
 

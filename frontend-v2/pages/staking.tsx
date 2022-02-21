@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import Layout from '@/components/Layout'
 import imgNA from '@/assets/images/ranks/na.png'
 import { API_BASE_URL } from '@/utils/constants'
-import { fetcher, safeToFixed } from '@/utils'
+import { fetcher, safeToFixed, shortenAddress } from '@/utils'
 import ABIStakingPool from '@/components/web3/abis/StakingPool.json'
 import ABIERC20 from '@/components/web3/abis/ERC20.json'
 import { useWeb3Default, GAFI } from '@/components/web3'
@@ -16,6 +16,7 @@ import TabUnstake from '@/components/Pages/Staking/TabUnstake'
 import Ranks from '@/components/Pages/Staking/Ranks'
 import FilterDropdown from '@/components/Pages/Home/FilterDropdown'
 import TopRanking from '@/components/Pages/Staking/TopRanking'
+import { handleChangeStaking } from '@/components/Pages/Staking/utils'
 
 const Staking = ({ data }) => {
   const mounted = useRef(false)
@@ -150,11 +151,11 @@ const Staking = ({ data }) => {
   const [rankingSelected, setRankingSelected] = useState()
   const [isLive, setIsLive] = useState(null)
   const rankingOptions = useMemo(() => {
-    let all = (data?.legendSnapshots || []).sort((a, b) => b.s - a.s).map(s => {
+    let all = (data?.legendSnapshots || []).sort((a, b) => b.snapshot_at - a.snapshot_at).map(s => {
       return {
         key: s.id,
         label: s.name,
-        value: s.top.map(x => ({ ...x, snapshot_at: x.snapshot_at ? new Date(x.snapshot_at * 1000) : null }))
+        value: s.top.map(x => ({ ...x, snapshot_at: x.snapshot_at ? new Date(x.snapshot_at * 1000) : null, wallet_address: shortenAddress(x.wallet_address, '*', 14, 13) }))
       }
     })
 
@@ -170,16 +171,18 @@ const Staking = ({ data }) => {
   }, [data])
   useEffect(() => {
     if (!rankingSelected) {
-      setRankingSelected(rankingOptions?.[0].value)
+      const selected = handleChangeStaking(rankingOptions, rankingOptions?.[0], account)
+      setRankingSelected(selected.value)
     }
 
     if (isLive === null) {
       setIsLive(!rankingOptions?.[0]?.key)
     }
-  }, [rankingOptions, rankingSelected, isLive])
+  }, [rankingOptions, rankingSelected, isLive, account])
   const handleRankingOption = (item: any) => {
     setIsLive(!item?.key)
-    setRankingSelected(item?.value)
+    const selected = handleChangeStaking(rankingOptions, item, account)
+    setRankingSelected(selected.value)
   }
 
   if (!pool) {

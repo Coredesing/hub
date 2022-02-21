@@ -1,0 +1,9 @@
+.page {
+    height: calc(100vh - 400px);
+}
+
+.button {
+    min-width: 180px;
+    -webkit-clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px), 0 0);
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px), 0 0);
+}

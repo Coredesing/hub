@@ -83,10 +83,10 @@ export const formatNumber = (num: number, range = 2) => {
   return num
 }
 
-export const shortenAddress = (address: string, symbol = '*', lengHide = 14) => {
+export const shortenAddress = (address: string, symbol = '*', lengHide = 14, lengStars = 10) => {
   address = address || ''
   let stars = ''
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < lengStars; i++) {
     stars += symbol
   }
   return address.slice(0, lengHide) + stars + address.slice(-(lengHide))

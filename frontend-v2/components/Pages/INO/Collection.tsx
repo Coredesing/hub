@@ -7,6 +7,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import styles from './Collection.module.scss'
 import { PropagateLoader } from 'react-spinners'
 import gamefiBoxImg from '@/assets/images/gamefi-box.png'
+import Pagination from '@/components/Base/Pagination'
 
 type Props = {
   poolInfo: ObjectType;
@@ -26,6 +27,17 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT 
   }, [])
   const { account } = useMyWeb3()
   const [isClaimed, setClaim] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const perPage = 8
+  const totalCollection = useMemo(() => {
+    return collections?.length || 0
+  }, [collections])
+  const listCollections = useMemo(() => {
+    if (!totalCollection) return []
+    const from = (currentPage - 1) * perPage
+    const end = (currentPage - 1) * perPage + perPage
+    return collections.slice(from, end)
+  }, [collections, currentPage, totalCollection, perPage])
   let timeClaim = poolInfo.campaignClaimConfig?.[0]?.start_time
   const claimType = poolInfo.campaignClaimConfig?.[0]?.claim_type
   const claimUrl = poolInfo.campaignClaimConfig?.[0]?.claim_url
@@ -108,7 +120,7 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT 
               <div>
                 <div className='flex flex-wrap gap-5 lg:justify-start justify-center'>
                   {
-                    collections.map((b, id) => <div key={id} className={clsx(styles.collection, 'cursor-pointer')} style={{ background: '#23252B' }}>
+                    listCollections.map((b, id) => <div key={id} className={clsx(styles.collection, 'cursor-pointer')} style={{ background: '#23252B' }}>
                       <div className={clsx(styles.collectionImage, 'w-full')}>
                         <img src={b.image || gamefiBoxImg.src} className='w-full h-full object-contain' alt=""
                           onError={(e: any) => {
@@ -135,6 +147,12 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT 
                     </div>)
                   }
                 </div>
+                <Pagination
+                  className='mt-8'
+                  totalPage={Math.ceil(totalCollection / perPage)}
+                  currentPage={currentPage}
+                  onChange={setCurrentPage}
+                />
               </div>
             </>
             : <div className='flex items-center w-full h-32 justify-center'>

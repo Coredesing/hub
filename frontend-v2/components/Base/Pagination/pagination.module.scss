@@ -1,10 +1,20 @@
 .pages {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 40px);
-    gap: 8px;
+    grid-template-columns: repeat(auto-fit, 28px);
+    gap: 5px;
+    justify-content: end;
 }
 
-.page-active {
-    background: #72F34B;
-    color: #000;
+.page {
+    transition: .3s;
+    border: 1px solid transparent;
+    &.page-active,
+    &.bordered:hover {
+        background: transparent;
+        border: 1px solid #72F34B;
+        color: #72F34B;
+        &>svg path {
+            stroke: #72F34B;
+        }
+    }
 }

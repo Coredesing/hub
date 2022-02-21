@@ -12,14 +12,14 @@ type Props = {
 }
 
 const SerieContentModal = ({ open, onClose, serieContents, idShow }: Props) => {
-  const [current, setCurrent] = useState(serieContents[0])
-  useEffect(() => {
-    setCurrent(serieContents[idShow])
-  }, [idShow, serieContents])
+  // const [current, setCurrent] = useState(serieContents[0])
+  // useEffect(() => {
+  //   setCurrent(serieContents[idShow])
+  // }, [idShow, serieContents])
 
-  const onSelectItem = (id: number) => {
-    setCurrent(serieContents[id])
-  }
+  // const onSelectItem = (id: number) => {
+  //   setCurrent(serieContents[id])
+  // }
   return <Modal show={open} toggle={onClose} className={styles.modal}>
     <div className={clsx('px-8 pt-14 pb-8', styles.content)}>
       <h3 className='font-bold text-2xl mb-5 font-mechanic'>SERIES CONTENT</h3>
@@ -55,7 +55,7 @@ const SerieContentModal = ({ open, onClose, serieContents, idShow }: Props) => {
             key={`thumb-${item.id}`}
             className={clsx(styles.itemThumb, 'p-px cursor-pointer item-thumb')}
           >
-            <div onClick={() => onSelectItem(id)} className={clsx('cursor-pointer pt-2 px-4 pb-4 bg-black')}>
+            <div className={clsx('cursor-pointer pt-2 px-4 pb-4 bg-black')}>
               <img src={item.banner} alt="" className='w-28 h-16 object-contain mb-2' />
               <h3 className='text-13px font-casual text-center break-words break-all text-ellipsis w-full whitespace-nowrap overflow-hidden'>{item.name}</h3>
             </div>

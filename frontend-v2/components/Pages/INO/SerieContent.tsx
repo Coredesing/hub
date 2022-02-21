@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from '@/components/Base/Table'
 import { ObjectType } from '@/utils/types'
 import SerieContentModal from './SerieContentModal'
@@ -64,47 +64,49 @@ const SerieContent = ({ poolInfo, selected }: Props) => {
   const useNewFormat = firstSerie?.description.match(re)
   const useNewNameFormat = firstSerie?.name.match(reName)
   const useOldFormatWithDescription = firstSerie?.description && !useNewFormat
-  const configs = poolInfo?.seriesContentConfig.map(x => {
-    if (useNewNameFormat) {
-      const matches = x.name.matchAll(reName)
+  const configs = useMemo(() => {
+    return poolInfo?.seriesContentConfig.map(x => {
+      if (useNewNameFormat) {
+        const matches = x.name.matchAll(reName)
+        for (const match of matches) {
+          x.name = match[1].trim()
+          x.rarity = match[2].trim()
+          x.rarityMapping = rankMapping[(x.rarity || '').toLowerCase()]
+          if (match[4]) {
+            x.category = match[4].trim()
+          }
+        }
+      }
+
+      if (!useNewFormat) {
+        return x
+      }
+
+      const metadata = {
+        raw: x.description
+      }
+
+      const matches = x.description.matchAll(re)
       for (const match of matches) {
-        x.name = match[1].trim()
-        x.rarity = match[2].trim()
-        x.rarityMapping = rankMapping[(x.rarity || '').toLowerCase()]
-        if (match[4]) {
-          x.category = match[4].trim()
+        const chanceAndAmount = match[3].match(/(.*?)%[\s,]*(.*?)items/)
+        if (chanceAndAmount) {
+          metadata[match[2]] = {
+            probability: parseFloat(chanceAndAmount[1]),
+            amount: parseFloat(chanceAndAmount[2])
+          }
         }
       }
-    }
 
-    if (!useNewFormat) {
-      return x
-    }
-
-    const metadata = {
-      raw: x.description
-    }
-
-    const matches = x.description.matchAll(re)
-    for (const match of matches) {
-      const chanceAndAmount = match[3].match(/(.*?)%[\s,]*(.*?)items/)
-      if (chanceAndAmount) {
-        metadata[match[2]] = {
-          probability: parseFloat(chanceAndAmount[1]),
-          amount: parseFloat(chanceAndAmount[2])
-        }
+      return {
+        metadata,
+        ...x
       }
-    }
-
-    return {
-      metadata,
-      ...x
-    }
-  }).sort((a, b) => {
-    const r1 = a.rarityMapping?.value || 0
-    const r2 = b.rarityMapping?.value || 0
-    return r2 - r1
-  })
+    }).sort((a, b) => {
+      const r1 = a.rarityMapping?.value || 0
+      const r2 = b.rarityMapping?.value || 0
+      return r2 - r1
+    })
+  }, [poolInfo])
   const useNewFormatExtended = configs?.[0]?.metadata?.[selected?.name]?.probability
   const showNewAmount = configs?.[0]?.metadata?.[selected?.name]?.amount
   const showNewRarity = configs?.[0]?.rarity
@@ -114,7 +116,7 @@ const SerieContent = ({ poolInfo, selected }: Props) => {
     <SerieContentModal
       open={openSerieContentModal}
       onClose={() => setOpenSerieContentModal(false)}
-      serieContents={poolInfo.seriesContentConfig || []}
+      serieContents={configs || []}
       idShow={idSerie}
     />
     <div className="view-mode flex gap-5 items-center" style={{ position: 'absolute', right: '15px', top: '18px' }}>

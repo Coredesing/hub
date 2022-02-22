@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { ReactNode, useEffect, useMemo, useState } from 'react'
 import TabMenus from './TabMenus'
 import styles from './Asset.module.scss'
 import CardSlim from '../Market/CardSlim'
@@ -9,6 +9,8 @@ import ERC721Abi from '@/components/web3/abis/Erc721.json'
 import LoadingOverlay from '@/components/Base/LoadingOverlay'
 import Dropdown from '@/components/Base/Dropdown'
 import { API_BASE_URL } from '@/utils/constants'
+import { BeatLoader, MoonLoader } from 'react-spinners'
+import clsx from 'clsx'
 
 const Asset = () => {
   const assetTypes = useMemo(() => ({
@@ -35,7 +37,7 @@ const Asset = () => {
   }
 
   const [assetLoading, setAssetLoading] = useState(false)
-  const [assets, setAssets] = useState<any[]>([])
+  const [assetComponents, setAssetComponents] = useState<ReactNode[]>([])
 
   const getMyListAsset = async (account: string, erc721Contract: any, prjInfo: any) => {
     try {
@@ -60,6 +62,10 @@ const Asset = () => {
         }
         collection.value = collection.value || collection.price
         collections.push(collection)
+        setAssetComponents((c) => [
+          ...c,
+          <CardSlim item={collection} key={collection.id} detailLink={`/account/collections/${prjInfo.slug}/${collection.id}`} />
+        ])
       }
       return collections
     } catch (error) {
@@ -81,7 +87,7 @@ const Asset = () => {
       try {
         if (useExternalUri) {
           const result = await fetcher(`${API_BASE_URL}/marketplace/collection/${prjInfo.token_address}/${idCollection}`, { method: 'POST' })
-          const infor = result.data?.data || {}
+          const infor = result.data || {}
           Object.assign(collection, infor)
         } else {
           if (erc721Contract) {
@@ -94,10 +100,18 @@ const Asset = () => {
         collection.icon = 'default.img'
       }
       collection.value = collection.value || collection.price
+      setAssetComponents((c) => [
+        ...c,
+        <CardSlim item={collection} key={collection.id} detailLink={`/account/collections/${prjInfo.slug}/${collection.id}`} />
+      ])
       collections.push(collection)
     }
     return collections
   }
+
+  useEffect(() => {
+    setAssetComponents([])
+  }, [currentTab])
 
   useEffect(() => {
     if (!account || !library) return
@@ -106,7 +120,6 @@ const Asset = () => {
     fetcher(`${API_BASE_URL}/marketplace/collections/support?type=${type}`).then(async (res) => {
       const arr = res.data || []
       if (arr.length) {
-        let collections: any[] = []
         for (let i = 0; i < arr.length; i++) {
           const p = arr[i]
           try {
@@ -118,21 +131,15 @@ const Asset = () => {
             if (!myBoxes) {
               continue
             }
-
             const useExternalApi = !!+p?.use_external_api
             if (useExternalApi) {
               const assets = await getMyListAsset(account, erc721Contract, p)
-              collections = [...collections, ...assets]
             } else {
-              const assets = await getMyAssetsFromExternalUri(myBoxes, erc721Contract, p)
-              collections = [...collections, ...assets]
+              const assets = await getMyAssetsFromExternalUri(myBoxes, erc721Contract, p)              
             }
           } catch (error) {
           }
         }
-        setAssets(collections)
-      } else {
-        setAssets([])
       }
       setAssetLoading(false)
     })
@@ -140,11 +147,11 @@ const Asset = () => {
 
   return <div>
     <div className='header px-9 '>
-      <h3 className='mt-14 lg:mt-0 font-bold text-2xl uppercase'>Assets ({assets.length})</h3>
-      <TabMenus value={currentTab} menus={[assetTypes[0].name, assetTypes[1].name, assetTypes[2].name]} onChange={onChangeTab} />
+      <h3 className='mt-14 lg:mt-0 font-bold text-2xl uppercase'>Assets ({assetLoading ? <BeatLoader color='#fff' size={6} /> : assetComponents.length})</h3>
+      <TabMenus value={currentTab} menus={[assetTypes[0].name, assetTypes[1].name, assetTypes[2].name]} tabDisabled={assetLoading} onChange={!assetLoading ? onChangeTab : undefined} />
     </div>
     <div className={styles.content}>
-      <LoadingOverlay loading={assetLoading}></LoadingOverlay>
+      {/* <LoadingOverlay loading={assetLoading}></LoadingOverlay> */}
       {/* <div className='flex gap-2 flex-wrap mb-10'>
         <Dropdown
           selected={{ value: 'Listing', key: 'listing', label: 'Listing' }}
@@ -162,9 +169,15 @@ const Asset = () => {
         />
       </div> */}
 
-      <div className={styles.collectionList}>
-        {assets.map((c) => (<CardSlim item={c} key={c.id} detailLink={`/account/collections/${c.project.slug}/${c.id}`} />))}
+      <div className={clsx(styles.collectionList, 'relative')}>
+        {assetComponents}
+        {assetLoading && <div className='flex items-center justify-center' style={{ width: '280px', height: '420px' }}><MoonLoader size={50} color='#fff'></MoonLoader></div>}
       </div>
+      {
+        !assetLoading && !assetComponents.length && <div className='flex items-center w-full h-32 justify-center'>
+          <h1 className='uppercase text-4xl text-center font-bold'>No Collections Found</h1>
+        </div>
+      }
     </div>
   </div>
 }

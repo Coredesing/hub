@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import styles from './styles.module.scss'
+import gamefiBox from '@/assets/images/gamefi-box.png'
 
 type Props = {
   item: any;
@@ -21,7 +22,16 @@ const CardSlim = ({ item, detailLink }: Props) => {
         {visibility(item)}
       </div> */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={item.image || item.icon} alt={item?.title} className={styles.banner}/>
+      <div className={styles.banner}>
+        <img
+          src={item.image || item.icon || gamefiBox.src}
+          alt={item?.title}
+          // className={styles.banner}
+          onError={(e: any) => {
+            e.target.src = gamefiBox.src
+          }}
+        />
+      </div>
       <div className={styles.information}>
         <div className="mb-2">
           <Link href="#" passHref>

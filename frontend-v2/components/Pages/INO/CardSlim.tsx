@@ -6,6 +6,7 @@ import { networkImage, currency, visibility } from './List'
 import styles from './ListCard.module.scss'
 import stylesCarousel from './Carousel.module.scss'
 import { intervalToDuration } from 'date-fns'
+import { formatNumber } from '@/utils'
 
 type Props = {
   item: Item;
@@ -133,7 +134,7 @@ const CardSlim = ({ item, now }: Props) => {
           {item.campaign_status !== 'Ended' && (
             <>
               <div className={styles.informationLabel}>{text}</div>
-              {item.campaign_status === 'TBA' ? 'TBA' : <span>{duration.days}d : {duration.hours}h : {duration.minutes}m : {duration.seconds}s</span>}
+              {item.campaign_status === 'TBA' ? 'TBA' : <span>{formatNumber(duration.days)}d : {formatNumber(duration.hours)}h : {formatNumber(duration.minutes)}m : {formatNumber(duration.seconds)}s</span>}
             </>
           )}
         </div>

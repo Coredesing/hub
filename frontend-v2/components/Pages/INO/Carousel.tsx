@@ -7,6 +7,7 @@ import stylesList from './List.module.scss'
 import { Item } from './types'
 import { networkImage, currency } from './List'
 import { intervalToDuration } from 'date-fns'
+import { formatNumber } from '@/utils'
 
 type Props = {
   items: Item[];
@@ -100,13 +101,13 @@ const CarouselAction = ({ item, now }: { item: Item; now: Date }) => {
           <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="55.1426" y="32.176">:</tspan></text>
           <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="121.143" y="32.176">:</tspan></text>
           <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="187.143" y="32.176">:</tspan></text>
-          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="12.8184" y="32.176">{duration.days}</tspan></text>
+          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="12.8184" y="32.176">{formatNumber(duration.days)}</tspan></text>
           <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }} fontSize="10" fontWeight="600"><tspan x="14.209" y="50.92">DAYS</tspan></text>
-          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="79.4199" y="32.176">{duration.hours}</tspan></text>
+          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="79.4199" y="32.176">{formatNumber(duration.hours)}</tspan></text>
           <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }} fontSize="10" fontWeight="600"><tspan x="77.1377" y="50.92">HOURS</tspan></text>
-          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="142.344" y="32.176">{duration.minutes}</tspan></text>
+          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="142.344" y="32.176">{formatNumber(duration.minutes)}</tspan></text>
           <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }} fontSize="10" fontWeight="600"><tspan x="139.153" y="50.92">MINUTES</tspan></text>
-          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="208.344" y="32.176">{duration.seconds}</tspan></text>
+          <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="208.344" y="32.176">{formatNumber(duration.seconds)}</tspan></text>
           <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }} fontSize="10" fontWeight="600"><tspan x="203.972" y="50.92">SECONDS</tspan></text>
         </svg>
         <Link href={`/ino/${item.id}`} passHref={true}>

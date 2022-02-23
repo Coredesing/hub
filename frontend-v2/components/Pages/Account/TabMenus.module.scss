@@ -2,10 +2,9 @@
     position: relative;
     background: #0D0F14;
     clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
-    cursor: pointer;
-    &:not(:first-child) {
-        // margin-left: -5px;
-    }
+    // &:not(:first-child) {
+    // margin-left: -5px;
+    // }
     &.active {
         background: #000000;
         &::before {

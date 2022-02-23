@@ -28,6 +28,8 @@ import { useAppContext } from '@/context/index'
 import { MARKET_ACTIVITIES } from '../Market/constant'
 import Pagination from 'components/Base/Pagination'
 import LoadingOverlay from 'components/Base/LoadingOverlay'
+import NoItemFound from '@/components/Base/NoItemFound'
+import { ClipLoader } from 'react-spinners'
 
 type Props = {
   projectInfo: ObjectType;
@@ -125,8 +127,12 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
     if (!ERC721Contract) {
       return
     }
-    const addressOwnerNFT = await ERC721Contract.ownerOf(tokenInfo.id)
-    setAddressOwnerNFT(addressOwnerNFT)
+    try {
+      const addressOwnerNFT = await ERC721Contract.ownerOf(tokenInfo.id)
+      setAddressOwnerNFT(addressOwnerNFT)
+    } catch (error) {
+      console.debug('error', error)
+    }
   }, [ERC721Contract, tokenInfo.id])
 
   const getTokenOnSale = useCallback(async () => {
@@ -258,6 +264,15 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
     if (action === onTransferNFT.name) {
       setOpenTransferModal(false)
     }
+    if (action === onOfferNFT.name) {
+      setOpenMakeOfferModal(false)
+    }
+    if (action === onListingNFT.name) {
+      setOpenSellNFTModal(false)
+    }
+    if (action === onBuyNFT.name) {
+      setOpenBuyNowModal(false)
+    }
     const result = await tx.wait(1)
     if (+result?.status !== 1) {
       toast.error('Request Failed')
@@ -289,7 +304,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   const handleCallContract = async (action: string, fnCallContract: () => Promise<any>) => {
     try {
       setLockingAction({ action, lock: true })
-      toast.loading('Request is processing!', { duration: 3000 })
+      toast.loading('Request is processing!', { duration: 2000 })
       const tx = await fnCallContract()
       return handleTx(tx, action)
     } catch (error) {
@@ -471,19 +486,21 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
           </div>
         }
         {
-          isAllowBuyOffer && <div className='grid grid-cols-2 gap-2 justify-center'>
+          isAllowBuyOffer
+          && <div className='grid grid-cols-2 gap-2 justify-center'>
             <button
-              disabled={!isApprovedToken}
+              disabled={!isApprovedToken || lockingAction.lock}
               onClick={() => setOpenMakeOfferModal(true)}
               className={clsx(
                 styles.btnClipPathBottomLeft,
                 'p-px',
                 {
-                  'bg-gamefiGreen-900 text-gamefiGreen-900 hover:bg-gamefiGreen-900 hover:text-gamefiGreen-900 cursor-not-allowed': !isApprovedToken,
-                  'cursor-pointer bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700': isApprovedToken
+                  'bg-gamefiGreen-900 text-gamefiGreen-900 hover:bg-gamefiGreen-900 hover:text-gamefiGreen-900 cursor-not-allowed': !isApprovedToken || lockingAction.lock,
+                  'cursor-pointer bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700': isApprovedToken && !lockingAction.lock
                 }
               )}>
               <div className={clsx(styles.btn, styles.btnClipPathBottomLeft, 'bg-gamefiDark-900 h-9 text-13px flex justify-center items-center rounded-sm font-bold uppercase')}>
+                {checkFnIsLoading(onOfferNFT.name) && <ClipLoader size={20} color='#a3a3a3' />}
                 Make Offer
               </div>
             </button>
@@ -501,8 +518,8 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
                 </ButtonBase>
                 : <ButtonBase
                   noneStyle
-                  isLoading={loadingApproveToken || loadingAllowance}
-                  disabled={loadingApproveToken || loadingAllowance}
+                  isLoading={checkFnIsLoading(onBuyNFT.name)}
+                  disabled={lockingAction.lock}
                   color='green'
                   className={clsx(styles.btnClipPathTopRight, styles.btn, 'uppercase h-9 rounded-sm text-13px font-bold text-black bg-gamefiGreen-700')}
                   onClick={() => setOpenBuyNowModal(true)}
@@ -518,12 +535,19 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
             <div className='flex gap-2 justify-center'>
               <button
                 onClick={handleOpenModalAuctionNFT}
+                disabled={lockingAction.lock}
                 className={clsx(
                   styles.btnClipPathBottomLeft,
-                  'cursor-pointer p-px bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700'
-
+                  'p-px',
+                  {
+                    'cursor-pointer bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700': !lockingAction.lock,
+                    'bg-gamefiGreen-900 text-gamefiGreen-900 hover:bg-gamefiGreen-900 hover:text-gamefiGreen-900 cursor-not-allowed': lockingAction.lock
+                  }
                 )}>
-                <div className={clsx(styles.btn, styles.btnClipPathBottomLeft, 'bg-gamefiDark-900 h-9 text-13px flex justify-center items-center rounded-sm font-bold uppercase')}>
+                <div
+                  className={clsx(styles.btn, styles.btnClipPathBottomLeft, 'bg-gamefiDark-900 h-9 text-13px flex justify-center items-center rounded-sm font-bold uppercase gap-2')}
+                >
+                  {checkFnIsLoading(onListingNFT.name) && <ClipLoader size={20} color='#a3a3a3' />}
                   Auction
                 </div>
               </button>
@@ -542,13 +566,18 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
             <div className='flex justify-center'>
               <button
                 disabled={lockingAction.lock}
-                // isLoading={checkFnIsLoading(onTransferNFT.name)}
                 onClick={() => setOpenTransferModal(true)}
                 className={clsx(
                   styles.btnClipPathTopRightBottomLeft,
-                  'cursor-pointer p-px mb-4 bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700'
+                  'p-px mb-4',
+                  {
+                    'cursor-pointer bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700': !lockingAction.lock,
+                    'bg-gamefiGreen-900 text-gamefiGreen-900 hover:bg-gamefiGreen-900 hover:text-gamefiGreen-900 cursor-not-allowed': lockingAction.lock
+                  }
                 )}>
-                <div className={clsx(styles.btn, styles.btnClipPathTopRightBottomLeft, 'bg-gamefiDark-900 h-9 text-13px flex justify-center items-center rounded-sm font-bold uppercase')}>
+                <div className={clsx(styles.btn, styles.btnClipPathTopRightBottomLeft,
+                  'bg-gamefiDark-900 h-9 text-13px flex justify-center items-center rounded-sm font-bold uppercase gap-2')}>
+                  {checkFnIsLoading(onTransferNFT.name) && <ClipLoader size={20} color='#a3a3a3' />}
                   Transfer
                 </div>
               </button>
@@ -628,109 +657,121 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
           <TabPanel value={currentTab} index={2}>
             <div className={clsx(styles.offerList)}>
               {
-                offerList.map((offer, k) => <div key={k} className={clsx(
-                  'font-casual text-sm',
-                  styles.offerItem
-                )}>
-                  <div className={styles.offerMaker}>
-                    <div>
-                      <b>{shortenAddress(offer.buyer, '*', 6)}</b> make an offer
+                !!offerList.length
+                  ? offerList.map((offer, k) =>
+                    <div key={k} className={clsx(
+                      'font-casual text-sm',
+                      styles.offerItem
+                    )}>
+                      <div className={styles.offerMaker}>
+                        <div>
+                          <b>{shortenAddress(offer.buyer, '*', 6)}</b> make an offer
+                        </div>
+                        <span className='text-white/50 text-13px'>
+                          {formatHumanReadableTime(+offer.dispatch_at * 1000, Date.now())}
+                        </span>
+                      </div>
+                      <div className='flex items-center'>
+                        <img src="" alt="" className='w-4 h-4 rounded-full' />
+                        <span className='ml-2'>
+                          {utils.formatEther(offer.raw_amount)} {offer.currencySymbol}
+                        </span>
+                        {
+                          offer.buyer === account &&
+                          <button onClick={onRejectOffer} className='border-0 outline-none text-13px text-gamefiGreen-700 ml-6'>
+                            Cancel
+                          </button>
+                        }
+                      </div>
                     </div>
-                    <span className='text-white/50 text-13px'>
-                      {formatHumanReadableTime(+offer.dispatch_at * 1000, Date.now())}
-                    </span>
-                  </div>
-                  <div className='flex items-center'>
-                    <img src="" alt="" className='w-4 h-4 rounded-full' />
-                    <span className='ml-2'>
-                      {utils.formatEther(offer.raw_amount)} {offer.currencySymbol}
-                    </span>
-                    {
-                      offer.buyer === account &&
-                      <button onClick={onRejectOffer} className='border-0 outline-none text-13px text-gamefiGreen-700 ml-6'>
-                        Cancel
-                      </button>
-                    }
-                  </div>
-                </div>)
+                  )
+                  : <NoItemFound title='No Offers Found' />
               }
             </div>
           </TabPanel>
           <TabPanel value={currentTab} index={3}>
-            <Table >
-              <LoadingOverlay loading={marketActivitiesState.state?.loading} />
-              <TableHead>
-                <TableRow>
-                  <TableCellHead className={styles.activityTableCellHead}>
-                    <span className="text-13px font-bold">Type</span>
-                  </TableCellHead>
-                  <TableCellHead className={styles.activityTableCellHead}>
-                    <span className="text-13px font-bold">Price</span>
-                  </TableCellHead>
-                  <TableCellHead className={styles.activityTableCellHead}>
-                    <span className="text-13px font-bold">From</span>
-                  </TableCellHead>
-                  <TableCellHead className={styles.activityTableCellHead}>
-                    <span className="text-13px font-bold">To</span>
-                  </TableCellHead>
-                  <TableCellHead className={styles.activityTableCellHead}>
-                    <span className="text-13px font-bold">Date</span>
-                  </TableCellHead>
-                </TableRow>
-              </TableHead>
-              <TableBody className={styles.activityTableBody}>
-                {
-                  (activities.currentList || []).map((item, id) => <TableRow key={id}>
-                    <TableCell className={styles.activityTableCell}>
-                      <span className='text-13px font-semibold'>
-                        {MARKET_ACTIVITIES[item.event_type] || '-/-'}
-                      </span>
-                    </TableCell>
-                    <TableCell className={styles.activityTableCell}>
-                      <span className='text-13px'>
-                        {item.raw_amount ? utils.formatEther(item.raw_amount) : '-/-'} {item.currencySymbol}
-                      </span>
-                    </TableCell>
-                    <TableCell className={styles.activityTableCell}>
-                      <span className='text-13px'>
-                        {
-                          MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenListed ||
-                            MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenDelisted
-                            ? shortenAddress(item.seller || '', '.', 5)
-                            : shortenAddress(item.buyer || '', '.', 5)
-                        }
-                      </span>
-                    </TableCell>
-                    <TableCell className={styles.activityTableCell}>
-                      <span className='text-13px'>
-                        {
-                          MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenListed ||
-                            MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenDelisted
-                            ? shortenAddress(item.buyer || '', '.', 5)
-                            : shortenAddress(item.seller || '', '.', 5)
-                        }
-                      </span>
-                    </TableCell>
-                    <TableCell className={styles.activityTableCell}>
-                      <a href={getTXLink(item.network, item.transaction_hash)} target={'_blank'} rel='noreferrer' className='flex items-center gap-2 text-13px'>
-                        {formatHumanReadableTime(+item.dispatch_at * 1000, Date.now())}
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M11.5 8.5V10C11.5 10.3978 11.342 10.7794 11.0607 11.0607C10.7794 11.342 10.3978 11.5 10 11.5H2C1.60218 11.5 1.22064 11.342 0.93934 11.0607C0.658035 10.7794 0.5 10.3978 0.5 10V2C0.5 1.60218 0.658035 1.22064 0.93934 0.93934C1.22064 0.658035 1.60218 0.5 2 0.5H3.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M6.5 0.5H11.5V5.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M11.5 0.5L5.5 6.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </a>
-                    </TableCell>
-                  </TableRow>)
-                }
-              </TableBody>
-            </Table>
-            <Pagination
-              className='mt-4 mb-8'
-              currentPage={activities.currentPage || 1}
-              totalPage={activities.totalPage || 0}
-              onChange={onChangePageActivities}
-            />
+            {
+              !!activities.totalPage
+                ? <>
+                  <Table >
+                    <LoadingOverlay loading={marketActivitiesState.state?.loading} />
+                    <TableHead>
+                      <TableRow>
+                        <TableCellHead className={styles.activityTableCellHead}>
+                          <span className="text-13px font-bold">Type</span>
+                        </TableCellHead>
+                        <TableCellHead className={styles.activityTableCellHead}>
+                          <span className="text-13px font-bold">Price</span>
+                        </TableCellHead>
+                        <TableCellHead className={styles.activityTableCellHead}>
+                          <span className="text-13px font-bold">From</span>
+                        </TableCellHead>
+                        <TableCellHead className={styles.activityTableCellHead}>
+                          <span className="text-13px font-bold">To</span>
+                        </TableCellHead>
+                        <TableCellHead className={styles.activityTableCellHead}>
+                          <span className="text-13px font-bold">Date</span>
+                        </TableCellHead>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody className={styles.activityTableBody}>
+                      {
+                        (activities.currentList || []).map((item, id) => <TableRow key={id}>
+                          <TableCell className={styles.activityTableCell}>
+                            <span className='text-13px font-semibold'>
+                              {MARKET_ACTIVITIES[item.event_type] || '-/-'}
+                            </span>
+                          </TableCell>
+                          <TableCell className={styles.activityTableCell}>
+                            <span className='text-13px'>
+                              {item.raw_amount ? utils.formatEther(item.raw_amount) : '-/-'} {item.currencySymbol}
+                            </span>
+                          </TableCell>
+                          <TableCell className={styles.activityTableCell}>
+                            <span className='text-13px'>
+                              {
+                                MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenListed ||
+                                  MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenDelisted
+                                  ? shortenAddress(item.seller || '', '.', 5)
+                                  : shortenAddress(item.buyer || '', '.', 5)
+                              }
+                            </span>
+                          </TableCell>
+                          <TableCell className={styles.activityTableCell}>
+                            <span className='text-13px'>
+                              {
+                                MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenListed ||
+                                  MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenDelisted
+                                  ? shortenAddress(item.buyer || '', '.', 5)
+                                  : shortenAddress(item.seller || '', '.', 5)
+                              }
+                            </span>
+                          </TableCell>
+                          <TableCell className={styles.activityTableCell}>
+                            <a href={getTXLink(item.network, item.transaction_hash)} target={'_blank'} rel='noreferrer' className='flex items-center gap-2 text-13px'>
+                              {formatHumanReadableTime(+item.dispatch_at * 1000, Date.now())}
+                              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11.5 8.5V10C11.5 10.3978 11.342 10.7794 11.0607 11.0607C10.7794 11.342 10.3978 11.5 10 11.5H2C1.60218 11.5 1.22064 11.342 0.93934 11.0607C0.658035 10.7794 0.5 10.3978 0.5 10V2C0.5 1.60218 0.658035 1.22064 0.93934 0.93934C1.22064 0.658035 1.60218 0.5 2 0.5H3.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M6.5 0.5H11.5V5.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M11.5 0.5L5.5 6.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                            </a>
+                          </TableCell>
+                        </TableRow>)
+                      }
+                    </TableBody>
+                  </Table>
+                  {
+                    !!activities.totalPage && <Pagination
+                      className='mt-4 mb-8'
+                      currentPage={activities.currentPage || 1}
+                      totalPage={activities.totalPage || 0}
+                      onChange={onChangePageActivities}
+                    />
+                  }
+                </>
+                : <NoItemFound title='No Activities Found' />
+            }
           </TabPanel>
         </div>
       </>}

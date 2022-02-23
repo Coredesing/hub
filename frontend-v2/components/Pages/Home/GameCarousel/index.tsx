@@ -25,7 +25,7 @@ const GameCarousel = ({ items, likes }: Props) => {
         showThumbs={true}
         thumbWidth={170}
         swipeable={true}
-        infiniteLoop={true}
+        infiniteLoop={items?.length > 1}
         interval={3000}
         renderThumbs={() => {
           return items && items.length > 1 && items.map((item) => {
@@ -40,7 +40,7 @@ const GameCarousel = ({ items, likes }: Props) => {
               title={label}
               style={{ position: 'absolute', zIndex: '2', top: 'calc(50% - 170px)', cursor: 'pointer', left: '0', opacity: !hasPrev && '50%' }}
             >
-              <Image src={require('@/assets/images/icons/arrow-left.png')} alt="left" className="w-1/2 h-auto"/>
+              <Image src={require('@/assets/images/icons/arrow-left.png')} alt="left" width={32} height={300}/>
             </button>
           )
         }
@@ -53,7 +53,7 @@ const GameCarousel = ({ items, likes }: Props) => {
               title={label}
               style={{ position: 'absolute', zIndex: '2', top: 'calc(50% - 170px)', cursor: 'pointer', right: '0', opacity: !hasNext && '50%' }}
             >
-              <Image src={require('@/assets/images/icons/arrow-right.png')} alt="right" className="w-1/2 h-auto"/>
+              <Image src={require('@/assets/images/icons/arrow-right.png')} alt="right" width={32} height={300}/>
             </button>
           )
         }

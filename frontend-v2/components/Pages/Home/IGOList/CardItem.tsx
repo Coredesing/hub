@@ -37,6 +37,16 @@ const CardItem = ({ item, ...props }: Props) => {
       return
     }
     const interval = setInterval(() => {
+      if (distance < 0) {
+        if (item.campaign_status.toLowerCase() === 'swap' || item.campaign_status.toLowerCase() === 'filled') {
+          setCountdownStatus('Buying Time')
+          return
+        }
+
+        setCountdownStatus(item.campaign_status)
+        return
+      }
+
       setDistance(new Date(item.start_time * 1000).getTime() - new Date().getTime())
       setDays(distance > 0 ? ('0' + Math.floor(distance / (1000 * 60 * 60 * 24)).toString()).slice(-2) : '00')
       setHours(distance > 0 ? ('0' + Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString()).slice(-2) : '00')
@@ -47,7 +57,7 @@ const CardItem = ({ item, ...props }: Props) => {
     return () => {
       clearInterval(interval)
     }
-  }, [item.start_time, distance, countdownStatus])
+  }, [item.start_time, distance, countdownStatus, item.campaign_status])
 
   return (
     <div className={`rounded overflow-hidden border border-transparent hover:border-gamefiGreen-700 hover:shadow hover:shadow-gamefiGreen-700 ${props.className}`} style={{ maxWidth: (screens.md || screens.lg || screens.xl) ? '350px' : '100%' }}>
@@ -71,14 +81,23 @@ const CardItem = ({ item, ...props }: Props) => {
           </Link>
         </div>
         {distance <= 0
-          ? <div className="mt-4 mb-2 flex justify-between">
-            <div className="w-full h-full flex flex-col align-middle items-center justify-center mt-1">
-              <div className="uppercase font-bold text-xs text-gray-500">Countdown to IGO date</div>
-              <div className="mt-2 font-medium text-center">
-                TBA
+          ? countdownStatus
+            ? <div className="mt-4 mb-2 flex justify-between">
+              <div className="w-full h-full flex flex-col align-middle items-center justify-center mt-1">
+                <div className="uppercase font-bold text-xs text-gray-500">Countdown to IGO date</div>
+                <div className="mt-2 font-medium text-center">
+                  {countdownStatus}
+                </div>
               </div>
             </div>
-          </div>
+            : <div className="mt-4 mb-2 flex justify-between">
+              <div className="w-full h-full flex flex-col align-middle items-center justify-center mt-1">
+                <div className="uppercase font-bold text-xs text-gray-500">Countdown to IGO date</div>
+                <div className="mt-2 font-medium text-center">
+                  TBA
+                </div>
+              </div>
+            </div>
           : <div className="mt-4 mb-2 flex justify-between">
             <div className="w-full h-full flex flex-col align-middle items-center justify-center mt-1">
               <div className="uppercase font-bold text-xs text-gray-500">Countdown to IGO date</div>

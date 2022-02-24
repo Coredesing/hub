@@ -135,7 +135,7 @@ const Asset = () => {
             if (useExternalApi) {
               const assets = await getMyListAsset(account, erc721Contract, p)
             } else {
-              const assets = await getMyAssetsFromExternalUri(myBoxes, erc721Contract, p)              
+              const assets = await getMyAssetsFromExternalUri(myBoxes, erc721Contract, p)
             }
           } catch (error) {
           }

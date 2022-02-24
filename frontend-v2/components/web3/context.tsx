@@ -1,5 +1,4 @@
 import { createContext, useContext, useReducer, useMemo, useCallback } from 'react'
-import toast from 'react-hot-toast'
 import { utils } from 'ethers'
 import { networks, Network } from './index'
 
@@ -68,7 +67,7 @@ export function MyWeb3Provider ({ children }) {
     library.getBalance(account).then(balance => {
       dispatch({ type: 'UPDATE_BALANCE', payload: { balance } })
     }).catch(() => {
-      toast.error('Could not load user\'s balance')
+      console.debug('Could not load user\'s balance')
     })
   }, [library, account, chainID, dispatch])
 

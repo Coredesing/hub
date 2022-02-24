@@ -40,13 +40,11 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
         }
         setTokenInfo({ ...info, id: params.id })
       }
-
     } catch (error) {
       console.debug('error', error)
     } finally {
       setLoading(false)
     }
-
   }, [projectInfo, params, library])
 
   useEffect(() => {
@@ -75,7 +73,7 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
 
 export default MarketplaceDetailPage
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps ({ params }) {
   if (!params?.slug) {
     return { props: { projectInfo: null } }
   }

@@ -50,7 +50,7 @@ const rankMapping = {
 const SerieContent = ({ poolInfo, selected }: Props) => {
   const [openSerieContentModal, setOpenSerieContentModal] = useState(false)
   const [idSerie, setIdSerie] = useState(0)
-  const onShhowSerieModal = (id: number) => {
+  const onShowSerieModal = (id: number) => {
     setIdSerie(id)
     setOpenSerieContentModal(true)
   }
@@ -133,22 +133,22 @@ const SerieContent = ({ poolInfo, selected }: Props) => {
         <Table >
           <TableHead>
             <TableRow>
-              <TableCellHead className="text-[12px] sm:text-[13px] md:text-base">Name</TableCellHead>
-              {showAmount && <TableCellHead className="text-[12px] sm:text-[13px] md:text-base">Amount</TableCellHead>}
-              {showRate && <TableCellHead className="text-[12px] sm:text-[13px] md:text-base">Chance</TableCellHead>}
-              {useOldFormatWithDescription ? <TableCellHead className="text-[12px] sm:text-[13px] md:text-base">Description</TableCellHead> : null}
-              {useNewFormat && !useNewFormatExtended ? <TableCellHead className="text-[12px] sm:text-[13px] md:text-base">Description</TableCellHead> : null}
-              {showNewCategory ? <TableCellHead className="hidden md:table-cell text-[12px] sm:text-[13px] md:text-base">Category</TableCellHead> : null}
-              {showNewRarity ? <TableCellHead className="hidden sm:table-cell">Rarity</TableCellHead> : null}
-              {useNewFormatExtended ? <TableCellHead className="text-[12px] sm:text-[13px] md:text-base"><span className="sm:hidden">%</span><span className="hidden sm:inline">Probability</span></TableCellHead> : null}
-              {showNewAmount ? <TableCellHead className="hidden md:table-cell text-[12px] sm:text-[13px] md:text-base">Amount</TableCellHead> : null}
+              <TableCellHead className="text-[12px] sm:text-[13px] md:text-sm">Name</TableCellHead>
+              {showAmount && <TableCellHead className="text-[12px] sm:text-[13px] md:text-sm">Amount</TableCellHead>}
+              {showRate && <TableCellHead className="text-[12px] sm:text-[13px] md:text-sm">Chance</TableCellHead>}
+              {showNewCategory ? <TableCellHead className="hidden md:table-cell text-[12px] sm:text-[13px] md:text-sm">Category</TableCellHead> : null}
+              {showNewRarity ? <TableCellHead className="hidden sm:table-cell text-[12px] sm:text-[13px] md:text-sm">Rarity</TableCellHead> : null}
+              {useNewFormatExtended ? <TableCellHead className="text-[12px] sm:text-[13px] md:text-sm"><span className="sm:hidden">%</span><span className="hidden sm:inline">Probability</span></TableCellHead> : null}
+              {showNewAmount ? <TableCellHead className="hidden md:table-cell text-[12px] sm:text-[13px] md:text-sm">Amount</TableCellHead> : null}
+              {useNewFormat && !useNewFormatExtended ? <TableCellHead className="text-[12px] sm:text-[13px] md:text-sm">Description</TableCellHead> : null}
+              {useOldFormatWithDescription ? <TableCellHead className="text-[12px] sm:text-[13px] md:text-sm">Description</TableCellHead> : null}
             </TableRow>
           </TableHead>
           <TableBody>
             {
               configs.map((b, id) => <TableRow key={id}>
                 <TableCell>
-                  <div onClick={() => onShhowSerieModal(id)} className="flex gap-3 items-center uppercase text-sm font-semibold cursor-pointer w-fit">
+                  <div onClick={() => onShowSerieModal(id)} className="flex gap-3 items-center uppercase text-sm font-semibold cursor-pointer w-fit">
                     <div className="flex gap-3 items-center uppercase text-[12px] sm:text-sm font-semibold cursor-pointer">
                       <img src={b.icon} alt="" className="w-12 h-14" />
                       <div>
@@ -161,25 +161,33 @@ const SerieContent = ({ poolInfo, selected }: Props) => {
                 </TableCell>
                 {showAmount && <TableCell>{b.amount}</TableCell>}
                 {showRate && <TableCell>{b.rate}%</TableCell>}
-                {useOldFormatWithDescription
-                  ? <TableCell>
-                    <div>
-                      <span
-                        className="break-words break-all text-ellipsis overflow-hidden text-sm"
-                        style={{
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: 'vertical'
-                        }}>
-                        {b.description}
-                      </span>
-                    </div>
-                  </TableCell>
-                  : null}
-                {useNewFormat && !useNewFormatExtended ? <TableCell>{b.metadata?.raw}</TableCell> : null}
                 {showNewCategory ? <TableCell className="hidden md:table-cell text-[12px] sm:text-[13px] md:text-base capitalize">{b.category}</TableCell> : null}
                 {showNewRarity ? <TableCell className="hidden sm:table-cell">{b.rarity && <span className={`font-semibold uppercase leading-loose ml-auto ${b.rarityMapping?.style || ''}`}>{b.rarity}</span>}</TableCell> : null}
                 {useNewFormatExtended ? <TableCell className="text-[12px] sm:text-sm"> {b.metadata?.[selected?.name]?.probability ? `${b.metadata?.[selected?.name]?.probability}%` : ''} </TableCell> : null}
                 {showNewAmount ? <TableCell className="hidden md:table-cell text-[12px] sm:text-[13px] md:text-base"> {b.metadata?.[selected?.name]?.amount || ''} </TableCell> : null}
+                {useNewFormat && !useNewFormatExtended ? <TableCell>{b.metadata?.raw}</TableCell> : null}
+                {useOldFormatWithDescription
+                  ? <TableCell>
+                    <div style={{ maxWidth: '500px' }}>
+                      <span
+                        className="break-words text-ellipsis overflow-hidden text-sm"
+                        style={{
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical'
+                        }}>
+                        {(b.description || '').slice(0, 100)}{(b.description || '').length > 100 && '...'}
+                      </span>
+                      {
+                        (b.description || '').length > 100 && <span
+                          onClick={() => onShowSerieModal(id)}
+                          className="text-gamefiGreen font-casual font-semibold ml-1 cursor-pointer text-sm"
+                        >
+                          Read more
+                        </span>
+                      }
+                    </div>
+                  </TableCell>
+                  : null}
               </TableRow>)
             }
           </TableBody>

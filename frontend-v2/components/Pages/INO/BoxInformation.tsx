@@ -9,7 +9,7 @@ type Props = {
 const BoxInformation = ({ boxes }: Props) => {
   const [idSelected, setIdSelected] = useState(0)
   const [openModal, setOpenModal] = useState(false)
-  const onShhowSerieModal = (id: number) => {
+  const onShowBoxModal = (id: number) => {
     setIdSelected(id)
     setOpenModal(true)
   }
@@ -25,16 +25,16 @@ const BoxInformation = ({ boxes }: Props) => {
       <TableHead>
         <TableRow>
           <TableCellHead>
-            Name
+            <span className='text-sm'>Name</span>
           </TableCellHead>
           <TableCellHead>
-            Total Sale
+            <span className='text-sm'>Total Sale</span>
           </TableCellHead>
           <TableCellHead>
-            Remaining
+            <span className='text-sm'>Remaining</span>
           </TableCellHead>
           <TableCellHead>
-            Description
+            <span className='text-sm'>Description</span>
           </TableCellHead>
         </TableRow>
       </TableHead>
@@ -42,7 +42,7 @@ const BoxInformation = ({ boxes }: Props) => {
         {
           boxes.map((b, id) => <TableRow key={id}>
             <TableCell>
-              <div className="flex gap-3 items-center text-sm font-semibold w-fit cursor-pointer" onClick={() => onShhowSerieModal(id)}>
+              <div className="flex gap-3 items-center text-sm font-semibold w-fit cursor-pointer" onClick={() => onShowBoxModal(id)}>
                 <img src={b.icon} alt="" className="w-14 h-12 object-contain" />
                 <span>{b.name}</span>
               </div>
@@ -54,20 +54,23 @@ const BoxInformation = ({ boxes }: Props) => {
               {(+(b.maxSupply || b.limit) - (+b.totalSold || 0)) || (b.maxSupply || b.limit)}
             </TableCell>
             <TableCell>
-              <div>
+              <div style={{ maxWidth: '500px' }}>
                 <span
-                  className="break-words break-all text-ellipsis overflow-hidden text-sm"
+                  className="break-words text-ellipsis overflow-hidden text-sm"
                   style={{
                     WebkitLineClamp: 2,
                     WebkitBoxOrient: 'vertical'
                   }}>
-                  {b.description}
+                  {(b.description || '').slice(0, 100)}{(b.description || '').length > 100 && '...'}
                 </span>
-                {/* <span
-                  className="text-gamefiGreen font-casual font-semibold ml-1 cursor-pointer text-sm"
-                >
-                  Read more
-                </span> */}
+                {
+                  (b.description || '').length > 100 && <span
+                    onClick={() => onShowBoxModal(id)}
+                    className="text-gamefiGreen font-casual font-semibold ml-1 cursor-pointer text-sm"
+                  >
+                    Read more
+                  </span>
+                }
               </div>
             </TableCell>
           </TableRow>)

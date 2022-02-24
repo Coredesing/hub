@@ -11,10 +11,11 @@ interface IProps {
   allowZero?: boolean;
   min?: number;
   max?: number;
+  minLength?: number;
   [k: string]: any;
 }
 export const FormInputNumber = (props: IProps) => {
-  const { value, onChange, allowZero, isPositive, isInteger, className, ...otherProps } =
+  const { value, onChange, allowZero, isPositive, isInteger, className, minLength, ...otherProps } =
     props
   const [val, setVal] = React.useState('')
 
@@ -24,6 +25,7 @@ export const FormInputNumber = (props: IProps) => {
 
   const _onChange = (event: any) => {
     let { value: valInput } = event.target
+    if ((valInput || '').length > minLength) return
     if (valInput === '') {
       setVal(valInput)
       onChange(event)

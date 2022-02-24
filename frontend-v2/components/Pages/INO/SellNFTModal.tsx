@@ -66,7 +66,6 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isL
   }
 
   const isAllowedApprove = !!account && !isApprovedMarketplace
-
   // const tags = ['Category a', 'Category b', 'category c'];
 
   return <Modal show={open} toggle={onClose}>
@@ -75,7 +74,7 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isL
       <div className={clsx('mb-8 flex items-center gap-3 justify-between')}>
         <label htmlFor="" className='text-sm block mb-2 font-casual'>Select Sell Method</label>
         <div className='flex gap-2 justify-end'>
-          <button
+          {/* <button
             className={clsx(martketStyles.btn, martketStyles.btnClipPathBottomLeft, 'text-13px font-bold uppercase', {
               'bg-black': !isAuction,
               'text-white/50': !isAuction,
@@ -83,8 +82,8 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isL
               'text-black': isAuction
             })}>
             Auction
-          </button>
-          {/* <button
+          </button> */}
+          <button
             className={clsx(martketStyles.btn, martketStyles.btnClipPathTopRight, 'text-13px font-bold uppercase', {
               'bg-black': !isFixedPrice,
               'text-white/50': !isFixedPrice,
@@ -92,7 +91,7 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isL
               'text-black': isFixedPrice,
             })}>
             Fixed Price
-          </button> */}
+          </button>
         </div>
       </div>
       <div>
@@ -102,7 +101,7 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isL
         <label htmlFor="" className='text-sm block mb-2 font-casual'>Total Price</label>
         <div className='flex gap-2'>
           <Input classes={{ input: 'font-casual text-sm rounded-sm px-4 py-2', formInput: 'w-40' }} onChange={onChangePriceAuction} value={auctionPrice} />
-          <Dropdown onChange={onChangeCurrency} items={currencies} selected={currency} propLabel='name' propValue='address' />
+          <Dropdown onChange={onChangeCurrency} items={currencies} selected={currency} propLabel='name' propValue='address' propIcon='icon' classes={{ wrapperDropdown: `${styles.wrapperDropdown} rounded-sm` }} />
         </div>
       </div>
       <div className={'mb-8 flex justify-between'}>

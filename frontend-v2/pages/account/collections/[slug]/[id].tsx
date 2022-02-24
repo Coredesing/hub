@@ -2,21 +2,21 @@ import Layout from '@/components/Layout'
 import React, { useCallback, useEffect, useState } from 'react'
 import MarketplaceDetail from '@/components/Pages/INO/MarketplaceDetail'
 import { fetchOneCollection } from '@/pages/api/market/collection/[slug]'
-import axios from '@/utils/axios'
 import { Contract } from '@ethersproject/contracts'
 import ERC721Abi from '@/components/web3/abis/Erc721.json'
 import { useWeb3Default } from '@/components/web3'
-import WrapperAccount from '@/components/Pages/Account/WrapperAccount'
-import LeftSideBar from '@/components/Pages/Account/LeftSideBar'
 import AccountContent from '@/components/Pages/Account/AccountContent'
-import LoadingOverlay from '@/components/Base/LoadingOverlay'
+import NotFound from '@/components/Pages/Notfound'
+import AccountLayout from '@/components/Pages/Account/AccountLayout'
+import { PropagateLoader } from 'react-spinners'
+import { API_BASE_URL } from '@/utils/constants'
+import { fetcher } from '@/utils'
 
 const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
   const [loading, setLoading] = useState(true)
   const { library } = useWeb3Default()
   const [tokenInfo, setTokenInfo] = useState<any>(null)
   const getTokenInfo = useCallback(async () => {
-    console.log(projectInfo)
     try {
       if (!projectInfo) {
         setLoading(false)
@@ -24,21 +24,29 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
       }
       if (!library) return
       if (+projectInfo.use_external_uri === 1) {
-        const result = await axios.post(`/marketplace/collection/${projectInfo.token_address}/${params.id}`)
-        const info = result.data.data
+        const result = await fetcher(`${API_BASE_URL}/marketplace/collection/${projectInfo.token_address}/${params.id}`, { method: 'POST' })
+        const info = result.data
         if (info) {
           setTokenInfo({ ...info, id: params.id })
         }
       } else {
         const erc721Contract = new Contract(projectInfo.token_address, ERC721Abi, library)
         const tokenURI = await erc721Contract.tokenURI(params.id)
-        const info = (await axios.get(tokenURI)).data || {}
+        let info = {}
+        try {
+          info = await fetcher(tokenURI)
+        } catch (error) {
+          console.debug('err', error)
+        }
         setTokenInfo({ ...info, id: params.id })
       }
-      setLoading(false)
+
     } catch (error) {
-      console.log('error', error)
+      console.debug('error', error)
+    } finally {
+      setLoading(false)
     }
+
   }, [projectInfo, params, library])
 
   useEffect(() => {
@@ -48,25 +56,26 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
   }, [getTokenInfo])
 
   return <Layout title="GameFi Market">
-    <WrapperAccount>
-      {/* <LeftSideBar /> */}
+    <AccountLayout>
       <AccountContent>
         {
           loading
-            ? <LoadingOverlay loading></LoadingOverlay>
+            ? <div className='flex items-center w-full h-96 justify-center'><PropagateLoader color='#fff'></PropagateLoader></div>
             : (
-              !projectInfo || !tokenInfo ? <h1>Not Found</h1> : <MarketplaceDetail projectInfo={projectInfo} tokenInfo={tokenInfo} />
+              !projectInfo || !tokenInfo
+                ? <NotFound backLink='' />
+                : <MarketplaceDetail projectInfo={projectInfo} tokenInfo={tokenInfo} />
             )
         }
       </AccountContent>
-    </WrapperAccount>
+    </AccountLayout>
 
   </Layout>
 }
 
 export default MarketplaceDetailPage
 
-export async function getServerSideProps ({ params }) {
+export async function getServerSideProps({ params }) {
   if (!params?.slug) {
     return { props: { projectInfo: null } }
   }

@@ -10,6 +10,7 @@
         "tsc": "tsc"
     },
     "dependencies": {
+        "@egjs/react-flicking": "^4.5.2",
         "@ethersproject/contracts": "^5.5.0",
         "@ethersproject/providers": "^5.5.1",
         "@ethersproject/units": "^5.5.0",

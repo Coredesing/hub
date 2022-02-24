@@ -471,6 +471,9 @@ class PoolController {
 
   async getPoolPublic({ request, auth, params }) {
     const poolId = params.campaignId;
+    const idRegex = /^\d+$/;
+    const slugRegex = /^[a-z0-9_-]+$/;
+
     console.log('[getPublicPool] - Start getPublicPool with poolId: ', poolId);
     try {
       if (await RedisUtils.checkExistRedisPoolDetail(poolId)) {
@@ -478,7 +481,7 @@ class PoolController {
         return HelperUtils.responseSuccess(JSON.parse(cachedPoolDetail));
       }
 
-      let pool = await CampaignModel.query()
+      let pool = CampaignModel.query()
         .with('tiers')
         .with('campaignClaimConfig')
         .with('whitelistBannerSetting')
@@ -488,8 +491,16 @@ class PoolController {
         .with('seriesContentConfig')
         .with('boxTypesConfig')
         .with('acceptedTokensConfig')
-        .where('id', poolId)
-        .first();
+
+      if (idRegex.test(poolId)) {
+        pool.where('id', poolId)
+      } else if (slugRegex.test(poolId)) {
+        pool.where('slug', poolId)
+      } else {
+        return HelperUtils.responseBadRequest('Invalid request');
+      }
+
+      pool = await pool.first();
 
       if (!pool) {
         return HelperUtils.responseNotFound('Pool not found');

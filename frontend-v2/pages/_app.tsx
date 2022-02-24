@@ -42,7 +42,9 @@ function MyApp ({ Component, pageProps }: AppProps) {
             <WalletProvider>
               <Component {...pageProps} />
             </WalletProvider>
-            <Toaster />
+            <Toaster
+              position="top-right"
+            />
             <LoadingOverlay loading={loading}></LoadingOverlay>
           </AppProvider>
 

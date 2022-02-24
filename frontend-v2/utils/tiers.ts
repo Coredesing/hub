@@ -79,3 +79,11 @@ export function tiersFromConfigs (configs: TierConfigs): Tier[] {
     }
   })
 }
+
+export function getTierById (id: any) {
+  if (!id) {
+    return
+  }
+
+  return tiers.find(tier => tier.id === id)
+}

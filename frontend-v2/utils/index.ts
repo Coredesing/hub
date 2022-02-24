@@ -205,7 +205,7 @@ export const useFetch = (url: string, timeout?: number) => {
   useEffect(() => {
     setLoading(true)
     setResponse(fetchResponse)
-    if (fetchResponse?.data) {
+    if (fetchResponse) {
       setLoading(false)
     }
 

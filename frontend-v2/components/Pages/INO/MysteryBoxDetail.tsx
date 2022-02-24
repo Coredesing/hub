@@ -116,16 +116,17 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     if (!presaleContract) return
     Promise
       .all(boxes.map((b, subBoxId) => new Promise(async (resolve, reject) => {
+        let result = {}
         try {
           const response = await presaleContract.subBoxes(eventId, subBoxId)
-          const result = {
+          result = {
             maxSupply: response.maxSupply ? response.maxSupply.toNumber() : 0,
             totalSold: response.totalSold ? response.totalSold.toNumber() : 0
           }
-          resolve({ ...b, subBoxId, ...result })
         } catch (error) {
-          reject(error)
+          console.debug('err', error)
         }
+        resolve({ ...b, subBoxId, ...result })
       })))
       .then((boxes) => {
         setBoxTypes(boxes)
@@ -398,7 +399,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               const infoBox = boxTypes.find((b, subBoxId) => subBoxId === idBoxType) || {}
               infoBox && Object.assign(collection, infoBox)
             } catch (error) {
-              console.log('error', error)
+              // console.log('error', error)
             }
             arrCollections.push(collection)
           } else {
@@ -409,7 +410,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               await handleInfoTokenExternal(collection.collectionId, collection)
               arrCollections.push(collection)
             } catch (error) {
-              console.log('error', error)
+              // console.log('error', error)
             }
           }
         }

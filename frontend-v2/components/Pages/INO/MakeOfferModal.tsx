@@ -2,11 +2,12 @@ import { ObjectType } from '@/utils/types'
 import clsx from 'clsx'
 import ButtonBase from '@/components/Base/Buttons/ButtonBase'
 import Modal from '@/components/Base/Modal'
-import { useBalanceToken } from '@/components/web3/utils'
+import { useMyBalance } from '@/components/web3/utils'
 import React, { ReactNode, useMemo, useState } from 'react'
 import styles from './MakeOfferModal.module.scss'
 import { BeatLoader } from 'react-spinners'
 import { BigNumber, utils } from 'ethers'
+import { FormInputNumber } from '@/components/Base/FormInputNumber'
 
 type Props = {
   open?: boolean;
@@ -17,12 +18,11 @@ type Props = {
   tokenOnSale?: ObjectType;
 } & ObjectType;
 
-const MakeOfferModal = ({ tokenOnSale, projectInfo, lastOffer, ...props }: Props) => {
+const MakeOfferModal = ({ tokenOnSale, projectInfo, lastOffer, myBalance, ...props }: Props) => {
   const token = useMemo(() => {
     return { address: tokenOnSale.currency }
   }, [tokenOnSale])
 
-  const { balanceShort, balance, loading: loadingBalance, updateBalance } = useBalanceToken(token as any, projectInfo.network)
   const [offerPrice, setOfferPrice] = useState('')
   const [notiMsg, setNotiMsg] = useState<{ type: 'info' | 'error'; msg: string | ReactNode }>({ type: 'info', msg: '' })
 
@@ -30,7 +30,7 @@ const MakeOfferModal = ({ tokenOnSale, projectInfo, lastOffer, ...props }: Props
     const val = e.target.value
     setOfferPrice(val)
     const valEther = utils.parseEther(val || '0')
-    if (BigNumber.from(balance).lt(valEther)) {
+    if (BigNumber.from(myBalance?.balance || 0).lt(valEther)) {
       setNotiMsg({ type: 'error', msg: 'Insufficient balance' })
     } else if (lastOffer) {
       if (BigNumber.from(valEther).gt(lastOffer.raw_amount)) {
@@ -44,10 +44,13 @@ const MakeOfferModal = ({ tokenOnSale, projectInfo, lastOffer, ...props }: Props
           setNotiMsg({ type: 'info', msg: <p>You already placed an offer for this hero with <span className='text-gamefiGreen-700'>{utils.formatEther(lastOffer.raw_amount)} {tokenOnSale.symbol}</span>.</p> })
         }
       }
+    } else {
+      setNotiMsg({ type: 'info', msg: '' })
     }
   }
 
   const handleOffer = async () => {
+    if (BigNumber.from(utils.parseEther(offerPrice || '0')).isZero()) return
     let valueOffer = BigNumber.from(utils.parseEther(offerPrice))
     const currentOffer = valueOffer
     if (lastOffer) {
@@ -58,30 +61,34 @@ const MakeOfferModal = ({ tokenOnSale, projectInfo, lastOffer, ...props }: Props
         valueOffer = BigNumber.from(0)
       }
     }
-    if (BigNumber.from(balance).lt(utils.parseEther(offerPrice))) return
+    if (BigNumber.from(myBalance?.balance || 0).lt(utils.parseEther(offerPrice))) return
     const ok = props.onSubmit && await props.onSubmit(valueOffer.toString(), valueOffer.toString())
     if (ok) {
-      updateBalance()
+      myBalance?.updateBalance()
+      setOfferPrice('')
     }
   }
 
   return <Modal show={props.open} toggle={props.onClose}>
     <div className={styles.content}>
-      <h3 className='font-bold text-2xl mb-7 uppercase'>Transfer your NFT</h3>
+      <h3 className='font-bold text-2xl mb-7 uppercase'>Make Offer</h3>
       <div className='mb-8 '>
-        <div className={clsx('grid', styles.formInput)}>
+        <div className={clsx('grid')}>
           <label htmlFor="" className='text-sm mb-2 font-casual flex justify-between gap-2 items-center'>
             <span>You will offer</span>
-            <span className='text-13px'>(Your Balance: <b>{loadingBalance ? <BeatLoader size={8} /> : `${balanceShort} ${tokenOnSale.symbol}`} </b>)</span>
+            <span className='text-13px'>(Your Balance: <b>{myBalance?.loading ? <BeatLoader size={8} color='#fff' /> : `${myBalance?.balanceShort || ''} ${tokenOnSale.symbol}`} </b>)</span>
           </label>
-          <input
-            type="text"
-            className={`font-casual text-sm rounded-sm px-4 py-2 relative ${styles.input}`}
-            onChange={onChangeOfferPrice}
-            value={offerPrice}
-            placeholder="Enter Your Offer"
-          />
-          <span></span>
+          <div className={styles.formInput}>
+            <FormInputNumber
+              className={`font-casual text-sm rounded-sm px-4 py-2 relative ${styles.input}`}
+              placeholder="Enter Your Offer"
+              onChange={onChangeOfferPrice}
+              value={offerPrice}
+              allowZero
+              minLength={10}
+            />
+            <span></span>
+          </div>
         </div>
         {
           notiMsg.msg && <div className={clsx('mt-7 text-sm font-casual', {
@@ -92,8 +99,14 @@ const MakeOfferModal = ({ tokenOnSale, projectInfo, lastOffer, ...props }: Props
         }
       </div>
       <div className='flex justify-end gap-8'>
-        <button className='uppercase text-white/50 font-bold' onClick={props.onClose}>Cancel</button>
-        <ButtonBase disabled={props.disabledButton} isLoading={props.isLoadingButton} color='green' onClick={handleOffer} className={clsx('uppercase', styles.btnOffer)}>
+        <button className='uppercase text-white/50 font-bold text-13px' onClick={props.onClose}>Cancel</button>
+        <ButtonBase
+          disabled={props.disabledButton || BigNumber.from(utils.parseEther(offerPrice || '0')).isZero()}
+          isLoading={props.isLoadingButton}
+          color='green'
+          onClick={handleOffer}
+          className={clsx('uppercase', styles.btnOffer)}
+        >
           Make Offer
         </ButtonBase>
       </div>

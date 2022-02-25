@@ -2,7 +2,7 @@ import { useAppContext } from '@/context'
 import { GAFI } from '@/components/web3'
 import Image from 'next/image'
 import Tippy from '@tippyjs/react'
-import Flicking, { MoveEvent, WillChangeEvent } from '@egjs/react-flicking'
+import Flicking from '@egjs/react-flicking'
 import '@egjs/flicking/dist/flicking.css'
 
 export default function Ranks () {

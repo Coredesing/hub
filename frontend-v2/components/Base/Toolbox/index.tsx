@@ -4,7 +4,6 @@ import ToolboxItem from './ToolboxItem'
 import MenuLink from './MenuLink'
 import WalletConnector from '../WalletConnector'
 import Topbar from '../Topbar'
-import { useMyWeb3 } from '@/components/web3/context'
 
 const Toolbox = () => {
   const [showMenu, setShowMenu] = useState(false)

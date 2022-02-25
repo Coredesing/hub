@@ -219,7 +219,7 @@ const GameRight = ({ data, liked, account, className, like }) => {
     <div className="inline-flex items-center mb-8">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={data.icon_token_link} className="w-6 h-6" alt={data.game_name} />
-      <span className="ml-3 text-3xl font-mechanic font-bold">{formatPrice(data.tokenomic?.price)}</span>
+      <span className="ml-3 text-3xl font-mechanic font-bold">{parseFloat(data.tokenomic?.price) ? formatPrice(data.tokenomic?.price) : 'N/A'}</span>
       <PriceChange className="ml-3 py-1 text-xs font-medium" tokenomic={data.tokenomic} />
     </div>
 

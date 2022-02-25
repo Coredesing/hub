@@ -502,8 +502,8 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
           </div>
         }
         {
-          isAllowBuyOffer
-          && <div className='grid grid-cols-2 gap-2 justify-center'>
+          isAllowBuyOffer &&
+          <div className='grid grid-cols-2 gap-2 justify-center'>
             <button
               disabled={checkingToBuyOffer || lockingAction.lock}
               onClick={() => setOpenMakeOfferModal(true)}
@@ -676,7 +676,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
           <TabPanel value={currentTab} index={2}>
             <div className={clsx(styles.offerList)}>
               {
-                !!offerList.length
+                offerList.length
                   ? offerList.map((offer, k) =>
                     <div key={k} className={clsx(
                       'font-casual text-sm',
@@ -710,7 +710,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
           </TabPanel>
           <TabPanel value={currentTab} index={3}>
             {
-              !!activities.totalPage
+              activities.totalPage
                 ? <>
                   <Table >
                     <LoadingOverlay loading={marketActivitiesState.state?.loading} />

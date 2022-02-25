@@ -49,7 +49,7 @@ const Rank = ({ data }) => {
   const [rankingSelected, setRankingSelected] = useState<ObjectType[]>()
   const [isLive, setIsLive] = useState(null)
   const rankingOptions = useMemo(() => {
-    let all = (data?.legendSnapshots || []).sort((a, b) => b.snapshot_at - a.snapshot_at).map(s => {
+    const all = (data?.legendSnapshots || []).sort((a, b) => b.snapshot_at - a.snapshot_at).map(s => {
       return {
         key: s.id,
         label: s.name,
@@ -66,7 +66,6 @@ const Rank = ({ data }) => {
     }
     return all
   }, [data])
-  
 
   useEffect(() => {
     if (!rankingSelected) {
@@ -118,7 +117,7 @@ const Rank = ({ data }) => {
                   onClick={() => router.push('/staking')}
                   className={clsx(
                     styles.btnUnstake,
-                    'p-px h-9 cursor-pointer bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700 rounded-sm',
+                    'p-px h-9 cursor-pointer bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700 rounded-sm'
                   )}>
                   <div className={'py-2 px-5 bg-gamefiDark-900 text-13px flex justify-center items-center rounded-sm font-bold uppercase'}>
                     Unstake

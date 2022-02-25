@@ -264,7 +264,7 @@ const Staking = ({ data }) => {
 
 export default Staking
 
-export async function getServerSideProps() {
+export async function getServerSideProps () {
   const [pools, tierConfigs, legendSnapshots, legendCurrent] = await Promise.all([
     fetcher(`${API_BASE_URL}/staking-pool`),
     fetcher(`${API_BASE_URL}/get-tiers`),

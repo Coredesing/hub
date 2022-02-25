@@ -6,8 +6,8 @@ import { useMyWeb3 } from '@/components/web3/context'
 import { fetcher } from '@/utils'
 import { Contract } from '@ethersproject/contracts'
 import ERC721Abi from '@/components/web3/abis/Erc721.json'
-import LoadingOverlay from '@/components/Base/LoadingOverlay'
-import Dropdown from '@/components/Base/Dropdown'
+// import LoadingOverlay from '@/components/Base/LoadingOverlay'
+// import Dropdown from '@/components/Base/Dropdown'
 import { API_BASE_URL } from '@/utils/constants'
 import { BeatLoader, MoonLoader } from 'react-spinners'
 import clsx from 'clsx'
@@ -143,7 +143,7 @@ const Asset = () => {
       }
       setAssetLoading(false)
     })
-  }, [currentTab, account, library])
+  }, [currentTab, account, library, assetTypes])
 
   return <div>
     <div className='header px-9 '>

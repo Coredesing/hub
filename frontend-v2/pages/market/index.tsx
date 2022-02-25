@@ -1,11 +1,10 @@
 import React from 'react'
 import Layout from '@/components/Layout'
 import Image from 'next/image'
-import Link from 'next/link'
-import HotCollections from '@/components/Pages/Market/HotCollections'
+// import HotCollections from '@/components/Pages/Market/HotCollections'
 // import HotAuctions from '@/components/Pages/Market/HotAuctions'
-import ListTrending from '@/components/Pages/Market/ListTrending'
-import Discover from '@/components/Pages/Market/Discover'
+// import ListTrending from '@/components/Pages/Market/ListTrending'
+// import Discover from '@/components/Pages/Market/Discover'
 import { useScreens } from '@/components/Pages/Home/utils'
 
 const Market = () => {

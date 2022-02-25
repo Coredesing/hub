@@ -7,14 +7,14 @@ import useSWR from 'swr'
 import IGOList from 'components/Pages/Home/IGOList'
 import INOList from 'components/Pages/Home/INOList'
 import GameList from 'components/Pages/Home/GameList'
-import NFTList from 'components/Pages/Home/NFTList'
+// import NFTList from 'components/Pages/Home/NFTList'
 import Instruction from 'components/Pages/Home/Instruction'
 
 import { API_BASE_URL } from '@/utils/constants'
 import Partners from '@/components/Pages/Home/Partners'
 import Performance from '@/components/Pages/Home/Performance'
 import { fetcher } from '@/utils'
-import GameFiCarousel from '@/components/Base/GameFiCarousel'
+// import GameFiCarousel from '@/components/Base/GameFiCarousel'
 
 const PageIndex = () => {
   const router = useRouter()
@@ -23,8 +23,8 @@ const PageIndex = () => {
   const [gameLikeIds, setGameLikesIds] = useState([])
   const [likes, setLikes] = useState([])
 
-  const { data: fetchFeaturedGamesResponse, error: fetchFeaturedGamesError } = useSWR(`${API_BASE_URL}/aggregator?display_area=Top Game`, fetcher)
-  const { data: fetchLikesResponse, error: fetchLikesError } = useSWR(`${API_BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`, fetcher)
+  const { data: fetchFeaturedGamesResponse } = useSWR(`${API_BASE_URL}/aggregator?display_area=Top Game`, fetcher)
+  const { data: fetchLikesResponse } = useSWR(`${API_BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`, fetcher)
 
   useEffect(() => {
     setFeaturedGames(fetchFeaturedGamesResponse?.data?.data)

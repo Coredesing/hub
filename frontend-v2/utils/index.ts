@@ -231,10 +231,19 @@ export function safeToFixed (num: number | string, fixed: number): string {
 export const useProfile = (walletAddress: string) => {
   const { response, loading, error, errorMessage } = useFetch(`/user/profile?wallet_address=${walletAddress || ''}`)
 
-  console.log(response)
+  const profile = response?.data?.user
+    ? {
+      ...response.data.user,
+      status: response.data.status,
+      message: response.data.message
+    }
+    : {
+      status: response?.data?.status || 404,
+      message: response?.data?.message || 'User Not Found'
+    }
 
   return {
-    profile: response?.data?.user || null,
+    profile: profile,
     loading,
     error,
     errorMessage

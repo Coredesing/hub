@@ -3,7 +3,9 @@ import useStyles from "../style";
 
 function PoolSlug(props: any) {
   const classes = useStyles();
-  const { poolDetail } = props;
+    const {
+        register, poolDetail,
+    } = props;
 
   return (
     <>
@@ -13,6 +15,7 @@ function PoolSlug(props: any) {
           type="text"
           name='slug'
           defaultValue={poolDetail?.slug}
+          ref={register({ required: false })}
           className={classes.formControlInput}
         />
       </div>

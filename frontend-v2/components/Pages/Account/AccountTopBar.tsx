@@ -1,6 +1,4 @@
-import clsx from 'clsx'
 import React, { useCallback } from 'react'
-import styles from './LeftSideBar.module.scss'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 const AccountTopBar = () => {

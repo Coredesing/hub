@@ -12,7 +12,7 @@ import { getCurrency } from '@/components/web3/utils'
 import { useRouter } from 'next/router'
 import { ObjectType } from '@/utils/types'
 import BigNumber from 'bignumber.js'
-import Pool_ABI from '@/components/web3/abis/PreSalePool.json'
+import ABIPool from '@/components/web3/abis/PreSalePool.json'
 
 const Pools = () => {
   const { account, library } = useMyWeb3()
@@ -29,7 +29,7 @@ const Pools = () => {
       const getPoolsAllowcation = async (pools: ObjectType[], account: string) => {
         const data = await Promise.all(pools.map((pool) => new Promise(async (resolve) => {
           try {
-            const contract = new Contract(pool.campaign_hash, Pool_ABI, library)
+            const contract = new Contract(pool.campaign_hash, ABIPool, library)
             if (contract) {
               const userPurchased = await contract.userPurchased(account)
               const userClaimed = await contract.userClaimed(account)

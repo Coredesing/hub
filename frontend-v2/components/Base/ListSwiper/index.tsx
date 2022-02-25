@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import style from './style.module.scss'
 import { useSwipeable } from 'react-swipeable'
 
@@ -56,8 +56,8 @@ const ListSwiper = ({ ...props }: Props) => {
   }
 
   const handlerSwiper = useSwipeable({
-    onSwipedLeft: (eventData) => updateIndex(activeIndex.from + props.step),
-    onSwipedRight: (eventData) => updateIndex(activeIndex.from - props.step)
+    onSwipedLeft: () => updateIndex(activeIndex.from + props.step),
+    onSwipedRight: () => updateIndex(activeIndex.from - props.step)
   })
 
   return (
@@ -88,7 +88,7 @@ const ListSwiper = ({ ...props }: Props) => {
       <div {...handlerSwiper} className="relative mt-14 w-full">
         <div className={style.carousel}>
           <div className={style.inner} style={{ transform: `translateX(-${activeIndex.from / props.showItemsNumber * 100}%)`, transition: `transform ${props.transition}`, display: `${totalItems < props.showItemsNumber ? 'flex' : ''}` }}>
-            {React.Children.map(props.children, (child, index) => React.cloneElement(child, { width: `${100 / props.showItemsNumber}%` }))}
+            {React.Children.map(props.children, (child) => React.cloneElement(child, { width: `${100 / props.showItemsNumber}%` }))}
           </div>
         </div>
         <button className={`absolute -left-12 top-0 bottom-0 ${activeIndex.from <= 0 ? 'opacity-20' : ''}`} onClick={() => updateIndex(activeIndex.from - props.step)}>

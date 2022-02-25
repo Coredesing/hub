@@ -3,14 +3,18 @@ import React, { ReactNode } from 'react'
 import styles from './WrapperPoolDetail.module.scss'
 type Props = {
   children: ReactNode;
+  backLink?: string;
 }
-const WrapperPoolDetail = ({ children }: Props) => {
+const WrapperPoolDetail = ({ children, backLink }: Props) => {
   const router = useRouter()
   return <div>
     <div className={` ${styles.backLink}`}>
       <a onClick={() => {
-        router.push('/ino')
-        // router.back()
+        if (backLink) {
+          router.push('/ino')
+        } else {
+          router.back()
+        }
       }} className='flex items-center gap-2 text-13px font-casual w-fit cursor-pointer'>
         <svg width="22" height="17" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M21.5 8.5H1.5" stroke="white" strokeMiterlimit="10" />

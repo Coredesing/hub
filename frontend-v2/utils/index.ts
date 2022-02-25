@@ -205,7 +205,7 @@ export const useFetch = (url: string, timeout?: number) => {
   useEffect(() => {
     setLoading(true)
     setResponse(fetchResponse)
-    if (fetchResponse?.data) {
+    if (fetchResponse) {
       setLoading(false)
     }
 
@@ -226,4 +226,17 @@ export const useFetch = (url: string, timeout?: number) => {
 export function safeToFixed (num: number | string, fixed: number): string {
   const re = new RegExp(`^-?\\d+(?:.\\d{0,${(fixed || -1)}})?`)
   return num.toString().match(re)?.[0] || `${num}`
+}
+
+export const useProfile = (walletAddress: string) => {
+  const { response, loading, error, errorMessage } = useFetch(`/user/profile?wallet_address=${walletAddress || ''}`)
+
+  console.log(response)
+
+  return {
+    profile: response?.data?.user || null,
+    loading,
+    error,
+    errorMessage
+  }
 }

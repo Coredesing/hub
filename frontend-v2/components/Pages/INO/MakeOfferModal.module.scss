@@ -5,28 +5,35 @@
 }
 
 .input {
-    border: 1px solid #3C3C42;
-    box-sizing: border-box;
-    background: #303035;
-    width: 100%;
-    outline: none;
+    border: 1px solid #3C3C42 !important;
+    box-sizing: border-box !important;
+    background: #303035 !important;
+    width: 100% !important;
+    outline: none !important;
 }
 
 .formInput {
     position: relative;
+    input {
+        @apply font-casual;
+    }
     &>span {
         position: absolute;
-        content: "dsf";
+        content: "";
         width: 2px;
-        height: 26px;
+        height: 20px;
         left: 0;
-        bottom: 6px;
-        background: #44454B;
+        top: 50%;
+        transform: translate(0, -50%);
+        @apply bg-gamefiDark-300;
     }
 }
 
 .btnOffer {
-    padding: 10px;
+    padding: 11px;
     min-width: 150px;
     height: unset;
+    color: #0D0F15;
+    @apply text-13px;
+    @apply font-bold;
 }

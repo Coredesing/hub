@@ -6,7 +6,6 @@ import styles from './Notfound.module.scss'
 
 const NotFound = ({ backLink }: { backLink?: string }) => {
   const router = useRouter()
-
   return (
     <div className={clsx(styles.page, 'w-full flex flex-col items-center justify-center p-5')}>
       <div className='mb-5'>

@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { API_BASE_URL } from '@/utils/constants'
 
 import { Contract } from '@ethersproject/contracts'
 import ERC721Abi from '@/components/web3/abis/Erc721.json'
 import { useLibraryDefaultFlexible } from '@/components/web3/utils'
 import { fetcher } from '@/utils'
+import { useWeb3Default } from '@/components/web3'
+import { ObjectType } from '@/utils/types'
 
 export const networkImage = (network: string) => {
   switch (network) {
@@ -71,4 +73,57 @@ export const useNFTInfos = (listData: any[]) => {
   }, [provider, listData])
 
   return { data, error, loading, errorMessage }
+}
+
+export const useNFTInfo = (projectInfo: ObjectType, token_id: string | number) => {
+  const [loading, setLoading] = useState(true)
+  const { library } = useWeb3Default()
+  const [tokenInfo, setTokenInfo] = useState<any>()
+  const getTokenInfo = useCallback(async () => {
+    try {
+      if (!projectInfo) {
+        setLoading(false)
+        return
+      }
+      if (!library) return
+      if (+projectInfo.use_external_uri === 1) {
+        const result = await fetcher(`${API_BASE_URL}/marketplace/collection/${projectInfo.token_address}/${token_id}`, { method: 'POST' })
+        const info = result.data
+        if (info) {
+          setTokenInfo({ ...info, id: token_id })
+        }
+      } else {
+        const erc721Contract = new Contract(projectInfo.token_address, ERC721Abi, library)
+        const tokenURI = await erc721Contract.tokenURI(token_id)
+        let info = {}
+        try {
+          info = await fetcher(tokenURI)
+        } catch (error) {
+          console.debug('err', error)
+        }
+        setTokenInfo({ ...info, id: token_id })
+      }
+    } catch (error) {
+      console.debug('error', error)
+      setTokenInfo(null)
+    }
+
+  }, [projectInfo, token_id, library])
+
+  useEffect(() => {
+    getTokenInfo().catch(err => {
+      console.debug(err)
+    })
+  }, [getTokenInfo])
+
+  useEffect(() => {
+    if (tokenInfo !== undefined) {
+      setLoading(false)
+    }
+  }, [tokenInfo])
+
+  return {
+    loading,
+    tokenInfo
+  }
 }

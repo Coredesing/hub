@@ -526,7 +526,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     }
   }
 
-  return (<WrapperPoolDetail>
+  return (<WrapperPoolDetail backLink='/ino'>
     <PlaceOrderModal
       open={openPlaceOrderModal}
       onClose={() => setOpenPlaceOrderModal(false)}

@@ -5,6 +5,7 @@ import React, { ReactNode } from 'react'
 type Props = {
   children?: ReactNode;
   path?: string;
+  onClick: () => void;
 }
 const MenuLink = ({ children, path }: Props) => {
   const router = useRouter()

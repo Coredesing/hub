@@ -12,7 +12,6 @@ type Props = {
 }
 
 const BoxesInformationModal = ({ open, onClose, items, idShow }: Props) => {
-
   return <Modal show={open} toggle={onClose} className={styles.modal}>
     <div className={clsx('px-8 pt-14 pb-8', styles.content)}>
       <div className='relative'>

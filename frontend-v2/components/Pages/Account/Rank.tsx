@@ -49,7 +49,7 @@ const Rank = ({ data }) => {
   const [rankingSelected, setRankingSelected] = useState<ObjectType[]>()
   const [isLive, setIsLive] = useState(null)
   const rankingOptions = useMemo(() => {
-    let all = (data?.legendSnapshots || []).sort((a, b) => b.snapshot_at - a.snapshot_at).map(s => {
+    const all = (data?.legendSnapshots || []).sort((a, b) => b.snapshot_at - a.snapshot_at).map(s => {
       return {
         key: s.id,
         label: s.name,
@@ -66,7 +66,6 @@ const Rank = ({ data }) => {
     }
     return all
   }, [data])
-  
 
   useEffect(() => {
     if (!rankingSelected) {
@@ -99,7 +98,7 @@ const Rank = ({ data }) => {
               {myRank.image && <Image src={myRank.image} width={60} height={60} className='object-cover' />}
               <div>
                 <span className='uppercase text-13px text-white/50 font-bold block'>Current Rank</span>
-                <span className='text-2xl block font-medium'>{myRank.name}</span>
+                <span className='text-xl md:text-2xl block font-medium'>{myRank.name}</span>
               </div>
             </div>
           </div>
@@ -107,27 +106,26 @@ const Rank = ({ data }) => {
             <div className='rounded w-full h-full gap-3 flex items-center flex-col sm:flex-row'>
               <div className='w-full flex flex-col justify-center'>
                 <span className='uppercase text-13px text-white/50 font-bold block'>Current Staked</span>
-                <span className='text-2xl block font-medium'>{+myRank.tokenStaked || 0} GAFI</span>
+                <span className='text-xl md:text-2xl block font-medium'>{+myRank.tokenStaked || 0} GAFI</span>
               </div>
               <div className='w-full flex flex-col justify-center'>
                 <span className='uppercase text-13px text-white/50 font-bold block'>$GAFI LEFT TO NEXT RANK</span>
-                <span className='text-2xl block font-medium'>{myRank.requirementNextTier}</span>
+                <span className='text-xl md:text-2xl block font-medium'>{myRank.requirementNextTier}</span>
               </div>
               <div className='w-full flex items-center gap-1'>
                 <button
                   onClick={() => router.push('/staking')}
                   className={clsx(
                     styles.btnUnstake,
-                    'p-px h-9 cursor-pointer bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700 rounded-sm',
+                    'p-px h-9 cursor-pointer bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700 rounded-sm'
                   )}>
-                  <div className={'py-2 px-5 bg-gamefiDark-900 text-13px flex justify-center items-center rounded-sm font-bold uppercase'}>
+                  <div className={'py-2 px-5 bg-gamefiDark-900 text-xs sm:text-13px flex justify-center items-center rounded-sm font-bold uppercase'}>
                     Unstake
                   </div>
                 </button>
-
                 <button
                   onClick={() => router.push('/staking')}
-                  className={clsx(styles.btnStakeMore, 'bg-gamefiGreen-700 py-2 px-5 text-black uppercase font-bold text-13px h-9 rounded-sm')}>Stake More</button>
+                  className={clsx(styles.btnStakeMore, 'bg-gamefiGreen-700 py-2 px-5 text-black uppercase font-bold text-xs sm:text-13px h-9 rounded-sm')}>Stake More</button>
               </div>
             </div>
           </div>

@@ -30,6 +30,9 @@
         min-width: 126px;
         -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px), 0 0);
         clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px), 0 0);
+        @media screen and (max-width: 640px) {
+            min-width: 110px;
+        }
     }
 }
 
@@ -37,4 +40,7 @@
     -webkit-clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%, 0 0);
     clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%, 0 0);
     min-width: 126px;
+    @media screen and (max-width: 640px) {
+        min-width: 110px;
+    }
 }

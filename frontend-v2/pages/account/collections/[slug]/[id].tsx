@@ -1,59 +1,16 @@
 import Layout from '@/components/Layout'
-import React, { useCallback, useEffect, useState } from 'react'
+import React from 'react'
 import MarketplaceDetail from '@/components/Pages/INO/MarketplaceDetail'
 import { fetchOneCollection } from '@/pages/api/market/collection/[slug]'
-import { Contract } from '@ethersproject/contracts'
-import ERC721Abi from '@/components/web3/abis/Erc721.json'
-import { useWeb3Default } from '@/components/web3'
 import AccountContent from '@/components/Pages/Account/AccountContent'
 import NotFound from '@/components/Pages/Notfound'
 import AccountLayout from '@/components/Pages/Account/AccountLayout'
 import { PropagateLoader } from 'react-spinners'
-import { API_BASE_URL } from '@/utils/constants'
-import { fetcher } from '@/utils'
+import { useNFTInfo } from '@/components/Pages/Market/utils'
 
 const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
-  const [loading, setLoading] = useState(true)
-  const { library } = useWeb3Default()
-  const [tokenInfo, setTokenInfo] = useState<any>(null)
-  const getTokenInfo = useCallback(async () => {
-    try {
-      if (!projectInfo) {
-        setLoading(false)
-        return
-      }
-      if (!library) return
-      if (+projectInfo.use_external_uri === 1) {
-        const result = await fetcher(`${API_BASE_URL}/marketplace/collection/${projectInfo.token_address}/${params.id}`, { method: 'POST' })
-        const info = result.data
-        if (info) {
-          setTokenInfo({ ...info, id: params.id })
-        }
-      } else {
-        const erc721Contract = new Contract(projectInfo.token_address, ERC721Abi, library)
-        const tokenURI = await erc721Contract.tokenURI(params.id)
-        let info = {}
-        try {
-          info = await fetcher(tokenURI)
-        } catch (error) {
-          console.debug('err', error)
-        }
-        setTokenInfo({ ...info, id: params.id })
-      }
-
-    } catch (error) {
-      console.debug('error', error)
-    } finally {
-      setLoading(false)
-    }
-
-  }, [projectInfo, params, library])
-
-  useEffect(() => {
-    getTokenInfo().catch(err => {
-      console.debug(err)
-    })
-  }, [getTokenInfo])
+  
+  const {loading, tokenInfo} = useNFTInfo(projectInfo, params.id)
 
   return <Layout title="GameFi Market">
     <AccountLayout>
@@ -75,7 +32,7 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
 
 export default MarketplaceDetailPage
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps ({ params }) {
   if (!params?.slug) {
     return { props: { projectInfo: null } }
   }

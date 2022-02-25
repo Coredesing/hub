@@ -3,12 +3,62 @@ import Layout from '@/components/Layout'
 import { formatterUSD, formatPrice, fetcher, printNumber } from '@/utils'
 import PriceChange from '@/components/Pages/Aggregator/PriceChange'
 import Link from 'next/link'
-import { Carousel } from 'react-responsive-carousel'
 import { TabPanel, Tabs } from '@/components/Base/Tabs'
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { useMyWeb3 } from '@/components/web3/context'
 import { useWalletContext } from '@/components/Base/WalletConnector/provider'
 import useSWR, { useSWRConfig } from 'swr'
+import Flicking from '@egjs/react-flicking'
+import { Sync } from '@egjs/flicking-plugins'
+import '@egjs/flicking/dist/flicking.css'
+
+const Carousel = ({ items }: { items: any[] }) => {
+  const flicking0 = useRef()
+  const flicking1 = useRef()
+
+  const [plugins, setPlugins] = useState([])
+
+  useEffect(() => {
+    setPlugins([new Sync({
+      type: 'index',
+      synchronizedFlickingOptions: [
+        {
+          flicking: flicking0.current,
+          isSlidable: true
+        },
+        {
+          flicking: flicking1.current,
+          isClickable: true,
+          activeClass: 'border-gamefiGreen-500'
+        }
+      ]
+    })])
+  }, [])
+
+  return <>
+    <Flicking ref={flicking0}
+      className="mb-4 w-full"
+      bounce={5}
+      plugins={plugins}>
+      {items.map(item => (
+        <img key={item} src={item} className="w-full aspect-[16/9]" alt="" />
+      ))}
+    </Flicking>
+
+    <Flicking ref={flicking1}
+      moveType="freeScroll"
+      bound={true}
+      interruptable={true}
+      preventClickOnDrag={false}
+      bounce={5}>
+      {items.map(item => (
+        <div key={item} className="p-[2px] rounded border-2 border-transparent cursor-pointer">
+          <img src={item} className="rounded w-32 aspect-[16/9]" alt="" />
+        </div>
+      ))}
+    </Flicking>
+  </>
+}
 
 const GameDetails = ({ data }) => {
   const items = [data.screen_shots_1, data.screen_shots_2, data.screen_shots_3, data.screen_shots_4, data.screen_shots_5].filter(x => !!x)
@@ -44,7 +94,7 @@ const GameDetails = ({ data }) => {
   }, [library, liked, mutate, signature, account, setShowModal])
 
   return (
-    <Layout title={data.game_name}>
+    <Layout title={data.game_name ? `${data.game_name} - GameFi Aggregator` : 'GameFi Aggregator'}>
       <div className="px-2 md:px-4 lg:px-24 md:container mx-auto lg:block">
         <Link href="/aggregator" passHref={true}>
           <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">
@@ -60,29 +110,7 @@ const GameDetails = ({ data }) => {
           <div className="uppercase font-bold text-3xl mb-6">{data.game_name}</div>
           <div className="flex flex-col md:flex-row font-casual gap-10">
             <div className="md:w-8/12 relative">
-              <Carousel
-                showStatus={false}
-                showIndicators={false}
-                showArrows={false}
-                autoPlay={true}
-                stopOnHover={true}
-                showThumbs={true}
-                thumbWidth={170}
-                swipeable={true}
-                infiniteLoop={true}
-                interval={3000}
-                renderThumbs={() => {
-                /* eslint-disable-next-line @next/next/no-img-element */
-                  return items && items.length > 1 && items.map((item) => <img key={item} src={item} alt="img" />)
-                }}
-              >
-                {items.map(item => (
-                  <div key={item} className="px-px">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={item} className="w-full" style={{ aspectRatio: '16/9' }} alt="" />
-                  </div>
-                ))}
-              </Carousel>
+              <Carousel items={items}/>
 
               <GameRight data={data} liked={liked} account={account} like={like} className="mt-6 md:hidden" />
 
@@ -219,7 +247,7 @@ const GameRight = ({ data, liked, account, className, like }) => {
     <div className="inline-flex items-center mb-8">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={data.icon_token_link} className="w-6 h-6" alt={data.game_name} />
-      <span className="ml-3 text-3xl font-mechanic font-bold">{formatPrice(data.tokenomic?.price)}</span>
+      <span className="ml-3 text-3xl font-mechanic font-bold">{parseFloat(data.tokenomic?.price) ? formatPrice(data.tokenomic?.price) : 'N/A'}</span>
       <PriceChange className="ml-3 py-1 text-xs font-medium" tokenomic={data.tokenomic} />
     </div>
 

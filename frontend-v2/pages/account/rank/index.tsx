@@ -5,7 +5,7 @@ import AccountLayout from '@/components/Pages/Account/AccountLayout'
 import { fetcher } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 
-const RankPage = ({data}) => {
+const RankPage = ({ data }) => {
   return <Layout title="My Account">
     <AccountLayout>
       <Rank data={data}></Rank>
@@ -15,7 +15,7 @@ const RankPage = ({data}) => {
 
 export default RankPage
 
-export async function getServerSideProps() {
+export async function getServerSideProps () {
   const [tierConfigs, legendSnapshots, legendCurrent] = await Promise.all([
     fetcher(`${API_BASE_URL}/get-tiers`),
     fetcher(`${API_BASE_URL}/staking-pool/legend-snapshots`),
@@ -31,4 +31,3 @@ export async function getServerSideProps() {
     }
   }
 }
-

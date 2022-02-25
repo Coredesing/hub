@@ -4,10 +4,12 @@ import Dropdown from '@/components/Base/Dropdown'
 import Modal from '@/components/Base/Modal'
 import styles from './SellNFTModal.module.scss'
 import martketStyles from './MarketplaceDetail.module.scss'
-import Input from '@/components/Base/Input'
+// import Input from '@/components/Base/Input'
 import { ObjectType } from '@/utils/types'
 import { useState } from 'react'
 import { useMyWeb3 } from '@/components/web3/context'
+import { FormInputNumber } from '@/components/Base/FormInputNumber'
+import BigNumberJs from 'bignumber.js'
 
 type Props = {
   open?: boolean;
@@ -49,7 +51,7 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isL
       setFeeAuction(0)
       return
     }
-    const fee = +val * feePlatform
+    const fee = +(new BigNumberJs(val).multipliedBy(feePlatform).toFixed(2))
     setFeeAuction(fee)
   }
 
@@ -100,7 +102,18 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isL
       <div className={clsx('mb-8 flex items-center gap-3 justify-between')}>
         <label htmlFor="" className='text-sm block mb-2 font-casual'>Total Price</label>
         <div className='flex gap-2'>
-          <Input classes={{ input: 'font-casual text-sm rounded-sm px-4 py-2', formInput: 'w-40' }} onChange={onChangePriceAuction} value={auctionPrice} />
+          <div className={clsx(styles.formInput, 'w-40')}>
+            <FormInputNumber
+              className={`font-casual text-sm rounded-sm px-4 py-2 relative ${styles.input}`}
+              placeholder="Enter Price"
+              onChange={onChangePriceAuction}
+              value={auctionPrice}
+              allowZero
+              minLength={10}
+            />
+            <span></span>
+          </div>
+          {/* <Input classes={{ input: 'font-casual text-sm rounded-sm px-4 py-2', formInput: 'w-40' }} onChange={onChangePriceAuction} value={auctionPrice} /> */}
           <Dropdown onChange={onChangeCurrency} items={currencies} selected={currency} propLabel='name' propValue='address' propIcon='icon' classes={{ wrapperDropdown: `${styles.wrapperDropdown} rounded-sm` }} />
         </div>
       </div>

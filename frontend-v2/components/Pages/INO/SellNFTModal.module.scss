@@ -55,3 +55,25 @@
         background: #303035;
     }
 }
+
+.formInput {
+    position: relative;
+    input {
+        @apply font-casual;
+        border: 1px solid #3C3C42 !important;
+        box-sizing: border-box !important;
+        background: #303035 !important;
+        width: 100% !important;
+        outline: none !important;
+    }
+    &>span {
+        position: absolute;
+        content: "";
+        width: 2px;
+        height: 20px;
+        left: 0;
+        top: 50%;
+        transform: translate(0, -50%);
+        @apply bg-gamefiDark-300;
+    }
+}

@@ -9,7 +9,6 @@ type Props = {
 }
 
 const TopRanking = ({ rankings, isLive }: Props) => {
-
   const isMdScreen = useMediaQuery({ maxWidth: '960px' })
 
   const renderNoRank = useCallback((no: number, obj: ObjectType) => {

@@ -17,7 +17,7 @@ type Props = {
   children?: ReactNode;
   classes?: {
     wrapperDropdown?: string;
-  }
+  };
 }
 const Dropdown = ({ items, selected, onChange, propLabel, propValue, isFilter, children, classes, propIcon }: Props) => {
   const [show, setShow] = useState(false)

@@ -9,8 +9,7 @@ import { PropagateLoader } from 'react-spinners'
 import { useNFTInfo } from '@/components/Pages/Market/utils'
 
 const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
-  
-  const {loading, tokenInfo} = useNFTInfo(projectInfo, params.id)
+  const { loading, tokenInfo } = useNFTInfo(projectInfo, params.id)
 
   return <Layout title="GameFi Market">
     <AccountLayout>

@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import AppContext from './index'
 import useTiersOld from './tiersOld'
 import useMarketActivities from './market-activities'
@@ -11,7 +11,20 @@ import { API_BASE_URL } from '@/utils/constants'
 import { Contract, utils } from 'ethers'
 
 const useTiers = () => {
-  const [configs, setConfigs] = useState<TierConfigs | null>(null)
+  const [configs] = useState<TierConfigs>({
+    tiers: [
+      '20000000000000000000',
+      '100000000000000000000',
+      '500000000000000000000',
+      '1000000000000000000000'
+    ],
+    delays: [
+      5,
+      8,
+      12,
+      30
+    ]
+  })
 
   const all = useMemo(() => {
     if (!configs) {
@@ -22,48 +35,49 @@ const useTiers = () => {
   }, [configs])
 
   return {
-    state: {
-      all
-    },
-
-    actions: {
-      setConfigs
-    }
+    all
   }
 }
 
-const useMyTier = (tiers) => {
+const useTierMine = (tiers) => {
   const { library: libraryDefault } = useWeb3Default()
-  const { account } = useMyWeb3()
+  const { library, account } = useMyWeb3()
   const [data, setData] = useState<{ id: number; tier: number; stakedInfo: { tokenStaked: string; uniStaked: string } } | null>(null)
+  const [pool, setPool] = useState(null)
+
   const tier = useMemo(() => {
-    if (!data || !tiers.state.all) {
+    if (!data || !tiers.all) {
       return null
     }
 
-    return tiers.state.all.find(x => x.id === data.tier)
+    return tiers.all.find(x => x.id === data.tier)
   }, [data, tiers])
-  const loadMyStakingData = useCallback(({ pool_id: poolID, pool_address: poolAddress }) => {
-    if (!account) {
+
+  const contractStakingReadonly = useMemo(() => {
+    if (!libraryDefault || !pool?.pool_address) {
+      return null
+    }
+
+    return new Contract(pool.pool_address, ABIStakingPool, libraryDefault)
+  }, [libraryDefault, pool])
+
+  const contractStaking = useMemo(() => {
+    if (!library || !pool?.pool_address) {
+      return null
+    }
+
+    return new Contract(pool.pool_address, ABIStakingPool, library.getSigner())
+  }, [library, pool])
+
+  const loadMyStaking = useCallback(() => {
+    if (!contractStakingReadonly) {
       setData(null)
       return
     }
-
-    if (!poolID || !poolAddress) {
-      setData(null)
-      return
-    }
-
-    if (!libraryDefault) {
-      setData(null)
-      return
-    }
-
-    const contract = new Contract(poolAddress, ABIStakingPool, libraryDefault)
 
     return Promise.allSettled([
       fetcher(`${API_BASE_URL}/user/tier-info?wallet_address=${account}`),
-      contract.linearStakingData(poolID, account).then(x => utils.formatUnits(x.balance, GAFI.decimals))
+      contractStakingReadonly.linearStakingData(pool.pool_id, account).then(x => utils.formatUnits(x.balance, GAFI.decimals))
     ]).then((results) => {
       if (results[0]?.status !== 'fulfilled') {
         setData(null)
@@ -83,13 +97,17 @@ const useMyTier = (tiers) => {
 
       setData(data)
     })
-  }, [account, setData, libraryDefault])
+  }, [account, setData, pool, contractStakingReadonly])
+  useEffect(() => {
+    loadMyStaking()
+  }, [loadMyStaking])
+
   const tierNextTokens = useMemo<number | string>(() => {
-    if (!data || !tiers.state.all || !tier) {
+    if (!data || !tiers.all || !tier) {
       return 0
     }
 
-    const t = tiers.state.all.find(x => x.id === data.tier + 1)
+    const t = tiers.all.find(x => x.id === data.tier + 1)
     if (!t) {
       return 0
     }
@@ -106,30 +124,49 @@ const useMyTier = (tiers) => {
   }, [data, tiers, tier])
 
   return {
-    loadMyStakingData,
-    state: {
-      tier,
-      staking: {
-        ...data?.stakedInfo,
-        nextTokens: tierNextTokens
-      }
-    }
+    pool,
+    tier,
+    staking: {
+      ...data?.stakedInfo,
+      nextTokens: tierNextTokens
+    },
+    setPool,
+    loadMyStaking,
+    contractStaking,
+    contractStakingReadonly
   }
 }
 
 const AppProvider = (props: any) => {
   const $tiers = useTiersOld()
   const tiers = useTiers()
-  const myTier = useMyTier(tiers)
-  const { loadMyStakingData } = myTier
+  const {
+    loadMyStaking,
+    tier: tierMine,
+    staking: stakingMine,
+    setPool: setStakingPool,
+    pool: stakingPool,
+    contractStaking,
+    contractStakingReadonly
+  } = useTierMine(tiers)
   const marketActivities = useMarketActivities()
+
+  useEffect(() => {
+    fetcher(`${API_BASE_URL}/staking-pool`).then(pools => {
+      setStakingPool(pools?.data?.[0])
+    })
+  }, [setStakingPool])
 
   return (
     <AppContext.Provider value={{
       $tiers,
       tiers,
-      myTier,
-      loadMyStakingData,
+      tierMine,
+      stakingMine,
+      stakingPool,
+      loadMyStaking,
+      contractStaking,
+      contractStakingReadonly,
       marketActivities
     }}>
       {props.children}

@@ -3,7 +3,6 @@ import Layout from '@/components/Layout'
 import imgNA from '@/assets/images/ranks/na.png'
 import { API_BASE_URL } from '@/utils/constants'
 import { fetcher, safeToFixed, shortenAddress } from '@/utils'
-import ABIStakingPool from '@/components/web3/abis/StakingPool.json'
 import ABIERC20 from '@/components/web3/abis/ERC20.json'
 import { useWeb3Default, GAFI } from '@/components/web3'
 import { Contract, BigNumber, utils } from 'ethers'
@@ -25,20 +24,7 @@ const Staking = ({ data }) => {
     return () => { mounted.current = false }
   }, [])
 
-  const pool = useMemo(() => data.pool, [data])
-  const { tiers, myTier, loadMyStakingData } = useAppContext()
-  useEffect(() => {
-    tiers.actions.setConfigs(data.tierConfigs)
-  }, [data, tiers])
-
-  const tierMine = useMemo(() => myTier.state.tier, [myTier])
-  const stakingMine = useMemo(() => myTier.state.staking, [myTier])
-  const loadMyStaking = useCallback(() => {
-    return loadMyStakingData(pool)
-  }, [loadMyStakingData, pool])
-  useEffect(() => {
-    loadMyStaking()
-  }, [loadMyStaking])
+  const { tierMine, stakingMine, stakingPool, contractStaking, contractStakingReadonly } = useAppContext()
 
   const [totalStaked, setTotalStaked] = useState<BigNumber | null>(null)
   const totalStakedNumber = useMemo(() => {
@@ -50,28 +36,14 @@ const Staking = ({ data }) => {
   }, [totalStaked])
 
   const { library: libraryDefault } = useWeb3Default()
-  const { library, account } = useMyWeb3()
-  const contractStakingReadonly = useMemo(() => {
-    if (!libraryDefault || !pool) {
-      return null
-    }
-
-    return new Contract(pool.pool_address, ABIStakingPool, libraryDefault)
-  }, [libraryDefault, pool])
-  const contractGÀIReadonly = useMemo(() => {
+  const { account } = useMyWeb3()
+  const contractGAFIReadonly = useMemo(() => {
     if (!libraryDefault) {
       return null
     }
 
     return new Contract(GAFI.address, ABIERC20, libraryDefault)
   }, [libraryDefault])
-  const contractStaking = useMemo(() => {
-    if (!library || !pool) {
-      return null
-    }
-
-    return new Contract(pool.pool_address, ABIStakingPool, library.getSigner())
-  }, [library, pool])
 
   const [pendingWithdrawal, setPendingWithdrawal] = useState({
     amount: null,
@@ -79,7 +51,7 @@ const Staking = ({ data }) => {
   })
 
   const loadMyPending = useCallback(() => {
-    if (!account) {
+    if (!account || !stakingPool) {
       setPendingWithdrawal({
         time: 0,
         amount: 0
@@ -100,7 +72,7 @@ const Staking = ({ data }) => {
       amount: null
     })
 
-    contractStakingReadonly.linearPendingWithdrawals(pool.pool_id, account).then(x => {
+    contractStakingReadonly.linearPendingWithdrawals(stakingPool.pool_id, account).then(x => {
       if (!mounted.current) {
         return
       }
@@ -120,27 +92,33 @@ const Staking = ({ data }) => {
         time: new Date(time * 1000),
         amount
       })
+    }).catch(err => {
+      console.debug(err)
+      setPendingWithdrawal({
+        time: 0,
+        amount: 0
+      })
     })
-  }, [account, contractStakingReadonly, pool, setPendingWithdrawal, mounted])
+  }, [account, contractStakingReadonly, stakingPool, setPendingWithdrawal, mounted])
 
   useEffect(() => {
-    if (!contractGÀIReadonly) {
+    if (!contractGAFIReadonly) {
       setTotalStaked(null)
       return
     }
 
-    if (!pool?.pool_address) {
+    if (!stakingPool?.pool_address) {
       return
     }
 
-    contractGÀIReadonly.balanceOf(pool.pool_address).then(x => {
+    contractGAFIReadonly.balanceOf(stakingPool.pool_address).then(x => {
       if (!mounted.current) {
         return
       }
 
       setTotalStaked(x)
     })
-  }, [contractGÀIReadonly, pool, mounted])
+  }, [contractGAFIReadonly, stakingPool, mounted])
 
   useEffect(() => {
     loadMyPending()
@@ -185,7 +163,7 @@ const Staking = ({ data }) => {
     setRankingSelected(selected.value)
   }
 
-  if (!pool) {
+  if (!stakingPool) {
     return (<Layout title="GameFi Staking">
       <div className="px-1 md:px-4 lg:px-16 md:container mx-auto lg:block pb-4">
         No Pool Available
@@ -245,10 +223,10 @@ const Staking = ({ data }) => {
 
         <div>
           <TabPanel value={tab} index={0}>
-            <TabStake {...{ pool, contractStaking, loadMyStaking, stakingMine, loadMyPending, pendingWithdrawal }} />
+            <TabStake {...{ contractStaking, stakingMine, loadMyPending, pendingWithdrawal }} />
           </TabPanel>
           <TabPanel value={tab} index={1}>
-            <TabUnstake {...{ pool, contractStaking, loadMyStaking, stakingMine, loadMyPending, pendingWithdrawal, goStake: () => { setTab(0) } }} />
+            <TabUnstake {...{ contractStaking, stakingMine, loadMyPending, pendingWithdrawal, goStake: () => { setTab(0) } }} />
           </TabPanel>
           <TabPanel value={tab} index={2}>
             <div className="md:text-lg 2xl:text-2xl uppercase font-bold flex mt-6 items-center">
@@ -265,9 +243,7 @@ const Staking = ({ data }) => {
 export default Staking
 
 export async function getServerSideProps () {
-  const [pools, tierConfigs, legendSnapshots, legendCurrent] = await Promise.all([
-    fetcher(`${API_BASE_URL}/staking-pool`),
-    fetcher(`${API_BASE_URL}/get-tiers`),
+  const [legendSnapshots, legendCurrent] = await Promise.all([
     fetcher(`${API_BASE_URL}/staking-pool/legend-snapshots`),
     fetcher(`${API_BASE_URL}/staking-pool/legend-current`)
   ])
@@ -275,8 +251,6 @@ export async function getServerSideProps () {
   return {
     props: {
       data: {
-        pool: pools?.data?.[0] || null,
-        tierConfigs: tierConfigs?.data || null,
         legendSnapshots: legendSnapshots?.data || null,
         legendCurrent: legendCurrent?.data || null
       }

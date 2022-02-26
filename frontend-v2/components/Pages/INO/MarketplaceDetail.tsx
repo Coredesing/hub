@@ -145,7 +145,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
         currency: tokenOnSale.currency,
         price: tokenOnSale.price.toString(),
         symbol: null,
-        icon: '',
+        icon: ''
       }
       if (!BigNumber.from(info.price).isZero()) {
         try {

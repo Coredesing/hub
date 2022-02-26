@@ -26,7 +26,7 @@ export default function Ranks () {
             bound={true}
             bounce={0}
           >
-            { tiers.state.all.map(tier => {
+            { tiers.all.map(tier => {
               return <div className="w-2/3 sm:w-[29%] md:w-1/5 flex flex-col items-center justify-center overflow-x-hidden" key={tier.name}>
                 <div className="w-1/2 relative mb-auto">
                   <Image src={tier.image} layout='responsive' objectFit='contain' alt={tier.name}/>

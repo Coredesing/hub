@@ -107,7 +107,6 @@ export const useNFTInfo = (projectInfo: ObjectType, token_id: string | number) =
       console.debug('error', error)
       setTokenInfo(null)
     }
-
   }, [projectInfo, token_id, library])
 
   useEffect(() => {

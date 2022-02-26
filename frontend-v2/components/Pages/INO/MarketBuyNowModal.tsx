@@ -19,7 +19,6 @@ type Props = {
 } & ObjectType;
 
 const BuyNowModal = ({ tokenOnSale, projectInfo, myBalance, ...props }: Props) => {
-
   const handleBuyNow = async () => {
     const ok = props.onSubmit && await props.onSubmit()
     if (ok) {

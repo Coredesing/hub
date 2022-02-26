@@ -4,8 +4,10 @@ import { utils } from 'ethers'
 import { GAFI } from '@/components/web3'
 import { useBalanceToken } from '@/components/web3/utils'
 import { safeToFixed } from '@/utils'
+import { useAppContext } from '@/context'
 
-export default function StakeRight ({ pool, contractStaking, loadMyStaking, loadMyPending, account, stakingMine, pendingWithdrawal, className }) {
+export default function StakeRight ({ loadMyPending, account, pendingWithdrawal, className }) {
+  const { stakingPool, stakingMine, loadMyStaking, contractStaking } = useAppContext()
   const [withdrawing, setWithdrawing] = useState(false)
   const [restaking, setRestaking] = useState(false)
   const { updateBalance } = useBalanceToken(GAFI)
@@ -30,7 +32,7 @@ export default function StakeRight ({ pool, contractStaking, loadMyStaking, load
     (async function () {
       try {
         setWithdrawing(true)
-        await contractStaking.linearClaimPendingWithdraw(pool.pool_id)
+        await contractStaking.linearClaimPendingWithdraw(stakingPool.pool_id)
           .then(tx => {
             return tx.wait(1).then(() => {
               loadMyPending()
@@ -52,7 +54,7 @@ export default function StakeRight ({ pool, contractStaking, loadMyStaking, load
         setWithdrawing(false)
       }
     })()
-  }, [contractStaking, pool, loadMyPending, setWithdrawing, updateBalance])
+  }, [contractStaking, stakingPool, loadMyPending, setWithdrawing, updateBalance])
   const onRestake = useCallback(() => {
     if (!contractStaking) {
       return
@@ -61,7 +63,7 @@ export default function StakeRight ({ pool, contractStaking, loadMyStaking, load
     (async function () {
       try {
         setRestaking(true)
-        await contractStaking.linearReStake(pool.pool_id)
+        await contractStaking.linearReStake(stakingPool.pool_id)
           .then(tx => {
             return tx.wait(1).then(() => {
               loadMyStaking()
@@ -83,7 +85,7 @@ export default function StakeRight ({ pool, contractStaking, loadMyStaking, load
         setRestaking(false)
       }
     })()
-  }, [contractStaking, pool, loadMyStaking, loadMyPending, setRestaking])
+  }, [contractStaking, stakingPool, loadMyStaking, loadMyPending, setRestaking])
 
   const [now, setNow] = useState(new Date())
   useEffect(() => {

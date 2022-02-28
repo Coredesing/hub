@@ -33,6 +33,9 @@ const Profile = () => {
     return (editing && walletSolana.address) || (!editing && profile.solana_address)
   }, [editing, walletSolana, profile])
 
+  const [telegram, setTelegram] = useState('')
+  const [twitter, setTwitter] = useState('')
+
   const handleEdit = useCallback(() => {
     if (signature) {
       setEditing(true)
@@ -94,6 +97,10 @@ const Profile = () => {
     })
   }, [])
 
+  const updatedSolana = useMemo(() => {
+    return walletSolana.address !== profile.solana_address
+  }, [walletSolana, profile])
+
   const handleSave = useCallback(async () => {
     const response = await fetcher(`${API_BASE_URL}/user/update-profile`, {
       headers: {
@@ -103,8 +110,10 @@ const Profile = () => {
       body: JSON.stringify({
         signature,
         wallet_address: account,
-        solana_address: walletSolana?.address,
-        solana_signature: walletSolana?.signature
+        solana_address: updatedSolana ? walletSolana?.address : undefined,
+        solana_signature: updatedSolana ? walletSolana?.signature : undefined,
+        user_telegram: telegram || undefined,
+        user_twitter: twitter || undefined
       }),
       method: 'PUT'
     })
@@ -122,11 +131,11 @@ const Profile = () => {
     toast.success('Update profile successfully')
     loadProfile()
     setEditing(false)
-  }, [signature, account, loadProfile, walletSolana])
+  }, [signature, account, loadProfile, walletSolana, updatedSolana, telegram, twitter])
 
   return <div className='py-10 px-4 xl:px-9'>
-    <div className='flex items-center justify-between'>
-      <h3 className='hidden lg:block uppercase font-bold text-2xl mb-7'>My Profile</h3>
+    <div className="flex items-center justify-between mb-6">
+      <h3 className='hidden lg:block uppercase font-bold text-2xl'>My Profile</h3>
       { profile
         ? <>{ editing
           ? <div className="flex">
@@ -149,7 +158,7 @@ const Profile = () => {
       }
     </div>
     <div className='w-full flex lg:flex-row flex-col gap-5 mb-16'>
-      <div className={clsx(styles.box, 'lg:w-2/3 w-full rounded-sm p-4 xl:p-7 flex-1')}>
+      <div className={clsx('lg:w-2/3 w-full rounded-sm p-4 xl:p-7 flex-1 bg-gamefiDark-800 clipped-t-r')}>
         <h3 className='font-bold text-base mb-2 uppercase'>Wallet Addresses</h3>
         <div className='font-casual text-sm mb-7'>
           Your wallets connected to GameFi are listed below.
@@ -157,7 +166,7 @@ const Profile = () => {
         </div>
         <div className='mb-7'>
           <h4 className='text-base font-bold mb-1 uppercase'>MAIN wallet Address</h4>
-          <div className={clsx(styles.walletBox, 'py-3 pl-2 pr-4 rounded-sm flex items-center')}>
+          <div className={clsx('bg-gamefiDark-700 py-3 pl-2 pr-4 rounded-sm flex items-center')}>
             <div className={clsx(styles.mainWalletIcons, 'flex items-center mr-4')}>
               <div className='w-8 h-8 rounded-full'>
                 <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -195,7 +204,7 @@ const Profile = () => {
         </div>
         <div>
           <h4 className='text-base font-bold mb-1 flex items-center'><span className='uppercase'>Sub-Wallet Address</span>&nbsp;<span className='font-casual text-sm font-normal text-white/60'>(Optional)</span></h4>
-          <div className={clsx(styles.walletBox, 'flex gap-2 items-center mb-2 py-3 pl-2 pr-4 rounded-sm')}>
+          <div className={clsx('bg-gamefiDark-700 flex gap-2 items-center mb-2 py-3 pl-2 pr-4 rounded-sm')}>
             <div className='w-8 h-8 rounded-full bg-black flex-none'>
               <SolanaIcon />
             </div>
@@ -205,13 +214,13 @@ const Profile = () => {
                 <span className={`font-casual text-13px break-words break-all text-ellipsis ${!wSolana ? 'text-white/40 italic' : 'text-white/80'}`}>{wSolana || 'Not connected'}</span>
               </div>
               { editing
-                ? (walletSolana.address ? <span className='cursor-pointer text-gamefiRed' onClick={disconnectWalletSolana}>Disconnect</span> : <span className='cursor-pointer text-gamefiGreen-700' onClick={connectWalletSolana}>Connect with Phantom</span>)
+                ? (walletSolana.address ? <span className='cursor-pointer text-red-400 hover:text-red-500 font-casual text-sm' onClick={disconnectWalletSolana}>Disconnect</span> : <span className='cursor-pointer text-gamefiGreen-700' onClick={connectWalletSolana}>Connect with Phantom</span>)
                 : (profile.solana_address && <span className='cursor-pointer' onClick={() => copy(profile?.solana_address)}>
                   <DocumentCopyIcon />
                 </span>)}
             </div>
           </div>
-          <div className={clsx(styles.walletBox, 'flex gap-2 items-center mb-2 py-3 pl-2 pr-4 rounded-sm')}>
+          <div className={clsx('bg-gamefiDark-700 flex gap-2 items-center mb-2 py-3 pl-2 pr-4 rounded-sm')}>
             <div className='w-8 h-8 rounded-full bg-black flex-none'>
               <TerraIcon />
             </div>
@@ -233,15 +242,15 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <div className={clsx(styles.box, 'lg:w-1/3 w-full rounded-sm p-4 xl:p-7 h-fit lg:max-w-sm')}>
+      <div className={clsx('lg:w-1/3 w-full rounded-sm p-4 xl:p-7 h-fit lg:max-w-sm bg-gamefiDark-800 clipped-t-r')}>
         <h3 className='font-bold text-base mb-4 uppercase'>Account Information</h3>
         { !account
           ? <div className='font-casual mt-4 text-sm text-white/60'>Please connect your wallet</div>
           : <>
             <div className='flex items-center justify-between gap-x-2 gap-y-4 mb-4'>
-              <label className='text-xs xl:text-sm font-casual'>Verification Status</label>
+              <label className='text-xs lg:text-sm font-casual leading-7 lg:leading-7'>Verification Status</label>
               <div className='flex gap-2 justify-end items-center'>
-                { loadingProfile && <span className="uppercase text-xs xl:text-sm font-semibold font-casual">{errorMessage || 'Loading...'}</span> }
+                { loadingProfile && <span className="uppercase text-xs lg:text-sm font-semibold font-casual">{errorMessage || 'Loading...'}</span> }
                 { !loadingProfile && <>
                   { !profile.verified
                     ? <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -250,15 +259,15 @@ const Profile = () => {
                     : <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M16 1.6L15.2 0C8.3 2 4.8 6.4 4.8 6.4L1.6 4L0 5.6L4.8 12C8.5 5.1 16 1.6 16 1.6Z" fill="#6CDB00" />
                     </svg> }
-                  <span className={`uppercase text-xs xl:text-sm font-semibold font-casual ${profile.verified ? 'text-gamefiGreen-700' : 'text-red-500'}`}>{profile.verifiedStatus}</span>
+                  <span className={`uppercase text-xs lg:text-sm font-semibold font-casual ${profile.verified ? 'text-gamefiGreen-700' : 'text-red-500'}`}>{profile.verifiedStatus}</span>
                 </>
                 }
               </div>
             </div>
             <div className='flex items-center justify-between gap-x-2 gap-y-4 mb-4'>
-              <label className='text-xs xl:text-sm font-casual'>Your Rank</label>
+              <label className='text-xs lg:text-sm font-casual leading-7 lg:leading-7'>Your Rank</label>
               <div className='flex gap-2 justify-end items-center'>
-                <span className={`uppercase text-xs xl:text-sm font-semibold font-casual ${!tierMine?.id ? 'text-yellow-300' : ''}`}>{tierMine?.name || 'Loading...'}</span>
+                <span className={`uppercase text-xs lg:text-sm font-semibold font-casual ${!tierMine?.id ? 'text-yellow-300' : ''}`}>{tierMine?.name || 'Loading...'}</span>
               </div>
             </div>
             { !loadingProfile && !profile.verified && !!tierMine?.id && <>
@@ -267,16 +276,19 @@ const Profile = () => {
             </>
             }
             { !loadingProfile && !tierMine?.id && <Link href="/staking" passHref={true}><a className="block w-full cursor-pointer clipped-t-r bg-gamefiGreen-700 py-2 px-5 text-black uppercase font-bold text-13px rounded-sm text-center" rel="noreferrer">Stake Now</a></Link> }
-            { profile?.user_telegram && <div className='flex items-center justify-between gap-x-2 gap-y-4 mt-4'>
-              <label className='text-xs xl:text-sm font-casual'>Telegram Account</label>
+
+            { profile?.user_twitter && <div className='flex items-center justify-between gap-x-2 gap-y-4 mt-4'>
+              <label className='text-xs lg:text-sm font-casual leading-7 lg:leading-7'>Twitter Account</label>
               <div className='flex gap-2 justify-end items-center'>
-                <span className="uppercase text-xs xl:text-sm font-semibold font-casual">{profile?.user_telegram}</span>
+                { !editing && <span className="text-xs lg:text-sm font-semibold font-casual">{profile?.user_twitter}</span> }
+                { editing && <input type="text" className="text-xs lg:text-sm font-casual bg-gamefiDark-700 rounded w-40 border-gamefiDark-600 py-1 px-2 pl-4" placeholder="e.g. @yourname" value={twitter} onChange={e => setTwitter(e.target.value)} /> }
               </div>
             </div> }
-            { profile?.user_twitter && <div className='flex items-center justify-between gap-x-2 gap-y-4 mt-4'>
-              <label className='text-xs xl:text-sm font-casual'>Twitter Account</label>
+            { profile?.user_telegram && <div className='flex items-center justify-between gap-x-2 gap-y-4 mt-4'>
+              <label className='text-xs lg:text-sm font-casual leading-7 lg:leading-7'>Telegram Account</label>
               <div className='flex gap-2 justify-end items-center'>
-                <span className="uppercase text-xs xl:text-sm font-semibold font-casual">{profile?.user_twitter}</span>
+                { !editing && <span className="text-xs lg:text-sm font-semibold font-casual">{profile?.user_telegram}</span> }
+                { editing && <input type="text" className="text-xs lg:text-sm font-casual bg-gamefiDark-700 rounded w-40 border-gamefiDark-600 py-1 px-2 pl-4" placeholder="e.g. @yourname" value={telegram} onChange={e => setTelegram(e.target.value)} /> }
               </div>
             </div> }
           </> }

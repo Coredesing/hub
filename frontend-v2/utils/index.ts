@@ -194,13 +194,14 @@ export const networkImage = (network: string) => {
   }
 }
 
-export const useFetch = (url: string, timeout?: number) => {
+export const useFetch = (url: string, shouldFetch?: boolean, timeout?: number) => {
+  if (shouldFetch === undefined) shouldFetch = true
   const [response, setResponse] = useState<SWRResponse | null>(null)
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  const { data: fetchResponse, error: fetchError } = useSWR(`${API_BASE_URL}${url}`, fetcher)
+  const { data: fetchResponse, error: fetchError } = useSWR(shouldFetch ? `${API_BASE_URL}${url}` : null, fetcher)
 
   useEffect(() => {
     setLoading(true)

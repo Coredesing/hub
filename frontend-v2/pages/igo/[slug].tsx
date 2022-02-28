@@ -8,8 +8,9 @@ import { fetchOneWithSlug } from '../api/igo'
 import PoolABI from '@/components/web3/abis/PreSalePool.json'
 import { useMyWeb3 } from '@/components/web3/context'
 import toast from 'react-hot-toast'
-import { useProfile } from '@/utils'
+import { useFetch, useProfile } from '@/utils'
 import ApplyWhitelist from '@/components/Pages/IGO/ApplyWhitelist'
+import SwapToken from '@/components/Pages/IGO/SwapToken'
 
 const IGODetails = ({ poolData }) => {
   const { provider } = useLibraryDefaultFlexible(poolData?.network_available)
@@ -23,6 +24,8 @@ const IGODetails = ({ poolData }) => {
     claimConfig: null,
     availableAmount: '0'
   })
+
+  const { response: userTier, loading: tierLoading } = useFetch(`/pool/${poolData?.id}/user/${account}/current-tier`, account && poolData?.id)
 
   const poolContract = useMemo(() => {
     return poolData?.campaign_hash && new ethers.Contract(poolData.campaign_hash, PoolABI, provider)
@@ -73,7 +76,7 @@ const IGODetails = ({ poolData }) => {
             {poolData && account && <ApplyWhitelist poolData={poolData}></ApplyWhitelist>}
           </div>
           <div className="border-[1px] p-4">
-            <div>Phase </div>
+            {poolData && userTier && <SwapToken poolData={poolData} userTier={userTier?.data} loading={tierLoading}></SwapToken>}
           </div>
         </div>
       </div>

@@ -21,14 +21,14 @@ const Pools = () => {
   const router = useRouter()
   const [loadingPools, setLoadingPools] = useState(false)
   const [pools, setPools] = useState({ total: 0, data: [] })
-  const [filter, setFilter] = useState<ObjectType>({ page: 1, limit: 10, search: '', type: '', status: '' })
-
   const poolTypes = useMemo(() => [
     { value: 1000, label: 'All types' },
     { value: 0, label: 'Public' },
     { value: 1, label: 'Private' },
     { value: 2, label: 'Seed' }
   ], [])
+  const [filter, setFilter] = useState<ObjectType>({ page: 1, limit: 10, search: '', type: 1000, typeSelected: poolTypes[0], status: '' })
+
 
   useEffect(() => {
     if (!account || !library) return

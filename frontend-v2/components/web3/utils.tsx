@@ -349,3 +349,11 @@ const currencyStable = (network: string) => {
   }
   }
 }
+
+export const getProviderSolana = () => {
+  if (!window?.solana?.isPhantom) {
+    return
+  }
+
+  return window.solana
+}

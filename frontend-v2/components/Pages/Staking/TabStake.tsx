@@ -6,10 +6,13 @@ import { useMyWeb3 } from '@/components/web3/context'
 import { useBalanceToken, useTokenAllowance, useTokenApproval } from '@/components/web3/utils'
 import WalletConnector from '@/components/Base/WalletConnector'
 import StakeRight from '@/components/Pages/Staking/StakeRight'
+import { useAppContext } from '@/context'
 import toast from 'react-hot-toast'
 import copy from 'copy-to-clipboard'
 
-export default function TabStake ({ pool, contractStaking, loadMyStaking, stakingMine, loadMyPending, pendingWithdrawal }) {
+export default function TabStake ({ loadMyPending, pendingWithdrawal }) {
+  const { stakingPool, stakingMine, loadMyStaking, contractStaking } = useAppContext()
+
   const { chainId: chainIDDefault } = useWeb3Default()
   const { library, account, network, balance, balanceShort } = useMyWeb3()
 
@@ -82,8 +85,8 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
     }
   }
 
-  const { allowance, load: loadAllowance, loading: loadingAllowance } = useTokenAllowance(GAFI, account, pool.pool_address)
-  const { approve, loading: loadingApproval, error: errorApproval } = useTokenApproval(GAFI, pool.pool_address)
+  const { allowance, load: loadAllowance, loading: loadingAllowance } = useTokenAllowance(GAFI, account, stakingPool.pool_address)
+  const { approve, loading: loadingApproval, error: errorApproval } = useTokenApproval(GAFI, stakingPool.pool_address)
   const allowanceEnough = useMemo(() => {
     try {
       const valueInWei = utils.parseUnits(amount, GAFI.decimals)
@@ -193,7 +196,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
     (async function () {
       try {
         setConfirming(true)
-        await contractStaking.linearDeposit(pool.pool_id, utils.parseUnits(amount, GAFI.decimals))
+        await contractStaking.linearDeposit(stakingPool.pool_id, utils.parseUnits(amount, GAFI.decimals))
           .then(tx => {
             tx.wait(2).then()
             setTx(tx.hash)
@@ -222,7 +225,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
         setConfirming(false)
       }
     })()
-  }, [confirmed, confirming, contractStaking, pool, amount, setConfirmed, setConfirming, setStep, setTx, loadMyStaking, updateBalance])
+  }, [confirmed, confirming, contractStaking, stakingPool, amount, setConfirmed, setConfirming, setStep, setTx, loadMyStaking, updateBalance])
 
   const stakeMore = useCallback(() => {
     setTx('')
@@ -349,7 +352,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
               { account && chainOK && balanceOK && <span className="font-casual text-xs md:text-sm opacity-50 ml-auto">{balanceShort} {network.currency}</span> }
             </div>
           </div>
-          <StakeRight { ...{ pool, contractStaking, loadMyStaking, loadMyPending, account, stakingMine, pendingWithdrawal } } className="hidden md:block" />
+          <StakeRight { ...{ loadMyStaking, loadMyPending, account, stakingMine, pendingWithdrawal } } className="hidden md:block" />
         </div>
       </> }
 
@@ -379,7 +382,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
               </div>
             </div>
           </div>
-          <StakeRight { ...{ pool, contractStaking, loadMyStaking, loadMyPending, account, stakingMine, pendingWithdrawal } } className="hidden md:block" />
+          <StakeRight { ...{ loadMyPending, account, stakingMine, pendingWithdrawal } } className="hidden md:block" />
         </div>
       </> }
 
@@ -400,7 +403,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
               </div>
             </div>
           </div>
-          <StakeRight { ...{ pool, contractStaking, loadMyStaking, loadMyPending, account, stakingMine, pendingWithdrawal } } className="hidden md:block" />
+          <StakeRight { ...{ loadMyPending, account, stakingMine, pendingWithdrawal } } className="hidden md:block" />
         </div>
       </> }
 
@@ -421,7 +424,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
               </div>
             </div>
           </div>
-          <StakeRight { ...{ pool, contractStaking, loadMyStaking, loadMyPending, account, stakingMine, pendingWithdrawal } } className="hidden md:block" />
+          <StakeRight { ...{ loadMyPending, account, stakingMine, pendingWithdrawal } } className="hidden md:block" />
         </div>
       </> }
 
@@ -455,7 +458,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
               </div>
             </div>
           </div>
-          <StakeRight { ...{ pool, contractStaking, loadMyStaking, loadMyPending, account, stakingMine, pendingWithdrawal } } className="hidden md:block" />
+          <StakeRight { ...{ loadMyPending, account, stakingMine, pendingWithdrawal } } className="hidden md:block" />
         </div>
       </> }
     </div>
@@ -512,6 +515,6 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
       </button>
     </div>}
 
-    <StakeRight { ...{ pool, contractStaking, loadMyStaking, loadMyPending, account, stakingMine, pendingWithdrawal } } className="block md:hidden mt-6" />
+    <StakeRight { ...{ loadMyPending, account, stakingMine, pendingWithdrawal } } className="block md:hidden mt-6" />
   </>
 }

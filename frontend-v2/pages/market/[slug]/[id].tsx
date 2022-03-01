@@ -7,8 +7,7 @@ import NotFound from '@/components/Pages/Notfound'
 import { useNFTInfo } from '@/components/Pages/Market/utils'
 
 const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
-
-  const {loading, tokenInfo} = useNFTInfo(projectInfo, params.id)
+  const { loading, tokenInfo } = useNFTInfo(projectInfo, params.id)
 
   return <Layout title="GameFi Market">
     {
@@ -25,7 +24,7 @@ const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
 
 export default MarketplaceDetailPage
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps ({ params }) {
   if (!params?.slug) {
     return { props: { projectInfo: null } }
   }

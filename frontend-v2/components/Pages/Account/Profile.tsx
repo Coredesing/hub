@@ -1,186 +1,172 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useCallback } from 'react'
 import { DocumentCopyIcon, SolanaIcon, TerraIcon } from 'components/Base/Icon'
 import styles from './Profile.module.scss'
 import clsx from 'clsx'
 import { useAppContext } from '@/context/index'
 import { useMyWeb3 } from '@/components/web3/context'
-import axios from '@/utils/axios'
 import toast from 'react-hot-toast'
-import useWalletSignature from 'hooks/useWalletSignature'
-import { fetcher, useFetch } from '@/utils'
+import useWalletSignature, { useWalletSignatureSolana, MESSAGE_SIGNATURE } from 'hooks/useWalletSignature'
+import { fetcher, useProfile } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
-import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { IS_TESTNET } from '@/components/web3/connectors'
+import { getProviderSolana } from '@/components/web3/utils'
+import copy from 'copy-to-clipboard'
 
 const Profile = () => {
-  const tiers = useAppContext()?.$tiers
   const { account } = useMyWeb3()
-  const [isEdit, setIsEdit] = useState(false)
-  const [newTwitter, setNewTwitter] = useState('')
-  const [newTelegram, setnewTelegram] = useState('')
-  const [newSolanaWallet, setNewSolanaWallet] = useState('')
-  const [newTerraWallet, setNewTerraWallet] = useState('')
-  const [signature, setSignature] = useState('')
+  const blockpassURL = IS_TESTNET ? process.env.NEXT_PUBLIC_BLOCKPASS_97 : process.env.NEXT_PUBLIC_BLOCKPASS_56
+  const { profile, loading: loadingProfile, load: loadProfile, errorMessage } = useProfile(account)
+  const { tierMine } = useAppContext()
+
   const { signMessage } = useWalletSignature()
+  const { signMessage: signMessageSolana } = useWalletSignatureSolana()
+  const [editing, setEditing] = useState(false)
+  const [signature, setSignature] = useState('')
+  const [walletSolana, setWalletSolana] = useState<{ address?: string; signature?: string }>({})
+  useEffect(() => {
+    setWalletSolana({ address: profile.solana_address })
+  }, [profile.solana_address])
+  const wSolana = useMemo(() => {
+    return (editing && walletSolana.address) || (!editing && profile.solana_address)
+  }, [editing, walletSolana, profile])
 
-  const { response, loading: loadingUserInfo } = useFetch(`/user/profile?wallet_address=${account}`)
-  const userInfo = useMemo(() => {
-    return response?.data?.user
-  }, [response])
+  const [telegram, setTelegram] = useState('')
+  const [twitter, setTwitter] = useState('')
 
-  const router = useRouter()
+  const handleEdit = useCallback(() => {
+    if (signature) {
+      setEditing(true)
+      return
+    }
 
-  // useEffect(() => {
-  //   if (account) {
-  //     tiers?.actions.getUserTier && tiers.actions.getUserTier(account)
-  //   }
-  // }, [account, tiers])
+    signMessage().then(data => {
+      if (!data) {
+        return
+      }
 
-  const onCopy = (val: any) => {
-    navigator.clipboard.writeText(val)
-  }
+      setSignature(data.toString())
+      setEditing(true)
+    }).catch(err => {
+      console.debug(err)
+      toast.error('Could not sign the authentication message')
+    })
+  }, [signMessage, setEditing, signature])
 
-  const handleEdit = async () => {
-    const data = await signMessage()
-    if (!data) return
-    setSignature(data.toString())
+  const connectWalletSolana = useCallback(() => {
+    const provider = getProviderSolana()
+    if (!provider) {
+      toast.error('No Solana Wallet Detected!')
+      return
+    }
 
-    setIsEdit(true)
-    setNewTwitter(userInfo?.user_twitter || '')
-    setnewTelegram(userInfo?.user_telegram || '')
-    setNewSolanaWallet(userInfo?.solana_address || '')
-  }
+    provider.connect().then(resp => {
+      if (!resp.publicKey) {
+        toast.error('Could not authenticate Solana wallet')
+        return
+      }
 
-  const handleSave = async () => {
-    let solanaSignature
-    // if (newSolanaWallet) {
-    //   solanaSignature = await solanaSign()
-    // }
+      signMessageSolana().then((data: { publicKey?: string; signature?: string }) => {
+        if (!data) {
+          return
+        }
 
-    const httpConfig = {
+        setWalletSolana({
+          address: data.publicKey,
+          signature: data.signature
+        })
+      }).catch(err => {
+        console.debug(err)
+        toast.error('Could not sign the authentication message')
+      })
+    })
+  }, [signMessageSolana])
+
+  const disconnectWalletSolana = useCallback(() => {
+    const provider = getProviderSolana()
+    if (!provider) {
+      toast.error('No Solana Wallet Detected!')
+      return
+    }
+
+    setWalletSolana({
+      address: '',
+      signature: ''
+    })
+  }, [])
+
+  const updatedSolana = useMemo(() => {
+    return walletSolana.address !== profile.solana_address
+  }, [walletSolana, profile])
+
+  const handleSave = useCallback(async () => {
+    const response = await fetcher(`${API_BASE_URL}/user/update-profile`, {
       headers: {
-        msgSignature: process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE,
+        msgSignature: MESSAGE_SIGNATURE,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         signature,
         wallet_address: account,
-        user_twitter: newTwitter,
-        user_telegram: newTelegram
-        // solana_address: solanaSignature?.publicKey ?? '',
-        // solana_signature: solanaSignature?.signature ?? ''
+        solana_address: updatedSolana ? walletSolana?.address : undefined,
+        solana_signature: updatedSolana ? walletSolana?.signature : undefined,
+        user_telegram: telegram || undefined,
+        user_twitter: twitter || undefined
       }),
       method: 'PUT'
-    }
+    })
 
-    const response = await fetcher(`${API_BASE_URL}/user/update-profile`, httpConfig as any)
-
-    if (response.data) {
-      if (response.data.status === 200 || response.data.user) {
-        setIsEdit(false)
-        toast.success('Update Profile Successfully')
-        router.reload()
-        return
-      }
-      toast.error(response.data.message || 'Update failed')
-    }
-  }
-
-  const solanaSign = async () => {
-    const encodedMessage = new TextEncoder().encode(process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE)
-    try {
-      // @ts-ignore
-      const signedMessage = await window?.solana.request({
-        method: 'signMessage',
-        params: {
-          message: encodedMessage,
-          display: 'utf8'
-        }
-      })
-      return signedMessage
-    } catch (e: any) {
-      toast.error(e?.message)
-    }
-  }
-
-  const getSolanaProvider = () => {
-    if ('solana' in window) {
-      // @ts-ignore
-      const provider = window?.solana
-      if (provider.isPhantom) {
-        return provider
-      }
-    }
-  }
-
-  const handleSolanaDisconnect = () => {
-    // @ts-ignore
-    if (!window.solana) {
+    if (!response) {
+      toast.error('Could not update your profile')
       return
     }
-    // @ts-ignore
-    window.solana.request({ method: 'disconnect' })
-    setNewSolanaWallet('')
-  }
 
-  const handleSolanaConnect = async () => {
-    const provider = getSolanaProvider()
-    if (!provider) {
-      toast.error('Phantom extension is not installed!')
+    if (response.status !== 200) {
+      toast.error('Could not update your profile')
       return
     }
-    try {
-      let resp
-      resp = await provider.connect()
-      if (!resp) {
-        resp = await provider.request({ method: 'connect' })
-      }
-      setNewSolanaWallet(resp.publicKey.toString())
-    } catch (err) {
-      toast.error('User rejected the request!')
-    }
-  }
 
-  const loadingTier = tiers?.state?.data === null || tiers?.state.loading
-  const isStaked = +tiers?.state?.data?.tier > 0
-  const isKyc = !loadingUserInfo && userInfo?.is_kyc === 1
+    toast.success('Update profile successfully')
+    loadProfile()
+    setEditing(false)
+  }, [signature, account, loadProfile, walletSolana, updatedSolana, telegram, twitter])
 
-  return <div className='py-10 px-9'>
-    <div className='flex items-center justify-between'>
-      <h3 className='hidden lg:block uppercase font-bold text-2xl mb-7'>My Profile</h3>
-      {
-        userInfo
-          ? <div>{isEdit
-            ? <div className="flex">
-              <button className='flex gap-2 items-center' onClick={() => setIsEdit(false)}>
-                <span className='uppercase font-bold text-13px text-gamefiRed outline-none focus:outline-none'>Cancel</span>
-              </button>
-              <button className='flex gap-2 items-center ml-3 bg-gamefiGreen-700 px-8 py-2 rounded-sm clipped-t-r' onClick={() => handleSave()}>
-                <span className='uppercase font-bold text-13px text-gamefiDark-900 outline-none focus:outline-none'>Save</span>
-              </button>
-            </div>
-            : <button className='flex gap-2 items-center' onClick={() => handleEdit()}>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10 3L13 6" stroke="#6CDB00" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M12 1L15 4L5 14L1 15L2 11L12 1Z" stroke="#6CDB00" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <span className='uppercase font-bold text-13px text-gamefiGreen-700 outline-none focus:outline-none'>Edit profile</span>
-            </button>}</div>
-          : <></>
+  return <div className='py-10 px-4 xl:px-9'>
+    <div className="flex items-center justify-between mb-6">
+      <h3 className='hidden lg:block uppercase font-bold text-2xl'>My Profile</h3>
+      { profile
+        ? <>{ editing
+          ? <div className="flex">
+            <button className='flex gap-2 items-center' onClick={() => setEditing(false)}>
+              <span className='uppercase font-bold text-13px outline-none focus:outline-none'>Cancel</span>
+            </button>
+            <button className='flex gap-2 items-center ml-3 bg-gamefiGreen-700 px-6 py-1 rounded-sm clipped-t-r' onClick={handleSave}>
+              <span className='uppercase font-bold text-13px text-gamefiDark-900 outline-none focus:outline-none'>Save</span>
+            </button>
+          </div>
+          : <button className='flex gap-2 items-center' onClick={handleEdit}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 3L13 6" stroke="#6CDB00" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M12 1L15 4L5 14L1 15L2 11L12 1Z" stroke="#6CDB00" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span className='uppercase font-bold text-13px text-gamefiGreen-700 outline-none focus:outline-none hover:underline'>Edit profile</span>
+          </button>
+        }</>
+        : null
       }
     </div>
-    <div className='w-full flex xl:flex-row flex-col gap-5 mb-16'>
-      <div className={clsx(styles.box, 'xl:w-2/3 w-full p-7 rounded-sm')}>
+    <div className='w-full flex lg:flex-row flex-col gap-5 mb-16'>
+      <div className={clsx('lg:w-2/3 w-full rounded-sm p-4 xl:p-7 flex-1 bg-gamefiDark-800 clipped-t-r')}>
         <h3 className='font-bold text-base mb-2 uppercase'>Wallet Addresses</h3>
         <div className='font-casual text-sm mb-7'>
-          Your wallets linked to GameFi are listed below.
-          Please click "Edit Profile" to connect / disconnect the sub-wallets, which will be used based on the pool's network.
+          Your wallets connected to GameFi are listed below.
+          In case you want to modify your sub-wallets, please click <strong>Edit Profile</strong>.
         </div>
         <div className='mb-7'>
           <h4 className='text-base font-bold mb-1 uppercase'>MAIN wallet Address</h4>
-          <div className={clsx(styles.walletBox, 'py-3 pl-2 pr-4 rounded-sm flex items-center')}>
+          <div className={clsx('bg-gamefiDark-700 py-3 pl-2 pr-4 rounded-sm flex items-center')}>
             <div className={clsx(styles.mainWalletIcons, 'flex items-center mr-4')}>
               <div className='w-8 h-8 rounded-full'>
                 <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -210,7 +196,7 @@ const Profile = () => {
             </div>
             <div className='flex justify-between gap-2 w-full items-center'>
               <span className='font-casual text-13px text-white/80 break-words break-all text-ellipsis'>{account}</span>
-              <span className='cursor-pointer' onClick={() => onCopy(account)}>
+              <span className='cursor-pointer' onClick={() => copy(account)}>
                 <DocumentCopyIcon />
               </span>
             </div>
@@ -218,48 +204,23 @@ const Profile = () => {
         </div>
         <div>
           <h4 className='text-base font-bold mb-1 flex items-center'><span className='uppercase'>Sub-Wallet Address</span>&nbsp;<span className='font-casual text-sm font-normal text-white/60'>(Optional)</span></h4>
-          <div className={clsx(styles.walletBox, 'flex gap-2 items-center mb-2 py-3 pl-2 pr-4 rounded-sm')}>
+          <div className={clsx('bg-gamefiDark-700 flex gap-2 items-center mb-2 py-3 pl-2 pr-4 rounded-sm')}>
             <div className='w-8 h-8 rounded-full bg-black flex-none'>
               <SolanaIcon />
             </div>
-            {
-              isEdit
-                ? <div className='flex justify-between gap-2 w-full items-center'>
-                  <div className='grid'>
-                    <span className='font-bold text-xs uppercase text-white/50'>Solana Wallet</span>
-                    {
-                      newSolanaWallet
-                        ? <span className='font-casual text-13px text-white/80 break-words break-all text-ellipsis'>{newSolanaWallet}</span>
-                        : <span className='text-white/40 italic text-13px font-casual'>Not connected</span>
-                    }
-                  </div>
-                  {newSolanaWallet
-                    ? <span className='cursor-pointer text-gamefiRed' onClick={() => handleSolanaDisconnect()}>
-                      Disconnect
-                    </span>
-                    : <span className='cursor-pointer text-gamefiGreen-700' onClick={() => handleSolanaConnect()}>
-                      Connect
-                    </span>
-                  }
-                </div>
-                : <div className='flex justify-between gap-2 w-full items-center'>
-                  <div className='grid'>
-                    <span className='font-bold text-xs uppercase text-white/50'>Solana Wallet</span>
-                    {
-                      userInfo?.solana_address
-                        ? <span className='font-casual text-13px text-white/80 break-words break-all text-ellipsis'>{userInfo?.solana_address}</span>
-                        : <span className='text-white/40 italic text-13px font-casual'>Not connected</span>
-                    }
-                  </div>
-                  {userInfo?.solana_address &&
-                    <span className='cursor-pointer' onClick={() => onCopy(userInfo?.solana_address)}>
-                      <DocumentCopyIcon />
-                    </span>
-                  }
-                </div>
-            }
+            <div className='flex justify-between gap-2 w-full items-center'>
+              <div className='grid'>
+                <span className='font-bold text-xs uppercase text-white/70'>Solana Wallet</span>
+                <span className={`font-casual text-13px break-words break-all text-ellipsis ${!wSolana ? 'text-white/40 italic' : 'text-white/80'}`}>{wSolana || 'Not connected'}</span>
+              </div>
+              { editing
+                ? (walletSolana.address ? <span className='cursor-pointer text-red-400 hover:text-red-500 font-casual text-sm' onClick={disconnectWalletSolana}>Disconnect</span> : <span className='cursor-pointer text-gamefiGreen-700' onClick={connectWalletSolana}>Connect with Phantom</span>)
+                : (profile.solana_address && <span className='cursor-pointer' onClick={() => copy(profile?.solana_address)}>
+                  <DocumentCopyIcon />
+                </span>)}
+            </div>
           </div>
-          <div className={clsx(styles.walletBox, 'flex gap-2 items-center mb-2 py-3 pl-2 pr-4 rounded-sm')}>
+          <div className={clsx('bg-gamefiDark-700 flex gap-2 items-center mb-2 py-3 pl-2 pr-4 rounded-sm')}>
             <div className='w-8 h-8 rounded-full bg-black flex-none'>
               <TerraIcon />
             </div>
@@ -267,13 +228,13 @@ const Profile = () => {
               <div className='grid'>
                 <span className='font-bold text-xs uppercase text-white/50'>Terra Wallet</span>
                 {
-                  userInfo?.terra_address
-                    ? <span className='font-casual text-13px text-white/80 break-words break-all text-ellipsis'>{userInfo?.terra_address}</span>
+                  profile?.terra_address
+                    ? <span className='font-casual text-13px text-white/80 break-words break-all text-ellipsis'>{profile?.terra_address}</span>
                     : <span className='text-white/40 italic text-13px font-casual'>Not connected</span>
                 }
               </div>
-              {userInfo?.terra_address &&
-                <span className='cursor-pointer' onClick={() => onCopy(userInfo?.terra_address)}>
+              {profile?.terra_address &&
+                <span className='cursor-pointer'>
                   <DocumentCopyIcon />
                 </span>
               }
@@ -281,75 +242,60 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <div className={clsx(styles.box, 'xl:w-1/3 w-ful rounded-sm p-7 h-fit')}>
-        <h3 className='font-bold text-base mb-4 uppercase'>Wallet Addresses</h3>
-        <div className='grid grid-cols-2 items-center justify-between gap-2 mb-4'>
-          <label className='text-sm font-casual' htmlFor="">KYC Status</label>
-          {/* {
-            notVerifyKyc && <div className='flex gap-2 justify-end items-center'>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M13.7 0.3C13.3 -0.1 12.7 -0.1 12.3 0.3L7 5.6L1.7 0.3C1.3 -0.1 0.7 -0.1 0.3 0.3C-0.1 0.7 -0.1 1.3 0.3 1.7L5.6 7L0.3 12.3C-0.1 12.7 -0.1 13.3 0.3 13.7C0.5 13.9 0.7 14 1 14C1.3 14 1.5 13.9 1.7 13.7L7 8.4L12.3 13.7C12.5 13.9 12.8 14 13 14C13.2 14 13.5 13.9 13.7 13.7C14.1 13.3 14.1 12.7 13.7 12.3L8.4 7L13.7 1.7C14.1 1.3 14.1 0.7 13.7 0.3Z" fill="#DE4343" />
-              </svg>
-              <span className={clsx(styles.notKyc, 'uppercase text-sm font-semibold font-casual')}>UNVERIFIED</span>
+      <div className={clsx('lg:w-1/3 w-full rounded-sm p-4 xl:p-7 h-fit lg:max-w-sm bg-gamefiDark-800 clipped-t-r')}>
+        <h3 className='font-bold text-base mb-4 uppercase'>Account Information</h3>
+        { !account
+          ? <div className='font-casual mt-4 text-sm text-white/60'>Please connect your wallet</div>
+          : <>
+            <div className='flex items-center justify-between gap-x-2 gap-y-4 mb-4'>
+              <label className='text-xs lg:text-sm font-casual leading-7 lg:leading-7'>Verification Status</label>
+              <div className='flex gap-2 justify-end items-center'>
+                { loadingProfile && <span className="uppercase text-xs lg:text-sm font-semibold font-casual">{errorMessage || 'Loading...'}</span> }
+                { !loadingProfile && <>
+                  { !profile.verified
+                    ? <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M13.7 0.3C13.3 -0.1 12.7 -0.1 12.3 0.3L7 5.6L1.7 0.3C1.3 -0.1 0.7 -0.1 0.3 0.3C-0.1 0.7 -0.1 1.3 0.3 1.7L5.6 7L0.3 12.3C-0.1 12.7 -0.1 13.3 0.3 13.7C0.5 13.9 0.7 14 1 14C1.3 14 1.5 13.9 1.7 13.7L7 8.4L12.3 13.7C12.5 13.9 12.8 14 13 14C13.2 14 13.5 13.9 13.7 13.7C14.1 13.3 14.1 12.7 13.7 12.3L8.4 7L13.7 1.7C14.1 1.3 14.1 0.7 13.7 0.3Z" fill="#DE4343" />
+                    </svg>
+                    : <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M16 1.6L15.2 0C8.3 2 4.8 6.4 4.8 6.4L1.6 4L0 5.6L4.8 12C8.5 5.1 16 1.6 16 1.6Z" fill="#6CDB00" />
+                    </svg> }
+                  <span className={`uppercase text-xs lg:text-sm font-semibold font-casual ${profile.verified ? 'text-gamefiGreen-700' : 'text-red-500'}`}>{profile.verifiedStatus}</span>
+                </>
+                }
+              </div>
             </div>
-          } */}
-          {
-            isStaked && isKyc && <div className='flex gap-2 justify-end items-center'>
-              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16 1.6L15.2 0C8.3 2 4.8 6.4 4.8 6.4L1.6 4L0 5.6L4.8 12C8.5 5.1 16 1.6 16 1.6Z" fill="#6CDB00" />
-              </svg>
-              <span className='uppercase text-sm text-gamefiGreen-700 font-semibold font-casual'>VERIFIED</span>
+            <div className='flex items-center justify-between gap-x-2 gap-y-4 mb-4'>
+              <label className='text-xs lg:text-sm font-casual leading-7 lg:leading-7'>Your Rank</label>
+              <div className='flex gap-2 justify-end items-center'>
+                <span className={`uppercase text-xs lg:text-sm font-semibold font-casual ${!tierMine?.id ? 'text-yellow-300' : ''}`}>{tierMine?.name || 'Loading...'}</span>
+              </div>
             </div>
-          }
-          {
-            isStaked && !isKyc && <div className={clsx(styles.btnclippart, 'bg-gamefiGreen-700 py-2 px-5 text-black uppercase font-bold text-13px rounded-sm text-center')}>KYC Now</div>
-          }
-        </div>
-        {
-          userInfo?.user_telegram && <div className='grid grid-cols-2 items-center justify-between mb-4'>
-            <label className='text-sm font-casual' htmlFor="">Twitter Account</label>
-            {isEdit
-              ? <input
-                type="text"
-                className="bg-gamefiDark-900 text-sm rounded-sm border-none outline-none focus:outline-none focus:border-none"
-                value={newTwitter}
-                onChange={(e) => setNewTwitter(e?.target?.value)}
-              ></input>
-              : <div className='text-sm font-casual text-white/50 text-right'>{userInfo?.user_telegram}</div>}
-          </div>
-        }
-        {
-          userInfo?.user_twitter && <div className='grid grid-cols-2 items-center justify-between mb-4'>
-            <label className='text-sm font-casual' htmlFor="">Telegram Account</label>
-            {isEdit
-              ? <input
-                type="text"
-                className="bg-gamefiDark-900 text-sm rounded-sm border-none outline-none focus:outline-none focus:border-none"
-                value={newTelegram}
-                onChange={(e) => setnewTelegram(e?.target?.value)}
-              ></input>
-              : <div className='text-sm font-casual text-white/50 text-right'>{userInfo?.user_twitter}</div>}
-          </div>
-        }
-        {
-          !isStaked && !loadingTier &&
-          <div>
-            <div className='font-casual mb-8 text-sm text-white/80'>You must stake $GAFI to achieve min Rank before KYC.</div>
-            <Link href={'/staking'}>
-              <a className={clsx(styles.btnclippart, 'bg-gamefiGreen-700 uppercase text-13px w-full block text-center py-2 px-2 text-black font-bold mb-6')}>
-                Stake Now
-              </a>
-            </Link>
-            <a
-              href='https://medium.com/gamefi-official/announcement-of-gamefi-launchpad-ranking-system-6fc9f52c91ea'
-              rel='noreferrer' target={'_blank'}
-              className={clsx(styles.link, 'text-sm font-bold text-center block font-casual')}>Learn about Ranking System</a>
-          </div>
-        }
+            { !loadingProfile && !profile.verified && !!tierMine?.id && <>
+              <a href={blockpassURL} target="_blank" className="block w-full cursor-pointer clipped-t-r bg-gamefiGreen-700 py-2 px-5 text-black uppercase font-bold text-13px rounded-sm text-center" rel="noreferrer">KYC Now</a>
+              <div className='font-casual mt-4 text-xs text-white/60'>If you submitted your verification, please wait while we are reviewing it</div>
+            </>
+            }
+            { !loadingProfile && !tierMine?.id && <Link href="/staking" passHref={true}><a className="block w-full cursor-pointer clipped-t-r bg-gamefiGreen-700 py-2 px-5 text-black uppercase font-bold text-13px rounded-sm text-center" rel="noreferrer">Stake Now</a></Link> }
+
+            { profile?.user_twitter && <div className='flex items-center justify-between gap-x-2 gap-y-4 mt-4'>
+              <label className='text-xs lg:text-sm font-casual leading-7 lg:leading-7'>Twitter Account</label>
+              <div className='flex gap-2 justify-end items-center'>
+                { !editing && <span className="text-xs lg:text-sm font-semibold font-casual">{profile?.user_twitter}</span> }
+                { editing && <input type="text" className="text-xs lg:text-sm font-casual bg-gamefiDark-700 rounded w-40 border-gamefiDark-600 py-1 px-2 pl-4" placeholder="e.g. @yourname" value={twitter} onChange={e => setTwitter(e.target.value)} /> }
+              </div>
+            </div> }
+            { profile?.user_telegram && <div className='flex items-center justify-between gap-x-2 gap-y-4 mt-4'>
+              <label className='text-xs lg:text-sm font-casual leading-7 lg:leading-7'>Telegram Account</label>
+              <div className='flex gap-2 justify-end items-center'>
+                { !editing && <span className="text-xs lg:text-sm font-semibold font-casual">{profile?.user_telegram}</span> }
+                { editing && <input type="text" className="text-xs lg:text-sm font-casual bg-gamefiDark-700 rounded w-40 border-gamefiDark-600 py-1 px-2 pl-4" placeholder="e.g. @yourname" value={telegram} onChange={e => setTelegram(e.target.value)} /> }
+              </div>
+            </div> }
+          </> }
       </div>
     </div>
     <div>
-      <h3 className='font-bold text-2xl uppercase mb-2'>Basic steps to get started with <a href="">GameFi.org</a></h3>
+      <h3 className='font-bold text-2xl uppercase mb-2'>Basic steps to get started with GameFi.org</h3>
       <div className='text-sm font-casual text-white/80 mb-6'>Follow these steps to join IGO / INO pools on GameFi.org launchpad</div>
       <div className={clsx(styles.steps)}>
         <div className={clsx(styles.step)}>
@@ -358,7 +304,6 @@ const Profile = () => {
           <div className='text-sm text-white/80 font-casual mb-6'>
             Check out GameFi's ranking system: Legend, Pro, Elite, Rookie. <a href='https://faq.gamefi.org/#1.2.-stake' rel='noreferrer' target={'_blank'} className={clsx(styles.link, 'font-bold text-sm font-casual')}>Read more</a>
           </div>
-          <button onClick={() => router.push('/staking')} className={clsx(styles.btnclippart, 'bg-gamefiGreen-700 text-black uppercase py-2 px-3 w-28 text-13px font-bold rounded-sm')}>Stake Now</button>
         </div>
         <div className={clsx(styles.step)}>
           <div className={clsx(styles.index, 'text-2xl font-bold rounded-full grid place-items-center')}>2</div>

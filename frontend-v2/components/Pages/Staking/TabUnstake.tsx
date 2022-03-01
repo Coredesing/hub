@@ -9,9 +9,8 @@ import { useAppContext } from '@/context'
 import toast from 'react-hot-toast'
 import copy from 'copy-to-clipboard'
 
-export default function TabStake ({ pool, contractStaking, loadMyStaking, stakingMine, loadMyPending, pendingWithdrawal, goStake }) {
-  const { myTier } = useAppContext()
-  const tierMine = useMemo(() => myTier.state.tier, [myTier])
+export default function TabUnstake ({ loadMyPending, pendingWithdrawal, goStake }) {
+  const { tierMine, stakingPool, stakingMine, loadMyStaking, contractStaking } = useAppContext()
 
   const { chainId: chainIDDefault } = useWeb3Default()
   const { library, account, network, balance } = useMyWeb3()
@@ -160,7 +159,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
     (async function () {
       try {
         setConfirming(true)
-        await contractStaking.linearWithdraw(pool.pool_id, utils.parseUnits(amount, GAFI.decimals))
+        await contractStaking.linearWithdraw(stakingPool.pool_id, utils.parseUnits(amount, GAFI.decimals))
           .then(tx => {
             setTx(tx.hash)
             return tx.wait(1).then(() => {
@@ -188,7 +187,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
         setConfirming(false)
       }
     })()
-  }, [confirmed, confirming, contractStaking, pool, amount, setConfirmed, setConfirming, setStep, setTx, loadMyStaking, loadMyPending])
+  }, [confirmed, confirming, contractStaking, stakingPool, amount, setConfirmed, setConfirming, setStep, setTx, loadMyStaking, loadMyPending])
 
   const unstakeMore = useCallback(() => {
     setTx('')
@@ -264,7 +263,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
               </label> }
             </div>
           </div>
-          <StakeRight { ...{ pool, contractStaking, loadMyStaking, loadMyPending, account, stakingMine, pendingWithdrawal } } className="hidden md:block" />
+          <StakeRight { ...{ loadMyPending, account, stakingMine, pendingWithdrawal } } className="hidden md:block" />
         </div>
       </> }
 
@@ -285,7 +284,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
               </div>
             </div>
           </div>
-          <StakeRight { ...{ pool, contractStaking, loadMyStaking, loadMyPending, account, stakingMine, pendingWithdrawal } } className="hidden md:block" />
+          <StakeRight { ...{ loadMyPending, account, stakingMine, pendingWithdrawal } } className="hidden md:block" />
         </div>
       </> }
 
@@ -306,7 +305,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
               </div>
             </div>
           </div>
-          <StakeRight { ...{ pool, contractStaking, loadMyStaking, loadMyPending, account, stakingMine, pendingWithdrawal } } className="hidden md:block" />
+          <StakeRight { ...{ loadMyPending, account, stakingMine, pendingWithdrawal } } className="hidden md:block" />
         </div>
       </> }
 
@@ -340,7 +339,7 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
               </div>
             </div>
           </div>
-          <StakeRight { ...{ pool, contractStaking, loadMyStaking, loadMyPending, account, stakingMine, pendingWithdrawal } } className="hidden md:block" />
+          <StakeRight { ...{ loadMyPending, account, stakingMine, pendingWithdrawal } } className="hidden md:block" />
         </div>
       </> }
     </div>
@@ -395,6 +394,6 @@ export default function TabStake ({ pool, contractStaking, loadMyStaking, stakin
       </button>
     </div>}
 
-    <StakeRight { ...{ pool, contractStaking, loadMyStaking, loadMyPending, account, stakingMine, pendingWithdrawal } } className="block md:hidden mt-6" />
+    <StakeRight { ...{ loadMyPending, account, stakingMine, pendingWithdrawal } } className="block md:hidden mt-6" />
   </>
 }

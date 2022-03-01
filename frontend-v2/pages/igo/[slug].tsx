@@ -15,7 +15,7 @@ const IGODetails = ({ poolData }) => {
   const { profile } = useProfile(account)
   const [notification, setNotification] = useState('')
 
-  const { response: userTier, loading: tierLoading } = useFetch(`/pool/${poolData?.id}/user/${account}/current-tier`, account && poolData?.id)
+  const { response: userTier, loading: tierLoading } = useFetch(`/pool/${poolData?.id}/user/${account}/current-tier`, !account || !poolData?.id)
 
   const prettyNumber = (input: number | string) => {
     return input.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')

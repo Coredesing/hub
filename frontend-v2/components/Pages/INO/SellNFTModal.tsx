@@ -90,7 +90,7 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isL
               'bg-black': !isFixedPrice,
               'text-white/50': !isFixedPrice,
               'bg-gamefiGreen-700': isFixedPrice,
-              'text-black': isFixedPrice,
+              'text-black': isFixedPrice
             })}>
             Fixed Price
           </button>

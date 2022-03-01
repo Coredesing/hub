@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import useSWR, { SWRResponse } from 'swr'
 import { API_BASE_URL } from '@/utils/constants'
 
@@ -194,19 +194,22 @@ export const networkImage = (network: string) => {
   }
 }
 
-export const useFetch = (url: string, shouldFetch?: boolean, timeout?: number) => {
-  if (shouldFetch === undefined) shouldFetch = true
+export const useFetch = (url: string, shouldSkip?: boolean) => {
   const [response, setResponse] = useState<SWRResponse | null>(null)
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  const { data: fetchResponse, error: fetchError } = useSWR(shouldFetch ? `${API_BASE_URL}${url}` : null, fetcher)
+  const { data, error: fetchError, mutate } = useSWR(shouldSkip ? null : `${API_BASE_URL}${url}`, fetcher)
 
   useEffect(() => {
     setLoading(true)
-    setResponse(fetchResponse)
-    if (fetchResponse) {
+    setResponse(data)
+    if (data) {
+      if (data.status >= 400) {
+        setError(true)
+        setErrorMessage(data.message || '')
+      }
       setLoading(false)
     }
 
@@ -219,9 +222,9 @@ export const useFetch = (url: string, shouldFetch?: boolean, timeout?: number) =
     return function () {
       setLoading(false)
     }
-  }, [url, timeout, fetchResponse, fetchError])
+  }, [url, shouldSkip, data, fetchError])
 
-  return { response, loading, error, errorMessage }
+  return { response, loading, error, errorMessage, mutate }
 }
 
 export function safeToFixed (num: number | string, fixed: number): string {
@@ -229,23 +232,73 @@ export function safeToFixed (num: number | string, fixed: number): string {
   return num.toString().match(re)?.[0] || `${num}`
 }
 
-export const useProfile = (walletAddress: string) => {
-  const { response, loading, error, errorMessage } = useFetch(`/user/profile?wallet_address=${walletAddress || ''}`)
+const USER_STATUS = {
+  UNVERIFIED: 0,
+  ACTIVE: 1,
+  BLOCKED: 2,
+  DELETED: 3
+}
 
-  const profile = response?.data?.user
-    ? {
-      ...response.data.user,
-      status: response.data.status,
-      message: response.data.message
+const KYC_STATUS = {
+  INCOMPLETE: 0, // Blockpass verifications pending
+  APPROVED: 1, // Profile has been approved by Merchant
+  RESUBMIT: 2, // Merchant has rejected one or more attributes
+  WAITING: 3, // Merchant's review pending
+  INREVIEW: 4 // In review by Merchant
+}
+
+export const useProfile = (walletAddress?: string) => {
+  const skip = useMemo(() => {
+    if (!walletAddress) {
+      return true
     }
-    : {
-      status: response?.data?.status || 404,
-      message: response?.data?.message || 'User Not Found'
+
+    return false
+  }, [walletAddress])
+  const { response, loading, error, errorMessage, mutate } = useFetch(`/user/profile?wallet_address=${walletAddress || ''}`, skip)
+  const loadingActual = useMemo(() => {
+    if (skip) {
+      return false
     }
+
+    return loading
+  }, [loading, skip])
+
+  const profile = useMemo(() => {
+    const exist = !!response?.data?.user
+    const verifiedEmail = response?.data?.user?.status === USER_STATUS.ACTIVE
+    const verifiedKYC = response?.data?.user?.is_kyc === KYC_STATUS.APPROVED
+    const verified = verifiedEmail && verifiedKYC
+
+    const kycStatus = response?.data?.user?.is_kyc === KYC_STATUS.APPROVED
+      ? 'Approved'
+      : (
+        response?.data?.user?.is_kyc === KYC_STATUS.INCOMPLETE
+          ? 'Incomplete KYC'
+          : (
+            response?.data?.user?.is_kyc === KYC_STATUS.RESUBMIT
+              ? 'Rejected KYC'
+              : (
+                response?.data?.user?.is_kyc === KYC_STATUS.WAITING || response?.data?.user?.is_kyc === KYC_STATUS.INREVIEW ? 'Pending KYC' : 'Invalid KYC'
+              )
+          )
+      )
+    const verifiedStatus = !walletAddress ? 'Disconnected' : (verifiedKYC ? 'Verified' : (verifiedEmail ? kycStatus : 'Unverified'))
+
+    return {
+      exist,
+      verified,
+      verifiedEmail,
+      verifiedKYC,
+      verifiedStatus,
+      ...response?.data?.user
+    }
+  }, [response, walletAddress])
 
   return {
-    profile: profile,
-    loading,
+    profile,
+    load: mutate,
+    loading: loadingActual,
     error,
     errorMessage
   }

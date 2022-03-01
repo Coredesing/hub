@@ -188,7 +188,7 @@ const SwapToken = ({ poolData, userTier, loading }: { poolData: any; userTier: a
     const result = await transaction.wait(1)
     console.log(result)
     if (+result?.status === 1) {
-      toast.success('Token Deposit Successful!')
+      toast.success('Token Deposit Successfully!')
     } else {
       toast.error('Token Deposit Failed')
     }

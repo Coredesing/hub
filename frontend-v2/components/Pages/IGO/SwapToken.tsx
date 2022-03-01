@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Recaptcha from '@/components/Base/Recaptcha'
-import { debounce, fetcher, useFetch } from '@/utils'
+import { debounce, fetcher } from '@/utils'
 import { useMyWeb3 } from '@/components/web3/context'
 import { getCurrency } from '@/components/web3/utils'
 import { BigNumber, ethers } from 'ethers'

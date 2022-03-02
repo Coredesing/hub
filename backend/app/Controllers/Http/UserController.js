@@ -215,29 +215,16 @@ class UserController {
     try {
       const userService = new UserService();
       const params = request.only(['user_twitter', 'user_telegram']);
-      const solana_signature = request.input('solana_signature')
-      const solana_address = request.input('solana_address')
+      const solana_address = request.input('solana_address');
+      const terra_address = request.input('terra_address');
       const wallet_address = request.header('wallet_address');
       const user = await userService.buildQueryBuilder({ wallet_address }).first();
       if (!user) {
         return HelperUtils.responseNotFound('User Not Found');
       }
 
-      if (!!solana_address) {
-        const signatureUint8 = bs58.decode(solana_signature);
-        const nonceUint8 = new TextEncoder().encode(process.env.MESSAGE_INVESTOR_SIGNATURE);
-        const pubKeyUint8 = bs58.decode(solana_address);
-        const verified = nacl.sign.detached.verify(nonceUint8, signatureUint8, pubKeyUint8)
-        if (!verified) {
-          return HelperUtils.responseBadRequest('Invalid Signature!');
-        }
-        const checkAddress = await userService.buildQueryBuilder({ solana_address }).first();
-
-        if (!!checkAddress && checkAddress?.wallet_address !== wallet_address) {
-          return HelperUtils.responseBadRequest('Duplicate solana address with another user!');
-        }
-      }
       user.solana_address = solana_address
+      user.terra_address = terra_address
       await user.save()
 
       const whitelistSubmission = JSON.parse(JSON.stringify(

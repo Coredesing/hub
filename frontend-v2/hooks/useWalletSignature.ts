@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useCallback } from 'react'
 import { useMyWeb3 } from '@/components/web3/context'
 import { getProviderSolana } from '@/components/web3/utils'
@@ -34,6 +35,7 @@ export const useWalletSignatureSolana = () => {
       }
 
       const encodedMessage = new TextEncoder().encode(MESSAGE_SIGNATURE)
+      // @ts-ignore
       window?.solana.request({
         method: 'signMessage',
         params: {

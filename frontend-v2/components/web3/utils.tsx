@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import { utils, Contract, BigNumber, providers } from 'ethers'
 import { networkConnector } from '@/components/web3/connectors'
@@ -351,6 +352,7 @@ const currencyStable = (network: string) => {
 }
 
 export const getProviderSolana = () => {
+  // @ts-ignore
   if (!window?.solana?.isPhantom) {
     return
   }

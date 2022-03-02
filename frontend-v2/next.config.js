@@ -10,5 +10,14 @@ module.exports = {
   },
   images: {
     domains: ['i.imgur.com', 'gamefi-public.s3.amazonaws.com', 'imgur.com', 'images.ctfassets.net', 's3.coinmarketcap.com']
+  },
+  async redirects() {
+    return [
+      {
+        source: '/unstaking',
+        destination: '/staking?u',
+        permanent: false,
+      },
+    ]
   }
 }

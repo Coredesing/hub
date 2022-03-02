@@ -10,6 +10,7 @@ import { useAppContext } from '@/context'
 import { useMyWeb3 } from '@/components/web3/context'
 import { TabPanel, Tabs } from '@/components/Base/Tabs'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import TabStake from '@/components/Pages/Staking/TabStake'
 import TabUnstake from '@/components/Pages/Staking/TabUnstake'
 import Ranks from '@/components/Pages/Staking/Ranks'
@@ -125,6 +126,13 @@ const Staking = ({ data }) => {
   }, [loadMyPending])
 
   const [tab, setTab] = useState(0)
+  const router = useRouter()
+  useEffect(() => {
+    if (router.query.u !== undefined) {
+      setTab(1)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const [rankingSelected, setRankingSelected] = useState()
   const [isLive, setIsLive] = useState(null)
@@ -163,19 +171,11 @@ const Staking = ({ data }) => {
     setRankingSelected(selected.value)
   }
 
-  if (!stakingPool) {
-    return (<Layout title="GameFi Staking">
-      <div className="px-1 md:px-4 lg:px-16 md:container mx-auto lg:block pb-4">
-        No Pool Available
-      </div>
-    </Layout>)
-  }
-
   return (
     <Layout title="GameFi Staking">
       <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl pb-4">
         <div className="p-px bg-gradient-to-r from-gamefiDark-500 via-gamefiDark-800 rounded">
-          <div className="bg-gradient-to-r from-gamefiDark-800 via-gamefiDark-900 to-gamefiDark-900 rounded flex">
+          <div className="bg-gradient-to-r from-gamefiDark-700 via-gamefiDark-900 to-gamefiDark-900 rounded flex">
             <div className="py-1 px-1 md:px-10 sm:px-2 pl-1 sm:pl-2 md:pl-4 flex-1 md:flex-initial flex items-center border-r border-gamefiDark-500">
               {(!account || !tierMine) && <img src={imgNA.src} className="hidden md:block w-20 mr-2" alt="No Rank" />}
               {account && tierMine && <div className="hidden md:block w-20 mr-1 md:mr-2"> <Image src={tierMine.image} layout='responsive' objectFit='contain' alt={tierMine.name} /> </div>}

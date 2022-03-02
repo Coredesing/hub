@@ -159,7 +159,7 @@ export default function TabUnstake ({ loadMyPending, pendingWithdrawal, goStake 
     (async function () {
       try {
         setConfirming(true)
-        await contractStaking.linearWithdraw(stakingPool.pool_id, utils.parseUnits(amount, GAFI.decimals))
+        await contractStaking.linearWithdraw(stakingPool?.pool_id, utils.parseUnits(amount, GAFI.decimals))
           .then(tx => {
             setTx(tx.hash)
             return tx.wait(1).then(() => {

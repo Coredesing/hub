@@ -85,8 +85,8 @@ export default function TabStake ({ loadMyPending, pendingWithdrawal }) {
     }
   }
 
-  const { allowance, load: loadAllowance, loading: loadingAllowance } = useTokenAllowance(GAFI, account, stakingPool.pool_address)
-  const { approve, loading: loadingApproval, error: errorApproval } = useTokenApproval(GAFI, stakingPool.pool_address)
+  const { allowance, load: loadAllowance, loading: loadingAllowance } = useTokenAllowance(GAFI, account, stakingPool?.pool_address)
+  const { approve, loading: loadingApproval, error: errorApproval } = useTokenApproval(GAFI, stakingPool?.pool_address)
   const allowanceEnough = useMemo(() => {
     try {
       const valueInWei = utils.parseUnits(amount, GAFI.decimals)

@@ -357,5 +357,6 @@ export const getProviderSolana = () => {
     return
   }
 
+  // @ts-ignore
   return window.solana
 }

@@ -2,10 +2,10 @@ import LoadingOverlay from '@/components/Base/LoadingOverlay'
 import Pagination from '@/components/Base/Pagination'
 import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from '@/components/Base/Table'
 import { useMyWeb3 } from '@/components/web3/context'
-import { fetcher } from '@/utils'
+import { debounce, fetcher } from '@/utils'
 import { API_BASE_URL, TOKEN_TYPE } from '@/utils/constants'
 import { formatPoolStatus, formatPoolType } from '@/utils/pool'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Contract, utils } from 'ethers'
 import styles from './Pools.module.scss'
 import { getCurrency } from '@/components/web3/utils'
@@ -13,13 +13,22 @@ import { useRouter } from 'next/router'
 import { ObjectType } from '@/utils/types'
 import BigNumber from 'bignumber.js'
 import ABIPool from '@/components/web3/abis/PreSalePool.json'
+import SearchInput from '@/components/Base/SearchInput'
+import Dropdown from '@/components/Base/Dropdown'
 
 const Pools = () => {
   const { account, library } = useMyWeb3()
   const router = useRouter()
   const [loadingPools, setLoadingPools] = useState(false)
   const [pools, setPools] = useState({ total: 0, data: [] })
-  const [filter, setFilter] = useState({ page: 1, limit: 10, search: '', type: '', status: '' })
+  const poolTypes = useMemo(() => [
+    { value: 1000, label: 'All types' },
+    { value: 0, label: 'Public' },
+    { value: 1, label: 'Private' },
+    { value: 2, label: 'Seed' }
+  ], [])
+  const [filter, setFilter] = useState<ObjectType>({ page: 1, limit: 10, search: '', type: 1000, typeSelected: poolTypes[0], status: '' })
+
 
   useEffect(() => {
     if (!account || !library) return
@@ -91,16 +100,24 @@ const Pools = () => {
     setFilter(f => ({ ...f, page }))
   }
 
+  const onSearchPool = debounce((e: any) => {
+    setFilter(f => ({ ...f, search: e.target.value }))
+  }, 1000)
+
+  const onFilterPoolType = (item: ObjectType) => {
+    setFilter(f => ({ ...f, type: item.value, typeSelected: item }))
+  }
+
   const redirectPool = (pool: any) => {
     switch (pool.token_type) {
-    case TOKEN_TYPE.ERC20: {
-      window.open(`https://hub.gamefi.org/#/buy-token/${pool.id}`)
-      return
-    }
+      case TOKEN_TYPE.ERC20: {
+        window.open(`https://hub.gamefi.org/#/buy-token/${pool.id}`)
+        return
+      }
 
-    default: {
-      router.push(`/ino/${pool.id}`)
-    }
+      default: {
+        router.push(`/ino/${pool.id}`)
+      }
     }
   }
 
@@ -109,7 +126,27 @@ const Pools = () => {
       <div className='flex items-center justify-between'>
         <h3 className='uppercase font-bold text-2xl mb-7'>IGO Pools</h3>
       </div>
-
+      <div className='flex justify-between flex-wrap gap-3 mb-7'>
+        <div className='flex gap-3 flex-wrap'>
+          <Dropdown
+            items={poolTypes}
+            propLabel='label'
+            propValue='value'
+            onChange={onFilterPoolType}
+            selected={filter.typeSelected}
+            classes={{
+              wrapperDropdown: 'w-40'
+            }}
+          />
+        </div>
+        <div>
+          <SearchInput
+            onChange={onSearchPool}
+            defaultValue={filter.search}
+            placeholder='Search'
+            style={{ maxWidth: '320px', width: '100%', height: '38px' }} />
+        </div>
+      </div>
       <div>
         <Table >
           <LoadingOverlay loading={loadingPools} />

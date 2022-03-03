@@ -3,8 +3,8 @@ import React from 'react'
 import styles from './Input.module.scss'
 type Props = {
   classes?: {
-    formInput: string;
-    input: string;
+    formInput?: string;
+    input?: string;
   };
   [k: string]: any;
 };

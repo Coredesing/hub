@@ -22,7 +22,7 @@ const RankPage = () => {
   return (
     <Layout title="My Rank - GameFi">
       <AccountLayout>
-        <div className="py-10 px-4 xl:px-9">
+        <div className="py-10 px-4 xl:px-9 2xl:pr-32">
           <h3 className='hidden lg:block uppercase font-bold text-2xl mb-6'>My Rank</h3>
           <div className="flex flex-col gap-4 sm:flex-row">
             <div className="p-px bg-gradient-to-r from-gamefiDark-500 via-gamefiDark-600 rounded">

@@ -5,9 +5,10 @@ import { Carousel } from 'react-responsive-carousel'
 import styles from './Carousel.module.scss'
 import stylesList from './List.module.scss'
 import { Item } from './types'
-import { networkImage, currency } from './List'
+import { networkImage } from './List'
 import { intervalToDuration } from 'date-fns'
 import { formatNumber } from '@/utils'
+import { getCurrency } from '@/components/web3/utils'
 
 type Props = {
   items: Item[];
@@ -212,7 +213,7 @@ const _Carousel = ({ items, style, now }: Props) => {
                 <div className={styles.informationPurchase}>
                   <div>
                     <p>Price</p>
-                    <span style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {currency(item)}</span>
+                    <span style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {getCurrency(item)?.name}</span>
                   </div>
                   <div>
                     <p>Total Sales</p>

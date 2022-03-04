@@ -111,7 +111,7 @@ const Profile = () => {
     setEditing(false)
   }, [signature, account, loadProfile, walletSolana, walletTerra, telegram, twitter])
 
-  return <div className='py-10 px-4 xl:px-9'>
+  return <div className='py-10 px-4 xl:px-9 2xl:pr-32'>
     <div className="flex items-center justify-between mb-6">
       <h3 className='hidden lg:block uppercase font-bold text-2xl'>My Profile</h3>
       { profile

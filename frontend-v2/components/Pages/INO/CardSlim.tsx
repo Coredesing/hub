@@ -2,11 +2,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useMemo } from 'react'
 import { Item } from './types'
-import { networkImage, currency, visibility } from './List'
+import { networkImage, visibility } from './List'
 import styles from './ListCard.module.scss'
 import stylesCarousel from './Carousel.module.scss'
 import { intervalToDuration } from 'date-fns'
 import { formatNumber } from '@/utils'
+import { useCurrency } from '@/components/web3/utils'
 
 type Props = {
   item: Item;
@@ -14,6 +15,7 @@ type Props = {
 }
 
 const CardSlim = ({ item, now }: Props) => {
+  const { currency } = useCurrency(item)
   const stages = useMemo(() => {
     const timeBuy = new Date(parseInt(item.start_time) * 1000)
     const timeFinish = new Date(parseInt(item.finish_time) * 1000)
@@ -122,7 +124,7 @@ const CardSlim = ({ item, now }: Props) => {
         <div className={stylesCarousel.informationPurchase} style={{ marginBottom: '1rem' }}>
           <div>
             <p>Starting Price</p>
-            <span style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {currency(item)}</span>
+            <span style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {currency.name}</span>
           </div>
           <div>
             <p>Total Sales</p>

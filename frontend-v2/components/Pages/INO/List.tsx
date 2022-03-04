@@ -4,6 +4,7 @@ import { useMemo, useState, useEffect } from 'react'
 import { Item } from './types'
 import styles from './List.module.scss'
 import { paginator, useFetch } from '@/utils'
+import { getCurrency } from '@/components/web3/utils'
 
 export const TOKEN_TYPE = 'box'
 
@@ -39,50 +40,6 @@ export const networkImage = (network: string) => {
 
   case 'polygon': {
     return require('@/assets/images/networks/polygon.svg')
-  }
-  }
-}
-
-export const currency = (item: Item) => {
-  if (item.accept_currency === 'eth') {
-    return currencyNative(item.network_available)
-  }
-
-  if (item.accept_currency === 'usdt') {
-    return currencyStable(item.network_available)
-  }
-
-  return item.accept_currency
-}
-
-export const currencyNative = (network: string) => {
-  switch (network) {
-  case 'bsc': {
-    return 'BNB'
-  }
-
-  case 'eth': {
-    return 'ETH'
-  }
-
-  case 'polygon': {
-    return 'MATIC'
-  }
-  }
-}
-
-export const currencyStable = (network: string) => {
-  switch (network) {
-  case 'bsc': {
-    return 'BUSD'
-  }
-
-  case 'eth': {
-    return 'USDT'
-  }
-
-  case 'polygon': {
-    return 'USDT'
   }
   }
 }
@@ -160,7 +117,7 @@ const List = () => {
                 <div className={styles.title}>
                   <h4 className="font-casual text-sm sm:text-base md:text-lg leading-normal font-semibold uppercase">{item.title}</h4>
                   <p className="font-casual text-[13px] md:text-base font-medium opacity-50">{visibility(item)}</p>
-                  <p className="mt-2 md:hidden uppercase font-casual font-medium text-base" style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {currency(item)}/BOX</p>
+                  <p className="mt-2 md:hidden uppercase font-casual font-medium text-base" style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {getCurrency(item)?.name}/BOX</p>
                 </div>
               </a>
             </Link>
@@ -175,7 +132,7 @@ const List = () => {
               </div>
               <div className="hidden md:block flex-1 flex flex-col">
                 <span className="text-[13px] font-bold opacity-50 tracking-wide uppercase">Price</span>
-                <p className="uppercase font-casual font-medium text-base" style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {currency(item)}/BOX</p>
+                <p className="uppercase font-casual font-medium text-base" style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {getCurrency(item)?.name}/BOX</p>
               </div>
             </div>
           </div>

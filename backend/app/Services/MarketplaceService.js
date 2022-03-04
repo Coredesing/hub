@@ -92,6 +92,16 @@ class MarketplaceService {
       builder.where('amount', '<=', params.max_price)
     }
 
+    if (params.price_order) {
+      if(['ASC', 'DESC'].includes(params.price_order.toUpperCase())) {
+        builder.orderBy('amount', params.price_order)
+      }
+    }
+
+    if (params.network) {
+      builder.where('network', params.network);
+    }
+
     return builder
   }
 
@@ -275,7 +285,7 @@ class MarketplaceService {
 
     let order = filterParams.sort_by || 'dispatch_at'
     let by = filterParams.sort_desc === 'false' ? 'ASC' : 'DESC'
-    
+
     let data = await this.buildQueryNFTEventsBuilder(filterParams)
       .orderBy(order, by)
       .paginate(filterParams.page, filterParams.limit);

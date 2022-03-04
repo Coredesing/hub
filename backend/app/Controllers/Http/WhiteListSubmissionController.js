@@ -10,6 +10,7 @@ const ConvertDateUtils = use('App/Common/ConvertDateUtils');
 const HelperUtils = use('App/Common/HelperUtils');
 const Const = use('App/Common/Const');
 const CountryList = use('App/Common/Country');
+const RedisUserUtils = use('App/Common/RedisUserUtils');
 const bs58 = require('bs58');
 const nacl = require('tweetnacl');
 
@@ -419,6 +420,123 @@ class WhiteListSubmissionController {
       } else {
         return HelperUtils.responseErrorInternal('ERROR : Get Whitelist Submission fail !');
       }
+    }
+  }
+
+  async applyAndJoinCampaign({request, params}) {
+    // get request params
+    const campaign_id = params.campaignId;
+    const wallet_address = request.input('wallet_address');
+    const user_telegram = request.input('user_telegram');
+    const user_twitter = request.input('user_twitter');
+    const solana_address = request.input('solana_address');
+    let email = '';
+    if (!campaign_id) {
+      return HelperUtils.responseBadRequest('Bad request with campaign_id');
+    }
+    try {
+      // check campaign
+      const campaignService = new CampaignService();
+      const camp = await campaignService.findByCampaignId(campaign_id);
+      if (!camp || camp.buy_type !== Const.BUY_TYPE.WHITELIST_LOTTERY) {
+        return HelperUtils.responseBadRequest(`Bad request with campaignId ${campaign_id}`)
+      }
+
+      const currentDate = ConvertDateUtils.getDatetimeNowUTC();
+      // check time to join campaign
+      if (camp.start_join_pool_time > currentDate || camp.end_join_pool_time < currentDate) {
+        return HelperUtils.responseBadRequest("It's not right time to join this campaign !");
+      }
+
+      // get user info
+      const userService = new UserService();
+      const userParams = {
+        'wallet_address': wallet_address
+      }
+
+      if (!camp.kyc_bypass) {
+        const user = await userService.findUser(userParams);
+        if (!user || !user.email) {
+          return HelperUtils.responseBadRequest("User not found");
+        }
+        email = user.email;
+        if (user.is_kyc !== Const.KYC_STATUS.APPROVED) {
+          return HelperUtils.responseBadRequest("Your KYC status is not verified");
+        }
+        let forbidden_countries = [];
+        try {
+          forbidden_countries = JSON.parse(camp.forbidden_countries);
+        } catch (_) {
+          forbidden_countries = [];
+        }
+        if (forbidden_countries.includes(user.national_id_issuing_country)) {
+          return HelperUtils.responseBadRequest(`Citizens and residents of ${CountryList && CountryList[user.national_id_issuing_country] || user.national_id_issuing_country} are restricted to participate in this pool`);
+        }
+
+        if (camp.airdrop_network === 'solana' && !user.solana_address) {
+          const solRegex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+          if (!solana_address || !solRegex.test(solana_address)) {
+            return HelperUtils.responseBadRequest('Invalid Solana address!');
+          }
+
+          const checkAddress = await userService.buildQueryBuilder({solana_address}).first();
+          if (checkAddress) {
+            return HelperUtils.responseBadRequest('Duplicate solana address with another user!');
+          }
+
+          user.solana_address = solana_address
+          await user.save()
+          await RedisUserUtils.deleteRedisUserProfile(wallet_address)
+        }
+      }
+
+      // check user tier
+      const userTier = (await HelperUtils.getUserTierSmartWithCached(wallet_address))[0];
+      // check user tier with min tier of campaign
+      if (camp.min_tier > userTier) {
+        return HelperUtils.responseBadRequest("Ranking not found");
+      }
+      // call to db to get tier info
+      const tierService = new TierService();
+      const tierParams = {
+        'campaign_id': campaign_id,
+        'level': userTier
+      };
+      const tier = await tierService.findByLevelAndCampaign(tierParams);
+      if (!tier) {
+        return HelperUtils.responseBadRequest("Ranking not found");
+      }
+
+      // call to whitelist submission service
+      const whitelistSubmissionService = new WhitelistSubmissionService();
+      const submissionParams = {
+        wallet_address,
+        campaign_id,
+        user_telegram,
+        user_twitter,
+        solana_address,
+      }
+      await whitelistSubmissionService.addWhitelistSubmission(submissionParams)
+      const socialCheckResult = await whitelistSubmissionService.checkFullSubmission(campaign_id, wallet_address);
+      const rejected = socialCheckResult.includes(Const.SOCIAL_SUBMISSION_STATUS.REJECTED);
+
+      if (rejected) {
+        const submission = await WhitelistSubmissionModel.query().where('campaign_id', campaign_id).where('wallet_address', wallet_address).first();
+        return {
+          status: 422,
+          message: 'Please follow our instruction correctly',
+          data: submission,
+        }
+      }
+
+      await campaignService.joinCampaign(campaign_id, wallet_address, solana_address, email);
+      return HelperUtils.responseSuccess(null, "Apply Whitelist successful");
+    } catch (e) {
+      console.log(e)
+      if(e.name === 'BadRequestException') {
+        return HelperUtils.responseBadRequest(e.message);
+      }
+      return HelperUtils.responseErrorInternal();
     }
   }
 }

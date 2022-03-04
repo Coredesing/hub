@@ -85,10 +85,7 @@ const Pools = () => {
   const allocationAmount = useCallback((pool: any) => {
     if (!pool) return null
 
-    const currency = getCurrency({
-      accept_currency: pool.accept_currency,
-      network_available: pool.network_available
-    })
+    const currency = getCurrency(pool)
 
     let amount = ''
     if (pool.token_type === TOKEN_TYPE.ERC721) {
@@ -181,8 +178,14 @@ const Pools = () => {
                   <div className='flex gap-2'>
                     <img src={item.banner} alt="" width={40} height={40} className='object-contain' />
                     <Link href={poolHref(item)} passHref={true}>
-                      <a className="hover:underline truncate">{item.title}</a>
+                      <a className="hover:underline truncate font-medium">{item.title}</a>
                     </Link>
+                  </div>
+                  <div className="text-xs mt-2">
+                    {formatPoolStatus(item.campaign_status)} - {formatPoolType(item.is_private)}
+                  </div>
+                  <div className="text-xs mt-2">
+                    {allocationAmount(item)}
                   </div>
                 </TableCell>
                 <TableCell className="border-none hidden sm:table-cell">

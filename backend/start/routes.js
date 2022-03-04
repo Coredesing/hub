@@ -113,6 +113,7 @@ Route.group(() => {
   Route.get('user/winner-search/:campaignId', 'WinnerListUserController.search').middleware(['maskEmailAndWallet']);
   Route.get('user/counting/:campaignId', 'CampaignController.countingJoinedCampaign');
   Route.get('user/check-join-campaign/:campaignId', 'CampaignController.checkJoinedCampaign');
+  Route.post('user/apply-join-campaign/:campaignId', 'WhiteListSubmissionController.applyAndJoinCampaign').middleware(['checkSignature']);
 
   // config
   Route.get('get-rate-setting', 'RateSettingController.getRateSetting');

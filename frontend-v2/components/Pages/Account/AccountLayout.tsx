@@ -6,7 +6,7 @@ import AccountTopBar from '@/components/Pages/Account/AccountTopBar'
 const AccountLayout = ({ children }: { children: ReactNode }) => {
   return <div className="flex flex-col lg:flex-row">
     <AccountTopBar />
-    <LeftSideBar></LeftSideBar>
+    <LeftSideBar className="hidden lg:block px-7 py-12 md:-mt-24 flex-none w-56"></LeftSideBar>
     <AccountContent>
       {children}
     </AccountContent>

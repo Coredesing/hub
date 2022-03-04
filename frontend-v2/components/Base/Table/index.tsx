@@ -1,5 +1,4 @@
 import React from 'react'
-import styles from './table.module.scss'
 import clsx from 'clsx'
 
 export const Table = (props: any) => {
@@ -14,24 +13,24 @@ export const Table = (props: any) => {
   )
 }
 
-export const TableRow = (props: any) => {
-  return <tr>
-    {props.children}
+export const TableRow = ({ children, className }: any) => {
+  return <tr className={className}>
+    {children}
   </tr>
 }
 
 export const TableCellHead = (props: any) => {
-  return <th className={clsx('uppercase py-3 px-4 font-bold text-base text-left text-white/50', styles['table-cell'], props.className)}>{props.children}</th>
+  return <th className={clsx('uppercase py-3 px-4 font-bold text-base text-left text-white/50 border-b border-white/10 bg-gamefiDark-800', props.className)}>{props.children}</th>
 }
 
 export const TableCell = (props: any) => {
-  return <td className={clsx('py-3 px-4 text-left text-sm font-casual', styles['table-cell'], props.className)}>{props.children}</td>
+  return <td className={clsx('py-3 px-4 text-left text-sm font-casual border-b border-white/10', props.className)}>{props.children}</td>
 }
 
 export const TableHead = (props: any) => {
-  return <thead className={clsx(styles['table-head'], props.className)}>{props.children}</thead>
+  return <thead className={clsx(props.className)}>{props.children}</thead>
 }
 
 export const TableBody = (props: any) => {
-  return <tbody className={clsx(styles['table-body'], props.className)}>{props.children}</tbody>
+  return <tbody className={clsx(props.className)}>{props.children}</tbody>
 }

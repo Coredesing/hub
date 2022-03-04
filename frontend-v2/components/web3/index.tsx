@@ -243,7 +243,7 @@ export const BUSD_BSC: Token = {
   name: 'BUSD',
   symbol: 'BUSD',
   decimals: 18,
-  address: IS_TESTNET ? process.env.NEXT_PUBLIC_BUSD_56 : process.env.NEXT_PUBLIC_BUSD_97
+  address: IS_TESTNET ? process.env.NEXT_PUBLIC_BUSD_97 : process.env.NEXT_PUBLIC_BUSD_56
 }
 
 export const USDT_ERC: Token = {

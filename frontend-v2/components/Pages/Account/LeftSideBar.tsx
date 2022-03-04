@@ -1,17 +1,17 @@
 import React, { useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-const LeftSideBar = () => {
+const LeftSideBar = ({ className }) => {
   const router = useRouter()
   const isCurrentLink = useCallback((path: string) => {
     return router.pathname === `${path}`
   }, [router])
 
-  return <div className="hidden lg:block px-7 py-12 md:-mt-24" style={{
+  return <div className={className} style={{
     background: '#1B1D26',
     boxShadow: 'inset -1px 0px 0px #303442',
-    minHeight: '100vh',
-    width: '234px'
+    minHeight: '100vh'
+    // width: '234px'
   }}>
     <h3 className='mb-11 font-bold text-2xl'>My Account</h3>
     <div className="grid">

@@ -1,9 +1,10 @@
 import React, { ReactNode } from 'react'
 type Props = {
-  children: ReactNode;
+    className?: string;
+    children: ReactNode;
 }
-const AccountContent = ({ children }: Props) => {
-  return <div className="w-full">
+const AccountContent = ({ className, children }: Props) => {
+  return <div className={`w-full ${className}`}>
     {children}
   </div>
 }

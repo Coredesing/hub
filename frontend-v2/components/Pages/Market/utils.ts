@@ -3,12 +3,12 @@ import { API_BASE_URL } from '@/utils/constants'
 
 import { Contract } from '@ethersproject/contracts'
 import ERC721Abi from '@/components/web3/abis/Erc721.json'
-import ERC20Abi from '@/components/web3/abis/ERC20.json'
+// import ERC20Abi from '@/components/web3/abis/ERC20.json'
 import { useLibraryDefaultFlexible } from '@/components/web3/utils'
 import { fetcher } from '@/utils'
 import { useWeb3Default } from '@/components/web3'
 import { ObjectType } from '@/utils/types'
-import { BigNumber } from 'ethers'
+// import { BigNumber } from 'ethers'
 
 export const networkImage = (network: string) => {
   switch (network) {
@@ -26,15 +26,15 @@ export const networkImage = (network: string) => {
   }
 }
 
-const currencies = {
-  list: {},
-  get(token: string) {
-    return this.list[token]
-  },
-  set(token: string, symbol: string) {
-    this.list[token] = symbol
-  }
-}
+// const currencies = {
+//   list: {},
+//   get(token: string) {
+//     return this.list[token]
+//   },
+//   set(token: string, symbol: string) {
+//     this.list[token] = symbol
+//   }
+// }
 
 export const useNFTInfos = (listData: any[], onSetOneItem?: (item: any) => any) => {
   const { provider } = useLibraryDefaultFlexible('bsc', false)
@@ -59,16 +59,16 @@ export const useNFTInfos = (listData: any[], onSetOneItem?: (item: any) => any) 
           collectionInfo = collectionInfo || {}
           item.collection_info = collectionInfo
 
-          if (!BigNumber.from(item.currency || 0).isZero()) {
-            item.currencySymbol = currencies.get(item.currency)
-            if (!item.currencySymbol) {
-              const erc20Contract = new Contract(item.currency, ERC20Abi, provider)
-              if (!erc20Contract) return null
-              const symbol = await erc20Contract.symbol().then(s => s).catch(console.error)
-              item.currencySymbol = symbol
-              currencies.set(item.currency, symbol)
-            }
-          }
+          // if (!BigNumber.from(item.currency || 0).isZero()) {
+          //   item.currencySymbol = currencies.get(item.currency)
+          //   if (!item.currencySymbol) {
+          //     const erc20Contract = new Contract(item.currency, ERC20Abi, provider)
+          //     if (!erc20Contract) return null
+          //     const symbol = await erc20Contract.symbol().then(s => s).catch(console.error)
+          //     item.currencySymbol = symbol
+          //     currencies.set(item.currency, symbol)
+          //   }
+          // }
           if (+collectionInfo.use_external_uri === 1) {
             const result = await fetcher(`${API_BASE_URL}/marketplace/collection/${tokenAddress}/${token_id}`, { method: 'POST' })
             const info = result.data

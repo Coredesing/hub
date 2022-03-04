@@ -119,32 +119,36 @@ export const useTokenApproval = (token?: Token, spender?: string) => {
   }
 }
 
+export const getLibraryDefaultFlexible = async (defaultLibrary, networkAlias?: string, mainnet = false) => {
+  if (!networkAlias) {
+    return defaultLibrary
+  }
+
+  const network = getNetworkByAlias(networkAlias, mainnet)
+  if (!network) {
+    return null
+  }
+
+  const connector = networkConnector(network.id)
+  if (!connector) {
+    return null
+  }
+
+  try {
+    const update = await connector.activate()
+    return getLibrary(update.provider)
+  } catch (err) {
+    return null
+  }
+}
+
 export const useLibraryDefaultFlexible = (networkAlias?: string, mainnet = false) => {
   const { library } = useWeb3Default()
   const [provider, setProvider] = useState<providers.Web3Provider | null>(null)
 
   useEffect(() => {
-    if (!networkAlias) {
-      setProvider(library)
-      return
-    }
-
-    const network = getNetworkByAlias(networkAlias, mainnet)
-    if (!network) {
-      setProvider(null)
-      return
-    }
-
-    const connector = networkConnector(network.id)
-    if (!connector) {
-      setProvider(null)
-      return
-    }
-
-    connector.activate().then(update => {
-      setProvider(getLibrary(update.provider))
-    }).catch(err => {
-      console.debug(err)
+    getLibraryDefaultFlexible(library, networkAlias, mainnet).then(provider => {
+      setProvider(provider)
     })
   }, [networkAlias, library, mainnet])
 

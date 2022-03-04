@@ -81,11 +81,24 @@ const Career = ({ data }) => {
 
 export default Career
 
-export function getServerSideProps ({ params }) {
+export function getStaticProps ({ params }) {
   if (!params?.slug) {
     return { props: { data: {} } }
   }
 
   const data = jobs.find(job => job.id === params.slug)
   return { props: { data: data } }
+}
+
+export async function getStaticPaths() {
+  const paths = jobs.map(job => {
+    return {
+      params: { slug: job.id }
+    }
+  })
+
+  return {
+    paths,
+    fallback: true // false or 'blocking'
+  };
 }

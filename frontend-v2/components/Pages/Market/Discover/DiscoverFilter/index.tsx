@@ -6,7 +6,7 @@ import isNumber from 'is-number'
 import { ethers } from 'ethers'
 
 type Props = {
-  onApply: (params: ObjectType) => any
+  onApply: (params: ObjectType) => any;
 }
 const DiscoverFilter = ({ onApply }: Props) => {
   const currencies = useMemo(() => [
@@ -40,7 +40,7 @@ const DiscoverFilter = ({ onApply }: Props) => {
     onApply({
       currency: currency,
       min_price: minPrice,
-      max_price: maxPrice,
+      max_price: maxPrice
     })
     setShowFilter(false)
   }
@@ -49,7 +49,7 @@ const DiscoverFilter = ({ onApply }: Props) => {
     onApply({
       currency: '',
       min_price: '',
-      max_price: '',
+      max_price: ''
     })
     setCurrency('')
     setMinPrice('')

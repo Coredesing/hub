@@ -21,7 +21,7 @@ const CollectionItems = ({ slug }: { slug: string }) => {
     price_order: '',
     currency: '',
     min_price: '',
-    max_price: '',
+    max_price: ''
   })
   const handleChangeNetwork = useCallback((network: any) => {
     if (network !== null && typeof network === 'object') {
@@ -38,7 +38,7 @@ const CollectionItems = ({ slug }: { slug: string }) => {
   const url = useMemo(() => {
     const query = new URLSearchParams(filter).toString()
     return `/marketplace/collection/${slug}/items?${query}`
-  }, [filter])
+  }, [filter, slug])
   const { response, loading } = useFetch(url)
 
   useEffect(() => {
@@ -130,8 +130,7 @@ const CollectionItems = ({ slug }: { slug: string }) => {
           +response?.data?.lastPage > 1 && <Pagination page={response?.data?.page} pageLast={response?.data?.lastPage} setPage={onChangePage} className="w-full justify-center mt-8 mb-8" />
         }
         {
-          !loading && !infoLoading && !infos.length
-          && <NoItemFound />
+          !loading && !infoLoading && !infos.length && <NoItemFound />
         }
       </div>
     </div>

@@ -52,7 +52,7 @@ export const useNFTInfos = (listData: any[], onSetOneItem?: (item: any) => any) 
         let item = listData[i]
         try {
           const tokenAddress = item?.token_address
-          const token_id = item.token_id
+          const tokenId = item.token_id
           const erc721Contract = new Contract(tokenAddress, ERC721Abi, provider)
           if (!erc721Contract) return null
           let collectionInfo = await fetcher(`${API_BASE_URL}/marketplace/collection/${item?.slug}`).then(res => res?.data)
@@ -70,13 +70,13 @@ export const useNFTInfos = (listData: any[], onSetOneItem?: (item: any) => any) 
           //   }
           // }
           if (+collectionInfo.use_external_uri === 1) {
-            const result = await fetcher(`${API_BASE_URL}/marketplace/collection/${tokenAddress}/${token_id}`, { method: 'POST' })
+            const result = await fetcher(`${API_BASE_URL}/marketplace/collection/${tokenAddress}/${tokenId}`, { method: 'POST' })
             const info = result.data
             if (info) {
               item = { ...item, token_info: info }
             }
           } else {
-            const tokenURI = await erc721Contract.tokenURI(token_id)
+            const tokenURI = await erc721Contract.tokenURI(tokenId)
             let info = {}
             try {
               info = await fetcher(tokenURI)
@@ -110,7 +110,7 @@ export const useNFTInfos = (listData: any[], onSetOneItem?: (item: any) => any) 
   return { data, error, loading, errorMessage }
 }
 
-export const useNFTInfo = (projectInfo: ObjectType, token_id: string | number) => {
+export const useNFTInfo = (projectInfo: ObjectType, tokenId: string | number) => {
   const [loading, setLoading] = useState(true)
   const { library } = useWeb3Default()
   const [tokenInfo, setTokenInfo] = useState<any>()
@@ -122,27 +122,27 @@ export const useNFTInfo = (projectInfo: ObjectType, token_id: string | number) =
       }
       if (!library) return
       if (+projectInfo.use_external_uri === 1) {
-        const result = await fetcher(`${API_BASE_URL}/marketplace/collection/${projectInfo.token_address}/${token_id}`, { method: 'POST' })
+        const result = await fetcher(`${API_BASE_URL}/marketplace/collection/${projectInfo.token_address}/${tokenId}`, { method: 'POST' })
         const info = result.data
         if (info) {
-          setTokenInfo({ ...info, id: token_id })
+          setTokenInfo({ ...info, id: tokenId })
         }
       } else {
         const erc721Contract = new Contract(projectInfo.token_address, ERC721Abi, library)
-        const tokenURI = await erc721Contract.tokenURI(token_id)
+        const tokenURI = await erc721Contract.tokenURI(tokenId)
         let info = {}
         try {
           info = await fetcher(tokenURI)
         } catch (error) {
           console.debug('err', error)
         }
-        setTokenInfo({ ...info, id: token_id })
+        setTokenInfo({ ...info, id: tokenId })
       }
     } catch (error) {
       console.debug('error', error)
       setTokenInfo(null)
     }
-  }, [projectInfo, token_id, library])
+  }, [projectInfo, tokenId, library])
 
   useEffect(() => {
     getTokenInfo().catch(err => {

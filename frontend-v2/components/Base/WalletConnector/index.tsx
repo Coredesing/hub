@@ -76,7 +76,7 @@ export const NetworkSelector = ({ onChange, isMulti = true, isToggle = true, ...
       setSelected(update)
     } else {
       setSelected(s => {
-        let obj = {}
+        const obj = {}
         for (const p in s) {
           obj[p] = false
         }
@@ -88,8 +88,8 @@ export const NetworkSelector = ({ onChange, isMulti = true, isToggle = true, ...
         return obj
       })
     }
-
   }
+  
   useEffect(() => {
     if (!onChange) {
       return

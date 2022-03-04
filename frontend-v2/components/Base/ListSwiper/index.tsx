@@ -64,7 +64,7 @@ const ListSwiper = ({ ...props }: Props) => {
     onSwipedLeft: () => updateIndex(activeIndex.from + props.step),
     onSwipedRight: () => updateIndex(activeIndex.from - props.step),
     trackMouse: true,
-    preventDefaultTouchmoveEvent: true,
+    preventDefaultTouchmoveEvent: true
   })
 
   return (

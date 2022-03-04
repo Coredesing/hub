@@ -19,7 +19,7 @@ const Discover = () => {
     price_order: '',
     currency: '',
     min_price: '',
-    max_price: '',
+    max_price: ''
   })
   const handleChangeNetwork = useCallback((network: any) => {
     if (network !== null && typeof network === 'object') {

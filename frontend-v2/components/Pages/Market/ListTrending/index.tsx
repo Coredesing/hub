@@ -63,21 +63,20 @@ const ListTrending = () => {
             </div>
           </div>
         </div>
-        {infos.length > 0
-          && <ListSwiper
-            title="Trending"
-            hasHeader={false}
-            showItemsNumber={isMdScreen ? 1 : 4} step={isMdScreen ? 1 : 4}
-            transition='0.5s'
-            style={{ display: 'flex', justifyContent: (infos.length > 4 || isMdScreen) ? 'start' : 'center', gap: '16px', }}>
-            {
-              infos.map((item, i) => <SwiperItem key={`hot-offers-${i}`} width={isMdScreen ? '250px' : '280px'}>
-                <div className={"w-full"}>
-                  <NFTCard item={item} showOffer={true} showListing={true}></NFTCard>
-                </div>
-              </SwiperItem>)
-            }
-          </ListSwiper>
+        {infos.length > 0 && <ListSwiper
+          title="Trending"
+          hasHeader={false}
+          showItemsNumber={isMdScreen ? 1 : 4} step={isMdScreen ? 1 : 4}
+          transition='0.5s'
+          style={{ display: 'flex', justifyContent: (infos.length > 4 || isMdScreen) ? 'start' : 'center', gap: '16px' }}>
+          {
+            infos.map((item, i) => <SwiperItem key={`hot-offers-${i}`} width={isMdScreen ? '250px' : '280px'}>
+              <div className='w-full'>
+                <NFTCard item={item} showOffer={true} showListing={true}></NFTCard>
+              </div>
+            </SwiperItem>)
+          }
+        </ListSwiper>
         }
         {(loading || infoLoading)
           ? (

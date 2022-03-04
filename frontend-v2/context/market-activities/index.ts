@@ -8,7 +8,7 @@ import ERC20ABI from 'components/web3/abis/ERC20.json'
 import { getNetworkByAlias, getLibrary } from 'components/web3'
 import { networkConnector } from 'components/web3/connectors'
 import { Web3Provider } from '@ethersproject/providers'
-import { currencyNative } from 'components/web3/utils'
+import { currencyNative, currencyStable } from 'components/web3/utils'
 
 type MarketDetailFilter = {
   limit?: number;
@@ -52,10 +52,13 @@ const useMarketActivities = () => {
       listData = await Promise.all(listData.map(async item => {
         try {
           if (BigNumber.from(item.currency).isZero()) {
-            item.currencySymbol = currencyNative(item.network)
+            item.currencySymbol = currencyNative(item.network)?.symbol
           } else {
-            const erc20Contract = new Contract(item.currency, ERC20ABI, provider)
-            item.currencySymbol = await erc20Contract.symbol()
+            item.currencySymbol = currencyStable(item.network)?.symbol
+            if (!item.currencySymbol) {
+              const erc20Contract = new Contract(item.currency, ERC20ABI, provider)
+              item.currencySymbol = await erc20Contract.symbol()
+            }
           }
         } catch (error) {
           console.log('err', error)

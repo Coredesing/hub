@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { networkImage } from '../utils'
 import { ethers } from 'ethers'
 import { getCurrencyByTokenAddress } from '@/components/web3'
+import ImageLoader from '@/components/Base/ImageLoader'
 
 type Props = {
   item: any;
@@ -14,9 +15,10 @@ const NFTCard = ({ item, ...props }: Props) => {
   return (
     <div className="w-full rounded overflow-hidden border border-transparent hover:border-gamefiGreen-700 hover:shadow hover:shadow-gamefiGreen-700">
       <div className="w-full">
-        <div className="bg-black flex items-center justify-center p-4 cursor-pointer" style={{ width: 'full', aspectRatio: '1' }}>
-          <Link href={`/market/${item?.slug}/${item?.id}`} passHref>
-            <img src={item?.token_info?.image || item?.token_info?.icon} alt={item?.token_info?.title} className="w-full object-cover" />
+        <div className="bg-gamefiDark-650 flex items-center justify-center p-4 cursor-pointer" style={{ width: 'full', aspectRatio: '1', height: '280px' }}>
+          <Link href={`/market/${item?.slug}/${item?.token_id || item?.id}`}>
+            <ImageLoader src={item?.token_info?.image || item?.token_info?.icon} className="w-full h-full object-contain"/>
+            {/* <img src={item?.token_info?.image || item?.token_info?.icon || gamefiBox.src} alt={item?.token_info?.title} className="w-full object-cover" /> */}
           </Link>
         </div>
       </div>
@@ -30,9 +32,9 @@ const NFTCard = ({ item, ...props }: Props) => {
           </Link>
         </div>
         <div>
-          <Link href={`/market/${item?.slug}/${item?.id}`} passHref>
+          <Link href={`/market/${item?.slug}/${item?.token_id || item?.id}`} passHref>
             <a className="font-bold text-xl tracking-wide cursor-pointer hover:underline">
-              #{item?.id || 0}
+              #{item?.token_id || item?.id || '-/-'}
             </a>
           </Link>
         </div>
@@ -43,7 +45,7 @@ const NFTCard = ({ item, ...props }: Props) => {
                 <p className="font-semibold text-sm opacity-50 uppercase">Listing Price</p>
                 <div className="flex items-center">
                   <div className="w-4 h-4"><Image src={networkImage(item?.network)} alt="network"></Image></div>
-                  <div className="text-gamefiGreen-700 text-xl font-medium ml-2">{ethers.utils.formatEther(item?.raw_amount || '0')} {getCurrencyByTokenAddress(item?.currency, item?.network)?.symbol}</div>
+                  <div className="text-gamefiGreen-700 text-xl font-medium ml-2">{ethers.utils.formatEther(item?.raw_amount || '0')} {item.currencySymbol || getCurrencyByTokenAddress(item?.currency, item?.network)?.symbol}</div>
                 </div>
               </div>
               : <></>
@@ -54,7 +56,7 @@ const NFTCard = ({ item, ...props }: Props) => {
                 <p className="font-semibold text-sm opacity-50 uppercase">Highest Offer</p>
                 <div className="flex items-center">
                   <div className="w-4 h-4"><Image src={networkImage(item?.network)} alt="network"></Image></div>
-                  <div className="text-gamefiGreen-700 text-xl font-medium ml-2">{ethers.utils.formatEther(item?.highest_offer || '0')} {getCurrencyByTokenAddress(item?.currency, item?.network)?.symbol}</div>
+                  <div className="text-gamefiGreen-700 text-xl font-medium ml-2">{ethers.utils.formatEther(item?.highest_offer || '0')} {item.currencySymbol || getCurrencyByTokenAddress(item?.currency, item?.network)?.symbol}</div>
                 </div>
               </div>
               : <></>

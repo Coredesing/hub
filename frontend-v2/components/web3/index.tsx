@@ -4,7 +4,7 @@ import { Web3Provider } from '@ethersproject/providers'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { network, injected, walletconnect, POLLING_INTERVAL, RPC_URLS, IS_TESTNET } from './connectors'
 import type { AddEthereumChainParameter } from '@web3-react/metamask'
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 
 export { NoEthereumProviderError } from '@web3-react/injected-connector'
 export function getLibrary (provider: any): Web3Provider {
@@ -438,5 +438,5 @@ export function getCurrencyByTokenAddress (tokenAddress: string, networkAlias: s
     }
     return nativeCurrency
   }
-  return currencies.find(x => x.address === tokenAddress)
+  return currencies.find(x => BigNumber.from(x.address || 0).eq(tokenAddress))
 }

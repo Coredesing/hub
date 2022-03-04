@@ -2,31 +2,13 @@ import Dropdown from '@/components/Base/Dropdown'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import { NetworkSelector } from '@/components/Base/WalletConnector'
-import { useRouter } from 'next/router'
 import DiscoverFilter from './DiscoverFilter'
 import { useNFTInfos } from '../utils'
 import NFTCard from '../NFTCard'
 import Pagination from '../Pagination'
 import { useFetch } from '@/utils'
 import { ObjectType } from '@/utils/types'
-
-const filterPriceOptions = [
-  {
-    key: 'newest',
-    label: 'Newest',
-    value: ''
-  },
-  {
-    key: 'price-ascending',
-    label: 'Price Ascending',
-    value: 'sort_by=raw_amount&sort_desc=true'
-  },
-  {
-    key: 'price-descending',
-    label: 'Price Descending',
-    value: 'sort_by=raw_amount&sort_desc=false'
-  }
-]
+import { filterPriceOptions } from '../constant'
 
 const Discover = () => {
   const [showDiscover, setShowDiscover] = useState('items')
@@ -34,7 +16,7 @@ const Discover = () => {
     page: 1,
     limit: 8,
     network: 'bsc',
-    price: '',
+    price_order: '',
     currency: '',
     min_price: '',
     max_price: '',
@@ -74,7 +56,7 @@ const Discover = () => {
   }
 
   const onFilterPrice = (item: ObjectType) => {
-    setFilter(f => ({ ...f, price: item.value }))
+    setFilter(f => ({ ...f, price_order: item.value }))
   }
 
   const onAdvanceFilter = useCallback((params: ObjectType) => {
@@ -83,7 +65,7 @@ const Discover = () => {
 
   return (
     <div className="bg-black w-full pb-20">
-      <div className="md:px-4 lg:px-16 md:container mx-auto mt-20">
+      <div className="md:px-4 lg:px-16 md:container mx-2 mt-20">
         <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
           <div className="inline-block top-0 left-0 right-0 uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
             Discover
@@ -92,7 +74,7 @@ const Discover = () => {
             <Image src={require('@/assets/images/under-stroke-yellow.svg')} alt="understroke"></Image>
           </div>
         </div>
-        <div className="mt-14 flex items-center justify-between">
+        <div className="mt-14 flex items-center justify-between flex-wrap md:flex-row gap-2">
           <div className="flex">
             <div className="relative" style={{ marginRight: '-6px' }}>
               <button
@@ -114,19 +96,21 @@ const Discover = () => {
               </svg>
             </div>
           </div>
-          <div className="flex items-stretch">
+          <div className="flex items-stretch flex-wrap gap-2 sm:justify-self-auto justify-end sm:w-auto w-full">
             <div><NetworkSelector isMulti={false} isToggle={false} selected={{ [filter.network]: true }} onChange={handleChangeNetwork}></NetworkSelector></div>
-            <div className="ml-2">
-              <Dropdown
-                items={filterPriceOptions}
-                selected={filterPriceOptions.find(f => f.value === filter.price)}
-                onChange={onFilterPrice}
-              />
-            </div>
-            <div className="">
-              <DiscoverFilter
-                onApply={onAdvanceFilter}
-              />
+            <div className='flex'>
+              <div>
+                <Dropdown
+                  items={filterPriceOptions}
+                  selected={filterPriceOptions.find(f => f.value === filter.price_order)}
+                  onChange={onFilterPrice}
+                />
+              </div>
+              <div className="">
+                <DiscoverFilter
+                  onApply={onAdvanceFilter}
+                />
+              </div>
             </div>
           </div>
         </div>

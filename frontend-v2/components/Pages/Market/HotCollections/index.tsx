@@ -3,8 +3,11 @@ import React, { useMemo } from 'react'
 import { useFetch } from '@/utils'
 import Link from 'next/link'
 import ImageLoader from '@/components/Base/ImageLoader'
+import { useMediaQuery } from 'react-responsive'
 
 const HotCollections = () => {
+  const isMdScreen = useMediaQuery({ maxWidth: '960px' })
+
   const url = '/marketplace/collections?limit=10&page=1'
   const { response, loading } = useFetch(url)
 
@@ -15,11 +18,11 @@ const HotCollections = () => {
   return (
     <div className="md:px-4 lg:px-16 md:container mx-auto mt-20">
       {!loading && hotCollections?.length
-        ? <ListSwiper title="Hot Collections" showItemsNumber={4} step={4} transition='0.5s' hasHeader={true} style={{ display: 'flex', justifyContent: 'start' }}>
+        ? <ListSwiper title="Hot Collections" showItemsNumber={isMdScreen ? 2 : 4} step={isMdScreen ? 2 : 4} transition='0.5s' hasHeader={true} style={{ display: 'flex', gap: '16px', justifyContent: 'start' }}>
           {hotCollections.map(collection => (
-            <SwiperItem key={collection.id} width="280px" style={{ flex: '0 0 280px' }}>
+            <SwiperItem key={collection.id} width={isMdScreen ? '250px' : '280px'} style={{ flex: `0 0 ${isMdScreen ? '250px' : '280px'}` }}>
               <Link href={`/market/collection/${collection.slug}`} passHref>
-                <div className={'w-full px-3 md:px-0 flex flex-col overflow-hidden rounded-sm mx-2 cursor-pointer hover:underline'} style={{ height: '240px' }}>
+                <div className={'w-full md:px-0 flex flex-col overflow-hidden rounded-sm cursor-pointer hover:underline'} style={{ height: '240px' }}>
                   <div className={'w-full relative'} style={{ height: '150px' }}>
                     <div className="absolute left-0 right-0 mx-auto w-14 -bottom-6 rounded-full border-2 border-gamefiDark-900 bg-gamefiDark-900" style={{ zIndex: '1' }}>
                       <img src={collection.logo} alt="" className="w-14 rounded-full object-cover"></img>

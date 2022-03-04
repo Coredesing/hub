@@ -1,5 +1,6 @@
 import { ObjectType } from '@/utils/types'
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
+import { useMediaQuery } from 'react-responsive';
 
 type Item = {
   key: any;
@@ -22,6 +23,7 @@ type Props = {
   onHandleFilter?: (show?: boolean) => any
 }
 const Dropdown = ({ items, selected, onChange, propLabel, propValue, isFilter, children, classes, propIcon, isShow, onHandleFilter }: Props) => {
+  const isSmScreen = useMediaQuery({ maxWidth: '640px' })
   const [show, setShow] = useState(false)
   const wrapperRef = useRef(null)
 
@@ -90,7 +92,7 @@ const Dropdown = ({ items, selected, onChange, propLabel, propValue, isFilter, c
         ? <div ref={wrapperRef} className={`origin-top-right right-0 absolute mt-2 z-10 rounded-sm py-1 shadow-lg focus:outline-none text-base ${!isFilter && 'bg-gamefiDark-650 w-40'}`}>
           {isFilter
             ? <div className="right-0 top-0">
-              <svg width="526" height="377" viewBox="0 0 526 377" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg width={isSmScreen ? "320" : "526"} height={isSmScreen ? "400" : "377"} viewBox={`0 0 ${isSmScreen ? '320 400' : '526 377'}`} fill="none" xmlns="http://www.w3.org/2000/svg">
                 <mask id="path-1-inside-1_964_15152" fill="white">
                   <path fillRule="evenodd" clipRule="evenodd" d="M101.5 0H526V39V375C526 376.105 525.105 377 524 377H2.00001C0.89544 377 0 376.105 0 375V39V15H89L101.5 0Z" />
                 </mask>

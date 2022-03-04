@@ -7,8 +7,10 @@ import Link from 'next/link'
 import Dropdown from '@/components/Base/Dropdown'
 import { FILTER_TIMES } from '../constant'
 import { ObjectType } from '@/utils/types'
+import { useMediaQuery } from 'react-responsive'
 
 const ListTrending = () => {
+  const isMdScreen = useMediaQuery({ maxWidth: '960px' })
   const [filter, setFilter] = useState({ start: '' })
 
   const url = useMemo(() => {
@@ -65,19 +67,19 @@ const ListTrending = () => {
           && <ListSwiper
             title="Trending"
             hasHeader={false}
-            showItemsNumber={4}
-            step={4} transition='0.5s'
-            style={{ display: 'flex', justifyContent: infos.length <= 4 ? 'center' : 'start', gap: '16px', }}>
+            showItemsNumber={isMdScreen ? 1 : 4} step={isMdScreen ? 1 : 4}
+            transition='0.5s'
+            style={{ display: 'flex', justifyContent: (infos.length > 4 || isMdScreen) ? 'start' : 'center', gap: '16px', }}>
             {
-              infos.map((item, i) => <SwiperItem key={`hot-offers-${i}`} width='280px'>
-                <div className={"w-full mx-3 " + Date.now() + Math.random()}>
+              infos.map((item, i) => <SwiperItem key={`hot-offers-${i}`} width={isMdScreen ? '250px' : '280px'}>
+                <div className={"w-full"}>
                   <NFTCard item={item} showOffer={true} showListing={true}></NFTCard>
                 </div>
               </SwiperItem>)
             }
           </ListSwiper>
         }
-        { (loading || infoLoading)
+        {(loading || infoLoading)
           ? (
             <div className="loader-wrapper mx-auto mt-14">
               <svg className="loader" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -87,7 +89,7 @@ const ListTrending = () => {
               Loading...
             </div>
           )
-          : <></> }
+          : <></>}
       </div>
     </div>
   )

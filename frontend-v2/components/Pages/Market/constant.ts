@@ -18,3 +18,21 @@ export const FILTER_TIMES = [
   {name: '7 Days', value: getTimeNumberLastDays(7)},
   {name: '30 Days', value: getTimeNumberLastDays(30)},
 ];
+
+export const filterPriceOptions = [
+  {
+    key: 'newest',
+    label: 'Newest',
+    value: ''
+  },
+  {
+    key: 'price-ascending',
+    label: 'Price Ascending',
+    value: 'asc'
+  },
+  {
+    key: 'price-descending',
+    label: 'Price Descending',
+    value: 'desc'
+  }
+]

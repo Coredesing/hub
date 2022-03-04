@@ -87,40 +87,44 @@ const DiscoverFilter = ({ onApply }: Props) => {
             </label>
           </div>
         </div> */}
-        <div className="mt-4 flex items-center align-middle">
+        <div className="mt-4 flex align-middle sm:flex-row sm:items-center flex-col items-start">
           <div className="font-medium w-24 mr-6">Currency</div>
-          {
-            currencies.map(c => <button key={c.symbol} className="flex items-center mr-4" onClick={() => setCurrency(c.address)}>
-              <input id={c.symbol} type="radio" name="radio" className="hidden" checked={currency === c.address} onChange={() => setCurrency(c.address)} />
-              <label htmlFor={c.symbol} className="flex items-center cursor-pointer">
-                <span className="w-4 h-4 inline-block mr-2 rounded-full border border-grey flex-no-shrink"></span>
-                {c.name}
-              </label>
-            </button>)
-          }
-        </div>
-        <div className="mt-4 flex items-center align-middle">
-          <div className="font-medium w-24 mr-6">Price</div>
-          <div className="relative flex">
-            <input
-              value={minPrice}
-              maxLength={10}
-              onChange={onChangeMinPrice}
-              disabled={!currency}
-              readOnly={!currency}
-              className="appearance-none border border-gamefiDark-400 rounded-sm bg-transparent px-2 py-1 focus:outline-none" style={{ width: '166px' }} placeholder="Min Price" />
-            <div className="absolute left-0 mt-2 rounded-r bg-gamefiDark-400" style={{ width: '2px', height: '18px' }}></div>
+          <div className='flex flex-wrap'>
+            {
+              currencies.map(c => <button key={c.symbol} className="flex items-center mr-4" onClick={() => setCurrency(c.address)}>
+                <input id={c.symbol} type="radio" name="radio" className="hidden" checked={currency === c.address} onChange={() => setCurrency(c.address)} />
+                <label htmlFor={c.symbol} className="flex items-center cursor-pointer">
+                  <span className="w-4 h-4 inline-block mr-2 rounded-full border border-grey flex-no-shrink"></span>
+                  {c.name}
+                </label>
+              </button>)
+            }
           </div>
-          <div className="mx-3">to</div>
-          <div className="relative flex">
-            <input
-              value={maxPrice}
-              maxLength={10}
-              onChange={onChangeMaxPrice}
-              disabled={!currency}
-              readOnly={!currency}
-              className="appearance-none border border-gamefiDark-400 rounded-sm bg-transparent px-2 py-1 focus:outline-none w-40" style={{ width: '166px' }} placeholder="Max Price" />
-            <div className="absolute left-0 mt-2 rounded-r bg-gamefiDark-400" style={{ width: '2px', height: '18px' }}></div>
+        </div>
+        <div className="mt-4 flex align-middle sm:flex-row sm:items-center flex-col items-start">
+          <div className="font-medium w-24 mr-6">Price</div>
+          <div className='flex flex-col sm:flex-row items-center'>
+            <div className="relative flex">
+              <input
+                value={minPrice}
+                maxLength={10}
+                onChange={onChangeMinPrice}
+                disabled={!currency}
+                readOnly={!currency}
+                className="appearance-none border border-gamefiDark-400 rounded-sm bg-transparent px-2 py-1 focus:outline-none" style={{ width: '166px' }} placeholder="Min Price" />
+              <div className="absolute left-0 mt-2 rounded-r bg-gamefiDark-400" style={{ width: '2px', height: '18px' }}></div>
+            </div>
+            <div className="mx-3 sm:block hidden">to</div>
+            <div className="relative flex sm:mt-0 mt-2">
+              <input
+                value={maxPrice}
+                maxLength={10}
+                onChange={onChangeMaxPrice}
+                disabled={!currency}
+                readOnly={!currency}
+                className="appearance-none border border-gamefiDark-400 rounded-sm bg-transparent px-2 py-1 focus:outline-none w-40" style={{ width: '166px' }} placeholder="Max Price" />
+              <div className="absolute left-0 mt-2 rounded-r bg-gamefiDark-400" style={{ width: '2px', height: '18px' }}></div>
+            </div>
           </div>
         </div>
         <div className="absolute bottom-8 right-5 flex items-center align-middle">

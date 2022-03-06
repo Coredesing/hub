@@ -70,47 +70,18 @@ const ApplyWhitelist = ({ poolData } : Props) => {
       return
     }
 
-    let solanaSignature
-    if (poolData.airdrop_network === 'solana' && formData.solana_wallet) {
-      solanaSignature = await solanaSign(formData.solana_wallet)
-      if (!solanaSignature) {
-        return
-      }
-    }
-
-    const formApply = {
-      wallet_address: account,
-      user_twitter: formData.twitter,
-      user_telegram: formData.telegram,
-      solana_address: formData.solana_wallet,
-      solana_signature: solanaSignature?.signature
-    }
-
-    const submitFormResponse = await fetcher(`${API_BASE_URL}/user/whitelist-apply/${poolData.id}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8'
-      },
-      body: JSON.stringify(formApply)
-    }).catch(e => console.log(e?.message))
-
-    if (submitFormResponse?.status !== 200) {
-      toast.error(submitFormResponse?.message || 'Submit Whitelist Form Failed!')
-      return
-    }
-
     const signature = await library.getSigner().signMessage(MESSAGE_SIGNATURE).catch(() => toast.error('Sign Message Failed!'))
     if (!signature) return
 
     const payload = {
-      campaign_id: poolData.id,
-      signature: signature || '',
       wallet_address: account,
-      solana_signature: solanaSignature?.signature,
-      solana_address: solanaSignature?.publicKey
+      user_twitter: formData.twitter,
+      user_telegram: formData.telegram,
+      solana_address: formData.solana_wallet || '',
+      signature: signature || ''
     }
 
-    const applyResponse = await fetcher(`${API_BASE_URL}/user/join-campaign`, {
+    const applyResponse = await fetcher(`${API_BASE_URL}/user/apply-join-campaign/${poolData?.id}`, {
       method: 'POST',
       headers: {
         msgSignature: MESSAGE_SIGNATURE || '',
@@ -119,64 +90,12 @@ const ApplyWhitelist = ({ poolData } : Props) => {
       body: JSON.stringify(payload)
     })
 
-    if (!applyResponse) {
+    if (!applyResponse || applyResponse?.status !== 200) {
       toast.error(applyResponse?.message || 'Apply Whitelist Failed!')
       return
     }
 
     applyResponse.status === 200 && toast.success('Apply Whitelist Successfully')
-  }
-
-  const solanaSign = async (address:any) => {
-    const encodedMessage = new TextEncoder().encode(MESSAGE_SIGNATURE)
-    // @ts-ignore
-    const provider = window.solana
-    if (!provider) {
-      toast.error('Phantom Wallet Not Found!')
-      return
-    }
-    const connectWallet = await provider.connect()
-    if (connectWallet?.publicKey?.toString() !== address) {
-      toast.error('You have not properly connected the linked solana wallet address.')
-      return
-    }
-    const signedMessage = await provider.request({
-      method: 'signMessage',
-      params: {
-        message: encodedMessage,
-        display: 'utf8'
-      }
-    })
-    return signedMessage
-  }
-
-  const handleSolanaConnect = async () => {
-    // @ts-ignore
-    const provider = window?.solana
-    if (!provider) {
-      toast.error('Phantom Wallet Not Found!')
-      return
-    }
-    try {
-      let resp
-      resp = await provider.connect()
-      if (!resp) {
-        resp = await provider.request({ method: 'connect' })
-      }
-      setFormData({ ...formData, solana_wallet: resp.publicKey.toString() })
-    } catch (err) {
-      toast.error('User Rejected!')
-    }
-  }
-
-  const handleSolanaDisconnect = () => {
-    // @ts-ignore
-    if (!window.solana) {
-      return
-    }
-    // @ts-ignore
-    window.solana.request({ method: 'disconnect' })
-    setFormData({ ...formData, solana_wallet: '' })
   }
 
   return (

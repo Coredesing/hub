@@ -254,6 +254,7 @@ class PoolService {
 
     let queryBuilder = this.buildQueryBuilder(filterParams)
       .orderBy('priority', 'DESC')
+      .orderBy('created_at', 'DESC')
       .orderBy('start_time', 'ASC')
 
     if(filterParams.campaign_status) {

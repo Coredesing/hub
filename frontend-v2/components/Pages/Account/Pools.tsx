@@ -176,15 +176,15 @@ const Pools = () => {
               pools.data.map((item, id) => <TableRow key={id} className="bg-gamefiDark-800 border-b-8 border-gamefiDark-900">
                 <TableCell className="border-none">
                   <div className='flex gap-2'>
-                    <img src={item.banner} alt="" width={40} height={40} className='object-contain' />
+                    <img src={item.banner} alt="" className='w-10' />
                     <Link href={poolHref(item)} passHref={true}>
                       <a className="hover:underline truncate font-medium">{item.title}</a>
                     </Link>
                   </div>
-                  <div className="text-xs mt-2">
+                  <div className="text-xs mt-2 sm:hidden">
                     {formatPoolStatus(item.campaign_status)} - {formatPoolType(item.is_private)}
                   </div>
-                  <div className="text-xs mt-2">
+                  <div className="text-xs mt-2 sm:hidden">
                     {allocationAmount(item)}
                   </div>
                 </TableCell>

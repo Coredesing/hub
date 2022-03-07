@@ -154,7 +154,7 @@ const _Carousel = ({ items, style, now }: Props) => {
               style={{ position: 'absolute', zIndex: '2', top: 'calc(50% - 170px)', cursor: 'pointer', left: '0', opacity: !hasPrev && '50%' }}
               className="hidden sm:block"
             >
-              <Image src={require('@/assets/images/icons/arrow-left.png')} alt="left" className="w-1/2 h-auto"/>
+              <Image src={require('@/assets/images/icons/arrow-left.png')} alt="left" width={32} height={300}/>
             </button>
           )
         }}
@@ -167,7 +167,7 @@ const _Carousel = ({ items, style, now }: Props) => {
               style={{ position: 'absolute', zIndex: '2', top: 'calc(50% - 170px)', cursor: 'pointer', right: '0', opacity: !hasNext && '50%' }}
               className="hidden sm:block"
             >
-              <Image src={require('@/assets/images/icons/arrow-right.png')} alt="right" className="w-1/2 h-auto"/>
+              <Image src={require('@/assets/images/icons/arrow-right.png')} alt="right" width={32} height={300}/>
             </button>
           )
         }

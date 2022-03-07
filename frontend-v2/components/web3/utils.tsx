@@ -335,7 +335,7 @@ export const currencyNative = (network: string) => {
   }
 }
 
-const currencyStable = (network: string) => {
+export const currencyStable = (network: string) => {
   switch (network) {
   case 'bsc': {
     return BUSD_BSC

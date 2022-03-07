@@ -43,7 +43,7 @@ const WalletConnector = (props) => {
           <div className="w-full sm:w-auto bg-gray-700 clipped-t-r py-2 px-6 rounded inline-flex justify-center cursor-pointer text-[13px]" onClick={() => setShowModal(true)}>
             <div className="inline-flex font-bold mr-2 items-center">
               <div className="inline-flex w-5 h-5 relative mr-2">
-                <Image src={network.image} layout="fill" alt={network.name}/>
+                <Image src={network.image} layout="fill" alt={network.name} />
               </div>
               {balance && balanceShort} {currencyNative}
             </div>
@@ -55,7 +55,7 @@ const WalletConnector = (props) => {
   )
 }
 
-export const NetworkSelector = ({ onChange, ...props }: { onChange: (network) => void; selected?: any }) => {
+export const NetworkSelector = ({ onChange, isMulti = true, isToggle = true, ...props }: { onChange: (network) => void; selected?: any; isMulti?: boolean; isToggle?: boolean }) => {
   const _networks = networks.filter(x => !x.testnet)
   const defaultValue = _networks.reduce((acc, val) => {
     acc[val.alias] = true
@@ -70,10 +70,26 @@ export const NetworkSelector = ({ onChange, ...props }: { onChange: (network) =>
     return !!selected[network?.alias]
   }, [selected])
   const toggle = network => {
-    const update = { ...selected }
-    update[network?.alias] = !update?.[network?.alias]
-    setSelected(update)
+    if (isMulti) {
+      const update = { ...selected }
+      update[network?.alias] = !update?.[network?.alias]
+      setSelected(update)
+    } else {
+      setSelected(s => {
+        const obj = {}
+        for (const p in s) {
+          obj[p] = false
+        }
+        if (isToggle) {
+          obj[network?.alias] = !obj?.[network?.alias]
+        } else {
+          obj[network?.alias] = true
+        }
+        return obj
+      })
+    }
   }
+  
   useEffect(() => {
     if (!onChange) {
       return

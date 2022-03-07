@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import style from './style.module.scss'
 import { useSwipeable } from 'react-swipeable'
+import { ObjectType } from '@/utils/types'
 
 type Props = {
   children: any;
@@ -9,7 +10,7 @@ type Props = {
   step?: number;
   hasHeader?: boolean;
   title?: string;
-}
+} & ObjectType
 
 type Page = {
   fromIndex: number;
@@ -17,9 +18,13 @@ type Page = {
   page: number;
 }
 
-export const SwiperItem = ({ children, width }: any) => {
-  return <div className={style.swiperItem} style={{ width: width }}>
-    { children }
+export const SwiperItem = ({ children, width, ...props }: any) => {
+  const _style = {
+    ...(props.style || {}),
+    width: width
+  }
+  return <div className={`${style.swiperItem} ${props.className || ''}`} style={_style}>
+    {children}
   </div>
 }
 
@@ -43,7 +48,7 @@ const ListSwiper = ({ ...props }: Props) => {
   }
 
   const pages = () => {
-    const pages : Page[] = []
+    const pages: Page[] = []
 
     for (let i = 0; i < totalItems; i += props.step) {
       pages.push({
@@ -57,7 +62,9 @@ const ListSwiper = ({ ...props }: Props) => {
 
   const handlerSwiper = useSwipeable({
     onSwipedLeft: () => updateIndex(activeIndex.from + props.step),
-    onSwipedRight: () => updateIndex(activeIndex.from - props.step)
+    onSwipedRight: () => updateIndex(activeIndex.from - props.step),
+    trackMouse: true,
+    preventDefaultTouchmoveEvent: true
   })
 
   return (
@@ -85,30 +92,33 @@ const ListSwiper = ({ ...props }: Props) => {
           </>
           : <></>
       }
-      <div {...handlerSwiper} className="relative mt-14 w-full">
+      <div {...handlerSwiper} className="relative mt-14 w-full md:px-0 px-12">
         <div className={style.carousel}>
-          <div className={style.inner} style={{ transform: `translateX(-${activeIndex.from / props.showItemsNumber * 100}%)`, transition: `transform ${props.transition}`, display: `${totalItems < props.showItemsNumber ? 'flex' : ''}` }}>
-            {React.Children.map(props.children, (child) => React.cloneElement(child, { width: `${100 / props.showItemsNumber}%` }))}
+          <div className={style.inner} style={{ transform: `translateX(-${activeIndex.from / props.showItemsNumber * 100}%)`, transition: `transform ${props.transition}`, display: `${totalItems < props.showItemsNumber ? 'flex' : ''}`, ...(props.style || {}) }}>
+            {React.Children.map(props.children, (child) => {
+              const _props = { ...(child.props || {}), width: child.props?.width || `${100 / props.showItemsNumber}%` }
+              return React.cloneElement(child, _props)
+            })}
           </div>
         </div>
-        <button className={`absolute -left-12 top-0 bottom-0 ${activeIndex.from <= 0 ? 'opacity-20' : ''}`} onClick={() => updateIndex(activeIndex.from - props.step)}>
+        <button className={`absolute left-0 md:-left-12 top-0 bottom-0 ${activeIndex.from <= 0 ? 'opacity-20' : ''}`} onClick={() => updateIndex(activeIndex.from - props.step)}>
           <svg width="32" height="122" viewBox="0 0 32 122" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22.5 61.5H2.5" stroke="white" strokeMiterlimit="10"/>
-            <path d="M9.5 68.5L2.5 61.5L9.5 54.5" stroke="white" strokeMiterlimit="10" strokeLinecap="square"/>
-            <path opacity="0.4" d="M31 23.5L20 34.5" stroke="#A0A4B2"/>
-            <path d="M31 0.5V8.5" stroke="white"/>
-            <path opacity="0.4" d="M31 99L20 88" stroke="#A0A4B2"/>
-            <path d="M31 122V114" stroke="white"/>
+            <path d="M22.5 61.5H2.5" stroke="white" strokeMiterlimit="10" />
+            <path d="M9.5 68.5L2.5 61.5L9.5 54.5" stroke="white" strokeMiterlimit="10" strokeLinecap="square" />
+            <path opacity="0.4" d="M31 23.5L20 34.5" stroke="#A0A4B2" />
+            <path d="M31 0.5V8.5" stroke="white" />
+            <path opacity="0.4" d="M31 99L20 88" stroke="#A0A4B2" />
+            <path d="M31 122V114" stroke="white" />
           </svg>
         </button>
-        <button className={`absolute -right-12 top-0 bottom-0 ${activeIndex.to >= totalItems - 1 ? 'opacity-20' : ''}`} onClick={() => updateIndex(activeIndex.from + props.step)}>
+        <button className={`absolute right-0 md:-right-12 top-0 bottom-0 ${activeIndex.to >= totalItems - 1 ? 'opacity-20' : ''}`} onClick={() => updateIndex(activeIndex.from + props.step)}>
           <svg width="32" height="122" viewBox="0 0 32 122" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9.5 60.5L29.5 60.5" stroke="white" strokeMiterlimit="10"/>
-            <path d="M22.5 53.5L29.5 60.5L22.5 67.5" stroke="white" strokeMiterlimit="10" strokeLinecap="square"/>
-            <path opacity="0.4" d="M1 98.5L12 87.5" stroke="#A0A4B2"/>
-            <path d="M1 121.5L1 113.5" stroke="white"/>
-            <path opacity="0.4" d="M1 23L12 34" stroke="#A0A4B2"/>
-            <path d="M1 0L0.999999 8" stroke="white"/>
+            <path d="M9.5 60.5L29.5 60.5" stroke="white" strokeMiterlimit="10" />
+            <path d="M22.5 53.5L29.5 60.5L22.5 67.5" stroke="white" strokeMiterlimit="10" strokeLinecap="square" />
+            <path opacity="0.4" d="M1 98.5L12 87.5" stroke="#A0A4B2" />
+            <path d="M1 121.5L1 113.5" stroke="white" />
+            <path opacity="0.4" d="M1 23L12 34" stroke="#A0A4B2" />
+            <path d="M1 0L0.999999 8" stroke="white" />
           </svg>
         </button>
       </div>

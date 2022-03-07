@@ -12,13 +12,15 @@ import { useMediaQuery } from 'react-responsive'
 const ListTrending = () => {
   const isMdScreen = useMediaQuery({ maxWidth: '960px' })
   const [filter, setFilter] = useState({ start: '' })
-
+  const [infos, setInfos] = useState([])
   const url = useMemo(() => {
     const query = new URLSearchParams(filter).toString()
     return `/marketplace/hot-offers?limit=10&page=1&${query}`
   }, [filter])
+  useEffect(() => {
+    setInfos([])
+  }, [url])
   const { response, loading } = useFetch(url)
-  const [infos, setInfos] = useState([])
   const onSetInfo = useCallback((item: ObjectType) => {
     setInfos((arr) => [
       ...arr,

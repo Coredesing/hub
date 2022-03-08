@@ -305,11 +305,10 @@ export const useProfile = (walletAddress?: string) => {
   }
 }
 
-
 export const isDifferentObj = (obj1: object, obj2: object, excludeProps?: string[]) => {
   if (typeof obj1 !== null && typeof obj1 === 'object' && typeof obj2 !== null && typeof obj2 === 'object') {
     let objCheck: ObjectType
-    let objForEach: ObjectType = Object.keys(obj1).length > Object.keys(obj2).length ? (objCheck = obj2, obj1) : (objCheck = obj1, obj2)
+    const objForEach: ObjectType = Object.keys(obj1).length > Object.keys(obj2).length ? (objCheck = obj2, obj1) : (objCheck = obj1, obj2)
     for (const prop in objForEach) {
       if (excludeProps?.length && excludeProps.includes(prop)) {
         continue

@@ -4,7 +4,6 @@ export const marketActivitiesActions = {
   FAILURE: 'MARKET_ACTIVITIES_FAILURE'
 }
 
-
 export const discoverMarketActions = {
   LOADING: 'DISCOVER_MARKET_LOADING',
   SUCCESS: 'DISCOVER_MARKET_SUCCESS',

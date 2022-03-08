@@ -126,10 +126,10 @@ export const useDiscoverMarket = () => {
     isGetInfoFromContract,
     allowSetOneByOne
   }: {
-    type: string,
-    filter: ObjectType,
-    isGetInfoFromContract?: boolean,
-    allowSetOneByOne?: boolean
+    type: string;
+    filter: ObjectType;
+    isGetInfoFromContract?: boolean;
+    allowSetOneByOne?: boolean;
   }) => {
     try {
       const oldData = state.data || {}
@@ -195,17 +195,12 @@ export const useDiscoverMarket = () => {
         }))
         if (allowSetOneByOne) return
       }
-
       dispatch({ type: discoverMarketActions.SUCCESS, payload: setListData(listData) })
-
     } catch (error) {
       console.log('error', error)
       dispatch({ type: discoverMarketActions.FAILURE, payload: error })
-
     }
   }, [state])
-
-
 
   return {
     state,
@@ -229,11 +224,11 @@ export const useCollectionsMarket = () => {
     allowSetOneByOne,
     slug
   }: {
-    type: string,
-    filter: ObjectType,
-    isGetInfoFromContract?: boolean,
-    allowSetOneByOne?: boolean,
-    slug: string
+    type: string;
+    filter: ObjectType;
+    isGetInfoFromContract?: boolean;
+    allowSetOneByOne?: boolean;
+    slug: string;
   }) => {
     try {
       const oldData = state.data || {}
@@ -305,15 +300,11 @@ export const useCollectionsMarket = () => {
         if (allowSetOneByOne) return
       }
       dispatch({ type: discoverMarketActions.SUCCESS, payload: setListData(listData) })
-
     } catch (error) {
       console.log('error', error)
       dispatch({ type: discoverMarketActions.FAILURE, payload: error })
-
     }
   }, [state])
-
-
 
   return {
     state,
@@ -322,6 +313,5 @@ export const useCollectionsMarket = () => {
     }
   }
 }
-
 
 export default useMarketActivities

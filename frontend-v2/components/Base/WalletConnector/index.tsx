@@ -4,6 +4,7 @@ import { useMyWeb3 } from '@/components/web3/context'
 import Image from 'next/image'
 import { useWalletContext } from './provider'
 import { shorten } from '@/utils'
+import { ObjectType } from '@/utils/types'
 
 const WalletConnector = (props) => {
   const { network, account, balance, currencyNative, balanceShort } = useMyWeb3()
@@ -55,7 +56,7 @@ const WalletConnector = (props) => {
   )
 }
 
-export const NetworkSelector = ({ onChange, isMulti = true, isToggle = true, ...props }: { onChange: (network) => void; selected?: any; isMulti?: boolean; isToggle?: boolean }) => {
+export const NetworkSelector = ({ onChange, isMulti = true, isToggle = true, ...props }: { onChange: (network) => void; selected?: any; isMulti?: boolean; isToggle?: boolean } & ObjectType) => {
   const _networks = networks.filter(x => !x.testnet)
   const defaultValue = _networks.reduce((acc, val) => {
     acc[val.alias] = true
@@ -100,7 +101,7 @@ export const NetworkSelector = ({ onChange, isMulti = true, isToggle = true, ...
 
   return (
     <div className="font-casual">
-      <div className="flex gap-x-1.5 bg-gamefiDark-700 rounded p-1.5">
+      <div className={`flex gap-x-1.5 bg-gamefiDark-700 rounded p-1.5 ${props.className || ''}`} style={props.style}>
         {_networks.map(network => {
           return <div key={network.alias} className={'flex items-center rounded flex-none cursor-pointer py-1 px-2'} onClick={() => toggle(network)} style={{ backgroundColor: isActive(network) ? (network.colorAlt || network.color) : 'transparent' }}>
             <div className={`flex-none w-4 h-4 relative contrast-200 brightness-200 grayscale ${isActive(network) ? 'opacity-100' : 'opacity-50'} hover:opacity-100`}><Image src={network.image2} alt={network.name} layout="fill"/></div>

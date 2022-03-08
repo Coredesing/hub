@@ -83,8 +83,8 @@ const Dropdown = ({ items, selected, onChange, propLabel, propValue, isFilter, c
               <path d="M15.5 4.5L8 12L0.5 4.5" stroke="#ffffff" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
-          : <button className={`${styles.button} flex align-middle items-center bg-gamefiDark-650 text-white font-bold uppercase px-4 h-9 rounded`} onClick={handleShowFilter}>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          : <button className={`${styles.button} flex align-middle items-center bg-gamefiDark-650 text-white font-bold uppercase px-4 rounded`} onClick={handleShowFilter}>
+            <svg width="18" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M14.9084 1.48387C14.7596 1.18725 14.4569 1 14.1252 1H1.87476C1.54313 1 1.24036 1.18725 1.09161 1.48387C0.944602 1.7805 0.976103 2.13488 1.17474 2.4L6.24993 9.16638V14.125C6.24993 14.6089 6.64107 15 7.12497 15H8.87503C9.35893 15 9.75007 14.6089 9.75007 14.125V9.16638L14.8253 2.4C15.0239 2.13488 15.0554 1.7805 14.9084 1.48387Z" fill="white" />
             </svg>
           </button>

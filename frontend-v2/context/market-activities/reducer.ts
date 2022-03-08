@@ -24,3 +24,14 @@ export const discoverMarketReducer = (state, action) => {
       failure: discoverMarketActions.FAILURE
     })
 }
+
+export const collectionMarketReducer = (state, action) => {
+  return initReducer(
+    state,
+    action,
+    {
+      loading: discoverMarketActions.LOADING,
+      success: discoverMarketActions.SUCCESS,
+      failure: discoverMarketActions.FAILURE
+    })
+}

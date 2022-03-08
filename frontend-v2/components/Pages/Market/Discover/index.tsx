@@ -109,8 +109,8 @@ const Discover = () => {
               </svg>
             </div>
           </div>
-          <div className="flex items-stretch flex-wrap gap-2 sm:justify-self-auto justify-end sm:w-auto w-full">
-            <div><NetworkSelector isMulti={false} isToggle={false} selected={{ [filter.network]: true }} onChange={handleChangeNetwork}></NetworkSelector></div>
+          <div className="flex items-center flex-wrap gap-2 sm:justify-self-auto justify-end sm:w-auto w-full">
+            <div><NetworkSelector isMulti={false} isToggle={false} selected={{ [filter.network]: true }} onChange={handleChangeNetwork} style={{ height: '38px' }}></NetworkSelector></div>
             <div className='flex'>
               <div>
                 <Dropdown

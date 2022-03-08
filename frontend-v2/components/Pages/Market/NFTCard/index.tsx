@@ -4,6 +4,7 @@ import { networkImage } from '../utils'
 import { ethers } from 'ethers'
 import { getCurrencyByTokenAddress } from '@/components/web3'
 import ImageLoader from '@/components/Base/ImageLoader'
+import { formatNumber } from '@/utils'
 
 type Props = {
   item: any;
@@ -34,7 +35,7 @@ const NFTCard = ({ item, ...props }: Props) => {
         <div>
           <Link href={`/market/${item?.slug}/${item?.token_id || item?.id}`} passHref>
             <a className="font-bold text-xl tracking-wide cursor-pointer hover:underline">
-              #{item?.token_id || item?.id || '-/-'}
+              #{formatNumber(item?.token_id || item?.id, 3) || '-/-'}
             </a>
           </Link>
         </div>

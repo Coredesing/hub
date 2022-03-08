@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import useSWR, { SWRResponse } from 'swr'
 import { API_BASE_URL } from '@/utils/constants'
+import { ObjectType } from './types'
 
 export const isImageFile = (str: string) => (/\.(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(str)
 export const isVideoFile = (str: string) => (/\.(mp4)$/i).test(str)
@@ -75,8 +76,8 @@ export const debounce = (fn: (any) => void, timer: number) => {
 }
 
 export const formatNumber = (num: number, range = 2) => {
-  const lengNum = String(num).length
-  if (lengNum < range) {
+  const lengNum = String(num ?? '').length
+  if (lengNum && lengNum < range) {
     const arr = new Array(range - lengNum).fill('0', 0, range - lengNum)
     return arr.join('') + num.toString()
   }
@@ -302,4 +303,22 @@ export const useProfile = (walletAddress?: string) => {
     error,
     errorMessage
   }
+}
+
+
+export const isDifferentObj = (obj1: object, obj2: object, excludeProps?: string[]) => {
+  if (typeof obj1 !== null && typeof obj1 === 'object' && typeof obj2 !== null && typeof obj2 === 'object') {
+    let objCheck: ObjectType
+    let objForEach: ObjectType = Object.keys(obj1).length > Object.keys(obj2).length ? (objCheck = obj2, obj1) : (objCheck = obj1, obj2)
+    for (const prop in objForEach) {
+      if (excludeProps?.length && excludeProps.includes(prop)) {
+        continue
+      }
+      if (objForEach[prop] !== objCheck[prop]) {
+        return true
+      }
+    }
+    return false
+  }
+  throw new Error('Object input invalid')
 }

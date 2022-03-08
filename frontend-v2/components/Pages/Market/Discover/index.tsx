@@ -1,71 +1,84 @@
 import Dropdown from '@/components/Base/Dropdown'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import { NetworkSelector } from '@/components/Base/WalletConnector'
 import DiscoverFilter from './DiscoverFilter'
 import { useNFTInfos } from '../utils'
 import NFTCard from '../NFTCard'
 import Pagination from '../Pagination'
-import { useFetch } from '@/utils'
 import { ObjectType } from '@/utils/types'
 import { filterPriceOptions } from '../constant'
+import { useAppContext } from '@/context/index'
+import Activities from '../Activities'
 
 const Discover = () => {
   const [showDiscover, setShowDiscover] = useState('items')
+  const type = showDiscover === 'items' ? 'discover' : 'activities'
+  const { state: discoversMarketState, actions } = useAppContext().discoverMarket
+  const discoverData = discoversMarketState?.data?.[type] || {}
   const [filter, setFilter] = useState<ObjectType>({
     page: 1,
-    limit: 8,
     network: 'bsc',
     price_order: '',
     currency: '',
     min_price: '',
     max_price: ''
   })
+
   const handleChangeNetwork = useCallback((network: any) => {
     if (network !== null && typeof network === 'object') {
       for (const name in network) {
-        if (network[name]) {
+        if (network[name] && filter.network !== name) {
           setFilter(f => ({ ...f, network: name }))
           break
         }
       }
     }
-  }, [])
-  const [infos, setInfos] = useState([])
-
-  const url = useMemo(() => {
-    const query = new URLSearchParams(filter).toString()
-    return `/marketplace/discover?${query}`
   }, [filter])
+
   useEffect(() => {
-    setInfos([])
-  }, [url])
-  const { response, loading } = useFetch(url)
-  const onSetInfo = useCallback((item: ObjectType) => {
-    setInfos((arr) => [...arr, item])
-  }, [setInfos])
-  const { data: items, loading: infoLoading } = useNFTInfos(response?.data?.data, onSetInfo)
-  useEffect(() => {
-    if (items) {
-      // setInfos(items)
+    const isDiscover = type === 'discover'
+    const applyFilter = {
+      ...filter,
+      limit: isDiscover ? 8 : 10
     }
-  }, [items])
+    actions.setDiscoverMarket({ type, filter: applyFilter, isGetInfoFromContract: true, allowSetOneByOne: isDiscover })
+  }, [filter, type])
+
+  // const [infos, setInfos] = useState([])
+  // const url = useMemo(() => {
+  //   const query = new URLSearchParams(filter).toString()
+  //   return `/marketplace/discover?${query}`
+  // }, [filter])
+  // useEffect(() => {
+  //   setInfos([])
+  // }, [url])
+  // const { response, loading } = useFetch(url)
+  // const onSetInfo = useCallback((item: ObjectType) => {
+  //   setInfos((arr) => [...arr, item])
+  // }, [setInfos])
+  // const { data: items, loading: infoLoading } = useNFTInfos(response?.data?.data, onSetInfo)
+  // useEffect(() => {
+  //   if (items) {
+  // setInfos(items)
+  //   }
+  // }, [items])
 
   const onChangePage = (page: number) => {
     setFilter(f => ({ ...f, page }))
   }
 
   const onFilterPrice = (item: ObjectType) => {
-    setFilter(f => ({ ...f, price_order: item.value }))
+    setFilter(f => ({ ...f, price_order: item.value, page: 1 }))
   }
 
   const onAdvanceFilter = useCallback((params: ObjectType) => {
-    setFilter(f => ({ ...f, ...params }))
+    setFilter(f => ({ ...f, ...params, page: 1 }))
   }, [])
 
   return (
     <div className="bg-black w-full pb-20">
-      <div className="md:px-4 lg:px-16 md:container mx-2 mt-20">
+      <div className="md:px-4 lg:px-16 md:container mx-auto mt-20">
         <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
           <div className="inline-block top-0 left-0 right-0 uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
             Discover
@@ -114,18 +127,38 @@ const Discover = () => {
             </div>
           </div>
         </div>
-        <div className="mt-14 grid gap-4 justify-center" style={{ gridTemplateColumns: 'repeat(auto-fill, 280px)' }}>
-          {
-            infos.length > 0
-              ? infos.map((info, i) => (
-                <NFTCard key={`discover-${i}`} item={info} showListing={true} showOffer={true}></NFTCard>
-              ))
-              : <></>
-          }
-        </div>
         {
-          +response?.data?.lastPage > 1 && <Pagination page={response?.data?.page} pageLast={response?.data?.lastPage} setPage={onChangePage} className="w-full justify-center mt-8 mb-8" />
+          showDiscover === 'items' && <>
+            <div className="mt-14 grid gap-4 justify-center" style={{ gridTemplateColumns: 'repeat(auto-fill, 280px)' }}>
+              {
+                (discoverData?.currentList || []).length > 0
+                  ? discoverData.currentList.map((info, i) => (
+                    <NFTCard key={`discover-${i}`} item={info} showListing={true} showOffer={true}></NFTCard>
+                  ))
+                  : <></>
+              }
+            </div>
+          </>
         }
+        {
+          showDiscover === 'activities' && <div className='mt-10'>
+            <Activities data={discoverData?.currentList || []} />
+          </div>
+        }
+        {
+          +discoverData?.totalPage > 1 && <Pagination page={discoverData.currentPage} pageLast={discoverData.totalPage} setPage={onChangePage} className="w-full justify-center mt-8 mb-8" />
+        }
+        {discoversMarketState?.loading
+          ? (
+            <div className="loader-wrapper mx-auto mt-14">
+              <svg className="loader" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Loading...
+            </div>
+          )
+          : <></>}
         {/* {!loading && !infoLoading && infos?.length
           ? <>
 
@@ -141,7 +174,7 @@ const Discover = () => {
             <Pagination page={response?.data?.page} pageLast={response?.data?.lastPage} setPage={onChangePage} className="w-full justify-center mt-8 mb-8" />
           </>
           : <></>} */}
-        {(loading || infoLoading)
+        {/* {(loading || infoLoading)
           ? (
             <div className="loader-wrapper mx-auto mt-14">
               <svg className="loader" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -151,7 +184,7 @@ const Discover = () => {
               Loading...
             </div>
           )
-          : <></>}
+          : <></>} */}
       </div>
     </div>
   )

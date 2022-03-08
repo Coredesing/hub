@@ -1,6 +1,6 @@
-import { useReducer } from 'react'
-import { marketActivitiesActions } from './constant'
-import tiersReducer from './reducer'
+import { useCallback, useReducer } from 'react'
+import { discoverMarketActions, marketActivitiesActions } from './constant'
+import tiersReducer, { discoverMarketReducer } from './reducer'
 import axios from '@/utils/axios'
 import { BigNumber, Contract } from 'ethers'
 import ERC721ABI from 'components/web3/abis/Erc721.json'
@@ -8,7 +8,13 @@ import ERC20ABI from 'components/web3/abis/ERC20.json'
 import { getNetworkByAlias, getLibrary } from 'components/web3'
 import { networkConnector } from 'components/web3/connectors'
 import { Web3Provider } from '@ethersproject/providers'
-import { currencyNative, currencyStable } from 'components/web3/utils'
+import { currencyNative, currencyStable, getLibraryDefaultFlexible, useLibraryDefaultFlexible } from 'components/web3/utils'
+import { fetcher, isDifferentObj } from '@/utils'
+import { API_BASE_URL } from '@/utils/constants'
+import { ObjectType } from '@/utils/types'
+import { getNftInfor } from '@/components/Pages/Market/utils'
+import Web3 from 'web3'
+const web3 = new Web3(Web3.givenProvider)
 
 type MarketDetailFilter = {
   limit?: number;
@@ -106,5 +112,113 @@ const useMarketActivities = () => {
     }
   }
 }
+
+export const useDiscoverMarket = () => {
+  const initState = {
+    data: null,
+    loading: false,
+    error: ''
+  }
+  const [state, dispatch] = useReducer(discoverMarketReducer, initState)
+  const setDiscoverMarket = useCallback(async ({
+    type,
+    filter,
+    isGetInfoFromContract,
+    allowSetOneByOne
+  }: {
+    type: string,
+    filter: ObjectType,
+    isGetInfoFromContract?: boolean,
+    allowSetOneByOne?: boolean
+  }) => {
+    try {
+      const oldData = state.data || {}
+      dispatch({ type: discoverMarketActions.LOADING, payload: { ...oldData } })
+      const oldTypeData = oldData[type] || {}
+      const oldFilter = oldTypeData.filter || {}
+      if (oldTypeData.data?.[filter.page]?.length && !isDifferentObj(oldFilter, filter, ['page'])) {
+        oldTypeData.currentPage = filter.page
+        oldTypeData.currentList = oldTypeData?.data?.[filter.page]
+        oldTypeData.filter = { ...(oldTypeData.filter || {}), ...filter }
+        dispatch({ type: discoverMarketActions.SUCCESS, payload: { ...oldData, [type]: { ...oldTypeData } } })
+        return
+      }
+
+      // check old filter and newFIlter check page old and new
+      filter.limit = filter.limit || 10
+      const query = new URLSearchParams(filter).toString()
+      const response = await fetcher(`${API_BASE_URL}/marketplace/${type}?${query}`)
+      const result = response.data || {}
+      const totalRecords = +result.total || 0
+      const totalPage = Math.ceil(totalRecords / filter.limit)
+      const currentPage = +result.page || 1
+      let listData = result.data
+      if (isGetInfoFromContract) {
+        const provider = await getLibraryDefaultFlexible(web3.currentProvider, 'bsc')
+        const list = []
+        listData = await Promise.all(listData.map(async item => {
+          const d = await getNftInfor(item, provider)
+          item = d.item
+          if (allowSetOneByOne) {
+            list.push(item)
+            const setData = {
+              ...oldData,
+              [type]: {
+                ...oldTypeData,
+                filter: { ...oldFilter, ...filter },
+                total: totalRecords,
+                currentPage,
+                totalPage,
+                currentList: list,
+                data: {
+                  ...(oldTypeData?.data || {}),
+                  [currentPage]: list
+                }
+              }
+            }
+            dispatch({
+              type: list.length < listData.length ? discoverMarketActions.LOADING : discoverMarketActions.SUCCESS,
+              payload: { ...setData }
+            })
+          }
+          return item
+        }))
+        if (allowSetOneByOne) return
+      }
+
+      const setData = {
+        ...oldData,
+        [type]: {
+          ...oldTypeData,
+          filter: { ...oldFilter, ...filter },
+          total: totalRecords,
+          currentPage,
+          totalPage,
+          currentList: listData,
+          data: {
+            ...(oldTypeData?.data || {}),
+            [currentPage]: listData
+          }
+        }
+      }
+      dispatch({ type: discoverMarketActions.SUCCESS, payload: { ...setData } })
+
+    } catch (error) {
+      console.log('error', error)
+      dispatch({ type: discoverMarketActions.FAILURE, payload: error })
+
+    }
+  }, [state])
+
+
+
+  return {
+    state,
+    actions: {
+      setDiscoverMarket
+    }
+  }
+}
+
 
 export default useMarketActivities

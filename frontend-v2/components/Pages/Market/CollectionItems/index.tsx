@@ -49,9 +49,6 @@ const CollectionItems = ({ slug }: { slug: string }) => {
   }, [setInfos])
 
   const { loading: infoLoading } = useNFTInfos(response?.data?.data, onSetInfo)
-  // useEffect(() => {
-
-  // }, [items, infoLoading])
 
   const onChangePage = (page: number) => {
     setFilter(f => ({ ...f, page }))

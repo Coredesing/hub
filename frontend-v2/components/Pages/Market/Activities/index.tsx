@@ -87,11 +87,13 @@ const Activities = ({
               <TableCell className={styles.activityTableCell}>
                 <a href={getTXLink(item.network, item.transaction_hash)} target={'_blank'} rel='noreferrer' className='flex items-center gap-2 text-13px'>
                   {formatHumanReadableTime(+item.dispatch_at * 1000, Date.now())}
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M11.5 8.5V10C11.5 10.3978 11.342 10.7794 11.0607 11.0607C10.7794 11.342 10.3978 11.5 10 11.5H2C1.60218 11.5 1.22064 11.342 0.93934 11.0607C0.658035 10.7794 0.5 10.3978 0.5 10V2C0.5 1.60218 0.658035 1.22064 0.93934 0.93934C1.22064 0.658035 1.60218 0.5 2 0.5H3.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M6.5 0.5H11.5V5.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M11.5 0.5L5.5 6.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                  <span className='block w-3 h-3'>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M11.5 8.5V10C11.5 10.3978 11.342 10.7794 11.0607 11.0607C10.7794 11.342 10.3978 11.5 10 11.5H2C1.60218 11.5 1.22064 11.342 0.93934 11.0607C0.658035 10.7794 0.5 10.3978 0.5 10V2C0.5 1.60218 0.658035 1.22064 0.93934 0.93934C1.22064 0.658035 1.60218 0.5 2 0.5H3.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M6.5 0.5H11.5V5.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M11.5 0.5L5.5 6.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
                 </a>
               </TableCell>
             </TableRow>)

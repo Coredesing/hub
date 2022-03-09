@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { ObjectType } from '@/utils/types'
 import PoolDetail from '@/components/Base/PoolDetail'
 import { TabPanel, Tabs } from '@/components/Base/Tabs'
-import { getTXLink, MARKETPLACE_CONTRACT, useWeb3Default } from '@/components/web3'
+import { getNetworkByAlias, getTXLink, MARKETPLACE_CONTRACT, useWeb3Default } from '@/components/web3'
 import { useMyWeb3 } from '@/components/web3/context'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { formatHumanReadableTime, formatNumber, shortenAddress, fetcher } from '@/utils'
@@ -31,6 +31,7 @@ import LoadingOverlay from 'components/Base/LoadingOverlay'
 import NoItemFound from '@/components/Base/NoItemFound'
 import { ClipLoader } from 'react-spinners'
 import Image from 'next/image'
+import Link from 'next/link'
 
 type Props = {
   projectInfo: ObjectType;
@@ -38,7 +39,7 @@ type Props = {
 } & ObjectType;
 
 const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
-  const { account, library } = useMyWeb3()
+  const { account, library, chainID } = useMyWeb3()
   const { library: libraryDefaultTemporary } = useWeb3Default()
   const [openTransferModal, setOpenTransferModal] = useState(false)
   const [openSellNFTModal, setOpenSellNFTModal] = useState(false)
@@ -62,6 +63,14 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   const isAllowedDelist = !!account && account === tokenOnSale.owner
   const isAllowedSell = !!account && account === addressOwnerNFT
   const isAllowBuyOffer = !!account && tokenOnSale.owner && account !== addressOwnerNFT && account !== tokenOnSale.owner && !BigNumber.from(tokenOnSale.owner).isZero()
+  const networkPool = useMemo(() => {
+    const network = getNetworkByAlias(projectInfo.network)
+    return network
+  }, [projectInfo])
+
+  const isValidChain = useMemo(() => {
+    return networkPool?.id === chainID
+  }, [networkPool, chainID])
 
   const currencies = useMemo(() => {
     return projectInfo.accepted_tokens
@@ -175,11 +184,15 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
         const offerList: ObjectType<any>[] = []
         await Promise.all(offers.map((item: any) => new Promise(async (resolve) => {
           if (item.currency === tokenOnSale.currency) {
-            if (!currencies[item.currency]) {
-              const erc20Contract = new Contract(item.currency, ERC20ABI, libraryDefaultTemporary)
-              item.currencySymbol = await erc20Contract.symbol()
-            } else {
-              item.currencySymbol = currencyNative(projectInfo.network)?.symbol
+            try {
+              if (!BigNumber.from(item.currency).isZero()) {
+                const erc20Contract = new Contract(item.currency, ERC20ABI, libraryDefaultTemporary)
+                item.currencySymbol = await erc20Contract.symbol()
+              } else {
+                item.currencySymbol = currencyNative(projectInfo.network)?.symbol
+              }
+            } catch (error) {
+              console.debug('error', error)
             }
             offerList.push(item)
           }
@@ -273,7 +286,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
       setOpenTransferModal(false)
     }
     if (action === onOfferNFT.name) {
-      // setOpenMakeOfferModal(false)
+      setOpenMakeOfferModal(false)
     }
     if (action === onListingNFT.name) {
       setOpenSellNFTModal(false)
@@ -356,7 +369,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   }
 
   const onAcceptOffer = async (item: ObjectType<any>) => {
-    // handleCallContract(onAcceptOffer.name, () => MarketplaceContractSigner.takeOffer(id, projectAddress, new BigNumber(item.raw_amount).toFixed(), addressCurrencyToBuy, item.buyer));
+    handleCallContract(onAcceptOffer.name, () => MarketplaceContractSigner.takeOffer(item.token_id, projectInfo.token_address, BigNumber.from(item.raw_amount).toString(), tokenOnSale.currency, item.buyer));
   }
 
   const onRejectOffer = () => {
@@ -456,12 +469,14 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
       bodyDetailContent={<>
         <h2 className="font-semibold text-4xl mb-2 uppercase"> {tokenInfo.title || tokenInfo.name || `#${formatNumber(tokenInfo.id, 3)}`}</h2>
         <div className="divider bg-white/20 w-full mt-3 mb-8" style={{ height: '1px' }}></div>
-        <div className='grid grid-cols-2 gap-3 mb-10'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10'>
           <div className='flex gap-2 items-center'>
             <img src={projectInfo.logo} alt="" className='w-11 h-11 rounded-full bg-black' />
             <div>
               <label htmlFor="" className="block font-bold text-white/50 text-13px uppercase">Creator</label>
-              <span className="block text-base font-casual">{projectInfo.name}</span>
+              <Link passHref href={`/market/collection/${projectInfo.slug}`}>
+                <a className="block text-base font-casual">{projectInfo.name}</a>
+              </Link>
             </div>
           </div>
           <div className='flex gap-2 items-center'>
@@ -482,7 +497,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
                 {
                   isAllowedDelist && <div
                     onClick={!lockingAction.lock ? onDelistNFT : undefined}
-                    className={clsx('ml-4 px-4 py-1 flex items-center gap-1 rounded ', {
+                    className={clsx('ml-4 px-4 py-1 flex items-center gap-1 rounded-sm ', {
                       'bg-red-600 cursor-pointer': !lockingAction.lock,
                       'bg-white/25 cursor-not-allowed': lockingAction.lock
                     })}
@@ -696,10 +711,37 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
                           {utils.formatEther(offer.raw_amount)} {offer.currencySymbol}
                         </span>
                         {
-                          offer.buyer === account &&
-                          <button onClick={onRejectOffer} className='border-0 outline-none text-13px text-gamefiGreen-700 ml-6'>
-                            Cancel
-                          </button>
+                          offer.event_type === 'TokenOffered'
+                            && isValidChain
+                            && tokenOnSale.currency === offer.currency
+                            && tokenOnSale.owner && account
+                            && BigNumber.from(tokenOnSale.owner).eq(account)
+                            ? <button
+                              onClick={() => onAcceptOffer(offer)}
+                              style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%, 0 0)' }}
+                              className={clsx('border-0 outline-none text-13px ml-6 text-black px-4 py-1 flex items-center gap-1 rounded-sm font-semibold',
+                                {
+                                  'bg-gamefiGreen-700 cursor-pointer': !lockingAction.lock,
+                                  'bg-white/25 cursor-not-allowed': lockingAction.lock
+                                }
+                              )}
+                            >
+                              {checkFnIsLoading(onAcceptOffer.name) && <ClipLoader size={18} color='#a3a3a3' />}
+                              Accept
+                            </button>
+                            : account && BigNumber.from(offer.buyer).eq(account) &&
+                            <button
+                              onClick={onRejectOffer}
+                              style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%, 0 0)' }}
+                              className={clsx('border-0 outline-none text-13px ml-6 text-black px-4 py-1 flex items-center gap-1 rounded-sm font-semibold',
+                                {
+                                  'bg-red-600 cursor-pointer': !lockingAction.lock,
+                                  'bg-white/25 cursor-not-allowed': lockingAction.lock
+                                }
+                              )}>
+                              {checkFnIsLoading(onRejectOffer.name) && <ClipLoader size={18} color='#a3a3a3' />}
+                              Cancel
+                            </button>
                         }
                       </div>
                     </div>
@@ -712,7 +754,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
             {
               activities.totalPage
                 ? <>
-                  <Table >
+                  <Table>
                     <LoadingOverlay loading={marketActivitiesState.state?.loading} />
                     <TableHead>
                       <TableRow>
@@ -769,11 +811,13 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
                           <TableCell className={styles.activityTableCell}>
                             <a href={getTXLink(item.network, item.transaction_hash)} target={'_blank'} rel='noreferrer' className='flex items-center gap-2 text-13px'>
                               {formatHumanReadableTime(+item.dispatch_at * 1000, Date.now())}
-                              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M11.5 8.5V10C11.5 10.3978 11.342 10.7794 11.0607 11.0607C10.7794 11.342 10.3978 11.5 10 11.5H2C1.60218 11.5 1.22064 11.342 0.93934 11.0607C0.658035 10.7794 0.5 10.3978 0.5 10V2C0.5 1.60218 0.658035 1.22064 0.93934 0.93934C1.22064 0.658035 1.60218 0.5 2 0.5H3.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
-                                <path d="M6.5 0.5H11.5V5.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
-                                <path d="M11.5 0.5L5.5 6.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
-                              </svg>
+                              <span className='block w-3 h-3'>
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M11.5 8.5V10C11.5 10.3978 11.342 10.7794 11.0607 11.0607C10.7794 11.342 10.3978 11.5 10 11.5H2C1.60218 11.5 1.22064 11.342 0.93934 11.0607C0.658035 10.7794 0.5 10.3978 0.5 10V2C0.5 1.60218 0.658035 1.22064 0.93934 0.93934C1.22064 0.658035 1.60218 0.5 2 0.5H3.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                  <path d="M6.5 0.5H11.5V5.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                  <path d="M11.5 0.5L5.5 6.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                              </span>
                             </a>
                           </TableCell>
                         </TableRow>)

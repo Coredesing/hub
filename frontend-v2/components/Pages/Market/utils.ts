@@ -8,6 +8,7 @@ import { useLibraryDefaultFlexible } from '@/components/web3/utils'
 import { fetcher } from '@/utils'
 import { useWeb3Default } from '@/components/web3'
 import { ObjectType } from '@/utils/types'
+import { Web3Provider } from '@ethersproject/providers'
 // import { BigNumber } from 'ethers'
 
 export const networkImage = (network: string) => {
@@ -36,6 +37,45 @@ export const networkImage = (network: string) => {
 //   }
 // }
 
+export const getNftInfor = async (item: { token_id: number | string, token_address?: string, slug?: string } & ObjectType, provider: Web3Provider) => {
+  let error
+  try {
+    const tokenAddress = item?.token_address
+    const tokenId = item.token_id
+    const erc721Contract = new Contract(tokenAddress, ERC721Abi, provider)
+    if (!erc721Contract) return null
+    let collectionInfo = await fetcher(`${API_BASE_URL}/marketplace/collection/${item?.slug}`).then(res => res?.data)
+    collectionInfo = collectionInfo || {}
+    item.collection_info = collectionInfo
+    if (+collectionInfo.use_external_uri === 1) {
+      const result = await fetcher(`${API_BASE_URL}/marketplace/collection/${tokenAddress}/${tokenId}`, { method: 'POST' })
+      const info = result.data
+      if (info) {
+        item = { ...item, token_info: info }
+      }
+    } else {
+      const tokenURI = await erc721Contract.tokenURI(tokenId)
+      let info = {}
+      try {
+        info = await fetcher(tokenURI)
+      } catch (error) {
+        console.debug('err', error)
+      }
+      item = { ...item, token_info: info }
+    }
+    item = {
+      collection_info: collectionInfo,
+      ...item
+    }
+  } catch (err) {
+    error = err?.message || err
+  }
+  return {
+    item,
+    error
+  }
+}
+
 export const useNFTInfos = (listData: any[], onSetOneItem?: (item: any) => any) => {
   const { provider } = useLibraryDefaultFlexible('bsc', false)
   const [data, setData] = useState<any[]>([])
@@ -50,48 +90,53 @@ export const useNFTInfos = (listData: any[], onSetOneItem?: (item: any) => any) 
     const fetchDatas = async () => {
       for (let i = 0; i < listData?.length || 0; i++) {
         let item = listData[i]
-        try {
-          const tokenAddress = item?.token_address
-          const tokenId = item.token_id
-          const erc721Contract = new Contract(tokenAddress, ERC721Abi, provider)
-          if (!erc721Contract) return null
-          let collectionInfo = await fetcher(`${API_BASE_URL}/marketplace/collection/${item?.slug}`).then(res => res?.data)
-          collectionInfo = collectionInfo || {}
-          item.collection_info = collectionInfo
-
-          // if (!BigNumber.from(item.currency || 0).isZero()) {
-          //   item.currencySymbol = currencies.get(item.currency)
-          //   if (!item.currencySymbol) {
-          //     const erc20Contract = new Contract(item.currency, ERC20Abi, provider)
-          //     if (!erc20Contract) return null
-          //     const symbol = await erc20Contract.symbol().then(s => s).catch(console.error)
-          //     item.currencySymbol = symbol
-          //     currencies.set(item.currency, symbol)
-          //   }
-          // }
-          if (+collectionInfo.use_external_uri === 1) {
-            const result = await fetcher(`${API_BASE_URL}/marketplace/collection/${tokenAddress}/${tokenId}`, { method: 'POST' })
-            const info = result.data
-            if (info) {
-              item = { ...item, token_info: info }
-            }
-          } else {
-            const tokenURI = await erc721Contract.tokenURI(tokenId)
-            let info = {}
-            try {
-              info = await fetcher(tokenURI)
-            } catch (error) {
-              console.debug('err', error)
-            }
-            item = { ...item, token_info: info }
-          }
-          item = {
-            collection_info: collectionInfo,
-            ...item
-          }
-        } catch (error) {
-          setErrorMessage(error.message || error)
+        const info = await getNftInfor(item, provider)
+        item = info.item
+        if (info.error) {
+          setErrorMessage(info.error)
         }
+        // try {
+        //   const tokenAddress = item?.token_address
+        //   const tokenId = item.token_id
+        //   const erc721Contract = new Contract(tokenAddress, ERC721Abi, provider)
+        //   if (!erc721Contract) return null
+        //   let collectionInfo = await fetcher(`${API_BASE_URL}/marketplace/collection/${item?.slug}`).then(res => res?.data)
+        //   collectionInfo = collectionInfo || {}
+        //   item.collection_info = collectionInfo
+
+        //   // if (!BigNumber.from(item.currency || 0).isZero()) {
+        //   //   item.currencySymbol = currencies.get(item.currency)
+        //   //   if (!item.currencySymbol) {
+        //   //     const erc20Contract = new Contract(item.currency, ERC20Abi, provider)
+        //   //     if (!erc20Contract) return null
+        //   //     const symbol = await erc20Contract.symbol().then(s => s).catch(console.error)
+        //   //     item.currencySymbol = symbol
+        //   //     currencies.set(item.currency, symbol)
+        //   //   }
+        //   // }
+        //   if (+collectionInfo.use_external_uri === 1) {
+        //     const result = await fetcher(`${API_BASE_URL}/marketplace/collection/${tokenAddress}/${tokenId}`, { method: 'POST' })
+        //     const info = result.data
+        //     if (info) {
+        //       item = { ...item, token_info: info }
+        //     }
+        //   } else {
+        //     const tokenURI = await erc721Contract.tokenURI(tokenId)
+        //     let info = {}
+        //     try {
+        //       info = await fetcher(tokenURI)
+        //     } catch (error) {
+        //       console.debug('err', error)
+        //     }
+        //     item = { ...item, token_info: info }
+        //   }
+        //   item = {
+        //     collection_info: collectionInfo,
+        //     ...item
+        //   }
+        // } catch (error) {
+        //   setErrorMessage(error.message || error)
+        // }
         if (onSetOneItem) {
           onSetOneItem(item)
         }

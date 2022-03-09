@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import AppContext from './index'
 import useTiersOld from './tiersOld'
-import useMarketActivities from './market-activities'
+import useMarketActivities, { useCollectionsMarket, useDiscoverMarket } from './market-activities'
 import { tiersFromConfigs, TierConfigs } from '@/utils/tiers'
 import { useMyWeb3 } from '@/components/web3/context'
 import { useWeb3Default, GAFI } from '@/components/web3'
@@ -150,6 +150,8 @@ const AppProvider = (props: any) => {
     contractStakingReadonly
   } = useTierMine(tiers)
   const marketActivities = useMarketActivities()
+  const discoverMarket = useDiscoverMarket()
+  const collectionsMarket = useCollectionsMarket()
 
   useEffect(() => {
     fetcher(`${API_BASE_URL}/staking-pool`).then(pools => {
@@ -167,7 +169,9 @@ const AppProvider = (props: any) => {
       loadMyStaking,
       contractStaking,
       contractStakingReadonly,
-      marketActivities
+      marketActivities,
+      discoverMarket,
+      collectionsMarket
     }}>
       {props.children}
     </AppContext.Provider>

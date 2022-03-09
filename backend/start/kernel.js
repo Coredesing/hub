@@ -53,6 +53,7 @@ const namedMiddleware = {
   checkBlockPassSignature:'App/Middleware/CheckBlockPassSignature',
   formatEmailAndWallet: 'App/Middleware/FormatEmailAndWallet',
   maskEmailAndWallet: 'App/Middleware/MaskEmailAndWallet',
+  maskInfoNonAuthorized: 'App/Middleware/MaskInfoNonAuthorized',
   typeAdmin: 'App/Middleware/TypeAdmin',
   typeUser: 'App/Middleware/TypeUser',
 }

@@ -193,8 +193,8 @@ class UserController {
         id: findedUser.id,
         status: findedUser.status,
         is_kyc: findedUser.is_kyc,
-        user_twitter: '*****',
-        user_telegram: '*****',
+        user_twitter: whitelistSubmission.user_twitter,
+        user_telegram: whitelistSubmission.user_telegram,
         solana_address: findedUser.solana_address,
         terra_address: findedUser.terra_address,
       }

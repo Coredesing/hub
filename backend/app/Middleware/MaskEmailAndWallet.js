@@ -17,7 +17,7 @@ class MaskEmailAndWallet {
         } else if (prop === 'email') {
           obj[prop] = this.maskEmail(obj[prop]);
         } else {
-          obj[prop] = '*****';
+          obj[prop] = this.maskFull(obj[prop]);
         }
       } else if(typeof obj[prop]==='object') {
         this.doMask(obj[prop], fields);
@@ -55,6 +55,13 @@ class MaskEmailAndWallet {
     email = email.replace(r, "***@");
     // console.log(`Email after mask is ${email}`);
     return email;
+  }
+
+  maskFull(value) {
+    if (!value) return value;
+    if (value === "") return value;
+
+    return '*****';
   }
 }
 

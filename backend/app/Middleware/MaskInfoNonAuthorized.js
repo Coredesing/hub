@@ -24,8 +24,6 @@ class MaskInfoNonAuthorized {
       if (recoverConvert && recoverConvert !== wallet_address) {
         maskEmailFlag = true;
       }
-
-      headers.wallet_address = wallet_address;
     } catch (e) {
       maskEmailFlag = true;
     } finally {
@@ -37,8 +35,6 @@ class MaskInfoNonAuthorized {
       }
     }
   }
-
-
 }
 
 module.exports = MaskInfoNonAuthorized;

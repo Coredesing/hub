@@ -59,8 +59,6 @@ class MaskEmailAndWallet {
 
   maskFull(value) {
     if (!value) return value;
-    if (value === "") return value;
-
     return '*****';
   }
 }

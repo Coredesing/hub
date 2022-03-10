@@ -3,7 +3,7 @@ import clsx from 'clsx'
 
 export const Table = (props: any) => {
   return (
-    <div className={clsx('rounded-sm overflow-hidden', props.className)}>
+    <div className={clsx('rounded-sm overflow-auto', props.className)}>
       <table className='w-full'>
         {
           props.children

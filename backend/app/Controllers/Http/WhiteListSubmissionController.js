@@ -427,8 +427,8 @@ class WhiteListSubmissionController {
     // get request params
     const campaign_id = params.campaignId;
     const wallet_address = request.input('wallet_address');
-    const user_telegram = request.input('user_telegram');
-    const user_twitter = request.input('user_twitter');
+    let user_telegram = request.input('user_telegram');
+    let user_twitter = request.input('user_twitter');
     const solana_address = request.input('solana_address');
     let email = '';
     if (!campaign_id) {
@@ -509,6 +509,17 @@ class WhiteListSubmissionController {
 
       // call to whitelist submission service
       const whitelistSubmissionService = new WhitelistSubmissionService();
+      if (!user_telegram || !user_twitter) {
+        //Load user tele/twitter if tele/twitter param does not exist
+        const whitelistSubmission = JSON.parse(JSON.stringify(
+          await whitelistSubmissionService.findSubmission({ wallet_address })
+        ));
+        if (whitelistSubmission) {
+          user_telegram = whitelistSubmission.user_telegram;
+          user_twitter = whitelistSubmission.user_twitter;
+        }
+      }
+
       const submissionParams = {
         wallet_address,
         campaign_id,

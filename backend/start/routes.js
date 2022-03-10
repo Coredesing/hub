@@ -94,7 +94,7 @@ Route.group(() => {
   Route.get('pools/mysterious-box', 'PoolController.getMysteriousBoxPoolsV3');
 
   // user
-  Route.get('user/profile', 'UserController.profile').middleware(['maskEmailAndWallet']);
+  Route.get('user/profile', 'UserController.profile').middleware(['maskInfoNonAuthorized']);
   Route.get('user/tier-info', 'UserController.tierInfo').middleware(['maskEmailAndWallet']);
   Route.post('user/deposit', 'CampaignController.deposit').middleware(['checkSignature']);
   Route.post('user/deposit-box', 'CampaignController.depositBox').middleware(['checkSignature']);

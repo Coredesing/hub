@@ -5,7 +5,7 @@ class MaskEmailAndWallet {
     await next();
     // get response data
     const data = response._lazyBody && response._lazyBody.content && response._lazyBody.content.data;
-    this.doMask(data,['email', 'wallet', 'wallet_address']);
+    this.doMask(data,['email', 'wallet', 'wallet_address', 'user_twitter', 'user_telegram']);
   }
 
   doMask(obj, fields) {
@@ -17,7 +17,7 @@ class MaskEmailAndWallet {
         } else if (prop === 'email') {
           obj[prop] = this.maskEmail(obj[prop]);
         } else {
-          obj[prop] = this.maskWallet(obj[prop]);
+          obj[prop] = this.maskFull(obj[prop]);
         }
       } else if(typeof obj[prop]==='object') {
         this.doMask(obj[prop], fields);
@@ -55,6 +55,11 @@ class MaskEmailAndWallet {
     email = email.replace(r, "***@");
     // console.log(`Email after mask is ${email}`);
     return email;
+  }
+
+  maskFull(value) {
+    if (!value) return value;
+    return '*****';
   }
 }
 

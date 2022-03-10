@@ -1,4 +1,3 @@
-import PoolBanner from '@/components/Base/PoolBanner'
 import React, { useMemo } from 'react'
 import { Carousel } from 'react-responsive-carousel'
 import { useScreens } from '../utils'

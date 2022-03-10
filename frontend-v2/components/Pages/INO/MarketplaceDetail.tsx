@@ -224,7 +224,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   const token = useMemo(() => {
     return { address: BigNumber.from(tokenOnSale.currency || 0).isZero() ? '' : tokenOnSale.currency, neededApproveToken: !BigNumber.from(tokenOnSale.currency || 0).isZero() }
   }, [tokenOnSale])
-  const { load: checkAllowance, loading: loadingAllowance, allowance, error } = useTokenAllowance(token as any, account, MARKETPLACE_CONTRACT, projectInfo.network)
+  const { load: checkAllowance, loading: loadingAllowance, allowance } = useTokenAllowance(token as any, account, MARKETPLACE_CONTRACT, projectInfo.network)
   const { approve, loading: loadingApproveToken } = useTokenApproval(token as any, MARKETPLACE_CONTRACT)
 
   useEffect(() => {
@@ -256,10 +256,10 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
     }
   }, [isAllowBuyOffer, tokenOnSale, account, checkAllowance])
 
-  const handleOpenModalAuctionNFT = () => {
-    setOpenSellNFTModal(true)
-    setMethodSellNFT('auction')
-  }
+  // const handleOpenModalAuctionNFT = () => {
+  //   setOpenSellNFTModal(true)
+  //   setMethodSellNFT('auction')
+  // }
 
   const handleOpenModalFixPriceNFT = () => {
     setOpenSellNFTModal(true)
@@ -368,8 +368,8 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
     return handleCallContract(onBuyNFT.name, () => MarketplaceContractSigner.buy(tokenInfo.id, projectInfo.token_address, tokenOnSale.price, tokenOnSale.currency, options))
   }
 
-  const onAcceptOffer = async (item: ObjectType<any>) => {
-    handleCallContract(onAcceptOffer.name, () => MarketplaceContractSigner.takeOffer(item.token_id, projectInfo.token_address, BigNumber.from(item.raw_amount).toString(), tokenOnSale.currency, item.buyer));
+  const onAcceptOffer = (item: ObjectType<any>) => {
+    handleCallContract(onAcceptOffer.name, () => MarketplaceContractSigner.takeOffer(item.token_id, projectInfo.token_address, BigNumber.from(item.raw_amount).toString(), tokenOnSale.currency, item.buyer))
   }
 
   const onRejectOffer = () => {
@@ -711,11 +711,11 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
                           {utils.formatEther(offer.raw_amount)} {offer.currencySymbol}
                         </span>
                         {
-                          offer.event_type === 'TokenOffered'
-                            && isValidChain
-                            && tokenOnSale.currency === offer.currency
-                            && tokenOnSale.owner && account
-                            && BigNumber.from(tokenOnSale.owner).eq(account)
+                          offer.event_type === 'TokenOffered' &&
+                            isValidChain &&
+                            tokenOnSale.currency === offer.currency &&
+                            tokenOnSale.owner && account &&
+                            BigNumber.from(tokenOnSale.owner).eq(account)
                             ? <button
                               onClick={() => onAcceptOffer(offer)}
                               style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%, 0 0)' }}

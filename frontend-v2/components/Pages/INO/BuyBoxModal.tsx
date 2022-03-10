@@ -1,13 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Modal from '@/components/Base/Modal'
 import clsx from 'clsx'
 import ButtonBase from '@/components/Base/Buttons/ButtonBase'
-import { useMyWeb3 } from '@/components/web3/context'
 import { debounce } from '@/utils/index'
 import { BigNumber, utils } from 'ethers'
 import Recaptcha from '@/components/Base/Recaptcha'
 import { ObjectType } from '@/utils/types'
-import { useMyBalance } from '@/components/web3/utils'
 import { BeatLoader } from 'react-spinners'
 import useBuyBox from '@/hooks/useBuyBox'
 import DialogTxSubmitted from '@/components/Base/DialogTxSubmitted'
@@ -23,7 +21,6 @@ type Props = {
 }
 
 const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, poolInfo, eventId, isValidChain, balanceInfo }: Props) => {
-  const { account } = useMyWeb3()
   const [isVerified, setVerify] = useState<string | null>('')
   const totalBuy = currencyInfo?.price ? BigNumber.from(amountBoxBuy).mul(utils.parseEther(currencyInfo?.price)).toString() : 0
   const recaptchaRef: any = React.useRef()

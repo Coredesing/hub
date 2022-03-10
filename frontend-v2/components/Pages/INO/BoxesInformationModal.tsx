@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Modal from '@/components/Base/Modal'
 import styles from './BoxesInformationModal.module.scss'
 import clsx from 'clsx'
@@ -25,7 +25,7 @@ const BoxesInformationModal = ({ open, onClose, items, idShow }: Props) => {
           showThumbs={true}
           swipeable={true}
           renderThumbs={() => {
-            return items && items.length > 1 && items.map((item, id) => <div
+            return items && items.length > 1 && items.map((item) => <div
               key={`thumb-${item.id}`}
               className={clsx(styles.itemThumb, 'p-px cursor-pointer item-thumb')}
             >

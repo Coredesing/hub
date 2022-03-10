@@ -76,7 +76,7 @@ const Dropdown = ({ items, selected, onChange, propLabel, propValue, isFilter, c
         !isFilter
           ? <button className={`${styles.button} flex align-middle justify-between items-center bg-gamefiDark-650 text-white font-bold uppercase px-4 rounded mr-2 w-full`} onClick={() => setShow(!show)}>
             <span className='flex items-center gap-2'>
-              {propIcon && selected?.[propIcon] && <img src={selected?.[propIcon]} width='18px' height='18px' />}
+              {propIcon && selected?.[propIcon] && <img src={selected?.[propIcon]} width='18px' height='18px' alt='icon'/>}
               {selected?.[propLabel] || selected?.label || 'Select Item'}
             </span>
             <svg className="ml-2" width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -107,7 +107,7 @@ const Dropdown = ({ items, selected, onChange, propLabel, propValue, isFilter, c
                 availableOptions() && availableOptions().length
                   ? availableOptions().map(item =>
                     <button key={item[propValue] || item.value} onClick={() => handleChangeFilter(item)} className='cursor-pointer hover:bg-gamefiDark-600 px-4 py-1 w-full text-left text-sm flex items-center gap-2'>
-                      {propIcon && <img src={item[propIcon]} width='16px' height='16px' />}
+                      {propIcon && <img src={item[propIcon]} width='16px' height='16px' alt='icon' />}
                       {item[propLabel] || item.label}
                     </button>
                   )

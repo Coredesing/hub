@@ -31,7 +31,7 @@ import DetailPoolItem from './DetailPoolItem'
 
 const AuctionDetail = ({ poolInfo }: any) => {
   const tiersState = useAppContext()?.$tiers
-  const { account: connectedAccount, chainID, network, ...context } = useMyWeb3()
+  const { account: connectedAccount, chainID } = useMyWeb3()
   const [currencyPool, setCurrencyPool] = useState<TokenType & ObjectType<any> | undefined>()
   const [lastBidder, setLastBidder] = useState<null | { wallet: string; amount: string; currency: string }>(null)
   const [resetLastBidder, setResetLastBidder] = useState(true)
@@ -91,7 +91,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
     if (poolInfo) {
       onSetCountdown()
     }
-  }, [poolInfo])
+  }, [poolInfo, onSetCountdown])
 
   useEffect(() => {
     if (poolInfo?.acceptedTokensConfig?.length) {
@@ -111,7 +111,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
       }
       handleSetToken()
     }
-  }, [poolInfo])
+  }, [poolInfo, contractToken])
 
   useEffect(() => {
     if (contractAuctionPool && resetLastBidder) {
@@ -137,7 +137,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
   useEffect(() => {
     if (contractAuctionPool) {
       contractAuctionPool.minBidIncrementPerMile().then((num: any) => {
-        setRateEachBid(+(+num / 1000).toFixed(2) + '')
+        setRateEachBid(+((+num / 1000).toFixed(2)) + '')
       }).catch(err => {
         console.debug(err)
       })
@@ -238,7 +238,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
           obj[keys[prop as unknown as number]] = result[prop][i].toString()
           if (+prop === 1) {
             if (!cachedSymbolCurrency[obj.currency]) {
-              const networkInfo = getNetworkByAlias(poolInfo.network_available)
+              // const networkInfo = getNetworkByAlias(poolInfo.network_available)
               try {
                 const contractToken = new Contract(obj.currency, Erc20Abi, libraryDefaultTemporary)
                 const symbol = await contractToken.symbol()
@@ -321,7 +321,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
       />
       <PoolDetail
         bodyBannerContent={<>
-          {isImageFile(poolInfo.banner) && <img className="w-full h-full object-contain" src={poolInfo.banner} />}
+          {isImageFile(poolInfo.banner) && <img className="w-full h-full object-contain" src={poolInfo.banner} alt='banner' />}
           {isVideoFile(poolInfo.banner) && <>
             <div className="wrapperVideo">
               <div className="uncontrol"></div>

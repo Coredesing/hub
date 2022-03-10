@@ -13,17 +13,15 @@ import { Web3Provider } from '@ethersproject/providers'
 
 export const networkImage = (network: string) => {
   switch (network) {
-    case 'bsc': {
-      return require('@/assets/images/networks/bsc.svg')
-    }
-
-    case 'eth': {
-      return require('@/assets/images/networks/eth.svg')
-    }
-
-    case 'polygon': {
-      return require('@/assets/images/networks/polygon.svg')
-    }
+  case 'bsc': {
+    return require('@/assets/images/networks/bsc.svg')
+  }
+  case 'eth': {
+    return require('@/assets/images/networks/eth.svg')
+  }
+  case 'polygon': {
+    return require('@/assets/images/networks/polygon.svg')
+  }
   }
 }
 
@@ -37,7 +35,7 @@ export const networkImage = (network: string) => {
 //   }
 // }
 
-export const getNftInfor = async (item: { token_id: number | string, token_address?: string, slug?: string } & ObjectType, provider: Web3Provider) => {
+export const getNftInfor = async (item: { token_id: number | string; token_address?: string; slug?: string } & ObjectType, provider: Web3Provider) => {
   let error
   try {
     const tokenAddress = item?.token_address
@@ -79,7 +77,7 @@ export const getNftInfor = async (item: { token_id: number | string, token_addre
 export const useNFTInfos = (listData: any[], onSetOneItem?: (item: any) => any) => {
   const { provider } = useLibraryDefaultFlexible('bsc', false)
   const [data, setData] = useState<any[]>([])
-  const [error, setError] = useState(false)
+  // const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -152,7 +150,7 @@ export const useNFTInfos = (listData: any[], onSetOneItem?: (item: any) => any) 
     }
   }, [provider, listData, onSetOneItem])
 
-  return { data, error, loading, errorMessage }
+  return { data, loading, errorMessage }
 }
 
 export const useNFTInfo = (projectInfo: ObjectType, tokenId: string | number) => {

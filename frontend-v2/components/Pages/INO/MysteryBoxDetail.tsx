@@ -115,7 +115,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     const boxes = poolInfo.boxTypesConfig || []
     if (!presaleContract) return
     Promise
-      .all(boxes.map((b, subBoxId) => new Promise(async (resolve, reject) => {
+      .all(boxes.map((b, subBoxId) => new Promise(async (resolve) => {
         let result = {}
         try {
           const response = await presaleContract.subBoxes(eventId, subBoxId)

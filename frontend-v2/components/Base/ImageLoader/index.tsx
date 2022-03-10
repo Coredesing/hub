@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 type Props = {
   src: string;
-  size?: 'small' | 'medium'
+  size?: 'small' | 'medium';
 } & ObjectType
 
 const ImageLoader = ({ src, size = 'medium', ...props }: Props) => {
@@ -30,8 +30,7 @@ const ImageLoader = ({ src, size = 'medium', ...props }: Props) => {
                   </div>
                 </div>
               </div>
-              :
-              <div className='shadow rounded-md mx-auto w-full h-full animate-pulse flex flex-col gap-1 items-center justify-center' style={{ maxWidth: '30px' }}>
+              : <div className='shadow rounded-md mx-auto w-full h-full animate-pulse flex flex-col gap-1 items-center justify-center' style={{ maxWidth: '30px' }}>
                 <div className='h-4 rounded-full bg-slate-200 w-4'></div>
                 <div className='h-2 bg-slate-200 rounded w-8'></div>
               </div>
@@ -52,7 +51,7 @@ const ImageLoader = ({ src, size = 'medium', ...props }: Props) => {
               setLoading(false)
             }, 1000)
           }}
-
+          alt=''
         />
       }
 

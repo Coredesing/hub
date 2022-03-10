@@ -3,12 +3,9 @@ import { discoverMarketActions, marketActivitiesActions } from './constant'
 import tiersReducer, { collectionMarketReducer, discoverMarketReducer } from './reducer'
 import axios from '@/utils/axios'
 import { BigNumber, Contract } from 'ethers'
-import ERC721ABI from 'components/web3/abis/Erc721.json'
 import ERC20ABI from 'components/web3/abis/ERC20.json'
-import { getNetworkByAlias, getLibrary } from 'components/web3'
-import { networkConnector } from 'components/web3/connectors'
 import { Web3Provider } from '@ethersproject/providers'
-import { currencyNative, currencyStable, getLibraryDefaultFlexible, useLibraryDefaultFlexible } from 'components/web3/utils'
+import { currencyNative, currencyStable, getLibraryDefaultFlexible } from 'components/web3/utils'
 import { fetcher, isDifferentObj } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 import { ObjectType } from '@/utils/types'
@@ -99,10 +96,6 @@ const useMarketActivities = () => {
         payload: error
       })
     }
-  }
-
-  const setData = (data: any) => {
-    dispatch({ type: marketActivitiesActions.SUCCESS, payload: data })
   }
 
   return {

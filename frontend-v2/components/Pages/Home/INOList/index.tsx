@@ -9,7 +9,7 @@ import { useFetch } from '@/utils'
 const INOList = () => {
   const screens = useScreens()
   const url = '/pools/current-pools?token_type=box&limit=6&page=1&is_private=0,1,2,3'
-  const { response, loading } = useFetch(url)
+  const { response } = useFetch(url)
 
   const listUpcoming = useMemo<any[]>(() => {
     return response?.data?.data || []

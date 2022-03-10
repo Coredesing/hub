@@ -33,7 +33,7 @@ const AuctionBoxModal = ({ open, poolInfo = {}, token = {}, auctionLoading, last
           setBalance(balance)
         }
         if (new BigNumber(token.address).isZero()) {
-          const networkInfo = getNetworkByAlias(poolInfo.network_available)
+          // const networkInfo = getNetworkByAlias(poolInfo.network_available)
           // const balance: any = await getAccountBalance('0x00', account, { appChainId: networkInfo.id, connectorName: networkInfo.name })
           handleSetBalance(balanceOnChain)
         } else {
@@ -47,7 +47,7 @@ const AuctionBoxModal = ({ open, poolInfo = {}, token = {}, auctionLoading, last
       }
     }
     renewBalance && getBalance()
-  }, [library, account, token, renewBalance, poolInfo.network_available])
+  }, [library, account, token, renewBalance, poolInfo.network_available, balanceOnChain])
 
   const [minimumMarkup, setMinimumMarkup] = useState<any>()
   const [minimumBid, setMinimumBid] = useState<any>()

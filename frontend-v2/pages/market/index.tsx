@@ -2,13 +2,13 @@ import React from 'react'
 import Layout from '@/components/Layout'
 import Image from 'next/image'
 import HotCollections from '@/components/Pages/Market/HotCollections'
-import HotAuctions from '@/components/Pages/Market/HotAuctions'
+// import HotAuctions from '@/components/Pages/Market/HotAuctions'
 import ListTrending from '@/components/Pages/Market/ListTrending'
 import Discover from '@/components/Pages/Market/Discover'
-import { useScreens } from '@/components/Pages/Home/utils'
+// import { useScreens } from '@/components/Pages/Home/utils'
 
 const Market = () => {
-  const screens = useScreens()
+  // const screens = useScreens()
   return (
     <Layout title="GameFi Market">
       {
@@ -27,8 +27,7 @@ const Market = () => {
         //       objectFit="cover"
         //       className="mt-48"
         //     ></Image>
-        //   </div>
-        //   : 
+        //   </div> : 
         <div className="relative w-full min-h-full pt-28">
           <div
             className="absolute top-0 right-0"

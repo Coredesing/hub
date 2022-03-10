@@ -9,7 +9,7 @@ const NotFound = ({ backLink }: { backLink?: string }) => {
   return (
     <div className={clsx(styles.page, 'w-full flex flex-col items-center justify-center p-5')}>
       <div className='mb-5'>
-        <Image src={require('@/assets/images/404.png')} />
+        <Image src={require('@/assets/images/404.png')} alt='not found' />
       </div>
       <h3 className='mb-3 uppercase text-lg lg:text-3xl font-medium text-center'>Sorry, we were unable to find that page</h3>
       <button

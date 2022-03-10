@@ -2,8 +2,7 @@ import { ObjectType } from '@/utils/types'
 import clsx from 'clsx'
 import ButtonBase from '@/components/Base/Buttons/ButtonBase'
 import Modal from '@/components/Base/Modal'
-import { useMyBalance } from '@/components/web3/utils'
-import React, { useMemo } from 'react'
+import React from 'react'
 import styles from './MarketBuyNowModal.module.scss'
 import { BeatLoader } from 'react-spinners'
 import { BigNumber, utils } from 'ethers'
@@ -18,7 +17,7 @@ type Props = {
   tokenOnSale?: ObjectType;
 } & ObjectType;
 
-const BuyNowModal = ({ tokenOnSale, projectInfo, myBalance, ...props }: Props) => {
+const BuyNowModal = ({ tokenOnSale, myBalance, ...props }: Props) => {
   const handleBuyNow = async () => {
     const ok = props.onSubmit && await props.onSubmit()
     if (ok) {

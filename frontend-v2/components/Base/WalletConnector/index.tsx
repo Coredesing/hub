@@ -90,7 +90,7 @@ export const NetworkSelector = ({ onChange, isMulti = true, isToggle = true, ...
       })
     }
   }
-  
+
   useEffect(() => {
     if (!onChange) {
       return

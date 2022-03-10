@@ -1,5 +1,4 @@
 import React from 'react'
-import Image from 'next/image'
 import { prettyPrice, priceChange, priceChangeTag, useScreens } from '../utils'
 
 const GameFiPerformance = ({ item } : { item: any }) => {

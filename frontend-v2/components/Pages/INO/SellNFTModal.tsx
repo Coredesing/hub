@@ -22,8 +22,8 @@ type Props = {
   [k: string]: any;
 }
 
-const SellNFTModal = ({ open, onClose, method, currencies = [], projectInfo, isLoadingButton, disabledButton, onListingNFT, onApproveMarket, isApprovedMarketplace, ...props }: Props) => {
-  const isAuction = method === 'auction'
+const SellNFTModal = ({ open, onClose, method, currencies = [], isLoadingButton, disabledButton, onListingNFT, onApproveMarket, isApprovedMarketplace }: Props) => {
+  // const isAuction = method === 'auction'
   const isFixedPrice = method === 'fixed-price'
   const { account } = useMyWeb3()
   const [currency, setCurrency] = useState<ObjectType>({})

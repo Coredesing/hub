@@ -2,8 +2,7 @@ import { ObjectType } from '@/utils/types'
 import clsx from 'clsx'
 import ButtonBase from '@/components/Base/Buttons/ButtonBase'
 import Modal from '@/components/Base/Modal'
-import { useMyBalance } from '@/components/web3/utils'
-import React, { ReactNode, useMemo, useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import styles from './MakeOfferModal.module.scss'
 import { BeatLoader } from 'react-spinners'
 import { BigNumber, utils } from 'ethers'
@@ -18,11 +17,7 @@ type Props = {
   tokenOnSale?: ObjectType;
 } & ObjectType;
 
-const MakeOfferModal = ({ tokenOnSale, projectInfo, lastOffer, myBalance, ...props }: Props) => {
-  const token = useMemo(() => {
-    return { address: tokenOnSale.currency }
-  }, [tokenOnSale])
-
+const MakeOfferModal = ({ tokenOnSale, lastOffer, myBalance, ...props }: Props) => {
   const [offerPrice, setOfferPrice] = useState('')
   const [notiMsg, setNotiMsg] = useState<{ type: 'info' | 'error'; msg: string | ReactNode }>({ type: 'info', msg: '' })
 

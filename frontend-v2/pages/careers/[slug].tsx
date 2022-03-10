@@ -12,8 +12,8 @@ const Career = ({ data }) => {
       <Link href="/careers" passHref={true}>
         <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">
           <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10"/>
-            <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square"/>
+            <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10" />
+            <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square" />
           </svg>
           CURRENT OPENINGS
         </a>
@@ -23,33 +23,33 @@ const Career = ({ data }) => {
 
       <div className="uppercase font-bold text-2xl mb-2 mt-8">JOB DESCRIPTION</div>
       <ul className="font-casual text-sm leading-6 opacity-80 mb-8 list-disc pl-4">
-        { data.descriptions.map(r =>
+        {data.descriptions.map(r =>
           <li key={r}>{r}</li>
-        ) }
+        )}
       </ul>
 
       <div className="uppercase font-bold text-2xl mb-2 mt-8">REQUIREMENTS</div>
       <ul className="font-casual text-sm leading-6 opacity-80 mb-4 list-disc pl-4">
-        { data.requirements.map(r =>
+        {data.requirements.map(r =>
           <li key={r}>{r}</li>
-        ) }
+        )}
       </ul>
 
       {data?.advantages && <>
         <p className="font-casual text-sm leading-6 font-bold">📌 Advantage</p>
         <ul className="font-casual text-sm leading-6 opacity-80 mb-8 list-disc pl-4">
-          { data?.advantages.map(r =>
+          {data?.advantages.map(r =>
             <li key={r}>{r}</li>
-          ) }
+          )}
         </ul>
       </>
       }
 
       <div className="uppercase font-bold text-2xl mb-2 mt-8">BENEFITS</div>
       <ul className="font-casual text-sm leading-6 opacity-80 mb-8 list-disc pl-4">
-        { data.benefits.map(r =>
+        {data.benefits.map(r =>
           <li key={r}>{r}</li>
-        ) }
+        )}
       </ul>
 
       <div className="uppercase font-bold text-2xl mb-2 mt-8">ABOUT OUR COMPANY</div>
@@ -81,7 +81,7 @@ const Career = ({ data }) => {
 
 export default Career
 
-export function getStaticProps ({ params }) {
+export async function getStaticProps({ params }) {
   if (!params?.slug) {
     return { props: { data: {} } }
   }
@@ -100,5 +100,5 @@ export async function getStaticPaths() {
   return {
     paths,
     fallback: true // false or 'blocking'
-  };
+  }
 }

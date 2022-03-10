@@ -8,7 +8,7 @@ type Props = {
 
 const BannerImagePool = (props: Props) => {
   return <>
-    {isImageFile(props.src) && <img className="w-full h-full object-contain" src={props.src} />}
+    {isImageFile(props.src) && <img className="w-full h-full object-contain" src={props.src} alt='banner' />}
     {
       isVideoFile(props.src) && <div className={styles.video}>
         <div>

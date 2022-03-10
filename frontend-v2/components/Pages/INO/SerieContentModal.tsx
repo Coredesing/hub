@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Modal from '@/components/Base/Modal'
 import styles from './SerieContentModal.module.scss'
 import clsx from 'clsx'
@@ -51,7 +51,7 @@ const SerieContentModal = ({ open, onClose, serieContents, idShow }: Props) => {
         // swipeable
         // centerMode
         renderThumbs={() => {
-          return serieContents && serieContents.length > 1 && serieContents.map((item, id) => <div
+          return serieContents && serieContents.length > 1 && serieContents.map((item) => <div
             key={`thumb-${item.id}`}
             className={clsx(styles.itemThumb, 'p-px cursor-pointer item-thumb')}
           >

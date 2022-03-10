@@ -40,7 +40,20 @@ class WhitelistSubmissionService {
 
   async addWhitelistSubmission(params) {
     if (!params.wallet_address || !params.campaign_id || !params.user_twitter || !params.user_telegram) {
-      ErrorFactory.badRequest('Missing required field')
+      let empty = [];
+      if (!params.wallet_address) {
+        empty.push('Wallet address');
+      }
+      if (!params.campaign_id) {
+        empty.push('Campaign');
+      }
+      if (!params.user_twitter) {
+        empty.push('Twitter');
+      }
+      if (!params.user_telegram) {
+        empty.push('Telegram');
+      }
+      ErrorFactory.badRequest(`Missing required field(s): ${empty.join(', ')}`)
     }
 
     let wl = await WhitelistSubmissionModel.query().
@@ -48,7 +61,7 @@ class WhitelistSubmissionService {
     where('wallet_address', params.wallet_address).first();
     if (wl) {
       if (wl.whitelist_user_id) {
-        ErrorFactory.badRequest('User already joined this campain');
+        ErrorFactory.badRequest('User already joined this campaign');
       } else {
         await WhitelistSubmissionModel.query().
         where('campaign_id', params.campaign_id).

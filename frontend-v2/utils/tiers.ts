@@ -59,7 +59,7 @@ const tiers = [{
   image: require('@/assets/images/ranks/legend.png'),
   config: {
     requirement: 'Auction NFT required',
-    requirementDescription: 'GameFi holds an auction for NFT Legend tickets monthly. Legend tickets will belong to 12 people who have staked the most $GAFI at the end of auction.'
+    requirementDescription: 'GameFi.org holds an auction for NFT Legend tickets monthly. Legend tickets will belong to 12 people who have staked the most $GAFI at the end of auction.'
   }
 }]
 

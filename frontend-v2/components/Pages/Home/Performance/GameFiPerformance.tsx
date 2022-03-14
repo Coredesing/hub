@@ -9,7 +9,7 @@ const GameFiPerformance = ({ item } : { item: any }) => {
         <div className="relative w-full px-6 py-5 bg-gamefiDark-800 rounded-sm">
           <div className="flex items-center">
             <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/11783.png" width="60" height="60" alt=""></img>
-            <div className="ml-3 uppercase text-xl font-bold">GameFi</div>
+            <div className="ml-3 text-xl font-bold">GameFi.org</div>
           </div>
           <div className="w-full flex items-center mt-4">
             <div className="mr-6 cursor-pointer">
@@ -165,7 +165,7 @@ const GameFiPerformance = ({ item } : { item: any }) => {
           </div>
           <div className="flex items-center">
             <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/11783.png" width="60" height="60" alt=""></img>
-            <div className="ml-3 uppercase text-xl font-bold">GameFi</div>
+            <div className="ml-3 text-xl font-bold">GameFi.org</div>
           </div>
           <div className="mt-6 flex" style={{
             background: 'linear-gradient(91.27deg, rgba(255, 255, 255, 0.03) 37.59%, rgba(255, 255, 255, 0) 101.09%)',

@@ -139,7 +139,7 @@ const Profile = () => {
       <div className="lg:w-2/3 w-full rounded-sm p-4 xl:p-7 flex-1 bg-gamefiDark-800 clipped-t-r">
         <h3 className='font-bold text-base mb-2 uppercase'>Wallet Addresses</h3>
         <div className='font-casual text-sm mb-7'>
-          Your wallets connected to GameFi are listed below.
+          Your wallets connected to GameFi.org are listed below.
           In case you want to modify your sub-wallets, please click <strong>Edit Profile</strong>.
         </div>
         <div className='mb-7'>
@@ -268,7 +268,7 @@ const Profile = () => {
           <div className="flex items-center justify-center w-12 h-12 bg-gray-700 mb-6 text-2xl font-bold rounded-full">1</div>
           <h5 className='font-bold text-base uppercase mb-2'>Stake $GAFI to upgrade your Rank</h5>
           <div className='text-sm text-white/80 font-casual'>
-            Check out GameFi's ranking system: Legend, Pro, Elite, Rookie.
+            Check out GameFi.org's ranking system: Legend, Pro, Elite, Rookie.
           </div>
           <a href='https://faq.gamefi.org/#1.2.-stake' rel='noreferrer' target="_blank" className="font-semibold text-xs md:text-sm font-casual text-gamefiGreen-700 hover:text-gamefiGreen-500 hover:underline mt-6">Read more</a>
         </div>

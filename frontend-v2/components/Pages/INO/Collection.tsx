@@ -96,7 +96,7 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT,
                               }
                             )}
                           >
-                            Claim all on GameFi
+                            Claim all on GameFi.org
                           </div>
                           : (claimUrl && <div
                             className={clsx(styles.btnClaimAll, 'bg-gamefiDark-900 w-40 text-13px flex justify-center items-center rounded-sm font-bold uppercase')}

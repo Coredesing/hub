@@ -252,7 +252,7 @@ export default function TabUnstake ({ loadMyPending, pendingWithdrawal, goStake 
 
               <label className="leading-relaxed inline-block align-middle font-casual text-sm text-gray-300 flex items-start mt-4">
                 <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed1c} onChange={handleAgreement(setAgreed1c)} />
-                <p className="-mt-1">The forfeited token vestings will be redistributed to the GameFi Development fund, further developing the GameFi platform and ecosystem.</p>
+                <p className="-mt-1">The forfeited token vestings will be redistributed to the GameFi.org Development fund, further developing the GameFi.org platform and ecosystem.</p>
               </label>
 
               <h3 className="text-lg font-bold uppercase mt-6 mb-2">2. Withdraw delay time</h3>

@@ -202,7 +202,7 @@ const Staking = ({ data }) => {
             <div className="px-1 md:px-10 sm:px-2 flex-1 md:flex-initial flex items-center">
               <div>
                 <span className="font-bold text-xs md:text-sm uppercase text-white opacity-50">Total <span className="hidden sm:inline">$GAFI</span> Staked</span>
-                <p className="font-semibold text-lg md:text-2xl text-white leading-6">{totalStaked === null ? 'Loading...' : totalStakedNumber.toLocaleString()}</p>
+                <p className="font-semibold text-lg md:text-2xl text-white leading-6">{totalStaked === null ? 'Loading...' : totalStakedNumber.toLocaleString('en-US', undefined)}</p>
               </div>
             </div>
           </div>

@@ -2,7 +2,7 @@ import Dropdown from '@/components/Base/Dropdown'
 import React, { useCallback, useEffect, useState } from 'react'
 import { NetworkSelector } from '@/components/Base/WalletConnector'
 import NFTCard from '../NFTCard'
-import { filterPriceOptions } from '../constant'
+import { currencies, filterPriceOptions } from '../constant'
 import { ObjectType } from '@/utils/types'
 import DiscoverFilter from '../Discover/DiscoverFilter'
 import Pagination from '../Pagination'
@@ -10,6 +10,7 @@ import NoItemFound from '@/components/Base/NoItemFound'
 import { useAppContext } from '@/context/index'
 import clsx from 'clsx'
 import Activities from '../Activities'
+import Image from 'next/image'
 
 const CollectionItems = ({ slug }: { slug: string }) => {
   const [collectionType, setCollectionType] = useState<'items' | 'activities'>('items')
@@ -67,6 +68,19 @@ const CollectionItems = ({ slug }: { slug: string }) => {
   const onAdvanceFilter = useCallback((params: ObjectType) => {
     setFilter(f => ({ ...f, ...params }))
   }, [])
+  const isActive = useCallback((selected: any) => {
+    return selected.address === filter.currency
+  }, [filter])
+
+  const onSelectCurrency = useCallback((item: any) => {
+    setFilter(f => ({
+      ...f,
+      currency: item.address !== f.currency ? item.address : '',
+      price_order: item.address === f.currency ? '' : f.price_order,
+      min_price: '',
+      max_price: ''
+    }))
+  }, [])
 
   return (
     <div className="w-full pb-20">
@@ -102,17 +116,30 @@ const CollectionItems = ({ slug }: { slug: string }) => {
           </div>
           <div className="flex md:flex-row flex-wrap gap-2 items-center">
             <div><NetworkSelector isMulti={false} isToggle={false} selected={{ [filter.network]: true }} onChange={handleChangeNetwork} style={{ height: '38px' }} /></div>
+
+            <div className="font-casual">
+              <div className={`flex gap-x-1.5 bg-gamefiDark-700 rounded p-1.5`}>
+                {currencies.map(currenncy => {
+                  return <div key={currenncy.address} className={'flex items-center rounded flex-none cursor-pointer py-1 px-2'} onClick={() => onSelectCurrency(currenncy)} style={{ backgroundColor: isActive(currenncy) ? (currenncy.colorAlt || currenncy.color) : 'transparent' }}>
+                    <div className={`flex-none w-4 h-4 relative contrast-200 brightness-200 grayscale ${isActive(currenncy) ? 'opacity-100' : 'opacity-50'} hover:opacity-100`}><Image src={currenncy.icon} alt={currenncy.name} layout="fill" /></div>
+                    {isActive(currenncy) && <span className={'ml-2 text-xs'}>{currenncy.symbol}</span>}
+                  </div>
+                })}
+              </div>
+            </div>
             <div className='flex'>
               <div>
                 <Dropdown
                   items={filterPriceOptions}
                   selected={filterPriceOptions.find(f => f.value === filter.price_order)}
                   onChange={onFilterPrice}
+                  disabled={!filter.currency}
                 />
               </div>
               <div className="">
                 <DiscoverFilter
                   onApply={onAdvanceFilter}
+                  disabled={!filter.currency}
                 />
               </div>
             </div>

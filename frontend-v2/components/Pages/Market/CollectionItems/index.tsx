@@ -2,7 +2,7 @@ import Dropdown from '@/components/Base/Dropdown'
 import React, { useCallback, useEffect, useState } from 'react'
 import { NetworkSelector } from '@/components/Base/WalletConnector'
 import NFTCard from '../NFTCard'
-import { currencies, filterPriceOptions } from '../constant'
+import { filterPriceOptions } from '../constant'
 import { ObjectType } from '@/utils/types'
 import DiscoverFilter from '../Discover/DiscoverFilter'
 import Pagination from '../Pagination'
@@ -10,7 +10,7 @@ import NoItemFound from '@/components/Base/NoItemFound'
 import { useAppContext } from '@/context/index'
 import clsx from 'clsx'
 import Activities from '../Activities'
-import Image from 'next/image'
+import CurrencySelector from '../CurrencySelector'
 
 const CollectionItems = ({ slug }: { slug: string }) => {
   const [collectionType, setCollectionType] = useState<'items' | 'activities'>('items')
@@ -68,9 +68,6 @@ const CollectionItems = ({ slug }: { slug: string }) => {
   const onAdvanceFilter = useCallback((params: ObjectType) => {
     setFilter(f => ({ ...f, ...params }))
   }, [])
-  const isActive = useCallback((selected: any) => {
-    return selected.address === filter.currency
-  }, [filter])
 
   const onSelectCurrency = useCallback((item: any) => {
     setFilter(f => ({
@@ -85,7 +82,7 @@ const CollectionItems = ({ slug }: { slug: string }) => {
   return (
     <div className="w-full pb-20">
       <div className="md:px-4 lg:px-16 md:container mx-2 mt-20">
-        <div className="mt-14 flex items-center justify-between flex-wrap md:flex-row gap-2">
+        <div className="mt-14 flex items-center justify-between flex-wrap md:flex-row gap-2 relative">
           <div className="flex">
             <div className="relative" style={{ marginRight: '-6px' }}>
               <div
@@ -116,17 +113,7 @@ const CollectionItems = ({ slug }: { slug: string }) => {
           </div>
           <div className="flex md:flex-row flex-wrap gap-2 items-center">
             <div><NetworkSelector isMulti={false} isToggle={false} selected={{ [filter.network]: true }} onChange={handleChangeNetwork} style={{ height: '38px' }} /></div>
-
-            <div className="font-casual">
-              <div className={`flex gap-x-1.5 bg-gamefiDark-700 rounded p-1.5`}>
-                {currencies.map(currenncy => {
-                  return <div key={currenncy.address} className={'flex items-center rounded flex-none cursor-pointer py-1 px-2'} onClick={() => onSelectCurrency(currenncy)} style={{ backgroundColor: isActive(currenncy) ? (currenncy.colorAlt || currenncy.color) : 'transparent' }}>
-                    <div className={`flex-none w-4 h-4 relative contrast-200 brightness-200 grayscale ${isActive(currenncy) ? 'opacity-100' : 'opacity-50'} hover:opacity-100`}><Image src={currenncy.icon} alt={currenncy.name} layout="fill" /></div>
-                    {isActive(currenncy) && <span className={'ml-2 text-xs'}>{currenncy.symbol}</span>}
-                  </div>
-                })}
-              </div>
-            </div>
+            <CurrencySelector selected={filter.currency} onChange={onSelectCurrency} style={{ height: '38px' }} />
             <div className='flex'>
               <div>
                 <Dropdown
@@ -144,6 +131,17 @@ const CollectionItems = ({ slug }: { slug: string }) => {
               </div>
             </div>
           </div>
+          {(collectionsMarketState.loading)
+            ? (
+              <div className="loader-wrapper absolute left-0 right-0" style={{bottom: '-74px'}}>
+                <svg className="loader" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Loading...
+              </div>
+            )
+            : <></>}
         </div>
         {
           collectionType === 'items'
@@ -161,17 +159,7 @@ const CollectionItems = ({ slug }: { slug: string }) => {
             </div>
         }
 
-        {(collectionsMarketState.loading)
-          ? (
-            <div className="loader-wrapper mx-auto mt-14">
-              <svg className="loader" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Loading...
-            </div>
-          )
-          : <></>}
+
         {
           +collectionsData.totalPage > 1 && <Pagination page={collectionsData.currentPage} pageLast={collectionsData.totalPage} setPage={onChangePage} className="w-full justify-center mt-8 mb-8" />
         }

@@ -68,7 +68,8 @@ const Activities = ({
                 <span className='text-13px'>
                   {
                     MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenListed ||
-                      MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenDelisted
+                      MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenDelisted ||
+                      MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenBought
                       ? shortenAddress(item.seller || '', '.', 5)
                       : shortenAddress(item.buyer || '', '.', 5)
                   }
@@ -78,7 +79,8 @@ const Activities = ({
                 <span className='text-13px'>
                   {
                     MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenListed ||
-                      MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenDelisted
+                      MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenDelisted ||
+                      MARKET_ACTIVITIES[item.event_type] === MARKET_ACTIVITIES.TokenBought
                       ? shortenAddress(item.buyer || '', '.', 5)
                       : shortenAddress(item.seller || '', '.', 5)
                   }

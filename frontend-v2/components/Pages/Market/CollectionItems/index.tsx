@@ -10,6 +10,7 @@ import NoItemFound from '@/components/Base/NoItemFound'
 import { useAppContext } from '@/context/index'
 import clsx from 'clsx'
 import Activities from '../Activities'
+import CurrencySelector from '../CurrencySelector'
 
 const CollectionItems = ({ slug }: { slug: string }) => {
   const [collectionType, setCollectionType] = useState<'items' | 'activities'>('items')
@@ -68,10 +69,20 @@ const CollectionItems = ({ slug }: { slug: string }) => {
     setFilter(f => ({ ...f, ...params }))
   }, [])
 
+  const onSelectCurrency = useCallback((item: any) => {
+    setFilter(f => ({
+      ...f,
+      currency: item.address !== f.currency ? item.address : '',
+      price_order: item.address === f.currency ? '' : f.price_order,
+      min_price: '',
+      max_price: ''
+    }))
+  }, [])
+
   return (
     <div className="w-full pb-20">
       <div className="md:px-4 lg:px-16 md:container mx-2 mt-20">
-        <div className="mt-14 flex items-center justify-between flex-wrap md:flex-row gap-2">
+        <div className="mt-14 flex items-center justify-between flex-wrap md:flex-row gap-2 relative">
           <div className="flex">
             <div className="relative" style={{ marginRight: '-6px' }}>
               <div
@@ -102,21 +113,35 @@ const CollectionItems = ({ slug }: { slug: string }) => {
           </div>
           <div className="flex md:flex-row flex-wrap gap-2 items-center">
             <div><NetworkSelector isMulti={false} isToggle={false} selected={{ [filter.network]: true }} onChange={handleChangeNetwork} style={{ height: '38px' }} /></div>
+            <CurrencySelector selected={filter.currency} onChange={onSelectCurrency} style={{ height: '38px' }} />
             <div className='flex'>
               <div>
                 <Dropdown
                   items={filterPriceOptions}
                   selected={filterPriceOptions.find(f => f.value === filter.price_order)}
                   onChange={onFilterPrice}
+                  disabled={!filter.currency}
                 />
               </div>
               <div className="">
                 <DiscoverFilter
                   onApply={onAdvanceFilter}
+                  disabled={!filter.currency}
                 />
               </div>
             </div>
           </div>
+          {(collectionsMarketState.loading)
+            ? (
+              <div className="loader-wrapper absolute left-0 right-0" style={{bottom: '-74px'}}>
+                <svg className="loader" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Loading...
+              </div>
+            )
+            : <></>}
         </div>
         {
           collectionType === 'items'
@@ -134,17 +159,7 @@ const CollectionItems = ({ slug }: { slug: string }) => {
             </div>
         }
 
-        {(collectionsMarketState.loading)
-          ? (
-            <div className="loader-wrapper mx-auto mt-14">
-              <svg className="loader" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Loading...
-            </div>
-          )
-          : <></>}
+
         {
           +collectionsData.totalPage > 1 && <Pagination page={collectionsData.currentPage} pageLast={collectionsData.totalPage} setPage={onChangePage} className="w-full justify-center mt-8 mb-8" />
         }

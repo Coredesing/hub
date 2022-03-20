@@ -1,3 +1,6 @@
+import { BNB, BUSD_BSC, GAFI } from "@/components/web3"
+import { ethers } from "ethers"
+
 export const MARKET_ACTIVITIES = {
   TokenOfferCanceled: 'Cancel',
   TokenBought: 'Buy',
@@ -34,5 +37,30 @@ export const filterPriceOptions = [
     key: 'price-descending',
     label: 'Price Descending',
     value: 'desc'
+  }
+]
+
+export const currencies = [
+  {
+    ...BNB,
+    address: ethers.constants.AddressZero,
+    color: '#546BC7',
+    colorText: '#fff',
+    colorAlt: '#e6b300',
+    icon: require('@/assets/images/icons/bnb.png')
+  },
+  {
+    ...GAFI,
+    color: '#546BC7',
+    colorText: '#fff',
+    colorAlt: '#6CDB00',
+    icon: require('@/assets/images/icons/gafi.png')
+  },
+  {
+    ...BUSD_BSC,
+    color: '#546BC7',
+    colorText: '#fff',
+    colorAlt: '#e6b300',
+    icon: require('@/assets/images/icons/busd.png')
   }
 ]

@@ -1,21 +1,22 @@
 import Dropdown from '@/components/Base/Dropdown'
-import { BNB, BUSD_BSC, GAFI } from '@/components/web3'
+// import { BNB, BUSD_BSC, GAFI } from '@/components/web3'
 import { ObjectType } from '@/utils/types'
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import isNumber from 'is-number'
-import { ethers } from 'ethers'
+// import { ethers } from 'ethers'
 
 type Props = {
   onApply: (params: ObjectType) => any;
+  disabled?: boolean;
 }
-const DiscoverFilter = ({ onApply }: Props) => {
-  const currencies = useMemo(() => [
-    { ...BNB, address: ethers.constants.AddressZero },
-    GAFI,
-    BUSD_BSC
-  ], [])
+const DiscoverFilter = ({ onApply, disabled }: Props) => {
+  // const currencies = useMemo(() => [
+  //   { ...BNB, address: ethers.constants.AddressZero },
+  //   GAFI,
+  //   BUSD_BSC
+  // ], [])
   const [isShowFilter, setShowFilter] = useState(false)
-  const [currency, setCurrency] = useState(currencies[0].address)
+  // const [currency, setCurrency] = useState(currencies[0].address)
   const [minPrice, setMinPrice] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
   const onChangeMinPrice = (e: any) => {
@@ -38,7 +39,7 @@ const DiscoverFilter = ({ onApply }: Props) => {
 
   const handleApply = () => {
     onApply({
-      currency: currency,
+      // currency: currency,
       min_price: minPrice,
       max_price: maxPrice
     })
@@ -51,14 +52,14 @@ const DiscoverFilter = ({ onApply }: Props) => {
       min_price: '',
       max_price: ''
     })
-    setCurrency('')
+    // setCurrency('')
     setMinPrice('')
     setMaxPrice('')
     setShowFilter(false)
   }
 
   return (
-    <Dropdown isFilter={true} isShow={isShowFilter} onHandleFilter={() => setShowFilter(!isShowFilter)}>
+    <Dropdown disabled={disabled} isFilter={true} isShow={isShowFilter} onHandleFilter={() => setShowFilter(!isShowFilter)}>
       <>
         <div className="flex items-center justify-between">
           <div className="text-xl uppercase font-semibold">Filter</div>
@@ -87,7 +88,7 @@ const DiscoverFilter = ({ onApply }: Props) => {
             </label>
           </div>
         </div> */}
-        <div className="mt-4 flex align-middle sm:flex-row sm:items-center flex-col items-start">
+        {/* <div className="mt-4 flex align-middle sm:flex-row sm:items-center flex-col items-start">
           <div className="font-medium w-24 mr-6">Currency</div>
           <div className='flex flex-wrap'>
             {
@@ -100,7 +101,7 @@ const DiscoverFilter = ({ onApply }: Props) => {
               </button>)
             }
           </div>
-        </div>
+        </div> */}
         <div className="mt-4 flex align-middle sm:flex-row sm:items-center flex-col items-start">
           <div className="font-medium w-24 mr-6">Price</div>
           <div className='flex flex-col sm:flex-row items-center'>
@@ -109,8 +110,8 @@ const DiscoverFilter = ({ onApply }: Props) => {
                 value={minPrice}
                 maxLength={10}
                 onChange={onChangeMinPrice}
-                disabled={!currency}
-                readOnly={!currency}
+                // disabled={!currency}
+                // readOnly={!currency}
                 className="appearance-none border border-gamefiDark-400 rounded-sm bg-transparent px-2 py-1 focus:outline-none" style={{ width: '166px' }} placeholder="Min Price" />
               <div className="absolute left-0 mt-2 rounded-r bg-gamefiDark-400" style={{ width: '2px', height: '18px' }}></div>
             </div>
@@ -120,8 +121,8 @@ const DiscoverFilter = ({ onApply }: Props) => {
                 value={maxPrice}
                 maxLength={10}
                 onChange={onChangeMaxPrice}
-                disabled={!currency}
-                readOnly={!currency}
+                // disabled={!currency}
+                // readOnly={!currency}
                 className="appearance-none border border-gamefiDark-400 rounded-sm bg-transparent px-2 py-1 focus:outline-none w-40" style={{ width: '166px' }} placeholder="Max Price" />
               <div className="absolute left-0 mt-2 rounded-r bg-gamefiDark-400" style={{ width: '2px', height: '18px' }}></div>
             </div>

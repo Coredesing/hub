@@ -115,18 +115,18 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     const boxes = poolInfo.boxTypesConfig || []
     if (!presaleContract) return
     Promise
-      .all(boxes.map((b, subBoxId) => new Promise(async (resolve) => {
-        let result = {}
-        try {
-          const response = await presaleContract.subBoxes(eventId, subBoxId)
-          result = {
-            maxSupply: response.maxSupply ? response.maxSupply.toNumber() : 0,
-            totalSold: response.totalSold ? response.totalSold.toNumber() : 0
-          }
-        } catch (error) {
+      .all(boxes.map((b, subBoxId) => new Promise((resolve) => {
+        presaleContract.subBoxes(eventId, subBoxId).then(res => {
+          resolve({
+            ...b,
+            subBoxId,
+            maxSupply: res.maxSupply ? res.maxSupply.toNumber() : 0,
+            totalSold: res.totalSold ? res.totalSold.toNumber() : 0
+          })
+        }).catch(error => {
           console.debug('err', error)
-        }
-        resolve({ ...b, subBoxId, ...result })
+          resolve({ ...b, subBoxId })
+        })
       })))
       .then((boxes) => {
         setBoxTypes(boxes)

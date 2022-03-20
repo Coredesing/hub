@@ -165,6 +165,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
             info.symbol = await erc20Contract.symbol()
           }
           if (info.symbol) {
+            /* eslint-disable */
             const icon = require(`@/assets/images/icons/${info.symbol.toLowerCase()}.png`)
             info.icon = icon
           }
@@ -182,7 +183,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
       fetcher(`${API_BASE_URL}/marketplace/offers/${projectInfo.slug}/${tokenInfo.id}?event_type=TokenOffered`).then(async (res) => {
         const offers = res?.data || []
         const offerList: ObjectType<any>[] = []
-        await Promise.all(offers.map((item: any) => new Promise(async (resolve) => {
+        for (const item of offers) {
           if (item.currency === tokenOnSale.currency) {
             try {
               if (!BigNumber.from(item.currency).isZero()) {
@@ -196,8 +197,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
             }
             offerList.push(item)
           }
-          resolve('')
-        })))
+        }
         setOfferList(offerList)
         setReloadOfferList(false)
       }).catch(err => {

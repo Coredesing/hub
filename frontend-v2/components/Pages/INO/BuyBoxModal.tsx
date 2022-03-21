@@ -53,7 +53,7 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
       balanceInfo?.updateBalance && balanceInfo.updateBalance()
       onClose && onClose(true)
     }
-  }, [success])
+  }, [balanceInfo, onClose, success])
 
   const onChangeRecapcha = (value: string | null) => {
     setVerify(value)

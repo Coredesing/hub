@@ -73,6 +73,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   useEffect(() => {
     if (!account) return
     tiersState.actions.getUserTier(account)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
   const { provider: libraryDefaultTemporary } = useLibraryDefaultFlexible(poolInfo?.network_available)
   const [myBoxThisPool, setMyBoxThisPool] = useState(0)

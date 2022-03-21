@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useMemo, useState } from 'react'
+import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import TabMenus from './TabMenus'
 import styles from './Asset.module.scss'
 import CardSlim from '../Market/CardSlim'
@@ -39,7 +39,7 @@ const Asset = () => {
   const [assetLoading, setAssetLoading] = useState(false)
   const [assetComponents, setAssetComponents] = useState<ReactNode[]>([])
 
-  const getMyListAsset = async (account: string, erc721Contract: any, prjInfo: any) => {
+  const getMyListAsset = useCallback(async (account: string, erc721Contract: any, prjInfo: any) => {
     try {
       const collections: any[] = []
       const result = await fetcher(`${API_BASE_URL}/marketplace/owner/${prjInfo.slug}?wallet=${account}`)
@@ -72,9 +72,9 @@ const Asset = () => {
       console.debug('errr', error)
       return []
     }
-  }
+  }, [])
 
-  const getMyAssetsFromExternalUri = async (amountBox: number, erc721Contract: any, prjInfo: any) => {
+  const getMyAssetsFromExternalUri = useCallback(async (amountBox: number, erc721Contract: any, prjInfo: any) => {
     const collections: any[] = []
     const useExternalUri = !!+prjInfo?.use_external_uri
     for (let id = 0; id < amountBox; id++) {
@@ -107,7 +107,7 @@ const Asset = () => {
       collections.push(collection)
     }
     return collections
-  }
+  }, [account])
 
   useEffect(() => {
     setAssetComponents([])
@@ -143,7 +143,7 @@ const Asset = () => {
       }
       setAssetLoading(false)
     })
-  }, [currentTab, account, library, assetTypes])
+  }, [currentTab, account, library, assetTypes, getMyAssetsFromExternalUri, getMyListAsset])
 
   return <div>
     <div className='header px-9 '>

@@ -39,6 +39,7 @@ const CollectionItems = ({ slug }: { slug: string }) => {
 
   useEffect(() => {
     actions.setCollectionsMarket({ type: collectionType, slug, filter, isGetInfoFromContract: true, allowSetOneByOne: collectionType === 'items' })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, collectionType, slug])
 
   // const [infos, setInfos] = useState([])
@@ -158,7 +159,6 @@ const CollectionItems = ({ slug }: { slug: string }) => {
               <Activities data={collectionsData?.currentList || []} />
             </div>
         }
-
         {
           +collectionsData.totalPage > 1 && <Pagination page={collectionsData.currentPage} pageLast={collectionsData.totalPage} setPage={onChangePage} className="w-full justify-center mt-8 mb-8" />
         }

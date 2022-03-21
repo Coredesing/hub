@@ -43,6 +43,7 @@ const Discover = () => {
       limit: isDiscover ? 8 : 10
     }
     actions.setDiscoverMarket({ type, filter: applyFilter, isGetInfoFromContract: true, allowSetOneByOne: isDiscover })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, type])
 
   // const [infos, setInfos] = useState([])

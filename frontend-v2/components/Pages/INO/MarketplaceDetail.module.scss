@@ -124,3 +124,10 @@
 .activityTableBody tr:hover td {
     background: transparent !important;
 }
+
+.informationItem {
+    grid-template-columns: 170px auto;
+    @media screen and (max-width: 640px) {
+        grid-template-columns: 1fr;
+    }
+}

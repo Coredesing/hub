@@ -1,6 +1,9 @@
 .video {
     position: relative;
     height: 460px;
+    @media screen and (max-width: 640px) {
+        height: 320px;
+    }
     div {
         position: absolute;
         top: 0;

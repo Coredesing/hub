@@ -185,12 +185,32 @@ video[poster] {
   font-size: 14px;
   p {
     margin-top: 1em;
-    margin-bottom: 1em;
+    margin-bottom: 0.25em;
+    color: #D4D7E1;
+    line-height: 1.75em;
   }
 
   ul {
     padding-left: 2em;
     list-style: disc;
+  }
+
+  a {
+    color: #6CDB00;
+  }
+
+  strong {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  h1, h2 {
+    font-size: 24px;
+    font-family: Rajdhani;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
   }
 }
 

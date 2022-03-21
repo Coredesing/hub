@@ -12,6 +12,9 @@ module.exports = {
       fontFamily: {
         casual: ['Poppins'],
         mechanic: ['Rajdhani']
+      },
+      borderRadius: {
+        DEFAULT: '0.2rem'
       }
     },
     colors: {

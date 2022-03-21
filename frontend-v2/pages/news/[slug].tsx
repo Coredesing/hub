@@ -17,8 +17,8 @@ const Article = ({ post }) => {
           <Image src={post.primary_author?.profile_image} layout="fill" className="rounded-full" alt={post.primary_author?.name}></Image>
         </div>
         <div>
-          <p className="font-casual font-medium font-base">{post.primary_author?.name}</p>
-          <p className="font-bold text-[13px] uppercase text-white text-opacity-50">
+          <p className="font-casual font-medium font-base leading-loose">{post.primary_author?.name}</p>
+          <p className="font-semibold text-[13px] uppercase text-white text-opacity-50">
             {format(new Date(post.published_at), 'MMM d, yyyy')}
             <span className="mx-2">•</span>
             {post.reading_time} min read
@@ -36,7 +36,7 @@ const Article = ({ post }) => {
       <div className="mt-4 inline-flex gap-2 flex-wrap font-casual text-sm">
         { post.tags && post.tags.map(tag =>
           <Link href={`/news/tag/${tag.slug}`} passHref={true} key={tag.id}>
-            <a className="px-2 py-1 bg-gamefiDark-630 cursor-pointer hover:bg-gamefiDark-650 uppercase rounded-sm" key={tag.id}>#{tag.name}</a>
+            <a className="px-2 py-1 bg-[#242732] cursor-pointer hover:bg-gamefiDark-650 uppercase rounded-sm" key={tag.id}>#{tag.name}</a>
           </Link>
         )}
       </div>

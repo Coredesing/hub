@@ -11,6 +11,21 @@ export const api = new GhostContentAPI({
   version: 'v3'
 })
 
+export const categories = {
+  update: 'Updates',
+  partnership: 'Partnership',
+  igo: 'IGO',
+  ino: 'INO & Marketplace',
+  ama: 'AMA'
+}
+
+export const Categories = ({ active }:{ active?: string }) => (
+  <div className="bg-gamefiDark-630/50 inline-flex w-full gap-x-3 sm:gap-x-8 p-3 sm:px-6 font-casual font-medium rounded text-xs sm:text-sm mb-6 overflow-x-auto">
+    <Link href="/news" passHref={true}><a className={`whitespace-nowrap font-bold hover:text-white ${!active ? 'text-gamefiGreen-400' : 'text-white/60'}`}>Latest News</a></Link>
+    {Object.keys(categories).map(category => <Link key={category} href={`/news/tag/${category}`} passHref={true}><a className={`whitespace-nowrap hover:text-white ${active === category ? 'text-gamefiGreen-400' : 'text-white/60'}`}>{categories[category] || category}</a></Link>)}
+  </div>
+)
+
 const News = ({ postsFeatured, postsUpdate, postsPartnership, postsIGO, postsINO, postsAMA, tags }) => {
   const featured = useMemo(() => {
     if (!postsFeatured?.length) {
@@ -86,6 +101,7 @@ const News = ({ postsFeatured, postsUpdate, postsPartnership, postsIGO, postsINO
 
   return <Layout title="GameFi.org News">
     <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
+      <Categories></Categories>
       { featured.big && <div className="flex flex-col sm:flex-row gap-4">
         <Link href={`/news/${featured.big.slug}`} passHref={true}>
           <a className="block relative w-full aspect-[16/9]">
@@ -160,7 +176,7 @@ const News = ({ postsFeatured, postsUpdate, postsPartnership, postsIGO, postsINO
 
           <NewsLayoutLeftRight4Bottom items={ino}>
             <span>GameFi</span>
-            <span className="text-gamefiGreen-500 ml-2">INO</span>
+            <span className="text-gamefiGreen-500 ml-2">INO & Marketplace</span>
           </NewsLayoutLeftRight4Bottom>
 
           <NewsLayoutLeft3Right items={ama}>

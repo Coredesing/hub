@@ -1,21 +1,15 @@
 import Layout from '@/components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
-import { api } from './'
+import { api, Categories } from './'
 import { format } from 'date-fns'
 
 const Article = ({ post }) => {
   return <Layout title={post.title}>
-    <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-4xl my-8 md:my-12 lg:my-16 xl:my-24">
-      <Link href="/news" passHref={true}>
-        <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">
-          <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10"/>
-            <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square"/>
-          </svg>
-            Back
-        </a>
-      </Link>
+    <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
+      <Categories active={post.primary_tag?.slug}></Categories>
+    </div>
+    <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-4xl my-8 mb-16">
       <h1 className="text-2xl lg:text-4xl font-bold uppercase">{post.title}</h1>
 
       { post.primary_author && <div className="flex gap-2 items-center mt-2 xl:mt-6">

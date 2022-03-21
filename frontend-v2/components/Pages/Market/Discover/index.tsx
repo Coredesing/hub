@@ -12,7 +12,6 @@ import Activities from '../Activities'
 import CurrencySelector from '../CurrencySelector'
 
 const Discover = () => {
-
   const [showDiscover, setShowDiscover] = useState('items')
   const type = showDiscover === 'items' ? 'discover' : 'activities'
   const { state: discoversMarketState, actions } = useAppContext().discoverMarket

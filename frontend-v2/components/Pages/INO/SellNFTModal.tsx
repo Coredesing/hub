@@ -99,9 +99,9 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], isLoadingButton,
       <div>
 
       </div>
-      <div className={clsx('mb-8 flex items-center gap-3 justify-between')}>
+      <div className={clsx('mb-8 flex sm:items-center gap-3 justify-between')}>
         <label htmlFor="" className='text-sm block mb-2 font-casual'>Total Price</label>
-        <div className='flex gap-2'>
+        <div className='flex gap-2 flex-col sm:flex-row'>
           <div className={clsx(styles.formInput, 'w-40')}>
             <FormInputNumber
               className={`font-casual text-sm rounded-sm px-4 py-2 relative ${styles.input}`}

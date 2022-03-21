@@ -242,7 +242,7 @@ const Staking = ({ data }) => {
 
 export default Staking
 
-export async function getServerSideProps () {
+export async function getStaticProps () {
   const [legendSnapshots, legendCurrent] = await Promise.all([
     fetcher(`${API_BASE_URL}/staking-pool/legend-snapshots`),
     fetcher(`${API_BASE_URL}/staking-pool/legend-current`)
@@ -254,6 +254,7 @@ export async function getServerSideProps () {
         legendSnapshots: legendSnapshots?.data || null,
         legendCurrent: legendCurrent?.data || null
       }
-    }
+    },
+    revalidate: 60
   }
 }

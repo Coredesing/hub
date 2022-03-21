@@ -31,7 +31,5 @@ type TabPanelProps = {
     children?: any;
 }
 export const TabPanel = (props: TabPanelProps) => {
-  return (
-    props.value === props.index ? props.children : <></>
-  )
+  return (props.value === props.index && props.children) || null
 }

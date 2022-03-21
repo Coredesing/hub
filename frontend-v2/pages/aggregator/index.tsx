@@ -253,7 +253,7 @@ const Aggregator = ({ data }) => {
               const network = getNetworkByAlias(item.network_available)
               return (
                 <Link href={`/aggregator/${item.slug}`} key={item.id} passHref={true}>
-                  <div className="flex items-center bg-gamefiDark-700 hover:bg-gamefiDark-600 mb-4 cursor-pointer">
+                  <div className="flex items-center bg-gamefiDark-650 hover:bg-gamefiDark-600 mb-4 cursor-pointer">
                     <div className="flex-1 flex items-center overflow-hidden">
                       <div className="flex-none relative hidden sm:block sm:w-48 sm:h-28">
                         <Image src={item.screen_shots_1} layout="fill" alt={item.game_name} />

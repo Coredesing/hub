@@ -145,6 +145,9 @@ export const getLibraryDefaultFlexible = async (defaultLibrary, networkAlias?: s
 export const useLibraryDefaultFlexible = (networkAlias?: string, mainnet = false) => {
   const { library } = useWeb3Default()
   const [provider, setProvider] = useState<providers.Web3Provider | null>(null)
+  const network = useMemo(() => {
+    return getNetworkByAlias(networkAlias, mainnet)
+  }, [networkAlias, mainnet])
 
   useEffect(() => {
     getLibraryDefaultFlexible(library, networkAlias, mainnet).then(provider => {
@@ -153,7 +156,8 @@ export const useLibraryDefaultFlexible = (networkAlias?: string, mainnet = false
   }, [networkAlias, library, mainnet])
 
   return {
-    provider
+    provider,
+    network
   }
 }
 

@@ -168,15 +168,15 @@ export function formatPrice (price: string): string {
 
 export function printNumber (_n: string | number): string {
   if (typeof _n === 'number') {
-    return _n.toLocaleString()
+    return _n.toLocaleString('en-US')
   }
 
-  const n = parseInt(_n)
+  const n = parseFloat(_n)
   if (!n) {
     return _n
   }
 
-  return n.toLocaleString()
+  return n.toLocaleString('en-US')
 }
 
 export const networkImage = (network: string) => {
@@ -195,13 +195,13 @@ export const networkImage = (network: string) => {
   }
 }
 
-export const useFetch = (url: string, shouldSkip?: boolean) => {
+export const useFetch = (url: string, shouldSkip?: boolean, args?: any) => {
   const [response, setResponse] = useState<SWRResponse | null>(null)
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  const { data, error: fetchError, mutate } = useSWR(shouldSkip ? null : `${API_BASE_URL}${url}`, fetcher)
+  const { data, error: fetchError, mutate } = useSWR(shouldSkip ? null : args ? [`${API_BASE_URL}${url}`, args] : `${API_BASE_URL}${url}`, fetcher)
 
   useEffect(() => {
     setLoading(true)
@@ -256,7 +256,14 @@ export const useProfile = (walletAddress?: string) => {
 
     return false
   }, [walletAddress])
-  const { response, loading, error, errorMessage, mutate } = useFetch(`/user/profile?wallet_address=${walletAddress || ''}`, skip)
+  const [headers, setHeaders] = useState({})
+
+  const options = useMemo(() => {
+    return {
+      headers
+    }
+  }, [headers])
+  const { response, loading, error, errorMessage, mutate } = useFetch(`/user/profile?wallet_address=${walletAddress || ''}`, skip, options)
   const loadingActual = useMemo(() => {
     if (skip) {
       return false
@@ -300,6 +307,7 @@ export const useProfile = (walletAddress?: string) => {
     profile,
     load: mutate,
     loading: loadingActual,
+    setHeaders,
     error,
     errorMessage
   }

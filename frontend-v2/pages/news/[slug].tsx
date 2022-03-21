@@ -1,0 +1,92 @@
+import Layout from '@/components/Layout'
+import Image from 'next/image'
+import Link from 'next/link'
+import { api } from './'
+import { format } from 'date-fns'
+
+const Article = ({ post }) => {
+  return <Layout title={post.title}>
+    <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-4xl my-8 md:my-12 lg:my-16 xl:my-24">
+      <Link href="/news" passHref={true}>
+        <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">
+          <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10"/>
+            <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square"/>
+          </svg>
+            Back
+        </a>
+      </Link>
+      <h1 className="text-2xl lg:text-4xl font-bold uppercase">{post.title}</h1>
+
+      { post.primary_author && <div className="flex gap-2 items-center mt-2 xl:mt-6">
+        <div className="relative w-11 h-11">
+          <Image src={post.primary_author?.profile_image} layout="fill" className="rounded-full" alt={post.primary_author?.name}></Image>
+        </div>
+        <div>
+          <p className="font-casual font-medium font-base">{post.primary_author?.name}</p>
+          <p className="font-bold text-[13px] uppercase text-white text-opacity-50">
+            {format(new Date(post.published_at), 'MMM d, yyyy')}
+            <span className="mx-2">•</span>
+            {post.reading_time} min read
+          </p>
+        </div>
+      </div> }
+
+      <div className="relative mt-6">
+        <img src={post.feature_image} alt={post.title} className="w-full aspect-[16/9]"></img>
+      </div>
+      <p className="mt-6 italic font-casual text-sm lg:text-base text-white text-opacity-75">{post.excerpt}</p>
+      <div className="mt-6 font-casual editor-content !text-base text-white text-opacity-95" dangerouslySetInnerHTML={{ __html: post.html }} />
+      <div className="h-px bg-gradient-to-r from-gray-300/30 mt-8"></div>
+      <p className="font-bold font-casual text-base mt-2">Tags</p>
+      <div className="mt-4 inline-flex gap-2 flex-wrap font-casual text-sm">
+        { post.tags && post.tags.map(tag =>
+          <Link href={`/news/tag/${tag.slug}`} passHref={true} key={tag.id}>
+            <a className="px-2 py-1 bg-gamefiDark-630 cursor-pointer hover:bg-gamefiDark-650 uppercase rounded-sm" key={tag.id}>#{tag.name}</a>
+          </Link>
+        )}
+      </div>
+      <div className="h-px bg-gradient-to-r from-gray-300/30 my-8"></div>
+      { post.primary_author && <div className="flex gap-4 items-center mt-2 xl:mt-6">
+        <div className="relative w-20 h-20">
+          <Image src={post.primary_author?.profile_image} layout="fill" className="rounded-full" alt={post.primary_author?.name}></Image>
+        </div>
+        <div className="flex-1">
+          <p className="font-bold text-[13px] text-white text-opacity-50 uppercase">Author</p>
+          <p className="font-casual font-medium text-lg">{post.primary_author?.name}</p>
+          {post.primary_author?.bio && <p className="font-casual text-base text-white text-opacity-75">
+            {post.primary_author?.bio}
+          </p>}
+        </div>
+      </div> }
+    </div>
+  </Layout>
+}
+
+export default Article
+
+export async function getStaticProps (context) {
+  const post = await api.posts.read({ slug: context.params.slug, include: 'authors,tags' }).catch(() => {})
+
+  if (!post) {
+    return {
+      notFound: true,
+      revalidate: 10
+    }
+  }
+
+  return {
+    props: { post },
+    revalidate: 10
+  }
+}
+
+export async function getStaticPaths () {
+  const posts = await api.posts.browse({ limit: 'all' })
+
+  const paths = posts.map((post) => ({
+    params: { slug: post.slug }
+  }))
+
+  return { paths, fallback: 'blocking' }
+}

@@ -217,7 +217,7 @@ export default function WalletProvider ({ children }) {
             </div>
           </div>
           <div className="p-6 text-white">
-            <div className="p-4 bg-gray-700 rounded flex justify-between">
+            <div className="p-4 bg-gamefiDark-600 rounded flex justify-between">
               <div>
                 <span className="sm:hidden">{shorten(account, 20)}</span>
                 <span className="hidden sm:inline">{account}</span>
@@ -265,7 +265,7 @@ export default function WalletProvider ({ children }) {
                   const available = !!agreed
                   const chosen = available && network.id === networkChosen?.id
 
-                  return <div key={network.id} className={`flex-1 overflow-x-hidden relative cursor-pointer flex flex-col items-center justify-between py-4 border ${chosen ? 'border-gamefiGreen-500 bg-gray-800' : 'bg-gray-700 border-transparent'}`} onClick={() => chooseNetwork(network)}>
+                  return <div key={network.id} className={`flex-1 overflow-x-hidden relative cursor-pointer flex flex-col items-center justify-between py-4 border ${chosen ? 'border-gamefiGreen-500 bg-gamefiDark-700' : 'bg-gamefiDark-600 border-transparent'}`} onClick={() => chooseNetwork(network)}>
                     <div className="w-11 h-11 relative"><Image src={network.image2} className={available ? 'filter-none' : 'grayscale'} alt={network.name} layout="fill"/></div>
                     <span className={`inline-block w-full text-center px-1 truncate text-xs md:text-[13px] leading-6 ${available ? 'text-white' : 'text-gray-100'}`}>{network.name}</span>
 
@@ -285,7 +285,7 @@ export default function WalletProvider ({ children }) {
                   const available = !!agreed && !!networkChosen
                   const chosen = available && wallet.id === walletChosen?.id
 
-                  return <div key={wallet.id} className={`flex-1 overflow-x-hidden relative cursor-pointer flex flex-col items-center justify-between py-4 md:py-6 border ${chosen ? 'border-gamefiGreen-500 bg-gray-800' : 'bg-gray-700 border-transparent'}`} onClick={() => chooseWallet(wallet)}>
+                  return <div key={wallet.id} className={`flex-1 overflow-x-hidden relative cursor-pointer flex flex-col items-center justify-between py-4 md:py-6 border ${chosen ? 'border-gamefiGreen-500 bg-gamefiDark-700' : 'bg-gamefiDark-600 border-transparent'}`} onClick={() => chooseWallet(wallet)}>
                     <Image src={wallet.image} className={available ? 'filter-none' : 'grayscale'} alt={wallet.name} />
                     <span className={`inline-block w-full text-center px-1 truncate text-xs md:text-[13px] leading-6 ${available ? 'text-white' : 'text-gray-100'}`}>{ (activating && chosen) ? 'Loading...' : wallet.name}</span>
 

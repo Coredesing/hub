@@ -3,8 +3,8 @@ import useResizeObserver, { UseResizeObserverCallback } from '@react-hook/resize
 
 type Props = {
   children?: ReactNode;
-  close: () => void;
-  style: any;
+  close?: () => void;
+  style?: any;
 }
 
 const useSize = (target: RefObject<HTMLElement>) => {
@@ -51,7 +51,7 @@ const ModalConnect = ({ children, close, style }: Props) => {
   return (
     <div ref={target} style={{ clipPath: `path('${path}')`, position: 'relative', ...style }}>
       {viewBox && <svg className="absolute inset-0" viewBox={viewBox} fill="none" xmlns="http://www.w3.org/2000/svg" style={{ zIndex: -1 }}>
-        <path fillRule="evenodd" clipRule="evenodd" d={path} fill="currentColor" className="text-gray-800"/>
+        <path fillRule="evenodd" clipRule="evenodd" d={path} fill="currentColor" className="text-gamefiDark-700"/>
       </svg>}
       {children}
 

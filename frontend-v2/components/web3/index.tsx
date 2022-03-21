@@ -212,30 +212,35 @@ export type Token = {
   symbol: string;
   decimals: number;
   address?: string;
+  image: string;
 }
 
 export const ETH: Token = {
   name: 'Ether',
   symbol: 'ETH',
-  decimals: 18
+  decimals: 18,
+  image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png'
 }
 
 export const MATIC: Token = {
   name: 'Matic',
   symbol: 'MATIC',
-  decimals: 18
+  decimals: 18,
+  image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png'
 }
 
 export const BNB: Token = {
   name: 'Binance Coin',
   symbol: 'BNB',
-  decimals: 18
+  decimals: 18,
+  image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png'
 }
 
 export const GAFI: Token = {
   name: 'GameFi',
   symbol: 'GAFI',
   decimals: 18,
+  image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11783.png',
   address: TOKEN_CONTRACT
 }
 
@@ -243,6 +248,7 @@ export const BUSD_BSC: Token = {
   name: 'BUSD',
   symbol: 'BUSD',
   decimals: 18,
+  image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/4687.png',
   address: IS_TESTNET ? process.env.NEXT_PUBLIC_BUSD_97 : process.env.NEXT_PUBLIC_BUSD_56
 }
 
@@ -250,6 +256,7 @@ export const USDT_ERC: Token = {
   name: 'USDT',
   symbol: 'USDT',
   decimals: 6,
+  image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png',
   address: IS_TESTNET ? process.env.NEXT_PUBLIC_USDT_5 : process.env.NEXT_PUBLIC_USDT_1
 }
 
@@ -257,6 +264,7 @@ export const USDT_POLYGON: Token = {
   name: 'USDT',
   symbol: 'USDT',
   decimals: 6,
+  image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png',
   address: IS_TESTNET ? process.env.NEXT_PUBLIC_USDT_80001 : process.env.NEXT_PUBLIC_USDT_137
 }
 

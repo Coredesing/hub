@@ -16,6 +16,7 @@ type Tier = {
     max?: number;
     requirement?: string;
     requirementDescription?: string;
+    social?: boolean;
   };
 }
 
@@ -26,7 +27,8 @@ const tiers = [{
   image: require('@/assets/images/ranks/start.png'),
   config: {
     delay: null,
-    tokens: 0
+    tokens: 0,
+    social: true
   }
 }, {
   id: 1,
@@ -34,7 +36,8 @@ const tiers = [{
   method: 'Lottery',
   image: require('@/assets/images/ranks/rookie.png'),
   config: {
-    max: 60
+    max: 60,
+    social: true
   }
 }, {
   id: 2,
@@ -42,7 +45,8 @@ const tiers = [{
   method: 'Lottery',
   image: require('@/assets/images/ranks/elite.png'),
   config: {
-    max: 300
+    max: 300,
+    social: true
   }
 }, {
   id: 3,
@@ -81,7 +85,8 @@ export function tiersFromConfigs (configs: TierConfigs): Tier[] {
 }
 
 export function getTierById (id: any) {
-  if (!id) {
+  id = id ?? false
+  if (id === false) {
     return
   }
 

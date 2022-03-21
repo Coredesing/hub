@@ -4,7 +4,7 @@ import { getTimelineOfPool } from '@/utils/pool'
 import { formatHumanReadableTime, isImageFile, isVideoFile, shortenAddress } from '@/utils/index'
 import useKyc from '@/hooks/useKyc'
 import { HashLoader } from 'react-spinners'
-import { TokenType, ObjectType } from '@/utils/types'
+import { ObjectType } from '@/utils/types'
 import { ButtonBase } from '@/components/Base/Buttons'
 import CountDownTimeV1, { CountDownTimeType as CountDownTimeTypeV1 } from '@/components/Base/CountDownTime'
 import { TIERS } from '@/utils/constants'
@@ -23,7 +23,7 @@ import DialogTxSubmitted from '@/components/Base/DialogTxSubmitted'
 import Pagination from '@/components/Base/Pagination'
 import { useLibraryDefaultFlexible, useTokenAllowance, useTokenApproval } from '@/components/web3/utils'
 import { Contract } from '@ethersproject/contracts'
-import { getNetworkByAlias } from '@/components/web3'
+import { getNetworkByAlias, Token as TokenType } from '@/components/web3'
 import toast from 'react-hot-toast'
 import SerieContent from './SerieContent'
 import RuleIntroduce from './RuleIntroduce'
@@ -202,10 +202,14 @@ const AuctionDetail = ({ poolInfo }: any) => {
       setTokenApproved(!BigNumber.from(allowance).isZero())
     }
   }, [allowance])
-  const handleApproveToken = async () => {
-    await approve(constants.MaxUint256)
-    toast.success('Approve token succesfully')
-    setTokenApproved(true)
+  const handleApproveToken = () => {
+    approve(constants.MaxUint256)
+      .then(ok => {
+        if (ok) {
+          toast.success('Successfully Approved Your $GAFI')
+          setTokenApproved(true)
+        }
+      })
   }
 
   const perPageBidHistory = 10

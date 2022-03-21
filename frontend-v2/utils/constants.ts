@@ -57,3 +57,10 @@ export const PANCAKE_GAFI_SWAP_URL = process.env.NEXT_PUBLIC_PANCAKE_GAFI_SWAP_U
 export const KUCOIN_GAFI_SWAP_URL = process.env.NEXT_PUBLIC_KUCOIN_GAFI_SWAP_URL
 export const GATE_GAFI_SWAP_URL = process.env.NEXT_PUBLIC_GATE_GAFI_SWAP_URL
 export const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
+
+export const CLAIM_TYPE = {
+  0: 'On GameFi.org',
+  1: 'Airdrop',
+  2: 'External Website',
+  3: 'TBA'
+}

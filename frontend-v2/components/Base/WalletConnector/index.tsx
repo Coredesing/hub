@@ -41,14 +41,14 @@ const WalletConnector = (props) => {
               Buy $GAFI
             </span>
           </a>
-          <div className="w-full sm:w-auto bg-gray-700 clipped-t-r py-2 px-6 rounded inline-flex justify-center cursor-pointer text-[13px]" onClick={() => setShowModal(true)}>
+          <div className="w-full sm:w-auto bg-gamefiDark-500 clipped-t-r py-2 px-6 rounded inline-flex justify-center cursor-pointer text-[13px]" onClick={() => setShowModal(true)}>
             <div className="inline-flex font-bold mr-2 items-center">
               <div className="inline-flex w-5 h-5 relative mr-2">
                 <Image src={network.image} layout="fill" alt={network.name} />
               </div>
               {balance && balanceShort} {currencyNative}
             </div>
-            <span className="bg-gray-800 px-2 rounded-sm">{accountShort}</span>
+            <span className="bg-gamefiDark-700 px-2 rounded-sm">{accountShort}</span>
           </div>
         </div>
       }

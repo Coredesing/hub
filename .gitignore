@@ -1,5 +1,6 @@
 .env
 .eslintcache
+.vscode
 .idea/
 build
 node_modules

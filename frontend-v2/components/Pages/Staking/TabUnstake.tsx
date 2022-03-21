@@ -344,7 +344,7 @@ export default function TabUnstake ({ loadMyPending, pendingWithdrawal, goStake 
       </> }
     </div>
 
-    { step === 1 && <div className="p-4 md:px-10 md:py-4 md:bg-gamefiDark-700 font-casual text-sm flex items-center">
+    { step === 1 && <div className="p-4 md:px-10 md:py-4 md:bg-gray-500 md:bg-opacity-20 font-casual text-sm flex items-center">
       <label className="leading-relaxed inline-block align-middle">
         <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed} onChange={handleAgreement(setAgreed)} />
         I fully understand and agree with all policies.
@@ -364,7 +364,7 @@ export default function TabUnstake ({ loadMyPending, pendingWithdrawal, goStake 
       </button> }
     </div>}
 
-    { step === 2 && <div className="p-4 md:px-10 md:py-4 md:bg-gamefiDark-700 font-casual text-sm flex items-center">
+    { step === 2 && <div className="p-4 md:px-10 md:py-4 md:bg-gray-500 md:bg-opacity-20 font-casual text-sm flex items-center">
       <button onClick={() => chooseStep(1)} className="ml-auto text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline">Back</button>
       <button
         onClick={() => chooseStep(3)}
@@ -374,7 +374,7 @@ export default function TabUnstake ({ loadMyPending, pendingWithdrawal, goStake 
       </button>
     </div>}
 
-    { step === 3 && <div className="p-4 md:px-10 md:py-4 md:bg-gamefiDark-700 font-casual text-sm flex items-center">
+    { step === 3 && <div className="p-4 md:px-10 md:py-4 md:bg-gray-500 md:bg-opacity-20 font-casual text-sm flex items-center">
       <button onClick={() => chooseStep(2)} className="ml-auto text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline">Back</button>
       <button
         onClick={confirmOrNext}
@@ -384,7 +384,7 @@ export default function TabUnstake ({ loadMyPending, pendingWithdrawal, goStake 
       </button>
     </div>}
 
-    { step === 4 && <div className="p-4 md:px-10 md:py-4 md:bg-gamefiDark-700 font-casual text-sm flex items-center">
+    { step === 4 && <div className="p-4 md:px-10 md:py-4 md:bg-gray-500 md:bg-opacity-20 font-casual text-sm flex items-center">
       <button onClick={unstakeMore} className="ml-auto text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline">I want to unstake more</button>
       <button
         onClick={goStake}

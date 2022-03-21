@@ -27,7 +27,7 @@ const Market = () => {
         //       objectFit="cover"
         //       className="mt-48"
         //     ></Image>
-        //   </div> : 
+        //   </div> :
         <div className="relative w-full min-h-full pt-28">
           <div
             className="absolute top-0 right-0"

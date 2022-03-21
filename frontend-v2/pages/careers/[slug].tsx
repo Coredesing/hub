@@ -81,7 +81,7 @@ const Career = ({ data }) => {
 
 export default Career
 
-export async function getStaticProps({ params }) {
+export function getStaticProps ({ params }) {
   if (!params?.slug) {
     return { props: { data: {} } }
   }
@@ -90,7 +90,7 @@ export async function getStaticProps({ params }) {
   return { props: { data: data } }
 }
 
-export async function getStaticPaths() {
+export function getStaticPaths () {
   const paths = jobs.map(job => {
     return {
       params: { slug: job.id }

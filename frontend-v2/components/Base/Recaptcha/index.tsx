@@ -15,7 +15,7 @@ const Recaptcha = ({ className, onChange, ...props }: Props, ref) => {
           {...props}
           sitekey={RECAPTCHA_SITE_KEY}
           onVerify={onChange}
-          ref={ref }
+          ref={ref}
           theme='dark'
         > </HCaptcha>
       </div>

@@ -96,14 +96,16 @@ export default function TabStake ({ loadMyPending, pendingWithdrawal }) {
     }
   }, [allowance, amount])
   const approveAndReload = useCallback((amount) => {
-    approve(amount).finally(() => {
-      if (!errorApproval) {
-        toast.success('Successfully Approved Your $GAFI')
-      }
-
-      loadAllowance().catch(err => { console.debug(err) })
-    })
-  }, [loadAllowance, approve, errorApproval])
+    approve(amount)
+      .then(ok => {
+        if (ok) {
+          toast.success('Successfully Approved Your $GAFI')
+        }
+      })
+      .finally(() => {
+        loadAllowance().catch(err => { console.debug(err) })
+      })
+  }, [loadAllowance, approve])
   useEffect(() => {
     loadAllowance().catch(err => { console.debug(err) })
   }, [account, loadAllowance])
@@ -463,7 +465,7 @@ export default function TabStake ({ loadMyPending, pendingWithdrawal }) {
       </> }
     </div>
 
-    { step === 1 && <div className="p-4 md:px-10 md:py-4 md:bg-gamefiDark-700 font-casual text-sm flex items-center">
+    { step === 1 && <div className="p-4 md:px-10 md:py-4 md:bg-gray-500 md:bg-opacity-20 font-casual text-sm flex items-center">
       <label className="leading-relaxed inline-block align-middle">
         <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed} onChange={handleAgreement} />
         I fully understand and agree with the <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">Ranking System</a> and <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">New Staking and Unstaking Policy</a>
@@ -476,7 +478,7 @@ export default function TabStake ({ loadMyPending, pendingWithdrawal }) {
       </button>
     </div>}
 
-    { step === 2 && <div className="p-4 md:px-10 md:py-4 md:bg-gamefiDark-700 font-casual text-sm flex items-center">
+    { step === 2 && <div className="p-4 md:px-10 md:py-4 md:bg-gray-500 md:bg-opacity-20 font-casual text-sm flex items-center">
       <button onClick={() => chooseStep(1)} className="ml-auto text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline">Back</button>
       <button
         onClick={() => chooseStep(3)}
@@ -486,7 +488,7 @@ export default function TabStake ({ loadMyPending, pendingWithdrawal }) {
       </button>
     </div>}
 
-    { step === 3 && <div className="p-4 md:px-10 md:py-4 md:bg-gamefiDark-700 font-casual text-sm flex items-center">
+    { step === 3 && <div className="p-4 md:px-10 md:py-4 md:bg-gray-500 md:bg-opacity-20 font-casual text-sm flex items-center">
       <button onClick={() => chooseStep(2)} className="ml-auto text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline">Back</button>
       <button
         onClick={approveOrNext}
@@ -496,7 +498,7 @@ export default function TabStake ({ loadMyPending, pendingWithdrawal }) {
       </button>
     </div>}
 
-    { step === 4 && <div className="p-4 md:px-10 md:py-4 md:bg-gamefiDark-700 font-casual text-sm flex items-center">
+    { step === 4 && <div className="p-4 md:px-10 md:py-4 md:bg-gray-500 md:bg-opacity-20 font-casual text-sm flex items-center">
       <button onClick={() => chooseStep(3)} className="ml-auto text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline">Back</button>
       <button
         onClick={confirmOrNext}
@@ -506,7 +508,7 @@ export default function TabStake ({ loadMyPending, pendingWithdrawal }) {
       </button>
     </div>}
 
-    { step === 5 && <div className="p-4 md:px-10 md:py-4 md:bg-gamefiDark-700 font-casual text-sm flex items-center">
+    { step === 5 && <div className="p-4 md:px-10 md:py-4 md:bg-gray-500 md:bg-opacity-20 font-casual text-sm flex items-center">
       <button
         onClick={stakeMore}
         className={`flex-none ml-auto py-2 px-10 font-bold font-mechanic text-sm rounded-xs hover:opacity-95 cursor-pointer clipped-t-r text-gamefiDark-900 ${stepOK4 ? 'bg-gamefiGreen-500' : 'bg-gray-500 bg-opacity-70'}`}

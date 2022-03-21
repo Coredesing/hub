@@ -34,8 +34,17 @@ const useTiers = () => {
     return tiersFromConfigs(configs)
   }, [configs])
 
+  const priority = useMemo(() => {
+    if (!all?.length) {
+      return []
+    }
+
+    return all.filter(x => !x.config?.social)
+  }, [all])
+
   return {
-    all
+    all,
+    priority
   }
 }
 

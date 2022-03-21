@@ -72,7 +72,7 @@ const ListTrending = () => {
           transition='0.5s'
           style={{ display: 'flex', justifyContent: (infos.length > 4 || isMdScreen) ? 'start' : 'center', gap: '16px' }}>
           {
-            infos.map((item, i) => <SwiperItem key={`hot-offers-${i}`} width={isMdScreen ? '250px' : '280px'}>
+            infos.map((item, i) => <SwiperItem key={`hot-offers-${i}`} style={{ minWidth: '280px' }} width={'280px'}>
               <div className='w-full'>
                 <NFTCard item={item} showOffer={true} showListing={true}></NFTCard>
               </div>

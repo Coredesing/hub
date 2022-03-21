@@ -630,20 +630,20 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
         />
         <div className='py-8'>
           <TabPanel value={currentTab} index={0}>
-            <div className='grid gap-2'>
-              <div className='grid gap-2' style={{ gridTemplateColumns: '170px auto' }}>
+            <div className='grid gap-4 sm:gap-2'>
+              <div className={`grid gap-2 ${styles.informationItem}`}>
                 <label htmlFor="" className='font-bold text-sm font-casual'>Contract Address</label>
                 <div className='font-casual text-sm text-gamefiGreen-700 break-words break-all'>
                   {projectInfo.token_address}
                 </div>
               </div>
-              <div className='grid gap-2' style={{ gridTemplateColumns: '170px auto' }}>
+              <div className={`grid gap-2 ${styles.informationItem}`}>
                 <label htmlFor="" className='font-bold text-sm font-casual'>Token ID</label>
                 <div className='font-casual text-sm'>
                   #{formatNumber(tokenInfo.id, 3)}
                 </div>
               </div>
-              <div className='grid gap-2' style={{ gridTemplateColumns: '170px auto' }}>
+              <div className={`grid gap-2 ${styles.informationItem}`}>
                 <label htmlFor="" className='font-bold text-sm font-casual'>Description</label>
                 <div className='font-casual text-sm'>
                   {tokenInfo.description}

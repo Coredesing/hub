@@ -96,6 +96,9 @@
     display: grid;
     gap: 8px;
     grid-template-columns: repeat(auto-fit, minmax(300px, 45%));
+    @media screen and (max-width: 640px) {
+        grid-template-columns: 1fr;
+    }
     div {
         display: grid;
         grid-template-columns: minmax(200px, 50%) auto;

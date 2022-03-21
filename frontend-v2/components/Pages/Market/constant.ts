@@ -1,5 +1,5 @@
-import { BNB, BUSD_BSC, GAFI } from "@/components/web3"
-import { ethers } from "ethers"
+import { BNB, BUSD_BSC, GAFI } from '@/components/web3'
+import { ethers } from 'ethers'
 
 export const MARKET_ACTIVITIES = {
   TokenOfferCanceled: 'Cancel',

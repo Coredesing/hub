@@ -59,8 +59,8 @@ const SerieContent = ({ poolInfo, selected }: Props) => {
   const firstSerie = poolInfo?.seriesContentConfig?.[0]
   const showRate = firstSerie && parseFloat(firstSerie?.rate) > 0
   const showAmount = firstSerie && parseFloat(firstSerie?.amount) > 0
-  const re = /((\w+):([^|]*))+/g
-  const reName = /^(.*?)-(.*?)(-(.*?))*$/g
+  const re = useMemo(() => /((\w+):([^|]*))+/g, [])
+  const reName = useMemo(() => /^(.*?)-(.*?)(-(.*?))*$/g, [])
   const useNewFormat = firstSerie?.description.match(re)
   const useNewNameFormat = firstSerie?.name.match(reName)
   const useOldFormatWithDescription = firstSerie?.description && !useNewFormat
@@ -106,7 +106,7 @@ const SerieContent = ({ poolInfo, selected }: Props) => {
       const r2 = b.rarityMapping?.value || 0
       return r2 - r1
     })
-  }, [poolInfo])
+  }, [re, reName, useNewFormat, useNewNameFormat, poolInfo])
   const useNewFormatExtended = configs?.[0]?.metadata?.[selected?.name]?.probability
   const showNewAmount = configs?.[0]?.metadata?.[selected?.name]?.amount
   const showNewRarity = configs?.[0]?.rarity

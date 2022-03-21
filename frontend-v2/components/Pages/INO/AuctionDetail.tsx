@@ -54,9 +54,20 @@ const AuctionDetail = ({ poolInfo }: any) => {
     return new Contract(poolInfo?.acceptedTokensConfig?.[0]?.address, Erc20Abi, libraryDefaultTemporary)
   }, [poolInfo, libraryDefaultTemporary])
 
-  const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string; [k: string]: any }>({ date1: 0, date2: 0, title: '' })
+  const getTotalBidHistories = useCallback(async () => {
+    try {
+      const totalNumberBid = await contractAuctionPool.numberOfBid()
+      setTotalBidHistories(+totalNumberBid)
+      const totalVolume = await contractAuctionPool.totalBid()
+      setTotalTotalVolume(utils.formatEther(totalVolume))
+    } catch (error) {
+      console.debug('error', error)
+    }
+  }, [contractAuctionPool])
+
+  const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string;[k: string]: any }>({ date1: 0, date2: 0, title: '' })
   const { checkingKyc, isKYC } = useKyc(connectedAccount, (isNumber(poolInfo?.kyc_bypass) && !poolInfo?.kyc_bypass))
-  const [allowNetwork, setAllowNetwork] = useState<{ ok: boolean; [k: string]: any }>({ ok: false })
+  const [allowNetwork, setAllowNetwork] = useState<{ ok: boolean;[k: string]: any }>({ ok: false })
   const [boxTypeSelected, setSelectBoxType] = useState<{ [k: string]: any }>({})
   useEffect(() => {
     const networkInfo = getNetworkByAlias(poolInfo?.network_available)
@@ -72,6 +83,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
   useEffect(() => {
     if (!connectedAccount) return
     tiersState.actions.getUserTier(connectedAccount)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connectedAccount])
 
   const onSetCountdown = useCallback(() => {
@@ -137,7 +149,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
   useEffect(() => {
     if (contractAuctionPool) {
       contractAuctionPool.minBidIncrementPerMile().then((num: any) => {
-        setRateEachBid(+((+num / 1000).toFixed(2)) + '')
+        setRateEachBid(`${+((+num / 1000).toFixed(2))}`)
       }).catch(err => {
         console.debug(err)
       })
@@ -181,11 +193,11 @@ const AuctionDetail = ({ poolInfo }: any) => {
       setResetLastBidder(true)
       getTotalBidHistories()
     }
-  }, [auctionSuccess])
+  }, [getTotalBidHistories, auctionSuccess, onCloseModalPlaceBidBox])
 
   const onPlaceBid = useCallback((numberBox: number, captcha: string) => {
     auctionBox(numberBox, captcha)
-  }, [poolInfo, connectedAccount, currencyPool])
+  }, [auctionBox])
 
   const [isApprovedToken, setTokenApproved] = useState<boolean | null>(null)
   const { approve, loading: loadingApproveToken } = useTokenApproval(currencyPool, poolInfo.campaign_hash)
@@ -228,7 +240,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
       }
     }
   }, [totalBidHistories])
-  const getListBidHistories = async () => {
+  const getListBidHistories = useCallback(async () => {
     try {
       if (!filterBidHistory) return
       setLoadingBidHistory(true)
@@ -263,26 +275,17 @@ const AuctionDetail = ({ poolInfo }: any) => {
       console.debug('error', error)
       setLoadingBidHistory(false)
     }
-  }
+  }, [contractAuctionPool, filterBidHistory, cachedSymbolCurrency, libraryDefaultTemporary])
   useEffect(() => {
-    if (!contractAuctionPool || !poolInfo || !filterBidHistory.hasOwnProperty('from')) return
+    if (!contractAuctionPool || !poolInfo || !('from' in filterBidHistory)) return
     getListBidHistories()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contractAuctionPool, filterBidHistory, poolInfo])
 
-  const getTotalBidHistories = async () => {
-    try {
-      const totalNumberBid = await contractAuctionPool.numberOfBid()
-      setTotalBidHistories(+totalNumberBid)
-      const totalVolume = await contractAuctionPool.totalBid()
-      setTotalTotalVolume(utils.formatEther(totalVolume))
-    } catch (error) {
-      console.debug('error', error)
-    }
-  }
   useEffect(() => {
     if (!contractAuctionPool || !poolInfo) return
     getTotalBidHistories()
-  }, [contractAuctionPool, poolInfo])
+  }, [getTotalBidHistories, contractAuctionPool, poolInfo])
 
   const onChangePageBidHistory = (page: number) => {
     if (filterBidHistory?.page === page) return

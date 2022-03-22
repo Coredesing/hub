@@ -40,9 +40,9 @@ const Articles = ({ posts, tag, pagination, pageOriginal }) => {
 
               <div className="w-full sm:max-w-xl">
                 <Link href={`/news/${item.slug}`} passHref={true}>
-                  <a className="line-clamp-2 font-bold text-lg sm:text-2xl !leading-none my-2 xl:my-4 hover:underline">{item.title}</a>
+                  <a className="line-clamp-2 font-bold text-lg sm:text-2xl !leading-shi mt-2 mb-2 xl:mb-4 hover:underline">{item.title}</a>
                 </Link>
-                <div className="line-clamp-2 font-casual text-xs sm:text-sm whitespace-pre-line text-white text-opacity-75">{item.excerpt}</div>
+                <div className="line-clamp-3 font-casual text-xs sm:text-sm whitespace-pre-line text-white text-opacity-75">{item.excerpt}</div>
               </div>
             </div>)}
           </div>

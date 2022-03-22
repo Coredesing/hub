@@ -299,7 +299,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
       toast.error('Request failed')
       return
     }
-    toast.success('Request successfuly')
+    toast.success('Request successfully')
     setTimeout(() => {
       setFilterActivities(f => ({ ...f, page: 1, force: true }))
     }, 2000)

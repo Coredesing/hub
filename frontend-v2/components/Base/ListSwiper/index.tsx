@@ -132,11 +132,10 @@ export default ListSwiper
 export const CarouselList = ({
   childrens
 }: { childrens: ReactElement[] }) => {
-
   return <ScrollingCarousel
     className={style.carouselList}
     leftIcon={<div className="w-10 h-full grid items-center">
-      <button className={` `} >
+      <button className={' '} >
         <svg width="32" height="122" viewBox="0 0 32 122" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M22.5 61.5H2.5" stroke="white" strokeMiterlimit="10" />
           <path d="M9.5 68.5L2.5 61.5L9.5 54.5" stroke="white" strokeMiterlimit="10" strokeLinecap="square" />

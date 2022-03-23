@@ -122,8 +122,8 @@ const Discover = () => {
               </div>
             </div>
             <div className="flex items-center flex-wrap gap-2 sm:justify-self-auto justify-end sm:w-auto w-full">
-              <div><NetworkSelector isMulti={false} isToggle={false} selected={{ [filter.network]: true }} onChange={handleChangeNetwork} style={{ height: '38px' }}></NetworkSelector></div>
-              <CurrencySelector selected={filter.currency} onChange={onSelectCurrency} />
+              <div><NetworkSelector isMulti={false} isToggle={false} selected={{ [filter.network]: true }} onChange={handleChangeNetwork} className='mb-0' style={{ height: '38px' }}></NetworkSelector></div>
+              <CurrencySelector selected={filter.currency} onChange={onSelectCurrency} style={{ height: '38px' }}/>
               <div className='flex'>
                 <div>
                   <Dropdown

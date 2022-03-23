@@ -114,7 +114,7 @@ const CollectionItems = ({ slug }: { slug: string }) => {
           </div>
           <div className="flex md:flex-row flex-wrap gap-2 items-center sm:justify-self-auto justify-end sm:w-auto w-full">
             <div><NetworkSelector isMulti={false} isToggle={false} selected={{ [filter.network]: true }} onChange={handleChangeNetwork} style={{ height: '38px' }} /></div>
-            <CurrencySelector selected={filter.currency} onChange={onSelectCurrency} style={{ height: '38px' }} />
+            <CurrencySelector selected={filter.currency} onChange={onSelectCurrency} className='mb-0' style={{ height: '38px' }} />
             <div className='flex'>
               <div>
                 <Dropdown

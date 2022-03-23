@@ -190,7 +190,7 @@ export const networkImage = (network: string) => {
   }
 
   case 'polygon': {
-    return require('assets/images/networks/polygon.svg')
+    return require('assets/images/networks/matic.svg')
   }
   }
 }

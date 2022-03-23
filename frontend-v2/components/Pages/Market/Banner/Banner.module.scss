@@ -1,0 +1,13 @@
+.viewAssets {
+    width: 164px;
+    transform: translate(-50%);
+    color: #0D0F15;
+    letter-spacing: 0.02em;
+    transition: .3s;
+    -webkit-clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%, 0 0);
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%, 0 0);
+}
+
+.imgBanner {
+    min-height: 200px;
+}

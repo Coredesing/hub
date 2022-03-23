@@ -12,6 +12,12 @@ module.exports = {
       fontFamily: {
         casual: ['Poppins'],
         mechanic: ['Rajdhani']
+      },
+      borderRadius: {
+        DEFAULT: '0.2rem'
+      },
+      lineHeight: {
+        shi: '1.1'
       }
     },
     colors: {
@@ -79,7 +85,7 @@ module.exports = {
     },
     fontSize: {
       xs: ['0.75rem', { lineHeight: '1rem' }],
-      sm: ['0.875rem', { lineHeight: '1.25rem' }],
+      sm: ['0.875rem', { lineHeight: '1.35rem' }],
       base: ['1rem', { lineHeight: '1.5rem' }],
       lg: ['1.125rem', { lineHeight: '1.75rem' }],
       xl: ['1.25rem', { lineHeight: '1.75rem' }],

@@ -1,4 +1,4 @@
-import ListSwiper, { SwiperItem } from '@/components/Base/ListSwiper'
+import { CarouselList, SwiperItem } from '@/components/Base/ListSwiper'
 import React, { useMemo } from 'react'
 import { useFetch } from '@/utils'
 import Link from 'next/link'
@@ -18,26 +18,66 @@ const HotCollections = () => {
   return (
     <div className="md:px-4 lg:px-16 md:container mx-auto mt-20">
       {!loading && hotCollections?.length
-        ? <ListSwiper title="Hot Collections" showItemsNumber={isMdScreen ? 2 : 4} step={isMdScreen ? 2 : 4} transition='0.5s' hasHeader={true} style={{ display: 'flex', gap: '16px', justifyContent: 'start' }}>
-          {hotCollections.map(collection => (
-            <SwiperItem key={collection.id} width={isMdScreen ? '250px' : '280px'} style={{ flex: `0 0 ${isMdScreen ? '250px' : '280px'}` }}>
-              <Link href={`/market/collection/${collection.slug}`} passHref>
-                <div className={'w-full md:px-0 flex flex-col overflow-hidden rounded-sm cursor-pointer hover:underline'} style={{ height: '240px' }}>
-                  <div className={'w-full relative'} style={{ height: '150px' }}>
-                    <div className="absolute left-0 right-0 mx-auto w-14 -bottom-6 rounded-full border-2 border-gamefiDark-900 bg-gamefiDark-900" style={{ zIndex: '1' }}>
-                      <img src={collection.logo} alt="" className="w-14 rounded-full object-cover"></img>
+        ? <>
+          <div className="md:text-lg 2xl:text-3xl uppercase font-bold">
+            Hot Collections
+          </div>
+          <div className="w-full relative bg-gamefiDark-600" style={{ height: '1px' }}>
+            <div className="absolute top-0 left-0 bg-gamefiDark-600 clipped-b-r-full-sm inline-block" style={{ height: '4px', width: '60px', marginTop: '0', marginLeft: '0' }}></div>
+            {
+              <div className="absolute top-0 right-0 w-1/5 grid grid-flow-col gap-2 bg-gamefiDark-900" style={{ height: '1px' }}>
+                {
+                  [1, 2, 3, 4].map((page: number) => (
+                    <div key={page} className={`h-full ${page === 1 ? 'bg-gamefiGreen-700' : 'bg-white'}`}></div>
+                  ))
+                }
+              </div>
+            }
+          </div>
+          <div className="mt-5">
+            <CarouselList childrens={hotCollections.map(collection => (
+              <SwiperItem key={collection.id}
+                width={isMdScreen ? '250px' : '280px'}
+                style={{ marginLeft: '8px', marginRight: '8px', flex: `0 0 ${isMdScreen ? '250px' : '280px'}` }}>
+                <Link href={`/market/collection/${collection.slug}`} passHref>
+                  <div className={'w-full md:px-0 flex flex-col overflow-hidden rounded-sm cursor-pointer hover:underline'} style={{ height: '240px' }}>
+                    <div className={'w-full relative'} style={{ height: '150px' }}>
+                      <div className="absolute left-0 right-0 mx-auto w-14 -bottom-6 rounded-full border-2 border-gamefiDark-900 bg-gamefiDark-900" style={{ zIndex: '1' }}>
+                        <img src={collection.logo} alt="" className="w-14 rounded-full object-cover"></img>
+                      </div>
+                      <ImageLoader src={collection.banner} alt='' className='object-cover' style={{ width: '100%', height: '150px' }} />
+                      {/* <img src={collection.banner} alt='favorite-img' className='object-cover' style={{ width: '100%', height: '150px' }} /> */}
                     </div>
-                    <ImageLoader src={collection.banner} alt='' className='object-cover' style={{ width: '100%', height: '150px' }} />
-                    {/* <img src={collection.banner} alt='favorite-img' className='object-cover' style={{ width: '100%', height: '150px' }} /> */}
+                    <div className="relative bg-gamefiDark-650 w-full clipped-b-r-sm" style={{ height: '90px' }}>
+                      <div className={'h-full flex items-center align-middle justify-center font-semibold py-4'}>{collection.name}</div>
+                    </div>
                   </div>
-                  <div className="relative bg-gamefiDark-650 w-full clipped-b-r-sm" style={{ height: '90px' }}>
-                    <div className={'h-full flex items-center align-middle justify-center font-semibold py-4'}>{collection.name}</div>
-                  </div>
-                </div>
-              </Link>
-            </SwiperItem>
-          ))}
-        </ListSwiper>
+                </Link>
+              </SwiperItem>
+            ))}
+            />
+          </div>
+        </>
+        // ? <ListSwiper title="Hot Collections" showItemsNumber={isMdScreen ? 2 : 4} step={isMdScreen ? 2 : 4} transition='0.5s' hasHeader={true} style={{ display: 'flex', gap: '16px', justifyContent: 'start' }}>
+        //   {hotCollections.map(collection => (
+        //     <SwiperItem key={collection.id} width={isMdScreen ? '250px' : '280px'} style={{ flex: `0 0 ${isMdScreen ? '250px' : '280px'}` }}>
+        //       <Link href={`/market/collection/${collection.slug}`} passHref>
+        //         <div className={'w-full md:px-0 flex flex-col overflow-hidden rounded-sm cursor-pointer hover:underline'} style={{ height: '240px' }}>
+        //           <div className={'w-full relative'} style={{ height: '150px' }}>
+        //             <div className="absolute left-0 right-0 mx-auto w-14 -bottom-6 rounded-full border-2 border-gamefiDark-900 bg-gamefiDark-900" style={{ zIndex: '1' }}>
+        //               <img src={collection.logo} alt="" className="w-14 rounded-full object-cover"></img>
+        //             </div>
+        //             <ImageLoader src={collection.banner} alt='' className='object-cover' style={{ width: '100%', height: '150px' }} />
+        //             {/* <img src={collection.banner} alt='favorite-img' className='object-cover' style={{ width: '100%', height: '150px' }} /> */}
+        //           </div>
+        //           <div className="relative bg-gamefiDark-650 w-full clipped-b-r-sm" style={{ height: '90px' }}>
+        //             <div className={'h-full flex items-center align-middle justify-center font-semibold py-4'}>{collection.name}</div>
+        //           </div>
+        //         </div>
+        //       </Link>
+        //     </SwiperItem>
+        //   ))}
+        // </ListSwiper>
         : <></>}
       {loading && (
         <div className="loader-wrapper">

@@ -1,21 +1,15 @@
 import Layout from '@/components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
-import { api } from './'
+import { api, Categories } from './'
 import { format } from 'date-fns'
 
 const Article = ({ post }) => {
   return <Layout title={post.title}>
-    <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-4xl my-8 md:my-12 lg:my-16 xl:my-24">
-      <Link href="/news" passHref={true}>
-        <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">
-          <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10"/>
-            <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square"/>
-          </svg>
-            Back
-        </a>
-      </Link>
+    <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
+      <Categories active={post.primary_tag?.slug}></Categories>
+    </div>
+    <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-4xl my-8 mb-16">
       <h1 className="text-2xl lg:text-4xl font-bold uppercase">{post.title}</h1>
 
       { post.primary_author && <div className="flex gap-2 items-center mt-2 xl:mt-6">
@@ -23,8 +17,8 @@ const Article = ({ post }) => {
           <Image src={post.primary_author?.profile_image} layout="fill" className="rounded-full" alt={post.primary_author?.name}></Image>
         </div>
         <div>
-          <p className="font-casual font-medium font-base">{post.primary_author?.name}</p>
-          <p className="font-bold text-[13px] uppercase text-white text-opacity-50">
+          <p className="font-casual font-medium font-base leading-loose">{post.primary_author?.name}</p>
+          <p className="font-semibold text-[13px] uppercase text-white text-opacity-50">
             {format(new Date(post.published_at), 'MMM d, yyyy')}
             <span className="mx-2">•</span>
             {post.reading_time} min read
@@ -42,7 +36,7 @@ const Article = ({ post }) => {
       <div className="mt-4 inline-flex gap-2 flex-wrap font-casual text-sm">
         { post.tags && post.tags.map(tag =>
           <Link href={`/news/tag/${tag.slug}`} passHref={true} key={tag.id}>
-            <a className="px-2 py-1 bg-gamefiDark-630 cursor-pointer hover:bg-gamefiDark-650 uppercase rounded-sm" key={tag.id}>#{tag.name}</a>
+            <a className="px-2 py-1 bg-[#242732] cursor-pointer hover:bg-gamefiDark-650 uppercase rounded-sm" key={tag.id}>#{tag.name}</a>
           </Link>
         )}
       </div>

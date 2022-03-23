@@ -2,7 +2,7 @@ import Layout from '@/components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { api } from '..'
+import { api, Categories } from '..'
 import { format } from 'date-fns'
 import Pagination from '@/components/Pages/Aggregator/Pagination'
 import { useEffect, useState } from 'react'
@@ -21,20 +21,11 @@ const Articles = ({ posts, tag, pagination, pageOriginal }) => {
   }, [pageOriginal, tag, page])
   return <Layout title={tag ? `GameFi.org News - ${tag.toUpperCase()}` : 'GameFi.org News'}>
     <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
-      <Link href="/news" passHref={true}>
-        <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">
-          <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10"/>
-            <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square"/>
-          </svg>
-            Back
-        </a>
-      </Link>
-      <h1 className="text-2xl lg:text-3xl font-bold uppercase">#{tag}</h1>
+      <Categories active={tag}></Categories>
       <div className="flex flex-col sm:flex-row gap-6 mt-10">
         <div className="flex-1">
           <div className="grid grid-cols-2 gap-x-6 gap-y-8">
-            { posts && posts.map(item => <div key={item.id} className="flex sm:flex-col gap-4 sm:gap-0">
+            { posts && posts.map(item => <div key={item.id} className="flex flex-col gap-4 sm:gap-0">
               <Link href={`/news/${item.slug}`} passHref={true}>
                 <a className="block relative w-full aspect-[16/9]">
                   <Image src={item.feature_image} layout="fill" alt={item.title} className="rounded" objectFit={'contain'}></Image>
@@ -47,11 +38,11 @@ const Articles = ({ posts, tag, pagination, pageOriginal }) => {
                 {item.reading_time} min read
               </p>
 
-              <div className="max-w-xl">
+              <div className="w-full sm:max-w-xl">
                 <Link href={`/news/${item.slug}`} passHref={true}>
-                  <a className="line-clamp-2 font-bold text-lg sm:text-2xl !leading-none my-2 xl:my-4 hover:underline">{item.title}</a>
+                  <a className="line-clamp-2 font-bold text-lg sm:text-2xl !leading-shi mt-2 mb-2 xl:mb-4 hover:underline">{item.title}</a>
                 </Link>
-                <div className="line-clamp-2 font-casual text-xs sm:text-sm whitespace-pre-line text-white text-opacity-75">{item.excerpt}</div>
+                <div className="line-clamp-3 font-casual text-xs sm:text-sm whitespace-pre-line text-white text-opacity-75">{item.excerpt}</div>
               </div>
             </div>)}
           </div>

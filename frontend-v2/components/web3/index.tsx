@@ -236,6 +236,20 @@ export const BNB: Token = {
   image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png'
 }
 
+export const AVAX: Token = {
+  name: 'Avalanche',
+  symbol: 'AVAX',
+  decimals: 18,
+  image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5805.png'
+}
+
+export const FTM: Token = {
+  name: 'Fantom',
+  symbol: 'FTM',
+  decimals: 18,
+  image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3513.png'
+}
+
 export const GAFI: Token = {
   name: 'GameFi',
   symbol: 'GAFI',
@@ -270,7 +284,7 @@ export const USDT_POLYGON: Token = {
 
 export const MARKETPLACE_CONTRACT = IS_TESTNET ? process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT_97 : process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT_56
 
-const currencies = [ETH, MATIC, BNB, USDT_ERC, USDT_POLYGON, BUSD_BSC, GAFI]
+const currencies = [ETH, MATIC, BNB, AVAX, FTM, USDT_ERC, USDT_POLYGON, BUSD_BSC, GAFI]
 
 export type Network = {
   id: number;
@@ -292,7 +306,7 @@ export const networks = [{
   currency: ETH.symbol,
   blockExplorerUrls: ['https://etherscan.io'],
   image: require('@/assets/images/networks/eth.svg'),
-  image2: require('@/assets/images/icons/ethereum.svg'),
+  image2: require('@/assets/images/networks/ethereum.svg'),
   color: '#546BC7',
   colorText: '#fff'
 }, {
@@ -302,18 +316,18 @@ export const networks = [{
   currency: ETH.symbol,
   blockExplorerUrls: ['https://goerli.etherscan.io'],
   image: require('@/assets/images/networks/eth.svg'),
-  image2: require('@/assets/images/icons/ethereum.svg'),
+  image2: require('@/assets/images/networks/ethereum.svg'),
   color: '#546BC7',
   colorText: '#fff',
   testnet: true
 }, {
   id: 56,
-  name: 'BSC',
+  name: 'BNB Chain',
   alias: 'bsc',
   currency: BNB.symbol,
   blockExplorerUrls: ['https://bscscan.com'],
   image: require('@/assets/images/networks/bsc.svg'),
-  image2: require('@/assets/images/icons/bsc.svg'),
+  image2: require('@/assets/images/networks/bnbchain.svg'),
   color: '#FFC700',
   colorAlt: '#e6b300',
   colorText: '#28282E'
@@ -324,7 +338,7 @@ export const networks = [{
   currency: BNB.symbol,
   blockExplorerUrls: ['https://testnet.bscscan.com'],
   image: require('@/assets/images/networks/bsc.svg'),
-  image2: require('@/assets/images/icons/bsc.svg'),
+  image2: require('@/assets/images/networks/bnbchain.svg'),
   color: '#FFC700',
   colorAlt: '#e6b300',
   colorText: '#28282E',
@@ -335,8 +349,8 @@ export const networks = [{
   alias: 'polygon',
   currency: MATIC.symbol,
   blockExplorerUrls: ['https://polygonscan.com'],
-  image: require('@/assets/images/networks/polygon.svg'),
-  image2: require('@/assets/images/icons/polygon.svg'),
+  image: require('@/assets/images/networks/matic.svg'),
+  image2: require('@/assets/images/networks/polygon.svg'),
   color: '#A06EF4',
   colorText: '#fff'
 }, {
@@ -345,8 +359,71 @@ export const networks = [{
   alias: 'polygon',
   currency: MATIC.symbol,
   blockExplorerUrls: ['https://mumbai.polygonscan.com'],
-  image: require('@/assets/images/networks/polygon.svg'),
-  image2: require('@/assets/images/icons/polygon.svg'),
+  image: require('@/assets/images/networks/matic.svg'),
+  image2: require('@/assets/images/networks/polygon.svg'),
+  color: '#A06EF4',
+  colorText: '#fff',
+  testnet: true
+}, {
+  id: 43114,
+  name: 'Avalanche',
+  alias: 'avax',
+  currency: AVAX.symbol,
+  blockExplorerUrls: ['https://snowtrace.io'],
+  image: require('@/assets/images/networks/avax.svg'),
+  image2: require('@/assets/images/networks/avalanche.svg'),
+  color: '#A06EF4',
+  colorText: '#fff'
+}, {
+  id: 43113,
+  name: 'Avalanche Testnet',
+  alias: 'avax',
+  currency: AVAX.symbol,
+  blockExplorerUrls: ['https://testnet.snowtrace.io'],
+  image: require('@/assets/images/networks/avax.svg'),
+  image2: require('@/assets/images/networks/avalanche.svg'),
+  color: '#A06EF4',
+  colorText: '#fff',
+  testnet: true
+}, {
+  id: 42161,
+  name: 'Arbitrum One',
+  alias: 'arb',
+  currency: ETH.symbol,
+  blockExplorerUrls: ['https://arbiscan.io'],
+  image: require('@/assets/images/networks/arb.svg'),
+  image2: require('@/assets/images/networks/arbitrum.svg'),
+  color: '#A06EF4',
+  colorText: '#fff'
+}, {
+  id: 421611,
+  name: 'Arbitrum Testnet',
+  alias: 'arb',
+  currency: ETH.symbol,
+  blockExplorerUrls: ['https://arbiscan.io'],
+  image: require('@/assets/images/networks/arb.svg'),
+  image2: require('@/assets/images/networks/arbitrum.svg'),
+  color: '#A06EF4',
+  colorText: '#fff',
+  testnet: true
+}, {
+  id: 250,
+  name: 'Fantom Opera',
+  alias: 'ftm',
+  currency: FTM.symbol,
+  blockExplorerUrls: ['https://ftmscan.com'],
+  image: require('@/assets/images/networks/ftm.svg'),
+  image2: require('@/assets/images/networks/fantom.svg'),
+  color: '#A06EF4',
+  colorText: '#fff'
+}, {
+  id: 4002,
+  name: 'Fantom Testnet',
+  alias: 'ftm',
+  currency: FTM.symbol,
+  blockExplorerUrls: ['https://ftmscan.com'],
+  image: require('@/assets/images/networks/ftm.svg'),
+  image2: require('@/assets/images/networks/fantom.svg'),
   color: '#A06EF4',
   colorText: '#fff',
   testnet: true
@@ -362,18 +439,18 @@ interface Wallet {
 export const wallets: Wallet[] = [{
   id: 'metamask',
   name: 'MetaMask',
-  networks: [1, 56, 137, 5, 97, 80001],
-  image: require('@/assets/images/icons/metamask.svg')
+  networks: [1, 56, 137, 5, 97, 80001, 43114, 43113, 250, 4002, 42161, 421611],
+  image: require('@/assets/images/wallets/metamask.svg')
 }, {
   id: 'bsc-wallet',
-  name: 'BSC Wallet',
+  name: 'Binance Wallet',
   networks: [1, 56, 5, 97],
-  image: require('@/assets/images/icons/bsc.svg')
+  image: require('@/assets/images/wallets/bsc.svg')
 }, {
   id: 'walletconnect',
   name: 'WalletConnect',
-  networks: [1, 56, 137, 5, 97, 80001],
-  image: require('@/assets/images/icons/walletconnect.svg')
+  networks: [1, 56, 137, 5, 97, 80001, 43114, 43113, 250, 4002, 42161, 421611],
+  image: require('@/assets/images/wallets/walletconnect.svg')
 }]
 
 export function connectorFromWallet (wallet: Wallet): AbstractConnector {

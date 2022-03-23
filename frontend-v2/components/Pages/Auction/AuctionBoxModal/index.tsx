@@ -7,7 +7,7 @@ import { debounce } from '@/utils/index'
 import { utils, Contract } from 'ethers'
 import Modal from '@/components/Base/Modal'
 import classes from './c.module.scss'
-import { getNetworkByAlias } from '@/components/web3'
+// import { getNetworkByAlias } from '@/components/web3'
 import { useMyWeb3 } from '@/components/web3/context'
 import BigNumber from 'bignumber.js'
 
@@ -106,7 +106,7 @@ const AuctionBoxModal = ({ open, poolInfo = {}, token = {}, auctionLoading, last
     if (!props.onClick || !account) return
     onRefreshRecaptcha()
     // setOpenStatusModal({ status: 'processing', open: true, title: 'Adding', data: { value } });
-    const result = await props.onClick(+value, isVerified)
+    await props.onClick(+value, isVerified)
     // if (result?.success) {
     //   setValue('');
     //   setRenewBalance(true);

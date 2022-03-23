@@ -1,4 +1,4 @@
-import ListSwiper, { SwiperItem } from '@/components/Base/ListSwiper'
+import { CarouselList, SwiperItem } from '@/components/Base/ListSwiper'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import NFTCard from '../NFTCard'
 import { useNFTInfos } from '../utils'
@@ -7,10 +7,10 @@ import Link from 'next/link'
 import Dropdown from '@/components/Base/Dropdown'
 import { FILTER_TIMES } from '../constant'
 import { ObjectType } from '@/utils/types'
-import { useMediaQuery } from 'react-responsive'
+// import { useMediaQuery } from 'react-responsive'
 
 const ListTrending = () => {
-  const isMdScreen = useMediaQuery({ maxWidth: '960px' })
+  // const isMdScreen = useMediaQuery({ maxWidth: '960px' })
   const [filter, setFilter] = useState({ start: '' })
   const [infos, setInfos] = useState([])
   const url = useMemo(() => {
@@ -65,21 +65,35 @@ const ListTrending = () => {
             </div>
           </div>
         </div>
-        {infos.length > 0 && <ListSwiper
+        <div className="mt-5">
+          {<CarouselList
+            key={infos.length}
+            childrens={
+              infos.map((item, i) => <SwiperItem
+                key={`hot-offers-${i}`}
+                style={{ minWidth: '280px', marginLeft: '8px', marginRight: '8px' }} width={'280px'}
+              >
+                <div className='w-full'>
+                  <NFTCard item={item} showOffer={true} showListing={true}></NFTCard>
+                </div>
+              </SwiperItem>)
+            } />}
+        </div>
+        {/* {infos.length > 0 && <ListSwiper
           title="Trending"
           hasHeader={false}
           showItemsNumber={isMdScreen ? 1 : 4} step={isMdScreen ? 1 : 4}
           transition='0.5s'
           style={{ display: 'flex', justifyContent: (infos.length > 4 || isMdScreen) ? 'start' : 'center', gap: '16px' }}>
           {
-            infos.map((item, i) => <SwiperItem key={`hot-offers-${i}`} width={isMdScreen ? '250px' : '280px'}>
+            infos.map((item, i) => <SwiperItem key={`hot-offers-${i}`} style={{ minWidth: '280px' }} width={'280px'}>
               <div className='w-full'>
                 <NFTCard item={item} showOffer={true} showListing={true}></NFTCard>
               </div>
             </SwiperItem>)
           }
         </ListSwiper>
-        }
+        } */}
         {(loading || infoLoading)
           ? (
             <div className="loader-wrapper mx-auto mt-14">

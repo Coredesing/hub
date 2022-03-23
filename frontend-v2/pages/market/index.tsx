@@ -5,6 +5,7 @@ import HotCollections from '@/components/Pages/Market/HotCollections'
 // import HotAuctions from '@/components/Pages/Market/HotAuctions'
 import ListTrending from '@/components/Pages/Market/ListTrending'
 import Discover from '@/components/Pages/Market/Discover'
+import Banner from '@/components/Pages/Market/Banner'
 // import { useScreens } from '@/components/Pages/Home/utils'
 
 const Market = () => {
@@ -12,31 +13,14 @@ const Market = () => {
   return (
     <Layout title="GameFi Market">
       {
-        // screens.mobile || screens.tablet
-        //   ? <div className="relative w-full min-h-full">
-        //     <div className="container absolute top-20 left-0 right-0 mx-auto opacity-50 flex items-center justify-center" style={{ zIndex: '1' }}>
-        //       <Image src={require('@/assets/images/coming-soon.png')} alt=""></Image>
-        //     </div>
-        //     <div className="container absolute flex items-center justify-center top-12 left-0 right-0 mx-auto uppercase text-center font-bold" style={{ fontSize: '50px', lineHeight: '1', zIndex: '2' }}>
-        //     Marketplace <br></br>Coming Soon
-        //     </div>
-        //     <Image
-        //       src={require('@/assets/images/market-banner.png')}
-        //       alt=""
-        //       layout="fill"
-        //       objectFit="cover"
-        //       className="mt-48"
-        //     ></Image>
-        //   </div> :
-        <div className="relative w-full min-h-full pt-28">
+        <div className="relative w-full min-h-full pt-20">
+          <Banner />
           <div
-            className="absolute top-0 right-0"
+            className="absolute top-0 right-0 md:h-96 md:w-72 h-60 w-28"
             style={{
               background: 'radial-gradient(74.55% 74.55% at 19.72% 25.45%, #C5BD06 0%, #00FF0A 100%)',
-              width: '250px',
-              height: '559px',
               opacity: '0.1',
-              filter: 'blur(184px)'
+              filter: 'blur(84px)'
             }}
           ></div>
           <div className="absolute bottom-0 right-0">

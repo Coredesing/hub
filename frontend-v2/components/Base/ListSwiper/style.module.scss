@@ -1,15 +1,43 @@
 .carousel {
-  overflow: hidden;
-  @apply relative;
+    overflow: hidden;
+    @apply relative;
 }
 
 .inner {
-  white-space: nowrap;
-  transition: transform 0.3s;
-  @apply items-center justify-center align-middle;
+    white-space: nowrap;
+    transition: transform 0.3s;
+    @apply items-center justify-center align-middle;
 }
 
 .swiperItem {
-  display: inline-flex;
-  @apply w-full;
+    display: inline-flex;
+    @apply w-full;
+}
+
+.carouselList {
+    & div[data-arrow*="left"] {
+        position: absolute;
+        left: -3rem;
+        top: 0;
+        bottom: 0;
+        @media screen and (max-width: 960px) {
+            left: 0;
+        }
+    }
+    & div[data-arrow*="right"] {
+        position: absolute;
+        right: -3rem;
+        top: 0;
+        bottom: 0;
+        @media screen and (max-width: 960px) {
+            right: 0;
+        }
+    }
+    & div[class*="styles-module_slider"] {
+        @media screen and (max-width: 960px) {
+            margin-left: 40px;
+            margin-right: 40px;
+        }
+        // justify-content: center;
+    }
 }

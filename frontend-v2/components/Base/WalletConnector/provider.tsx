@@ -12,9 +12,13 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import copy from 'copy-to-clipboard'
 import { shorten } from '@/utils'
 
-export const ctx = createContext<{ setShowModal:(any) => void }>({
-  setShowModal () {}
-})
+export const ctx = createContext<{
+  setShowModal:(any) => void;
+  tryDeactivate:(any) => void;
+    }>({
+      setShowModal () {},
+      tryDeactivate () {}
+    })
 
 export const useWalletContext = () => useContext(ctx)
 
@@ -189,13 +193,13 @@ export default function WalletProvider ({ children }) {
     setWalletChosen(undefined)
   }, [networkChosen, dispatch])
 
-  return <ctx.Provider value={{ setShowModal }}>
+  return <ctx.Provider value={{ setShowModal, tryDeactivate }}>
     {children}
     <Modal show={showModal} toggle={setShowModal} className='dark:bg-transparent fixed z-50'>
       <ModalConnect close={() => setShowModal(false)} style={{ color: network?.colorText || '' }}>
         { account && <div className="font-casual">
           <div className="p-6 pt-10" style={{ backgroundColor: network?.color || 'transparent' }}>
-            <div className="font-bold text-2xl uppercase mb-5">Account</div>
+            <div className="font-bold text-2xl uppercase mb-5">My Wallet</div>
             <div className="flex justify-between items-center flex-wrap gap-4">
               <div className="w-full sm:w-auto flex items-center">
                 <span className="w-14 h-14 mr-4"><Image src={ require('@/assets/images/avatar.png') } alt="avatar" /></span>

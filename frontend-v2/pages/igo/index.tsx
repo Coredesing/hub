@@ -166,7 +166,7 @@ const IGO = () => {
               </>
           }
         </div>
-        <CompletedPools></CompletedPools>
+        {/* <CompletedPools></CompletedPools> */}
       </ListIGOContext.Provider>
     </Layout>
   )

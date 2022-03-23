@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Card from '@/components/Pages/IGO/Card'
 import { useFetch } from '@/utils'
 import { Item } from '@/components/Pages/IGO/type'
+import CompletedPools from '@/components/Pages/IGO/CompletedPools'
 
 export const ListIGOContext = createContext({
   now: null
@@ -165,6 +166,7 @@ const IGO = () => {
               </>
           }
         </div>
+        <CompletedPools></CompletedPools>
       </ListIGOContext.Provider>
     </Layout>
   )

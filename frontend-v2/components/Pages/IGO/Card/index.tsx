@@ -121,21 +121,36 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
     </div>
     <div className="mt-2 border-t-[1px] border-white/10 py-4">
       {
-        !item?.start_time && item.campaign_status?.toLowerCase() === 'upcoming' && item.buy_type?.toLowerCase() !== 'whitelist' && <div className="w-full flex flex-col items-center justify-center">
-          <div className="text-sm font-semibold text-white/50 uppercase">TBA</div>
+        !item?.start_time && item.campaign_status?.toLowerCase() === 'tba' && <div className="w-full flex flex-col items-center justify-center">
+          <div className="text-sm font-semibold text-white/50 uppercase">Pool Starts In</div>
+          <div className="mt-2 font-medium">TBA</div>
         </div>
       }
       {
         item.finish_time && item.campaign_status?.toLowerCase() === 'swap' && <div className="w-full flex flex-col items-center justify-center">
-          <div className="text-sm font-semibold text-white/50 uppercase">Swap Ended In</div>
+          <div className="text-sm font-semibold text-white/50 uppercase">Swap Ends In</div>
           <div className="mt-2">
             <Countdown to={item?.finish_time}></Countdown>
           </div>
         </div>
       }
       {
-        item.buy_type?.toLowerCase() === 'whitelist' && item.campaign_status?.toLowerCase() === 'upcoming' && <div className="w-full flex flex-col items-center justify-center">
-          <div className="text-sm font-semibold text-white/50 uppercase">Whitelist Ended In</div>
+        item.buy_type?.toLowerCase() === 'whitelist' &&
+        item.campaign_status?.toLowerCase() === 'upcoming' &&
+        now.getTime() >= new Date(Number(item.start_join_pool_time || 0) * 1000).getTime() &&
+        <div className="w-full flex flex-col items-center justify-center">
+          <div className="text-sm font-semibold text-white/50 uppercase">Whitelist Ends In</div>
+          <div className="mt-2">
+            <Countdown to={item?.end_join_pool_time}></Countdown>
+          </div>
+        </div>
+      }
+      {
+        item.buy_type?.toLowerCase() === 'whitelist' &&
+        item.campaign_status?.toLowerCase() === 'upcoming' &&
+        now.getTime() < new Date(Number(item.start_join_pool_time || 0) * 1000).getTime() &&
+        <div className="w-full flex flex-col items-center justify-center">
+          <div className="text-sm font-semibold text-white/50 uppercase">Whitelist Starts In</div>
           <div className="mt-2">
             <Countdown to={item?.end_join_pool_time}></Countdown>
           </div>

@@ -2,9 +2,8 @@
     position: relative;
     height: fit-content;
     input {
-        border: 1px solid #3C3C42;
+        @apply border-[1px] border-gamefiDark-600 bg-gamefiDark-900 w-full outline-none focus:border-gamefiDark-600;
         box-sizing: border-box;
-        background: #303035;
         width: 100%;
         outline: none;
     }

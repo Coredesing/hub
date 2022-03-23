@@ -15,6 +15,7 @@ import { format } from 'date-fns'
 import Recaptcha from '@/components/Base/Recaptcha'
 import Requirements from '@/components/Pages/IGO/Requirements'
 import SwapProgress from '@/components/Pages/IGO/SwapProgress'
+import Countdown from '@/components/Pages/IGO/Countdown'
 
 export const IGOContext = createContext({
   poolData: null,
@@ -234,6 +235,9 @@ const IGODetails = ({ poolData }) => {
               </div>
               <div className="font-casual text-sm text-white/80 mt-8">
                 { poolData.description }
+              </div>
+              <div className="mt-4">
+                <Countdown title="Phase 2 Ends In" to={poolData?.finish_time}></Countdown>
               </div>
             </div>
             <div className="lg:w-[26rem] flex flex-col gap-6">

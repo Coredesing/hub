@@ -8,7 +8,7 @@ import { ListIGOContext } from '@/pages/igo'
 import Progress from './Progress'
 import Countdown from './Countdown'
 
-const Card = ({ item, className }: { item: Item; className?: string }) => {
+const Card = ({ item, color, background }: { item: Item; color?: string; background?:string }) => {
   const { network } = useLibraryDefaultFlexible(item?.network_available)
   const { now } = useContext(ListIGOContext)
 
@@ -44,10 +44,10 @@ const Card = ({ item, className }: { item: Item; className?: string }) => {
     return poolClaimTime.start <= now
   }, [poolClaimTime, now])
 
-  return <div className={`${className} w-full flex flex-col`}>
+  return <div className={`bg-${background} w-full flex flex-col`}>
     <div className="w-full aspect-[16/9] bg-black relative">
       <img src={item?.banner} alt="" className="object-cover w-full h-full"></img>
-      <div className="absolute h-6 w-2/5 inline-flex align-middle items-center top-0 left-0 uppercase text-xs text-left bg-black clipped-b-r-full">
+      <div className={`absolute h-6 w-2/5 inline-flex align-middle items-center top-0 left-0 uppercase text-xs text-left bg-${color} clipped-b-r-full`}>
         <Image src={poolStatus(item.is_private).icon} alt="lock"></Image>
         <span className="ml-2 font-medium tracking-widest">{poolStatus(item.is_private).title}</span>
       </div>

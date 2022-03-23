@@ -101,7 +101,7 @@ const IGO = () => {
                     <p><span className="uppercase font-semibold text-xl">Pool IGO</span> <span className="text-white/60">(Staking $GAFI required)</span></p>
                     <div className="mt-4 w-full grid md:grid-cols-3 xl:grid-cols-3 gap-6">
                       {openingPublicList.map(item => <div key={item.id} className="w-full">
-                        <Card item={item} className="bg-gamefiDark"></Card>
+                        <Card item={item} color="black" background="gamefiDark"></Card>
                       </div>)}
                     </div>
                   </div>
@@ -112,7 +112,7 @@ const IGO = () => {
                       <p><span className="uppercase font-semibold text-xl">Pool Community</span> <span className="text-white/60">(Staking $GAFI not required)</span></p>
                       <div className="mt-4 w-full grid md:grid-cols-3 xl:grid-cols-3 gap-6">
                         {openingCommunityList.map(item => <div key={item.id} className="w-full">
-                          <Card item={item} className="bg-gamefiDark"></Card>
+                          <Card item={item} color="black" background="gamefiDark"></Card>
                         </div>)}
                       </div>
                     </div>
@@ -145,7 +145,7 @@ const IGO = () => {
                     <p><span className="uppercase font-semibold text-xl">Pool IGO</span> <span className="text-white/60">(Staking $GAFI required)</span></p>
                     <div className="mt-4 w-full grid md:grid-cols-3 xl:grid-cols-3 gap-6">
                       {upcomingPublicList.map(item => <div key={item.id} className="w-full">
-                        <Card item={item} className="bg-black"></Card>
+                        <Card item={item} color="gamefiDark" background="black"></Card>
                       </div>)}
                     </div>
                   </div>
@@ -156,7 +156,7 @@ const IGO = () => {
                       <p><span className="uppercase font-semibold text-xl">Pool Community</span> <span className="text-white/60">(Staking $GAFI not required)</span></p>
                       <div className="mt-4 w-full grid md:grid-cols-3 xl:grid-cols-3 gap-6">
                         {upcomingCommunityList.map(item => <div key={item.id} className="w-full">
-                          <Card item={item} className="bg-black"></Card>
+                          <Card item={item} color="gamefiDark" background="black"></Card>
                         </div>)}
                       </div>
                     </div>

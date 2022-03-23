@@ -234,7 +234,7 @@ export default function WalletProvider ({ children }) {
                 <path d="M5.5 12.5H9.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <p className="flex mt-4 justify-center justify-between w-full font-medium cursor-pointer">
+            <p className="flex mt-4 justify-between w-full font-medium cursor-pointer">
               <Link href="/account" passHref={true}>
                 <a className="text-[13px] sm:text-base text-white hover:text-gray-400 underline" onClick={() => {
                   setShowModal(false)
@@ -257,21 +257,21 @@ export default function WalletProvider ({ children }) {
         { !account &&
           <div className="p-6 pt-10 text-white">
             <div className="font-bold text-2xl uppercase mb-5">Connect Wallet</div>
-            <div className="font-bold text-sm uppercase">1. Agreement</div>
+            <div className="font-bold text-sm uppercase">1. Agree to GameFi.org terms & conditions</div>
             <label className="py-2 leading-relaxed mb-5 inline-block font-casual text-sm">
               <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed} onChange={handleAgreement} />
               I have read and agreed with the <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">Terms of Service</a> and <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">Privacy Policy</a>.
             </label>
             <div className="mb-7">
               <div className={`font-bold text-sm uppercase mb-2 ${agreed ? 'text-white' : 'text-gray-400'}`}>2. Choose Network</div>
-              <div className="flex gap-x-2 font-casual">
+              <div className="font-casual grid grid-cols-3 gap-2">
                 {getNetworkAvailable().map(network => {
                   const available = !!agreed
                   const chosen = available && network.id === networkChosen?.id
 
-                  return <div key={network.id} className={`flex-1 overflow-x-hidden relative cursor-pointer flex flex-col items-center justify-between py-4 border ${chosen ? 'border-gamefiGreen-500 bg-gamefiDark-700' : 'bg-gamefiDark-600 border-transparent'}`} onClick={() => chooseNetwork(network)}>
+                  return <div key={network.id} className={`w-full relative cursor-pointer flex flex-col items-center justify-between py-4 border ${chosen ? 'border-gamefiGreen-500 bg-gamefiDark-700' : 'bg-gamefiDark-600 border-transparent'}`} onClick={() => chooseNetwork(network)}>
                     <div className="w-11 h-11 relative"><Image src={network.image2} className={available ? 'filter-none' : 'grayscale'} alt={network.name} layout="fill"/></div>
-                    <span className={`inline-block w-full text-center px-1 truncate text-xs md:text-[13px] leading-6 ${available ? 'text-white' : 'text-gray-100'}`}>{network.name}</span>
+                    <span className={`inline-block w-full text-center px-1 truncate text-xs md:text-[13px] mt-[8px] !leading-none ${available ? 'text-white' : 'text-gray-100'}`}>{network.name}</span>
 
                     { chosen && <svg className="w-6 absolute top-0 left-0" viewBox="0 0 23 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M0 1C0 0.447715 0.447715 0 1 0H21.0144C21.7241 0 22.208 0.718806 21.9408 1.37638L16.2533 15.3764C16.1002 15.7534 15.7338 16 15.3269 16H8H1C0.447715 16 0 15.5523 0 15V1Z" fill="#6CDB00"/>
@@ -291,7 +291,7 @@ export default function WalletProvider ({ children }) {
 
                   return <div key={wallet.id} className={`flex-1 overflow-x-hidden relative cursor-pointer flex flex-col items-center justify-between py-4 md:py-6 border ${chosen ? 'border-gamefiGreen-500 bg-gamefiDark-700' : 'bg-gamefiDark-600 border-transparent'}`} onClick={() => chooseWallet(wallet)}>
                     <Image src={wallet.image} className={available ? 'filter-none' : 'grayscale'} alt={wallet.name} />
-                    <span className={`inline-block w-full text-center px-1 truncate text-xs md:text-[13px] leading-6 ${available ? 'text-white' : 'text-gray-100'}`}>{ (activating && chosen) ? 'Loading...' : wallet.name}</span>
+                    <span className={`inline-block w-full text-center px-1 truncate text-xs md:text-[13px] mt-[8px] !leading-none ${available ? 'text-white' : 'text-gray-100'}`}>{ (activating && chosen) ? 'Loading...' : wallet.name}</span>
 
                     { chosen && <svg className="w-6 absolute top-0 left-0" viewBox="0 0 23 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M0 1C0 0.447715 0.447715 0 1 0H21.0144C21.7241 0 22.208 0.718806 21.9408 1.37638L16.2533 15.3764C16.1002 15.7534 15.7338 16 15.3269 16H8H1C0.447715 16 0 15.5523 0 15V1Z" fill="#6CDB00"/>

@@ -19,7 +19,7 @@ const Toolbox = () => {
         <ToolboxItem path='/ino'>
           <Image src={require('@/assets/images/icons/nft.svg')} alt='ino'></Image>
         </ToolboxItem>
-        <ToolboxItem path='https://hub.gamefi.org'>
+        <ToolboxItem path='/igo'>
           <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
         </ToolboxItem>
         {/* <ToolboxItem path='/market'>

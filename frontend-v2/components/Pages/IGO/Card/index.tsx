@@ -67,10 +67,10 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
     </div>
     <div className="px-4 py-8 flex flex-col gap-4">
       <div className="w-full flex justify-between items-center">
-        <div className="max-w-[2/3] overflow-hidden text-ellipsis uppercase font-semibold hover:underline">
+        <div className="max-w-[2/3] overflow-hidden text-ellipsis uppercase font-semibold hover:underline xl:text-xl">
           <a href={`/igo/${item?.id}`}>{item.title}</a>
         </div>
-        <div><Image src={network?.image} alt="" className="w-6 h-6"></Image></div>
+        <div className="w-6 h-6 xl:w-8 xl:h-8"><Image src={network?.image} alt=""></Image></div>
       </div>
       <div className="inline-flex gap-5">
         { item?.website && <a href={item?.website} className="hover:text-gray-300" target="_blank" rel="noopenner noreferrer">

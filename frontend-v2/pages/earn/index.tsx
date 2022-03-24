@@ -87,7 +87,7 @@ const Earn = ({ pools }) => {
             <span className="text-base">Everyone</span>
           </div>
           <div className="w-[10rem] text-right">
-            <div className={`w-[7rem] items-center justify-center py-1 px-3 rounded text-sm cursor-pointer inline-flex ${open[contractAddress] ? 'bg-gamefiDark-400' : 'bg-gamefiGreen-600 hover:bg-gamefiGreen-500 text-gamefiDark-900'}`} onClick={() => toggle(contractAddress)}>
+            <div className={`items-center justify-center py-1 px-3 rounded text-sm cursor-pointer inline-flex ${open[contractAddress] ? 'hover:text-gamefiGreen-500' : 'bg-gamefiGreen-600 hover:bg-gamefiGreen-500 text-gamefiDark-900'}`} onClick={() => toggle(contractAddress)}>
               { open[contractAddress] ? <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 15l-6-6-6 6"/></svg> : 'Stake Now' }
             </div>
           </div>

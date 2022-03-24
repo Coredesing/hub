@@ -44,14 +44,14 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
     return poolClaimTime.start <= now
   }, [poolClaimTime, now])
 
-  return <div className={`bg-${background} w-full flex flex-col`}>
-    <div className="w-full aspect-[16/9] bg-black relative">
+  return <div className={`bg-${background} w-full flex flex-col font-casual hover:opacity-90`}>
+    <a href={`/igo/${item.id}`} className="w-full aspect-[16/9] bg-black relative">
       <img src={item?.banner} alt="" className="object-cover w-full h-full"></img>
-      <div className={`absolute h-6 w-2/5 inline-flex align-middle items-center top-0 left-0 uppercase text-xs text-left bg-${color} clipped-b-r-full`}>
+      <div className={`absolute h-6 w-2/5 inline-flex align-middle items-center -top-[1px] -left-[1px] uppercase text-xs text-left bg-${color} clipped-b-r-full`}>
         <Image src={poolStatus(item.is_private).icon} alt="lock"></Image>
         <span className="ml-2 font-medium tracking-widest">{poolStatus(item.is_private).title}</span>
       </div>
-      <div className="absolute py-1 px-3 border-[1px] rounded-sm inline-flex gap-1 align-middle items-center top-1 right-1 uppercase text-xs text-left bg-black opacity-60">
+      {/* <div className="absolute py-1 px-3 border-[1px] rounded-sm inline-flex gap-1 align-middle items-center top-1 right-1 uppercase text-xs text-left bg-black opacity-60">
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clipPath="url(#clip0_4_2212)">
             <path d="M6 0C4.81331 0 3.65328 0.351894 2.66658 1.01118C1.67989 1.67047 0.910851 2.60754 0.456726 3.7039C0.00259972 4.80026 -0.11622 6.00666 0.115291 7.17054C0.346802 8.33443 0.918247 9.40353 1.75736 10.2426C2.59648 11.0818 3.66558 11.6532 4.82946 11.8847C5.99335 12.1162 7.19975 11.9974 8.2961 11.5433C9.39246 11.0892 10.3295 10.3201 10.9888 9.33342C11.6481 8.34673 12 7.18669 12 6C11.9954 4.41012 11.3618 2.88668 10.2375 1.76246C9.11332 0.638241 7.58988 0.00461698 6 0V0ZM5 8.707L2.293 6L3 5.293L5 7.293L9 3.293L9.707 4L5 8.707Z" fill="white"/>
@@ -63,12 +63,12 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
           </defs>
         </svg>
         Joined
-      </div>
-    </div>
-    <div className="px-4 py-8 flex flex-col gap-4">
+      </div> */}
+    </a>
+    <div className="px-4 py-4 flex flex-col gap-4">
       <div className="w-full flex justify-between items-center">
         <div className="max-w-[2/3] overflow-hidden text-ellipsis uppercase font-semibold hover:underline xl:text-xl">
-          <a href={`/igo/${item?.id}`}>{item.title}</a>
+          <a href={`/igo/${item.id}`}>{item.title}</a>
         </div>
         <div className="w-6 h-6 xl:w-8 xl:h-8"><Image src={network?.image} alt=""></Image></div>
       </div>
@@ -98,19 +98,19 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
         </a> }
       </div>
       <div>
-        <div className="text-white/50 uppercase font-medium text-sm">Rate</div>
-        <div className="text-gamefiGreen uppercase font-medium">
+        <div className="text-white/50 uppercase font-medium text-xs">Rate</div>
+        <div className="text-gamefiGreen uppercase font-medium text-sm">
           1 {item.symbol} = {item.token_conversion_rate} {getCurrency(item).symbol}
         </div>
       </div>
       <div className="w-full grid grid-cols-2 gap-2">
         <div>
-          <div className="text-white/50 uppercase font-medium text-sm">Total Rise</div>
-          <div>${Number(parseInt(item?.total_sold_coin) * parseFloat(item?.token_conversion_rate)).toLocaleString('en-US')}</div>
+          <div className="text-white/50 uppercase font-medium text-xs">Total Rise</div>
+          <div className="text-sm">${Number(parseInt(item?.total_sold_coin) * parseFloat(item?.token_conversion_rate)).toLocaleString('en-US')}</div>
         </div>
         <div>
-          <div className="text-white/50 uppercase font-medium text-sm">Participants</div>
-          <div>{Number(10000).toLocaleString('en-US')}</div>
+          <div className="text-white/50 uppercase font-medium text-xs">Participants</div>
+          <div className="text-sm">{Number(10000).toLocaleString('en-US')}</div>
         </div>
       </div>
       {
@@ -122,13 +122,13 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
     <div className="mt-2 border-t-[1px] border-white/10 py-4">
       {
         !item?.start_time && item.campaign_status?.toLowerCase() === 'tba' && <div className="w-full flex flex-col items-center justify-center">
-          <div className="text-sm font-semibold text-white/50 uppercase">Pool Starts In</div>
+          <div className="text-xs font-semibold text-white/50 uppercase">Pool Starts In</div>
           <div className="mt-2 font-medium">TBA</div>
         </div>
       }
       {
         item.finish_time && item.campaign_status?.toLowerCase() === 'swap' && <div className="w-full flex flex-col items-center justify-center">
-          <div className="text-sm font-semibold text-white/50 uppercase">Swap Ends In</div>
+          <div className="text-xs font-semibold text-white/50 uppercase">Swap Ends In</div>
           <div className="mt-2">
             <Countdown to={item?.finish_time}></Countdown>
           </div>
@@ -139,7 +139,7 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
         item.campaign_status?.toLowerCase() === 'upcoming' &&
         now.getTime() >= new Date(Number(item.start_join_pool_time || 0) * 1000).getTime() &&
         <div className="w-full flex flex-col items-center justify-center">
-          <div className="text-sm font-semibold text-white/50 uppercase">Whitelist Ends In</div>
+          <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Ends In</div>
           <div className="mt-2">
             <Countdown to={item?.end_join_pool_time}></Countdown>
           </div>
@@ -150,7 +150,7 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
         item.campaign_status?.toLowerCase() === 'upcoming' &&
         now.getTime() < new Date(Number(item.start_join_pool_time || 0) * 1000).getTime() &&
         <div className="w-full flex flex-col items-center justify-center">
-          <div className="text-sm font-semibold text-white/50 uppercase">Whitelist Starts In</div>
+          <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Starts In</div>
           <div className="mt-2">
             <Countdown to={item?.end_join_pool_time}></Countdown>
           </div>

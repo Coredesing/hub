@@ -81,6 +81,8 @@ const IGODetails = ({ poolData }) => {
       })
   }, [poolData, account])
   useEffect(() => {
+    console.log(poolData)
+    console.log('ccc', new Date(Number(poolData.start_time || 0) * 1000))
     loadJoined()
   }, [loadJoined])
   const [tab, setTab] = useState(0)
@@ -238,7 +240,75 @@ const IGODetails = ({ poolData }) => {
                 { poolData.description }
               </div>
               <div className="mt-4">
-                <Countdown title="Phase 2 Ends In" to={poolData?.finish_time}></Countdown>
+                {
+                  !poolData?.start_time && poolData.campaign_status?.toLowerCase() === 'tba' &&
+                  <div className="w-full flex flex-col items-center justify-center bg-black rounded-sm py-2 px-4">
+                    <div className="font-semibold text-2xl">Coming Soon</div>
+                  </div>
+                }
+                {
+                  poolData.buy_type?.toLowerCase() === 'whitelist' &&
+                  poolData.campaign_status?.toLowerCase() === 'upcoming' &&
+                  now.getTime() >= new Date(Number(poolData.start_join_pool_time || 0) * 1000).getTime() &&
+                  now.getTime() <= new Date(Number(poolData.end_join_pool_time || 0) * 1000).getTime() &&
+                  <div className="w-full">
+                    <div className="mt-2">
+                      <Countdown title="Whitelist Ends In" to={poolData?.end_join_pool_time}></Countdown>
+                    </div>
+                  </div>
+                }
+                {
+                  poolData.buy_type?.toLowerCase() === 'whitelist' &&
+                  poolData.campaign_status?.toLowerCase() === 'upcoming' &&
+                  now.getTime() < new Date(Number(poolData.start_join_pool_time || 0) * 1000).getTime() &&
+                  <div className="w-full">
+                    <div className="mt-2">
+                      <Countdown title="Whitelist Starts In" to={poolData?.start_join_pool_time}></Countdown>
+                    </div>
+                  </div>
+                }
+                {
+                  now.getTime() > new Date(Number(poolData.end_join_pool_time || 0) * 1000).getTime() &&
+                  now.getTime() < new Date(Number(poolData.start_time || 0) * 1000).getTime() &&
+                  <div className="w-full">
+                    <div className="mt-2">
+                      {
+                        now.getTime() < new Date(Number(poolData.start_pre_order_time || 0) * 1000).getTime()
+                          ? <Countdown title="Pre-order Starts In" to={poolData?.start_time}></Countdown>
+                          : <Countdown title="Phase 1 Starts In" to={poolData?.start_time}></Countdown>
+                      }
+                    </div>
+                  </div>
+                }
+                {
+                  poolData.freeBuyTimeSetting?.start_buy_time &&
+                  now.getTime() >= new Date(Number(poolData.start_time || 0) * 1000).getTime() &&
+                  now.getTime() < new Date(Number(poolData.freeBuyTimeSetting?.start_buy_time || 0) * 1000).getTime() &&
+                  <div className="w-full">
+                    <div className="mt-2">
+                      <Countdown title="Phase 1 Ends In" to={poolData.freeBuyTimeSetting?.start_buy_time}></Countdown>
+                    </div>
+                  </div>
+                }
+                {
+                  !poolData.freeBuyTimeSetting?.start_buy_time &&
+                  now.getTime() >= new Date(Number(poolData.start_time || 0) * 1000).getTime() &&
+                  now.getTime() < new Date(Number(poolData.freeBuyTimeSetting?.start_buy_time || 0) * 1000).getTime() &&
+                  <div className="w-full">
+                    <div className="mt-2">
+                      <Countdown title="Buying Time Ends In" to={poolData.freeBuyTimeSetting?.start_buy_time}></Countdown>
+                    </div>
+                  </div>
+                }
+                {
+                  poolData.freeBuyTimeSetting?.start_buy_time && now.getTime() >= new Date(Number(poolData.freeBuyTimeSetting?.start_buy_time || 0) * 1000).getTime() &&
+                  now.getTime() <= new Date(Number(poolData.finish_time || 0) * 1000).getTime() &&
+                  <div className="w-full">
+                    <div className="mt-2">
+                      <Countdown title="Phase 2 Ends In" to={poolData?.finish_time}></Countdown>
+                    </div>
+                  </div>
+                }
               </div>
             </div>
             <div className="lg:w-[26rem] flex flex-col gap-6">
@@ -276,15 +346,15 @@ const IGODetails = ({ poolData }) => {
                 </div>
                 <div className="flex justify-between mb-4 items-center">
                   <strong className="font-semibold">Price</strong>
-                  <span>{formatPrice(poolData?.token_conversion_rate)} {usd?.symbol}</span>
+                  <span>{poolData?.token_conversion_rate} {usd?.symbol}</span>
                 </div>
                 <div className="flex justify-between mb-4 items-center">
                   <strong className="font-semibold">Total Raised</strong>
-                  <span>{formatterUSD.format(totalRaised)} {usd?.symbol}</span>
+                  <span>{formatterUSD.format(totalRaised).replace(/\D00(?=\D*$)/, '')}</span>
                 </div>
                 <div className="flex justify-between mb-4 items-center">
                   <strong className="font-semibold">Swap Amount</strong>
-                  <span>{printNumber(poolData?.total_sold_coin)}</span>
+                  <span>{printNumber(poolData?.total_sold_coin)} {poolData?.symbol}</span>
                 </div>
                 <div className="flex justify-between mb-4 items-center">
                   <strong className="font-semibold">Network</strong>

@@ -271,7 +271,8 @@ const Requirements = () => {
             <strong className="tracking-wider">
               {whitelistJoined && poolWhitelistOKSocial && 'Applied'}
               {whitelistJoined && !poolWhitelistOKSocial && 'Incomplete'}
-              {!whitelistJoined && !poolWhitelistOKTime && 'Closed'}
+              {!whitelistJoined && !poolWhitelistOKTime && new Date(now).getTime() < poolWhitelistTime?.start?.getTime() && 'Upcoming'}
+              {!whitelistJoined && !poolWhitelistOKTime && new Date(now).getTime() > poolWhitelistTime?.end?.getTime() && 'Closed'}
               {poolWhitelistReady && 'Unapplied'}
             </strong>
           </div>

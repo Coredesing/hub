@@ -20,7 +20,7 @@ const Sidebar = () => {
           <Image src={require('@/assets/images/icons/controller.svg')} alt='aggregator'></Image>
           <span className="mt-2">Aggregator</span>
         </SidebarLink>
-        <SidebarLink path='/igo'>
+        <SidebarLink path='https://hub.gamefi.org/#/pools/token' external={true}>
           <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
           <span className="mt-2">IGO</span>
         </SidebarLink>

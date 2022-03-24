@@ -45,6 +45,7 @@ const IGODetails = ({ poolData }) => {
   }, [])
 
   const [failedRequirements, setFailedRequirements] = useState(false)
+  const [current, setCurrent] = useState(null)
 
   const usd = useMemo(() => {
     return getCurrency(poolData)

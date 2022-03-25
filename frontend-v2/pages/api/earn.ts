@@ -2,7 +2,7 @@ import { getLibraryDefaultFlexible } from '@/components/web3/utils'
 import { fetcher } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 import { Contract } from 'ethers'
-import ABIStakingPool from '@/components/web3/abis/StakingPool'
+import ABIStakingPool from '@/components/web3/abis/StakingPool.json'
 import { GAFI } from '@/components/web3'
 
 export function fetchAll () {
@@ -29,6 +29,7 @@ export function fetchAll () {
         token: GAFI.symbol,
         tokenAddress: GAFI.address,
         tokenImage: GAFI.image,
+        tokenDecimals: GAFI.decimals,
         cap: linearData.cap.toString(),
         totalStaked: linearData.totalStaked.toString(),
         minInvestment: linearData.minInvestment.toString(),
@@ -41,4 +42,17 @@ export function fetchAll () {
       }
     }))
   })
+}
+
+export default async function handler (req, res) {
+  try {
+    const data = await fetchAll()
+    if (!data) {
+      throw new Error('Invalid response')
+    }
+
+    res.status(200).json({ data })
+  } catch (err) {
+    res.status(500).json({ error: 'failed to load data' })
+  }
 }

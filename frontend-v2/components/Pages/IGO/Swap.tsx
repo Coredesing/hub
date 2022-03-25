@@ -498,7 +498,7 @@ const Swap = () => {
         </div>
       }
       {
-        now.getTime() > new Date(Number(poolData?.finish_time || '0') * 1000).getTime() && <div className="my-4 w-full flex flex-col bg-gamefiDark-650 p-7 rounded">
+        now.getTime() > new Date(Number(poolData?.finish_time || '0') * 1000).getTime() && <div className="my-4 w-full flex flex-col bg-gamefiDark-630/30 p-7 rounded">
           Pool Swap Time Is Over!
         </div>
       }

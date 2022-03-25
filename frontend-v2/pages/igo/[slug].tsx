@@ -28,6 +28,7 @@ export const IGOContext = createContext({
 
   failedRequirements: false,
   usd: null,
+  hasFCFS: false,
 
   setSignature: (v: any) => { console.log(v) },
   loadJoined: () => {},
@@ -45,7 +46,9 @@ const IGODetails = ({ poolData }) => {
   }, [])
 
   const [failedRequirements, setFailedRequirements] = useState(false)
-  const [current, setCurrent] = useState(null)
+  const hasFCFS = useMemo(() => {
+    return poolData.freeBuyTimeSetting?.start_buy_time
+  }, [poolData.freeBuyTimeSetting?.start_buy_time])
 
   const usd = useMemo(() => {
     return getCurrency(poolData)
@@ -81,8 +84,6 @@ const IGODetails = ({ poolData }) => {
       })
   }, [poolData, account])
   useEffect(() => {
-    console.log(poolData)
-    console.log('ccc', new Date(Number(poolData.start_time || 0) * 1000))
     loadJoined()
   }, [loadJoined])
   const [tab, setTab] = useState(0)
@@ -196,6 +197,7 @@ const IGODetails = ({ poolData }) => {
 
           failedRequirements,
           usd,
+          hasFCFS,
 
           setSignature,
           loadJoined,
@@ -281,31 +283,31 @@ const IGODetails = ({ poolData }) => {
                   </div>
                 }
                 {
-                  poolData.freeBuyTimeSetting?.start_buy_time &&
+                  hasFCFS &&
                   now.getTime() >= new Date(Number(poolData.start_time || 0) * 1000).getTime() &&
-                  now.getTime() < new Date(Number(poolData.freeBuyTimeSetting?.start_buy_time || 0) * 1000).getTime() &&
+                  now.getTime() < new Date(Number(hasFCFS || 0) * 1000).getTime() &&
                   <div className="w-full">
                     <div className="mt-2">
-                      <Countdown title="Phase 1 Ends In" to={poolData.freeBuyTimeSetting?.start_buy_time}></Countdown>
+                      <Countdown title="Phase 1 Ends In" to={hasFCFS}></Countdown>
                     </div>
                   </div>
                 }
                 {
-                  !poolData.freeBuyTimeSetting?.start_buy_time &&
-                  now.getTime() >= new Date(Number(poolData.start_time || 0) * 1000).getTime() &&
-                  now.getTime() < new Date(Number(poolData.freeBuyTimeSetting?.start_buy_time || 0) * 1000).getTime() &&
-                  <div className="w-full">
-                    <div className="mt-2">
-                      <Countdown title="Buying Time Ends In" to={poolData.freeBuyTimeSetting?.start_buy_time}></Countdown>
-                    </div>
-                  </div>
-                }
-                {
-                  poolData.freeBuyTimeSetting?.start_buy_time && now.getTime() >= new Date(Number(poolData.freeBuyTimeSetting?.start_buy_time || 0) * 1000).getTime() &&
+                  hasFCFS && now.getTime() >= new Date(Number(hasFCFS || 0) * 1000).getTime() &&
                   now.getTime() <= new Date(Number(poolData.finish_time || 0) * 1000).getTime() &&
                   <div className="w-full">
                     <div className="mt-2">
                       <Countdown title="Phase 2 Ends In" to={poolData?.finish_time}></Countdown>
+                    </div>
+                  </div>
+                }
+                {
+                  !hasFCFS &&
+                  now.getTime() >= new Date(Number(poolData.start_time || 0) * 1000).getTime() &&
+                  now.getTime() <= new Date(Number(poolData.finish_time || 0) * 1000).getTime() &&
+                  <div className="w-full">
+                    <div className="mt-2">
+                      <Countdown title="Buy Phase Ends In" to={poolData?.finish_time}></Countdown>
                     </div>
                   </div>
                 }

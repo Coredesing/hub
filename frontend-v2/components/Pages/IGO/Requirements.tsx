@@ -183,7 +183,6 @@ const Requirements = () => {
   }, [poolData, account, poolWhitelistReady, formData, signature, loadJoined])
 
   useEffect(() => {
-    console.log(poolNetworkInvalid, poolRankInvalid, !profile?.verified, !whitelistJoined)
     setFailedRequirements(poolNetworkInvalid || poolRankInvalid || !profile?.verified || !whitelistJoined)
   }, [poolNetworkInvalid, poolRankInvalid, profile, setFailedRequirements, whitelistJoined])
 

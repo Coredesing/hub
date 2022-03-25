@@ -8,9 +8,6 @@ import Countdown from '../Card/Countdown'
 
 const Card = ({ item }: {item: Item}) => {
   const { network } = useLibraryDefaultFlexible(item?.network_available)
-  useEffect(() => {
-    console.log(item.socialNetworkSetting)
-  }, [])
 
   return <div className="px-6 py-4 bg-gamefiDark-630/30 clipped-t-r rounded w-full flex items-stretch justify-between gap-6 font-casual">
     <a href={`/igo/${item.id}`} className="relative w-24 h-24 bg-black">

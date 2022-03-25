@@ -188,9 +188,8 @@ const Swap = () => {
   }, [now, poolData?.start_pre_order_time, poolData?.start_time])
 
   const preOrderAllowed = useMemo(() => {
-    return isPreOrderTime &&
-    tierMine?.id >= poolData?.pre_order_min_tier
-  }, [isPreOrderTime, poolData?.pre_order_min_tier, tierMine?.id])
+    return tierMine?.id >= poolData?.pre_order_min_tier
+  }, [poolData?.pre_order_min_tier, tierMine?.id])
 
   const swappable = useMemo(() => {
     // console.log('bbbb', poolData?.campaign_status, poolData?.is_deploy, allocation, allowance)
@@ -342,7 +341,7 @@ const Swap = () => {
   return (
     <>
       {
-        (preOrderAllowed ||
+        ((isPreOrderTime && preOrderAllowed) ||
         (now.getTime() >= new Date(Number(poolData?.start_time || '0') * 1000).getTime() &&
         now.getTime() <= new Date(Number(poolData?.finish_time || '0') * 1000).getTime())) &&
           <div className="my-4 w-full bg-gamefiDark-630/30 p-7 rounded clipped-t-r">
@@ -449,7 +448,7 @@ const Swap = () => {
                               }`
                             }
                             onClick={() => swappable && handleSwap()}
-                          >{ preOrderAllowed ? 'Pre-order' : 'Swap' }</button>
+                          >Pre-order</button>
                         </div>
                       </>
                       : <>
@@ -480,7 +479,7 @@ const Swap = () => {
                               }`
                             }
                             onClick={() => swappable && handleSwap()}
-                          >{ preOrderAllowed ? 'Pre-order' : 'Swap' }</button>
+                          >Swap</button>
                         </div>
                       </>
                   }
@@ -490,7 +489,10 @@ const Swap = () => {
           </div>
       }
       {
-        (!isPreOrderTime || (isPreOrderTime && !preOrderAllowed) || (!isPreOrderTime && now.getTime() < new Date(Number(poolData?.start_time || '0') * 1000).getTime())) &&
+        now.getTime() < new Date(Number(poolData?.finish_time || '0') * 1000).getTime() &&
+        ((isPreOrderTime && !preOrderAllowed) ||
+          ((!isPreOrderTime || !preOrderAllowed) && now.getTime() < new Date(Number(poolData?.start_time || '0') * 1000).getTime()) ||
+          ((isPreOrderTime && preOrderAllowed) && now.getTime() < new Date(Number(poolData?.start_pre_order_time || '0') * 1000).getTime())) &&
         <div className="my-4 w-full flex flex-col bg-gamefiDark-630/30 p-7 rounded">
           Not Swap Time Yet!
         </div>

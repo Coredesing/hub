@@ -67,8 +67,8 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
     </a>
     <div className="px-4 py-4 flex flex-col gap-4">
       <div className="w-full flex justify-between items-center">
-        <div className="max-w-[2/3] overflow-hidden text-ellipsis uppercase font-semibold hover:underline xl:text-xl">
-          <a href={`/igo/${item.id}`}>{item.title}</a>
+        <div className="w-5/6 overflow-hidden text-ellipsis whitespace-nowrap uppercase font-semibold hover:underline xl:text-lg">
+          <a href={`/igo/${item.id}`} className="w-full overflow-hidden text-ellipsis">{item.title}</a>
         </div>
         <div className="w-6 h-6 xl:w-8 xl:h-8"><Image src={network?.image} alt=""></Image></div>
       </div>

@@ -30,11 +30,11 @@ const Progress = ({ poolData, poolOver }: { poolData: Item; poolOver: any }) => 
       return 100
     }
 
-    if (FixedNumber.from(total).isZero) {
+    if (FixedNumber.from(total).isZero()) {
       return 0
     }
 
-    return FixedNumber.from(sold).divUnsafe(FixedNumber.from(total)).mulUnsafe(FixedNumber.from(100)).toUnsafeFloat() + parseFloat(poolData?.progress_display.toString() || '0')
+    return FixedNumber.from(sold).divUnsafe(FixedNumber.from(total)).mulUnsafe(FixedNumber.from(100)).toUnsafeFloat() + parseFloat(poolData?.progress_display?.toString() || '0')
   }, [total, sold, poolData, poolOver])
   const soldActual = useMemo(() => {
     return Math.ceil(progress / 100 * parseFloat(poolData.total_sold_coin) || 0)

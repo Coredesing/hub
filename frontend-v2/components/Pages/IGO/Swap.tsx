@@ -12,14 +12,16 @@ import POOL_ABI from '@/components/web3/abis/Pool.json'
 import useWalletSignature from '@/hooks/useWalletSignature'
 import { useUserPurchased } from '@/hooks/useUserPurchased'
 import { IGOContext } from '@/pages/igo/[slug]'
+import { useAppContext } from '@/context'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 
 const Swap = () => {
-  const { poolData, usd } = useContext(IGOContext)
+  const { poolData, usd, hasFCFS } = useContext(IGOContext)
   const { library, account, network, balanceShort } = useMyWeb3()
   const [txHash, setTxHash] = useState('')
   const [allocation, setAllocation] = useState(null)
+  const { tierMine } = useAppContext()
 
   const [now, setNow] = useState(new Date())
   useEffect(() => {
@@ -108,7 +110,7 @@ const Swap = () => {
     if (poolData?.start_time) {
       const startTime = new Date(Number(poolData?.start_time) * 1000).getTime()
       const endTime = new Date(Number(poolData?.finish_time) * 1000).getTime()
-      const freeBuyTime = poolData?.freeBuyTimeSetting?.start_buy_time ? new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000).getTime() : null
+      const freeBuyTime = hasFCFS ? new Date(Number(poolData.freeBuyTimeSetting.start_buy_time) * 1000).getTime() : null
 
       if (freeBuyTime && now.getTime() >= startTime && now.getTime() < freeBuyTime) {
         return setPhase(1)
@@ -119,6 +121,11 @@ const Swap = () => {
       }
 
       if (!freeBuyTime && now.getTime() >= startTime && now.getTime() <= endTime) {
+        return setPhase(1)
+      }
+
+      // Pre-order will set to phase 1
+      if (isPreOrderTime && preOrderAllowed) {
         return setPhase(1)
       }
 
@@ -173,9 +180,32 @@ const Swap = () => {
     }
   }, 5000)
 
+  // Pre-order
+  const isPreOrderTime = useMemo(() => {
+    return poolData?.start_pre_order_time &&
+    now.getTime() >= new Date(Number(poolData?.start_pre_order_time || '0') * 1000).getTime() &&
+    now.getTime() < new Date(Number(poolData?.start_time || '0') * 1000).getTime()
+  }, [now, poolData?.start_pre_order_time, poolData?.start_time])
+
+  const preOrderAllowed = useMemo(() => {
+    return tierMine?.id >= poolData?.pre_order_min_tier
+  }, [poolData?.pre_order_min_tier, tierMine?.id])
+
   const swappable = useMemo(() => {
-    // console.log(poolData?.campaign_status, poolData?.is_deploy, allocation, allowance)
-    return poolData?.campaign_status?.toLowerCase() === 'swap' &&
+    // console.log('bbbb', poolData?.campaign_status, poolData?.is_deploy, allocation, allowance)
+    return isPreOrderTime
+
+      ? tierMine?.id >= poolData?.pre_order_min_tier &&
+        poolData?.is_deploy &&
+        allocation &&
+        !loadingApproval &&
+        !loadingAllowance &&
+        (allowance?.gt(0) || !usd.address) &&
+        allocation?.max_buy > 0 &&
+        poolData?.network_available?.toLowerCase() === network?.alias &&
+        Number(remainingToken) > 0
+
+      : poolData?.campaign_status?.toLowerCase() === 'swap' &&
         poolData?.is_deploy &&
         allocation &&
         !loadingApproval &&
@@ -185,7 +215,22 @@ const Swap = () => {
         poolData?.network_available?.toLowerCase() === network?.alias &&
         phase !== null &&
         Number(remainingToken) > 0
-  }, [allocation, allowance, loadingAllowance, loadingApproval, poolData, network, usd, phase, remainingToken])
+  }, [
+    isPreOrderTime,
+    tierMine?.id,
+    poolData?.pre_order_min_tier,
+    poolData?.is_deploy,
+    poolData?.network_available,
+    poolData?.campaign_status,
+    allocation,
+    loadingApproval,
+    loadingAllowance,
+    allowance,
+    usd.address,
+    network?.alias,
+    remainingToken,
+    phase
+  ])
 
   const getUserSignature = async () => {
     let payload = {
@@ -296,7 +341,9 @@ const Swap = () => {
   return (
     <>
       {
-        now.getTime() >= new Date(Number(poolData?.start_time || '0') * 1000).getTime() && now.getTime() <= new Date(Number(poolData?.finish_time || '0') * 1000).getTime() &&
+        ((isPreOrderTime && preOrderAllowed) ||
+        (now.getTime() >= new Date(Number(poolData?.start_time || '0') * 1000).getTime() &&
+        now.getTime() <= new Date(Number(poolData?.finish_time || '0') * 1000).getTime())) &&
           <div className="my-4 w-full bg-gamefiDark-630/30 p-7 rounded clipped-t-r">
             <div className="flex flex-col lg:flex-row gap-14 lg:gap-4 w-full">
               <div className="w-full lg:w-1/2">
@@ -311,13 +358,19 @@ const Swap = () => {
                   </thead>
                   <tbody>
                     {
-                      rounds.map(round => (
-                        <tr key={round.phase}>
-                          <td className="px-2 py-2 font-medium text-left">{round.name}</td>
-                          <td className="px-2 py-2 uppercase font-medium text-right">{`${Number(round.allocation || 0).toFixed(1)} ${round.token?.symbol}`}</td>
-                          <td className="px-2 py-2 uppercase font-medium text-right">{`${Number(round.purchased || 0).toFixed(1)} ${round.token?.symbol}`}</td>
+                      hasFCFS
+                        ? rounds.map(round => (
+                          <tr key={round.phase}>
+                            <td className="px-2 py-2 font-medium text-left">{round.name}</td>
+                            <td className="px-2 py-2 uppercase font-medium text-right">{`${Number(round.allocation || 0).toFixed(1)} ${round.token?.symbol}`}</td>
+                            <td className="px-2 py-2 uppercase font-medium text-right">{`${Number(round.purchased || 0).toFixed(1)} ${round.token?.symbol}`}</td>
+                          </tr>
+                        ))
+                        : <tr>
+                          <td className="px-2 py-2 font-medium text-left">{rounds.find(round => round.phase === 1)?.name}</td>
+                          <td className="px-2 py-2 uppercase font-medium text-right">{`${Number(rounds.find(round => round.phase === 1)?.allocation || 0).toFixed(1)} ${rounds.find(round => round.phase === 1)?.token?.symbol}`}</td>
+                          <td className="px-2 py-2 uppercase font-medium text-right">{`${Number(rounds.find(round => round.phase === 1)?.purchased || 0).toFixed(1)} ${rounds.find(round => round.phase === 1)?.token?.symbol}`}</td>
                         </tr>
-                      ))
                     }
                   </tbody>
                 </table>
@@ -362,50 +415,96 @@ const Swap = () => {
                       <button className="text-gamefiGreen font-medium tracking-wide" onClick={() => setInputAmount(remainingToken || '0')}>Max</button>
                     </div>
                   </div>
-                  <div className="w-full mt-4 text-sm">
-                    {
-                      Number(remainingToken) > 0 ? 'You need to Approve once and only once before start swapping' : 'You have reached your order limit !'
-                    }
-                  </div>
-                  {swappable
-                    ? <div className="w-full mt-5">
-                      <Recaptcha onChange={onVerifyCapcha} ref={recaptchaRef}></Recaptcha>
-                    </div>
-                    : null}
-                  <div className="mt-5 w-full flex gap-2 items-center justify-end">
-                    <button
-                      className={
-                        `h-[36px] px-3 w-1/2 xl:w-1/3 text-center font-bold uppercase text-sm rounded-sm clipped-b-l ${
-                          swappable
-                            ? 'hover:opacity-95 cursor-pointer bg-gamefiGreen-600 text-gamefiDark'
-                            : 'cursor-not-allowed bg-gamefiDark-400 text-gamefiDark'
-                        }`
-                      }
-                      onClick={() => swappable && handleSwap()}
-                    >Swap</button>
-                    <button
-                      className={
-                        `h-[36px] px-3 w-1/2 xl:w-1/3 text-center font-bold uppercase text-sm rounded-sm clipped-t-r ${
-                          approvable
-                            ? 'hover:opacity-95 cursor-pointer bg-gamefiGreen-600 text-gamefiDark'
-                            : 'cursor-not-allowed bg-gamefiDark-400 text-gamefiDark'
-                        } ${loadingApproval && 'cursor-not-allowed hover:opacity-100'}`
-                      }
-                      onClick={() => approvable && handleApprove(ethers.constants.MaxUint256)}
-                    >{!loadingApproval && ((allowance?.gt(0) || !usd?.address) ? 'Approved' : 'Approve')} {loadingApproval && <div className="dot-flashing mx-auto"></div>}</button>
-                  </div>
+                  {
+                    Number(remainingToken) > 0
+                      ? <div className="w-full mt-4 text-sm">
+                        You need to Approve once and only once before start swapping
+                      </div>
+                      : <div className="w-full mt-4 text-sm text-gamefiRed">
+                        You have reached your order limit !
+                      </div>
+                  }
+                  {
+                    isPreOrderTime
+                      ? <>
+                        {swappable
+                          ? <div className="w-full mt-5">
+                            <Recaptcha onChange={onVerifyCapcha} ref={recaptchaRef}></Recaptcha>
+                          </div>
+                          : null}
+                        <div className="mt-5 w-full flex gap-2 items-center justify-end">
+                          <button
+                            className={
+                              `h-[36px] px-3 w-1/2 xl:w-1/3 text-center font-bold uppercase text-sm rounded-sm clipped-t-r ${
+                                approvable
+                                  ? 'hover:opacity-95 cursor-pointer bg-gamefiGreen-600 text-gamefiDark'
+                                  : 'cursor-not-allowed bg-gamefiDark-400 text-gamefiDark'
+                              } ${loadingApproval && 'cursor-not-allowed hover:opacity-100'}`
+                            }
+                            onClick={() => approvable && handleApprove(ethers.constants.MaxUint256)}
+                          >
+                            {!loadingApproval && ((allowance?.gt(0) || !usd?.address) ? 'Approved' : 'Approve')} {loadingApproval && <div className="dot-flashing mx-auto"></div>}
+                          </button>
+                          <button
+                            className={
+                              `h-[36px] px-3 w-1/2 xl:w-1/3 text-center font-bold uppercase text-sm rounded-sm clipped-b-l ${
+                                swappable
+                                  ? 'hover:opacity-95 cursor-pointer bg-gamefiGreen-600 text-gamefiDark'
+                                  : 'cursor-not-allowed bg-gamefiDark-400 text-gamefiDark'
+                              }`
+                            }
+                            onClick={() => swappable && handleSwap()}
+                          >Pre-order</button>
+                        </div>
+                      </>
+                      : <>
+                        {swappable
+                          ? <div className="w-full mt-5">
+                            <Recaptcha onChange={onVerifyCapcha} ref={recaptchaRef}></Recaptcha>
+                          </div>
+                          : <></>}
+                        <div className="mt-5 w-full flex gap-2 items-center justify-end">
+                          <button
+                            className={
+                              `h-[36px] px-3 w-1/2 xl:w-1/3 text-center font-bold uppercase text-sm rounded-sm clipped-t-r ${
+                                approvable
+                                  ? 'hover:opacity-95 cursor-pointer bg-gamefiGreen-600 text-gamefiDark'
+                                  : 'cursor-not-allowed bg-gamefiDark-400 text-gamefiDark'
+                              } ${loadingApproval && 'cursor-not-allowed hover:opacity-100'}`
+                            }
+                            onClick={() => approvable && handleApprove(ethers.constants.MaxUint256)}
+                          >
+                            {!loadingApproval && ((allowance?.gt(0) || !usd?.address) ? 'Approved' : 'Approve')} {loadingApproval && <div className="dot-flashing mx-auto"></div>}
+                          </button>
+                          <button
+                            className={
+                              `h-[36px] px-3 w-1/2 xl:w-1/3 text-center font-bold uppercase text-sm rounded-sm clipped-b-l ${
+                                swappable
+                                  ? 'hover:opacity-95 cursor-pointer bg-gamefiGreen-600 text-gamefiDark'
+                                  : 'cursor-not-allowed bg-gamefiDark-400 text-gamefiDark'
+                              }`
+                            }
+                            onClick={() => swappable && handleSwap()}
+                          >Swap</button>
+                        </div>
+                      </>
+                  }
                 </div>
               </div>
             </div>
           </div>
       }
       {
-        now.getTime() < new Date(Number(poolData?.start_time || '0') * 1000).getTime() && <div className="my-4 w-full flex flex-col bg-gamefiDark-650 p-7 rounded">
+        now.getTime() < new Date(Number(poolData?.finish_time || '0') * 1000).getTime() &&
+        ((isPreOrderTime && !preOrderAllowed) ||
+          ((!isPreOrderTime || !preOrderAllowed) && now.getTime() < new Date(Number(poolData?.start_time || '0') * 1000).getTime()) ||
+          ((isPreOrderTime && preOrderAllowed) && now.getTime() < new Date(Number(poolData?.start_pre_order_time || '0') * 1000).getTime())) &&
+        <div className="my-4 w-full flex flex-col bg-gamefiDark-630/30 p-7 rounded">
           Not Swap Time Yet!
         </div>
       }
       {
-        now.getTime() > new Date(Number(poolData?.finish_time || '0') * 1000).getTime() && <div className="my-4 w-full flex flex-col bg-gamefiDark-650 p-7 rounded">
+        now.getTime() > new Date(Number(poolData?.finish_time || '0') * 1000).getTime() && <div className="my-4 w-full flex flex-col bg-gamefiDark-630/30 p-7 rounded">
           Pool Swap Time Is Over!
         </div>
       }

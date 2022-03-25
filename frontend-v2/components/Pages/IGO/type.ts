@@ -30,4 +30,5 @@ export type Item = {
   progress_display: string | number | null;
   buy_type: string;
   end_join_pool_time: string;
+  min_tier: number | string;
 }

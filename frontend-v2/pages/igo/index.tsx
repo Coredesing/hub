@@ -78,94 +78,98 @@ const IGO = () => {
         </div>
       </div>
       <ListIGOContext.Provider value={{ now }}>
-        <div className="md:px-4 lg:px-16 mx-auto bg-black mt-20 pb-32">
-          <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
-            <div className="inline-block top-0 left-0 right-0 uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
-                Opening Projects
-            </div>
-            <div className="absolute -bottom-5 left-0 right-0">
-              <Image src={require('@/assets/images/under-stroke-yellow.svg')} alt="understroke"></Image>
-            </div>
-          </div>
-          {
-            openingLoading
-              ? <div className="loader-wrapper mx-auto mt-14">
-                <svg className="loader" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-              Loading...
+        {
+          openingItems?.length > 0 && <div className="md:px-4 lg:px-16 mx-auto bg-black mt-20 pb-32">
+            <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
+              <div className="inline-block top-0 left-0 right-0 uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
+                  Opening Projects
               </div>
-              : <>
-                {openingPublicList?.length
-                  ? <div className="w-full max-w-[1180px] mx-auto mt-14">
-                    <p><span className="uppercase font-semibold text-xl">Pool IGO</span> <span className="text-white/60">(Staking $GAFI required)</span></p>
-                    <div className="mt-4 w-full grid md:grid-cols-3 xl:grid-cols-3 gap-6">
-                      {openingPublicList.map(item => <div key={item.id} className="w-full">
-                        <Card item={item} color="black" background="gamefiDark"></Card>
-                      </div>)}
-                    </div>
-                  </div>
-                  : <></>}
-                {openingCommunityList?.length
-                  ? <>
-                    <div className="w-full max-w-[1180px] mx-auto mt-14">
-                      <p><span className="uppercase font-semibold text-xl">Pool Community</span> <span className="text-white/60">(Staking $GAFI not required)</span></p>
+              <div className="absolute -bottom-5 left-0 right-0">
+                <Image src={require('@/assets/images/under-stroke-yellow.svg')} alt="understroke"></Image>
+              </div>
+            </div>
+            {
+              openingLoading
+                ? <div className="loader-wrapper mx-auto mt-14">
+                  <svg className="loader" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                Loading...
+                </div>
+                : <>
+                  {openingPublicList?.length
+                    ? <div className="w-full max-w-[1180px] mx-auto mt-14">
+                      <p><span className="uppercase font-semibold text-xl">Pool IGO</span> <span className="text-white/60">(Staking $GAFI required)</span></p>
                       <div className="mt-4 w-full grid md:grid-cols-3 xl:grid-cols-3 gap-6">
-                        {openingCommunityList.map(item => <div key={item.id} className="w-full">
+                        {openingPublicList.map(item => <div key={item.id} className="w-full">
                           <Card item={item} color="black" background="gamefiDark"></Card>
                         </div>)}
                       </div>
                     </div>
-                  </>
-                  : <></>}
-              </>
-          }
-        </div>
-        <div className="md:px-4 lg:px-16 mx-auto pb-32">
-          <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
-            <div className="inline-block top-0 left-0 right-0 uppercase bg-black w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
-                Upcoming Projects
-            </div>
-            <div className="absolute -bottom-5 left-0 right-0">
-              <Image src={require('@/assets/images/under-stroke-yellow.svg')} alt="understroke"></Image>
-            </div>
+                    : <></>}
+                  {openingCommunityList?.length
+                    ? <>
+                      <div className="w-full max-w-[1180px] mx-auto mt-14">
+                        <p><span className="uppercase font-semibold text-xl">Pool Community</span> <span className="text-white/60">(Staking $GAFI not required)</span></p>
+                        <div className="mt-4 w-full grid md:grid-cols-3 xl:grid-cols-3 gap-6">
+                          {openingCommunityList.map(item => <div key={item.id} className="w-full">
+                            <Card item={item} color="black" background="gamefiDark"></Card>
+                          </div>)}
+                        </div>
+                      </div>
+                    </>
+                    : <></>}
+                </>
+            }
           </div>
-          {
-            upcomingLoading
-              ? <div className="loader-wrapper mx-auto mt-14">
-                <svg className="loader" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-              Loading...
+        }
+        {
+          upcomingItems?.length > 0 && <div className={`md:px-4 lg:px-16 mx-auto pb-32 ${!openingItems?.length && 'bg-black'}`}>
+            <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
+              <div className={`inline-block top-0 left-0 right-0 uppercase ${openingItems?.length > 0 ? 'bg-black' : 'bg-gamefiDark'} w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl`}>
+                  Upcoming Projects
               </div>
-              : <>
-                {upcomingPublicList?.length
-                  ? <div className="w-full max-w-[1180px] mx-auto mt-14">
-                    <p><span className="uppercase font-semibold text-xl">Pool IGO</span> <span className="text-white/60">(Staking $GAFI required)</span></p>
-                    <div className="mt-4 w-full grid md:grid-cols-3 xl:grid-cols-3 gap-6">
-                      {upcomingPublicList.map(item => <div key={item.id} className="w-full">
-                        <Card item={item} color="gamefiDark" background="black"></Card>
-                      </div>)}
-                    </div>
-                  </div>
-                  : <></>}
-                {upcomingCommunityList?.length
-                  ? <>
-                    <div className="w-full max-w-[1180px] mx-auto mt-14">
-                      <p><span className="uppercase font-semibold text-xl">Pool Community</span> <span className="text-white/60">(Staking $GAFI not required)</span></p>
+              <div className="absolute -bottom-5 left-0 right-0">
+                <Image src={require('@/assets/images/under-stroke-yellow.svg')} alt="understroke"></Image>
+              </div>
+            </div>
+            {
+              upcomingLoading
+                ? <div className="loader-wrapper mx-auto mt-14">
+                  <svg className="loader" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                Loading...
+                </div>
+                : <>
+                  {upcomingPublicList?.length
+                    ? <div className="w-full max-w-[1180px] mx-auto mt-14">
+                      <p><span className="uppercase font-semibold text-xl">Pool IGO</span> <span className="text-white/60">(Staking $GAFI required)</span></p>
                       <div className="mt-4 w-full grid md:grid-cols-3 xl:grid-cols-3 gap-6">
-                        {upcomingCommunityList.map(item => <div key={item.id} className="w-full">
-                          <Card item={item} color="gamefiDark" background="black"></Card>
+                        {upcomingPublicList.map(item => <div key={item.id} className="w-full">
+                          <Card item={item} color={openingItems?.length > 0 ? 'gamefiDark' : 'black'} background={openingItems?.length > 0 ? 'black' : 'gamefiDark'}></Card>
                         </div>)}
                       </div>
                     </div>
-                  </>
-                  : <></>}
-              </>
-          }
-        </div>
+                    : <></>}
+                  {upcomingCommunityList?.length
+                    ? <>
+                      <div className="w-full max-w-[1180px] mx-auto mt-14">
+                        <p><span className="uppercase font-semibold text-xl">Pool Community</span> <span className="text-white/60">(Staking $GAFI not required)</span></p>
+                        <div className="mt-4 w-full grid md:grid-cols-3 xl:grid-cols-3 gap-6">
+                          {upcomingCommunityList.map(item => <div key={item.id} className="w-full">
+                            <Card item={item} color={openingItems?.length > 0 ? 'gamefiDark' : 'black'} background={openingItems?.length > 0 ? 'black' : 'gamefiDark'}></Card>
+                          </div>)}
+                        </div>
+                      </div>
+                    </>
+                    : <></>}
+                </>
+            }
+          </div>
+        }
         <CompletedPools></CompletedPools>
       </ListIGOContext.Provider>
     </Layout>

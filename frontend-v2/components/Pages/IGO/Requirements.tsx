@@ -183,7 +183,6 @@ const Requirements = () => {
   }, [poolData, account, poolWhitelistReady, formData, signature, loadJoined])
 
   useEffect(() => {
-    console.log(poolNetworkInvalid, poolRankInvalid, !profile?.verified, !whitelistJoined)
     setFailedRequirements(poolNetworkInvalid || poolRankInvalid || !profile?.verified || !whitelistJoined)
   }, [poolNetworkInvalid, poolRankInvalid, profile, setFailedRequirements, whitelistJoined])
 
@@ -271,7 +270,8 @@ const Requirements = () => {
             <strong className="tracking-wider">
               {whitelistJoined && poolWhitelistOKSocial && 'Applied'}
               {whitelistJoined && !poolWhitelistOKSocial && 'Incomplete'}
-              {!whitelistJoined && !poolWhitelistOKTime && 'Closed'}
+              {!whitelistJoined && !poolWhitelistOKTime && new Date(now).getTime() < poolWhitelistTime?.start?.getTime() && 'Upcoming'}
+              {!whitelistJoined && !poolWhitelistOKTime && new Date(now).getTime() > poolWhitelistTime?.end?.getTime() && 'Closed'}
               {poolWhitelistReady && 'Unapplied'}
             </strong>
           </div>

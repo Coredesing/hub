@@ -422,7 +422,7 @@ const Swap = () => {
                   {
                     isPreOrderTime
                       ? <>
-                        {preOrderAllowed
+                        {swappable
                           ? <div className="w-full mt-5">
                             <Recaptcha onChange={onVerifyCapcha} ref={recaptchaRef}></Recaptcha>
                           </div>
@@ -457,7 +457,7 @@ const Swap = () => {
                           ? <div className="w-full mt-5">
                             <Recaptcha onChange={onVerifyCapcha} ref={recaptchaRef}></Recaptcha>
                           </div>
-                          : null}
+                          : <></>}
                         <div className="mt-5 w-full flex gap-2 items-center justify-end">
                           <button
                             className={

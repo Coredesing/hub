@@ -156,10 +156,9 @@ const Earn = ({ pools: initPools }) => {
       const tx = await contract.linearClaimReward(poolID)
       await tx.wait(1)
       toast.success('Claim successfully')
+      fetchPools()
     } catch {
       toast.error('Error occurred. Please try again')
-    } finally {
-      fetchPools()
     }
   }, [library, fetchPools])
 

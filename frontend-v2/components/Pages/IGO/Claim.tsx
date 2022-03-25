@@ -272,7 +272,7 @@ const Claim = () => {
                       {Number(item.max_percent_claim) - Number(configs[index - 1]?.max_percent_claim || 0)}%
                     </div>
                     <div className="table-cell align-middle py-2 rounded font-light">
-                      {(Number(purchasedTokens) * Number(item.max_percent_claim) / 100).toFixed(2)} {poolData?.symbol}
+                      {((Number(purchasedTokens) * Number(item.max_percent_claim) / 100) - (Number(purchasedTokens) * Number(configs[index - 1]?.max_percent_claim) / 100 || 0)).toFixed(2)} {poolData?.symbol}
                     </div>
                     <div className="table-cell align-middle py-2 rounded font-light">
                       {item.status === 'Claimable'

@@ -17,7 +17,7 @@ import { useAppContext } from '@/context'
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 
 const Swap = () => {
-  const { poolData, usd } = useContext(IGOContext)
+  const { poolData, usd, hasFCFS } = useContext(IGOContext)
   const { library, account, network, balanceShort } = useMyWeb3()
   const [txHash, setTxHash] = useState('')
   const [allocation, setAllocation] = useState(null)
@@ -110,7 +110,7 @@ const Swap = () => {
     if (poolData?.start_time) {
       const startTime = new Date(Number(poolData?.start_time) * 1000).getTime()
       const endTime = new Date(Number(poolData?.finish_time) * 1000).getTime()
-      const freeBuyTime = poolData?.freeBuyTimeSetting?.start_buy_time ? new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000).getTime() : null
+      const freeBuyTime = hasFCFS ? new Date(Number(poolData.freeBuyTimeSetting.start_buy_time) * 1000).getTime() : null
 
       if (freeBuyTime && now.getTime() >= startTime && now.getTime() < freeBuyTime) {
         return setPhase(1)
@@ -358,13 +358,19 @@ const Swap = () => {
                   </thead>
                   <tbody>
                     {
-                      rounds.map(round => (
-                        <tr key={round.phase}>
-                          <td className="px-2 py-2 font-medium text-left">{round.name}</td>
-                          <td className="px-2 py-2 uppercase font-medium text-right">{`${Number(round.allocation || 0).toFixed(1)} ${round.token?.symbol}`}</td>
-                          <td className="px-2 py-2 uppercase font-medium text-right">{`${Number(round.purchased || 0).toFixed(1)} ${round.token?.symbol}`}</td>
+                      hasFCFS
+                        ? rounds.map(round => (
+                          <tr key={round.phase}>
+                            <td className="px-2 py-2 font-medium text-left">{round.name}</td>
+                            <td className="px-2 py-2 uppercase font-medium text-right">{`${Number(round.allocation || 0).toFixed(1)} ${round.token?.symbol}`}</td>
+                            <td className="px-2 py-2 uppercase font-medium text-right">{`${Number(round.purchased || 0).toFixed(1)} ${round.token?.symbol}`}</td>
+                          </tr>
+                        ))
+                        : <tr>
+                          <td className="px-2 py-2 font-medium text-left">{rounds.find(round => round.phase === 1)?.name}</td>
+                          <td className="px-2 py-2 uppercase font-medium text-right">{`${Number(rounds.find(round => round.phase === 1)?.allocation || 0).toFixed(1)} ${rounds.find(round => round.phase === 1)?.token?.symbol}`}</td>
+                          <td className="px-2 py-2 uppercase font-medium text-right">{`${Number(rounds.find(round => round.phase === 1)?.purchased || 0).toFixed(1)} ${rounds.find(round => round.phase === 1)?.token?.symbol}`}</td>
                         </tr>
-                      ))
                     }
                   </tbody>
                 </table>

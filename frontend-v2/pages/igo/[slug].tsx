@@ -420,29 +420,46 @@ const IGODetails = ({ poolData }) => {
                     </div>
                   </div>
 
-                  <div className="table-row">
-                    <div className="table-cell align-middle py-2 rounded">
+                  {
+                    hasFCFS
+                      ? <>
+                        <div className="table-row">
+                          <div className="table-cell align-middle py-2 rounded">
                       Buy Phase 1 - Guarantee
-                    </div>
-                    <div className="table-cell align-middle py-2 font-normal">
-                      {poolBuyTime.start ? format(poolBuyTime.start, 'HH:mm, dd MMM yyyy') : 'TBA'}
-                    </div>
-                    <div className="table-cell align-middle py-2 font-normal">
-                      {poolBuyTime.end ? format(poolBuyTime.end, 'HH:mm, dd MMM yyyy') : 'TBA'}
-                    </div>
-                  </div>
+                          </div>
+                          <div className="table-cell align-middle py-2 font-normal">
+                            {poolBuyTime.start ? format(poolBuyTime.start, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                          </div>
+                          <div className="table-cell align-middle py-2 font-normal">
+                            {poolBuyTime.end ? format(poolBuyTime.end, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                          </div>
+                        </div>
 
-                  <div className="table-row">
-                    <div className="table-cell align-middle py-2 rounded">
+                        <div className="table-row">
+                          <div className="table-cell align-middle py-2 rounded">
                       Buy Phase 2 - FCFS
-                    </div>
-                    <div className="table-cell align-middle py-2 font-normal">
-                      {poolFreeBuyTime.start ? format(poolFreeBuyTime.start, 'HH:mm, dd MMM yyyy') : 'TBA'}
-                    </div>
-                    <div className="table-cell align-middle py-2 font-normal">
-                      {poolFreeBuyTime.end ? format(poolFreeBuyTime.end, 'HH:mm, dd MMM yyyy') : 'TBA'}
-                    </div>
-                  </div>
+                          </div>
+                          <div className="table-cell align-middle py-2 font-normal">
+                            {poolFreeBuyTime.start ? format(poolFreeBuyTime.start, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                          </div>
+                          <div className="table-cell align-middle py-2 font-normal">
+                            {poolFreeBuyTime.end ? format(poolFreeBuyTime.end, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                          </div>
+                        </div>
+                      </>
+                      : <>
+                        <div className="table-row">
+                          <div className="table-cell align-middle py-2 rounded">
+                      Buy Phase - Guarantee
+                          </div>
+                          <div className="table-cell align-middle py-2 font-normal">
+                            {poolBuyTime.start ? format(poolBuyTime.start, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                          </div>
+                          <div className="table-cell align-middle py-2 font-normal">
+                            {poolFreeBuyTime.end ? format(poolFreeBuyTime.end, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                          </div>
+                        </div></>
+                  }
 
                   <div className="table-row">
                     <div className="table-cell align-middle py-2 rounded">

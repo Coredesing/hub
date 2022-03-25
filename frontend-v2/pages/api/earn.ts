@@ -3,7 +3,7 @@ import { fetcher } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 import { Contract } from 'ethers'
 import ABIStakingPool from '@/components/web3/abis/StakingPool.json'
-import { GAFI } from '@/components/web3'
+import { BUSD_BSC, GAFI } from '@/components/web3'
 
 export function fetchAll () {
   return fetcher(`${API_BASE_URL}/staking-pool`).then(pools => {
@@ -38,7 +38,8 @@ export function fetchAll () {
         lockDuration: linearData.lockDuration.toString(),
         delayDuration: linearData.delayDuration.toString(),
         startJoinTime: linearData.startJoinTime.toString(),
-        endJoinTime: linearData.endJoinTime.toString()
+        endJoinTime: linearData.endJoinTime.toString(),
+        buyURL: `https://pancakeswap.finance/swap?outputCurrency=${GAFI.address}&inputCurrency=${BUSD_BSC.address}`
       }
     }))
   })

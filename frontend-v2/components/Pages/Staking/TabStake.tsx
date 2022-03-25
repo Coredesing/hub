@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback, ChangeEvent } from 'react'
 import { safeToFixed, shorten } from '@/utils'
-import { useWeb3Default, switchNetwork, GAFI } from '@/components/web3'
+import { useWeb3Default, switchNetwork, GAFI, BUSD_BSC } from '@/components/web3'
 import { utils, constants } from 'ethers'
 import { useMyWeb3 } from '@/components/web3/context'
 import { useBalanceToken, useTokenAllowance, useTokenApproval } from '@/components/web3/utils'
@@ -330,7 +330,7 @@ export default function TabStake ({ loadMyPending, pendingWithdrawal }) {
               </svg> }
               <span className="font-casual text-xs sm:text-sm md:text-base">$GAFI available to stake</span>
               { account && chainOK && balanceGAFI !== null && !balanceGAFIOK && <a
-                href="https://pancakeswap.finance/swap?outputCurrency=0x89af13a10b32f1b2f8d1588f93027f69b6f4e27e&inputCurrency=0xe9e7cea3dedca5984780bafc599bd69add087d56"
+                href={`https://pancakeswap.finance/swap?outputCurrency=${GAFI.address}&inputCurrency=${BUSD_BSC.address}`}
                 target="_blank"
                 className='flex-none ml-auto py-2 px-4 md:py-3 md:px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-bold text-sm rounded-xs hover:opacity-95 cursor-pointer clipped-t-r' rel="noreferrer"
               >

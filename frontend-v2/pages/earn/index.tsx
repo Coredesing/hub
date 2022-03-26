@@ -76,10 +76,10 @@ const Earn = ({ pools: initPools }) => {
           key={contractAddress}
           pools={pools}
           contractAddress={contractAddress}
-          className="mb-6"
+          className="mb-8"
         ></ContractPools>
       })}
-      <div className="rounded-sm shadow overflow-hidden mb-6">
+      <div className="rounded-sm shadow overflow-hidden mb-8">
         <div className="flex flex-col md:flex-row gap-y-4 md:gap-y-0 w-full md:items-center bg-gamefiDark-630/80 p-4 md:px-6 md:py-4">
           <div className="flex justify-between">
             <div className="flex-none inline-flex items-center truncate w-[10rem]">
@@ -95,7 +95,6 @@ const Earn = ({ pools: initPools }) => {
               <div className="text-base uppercase font-medium font-casual my-0.5">TBA</div>
             </div>
           </div>
-
           <div>
             <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-0.5">Lock-in term</p>
             { pools && <div className="flex text-[12px] gap-2 font-casual flex-wrap">

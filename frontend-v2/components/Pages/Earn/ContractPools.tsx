@@ -286,7 +286,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
   }, [loadingAllowance, loadingApproval, allowanceEnough, approveAndReload, stake])
 
   return <div className={`rounded-sm shadow overflow-hidden ${className || ''}`}>
-    <div className="flex flex-col md:flex-row gap-y-4 md:gap-y-0 w-full md:items-center bg-gamefiDark-630/80 px-6 py-4">
+    <div className="flex flex-col md:flex-row gap-y-4 md:gap-y-0 w-full md:items-center bg-gamefiDark-630/80 p-4 md:px-6 md:py-4">
       <div className="flex justify-between">
         <div className="flex-none inline-flex items-center w-[10rem] truncate">
           <img src={poolFirst?.tokenImage} alt={poolFirst?.token} className="w-10 h-10 rounded-full mr-3" />
@@ -314,7 +314,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
         <span className="text-base font-casual">{poolFirst?.subject}</span>
       </div>
       <div className="md:ml-auto xl:ml-0 mt-auto md:mt-0 flex items-center md:justify-end justify-center min-w-[5rem] text-right">
-        <div className="items-center justify-center py-2 rounded text-sm cursor-pointer inline-flex hover:text-gamefiGreen-500" onClick={() => setOpen(!open)}>
+        <div className="items-center justify-center rounded text-sm cursor-pointer inline-flex hover:text-gamefiGreen-500" onClick={() => setOpen(!open)}>
           { open
             ? <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
             : <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>

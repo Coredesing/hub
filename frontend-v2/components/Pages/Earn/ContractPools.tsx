@@ -38,18 +38,19 @@ const ContractPools = ({ pools, contractAddress, className }: {
     return selectedExtended?.myPendingReward?.gte(parseUnits('0.01', selectedExtended?.tokenDecimals))
   }, [selectedExtended])
 
-  const loadMyExtended = useCallback(async (init?: PoolExtended) => {
-    const v = init || selectedExtended
+  const loadMyExtended = useCallback(async (v?: PoolExtended) => {
     if (!v) {
       return
     }
 
     if (!account) {
-      v.myPendingReward = constants.Zero
-      v.myPendingRewardParsed = '0'
-      v.myStake = constants.Zero
-      v.myStakeParsed = '0'
-      setSelectedExtended(v)
+      setSelectedExtended(prevState => ({
+        ...prevState,
+        myPendingReward: constants.Zero,
+        myPendingRewardParsed: '0',
+        myStake: constants.Zero,
+        myStakeParsed: '0'
+      }))
       return
     }
 
@@ -62,15 +63,17 @@ const ContractPools = ({ pools, contractAddress, className }: {
         await contract.linearStakingData(v?.id, account)
       ]
 
-      v.myPendingReward = pendingReward
-      v.myPendingRewardParsed = formatUnits(pendingReward, v?.tokenDecimals)
-      v.myStake = stakingData.balance
-      v.myStakeParsed = formatUnits(stakingData.balance, v?.tokenDecimals)
-      setSelectedExtended(v)
+      setSelectedExtended(prevState => ({
+        ...prevState,
+        myPendingReward: pendingReward,
+        myPendingRewardParsed: formatUnits(pendingReward, v?.tokenDecimals),
+        myStake: stakingData.balance,
+        myStakeParsed: formatUnits(stakingData.balance, v?.tokenDecimals)
+      }))
     } finally {
       setLoading(false)
     }
-  }, [account, contractAddress, selectedExtended])
+  }, [account, contractAddress])
 
   useEffect(() => {
     if (!selected) {
@@ -267,9 +270,9 @@ const ContractPools = ({ pools, contractAddress, className }: {
       toast.error('Error occurred. Please try again')
     } finally {
       setConfirming(false)
-      loadMyExtended()
+      loadMyExtended(selectedExtended)
     }
-  }, [library, currentPool, currentToken, amount, contractAddress, allowanceEnough, loadMyExtended, confirming])
+  }, [library, currentPool, currentToken, amount, contractAddress, allowanceEnough, loadMyExtended, confirming, selectedExtended])
 
   const approveOrStake = useCallback(() => {
     if (loadingAllowance || loadingApproval) {
@@ -350,7 +353,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
         </div>
         <div className="flex flex-col md:flex-row justify-between flex-1 gap-4">
           <div className="md:min-w-[10rem] md:border-r md:border-white/20 flex flex-col md:pr-4">
-            <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Your Interest</p>
+            <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Your Interest {JSON.stringify(myPendingRewardClaimable)}</p>
             <p className="text-base text-white font-casual font-medium">{ loading ? 'Loading...' : `${safeToFixed(selectedExtended.myPendingRewardParsed, 2)} ${poolFirst?.token}` }</p>
             <div className="mt-auto">
               { account && myPendingRewardClaimable && !networkIncorrect && <>

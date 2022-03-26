@@ -13,6 +13,7 @@ import { getNetworkByAlias, switchNetwork, Token } from '@/components/web3'
 import toast from 'react-hot-toast'
 import Modal from '@/components/Base/Modal'
 import type { Pool } from '@/pages/api/earn'
+import { useWalletContext } from '@/components/Base/WalletConnector/provider'
 
 type PoolExtended = Pool & {
   totalCap?: BigNumber;
@@ -28,7 +29,6 @@ type PoolExtended = Pool & {
   timeClosing?: Date;
   myPendingReward?: BigNumber;
   myPendingRewardParsed?: string;
-  myPendingRewardClaimable?: boolean;
   myStake?: BigNumber;
   myStakeParsed?: string;
 }
@@ -79,18 +79,60 @@ const ContractPools = ({ pools, contractAddress }: {
   pools: Pool[];
   contractAddress: string;
 }) => {
+  const { setShowModal: showConnectWallet } = useWalletContext()
+
   const poolFirst = useMemo<Pool | undefined>(() => {
     return pools?.[0]
   }, [pools])
   const { account, network, library } = useMyWeb3()
 
-  const [open, setOpen] = useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(false)
+
   const [selected, setSelected] = useState<Pool | undefined>()
   useEffect(() => {
     setSelected(pools?.[0])
   }, [pools])
 
   const [selectedExtended, setSelectedExtended] = useState<PoolExtended | undefined>()
+  const myPendingRewardClaimable = useMemo(() => {
+    return selectedExtended?.myPendingReward?.gte(parseUnits('0.01', selectedExtended?.tokenDecimals))
+  }, [selectedExtended])
+
+  const loadMyExtended = useCallback(async (init?: PoolExtended) => {
+    const v = init || selectedExtended
+    if (!v) {
+      return
+    }
+
+    if (!account) {
+      v.myPendingReward = constants.Zero
+      v.myPendingRewardParsed = '0'
+      v.myStake = constants.Zero
+      v.myStakeParsed = '0'
+      setSelectedExtended(v)
+      return
+    }
+
+    setLoading(true)
+    try {
+      const library = await getLibraryDefaultFlexible(null, v?.network)
+      const contract = new Contract(contractAddress, ABIStakingPool, library)
+      const [pendingReward, stakingData] = [
+        await contract.linearPendingReward(v?.id, account),
+        await contract.linearStakingData(v?.id, account)
+      ]
+
+      v.myPendingReward = pendingReward
+      v.myPendingRewardParsed = formatUnits(pendingReward, v?.tokenDecimals)
+      v.myStake = stakingData.balance
+      v.myStakeParsed = formatUnits(stakingData.balance, v?.tokenDecimals)
+      setSelectedExtended(v)
+    } finally {
+      setLoading(false)
+    }
+  }, [account, contractAddress, selectedExtended])
+
   useEffect(() => {
     if (!selected) {
       setSelectedExtended(undefined)
@@ -112,29 +154,10 @@ const ContractPools = ({ pools, contractAddress }: {
 
     if (!account) {
       setSelectedExtended(v)
-      return
     }
 
-    (async () => {
-      let minimum
-      const library = await getLibraryDefaultFlexible(null, v?.network)
-      const contract = new Contract(contractAddress, ABIStakingPool, library)
-      const [pendingReward, stakingData] = [
-        await contract.linearPendingReward(v?.id, account),
-        await contract.linearStakingData(v?.id, account)
-      ]
-      if (!minimum) {
-        minimum = parseUnits('0.0001', v?.tokenDecimals)
-      }
-
-      v.myPendingReward = pendingReward
-      v.myPendingRewardParsed = formatUnits(pendingReward, v?.tokenDecimals)
-      v.myPendingRewardClaimable = pendingReward.gt(minimum)
-      v.myStake = stakingData.balance
-      v.myStakeParsed = formatUnits(stakingData.balance, v?.tokenDecimals)
-      setSelectedExtended(v)
-    })()
-  }, [selected, account, contractAddress])
+    loadMyExtended(v)
+  }, [selected, account, contractAddress, loadMyExtended])
 
   const networkIncorrect = useMemo(() => {
     return (selected?.network || '').toLowerCase() !== network?.alias
@@ -147,12 +170,15 @@ const ContractPools = ({ pools, contractAddress }: {
     }
 
     try {
+      setConfirming(true)
       const contract = new Contract(contractAddress, ABIStakingPool, library.getSigner())
       const tx = await contract.linearClaimReward(poolID)
       await tx.wait(1)
       toast.success('Claim successfully')
     } catch {
       toast.error('Error occurred. Please try again')
+    } finally {
+      setConfirming(false)
     }
   }, [library])
 
@@ -174,6 +200,7 @@ const ContractPools = ({ pools, contractAddress }: {
   const [amount, setAmount] = useState<string>('')
   useEffect(() => {
     setAmount('')
+    setStep(1)
   }, [currentPool])
   const estimatedInterest = useMemo<number>(() => {
     if (!currentPool) {
@@ -207,6 +234,25 @@ const ContractPools = ({ pools, contractAddress }: {
     }
   }
 
+  const [step, setStep] = useState<number>(1)
+  const nextStep = useCallback(() => {
+    if (step === 1) {
+      if (!amount) {
+        toast.error(`Please input your amount of ${currentToken.symbol}`)
+        return
+      }
+    }
+
+    setStep(step + 1)
+  }, [step, setStep, amount, currentToken])
+  const prevStep = useCallback(() => {
+    if (step === 1) {
+      return
+    }
+
+    setStep(step - 1)
+  }, [step, setStep])
+
   const { allowance, load: loadAllowance, loading: loadingAllowance } = useTokenAllowance(currentToken, account, contractAddress)
   useEffect(() => {
     loadAllowance().catch(err => { console.debug(err) })
@@ -234,17 +280,15 @@ const ContractPools = ({ pools, contractAddress }: {
   }, [allowance, amount, currentToken])
   const approveAndReload = useCallback((amount) => {
     return approve(amount)
-      .then(ok => {
+      .then((ok) => {
         if (ok) {
           toast.success(`Successfully approved your ${currentToken?.symbol}`)
-          return loadAllowance()
         }
-      })
-      .catch(() => {
-        loadAllowance().catch(err => { console.debug(err) })
+        return loadAllowance()
       })
   }, [loadAllowance, approve, currentToken])
 
+  const [confirming, setConfirming] = useState<boolean>(false)
   const stake = useCallback(async () => {
     if (!currentPool || !currentToken) {
       return
@@ -264,7 +308,12 @@ const ContractPools = ({ pools, contractAddress }: {
       return
     }
 
+    if (confirming) {
+      return
+    }
+
     try {
+      setConfirming(true)
       const contract = new Contract(contractAddress, ABIStakingPool, library.getSigner())
       const tx = await contract.linearDeposit(currentPool.id, parseUnits(amount, currentToken.decimals))
       await tx.wait(1)
@@ -277,8 +326,11 @@ const ContractPools = ({ pools, contractAddress }: {
 
       console.debug(err)
       toast.error('Error occurred. Please try again')
+    } finally {
+      setConfirming(false)
+      loadMyExtended()
     }
-  }, [library, currentPool, currentToken, amount, contractAddress, allowanceEnough])
+  }, [library, currentPool, currentToken, amount, contractAddress, allowanceEnough, loadMyExtended])
 
   const approveOrStake = useCallback(() => {
     if (loadingAllowance || loadingApproval) {
@@ -286,10 +338,12 @@ const ContractPools = ({ pools, contractAddress }: {
     }
 
     if (allowanceEnough) {
-      return stake()
+      return stake().then(() => {
+        setCurrentPool(undefined)
+      })
     }
 
-    return approveAndReload(constants.MaxUint256).then(stake)
+    return approveAndReload(constants.MaxUint256)
   }, [loadingAllowance, loadingApproval, allowanceEnough, approveAndReload, stake])
 
   return <div className="rounded-sm shadow overflow-hidden">
@@ -316,7 +370,7 @@ const ContractPools = ({ pools, contractAddress }: {
       </div>
       <div className="ml-auto">
         <p className="text-[13px] text-white font-bold uppercase text-opacity-50">Applicable subjects</p>
-        <span className="text-base font-casual">Everyone</span>
+        <span className="text-base font-casual">{poolFirst?.subject}</span>
       </div>
       <div className="min-w-[5rem] text-right">
         <div className="items-center justify-center py-2 rounded text-sm cursor-pointer inline-flex hover:text-gamefiGreen-500" onClick={() => setOpen(!open)}>
@@ -330,12 +384,12 @@ const ContractPools = ({ pools, contractAddress }: {
 
     { open && selectedExtended && <div className="bg-gamefiDark-630/30 p-4">
       <div className="flex px-2">
-        <div className="flex-1 border-r border-white/20 px-6 pl-3">
+        <div className="w-1/2 border-r border-white/20 px-6 pl-3">
           <div className="flex justify-between mb-1">
             <span className="text-[13px] text-white font-bold uppercase text-opacity-50">Total Pool Cap</span>
             <span className="text-[13px] text-white font-bold uppercase">{printNumber(selectedExtended.totalCapParsed)} {poolFirst?.token}</span>
           </div>
-          <div className="bg-gamefiDark-900 rounded mb-1">
+          <div className="bg-gamefiDark-400 rounded mb-1">
             <div className="h-[5px] rounded bg-gradient-to-r from-yellow-300 to-gamefiGreen-500" style={{ width: `${selectedExtended.progress.toLocaleString('en-US')}%` }}></div>
           </div>
           <div className="font-casual text-xs text-white/50 mb-6">{selectedExtended.progress.toFixed(2)}%</div>
@@ -354,143 +408,167 @@ const ContractPools = ({ pools, contractAddress }: {
           </div>
         </div>
         <div className="min-w-[12rem] px-6 border-r border-white/20 flex flex-col">
-          <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Your Current Interest</p>
-          <p className="text-base text-white font-casual font-medium">{safeToFixed(selectedExtended.myPendingRewardParsed, 2)} {poolFirst?.token}</p>
+          <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Your Interest</p>
+          <p className="text-base text-white font-casual font-medium">{ loading ? 'Loading...' : `${safeToFixed(selectedExtended.myPendingRewardParsed, 2)} ${poolFirst?.token}` }</p>
           <div className="mt-auto">
-            { selectedExtended.myPendingRewardClaimable && !networkIncorrect && <>
-              {/* <div onClick={() => restake(contractAddress, selected?.id)} className="bg-gamefiGreen-600 hover:bg-opacity-80 uppercase p-px rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer mb-2">
-                      <div className="bg-gamefiDark-650 clipped-t-r py-2 px-5 rounded-sm text-gamefiGreen-600 hover:text-opacity-80">Re-stake Reward</div>
-                    </div> */}
-              <div onClick={() => claimReward(contractAddress, selected?.id)} className="bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-b-l text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800">
+            { account && myPendingRewardClaimable && !networkIncorrect && <>
+              <div onClick={() => claimReward(contractAddress, selected?.id)} className="bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800">
+                { confirming ? 'Confirming...' : 'Collect Interest' }
+              </div>
+            </>
+            }
+            { account && !networkIncorrect && !myPendingRewardClaimable && <>
+              <div className="bg-gamefiDark-300 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-not-allowed text-gamefiDark-800">
                 Collect Interest
               </div>
             </>
             }
-            { networkIncorrect && <div
-              className="bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-b-l text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800"
+            { account && networkIncorrect && <div
+              className="bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800"
               onClick={() => switchNetwork(library.provider, getNetworkByAlias(selected?.network)?.id)}
             >
               Switch Network
             </div> }
-            { (!selectedExtended.myPendingRewardClaimable && !networkIncorrect) && <>
-              <div className="bg-gamefiDark-300 uppercase py-2 px-5 rounded-sm clipped-b-l text-[13px] font-bold text-center cursor-not-allowed text-gamefiDark-800">
-                Collect Interest
-              </div>
-            </>
-            }
+            { !account && <div
+              className="bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800"
+              onClick={() => showConnectWallet(true)
+              }>Connect Wallet</div>}
           </div>
         </div>
-        <div className="min-w-[12rem] px-6 border-r border-white/20 flex flex-col">
-          <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Current Investment</p>
-          <p className="text-base text-white font-casual font-medium">{safeToFixed(selectedExtended.myStakeParsed, 2)} GAFI</p>
+        <div className="flex-1 px-6 pr-3 flex flex-col">
+          <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Your Investment</p>
+          <p className="text-base text-white font-casual font-medium">{ loading ? 'Loading...' : `${safeToFixed(selectedExtended.myStakeParsed, 2)} ${poolFirst?.token}` }</p>
           <div className="mt-auto">
+            <div className="flex gap-2">
+              <div className="flex-1 bg-gamefiDark-300 uppercase py-2 px-5 rounded-sm clipped-b-l text-[13px] font-bold text-center cursor-not-allowed text-gamefiDark-800">
+                Withdraw
+              </div>
+              { account && !networkIncorrect && <>
+                <div onClick={() => setCurrentPool(selectedExtended)} className="flex-1 bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800">
+                Stake
+                </div>
+              </>
+              }
+              { account && networkIncorrect && <div
+                className="bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800"
+                onClick={() => switchNetwork(library.provider, getNetworkByAlias(selected?.network)?.id)}
+              >
+              Switch Network
+              </div> }
+              { !account && <div
+                className="bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800"
+                onClick={() => showConnectWallet(true)
+                }>Connect Wallet</div>}
+            </div>
             <Modal
               show={!!currentPool}
               toggle={(x: boolean) => setCurrentPool(x && selectedExtended)}
-              className={'!bg-gamefiDark-650 !max-w-2xl'}
+              className={'!bg-[#1F212E] !max-w-lg'}
             >
               <div className="px-8 pt-10 pb-6">
-                <p className="text-xl uppercase font-medium font-casual mb-2">
+                <p className="text-xl uppercase font-medium font-casual">
                   Stake {currentToken?.symbol}
                 </p>
-                <div className="bg-gamefiDark-900 rounded mb-1">
-                  <div className="h-[5px] rounded bg-gradient-to-r from-yellow-300 to-gamefiGreen-500" style={{ width: `${selectedExtended.progress.toLocaleString('en-US')}%` }}></div>
-                </div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-[13px] text-white font-bold uppercase text-opacity-50">{selectedExtended.progress.toFixed(2)}%</span>
-                  <span className="text-[13px] text-white font-bold uppercase">{printNumber(selectedExtended.totalCapParsed)} {currentToken?.symbol}</span>
-                </div>
+                <p className="text-xs text-white font-bold uppercase text-opacity-50">Remaining Quota: <span className="text-sm uppercase text-white/80">{ printNumber(selectedExtended?.remainingParsed) } {currentPool?.token}</span></p>
 
-                <div className="flex gap-6 mt-4 pt-4 border-t border-white/20">
-                  <div className="w-full">
+                <div className="flex flex-col gap-6 my-6 pt-4 border-t border-b border-white/20">
+                  { step === 1 && <div className="w-full">
                     <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Pool</p>
-                    { pools && <div className="flex text-[12px] gap-x-2 font-casual">{ pools.map(pool => <div key={pool.id} className={`px-2 py-1 rounded-sm border cursor-pointer ${selected === pool ? 'border-gamefiGreen-500' : 'border-white/50'}`} onClick={() => {
+                    { pools && <div className="flex text-sm gap-x-2 font-casual">{ pools.map(pool => <div key={pool.id} className={`px-2 py-1 rounded-sm border cursor-pointer ${selected === pool ? 'border-gamefiGreen-500' : 'border-white/50'}`} onClick={() => {
                       setSelected(pool)
                     }}>
                       {formatDistanceStrict(0, Number(pool.lockDuration) * 1000, { unit: 'day' })}
                     </div>) }</div> }
-                    <div className="mb-6"></div>
-                    <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Amount ({currentToken?.symbol})</p>
+                    <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1 mt-[1.25rem]">Amount ({currentToken?.symbol})</p>
                     <div className="relative">
                       <input
                         type="text"
-                        className="font-casual text-sm w-full px-2 py-1 rounded-sm border-white/50 cursor-pointer bg-gamefiDark-630/10 focus:bg-gamefiDark-630 text-white"
+                        className="font-casual w-full px-2 py-1 rounded-sm border-white/50 cursor-pointer bg-gamefiDark-630/10 focus:bg-gamefiDark-630 text-white"
                         placeholder={`Minimum: ${printNumber(selectedExtended.amountMinParsed)} ${currentToken?.symbol}`}
                         value={amount}
                         onChange={handleAmount}
                       />
                       <div className="uppercase font-semibold absolute inset-y-0 right-2 flex justify-center items-center hover:text-gamefiGreen-500 cursor-pointer" onClick={setAmountMax}>Max</div>
                     </div>
-                    <p className="text-xs font-casual leading-loose mb-6">Balance: {balanceTokenShort} {currentToken?.symbol}</p>
-                  </div>
-                  <div className="w-full">
-                    <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Applicable Subjects</p>
-                    <p className="font-casual text-sm mb-6">Everyone</p>
+                    <p className="text-xs font-casual leading-loose">Balance: {balanceTokenShort} {currentToken?.symbol}</p>
 
+                  </div> }
+
+                  { step === 2 &&
+                  <div className="w-full">
+                    <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Pool</p>
+                    <p className="font-casual mb-6">{ formatDistanceStrict(0, Number(selectedExtended.lockDuration) * 1000, { unit: 'day' }) }</p>
+
+                    <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Amount</p>
+                    <p className="font-casual">{ printNumber(amount) } {currentPool?.token}</p>
+                  </div>
+                  }
+
+                  <div className="w-full">
                     <div className="flex justify-between mb-6">
                       <div>
                         <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Estimated Interest ({currentToken?.symbol})</p>
-                        <p className="font-casual text-sm">{estimatedInterest} {currentToken?.symbol}</p>
+                        <p className="font-casual">{printNumber(estimatedInterest)} {currentToken?.symbol}</p>
                       </div>
                       <div className="text-right">
                         <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">APR</p>
-                        <p className="font-casual text-sm">{ Number(selected?.APR).toFixed(2) }%</p>
+                        <p className="font-casual">{ Number(selected?.APR).toFixed(2) }%</p>
                       </div>
                     </div>
 
                     <div className="flex justify-between mb-6">
                       <div>
                         <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Start Date</p>
-                        <p className="font-casual text-sm">Now</p>
+                        <p className="font-casual">Now</p>
                       </div>
                       <div className="text-right">
                         <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Maturity Date</p>
-                        <p className="font-casual text-sm">{ format(addSeconds(new Date(), Number(selected.lockDuration)), 'yyyy-MM-dd') }</p>
+                        <p className="font-casual">{ format(addSeconds(new Date(), Number(selected.lockDuration)), 'yyyy-MM-dd') }</p>
                       </div>
                     </div>
                   </div>
                 </div>
+
                 <div className="flex gap-6">
-                  <div className="flex-1">
-                    <div className="flex gap-2">
-                      { !networkIncorrect && <div onClick={approveOrStake} className="flex-1 flex justify-center items-end bg-gamefiGreen-600 hover:bg-opacity-80 uppercase p-2 rounded-sm clipped-b-l text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800">
-                        Stake Now
-                      </div> }
-                      { networkIncorrect && <div
-                        className="flex justify-center items-end bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-b-l text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800"
-                        onClick={() => switchNetwork(library.provider, getNetworkByAlias(selected?.network)?.id)}
-                      >
+                  { step === 1 && <a
+                    className="flex-1 bg-gamefiGreen-600 hover:bg-opacity-80 uppercase p-px rounded-sm clipped-b-l text-[13px] font-bold text-center cursor-pointer"
+                    href={selected?.buyURL}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <div className="bg-[#1F212E] clipped-b-l p-2 rounded-sm text-gamefiGreen-600 hover:text-opacity-80">Buy {currentToken?.symbol}</div>
+                  </a> }
+                  { step > 1 && <div
+                    onClick={prevStep}
+                    className="flex-1 bg-gamefiGreen-600 hover:bg-opacity-80 uppercase p-px rounded-sm clipped-b-l text-[13px] font-bold text-center cursor-pointer"
+                  >
+                    <div className="bg-[#1F212E] clipped-b-l p-2 rounded-sm text-gamefiGreen-600 hover:text-opacity-80">Back</div>
+                  </div> }
+                  { !networkIncorrect && <>
+                    { step === 1 && <div onClick={nextStep} className="flex-1 flex justify-center items-end bg-gamefiGreen-600 hover:bg-opacity-80 uppercase p-2 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800">
+                      Next
+                    </div> }
+
+                    { step === 2 && allowanceEnough && <div onClick={approveOrStake} className="flex-1 flex justify-center items-end bg-gamefiGreen-600 hover:bg-opacity-80 uppercase p-2 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800">
+                      { confirming ? 'Confirming...' : 'Stake' }
+                    </div> }
+
+                    { step === 2 && !allowanceEnough && <div onClick={approveOrStake} className="flex-1 flex justify-center items-end bg-gamefiGreen-600 hover:bg-opacity-80 uppercase p-2 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800">
+                      { loadingApproval ? 'Loading...' : 'Approve' }
+                    </div> }
+                  </>
+                  }
+
+                  { networkIncorrect && <div
+                    className="flex justify-center items-end bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800"
+                    onClick={() => switchNetwork(library.provider, getNetworkByAlias(selected?.network)?.id)}
+                  >
                         Switch Network
-                      </div> }
-                      <a
-                        className="flex-1 bg-gamefiGreen-600 hover:bg-opacity-80 uppercase p-px rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer"
-                        href={selected?.buyURL}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <div className="bg-gamefiDark-650 clipped-t-r p-2 rounded-sm text-gamefiGreen-600 hover:text-opacity-80">Buy {currentToken?.symbol}</div>
-                      </a>
-                    </div>
-                  </div>
-                  <div className="flex-1"></div>
+                  </div> }
                 </div>
               </div>
             </Modal>
-            { !networkIncorrect && <>
-              <div onClick={() => setCurrentPool(selectedExtended)} className="bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800">
-                Stake
-              </div>
-            </>
-            }
-            { networkIncorrect && <div
-              className="bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-b-l text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800"
-              onClick={() => switchNetwork(library.provider, getNetworkByAlias(selected?.network)?.id)}
-            >
-              Switch Network
-            </div> }
           </div>
-        </div>
-        <div className="min-w-[15rem] px-6">
         </div>
       </div>
     </div> }

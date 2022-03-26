@@ -25,6 +25,7 @@ export type Pool = {
   startJoinTime?: string;
   endJoinTime?: string;
   buyURL?: string;
+  subject?: string;
 }
 
 export function fetchAll () {
@@ -46,7 +47,6 @@ export function fetchAll () {
 
       const contract = new Contract(contractAddress, ABIStakingPool, library)
       const linearData = await contract.linearPoolInfo(poolID)
-      console.log(linearData.totalStaked.toString())
       return {
         ...data,
         token: GAFI.symbol,
@@ -62,7 +62,8 @@ export function fetchAll () {
         delayDuration: linearData.delayDuration.toString(),
         startJoinTime: linearData.startJoinTime.toString(),
         endJoinTime: linearData.endJoinTime.toString(),
-        buyURL: `https://pancakeswap.finance/swap?outputCurrency=${GAFI.address}&inputCurrency=${BUSD_BSC.address}`
+        buyURL: `https://pancakeswap.finance/swap?outputCurrency=${GAFI.address}&inputCurrency=${BUSD_BSC.address}`,
+        subject: 'Seed & Private Investors'
       }
     }))
   })

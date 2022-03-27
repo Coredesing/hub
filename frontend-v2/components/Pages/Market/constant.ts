@@ -47,20 +47,20 @@ export const currencies = [
     color: '#546BC7',
     colorText: '#fff',
     colorAlt: '#e6b300',
-    icon: require('@/assets/images/icons/bnb.png')
+    icon: BNB.image
   },
   {
     ...GAFI,
     color: '#546BC7',
     colorText: '#fff',
     colorAlt: '#6CDB00',
-    icon: require('@/assets/images/icons/gafi.png')
+    icon: GAFI.image
   },
   {
     ...BUSD_BSC,
     color: '#546BC7',
     colorText: '#fff',
     colorAlt: '#e6b300',
-    icon: require('@/assets/images/icons/busd.png')
+    icon: BUSD_BSC.image
   }
 ]

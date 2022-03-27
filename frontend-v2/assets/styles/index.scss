@@ -29,7 +29,7 @@ html, body {
 }
 
 .clipped-t-r-sm {
-  clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 0 100%, 0 0);
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%, 0 0);
 }
 
 .clipped-t-l {
@@ -74,7 +74,7 @@ html, body {
 }
 
 .clipped-b-l-sm {
-  clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 5px 100%, 0 calc(100% - 5px));
+  clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 6px 100%, 0 calc(100% - 6px));
 }
 
 .clipped-b-r-sm {

@@ -18,8 +18,7 @@ const HotCollections = () => {
   return (
     <div className="md:px-4 lg:px-16 md:container mx-auto mt-20">
       {!loading && hotCollections?.length
-        ?
-        <>
+        ? <>
           <div className="md:text-lg 2xl:text-3xl uppercase font-bold">
             Hot Collections
           </div>

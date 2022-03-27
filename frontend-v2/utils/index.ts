@@ -190,7 +190,7 @@ export const networkImage = (network: string) => {
   }
 
   case 'polygon': {
-    return require('assets/images/networks/polygon.svg')
+    return require('assets/images/networks/matic.svg')
   }
   }
 }
@@ -229,6 +229,10 @@ export const useFetch = (url: string, shouldSkip?: boolean, args?: any) => {
 }
 
 export function safeToFixed (num: number | string, fixed: number): string {
+  if (num === undefined) {
+    return ''
+  }
+
   const re = new RegExp(`^-?\\d+(?:.\\d{0,${(fixed || -1)}})?`)
   return num.toString().match(re)?.[0] || `${num}`
 }

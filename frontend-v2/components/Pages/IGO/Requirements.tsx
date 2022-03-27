@@ -10,10 +10,9 @@ import { IGOContext } from '@/pages/igo/[slug]'
 import useWalletSignature, { MESSAGE_SIGNATURE } from '@/hooks/useWalletSignature'
 import Modal from '@/components/Base/Modal'
 import ModalConnect from '@/components/Base/WalletConnector/ModalConnect'
-import gamefiLogo from '@/assets/images/icons/gafi.png'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
-import { switchNetwork } from '@/components/web3'
+import { GAFI, switchNetwork } from '@/components/web3'
 import { API_BASE_URL } from '@/utils/constants'
 
 const SOCIAL_STATUS = {
@@ -184,7 +183,6 @@ const Requirements = () => {
   }, [poolData, account, poolWhitelistReady, formData, signature, loadJoined])
 
   useEffect(() => {
-    console.log(poolNetworkInvalid, poolRankInvalid, !profile?.verified, !whitelistJoined)
     setFailedRequirements(poolNetworkInvalid || poolRankInvalid || !profile?.verified || !whitelistJoined)
   }, [poolNetworkInvalid, poolRankInvalid, profile, setFailedRequirements, whitelistJoined])
 
@@ -272,7 +270,8 @@ const Requirements = () => {
             <strong className="tracking-wider">
               {whitelistJoined && poolWhitelistOKSocial && 'Applied'}
               {whitelistJoined && !poolWhitelistOKSocial && 'Incomplete'}
-              {!whitelistJoined && !poolWhitelistOKTime && 'Closed'}
+              {!whitelistJoined && !poolWhitelistOKTime && new Date(now).getTime() < poolWhitelistTime?.start?.getTime() && 'Upcoming'}
+              {!whitelistJoined && !poolWhitelistOKTime && new Date(now).getTime() > poolWhitelistTime?.end?.getTime() && 'Closed'}
               {poolWhitelistReady && 'Unapplied'}
             </strong>
           </div>
@@ -336,7 +335,7 @@ const Requirements = () => {
                 {poolData?.title}
               </div>
               <div className="table-cell align-middle px-3 font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
-                <img src={gamefiLogo.src} className="inline-block w-6 h-6 object-contain mr-1" alt="GameFi.org"/>
+                <img src={GAFI.image} className="inline-block w-6 h-6 object-contain mr-1" alt="GameFi.org"/>
                   GAMEFI
               </div>
             </div>

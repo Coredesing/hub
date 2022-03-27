@@ -9,10 +9,18 @@ export const RPC_URLS: { [chainId: number]: string } = {
   56: process.env.NEXT_PUBLIC_RPC_URL_56,
   97: process.env.NEXT_PUBLIC_RPC_URL_97,
   137: process.env.NEXT_PUBLIC_RPC_URL_137,
-  80001: process.env.NEXT_PUBLIC_RPC_URL_80001
+  80001: process.env.NEXT_PUBLIC_RPC_URL_80001,
+  43114: process.env.NEXT_PUBLIC_RPC_URL_43114,
+  43113: process.env.NEXT_PUBLIC_RPC_URL_43113,
+  250: process.env.NEXT_PUBLIC_RPC_URL_250,
+  4002: process.env.NEXT_PUBLIC_RPC_URL_4002,
+  42161: process.env.NEXT_PUBLIC_RPC_URL_42161,
+  421611: process.env.NEXT_PUBLIC_RPC_URL_421611
 }
-// ETH Mainnet, ETH Goerli, BSC Mainnet, BSC Testnet, Polygon Mainnet, Polygon Mumbai
-export const injected = new InjectedConnector({ supportedChainIds: [1, 5, 56, 97, 137, 80001] })
+
+export const injected = new InjectedConnector({
+  supportedChainIds: Object.keys(RPC_URLS).map(x => parseInt(x))
+})
 
 export const networkConnector = (chainId?: number) => {
   if (!RPC_URLS?.[chainId]) {

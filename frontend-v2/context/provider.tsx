@@ -164,7 +164,8 @@ const AppProvider = (props: any) => {
 
   useEffect(() => {
     fetcher(`${API_BASE_URL}/staking-pool`).then(pools => {
-      setStakingPool(pools?.data?.[0])
+      const pool = pools?.data?.find(x => !!x?.rkp_rate)
+      setStakingPool(pool)
     })
   }, [setStakingPool])
 

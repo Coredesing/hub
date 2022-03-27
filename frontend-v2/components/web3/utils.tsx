@@ -72,21 +72,21 @@ export const useTokenApproval = (token?: Token, spender?: string) => {
   const [error, setError] = useState<Error>()
   const { account, library } = useMyWeb3()
 
-  const approve = useCallback(async (amount) => {
+  const approve = useCallback(async (amount): Promise<boolean> => {
     setError(null)
     if (!token || !account || !spender) {
       setError(new Error('Invalid token or owner or spender'))
-      return
+      return false
     }
 
     if (!utils.isAddress(token.address) || !utils.isAddress(spender)) {
       setError(new Error('Invalid token or spender'))
-      return
+      return false
     }
 
     if (!library) {
       setError(new Error('Invalid provider'))
-      return
+      return false
     }
 
     setLoading(true)
@@ -99,11 +99,12 @@ export const useTokenApproval = (token?: Token, spender?: string) => {
       if (+result?.status !== 1) {
         throw new Error('Approve failed')
       }
+
       return true
     } catch (err) {
       if (err.code === 4001) {
         setError(new Error('User denied transaction'))
-        return
+        return false
       }
 
       setError(err)

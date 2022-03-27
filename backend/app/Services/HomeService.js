@@ -5,8 +5,11 @@ const RedisUtils = use('App/Common/RedisUtils');
 const BigNumber = use('bignumber.js');
 
 class HomeService {
-  async getPerformances() {
+  async getPerformances(symbols) {
     let builder = CampaignModel.query();
+    if (symbols) {
+      builder.whereIn('symbol', symbols)
+    }
     let pools = await builder.where('token_type', 'erc20')
       .where('is_deploy', 1)
       .whereNotNull('slug')

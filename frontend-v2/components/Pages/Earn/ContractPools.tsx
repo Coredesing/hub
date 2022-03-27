@@ -388,7 +388,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
         </div>
         { !upcoming && !closed && <div className="flex flex-col md:flex-row justify-between flex-1 gap-4">
           <div className="md:min-w-[10rem] md:border-r md:border-white/20 flex flex-col md:pr-4">
-            <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Your Interest {JSON.stringify(myPendingRewardClaimable)}</p>
+            <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Your Interest</p>
             <p className="text-base text-white font-casual font-medium">{ loading ? 'Loading...' : `${safeToFixed(selectedExtended?.myPendingRewardParsed, 2)} ${poolFirst?.token}` }</p>
             <div className="mt-auto">
               { account && myPendingRewardClaimable && !networkIncorrect && <>
@@ -431,11 +431,11 @@ const ContractPools = ({ pools, contractAddress, className }: {
                 </>
                 }
                 { account && networkIncorrect && <div
-                  className="bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800"
+                  className="flex-1 bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800"
                   onClick={() => switchNetwork(library.provider, getNetworkByAlias(selected?.network)?.id)}
                 >Switch Network</div> }
                 { !account && <div
-                  className="bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800"
+                  className="flex-1 bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800"
                   onClick={() => showConnectWallet(true)
                   }>Connect Wallet</div>}
               </div>

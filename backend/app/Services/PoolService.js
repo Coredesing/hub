@@ -101,7 +101,7 @@ class PoolService {
   }
 
   getJoinedPools(walletAddress, params) {
-    let query = this.buildSearchQuery(params);
+    let query = this.buildSearchQuery(params).with('campaignClaimConfig');
     query = query.where(query => {
       query.whereHas('whitelistUsers', (builder) => {
         builder.where('wallet_address', walletAddress);

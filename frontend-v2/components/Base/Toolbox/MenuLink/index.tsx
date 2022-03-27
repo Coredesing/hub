@@ -7,11 +7,12 @@ type Props = {
   path?: string;
   onClick: () => void;
 }
-const MenuLink = ({ children, path }: Props) => {
+const MenuLink = ({ children, path, onClick }: Props) => {
   const router = useRouter()
   return (
     <Link href={path} passHref>
       <div
+        onClick={onClick}
         className={`relative w-full py-4 flex align-middle items-center pl-5 uppercase gap-5 text-sm font-semibold cursor-pointer ${
           router.asPath === path ? 'opacity-100' : 'opacity-40'
         }`}

@@ -94,12 +94,9 @@ const ContractPools = ({ pools, contractAddress, className }: {
     v.timeOpening = new Date(Number(selected?.startJoinTime) * 1000)
     v.timeClosing = new Date(Number(selected?.endJoinTime) * 1000)
 
-    if (!account) {
-      setSelectedExtended(v)
-    }
-
+    setSelectedExtended(v)
     loadMyExtended(v)
-  }, [selected, account, contractAddress, loadMyExtended])
+  }, [selected, contractAddress, loadMyExtended])
 
   const [now, setNow] = useState(new Date())
   useEffect(() => {
@@ -331,20 +328,20 @@ const ContractPools = ({ pools, contractAddress, className }: {
       <div className="flex justify-between">
         <div className="flex-none inline-flex items-center w-[10rem] truncate">
           <img src={poolFirst?.tokenImage} alt={poolFirst?.token} className="w-10 h-10 rounded-full mr-3" />
-          <span className="text-xl uppercase font-semibold tracking-wide font-casual">{poolFirst?.token}</span>
+          <span className="text-lg uppercase font-semibold tracking-wide font-casual">{poolFirst?.token}</span>
         </div>
         <div className="min-w-[8rem]">
           <p className="text-[13px] text-white font-bold uppercase text-opacity-50">APR</p>
-          <span className="text-xl uppercase font-medium font-casual">{ Number(selected?.APR).toFixed(2) }%</span>
+          <span className="text-base uppercase font-medium font-casual">{ selected?.APR ? Number(selected?.APR).toFixed(2) : 0 }%</span>
         </div>
         <div className="hidden sm:block min-w-[12rem]">
           <p className="text-[13px] text-white font-bold uppercase text-opacity-50">Remaining Quota</p>
-          <div className="text-base uppercase font-medium font-casual my-0.5">{ printNumber(selectedExtended?.remainingParsed) } {poolFirst?.token}</div>
+          <div className="text-base uppercase font-medium font-casual my-0.5">{ selectedExtended?.remainingParsed ? printNumber(selectedExtended?.remainingParsed) : '-' } {poolFirst?.token}</div>
         </div>
       </div>
       <div>
         <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-0.5">Lock-in term</p>
-        { pools && <div className="flex text-[12px] gap-2 font-casual flex-wrap">{ pools.map(pool => <div key={pool.id} className={`px-2 py-1 rounded-sm border cursor-pointer ${selected === pool ? 'border-gamefiGreen-500' : 'border-white/50'}`} onClick={() => {
+        { pools && <div className="flex text-[13px] gap-2 font-medium font-casual flex-wrap">{ pools.map(pool => <div key={pool.id} className={`px-2 py-1 rounded-sm border cursor-pointer ${selected === pool ? 'bg-gamefiGreen-600 border-gamefiGreen-600 text-gamefiDark-700' : 'border-white/50 hover:border-gamefiGreen-600'}`} onClick={() => {
           setSelected(pool)
         }}>
           {formatDistanceStrict(0, Number(pool.lockDuration) * 1000, { unit: 'day' })}
@@ -369,7 +366,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
         <div className="w-full sm:w-1/2 sm:border-r sm:border-white/20 flex-none sm:pr-4">
           <div className="flex justify-between mb-1">
             <span className="text-[13px] text-white font-bold uppercase text-opacity-50">Total Pool Cap</span>
-            <span className="text-[13px] text-white font-bold uppercase">{printNumber(selectedExtended.totalCapParsed)} {poolFirst?.token}</span>
+            <span className="text-[13px] text-white font-bold uppercase">{printNumber(selectedExtended?.totalCapParsed)} {poolFirst?.token}</span>
           </div>
           <div className="bg-gamefiDark-400 rounded mb-1">
             <div className="h-[5px] rounded bg-gradient-to-r from-yellow-300 to-gamefiGreen-500" style={{ width: `${selectedExtended?.progress?.toFixed(2)}%` }}></div>
@@ -378,20 +375,20 @@ const ContractPools = ({ pools, contractAddress, className }: {
 
           <div className="flex justify-between mb-4 font-casual text-sm">
             <span className="font-semibold">Opening Time</span>
-            <span>{format(selectedExtended.timeOpening, 'yyyy-MM-dd HH:mm:ss O')}</span>
+            <span>{format(selectedExtended?.timeOpening, 'yyyy-MM-dd HH:mm:ss O')}</span>
           </div>
           <div className="flex justify-between mb-4 font-casual text-sm">
             <span className="font-semibold">Closing Time</span>
-            <span>{format(selectedExtended.timeClosing, 'yyyy-MM-dd HH:mm:ss O')}</span>
+            <span>{format(selectedExtended?.timeClosing, 'yyyy-MM-dd HH:mm:ss O')}</span>
           </div>
           <div className="flex justify-between mb-4 font-casual text-sm">
             <span className="font-semibold">Minimum Investment</span>
-            <span>{printNumber(selectedExtended.amountMinParsed)} {poolFirst?.token}</span>
+            <span>{printNumber(selectedExtended?.amountMinParsed)} {poolFirst?.token}</span>
           </div>
         </div>
         { !upcoming && !closed && <div className="flex flex-col md:flex-row justify-between flex-1 gap-4">
           <div className="md:min-w-[10rem] md:border-r md:border-white/20 flex flex-col md:pr-4">
-            <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Your Interest {JSON.stringify(myPendingRewardClaimable)}</p>
+            <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Your Interest</p>
             <p className="text-base text-white font-casual font-medium">{ loading ? 'Loading...' : `${safeToFixed(selectedExtended?.myPendingRewardParsed, 2)} ${poolFirst?.token}` }</p>
             <div className="mt-auto">
               { account && myPendingRewardClaimable && !networkIncorrect && <>
@@ -434,11 +431,11 @@ const ContractPools = ({ pools, contractAddress, className }: {
                 </>
                 }
                 { account && networkIncorrect && <div
-                  className="bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800"
+                  className="flex-1 bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800"
                   onClick={() => switchNetwork(library.provider, getNetworkByAlias(selected?.network)?.id)}
                 >Switch Network</div> }
                 { !account && <div
-                  className="bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800"
+                  className="flex-1 bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800"
                   onClick={() => showConnectWallet(true)
                   }>Connect Wallet</div>}
               </div>
@@ -553,26 +550,26 @@ const ContractPools = ({ pools, contractAddress, className }: {
             </div>
           </div>
         </div> }
-        { upcoming && <div className="flex-1 flex justify-center items-center font-casual">
+        { upcoming && <div className="flex-1 flex justify-center items-center uppercase">
           { countdown && <div className="flex">
             <div className="flex flex-col items-center justify-center px-4">
-              <div className="text-2xl leading-6 tracking-wide">{countdown.days || '00'}</div>
-              <div className="text-xs leading-4 tracking-wide">Days</div>
+              <div className="text-3xl font-bold leading-6 tracking-wide">{countdown.days || '00'}</div>
+              <div className="text-xs font-semibold leading-4 tracking-wide">Days</div>
             </div>
-            <span className="text-2xl self-start">:</span>
+            <span className="text-2xl font-bold self-start !leading-none">:</span>
             <div className="flex flex-col items-center justify-center px-4">
-              <div className="text-2xl leading-6 tracking-wide">{countdown.hours || '00'}</div>
-              <div className="text-xs leading-4 tracking-wide">Hours</div>
+              <div className="text-3xl font-bold leading-6 tracking-wide">{countdown.hours || '00'}</div>
+              <div className="text-xs font-semibold leading-4 tracking-wide">Hours</div>
             </div>
-            <span className="text-2xl self-start">:</span>
+            <span className="text-2xl font-bold self-start !leading-none">:</span>
             <div className="flex flex-col items-center justify-center px-4">
-              <div className="text-2xl leading-6 tracking-wide">{countdown.minutes || '00'}</div>
-              <div className="text-xs leading-4 tracking-wide">Minutes</div>
+              <div className="text-3xl font-bold leading-6 tracking-wide">{countdown.minutes || '00'}</div>
+              <div className="text-xs font-semibold leading-4 tracking-wide">Minutes</div>
             </div>
-            <span className="text-2xl self-start">:</span>
+            <span className="text-2xl font-bold self-start !leading-none">:</span>
             <div className="flex flex-col items-center justify-center px-4">
-              <div className="text-2xl leading-6 tracking-wide">{countdown.seconds || '00'}</div>
-              <div className="text-xs leading-4 tracking-wide">Seconds</div>
+              <div className="text-3xl font-bold leading-6 tracking-wide">{countdown.seconds || '00'}</div>
+              <div className="text-xs font-semibold leading-4 tracking-wide">Seconds</div>
             </div>
           </div> }
         </div>}

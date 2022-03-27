@@ -1,13 +1,13 @@
 module.exports = {
   apps: [{
     name: 'nextjs',
-    script: 'yarn',
+    script: 'npm',
     args: 'start',
     env: {
-      NODE_ENV: 'development'
+      PORT: 3000
     },
     env_production: {
-      NODE_ENV: 'production'
+      PORT: 1234
     }
   }]
 }

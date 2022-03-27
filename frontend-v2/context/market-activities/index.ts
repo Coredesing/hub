@@ -215,13 +215,15 @@ export const useCollectionsMarket = () => {
     filter,
     isGetInfoFromContract,
     allowSetOneByOne,
-    slug
+    slug,
+    allowGetOwnerNft
   }: {
     type: string;
     filter: ObjectType;
     isGetInfoFromContract?: boolean;
     allowSetOneByOne?: boolean;
     slug: string;
+    allowGetOwnerNft?: boolean;
   }) => {
     try {
       const oldData = state.data || {}
@@ -278,7 +280,7 @@ export const useCollectionsMarket = () => {
           return
         }
         listData = await Promise.all(listData.map(async item => {
-          const d = await getNftInfor(item, provider)
+          const d = await getNftInfor(item, provider, { allowGetOwnerNft })
           item = d.item
           if (allowSetOneByOne) {
             list.push(item)

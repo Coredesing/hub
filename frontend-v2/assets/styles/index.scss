@@ -1,289 +1,290 @@
 /* purgecss start ignore */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 /* purgecss end ignore */
 
-html, body {
-  margin: 0 !important;
-  padding: 0 !important;
-  font-family: Rajdhani;
-  line-height: 17px;
+html,
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: Rajdhani;
+    line-height: 17px;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 .hide-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
 
-.menu-slide-up > .h-full {
-  transition: height 0.4ms ease-out;
+.menu-slide-up>.h-full {
+    transition: height 0.4ms ease-out;
 }
 
 .clipped-t-r {
-  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%, 0 0);
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%, 0 0);
 }
 
 .clipped-t-r-sm {
-  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%, 0 0);
+    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%, 0 0);
 }
 
 .clipped-t-l {
-  clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px, 10px 0);
+    clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px, 10px 0);
 }
 
 .clipped-t-l-full {
-  clip-path: polygon(30px 0, 100% 0%, 100% 100%, 0% 100%);
+    clip-path: polygon(30px 0, 100% 0%, 100% 100%, 0% 100%);
 }
 
 .clipped-t-l-full-sm {
-  clip-path: polygon(5px 0, 100% 0%, 100% 100%, 0% 100%);
+    clip-path: polygon(5px 0, 100% 0%, 100% 100%, 0% 100%);
 }
 
 .clipped-t-r-lg {
-  clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 0 100%, 0 0);
+    clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 0 100%, 0 0);
 }
 
 .clipped-b-r {
-  margin-top: -1px;
-  margin-left: -1px;
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 0);
+    margin-top: -1px;
+    margin-left: -1px;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 0);
 }
 
 .clipped-b-r-full {
-  margin-top: -1px;
-  margin-left: -1px;
-  clip-path: polygon(0 0, 100% 0%, calc(100% - 20px) 100%, 0% 100%);
+    margin-top: -1px;
+    margin-left: -1px;
+    clip-path: polygon(0 0, 100% 0%, calc(100% - 20px) 100%, 0% 100%);
 }
 
 .clipped-b-l-full {
-  clip-path: polygon(0 0, 100% 0%, 100% 100%, 20px 100%);
+    clip-path: polygon(0 0, 100% 0%, 100% 100%, 20px 100%);
 }
 
 .clipped-b {
-  margin-top: -1px;
-  clip-path: polygon(0 0, 100% 0, calc(100% - 15px) 100%, 15px 100%);
+    margin-top: -1px;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 15px) 100%, 15px 100%);
 }
 
 .clipped-b-l {
-  clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 10px 100%, 0 calc(100% - 10px));
 }
 
 .clipped-b-l-sm {
-  clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+    clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 6px 100%, 0 calc(100% - 6px));
 }
 
 .clipped-b-r-sm {
-  margin-top: -1px;
-  margin-left: -1px;
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0% 50%);
+    margin-top: -1px;
+    margin-left: -1px;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0% 50%);
 }
 
 .clipped-b-r-full-sm {
-  margin-top: -1px;
-  margin-left: -1px;
-  clip-path: polygon(0 0, 100% 0%, calc(100% - 5px) 100%, 0% 100%);
+    margin-top: -1px;
+    margin-left: -1px;
+    clip-path: polygon(0 0, 100% 0%, calc(100% - 5px) 100%, 0% 100%);
+}
+
+.clipped-b-l-t-r {
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0% calc(100% - 10px));
 }
 
 .thumbs {
-  @apply lg:px-14;
+    @apply lg:px-14;
 }
 
 .thumb {
-  border: 1px solid transparent !important;
-  height: 80px !important;
+    border: 1px solid transparent !important;
+    height: 80px !important;
 }
 
 .thumbs-wrapper {
-  margin: 5px 0 !important;
-  .selected {
-    border: 1px solid #72F34B !important;
-  }
+    margin: 5px 0 !important;
+    .selected {
+        border: 1px solid #72F34B !important;
+    }
 }
 
 .aspect-half {
-  aspect-ratio: 2/1;
+    aspect-ratio: 2/1;
 }
 
 ::-webkit-scrollbar {
-  display: none;
-  width: 5px;
+    display: none;
+    width: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background-color: transparent;
+    background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gamefiDark-500 rounded;
+    @apply bg-gamefiDark-500 rounded;
 }
 
 video[poster] {
-  height:100% !important;
-  width:100% !important;
+    height: 100% !important;
+    width: 100% !important;
 }
 
 .loader-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  color: #fff;
-  font-family: Rajdhani;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 24px;
-  text-transform: uppercase;
-  color: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    color: #fff;
+    font-family: Rajdhani;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    text-transform: uppercase;
+    color: #FFFFFF;
 }
 
 .loader {
-  width: 1.25em;
-  height: 1.25em;
-  margin-right: 0.5em;
-  circle {
-      opacity: 0.25;
-  }
-
-  path {
-      opacity: 0.75;
-  }
-
-  animation: spin 1s linear infinite;
+    width: 1.25em;
+    height: 1.25em;
+    margin-right: 0.5em;
+    circle {
+        opacity: 0.25;
+    }
+    path {
+        opacity: 0.75;
+    }
+    animation: spin 1s linear infinite;
 }
 
 .big-loader {
-  width: 2.5em;
-  height: 2.5em;
-  margin-right: 0.5em;
-  circle {
-      opacity: 0.25;
-  }
-
-  path {
-      opacity: 0.75;
-  }
-
-  animation: spin 1s linear infinite;
+    width: 2.5em;
+    height: 2.5em;
+    margin-right: 0.5em;
+    circle {
+        opacity: 0.25;
+    }
+    path {
+        opacity: 0.75;
+    }
+    animation: spin 1s linear infinite;
 }
 
-
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .editor-content {
-  font-size: 14px;
-  p {
-    margin-top: 1em;
-    margin-bottom: 0.25em;
-    color: #D4D7E1;
-    line-height: 1.75em;
-  }
-
-  ul {
-    padding-left: 2em;
-    list-style: disc;
-  }
-
-  a {
-    color: #6CDB00;
-  }
-
-  strong {
-    color: #fff;
-    font-weight: 600;
-  }
-
-  h1, h2 {
-    font-size: 24px;
-    font-family: Rajdhani;
-    font-weight: 700;
-    text-transform: uppercase;
-    margin-top: 1.5em;
-    margin-bottom: 0.5em;
-  }
+    font-size: 14px;
+    p {
+        margin-top: 1em;
+        margin-bottom: 0.25em;
+        color: #D4D7E1;
+        line-height: 1.75em;
+    }
+    ul {
+        padding-left: 2em;
+        list-style: disc;
+    }
+    a {
+        color: #6CDB00;
+    }
+    strong {
+        color: #fff;
+        font-weight: 600;
+    }
+    h1,
+    h2 {
+        font-size: 24px;
+        font-family: Rajdhani;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+    }
 }
 
-input[type="radio"] + label span {
-  transition: background .2s,
-    transform .2s;
+input[type="radio"]+label span {
+    transition: background .2s, transform .2s;
 }
 
-input[type="radio"] + label span:hover,
-input[type="radio"] + label:hover span{
-transform: scale(1.2);
-} 
-
-input[type="radio"]:checked + label span {
-background-color: #6cdb00; //bg-blue
-box-shadow: 0px 0px 0px 1px black inset;
-border: 2px solid #6cdb00;
+input[type="radio"]+label span:hover,
+input[type="radio"]+label:hover span {
+    transform: scale(1.2);
 }
 
-input[type="radio"]:checked + label{
- color: #6cdb00; //text-blue
+input[type="radio"]:checked+label span {
+    background-color: #6cdb00; //bg-blue
+    box-shadow: 0px 0px 0px 1px black inset;
+    border: 2px solid #6cdb00;
+}
+
+input[type="radio"]:checked+label {
+    color: #6cdb00; //text-blue
 }
 
 input[type="checkbox"].dark:checked {
-  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='black' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e")
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='black' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e")
 }
 
 .dot-flashing {
-  position: relative;
-  width: 7px;
-  height: 7px;
-  border-radius: 100px;
-  background-color: #3e4150;
-  color: #3e4150;
-  animation: dotFlashing 0.4s infinite linear alternate;
-  animation-delay: .2s;
+    position: relative;
+    width: 7px;
+    height: 7px;
+    border-radius: 100px;
+    background-color: #3e4150;
+    color: #3e4150;
+    animation: dotFlashing 0.4s infinite linear alternate;
+    animation-delay: .2s;
 }
 
-.dot-flashing::before, .dot-flashing::after {
-  content: '';
-  display: inline-block;
-  position: absolute;
-  top: 0;
+.dot-flashing::before,
+.dot-flashing::after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 0;
 }
 
 .dot-flashing::before {
-  left: -12px;
-  width: 7px;
-  height: 7px;
-  border-radius: 100px;
-  background-color: #3e4150;
-  color: #3e4150;
-  animation: dotFlashing 0.4s infinite alternate;
-  animation-delay: 0s;
+    left: -12px;
+    width: 7px;
+    height: 7px;
+    border-radius: 100px;
+    background-color: #3e4150;
+    color: #3e4150;
+    animation: dotFlashing 0.4s infinite alternate;
+    animation-delay: 0s;
 }
 
 .dot-flashing::after {
-  left: 12px;
-  width: 7px;
-  height: 7px;
-  border-radius: 100px;
-  background-color: #3e4150;
-  color: #3e4150;
-  animation: dotFlashing 0.4s infinite alternate;
-  animation-delay: 0.4s;
+    left: 12px;
+    width: 7px;
+    height: 7px;
+    border-radius: 100px;
+    background-color: #3e4150;
+    color: #3e4150;
+    animation: dotFlashing 0.4s infinite alternate;
+    animation-delay: 0.4s;
 }
 
 @keyframes dotFlashing {
-  0% {
-    background-color: #3e4150;
-  }
-  50%,
-  100% {
-    background-color: #caccd6;
-  }
+    0% {
+        background-color: #3e4150;
+    }
+    50%,
+    100% {
+        background-color: #caccd6;
+    }
 }

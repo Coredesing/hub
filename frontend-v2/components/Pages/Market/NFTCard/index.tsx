@@ -18,7 +18,13 @@ const NFTCard = ({ item, ...props }: Props) => {
 
   return (
     <div className="w-full rounded overflow-hidden hover:bg-gamefiGreen-700 hover:shadow hover:shadow-gamefiGreen-700 clipped-b-l p-px ">
-      <div className='clipped-b-l bg-gamefiDark-650 rounded'>
+      <div className='clipped-b-l bg-gamefiDark-650 rounded relative'>
+        {
+          typeof item.isFirstEdition === 'boolean' &&
+          <div className={`absolute left-0 top-0 py-1 px-5 font-semibold bg-gamefiDark-900 ${item.isFirstEdition ? 'text-gamefiGreen-700' : 'text-orange-400'}`} style={{ clipPath: 'polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%)' }}>
+            {item.isFirstEdition ? 'First Edition' : 'ReSale'}
+          </div>
+        }
         <div className="w-full">
           <div className="bg-gamefiDark-650 flex items-center justify-center p-4 cursor-pointer w-full" style={{ aspectRatio: '1', height: isSmScreen ? '215px' : '280px' }}>
             <Link href={`/market/${item?.slug}/${item?.token_id || item?.id}`} passHref>
@@ -39,7 +45,7 @@ const NFTCard = ({ item, ...props }: Props) => {
           <div>
             <Link href={`/market/${item?.slug}/${item?.token_id || item?.id}`} passHref>
               <a className="font-bold text-xl tracking-wide cursor-pointer hover:underline">
-                #{formatNumber(item?.token_id || item?.id, 3) || '-/-'}
+                #{formatNumber(item?.token_info?.name || item?.token_id || item?.id, 3) || '-/-'}
               </a>
             </Link>
           </div>

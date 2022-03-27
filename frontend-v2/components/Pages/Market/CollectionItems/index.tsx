@@ -38,7 +38,7 @@ const CollectionItems = ({ slug }: { slug: string }) => {
   }, [filter])
 
   useEffect(() => {
-    actions.setCollectionsMarket({ type: collectionType, slug, filter, isGetInfoFromContract: true, allowSetOneByOne: collectionType === 'items' })
+    actions.setCollectionsMarket({ type: collectionType, slug, filter, isGetInfoFromContract: true, allowSetOneByOne: collectionType === 'items', allowGetOwnerNft: collectionType === 'items' })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, collectionType, slug])
 

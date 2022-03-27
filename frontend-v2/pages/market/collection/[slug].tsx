@@ -3,13 +3,15 @@ import { fetchOneCollection } from '@/pages/api/market/collection/[slug]'
 import React from 'react'
 import Image from 'next/image'
 import CollectionItems from '@/components/Pages/Market/CollectionItems'
+import { InfoCollection } from '@/components/Pages/Market/TopCollections/Item'
 
 const CollectionDetail = ({ data }) => {
   return (
     <Layout title="Market - GameFi">
       {data?.id
         ? <div className="container w-full mx-auto">
-          <div className="relative w-full mt-14 rounded-xs flex" style={{ height: '300px' }}>
+          <div className="relative w-full mt-14 rounded-xs flex" style={{ height: '500px' }}>
+            <InfoCollection item={data} />
             <img src={data?.default_image || data?.banner} alt="banner" style={{ width: '100%', height: '100%', objectFit: 'cover' }}></img>
             <img src={data?.logo} alt="logo" className="absolute -bottom-8 w-20 h-20 left-0 right-0 mx-auto border-4 border-gamefiDark-900 bg-gamefiDark-900 rounded-full"></img>
           </div>

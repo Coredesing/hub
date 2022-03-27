@@ -94,12 +94,9 @@ const ContractPools = ({ pools, contractAddress, className }: {
     v.timeOpening = new Date(Number(selected?.startJoinTime) * 1000)
     v.timeClosing = new Date(Number(selected?.endJoinTime) * 1000)
 
-    if (!account) {
-      setSelectedExtended(v)
-    }
-
+    setSelectedExtended(v)
     loadMyExtended(v)
-  }, [selected, account, contractAddress, loadMyExtended])
+  }, [selected, contractAddress, loadMyExtended])
 
   const [now, setNow] = useState(new Date())
   useEffect(() => {
@@ -331,11 +328,11 @@ const ContractPools = ({ pools, contractAddress, className }: {
       <div className="flex justify-between">
         <div className="flex-none inline-flex items-center w-[10rem] truncate">
           <img src={poolFirst?.tokenImage} alt={poolFirst?.token} className="w-10 h-10 rounded-full mr-3" />
-          <span className="text-xl uppercase font-semibold tracking-wide font-casual">{poolFirst?.token}</span>
+          <span className="text-lg uppercase font-semibold tracking-wide font-casual">{poolFirst?.token}</span>
         </div>
         <div className="min-w-[8rem]">
           <p className="text-[13px] text-white font-bold uppercase text-opacity-50">APR</p>
-          <span className="text-xl uppercase font-medium font-casual">{ Number(selected?.APR).toFixed(2) }%</span>
+          <span className="text-base uppercase font-medium font-casual">{ Number(selected?.APR).toFixed(2) }%</span>
         </div>
         <div className="hidden sm:block min-w-[12rem]">
           <p className="text-[13px] text-white font-bold uppercase text-opacity-50">Remaining Quota</p>
@@ -344,7 +341,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
       </div>
       <div>
         <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-0.5">Lock-in term</p>
-        { pools && <div className="flex text-[12px] gap-2 font-casual flex-wrap">{ pools.map(pool => <div key={pool.id} className={`px-2 py-1 rounded-sm border cursor-pointer ${selected === pool ? 'border-gamefiGreen-500' : 'border-white/50'}`} onClick={() => {
+        { pools && <div className="flex text-[13px] gap-2 font-medium font-casual flex-wrap">{ pools.map(pool => <div key={pool.id} className={`px-2 py-1 rounded-sm border cursor-pointer ${selected === pool ? 'bg-gamefiGreen-600 border-gamefiGreen-600 text-gamefiDark-700' : 'border-white/50 hover:border-gamefiGreen-600'}`} onClick={() => {
           setSelected(pool)
         }}>
           {formatDistanceStrict(0, Number(pool.lockDuration) * 1000, { unit: 'day' })}
@@ -368,7 +365,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="w-full sm:w-1/2 sm:border-r sm:border-white/20 flex-none sm:pr-4">
           <div className="flex justify-between mb-1">
-            <span className="text-[13px] text-white font-bold uppercase text-opacity-50">Total Pool Cap</span>
+            <span className="text-[13px] text-white font-bold uppercase text-opacity-50">Total Pool Cap {selectedExtended?.id}</span>
             <span className="text-[13px] text-white font-bold uppercase">{printNumber(selectedExtended.totalCapParsed)} {poolFirst?.token}</span>
           </div>
           <div className="bg-gamefiDark-400 rounded mb-1">

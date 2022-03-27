@@ -6,7 +6,7 @@ import { BigNumber } from 'ethers'
 import type { Pool } from '@/pages/api/earn'
 import ContractPools from '@/components/Pages/Earn/ContractPools'
 import { format, intervalToDuration } from 'date-fns'
-import { formatNumber } from "@/utils"
+import { formatNumber } from '@/utils'
 
 export type PoolExtended = Pool & {
   totalCap?: BigNumber;

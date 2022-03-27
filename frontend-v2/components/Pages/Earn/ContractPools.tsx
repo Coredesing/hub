@@ -553,23 +553,23 @@ const ContractPools = ({ pools, contractAddress, className }: {
         { upcoming && <div className="flex-1 flex justify-center items-center font-casual">
           { countdown && <div className="flex">
             <div className="flex flex-col items-center justify-center px-4">
-              <div className="text-2xl leading-6 tracking-wide">{countdown.days || '00'}</div>
-              <div className="text-xs leading-4 tracking-wide">Days</div>
+              <div className="text-3xl font-bold leading-6 tracking-wide">{countdown.days || '00'}</div>
+              <div className="text-xs font-semibold leading-4 tracking-wide">Days</div>
             </div>
-            <span className="text-2xl self-start">:</span>
+            <span className="text-2xl font-bold self-start !leading-none">:</span>
             <div className="flex flex-col items-center justify-center px-4">
-              <div className="text-2xl leading-6 tracking-wide">{countdown.hours || '00'}</div>
-              <div className="text-xs leading-4 tracking-wide">Hours</div>
+              <div className="text-3xl font-bold leading-6 tracking-wide">{countdown.hours || '00'}</div>
+              <div className="text-xs font-semibold leading-4 tracking-wide">Hours</div>
             </div>
-            <span className="text-2xl self-start">:</span>
+            <span className="text-2xl font-bold self-start !leading-none">:</span>
             <div className="flex flex-col items-center justify-center px-4">
-              <div className="text-2xl leading-6 tracking-wide">{countdown.minutes || '00'}</div>
-              <div className="text-xs leading-4 tracking-wide">Minutes</div>
+              <div className="text-3xl font-bold leading-6 tracking-wide">{countdown.minutes || '00'}</div>
+              <div className="text-xs font-semibold leading-4 tracking-wide">Minutes</div>
             </div>
-            <span className="text-2xl self-start">:</span>
+            <span className="text-2xl font-bold self-start !leading-none">:</span>
             <div className="flex flex-col items-center justify-center px-4">
-              <div className="text-2xl leading-6 tracking-wide">{countdown.seconds || '00'}</div>
-              <div className="text-xs leading-4 tracking-wide">Seconds</div>
+              <div className="text-3xl font-bold leading-6 tracking-wide">{countdown.seconds || '00'}</div>
+              <div className="text-xs font-semibold leading-4 tracking-wide">Seconds</div>
             </div>
           </div> }
         </div>}

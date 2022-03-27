@@ -6,6 +6,7 @@ import { BigNumber } from 'ethers'
 import type { Pool } from '@/pages/api/earn'
 import ContractPools from '@/components/Pages/Earn/ContractPools'
 import { format, intervalToDuration } from 'date-fns'
+import { formatNumber } from "@/utils"
 
 export type PoolExtended = Pool & {
   totalCap?: BigNumber;
@@ -44,7 +45,7 @@ const Earn = ({ pools: initPools }) => {
     }, {})
   }, [pools])
 
-  const [openSoon, setOpenSoon] = useState<boolean>(false)
+  const [openSoon, setOpenSoon] = useState<boolean>(true)
   const [now, setNow] = useState(new Date())
   useEffect(() => {
     const interval = setInterval(() => {
@@ -141,26 +142,26 @@ const Earn = ({ pools: initPools }) => {
                 <span>0</span>
               </div>
             </div>
-            <div className="flex-1 flex justify-center items-center font-casual">
+            <div className="flex-1 flex justify-center items-center uppercase">
               <div className="flex">
                 <div className="flex flex-col items-center justify-center px-4">
-                  <div className="text-2xl leading-6 tracking-wide">{countdown.days || '00'}</div>
-                  <div className="text-xs leading-4 tracking-wide">Days</div>
+                  <div className="text-3xl font-bold leading-6 tracking-wide">{formatNumber(countdown.days, 2) || '00'}</div>
+                  <div className="text-xs font-semibold leading-4 tracking-wide">Days</div>
                 </div>
-                <span className="text-2xl self-start">:</span>
+                <span className="text-2xl font-bold self-start !leading-none">:</span>
                 <div className="flex flex-col items-center justify-center px-4">
-                  <div className="text-2xl leading-6 tracking-wide">{countdown.hours || '00'}</div>
-                  <div className="text-xs leading-4 tracking-wide">Hours</div>
+                  <div className="text-3xl font-bold leading-6 tracking-wide">{formatNumber(countdown.hours, 2) || '00'}</div>
+                  <div className="text-xs font-semibold leading-4 tracking-wide">Hours</div>
                 </div>
-                <span className="text-2xl self-start">:</span>
+                <span className="text-2xl font-bold self-start !leading-none">:</span>
                 <div className="flex flex-col items-center justify-center px-4">
-                  <div className="text-2xl leading-6 tracking-wide">{countdown.minutes || '00'}</div>
-                  <div className="text-xs leading-4 tracking-wide">Minutes</div>
+                  <div className="text-3xl font-bold leading-6 tracking-wide">{formatNumber(countdown.minutes, 2) || '00'}</div>
+                  <div className="text-xs font-semibold leading-4 tracking-wide">Minutes</div>
                 </div>
-                <span className="text-2xl self-start">:</span>
+                <span className="text-2xl font-bold self-start !leading-none">:</span>
                 <div className="flex flex-col items-center justify-center px-4">
-                  <div className="text-2xl leading-6 tracking-wide">{countdown.seconds || '00'}</div>
-                  <div className="text-xs leading-4 tracking-wide">Seconds</div>
+                  <div className="text-3xl font-bold leading-6 tracking-wide">{formatNumber(countdown.seconds, 2) || '00'}</div>
+                  <div className="text-xs font-semibold leading-4 tracking-wide">Seconds</div>
                 </div>
               </div>
             </div>

@@ -1,0 +1,45 @@
+.item {
+    &::before {
+        position: absolute;
+        background: radial-gradient(transparent, rgba(0, 0, 0, 0.6));
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        content: "";
+        z-index: 1;
+    }
+}
+
+.infor {
+    max-width: 525px;
+    max-height: 300px;
+    transform: translate(-50%, -50%);
+    & * {
+        position: relative;
+    }
+    &::before {
+        position: absolute;
+        top: -80px;
+        left: -130px;
+        bottom: 0;
+        right: 0;
+        content: "";
+        filter: blur(80px);
+        width: calc(100% + 260px);
+        height: calc(100% + 160px);
+        border-radius: 50%;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, .85) 20%, rgba(0, 0, 0, .9) 30%, rgba(0, 0, 0, .85) 80%, rgba(0, 0, 0, 0.2) 100%);
+    }
+}
+
+.countdown {
+    background: transparent;
+    & [class*="number"] {
+        transition: .3s;
+        font-size: 36px;
+        @media screen and (max-width: 640px) {
+            font-size: 28px;
+        }
+    }
+}

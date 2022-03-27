@@ -6,15 +6,39 @@ import HotCollections from '@/components/Pages/Market/HotCollections'
 import ListTrending from '@/components/Pages/Market/ListTrending'
 import Discover from '@/components/Pages/Market/Discover'
 import Banner from '@/components/Pages/Market/Banner'
+import { fetcher } from '@/utils'
+import { API_BASE_URL } from '@/utils/constants'
+import { ObjectType } from '@/utils/types'
+import TopCollections from '@/components/Pages/Market/TopCollections'
+
 // import { useScreens } from '@/components/Pages/Home/utils'
 
-const Market = () => {
+const Market = ({ topCollections }: { topCollections: ObjectType[] }) => {
+  
   // const screens = useScreens()
   return (
     <Layout title="GameFi Market">
       {
-        <div className="relative w-full min-h-full pt-20">
-          <Banner />
+        <div className="relative w-full min-h-full">
+          {/* <Banner /> */}
+          <TopCollections items={topCollections} />
+          {/* {
+            !!topCollections?.length && topCollections.map((item) => <div>
+              <img src="" alt="" />
+              <div className="infor">
+                <div className="icon">
+                  <GamefiIcon />
+                  <RelatingIcon />
+                  <div style={{ textAlign: 'left' }}>
+                    <img src={item.logo} width="60" height="53" style={{ objectFit: 'contain' }} alt="" />
+                  </div>
+                </div>
+                <div className="title firs-neue-font">
+                  {item.title}
+                </div>
+              </div>
+            </div>)
+          } */}
           <div
             className="absolute top-0 right-0 md:h-96 md:w-72 h-60 w-28"
             style={{
@@ -40,3 +64,19 @@ const Market = () => {
 }
 
 export default Market
+
+export const getServerSideProps = async () => {
+  try {
+    const data = await fetcher(`${API_BASE_URL}/marketplace/first-edition-collections`)
+    return {
+      props: {
+        topCollections: data?.data || []
+      }
+    }
+  } catch (error) {
+    console.log('error', error)
+    return {
+      props: {}
+    }
+  }
+}

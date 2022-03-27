@@ -32,6 +32,7 @@ import NoItemFound from '@/components/Base/NoItemFound'
 import { ClipLoader } from 'react-spinners'
 import Image from 'next/image'
 import Link from 'next/link'
+import CountDownTimeV1 from '@/components/Base/CountDownTime'
 
 type Props = {
   projectInfo: ObjectType;
@@ -130,8 +131,20 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
       return arr
     }, [])
     setAttrLinks(attrLinks)
+    if (tokenInfo.name) {
+      arr.push({ trait_type: 'name', value: tokenInfo.name })
+    }
+    if (tokenInfo.size) {
+      arr.push({ trait_type: 'size', value: tokenInfo.size })
+    }
+    if (tokenInfo.level) {
+      arr.push({ trait_type: 'level', value: tokenInfo.level })
+    }
+    if (tokenInfo.coordinates) {
+      arr.push({ trait_type: 'coordinates', value: tokenInfo.coordinates })
+    }
     return arr
-  }, [tokenInfo.attributes])
+  }, [tokenInfo])
 
   const getAddresssOwnerNFT = useCallback(async () => {
     if (!ERC721Contract) {
@@ -417,6 +430,31 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   const myBalance = useMyBalance(token as any, projectInfo.network)
   const OwnerNFT = !BigNumber.from(tokenOnSale.owner || 0).isZero() ? tokenOnSale.owner : addressOwnerNFT
   const checkingToBuyOffer = (!isApprovedToken && token.neededApproveToken) || (token.neededApproveToken && loadingAllowance)
+
+  const isFirstEdition = useMemo(() => {
+    if (projectInfo?.sale_address && (addressOwnerNFT || tokenOnSale.owner)) {
+      return BigNumber.from(projectInfo?.sale_address).eq(addressOwnerNFT || 0) || BigNumber.from(projectInfo?.sale_address).eq(tokenOnSale.owner || 0);
+    }
+  }, [projectInfo?.sale_address, addressOwnerNFT, tokenOnSale.owner])
+
+  const [countdown, setCountdown] = useState<{ date1: number; date2: number; title: string } & ObjectType<any>>({ date1: 0, date2: 0, title: '' });
+  const handleCountdown = useCallback(() => {
+    if (!projectInfo) return;
+    const now = Date.now();
+    const startIn = +projectInfo.sale_from && +projectInfo.sale_from * 1000;
+    const finishIn = +projectInfo.sale_to && +projectInfo.sale_to * 1000;
+    if (startIn > now) {
+      setCountdown({ date1: startIn, date2: now, title: 'Sale Starts In', isWaiting: true })
+    } else if (finishIn > now) {
+      setCountdown({ date1: finishIn, date2: now, title: 'Sale Ends In', isSale: true })
+    } else {
+      setCountdown({ date1: 0, date2: 0, title: 'Finished', isFinished: true })
+    }
+  }, [projectInfo])
+  useEffect(() => {
+    handleCountdown()
+  }, [handleCountdown])
+
   return <WrapperPoolDetail>
     <DialogTxSubmitted
       transaction={txHash}
@@ -482,7 +520,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
           <div className='flex gap-2 items-center'>
             <img src={projectInfo.logo} alt="" className='w-11 h-11 rounded-full bg-black' />
             <div>
-              <label htmlFor="" className="block font-bold text-white/50 text-13px uppercase">Owner</label>
+              <label htmlFor="" className="block font-bold text-white/50 text-13px uppercase">Owner <span className={`uppercase ${isFirstEdition ? 'text-gamefiGreen-700' : 'text-orange-500'}`}>{isFirstEdition ? '(First Edition)' : '(ReSale)'}</span></label>
               <span className="block text-base font-casual">{OwnerNFT && shortenAddress(OwnerNFT, '.', 6)}</span>
             </div>
           </div>
@@ -517,26 +555,35 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
           </div>
         }
         {
+          isFirstEdition && countdown.date1 > 0 &&
+          <div className={styles.countdown}>
+            <CountDownTimeV1 title={countdown.title} className="countdown mb-4" time={countdown} onFinish={handleCountdown} />
+          </div>
+        }
+        {
           isAllowBuyOffer &&
-          <div className='grid grid-cols-2 gap-2 justify-center'>
-            <button
-              disabled={checkingToBuyOffer || lockingAction.lock}
-              onClick={() => setOpenMakeOfferModal(true)}
-              className={clsx(
-                styles.btnClipPathBottomLeft,
-                'p-px',
-                {
-                  'bg-gamefiGreen-900 text-gamefiGreen-900 hover:bg-gamefiGreen-900 hover:text-gamefiGreen-900 cursor-not-allowed': checkingToBuyOffer || lockingAction.lock,
-                  'cursor-pointer bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700': (isApprovedToken || !token.neededApproveToken) && !lockingAction.lock
-                }
-              )}>
-              <div className={clsx(styles.btn, styles.btnBuy, styles.btnClipPathBottomLeft, 'bg-gamefiDark-900 text-13px flex justify-center items-center rounded-sm font-bold uppercase gap-2')}>
-                {checkFnIsLoading(onOfferNFT.name) && <ClipLoader size={20} color='#a3a3a3' />}
-                Make Offer
-              </div>
-            </button>
+          <div className={`grid ${isFirstEdition ? 'grid-cols-1' : 'grid-cols-2'} gap-2 justify-center`}>
             {
-              checkingToBuyOffer || loadingAllowance
+              !isFirstEdition && <button
+                disabled={checkingToBuyOffer || lockingAction.lock}
+                onClick={() => setOpenMakeOfferModal(true)}
+                className={clsx(
+                  styles.btnClipPathBottomLeft,
+                  'p-px',
+                  {
+                    'bg-gamefiGreen-900 text-gamefiGreen-900 hover:bg-gamefiGreen-900 hover:text-gamefiGreen-900 cursor-not-allowed': checkingToBuyOffer || lockingAction.lock,
+                    'cursor-pointer bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700': (isApprovedToken || !token.neededApproveToken) && !lockingAction.lock
+                  }
+                )}>
+                <div className={clsx(styles.btn, styles.btnBuy, styles.btnClipPathBottomLeft, 'bg-gamefiDark-900 text-13px flex justify-center items-center rounded-sm font-bold uppercase gap-2')}>
+                  {checkFnIsLoading(onOfferNFT.name) && <ClipLoader size={20} color='#a3a3a3' />}
+                  Make Offer
+                </div>
+              </button>
+            }
+            {
+              (!isFirstEdition || (isFirstEdition && countdown.isSale)) &&
+              (checkingToBuyOffer || loadingAllowance
                 ? <ButtonBase
                   noneStyle
                   isLoading={loadingApproveToken || loadingAllowance}
@@ -556,7 +603,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
                   onClick={() => setOpenBuyNowModal(true)}
                 >
                   Buy Now
-                </ButtonBase>
+                </ButtonBase>)
             }
           </div>
         }

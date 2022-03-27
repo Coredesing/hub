@@ -3,25 +3,26 @@ import { API_BASE_URL } from '@/utils/constants'
 
 import { Contract } from '@ethersproject/contracts'
 import ERC721Abi from '@/components/web3/abis/Erc721.json'
+import MarketplaceAbi from '@/components/web3/abis/Marketplace.json'
 // import ERC20Abi from '@/components/web3/abis/ERC20.json'
 import { useLibraryDefaultFlexible } from '@/components/web3/utils'
 import { fetcher } from '@/utils'
-import { useWeb3Default } from '@/components/web3'
+import { MARKETPLACE_CONTRACT, useWeb3Default } from '@/components/web3'
 import { ObjectType } from '@/utils/types'
 import { Web3Provider } from '@ethersproject/providers'
-// import { BigNumber } from 'ethers'
+import { BigNumber } from 'ethers'
 
 export const networkImage = (network: string) => {
   switch (network) {
-  case 'bsc': {
-    return require('@/assets/images/networks/bsc.svg')
-  }
-  case 'eth': {
-    return require('@/assets/images/networks/eth.svg')
-  }
-  case 'polygon': {
-    return require('@/assets/images/networks/matic.svg')
-  }
+    case 'bsc': {
+      return require('@/assets/images/networks/bsc.svg')
+    }
+    case 'eth': {
+      return require('@/assets/images/networks/eth.svg')
+    }
+    case 'polygon': {
+      return require('@/assets/images/networks/matic.svg')
+    }
   }
 }
 
@@ -35,7 +36,7 @@ export const networkImage = (network: string) => {
 //   }
 // }
 
-export const getNftInfor = async (item: { token_id: number | string; token_address?: string; slug?: string } & ObjectType, provider: Web3Provider) => {
+export const getNftInfor = async (item: { token_id: number | string; token_address?: string; slug?: string } & ObjectType, provider: Web3Provider, options?: { allowGetOwnerNft?: boolean }) => {
   let error
   try {
     const tokenAddress = item?.token_address
@@ -60,6 +61,25 @@ export const getNftInfor = async (item: { token_id: number | string; token_addre
         console.debug('err', error)
       }
       item = { ...item, token_info: info }
+    }
+    if (options?.allowGetOwnerNft && collectionInfo.sale_address) {
+      try {
+        if (erc721Contract) {
+          const addressOwnerNFT = await erc721Contract.ownerOf(item.token_id)
+          item.isFirstEdition = BigNumber.from(collectionInfo.sale_address).eq(addressOwnerNFT)
+          item.owner_address = addressOwnerNFT
+        }
+        if (!item.isFirstEdition) {
+          const marketplaceContract = new Contract(MARKETPLACE_CONTRACT, MarketplaceAbi, provider)
+          if (marketplaceContract) {
+            const tokenOnSale = await marketplaceContract.tokensOnSale(collectionInfo.token_address, item.token_id)
+            item.isFirstEdition = BigNumber.from(collectionInfo.sale_address).eq(tokenOnSale.tokenOwner)
+          }
+        }
+      } catch (error) {
+
+      }
+
     }
     item = {
       collection_info: collectionInfo,

@@ -1,8 +1,7 @@
 module.exports = {
   apps: [{
     name: 'nextjs',
-    script: 'yarn',
-    interpreter: '/usr/bin/bash',
+    script: 'npm',
     args: 'start'
   }]
 }

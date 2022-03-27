@@ -341,7 +341,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
       </div>
       <div>
         <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-0.5">Lock-in term</p>
-        { pools && <div className="flex text-[13px] gap-2 font-medium font-casual flex-wrap">{ pools.map(pool => <div key={pool.id} className={`px-2 py-1 rounded-sm border cursor-pointer ${selected === pool ? 'bg-gamefiGreen-600 border-gamefiGreen-600 text-gamefiDark-700' : 'border-white/50'}`} onClick={() => {
+        { pools && <div className="flex text-[13px] gap-2 font-medium font-casual flex-wrap">{ pools.map(pool => <div key={pool.id} className={`px-2 py-1 rounded-sm border cursor-pointer ${selected === pool ? 'bg-gamefiGreen-600 border-gamefiGreen-600 text-gamefiDark-700' : 'border-white/50 hover:border-gamefiGreen-600'}`} onClick={() => {
           setSelected(pool)
         }}>
           {formatDistanceStrict(0, Number(pool.lockDuration) * 1000, { unit: 'day' })}

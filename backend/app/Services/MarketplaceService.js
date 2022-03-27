@@ -105,7 +105,26 @@ class MarketplaceService {
     return builder
   }
 
-  // TODO: cached
+  async getFirstEditionCollections(filterParams) {
+    if (await RedisMarketplaceUtils.existRedisMarketplaceFirstEditionCollections()) {
+      let data = await RedisMarketplaceUtils.getRedisMarketplaceFirstEditionCollections()
+      data = JSON.parse(data)
+      return data
+    }
+
+    filterParams = this.formatPaginate(filterParams)
+    let data = await this.buildQueryCollectionBuilder(filterParams)
+      .where('sale', 'first-edition')
+      .where('is_show', 1)
+      .orderBy('priority', 'DESC')
+      .fetch()
+
+    data = JSON.parse(JSON.stringify(data))
+    await RedisMarketplaceUtils.setRedisMarketplaceFirstEditionCollections(data)
+
+    return data
+  }
+
   async getTopCollections(filterParams) {
     if (await RedisMarketplaceUtils.existRedisMarketplaceTopCollections()) {
       let data = await RedisMarketplaceUtils.getRedisMarketplaceTopCollections()
@@ -383,6 +402,7 @@ class MarketplaceService {
     await collection.save();
     // delete cache here
     await RedisMarketplaceUtils.deleteRedisMarketplaceTopCollections()
+    await RedisMarketplaceUtils.deleteRedisMarketplaceFirstEditionCollections()
     await RedisMarketplaceUtils.deleteRedisMarketplaceCollectionDetail(params?.token_address)
     return collection;
   }

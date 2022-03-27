@@ -133,6 +133,7 @@ Route.group(() => {
   Route.get('get-tiers', 'TierSettingController.getTiersSetting');
 
   // Marketplace
+  Route.get('marketplace/first-edition-collections', 'MarketplaceController.getFirstEditionCollections');
   Route.get('marketplace/collections', 'MarketplaceController.getCollections');
   Route.get('marketplace/hot-offers', 'MarketplaceController.getHotOffers');
   Route.get('marketplace/discover', 'MarketplaceController.discover');

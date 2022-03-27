@@ -118,57 +118,6 @@ const Earn = ({ pools: initPools }) => {
             </div>
           </div>
         </div>
-        { openSoon && <div className="bg-gamefiDark-630/30 p-4">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="w-full sm:w-1/2 sm:border-r sm:border-white/20 flex-none pr-4">
-              <div className="flex justify-between mb-1">
-                <span className="text-[13px] text-white font-bold uppercase text-opacity-50">Total Pool Cap</span>
-                <span
-                  className="text-[13px] text-white font-bold uppercase">TBA</span>
-              </div>
-              <div className="bg-gamefiDark-400 rounded mb-1">
-                <div className="h-[5px] rounded bg-gradient-to-r from-yellow-300 to-gamefiGreen-500 w-0"></div>
-              </div>
-              <div className="font-casual text-xs text-white/50 mb-6">0%</div>
-              <div className="flex justify-between mb-4 font-casual text-sm">
-                <span className="font-semibold">Opening Time</span>
-                <span>{format(deadlineSoon, 'yyyy-MM-dd HH:mm:ss O')}</span>
-              </div>
-              <div className="flex justify-between mb-4 font-casual text-sm">
-                <span className="font-semibold">Closing Time</span>
-                <span>TBA</span>
-              </div>
-              <div className="flex justify-between mb-4 font-casual text-sm">
-                <span className="font-semibold">Minimum Investment</span>
-                <span>0</span>
-              </div>
-            </div>
-            <div className="flex-1 flex justify-center items-center uppercase">
-              <div className="flex">
-                <div className="flex flex-col items-center justify-center px-4">
-                  <div className="text-3xl font-bold leading-6 tracking-wide">{formatNumber(countdown.days, 2) || '00'}</div>
-                  <div className="text-xs font-semibold leading-4 tracking-wide">Days</div>
-                </div>
-                <span className="text-2xl font-bold self-start !leading-none">:</span>
-                <div className="flex flex-col items-center justify-center px-4">
-                  <div className="text-3xl font-bold leading-6 tracking-wide">{formatNumber(countdown.hours, 2) || '00'}</div>
-                  <div className="text-xs font-semibold leading-4 tracking-wide">Hours</div>
-                </div>
-                <span className="text-2xl font-bold self-start !leading-none">:</span>
-                <div className="flex flex-col items-center justify-center px-4">
-                  <div className="text-3xl font-bold leading-6 tracking-wide">{formatNumber(countdown.minutes, 2) || '00'}</div>
-                  <div className="text-xs font-semibold leading-4 tracking-wide">Minutes</div>
-                </div>
-                <span className="text-2xl font-bold self-start !leading-none">:</span>
-                <div className="flex flex-col items-center justify-center px-4">
-                  <div className="text-3xl font-bold leading-6 tracking-wide">{formatNumber(countdown.seconds, 2) || '00'}</div>
-                  <div className="text-xs font-semibold leading-4 tracking-wide">Seconds</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div> }
       </div>
       <div className="rounded-sm overflow-hidden mb-8 relative">
         <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center text-lg text-gamefiDark-100 font-semibold z-[1]">Coming Soon</div>
@@ -209,57 +158,6 @@ const Earn = ({ pools: initPools }) => {
             </div>
           </div>
         </div>
-        { openSoon && <div className="bg-gamefiDark-630/30 p-4">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="w-full sm:w-1/2 sm:border-r sm:border-white/20 flex-none pr-4">
-              <div className="flex justify-between mb-1">
-                <span className="text-[13px] text-white font-bold uppercase text-opacity-50">Total Pool Cap</span>
-                <span
-                  className="text-[13px] text-white font-bold uppercase">TBA</span>
-              </div>
-              <div className="bg-gamefiDark-400 rounded mb-1">
-                <div className="h-[5px] rounded bg-gradient-to-r from-yellow-300 to-gamefiGreen-500 w-0"></div>
-              </div>
-              <div className="font-casual text-xs text-white/50 mb-6">0%</div>
-              <div className="flex justify-between mb-4 font-casual text-sm">
-                <span className="font-semibold">Opening Time</span>
-                <span>{format(deadlineSoon, 'yyyy-MM-dd HH:mm:ss O')}</span>
-              </div>
-              <div className="flex justify-between mb-4 font-casual text-sm">
-                <span className="font-semibold">Closing Time</span>
-                <span>TBA</span>
-              </div>
-              <div className="flex justify-between mb-4 font-casual text-sm">
-                <span className="font-semibold">Minimum Investment</span>
-                <span>0</span>
-              </div>
-            </div>
-            <div className="flex-1 flex justify-center items-center uppercase">
-              <div className="flex">
-                <div className="flex flex-col items-center justify-center px-4">
-                  <div className="text-3xl font-bold leading-6 tracking-wide">{formatNumber(countdown.days, 2) || '00'}</div>
-                  <div className="text-xs font-semibold leading-4 tracking-wide">Days</div>
-                </div>
-                <span className="text-2xl font-bold self-start !leading-none">:</span>
-                <div className="flex flex-col items-center justify-center px-4">
-                  <div className="text-3xl font-bold leading-6 tracking-wide">{formatNumber(countdown.hours, 2) || '00'}</div>
-                  <div className="text-xs font-semibold leading-4 tracking-wide">Hours</div>
-                </div>
-                <span className="text-2xl font-bold self-start !leading-none">:</span>
-                <div className="flex flex-col items-center justify-center px-4">
-                  <div className="text-3xl font-bold leading-6 tracking-wide">{formatNumber(countdown.minutes, 2) || '00'}</div>
-                  <div className="text-xs font-semibold leading-4 tracking-wide">Minutes</div>
-                </div>
-                <span className="text-2xl font-bold self-start !leading-none">:</span>
-                <div className="flex flex-col items-center justify-center px-4">
-                  <div className="text-3xl font-bold leading-6 tracking-wide">{formatNumber(countdown.seconds, 2) || '00'}</div>
-                  <div className="text-xs font-semibold leading-4 tracking-wide">Seconds</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div> }
       </div>
       <p className="text-center font-casual text-sm text-white/60">More high-reward earning programs are coming. Stay tuned!</p>
     </div>

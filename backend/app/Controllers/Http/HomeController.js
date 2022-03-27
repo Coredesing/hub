@@ -154,7 +154,7 @@ class HomeController {
       const param = request.all();
       const limit = param.limit ? param.limit : 10;
       const page = param.page ? param.page : 1;
-      const tickers = param.tickers;
+      const tickers = param.tickers ? param.tickers.split(',') : [];
 
       // TODO: pagination, cache
 

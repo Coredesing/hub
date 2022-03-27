@@ -73,7 +73,7 @@ class HomeService {
 
   async getTokenomics(tickers) {
     let builder = TokenomicModel.query();
-    let pools = await builder.whereIn('ticker', tickers).fetch()
+    let pools = await builder.whereIn('ticker', tickers).fetch().catch(e => console.log(e))
 
     pools = JSON.parse(JSON.stringify(pools))
 

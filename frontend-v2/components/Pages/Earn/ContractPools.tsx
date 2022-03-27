@@ -124,34 +124,34 @@ const ContractPools = ({ pools, contractAddress, className }: {
     }
   }, [library])
 
-  const [currentPool, setCurrentPool] = useState<Pool | undefined>()
+  const [showPool, setCurrentPool] = useState<boolean>()
   const currentToken = useMemo<Token>(() => {
-    if (!currentPool) {
+    if (!selected) {
       return
     }
 
     return {
-      name: currentPool?.token,
-      symbol: currentPool?.token,
-      address: currentPool?.tokenAddress,
-      decimals: currentPool?.tokenDecimals,
-      image: currentPool?.tokenImage
+      name: selected?.token,
+      symbol: selected?.token,
+      address: selected?.tokenAddress,
+      decimals: selected?.tokenDecimals,
+      image: selected?.tokenImage
     }
-  }, [currentPool])
+  }, [selected])
   const { balance: balanceToken, balanceShort: balanceTokenShort } = useBalanceToken(currentToken)
   const [amount, setAmount] = useState<string>('')
   useEffect(() => {
     setAmount('')
     setStep(1)
-  }, [currentPool])
+  }, [showPool])
   const estimatedInterest = useMemo<number>(() => {
-    if (!currentPool) {
+    if (!selected) {
       return 0
     }
 
-    const apr = Number(currentPool?.APR || 0)
+    const apr = Number(selected?.APR || 0)
     return apr * Number(amount) / 100
-  }, [amount, currentPool])
+  }, [amount, selected])
 
   const setAmountMax = () => {
     setAmount(balanceTokenShort)
@@ -232,7 +232,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
 
   const [confirming, setConfirming] = useState<boolean>(false)
   const stake = useCallback(async () => {
-    if (!currentPool || !currentToken) {
+    if (!selected || !currentToken) {
       return
     }
 
@@ -257,7 +257,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
     try {
       setConfirming(true)
       const contract = new Contract(contractAddress, ABIStakingPool, library.getSigner())
-      const tx = await contract.linearDeposit(currentPool.id, parseUnits(amount, currentToken.decimals))
+      const tx = await contract.linearDeposit(selected.id, parseUnits(amount, currentToken.decimals))
       await tx.wait(1)
       toast.success('Stake successfully')
     } catch (err) {
@@ -272,7 +272,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
       setConfirming(false)
       loadMyExtended(selectedExtended)
     }
-  }, [library, currentPool, currentToken, amount, contractAddress, allowanceEnough, loadMyExtended, confirming, selectedExtended])
+  }, [library, selected, currentToken, amount, contractAddress, allowanceEnough, loadMyExtended, confirming, selectedExtended])
 
   const approveOrStake = useCallback(() => {
     if (loadingAllowance || loadingApproval) {
@@ -390,7 +390,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
                 </div>
                 { account && !networkIncorrect && <>
                   <div
-                    onClick={() => setCurrentPool(selectedExtended)}
+                    onClick={() => setCurrentPool(true)}
                     className="flex-1 bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800"
                   >Stake</div>
                 </>
@@ -405,15 +405,15 @@ const ContractPools = ({ pools, contractAddress, className }: {
                   }>Connect Wallet</div>}
               </div>
               <Modal
-                show={!!currentPool}
-                toggle={(x: boolean) => setCurrentPool(x && selectedExtended)}
+                show={!!showPool}
+                toggle={(x: boolean) => setCurrentPool(x)}
                 className={'!bg-[#1F212E] !max-w-lg'}
               >
                 <div className="px-8 pt-10 pb-6">
                   <p className="text-xl uppercase font-medium font-casual">
                     Stake {currentToken?.symbol}
                   </p>
-                  <p className="text-xs text-white font-bold uppercase text-opacity-50">Remaining Quota: <span className="text-sm uppercase text-white/80">{ printNumber(selectedExtended?.remainingParsed) } {currentPool?.token}</span></p>
+                  <p className="text-xs text-white font-bold uppercase text-opacity-50">Remaining Quota: <span className="text-sm uppercase text-white/80">{ printNumber(selectedExtended?.remainingParsed) } {selected?.token}</span></p>
 
                   <div className="flex flex-col gap-6 my-6 pt-4 border-t border-b border-white/20">
                     { step === 1 && <div className="w-full">
@@ -444,7 +444,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
                       <p className="font-casual mb-6">{ formatDistanceStrict(0, Number(selectedExtended.lockDuration) * 1000, { unit: 'day' }) }</p>
 
                       <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Amount</p>
-                      <p className="font-casual">{ printNumber(amount) } {currentPool?.token}</p>
+                      <p className="font-casual">{ printNumber(amount) } {selected?.token}</p>
                     </div>
                     }
 

@@ -1,4 +1,4 @@
-git pull
+git pull || exit
 yarn install || exit
 BUILD_DIR=.temp yarn build || exit
 if [ ! -d ".temp" ]; then

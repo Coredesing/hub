@@ -59,10 +59,10 @@ export function fetchAll () {
 
       return {
         ...data,
-        token: token.symbol,
-        tokenAddress: token.address,
-        tokenImage: token.image,
-        tokenDecimals: token.decimals,
+        token: token?.symbol,
+        tokenAddress: token?.address,
+        tokenImage: token?.image,
+        tokenDecimals: token?.decimals,
         cap: linearData.cap.toString(),
         totalStaked: linearData.totalStaked.toString(),
         minInvestment: linearData.minInvestment.toString(),

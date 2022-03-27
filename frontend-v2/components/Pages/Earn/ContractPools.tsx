@@ -550,7 +550,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
             </div>
           </div>
         </div> }
-        { upcoming && <div className="flex-1 flex justify-center items-center font-casual">
+        { upcoming && <div className="flex-1 flex justify-center items-center uppercase">
           { countdown && <div className="flex">
             <div className="flex flex-col items-center justify-center px-4">
               <div className="text-3xl font-bold leading-6 tracking-wide">{countdown.days || '00'}</div>

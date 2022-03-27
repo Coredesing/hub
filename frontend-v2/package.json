@@ -3,7 +3,7 @@
     "scripts": {
         "dev": "next",
         "build": "next build",
-        "start": "next start",
+        "start": "next start -H 127.0.0.1",
         "deploy": "next build && next start",
         "type-check": "tsc",
         "lint": "next lint",

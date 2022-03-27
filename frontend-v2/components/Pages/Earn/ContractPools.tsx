@@ -332,11 +332,11 @@ const ContractPools = ({ pools, contractAddress, className }: {
         </div>
         <div className="min-w-[8rem]">
           <p className="text-[13px] text-white font-bold uppercase text-opacity-50">APR</p>
-          <span className="text-base uppercase font-medium font-casual">{ Number(selected?.APR).toFixed(2) }%</span>
+          <span className="text-base uppercase font-medium font-casual">{ selected?.APR ? Number(selected?.APR).toFixed(2) : 0 }%</span>
         </div>
         <div className="hidden sm:block min-w-[12rem]">
           <p className="text-[13px] text-white font-bold uppercase text-opacity-50">Remaining Quota</p>
-          <div className="text-base uppercase font-medium font-casual my-0.5">{ printNumber(selectedExtended?.remainingParsed) } {poolFirst?.token}</div>
+          <div className="text-base uppercase font-medium font-casual my-0.5">{ selectedExtended?.remainingParsed ? printNumber(selectedExtended?.remainingParsed) : '-' } {poolFirst?.token}</div>
         </div>
       </div>
       <div>
@@ -365,8 +365,8 @@ const ContractPools = ({ pools, contractAddress, className }: {
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="w-full sm:w-1/2 sm:border-r sm:border-white/20 flex-none sm:pr-4">
           <div className="flex justify-between mb-1">
-            <span className="text-[13px] text-white font-bold uppercase text-opacity-50">Total Pool Cap {selectedExtended?.id}</span>
-            <span className="text-[13px] text-white font-bold uppercase">{printNumber(selectedExtended.totalCapParsed)} {poolFirst?.token}</span>
+            <span className="text-[13px] text-white font-bold uppercase text-opacity-50">Total Pool Cap</span>
+            <span className="text-[13px] text-white font-bold uppercase">{printNumber(selectedExtended?.totalCapParsed)} {poolFirst?.token}</span>
           </div>
           <div className="bg-gamefiDark-400 rounded mb-1">
             <div className="h-[5px] rounded bg-gradient-to-r from-yellow-300 to-gamefiGreen-500" style={{ width: `${selectedExtended?.progress?.toFixed(2)}%` }}></div>
@@ -375,15 +375,15 @@ const ContractPools = ({ pools, contractAddress, className }: {
 
           <div className="flex justify-between mb-4 font-casual text-sm">
             <span className="font-semibold">Opening Time</span>
-            <span>{format(selectedExtended.timeOpening, 'yyyy-MM-dd HH:mm:ss O')}</span>
+            <span>{format(selectedExtended?.timeOpening, 'yyyy-MM-dd HH:mm:ss O')}</span>
           </div>
           <div className="flex justify-between mb-4 font-casual text-sm">
             <span className="font-semibold">Closing Time</span>
-            <span>{format(selectedExtended.timeClosing, 'yyyy-MM-dd HH:mm:ss O')}</span>
+            <span>{format(selectedExtended?.timeClosing, 'yyyy-MM-dd HH:mm:ss O')}</span>
           </div>
           <div className="flex justify-between mb-4 font-casual text-sm">
             <span className="font-semibold">Minimum Investment</span>
-            <span>{printNumber(selectedExtended.amountMinParsed)} {poolFirst?.token}</span>
+            <span>{printNumber(selectedExtended?.amountMinParsed)} {poolFirst?.token}</span>
           </div>
         </div>
         { !upcoming && !closed && <div className="flex flex-col md:flex-row justify-between flex-1 gap-4">

@@ -10,7 +10,7 @@ import ABIStakingPool from '@/components/web3/abis/StakingPool.json'
 import toast from 'react-hot-toast'
 import { getNetworkByAlias, switchNetwork, Token } from '@/components/web3'
 import { printNumber, safeToFixed } from '@/utils'
-import { addSeconds, format, formatDistanceStrict } from 'date-fns'
+import { addSeconds, format, formatDistanceStrict, intervalToDuration } from 'date-fns'
 import Modal from '@/components/Base/Modal'
 
 const ContractPools = ({ pools, contractAddress, className }: {
@@ -101,6 +101,44 @@ const ContractPools = ({ pools, contractAddress, className }: {
     loadMyExtended(v)
   }, [selected, account, contractAddress, loadMyExtended])
 
+  const [now, setNow] = useState(new Date())
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(new Date())
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [setNow])
+  const upcoming = useMemo(() => {
+    if (!selectedExtended) {
+      return false
+    }
+
+    if (!selectedExtended?.timeOpening) {
+      return true
+    }
+
+    return selectedExtended?.timeOpening >= now
+  }, [now, selectedExtended])
+  const closed = useMemo(() => {
+    if (!selectedExtended?.timeClosing) {
+      return true
+    }
+
+    return selectedExtended?.timeClosing <= now
+  }, [now, selectedExtended])
+
+  const countdown = useMemo(() => {
+    if (!selectedExtended?.timeOpening) {
+      return
+    }
+
+    return intervalToDuration({
+      start: now,
+      end: selectedExtended?.timeOpening
+    })
+  }, [now, selectedExtended])
+
   const networkIncorrect = useMemo(() => {
     return (selected?.network || '').toLowerCase() !== network?.alias
   }, [selected, network])
@@ -124,7 +162,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
     }
   }, [library])
 
-  const [showPool, setCurrentPool] = useState<boolean>()
+  const [showPool, setShowPool] = useState<boolean>()
   const currentToken = useMemo<Token>(() => {
     if (!selected) {
       return
@@ -281,7 +319,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
 
     if (allowanceEnough) {
       return stake().then(() => {
-        setCurrentPool(undefined)
+        setShowPool(false)
       })
     }
 
@@ -334,9 +372,9 @@ const ContractPools = ({ pools, contractAddress, className }: {
             <span className="text-[13px] text-white font-bold uppercase">{printNumber(selectedExtended.totalCapParsed)} {poolFirst?.token}</span>
           </div>
           <div className="bg-gamefiDark-400 rounded mb-1">
-            <div className="h-[5px] rounded bg-gradient-to-r from-yellow-300 to-gamefiGreen-500" style={{ width: `${selectedExtended.progress.toFixed(2)}%` }}></div>
+            <div className="h-[5px] rounded bg-gradient-to-r from-yellow-300 to-gamefiGreen-500" style={{ width: `${selectedExtended?.progress?.toFixed(2)}%` }}></div>
           </div>
-          <div className="font-casual text-xs text-white/50 mb-6">{selectedExtended.progress.toFixed(2)}%</div>
+          <div className="font-casual text-xs text-white/50 mb-6">{selectedExtended?.progress?.toFixed(2)}%</div>
 
           <div className="flex justify-between mb-4 font-casual text-sm">
             <span className="font-semibold">Opening Time</span>
@@ -351,10 +389,10 @@ const ContractPools = ({ pools, contractAddress, className }: {
             <span>{printNumber(selectedExtended.amountMinParsed)} {poolFirst?.token}</span>
           </div>
         </div>
-        <div className="flex flex-col md:flex-row justify-between flex-1 gap-4">
+        { !upcoming && !closed && <div className="flex flex-col md:flex-row justify-between flex-1 gap-4">
           <div className="md:min-w-[10rem] md:border-r md:border-white/20 flex flex-col md:pr-4">
             <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Your Interest {JSON.stringify(myPendingRewardClaimable)}</p>
-            <p className="text-base text-white font-casual font-medium">{ loading ? 'Loading...' : `${safeToFixed(selectedExtended.myPendingRewardParsed, 2)} ${poolFirst?.token}` }</p>
+            <p className="text-base text-white font-casual font-medium">{ loading ? 'Loading...' : `${safeToFixed(selectedExtended?.myPendingRewardParsed, 2)} ${poolFirst?.token}` }</p>
             <div className="mt-auto">
               { account && myPendingRewardClaimable && !networkIncorrect && <>
                 <div onClick={() => claimReward(contractAddress, selected?.id)} className="bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800">
@@ -382,7 +420,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
           </div>
           <div className="md:flex-1 flex flex-col">
             <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Your Investment</p>
-            <p className="text-base text-white font-casual font-medium">{ loading ? 'Loading...' : `${safeToFixed(selectedExtended.myStakeParsed, 2)} ${poolFirst?.token}` }</p>
+            <p className="text-base text-white font-casual font-medium">{ loading ? 'Loading...' : `${safeToFixed(selectedExtended?.myStakeParsed, 2)} ${poolFirst?.token}` }</p>
             <div className="mt-auto">
               <div className="flex gap-2">
                 <div className="flex-1 bg-gamefiDark-300 uppercase py-2 px-5 rounded-sm clipped-b-l text-[13px] font-bold text-center cursor-not-allowed text-gamefiDark-800">
@@ -390,7 +428,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
                 </div>
                 { account && !networkIncorrect && <>
                   <div
-                    onClick={() => setCurrentPool(true)}
+                    onClick={() => setShowPool(true)}
                     className="flex-1 bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800"
                   >Stake</div>
                 </>
@@ -406,7 +444,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
               </div>
               <Modal
                 show={!!showPool}
-                toggle={(x: boolean) => setCurrentPool(x)}
+                toggle={(x: boolean) => setShowPool(x)}
                 className={'!bg-[#1F212E] !max-w-lg'}
               >
                 <div className="px-8 pt-10 pb-6">
@@ -428,7 +466,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
                         <input
                           type="text"
                           className="font-casual w-full px-2 py-1 rounded-sm border-white/50 cursor-pointer bg-gamefiDark-630/10 focus:bg-gamefiDark-630 text-white"
-                          placeholder={`Minimum: ${printNumber(selectedExtended.amountMinParsed)} ${currentToken?.symbol}`}
+                          placeholder={`Minimum: ${printNumber(selectedExtended?.amountMinParsed)} ${currentToken?.symbol}`}
                           value={amount}
                           onChange={handleAmount}
                         />
@@ -441,7 +479,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
                     { step === 2 &&
                     <div className="w-full">
                       <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Pool</p>
-                      <p className="font-casual mb-6">{ formatDistanceStrict(0, Number(selectedExtended.lockDuration) * 1000, { unit: 'day' }) }</p>
+                      <p className="font-casual mb-6">{ formatDistanceStrict(0, Number(selectedExtended?.lockDuration) * 1000, { unit: 'day' }) }</p>
 
                       <p className="text-[13px] text-white font-bold uppercase text-opacity-50 mb-1">Amount</p>
                       <p className="font-casual">{ printNumber(amount) } {selected?.token}</p>
@@ -514,7 +552,33 @@ const ContractPools = ({ pools, contractAddress, className }: {
               </Modal>
             </div>
           </div>
-        </div>
+        </div> }
+        { upcoming && <div className="flex-1 flex justify-center items-center font-casual">
+          { countdown && <div className="flex">
+            <div className="flex flex-col items-center justify-center px-4">
+              <div className="text-2xl leading-6 tracking-wide">{countdown.days || '00'}</div>
+              <div className="text-xs leading-4 tracking-wide">Days</div>
+            </div>
+            <span className="text-2xl self-start">:</span>
+            <div className="flex flex-col items-center justify-center px-4">
+              <div className="text-2xl leading-6 tracking-wide">{countdown.hours || '00'}</div>
+              <div className="text-xs leading-4 tracking-wide">Hours</div>
+            </div>
+            <span className="text-2xl self-start">:</span>
+            <div className="flex flex-col items-center justify-center px-4">
+              <div className="text-2xl leading-6 tracking-wide">{countdown.minutes || '00'}</div>
+              <div className="text-xs leading-4 tracking-wide">Minutes</div>
+            </div>
+            <span className="text-2xl self-start">:</span>
+            <div className="flex flex-col items-center justify-center px-4">
+              <div className="text-2xl leading-6 tracking-wide">{countdown.seconds || '00'}</div>
+              <div className="text-xs leading-4 tracking-wide">Seconds</div>
+            </div>
+          </div> }
+        </div>}
+        { closed && <div className="flex-1 flex justify-center items-center font-casual">
+          The pool is closed. Please try another pool.
+        </div>}
 
       </div>
     </div> }

@@ -1,15 +1,13 @@
 'use strict'
 
 const CampaignModel = use('App/Models/Campaign');
+const TokenomicModel = use('App/Models/Tokenomic');
 const RedisUtils = use('App/Common/RedisUtils');
 const BigNumber = use('bignumber.js');
 
 class HomeService {
-  async getPerformances(symbols) {
+  async getPerformances() {
     let builder = CampaignModel.query();
-    if (symbols) {
-      builder.whereIn('symbol', symbols)
-    }
     let pools = await builder.where('token_type', 'erc20')
       .where('is_deploy', 1)
       .whereNotNull('slug')
@@ -71,6 +69,35 @@ class HomeService {
     // Cache data
     await RedisUtils.setRedisPerformanceDetail(data);
     return data
+  }
+
+  async getTokenomics(tickers) {
+    let builder = TokenomicModel.query();
+    let pools = await builder.whereIn('ticker', tickers).fetch()
+
+    pools = JSON.parse(JSON.stringify(pools))
+    pools = pools.filter((data) => data.tokenomic && data.tokenomic.ticker)
+
+    // let result = pools
+
+    // result = result.sort(function(a, b) {
+    //   let roi_a = new BigNumber(a.ido_roi)
+    //   let roi_b = new BigNumber(b.ido_roi)
+
+    //   if (roi_a.gt(roi_b)) {
+    //     return -1
+    //   }
+
+    //   if (roi_a.lt(roi_b)) {
+    //     return 1
+    //   }
+
+    //   return a.rank - b.rank
+    // })
+
+    // Cache data
+    // await RedisUtils.setRedisPerformanceDetail(data);
+    return pools
   }
 }
 

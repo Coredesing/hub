@@ -1,6 +1,7 @@
 const path = require('path')
 
 module.exports = {
+  distDir: process.env.BUILD_DIR || '.next',
   eslint: {
     ignoreDuringBuilds: true,
     dirs: ['pages', 'components', 'utils', 'hooks', 'context']

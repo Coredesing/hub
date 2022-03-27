@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { BigNumber } from 'ethers'
 import type { Pool } from '@/pages/api/earn'
 import ContractPools from '@/components/Pages/Earn/ContractPools'
-import { intervalToDuration } from 'date-fns'
+import { format, intervalToDuration } from 'date-fns'
 
 export type PoolExtended = Pool & {
   totalCap?: BigNumber;
@@ -53,14 +53,13 @@ const Earn = ({ pools: initPools }) => {
 
     return () => clearInterval(interval)
   }, [setNow])
+  const [deadlineSoon] = useState(new Date('2022-04-03T00:00:00Z'))
   const countdown = useMemo(() => {
-    const deadlineSoon = new Date('2022-04-03T00:00:00Z')
-
     return intervalToDuration({
       start: now,
       end: deadlineSoon
     })
-  }, [now])
+  }, [now, deadlineSoon])
 
   return <Layout title="GameFi Earn">
     <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
@@ -131,7 +130,7 @@ const Earn = ({ pools: initPools }) => {
               <div className="font-casual text-xs text-white/50 mb-6">0%</div>
               <div className="flex justify-between mb-4 font-casual text-sm">
                 <span className="font-semibold">Opening Time</span>
-                <span>2022-03-23 00:00:00 GMT+7</span>
+                <span>{format(deadlineSoon, 'yyyy-MM-dd HH:mm:ss O')}</span>
               </div>
               <div className="flex justify-between mb-4 font-casual text-sm">
                 <span className="font-semibold">Closing Time</span>

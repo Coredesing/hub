@@ -50,6 +50,7 @@ Route.group(() => {
   Route.post('vesting/gamefi', 'HomeController.createVestingOption').middleware(['checkSignature']);
   Route.post('vesting/gamefi/:address', 'HomeController.getVestingOption');
   Route.get('legend/:id', 'HomeController.getLegendImages');
+  Route.get('tokenomics', 'HomeController.getTokenomics');
 
   // Aggregator
   Route.get('aggregator', 'AggregatorController.getAggregator');

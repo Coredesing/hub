@@ -64,7 +64,7 @@ class HomeController {
       }
 
       const homeService = new HomeService()
-      let data = await homeService.getPerformances()
+      let data = await homeService.getPerformances(symbols)
       return HelperUtils.responseSuccess(data);
     } catch (e) {
       return HelperUtils.responseErrorInternal();
@@ -146,6 +146,23 @@ class HomeController {
       return HelperUtils.responseSuccess(data)
     } catch (e) {
       return HelperUtils.responseErrorInternal()
+    }
+  }
+
+  async getTokenomics({request}) {
+    try {
+      const param = request.all();
+      const limit = param.limit ? param.limit : 10;
+      const page = param.page ? param.page : 1;
+      const tickers = param.tickers ? param.tickers.split(',') : [];
+
+      // TODO: pagination, cache
+
+      const homeService = new HomeService()
+      let data = await homeService.getTokenomics(tickers)
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
     }
   }
 }

@@ -54,7 +54,7 @@ class HomeController {
       const param = request.all();
       const limit = param.limit ? param.limit : 10;
       const page = param.page ? param.page : 1;
-      const symbol = param.symbol || '';
+      const symbols = param.symbols ? param.symbols.split(',') : null;
 
       // TODO: pagination
       if (await RedisUtils.checkExistPerformanceDetail()) {
@@ -65,7 +65,7 @@ class HomeController {
       }
 
       const homeService = new HomeService()
-      let data = await homeService.getPerformances(symbol)
+      let data = await homeService.getPerformances(symbols)
       return HelperUtils.responseSuccess(data);
     } catch (e) {
       return HelperUtils.responseErrorInternal();

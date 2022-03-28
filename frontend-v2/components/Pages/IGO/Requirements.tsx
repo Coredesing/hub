@@ -422,7 +422,7 @@ const Requirements = () => {
             <p className="mt-6 text-sm inline-flex items-center font-medium">
               <span className="flex items-center justify-center mr-2 bg-black w-6 h-6 rounded-full font-bold">3</span>
                 Like and retweet the
-              <a className="ml-1 text-gamefiGreen-600 hover:text-gamefiGreen-500 hover:underline" target="_blank" href={poolData?.socialRequirement?.self_retweet_post} rel="noreferrer">{poolData?.title} announment on GameFi’s Twitter
+              <a className="ml-1 text-gamefiGreen-600 hover:text-gamefiGreen-500 hover:underline" target="_blank" href={poolData?.socialRequirement?.self_retweet_post} rel="noreferrer">{poolData?.title} announcement on GameFi’s Twitter
               </a>
             </p>
           </> }

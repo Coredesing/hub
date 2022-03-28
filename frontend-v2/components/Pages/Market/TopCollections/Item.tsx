@@ -7,18 +7,18 @@ import { GamefiIcon, RelatingIcon } from '@/components/Base/Icon'
 
 type Props = {
   item: ObjectType;
-  isDislayJoin?: boolean
+  isDisplayJoin?: boolean;
 }
 
-export const InfoCollection = ({ item, isDislayJoin }: Props) => {
+export const InfoCollection = ({ item, isDisplayJoin }: Props) => {
   const isSoldOut = useMemo(() => {
     return !!(+item.sold_out)
   }, [item.sold_out])
-  const [countdown, setCountdown] = useState<{ date1: number; date2: number; title: string } & ObjectType>({ date1: 0, date2: 0, title: '' });
+  const [countdown, setCountdown] = useState<{ date1: number; date2: number; title: string } & ObjectType>({ date1: 0, date2: 0, title: '' })
   const handleCountdown = useCallback(() => {
-    const now = Date.now();
-    const startIn = +item.sale_from && +item.sale_from * 1000;
-    const finishIn = +item.sale_to && +item.sale_to * 1000;
+    const now = Date.now()
+    const startIn = +item.sale_from && +item.sale_from * 1000
+    const finishIn = +item.sale_to && +item.sale_to * 1000
     if (startIn > now) {
       setCountdown({ date1: startIn, date2: now, title: 'Sale Starts In' })
     } else if (finishIn > now) {
@@ -31,7 +31,7 @@ export const InfoCollection = ({ item, isDislayJoin }: Props) => {
     handleCountdown()
   }, [handleCountdown])
 
-  return <div className={`${styles.infor} absolute top-1/2 left-1/2 w-full h-full z-10`}>
+  return <div className={`${styles.info} absolute top-1/2 left-1/2 w-full h-full z-10`}>
     <div className="flex  justify-center items-center gap-4 mb-2 relative">
       <GamefiIcon />
       <RelatingIcon />
@@ -47,7 +47,7 @@ export const InfoCollection = ({ item, isDislayJoin }: Props) => {
     </div>
     {!countdown.isFinished && countdown.date1 > 0 && <CountDownTimeV1 className={styles.countdown} time={countdown} title={countdown.title} />}
     {
-      isDislayJoin && <div className='text-center mt-4'>
+      isDisplayJoin && <div className='text-center mt-4'>
         <Link href={`/market/collection/${item.slug}`} passHref>
           <a className='w-fit clipped-b-l-t-r bg-gamefiGreen-700 text-lg uppercase text-black font-semibold py-2 px-6 rounded-sm'>Join Now</a>
         </Link>
@@ -60,7 +60,7 @@ const Item = ({ item }: Props) => {
   return (
     <div>
       <img src={item.banner} className='absolute w-full h-full object-cover' alt="" />
-      <InfoCollection item={item} isDislayJoin />
+      <InfoCollection item={item} isDisplayJoin />
     </div>
   )
 }

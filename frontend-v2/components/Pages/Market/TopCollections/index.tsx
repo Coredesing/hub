@@ -1,13 +1,12 @@
 import { ObjectType } from '@/utils/types'
-import React, { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import Flicking from '@egjs/react-flicking'
-import { Sync } from '@egjs/flicking-plugins'
 import '@egjs/flicking/dist/flicking.css'
 import Item from './Item'
 import styles from './TopCollections.module.scss'
 
 type Props = {
-  items: ObjectType[]
+  items: ObjectType[];
 }
 
 const TopCollections = ({ items }: Props) => {
@@ -19,7 +18,7 @@ const TopCollections = ({ items }: Props) => {
       bounce={5}
     >
       {
-        !!items?.length && items.map((item, idx) => <div style={{ minHeight: '608px' }} className={`${styles.item} relative w-full`}><Item item={item} /></div>)
+        !!items?.length && items.map((item, idx) => <div style={{ minHeight: '608px' }} key={idx} className={`${styles.item} relative w-full`}><Item item={item} /></div>)
       }
     </Flicking>
   )

@@ -2,12 +2,10 @@ import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import clsx from 'clsx'
 import { getTimelineOfPool } from '@/utils/pool'
 import { formatHumanReadableTime, isImageFile, isVideoFile, shortenAddress } from '@/utils/index'
-import useKyc from '@/hooks/useKyc'
 import { HashLoader } from 'react-spinners'
 import { ObjectType } from '@/utils/types'
 import { ButtonBase } from '@/components/Base/Buttons'
 import CountDownTimeV1, { CountDownTimeType as CountDownTimeTypeV1 } from '@/components/Base/CountDownTime'
-import { TIERS } from '@/utils/constants'
 import Erc20Abi from '@/components/web3/abis/ERC20.json'
 import AuctionBoxModal from '@/components/Pages/Auction/AuctionBoxModal'
 import AuctionPoolAbi from '@/components/web3/abis/AuctionPool.json'
@@ -28,6 +26,7 @@ import toast from 'react-hot-toast'
 import SerieContent from './SerieContent'
 import RuleIntroduce from './RuleIntroduce'
 import DetailPoolItem from './DetailPoolItem'
+import { getTierById } from '@/utils/tiers'
 
 const AuctionDetail = ({ poolInfo }: any) => {
   const tiersState = useAppContext()?.$tiers
@@ -66,7 +65,22 @@ const AuctionDetail = ({ poolInfo }: any) => {
   }, [contractAuctionPool])
 
   const [countdown, setCountdown] = useState<CountDownTimeTypeV1 & { title: string;[k: string]: any }>({ date1: 0, date2: 0, title: '' })
-  const { checkingKyc, isKYC } = useKyc(connectedAccount, (isNumber(poolInfo?.kyc_bypass) && !poolInfo?.kyc_bypass))
+  const { tierMine } = useAppContext()
+  const poolRank = useMemo(() => {
+    return getTierById(poolInfo?.min_tier)
+  }, [poolInfo])
+  const poolRankInvalid = useMemo(() => {
+    if (!poolRank?.id) {
+      return false
+    }
+
+    if (poolInfo?.kyc_bypass) {
+      return false
+    }
+
+    return poolRank.id > tierMine?.id
+  }, [poolRank, tierMine, poolInfo])
+  // const { checkingKyc, isKYC } = useKyc(connectedAccount, (isNumber(poolInfo?.kyc_bypass) && !poolInfo?.kyc_bypass))
   const [allowNetwork, setAllowNetwork] = useState<{ ok: boolean;[k: string]: any }>({ ok: false })
   const [boxTypeSelected, setSelectBoxType] = useState<{ [k: string]: any }>({})
   useEffect(() => {
@@ -226,7 +240,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
 
   const perPageBidHistory = 10
   const [filterBidHistory, setFilterBidHistory] = useState<{ from?: number; page?: number; perPage: number }>({ perPage: perPageBidHistory, page: 1 })
-  const [bidHistores, setBidHistories] = useState<ObjectType<any>[]>([])
+  const [bidHistories, setBidHistories] = useState<ObjectType<any>[]>([])
   const [cachedSymbolCurrency, setCachedSymbolCurrency] = useState<ObjectType<string>>({})
   const [totalBidHistories, setTotalBidHistories] = useState(0)
   const [totalVolumeBid, setTotalTotalVolume] = useState('')
@@ -245,10 +259,10 @@ const AuctionDetail = ({ poolInfo }: any) => {
       if (!filterBidHistory) return
       setLoadingBidHistory(true)
       const result = await contractAuctionPool.bidHistory(filterBidHistory.from, filterBidHistory.perPage)
-      const leng = result[0].length
+      const length = result[0].length
       const arr: ObjectType<any>[] = []
       const keys = ['address', 'currency', 'amount', 'created_at']
-      for (let i = leng - 1; i >= 0; i--) {
+      for (let i = length - 1; i >= 0; i--) {
         const obj: ObjectType<any> = {}
         for (const prop in result) {
           obj[keys[prop as unknown as number]] = result[prop][i].toString()
@@ -303,9 +317,9 @@ const AuctionDetail = ({ poolInfo }: any) => {
     setCurrentTab(val)
   }
 
-  const disabledBuyNow = !allowNetwork.ok || !isKYC || loadingAllowance || auctionLoading || !connectedAccount || tiersState?.state?.loading || !isNumber(tiersState?.state?.data?.tier) || (poolInfo?.min_tier > 0 && (tiersState?.state?.data?.tier < poolInfo.min_tier))
+  const disabledBuyNow = !allowNetwork.ok || poolRankInvalid || loadingAllowance || auctionLoading || !connectedAccount || tiersState?.state?.loading || !isNumber(tiersState?.state?.data?.tier) || (poolInfo?.min_tier > 0 && (tiersState?.state?.data?.tier < poolInfo.min_tier))
   const isShowBtnApprove = allowNetwork.ok && countdown?.isAuction && connectedAccount && isApprovedToken !== null && !isApprovedToken && currencyPool?.neededApprove
-  const isShowBtnBuy = connectedAccount && !checkingKyc && countdown.isAuction && isApprovedToken
+  const isShowBtnBuy = connectedAccount && countdown.isAuction && isApprovedToken
 
   return (
     <>
@@ -363,7 +377,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
                 icon={getNetworkByAlias(poolInfo.network_available)?.image}
                 value={poolInfo.network_available} />
               <DetailPoolItem label='Min Rank'
-                value={poolInfo.min_tier > 0 ? TIERS[poolInfo.min_tier].name : 'Not Required'} />
+                value={poolInfo.min_tier > 0 ? poolRank?.name : 'Not Required'} />
             </div>
             <div className="grid grid-cols-2">
               {
@@ -431,7 +445,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
           <Tabs
             titles={[
               'Rule Introduction',
-              'Box Infomation',
+              'Box Information',
               'Series Content',
               'Bid History'
             ]}
@@ -476,7 +490,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
                 </TableHead>
                 <TableBody>
                   {
-                    bidHistores.map((b, id) => <TableRow key={id}>
+                    bidHistories.map((b, id) => <TableRow key={id}>
                       <TableCell>
                         <span className="font-semibold text-sm">
                           {shortenAddress(b.address, '*', 6)}

@@ -439,7 +439,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
 
   const [countdown, setCountdown] = useState<{ date1: number; date2: number; title: string } & ObjectType<any>>({ date1: 0, date2: 0, title: '' });
   const handleCountdown = useCallback(() => {
-    if (!projectInfo) return;
+    if (!projectInfo || !projectInfo.sale_address) return;
     const now = Date.now();
     const startIn = +projectInfo.sale_from && +projectInfo.sale_from * 1000;
     const finishIn = +projectInfo.sale_to && +projectInfo.sale_to * 1000;
@@ -520,7 +520,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
           <div className='flex gap-2 items-center'>
             <img src={projectInfo.logo} alt="" className='w-11 h-11 rounded-full bg-black' />
             <div>
-              <label htmlFor="" className="block font-bold text-white/50 text-13px uppercase">Owner <span className={`uppercase ${isFirstEdition ? 'text-gamefiGreen-700' : 'text-orange-500'}`}>{isFirstEdition ? '(First Edition)' : '(ReSale)'}</span></label>
+              <label htmlFor="" className="block font-bold text-white/50 text-13px uppercase">Owner <span className={`uppercase ${isFirstEdition ? 'text-gamefiGreen-700' : 'text-orange-500'}`}>{isFirstEdition ? '(First Edition)' : countdown.isSale && '(ReSale)'}</span></label>
               <span className="block text-base font-casual">{OwnerNFT && shortenAddress(OwnerNFT, '.', 6)}</span>
             </div>
           </div>

@@ -40,7 +40,7 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
     }
   }, [item])
 
-  const poolOver = useMemo(() => {
+  const isClaimTime = useMemo(() => {
     return poolClaimTime.start <= now
   }, [poolClaimTime, now])
 
@@ -115,7 +115,7 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
       </div>
       {
         item.campaign_status?.toLowerCase() === 'swap' && <div className="mt-4">
-          { item && <Progress poolData={item} poolOver={poolOver}></Progress>}
+          { item && <Progress poolData={item} isClaimTime={isClaimTime}></Progress>}
         </div>
       }
     </div>

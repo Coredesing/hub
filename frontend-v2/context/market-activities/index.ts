@@ -1,7 +1,6 @@
 import { useCallback, useReducer } from 'react'
 import { discoverMarketActions, marketActivitiesActions } from './constant'
 import tiersReducer, { collectionMarketReducer, discoverMarketReducer } from './reducer'
-import axios from '@/utils/axios'
 import { BigNumber, Contract } from 'ethers'
 import ERC20ABI from 'components/web3/abis/ERC20.json'
 import { Web3Provider } from '@ethersproject/providers'
@@ -9,7 +8,7 @@ import { currencyNative, currencyStable, getLibraryDefaultFlexible } from 'compo
 import { fetcher, isDifferentObj } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 import { ObjectType } from '@/utils/types'
-import { getNftInfor } from '@/components/Pages/Market/utils'
+import { getNftInfo } from '@/components/Pages/Market/utils'
 import Web3 from 'web3'
 const web3 = new Web3(Web3.givenProvider)
 
@@ -44,8 +43,8 @@ const useMarketActivities = () => {
         return
       }
 
-      const response = await axios.get(`/marketplace/collection/${filter.project}/activities?page=${page}&limit=${limit}&token_id=${filter.tokenId}`)
-      const result = response.data.data || null
+      const response = await fetcher(`${process.env.NEXT_PUBLIC_BASE_URL}/marketplace/collection/${filter.project}/activities?page=${page}&limit=${limit}&token_id=${filter.tokenId}`)
+      const result = response?.data || null
       if (!result) {
         dispatch({ type: marketActivitiesActions.SUCCESS, payload: oldData })
         return
@@ -177,7 +176,7 @@ export const useDiscoverMarket = () => {
           return
         }
         listData = await Promise.all(listData.map(async item => {
-          const d = await getNftInfor(item, provider, { allowGetOwnerNft })
+          const d = await getNftInfo(item, provider, { allowGetOwnerNft })
           item = d.item
           if (allowSetOneByOne) {
             list.push(item)
@@ -282,7 +281,7 @@ export const useCollectionsMarket = () => {
           return
         }
         listData = await Promise.all(listData.map(async item => {
-          const d = await getNftInfor(item, provider, { allowGetOwnerNft })
+          const d = await getNftInfo(item, provider, { allowGetOwnerNft })
           item = d.item
           if (allowSetOneByOne) {
             list.push(item)

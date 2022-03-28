@@ -14,15 +14,15 @@ import { BigNumber } from 'ethers'
 
 export const networkImage = (network: string) => {
   switch (network) {
-    case 'bsc': {
-      return require('@/assets/images/networks/bsc.svg')
-    }
-    case 'eth': {
-      return require('@/assets/images/networks/eth.svg')
-    }
-    case 'polygon': {
-      return require('@/assets/images/networks/matic.svg')
-    }
+  case 'bsc': {
+    return require('@/assets/images/networks/bsc.svg')
+  }
+  case 'eth': {
+    return require('@/assets/images/networks/eth.svg')
+  }
+  case 'polygon': {
+    return require('@/assets/images/networks/matic.svg')
+  }
   }
 }
 
@@ -36,7 +36,7 @@ export const networkImage = (network: string) => {
 //   }
 // }
 
-export const getNftInfor = async (item: { token_id: number | string; token_address?: string; slug?: string } & ObjectType, provider: Web3Provider, options?: { allowGetOwnerNft?: boolean }) => {
+export const getNftInfo = async (item: { token_id: number | string; token_address?: string; slug?: string } & ObjectType, provider: Web3Provider, options?: { allowGetOwnerNft?: boolean }) => {
   let error
   try {
     const tokenAddress = item?.token_address
@@ -83,7 +83,6 @@ export const getNftInfor = async (item: { token_id: number | string; token_addre
       } catch (error) {
 
       }
-
     }
     item = {
       collection_info: collectionInfo,
@@ -109,10 +108,10 @@ export const useNFTInfos = (listData: any[], onSetOneItem?: (item: any) => any) 
     if (!provider || !listData?.length) return
     setLoading(true)
     const list = []
-    const fetchDatas = async () => {
+    const fetchData = async () => {
       for (let i = 0; i < listData?.length || 0; i++) {
         let item = listData[i]
-        const info = await getNftInfor(item, provider)
+        const info = await getNftInfo(item, provider)
         item = info.item
         if (info.error) {
           setErrorMessage(info.error)
@@ -168,7 +167,7 @@ export const useNFTInfos = (listData: any[], onSetOneItem?: (item: any) => any) 
       setLoading(false)
     }
 
-    fetchDatas().catch(e => console.debug(e))
+    fetchData().catch(e => console.debug(e))
     return function () {
       setLoading(false)
     }

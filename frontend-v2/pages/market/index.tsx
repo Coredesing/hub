@@ -5,7 +5,7 @@ import HotCollections from '@/components/Pages/Market/HotCollections'
 // import HotAuctions from '@/components/Pages/Market/HotAuctions'
 import ListTrending from '@/components/Pages/Market/ListTrending'
 import Discover from '@/components/Pages/Market/Discover'
-import Banner from '@/components/Pages/Market/Banner'
+// import Banner from '@/components/Pages/Market/Banner'
 import { fetcher } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 import { ObjectType } from '@/utils/types'
@@ -14,7 +14,6 @@ import TopCollections from '@/components/Pages/Market/TopCollections'
 // import { useScreens } from '@/components/Pages/Home/utils'
 
 const Market = ({ topCollections }: { topCollections: ObjectType[] }) => {
-  
   // const screens = useScreens()
   return (
     <Layout title="GameFi Market">
@@ -25,7 +24,7 @@ const Market = ({ topCollections }: { topCollections: ObjectType[] }) => {
           {/* {
             !!topCollections?.length && topCollections.map((item) => <div>
               <img src="" alt="" />
-              <div className="infor">
+              <div className="info">
                 <div className="icon">
                   <GamefiIcon />
                   <RelatingIcon />
@@ -50,9 +49,6 @@ const Market = ({ topCollections }: { topCollections: ObjectType[] }) => {
           <div className="absolute bottom-0 right-0">
             <Image src={require('@/assets/images/bg-item-market.png')} width="221" height="247" alt=""></Image>
           </div>
-          {/* <div className="md:px-4 lg:px-16 md:container mx-auto lg:block">
-            <Image src={require('@/assets/images/market-coming-soon.png')} alt="" className="-z-0"></Image>
-          </div> */}
           <HotCollections></HotCollections>
           {/* <HotAuctions></HotAuctions> */}
           <ListTrending></ListTrending>

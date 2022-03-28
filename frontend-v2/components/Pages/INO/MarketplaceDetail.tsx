@@ -146,7 +146,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
     return arr
   }, [tokenInfo])
 
-  const getAddresssOwnerNFT = useCallback(async () => {
+  const getAddressOwnerNFT = useCallback(async () => {
     if (!ERC721Contract) {
       return
     }
@@ -227,8 +227,8 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   }, [offerList, account])
 
   useEffect(() => {
-    getAddresssOwnerNFT()
-  }, [getAddresssOwnerNFT])
+    getAddressOwnerNFT()
+  }, [getAddressOwnerNFT])
 
   useEffect(() => {
     getTokenOnSale()
@@ -324,7 +324,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
       onAcceptOffer.name
     ].includes(action)) {
       getTokenOnSale()
-      getAddresssOwnerNFT()
+      getAddressOwnerNFT()
     }
     if (action === onOfferNFT.name || action === onRejectOffer.name) {
       setTimeout(() => {

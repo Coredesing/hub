@@ -6,6 +6,16 @@ const MarketplaceCollections = use('App/Models/MarketplaceCollections');
 const RedisMarketplaceUtils = use('App/Common/RedisMarketplaceUtils');
 
 class MarketplaceController {
+  async getFirstEditionCollections({ request }) {
+    try {
+      const inputParams = request.all();
+      let data = await (new MarketplaceService).getFirstEditionCollections(inputParams);
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      return HelperUtils.responseErrorInternal();
+    }
+  }
+
   async getCollections({ request }) {
     try {
       const inputParams = request.all();
@@ -303,8 +313,9 @@ class MarketplaceController {
       await MarketplaceCollections.query().where('id', id).update({
         is_show: inputParams.status,
       });
-      
+
       await RedisMarketplaceUtils.deleteRedisMarketplaceTopCollections()
+      await RedisMarketplaceUtils.deleteRedisMarketplaceFirstEditionCollections()
       return HelperUtils.responseSuccess();
     } catch (e) {
       console.log(e)
@@ -319,6 +330,7 @@ class MarketplaceController {
 
       if (collection && collection.slug) {
         await RedisMarketplaceUtils.deleteRedisMarketplaceTopCollections()
+        await RedisMarketplaceUtils.deleteRedisMarketplaceFirstEditionCollections()
         await RedisMarketplaceUtils.deleteRedisMarketplaceCollectionDetail(params?.token_address)
       }
       return HelperUtils.responseSuccess();

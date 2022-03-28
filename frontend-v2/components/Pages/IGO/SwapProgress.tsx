@@ -4,10 +4,12 @@ import { Contract, utils, constants, FixedNumber, ethers } from 'ethers'
 import ABIPool from '@/components/web3/abis/Pool.json'
 import { useContext, useEffect, useMemo, useState } from 'react'
 import { printNumber } from '@/utils'
+import { TIMELINE } from './constants'
 
 const SwapProgress = () => {
-  const { poolData, poolOver } = useContext(IGOContext)
+  const { poolData, current, timeline } = useContext(IGOContext)
   const { provider } = useLibraryDefaultFlexible(poolData?.network_available)
+
   const poolContractReadonly = useMemo(() => {
     if (!poolData?.campaign_hash || !provider) {
       return null
@@ -27,7 +29,7 @@ const SwapProgress = () => {
     return soldWithContract || constants.Zero
   }, [soldWithContract])
   const progress = useMemo(() => {
-    if (poolOver) {
+    if (timeline.findIndex(item => item.key === current?.key) > TIMELINE.BUY_PHASE) {
       return 100
     }
 
@@ -35,8 +37,14 @@ const SwapProgress = () => {
       return 0
     }
 
-    return FixedNumber.from(sold).divUnsafe(FixedNumber.from(total)).mulUnsafe(FixedNumber.from(100)).toUnsafeFloat() + parseFloat(poolData?.progress_display || 0)
-  }, [total, sold, poolData, poolOver])
+    const result = FixedNumber.from(sold).divUnsafe(FixedNumber.from(total)).mulUnsafe(FixedNumber.from(100)).toUnsafeFloat() + parseFloat(poolData?.progress_display || 0)
+    if (result > 100) {
+      return 100
+    }
+
+    return result
+  }, [timeline, total, sold, poolData?.progress_display, current])
+
   const soldActual = useMemo(() => {
     return Math.ceil(progress / 100 * parseFloat(poolData.total_sold_coin) || 0)
   }, [progress, poolData])
@@ -46,9 +54,11 @@ const SwapProgress = () => {
       return
     }
 
-    poolContractReadonly.tokenSold().then(x => {
+    const interval = setInterval(() => poolContractReadonly.tokenSold().then(x => {
       setSoldWithContract(x)
-    })
+    }), 15000)
+
+    return () => clearInterval(interval)
   }, [poolContractReadonly])
 
   return <div className="bg-gradient-to-b from-gamefiDark-630/30 via-gamefiDark-630/30 p-4 xl:p-6 2xl:p-7 rounded">

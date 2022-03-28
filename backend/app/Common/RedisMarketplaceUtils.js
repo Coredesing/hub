@@ -33,6 +33,36 @@ const deleteRedisMarketplaceTopCollections = () => {
 };
 
 /*
+  Marketplace First Edition collections
+ */
+const getRedisKeyMarketplaceFirstEditionCollections = () => {
+  return `marketplace_first_edition_collections`;
+};
+
+const getRedisMarketplaceFirstEditionCollections = async () => {
+  return await Redis.get(getRedisKeyMarketplaceFirstEditionCollections());
+};
+
+const setRedisMarketplaceFirstEditionCollections = async (data) => {
+  if (!data || data.length < 1) {
+    return
+  }
+
+  await Redis.set(getRedisKeyMarketplaceFirstEditionCollections(), JSON.stringify(data));
+};
+
+const existRedisMarketplaceFirstEditionCollections = async () => {
+  return await Redis.exists(getRedisKeyMarketplaceFirstEditionCollections());
+};
+
+const deleteRedisMarketplaceFirstEditionCollections = () => {
+  let redisKey = getRedisKeyMarketplaceFirstEditionCollections();
+  if (Redis.exists(redisKey)) {
+    Redis.del(redisKey);
+  }
+};
+
+/*
   Marketplace collections
  */
 const getRedisKeyMarketplaceSupportCollections = () => {
@@ -142,6 +172,12 @@ const deleteRedisMarketplaceSlug = (token_address) => {
 };
 
 module.exports = {
+  // first edition collections
+  getRedisMarketplaceFirstEditionCollections,
+  setRedisMarketplaceFirstEditionCollections,
+  existRedisMarketplaceFirstEditionCollections,
+  deleteRedisMarketplaceFirstEditionCollections,
+
   // collections
   getRedisMarketplaceTopCollections,
   setRedisMarketplaceTopCollections,

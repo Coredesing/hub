@@ -2,11 +2,10 @@ import LoadingOverlay from '@/components/Base/LoadingOverlay'
 import Pagination from '@/components/Base/Pagination'
 import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from '@/components/Base/Table'
 import { useMyWeb3 } from '@/components/web3/context'
-import { debounce } from '@/utils'
-import { TOKEN_TYPE } from '@/utils/constants'
-import { formatPoolStatus, formatPoolType } from '@/utils/pool'
+import { debounce, fetcher, formatPrice, printNumber, useFetch } from '@/utils'
+import { API_BASE_URL, TOKEN_TYPE } from '@/utils/constants'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Contract, utils } from 'ethers'
+import { Contract, ethers } from 'ethers'
 import Link from 'next/link'
 import { ObjectType } from '@/utils/types'
 import BigNumber from 'bignumber.js'
@@ -16,10 +15,14 @@ import Dropdown from '@/components/Base/Dropdown'
 import { fetchJoined } from '@/pages/api/igo'
 import { getLibraryDefaultFlexible, getCurrency } from '@/components/web3/utils'
 import { useWeb3Default } from '@/components/web3'
+import { format } from 'date-fns'
+import Image from 'next/image'
+import Tippy from '@tippyjs/react'
 
 const Pools = () => {
-  const { account } = useMyWeb3()
+  const { account, library } = useMyWeb3()
   const { library: libraryDefault } = useWeb3Default()
+
   const [loadingPools, setLoadingPools] = useState(false)
   const [pools, setPools] = useState({ total: 0, data: [] })
   const poolTypes = useMemo(() => [
@@ -54,9 +57,6 @@ const Pools = () => {
               contract.userPurchased(account),
               contract.userClaimed(account)
             ]).then(([userPurchased, userClaimed]) => {
-              const numToken = parseFloat(utils.formatEther(userPurchased.toString())).toFixed(4)
-              const allocation = new BigNumber(numToken).multipliedBy(pool.token_conversion_rate).toFixed(0)
-              pool.allocation = allocation
               pool.user_purchased = new BigNumber(userPurchased.toString()).div(new BigNumber(10).pow(pool.decimals)).toFixed()
               pool.user_claimed = new BigNumber(userClaimed.toString()).div(new BigNumber(10).pow(pool.decimals)).toFixed()
               resolve(pool)
@@ -82,26 +82,29 @@ const Pools = () => {
     loadPools()
   }, [loadPools])
 
-  const allocationAmount = useCallback((pool: any) => {
-    if (!pool) return null
-
-    const currency = getCurrency(pool)
-
-    let amount = ''
-    if (pool.token_type === TOKEN_TYPE.ERC721) {
-      const isClaim = pool.process === 'only-claim'
-      if (isClaim) {
-        amount = pool.user_claimed || 0
-      } else {
-        amount = pool.user_purchased || 0
-      }
-      return `${amount} ${pool?.symbol?.toUpperCase() || ''}`
+  const nextClaim = (item: any) => {
+    const configs = item?.campaignClaimConfig?.filter(config => new Date(Number(config.start_time) * 1000).getTime() >= new Date().getTime())
+    console.log(item)
+    if (!configs?.length) {
+      return item.campaign_status.toLowerCase() === 'ended' ? 'Finished' : ''
     }
-    if (pool.token_type === TOKEN_TYPE.ERC20) {
-      return `${pool.allocation || 0} ${currency?.symbol || ''}`
-    }
-    return `${pool.allocation || '-/-'} ${currency?.symbol || ''}`
-  }, [])
+
+    return format(new Date(Number(configs[0].start_time) * 1000), 'yyyy-MM-dd HH:mm:ss')
+  }
+
+  const { response: tokenomicsResponse } = useFetch(`/tokenomics?tickers=${pools?.data?.length > 0 ? pools.data.map(pool => pool.symbol).join(',') : ''}`)
+
+  const tokenomics = useMemo(() => {
+    const data = tokenomicsResponse?.data
+    return data
+  }, [tokenomicsResponse])
+
+  const addToWallet = async (address: string) => {
+    const result = await library('wallet_watchAsset', ['ERC20', {
+      address: address
+    }])
+    console.log(result)
+  }
 
   const onChangePage = (page: number) => {
     setFilter(f => ({ ...f, page }))
@@ -115,12 +118,19 @@ const Pools = () => {
     setFilter(f => ({ ...f, type: item.value, typeSelected: item }))
   }
 
+  // const poolHref = useCallback((pool) => {
+  //   if (pool.token_type === TOKEN_TYPE.ERC20) {
+  //     return `/igo/${pool.id}`
+  //   }
+
+  //   return `/ino/${pool.id}`
+  // }, [])
   const poolHref = useCallback((pool) => {
     if (pool.token_type === TOKEN_TYPE.ERC20) {
-      return `/igo/${pool.id}`
+      return `https://hub.gamefi.org/#/buy-token/${pool.id}`
     }
 
-    return `/ino/${pool.id}`
+    return `https://hub.gamefi.org/#/mystery-box/${pool.id}`
   }, [])
 
   return (
@@ -155,19 +165,25 @@ const Pools = () => {
           <TableHead>
             <TableRow>
               <TableCellHead className="bg-transparent border-b-0">
-                <span className="text-13px font-bold text-white/50">Pool name</span>
+                <span className="text-13px font-bold text-white/50">Pool Name</span>
               </TableCellHead>
               <TableCellHead className="bg-transparent border-b-0 hidden sm:table-cell">
-                <span className="text-13px font-bold text-white/50">Type</span>
+                <span className="text-13px font-bold text-white/50">Have Bought</span>
               </TableCellHead>
               <TableCellHead className="bg-transparent border-b-0 hidden sm:table-cell">
-                <span className="text-13px font-bold text-white/50">Status</span>
+                <span className="text-13px font-bold text-white/50">Token Allocation</span>
               </TableCellHead>
               <TableCellHead className="bg-transparent border-b-0 hidden sm:table-cell">
-                <span className="text-13px font-bold text-white/50">Allocation</span>
+                <span className="text-13px font-bold text-white/50">Claimed Tokens</span>
+              </TableCellHead>
+              <TableCellHead className="bg-transparent border-b-0">
+                <span className="text-13px font-bold text-white/50">Next Claim</span>
               </TableCellHead>
               <TableCellHead className="bg-transparent border-b-0 text-right">
-                <span className="text-13px font-bold text-white/50">Action</span>
+                <span className="text-13px font-bold text-white/50">Token Price</span>
+              </TableCellHead>
+              <TableCellHead className="bg-transparent border-b-0 text-right">
+                <span className="text-13px font-bold text-white/50">Current Price</span>
               </TableCellHead>
             </TableRow>
           </TableHead>
@@ -181,30 +197,37 @@ const Pools = () => {
                       <a className="hover:underline truncate font-medium">{item.title}</a>
                     </Link>
                   </div>
-                  <div className="text-xs mt-2 sm:hidden">
-                    {formatPoolStatus(item.campaign_status)} - {formatPoolType(item.is_private)}
-                  </div>
-                  <div className="text-xs mt-2 sm:hidden">
-                    {allocationAmount(item)}
-                  </div>
                 </TableCell>
                 <TableCell className="border-none hidden sm:table-cell">
-                  {formatPoolType(item.is_private)}
+                  {printNumber((Number(item.user_purchased) * (Number(item.token_conversion_rate)) || 0))} {getCurrency(item)?.symbol}
                 </TableCell>
                 <TableCell className="border-none hidden sm:table-cell">
-                  {formatPoolStatus(item.campaign_status)}
+                  {printNumber((Number(item.user_purchased) || 0))} {item.symbol}
                 </TableCell>
                 <TableCell className="border-none hidden sm:table-cell">
-                  {allocationAmount(item)}
+                  {printNumber((item.user_claimed || 0).toLocaleString('en-US'))} {item.symbol}
                 </TableCell>
-                <TableCell className="border-none text-right w-32">
-                  <Link href={poolHref(item)} passHref={true}>
-                    <a
-                      className={'clipped-t-r inline-block rounded-sm uppercase font-bold bg-gamefiGreen-700 hover:bg-gamefiGreen-600 text-center text-black font-mechanic sm:text-13px text-xs py-1 px-4 sm:w-32 sm:py-2'}>
-                    Pool Detail
-                    </a>
-                  </Link>
+                <TableCell className="border-none hidden sm:table-cell">
+                  {nextClaim(item)}
                 </TableCell>
+                <TableCell className="border-none hidden sm:table-cell text-right">
+                  ${item.token_conversion_rate}
+                </TableCell>
+                <TableCell className="border-none hidden sm:table-cell text-right">
+                  {printNumber(tokenomics?.find(token => token.ticker === item.symbol)?.price)}
+                </TableCell>
+                {/* <TableCell className="border-none hidden sm:table-cell text-right">
+                  {item.token && item.campaign_status?.toLowerCase() === 'ended' && <>
+                    <Tippy content="Add to Metamask">
+                      <button
+                        className="w-8 h-8 xl:w-10 xl:h-10 p-2 bg-gamefiDark-630 rounded hover:opacity-90"
+                        onClick={() => addToWallet(item.token)}
+                      >
+                        <Image src={require('@/assets/images/wallets/metamask.svg')} alt=""></Image>
+                      </button>
+                    </Tippy>
+                  </>}
+                </TableCell> */}
               </TableRow>)
             }
           </TableBody>

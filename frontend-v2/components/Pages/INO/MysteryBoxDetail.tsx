@@ -17,7 +17,7 @@ import SerieContent from './SerieContent'
 import { useMyWeb3 } from '@/components/web3/context'
 import { useLibraryDefaultFlexible, useMyBalance, useTokenAllowance, useTokenApproval } from '@/components/web3/utils'
 import { fetcher } from '@/utils'
-import { API_BASE_URL, TIERS } from '@/utils/constants'
+import { API_BASE_URL } from '@/utils/constants'
 import { useCheckJoinPool, useJoinPool } from '@/hooks/useJoinPool'
 import Alert from '@/components/Base/Alert'
 import InfoBoxOrderItem from './InfoBoxOrderItem'
@@ -36,6 +36,7 @@ import isNumber from 'is-number'
 import Link from 'next/link'
 import { getNetworkByAlias } from '@/components/web3'
 import Collection from './Collection'
+import { getTierById } from '@/utils/tiers'
 
 const MysteryBoxDetail = ({ poolInfo }: any) => {
   const eventId = 0
@@ -69,6 +70,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const isValidChain = useMemo(() => {
     return networkPool?.id === chainID
   }, [networkPool, chainID])
+  const poolRank = useMemo(() => {
+    return getTierById(poolInfo?.min_tier)
+  }, [poolInfo])
 
   useEffect(() => {
     if (!account) return
@@ -506,7 +510,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       account && poolInfo.min_tier > 0 && isNumber(userTier) && (userTier < poolInfo.min_tier)
     ) {
       return <Alert>
-        <span>{`You haven't achieved min rank (${TIERS[poolInfo.min_tier]?.name}) to apply for Whitelist yet. To upgrade your Rank, please click`} <Link href="/staking"><a className="font-semibold link">here</a></Link></span></Alert>
+        <span>{`You haven't achieved min rank (${poolRank?.name}) to apply for Whitelist yet. To upgrade your Rank, please click`} <Link href="/staking"><a className="font-semibold link">here</a></Link></span></Alert>
     }
     if (isAppliedWhitelist && countdown.isWhitelist) {
       return <Alert type="info">
@@ -595,7 +599,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             icon={getNetworkByAlias(poolInfo.network_available)?.image}
             value={poolInfo.network_available} />
           <DetailPoolItem label='Min Rank'
-            value={poolInfo.min_tier > 0 ? TIERS[poolInfo.min_tier].name : 'No Required'} />
+            value={poolInfo.min_tier > 0 ? poolRank?.name : 'No Required'} />
         </div>
         <div className='mb-8'>
           <div> <h4 className='font-bold text-base mb-1 uppercase'>Currency</h4> </div>

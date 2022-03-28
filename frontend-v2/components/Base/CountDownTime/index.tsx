@@ -70,7 +70,7 @@ export const CountDownTimeV1 = (props: Props) => {
   }, [isFinish, onFinish])
 
   return (
-    <div className={clsx('w-full rounded', props.className,  props.background ? props.background : 'bg-black')}>
+    <div className={clsx('w-full rounded', props.className, props.background ? props.background : 'bg-black')}>
       {
         props.title && <div className='font-bold text-sm text-white pt-1 text-center'>
           {props.title}

@@ -1,16 +1,29 @@
 import { ObjectType } from '@/utils/types'
-import React, { useState } from 'react'
+import { forwardRef, useCallback, useEffect, useRef, useState } from 'react'
 
 type Props = {
   src: string;
   size?: 'small' | 'medium';
 } & ObjectType
 
-const ImageLoader = ({ src, size = 'medium', ...props }: Props) => {
+const ImageLoader = ({ src, size = 'medium', ...props }: Props, ref) => {
   const [loading, setLoading] = useState(true)
+  const mounted = useRef(false)
+  useEffect(() => {
+    mounted.current = true
+    return () => { mounted.current = false }
+  }, [])
+
+  const updateLoading = useCallback((v) => {
+    if (!mounted.current) {
+      return
+    }
+
+    setLoading(v)
+  }, [mounted])
 
   return (
-    <>
+    <div ref={ref} className="w-full">
       {
         loading && <>
           {
@@ -44,19 +57,21 @@ const ImageLoader = ({ src, size = 'medium', ...props }: Props) => {
           {...props}
           style={props.style ? { ...props.style, display: loading ? 'none' : '' } : { display: loading ? 'none' : '' }}
           onError={() => {
-            setLoading(true)
+            updateLoading(true)
           }}
           onLoad={() => {
             setTimeout(() => {
-              setLoading(false)
+              updateLoading(false)
             }, 1000)
           }}
           alt=''
         />
       }
 
-    </>
+    </div>
   )
 }
 
-export default ImageLoader
+const ImageLoaderForwarded = forwardRef(ImageLoader)
+
+export default ImageLoaderForwarded

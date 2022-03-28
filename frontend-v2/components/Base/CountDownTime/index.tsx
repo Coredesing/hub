@@ -4,7 +4,7 @@ import clsx from 'clsx'
 
 type TimeStamp = number;
 
-export type CountDonwRanges = {
+export type CountDownRanges = {
   date1: TimeStamp;
   date2: TimeStamp;
 }
@@ -16,14 +16,14 @@ export type DHMSType = {
   seconds: number;
 }
 
-export type CountDownTimeType = DHMSType | CountDonwRanges
+export type CountDownTimeType = DHMSType | CountDownRanges
 
 type Props = {
-    time: CountDownTimeType;
-    onFinish?: () => void;
-    title?: string;
-    background?: string;
-    [k: string]: any;
+  time: CountDownTimeType;
+  onFinish?: () => void;
+  title?: string;
+  background?: string;
+  [k: string]: any;
 }
 
 const isZero = (num: number) => num === 0

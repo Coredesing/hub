@@ -1,12 +1,10 @@
 import Layout from '@/components/Layout'
 import { fetchAll, PoolSubjects } from '@/pages/api/earn'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import { BigNumber } from 'ethers'
 import type { Pool } from '@/pages/api/earn'
 import ContractPools from '@/components/Pages/Earn/ContractPools'
-import { format, intervalToDuration } from 'date-fns'
-import { formatNumber } from '@/utils'
 
 export type PoolExtended = Pool & {
   totalCap?: BigNumber;
@@ -44,23 +42,6 @@ const Earn = ({ pools: initPools }) => {
       return acc
     }, {})
   }, [pools])
-
-  const [openSoon, setOpenSoon] = useState<boolean>(true)
-  const [now, setNow] = useState(new Date())
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(new Date())
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [setNow])
-  const [deadlineSoon] = useState(new Date('2022-04-03T00:00:00Z'))
-  const countdown = useMemo(() => {
-    return intervalToDuration({
-      start: now,
-      end: deadlineSoon
-    })
-  }, [now, deadlineSoon])
 
   return <Layout title="GameFi Earn">
     <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
@@ -111,10 +92,7 @@ const Earn = ({ pools: initPools }) => {
           </div>
           <div className="md:ml-auto xl:ml-0 mt-auto md:mt-0 flex items-center md:justify-end justify-center min-w-[5rem] text-right">
             <div className="items-center justify-center rounded text-sm cursor-pointer inline-flex hover:text-gamefiGreen-500">
-              { openSoon
-                ? <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
-                : <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-              }
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
             </div>
           </div>
         </div>
@@ -151,10 +129,7 @@ const Earn = ({ pools: initPools }) => {
           </div>
           <div className="md:ml-auto xl:ml-0 mt-auto md:mt-0 flex items-center md:justify-end justify-center min-w-[5rem] text-right">
             <div className="items-center justify-center rounded text-sm cursor-pointer inline-flex hover:text-gamefiGreen-500">
-              { openSoon
-                ? <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
-                : <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-              }
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
             </div>
           </div>
         </div>

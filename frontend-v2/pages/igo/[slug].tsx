@@ -16,7 +16,18 @@ import Recaptcha from '@/components/Base/Recaptcha'
 import Requirements from '@/components/Pages/IGO/Requirements'
 import SwapProgress from '@/components/Pages/IGO/SwapProgress'
 import Countdown from '@/components/Pages/IGO/Countdown'
+import { dateFromString, isInRange } from '@/components/Pages/IGO/utils'
+import { TIMELINE } from '@/components/Pages/IGO/constants'
 
+type Milestone = {
+  key: string;
+  milestone: string;
+  active: boolean;
+  start: Date | undefined;
+  end: Date | undefined;
+  info?: any;
+  subMilestones?: Milestone[];
+}
 export const IGOContext = createContext({
   poolData: null,
   whitelistJoined: false,
@@ -24,15 +35,19 @@ export const IGOContext = createContext({
   now: null,
   signature: null,
 
-  poolOver: false,
+  current: null,
 
   failedRequirements: false,
   usd: null,
   hasFCFS: false,
+  completed: false,
+  timeline: [],
 
   setSignature: (v: any) => { console.log(v) },
   loadJoined: () => {},
-  setFailedRequirements: (v: any) => { console.log(v) }
+  setFailedRequirements: (v: any) => { console.log(v) },
+  setCompleted: (v: any) => { console.log(v) },
+  setCurrent: (v: any) => { console.log(v) }
 })
 
 const IGODetails = ({ poolData }) => {
@@ -46,6 +61,7 @@ const IGODetails = ({ poolData }) => {
   }, [])
 
   const [failedRequirements, setFailedRequirements] = useState(false)
+  const [completed, setCompleted] = useState(false)
   const hasFCFS = useMemo(() => {
     return poolData.freeBuyTimeSetting?.start_buy_time
   }, [poolData.freeBuyTimeSetting?.start_buy_time])
@@ -84,6 +100,7 @@ const IGODetails = ({ poolData }) => {
       })
   }, [poolData, account])
   useEffect(() => {
+    console.log(poolData)
     loadJoined()
   }, [loadJoined])
   const [tab, setTab] = useState(0)
@@ -131,13 +148,13 @@ const IGODetails = ({ poolData }) => {
     }
   }, [poolData])
 
-  const poolOver = useMemo(() => {
+  const isClaimTime = useMemo(() => {
     return poolClaimTime.start <= now
   }, [poolClaimTime, now])
 
   const poolHasWinners = useMemo(() => {
-    return poolPreOrderTime.start <= now || poolBuyTime.start <= now || poolFreeBuyTime.start <= now || poolOver
-  }, [poolPreOrderTime, poolBuyTime, poolFreeBuyTime, now, poolOver])
+    return poolPreOrderTime.start <= now || poolBuyTime.start <= now || poolFreeBuyTime.start <= now || isClaimTime
+  }, [poolPreOrderTime, poolBuyTime, poolFreeBuyTime, now, isClaimTime])
 
   const [winnerSearch, setWinnerSearch] = useState('')
   const [captchaWinner, setCaptchaWinner] = useState('')
@@ -172,6 +189,144 @@ const IGODetails = ({ poolData }) => {
       })
   }, [winnerSearch, captchaWinner, poolData, setWinnerSearchResults])
 
+  const timeline = useMemo<Milestone[]>(() => {
+    return [
+      {
+        key: 'tba',
+        milestone: 'Upcoming - TBA',
+        active: false,
+        start: undefined,
+        end: undefined,
+        info: {
+          countdownTitle: 'TBA'
+        }
+      },
+      {
+        key: 'pre-whitelist',
+        milestone: 'Upcoming - Whitelist',
+        active: false,
+        start: undefined,
+        end: new Date(Number(poolData?.start_join_pool_time) * 1000) || undefined,
+        info: {
+          countdownTitle: 'Whitelist Starts In'
+        }
+      },
+      {
+        key: 'whitelist',
+        milestone: 'Apply Whitelist',
+        active: true,
+        start: new Date(Number(poolData?.start_join_pool_time) * 1000) || undefined,
+        end: new Date(Number(poolData?.end_join_pool_time) * 1000) || undefined,
+        info: {
+          countdownTitle: 'Whitelist Ends In'
+        }
+      },
+      {
+        key: 'winner-announcement',
+        milestone: 'Winner Announcement',
+        active: true,
+        start: new Date(Number(poolData?.end_join_pool_time) * 1000) || undefined,
+        end: new Date(Number(poolData?.start_pre_order_time || poolData?.start_time || 0) * 1000) || undefined,
+        info: {
+          countdownTitle: hasFCFS ? 'Phase 1 Starts In' : 'Buy Phase Starts In'
+        }
+      },
+      {
+        key: 'pre-order',
+        milestone: 'Pre-order',
+        active: !!poolData?.start_pre_order_time,
+        start: new Date(Number(poolData?.start_pre_order_time) * 1000) || undefined,
+        end: new Date(Number(poolData?.start_time) * 1000) || undefined,
+        info: {
+          minTier: preOrderMinTier,
+          countdownTitle: hasFCFS ? 'Phase 1 Starts In' : 'Buy Phase Starts In'
+        }
+      },
+      {
+        key: 'buy-phase',
+        milestone: 'Buy Phase',
+        active: true,
+        start: new Date(Number(poolData?.start_time) * 1000) || undefined,
+        end: new Date(Number(poolData?.finish_time) * 1000) || undefined,
+        subMilestones: hasFCFS
+          ? [
+            {
+              key: 'phase-1',
+              milestone: 'Phase 1 - Guaranteed',
+              active: true,
+              start: new Date(Number(poolData?.start_time) * 1000) || undefined,
+              end: new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000) || undefined
+            },
+            {
+              key: 'phase-2',
+              milestone: 'Phase 2 - FCFS',
+              active: true,
+              start: new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000) || undefined,
+              end: new Date(Number(poolData?.finish_time) * 1000) || undefined
+            }
+          ]
+          : []
+      },
+      {
+        key: 'claim',
+        milestone: 'Claim',
+        active: !!poolData?.start_pre_order_time,
+        start: new Date(Number(poolData?.start_pre_order_time) * 1000) || undefined,
+        end: new Date(Number(poolData?.start_time) * 1000) || undefined,
+        info: {
+          countdownTitle: 'Next Claim In'
+        }
+      }
+    ]
+  }, [poolData, preOrderMinTier, hasFCFS])
+
+  const [current, setCurrent] = useState(null)
+  useEffect(() => {
+    if (!poolData.start_join_pool_time || poolData.campaign_status?.toLowerCase() === 'tba') {
+      return setCurrent(timeline[TIMELINE.TBA])
+    }
+
+    if (now.getTime() < dateFromString(poolData.start_join_pool_time).getTime()) {
+      return setCurrent(timeline[TIMELINE.PRE_WHITELIST])
+    }
+
+    if (isInRange(poolData?.start_join_pool_time, poolData?.end_join_pool_time, now)) {
+      return setCurrent(timeline[TIMELINE.WHITELIST])
+    }
+
+    if (poolData.start_pre_order_time && isInRange(poolData?.end_join_pool_time, poolData?.start_pre_order_time, now)) {
+      return setCurrent(timeline[TIMELINE.WINNER_ANNOUNCEMENT])
+    }
+
+    if (isInRange(poolData.end_join_pool_time, poolData.start_time, now)) {
+      return setCurrent(timeline[TIMELINE.WINNER_ANNOUNCEMENT])
+    }
+
+    if (poolData.start_pre_order_time &&
+      isInRange(poolData?.start_pre_order_time, poolData?.start_time, now)) {
+      return setCurrent(timeline[TIMELINE.PRE_ORDER])
+    }
+
+    if (!hasFCFS &&
+      isInRange(poolData?.start_time, poolData?.finish_time, now)) {
+      return setCurrent(timeline[TIMELINE.BUY_PHASE])
+    }
+
+    if (hasFCFS &&
+      isInRange(poolData?.start_time, poolData?.freeBuyTimeSetting?.start_buy_time, now)) {
+      return setCurrent(timeline[TIMELINE.BUY_PHASE].subMilestones[0])
+    }
+
+    if (hasFCFS &&
+      isInRange(poolData?.freeBuyTimeSetting?.start_buy_time, poolData?.finish_time, now)) {
+      return setCurrent(timeline[TIMELINE.BUY_PHASE].subMilestones[1])
+    }
+
+    if (now.getTime() > dateFromString(poolData.finish_time).getTime()) {
+      return setCurrent(timeline.find(item => item.key === 'claim'))
+    }
+  }, [hasFCFS, now, poolData, timeline])
+
   return (
     <Layout title={poolData?.title || 'GameFi'}>
       <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
@@ -193,15 +348,19 @@ const IGODetails = ({ poolData }) => {
           now,
           signature,
 
-          poolOver,
+          current,
 
           failedRequirements,
           usd,
           hasFCFS,
+          completed,
+          timeline,
 
           setSignature,
           loadJoined,
-          setFailedRequirements
+          setFailedRequirements,
+          setCompleted,
+          setCurrent
         }}>
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="flex-1 bg-gradient-to-b from-gamefiDark-630/30 p-4 xl:p-6 2xl:p-7 rounded">
@@ -238,40 +397,35 @@ const IGODetails = ({ poolData }) => {
                   </p>
                 </div>
               </div>
-              <div className="font-casual text-sm text-white/80 mt-8">
+              <div className="font-casual text-sm text-white/80 mt-8 line-clamp-4">
                 { poolData.description }
               </div>
+              {poolData.slug && <div className=""><a href={`/aggregator/${poolData.slug}`}>Full Research &gt;&gt;</a></div>}
               <div className="mt-4">
                 {
-                  !poolData?.start_time && poolData.campaign_status?.toLowerCase() === 'tba' &&
+                  current?.key === 'tba' &&
                   <div className="w-full flex flex-col items-center justify-center bg-black rounded-sm py-2 px-4">
                     <div className="font-semibold text-2xl">Coming Soon</div>
                   </div>
                 }
                 {
-                  poolData.buy_type?.toLowerCase() === 'whitelist' &&
-                  poolData.campaign_status?.toLowerCase() === 'upcoming' &&
-                  now.getTime() >= new Date(Number(poolData.start_join_pool_time || 0) * 1000).getTime() &&
-                  now.getTime() <= new Date(Number(poolData.end_join_pool_time || 0) * 1000).getTime() &&
+                  current?.key === 'pre-whitelist' &&
                   <div className="w-full">
                     <div className="mt-2">
-                      <Countdown title="Whitelist Ends In" to={poolData?.end_join_pool_time}></Countdown>
+                      <Countdown title={current?.info?.countdownTitle} to={poolData?.start_join_pool_time}></Countdown>
                     </div>
                   </div>
                 }
                 {
-                  poolData.buy_type?.toLowerCase() === 'whitelist' &&
-                  poolData.campaign_status?.toLowerCase() === 'upcoming' &&
-                  now.getTime() < new Date(Number(poolData.start_join_pool_time || 0) * 1000).getTime() &&
+                  current?.key === 'whitelist' &&
                   <div className="w-full">
                     <div className="mt-2">
-                      <Countdown title="Whitelist Starts In" to={poolData?.start_join_pool_time}></Countdown>
+                      <Countdown title={current?.info?.countdownTitle} to={poolData?.end_join_pool_time}></Countdown>
                     </div>
                   </div>
                 }
                 {
-                  now.getTime() > new Date(Number(poolData.end_join_pool_time || 0) * 1000).getTime() &&
-                  now.getTime() < new Date(Number(poolData.start_time || 0) * 1000).getTime() &&
+                  current?.key === 'winner-announcement' &&
                   <div className="w-full">
                     <div className="mt-2">
                       {
@@ -283,31 +437,26 @@ const IGODetails = ({ poolData }) => {
                   </div>
                 }
                 {
-                  hasFCFS &&
-                  now.getTime() >= new Date(Number(poolData.start_time || 0) * 1000).getTime() &&
-                  now.getTime() < new Date(Number(hasFCFS || 0) * 1000).getTime() &&
+                  current?.key === 'buy-phase' &&
                   <div className="w-full">
                     <div className="mt-2">
-                      <Countdown title="Phase 1 Ends In" to={hasFCFS}></Countdown>
+                      <Countdown title={current?.info?.countdownTitle} to={hasFCFS}></Countdown>
                     </div>
                   </div>
                 }
                 {
-                  hasFCFS && now.getTime() >= new Date(Number(hasFCFS || 0) * 1000).getTime() &&
-                  now.getTime() <= new Date(Number(poolData.finish_time || 0) * 1000).getTime() &&
+                  current?.key === 'buy-phase-1' &&
                   <div className="w-full">
                     <div className="mt-2">
-                      <Countdown title="Phase 2 Ends In" to={poolData?.finish_time}></Countdown>
+                      <Countdown title={current?.info?.countdownTitle} to={poolData?.finish_time}></Countdown>
                     </div>
                   </div>
                 }
                 {
-                  !hasFCFS &&
-                  now.getTime() >= new Date(Number(poolData.start_time || 0) * 1000).getTime() &&
-                  now.getTime() <= new Date(Number(poolData.finish_time || 0) * 1000).getTime() &&
+                  current?.key === 'buy-phase-2' &&
                   <div className="w-full">
                     <div className="mt-2">
-                      <Countdown title="Buy Phase Ends In" to={poolData?.finish_time}></Countdown>
+                      <Countdown title={current?.info?.countdownTitle} to={poolData?.finish_time}></Countdown>
                     </div>
                   </div>
                 }

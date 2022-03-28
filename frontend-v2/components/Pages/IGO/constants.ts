@@ -1,0 +1,9 @@
+export enum TIMELINE {
+  TBA = 0,
+  PRE_WHITELIST = 1,
+  WHITELIST = 2,
+  WINNER_ANNOUNCEMENT = 3,
+  PRE_ORDER = 4,
+  BUY_PHASE = 5,
+  CLAIM = 6
+}

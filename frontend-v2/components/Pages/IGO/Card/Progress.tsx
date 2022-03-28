@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { printNumber } from '@/utils'
 import { Item } from '../type'
 
-const Progress = ({ poolData, poolOver }: { poolData: Item; poolOver: any }) => {
+const Progress = ({ poolData, isClaimTime }: { poolData: Item; isClaimTime: any }) => {
   const { provider } = useLibraryDefaultFlexible(poolData?.network_available)
   const poolContractReadonly = useMemo(() => {
     if (!poolData?.campaign_hash || !provider) {
@@ -26,7 +26,7 @@ const Progress = ({ poolData, poolOver }: { poolData: Item; poolOver: any }) => 
     return soldWithContract || constants.Zero
   }, [soldWithContract])
   const progress = useMemo(() => {
-    if (poolOver) {
+    if (isClaimTime) {
       return 100
     }
 
@@ -35,7 +35,7 @@ const Progress = ({ poolData, poolOver }: { poolData: Item; poolOver: any }) => 
     }
 
     return FixedNumber.from(sold).divUnsafe(FixedNumber.from(total)).mulUnsafe(FixedNumber.from(100)).toUnsafeFloat() + parseFloat(poolData?.progress_display?.toString() || '0')
-  }, [total, sold, poolData, poolOver])
+  }, [total, sold, poolData, isClaimTime])
   const soldActual = useMemo(() => {
     return Math.ceil(progress / 100 * parseFloat(poolData.total_sold_coin) || 0)
   }, [progress, poolData])

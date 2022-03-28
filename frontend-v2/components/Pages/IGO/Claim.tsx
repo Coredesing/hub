@@ -46,22 +46,21 @@ const Claim = () => {
 
   const currentPhase = useMemo(() => {
     let data = null
-    poolData?.campaignClaimConfig && poolData.campaignClaimConfig.forEach((config, index) => {
-      if (
-        new Date().getTime() < new Date(Number(config.start_time) * 1000).getTime() ||
-        (!data && index === poolData.campaignClaimConfig.length - 1)
-      ) {
-        data = config
-      }
-    })
+    const available = poolData?.campaignClaimConfig?.filter(config => now.getTime() >= new Date(Number(config.start_time) * 1000).getTime())
+    if (!available.length) {
+      data = null
+    } else {
+      data = available[available.length - 1]
+    }
 
     return data
-  }, [poolData.campaignClaimConfig])
+  }, [now, poolData?.campaignClaimConfig])
 
   const configs = useMemo(() => {
     const claimedPercentage = Number(claimedTokens || 0) / Number(purchasedTokens || 1) * 100
     const items = poolData?.campaignClaimConfig && poolData.campaignClaimConfig.map((config) => {
       let status = 'Unknown'
+      console.log(claimedPercentage)
 
       if (purchasedTokens && claimedTokens) {
         status = claimedPercentage < Number(config.max_percent_claim) ? 'Claimable' : 'Claimed'
@@ -87,11 +86,15 @@ const Claim = () => {
     }
   }, [configs, lastPage, page])
 
+  const prettyFloat = (input: number | string) => {
+    return parseFloat(Number(input || '0').toFixed(5))
+  }
+
   const claimable = useMemo(() => {
     return Number(purchasedTokens || 0) > 0 &&
       new Date(Number(poolData?.release_time) * 1000).getTime() <= now.getTime() &&
-      Number(currentPhase?.max_percent_claim || 0) * Number(purchasedTokens) > Number(claimedTokens || 0) &&
-      Number(claimedTokens || 0) < Number(purchasedTokens || 0) &&
+      prettyFloat(prettyFloat(currentPhase?.max_percent_claim) * prettyFloat(purchasedTokens) / 100) > prettyFloat(claimedTokens) &&
+      prettyFloat(claimedTokens) < prettyFloat(purchasedTokens) &&
       poolData?.network_available === network?.alias
   }, [purchasedTokens, poolData?.release_time, poolData?.network_available, now, currentPhase?.max_percent_claim, claimedTokens, network?.alias])
 
@@ -319,7 +322,7 @@ const Claim = () => {
             </div>
             <div className="w-full mt-6 flex justify-between items-center">
               <button
-                className={`px-8 py-3 rounded-sm clipped-t-r text-gamefiDark text-sm font-bold uppercase whitespace-nowrap ${claimable ? 'cursor-not-allowed hover:opacity-95 bg-gamefiGreen-600' : 'bg-gamefiDark-300 cursor-not-allowed'}`}
+                className={`px-8 py-3 rounded-sm clipped-t-r text-gamefiDark text-sm font-bold uppercase whitespace-nowrap ${claimable ? 'hover:opacity-95 bg-gamefiGreen-600 ' : 'bg-gamefiDark-300 cursor-not-allowed'}`}
                 onClick={() => claimable && handleClaim()}
               >
                 Claim On GameFi.org

@@ -1,3 +1,5 @@
+import { CLAIM_TYPE } from './constants'
+
 export const getTimelineOfPool = (pool: { [k: string]: any }) => {
   const startJoinPooltime = +pool.start_join_pool_time * 1000
   const endJoinPoolTime = +pool.end_join_pool_time * 1000
@@ -8,18 +10,30 @@ export const getTimelineOfPool = (pool: { [k: string]: any }) => {
   return { startJoinPooltime, endJoinPoolTime, startBuyTime, freeBuyTime, finishTime, startPreOrderTime }
 }
 
-export const formatPoolType = (key: 0 | 1 | 2 | number) => {
-  if (key === 0) return 'Public'
-  if (key === 1) return 'Private'
-  if (key === 2) return 'Seed'
-  if (key === 3) return 'Community'
-  return ''
-}
+export const getClaimTypes = (pool: any) => {
+  if (!pool?.campaignClaimConfig?.length) {
+    return []
+  }
 
-export const formatPoolStatus = (status: string) => {
-  const stt = String(status).toLowerCase()
-  if (stt === 'filled' || stt === 'swap') return 'Opening'
-  if (stt === 'ended') return 'Ended'
-  if (stt === 'upcoming') return 'Upcoming'
-  return status
+  const types = []
+  pool?.campaignClaimConfig?.forEach(config => {
+    const claimType = CLAIM_TYPE[Number(config?.claim_type)]
+
+    const index = types.findIndex(type => type.name === claimType)
+    if (index === -1) types.push({ id: config?.claim_type, name: claimType, value: 0 })
+  })
+
+  const keys = pool?.campaignClaimConfig?.map(item => item.claim_type)
+  const results = []
+  let previousValue = 0
+  types.forEach(type => {
+    const lastIndex = keys.lastIndexOf(type.id)
+    const value = Number(pool?.campaignClaimConfig[lastIndex]?.max_percent_claim) - previousValue
+    results.push({
+      ...type,
+      value: value > 0 ? value : 0
+    })
+    previousValue += value
+  })
+  return results
 }

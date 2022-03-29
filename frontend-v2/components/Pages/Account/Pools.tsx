@@ -3,7 +3,7 @@ import Pagination from '@/components/Base/Pagination'
 import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from '@/components/Base/Table'
 import { useMyWeb3 } from '@/components/web3/context'
 import { debounce, fetcher, formatPrice, printNumber, useFetch } from '@/utils'
-import { API_BASE_URL, TOKEN_TYPE } from '@/utils/constants'
+import { API_BASE_URL, CLAIM_TYPE, TOKEN_TYPE } from '@/utils/constants'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Contract, ethers } from 'ethers'
 import Link from 'next/link'
@@ -16,8 +16,8 @@ import { fetchJoined } from '@/pages/api/igo'
 import { getLibraryDefaultFlexible, getCurrency } from '@/components/web3/utils'
 import { useWeb3Default } from '@/components/web3'
 import { format } from 'date-fns'
-import Image from 'next/image'
 import Tippy from '@tippyjs/react'
+import Image from 'next/image'
 
 const Pools = () => {
   const { account, library } = useMyWeb3()
@@ -57,8 +57,9 @@ const Pools = () => {
               contract.userPurchased(account),
               contract.userClaimed(account)
             ]).then(([userPurchased, userClaimed]) => {
-              pool.user_purchased = new BigNumber(userPurchased.toString()).div(new BigNumber(10).pow(pool.decimals)).toFixed()
-              pool.user_claimed = new BigNumber(userClaimed.toString()).div(new BigNumber(10).pow(pool.decimals)).toFixed()
+              pool.user_purchased = new BigNumber(userPurchased.toString()).div(new BigNumber(10).pow([99, 100].includes(pool.id) ? 18 : pool.decimals)).toFixed()
+              pool.user_claimed = new BigNumber(userClaimed.toString()).div(new BigNumber(10).pow([99, 100].includes(pool.id) ? 18 : pool.decimals)).toFixed()
+              if (pool.id === 99) console.log(pool)
               resolve(pool)
             }).catch(() => {
               pool.allocation = 0
@@ -84,7 +85,6 @@ const Pools = () => {
 
   const nextClaim = (item: any) => {
     const configs = item?.campaignClaimConfig?.filter(config => new Date(Number(config.start_time) * 1000).getTime() >= new Date().getTime())
-    console.log(item)
     if (!configs?.length) {
       return item.campaign_status.toLowerCase() === 'ended' ? 'Finished' : ''
     }
@@ -132,6 +132,50 @@ const Pools = () => {
 
     return `https://hub.gamefi.org/#/mystery-box/${pool.id}`
   }, [])
+
+  const currentClaimPhase = (item: any) => {
+    let data = null
+    const available = item?.campaignClaimConfig?.filter(config => new Date().getTime() >= new Date(Number(config.start_time) * 1000).getTime())
+    if (!available.length) {
+      data = null
+    } else {
+      data = available[available.length - 1]
+    }
+
+    return data
+  }
+
+  const availableToClaim = (item: any) => {
+    return printNumber(Number(currentClaimPhase(item)?.max_percent_claim) * Number(item.user_purchased) / 100 || 0)
+  }
+
+  const claimTypes = (item: any) => {
+    if (!item?.campaignClaimConfig?.length) {
+      return []
+    }
+
+    const types = []
+    item?.campaignClaimConfig?.forEach(config => {
+      const claimType = CLAIM_TYPE[Number(config?.claim_type)]
+
+      const index = types.findIndex(type => type.name === claimType)
+      if (index === -1) types.push({ id: config?.claim_type, name: claimType, value: 0 })
+    })
+
+    const keys = item?.campaignClaimConfig?.map(item => item.claim_type)
+    const results = []
+    let previousValue = 0
+    types.forEach(type => {
+      const lastIndex = keys.lastIndexOf(type.id)
+      const value = Number(item?.campaignClaimConfig[lastIndex]?.max_percent_claim) - previousValue
+      results.push({
+        ...type,
+        value: value > 0 ? value : 0
+      })
+      previousValue += value
+    })
+    return results
+  }
 
   return (
     <div className='py-10 px-4 xl:px-9 2xl:pr-32'>
@@ -194,7 +238,7 @@ const Pools = () => {
                   <div className='flex gap-2'>
                     <img src={item.banner} alt="" className='w-10' />
                     <Link href={poolHref(item)} passHref={true}>
-                      <a className="hover:underline truncate font-medium">{item.title}</a>
+                      <a className="hover:underline w-32 truncate font-medium">{item.title}</a>
                     </Link>
                   </div>
                 </TableCell>
@@ -205,7 +249,9 @@ const Pools = () => {
                   {printNumber((Number(item.user_purchased) || 0))} {item.symbol}
                 </TableCell>
                 <TableCell className="border-none hidden sm:table-cell">
-                  {printNumber((item.user_claimed || 0).toLocaleString('en-US'))} {item.symbol}
+                  {claimTypes(item)?.find(type => type.name === CLAIM_TYPE[0])?.value === 100
+                    ? `${printNumber((item.user_claimed || 0).toLocaleString('en-US'))}/${availableToClaim(item)} ${item.symbol}`
+                    : ''}
                 </TableCell>
                 <TableCell className="border-none hidden sm:table-cell">
                   {nextClaim(item)}
@@ -216,7 +262,7 @@ const Pools = () => {
                 <TableCell className="border-none hidden sm:table-cell text-right">
                   {printNumber(tokenomics?.find(token => token.ticker === item.symbol)?.price)}
                 </TableCell>
-                {/* <TableCell className="border-none hidden sm:table-cell text-right">
+                <TableCell className="border-none hidden sm:table-cell text-right">
                   {item.token && item.campaign_status?.toLowerCase() === 'ended' && <>
                     <Tippy content="Add to Metamask">
                       <button
@@ -227,7 +273,7 @@ const Pools = () => {
                       </button>
                     </Tippy>
                   </>}
-                </TableCell> */}
+                </TableCell>
               </TableRow>)
             }
           </TableBody>

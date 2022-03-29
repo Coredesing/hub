@@ -18,6 +18,7 @@ import SwapProgress from '@/components/Pages/IGO/SwapProgress'
 import Countdown from '@/components/Pages/IGO/Countdown'
 import { dateFromString, isInRange } from '@/components/Pages/IGO/utils'
 import { TIMELINE } from '@/components/Pages/IGO/constants'
+import Notification from '@/components/Pages/IGO/Notification'
 
 type Milestone = {
   key: string;
@@ -362,6 +363,8 @@ const IGODetails = ({ poolData }) => {
           setCompleted,
           setCurrent
         }}>
+          <Notification type="success" text="Congratulations! You are one of 500 winners. You can join from Phase 1 - Guarantee."></Notification>
+          <Notification type="error" text="This pool is over. See you in the next pool."></Notification>
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="flex-1 bg-gradient-to-b from-gamefiDark-630/30 p-4 xl:p-6 2xl:p-7 rounded">
               <div className="flex items-center gap-6">
@@ -526,10 +529,10 @@ const IGODetails = ({ poolData }) => {
                   <div className="table-row">
                     <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">Milestone</div>
                     <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
-                      Start
+                      From
                     </div>
                     <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
-                      End
+                      To
                     </div>
                   </div>
 
@@ -538,10 +541,10 @@ const IGODetails = ({ poolData }) => {
                       Apply Whitelist
                     </div>
                     <div className="table-cell align-middle py-2 font-normal">
-                      {poolWhitelistTime.start ? format(poolWhitelistTime.start, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                      {timeline[TIMELINE.WHITELIST].start ? `${format(timeline[TIMELINE.WHITELIST].start, 'HH:mm, dd MMM yyyy')} (${format(new Date(), 'z')})` : 'TBA'}
                     </div>
                     <div className="table-cell align-middle py-2 font-normal">
-                      {poolWhitelistTime.end ? format(poolWhitelistTime.end, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                      {timeline[TIMELINE.WHITELIST].end ? `${format(timeline[TIMELINE.WHITELIST].end, 'HH:mm, dd MMM yyyy')} (${format(new Date(), 'z')})` : 'TBA'}
                     </div>
                   </div>
 
@@ -550,10 +553,9 @@ const IGODetails = ({ poolData }) => {
                       Winner Announcement
                     </div>
                     <div className="table-cell align-middle py-2 font-normal">
-                      {poolWhitelistTime.end ? format(poolWhitelistTime.end, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                      {timeline[TIMELINE.WINNER_ANNOUNCEMENT].end ? `${format(timeline[TIMELINE.WINNER_ANNOUNCEMENT].end, 'HH:mm, dd MMM yyyy')} (${format(new Date(), 'z')})` : 'TBA'}
                     </div>
                     <div className="table-cell align-middle py-2 font-normal">
-                      {poolPreOrderTime.start ? format(poolPreOrderTime.start, 'HH:mm, dd MMM yyyy') : 'TBA'}
                     </div>
                   </div>
 
@@ -562,10 +564,10 @@ const IGODetails = ({ poolData }) => {
                       Pre-order (Min Tier: {preOrderMinTier.name})
                     </div>
                     <div className="table-cell align-middle py-2 font-normal">
-                      {poolPreOrderTime.start ? format(poolPreOrderTime.start, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                      {timeline[TIMELINE.PRE_ORDER].start ? format(timeline[TIMELINE.PRE_ORDER].start, 'HH:mm, dd MMM yyyy') : 'TBA'}
                     </div>
                     <div className="table-cell align-middle py-2 font-normal">
-                      {poolPreOrderTime.end ? format(poolPreOrderTime.end, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                      {timeline[TIMELINE.PRE_ORDER].end ? format(timeline[TIMELINE.PRE_ORDER].end, 'HH:mm, dd MMM yyyy') : 'TBA'}
                     </div>
                   </div>
 
@@ -577,10 +579,10 @@ const IGODetails = ({ poolData }) => {
                       Buy Phase 1 - Guarantee
                           </div>
                           <div className="table-cell align-middle py-2 font-normal">
-                            {poolBuyTime.start ? format(poolBuyTime.start, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                            {timeline[TIMELINE.BUY_PHASE].subMilestones[0].start ? format(timeline[TIMELINE.BUY_PHASE].subMilestones[0].start, 'HH:mm, dd MMM yyyy') : 'TBA'}
                           </div>
                           <div className="table-cell align-middle py-2 font-normal">
-                            {poolBuyTime.end ? format(poolBuyTime.end, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                            {timeline[TIMELINE.BUY_PHASE].subMilestones[0].end ? format(timeline[TIMELINE.BUY_PHASE].subMilestones[0].end, 'HH:mm, dd MMM yyyy') : 'TBA'}
                           </div>
                         </div>
 
@@ -589,10 +591,10 @@ const IGODetails = ({ poolData }) => {
                       Buy Phase 2 - FCFS
                           </div>
                           <div className="table-cell align-middle py-2 font-normal">
-                            {poolFreeBuyTime.start ? format(poolFreeBuyTime.start, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                            {timeline[TIMELINE.BUY_PHASE].subMilestones[1].start ? format(timeline[TIMELINE.BUY_PHASE].subMilestones[1].start, 'HH:mm, dd MMM yyyy') : 'TBA'}
                           </div>
                           <div className="table-cell align-middle py-2 font-normal">
-                            {poolFreeBuyTime.end ? format(poolFreeBuyTime.end, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                            {timeline[TIMELINE.BUY_PHASE].subMilestones[1].end ? format(timeline[TIMELINE.BUY_PHASE].subMilestones[1].end, 'HH:mm, dd MMM yyyy') : 'TBA'}
                           </div>
                         </div>
                       </>

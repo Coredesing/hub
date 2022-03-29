@@ -14,6 +14,9 @@ import { useUserPurchased } from '@/hooks/useUserPurchased'
 import { IGOContext } from '@/pages/igo/[slug]'
 import { useAppContext } from '@/context'
 
+import Image from 'next/image'
+import { format } from 'date-fns'
+
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 
 const Swap = () => {
@@ -499,13 +502,17 @@ const Swap = () => {
         ((isPreOrderTime && !preOrderAllowed) ||
           ((!isPreOrderTime || !preOrderAllowed) && now.getTime() < new Date(Number(poolData?.start_time || '0') * 1000).getTime()) ||
           ((isPreOrderTime && preOrderAllowed) && now.getTime() < new Date(Number(poolData?.start_pre_order_time || '0') * 1000).getTime())) &&
-        <div className="my-4 w-full flex flex-col bg-gamefiDark-630/30 p-7 rounded">
-          Not Swap Time Yet!
-        </div>
+          <div className="my-4 w-full flex flex-col gap-4 p-12 rounded items-center justify-center">
+            <Image src={require('@/assets/images/icons/calendar.png')} alt=""></Image>
+            <div className="text-gamefiDark-200">
+              This pool has not start yet. Please wait until Buy Phase.</div>
+          </div>
       }
       {
-        now.getTime() > new Date(Number(poolData?.finish_time || '0') * 1000).getTime() && <div className="my-4 w-full flex flex-col bg-gamefiDark-630/30 p-7 rounded">
-          Pool Swap Time Is Over!
+        now.getTime() > new Date(Number(poolData?.finish_time || '0') * 1000).getTime() &&
+        <div className="my-4 w-full flex flex-col gap-4 p-12 rounded items-center justify-center">
+          <Image src={require('@/assets/images/icons/poolOver.png')} alt=""></Image>
+          <div className="text-gamefiDark-200">This pool is over. See you in the next pool.</div>
         </div>
       }
     </>

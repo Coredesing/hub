@@ -41,7 +41,7 @@ const CollectionItems = ({ slug }: { slug: string }) => {
     actions.setCollectionsMarket({
       type: collectionType,
       slug,
-      filter: {...filter, limit: collectionType === 'items' ? 20 : 10},
+      filter: { ...filter, limit: collectionType === 'items' ? 20 : 10 },
       isGetInfoFromContract: true,
       allowSetOneByOne: collectionType === 'items',
       allowGetOwnerNft: collectionType === 'items',
@@ -67,6 +67,8 @@ const CollectionItems = ({ slug }: { slug: string }) => {
 
   const onChangePage = (page: number) => {
     setFilter(f => ({ ...f, page }))
+    const toHeader = document.getElementById("first")
+    toHeader && toHeader.scrollIntoView({ behavior: 'smooth' })
   }
 
   const onFilterPrice = (item: ObjectType) => {
@@ -90,11 +92,14 @@ const CollectionItems = ({ slug }: { slug: string }) => {
   return (
     <div className="w-full pb-20">
       <div className="md:px-4 lg:px-16 md:container mx-2 mt-20">
-        <div className="mt-14 flex items-center justify-between flex-wrap md:flex-row gap-2 relative">
+        <div className="mt-14 flex items-center justify-between flex-wrap md:flex-row gap-2 relative" id='first'>
           <div className="flex">
             <div className="relative" style={{ marginRight: '-6px' }}>
               <div
-                onClick={() => setCollectionType('items')}
+                onClick={() => {
+                  setCollectionType('items')
+                  setFilter(f => ({ ...f, page: 1 }))
+                }}
                 className={clsx(
                   `absolute top-0 bottom-0 w-full flex items-center justify-center pr-2 font-semibold uppercase ${collectionType === 'items' ? 'text-black' : 'text-white opacity-50'}`,
                   {
@@ -107,7 +112,10 @@ const CollectionItems = ({ slug }: { slug: string }) => {
             </div>
             <div className="relative">
               <div
-                onClick={() => setCollectionType('activities')}
+                onClick={() => {
+                  setCollectionType('activities')
+                  setFilter(f => ({ ...f, page: 1 }))
+                }}
                 className={clsx(
                   `absolute top-0 bottom-0 w-full flex items-center justify-center pr-2 font-semibold uppercase ${collectionType === 'activities' ? 'text-black' : 'text-white opacity-50'}`,
                   {

@@ -19,10 +19,9 @@ type Page = {
   page: number;
 }
 
-export const SwiperItem = ({ children, width, ...props }: any) => {
+export const SwiperItem = ({ children, ...props }: any) => {
   const _style = {
-    ...(props.style || {}),
-    width: width
+    ...(props.style || {})
   }
   return <div className={`${style.swiperItem} ${props.className || ''}`} style={_style}>
     {children}
@@ -80,7 +79,7 @@ const ListSwiper = ({ ...props }: Props) => {
               <div className="absolute top-0 left-0 bg-gamefiDark-600 clipped-b-r-full-sm inline-block" style={{ height: '4px', width: '60px', marginTop: '0', marginLeft: '0' }}></div>
               {
                 props.showItemsNumber === props.step
-                  ? <div className="absolute top-0 right-0 w-1/5 grid grid-flow-col gap-2 bg-gamefiDark-900" style={{ height: '1px' }}>
+                  ? <div className="hidden md:grid absolute top-0 right-0 w-1/5 grid-flow-col gap-2 bg-gamefiDark-900" style={{ height: '1px' }}>
                     {pages && pages().length
                       ? pages().map((page: Page) => (
                         <div key={page.page} className={`h-full ${activeIndex.to >= page.fromIndex && activeIndex.to <= page.toIndex ? 'bg-gamefiGreen-700' : 'bg-white'}`}></div>
@@ -102,7 +101,7 @@ const ListSwiper = ({ ...props }: Props) => {
             })}
           </div>
         </div>
-        <button className={`absolute left-0 md:-left-12 top-0 bottom-0 ${activeIndex.from <= 0 ? 'opacity-20' : ''}`} onClick={() => updateIndex(activeIndex.from - props.step)}>
+        <button className={`hidden md:block absolute left-0 md:-left-12 top-0 bottom-0 ${activeIndex.from <= 0 ? 'opacity-20' : ''}`} onClick={() => updateIndex(activeIndex.from - props.step)}>
           <svg width="32" height="122" viewBox="0 0 32 122" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.5 61.5H2.5" stroke="white" strokeMiterlimit="10" />
             <path d="M9.5 68.5L2.5 61.5L9.5 54.5" stroke="white" strokeMiterlimit="10" strokeLinecap="square" />
@@ -112,7 +111,7 @@ const ListSwiper = ({ ...props }: Props) => {
             <path d="M31 122V114" stroke="white" />
           </svg>
         </button>
-        <button className={`absolute right-0 md:-right-12 top-0 bottom-0 ${activeIndex.to >= totalItems - 1 ? 'opacity-20' : ''}`} onClick={() => updateIndex(activeIndex.from + props.step)}>
+        <button className={`hidden md:block absolute right-0 md:-right-12 top-0 bottom-0 ${activeIndex.to >= totalItems - 1 ? 'opacity-20' : ''}`} onClick={() => updateIndex(activeIndex.from + props.step)}>
           <svg width="32" height="122" viewBox="0 0 32 122" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.5 60.5L29.5 60.5" stroke="white" strokeMiterlimit="10" />
             <path d="M22.5 53.5L29.5 60.5L22.5 67.5" stroke="white" strokeMiterlimit="10" strokeLinecap="square" />

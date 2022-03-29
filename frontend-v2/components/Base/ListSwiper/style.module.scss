@@ -1,20 +1,20 @@
 .carousel {
     overflow: hidden;
-    @apply relative;
+    @apply relative items-stretch;
 }
 
 .inner {
     white-space: nowrap;
     transition: transform 0.3s;
-    @apply items-center justify-center align-middle;
+    @apply items-stretch justify-center align-middle gap-4;
 }
 
 .swiperItem {
     display: inline-flex;
-    @apply w-full;
 }
 
 .carouselList {
+    @apply w-full flex;
     & div[data-arrow*="left"] {
         position: absolute;
         left: -3rem;

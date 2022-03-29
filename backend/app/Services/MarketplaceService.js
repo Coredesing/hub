@@ -257,7 +257,9 @@ class MarketplaceService {
     let by = filterParams.sort_desc === 'false' ? 'ASC' : 'DESC'
 
     const data = await this.buildQueryNFTEventsBuilder(filterParams)
-      .orderBy(order, by)
+      // .orderBy(order, by)
+      // BY: cannot exploit SQL injection
+      .orderByRaw(`CASE WHEN slug = 'metagod-ticket' then 90000000000 ELSE dispatch_at END ${by}`)
       .paginate(filterParams.page, filterParams.limit);
     return data
   }

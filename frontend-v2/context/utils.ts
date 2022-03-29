@@ -26,6 +26,7 @@ export const initReducer = (state: StateType = initialState, action: ActionType,
   case actionReducer.loading: {
     return {
       ...state,
+      data: action.payload || null,
       loading: true
     }
   }

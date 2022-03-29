@@ -18,16 +18,19 @@ const NFTCard = ({ item, ...props }: Props) => {
 
   return (
     <div className="w-full rounded overflow-hidden hover:bg-gamefiGreen-700 hover:shadow hover:shadow-gamefiGreen-700 clipped-b-l p-px ">
-      <div className='clipped-b-l bg-gamefiDark-650 rounded relative'>
+      <div className='clipped-b-l bg-gamefiDark-650 h-full rounded relative'>
         {
           typeof item.isFirstEdition === 'boolean' &&
-          <div className={`absolute left-0 top-0 py-1 px-5 font-semibold bg-gamefiDark-900 ${item.isFirstEdition ? 'text-gamefiGreen-700' : 'text-orange-400'}`} style={{ clipPath: 'polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%)' }}>
+          (item.isFirstEdition || (!item.collection_info?.sale_over && !item.isFirstEdition)) &&
+          <div
+            className={`absolute left-0 top-0 py-1 px-5 font-semibold bg-gamefiDark-900 ${item.isFirstEdition ? 'text-gamefiGreen-700' : 'text-orange-400'}`}
+            style={{ clipPath: 'polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%)' }}>
             {item.isFirstEdition ? 'First Edition' : 'ReSale'}
           </div>
         }
         <div className="w-full">
           <div className="bg-gamefiDark-650 flex items-center justify-center p-4 cursor-pointer w-full" style={{ aspectRatio: '1', height: isSmScreen ? '215px' : '280px' }}>
-            <Link href={`/market/${item?.slug}/${item?.token_id || item?.id}`} passHref>
+            <Link href={`/market/${item?.slug}/${item?.token_id ?? item?.id}`} passHref>
               <ImageLoader src={item?.token_info?.image || item?.token_info?.icon} className="w-full h-full object-contain" />
               {/* <img src={item?.token_info?.image || item?.token_info?.icon || gamefiBox.src} alt={item?.token_info?.title} className="w-full object-cover" /> */}
             </Link>
@@ -43,9 +46,9 @@ const NFTCard = ({ item, ...props }: Props) => {
             </Link>
           </div>
           <div>
-            <Link href={`/market/${item?.slug}/${item?.token_id || item?.id}`} passHref>
+            <Link href={`/market/${item?.slug}/${item?.token_id ?? item?.id}`} passHref>
               <a className="font-bold text-xl tracking-wide cursor-pointer hover:underline">
-                #{formatNumber(item?.token_info?.name || item?.token_id || item?.id, 3) || '-/-'}
+                #{formatNumber(item?.token_info?.name || (item?.token_id ?? item?.id), 3) || '-/-'}
               </a>
             </Link>
           </div>
@@ -56,7 +59,7 @@ const NFTCard = ({ item, ...props }: Props) => {
                   <p className="font-semibold text-sm opacity-50 uppercase">Listing Price</p>
                   <div className="flex items-center">
                     <div className="w-4 h-4"><Image src={networkImage(item?.network)} alt="network"></Image></div>
-                    <div className="text-gamefiGreen-700 sm:text-xl text-base font-medium ml-2">{ethers.utils.formatEther(item?.raw_amount || '0')} {item.currencySymbol || getCurrencyByTokenAddress(item?.currency, item?.network)?.symbol}</div>
+                    <div className="text-gamefiGreen-700 text-base font-medium ml-2"><span className='sm:text-xl'>{ethers.utils.formatEther(item?.raw_amount || '0')}</span> {item.currencySymbol || getCurrencyByTokenAddress(item?.currency, item?.network)?.symbol}</div>
                   </div>
                 </div>
                 : <></>
@@ -67,7 +70,7 @@ const NFTCard = ({ item, ...props }: Props) => {
                   <p className="font-semibold text-sm opacity-50 uppercase">Highest Offer</p>
                   <div className="flex items-center">
                     <div className="w-4 h-4"><Image src={networkImage(item?.network)} alt="network"></Image></div>
-                    <div className="text-gamefiGreen-700 sm:text-xl text-base font-medium ml-2">{ethers.utils.formatEther(item?.highest_offer || '0')} {item.currencySymbol || getCurrencyByTokenAddress(item?.currency, item?.network)?.symbol}</div>
+                    <div className="text-gamefiGreen-700 text-base font-medium ml-2"><span className='sm:text-xl'>{ethers.utils.formatEther(item?.highest_offer || '0')}</span> {item.currencySymbol || getCurrencyByTokenAddress(item?.currency, item?.network)?.symbol}</div>
                   </div>
                 </div>
                 : <></>

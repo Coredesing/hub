@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import useSWR, { SWRResponse } from 'swr'
 import { API_BASE_URL } from '@/utils/constants'
 import { ObjectType } from './types'
+import { formatDistance } from 'date-fns'
 
 export const isImageFile = (str: string) => (/\.(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(str)
 export const isVideoFile = (str: string) => (/\.(mp4)$/i).test(str)
@@ -44,25 +45,9 @@ export const caclDiffTime = (time: { [k in string]: any }): { [k in string]: any
 }
 
 export const formatHumanReadableTime = (timeInput: number, timeToCheck: number) => {
-  if (timeInput >= timeToCheck) return 'a few seconds ago'
-  const { days, hours, seconds, minutes } = getDiffTime(timeToCheck, timeInput)
-  let str = ''
-  if (days && days > 7) {
-    return new Date(timeInput).toUTCString()
-  }
-  if (days) {
-    str += `${days} day${days > 1 ? 's' : ''} `
-  } else {
-    if (hours) {
-      str += `${hours} hour${hours > 1 ? 's' : ''} `
-    } else if (minutes) {
-      str += `${minutes} minute${minutes > 1 ? 's' : ''} `
-    } else if (seconds) {
-      str += `${seconds} second${seconds > 1 ? 's' : ''} `
-    }
-  }
-  str += 'ago'
-  return str
+  const d1 = new Date(timeInput)
+  const d2 = new Date(timeToCheck)
+  return formatDistance(d1, d2, { addSuffix: true, includeSeconds: true })
 }
 
 export const debounce = (fn: (any) => void, timer: number) => {

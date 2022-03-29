@@ -17,8 +17,8 @@ const NFTCard = ({ item, ...props }: Props) => {
   const isSmScreen = useMediaQuery({ maxWidth: '640px' })
 
   return (
-    <div className="w-full rounded overflow-hidden hover:bg-gamefiGreen-700 hover:shadow hover:shadow-gamefiGreen-700 clipped-b-l p-px ">
-      <div className='clipped-b-l bg-gamefiDark-650 h-full rounded relative'>
+    <div className="rounded overflow-hidden clipped-b-l p-px">
+      <div className='clipped-b-l bg-gamefiDark-630/30 hover:bg-gamefiDark-630 h-full rounded relative'>
         {
           typeof item.isFirstEdition === 'boolean' &&
           (item.isFirstEdition || (!item.collection_info?.sale_over && !item.isFirstEdition)) &&
@@ -28,15 +28,15 @@ const NFTCard = ({ item, ...props }: Props) => {
             {item.isFirstEdition ? 'First Edition' : 'ReSale'}
           </div>
         }
-        <div className="w-full">
-          <div className="bg-gamefiDark-650 flex items-center justify-center p-4 cursor-pointer w-full" style={{ aspectRatio: '1', height: isSmScreen ? '215px' : '280px' }}>
+        <div className="w-full p-1">
+          <div className="bg-black flex items-center justify-center p-4 cursor-pointer w-full" style={{ aspectRatio: '1' }}>
             <Link href={`/market/${item?.slug}/${item?.token_id ?? item?.id}`} passHref>
               <ImageLoader src={item?.token_info?.image || item?.token_info?.icon} className="w-full h-full object-contain" />
               {/* <img src={item?.token_info?.image || item?.token_info?.icon || gamefiBox.src} alt={item?.token_info?.title} className="w-full object-cover" /> */}
             </Link>
           </div>
         </div>
-        <div className="bg-gamefiDark-650 w-full px-5 pt-5 pb-2">
+        <div className="w-full px-5 pt-5 pb-2">
           <div className="mb-2">
             <Link href={`/market/collection/${item?.slug}`} passHref>
               <a className="flex align-middle items-center cursor-pointer hover:underline">

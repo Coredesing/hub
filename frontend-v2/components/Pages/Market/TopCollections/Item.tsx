@@ -31,7 +31,27 @@ export const InfoCollection = ({ item, isDisplayJoin }: Props) => {
     handleCountdown()
   }, [handleCountdown])
 
-  return <div className={`${styles.info} absolute top-1/2 left-1/2 w-full h-full z-10`}>
+  const saleDescription = useMemo(() => {
+    if (!item?.sale_description) return
+    const idxOfColon = item.sale_description.indexOf(':');
+    const elements: any[] = []
+    if (idxOfColon >= 0) {
+      elements.push(<div className='text-base text-left mb-1 font-semibold'>{item.sale_description.slice(0, idxOfColon + 1)}</div>)
+    }
+    const childs: string[] = item.sale_description.slice(idxOfColon + 1)
+      .split('-')
+      .map((t: string) => t.replace('/\n', '').trim())
+      .filter((t: string) => t);
+    if (childs.length > 1) {
+      childs.map((t: string) => {
+        elements.push(<p className='text-sm text-left px-2 font-normal' style={{ lineHeight: '20px' }}>-{' '}{t}</p>)
+      })
+      return elements
+    }
+    return item.sale_description
+  }, [item?.sale_description])
+
+  return <div className={`${styles.info} absolute top-1/2 left-1/2 w-full z-10`}>
     <div className="flex  justify-center items-center gap-4 mb-2 relative">
       <GamefiIcon />
       <RelatingIcon />
@@ -43,7 +63,7 @@ export const InfoCollection = ({ item, isDisplayJoin }: Props) => {
       {item.title || item.name}
     </div>
     <div className="text-base font-bold text-center mb-4 sm:mb-7">
-      {item.sale_description || item.description}
+      {saleDescription || item.description}
     </div>
     {!countdown.isFinished && countdown.date1 > 0 && <CountDownTimeV1 className={styles.countdown} time={countdown} title={countdown.title} />}
     {

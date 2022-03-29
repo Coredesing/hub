@@ -40,10 +40,10 @@ const Discover = () => {
     const isDiscover = type === 'discover'
     const applyFilter = {
       ...filter,
-      limit: isDiscover ? 8 : 10
+      limit: isDiscover ? 12 : 10
     }
     actions.setDiscoverMarket({ type, filter: applyFilter, isGetInfoFromContract: true, allowSetOneByOne: isDiscover, allowGetOwnerNft: isDiscover })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, type])
 
   // const [infos, setInfos] = useState([])
@@ -67,6 +67,8 @@ const Discover = () => {
 
   const onChangePage = (page: number) => {
     setFilter(f => ({ ...f, page }))
+    const toDiscover = document.getElementById("discover")
+    toDiscover && toDiscover.scrollIntoView({ behavior: 'smooth' })
   }
 
   const onFilterPrice = (item: ObjectType) => {
@@ -92,7 +94,7 @@ const Discover = () => {
       <div className="md:px-4 lg:px-16 md:container mx-auto mt-20 relative">
         <div className='relative'>
           <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
-            <div className="inline-block top-0 left-0 right-0 uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
+            <div id='discover' className="inline-block top-0 left-0 right-0 uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
               Discover
             </div>
             <div className="absolute -bottom-5 left-0 right-0">
@@ -104,7 +106,10 @@ const Discover = () => {
               <div className="relative" style={{ marginRight: '-6px' }}>
                 <button
                   className={`absolute top-0 bottom-0 w-full flex items-center justify-center pr-2 font-semibold uppercase ${showDiscover === 'items' ? 'text-black' : 'text-white opacity-50'}`}
-                  onClick={() => setShowDiscover('items')}
+                  onClick={() => {
+                    setShowDiscover('items')
+                    setFilter(f => ({ ...f, page: 1 }))
+                  }}
                 >Items
                 </button>
                 <svg width="142" height="38" viewBox="0 0 142 38" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -114,7 +119,10 @@ const Discover = () => {
               <div className="relative">
                 <button
                   className={`absolute top-0 bottom-0 w-full flex items-center justify-center pr-2 font-semibold uppercase ${showDiscover === 'activities' ? 'text-black' : 'text-white opacity-50'}`}
-                  onClick={() => setShowDiscover('activities')}
+                  onClick={() => {
+                    setShowDiscover('activities')
+                    setFilter(f => ({ ...f, page: 1 }))
+                  }}
                 >Activities</button>
                 <svg width="142" height="38" viewBox="0 0 142 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M0 0H133.172C133.702 0 134.211 0.210714 134.586 0.585786L141.414 7.41421C141.789 7.78929 142 8.29799 142 8.82843V36C142 37.1046 141.105 38 140 38H11.5418C10.6332 38 9.83885 37.3876 9.60763 36.509L0 0Z" fill={showDiscover === 'activities' ? '#6CDB00' : '#242732'} />
@@ -123,7 +131,7 @@ const Discover = () => {
             </div>
             <div className="flex items-center flex-wrap gap-2 sm:justify-self-auto justify-end sm:w-auto w-full">
               <div><NetworkSelector isMulti={false} isToggle={false} selected={{ [filter.network]: true }} onChange={handleChangeNetwork} className='mb-0' style={{ height: '38px' }}></NetworkSelector></div>
-              <CurrencySelector selected={filter.currency} onChange={onSelectCurrency} style={{ height: '38px' }}/>
+              <CurrencySelector selected={filter.currency} onChange={onSelectCurrency} style={{ height: '38px' }} />
               <div className='flex'>
                 <div>
                   <Dropdown

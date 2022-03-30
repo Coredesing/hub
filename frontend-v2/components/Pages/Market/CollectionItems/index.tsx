@@ -91,7 +91,7 @@ const CollectionItems = ({ slug }: { slug: string }) => {
 
   return (
     <div className="w-full pb-20">
-      <div className="md:px-4 lg:px-16 md:container mx-2 mt-20">
+      <div className="md:px-4 lg:px-8 md:container mx-2 mt-20">
         <div className="mt-14 flex items-center justify-between flex-wrap md:flex-row gap-2 relative" id='first'>
           <div className="flex">
             <div className="relative" style={{ marginRight: '-6px' }}>

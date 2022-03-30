@@ -53,7 +53,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   const [methodSellNFT, setMethodSellNFT] = useState('')
   const [reloadOfferList, setReloadOfferList] = useState(true)
   const [offerList, setOfferList] = useState<ObjectType<any>[]>([])
-  const [lastOffer, setLastOffer] = useState<ObjectType<any> | null>(null)
+  // const [lastOffer, setLastOffer] = useState<ObjectType<any> | null>(null)
   const [tokenOnSale, setTokenOnSale] = useState<ObjectType>({})
   const { marketActivities: marketActivitiesState } = useAppContext()
   const activities = marketActivitiesState.state?.data?.[tokenInfo.id] || {}
@@ -223,12 +223,12 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
     }
   }, [tokenOnSale, reloadOfferList, libraryDefaultTemporary, projectInfo, tokenInfo, currencies])
 
-  useEffect(() => {
-    if (offerList.length && account) {
-      const myLastOffer = offerList.find(item => item.buyer === account)
-      setLastOffer(myLastOffer as any)
-    }
-  }, [offerList, account])
+  // useEffect(() => {
+  //   if (offerList.length && account) {
+  //     const myLastOffer = offerList.find(item => item.buyer === account)
+  //     setLastOffer(myLastOffer as any)
+  //   }
+  // }, [offerList, account])
 
   useEffect(() => {
     getAddressOwnerNFT()

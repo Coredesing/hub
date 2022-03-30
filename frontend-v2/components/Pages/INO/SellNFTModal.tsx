@@ -52,7 +52,7 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], isLoadingButton,
       setFeeAuction(0)
       return
     }
-    const fee = (new BigNumberJs(val).multipliedBy(feePlatform))
+    const fee = new BigNumberJs(val).multipliedBy(feePlatform)
     try {
       setFeeAuction(utils.formatEther(utils.parseEther(fee.toString()).toString()))
     } catch (error) {

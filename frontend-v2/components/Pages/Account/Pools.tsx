@@ -14,13 +14,15 @@ import SearchInput from '@/components/Base/SearchInput'
 import Dropdown from '@/components/Base/Dropdown'
 import { fetchJoined } from '@/pages/api/igo'
 import { getLibraryDefaultFlexible, getCurrency } from '@/components/web3/utils'
-import { useWeb3Default } from '@/components/web3'
+import { getNetworkByAlias, switchNetwork, useWeb3Default } from '@/components/web3'
 import { format } from 'date-fns'
 import Tippy from '@tippyjs/react'
 import Image from 'next/image'
+import toast from 'react-hot-toast'
+import ERC20_ABI from '@/components/web3/abis/ERC20.json'
 
 const Pools = () => {
-  const { account, library } = useMyWeb3()
+  const { account, library, network } = useMyWeb3()
   const { library: libraryDefault } = useWeb3Default()
 
   const [loadingPools, setLoadingPools] = useState(false)
@@ -99,11 +101,41 @@ const Pools = () => {
     return data
   }, [tokenomicsResponse])
 
-  const addToWallet = async (address: string) => {
-    const result = await library('wallet_watchAsset', ['ERC20', {
-      address: address
-    }])
-    console.log(result)
+  const addToWallet = async (item: any) => {
+    if (!library?.provider?.isMetaMask) {
+      toast.error('MetaMask wallet is not found!')
+      return
+    }
+
+    if (!item.token) {
+      return
+    }
+
+    if (network.alias !== item?.network_available) {
+      return switchNetwork(library?.provider, getNetworkByAlias(item?.network_available)?.id)
+    }
+
+    const tokenContract = new ethers.Contract(item.token, ERC20_ABI, library.getSigner())
+    console.log(library)
+    if (!tokenContract) {
+      return
+    }
+    const symbol = await tokenContract.symbol()
+    const decimals = await tokenContract.decimals()
+    const name = await tokenContract.name()
+
+    await library?.provider?.request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: tokenContract.address,
+          symbol,
+          decimals,
+          name
+        }
+      }
+    })
   }
 
   const onChangePage = (page: number) => {
@@ -249,7 +281,7 @@ const Pools = () => {
                   {printNumber((Number(item.user_purchased) || 0))} {item.symbol}
                 </TableCell>
                 <TableCell className="border-none hidden sm:table-cell">
-                  {claimTypes(item)?.find(type => type.name === CLAIM_TYPE[0])?.value === 100
+                  {claimTypes(item)?.find(type => type.name === CLAIM_TYPE[0])?.value === 100 && Number(availableToClaim(item)) > 0
                     ? `${printNumber((item.user_claimed || 0).toLocaleString('en-US'))}/${availableToClaim(item)} ${item.symbol}`
                     : ''}
                 </TableCell>
@@ -260,14 +292,14 @@ const Pools = () => {
                   ${item.token_conversion_rate}
                 </TableCell>
                 <TableCell className="border-none hidden sm:table-cell text-right">
-                  {printNumber(tokenomics?.find(token => token.ticker === item.symbol)?.price)}
+                  {tokenomics?.find(token => token.ticker === item.symbol)?.price ? `$${printNumber(tokenomics?.find(token => token.ticker === item.symbol)?.price)}` : ''}
                 </TableCell>
                 <TableCell className="border-none hidden sm:table-cell text-right">
-                  {item.token && item.campaign_status?.toLowerCase() === 'ended' && <>
+                  {item.token && item.campaign_status?.toLowerCase() === 'ended' && item.token_type === 'erc20' && <>
                     <Tippy content="Add to Metamask">
                       <button
                         className="w-8 h-8 xl:w-10 xl:h-10 p-2 bg-gamefiDark-630 rounded hover:opacity-90"
-                        onClick={() => addToWallet(item.token)}
+                        onClick={() => addToWallet(item)}
                       >
                         <Image src={require('@/assets/images/wallets/metamask.svg')} alt=""></Image>
                       </button>

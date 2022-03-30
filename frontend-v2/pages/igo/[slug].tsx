@@ -363,7 +363,7 @@ const IGODetails = ({ poolData }) => {
       return
     }
 
-    if (network.alias !== poolNetwork?.alias) {
+    if (network?.alias !== poolNetwork?.alias) {
       return switchNetwork(library?.provider, poolNetwork.id)
     }
 

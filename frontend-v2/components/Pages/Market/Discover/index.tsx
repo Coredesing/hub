@@ -67,7 +67,7 @@ const Discover = () => {
 
   const onChangePage = (page: number) => {
     setFilter(f => ({ ...f, page }))
-    const toDiscover = document.getElementById("discover")
+    const toDiscover = document.getElementById('discover')
     toDiscover && toDiscover.scrollIntoView({ behavior: 'smooth' })
   }
 

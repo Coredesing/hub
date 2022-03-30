@@ -50,7 +50,7 @@ const IGO = () => {
   return (
     <Layout title="Launchpad">
       <div className="px-2 md:px-4 lg:px-16 md:container mx-auto lg:block pt-16">
-        <div className="w-full text-center text-[84px] leading-[80%] font-bold uppercase">
+        <div className="w-full text-center text-[84px] leading-[80%] font-bold uppercase select-none">
         Dedicated Gaming <br></br>Launchpad & IGO
         </div>
         <div className="mt-14 w-full flex gap-14 justify-center items-center">
@@ -60,7 +60,7 @@ const IGO = () => {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text'
-            }}>55+</div>
+            }}>100+</div>
             <div className="uppercase font-medium">Total Projects Launched</div>
           </div>
           <div className="flex flex-col gap-3 items-center justify-center">
@@ -69,7 +69,7 @@ const IGO = () => {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text'
-            }}>500X</div>
+            }}>30X</div>
             <div className="uppercase font-medium">Average ATH ROI</div>
           </div>
         </div>

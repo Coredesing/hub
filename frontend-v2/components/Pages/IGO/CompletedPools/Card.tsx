@@ -9,6 +9,15 @@ import Countdown from '../Card/Countdown'
 const Card = ({ item }: {item: Item}) => {
   const { network } = useLibraryDefaultFlexible(item?.network_available)
 
+  const nextClaim = (item: any) => {
+    const configs = item?.campaignClaimConfig?.filter(config => new Date(Number(config.start_time) * 1000).getTime() >= new Date().getTime())
+    if (!configs?.length) {
+      return item.campaign_status.toLowerCase() === 'ended' ? 'Finished' : ''
+    }
+
+    return configs[0].start_time
+  }
+
   return <div className="px-6 py-4 bg-gamefiDark-630/30 clipped-t-r rounded w-full flex items-stretch justify-between gap-6 font-casual">
     <a href={`/igo/${item.id}`} className="relative w-24 h-24 bg-black">
       <img src={item.banner} alt="" className="w-full h-full object-cover rounded-sm"></img>
@@ -69,7 +78,7 @@ const Card = ({ item }: {item: Item}) => {
         <div>
           <div className="text-white/50 uppercase font-semibold text-xs font-mechanic">Next Claim In</div>
           <div className="text-sm">
-            <Countdown to={0}></Countdown>
+            <Countdown to={nextClaim(item)}></Countdown>
           </div>
         </div>
       </div>

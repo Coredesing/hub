@@ -44,7 +44,7 @@ const CollectionItems = ({ slug }: { slug: string }) => {
       filter: { ...filter, limit: collectionType === 'items' ? 20 : 10 },
       isGetInfoFromContract: true,
       allowSetOneByOne: collectionType === 'items',
-      allowGetOwnerNft: collectionType === 'items',
+      allowGetOwnerNft: collectionType === 'items'
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, collectionType, slug])
@@ -67,7 +67,7 @@ const CollectionItems = ({ slug }: { slug: string }) => {
 
   const onChangePage = (page: number) => {
     setFilter(f => ({ ...f, page }))
-    const toHeader = document.getElementById("first")
+    const toHeader = document.getElementById('first')
     toHeader && toHeader.scrollIntoView({ behavior: 'smooth' })
   }
 

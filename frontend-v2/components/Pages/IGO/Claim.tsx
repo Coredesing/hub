@@ -199,7 +199,7 @@ const Claim = () => {
 
   return (
     <>
-      { current.key === 'claim' && Number(purchasedTokens) > 0 &&
+      { current?.key === 'claim' && Number(purchasedTokens) > 0 &&
       <div className="w-full my-4 flex flex-col xl:flex-row gap-6">
         <div className="w-full xl:w-1/3 bg-gamefiDark-630/30 p-7 rounded clipped-t-r">
           <p className="uppercase font-mechanic font-bold text-lg mb-6">Your Allocation</p>
@@ -340,13 +340,13 @@ const Claim = () => {
         </div>
       </div>}
       {
-        current.key !== 'claim' && <div className="w-full mt-6 p-12 text-gamefiDark-200 flex flex-col items-center justify-center gap-4">
+        current?.key !== 'claim' && <div className="w-full mt-6 p-12 text-gamefiDark-200 flex flex-col items-center justify-center gap-4">
           <Image src={require('@/assets/images/icons/calendar.png')} alt=""></Image>
           <div>This pool has not completed yet. Please wait until Claim Phase.</div>
         </div>
       }
       {
-        current.key === 'claim' && !usdPurchased && <div className="w-full mt-6 p-12 text-gamefiDark-200 flex flex-col items-center justify-center gap-4">
+        current?.key === 'claim' && !usdPurchased && <div className="w-full mt-6 p-12 text-gamefiDark-200 flex flex-col items-center justify-center gap-4">
           <Image src={require('@/assets/images/icons/calendar.png')} alt=""></Image>
           <div>You do not have enough tokens to claim.</div>
         </div>

@@ -10,6 +10,7 @@ import { useState } from 'react'
 import { useMyWeb3 } from '@/components/web3/context'
 import { FormInputNumber } from '@/components/Base/FormInputNumber'
 import BigNumberJs from 'bignumber.js'
+import { utils } from 'ethers'
 
 type Props = {
   open?: boolean;
@@ -29,7 +30,7 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], isLoadingButton,
   const [currency, setCurrency] = useState<ObjectType>({})
   const [auctionPrice, setAuctionPrice] = useState('0')
   // const [expire, setExpire] = useState(0)
-  const [feeAuction, setFeeAuction] = useState(0)
+  const [feeAuction, setFeeAuction] = useState<number | string>(0)
   const feePlatform = 0.01
 
   // NFT's owner approve to marketplace
@@ -51,8 +52,12 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], isLoadingButton,
       setFeeAuction(0)
       return
     }
-    const fee = +(new BigNumberJs(val).multipliedBy(feePlatform).toFixed(2))
-    setFeeAuction(fee)
+    const fee = (new BigNumberJs(val).multipliedBy(feePlatform))
+    try {
+      setFeeAuction(utils.formatEther(utils.parseEther(fee.toString()).toString()))
+    } catch (error) {
+      setFeeAuction(0)
+    }
   }
 
   // const onChangeExpire = (e: any) => {

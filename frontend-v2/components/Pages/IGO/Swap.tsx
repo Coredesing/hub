@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import Recaptcha from '@/components/Base/Recaptcha'
-import { debounce, fetcher, useFetch } from '@/utils'
+import { debounce, fetcher, printNumber, useFetch } from '@/utils'
 import { useMyWeb3 } from '@/components/web3/context'
 import { useBalanceToken, useTokenAllowance, useTokenApproval } from '@/components/web3/utils'
 import { ethers } from 'ethers'
@@ -15,12 +15,12 @@ import { IGOContext } from '@/pages/igo/[slug]'
 import { useAppContext } from '@/context'
 
 import Image from 'next/image'
-import { format } from 'date-fns'
+import { TIMELINE } from './constants'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 
 const Swap = () => {
-  const { poolData, usd, hasFCFS, allocation } = useContext(IGOContext)
+  const { poolData, usd, hasFCFS, allocation, timeline, current } = useContext(IGOContext)
   const { library, account, network, balanceShort } = useMyWeb3()
   const [txHash, setTxHash] = useState('')
   const { tierMine } = useAppContext()
@@ -46,14 +46,14 @@ const Swap = () => {
   const [rounds, setRounds] = useState([
     {
       phase: 1,
-      name: 'Buy Phase 1 - Guarantee',
+      name: 'Buying Phase 1 - Guarantee',
       token: usd,
       allocation: allocation?.max_buy || '0',
       purchased: '0'
     },
     {
       phase: 2,
-      name: 'Buy Phase 2 - FCFS',
+      name: 'Buying Phase 2 - FCFS',
       token: usd,
       allocation: poolData?.freeBuyTimeSetting?.max_bonus || '0',
       purchased: '0'
@@ -176,10 +176,8 @@ const Swap = () => {
 
   // Pre-order
   const isPreOrderTime = useMemo(() => {
-    return poolData?.start_pre_order_time &&
-    now.getTime() >= new Date(Number(poolData?.start_pre_order_time || '0') * 1000).getTime() &&
-    now.getTime() < new Date(Number(poolData?.start_time || '0') * 1000).getTime()
-  }, [now, poolData?.start_pre_order_time, poolData?.start_time])
+    return poolData?.start_pre_order_time && current?.key === 'pre-order'
+  }, [current?.key, poolData?.start_pre_order_time])
 
   const preOrderAllowed = useMemo(() => {
     return tierMine?.id >= poolData?.pre_order_min_tier
@@ -190,6 +188,7 @@ const Swap = () => {
     return isPreOrderTime
 
       ? tierMine?.id >= poolData?.pre_order_min_tier &&
+        current?.key === 'pre-order' &&
         poolData?.is_deploy &&
         allocation &&
         !loadingApproval &&
@@ -199,7 +198,7 @@ const Swap = () => {
         poolData?.network_available?.toLowerCase() === network?.alias &&
         Number(remainingToken) > 0
 
-      : poolData?.campaign_status?.toLowerCase() === 'swap' &&
+      : current?.key?.includes('buying-phase') &&
         poolData?.is_deploy &&
         allocation &&
         !loadingApproval &&
@@ -335,9 +334,7 @@ const Swap = () => {
   return (
     <>
       {
-        ((isPreOrderTime && preOrderAllowed) ||
-        (now.getTime() >= new Date(Number(poolData?.start_time || '0') * 1000).getTime() &&
-        now.getTime() <= new Date(Number(poolData?.finish_time || '0') * 1000).getTime())) &&
+        now.getTime() >= timeline[TIMELINE.WINNER_ANNOUNCEMENT].start?.getTime() && poolData?.public_winner_status &&
           <div className="my-4 w-full bg-gamefiDark-630/30 p-7 rounded clipped-t-r">
             <div className="flex flex-col lg:flex-row gap-14 lg:gap-4 w-full">
               <div className="w-full lg:w-1/2">
@@ -356,147 +353,156 @@ const Swap = () => {
                         ? rounds.map(round => (
                           <tr key={round.phase}>
                             <td className="px-2 py-2 font-medium text-left">{round.name}</td>
-                            <td className="px-2 py-2 uppercase font-medium text-right">{`${Number(round.allocation || 0).toFixed(1)} ${round.token?.symbol}`}</td>
-                            <td className="px-2 py-2 uppercase font-medium text-right">{`${Number(round.purchased || 0).toFixed(1)} ${round.token?.symbol}`}</td>
+                            <td className="px-2 py-2 uppercase font-medium text-right">{`${printNumber(Number(round.allocation || 0), 2)} ${round.token?.symbol}`}</td>
+                            <td className="px-2 py-2 uppercase font-medium text-right">{`${printNumber(Number(round.purchased || 0), 2)} ${round.token?.symbol}`}</td>
                           </tr>
                         ))
                         : <tr>
                           <td className="px-2 py-2 font-medium text-left">{rounds.find(round => round.phase === 1)?.name}</td>
-                          <td className="px-2 py-2 uppercase font-medium text-right">{`${Number(rounds.find(round => round.phase === 1)?.allocation || 0).toFixed(1)} ${rounds.find(round => round.phase === 1)?.token?.symbol}`}</td>
-                          <td className="px-2 py-2 uppercase font-medium text-right">{`${Number(rounds.find(round => round.phase === 1)?.purchased || 0).toFixed(1)} ${rounds.find(round => round.phase === 1)?.token?.symbol}`}</td>
+                          <td className="px-2 py-2 uppercase font-medium text-right">{`${printNumber(Number(rounds.find(round => round.phase === 1)?.allocation || 0), 2)} ${rounds.find(round => round.phase === 1)?.token?.symbol}`}</td>
+                          <td className="px-2 py-2 uppercase font-medium text-right">{`${printNumber(Number(rounds.find(round => round.phase === 1)?.purchased || 0), 2)} ${rounds.find(round => round.phase === 1)?.token?.symbol}`}</td>
                         </tr>
                     }
                   </tbody>
                 </table>
                 <div className="mt-4 px-2 py-4 flex w-full justify-between items-center bg-gamefiDark rounded-sm">
                   <div className="font-medium">Total</div>
-                  <div className="font-medium uppercase">{`${Number(usdPurchased || '0').toFixed(1)} ${usd?.symbol}`}</div>
+                  <div className="font-medium uppercase">{`${printNumber(Number(usdPurchased || '0'), 2)} ${usd?.symbol}`}</div>
                 </div>
               </div>
-              <div className="flex-1 bg-gamefiDark rounded px-3 py-4">
-                <div className="uppercase font-semibold tracking-wide leading-7 text-lg">
-                  {rounds.find(round => round.phase === phase)?.name}
-                </div>
-                <div className="w-full flex items-center gap-2 mt-4">
-                  <div className="flex flex-col gap-1 items-center justify-center w-1/2">
-                    <div className={`w-full text-sm font-semibold tracking-wide text-center ${!allowance?.gt(0) ? 'text-gamefiGreen' : ''}`}>Step 1: Approve</div>
-                    <div className={`w-full h-1 rounded-sm ${!allowance?.gt(0) ? 'bg-gamefiGreen' : 'bg-gamefiDark-650'}`}></div>
-                  </div>
-                  <div className="flex flex-col gap-1 items-center justify-center w-1/2">
-                    <div className={`w-full text-sm font-semibold tracking-wide text-center ${allowance?.gt(0) ? 'text-gamefiGreen' : ''}`}>Step 2: Swap</div>
-                    <div className={`w-full h-1 rounded-sm ${allowance?.gt(0) ? 'bg-gamefiGreen' : 'bg-gamefiDark-650'}`}></div>
-                  </div>
-                </div>
-                <div className="mt-10 flex flex-col w-full">
-                  <div className="w-full flex items-center justify-between text-sm">
-                    <div>Amount</div>
-                    <div>Current Balance: <span className="font-bold">{usd?.address ? usdBalance : balanceShort}</span></div>
-                  </div>
-                  <div className="w-full relative flex mt-2">
-                    <input
-                      type="number"
-                      min={0}
-                      value={inputAmount}
-                      onChange={e => setInputAmount(e?.target?.value)}
-                      className="appearance-none bg-gamefiDark-650 border border-gamefiDark-600 rounded-sm w-full px-4 py-3 focus:outline-none focus:border-gamefiDark-600 focus:ring-0"
-                      placeholder="0.00"
-                    />
-                    <div className="absolute top-0 bottom-0 left-0 flex items-center">
-                      <div className="rounded-r bg-gamefiDark-400" style={{ width: '2px', height: '18px' }}></div>
+              {
+                ((!preOrderAllowed && now.getTime() >= timeline[TIMELINE.BUYING_PHASE].start.getTime()) ||
+                (preOrderAllowed && now.getTime() >= timeline[TIMELINE.PRE_ORDER].start.getTime()))
+                  ? <div className="flex-1 bg-gamefiDark rounded px-3 py-4">
+                    <div className="uppercase font-semibold tracking-wide leading-7 text-lg">
+                      {rounds.find(round => round.phase === phase)?.name}
                     </div>
-                    <div className="absolute top-0 bottom-0 right-0 flex items-center px-2 text-sm gap-4 bg-gamefiDark-650 m-[1px]">
-                      <div className="uppercase text-gamefiDark-300 font-bold">{usd.symbol}</div>
-                      <button className="text-gamefiGreen font-medium tracking-wide" onClick={() => setInputAmount(remainingToken || '0')}>Max</button>
+                    <div className="w-full flex items-center gap-2 mt-4">
+                      <div className="flex flex-col gap-1 items-center justify-center w-1/2">
+                        <div className={`w-full text-sm font-semibold tracking-wide text-center ${!allowance?.gt(0) ? 'text-gamefiGreen' : ''}`}>Step 1: Approve</div>
+                        <div className={`w-full h-1 rounded-sm ${!allowance?.gt(0) ? 'bg-gamefiGreen' : 'bg-gamefiDark-650'}`}></div>
+                      </div>
+                      <div className="flex flex-col gap-1 items-center justify-center w-1/2">
+                        <div className={`w-full text-sm font-semibold tracking-wide text-center ${allowance?.gt(0) ? 'text-gamefiGreen' : ''}`}>Step 2: Swap</div>
+                        <div className={`w-full h-1 rounded-sm ${allowance?.gt(0) ? 'bg-gamefiGreen' : 'bg-gamefiDark-650'}`}></div>
+                      </div>
                     </div>
-                  </div>
-                  {
-                    Number(remainingToken) > 0
-                      ? <div className="w-full mt-4 text-sm">
+                    <div className="mt-10 flex flex-col w-full">
+                      <div className="w-full flex items-center justify-between text-sm">
+                        <div>Amount</div>
+                        <div>Current Balance: <span className="font-bold">{usd?.address ? usdBalance : balanceShort}</span></div>
+                      </div>
+                      <div className="w-full relative flex mt-2">
+                        <input
+                          type="number"
+                          min={0}
+                          value={inputAmount}
+                          onChange={e => setInputAmount(e?.target?.value)}
+                          className="appearance-none bg-gamefiDark-650 border border-gamefiDark-600 rounded-sm w-full px-4 py-3 focus:outline-none focus:border-gamefiDark-600 focus:ring-0"
+                          placeholder="0.00"
+                        />
+                        <div className="absolute top-0 bottom-0 left-0 flex items-center">
+                          <div className="rounded-r bg-gamefiDark-400" style={{ width: '2px', height: '18px' }}></div>
+                        </div>
+                        <div className="absolute top-0 bottom-0 right-0 flex items-center px-2 text-sm gap-4 bg-gamefiDark-650 m-[1px]">
+                          <div className="uppercase text-gamefiDark-300 font-bold">{usd.symbol}</div>
+                          <button className="text-gamefiGreen font-medium tracking-wide" onClick={() => setInputAmount(remainingToken || '0')}>Max</button>
+                        </div>
+                      </div>
+                      {
+                        Number(remainingToken) > 0
+                          ? <div className="w-full mt-4 text-sm">
                         You need to Approve once and only once before start swapping
-                      </div>
-                      : <div className="w-full mt-4 text-sm text-gamefiRed">
+                          </div>
+                          : <div className="w-full mt-4 text-sm text-gamefiRed">
                         You have reached your order limit !
-                      </div>
-                  }
-                  {
-                    isPreOrderTime
-                      ? <>
-                        {swappable
-                          ? <div className="w-full mt-5">
-                            <Recaptcha onChange={onVerifyCapcha} ref={recaptchaRef}></Recaptcha>
                           </div>
-                          : null}
-                        <div className="mt-5 w-full flex gap-2 items-center justify-end">
-                          <button
-                            className={
-                              `h-[36px] px-3 w-1/2 xl:w-1/3 text-center font-bold uppercase text-sm rounded-sm clipped-t-r ${
-                                approvable
-                                  ? 'hover:opacity-95 cursor-pointer bg-gamefiGreen-600 text-gamefiDark'
-                                  : 'cursor-not-allowed bg-gamefiDark-400 text-gamefiDark'
-                              } ${loadingApproval && 'cursor-not-allowed hover:opacity-100'}`
-                            }
-                            onClick={() => approvable && handleApprove(ethers.constants.MaxUint256)}
-                          >
-                            {!loadingApproval && ((allowance?.gt(0) || !usd?.address) ? 'Approved' : 'Approve')} {loadingApproval && <div className="dot-flashing mx-auto"></div>}
-                          </button>
-                          <button
-                            className={
-                              `h-[36px] px-3 w-1/2 xl:w-1/3 text-center font-bold uppercase text-sm rounded-sm clipped-b-l ${
-                                swappable
-                                  ? 'hover:opacity-95 cursor-pointer bg-gamefiGreen-600 text-gamefiDark'
-                                  : 'cursor-not-allowed bg-gamefiDark-400 text-gamefiDark'
-                              }`
-                            }
-                            onClick={() => swappable && handleSwap()}
-                          >Pre-order</button>
-                        </div>
-                      </>
-                      : <>
-                        {swappable
-                          ? <div className="w-full mt-5">
-                            <Recaptcha onChange={onVerifyCapcha} ref={recaptchaRef}></Recaptcha>
-                          </div>
-                          : <></>}
-                        <div className="mt-5 w-full flex gap-2 items-center justify-end">
-                          <button
-                            className={
-                              `h-[36px] px-3 w-1/2 xl:w-1/3 text-center font-bold uppercase text-sm rounded-sm clipped-t-r ${
-                                approvable
-                                  ? 'hover:opacity-95 cursor-pointer bg-gamefiGreen-600 text-gamefiDark'
-                                  : 'cursor-not-allowed bg-gamefiDark-400 text-gamefiDark'
-                              } ${loadingApproval && 'cursor-not-allowed hover:opacity-100'}`
-                            }
-                            onClick={() => approvable && handleApprove(ethers.constants.MaxUint256)}
-                          >
-                            {!loadingApproval && ((allowance?.gt(0) || !usd?.address) ? 'Approved' : 'Approve')} {loadingApproval && <div className="dot-flashing mx-auto"></div>}
-                          </button>
-                          <button
-                            className={
-                              `h-[36px] px-3 w-1/2 xl:w-1/3 text-center font-bold uppercase text-sm rounded-sm clipped-b-l ${
-                                swappable
-                                  ? 'hover:opacity-95 cursor-pointer bg-gamefiGreen-600 text-gamefiDark'
-                                  : 'cursor-not-allowed bg-gamefiDark-400 text-gamefiDark'
-                              }`
-                            }
-                            onClick={() => swappable && handleSwap()}
-                          >Swap</button>
-                        </div>
-                      </>
-                  }
-                </div>
-              </div>
+                      }
+                      {
+                        isPreOrderTime && preOrderAllowed
+                          ? <>
+                            {swappable
+                              ? <div className="w-full mt-5">
+                                <Recaptcha onChange={onVerifyCapcha} ref={recaptchaRef}></Recaptcha>
+                              </div>
+                              : null}
+                            <div className="mt-5 w-full flex gap-2 items-center justify-end">
+                              <button
+                                className={
+                                  `h-[36px] px-3 w-1/2 xl:w-1/3 text-center font-bold uppercase text-sm rounded-sm clipped-t-r ${
+                                    approvable
+                                      ? 'hover:opacity-95 cursor-pointer bg-gamefiGreen-600 text-gamefiDark'
+                                      : 'cursor-not-allowed bg-gamefiDark-400 text-gamefiDark'
+                                  } ${loadingApproval && 'cursor-not-allowed hover:opacity-100'}`
+                                }
+                                onClick={() => approvable && handleApprove(ethers.constants.MaxUint256)}
+                              >
+                                {!loadingApproval && ((allowance?.gt(0) || !usd?.address) ? 'Approved' : 'Approve')} {loadingApproval && <div className="dot-flashing mx-auto"></div>}
+                              </button>
+                              <button
+                                className={
+                                  `h-[36px] px-3 w-1/2 xl:w-1/3 text-center font-bold uppercase text-sm rounded-sm clipped-b-l ${
+                                    swappable
+                                      ? 'hover:opacity-95 cursor-pointer bg-gamefiGreen-600 text-gamefiDark'
+                                      : 'cursor-not-allowed bg-gamefiDark-400 text-gamefiDark'
+                                  }`
+                                }
+                                onClick={() => swappable && handleSwap()}
+                              >Pre-order</button>
+                            </div>
+                          </>
+                          : <>
+                            {swappable
+                              ? <div className="w-full mt-5">
+                                <Recaptcha onChange={onVerifyCapcha} ref={recaptchaRef}></Recaptcha>
+                              </div>
+                              : <></>}
+                            <div className="mt-5 w-full flex gap-2 items-center justify-end">
+                              <button
+                                className={
+                                  `h-[36px] px-3 w-1/2 xl:w-1/3 text-center font-bold uppercase text-sm rounded-sm clipped-t-r ${
+                                    approvable
+                                      ? 'hover:opacity-95 cursor-pointer bg-gamefiGreen-600 text-gamefiDark'
+                                      : 'cursor-not-allowed bg-gamefiDark-400 text-gamefiDark'
+                                  } ${loadingApproval && 'cursor-not-allowed hover:opacity-100'}`
+                                }
+                                onClick={() => approvable && handleApprove(ethers.constants.MaxUint256)}
+                              >
+                                {!loadingApproval && ((allowance?.gt(0) || !usd?.address) ? 'Approved' : 'Approve')} {loadingApproval && <div className="dot-flashing mx-auto"></div>}
+                              </button>
+                              <button
+                                className={
+                                  `h-[36px] px-3 w-1/2 xl:w-1/3 text-center font-bold uppercase text-sm rounded-sm clipped-b-l ${
+                                    swappable
+                                      ? 'hover:opacity-95 cursor-pointer bg-gamefiGreen-600 text-gamefiDark'
+                                      : 'cursor-not-allowed bg-gamefiDark-400 text-gamefiDark'
+                                  }`
+                                }
+                                onClick={() => swappable && handleSwap()}
+                              >Swap</button>
+                            </div>
+                          </>
+                      }
+                    </div>
+                  </div>
+                  : <div className="flex-1 bg-gamefiDark rounded px-3 py-4">
+                    <div className="w-full h-full flex flex-col gap-4 items-center justify-center">
+                      <Image src={require('@/assets/images/icons/calendar.png')} alt=""></Image>
+                      <div>Please Wait Until Buying Phase</div>
+                    </div>
+                  </div>
+              }
             </div>
           </div>
       }
       {
-        now.getTime() < new Date(Number(poolData?.finish_time || '0') * 1000).getTime() &&
-        ((isPreOrderTime && !preOrderAllowed) ||
-          ((!isPreOrderTime || !preOrderAllowed) && now.getTime() < new Date(Number(poolData?.start_time || '0') * 1000).getTime()) ||
-          ((isPreOrderTime && preOrderAllowed) && now.getTime() < new Date(Number(poolData?.start_pre_order_time || '0') * 1000).getTime())) &&
+        (now.getTime() < timeline[TIMELINE.WINNER_ANNOUNCEMENT].start?.getTime() ||
+        (now.getTime() >= timeline[TIMELINE.WINNER_ANNOUNCEMENT].start?.getTime() && !poolData?.public_winner_status)) &&
+        now.getTime() < timeline[TIMELINE.WINNER_ANNOUNCEMENT].end?.getTime() &&
           <div className="my-4 w-full flex flex-col gap-4 p-12 rounded items-center justify-center">
             <Image src={require('@/assets/images/icons/calendar.png')} alt=""></Image>
             <div className="text-gamefiDark-200">
-              This pool has not start yet. Please wait until Buy Phase.</div>
+              This pool has not start yet. Please wait until Buying Phase.</div>
           </div>
       }
       {

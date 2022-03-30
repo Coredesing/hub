@@ -67,6 +67,9 @@ const CardItem = ({ item, ...props }: Props) => {
           <span className="ml-2 font-medium tracking-widest">{poolStatus(item.is_private)}</span>
         </div>
         <div className="cursor-pointer">
+          {/* <Link href={`/igo/${item.id}`} passHref>
+            <img src={item?.banner} alt="" style={{ width: '100%', objectFit: 'cover', aspectRatio: '4/3' }} />
+          </Link> */}
           <Link href={`https://hub.gamefi.org/#/buy-token/${item.id}`} passHref>
             <img src={item?.banner} alt="" style={{ width: '100%', objectFit: 'cover', aspectRatio: '4/3' }} />
           </Link>
@@ -74,6 +77,11 @@ const CardItem = ({ item, ...props }: Props) => {
       </div>
       <div className="bg-gamefiDark-650 w-full clipped-b-l pb-2">
         <div className="w-full flex items-center justify-center border-b border-gamefiDark-600" style={{ height: '80px' }}>
+          {/* <Link href={`/igo/${item.id}`} passHref>
+            <a className="text-center font-semibold text-lg cursor-pointer hover:underline">
+              {item?.title || ''}
+            </a>
+          </Link> */}
           <Link href={`https://hub.gamefi.org/#/buy-token/${item.id}`} passHref>
             <a className="text-center font-semibold text-lg cursor-pointer hover:underline">
               {item?.title || ''}

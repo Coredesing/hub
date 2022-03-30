@@ -8,6 +8,7 @@ import { useMemo, useState, useEffect } from 'react'
 import PriceChange from '@/components/Pages/Aggregator/PriceChange'
 import Pagination from '@/components/Pages/Aggregator/Pagination'
 import { getNetworkByAlias } from '@/components/web3'
+import { CMC_ASSETS_DOMAIN_CHART } from '@/utils/constants'
 
 export const CATEGORY_LIST = [
   'Action',
@@ -306,7 +307,7 @@ const Aggregator = ({ data }) => {
                     </div>
                     <div className="flex-none font-casual text-sm w-48 hidden 2xl:block">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      { item.price_change_7d && <img src={`https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/${item.cmc_id}.svg`} alt={`CoinMarketCap ${item.game_name}`} className={parseFloat(item.price_change_7d || 0) > 0 ? 'hue-rotate-90' : '-hue-rotate-60 -saturate-150 contrast-150 brightness-75'} /> }
+                      { item.price_change_7d && <img src={`https://${CMC_ASSETS_DOMAIN_CHART}/generated/sparklines/web/7d/usd/${item.cmc_id}.svg`} alt={`CoinMarketCap ${item.game_name}`} className={parseFloat(item.price_change_7d || 0) > 0 ? 'hue-rotate-90' : '-hue-rotate-60 -saturate-150 contrast-150 brightness-75'} /> }
                     </div>
                   </div>
                 </Link>

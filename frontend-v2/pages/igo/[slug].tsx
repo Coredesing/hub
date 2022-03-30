@@ -244,7 +244,7 @@ const IGODetails = ({ poolData }) => {
         start: new Date(Number(poolData?.end_join_pool_time) * 1000) || undefined,
         end: new Date(Number(poolData?.start_pre_order_time || poolData?.start_time || 0) * 1000) || undefined,
         info: {
-          countdownTitle: hasFCFS ? 'Phase 1 Starts In' : 'Buy Phase Starts In'
+          countdownTitle: hasFCFS ? 'Phase 1 Starts In' : 'Buying Phase Starts In'
         }
       },
       {
@@ -255,12 +255,12 @@ const IGODetails = ({ poolData }) => {
         end: new Date(Number(poolData?.start_time) * 1000) || undefined,
         info: {
           minTier: preOrderMinTier,
-          countdownTitle: hasFCFS ? 'Phase 1 Starts In' : 'Buy Phase Starts In'
+          countdownTitle: hasFCFS ? 'Phase 1 Starts In' : 'Buying Phase Starts In'
         }
       },
       {
-        key: 'buy-phase',
-        milestone: 'Buy Phase',
+        key: 'buying-phase',
+        milestone: 'Buying Phase',
         active: true,
         start: new Date(Number(poolData?.start_time) * 1000) || undefined,
         end: new Date(Number(poolData?.finish_time) * 1000) || undefined,
@@ -335,17 +335,17 @@ const IGODetails = ({ poolData }) => {
 
     if (!hasFCFS &&
       isInRange(poolData?.start_time, poolData?.finish_time, now)) {
-      return setCurrent(timeline[TIMELINE.BUY_PHASE])
+      return setCurrent(timeline[TIMELINE.BUYING_PHASE])
     }
 
     if (hasFCFS &&
       isInRange(poolData?.start_time, poolData?.freeBuyTimeSetting?.start_buy_time, now)) {
-      return setCurrent(timeline[TIMELINE.BUY_PHASE].subMilestones[0])
+      return setCurrent(timeline[TIMELINE.BUYING_PHASE].subMilestones[0])
     }
 
     if (hasFCFS &&
       isInRange(poolData?.freeBuyTimeSetting?.start_buy_time, poolData?.finish_time, now)) {
-      return setCurrent(timeline[TIMELINE.BUY_PHASE].subMilestones[1])
+      return setCurrent(timeline[TIMELINE.BUYING_PHASE].subMilestones[1])
     }
 
     if (now.getTime() > dateFromString(poolData.finish_time).getTime()) {
@@ -363,7 +363,7 @@ const IGODetails = ({ poolData }) => {
       return
     }
 
-    if (network.alias !== poolNetwork?.alias) {
+    if (network?.alias !== poolNetwork?.alias) {
       return switchNetwork(library?.provider, poolNetwork.id)
     }
 
@@ -389,6 +389,17 @@ const IGODetails = ({ poolData }) => {
       }
     })
   }
+
+  useEffect(() => {
+    if (current?.key === 'buying-phase') {
+      setTab(1)
+      return
+    }
+
+    if (current?.key === 'claim') {
+      setTab(1)
+    }
+  }, [current])
 
   return (
     <Layout title={poolData?.title || 'GameFi'}>
@@ -437,7 +448,7 @@ const IGODetails = ({ poolData }) => {
             poolData?.public_winner_status &&
             winnerList?.total &&
             allocation?.max_buy
-              ? <Notification type="success" text={`Congratulations! You are one of ${winnerList?.total || 0} winners. You can join from Phase 1 - Guarantee.`}></Notification>
+              ? <Notification type="success" text={`Congratulations on your ${allocation.max_buy} ${usd.symbol} allocation for ${poolData.title}. You can join from ${poolData?.pre_order_min_tier !== null && tierMine?.id >= poolData?.pre_order_min_tier ? 'Pre-order' : 'Phase 1 - Guarantee'}.`}></Notification>
               : ''
           }
           {
@@ -528,7 +539,7 @@ const IGODetails = ({ poolData }) => {
                   </div>
                 }
                 {
-                  current?.key === 'buy-phase' &&
+                  current?.key === 'buying-phase' &&
                   <div className="w-full">
                     <div className="mt-2">
                       <Countdown title={current?.info?.countdownTitle} to={hasFCFS}></Countdown>
@@ -536,7 +547,7 @@ const IGODetails = ({ poolData }) => {
                   </div>
                 }
                 {
-                  current?.key === 'buy-phase-1' &&
+                  current?.key === 'buying-phase-1' &&
                   <div className="w-full">
                     <div className="mt-2">
                       <Countdown title={current?.info?.countdownTitle} to={poolData?.finish_time}></Countdown>
@@ -544,7 +555,7 @@ const IGODetails = ({ poolData }) => {
                   </div>
                 }
                 {
-                  current?.key === 'buy-phase-2' &&
+                  current?.key === 'buying-phase-2' &&
                   <div className="w-full">
                     <div className="mt-2">
                       <Countdown title={current?.info?.countdownTitle} to={poolData?.finish_time}></Countdown>
@@ -674,34 +685,34 @@ const IGODetails = ({ poolData }) => {
                   {
                     hasFCFS
                       ? <>
-                        <div className={`table-row ${current?.key === 'buy-phase-1' && 'text-gamefiGreen'}`}>
+                        <div className={`table-row ${current?.key === 'buying-phase-1' && 'text-gamefiGreen'}`}>
                           <div className="table-cell align-middle py-2 rounded">
-                      Buy Phase 1 - Guarantee
+                      Buying Phase 1 - Guarantee
                           </div>
                           <div className="table-cell align-middle py-2 font-normal">
-                            {timeline[TIMELINE.BUY_PHASE].subMilestones[0].start ? format(timeline[TIMELINE.BUY_PHASE].subMilestones[0].start, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                            {timeline[TIMELINE.BUYING_PHASE].subMilestones[0].start ? format(timeline[TIMELINE.BUYING_PHASE].subMilestones[0].start, 'HH:mm, dd MMM yyyy') : 'TBA'}
                           </div>
                           <div className="table-cell align-middle py-2 font-normal">
-                            {timeline[TIMELINE.BUY_PHASE].subMilestones[0].end ? format(timeline[TIMELINE.BUY_PHASE].subMilestones[0].end, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                            {timeline[TIMELINE.BUYING_PHASE].subMilestones[0].end ? format(timeline[TIMELINE.BUYING_PHASE].subMilestones[0].end, 'HH:mm, dd MMM yyyy') : 'TBA'}
                           </div>
                         </div>
 
-                        <div className={`table-row ${current?.key === 'buy-phase-2' && 'text-gamefiGreen'}`}>
+                        <div className={`table-row ${current?.key === 'buying-phase-2' && 'text-gamefiGreen'}`}>
                           <div className="table-cell align-middle py-2 rounded">
-                      Buy Phase 2 - FCFS
+                      Buying Phase 2 - FCFS
                           </div>
                           <div className="table-cell align-middle py-2 font-normal">
-                            {timeline[TIMELINE.BUY_PHASE].subMilestones[1].start ? format(timeline[TIMELINE.BUY_PHASE].subMilestones[1].start, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                            {timeline[TIMELINE.BUYING_PHASE].subMilestones[1].start ? format(timeline[TIMELINE.BUYING_PHASE].subMilestones[1].start, 'HH:mm, dd MMM yyyy') : 'TBA'}
                           </div>
                           <div className="table-cell align-middle py-2 font-normal">
-                            {timeline[TIMELINE.BUY_PHASE].subMilestones[1].end ? format(timeline[TIMELINE.BUY_PHASE].subMilestones[1].end, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                            {timeline[TIMELINE.BUYING_PHASE].subMilestones[1].end ? format(timeline[TIMELINE.BUYING_PHASE].subMilestones[1].end, 'HH:mm, dd MMM yyyy') : 'TBA'}
                           </div>
                         </div>
                       </>
                       : <>
-                        <div className={`table-row ${current?.key === 'buy-phase' && 'text-gamefiGreen'}`}>
+                        <div className={`table-row ${current?.key === 'buying-phase' && 'text-gamefiGreen'}`}>
                           <div className="table-cell align-middle py-2 rounded">
-                      Buy Phase - Guarantee
+                      Buying Phase - Guarantee
                           </div>
                           <div className="table-cell align-middle py-2 font-normal">
                             {poolBuyTime.start ? format(poolBuyTime.start, 'HH:mm, dd MMM yyyy') : 'TBA'}

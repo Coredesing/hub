@@ -101,7 +101,7 @@ const Pools = () => {
     return data
   }, [tokenomicsResponse])
 
-  const addToWallet = async (item: any) => {
+  const addToWallet = useCallback(async (item: any) => {
     if (!library?.provider?.isMetaMask) {
       toast.error('MetaMask wallet is not found!')
       return
@@ -111,12 +111,12 @@ const Pools = () => {
       return
     }
 
-    if (network.alias !== item?.network_available) {
+    if (network?.alias !== item?.network_available) {
       return switchNetwork(library?.provider, getNetworkByAlias(item?.network_available)?.id)
     }
 
     const tokenContract = new ethers.Contract(item.token, ERC20_ABI, library.getSigner())
-    console.log(library)
+
     if (!tokenContract) {
       return
     }
@@ -136,7 +136,7 @@ const Pools = () => {
         }
       }
     })
-  }
+  }, [library, network])
 
   const onChangePage = (page: number) => {
     setFilter(f => ({ ...f, page }))

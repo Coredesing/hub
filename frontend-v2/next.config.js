@@ -20,19 +20,19 @@ module.exports = {
         source: '/unstaking',
         destination: '/staking?u',
         permanent: false
-      },
-      {
-        source: '/igo/:slug',
-        destination: 'https://hub.gamefi.org/#/buy-token/:slug',
-        permanent: false,
-        basePath: false
-      },
-      {
-        source: '/igo',
-        destination: 'https://hub.gamefi.org/#/pools/token',
-        permanent: false,
-        basePath: false
       }
+      // {
+      //   source: '/igo/:slug',
+      //   destination: 'https://hub.gamefi.org/#/buy-token/:slug',
+      //   permanent: false,
+      //   basePath: false
+      // },
+      // {
+      //   source: '/igo',
+      //   destination: 'https://hub.gamefi.org/#/pools/token',
+      //   permanent: false,
+      //   basePath: false
+      // }
     ]
   }
 }

@@ -1,14 +1,23 @@
 import React from 'react'
 import Image from 'next/image'
 
-const Notification = ({ type, text }: { type: 'error' | 'success'; text: string }) => {
+const Notification = ({ type, text }: { type: 'error' | 'success' | 'info'; text: string }) => {
   return (
     <div
       className="w-full px-6 py-2 mb-4 inline-flex items-center gap-2 justify-center text-center font-casual text-sm"
       style={{
-        background: type === 'success'
-          ? 'linear-gradient(90deg, rgba(28, 45, 102, 0) 0%, #1C2D66 24.78%, #1C2D66 50.41%, #1C2D66 75.81%, rgba(28, 45, 102, 0) 100%)'
-          : 'linear-gradient(90deg, rgba(222, 67, 67, 0) 0%, #DE4343 24.78%, #DE4343 50.41%, #DE4343 75.81%, rgba(222, 67, 67, 0) 100%)'
+        background: `
+          ${type === 'success'
+      ? 'linear-gradient(90deg, rgba(28, 45, 102, 0) 0%, #1C2D66 24.78%, #1C2D66 50.41%, #1C2D66 75.81%, rgba(28, 45, 102, 0) 100%)'
+      : ''
+    }
+    ${
+    type === 'error' ? 'linear-gradient(90deg, rgba(222, 67, 67, 0) 0%, #DE4343 24.78%, #DE4343 50.41%, #DE4343 75.81%, rgba(222, 67, 67, 0) 100%)' : ''
+    }
+    ${
+    type === 'info' ? 'linear-gradient(90deg, rgba(144, 134, 134, 0) 0%, rgba(144, 134, 134, 0.56) 24.78%, #908686 50.41%, rgba(144, 134, 134, 0.6) 75.81%, rgba(144, 134, 134, 0) 100%)' : ''
+    }
+        `
       }}
     >
       {

@@ -20,10 +20,9 @@ import { format } from 'date-fns'
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 
 const Swap = () => {
-  const { poolData, usd, hasFCFS } = useContext(IGOContext)
+  const { poolData, usd, hasFCFS, allocation } = useContext(IGOContext)
   const { library, account, network, balanceShort } = useMyWeb3()
   const [txHash, setTxHash] = useState('')
-  const [allocation, setAllocation] = useState(null)
   const { tierMine } = useAppContext()
 
   const [now, setNow] = useState(new Date())
@@ -36,14 +35,6 @@ const Swap = () => {
   }, [])
 
   // Round Info
-  const { response: allocationResponse, errorMessage: allocationError } = useFetch(`/pool/${poolData.id}/user/${account}/current-tier`, !poolData)
-  useEffect(() => {
-    setAllocation(allocationResponse?.data)
-  }, [allocationResponse])
-
-  useEffect(() => {
-    if (allocationError) toast.error('Failed to fetch allocation, reload the page to try again!')
-  }, [allocationError])
 
   const { userPurchasedTokens: purchasedTokens, updatePurchasedTokens } = useUserPurchased(poolData?.campaign_hash, poolData?.network_available)
 

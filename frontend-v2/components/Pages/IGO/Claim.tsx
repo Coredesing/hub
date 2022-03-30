@@ -12,7 +12,7 @@ import { format } from 'date-fns'
 import Pagination from './Pagination'
 import { ethers } from 'ethers'
 import { IGOContext } from '@/pages/igo/[slug]'
-import Image from "next/image"
+import Image from 'next/image'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 const PER_PAGE = 5
@@ -341,12 +341,15 @@ const Claim = () => {
       </div>}
       {
         current.key !== 'claim' && <div className="w-full mt-6 p-12 text-gamefiDark-200 flex flex-col items-center justify-center gap-4">
-          {/* <Image src={require('@/assets/images/icons/')} alt=""></Image> */}
-          <div>You do not have enough token to claim</div>
+          <Image src={require('@/assets/images/icons/calendar.png')} alt=""></Image>
+          <div>This pool has not completed yet. Please wait until Claim Phase.</div>
         </div>
       }
       {
-        current.key === 'claim' && !usdPurchased && <div className="w-full mt-6 p-12 text-gamefiDark-200">You do not have enough tokens to claim.</div>
+        current.key === 'claim' && !usdPurchased && <div className="w-full mt-6 p-12 text-gamefiDark-200 flex flex-col items-center justify-center gap-4">
+          <Image src={require('@/assets/images/icons/calendar.png')} alt=""></Image>
+          <div>You do not have enough tokens to claim.</div>
+        </div>
       }
     </>
   )

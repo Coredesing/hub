@@ -137,7 +137,8 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
       {
         item.buy_type?.toLowerCase() === 'whitelist' &&
         item.campaign_status?.toLowerCase() === 'upcoming' &&
-        now.getTime() >= new Date(Number(item.start_join_pool_time || 0) * 1000).getTime() &&
+        now.getTime() >= new Date(Number(item.start_join_pool_time) * 1000).getTime() &&
+        now.getTime() < new Date(Number(item.end_join_pool_time) * 1000).getTime() &&
         <div className="w-full flex flex-col items-center justify-center">
           <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Ends In</div>
           <div className="mt-2">
@@ -148,11 +149,20 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
       {
         item.buy_type?.toLowerCase() === 'whitelist' &&
         item.campaign_status?.toLowerCase() === 'upcoming' &&
-        now.getTime() < new Date(Number(item.start_join_pool_time || 0) * 1000).getTime() &&
+        now.getTime() < new Date(Number(item.start_join_pool_time) * 1000).getTime() &&
         <div className="w-full flex flex-col items-center justify-center">
           <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Starts In</div>
           <div className="mt-2">
             <Countdown to={item?.end_join_pool_time}></Countdown>
+          </div>
+        </div>
+      }
+      {now.getTime() > new Date(Number(item.end_join_pool_time) * 1000).getTime() &&
+      now.getTime() <= new Date(Number(item.start_time) * 1000).getTime() &&
+        <div className="w-full flex flex-col items-center justify-center">
+          <div className="text-xs font-semibold text-white/50 uppercase">Buy Phase Starts In</div>
+          <div className="mt-2">
+            <Countdown to={item?.start_time}></Countdown>
           </div>
         </div>
       }

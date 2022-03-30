@@ -3,7 +3,7 @@ import { getTierById } from '@/utils/tiers'
 import React, { useEffect, useMemo, useState, useCallback, createContext } from 'react'
 import { fetchOneWithSlug } from '../api/igo'
 import { useMyWeb3 } from '@/components/web3/context'
-import { fetcher, printNumber, formatterUSD, formatPrice } from '@/utils'
+import { fetcher, printNumber, formatterUSD, formatPrice, useFetch } from '@/utils'
 import Swap from '@/components/Pages/IGO/Swap'
 import Claim from '@/components/Pages/IGO/Claim'
 import Link from 'next/link'
@@ -19,7 +19,13 @@ import Countdown from '@/components/Pages/IGO/Countdown'
 import { dateFromString, isInRange } from '@/components/Pages/IGO/utils'
 import { TIMELINE } from '@/components/Pages/IGO/constants'
 import Notification from '@/components/Pages/IGO/Notification'
-
+import { useAppContext } from '@/context'
+import toast from 'react-hot-toast'
+import Image from 'next/image'
+import Tippy from '@tippyjs/react'
+import { ethers } from 'ethers'
+import { switchNetwork } from '@/components/web3'
+import ERC20_ABI from '@/components/web3/abis/ERC20.json'
 type Milestone = {
   key: string;
   milestone: string;
@@ -43,6 +49,7 @@ export const IGOContext = createContext({
   hasFCFS: false,
   completed: false,
   timeline: [],
+  allocation: null,
 
   setSignature: (v: any) => { console.log(v) },
   loadJoined: () => {},
@@ -52,6 +59,8 @@ export const IGOContext = createContext({
 })
 
 const IGODetails = ({ poolData }) => {
+  const { tierMine } = useAppContext()
+
   const [now, setNow] = useState(new Date())
   useEffect(() => {
     const interval = setInterval(() => {
@@ -75,7 +84,7 @@ const IGODetails = ({ poolData }) => {
     return parseInt(poolData?.total_sold_coin) * parseFloat(poolData?.token_conversion_rate)
   }, [poolData])
 
-  const { account } = useMyWeb3()
+  const { account, library, network } = useMyWeb3()
   const { network: poolNetwork } = useLibraryDefaultFlexible(poolData?.network_available)
   const [signature, setSignature] = useState('')
   const preOrderMinTier = useMemo(() => {
@@ -153,10 +162,6 @@ const IGODetails = ({ poolData }) => {
     return poolClaimTime.start <= now
   }, [poolClaimTime, now])
 
-  const poolHasWinners = useMemo(() => {
-    return poolPreOrderTime.start <= now || poolBuyTime.start <= now || poolFreeBuyTime.start <= now || isClaimTime
-  }, [poolPreOrderTime, poolBuyTime, poolFreeBuyTime, now, isClaimTime])
-
   const [winnerSearch, setWinnerSearch] = useState('')
   const [captchaWinner, setCaptchaWinner] = useState('')
   const [winnerSearchResults, setWinnerSearchResults] = useState([])
@@ -189,6 +194,16 @@ const IGODetails = ({ poolData }) => {
         ])
       })
   }, [winnerSearch, captchaWinner, poolData, setWinnerSearchResults])
+
+  const { response: winnerResponse, errorMessage: winnerError } = useFetch(`/user/winner-list/${poolData.id}`, !poolData)
+
+  const winnerList = useMemo(() => {
+    return winnerResponse?.data
+  }, [winnerResponse])
+
+  const poolHasWinners = useMemo(() => {
+    return winnerList?.total > 0
+  }, [winnerList])
 
   const timeline = useMemo<Milestone[]>(() => {
     return [
@@ -282,6 +297,16 @@ const IGODetails = ({ poolData }) => {
   }, [poolData, preOrderMinTier, hasFCFS])
 
   const [current, setCurrent] = useState(null)
+
+  const { response: allocationResponse, errorMessage: allocationError } = useFetch(`/pool/${poolData.id}/user/${account}/current-tier`, !poolData)
+  const allocation = useMemo(() => {
+    return allocationResponse?.data
+  }, [allocationResponse?.data])
+
+  useEffect(() => {
+    if (allocationError) toast.error('Failed to fetch allocation, reload the page to try again!')
+  }, [allocationError])
+
   useEffect(() => {
     if (!poolData.start_join_pool_time || poolData.campaign_status?.toLowerCase() === 'tba') {
       return setCurrent(timeline[TIMELINE.TBA])
@@ -328,6 +353,43 @@ const IGODetails = ({ poolData }) => {
     }
   }, [hasFCFS, now, poolData, timeline])
 
+  const addToWallet = async (item: any) => {
+    if (!library?.provider?.isMetaMask) {
+      toast.error('MetaMask wallet is not found!')
+      return
+    }
+
+    if (!item.token) {
+      return
+    }
+
+    if (network.alias !== poolNetwork?.alias) {
+      return switchNetwork(library?.provider, poolNetwork.id)
+    }
+
+    const tokenContract = new ethers.Contract(item.token, ERC20_ABI, library.getSigner())
+    console.log(library)
+    if (!tokenContract) {
+      return
+    }
+    const symbol = await tokenContract.symbol()
+    const decimals = await tokenContract.decimals()
+    const name = await tokenContract.name()
+
+    await library?.provider?.request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: tokenContract.address,
+          symbol,
+          decimals,
+          name
+        }
+      }
+    })
+  }
+
   return (
     <Layout title={poolData?.title || 'GameFi'}>
       <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
@@ -356,6 +418,7 @@ const IGODetails = ({ poolData }) => {
           hasFCFS,
           completed,
           timeline,
+          allocation,
 
           setSignature,
           loadJoined,
@@ -363,8 +426,33 @@ const IGODetails = ({ poolData }) => {
           setCompleted,
           setCurrent
         }}>
-          <Notification type="success" text="Congratulations! You are one of 500 winners. You can join from Phase 1 - Guarantee."></Notification>
-          <Notification type="error" text="This pool is over. See you in the next pool."></Notification>
+          {
+            (!poolData?.public_winner_status || !winnerList?.total) &&
+            current?.key === 'winner-announcement'
+              ? <Notification type="info" text="Please wait for the winner announcement."></Notification>
+              : ''
+          }
+          {
+            current?.key === 'winner-announcement' &&
+            poolData?.public_winner_status &&
+            winnerList?.total &&
+            allocation?.max_buy
+              ? <Notification type="success" text={`Congratulations! You are one of ${winnerList?.total || 0} winners. You can join from Phase 1 - Guarantee.`}></Notification>
+              : ''
+          }
+          {
+            current?.key === 'winner-announcement' &&
+            poolData?.public_winner_status &&
+            winnerList?.total &&
+            !allocation?.max_buy
+              ? <Notification type="error" text={`Sorry! You are not one of the ${winnerList?.total || 0} winners.`}></Notification>
+              : ''
+          }
+          {
+            poolData?.finish_time && now.getTime() > new Date(poolData.finish_time).getTime()
+              ? <Notification type="error" text="This pool is over. See you in the next pool."></Notification>
+              : ''
+          }
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="flex-1 bg-gradient-to-b from-gamefiDark-630/30 p-4 xl:p-6 2xl:p-7 rounded">
               <div className="flex items-center gap-6">
@@ -400,7 +488,7 @@ const IGODetails = ({ poolData }) => {
                   </p>
                 </div>
               </div>
-              <div className="font-casual text-sm text-white/80 mt-8 line-clamp-4">
+              <div className="font-casual text-sm text-white/80 mt-8">
                 { poolData.description }
               </div>
               {poolData.slug && <div className=""><a href={`/aggregator/${poolData.slug}`}>Full Research &gt;&gt;</a></div>}
@@ -432,8 +520,8 @@ const IGODetails = ({ poolData }) => {
                   <div className="w-full">
                     <div className="mt-2">
                       {
-                        now.getTime() < new Date(Number(poolData.start_pre_order_time || 0) * 1000).getTime()
-                          ? <Countdown title="Pre-order Starts In" to={poolData?.start_time}></Countdown>
+                        tierMine?.id >= poolData?.pre_order_min_tier
+                          ? <Countdown title="Pre-order Starts In" to={poolData?.start_pre_order_time}></Countdown>
                           : <Countdown title="Phase 1 Starts In" to={poolData?.start_time}></Countdown>
                       }
                     </div>
@@ -478,7 +566,7 @@ const IGODetails = ({ poolData }) => {
                   'POOL INFO',
                   'SWAP',
                   'CLAIM',
-                  'WINNERS'
+                  `WINNERS (${winnerList.total})`
                 ]
                 : [
                   'POOL INFO',
@@ -496,7 +584,19 @@ const IGODetails = ({ poolData }) => {
                 <p className="uppercase font-mechanic font-bold text-lg mb-6">Token Info</p>
                 <div className="flex justify-between mb-4 items-center">
                   <strong className="font-semibold">Symbol</strong>
-                  <span>{poolData?.symbol}</span>
+                  <span className="flex gap-2 items-center">
+                    {poolData?.symbol}
+                    {poolData.token && poolData.campaign_status?.toLowerCase() === 'ended' && poolData.token_type === 'erc20' && <>
+                      <Tippy content="Add to Metamask">
+                        <button
+                          className="w-6 h-6 xl:w-8 xl:h-8 hover:opacity-90"
+                          onClick={() => addToWallet(poolData)}
+                        >
+                          <Image src={require('@/assets/images/wallets/metamask.svg')} alt=""></Image>
+                        </button>
+                      </Tippy>
+                    </>}
+                  </span>
                 </div>
                 <div className="flex justify-between mb-4 items-center">
                   <strong className="font-semibold">Price</strong>
@@ -536,7 +636,7 @@ const IGODetails = ({ poolData }) => {
                     </div>
                   </div>
 
-                  <div className="table-row">
+                  <div className={`table-row ${current?.key === 'whitelist' && 'text-gamefiGreen'}`}>
                     <div className="table-cell align-middle py-2 rounded">
                       Apply Whitelist
                     </div>
@@ -548,7 +648,7 @@ const IGODetails = ({ poolData }) => {
                     </div>
                   </div>
 
-                  <div className="table-row">
+                  <div className={`table-row ${current?.key === 'winner-announcement' && 'text-gamefiGreen'}`}>
                     <div className="table-cell align-middle py-2 rounded">
                       Winner Announcement
                     </div>
@@ -559,7 +659,7 @@ const IGODetails = ({ poolData }) => {
                     </div>
                   </div>
 
-                  <div className="table-row">
+                  <div className={`table-row ${current?.key === 'pre-order' && 'text-gamefiGreen'}`}>
                     <div className="table-cell align-middle py-2 rounded">
                       Pre-order (Min Tier: {preOrderMinTier.name})
                     </div>
@@ -574,7 +674,7 @@ const IGODetails = ({ poolData }) => {
                   {
                     hasFCFS
                       ? <>
-                        <div className="table-row">
+                        <div className={`table-row ${current?.key === 'buy-phase-1' && 'text-gamefiGreen'}`}>
                           <div className="table-cell align-middle py-2 rounded">
                       Buy Phase 1 - Guarantee
                           </div>
@@ -586,7 +686,7 @@ const IGODetails = ({ poolData }) => {
                           </div>
                         </div>
 
-                        <div className="table-row">
+                        <div className={`table-row ${current?.key === 'buy-phase-2' && 'text-gamefiGreen'}`}>
                           <div className="table-cell align-middle py-2 rounded">
                       Buy Phase 2 - FCFS
                           </div>
@@ -599,7 +699,7 @@ const IGODetails = ({ poolData }) => {
                         </div>
                       </>
                       : <>
-                        <div className="table-row">
+                        <div className={`table-row ${current?.key === 'buy-phase' && 'text-gamefiGreen'}`}>
                           <div className="table-cell align-middle py-2 rounded">
                       Buy Phase - Guarantee
                           </div>
@@ -612,7 +712,7 @@ const IGODetails = ({ poolData }) => {
                         </div></>
                   }
 
-                  <div className="table-row">
+                  <div className={`table-row ${current?.key === 'claim' && 'text-gamefiGreen'}`}>
                     <div className="table-cell align-middle py-2 rounded">
                       Claim
                     </div>
@@ -626,10 +726,20 @@ const IGODetails = ({ poolData }) => {
             </div>
           </TabPanel>
           <TabPanel value={tab} index={1}>
-            { failedRequirements ? <div className="my-4 w-full bg-gamefiDark-630/30 p-7 rounded clipped-t-r text-center font-semibold text-lg font-casual">You do not meet the requirements!</div> : <Swap></Swap> }
+            { failedRequirements
+              ? <div className="my-4 w-full flex flex-col gap-4 p-12 rounded items-center justify-center">
+                <Image src={require('@/assets/images/icons/poolOver.png')} alt=""></Image>
+                <div className="text-gamefiDark-200">You do not meet the requirements.</div>
+              </div>
+              : <Swap></Swap> }
           </TabPanel>
           <TabPanel value={tab} index={2}>
-            { failedRequirements ? <div className="my-4 w-full bg-gamefiDark-630/30 p-7 rounded clipped-t-r text-center font-semibold text-lg font-casual">You do not meet the requirements! {failedRequirements}</div> : <Claim></Claim> }
+            { failedRequirements
+              ? <div className="my-4 w-full flex flex-col gap-4 p-12 rounded items-center justify-center">
+                <Image src={require('@/assets/images/icons/poolOver.png')} alt=""></Image>
+                <div className="text-gamefiDark-200">You do not meet the requirements.</div>
+              </div>
+              : <Claim></Claim> }
           </TabPanel>
           <TabPanel value={tab} index={3}>
             <div className="bg-gamefiDark-630/30 clipped-t-r rounded-md p-7 font-casual text-sm flex gap-6 mt-4">

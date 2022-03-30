@@ -1,4 +1,4 @@
-import ListSwiper, { CarouselList, SwiperItem } from '@/components/Base/ListSwiper'
+import { CarouselList, SwiperItem } from '@/components/Base/ListSwiper'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import NFTCard from '../NFTCard'
 import { useNFTInfos } from '../utils'
@@ -66,19 +66,18 @@ const ListTrending = () => {
           </div>
         </div>
         <div className="mt-5">
-          {<CarouselList
-            key={infos.length}
-            childrens={
-              infos.map((item, i) => <SwiperItem
-                key={`hot-offers-${i}`}
-                style={{minWidth: '280px'}}
-                className="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 px-2"
-              >
-                <div className='w-full'>
-                  <NFTCard item={item} showOffer={true} showListing={true}></NFTCard>
-                </div>
-              </SwiperItem>)
-            } />}
+          {<CarouselList key={infos.length}>{
+            infos.map((item, i) => <SwiperItem
+              key={`hot-offers-${i}`}
+              style={{ minWidth: '280px' }}
+              className="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 px-2"
+            >
+              <div className='w-full'>
+                <NFTCard item={item} showOffer={true} showListing={true}></NFTCard>
+              </div>
+            </SwiperItem>)
+          }
+          </CarouselList> }
         </div>
         {/* {infos.length > 0 && <ListSwiper
           title="Trending"

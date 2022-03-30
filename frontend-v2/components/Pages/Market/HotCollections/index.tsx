@@ -9,7 +9,7 @@ const HotCollections = () => {
   const { response, loading } = useFetch(url)
 
   const hotCollections = useMemo<any[]>(() => {
-    return response?.data?.data || []
+    return response?.data || []
   }, [response])
 
   return (

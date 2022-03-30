@@ -151,9 +151,11 @@ export function formatPrice (price: string): string {
   return `$${price.slice(0, position + matches[0].length + 4)}`
 }
 
-export function printNumber (_n: string | number): string {
+export function printNumber (_n: string | number, fixed?: number): string {
   if (typeof _n === 'number') {
-    return _n.toLocaleString('en-US')
+    return _n.toLocaleString('en-US', {
+      maximumFractionDigits: fixed || 3
+    })
   }
 
   const n = parseFloat(_n)
@@ -161,7 +163,9 @@ export function printNumber (_n: string | number): string {
     return _n
   }
 
-  return n.toLocaleString('en-US')
+  return n.toLocaleString('en-US', {
+    maximumFractionDigits: fixed || 3
+  })
 }
 
 export const networkImage = (network: string) => {

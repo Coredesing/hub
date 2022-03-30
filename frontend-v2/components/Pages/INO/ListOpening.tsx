@@ -57,7 +57,7 @@ const List = ({ now }: Props) => {
           {itemsExclusive?.length
             ? <>
               <div className={styles.subheading}>
-        POOL INO <span>(Staking $GAFI required)</span>
+        POOL INO <span>($GAFI Staking required)</span>
               </div>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
                 { !loading && itemsExclusive.map(item => {
@@ -71,7 +71,7 @@ const List = ({ now }: Props) => {
           {itemsOpen?.length
             ? <>
               <div className={styles.subheading} style={{ marginTop: '2rem' }}>
-        POOL Community <span>(Staking $GAFI not required)</span>
+        POOL Community <span>($GAFI Staking not required)</span>
               </div>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
                 { !loading && itemsOpen.map(item => {

@@ -50,7 +50,7 @@ const CollectionDetail = ({ data }) => {
   )
 }
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps ({ params }) {
   if (!params?.slug) {
     return { props: { data: {} } }
   }

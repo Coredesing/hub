@@ -47,8 +47,8 @@ export const getNftInfo = async (item: { token_id: number | string; token_addres
     collectionInfo = collectionInfo || {}
     item.collection_info = collectionInfo
     if (item.collection_info.sale_to) {
-      const saleTo = +item.collection_info.sale_to * 1000;
-      item.collection_info.sale_over = saleTo < Date.now();
+      const saleTo = +item.collection_info.sale_to * 1000
+      item.collection_info.sale_over = saleTo < Date.now()
     }
     if (+collectionInfo.use_external_uri === 1) {
       const result = await fetcher(`${API_BASE_URL}/marketplace/collection/${tokenAddress}/${tokenId}`, { method: 'POST' })

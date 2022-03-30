@@ -50,7 +50,7 @@ const IGO = () => {
   return (
     <Layout title="Launchpad">
       <div className="px-2 md:px-4 lg:px-16 md:container mx-auto lg:block pt-16">
-        <div className="w-full text-center text-[84px] leading-[80%] font-bold uppercase">
+        <div className="w-full text-center text-[84px] leading-[80%] font-bold uppercase select-none">
         Dedicated Gaming <br></br>Launchpad & IGO
         </div>
         <div className="mt-14 w-full flex gap-14 justify-center items-center">
@@ -60,7 +60,7 @@ const IGO = () => {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text'
-            }}>55+</div>
+            }}>100+</div>
             <div className="uppercase font-medium">Total Projects Launched</div>
           </div>
           <div className="flex flex-col gap-3 items-center justify-center">
@@ -69,7 +69,7 @@ const IGO = () => {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text'
-            }}>500X</div>
+            }}>30X</div>
             <div className="uppercase font-medium">Average ATH ROI</div>
           </div>
         </div>
@@ -100,7 +100,7 @@ const IGO = () => {
                 : <>
                   {openingPublicList?.length
                     ? <div className="w-full max-w-[1180px] mx-auto mt-14">
-                      <p><span className="uppercase font-semibold text-xl">Pool IGO</span> <span className="text-white/60">(Staking $GAFI required)</span></p>
+                      <p><span className="uppercase font-semibold text-xl">IGO Pool</span> <span className="text-white/60">($GAFI Staking required)</span></p>
                       <div className="mt-4 w-full grid md:grid-cols-3 xl:grid-cols-3 gap-6">
                         {openingPublicList.map(item => <div key={item.id} className="w-full">
                           <Card item={item} color="black" background="gamefiDark"></Card>
@@ -111,7 +111,7 @@ const IGO = () => {
                   {openingCommunityList?.length
                     ? <>
                       <div className="w-full max-w-[1180px] mx-auto mt-14">
-                        <p><span className="uppercase font-semibold text-xl">Pool Community</span> <span className="text-white/60">(Staking $GAFI not required)</span></p>
+                        <p><span className="uppercase font-semibold text-xl">Community Pool</span> <span className="text-white/60">($GAFI Staking not required)</span></p>
                         <div className="mt-4 w-full grid md:grid-cols-3 xl:grid-cols-3 gap-6">
                           {openingCommunityList.map(item => <div key={item.id} className="w-full">
                             <Card item={item} color="black" background="gamefiDark"></Card>
@@ -146,7 +146,7 @@ const IGO = () => {
                 : <>
                   {upcomingPublicList?.length
                     ? <div className="w-full max-w-[1180px] mx-auto mt-14">
-                      <p><span className="uppercase font-semibold text-xl">Pool IGO</span> <span className="text-white/60">(Staking $GAFI required)</span></p>
+                      <p><span className="uppercase font-semibold text-xl">IGO Pool</span> <span className="text-white/60">($GAFI Staking required)</span></p>
                       <div className="mt-4 w-full grid md:grid-cols-3 xl:grid-cols-3 gap-6">
                         {upcomingPublicList.map(item => <div key={item.id} className="w-full">
                           <Card item={item} color={openingItems?.length > 0 ? 'gamefiDark' : 'black'} background={openingItems?.length > 0 ? 'black' : 'gamefiDark'}></Card>
@@ -157,7 +157,7 @@ const IGO = () => {
                   {upcomingCommunityList?.length
                     ? <>
                       <div className="w-full max-w-[1180px] mx-auto mt-14">
-                        <p><span className="uppercase font-semibold text-xl">Pool Community</span> <span className="text-white/60">(Staking $GAFI not required)</span></p>
+                        <p><span className="uppercase font-semibold text-xl">Community Pool</span> <span className="text-white/60">($GAFI Staking not required)</span></p>
                         <div className="mt-4 w-full grid md:grid-cols-3 xl:grid-cols-3 gap-6">
                           {upcomingCommunityList.map(item => <div key={item.id} className="w-full">
                             <Card item={item} color={openingItems?.length > 0 ? 'gamefiDark' : 'black'} background={openingItems?.length > 0 ? 'black' : 'gamefiDark'}></Card>

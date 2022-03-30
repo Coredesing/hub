@@ -29,7 +29,7 @@ const SwapProgress = () => {
     return soldWithContract || constants.Zero
   }, [soldWithContract])
   const progress = useMemo(() => {
-    if (timeline.findIndex(item => item.key === current?.key) > TIMELINE.BUY_PHASE) {
+    if (timeline.findIndex(item => item.key === current?.key) > TIMELINE.BUYING_PHASE) {
       return 100
     }
 

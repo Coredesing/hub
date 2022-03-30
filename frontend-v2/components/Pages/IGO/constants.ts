@@ -4,6 +4,6 @@ export enum TIMELINE {
   WHITELIST = 2,
   WINNER_ANNOUNCEMENT = 3,
   PRE_ORDER = 4,
-  BUY_PHASE = 5,
+  BUYING_PHASE = 5,
   CLAIM = 6
 }

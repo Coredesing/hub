@@ -13,12 +13,13 @@ import Pagination from './Pagination'
 import { ethers } from 'ethers'
 import { IGOContext } from '@/pages/igo/[slug]'
 import Image from 'next/image'
+import { TIMELINE } from './constants'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 const PER_PAGE = 5
 
 const Claim = () => {
-  const { poolData, usd, current } = useContext(IGOContext)
+  const { poolData, usd, current, timeline } = useContext(IGOContext)
   const [now, setNow] = useState(new Date())
   useEffect(() => {
     const interval = setInterval(() => {
@@ -199,7 +200,7 @@ const Claim = () => {
 
   return (
     <>
-      { current?.key === 'claim' && Number(purchasedTokens) > 0 &&
+      { now.getTime() > timeline[TIMELINE.BUYING_PHASE].end?.getTime() && Number(purchasedTokens) > 0 &&
       <div className="w-full my-4 flex flex-col xl:flex-row gap-6">
         <div className="w-full xl:w-1/3 bg-gamefiDark-630/30 p-7 rounded clipped-t-r">
           <p className="uppercase font-mechanic font-bold text-lg mb-6">Your Allocation</p>
@@ -340,7 +341,7 @@ const Claim = () => {
         </div>
       </div>}
       {
-        current?.key !== 'claim' && <div className="w-full mt-6 p-12 text-gamefiDark-200 flex flex-col items-center justify-center gap-4">
+        now.getTime() <= timeline[TIMELINE.BUYING_PHASE].end?.getTime() && <div className="w-full mt-6 p-12 text-gamefiDark-200 flex flex-col items-center justify-center gap-4">
           <Image src={require('@/assets/images/icons/calendar.png')} alt=""></Image>
           <div>This pool has not completed yet. Please wait until Claim Phase.</div>
         </div>

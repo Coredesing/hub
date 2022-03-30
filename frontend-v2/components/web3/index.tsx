@@ -5,6 +5,7 @@ import React, { ReactNode, useEffect, useState } from 'react'
 import { network, injected, walletconnect, POLLING_INTERVAL, RPC_URLS, IS_TESTNET } from './connectors'
 import type { AddEthereumChainParameter } from '@web3-react/metamask'
 import { BigNumber, ethers } from 'ethers'
+import { CMC_ASSETS_DOMAIN } from '@/utils/constants'
 
 export { NoEthereumProviderError } from '@web3-react/injected-connector'
 export function getLibrary (provider: any): Web3Provider {
@@ -219,42 +220,42 @@ export const ETH: Token = {
   name: 'Ether',
   symbol: 'ETH',
   decimals: 18,
-  image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png'
+  image: `https://${CMC_ASSETS_DOMAIN}/static/img/coins/64x64/1027.png`
 }
 
 export const MATIC: Token = {
   name: 'Matic',
   symbol: 'MATIC',
   decimals: 18,
-  image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png'
+  image: `https://${CMC_ASSETS_DOMAIN}/static/img/coins/64x64/3890.png`
 }
 
 export const BNB: Token = {
   name: 'Binance Coin',
   symbol: 'BNB',
   decimals: 18,
-  image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png'
+  image: `https://${CMC_ASSETS_DOMAIN}/static/img/coins/64x64/1839.png`
 }
 
 export const AVAX: Token = {
   name: 'Avalanche',
   symbol: 'AVAX',
   decimals: 18,
-  image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5805.png'
+  image: `https://${CMC_ASSETS_DOMAIN}/static/img/coins/64x64/5805.png`
 }
 
 export const FTM: Token = {
   name: 'Fantom',
   symbol: 'FTM',
   decimals: 18,
-  image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3513.png'
+  image: `https://${CMC_ASSETS_DOMAIN}/static/img/coins/64x64/3513.png`
 }
 
 export const GAFI: Token = {
   name: 'GameFi',
   symbol: 'GAFI',
   decimals: 18,
-  image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11783.png',
+  image: `https://${CMC_ASSETS_DOMAIN}/static/img/coins/64x64/11783.png`,
   address: TOKEN_CONTRACT
 }
 
@@ -262,7 +263,7 @@ export const BUSD_BSC: Token = {
   name: 'BUSD',
   symbol: 'BUSD',
   decimals: 18,
-  image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/4687.png',
+  image: `https://${CMC_ASSETS_DOMAIN}/static/img/coins/64x64/4687.png`,
   address: IS_TESTNET ? process.env.NEXT_PUBLIC_BUSD_97 : process.env.NEXT_PUBLIC_BUSD_56
 }
 
@@ -270,7 +271,7 @@ export const USDT_ERC: Token = {
   name: 'USDT',
   symbol: 'USDT',
   decimals: 6,
-  image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png',
+  image: `https://${CMC_ASSETS_DOMAIN}/static/img/coins/64x64/825.png`,
   address: IS_TESTNET ? process.env.NEXT_PUBLIC_USDT_5 : process.env.NEXT_PUBLIC_USDT_1
 }
 
@@ -278,7 +279,7 @@ export const USDT_POLYGON: Token = {
   name: 'USDT',
   symbol: 'USDT',
   decimals: 6,
-  image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png',
+  image: `https://${CMC_ASSETS_DOMAIN}/static/img/coins/64x64/825.png`,
   address: IS_TESTNET ? process.env.NEXT_PUBLIC_USDT_80001 : process.env.NEXT_PUBLIC_USDT_137
 }
 

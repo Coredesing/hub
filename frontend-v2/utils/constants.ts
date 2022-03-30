@@ -16,3 +16,6 @@ export const CLAIM_TYPE = {
   2: 'External Website',
   3: 'TBA'
 }
+
+export const CMC_ASSETS_DOMAIN = 's2.coinmarketcap.com'
+export const CMC_ASSETS_DOMAIN_CHART = 's3.coinmarketcap.com'

@@ -1,3 +1,4 @@
+import { CMC_ASSETS_DOMAIN } from '@/utils/constants'
 import React from 'react'
 import { prettyPrice, priceChange, priceChangeTag, useScreens } from '../utils'
 
@@ -8,7 +9,7 @@ const GameFiPerformance = ({ item } : { item: any }) => {
       <div className="container">
         <div className="relative w-full px-6 py-5 bg-gamefiDark-800 rounded-sm">
           <div className="flex items-center">
-            <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/11783.png" width="60" height="60" alt=""></img>
+            <img src={`https://${CMC_ASSETS_DOMAIN}/static/img/coins/64x64/11783.png`} width="60" height="60" alt=""></img>
             <div className="ml-3 text-xl font-bold">GameFi.org</div>
           </div>
           <div className="w-full flex items-center mt-4">
@@ -103,7 +104,7 @@ const GameFiPerformance = ({ item } : { item: any }) => {
                 <div className="w-full mt-4 sm:mt-0 flex  items-center justify-between">
                   <div className="text-white opacity-50 text-xs">Native Token:</div>
                   <div className="flex">
-                    <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/11783.png" width="24" height="24" alt=""></img>
+                    <img src={`https://${CMC_ASSETS_DOMAIN}/static/img/coins/64x64/11783.png`} width="24" height="24" alt=""></img>
                     <div className="ml-2 text-sm font-medium">GAFI</div>
                   </div>
                 </div>
@@ -164,7 +165,7 @@ const GameFiPerformance = ({ item } : { item: any }) => {
             </div>
           </div>
           <div className="flex items-center">
-            <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/11783.png" width="60" height="60" alt=""></img>
+            <img src={`https://${CMC_ASSETS_DOMAIN}/static/img/coins/64x64/11783.png`} width="60" height="60" alt=""></img>
             <div className="ml-3 text-xl font-bold">GameFi.org</div>
           </div>
           <div className="mt-6 flex" style={{
@@ -215,7 +216,7 @@ const GameFiPerformance = ({ item } : { item: any }) => {
                 <div className="w-full mt-4 sm:mt-0 flex flex-col sm:flex-row items-center justify-between">
                   <div className="text-white opacity-50 text-xs">Native Token:</div>
                   <div className="flex">
-                    <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/11783.png" width="24" height="24" alt=""></img>
+                    <img src={`https://${CMC_ASSETS_DOMAIN}/static/img/coins/64x64/11783.png`} width="24" height="24" alt=""></img>
                     <div className="ml-2 text-sm font-medium">GAFI</div>
                   </div>
                 </div>

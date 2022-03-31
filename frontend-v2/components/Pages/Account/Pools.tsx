@@ -95,7 +95,7 @@ const Pools = () => {
   const nextClaim = (item: any) => {
     const configs = item?.campaignClaimConfig?.filter(config => new Date(Number(config.start_time) * 1000).getTime() >= new Date().getTime())
     if (!configs?.length) {
-      return item.campaign_status.toLowerCase() === 'ended' ? 'Finished' : ''
+      return item?.campaign_status?.toLowerCase() === 'ended' ? 'Finished' : ''
     }
 
     return format(new Date(Number(configs[0].start_time) * 1000), 'yyyy-MM-dd HH:mm:ss')
@@ -333,7 +333,7 @@ const Pools = () => {
         }
       </div>
       <Modal
-        show={open}
+        show={open && selectedPool}
         toggle={handleClose}
       >
         <div className="py-12 px-4">
@@ -344,6 +344,28 @@ const Pools = () => {
           <div className="w-full flex mt-4 items-center justify-between">
             <div>Have Bought</div>
             <div>{printNumber((Number(selectedPool?.user_purchased) * (Number(selectedPool?.token_conversion_rate)) || 0))} {getCurrency(selectedPool)?.symbol}</div>
+          </div>
+          <div className="w-full flex mt-4 items-center justify-between">
+            <div>Token Allocation</div>
+            <div>{printNumber((Number(selectedPool?.user_purchased) || 0))} {selectedPool?.symbol}</div>
+          </div>
+          <div className="w-full flex mt-4 items-center justify-between">
+            <div>Claimed Tokens</div>
+            <div>{claimTypes(selectedPool)?.find(type => type.name === CLAIM_TYPE[0])?.value === 100 && Number(availableToClaim(selectedPool)) > 0
+              ? `${printNumber((selectedPool?.user_claimed || 0).toLocaleString('en-US'))}/${availableToClaim(selectedPool)} ${selectedPool?.symbol}`
+              : ''}</div>
+          </div>
+          <div className="w-full flex mt-4 items-center justify-between">
+            <div>Next Claim</div>
+            <div>{nextClaim(selectedPool)}</div>
+          </div>
+          <div className="w-full flex mt-4 items-center justify-between">
+            <div>Token Price</div>
+            <div>${selectedPool?.token_conversion_rate}</div>
+          </div>
+          <div className="w-full flex mt-4 items-center justify-between">
+            <div>Current Price</div>
+            <div>{tokenomics?.find(token => token.ticker === selectedPool?.symbol)?.price ? `$${printNumber(tokenomics?.find(token => token.ticker === selectedPool?.symbol)?.price)}` : ''}</div>
           </div>
         </div>
       </Modal>

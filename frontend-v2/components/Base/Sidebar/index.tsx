@@ -20,14 +20,14 @@ const Sidebar = () => {
           <Image src={require('@/assets/images/icons/controller.svg')} alt='hub'></Image>
           <span className="mt-2">Hub</span>
         </SidebarLink>
-        {/* <SidebarLink path='https://hub.gamefi.org/#/pools/token' external={true}>
-          <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
-          <span className="mt-2">IGO</span>
-        </SidebarLink> */}
-        <SidebarLink path='/igo'>
+        <SidebarLink path='https://hub.gamefi.org/#/pools/token' external={true}>
           <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
           <span className="mt-2">IGO</span>
         </SidebarLink>
+        {/* <SidebarLink path='/igo'>
+          <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
+          <span className="mt-2">IGO</span>
+        </SidebarLink> */}
         <SidebarLink path='/ino'>
           <Image src={require('@/assets/images/icons/nft.svg')} alt='INO'></Image>
           <span className="mt-2">INO</span>

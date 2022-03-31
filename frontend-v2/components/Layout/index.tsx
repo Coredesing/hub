@@ -4,6 +4,7 @@ import Sidebar from '@/components/Base/Sidebar'
 import Topbar from '@/components/Base/Topbar'
 import Toolbox from '@/components/Base/Toolbox'
 import Footer from '@/components/Base/Footer'
+import imageSocial from '@/assets/images/gamefi.jpg'
 
 type Props = {
   children?: ReactNode;
@@ -45,7 +46,7 @@ const Layout = ({ children, title, description, image }: Props) => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta property="og:title" content={title || 'GameFi.org'} key="title" />
         <meta property="og:description" content={description || 'GameFi.org is an all-in-one discovery gaming hub for games, guilds, and metaverses.'} key="description" />
-        { image && <meta property="og:image" content={image} key="title" /> }
+        <meta property="og:image" content={image || imageSocial.src} key="title" />
       </Head>
       <div>
         <Sidebar></Sidebar>

@@ -5,9 +5,8 @@ import Link from 'next/link'
 import ImageLoader from '@/components/Base/ImageLoader'
 
 const HotCollections = () => {
-  const url = '/marketplace/collections?limit=10&page=1'
+  const url = '/marketplace/top-collections?limit=10&page=1'
   const { response, loading } = useFetch(url)
-
   const hotCollections = useMemo<any[]>(() => {
     return response?.data || []
   }, [response])
@@ -25,9 +24,9 @@ const HotCollections = () => {
           <div className="mt-5">
             <CarouselList>
               {hotCollections.map(collection => (
-                <SwiperItem key={collection.id}
-                  width="300px"
-                  style={{ marginLeft: '8px', marginRight: '8px', flex: '0 0 300px' }}>
+                <div key={collection.id}
+                  // width="300px"
+                  style={{ marginLeft: '8px', marginRight: '8px', flex: '0 0 280px', width: '280px' }}>
                   <Link href={`/market/collection/${collection.slug}`} passHref>
                     <div className={'w-full md:px-0 flex flex-col overflow-hidden rounded-sm cursor-pointer hover:underline'} style={{ height: '240px' }}>
                       <div className={'w-full relative'} style={{ height: '150px' }}>
@@ -41,7 +40,7 @@ const HotCollections = () => {
                       </div>
                     </div>
                   </Link>
-                </SwiperItem>
+                </div>
               ))}
             </CarouselList>
           </div>

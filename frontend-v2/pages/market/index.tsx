@@ -10,6 +10,7 @@ import { fetcher } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 import { ObjectType } from '@/utils/types'
 import TopCollections from '@/components/Pages/Market/TopCollections'
+import WrapperContent from '@/components/Pages/Market/WrapperContent'
 
 // import { useScreens } from '@/components/Pages/Home/utils'
 
@@ -49,10 +50,14 @@ const Market = ({ topCollections }: { topCollections: ObjectType[] }) => {
           <div className="absolute bottom-0 right-0">
             <Image src={require('@/assets/images/bg-item-market.png')} width="221" height="247" alt=""></Image>
           </div>
-          <HotCollections></HotCollections>
+          <WrapperContent>
+            <HotCollections />
+          </WrapperContent>
           {/* <HotAuctions></HotAuctions> */}
-          <ListTrending></ListTrending>
-          <Discover></Discover>
+          <WrapperContent>
+            <ListTrending />
+          </WrapperContent>
+          <Discover />
         </div>
       }
     </Layout>

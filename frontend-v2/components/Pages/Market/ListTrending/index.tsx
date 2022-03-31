@@ -67,15 +67,15 @@ const ListTrending = () => {
         </div>
         <div className="mt-5">
           {<CarouselList key={infos.length}>{
-            infos.map((item, i) => <SwiperItem
+            infos.map((item, i) => <div
               key={`hot-offers-${i}`}
-              style={{ minWidth: '280px' }}
+              style={{ width: '296px' }}
               className="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 px-2"
             >
               <div className='w-full'>
                 <NFTCard item={item} showOffer={true} showListing={true}></NFTCard>
               </div>
-            </SwiperItem>)
+            </div>)
           }
           </CarouselList> }
         </div>

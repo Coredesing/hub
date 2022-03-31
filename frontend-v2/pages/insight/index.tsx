@@ -100,7 +100,7 @@ const News = ({ postsFeatured, postsUpdate, postsPartnership, postsIGO, postsINO
     }
   }, [postsAMA])
 
-  return <Layout title="GameFi.org Insight">
+  return <Layout title="GameFi.org - Insight">
     <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
       <Categories></Categories>
       { featured.big && <div className="flex flex-col sm:flex-row gap-6">

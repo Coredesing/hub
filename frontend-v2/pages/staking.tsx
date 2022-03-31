@@ -172,7 +172,7 @@ const Staking = ({ data }) => {
   }
 
   return (
-    <Layout title="GameFi Staking">
+    <Layout title="GameFi.org - Staking">
       <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl pb-4">
         <div className="p-px bg-gradient-to-r from-gamefiDark-500 via-gamefiDark-800 rounded">
           <div className="bg-gradient-to-r from-gamefiDark-700 via-gamefiDark-900 to-gamefiDark-900 rounded flex">

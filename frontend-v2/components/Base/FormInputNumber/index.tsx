@@ -31,13 +31,13 @@ export const FormInputNumber = (props: IProps) => {
       onChange(event)
       return
     }
-    
+
     if (!isNaN(+valInput) && isNumber(+valInput)) {
       if (!allowZero && valInput.charAt(0) === '0') {
         valInput = valInput.replace(/0/i, '')
       }
       if (valInput.length === 2 && !valInput.includes('.')) {
-        valInput = +valInput + '';
+        valInput = String(+valInput) + ''
       }
       if (typeof props.min === 'number') {
         if (+valInput < props.min) {

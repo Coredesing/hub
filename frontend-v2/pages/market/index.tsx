@@ -17,7 +17,7 @@ import WrapperContent from '@/components/Pages/Market/WrapperContent'
 const Market = ({ topCollections }: { topCollections: ObjectType[] }) => {
   // const screens = useScreens()
   return (
-    <Layout title="GameFi Market">
+    <Layout title="GameFi.org - Market">
       {
         <div className="relative w-full min-h-full">
           {/* <Banner /> */}

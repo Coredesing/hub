@@ -20,7 +20,7 @@ const RankPage = () => {
   const { account } = useMyWeb3()
 
   return (
-    <Layout title="My Rank - GameFi">
+    <Layout title="GameFi.org - My Rank">
       <AccountLayout>
         <div className="py-10 px-4 xl:px-9 2xl:pr-32">
           <h3 className='hidden lg:block uppercase font-bold text-2xl mb-6'>My Rank</h3>

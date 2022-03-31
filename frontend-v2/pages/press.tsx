@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Layout from '@/components/Layout'
 
 const PressKit = () => (
-  <Layout title="Press Kit">
+  <Layout title="GameFi.org - Press Kit">
     <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-4xl my-8 md:my-12 lg:my-16 xl:my-24">
       <div className="uppercase font-bold text-4xl">Press Kit</div>
 

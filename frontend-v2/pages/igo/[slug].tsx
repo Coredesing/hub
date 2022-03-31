@@ -362,7 +362,7 @@ const IGODetails = ({ poolData }) => {
     if (now.getTime() > dateFromString(poolData.finish_time).getTime()) {
       return setCurrent(timeline.find(item => item.key === 'claim'))
     }
-  }, [hasFCFS, now, poolData, timeline])
+  }, [hasFCFS, now, poolData, timeline, tierMine])
 
   const addToWallet = async (item: any) => {
     if (!library?.provider?.isMetaMask) {
@@ -411,7 +411,7 @@ const IGODetails = ({ poolData }) => {
   }, [current])
 
   return (
-    <Layout title={poolData?.title || 'GameFi'}>
+    <Layout title={poolData?.title ? `GameFi.org - ${poolData?.title} IGO` : 'GameFi.org - Initial DEX Offering'}>
       <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
         {/* <div className="px-2 md:px-4 lg:px-24 md:container mx-auto lg:block mb-4 md:mb-8 lg:mb-10 xl:mb-16"> */}
         <Link href="/igo" passHref={true}>

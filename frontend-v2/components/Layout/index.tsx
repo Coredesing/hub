@@ -8,11 +8,13 @@ import Footer from '@/components/Base/Footer'
 type Props = {
   children?: ReactNode;
   title?: string;
+  description?: string;
+  image?: string;
 }
 
 const BETA_SUPPRESSION = 'BETA_SUPPRESSION'
 
-const Layout = ({ children, title }: Props) => {
+const Layout = ({ children, title, description, image }: Props) => {
   const [suppressed, setSuppressed] = useState<boolean>(true)
 
   useEffect(function () {
@@ -41,6 +43,8 @@ const Layout = ({ children, title }: Props) => {
         <meta charSet="utf-8" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta property="og:title" content={title || 'GameFi.org'} key="title" />
+        <meta property="og:description" content={description || 'GameFi.org is an all-in-one discovery gaming hub for games, guilds, and metaverses.'} key="description" />
       </Head>
       <div>
         <Sidebar></Sidebar>

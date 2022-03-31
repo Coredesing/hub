@@ -1,7 +1,7 @@
 import Layout from '@/components/Layout'
 
 const Disclaimer = () => (
-  <Layout title="Disclaimer">
+  <Layout title="GameFi.org - Disclaimer">
     <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-4xl my-8 md:my-12 lg:my-16 xl:my-24">
       <div className="uppercase font-bold text-4xl">Disclaimer</div>
 

@@ -94,7 +94,7 @@ const GameDetails = ({ data }) => {
   }, [library, liked, mutate, signature, account, setShowModal])
 
   return (
-    <Layout title={data.game_name ? `${data.game_name} - GameFi Hub` : 'GameFi Hub'}>
+    <Layout title={data.game_name ? `GameFi.org - ${data.game_name}` : 'GameFi.org Hub'}>
       <div className="px-2 md:px-4 lg:px-24 md:container mx-auto lg:block">
         <Link href="/hub" passHref={true}>
           <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">

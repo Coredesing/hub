@@ -7,7 +7,7 @@ const Career = ({ data }) => {
     return null
   }
 
-  return (<Layout title={data.title}>
+  return (<Layout title={data.title ? `GameFi.org - ${data.title}` : 'GameFi.org - Careers'}>
     <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block pb-16 max-w-4xl">
       <Link href="/careers" passHref={true}>
         <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">

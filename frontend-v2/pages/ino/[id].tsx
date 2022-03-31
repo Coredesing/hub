@@ -18,7 +18,7 @@ const AuctionBox = (props: any) => {
     }
     return <NotFound backLink='/ino' />
   }
-  return <Layout title="GameFi INO">
+  return <Layout title="GameFi.org - Initial Game Offering">
     {
       loading
         ? <>

@@ -4,7 +4,7 @@ import Favorites from 'components/Pages/Account/Favorites'
 import AccountLayout from '@/components/Pages/Account/AccountLayout'
 
 const FavoritesPage = () => {
-  return <Layout title="My Account: Favorites">
+  return <Layout title="GameFi.org - My Favorites">
     <AccountLayout>
       <Favorites></Favorites>
     </AccountLayout>

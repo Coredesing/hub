@@ -20,10 +20,17 @@ import Tippy from '@tippyjs/react'
 import Image from 'next/image'
 import toast from 'react-hot-toast'
 import ERC20_ABI from '@/components/web3/abis/ERC20.json'
+import Modal from '@/components/Base/Modal'
 
 const Pools = () => {
   const { account, library, network } = useMyWeb3()
   const { library: libraryDefault } = useWeb3Default()
+  const [open, setOpen] = useState(false)
+  const [selectedPool, setSelectedPool] = useState(null)
+  const handleClose = () => {
+    setSelectedPool(null)
+    setOpen(false)
+  }
 
   const [loadingPools, setLoadingPools] = useState(false)
   const [pools, setPools] = useState({ total: 0, data: [] })
@@ -243,22 +250,22 @@ const Pools = () => {
               <TableCellHead className="bg-transparent border-b-0">
                 <span className="text-13px font-bold text-white/50">Pool Name</span>
               </TableCellHead>
-              <TableCellHead className="bg-transparent border-b-0 hidden sm:table-cell">
+              <TableCellHead className="bg-transparent border-b-0">
                 <span className="text-13px font-bold text-white/50">Have Bought</span>
               </TableCellHead>
-              <TableCellHead className="bg-transparent border-b-0 hidden sm:table-cell">
+              <TableCellHead className="bg-transparent border-b-0 hidden xl:table-cell">
                 <span className="text-13px font-bold text-white/50">Token Allocation</span>
               </TableCellHead>
-              <TableCellHead className="bg-transparent border-b-0 hidden sm:table-cell">
+              <TableCellHead className="bg-transparent border-b-0 hidden xl:table-cell">
                 <span className="text-13px font-bold text-white/50">Claimed Tokens</span>
               </TableCellHead>
-              <TableCellHead className="bg-transparent border-b-0">
+              <TableCellHead className="bg-transparent border-b-0 hidden xl:table-cell">
                 <span className="text-13px font-bold text-white/50">Next Claim</span>
               </TableCellHead>
-              <TableCellHead className="bg-transparent border-b-0 text-right">
+              <TableCellHead className="bg-transparent border-b-0 text-right hidden xl:table-cell">
                 <span className="text-13px font-bold text-white/50">Token Price</span>
               </TableCellHead>
-              <TableCellHead className="bg-transparent border-b-0 text-right">
+              <TableCellHead className="bg-transparent border-b-0 text-right hidden xl:table-cell">
                 <span className="text-13px font-bold text-white/50">Current Price</span>
               </TableCellHead>
             </TableRow>
@@ -268,33 +275,33 @@ const Pools = () => {
               pools.data.map((item, id) => <TableRow key={id} className="bg-gamefiDark-800 border-b-8 border-gamefiDark-900">
                 <TableCell className="border-none">
                   <div className='flex gap-2'>
-                    <img src={item.banner} alt="" className='w-10' />
+                    <img src={item.banner} alt="" className='hidden 2xl:block w-10' />
                     <Link href={poolHref(item)} passHref={true}>
                       <a className="hover:underline w-32 truncate font-medium">{item.title}</a>
                     </Link>
                   </div>
                 </TableCell>
-                <TableCell className="border-none hidden sm:table-cell">
+                <TableCell className="border-none">
                   {printNumber((Number(item.user_purchased) * (Number(item.token_conversion_rate)) || 0))} {getCurrency(item)?.symbol}
                 </TableCell>
-                <TableCell className="border-none hidden sm:table-cell">
+                <TableCell className="border-none hidden xl:table-cell">
                   {printNumber((Number(item.user_purchased) || 0))} {item.symbol}
                 </TableCell>
-                <TableCell className="border-none hidden sm:table-cell">
+                <TableCell className="border-none hidden xl:table-cell">
                   {claimTypes(item)?.find(type => type.name === CLAIM_TYPE[0])?.value === 100 && Number(availableToClaim(item)) > 0
                     ? `${printNumber((item.user_claimed || 0).toLocaleString('en-US'))}/${availableToClaim(item)} ${item.symbol}`
                     : ''}
                 </TableCell>
-                <TableCell className="border-none hidden sm:table-cell">
+                <TableCell className="border-none hidden xl:table-cell">
                   {nextClaim(item)}
                 </TableCell>
-                <TableCell className="border-none hidden sm:table-cell text-right">
+                <TableCell className="border-none hidden xl:table-cell text-right">
                   ${item.token_conversion_rate}
                 </TableCell>
-                <TableCell className="border-none hidden sm:table-cell text-right">
+                <TableCell className="border-none hidden xl:table-cell text-right">
                   {tokenomics?.find(token => token.ticker === item.symbol)?.price ? `$${printNumber(tokenomics?.find(token => token.ticker === item.symbol)?.price)}` : ''}
                 </TableCell>
-                <TableCell className="border-none hidden sm:table-cell text-right">
+                <TableCell className="border-none hidden xl:table-cell text-right">
                   {item.token && item.campaign_status?.toLowerCase() === 'ended' && item.token_type === 'erc20' && <>
                     <Tippy content="Add to Metamask">
                       <button
@@ -305,6 +312,12 @@ const Pools = () => {
                       </button>
                     </Tippy>
                   </>}
+                </TableCell>
+                <TableCell className="border-none xl:hidden text-right">
+                  <button className="whitespace-nowrap text-gamefiGreen" onClick={() => {
+                    setSelectedPool(item)
+                    setOpen(true)
+                  }}>View Detail &gt;</button>
                 </TableCell>
               </TableRow>)
             }
@@ -319,6 +332,21 @@ const Pools = () => {
           />
         }
       </div>
+      <Modal
+        show={open}
+        toggle={handleClose}
+      >
+        <div className="py-12 px-4">
+          <div className="w-full flex items-center justify-between">
+            <div>Pool Name</div>
+            <div><a className="hover:underline w-32 truncate font-medium">{selectedPool?.title}</a></div>
+          </div>
+          <div className="w-full flex mt-4 items-center justify-between">
+            <div>Have Bought</div>
+            <div>{printNumber((Number(selectedPool?.user_purchased) * (Number(selectedPool?.token_conversion_rate)) || 0))} {getCurrency(selectedPool)?.symbol}</div>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

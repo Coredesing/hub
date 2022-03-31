@@ -1,10 +1,11 @@
 import { getCurrency, useLibraryDefaultFlexible } from '@/components/web3/utils'
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Item } from '../type'
 import Image from 'next/image'
-import { formatterUSD } from '@/utils'
+import { fetcher, formatterUSD, printNumber } from '@/utils'
 import { getTierById } from '@/utils/tiers'
 import Countdown from '../Card/Countdown'
+import { API_BASE_URL } from '@/utils/constants'
 
 const Card = ({ item }: {item: Item}) => {
   const { network } = useLibraryDefaultFlexible(item?.network_available)
@@ -18,8 +19,21 @@ const Card = ({ item }: {item: Item}) => {
     return configs[0].start_time
   }
 
+  // const [participants, setParticipants] = useState(0)
+
+  // const fetchParticipants = useCallback(async () => {
+  //   const response = await fetcher(`${API_BASE_URL}/pool/${item.id}/total-participants`)
+  //   return response?.data
+  // }, [item])
+
+  // useEffect(() => {
+  //   fetchParticipants().then(data => {
+  //     setParticipants(data?.total || 0)
+  //   })
+  // }, [fetchParticipants, setParticipants])
+
   return <div className="px-6 py-4 bg-gamefiDark-630/30 clipped-t-r rounded w-full flex items-stretch justify-between gap-6 font-casual">
-    <a href={`/igo/${item.id}`} className="relative w-24 h-24 bg-black">
+    <a href={`/igo/${item.id}`} className="hidden lg:block relative w-24 h-24 bg-black">
       <img src={item.banner} alt="" className="w-full h-full object-cover rounded-sm"></img>
       <div className="w-6 h-6 xl:w-8 xl:h-8 absolute -top-2 -left-2"><Image src={network?.image} alt=""></Image></div>
     </a>
@@ -50,7 +64,7 @@ const Card = ({ item }: {item: Item}) => {
         </a> }
       </div>
       <a href={`/igo/${item.id}`} className="w-full text-lg font-semibold leading-4 hover:underline">{item.title}</a>
-      <div className="w-full 2xl:pr-[200px] pr-[100px] inline-flex justify-between mt-4">
+      <div className="w-full 2xl:pr-[200px] lg:pr-[100px] grid grid-cols-2 gap-4 lg:inline-flex justify-between mt-4">
         <div>
           <div className="text-white/50 uppercase font-semibold text-xs font-mechanic">Total Rised</div>
           <div className="text-sm">
@@ -60,7 +74,8 @@ const Card = ({ item }: {item: Item}) => {
         <div>
           <div className="text-white/50 uppercase font-semibold text-xs font-mechanic">Participants</div>
           <div className="text-sm">
-            {Number(10000).toLocaleString('en-US')}
+            {/* {participants ? printNumber(participants) : '-'} */}
+            -
           </div>
         </div>
         <div>

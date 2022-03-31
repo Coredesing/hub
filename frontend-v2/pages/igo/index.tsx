@@ -20,11 +20,23 @@ const IGO = () => {
 
     return () => clearInterval(interval)
   }, [])
+
+  const { response: totalCompletedResponse, loading: totalCompletedLoading } = useFetch('/pools/total-completed-pools')
+  const totalCompletedPools = useMemo(() => {
+    console.log(totalCompletedResponse)
+    return totalCompletedResponse?.data?.total || 0
+  }, [totalCompletedResponse?.data?.total])
+
+  const roundedTotalCompletedPools = useMemo(() => {
+    return Math.floor(Number(totalCompletedPools) / 10) * 10 || 0
+  }, [totalCompletedPools])
   const { response: openingResponse, loading: openingLoading } = useFetch('/pools/active-pools?token_type=erc20&is_display=1')
   const { response: upcomingResponse, loading: upcomingLoading } = useFetch('/pools/upcoming-pools?token_type=erc20&is_display=1')
 
   const openingItems = useMemo<Item[]>(() => {
-    return openingResponse?.data?.data || []
+    const origin = openingResponse?.data?.data || []
+    const sortedItems = origin.sort((a, b) => a?.finish_time < b?.finish_time)
+    return sortedItems || []
   }, [openingResponse])
 
   const openingPublicList = useMemo<Item[]>(() => {
@@ -36,7 +48,20 @@ const IGO = () => {
   }, [openingItems])
 
   const upcomingItems = useMemo<Item[]>(() => {
-    return upcomingResponse?.data?.data || []
+    const origin = upcomingResponse?.data?.data || []
+    let remain = origin
+    const tba = origin.filter(item => item.campaign_status?.toLowerCase() === 'tba')
+    remain = remain.filter(item => !tba.includes(item))
+    const preWhitelist = remain.filter(item => new Date().getTime() < new Date(Number(item?.start_join_pool_time) * 1000).getTime()).sort((a, b) => a?.start_join_pool_time < b?.start_join_pool_time)
+    console.log(preWhitelist)
+    remain = remain.filter(item => !preWhitelist.includes(item))
+    const whitelist = remain.filter(item => new Date().getTime() < new Date(Number(item?.end_join_pool_time) * 1000).getTime()).sort((a, b) => a?.end_join_pool_time < b?.end_join_pool_time)
+    remain = remain.filter(item => !whitelist.includes(item))
+    const preStart = remain.filter(item => new Date().getTime() < new Date(Number(item?.start_time) * 1000).getTime()).sort((a, b) => a?.start_time < b?.start_time)
+    const sortedItems = [].concat(preStart).concat(whitelist).concat(preWhitelist).concat(tba)
+    console.log(sortedItems)
+
+    return sortedItems || []
   }, [upcomingResponse])
 
   const upcomingPublicList = useMemo<Item[]>(() => {
@@ -50,7 +75,7 @@ const IGO = () => {
   return (
     <Layout title="GameFi.org - Initial DEX Offering">
       <div className="px-2 md:px-4 lg:px-16 md:container mx-auto lg:block pt-16">
-        <div className="w-full text-center text-[84px] leading-[80%] font-bold uppercase select-none">
+        <div className="w-full text-center text-[60px] xl:text-[84px] leading-[80%] font-bold uppercase select-none">
         Dedicated Gaming <br></br>Launchpad & IGO
         </div>
         <div className="mt-14 w-full flex gap-14 justify-center items-center">
@@ -60,7 +85,7 @@ const IGO = () => {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text'
-            }}>100+</div>
+            }}>{roundedTotalCompletedPools}+</div>
             <div className="uppercase font-medium">Total Projects Launched</div>
           </div>
           <div className="flex flex-col gap-3 items-center justify-center">
@@ -69,7 +94,7 @@ const IGO = () => {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text'
-            }}>30X</div>
+            }}>61X</div>
             <div className="uppercase font-medium">Average ATH ROI</div>
           </div>
         </div>

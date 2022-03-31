@@ -74,7 +74,7 @@ export const InfoCollection = ({ item, isDisplayJoin, isShowSoldOut }: Props) =>
     }
     {
       isDisplayJoin && <div className='text-center mt-4'>
-        <Link href={`/market/collection/${item.slug}`} passHref>
+        <Link href={`/marketplace/collection/${item.slug}`} passHref>
           <a className='w-fit clipped-b-l-t-r bg-gamefiGreen-700 text-lg uppercase text-black font-semibold py-2 px-6 rounded-sm'>Join Now</a>
         </Link>
       </div>

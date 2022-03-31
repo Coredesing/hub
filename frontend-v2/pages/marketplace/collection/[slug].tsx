@@ -7,7 +7,7 @@ import { InfoCollection } from '@/components/Pages/Market/TopCollections/Item'
 
 const CollectionDetail = ({ data }) => {
   return (
-    <Layout title={data.name ? `GameFi.org - ${data.name} Market` : 'GameFi.org - Market'}>
+    <Layout title={data.name ? `GameFi.org - ${data.name} Marketplace` : 'GameFi.org - Marketplace'}>
       {data?.id
         ? <>
           <div className="relative w-full rounded-xs flex" style={{ height: '500px' }}>

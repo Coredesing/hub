@@ -32,9 +32,9 @@ const Sidebar = () => {
           <Image src={require('@/assets/images/icons/nft.svg')} alt='INO'></Image>
           <span className="mt-2">INO</span>
         </SidebarLink>
-        <SidebarLink path='/market'>
-          <Image src={require('@/assets/images/icons/shop.svg')} alt='market'></Image>
-          <span className="mt-2">Market</span>
+        <SidebarLink path='/marketplace'>
+          <Image src={require('@/assets/images/icons/shop.svg')} alt='marketplace'></Image>
+          <span className="mt-2">Marketplace</span>
         </SidebarLink>
         <SidebarLink path='/staking'>
           <Image src={require('@/assets/images/icons/coin.svg')} alt='staking'></Image>

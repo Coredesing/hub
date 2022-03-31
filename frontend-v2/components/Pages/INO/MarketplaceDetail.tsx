@@ -546,7 +546,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
             <img src={projectInfo.logo} alt="" className='w-11 h-11 rounded-full bg-black' />
             <div>
               <label htmlFor="" className="block font-bold text-white/50 text-13px uppercase">Creator</label>
-              <Link passHref href={`/market/collection/${projectInfo.slug}`}>
+              <Link passHref href={`/marketplace/collection/${projectInfo.slug}`}>
                 <a className="block text-base font-casual">{projectInfo.name}</a>
               </Link>
             </div>

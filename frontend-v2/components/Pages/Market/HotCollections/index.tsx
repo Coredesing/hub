@@ -26,7 +26,7 @@ const HotCollections = () => {
             <CarouselList>
               {hotCollections.map(collection => (
                 <WrapperItem key={collection.id} className="ml-2 mr-2 first:ml-0 last:mr-0">
-                  <Link href={`/market/collection/${collection.slug}`} passHref>
+                  <Link href={`/marketplace/collection/${collection.slug}`} passHref>
                     <div className={'w-full md:px-0 flex flex-col overflow-hidden rounded-sm cursor-pointer hover:underline'} style={{ height: '240px' }}>
                       <div className={'w-full relative'} style={{ height: '150px' }}>
                         <div className="absolute left-0 right-0 mx-auto w-14 -bottom-6 rounded-full border-2 border-gamefiDark-900 bg-gamefiDark-900" style={{ zIndex: '1' }}>

@@ -45,10 +45,10 @@ const Activities = ({
                     <ImageLoader size='small' src={item?.token_info?.image || item?.token_info?.icon} alt="" className='w-16 h-16 rounded object-cover' />
                   </div>
                   <div>
-                    <Link passHref href={`/market/${item.slug}/${item.token_id || item.id}`}>
+                    <Link passHref href={`/marketplace/${item.slug}/${item.token_id || item.id}`}>
                       <a className='block font-semibold text-base font-casual'>#{formatNumber(item.token_id || item.id, 3)}</a>
                     </Link>
-                    <Link passHref href={`/market/collection/${item.slug}`} >
+                    <Link passHref href={`/marketplace/collection/${item.slug}`} >
                       <a className='block font-medium text-sm text-white/50 font-casual'>{item.collection_info?.name}</a>
                     </Link>
                   </div>

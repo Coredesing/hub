@@ -50,7 +50,7 @@ const NFTCard = ({ item, ...props }: Props) => {
         }
         <div className="w-full p-1">
           <div className="bg-black flex items-center justify-center p-4 cursor-pointer w-full" style={{ aspectRatio: '1' }}>
-            <Link href={`/market/${item?.slug}/${item?.token_id ?? item?.id}`} passHref>
+            <Link href={`/marketplace/${item?.slug}/${item?.token_id ?? item?.id}`} passHref>
               <ImageLoader src={item?.token_info?.image || item?.token_info?.icon} className="w-full h-full object-contain" style={{ maxHeight: '240px' }} />
               {/* <img src={item?.token_info?.image || item?.token_info?.icon || gamefiBox.src} alt={item?.token_info?.title} className="w-full object-cover" /> */}
             </Link>
@@ -58,7 +58,7 @@ const NFTCard = ({ item, ...props }: Props) => {
         </div>
         <div className="w-full px-5 pt-5 pb-2">
           <div className="mb-2">
-            <Link href={`/market/collection/${item?.slug}`} passHref>
+            <Link href={`/marketplace/collection/${item?.slug}`} passHref>
               <a className="flex align-middle items-center cursor-pointer hover:underline">
                 <span className="w-7 h-7 relative mr-2 rounded-full overflow-hidden bg-white/95 grid place-items-center" style={{ padding: '3px' }}>
                   <img src={item?.collection_info?.logo} className='object-contain w-full h-full' alt="collection"></img>
@@ -68,7 +68,7 @@ const NFTCard = ({ item, ...props }: Props) => {
             </Link>
           </div>
           <div>
-            <Link href={`/market/${item?.slug}/${item?.token_id ?? item?.id}`} passHref>
+            <Link href={`/marketplace/${item?.slug}/${item?.token_id ?? item?.id}`} passHref>
               <a className="font-bold text-xl tracking-wide cursor-pointer hover:underline">
                 #{formatNumber(item?.token_info?.name || (item?.token_id ?? item?.id), 3) || '-/-'}
               </a>

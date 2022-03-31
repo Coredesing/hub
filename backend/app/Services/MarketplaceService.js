@@ -136,7 +136,7 @@ class MarketplaceService {
     let data = await this.buildQueryCollectionBuilder(filterParams)
       .where('is_show', 1)
       .orderBy('priority', 'DESC')
-      .paginate(filterParams.page, filterParams.limit);
+      .fetch()
 
     data = JSON.parse(JSON.stringify(data))
     await RedisMarketplaceUtils.setRedisMarketplaceTopCollections(data)

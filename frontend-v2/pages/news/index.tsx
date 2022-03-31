@@ -4,6 +4,7 @@ import Layout from '@/components/Layout'
 import GhostContentAPI from '@tryghost/content-api'
 import { useMemo, ReactNode } from 'react'
 import { format } from 'date-fns'
+import avatar from '@/assets/images/avatar.png'
 
 export const api = new GhostContentAPI({
   url: 'https://gamefi.ghost.io',
@@ -105,7 +106,7 @@ const News = ({ postsFeatured, postsUpdate, postsPartnership, postsIGO, postsINO
       { featured.big && <div className="flex flex-col sm:flex-row gap-6">
         <Link href={`/news/${featured.big.slug}`} passHref={true}>
           <a className="block relative w-full sm:w-auto sm:flex-1 aspect-[16/9]">
-            <Image src={featured.big.feature_image} layout="fill" alt={featured.big.title} className="rounded"></Image>
+            { featured.big?.feature_image && <Image src={featured.big.feature_image} layout="fill" alt={featured.big.title} className="rounded"></Image> }
           </a>
         </Link>
         <div className="sm:w-[32%]">
@@ -116,7 +117,7 @@ const News = ({ postsFeatured, postsUpdate, postsPartnership, postsIGO, postsINO
           <div className="line-clamp-3 font-casual text-sm lg:text-base whitespace-pre-line text-white text-opacity-75">{featured.big.excerpt}</div>
           <div className="flex gap-2 items-center mt-2 xl:mt-6">
             <div className="relative w-11 h-11">
-              <Image src={featured.big.primary_author?.profile_image} layout="fill" className="rounded-full" alt={featured.big.primary_author?.name}></Image>
+              <Image src={featured.big.primary_author?.profile_image || avatar} layout="fill" className="rounded-full" alt={featured.big.primary_author?.name}></Image>
             </div>
             <div>
               <p className="font-casual font-medium text-base leading-loose">{featured.big.primary_author?.name}</p>

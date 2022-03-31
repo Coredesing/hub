@@ -13,13 +13,16 @@ const Toolbox = () => {
         <ToolboxItem path='/'>
           <Image src={require('@/assets/images/icons/home.svg')} alt='home'></Image>
         </ToolboxItem>
-        <ToolboxItem path='/aggregator'>
-          <Image src={require('@/assets/images/icons/controller.svg')} alt='aggregator'></Image>
+        <ToolboxItem path='/hub'>
+          <Image src={require('@/assets/images/icons/controller.svg')} alt='hub'></Image>
         </ToolboxItem>
         <ToolboxItem path='/ino'>
           <Image src={require('@/assets/images/icons/nft.svg')} alt='ino'></Image>
         </ToolboxItem>
-        <ToolboxItem path='https://hub.gamefi.org/#/pools/token'>
+        {/* <ToolboxItem path='https://hub.gamefi.org/#/pools/token'>
+          <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
+        </ToolboxItem> */}
+        <ToolboxItem path='/igo'>
           <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
         </ToolboxItem>
         {/* <ToolboxItem path='/market'>
@@ -42,11 +45,15 @@ const Toolbox = () => {
             <Image src={require('@/assets/images/icons/home.svg')} alt='home'></Image>
             <span>Home</span>
           </MenuLink>
-          <MenuLink onClick={() => setShowMenu(false)} path='/aggregator'>
-            <Image src={require('@/assets/images/icons/controller.svg')} alt='aggregator'></Image>
-            <span>Aggregator</span>
+          <MenuLink onClick={() => setShowMenu(false)} path='/hub'>
+            <Image src={require('@/assets/images/icons/controller.svg')} alt='hub'></Image>
+            <span>Hub</span>
           </MenuLink>
-          <MenuLink onClick={() => setShowMenu(false)} path='https://hub.gamefi.org'>
+          {/* <MenuLink onClick={() => setShowMenu(false)} path='https://hub.gamefi.org'>
+            <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
+            <span>Launchpad</span>
+          </MenuLink> */}
+          <MenuLink onClick={() => setShowMenu(false)} path='/igo'>
             <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
             <span>Launchpad</span>
           </MenuLink>
@@ -66,9 +73,9 @@ const Toolbox = () => {
             <Image src={require('@/assets/images/icons/earn.svg')} alt='earn'></Image>
             <span>Earn</span>
           </MenuLink>
-          <MenuLink onClick={() => setShowMenu(false)} path='/news'>
-            <Image src={require('@/assets/images/icons/news.svg')} alt='news'></Image>
-            <span>News</span>
+          <MenuLink onClick={() => setShowMenu(false)} path='/insight'>
+            <Image src={require('@/assets/images/icons/news.svg')} alt='insight'></Image>
+            <span>Insight</span>
           </MenuLink>
           <MenuLink onClick={() => setShowMenu(false)} path='/metaverse'>
             <Image src={require('@/assets/images/icons/planet.svg')} alt='metaverse'></Image>

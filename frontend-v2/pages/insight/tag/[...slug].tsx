@@ -16,17 +16,17 @@ const Articles = ({ posts, tag, pagination, pageOriginal }) => {
       return
     }
 
-    router.push(`/news/tag/${tag}/${page}`)
+    router.push(`/insight/tag/${tag}/${page}`)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageOriginal, tag, page])
-  return <Layout title={tag ? `GameFi.org News - ${tag.toUpperCase()}` : 'GameFi.org News'}>
+  return <Layout title={tag ? `GameFi.org Insight - ${tag.toUpperCase()}` : 'GameFi.org Insight'}>
     <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
       <Categories active={tag}></Categories>
       <div className="flex flex-col sm:flex-row gap-6 mt-10">
         <div className="flex-1">
           <div className="grid grid-cols-2 gap-x-6 gap-y-8">
             { posts && posts.map(item => <div key={item.id} className="flex flex-col gap-4 sm:gap-0">
-              <Link href={`/news/${item.slug}`} passHref={true}>
+              <Link href={`/insight/${item.slug}`} passHref={true}>
                 <a className="block relative w-full aspect-[16/9]">
                   <Image src={item.feature_image} layout="fill" alt={item.title} className="rounded" objectFit={'contain'}></Image>
                 </a>
@@ -39,7 +39,7 @@ const Articles = ({ posts, tag, pagination, pageOriginal }) => {
               </p>
 
               <div className="w-full sm:max-w-xl">
-                <Link href={`/news/${item.slug}`} passHref={true}>
+                <Link href={`/insight/${item.slug}`} passHref={true}>
                   <a className="line-clamp-2 font-bold text-lg sm:text-2xl !leading-shi mt-2 mb-2 xl:mb-4 hover:underline">{item.title}</a>
                 </Link>
                 <div className="line-clamp-3 font-casual text-xs sm:text-sm whitespace-pre-line text-white text-opacity-75">{item.excerpt}</div>

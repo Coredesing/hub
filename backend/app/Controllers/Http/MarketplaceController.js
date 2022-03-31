@@ -16,7 +16,7 @@ class MarketplaceController {
     }
   }
 
-  async getCollections({ request }) {
+  async getTopCollections({ request }) {
     try {
       const inputParams = request.all();
       let data = await (new MarketplaceService).getTopCollections(inputParams);

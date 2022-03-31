@@ -285,7 +285,7 @@ export const USDT_POLYGON: Token = {
 
 export const MARKETPLACE_CONTRACT = IS_TESTNET ? process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT_97 : process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT_56
 
-const currencies = [ETH, MATIC, BNB, AVAX, FTM, USDT_ERC, USDT_POLYGON, BUSD_BSC, GAFI]
+export const CURRENCIES = [ETH, MATIC, BNB, AVAX, FTM, USDT_ERC, USDT_POLYGON, BUSD_BSC, GAFI]
 
 export type Network = {
   id: number;
@@ -476,7 +476,7 @@ export function getAddChainParameters (chainId: number): AddEthereumChainParamet
     return null
   }
 
-  const nativeCurrency = currencies.find(x => x.symbol === chain.currency)
+  const nativeCurrency = CURRENCIES.find(x => x.symbol === chain.currency)
   if (!nativeCurrency) {
     return null
   }
@@ -518,11 +518,11 @@ export function getCurrencyByTokenAddress (tokenAddress: string, networkAlias: s
       return null
     }
 
-    const nativeCurrency = currencies.find(x => x.symbol === chain.currency)
+    const nativeCurrency = CURRENCIES.find(x => x.symbol === chain.currency)
     if (!nativeCurrency) {
       return null
     }
     return nativeCurrency
   }
-  return currencies.find(x => BigNumber.from(x.address || 0).eq(tokenAddress))
+  return CURRENCIES.find(x => BigNumber.from(x.address || 0).eq(tokenAddress))
 }

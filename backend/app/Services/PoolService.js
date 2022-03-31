@@ -219,6 +219,7 @@ class PoolService {
     const now = moment().unix();
     let pools = await this.buildQueryBuilder(filterParams)
       .with('campaignClaimConfig')
+      .with('socialNetworkSetting')
       // .where('start_time', '<=', now)
       // .where('finish_time', '>', now)
       .where(builder => {
@@ -280,6 +281,7 @@ class PoolService {
     const now = moment().unix();
     let pools = await this.buildQueryBuilder(filterParams)
       .with('campaignClaimConfig')
+      .with('socialNetworkSetting')
       // .where('start_join_pool_time', '<', now)
       .where('end_join_pool_time', '<', now)
       .whereIn('campaign_status', [
@@ -306,6 +308,7 @@ class PoolService {
     // const now = moment().unix();
     let pools = await this.buildQueryBuilder(filterParams)
       .with('campaignClaimConfig')
+      .with('socialNetworkSetting')
       .where('is_display', Const.POOL_DISPLAY.DISPLAY)
       .whereIn('campaign_status', [
         Const.POOL_STATUS.TBA,

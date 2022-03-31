@@ -223,7 +223,8 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
             offerList.push(item)
           }
         }
-        setOfferList(offerList)
+        const sorted = offerList.sort((a, b) => b.dispatch_at - a.dispatch_at)
+        setOfferList(sorted)
         setReloadOfferList(false)
       }).catch(err => {
         console.debug('err', err)
@@ -862,7 +863,17 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
                         </div>
                       </div>
                     )
-                    : <NoItemFound title='No Offers Found' />
+                    : <div className='w-full grid gap-5 place-items-center'>
+                      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21.0002 1.99883L9 13.999L13.9999 18.9989L26.0001 6.99873L21.0002 1.99883Z" stroke="#3D414F" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+                        <path d="M21.5 11.5L30 20L27 23L18.5 14.5" stroke="#3D414F" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+                        <path d="M3 31V26H19V31" stroke="#3D414F" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+                        <path d="M1 22H4" stroke="#3D414F" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+                        <path d="M3.63672 15.6357L5.75772 17.7567" stroke="#3D414F" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+                        <path d="M1 31H21" stroke="#3D414F" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+                      </svg>
+                      <p className='font-casual w-full text-sm text-center break-words' style={{ maxWidth: '320px' }}><span className='block'>There are currently no offers. Be the first by <span className='text-gamefiGreen-700'>connecting your wallet and placing a bid</span></span></p>
+                    </div>
                 }
               </div>
             </TabPanel>

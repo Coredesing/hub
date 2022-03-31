@@ -264,21 +264,30 @@ const IGODetails = ({ poolData }) => {
         active: true,
         start: new Date(Number(poolData?.start_time) * 1000) || undefined,
         end: new Date(Number(poolData?.finish_time) * 1000) || undefined,
+        info: {
+          countdownTitle: 'Buying Phase Ends In'
+        },
         subMilestones: hasFCFS
           ? [
             {
-              key: 'phase-1',
+              key: 'buying-phase-1',
               milestone: 'Phase 1 - Guaranteed',
               active: true,
               start: new Date(Number(poolData?.start_time) * 1000) || undefined,
-              end: new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000) || undefined
+              end: new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000) || undefined,
+              info: {
+                countdownTitle: 'Phase 2 Starts In'
+              }
             },
             {
-              key: 'phase-2',
+              key: 'buying-phase-1',
               milestone: 'Phase 2 - FCFS',
               active: true,
               start: new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000) || undefined,
-              end: new Date(Number(poolData?.finish_time) * 1000) || undefined
+              end: new Date(Number(poolData?.finish_time) * 1000) || undefined,
+              info: {
+                countdownTitle: 'Phase 2 Ends In'
+              }
             }
           ]
           : []
@@ -320,15 +329,17 @@ const IGODetails = ({ poolData }) => {
       return setCurrent(timeline[TIMELINE.WHITELIST])
     }
 
-    if (poolData.start_pre_order_time && isInRange(poolData?.end_join_pool_time, poolData?.start_pre_order_time, now)) {
+    if (poolData.start_pre_order_time && tierMine?.id >= poolData.pre_order_min_tier && isInRange(poolData?.end_join_pool_time, poolData?.start_pre_order_time, now)) {
       return setCurrent(timeline[TIMELINE.WINNER_ANNOUNCEMENT])
     }
 
-    if (isInRange(poolData.end_join_pool_time, poolData.start_time, now)) {
+    if ((!poolData.start_pre_order_time || tierMine?.id < poolData.pre_order_min_tier) &&
+      isInRange(poolData.end_join_pool_time, poolData.start_time, now)) {
       return setCurrent(timeline[TIMELINE.WINNER_ANNOUNCEMENT])
     }
 
     if (poolData.start_pre_order_time &&
+      tierMine?.id >= poolData?.pre_order_min_tier &&
       isInRange(poolData?.start_pre_order_time, poolData?.start_time, now)) {
       return setCurrent(timeline[TIMELINE.PRE_ORDER])
     }
@@ -368,7 +379,6 @@ const IGODetails = ({ poolData }) => {
     }
 
     const tokenContract = new ethers.Contract(item.token, ERC20_ABI, library.getSigner())
-    console.log(library)
     if (!tokenContract) {
       return
     }
@@ -391,13 +401,12 @@ const IGODetails = ({ poolData }) => {
   }
 
   useEffect(() => {
-    if (current?.key === 'buying-phase') {
+    if (current?.key === 'winner-announcement' || current?.key === 'pre-order' || current?.key?.includes('buying-phase')) {
       setTab(1)
-      return
     }
 
     if (current?.key === 'claim') {
-      setTab(1)
+      setTab(2)
     }
   }, [current])
 
@@ -539,10 +548,18 @@ const IGODetails = ({ poolData }) => {
                   </div>
                 }
                 {
+                  current?.key === 'pre-order' &&
+                  <div className="w-full">
+                    <div className="mt-2">
+                      <Countdown title={current?.info?.countdownTitle} to={poolData?.start_time}></Countdown>
+                    </div>
+                  </div>
+                }
+                {
                   current?.key === 'buying-phase' &&
                   <div className="w-full">
                     <div className="mt-2">
-                      <Countdown title={current?.info?.countdownTitle} to={hasFCFS}></Countdown>
+                      <Countdown title={current?.info?.countdownTitle} to={poolData?.finish_time}></Countdown>
                     </div>
                   </div>
                 }
@@ -550,7 +567,7 @@ const IGODetails = ({ poolData }) => {
                   current?.key === 'buying-phase-1' &&
                   <div className="w-full">
                     <div className="mt-2">
-                      <Countdown title={current?.info?.countdownTitle} to={poolData?.finish_time}></Countdown>
+                      <Countdown title={current?.info?.countdownTitle} to={poolData?.freeBuyTimeSetting?.start_buy_time}></Countdown>
                     </div>
                   </div>
                 }
@@ -630,7 +647,7 @@ const IGODetails = ({ poolData }) => {
                   <span className="inline-flex items-center"><img src={usd?.image} className="w-5 h-5 mr-2" alt={usd?.name} />{usd?.symbol}</span>
                 </div>
                 <div className="">
-                  <strong className="font-semibold block">Vesting</strong>
+                  <strong className="font-semibold block">Vesting Schedule</strong>
                   <span className="text-gamefiDark-100 text-[13px]">{poolData?.claim_policy}</span>
                 </div>
               </div>

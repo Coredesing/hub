@@ -150,20 +150,20 @@ const Pools = () => {
     setFilter(f => ({ ...f, type: item.value, typeSelected: item }))
   }
 
-  // const poolHref = useCallback((pool) => {
-  //   if (pool.token_type === TOKEN_TYPE.ERC20) {
-  //     return `/igo/${pool.id}`
-  //   }
-
-  //   return `/ino/${pool.id}`
-  // }, [])
   const poolHref = useCallback((pool) => {
     if (pool.token_type === TOKEN_TYPE.ERC20) {
-      return `https://hub.gamefi.org/#/buy-token/${pool.id}`
+      return `/igo/${pool.id}`
     }
 
-    return `https://hub.gamefi.org/#/mystery-box/${pool.id}`
+    return `/ino/${pool.id}`
   }, [])
+  // const poolHref = useCallback((pool) => {
+  //   if (pool.token_type === TOKEN_TYPE.ERC20) {
+  //     return `https://hub.gamefi.org/#/buy-token/${pool.id}`
+  //   }
+
+  //   return `https://hub.gamefi.org/#/mystery-box/${pool.id}`
+  // }, [])
 
   const currentClaimPhase = (item: any) => {
     let data = null

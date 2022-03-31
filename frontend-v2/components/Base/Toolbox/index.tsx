@@ -19,7 +19,10 @@ const Toolbox = () => {
         <ToolboxItem path='/ino'>
           <Image src={require('@/assets/images/icons/nft.svg')} alt='ino'></Image>
         </ToolboxItem>
-        <ToolboxItem path='https://hub.gamefi.org/#/pools/token'>
+        {/* <ToolboxItem path='https://hub.gamefi.org/#/pools/token'>
+          <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
+        </ToolboxItem> */}
+        <ToolboxItem path='/igo'>
           <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
         </ToolboxItem>
         {/* <ToolboxItem path='/market'>
@@ -46,7 +49,11 @@ const Toolbox = () => {
             <Image src={require('@/assets/images/icons/controller.svg')} alt='aggregator'></Image>
             <span>Aggregator</span>
           </MenuLink>
-          <MenuLink onClick={() => setShowMenu(false)} path='https://hub.gamefi.org'>
+          {/* <MenuLink onClick={() => setShowMenu(false)} path='https://hub.gamefi.org'>
+            <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
+            <span>Launchpad</span>
+          </MenuLink> */}
+          <MenuLink onClick={() => setShowMenu(false)} path='/igo'>
             <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
             <span>Launchpad</span>
           </MenuLink>

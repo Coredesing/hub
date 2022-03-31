@@ -219,6 +219,7 @@ class PoolService {
     const now = moment().unix();
     let pools = await this.buildQueryBuilder(filterParams)
       .with('campaignClaimConfig')
+      .with('socialNetworkSetting')
       // .where('start_time', '<=', now)
       // .where('finish_time', '>', now)
       .where(builder => {
@@ -280,6 +281,7 @@ class PoolService {
     const now = moment().unix();
     let pools = await this.buildQueryBuilder(filterParams)
       .with('campaignClaimConfig')
+      .with('socialNetworkSetting')
       // .where('start_join_pool_time', '<', now)
       .where('end_join_pool_time', '<', now)
       .whereIn('campaign_status', [
@@ -306,6 +308,7 @@ class PoolService {
     // const now = moment().unix();
     let pools = await this.buildQueryBuilder(filterParams)
       .with('campaignClaimConfig')
+      .with('socialNetworkSetting')
       .where('is_display', Const.POOL_DISPLAY.DISPLAY)
       .whereIn('campaign_status', [
         Const.POOL_STATUS.TBA,
@@ -358,25 +361,28 @@ class PoolService {
   async getCompleteSalePoolsV3(filterParams) {
     const limit = filterParams.limit ? filterParams.limit : 20;
     const page = filterParams.page ? filterParams.page : 1;
+    const isSearch =filterParams?.is_search
     filterParams.limit = limit;
     filterParams.page = page;
     if (filterParams.limit > 20) {
       filterParams.limit = 20
     }
 
-    if (await RedisUtils.checkExistRedisCompletedPools(page)) {
+    if (!isSearch && await RedisUtils.checkExistRedisCompletedPools(page)) {
       const cachedPools = await RedisUtils.getRedisCompletedPools(page)
       return JSON.parse(cachedPools)
     }
 
     let pools = await this.buildSearchQuery(filterParams)
+      .with('campaignClaimConfig')
+      .with('socialNetworkSetting')
       .where('campaign_status', Const.POOL_STATUS.ENDED)
       .orderBy('priority', 'DESC')
       .orderBy('finish_time', 'DESC')
       .paginate(page, limit);
 
     // cache data
-    if (page <= 2) {
+    if (page <= 2 && !isSearch) {
       await RedisUtils.createRedisCompletedPools(page, pools)
     }
     return pools;

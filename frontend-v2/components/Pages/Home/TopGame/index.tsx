@@ -15,7 +15,7 @@ const TopGame = ({ item, isTop, like }: Props) => {
         <div className="ml-2">{like?.total_like || 0}</div>
       </div>
       <div className="w-full">
-        <Link href={`/aggregator/${item.slug}`} passHref>
+        <Link href={`/hub/${item.slug}`} passHref>
           <img src={item?.top_favourite_link} alt='favorite-img' style={{ width: '100%', aspectRatio: isTop ? '2' : '1', objectFit: 'cover' }} className="hover:cursor-pointer" />
         </Link>
       </div>
@@ -26,7 +26,7 @@ const TopGame = ({ item, isTop, like }: Props) => {
           <img src={item?.icon_token_link} alt="" style={{ width: '100%', objectFit: 'cover' }}></img>
         </div>
       }
-      <Link href={`/aggregator/${item.slug}`} passHref>
+      <Link href={`/hub/${item.slug}`} passHref>
         <div className={`${isTop ? 'ml-24' : 'justify-center'} h-full flex items-center align-middle font-semibold py-4 cursor-pointer hover:underline`}>
           {item?.game_name}
         </div>

@@ -129,8 +129,8 @@ const ListSwiper = ({ ...props }: Props) => {
 export default ListSwiper
 
 export const CarouselList = ({
-  childrens
-}: { childrens: ReactElement[] }) => {
+  children
+}: { children: ReactElement[] }) => {
   return <ScrollingCarousel
     className={style.carouselList}
     leftIcon={<div className="w-10 h-full grid items-center">
@@ -158,6 +158,6 @@ export const CarouselList = ({
       </button>
     </div>}
   >
-    {childrens}
+    {children}
   </ScrollingCarousel>
 }

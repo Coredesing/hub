@@ -1,8 +1,9 @@
 import Layout from '@/components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
-import { api, Categories } from './'
+import { api, Categories } from '.'
 import { format } from 'date-fns'
+import avatar from '@/assets/images/avatar.png'
 
 const Article = ({ post }) => {
   return <Layout title={post.title}>
@@ -14,7 +15,7 @@ const Article = ({ post }) => {
 
       { post.primary_author && <div className="flex gap-2 items-center mt-2 xl:mt-6">
         <div className="relative w-11 h-11">
-          <Image src={post.primary_author?.profile_image} layout="fill" className="rounded-full" alt={post.primary_author?.name}></Image>
+          <Image src={post.primary_author?.profile_image || avatar} layout="fill" className="rounded-full" alt={post.primary_author?.name}></Image>
         </div>
         <div>
           <p className="font-casual font-medium font-base leading-loose">{post.primary_author?.name}</p>
@@ -35,7 +36,7 @@ const Article = ({ post }) => {
       <p className="font-bold font-casual text-base mt-2">Tags</p>
       <div className="mt-4 inline-flex gap-2 flex-wrap font-casual text-sm">
         { post.tags && post.tags.map(tag =>
-          <Link href={`/news/tag/${tag.slug}`} passHref={true} key={tag.id}>
+          <Link href={`/insight/tag/${tag.slug}`} passHref={true} key={tag.id}>
             <a className="px-2 py-1 bg-[#242732] cursor-pointer hover:bg-gamefiDark-650 uppercase rounded-sm" key={tag.id}>#{tag.name}</a>
           </Link>
         )}
@@ -43,7 +44,7 @@ const Article = ({ post }) => {
       <div className="h-px bg-gradient-to-r from-gray-300/30 my-8"></div>
       { post.primary_author && <div className="flex gap-4 items-center mt-2 xl:mt-6">
         <div className="relative w-20 h-20">
-          <Image src={post.primary_author?.profile_image} layout="fill" className="rounded-full" alt={post.primary_author?.name}></Image>
+          <Image src={post.primary_author?.profile_image || avatar} layout="fill" className="rounded-full" alt={post.primary_author?.name}></Image>
         </div>
         <div className="flex-1">
           <p className="font-bold text-[13px] text-white text-opacity-50 uppercase">Author</p>

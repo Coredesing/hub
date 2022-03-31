@@ -369,7 +369,7 @@ class PoolService {
       return JSON.parse(cachedPools)
     }
 
-    let pools = await this.buildQueryBuilder(filterParams)
+    let pools = await this.buildSearchQuery(filterParams)
       .where('campaign_status', Const.POOL_STATUS.ENDED)
       .orderBy('priority', 'DESC')
       .orderBy('finish_time', 'DESC')

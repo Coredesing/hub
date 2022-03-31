@@ -277,7 +277,7 @@ const Claim = () => {
                           {format(new Date(Number(item.start_time) * 1000), 'yyyy-MM-dd HH:mm:ss')}
                         </div>
                         <div className="table-cell align-middle py-2 rounded font-light">
-                          {printNumber(Number(item.max_percent_claim) - Number(configs[index - 1]?.max_percent_claim) || 0)}%
+                          {printNumber(Number(item.max_percent_claim) - (Number(configs[index - 1]?.max_percent_claim) || 0))}%
                         </div>
                         <div className="table-cell align-middle py-2 rounded font-light">
                           {printNumber(((Number(purchasedTokens) * Number(item.max_percent_claim) / 100) - (Number(purchasedTokens) * Number(configs[index - 1]?.max_percent_claim) / 100 || 0)))} {poolData?.symbol}

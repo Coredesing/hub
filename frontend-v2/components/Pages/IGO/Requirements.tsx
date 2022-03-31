@@ -183,7 +183,7 @@ const Requirements = () => {
   }, [poolData, account, poolWhitelistReady, formData, signature, loadJoined])
 
   useEffect(() => {
-    setFailedRequirements(poolNetworkInvalid || poolRankInvalid || !profile?.verified || !whitelistJoined)
+    setFailedRequirements(poolNetworkInvalid || poolRankInvalid || (!poolData?.kyc_bypass && !profile?.verified) || !whitelistJoined)
   }, [poolNetworkInvalid, poolRankInvalid, profile, setFailedRequirements, whitelistJoined])
 
   return <>
@@ -243,7 +243,7 @@ const Requirements = () => {
           <div className="table-cell align-middle text-white/90">KYC Status</div>
           <div className="table-cell align-middle text-white/90"><strong className="tracking-wider">{profile?.verified ? 'Verified' : 'Unverified'}</strong></div>
           <div className="table-cell align-middle h-10 w-32">
-            { !profile.verified && <>
+            { !poolData?.kyc_bypass && !profile?.verified && <>
               { (!account || poolNetworkInvalid || poolRankInvalid) &&
                     <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiDark-400 text-black'>
                     Verify Now

@@ -94,9 +94,9 @@ const GameDetails = ({ data }) => {
   }, [library, liked, mutate, signature, account, setShowModal])
 
   return (
-    <Layout title={data.game_name ? `${data.game_name} - GameFi Aggregator` : 'GameFi Aggregator'}>
+    <Layout title={data.game_name ? `${data.game_name} - GameFi Hub` : 'GameFi Hub'}>
       <div className="px-2 md:px-4 lg:px-24 md:container mx-auto lg:block">
-        <Link href="/aggregator" passHref={true}>
+        <Link href="/hub" passHref={true}>
           <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">
             <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10"/>

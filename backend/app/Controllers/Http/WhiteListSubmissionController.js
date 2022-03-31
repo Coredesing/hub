@@ -550,6 +550,34 @@ class WhiteListSubmissionController {
       return HelperUtils.responseErrorInternal();
     }
   }
+
+  async getTotalWhitelistSubmissions({ params }) {
+    const campaign_id = params.campaignId;
+
+    if (!campaign_id) {
+      return HelperUtils.responseBadRequest('Bad request with campaign_id');
+    }
+
+    try {
+      const whitelistSubmissionService = new WhitelistSubmissionService();
+      const submissionParams = {
+        campaign_id,
+      }
+      const submission = await whitelistSubmissionService.countSubmissions(submissionParams)
+
+      return HelperUtils.responseSuccess(
+        submission
+      );
+
+    } catch (e) {
+      console.log("error", e)
+      if (e instanceof BadRequestException) {
+        return HelperUtils.responseBadRequest(e.message);
+      } else {
+        return HelperUtils.responseErrorInternal('ERROR : Get Total Submissions Failed !');
+      }
+    }
+  }
 }
 
 module.exports = WhiteListSubmissionController

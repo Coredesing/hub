@@ -16,6 +16,7 @@ import { useAppContext } from '@/context'
 
 import Image from 'next/image'
 import { TIMELINE } from './constants'
+import { getTierById } from '@/utils/tiers'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 
@@ -46,7 +47,7 @@ const Swap = () => {
   const [rounds, setRounds] = useState([
     {
       phase: 1,
-      name: 'Buying Phase 1 - Guarantee',
+      name: 'Pre-order/Buying Phase 1 - Guarantee',
       token: usd,
       allocation: allocation?.max_buy || '0',
       purchased: '0'
@@ -106,20 +107,19 @@ const Swap = () => {
       const endTime = new Date(Number(poolData?.finish_time) * 1000).getTime()
       const freeBuyTime = hasFCFS ? new Date(Number(poolData.freeBuyTimeSetting.start_buy_time) * 1000).getTime() : null
 
-      if (freeBuyTime && now.getTime() >= startTime && now.getTime() < freeBuyTime) {
+      if (current?.key === 'buying-phase') {
         return setPhase(1)
       }
 
-      if (freeBuyTime && now.getTime() >= freeBuyTime && now.getTime() <= endTime) {
+      if (current?.key === 'buying-phase-1') {
+        return setPhase(1)
+      }
+
+      if (current?.key === 'buying-phase-2') {
         return setPhase(2)
       }
 
-      if (!freeBuyTime && now.getTime() >= startTime && now.getTime() <= endTime) {
-        return setPhase(1)
-      }
-
-      // Pre-order will set to phase 1
-      if (isPreOrderTime && preOrderAllowed) {
+      if (isPreOrderTime && preOrderAllowed && current?.key === 'pre-order') {
         return setPhase(1)
       }
 
@@ -334,7 +334,9 @@ const Swap = () => {
   return (
     <>
       {
-        now.getTime() >= timeline[TIMELINE.WINNER_ANNOUNCEMENT].start?.getTime() && poolData?.public_winner_status &&
+        now.getTime() >= timeline[TIMELINE.WINNER_ANNOUNCEMENT].start?.getTime() &&
+        now.getTime() < timeline[TIMELINE.BUYING_PHASE].end?.getTime() &&
+        poolData?.public_winner_status &&
           <div className="my-4 w-full bg-gamefiDark-630/30 p-7 rounded clipped-t-r">
             <div className="flex flex-col lg:flex-row gap-14 lg:gap-4 w-full">
               <div className="w-full lg:w-1/2">
@@ -351,7 +353,7 @@ const Swap = () => {
                     {
                       hasFCFS
                         ? rounds.map(round => (
-                          <tr key={round.phase}>
+                          <tr className={phase === round.phase ? 'text-gamefiGreen' : ''} key={round.phase}>
                             <td className="px-2 py-2 font-medium text-left">{round.name}</td>
                             <td className="px-2 py-2 uppercase font-medium text-right">{`${printNumber(Number(round.allocation || 0), 2)} ${round.token?.symbol}`}</td>
                             <td className="px-2 py-2 uppercase font-medium text-right">{`${printNumber(Number(round.purchased || 0), 2)} ${round.token?.symbol}`}</td>

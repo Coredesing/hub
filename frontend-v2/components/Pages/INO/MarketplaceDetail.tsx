@@ -33,6 +33,7 @@ import { ClipLoader } from 'react-spinners'
 import Image from 'next/image'
 import Link from 'next/link'
 import CountDownTimeV1 from '@/components/Base/CountDownTime'
+import { CURRENCIES } from '@/components/web3'
 
 type Props = {
   projectInfo: ObjectType;
@@ -176,16 +177,23 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
       if (!BigNumber.from(info.price).isZero()) {
         try {
           if (BigNumber.from(info.currency).isZero()) {
-            info.symbol = currencyNative(projectInfo.network)?.symbol
+            info.symbol = currencyNative((projectInfo.network || '').toLowerCase())?.symbol
+            info.icon = currencyNative((projectInfo.network || '').toLowerCase())?.image
           } else {
-            const erc20Contract = new Contract(info.currency, ERC20ABI, libraryDefaultTemporary)
-            info.symbol = await erc20Contract.symbol()
+            const currency = CURRENCIES.find((crc) => BigNumber.from(crc.address || '0').eq(info.currency))
+            if (currency) {
+              info.icon = currency.image
+              info.symbol = currency.symbol
+            } else {
+              const erc20Contract = new Contract(info.currency, ERC20ABI, libraryDefaultTemporary)
+              info.symbol = await erc20Contract.symbol()
+            }
           }
-          if (info.symbol) {
-            /* eslint-disable */
-            const icon = require(`@/assets/images/icons/${info.symbol.toLowerCase()}.png`)
-            info.icon = icon
-          }
+          // if (info.symbol) {
+          //   /* eslint-disable */
+          //   const icon = require(`@/assets/images/icons/${info.symbol.toLowerCase()}.png`)
+          //   info.icon = icon
+          // }
         } catch (error) {
         }
       }
@@ -545,7 +553,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
             </div>
           </div>
           <div className='flex gap-2 items-center'>
-            <img src={projectInfo.logo} alt="" className='w-11 h-11 rounded-full bg-black' />
+            {isFirstEdition && <img src={projectInfo.logo} alt="" className='w-11 h-11 rounded-full bg-black' />}
             <div>
               <label htmlFor="" className="block font-bold text-white/50 text-13px uppercase">Owner <span className={`uppercase ${isFirstEdition ? 'text-gamefiGreen-700' : 'text-orange-500'}`}>{isFirstEdition ? '(First Edition)' : countdown.isSale && '(ReSale)'}</span></label>
               <span className="block text-base font-casual">{OwnerNFT && shortenAddress(OwnerNFT, '.', 6)}</span>
@@ -665,7 +673,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
         }
         {
           isAllowedSell && <div className={clsx('px-5 py-4 mb-2', styles.box, styles.boxCPTopRight)}>
-            <h3 className='text-center text-sm font-casual mb-4'>Sell the item at a fixed price or as an auction</h3>
+            <h3 className='text-center text-sm font-casual mb-4'>Sell the item at a fixed price</h3>
             <div className='flex gap-2 justify-center'>
               <button
                 onClick={handleOpenModalFixPriceNFT}
@@ -726,7 +734,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
           titles={[
             'Information',
             'Attributes',
-            `Offers ${offerList.length ? `(${offerList.length})` : ''}`,
+            isFirstEdition ? null : `Offers ${offerList.length ? `(${offerList.length})` : ''}`,
             'Activities'
           ]}
           currentValue={currentTab}
@@ -747,12 +755,14 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
                   #{formatNumber(tokenInfo.id, 3)}
                 </div>
               </div>
-              <div className={`grid gap-2 ${styles.informationItem}`}>
-                <label htmlFor="" className='font-bold text-sm font-casual'>Description</label>
-                <div className='font-casual text-sm'>
-                  {tokenInfo.description}
+              {
+                tokenInfo.description && <div className={`grid gap-2 ${styles.informationItem}`}>
+                  <label htmlFor="" className='font-bold text-sm font-casual'>Description</label>
+                  <div className='font-casual text-sm'>
+                    {tokenInfo.description}
+                  </div>
                 </div>
-              </div>
+              }
             </div>
           </TabPanel>
           <TabPanel value={currentTab} index={1}>
@@ -792,69 +802,72 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
               </div>
             }
           </TabPanel>
-          <TabPanel value={currentTab} index={2}>
-            <div className={clsx(styles.offerList)}>
-              {
-                offerList.length
-                  ? offerList.map((offer, k) =>
-                    <div key={k} className={clsx(
-                      'font-casual text-sm',
-                      styles.offerItem
-                    )}>
-                      <div className={styles.offerMaker}>
-                        <div>
-                          <b>{shortenAddress(offer.buyer, '*', 6)}</b> make an offer
+          {
+            !isFirstEdition && <TabPanel value={currentTab} index={2}>
+              <div className={clsx(styles.offerList)}>
+                {
+                  offerList.length
+                    ? offerList.map((offer, k) =>
+                      <div key={k} className={clsx(
+                        'font-casual text-sm',
+                        styles.offerItem
+                      )}>
+                        <div className={styles.offerMaker}>
+                          <div>
+                            <b>{shortenAddress(offer.buyer, '*', 6)}</b> make an offer
+                          </div>
+                          <span className='text-white/50 text-13px'>
+                            {formatHumanReadableTime(+offer.dispatch_at * 1000, Date.now())}
+                          </span>
                         </div>
-                        <span className='text-white/50 text-13px'>
-                          {formatHumanReadableTime(+offer.dispatch_at * 1000, Date.now())}
-                        </span>
+                        <div className='flex items-center'>
+                          <img src="" alt="" className='w-4 h-4 rounded-full' />
+                          <span className='ml-2'>
+                            {utils.formatEther(offer.raw_amount)} {offer.currencySymbol}
+                          </span>
+                          {
+                            offer.event_type === 'TokenOffered' &&
+                              isValidChain &&
+                              tokenOnSale.currency === offer.currency &&
+                              tokenOnSale.owner && account &&
+                              BigNumber.from(tokenOnSale.owner).eq(account)
+                              ? <button
+                                onClick={() => onAcceptOffer(offer)}
+                                style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%, 0 0)' }}
+                                className={clsx('border-0 outline-none text-13px ml-6 text-black px-4 py-1 flex items-center gap-1 rounded-sm font-semibold',
+                                  {
+                                    'bg-gamefiGreen-700 cursor-pointer': !lockingAction.lock,
+                                    'bg-white/25 cursor-not-allowed': lockingAction.lock
+                                  }
+                                )}
+                              >
+                                {checkFnIsLoading(onAcceptOffer.name) && <ClipLoader size={18} color='#a3a3a3' />}
+                                Accept
+                              </button>
+                              : null
+                            // account && BigNumber.from(offer.buyer).eq(account) &&
+                            // <button
+                            //   onClick={onCancelOffer}
+                            //   style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%, 0 0)' }}
+                            //   className={clsx('border-0 outline-none text-13px ml-6 text-black px-4 py-1 flex items-center gap-1 rounded-sm font-semibold',
+                            //     {
+                            //       'bg-red-600 cursor-pointer': !lockingAction.lock,
+                            //       'bg-white/25 cursor-not-allowed': lockingAction.lock
+                            //     }
+                            //   )}>
+                            //   {checkFnIsLoading(onCancelOffer.name) && <ClipLoader size={18} color='#a3a3a3' />}
+                            //   Cancel
+                            // </button>
+                          }
+                        </div>
                       </div>
-                      <div className='flex items-center'>
-                        <img src="" alt="" className='w-4 h-4 rounded-full' />
-                        <span className='ml-2'>
-                          {utils.formatEther(offer.raw_amount)} {offer.currencySymbol}
-                        </span>
-                        {
-                          offer.event_type === 'TokenOffered' &&
-                            isValidChain &&
-                            tokenOnSale.currency === offer.currency &&
-                            tokenOnSale.owner && account &&
-                            BigNumber.from(tokenOnSale.owner).eq(account)
-                            ? <button
-                              onClick={() => onAcceptOffer(offer)}
-                              style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%, 0 0)' }}
-                              className={clsx('border-0 outline-none text-13px ml-6 text-black px-4 py-1 flex items-center gap-1 rounded-sm font-semibold',
-                                {
-                                  'bg-gamefiGreen-700 cursor-pointer': !lockingAction.lock,
-                                  'bg-white/25 cursor-not-allowed': lockingAction.lock
-                                }
-                              )}
-                            >
-                              {checkFnIsLoading(onAcceptOffer.name) && <ClipLoader size={18} color='#a3a3a3' />}
-                              Accept
-                            </button>
-                            : null
-                          // account && BigNumber.from(offer.buyer).eq(account) &&
-                          // <button
-                          //   onClick={onCancelOffer}
-                          //   style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%, 0 0)' }}
-                          //   className={clsx('border-0 outline-none text-13px ml-6 text-black px-4 py-1 flex items-center gap-1 rounded-sm font-semibold',
-                          //     {
-                          //       'bg-red-600 cursor-pointer': !lockingAction.lock,
-                          //       'bg-white/25 cursor-not-allowed': lockingAction.lock
-                          //     }
-                          //   )}>
-                          //   {checkFnIsLoading(onCancelOffer.name) && <ClipLoader size={18} color='#a3a3a3' />}
-                          //   Cancel
-                          // </button>
-                        }
-                      </div>
-                    </div>
-                  )
-                  : <NoItemFound title='No Offers Found' />
-              }
-            </div>
-          </TabPanel>
+                    )
+                    : <NoItemFound title='No Offers Found' />
+                }
+              </div>
+            </TabPanel>
+          }
+
           <TabPanel value={currentTab} index={3}>
             {
               activities.totalPage

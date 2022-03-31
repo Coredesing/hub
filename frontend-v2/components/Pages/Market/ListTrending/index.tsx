@@ -7,6 +7,7 @@ import Link from 'next/link'
 import Dropdown from '@/components/Base/Dropdown'
 import { FILTER_TIMES } from '../constant'
 import { ObjectType } from '@/utils/types'
+import { WrapperItem } from '../WrapperContent'
 // import { useMediaQuery } from 'react-responsive'
 
 const ListTrending = () => {
@@ -67,15 +68,14 @@ const ListTrending = () => {
         </div>
         <div className="mt-5">
           {<CarouselList key={infos.length}>{
-            infos.map((item, i) => <SwiperItem
+            infos.map((item, i) => <WrapperItem
               key={`hot-offers-${i}`}
-              style={{ minWidth: '280px' }}
-              className="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 px-2"
+              className="w-full mx-2 first:ml-0 last:mr-0"
             >
               <div className='w-full'>
                 <NFTCard item={item} showOffer={true} showListing={true}></NFTCard>
               </div>
-            </SwiperItem>)
+            </WrapperItem>)
           }
           </CarouselList> }
         </div>

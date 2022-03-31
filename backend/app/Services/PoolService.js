@@ -389,10 +389,10 @@ class PoolService {
   }
 
   async countTotalCompletedPools() {
-    let result = await CampaignModel.query()
-      .where('campaign_status', Const.POOL_STATUS.ENDED)
-      .count('* as sum')
-      .first()
+    const builder = CampaignModel.query()
+     let result = await builder
+      // .where('campaign_status', Const.POOL_STATUS.ENDED)
+      .countDistinct('token as sum').first()
     
     if (!result) {
       return {

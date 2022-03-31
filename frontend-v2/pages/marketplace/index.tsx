@@ -17,7 +17,7 @@ import WrapperContent from '@/components/Pages/Market/WrapperContent'
 const Market = ({ topCollections }: { topCollections: ObjectType[] }) => {
   // const screens = useScreens()
   return (
-    <Layout title="GameFi.org - Marketplace">
+    <Layout title="GameFi.org - Marketplace" description="An one-stop shop for trading NFT collections of in-game items, boxes & virtual lands, updating in real-time. ">
       {
         <div className="relative w-full min-h-full">
           {/* <Banner /> */}

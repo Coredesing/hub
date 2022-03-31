@@ -48,7 +48,7 @@ const IGO = () => {
   }, [upcomingItems])
 
   return (
-    <Layout title="GameFi.org - Initial DEX Offering">
+    <Layout title="GameFi.org - Initial DEX Offering" description="The first game-specific launchpad conducting Initial Game Offerings for game projects.">
       <div className="px-2 md:px-4 lg:px-16 md:container mx-auto lg:block pt-16">
         <div className="w-full text-center text-[84px] leading-[80%] font-bold uppercase select-none">
         Dedicated Gaming <br></br>Launchpad & IGO

@@ -38,6 +38,23 @@ class WhitelistSubmissionService {
     return await builder.first();
   }
 
+  async countSubmissions(params) {
+    let builder = this.buildQueryBuilder(params)
+    let result = await builder.count('* as sum').first()
+
+    if (!result) {
+      return {
+        total: 0
+      }
+    }
+
+    result = JSON.parse(JSON.stringify(result))
+
+    return {
+      total: Number(result?.sum || 0)
+    }
+  }
+
   async addWhitelistSubmission(params) {
     if (!params.wallet_address || !params.campaign_id || !params.user_twitter || !params.user_telegram) {
       let empty = [];

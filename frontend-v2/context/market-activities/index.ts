@@ -1,5 +1,5 @@
 import { useCallback, useReducer } from 'react'
-import { discoverMarketActions, marketActivitiesActions } from './constant'
+import { collectionMarketActions, discoverMarketActions, marketActivitiesActions } from './constant'
 import tiersReducer, { collectionMarketReducer, discoverMarketReducer } from './reducer'
 import { BigNumber, Contract } from 'ethers'
 import ERC20ABI from 'components/web3/abis/ERC20.json'
@@ -167,7 +167,7 @@ export const useDiscoverMarket = () => {
       }
       if (isGetInfoFromContract) {
         const provider = await getLibraryDefaultFlexible(web3.currentProvider, 'bsc')
-        const list = []
+        // const list = []
         if (!listData.length) {
           dispatch({
             type: discoverMarketActions.SUCCESS,
@@ -175,18 +175,32 @@ export const useDiscoverMarket = () => {
           })
           return
         }
-        listData = await Promise.all(listData.map(async item => {
-          const d = await getNftInfo(item, provider, { allowGetOwnerNft })
-          item = d.item
-          if (allowSetOneByOne) {
-            list.push(item)
-            dispatch({
-              type: list.length < listData.length ? discoverMarketActions.LOADING : discoverMarketActions.SUCCESS,
-              payload: setListData(list)
-            })
-          }
-          return item
-        }))
+        // listData = await Promise.all(listData.map(async item => {
+        //   const d = await getNftInfo(item, provider, { allowGetOwnerNft })
+        //   item = d.item
+        //   if (allowSetOneByOne) {
+        //     list.push(item)
+        //     dispatch({
+        //       type: list.length < listData.length ? discoverMarketActions.LOADING : discoverMarketActions.SUCCESS,
+        //       payload: setListData(list)
+        //     })
+        //   }
+        //   return item
+        // }))
+        const objListData: ObjectType = {}
+        await Promise.all(listData.map((item, idx: number) => new Promise((resolve) => {
+          getNftInfo(item, provider, { allowGetOwnerNft }).then((d) => {
+            objListData[idx] = d.item;
+            const outputLists = Object.values(objListData)
+            if (allowSetOneByOne) {
+              dispatch({
+                type: outputLists.length < listData.length ? discoverMarketActions.LOADING : discoverMarketActions.SUCCESS,
+                payload: setListData(outputLists)
+              })
+            }
+            resolve(d.item)
+          })
+        })))
         if (allowSetOneByOne) return
       }
       dispatch({ type: discoverMarketActions.SUCCESS, payload: setListData(listData) })
@@ -228,7 +242,7 @@ export const useCollectionsMarket = () => {
   }) => {
     try {
       const oldData = state.data || {}
-      dispatch({ type: discoverMarketActions.LOADING, payload: { ...oldData } })
+      dispatch({ type: collectionMarketActions.LOADING, payload: { ...oldData } })
       const oldTypeData = oldData[type] || {}
       const oldProjectData = oldTypeData[slug] || {}
       const oldFilter = oldProjectData.filter || {}
@@ -236,7 +250,7 @@ export const useCollectionsMarket = () => {
         oldProjectData.currentPage = filter.page
         oldProjectData.currentList = oldProjectData?.data?.[filter.page]
         oldProjectData.filter = { ...(oldProjectData.filter || {}), ...filter }
-        dispatch({ type: discoverMarketActions.SUCCESS, payload: { ...oldData, [type]: { ...oldTypeData, [slug]: { ...oldProjectData } } } })
+        dispatch({ type: collectionMarketActions.SUCCESS, payload: { ...oldData, [type]: { ...oldTypeData, [slug]: { ...oldProjectData } } } })
         return
       }
 
@@ -252,7 +266,7 @@ export const useCollectionsMarket = () => {
         const setData = {
           ...oldData,
           [type]: {
-            ...oldProjectData,
+            ...oldTypeData,
             [slug]: {
               filter: { ...oldFilter, ...filter },
               total: totalRecords,
@@ -271,33 +285,47 @@ export const useCollectionsMarket = () => {
 
       if (isGetInfoFromContract) {
         const provider = await getLibraryDefaultFlexible(web3.currentProvider, 'bsc')
-        const list = []
+        // const list = []
 
         if (!listData.length) {
           dispatch({
-            type: discoverMarketActions.SUCCESS,
+            type: collectionMarketActions.SUCCESS,
             payload: setListData([])
           })
           return
         }
-        listData = await Promise.all(listData.map(async item => {
-          const d = await getNftInfo(item, provider, { allowGetOwnerNft })
-          item = d.item
-          if (allowSetOneByOne) {
-            list.push(item)
-            dispatch({
-              type: list.length < listData.length ? discoverMarketActions.LOADING : discoverMarketActions.SUCCESS,
-              payload: setListData(list)
-            })
-          }
-          return item
-        }))
+        // listData = await Promise.all(listData.map(async item => {
+        //   const d = await getNftInfo(item, provider, { allowGetOwnerNft })
+        //   item = d.item
+        //   if (allowSetOneByOne) {
+        //     list.push(item)
+        //     dispatch({
+        //       type: list.length < listData.length ? collectionMarketActions.LOADING : collectionMarketActions.SUCCESS,
+        //       payload: setListData(list)
+        //     })
+        //   }
+        //   return item
+        // }))
+        const objListData: ObjectType = {}
+        await Promise.all(listData.map((item, idx: number) => new Promise((resolve) => {
+          getNftInfo(item, provider, { allowGetOwnerNft }).then((d) => {
+            objListData[idx] = d.item;
+            const outputLists = Object.values(objListData)
+            if (allowSetOneByOne) {
+              dispatch({
+                type: outputLists.length < listData.length ? collectionMarketActions.LOADING : collectionMarketActions.SUCCESS,
+                payload: setListData(outputLists)
+              })
+            }
+            resolve(d.item)
+          })
+        })))
         if (allowSetOneByOne) return
       }
-      dispatch({ type: discoverMarketActions.SUCCESS, payload: setListData(listData) })
+      dispatch({ type: collectionMarketActions.SUCCESS, payload: setListData(listData) })
     } catch (error) {
       console.log('error', error)
-      dispatch({ type: discoverMarketActions.FAILURE, payload: error })
+      dispatch({ type: collectionMarketActions.FAILURE, payload: error })
     }
   }, [state])
 

@@ -3,6 +3,7 @@ import React, { useMemo } from 'react'
 import { useFetch } from '@/utils'
 import Link from 'next/link'
 import ImageLoader from '@/components/Base/ImageLoader'
+import { WrapperItem } from '../WrapperContent'
 
 const HotCollections = () => {
   const url = '/marketplace/top-collections?limit=10&page=1'
@@ -24,9 +25,7 @@ const HotCollections = () => {
           <div className="mt-5">
             <CarouselList>
               {hotCollections.map(collection => (
-                <div key={collection.id}
-                  // width="300px"
-                  style={{ marginLeft: '8px', marginRight: '8px', flex: '0 0 280px', width: '280px' }}>
+                <WrapperItem key={collection.id} className="ml-2 mr-2 first:ml-0 last:mr-0">
                   <Link href={`/market/collection/${collection.slug}`} passHref>
                     <div className={'w-full md:px-0 flex flex-col overflow-hidden rounded-sm cursor-pointer hover:underline'} style={{ height: '240px' }}>
                       <div className={'w-full relative'} style={{ height: '150px' }}>
@@ -40,7 +39,7 @@ const HotCollections = () => {
                       </div>
                     </div>
                   </Link>
-                </div>
+                </WrapperItem>
               ))}
             </CarouselList>
           </div>

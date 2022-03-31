@@ -9,3 +9,9 @@ const WrapperContent = (props: any) => {
 }
 
 export default WrapperContent
+
+export const WrapperItem = (props: any) => {
+  return <div style={{ width: '280px' }} {...props}>
+    {props.children}
+  </div>
+}

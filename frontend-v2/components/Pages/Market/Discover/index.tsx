@@ -10,7 +10,7 @@ import { filterPriceOptions } from '../constant'
 import { useAppContext } from '@/context/index'
 import Activities from '../Activities'
 import CurrencySelector from '../CurrencySelector'
-import WrapperContent from '../WrapperContent'
+import WrapperContent, { WrapperItem } from '../WrapperContent'
 
 const Discover = () => {
   const [showDiscover, setShowDiscover] = useState('items')
@@ -41,7 +41,7 @@ const Discover = () => {
     const isDiscover = type === 'discover'
     const applyFilter = {
       ...filter,
-      limit: isDiscover ? 12 : 10
+      limit: isDiscover ? 16 : 10
     }
     actions.setDiscoverMarket({ type, filter: applyFilter, isGetInfoFromContract: true, allowSetOneByOne: isDiscover, allowGetOwnerNft: isDiscover })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -170,9 +170,9 @@ const Discover = () => {
                 {
                   (discoverData?.currentList || []).length > 0
                     ? discoverData.currentList.map((info, i) => (
-                      <div key={`discover-${i}`} style={{ width: '280px' }}>
+                      <WrapperItem key={`discover-${i}`}>
                         <NFTCard item={info} showListing={true} showOffer={true}></NFTCard>
-                      </div>
+                      </WrapperItem>
                     ))
                     : <></>
                 }

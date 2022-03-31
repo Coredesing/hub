@@ -502,7 +502,7 @@ const IGODetails = ({ poolData }) => {
               <div className="font-casual text-sm text-white/80 mt-8">
                 { poolData.description }
               </div>
-              {poolData.slug && <div className=""><a href={`/aggregator/${poolData.slug}`}>Full Research &gt;&gt;</a></div>}
+              {poolData.slug && <div className=""><a href={`/hub/${poolData.slug}`}>Full Research &gt;&gt;</a></div>}
               <div className="mt-4">
                 {
                   current?.key === 'tba' &&

@@ -108,7 +108,7 @@ const GameFiCarousel = ({ items, likes }: Props) => {
                 <p className="font-casual text-left font-light leading-5 md:text-xs lg:text-sm text-gray-300 max-h-24 2xl:max-h-32 overflow-y-scroll">{item.short_description}</p>
               </div>
               <div className="mt-6 xl:mt-10">
-                <Link href={`/aggregator/${item?.slug}`} passHref>
+                <Link href={`/hub/${item?.slug}`} passHref>
                   <div className="bg-gamefiGreen-600 text-gamefiDark-900 py-2 px-6 rounded-xs clipped-t-r hover:opacity-90 w-36 cursor-pointer">
                     <a className="flex align-middle items-center">
                       <div className="mr-2 uppercase font-bold text-xs">View more</div>

@@ -26,7 +26,7 @@ export const CATEGORY_LIST = [
   'Others'
 ]
 
-const Aggregator = ({ data }) => {
+const Hub = ({ data }) => {
   const router = useRouter()
   const [filterShown, setFilterShown] = useState<boolean>(false)
   const [page, setPage] = useState<number>(data.page)
@@ -136,7 +136,7 @@ const Aggregator = ({ data }) => {
   }, [params])
 
   return (
-    <Layout title="GameFi Aggregator">
+    <Layout title="GameFi Hub">
       <div className="px-2 md:px-4 lg:px-16 md:container mx-auto lg:block" onClick={() => setFilterShown(false)}>
         <div className="m-4 flex items-center justify-center">
           <Image src={require('@/assets/images/aggregator/banner.png')} alt="" />
@@ -253,7 +253,7 @@ const Aggregator = ({ data }) => {
               const roi = ((parseFloat(item.price) || 0) / (parseFloat(item.token_price) || 1)).toFixed(2)
               const network = getNetworkByAlias(item.network_available)
               return (
-                <Link href={`/aggregator/${item.slug}`} key={item.id} passHref={true}>
+                <Link href={`/hub/${item.slug}`} key={item.id} passHref={true}>
                   <div className="flex items-center bg-gamefiDark-650 hover:bg-gamefiDark-600 mb-4 cursor-pointer">
                     <div className="flex-1 flex items-center overflow-hidden">
                       <div className="flex-none relative hidden sm:block sm:w-48 sm:h-28">
@@ -346,4 +346,4 @@ export async function getServerSideProps ({ query }) {
   }
 }
 
-export default Aggregator
+export default Hub

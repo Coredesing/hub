@@ -12,13 +12,9 @@ const PressKit = () => (
       <div className="uppercase font-bold text-2xl mb-2 mt-8">GENERAL INFORMATION</div>
       <p className="font-casual text-sm leading-6 opacity-80">Founding date: August 2021</p>
       <p className="font-casual text-sm leading-6 opacity-80">
-        Website:
+        Website: <a href="https://gamefi.org/" className="text-gamefiGreen-500 hover:text-gamefiGreen-800" target="_blank" rel="noreferrer">https://gamefi.org</a>
       </p>
-      <ul className="font-casual text-sm leading-6 opacity-80 list-disc pl-8">
-        <li>Aggregator: <a href="https://gamefi.org/" className="text-gamefiGreen-500 hover:text-gamefiGreen-800" target="_blank" rel="noreferrer">https://gamefi.org/</a></li>
-        <li>Launchpad: <a href="https://hub.gamefi.org/" className="text-gamefiGreen-500 hover:text-gamefiGreen-800" target="_blank" rel="noreferrer">https://hub.gamefi.org/</a></li>
-        <li>Marketplace: <a href="https://hub.gamefi.org/#/mystery-boxes" className="text-gamefiGreen-500 hover:text-gamefiGreen-800" target="_blank" rel="noreferrer">https://hub.gamefi.org/#/mystery-boxes</a></li>
-      </ul>
+
       <p className="font-casual text-sm leading-6 opacity-80">
         Social:
       </p>
@@ -36,7 +32,7 @@ const PressKit = () => (
       </p>
       <p className="font-casual text-sm leading-6 opacity-80">First IGO (Initial Game Offering) platform, with tools to facilitate launching new coins, crypto projects, and raising liquidity. GameFi.org Launchpad helps investors identify early-stage potential blockchain games and participate in their presale rounds.</p>
       <p className="font-casual text-sm leading-6 font-bold mt-4">
-        2. GameFi.org Aggregator
+        2. GameFi.org Hub
       </p>
       <p className="font-casual text-sm leading-6 opacity-80">A listing page of the industry’s most creative blockchain games, where players, investors, and traders can receive in-depth information about their game modes, game studios, whitepapers, tokenomics as well as planned IGO events.</p>
       <p className="font-casual text-sm leading-6 font-bold mt-4">

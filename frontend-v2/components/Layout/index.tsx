@@ -46,7 +46,7 @@ const Layout = ({ children, title, description, image }: Props) => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta property="og:title" content={title || 'GameFi.org'} key="title" />
         <meta property="og:description" content={description || 'GameFi.org is an all-in-one discovery gaming hub for games, guilds, and metaverses.'} key="description" />
-        <meta property="og:image" content={image || imageSocial.src} key="title" />
+        <meta property="og:image" content={image || imageSocial.src} key="image" />
       </Head>
       <div>
         <Sidebar></Sidebar>

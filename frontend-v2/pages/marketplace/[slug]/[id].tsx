@@ -9,7 +9,7 @@ import { useNFTInfo } from '@/components/Pages/Market/utils'
 const MarketplaceDetailPage = ({ projectInfo, params }: any) => {
   const { loading, tokenInfo } = useNFTInfo(projectInfo, params.id)
 
-  return <Layout title={projectInfo.name ? `GameFi.org - ${projectInfo.name} Marketplace` : 'GameFi.org - Marketplace'}>
+  return <Layout title={projectInfo.name ? `GameFi.org - ${projectInfo.name} Marketplace` : 'GameFi.org - Marketplace'} description={tokenInfo?.description}>
     {
       loading
         ? <LoadingOverlay loading></LoadingOverlay>

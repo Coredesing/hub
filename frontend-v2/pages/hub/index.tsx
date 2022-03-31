@@ -136,7 +136,7 @@ const Hub = ({ data }) => {
   }, [params])
 
   return (
-    <Layout title="GameFi.org - Hub">
+    <Layout title="GameFi.org - Hub" description="An ultimate gaming destination for gamers, investors, and other game studios.">
       <div className="px-2 md:px-4 lg:px-16 md:container mx-auto lg:block" onClick={() => setFilterShown(false)}>
         <div className="m-4 flex items-center justify-center">
           <Image src={require('@/assets/images/aggregator/banner.png')} alt="" />

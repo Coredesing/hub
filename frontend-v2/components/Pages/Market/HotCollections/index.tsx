@@ -1,4 +1,4 @@
-import { CarouselList, SwiperItem } from '@/components/Base/ListSwiper'
+import { CarouselList } from '@/components/Base/ListSwiper'
 import React, { useMemo } from 'react'
 import { useFetch } from '@/utils'
 import Link from 'next/link'

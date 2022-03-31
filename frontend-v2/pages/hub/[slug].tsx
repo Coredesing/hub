@@ -94,7 +94,7 @@ const GameDetails = ({ data }) => {
   }, [library, liked, mutate, signature, account, setShowModal])
 
   return (
-    <Layout title={data.game_name ? `GameFi.org - ${data.game_name}` : 'GameFi.org Hub'}>
+    <Layout title={data.game_name ? `GameFi.org - ${data.game_name}` : 'GameFi.org Hub'} description={data?.game_intro} image={data.screen_shots_1}>
       <div className="px-2 md:px-4 lg:px-24 md:container mx-auto lg:block">
         <Link href="/hub" passHref={true}>
           <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">
@@ -329,7 +329,7 @@ const GameRight = ({ data, liked, account, className, like }) => {
             <path d="M14 9.625H12.25V7.875H10.5V9.625H8.75V11.375H10.5V13.125H12.25V11.375H14V9.625Z" fill="currentColor"/>
             <path d="M7.00003 10.7161L2.37565 6.34462C1.53828 5.48975 1.54265 4.11338 2.39053 3.2655C2.80353 2.8525 3.35303 2.625 3.93753 2.625C4.6244 2.625 5.24653 2.95575 5.52828 3.32675C5.69103 3.53675 6.8189 4.69 7.00003 4.9175C7.18115 4.69 8.30903 3.53675 8.47178 3.32675C8.75178 2.95837 9.38003 2.625 10.0625 2.625C10.647 2.625 11.1965 2.8525 11.6095 3.2655C12.3892 4.046 12.4469 5.26837 11.8003 6.125H13.762C14.252 4.739 13.9554 3.13688 12.8468 2.02825C12.0777 1.25913 11.0705 0.875 10.0625 0.875C9.05453 0.875 8.0474 1.25913 7.27828 2.02825C7.1724 2.13413 7.09103 2.25488 7.00003 2.36863C6.90903 2.25488 6.82765 2.13413 6.72178 2.02825C5.95265 1.25913 4.94553 0.875 3.93753 0.875C2.92953 0.875 1.9224 1.25913 1.15328 2.02825C-0.3841 3.56562 -0.3841 6.05938 1.15328 7.59675L7.00003 13.125V10.7161Z" fill="currentColor"/>
           </svg>
-          { !account ? 'Connect wallet' : (liked ? 'Remove from favourite List' : 'Add to favourite List')}
+          { !account ? 'Connect wallet' : (liked ? 'Remove from favorite List' : 'Add to favorite List')}
         </div>
       </div>
       { data.web_game_link && <Link href={data.web_game_link} passHref={true}><a target="_blank" rel="noopenner noreferrer" className="block cursor-pointer clipped-b-r bg-gamefiGreen-500 hover:bg-gamefiGreen-700 p-4 text-gamefiDark-900">

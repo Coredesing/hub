@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './Activites.module.scss'
+import styles from './Activities.module.scss'
 import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from 'components/Base/Table'
 import { getCurrencyByTokenAddress, getTXLink } from '@/components/web3'
 import { MARKET_ACTIVITIES } from '../constant'

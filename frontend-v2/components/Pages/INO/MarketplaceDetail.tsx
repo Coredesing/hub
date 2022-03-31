@@ -433,7 +433,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   useEffect(() => {
     if (!libraryDefaultTemporary) return
     marketActivitiesState.actions.setActivitiesMarketDetail(filterActivities, libraryDefaultTemporary)
-  }, [filterActivities, libraryDefaultTemporary])
+  }, [filterActivities, libraryDefaultTemporary, marketActivitiesState.actions])
 
   const onChangePageActivities = (page: number) => {
     setFilterActivities(f => ({ ...f, page }))
@@ -480,7 +480,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
         setMyOfferInfo(null)
       }
     } catch (error) {
-      console.log('erro', error)
+      console.log('error', error)
       setMyOfferInfo(null)
     }
   }, [account, MarketplaceContract, tokenInfo.id, projectInfo.token_address, currencies])

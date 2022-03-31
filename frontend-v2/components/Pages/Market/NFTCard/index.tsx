@@ -5,7 +5,6 @@ import { BigNumber, ethers } from 'ethers'
 import { getCurrencyByTokenAddress } from '@/components/web3'
 import ImageLoader from '@/components/Base/ImageLoader'
 import { formatNumber } from '@/utils'
-import { useMediaQuery } from 'react-responsive'
 
 type Props = {
   item: any;
@@ -14,8 +13,6 @@ type Props = {
 }
 
 const NFTCard = ({ item, ...props }: Props) => {
-  const isSmScreen = useMediaQuery({ maxWidth: '640px' })
-
   return (
     <div className="rounded overflow-hidden clipped-b-l p-px">
       <div className='clipped-b-l bg-gamefiDark-630/30 hover:bg-gamefiDark-630 h-full rounded relative'>

@@ -79,7 +79,7 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], isLoadingButton,
     <div className={styles.content}>
       <h3 className='font-bold text-2xl mb-7 uppercase'>Sell Your NFT</h3>
       <div className={clsx('mb-8 flex items-center gap-3 justify-between')}>
-        <label htmlFor="" className='text-sm block mb-2 font-casual'>Select Sell Method</label>
+        <label htmlFor="" className='text-sm block mb-2 font-casual'>Sell Method</label>
         <div className='flex gap-2 justify-end'>
           {/* <button
             className={clsx(martketStyles.btn, martketStyles.btnClipPathBottomLeft, 'text-13px font-bold uppercase', {

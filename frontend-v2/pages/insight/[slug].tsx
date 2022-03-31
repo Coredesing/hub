@@ -1,7 +1,7 @@
 import Layout from '@/components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
-import { api, Categories } from './'
+import { api, Categories } from '.'
 import { format } from 'date-fns'
 import avatar from '@/assets/images/avatar.png'
 
@@ -36,7 +36,7 @@ const Article = ({ post }) => {
       <p className="font-bold font-casual text-base mt-2">Tags</p>
       <div className="mt-4 inline-flex gap-2 flex-wrap font-casual text-sm">
         { post.tags && post.tags.map(tag =>
-          <Link href={`/news/tag/${tag.slug}`} passHref={true} key={tag.id}>
+          <Link href={`/insight/tag/${tag.slug}`} passHref={true} key={tag.id}>
             <a className="px-2 py-1 bg-[#242732] cursor-pointer hover:bg-gamefiDark-650 uppercase rounded-sm" key={tag.id}>#{tag.name}</a>
           </Link>
         )}

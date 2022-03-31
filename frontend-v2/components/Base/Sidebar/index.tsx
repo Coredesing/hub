@@ -40,9 +40,9 @@ const Sidebar = () => {
           <Image src={require('@/assets/images/icons/earn.svg')} alt='earn'></Image>
           <span className="mt-2">Earn</span>
         </SidebarLink>
-        <SidebarLink path='/news'>
-          <Image src={require('@/assets/images/icons/news.svg')} alt='news'></Image>
-          <span className="mt-2">News</span>
+        <SidebarLink path='/insight'>
+          <Image src={require('@/assets/images/icons/news.svg')} alt='insight'></Image>
+          <span className="mt-2">Insight</span>
         </SidebarLink>
         <SidebarLink path='/metaverse'>
           <Image src={require('@/assets/images/icons/planet.svg')}alt='metaverse'></Image>

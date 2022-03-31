@@ -66,9 +66,9 @@ const Toolbox = () => {
             <Image src={require('@/assets/images/icons/earn.svg')} alt='earn'></Image>
             <span>Earn</span>
           </MenuLink>
-          <MenuLink onClick={() => setShowMenu(false)} path='/news'>
-            <Image src={require('@/assets/images/icons/news.svg')} alt='news'></Image>
-            <span>News</span>
+          <MenuLink onClick={() => setShowMenu(false)} path='/insight'>
+            <Image src={require('@/assets/images/icons/news.svg')} alt='insight'></Image>
+            <span>Insight</span>
           </MenuLink>
           <MenuLink onClick={() => setShowMenu(false)} path='/metaverse'>
             <Image src={require('@/assets/images/icons/planet.svg')} alt='metaverse'></Image>

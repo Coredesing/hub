@@ -67,7 +67,7 @@ const Footer = () => {
             <Link href="/press" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Press</a></Link>
             <Link href="/careers" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Careers</a></Link>
             <a href="https://t.me/GameFi_OfficialANN" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Business Contacts</a>
-            <Link href="/news" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">GameFi.org News</a></Link>
+            <Link href="/insight" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">GameFi.org Insight</a></Link>
           </div>
         </div>
         <div className="basis-1/3 text-center lg:text-left mt-8 lg:mt-0">

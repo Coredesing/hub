@@ -22,8 +22,8 @@ export const categories = {
 
 export const Categories = ({ active }:{ active?: string }) => (
   <div className="bg-gamefiDark-630/50 inline-flex w-full gap-x-3 sm:gap-x-8 p-3 sm:px-6 font-casual font-medium rounded text-xs sm:text-sm mb-6 overflow-x-auto">
-    <Link href="/news" passHref={true}><a className={`whitespace-nowrap hover:text-white ${!active ? 'text-gamefiGreen-400' : 'text-white/60'}`}>Latest News</a></Link>
-    {Object.keys(categories).map(category => <Link key={category} href={`/news/tag/${category}`} passHref={true}><a className={`whitespace-nowrap hover:text-white ${active === category ? 'text-gamefiGreen-400' : 'text-white/60'}`}>{categories[category] || category}</a></Link>)}
+    <Link href="/insight" passHref={true}><a className={`whitespace-nowrap hover:text-white ${!active ? 'text-gamefiGreen-400' : 'text-white/60'}`}>Latest News</a></Link>
+    {Object.keys(categories).map(category => <Link key={category} href={`/insight/tag/${category}`} passHref={true}><a className={`whitespace-nowrap hover:text-white ${active === category ? 'text-gamefiGreen-400' : 'text-white/60'}`}>{categories[category] || category}</a></Link>)}
   </div>
 )
 
@@ -100,18 +100,18 @@ const News = ({ postsFeatured, postsUpdate, postsPartnership, postsIGO, postsINO
     }
   }, [postsAMA])
 
-  return <Layout title="GameFi.org News">
+  return <Layout title="GameFi.org Insight">
     <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
       <Categories></Categories>
       { featured.big && <div className="flex flex-col sm:flex-row gap-6">
-        <Link href={`/news/${featured.big.slug}`} passHref={true}>
+        <Link href={`/insight/${featured.big.slug}`} passHref={true}>
           <a className="block relative w-full sm:w-auto sm:flex-1 aspect-[16/9]">
             { featured.big?.feature_image && <Image src={featured.big.feature_image} layout="fill" alt={featured.big.title} className="rounded"></Image> }
           </a>
         </Link>
         <div className="sm:w-[32%]">
           <p className="font-semibold uppercase text-gamefiGreen-500 tracking-widest xl:mt-10">Featured</p>
-          <Link href={`/news/${featured.big.slug}`} passHref={true}>
+          <Link href={`/insight/${featured.big.slug}`} passHref={true}>
             <a className="line-clamp-3 font-bold text-xl sm:text-2xl lg:text-4xl !leading-shi my-2 xl:my-4 hover:underline">{featured.big.title}</a>
           </Link>
           <div className="line-clamp-3 font-casual text-sm lg:text-base whitespace-pre-line text-white text-opacity-75">{featured.big.excerpt}</div>
@@ -133,7 +133,7 @@ const News = ({ postsFeatured, postsUpdate, postsPartnership, postsIGO, postsINO
 
       { featured.others && <div className="flex flex-col sm:flex-row mt-10 gap-4 sm:gap-6">
         { featured.others.map(item => <div key={item.id} className="flex sm:flex-col gap-4 sm:gap-0">
-          <Link href={`/news/${item.slug}`} passHref={true}>
+          <Link href={`/insight/${item.slug}`} passHref={true}>
             <a className="block relative w-1/2 sm:w-full aspect-[16/9]">
               <Image src={item.feature_image} layout="fill" alt={item.title} className="rounded" objectFit={'cover'}></Image>
             </a>
@@ -146,7 +146,7 @@ const News = ({ postsFeatured, postsUpdate, postsPartnership, postsIGO, postsINO
           </p>
 
           <div className="w-1/2 sm:w-auto sm:max-w-xl">
-            <Link href={`/news/${item.slug}`} passHref={true}>
+            <Link href={`/insight/${item.slug}`} passHref={true}>
               <a className="line-clamp-2 font-semibold text-lg sm:text-2xl !leading-shi mt-2 mb-2 xl:mb-4 hover:underline tracking-wide">{item.title}</a>
             </Link>
             <div className="line-clamp-3 font-casual text-xs sm:text-sm whitespace-pre-line text-white text-opacity-75">{item.excerpt}</div>
@@ -261,7 +261,7 @@ const News = ({ postsFeatured, postsUpdate, postsPartnership, postsIGO, postsINO
             </div>
             <div className="mt-6 inline-flex gap-2 flex-wrap font-casual text-sm">
               { tags && tags.map(tag =>
-                <Link href={`/news/tag/${tag.slug}`} passHref={true} key={tag.id}>
+                <Link href={`/insight/tag/${tag.slug}`} passHref={true} key={tag.id}>
                   <a className="px-2 py-1 bg-[#242732] cursor-pointer hover:bg-gamefiDark-650 uppercase rounded-sm" key={tag.id}>{tag.name} <span className="text-[11px]">({tag.count?.posts || 0})</span></a>
                 </Link>
               )}
@@ -283,7 +283,7 @@ const NewsLayoutLeft3Right = ({ items, children }: { items: { big?: any; others?
     </div>
     <div className="flex flex-col sm:flex-row mt-6 gap-6">
       { items.big && <div className="w-full sm:w-1/2">
-        <Link href={`/news/${items.big.slug}`} passHref={true}>
+        <Link href={`/insight/${items.big.slug}`} passHref={true}>
           <a className="block relative w-full aspect-[16/9]">
             <Image src={items.big.feature_image} layout="fill" alt={items.big.title} className="rounded"></Image>
           </a>
@@ -296,7 +296,7 @@ const NewsLayoutLeft3Right = ({ items, children }: { items: { big?: any; others?
         </p>
 
         <div className="max-w-xl">
-          <Link href={`/news/${items.big.slug}`} passHref={true}>
+          <Link href={`/insight/${items.big.slug}`} passHref={true}>
             <a className="line-clamp-2 font-semibold text-xl sm:text-2xl !leading-shi mt-2 mb-4 xl:mb-4 hover:underline">{items.big.title}</a>
           </Link>
           <div className="line-clamp-3 font-casual text-sm whitespace-pre-line text-white text-opacity-75">{items.big.excerpt}</div>
@@ -304,7 +304,7 @@ const NewsLayoutLeft3Right = ({ items, children }: { items: { big?: any; others?
       </div> }
       { items.others && <div className="w-full sm:w-1/2 flex flex-col gap-6">
         { items.others.map(item => <div key={item.id} className="flex gap-4">
-          <Link href={`/news/${item.slug}`} passHref={true}>
+          <Link href={`/insight/${item.slug}`} passHref={true}>
             <a className="block relative w-1/2 aspect-[16/9]">
               <Image src={item.feature_image} layout="fill" alt={item.title} className="rounded" objectFit={'cover'}></Image>
             </a>
@@ -315,7 +315,7 @@ const NewsLayoutLeft3Right = ({ items, children }: { items: { big?: any; others?
               <span className="hidden xl:inline mx-2">•</span>
               <span className="hidden xl:inline">{item.reading_time} min read</span>
             </p>
-            <Link href={`/news/${item.slug}`} passHref={true}>
+            <Link href={`/insight/${item.slug}`} passHref={true}>
               <a className="line-clamp-2 font-semibold text-sm xl:text-lg !leading-shi hover:underline tracking-wide">{item.title}</a>
             </Link>
           </div>
@@ -335,7 +335,7 @@ const NewsLayoutLeftRight4Bottom = ({ items, children }: { items: { big?: any[];
     </div>
     { items.big && <div className="flex mt-6 gap-6">
       { items.big.map(item => <div key={item.id} className="w-1/2">
-        <Link href={`/news/${item?.slug}`} passHref={true}>
+        <Link href={`/insight/${item?.slug}`} passHref={true}>
           <a className="block relative w-full aspect-[16/9]">
             <Image src={item?.feature_image} layout="fill" alt={item?.title} className="rounded"></Image>
           </a>
@@ -348,7 +348,7 @@ const NewsLayoutLeftRight4Bottom = ({ items, children }: { items: { big?: any[];
         </p>
 
         <div className="max-w-xl">
-          <Link href={`/news/${item?.slug}`} passHref={true}>
+          <Link href={`/insight/${item?.slug}`} passHref={true}>
             <a className="line-clamp-2 font-semibold text-xl sm:text-2xl !leading-shi mt-2 mb-4 xl:mb-4 hover:underline">{item?.title}</a>
           </Link>
           <div className="line-clamp-3 font-casual text-sm whitespace-pre-line text-white text-opacity-75">{item?.excerpt}</div>
@@ -357,7 +357,7 @@ const NewsLayoutLeftRight4Bottom = ({ items, children }: { items: { big?: any[];
     </div> }
     { items.others && <div className="grid grid-cols-2 mt-8 gap-6">
       { items.others.map(item => <div key={item.id} className="flex gap-4">
-        <Link href={`/news/${item.slug}`} passHref={true}>
+        <Link href={`/insight/${item.slug}`} passHref={true}>
           <a className="block relative w-1/2 aspect-[16/9]">
             <Image src={item.feature_image} layout="fill" alt={item.title} className="rounded"></Image>
           </a>
@@ -368,7 +368,7 @@ const NewsLayoutLeftRight4Bottom = ({ items, children }: { items: { big?: any[];
             <span className="mx-2">•</span>
             {item.reading_time} min read
           </p>
-          <Link href={`/news/${item.slug}`} passHref={true}>
+          <Link href={`/insight/${item.slug}`} passHref={true}>
             <a className="line-clamp-2 font-semibold text-lg !leading-shi hover:underline tracking-wide">{item.title}</a>
           </Link>
         </div>

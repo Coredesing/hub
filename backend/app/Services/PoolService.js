@@ -388,6 +388,25 @@ class PoolService {
     return pools;
   }
 
+  async countTotalCompletedPools() {
+    let result = await CampaignModel.query()
+      .where('campaign_status', Const.POOL_STATUS.ENDED)
+      .count('* as sum')
+      .first()
+    
+    if (!result) {
+      return {
+        total: 0
+      }
+    }
+
+    result = JSON.parse(JSON.stringify(result))
+
+    return {
+      total: Number(result?.sum || 0)
+    }
+  }
+
   addDefaultClaimConfig(claim_configuration, default_datetime) {
     let claimConfigs = claim_configuration || [];
     if (claimConfigs.length === 0) {

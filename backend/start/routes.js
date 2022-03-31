@@ -134,6 +134,7 @@ Route.group(() => {
 
   // Marketplace
   Route.get('marketplace/first-edition-collections', 'MarketplaceController.getFirstEditionCollections');
+  Route.get('marketplace/top-collections', 'MarketplaceController.getTopCollections');
   Route.get('marketplace/collections', 'MarketplaceController.getCollections');
   Route.get('marketplace/hot-offers', 'MarketplaceController.getHotOffers');
   Route.get('marketplace/discover', 'MarketplaceController.discover');

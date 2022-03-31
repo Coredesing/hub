@@ -1,5 +1,5 @@
 import { initReducer } from '../utils'
-import { marketActivitiesActions, discoverMarketActions } from './constant'
+import { marketActivitiesActions, discoverMarketActions, collectionMarketActions } from './constant'
 
 const tiersReducer = (state, action) => {
   return initReducer(
@@ -30,8 +30,8 @@ export const collectionMarketReducer = (state, action) => {
     state,
     action,
     {
-      loading: discoverMarketActions.LOADING,
-      success: discoverMarketActions.SUCCESS,
-      failure: discoverMarketActions.FAILURE
+      loading: collectionMarketActions.LOADING,
+      success: collectionMarketActions.SUCCESS,
+      failure: collectionMarketActions.FAILURE
     })
 }

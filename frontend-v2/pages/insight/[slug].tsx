@@ -4,9 +4,18 @@ import Link from 'next/link'
 import { api, Categories } from '.'
 import { format } from 'date-fns'
 import avatar from '@/assets/images/avatar.png'
+import Head from 'next/head'
 
 const Article = ({ post }) => {
   return <Layout title={post.title} description={post.excerpt} image={post.feature_image}>
+    <Head>
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={post.title} />
+      <meta name="twitter:description" content={post.excerpt} />
+      <meta name="twitter:url" content={`https://gamefi.org/insight/${post.slug}`} />
+      <meta name="twitter:image" content={post.feature_image} />
+      <meta name="twitter:site" content="@GameFi_Official" />
+    </Head>
     <div className="px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
       <Categories active={post.primary_tag?.slug}></Categories>
     </div>

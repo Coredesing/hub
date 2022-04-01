@@ -320,12 +320,12 @@ const Requirements = () => {
     </div>
 
     <Modal show={showModal} toggle={setShowModal} className='dark:bg-transparent fixed z-50 sm:!max-w-3xl'>
-      <ModalConnect close={() => setShowModal(false)}>
+      <div className="bg-gamefiDark-700 pt-4">
         <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full">
           <strong className="uppercase text-2xl font-mechanic">Welcome to {poolData?.title || ''} on GameFi.org</strong>
           <p className="mt-6 text-sm">In order to participate in the IGO, you must fullfil requirements as below.</p>
           <p className="mt-2 text-sm text-gamefiDark-100">{tiers.priority.map(x => x.name).join(', ')} are not required to do the social requirements. However, we recommend following our official Twitter and Telegram groups to stay up-to-date with important announcements.</p>
-          <p className="mt-6 w-full text-sm inline-flex items-center font-medium">
+          <div className="mt-6 w-full text-sm inline-flex items-center font-medium">
             <span className="flex items-center justify-center mr-2 bg-black w-6 h-6 rounded-full font-bold">1</span>
             Provide social information
             <div className="flex gap-1 ml-auto">
@@ -337,7 +337,7 @@ const Requirements = () => {
                 <Link href="/account" passHref={true}>Edit</Link>
               </span>
             </div>
-          </p>
+          </div>
           <div className="flex gap-4 mt-2">
             <div className="w-full text-sm">
               <span className="text-[13px]"><span className="hidden sm:inline">Your</span> Twitter Account</span>
@@ -459,7 +459,7 @@ const Requirements = () => {
             { !whitelistJoined && <button className="font-bold uppercase clipped-t-r bg-gamefiGreen-600 hover:bg-gamefiGreen-500 text-black py-2 px-6 tracking-wider rounded-sm" onClick={handleApplyWhitelist}>Apply Whitelist</button> }
           </div>
         </div>
-      </ModalConnect>
+      </div>
     </Modal>
   </>
 }

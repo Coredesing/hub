@@ -196,7 +196,7 @@ export default function WalletProvider ({ children }) {
   return <ctx.Provider value={{ setShowModal, tryDeactivate }}>
     {children}
     <Modal show={showModal} toggle={setShowModal} className='dark:bg-transparent fixed z-50'>
-      <ModalConnect close={() => setShowModal(false)} style={{ color: network?.colorText || '' }}>
+      <div className="bg-gamefiDark-700 pt-4">
         { account && <div className="font-casual">
           <div className="p-6 pt-10" style={{ backgroundColor: network?.color || 'transparent' }}>
             <div className="font-bold text-2xl uppercase mb-5">My Wallet</div>
@@ -303,7 +303,7 @@ export default function WalletProvider ({ children }) {
               </div>
             </div>
           </div> }
-      </ModalConnect>
+      </div>
     </Modal>
   </ctx.Provider>
 }

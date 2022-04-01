@@ -80,7 +80,7 @@ const Footer = () => {
           <div className="mt-3 lg:mt-4 flex flex-col text-base leading-7 font-extralight">
             <Link href="/press" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Press</a></Link>
             <Link href="/careers" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Careers</a></Link>
-            <a href="https://t.me/GameFi_OfficialANN" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Contacts</a>
+            <a href="https://t.me/GameFi_Official" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Contacts</a>
             <Link href="/insight" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Insight</a></Link>
           </div>
         </div>

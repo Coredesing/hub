@@ -81,7 +81,7 @@ const IGODetails = ({ poolData }) => {
   }, [poolData])
 
   const totalRaise = useMemo(() => {
-    return parseInt(poolData?.total_sold_coin) * parseFloat(poolData?.token_conversion_rate)
+    return Math.round(parseInt(poolData?.total_sold_coin) * parseFloat(poolData?.token_conversion_rate))
   }, [poolData])
 
   const { account, library, network } = useMyWeb3()
@@ -613,10 +613,10 @@ const IGODetails = ({ poolData }) => {
                   <strong className="font-semibold">Symbol</strong>
                   <span className="flex gap-2 items-center">
                     {poolData?.symbol}
-                    {poolData.token && poolData.campaign_status?.toLowerCase() === 'ended' && poolData.token_type === 'erc20' && <>
+                    {poolData.token && timeline[TIMELINE.CLAIM]?.start && now.getTime() >= timeline[TIMELINE.CLAIM].start.getTime() && poolData.token_type === 'erc20' && <>
                       <Tippy content="Add to Metamask">
                         <button
-                          className="w-6 h-6 xl:w-8 xl:h-8 hover:opacity-90"
+                          className="w-6 h-6 hover:opacity-90"
                           onClick={() => addToWallet(poolData)}
                         >
                           <Image src={require('@/assets/images/wallets/metamask.svg')} alt=""></Image>
@@ -656,10 +656,10 @@ const IGODetails = ({ poolData }) => {
                   <div className="table-row">
                     <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">Milestone</div>
                     <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
-                      From
+                      From {`(${format(new Date(), 'z')})`}
                     </div>
                     <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
-                      To
+                      To {`(${format(new Date(), 'z')})`}
                     </div>
                   </div>
 
@@ -668,10 +668,10 @@ const IGODetails = ({ poolData }) => {
                       Apply Whitelist
                     </div>
                     <div className="table-cell align-middle py-2 font-normal">
-                      {timeline[TIMELINE.WHITELIST].start ? `${format(timeline[TIMELINE.WHITELIST].start, 'HH:mm, dd MMM yyyy')} (${format(new Date(), 'z')})` : 'TBA'}
+                      {timeline[TIMELINE.WHITELIST].start ? `${format(timeline[TIMELINE.WHITELIST].start, 'HH:mm, dd MMM yyyy')}` : 'TBA'}
                     </div>
                     <div className="table-cell align-middle py-2 font-normal">
-                      {timeline[TIMELINE.WHITELIST].end ? `${format(timeline[TIMELINE.WHITELIST].end, 'HH:mm, dd MMM yyyy')} (${format(new Date(), 'z')})` : 'TBA'}
+                      {timeline[TIMELINE.WHITELIST].end ? `${format(timeline[TIMELINE.WHITELIST].end, 'HH:mm, dd MMM yyyy')}` : 'TBA'}
                     </div>
                   </div>
 
@@ -680,7 +680,7 @@ const IGODetails = ({ poolData }) => {
                       Winner Announcement
                     </div>
                     <div className="table-cell align-middle py-2 font-normal">
-                      {timeline[TIMELINE.WINNER_ANNOUNCEMENT].end ? `${format(timeline[TIMELINE.WINNER_ANNOUNCEMENT].end, 'HH:mm, dd MMM yyyy')} (${format(new Date(), 'z')})` : 'TBA'}
+                      {timeline[TIMELINE.WINNER_ANNOUNCEMENT].end ? `${format(timeline[TIMELINE.WINNER_ANNOUNCEMENT].end, 'HH:mm, dd MMM yyyy')}` : 'TBA'}
                     </div>
                     <div className="table-cell align-middle py-2 font-normal">
                     </div>

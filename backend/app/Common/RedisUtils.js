@@ -8,6 +8,7 @@ const CURRENT_POOLS_CACHED_TTL = 120 // 2 minutes
 const POOL_BY_TOKEN_TYPEP_CACHED_TTL = 120 // 2 minutes
 const COMPLETED_POOLS_CACHED_TTL = 120 // 2 minutes
 const LATEST_POOLS_CACHED_TTL = 600 // 10 minutes
+const TOTAL_COMPLETED_TTL = 12 * 60 * 60; // 12 hours
 
 const LATEST_POOL_KEY = 'latest_pools';
 
@@ -512,6 +513,49 @@ const deleteRedisUserTierBalance = (walletAddress) => {
   return false;
 };
 
+/**
+ * Total Completed Pools
+ */
+ const getRedisTotalCompletedKey = () => {
+  return `total_completed`;
+};
+
+const getTotalCompleted = async (walletAddress) => {
+  return await Redis.get(getRedisTotalCompletedKey(walletAddress));
+};
+
+const checkExistRedisTotalCompleted = async (walletAddress) => {
+  let redisKey = getRedisTotalCompletedKey(walletAddress);
+
+  if (!ENABLE_REDIS) {
+    return false;
+  }
+
+  return await Redis.exists(redisKey)
+};
+
+const createRedisTotalCompleted = async (data) => {
+  const redisKey = getRedisTotalCompletedKey();
+
+  if (!ENABLE_REDIS) {
+    return false;
+  }
+
+  return await Redis.setex(redisKey, TIER_CACHED_TTL, JSON.stringify(data));
+};
+
+const deleteRedisTotalCompleted = (walletAddress) => {
+  let redisKey = getRedisKeyUserTierBalance(walletAddress);
+  if (Redis.exists(redisKey)) {
+    logRedisUtil(`deleteRedisUserTierBalance - existed key ${redisKey} on redis`);
+    // remove old key
+    Redis.del(redisKey);
+    return true;
+  }
+
+  return false;
+};
+
 module.exports = {
   // POOL LIST
   checkExistRedisPoolList,
@@ -596,4 +640,10 @@ module.exports = {
   checkExistRedisUserTierBalance,
   createRedisUserTierBalance,
   deleteRedisUserTierBalance,
+
+  // total completed pools
+  getTotalCompleted,
+  checkExistRedisTotalCompleted,
+  createRedisTotalCompleted,
+  deleteRedisTotalCompleted
 };

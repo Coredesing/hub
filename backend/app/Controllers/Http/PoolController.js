@@ -766,7 +766,13 @@ class PoolController {
 
   async countTotalCompleteSalePoolsV3({ request }) {
     try {
+      if (await RedisUtils.checkExistRedisTotalCompleted()) {
+        const cachedTotalCompleted = await RedisUtils.getRedisTotalCompleted();
+        return HelperUtils.responseSuccess(JSON.parse(cachedTotalCompleted));
+      }
+
       let data = await (new PoolService).countTotalCompletedPools();
+      RedisUtils.createRedisTotalCompleted(data);
       return HelperUtils.responseSuccess(data);
     } catch (e) {
       console.log(e);

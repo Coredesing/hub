@@ -112,7 +112,7 @@ const News = ({ postsFeatured, postsUpdate, postsPartnership, postsIGO, postsINO
         <div className="sm:w-[32%]">
           <p className="text-sm font-semibold uppercase text-gamefiGreen-500 tracking-widest xl:mt-10">Featured</p>
           <Link href={`/insight/${featured.big.slug}`} passHref={true}>
-            <a className="line-clamp-2 font-semibold text-[22px] sm:text-2xl lg:text-4xl !leading-shi my-2 xl:my-4 hover:underline">{featured.big.title}</a>
+            <a className="line-clamp-2 font-semibold text-[22px] sm:text-2xl lg:text-3xl !leading-shi my-2 xl:my-4 hover:underline">{featured.big.title}</a>
           </Link>
           <div className="line-clamp-3 font-casual text-sm lg:text-base text-white text-opacity-75">{featured.big.excerpt}</div>
           <div className="flex gap-2 items-center mt-3 xl:mt-6">

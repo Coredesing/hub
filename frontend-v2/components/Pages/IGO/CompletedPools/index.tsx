@@ -40,7 +40,7 @@ const CompletedPools = () => {
     <div className="px-4 2xl:px-0 max-w-[1180px] mx-auto mt-20 relative">
       <div className="w-full flex items-center justify-between">
         <div className="h-14 flex items-center font-bold text-lg lg:text-2xl uppercase clipped-b-r-full bg-gamefiDark pr-4">Completed Projects</div>
-        <div className="h-14 flex gap-2 items-center">
+        <div className="h-14 flex gap-2 items-center p-4">
           {/* <Dropdown></Dropdown>
           <Dropdown></Dropdown> */}
           <SearchInput defaultValue={search} onChange={(e) => onSearchPool(e)}></SearchInput>

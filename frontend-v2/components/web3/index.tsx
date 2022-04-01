@@ -460,6 +460,10 @@ export function connectorFromWallet (wallet: Wallet): AbstractConnector {
   }
 
   if (wallet.id === 'metamask' || wallet.id === 'bsc-wallet') {
+    const provider = (window as any).ethereum?.providers?.find(x => !!x.isMetaMask)
+    if (provider) {
+      (window as any).ethereum?.setSelectedProvider(provider)
+    }
     return injected
   }
 

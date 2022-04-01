@@ -29,7 +29,7 @@ const useMarketActivities = () => {
 
   const [state, dispatch] = useReducer(tiersReducer, initState)
 
-  const setActivitiesMarketDetail = async (filter: MarketDetailFilter, provider: Web3Provider) => {
+  const setActivitiesMarketDetail = useCallback(async (filter: MarketDetailFilter, provider: Web3Provider) => {
     const oldData = state.data
     dispatch({ type: marketActivitiesActions.LOADING, payload: oldData })
     try {
@@ -43,7 +43,7 @@ const useMarketActivities = () => {
         return
       }
 
-      const response = await fetcher(`${process.env.NEXT_PUBLIC_BASE_URL}/marketplace/collection/${filter.project}/activities?page=${page}&limit=${limit}&token_id=${filter.tokenId}`)
+      const response = await fetcher(`${API_BASE_URL}/marketplace/collection/${filter.project}/activities?page=${page}&limit=${limit}&token_id=${filter.tokenId}`)
       const result = response?.data || null
       if (!result) {
         dispatch({ type: marketActivitiesActions.SUCCESS, payload: oldData })
@@ -95,7 +95,7 @@ const useMarketActivities = () => {
         payload: error
       })
     }
-  }
+  }, [state])
 
   return {
     state,

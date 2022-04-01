@@ -304,7 +304,7 @@ const Requirements = () => {
 
     <Modal show={showModal} toggle={setShowModal} className='dark:bg-transparent fixed z-50 sm:!max-w-3xl'>
       <ModalConnect close={() => setShowModal(false)}>
-        <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual">
+        <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full">
           <strong className="uppercase text-2xl font-mechanic">Welcome to {poolData?.title || ''} on GameFi.org</strong>
           <p className="mt-6 text-sm">In order to participate in the IGO, you must fullfil requirements as below.</p>
           <p className="mt-2 text-sm text-gamefiDark-100">{tiers.priority.map(x => x.name).join(', ')} are not required to do the social requirements. However, we recommend following our official Twitter and Telegram groups to stay up-to-date with important announcements.</p>
@@ -316,18 +316,18 @@ const Requirements = () => {
                 <path d="M10 3L13 6" stroke="#6CDB00" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M12 1L15 4L5 14L1 15L2 11L12 1Z" stroke="#6CDB00" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span className='uppercase font-bold text-xs text-gamefiGreen-700 outline-none focus:outline-none hover:underline'>
-                <Link href="/account" passHref={true}>Edit profile</Link>
+              <span className='uppercase font-bold text-[12px] lg:text-xs text-gamefiGreen-700 outline-none focus:outline-none hover:underline'>
+                <Link href="/account" passHref={true}>Edit</Link>
               </span>
             </div>
           </p>
           <div className="flex gap-4 mt-2">
             <div className="w-full text-sm">
-              <span className="text-[13px]">Your Twitter Account</span>
+              <span className="text-[13px]"><span className="hidden sm:inline">Your</span> Twitter Account</span>
               <input type="text" value={profile.user_twitter || formData.twitter} onChange={e => setTwitter(e.target.value)} className="mt-2 w-full bg-gamefiDark-600 border-gamefiDark-400 rounded text-sm" disabled={!!profile.user_twitter} readOnly={!!profile.user_twitter}/>
             </div>
             <div className="w-full text-sm">
-              <span className="text-[13px]">Your Telegram Account</span>
+              <span className="text-[13px]"><span className="hidden sm:inline">Your</span> Telegram Account</span>
               <input type="text" value={profile.user_telegram || formData.telegram} onChange={e => setTelegram(e.target.value)} className="mt-2 w-full bg-gamefiDark-600 border-gamefiDark-400 rounded text-sm" disabled={!!profile.user_telegram} readOnly={!!profile.user_telegram}/>
             </div>
           </div>
@@ -335,7 +335,7 @@ const Requirements = () => {
           <p className="mt-6 text-sm inline-flex items-center font-medium">
             <span className="flex items-center justify-center mr-2 bg-black w-6 h-6 rounded-full font-bold">2</span>Follow and subscribe
           </p>
-          <div className="table w-full font-casual text-sm mt-2 font-medium border-separate [border-spacing:0_0.4rem]">
+          <div className="lg:table w-full overflow-x-scroll font-casual text-sm mt-2 font-medium border-separate [border-spacing:0_0.4rem]">
             <div className="table-row">
               <div className="table-cell align-middle px-3 font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
                   Account

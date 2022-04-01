@@ -40,7 +40,7 @@ const Modal = ({ children, show, toggle, className, ...props }: Props) => {
     show
       ? <div className="fixed inset-0 overflow-y-auto" style={{ zIndex: '9999' }}>
         <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-          <div className="fixed inset-0 bg-gamefiDark-900 bg-opacity-75 transition-opacity"></div>
+          <div className="fixed inset-0 bg-gamefiDark-900 bg-opacity-75 transition-opacity -z-[1]"></div>
 
           {/* This element is to trick the browser into centering the modal contents. */}
           <span className="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>

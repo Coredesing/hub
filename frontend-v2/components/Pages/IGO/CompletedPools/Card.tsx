@@ -90,7 +90,7 @@ const Card = ({ item }: {item: Item}) => {
             {getTierById(item?.min_tier)?.name}
           </div>
         </div>
-        <div>
+        <div className="w-40">
           <div className="text-white/50 uppercase font-semibold text-xs font-mechanic">Next Claim In</div>
           <div className="text-sm">
             <Countdown to={nextClaim(item)}></Countdown>

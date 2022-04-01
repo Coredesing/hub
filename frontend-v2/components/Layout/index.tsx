@@ -11,11 +11,12 @@ type Props = {
   title?: string;
   description?: string;
   image?: string;
+  disableFooter?: boolean;
 }
 
 const BETA_SUPPRESSION = 'BETA_SUPPRESSION'
 
-const Layout = ({ children, title, description, image }: Props) => {
+const Layout = ({ children, title, description, image, disableFooter }: Props) => {
   const [suppressed, setSuppressed] = useState<boolean>(true)
 
   useEffect(function () {
@@ -61,7 +62,7 @@ const Layout = ({ children, title, description, image }: Props) => {
         </div> } */}
         <Topbar></Topbar>
         {children}
-        <Footer></Footer>
+        { !disableFooter && <Footer></Footer> }
       </div>
       <Toolbox></Toolbox>
     </div>

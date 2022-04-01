@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { Item } from '../type'
 import Image from 'next/image'
 import community from 'assets/images/icons/community.png'
@@ -7,10 +7,24 @@ import { getCurrency, useLibraryDefaultFlexible } from '@/components/web3/utils'
 import { ListIGOContext } from '@/pages/igo'
 import Progress from './Progress'
 import Countdown from './Countdown'
+import { fetcher, printNumber } from '@/utils'
+import { API_BASE_URL } from '@/utils/constants'
 
 const Card = ({ item, color, background }: { item: Item; color?: string; background?:string }) => {
   const { network } = useLibraryDefaultFlexible(item?.network_available)
   const { now } = useContext(ListIGOContext)
+  // const [participants, setParticipants] = useState(0)
+
+  // const fetchParticipants = useCallback(async () => {
+  //   const response = await fetcher(`${API_BASE_URL}/pool/${item.id}/total-participants`)
+  //   return response?.data
+  // }, [item])
+
+  // useEffect(() => {
+  //   fetchParticipants().then(data => {
+  //     setParticipants(data?.total || 0)
+  //   })
+  // }, [fetchParticipants, setParticipants])
 
   const poolStatus = (status: any) => {
     switch (status) {
@@ -105,12 +119,13 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
       </div>
       <div className="w-full grid grid-cols-2 gap-2">
         <div>
-          <div className="text-white/50 uppercase font-medium text-xs">Total Rise</div>
-          <div className="text-sm">${Number(parseInt(item?.total_sold_coin) * parseFloat(item?.token_conversion_rate)).toLocaleString('en-US')}</div>
+          <div className="text-white/50 uppercase font-medium text-xs">Total Rised</div>
+          <div className="text-sm">${Math.round(Number(item?.total_sold_coin) * Number(item?.token_conversion_rate)).toLocaleString('en-US')}</div>
         </div>
         <div>
           <div className="text-white/50 uppercase font-medium text-xs">Participants</div>
-          <div className="text-sm">{Number(10000).toLocaleString('en-US')}</div>
+          {/* <div className="text-sm">{participants ? printNumber(participants) : '-'}</div> */}
+          <div className="text-sm">-</div>
         </div>
       </div>
       {

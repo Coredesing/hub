@@ -16,25 +16,25 @@ const Sidebar = () => {
           <Image src={require('@/assets/images/icons/home.svg')} alt='home'></Image>
           <span className="mt-2">Home</span>
         </SidebarLink>
+        {/* <SidebarLink path='https://hub.gamefi.org/#/pools/token' external={true}>
+          <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
+          <span className="mt-2">IGO</span>
+        </SidebarLink> */}
+        <SidebarLink path='/igo'>
+          <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
+          <span className="mt-2">IGO</span>
+        </SidebarLink>
         <SidebarLink path='/hub'>
           <Image src={require('@/assets/images/icons/controller.svg')} alt='hub'></Image>
           <span className="mt-2">Hub</span>
         </SidebarLink>
-        <SidebarLink path='https://hub.gamefi.org/#/pools/token' external={true}>
-          <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
-          <span className="mt-2">IGO</span>
-        </SidebarLink>
-        {/* <SidebarLink path='/igo'>
-          <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
-          <span className="mt-2">IGO</span>
-        </SidebarLink> */}
         <SidebarLink path='/ino'>
           <Image src={require('@/assets/images/icons/nft.svg')} alt='INO'></Image>
           <span className="mt-2">INO</span>
         </SidebarLink>
-        <SidebarLink path='/market'>
-          <Image src={require('@/assets/images/icons/shop.svg')} alt='market'></Image>
-          <span className="mt-2">Market</span>
+        <SidebarLink path='/marketplace'>
+          <Image src={require('@/assets/images/icons/shop.svg')} alt='marketplace'></Image>
+          <span className="mt-2">Marketplace</span>
         </SidebarLink>
         <SidebarLink path='/staking'>
           <Image src={require('@/assets/images/icons/coin.svg')} alt='staking'></Image>

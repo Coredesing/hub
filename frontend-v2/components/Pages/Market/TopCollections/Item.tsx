@@ -34,17 +34,17 @@ export const InfoCollection = ({ item, isDisplayJoin, isShowSoldOut }: Props) =>
 
   const saleDescription = useMemo(() => {
     if (!item?.sale_description) return
-    const idxOfColon = item.sale_description.indexOf(':')
+    const idxOfColon: number = item.sale_description.indexOf(':')
     const elements: any[] = []
     if (idxOfColon >= 0) {
       elements.push(<div key="title" className='text-base text-left mb-1 font-semibold'>{item.sale_description.slice(0, idxOfColon + 1)}</div>)
     }
-    const childs: string[] = item.sale_description.slice(idxOfColon + 1)
+    const children: string[] = item.sale_description.slice(idxOfColon + 1)
       .split('-')
       .map((t: string) => t.replace('/\n', '').trim())
       .filter((t: string) => t)
-    if (childs.length > 1) {
-      childs.forEach((t: string, idx) => {
+    if (children.length > 1) {
+      children.forEach((t: string, idx) => {
         elements.push(<p key={idx} className='text-sm text-left px-2 font-normal' style={{ lineHeight: '20px' }}>-{' '}{t}</p>)
       })
       return elements
@@ -74,7 +74,7 @@ export const InfoCollection = ({ item, isDisplayJoin, isShowSoldOut }: Props) =>
     }
     {
       isDisplayJoin && <div className='text-center mt-4'>
-        <Link href={`/market/collection/${item.slug}`} passHref>
+        <Link href={`/marketplace/collection/${item.slug}`} passHref>
           <a className='w-fit clipped-b-l-t-r bg-gamefiGreen-700 text-lg uppercase text-black font-semibold py-2 px-6 rounded-sm'>Join Now</a>
         </Link>
       </div>

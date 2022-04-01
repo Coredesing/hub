@@ -1,4 +1,4 @@
-import { useFetch } from '@/utils'
+import { debounce, useFetch } from '@/utils'
 import React, { useMemo, useState } from 'react'
 import Dropdown from '@/components/Base/Dropdown'
 import SearchInput from '@/components/Base/SearchInput'
@@ -9,7 +9,8 @@ const PER_PAGE = 10
 
 const CompletedPools = () => {
   const [page, setPage] = useState(1)
-  const { response, loading } = useFetch(`/pools/complete-sale-pools?token_type=erc20&limit=${PER_PAGE}&page=${page}`)
+  const [search, setSearch] = useState('')
+  const { response, loading } = useFetch(`/pools/complete-sale-pools?${search && `is_search=1&title=${search}&`}token_type=erc20&limit=${PER_PAGE}&page=${page}`)
 
   const pools = useMemo(() => {
     return response?.data?.data || []
@@ -17,7 +18,7 @@ const CompletedPools = () => {
 
   const lastPage = useMemo(() => {
     return Math.ceil((Number(response?.data?.total) || 0) / PER_PAGE) || 1
-  }, [])
+  }, [response?.data?.total])
 
   const data = useMemo(() => {
     return {
@@ -26,6 +27,10 @@ const CompletedPools = () => {
       items: pools.filter((item, i) => (i >= (page - 1) * PER_PAGE && i < page * PER_PAGE))
     }
   }, [lastPage, page, pools])
+
+  const onSearchPool = debounce((e: any) => {
+    setSearch(e?.target?.value)
+  }, 1000)
 
   return <div className="relative bg-black w-full pb-20">
     <div className="absolute left-0 top-0 h-14 w-1/3">
@@ -36,9 +41,9 @@ const CompletedPools = () => {
       <div className="w-full flex items-center justify-between">
         <div className="h-14 flex items-center font-bold text-lg lg:text-2xl uppercase clipped-b-r-full bg-gamefiDark pr-4">Completed Projects</div>
         <div className="h-14 flex gap-2 items-center">
-          <Dropdown></Dropdown>
-          <Dropdown></Dropdown>
-          <SearchInput></SearchInput>
+          {/* <Dropdown></Dropdown>
+          <Dropdown></Dropdown> */}
+          <SearchInput defaultValue={search} onChange={(e) => onSearchPool(e)}></SearchInput>
         </div>
       </div>
       <div className="w-full flex flex-col gap-4 mt-12">

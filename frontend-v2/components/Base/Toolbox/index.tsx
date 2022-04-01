@@ -19,18 +19,9 @@ const Toolbox = () => {
         <ToolboxItem path='/ino'>
           <Image src={require('@/assets/images/icons/nft.svg')} alt='ino'></Image>
         </ToolboxItem>
-        {/* <ToolboxItem path='https://hub.gamefi.org/#/pools/token'>
-          <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
-        </ToolboxItem> */}
         <ToolboxItem path='/igo'>
           <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
         </ToolboxItem>
-        {/* <ToolboxItem path='/market'>
-          <Image src={require('@/assets/images/icons/shop.svg')} alt='market'></Image>
-        </ToolboxItem>
-        <ToolboxItem path='/metaverse'>
-          <Image src={require('@/assets/images/icons/planet.svg')} alt='metaverse'></Image>
-        </ToolboxItem> */}
         <button
           className={'relative w-full py-4 flex flex-col align-middle items-center justify-center uppercase text-xs lg:text-sm font-semibold cursor-pointer opacity-40'}
           onClick={() => setShowMenu(true)}
@@ -49,10 +40,6 @@ const Toolbox = () => {
             <Image src={require('@/assets/images/icons/controller.svg')} alt='hub'></Image>
             <span>Hub</span>
           </MenuLink>
-          {/* <MenuLink onClick={() => setShowMenu(false)} path='https://hub.gamefi.org'>
-            <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
-            <span>Launchpad</span>
-          </MenuLink> */}
           <MenuLink onClick={() => setShowMenu(false)} path='/igo'>
             <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
             <span>Launchpad</span>
@@ -61,9 +48,9 @@ const Toolbox = () => {
             <Image src={require('@/assets/images/icons/nft.svg')} alt='ino'></Image>
             <span>INO</span>
           </MenuLink>
-          <MenuLink onClick={() => setShowMenu(false)} path='/market'>
-            <Image src={require('@/assets/images/icons/shop.svg')} alt='market'></Image>
-            <span>Market</span>
+          <MenuLink onClick={() => setShowMenu(false)} path='/marketplace'>
+            <Image src={require('@/assets/images/icons/shop.svg')} alt='marketplace'></Image>
+            <span>Marketplace</span>
           </MenuLink>
           <MenuLink onClick={() => setShowMenu(false)} path='/staking'>
             <Image src={require('@/assets/images/icons/coin.svg')} alt='staking'></Image>

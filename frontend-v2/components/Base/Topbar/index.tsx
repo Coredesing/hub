@@ -22,9 +22,9 @@ const Topbar = ({ className }: { className?: string }) => {
             <Image src={require('@/assets/images/gamefi.svg')} alt='gamefi'></Image>
           </div>
         </Link>
-        <div className="flex align-middle items-center cursor-pointer">
+        {/* <div className="flex align-middle items-center cursor-pointer">
           <Image src={require('@/assets/images/icons/search.svg')} alt='search'></Image>
-        </div>
+        </div> */}
       </div>
     </div>
   )

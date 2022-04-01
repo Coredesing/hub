@@ -2,7 +2,7 @@ import Layout from '@/components/Layout'
 import Image from 'next/image'
 
 const Metaverse = () => (
-  <Layout title="GameFi Metaverse">
+  <Layout title="GameFi.org - Metaverse" description="A virtual space for the gaming community to interact, socialize, play & earn.">
     <div className="relative w-full min-h-full">
       <div className="container absolute top-20 left-0 right-0 mx-auto opacity-50 flex items-center justify-center" style={{ zIndex: '1' }}>
         <Image src={require('@/assets/images/coming-soon.png')} alt=""></Image>

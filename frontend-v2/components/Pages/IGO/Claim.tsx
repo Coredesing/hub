@@ -62,7 +62,6 @@ const Claim = () => {
     const claimedPercentage = Number(claimedTokens || 0) / Number(purchasedTokens || 1) * 100
     const items = poolData?.campaignClaimConfig && poolData.campaignClaimConfig.map((config) => {
       let status = 'Unknown'
-      console.log(claimedPercentage)
 
       if (purchasedTokens && claimedTokens) {
         status = claimedPercentage < Number(config.max_percent_claim) ? 'Claimable' : 'Claimed'
@@ -235,16 +234,16 @@ const Claim = () => {
           <div className="mb-4">
             <strong className="font-semibold block">Claim Type</strong>
             <span className="text-gamefiDark-100 text-[13px]">
-              {claimTypes.map((item, index) => `${item.value}% on ${item.name}${index < claimTypes.length - 1 ? ', ' : '.'}`)}
+              {claimTypes.map((item, index) => `${item.value}% ${item.name}${index < claimTypes.length - 1 ? ', ' : '.'}`)}
             </span>
           </div>
         </div>
-        <div className="flex-1 bg-gamefiDark-630/30 p-7 rounded clipped-t-r">
+        <div className="flex-1 bg-gamefiDark-630/30 p-7 rounded clipped-t-r overflow-x-auto">
           <p className="uppercase font-mechanic font-bold text-lg mb-6">Claim Details</p>
           {
             data.items?.length
               ? <>
-                <div className="table w-full font-casual text-sm mt-2 font-medium border-separate [border-spacing:0_0.4rem]">
+                <div className="table w-full min-w-[600px] font-casual text-sm mt-2 font-medium border-separate [border-spacing:0_0.4rem]">
                   <div className="table-row">
                     <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
               No.
@@ -327,7 +326,7 @@ const Claim = () => {
                     )
                   })}
                 </div>
-                <div className="w-full mt-6 flex justify-between items-center">
+                <div className="w-full mt-6 flex flex-col-reverse xl:flex-row justify-between xl:items-center gap-4">
                   <button
                     className={`px-8 py-3 rounded-sm clipped-t-r text-gamefiDark text-sm font-bold uppercase whitespace-nowrap ${claimable ? 'hover:opacity-95 bg-gamefiGreen-600 ' : 'bg-gamefiDark-300 cursor-not-allowed'}`}
                     onClick={() => claimable && handleClaim()}

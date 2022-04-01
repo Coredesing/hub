@@ -8,11 +8,14 @@ import AppProvider from '@/context/provider'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import LoadingOverlay from '@/components/Base/LoadingOverlay'
+import Script from 'next/script'
 
 import 'tippy.js/dist/tippy.css'
 import 'assets/styles/index.scss'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
+
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
 
 function MyApp ({ Component, pageProps }: AppProps) {
   const router = useRouter()
@@ -35,22 +38,37 @@ function MyApp ({ Component, pageProps }: AppProps) {
   })
 
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <Web3ProviderNetwork getLibrary={getLibrary}>
-        <MyWeb3Provider>
-          <AppProvider>
-            <WalletProvider>
-              <Component {...pageProps} />
-            </WalletProvider>
-            <Toaster
-              position="top-right"
-            />
-            <LoadingOverlay loading={loading}></LoadingOverlay>
-          </AppProvider>
+    <>
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
 
-        </MyWeb3Provider>
-      </Web3ProviderNetwork>
-    </Web3ReactProvider>
+          gtag('config', '${GA_MEASUREMENT_ID}');
+        `}
+      </Script>
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <Web3ProviderNetwork getLibrary={getLibrary}>
+          <MyWeb3Provider>
+            <AppProvider>
+              <WalletProvider>
+                <Component {...pageProps} />
+              </WalletProvider>
+              <Toaster
+                position="top-right"
+              />
+              <LoadingOverlay loading={loading}></LoadingOverlay>
+            </AppProvider>
+
+          </MyWeb3Provider>
+        </Web3ProviderNetwork>
+      </Web3ReactProvider>
+    </>
   )
 }
 

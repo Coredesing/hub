@@ -45,7 +45,7 @@ const CardSlim = ({ item, detailLink }: Props) => {
           </Link>
         </div>
         <div>
-          <Link href={detailLink || `/market/${item.project?.slug}/${item.id}`} passHref>
+          <Link href={detailLink || `/marketplace/${item.project?.slug}/${item.id}`} passHref>
             <a className={styles.title}>
               #{item.id}
             </a>

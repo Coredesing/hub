@@ -6,7 +6,7 @@ import { format } from 'date-fns'
 import avatar from '@/assets/images/avatar.png'
 
 const Article = ({ post }) => {
-  return <Layout title={post.title}>
+  return <Layout title={post.title} description={post.excerpt} image={post.feature_image}>
     <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
       <Categories active={post.primary_tag?.slug}></Categories>
     </div>

@@ -80,7 +80,7 @@ const IGODetails = ({ poolData }) => {
     return getCurrency(poolData)
   }, [poolData])
 
-  const totalRaised = useMemo(() => {
+  const totalRaise = useMemo(() => {
     return parseInt(poolData?.total_sold_coin) * parseFloat(poolData?.token_conversion_rate)
   }, [poolData])
 
@@ -110,7 +110,6 @@ const IGODetails = ({ poolData }) => {
       })
   }, [poolData, account])
   useEffect(() => {
-    console.log(poolData)
     loadJoined()
   }, [loadJoined])
   const [tab, setTab] = useState(0)
@@ -362,7 +361,7 @@ const IGODetails = ({ poolData }) => {
     if (now.getTime() > dateFromString(poolData.finish_time).getTime()) {
       return setCurrent(timeline.find(item => item.key === 'claim'))
     }
-  }, [hasFCFS, now, poolData, timeline])
+  }, [hasFCFS, now, poolData, timeline, tierMine])
 
   const addToWallet = async (item: any) => {
     if (!library?.provider?.isMetaMask) {
@@ -411,7 +410,7 @@ const IGODetails = ({ poolData }) => {
   }, [current])
 
   return (
-    <Layout title={poolData?.title || 'GameFi'}>
+    <Layout title={poolData?.title ? `GameFi.org - ${poolData?.title} IGO` : 'GameFi.org - Initial DEX Offering'} description="The first game-specific launchpad conducting Initial Game Offerings for game projects.">
       <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
         {/* <div className="px-2 md:px-4 lg:px-24 md:container mx-auto lg:block mb-4 md:mb-8 lg:mb-10 xl:mb-16"> */}
         <Link href="/igo" passHref={true}>
@@ -631,8 +630,8 @@ const IGODetails = ({ poolData }) => {
                   <span>{poolData?.token_conversion_rate} {usd?.symbol}</span>
                 </div>
                 <div className="flex justify-between mb-4 items-center">
-                  <strong className="font-semibold">Total Raised</strong>
-                  <span>{formatterUSD.format(totalRaised).replace(/\D00(?=\D*$)/, '')}</span>
+                  <strong className="font-semibold">Total Raise</strong>
+                  <span>{formatterUSD.format(totalRaise).replace(/\D00(?=\D*$)/, '')}</span>
                 </div>
                 <div className="flex justify-between mb-4 items-center">
                   <strong className="font-semibold">Swap Amount</strong>
@@ -651,9 +650,9 @@ const IGODetails = ({ poolData }) => {
                   <span className="text-gamefiDark-100 text-[13px]">{poolData?.claim_policy}</span>
                 </div>
               </div>
-              <div className="flex-1 bg-gamefiDark-630 bg-opacity-30 clipped-t-r rounded-md p-6 font-casual text-sm">
+              <div className="flex-1 overflow-x-auto bg-gamefiDark-630 bg-opacity-30 clipped-t-r rounded-md p-6 font-casual text-sm">
                 <p className="uppercase font-mechanic font-bold text-lg mb-6">Pool Timeline</p>
-                <div className="table w-full font-casual text-sm mt-2 font-medium border-separate [border-spacing:0_0.4rem]">
+                <div className="table w-full min-w-[600px] font-casual text-sm mt-2 font-medium border-separate [border-spacing:0_0.4rem]">
                   <div className="table-row">
                     <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">Milestone</div>
                     <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
@@ -687,17 +686,19 @@ const IGODetails = ({ poolData }) => {
                     </div>
                   </div>
 
-                  <div className={`table-row ${current?.key === 'pre-order' && 'text-gamefiGreen'}`}>
-                    <div className="table-cell align-middle py-2 rounded">
-                      Pre-order (Min Tier: {preOrderMinTier.name})
+                  {
+                    poolData?.start_pre_order_time && <div className={`table-row ${current?.key === 'pre-order' && 'text-gamefiGreen'}`}>
+                      <div className="table-cell align-middle py-2 rounded">
+                        Pre-order (Min Tier: {preOrderMinTier.name})
+                      </div>
+                      <div className="table-cell align-middle py-2 font-normal">
+                        {timeline[TIMELINE.PRE_ORDER].start ? format(timeline[TIMELINE.PRE_ORDER].start, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                      </div>
+                      <div className="table-cell align-middle py-2 font-normal">
+                        {timeline[TIMELINE.PRE_ORDER].end ? format(timeline[TIMELINE.PRE_ORDER].end, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                      </div>
                     </div>
-                    <div className="table-cell align-middle py-2 font-normal">
-                      {timeline[TIMELINE.PRE_ORDER].start ? format(timeline[TIMELINE.PRE_ORDER].start, 'HH:mm, dd MMM yyyy') : 'TBA'}
-                    </div>
-                    <div className="table-cell align-middle py-2 font-normal">
-                      {timeline[TIMELINE.PRE_ORDER].end ? format(timeline[TIMELINE.PRE_ORDER].end, 'HH:mm, dd MMM yyyy') : 'TBA'}
-                    </div>
-                  </div>
+                  }
 
                   {
                     hasFCFS
@@ -745,7 +746,7 @@ const IGODetails = ({ poolData }) => {
                       Claim
                     </div>
                     <div className="table-cell align-middle py-2 font-normal">
-                      {poolClaimTime.start ? format(poolClaimTime.start, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                      {poolData?.campaignClaimConfig[0]?.start_time ? format(new Date(Number(poolData?.campaignClaimConfig[0]?.start_time) * 1000), 'HH:mm, dd MMM yyyy') : 'TBA'}
                     </div>
                     <div className="table-cell align-middle py-2 font-normal"></div>
                   </div>
@@ -770,8 +771,8 @@ const IGODetails = ({ poolData }) => {
               : <Claim></Claim> }
           </TabPanel>
           <TabPanel value={tab} index={3}>
-            <div className="bg-gamefiDark-630/30 clipped-t-r rounded-md p-7 font-casual text-sm flex gap-6 mt-4">
-              <div className="pr-6 border-r border-gamefiDark-630/50">
+            <div className="bg-gamefiDark-630/30 clipped-t-r rounded-md p-7 font-casual text-sm flex flex-col xl:flex-row gap-6 mt-4">
+              <div className="pr-6 xl:border-r border-gamefiDark-630/50">
                 <p className="font-mechanic uppercase font-bold text-lg mb-6">Winner Lookup</p>
                 <input type="text" placeholder="Enter wallet address" className="w-full text-sm rounded-sm bg-gamefiDark-650/50 border-gamefiDark-400 mb-3" value={winnerSearch} onChange={e => setWinnerSearch(e.target.value)} />
                 <Recaptcha className="w-full mb-3" onChange={onCaptchaWinner} onLoad={onCaptchaWinnerLoad}></Recaptcha>

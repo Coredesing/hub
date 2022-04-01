@@ -19,7 +19,7 @@ const Articles = ({ posts, tag, pagination, pageOriginal }) => {
     router.push(`/insight/tag/${tag}/${page}`)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageOriginal, tag, page])
-  return <Layout title={tag ? `GameFi.org Insight - ${tag.toUpperCase()}` : 'GameFi.org Insight'}>
+  return <Layout title={tag ? `GameFi.org - ${tag.toUpperCase()} Insight` : 'GameFi.org - Insight'} description="An integrated information channel providing the latest news on GameFi.org">
     <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
       <Categories active={tag}></Categories>
       <div className="flex flex-col sm:flex-row gap-6 mt-10">

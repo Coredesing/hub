@@ -764,6 +764,16 @@ class PoolController {
     }
   }
 
+  async countTotalCompleteSalePoolsV3({ request }) {
+    try {
+      let data = await (new PoolService).countTotalCompletedPools();
+      return HelperUtils.responseSuccess(data);
+    } catch (e) {
+      console.log(e);
+      return HelperUtils.responseErrorInternal('countTotalCompletedPools Failed !!!');
+    }
+  }
+
   async getPoolByTokenType({ request, params }) {
     const inputParams = request.all();
     try {

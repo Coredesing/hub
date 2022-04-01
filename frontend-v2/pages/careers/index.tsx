@@ -523,7 +523,7 @@ export const jobs = [
   }]
 
 const Careers = () => (
-  <Layout title="Careers">
+  <Layout title="GameFi.org - Careers">
     <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block pb-16">
       <div className="uppercase font-bold text-4xl mb-6">Current Openings</div>
 

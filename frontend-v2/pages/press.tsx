@@ -3,7 +3,7 @@ import Layout from '@/components/Layout'
 
 const PressKit = () => (
   <Layout title="GameFi.org - Press Kit">
-    <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-4xl my-8 md:my-12 lg:my-16 xl:my-24">
+    <div className="px-4 lg:px-16 mx-auto lg:block max-w-4xl my-8 md:my-12 lg:my-16 xl:my-24">
       <div className="uppercase font-bold text-4xl">Press Kit</div>
 
       <div className="uppercase font-bold text-2xl mb-2 mt-8">WE PROVIDE EXTENSIVE SERVICES FOR BLOCKCHAIN GAMERS, INVESTORS, AND TRADERS</div>
@@ -101,25 +101,26 @@ const PressKit = () => (
 
       <div className="uppercase font-bold text-2xl mb-2 mt-8">colors</div>
       <div className="flex gap-x-4 justify-between">
-        <div className="font-casual font-bold text-sm text-center w-full py-6 rounded-lg" style={{ color: '#0E0F14', backgroundColor: '#6CDB00' }}>
+        <div className="font-casual font-medium sm:font-bold text-[11px] sm:text-sm text-center w-full py-6 rounded-lg" style={{ color: '#0E0F14', backgroundColor: '#6CDB00' }}>
           #6CDB00
         </div>
-        <div className="font-casual font-bold text-sm text-center w-full py-6 rounded-lg" style={{ color: '#0E0F14', backgroundColor: '#FEB800' }}>
+        <div className="font-casual font-medium sm:font-bold text-[11px] sm:text-sm text-center w-full py-6 rounded-lg" style={{ color: '#0E0F14', backgroundColor: '#FEB800' }}>
           #FEB800
         </div>
-        <div className="font-casual font-bold text-sm text-center w-full py-6 rounded-lg" style={{ color: '#0E0F14', backgroundColor: '#FF5152' }}>
+        <div className="font-casual font-medium sm:font-bold text-[11px] sm:text-sm text-center w-full py-6 rounded-lg" style={{ color: '#0E0F14', backgroundColor: '#FF5152' }}>
           #FF5152
         </div>
-        <div className="font-casual font-bold text-sm text-center w-full py-6 rounded-lg" style={{ color: '#0E0F14', backgroundColor: '#ECF8F8' }}>
+        <div className="font-casual font-medium sm:font-bold text-[11px] sm:text-sm text-center w-full py-6 rounded-lg" style={{ color: '#0E0F14', backgroundColor: '#ECF8F8' }}>
           #ECF8F8
         </div>
-        <div className="font-casual font-bold text-sm text-center w-full py-6 rounded-lg" style={{ color: '#fff', backgroundColor: '#23262F' }}>
+        <div className="font-casual font-medium sm:font-bold text-[11px] sm:text-sm text-center w-full py-6 rounded-lg" style={{ color: '#fff', backgroundColor: '#23262F' }}>
           #23262F
         </div>
       </div>
 
       <div className="uppercase font-bold text-2xl mb-2 mt-8">FULL KIT</div>
       <p className="font-casual text-sm leading-6 opacity-80">Download the full GameFi.org Press kit here</p>
+      <p className="font-casual text-sm opacity-80">Last Update: Apr 01 2022</p>
     </div>
   </Layout>
 )

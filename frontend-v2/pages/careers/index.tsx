@@ -10,7 +10,7 @@ export const jobs = [
     type: 'Full time',
     level: 'Senior, Junior',
     descriptions: [
-      'Develop, improve and maintain Smart Contracts, apply to use-cases such as NFT minting, Marketplace Operation, On-chain => Offchain integration (using Wallet and NFT as logging keys)',
+      'Develop, improve and maintain Smart Contracts, apply to use-cases such as NFT minting, Marketplace Operation, On-chain => Off-chain integration (using Wallet and NFT as logging keys)',
       'Work with product teams to write smart contracts according to the needs of each product team',
       'Research, explore, discuss, debate, come up with development ideas in a general direction and work with the team on those ideas',
       'Read/Understand technical papers/documents to come up with a solution as well as install that solution in the code base',
@@ -202,8 +202,8 @@ export const jobs = [
 
   // Job 5
   {
-    id: 'marketing-excutive',
-    title: '🎈 Marketing Excutive',
+    id: 'marketing-executive',
+    title: '🎈 Marketing Executive',
     location: 'Ha Noi, HCM, Remote',
     type: 'Full time',
     level: 'Senior, Junior',
@@ -239,7 +239,7 @@ export const jobs = [
   // Job 6
   {
     id: 'graphic-designer',
-    title: '🚀Graphic Designer',
+    title: '🚀 Graphic Designer',
     location: 'Ha Noi, HCM, Remote',
     type: 'Full time',
     level: 'Senior, Junior, Remote',
@@ -249,7 +249,7 @@ export const jobs = [
       'Coordinating the content department to create ideas, develop a scripted deployment plan, shoot short videos for brands according to the media team’s content plan',
       'Editing in-house video clips to serve PR campaigns, marketing, training activities and internal communication, etc.',
       'Collect and research new trends and ideas to increase the attractiveness of videos',
-      'Setting up for product’s inhouse photoshoot',
+      'Setting up for product’s in-house photoshoot',
       'Other tasks as assigned'
     ],
     requirements: [
@@ -278,7 +278,7 @@ export const jobs = [
   // Job 7
   {
     id: 'game-ui-ux-designer',
-    title: '🕹️Game UI/UX Designer',
+    title: '🕹️ Game UI/UX Designer',
     location: 'Ha Noi, HCM, Remote',
     type: 'Full time',
     level: 'Senior, Junior, Remote',
@@ -326,7 +326,7 @@ export const jobs = [
   // Job 8
   {
     id: 'game-executive-producer',
-    title: '🎨Game Executive Producer',
+    title: '🎨 Game Executive Producer',
     location: 'Ha Noi, HCM, Remote',
     type: 'Full time',
     level: 'Senior, Junior, Remote',
@@ -348,7 +348,7 @@ export const jobs = [
       'Rapid prototyping experience. User research and feedback implementation experience',
       'Strong sense of organization coordination and communication',
       'Capability to work on tight deadlines',
-      'Excellent problem-finding and solution-fiding skills',
+      'Excellent problem-finding and solution-finding skills',
       'Blockchain basic knowledge',
       'Monetization experience',
       'Technical background or Design background'

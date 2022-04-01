@@ -66,8 +66,8 @@ const Footer = () => {
           <div className="mt-3 lg:mt-4 flex flex-col text-base leading-7 font-extralight">
             <Link href="/press" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Press</a></Link>
             <Link href="/careers" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Careers</a></Link>
-            <a href="https://t.me/GameFi_OfficialANN" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Business Contacts</a>
-            <Link href="/insight" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">GameFi.org Insight</a></Link>
+            <a href="https://t.me/GameFi_OfficialANN" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Contacts</a>
+            <Link href="/insight" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Insight</a></Link>
           </div>
         </div>
         <div className="basis-1/3 text-center lg:text-left mt-8 lg:mt-0">
@@ -75,7 +75,7 @@ const Footer = () => {
           <div className="mt-3 lg:mt-4 flex flex-col text-base leading-7 font-extralight">
             <a href="https://about.gamefi.org/#features" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Features</a>
             <a href="https://about.gamefi.org/#roadmap" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Roadmap</a>
-            <a href="https://about.gamefi.org/#ourteam" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Our Team</a>
+            <a href="https://about.gamefi.org/#ourteam" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Team</a>
             <a href="https://about.gamefi.org/#advisors" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Advisors</a>
           </div>
         </div>
@@ -89,8 +89,8 @@ const Footer = () => {
       </div>
     </div>
     <div className="md:container md:px-4 lg:px-16 mx-auto lg:block">
-      <div className="flex align-middle items-center justify-between text-base font-light pt-6 pb-8 border-t border-gray-700 text-gray-400">
-        <div>&#169; Icetea Labs, 2021</div>
+      <div className="flex align-middle items-center justify-between text-base font-light pt-6 pb-8 border-t border-gray-700 text-gray-400 px-4">
+        <div className="text-sm sm:text-base leading-6">&#169; Icetea Labs, 2021</div>
         <div className="flex gap-x-4 items-center">
           {/* <Link href="#" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Terms of Use</a></Link>
           <div className="h-4 w-px bg-gray-600"></div>

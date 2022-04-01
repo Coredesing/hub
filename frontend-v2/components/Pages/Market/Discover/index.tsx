@@ -166,7 +166,7 @@ const Discover = () => {
           </div>
           {
             showDiscover === 'items' && <>
-              <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 justify-center" style={{ gridTemplateColumns: 'repeat(auto-fill, 280px)' }}>
+              <div className="mt-14 grid sm:grid-cols-2-auto lg:grid-cols-3-auto xl:grid-cols-4-auto gap-2 text-center lg:gap-4 justify-center">
                 {
                   (discoverData?.currentList || []).length > 0
                     ? discoverData.currentList.map((info, i) => (

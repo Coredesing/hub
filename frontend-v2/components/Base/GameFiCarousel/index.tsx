@@ -84,7 +84,7 @@ const GameFiCarousel = ({ items, likes }: Props) => {
         {items && items.map(item => (
           <div key={`game-${item.id}`} className="flex">
             <div className="clipped-t-r w-[450px] xl:w-[600px] 2xl:w-[747px]">
-              <video className="clipped-t-r" style={{ aspectRatio: '16/9', objectFit: 'cover' }} muted controls poster={item.screen_shots_1}>
+              <video className="clipped-t-r" style={{ aspectRatio: '16/9', objectFit: 'cover' }} muted controls controlsList="nodownload" poster={item.screen_shots_1}>
                 <source src={item.intro_video} type="video/mp4"></source>
             Your browser does not support the video tag.
               </video>

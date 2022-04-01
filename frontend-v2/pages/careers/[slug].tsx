@@ -8,14 +8,14 @@ const Career = ({ data }) => {
   }
 
   return (<Layout title={data.title ? `GameFi.org - ${data.title}` : 'GameFi.org - Careers'}>
-    <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block pb-16 max-w-4xl">
+    <div className="px-4 lg:px-16 mx-auto lg:block pb-12 max-w-4xl">
       <Link href="/careers" passHref={true}>
         <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">
           <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10" />
             <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square" />
           </svg>
-          CURRENT OPENINGS
+          CURRENT POSITIONS
         </a>
       </Link>
 
@@ -56,24 +56,18 @@ const Career = ({ data }) => {
       <p className="font-casual text-sm leading-6 opacity-80 mb-2">Icetea Labs is a laboratory incubating and nurturing blockchain-enabled projects. Our mission is to support visionary founders and energetic teams to create a long-lasting positive impact through decentralization technologies. We not only finance potential projects but also advise, assist and connect projects with our extensive network of strategic partners.</p>
       <p className="font-casual text-sm leading-6 opacity-80 mb-8">Learn more: <a href="https://icetea.io/" className="text-gamefiGreen-500 hover:text-gamefiGreen-800">https://icetea.io/</a></p>
 
-      <div className="uppercase font-bold text-2xl mb-2 mt-8">APPLLCATION</div>
+      <div className="uppercase font-bold text-2xl mb-2 mt-8">APPLICATION</div>
 
       <p className="font-casual text-sm leading-6 font-bold mt-4">
-        <span className="inline-block w-20">Method:</span> <span className="font-normal opacity-80">Send CV & Portfolio to email: <a href="mailto:talent@icetea.io" className="text-gamefiGreen-500 hover:text-gamefiGreen-800">talent@icetea.io</a></span>
+        <span className="inline-block w-20">Method:</span> <span className="text-xs sm:text-sm font-normal opacity-80">Send CV & Portfolio via email</span>
       </p>
       <p className="font-casual text-sm leading-6 font-bold mt-4">
-        <span className="inline-block w-20">Title:</span><span className="font-normal opacity-80">CV Talent Acquisition Specialist – Your full name</span>
+        <span className="inline-block w-20">Subject:</span><span className="text-xs sm:text-sm font-normal opacity-80">[GameFi.org] [Position] – Your full name</span>
       </p>
 
       <div className="flex mt-4">
         <div className="font-casual text-sm leading-6 font-bold w-20">Contact:</div>
-        <div>
-          <p className="font-casual text-sm leading-6 opacity-80 mb-4">Nguyen Son Tung – Talent Acquisition Leader</p>
-          <p className="font-casual text-sm leading-6 opacity-80 mb-4">Email: tung.nguyen1@icetea.io</p>
-          <p className="font-casual text-sm leading-6 opacity-80 mb-4">Skype: live:.cid.50f48be3d1f32dcc</p>
-          <p className="font-casual text-sm leading-6 opacity-80 mb-4">Telegram: @tweeday54</p>
-          <p className="font-casual text-sm leading-6 opacity-80 mb-4">Phone/Zalo: +84 834 096 856</p>
-        </div>
+        <p className="font-casual text-sm leading-6 opacity-80 mb-4"><a href="mailto:talent@icetea.io" className="text-gamefiGreen-500 hover:text-gamefiGreen-800 text-xs sm:text-sm">talent@icetea.io</a></p>
       </div>
     </div>
   </Layout>)

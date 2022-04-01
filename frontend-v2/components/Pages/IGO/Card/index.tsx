@@ -61,7 +61,7 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
   return <div className={`bg-${background} w-full flex flex-col font-casual hover:opacity-90`}>
     <a href={`/igo/${item.id}`} className="w-full aspect-[16/9] bg-black relative">
       <img src={item?.banner} alt="" className="object-cover w-full h-full"></img>
-      <div className={`absolute h-6 w-2/5 inline-flex align-middle items-center -top-[1px] -left-[1px] uppercase text-xs text-left bg-${color} clipped-b-r-full`}>
+      <div className={`absolute h-6 w-36 xl:w-2/5 inline-flex align-middle items-center -top-[1px] -left-[1px] uppercase text-xs text-left bg-${color} clipped-b-r-full`}>
         <Image src={poolStatus(item.is_private).icon} alt="lock"></Image>
         <span className="ml-2 font-medium tracking-widest">{poolStatus(item.is_private).title}</span>
       </div>

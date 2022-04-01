@@ -11,6 +11,7 @@ import { useAppContext } from '@/context/index'
 import Activities from '../Activities'
 import CurrencySelector from '../CurrencySelector'
 import WrapperContent, { WrapperItem } from '../WrapperContent'
+import DiscoverTypes from './DiscoverTypes'
 
 const Discover = () => {
   const [showDiscover, setShowDiscover] = useState('items')
@@ -104,50 +105,42 @@ const Discover = () => {
               </div>
             </div>
             <div className="mt-14 flex items-center justify-between flex-wrap md:flex-row gap-2">
-              <div className="flex">
-                <div className="relative" style={{ marginRight: '-6px' }}>
-                  <button
-                    className={`absolute top-0 bottom-0 w-full flex items-center justify-center pr-2 font-semibold uppercase ${showDiscover === 'items' ? 'text-black' : 'text-white opacity-50'}`}
-                    onClick={() => {
-                      setShowDiscover('items')
-                      setFilter(f => ({ ...f, page: 1 }))
-                    }}
-                  >Items
-                  </button>
-                  <svg width="142" height="38" viewBox="0 0 142 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 2C0 0.89543 0.895431 0 2 0H66H130.458C131.367 0 132.161 0.612387 132.392 1.49101L142 38H8.82843C8.298 38 7.78929 37.7893 7.41421 37.4142L0.585786 30.5858C0.210713 30.2107 0 29.702 0 29.1716V2Z" fill={showDiscover === 'items' ? '#6CDB00' : '#242732'} />
-                  </svg>
-                </div>
-                <div className="relative">
-                  <button
-                    className={`absolute top-0 bottom-0 w-full flex items-center justify-center pr-2 font-semibold uppercase ${showDiscover === 'activities' ? 'text-black' : 'text-white opacity-50'}`}
-                    onClick={() => {
-                      setShowDiscover('activities')
-                      setFilter(f => ({ ...f, page: 1 }))
-                    }}
-                  >Activities</button>
-                  <svg width="142" height="38" viewBox="0 0 142 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 0H133.172C133.702 0 134.211 0.210714 134.586 0.585786L141.414 7.41421C141.789 7.78929 142 8.29799 142 8.82843V36C142 37.1046 141.105 38 140 38H11.5418C10.6332 38 9.83885 37.3876 9.60763 36.509L0 0Z" fill={showDiscover === 'activities' ? '#6CDB00' : '#242732'} />
-                  </svg>
-                </div>
-              </div>
-              <div className="flex items-center flex-wrap gap-2 sm:justify-self-auto justify-end sm:w-auto w-full">
-                <div><NetworkSelector isMulti={false} isToggle={false} selected={{ [filter.network]: true }} onChange={handleChangeNetwork} className='mb-0' style={{ height: '38px' }}></NetworkSelector></div>
-                <CurrencySelector selected={filter.currency} onChange={onSelectCurrency} style={{ height: '38px' }} />
-                <div className='flex'>
-                  <div>
-                    <Dropdown
-                      items={filterPriceOptions}
-                      selected={filterPriceOptions.find(f => f.value === filter.price_order)}
-                      onChange={onFilterPrice}
-                      disabled={!filter.currency}
-                    />
-                  </div>
-                  <div className="">
-                    <DiscoverFilter
-                      disabled={!filter.currency}
-                      onApply={onAdvanceFilter}
-                    />
+              <DiscoverTypes
+                currentType={showDiscover}
+                onChange={(type) => {
+                  setShowDiscover(type)
+                  setFilter(f => ({ ...f, page: 1 }))
+                }} />
+              <div className="grid sm:flex items-center flex-wrap gap-2 sm:justify-self-auto sm:w-auto w-full">
+                <div className='w-full sm:w-auto'><NetworkSelector
+                  isMulti={false}
+                  isToggle={false}
+                  selected={{ [filter.network]: true }}
+                  onChange={handleChangeNetwork}
+                  className='h-10'
+                  style={{ marginBottom: '0' }}></NetworkSelector></div>
+                <div className='flex gap-2'>
+                  <CurrencySelector
+                    className="w-full h-10"
+                    selected={filter.currency}
+                    onChange={onSelectCurrency}
+                  />
+                  <div className='flex'>
+                    <div>
+                      <Dropdown
+                        items={filterPriceOptions}
+                        selected={filterPriceOptions.find(f => f.value === filter.price_order)}
+                        onChange={onFilterPrice}
+                        disabled={!filter.currency}
+                        classes={{ buttonSelected: 'h-10' }}
+                      />
+                    </div>
+                    <div>
+                      <DiscoverFilter
+                        disabled={!filter.currency}
+                        onApply={onAdvanceFilter}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -166,7 +159,7 @@ const Discover = () => {
           </div>
           {
             showDiscover === 'items' && <>
-              <div className="mt-14 grid sm:grid-cols-2-auto lg:grid-cols-3-auto xl:grid-cols-4-auto gap-2 text-center lg:gap-4 justify-center">
+              <div className="mt-14 grid sm:grid-cols-2-auto lg:grid-cols-3-auto xl:grid-cols-4-auto gap-2 lg:gap-4 justify-center">
                 {
                   (discoverData?.currentList || []).length > 0
                     ? discoverData.currentList.map((info, i) => (

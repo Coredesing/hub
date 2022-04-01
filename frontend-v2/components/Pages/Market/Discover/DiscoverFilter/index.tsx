@@ -59,7 +59,7 @@ const DiscoverFilter = ({ onApply, disabled }: Props) => {
   }
 
   return (
-    <Dropdown disabled={disabled} isFilter={true} isShow={isShowFilter} onHandleFilter={() => setShowFilter(!isShowFilter)}>
+    <Dropdown disabled={disabled} isFilter={true} isShow={isShowFilter} onHandleFilter={() => setShowFilter(!isShowFilter)} classes={{ buttonSelected: 'h-10' }}>
       <>
         <div className="flex items-center justify-between">
           <div className="text-xl uppercase font-semibold">Filter</div>

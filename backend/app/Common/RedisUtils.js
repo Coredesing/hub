@@ -520,7 +520,7 @@ const deleteRedisUserTierBalance = (walletAddress) => {
   return `total_completed`;
 };
 
-const getTotalCompleted = async (walletAddress) => {
+const getRedisTotalCompleted = async (walletAddress) => {
   return await Redis.get(getRedisTotalCompletedKey(walletAddress));
 };
 
@@ -642,7 +642,7 @@ module.exports = {
   deleteRedisUserTierBalance,
 
   // total completed pools
-  getTotalCompleted,
+  getRedisTotalCompleted,
   checkExistRedisTotalCompleted,
   createRedisTotalCompleted,
   deleteRedisTotalCompleted

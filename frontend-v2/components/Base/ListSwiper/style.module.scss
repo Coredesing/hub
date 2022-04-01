@@ -16,6 +16,7 @@
 .carouselList {
     @apply w-full flex;
     & div[data-arrow*="left"] {
+        z-index: 1000;
         position: absolute;
         left: -3rem;
         top: 0;
@@ -25,6 +26,7 @@
         }
     }
     & div[data-arrow*="right"] {
+        z-index: 1000;
         position: absolute;
         right: -3rem;
         top: 0;
@@ -38,6 +40,18 @@
             margin-left: 40px;
             margin-right: 40px;
         }
-        // justify-content: center;
+    }
+}
+
+.carouselMobile {
+    li[class*="slide"] {
+        display: grid;
+        justify-content: center;
+    }
+    ul[class*="control-dots"] {
+        display: none;
+    }
+    p[class*="carousel-status"] {
+        display: none;
     }
 }

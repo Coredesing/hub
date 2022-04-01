@@ -194,7 +194,7 @@ const News = ({ postsFeatured, postsUpdate, postsPartnership, postsIGO, postsINO
   </Layout>
 }
 
-export const Right = ({ tags }: { tags?: { slug: string }[] }) => {
+export const Right = ({ tags }: { tags?: { link: string; image: any; count: any; name: string; slug: string; id: string; }[] }) => {
   const [ads] = useState([{
     id: 'epicwar',
     link: 'https://epicwar.io',

@@ -1,4 +1,5 @@
 import React from 'react'
+import { useMediaQuery } from 'react-responsive'
 
 const WrapperContent = (props: any) => {
   return (
@@ -11,7 +12,8 @@ const WrapperContent = (props: any) => {
 export default WrapperContent
 
 export const WrapperItem = (props: any) => {
-  return <div style={{ width: '280px' }} {...props}>
+  const isMsScreen = useMediaQuery({ maxWidth: '640px' })
+  return <div style={{ width: isMsScreen ? '220px' : '280px' }} {...props}>
     {props.children}
   </div>
 }

@@ -434,7 +434,8 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   useEffect(() => {
     if (!libraryDefaultTemporary) return
     marketActivitiesState.actions.setActivitiesMarketDetail(filterActivities, libraryDefaultTemporary)
-  }, [filterActivities, libraryDefaultTemporary, marketActivitiesState.actions])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterActivities, libraryDefaultTemporary])
 
   const onChangePageActivities = (page: number) => {
     setFilterActivities(f => ({ ...f, page }))

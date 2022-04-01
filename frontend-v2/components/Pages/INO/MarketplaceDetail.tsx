@@ -206,22 +206,24 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
     if (reloadOfferList && tokenOnSale.currency) {
       fetcher(`${API_BASE_URL}/marketplace/offers/${projectInfo.slug}/${tokenInfo.id}?event_type=TokenOffered`).then(async (res) => {
         const offers = res?.data || []
-        const offerList: ObjectType<any>[] = []
-        for (const item of offers) {
-          if (item.currency === tokenOnSale.currency) {
-            try {
-              if (!BigNumber.from(item.currency).isZero()) {
-                const erc20Contract = new Contract(item.currency, ERC20ABI, libraryDefaultTemporary)
-                item.currencySymbol = await erc20Contract.symbol()
-              } else {
-                item.currencySymbol = currencyNative(projectInfo.network)?.symbol
-              }
-            } catch (error) {
-              console.debug('error', error)
-            }
-            offerList.push(item)
+        const offerList: ObjectType<any>[] = await Promise.all(offers.map((offer) => new Promise((resolve) => {
+          if (!BigNumber.from(offer.currency).isZero()) {
+            offer.icon = CURRENCIES.find((c) => BigNumber.from(offer.currency).eq(c.address || 0))
+            const erc20Contract = new Contract(offer.currency, ERC20ABI, libraryDefaultTemporary)
+            erc20Contract.symbol()
+              .then((symbol) => {
+                offer.currencySymbol = symbol
+              }).finally(() => {
+                resolve(offer)
+              })
+          } else {
+            const curr = currencyNative(projectInfo.network)
+            offer.currencySymbol = curr?.symbol
+            offer.icon = curr?.image
+            resolve(offer)
           }
-        }
+        })))
+
         const sorted = offerList.sort((a, b) => b.dispatch_at - a.dispatch_at)
         setOfferList(sorted)
         setReloadOfferList(false)
@@ -821,9 +823,9 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
                             {formatHumanReadableTime(+offer.dispatch_at * 1000, Date.now())}
                           </span>
                         </div>
-                        <div className='flex items-center'>
-                          <img src="" alt="" className='w-4 h-4 rounded-full' />
-                          <span className='ml-2'>
+                        <div className='flex items-center pl-3'>
+                          {offer.icon && <img src={offer.icon} alt="" className='w-4 h-4 rounded-full' />}
+                          <span className='ml-2 leading-none'>
                             {utils.formatEther(offer.raw_amount)} {offer.currencySymbol}
                           </span>
                           {

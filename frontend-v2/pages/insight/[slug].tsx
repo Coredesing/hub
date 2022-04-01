@@ -11,15 +11,15 @@ const Article = ({ post }) => {
       <Categories active={post.primary_tag?.slug}></Categories>
     </div>
     <div className="px-4 lg:px-16 mx-auto lg:block max-w-4xl my-8 mb-16">
-      <h1 className="text-2xl lg:text-4xl font-bold uppercase">{post.title}</h1>
+      <h1 className="text-[28px] !leading-shi lg:text-4xl font-bold uppercase">{post.title}</h1>
 
       { post.primary_author && <div className="flex gap-2 items-center mt-2 xl:mt-6">
         <div className="relative w-11 h-11">
           <Image src={post.primary_author?.profile_image || avatar} layout="fill" className="rounded-full" alt={post.primary_author?.name}></Image>
         </div>
         <div>
-          <p className="font-casual font-medium font-base leading-loose">{post.primary_author?.name}</p>
-          <p className="font-semibold text-[13px] uppercase text-white text-opacity-50">
+          <p className="font-casual font-medium text-sm leading-loose">{post.primary_author?.name}</p>
+          <p className="font-casual text-[13px] text-white text-opacity-50">
             {format(new Date(post.published_at), 'MMM d, yyyy')}
             <span className="mx-2">•</span>
             {post.reading_time} min read
@@ -30,7 +30,7 @@ const Article = ({ post }) => {
       <div className="relative mt-6">
         <img src={post.feature_image} alt={post.title} className="w-full aspect-[16/9]"></img>
       </div>
-      <p className="mt-6 italic font-casual text-sm lg:text-base text-white text-opacity-75">{post.excerpt}</p>
+      <p className="mt-6 italic font-casual text-base text-white text-opacity-75">{post.excerpt}</p>
       <div className="mt-6 font-casual editor-content !text-base text-white text-opacity-95" dangerouslySetInnerHTML={{ __html: post.html }} />
       <div className="h-px bg-gradient-to-r from-gray-300/30 mt-8"></div>
       <p className="font-bold font-casual text-base mt-2">Tags</p>

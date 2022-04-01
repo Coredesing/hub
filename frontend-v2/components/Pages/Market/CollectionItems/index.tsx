@@ -8,9 +8,11 @@ import DiscoverFilter from '../Discover/DiscoverFilter'
 import Pagination from '../Pagination'
 import NoItemFound from '@/components/Base/NoItemFound'
 import { useAppContext } from '@/context/index'
-import clsx from 'clsx'
+// import clsx from 'clsx'
 import Activities from '../Activities'
 import CurrencySelector from '../CurrencySelector'
+import DiscoverTypes from '../Discover/DiscoverTypes'
+import { WrapperItem } from '../WrapperContent'
 
 const CollectionItems = ({ slug }: { slug: string }) => {
   const [collectionType, setCollectionType] = useState<'items' | 'activities'>('items')
@@ -93,43 +95,46 @@ const CollectionItems = ({ slug }: { slug: string }) => {
     <div className="w-full pb-20">
       <div className="md:px-4 lg:px-8 md:container mx-2 mt-20">
         <div className="mt-14 flex items-center justify-between flex-wrap md:flex-row gap-2 relative" id='first'>
-          <div className="flex">
-            <div className="relative" style={{ marginRight: '-6px' }}>
-              <div
-                onClick={() => {
-                  setCollectionType('items')
-                  setFilter(f => ({ ...f, page: 1 }))
-                }}
-                className={clsx(
-                  `absolute top-0 bottom-0 w-full flex items-center justify-center pr-2 font-semibold uppercase ${collectionType === 'items' ? 'text-black' : 'text-white opacity-50'}`,
-                  {
-                    'cursor-pointer': collectionType !== 'items'
-                  }
-                )}>Items</div>
-              <svg width="142" height="38" viewBox="0 0 142 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 2C0 0.89543 0.895431 0 2 0H66H130.458C131.367 0 132.161 0.612387 132.392 1.49101L142 38H8.82843C8.298 38 7.78929 37.7893 7.41421 37.4142L0.585786 30.5858C0.210713 30.2107 0 29.702 0 29.1716V2Z" fill={collectionType === 'items' ? '#6CDB00' : '#242732'} />
-              </svg>
+          <DiscoverTypes
+            currentType={collectionType}
+            onChange={(type) => {
+              setCollectionType(type)
+              setFilter(f => ({ ...f, page: 1 }))
+            }} />
+          <div className="grid sm:flex md:flex-row flex-wrap gap-2 items-center sm:justify-self-auto sm:w-auto w-full">
+            <div className='w-full sm:w-auto'><NetworkSelector
+              isMulti={false}
+              isToggle={false}
+              selected={{ [filter.network]: true }}
+              onChange={handleChangeNetwork}
+              className='mb-0 h-10'
+              style={{ marginBottom: '0' }} /></div>
+
+            <div className='flex gap-2'>
+              <CurrencySelector
+                className="w-full h-10"
+                selected={filter.currency}
+                onChange={onSelectCurrency}
+              />
+              <div className='flex'>
+                <div>
+                  <Dropdown
+                    items={filterPriceOptions}
+                    selected={filterPriceOptions.find(f => f.value === filter.price_order)}
+                    onChange={onFilterPrice}
+                    disabled={!filter.currency}
+                    classes={{ buttonSelected: 'h-10' }}
+                  />
+                </div>
+                <div>
+                  <DiscoverFilter
+                    disabled={!filter.currency}
+                    onApply={onAdvanceFilter}
+                  />
+                </div>
+              </div>
             </div>
-            <div className="relative">
-              <div
-                onClick={() => {
-                  setCollectionType('activities')
-                  setFilter(f => ({ ...f, page: 1 }))
-                }}
-                className={clsx(
-                  `absolute top-0 bottom-0 w-full flex items-center justify-center pr-2 font-semibold uppercase ${collectionType === 'activities' ? 'text-black' : 'text-white opacity-50'}`,
-                  {
-                    'cursor-pointer': collectionType !== 'activities'
-                  }
-                )}>Activities</div>
-              <svg width="142" height="38" viewBox="0 0 142 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 0H133.172C133.702 0 134.211 0.210714 134.586 0.585786L141.414 7.41421C141.789 7.78929 142 8.29799 142 8.82843V36C142 37.1046 141.105 38 140 38H11.5418C10.6332 38 9.83885 37.3876 9.60763 36.509L0 0Z" fill={collectionType === 'activities' ? '#6CDB00' : '#242732'} />
-              </svg>
-            </div>
-          </div>
-          <div className="flex md:flex-row flex-wrap gap-2 items-center sm:justify-self-auto justify-end sm:w-auto w-full">
-            <div><NetworkSelector isMulti={false} isToggle={false} selected={{ [filter.network]: true }} onChange={handleChangeNetwork} style={{ height: '38px' }} /></div>
-            <CurrencySelector selected={filter.currency} onChange={onSelectCurrency} className='mb-0' style={{ height: '38px' }} />
+            {/* <CurrencySelector selected={filter.currency} onChange={onSelectCurrency} className='mb-0' style={{ height: '38px' }} />
             <div className='flex'>
               <div>
                 <Dropdown
@@ -145,7 +150,7 @@ const CollectionItems = ({ slug }: { slug: string }) => {
                   disabled={!filter.currency}
                 />
               </div>
-            </div>
+            </div> */}
           </div>
           {(collectionsMarketState.loading)
             ? (
@@ -161,11 +166,12 @@ const CollectionItems = ({ slug }: { slug: string }) => {
         </div>
         {
           collectionType === 'items'
-            ? <div className="mt-14 grid gap-4 justify-center md:justify-start" style={{ gridTemplateColumns: 'repeat(auto-fill, 280px)' }}>
+            ? <div className="mt-14 grid sm:grid-cols-2-auto lg:grid-cols-3-auto xl:grid-cols-4-auto gap-2 lg:gap-4 justify-center md:justify-start">
               {
                 (collectionsData.currentList || []).length > 0
-                  ? collectionsData.currentList.map((info, i) => (
-                    <NFTCard key={`discover-${i}`} item={info} showListing={true} showOffer={true}></NFTCard>
+                  ? collectionsData.currentList.map((info, i) => (<WrapperItem key={`discover-${i}`}>
+                    <NFTCard item={info} showListing={true} showOffer={true}></NFTCard>
+                  </WrapperItem>
                   ))
                   : <></>
               }

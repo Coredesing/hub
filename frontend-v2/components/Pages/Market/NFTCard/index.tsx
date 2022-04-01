@@ -14,7 +14,7 @@ type Props = {
 
 const NFTCard = ({ item, ...props }: Props) => {
   return (
-    <div className="rounded overflow-hidden clipped-b-l p-px">
+    <div className="rounded overflow-hidden clipped-b-l p-px h-full">
       <div className='clipped-b-l bg-gamefiDark-630/30 hover:bg-gamefiDark-630 h-full rounded relative'>
         {
           typeof item.isFirstEdition === 'boolean' &&

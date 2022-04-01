@@ -7,10 +7,10 @@ import avatar from '@/assets/images/avatar.png'
 
 const Article = ({ post }) => {
   return <Layout title={post.title} description={post.excerpt} image={post.feature_image}>
-    <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
+    <div className="px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
       <Categories active={post.primary_tag?.slug}></Categories>
     </div>
-    <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-4xl my-8 mb-16">
+    <div className="px-4 lg:px-16 mx-auto lg:block max-w-4xl my-8 mb-16">
       <h1 className="text-2xl lg:text-4xl font-bold uppercase">{post.title}</h1>
 
       { post.primary_author && <div className="flex gap-2 items-center mt-2 xl:mt-6">

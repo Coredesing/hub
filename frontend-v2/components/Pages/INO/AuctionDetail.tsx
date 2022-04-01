@@ -355,6 +355,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
                   autoPlay
                   loop
                   muted
+                  controlsList="nodownload"
                 >
                   <source src={poolInfo.banner} type="video/mp4" />
                   Your browser does not support the video tag.

@@ -44,7 +44,7 @@ const Earn = ({ pools: initPools }) => {
   }, [pools])
 
   return <Layout title="GameFi.org - Earn" description="A safe and simple way to grow your digital assets.">
-    <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
+    <div className="px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
       <h1 className="uppercase font-bold text-4xl hidden">GameFi Earn</h1>
       <h3 className="font-medium text-xl mb-14 hidden">A Safe and Simple Way to Grow Your Digital Assets.</h3>
       <div className="mt-4 mb-14 mx-auto flex items-center justify-center max-w-[1128px]">

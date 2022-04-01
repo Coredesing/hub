@@ -17,6 +17,7 @@ const BannerImagePool = (props: Props) => {
             autoPlay
             loop
             muted
+            controlsList="nodownload"
             key={props.src}
           >
             <source src={props.src} type="video/mp4" />

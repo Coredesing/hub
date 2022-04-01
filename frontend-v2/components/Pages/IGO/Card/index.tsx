@@ -81,7 +81,7 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
     </a>
     <div className="px-4 py-4 flex flex-col gap-4">
       <div className="w-full flex justify-between items-center">
-        <div className="w-5/6 overflow-hidden text-ellipsis whitespace-nowrap uppercase font-semibold hover:underline xl:text-lg">
+        <div className="w-5/6 overflow-hidden text-left text-ellipsis whitespace-nowrap uppercase font-semibold hover:underline xl:text-lg">
           <a href={`/igo/${item.id}`} className="w-full overflow-hidden text-ellipsis">{item.title}</a>
         </div>
         <div className="w-6 h-6 xl:w-8 xl:h-8"><Image src={network?.image} alt=""></Image></div>
@@ -111,18 +111,18 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
           </svg>
         </a> }
       </div>
-      <div>
+      <div className="w-full text-left">
         <div className="text-white/50 uppercase font-medium text-xs">Rate</div>
         <div className="text-gamefiGreen uppercase font-medium text-sm">
           1 {item.symbol} = {item.token_conversion_rate} {getCurrency(item).symbol}
         </div>
       </div>
       <div className="w-full grid grid-cols-2 gap-2">
-        <div>
+        <div className="text-left">
           <div className="text-white/50 uppercase font-medium text-xs">Total Raise</div>
           <div className="text-sm">${Math.round(Number(item?.total_sold_coin) * Number(item?.token_conversion_rate)).toLocaleString('en-US')}</div>
         </div>
-        <div>
+        <div className="text-left">
           <div className="text-white/50 uppercase font-medium text-xs">Participants</div>
           {/* <div className="text-sm">{participants ? printNumber(participants) : '-'}</div> */}
           <div className="text-sm">-</div>

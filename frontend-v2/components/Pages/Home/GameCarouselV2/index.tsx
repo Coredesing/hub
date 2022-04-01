@@ -123,7 +123,7 @@ const GameCarousel = ({ items, likes }: Props) => {
             {items.map(item => (
               <div key={`mobile-game-${item.id}`} className="w-full">
                 <div className="w-full">
-                  <div className="absolute z-10 top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-center md:text-left bg-gamefiDark-900 w-1/2 md:pb-1 lg:pb-2 clipped-b-r-full inline-block"><span className="text-gamefiGreen-500">Featured</span> games</div>
+                  <div className="absolute z-20 top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-center md:text-left bg-gamefiDark-900 w-1/2 md:pb-1 lg:pb-2 clipped-b-r-full inline-block"><span className="text-gamefiGreen-500">Featured</span> games</div>
                   <video key={`video-${item.id}`} className='clipped-t-r-lg' style={{ aspectRatio: '16/9', objectFit: 'fill' }} muted controls controlsList="nodownload" poster={item.screen_shots_1}>
                     <source src={item.intro_video} type="video/mp4"></source>
                   </video>
@@ -143,7 +143,7 @@ const GameCarousel = ({ items, likes }: Props) => {
                     </div>
                   </div>
                   <div className="mt-3">
-                    <p className="font-casual text-left leading-5 md:text-xs lg:text-base text-gray-300 max-h-24 overflow-y-scroll">{item.short_description}</p>
+                    <p className="font-casual text-left leading-5 md:text-xs lg:text-base text-gray-300 max-h-36 overflow-y-scroll">{item.short_description}</p>
                   </div>
                   <div className="mt-3">
                     <Link href={`/hub/${item?.slug}`} passHref>

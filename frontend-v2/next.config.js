@@ -14,7 +14,10 @@ module.exports = {
   images: {
     domains: ['i.imgur.com', 'gamefi-public.s3.amazonaws.com', 'imgur.com', 'images.ctfassets.net', 's2.coinmarketcap.com', 's3.coinmarketcap.com', 'gamefi.ghost.io']
   },
-  async redirects () {
+  experimental: {
+    scrollRestoration: true
+  },
+  redirects () {
     return [
       {
         source: '/unstaking',

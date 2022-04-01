@@ -87,7 +87,7 @@ const Card = ({ item }: {item: Item}) => {
         <div>
           <div className="text-white/50 uppercase font-semibold text-xs font-mechanic">Min Rank</div>
           <div className="text-sm">
-            {getTierById(item?.min_tier)?.name}
+            {item?.min_tier ? getTierById(item?.min_tier)?.name : '-'}
           </div>
         </div>
         <div className="w-40">

@@ -3,10 +3,9 @@ import { getTierById } from '@/utils/tiers'
 import React, { useEffect, useMemo, useState, useCallback, createContext } from 'react'
 import { fetchOneWithSlug } from '../api/igo'
 import { useMyWeb3 } from '@/components/web3/context'
-import { fetcher, printNumber, formatterUSD, formatPrice, useFetch } from '@/utils'
+import { fetcher, printNumber, formatterUSD, useFetch } from '@/utils'
 import Swap from '@/components/Pages/IGO/Swap'
 import Claim from '@/components/Pages/IGO/Claim'
-import Link from 'next/link'
 import { API_BASE_URL } from '@/utils/constants'
 import { TabPanel, Tabs } from '@/components/Base/Tabs'
 import { useLibraryDefaultFlexible, getCurrency } from '@/components/web3/utils'
@@ -26,6 +25,7 @@ import Tippy from '@tippyjs/react'
 import { ethers } from 'ethers'
 import { switchNetwork } from '@/components/web3'
 import ERC20_ABI from '@/components/web3/abis/ERC20.json'
+import { useRouter } from 'next/router'
 type Milestone = {
   key: string;
   milestone: string;
@@ -59,7 +59,9 @@ export const IGOContext = createContext({
 })
 
 const IGODetails = ({ poolData }) => {
+  const router = useRouter()
   const { tierMine } = useAppContext()
+  const [readMore, setReadMore] = useState(false)
 
   const [now, setNow] = useState(new Date())
   useEffect(() => {
@@ -81,7 +83,7 @@ const IGODetails = ({ poolData }) => {
   }, [poolData])
 
   const totalRaise = useMemo(() => {
-    return parseInt(poolData?.total_sold_coin) * parseFloat(poolData?.token_conversion_rate)
+    return Math.round(parseInt(poolData?.total_sold_coin) * parseFloat(poolData?.token_conversion_rate))
   }, [poolData])
 
   const { account, library, network } = useMyWeb3()
@@ -114,24 +116,6 @@ const IGODetails = ({ poolData }) => {
   }, [loadJoined])
   const [tab, setTab] = useState(0)
 
-  const poolWhitelistTime = useMemo(() => {
-    const start = poolData?.start_join_pool_time ? new Date(Number(poolData?.start_join_pool_time) * 1000) : undefined
-    const end = poolData?.end_join_pool_time ? new Date(Number(poolData?.end_join_pool_time) * 1000) : undefined
-    return {
-      start,
-      end
-    }
-  }, [poolData])
-
-  const poolPreOrderTime = useMemo(() => {
-    const start = poolData?.start_pre_order_time ? new Date(Number(poolData?.start_pre_order_time) * 1000) : undefined
-    const end = poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined
-    return {
-      start,
-      end
-    }
-  }, [poolData])
-
   const poolBuyTime = useMemo(() => {
     const start = poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined
     const end = poolData?.freeBuyTimeSetting?.start_buy_time ? new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000) : undefined
@@ -149,17 +133,6 @@ const IGODetails = ({ poolData }) => {
       end
     }
   }, [poolData])
-
-  const poolClaimTime = useMemo(() => {
-    const start = poolData?.campaignClaimConfig?.[0]?.finish_time ? new Date(Number(poolData?.campaignClaimConfig?.[0]?.finish_time) * 1000) : undefined
-    return {
-      start
-    }
-  }, [poolData])
-
-  const isClaimTime = useMemo(() => {
-    return poolClaimTime.start <= now
-  }, [poolClaimTime, now])
 
   const [winnerSearch, setWinnerSearch] = useState('')
   const [captchaWinner, setCaptchaWinner] = useState('')
@@ -194,7 +167,7 @@ const IGODetails = ({ poolData }) => {
       })
   }, [winnerSearch, captchaWinner, poolData, setWinnerSearchResults])
 
-  const { response: winnerResponse, errorMessage: winnerError } = useFetch(`/user/winner-list/${poolData.id}`, !poolData)
+  const { response: winnerResponse } = useFetch(`/user/winner-list/${poolData.id}`, !poolData)
 
   const winnerList = useMemo(() => {
     return winnerResponse?.data
@@ -411,17 +384,17 @@ const IGODetails = ({ poolData }) => {
 
   return (
     <Layout title={poolData?.title ? `GameFi.org - ${poolData?.title} IGO` : 'GameFi.org - Initial DEX Offering'} description="The first game-specific launchpad conducting Initial Game Offerings for game projects.">
-      <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
-        {/* <div className="px-2 md:px-4 lg:px-24 md:container mx-auto lg:block mb-4 md:mb-8 lg:mb-10 xl:mb-16"> */}
-        <Link href="/igo" passHref={true}>
-          <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">
-            <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10"/>
-              <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square"/>
-            </svg>
+      <div className="px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
+        {/* <div className="px-4 lg:px-24 md:container mx-auto lg:block mb-4 md:mb-8 lg:mb-10 xl:mb-16"> */}
+        <a onClick={() => {
+          router.back()
+        }} className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500 cursor-pointer">
+          <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10"/>
+            <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square"/>
+          </svg>
             Back
-          </a>
-        </Link>
+        </a>
         { !poolData.id && <div className="uppercase font-bold text-3xl mb-6">IGO Not Found</div>}
         { poolData.id && <IGOContext.Provider value={{
           poolData,
@@ -507,10 +480,28 @@ const IGODetails = ({ poolData }) => {
                   </p>
                 </div>
               </div>
-              <div className="font-casual text-sm text-white/80 mt-8">
+              <div className={`font-casual text-sm text-white/80 mt-8 ${poolData.description?.split(' ')?.length > 60 && !readMore && 'line-clamp-4'}`}>
                 { poolData.description }
               </div>
-              {poolData.slug && <div className=""><a href={`/hub/${poolData.slug}`}>Full Research &gt;&gt;</a></div>}
+              <div className="w-full flex items-center justify-center">
+                {
+                  poolData.description?.split(' ')?.length > 60 && !readMore &&
+                  <button onClick={() => setReadMore(true)}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 15L12.3536 15.3536L12 15.7071L11.6464 15.3536L12 15ZM18.3536 9.35355L12.3536 15.3536L11.6464 14.6464L17.6464 8.64645L18.3536 9.35355ZM11.6464 15.3536L5.64645 9.35355L6.35355 8.64645L12.3536 14.6464L11.6464 15.3536Z" fill="white"/>
+                    </svg>
+                  </button>
+                }
+                {
+                  poolData.description?.split(' ')?.length > 60 && readMore &&
+                  <button onClick={() => setReadMore(false)}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 9L12.3536 8.64645L12 8.29289L11.6464 8.64645L12 9ZM18.3536 14.6464L12.3536 8.64645L11.6464 9.35355L17.6464 15.3536L18.3536 14.6464ZM11.6464 8.64645L5.64645 14.6464L6.35355 15.3536L12.3536 9.35355L11.6464 8.64645Z" fill="white"/>
+                    </svg>
+                  </button>
+                }
+              </div>
+              {poolData.slug && <div className="text-gamefiGreen-700 mt-4"><a href={`/hub/${poolData.slug}`}>Full Research &gt;&gt;</a></div>}
               <div className="mt-4">
                 {
                   current?.key === 'tba' &&
@@ -613,10 +604,10 @@ const IGODetails = ({ poolData }) => {
                   <strong className="font-semibold">Symbol</strong>
                   <span className="flex gap-2 items-center">
                     {poolData?.symbol}
-                    {poolData.token && poolData.campaign_status?.toLowerCase() === 'ended' && poolData.token_type === 'erc20' && <>
+                    {poolData.token && timeline[TIMELINE.CLAIM]?.start && now.getTime() >= timeline[TIMELINE.CLAIM].start.getTime() && poolData.token_type === 'erc20' && <>
                       <Tippy content="Add to Metamask">
                         <button
-                          className="w-6 h-6 xl:w-8 xl:h-8 hover:opacity-90"
+                          className="w-6 h-6 hover:opacity-90"
                           onClick={() => addToWallet(poolData)}
                         >
                           <Image src={require('@/assets/images/wallets/metamask.svg')} alt=""></Image>
@@ -626,7 +617,7 @@ const IGODetails = ({ poolData }) => {
                   </span>
                 </div>
                 <div className="flex justify-between mb-4 items-center">
-                  <strong className="font-semibold">Price</strong>
+                  <strong className="font-semibold">Token Price</strong>
                   <span>{poolData?.token_conversion_rate} {usd?.symbol}</span>
                 </div>
                 <div className="flex justify-between mb-4 items-center">
@@ -656,10 +647,10 @@ const IGODetails = ({ poolData }) => {
                   <div className="table-row">
                     <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">Milestone</div>
                     <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
-                      From
+                      From {`(${format(new Date(), 'z')})`}
                     </div>
                     <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
-                      To
+                      To {`(${format(new Date(), 'z')})`}
                     </div>
                   </div>
 
@@ -668,10 +659,10 @@ const IGODetails = ({ poolData }) => {
                       Apply Whitelist
                     </div>
                     <div className="table-cell align-middle py-2 font-normal">
-                      {timeline[TIMELINE.WHITELIST].start ? `${format(timeline[TIMELINE.WHITELIST].start, 'HH:mm, dd MMM yyyy')} (${format(new Date(), 'z')})` : 'TBA'}
+                      {timeline[TIMELINE.WHITELIST].start ? `${format(timeline[TIMELINE.WHITELIST].start, 'HH:mm, dd MMM yyyy')}` : 'TBA'}
                     </div>
                     <div className="table-cell align-middle py-2 font-normal">
-                      {timeline[TIMELINE.WHITELIST].end ? `${format(timeline[TIMELINE.WHITELIST].end, 'HH:mm, dd MMM yyyy')} (${format(new Date(), 'z')})` : 'TBA'}
+                      {timeline[TIMELINE.WHITELIST].end ? `${format(timeline[TIMELINE.WHITELIST].end, 'HH:mm, dd MMM yyyy')}` : 'TBA'}
                     </div>
                   </div>
 
@@ -680,7 +671,7 @@ const IGODetails = ({ poolData }) => {
                       Winner Announcement
                     </div>
                     <div className="table-cell align-middle py-2 font-normal">
-                      {timeline[TIMELINE.WINNER_ANNOUNCEMENT].end ? `${format(timeline[TIMELINE.WINNER_ANNOUNCEMENT].end, 'HH:mm, dd MMM yyyy')} (${format(new Date(), 'z')})` : 'TBA'}
+                      {timeline[TIMELINE.WINNER_ANNOUNCEMENT].end ? `${format(timeline[TIMELINE.WINNER_ANNOUNCEMENT].end, 'HH:mm, dd MMM yyyy')}` : 'TBA'}
                     </div>
                     <div className="table-cell align-middle py-2 font-normal">
                     </div>
@@ -758,7 +749,7 @@ const IGODetails = ({ poolData }) => {
             { failedRequirements
               ? <div className="my-4 w-full flex flex-col gap-4 p-12 rounded items-center justify-center">
                 <Image src={require('@/assets/images/icons/poolOver.png')} alt=""></Image>
-                <div className="text-gamefiDark-200">You do not meet the requirements.</div>
+                <div className="text-gamefiDark-100">Please complete requirements in the <span className="font-bold uppercase">Requirements</span> section.</div>
               </div>
               : <Swap></Swap> }
           </TabPanel>
@@ -766,7 +757,7 @@ const IGODetails = ({ poolData }) => {
             { failedRequirements
               ? <div className="my-4 w-full flex flex-col gap-4 p-12 rounded items-center justify-center">
                 <Image src={require('@/assets/images/icons/poolOver.png')} alt=""></Image>
-                <div className="text-gamefiDark-200">You do not meet the requirements.</div>
+                <div className="text-gamefiDark-100">Please complete requirements in the <span className="font-bold uppercase">Requirements</span> section.</div>
               </div>
               : <Claim></Claim> }
           </TabPanel>

@@ -9,8 +9,9 @@ import { useMyWeb3 } from '@/components/web3/context'
 import { useWalletContext } from '@/components/Base/WalletConnector/provider'
 import useSWR, { useSWRConfig } from 'swr'
 import Flicking from '@egjs/react-flicking'
-import { Sync } from '@egjs/flicking-plugins'
+import { Sync, AutoPlay } from '@egjs/flicking-plugins'
 import '@egjs/flicking/dist/flicking.css'
+import { useRouter } from 'next/router'
 
 const Carousel = ({ items }: { items: any[] }) => {
   const flicking0 = useRef()
@@ -19,20 +20,23 @@ const Carousel = ({ items }: { items: any[] }) => {
   const [plugins, setPlugins] = useState([])
 
   useEffect(() => {
-    setPlugins([new Sync({
-      type: 'index',
-      synchronizedFlickingOptions: [
-        {
-          flicking: flicking0.current,
-          isSlidable: true
-        },
-        {
-          flicking: flicking1.current,
-          isClickable: true,
-          activeClass: 'border-gamefiGreen-500'
-        }
-      ]
-    })])
+    setPlugins([
+      new Sync({
+        type: 'index',
+        synchronizedFlickingOptions: [
+          {
+            flicking: flicking0.current,
+            isSlidable: true
+          },
+          {
+            flicking: flicking1.current,
+            isClickable: true,
+            activeClass: 'border-gamefiGreen-500'
+          }
+        ]
+      }),
+      new AutoPlay({ duration: 3000, direction: 'NEXT', stopOnHover: false })
+    ])
   }, [])
 
   return <>
@@ -61,6 +65,7 @@ const Carousel = ({ items }: { items: any[] }) => {
 }
 
 const GameDetails = ({ data }) => {
+  const router = useRouter()
   const items = [data.screen_shots_1, data.screen_shots_2, data.screen_shots_3, data.screen_shots_4, data.screen_shots_5].filter(x => !!x)
   const [tab, setTab] = useState(0)
 
@@ -95,16 +100,16 @@ const GameDetails = ({ data }) => {
 
   return (
     <Layout title={data.game_name ? `GameFi.org - ${data.game_name}` : 'GameFi.org Hub'} description={data?.game_intro} image={data.screen_shots_1}>
-      <div className="px-2 md:px-4 lg:px-24 md:container mx-auto lg:block">
-        <Link href="/hub" passHref={true}>
-          <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">
-            <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10"/>
-              <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square"/>
-            </svg>
-            Back
-          </a>
-        </Link>
+      <div className="px-4 lg:px-24 md:container mx-auto lg:block">
+        <a onClick={() => {
+          router.back()
+        }} className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500 cursor-pointer">
+          <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10"/>
+            <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square"/>
+          </svg>
+          Back
+        </a>
         { !data.id && <div className="uppercase font-bold text-3xl mb-6">Game Not Found</div>}
         { data.id && <>
           <div className="uppercase font-bold text-3xl mb-6">{data.game_name}</div>
@@ -127,16 +132,16 @@ const GameDetails = ({ data }) => {
 
               <div className="mt-6 mb-10 editor-content text-gray-200 leading-6">
                 <TabPanel value={tab} index={0}>
-                  <div className="mt-6"><strong>Introduction</strong></div>
+                  <div className="mt-6 text-base"><strong>Introduction</strong></div>
                   <div dangerouslySetInnerHTML={{ __html: data.game_intro }}></div>
                   { data.game_features && <>
-                    <div className="mt-6"><strong>Highlight Features</strong></div>
+                    <div className="mt-6 text-base"><strong>Highlight Features</strong></div>
                     <div dangerouslySetInnerHTML={{ __html: data.game_features }}></div>
                   </>
                   }
 
                   { data.system_require && <>
-                    <div className="mt-6"><strong>System Requirements</strong></div>
+                    <div className="mt-6 text-base"><strong>System Requirements</strong></div>
                     <div dangerouslySetInnerHTML={{ __html: data.system_require }}></div>
                   </>
                   }
@@ -144,7 +149,7 @@ const GameDetails = ({ data }) => {
                   <div className="h-px bg-gradient-to-r from-gray-300 my-8"></div>
 
                   { data.hashtags && <>
-                    <div className="mt-6"><strong>Tags</strong></div>
+                    <div className="mt-6 text-base"><strong>Tags</strong></div>
                     {data.hashtags.split(',').map(tag => <div key={tag} className="m-1 inline-block px-3 py-1 bg-gamefiDark-500 rounded text-sm">{tag}</div>)}
                   </>
                   }

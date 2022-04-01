@@ -10,7 +10,7 @@ export const jobs = [
     type: 'Full time',
     level: 'Senior, Junior',
     descriptions: [
-      'Develop, improve and maintain Smart Contracts, apply to use-cases such as NFT minting, Marketplace Operation, On-chain => Offchain integration (using Wallet and NFT as logging keys)',
+      'Develop, improve and maintain Smart Contracts, apply to use-cases such as NFT minting, Marketplace Operation, On-chain => Off-chain integration (using Wallet and NFT as logging keys)',
       'Work with product teams to write smart contracts according to the needs of each product team',
       'Research, explore, discuss, debate, come up with development ideas in a general direction and work with the team on those ideas',
       'Read/Understand technical papers/documents to come up with a solution as well as install that solution in the code base',
@@ -202,8 +202,8 @@ export const jobs = [
 
   // Job 5
   {
-    id: 'marketing-excutive',
-    title: '🎈 Marketing Excutive',
+    id: 'marketing-executive',
+    title: '🎈 Marketing Executive',
     location: 'Ha Noi, HCM, Remote',
     type: 'Full time',
     level: 'Senior, Junior',
@@ -239,7 +239,7 @@ export const jobs = [
   // Job 6
   {
     id: 'graphic-designer',
-    title: '🚀Graphic Designer',
+    title: '🚀 Graphic Designer',
     location: 'Ha Noi, HCM, Remote',
     type: 'Full time',
     level: 'Senior, Junior, Remote',
@@ -249,7 +249,7 @@ export const jobs = [
       'Coordinating the content department to create ideas, develop a scripted deployment plan, shoot short videos for brands according to the media team’s content plan',
       'Editing in-house video clips to serve PR campaigns, marketing, training activities and internal communication, etc.',
       'Collect and research new trends and ideas to increase the attractiveness of videos',
-      'Setting up for product’s inhouse photoshoot',
+      'Setting up for product’s in-house photoshoot',
       'Other tasks as assigned'
     ],
     requirements: [
@@ -278,7 +278,7 @@ export const jobs = [
   // Job 7
   {
     id: 'game-ui-ux-designer',
-    title: '🕹️Game UI/UX Designer',
+    title: '🕹️ Game UI/UX Designer',
     location: 'Ha Noi, HCM, Remote',
     type: 'Full time',
     level: 'Senior, Junior, Remote',
@@ -326,7 +326,7 @@ export const jobs = [
   // Job 8
   {
     id: 'game-executive-producer',
-    title: '🎨Game Executive Producer',
+    title: '🎨 Game Executive Producer',
     location: 'Ha Noi, HCM, Remote',
     type: 'Full time',
     level: 'Senior, Junior, Remote',
@@ -348,7 +348,7 @@ export const jobs = [
       'Rapid prototyping experience. User research and feedback implementation experience',
       'Strong sense of organization coordination and communication',
       'Capability to work on tight deadlines',
-      'Excellent problem-finding and solution-fiding skills',
+      'Excellent problem-finding and solution-finding skills',
       'Blockchain basic knowledge',
       'Monetization experience',
       'Technical background or Design background'
@@ -525,21 +525,21 @@ export const jobs = [
 const Careers = () => (
   <Layout title="GameFi.org - Careers">
     <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block pb-16">
-      <div className="uppercase font-bold text-4xl mb-6">Current Openings</div>
+      <div className="uppercase font-bold text-4xl mb-6">Current Positions</div>
 
       <div className="flex w-full px-4 mb-2">
         <div className="text-xs text-gamefiDark-50 uppercase flex-1">Title</div>
         <div className="hidden md:inline-block text-xs text-gamefiDark-50 uppercase w-48 text-left">Location</div>
-        <div className="hidden md:inline-block text-xs text-gamefiDark-50 uppercase w-48 text-left">Job Type</div>
-        <div className="inline-flex justify-start text-xs text-gamefiDark-50 uppercase w-48">Level</div>
+        <div className="hidden md:inline-block text-xs text-gamefiDark-50 uppercase w-32 text-left">Job Type</div>
+        <div className="inline-flex justify-end md:justify-start text-xs text-gamefiDark-50 uppercase w-48">Level</div>
       </div>
 
       { jobs.map((job) => <Link href={`/careers/${job.id}`} key={job.id} passHref={true}>
         <div className="flex w-full text-sm font-casual hover:bg-gamefiDark-700 cursor-pointer p-4 mb-2">
           <div className="flex-1 text-base">{job.title}<p className="md:hidden text-xs">{job.location}</p><p className="md:hidden text-xs">{job.type}</p></div>
           <div className="hidden md:inline-block w-48 text-left opacity-75">{job.location}</div>
-          <div className="hidden md:inline-block w-48 text-left opacity-75">{job.type}</div>
-          <div className="md:w-48 items-center justify-start inline-flex gap-x-2">{job.level.split(',').map(l => {
+          <div className="hidden md:inline-block w-32 text-left opacity-75">{job.type}</div>
+          <div className="md:w-48 items-end md:items-start justify-start flex flex-col sm:flex-row gap-2">{job.level.split(',').map(l => {
             l = l.trim()
             let color = 'text-white'
             if (l === 'Senior') {

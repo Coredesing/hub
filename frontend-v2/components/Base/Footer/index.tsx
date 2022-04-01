@@ -18,6 +18,20 @@ const Footer = () => {
               </a>
             </div>
             <div className="mr-3 cursor-pointer">
+              <a href="https://t.me/GameFi_OfficialANN" target="_blank" rel="noreferrer">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clipPath="url(#clip0_1424_6166)">
+                    <path d="M15.9683 1.68422C15.9557 1.62517 15.9276 1.57057 15.8868 1.52608C15.846 1.48158 15.794 1.44883 15.7363 1.43122C15.526 1.3893 15.3084 1.40484 15.1063 1.47622C15.1063 1.47622 1.08725 6.51422 0.286252 7.07222C0.114252 7.19322 0.056252 7.26222 0.027252 7.34422C-0.110748 7.74422 0.320252 7.91722 0.320252 7.91722L3.93325 9.09422C3.99426 9.10522 4.05701 9.10145 4.11625 9.08322C4.93825 8.56422 12.3863 3.86122 12.8163 3.70322C12.8843 3.68322 12.9343 3.70322 12.9163 3.75222C12.7443 4.35222 6.31025 10.0712 6.27525 10.1062C6.25818 10.1205 6.2448 10.1387 6.23627 10.1592C6.22774 10.1798 6.2243 10.2021 6.22625 10.2242L5.88925 13.7522C5.88925 13.7522 5.74725 14.8522 6.84525 13.7522C7.62425 12.9732 8.37225 12.3272 8.74525 12.0142C9.98725 12.8722 11.3243 13.8202 11.9013 14.3142C11.9979 14.4083 12.1125 14.4819 12.2383 14.5305C12.3641 14.5792 12.4985 14.6018 12.6333 14.5972C12.7992 14.5767 12.955 14.5062 13.0801 14.3952C13.2051 14.2841 13.2934 14.1376 13.3333 13.9752C13.3333 13.9752 15.8943 3.70022 15.9793 2.31722C15.9873 2.18222 16.0003 2.10022 16.0003 2.00022C16.0039 1.89392 15.9931 1.78762 15.9683 1.68422Z" fill="white"/>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_1424_6166">
+                      <rect width="16" height="16" fill="white"/>
+                    </clipPath>
+                  </defs>
+                </svg>
+              </a>
+            </div>
+            <div className="mr-3 cursor-pointer">
               <a href="https://t.me/GameFi_Official" target="_blank" rel="noreferrer">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g clipPath="url(#clip0_1424_6166)">
@@ -66,8 +80,8 @@ const Footer = () => {
           <div className="mt-3 lg:mt-4 flex flex-col text-base leading-7 font-extralight">
             <Link href="/press" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Press</a></Link>
             <Link href="/careers" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Careers</a></Link>
-            <a href="https://t.me/GameFi_OfficialANN" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Business Contacts</a>
-            <Link href="/insight" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">GameFi.org Insight</a></Link>
+            <a href="https://t.me/GameFi_OfficialANN" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Contacts</a>
+            <Link href="/insight" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Insight</a></Link>
           </div>
         </div>
         <div className="basis-1/3 text-center lg:text-left mt-8 lg:mt-0">
@@ -75,7 +89,7 @@ const Footer = () => {
           <div className="mt-3 lg:mt-4 flex flex-col text-base leading-7 font-extralight">
             <a href="https://about.gamefi.org/#features" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Features</a>
             <a href="https://about.gamefi.org/#roadmap" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Roadmap</a>
-            <a href="https://about.gamefi.org/#ourteam" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Our Team</a>
+            <a href="https://about.gamefi.org/#ourteam" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Team</a>
             <a href="https://about.gamefi.org/#advisors" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Advisors</a>
           </div>
         </div>
@@ -89,8 +103,8 @@ const Footer = () => {
       </div>
     </div>
     <div className="md:container md:px-4 lg:px-16 mx-auto lg:block">
-      <div className="flex align-middle items-center justify-between text-base font-light pt-6 pb-8 border-t border-gray-700 text-gray-400">
-        <div>&#169; Icetea Labs, 2021</div>
+      <div className="flex align-middle items-center justify-between text-base font-light pt-6 pb-8 border-t border-gray-700 text-gray-400 px-4">
+        <div className="text-sm sm:text-base leading-6">&#169; Icetea Labs, 2021</div>
         <div className="flex gap-x-4 items-center">
           {/* <Link href="#" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Terms of Use</a></Link>
           <div className="h-4 w-px bg-gray-600"></div>

@@ -35,7 +35,7 @@ const Partners = () => {
     <div className="px-4 lg:px-16 md:container mx-auto pt-20 pb-14">
       <div className="mx-auto relative" style={{ maxWidth: '600px' }}>
         <Image src={require('assets/images/backedby.png')} alt=""></Image>
-        <div className="font-casual text-base -mt-8 text-white/80 text-center max-w-lg mx-auto">
+        <div className="font-casual text-sm sm:text-base -mt-8 text-white/80 text-center max-w-lg mx-auto">
         GameFi.org is honored and thrilled to be backed by leading Venture Capitals in blockchain industry.
         </div>
       </div>
@@ -47,7 +47,7 @@ const Partners = () => {
       </div>
       <div className="flex flex-col items-center mt-14">
         <div className="font-bold text-2xl uppercase">Our Portfolio</div>
-        <div className="font-casual text-base text-white/80 text-center max-w-2xl mx-auto">
+        <div className="font-casual text-sm sm:text-base text-white/80 text-center max-w-2xl mx-auto">
         All projects launched on GameFi.org are scrutinized and hand-picked.
         They all aim at long-term development and ensure benefits for GameFi users.
         </div>

@@ -195,27 +195,38 @@ const News = ({ postsFeatured, postsUpdate, postsPartnership, postsIGO, postsINO
 }
 
 export const Right = ({ tags }: { tags?: { link: string; image: any; count: any; name: string; slug: string; id: string }[] }) => {
-  const [ads] = useState([{
-    id: 'epicwar',
-    link: 'https://epicwar.io',
-    image: require('@/assets/images/ads/epicwar.jpg')
-  }, {
-    id: 'epicwar-testnet',
-    link: 'https://epicwar.io/insights/blogs/319',
-    image: require('@/assets/images/ads/epicwar-testnet.jpg')
-  }, {
-    id: 'nextverse1',
-    link: 'https://nextverse.org',
-    image: require('@/assets/images/ads/nextverse1.jpeg')
-  }, {
-    id: 'nextverse2',
-    link: 'https://nextverse.org',
-    image: require('@/assets/images/ads/nextverse2.jpeg')
-  }, {
-    id: 'nextverse3',
-    link: 'https://nextverse.org',
-    image: require('@/assets/images/ads/nextverse3.jpeg')
-  }])
+  const [ads] = useState([
+    {
+      id: 'epicwar',
+      link: 'https://epicwar.io',
+      image: require('@/assets/images/ads/epicwar.jpg')
+    },
+    {
+      id: 'epicwar-testnet',
+      link: 'https://epicwar.io/insights/blogs/319',
+      image: require('@/assets/images/ads/epicwar-testnet.jpg')
+    },
+    {
+      id: 'nextverse1',
+      link: 'https://nextverse.org',
+      image: require('@/assets/images/ads/nextverse1.jpeg')
+    },
+    {
+      id: 'nextverse2',
+      link: 'https://nextverse.org',
+      image: require('@/assets/images/ads/nextverse2.jpeg')
+    },
+    {
+      id: 'nextverse3',
+      link: 'https://nextverse.org',
+      image: require('@/assets/images/ads/nextverse3.jpeg')
+    },
+    {
+      id: 'mechmaster-testnet',
+      link: 'https://app.mechmaster.io/#/beta-testing-event',
+      image: require('@/assets/images/ads/mech-testnet.jpeg')
+    }
+  ])
 
   const [idx, setIdx] = useState(0)
   useEffect(() => {
@@ -294,8 +305,8 @@ export const Right = ({ tags }: { tags?: { link: string; image: any; count: any;
       </div>
     </div>
 
-    { ad && <a className="block mt-10" href={ad.link} target="_blank" rel="noreferrer">
-      <img src={ad.image?.default?.src} alt="" className="rounded" />
+    { ad && <a className="block w-full text-center mt-10" href={ad.link} target="_blank" rel="noreferrer">
+      <img src={ad.image?.default?.src} alt="" className="rounded max-w-full block mx-auto" />
     </a> }
 
     { tags && <div className="relative mt-14">

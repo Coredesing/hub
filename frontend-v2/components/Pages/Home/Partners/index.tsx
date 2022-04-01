@@ -60,9 +60,9 @@ const Partners = () => {
         <Flicking circular={true} className="flex-1" plugins={plugins} align="center" ref={refSlider} interruptable={true}>
           <div className="w-full mb-8">
             <div className="grid grid-cols-3 max-w-xl mx-auto md:hidden">
-              <div><Image src={require('assets/images/brands/1.png')} alt=""></Image></div>
-              <div><Image src={require('assets/images/brands/2.png')} alt=""></Image></div>
-              <div><Image src={require('assets/images/brands/3.png')} alt=""></Image></div>
+              <a href="https://solice.io/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/1.png')} alt=""></Image></a>
+              <a href="https://sidusheroes.com/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/2.png')} alt=""></Image></a>
+              <a href="https://www.rebelbots.com/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/3.png')} alt=""></Image></a>
               <div><Image src={require('assets/images/brands/4.png')} alt=""></Image></div>
               <div><Image src={require('assets/images/brands/5.png')} alt=""></Image></div>
               <div><Image src={require('assets/images/brands/6.png')} alt=""></Image></div>
@@ -80,9 +80,9 @@ const Partners = () => {
               <div><Image src={require('assets/images/brands/18.png')} alt=""></Image></div>
             </div>
             <div className="hidden md:flex mx-auto justify-center">
-              <div><Image src={require('assets/images/brands/1.png')} alt=""></Image></div>
-              <div><Image src={require('assets/images/brands/2.png')} alt=""></Image></div>
-              <div><Image src={require('assets/images/brands/3.png')} alt=""></Image></div>
+              <a href="https://solice.io/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/1.png')} alt=""></Image></a>
+              <a href="https://sidusheroes.com/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/2.png')} alt=""></Image></a>
+              <a href="https://www.rebelbots.com/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/3.png')} alt=""></Image></a>
               <div><Image src={require('assets/images/brands/4.png')} alt=""></Image></div>
             </div>
             <div className="hidden md:flex mx-auto justify-center mt-4">

@@ -110,7 +110,6 @@ const IGODetails = ({ poolData }) => {
       })
   }, [poolData, account])
   useEffect(() => {
-    console.log(poolData)
     loadJoined()
   }, [loadJoined])
   const [tab, setTab] = useState(0)

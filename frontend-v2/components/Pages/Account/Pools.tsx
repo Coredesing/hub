@@ -68,7 +68,6 @@ const Pools = () => {
             ]).then(([userPurchased, userClaimed]) => {
               pool.user_purchased = new BigNumber(userPurchased.toString()).div(new BigNumber(10).pow([99, 100].includes(pool.id) ? 18 : pool.decimals)).toFixed()
               pool.user_claimed = new BigNumber(userClaimed.toString()).div(new BigNumber(10).pow([99, 100].includes(pool.id) ? 18 : pool.decimals)).toFixed()
-              if (pool.id === 99) console.log(pool)
               resolve(pool)
             }).catch(() => {
               pool.allocation = 0

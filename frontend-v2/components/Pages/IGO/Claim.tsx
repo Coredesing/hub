@@ -62,7 +62,6 @@ const Claim = () => {
     const claimedPercentage = Number(claimedTokens || 0) / Number(purchasedTokens || 1) * 100
     const items = poolData?.campaignClaimConfig && poolData.campaignClaimConfig.map((config) => {
       let status = 'Unknown'
-      console.log(claimedPercentage)
 
       if (purchasedTokens && claimedTokens) {
         status = claimedPercentage < Number(config.max_percent_claim) ? 'Claimable' : 'Claimed'

@@ -6,6 +6,7 @@ import Card from '@/components/Pages/IGO/Card'
 import { useFetch } from '@/utils'
 import { Item } from '@/components/Pages/IGO/type'
 import CompletedPools from '@/components/Pages/IGO/CompletedPools'
+import { Carousel } from 'react-responsive-carousel'
 
 export const ListIGOContext = createContext({
   now: null
@@ -23,7 +24,6 @@ const IGO = () => {
 
   const { response: totalCompletedResponse, loading: totalCompletedLoading } = useFetch('/pools/total-completed-pools')
   const totalCompletedPools = useMemo(() => {
-    console.log(totalCompletedResponse)
     return totalCompletedResponse?.data?.total || 0
   }, [totalCompletedResponse?.data?.total])
 
@@ -53,13 +53,11 @@ const IGO = () => {
     const tba = origin.filter(item => item.campaign_status?.toLowerCase() === 'tba')
     remain = remain.filter(item => !tba.includes(item))
     const preWhitelist = remain.filter(item => new Date().getTime() < new Date(Number(item?.start_join_pool_time) * 1000).getTime()).sort((a, b) => a?.start_join_pool_time < b?.start_join_pool_time)
-    console.log(preWhitelist)
     remain = remain.filter(item => !preWhitelist.includes(item))
     const whitelist = remain.filter(item => new Date().getTime() < new Date(Number(item?.end_join_pool_time) * 1000).getTime()).sort((a, b) => a?.end_join_pool_time < b?.end_join_pool_time)
     remain = remain.filter(item => !whitelist.includes(item))
     const preStart = remain.filter(item => new Date().getTime() < new Date(Number(item?.start_time) * 1000).getTime()).sort((a, b) => a?.start_time < b?.start_time)
     const sortedItems = [].concat(preStart).concat(whitelist).concat(preWhitelist).concat(tba)
-    console.log(sortedItems)
 
     return sortedItems || []
   }, [upcomingResponse])
@@ -126,10 +124,24 @@ const IGO = () => {
                   {openingPublicList?.length
                     ? <div className="w-full max-w-[1180px] mx-auto mt-14">
                       <p><span className="uppercase font-semibold text-xl">IGO Pool</span> <span className="text-white/60">($GAFI Staking required)</span></p>
-                      <div className="mt-4 w-full grid md:grid-cols-3 xl:grid-cols-3 gap-6">
+                      <div className="hidden mt-4 w-full lg:grid lg:grid-cols-3 gap-6">
                         {openingPublicList.map(item => <div key={item.id} className="w-full">
                           <Card item={item} color="black" background="gamefiDark"></Card>
                         </div>)}
+                      </div>
+                      <div className="mt-4 w-full lg:hidden">
+                        <Carousel
+                          showIndicators={false}
+                          showStatus={false}
+                          centerMode
+                          centerSlidePercentage={80}
+                          showArrows={false}
+                          infiniteLoop={true}
+                        >
+                          {openingPublicList.map(item => (
+                            <div key={item.id} className="px-4"><Card item={item} color="black" background="gamefiDark"></Card></div>
+                          ))}
+                        </Carousel>
                       </div>
                     </div>
                     : <></>}
@@ -137,10 +149,24 @@ const IGO = () => {
                     ? <>
                       <div className="w-full max-w-[1180px] mx-auto mt-14">
                         <p><span className="uppercase font-semibold text-xl">Community Pool</span> <span className="text-white/60">($GAFI Staking not required)</span></p>
-                        <div className="mt-4 w-full grid md:grid-cols-3 xl:grid-cols-3 gap-6">
+                        <div className="hidden mt-4 w-full lg:grid md:grid-cols-3 lg:grid-cols-3 gap-6">
                           {openingCommunityList.map(item => <div key={item.id} className="w-full">
                             <Card item={item} color="black" background="gamefiDark"></Card>
                           </div>)}
+                        </div>
+                        <div className="mt-4 w-full lg:hidden">
+                          <Carousel
+                            showIndicators={false}
+                            showStatus={false}
+                            centerMode
+                            centerSlidePercentage={80}
+                            showArrows={false}
+                            infiniteLoop={true}
+                          >
+                            {openingCommunityList.map(item => (
+                              <div key={item.id} className="px-4"><Card item={item} color="black" background="gamefiDark"></Card></div>
+                            ))}
+                          </Carousel>
                         </div>
                       </div>
                     </>
@@ -172,10 +198,24 @@ const IGO = () => {
                   {upcomingPublicList?.length
                     ? <div className="w-full max-w-[1180px] mx-auto mt-14">
                       <p><span className="uppercase font-semibold text-xl">IGO Pool</span> <span className="text-white/60">($GAFI Staking required)</span></p>
-                      <div className="mt-4 w-full grid md:grid-cols-3 xl:grid-cols-3 gap-6">
+                      <div className="hidden mt-4 w-full lg:grid md:grid-cols-3 lg:grid-cols-3 gap-6">
                         {upcomingPublicList.map(item => <div key={item.id} className="w-full">
                           <Card item={item} color={openingItems?.length > 0 ? 'gamefiDark' : 'black'} background={openingItems?.length > 0 ? 'black' : 'gamefiDark'}></Card>
                         </div>)}
+                      </div>
+                      <div className="mt-4 w-full lg:hidden">
+                        <Carousel
+                          showIndicators={false}
+                          showStatus={false}
+                          centerMode
+                          centerSlidePercentage={80}
+                          showArrows={false}
+                          infiniteLoop={true}
+                        >
+                          {upcomingPublicList.map(item => (
+                            <div key={item.id} className="px-2"><Card item={item} color={openingItems?.length > 0 ? 'gamefiDark' : 'black'} background={openingItems?.length > 0 ? 'black' : 'gamefiDark'}></Card></div>
+                          ))}
+                        </Carousel>
                       </div>
                     </div>
                     : <></>}
@@ -183,10 +223,24 @@ const IGO = () => {
                     ? <>
                       <div className="w-full max-w-[1180px] mx-auto mt-14">
                         <p><span className="uppercase font-semibold text-xl">Community Pool</span> <span className="text-white/60">($GAFI Staking not required)</span></p>
-                        <div className="mt-4 w-full grid md:grid-cols-3 xl:grid-cols-3 gap-6">
+                        <div className="hidden mt-4 w-full lg:grid md:grid-cols-3 lg:grid-cols-3 gap-6">
                           {upcomingCommunityList.map(item => <div key={item.id} className="w-full">
                             <Card item={item} color={openingItems?.length > 0 ? 'gamefiDark' : 'black'} background={openingItems?.length > 0 ? 'black' : 'gamefiDark'}></Card>
                           </div>)}
+                        </div>
+                        <div className="mt-4 w-full lg:hidden">
+                          <Carousel
+                            showIndicators={false}
+                            showStatus={false}
+                            centerMode
+                            centerSlidePercentage={80}
+                            showArrows={false}
+                            infiniteLoop={true}
+                          >
+                            {upcomingCommunityList.map(item => (
+                              <div key={item.id} className="px-2"><Card item={item} color={openingItems?.length > 0 ? 'gamefiDark' : 'black'} background={openingItems?.length > 0 ? 'black' : 'gamefiDark'}></Card></div>
+                            ))}
+                          </Carousel>
                         </div>
                       </div>
                     </>

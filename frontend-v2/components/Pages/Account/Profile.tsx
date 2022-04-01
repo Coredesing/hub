@@ -200,7 +200,7 @@ const Profile = () => {
             </div>
             <div className="flex items-center w-full">
               <div className="w-full">
-                <span className='font-bold text-xs uppercase text-white/70'>Solana Wallet</span>
+                <span className='font-bold text-xs uppercase text-white/70'>Terra Wallet</span>
                 <input type="text" value={!editing && !wTerra ? 'Not Connected' : wTerra} disabled={!editing} className={`font-casual text-xs leading-4 w-full py-1 border-0 border-b border-dashed ${!wTerra ? 'text-white/40 italic' : 'text-white/80'} ${editing ? 'bg-gamefiDark-800 border-white px-1' : 'bg-transparent border-transparent px-0'}`} onChange={e => setWalletTerra(e.target.value)} placeholder="Enter your Terra wallet address"/>
               </div>
               { !editing && wTerra && <div className="ml-4 cursor-pointer flex items-center" onClick={() => copy(profile?.terra_address)}><DocumentCopyIcon /></div> }

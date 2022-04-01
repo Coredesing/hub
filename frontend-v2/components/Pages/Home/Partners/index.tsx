@@ -58,7 +58,7 @@ const Partners = () => {
         </div>
         <Flicking circular={true} className="flex-1" plugins={plugins} align="center" ref={refSlider} interruptable={true}>
           <div className="w-full mb-8">
-            <div className="grid grid-cols-3 max-w-xl mx-auto md:hidden gap-6">
+            <div className="grid grid-cols-3 max-w-xl mx-auto md:hidden gap-x-2 gap-y-6">
               <a href="https://solice.io/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/1.png')} alt=""></Image></a>
               <a href="https://sidusheroes.com/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/2.png')} alt=""></Image></a>
               <a href="https://www.rebelbots.com/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/3.png')} alt=""></Image></a>
@@ -106,7 +106,7 @@ const Partners = () => {
             </div>
           </div>
           <div className="w-full mb-8">
-            <div className="grid grid-cols-3 max-w-xl mx-auto md:hidden gap-2">
+            <div className="grid grid-cols-3 max-w-xl mx-auto md:hidden gap-x-2 gap-y-6">
               <a href="https://planetsandbox.io/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/19.png')} alt=""></Image></a>
               <a href="https://deathroad.io/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/20.png')} alt=""></Image></a>
               <a href="https://kabyarena.com/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/21.png')} alt=""></Image></a>

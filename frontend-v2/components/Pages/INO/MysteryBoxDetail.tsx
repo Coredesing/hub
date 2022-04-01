@@ -112,7 +112,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       const myNumBox = await erc721Contract.balanceOf(account)
       setOwnedBox(myNumBox.toString() || 0)
     } catch (error) {
-      console.log(error)
+      console.debug(error)
     }
   }, [erc721Contract, account])
 
@@ -388,7 +388,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           try {
             await handleInfoTokenExternal(collectionId, collection)
           } catch (error) {
-            console.log('err', error)
+            console.debug(error)
           }
           arrCollections.push(collection)
         }
@@ -404,7 +404,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               const infoBox = boxTypes.find((b, subBoxId) => subBoxId === idBoxType) || {}
               infoBox && Object.assign(collection, infoBox)
             } catch (error) {
-              // console.log('error', error)
+              // console.debug('error', error)
             }
             arrCollections.push(collection)
           } else {
@@ -415,14 +415,14 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               await handleInfoTokenExternal(collection.collectionId, collection)
               arrCollections.push(collection)
             } catch (error) {
-              // console.log('error', error)
+              // console.debug('error', error)
             }
           }
         }
       }
       setCollections(arrCollections)
     } catch (error) {
-      console.log('error', error)
+      console.debug(error)
       console.error('Something went wrong when show collections')
     } finally {
       setLoadingCollection(false)

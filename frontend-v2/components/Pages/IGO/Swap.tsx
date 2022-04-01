@@ -184,7 +184,7 @@ const Swap = () => {
   }, [poolData?.pre_order_min_tier, tierMine?.id])
 
   const swappable = useMemo(() => {
-    // console.log('bbbb', poolData?.campaign_status, poolData?.is_deploy, allocation, allowance)
+    // console.debug('bbbb', poolData?.campaign_status, poolData?.is_deploy, allocation, allowance)
     return isPreOrderTime
 
       ? tierMine?.id >= poolData?.pre_order_min_tier &&

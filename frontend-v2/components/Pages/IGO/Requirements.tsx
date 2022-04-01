@@ -101,8 +101,8 @@ const Requirements = () => {
     }, {})
   }, [whitelistStatus])
   const poolWhitelistOKSocial = useMemo(() => {
-    return Object.keys(poolWhitelistSocialProblems).length === 0
-  }, [poolWhitelistSocialProblems])
+    return poolData?.is_private === 3 || Object.keys(poolWhitelistSocialProblems).length === 0
+  }, [poolData?.is_private, poolWhitelistSocialProblems])
 
   const [formData, setFormData] = useState({
     telegram: '',
@@ -183,8 +183,12 @@ const Requirements = () => {
   }, [poolData, account, poolWhitelistReady, formData, signature, loadJoined])
 
   useEffect(() => {
+    if (poolData?.is_private === 3) {
+      setFailedRequirements(false)
+      return
+    }
     setFailedRequirements(poolNetworkInvalid || poolRankInvalid || (!poolData?.kyc_bypass && !profile?.verified) || !whitelistJoined)
-  }, [poolNetworkInvalid, poolRankInvalid, profile, setFailedRequirements, whitelistJoined])
+  }, [poolData?.is_private, poolData?.kyc_bypass, poolNetworkInvalid, poolRankInvalid, profile, setFailedRequirements, whitelistJoined])
 
   return <>
     <div className="bg-gamefiDark-630 bg-opacity-30 p-4 xl:p-6 2xl:p-7 rounded">
@@ -238,10 +242,10 @@ const Requirements = () => {
         </div>
         <div className="table-row">
           <div className="table-cell align-middle w-6">
-            { !profile.verified ? <IconError className="w-4 h-4" /> : <IconOK className="w-4 h-4" /> }
+            { !profile.verified ? (poolData?.is_private === 3 ? <IconOK className="w-4 h-4" /> : <IconError className="w-4 h-4" />) : <IconOK className="w-4 h-4" /> }
           </div>
           <div className="table-cell align-middle text-white/90">KYC Status</div>
-          <div className="table-cell align-middle text-white/90"><strong className="tracking-wider">{profile?.verified ? 'Verified' : 'Unverified'}</strong></div>
+          <div className="table-cell align-middle text-white/90"><strong className="tracking-wider">{profile?.verified ? 'Verified' : (poolData?.is_private === 3 ? 'Not Required' : 'Unverified')}</strong></div>
           <div className="table-cell align-middle h-10 w-32">
             { !poolData?.kyc_bypass && !profile?.verified && <>
               { (!account || poolNetworkInvalid || poolRankInvalid) &&
@@ -263,20 +267,26 @@ const Requirements = () => {
         </div>
         <div className="table-row">
           <div className="table-cell align-middle w-6">
-            { whitelistJoined ? (!poolWhitelistOKSocial ? <IconWarning className="w-4 h-4" /> : <IconOK className="w-4 h-4" />) : <IconError className="w-4 h-4" /> }
+            { whitelistJoined ? (!poolWhitelistOKSocial ? <IconWarning className="w-4 h-4" /> : <IconOK className="w-4 h-4" />) : (poolData?.is_private === 3 ? <IconOK className="w-4 h-4" /> : <IconError className="w-4 h-4" />) }
           </div>
           <div className="table-cell align-middle text-white/90">Whitelist</div>
           <div className="table-cell align-middle text-white/90">
-            <strong className="tracking-wider">
-              {whitelistJoined && poolWhitelistOKSocial && 'Applied'}
-              {whitelistJoined && !poolWhitelistOKSocial && 'Incomplete'}
-              {!whitelistJoined && !poolWhitelistOKTime && new Date(now).getTime() < poolWhitelistTime?.start?.getTime() && 'Upcoming'}
-              {!whitelistJoined && !poolWhitelistOKTime && new Date(now).getTime() > poolWhitelistTime?.end?.getTime() && 'Closed'}
-              {poolWhitelistReady && 'Unapplied'}
-            </strong>
+            {
+              poolData?.is_private !== 3
+                ? <strong className="tracking-wider">
+                  {whitelistJoined && poolWhitelistOKSocial && 'Applied'}
+                  {whitelistJoined && !poolWhitelistOKSocial && 'Incomplete'}
+                  {!whitelistJoined && !poolWhitelistOKTime && new Date(now).getTime() < poolWhitelistTime?.start?.getTime() && 'Upcoming'}
+                  {!whitelistJoined && !poolWhitelistOKTime && new Date(now).getTime() > poolWhitelistTime?.end?.getTime() && 'Closed'}
+                  {poolWhitelistReady && 'Unapplied'}
+                </strong>
+                : <strong className="tracking-wider">
+                Not Required
+                </strong>
+            }
           </div>
           <div className="table-cell align-middle h-10 w-32">
-            { poolWhitelistReady && <>
+            { poolData?.is_private !== 3 && poolWhitelistReady && <>
               { (!account || poolNetworkInvalid || poolRankInvalid || !profile.verified) &&
                     <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiDark-400 text-black'>
                     Apply Whitelist
@@ -292,10 +302,17 @@ const Requirements = () => {
             }
 
             {
-              !poolWhitelistReady && poolWhitelistOKTime && !poolWhitelistOKSocial &&
+              poolData?.is_private !== 3 && !poolWhitelistReady && poolWhitelistOKTime && !poolWhitelistOKSocial &&
                 <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiYellow-400 text-gamefiDark-900 inline-block text-center' onClick={showApplyWhitelist}>
                     Review Submission
                 </button>
+            }
+
+            {
+              poolData?.is_private === 3 && poolWhitelistReady &&
+              <a href={poolData?.socialRequirement?.gleam_link || '#'} target="_blank" className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiGreen-500 text-gamefiDark-900 inline-block text-center' rel="noreferrer">
+                  Join Competition
+              </a>
             }
           </div>
         </div>

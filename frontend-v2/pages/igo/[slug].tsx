@@ -51,11 +51,11 @@ export const IGOContext = createContext({
   timeline: [],
   allocation: null,
 
-  setSignature: (v: any) => { console.log(v) },
+  setSignature: (v: any) => { console.debug(v) },
   loadJoined: () => {},
-  setFailedRequirements: (v: any) => { console.log(v) },
-  setCompleted: (v: any) => { console.log(v) },
-  setCurrent: (v: any) => { console.log(v) }
+  setFailedRequirements: (v: any) => { console.debug(v) },
+  setCompleted: (v: any) => { console.debug(v) },
+  setCurrent: (v: any) => { console.debug(v) }
 })
 
 const IGODetails = ({ poolData }) => {

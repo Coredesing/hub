@@ -63,7 +63,7 @@ const useMarketActivities = () => {
             }
           }
         } catch (error) {
-          console.log('err', error)
+          console.debug('err', error)
         }
 
         return item
@@ -89,7 +89,7 @@ const useMarketActivities = () => {
       }
       dispatch({ type: marketActivitiesActions.SUCCESS, payload: { ...oldData, ...setData } })
     } catch (error: any) {
-      console.log('error', error)
+      console.debug('error', error)
       dispatch({
         type: marketActivitiesActions.FAILURE,
         payload: error
@@ -205,7 +205,7 @@ export const useDiscoverMarket = () => {
       }
       dispatch({ type: discoverMarketActions.SUCCESS, payload: setListData(listData) })
     } catch (error) {
-      console.log('error', error)
+      console.debug('error', error)
       dispatch({ type: discoverMarketActions.FAILURE, payload: error })
     }
   }, [state])
@@ -324,7 +324,7 @@ export const useCollectionsMarket = () => {
       }
       dispatch({ type: collectionMarketActions.SUCCESS, payload: setListData(listData) })
     } catch (error) {
-      console.log('error', error)
+      console.debug('error', error)
       dispatch({ type: collectionMarketActions.FAILURE, payload: error })
     }
   }, [state])

@@ -51,7 +51,7 @@ export const useCheckJoinPool = (poolId: string | number, account: Address) => {
       const isJoin = res.data
       setJoinPool(isJoin)
     } catch (error) {
-      console.log('error', error)
+      console.debug('error', error)
     }
     setLoading(false)
   }, [poolId, account])

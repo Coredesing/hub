@@ -41,7 +41,7 @@ const useTiersContext = () => {
         }
       })
     } catch (error) {
-      console.log('error', error)
+      console.debug('error', error)
       dispatch({ type: tiersActions.FAILURE, payload: error })
     }
   }

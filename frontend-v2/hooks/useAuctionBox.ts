@@ -55,7 +55,7 @@ const useAuctionBox = ({ poolId, currencyInfo, poolAddress, subBoxId }: PoolDepo
         setAuctionSuccess(false)
       }
     } catch (error: any) {
-      console.log('error', error)
+      console.debug('error', error)
       setAuctionLoading(false)
       const msgError = handleErrMsg(error)
       toast.error(msgError)

@@ -64,7 +64,7 @@ const Card = ({ item }: {item: Item}) => {
         </a> }
       </div>
       <a href={`/igo/${item.id}`} className="w-full text-lg font-semibold leading-4 hover:underline">{item.title}</a>
-      <div className="w-full 2xl:pr-[200px] lg:pr-[100px] grid grid-cols-2 gap-4 lg:inline-flex justify-between mt-4">
+      <a href={`/igo/${item.id}`} className="w-full 2xl:pr-[200px] lg:pr-[100px] grid grid-cols-2 gap-4 lg:inline-flex justify-between mt-4">
         <div>
           <div className="text-white/50 uppercase font-semibold text-xs font-mechanic">Total Raise</div>
           <div className="text-sm">
@@ -96,7 +96,7 @@ const Card = ({ item }: {item: Item}) => {
             <Countdown to={nextClaim(item)}></Countdown>
           </div>
         </div>
-      </div>
+      </a>
     </div>
   </div>
 }

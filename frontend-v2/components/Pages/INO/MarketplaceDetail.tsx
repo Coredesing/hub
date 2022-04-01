@@ -484,7 +484,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
         setMyOfferInfo(null)
       }
     } catch (error) {
-      console.log('error', error)
+      console.debug('error', error)
       setMyOfferInfo(null)
     }
   }, [account, MarketplaceContract, tokenInfo.id, projectInfo.token_address, currencies])

@@ -23,7 +23,7 @@ export const useOrderBox = (poolId: string | number, account: Address) => {
       setLoading(false)
       return true
     } catch (error) {
-      console.log('error', error)
+      console.debug('error', error)
       toast.error(error.message)
       setLoading(false)
     }

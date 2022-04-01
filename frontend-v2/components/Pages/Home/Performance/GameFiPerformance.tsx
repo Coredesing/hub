@@ -85,7 +85,7 @@ const GameFiPerformance = ({ item } : { item: any }) => {
 
               <div className="w-full flex flex-col justify-between">
                 <div className="w-full mt-4 sm:mt-0 flex  items-center justify-between">
-                  <div className="text-white opacity-50 text-xs">Raised:</div>
+                  <div className="text-white opacity-50 text-xs">Raise:</div>
                   <div className="text-sm font-medium">{item?.raised}</div>
                 </div>
                 <div className="w-full mt-4 sm:mt-0 flex  items-center justify-between">
@@ -197,7 +197,7 @@ const GameFiPerformance = ({ item } : { item: any }) => {
 
               <div className="w-full flex flex-col justify-between">
                 <div className="w-full mt-4 sm:mt-0 flex flex-col sm:flex-row items-center justify-between">
-                  <div className="text-white opacity-50 text-xs">Raised:</div>
+                  <div className="text-white opacity-50 text-xs">Raise:</div>
                   <div className="text-sm font-medium">{item?.raised}</div>
                 </div>
                 <div className="w-full mt-4 sm:mt-0 flex flex-col sm:flex-row items-center justify-between">

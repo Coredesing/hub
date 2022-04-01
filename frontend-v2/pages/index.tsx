@@ -1,5 +1,5 @@
 import Layout from '@/components/Layout'
-import GameCarousel from '@/components/Pages/Home/GameCarousel'
+import GameCarousel from '@/components/Pages/Home/GameCarouselV2'
 
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -46,7 +46,7 @@ const PageIndex = () => {
       </div>
       <Instruction></Instruction>
       <IGOList></IGOList>
-      <div className="bg-gamefiDark-800">
+      <div className="bg-gamefiDark-900">
         <INOList></INOList>
         <GameList></GameList>
         {/* <NFTList></NFTList> */}

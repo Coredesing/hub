@@ -40,16 +40,15 @@ const Partners = () => {
         </div>
       </div>
       <div className="container mx-auto xl:px-16 grid grid-cols-2 md:grid-cols-4 items-center justify-center mt-8 max-w-6xl">
-        <a href="https://www.animocabrands.com/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/Animoca.png')} alt="Animoca" ></Image></a>
-        <a href="https://daomaker.com/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/DaoMaker.png')} alt="DaoMaker" ></Image></a>
-        <a href="https://morningstar.ventures/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/MorningStar.png')} alt="MorningStar" ></Image></a>
-        <a href="https://polygon.technology/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/Polygon.png')} alt="Polygon" ></Image></a>
+        <a href="https://www.animocabrands.com/" target="_blank" className="flex items-center justify-center" rel="noreferrer"><Image src={require('assets/images/brands/Animoca.png')} alt="Animoca" ></Image></a>
+        <a href="https://daomaker.com/" target="_blank" className="flex items-center justify-center" rel="noreferrer"><Image src={require('assets/images/brands/DaoMaker.png')} alt="DaoMaker" ></Image></a>
+        <a href="https://morningstar.ventures/" target="_blank" className="flex items-center justify-center" rel="noreferrer"><Image src={require('assets/images/brands/MorningStar.png')} alt="MorningStar" ></Image></a>
+        <a href="https://polygon.technology/" target="_blank" className="flex items-center justify-center" rel="noreferrer"><Image src={require('assets/images/brands/Polygon.png')} alt="Polygon" ></Image></a>
       </div>
       <div className="flex flex-col items-center mt-14">
         <div className="font-bold text-2xl uppercase">Our Portfolio</div>
         <div className="font-casual text-base text-white/80 text-center max-w-2xl mx-auto">
         All projects launched on GameFi.org are scrutinized and hand-picked.
-          <br />
         They all aim at long-term development and ensure benefits for GameFi users.
         </div>
       </div>
@@ -59,7 +58,7 @@ const Partners = () => {
         </div>
         <Flicking circular={true} className="flex-1" plugins={plugins} align="center" ref={refSlider} interruptable={true}>
           <div className="w-full mb-8">
-            <div className="grid grid-cols-3 max-w-xl mx-auto md:hidden">
+            <div className="grid grid-cols-3 max-w-xl mx-auto md:hidden gap-6">
               <a href="https://solice.io/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/1.png')} alt=""></Image></a>
               <a href="https://sidusheroes.com/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/2.png')} alt=""></Image></a>
               <a href="https://www.rebelbots.com/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/3.png')} alt=""></Image></a>
@@ -107,14 +106,13 @@ const Partners = () => {
             </div>
           </div>
           <div className="w-full mb-8">
-            <div className="grid grid-cols-3 max-w-xl mx-auto md:hidden">
+            <div className="grid grid-cols-3 max-w-xl mx-auto md:hidden gap-2">
               <a href="https://planetsandbox.io/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/19.png')} alt=""></Image></a>
               <a href="https://deathroad.io/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/20.png')} alt=""></Image></a>
               <a href="https://kabyarena.com/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/21.png')} alt=""></Image></a>
               <a href="https://mechmaster.io/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/22.png')} alt=""></Image></a>
               <a href="https://www.spacey2025.com" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/23.png')} alt=""></Image></a>
               <a href="https://mymasterwar.com/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/24.png')} alt=""></Image></a>
-              <a href="https://f2nft.games/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/25.png')} alt=""></Image></a>
               <a href="https://f2nft.games/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/25.png')} alt=""></Image></a>
               <a href="https://thewastedlands.io/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/26.png')} alt=""></Image></a>
               <a href="https://aspo.world/" target="_blank" className="block" rel="noreferrer"><Image src={require('assets/images/brands/27.png')} alt=""></Image></a>

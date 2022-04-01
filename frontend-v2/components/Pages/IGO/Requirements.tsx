@@ -308,8 +308,18 @@ const Requirements = () => {
           <strong className="uppercase text-2xl font-mechanic">Welcome to {poolData?.title || ''} on GameFi.org</strong>
           <p className="mt-6 text-sm">In order to participate in the IGO, you must fullfil requirements as below.</p>
           <p className="mt-2 text-sm text-gamefiDark-100">{tiers.priority.map(x => x.name).join(', ')} are not required to do the social requirements. However, we recommend following our official Twitter and Telegram groups to stay up-to-date with important announcements.</p>
-          <p className="mt-6 text-sm inline-flex items-center font-medium">
-            <span className="flex items-center justify-center mr-2 bg-black w-6 h-6 rounded-full font-bold">1</span>Provide social information
+          <p className="mt-6 w-full text-sm inline-flex items-center font-medium">
+            <span className="flex items-center justify-center mr-2 bg-black w-6 h-6 rounded-full font-bold">1</span>
+            Provide social information
+            <div className="flex gap-1 ml-auto">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 3L13 6" stroke="#6CDB00" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M12 1L15 4L5 14L1 15L2 11L12 1Z" stroke="#6CDB00" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span className='uppercase font-bold text-xs text-gamefiGreen-700 outline-none focus:outline-none hover:underline'>
+                <Link href="/account" passHref={true}>Edit profile</Link>
+              </span>
+            </div>
           </p>
           <div className="flex gap-4 mt-2">
             <div className="w-full text-sm">

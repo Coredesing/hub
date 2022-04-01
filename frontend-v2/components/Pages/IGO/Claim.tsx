@@ -234,7 +234,7 @@ const Claim = () => {
           <div className="mb-4">
             <strong className="font-semibold block">Claim Type</strong>
             <span className="text-gamefiDark-100 text-[13px]">
-              {claimTypes.map((item, index) => `${item.value}% on ${item.name}${index < claimTypes.length - 1 ? ', ' : '.'}`)}
+              {claimTypes.map((item, index) => `${item.value}% ${item.name}${index < claimTypes.length - 1 ? ', ' : '.'}`)}
             </span>
           </div>
         </div>

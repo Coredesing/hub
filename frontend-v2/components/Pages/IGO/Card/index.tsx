@@ -119,7 +119,7 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
       </div>
       <div className="w-full grid grid-cols-2 gap-2">
         <div>
-          <div className="text-white/50 uppercase font-medium text-xs">Total Rise</div>
+          <div className="text-white/50 uppercase font-medium text-xs">Total Rised</div>
           <div className="text-sm">${Math.round(Number(item?.total_sold_coin) * Number(item?.token_conversion_rate)).toLocaleString('en-US')}</div>
         </div>
         <div>

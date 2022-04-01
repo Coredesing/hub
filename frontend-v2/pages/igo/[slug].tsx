@@ -686,17 +686,19 @@ const IGODetails = ({ poolData }) => {
                     </div>
                   </div>
 
-                  <div className={`table-row ${current?.key === 'pre-order' && 'text-gamefiGreen'}`}>
-                    <div className="table-cell align-middle py-2 rounded">
-                      Pre-order (Min Tier: {preOrderMinTier.name})
+                  {
+                    poolData?.start_pre_order_time && <div className={`table-row ${current?.key === 'pre-order' && 'text-gamefiGreen'}`}>
+                      <div className="table-cell align-middle py-2 rounded">
+                        Pre-order (Min Tier: {preOrderMinTier.name})
+                      </div>
+                      <div className="table-cell align-middle py-2 font-normal">
+                        {timeline[TIMELINE.PRE_ORDER].start ? format(timeline[TIMELINE.PRE_ORDER].start, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                      </div>
+                      <div className="table-cell align-middle py-2 font-normal">
+                        {timeline[TIMELINE.PRE_ORDER].end ? format(timeline[TIMELINE.PRE_ORDER].end, 'HH:mm, dd MMM yyyy') : 'TBA'}
+                      </div>
                     </div>
-                    <div className="table-cell align-middle py-2 font-normal">
-                      {timeline[TIMELINE.PRE_ORDER].start ? format(timeline[TIMELINE.PRE_ORDER].start, 'HH:mm, dd MMM yyyy') : 'TBA'}
-                    </div>
-                    <div className="table-cell align-middle py-2 font-normal">
-                      {timeline[TIMELINE.PRE_ORDER].end ? format(timeline[TIMELINE.PRE_ORDER].end, 'HH:mm, dd MMM yyyy') : 'TBA'}
-                    </div>
-                  </div>
+                  }
 
                   {
                     hasFCFS

@@ -31,7 +31,7 @@ const DiscoverTypes = ({ onChange, currentType }: Props) => {
       </div>
       <div className="relative w-full">
         <button
-          style={{minWidth: '120px', clipPath: 'polygon(0 0, calc(100% - 9px) 0px, 100% 9px, 100% 100%, 9px 100%)'}}
+          style={{ minWidth: '120px', clipPath: 'polygon(0 0, calc(100% - 9px) 0px, 100% 9px, 100% 100%, 9px 100%)' }}
           className={`w-full h-10 rounded-sm flex items-center justify-center pr-2 font-semibold uppercase ${currentType === 'activities' ? 'text-black bg-gamefiGreen-700' : 'text-white bg-gamefiDark-600/80'}`}
           onClick={() => handleChangeType('activities')}
         >Activities</button>

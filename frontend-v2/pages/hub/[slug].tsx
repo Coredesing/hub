@@ -11,6 +11,7 @@ import useSWR, { useSWRConfig } from 'swr'
 import Flicking from '@egjs/react-flicking'
 import { Sync, AutoPlay } from '@egjs/flicking-plugins'
 import '@egjs/flicking/dist/flicking.css'
+import { useRouter } from 'next/router'
 
 const Carousel = ({ items }: { items: any[] }) => {
   const flicking0 = useRef()
@@ -64,6 +65,7 @@ const Carousel = ({ items }: { items: any[] }) => {
 }
 
 const GameDetails = ({ data }) => {
+  const router = useRouter()
   const items = [data.screen_shots_1, data.screen_shots_2, data.screen_shots_3, data.screen_shots_4, data.screen_shots_5].filter(x => !!x)
   const [tab, setTab] = useState(0)
 
@@ -99,15 +101,15 @@ const GameDetails = ({ data }) => {
   return (
     <Layout title={data.game_name ? `GameFi.org - ${data.game_name}` : 'GameFi.org Hub'} description={data?.game_intro} image={data.screen_shots_1}>
       <div className="px-4 lg:px-24 md:container mx-auto lg:block">
-        <Link href="/hub" passHref={true}>
-          <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">
-            <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10"/>
-              <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square"/>
-            </svg>
-            Back
-          </a>
-        </Link>
+        <a onClick={() => {
+          router.back()
+        }} className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500 cursor-pointer">
+          <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10"/>
+            <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square"/>
+          </svg>
+          Back
+        </a>
         { !data.id && <div className="uppercase font-bold text-3xl mb-6">Game Not Found</div>}
         { data.id && <>
           <div className="uppercase font-bold text-3xl mb-6">{data.game_name}</div>

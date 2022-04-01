@@ -21,7 +21,7 @@ export const categories = {
 }
 
 export const Categories = ({ active }:{ active?: string }) => (
-  <div className="bg-gamefiDark-630/50 inline-flex w-full gap-x-3 sm:gap-x-8 p-3 sm:px-6 font-casual font-medium rounded text-xs sm:text-sm mb-6 overflow-x-auto">
+  <div className="bg-gamefiDark-630/50 inline-flex items-center justify-center w-full gap-3 sm:gap-8 p-3 sm:px-6 font-casual font-medium rounded text-xs sm:text-sm mb-6 overflow-x-auto flex-wrap">
     <Link href="/insight" passHref={true}><a className={`whitespace-nowrap hover:text-white ${!active ? 'text-gamefiGreen-400' : 'text-white/60'}`}>Latest News</a></Link>
     {Object.keys(categories).map(category => <Link key={category} href={`/insight/tag/${category}`} passHref={true}><a className={`whitespace-nowrap hover:text-white ${active === category ? 'text-gamefiGreen-400' : 'text-white/60'}`}>{categories[category] || category}</a></Link>)}
   </div>
@@ -355,7 +355,7 @@ const NewsLayoutLeftRight4Bottom = ({ items, children }: { items: { big?: any[];
         </div>
       </div>) }
     </div> }
-    { items.others && <div className="grid grid-cols-2 mt-8 gap-6">
+    { items.others && <div className="grid sm:grid-cols-2 mt-8 gap-6">
       { items.others.map(item => <div key={item.id} className="flex gap-4">
         <Link href={`/insight/${item.slug}`} passHref={true}>
           <a className="block relative w-1/2 aspect-[16/9]">

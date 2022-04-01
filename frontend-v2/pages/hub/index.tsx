@@ -238,7 +238,8 @@ const Hub = ({ data }) => {
             <div className="uppercase text-gray-400 font-bold text-sm w-16 xl:w-32">CMC Rank</div>
             <div className="uppercase text-gray-400 font-bold text-sm w-48 hidden 2xl:block">Last 7 days</div>
           </div>
-          <div className="relative mb-8">
+          { !data.data?.length && <p className="font-casual text-sm text-center my-6">No games matching your search criteria were found.</p> }
+          { !!data.data?.length && <div className="relative mb-8">
             { loading && (
               <div className="flex gap-2 justify-center items-center uppercase font-casual font-semibold absolute z-10 inset-0 bg-gamefiDark-900 bg-opacity-90">
                 <svg className="animate-spin w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -313,8 +314,8 @@ const Hub = ({ data }) => {
                 </Link>
               )
             }) }
-          </div>
-          <Pagination page={data.page} pageLast={data.lastPage} setPage={setPage} className="w-full justify-end mb-8" />
+          </div> }
+          { !!data.data?.length && <Pagination page={data.page} pageLast={data.lastPage} setPage={setPage} className="w-full justify-end mb-8" /> }
         </div>
       </div>
     </Layout>

@@ -495,6 +495,10 @@ export function getNetworkAvailable (mainnet?: boolean): Network[] {
 }
 
 export function getNetworkByAlias (alias: string, mainnet?: boolean): Network | null {
+  if (alias === 'Ether') {
+    alias = 'eth'
+  }
+
   if (!alias) {
     return null
   }

@@ -124,15 +124,15 @@ const List = () => {
             <div className="flex-1 flex mt-4 md:mt-0">
               <div className="flex-1 flex flex-col">
                 <span className="text-[13px] font-bold opacity-50 tracking-wide uppercase">Network</span>
-                <div className="inline-flex items-center uppercase font-casual font-medium text-base"><div className="w-6 h-6 mr-2 relative inline-block"><Image src={networkImage(item.network_available)} alt={item.network_available} layout="fill" objectFit="cover" /></div> {item.network_available}</div>
+                <div className="inline-flex items-center uppercase font-casual font-medium text-base"><div className="w-6 h-6 mt-1 mr-2 relative inline-block"><Image src={networkImage(item.network_available)} alt={item.network_available} layout="fill" objectFit="cover" /></div> {item.network_available}</div>
               </div>
               <div className="flex-1 flex flex-col">
                 <span className="text-[13px] font-bold opacity-50 tracking-wide uppercase">Total Sales</span>
-                <p className="uppercase font-casual font-medium text-base">{item.total_sold_coin}</p>
+                <p className="uppercase font-casual font-medium text-base mt-1">{item.total_sold_coin}</p>
               </div>
-              <div className="hidden md:block flex-1 flex flex-col">
+              <div className="hidden md:flex flex-1 flex-col">
                 <span className="text-[13px] font-bold opacity-50 tracking-wide uppercase">Price</span>
-                <p className="uppercase font-casual font-medium text-base" style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {getCurrency(item)?.name}/BOX</p>
+                <p className="uppercase font-casual font-medium text-base mt-1" style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {getCurrency(item)?.name}/BOX</p>
               </div>
             </div>
           </div>

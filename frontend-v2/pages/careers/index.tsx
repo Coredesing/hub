@@ -525,21 +525,21 @@ export const jobs = [
 const Careers = () => (
   <Layout title="GameFi.org - Careers">
     <div className="px-2 md:px-4 lg:px-16 mx-auto lg:block pb-16">
-      <div className="uppercase font-bold text-4xl mb-6">Current Openings</div>
+      <div className="uppercase font-bold text-4xl mb-6">Current Positions</div>
 
       <div className="flex w-full px-4 mb-2">
         <div className="text-xs text-gamefiDark-50 uppercase flex-1">Title</div>
         <div className="hidden md:inline-block text-xs text-gamefiDark-50 uppercase w-48 text-left">Location</div>
-        <div className="hidden md:inline-block text-xs text-gamefiDark-50 uppercase w-48 text-left">Job Type</div>
-        <div className="inline-flex justify-start text-xs text-gamefiDark-50 uppercase w-48">Level</div>
+        <div className="hidden md:inline-block text-xs text-gamefiDark-50 uppercase w-32 text-left">Job Type</div>
+        <div className="inline-flex justify-end md:justify-start text-xs text-gamefiDark-50 uppercase w-48">Level</div>
       </div>
 
       { jobs.map((job) => <Link href={`/careers/${job.id}`} key={job.id} passHref={true}>
         <div className="flex w-full text-sm font-casual hover:bg-gamefiDark-700 cursor-pointer p-4 mb-2">
           <div className="flex-1 text-base">{job.title}<p className="md:hidden text-xs">{job.location}</p><p className="md:hidden text-xs">{job.type}</p></div>
           <div className="hidden md:inline-block w-48 text-left opacity-75">{job.location}</div>
-          <div className="hidden md:inline-block w-48 text-left opacity-75">{job.type}</div>
-          <div className="md:w-48 items-center justify-start inline-flex gap-x-2">{job.level.split(',').map(l => {
+          <div className="hidden md:inline-block w-32 text-left opacity-75">{job.type}</div>
+          <div className="md:w-48 items-end md:items-start justify-start flex flex-col sm:flex-row gap-2">{job.level.split(',').map(l => {
             l = l.trim()
             let color = 'text-white'
             if (l === 'Senior') {

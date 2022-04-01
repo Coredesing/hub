@@ -3,10 +3,9 @@ import { getTierById } from '@/utils/tiers'
 import React, { useEffect, useMemo, useState, useCallback, createContext } from 'react'
 import { fetchOneWithSlug } from '../api/igo'
 import { useMyWeb3 } from '@/components/web3/context'
-import { fetcher, printNumber, formatterUSD, formatPrice, useFetch } from '@/utils'
+import { fetcher, printNumber, formatterUSD, useFetch } from '@/utils'
 import Swap from '@/components/Pages/IGO/Swap'
 import Claim from '@/components/Pages/IGO/Claim'
-import Link from 'next/link'
 import { API_BASE_URL } from '@/utils/constants'
 import { TabPanel, Tabs } from '@/components/Base/Tabs'
 import { useLibraryDefaultFlexible, getCurrency } from '@/components/web3/utils'
@@ -26,6 +25,7 @@ import Tippy from '@tippyjs/react'
 import { ethers } from 'ethers'
 import { switchNetwork } from '@/components/web3'
 import ERC20_ABI from '@/components/web3/abis/ERC20.json'
+import { useRouter } from 'next/router'
 type Milestone = {
   key: string;
   milestone: string;
@@ -59,6 +59,7 @@ export const IGOContext = createContext({
 })
 
 const IGODetails = ({ poolData }) => {
+  const router = useRouter()
   const { tierMine } = useAppContext()
 
   const [now, setNow] = useState(new Date())
@@ -114,24 +115,6 @@ const IGODetails = ({ poolData }) => {
   }, [loadJoined])
   const [tab, setTab] = useState(0)
 
-  const poolWhitelistTime = useMemo(() => {
-    const start = poolData?.start_join_pool_time ? new Date(Number(poolData?.start_join_pool_time) * 1000) : undefined
-    const end = poolData?.end_join_pool_time ? new Date(Number(poolData?.end_join_pool_time) * 1000) : undefined
-    return {
-      start,
-      end
-    }
-  }, [poolData])
-
-  const poolPreOrderTime = useMemo(() => {
-    const start = poolData?.start_pre_order_time ? new Date(Number(poolData?.start_pre_order_time) * 1000) : undefined
-    const end = poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined
-    return {
-      start,
-      end
-    }
-  }, [poolData])
-
   const poolBuyTime = useMemo(() => {
     const start = poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined
     const end = poolData?.freeBuyTimeSetting?.start_buy_time ? new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000) : undefined
@@ -149,17 +132,6 @@ const IGODetails = ({ poolData }) => {
       end
     }
   }, [poolData])
-
-  const poolClaimTime = useMemo(() => {
-    const start = poolData?.campaignClaimConfig?.[0]?.finish_time ? new Date(Number(poolData?.campaignClaimConfig?.[0]?.finish_time) * 1000) : undefined
-    return {
-      start
-    }
-  }, [poolData])
-
-  const isClaimTime = useMemo(() => {
-    return poolClaimTime.start <= now
-  }, [poolClaimTime, now])
 
   const [winnerSearch, setWinnerSearch] = useState('')
   const [captchaWinner, setCaptchaWinner] = useState('')
@@ -194,7 +166,7 @@ const IGODetails = ({ poolData }) => {
       })
   }, [winnerSearch, captchaWinner, poolData, setWinnerSearchResults])
 
-  const { response: winnerResponse, errorMessage: winnerError } = useFetch(`/user/winner-list/${poolData.id}`, !poolData)
+  const { response: winnerResponse } = useFetch(`/user/winner-list/${poolData.id}`, !poolData)
 
   const winnerList = useMemo(() => {
     return winnerResponse?.data
@@ -413,15 +385,15 @@ const IGODetails = ({ poolData }) => {
     <Layout title={poolData?.title ? `GameFi.org - ${poolData?.title} IGO` : 'GameFi.org - Initial DEX Offering'} description="The first game-specific launchpad conducting Initial Game Offerings for game projects.">
       <div className="px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
         {/* <div className="px-4 lg:px-24 md:container mx-auto lg:block mb-4 md:mb-8 lg:mb-10 xl:mb-16"> */}
-        <Link href="/igo" passHref={true}>
-          <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">
-            <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10"/>
-              <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square"/>
-            </svg>
+        <a onClick={() => {
+          router.back()
+        }} className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500 cursor-pointer">
+          <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10"/>
+            <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square"/>
+          </svg>
             Back
-          </a>
-        </Link>
+        </a>
         { !poolData.id && <div className="uppercase font-bold text-3xl mb-6">IGO Not Found</div>}
         { poolData.id && <IGOContext.Provider value={{
           poolData,

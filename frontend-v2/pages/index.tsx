@@ -7,7 +7,7 @@ import useSWR from 'swr'
 import IGOList from 'components/Pages/Home/IGOList'
 import INOList from 'components/Pages/Home/INOList'
 import GameList from 'components/Pages/Home/GameList'
-import NFTList from 'components/Pages/Home/NFTList'
+// import NFTList from 'components/Pages/Home/NFTList'
 import Instruction from 'components/Pages/Home/Instruction'
 
 import { API_BASE_URL } from '@/utils/constants'

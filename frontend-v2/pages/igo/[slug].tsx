@@ -61,6 +61,7 @@ export const IGOContext = createContext({
 const IGODetails = ({ poolData }) => {
   const router = useRouter()
   const { tierMine } = useAppContext()
+  const [readMore, setReadMore] = useState(false)
 
   const [now, setNow] = useState(new Date())
   useEffect(() => {
@@ -479,10 +480,28 @@ const IGODetails = ({ poolData }) => {
                   </p>
                 </div>
               </div>
-              <div className="font-casual text-sm text-white/80 mt-8">
+              <div className={`font-casual text-sm text-white/80 mt-8 ${poolData.description?.split(' ')?.length > 60 && !readMore && 'line-clamp-4'}`}>
                 { poolData.description }
               </div>
-              {poolData.slug && <div className=""><a href={`/hub/${poolData.slug}`}>Full Research &gt;&gt;</a></div>}
+              <div className="w-full flex items-center justify-center">
+                {
+                  poolData.description?.split(' ')?.length > 60 && !readMore &&
+                  <button onClick={() => setReadMore(true)}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 15L12.3536 15.3536L12 15.7071L11.6464 15.3536L12 15ZM18.3536 9.35355L12.3536 15.3536L11.6464 14.6464L17.6464 8.64645L18.3536 9.35355ZM11.6464 15.3536L5.64645 9.35355L6.35355 8.64645L12.3536 14.6464L11.6464 15.3536Z" fill="white"/>
+                    </svg>
+                  </button>
+                }
+                {
+                  poolData.description?.split(' ')?.length > 60 && readMore &&
+                  <button onClick={() => setReadMore(false)}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 9L12.3536 8.64645L12 8.29289L11.6464 8.64645L12 9ZM18.3536 14.6464L12.3536 8.64645L11.6464 9.35355L17.6464 15.3536L18.3536 14.6464ZM11.6464 8.64645L5.64645 14.6464L6.35355 15.3536L12.3536 9.35355L11.6464 8.64645Z" fill="white"/>
+                    </svg>
+                  </button>
+                }
+              </div>
+              {poolData.slug && <div className="text-gamefiGreen-700 mt-4"><a href={`/hub/${poolData.slug}`}>Full Research &gt;&gt;</a></div>}
               <div className="mt-4">
                 {
                   current?.key === 'tba' &&

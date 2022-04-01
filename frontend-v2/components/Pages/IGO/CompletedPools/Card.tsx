@@ -66,7 +66,7 @@ const Card = ({ item }: {item: Item}) => {
       <a href={`/igo/${item.id}`} className="w-full text-lg font-semibold leading-4 hover:underline">{item.title}</a>
       <div className="w-full 2xl:pr-[200px] lg:pr-[100px] grid grid-cols-2 gap-4 lg:inline-flex justify-between mt-4">
         <div>
-          <div className="text-white/50 uppercase font-semibold text-xs font-mechanic">Total Rised</div>
+          <div className="text-white/50 uppercase font-semibold text-xs font-mechanic">Total Raise</div>
           <div className="text-sm">
             {formatterUSD.format(parseInt(item?.total_sold_coin) * parseFloat(item?.token_conversion_rate)).replace(/\D00(?=\D*$)/, '')}
           </div>

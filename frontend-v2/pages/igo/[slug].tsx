@@ -645,7 +645,7 @@ const IGODetails = ({ poolData }) => {
                   </span>
                 </div>
                 <div className="flex justify-between mb-4 items-center">
-                  <strong className="font-semibold">Price</strong>
+                  <strong className="font-semibold">Token Price</strong>
                   <span>{poolData?.token_conversion_rate} {usd?.symbol}</span>
                 </div>
                 <div className="flex justify-between mb-4 items-center">
@@ -777,7 +777,7 @@ const IGODetails = ({ poolData }) => {
             { failedRequirements
               ? <div className="my-4 w-full flex flex-col gap-4 p-12 rounded items-center justify-center">
                 <Image src={require('@/assets/images/icons/poolOver.png')} alt=""></Image>
-                <div className="text-gamefiDark-200">You do not meet the requirements.</div>
+                <div className="text-gamefiDark-100">Please complete requirements in the <span className="font-bold uppercase">Requirements</span> section.</div>
               </div>
               : <Swap></Swap> }
           </TabPanel>
@@ -785,7 +785,7 @@ const IGODetails = ({ poolData }) => {
             { failedRequirements
               ? <div className="my-4 w-full flex flex-col gap-4 p-12 rounded items-center justify-center">
                 <Image src={require('@/assets/images/icons/poolOver.png')} alt=""></Image>
-                <div className="text-gamefiDark-200">You do not meet the requirements.</div>
+                <div className="text-gamefiDark-100">Please complete requirements in the <span className="font-bold uppercase">Requirements</span> section.</div>
               </div>
               : <Claim></Claim> }
           </TabPanel>

@@ -245,7 +245,7 @@ const deleteAllRedisCurrentPools = (pages = []) => {
  * COMPLETED POOLS
  */
  const getRedisKeyCompletedPools = (page = 1) => {
-  return `completed_pools_${page}`;
+  return `v2_completed_pools_${page}`;
 };
 
 const getRedisCompletedPools = async (page) => {

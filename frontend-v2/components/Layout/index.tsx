@@ -52,13 +52,13 @@ const Layout = ({ children, title, description, image }: Props) => {
         <Sidebar></Sidebar>
       </div>
       <div className="w-full h-full overflow-auto relative">
-        { !suppressed && <div className="text-[11px] font-casual flex py-1 px-4 bg-gamefiGreen-700 text-gamefiDark-900 items-center justify-center">
+        {/* { !suppressed && <div className="text-[11px] font-casual flex py-1 px-4 bg-gamefiGreen-700 text-gamefiDark-900 items-center justify-center">
           <span className="hidden sm:inline">This is the beta version of GameFi.org!</span>
           <a href="https://hub.gamefi.org" target="_blank" className="sm:ml-1 uppercase sm:normal-case font-semibold hover:underline" rel="noreferrer">Go back to the old version</a>
           <svg xmlns="http://www.w3.org/2000/svg" className="absolute right-2 h-4 w-4 inline flex-none cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor" onClick={suppress}>
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
-        </div> }
+        </div> } */}
         <Topbar></Topbar>
         {children}
         <Footer></Footer>

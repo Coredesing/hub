@@ -44,7 +44,7 @@ const IGOList = () => {
             : <div className="mx-auto md:container 2xl:px-16">
               <div className={`text-center justify-center ${listUpcoming.length > 2 ? 'grid grid-cols-2' : 'flex'} ${listUpcoming.length >= 3 ? 'xl:grid xl:grid-cols-3' : 'flex'} 2xl:${listUpcoming.length >= 4 ? 'grid 2xl:grid-cols-4' : 'flex'} gap-4 xl:gap-6 mt-14`}>
                 {listUpcoming.map(item => (
-                  <CardItem key={item.id} item={item}></CardItem>
+                  <div key={item.id} className="mx-auto"><CardItem item={item}></CardItem></div>
                 ))}
               </div>
               {

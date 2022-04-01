@@ -70,9 +70,9 @@ const ListTrending = () => {
           {<CarouselList key={infos.length}>{
             infos.map((item, i) => <WrapperItem
               key={`hot-offers-${i}`}
-              className="w-full mx-2 first:ml-0 last:mr-0"
+              className="w-full mx-2 first:ml-0 last:mr-0 h-full"
             >
-              <div className='w-full'>
+              <div className='w-full h-full'>
                 <NFTCard item={item} showOffer={true} showListing={true}></NFTCard>
               </div>
             </WrapperItem>)

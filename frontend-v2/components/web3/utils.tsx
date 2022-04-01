@@ -321,7 +321,7 @@ export const useCurrency = (item?: Item) => {
 }
 
 export const currencyNative = (network: string) => {
-  switch (network) {
+  switch (String(network).toLowerCase()) {
   case 'bsc': {
     return BNB
   }
@@ -341,7 +341,7 @@ export const currencyNative = (network: string) => {
 }
 
 export const currencyStable = (network: string) => {
-  switch (network) {
+  switch (String(network).toLowerCase()) {
   case 'bsc': {
     return BUSD_BSC
   }

@@ -3,6 +3,8 @@ import style from './style.module.scss'
 import { useSwipeable } from 'react-swipeable'
 import { ObjectType } from '@/utils/types'
 import { ScrollingCarousel } from '@trendyol-js/react-carousel'
+import { Carousel as CarouselMobile } from 'react-responsive-carousel'
+import { useMediaQuery } from 'react-responsive'
 
 type Props = {
   children: any;
@@ -131,33 +133,64 @@ export default ListSwiper
 export const CarouselList = ({
   children
 }: { children: ReactElement[] }) => {
-  return <ScrollingCarousel
-    className={style.carouselList}
-    leftIcon={<div className="w-10 h-full grid items-center">
-      <button className={' '} >
-        <svg width="32" height="122" viewBox="0 0 32 122" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22.5 61.5H2.5" stroke="white" strokeMiterlimit="10" />
-          <path d="M9.5 68.5L2.5 61.5L9.5 54.5" stroke="white" strokeMiterlimit="10" strokeLinecap="square" />
-          <path opacity="0.4" d="M31 23.5L20 34.5" stroke="#A0A4B2" />
-          <path d="M31 0.5V8.5" stroke="white" />
-          <path opacity="0.4" d="M31 99L20 88" stroke="#A0A4B2" />
-          <path d="M31 122V114" stroke="white" />
-        </svg>
-      </button>
-    </div>}
-    rightIcon={<div className="w-10 h-full grid items-center justify-end">
-      <button>
-        <svg width="32" height="122" viewBox="0 0 32 122" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9.5 60.5L29.5 60.5" stroke="white" strokeMiterlimit="10" />
-          <path d="M22.5 53.5L29.5 60.5L22.5 67.5" stroke="white" strokeMiterlimit="10" strokeLinecap="square" />
-          <path opacity="0.4" d="M1 98.5L12 87.5" stroke="#A0A4B2" />
-          <path d="M1 121.5L1 113.5" stroke="white" />
-          <path opacity="0.4" d="M1 23L12 34" stroke="#A0A4B2" />
-          <path d="M1 0L0.999999 8" stroke="white" />
-        </svg>
-      </button>
-    </div>}
-  >
-    {children}
-  </ScrollingCarousel>
+  const isSmScreen = useMediaQuery({ maxWidth: '540px' })
+  return !isSmScreen
+    ? <ScrollingCarousel
+      className={style.carouselList}
+      leftIcon={<div className="w-10 h-full grid items-center">
+        <button className={' '} >
+          <svg width="32" height="122" viewBox="0 0 32 122" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.5 61.5H2.5" stroke="white" strokeMiterlimit="10" />
+            <path d="M9.5 68.5L2.5 61.5L9.5 54.5" stroke="white" strokeMiterlimit="10" strokeLinecap="square" />
+            <path opacity="0.4" d="M31 23.5L20 34.5" stroke="#A0A4B2" />
+            <path d="M31 0.5V8.5" stroke="white" />
+            <path opacity="0.4" d="M31 99L20 88" stroke="#A0A4B2" />
+            <path d="M31 122V114" stroke="white" />
+          </svg>
+        </button>
+      </div>}
+      rightIcon={<div className="w-10 h-full grid items-center justify-end">
+        <button>
+          <svg width="32" height="122" viewBox="0 0 32 122" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.5 60.5L29.5 60.5" stroke="white" strokeMiterlimit="10" />
+            <path d="M22.5 53.5L29.5 60.5L22.5 67.5" stroke="white" strokeMiterlimit="10" strokeLinecap="square" />
+            <path opacity="0.4" d="M1 98.5L12 87.5" stroke="#A0A4B2" />
+            <path d="M1 121.5L1 113.5" stroke="white" />
+            <path opacity="0.4" d="M1 23L12 34" stroke="#A0A4B2" />
+            <path d="M1 0L0.999999 8" stroke="white" />
+          </svg>
+        </button>
+      </div>}
+    >
+      {children}
+    </ScrollingCarousel>
+    : <CarouselMobile
+      className={style.carouselMobile}
+      renderArrowPrev={(prev, hasPrev, label) => {
+        return hasPrev && <button className='absolute left-0 top-1/2 z-50' style={{ transform: 'translate(0, -50%)' }} onClick={prev} >
+          <svg width="32" height="122" viewBox="0 0 32 122" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.5 61.5H2.5" stroke="white" strokeMiterlimit="10" />
+            <path d="M9.5 68.5L2.5 61.5L9.5 54.5" stroke="white" strokeMiterlimit="10" strokeLinecap="square" />
+            <path opacity="0.4" d="M31 23.5L20 34.5" stroke="#A0A4B2" />
+            <path d="M31 0.5V8.5" stroke="white" />
+            <path opacity="0.4" d="M31 99L20 88" stroke="#A0A4B2" />
+            <path d="M31 122V114" stroke="white" />
+          </svg>
+        </button>
+      }}
+      renderArrowNext={(next, hasNext, label) => {
+        return hasNext && <button className='absolute right-0 top-1/2 z-50' style={{ transform: 'translate(0, -50%)' }} onClick={next}>
+          <svg width="32" height="122" viewBox="0 0 32 122" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.5 60.5L29.5 60.5" stroke="white" strokeMiterlimit="10" />
+            <path d="M22.5 53.5L29.5 60.5L22.5 67.5" stroke="white" strokeMiterlimit="10" strokeLinecap="square" />
+            <path opacity="0.4" d="M1 98.5L12 87.5" stroke="#A0A4B2" />
+            <path d="M1 121.5L1 113.5" stroke="white" />
+            <path opacity="0.4" d="M1 23L12 34" stroke="#A0A4B2" />
+            <path d="M1 0L0.999999 8" stroke="white" />
+          </svg>
+        </button>
+      }}
+    >
+      {children}
+    </CarouselMobile>
 }

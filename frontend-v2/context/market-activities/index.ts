@@ -146,7 +146,7 @@ export const useDiscoverMarket = () => {
       const totalRecords = +result.total || 0
       const totalPage = Math.ceil(totalRecords / filter.limit)
       const currentPage = +result.page || 1
-      let listData = result.data
+      const listData = result.data
       const setListData = (list = []) => {
         const setData = {
           ...oldData,
@@ -190,7 +190,7 @@ export const useDiscoverMarket = () => {
         const objListData: ObjectType = {}
         await Promise.all(listData.map((item, idx: number) => new Promise((resolve) => {
           getNftInfo(item, provider, { allowGetOwnerNft }).then((d) => {
-            objListData[idx] = d.item;
+            objListData[idx] = d.item
             const outputLists = Object.values(objListData)
             if (allowSetOneByOne) {
               dispatch({
@@ -261,7 +261,7 @@ export const useCollectionsMarket = () => {
       const totalRecords = +result.total || 0
       const totalPage = Math.ceil(totalRecords / filter.limit)
       const currentPage = +result.page || 1
-      let listData = result.data
+      const listData = result.data
       const setListData = (list = []) => {
         const setData = {
           ...oldData,
@@ -309,7 +309,7 @@ export const useCollectionsMarket = () => {
         const objListData: ObjectType = {}
         await Promise.all(listData.map((item, idx: number) => new Promise((resolve) => {
           getNftInfo(item, provider, { allowGetOwnerNft }).then((d) => {
-            objListData[idx] = d.item;
+            objListData[idx] = d.item
             const outputLists = Object.values(objListData)
             if (allowSetOneByOne) {
               dispatch({

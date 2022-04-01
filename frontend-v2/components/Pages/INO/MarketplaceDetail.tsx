@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { ObjectType } from '@/utils/types'
 import PoolDetail from '@/components/Base/PoolDetail'
 import { TabPanel, Tabs } from '@/components/Base/Tabs'
-import { getNetworkByAlias, getTXLink, MARKETPLACE_CONTRACT, useWeb3Default } from '@/components/web3'
+import { getNetworkByAlias, getTXLink, MARKETPLACE_CONTRACT, useWeb3Default, CURRENCIES } from '@/components/web3'
 import { useMyWeb3 } from '@/components/web3/context'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { formatHumanReadableTime, formatNumber, shortenAddress, fetcher } from '@/utils'
@@ -33,7 +33,6 @@ import { ClipLoader } from 'react-spinners'
 import Image from 'next/image'
 import Link from 'next/link'
 import CountDownTimeV1 from '@/components/Base/CountDownTime'
-import { CURRENCIES } from '@/components/web3'
 
 type Props = {
   projectInfo: ObjectType;
@@ -435,6 +434,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
   useEffect(() => {
     if (!libraryDefaultTemporary) return
     marketActivitiesState.actions.setActivitiesMarketDetail(filterActivities, libraryDefaultTemporary)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterActivities, libraryDefaultTemporary])
 
   const onChangePageActivities = (page: number) => {
@@ -446,11 +446,11 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
 
   const isFirstEdition = useMemo(() => {
     if (projectInfo?.sale_address && (addressOwnerNFT || tokenOnSale.owner)) {
-      return BigNumber.from(projectInfo?.sale_address).eq(addressOwnerNFT || 0) || BigNumber.from(projectInfo?.sale_address).eq(tokenOnSale.owner || 0);
+      return BigNumber.from(projectInfo?.sale_address).eq(addressOwnerNFT || 0) || BigNumber.from(projectInfo?.sale_address).eq(tokenOnSale.owner || 0)
     }
   }, [projectInfo?.sale_address, addressOwnerNFT, tokenOnSale.owner])
 
-  const [countdown, setCountdown] = useState<{ date1: number; date2: number; title: string } & ObjectType<any>>({ date1: 0, date2: 0, title: '' });
+  const [countdown, setCountdown] = useState<{ date1: number; date2: number; title: string } & ObjectType<any>>({ date1: 0, date2: 0, title: '' })
   const handleCountdown = useCallback(() => {
     if (!projectInfo || !projectInfo.sale_address) return
     const now = Date.now()
@@ -468,7 +468,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
     handleCountdown()
   }, [handleCountdown])
 
-  const [myOfferInfo, setMyOfferInfo] = useState<{ amount: string; currency: string, symbol: string } | null>(null)
+  const [myOfferInfo, setMyOfferInfo] = useState<{ amount: string; currency: string; symbol: string } | null>(null)
   const getMyOffer = useCallback(async () => {
     if (!MarketplaceContract || !projectInfo.token_address || !account) {
       return setMyOfferInfo(null)

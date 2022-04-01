@@ -39,7 +39,7 @@ const MakeOfferModal = ({ tokenOnSale, lastOffer, myBalance, ...props }: Props) 
           const numReturned = BigNumber.from(lastOffer.amount).sub(valEther)
           if (numReturned.eq(0)) {
             setNotiMsg({ type: 'error', msg: <p>You already placed an offer with {utils.formatEther(lastOffer.amount)} {tokenOnSale.symbol}</p> })
-            return;
+            return
           }
           if (+val && numReturned) {
             const valueReturned = utils.formatEther(numReturned)

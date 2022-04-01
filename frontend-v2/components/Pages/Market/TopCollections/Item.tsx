@@ -44,7 +44,7 @@ export const InfoCollection = ({ item, isDisplayJoin, isShowSoldOut }: Props) =>
       .map((t: string) => t.replace('/\n', '').trim())
       .filter((t: string) => t)
     if (childs.length > 1) {
-      childs.map((t: string, idx) => {
+      childs.forEach((t: string, idx) => {
         elements.push(<p key={idx} className='text-sm text-left px-2 font-normal' style={{ lineHeight: '20px' }}>-{' '}{t}</p>)
       })
       return elements
@@ -69,9 +69,9 @@ export const InfoCollection = ({ item, isDisplayJoin, isShowSoldOut }: Props) =>
     {!countdown.isFinished && countdown.date1 > 0 && !isSoldOut && <CountDownTimeV1 className={styles.countdown} time={countdown} title={countdown.title} />}
     {
       isSoldOut && isShowSoldOut && <div className="flex justify-center">
-          <SoldOutIcon />
-        </div>
-      }
+        <SoldOutIcon />
+      </div>
+    }
     {
       isDisplayJoin && <div className='text-center mt-4'>
         <Link href={`/market/collection/${item.slug}`} passHref>

@@ -29,7 +29,7 @@ const useMarketActivities = () => {
 
   const [state, dispatch] = useReducer(tiersReducer, initState)
 
-  const setActivitiesMarketDetail = async (filter: MarketDetailFilter, provider: Web3Provider) => {
+  const setActivitiesMarketDetail = useCallback(async (filter: MarketDetailFilter, provider: Web3Provider) => {
     const oldData = state.data
     dispatch({ type: marketActivitiesActions.LOADING, payload: oldData })
     try {
@@ -43,7 +43,7 @@ const useMarketActivities = () => {
         return
       }
 
-      const response = await fetcher(`${process.env.NEXT_PUBLIC_BASE_URL}/marketplace/collection/${filter.project}/activities?page=${page}&limit=${limit}&token_id=${filter.tokenId}`)
+      const response = await fetcher(`${API_BASE_URL}/marketplace/collection/${filter.project}/activities?page=${page}&limit=${limit}&token_id=${filter.tokenId}`)
       const result = response?.data || null
       if (!result) {
         dispatch({ type: marketActivitiesActions.SUCCESS, payload: oldData })
@@ -95,7 +95,7 @@ const useMarketActivities = () => {
         payload: error
       })
     }
-  }
+  }, [state])
 
   return {
     state,
@@ -146,7 +146,7 @@ export const useDiscoverMarket = () => {
       const totalRecords = +result.total || 0
       const totalPage = Math.ceil(totalRecords / filter.limit)
       const currentPage = +result.page || 1
-      let listData = result.data
+      const listData = result.data
       const setListData = (list = []) => {
         const setData = {
           ...oldData,
@@ -190,7 +190,7 @@ export const useDiscoverMarket = () => {
         const objListData: ObjectType = {}
         await Promise.all(listData.map((item, idx: number) => new Promise((resolve) => {
           getNftInfo(item, provider, { allowGetOwnerNft }).then((d) => {
-            objListData[idx] = d.item;
+            objListData[idx] = d.item
             const outputLists = Object.values(objListData)
             if (allowSetOneByOne) {
               dispatch({
@@ -261,7 +261,7 @@ export const useCollectionsMarket = () => {
       const totalRecords = +result.total || 0
       const totalPage = Math.ceil(totalRecords / filter.limit)
       const currentPage = +result.page || 1
-      let listData = result.data
+      const listData = result.data
       const setListData = (list = []) => {
         const setData = {
           ...oldData,
@@ -309,7 +309,7 @@ export const useCollectionsMarket = () => {
         const objListData: ObjectType = {}
         await Promise.all(listData.map((item, idx: number) => new Promise((resolve) => {
           getNftInfo(item, provider, { allowGetOwnerNft }).then((d) => {
-            objListData[idx] = d.item;
+            objListData[idx] = d.item
             const outputLists = Object.values(objListData)
             if (allowSetOneByOne) {
               dispatch({

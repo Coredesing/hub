@@ -9,7 +9,7 @@ const PressKit = () => (
       <div className="uppercase font-bold text-2xl mb-2 mt-8">WE PROVIDE EXTENSIVE SERVICES FOR BLOCKCHAIN GAME DEVELOPERS, PLAYERS, AND INVESTORS</div>
       <p className="font-casual text-sm leading-6 opacity-80 mb-8">GameFi.org is an all-encompassing hub for game finance. Its ecosystem features GameFi Hub, Launchpad, Marketplace, Guild Hub, and Metaverse. GameFi.org was created to work out problems that most game studios have encountered and discovered effective ways in developing a platform that builds relationships with game developers, players, and investors all in one place.</p>
       <div className="uppercase font-bold text-2xl mb-2 mt-8">GENERAL INFORMATION</div>
-      <p className="font-casual text-sm leading-6 opacity-80">Foundation date: August 2021</p>
+      <p className="font-casual text-sm leading-6 opacity-80">Founded: August 2021</p>
       <p className="font-casual text-sm leading-6 opacity-80">
         Website: <a href="https://gamefi.org/" className="text-gamefiGreen-500 hover:text-gamefiGreen-800" target="_blank" rel="noreferrer">https://gamefi.org/</a>
       </p>
@@ -20,7 +20,7 @@ const PressKit = () => (
       <ul className="font-casual text-sm leading-6 opacity-80 list-disc pl-8">
         <li>Twitter: <a href="https://twitter.com/GameFi_Official" className="text-gamefiGreen-500 hover:text-gamefiGreen-800" target="_blank" rel="noreferrer">https://twitter.com/GameFi_Official</a></li>
         <li>Telegram Global Chat: <a href="https://t.me/GameFi_Official" className="text-gamefiGreen-500 hover:text-gamefiGreen-800" target="_blank" rel="noreferrer">https://t.me/GameFi_Official</a></li>
-        <li>Announcement Channel : <a href="https://t.me/GameFi_OfficialANN" className="text-gamefiGreen-500 hover:text-gamefiGreen-800" target="_blank" rel="noreferrer">https://t.me/GameFi_OfficialANN</a></li>
+        <li>Announcement Channel: <a href="https://t.me/GameFi_OfficialANN" className="text-gamefiGreen-500 hover:text-gamefiGreen-800" target="_blank" rel="noreferrer">https://t.me/GameFi_OfficialANN</a></li>
         <li>Discord: <a href="https://discord.gg/gamefi" className="text-gamefiGreen-500 hover:text-gamefiGreen-800" target="_blank" rel="noreferrer">https://discord.gg/gamefi</a></li>
         <li>Facebook: <a href="https://www.facebook.com/GameFi.org/" className="text-gamefiGreen-500 hover:text-gamefiGreen-800" target="_blank" rel="noreferrer">https://www.facebook.com/GameFi.org/</a></li>
         <li>LinkedIn: <a href="https://www.linkedin.com/company/gamefi-official/" className="text-gamefiGreen-500 hover:text-gamefiGreen-800" target="_blank" rel="noreferrer">https://www.linkedin.com/company/gamefi-official/</a></li>
@@ -28,7 +28,7 @@ const PressKit = () => (
 
       <div className="uppercase font-bold text-2xl mb-2 mt-8">ECOSYSTEM FEATURES</div>
       <p className="font-casual text-sm leading-6 font-bold mt-4">
-        GameFi.org Launchpad
+        GameFi Launchpad
       </p>
       <p className="font-casual text-sm leading-6 opacity-80">GameFi Hub will be an ultimate gaming destination for gamers, investors, and other game studios.</p>
       <p className="font-casual text-sm leading-6 font-bold mt-4">
@@ -36,7 +36,7 @@ const PressKit = () => (
       </p>
       <p className="font-casual text-sm leading-6 opacity-80">A listing page of the industry’s most creative blockchain games, where players, investors, and traders can receive in-depth information about their game modes, game studios, whitepapers, tokenomics as well as planned IGO events.</p>
       <p className="font-casual text-sm leading-6 font-bold mt-4">
-        GameFi.org Marketplace
+        GameFi Marketplace
       </p>
       <p className="font-casual text-sm leading-6 opacity-80">GameFi.org Marketplace is the destination for everyone to track and trade in-game items, boxes & virtual lands from various collections of game finance projects, updating in real-time.</p>
       <p className="font-casual text-sm leading-6 font-bold mt-4">
@@ -118,8 +118,8 @@ const PressKit = () => (
       </div>
 
       <div className="uppercase font-bold text-2xl mb-2 mt-8">FULL KIT</div>
-      <p className="font-casual text-sm leading-6 opacity-80">Download the full GameFi.org Press kit <a target={'_blank'} href={'https://drive.google.com/file/d/1gWo9XYdKk-u0PEmeORoeWWCPv1_RCmqs/view?usp=sharing'} className={'text-gamefiGreen-400'} rel="noreferrer">here</a></p>
-      <p className="font-casual text-sm opacity-80">Last Update: Apr 01, 2022</p>
+      <p className="font-casual text-sm leading-6 opacity-80">Download the full GameFi.org Press kit <a target={'_blank'} href={'https://drive.google.com/file/d/1gWo9XYdKk-u0PEmeORoeWWCPv1_RCmqs/view?usp=sharing'} className={'text-gamefiGreen-400'} rel="noreferrer"><strong>HERE</strong></a></p>
+      <p className="font-casual text-sm opacity-80">Last update: Apr 01, 2022</p>
     </div>
   </Layout>
 )

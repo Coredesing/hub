@@ -4,7 +4,7 @@ import { Carousel } from 'react-responsive-carousel'
 import { useMediaQuery } from 'react-responsive'
 import Link from 'next/link'
 import Flicking, { ViewportSlot } from '@egjs/react-flicking'
-import { Pagination, Sync } from '@egjs/flicking-plugins'
+import { AutoPlay, Pagination, Sync } from '@egjs/flicking-plugins'
 import arrowLeft from 'assets/images/icons/arrow-left.png'
 import arrowRight from 'assets/images/icons/arrow-right.png'
 
@@ -38,7 +38,7 @@ const GameCarousel = ({ items, likes }: Props) => {
           activeClass: 'thumbnail-bullet-acitve'
         }
       ]
-    })])
+    }), new AutoPlay({ duration: 3000, direction: 'NEXT', stopOnHover: true })])
   }, [])
 
   const prev = () => {

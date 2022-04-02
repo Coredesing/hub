@@ -784,6 +784,12 @@ class CampaignController {
         // calc max token that user can claimable
         maxTokenClaim = new BigNumber(claimConfig.max_percent_claim).dividedBy(100).multipliedBy(tokenPurchased)
           .decimalPlaces(0, BigNumber.ROUND_DOWN).toFixed(0, BigNumber.ROUND_DOWN);
+
+        // Hardcode for MITA pool
+        if (campaign_id === 99 || campaign_id === '99' || campaign_id === 100 || campaign_id === '100') {
+          maxTokenClaim = new BigNumber(claimConfig.max_percent_claim).dividedBy(100).dividedBy(10 ** 10).multipliedBy(tokenPurchased)
+            .decimalPlaces(0, BigNumber.ROUND_DOWN).toFixed(0, BigNumber.ROUND_DOWN);
+        }
       }
 
       console.log(`max token claim ${maxTokenClaim}`);

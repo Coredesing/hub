@@ -11,7 +11,7 @@ export const useUserClaimed = (address: string, networkAlias: string, decimals: 
 
   const updateClaimedTokens = useCallback(async () => {
     try {
-      if (!address || !account || !provider || network?.alias !== networkAlias.toLowerCase() || !decimals) {
+      if (!address || !account || !provider || !decimals) {
         return
       }
       const poolContract = new ethers.Contract(address, POOL_ABI, provider)
@@ -20,7 +20,7 @@ export const useUserClaimed = (address: string, networkAlias: string, decimals: 
     } catch (e) {
       console.debug(e)
     }
-  }, [account, address, decimals, network?.alias, networkAlias, provider])
+  }, [account, address, decimals, provider])
 
   useEffect((): any => {
     updateClaimedTokens()

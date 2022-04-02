@@ -10,7 +10,7 @@ export const useUserPurchased = (address: string, networkAlias: string, decimals
   const { provider } = useLibraryDefaultFlexible(networkAlias)
 
   const updatePurchasedTokens = useCallback(async () => {
-    if (!address || !account || !provider || network?.alias !== networkAlias.toLowerCase() || !decimals) {
+    if (!address || !account || !provider || !decimals) {
       return
     }
     try {
@@ -20,7 +20,7 @@ export const useUserPurchased = (address: string, networkAlias: string, decimals
     } catch (e) {
       console.debug(e)
     }
-  }, [account, address, decimals, network?.alias, networkAlias, provider])
+  }, [account, address, decimals, provider])
 
   useEffect((): any => {
     updatePurchasedTokens()

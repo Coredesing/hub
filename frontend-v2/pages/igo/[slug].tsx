@@ -754,12 +754,7 @@ const IGODetails = ({ poolData }) => {
               : <Swap></Swap> }
           </TabPanel>
           <TabPanel value={tab} index={2}>
-            { failedRequirements
-              ? <div className="my-4 w-full flex flex-col gap-4 p-12 rounded items-center justify-center">
-                <Image src={require('@/assets/images/icons/poolOver.png')} alt=""></Image>
-                <div className="text-gamefiDark-100">Please complete requirements in the <span className="font-bold uppercase">Requirements</span> section.</div>
-              </div>
-              : <Claim></Claim> }
+            <Claim></Claim>
           </TabPanel>
           <TabPanel value={tab} index={3}>
             <div className="bg-gamefiDark-630/30 clipped-t-r rounded-md p-7 font-casual text-sm flex flex-col xl:flex-row gap-6 mt-4">

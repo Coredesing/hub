@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import Recaptcha from '@/components/Base/Recaptcha'
-import { debounce, fetcher, printNumber, useFetch } from '@/utils'
+import { debounce, fetcher, printNumber } from '@/utils'
 import { useMyWeb3 } from '@/components/web3/context'
 import { useBalanceToken, useTokenAllowance, useTokenApproval } from '@/components/web3/utils'
 import { ethers } from 'ethers'
@@ -101,12 +101,16 @@ const Swap = () => {
     setRounds(rounds.map(round => round.phase === phase ? { ...round, purchased: currentPurchased } : round))
   }, [phase, usdPurchased])
 
+  const isPreOrderTime = useMemo(() => {
+    return poolData?.start_pre_order_time && current?.key === 'pre-order'
+  }, [current?.key, poolData?.start_pre_order_time])
+
+  const preOrderAllowed = useMemo(() => {
+    return tierMine?.id >= poolData?.pre_order_min_tier
+  }, [poolData?.pre_order_min_tier, tierMine?.id])
+
   useEffect(() => {
     if (poolData?.start_time) {
-      const startTime = new Date(Number(poolData?.start_time) * 1000).getTime()
-      const endTime = new Date(Number(poolData?.finish_time) * 1000).getTime()
-      const freeBuyTime = hasFCFS ? new Date(Number(poolData.freeBuyTimeSetting.start_buy_time) * 1000).getTime() : null
-
       if (current?.key === 'buying-phase') {
         return setPhase(1)
       }
@@ -125,7 +129,7 @@ const Swap = () => {
 
       setPhase(null)
     }
-  }, [now, poolData])
+  }, [current?.key, isPreOrderTime, now, poolData, preOrderAllowed])
 
   // Approve Token
   const { allowance, load: loadAllowance, loading: loadingAllowance, error } = useTokenAllowance(usd, account, poolData?.campaign_hash, poolData?.network_available)
@@ -175,13 +179,6 @@ const Swap = () => {
   }, 5000)
 
   // Pre-order
-  const isPreOrderTime = useMemo(() => {
-    return poolData?.start_pre_order_time && current?.key === 'pre-order'
-  }, [current?.key, poolData?.start_pre_order_time])
-
-  const preOrderAllowed = useMemo(() => {
-    return tierMine?.id >= poolData?.pre_order_min_tier
-  }, [poolData?.pre_order_min_tier, tierMine?.id])
 
   const swappable = useMemo(() => {
     // console.debug('bbbb', poolData?.campaign_status, poolData?.is_deploy, allocation, allowance)
@@ -208,22 +205,7 @@ const Swap = () => {
         poolData?.network_available?.toLowerCase() === network?.alias &&
         phase !== null &&
         Number(remainingToken) > 0
-  }, [
-    isPreOrderTime,
-    tierMine?.id,
-    poolData?.pre_order_min_tier,
-    poolData?.is_deploy,
-    poolData?.network_available,
-    poolData?.campaign_status,
-    allocation,
-    loadingApproval,
-    loadingAllowance,
-    allowance,
-    usd.address,
-    network?.alias,
-    remainingToken,
-    phase
-  ])
+  }, [isPreOrderTime, tierMine?.id, poolData?.pre_order_min_tier, poolData?.is_deploy, poolData?.network_available, current?.key, allocation, loadingApproval, loadingAllowance, allowance, usd.address, network?.alias, remainingToken, phase])
 
   const getUserSignature = async () => {
     let payload = {

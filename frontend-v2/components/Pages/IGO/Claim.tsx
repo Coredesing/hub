@@ -1,10 +1,9 @@
 import { useMyWeb3 } from '@/components/web3/context'
-import { fetcher, formatPrice, formatterUSD, printNumber } from '@/utils'
+import { fetcher, formatPrice, printNumber } from '@/utils'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
 import PresalePoolABI from '@/components/web3/abis/PreSalePool.json'
 import { API_BASE_URL, CLAIM_TYPE } from '@/utils/constants'
-import { getContract } from '@/components/web3/contract'
 import { useUserPurchased } from '@/hooks/useUserPurchased'
 import { useUserClaimed } from '@/hooks/useUserClaimed'
 import { useLibraryDefaultFlexible } from '@/components/web3/utils'
@@ -15,12 +14,13 @@ import { IGOContext } from '@/pages/igo/[slug]'
 import Image from 'next/image'
 import { TIMELINE } from './constants'
 import BigNumber from 'bignumber.js'
+import { getNetworkByAlias, switchNetwork } from '@/components/web3'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 const PER_PAGE = 5
 
 const Claim = () => {
-  const { poolData, usd, current, timeline } = useContext(IGOContext)
+  const { poolData, usd, timeline } = useContext(IGOContext)
   const [now, setNow] = useState(new Date())
   useEffect(() => {
     const interval = setInterval(() => {
@@ -58,6 +58,11 @@ const Claim = () => {
 
     return data
   }, [now, poolData?.campaignClaimConfig])
+
+  useEffect(() => {
+    const a = poolData?.campaignClaimConfig?.findIndex(config => config.id === currentPhase?.id)
+    setPage(Math.ceil((Number(a) + 1) / PER_PAGE))
+  }, [currentPhase?.id, poolData?.campaignClaimConfig])
 
   const configs = useMemo(() => {
     const claimedPercentage = (Number(claimedTokens || 0) / Number(purchasedTokens || 1) * 100).toPrecision(4)
@@ -125,8 +130,8 @@ const Claim = () => {
       new Date(Number(poolData?.release_time) * 1000).getTime() <= now.getTime() &&
       prettyFloat(prettyFloat(currentPhase?.max_percent_claim) * prettyFloat(purchasedTokens) / 100) > prettyFloat(claimedTokens) &&
       prettyFloat(claimedTokens) < prettyFloat(purchasedTokens) &&
-      poolData?.network_available === network?.alias
-  }, [purchasedTokens, poolData?.release_time, poolData?.network_available, now, currentPhase?.max_percent_claim, claimedTokens, network?.alias])
+      claimTypes.find(type => type.name === CLAIM_TYPE[0])?.value > 0
+  }, [claimTypes, purchasedTokens, poolData?.release_time, now, currentPhase?.max_percent_claim, claimedTokens])
 
   // Actions
   const getUserSignature = async () => {
@@ -172,7 +177,16 @@ const Claim = () => {
   }
 
   const handleClaim = async () => {
+    if (!account || !network) {
+      return
+    }
+
+    if (network?.alias !== poolData?.network_available) {
+      switchNetwork(library?.provider, getNetworkByAlias(poolData?.network_available).id)
+      return
+    }
     const { signature, amount } = await getUserSignature()
+    console.log(amount)
     if (!signature || !amount) return
 
     if (amount && new BigNumber(amount).lte(0)) return toast.error('Please wait until the next milestone to claim the tokens.')
@@ -200,7 +214,7 @@ const Claim = () => {
 
   return (
     <>
-      { now.getTime() > timeline[TIMELINE.BUYING_PHASE].end?.getTime() && Number(purchasedTokens) > 0 &&
+      { now.getTime() > timeline[TIMELINE.BUYING_PHASE].end?.getTime() &&
       <div className="w-full my-4 flex flex-col xl:flex-row gap-6">
         <div className="w-full xl:w-1/3 bg-gamefiDark-630/30 p-7 rounded clipped-t-r">
           <p className="uppercase font-mechanic font-bold text-lg mb-6">Your Allocation</p>
@@ -346,12 +360,12 @@ const Claim = () => {
           <div>This pool has not completed yet. Please wait until Claim Phase.</div>
         </div>
       }
-      {
+      {/* {
         current?.key === 'claim' && !usdPurchased && <div className="w-full mt-6 p-12 text-gamefiDark-200 flex flex-col items-center justify-center gap-4">
           <Image src={require('@/assets/images/icons/calendar.png')} alt=""></Image>
           <div>You do not have enough tokens to claim.</div>
         </div>
-      }
+      } */}
     </>
   )
 }

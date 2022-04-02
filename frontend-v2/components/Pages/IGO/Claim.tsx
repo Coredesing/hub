@@ -14,6 +14,7 @@ import { ethers } from 'ethers'
 import { IGOContext } from '@/pages/igo/[slug]'
 import Image from 'next/image'
 import { TIMELINE } from './constants'
+import BigNumber from 'bignumber.js'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 const PER_PAGE = 5
@@ -37,8 +38,8 @@ const Claim = () => {
   }, [poolData?.campaignClaimConfig?.length])
 
   // Claim Info
-  const { userPurchasedTokens: purchasedTokens } = useUserPurchased(poolData?.campaign_hash, poolData?.network_available)
-  const { userClaimedTokens: claimedTokens, updateClaimedTokens } = useUserClaimed(poolData?.campaign_hash, poolData?.network_available)
+  const { userPurchasedTokens: purchasedTokens } = useUserPurchased(poolData?.campaign_hash, poolData?.network_available, [99, 100].includes(poolData?.id) ? 18 : poolData?.decimals)
+  const { userClaimedTokens: claimedTokens, updateClaimedTokens } = useUserClaimed(poolData?.campaign_hash, poolData?.network_available, poolData?.decimals)
   const { network: poolNetwork } = useLibraryDefaultFlexible(poolData?.network_available)
 
   const usdPurchased = useMemo(() => {
@@ -59,12 +60,12 @@ const Claim = () => {
   }, [now, poolData?.campaignClaimConfig])
 
   const configs = useMemo(() => {
-    const claimedPercentage = Number(claimedTokens || 0) / Number(purchasedTokens || 1) * 100
+    const claimedPercentage = (Number(claimedTokens || 0) / Number(purchasedTokens || 1) * 100).toPrecision(4)
     const items = poolData?.campaignClaimConfig && poolData.campaignClaimConfig.map((config) => {
       let status = 'Unknown'
 
       if (purchasedTokens && claimedTokens) {
-        status = claimedPercentage < Number(config.max_percent_claim) ? 'Claimable' : 'Claimed'
+        status = Number(claimedPercentage) < Number(config.max_percent_claim) ? 'Claimable' : 'Claimed'
       }
 
       if (new Date().getTime() < new Date(Number(config.start_time) * 1000).getTime()) {
@@ -90,14 +91,6 @@ const Claim = () => {
   const prettyFloat = (input: number | string) => {
     return parseFloat(Number(input || '0').toFixed(5))
   }
-
-  const claimable = useMemo(() => {
-    return Number(purchasedTokens || 0) > 0 &&
-      new Date(Number(poolData?.release_time) * 1000).getTime() <= now.getTime() &&
-      prettyFloat(prettyFloat(currentPhase?.max_percent_claim) * prettyFloat(purchasedTokens) / 100) > prettyFloat(claimedTokens) &&
-      prettyFloat(claimedTokens) < prettyFloat(purchasedTokens) &&
-      poolData?.network_available === network?.alias
-  }, [purchasedTokens, poolData?.release_time, poolData?.network_available, now, currentPhase?.max_percent_claim, claimedTokens, network?.alias])
 
   const claimTypes = useMemo(() => {
     if (!configs?.length) {
@@ -126,6 +119,15 @@ const Claim = () => {
     })
     return results
   }, [configs])
+
+  const claimable = useMemo(() => {
+    return Number(purchasedTokens || 0) > 0 &&
+      new Date(Number(poolData?.release_time) * 1000).getTime() <= now.getTime() &&
+      prettyFloat(prettyFloat(currentPhase?.max_percent_claim) * prettyFloat(purchasedTokens) / 100) > prettyFloat(claimedTokens) &&
+      prettyFloat(claimedTokens) < prettyFloat(purchasedTokens) &&
+      poolData?.network_available === network?.alias &&
+      claimTypes[CLAIM_TYPE[0]]?.value > 0
+  }, [purchasedTokens, poolData?.release_time, poolData?.network_available, now, currentPhase?.max_percent_claim, claimedTokens, network?.alias, claimTypes])
 
   // Actions
   const getUserSignature = async () => {
@@ -174,11 +176,11 @@ const Claim = () => {
     const { signature, amount } = await getUserSignature()
     if (!signature || !amount) return
 
-    if (amount && ethers.utils.parseEther(amount).lte(0)) return toast.error('Please wait until the next milestone to claim the tokens.')
+    if (amount && new BigNumber(amount).lte(0)) return toast.error('Please wait until the next milestone to claim the tokens.')
 
     const loading = toast.loading('start claim token')
     try {
-      const poolContract = getContract(poolData?.campaign_hash, PresalePoolABI, library, account)
+      const poolContract = new ethers.Contract(poolData?.campaign_hash, PresalePoolABI, library.getSigner())
       if (!poolContract) return
 
       const transaction = await poolContract.claimTokens(account, amount, signature)

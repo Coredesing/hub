@@ -522,6 +522,10 @@ class CampaignController {
       let minBuy = 0, maxBuy = 0;
       let winner;
       const current = ConvertDateUtils.getDatetimeNowUTC();
+      const currentTier = (await HelperUtils.getUserTierSmartWithCached(userWalletAddress))[0];
+      if (currentTier < camp.min_tier) {
+        return HelperUtils.responseBadRequest("You need to achieve a higher rank for buying tokens");
+      }
 
       // FREE BUY TIME:
       const { maxBonus, isFreeBuyTime, existWhitelist } = await campaignService.getFreeBuyTimeInfo(camp, userWalletAddress);
@@ -539,7 +543,6 @@ class CampaignController {
       // check user tier if user not in reserved list
       if (winner) {
         // get realtime tier from SC
-        const currentTier = (await HelperUtils.getUserTierSmartWithCached(userWalletAddress))[0];
         const isInPreOrderTime = HelperUtils.checkIsInPreOrderTime(camp, currentTier);
 
         // if user decrement their tier then they can not buy token
@@ -748,6 +751,14 @@ class CampaignController {
         return HelperUtils.responseBadRequest("Cannot claim");
       }
 
+      // Force user min tier from campaign_id 81. (MetaGod)
+      if (camp.id >= 81) {
+        const currentTier = (await HelperUtils.getUserTierSmartWithCached(userWalletAddress))[0];
+        if (currentTier < camp.min_tier) {
+          return HelperUtils.responseBadRequest("You need to increase your rank to claim tokens");
+        }
+      }
+
       // get campaign claim config from db
       const claimParams = {
         'campaign_id': campaign_id,
@@ -756,7 +767,7 @@ class CampaignController {
       const claimConfigService = new CampaignClaimConfigService();
       const claimConfig = await claimConfigService.findLastClaimPhase(claimParams);
       if (!claimConfig) {
-        return HelperUtils.responseBadRequest("You can not claim token at current time !");
+        return HelperUtils.responseBadRequest("You can not claim token at current time!");
       }
 
       let maxTokenClaim = new BigNumber(0);

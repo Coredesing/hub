@@ -125,9 +125,8 @@ const Claim = () => {
       new Date(Number(poolData?.release_time) * 1000).getTime() <= now.getTime() &&
       prettyFloat(prettyFloat(currentPhase?.max_percent_claim) * prettyFloat(purchasedTokens) / 100) > prettyFloat(claimedTokens) &&
       prettyFloat(claimedTokens) < prettyFloat(purchasedTokens) &&
-      poolData?.network_available === network?.alias &&
-      claimTypes[CLAIM_TYPE[0]]?.value > 0
-  }, [purchasedTokens, poolData?.release_time, poolData?.network_available, now, currentPhase?.max_percent_claim, claimedTokens, network?.alias, claimTypes])
+      poolData?.network_available === network?.alias
+  }, [purchasedTokens, poolData?.release_time, poolData?.network_available, now, currentPhase?.max_percent_claim, claimedTokens, network?.alias])
 
   // Actions
   const getUserSignature = async () => {

@@ -37,7 +37,7 @@ const Swap = () => {
 
   // Round Info
 
-  const { userPurchasedTokens: purchasedTokens, updatePurchasedTokens } = useUserPurchased(poolData?.campaign_hash, poolData?.network_available)
+  const { userPurchasedTokens: purchasedTokens, updatePurchasedTokens } = useUserPurchased(poolData?.campaign_hash, poolData?.network_available, poolData?.decimals)
 
   const usdPurchased = useMemo(() => {
     const rate = poolData?.token_conversion_rate || 1

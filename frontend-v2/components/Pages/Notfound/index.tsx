@@ -13,7 +13,9 @@ const NotFound = ({ backLink }: { backLink?: string }) => {
       </div>
       <h3 className='mb-3 uppercase text-lg lg:text-3xl font-medium text-center'>Sorry, we were unable to find that page</h3>
       <button
-        onClick={() => router.push(backLink || '/')}
+        onClick={() => {
+          router.push(backLink || '/')
+        }}
         className={clsx(styles.button, 'uppercase bg-gamefiGreen-700 px-4 py-2 text-black font-semibold')}>
         Go back
       </button>

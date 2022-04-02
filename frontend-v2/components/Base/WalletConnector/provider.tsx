@@ -1,9 +1,8 @@
 import { useState, useEffect, useMemo, useCallback, createContext, ChangeEvent, useContext } from 'react'
-import { useEagerConnect, NoEthereumProviderError, getNetworkAvailable, wallets, connectorFromWallet, switchNetwork, activated, deactivated } from '@/components/web3'
+import { useEagerConnect, NoEthereumProviderError, getNetworkAvailable, wallets, connectorFromWallet, switchNetwork, activated, deactivated, WALLET_CHOSEN } from '@/components/web3'
 import { injected } from '@/components/web3/connectors'
 import { useMyWeb3 } from '@/components/web3/context'
 import Modal from '@/components/Base/Modal'
-import ModalConnect from './ModalConnect'
 import toast from 'react-hot-toast'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -134,10 +133,11 @@ export default function WalletProvider ({ children }) {
 
     try {
       setActivating(true)
-      if (connectorChosen === injected && (window as any).ethereum) {
-        await switchNetwork((window as any).ethereum, networkChosen?.id)
+      if (connectorChosen === injected && window.ethereum) {
+        await switchNetwork(window.ethereum, networkChosen?.id)
       }
       await activate(connectorChosen)
+      localStorage.setItem(WALLET_CHOSEN, walletChosen.id)
     } catch (err) {
       console.debug(err)
     } finally {
@@ -145,7 +145,7 @@ export default function WalletProvider ({ children }) {
       setActivating(false)
       setConnectorChosen(undefined)
     }
-  }, [active, connectorChosen, networkChosen, setActivating, activate, setConnectorChosen])
+  }, [active, connectorChosen, networkChosen, setActivating, activate, setConnectorChosen, walletChosen])
 
   const tryDeactivate = useCallback(() => {
     if (!active) {

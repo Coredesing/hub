@@ -10,6 +10,7 @@
         "tsc": "tsc"
     },
     "dependencies": {
+        "@binance-chain/bsc-connector": "^1.0.0",
         "@egjs/flicking-plugins": "^4.2.3",
         "@egjs/react-flicking": "^4.5.2",
         "@ethersproject/contracts": "^5.5.0",

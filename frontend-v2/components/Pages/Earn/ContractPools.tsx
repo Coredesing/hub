@@ -392,7 +392,9 @@ const ContractPools = ({ pools, contractAddress, className }: {
             <p className="text-base text-white font-casual font-medium">{ loading ? 'Loading...' : `${safeToFixed(selectedExtended?.myPendingRewardParsed, 2)} ${poolFirst?.token}` }</p>
             <div className="mt-auto">
               { account && myPendingRewardClaimable && !networkIncorrect && <>
-                <div onClick={() => claimReward(contractAddress, selected?.id)} className="bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800">
+                <div onClick={() => {
+                  claimReward(contractAddress, selected?.id)
+                }} className="bg-gamefiGreen-600 hover:bg-opacity-80 uppercase py-2 px-5 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800">
                   { confirming ? 'Confirming...' : 'Collect Interest' }
                 </div>
               </>
@@ -528,11 +530,15 @@ const ContractPools = ({ pools, contractAddress, className }: {
                         Next
                       </div> }
 
-                      { step === 2 && allowanceEnough && <div onClick={approveOrStake} className="flex-1 flex justify-center items-end bg-gamefiGreen-600 hover:bg-opacity-80 uppercase p-2 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800">
+                      { step === 2 && allowanceEnough && <div onClick={() => {
+                        approveOrStake()
+                      }} className="flex-1 flex justify-center items-end bg-gamefiGreen-600 hover:bg-opacity-80 uppercase p-2 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800">
                         { confirming ? 'Confirming...' : 'Stake' }
                       </div> }
 
-                      { step === 2 && !allowanceEnough && <div onClick={approveOrStake} className="flex-1 flex justify-center items-end bg-gamefiGreen-600 hover:bg-opacity-80 uppercase p-2 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800">
+                      { step === 2 && !allowanceEnough && <div onClick={() => {
+                        approveOrStake()
+                      }} className="flex-1 flex justify-center items-end bg-gamefiGreen-600 hover:bg-opacity-80 uppercase p-2 rounded-sm clipped-t-r text-[13px] font-bold text-center cursor-pointer text-gamefiDark-800">
                         { loadingApproval ? 'Loading...' : 'Approve' }
                       </div> }
                     </>

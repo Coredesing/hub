@@ -41,6 +41,7 @@ const useTierMine = (tiers) => {
     }
 
     console.log('looking up for user\'s tier', JSON.stringify(tiers.all.map(x => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { image, ...fields } = x
       return {
         ...fields

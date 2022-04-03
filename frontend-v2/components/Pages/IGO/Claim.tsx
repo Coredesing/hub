@@ -186,7 +186,6 @@ const Claim = () => {
       return
     }
     const { signature, amount } = await getUserSignature()
-    console.log(amount)
     if (!signature || !amount) return
 
     if (amount && new BigNumber(amount).lte(0)) return toast.error('Please wait until the next milestone to claim the tokens.')
@@ -296,18 +295,24 @@ const Claim = () => {
                         <div className="table-cell align-middle py-2 rounded font-light">
                           {printNumber(((Number(purchasedTokens) * Number(item.max_percent_claim) / 100) - (Number(purchasedTokens) * Number(configs[index - 1]?.max_percent_claim) / 100 || 0)))} {poolData?.symbol}
                         </div>
-                        <div className="table-cell align-middle py-2 rounded font-light">
-                          {Number(item.claim_type) === 0
-                            ? item.status === 'Claimable'
-                              ? <div style={{
-                                background: 'linear-gradient(270deg, #7EFF00 2.11%, #BCDB00 98.59%), #FFFFFF',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                                backgroundClip: 'text'
-                              }}>{item.status}</div>
-                              : <div className={`${item.status === 'Waiting' && 'text-gamefiYellow-500'} ${item.status === 'Claimed' && 'text-gamefiDark-200'}`}>{item.status}</div>
-                            : <></>}
-                        </div>
+                        {
+                          Number(purchasedTokens || 0)
+                            ? <div className="table-cell align-middle py-2 rounded font-light">
+                              {Number(item.claim_type) === 0
+                                ? item.status === 'Claimable'
+                                  ? <div style={{
+                                    background: 'linear-gradient(270deg, #7EFF00 2.11%, #BCDB00 98.59%), #FFFFFF',
+                                    WebkitBackgroundClip: 'text',
+                                    WebkitTextFillColor: 'transparent',
+                                    backgroundClip: 'text'
+                                  }}>{item.status}</div>
+                                  : <div className={`${item.status === 'Waiting' && 'text-gamefiYellow-500'} ${item.status === 'Claimed' && 'text-gamefiDark-200'}`}>{item.status}</div>
+                                : <></>}
+                            </div>
+                            : <div className="table-cell align-middle py-2 rounded font-light">
+                              <div className="text-gamefiDark-200"></div>
+                            </div>
+                        }
                         <div className="table-cell align-middle py-2 rounded font-light text-right">
                           <span
                             className={`${

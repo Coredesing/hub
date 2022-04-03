@@ -1,12 +1,7 @@
 import { utils } from 'ethers'
 import { GAFI } from '@/components/web3'
 
-export type TierConfigs = {
-  delays: number[];
-  tiers: string[];
-}
-
-type Tier = {
+export type Tier = {
   name: string;
   method: string | null;
   image: any;
@@ -20,7 +15,7 @@ type Tier = {
   };
 }
 
-const tiers = [{
+export const TIERS = [{
   id: 0,
   name: 'Start',
   method: null,
@@ -36,6 +31,8 @@ const tiers = [{
   method: 'Lottery',
   image: require('@/assets/images/ranks/rookie.png'),
   config: {
+    delay: 5,
+    tokens: parseFloat(utils.formatUnits('20000000000000000000', GAFI.decimals)),
     max: 60,
     social: true
   }
@@ -45,6 +42,8 @@ const tiers = [{
   method: 'Lottery',
   image: require('@/assets/images/ranks/elite.png'),
   config: {
+    delay: 8,
+    tokens: parseFloat(utils.formatUnits('100000000000000000000', GAFI.decimals)),
     max: 300,
     social: true
   }
@@ -54,6 +53,8 @@ const tiers = [{
   method: 'Lottery',
   image: require('@/assets/images/ranks/pro.png'),
   config: {
+    delay: 12,
+    tokens: parseFloat(utils.formatUnits('500000000000000000000', GAFI.decimals)),
     max: 700
   }
 }, {
@@ -62,27 +63,12 @@ const tiers = [{
   method: 'Guaranteed 20% Pool',
   image: require('@/assets/images/ranks/legend.png'),
   config: {
+    delay: 30,
+    tokens: parseFloat(utils.formatUnits('1000000000000000000000', GAFI.decimals)),
     requirement: 'Auction NFT required',
     requirementDescription: 'GameFi.org holds an auction for NFT Legend tickets monthly. Legend tickets will belong to 12 people who have staked the most $GAFI at the end of auction.'
   }
 }]
-
-export function tiersFromConfigs (configs: TierConfigs): Tier[] {
-  return tiers.map((tier, i) => {
-    if (i === 0) {
-      return tier
-    }
-
-    return {
-      ...tier,
-      config: {
-        ...tier.config,
-        delay: configs.delays[i - 1],
-        tokens: utils.formatUnits(configs.tiers[i - 1], GAFI.decimals)
-      }
-    }
-  })
-}
 
 export function getTierById (id: any) {
   id = id ?? false
@@ -90,5 +76,5 @@ export function getTierById (id: any) {
     return
   }
 
-  return tiers.find(tier => tier.id === id)
+  return TIERS.find(tier => tier.id === id)
 }

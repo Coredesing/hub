@@ -2,7 +2,7 @@ import { useState, useMemo, useCallback, useEffect } from 'react'
 import AppContext from './index'
 import useTiersOld from './tiersOld'
 import useMarketActivities, { useCollectionsMarket, useDiscoverMarket } from './market-activities'
-import { tiersFromConfigs, TierConfigs } from '@/utils/tiers'
+import { TIERS, Tier } from '@/utils/tiers'
 import { useMyWeb3 } from '@/components/web3/context'
 import { useWeb3Default, GAFI } from '@/components/web3'
 import ABIStakingPool from '@/components/web3/abis/StakingPool.json'
@@ -11,28 +11,9 @@ import { API_BASE_URL } from '@/utils/constants'
 import { Contract, utils } from 'ethers'
 
 const useTiers = () => {
-  const [configs] = useState<TierConfigs>({
-    tiers: [
-      '20000000000000000000',
-      '100000000000000000000',
-      '500000000000000000000',
-      '1000000000000000000000'
-    ],
-    delays: [
-      5,
-      8,
-      12,
-      30
-    ]
-  })
-
-  const all = useMemo(() => {
-    if (!configs) {
-      return []
-    }
-
-    return tiersFromConfigs(configs)
-  }, [configs])
+  const all = useMemo<Tier[]>(() => {
+    return TIERS
+  }, [])
 
   const priority = useMemo(() => {
     if (!all?.length) {
@@ -58,6 +39,13 @@ const useTierMine = (tiers) => {
     if (!data || !tiers.all) {
       return null
     }
+
+    console.log('looking up for user\'s tier', JSON.stringify(tiers.all.map(x => {
+      const { image, ...fields } = x
+      return {
+        ...fields
+      }
+    })), data.tier)
 
     return tiers.all.find(x => x.id === data.tier)
   }, [data, tiers])

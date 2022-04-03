@@ -455,7 +455,7 @@ const Requirements = () => {
 
           <div className="mt-6 text-sm flex items-center justify-end gap-6 font-mechanic text-[13px]">
             <button className="font-bold uppercase text-gamefiGreen-500 hover:text-white" onClick={() => setShowModal(false)}>Cancel</button>
-            { !whitelistJoined && <button className="font-bold uppercase clipped-t-r bg-gamefiGreen-600 hover:bg-gamefiGreen-500 text-black py-2 px-6 tracking-wider rounded-sm" onClick={handleApplyWhitelist}>Apply Whitelist</button> }
+            { !whitelistJoined && <button className="font-bold uppercase clipped-t-r bg-gamefiGreen-600 hover:bg-gamefiGreen-500 text-black py-2 px-6 tracking-wider rounded-sm" onClick={() => { handleApplyWhitelist() }}>Apply Whitelist</button> }
           </div>
         </div>
       </div>

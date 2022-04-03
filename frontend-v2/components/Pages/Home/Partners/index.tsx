@@ -6,6 +6,11 @@ import '@egjs/flicking-plugins/dist/pagination.css'
 import '@egjs/flicking/dist/flicking.css'
 import arrowLeft from 'assets/images/icons/arrow-left.png'
 import arrowRight from 'assets/images/icons/arrow-right.png'
+import Animoca from '@/assets/images/brands/Animoca.png'
+import DaoMaker from '@/assets/images/brands/DaoMaker.png'
+import IceteaLabs from '@/assets/images/brands/IceteaLabs.png'
+import MorningStar from '@/assets/images/brands/MorningStar.png'
+import Polygon from '@/assets/images/brands/Polygon.png'
 
 const Partners = () => {
   const [plugins] = useState([new Pagination({
@@ -39,11 +44,12 @@ const Partners = () => {
         GameFi.org is honored and thrilled to be backed by leading Venture Capitals in blockchain industry.
         </div>
       </div>
-      <div className="container mx-auto xl:px-16 grid grid-cols-2 md:grid-cols-4 items-center justify-center mt-8 max-w-6xl">
-        <a href="https://www.animocabrands.com/" target="_blank" className="flex items-center justify-center" rel="noreferrer"><Image src={require('assets/images/brands/Animoca.png')} alt="Animoca" ></Image></a>
-        <a href="https://daomaker.com/" target="_blank" className="flex items-center justify-center" rel="noreferrer"><Image src={require('assets/images/brands/DaoMaker.png')} alt="DaoMaker" ></Image></a>
-        <a href="https://morningstar.ventures/" target="_blank" className="flex items-center justify-center" rel="noreferrer"><Image src={require('assets/images/brands/MorningStar.png')} alt="MorningStar" ></Image></a>
-        <a href="https://polygon.technology/" target="_blank" className="flex items-center justify-center" rel="noreferrer"><Image src={require('assets/images/brands/Polygon.png')} alt="Polygon" ></Image></a>
+      <div className="container mx-auto xl:px-16 grid gap-2 grid-cols-2 md:grid-cols-5 items-center justify-center mt-8 max-w-6xl">
+        <a href="https://icetea.io" target="_blank" className="flex items-center justify-center col-span-2 md:col-span-1" rel="noreferrer"><img src={IceteaLabs.src} alt="Icetea Labs" className="!max-w-[50%] md:!max-w-[100%]"></img></a>
+        <a href="https://www.animocabrands.com/" target="_blank" className="flex items-center justify-center" rel="noreferrer"><img src={Animoca.src} alt="Animoca" ></img></a>
+        <a href="https://daomaker.com/" target="_blank" className="flex items-center justify-center" rel="noreferrer"><img src={DaoMaker.src} alt="DaoMaker" ></img></a>
+        <a href="https://morningstar.ventures/" target="_blank" className="flex items-center justify-center" rel="noreferrer"><img src={MorningStar.src} alt="MorningStar" ></img></a>
+        <a href="https://polygon.technology/" target="_blank" className="flex items-center justify-center" rel="noreferrer"><img src={Polygon.src} alt="Polygon" ></img></a>
       </div>
       <div className="flex flex-col items-center mt-14">
         <div className="font-bold text-2xl uppercase">Our Portfolio</div>

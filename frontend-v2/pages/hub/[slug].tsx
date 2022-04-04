@@ -200,7 +200,7 @@ const GameDetails = ({ data }) => {
                   </>
                   }
 
-                  { data?.tokenomic?.token_metrics && <>
+                  { data?.tokenomic?.token_distribution && <>
                     <div className="mt-6"><strong>Token Distribution</strong></div>
                     <div dangerouslySetInnerHTML={{ __html: data?.tokenomic?.token_distribution }}></div>
                   </>

@@ -420,7 +420,9 @@ const Swap = () => {
                                       : 'cursor-not-allowed bg-gamefiDark-400 text-gamefiDark'
                                   } ${loadingApproval && 'cursor-not-allowed hover:opacity-100'}`
                                 }
-                                onClick={() => approvable && handleApprove(ethers.constants.MaxUint256)}
+                                onClick={() => {
+                                  approvable && handleApprove(ethers.constants.MaxUint256)
+                                }}
                               >
                                 {!loadingApproval && ((allowance?.gt(0) || !usd?.address) ? 'Approved' : 'Approve')} {loadingApproval && <div className="dot-flashing mx-auto"></div>}
                               </button>
@@ -432,7 +434,9 @@ const Swap = () => {
                                       : 'cursor-not-allowed bg-gamefiDark-400 text-gamefiDark'
                                   }`
                                 }
-                                onClick={() => swappable && handleSwap()}
+                                onClick={() => {
+                                  swappable && handleSwap()
+                                }}
                               >Pre-order</button>
                             </div>
                           </>
@@ -451,7 +455,9 @@ const Swap = () => {
                                       : 'cursor-not-allowed bg-gamefiDark-400 text-gamefiDark'
                                   } ${loadingApproval && 'cursor-not-allowed hover:opacity-100'}`
                                 }
-                                onClick={() => approvable && handleApprove(ethers.constants.MaxUint256)}
+                                onClick={() => {
+                                  approvable && handleApprove(ethers.constants.MaxUint256)
+                                }}
                               >
                                 {!loadingApproval && ((allowance?.gt(0) || !usd?.address) ? 'Approved' : 'Approve')} {loadingApproval && <div className="dot-flashing mx-auto"></div>}
                               </button>
@@ -463,7 +469,9 @@ const Swap = () => {
                                       : 'cursor-not-allowed bg-gamefiDark-400 text-gamefiDark'
                                   }`
                                 }
-                                onClick={() => swappable && handleSwap()}
+                                onClick={() => {
+                                  swappable && handleSwap()
+                                }}
                               >Swap</button>
                             </div>
                           </>

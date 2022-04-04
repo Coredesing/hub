@@ -1,6 +1,6 @@
 import { useLibraryDefaultFlexible } from '@/components/web3/utils'
 import { IGOContext } from '@/pages/igo/[slug]'
-import { Contract, utils, constants, FixedNumber, ethers } from 'ethers'
+import { Contract, utils, constants, FixedNumber } from 'ethers'
 import ABIPool from '@/components/web3/abis/Pool.json'
 import { useContext, useEffect, useMemo, useState } from 'react'
 import { printNumber } from '@/utils'

@@ -10,6 +10,18 @@ import toast from 'react-hot-toast'
 import copy from 'copy-to-clipboard'
 
 export default function TabUnstake ({ loadMyPending, pendingWithdrawal, goStake }) {
+  const [now, setNow] = useState(new Date())
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(new Date())
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [setNow])
+  const hasPendingWithdrawalAvailable = useMemo(() => {
+    return pendingWithdrawal?.time <= now
+  }, [pendingWithdrawal, now])
+
   const { tierMine, stakingPool, stakingMine, loadMyStaking, contractStaking } = useAppContext()
 
   const { chainId: chainIDDefault } = useWeb3Default()
@@ -48,14 +60,20 @@ export default function TabUnstake ({ loadMyPending, pendingWithdrawal, goStake 
   const [agreed1b, setAgreed1b] = useState(false)
   const [agreed1c, setAgreed1c] = useState(false)
   const [agreed2a, setAgreed2a] = useState(false)
+  const [agreed2b, setAgreed2b] = useState(false)
   useEffect(() => {
     if (agreed1a && agreed1b && agreed1c && agreed2a) {
+      if (pendingWithdrawal?.amount) {
+        setAgreed(agreed2b)
+        return
+      }
+
       setAgreed(true)
       return
     }
 
     setAgreed(false)
-  }, [setAgreed, agreed1a, agreed1b, agreed1c, agreed2a])
+  }, [setAgreed, agreed1a, agreed1b, agreed1c, agreed2a, agreed2b, pendingWithdrawal])
 
   const handleAgreement = (setter) => (event: ChangeEvent<HTMLInputElement>) => {
     const target = event.target
@@ -240,26 +258,32 @@ export default function TabUnstake ({ loadMyPending, pendingWithdrawal, goStake 
         <div className="flex flex-col md:flex-row gap-4 md:gap-6 mt-2 md:mt-6">
           <div className="flex-1">
             <div className="bg-gray-500 bg-opacity-20 p-4 md:px-6 md:py-5 rounded w-full">
-              <h3 className="text-lg font-bold uppercase mb-2">1. Unstaking Policies</h3>
-              <label className="leading-relaxed inline-block align-middle font-casual text-sm text-gray-300 flex items-start">
+              <h3 className="text-lg font-bold uppercase mb-2">1. Unstaking policies</h3>
+              <label className="leading-relaxed font-casual text-sm text-gray-300 flex items-start">
                 <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed1a} onChange={handleAgreement(setAgreed1a)} />
                 <p className="-mt-1">You will <strong>get a refund</strong> if you <strong>lose all future token releases in an IGO pool</strong> due to an unstake lowering your rank. The refund is calculated based on the number of tokens left in the pool, which you are not eligible to claim, and the token’s IGO price.</p>
               </label>
-              <label className="leading-relaxed inline-block align-middle font-casual text-sm text-gray-300 flex items-start mt-4">
+              <label className="leading-relaxed font-casual text-sm text-gray-300 flex items-start mt-4">
                 <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed1b} onChange={handleAgreement(setAgreed1b)} />
                 <p className="-mt-1">Within the last three working days of the month that you lost your ability to claim, <strong>this refund will be airdropped directly to your wallet address</strong>.</p>
               </label>
 
-              <label className="leading-relaxed inline-block align-middle font-casual text-sm text-gray-300 flex items-start mt-4">
+              <label className="leading-relaxed font-casual text-sm text-gray-300 flex items-start mt-4">
                 <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed1c} onChange={handleAgreement(setAgreed1c)} />
                 <p className="-mt-1">The forfeited token vestings will be redistributed to the GameFi.org Development fund, further developing the GameFi.org platform and ecosystem.</p>
               </label>
 
               <h3 className="text-lg font-bold uppercase mt-6 mb-2">2. Withdraw delay time</h3>
-              { tierMine && <label className="leading-relaxed inline-block align-middle font-casual text-sm text-gray-300 flex items-start">
+              { tierMine && <label className="leading-relaxed font-casual text-sm text-gray-300 flex items-start">
                 <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed2a} onChange={handleAgreement(setAgreed2a)} />
-                <p className="-mt-1">{ tierMine.id === 0 && <span>Your current rank is Start. You can withdraw after unstake</span> }
+                <p className="-mt-1">{ tierMine.id === 0 && <span>Your current rank is Start. You can withdraw after unstaking</span> }
                   { tierMine.id !== 0 && <span>Your current rank is <strong>{tierMine.name}</strong>, withdraw delay time is <strong>{tierMine.config.delay ? `${tierMine.config.delay} days` : '—'}</strong>. After <strong>{tierMine.config.delay ? `${tierMine.config.delay} days` : '—'}</strong>, you will be allowed to withdraw your $GAFI.</span> }</p>
+              </label> }
+              { !!pendingWithdrawal?.amount && <label className="leading-relaxed font-casual text-sm text-gray-300 flex items-start mt-4">
+                <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed2b} onChange={handleAgreement(setAgreed2b)} />
+                <p className="-mt-1">
+                  { hasPendingWithdrawalAvailable && <span>Your pending withdrawal is <strong>ready to be claimed</strong>. </span> }<span>Your withdraw delay time <strong className="uppercase">will be reset</strong> if you continue to unstake.</span>
+                </p>
               </label> }
             </div>
           </div>

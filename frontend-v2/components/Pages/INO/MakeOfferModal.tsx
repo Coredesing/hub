@@ -19,9 +19,9 @@ type Props = {
 
 const MakeOfferModal = ({ tokenOnSale, lastOffer, myBalance, ...props }: Props) => {
   const [offerPrice, setOfferPrice] = useState('')
-  const [notiMsg, setNotiMsg] = useState<{ type: 'info' | 'error'; msg: string | ReactNode }>({ type: 'info', msg: '' })
+  const [notificationMessage, setNotificationMessage] = useState<{ type: 'info' | 'error'; msg: string | ReactNode }>({ type: 'info', msg: '' })
   useEffect(() => {
-    setNotiMsg({ type: 'info', msg: lastOffer ? <p>You already placed an offer with <span className='text-gamefiGreen-700'>{utils.formatEther(lastOffer.amount)} {lastOffer?.symbol || ''}</span>.</p> : '' })
+    setNotificationMessage({ type: 'info', msg: lastOffer ? <p>You already placed an offer with <span className='text-gamefiGreen-700'>{utils.formatEther(lastOffer.amount)} {lastOffer?.symbol || ''}</span>.</p> : '' })
   }, [lastOffer, tokenOnSale?.symbol])
 
   const onChangeOfferPrice = (e: any) => {
@@ -30,29 +30,29 @@ const MakeOfferModal = ({ tokenOnSale, lastOffer, myBalance, ...props }: Props) 
       setOfferPrice(val)
       const valEther = utils.parseEther(val || '0')
       if (BigNumber.from(myBalance?.balance || 0).lt(valEther)) {
-        setNotiMsg({ type: 'error', msg: 'Insufficient balance' })
+        setNotificationMessage({ type: 'error', msg: 'Insufficient balance' })
       } else if (lastOffer) {
         if (BigNumber.from(valEther).gt(lastOffer.amount)) {
           const numExceed = utils.formatEther(BigNumber.from(valEther).sub(lastOffer.amount))
-          setNotiMsg({ type: 'info', msg: <p>You already placed an offer with <span className='text-gamefiGreen-700'>{utils.formatEther(lastOffer.amount)} {tokenOnSale.symbol}</span>. This offer will need <span className='text-gamefiGreen-700'>{numExceed} {tokenOnSale.symbol}</span> more.</p> })
+          setNotificationMessage({ type: 'info', msg: <p>You already placed an offer with <span className='text-gamefiGreen-700'>{utils.formatEther(lastOffer.amount)} {tokenOnSale.symbol}</span>. This offer will need <span className='text-gamefiGreen-700'>{numExceed} {tokenOnSale.symbol}</span> more.</p> })
         } else {
           const numReturned = BigNumber.from(lastOffer.amount).sub(valEther)
           if (numReturned.eq(0)) {
-            setNotiMsg({ type: 'error', msg: <p>You already placed an offer with {utils.formatEther(lastOffer.amount)} {tokenOnSale.symbol}</p> })
+            setNotificationMessage({ type: 'error', msg: <p>You already placed an offer with {utils.formatEther(lastOffer.amount)} {tokenOnSale.symbol}</p> })
             return
           }
           if (+val && numReturned) {
             const valueReturned = utils.formatEther(numReturned)
-            setNotiMsg({
+            setNotificationMessage({
               type: 'info',
               msg: <p>You had an offer at higher price of <span className='text-gamefiGreen-700'>{utils.formatEther(lastOffer.amount)} {tokenOnSale.symbol}</span>. By placing this new offer, <span className='text-gamefiGreen-700'>{valueReturned} {tokenOnSale.symbol}</span> will be returned to your address.</p>
             })
           } else {
-            setNotiMsg({ type: 'info', msg: <p>You already placed an offer with <span className='text-gamefiGreen-700'>{utils.formatEther(lastOffer.amount)} {tokenOnSale.symbol}</span>.</p> })
+            setNotificationMessage({ type: 'info', msg: <p>You already placed an offer with <span className='text-gamefiGreen-700'>{utils.formatEther(lastOffer.amount)} {tokenOnSale.symbol}</span>.</p> })
           }
         }
       } else {
-        setNotiMsg({ type: 'info', msg: '' })
+        setNotificationMessage({ type: 'info', msg: '' })
       }
     } catch (error) {
       console.debug('error', error)
@@ -102,10 +102,10 @@ const MakeOfferModal = ({ tokenOnSale, lastOffer, myBalance, ...props }: Props) 
         </div>
         <div className='mt-7' style={{ minHeight: '44px' }}>
           {
-            notiMsg.msg && <div className={clsx('text-sm font-casual', {
-              'text-red-700': notiMsg.type === 'error'
+            notificationMessage.msg && <div className={clsx('text-sm font-casual', {
+              'text-red-700': notificationMessage.type === 'error'
             })}>
-              {notiMsg.msg}
+              {notificationMessage.msg}
             </div>
           }
         </div>
@@ -113,7 +113,7 @@ const MakeOfferModal = ({ tokenOnSale, lastOffer, myBalance, ...props }: Props) 
       <div className='flex justify-end gap-8'>
         <button className='uppercase text-white/50 font-bold text-13px' onClick={props.onClose}>Cancel</button>
         <ButtonBase
-          disabled={props.disabledButton || BigNumber.from(utils.parseEther(offerPrice || '0')).isZero() || !!(notiMsg.type === 'error' && notiMsg.msg)}
+          disabled={props.disabledButton || BigNumber.from(utils.parseEther(offerPrice || '0')).isZero() || !!(notificationMessage.type === 'error' && notificationMessage.msg)}
           isLoading={props.isLoadingButton}
           color='green'
           onClick={() => {

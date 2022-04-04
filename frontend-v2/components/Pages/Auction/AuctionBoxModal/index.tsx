@@ -92,7 +92,7 @@ const AuctionBoxModal = ({ open, poolInfo = {}, token = {}, auctionLoading, last
 
   const [isVerified, setVerify] = useState<string | null>('')
   const recaptchaRef: any = React.useRef()
-  const onChangeRecapcha = (value: string | null) => {
+  const onChangeRecaptcha = (value: string | null) => {
     setVerify(value)
   }
   const onRefreshRecaptcha = debounce(() => {
@@ -144,7 +144,7 @@ const AuctionBoxModal = ({ open, poolInfo = {}, token = {}, auctionLoading, last
         </div>
         {/* {error && <AlertMsg message={error} />} */}
         <div className='mb-4'>
-          <Recaptcha onChange={onChangeRecapcha} ref={recaptchaRef} />
+          <Recaptcha onChange={onChangeRecaptcha} ref={recaptchaRef} />
         </div>
         <ButtonBase color='green' onClick={() => {
           onPlaceBid()

@@ -5,6 +5,7 @@ const HelperUtils = use('App/Common/HelperUtils');
 const SubscribeEmailService = use('App/Services/SubscribeEmailService');
 const HomeService = use('App/Services/HomeService');
 const GameFiVestingService = use('App/Services/GameFiVestingService');
+const MetagodNFTTicketUtils = use('App/Common/MetagodNFTTicketUtils');
 
 class HomeController {
   async subscribe({request}) {
@@ -108,6 +109,24 @@ class HomeController {
       description: 'GameFi Box',
       name: 'GameFi-Box',
     };
+  }
+
+  async getMetaGodTicketDetail({ request, auth, params }) {
+    try {
+      const nftId = parseInt(request.params.id)
+      if (isNaN(nftId) || nftId < 0) {
+        return HelperUtils.responseNotFound()
+      }
+
+      const data = MetagodNFTTicketUtils.getDetailByID(nftId)
+      if (!data) {
+        return HelperUtils.responseNotFound()
+      }
+
+      return data
+    } catch (e) {
+      return HelperUtils.responseErrorInternal()
+    }
   }
 
   async getVestingOption({request}) {

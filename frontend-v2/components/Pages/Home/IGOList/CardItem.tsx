@@ -63,7 +63,7 @@ const CardItem = ({ item, ...props }: Props) => {
     <div className={`rounded overflow-hidden border border-transparent hover:border-gamefiGreen-700 hover:shadow hover:shadow-gamefiGreen-700 ${props.className}`} style={{ maxWidth: (screens.md || screens.lg || screens.xl) ? '350px' : '100%' }}>
       <div className="w-full relative">
         <div className="absolute h-6 w-2/5 inline-flex align-middle items-center top-0 left-0 uppercase text-xs text-left bg-black clipped-b-r-full">
-          <Image src={require('assets/images/icons/lock.svg')} alt="lock"></Image>
+          <Image src={require('@/assets/images/icons/lock.svg')} alt="lock"></Image>
           <span className="ml-2 font-medium tracking-widest">{poolStatus(item.is_private)}</span>
         </div>
         <div className="cursor-pointer">

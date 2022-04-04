@@ -4,8 +4,8 @@ import { useMediaQuery } from 'react-responsive'
 import Link from 'next/link'
 import Flicking from '@egjs/react-flicking'
 import { AutoPlay, Sync } from '@egjs/flicking-plugins'
-import arrowLeft from 'assets/images/icons/arrow-left.png'
-import arrowRight from 'assets/images/icons/arrow-right.png'
+import arrowLeft from '@/assets/images/icons/arrow-left.png'
+import arrowRight from '@/assets/images/icons/arrow-right.png'
 
 type Props = {
   items?: any[];

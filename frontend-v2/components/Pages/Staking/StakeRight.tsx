@@ -143,7 +143,7 @@ export default function StakeRight ({ loadMyPending, account, pendingWithdrawal,
           </div>
         </div>
         <div className={`cursor-pointer clipped-b-l p-px mt-2 bg-gamefiGreen-500 ${canWithdraw ? 'grayscale' : 'grayscale-0'}`} onClick={restake}>
-          <div className={'clipped-b-l p-2 flex justify-center items-center bg-gamefiDark-800 text-gamefiGreen-500 bg-gamefiDark-800 text-gamefiGreen-500\'}'}>
+          <div className={'clipped-b-l p-2 flex justify-center items-center text-gamefiGreen-500 bg-gamefiDark-800 text-gamefiGreen-500\'}'}>
             {restaking ? 'Restaking...' : 'Restake'}
           </div>
         </div>

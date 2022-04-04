@@ -604,11 +604,18 @@ const IGODetails = ({ poolData }) => {
                   <strong className="font-semibold">Symbol</strong>
                   <span className="flex gap-2 items-center">
                     {poolData?.symbol}
-                    {poolData.token && timeline[TIMELINE.CLAIM]?.start && now.getTime() >= timeline[TIMELINE.CLAIM].start.getTime() && poolData.token_type === 'erc20' && <>
+                    {poolData.token &&
+                      timeline[TIMELINE.CLAIM]?.start &&
+                      now.getTime() >= timeline[TIMELINE.CLAIM].start.getTime() &&
+                      poolData.token_type === 'erc20' &&
+                      poolData.token !== '0xE23C8837560360ff0D49ED005c5E3ad747F50B3d' &&
+                    <>
                       <Tippy content="Add to Metamask">
                         <button
                           className="w-6 h-6 hover:opacity-90"
-                          onClick={() => addToWallet(poolData)}
+                          onClick={() => {
+                            addToWallet(poolData)
+                          }}
                         >
                           <Image src={require('@/assets/images/wallets/metamask.svg')} alt=""></Image>
                         </button>

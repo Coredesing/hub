@@ -2,10 +2,12 @@ import { useWeb3React, createWeb3ReactRoot } from '@web3-react/core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { Web3Provider } from '@ethersproject/providers'
 import React, { ReactNode, useEffect, useState } from 'react'
-import { network, injected, walletconnect, POLLING_INTERVAL, RPC_URLS, IS_TESTNET } from './connectors'
+import { network, injected, walletconnect, POLLING_INTERVAL, RPC_URLS, IS_TESTNET, bscConnector } from './connectors'
 import type { AddEthereumChainParameter } from '@web3-react/metamask'
 import { BigNumber, ethers } from 'ethers'
 import { CMC_ASSETS_DOMAIN } from '@/utils/constants'
+
+export const WALLET_CHOSEN = 'WALLET_CHOSEN'
 
 export { NoEthereumProviderError } from '@web3-react/injected-connector'
 export function getLibrary (provider: any): Web3Provider {
@@ -76,29 +78,52 @@ export function useEagerConnect () {
       return
     }
 
-    injected.isAuthorized().then((isAuthorized: boolean) => {
-      if (isAuthorized) {
-        injected.getAccount()
-          .then(acc => {
-            if (isSignedOut(acc)) {
-              return
-            }
+    const walletChosen = localStorage.getItem(WALLET_CHOSEN)
+    if (walletChosen === WalletBinance.id && (window as any).BinanceChain) {
+      activate(bscConnector, undefined, true).catch(() => {
+        setTried(true)
+      })
+      return
+    }
 
-            activate(injected, undefined, true).catch(() => {
-              setTried(true)
-            })
-          })
-          .catch(() => {
-            setTried(true)
-          })
-        return
+    const tryMetamask = async () => {
+      const _provider = await injected.getProvider()
+      if (_provider.overrideIsMetaMask) {
+        // coinbase wallet
+        const provider = (window as any).ethereum?.providers?.find(x => !!x.isMetaMask)
+        if (!provider) {
+          return
+        }
+
+        window.ethereum = provider
       }
 
-      setTried(true)
-    }).catch(err => {
-      console.debug(err)
-      setTried(true)
-    })
+      injected.isAuthorized().then((isAuthorized: boolean) => {
+        if (isAuthorized) {
+          injected.getAccount()
+            .then(acc => {
+              if (isSignedOut(acc)) {
+                return
+              }
+
+              activate(injected, undefined, true).catch(() => {
+                setTried(true)
+              })
+            })
+            .catch(() => {
+              setTried(true)
+            })
+          return
+        }
+
+        setTried(true)
+      }).catch(err => {
+        console.debug(err)
+        setTried(true)
+      })
+    }
+
+    tryMetamask()
   }, [activate, tried])
 
   useEffect(() => {
@@ -135,6 +160,8 @@ export function deactivated (account) {
   if (typeof window === 'undefined') {
     return
   }
+
+  localStorage.removeItem(WALLET_CHOSEN)
 
   const deactivationRaw = localStorage.getItem(DEACTIVATION_PERSISTENCE_KEY)
   if (!deactivationRaw) {
@@ -437,37 +464,54 @@ interface Wallet {
   image: any;
 }
 
-export const wallets: Wallet[] = [{
+export const WalletMetamask = {
   id: 'metamask',
   name: 'MetaMask',
   networks: [1, 56, 137, 5, 97, 80001, 43114, 43113, 250, 4002, 42161, 421611],
   image: require('@/assets/images/wallets/metamask.svg')
-}, {
+}
+
+export const WalletBinance = {
   id: 'bsc-wallet',
   name: 'Binance Wallet',
   networks: [1, 56, 5, 97],
   image: require('@/assets/images/wallets/bsc.svg')
-}, {
+}
+
+export const WalletConnect = {
   id: 'walletconnect',
   name: 'WalletConnect',
   networks: [1, 56, 137, 5, 97, 80001, 43114, 43113, 250, 4002, 42161, 421611],
   image: require('@/assets/images/wallets/walletconnect.svg')
-}]
+}
+
+export const wallets: Wallet[] = [WalletMetamask, WalletBinance, WalletConnect]
 
 export function connectorFromWallet (wallet: Wallet): AbstractConnector {
   if (!wallet) {
     return
   }
 
-  if (wallet.id === 'metamask' || wallet.id === 'bsc-wallet') {
-    const provider = (window as any).ethereum?.providers?.find(x => !!x.isMetaMask)
-    if (provider) {
-      (window as any).ethereum?.setSelectedProvider(provider)
+  if (wallet.id === WalletMetamask.id) {
+    if ((window as any)?.ethereum?.overrideIsMetaMask) {
+      // coinbase wallet
+      const provider = (window as any)?.ethereum?.providers?.find(x => !!x.isMetaMask)
+      if (!provider) {
+        return
+      }
+
+      window.ethereum = provider
+      return injected
     }
+
     return injected
   }
 
-  if (wallet.id === 'walletconnect') {
+  if (wallet.id === WalletBinance.id) {
+    return bscConnector
+  }
+
+  if (wallet.id === WalletConnect.id) {
     return walletconnect
   }
 

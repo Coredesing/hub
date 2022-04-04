@@ -1,14 +1,12 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useMemo } from 'react'
 import { Item } from '../type'
 import Image from 'next/image'
-import community from 'assets/images/icons/community.png'
-import lock from 'assets/images/icons/lock.svg'
+import community from '@/assets/images/icons/community.png'
+import lock from '@/assets/images/icons/lock.svg'
 import { getCurrency, useLibraryDefaultFlexible } from '@/components/web3/utils'
 import { ListIGOContext } from '@/pages/igo'
 import Progress from './Progress'
 import Countdown from './Countdown'
-import { fetcher, printNumber } from '@/utils'
-import { API_BASE_URL } from '@/utils/constants'
 
 const Card = ({ item, color, background }: { item: Item; color?: string; background?:string }) => {
   const { network } = useLibraryDefaultFlexible(item?.network_available)
@@ -168,7 +166,7 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
         <div className="w-full flex flex-col items-center justify-center">
           <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Starts In</div>
           <div className="mt-2">
-            <Countdown to={item?.end_join_pool_time}></Countdown>
+            <Countdown to={item?.start_join_pool_time}></Countdown>
           </div>
         </div>
       }

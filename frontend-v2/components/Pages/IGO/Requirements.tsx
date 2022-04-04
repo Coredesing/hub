@@ -28,6 +28,8 @@ const Requirements = () => {
   const { tierMine, tiers } = useAppContext()
   const { signMessage } = useWalletSignature()
   const { profile, setHeaders } = useProfile(account)
+  const [whitelistLoading, setWhitelistLoading] = useState(false)
+  const [showModal, setShowModal] = useState(false)
 
   useEffect(() => {
     if (!signature) {
@@ -40,7 +42,10 @@ const Requirements = () => {
     })
   }, [signature, setHeaders])
 
-  const [showModal, setShowModal] = useState(false)
+  useEffect(() => {
+    setSignature(false)
+    setShowModal(false)
+  }, [account, setSignature])
 
   const poolNetworkInvalid = useMemo(() => {
     if (!account) {
@@ -154,6 +159,8 @@ const Requirements = () => {
       return
     }
 
+    setWhitelistLoading(true)
+
     const formApply = {
       wallet_address: account,
       user_twitter: formData.twitter,
@@ -171,6 +178,7 @@ const Requirements = () => {
       },
       body: JSON.stringify(formApply)
     }).catch(e => console.debug(e?.message))
+    setWhitelistLoading(false)
 
     if (submitFormResponse?.status !== 200) {
       toast.error(submitFormResponse?.message || 'Submit Whitelist Form Failed!')
@@ -318,7 +326,7 @@ const Requirements = () => {
       </div>
     </div>
 
-    <Modal show={showModal} toggle={setShowModal} className='dark:bg-transparent fixed z-50 sm:!max-w-3xl'>
+    <Modal show={showModal} toggle={setShowModal} onClose={() => { setSignature('') }} className='dark:bg-transparent fixed z-50 sm:!max-w-3xl'>
       <div className="bg-gamefiDark-700 pt-4">
         <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full">
           <strong className="uppercase text-2xl font-mechanic">Welcome to {poolData?.title || ''} on GameFi.org</strong>
@@ -455,7 +463,10 @@ const Requirements = () => {
 
           <div className="mt-6 text-sm flex items-center justify-end gap-6 font-mechanic text-[13px]">
             <button className="font-bold uppercase text-gamefiGreen-500 hover:text-white" onClick={() => setShowModal(false)}>Cancel</button>
-            { !whitelistJoined && <button className="font-bold uppercase clipped-t-r bg-gamefiGreen-600 hover:bg-gamefiGreen-500 text-black py-2 px-6 tracking-wider rounded-sm" onClick={handleApplyWhitelist}>Apply Whitelist</button> }
+            { !whitelistJoined && !whitelistLoading && <button className="font-bold uppercase clipped-t-r bg-gamefiGreen-600 hover:bg-gamefiGreen-500 text-black py-2 px-6 tracking-wider rounded-sm" onClick={() => { handleApplyWhitelist() }}>Apply Whitelist</button> }
+            {whitelistLoading && <div className="font-bold uppercase clipped-t-r bg-gamefiGreen-600 hover:bg-gamefiGreen-500 text-black py-4 px-6 w-36 tracking-wider rounded-sm">
+              <div className="dot-flashing mx-auto"></div>
+            </div>}
           </div>
         </div>
       </div>

@@ -54,8 +54,8 @@ const Asset = () => {
         if (erc721Contract) {
           try {
             const tokenURI = await erc721Contract.tokenURI(collection.token_id)
-            const infor = (await fetcher(tokenURI)) || {}
-            Object.assign(collection, infor)
+            const info = (await fetcher(tokenURI)) || {}
+            Object.assign(collection, info)
           } catch (error) {
             console.debug('err', error)
           }
@@ -69,7 +69,7 @@ const Asset = () => {
       }
       return collections
     } catch (error) {
-      console.debug('errr', error)
+      console.debug('error', error)
       return []
     }
   }, [])
@@ -87,13 +87,13 @@ const Asset = () => {
       try {
         if (useExternalUri) {
           const result = await fetcher(`${API_BASE_URL}/marketplace/collection/${prjInfo.token_address}/${idCollection}`, { method: 'POST' })
-          const infor = result.data || {}
-          Object.assign(collection, infor)
+          const info = result.data || {}
+          Object.assign(collection, info)
         } else {
           if (erc721Contract) {
             const tokenURI = await erc721Contract.tokenURI(collection.token_id)
-            const infor = (await fetcher(tokenURI)) || {}
-            Object.assign(collection, infor)
+            const info = (await fetcher(tokenURI)) || {}
+            Object.assign(collection, info)
           }
         }
       } catch (error: any) {

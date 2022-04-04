@@ -4,13 +4,13 @@ import Image from 'next/image'
 const Instruction = () => {
   return (
     <>
-      <div className="lg:hidden w-full flex justify-center mt-20"><Image src={require('assets/images/instruction.png')} alt=""></Image></div>
+      <div className="lg:hidden w-full flex justify-center mt-20"><Image src={require('@/assets/images/instruction.png')} alt=""></Image></div>
       <div className="hidden lg:block md:px-4 lg:px-16 mx-auto py-28 container relative select-none">
         <div className="absolute bottom-0 left-4 lg:left-10">
-          <Image src={require('assets/images/home-widget-1.png')} alt=''></Image>
+          <Image src={require('@/assets/images/home-widget-1.png')} alt=''></Image>
         </div>
         <div className="absolute bottom-0 right-4 lg:right-10">
-          <Image src={require('assets/images/home-widget-2.png')} alt=''></Image>
+          <Image src={require('@/assets/images/home-widget-2.png')} alt=''></Image>
         </div>
         <div className="uppercase font-bold text-center text-3xl">Easy to join INO & IGO with 5 steps</div>
         <div className="mt-14 mx-auto relative flex justify-between" style={{ maxWidth: '800px' }}>

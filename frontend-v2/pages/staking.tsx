@@ -18,7 +18,7 @@ import FilterDropdown from '@/components/Pages/Home/FilterDropdown'
 import TopRanking from '@/components/Pages/Staking/TopRanking'
 import { handleChangeStaking } from '@/components/Pages/Staking/utils'
 
-const Staking = ({ data }) => {
+const Staking = ({ legendSnapshots, legendCurrent }) => {
   const mounted = useRef(false)
   useEffect(() => {
     mounted.current = true
@@ -137,7 +137,7 @@ const Staking = ({ data }) => {
   const [rankingSelected, setRankingSelected] = useState()
   const [isLive, setIsLive] = useState(null)
   const rankingOptions = useMemo(() => {
-    let all = (data?.legendSnapshots || []).sort((a, b) => b.snapshot_at - a.snapshot_at).map(s => {
+    let all = (legendSnapshots || []).sort((a, b) => b.snapshot_at - a.snapshot_at).map(s => {
       return {
         key: s.id,
         label: s.name,
@@ -145,20 +145,20 @@ const Staking = ({ data }) => {
       }
     })
 
-    if (data?.legendCurrent) {
+    if (legendCurrent) {
       all = [{
         key: 0,
         label: 'Realtime',
-        value: data.legendCurrent.map(x => ({ wallet_address: x.wallet_address, amount: parseFloat(x.amount), snapshot_at: x.last_time ? new Date(x.last_time * 1000) : null }))
+        value: legendCurrent.map(x => ({ wallet_address: x.wallet_address, amount: parseFloat(x.amount), snapshot_at: x.last_time ? new Date(x.last_time * 1000) : null }))
       }, ...all]
     }
 
     return all
-  }, [data])
+  }, [legendSnapshots, legendCurrent])
   useEffect(() => {
     if (!rankingSelected) {
       const selected = handleChangeStaking(rankingOptions, rankingOptions?.[0], account)
-      setRankingSelected(selected.value)
+      setRankingSelected(selected?.value)
     }
 
     if (isLive === null) {
@@ -168,7 +168,7 @@ const Staking = ({ data }) => {
   const handleRankingOption = (item: any) => {
     setIsLive(!item?.key)
     const selected = handleChangeStaking(rankingOptions, item, account)
-    setRankingSelected(selected.value)
+    setRankingSelected(selected?.value)
   }
 
   return (
@@ -250,10 +250,8 @@ export async function getStaticProps () {
 
   return {
     props: {
-      data: {
-        legendSnapshots: legendSnapshots?.data || null,
-        legendCurrent: legendCurrent?.data || null
-      }
+      legendSnapshots: legendSnapshots?.data || null,
+      legendCurrent: legendCurrent?.data || null
     },
     revalidate: 60
   }

@@ -120,7 +120,9 @@ const Profile = () => {
             <button className='flex gap-2 items-center' onClick={() => setEditing(false)}>
               <span className='uppercase font-bold text-13px outline-none focus:outline-none'>Cancel</span>
             </button>
-            <button className='flex gap-2 items-center ml-3 bg-gamefiGreen-700 px-6 py-1 rounded-sm clipped-t-r' onClick={handleSave}>
+            <button className='flex gap-2 items-center ml-3 bg-gamefiGreen-700 px-6 py-1 rounded-sm clipped-t-r' onClick={() => {
+              handleSave()
+            }}>
               <span className='uppercase font-bold text-13px text-gamefiDark-900 outline-none focus:outline-none'>Save</span>
             </button>
           </div>
@@ -247,14 +249,14 @@ const Profile = () => {
               <label className='text-xs lg:text-sm font-casual leading-7 lg:leading-7 truncate'>Twitter <span className="hidden xl:inline">Account</span></label>
               <div className='flex gap-2 justify-end items-center'>
                 { !editing && <span className="text-xs lg:text-sm font-semibold font-casual">{profile?.user_twitter}</span> }
-                { editing && <input type="text" className="text-xs lg:text-sm font-casual bg-gamefiDark-700 rounded w-32 border-gamefiDark-600 py-1 px-2" placeholder="@yourname" value={twitter} onChange={e => setTwitter(e.target.value)} /> }
+                { editing && <input type="text" className="text-xs lg:text-sm font-casual bg-gamefiDark-700 rounded w-32 border-gamefiDark-600 py-1 px-2" placeholder="@your.name" value={twitter} onChange={e => setTwitter(e.target.value)} /> }
               </div>
             </div> }
             { profile?.user_telegram && <div className='flex items-center justify-between gap-x-2 gap-y-4 mt-4'>
               <label className='text-xs lg:text-sm font-casual leading-7 lg:leading-7 truncate'>Telegram <span className="hidden xl:inline">Account</span></label>
               <div className='flex gap-2 justify-end items-center'>
                 { !editing && <span className="text-xs lg:text-sm font-semibold font-casual">{profile?.user_telegram}</span> }
-                { editing && <input type="text" className="text-xs lg:text-sm font-casual bg-gamefiDark-700 rounded w-32 border-gamefiDark-600 py-1 px-2" placeholder="@yourname" value={telegram} onChange={e => setTelegram(e.target.value)} /> }
+                { editing && <input type="text" className="text-xs lg:text-sm font-casual bg-gamefiDark-700 rounded w-32 border-gamefiDark-600 py-1 px-2" placeholder="@your.name" value={telegram} onChange={e => setTelegram(e.target.value)} /> }
               </div>
             </div> }
           </> }

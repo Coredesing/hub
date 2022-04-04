@@ -9,11 +9,10 @@ import { useUserClaimed } from '@/hooks/useUserClaimed'
 import { useLibraryDefaultFlexible } from '@/components/web3/utils'
 import { format } from 'date-fns'
 import Pagination from './Pagination'
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { IGOContext } from '@/pages/igo/[slug]'
 import Image from 'next/image'
 import { TIMELINE } from './constants'
-import BigNumber from 'bignumber.js'
 import { getNetworkByAlias, switchNetwork } from '@/components/web3'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
@@ -186,10 +185,9 @@ const Claim = () => {
       return
     }
     const { signature, amount } = await getUserSignature()
-    console.log(amount)
     if (!signature || !amount) return
 
-    if (amount && new BigNumber(amount).lte(0)) return toast.error('Please wait until the next milestone to claim the tokens.')
+    if (amount && BigNumber.from(amount).lte(0)) return toast.error('Please wait until the next milestone to claim the tokens.')
 
     const loading = toast.loading('start claim token')
     try {
@@ -296,18 +294,24 @@ const Claim = () => {
                         <div className="table-cell align-middle py-2 rounded font-light">
                           {printNumber(((Number(purchasedTokens) * Number(item.max_percent_claim) / 100) - (Number(purchasedTokens) * Number(configs[index - 1]?.max_percent_claim) / 100 || 0)))} {poolData?.symbol}
                         </div>
-                        <div className="table-cell align-middle py-2 rounded font-light">
-                          {Number(item.claim_type) === 0
-                            ? item.status === 'Claimable'
-                              ? <div style={{
-                                background: 'linear-gradient(270deg, #7EFF00 2.11%, #BCDB00 98.59%), #FFFFFF',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                                backgroundClip: 'text'
-                              }}>{item.status}</div>
-                              : <div className={`${item.status === 'Waiting' && 'text-gamefiYellow-500'} ${item.status === 'Claimed' && 'text-gamefiDark-200'}`}>{item.status}</div>
-                            : <></>}
-                        </div>
+                        {
+                          Number(purchasedTokens || 0)
+                            ? <div className="table-cell align-middle py-2 rounded font-light">
+                              {Number(item.claim_type) === 0
+                                ? item.status === 'Claimable'
+                                  ? <div style={{
+                                    background: 'linear-gradient(270deg, #7EFF00 2.11%, #BCDB00 98.59%), #FFFFFF',
+                                    WebkitBackgroundClip: 'text',
+                                    WebkitTextFillColor: 'transparent',
+                                    backgroundClip: 'text'
+                                  }}>{item.status}</div>
+                                  : <div className={`${item.status === 'Waiting' && 'text-gamefiYellow-500'} ${item.status === 'Claimed' && 'text-gamefiDark-200'}`}>{item.status}</div>
+                                : <></>}
+                            </div>
+                            : <div className="table-cell align-middle py-2 rounded font-light">
+                              <div className="text-gamefiDark-200"></div>
+                            </div>
+                        }
                         <div className="table-cell align-middle py-2 rounded font-light text-right">
                           <span
                             className={`${
@@ -344,7 +348,12 @@ const Claim = () => {
                 <div className="w-full mt-6 flex flex-col-reverse xl:flex-row justify-between xl:items-center gap-4">
                   <button
                     className={`px-8 py-3 rounded-sm clipped-t-r text-gamefiDark text-sm font-bold uppercase whitespace-nowrap ${claimable ? 'hover:opacity-95 bg-gamefiGreen-600 ' : 'bg-gamefiDark-300 cursor-not-allowed'}`}
-                    onClick={() => claimable && handleClaim()}
+                    onClick={() => {
+                      if (!claimable) {
+                        return
+                      }
+                      handleClaim()
+                    }}
                   >
                   Claim On GameFi.org
                   </button>

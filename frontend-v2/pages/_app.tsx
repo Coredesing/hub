@@ -11,7 +11,7 @@ import LoadingOverlay from '@/components/Base/LoadingOverlay'
 import Script from 'next/script'
 
 import 'tippy.js/dist/tippy.css'
-import 'assets/styles/index.scss'
+import '@/assets/styles/index.scss'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
 

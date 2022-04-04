@@ -11,7 +11,7 @@ const DiscoverTypes = ({ onChange, currentType }: Props) => {
   const handleChangeType = useCallback((type: DiscoverType) => {
     if (currentType === type) return
     onChange(type)
-  }, [currentType])
+  }, [currentType, onChange])
 
   return (
     <div className="sm:flex grid grid-cols-2 sm:w-auto w-full">

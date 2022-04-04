@@ -1,4 +1,4 @@
-import { ReactNode, useState, useEffect } from 'react'
+import { ReactNode } from 'react'
 import Head from 'next/head'
 import Sidebar from '@/components/Base/Sidebar'
 import Topbar from '@/components/Base/Topbar'
@@ -14,28 +14,28 @@ type Props = {
   disableFooter?: boolean;
 }
 
-const BETA_SUPPRESSION = 'BETA_SUPPRESSION'
+// const BETA_SUPPRESSION = 'BETA_SUPPRESSION'
 
 const Layout = ({ children, title, description, image, disableFooter }: Props) => {
-  const [suppressed, setSuppressed] = useState<boolean>(true)
+  // const [suppressed, setSuppressed] = useState<boolean>(true)
 
-  useEffect(function () {
-    if (!window.localStorage) {
-      return
-    }
+  // useEffect(function () {
+  //   if (!window.localStorage) {
+  //     return
+  //   }
 
-    const suppressed = window.localStorage.getItem(BETA_SUPPRESSION)
-    if (!suppressed) {
-      setSuppressed(false)
-    }
-  }, [])
+  //   const suppressed = window.localStorage.getItem(BETA_SUPPRESSION)
+  //   if (!suppressed) {
+  //     setSuppressed(false)
+  //   }
+  // }, [])
 
-  const suppress = () => {
-    setSuppressed(true)
-    if (window.localStorage) {
-      window.localStorage.setItem(BETA_SUPPRESSION, '1')
-    }
-  }
+  // const suppress = () => {
+  //   setSuppressed(true)
+  //   if (window.localStorage) {
+  //     window.localStorage.setItem(BETA_SUPPRESSION, '1')
+  //   }
+  // }
 
   const theme = 'dark'
   return (<div className={`flex w-full h-screen ${theme}`}>

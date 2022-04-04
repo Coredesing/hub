@@ -2,8 +2,8 @@ import LoadingOverlay from '@/components/Base/LoadingOverlay'
 import Pagination from '@/components/Base/Pagination'
 import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from '@/components/Base/Table'
 import { useMyWeb3 } from '@/components/web3/context'
-import { debounce, fetcher, formatPrice, printNumber, useFetch } from '@/utils'
-import { API_BASE_URL, CLAIM_TYPE, TOKEN_TYPE } from '@/utils/constants'
+import { debounce, printNumber, useFetch } from '@/utils'
+import { CLAIM_TYPE, TOKEN_TYPE } from '@/utils/constants'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Contract, ethers } from 'ethers'
 import Link from 'next/link'
@@ -305,7 +305,9 @@ const Pools = () => {
                     <Tippy content="Add to Metamask">
                       <button
                         className="w-8 h-8 xl:w-10 xl:h-10 p-2 bg-gamefiDark-630 rounded hover:opacity-90"
-                        onClick={() => addToWallet(item)}
+                        onClick={() => {
+                          addToWallet(item)
+                        }}
                       >
                         <Image src={require('@/assets/images/wallets/metamask.svg')} alt=""></Image>
                       </button>

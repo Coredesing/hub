@@ -52,7 +52,7 @@ export const InfoCollection = ({ item, isDisplayJoin, isShowSoldOut }: Props) =>
     return item.sale_description
   }, [item?.sale_description])
 
-  return <div className={`${styles.info} absolute top-1/2 left-1/2 w-full z-10`}>
+  return <div className={`${styles.info} absolute top-1/2 left-1/2 w-full z-10 px-2`}>
     <div className="flex  justify-center items-center gap-4 mb-2 relative">
       <GamefiIcon />
       <RelatingIcon />

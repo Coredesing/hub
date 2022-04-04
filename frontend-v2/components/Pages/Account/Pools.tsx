@@ -163,13 +163,6 @@ const Pools = () => {
 
     return `/ino/${pool.id}`
   }, [])
-  // const poolHref = useCallback((pool) => {
-  //   if (pool.token_type === TOKEN_TYPE.ERC20) {
-  //     return `https://hub.gamefi.org/#/buy-token/${pool.id}`
-  //   }
-
-  //   return `https://hub.gamefi.org/#/mystery-box/${pool.id}`
-  // }, [])
 
   const currentClaimPhase = (item: any) => {
     let data = null

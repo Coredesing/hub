@@ -70,9 +70,6 @@ const CardItem = ({ item, ...props }: Props) => {
           <Link href={`/igo/${item.id}`} passHref>
             <img src={item?.banner} alt="" style={{ width: '100%', objectFit: 'cover', aspectRatio: '4/3' }} />
           </Link>
-          {/* <Link href={`https://hub.gamefi.org/#/buy-token/${item.id}`} passHref>
-            <img src={item?.banner} alt="" style={{ width: '100%', objectFit: 'cover', aspectRatio: '4/3' }} />
-          </Link> */}
         </div>
       </div>
       <div className="bg-gamefiDark-650 w-full clipped-b-l pb-2">
@@ -82,11 +79,6 @@ const CardItem = ({ item, ...props }: Props) => {
               {item?.title || ''}
             </a>
           </Link>
-          {/* <Link href={`https://hub.gamefi.org/#/buy-token/${item.id}`} passHref>
-            <a className="text-center font-semibold text-lg cursor-pointer hover:underline">
-              {item?.title || ''}
-            </a>
-          </Link> */}
         </div>
         {distance <= 0
           ? countdownStatus

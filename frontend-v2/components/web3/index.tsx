@@ -88,7 +88,7 @@ export function useEagerConnect () {
 
     const tryMetamask = async () => {
       const _provider = await injected.getProvider()
-      if (_provider.overrideIsMetaMask) {
+      if (_provider?.overrideIsMetaMask) {
         // coinbase wallet
         const provider = (window as any).ethereum?.providers?.find(x => !!x.isMetaMask)
         if (!provider) {

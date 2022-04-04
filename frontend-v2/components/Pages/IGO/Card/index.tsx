@@ -168,7 +168,7 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
         <div className="w-full flex flex-col items-center justify-center">
           <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Starts In</div>
           <div className="mt-2">
-            <Countdown to={item?.end_join_pool_time}></Countdown>
+            <Countdown to={item?.start_join_pool_time}></Countdown>
           </div>
         </div>
       }

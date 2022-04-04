@@ -608,7 +608,9 @@ const IGODetails = ({ poolData }) => {
                       <Tippy content="Add to Metamask">
                         <button
                           className="w-6 h-6 hover:opacity-90"
-                          onClick={() => addToWallet(poolData)}
+                          onClick={() => {
+                            addToWallet(poolData)
+                          }}
                         >
                           <Image src={require('@/assets/images/wallets/metamask.svg')} alt=""></Image>
                         </button>

@@ -185,7 +185,7 @@ class UserController {
         return HelperUtils.responseNotFound();
       }
       const whitelistSubmission = JSON.parse(JSON.stringify(
-        await (new WhitelistSubmissionService).findSubmission({ wallet_address })
+        await (new WhitelistSubmissionService).findLastSubmission({ wallet_address })
       ));
 
       const user = {

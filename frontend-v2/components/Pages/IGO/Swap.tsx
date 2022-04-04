@@ -16,14 +16,13 @@ import { useAppContext } from '@/context'
 
 import Image from 'next/image'
 import { TIMELINE } from './constants'
-import { getTierById } from '@/utils/tiers'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 
 const Swap = () => {
   const { poolData, usd, hasFCFS, allocation, timeline, current } = useContext(IGOContext)
   const { library, account, network, balanceShort } = useMyWeb3()
-  const [txHash, setTxHash] = useState('')
+  // const [txHash, setTxHash] = useState('')
   const { tierMine } = useAppContext()
 
   const [now, setNow] = useState(new Date())
@@ -86,6 +85,7 @@ const Swap = () => {
       return { ...round, allocation: allocations[round.phase] || '0' }
     })
     setRounds(items)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allocation, poolData])
 
   useEffect(() => {
@@ -99,6 +99,7 @@ const Swap = () => {
 
     const currentPurchased = (Number(usdPurchased) - Number(previousRoundsPurchased)).toFixed(1)
     setRounds(rounds.map(round => round.phase === phase ? { ...round, purchased: currentPurchased } : round))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, usdPurchased])
 
   const isPreOrderTime = useMemo(() => {
@@ -132,7 +133,7 @@ const Swap = () => {
   }, [current?.key, isPreOrderTime, now, poolData, preOrderAllowed])
 
   // Approve Token
-  const { allowance, load: loadAllowance, loading: loadingAllowance, error } = useTokenAllowance(usd, account, poolData?.campaign_hash, poolData?.network_available)
+  const { allowance, load: loadAllowance, loading: loadingAllowance } = useTokenAllowance(usd, account, poolData?.campaign_hash, poolData?.network_available)
   const { approve, loading: loadingApproval, error: errorApproval } = useTokenApproval(usd, poolData?.campaign_hash)
 
   const { signMessage } = useWalletSignature()
@@ -167,7 +168,7 @@ const Swap = () => {
 
   const { balanceShort: usdBalance, updateBalance: updateUsdBalance } = useBalanceToken(usd, poolData?.network_available)
 
-  const onVerifyCapcha = (token: string | null) => {
+  const onVerifyCaptcha = (token: string | null) => {
     setCaptchaToken(token || '')
   }
 
@@ -299,7 +300,7 @@ const Swap = () => {
 
       if (+result?.status === 1) {
         toast.success('Token Deposit Successfully!')
-        setTxHash(transaction?.hash || '')
+        // setTxHash(transaction?.hash || '')
       } else {
         toast.error('Token Deposit Failed')
       }
@@ -407,7 +408,7 @@ const Swap = () => {
                           ? <>
                             {swappable
                               ? <div className="w-full mt-5">
-                                <Recaptcha onChange={onVerifyCapcha} ref={recaptchaRef}></Recaptcha>
+                                <Recaptcha onChange={onVerifyCaptcha} ref={recaptchaRef}></Recaptcha>
                               </div>
                               : null}
                             <div className="mt-5 w-full flex gap-2 items-center justify-end">
@@ -438,7 +439,7 @@ const Swap = () => {
                           : <>
                             {swappable
                               ? <div className="w-full mt-5">
-                                <Recaptcha onChange={onVerifyCapcha} ref={recaptchaRef}></Recaptcha>
+                                <Recaptcha onChange={onVerifyCaptcha} ref={recaptchaRef}></Recaptcha>
                               </div>
                               : <></>}
                             <div className="mt-5 w-full flex gap-2 items-center justify-end">

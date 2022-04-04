@@ -9,11 +9,10 @@ import { useUserClaimed } from '@/hooks/useUserClaimed'
 import { useLibraryDefaultFlexible } from '@/components/web3/utils'
 import { format } from 'date-fns'
 import Pagination from './Pagination'
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { IGOContext } from '@/pages/igo/[slug]'
 import Image from 'next/image'
 import { TIMELINE } from './constants'
-import BigNumber from 'bignumber.js'
 import { getNetworkByAlias, switchNetwork } from '@/components/web3'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
@@ -188,7 +187,7 @@ const Claim = () => {
     const { signature, amount } = await getUserSignature()
     if (!signature || !amount) return
 
-    if (amount && new BigNumber(amount).lte(0)) return toast.error('Please wait until the next milestone to claim the tokens.')
+    if (amount && BigNumber.from(amount).lte(0)) return toast.error('Please wait until the next milestone to claim the tokens.')
 
     const loading = toast.loading('start claim token')
     try {

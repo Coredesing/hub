@@ -146,7 +146,9 @@ const AuctionBoxModal = ({ open, poolInfo = {}, token = {}, auctionLoading, last
         <div className='mb-4'>
           <Recaptcha onChange={onChangeRecapcha} ref={recaptchaRef} />
         </div>
-        <ButtonBase color='green' onClick={onPlaceBid} className={`${classes.btnBid} w-full`} disabled={!account || auctionLoading || !isVerified} isLoading={auctionLoading}>
+        <ButtonBase color='green' onClick={() => {
+          onPlaceBid()
+        }} className={`${classes.btnBid} w-full`} disabled={!account || auctionLoading || !isVerified} isLoading={auctionLoading}>
           Place a Bid
         </ButtonBase>
       </div>

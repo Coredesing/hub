@@ -6,7 +6,7 @@ import { useLibraryDefaultFlexible } from '@/components/web3/utils'
 
 export const useUserPurchased = (address: string, networkAlias: string, decimals: number) => {
   const [userPurchasedTokens, setUserPurchasedTokens] = useState('0')
-  const { account, network } = useMyWeb3()
+  const { account } = useMyWeb3()
   const { provider } = useLibraryDefaultFlexible(networkAlias)
 
   const updatePurchasedTokens = useCallback(async () => {

@@ -22,7 +22,7 @@ const IGO = () => {
     return () => clearInterval(interval)
   }, [])
 
-  const { response: totalCompletedResponse, loading: totalCompletedLoading } = useFetch('/pools/total-completed-pools')
+  const { response: totalCompletedResponse } = useFetch('/pools/total-completed-pools')
   const totalCompletedPools = useMemo(() => {
     return totalCompletedResponse?.data?.total || 0
   }, [totalCompletedResponse?.data?.total])
@@ -108,7 +108,7 @@ const IGO = () => {
                   Opening Projects
               </div>
               <div className="absolute -bottom-5 left-0 right-0">
-                <Image src={require('@/assets/images/under-stroke-yellow.svg')} alt="understroke"></Image>
+                <Image src={require('@/assets/images/under-stroke-yellow.svg')} alt=""></Image>
               </div>
             </div>
             {
@@ -182,7 +182,7 @@ const IGO = () => {
                   Upcoming Projects
               </div>
               <div className="absolute -bottom-5 left-0 right-0">
-                <Image src={require('@/assets/images/under-stroke-yellow.svg')} alt="understroke"></Image>
+                <Image src={require('@/assets/images/under-stroke-yellow.svg')} alt=""></Image>
               </div>
             </div>
             {

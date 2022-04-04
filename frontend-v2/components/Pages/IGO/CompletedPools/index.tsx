@@ -1,6 +1,5 @@
 import { debounce, useFetch } from '@/utils'
 import React, { useMemo, useState } from 'react'
-import Dropdown from '@/components/Base/Dropdown'
 import SearchInput from '@/components/Base/SearchInput'
 import Card from './Card'
 import Pagination from '../Pagination'
@@ -10,7 +9,7 @@ const PER_PAGE = 10
 const CompletedPools = () => {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
-  const { response, loading } = useFetch(`/pools/complete-sale-pools?${search && `is_search=1&title=${search}&`}token_type=erc20&limit=${PER_PAGE}&page=${page}`)
+  const { response } = useFetch(`/pools/complete-sale-pools?${search && `is_search=1&title=${search}&`}token_type=erc20&limit=${PER_PAGE}&page=${page}`)
 
   const pools = useMemo(() => {
     return response?.data?.data || []

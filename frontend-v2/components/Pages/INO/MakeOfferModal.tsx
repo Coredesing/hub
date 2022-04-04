@@ -116,7 +116,9 @@ const MakeOfferModal = ({ tokenOnSale, lastOffer, myBalance, ...props }: Props) 
           disabled={props.disabledButton || BigNumber.from(utils.parseEther(offerPrice || '0')).isZero() || !!(notiMsg.type === 'error' && notiMsg.msg)}
           isLoading={props.isLoadingButton}
           color='green'
-          onClick={handleOffer}
+          onClick={() => {
+            handleOffer()
+          }}
           className={clsx('uppercase', styles.btnOffer)}
         >
           Make Offer

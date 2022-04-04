@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useMemo } from 'react'
 import { Item } from '../type'
 import Image from 'next/image'
 import community from 'assets/images/icons/community.png'
@@ -7,8 +7,6 @@ import { getCurrency, useLibraryDefaultFlexible } from '@/components/web3/utils'
 import { ListIGOContext } from '@/pages/igo'
 import Progress from './Progress'
 import Countdown from './Countdown'
-import { fetcher, printNumber } from '@/utils'
-import { API_BASE_URL } from '@/utils/constants'
 
 const Card = ({ item, color, background }: { item: Item; color?: string; background?:string }) => {
   const { network } = useLibraryDefaultFlexible(item?.network_available)

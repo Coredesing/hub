@@ -348,7 +348,12 @@ const Claim = () => {
                 <div className="w-full mt-6 flex flex-col-reverse xl:flex-row justify-between xl:items-center gap-4">
                   <button
                     className={`px-8 py-3 rounded-sm clipped-t-r text-gamefiDark text-sm font-bold uppercase whitespace-nowrap ${claimable ? 'hover:opacity-95 bg-gamefiGreen-600 ' : 'bg-gamefiDark-300 cursor-not-allowed'}`}
-                    onClick={() => claimable && handleClaim()}
+                    onClick={() => {
+                      if (!claimable) {
+                        return
+                      }
+                      handleClaim()
+                    }}
                   >
                   Claim On GameFi.org
                   </button>

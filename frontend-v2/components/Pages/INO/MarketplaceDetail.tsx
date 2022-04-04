@@ -657,7 +657,9 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
                   disabled={loadingApproveToken || loadingAllowance}
                   color='green'
                   className={clsx(styles.btnClipPathTopRight, styles.btn, styles.btnBuy, 'uppercase rounded-sm text-13px font-bold text-black bg-gamefiGreen-700')}
-                  onClick={onApproveToken}
+                  onClick={() => {
+                    onApproveToken()
+                  }}
                 >
                   {loadingAllowance ? 'Checking Approval' : 'Approve to Buy'}
                 </ButtonBase>

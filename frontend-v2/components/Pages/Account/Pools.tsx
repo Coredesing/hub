@@ -305,7 +305,9 @@ const Pools = () => {
                     <Tippy content="Add to Metamask">
                       <button
                         className="w-8 h-8 xl:w-10 xl:h-10 p-2 bg-gamefiDark-630 rounded hover:opacity-90"
-                        onClick={() => addToWallet(item)}
+                        onClick={() => {
+                          addToWallet(item)
+                        }}
                       >
                         <Image src={require('@/assets/images/wallets/metamask.svg')} alt=""></Image>
                       </button>

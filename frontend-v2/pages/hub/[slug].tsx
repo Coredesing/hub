@@ -245,36 +245,38 @@ const GameDetails = ({ data }) => {
 }
 
 const GameRight = ({ data, liked, account, className, like }) => {
-  const roi = ((parseFloat(data.tokenomic?.price) || 0) / parseFloat(data.token_price)).toFixed(2)
+  const p = parseFloat(data.tokenomic?.price)
+  const roi = ((p || 0) / parseFloat(data.token_price)).toFixed(2)
 
   return <div className={`flex-1 overflow-x-hidden ${className || ''}`}>
-    <p className="hidden md:block text-sm mb-2">Current Price (% Chg 24H)</p>
-    <div className="inline-flex items-center mb-8">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={data.icon_token_link} className="w-6 h-6" alt={data.game_name} />
-      <span className="ml-3 text-3xl font-mechanic font-bold">{parseFloat(data.tokenomic?.price) ? formatPrice(data.tokenomic?.price) : 'N/A'}</span>
-      <PriceChange className="ml-3 py-1 text-xs font-medium" tokenomic={data.tokenomic} />
-    </div>
+    { !!p && <><p className="hidden md:block text-sm mb-2">Current Price (% Chg 24H)</p>
+      <div className="inline-flex items-center mb-8">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={data.icon_token_link} className="w-6 h-6" alt={data.game_name} />
+        <span className="ml-3 text-3xl font-mechanic font-bold">{p ? formatPrice(data.tokenomic?.price) : 'N/A'}</span>
+        <PriceChange className="ml-3 py-1 text-xs font-medium" tokenomic={data.tokenomic} />
+      </div></> }
 
     <div className="flex items-center justify-between mb-4 gap-2">
       <span className="text-sm text-gray-300">IGO Price</span>
       <span className="font-medium text-base">{formatPrice(data.token_price)}</span>
     </div>
+    { !!p && <>
+      <div className="flex items-center justify-between mb-4 gap-2">
+        <span className="text-sm text-gray-300">IGO ROI</span>
+        <span className="font-medium text-base">{roi}x</span>
+      </div>
 
-    <div className="flex items-center justify-between mb-4 gap-2">
-      <span className="text-sm text-gray-300">IGO ROI</span>
-      <span className="font-medium text-base">{roi}x</span>
-    </div>
+      <div className="flex items-center justify-between mb-4 gap-2">
+        <span className="text-sm text-gray-300">Volume (24H)</span>
+        <span className="font-medium text-base">{formatterUSD.format(data.tokenomic?.volume_24h)}</span>
+      </div>
 
-    <div className="flex items-center justify-between mb-4 gap-2">
-      <span className="text-sm text-gray-300">Volume (24H)</span>
-      <span className="font-medium text-base">{formatterUSD.format(data.tokenomic?.volume_24h)}</span>
-    </div>
-
-    <div className="flex items-center justify-between mb-4 gap-2">
-      <span className="text-sm text-gray-300">Fully Diluted Market Cap</span>
-      <span className="font-medium text-base">{formatterUSD.format(data.tokenomic?.fully_diluted_market_cap)}</span>
-    </div>
+      <div className="flex items-center justify-between mb-4 gap-2">
+        <span className="text-sm text-gray-300">Fully Diluted Market Cap</span>
+        <span className="font-medium text-base">{formatterUSD.format(data.tokenomic?.fully_diluted_market_cap)}</span>
+      </div>
+    </> }
 
     <div className="flex items-center justify-between mb-4 gap-2">
       <span className="text-sm text-gray-300">Game Release Status</span>
@@ -286,11 +288,6 @@ const GameRight = ({ data, liked, account, className, like }) => {
     <div className="flex items-center justify-between mb-4 gap-4">
       <span className="text-sm text-gray-300">Developer</span>
       <span className="font-medium text-base truncate max-w-xs">{data.developer}</span>
-    </div>
-
-    <div className="flex items-center justify-between mb-4 gap-4">
-      <span className="text-sm text-gray-300 flex-none pr-4">Category</span>
-      <span className="font-medium text-base truncate max-w-xs">{data.category?.split(',').join(', ')}</span>
     </div>
 
     <div className="flex items-center justify-between mb-4 gap-4">
@@ -325,6 +322,10 @@ const GameRight = ({ data, liked, account, className, like }) => {
           </svg>
         </a> }
       </p>
+    </div>
+
+    <div className="flex flex-wrap gap-2 mb-8">
+      { data.category?.split(',').map(x => <Link href={`/hub?category=${x}`} passHref key={x}><a className="text-xs px-2 py-1.5 bg-gamefiDark-630/50 hover:bg-gamefiDark-630 rounded">{x}</a></Link>)}
     </div>
 
     <div className="font-mechanic font-bold uppercase text-center text-sm">

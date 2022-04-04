@@ -10,13 +10,15 @@ type Props = {
   show?: boolean;
   toggle?: any;
   className?: any;
+  onClose?: any;
 } & ObjectType
 
-const Modal = ({ children, show, toggle, className, ...props }: Props) => {
+const Modal = ({ children, show, toggle, className, onClose, ...props }: Props) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const handleClose = useCallback(() => {
+    onClose && onClose()
     toggle && toggle(false)
-  }, [toggle])
+  }, [onClose, toggle])
 
   useEffect(() => {
     function handleClick (event: any) {

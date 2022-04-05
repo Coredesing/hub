@@ -6,7 +6,7 @@ import styles from './SellNFTModal.module.scss'
 import marketStyles from './MarketplaceDetail.module.scss'
 // import Input from '@/components/Base/Input'
 import { ObjectType } from '@/utils/types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMyWeb3 } from '@/components/web3/context'
 import { FormInputNumber } from '@/components/Base/FormInputNumber'
 import BigNumberJs from 'bignumber.js'
@@ -32,6 +32,10 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], isLoadingButton,
   // const [expire, setExpire] = useState(0)
   const [feeAuction, setFeeAuction] = useState<number | string>(0)
   const feePlatform = 0.01
+
+  useEffect(() => {
+    setCurrency(currencies?.[0] || {})
+  }, [currencies])
 
   // NFT's owner approve to marketplace
   const handleApproveToken = async () => {
@@ -64,8 +68,16 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], isLoadingButton,
   //   setExpire(e.target.value);
   // }
 
-  const handleListingNFT = () => {
-    onListingNFT(auctionPrice, currency.address)
+  const handleListingNFT = async () => {
+    try {
+      const ok = await onListingNFT(auctionPrice, currency.address)
+      if (ok) {
+        setAuctionPrice('0')
+        setCurrency(currencies?.[0] || {})
+        setFeeAuction(0)
+      }
+    } catch (error) {
+    }
   }
 
   const onChangeCurrency = (val: ObjectType) => {

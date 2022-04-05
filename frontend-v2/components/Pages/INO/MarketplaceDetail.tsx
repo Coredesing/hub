@@ -362,7 +362,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
 
   const onListingNFT = (price: string, tokenAddress: string) => {
     if (!ERC721ContractSigner) return
-    handleCallContract(
+    return handleCallContract(
       onListingNFT.name,
       () => MarketplaceContractSigner.list(tokenInfo.id, projectInfo.token_address, utils.parseEther(price + ''), tokenAddress)
     )

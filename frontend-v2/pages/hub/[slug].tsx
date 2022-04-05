@@ -362,7 +362,7 @@ const GameRight = ({ data, liked, account, className, like }) => {
       { data.gamefi_ido_link && data.ido_type === 'launched' && <Link href={data.gamefi_ido_link} passHref={true}><a target="_blank" rel="noopenner noreferrer" className="mb-3 block cursor-pointer clipped-b-r bg-gamefiYellow-400 hover:bg-gamefiYellow-500 p-4 text-gamefiDark-900">
         {data.game_name} IDO on GameFi
       </a></Link> }
-      { data.gamefi_ido_link && idoUpcoming && <CountdownSVG title={`${data.game_name} IDO on GameFi in`} deadline={data?.ido_date} action="Join Now"></CountdownSVG> }
+      { data.gamefi_ido_link && data.ido_type !== 'launched' && idoUpcoming && <CountdownSVG title={`${data.game_name} IDO on GameFi in`} deadline={data?.ido_date} action="Join Now"></CountdownSVG> }
     </div>
   </div>
 }

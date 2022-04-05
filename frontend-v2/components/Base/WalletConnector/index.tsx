@@ -89,7 +89,7 @@ const WalletConnector = (props) => {
                           IGO Pools
                       </a>
                     </Link>
-                    <Link href="/account/collections" passHref={true}>
+                    <Link href="/account/collections/assets" passHref={true}>
                       <a className="flex min-w-[15rem] items-center p-1.5 mb-1 bg-gradient-to-r via-transparent hover:from-gamefiDark-400 hover:cursor-pointer rounded-sm">
                         <svg className="w-4 h-4 mr-2.5 text-gamefiDark-200" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M12 14.5C13.3807 14.5 14.5 13.3807 14.5 12C14.5 10.6193 13.3807 9.5 12 9.5C10.6193 9.5 9.5 10.6193 9.5 12C9.5 13.3807 10.6193 14.5 12 14.5Z" stroke={'#92929e'} strokeLinecap="round" strokeLinejoin="round" />

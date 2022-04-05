@@ -134,7 +134,7 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
     </div>
     <div className="mt-2 border-t-[1px] border-white/10 py-4">
       {
-        !item?.start_time && item.campaign_status?.toLowerCase() === 'tba' && <div className="w-full flex flex-col items-center justify-center">
+        !item?.start_time && ['tba', 'upcoming'].includes(item.campaign_status?.toLowerCase()) && <div className="w-full flex flex-col items-center justify-center">
           <div className="text-xs font-semibold text-white/50 uppercase">Pool Starts In</div>
           <div className="mt-2 font-medium">TBA</div>
         </div>

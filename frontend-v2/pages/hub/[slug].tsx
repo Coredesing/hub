@@ -255,7 +255,6 @@ const GameDetails = ({ data }) => {
 }
 
 const GameRight = ({ data, liked, account, className, like }) => {
-  const router = useRouter()
   const p = parseFloat(data.tokenomic?.price)
   const roi = ((p || 0) / parseFloat(data.token_price)).toFixed(2)
   const idoUpcoming = useMemo(() => {

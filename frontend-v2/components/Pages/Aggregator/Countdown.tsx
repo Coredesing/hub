@@ -36,6 +36,10 @@ const CountdownSVG = ({ action, title, deadline, onAction }:{ title?: string; ac
       return {}
     }
 
+    if (deadlineActual < now) {
+      return {}
+    }
+
     return intervalToDuration({
       start: now,
       end: deadlineActual

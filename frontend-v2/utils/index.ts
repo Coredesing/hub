@@ -171,15 +171,15 @@ export function printNumber (_n: string | number, fixed?: number): string {
 export const networkImage = (network: string) => {
   switch (network) {
   case 'bsc': {
-    return require('assets/images/networks/bsc.svg')
+    return require('@/assets/images/networks/bsc.svg')
   }
 
   case 'eth': {
-    return require('assets/images/networks/eth.svg')
+    return require('@/assets/images/networks/eth.svg')
   }
 
   case 'polygon': {
-    return require('assets/images/networks/matic.svg')
+    return require('@/assets/images/networks/matic.svg')
   }
   }
 }

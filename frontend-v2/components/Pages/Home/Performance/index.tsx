@@ -12,6 +12,8 @@ const Performance = () => {
     return response?.data?.performances || []
   }, [response])
 
+  console.log(performances)
+
   const gamefi = useMemo(() => {
     return response?.data?.gamefi
   }, [response])
@@ -19,7 +21,7 @@ const Performance = () => {
   return (
     <div className="container px-4 lg:px-16 mx-auto mt-20 pb-10 relative">
       <div className="mx-auto relative" style={{ maxWidth: '600px' }}>
-        <Image src={require('assets/images/performance.png')} alt=""></Image>
+        <Image src={require('@/assets/images/performance.png')} alt=""></Image>
         <div className="text-3xl font-bold uppercase absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center">Performance</div>
       </div>
       <div className="w-full">

@@ -1,6 +1,6 @@
 import { fetchOneWithSlug } from '@/pages/api/aggregator'
 import Layout from '@/components/Layout'
-import { formatterUSD, formatPrice, fetcher, printNumber } from '@/utils'
+import { formatterUSD, formatPrice, fetcher, printNumber, isVideoFile, isImageFile } from '@/utils'
 import PriceChange from '@/components/Pages/Aggregator/PriceChange'
 import Link from 'next/link'
 import { TabPanel, Tabs } from '@/components/Base/Tabs'
@@ -35,7 +35,7 @@ const Carousel = ({ items }: { items: any[] }) => {
           }
         ]
       }),
-      new AutoPlay({ duration: 3000, direction: 'NEXT', stopOnHover: false })
+      new AutoPlay({ duration: 10000, direction: 'NEXT', stopOnHover: true })
     ])
   }, [])
 
@@ -44,9 +44,17 @@ const Carousel = ({ items }: { items: any[] }) => {
       className="mb-4 w-full"
       bounce={5}
       plugins={plugins}>
-      {items.map(item => (
-        <img key={item} src={item} className="w-full aspect-[16/9]" alt="" />
-      ))}
+      {items.map(item => {
+        if (isImageFile(item)) {
+          return <img key={item} src={item} className="w-full aspect-[16/9]" alt="" />
+        }
+
+        if (isVideoFile(item)) {
+          return <video className="w-full aspect-[16/9]" key={item} src={item} preload="auto" autoPlay muted controls controlsList="nodownload" poster={items?.[1]}></video>
+        }
+
+        return null
+      })}
     </Flicking>
 
     <Flicking ref={flicking1}
@@ -57,7 +65,8 @@ const Carousel = ({ items }: { items: any[] }) => {
       bounce={5}>
       {items.map(item => (
         <div key={item} className="p-[2px] rounded border-2 border-transparent cursor-pointer">
-          <img src={item} className="rounded w-32 aspect-[16/9]" alt="" />
+          { isVideoFile(item) && <img src={items?.[1]} className="rounded w-32 aspect-[16/9]" alt="" /> }
+          { isImageFile(item) && <img src={item} className="rounded w-32 aspect-[16/9]" alt="" /> }
         </div>
       ))}
     </Flicking>
@@ -66,7 +75,7 @@ const Carousel = ({ items }: { items: any[] }) => {
 
 const GameDetails = ({ data }) => {
   const router = useRouter()
-  const items = [data.screen_shots_1, data.screen_shots_2, data.screen_shots_3, data.screen_shots_4, data.screen_shots_5].filter(x => !!x)
+  const items = [data.intro_video, data.screen_shots_1, data.screen_shots_2, data.screen_shots_3, data.screen_shots_4, data.screen_shots_5].filter(x => !!x)
   const [tab, setTab] = useState(0)
 
   const { account, library } = useMyWeb3()
@@ -200,7 +209,7 @@ const GameDetails = ({ data }) => {
                   </>
                   }
 
-                  { data?.tokenomic?.token_metrics && <>
+                  { data?.tokenomic?.token_distribution && <>
                     <div className="mt-6"><strong>Token Distribution</strong></div>
                     <div dangerouslySetInnerHTML={{ __html: data?.tokenomic?.token_distribution }}></div>
                   </>
@@ -245,36 +254,38 @@ const GameDetails = ({ data }) => {
 }
 
 const GameRight = ({ data, liked, account, className, like }) => {
-  const roi = ((parseFloat(data.tokenomic?.price) || 0) / parseFloat(data.token_price)).toFixed(2)
+  const p = parseFloat(data.tokenomic?.price)
+  const roi = ((p || 0) / parseFloat(data.token_price)).toFixed(2)
 
   return <div className={`flex-1 overflow-x-hidden ${className || ''}`}>
-    <p className="hidden md:block text-sm mb-2">Current Price (% Chg 24H)</p>
-    <div className="inline-flex items-center mb-8">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={data.icon_token_link} className="w-6 h-6" alt={data.game_name} />
-      <span className="ml-3 text-3xl font-mechanic font-bold">{parseFloat(data.tokenomic?.price) ? formatPrice(data.tokenomic?.price) : 'N/A'}</span>
-      <PriceChange className="ml-3 py-1 text-xs font-medium" tokenomic={data.tokenomic} />
-    </div>
+    { !!p && <><p className="hidden md:block text-sm mb-2">Current Price (% Chg 24H)</p>
+      <div className="inline-flex items-center mb-8">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={data.icon_token_link} className="w-6 h-6" alt={data.game_name} />
+        <span className="ml-3 text-3xl font-mechanic font-bold">{p ? formatPrice(data.tokenomic?.price) : 'N/A'}</span>
+        <PriceChange className="ml-3 py-1 text-xs font-medium" tokenomic={data.tokenomic} />
+      </div></> }
 
     <div className="flex items-center justify-between mb-4 gap-2">
       <span className="text-sm text-gray-300">IGO Price</span>
       <span className="font-medium text-base">{formatPrice(data.token_price)}</span>
     </div>
+    { !!p && <>
+      <div className="flex items-center justify-between mb-4 gap-2">
+        <span className="text-sm text-gray-300">IGO ROI</span>
+        <span className="font-medium text-base">{roi}x</span>
+      </div>
 
-    <div className="flex items-center justify-between mb-4 gap-2">
-      <span className="text-sm text-gray-300">IGO ROI</span>
-      <span className="font-medium text-base">{roi}x</span>
-    </div>
+      <div className="flex items-center justify-between mb-4 gap-2">
+        <span className="text-sm text-gray-300">Volume (24H)</span>
+        <span className="font-medium text-base">{formatterUSD.format(data.tokenomic?.volume_24h)}</span>
+      </div>
 
-    <div className="flex items-center justify-between mb-4 gap-2">
-      <span className="text-sm text-gray-300">Volume (24H)</span>
-      <span className="font-medium text-base">{formatterUSD.format(data.tokenomic?.volume_24h)}</span>
-    </div>
-
-    <div className="flex items-center justify-between mb-4 gap-2">
-      <span className="text-sm text-gray-300">Fully Diluted Market Cap</span>
-      <span className="font-medium text-base">{formatterUSD.format(data.tokenomic?.fully_diluted_market_cap)}</span>
-    </div>
+      <div className="flex items-center justify-between mb-4 gap-2">
+        <span className="text-sm text-gray-300">Fully Diluted Market Cap</span>
+        <span className="font-medium text-base">{formatterUSD.format(data.tokenomic?.fully_diluted_market_cap)}</span>
+      </div>
+    </> }
 
     <div className="flex items-center justify-between mb-4 gap-2">
       <span className="text-sm text-gray-300">Game Release Status</span>
@@ -286,11 +297,6 @@ const GameRight = ({ data, liked, account, className, like }) => {
     <div className="flex items-center justify-between mb-4 gap-4">
       <span className="text-sm text-gray-300">Developer</span>
       <span className="font-medium text-base truncate max-w-xs">{data.developer}</span>
-    </div>
-
-    <div className="flex items-center justify-between mb-4 gap-4">
-      <span className="text-sm text-gray-300 flex-none pr-4">Category</span>
-      <span className="font-medium text-base truncate max-w-xs">{data.category?.split(',').join(', ')}</span>
     </div>
 
     <div className="flex items-center justify-between mb-4 gap-4">
@@ -325,6 +331,10 @@ const GameRight = ({ data, liked, account, className, like }) => {
           </svg>
         </a> }
       </p>
+    </div>
+
+    <div className="flex flex-wrap gap-2 mb-8">
+      { data.category?.split(',').map(x => <Link href={`/hub?category=${x}`} passHref key={x}><a className="text-xs px-2 py-1.5 bg-gamefiDark-630/50 hover:bg-gamefiDark-630 rounded">{x}</a></Link>)}
     </div>
 
     <div className="font-mechanic font-bold uppercase text-center text-sm">

@@ -245,6 +245,7 @@ const AuctionDetail = ({ poolInfo }: any) => {
   const [totalBidHistories, setTotalBidHistories] = useState(0)
   const [totalVolumeBid, setTotalTotalVolume] = useState('')
   const [loadingGetBidHistory, setLoadingBidHistory] = useState(false)
+  console.debug(loadingGetBidHistory)
   useEffect(() => {
     if (totalBidHistories) {
       if (totalBidHistories <= perPageBidHistory) {

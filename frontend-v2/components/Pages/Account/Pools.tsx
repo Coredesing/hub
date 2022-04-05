@@ -163,13 +163,6 @@ const Pools = () => {
 
     return `/ino/${pool.id}`
   }, [])
-  // const poolHref = useCallback((pool) => {
-  //   if (pool.token_type === TOKEN_TYPE.ERC20) {
-  //     return `https://hub.gamefi.org/#/buy-token/${pool.id}`
-  //   }
-
-  //   return `https://hub.gamefi.org/#/mystery-box/${pool.id}`
-  // }, [])
 
   const currentClaimPhase = (item: any) => {
     let data = null
@@ -305,7 +298,9 @@ const Pools = () => {
                     <Tippy content="Add to Metamask">
                       <button
                         className="w-8 h-8 xl:w-10 xl:h-10 p-2 bg-gamefiDark-630 rounded hover:opacity-90"
-                        onClick={() => addToWallet(item)}
+                        onClick={() => {
+                          addToWallet(item)
+                        }}
                       >
                         <Image src={require('@/assets/images/wallets/metamask.svg')} alt=""></Image>
                       </button>

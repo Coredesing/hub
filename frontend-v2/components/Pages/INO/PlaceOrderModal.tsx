@@ -15,7 +15,7 @@ type Props = {
   [k: string]: any;
 }
 
-const PlaceOrderModal = ({ open, onClose, poolId, getBoxOrderd, maxBoxOrdered }: Props) => {
+const PlaceOrderModal = ({ open, onClose, poolId, getBoxOrdered, maxBoxOrdered }: Props) => {
   const { account } = useMyWeb3()
   const { orderBox, loading: loadingOrderBox } = useOrderBox(poolId, account)
   const [numberBox, setNumberBox] = useState(0)
@@ -32,7 +32,7 @@ const PlaceOrderModal = ({ open, onClose, poolId, getBoxOrderd, maxBoxOrdered }:
       }
       await orderBox(numberBox)
       setNumberBox(0)
-      getBoxOrderd && getBoxOrderd()
+      getBoxOrdered && getBoxOrdered()
       onClose && onClose()
     } catch (error) {
 
@@ -43,12 +43,12 @@ const PlaceOrderModal = ({ open, onClose, poolId, getBoxOrderd, maxBoxOrdered }:
       <h3 className='uppercase text-2xl font-bold mb-4'>Buy Boxes </h3>
       <div>
         <h4 className='font-casual text-sm text-white/70 mb-2'>Number of boxes you want to buy? (Maximum: {maxBoxOrdered})</h4>
-        <FormInputNumber value={numberBox} isPositive isInteger onChange={onChangeNumberBox} max={maxBoxOrdered} className={clsx(styles.input, 'text-sm font-casual')} placeholder="Amout. Eg: 50" />
+        <FormInputNumber value={numberBox} isPositive isInteger onChange={onChangeNumberBox} max={maxBoxOrdered} className={clsx(styles.input, 'text-sm font-casual')} placeholder="Amount. Eg: 50" />
       </div>
       <div className='grid justify-center'>
         <ButtonBase
           color={'green'}
-          onClick={onPlaceOrder}
+          onClick={() => { onPlaceOrder() }}
           disabled={loadingOrderBox}
           isLoading={loadingOrderBox}
           className={clsx('mt-4 uppercase w-40 ')}>

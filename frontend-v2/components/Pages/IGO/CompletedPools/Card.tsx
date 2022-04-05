@@ -1,11 +1,9 @@
 import { getCurrency, useLibraryDefaultFlexible } from '@/components/web3/utils'
-import React, { useCallback, useEffect, useState } from 'react'
 import { Item } from '../type'
 import Image from 'next/image'
-import { fetcher, formatterUSD, printNumber } from '@/utils'
+import { formatterUSD } from '@/utils'
 import { getTierById } from '@/utils/tiers'
 import Countdown from '../Card/Countdown'
-import { API_BASE_URL } from '@/utils/constants'
 
 const Card = ({ item }: {item: Item}) => {
   const { network } = useLibraryDefaultFlexible(item?.network_available)

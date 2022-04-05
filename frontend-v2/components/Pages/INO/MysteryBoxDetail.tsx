@@ -289,7 +289,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     setCurrentTab(val)
   }
 
-  const getBoxOrderd = useCallback(async () => {
+  const getBoxOrdered = useCallback(async () => {
     if (!account) {
       setMyBoxOrdered(0)
       return
@@ -304,8 +304,8 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }, [account, poolInfo])
 
   useEffect(() => {
-    getBoxOrderd()
-  }, [getBoxOrderd])
+    getBoxOrdered()
+  }, [getBoxOrdered])
   const { isJoinPool, loading: loadingCheckJPool } = useCheckJoinPool(poolInfo?.id, account)
   const { joinPool, loading: loadingJPool, success: isJoinSuccess } = useJoinPool(poolInfo?.id, account)
 
@@ -336,7 +336,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const handleApproveToken = async () => {
     const ok = await approve(constants.MaxUint256)
     if (ok) {
-      toast.success('Approve token succesfully')
+      toast.success('Approve token successfully')
       setTokenApproved(true)
     }
   }
@@ -490,10 +490,10 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }
   const isCommunityPool = +poolInfo.is_private === 3
   const isAppliedWhitelist = isJoinPool || isJoinSuccess
-  const isDepoyedPool = !!+poolInfo.is_deploy
-  const isShowBtnApprove = !!account && isDepoyedPool && currencySelected.neededApprove && !isApprovedToken && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2)
-  const isShowBtnBuy = !!account && isDepoyedPool && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && countdown.isSale && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken))
-  const isAllowedJoinCompetive = (countdown.isWhitelist || countdown.isUpcoming) && isCommunityPool && poolInfo.socialRequirement?.gleam_link && !isAppliedWhitelist
+  const isDeployedPool = !!+poolInfo.is_deploy
+  const isShowBtnApprove = !!account && isDeployedPool && currencySelected.neededApprove && !isApprovedToken && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2)
+  const isShowBtnBuy = !!account && isDeployedPool && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && countdown.isSale && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken))
+  const isAllowedJoinCompetition = (countdown.isWhitelist || countdown.isUpcoming) && isCommunityPool && poolInfo.socialRequirement?.gleam_link && !isAppliedWhitelist
 
   const renderMsg = () => {
     if (!account) {
@@ -536,7 +536,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       open={openPlaceOrderModal}
       onClose={() => setOpenPlaceOrderModal(false)}
       poolId={poolInfo.id}
-      getBoxOrderd={getBoxOrderd}
+      getBoxOrdered={getBoxOrdered}
       maxBoxOrdered={maxBoxCanBuy}
     />
     <BuyBoxModal
@@ -629,7 +629,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           </div>
         }
         <div>
-          {isAllowedJoinCompetive && !isClickedCompetition && <ButtonBase color="red"
+          {isAllowedJoinCompetition && !isClickedCompetition && <ButtonBase color="red"
             onClick={() => onJoinCompetition(poolInfo.socialRequirement.gleam_link)}
             className={clsx('w-full mt-4 uppercase')}>
             Join Competition
@@ -640,7 +640,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               color={'green'}
               isLoading={loadingJPool || loadingCheckJPool}
               disabled={loadingCheckJPool || loadingJPool}
-              onClick={joinPool}
+              onClick={() => {
+                joinPool()
+              }}
               className={clsx('w-full mt-4 uppercase')}>
               Apply Whitelist
             </ButtonBase>
@@ -660,7 +662,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               color={'green'}
               isLoading={loadingApproveToken || loadingAllowance}
               disabled={loadingApproveToken || loadingAllowance || !isValidChain}
-              onClick={handleApproveToken}
+              onClick={() => {
+                handleApproveToken()
+              }}
               className={clsx('w-full mt-4 uppercase')}>
               {loadingAllowance ? 'Checking Approval' : 'Approve'}
             </ButtonBase>
@@ -681,7 +685,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         <Tabs
           titles={[
             'Rule Introduction',
-            boxSelected?.description ? 'Box Infomation' : undefined,
+            boxSelected?.description ? 'Box Information' : undefined,
             'Series Content',
             'TimeLine',
             `Collection ${ownedBox ? `(${ownedBox})` : ''}`

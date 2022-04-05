@@ -558,7 +558,7 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
           <div className='flex gap-2 items-center'>
             {isFirstEdition && <img src={projectInfo.logo} alt="" className='w-11 h-11 rounded-full bg-black' />}
             <div>
-              <label htmlFor="" className="block font-bold text-white/50 text-13px uppercase">Owner <span className={`uppercase ${isFirstEdition ? 'text-gamefiGreen-700' : 'text-orange-500'}`}>{isFirstEdition ? '(First Edition)' : countdown.isSale && '(ReSale)'}</span></label>
+              <label htmlFor="" className="block font-bold text-white/50 text-13px uppercase">Owner <span className={`uppercase ${isFirstEdition ? 'text-gamefiGreen-700' : 'text-orange-500'}`}>{isFirstEdition ? '(First Edition)' : countdown.isSale && '(Resale)'}</span></label>
               <span className="block text-base font-casual">{OwnerNFT && shortenAddress(OwnerNFT, '.', 6)}</span>
             </div>
           </div>
@@ -657,7 +657,9 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
                   disabled={loadingApproveToken || loadingAllowance}
                   color='green'
                   className={clsx(styles.btnClipPathTopRight, styles.btn, styles.btnBuy, 'uppercase rounded-sm text-13px font-bold text-black bg-gamefiGreen-700')}
-                  onClick={onApproveToken}
+                  onClick={() => {
+                    onApproveToken()
+                  }}
                 >
                   {loadingAllowance ? 'Checking Approval' : 'Approve to Buy'}
                 </ButtonBase>

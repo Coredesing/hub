@@ -44,7 +44,9 @@ const BuyNowModal = ({ tokenOnSale, myBalance, ...props }: Props) => {
           disabled={props.disabledButton || disabledBuy}
           isLoading={props.isLoadingButton}
           color='green'
-          onClick={handleBuyNow}
+          onClick={() => {
+            handleBuyNow()
+          }}
           className={clsx('uppercase', styles.btnOffer)}
         >
           Buy now

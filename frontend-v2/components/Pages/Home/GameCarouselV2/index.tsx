@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { Carousel } from 'react-responsive-carousel'
 import { useMediaQuery } from 'react-responsive'
 import Link from 'next/link'
-import Flicking, { ViewportSlot } from '@egjs/react-flicking'
-import { AutoPlay, Pagination, Sync } from '@egjs/flicking-plugins'
-import arrowLeft from 'assets/images/icons/arrow-left.png'
-import arrowRight from 'assets/images/icons/arrow-right.png'
+import Flicking from '@egjs/react-flicking'
+import { AutoPlay, Sync } from '@egjs/flicking-plugins'
+import arrowLeft from '@/assets/images/icons/arrow-left.png'
+import arrowRight from '@/assets/images/icons/arrow-right.png'
 
 type Props = {
   items?: any[];
@@ -35,7 +34,7 @@ const GameCarousel = ({ items, likes }: Props) => {
         {
           flicking: refSlider1.current,
           isClickable: true,
-          activeClass: 'thumbnail-bullet-acitve'
+          activeClass: 'thumbnail-bullet-active'
         }
       ]
     }), new AutoPlay({ duration: 3000, direction: 'NEXT', stopOnHover: true })])
@@ -112,7 +111,7 @@ const GameCarousel = ({ items, likes }: Props) => {
           </div>
         </div>
         <Flicking ref={refSlider1} bound={true} bounce={30} moveType="freeScroll">
-          {items && items.map(item => <div key={`caurouse-paginate-${item.id}`} className="border border-transparent mx-1 mt-8 cursor-pointer">
+          {items && items.map(item => <div key={`carousel-paginate-${item.id}`} className="border border-transparent mx-1 mt-8 cursor-pointer">
             <img className="h-20 w-36 object-cover thumbnail-bullet-active" src={item?.screen_shots_1} alt=""></img>
           </div>)}
         </Flicking>
@@ -159,7 +158,7 @@ const GameCarousel = ({ items, likes }: Props) => {
           </Flicking>
         </div>
         <Flicking ref={refSlider1} bound={true} bounce={30} moveType="freeScroll">
-          {items && items.map(item => <div key={`caurouse-paginate-${item.id}`} className="border border-transparent mx-1 mt-8 cursor-pointer">
+          {items && items.map(item => <div key={`carousel-paginate-${item.id}`} className="border border-transparent mx-1 mt-8 cursor-pointer">
             <img className="h-20 w-36 object-cover thumbnail-bullet-active" src={item?.screen_shots_1} alt=""></img>
           </div>)}
         </Flicking>

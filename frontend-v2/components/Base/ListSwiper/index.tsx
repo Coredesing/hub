@@ -166,7 +166,7 @@ export const CarouselList = ({
     </ScrollingCarousel>
     : <CarouselMobile
       className={style.carouselMobile}
-      renderArrowPrev={(prev, hasPrev, label) => {
+      renderArrowPrev={(prev, hasPrev) => {
         return hasPrev && <button className='absolute left-0 top-1/2 z-50' style={{ transform: 'translate(0, -50%)' }} onClick={prev} >
           <svg width="32" height="122" viewBox="0 0 32 122" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.5 61.5H2.5" stroke="white" strokeMiterlimit="10" />
@@ -178,7 +178,7 @@ export const CarouselList = ({
           </svg>
         </button>
       }}
-      renderArrowNext={(next, hasNext, label) => {
+      renderArrowNext={(next, hasNext) => {
         return hasNext && <button className='absolute right-0 top-1/2 z-50' style={{ transform: 'translate(0, -50%)' }} onClick={next}>
           <svg width="32" height="122" viewBox="0 0 32 122" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.5 60.5L29.5 60.5" stroke="white" strokeMiterlimit="10" />

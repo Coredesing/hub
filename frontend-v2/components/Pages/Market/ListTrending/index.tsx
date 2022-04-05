@@ -1,4 +1,4 @@
-import { CarouselList, SwiperItem } from '@/components/Base/ListSwiper'
+import { CarouselList } from '@/components/Base/ListSwiper'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import NFTCard from '../NFTCard'
 import { useNFTInfos } from '../utils'

@@ -3,7 +3,7 @@ import ButtonBase from '@/components/Base/Buttons/ButtonBase'
 import Dropdown from '@/components/Base/Dropdown'
 import Modal from '@/components/Base/Modal'
 import styles from './SellNFTModal.module.scss'
-import martketStyles from './MarketplaceDetail.module.scss'
+import marketStyles from './MarketplaceDetail.module.scss'
 // import Input from '@/components/Base/Input'
 import { ObjectType } from '@/utils/types'
 import { useState } from 'react'
@@ -82,7 +82,7 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], isLoadingButton,
         <label htmlFor="" className='text-sm block mb-2 font-casual'>Sell Method</label>
         <div className='flex gap-2 justify-end'>
           {/* <button
-            className={clsx(martketStyles.btn, martketStyles.btnClipPathBottomLeft, 'text-13px font-bold uppercase', {
+            className={clsx(marketStyles.btn, marketStyles.btnClipPathBottomLeft, 'text-13px font-bold uppercase', {
               'bg-black': !isAuction,
               'text-white/50': !isAuction,
               'bg-gamefiGreen-700': isAuction,
@@ -91,7 +91,7 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], isLoadingButton,
             Auction
           </button> */}
           <button
-            className={clsx(martketStyles.btn, martketStyles.btnClipPathTopRight, 'text-13px font-bold uppercase', {
+            className={clsx(marketStyles.btn, marketStyles.btnClipPathTopRight, 'text-13px font-bold uppercase', {
               'bg-black': !isFixedPrice,
               'text-white/50': !isFixedPrice,
               'bg-gamefiGreen-700': isFixedPrice,
@@ -137,7 +137,7 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], isLoadingButton,
       </div> */}
       <div className="divider bg-white/20 w-full mt-8 mb-4" style={{ height: '1px' }}></div>
       {/* <div>
-        <label htmlFor="" className='block font-bold text-lg mb-4'>Choose Categogy (3/3)</label>
+        <label htmlFor="" className='block font-bold text-lg mb-4'>Choose Category (3/3)</label>
         <div className={clsx('flex gap-2 bg-white/10 flex-wrap rounded-sm border border-white/25 p-1 items-center', styles.tagsBox)}>
           {
             tags.map((t) => <span key={t} className={clsx('flex items-center px-2 py-1 bg-white/25 rounded-sm font-casual', styles.tag)}>
@@ -164,7 +164,9 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], isLoadingButton,
             isLoading={disabledButton}
             disabled={disabledButton}
             color='green'
-            onClick={handleApproveToken}
+            onClick={() => {
+              handleApproveToken()
+            }}
             className={clsx('uppercase', styles.btnSubmit)}>
             Approve
           </ButtonBase>

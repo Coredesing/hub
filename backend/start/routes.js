@@ -51,6 +51,7 @@ Route.group(() => {
   Route.post('vesting/gamefi/:address', 'HomeController.getVestingOption');
   Route.get('legend/:id', 'HomeController.getLegendImages');
   Route.get('tokenomics', 'HomeController.getTokenomics');
+  Route.get('nft/metagod-ticket/:id', 'HomeController.getMetaGodTicketDetail');
 
   // Aggregator
   Route.get('aggregator', 'AggregatorController.getAggregator');

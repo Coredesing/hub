@@ -70,7 +70,7 @@ const WalletConnector = (props) => {
                             </clipPath>
                           </defs>
                         </svg>
-                          My Account
+                          My Profile
                       </a>
                     </Link>
                     <Link href="/account/rank" passHref={true}>
@@ -86,7 +86,18 @@ const WalletConnector = (props) => {
                         <svg className="w-4 h-4 mr-2.5 text-gamefiDark-200" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M14 0H2C1.4 0 1 0.4 1 1V16L4 14L6 16L8 14L10 16L12 14L15 16V1C15 0.4 14.6 0 14 0ZM12 10H4V8H12V10ZM12 6H4V4H12V6Z" fill="currentColor"/>
                         </svg>
-                          My Pools
+                          IGO Pools
+                      </a>
+                    </Link>
+                    <Link href="/account/collections" passHref={true}>
+                      <a className="flex min-w-[15rem] items-center p-1.5 mb-1 bg-gradient-to-r via-transparent hover:from-gamefiDark-400 hover:cursor-pointer rounded-sm">
+                        <svg className="w-4 h-4 mr-2.5 text-gamefiDark-200" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 14.5C13.3807 14.5 14.5 13.3807 14.5 12C14.5 10.6193 13.3807 9.5 12 9.5C10.6193 9.5 9.5 10.6193 9.5 12C9.5 13.3807 10.6193 14.5 12 14.5Z" stroke={'#92929e'} strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M4 6.5C5.38071 6.5 6.5 5.38071 6.5 4C6.5 2.61929 5.38071 1.5 4 1.5C2.61929 1.5 1.5 2.61929 1.5 4C1.5 5.38071 2.61929 6.5 4 6.5Z" stroke={'#92929e'} strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M14.5 1.5H9.5V6.5H14.5V1.5Z" stroke={'#92929e'} strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M6.5 9.5H1.5V14.5H6.5V9.5Z" stroke={'#92929e'} strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                          Collections
                       </a>
                     </Link>
                     <div className="h-px w-full bg-gamefiDark-400 my-2"></div>

@@ -14,7 +14,6 @@ import { useRouter } from 'next/router'
 import TabStake from '@/components/Pages/Staking/TabStake'
 import TabUnstake from '@/components/Pages/Staking/TabUnstake'
 import Ranks from '@/components/Pages/Staking/Ranks'
-import FilterDropdown from '@/components/Pages/Home/FilterDropdown'
 import TopRanking from '@/components/Pages/Staking/TopRanking'
 import { handleChangeStaking } from '@/components/Pages/Staking/utils'
 
@@ -165,15 +164,10 @@ const Staking = ({ legendSnapshots, legendCurrent }) => {
       setIsLive(!rankingOptions?.[0]?.key)
     }
   }, [rankingOptions, rankingSelected, isLive, account])
-  const handleRankingOption = (item: any) => {
-    setIsLive(!item?.key)
-    const selected = handleChangeStaking(rankingOptions, item, account)
-    setRankingSelected(selected?.value)
-  }
 
   return (
     <Layout title="GameFi.org - Staking">
-      <div className="px-4 lg:px-16 mx-auto lg:block max-w-7xl pb-4">
+      <div className="px-2 lg:px-16 mx-auto lg:block max-w-7xl pb-4">
         <div className="p-px bg-gradient-to-r from-gamefiDark-500 via-gamefiDark-800 rounded">
           <div className="bg-gradient-to-r from-gamefiDark-700 via-gamefiDark-900 to-gamefiDark-900 rounded flex">
             <div className="py-1 px-1 md:px-10 sm:px-2 pl-1 sm:pl-2 md:pl-4 flex-1 md:flex-initial flex items-center border-r border-gamefiDark-500">
@@ -229,9 +223,6 @@ const Staking = ({ legendSnapshots, legendCurrent }) => {
             <TabUnstake {...{ contractStaking, stakingMine, loadMyPending, pendingWithdrawal, goStake: () => { setTab(0) } }} />
           </TabPanel>
           <TabPanel value={tab} index={2}>
-            <div className="md:text-lg 2xl:text-2xl uppercase font-bold flex mt-6 items-center">
-              <span className="mr-2">Ranking</span><FilterDropdown items={rankingOptions} selected={rankingSelected} onChange={handleRankingOption}></FilterDropdown>
-            </div>
             {<TopRanking isLive={isLive} rankings={rankingSelected} />}
           </TabPanel>
         </div>

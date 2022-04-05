@@ -1,6 +1,6 @@
 import { fetchOneWithSlug } from '@/pages/api/aggregator'
 import Layout from '@/components/Layout'
-import { formatterUSD, formatPrice, fetcher, printNumber } from '@/utils'
+import { formatterUSD, formatPrice, fetcher, printNumber, isVideoFile, isImageFile } from '@/utils'
 import PriceChange from '@/components/Pages/Aggregator/PriceChange'
 import Link from 'next/link'
 import { TabPanel, Tabs } from '@/components/Base/Tabs'
@@ -35,7 +35,7 @@ const Carousel = ({ items }: { items: any[] }) => {
           }
         ]
       }),
-      new AutoPlay({ duration: 3000, direction: 'NEXT', stopOnHover: false })
+      new AutoPlay({ duration: 10000, direction: 'NEXT', stopOnHover: true })
     ])
   }, [])
 
@@ -44,9 +44,17 @@ const Carousel = ({ items }: { items: any[] }) => {
       className="mb-4 w-full"
       bounce={5}
       plugins={plugins}>
-      {items.map(item => (
-        <img key={item} src={item} className="w-full aspect-[16/9]" alt="" />
-      ))}
+      {items.map(item => {
+        if (isImageFile(item)) {
+          return <img key={item} src={item} className="w-full aspect-[16/9]" alt="" />
+        }
+
+        if (isVideoFile(item)) {
+          return <video className="w-full aspect-[16/9]" key={item} src={item} preload="auto" autoPlay muted controls controlsList="nodownload" poster={items?.[1]}></video>
+        }
+
+        return null
+      })}
     </Flicking>
 
     <Flicking ref={flicking1}
@@ -57,7 +65,8 @@ const Carousel = ({ items }: { items: any[] }) => {
       bounce={5}>
       {items.map(item => (
         <div key={item} className="p-[2px] rounded border-2 border-transparent cursor-pointer">
-          <img src={item} className="rounded w-32 aspect-[16/9]" alt="" />
+          { isVideoFile(item) && <img src={items?.[1]} className="rounded w-32 aspect-[16/9]" alt="" /> }
+          { isImageFile(item) && <img src={item} className="rounded w-32 aspect-[16/9]" alt="" /> }
         </div>
       ))}
     </Flicking>
@@ -66,7 +75,7 @@ const Carousel = ({ items }: { items: any[] }) => {
 
 const GameDetails = ({ data }) => {
   const router = useRouter()
-  const items = [data.screen_shots_1, data.screen_shots_2, data.screen_shots_3, data.screen_shots_4, data.screen_shots_5].filter(x => !!x)
+  const items = [data.intro_video, data.screen_shots_1, data.screen_shots_2, data.screen_shots_3, data.screen_shots_4, data.screen_shots_5].filter(x => !!x)
   const [tab, setTab] = useState(0)
 
   const { account, library } = useMyWeb3()

@@ -194,7 +194,7 @@ const IGODetails = ({ poolData }) => {
         milestone: 'Upcoming - Whitelist',
         active: false,
         start: undefined,
-        end: new Date(Number(poolData?.start_join_pool_time) * 1000) || undefined,
+        end: poolData?.start_join_pool_time ? new Date(Number(poolData?.start_join_pool_time) * 1000) : undefined,
         info: {
           countdownTitle: 'Whitelist Starts In'
         }
@@ -203,8 +203,8 @@ const IGODetails = ({ poolData }) => {
         key: 'whitelist',
         milestone: 'Apply Whitelist',
         active: true,
-        start: new Date(Number(poolData?.start_join_pool_time) * 1000) || undefined,
-        end: new Date(Number(poolData?.end_join_pool_time) * 1000) || undefined,
+        start: poolData?.start_join_pool_time ? new Date(Number(poolData?.start_join_pool_time) * 1000) : undefined,
+        end: poolData?.end_join_pool_time ? new Date(Number(poolData?.end_join_pool_time) * 1000) : undefined,
         info: {
           countdownTitle: 'Whitelist Ends In'
         }
@@ -213,10 +213,12 @@ const IGODetails = ({ poolData }) => {
         key: 'winner-announcement',
         milestone: 'Winner Announcement',
         active: true,
-        start: new Date(Number(poolData?.end_join_pool_time) * 1000) || undefined,
-        end: new Date(Number(poolData?.start_pre_order_time || poolData?.start_time || 0) * 1000) || undefined,
+        start: poolData?.end_join_pool_time ? new Date(Number(poolData?.end_join_pool_time) * 1000) : undefined,
+        end: tierMine?.id >= poolData?.pre_order_min_tier
+          ? (poolData?.start_pre_order_time ? new Date(Number(poolData?.start_pre_order_time) * 1000) : undefined)
+          : (poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined),
         info: {
-          countdownTitle: hasFCFS ? 'Phase 1 Starts In' : 'Buying Phase Starts In'
+          countdownTitle: tierMine?.id >= poolData?.pre_order_min_tier ? 'Preorder starts in' : (hasFCFS ? 'Phase 1 Starts In' : 'Buying Phase Starts In')
         }
       },
       {

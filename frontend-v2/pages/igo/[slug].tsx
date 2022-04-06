@@ -430,7 +430,7 @@ const IGODetails = ({ poolData }) => {
           {
             current?.key === 'winner-announcement' &&
             poolData?.public_winner_status &&
-            winnerList?.total &&
+            winnerList?.total > 0 &&
             allocation?.max_buy
               ? <Notification type="success" text={`Congratulations on your ${allocation.max_buy} ${usd.symbol} allocation for ${poolData.title}. You can join from ${poolData?.pre_order_min_tier !== null && tierMine?.id >= poolData?.pre_order_min_tier ? 'Pre-order' : 'Phase 1 - Guarantee'}.`}></Notification>
               : ''
@@ -438,7 +438,7 @@ const IGODetails = ({ poolData }) => {
           {
             current?.key === 'winner-announcement' &&
             poolData?.public_winner_status &&
-            winnerList?.total &&
+            winnerList?.total > 0 &&
             !allocation?.max_buy
               ? <Notification type="error" text={`Sorry! You are not one of the ${winnerList?.total || 0} winners.`}></Notification>
               : ''

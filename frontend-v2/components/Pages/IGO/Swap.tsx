@@ -319,8 +319,8 @@ const Swap = () => {
       {
         now.getTime() >= timeline[TIMELINE.WINNER_ANNOUNCEMENT].start?.getTime() &&
         now.getTime() < timeline[TIMELINE.BUYING_PHASE].end?.getTime() &&
-        poolData?.public_winner_status &&
-          <div className="my-4 w-full bg-gamefiDark-630/30 p-7 rounded clipped-t-r">
+        poolData?.public_winner_status
+          ? <div className="my-4 w-full bg-gamefiDark-630/30 p-7 rounded clipped-t-r">
             <div className="flex flex-col lg:flex-row gap-14 lg:gap-4 w-full">
               <div className="w-full lg:w-1/2">
                 <div className="uppercase font-bold w-full mb-5 px-2 tracking-wide leading-7">Rounds Info</div>
@@ -487,6 +487,7 @@ const Swap = () => {
               }
             </div>
           </div>
+          : <></>
       }
       {
         (now.getTime() < timeline[TIMELINE.WINNER_ANNOUNCEMENT].start?.getTime() ||

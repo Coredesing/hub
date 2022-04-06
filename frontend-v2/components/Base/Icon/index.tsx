@@ -143,7 +143,7 @@ export const RelatingIcon = () => {
 }
 
 export const SoldOutIcon = () => {
-  return <svg width="184" height="145" viewBox="0 0 184 145" fill="none" xmlns="http://www.w3.org/2000/svg">
+  return <svg className="sm:w-44 sm:h-36 w-32 h-24" viewBox="0 0 184 145" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g clipPath="url(#clip0_4_80)">
       <path fillRule="evenodd" clipRule="evenodd" d="M24.9864 126.555L42.9966 95.36L50.6903 99.802L40.3738 117.671L138.294 117.671L127.977 99.802L135.671 95.36L153.681 126.555L24.9864 126.555ZM89.2704 32.4741L69.9047 63.4894L62.3691 58.7842L89.3969 15.4977L115.57 58.8406L107.965 63.433L89.2704 32.4741Z" fill="#CC4D4D" />
     </g>

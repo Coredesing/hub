@@ -202,6 +202,8 @@ export const useDiscoverMarket = () => {
           })
         })))
         if (allowSetOneByOne) return
+        dispatch({ type: discoverMarketActions.SUCCESS, payload: setListData(Object.values(objListData)) })
+        return
       }
       dispatch({ type: discoverMarketActions.SUCCESS, payload: setListData(listData) })
     } catch (error) {
@@ -321,6 +323,8 @@ export const useCollectionsMarket = () => {
           })
         })))
         if (allowSetOneByOne) return
+        dispatch({ type: collectionMarketActions.SUCCESS, payload: setListData(Object.values(objListData)) })
+        return
       }
       dispatch({ type: collectionMarketActions.SUCCESS, payload: setListData(listData) })
     } catch (error) {

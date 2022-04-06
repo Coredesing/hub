@@ -680,7 +680,7 @@ const IGODetails = ({ poolData }) => {
                       Winner Announcement
                     </div>
                     <div className="table-cell align-middle py-2 font-normal">
-                      {timeline[TIMELINE.WINNER_ANNOUNCEMENT].end ? `${format(timeline[TIMELINE.WINNER_ANNOUNCEMENT].end, 'HH:mm, dd MMM yyyy')}` : 'TBA'}
+                      {timeline[TIMELINE.WINNER_ANNOUNCEMENT].start ? `${format(timeline[TIMELINE.WINNER_ANNOUNCEMENT].start, 'HH:mm, dd MMM yyyy')}` : 'TBA'}
                     </div>
                     <div className="table-cell align-middle py-2 font-normal">
                     </div>

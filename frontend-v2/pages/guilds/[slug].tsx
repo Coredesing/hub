@@ -84,3 +84,9 @@ const GuildDetail = ({ item }: {item: any}) => {
 }
 
 export default GuildDetail
+
+export function getStaticProps () {
+  return {
+    notFound: true
+  }
+}

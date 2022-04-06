@@ -44,10 +44,10 @@ const Sidebar = () => {
           <Image src={require('@/assets/images/icons/news.svg')} alt='insight'></Image>
           <span className="mt-2">Insight</span>
         </SidebarLink>
-        <SidebarLink path='/guilds'>
+        {/* <SidebarLink path='/guilds'>
           <Image src={require('@/assets/images/icons/controller.svg')} alt='guilds'></Image>
           <span className="mt-2">Guilds</span>
-        </SidebarLink>
+        </SidebarLink> */}
         <SidebarLink path='/metaverse'>
           <Image src={require('@/assets/images/icons/planet.svg')} alt='metaverse'></Image>
           <span className="mt-2">Metaverse</span>

@@ -12,8 +12,6 @@ const Performance = () => {
     return response?.data?.performances || []
   }, [response])
 
-  console.log(performances)
-
   const gamefi = useMemo(() => {
     return response?.data?.gamefi
   }, [response])

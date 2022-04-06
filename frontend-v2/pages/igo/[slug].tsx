@@ -277,7 +277,7 @@ const IGODetails = ({ poolData }) => {
         }
       }
     ]
-  }, [poolData, preOrderMinTier, hasFCFS])
+  }, [poolData, preOrderMinTier, hasFCFS, tierMine])
 
   const [current, setCurrent] = useState(null)
 

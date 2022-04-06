@@ -12,6 +12,7 @@ import Flicking from '@egjs/react-flicking'
 import { Sync, AutoPlay } from '@egjs/flicking-plugins'
 import '@egjs/flicking/dist/flicking.css'
 import { useRouter } from 'next/router'
+import CountdownSVG from '@/components/Pages/Aggregator/Countdown'
 
 const Carousel = ({ items }: { items: any[] }) => {
   const flicking0 = useRef()
@@ -256,6 +257,14 @@ const GameDetails = ({ data }) => {
 const GameRight = ({ data, liked, account, className, like }) => {
   const p = parseFloat(data.tokenomic?.price)
   const roi = ((p || 0) / parseFloat(data.token_price)).toFixed(2)
+  const idoUpcoming = useMemo(() => {
+    try {
+      const d = new Date(data?.ido_date)
+      return d.getTime() > 0
+    } catch (err) {
+      return false
+    }
+  }, [data])
 
   return <div className={`flex-1 overflow-x-hidden ${className || ''}`}>
     { !!p && <><p className="hidden md:block text-sm mb-2">Current Price (% Chg 24H)</p>
@@ -338,7 +347,7 @@ const GameRight = ({ data, liked, account, className, like }) => {
     </div>
 
     <div className="font-mechanic font-bold uppercase text-center text-sm">
-      <div className={`cursor-pointer clipped-t-l p-px mb-4 ${liked ? 'bg-gamefiYellow-500 text-gamefiYellow-500 hover:bg-gamefiYellow-600 hover:text-gamefiYellow-600' : 'bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700'}`} onClick={() => like(data)}>
+      <div className={`cursor-pointer clipped-t-l p-px mb-3 ${liked ? 'bg-gamefiYellow-500 text-gamefiYellow-500 hover:bg-gamefiYellow-600 hover:text-gamefiYellow-600' : 'bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700'}`} onClick={() => like(data)}>
         <div className="clipped-t-l bg-gamefiDark-900 p-4 flex justify-center items-center">
           <svg className="w-4 h-4 mr-2" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M14 9.625H12.25V7.875H10.5V9.625H8.75V11.375H10.5V13.125H12.25V11.375H14V9.625Z" fill="currentColor"/>
@@ -347,9 +356,15 @@ const GameRight = ({ data, liked, account, className, like }) => {
           { !account ? 'Connect wallet' : (liked ? 'Remove from favorite List' : 'Add to favorite List')}
         </div>
       </div>
-      { data.web_game_link && <Link href={data.web_game_link} passHref={true}><a target="_blank" rel="noopenner noreferrer" className="block cursor-pointer clipped-b-r bg-gamefiGreen-500 hover:bg-gamefiGreen-700 p-4 text-gamefiDark-900">
+      { data.web_game_link && <Link href={data.web_game_link} passHref={true}><a target="_blank" rel="noopenner noreferrer" className={`mb-3 block cursor-pointer bg-gamefiGreen-500 hover:bg-gamefiGreen-700 p-4 text-gamefiDark-900 ${data.gamefi_ido_link && data.ido_type === 'launched' ? '' : 'clipped-b-r'}`}>
       Play
       </a></Link> }
+      { data.gamefi_ido_link && data.ido_type === 'launched' && <Link href={data.gamefi_ido_link} passHref={true}><a target="_blank" rel="noopenner noreferrer" className="mb-3 block cursor-pointer clipped-b-r bg-gamefiYellow-400 hover:bg-gamefiYellow-500 p-4 text-gamefiDark-900">
+        {data.game_name} IDO on GameFi
+      </a></Link> }
+      { data.gamefi_ido_link && data.ido_type !== 'launched' && idoUpcoming && <CountdownSVG title={`${data.game_name} IDO on GameFi in`} deadline={data?.ido_date} action="Join Now" onAction={() => {
+        window.open(data.gamefi_ido_link, '_blank')
+      }}></CountdownSVG> }
     </div>
   </div>
 }

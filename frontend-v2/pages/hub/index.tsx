@@ -70,6 +70,7 @@ const Hub = ({ data }) => {
     }
   }
   const resetFilters = () => {
+    setPage(1)
     setCategory(null)
     setIDOType(null)
     setLaunchStatus(null)

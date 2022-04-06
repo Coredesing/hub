@@ -1,8 +1,7 @@
-import Layout, { GlobalContext } from '@/components/Layout'
 import GameCarousel from '@/components/Pages/Home/GameCarouselV2'
 
 import { useRouter } from 'next/router'
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
 import IGOList from 'components/Pages/Home/IGOList'
 import INOList from 'components/Pages/Home/INOList'
@@ -15,6 +14,7 @@ import Partners from '@/components/Pages/Home/Partners'
 import Performance from '@/components/Pages/Home/Performance'
 import { fetcher } from '@/utils'
 import banner from '@/assets/images/banner.jpg'
+import Layout from '@/components/Layout'
 
 const PageIndex = () => {
   const router = useRouter()
@@ -36,7 +36,14 @@ const PageIndex = () => {
     setLikes(fetchLikesResponse?.data)
   }, [featuredGames, gameLikeIds, fetchLikesResponse?.data])
 
-  const { now } = useContext(GlobalContext)
+  const [now, setNow] = useState(new Date())
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(new Date())
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   const bannerShow = useMemo(() => {
     const bannerDeadline = new Date('2022-04-08T00:00:00Z')

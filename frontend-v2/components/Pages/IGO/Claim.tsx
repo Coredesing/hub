@@ -14,14 +14,12 @@ import { IGOContext } from '@/pages/igo/[slug]'
 import Image from 'next/image'
 import { TIMELINE } from './constants'
 import { getNetworkByAlias, switchNetwork } from '@/components/web3'
-import { GlobalContext } from '@/components/Layout'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 const PER_PAGE = 5
 
 const Claim = () => {
-  const { poolData, usd, timeline } = useContext(IGOContext)
-  const { now } = useContext(GlobalContext)
+  const { poolData, usd, timeline, now } = useContext(IGOContext)
 
   const { account, library, network } = useMyWeb3()
   const [page, setPage] = useState(1)

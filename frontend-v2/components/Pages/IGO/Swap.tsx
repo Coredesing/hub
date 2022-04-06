@@ -16,16 +16,14 @@ import { useAppContext } from '@/context'
 
 import Image from 'next/image'
 import { TIMELINE } from './constants'
-import { GlobalContext } from '@/components/Layout'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 
 const Swap = () => {
-  const { poolData, usd, hasFCFS, allocation, timeline, current } = useContext(IGOContext)
+  const { poolData, usd, hasFCFS, allocation, timeline, current, now } = useContext(IGOContext)
   const { library, account, network, balanceShort } = useMyWeb3()
   // const [txHash, setTxHash] = useState('')
   const { tierMine } = useAppContext()
-  const { now } = useContext(GlobalContext)
 
   // Round Info
 

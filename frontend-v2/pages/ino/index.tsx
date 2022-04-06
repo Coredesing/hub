@@ -1,5 +1,5 @@
-import { useContext } from 'react'
-import Layout, { GlobalContext } from '@/components/Layout'
+import { useEffect, useState } from 'react'
+import Layout from '@/components/Layout'
 import Carousel from '@/components/Pages/INO/Carousel'
 import List, { TOKEN_TYPE } from '@/components/Pages/INO/List'
 import ListAuction from '@/components/Pages/INO/ListAuction'
@@ -8,7 +8,14 @@ import ListUpcoming from '@/components/Pages/INO/ListUpcoming'
 import { useFetch } from '@/utils'
 
 const INO = () => {
-  const { now } = useContext(GlobalContext)
+  const [now, setNow] = useState(new Date())
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(new Date())
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   const { response } = useFetch(`/pools/mysterious-box?token_type=${TOKEN_TYPE}&limit=10&is_featured=1&is_display=1`)
 

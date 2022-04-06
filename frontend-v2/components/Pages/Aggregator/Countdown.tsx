@@ -1,10 +1,16 @@
-import { GlobalContext } from '@/components/Layout'
 import { formatNumber } from '@/utils'
 import { intervalToDuration } from 'date-fns'
-import { useContext, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 const CountdownSVG = ({ action, title, deadline, onAction }:{ title?: string; action?: string; deadline: Date | string; onAction?: () => void }) => {
-  const { now } = useContext(GlobalContext)
+  const [now, setNow] = useState(new Date())
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(new Date())
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   const deadlineActual = useMemo(() => {
     if (deadline instanceof Date) {

@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { Item } from '../type'
 import Image from 'next/image'
 import community from '@/assets/images/icons/community.png'
@@ -6,11 +6,17 @@ import lock from '@/assets/images/icons/lock.svg'
 import { getCurrency, useLibraryDefaultFlexible } from '@/components/web3/utils'
 import Progress from './Progress'
 import Countdown from './Countdown'
-import { GlobalContext } from '@/components/Layout'
 
 const Card = ({ item, color, background }: { item: Item; color?: string; background?:string }) => {
   const { network } = useLibraryDefaultFlexible(item?.network_available)
-  const { now } = useContext(GlobalContext)
+  const [now, setNow] = useState(new Date())
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(new Date())
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
   // const [participants, setParticipants] = useState(0)
 
   // const fetchParticipants = useCallback(async () => {

@@ -1,4 +1,4 @@
-import Layout, { GlobalContext } from '@/components/Layout'
+import Layout from '@/components/Layout'
 import { getTierById } from '@/utils/tiers'
 import React, { useEffect, useMemo, useState, useCallback, createContext, useContext } from 'react'
 import { fetchOneWithSlug } from '../api/igo'
@@ -50,6 +50,7 @@ export const IGOContext = createContext({
   completed: false,
   timeline: [],
   allocation: null,
+  now: new Date(),
 
   setSignature: (v: any) => { console.debug(v) },
   loadJoined: () => {},
@@ -62,7 +63,14 @@ const IGODetails = ({ poolData }) => {
   const router = useRouter()
   const { tierMine } = useAppContext()
   const [readMore, setReadMore] = useState(false)
-  const { now } = useContext(GlobalContext)
+  const [now, setNow] = useState(new Date())
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(new Date())
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   const [failedRequirements, setFailedRequirements] = useState(false)
   const [completed, setCompleted] = useState(false)
@@ -395,6 +403,7 @@ const IGODetails = ({ poolData }) => {
           whitelistJoined,
           whitelistStatus,
           signature,
+          now,
 
           current,
 

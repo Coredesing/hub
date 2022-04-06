@@ -50,7 +50,7 @@ const IGO = () => {
   const upcomingItems = useMemo<Item[]>(() => {
     const origin = upcomingResponse?.data?.data || []
     let remain = origin
-    const tba = origin.filter(item => item.campaign_status?.toLowerCase() === 'tba' || (item.campaign_status?.toLowerCase() === 'upcoming' && !item.start_join_pool_time))
+    const tba = origin.filter(item => !item.start_join_pool_time)
     remain = remain.filter(item => !tba.includes(item))
     const preWhitelist = remain.filter(item => new Date().getTime() < new Date(Number(item?.start_join_pool_time) * 1000).getTime()).sort((a, b) => a?.start_join_pool_time < b?.start_join_pool_time)
     remain = remain.filter(item => !preWhitelist.includes(item))

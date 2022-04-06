@@ -730,7 +730,7 @@ const IGODetails = ({ poolData }) => {
                       : <>
                         <div className={`table-row ${current?.key === 'buying-phase' && 'text-gamefiGreen'}`}>
                           <div className="table-cell align-middle py-2 rounded">
-                      Buying Phase - Guarantee
+                            {poolData?.is_private === 3 ? 'Buying Phase - FCFS' : 'Buying Phase - Guarantee'}
                           </div>
                           <div className="table-cell align-middle py-2 font-normal">
                             {poolBuyTime.start ? format(poolBuyTime.start, 'HH:mm, dd MMM yyyy') : 'TBA'}

@@ -135,7 +135,7 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
     <div className="mt-2 border-t-[1px] border-white/10 py-4">
       {
         !item?.start_time && ['tba', 'upcoming'].includes(item.campaign_status?.toLowerCase()) && <div className="w-full flex flex-col items-center justify-center">
-          <div className="text-xs font-semibold text-white/50 uppercase">Pool Starts In</div>
+          <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Starts In</div>
           <div className="mt-2 font-medium">TBA</div>
         </div>
       }
@@ -161,7 +161,6 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
       }
       {
         item.buy_type?.toLowerCase() === 'whitelist' &&
-        item.campaign_status?.toLowerCase() === 'upcoming' &&
         now.getTime() < new Date(Number(item.start_join_pool_time) * 1000).getTime() &&
         <div className="w-full flex flex-col items-center justify-center">
           <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Starts In</div>

@@ -1,11 +1,16 @@
 import Layout from '@/components/Layout'
 import Link from 'next/link'
 import { jobs } from './index'
+import { useRouter } from 'next/router'
 
 const Career = ({ data }) => {
+  const router = useRouter()
+
   if (!data) {
     return null
   }
+
+  const linkShare = process.env.NEXT_PUBLIC_SITE_URL + router.asPath
 
   return (<Layout title={data.title ? `GameFi.org - ${data.title}` : 'GameFi.org - Careers'}>
     <div className="px-4 lg:px-16 mx-auto lg:block pb-12 max-w-4xl">
@@ -19,7 +24,7 @@ const Career = ({ data }) => {
         </a>
       </Link>
 
-      <div className="uppercase font-bold text-4xl">{data.title}</div>
+      <div className="uppercase font-bold text-3xl md:text-4xl">{data.title}</div>
 
       <div className="uppercase font-bold text-2xl mb-2 mt-8">JOB DESCRIPTION</div>
       <ul className="font-casual text-sm leading-6 opacity-80 mb-8 list-disc pl-4">
@@ -54,6 +59,15 @@ const Career = ({ data }) => {
 
       <div className="uppercase font-bold text-2xl mb-2 mt-8">ABOUT OUR COMPANY</div>
       <p className="font-casual text-sm leading-6 opacity-80 mb-2">GameFi.org is an all-encompassing hub for game finance. Its ecosystem features a Launchpad, GameFi Hub, Marketplace, GameFi Earn, Guild Hub, and Tournament. GameFi.org was created to work out problems that most game studios have encountered and discovered effective ways in developing a platform that builds relationships with game developers, players, and investors all in one place.</p>
+
+      <div className="mt-2 w-full flex gap-2 items-center">
+
+        <div className="fb-share-button ml-auto" data-href={linkShare} data-layout="button" data-size="small"></div>
+
+
+          <a className="twitter-share-button" href={linkShare}>Tweet</a>
+
+      </div>
 
       <div className="uppercase font-bold text-2xl mb-2 mt-8">APPLICATION</div>
 

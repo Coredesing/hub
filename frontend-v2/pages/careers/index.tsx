@@ -6,7 +6,7 @@ export const jobs = [
   {
     id: 'smart-contract-developer',
     title: '📌 Smart Contract Developer',
-    location: 'Ha Noi, HCM, Remote',
+    location: 'Ha Noi, HCM',
     type: 'Full time',
     level: 'Senior, Junior',
     descriptions: [
@@ -47,7 +47,7 @@ export const jobs = [
   {
     id: 'fullstack-engineer',
     title: '🎯 Fullstack Engineer',
-    location: 'Ha Noi, HCM, Remote',
+    location: 'Ha Noi, HCM',
     type: 'Full time',
     level: 'Senior, Junior',
     descriptions: [
@@ -88,68 +88,11 @@ export const jobs = [
     ]
   },
 
-  // Job 3
-  {
-    id: 'tester',
-    title: '⛳ Tester (Lead)',
-    location: 'Ha Noi, HCM, Remote',
-    type: 'Full time',
-    level: 'Senior',
-    descriptions: [
-      'Review client requirement and provides feedback',
-      'Responsible for creating test plans and strategy',
-      'Reviews and re-evaluates the test strategy to adjust for new information, changing risks, shifting priorities and schedules',
-      'Oversees testing of software features',
-      'Oversees quality review of various applications',
-      'Oversees project to make sure work is scheduled based on priorities, risks and team strengths and assignment of resources across projects',
-      'Oversees implementation and execution of functional, regression and acceptance tests',
-      'Assists in test environment setup/teardown, test automation and exploratory testing',
-      'Oversees the creation and maintenance of test data and test documentation',
-      'Provides suitable solutions for issues/errors based on the understanding of the system and client business processes',
-      'Leads/mentors Test Engineers and shares knowledge to make sure QA staff meets technical qualifications required for their positions',
-      'Assists in coaching junior staff by helping them to make decisions, solve problems, manage meetings and set goals, provides feedback on testing-related tasks, delegates and assigns testing responsibilities',
-      'Works with clients in evaluating and implementing new technologies and offer strategies for new opportunities',
-      'Assists in formulating QA standards and best practices, organizational policies and processes and strategic plans',
-      'Assists management in setting the direction for quality assurance within the organization',
-      'Assists in recruiting new staff, conducting interviews and evaluate potential candidates'
-    ],
-    requirements: [
-      '6+ years of working experience or equivalent combination of education and experience. Background in CS, IT or related scientific discipline',
-      'Experience in testing various Game, Web applications, Services',
-      'Experience managing a team of QA Engineers',
-      'Experience in communicating with clients',
-      'Understanding of test-driven development',
-      'Understanding of software development lifecycle and best practices',
-      'Understanding of Agile and Waterfall processes',
-      'Understanding of user interface design',
-      'Strong knowledge of software quality assurance best practices & methodologies',
-      'Familiarity with various defect management systems',
-      'Ability to communicate in English verbally and in writing',
-      'Ability to communicate technical aspects to people with non-IT background',
-      'Ability to ensure that solutions developed by technical teams fit the business needs',
-      'Ability to offer alternative approaches to achieve the client goals',
-      'Ability to analyses complex situations and manage all variables to achieve optimal solutions',
-      'Ability to act on the information provided or get information needed so that decisions for project implementations can be made quickly and effectively',
-      'Ability to define and prioritize short-term and long-term objectives for the teams and make necessary corrections under changing circumstances'
-    ],
-    benefits: [
-      'Competitive salary range (negotiable based on capacity)',
-      'Sign Labor contract, pay Insurance, have 12 annual leaves and other holidays as regulated by the State',
-      'Review bonus and increase salary annually, have December bonus (13th month salary)',
-      'Equipment and devices equipped and periodic health check for all employees',
-      'Support career development, have chance to participate in Icetea Labs’ training courses to improve professional skills',
-      'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
-      'A buzzing space full of globally influential technical founders and business establishing experts',
-      "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
-    ]
-  },
-
   // Job 4
   {
     id: 'business-analyst',
     title: '🔍 Business Analyst (Lead)',
-    location: 'Ha Noi, HCM, Remote',
+    location: 'Ha Noi, HCM',
     type: 'Full time',
     level: 'Senior',
     descriptions: [
@@ -200,88 +143,13 @@ export const jobs = [
     ]
   },
 
-  // Job 5
-  {
-    id: 'marketing-executive',
-    title: '🎈 Marketing Executive',
-    location: 'Ha Noi, HCM, Remote',
-    type: 'Full time',
-    level: 'Senior, Junior',
-    descriptions: [
-      'Write posts, news on social networks, press release as well as creative copy',
-      'Run social media channels (e.g.: Twitter, Telegram, Facebook and LinkedIn) to enhance audience engagement',
-      'Help with marketing plans, advertising, direct marketing and campaign',
-      'Build & manage vibrant community on social media channels',
-      "Manage and take care marketing partners' activities",
-      'Other tasks assigned by leaders'
-    ],
-    requirements: [
-      'Proven experience in marketing, especially in content marketing',
-      'Ability to work independently and collaboratively as a team member',
-      'An effective communicator with good English written and spoken skills',
-      'Proven ability to quickly learn and understand complex topics',
-      'Interest in Blockchain is a plus',
-      'Experience in design and video editing are also plus points'
-    ],
-    benefits: [
-      'Competitive salary range (negotiable based on capacity) up to $1000',
-      'Sign Labor contract, pay Insurance, have 12 annual leaves and other holidays as regulated by the State',
-      'Review bonus and increase salary annually, have December bonus (13th month salary)',
-      'Equipment and devices equipped and periodic health check for all employees',
-      'Support career development, have chance to participate in Icetea Labs’ training courses to improve professional skills',
-      'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
-      'A buzzing space full of globally influential technical founders and business establishing experts',
-      "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
-    ]
-  },
-
-  // Job 6
-  {
-    id: 'graphic-designer',
-    title: '🚀 Graphic Designer',
-    location: 'Ha Noi, HCM, Remote',
-    type: 'Full time',
-    level: 'Senior, Junior, Remote',
-    descriptions: [
-      'Design the marketing materials for marketing activities (catalog, brochure, poster, etc.)',
-      'Design work related to products (mattress, packing and other bedding products)',
-      'Coordinating the content department to create ideas, develop a scripted deployment plan, shoot short videos for brands according to the media team’s content plan',
-      'Editing in-house video clips to serve PR campaigns, marketing, training activities and internal communication, etc.',
-      'Collect and research new trends and ideas to increase the attractiveness of videos',
-      'Setting up for product’s in-house photoshoot',
-      'Other tasks as assigned'
-    ],
-    requirements: [
-      'Proficient with Graphic software e.g. Adobe Photoshop, Premiere Pro and Illustrator',
-      'Ability to meet tight deadlines and handle multiple projects simultaneously',
-      'Exceptional creativity and innovation',
-      'Experienced in designing game related content is a plus',
-      'Portfolio presentation for interview',
-      'Able to give and receive constructive criticism',
-      'Understand marketing, production, website design, corporate identity, product packaging, advertisements and multimedia design',
-      'Experience with computer-aided design'
-    ],
-    benefits: [
-      'Competitive salary (negotiable based on capacity)',
-      'Sign Labor contract, pay Insurance, have 12 annual leaves and other holidays as regulated by the State',
-      'Review bonus and increase salary annually, have December bonus (13th month salary)',
-      'Equipment and devices equipped and periodic health check for all employees',
-      'Support career development, have chance to participate in Icetea Labs’ training courses to improve professional skills',
-      'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
-      'A buzzing space full of globally influential technical founders and business establishing experts',
-      "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
-    ]
-  },
-
   // Job 7
   {
     id: 'game-ui-ux-designer',
     title: '🕹️ Game UI/UX Designer',
-    location: 'Ha Noi, HCM, Remote',
+    location: 'Ha Noi, HCM',
     type: 'Full time',
-    level: 'Senior, Junior, Remote',
+    level: 'Senior',
     descriptions: [
       'Translate concepts into user flow, wireframes, mockups and prototypes that lead to intuitive user experience',
       'Understand our users (create personas through user research and data...)',
@@ -327,14 +195,14 @@ export const jobs = [
   {
     id: 'game-executive-producer',
     title: '🎨 Game Executive Producer',
-    location: 'Ha Noi, HCM, Remote',
+    location: 'Ha Noi, HCM',
     type: 'Full time',
-    level: 'Senior, Junior, Remote',
+    level: 'Senior',
     descriptions: [
       'Ensure our team is up to speed with the Gaming landscape, markets, competition and user requirements in depth',
       'Deeply understand the overall game vision, product strategy, customer base and business goals',
       'Deliver on our first game. Then create new and exciting games within the GameFi Eco System',
-      'Have autonomy and accountability over the strategic direction, execution and budge of our games',
+      'Have autonomy and accountability over the strategic direction, execution and budget of our games',
       'Source, select and manage internal and external development partners who will execute our vision',
       'Create a framework for game production. Manage the milestones, timelines, and KPIs of the game, making sure they are executed by the personnel responsible as the organization grows',
       'Build a highly functioning team to execute the strategic vision, finding the right balance of outsourced partners and internal hires as appropriate',
@@ -370,9 +238,9 @@ export const jobs = [
   {
     id: 'game-designer-economy',
     title: '🔮 Game Designer (Economy)',
-    location: 'Ha Noi, HCM, Remote',
+    location: 'Ha Noi, HCM',
     type: 'Full time',
-    level: 'Senior, Junior, Remote',
+    level: 'Senior',
     descriptions: [
       'Solve never before solved game design challenges as we work together to create a truly groundbreaking gaming experience',
       'Take a pre-existing high-level game economy design and improve it with monetization strategies and details to pre-existing features',
@@ -410,9 +278,9 @@ export const jobs = [
   {
     id: 'game-2d-3d-artist',
     title: '🎮 Game 2D/3D Artist (All level)',
-    location: 'Ha Noi, HCM, Remote',
+    location: 'Ha Noi, HCM',
     type: 'Full time',
-    level: 'Senior, Junior, Remote',
+    level: 'Senior, Junior',
     descriptions: [
       'Work on the illustration or concept art design for our game, working closely with the product team and engineers to produce initial sketches of concepts to high quality game marketing ready illustrations',
       'Collaborate with other team members to ensure successful development, release and launch of a successful game',

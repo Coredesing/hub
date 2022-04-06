@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useMemo, useState } from 'react'
 import Image from 'next/image'
 import { useMediaQuery } from 'react-responsive'
 import Link from 'next/link'
@@ -137,7 +137,7 @@ const GameCarousel = ({ items, likes }: Props) => {
                     <div className="flex align-middle items-center ml-4">
                       <Image src={require('@/assets/images/icons/game-console.svg')} alt="game-console"/>
                       <p
-                        className="ml-2 tracking-widest uppercase text-gray-200 whitespace-nowrap overflow-hidden overflow-ellipsis"
+                        className="ml-2 tracking-widest uppercase text-gray-200 whitespace-nowrap max-w-[200px] overflow-hidden overflow-ellipsis"
                       >{item.developer}</p>
                     </div>
                   </div>

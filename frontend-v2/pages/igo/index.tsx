@@ -57,7 +57,8 @@ const IGO = () => {
     const whitelist = remain.filter(item => new Date().getTime() < new Date(Number(item?.end_join_pool_time) * 1000).getTime()).sort((a, b) => a?.end_join_pool_time < b?.end_join_pool_time)
     remain = remain.filter(item => !whitelist.includes(item))
     const preStart = remain.filter(item => new Date().getTime() < new Date(Number(item?.start_time) * 1000).getTime()).sort((a, b) => a?.start_time < b?.start_time)
-    const sortedItems = [].concat(preStart).concat(whitelist).concat(preWhitelist).concat(tba)
+    remain = remain.filter(item => !preStart.includes(item))
+    const sortedItems = [].concat(remain).concat(preStart).concat(whitelist).concat(preWhitelist).concat(tba)
 
     return sortedItems || []
   }, [upcomingResponse])

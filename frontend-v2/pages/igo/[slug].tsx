@@ -291,7 +291,7 @@ const IGODetails = ({ poolData }) => {
   }, [allocationError])
 
   useEffect(() => {
-    if (!poolData.start_join_pool_time || poolData.campaign_status?.toLowerCase() === 'tba') {
+    if (!poolData.start_join_pool_time && poolData.campaign_status?.toLowerCase() === 'tba') {
       return setCurrent(timeline[TIMELINE.TBA])
     }
 

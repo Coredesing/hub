@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useScreens } from '../utils'
+import Countdown from '@/components/Pages/IGO/Card/Countdown'
 
 type Props = {
   item: any;
@@ -32,6 +33,15 @@ const CardItem = ({ item, ...props }: Props) => {
 
   const screens = useScreens()
 
+  const [now, setNow] = useState(new Date())
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(new Date())
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
+
   useEffect(() => {
     if (countdownStatus) {
       return
@@ -60,7 +70,7 @@ const CardItem = ({ item, ...props }: Props) => {
   }, [item.start_time, distance, countdownStatus, item.campaign_status])
 
   return (
-    <div className={`rounded overflow-hidden border border-transparent hover:border-gamefiGreen-700 hover:shadow hover:shadow-gamefiGreen-700 ${props.className}`} style={{ maxWidth: (screens.md || screens.lg || screens.xl) ? '350px' : '100%' }}>
+    <div className={`rounded overflow-hidden border border-transparent hover:opacity-80 ${props.className}`} style={{ maxWidth: (screens.md || screens.lg || screens.xl) ? '350px' : '100%' }}>
       <div className="w-full relative">
         <div className="absolute h-6 w-2/5 inline-flex align-middle items-center top-0 left-0 uppercase text-xs text-left bg-black clipped-b-r-full">
           <Image src={require('@/assets/images/icons/lock.svg')} alt="lock"></Image>
@@ -68,11 +78,11 @@ const CardItem = ({ item, ...props }: Props) => {
         </div>
         <div className="cursor-pointer">
           <Link href={`/igo/${item.id}`} passHref>
-            <img src={item?.banner} alt="" style={{ width: '100%', objectFit: 'cover', aspectRatio: '4/3' }} />
+            <img src={item?.banner} alt="" style={{ width: '100%', objectFit: 'cover', aspectRatio: '16/9' }} />
           </Link>
         </div>
       </div>
-      <div className="bg-gamefiDark-650 w-full clipped-b-l pb-2">
+      <div className="bg-gamefiDark-650 w-full clipped-b-l">
         <div className="w-full flex items-center justify-center border-b border-gamefiDark-600" style={{ height: '80px' }}>
           <Link href={`/igo/${item.id}`} passHref>
             <a className="text-center font-semibold text-lg cursor-pointer hover:underline">
@@ -80,38 +90,51 @@ const CardItem = ({ item, ...props }: Props) => {
             </a>
           </Link>
         </div>
-        {distance <= 0
-          ? countdownStatus
-            ? <div className="mt-4 mb-2 flex justify-between">
-              <div className="w-full h-full flex flex-col align-middle items-center justify-center mt-1">
-                <div className="uppercase font-bold text-xs text-gray-500">Countdown to IGO date</div>
-                <div className="mt-2 font-medium text-center">
-                  {countdownStatus}
-                </div>
-              </div>
+        {
+          !item?.start_time && ['tba', 'upcoming'].includes(item.campaign_status?.toLowerCase()) && <div className="py-3 w-full flex flex-col items-center justify-center">
+            <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Starts In</div>
+            <div className="mt-2 font-medium">TBA</div>
+          </div>
+        }
+        {
+          item.finish_time && item.campaign_status?.toLowerCase() === 'swap' && <div className="py-3 w-full flex flex-col items-center justify-center">
+            <div className="text-xs font-semibold text-white/50 uppercase">Swap Ends In</div>
+            <div className="mt-2">
+              <Countdown to={item?.finish_time}></Countdown>
             </div>
-            : <div className="mt-4 mb-2 flex justify-between">
-              <div className="w-full h-full flex flex-col align-middle items-center justify-center mt-1">
-                <div className="uppercase font-bold text-xs text-gray-500">Countdown to IGO date</div>
-                <div className="mt-2 font-medium text-center">
-                  TBA
-                </div>
-              </div>
-            </div>
-          : <div className="mt-4 mb-2 flex justify-between">
-            <div className="w-full h-full flex flex-col align-middle items-center justify-center mt-1">
-              <div className="uppercase font-bold text-xs text-gray-500">Countdown to IGO date</div>
-              <div className="mt-2 flex font-medium">
-                <div className="text-center">{days}d</div>
-                <span className="mx-1">:</span>
-                <div className="text-center">{hours}h</div>
-                <span className="mx-1">:</span>
-                <div className="text-center">{minutes}m</div>
-                <span className="mx-1">:</span>
-                <div className="text-center">{seconds}s</div>
-              </div>
-            </div>
-          </div>}
+          </div>
+        }
+        {
+          item.buy_type?.toLowerCase() === 'whitelist' &&
+        item.campaign_status?.toLowerCase() === 'upcoming' &&
+        now.getTime() >= new Date(Number(item.start_join_pool_time) * 1000).getTime() &&
+        now.getTime() < new Date(Number(item.end_join_pool_time) * 1000).getTime() &&
+        <div className="py-3 w-full flex flex-col items-center justify-center">
+          <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Ends In</div>
+          <div className="mt-2">
+            <Countdown to={item?.end_join_pool_time}></Countdown>
+          </div>
+        </div>
+        }
+        {
+          item.buy_type?.toLowerCase() === 'whitelist' &&
+        now.getTime() < new Date(Number(item.start_join_pool_time) * 1000).getTime() &&
+        <div className="py-3 w-full flex flex-col items-center justify-center">
+          <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Starts In</div>
+          <div className="mt-2">
+            <Countdown to={item?.start_join_pool_time}></Countdown>
+          </div>
+        </div>
+        }
+        {now.getTime() > new Date(Number(item.end_join_pool_time) * 1000).getTime() &&
+      now.getTime() <= new Date(Number(item.start_time) * 1000).getTime() &&
+        <div className="py-3 w-full flex flex-col items-center justify-center">
+          <div className="text-xs font-semibold text-white/50 uppercase">Buying Phase Starts In</div>
+          <div className="mt-2">
+            <Countdown to={item?.start_time}></Countdown>
+          </div>
+        </div>
+        }
       </div>
     </div>
   )

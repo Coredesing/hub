@@ -225,6 +225,16 @@ export const Right = ({ tags }: { tags?: { link: string; image: any; count: any;
       id: 'mechmaster-testnet',
       link: 'https://app.mechmaster.io/#/beta-testing-event',
       image: require('@/assets/images/ads/mech-testnet.jpeg')
+    },
+    {
+      id: 'desports',
+      link: 'https://about.desports.gg/',
+      image: require('@/assets/images/ads/desports.jpg')
+    },
+    {
+      id: 'metacity',
+      link: 'https://metacity.game/',
+      image: require('@/assets/images/ads/metacity.jpg')
     }
   ])
 

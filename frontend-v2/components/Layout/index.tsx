@@ -12,11 +12,12 @@ type Props = {
   description?: string;
   image?: string;
   disableFooter?: boolean;
+  extended?: boolean;
 }
 
 // const BETA_SUPPRESSION = 'BETA_SUPPRESSION'
 
-const Layout = ({ children, title, description, image, disableFooter }: Props) => {
+const Layout = ({ children, title, description, image, disableFooter, extended }: Props) => {
   // const [suppressed, setSuppressed] = useState<boolean>(true)
 
   // useEffect(function () {
@@ -60,7 +61,7 @@ const Layout = ({ children, title, description, image, disableFooter }: Props) =
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </div> } */}
-        <Topbar></Topbar>
+        <Topbar absolute={extended}></Topbar>
         {children}
         { !disableFooter && <Footer></Footer> }
       </div>

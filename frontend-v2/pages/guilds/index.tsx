@@ -59,17 +59,50 @@ const Guilds = () => {
                 }}></Dropdown>
               </div>
             </div>
-            <div className="w-full flex gap-1 text-gamefiDark-100 text-sm uppercase font-medium">
-              <div>Guild</div>
-              <div>Game</div>
-              <div>Region</div>
-              <div>Daily Active Discord Members</div>
-              <div>Activeness</div>
-              <div>Avg Scholar Commission</div>
-              <div>Avg Guild Commission</div>
-              <div>AVG SLP</div>
+            <div className="w-full px-4 mt-6 mb-3 flex gap-1 md:gap-4 xl:gap-6 text-gamefiDark-100 text-sm uppercase font-medium leading-4">
+              <div className="w-52">Guild</div>
+              <div className="w-40">Game</div>
+              <div className="w-40">Region</div>
+              <div className="w-40">Daily Active <br></br> Discord Members</div>
+              <div className="w-40">Activeness</div>
+              <div className="w-40">Avg Scholar <br></br> Commission</div>
+              <div className="w-40">Avg Guild <br></br> Commission</div>
+              <div className="w-40">AVG SLP</div>
             </div>
-            <div className="w-full"></div>
+            <div className="w-full flex gap-1 md:gap-4 xl:gap-6 items-center my-1 bg-gamefiDark-630/30 rounded-sm clipped-b-r p-4">
+              <div className="w-52">This is Guild Name</div>
+              <div className="w-40">Game Name</div>
+              <div className="w-40">North America</div>
+              <div className="w-40">
+                <div className="w-full flex items-center gap-2 lg:pr-2">
+                  <div>{printNumber(1500)}</div>
+                  <div className="w-full h-2 rounded-full" style={{ background: 'linear-gradient(269.43deg, #9075FF 19.03%, #AB9FF8 89.99%), #C4C4C4' }}>
+                  </div>
+                </div>
+              </div>
+              <div className="w-40">2.6%</div>
+              <div className="w-40">
+                <div className="w-full flex items-center gap-2 lg:pr-2">
+                  <div>56%</div>
+                  <div className="w-full h-2 rounded-full" style={{ background: 'linear-gradient(269.53deg, #FFA800 -2.13%, #FFB800 94.16%)' }}>
+                  </div>
+                </div>
+              </div>
+              <div className="w-40">
+                <div className="w-full flex items-center gap-2 lg:pr-2">
+                  <div>56%</div>
+                  <div className="w-full h-2 rounded-full" style={{ background: 'linear-gradient(269.6deg, #FF9649 3.55%, #FFB379 86.23%)' }}>
+                  </div>
+                </div>
+              </div>
+              <div className="w-40">
+                <div className="w-full flex items-center gap-2 lg:pr-2">
+                  <div>44</div>
+                  <div className="w-full h-2 rounded-full" style={{ background: 'linear-gradient(269.73deg, #00C2FF 8.09%, #71DDFF 100%)' }}>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </>

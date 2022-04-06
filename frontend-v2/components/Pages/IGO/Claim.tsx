@@ -1,5 +1,5 @@
 import { useMyWeb3 } from '@/components/web3/context'
-import { fetcher, formatPrice, printNumber } from '@/utils'
+import { fetcher, printNumber } from '@/utils'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
 import PresalePoolABI from '@/components/web3/abis/PreSalePool.json'

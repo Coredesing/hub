@@ -187,7 +187,9 @@ const SellNFTModal = ({ open, onClose, method, currencies = [], isLoadingButton,
           isApprovedMarketplace &&
           <ButtonBase
             color='green'
-            onClick={handleListingNFT}
+            onClick={() => {
+              handleListingNFT()
+            }}
             className={clsx('uppercase', styles.btnSubmit)}
             isLoading={isLoadingButton}
             disabled={disabledButton || !currency.address}>

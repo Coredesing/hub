@@ -218,7 +218,7 @@ const IGODetails = ({ poolData }) => {
           ? (poolData?.start_pre_order_time ? new Date(Number(poolData?.start_pre_order_time) * 1000) : undefined)
           : (poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined),
         info: {
-          countdownTitle: tierMine?.id >= poolData?.pre_order_min_tier ? 'Preorder starts in' : (hasFCFS ? 'Phase 1 Starts In' : 'Buying Phase Starts In')
+          countdownTitle: tierMine?.id >= poolData?.pre_order_min_tier ? 'Pre-order starts in' : (hasFCFS ? 'Phase 1 Starts In' : 'Buying Phase Starts In')
         }
       },
       {
@@ -375,7 +375,6 @@ const IGODetails = ({ poolData }) => {
   }
 
   useEffect(() => {
-    console.log(poolData)
     if (current?.key === 'winner-announcement' || current?.key === 'pre-order' || current?.key?.includes('buying-phase')) {
       setTab(1)
     }

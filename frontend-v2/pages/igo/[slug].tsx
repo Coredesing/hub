@@ -213,7 +213,7 @@ const IGODetails = ({ poolData }) => {
         key: 'winner-announcement',
         milestone: 'Winner Announcement',
         active: true,
-        start: poolData?.end_join_pool_time ? new Date(Number(poolData?.end_join_pool_time) * 1000) : undefined,
+        start: poolData?.release_time ? new Date(Number(poolData?.release_time) * 1000) : undefined,
         end: tierMine?.id >= poolData?.pre_order_min_tier
           ? (poolData?.start_pre_order_time ? new Date(Number(poolData?.start_pre_order_time) * 1000) : undefined)
           : (poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined),
@@ -375,6 +375,7 @@ const IGODetails = ({ poolData }) => {
   }
 
   useEffect(() => {
+    console.log(poolData)
     if (current?.key === 'winner-announcement' || current?.key === 'pre-order' || current?.key?.includes('buying-phase')) {
       setTab(1)
     }

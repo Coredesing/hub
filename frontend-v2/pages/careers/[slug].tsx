@@ -53,8 +53,7 @@ const Career = ({ data }) => {
       </ul>
 
       <div className="uppercase font-bold text-2xl mb-2 mt-8">ABOUT OUR COMPANY</div>
-      <p className="font-casual text-sm leading-6 opacity-80 mb-2">Icetea Labs is a laboratory incubating and nurturing blockchain-enabled projects. Our mission is to support visionary founders and energetic teams to create a long-lasting positive impact through decentralization technologies. We not only finance potential projects but also advise, assist and connect projects with our extensive network of strategic partners.</p>
-      <p className="font-casual text-sm leading-6 opacity-80 mb-8">Learn more: <a href="https://icetea.io/" className="text-gamefiGreen-500 hover:text-gamefiGreen-800">https://icetea.io/</a></p>
+      <p className="font-casual text-sm leading-6 opacity-80 mb-2">GameFi.org is an all-encompassing hub for game finance. Its ecosystem features a Launchpad, GameFi Hub, Marketplace, GameFi Earn, Guild Hub, and Tournament. GameFi.org was created to work out problems that most game studios have encountered and discovered effective ways in developing a platform that builds relationships with game developers, players, and investors all in one place.</p>
 
       <div className="uppercase font-bold text-2xl mb-2 mt-8">APPLICATION</div>
 

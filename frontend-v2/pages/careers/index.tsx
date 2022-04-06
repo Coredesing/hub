@@ -84,7 +84,7 @@ export const jobs = [
       'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
       'A buzzing space full of globally influential technical founders and business establishing experts',
       "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 AM – 1:30 PM'
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
     ]
   },
 
@@ -141,7 +141,7 @@ export const jobs = [
       'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
       'A buzzing space full of globally influential technical founders and business establishing experts',
       "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 AM – 1:30 PM'
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
     ]
   },
 
@@ -196,7 +196,7 @@ export const jobs = [
       'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
       'A buzzing space full of globally influential technical founders and business establishing experts',
       "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 AM – 1:30 PM'
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
     ]
   },
 
@@ -232,7 +232,7 @@ export const jobs = [
       'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
       'A buzzing space full of globally influential technical founders and business establishing experts',
       "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 AM – 1:30 PM'
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
     ]
   },
 
@@ -271,7 +271,7 @@ export const jobs = [
       'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
       'A buzzing space full of globally influential technical founders and business establishing experts',
       "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 AM – 1:30 PM'
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
     ]
   },
 
@@ -319,7 +319,7 @@ export const jobs = [
       'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
       'A buzzing space full of globally influential technical founders and business establishing experts',
       "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 AM – 1:30 PM'
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
     ]
   },
 
@@ -362,7 +362,7 @@ export const jobs = [
       'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
       'A buzzing space full of globally influential technical founders and business establishing experts',
       "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 AM – 1:30 PM'
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
     ]
   },
 
@@ -402,7 +402,7 @@ export const jobs = [
       'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
       'A buzzing space full of globally influential technical founders and business establishing experts',
       "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 AM – 1:30 PM'
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
     ]
   },
 
@@ -436,7 +436,7 @@ export const jobs = [
       'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
       'A buzzing space full of globally influential technical founders and business establishing experts',
       "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 AM – 1:30 PM'
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
     ]
   },
 
@@ -476,7 +476,7 @@ export const jobs = [
       'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
       'A buzzing space full of globally influential technical founders and business establishing experts',
       "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 AM – 1:30 PM'
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
     ]
   },
 
@@ -518,7 +518,7 @@ export const jobs = [
       'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
       'A buzzing space full of globally influential technical founders and business establishing experts',
       "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 AM – 1:30 PM'
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
     ]
   }]
 

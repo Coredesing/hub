@@ -48,6 +48,12 @@ const Progress = ({ poolData, isClaimTime }: { poolData: Item; isClaimTime: any 
     poolContractReadonly.tokenSold().then(x => {
       setSoldWithContract(x)
     })
+
+    const interval = setInterval(() => poolContractReadonly.tokenSold().then(x => {
+      setSoldWithContract(x)
+    }), 15000)
+
+    return () => clearInterval(interval)
   }, [poolContractReadonly])
 
   return <div className="">

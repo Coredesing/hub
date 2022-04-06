@@ -1,15 +1,16 @@
 import PoolBanner from '@/components/Base/PoolBanner'
-import React, { useMemo } from 'react'
-import { Carousel } from 'react-responsive-carousel'
+import React, { useMemo, useRef } from 'react'
 import { useScreens } from '../utils'
 import Image from 'next/image'
 import ListSwiper, { SwiperItem } from '@/components/Base/ListSwiper'
 import { useFetch } from '@/utils'
+import Flicking from '@egjs/react-flicking'
 
 const INOList = () => {
   const screens = useScreens()
   const url = '/pools/current-pools?token_type=box&limit=6&page=1&is_private=0,1,2,3'
   const { response } = useFetch(url)
+  const refSlider = useRef(null)
 
   const listUpcoming = useMemo<any[]>(() => {
     return response?.data?.data || []
@@ -29,18 +30,11 @@ const INOList = () => {
         {
           screens.mobile || screens.tablet
             ? <div className="pt-14">
-              <Carousel
-                showIndicators={false}
-                showStatus={false}
-                centerMode
-                centerSlidePercentage={80}
-                showArrows={false}
-                infiniteLoop={true}
-              >
+              <Flicking circular={true} className="w-full" align="center" ref={refSlider} interruptable={true}>
                 {listUpcoming.map(item => (
-                  <PoolBanner key={item.id} item={item} color="yellow" url={`/ino/${item.id}`}></PoolBanner>
+                  <div key={item.id} className="w-2/3 px-3"><PoolBanner item={item} color="yellow" url={`/ino/${item.id}`}></PoolBanner></div>
                 ))}
-              </Carousel>
+              </Flicking>
             </div>
             : <div className="mx-auto md:container 2xl:px-16">
               <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>

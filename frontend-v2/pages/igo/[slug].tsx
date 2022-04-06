@@ -1,6 +1,6 @@
-import Layout from '@/components/Layout'
+import Layout, { GlobalContext } from '@/components/Layout'
 import { getTierById } from '@/utils/tiers'
-import React, { useEffect, useMemo, useState, useCallback, createContext } from 'react'
+import React, { useEffect, useMemo, useState, useCallback, createContext, useContext } from 'react'
 import { fetchOneWithSlug } from '../api/igo'
 import { useMyWeb3 } from '@/components/web3/context'
 import { fetcher, printNumber, formatterUSD, useFetch } from '@/utils'
@@ -26,6 +26,7 @@ import { ethers } from 'ethers'
 import { switchNetwork } from '@/components/web3'
 import ERC20_ABI from '@/components/web3/abis/ERC20.json'
 import { useRouter } from 'next/router'
+
 type Milestone = {
   key: string;
   milestone: string;
@@ -39,7 +40,6 @@ export const IGOContext = createContext({
   poolData: null,
   whitelistJoined: false,
   whitelistStatus: null,
-  now: null,
   signature: null,
 
   current: null,
@@ -62,15 +62,7 @@ const IGODetails = ({ poolData }) => {
   const router = useRouter()
   const { tierMine } = useAppContext()
   const [readMore, setReadMore] = useState(false)
-
-  const [now, setNow] = useState(new Date())
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(new Date())
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [])
+  const { now } = useContext(GlobalContext)
 
   const [failedRequirements, setFailedRequirements] = useState(false)
   const [completed, setCompleted] = useState(false)
@@ -295,7 +287,7 @@ const IGODetails = ({ poolData }) => {
       return setCurrent(timeline[TIMELINE.TBA])
     }
 
-    if (now.getTime() < dateFromString(poolData.start_join_pool_time).getTime()) {
+    if (now?.getTime() < dateFromString(poolData.start_join_pool_time).getTime()) {
       return setCurrent(timeline[TIMELINE.PRE_WHITELIST])
     }
 
@@ -333,7 +325,7 @@ const IGODetails = ({ poolData }) => {
       return setCurrent(timeline[TIMELINE.BUYING_PHASE].subMilestones[1])
     }
 
-    if (now.getTime() > dateFromString(poolData.finish_time).getTime()) {
+    if (now?.getTime() > dateFromString(poolData.finish_time).getTime()) {
       return setCurrent(timeline.find(item => item.key === 'claim'))
     }
   }, [hasFCFS, now, poolData, timeline, tierMine])
@@ -402,7 +394,6 @@ const IGODetails = ({ poolData }) => {
           poolData,
           whitelistJoined,
           whitelistStatus,
-          now,
           signature,
 
           current,
@@ -443,7 +434,7 @@ const IGODetails = ({ poolData }) => {
               : ''
           }
           {
-            poolData?.finish_time && now.getTime() > new Date(poolData.finish_time).getTime()
+            poolData?.finish_time && now?.getTime() > new Date(poolData.finish_time).getTime()
               ? <Notification type="error" text="This pool is over. See you in the next pool."></Notification>
               : ''
           }
@@ -608,7 +599,7 @@ const IGODetails = ({ poolData }) => {
                     {poolData?.symbol}
                     {poolData.token &&
                       timeline[TIMELINE.CLAIM]?.start &&
-                      now.getTime() >= timeline[TIMELINE.CLAIM].start.getTime() &&
+                      now?.getTime() >= timeline[TIMELINE.CLAIM].start.getTime() &&
                       poolData.token_type === 'erc20' &&
                       poolData.token !== '0xE23C8837560360ff0D49ED005c5E3ad747F50B3d' &&
                     <>

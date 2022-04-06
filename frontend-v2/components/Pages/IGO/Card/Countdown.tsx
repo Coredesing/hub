@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import { intervalToDuration } from 'date-fns'
 
 const Countdown = ({ to }: { to: string | number }) => {
-  const [distance, setDistance] = useState(0)
   const [days, setDays] = useState('00')
   const [hours, setHours] = useState('00')
   const [minutes, setMinutes] = useState('00')
@@ -9,18 +9,20 @@ const Countdown = ({ to }: { to: string | number }) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setDistance(new Date(Number(to) * 1000).getTime() - new Date().getTime())
-
-      setDays(distance > 0 ? ('0' + Math.floor(distance / (1000 * 60 * 60 * 24)).toString()).slice(-2) : '00')
-      setHours(distance > 0 ? ('0' + Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString()).slice(-2) : '00')
-      setMinutes(distance > 0 ? ('0' + Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString()).slice(-2) : '00')
-      setSeconds(distance > 0 ? ('0' + Math.floor((distance % (1000 * 60)) / 1000).toString()).slice(-2) : '00')
+      const duration = intervalToDuration({
+        start: new Date(Number(to) * 1000),
+        end: new Date()
+      })
+      setDays(duration.days < 10 ? `0${duration.days}` : `${duration.days}`)
+      setHours(duration.hours < 10 ? `0${duration.hours}` : `${duration.hours}`)
+      setMinutes(duration.minutes < 10 ? `0${duration.minutes}` : `${duration.minutes}`)
+      setSeconds(duration.seconds < 10 ? `0${duration.seconds}` : `${duration.seconds}`)
     }, 1000)
 
     return () => {
       clearInterval(interval)
     }
-  }, [distance, to])
+  }, [to])
 
   return (
     <div className="flex font-medium">

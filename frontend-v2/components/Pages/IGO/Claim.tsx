@@ -14,20 +14,14 @@ import { IGOContext } from '@/pages/igo/[slug]'
 import Image from 'next/image'
 import { TIMELINE } from './constants'
 import { getNetworkByAlias, switchNetwork } from '@/components/web3'
+import { GlobalContext } from '@/components/Layout'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 const PER_PAGE = 5
 
 const Claim = () => {
   const { poolData, usd, timeline } = useContext(IGOContext)
-  const [now, setNow] = useState(new Date())
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(new Date())
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [])
+  const { now } = useContext(GlobalContext)
 
   const { account, library, network } = useMyWeb3()
   const [page, setPage] = useState(1)
@@ -48,7 +42,7 @@ const Claim = () => {
 
   const currentPhase = useMemo(() => {
     let data = null
-    const available = poolData?.campaignClaimConfig?.filter(config => now.getTime() >= new Date(Number(config.start_time) * 1000).getTime())
+    const available = poolData?.campaignClaimConfig?.filter(config => now?.getTime() >= new Date(Number(config.start_time) * 1000).getTime())
     if (!available.length) {
       data = null
     } else {
@@ -126,7 +120,7 @@ const Claim = () => {
 
   const claimable = useMemo(() => {
     return Number(purchasedTokens || 0) > 0 &&
-      new Date(Number(poolData?.release_time) * 1000).getTime() <= now.getTime() &&
+      new Date(Number(poolData?.release_time) * 1000).getTime() <= now?.getTime() &&
       prettyFloat(prettyFloat(currentPhase?.max_percent_claim) * prettyFloat(purchasedTokens) / 100) > prettyFloat(claimedTokens) &&
       prettyFloat(claimedTokens) < prettyFloat(purchasedTokens) &&
       claimTypes.find(type => type.name === CLAIM_TYPE[0])?.value > 0
@@ -212,7 +206,7 @@ const Claim = () => {
 
   return (
     <>
-      { now.getTime() > timeline[TIMELINE.BUYING_PHASE].end?.getTime() &&
+      { now?.getTime() > timeline[TIMELINE.BUYING_PHASE].end?.getTime() &&
       <div className="w-full my-4 flex flex-col xl:flex-row gap-6">
         <div className="w-full xl:w-1/3 bg-gamefiDark-630/30 p-7 rounded clipped-t-r">
           <p className="uppercase font-mechanic font-bold text-lg mb-6">Your Allocation</p>
@@ -364,7 +358,7 @@ const Claim = () => {
         </div>
       </div>}
       {
-        now.getTime() <= timeline[TIMELINE.BUYING_PHASE].end?.getTime() && <div className="w-full mt-6 p-12 text-gamefiDark-200 flex flex-col items-center justify-center gap-4">
+        now?.getTime() <= timeline[TIMELINE.BUYING_PHASE].end?.getTime() && <div className="w-full mt-6 p-12 text-gamefiDark-200 flex flex-col items-center justify-center gap-4">
           <Image src={require('@/assets/images/icons/calendar.png')} alt=""></Image>
           <div>This pool has not completed yet. Please wait until Claim Phase.</div>
         </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback, ChangeEvent } from 'react'
+import { useState, useEffect, useMemo, useCallback, ChangeEvent, useContext } from 'react'
 import { safeToFixed } from '@/utils'
 import { useWeb3Default, switchNetwork, GAFI } from '@/components/web3'
 import { utils } from 'ethers'
@@ -8,21 +8,15 @@ import StakeRight from '@/components/Pages/Staking/StakeRight'
 import { useAppContext } from '@/context'
 import toast from 'react-hot-toast'
 import copy from 'copy-to-clipboard'
+import { GlobalContext } from '@/components/Layout'
 
 export default function TabUnstake ({ loadMyPending, pendingWithdrawal, goStake }) {
-  const [now, setNow] = useState(new Date())
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(new Date())
-    }, 1000)
+  const { tierMine, stakingPool, stakingMine, loadMyStaking, contractStaking } = useAppContext()
+  const { now } = useContext(GlobalContext)
 
-    return () => clearInterval(interval)
-  }, [setNow])
   const hasPendingWithdrawalAvailable = useMemo(() => {
     return pendingWithdrawal?.time <= now
   }, [pendingWithdrawal, now])
-
-  const { tierMine, stakingPool, stakingMine, loadMyStaking, contractStaking } = useAppContext()
 
   const { chainId: chainIDDefault } = useWeb3Default()
   const { library, account, network, balance } = useMyWeb3()

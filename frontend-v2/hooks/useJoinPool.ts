@@ -21,7 +21,7 @@ export const useJoinPool = (poolId: string | number, account: Address) => {
         return
       }
 
-      const signature = await apiSignMessage({
+      await apiSignMessage({
         campaign_id: poolId
       })
       toast.success('Apply whitelist successfully')

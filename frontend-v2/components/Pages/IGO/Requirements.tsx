@@ -13,6 +13,7 @@ import Link from 'next/link'
 import toast from 'react-hot-toast'
 import { GAFI, switchNetwork } from '@/components/web3'
 import { API_BASE_URL } from '@/utils/constants'
+import { GlobalContext } from '@/components/Layout'
 
 const SOCIAL_STATUS = {
   PENDING: 0,
@@ -22,7 +23,7 @@ const SOCIAL_STATUS = {
 }
 
 const Requirements = () => {
-  const { poolData, whitelistJoined, whitelistStatus, now, signature, setSignature, loadJoined, setFailedRequirements } = useContext(IGOContext)
+  const { poolData, whitelistJoined, whitelistStatus, signature, setSignature, loadJoined, setFailedRequirements } = useContext(IGOContext)
   const { network: poolNetwork } = useLibraryDefaultFlexible(poolData?.network_available)
   const { library, account, network } = useMyWeb3()
   const { tierMine, tiers } = useAppContext()
@@ -30,6 +31,7 @@ const Requirements = () => {
   const { profile, setHeaders } = useProfile(account)
   const [whitelistLoading, setWhitelistLoading] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const { now } = useContext(GlobalContext)
 
   useEffect(() => {
     if (!signature) {

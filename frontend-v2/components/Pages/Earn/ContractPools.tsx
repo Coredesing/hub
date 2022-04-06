@@ -5,13 +5,14 @@ import { Pool } from '@/pages/api/earn'
 import { PoolExtended } from '@/pages/earn'
 import { formatUnits, parseUnits } from '@ethersproject/units'
 import { BigNumber, constants, Contract } from 'ethers'
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import { ChangeEvent, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import ABIStakingPool from '@/components/web3/abis/StakingPool.json'
 import toast from 'react-hot-toast'
 import { getNetworkByAlias, switchNetwork, Token } from '@/components/web3'
 import { printNumber, safeToFixed } from '@/utils'
 import { addSeconds, format, formatDistanceStrict, intervalToDuration } from 'date-fns'
 import Modal from '@/components/Base/Modal'
+import { GlobalContext } from '@/components/Layout'
 
 const ContractPools = ({ pools, contractAddress, className }: {
     pools: Pool[];
@@ -98,14 +99,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
     loadMyExtended(v)
   }, [selected, contractAddress, loadMyExtended])
 
-  const [now, setNow] = useState(new Date())
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(new Date())
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [setNow])
+  const { now } = useContext(GlobalContext)
   const upcoming = useMemo(() => {
     if (!selectedExtended) {
       return false

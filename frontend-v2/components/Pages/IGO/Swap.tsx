@@ -16,6 +16,7 @@ import { useAppContext } from '@/context'
 
 import Image from 'next/image'
 import { TIMELINE } from './constants'
+import { GlobalContext } from '@/components/Layout'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 
@@ -24,15 +25,7 @@ const Swap = () => {
   const { library, account, network, balanceShort } = useMyWeb3()
   // const [txHash, setTxHash] = useState('')
   const { tierMine } = useAppContext()
-
-  const [now, setNow] = useState(new Date())
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(new Date())
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [])
+  const { now } = useContext(GlobalContext)
 
   // Round Info
 
@@ -317,8 +310,8 @@ const Swap = () => {
   return (
     <>
       {
-        now.getTime() >= timeline[TIMELINE.WINNER_ANNOUNCEMENT].start?.getTime() &&
-        now.getTime() < timeline[TIMELINE.BUYING_PHASE].end?.getTime() &&
+        now?.getTime() >= timeline[TIMELINE.WINNER_ANNOUNCEMENT].start?.getTime() &&
+        now?.getTime() < timeline[TIMELINE.BUYING_PHASE].end?.getTime() &&
         poolData?.public_winner_status
           ? <div className="my-4 w-full bg-gamefiDark-630/30 p-7 rounded clipped-t-r">
             <div className="flex flex-col lg:flex-row gap-14 lg:gap-4 w-full">
@@ -356,8 +349,8 @@ const Swap = () => {
                 </div>
               </div>
               {
-                ((!preOrderAllowed && now.getTime() >= timeline[TIMELINE.BUYING_PHASE].start.getTime()) ||
-                (preOrderAllowed && now.getTime() >= timeline[TIMELINE.PRE_ORDER].start.getTime()))
+                ((!preOrderAllowed && now?.getTime() >= timeline[TIMELINE.BUYING_PHASE].start.getTime()) ||
+                (preOrderAllowed && now?.getTime() >= timeline[TIMELINE.PRE_ORDER].start.getTime()))
                   ? <div className="flex-1 bg-gamefiDark rounded px-3 py-4">
                     <div className="uppercase font-semibold tracking-wide leading-7 text-lg">
                       {rounds.find(round => round.phase === phase)?.name}
@@ -490,9 +483,9 @@ const Swap = () => {
           : <></>
       }
       {
-        (now.getTime() < timeline[TIMELINE.WINNER_ANNOUNCEMENT].start?.getTime() ||
-        (now.getTime() >= timeline[TIMELINE.WINNER_ANNOUNCEMENT].start?.getTime() && !poolData?.public_winner_status)) &&
-        now.getTime() < timeline[TIMELINE.WINNER_ANNOUNCEMENT].end?.getTime() &&
+        (now?.getTime() < timeline[TIMELINE.WINNER_ANNOUNCEMENT].start?.getTime() ||
+        (now?.getTime() >= timeline[TIMELINE.WINNER_ANNOUNCEMENT].start?.getTime() && !poolData?.public_winner_status)) &&
+        now?.getTime() < timeline[TIMELINE.WINNER_ANNOUNCEMENT].end?.getTime() &&
           <div className="my-4 w-full flex flex-col gap-4 p-12 rounded items-center justify-center">
             <Image src={require('@/assets/images/icons/calendar.png')} alt=""></Image>
             <div className="text-gamefiDark-200">
@@ -500,7 +493,7 @@ const Swap = () => {
           </div>
       }
       {
-        now.getTime() > new Date(Number(poolData?.finish_time || '0') * 1000).getTime() &&
+        now?.getTime() > new Date(Number(poolData?.finish_time || '0') * 1000).getTime() &&
         <div className="my-4 w-full flex flex-col gap-4 p-12 rounded items-center justify-center">
           <Image src={require('@/assets/images/icons/poolOver.png')} alt=""></Image>
           <div className="text-gamefiDark-200">This pool is over. See you in the next pool.</div>

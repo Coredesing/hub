@@ -4,13 +4,13 @@ import Image from 'next/image'
 import community from '@/assets/images/icons/community.png'
 import lock from '@/assets/images/icons/lock.svg'
 import { getCurrency, useLibraryDefaultFlexible } from '@/components/web3/utils'
-import { ListIGOContext } from '@/pages/igo'
 import Progress from './Progress'
 import Countdown from './Countdown'
+import { GlobalContext } from '@/components/Layout'
 
 const Card = ({ item, color, background }: { item: Item; color?: string; background?:string }) => {
   const { network } = useLibraryDefaultFlexible(item?.network_available)
-  const { now } = useContext(ListIGOContext)
+  const { now } = useContext(GlobalContext)
   // const [participants, setParticipants] = useState(0)
 
   // const fetchParticipants = useCallback(async () => {
@@ -150,8 +150,8 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
       {
         item.buy_type?.toLowerCase() === 'whitelist' &&
         item.campaign_status?.toLowerCase() === 'upcoming' &&
-        now.getTime() >= new Date(Number(item.start_join_pool_time) * 1000).getTime() &&
-        now.getTime() < new Date(Number(item.end_join_pool_time) * 1000).getTime() &&
+        now?.getTime() >= new Date(Number(item.start_join_pool_time) * 1000).getTime() &&
+        now?.getTime() < new Date(Number(item.end_join_pool_time) * 1000).getTime() &&
         <div className="w-full flex flex-col items-center justify-center">
           <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Ends In</div>
           <div className="mt-2">
@@ -161,7 +161,7 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
       }
       {
         item.buy_type?.toLowerCase() === 'whitelist' &&
-        now.getTime() < new Date(Number(item.start_join_pool_time) * 1000).getTime() &&
+        now?.getTime() < new Date(Number(item.start_join_pool_time) * 1000).getTime() &&
         <div className="w-full flex flex-col items-center justify-center">
           <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Starts In</div>
           <div className="mt-2">
@@ -169,8 +169,8 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
           </div>
         </div>
       }
-      {now.getTime() > new Date(Number(item.end_join_pool_time) * 1000).getTime() &&
-      now.getTime() <= new Date(Number(item.start_time) * 1000).getTime() &&
+      {now?.getTime() > new Date(Number(item.end_join_pool_time) * 1000).getTime() &&
+      now?.getTime() <= new Date(Number(item.start_time) * 1000).getTime() &&
         <div className="w-full flex flex-col items-center justify-center">
           <div className="text-xs font-semibold text-white/50 uppercase">Buying Phase Starts In</div>
           <div className="mt-2">

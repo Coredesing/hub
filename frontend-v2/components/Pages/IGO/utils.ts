@@ -5,5 +5,5 @@ export const dateFromString = (input: string) => {
 
 export const isInRange = (from: string, to: string, now: Date) => {
   if (!from || !to) return null
-  return dateFromString(from).getTime() <= now.getTime() && dateFromString(to).getTime() > now.getTime()
+  return dateFromString(from).getTime() <= now?.getTime() && dateFromString(to).getTime() > now?.getTime()
 }

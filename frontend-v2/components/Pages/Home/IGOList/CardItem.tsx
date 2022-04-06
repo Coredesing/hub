@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useContext } from 'react'
 import Image from 'next/image'
-import { useScreens } from '../utils'
 import Countdown from '@/components/Pages/IGO/Card/Countdown'
+import { GlobalContext } from '@/components/Layout'
 
 type Props = {
   item: any;
@@ -24,53 +24,9 @@ const poolStatus = (status: any) => {
 }
 
 const CardItem = ({ item, ...props }: Props) => {
-  const [distance, setDistance] = useState(0)
-  const [days, setDays] = useState('00')
-  const [hours, setHours] = useState('00')
-  const [minutes, setMinutes] = useState('00')
-  const [seconds, setSeconds] = useState('00')
-  const [countdownStatus, setCountdownStatus] = useState('')
-
-  const screens = useScreens()
-
-  const [now, setNow] = useState(new Date())
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(new Date())
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [])
-
-  useEffect(() => {
-    if (countdownStatus) {
-      return
-    }
-    const interval = setInterval(() => {
-      if (distance < 0) {
-        if (item.campaign_status.toLowerCase() === 'swap' || item.campaign_status.toLowerCase() === 'filled') {
-          setCountdownStatus('Buying Time')
-          return
-        }
-
-        setCountdownStatus(item.campaign_status)
-        return
-      }
-
-      setDistance(new Date(item.start_time * 1000).getTime() - new Date().getTime())
-      setDays(distance > 0 ? ('0' + Math.floor(distance / (1000 * 60 * 60 * 24)).toString()).slice(-2) : '00')
-      setHours(distance > 0 ? ('0' + Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString()).slice(-2) : '00')
-      setMinutes(distance > 0 ? ('0' + Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString()).slice(-2) : '00')
-      setSeconds(distance > 0 ? ('0' + Math.floor((distance % (1000 * 60)) / 1000).toString()).slice(-2) : '00')
-    }, 1000)
-
-    return () => {
-      clearInterval(interval)
-    }
-  }, [item.start_time, distance, countdownStatus, item.campaign_status])
-
+  const { now } = useContext(GlobalContext)
   return (
-    <div className={`rounded overflow-hidden border border-transparent hover:opacity-80 ${props.className}`} style={{ maxWidth: (screens.md || screens.lg || screens.xl) ? '350px' : '100%' }}>
+    <div className={`w-full rounded overflow-hidden border border-transparent hover:opacity-80 ${props.className}`}>
       <div className="w-full relative">
         <div className="absolute h-6 w-2/5 inline-flex align-middle items-center top-0 left-0 uppercase text-xs text-left bg-black clipped-b-r-full">
           <Image src={require('@/assets/images/icons/lock.svg')} alt="lock"></Image>
@@ -107,8 +63,8 @@ const CardItem = ({ item, ...props }: Props) => {
         {
           item.buy_type?.toLowerCase() === 'whitelist' &&
         item.campaign_status?.toLowerCase() === 'upcoming' &&
-        now.getTime() >= new Date(Number(item.start_join_pool_time) * 1000).getTime() &&
-        now.getTime() < new Date(Number(item.end_join_pool_time) * 1000).getTime() &&
+        now?.getTime() >= new Date(Number(item.start_join_pool_time) * 1000).getTime() &&
+        now?.getTime() < new Date(Number(item.end_join_pool_time) * 1000).getTime() &&
         <div className="py-3 w-full flex flex-col items-center justify-center">
           <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Ends In</div>
           <div className="mt-2">
@@ -118,7 +74,7 @@ const CardItem = ({ item, ...props }: Props) => {
         }
         {
           item.buy_type?.toLowerCase() === 'whitelist' &&
-        now.getTime() < new Date(Number(item.start_join_pool_time) * 1000).getTime() &&
+        now?.getTime() < new Date(Number(item.start_join_pool_time) * 1000).getTime() &&
         <div className="py-3 w-full flex flex-col items-center justify-center">
           <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Starts In</div>
           <div className="mt-2">
@@ -126,8 +82,8 @@ const CardItem = ({ item, ...props }: Props) => {
           </div>
         </div>
         }
-        {now.getTime() > new Date(Number(item.end_join_pool_time) * 1000).getTime() &&
-      now.getTime() <= new Date(Number(item.start_time) * 1000).getTime() &&
+        {now?.getTime() > new Date(Number(item.end_join_pool_time) * 1000).getTime() &&
+      now?.getTime() <= new Date(Number(item.start_time) * 1000).getTime() &&
         <div className="py-3 w-full flex flex-col items-center justify-center">
           <div className="text-xs font-semibold text-white/50 uppercase">Buying Phase Starts In</div>
           <div className="mt-2">

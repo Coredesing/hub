@@ -1,14 +1,18 @@
-import React, { useMemo } from 'react'
-import { Carousel } from 'react-responsive-carousel'
+import React, { useMemo, useRef } from 'react'
 import { useScreens } from '../utils'
 import Image from 'next/image'
 import CardItem from './CardItem'
 import { useFetch } from '@/utils'
+import Flicking from '@egjs/react-flicking'
+import '@egjs/flicking-plugins/dist/pagination.css'
+import '@egjs/flicking/dist/flicking.css'
 
 const IGOList = () => {
   const screens = useScreens()
   const url = '/pools/current-pools?token_type=erc20&limit=100000&page=1&is_private=0,1,2,3'
   const { response, loading } = useFetch(url)
+
+  const refSlider = useRef(null)
 
   const listUpcoming = useMemo<any[]>(() => {
     const origin = response?.data?.data || []
@@ -39,23 +43,16 @@ const IGOList = () => {
         {
           screens.mobile || screens.tablet
             ? <div className="mt-14">
-              <Carousel
-                showIndicators={false}
-                showStatus={false}
-                centerMode
-                centerSlidePercentage={80}
-                showArrows={false}
-                infiniteLoop={true}
-              >
+              <Flicking circular={true} className="w-full" align="center" ref={refSlider} interruptable={true}>
                 {listUpcoming.map(item => (
-                  <CardItem key={item.id} item={item} className="px-3"></CardItem>
+                  <div key={item.id} className="w-2/3 px-3"><CardItem item={item}></CardItem></div>
                 ))}
-              </Carousel>
+              </Flicking>
             </div>
             : <div className="mx-auto md:container 2xl:px-16">
               <div className={`text-center justify-center ${listUpcoming.length > 2 ? 'grid grid-cols-2' : 'flex'} ${listUpcoming.length >= 3 ? 'xl:grid xl:grid-cols-3' : 'flex'} 2xl:${listUpcoming.length >= 4 ? 'grid 2xl:grid-cols-4' : 'flex'} gap-4 xl:gap-6 mt-14`}>
                 {listUpcoming.map(item => (
-                  <div key={item.id} className="mx-auto"><CardItem item={item}></CardItem></div>
+                  <div key={item.id} className="mx-auto w-full"><CardItem item={item}></CardItem></div>
                 ))}
               </div>
               {

@@ -38,6 +38,7 @@ const SwapProgress = () => {
     }
 
     const result = FixedNumber.from(sold).divUnsafe(FixedNumber.from(total)).mulUnsafe(FixedNumber.from(100)).toUnsafeFloat() + parseFloat(poolData?.progress_display || 0)
+
     if (result > 100) {
       return 100
     }
@@ -53,6 +54,10 @@ const SwapProgress = () => {
     if (!poolContractReadonly) {
       return
     }
+
+    poolContractReadonly.tokenSold().then(x => {
+      setSoldWithContract(x)
+    })
 
     const interval = setInterval(() => poolContractReadonly.tokenSold().then(x => {
       setSoldWithContract(x)

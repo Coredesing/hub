@@ -62,7 +62,7 @@ const Career = ({ data }) => {
 
       <div className="mt-2 w-full flex gap-2 items-center">
 
-        <div className="fb-share-button ml-auto" data-href={linkShare} data-layout="button" data-size="small"></div>
+        <div className="fb-share-button ml-auto" data-href={linkShare} data-layout="button_count" data-size="small"><a target="_blank" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(linkShare)}&amp;src=sdkpreparse`} className="fb-xfbml-parse-ignore" rel="noreferrer">Share</a></div>
 
         <a className="twitter-share-button" href={linkShare}>Tweet</a>
 

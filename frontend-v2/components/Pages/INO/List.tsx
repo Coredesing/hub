@@ -111,28 +111,28 @@ const List = () => {
         return (
           <div className="sm:flex p-4 border-b border-gamefiDark-600" key={item.id}>
             <Link href={`/ino/${item.id}`} passHref={true}>
-              <a className="flex gap-x-5 sm:gap-x-4 items-center sm:w-2/3 md:w-1/2 lg:w-5/12">
+              <a className="flex sm:flex-row flex-col gap-x-5 sm:gap-x-4 sm:items-center sm:w-2/3 md:w-1/2 lg:w-5/12">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={item.mini_banner} alt={item.title} className="flex-none w-28 sm:w-36 md:w-40 aspect-[16/9]" />
+                <img src={item.mini_banner} alt={item.title} className="flex-none w-full sm:w-36 md:w-40 aspect-[16/9]" />
                 <div className={styles.title}>
-                  <h4 className="font-casual text-sm sm:text-base md:text-lg leading-normal font-semibold uppercase">{item.title}</h4>
+                  <h4 className="font-casual text-sm sm:text-base md:text-lg leading-normal font-semibold uppercase mt-3 sm:mt-0">{item.title}</h4>
                   <p className="font-casual text-[13px] md:text-base font-medium opacity-50">{visibility(item)}</p>
-                  <p className="mt-2 md:hidden uppercase font-casual font-medium text-base" style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {getCurrency(item)?.name}/BOX</p>
+                  {/* <p className="mt-2 md:hidden uppercase font-casual font-medium text-base" style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {getCurrency(item)?.name}/BOX</p> */}
                 </div>
               </a>
             </Link>
-            <div className="flex-1 flex mt-4 md:mt-0">
-              <div className="flex-1 flex flex-col">
-                <span className="text-[13px] font-bold opacity-50 tracking-wide uppercase">Network</span>
-                <div className="inline-flex items-center uppercase font-casual font-medium text-base"><div className="w-6 h-6 mt-1 mr-2 relative inline-block"><Image src={networkImage(item.network_available)} alt={item.network_available} layout="fill" objectFit="cover" /></div> {item.network_available}</div>
+            <div className="flex-1 flex gap-2 mt-4 md:mt-0">
+              <div className="flex-1 flex flex-col gap-1">
+                <span className="text-xs sm:text-[13px] font-bold opacity-50 tracking-wide uppercase">Network</span>
+                <div className="inline-flex items-center uppercase font-casual font-medium text-xs sm:text-base"><div className="sm:w-6 sm:h-6 w-4 h-4 mr-2 relative inline-block"><Image src={networkImage(item.network_available)} alt={item.network_available} layout="fill" objectFit="cover" /></div> {item.network_available}</div>
               </div>
-              <div className="flex-1 flex flex-col">
-                <span className="text-[13px] font-bold opacity-50 tracking-wide uppercase">Total Sales</span>
-                <p className="uppercase font-casual font-medium text-base mt-1">{item.total_sold_coin}</p>
+              <div className="flex-1 flex flex-col gap-1">
+                <span className="text-xs sm:text-[13px] font-bold opacity-50 tracking-wide uppercase">Total Sales</span>
+                <p className="uppercase font-casual font-medium text-xs sm:text-base">{item.total_sold_coin}</p>
               </div>
-              <div className="hidden md:flex flex-1 flex-col">
-                <span className="text-[13px] font-bold opacity-50 tracking-wide uppercase">Price</span>
-                <p className="uppercase font-casual font-medium text-base mt-1" style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {getCurrency(item)?.name}/BOX</p>
+              <div className="flex flex-1 flex-col gap-1">
+                <span className="text-xs sm:text-[13px] font-bold opacity-50 tracking-wide uppercase">Price</span>
+                <p className="uppercase font-casual font-medium text-xs sm:text-base" style={{ color: '#72F34B' }}>{item.ether_conversion_rate} <span className="text-10px sm:text-base">{getCurrency(item)?.name}/BOX</span> </p>
               </div>
             </div>
           </div>

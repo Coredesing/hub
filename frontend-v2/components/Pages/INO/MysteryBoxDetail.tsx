@@ -552,7 +552,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     />
     <PoolDetail
       headContent={<div className={clsx(styles.headPool)}>
-        {<div className='mb-10'>{renderMsg()}</div>}
+        {!countdown.isFinished && <div className='mb-10'>{renderMsg()}</div>}
         <div className={'grid lg:grid-cols-2'}>
           <div className={clsx('flex mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}>
             <InfoBoxOrderItem label='Registered Users' value={poolInfo.totalRegistered || 0} />

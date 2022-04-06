@@ -2,15 +2,21 @@ import Layout from '@/components/Layout'
 import Link from 'next/link'
 import { jobs } from './index'
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 const Career = ({ data }) => {
   const router = useRouter()
 
+  const linkShare = process.env.NEXT_PUBLIC_SITE_URL + router.asPath
+
+  useEffect(() => {
+    (window as any)?.FB?.XFBML?.parse();
+    (window as any)?.twttr?.widgets?.load()
+  }, [linkShare])
+
   if (!data) {
     return null
   }
-
-  const linkShare = process.env.NEXT_PUBLIC_SITE_URL + router.asPath
 
   return (<Layout title={data.title ? `GameFi.org - ${data.title}` : 'GameFi.org - Careers'}>
     <div className="px-4 lg:px-16 mx-auto lg:block pb-12 max-w-4xl">

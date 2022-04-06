@@ -52,6 +52,29 @@ function MyApp ({ Component, pageProps }: AppProps) {
           gtag('config', '${GA_MEASUREMENT_ID}');
         `}
       </Script>
+      <div id="fb-root"></div>
+      <Script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v13.0" nonce="TSzLMSE6">
+      </Script>
+      <Script>
+        {`
+          window.twttr = (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0],
+              t = window.twttr || {};
+            if (d.getElementById(id)) return t;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "https://platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js, fjs);
+
+            t._e = [];
+            t.ready = function(f) {
+              t._e.push(f);
+            };
+
+            return t;
+          }(document, "script", "twitter-wjs"));
+        `}
+      </Script>
       <Web3ReactProvider getLibrary={getLibrary}>
         <Web3ProviderNetwork getLibrary={getLibrary}>
           <MyWeb3Provider>

@@ -226,7 +226,7 @@ const Claim = () => {
           </div>
           <div className="flex justify-between mb-4 items-center">
             <strong className="font-semibold">Token Price</strong>
-            <span>{formatPrice(poolData?.token_conversion_rate)} {usd?.symbol}</span>
+            <span>{printNumber(poolData?.token_conversion_rate)} {usd?.symbol}</span>
           </div>
           <div className="flex justify-between mb-4 items-center">
             <strong className="font-semibold">Have Bought</strong>

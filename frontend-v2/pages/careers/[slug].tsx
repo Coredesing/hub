@@ -64,8 +64,7 @@ const Career = ({ data }) => {
 
         <div className="fb-share-button ml-auto" data-href={linkShare} data-layout="button" data-size="small"></div>
 
-
-          <a className="twitter-share-button" href={linkShare}>Tweet</a>
+        <a className="twitter-share-button" href={linkShare}>Tweet</a>
 
       </div>
 

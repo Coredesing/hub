@@ -53,9 +53,9 @@ function MyApp ({ Component, pageProps }: AppProps) {
         `}
       </Script>
       <div id="fb-root"></div>
-      <Script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v13.0" nonce="TSzLMSE6">
+      <Script async defer crossOrigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v13.0" nonce="TSzLMSE6" id="facebook-share">
       </Script>
-      <Script>
+      <Script id="twitter-share">
         {`
           window.twttr = (function(d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0],

@@ -11,7 +11,18 @@ const IGOList = () => {
   const { response, loading } = useFetch(url)
 
   const listUpcoming = useMemo<any[]>(() => {
-    return response?.data?.data || []
+    const origin = response?.data?.data || []
+    let remain = origin
+    const tba = origin.filter(item => !item.start_join_pool_time)
+    remain = remain.filter(item => !tba.includes(item))
+    const preWhitelist = remain.filter(item => new Date().getTime() < new Date(Number(item?.start_join_pool_time) * 1000).getTime()).sort((a, b) => a?.start_join_pool_time < b?.start_join_pool_time)
+    remain = remain.filter(item => !preWhitelist.includes(item))
+    const whitelist = remain.filter(item => new Date().getTime() < new Date(Number(item?.end_join_pool_time) * 1000).getTime()).sort((a, b) => a?.end_join_pool_time < b?.end_join_pool_time)
+    remain = remain.filter(item => !whitelist.includes(item))
+    const preStart = remain.filter(item => new Date().getTime() < new Date(Number(item?.start_time) * 1000).getTime()).sort((a, b) => a?.start_time < b?.start_time)
+    remain = remain.filter(item => !preStart.includes(item))?.sort((a, b) => a.finish_time < b.finish_time)
+    const sortedItems = [].concat(remain).concat(preStart).concat(whitelist).concat(preWhitelist).concat(tba)
+    return sortedItems || []
   }, [response])
 
   return (listUpcoming && listUpcoming.length > 0

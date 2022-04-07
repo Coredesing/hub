@@ -109,7 +109,7 @@ const GameDetails = ({ data }) => {
   }, [library, liked, mutate, signature, account, setShowModal])
 
   return (
-    <Layout title={data.game_name ? `GameFi.org - ${data.game_name}` : 'GameFi.org Hub'} description={data?.game_intro} image={data.screen_shots_1}>
+    <Layout title={data.game_name ? `GameFi.org - ${data.game_name}` : 'GameFi.org Hub'} description={data?.game_intro?.replace(/(<([^>]+)>)/gi, '')} image={data.screen_shots_1}>
       <div className="px-4 lg:px-24 md:container mx-auto lg:block">
         <a onClick={() => {
           router.back()

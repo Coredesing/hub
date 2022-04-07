@@ -1,9 +1,8 @@
 import { useContext, useEffect, useMemo, useState } from 'react'
 import { Item } from '../type'
 import Image from 'next/image'
-import community from '@/assets/images/icons/community.png'
-import lock from '@/assets/images/icons/lock.svg'
 import { getCurrency, useLibraryDefaultFlexible } from '@/components/web3/utils'
+import { poolStatus } from '@/utils/pool'
 import Progress from './Progress'
 import Countdown from './Countdown'
 
@@ -29,27 +28,6 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
   //     setParticipants(data?.total || 0)
   //   })
   // }, [fetchParticipants, setParticipants])
-
-  const poolStatus = (status: any) => {
-    switch (status) {
-    case 1:
-      return {
-        title: 'private',
-        icon: lock
-      }
-    case 3:
-      return {
-        title: 'community',
-        icon: community
-      }
-    case 0:
-    default:
-      return {
-        title: 'public',
-        icon: lock
-      }
-    }
-  }
 
   const poolClaimTime = useMemo(() => {
     const start = item?.campaignClaimConfig?.[0]?.finish_time ? new Date(Number(item?.campaignClaimConfig?.[0]?.finish_time) * 1000) : undefined
@@ -88,7 +66,7 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
         <div className="w-5/6 overflow-hidden text-left text-ellipsis whitespace-nowrap uppercase font-semibold hover:underline xl:text-lg">
           <a href={`/igo/${item.id}`} className="w-full overflow-hidden text-ellipsis">{item.title}</a>
         </div>
-        <div className="w-6 h-6 xl:w-8 xl:h-8"><Image src={network?.image} alt=""></Image></div>
+        <div className="w-6 h-6 xl:w-7 xl:h-7 relative"><Image layout="fill" src={network?.image} alt=""></Image></div>
       </div>
       <div className="inline-flex gap-5">
         { item?.website && <a href={item?.website} className="hover:text-gray-300" target="_blank" rel="noopenner noreferrer">

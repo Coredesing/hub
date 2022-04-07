@@ -2,24 +2,13 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Countdown from '@/components/Pages/IGO/Card/Countdown'
+import { poolStatus } from '@/utils/pool'
 
 type Props = {
   item: any;
   showOffer?: boolean;
   showListing?: boolean;
   className?: string;
-}
-
-const poolStatus = (status: any) => {
-  switch (status) {
-  case 1:
-    return 'private'
-  case 3:
-    return 'community'
-  case 0:
-  default:
-    return 'public'
-  }
 }
 
 const CardItem = ({ item, ...props }: Props) => {
@@ -35,9 +24,9 @@ const CardItem = ({ item, ...props }: Props) => {
   return (
     <div className={`w-full rounded overflow-hidden border border-transparent hover:opacity-80 ${props.className}`}>
       <div className="w-full relative">
-        <div className="absolute h-6 w-2/5 inline-flex align-middle items-center top-0 left-0 uppercase text-xs text-left bg-black clipped-b-r-full">
-          <Image src={require('@/assets/images/icons/lock.svg')} alt="lock"></Image>
-          <span className="ml-2 font-medium tracking-widest">{poolStatus(item.is_private)}</span>
+        <div className="absolute h-6 w-2/5 inline-flex align-middle items-center top-0 left-0 pl-0.5 uppercase text-xs text-left bg-black clipped-b-r-full">
+          <Image src={poolStatus(item.is_private).icon} alt="lock"></Image>
+          <span className="ml-2 font-medium tracking-widest">{poolStatus(item.is_private).title}</span>
         </div>
         <div className="cursor-pointer">
           <Link href={`/igo/${item.id}`} passHref>

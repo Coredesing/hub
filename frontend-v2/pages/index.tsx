@@ -55,7 +55,7 @@ const PageIndex = () => {
       {/* <GameFiCarousel likes={likes} items={featuredGames}></GameFiCarousel> */}
       <div className="md:px-4 lg:px-16 mt-4 md:container mx-auto lg:block">
         { bannerShow && <div className="mx-auto relative mb-4 sm:mb-16">
-          <a href="https://www.youtube.com/channel/UC7pBvbuC36MCW_ZzLt0K17Q" target="_blank" rel="noreferrer">
+          <a href="https://youtu.be/MZWUZnW44pc" target="_blank" rel="noreferrer">
             <img src={banner.src} alt="" className="mx-auto aspect-[970/90] max-h-[90px]" />
           </a>
         </div> }

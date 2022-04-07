@@ -72,31 +72,31 @@ const Swap = () => {
       2: poolData?.freeBuyTimeSetting?.max_bonus || '0'
     }
 
-    const haveBought = {
-      1: Number(usdPurchased) > Number(allocations[1]) ? allocations[1] : usdPurchased,
-      2: phase >= 2 && Number(usdPurchased) - Number(allocations[2]) >= 0 ? Number(usdPurchased) - Number(allocations[2]) : 0
-    }
+    // const haveBought = {
+    //   1: Number(usdPurchased) > Number(allocations[1]) ? allocations[1] : usdPurchased,
+    //   2: phase >= 2 && Number(usdPurchased) - Number(allocations[2]) >= 0 ? Number(usdPurchased) - Number(allocations[2]) : 0
+    // }
 
     const items = rounds.map(round => {
-      return { ...round, allocation: allocations[round.phase] || '0', purchased: haveBought[round.phase] || '0' }
+      return { ...round, allocation: allocations[round.phase] || '0' }
     })
     setRounds(items)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allocation, poolData, usdPurchased])
 
-  // useEffect(() => {
-  //   let previousRoundsPurchased = '0'
+  useEffect(() => {
+    let previousRoundsPurchased = '0'
 
-  //   rounds.forEach(round => {
-  //     if (round.phase < phase) {
-  //       previousRoundsPurchased = (Number(previousRoundsPurchased) + Number(round.purchased)).toString()
-  //     }
-  //   })
+    rounds.forEach(round => {
+      if (round.phase < phase) {
+        previousRoundsPurchased = (Number(previousRoundsPurchased) + Number(round.purchased)).toString()
+      }
+    })
 
-  //   const currentPurchased = (Number(usdPurchased) - Number(previousRoundsPurchased)).toFixed(1)
-  //   setRounds(rounds.map(round => round.phase === phase ? { ...round, purchased: currentPurchased } : round))
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [phase, usdPurchased])
+    const currentPurchased = (Number(usdPurchased) - Number(previousRoundsPurchased)).toFixed(1)
+    setRounds(rounds.map(round => round.phase === phase ? { ...round, purchased: currentPurchased } : round))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, usdPurchased])
 
   const isPreOrderTime = useMemo(() => {
     return poolData?.start_pre_order_time && current?.key === 'pre-order'

@@ -254,7 +254,7 @@ const IGODetails = ({ poolData }) => {
               }
             },
             {
-              key: 'buying-phase-1',
+              key: 'buying-phase-2',
               milestone: 'Phase 2 - FCFS',
               active: true,
               start: new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000) || undefined,

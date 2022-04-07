@@ -51,7 +51,7 @@ const Layout = ({ children, title, description, image, disableFooter, extended }
           <meta property="og:title" content={title || 'GameFi.org'} key="title" />
           <meta property="og:description" content={description || 'GameFi.org is an all-in-one discovery gaming hub for games, guilds, and metaverses.'} key="description" />
           <meta property="og:image" content={image || imageSocial.src} key="image" />
-          {/* <meta name="keywords" content="game, gamefi, gaming, launchpad, game hub, marketplace, earn and save, game portal, game pass, game guild, tournament"></meta> */}
+          <meta name="keywords" content="launchpad, game hub, nft marketplace, game portal, game pass, game guild, tournament, metaverse, ido"></meta>
         </Head>
 
         <div>

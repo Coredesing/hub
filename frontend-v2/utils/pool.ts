@@ -1,7 +1,7 @@
 import { CLAIM_TYPE } from './constants'
 import community from '@/assets/images/icons/community.svg'
 import seed from '@/assets/images/icons/seed.svg'
-import ic_public from '@/assets/images/icons/public.svg'
+import publicIcon from '@/assets/images/icons/public.svg'
 import lock from '@/assets/images/icons/lock.svg'
 
 export const getTimelineOfPool = (pool: { [k: string]: any }) => {
@@ -44,26 +44,26 @@ export const getClaimTypes = (pool: any) => {
 
 export const poolStatus = (status: any) => {
   switch (status) {
-    case 1:
-      return {
-        title: 'private',
-        icon: lock
-      }
-    case 2:
-      return {
-        title: 'seed',
-        icon: seed
-      }
-    case 3:
-      return {
-        title: 'community',
-        icon: community
-      }
-    case 0:
-    default:
-      return {
-        title: 'public',
-        icon: ic_public
-      }
+  case 1:
+    return {
+      title: 'private',
+      icon: lock
+    }
+  case 2:
+    return {
+      title: 'seed',
+      icon: seed
+    }
+  case 3:
+    return {
+      title: 'community',
+      icon: community
+    }
+  case 0:
+  default:
+    return {
+      title: 'public',
+      icon: publicIcon
+    }
   }
 }

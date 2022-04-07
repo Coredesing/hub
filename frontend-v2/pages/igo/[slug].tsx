@@ -607,8 +607,8 @@ const IGODetails = ({ poolData }) => {
                   <span className="flex gap-2 items-center">
                     {poolData?.symbol}
                     {poolData.token &&
-                      timeline[TIMELINE.CLAIM]?.start &&
-                      now?.getTime() >= timeline[TIMELINE.CLAIM].start.getTime() &&
+                      timeline[TIMELINE.BUYING_PHASE]?.end &&
+                      now?.getTime() >= timeline[TIMELINE.BUYING_PHASE].end.getTime() &&
                       poolData.token_type === 'erc20' &&
                       poolData.token?.toLowerCase() !== '0xe23c8837560360ff0d49ed005c5e3ad747f50b3d' &&
                     <>

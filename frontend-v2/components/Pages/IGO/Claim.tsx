@@ -14,6 +14,8 @@ import { IGOContext } from '@/pages/igo/[slug]'
 import Image from 'next/image'
 import { TIMELINE } from './constants'
 import { getNetworkByAlias, switchNetwork } from '@/components/web3'
+import Tippy from '@tippyjs/react'
+import ERC20_ABI from '@/components/web3/abis/ERC20.json'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 const PER_PAGE = 5
@@ -202,6 +204,42 @@ const Claim = () => {
     }
   }
 
+  const addToWallet = async (item: any) => {
+    if (!library?.provider?.isMetaMask) {
+      toast.error('MetaMask wallet is not found!')
+      return
+    }
+
+    if (!item.token) {
+      return
+    }
+
+    if (network?.alias !== poolNetwork?.alias) {
+      return switchNetwork(library?.provider, poolNetwork.id)
+    }
+
+    const tokenContract = new ethers.Contract(item.token, ERC20_ABI, library.getSigner())
+    if (!tokenContract) {
+      return
+    }
+    const symbol = await tokenContract.symbol()
+    const decimals = await tokenContract.decimals()
+    const name = await tokenContract.name()
+
+    await library?.provider?.request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: tokenContract.address,
+          symbol,
+          decimals,
+          name
+        }
+      }
+    })
+  }
+
   return (
     <>
       { now?.getTime() > timeline[TIMELINE.BUYING_PHASE].end?.getTime() &&
@@ -214,7 +252,26 @@ const Claim = () => {
           </div>
           <div className="flex justify-between mb-4 items-center">
             <strong className="font-semibold">Symbol</strong>
-            <span>{poolData?.symbol}</span>
+            <span className="flex gap-2 items-center">
+              {poolData?.symbol}
+              {poolData.token &&
+                timeline[TIMELINE.BUYING_PHASE]?.end &&
+                now?.getTime() >= timeline[TIMELINE.BUYING_PHASE].end.getTime() &&
+                poolData.token_type === 'erc20' &&
+                poolData.token?.toLowerCase() !== '0xe23c8837560360ff0d49ed005c5e3ad747f50b3d' &&
+              <>
+                <Tippy content="Add to Metamask">
+                  <button
+                    className="w-6 h-6 hover:opacity-90"
+                    onClick={() => {
+                      addToWallet(poolData)
+                    }}
+                  >
+                    <Image src={require('@/assets/images/wallets/metamask.svg')} alt=""></Image>
+                  </button>
+                </Tippy>
+              </>}
+            </span>
           </div>
           <div className="flex justify-between mb-4 items-center">
             <strong className="font-semibold">Token Price</strong>

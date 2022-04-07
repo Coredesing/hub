@@ -47,11 +47,11 @@ const Carousel = ({ items }: { items: any[] }) => {
       plugins={plugins}>
       {items.map(item => {
         if (isImageFile(item)) {
-          return <img key={item} src={item} className="w-full aspect-[16/9]" alt="" />
+          return <img key={item} src={item} className="w-full aspect-[144/66]" alt="" />
         }
 
         if (isVideoFile(item)) {
-          return <video className="w-full aspect-[16/9]" key={item} src={item} preload="auto" autoPlay muted controls controlsList="nodownload" poster={items?.[1]}></video>
+          return <video className="w-full aspect-[144/66] object-cover" key={item} src={item} preload="auto" autoPlay muted controls controlsList="nodownload" poster={items?.[1]}></video>
         }
 
         return null

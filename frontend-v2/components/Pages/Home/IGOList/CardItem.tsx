@@ -24,7 +24,7 @@ const CardItem = ({ item, ...props }: Props) => {
   return (
     <div className={`w-full rounded overflow-hidden border border-transparent hover:opacity-80 ${props.className}`}>
       <div className="w-full relative">
-        <div className="absolute h-6 w-2/5 inline-flex align-middle items-center top-0 left-0 uppercase text-xs text-left bg-black clipped-b-r-full">
+        <div className="absolute h-6 w-2/5 inline-flex align-middle items-center top-0 left-0 pl-0.5 uppercase text-xs text-left bg-black clipped-b-r-full">
           <Image src={poolStatus(item.is_private).icon} alt="lock"></Image>
           <span className="ml-2 font-medium tracking-widest">{poolStatus(item.is_private).title}</span>
         </div>

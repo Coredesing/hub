@@ -1,7 +1,7 @@
 import { CLAIM_TYPE } from './constants'
 import community from '@/assets/images/icons/community.svg'
 import seed from '@/assets/images/icons/seed.svg'
-import ic_public from '@/assets/images/icons/ic_public.svg'
+import ic_public from '@/assets/images/icons/public.svg'
 import lock from '@/assets/images/icons/lock.svg'
 
 export const getTimelineOfPool = (pool: { [k: string]: any }) => {

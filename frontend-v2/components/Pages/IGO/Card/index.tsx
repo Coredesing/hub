@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Item } from '../type'
 import Image from 'next/image'
 import { getCurrency, useLibraryDefaultFlexible } from '@/components/web3/utils'

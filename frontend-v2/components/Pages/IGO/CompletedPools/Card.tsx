@@ -91,7 +91,7 @@ const Card = ({ item }: {item: Item}) => {
         <div className="w-40">
           <div className="text-white/50 uppercase font-semibold text-xs font-mechanic">Next Claim In</div>
           <div className="text-sm">
-            <Countdown to={nextClaim(item)}></Countdown>
+            {nextClaim(item) === 'Finished' ? 'Finished' : <Countdown to={nextClaim(item)}></Countdown>}
           </div>
         </div>
       </a>

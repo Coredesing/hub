@@ -610,7 +610,7 @@ const IGODetails = ({ poolData }) => {
                       timeline[TIMELINE.CLAIM]?.start &&
                       now?.getTime() >= timeline[TIMELINE.CLAIM].start.getTime() &&
                       poolData.token_type === 'erc20' &&
-                      poolData.token !== '0xE23C8837560360ff0D49ED005c5E3ad747F50B3d' &&
+                      poolData.token?.toLowerCase() !== '0xe23c8837560360ff0d49ed005c5e3ad747f50b3d' &&
                     <>
                       <Tippy content="Add to Metamask">
                         <button

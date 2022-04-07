@@ -74,7 +74,7 @@ const Swap = () => {
 
     const haveBought = {
       1: Number(usdPurchased) > Number(allocations[1]) ? allocations[1] : usdPurchased,
-      2: Number(usdPurchased) - Number(allocations[2]) >= 0 ? Number(usdPurchased) - Number(allocations[2]) : 0
+      2: phase >= 2 && Number(usdPurchased) - Number(allocations[2]) >= 0 ? Number(usdPurchased) - Number(allocations[2]) : 0
     }
 
     const items = rounds.map(round => {

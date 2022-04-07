@@ -78,7 +78,7 @@ const Footer = () => {
         <div className="basis-1/3 text-center lg:text-left mt-8 lg:mt-0">
           <div className="font-mechanic font-bold text-base uppercase text-white opacity-50">About</div>
           <div className="mt-3 lg:mt-4 flex flex-col text-base leading-7 font-extralight">
-            <Link href="/press" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Press</a></Link>
+            <Link href="/press-kit" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Press Kit</a></Link>
             <Link href="/careers" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Careers</a></Link>
             <a href="https://t.me/GameFi_Official" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Contacts</a>
             <Link href="/insight" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Insight</a></Link>

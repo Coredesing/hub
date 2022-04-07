@@ -25,7 +25,12 @@ module.exports = {
         source: '/game/:slug*',
         destination: '/hub/:slug*',
         permanent: true
-      }
+      },
+      {
+        source: '/press',
+        destination: '/press-kit',
+        permanent: false
+      },
     ]
   }
 }

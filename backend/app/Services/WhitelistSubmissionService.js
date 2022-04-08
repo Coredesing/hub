@@ -39,7 +39,6 @@ class WhitelistSubmissionService {
   }
   async findLastSubmission(params) {
     let builder = this.buildQueryBuilder(params);
-    console.log(builder.last())
     return await builder.last();
   }
 

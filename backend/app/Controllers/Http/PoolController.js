@@ -646,9 +646,11 @@ class PoolController {
     const inputParams = request.all();
     const limit = inputParams.limit ? inputParams.limit : 20;
     const page = inputParams.page ? inputParams.page : 1;
+    const network_available = inputParams.network_available ? inputParams.network_available.split(',') : null
     inputParams.limit = limit;
     inputParams.page = page;
     inputParams.is_search = true;
+    inputParams.network_available = network_available;
 
     const walletAddress = params.walletAddress;
     try {

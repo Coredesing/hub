@@ -78,7 +78,7 @@ class PoolService {
     }
 
     if(params.network_available) {
-      builder = builder.where('network_available', params.network_available)
+      builder = builder.whereIn('network_available', params.network_available)
     }
 
     if (params.process) {

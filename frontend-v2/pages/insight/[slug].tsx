@@ -24,7 +24,7 @@ const Article = ({ post }) => {
 
       { post.primary_author && <div className="flex gap-2 items-center mt-2 xl:mt-6">
         <div className="relative w-11 h-11">
-          <Image src={post.primary_author?.profile_image || avatar} layout="fill" className="rounded-full" alt={post.primary_author?.name}></Image>
+          <img src={post.primary_author?.profile_image || avatar} className="w-full h-full object-cover rounded-full" alt={post.primary_author?.name}></img>
         </div>
         <div>
           <p className="font-casual font-medium text-sm leading-loose">{post.primary_author?.name}</p>

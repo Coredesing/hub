@@ -117,7 +117,7 @@ const News = ({ postsFeatured, postsUpdate, postsPartnership, postsIGO, postsINO
           <div className="line-clamp-3 font-casual text-sm lg:text-base text-white text-opacity-75">{featured.big.excerpt}</div>
           <div className="flex gap-2 items-center mt-3 xl:mt-6">
             <div className="relative w-11 h-11">
-              <Image src={featured.big.primary_author?.profile_image || avatar} layout="fill" className="rounded-full" alt={featured.big.primary_author?.name}></Image>
+              <img src={featured.big.primary_author?.profile_image || avatar} className="w-full h-full rounded-full object-cover" alt={featured.big.primary_author?.name}></img>
             </div>
             <div>
               <p className="font-casual font-medium text-sm leading-loose">{featured.big.primary_author?.name}</p>

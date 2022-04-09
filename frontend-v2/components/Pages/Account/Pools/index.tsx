@@ -54,7 +54,7 @@ const Pools = () => {
     { value: POOL_STATUS_JOINED.CLAIMABLE, label: 'Claimable' },
     { value: POOL_STATUS_JOINED.COMPLETED, label: 'Completed' }
   ], [])
-  const [filter, setFilter] = useState<ObjectType>({ page: 1, limit: 10, search: '', status: null, network: { bsc: true } })
+  const [filter, setFilter] = useState<ObjectType>({ page: 1, limit: 10, search: '', status: null, network: { eth: true, bsc: true, polygon: true } })
   const loadPools = useCallback(async () => {
     if (!account) {
       setPools({
@@ -191,7 +191,7 @@ const Pools = () => {
   }
 
   const availableToClaim = (item: any) => {
-    return printNumber(Number(currentClaimPhase(item)?.max_percent_claim) * Number(item.user_purchased) / 100 || 0)
+    return printNumber(Number(currentClaimPhase(item)?.max_percent_claim) * Number(item.user_purchased) / 100 || 0, 2)
   }
 
   const claimTypes = (item: any) => {
@@ -311,7 +311,7 @@ const Pools = () => {
                 <TableCell className="border-none hidden xl:table-cell">
                   {claimTypes(selectedPool)?.find(type => type.name === CLAIM_TYPE[0])?.value}
                   {claimTypes(item)?.find(type => type.name === CLAIM_TYPE[0])?.value === 100 && Number(item.user_purchased) > 0
-                    ? `${printNumber((item.user_claimed || 0).toLocaleString('en-US'))}/${availableToClaim(item)} ${item.symbol}`
+                    ? `${printNumber((item.user_claimed || 0), 2)}/${availableToClaim(item)} ${item.symbol}`
                     : ''}
                 </TableCell>
                 <TableCell className="border-none hidden xl:table-cell">

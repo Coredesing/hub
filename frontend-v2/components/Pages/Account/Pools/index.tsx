@@ -21,6 +21,18 @@ import Image from 'next/image'
 import toast from 'react-hot-toast'
 import ERC20_ABI from '@/components/web3/abis/ERC20.json'
 import Modal from '@/components/Base/Modal'
+import { NetworkSelector } from '@/components/Base/WalletConnector'
+
+const POOL_STATUS_JOINED = {
+  NONE: 'NONE',
+  APPLIED_WHITELIST: 'APPLIED_WHITELIST',
+  WIN_WHITELIST: 'WIN_WHITELIST',
+  NOT_WIN_WHITELIST: 'NOT_WIN_WHITELIST',
+  CANCELED_WHITELIST: 'CANCELED_WHITELIST',
+  SWAPPING: 'SWAPPING',
+  CLAIMABLE: 'CLAIMABLE',
+  COMPLETED: 'COMPLETED'
+}
 
 const Pools = () => {
   const { account, library, network } = useMyWeb3()
@@ -34,13 +46,15 @@ const Pools = () => {
 
   const [loadingPools, setLoadingPools] = useState(false)
   const [pools, setPools] = useState({ total: 0, data: [] })
-  const poolTypes = useMemo(() => [
-    { value: 1000, label: 'All types' },
-    { value: 0, label: 'Public' },
-    { value: 1, label: 'Private' },
-    { value: 2, label: 'Seed' }
+  const poolStatus = useMemo(() => [
+    // { value: POOL_STATUS_JOINED.APPLIED_WHITELIST, label: 'Whitelist Applied' },
+    // { value: POOL_STATUS_JOINED.WIN_WHITELIST, label: 'Win Whitelist' },
+    // { value: POOL_STATUS_JOINED.NOT_WIN_WHITELIST, label: 'Not Win Whitelist' },
+    // { value: POOL_STATUS_JOINED.SWAPPING, label: 'Swaping' },
+    { value: POOL_STATUS_JOINED.CLAIMABLE, label: 'Claimable' },
+    { value: POOL_STATUS_JOINED.COMPLETED, label: 'Completed' }
   ], [])
-  const [filter, setFilter] = useState<ObjectType>({ page: 1, limit: 10, search: '', type: 1000, typeSelected: poolTypes[0], status: '' })
+  const [filter, setFilter] = useState<ObjectType>({ page: 1, limit: 10, search: '', status: null, network: { bsc: true } })
   const loadPools = useCallback(async () => {
     if (!account) {
       setPools({
@@ -52,7 +66,7 @@ const Pools = () => {
 
     setLoadingPools(true)
     try {
-      const res = await fetchJoined(account, filter.page, filter.limit, filter.search, filter.type, filter.status)
+      const res = await fetchJoined(account, filter.page, filter.limit, filter.search, filter.type, filter.status?.value, Object.keys(filter.network).filter(item => filter.network[item] && item).join(','))
       const data = await Promise.all(res.data.data.map(pool => {
         return new Promise((resolve) => {
           getLibraryDefaultFlexible(libraryDefault, pool?.network_available).then(library => {
@@ -152,8 +166,8 @@ const Pools = () => {
     setFilter(f => ({ ...f, search: e.target.value }))
   }, 1000)
 
-  const onFilterPoolType = (item: ObjectType) => {
-    setFilter(f => ({ ...f, type: item.value, typeSelected: item }))
+  const onFilterPoolStatus = (item: ObjectType) => {
+    setFilter(f => ({ ...f, status: item }))
   }
 
   const poolHref = useCallback((pool) => {
@@ -208,23 +222,38 @@ const Pools = () => {
     return results
   }
 
+  const handleChangeNetwork = useCallback((network: any) => {
+    if (network !== null && typeof network === 'object') {
+      setFilter(f => ({ ...f, network }))
+    }
+  }, [])
+
   return (
     <div className='py-10 px-4 xl:px-9 2xl:pr-32'>
       <div className='flex items-center justify-between'>
         <h3 className='uppercase font-bold text-2xl mb-7'>IGO Pools</h3>
       </div>
-      <div className='flex justify-between sm:flex-wrap gap-3 mb-7'>
-        <div className='flex gap-3 flex-wrap'>
-          <Dropdown
-            items={poolTypes}
-            propLabel='label'
-            propValue='value'
-            onChange={onFilterPoolType}
-            selected={filter.typeSelected}
-            classes={{
-              wrapperDropdown: 'w-40'
-            }}
-          />
+      <div className='flex justify-between flex-wrap gap-3 mb-7'>
+        <div className='flex gap-5 flex-wrap'>
+          <NetworkSelector
+            onChange={handleChangeNetwork}
+            isMulti={true}
+            isToggle={false}
+            selected={filter.network}
+          ></NetworkSelector>
+          {/* <div className="flex gap-2 items-center">
+            <span className="text-gamefiDark-100 uppercase font-semibold text-sm">Pool Status</span>
+            <Dropdown
+              items={poolStatus}
+              propLabel='label'
+              propValue='value'
+              onChange={onFilterPoolStatus}
+              selected={filter.status}
+              classes={{
+                wrapperDropdown: 'w-40'
+              }}
+            />
+          </div> */}
         </div>
         <div>
           <SearchInput
@@ -264,7 +293,7 @@ const Pools = () => {
           </TableHead>
           <TableBody>
             {
-              pools.data.map((item, id) => <TableRow key={id} className="bg-gamefiDark-800 border-b-8 border-gamefiDark-900">
+              pools.data.map((item, id) => <TableRow key={id} className="bg-gamefiDark-630/30 border-b-8 border-gamefiDark-900">
                 <TableCell className="border-none">
                   <div className='flex gap-2'>
                     <img src={item.banner} alt="" className='hidden 2xl:block w-10' />
@@ -280,7 +309,8 @@ const Pools = () => {
                   {printNumber((Number(item.user_purchased) || 0))} {item.symbol}
                 </TableCell>
                 <TableCell className="border-none hidden xl:table-cell">
-                  {claimTypes(item)?.find(type => type.name === CLAIM_TYPE[0])?.value === 100 && Number(availableToClaim(item)) > 0
+                  {claimTypes(selectedPool)?.find(type => type.name === CLAIM_TYPE[0])?.value}
+                  {claimTypes(item)?.find(type => type.name === CLAIM_TYPE[0])?.value === 100 && Number(item.user_purchased) > 0
                     ? `${printNumber((item.user_claimed || 0).toLocaleString('en-US'))}/${availableToClaim(item)} ${item.symbol}`
                     : ''}
                 </TableCell>

@@ -183,7 +183,7 @@ const Claim = () => {
 
     if (amount && BigNumber.from(amount).lte(0)) return toast.error('Please wait until the next milestone to claim the tokens.')
 
-    const loading = toast.loading('start claim token')
+    const loading = toast.loading('Processing...')
     try {
       const poolContract = new ethers.Contract(poolData?.campaign_hash, PresalePoolABI, library.getSigner())
       if (!poolContract) return

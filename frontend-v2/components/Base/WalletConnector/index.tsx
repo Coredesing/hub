@@ -184,7 +184,7 @@ export const NetworkSelector = ({ onChange, isMulti = true, isToggle = true, ...
 
   return (
     <div className="font-casual">
-      <div className={`flex gap-x-1.5 bg-gamefiDark-700 rounded p-1.5 mb-1 ${props.className || ''}`} style={props.style}>
+      <div className={`grid grid-cols-3 sm:flex gap-1.5 bg-gamefiDark-630/30 rounded p-1.5 mb-1 ${props.className || ''}`} style={props.style}>
         {_networks.map(network => {
           return <div key={network.alias} className={'flex items-center rounded flex-none cursor-pointer py-1 px-2'} onClick={() => toggle(network)} style={{ backgroundColor: isActive(network) ? (network.colorAlt || network.color) : 'transparent' }}>
             <div className={`flex-none w-4 h-4 relative contrast-200 brightness-200 grayscale ${isActive(network) ? 'opacity-100' : 'opacity-50'} hover:opacity-100`}><Image src={network.image2} alt={network.name} layout="fill" /></div>

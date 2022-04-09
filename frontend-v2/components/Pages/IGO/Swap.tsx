@@ -290,7 +290,7 @@ const Swap = () => {
         signature
       ]
 
-    const loading = toast.loading('start swap token')
+    const loading = toast.loading('Processing...')
     try {
       const transaction = await poolContract[method](...params)
       const result = await transaction.wait(1)

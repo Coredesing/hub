@@ -16,6 +16,9 @@ import TabUnstake from '@/components/Pages/Staking/TabUnstake'
 import Ranks from '@/components/Pages/Staking/Ranks'
 import TopRanking from '@/components/Pages/Staking/TopRanking'
 import { handleChangeStaking } from '@/components/Pages/Staking/utils'
+import CountdownSVG from '@/components/Pages/Aggregator/Countdown'
+import { format } from 'date-fns'
+import imgLegend from '@/assets/images/ranks/legend.png'
 
 const Staking = ({ legendSnapshots, legendCurrent }) => {
   const mounted = useRef(false)
@@ -165,6 +168,47 @@ const Staking = ({ legendSnapshots, legendCurrent }) => {
     }
   }, [rankingOptions, rankingSelected, isLive, account])
 
+  const [dataAuction, setDataAuction] = useState<{ limit: number; top: { amount: number; wallet_address: string; last_time: number; lastTime?: Date }[] } | null>(null)
+  const [deadlineAuction, setDeadlineAuction] = useState<Date | null>(null)
+  const rankingAuction = useMemo(() => {
+    if (!dataAuction?.top) {
+      return
+    }
+
+    return dataAuction?.top.map(x => {
+      x.lastTime = new Date(Number(x.last_time) * 1000)
+      return x
+    })
+  }, [dataAuction])
+  useEffect(() => {
+    fetcher(`${API_BASE_URL}/staking-pool/top-staked`).then(data => {
+      if (data?.status !== 200 || !data?.data) {
+        return
+      }
+
+      const endTime = new Date(Number(data?.data?.end_time) * 1000)
+      if (!endTime.getTime()) {
+        return
+      }
+
+      if (data?.data.disable) {
+        return
+      }
+
+      try {
+        const { limit, top } = data.data
+
+        setDeadlineAuction(endTime)
+        setDataAuction({
+          limit: Number(limit),
+          top
+        })
+      } catch (err) {
+        console.debug(err)
+      }
+    })
+  }, [])
+
   return (
     <Layout title="GameFi.org - Staking">
       <div className="px-2 lg:px-16 mx-auto lg:block max-w-7xl pb-4">
@@ -203,6 +247,61 @@ const Staking = ({ legendSnapshots, legendCurrent }) => {
         </div>
 
         <Ranks />
+
+        { deadlineAuction && <div className="mt-2 md:mt-10 py-8 border-t border-gamefiDark-650">
+          <div className="flex flex-col sm:flex-row gap-6 items-center justify-between">
+            <div>
+              <div className="font-bold text-lg md:text-3xl uppercase">Legend Auction</div>
+              <ul className="font-casual text-sm list-disc pl-4">
+                <li>Top <strong>{dataAuction?.limit} competitor(s)</strong> will be rewarded with Legend NFT(s)</li>
+                <li>Ranking will be updated every minute and will be finalized after review</li>
+              </ul>
+            </div>
+            <div className="max-w-full w-96 sm:w-1/4 flex-none">
+              <CountdownSVG title="AUCTION ENDS IN" deadline={deadlineAuction}></CountdownSVG>
+            </div>
+          </div>
+          <div className='overflow-x-auto'>
+            <table className="mt-4 w-full">
+              <thead>
+                <tr>
+                  <th scope="col" className="p-2 sm:p-4 font-bold text-xs md:text-sm uppercase text-white opacity-50 text-left sm:w-24">
+                    Rank
+                  </th>
+                  <th scope="col" className="p-2 sm:p-4 font-bold text-xs md:text-sm uppercase text-white opacity-50 text-left">
+                    Wallet <span className="hidden sm:inline">Address</span>
+                  </th>
+                  <th scope="col" className="p-2 sm:p-4 font-bold text-xs md:text-sm uppercase text-white opacity-50 text-left">
+                    Amount <span className="hidden sm:inline">{GAFI.symbol}</span>
+                  </th>
+                  <th scope="col" className="p-2 sm:p-4 font-bold text-xs md:text-sm uppercase text-white opacity-50 text-left">
+                    Last Staking
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {(rankingAuction || []).map((x, index) => <tr key={index} className={`border-b border-gamefiDark-600 font-casual ${index < dataAuction?.limit ? 'bg-gamefiDark-630 border-gamefiGreen-700/10' : ''}`}>
+                  <td className="p-2 sm:p-4 text-sm flex items-center justify-between sm:w-24">
+                    <div className="leading-none font-mechanic text-lg sm:text-xl w-4 text-center font-bold">{index + 1}</div>
+                    { index < dataAuction?.limit && <div className="w-10 h-10 relative">
+                      <Image src={imgLegend} layout="fill" alt="legend"></Image>
+                    </div> }
+                  </td>
+                  <td className="p-2 sm:p-4 text-sm whitespace-nowrap break-all md:w-auto w-12">
+                    <span className="hidden sm:inline">{shortenAddress(x.wallet_address, '.', 10, 5)}</span>
+                    <span className="sm:hidden">{shortenAddress(x.wallet_address, '.', 5, 3)}</span>
+                  </td>
+                  <td className="p-2 sm:p-4 text-sm whitespace-nowrap">
+                    {x.amount}
+                  </td>
+                  <td className="p-2 sm:p-4 text-sm">
+                    <span>{x.lastTime ? format(x.lastTime, 'yyyy/MM/dd') : '—'}</span>
+                  </td>
+                </tr>)}
+              </tbody>
+            </table>
+          </div>
+        </div> }
 
         <Tabs
           titles={[

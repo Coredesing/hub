@@ -34,6 +34,7 @@ const useTierMine = (tiers) => {
   const { library, account } = useMyWeb3()
   const [data, setData] = useState<{ id: number; tier: number; stakedInfo: { tokenStaked: string; uniStaked: string } } | null>(null)
   const [pool, setPool] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const tier = useMemo(() => {
     if (!data || !tiers.all) {
@@ -65,10 +66,12 @@ const useTierMine = (tiers) => {
       return
     }
 
+    setLoading(true)
     return Promise.allSettled([
       fetcher(`${API_BASE_URL}/user/tier-info?wallet_address=${account}`),
       contractStakingReadonly.linearStakingData(pool.pool_id, account).then(x => utils.formatUnits(x.balance, GAFI.decimals))
     ]).then((results) => {
+      setLoading(false)
       if (results[0]?.status !== 'fulfilled') {
         setData(null)
         return
@@ -114,6 +117,7 @@ const useTierMine = (tiers) => {
   }, [data, tiers, tier])
 
   return {
+    loading,
     pool,
     tier,
     staking: {
@@ -131,6 +135,7 @@ const AppProvider = (props: any) => {
   const $tiers = useTiersOld()
   const tiers = useTiers()
   const {
+    loading: tierMineLoading,
     loadMyStaking,
     tier: tierMine,
     staking: stakingMine,
@@ -155,6 +160,7 @@ const AppProvider = (props: any) => {
       $tiers,
       tiers,
       tierMine,
+      tierMineLoading,
       stakingMine,
       stakingPool,
       loadMyStaking,

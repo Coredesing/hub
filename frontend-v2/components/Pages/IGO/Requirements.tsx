@@ -25,9 +25,9 @@ const Requirements = () => {
   const { poolData, whitelistJoined, whitelistStatus, signature, setSignature, loadJoined, setFailedRequirements, now } = useContext(IGOContext)
   const { network: poolNetwork } = useLibraryDefaultFlexible(poolData?.network_available)
   const { library, account, network } = useMyWeb3()
-  const { tierMine, tiers } = useAppContext()
+  const { tierMine, tiers, tierMineLoading } = useAppContext()
   const { signMessage } = useWalletSignature()
-  const { profile, setHeaders } = useProfile(account)
+  const { profile, setHeaders, loading: profileLoading } = useProfile(account)
   const [whitelistLoading, setWhitelistLoading] = useState(false)
   const [showModal, setShowModal] = useState(false)
 
@@ -211,12 +211,12 @@ const Requirements = () => {
             { poolNetworkInvalid && <>
               { !account && <WalletConnector buttonClassName="!px-2 !py-1 font-mechanic !w-full"></WalletConnector> }
               { account &&
-                    <button
-                      onClick={() => switchNetwork(library?.provider, poolNetwork?.id)}
-                      className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r bg-gamefiGreen-500 text-gamefiDark-900 w-full'
-                    >
-                    Switch Network
-                    </button>
+                <button
+                  onClick={() => switchNetwork(library?.provider, poolNetwork?.id)}
+                  className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r bg-gamefiGreen-500 text-gamefiDark-900 w-full'
+                >
+                Switch Network
+                </button>
               }
             </>
             }
@@ -229,19 +229,20 @@ const Requirements = () => {
           <div className="table-cell align-middle text-white/90">Min Rank</div>
           <div className="table-cell align-middle text-white/90"><strong className="tracking-wider">{poolRank?.name || 'Unknown'}</strong></div>
           <div className="table-cell align-middle h-10 w-32">
-            { poolRankInvalid && <>
+            { tierMineLoading && <button className="px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm clipped-t-r w-full bg-gamefiDark-400 text-black">Loading...</button> }
+            { !tierMineLoading && poolRankInvalid && <>
               { (!account || poolNetworkInvalid) &&
-                    <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiDark-400 text-black'>
-                    Stake
-                    </button>
+                <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiDark-400 text-black'>
+                Stake
+                </button>
               }
 
               { (account && !poolNetworkInvalid) &&
-                    <Link href="/staking" passHref={true}>
-                      <a className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiGreen-500 text-gamefiDark-900 inline-block text-center'>
-                        Stake
-                      </a>
-                    </Link>
+                <Link href="/staking" passHref={true}>
+                  <a className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiGreen-500 text-gamefiDark-900 inline-block text-center'>
+                    Stake
+                  </a>
+                </Link>
               }
             </>
             }
@@ -254,19 +255,20 @@ const Requirements = () => {
           <div className="table-cell align-middle text-white/90">KYC Status</div>
           <div className="table-cell align-middle text-white/90"><strong className="tracking-wider">{profile?.verified ? 'Verified' : (poolData?.is_private === 3 ? 'Not Required' : 'Unverified')}</strong></div>
           <div className="table-cell align-middle h-10 w-32">
-            { !poolData?.kyc_bypass && !profile?.verified && <>
+            { profileLoading && <button className="px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm clipped-t-r w-full bg-gamefiDark-400 text-black">Loading...</button> }
+            { !profileLoading && !poolData?.kyc_bypass && !profile?.verified && <>
               { (!account || poolNetworkInvalid || poolRankInvalid) &&
-                    <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiDark-400 text-black'>
-                    Verify Now
-                    </button>
+                <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiDark-400 text-black'>
+                Verify Now
+                </button>
               }
 
               { (account && !poolNetworkInvalid && !poolRankInvalid) &&
-                    <Link href="/account/profile" passHref={true}>
-                      <a className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiGreen-500 text-gamefiDark-900 inline-block text-center'>
-                        Verify Now
-                      </a>
-                    </Link>
+                <Link href="/account/profile" passHref={true}>
+                  <a className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiGreen-500 text-gamefiDark-900 inline-block text-center'>
+                    Verify Now
+                  </a>
+                </Link>
               }
             </>
             }
@@ -295,30 +297,30 @@ const Requirements = () => {
           <div className="table-cell align-middle h-10 w-32">
             { poolData?.is_private !== 3 && poolWhitelistReady && <>
               { (!account || poolNetworkInvalid || poolRankInvalid || !profile.verified) &&
-                    <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiDark-400 text-black'>
-                    Apply Whitelist
-                    </button>
+                <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiDark-400 text-black'>
+                Apply Whitelist
+                </button>
               }
 
               { (account && !poolNetworkInvalid && !poolRankInvalid && profile.verified) &&
-                    <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiGreen-500 text-gamefiDark-900 inline-block text-center' onClick={showApplyWhitelist}>
-                    Apply Whitelist
-                    </button>
+                <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiGreen-500 text-gamefiDark-900 inline-block text-center' onClick={showApplyWhitelist}>
+                Apply Whitelist
+                </button>
               }
             </>
             }
 
             {
               poolData?.is_private !== 3 && !poolWhitelistReady && poolWhitelistOKTime && !poolWhitelistOKSocial &&
-                <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiYellow-400 text-gamefiDark-900 inline-block text-center' onClick={showApplyWhitelist}>
-                    Review Submission
-                </button>
+              <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiYellow-400 text-gamefiDark-900 inline-block text-center' onClick={showApplyWhitelist}>
+                Review Submission
+              </button>
             }
 
             {
               poolData?.is_private === 3 && poolWhitelistReady &&
               <a href={poolData?.socialRequirement?.gleam_link || '#'} target="_blank" className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiGreen-500 text-gamefiDark-900 inline-block text-center' rel="noreferrer">
-                  Join Competition
+                Join Competition
               </a>
             }
           </div>

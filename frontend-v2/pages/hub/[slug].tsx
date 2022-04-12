@@ -45,7 +45,11 @@ const Carousel = ({ items }: { items: any[] }) => {
       className="mb-4 w-full"
       bounce={5}
       plugins={plugins}>
-      {items.map(item => {
+      {items.map((item, index) => {
+        if (isVideoFile(items?.[index - 1])) {
+          return null
+        }
+
         if (isImageFile(item)) {
           return <img key={item} src={item} className="w-full aspect-[144/66]" alt="" />
         }
@@ -64,12 +68,18 @@ const Carousel = ({ items }: { items: any[] }) => {
       interruptable={true}
       preventClickOnDrag={false}
       bounce={5}>
-      {items.map(item => (
-        <div key={item} className="p-[2px] rounded border-2 border-transparent cursor-pointer">
-          { isVideoFile(item) && <img src={items?.[1]} className="rounded w-32 aspect-[16/9]" alt="" /> }
-          { isImageFile(item) && <img src={item} className="rounded w-32 aspect-[16/9]" alt="" /> }
-        </div>
-      ))}
+      {items.map((item, index) => {
+        if (isVideoFile(items?.[index - 1])) {
+          return null
+        }
+
+        return (
+          <div key={item} className="p-[2px] rounded border-2 border-transparent cursor-pointer">
+            { isVideoFile(item) && <img src={items?.[1]} className="rounded w-32 aspect-[144/66]" alt="" /> }
+            { isImageFile(item) && <img src={item} className="rounded w-32 aspect-[144/66]" alt="" /> }
+          </div>
+        )
+      })}
     </Flicking>
   </>
 }

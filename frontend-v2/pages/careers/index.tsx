@@ -10,36 +10,38 @@ export const jobs = [
     type: 'Full time',
     level: 'Senior, Junior',
     descriptions: [
-      'Develop, improve and maintain Smart Contracts, apply to use-cases such as NFT minting, Marketplace Operation, On-chain => Off-chain integration (using Wallet and NFT as logging keys)',
+      'Develop, improve and maintain Smart Contracts, apply to use-cases such as NFT minting, Marketplace operation, On-chain and Off-chain integration (using Wallet and NFT as logging keys)',
       'Work with product teams to write smart contracts according to the needs of each product team',
       'Research, explore, discuss, debate, come up with development ideas in a general direction and work with the team on those ideas',
-      'Read/Understand technical papers/documents to come up with a solution as well as install that solution in the code base',
+      'Read/Understand technical papers/documents to come up with solutions as well as install them in the code base',
       'Research and learn about models of other protocols on crypto space',
       'Write tests and deployment scripts',
       'Work, report and be trained by Blockchain Tech Lead'
     ],
     advantages: [
-      'Priority is given to candidates who have knowledge of code bases, models of protocols',
-      'Priority is given to candidates who actively research and optimize the system and give ideas to develop the system'
+      'Have knowledge of code bases, models of protocols',
+      'Actively research and optimize the system and give ideas to develop the system'
     ],
     requirements: [
-      '6 months+ experience in coding smart contracts using Solidity',
-      'Experience working with Web3 js, Node js, Vue js, React js',
-      'Have good logical thinking, good knowledge of algorithms and algorithms (priority is given to those who have participated in national, regional or international competitive programming at high school or university)',
-      'Can read and understand technical papers/documents at the method/algorithm level',
-      'Possessing the working spirit of a startup: proactive, self-responsible at work, willing to try new things, learn new things, have a problem-solver mindset',
-      'Able to communicate in English at work at a good level or higher, especially reading and writing skills at a level that can meet the requirements of intensive document research',
-      'Have a sense of writing clean, meticulous and detailed code',
-      'Have good teamwork skills, support colleagues with/different teams'
+      'Have 6 months+ experience in coding smart contracts using Solidity',
+      'Have experience in using Web3 js, Node js, Vue js, React js',
+      'Grasp good logical thinking, good knowledge of algorithms (priority is given to those who have participated in national, regional or international competitive programming at high school or university)',
+      'Can read and understand technical papers/documents at the algorithm level',
+      'Possess the working spirit of a startup: be proactive, self-responsible at work, willing to try & learn new things, and have a problem-solver mindset',
+      'Be able to communicate in English at work at a good or higher level, especially reading and writing skills at a level that can meet the requirements of intensive document research',
+      'Have a sense of writing clean, meticulous, and detailed code',
+      'Have good teamwork skills, support colleagues from various teams'
     ],
     benefits: [
-      'Competitive salary (negotiable based on capacity)',
-      'Sign Labor contract, pay Insurance, have 12 annual leaves and other holidays as regulated by the State',
-      'Review bonus and increase salary annually, have December bonus (13th month salary)',
-      'Equipment and devices equipped and periodic health check for all employees',
-      'Support career development, have chance to participate in Icetea Labs’ training courses to improve professional skills',
-      'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
-      'A buzzing space full of globally influential technical founders and business establishing experts'
+      'Obtain competitive salary range (negotiable salary based on ability)',
+      'Sign a Labor contract, pay the Insurance, have 12-annual leaves and other holidays as regulated by the State',
+      'Review bonus and salary annually; 13th month salary is paid together with December payroll',
+      'Provide necessary equipment & devices and periodic health checks for all employees',
+      'Support career development and have chances to participate in Icetea Labs’ training courses for professional skill enhancement',
+      'Have tea - coffee breaks with snacks; join teambuilding, sports, esports, and unlimited parties',
+      'Work in a buzzing space full of globally influential technical founders and business establishing experts',
+      "Receive other employee benefits offered by company's leadership",
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunchtime: 12:00 PM – 1:30 PM'
     ]
   },
 
@@ -51,13 +53,14 @@ export const jobs = [
     type: 'Full time',
     level: 'Senior, Junior',
     descriptions: [
-      'Building the initial marketplace and APIs with our Blockchain Tech Lead',
-      'Overseeing the engineering organization on a day – to – day basis as the organization grows',
+      'Build the initial marketplace and APIs with our Blockchain Tech Lead',
+      'Oversee the engineering organization on a day – to – day basis as the organization grows',
       'Evaluate and confirm product design and changes',
-      'Recruit, assign, direct and evaluate technical employees',
-      'Manage the installation, testing, operation and maintenance of the product, making sure they are executed by the personnel responsible as the organization grows',
+      'Recruit, assign, direct, and evaluate technical employees',
+      'Manage the installation, testing, operation, and maintenance of the product, make sure they are executed by the personnel responsible as the organization grows',
       'Organize and manage technical projects, making detailed plans and timelines that work towards the fulfillment of set product objectives',
       'Collaborate with other leaders to ensure successful development, release and launch of a world – class product'
+
     ],
     requirements: [
       'Prior leadership experience of an engineering organization',
@@ -77,18 +80,18 @@ export const jobs = [
     ],
     benefits: [
       'Competitive salary range (negotiable based on capacity)',
-      'Sign Labor contract, pay Insurance, have 12 annual leaves and other holidays as regulated by the State',
-      'Review bonus and increase salary annually, have December bonus (13th month salary)',
-      'Equipment and devices equipped and periodic health check for all employees',
-      'Support career development, have chance to participate in Icetea Labs’ training courses to improve professional skills',
-      'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
-      'A buzzing space full of globally influential technical founders and business establishing experts',
-      "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
+      'Sign Labor contract, pay Insurance, have 12-annual leaves and other holidays as regulated by the State',
+      'Review bonus and salary annually; 13th month salary is paid together with December payroll',
+      'Provide necessary equipment & devices and periodic health checks for all employees',
+      'Support career development and have chances to participate in Icetea Labs’ training courses for professional skill enhancement',
+      'Have tea - coffee breaks with snacks; join teambuilding, sports, esports, and unlimited parties',
+      'Work in a buzzing space full of globally influential technical founders and business establishing experts',
+      "Receive other employee benefits offered by company's leadership",
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunchtime: 12:00 PM – 1:30 PM'
     ]
   },
 
-  // Job 4
+  // Job 3
   {
     id: 'business-analyst',
     title: '🔍 Business Analyst (Lead)',
@@ -96,18 +99,18 @@ export const jobs = [
     type: 'Full time',
     level: 'Senior',
     descriptions: [
-      'Meet with decision makers, system owners and end users to define business, financial and operations requirements and systems goals, and identify and resolve system issues',
+      'Meet with decision makers, system owners and end users to define business, financial & operations requirements, and systems goals, and identify and resolve system issues',
       'Lead design sessions in prototyping new systems for the purpose of enhancing business processes, operations and information process flow',
       'Review and analyze the effectiveness and efficiency of existing systems and develop strategies for improving or further leveraging these systems',
       'Identify and establish scope and parameters of systems analysis in order to define outcome criteria and measure-taking actions',
       'Collaborate in the planning, design, development and deployment of new applications, and enhancement to existing applications',
-      'Conduct research on software and hardware products to justify recommendations and to support purchasing efforts',
+      'Conduct research on software & hardware products to justify recommendations and to support purchasing efforts',
       'Prepare and deliver reports, recommendations or alternatives that address existing and potential trouble areas in operating systems across the organization',
       'Create system design proposals',
       'Perform cost-benefit and return on investment analyses for proposed systems to aid management in making implementation decisions',
       'Ensure compatibility and interoperability of in-house computing systems',
-      'Create systems models, specifications, diagrams and charts to provide direction to system programmers',
-      'Coordinate and perform in-depth tests, including end-user reviews for modified and new systems, and another post-implementation support',
+      'Create system models, specifications, diagrams & charts to provide direction to system programmers',
+      'Coordinate and perform in-depth tests, including end-user reviews for modified & new systems, and another post-implementation support',
       'Provide orientation and training to end users for all modified and new systems',
       'Provide guidance and/or instruction to junior staff members'
     ],
@@ -131,19 +134,19 @@ export const jobs = [
       'Experience working in a team-oriented, collaborative environment'
     ],
     benefits: [
-      'Competitive salary range (negotiable based on capacity)',
-      'Sign Labor contract, pay Insurance, have 12 annual leaves and other holidays as regulated by the State',
-      'Review bonus and increase salary annually, have December bonus (13th month salary)',
-      'Equipment and devices equipped and periodic health check for all employees',
-      'Support career development, have chance to participate in Icetea Labs’ training courses to improve professional skills',
-      'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
-      'A buzzing space full of globally influential technical founders and business establishing experts',
-      "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
+      'Obtain competitive salary range (negotiable salary based on ability)',
+      'Sign a Labor contract, pay the Insurance, have 12-annual leaves and other holidays as regulated by the State',
+      'Review bonus and salary annually; 13th month salary is paid together with December payroll',
+      'Provide necessary equipment & devices and periodic health checks for all employees',
+      'Support career development and have chances to participate in Icetea Labs’ training courses for professional skill enhancement',
+      'Have tea - coffee breaks with snacks; join teambuilding, sports, esports, and unlimited parties',
+      'Work in a buzzing space full of globally influential technical founders and business establishing experts',
+      "Receive other employee benefits offered by company's leadership",
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunchtime: 12:00 PM – 1:30 PM'
     ]
   },
 
-  // Job 7
+  // Job 4
   {
     id: 'game-ui-ux-designer',
     title: '🕹️ Game UI/UX Designer',
@@ -151,47 +154,47 @@ export const jobs = [
     type: 'Full time',
     level: 'Senior',
     descriptions: [
-      'Translate concepts into user flow, wireframes, mockups and prototypes that lead to intuitive user experience',
-      'Understand our users (create personas through user research and data...)',
-      'Understand our Ecosystem, our NFT game, our NFTs and the metaverse',
-      'Design (define the right interaction model, find creative solutions to solve UX problems...)',
-      'Work closely with the Product Development team to design and deliver breakthrough digital experiences for both OC and Mobile games',
-      'You have strong knowledge of the digital space and can show our teams the right design direction',
-      'Create mood boards, Sketches, wireframes and user flows prior to designing using key data and analytics',
-      'Design communication materials for our brand, from brief through to execution and contribute to elevating the product development team and creative output',
-      'You contribute all sorts of design and production support to the team. Focusing on innovation and quality',
-      'Inspire and collaborate with your co-workers to produce inventive, thoughtful, relevant work for the team. Experiment with new tools and techniques to improve your work',
-      'Cultivate and understanding of industry trends and share your insights with the team',
-      'Participates and facilitates brainstorming sessions'
+      'Translate concepts into user flow, wireframes, mockups, and prototypes that lead to intuitive users experiences',
+      "Understand our users (create users' personas through research and data)",
+      'Understand our Ecosystem, our NFT game, our NFTs, and the metaverse',
+      'Design (define the suitable interaction model, find creative solutions to UX problems, etc.)',
+      'Keep close contact with the product development team to design and deliver breakthrough digital experiences for both PC and Mobile games',
+      'Have strong knowledge of the digital space and can show our teams the suitable design direction',
+      'Create mood boards, Sketches, wireframes, and user flows before designing by using key data and analytics',
+      'Design communication materials for our brand from brief through to execution and contribute to elevating the product development team with creative output',
+      'Contribute all sorts of design and production support to the team, focusing on innovation and quality',
+      'Inspire and collaborate with your co-workers to produce inventive, thoughtful, relevant work for the team. Open to experimenting with new tools and techniques to improve your work',
+      'Cultivate and understand industry trends, actively share your insights with the team',
+      'Participate in and facilitate brainstorming sessions'
     ],
     requirements: [
-      'English and Vietnamese speaking and writing skills',
+      'English and Vietnamese writing and speaking skills',
       'Prior experience working as UX Designer',
-      'A great sense of product design and a deep UX understanding',
-      'Experience creating prototypes using wireframe tools (Figma...)',
-      'Solid experience that is demonstrated via your portfolio',
+      'A great sense of product design and a thorough UX understanding',
+      'Experience creating prototypes using wireframe tools (e.g., Figma)',
+      'Solid experience demonstrated via your portfolio',
       'Have at least 2-3 years of experience',
       'Can demonstrate the range in both concept and final design solutions',
       'Have extremely high regard for details',
-      'Are able to manage multiple tasks and deadlines without losing your way',
-      'Can not only develop your own concepts/designs but are also able to collaborate with the team to enhance every project and are not above any task',
+      'Can manage multiple tasks and deadlines without losing your way',
+      'Can develop your own concepts/designs, as well as collaborate with the team to enhance every project and are not above any task',
       'Passionate about what you do, not just chasing a paycheck',
       'Have a strong positive attitude. So strong that it is contagious'
     ],
     benefits: [
-      'Competitive salary (negotiable based on capacity)',
-      'Sign Labor contract, pay Insurance, have 12 annual leaves and other holidays as regulated by the State',
-      'Review bonus and increase salary annually, have December bonus (13th month salary)',
-      'Equipment and devices equipped and periodic health check for all employees',
-      'Support career development, have chance to participate in Icetea Labs’ training courses to improve professional skills',
-      'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
-      'A buzzing space full of globally influential technical founders and business establishing experts',
-      "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
+      'Obtain competitive salary range (negotiable salary based on ability)',
+      'Sign a Labor contract, pay the Insurance, have 12-annual leaves and other holidays as regulated by the State',
+      'Review bonus and salary annually; 13th month salary is paid together with December payroll',
+      'Provide necessary equipment & devices and periodic health checks for all employees',
+      'Support career development and have chances to participate in Icetea Labs’ training courses for professional skill enhancement',
+      'Have tea - coffee breaks with snacks; join teambuilding, sports, esports, and unlimited parties',
+      'Work in a buzzing space full of globally influential technical founders and business establishing experts',
+      "Receive other employee benefits offered by company's leadership",
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunchtime: 12:00 PM – 1:30 PM'
     ]
   },
 
-  // Job 8
+  // Job 5
   {
     id: 'game-executive-producer',
     title: '🎨 Game Executive Producer',
@@ -199,42 +202,42 @@ export const jobs = [
     type: 'Full time',
     level: 'Senior',
     descriptions: [
-      'Ensure our team is up to speed with the Gaming landscape, markets, competition and user requirements in depth',
-      'Deeply understand the overall game vision, product strategy, customer base and business goals',
-      'Deliver on our first game. Then create new and exciting games within the GameFi Eco System',
-      'Have autonomy and accountability over the strategic direction, execution and budget of our games',
-      'Source, select and manage internal and external development partners who will execute our vision',
-      'Create a framework for game production. Manage the milestones, timelines, and KPIs of the game, making sure they are executed by the personnel responsible as the organization grows',
+      'Ensure our team is up-to-speed with the gaming landscape, markets, competitions, and user requirements in depth',
+      'Thoroughly understand the overall game vision, product strategy, customer base, and business goals',
+      'Deliver on our first game. Then create new and exciting games within the GameFi Ecosystem',
+      'Have autonomy and accountability over the strategic direction, execution, and budge of our games',
+      'Source, select, and manage internal and external development partners who will execute our vision',
+      'Create a framework for game production. Manage the milestones, timelines, and KPIs of the game, taking personal responsibility to execute them as the organization grows',
       'Build a highly functioning team to execute the strategic vision, finding the right balance of outsourced partners and internal hires as appropriate',
       'Manage the development and operational processes within your division',
       'Effectively priorities product and team decisions across all levels and make strategic pivots based on data and new information'
     ],
     requirements: [
-      '5+ years of Game Producer experience in making Web Game (like games in facebook, zalo), Multiplayer Game preferred (PC, iOS and Android), including game at similar scale and levels',
-      'Willingness to relocate to Hanoi, Vietnam to bond with the team',
+      '5+ years of Game Producer experience in making Web Games (e.g., games on Facebook, Zalo), Multiplayer games preferred (PC, iOS, and Android), including games on similar scale and levels',
+      'Willingness to relocate to Hanoi, Vietnam, to bond with the team',
       'Prior leadership experience working with cross-functional teams',
       'Rapid prototyping experience. User research and feedback implementation experience',
-      'Strong sense of organization coordination and communication',
+      'Strong sense of organizational coordination and communication',
       'Capability to work on tight deadlines',
       'Excellent problem-finding and solution-finding skills',
-      'Blockchain basic knowledge',
+      'Basic knowledge of Blockchain',
       'Monetization experience',
-      'Technical background or Design background'
+      'Have a technical background or design background'
     ],
     benefits: [
-      'Competitive salary (negotiable based on capacity)',
-      'Sign Labor contract, pay Insurance, have 12 annual leaves and other holidays as regulated by the State',
-      'Review bonus and increase salary annually, have December bonus (13th month salary)',
-      'Equipment and devices equipped and periodic health check for all employees',
-      'Support career development, have chance to participate in Icetea Labs’ training courses to improve professional skills',
-      'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
-      'A buzzing space full of globally influential technical founders and business establishing experts',
-      "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
+      'Obtain competitive salary range (negotiable salary based on ability)',
+      'Sign a Labor contract, pay the Insurance, have 12-annual leaves and other holidays as regulated by the State',
+      'Review bonus and salary annually; 13th month salary is paid together with December payroll',
+      'Provide necessary equipment & devices and periodic health checks for all employees',
+      'Support career development and have chances to participate in Icetea Labs’ training courses for professional skill enhancement',
+      'Have tea - coffee breaks with snacks; join teambuilding, sports, esports, and unlimited parties',
+      'Work in a buzzing space full of globally influential technical founders and business establishing experts',
+      "Receive other employee benefits offered by company's leadership",
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunchtime: 12:00 PM – 1:30 PM'
     ]
   },
 
-  // Job 9
+  // Job 6
   {
     id: 'game-designer-economy',
     title: '🔮 Game Designer (Economy)',
@@ -242,39 +245,38 @@ export const jobs = [
     type: 'Full time',
     level: 'Senior',
     descriptions: [
-      'Solve never before solved game design challenges as we work together to create a truly groundbreaking gaming experience',
-      'Take a pre-existing high-level game economy design and improve it with monetization strategies and details to pre-existing features',
-      'Collaborate with the design team and developers to successfully implement and tune economic and monetization content into the product',
+      'Solve game design challenges as we work together to create a truly groundbreaking gaming experience',
+      'Take a pre-existing high-leveled game economy design, improve it with monetization strategies and details to pre-existing features',
+      'Collaborate with the developers and design team to successfully implement, tune economic & monetization content into the product',
       'Manage the economy and pricing of all content within the game with in-depth macroeconomic models',
-      'Manage the balance between player-generated vs developer-generated content while keeping positive progression and play-and-earn philosophy at the core of your design'
+      'Manage the balance between player-generated vs. developer-generated content while keeping positive progression and play-and-earn philosophy at the core of your design'
     ],
     requirements: [
       '2+ years of experience with economy design or mobile game monetization',
       'Proficient in analytical thinking and problem solving',
-      'Strong quantitative skills (e.g. the skill set to translate the design into numbers)',
+      'Strong quantitative skills (e.g., the skill set to translate the design into numbers)',
       'Expertise in Excel or Sheets',
-      'Familiarity analyzing and interpreting player data',
-      'An entry-level understanding of the blockchain',
+      "Familiar with analyzing and interpreting players' data",
+      'An entry-level understanding of blockchain',
       'An interest in Play-to-Earn game design',
-      'Strong understanding of the Web mini game, Game casual',
-      'Blockchain basic knowledge',
+      'Strong knowledge of the Web mini-game, game casual',
       'Marketplace platform experience',
-      'Mathematical or Analytical background'
+      'Have a mathematical background or analytical background'
     ],
     benefits: [
-      'Competitive salary range (negotiable based on capacity)',
-      'Sign Labor contract, pay Insurance, have 12 annual leaves and other holidays as regulated by the State',
-      'Review bonus and increase salary annually, have December bonus (13th month salary)',
-      'Equipment and devices equipped and periodic health check for all employees',
-      'Support career development, have chance to participate in Icetea Labs’ training courses to improve professional skills',
-      'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
-      'A buzzing space full of globally influential technical founders and business establishing experts',
-      "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
+      'Obtain competitive salary range (negotiable salary based on ability)',
+      'Sign a Labor contract, pay the Insurance, have 12-annual leaves and other holidays as regulated by the State',
+      'Review bonus and salary annually; 13th month salary is paid together with December payroll',
+      'Provide necessary equipment & devices and periodic health checks for all employees',
+      'Support career development and have chances to participate in Icetea Labs’ training courses for professional skill enhancement',
+      'Have tea - coffee breaks with snacks; join teambuilding, sports, esports, and unlimited parties',
+      'Work in a buzzing space full of globally influential technical founders and business establishing experts',
+      "Receive other employee benefits offered by company's leadership",
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunchtime: 12:00 PM – 1:30 PM'
     ]
   },
 
-  // Job 10
+  // Job 7
   {
     id: 'game-2d-3d-artist',
     title: '🎮 Game 2D/3D Artist (All level)',
@@ -282,33 +284,33 @@ export const jobs = [
     type: 'Full time',
     level: 'Senior, Junior',
     descriptions: [
-      'Work on the illustration or concept art design for our game, working closely with the product team and engineers to produce initial sketches of concepts to high quality game marketing ready illustrations',
-      'Collaborate with other team members to ensure successful development, release and launch of a successful game',
-      'Conduct user research to inform, iterate and validate the product, characters, environment, asset design'
+      'Work on the art design illustration or concept for our game and work closely with the product team & engineers to produce initial sketches of concepts, marketing-ready illustrations, and high-quality games',
+      'Collaborate with other team members to ensure the successful development, release, and launch of a successful game',
+      'Conduct user research to inform and validate the product, characters, environment, and design assets',
     ],
     requirements: [
-      '1 – 5 years prior experience in illustration & design',
-      'Solid knowledge of Zbrush/Blender, Mixamo or other similar applications',
-      'Solid knowledge of best practices in design',
+      '1 – 5 year experience in illustration & design',
+      'Solid knowledge of Zbrush/Blender, Mixamo, or similar applications',
+      'Solid understanding of best practices in design',
       'Rapid prototyping experience',
       'Capability to work on tight deadlines',
       'Have a sizable portfolio of creative work related to concept art and character designs',
       'Experience in multiple major art & game product releases'
     ],
     benefits: [
-      'Competitive salary range (negotiable based on capacity)',
-      'Sign Labor contract, pay Insurance, have 12 annual leaves and other holidays as regulated by the State',
-      'Review bonus and increase salary annually, have December bonus (13th month salary)',
-      'Equipment and devices equipped and periodic health check for all employees',
-      'Support career development, have chance to participate in Icetea Labs’ training courses to improve professional skills',
-      'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
-      'A buzzing space full of globally influential technical founders and business establishing experts',
-      "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
+      'Obtain competitive salary range (negotiable salary based on ability)',
+      'Sign a Labor contract, pay the Insurance, have 12-annual leaves and other holidays as regulated by the State',
+      'Review bonus and salary annually; 13th month salary is paid together with December payroll',
+      'Provide necessary equipment & devices and periodic health checks for all employees',
+      'Support career development and have chances to participate in Icetea Labs’ training courses for professional skill enhancement',
+      'Have tea - coffee breaks with snacks; join teambuilding, sports, esports, and unlimited parties',
+      'Work in a buzzing space full of globally influential technical founders and business establishing experts',
+      "Receive other employee benefits offered by company's leadership",
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunchtime: 12:00 PM – 1:30 PM'
     ]
   },
 
-  // Job 11
+  // Job 8
   {
     id: 'art-director',
     title: '🎨 Art Director',
@@ -316,39 +318,39 @@ export const jobs = [
     type: 'Full time',
     level: 'Senior',
     descriptions: [
-      'Work with the entire creative team to establish a unified brand understanding and voice for the company, helming a creative audit to elevate our innovation',
-      'Conceptualize campaign vision, harnessing original graphics 2D – 3D content, copy, content website, social media and other marketing materials',
-      'Develop creative briefs based on ideas established in brainstorming sessions with director, schedules and expected deliverables for the creative team',
-      'Delegate projects to in – house designers and oversee storyboards',
-      'Obtain team approval by presenting final layouts, storyboards and illustration, encouraging members to provide feedback and responding to internal commentary and request',
-      'Present or oversee presentation of final concepts and coordinate production and dissemination for cross – organizational use'
+      'Work with the entire creative team to establish a unified brand understanding and voice for the company, helm a creative audit to elevate our innovation',
+      'Conceptualize campaign vision, harness original graphics 2D – 3D content, website, social media, and other marketing materials',
+      'Develop creative briefs based on ideas from brainstorming sessions with the director, schedules, and expected deliverables for the creative team',
+      'Delegate projects to in–house designers and oversee storyboards',
+      'Obtain team approval by presenting final layouts, storyboards, and illustrations while encouraging members to provide feedback and respond to internal commentary and requests',
+      'Present or oversee the presentation of final concepts and coordinate production and dissemination for cross-organizational use'
     ],
     requirements: [
-      'Bachelor’s degree in fine art, graphic design or similar discipline',
-      '8+ years as a professional graphic designer with 4+ years of experience in management role',
-      'Proficiency with design software, such as Adobe Creative Suite',
-      'Exceptional capability with typography, layout and prototyping',
-      'Highly skilled with leading a team of creative talent',
-      'Strong creative vision with an understanding of business objectives',
-      'Master’s degree',
-      'Prior experience as an art director',
+      'Bachelor’s degree in fine art, graphic design, or similar qualifications',
+      '8+ years as a professional graphic designer with 4+ years of experience in a management role',
+      'Proficiency in design software, such as Adobe Creative Suite',
+      'Exceptional capability in typography, layout, and prototyping',
+      'Highly skilled in leading a team of creative talent',
+      'Strong and creative vision with an understanding of business objectives',
       'Web development experience',
-      'Have a solid knowledge of photography and video production'
+      'A solid knowledge of photography and video production',
+      'Prior experience as an art director is a plus point',
+      'Master’s degree is a plus point'
     ],
     benefits: [
-      'Competitive salary range (negotiable based on capacity)',
-      'Sign Labor contract, pay Insurance, have 12 annual leaves and other holidays as regulated by the State',
-      'Review bonus and increase salary annually, have December bonus (13th month salary)',
-      'Equipment and devices equipped and periodic health check for all employees',
-      'Support career development, have chance to participate in Icetea Labs’ training courses to improve professional skills',
-      'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
-      'A buzzing space full of globally influential technical founders and business establishing experts',
-      "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
+      'Obtain competitive salary range (negotiable salary based on ability)',
+      'Sign a Labor contract, pay the Insurance, have 12-annual leaves and other holidays as regulated by the State',
+      'Review bonus and salary annually; 13th month salary is paid together with December payroll',
+      'Provide necessary equipment & devices and periodic health checks for all employees',
+      'Support career development and have chances to participate in Icetea Labs’ training courses for professional skill enhancement',
+      'Have tea - coffee breaks with snacks; join teambuilding, sports, esports, and unlimited parties',
+      'Work in a buzzing space full of globally influential technical founders and business establishing experts',
+      "Receive other employee benefits offered by company's leadership",
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunchtime: 12:00 PM – 1:30 PM'
     ]
   },
 
-  // Job 12
+  // Job 9
   {
     id: 'chief-marketing-officer',
     title: '💥 Chief Marketing Officer',
@@ -356,39 +358,146 @@ export const jobs = [
     type: 'Full time',
     level: 'Senior',
     descriptions: [
-      'Manage Marketing, Community and product-related programs from inception through completion while leveraging your excellent stakeholder management and program management skills',
+      'Manage Marketing, Community, and product-related programs from inception through completion while leveraging your excellent stakeholder management and program management skills',
       'Collaborate with a diverse cross-functional team (Marketing, Communication, Product, Design, Research, Data, Legal, etc.)',
       'Establish roadmaps and milestones, anticipate and manage risks, resolve roadblocks and operational challenges',
-      'Establish and manage required processes, communication forums, artifacts, reporting formats and tools to upscale high-quality marketing operations',
-      'Run stand ups, workgroup meetings, identifying action items and addressing blockers to keep programs and projects on track',
+      'Establish and manage required processes, communication forums, artifacts, reporting formats, and tools to upscale high-quality marketing operations',
+      'Run stand-ups, and workgroup meetings, identify action items, and address blockers to keep programs and projects on track',
       'Improve process inputs, streamline workflows and project management tools',
       'Become a trustful and reliable partner to multidisciplinary stakeholders',
       'Communicate status and manage stakeholder expectations and report to Direct Manager'
     ],
     requirements: [
-      'Bachelor’s degree in Marketing, Business, Data Analytics, Engineering, Computer Science or other similar fields or equivalent practical experience',
-      'Experience working as a program manager, operations manager or similar cross-functional role in a technology company',
+      'Bachelor’s degree in Marketing, Business, Data Analytics, Engineering, Computer Science, or other similar fields or equivalent practical experience',
+      'Experience working as a program manager, operations manager, or similar cross-functional role in a technology company',
       'Experience working with and coordinating operations and programs of interdisciplinary working groups',
       'Experience building productivity and automation tools',
       'Tenacious, self-starter who thrives in understanding the details of complex, cross-functional projects and can effectively distill into actionable project plans',
-      'Super organization skills and an analytical view on maximizing productivity, with a focus on value and not getting caught up on process',
-      'Great communication and stakeholder management skills, both written and verbal',
-      'Have the energy and patience to work in a dynamic team and rapidly growing industry, while applying a methodical and analytical mindset',
-      'Comfortable working with a lot of data in technical environment, requiring high attention to detail',
+      'Super organization skills and an analytical view on maximizing productivity, with a focus on value and not getting caught up in the process',
+      'Excellent communication and stakeholder management skills, both written and verbal',
+      'Have the energy and patience to work in a dynamic team and rapidly growing industry while applying a methodical and analytical mindset',
+      'Work comfortably with a lot of data in a technical environment, requiring high attention to details',
       'Ability to simplify operational and informational complexity, delivering the right message to each stakeholder'
     ],
     benefits: [
-      'Competitive salary range (negotiable based on capacity)',
-      'Sign Labor contract, pay Insurance, have 12 annual leaves and other holidays as regulated by the State',
-      'Review bonus and increase salary annually, have December bonus (13th month salary)',
-      'Equipment and devices equipped and periodic health check for all employees',
-      'Support career development, have chance to participate in Icetea Labs’ training courses to improve professional skills',
-      'Tea and coffee break with snack, team building, sports, esports, unlimited parties as regulated by the Company',
-      'A buzzing space full of globally influential technical founders and business establishing experts',
-      "Other employee benefits offered by the company's leadership",
-      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunch time: 12:00 PM – 1:30 PM'
+      'Obtain competitive salary range (negotiable salary based on ability)',
+      'Sign a Labor contract, pay the Insurance, have 12-annual leaves and other holidays as regulated by the State',
+      'Review bonus and salary annually; 13th month salary is paid together with December payroll',
+      'Provide necessary equipment & devices and periodic health checks for all employees',
+      'Support career development and have chances to participate in Icetea Labs’ training courses for professional skill enhancement',
+      'Have tea - coffee breaks with snacks; join teambuilding, sports, esports, and unlimited parties',
+      'Work in a buzzing space full of globally influential technical founders and business establishing experts',
+      "Receive other employee benefits offered by company's leadership",
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunchtime: 12:00 PM – 1:30 PM'
     ]
-  }]
+  },
+
+  // Job 10
+  {
+    id: 'nodejs-developer',
+    title: '🔥 Node.Js Developer',
+    location: 'Ha Noi, HCM',
+    type: 'Full time',
+    level: 'Senior',
+    descriptions: [
+      'Focus on developing user-interface components and implementing them follow well-known Node.js',
+      'Update, build new features, and customize product',
+      'Be proficient in requirement understanding, project analysis, and coding'
+    ],
+    requirements: [
+      'Have at least 2 years of experience in Node.js programming',
+      'Be proficient in JavaScript',
+      'Be proficient in Node.js and related frameworks',
+      'Have good knowledge of SQL/NoSQL, PostgreSQL, MongoDB...',
+      'Have ability to read and understand English documents',
+      'Obtain analytical and problem-solving skills'
+    ],
+    benefits: [
+      'Obtain competitive salary range (negotiable salary based on ability)',
+      'Sign a Labor contract, pay the Insurance, have 12-annual leaves and other holidays as regulated by the State',
+      'Review bonus and salary annually; 13th month salary is paid together with December payroll',
+      'Provide necessary equipment & devices and periodic health checks for all employees',
+      'Support career development and have chances to participate in Icetea Labs’ training courses for professional skill enhancement',
+      'Have tea - coffee breaks with snacks; join teambuilding, sports, esports, and unlimited parties',
+      'Work in a buzzing space full of globally influential technical founders and business establishing experts',
+      "Receive other employee benefits offered by company's leadership",
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunchtime: 12:00 PM – 1:30 PM'
+    ]
+  },
+
+  // Job 11
+  {
+    id: 'frontend-developer',
+    title: '🚩 Front-End Developer',
+    location: 'Ha Noi, HCM',
+    type: 'Full time',
+    level: 'Senior',
+    descriptions: [
+      'Focus on developing user-interface components and implementing them, following well-known React.js, Vue.js, etc',
+      'Update, build new features, and customize the product',
+      'Be proficient in requirement understanding, project analysis, and coding'
+    ],
+    requirements: [
+      'Have at least 1 year of experience using React.js, Vue.js, and related libraries such as Redux, Vuex, etc',
+      'Be proficient in JavaScript, have good knowledge of HTML/CSS, AJAX, and libraries involved',
+      'Be experienced in responsive web design and UI/UX optimization',
+      'Be experienced in working with ResfulAPI/GraphQL',
+      'Be experienced in using version management tools like Git',
+      'Have analytical and problem-solving skills',
+      'Have ability to read and understand English documents',
+      'Knowledge or interest in blockchain is a plus',
+      'Experience in using: web.js ethers.js is a plus'
+    ],
+    benefits: [
+      'Obtain competitive salary range (negotiable salary based on ability)',
+      'Sign a Labor contract, pay the Insurance, have 12-annual leaves and other holidays as regulated by the State',
+      'Review bonus and salary annually; 13th month salary is paid together with December payroll',
+      'Provide necessary equipment & devices and periodic health checks for all employees',
+      'Support career development and have chances to participate in Icetea Labs’ training courses for professional skill enhancement',
+      'Have tea - coffee breaks with snacks; join teambuilding, sports, esports, and unlimited parties',
+      'Work in a buzzing space full of globally influential technical founders and business establishing experts',
+      "Receive other employee benefits offered by company's leadership",
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunchtime: 12:00 PM – 1:30 PM'
+    ]
+  },
+
+  // Job 12
+  {
+    id: 'content-marketing',
+    title: '✒️ Content Marketing',
+    location: 'Ha Noi, HCM',
+    type: 'Full time',
+    level: 'Senior',
+    descriptions: [
+      'Write posts, news on social networks, press release as well as creative copy',
+      'Run social media channels (e.g.: Twitter, Telegram, Facebook and LinkedIn) to enhance audience engagement',
+      'Help with marketing plans, advertising, direct marketing and campaign',
+      'Build & manage vibrant community on social media channels',
+      'Manage and take care marketing partners’ activities',
+      'Other tasks assigned by leaders'
+    ],
+    requirements: [
+      'Experience in marketing, especially in content marketing',
+      'Work independently and collaboratively as a team member',
+      'Have good English written and spoken skills',
+      'Be able to quickly learn and understand complex topics',
+      'Be interested in Blockchain is a plus',
+      'Experience in design and video editing are also plus points'
+    ],
+    benefits: [
+      'Obtain competitive salary range (negotiable salary based on ability)',
+      'Sign a Labor contract, pay the Insurance, have 12-annual leaves and other holidays as regulated by the State',
+      'Review bonus and salary annually; 13th month salary is paid together with December payroll',
+      'Provide necessary equipment & devices and periodic health checks for all employees',
+      'Support career development and have chances to participate in Icetea Labs’ training courses for professional skill enhancement',
+      'Have tea - coffee breaks with snacks; join teambuilding, sports, esports, and unlimited parties',
+      'Work in a buzzing space full of globally influential technical founders and business establishing experts',
+      "Receive other employee benefits offered by company's leadership",
+      'Working time: Monday to Friday (9:00 AM – 6:00 PM); Lunchtime: 12:00 PM – 1:30 PM'
+    ]
+  }
+]
+
 
 const Careers = () => (
   <Layout title="GameFi.org - Careers">

@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import Layout from '@/components/Layout'
 import imgNA from '@/assets/images/ranks/na.png'
 import { API_BASE_URL } from '@/utils/constants'
-import { fetcher, safeToFixed, shortenAddress } from '@/utils'
+import { fetcher, printNumber, safeToFixed, shortenAddress } from '@/utils'
 import ABIERC20 from '@/components/web3/abis/ERC20.json'
 import { useWeb3Default, GAFI } from '@/components/web3'
 import { Contract, BigNumber, utils } from 'ethers'
@@ -168,6 +168,7 @@ const Staking = ({ legendSnapshots, legendCurrent }) => {
     }
   }, [rankingOptions, rankingSelected, isLive, account])
 
+  const timezone = useMemo(() => format(new Date(), 'OOOO'), [])
   const [dataAuction, setDataAuction] = useState<{ limit: number; top: { amount: number; wallet_address: string; last_time: number; lastTime?: Date }[] } | null>(null)
   const [deadlineAuction, setDeadlineAuction] = useState<Date | null>(null)
   const rankingAuction = useMemo(() => {
@@ -275,7 +276,7 @@ const Staking = ({ legendSnapshots, legendCurrent }) => {
                     Amount <span className="hidden sm:inline">{GAFI.symbol}</span>
                   </th>
                   <th scope="col" className="p-2 sm:p-4 font-bold text-xs md:text-sm uppercase text-white opacity-50 text-left">
-                    Last Staking
+                    Last Staking ({timezone})
                   </th>
                 </tr>
               </thead>
@@ -292,7 +293,7 @@ const Staking = ({ legendSnapshots, legendCurrent }) => {
                     <span className="sm:hidden">{shortenAddress(x.wallet_address, '.', 5, 3)}</span>
                   </td>
                   <td className="p-2 sm:p-4 text-sm whitespace-nowrap">
-                    {x.amount}
+                    {printNumber(x.amount)}
                   </td>
                   <td className="p-2 sm:p-4 text-sm">
                     <span>{x.lastTime ? format(x.lastTime, 'yyyy/MM/dd') : '—'}</span>

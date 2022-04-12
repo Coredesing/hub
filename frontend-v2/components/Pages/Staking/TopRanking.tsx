@@ -1,8 +1,9 @@
 import { GAFI } from '@/components/web3'
-import { shortenAddress } from '@/utils'
+import { printNumber, shortenAddress } from '@/utils'
 import { ObjectType } from '@/utils/types'
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
+import { format } from 'date-fns'
 
 type Props = {
   rankings: ObjectType[];
@@ -89,6 +90,8 @@ const TopRanking = ({ rankings, isLive }: Props) => {
     )
   }, [])
 
+  const timezone = useMemo(() => format(new Date(), 'OOOO'), [])
+
   return (
     <div className='overflow-x-auto'>
       <table className="mt-4 w-full">
@@ -104,7 +107,7 @@ const TopRanking = ({ rankings, isLive }: Props) => {
                 Amount <span className="hidden sm:inline">{GAFI.symbol}</span>
             </th>
             <th scope="col" className="p-2 sm:p-4 font-bold text-xs md:text-sm uppercase text-white opacity-50 text-left">
-              {isLive ? 'Last Staking' : 'Snapshot Time'}
+              {isLive ? 'Last Staking' : 'Snapshot Time'} ({timezone})
             </th>
           </tr>
         </thead>
@@ -117,11 +120,10 @@ const TopRanking = ({ rankings, isLive }: Props) => {
               {isMdScreen ? shortenAddress(x.wallet_address, '.', 4, 3) : x.wallet_address}
             </td>
             <td className="p-2 sm:p-4 text-sm whitespace-nowrap">
-              {x.amount}
+              {printNumber(x.amount)}
             </td>
             <td className="p-2 sm:p-4 text-sm sm:whitespace-nowrap break-words">
-              <span className="hidden sm:inline">{x.snapshot_at ? x.snapshot_at.toLocaleString('en-ZA', { timeZoneName: 'short', hour12: false }) : '—'}</span>
-              <span className="sm:hidden">{x.snapshot_at ? x.snapshot_at.toLocaleString('en-ZA') : '—'}</span>
+              <span>{x.snapshot_at ? format(x.snapshot_at, 'yyyy/MM/dd') : '—'}</span>
             </td>
           </tr>)}
         </tbody>

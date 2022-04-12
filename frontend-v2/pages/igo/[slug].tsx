@@ -1,6 +1,6 @@
 import Layout from '@/components/Layout'
 import { getTierById } from '@/utils/tiers'
-import React, { useEffect, useMemo, useState, useCallback, createContext, useContext } from 'react'
+import React, { useEffect, useMemo, useState, useCallback, createContext } from 'react'
 import { fetchOneWithSlug } from '../api/igo'
 import { useMyWeb3 } from '@/components/web3/context'
 import { fetcher, printNumber, formatterUSD, useFetch } from '@/utils'

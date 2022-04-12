@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useContext, useEffect } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { utils } from 'ethers'
 import { GAFI } from '@/components/web3'

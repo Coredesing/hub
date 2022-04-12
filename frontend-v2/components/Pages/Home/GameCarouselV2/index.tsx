@@ -71,7 +71,7 @@ const GameCarousel = ({ items, likes }: Props) => {
                   </div>
                   <video className="clipped-t-r-lg" style={{ aspectRatio: '16/9', objectFit: 'fill' }} muted controls controlsList="nodownload" poster={item.screen_shots_1}>
                     <source src={item.intro_video} type="video/mp4"></source>
-              Your browser does not support the video tag.
+                    Your browser does not support the video tag.
                   </video>
                 </div>
                 <div className="col-span-5 xl:col-span-4 2xl:pt-14 w-full px-4">
@@ -112,7 +112,9 @@ const GameCarousel = ({ items, likes }: Props) => {
         </div>
         <Flicking ref={refSlider1} bound={true} bounce={30} moveType="freeScroll">
           {items && items.map(item => <div key={`carousel-paginate-${item.id}`} className="border border-transparent mx-1 mt-8 cursor-pointer">
-            <img className="h-20 w-36 object-cover thumbnail-bullet-active" src={item?.screen_shots_1} alt=""></img>
+            <div className="h-20 w-36 relative">
+              <Image className="object-cover" src={item?.screen_shots_1} alt="" layout="fill"></Image>
+            </div>
           </div>)}
         </Flicking>
       </div>
@@ -159,7 +161,9 @@ const GameCarousel = ({ items, likes }: Props) => {
         </div>
         <Flicking ref={refSlider1} bound={true} bounce={30} moveType="freeScroll">
           {items && items.map(item => <div key={`carousel-paginate-${item.id}`} className="border border-transparent mx-1 mt-8 cursor-pointer">
-            <img className="h-20 w-36 object-cover thumbnail-bullet-active" src={item?.screen_shots_1} alt=""></img>
+            <div className="h-20 w-36 relative">
+              <Image className="object-cover" src={item?.screen_shots_1} alt="" layout="fill"></Image>
+            </div>
           </div>)}
         </Flicking>
       </div>

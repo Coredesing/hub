@@ -1,22 +1,29 @@
 import { ObjectType } from '@/utils/types'
 // import { MediumIcon, TelegramIcon, TwitterIcon } from '@/components/Base/Icon'
-import React from 'react'
+import React, { useCallback } from 'react'
 
 type Props = {
   poolInfo: ObjectType;
 }
 const RuleIntroduce = ({ poolInfo }: Props) => {
-  const getRules = (rule = '') => {
+  const getRules = useCallback((rule = '') => {
     if (typeof rule !== 'string') return []
-    return rule.split('\n').filter((r) => r.trim())
-  }
+    return rule.split('\n')
+      .filter((r) => r.trim())
+      .map((t) => {
+        if (t.indexOf('-') === 0) {
+          return t.slice(1)
+        }
+        return t
+      })
+  }, [])
   return <div>
     <div style={{ maxWidth: '780px' }}>
       <div className="desc mb-6">
         <ul className={'grid gap-2 font-casual text-sm'}>
           {getRules(poolInfo.rule).map((rule, idx) => (
             <li key={idx} className='flex'>
-              <div className='flex'><span className='font-bold'>{idx + 1}</span>&nbsp;-&nbsp;</div>
+              <div className='flex'><span className='font-bold'>{/*idx + 1*/}</span>&nbsp;-&nbsp;</div>
               <div>
                 {rule}
               </div>

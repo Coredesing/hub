@@ -494,7 +494,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const isShowBtnApprove = !!account && isDeployedPool && currencySelected.neededApprove && !isApprovedToken && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2)
   const isShowBtnBuy = !!account && isDeployedPool && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && countdown.isSale && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken))
   const isAllowedJoinCompetition = (countdown.isWhitelist || countdown.isUpcoming) && isCommunityPool && poolInfo.socialRequirement?.gleam_link && !isAppliedWhitelist
-
+  const needAllyWhitelist = !!poolInfo.start_join_pool_time
   const renderMsg = () => {
     if (!account) {
       return <Alert type="danger">
@@ -523,7 +523,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         Congratulations! You have successfully applied whitelist and can buy Mystery boxes
       </Alert>
     }
-    if (((!loadingCheckJPool && !loadingJPool) && account && (countdown.isSale || countdown.isUpcomingSale)) && !countdown.isPhase2 && !isAppliedWhitelist) {
+    if (needAllyWhitelist && ((!loadingCheckJPool && !loadingJPool) && account && (countdown.isSale || countdown.isUpcomingSale)) && !countdown.isPhase2 && !isAppliedWhitelist) {
       return <Alert type="danger">
         You have not applied whitelist.
         {(timelinePool.freeBuyTime && !countdown.isPhase2) ? ' Please stay tuned, you can buy from Phase 2' : ' Please stay tuned and join other pools'}

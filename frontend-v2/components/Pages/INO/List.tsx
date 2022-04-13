@@ -132,7 +132,7 @@ const List = () => {
               </div>
               <div className="flex flex-1 flex-col gap-1">
                 <span className="text-xs sm:text-[13px] font-bold opacity-50 tracking-wide uppercase">Price</span>
-                <p className="uppercase font-casual font-medium text-xs sm:text-base" style={{ color: '#72F34B' }}>{item.ether_conversion_rate} <span className="text-10px sm:text-base">{getCurrency(item)?.name}/BOX</span> </p>
+                <p className="uppercase font-casual font-medium text-xs sm:text-base" style={{ color: '#72F34B' }}>{item.ether_conversion_rate} <span className="text-10px sm:text-base">{getCurrency(item)?.symbol}/BOX</span> </p>
               </div>
             </div>
           </div>

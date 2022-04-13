@@ -44,19 +44,20 @@ const SerieContentModal = ({ open, onClose, serieContents, idShow }: Props) => {
         stopOnHover={true}
         showThumbs={true}
         thumbWidth={170}
-        swipeable={true}
+        swipeable={false}
         // infiniteLoop={true}
         // interval={3000}
         // showThumbs
         // swipeable
-        // centerMode
+        centerMode
+
         renderThumbs={() => {
           return serieContents && serieContents.length > 1 && serieContents.map((item) => <div
             key={`thumb-${item.id}`}
             className={clsx(styles.itemThumb, 'p-px cursor-pointer item-thumb')}
           >
-            <div className={clsx('cursor-pointer pt-2 px-4 pb-4 bg-black')}>
-              <img src={item.banner} alt="" className='w-28 h-16 object-contain mb-2' />
+            <div className={clsx('cursor-pointer pt-2 px-4 pb-2 bg-black')}>
+              <img src={item.banner} alt="" className='w-full h-16 object-contain mb-2' />
               <h3 className='text-13px font-casual text-center break-words break-all text-ellipsis w-full whitespace-nowrap overflow-hidden'>{item.name}</h3>
             </div>
           </div>)
@@ -68,7 +69,17 @@ const SerieContentModal = ({ open, onClose, serieContents, idShow }: Props) => {
               <img src={s.banner} key={s.id} alt="" className=' w-ful h-full object-contain' />
             </div>
             <div className='sm:w-auto sm:h-auto w-40 h-auto'>
-              <h4 className='text-lg uppercase font-bold text-center' key={s.name}>{s.name}</h4>
+              <h4 className='text-lg uppercase font-bold text-center mb-2' key={s.name}>{s.name}</h4>
+              <div className="flex gap-8 flex-wrap justify-center text-white/50">
+                <div>
+                  <span className="block font-semibold text-base uppercase">Amount</span>
+                  <span className="block font-semibold text-base">{s.amount}</span>
+                </div>
+                <div>
+                  <span className="block font-semibold text-base uppercase">{s.rate ? 'Chance' : s.rarity ? 'Rarity' : ''}</span>
+                  <span className="block font-semibold text-base">{s.rate || s.rarity}%</span>
+                </div>
+              </div>
               <div className={clsx(styles.itemDesc, 'text-base')}>
                 {s.description}
               </div>

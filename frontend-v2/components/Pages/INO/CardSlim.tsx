@@ -17,15 +17,14 @@ type Props = {
 const CardSlim = ({ item, now }: Props) => {
   const { currency } = useCurrency(item)
   const stages = useMemo(() => {
-    const timeBuy = new Date(parseInt(item.start_time) * 1000)
-    const timeFinish = new Date(parseInt(item.finish_time) * 1000)
-
+    const timeBuy = item.start_time && new Date(parseInt(item.start_time) * 1000)
+    const timeFinish = item.finish_time && new Date(parseInt(item.finish_time) * 1000)
     return { timeBuy, timeFinish }
   }, [item])
 
   const duration = useMemo(() => {
     const { timeBuy, timeFinish } = stages
-
+    if (!timeBuy || !timeFinish) return null
     if (now < timeBuy) {
       return intervalToDuration({
         start: now,
@@ -40,7 +39,8 @@ const CardSlim = ({ item, now }: Props) => {
   }, [now, stages])
 
   const text = useMemo(() => {
-    const { timeBuy } = stages
+    const { timeBuy, timeFinish } = stages
+    if (!timeBuy || !timeFinish) return ''
 
     if (now < timeBuy) {
       return 'Starts in'
@@ -136,7 +136,7 @@ const CardSlim = ({ item, now }: Props) => {
           {item.campaign_status !== 'Ended' && (
             <>
               <div className={styles.informationLabel}>{text}</div>
-              {item.campaign_status === 'TBA' ? 'TBA' : <span>{formatNumber(duration.days)}d : {formatNumber(duration.hours)}h : {formatNumber(duration.minutes)}m : {formatNumber(duration.seconds)}s</span>}
+              {item.campaign_status === 'TBA' ? 'TBA' : !duration ? 'TBA' : <span>{formatNumber(duration.days)}d : {formatNumber(duration.hours)}h : {formatNumber(duration.minutes)}m : {formatNumber(duration.seconds)}s</span>}
             </>
           )}
         </div>

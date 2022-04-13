@@ -197,7 +197,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           title: 'BUYING - PHASE 1',
           desc: neededApplyWl ? 'Whitelist registrants will be given favorable deals to buy Mystery Boxes in Phase 1, on a First-Come First-Served basis.' : 'You can buy Mystery Box before the Buy Phase ends'
         }
-        timeLinesInfo[neededApplyWl ? 3 : 4] = {
+        timeLinesInfo[!neededApplyWl ? 3 : 4] = {
           title: 'END',
           desc: 'Thank you for your participation.'
         }
@@ -207,7 +207,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       const currentTime = Date.now()
       if (soldOut) {
         setCountdown({ date1: 0, date2: 0, title: 'This pool is over. See you in the next pool.', isFinished: true })
-        timeLine.freeBuyTime ? (timeLinesInfo[5].current = true) : (timeLinesInfo[4].current = true)
+        timeLine.freeBuyTime ? (timeLinesInfo[!neededApplyWl ? 4 : 5].current = true) : (timeLinesInfo[!neededApplyWl ? 3 : 4].current = true)
       } else if (timeLine.startJoinPooltime > currentTime) {
         setCountdown({ date1: timeLine.startJoinPooltime, date2: currentTime, title: 'Whitelist Opens In', isUpcoming: true })
         timeLinesInfo[1].current = true
@@ -239,7 +239,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         }
       } else {
         setCountdown({ date1: 0, date2: 0, title: 'Finished', isFinished: true })
-        timeLine.freeBuyTime ? (timeLinesInfo[!neededApplyWl ? 4 : 5].current = true) : (timeLinesInfo[4].current = true)
+        timeLine.freeBuyTime ? (timeLinesInfo[!neededApplyWl ? 4 : 5].current = true) : (timeLinesInfo[!neededApplyWl ? 3 : 4].current = true)
       }
       setTimelines(timeLinesInfo)
     }
@@ -250,7 +250,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }, [onSetCountdown])
 
   const listTokens = useMemo(() => {
-    if (!boxSelected.currency_ids) {
+    if (!boxSelected?.currency_ids) {
       return []
     }
     const currencyIds = boxSelected.currency_ids.split(',').map(id => +id)
@@ -286,7 +286,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }
 
   const onSelectBoxType = (b: ObjectType) => {
-    if (b.id === boxSelected.id) return
+    if (b.id === boxSelected?.id) return
     setBoxSelected(b)
   }
 
@@ -585,7 +585,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           </div>
         </div>
       </div>}
-      bodyBannerContent={<BannerImagePool src={boxSelected.banner} />}
+      bodyBannerContent={<BannerImagePool src={boxSelected?.banner} />}
       bodyDetailContent={<>
         <h2 className="font-semibold text-4xl mb-2 uppercase">{poolInfo.title || poolInfo.name}</h2>
         <div className="creator flex items-center gap-1">
@@ -618,7 +618,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         <div className='mb-8'>
           <div> <h4 className='font-bold text-base mb-1 uppercase'>Type</h4></div>
           <div className={clsx('gap-2 flex flex-wrap', stylesBoxType.boxTypes)}>
-            {boxTypes.map((b) => <BoxTypeItem key={b.id} item={b} onClick={onSelectBoxType} selected={boxSelected.id === b.id} />)}
+            {boxTypes.map((b) => <BoxTypeItem key={b.id} item={b} onClick={onSelectBoxType} selected={boxSelected?.id === b.id} />)}
           </div>
         </div>
         {
@@ -693,7 +693,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         <Tabs
           titles={[
             'Rule Introduction',
-            boxSelected?.description ? 'Box Information' : undefined,
+            'Box Information',
             'Series Content',
             'TimeLine',
             `Collection ${ownedBox ? `(${ownedBox})` : ''}`
@@ -705,11 +705,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           <TabPanel value={currentTab} index={0}>
             <RuleIntroduce poolInfo={poolInfo} />
           </TabPanel>
-          {
-            boxSelected?.description && <TabPanel value={currentTab} index={1}>
-              <BoxInformation boxes={boxTypes} />
-            </TabPanel>
-          }
+          <TabPanel value={currentTab} index={1}>
+            <BoxInformation boxes={boxTypes} />
+          </TabPanel>
           <TabPanel value={currentTab} index={2}>
             <SerieContent poolInfo={poolInfo} selected={boxSelected} />
           </TabPanel>

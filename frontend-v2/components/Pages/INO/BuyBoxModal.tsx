@@ -37,7 +37,7 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
     eventId,
     currencyInfo,
     poolAddress: poolInfo.campaign_hash,
-    subBoxId: boxTypeBuy.subBoxId,
+    subBoxId: boxTypeBuy?.subBoxId,
     priceOfBox: currencyInfo.price
   })
   const insufficientBalance = !balanceInfo?.balance || BigNumber.from(balanceInfo?.balance).lt(totalBuy)

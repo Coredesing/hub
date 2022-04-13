@@ -213,7 +213,7 @@ const _Carousel = ({ items, style, now }: Props) => {
                 <div className={styles.informationPurchase}>
                   <div>
                     <p>Price</p>
-                    <span style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {getCurrency(item)?.name}</span>
+                    <span style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {getCurrency(item)?.symbol}</span>
                   </div>
                   <div>
                     <p>Total Sales</p>

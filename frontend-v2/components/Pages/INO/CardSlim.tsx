@@ -124,7 +124,7 @@ const CardSlim = ({ item, now }: Props) => {
         <div className={stylesCarousel.informationPurchase} style={{ marginBottom: '1rem' }}>
           <div>
             <p>Starting Price</p>
-            <span style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {currency.name}</span>
+            <span style={{ color: '#72F34B' }}>{item.ether_conversion_rate} {currency.symbol}</span>
           </div>
           <div>
             <p>Total Sales</p>

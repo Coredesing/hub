@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useLayoutEffect } from 'react'
 import Modal from '@/components/Base/Modal'
 import styles from './SerieContentModal.module.scss'
 import clsx from 'clsx'
@@ -20,6 +20,35 @@ const SerieContentModal = ({ open, onClose, serieContents, idShow }: Props) => {
   // const onSelectItem = (id: number) => {
   //   setCurrent(serieContents[id])
   // }
+
+  useLayoutEffect(() => {
+    const seriesCarouselList = document.querySelector('.series-carousel')
+    if (!seriesCarouselList || !open) return
+    const btnPrev = seriesCarouselList.querySelector('.control-arrow.control-prev')
+    const btnNext = seriesCarouselList.querySelector('.control-arrow.control-next')
+
+    const handleKeydown = (e: any) => {
+      if (e.code === 'ArrowLeft') {
+        if ((btnPrev as any)?.click) {
+          (btnPrev as any).click()
+        }
+      }
+      if (e.code === 'ArrowRight') {
+        if ((btnNext as any)?.click) {
+          (btnNext as any).click()
+        }
+      }
+    }
+    if (!document.onkeydown) {
+      document.onkeydown = handleKeydown
+    } else {
+      const onKeyDown: any = document.onkeydown
+      document.onkeydown = (e) => {
+        onKeyDown(e)
+        handleKeydown(e)
+      }
+    }
+  }, [open])
   return <Modal show={open} toggle={onClose} className={styles.modal}>
     <div className={clsx('px-8 pt-14 pb-8', styles.content)}>
       <h3 className='font-bold text-2xl mb-5 font-mechanic'>SERIES CONTENT</h3>
@@ -36,7 +65,7 @@ const SerieContentModal = ({ open, onClose, serieContents, idShow }: Props) => {
       </div> */}
       {/* <div className="slides flex gap-2 items-center"> */}
       <Carousel
-        className={styles.carousel}
+        className={`${styles.carousel} series-carousel`}
         showStatus={false}
         showIndicators={false}
         selectedItem={idShow}

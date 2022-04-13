@@ -33,9 +33,11 @@ const BoxInformation = ({ boxes }: Props) => {
           <TableCellHead>
             <span className='text-sm'>Remaining</span>
           </TableCellHead>
-          <TableCellHead>
-            <span className='text-sm'>Description</span>
-          </TableCellHead>
+          {
+            boxes?.[0]?.description && <TableCellHead>
+              <span className='text-sm'>Description</span>
+            </TableCellHead>
+          }
         </TableRow>
       </TableHead>
       <TableBody>
@@ -53,26 +55,28 @@ const BoxInformation = ({ boxes }: Props) => {
             <TableCell>
               {(+(b.maxSupply || b.limit) - (+b.totalSold || 0)) || (b.maxSupply || b.limit)}
             </TableCell>
-            <TableCell>
-              <div style={{ maxWidth: '500px' }}>
-                <span
-                  className="break-words text-ellipsis overflow-hidden text-sm"
-                  style={{
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical'
-                  }}>
-                  {(b.description || '').slice(0, 100)}{(b.description || '').length > 100 && '...'}
-                </span>
-                {
-                  (b.description || '').length > 100 && <span
-                    onClick={() => onShowBoxModal(id)}
-                    className="text-gamefiGreen font-casual font-semibold ml-1 cursor-pointer text-sm"
-                  >
-                    Read more
+            {
+              boxes?.[0]?.description && <TableCell>
+                <div style={{ maxWidth: '500px' }}>
+                  <span
+                    className="break-words text-ellipsis overflow-hidden text-sm"
+                    style={{
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical'
+                    }}>
+                    {(b.description || '').slice(0, 100)}{(b.description || '').length > 100 && '...'}
                   </span>
-                }
-              </div>
-            </TableCell>
+                  {
+                    (b.description || '').length > 100 && <span
+                      onClick={() => onShowBoxModal(id)}
+                      className="text-gamefiGreen font-casual font-semibold ml-1 cursor-pointer text-sm"
+                    >
+                      Read more
+                    </span>
+                  }
+                </div>
+              </TableCell>
+            }
           </TableRow>)
         }
       </TableBody>

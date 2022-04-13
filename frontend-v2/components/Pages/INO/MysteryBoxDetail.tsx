@@ -164,35 +164,40 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       const isAccIsBuyPreOrder = userTier >= poolInfo.pre_order_min_tier
       const timeLine = getTimelineOfPool(poolInfo)
       setTimelinePool(timeLine)
+      const neededApplyWl = !!timeLine.startJoinPooltime
       const timeLinesInfo: { [k: string]: any } = {
         1: {
           title: 'INTRODUCTION',
-          desc: 'Stay tuned and prepare to APPLY WHITELIST.'
-        },
-        2: {
+          desc: `Stay tuned and prepare to ${neededApplyWl ? 'APPLY WHITELIST' : 'BUY'}.`
+        }
+      }
+
+      if (neededApplyWl) {
+        timeLinesInfo[2] = {
           title: 'WHITELISTING',
           desc: 'Click the [APPLY WHITELIST] button to register for Phase 1.'
         }
       }
+
       if (timeLine.freeBuyTime) {
-        timeLinesInfo[3] = {
+        timeLinesInfo[!neededApplyWl ? 2 : 3] = {
           title: 'BUYING - PHASE 1',
-          desc: 'Whitelist registrants will be given favorable deals to buy Mystery Boxes on a First-Come First-Served basis.'
+          desc: neededApplyWl ? 'Whitelist registrants will be given favorable deals to buy Mystery Boxes on a First-Come First-Served basis.' : 'You can buy Mystery Box before the Buy Phase ends'
         }
-        timeLinesInfo[4] = {
+        timeLinesInfo[!neededApplyWl ? 3 : 4] = {
           title: 'BUYING - PHASE 2',
           desc: 'Phase 2 will start right after Phase 1 ends. Remaining boxes in Phase 1 will be transferred to Phase 2.'
         }
-        timeLinesInfo[5] = {
+        timeLinesInfo[!neededApplyWl ? 4 : 5] = {
           title: 'END',
           desc: 'Thank you for your participation.'
         }
       } else {
-        timeLinesInfo[3] = {
+        timeLinesInfo[!neededApplyWl ? 2 : 3] = {
           title: 'BUYING - PHASE 1',
-          desc: 'Whitelist registrants will be given favorable deals to buy Mystery Boxes in Phase 1, on a First-Come First-Served basis.'
+          desc: neededApplyWl ? 'Whitelist registrants will be given favorable deals to buy Mystery Boxes in Phase 1, on a First-Come First-Served basis.' : 'You can buy Mystery Box before the Buy Phase ends'
         }
-        timeLinesInfo[4] = {
+        timeLinesInfo[!neededApplyWl ? 3 : 4] = {
           title: 'END',
           desc: 'Thank you for your participation.'
         }
@@ -202,39 +207,39 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       const currentTime = Date.now()
       if (soldOut) {
         setCountdown({ date1: 0, date2: 0, title: 'This pool is over. See you in the next pool.', isFinished: true })
-        timeLine.freeBuyTime ? (timeLinesInfo[5].current = true) : (timeLinesInfo[4].current = true)
+        timeLine.freeBuyTime ? (timeLinesInfo[!neededApplyWl ? 4 : 5].current = true) : (timeLinesInfo[!neededApplyWl ? 3 : 4].current = true)
       } else if (timeLine.startJoinPooltime > currentTime) {
         setCountdown({ date1: timeLine.startJoinPooltime, date2: currentTime, title: 'Whitelist Opens In', isUpcoming: true })
         timeLinesInfo[1].current = true
       } else if (timeLine.endJoinPoolTime > currentTime) {
         if (isAccIsBuyPreOrder && startBuyTime < currentTime) {
-          timeLinesInfo[3].current = true
+          timeLinesInfo[!neededApplyWl ? 2 : 3].current = true
           setCountdown({ date1: timeLine?.freeBuyTime || timeLine?.finishTime, date2: currentTime, title: 'Phase 1 Ends In', isSale: true, isPhase1: true })
         } else {
           setCountdown({ date1: timeLine.endJoinPoolTime, date2: currentTime, title: 'Whitelist Closes In', isWhitelist: true })
-          timeLinesInfo[2].current = true
+          timeLinesInfo[!neededApplyWl ? 1 : 2].current = true
         }
       } else if (startBuyTime > currentTime) {
-        timeLinesInfo[2].current = true
+        timeLinesInfo[!neededApplyWl ? 1 : 2].current = true
         if (timeLine.freeBuyTime) {
           setCountdown({ date1: startBuyTime, date2: currentTime, title: 'Sale Phase 1 Starts In', isUpcomingSale: true, isMultiPhase: true })
         } else {
           setCountdown({ date1: startBuyTime, date2: currentTime, title: 'Sale Starts In', isUpcomingSale: true })
         }
       } else if (timeLine.freeBuyTime && timeLine.freeBuyTime > currentTime) {
-        timeLinesInfo[3].current = true
+        timeLinesInfo[!neededApplyWl ? 2 : 3].current = true
         setCountdown({ date1: timeLine.freeBuyTime, date2: currentTime, title: 'Phase 1 Ends In', isSale: true, isPhase1: true })
       } else if (timeLine.finishTime > currentTime) {
         if (timeLine.freeBuyTime) {
-          timeLinesInfo[4].current = true
+          timeLinesInfo[!neededApplyWl ? 3 : 4].current = true
           setCountdown({ date1: timeLine.finishTime, date2: currentTime, title: 'Phase 2 Ends In', isSale: true, isPhase2: true })
         } else {
-          timeLinesInfo[3].current = true
+          timeLinesInfo[!neededApplyWl ? 2 : 3].current = true
           setCountdown({ date1: timeLine.finishTime, date2: currentTime, title: 'Sale Ends In', isSale: true, isPhase1: true })
         }
       } else {
         setCountdown({ date1: 0, date2: 0, title: 'Finished', isFinished: true })
-        timeLine.freeBuyTime ? (timeLinesInfo[5].current = true) : (timeLinesInfo[4].current = true)
+        timeLine.freeBuyTime ? (timeLinesInfo[!neededApplyWl ? 4 : 5].current = true) : (timeLinesInfo[!neededApplyWl ? 3 : 4].current = true)
       }
       setTimelines(timeLinesInfo)
     }
@@ -245,7 +250,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }, [onSetCountdown])
 
   const listTokens = useMemo(() => {
-    if (!boxSelected.currency_ids) {
+    if (!boxSelected?.currency_ids) {
       return []
     }
     const currencyIds = boxSelected.currency_ids.split(',').map(id => +id)
@@ -281,7 +286,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }
 
   const onSelectBoxType = (b: ObjectType) => {
-    if (b.id === boxSelected.id) return
+    if (b.id === boxSelected?.id) return
     setBoxSelected(b)
   }
 
@@ -553,14 +558,17 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     <PoolDetail
       headContent={<div className={clsx(styles.headPool)}>
         {!countdown.isFinished && <div className='mb-10'>{renderMsg()}</div>}
-        <div className={'grid lg:grid-cols-2'}>
-          <div className={clsx('flex mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}>
+        <div className={`grid ${needAllpyWhitelist ? 'lg:grid-cols-2' : ''} `}>
+          {needAllpyWhitelist && <div className={clsx('flex mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}>
             <InfoBoxOrderItem label='Registered Users' value={poolInfo.totalRegistered || 0} />
             <InfoBoxOrderItem label='Ordered Boxes' value={poolInfo.totalOrder || 0} />
             <InfoBoxOrderItem label='Your Ordered' value={myBoxOrdered} />
           </div>
-          <div className={clsx('flex items-center gap-2', styles.headCountdown,
+          }
+          <div className={clsx('flex items-center gap-2',
+            styles.headCountdown,
             {
+              [styles.headClipedpath]: needAllpyWhitelist,
               'bg-black justify-center': !countdown.isFinished,
               [`${styles.countdownFinished} justify-center lg:justify-end`]: countdown.isFinished
             })} >
@@ -577,7 +585,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           </div>
         </div>
       </div>}
-      bodyBannerContent={<BannerImagePool src={boxSelected.banner} />}
+      bodyBannerContent={<BannerImagePool src={boxSelected?.banner} />}
       bodyDetailContent={<>
         <h2 className="font-semibold text-4xl mb-2 uppercase">{poolInfo.title || poolInfo.name}</h2>
         <div className="creator flex items-center gap-1">
@@ -610,7 +618,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         <div className='mb-8'>
           <div> <h4 className='font-bold text-base mb-1 uppercase'>Type</h4></div>
           <div className={clsx('gap-2 flex flex-wrap', stylesBoxType.boxTypes)}>
-            {boxTypes.map((b) => <BoxTypeItem key={b.id} item={b} onClick={onSelectBoxType} selected={boxSelected.id === b.id} />)}
+            {boxTypes.map((b) => <BoxTypeItem key={b.id} item={b} onClick={onSelectBoxType} selected={boxSelected?.id === b.id} />)}
           </div>
         </div>
         {
@@ -685,7 +693,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         <Tabs
           titles={[
             'Rule Introduction',
-            boxSelected?.description ? 'Box Information' : undefined,
+            'Box Information',
             'Series Content',
             'TimeLine',
             `Collection ${ownedBox ? `(${ownedBox})` : ''}`
@@ -697,11 +705,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           <TabPanel value={currentTab} index={0}>
             <RuleIntroduce poolInfo={poolInfo} />
           </TabPanel>
-          {
-            boxSelected?.description && <TabPanel value={currentTab} index={1}>
-              <BoxInformation boxes={boxTypes} />
-            </TabPanel>
-          }
+          <TabPanel value={currentTab} index={1}>
+            <BoxInformation boxes={boxTypes} />
+          </TabPanel>
           <TabPanel value={currentTab} index={2}>
             <SerieContent poolInfo={poolInfo} selected={boxSelected} />
           </TabPanel>

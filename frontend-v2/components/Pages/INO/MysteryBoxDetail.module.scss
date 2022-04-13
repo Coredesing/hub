@@ -16,9 +16,7 @@
     }
 }
 
-.headCountdown {
-    min-height: 70px;
-    border-radius: 2px;
+.headClipedpath {
     @media all and (min-width: 1024px) {
         -webkit-clip-path: polygon(30px 0, 100% 0, 100% 100%, 0% 100%);
         clip-path: polygon(30px 0, 100% 0, 100% 100%, 0% 100%);
@@ -26,6 +24,18 @@
         margin-left: -20px;
         padding-left: 20px;
     }
+}
+
+.headCountdown {
+    min-height: 70px;
+    border-radius: 2px;
+    // @media all and (min-width: 1024px) {
+    //     -webkit-clip-path: polygon(30px 0, 100% 0, 100% 100%, 0% 100%);
+    //     clip-path: polygon(30px 0, 100% 0, 100% 100%, 0% 100%);
+    //     width: calc(100% + 20px);
+    //     margin-left: -20px;
+    //     padding-left: 20px;
+    // }
     &.countdownFinished {
         background: linear-gradient(268.42deg, #841A1A 5.62%, rgba(180, 24, 24, 0) 87.32%);
         padding-right: 30px;

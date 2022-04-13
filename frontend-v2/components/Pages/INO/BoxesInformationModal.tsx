@@ -65,7 +65,9 @@ const BoxesInformationModal = ({ open, onClose, items, idShow }: Props) => {
           }
 
         </Carousel>
-        <div className={styles.divider}> </div>
+        {
+          items.length > 1 && <div className={styles.divider}> </div>
+        }
       </div>
     </div >
   </Modal >

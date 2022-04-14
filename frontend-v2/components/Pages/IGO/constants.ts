@@ -7,3 +7,5 @@ export enum TIMELINE {
   BUYING_PHASE = 5,
   CLAIM = 6
 }
+
+export const DECIMAL_PLACES = 10 ** 7

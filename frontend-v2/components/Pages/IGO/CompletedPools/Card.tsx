@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { formatterUSD } from '@/utils'
 import { getTierById } from '@/utils/tiers'
 import Countdown from '../Card/Countdown'
+import { poolStatus } from '@/utils/pool'
 
 const Card = ({ item }: {item: Item}) => {
   const { network } = useLibraryDefaultFlexible(item?.network_available)
@@ -61,31 +62,42 @@ const Card = ({ item }: {item: Item}) => {
           </svg>
         </a> }
       </div>
-      <a href={`/igo/${item.id}`} className="w-full text-lg font-semibold leading-4 hover:underline">{item.title}</a>
-      <a href={`/igo/${item.id}`} className="w-full 2xl:pr-[200px] lg:pr-[100px] grid grid-cols-2 gap-4 lg:inline-flex justify-between mt-4">
-        <div>
+      <a href={`/igo/${item.id}`} className="w-full text-lg font-semibold leading-4 hover:underline flex items-center gap-4">
+        {item.title}
+        <div className="inline-flex items-center gap-1 text-[12px] font-mechanic">
+          <Image src={poolStatus(item.is_private).icon} width={12} height={12} alt="lock"></Image>
+          <span className="tracking-wider uppercase">{poolStatus(item.is_private).title}</span>
+        </div>
+      </a>
+      <a href={`/igo/${item.id}`} className="w-full 2xl:pr-[200px] xl:pr-[100px] grid grid-cols-2 gap-4 lg:inline-flex justify-between mt-4">
+        <div className="w-[100px]">
           <div className="text-white/50 uppercase font-semibold text-xs font-mechanic">Total Raise</div>
           <div className="text-sm">
             {formatterUSD.format(parseInt(item?.total_sold_coin) * parseFloat(item?.token_conversion_rate)).replace(/\D00(?=\D*$)/, '')}
           </div>
         </div>
-        <div>
+        <div className="w-[80px]">
           <div className="text-white/50 uppercase font-semibold text-xs font-mechanic">Participants</div>
           <div className="text-sm">
             {/* {participants ? printNumber(participants) : '-'} */}
             -
           </div>
         </div>
-        <div>
-          <div className="text-white/50 uppercase font-semibold text-xs font-mechanic">IGO Price</div>
+        <div className="w-[120px]">
+          <div className="text-white/50 uppercase font-semibold text-xs font-mechanic">Price</div>
           <div className="uppercase text-sm">
             {item.token_conversion_rate} {getCurrency(item).symbol}
           </div>
         </div>
-        <div>
+        <div className="w-[100px]">
           <div className="text-white/50 uppercase font-semibold text-xs font-mechanic">Min Rank</div>
           <div className="text-sm">
-            {item?.min_tier ? getTierById(item?.min_tier)?.name : '-'}
+            {item?.min_tier > 0
+              ? <div className="inline-flex items-center gap-1">
+                <Image src={getTierById(item?.min_tier)?.image} width={28} height={28} alt=""></Image>
+                {getTierById(item?.min_tier)?.name}
+              </div>
+              : '-'}
           </div>
         </div>
         <div className="w-40">

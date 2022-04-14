@@ -148,7 +148,7 @@ const SerieContent = ({ poolInfo, selected }: Props) => {
             {
               configs.map((b, id) => <TableRow key={id}>
                 <TableCell>
-                  <div onClick={() => onShowSerieModal(id)} className="flex gap-3 items-center uppercase text-sm font-semibold cursor-pointer w-fit">
+                  <div onClick={() => onShowSerieModal(id)} className="flex gap-3 items-center uppercase text-sm font-semibold cursor-pointer w-fit" style={{ minWidth: '140px' }}>
                     <div className="flex gap-3 items-center uppercase text-[12px] sm:text-sm font-semibold cursor-pointer">
                       <img src={b.icon} alt="" className="w-12 h-14" />
                       <div>

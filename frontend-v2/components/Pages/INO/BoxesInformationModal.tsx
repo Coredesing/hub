@@ -76,7 +76,7 @@ const BoxesInformationModal = ({ open, onClose, items, idShow }: Props) => {
                   <img src={box.banner} className={'w-60 h-32 object-contain relative'} alt="" />
                 </div>
               </div>
-              <div className='md:w-3/5 w-full'>
+              <div className='md:w-3/5 w-full overflow-auto' style={{ maxHeight: '300px' }}>
                 <h3 className='text-lg font-semibold font-mechanic uppercase text-left mb-4'>{box.name}</h3>
                 <div className='text-left text-sm font-casual mb-7'>
                   {box.description}

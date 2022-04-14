@@ -9,7 +9,7 @@ const Toolbox = () => {
   const [showMenu, setShowMenu] = useState(false)
   return (
     <>
-      <div className="fixed w-full bottom-0 grid grid-cols-5 md:hidden dark:bg-gamefiDark-700" style={{ boxShadow: 'inset -1px 0px 0px #303442', zIndex: '99' }}>
+      <div className="fixed w-full bottom-0 grid grid-cols-5 md:hidden dark:bg-gamefiDark-700" style={{ boxShadow: 'inset -1px 0px 0px #303442', zIndex: '1000' }}>
         <ToolboxItem path='/'>
           <Image src={require('@/assets/images/icons/home.svg')} alt='home'></Image>
         </ToolboxItem>

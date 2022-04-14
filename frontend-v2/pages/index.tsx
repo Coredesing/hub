@@ -13,7 +13,7 @@ import { API_BASE_URL } from '@/utils/constants'
 import Partners from '@/components/Pages/Home/Partners'
 import Performance from '@/components/Pages/Home/Performance'
 import { fetcher } from '@/utils'
-import banner from '@/assets/images/banner.jpg'
+import banner from '@/assets/images/banner.png'
 import Layout from '@/components/Layout'
 
 const PageIndex = () => {
@@ -46,7 +46,7 @@ const PageIndex = () => {
   }, [])
 
   const bannerShow = useMemo(() => {
-    const bannerDeadline = new Date('2022-04-08T00:00:00Z')
+    const bannerDeadline = new Date('2022-04-15T00:00:00Z')
     return bannerDeadline > now
   }, [now])
 
@@ -55,7 +55,7 @@ const PageIndex = () => {
       {/* <GameFiCarousel likes={likes} items={featuredGames}></GameFiCarousel> */}
       <div className="md:px-4 lg:px-16 mt-4 md:container mx-auto lg:block">
         { bannerShow && <div className="mx-auto relative mb-4 sm:mb-16">
-          <a href="https://youtu.be/MZWUZnW44pc" target="_blank" rel="noreferrer">
+          <a href="https://youtu.be/0R_p_yYl7tE" target="_blank" rel="noreferrer">
             <img src={banner.src} alt="" className="mx-auto aspect-[970/90] max-h-[90px]" />
           </a>
         </div> }

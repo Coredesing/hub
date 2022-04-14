@@ -367,7 +367,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     try {
       if (!erc721Contract) return
       const isCallDefaultCollection = poolInfo.campaign_hash === poolInfo.token
-      const arrCollections = []
+      // const arrCollections = []
       if (!account) return
       const callWithExternalApi = !!poolInfo.use_external_api
       const handleInfoTokenExternal = async (collectionId: number, collection: ObjectType) => {
@@ -382,6 +382,16 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           console.debug('error', error)
         }
       }
+      const handleSetCollection = (collection: ObjectType) => {
+        setCollections((c) => {
+          const newArr = [...c]
+          const existId = c.find((b) => b.collectionId === collection.collectionId)
+          if (!existId) {
+            newArr.push(collection)
+          }
+          return newArr
+        })
+      }
       if (callWithExternalApi) {
         const result = await fetcher(`${API_BASE_URL}/pool/owner/${poolInfo.token}?wallet=${account}&limit=100`)
         const arr = result.data.data?.data || []
@@ -395,7 +405,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           } catch (error) {
             console.debug(error)
           }
-          arrCollections.push(collection)
+          handleSetCollection(collection)
+          // arrCollections.push(collection)
+          // setCollections(arrCollections)
         }
       } else {
         for (let id = 0; id < ownedBox; id++) {
@@ -408,24 +420,26 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               const idBoxType = boxType.subBoxId.toNumber()
               const infoBox = boxTypes.find((b, subBoxId) => subBoxId === idBoxType) || {}
               infoBox && Object.assign(collection, infoBox)
+              handleSetCollection(collection)
             } catch (error) {
               // console.debug('error', error)
             }
-            arrCollections.push(collection)
+            // arrCollections.push(collection)
           } else {
             const collection: ObjectType = {}
             try {
               const collectionId = await erc721Contract.tokenOfOwnerByIndex(account, id)
               collection.collectionId = collectionId.toNumber()
               await handleInfoTokenExternal(collection.collectionId, collection)
-              arrCollections.push(collection)
+              // arrCollections.push(collection)
+              handleSetCollection(collection)
             } catch (error) {
               // console.debug('error', error)
             }
           }
         }
       }
-      setCollections(arrCollections)
+      // setCollections(arrCollections)
     } catch (error) {
       console.debug(error)
       console.error('Something went wrong when show collections')
@@ -433,6 +447,10 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       setLoadingCollection(false)
     }
   }, [presaleContract, erc721Contract, boxTypes, poolInfo, account])
+
+  useEffect(() => {
+    setCollections([])
+  }, [account])
 
   useEffect(() => {
     if (+ownedBox > 0 && boxTypes.length) {
@@ -722,6 +740,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               onClaimAllNFT={onClaimAllNFT}
               onClaimNFT={onClaimNFT}
               isValidChain={isValidChain}
+              ownedBox={ownedBox}
             />
           </TabPanel>
         </div>

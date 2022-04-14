@@ -17,7 +17,7 @@ type Props = {
   onClaimNFT: (tokenId: number) => any;
 } & ObjectType
 
-const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT, isValidChain }: Props) => {
+const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT, isValidChain, ownedBox }: Props) => {
   const POOL_IDS_IS_CLAIMED_ONE_BY_ONE: any[] = useMemo(() => {
     try {
       return JSON.parse(process.env.NEXT_PUBLIC_POOL_IDS_IS_CLAIMED_ONE_BY_ONE || '')
@@ -49,6 +49,11 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT,
       setClaim(true)
     }
   }, [timeClaim, timeNow])
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [account])
+
   const onFinishCountdown = () => {
     setClaim(true)
   }
@@ -66,10 +71,11 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT,
   return (
     <div>
       {
-        loading
+        loading && !collections.length
           ? <div className='flex items-center w-full h-32 justify-center'><PropagateLoader color='#fff'></PropagateLoader></div>
-          : !!collections.length && account
+          : !!collections.length && account && ownedBox > 0
             ? <>
+              {loading && <div className='flex items-center w-full h-5 justify-center'><PropagateLoader color='#fff'></PropagateLoader></div>}
               <div className='flex gap-3 justify-between flex-wrap items-center mb-9'>
                 <div className={clsx(styles.wrapperCountdown, 'items-center')}>
                   <div className='text-sm font-bold uppercase w-max'>
@@ -152,12 +158,14 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT,
                     </div>)
                   }
                 </div>
-                <Pagination
-                  className='mt-8'
-                  totalPage={Math.ceil(totalCollection / perPage)}
-                  currentPage={currentPage}
-                  onChange={setCurrentPage}
-                />
+                {
+                  !loading && <Pagination
+                    className='mt-8'
+                    totalPage={Math.ceil(totalCollection / perPage)}
+                    currentPage={currentPage}
+                    onChange={setCurrentPage}
+                  />
+                }
               </div>
             </>
             : <div className='flex items-center w-full h-32 justify-center'>

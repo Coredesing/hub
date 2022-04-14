@@ -15,7 +15,7 @@ import Recaptcha from '@/components/Base/Recaptcha'
 import Requirements from '@/components/Pages/IGO/Requirements'
 import SwapProgress from '@/components/Pages/IGO/SwapProgress'
 import Countdown from '@/components/Pages/IGO/Countdown'
-import { dateFromString, isInRange } from '@/components/Pages/IGO/utils'
+import { dateFromString, isInRange } from '@/utils/pool'
 import { TIMELINE } from '@/components/Pages/IGO/constants'
 import Notification from '@/components/Pages/IGO/Notification'
 import { useAppContext } from '@/context'
@@ -295,7 +295,7 @@ const IGODetails = ({ poolData }) => {
       return setCurrent(timeline[TIMELINE.TBA])
     }
 
-    if (now?.getTime() < dateFromString(poolData.start_join_pool_time).getTime()) {
+    if (now?.getTime() < dateFromString(poolData.start_join_pool_time)?.getTime()) {
       return setCurrent(timeline[TIMELINE.PRE_WHITELIST])
     }
 
@@ -333,7 +333,7 @@ const IGODetails = ({ poolData }) => {
       return setCurrent(timeline[TIMELINE.BUYING_PHASE].subMilestones[1])
     }
 
-    if (now?.getTime() > dateFromString(poolData.finish_time).getTime()) {
+    if (now?.getTime() > dateFromString(poolData.finish_time)?.getTime()) {
       return setCurrent(timeline.find(item => item.key === 'claim'))
     }
   }, [hasFCFS, now, poolData, timeline, tierMine])
@@ -451,7 +451,7 @@ const IGODetails = ({ poolData }) => {
             <div className="flex-1 bg-gradient-to-b from-gamefiDark-630/30 p-4 xl:p-6 2xl:p-7 rounded">
               <div className="flex items-center gap-6">
                 <div>
-                  <img src={poolData?.token_images} alt={poolData.name} className="w-32 h-32 object-contain bg-black rounded" />
+                  <img src={poolData?.token_images} alt={poolData.name} className="w-[120px] h-[120px] object-contain bg-black rounded" />
                 </div>
                 <div>
                   <h2 className="font-semibold text-2xl font-casual capitalize my-2">{ poolData?.title }</h2>

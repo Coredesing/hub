@@ -67,3 +67,20 @@ export const poolStatus = (status: any) => {
     }
   }
 }
+
+export const dateFromString = (input: string) => {
+  if (!input) return null
+  return new Date(Number(input) * 1000)
+}
+
+export const isInRange = (from: string, to: string, now: Date) => {
+  if (!from || !to) return null
+  return dateFromString(from).getTime() <= now?.getTime() && dateFromString(to).getTime() > now?.getTime()
+}
+
+export const roundNumber = (input: number | string, decimals) => {
+  if (!decimals) {
+    return 0
+  }
+  return Math.round(Number(input || '0') * decimals) / decimals
+}

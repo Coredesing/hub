@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from '@/components/Base/Table'
 import BoxesInformationModal from './BoxesInformationModal'
+import { useMediaQuery } from 'react-responsive'
 
 type Props = {
   boxes: any[];
@@ -13,6 +14,9 @@ const BoxInformation = ({ boxes }: Props) => {
     setIdSelected(id)
     setOpenModal(true)
   }
+
+  const isSmScreen = useMediaQuery({ maxWidth: '640px' })
+  const sliceTo = isSmScreen ? 30 : 100
 
   return <div>
     <BoxesInformationModal
@@ -44,7 +48,7 @@ const BoxInformation = ({ boxes }: Props) => {
         {
           boxes.map((b, id) => <TableRow key={id}>
             <TableCell>
-              <div className="flex gap-3 items-center text-sm font-semibold w-fit cursor-pointer" onClick={() => onShowBoxModal(id)}>
+              <div className="flex gap-3 items-center text-sm font-semibold w-fit cursor-pointer" style={{ minWidth: '140px' }} onClick={() => onShowBoxModal(id)}>
                 <img src={b.icon} alt="" className="w-14 h-12 object-contain" />
                 <span>{b.name}</span>
               </div>
@@ -64,10 +68,10 @@ const BoxInformation = ({ boxes }: Props) => {
                       WebkitLineClamp: 2,
                       WebkitBoxOrient: 'vertical'
                     }}>
-                    {(b.description || '').slice(0, 100)}{(b.description || '').length > 100 && '...'}
+                    {(b.description || '').slice(0, sliceTo)}{(b.description || '').length > sliceTo && '...'}
                   </span>
                   {
-                    (b.description || '').length > 100 && <span
+                    (b.description || '').length > sliceTo && <span
                       onClick={() => onShowBoxModal(id)}
                       className="text-gamefiGreen font-casual font-semibold ml-1 cursor-pointer text-sm"
                     >

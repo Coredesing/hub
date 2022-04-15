@@ -11,7 +11,7 @@ import { ObjectType } from '@/utils/types'
 import BigNumber from 'bignumber.js'
 import ABIPool from '@/components/web3/abis/PreSalePool.json'
 import SearchInput from '@/components/Base/SearchInput'
-import Dropdown from '@/components/Base/Dropdown'
+// import Dropdown from '@/components/Base/Dropdown'
 import { fetchJoined } from '@/pages/api/igo'
 import { getLibraryDefaultFlexible, getCurrency } from '@/components/web3/utils'
 import { getNetworkByAlias, switchNetwork, useWeb3Default } from '@/components/web3'
@@ -46,14 +46,14 @@ const Pools = () => {
 
   const [loadingPools, setLoadingPools] = useState(false)
   const [pools, setPools] = useState({ total: 0, data: [] })
-  const poolStatus = useMemo(() => [
-    // { value: POOL_STATUS_JOINED.APPLIED_WHITELIST, label: 'Whitelist Applied' },
-    // { value: POOL_STATUS_JOINED.WIN_WHITELIST, label: 'Win Whitelist' },
-    // { value: POOL_STATUS_JOINED.NOT_WIN_WHITELIST, label: 'Not Win Whitelist' },
-    // { value: POOL_STATUS_JOINED.SWAPPING, label: 'Swaping' },
-    { value: POOL_STATUS_JOINED.CLAIMABLE, label: 'Claimable' },
-    { value: POOL_STATUS_JOINED.COMPLETED, label: 'Completed' }
-  ], [])
+  // const poolStatus = useMemo(() => [
+  //   // { value: POOL_STATUS_JOINED.APPLIED_WHITELIST, label: 'Whitelist Applied' },
+  //   // { value: POOL_STATUS_JOINED.WIN_WHITELIST, label: 'Win Whitelist' },
+  //   // { value: POOL_STATUS_JOINED.NOT_WIN_WHITELIST, label: 'Not Win Whitelist' },
+  //   // { value: POOL_STATUS_JOINED.SWAPPING, label: 'Swaping' },
+  //   { value: POOL_STATUS_JOINED.CLAIMABLE, label: 'Claimable' },
+  //   { value: POOL_STATUS_JOINED.COMPLETED, label: 'Completed' }
+  // ], [])
   const [filter, setFilter] = useState<ObjectType>({ page: 1, limit: 10, search: '', status: null, network: { eth: true, bsc: true, polygon: true } })
   const loadPools = useCallback(async () => {
     if (!account) {
@@ -166,9 +166,9 @@ const Pools = () => {
     setFilter(f => ({ ...f, search: e.target.value }))
   }, 1000)
 
-  const onFilterPoolStatus = (item: ObjectType) => {
-    setFilter(f => ({ ...f, status: item }))
-  }
+  // const onFilterPoolStatus = (item: ObjectType) => {
+  //   setFilter(f => ({ ...f, status: item }))
+  // }
 
   const poolHref = useCallback((pool) => {
     if (pool.token_type === TOKEN_TYPE.ERC20) {

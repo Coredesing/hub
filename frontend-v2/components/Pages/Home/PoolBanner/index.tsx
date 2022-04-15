@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useScreens } from '@/components/Pages/Home/utils'
+import { poolStatus } from '@/utils/pool'
 
 type Props = {
   item?: any;
@@ -48,26 +49,14 @@ const PoolBanner = ({ item, color = 'green', className, url, tagColor = 'gamefiD
     }
   }, [item.start_time, distance, countdownStatus, item.campaign_status])
 
-  const poolStatus = (status: any) => {
-    switch (status) {
-    case 1:
-      return 'private'
-    case 3:
-      return 'community'
-    case 0:
-    default:
-      return 'public'
-    }
-  }
-
   return (
     <>
-      <div className={`mx-auto overflow-hidden px-3 lg:px-0 ${className}`} style={{ width: '100%' }}>
+      <div className={`w-full mx-auto overflow-hidden px-3 lg:px-0 ${className} hover:opacity-80`}>
         <div className="flex flex-col clipped-b-l rounded-tr">
           <div className="w-full h-full relative">
             <div className={`absolute h-8 w-2/5 inline-flex align-middle items-center justify-center top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-left bg-gamefiDark-900 clipped-b-r-full bg-${tagColor}`}>
-              <Image src={require('@/assets/images/icons/lock.svg')} alt="lock"></Image>
-              <span className="ml-2 font-bold">{poolStatus(item.is_private)}</span>
+              <Image src={poolStatus(item.is_private)?.icon} alt="lock"></Image>
+              <span className="ml-2 font-bold">{poolStatus(item.is_private)?.title}</span>
             </div>
             <Link href={url || '#' } passHref>
               <div className={`hover:cursor-pointer ${color === 'green' ? 'hover:border-gamefiGreen-500' : 'hover:border-gamefiYellow-500'}`}>
@@ -98,7 +87,7 @@ const PoolBanner = ({ item, color = 'green', className, url, tagColor = 'gamefiD
                 </div>
                 : <div className={`w-full relative ${color === 'yellow' && 'text-gamefiYellow'} ${(!color || color === 'green') && 'text-gamefiGreen-700'}`}>
                   <div className="w-full h-full flex flex-col align-middle items-center justify-center absolute mt-1">
-                    <div className="uppercase font-semibold text-sm 2xl:text-base">Countdown to IGO date</div>
+                    <div className="uppercase font-semibold text-sm 2xl:text-base">Countdown to INO date</div>
                     <div className="uppercase font-bold mt-2 flex tracking-widest">
                       <div className="flex flex-col text-center w-10">
                         <div className="text-2xl leading-4 2xl:text-3xl 2xl:leading-6">{days}</div>

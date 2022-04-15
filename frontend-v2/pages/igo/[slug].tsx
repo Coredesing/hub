@@ -225,8 +225,8 @@ const IGODetails = ({ poolData }) => {
         key: 'pre-order',
         milestone: 'Pre-order',
         active: !!poolData?.start_pre_order_time,
-        start: new Date(Number(poolData?.start_pre_order_time) * 1000) || undefined,
-        end: new Date(Number(poolData?.start_time) * 1000) || undefined,
+        start: poolData?.start_pre_order_time ? new Date(Number(poolData?.start_pre_order_time) * 1000) : undefined,
+        end: poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined,
         info: {
           minTier: preOrderMinTier,
           countdownTitle: hasFCFS ? 'Phase 1 Starts In' : 'Buying Phase Starts In'
@@ -236,8 +236,8 @@ const IGODetails = ({ poolData }) => {
         key: 'buying-phase',
         milestone: 'Buying Phase',
         active: true,
-        start: new Date(Number(poolData?.start_time) * 1000) || undefined,
-        end: new Date(Number(poolData?.finish_time) * 1000) || undefined,
+        start: poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined,
+        end: poolData?.finish_time ? new Date(Number(poolData?.finish_time) * 1000) : undefined,
         info: {
           countdownTitle: 'Buying Phase Ends In'
         },
@@ -247,8 +247,8 @@ const IGODetails = ({ poolData }) => {
               key: 'buying-phase-1',
               milestone: 'Phase 1 - Guaranteed',
               active: true,
-              start: new Date(Number(poolData?.start_time) * 1000) || undefined,
-              end: new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000) || undefined,
+              start: poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined,
+              end: poolData?.freeBuyTimeSetting?.start_buy_time ? new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000) : undefined,
               info: {
                 countdownTitle: 'Phase 2 Starts In'
               }
@@ -257,8 +257,8 @@ const IGODetails = ({ poolData }) => {
               key: 'buying-phase-2',
               milestone: 'Phase 2 - FCFS',
               active: true,
-              start: new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000) || undefined,
-              end: new Date(Number(poolData?.finish_time) * 1000) || undefined,
+              start: poolData?.freeBuyTimeSetting?.start_buy_time ? new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000) : undefined,
+              end: poolData?.finish_time ? new Date(Number(poolData?.finish_time) * 1000) : undefined,
               info: {
                 countdownTitle: 'Phase 2 Ends In'
               }
@@ -270,8 +270,8 @@ const IGODetails = ({ poolData }) => {
         key: 'claim',
         milestone: 'Claim',
         active: !!poolData?.start_pre_order_time,
-        start: new Date(Number(poolData?.start_pre_order_time) * 1000) || undefined,
-        end: new Date(Number(poolData?.start_time) * 1000) || undefined,
+        start: poolData?.start_pre_order_time ? new Date(Number(poolData?.start_pre_order_time) * 1000) : undefined,
+        end: poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined,
         info: {
           countdownTitle: 'Next Claim In'
         }

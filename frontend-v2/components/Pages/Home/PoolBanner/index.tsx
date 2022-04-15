@@ -51,7 +51,7 @@ const PoolBanner = ({ item, color = 'green', className, url, tagColor = 'gamefiD
 
   return (
     <>
-      <div className={`w-full mx-auto overflow-hidden px-3 lg:px-0 ${className}`}>
+      <div className={`w-full mx-auto overflow-hidden px-3 lg:px-0 ${className} hover:opacity-80`}>
         <div className="flex flex-col clipped-b-l rounded-tr">
           <div className="w-full h-full relative">
             <div className={`absolute h-8 w-2/5 inline-flex align-middle items-center justify-center top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-left bg-gamefiDark-900 clipped-b-r-full bg-${tagColor}`}>

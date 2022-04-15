@@ -52,6 +52,7 @@ Route.group(() => {
   Route.get('legend/:id', 'HomeController.getLegendImages');
   Route.get('tokenomics', 'HomeController.getTokenomics');
   Route.get('nft/metagod-ticket/:id', 'HomeController.getMetaGodTicketDetail');
+  Route.get('nft/:nft/:id', 'HomeController.getNFTDetail');
 
   // Aggregator
   Route.get('aggregator', 'AggregatorController.getAggregator');

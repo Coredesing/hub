@@ -12,7 +12,6 @@ type Props = {
 }
 
 const BoxesInformationModal = ({ open, onClose, items, idShow }: Props) => {
-
   useLayoutEffect(() => {
     const boxInformationsCarouselList = document.querySelector('.box-informations')
     if (!boxInformationsCarouselList || !open) return
@@ -41,7 +40,6 @@ const BoxesInformationModal = ({ open, onClose, items, idShow }: Props) => {
       }
     }
   }, [open])
-
 
   return <Modal show={open} toggle={onClose} className={styles.modal}>
     <div className={clsx('px-8 pt-14 pb-8', styles.content)}>

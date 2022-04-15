@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useMemo, CSSProperties, useEffect } from 'react'
+import React, { useMemo, CSSProperties } from 'react'
 import { Carousel } from 'react-responsive-carousel'
 import styles from './Carousel.module.scss'
 import stylesList from './List.module.scss'
@@ -144,32 +144,24 @@ const _Carousel = ({ items, style, now }: Props) => {
           /* eslint-disable-next-line @next/next/no-img-element */
           return thumbs.map((item) => <img key={`thumb-${item.id}`} src={item.mini_banner} alt="img" className={styles.thumbnail} />)
         }}
-        renderArrowPrev={(onClickHandler, hasPrev, label) => {
-          return (
-            <button
-              type="button"
-              onClick={onClickHandler}
-              title={label}
-              style={{ position: 'absolute', zIndex: '2', top: 'calc(50% - 170px)', cursor: 'pointer', left: '0', opacity: !hasPrev && '50%' }}
-              className="hidden sm:block"
-            >
-              <Image src={require('@/assets/images/icons/arrow-left.png')} alt="left" width={32} height={300} />
-            </button>
-          )
-        }}
-        renderArrowNext={(onClickHandler, hasNext, label) =>
-        (
-          <button
-            type="button"
-            onClick={onClickHandler}
-            title={label}
-            style={{ position: 'absolute', zIndex: '2', top: 'calc(50% - 170px)', cursor: 'pointer', right: '0', opacity: !hasNext && '50%' }}
-            className="hidden sm:block"
-          >
-            <Image src={require('@/assets/images/icons/arrow-right.png')} alt="right" width={32} height={300} />
-          </button>
-        )
-        }
+        renderArrowPrev={(onClickHandler, hasPrev, label) => <button
+          type="button"
+          onClick={onClickHandler}
+          title={label}
+          style={{ position: 'absolute', zIndex: '2', top: 'calc(50% - 170px)', cursor: 'pointer', left: '0', opacity: !hasPrev && '50%' }}
+          className="hidden sm:block"
+        >
+          <Image src={require('@/assets/images/icons/arrow-left.png')} alt="left" width={32} height={300} />
+        </button>}
+        renderArrowNext={(onClickHandler, hasNext, label) => <button
+          type="button"
+          onClick={onClickHandler}
+          title={label}
+          style={{ position: 'absolute', zIndex: '2', top: 'calc(50% - 170px)', cursor: 'pointer', right: '0', opacity: !hasNext && '50%' }}
+          className="hidden sm:block"
+        >
+          <Image src={require('@/assets/images/icons/arrow-right.png')} alt="right" width={32} height={300} />
+        </button>}
       >
         {items.map(item => {
           return (

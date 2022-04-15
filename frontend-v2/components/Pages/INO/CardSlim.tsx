@@ -24,9 +24,11 @@ const CardSlim = ({ item, now }: Props) => {
 
   const countdown = useMemo(() => {
     const { timeBuy, timeFinish } = stages
-    if (!timeBuy || !timeFinish) return {
-      text: 'TBA',
-      duration: null
+    if (!timeBuy || !timeFinish) {
+      return {
+        text: 'TBA',
+        duration: null
+      }
     }
     if (now < timeBuy) {
       return {
@@ -47,7 +49,7 @@ const CardSlim = ({ item, now }: Props) => {
       }
     }
     return { text: 'Ended' }
-  }, [stages])
+  }, [stages, now])
 
   // const duration = useMemo(() => {
   //   const { timeBuy, timeFinish } = stages

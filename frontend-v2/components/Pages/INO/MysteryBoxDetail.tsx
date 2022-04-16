@@ -143,6 +143,21 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       })
   }, [poolInfo, presaleContract])
 
+  const total = useMemo(() => {
+    let total = 0
+    boxTypes.forEach(type => {
+      total += type.maxSupply
+    })
+    return total
+  }, [boxTypes])
+  const sold = useMemo(() => {
+    let total = 0
+    boxTypes.forEach(type => {
+      total += type.totalSold
+    })
+    return total
+  }, [boxTypes])
+
   useEffect(() => {
     if (!presaleContract || !account) {
       setMyBoxThisPool(0)
@@ -204,8 +219,13 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         }
       }
       const startBuyTime = isAccIsBuyPreOrder && timeLine.startPreOrderTime ? timeLine.startPreOrderTime : timeLine.startBuyTime
-      const soldOut = true
+      let soldOut = false
       const currentTime = Date.now()
+
+      if (sold >= total) {
+        soldOut = true
+      }
+
       if (soldOut) {
         setCountdown({ date1: 0, date2: 0, title: 'This pool is over. See you in the next pool.', isFinished: true })
         timeLine.freeBuyTime ? (timeLinesInfo[!neededApplyWl ? 4 : 5].current = true) : (timeLinesInfo[!neededApplyWl ? 3 : 4].current = true)

@@ -699,20 +699,29 @@ class CampaignController {
   }
 
   async checkJoinedCampaign({ request, auth }) {
-    const campaignId = request.params.campaignId;
+    const campaignId = request.params.campaignId
     // get user wallet
-    const userWalletAddress = request.input('wallet_address');
-    // const userWalletAddress = auth.user !== null ? auth.user.wallet_address : null;
+    const userWalletAddress = request.input('wallet_address')
     if (!userWalletAddress) {
-      return HelperUtils.responseBadRequest("User don't have a valid wallet");
+      return HelperUtils.responseBadRequest("invalid wallet")
     }
+
+    const campaignService = new PoolService()
+    const camp = await campaignService.getPoolWithFreeBuySettingById(campaignId)
+    if (!camp) {
+      return HelperUtils.responseBadRequest("Do not found campaign")
+    }
+
+    if (!camp.start_join_pool_time && !camp.end_join_pool_time) {
+      return HelperUtils.responseSuccess(true)
+    }
+
     try {
-      const wlService = new WhitelistService();
-      const existed = await wlService.checkExisted(userWalletAddress, campaignId);
-      return HelperUtils.responseSuccess(existed);
+      const wlService = new WhitelistService()
+      const existed = await wlService.checkExisted(userWalletAddress, campaignId)
+      return HelperUtils.responseSuccess(existed)
     } catch (e) {
-      console.log(e);
-      return HelperUtils.responseErrorInternal("Check join campaign has internal server error !");
+      return HelperUtils.responseErrorInternal()
     }
   }
 

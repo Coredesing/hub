@@ -96,7 +96,7 @@ class WhitelistUserService {
     const wl = await WhitelistModel.query().
       where('campaign_id', campaign_id).
       where('wallet_address', wallet_address).first();
-    return wl != null ? true : false;
+    return wl != null;
   }
 
   async getRandomWinners(number, campaign_id) {

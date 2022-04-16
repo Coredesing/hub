@@ -37,6 +37,7 @@ import Link from 'next/link'
 import { getNetworkByAlias } from '@/components/web3'
 import Collection from './Collection'
 import { getTierById } from '@/utils/tiers'
+import Progress from './Progress'
 
 const MysteryBoxDetail = ({ poolInfo }: any) => {
   const eventId = 0
@@ -268,7 +269,13 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }, [poolInfo, boxSelected])
 
   useEffect(() => {
-    getSupplyBoxes()
+    const interval = setInterval(() => {
+      getSupplyBoxes()
+    }, 5000)
+
+    return () => {
+      clearInterval(interval)
+    }
   }, [getSupplyBoxes])
 
   useEffect(() => {
@@ -654,6 +661,11 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             />
           </div>
         }
+        <div className='mb-8'>
+          <div className={clsx('gap-2 flex flex-wrap', stylesBoxType.boxTypes)}>
+            <Progress boxTypes={boxTypes}></Progress>
+          </div>
+        </div>
         <div>
           {isAllowedJoinCompetition && !isClickedCompetition && <ButtonBase color="red"
             onClick={() => onJoinCompetition(poolInfo.socialRequirement.gleam_link)}

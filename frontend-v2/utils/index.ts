@@ -322,3 +322,7 @@ export const isDifferentObj = (obj1: object, obj2: object, excludeProps?: string
   }
   throw new Error('Object input invalid')
 }
+
+export const stripTags = (str = '') => {
+  return (str || '').replace(/(<([^>]+)>)/gi, '')
+}

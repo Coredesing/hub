@@ -204,7 +204,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         }
       }
       const startBuyTime = isAccIsBuyPreOrder && timeLine.startPreOrderTime ? timeLine.startPreOrderTime : timeLine.startBuyTime
-      const soldOut = false
+      const soldOut = true
       const currentTime = Date.now()
       if (soldOut) {
         setCountdown({ date1: 0, date2: 0, title: 'This pool is over. See you in the next pool.', isFinished: true })

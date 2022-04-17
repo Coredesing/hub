@@ -64,7 +64,7 @@ const Claim = () => {
       let status = 'Unknown'
 
       if (purchasedTokens && claimedTokens) {
-        status = Number(claimedPercentage) < Number(config.max_percent_claim) ? 'Claimable' : 'Claimed'
+        status = roundNumber(claimedPercentage, 2) < roundNumber(config.max_percent_claim, 2) ? 'Claimable' : 'Claimed'
       }
 
       if (new Date().getTime() < new Date(Number(config.start_time) * 1000).getTime()) {

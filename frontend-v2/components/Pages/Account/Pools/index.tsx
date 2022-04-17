@@ -11,7 +11,6 @@ import { ObjectType } from '@/utils/types'
 import BigNumber from 'bignumber.js'
 import ABIPool from '@/components/web3/abis/PreSalePool.json'
 import SearchInput from '@/components/Base/SearchInput'
-// import Dropdown from '@/components/Base/Dropdown'
 import { fetchJoined } from '@/pages/api/igo'
 import { getLibraryDefaultFlexible, getCurrency } from '@/components/web3/utils'
 import { getNetworkByAlias, switchNetwork, useWeb3Default } from '@/components/web3'
@@ -22,17 +21,8 @@ import toast from 'react-hot-toast'
 import ERC20_ABI from '@/components/web3/abis/ERC20.json'
 import Modal from '@/components/Base/Modal'
 import { NetworkSelector } from '@/components/Base/WalletConnector'
-
-const POOL_STATUS_JOINED = {
-  NONE: 'NONE',
-  APPLIED_WHITELIST: 'APPLIED_WHITELIST',
-  WIN_WHITELIST: 'WIN_WHITELIST',
-  NOT_WIN_WHITELIST: 'NOT_WIN_WHITELIST',
-  CANCELED_WHITELIST: 'CANCELED_WHITELIST',
-  SWAPPING: 'SWAPPING',
-  CLAIMABLE: 'CLAIMABLE',
-  COMPLETED: 'COMPLETED'
-}
+import Progress from './Progress'
+import { roundNumber } from '@/utils/pool'
 
 const Pools = () => {
   const { account, library, network } = useMyWeb3()
@@ -46,14 +36,6 @@ const Pools = () => {
 
   const [loadingPools, setLoadingPools] = useState(false)
   const [pools, setPools] = useState({ total: 0, data: [] })
-  // const poolStatus = useMemo(() => [
-  //   // { value: POOL_STATUS_JOINED.APPLIED_WHITELIST, label: 'Whitelist Applied' },
-  //   // { value: POOL_STATUS_JOINED.WIN_WHITELIST, label: 'Win Whitelist' },
-  //   // { value: POOL_STATUS_JOINED.NOT_WIN_WHITELIST, label: 'Not Win Whitelist' },
-  //   // { value: POOL_STATUS_JOINED.SWAPPING, label: 'Swaping' },
-  //   { value: POOL_STATUS_JOINED.CLAIMABLE, label: 'Claimable' },
-  //   { value: POOL_STATUS_JOINED.COMPLETED, label: 'Completed' }
-  // ], [])
   const [filter, setFilter] = useState<ObjectType>({ page: 1, limit: 10, search: '', status: null, network: { eth: true, bsc: true, polygon: true } })
   const loadPools = useCallback(async () => {
     if (!account) {
@@ -111,7 +93,7 @@ const Pools = () => {
       return item?.campaign_status?.toLowerCase() === 'ended' ? 'Finished' : ''
     }
 
-    return format(new Date(Number(configs[0].start_time) * 1000), 'yyyy-MM-dd HH:mm:ss')
+    return format(new Date(Number(configs[0].start_time) * 1000), 'yyyy-MM-dd HH:mm')
   }
 
   const { response: tokenomicsResponse } = useFetch(`/tokenomics?tickers=${pools?.data?.length > 0 ? pools.data.map(pool => pool.symbol).join(',') : ''}`)
@@ -181,7 +163,7 @@ const Pools = () => {
   const currentClaimPhase = (item: any) => {
     let data = null
     const available = item?.campaignClaimConfig?.filter(config => new Date().getTime() >= new Date(Number(config.start_time) * 1000).getTime())
-    if (!available.length) {
+    if (!available?.length) {
       data = null
     } else {
       data = available[available.length - 1]
@@ -191,7 +173,7 @@ const Pools = () => {
   }
 
   const availableToClaim = (item: any) => {
-    return printNumber(Number(currentClaimPhase(item)?.max_percent_claim) * Number(item.user_purchased) / 100 || 0, 2)
+    return Number(currentClaimPhase(item)?.max_percent_claim) * Number(item?.user_purchased) / 100 || 0
   }
 
   const claimTypes = (item: any) => {
@@ -277,11 +259,11 @@ const Pools = () => {
               <TableCellHead className="bg-transparent border-b-0 hidden xl:table-cell">
                 <span className="text-13px font-bold text-white/50">Token Allocation</span>
               </TableCellHead>
-              <TableCellHead className="bg-transparent border-b-0 hidden xl:table-cell">
+              <TableCellHead className="bg-transparent border-b-0 hidden xl:table-cell min-w-[100px]">
                 <span className="text-13px font-bold text-white/50">Claimed Tokens</span>
               </TableCellHead>
               <TableCellHead className="bg-transparent border-b-0 hidden xl:table-cell">
-                <span className="text-13px font-bold text-white/50">Next Claim</span>
+                <span className="text-13px font-bold text-white/50">Next Claim (yyyy-MM-dd {format(new Date(), 'z')})</span>
               </TableCellHead>
               <TableCellHead className="bg-transparent border-b-0 text-right hidden xl:table-cell">
                 <span className="text-13px font-bold text-white/50">Token Price</span>
@@ -303,15 +285,15 @@ const Pools = () => {
                   </div>
                 </TableCell>
                 <TableCell className="border-none">
-                  {printNumber((Number(item.user_purchased) * (Number(item.token_conversion_rate)) || 0))} {getCurrency(item)?.symbol}
+                  {roundNumber((Number(item.user_purchased) * (Number(item.token_conversion_rate)) || 0), 2)} {getCurrency(item)?.symbol}
                 </TableCell>
                 <TableCell className="border-none hidden xl:table-cell">
-                  {printNumber((Number(item.user_purchased) || 0))} {item.symbol}
+                  {roundNumber((Number(item.user_purchased) || 0), 2)} {item.symbol}
                 </TableCell>
-                <TableCell className="border-none hidden xl:table-cell">
+                <TableCell className="border-none hidden xl:table-cell min-w-[100px]">
                   {claimTypes(selectedPool)?.find(type => type.name === CLAIM_TYPE[0])?.value}
                   {claimTypes(item)?.find(type => type.name === CLAIM_TYPE[0])?.value === 100 && Number(item.user_purchased) > 0
-                    ? `${printNumber((item.user_claimed || 0), 2)}/${availableToClaim(item)} ${item.symbol}`
+                    ? <Progress claimed={Number(item?.user_claimed) || 0} total={roundNumber(availableToClaim(item), 2)}></Progress>
                     : ''}
                 </TableCell>
                 <TableCell className="border-none hidden xl:table-cell">
@@ -324,7 +306,9 @@ const Pools = () => {
                   {tokenomics?.find(token => token.ticker === item.symbol)?.price ? `$${printNumber(tokenomics?.find(token => token.ticker === item.symbol)?.price)}` : ''}
                 </TableCell>
                 <TableCell className="border-none hidden xl:table-cell text-right">
-                  {item.token && item.campaign_status?.toLowerCase() === 'ended' && item.token_type === 'erc20' && <>
+                  {item.token &&
+                    item.campaign_status?.toLowerCase() === 'ended' && item.token_type === 'erc20' &&
+                    item.token?.toLowerCase() !== '0xe23c8837560360ff0d49ed005c5e3ad747f50b3d' && <>
                     <Tippy content="Add to Metamask">
                       <button
                         className="w-8 h-8 xl:w-10 xl:h-10 p-2 bg-gamefiDark-630 rounded hover:opacity-90"
@@ -376,7 +360,7 @@ const Pools = () => {
           <div className="w-full flex mt-4 items-center justify-between">
             <div>Claimed Tokens</div>
             <div>{claimTypes(selectedPool)?.find(type => type.name === CLAIM_TYPE[0])?.value === 100 && Number(availableToClaim(selectedPool)) > 0
-              ? `${printNumber((selectedPool?.user_claimed || 0).toLocaleString('en-US'))}/${availableToClaim(selectedPool)} ${selectedPool?.symbol}`
+              ? <Progress claimed={selectedPool?.user_claimed || 0} total={availableToClaim(selectedPool)}></Progress>
               : ''}</div>
           </div>
           <div className="w-full flex mt-4 items-center justify-between">

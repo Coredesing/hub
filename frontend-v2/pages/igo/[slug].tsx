@@ -385,7 +385,7 @@ const IGODetails = ({ poolData }) => {
   }, [current])
 
   return (
-    <Layout title={poolData?.title ? `GameFi.org - ${poolData?.title} IGO` : 'GameFi.org - Initial DEX Offering'} description="The first game-specific launchpad conducting Initial Game Offerings for game projects.">
+    <Layout title={poolData?.title ? `GameFi.org - ${poolData?.title}` : 'GameFi.org - Initial DEX Offering'} description="The first game-specific launchpad conducting Initial Game Offerings for game projects.">
       <div className="px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
         {/* <div className="px-4 lg:px-24 md:container mx-auto lg:block mb-4 md:mb-8 lg:mb-10 xl:mb-16"> */}
         <a onClick={() => {

@@ -159,7 +159,7 @@ const Swap = () => {
   }, [approve, loadAllowance])
 
   // Swap Token
-  const [captchaToken, setCaptchaToken] = useState('a')
+  const [captchaToken, setCaptchaToken] = useState('')
   const recaptchaRef: any = useRef()
   const [inputAmount, setInputAmount] = useState('0')
 
@@ -484,7 +484,6 @@ const Swap = () => {
           </div>
           : <></>
       }
-      {timeline[TIMELINE.PRE_ORDER].start?.toLocaleString()}
       {
         ((timeline[TIMELINE.PRE_ORDER].start &&
           now?.getTime() < timeline[TIMELINE.PRE_ORDER].start?.getTime()) ||

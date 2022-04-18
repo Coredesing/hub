@@ -25,7 +25,7 @@ const Countdown = ({ title, to }: { title: string; to: string | number }) => {
   }, [to])
 
   return (
-    <div className="flex gap-6 items-center justify-center w-full p-4 bg-black rounded-sm font-semibold uppercase">
+    <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 items-center justify-center w-full p-4 bg-black rounded-sm font-semibold uppercase">
       {title && <div className="inline-flex gap-1 items-center text-sm">
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle opacity="0.3" cx="6" cy="6" r="6" fill="#72F34B"/>
@@ -34,7 +34,7 @@ const Countdown = ({ title, to }: { title: string; to: string | number }) => {
         </svg>
         {title}
       </div>}
-      <div className="flex gap-4 items-center justify-center">
+      <div className="flex gap-2 lg:gap-4 items-center justify-center">
         <div className="flex flex-col items-center justify-center">
           <div className="text-2xl leading-6 tracking-wide">{days}</div>
           <div className="text-xs leading-4 tracking-wide">Days</div>

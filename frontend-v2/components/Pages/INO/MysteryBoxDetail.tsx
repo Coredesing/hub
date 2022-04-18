@@ -117,10 +117,10 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     }
   }, [erc721Contract, account])
 
-  const getSupplyBoxes = useCallback(() => {
+  const getSupplyBoxes = useCallback(async () => {
     const boxes = poolInfo.boxTypesConfig || []
-    if (!presaleContract) return
-    Promise
+    if (!presaleContract) return boxes
+    const listBoxes = await Promise
       .all(boxes.map((b, subBoxId) => new Promise((resolve) => {
         presaleContract.subBoxes(eventId, subBoxId).then(res => {
           resolve({
@@ -135,28 +135,49 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         })
       })))
       .then((boxes) => {
-        setBoxTypes(boxes)
-        setBoxSelected(boxes[0])
+        return boxes
       })
       .catch(err => {
         console.debug('err', err)
+        return boxes
       })
+    return listBoxes
   }, [poolInfo, presaleContract])
 
-  const total = useMemo(() => {
-    let total = 0
-    boxTypes.forEach(type => {
-      total += type.maxSupply
-    })
-    return total
-  }, [boxTypes])
-  const sold = useMemo(() => {
-    let total = 0
-    boxTypes.forEach(type => {
-      total += type.totalSold
-    })
-    return total
-  }, [boxTypes])
+  const handleSetSupplyBoxes = useCallback(async () => {
+    const boxes = await getSupplyBoxes()
+    if (!boxes?.length) return
+    setBoxTypes(boxes)
+    setBoxSelected(boxes[0])
+  }, [getSupplyBoxes])
+
+  useEffect(() => {
+    handleSetSupplyBoxes()
+  }, [handleSetSupplyBoxes])
+
+  const [supplyBox, setSupplyBox] = useState({ total: 0, sold: 0 })
+
+  useEffect(() => {
+    const handleSetSupplyBox = () => {
+      getSupplyBoxes().then(boxes => {
+        const sl = boxes.reduce((sl, box) => {
+          sl.total += box.maxSupply || 0
+          sl.sold += box.totalSold || 0
+          return sl
+        }, { total: 0, sold: 0 })
+        setSupplyBox(sl)
+      })
+    }
+    handleSetSupplyBox()
+    const interval = setInterval(() => {
+      handleSetSupplyBox()
+    }, 5000)
+
+    return () => {
+      clearInterval(interval)
+    }
+
+  }, [getSupplyBoxes])
 
   useEffect(() => {
     if (!presaleContract || !account) {
@@ -171,9 +192,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     if (isReset) {
       getMyBoxThisPool()
       getMyNumBox()
-      getSupplyBoxes()
+      handleSetSupplyBoxes()
     }
-  }, [getMyBoxThisPool, getMyNumBox, getSupplyBoxes])
+  }, [getMyBoxThisPool, getMyNumBox, handleSetSupplyBoxes])
 
   const onSetCountdown = useCallback(() => {
     if (poolInfo) {
@@ -219,13 +240,8 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         }
       }
       const startBuyTime = isAccIsBuyPreOrder && timeLine.startPreOrderTime ? timeLine.startPreOrderTime : timeLine.startBuyTime
-      let soldOut = false
+      const soldOut = supplyBox.sold !== 0 && supplyBox.total !== 0 && supplyBox.sold >= supplyBox.total
       const currentTime = Date.now()
-
-      if (sold >= total) {
-        soldOut = true
-      }
-
       if (soldOut) {
         setCountdown({ date1: 0, date2: 0, title: 'This pool is over. See you in the next pool.', isFinished: true })
         timeLine.freeBuyTime ? (timeLinesInfo[!neededApplyWl ? 4 : 5].current = true) : (timeLinesInfo[!neededApplyWl ? 3 : 4].current = true)
@@ -264,7 +280,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       }
       setTimelines(timeLinesInfo)
     }
-  }, [poolInfo, userTier])
+  }, [poolInfo, userTier, supplyBox])
 
   useEffect(() => {
     onSetCountdown()
@@ -287,16 +303,6 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     setCurrencySelected(token)
     return listCurrencies
   }, [poolInfo, boxSelected])
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      getSupplyBoxes()
-    }, 5000)
-
-    return () => {
-      clearInterval(interval)
-    }
-  }, [getSupplyBoxes])
 
   useEffect(() => {
     const boxes = poolInfo.boxTypesConfig || []
@@ -683,7 +689,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         }
         <div className='mb-8'>
           <div className={clsx('gap-2 flex flex-wrap', stylesBoxType.boxTypes)}>
-            <Progress boxTypes={boxTypes}></Progress>
+            <Progress {...supplyBox}></Progress>
           </div>
         </div>
         <div>

@@ -55,14 +55,14 @@ const AscDescAmount = ({ value, maxBuy, onChangeValue, bought, currencyInfo, dis
           'cursor-not-allowed': disabled
         })}
         onClick={disabled ? undefined : onDesc}>-</div>
-      <div className={clsx('px-5 text-lg font-bold border-t border-b border-r  border-white/50 flex items-center w-20 justify-center cursor-pointer', styles['h-30px'])}>
+      <div className={clsx('px-2 text-lg font-bold border-t border-b border-r  border-white/50 flex items-center w-20 justify-center', styles['h-30px'])}>
         <FormInputNumber
           value={value}
           disabled={disabled}
           onChange={onChangeInput}
           isPositive isInteger
           max={remaining}
-          className={clsx(styles.input)} />
+          className={clsx(styles.input, 'cursor-pointer')} />
       </div>
       <div className={clsx('px-2 text-lg font-semibold border-t border-b border-white/50 border-r flex items-center w-8 justify-center cursor-pointer', styles['h-30px'], {
         'cursor-not-allowed': disabled

@@ -2,21 +2,12 @@ import { FixedNumber } from 'ethers'
 import { useMemo } from 'react'
 import { printNumber } from '@/utils'
 
-const Progress = ({ boxTypes }: { boxTypes: any }) => {
-  const total = useMemo(() => {
-    let total = 0
-    boxTypes.forEach(type => {
-      total += type.maxSupply
-    })
-    return total
-  }, [boxTypes])
-  const sold = useMemo(() => {
-    let total = 0
-    boxTypes.forEach(type => {
-      total += type.totalSold
-    })
-    return total
-  }, [boxTypes])
+type Props = {
+  sold: number;
+  total: number;
+}
+
+const Progress = ({ sold, total }: Props) => {
   const progress = useMemo(() => {
     if (FixedNumber.from(total).isZero()) {
       return 0

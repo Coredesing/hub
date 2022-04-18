@@ -351,7 +351,7 @@ const Swap = () => {
                 </div>
               </div>
               {
-                ((!preOrderAllowed && now?.getTime() >= timeline[TIMELINE.BUYING_PHASE].start?.getTime()) ||
+                (now?.getTime() >= timeline[TIMELINE.BUYING_PHASE].start?.getTime() ||
                 (preOrderAllowed && now?.getTime() >= timeline[TIMELINE.PRE_ORDER].start?.getTime()))
                   ? <div className="flex-1 bg-gamefiDark rounded px-3 py-4">
                     <div className="uppercase font-semibold tracking-wide leading-7 text-lg">

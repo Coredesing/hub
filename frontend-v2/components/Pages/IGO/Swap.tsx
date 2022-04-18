@@ -351,8 +351,8 @@ const Swap = () => {
                 </div>
               </div>
               {
-                ((!preOrderAllowed && now?.getTime() >= timeline[TIMELINE.BUYING_PHASE].start.getTime()) ||
-                (preOrderAllowed && now?.getTime() >= timeline[TIMELINE.PRE_ORDER].start.getTime()))
+                ((!preOrderAllowed && now?.getTime() >= timeline[TIMELINE.BUYING_PHASE].start?.getTime()) ||
+                (preOrderAllowed && now?.getTime() >= timeline[TIMELINE.PRE_ORDER].start?.getTime()))
                   ? <div className="flex-1 bg-gamefiDark rounded px-3 py-4">
                     <div className="uppercase font-semibold tracking-wide leading-7 text-lg">
                       {rounds.find(round => round.phase === phase)?.name}
@@ -495,7 +495,7 @@ const Swap = () => {
           </div>
       }
       {
-        now?.getTime() > new Date(Number(poolData?.finish_time || '0') * 1000).getTime() &&
+        now?.getTime() > timeline[TIMELINE.BUYING_PHASE].end?.getTime() &&
         <div className="my-4 w-full flex flex-col gap-4 p-12 rounded items-center justify-center">
           <Image src={require('@/assets/images/icons/poolOver.png')} alt=""></Image>
           <div className="text-gamefiDark-200">This pool is over. See you in the next pool.</div>

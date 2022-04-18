@@ -443,7 +443,7 @@ const IGODetails = ({ poolData }) => {
               : ''
           }
           {
-            poolData?.finish_time && now?.getTime() > new Date(poolData.finish_time).getTime()
+            poolData?.finish_time && now?.getTime() > new Date(poolData.finish_time)?.getTime()
               ? <Notification type="error" text="This pool is over. See you in the next pool."></Notification>
               : ''
           }
@@ -608,7 +608,7 @@ const IGODetails = ({ poolData }) => {
                     {poolData?.symbol}
                     {poolData.token &&
                       timeline[TIMELINE.BUYING_PHASE]?.end &&
-                      now?.getTime() >= timeline[TIMELINE.BUYING_PHASE].end.getTime() &&
+                      now?.getTime() >= timeline[TIMELINE.BUYING_PHASE].end?.getTime() &&
                       poolData.token_type === 'erc20' &&
                       poolData.token?.toLowerCase() !== '0xe23c8837560360ff0d49ed005c5e3ad747f50b3d' &&
                     <>

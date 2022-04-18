@@ -15,7 +15,7 @@ import Recaptcha from '@/components/Base/Recaptcha'
 import Requirements from '@/components/Pages/IGO/Requirements'
 import SwapProgress from '@/components/Pages/IGO/SwapProgress'
 import Countdown from '@/components/Pages/IGO/Countdown'
-import { dateFromString, isInRange } from '@/components/Pages/IGO/utils'
+import { dateFromString, isInRange } from '@/utils/pool'
 import { TIMELINE } from '@/components/Pages/IGO/constants'
 import Notification from '@/components/Pages/IGO/Notification'
 import { useAppContext } from '@/context'
@@ -226,8 +226,8 @@ const IGODetails = ({ poolData }) => {
         key: 'pre-order',
         milestone: 'Pre-order',
         active: !!poolData?.start_pre_order_time,
-        start: new Date(Number(poolData?.start_pre_order_time) * 1000) || undefined,
-        end: new Date(Number(poolData?.start_time) * 1000) || undefined,
+        start: poolData?.start_pre_order_time ? new Date(Number(poolData?.start_pre_order_time) * 1000) : undefined,
+        end: poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined,
         info: {
           minTier: preOrderMinTier,
           countdownTitle: hasFCFS ? 'Phase 1 Starts In' : 'Buying Phase Starts In'
@@ -237,8 +237,8 @@ const IGODetails = ({ poolData }) => {
         key: 'buying-phase',
         milestone: 'Buying Phase',
         active: true,
-        start: new Date(Number(poolData?.start_time) * 1000) || undefined,
-        end: new Date(Number(poolData?.finish_time) * 1000) || undefined,
+        start: poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined,
+        end: poolData?.finish_time ? new Date(Number(poolData?.finish_time) * 1000) : undefined,
         info: {
           countdownTitle: 'Buying Phase Ends In'
         },
@@ -248,8 +248,8 @@ const IGODetails = ({ poolData }) => {
               key: 'buying-phase-1',
               milestone: 'Phase 1 - Guaranteed',
               active: true,
-              start: new Date(Number(poolData?.start_time) * 1000) || undefined,
-              end: new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000) || undefined,
+              start: poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined,
+              end: poolData?.freeBuyTimeSetting?.start_buy_time ? new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000) : undefined,
               info: {
                 countdownTitle: 'Phase 2 Starts In'
               }
@@ -258,8 +258,8 @@ const IGODetails = ({ poolData }) => {
               key: 'buying-phase-2',
               milestone: 'Phase 2 - FCFS',
               active: true,
-              start: new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000) || undefined,
-              end: new Date(Number(poolData?.finish_time) * 1000) || undefined,
+              start: poolData?.freeBuyTimeSetting?.start_buy_time ? new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000) : undefined,
+              end: poolData?.finish_time ? new Date(Number(poolData?.finish_time) * 1000) : undefined,
               info: {
                 countdownTitle: 'Phase 2 Ends In'
               }
@@ -271,8 +271,8 @@ const IGODetails = ({ poolData }) => {
         key: 'claim',
         milestone: 'Claim',
         active: !!poolData?.start_pre_order_time,
-        start: new Date(Number(poolData?.start_pre_order_time) * 1000) || undefined,
-        end: new Date(Number(poolData?.start_time) * 1000) || undefined,
+        start: poolData?.start_pre_order_time ? new Date(Number(poolData?.start_pre_order_time) * 1000) : undefined,
+        end: poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined,
         info: {
           countdownTitle: 'Next Claim In'
         }
@@ -296,7 +296,7 @@ const IGODetails = ({ poolData }) => {
       return setCurrent(timeline[TIMELINE.TBA])
     }
 
-    if (now?.getTime() < dateFromString(poolData.start_join_pool_time).getTime()) {
+    if (now?.getTime() < dateFromString(poolData.start_join_pool_time)?.getTime()) {
       return setCurrent(timeline[TIMELINE.PRE_WHITELIST])
     }
 
@@ -334,7 +334,7 @@ const IGODetails = ({ poolData }) => {
       return setCurrent(timeline[TIMELINE.BUYING_PHASE].subMilestones[1])
     }
 
-    if (now?.getTime() > dateFromString(poolData.finish_time).getTime()) {
+    if (now?.getTime() > dateFromString(poolData.finish_time)?.getTime()) {
       return setCurrent(timeline.find(item => item.key === 'claim'))
     }
   }, [hasFCFS, now, poolData, timeline, tierMine])
@@ -397,7 +397,7 @@ const IGODetails = ({ poolData }) => {
   }, [poolData])
 
   return (
-    <Layout title={poolData?.title ? `GameFi.org - ${poolData?.title} IGO` : 'GameFi.org - Initial DEX Offering'} description="The first game-specific launchpad conducting Initial Game Offerings for game projects.">
+    <Layout title={poolData?.title ? `GameFi.org - ${poolData?.title}` : 'GameFi.org - Initial DEX Offering'} description="The first game-specific launchpad conducting Initial Game Offerings for game projects.">
       <div className="px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-4 md:mb-8 lg:mb-10 xl:mb-16">
         {/* <div className="px-4 lg:px-24 md:container mx-auto lg:block mb-4 md:mb-8 lg:mb-10 xl:mb-16"> */}
         <a onClick={() => {
@@ -455,7 +455,7 @@ const IGODetails = ({ poolData }) => {
               : ''
           }
           {
-            poolData?.finish_time && now?.getTime() > new Date(poolData.finish_time).getTime()
+            poolData?.finish_time && now?.getTime() > new Date(poolData.finish_time)?.getTime()
               ? <Notification type="error" text="This pool is over. See you in the next pool."></Notification>
               : ''
           }
@@ -463,7 +463,7 @@ const IGODetails = ({ poolData }) => {
             <div className="flex-1 bg-gradient-to-b from-gamefiDark-630/30 p-4 xl:p-6 2xl:p-7 rounded">
               <div className="flex items-center gap-6">
                 <div>
-                  <img src={poolData?.token_images} alt={poolData.name} className="w-32 h-32 object-contain bg-black rounded" />
+                  <img src={poolData?.token_images} alt={poolData.name} className="w-[120px] h-[120px] object-contain bg-black rounded" />
                 </div>
                 <div>
                   <h2 className="font-semibold text-2xl font-casual capitalize my-2">{poolData?.title}</h2>
@@ -624,7 +624,7 @@ const IGODetails = ({ poolData }) => {
                     {poolData?.symbol}
                     {poolData.token &&
                       timeline[TIMELINE.BUYING_PHASE]?.end &&
-                      now?.getTime() >= timeline[TIMELINE.BUYING_PHASE].end.getTime() &&
+                      now?.getTime() >= timeline[TIMELINE.BUYING_PHASE].end?.getTime() &&
                       poolData.token_type === 'erc20' &&
                       poolData.token?.toLowerCase() !== '0xe23c8837560360ff0d49ed005c5e3ad747f50b3d' &&
                       <>

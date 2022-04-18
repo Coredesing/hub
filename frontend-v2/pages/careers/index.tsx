@@ -286,7 +286,7 @@ export const jobs = [
     descriptions: [
       'Work on the art design illustration or concept for our game and work closely with the product team & engineers to produce initial sketches of concepts, marketing-ready illustrations, and high-quality games',
       'Collaborate with other team members to ensure the successful development, release, and launch of a successful game',
-      'Conduct user research to inform and validate the product, characters, environment, and design assets',
+      'Conduct user research to inform and validate the product, characters, environment, and design assets'
     ],
     requirements: [
       '1 – 5 year experience in illustration & design',
@@ -497,7 +497,6 @@ export const jobs = [
     ]
   }
 ]
-
 
 const Careers = () => (
   <Layout title="GameFi.org - Careers">

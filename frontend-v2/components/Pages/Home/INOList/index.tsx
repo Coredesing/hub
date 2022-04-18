@@ -1,8 +1,7 @@
-import PoolBanner from '@/components/Base/PoolBanner'
+import PoolBanner from '@/components/Pages/Home/PoolBanner'
 import React, { useMemo, useRef } from 'react'
 import { useScreens } from '../utils'
 import Image from 'next/image'
-import ListSwiper, { SwiperItem } from '@/components/Base/ListSwiper'
 import { useFetch } from '@/utils'
 import Flicking from '@egjs/react-flicking'
 
@@ -36,14 +35,10 @@ const INOList = () => {
                 ))}
               </Flicking>
             </div>
-            : <div className="mx-auto md:container 2xl:px-16">
-              <ListSwiper showItemsNumber={3} step={3} transition='0.5s' hasHeader={false}>
-                {listUpcoming.map(item => (
-                  <SwiperItem key={item.id}>
-                    <PoolBanner item={item} color="yellow" tagColor="gamefiDark-700" className="mx-3" url={`/ino/${item.id}`}></PoolBanner>
-                  </SwiperItem>
-                ))}
-              </ListSwiper>
+            : <div className={`pt-14 mx-auto md:container 2xl:px-16 ${listUpcoming.length <= 3 ? 'flex' : 'grid grid-cols-3'} gap-4 xl:gap-6 justify-center items-center`}>
+              {listUpcoming.map(item => (
+                <PoolBanner key={`ino-${item.id}`} item={item} color="yellow" tagColor="gamefiDark-700" className="max-w-[400px]" url={`/ino/${item.id}`}></PoolBanner>
+              ))}
             </div>
         }
       </div>

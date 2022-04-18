@@ -12,7 +12,6 @@ type Props = {
 }
 
 const BoxesInformationModal = ({ open, onClose, items, idShow }: Props) => {
-
   useLayoutEffect(() => {
     const boxInformationsCarouselList = document.querySelector('.box-informations')
     if (!boxInformationsCarouselList || !open) return
@@ -41,7 +40,6 @@ const BoxesInformationModal = ({ open, onClose, items, idShow }: Props) => {
       }
     }
   }, [open])
-
 
   return <Modal show={open} toggle={onClose} className={styles.modal}>
     <div className={clsx('px-8 pt-14 pb-8', styles.content)}>
@@ -76,7 +74,7 @@ const BoxesInformationModal = ({ open, onClose, items, idShow }: Props) => {
                   <img src={box.banner} className={'w-60 h-32 object-contain relative'} alt="" />
                 </div>
               </div>
-              <div className='md:w-3/5 w-full'>
+              <div className='md:w-3/5 w-full overflow-auto' style={{ maxHeight: '300px' }}>
                 <h3 className='text-lg font-semibold font-mechanic uppercase text-left mb-4'>{box.name}</h3>
                 <div className='text-left text-sm font-casual mb-7'>
                   {box.description}

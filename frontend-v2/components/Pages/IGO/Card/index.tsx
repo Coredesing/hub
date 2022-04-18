@@ -40,8 +40,8 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
     return poolClaimTime.start <= now
   }, [poolClaimTime, now])
 
-  return <div className={`bg-${background} w-full flex flex-col font-casual hover:opacity-90`}>
-    <a href={`/igo/${item.id}`} className="w-full aspect-[16/9] bg-black relative">
+  return <a href={`/igo/${item.id}`} className={`bg-${background} w-full flex flex-col font-casual hover:opacity-90`}>
+    <div className="w-full aspect-[16/9] bg-black relative">
       <img src={item?.banner} alt="" className="object-cover w-full h-full"></img>
       <div className={`absolute h-6 w-36 xl:w-2/5 inline-flex align-middle items-center -top-[1px] -left-[1px] uppercase text-xs text-left bg-${color} clipped-b-r-full`}>
         <Image src={poolStatus(item.is_private).icon} alt="lock"></Image>
@@ -60,11 +60,11 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
         </svg>
         Joined
       </div> */}
-    </a>
+    </div>
     <div className="px-4 py-4 flex flex-col gap-4">
       <div className="w-full flex justify-between items-center">
         <div className="w-5/6 overflow-hidden text-left text-ellipsis whitespace-nowrap uppercase font-semibold hover:underline xl:text-lg">
-          <a href={`/igo/${item.id}`} className="w-full overflow-hidden text-ellipsis">{item.title}</a>
+          <div className="w-full overflow-hidden text-ellipsis">{item.title}</div>
         </div>
         <div className="w-6 h-6 xl:w-7 xl:h-7 relative"><Image layout="fill" src={network?.image} alt=""></Image></div>
       </div>
@@ -163,7 +163,7 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
         </div>
       }
     </div>
-  </div>
+  </a>
 }
 
 export default Card

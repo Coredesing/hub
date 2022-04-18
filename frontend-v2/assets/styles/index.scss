@@ -213,6 +213,12 @@ video[poster] {
         margin-top: 1.5em;
         margin-bottom: 0.5em;
     }
+    figcaption {
+        text-align: center;
+        font-size: 0.9em;
+        font-style: italic;
+        margin-top: 0.5em;
+    }
 }
 
 input[type="radio"]+label span {
@@ -293,6 +299,6 @@ input[type="checkbox"].dark:checked {
     background-color: #6CDB00!important;
 }
 
-.thumbnail-bullet-acitve {
-    border-color: #6CDB00!important;
+.thumbnail-bullet-active {
+    border-color: #6CDB00 !important;
 }

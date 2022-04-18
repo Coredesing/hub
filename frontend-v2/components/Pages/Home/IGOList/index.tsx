@@ -50,9 +50,9 @@ const IGOList = () => {
               </Flicking>
             </div>
             : <div className="mx-auto md:container 2xl:px-16">
-              <div className={`text-center justify-center ${listUpcoming.length > 2 ? 'grid grid-cols-2' : 'flex'} ${listUpcoming.length >= 3 ? 'xl:grid xl:grid-cols-3' : 'flex'} 2xl:${listUpcoming.length >= 4 ? 'grid 2xl:grid-cols-4' : 'flex'} gap-4 xl:gap-6 mt-14`}>
+              <div className={`text-center justify-center ${listUpcoming.length <= 3 ? 'flex' : 'grid grid-cols-3'} gap-4 xl:gap-6 mt-14`}>
                 {listUpcoming.map(item => (
-                  <div key={item.id} className="mx-auto w-full"><CardItem item={item}></CardItem></div>
+                  <CardItem key={`igo-${item.id}`} item={item} className="max-w-[400px]"></CardItem>
                 ))}
               </div>
               {

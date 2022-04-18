@@ -12,10 +12,11 @@ import Pagination from './Pagination'
 import { BigNumber, ethers } from 'ethers'
 import { IGOContext } from '@/pages/igo/[slug]'
 import Image from 'next/image'
-import { TIMELINE } from './constants'
+import { DECIMAL_PLACES, TIMELINE } from './constants'
 import { getNetworkByAlias, switchNetwork } from '@/components/web3'
 import Tippy from '@tippyjs/react'
 import ERC20_ABI from '@/components/web3/abis/ERC20.json'
+import { roundNumber } from '@/utils/pool'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 const PER_PAGE = 5
@@ -37,7 +38,7 @@ const Claim = () => {
 
   const usdPurchased = useMemo(() => {
     const rate = poolData?.token_conversion_rate || 1
-    return Number(purchasedTokens) * rate || 0
+    return roundNumber(Number(purchasedTokens) * rate, DECIMAL_PLACES) || 0
   }, [poolData, purchasedTokens])
 
   const currentPhase = useMemo(() => {
@@ -58,12 +59,12 @@ const Claim = () => {
   }, [currentPhase?.id, poolData?.campaignClaimConfig])
 
   const configs = useMemo(() => {
-    const claimedPercentage = (Number(claimedTokens || 0) / Number(purchasedTokens || 1) * 100).toPrecision(4)
+    const claimedPercentage = roundNumber((Number(claimedTokens || 0) / Number(purchasedTokens || 1) * 100), 2)
     const items = poolData?.campaignClaimConfig && poolData.campaignClaimConfig.map((config) => {
       let status = 'Unknown'
 
       if (purchasedTokens && claimedTokens) {
-        status = Number(claimedPercentage) < Number(config.max_percent_claim) ? 'Claimable' : 'Claimed'
+        status = roundNumber(claimedPercentage, 2) < roundNumber(config.max_percent_claim, 2) ? 'Claimable' : 'Claimed'
       }
 
       if (new Date().getTime() < new Date(Number(config.start_time) * 1000).getTime()) {
@@ -85,10 +86,6 @@ const Claim = () => {
       items: configs.filter((item, i) => (i >= (page - 1) * PER_PAGE && i < page * PER_PAGE))
     }
   }, [configs, lastPage, page])
-
-  const prettyFloat = (input: number | string) => {
-    return parseFloat(Number(input || '0').toFixed(5))
-  }
 
   const claimTypes = useMemo(() => {
     if (!configs?.length) {
@@ -121,8 +118,8 @@ const Claim = () => {
   const claimable = useMemo(() => {
     return Number(purchasedTokens || 0) > 0 &&
       new Date(Number(poolData?.release_time) * 1000).getTime() <= now?.getTime() &&
-      prettyFloat(prettyFloat(currentPhase?.max_percent_claim) * prettyFloat(purchasedTokens) / 100) > prettyFloat(claimedTokens) &&
-      prettyFloat(claimedTokens) < prettyFloat(purchasedTokens) &&
+      roundNumber(Number(currentPhase?.max_percent_claim) * Number(purchasedTokens) / 100, DECIMAL_PLACES) > roundNumber(claimedTokens, DECIMAL_PLACES) &&
+      roundNumber(claimedTokens, DECIMAL_PLACES) < roundNumber(purchasedTokens, DECIMAL_PLACES) &&
       claimTypes.find(type => type.name === CLAIM_TYPE[0])?.value > 0
   }, [claimTypes, purchasedTokens, poolData?.release_time, now, currentPhase?.max_percent_claim, claimedTokens])
 
@@ -275,19 +272,19 @@ const Claim = () => {
           </div>
           <div className="flex justify-between mb-4 items-center">
             <strong className="font-semibold">Token Price</strong>
-            <span>{printNumber(poolData?.token_conversion_rate)} {usd?.symbol}</span>
+            <span>{poolData?.token_conversion_rate} {usd?.symbol}</span>
           </div>
           <div className="flex justify-between mb-4 items-center">
             <strong className="font-semibold">Have Bought</strong>
-            <span>{printNumber(usdPurchased)} {usd?.symbol}</span>
+            <span>{usdPurchased} {usd?.symbol}</span>
           </div>
           <div className="flex justify-between mb-4 items-center">
             <strong className="font-semibold">Equivalent</strong>
-            <span>{printNumber(purchasedTokens)} {poolData?.symbol}</span>
+            <span>{roundNumber(purchasedTokens, 2)} {poolData?.symbol}</span>
           </div>
           <div className="flex justify-between mb-4 items-center">
             <strong className="font-semibold">Claimed On GameFi</strong>
-            <span className="">{printNumber(claimedTokens)} {poolData?.symbol}</span>
+            <span className="">{roundNumber(claimedTokens, 2)} {poolData?.symbol}</span>
           </div>
           <div className="mb-4">
             <strong className="font-semibold block">Vesting</strong>

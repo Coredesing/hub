@@ -23,7 +23,7 @@ const RuleIntroduce = ({ poolInfo }: Props) => {
         <ul className={'grid gap-2 font-casual text-sm'}>
           {getRules(poolInfo.rule).map((rule, idx) => (
             <li key={idx} className='flex'>
-              <div className='flex'><span className='font-bold'>{/*idx + 1*/}</span>&nbsp;-&nbsp;</div>
+              <div className='flex'><span className='font-bold'></span>&nbsp;-&nbsp;</div>
               <div>
                 {rule}
               </div>

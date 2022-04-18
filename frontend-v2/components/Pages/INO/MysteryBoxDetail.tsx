@@ -37,6 +37,7 @@ import Link from 'next/link'
 import { getNetworkByAlias } from '@/components/web3'
 import Collection from './Collection'
 import { getTierById } from '@/utils/tiers'
+import Progress from './Progress'
 
 const MysteryBoxDetail = ({ poolInfo }: any) => {
   const eventId = 0
@@ -116,10 +117,10 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     }
   }, [erc721Contract, account])
 
-  const getSupplyBoxes = useCallback(() => {
+  const getSupplyBoxes = useCallback(async () => {
     const boxes = poolInfo.boxTypesConfig || []
-    if (!presaleContract) return
-    Promise
+    if (!presaleContract) return boxes
+    const listBoxes = await Promise
       .all(boxes.map((b, subBoxId) => new Promise((resolve) => {
         presaleContract.subBoxes(eventId, subBoxId).then(res => {
           resolve({
@@ -134,13 +135,49 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         })
       })))
       .then((boxes) => {
-        setBoxTypes(boxes)
-        setBoxSelected(boxes[0])
+        return boxes
       })
       .catch(err => {
         console.debug('err', err)
+        return boxes
       })
+    return listBoxes
   }, [poolInfo, presaleContract])
+
+  const handleSetSupplyBoxes = useCallback(async () => {
+    const boxes = await getSupplyBoxes()
+    if (!boxes?.length) return
+    setBoxTypes(boxes)
+    setBoxSelected(boxes[0])
+  }, [getSupplyBoxes])
+
+  useEffect(() => {
+    handleSetSupplyBoxes()
+  }, [handleSetSupplyBoxes])
+
+  const [supplyBox, setSupplyBox] = useState({ total: 0, sold: 0 })
+
+  useEffect(() => {
+    const handleSetSupplyBox = () => {
+      getSupplyBoxes().then(boxes => {
+        const sl = boxes.reduce((sl, box) => {
+          sl.total += box.maxSupply || 0
+          sl.sold += box.totalSold || 0
+          return sl
+        }, { total: 0, sold: 0 })
+        setSupplyBox(sl)
+      })
+    }
+    handleSetSupplyBox()
+    const interval = setInterval(() => {
+      handleSetSupplyBox()
+    }, 5000)
+
+    return () => {
+      clearInterval(interval)
+    }
+
+  }, [getSupplyBoxes])
 
   useEffect(() => {
     if (!presaleContract || !account) {
@@ -155,9 +192,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     if (isReset) {
       getMyBoxThisPool()
       getMyNumBox()
-      getSupplyBoxes()
+      handleSetSupplyBoxes()
     }
-  }, [getMyBoxThisPool, getMyNumBox, getSupplyBoxes])
+  }, [getMyBoxThisPool, getMyNumBox, handleSetSupplyBoxes])
 
   const onSetCountdown = useCallback(() => {
     if (poolInfo) {
@@ -203,7 +240,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         }
       }
       const startBuyTime = isAccIsBuyPreOrder && timeLine.startPreOrderTime ? timeLine.startPreOrderTime : timeLine.startBuyTime
-      const soldOut = false
+      const soldOut = supplyBox.sold !== 0 && supplyBox.total !== 0 && supplyBox.sold >= supplyBox.total
       const currentTime = Date.now()
       if (soldOut) {
         setCountdown({ date1: 0, date2: 0, title: 'This pool is over. See you in the next pool.', isFinished: true })
@@ -243,7 +280,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       }
       setTimelines(timeLinesInfo)
     }
-  }, [poolInfo, userTier])
+  }, [poolInfo, userTier, supplyBox])
 
   useEffect(() => {
     onSetCountdown()
@@ -266,10 +303,6 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     setCurrencySelected(token)
     return listCurrencies
   }, [poolInfo, boxSelected])
-
-  useEffect(() => {
-    getSupplyBoxes()
-  }, [getSupplyBoxes])
 
   useEffect(() => {
     const boxes = poolInfo.boxTypesConfig || []
@@ -367,7 +400,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     try {
       if (!erc721Contract) return
       const isCallDefaultCollection = poolInfo.campaign_hash === poolInfo.token
-      const arrCollections = []
+      // const arrCollections = []
       if (!account) return
       const callWithExternalApi = !!poolInfo.use_external_api
       const handleInfoTokenExternal = async (collectionId: number, collection: ObjectType) => {
@@ -382,6 +415,16 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           console.debug('error', error)
         }
       }
+      const handleSetCollection = (collection: ObjectType) => {
+        setCollections((c) => {
+          const newArr = [...c]
+          const existId = c.find((b) => b.collectionId === collection.collectionId)
+          if (!existId) {
+            newArr.push(collection)
+          }
+          return newArr
+        })
+      }
       if (callWithExternalApi) {
         const result = await fetcher(`${API_BASE_URL}/pool/owner/${poolInfo.token}?wallet=${account}&limit=100`)
         const arr = result.data.data?.data || []
@@ -395,7 +438,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           } catch (error) {
             console.debug(error)
           }
-          arrCollections.push(collection)
+          handleSetCollection(collection)
+          // arrCollections.push(collection)
+          // setCollections(arrCollections)
         }
       } else {
         for (let id = 0; id < ownedBox; id++) {
@@ -408,24 +453,26 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               const idBoxType = boxType.subBoxId.toNumber()
               const infoBox = boxTypes.find((b, subBoxId) => subBoxId === idBoxType) || {}
               infoBox && Object.assign(collection, infoBox)
+              handleSetCollection(collection)
             } catch (error) {
               // console.debug('error', error)
             }
-            arrCollections.push(collection)
+            // arrCollections.push(collection)
           } else {
             const collection: ObjectType = {}
             try {
               const collectionId = await erc721Contract.tokenOfOwnerByIndex(account, id)
               collection.collectionId = collectionId.toNumber()
               await handleInfoTokenExternal(collection.collectionId, collection)
-              arrCollections.push(collection)
+              // arrCollections.push(collection)
+              handleSetCollection(collection)
             } catch (error) {
               // console.debug('error', error)
             }
           }
         }
       }
-      setCollections(arrCollections)
+      // setCollections(arrCollections)
     } catch (error) {
       console.debug(error)
       console.error('Something went wrong when show collections')
@@ -433,6 +480,10 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       setLoadingCollection(false)
     }
   }, [presaleContract, erc721Contract, boxTypes, poolInfo, account])
+
+  useEffect(() => {
+    setCollections([])
+  }, [account])
 
   useEffect(() => {
     if (+ownedBox > 0 && boxTypes.length) {
@@ -636,6 +687,11 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             />
           </div>
         }
+        <div className='mb-8'>
+          <div className={clsx('gap-2 flex flex-wrap', stylesBoxType.boxTypes)}>
+            <Progress {...supplyBox}></Progress>
+          </div>
+        </div>
         <div>
           {isAllowedJoinCompetition && !isClickedCompetition && <ButtonBase color="red"
             onClick={() => onJoinCompetition(poolInfo.socialRequirement.gleam_link)}
@@ -722,6 +778,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               onClaimAllNFT={onClaimAllNFT}
               onClaimNFT={onClaimNFT}
               isValidChain={isValidChain}
+              ownedBox={ownedBox}
             />
           </TabPanel>
         </div>

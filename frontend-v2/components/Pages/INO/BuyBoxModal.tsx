@@ -51,9 +51,15 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
   useEffect(() => {
     if (success) {
       balanceInfo?.updateBalance && balanceInfo.updateBalance()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [success])
+
+  useEffect(() => {
+    if (success) {
       onClose && onClose(true)
     }
-  }, [balanceInfo, onClose, success])
+  }, [onClose, success])
 
   const onChangeRecapcha = (value: string | null) => {
     setVerify(value)
@@ -104,7 +110,7 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
             insufficient balance
           </div>}
           <div className='flex justify-center'>
-            <Recaptcha onChange={onChangeRecapcha} ref={recaptchaRef}/>
+            <Recaptcha onChange={onChangeRecapcha} ref={recaptchaRef} />
           </div>
           <div className='grid justify-center grid-cols-1'>
             <ButtonBase

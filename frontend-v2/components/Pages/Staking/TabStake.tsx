@@ -468,7 +468,7 @@ export default function TabStake ({ loadMyPending, pendingWithdrawal }) {
     { step === 1 && <div className="p-4 md:px-10 md:py-4 md:bg-gray-500 md:bg-opacity-20 font-casual text-sm flex items-center">
       <label className="leading-relaxed inline-block align-middle">
         <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed} onChange={handleAgreement} />
-        I fully understand and agree with the <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">Ranking System</a> and <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">New Staking and Unstaking Policy</a>
+        I fully understand and agree with the <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="https://gamefi.org/insight/announcement-of-gamefi-launchpad-ranking-system" target="_blank" rel="noopener nofollower noreferrer">Ranking System</a> and <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="https://gamefi.org/insight/new-staking-and-unstaking-policy-updates-on-gamefi-launchpad" target="_blank" rel="noopener nofollower noreferrer">New Staking and Unstaking Policy</a>
       </label>
       <button
         onClick={() => chooseStep(2)}

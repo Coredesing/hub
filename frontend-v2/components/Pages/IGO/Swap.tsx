@@ -15,7 +15,8 @@ import { IGOContext } from '@/pages/igo/[slug]'
 import { useAppContext } from '@/context'
 
 import Image from 'next/image'
-import { TIMELINE } from './constants'
+import { DECIMAL_PLACES, TIMELINE } from './constants'
+import { roundNumber } from '@/utils/pool'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 
@@ -31,7 +32,7 @@ const Swap = () => {
 
   const usdPurchased = useMemo(() => {
     const rate = poolData?.token_conversion_rate || 1
-    return Number(purchasedTokens) * rate || 0
+    return roundNumber(Number(purchasedTokens) * rate, DECIMAL_PLACES) || 0
   }, [poolData, purchasedTokens])
 
   const [rounds, setRounds] = useState([
@@ -39,14 +40,14 @@ const Swap = () => {
       phase: 1,
       name: 'Pre-order/Buying Phase 1 - Guarantee',
       token: usd,
-      allocation: allocation?.max_buy || '0',
+      allocation: allocation?.max_buy || 0,
       purchased: '0'
     },
     {
       phase: 2,
       name: 'Buying Phase 2 - FCFS',
       token: usd,
-      allocation: poolData?.freeBuyTimeSetting?.max_bonus || '0',
+      allocation: poolData?.freeBuyTimeSetting?.max_bonus || 0,
       purchased: '0'
     }
   ])
@@ -56,15 +57,14 @@ const Swap = () => {
   const remainingToken = useMemo(() => {
     let amount = 0
     rounds.forEach(round => {
-      if (round.phase <= phase) amount += (Number(round.allocation || 0) - Number(round.purchased || 0))
+      if (round.phase <= phase) amount += roundNumber((round.allocation - Number(round.purchased || 0)), DECIMAL_PLACES)
     })
-    console.log(amount)
 
-    return amount > 0 ? amount.toString() : '0'
+    return amount > 0 ? amount : 0
   }, [phase, rounds])
 
   useEffect(() => {
-    setInputAmount(remainingToken || '0')
+    setInputAmount(remainingToken.toString() || '0')
   }, [allocation, remainingToken])
 
   useEffect(() => {
@@ -79,7 +79,7 @@ const Swap = () => {
     }
 
     const items = rounds.map(round => {
-      return { ...round, allocation: allocations[round.phase] || '0', purchased: haveBought[round.phase] }
+      return { ...round, allocation: allocations[round.phase] || '0', purchased: (roundNumber(Number(haveBought[round.phase]), DECIMAL_PLACES)).toString() }
     })
     setRounds(items)
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -189,7 +189,6 @@ const Swap = () => {
         !loadingApproval &&
         !loadingAllowance &&
         (allowance?.gt(0) || !usd.address) &&
-        allocation?.max_buy > 0 &&
         poolData?.network_available?.toLowerCase() === network?.alias &&
         Number(remainingToken) > 0
 
@@ -199,7 +198,6 @@ const Swap = () => {
         !loadingApproval &&
         !loadingAllowance &&
         (allowance?.gt(0) || !usd.address) &&
-        allocation?.max_buy > 0 &&
         poolData?.network_available?.toLowerCase() === network?.alias &&
         phase !== null &&
         Number(remainingToken) > 0
@@ -353,8 +351,8 @@ const Swap = () => {
                 </div>
               </div>
               {
-                ((!preOrderAllowed && now?.getTime() >= timeline[TIMELINE.BUYING_PHASE].start.getTime()) ||
-                (preOrderAllowed && now?.getTime() >= timeline[TIMELINE.PRE_ORDER].start.getTime()))
+                (now?.getTime() >= timeline[TIMELINE.BUYING_PHASE].start?.getTime() ||
+                (preOrderAllowed && now?.getTime() >= timeline[TIMELINE.PRE_ORDER].start?.getTime()))
                   ? <div className="flex-1 bg-gamefiDark rounded px-3 py-4">
                     <div className="uppercase font-semibold tracking-wide leading-7 text-lg">
                       {rounds.find(round => round.phase === phase)?.name}
@@ -388,7 +386,7 @@ const Swap = () => {
                         </div>
                         <div className="absolute top-0 bottom-0 right-0 flex items-center px-2 text-sm gap-4 bg-gamefiDark-650 m-[1px]">
                           <div className="uppercase text-gamefiDark-300 font-bold">{usd.symbol}</div>
-                          <button className="text-gamefiGreen font-medium tracking-wide" onClick={() => setInputAmount(remainingToken || '0')}>Max</button>
+                          <button className="text-gamefiGreen font-medium tracking-wide" onClick={() => setInputAmount(remainingToken.toString() || '0')}>Max</button>
                         </div>
                       </div>
                       {
@@ -487,9 +485,9 @@ const Swap = () => {
           : <></>
       }
       {
-        (now?.getTime() < timeline[TIMELINE.WINNER_ANNOUNCEMENT].start?.getTime() ||
-        (now?.getTime() >= timeline[TIMELINE.WINNER_ANNOUNCEMENT].start?.getTime() && !poolData?.public_winner_status)) &&
-        now?.getTime() < timeline[TIMELINE.WINNER_ANNOUNCEMENT].end?.getTime() &&
+        ((timeline[TIMELINE.PRE_ORDER].start &&
+          now?.getTime() < timeline[TIMELINE.PRE_ORDER].start?.getTime()) ||
+          (!timeline[TIMELINE.PRE_ORDER].start && now?.getTime() < timeline[TIMELINE.BUYING_PHASE].start?.getTime())) &&
           <div className="my-4 w-full flex flex-col gap-4 p-12 rounded items-center justify-center">
             <Image src={require('@/assets/images/icons/calendar.png')} alt=""></Image>
             <div className="text-gamefiDark-200">
@@ -497,7 +495,7 @@ const Swap = () => {
           </div>
       }
       {
-        now?.getTime() > new Date(Number(poolData?.finish_time || '0') * 1000).getTime() &&
+        now?.getTime() > timeline[TIMELINE.BUYING_PHASE].end?.getTime() &&
         <div className="my-4 w-full flex flex-col gap-4 p-12 rounded items-center justify-center">
           <Image src={require('@/assets/images/icons/poolOver.png')} alt=""></Image>
           <div className="text-gamefiDark-200">This pool is over. See you in the next pool.</div>

@@ -22,32 +22,61 @@ const CardSlim = ({ item, now }: Props) => {
     return { timeBuy, timeFinish }
   }, [item])
 
-  const duration = useMemo(() => {
+  const countdown = useMemo(() => {
     const { timeBuy, timeFinish } = stages
-    if (!timeBuy || !timeFinish) return null
-    if (now < timeBuy) {
-      return intervalToDuration({
-        start: now,
-        end: timeBuy
-      })
+    if (!timeBuy || !timeFinish) {
+      return {
+        text: 'TBA',
+        duration: null
+      }
     }
-
-    return intervalToDuration({
-      start: now,
-      end: timeFinish
-    })
-  }, [now, stages])
-
-  const text = useMemo(() => {
-    const { timeBuy, timeFinish } = stages
-    if (!timeBuy || !timeFinish) return ''
-
     if (now < timeBuy) {
-      return 'Starts in'
+      return {
+        text: 'Starts in',
+        duration: intervalToDuration({
+          start: now,
+          end: timeBuy
+        })
+      }
     }
-
-    return 'Ends in'
+    if (now < timeFinish) {
+      return {
+        text: 'Ends in',
+        duration: intervalToDuration({
+          start: now,
+          end: timeFinish
+        })
+      }
+    }
+    return { text: 'Ended' }
   }, [stages, now])
+
+  // const duration = useMemo(() => {
+  //   const { timeBuy, timeFinish } = stages
+  //   if (!timeBuy || !timeFinish) return null
+  //   if (now < timeBuy) {
+  //     return intervalToDuration({
+  //       start: now,
+  //       end: timeBuy
+  //     })
+  //   }
+
+  //   return intervalToDuration({
+  //     start: now,
+  //     end: timeFinish
+  //   })
+  // }, [now, stages])
+
+  // const text = useMemo(() => {
+  //   const { timeBuy, timeFinish } = stages
+  //   if (!timeBuy || !timeFinish) return ''
+
+  //   if (now < timeBuy) {
+  //     return 'Starts in'
+  //   }
+
+  //   return 'Ends in'
+  // }, [stages, now])
 
   const poolType = useMemo(() => {
     return visibility(item)
@@ -132,13 +161,15 @@ const CardSlim = ({ item, now }: Props) => {
           </div>
         </div>
         <div className={styles.informationStage}>
-          {item.campaign_status === 'Ended' && <span style={{ padding: '0.6rem 0' }}>Ended</span>}
+          {countdown.text && <span style={{ padding: '0.6rem 0' }}>{countdown.text}</span>}
+          {countdown.duration && <span>{formatNumber(countdown.duration.days)}d : {formatNumber(countdown.duration.hours)}h : {formatNumber(countdown.duration.minutes)}m : {formatNumber(countdown.duration.seconds)}s</span>}
+          {/* {item.campaign_status === 'Ended' && <span style={{ padding: '0.6rem 0' }}>Ended</span>}
           {item.campaign_status !== 'Ended' && (
             <>
               <div className={styles.informationLabel}>{text}</div>
               {item.campaign_status === 'TBA' ? 'TBA' : !duration ? 'TBA' : <span>{formatNumber(duration.days)}d : {formatNumber(duration.hours)}h : {formatNumber(duration.minutes)}m : {formatNumber(duration.seconds)}s</span>}
             </>
-          )}
+          )} */}
         </div>
       </div>
     </div>

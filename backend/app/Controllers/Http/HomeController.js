@@ -111,6 +111,26 @@ class HomeController {
     };
   }
 
+  async getNFTDetail({ request, auth, params }) {
+    const nft = request.params.nft
+    let image = ''
+
+    switch (nft) {
+      case 'kingdomquest':
+        image = 'https://gamefi-public.s3.amazonaws.com/aggregator/optimized/kingdom-quest/Bundle.png'
+        break
+      default:
+        return {}
+    }
+
+    return {
+      image: image,
+      external_url: image,
+      description: `GameFi-${nft} Box`,
+      name: `GameFi-${nft} Box`
+    }
+  }
+
   async getMetaGodTicketDetail({ request, auth, params }) {
     try {
       const nftId = parseInt(request.params.id)

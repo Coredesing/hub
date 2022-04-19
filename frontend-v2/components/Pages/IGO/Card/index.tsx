@@ -5,6 +5,7 @@ import { getCurrency, useLibraryDefaultFlexible } from '@/components/web3/utils'
 import { poolStatus } from '@/utils/pool'
 import Progress from './Progress'
 import Countdown from './Countdown'
+import { useRouter } from 'next/router'
 
 const Card = ({ item, color, background }: { item: Item; color?: string; background?:string }) => {
   const { network } = useLibraryDefaultFlexible(item?.network_available)
@@ -16,6 +17,8 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
 
     return () => clearInterval(interval)
   }, [])
+
+  const router = useRouter()
   // const [participants, setParticipants] = useState(0)
 
   // const fetchParticipants = useCallback(async () => {
@@ -40,7 +43,7 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
     return poolClaimTime.start <= now
   }, [poolClaimTime, now])
 
-  return <a href={`/igo/${item.id}`} className={`bg-${background} w-full flex flex-col font-casual hover:opacity-90`}>
+  return <div onClick={() => { router.push(`/igo/${item.id}`) }} className={`bg-${background} cursor-pointer w-full flex flex-col font-casual hover:opacity-90`}>
     <div className="w-full aspect-[16/9] bg-black relative">
       <img src={item?.banner} alt="" className="object-cover w-full h-full"></img>
       <div className={`absolute h-6 w-36 xl:w-2/5 inline-flex align-middle items-center -top-[1px] -left-[1px] uppercase text-xs text-left bg-${color} clipped-b-r-full`}>
@@ -163,7 +166,7 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
         </div>
       }
     </div>
-  </a>
+  </div>
 }
 
 export default Card

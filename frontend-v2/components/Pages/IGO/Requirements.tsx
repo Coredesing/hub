@@ -356,17 +356,36 @@ const Requirements = () => {
           <div className="grid grid-cols-2 gap-4 mt-2">
             <div className="w-full text-sm">
               <span className="text-[13px]"><span className="hidden sm:inline">Your</span> Twitter Account</span>
-              <input type="text" value={profile.user_twitter || formData.twitter} onChange={e => setTwitter(e.target.value)} className="mt-2 w-full bg-gamefiDark-600 border-gamefiDark-400 rounded text-sm" disabled={!!profile.user_twitter} readOnly={!!profile.user_twitter}/>
+              <input
+                type="text"
+                value={profile.user_twitter || formData.twitter}
+                onChange={e => setTwitter(e.target.value)}
+                className="mt-2 w-full bg-gamefiDark-600 border-gamefiDark-400 rounded text-sm"
+                disabled={!!profile.user_twitter}
+                readOnly={!!profile.user_twitter}
+              />
             </div>
             <div className="w-full text-sm">
               <span className="text-[13px]"><span className="hidden sm:inline">Your</span> Telegram Account</span>
-              <input type="text" value={profile.user_telegram || formData.telegram} onChange={e => setTelegram(e.target.value)} className="mt-2 w-full bg-gamefiDark-600 border-gamefiDark-400 rounded text-sm" disabled={!!profile.user_telegram} readOnly={!!profile.user_telegram}/>
+              <input
+                type="text"
+                value={profile.user_telegram || formData.telegram}
+                onChange={e => setTelegram(e.target.value)}
+                className="mt-2 w-full bg-gamefiDark-600 border-gamefiDark-400 rounded text-sm"
+                disabled={!!profile.user_telegram} readOnly={!!profile.user_telegram}
+              />
             </div>
             {
               poolData?.airdrop_network === 'solana'
                 ? <div className="w-full text-sm col-span-2">
                   <span className="text-[13px]"><span className="hidden sm:inline">Your</span> Solana Wallet</span>
-                  <input type="text" value={profile.solana_address || formData.solana_address} onChange={e => setSolana(e.target.value)} className="mt-2 w-full bg-gamefiDark-600 border-gamefiDark-400 rounded text-sm" disabled={!!profile.user_twitter} readOnly={!!profile.user_twitter}/>
+                  <input
+                    type="text"
+                    value={profile.solana_address || formData.solana_address}
+                    onChange={e => setSolana(e.target.value)}
+                    className="mt-2 w-full bg-gamefiDark-600 border-gamefiDark-400 rounded text-sm"
+                    disabled={!!profile.solana_address} readOnly={!!profile.solana_address}
+                  />
                 </div>
                 : ''
             }

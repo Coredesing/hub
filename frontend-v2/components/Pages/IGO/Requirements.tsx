@@ -353,7 +353,7 @@ const Requirements = () => {
               </span>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4 mt-2">
+          <div className="flex flex-col sm:flex-row gap-4 mt-2">
             <div className="w-full text-sm">
               <span className="text-[13px]"><span className="hidden sm:inline">Your</span> Twitter Account</span>
               <input
@@ -375,9 +375,11 @@ const Requirements = () => {
                 disabled={!!profile.user_telegram} readOnly={!!profile.user_telegram}
               />
             </div>
-            {
-              poolData?.airdrop_network === 'solana'
-                ? <div className="w-full text-sm col-span-2">
+          </div>
+          {
+            poolData?.airdrop_network === 'solana'
+              ? <div className="flex flex-col sm:flex-row gap-4 mt-4">
+                <div className="w-full text-sm col-span-2">
                   <span className="text-[13px]"><span className="hidden sm:inline">Your</span> Solana Wallet</span>
                   <input
                     type="text"
@@ -387,10 +389,9 @@ const Requirements = () => {
                     disabled={!!profile.solana_address} readOnly={!!profile.solana_address}
                   />
                 </div>
-                : ''
-            }
-          </div>
-
+              </div>
+              : ''
+          }
           <p className="mt-6 text-sm inline-flex items-center font-medium">
             <span className="flex items-center justify-center mr-2 bg-black w-6 h-6 rounded-full font-bold">2</span>Follow and subscribe
           </p>

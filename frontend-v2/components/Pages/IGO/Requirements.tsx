@@ -111,7 +111,7 @@ const Requirements = () => {
   const [formData, setFormData] = useState({
     telegram: '',
     twitter: '',
-    solana_wallet: '',
+    solana_address: '',
     terra_wallet: ''
   })
   const setTwitter = useCallback((v) => {
@@ -124,6 +124,12 @@ const Requirements = () => {
     setFormData({
       ...formData,
       telegram: v
+    })
+  }, [formData])
+  const setSolana = useCallback((v) => {
+    setFormData({
+      ...formData,
+      solana_address: v
     })
   }, [formData])
   const showApplyWhitelist = useCallback(() => {
@@ -165,7 +171,7 @@ const Requirements = () => {
       wallet_address: account,
       user_twitter: formData.twitter,
       user_telegram: formData.telegram,
-      solana_address: formData.solana_wallet,
+      solana_address: formData.solana_address,
       terra_address: formData.terra_wallet,
       signature
     }
@@ -332,7 +338,7 @@ const Requirements = () => {
       <div className="bg-gamefiDark-700 pt-4">
         <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full">
           <strong className="uppercase text-2xl font-mechanic">Welcome to {poolData?.title || ''} on GameFi.org</strong>
-          <p className="mt-6 text-sm">In order to participate in the IGO, you must fullfil requirements as below.</p>
+          <p className="mt-6 text-sm">In order to participate in the IGO, you must fulfill requirements as below.</p>
           <p className="mt-2 text-sm text-gamefiDark-100">{tiers.priority.map(x => x.name).join(', ')} are not required to do the social requirements. However, we recommend following our official Twitter and Telegram groups to stay up-to-date with important announcements.</p>
           <div className="mt-6 w-full text-sm inline-flex items-center font-medium">
             <span className="flex items-center justify-center mr-2 bg-black w-6 h-6 rounded-full font-bold">1</span>
@@ -347,7 +353,7 @@ const Requirements = () => {
               </span>
             </div>
           </div>
-          <div className="flex gap-4 mt-2">
+          <div className="grid grid-cols-2 gap-4 mt-2">
             <div className="w-full text-sm">
               <span className="text-[13px]"><span className="hidden sm:inline">Your</span> Twitter Account</span>
               <input type="text" value={profile.user_twitter || formData.twitter} onChange={e => setTwitter(e.target.value)} className="mt-2 w-full bg-gamefiDark-600 border-gamefiDark-400 rounded text-sm" disabled={!!profile.user_twitter} readOnly={!!profile.user_twitter}/>
@@ -356,6 +362,14 @@ const Requirements = () => {
               <span className="text-[13px]"><span className="hidden sm:inline">Your</span> Telegram Account</span>
               <input type="text" value={profile.user_telegram || formData.telegram} onChange={e => setTelegram(e.target.value)} className="mt-2 w-full bg-gamefiDark-600 border-gamefiDark-400 rounded text-sm" disabled={!!profile.user_telegram} readOnly={!!profile.user_telegram}/>
             </div>
+            {
+              poolData?.airdrop_network === 'solana'
+                ? <div className="w-full text-sm col-span-2">
+                  <span className="text-[13px]"><span className="hidden sm:inline">Your</span> Solana Wallet</span>
+                  <input type="text" value={profile.solana_address || formData.solana_address} onChange={e => setSolana(e.target.value)} className="mt-2 w-full bg-gamefiDark-600 border-gamefiDark-400 rounded text-sm" disabled={!!profile.user_twitter} readOnly={!!profile.user_twitter}/>
+                </div>
+                : ''
+            }
           </div>
 
           <p className="mt-6 text-sm inline-flex items-center font-medium">

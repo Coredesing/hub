@@ -61,7 +61,7 @@ const SwapProgress = () => {
 
     const interval = setInterval(() => poolContractReadonly.tokenSold().then(x => {
       setSoldWithContract(x)
-    }), 15000)
+    }), 3000)
 
     return () => clearInterval(interval)
   }, [poolContractReadonly])

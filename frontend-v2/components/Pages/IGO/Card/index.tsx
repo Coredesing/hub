@@ -70,11 +70,6 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
         <div className="w-5/6 overflow-hidden text-left text-ellipsis whitespace-nowrap uppercase font-semibold hover:underline xl:text-lg">
           <div className="w-full overflow-hidden text-ellipsis">{item.title}</div>
         </div>
-        <div className="w-6 h-6 xl:w-7 xl:h-7 relative">{
-          item.airdrop_network && item.airdrop_network !== 'none'
-            ? <Image layout="fill" src={airdropNetworks[item.airdrop_network]?.image} alt=""></Image>
-            : <Image layout="fill" src={network?.image} alt=""></Image>
-        }</div>
       </div>
       <div className="inline-flex gap-5">
         { item?.website && <a href={item?.website} className="hover:text-gray-300" target="_blank" rel="noopenner noreferrer">
@@ -105,6 +100,27 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
         <div className="text-white/50 uppercase font-medium text-xs">Rate</div>
         <div className="text-gamefiGreen uppercase font-medium text-sm">
           1 {item.symbol} = {item.token_conversion_rate} {getCurrency(item).symbol}
+        </div>
+      </div>
+      <div className="w-full grid grid-cols-2 gap-2">
+        <div className="text-left flex flex-col gap-2 text-sm">
+          <div className="text-white/50 uppercase font-medium text-xs">IGO Network</div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 xl:w-5 xl:h-5 relative"><Image layout="fill" src={network?.image} alt=""></Image></div>
+            <span>{network?.name}</span>
+          </div>
+        </div>
+        <div className="text-left flex flex-col gap-2 text-sm">
+          <div className="text-white/50 uppercase font-medium text-xs">Token Network</div>
+          {item.airdrop_network && item.airdrop_network !== 'none'
+            ? <div className="flex items-center gap-2">
+              <div className="w-4 h-4 xl:w-5 xl:h-5 relative"><Image layout="fill" src={airdropNetworks[item.airdrop_network]?.image} alt=""></Image></div>
+              <span>{airdropNetworks[item.airdrop_network]?.name}</span>
+            </div>
+            : <div className="flex items-center gap-2">
+              <div className="w-4 h-4 xl:w-5 xl:h-5 relative"><Image layout="fill" src={network?.image} alt=""></Image></div>
+              <span>{network?.name}</span>
+            </div>}
         </div>
       </div>
       <div className="w-full grid grid-cols-2 gap-2">

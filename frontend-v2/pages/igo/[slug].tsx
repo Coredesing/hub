@@ -599,13 +599,13 @@ const IGODetails = ({ poolData }) => {
             titles={
               poolHasWinners
                 ? [
-                  'POOL INFO',
+                  'INFORMATION',
                   'SWAP',
                   'CLAIM',
                   `WINNERS (${winnerList.total})`
                 ]
                 : [
-                  'POOL INFO',
+                  'INFORMATION',
                   'SWAP',
                   'CLAIM'
                 ]}

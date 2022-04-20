@@ -26,7 +26,7 @@ import { ethers } from 'ethers'
 import { switchNetwork } from '@/components/web3'
 import ERC20_ABI from '@/components/web3/abis/ERC20.json'
 import { useRouter } from 'next/router'
-import CountdownSVG from '@/components/Pages/Aggregator/Countdown'
+import imgRocket from '@/assets/images/rocket.png'
 
 type Milestone = {
   key: string;
@@ -389,7 +389,7 @@ const IGODetails = ({ poolData }) => {
   useEffect(() => {
     fetcher(`${API_BASE_URL}/gaming/pools/${poolData?.id}/games`)
       .then(data => {
-        setGames(data)
+        setGames(data?.data || [])
       })
       .catch(err => {
         console.debug(err)
@@ -591,9 +591,9 @@ const IGODetails = ({ poolData }) => {
             </div>
           </div>
 
-          {/* {games && games.length && <>
+          {!!games?.length && <>
             {games.map(game => <GameDetails game={game} key={game.id}></GameDetails>)}
-          </>} */}
+          </>}
 
           <Tabs
             titles={
@@ -823,50 +823,37 @@ const IGODetails = ({ poolData }) => {
 }
 
 const GameDetails = ({ game }) => {
-  return <div className="mt-6">
-    <div className="bg-gamefiDark-630/30 p-4 xl:p-6 2xl:p-7 rounded flex flex-col sm:flex-row gap-6">
-      <div>
-        <h4 className="font-bold uppercase text-xl">{game.name}</h4>
-        <p className="font-casual text-sm text-white/80">Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro qui ipsum vero repellat, voluptatum deleniti.</p>
-
-        <div className="flex mt-4">
-          <div className="flex-1">
-            <h4 className="font-bold uppercase text-sm">Rewards</h4>
-            <p className="font-casual text-sm text-white/80">
-              {game.settings?.rewards.map((reward) => `${reward.amount} $${reward.token}`).join(', ')}
-            </p>
-          </div>
-          <div className="w-1/4">
-            <h4 className="font-bold uppercase text-sm">Distribution</h4>
-            <p className="font-casual text-sm text-white/80">
-              {game.settings.distribution}
-            </p>
-          </div>
-          <div className="w-1/4">
-            <h4 className="font-bold uppercase text-sm">Minimum Staking</h4>
-            <p className="font-casual text-sm text-white/80">
-              {game.settings.minimumGAFI} $GAFI
-            </p>
-          </div>
-        </div>
+  return null
+  return <div className="mt-14">
+    <div className="bg-black/50 relative min-h-[240px] rounded-lg">
+      <div className="absolute w-full h-full overflow-hidden rounded-lg">
+        <div className="absolute bg-[#FF8A00] w-64 h-64 rounded-full blur-2xl -top-32 -left-32 bg-opacity-[15%]"></div>
       </div>
-      <div className="flex-none">
-        <h4 className="font-bold uppercase text-sm">Your prediction</h4>
-        <form className="font-casual text-sm text-white/80 w-72 flex">
-          <input type="text" className="w-full bg-gamefiDark-800" />
-          <button className="px-4 border border-gamefiDark-300 -ml-px">Submit</button>
-        </form>
-
-        <h4 className="font-bold uppercase text-sm mt-4">Ends in</h4>
-        <div className="w-72">
-          <CountdownSVG deadline={game.endedAt}></CountdownSVG>
+      <div className="absolute right-3 bottom-[-11%]">
+        <Image src={imgRocket} alt={game.name} />
+      </div>
+      <div className="absolute flex items-center w-full h-full">
+        <div className="font-casual px-8 border-r border-white/10">
+          <div className="text-transparent bg-clip-text bg-gradient-to-br from-amber-400 to-rose-400">
+            <h2 className="text-5xl font-bold">ROI</h2>
+            <h3 className="text-4xl uppercase">Prediction</h3>
+          </div>
+          <p className="text-white/80 text-base">{game.description || `Guest the highest ROI to win ${game.settings?.rewards.map((reward) => `${reward.amount} $${reward.token}`).join(', ')}`}</p>
+          <p className="text-xs mt-6">
+            <a href="#" className="hover:underline">Learn More</a>
+          </p>
         </div>
+        <div className="px-8">
+          <p>What </p>
+          <input type="text" />
+        </div>
+        <div className="ml-auto pr-72">alo</div>
       </div>
     </div>
   </div>
 }
 
-export async function getServerSideProps ({ params }) {
+export async function getServerSideProps({ params }) {
   if (!params?.slug) {
     return { props: { poolData: {} } }
   }

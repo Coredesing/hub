@@ -457,6 +457,21 @@ export const networks = [{
   testnet: true
 }]
 
+export const airdropNetworks = {
+  solana: {
+    id: 1001,
+    name: 'Solana',
+    alias: 'solana',
+    image: require('@/assets/images/networks/solana.svg')
+  },
+  terra: {
+    id: 1002,
+    name: 'Terra',
+    alias: 'terra',
+    image: require('@/assets/images/networks/terra.svg')
+  }
+}
+
 interface Wallet {
   id: string;
   name: string;

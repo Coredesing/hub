@@ -31,4 +31,5 @@ export type Item = {
   buy_type: string;
   end_join_pool_time: string;
   min_tier: number | string;
+  airdrop_network: string;
 }

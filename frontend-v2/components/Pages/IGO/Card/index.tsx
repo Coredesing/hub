@@ -6,6 +6,7 @@ import { poolStatus } from '@/utils/pool'
 import Progress from './Progress'
 import Countdown from './Countdown'
 import { useRouter } from 'next/router'
+import { airdropNetworks } from '@/components/web3'
 
 const Card = ({ item, color, background }: { item: Item; color?: string; background?:string }) => {
   const { network } = useLibraryDefaultFlexible(item?.network_available)
@@ -69,7 +70,11 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
         <div className="w-5/6 overflow-hidden text-left text-ellipsis whitespace-nowrap uppercase font-semibold hover:underline xl:text-lg">
           <div className="w-full overflow-hidden text-ellipsis">{item.title}</div>
         </div>
-        <div className="w-6 h-6 xl:w-7 xl:h-7 relative"><Image layout="fill" src={network?.image} alt=""></Image></div>
+        <div className="w-6 h-6 xl:w-7 xl:h-7 relative">{
+          item.airdrop_network && item.airdrop_network !== 'none'
+            ? <Image layout="fill" src={airdropNetworks[item.airdrop_network]?.image} alt=""></Image>
+            : <Image layout="fill" src={network?.image} alt=""></Image>
+        }</div>
       </div>
       <div className="inline-flex gap-5">
         { item?.website && <a href={item?.website} className="hover:text-gray-300" target="_blank" rel="noopenner noreferrer">

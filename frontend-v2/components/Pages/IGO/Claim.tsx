@@ -13,7 +13,7 @@ import { BigNumber, ethers } from 'ethers'
 import { IGOContext } from '@/pages/igo/[slug]'
 import Image from 'next/image'
 import { DECIMAL_PLACES, TIMELINE } from './constants'
-import { getNetworkByAlias, switchNetwork } from '@/components/web3'
+import { airdropNetworks, getNetworkByAlias, switchNetwork } from '@/components/web3'
 import Tippy from '@tippyjs/react'
 import ERC20_ABI from '@/components/web3/abis/ERC20.json'
 import { roundNumber } from '@/utils/pool'
@@ -245,7 +245,11 @@ const Claim = () => {
           <p className="uppercase font-mechanic font-bold text-lg mb-6">Your Allocation</p>
           <div className="flex justify-between mb-4 items-center">
             <strong className="font-semibold">Network</strong>
-            <span className="inline-flex items-center"><img src={poolNetwork?.image?.default?.src} className="w-5 h-5 mr-2" alt={poolNetwork?.name} />{poolNetwork?.name}</span>
+            {
+              poolData.airdrop_network && poolData.airdrop_network !== 'none'
+                ? <span className="inline-flex items-center"><img src={airdropNetworks[poolData.airdrop_network]?.image?.default?.src} className="w-5 h-5 mr-2" alt={airdropNetworks[poolData.airdrop_network]?.name} />{airdropNetworks[poolData.airdrop_network]?.name}</span>
+                : <span className="inline-flex items-center"><img src={poolNetwork?.image?.default?.src} className="w-5 h-5 mr-2" alt={poolNetwork?.name} />{poolNetwork?.name}</span>
+            }
           </div>
           <div className="flex justify-between mb-4 items-center">
             <strong className="font-semibold">Symbol</strong>

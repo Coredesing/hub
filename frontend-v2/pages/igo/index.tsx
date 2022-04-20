@@ -9,6 +9,7 @@ import CompletedPools from '@/components/Pages/IGO/CompletedPools'
 import Flicking from '@egjs/react-flicking'
 import '@egjs/flicking-plugins/dist/pagination.css'
 import '@egjs/flicking/dist/flicking.css'
+import CountUp from 'react-countup'
 
 const IGO = () => {
   const refOpeningPublic = useRef(null)
@@ -78,7 +79,7 @@ const IGO = () => {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text'
-            }}>{roundedTotalCompletedPools}+</div>
+            }}><CountUp start={0} end={roundedTotalCompletedPools} suffix="+"></CountUp></div>
             <div className="uppercase font-medium">Total Projects Launched</div>
           </div>
           <div className="flex flex-col gap-3 items-center justify-center">

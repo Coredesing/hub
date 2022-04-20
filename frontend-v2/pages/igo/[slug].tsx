@@ -23,7 +23,7 @@ import toast from 'react-hot-toast'
 import Image from 'next/image'
 import Tippy from '@tippyjs/react'
 import { ethers } from 'ethers'
-import { switchNetwork } from '@/components/web3'
+import { airdropNetworks, switchNetwork } from '@/components/web3'
 import ERC20_ABI from '@/components/web3/abis/ERC20.json'
 import { useRouter } from 'next/router'
 import imgRocket from '@/assets/images/rocket.png'
@@ -599,13 +599,13 @@ const IGODetails = ({ poolData }) => {
             titles={
               poolHasWinners
                 ? [
-                  'POOL INFO',
+                  'INFORMATION',
                   'SWAP',
                   'CLAIM',
                   `WINNERS (${winnerList.total})`
                 ]
                 : [
-                  'POOL INFO',
+                  'INFORMATION',
                   'SWAP',
                   'CLAIM'
                 ]}
@@ -654,7 +654,15 @@ const IGODetails = ({ poolData }) => {
                   <span>{printNumber(poolData?.total_sold_coin)} {poolData?.symbol}</span>
                 </div>
                 <div className="flex justify-between mb-4 items-center">
-                  <strong className="font-semibold">Network</strong>
+                  <strong className="font-semibold">Token Network</strong>
+                  {
+                    poolData.airdrop_network && poolData.airdrop_network !== 'none'
+                      ? <span className="inline-flex items-center"><img src={airdropNetworks[poolData.airdrop_network]?.image?.default?.src} className="w-5 h-5 mr-2" alt={airdropNetworks[poolData.airdrop_network]?.name} />{airdropNetworks[poolData.airdrop_network]?.name}</span>
+                      : <span className="inline-flex items-center"><img src={poolNetwork?.image?.default?.src} className="w-5 h-5 mr-2" alt={poolNetwork?.name} />{poolNetwork?.name}</span>
+                  }
+                </div>
+                <div className="flex justify-between mb-4 items-center">
+                  <strong className="font-semibold">IGO Network</strong>
                   <span className="inline-flex items-center"><img src={poolNetwork?.image?.default?.src} className="w-5 h-5 mr-2" alt={poolNetwork?.name} />{poolNetwork?.name}</span>
                 </div>
                 <div className="flex justify-between mb-4 items-center">

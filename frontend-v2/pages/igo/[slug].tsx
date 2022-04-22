@@ -1034,7 +1034,7 @@ const GameDetails = ({ game }) => {
             Congratulations. You won {rewardsEach.join(', ')} !
             </div> }
             <p className="text-xs mt-1">
-              { recordsMine?.[0] && !winners?.length && <span className="text-white/60">Stay tune for the result at <strong>{format(snapshot, 'yyyy-MM-dd HH:mm:ss')}</strong></span> }
+              { recordsMine?.[0] && !winners?.length && <span className="text-white/60">Stay tuned for the result at <strong>{format(snapshot, 'yyyy-MM-dd HH:mm:ss')}</strong></span> }
               { recordsMine?.[0] && won && <span className="text-white/60">Reward Distribution: <strong>{game?.settings?.distribution}</strong></span> }
               { errorNumber ? <span className="text-[#DE4343]">{errorNumber}</span> : <span>&nbsp;</span> }
             </p>

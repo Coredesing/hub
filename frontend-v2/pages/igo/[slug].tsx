@@ -946,7 +946,7 @@ const GameDetails = ({ game }) => {
     return ended || !!recordsMine?.[0]
   }, [ended, recordsMine])
   const won = useMemo(() => {
-    return !!winners?.length && !!winners.find(x => x.wallet.toLowerCase() === account.toLowerCase())
+    return !!winners?.length && !!winners.find(x => x.wallet?.toLowerCase() === account?.toLowerCase())
   }, [winners, account])
   const rewardsEach = useMemo(() => {
     if (!winners?.length) {

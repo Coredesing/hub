@@ -176,7 +176,6 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     return () => {
       clearInterval(interval)
     }
-
   }, [getSupplyBoxes])
 
   useEffect(() => {

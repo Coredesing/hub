@@ -302,3 +302,9 @@ input[type="checkbox"].dark:checked {
 .thumbnail-bullet-active {
     border-color: #6CDB00 !important;
 }
+
+input.hide-spin::-webkit-outer-spin-button,
+input.hide-spin::-webkit-inner-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}

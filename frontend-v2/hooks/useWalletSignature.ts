@@ -2,6 +2,7 @@
 import { useCallback } from 'react'
 import { useMyWeb3 } from '@/components/web3/context'
 import { getProviderSolana } from '@/components/web3/utils'
+import { utils } from 'ethers'
 
 export const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 
@@ -11,10 +12,27 @@ const useWalletSignature = () => {
     return new Promise((resolve, reject) => {
       if (!library || !account) {
         reject(new Error('Please connect wallet to sign'))
+        return
       }
 
-      library.getSigner().signMessage(MESSAGE_SIGNATURE).then(message => {
-        resolve(message)
+      const key = `SIGNATURE_${account}`
+
+      if (window.localStorage) {
+        const sig = window.localStorage.getItem(key)
+        if (sig) {
+          const addr = utils.verifyMessage(MESSAGE_SIGNATURE, sig)
+          if (addr.toLowerCase() === account.toLowerCase()) {
+            resolve(sig)
+            return
+          }
+        }
+      }
+
+      library.getSigner().signMessage(MESSAGE_SIGNATURE).then(sig => {
+        if (window.localStorage) {
+          window.localStorage.setItem(key, sig)
+        }
+        resolve(sig)
       }).catch(error => {
         reject(error || 'Something went wrong when signing message')
       })

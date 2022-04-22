@@ -1,16 +1,16 @@
 import Layout from '@/components/Layout'
 import { getTierById } from '@/utils/tiers'
-import React, { useEffect, useMemo, useState, useCallback, createContext } from 'react'
+import React, { useEffect, useMemo, useState, useCallback, createContext, ChangeEvent } from 'react'
 import { fetchOneWithSlug } from '../api/igo'
 import { useMyWeb3 } from '@/components/web3/context'
-import { fetcher, printNumber, formatterUSD, useFetch } from '@/utils'
+import { fetcher, printNumber, formatterUSD, useFetch, formatNumber, safeToFixed } from '@/utils'
 import Swap from '@/components/Pages/IGO/Swap'
 import Claim from '@/components/Pages/IGO/Claim'
 import { API_BASE_URL } from '@/utils/constants'
 import { TabPanel, Tabs } from '@/components/Base/Tabs'
 import { useLibraryDefaultFlexible, getCurrency } from '@/components/web3/utils'
 
-import { format, intervalToDuration } from 'date-fns'
+import { format } from 'date-fns'
 import Recaptcha from '@/components/Base/Recaptcha'
 import Requirements from '@/components/Pages/IGO/Requirements'
 import SwapProgress from '@/components/Pages/IGO/SwapProgress'
@@ -27,6 +27,8 @@ import { airdropNetworks, switchNetwork } from '@/components/web3'
 import ERC20_ABI from '@/components/web3/abis/ERC20.json'
 import { useRouter } from 'next/router'
 import imgRocket from '@/assets/images/rocket.png'
+import { useCountdown } from '@/components/Pages/Aggregator/Countdown'
+import useWalletSignature from '@/hooks/useWalletSignature'
 
 type Milestone = {
   key: string;
@@ -389,7 +391,7 @@ const IGODetails = ({ poolData }) => {
   useEffect(() => {
     fetcher(`${API_BASE_URL}/gaming/pools/${poolData?.id}/games`)
       .then(data => {
-        setGames(data?.data || [])
+        setGames((data?.data || []).filter(x => !x.disabled))
       })
       .catch(err => {
         console.debug(err)
@@ -831,8 +833,136 @@ const IGODetails = ({ poolData }) => {
 }
 
 const GameDetails = ({ game }) => {
-  return null
-  return <div className="mt-14">
+  const { countdown, ended } = useCountdown({ deadline: game?.endedAt })
+  const snapshot = useMemo(() => new Date(game?.settings?.snapshot), [game])
+  const [winners, setWinners] = useState(null)
+  const [recordsMine, setRecordsMine] = useState(null)
+  const { account } = useMyWeb3()
+  const { signMessage } = useWalletSignature()
+
+  useEffect(() => {
+    if (!game.answer) {
+      return
+    }
+
+    fetcher(`${API_BASE_URL}/gaming/games/${game.id}/winners`)
+      .then(data => {
+        setWinners(data.data || [])
+      })
+      .catch(err => {
+        console.debug(err)
+      })
+  }, [game])
+
+  const loadRecordsMine = useCallback(() => {
+    if (!account) {
+      setRecordsMine([])
+      return
+    }
+
+    setRecordsMine(null)
+
+    fetcher(`${API_BASE_URL}/gaming/games/${game.id}/records?wallet=${account}`)
+      .then(data => {
+        setRecordsMine(data.data || [])
+      })
+      .catch(err => {
+        setRecordsMine([])
+        console.debug(err)
+      })
+  }, [game, account])
+
+  useEffect(() => {
+    loadRecordsMine()
+  }, [loadRecordsMine])
+
+  const endedNotJoined = useMemo(() => ended && recordsMine !== null && !recordsMine?.length, [recordsMine, ended])
+
+  const [number, setNumber] = useState('')
+  const [errorNumber, setErrorNumber] = useState('')
+  const handleNumber = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setErrorNumber('')
+    const target = event.target
+    const value = safeToFixed(target.value, game?.settings?.digits || 2)
+    if (!value) {
+      setNumber('')
+      return
+    }
+
+    if (Number(value) > 100000) {
+      setErrorNumber('Your prediction is too large')
+    }
+
+    setNumber(value)
+  }, [game])
+
+  const submit = useCallback(() => {
+    if (!number) {
+      toast.error('Please enter your prediction')
+      return
+    }
+
+    if (errorNumber) {
+      toast.error(errorNumber)
+      return
+    }
+
+    signMessage().then(data => {
+      if (!data) {
+        return
+      }
+
+      const signature = data.toString()
+      return fetcher(`${API_BASE_URL}/gaming/games/${game.id}/records`, {
+        method: 'PUT',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          wallet_address: account,
+          wallet_signature: signature,
+          answer: number
+        })
+      })
+        .then(data => {
+          if (data.error) {
+            toast.error(`Error: ${data.error}`)
+            return
+          }
+
+          loadRecordsMine()
+        })
+        .catch(err => {
+          toast.error('Error occurred')
+          console.debug(err)
+        })
+    }).catch(err => {
+      console.debug(err)
+      toast.error('Could not sign the authentication message')
+    })
+  }, [number, errorNumber, signMessage, account, game.id, loadRecordsMine])
+
+  const disabled = useMemo(() => {
+    return ended || !!recordsMine?.[0]
+  }, [ended, recordsMine])
+  const won = useMemo(() => {
+    return !!winners?.length && !!winners.find(x => x.wallet.toLowerCase() === account.toLowerCase())
+  }, [winners, account])
+  const rewardsEach = useMemo(() => {
+    if (!winners?.length) {
+      return []
+    }
+
+    return game.settings?.rewards?.map(x => {
+      if (!x?.amount) {
+        return null
+      }
+
+      return `${Math.round(x.amount / winners?.length)} ${x.token}`
+    }).filter(x => !!x) || []
+  }, [game, winners])
+
+  return <div className="mt-20">
     <div className="bg-black/50 relative min-h-[240px] rounded-lg">
       <div className="absolute w-full h-full overflow-hidden rounded-lg">
         <div className="absolute bg-[#FF8A00] w-64 h-64 rounded-full blur-2xl -top-32 -left-32 bg-opacity-[15%]"></div>
@@ -840,28 +970,82 @@ const GameDetails = ({ game }) => {
       <div className="absolute right-3 bottom-[-11%]">
         <Image src={imgRocket} alt={game.name} />
       </div>
-      <div className="absolute flex items-center w-full h-full">
-        <div className="font-casual px-8 border-r border-white/10">
+      <div className="absolute flex items-center w-full h-full pr-72">
+        <div className="flex-1 font-casual px-8 border-r border-white/10">
           <div className="text-transparent bg-clip-text bg-gradient-to-br from-amber-400 to-rose-400">
             <h2 className="text-5xl font-bold">ROI</h2>
             <h3 className="text-4xl uppercase">Prediction</h3>
           </div>
-          <p className="text-white/80 text-base">{game.description || `Guest the highest ROI to win ${game.settings?.rewards.map((reward) => `${reward.amount} $${reward.token}`).join(', ')}`}</p>
+          <p className="text-white/80 text-base">{game.description || `Guest the highest ROI to win ${game.settings?.rewards?.map((reward) => `${reward.amount} $${reward.token}`).join(', ') || ''}`}</p>
           <p className="text-xs mt-6">
-            <a href="#" className="hover:underline">Learn More</a>
+            <a href={`#/${game.id}`} className="text-gamefiGreen-500 hover:underline inline-flex">
+              Learn More
+              <svg xmlns="http://www.w3.org/2000/svg" className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
           </p>
         </div>
-        <div className="px-8">
-          <p>What </p>
-          <input type="text" />
+        <div className="flex-1 px-8 font-casual">
+          {!ended && <><p className="text-sm text-white/80 uppercase">Ends in</p>
+            <div className="text-base font-medium">
+              {countdown.days ? formatNumber(countdown.days, 2) : '00'}d : {countdown.hours ? formatNumber(countdown.hours, 2) : '00'}h : {countdown.minutes ? formatNumber(countdown.minutes, 2) : '00'}m : {countdown.seconds ? formatNumber(countdown.seconds, 2) : '00'}s
+            </div></>}
+
+          {ended && !game.answer && <><p className="text-sm text-white/80 uppercase">Result snapshot</p>
+            <div className="text-base font-medium">
+              {format(snapshot, 'yyyy-MM-dd HH:mm:ss')}
+            </div></>}
+
+          {ended && game.answer && <div className="flex justify-between">
+            <div>
+              <p className="text-sm text-white/80 uppercase">Result</p>
+              <div className="text-base font-medium">
+                {game.answer}
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-white/80 uppercase">Winners</p>
+              <div className="text-base font-medium">
+                {winners?.length ? `${winners?.length} winners` : 'No winners'}
+              </div>
+            </div>
+          </div>}
+
+          <p className="text-sm text-white/80 uppercase mt-6">Your prediction</p>
+          { !account && <div className="text-base font-medium text-rose-500">
+            Please connect your wallet
+          </div> }
+
+          { account && recordsMine === null && <div className="text-base font-medium">
+            Loading...
+          </div> }
+
+          { account && recordsMine !== null && endedNotJoined && <div className="text-base font-medium text-[#DE4343]">
+            You did not join this game
+          </div> }
+
+          { account && recordsMine !== null && !endedNotJoined && <>
+            {!winners?.length && <div className="relative mt-1">
+              <input type="number" className="hide-spin text-base bg-white/10 rounded-sm clipped-t-r-sm w-full border-transparent px-3 pr-24 py-2 block shadow-lg focus:ring-0 focus:shadow-none focus:border-transparent" placeholder="Enter your number here" disabled={disabled} value={recordsMine?.[0]?.answer || number} onChange={handleNumber} />
+              <button className={`font-[13px] font-mechanic uppercase font-bold absolute right-1.5 top-[50%] -translate-y-1/2 rounded-sm clipped-t-r-sm  block text-sm px-4 py-1 ${disabled ? 'text-white/40 bg-gamefiDark-500/50 cursor-not-allowed' : 'text-black cursor-pointer bg-gradient-to-br from-amber-400 via-amber-400 to-rose-400'}`} onClick={() => { submit() }}>Submit</button>
+            </div> }
+            { !!winners?.length && won && <div className="text-base font-medium text-gamefiGreen-500">
+            Congratulations. You won {rewardsEach.join(', ')} !
+            </div> }
+            <p className="text-xs mt-1">
+              { recordsMine?.[0] && !winners?.length && <span className="text-white/60">Stay tune for the result at <strong>{format(snapshot, 'yyyy-MM-dd HH:mm:ss')}</strong></span> }
+              { recordsMine?.[0] && won && <span className="text-white/60">Reward Distribution: <strong>{game?.settings?.distribution}</strong></span> }
+              { errorNumber ? <span className="text-[#DE4343]">{errorNumber}</span> : <span>&nbsp;</span> }
+            </p>
+          </> }
         </div>
-        <div className="ml-auto pr-72">alo</div>
       </div>
     </div>
   </div>
 }
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps ({ params }) {
   if (!params?.slug) {
     return { props: { poolData: {} } }
   }

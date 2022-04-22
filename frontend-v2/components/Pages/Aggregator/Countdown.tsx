@@ -3,7 +3,7 @@ import { formatNumber } from '@/utils'
 import { intervalToDuration } from 'date-fns'
 import { useMemo } from 'react'
 
-const CountdownSVG = ({ action, title, deadline, onAction }:{ title?: string; action?: string; deadline: Date | string; onAction?: () => void }) => {
+export const useCountdown = ({ deadline }: { deadline: Date | string }) => {
   const { now } = useAppContext()
 
   const deadlineActual = useMemo(() => {
@@ -17,20 +17,27 @@ const CountdownSVG = ({ action, title, deadline, onAction }:{ title?: string; ac
 
     return null
   }, [deadline])
+  const ended = useMemo(() => {
+    if (!deadlineActual) {
+      return true
+    }
+
+    if (deadlineActual.getTime() === 0) {
+      return true
+    }
+
+    if (deadlineActual < now) {
+      return true
+    }
+
+    return false
+  }, [deadlineActual, now])
   const countdown = useMemo(() => {
     if (!now) {
       return {}
     }
 
-    if (!deadlineActual) {
-      return {}
-    }
-
-    if (deadlineActual.getTime() === 0) {
-      return {}
-    }
-
-    if (deadlineActual < now) {
+    if (ended) {
       return {}
     }
 
@@ -38,7 +45,13 @@ const CountdownSVG = ({ action, title, deadline, onAction }:{ title?: string; ac
       start: now,
       end: deadlineActual
     })
-  }, [deadlineActual, now])
+  }, [deadlineActual, now, ended])
+
+  return { countdown, ended }
+}
+
+const CountdownSVG = ({ action, title, deadline, onAction }: { title?: string; action?: string; deadline: Date | string; onAction?: () => void }) => {
+  const { countdown } = useCountdown({ deadline })
 
   const height = useMemo(() => {
     if (!title) {
@@ -57,12 +70,12 @@ const CountdownSVG = ({ action, title, deadline, onAction }:{ title?: string; ac
   }, [action])
 
   return <svg xmlns="http://www.w3.org/2000/svg" className="w-full" viewBox={`0 0 ${width} ${height}`} fill="none">
-    { title && <text fill="white" fontFamily="Rajdhani" fontSize="13" fontWeight="bold" letterSpacing="0.04em">
+    {title && <text fill="white" fontFamily="Rajdhani" fontSize="13" fontWeight="bold" letterSpacing="0.04em">
       <tspan y="14">{title}</tspan>
-    </text> }
+    </text>}
     <g transform={`translate(0 ${title ? 0 : -25})`}>
-      <path d="M272.5 25.5V74.5V89.5H0.5V33.7315L10.2016 25.5H20.3801H272.5Z" stroke="#525252"/>
-      <rect x="263" y="29" width="6" height="21" fill="#525252"/>
+      <path d="M272.5 25.5V74.5V89.5H0.5V33.7315L10.2016 25.5H20.3801H272.5Z" stroke="#525252" />
+      <rect x="263" y="29" width="6" height="21" fill="#525252" />
       <text fill="white" fontFamily="Rajdhani" fontSize="28" fontWeight="bold" letterSpacing="0em"><tspan x="55.1426" y="57.176">:</tspan></text>
       <text fill="white" fontFamily="Rajdhani" fontSize="28" fontWeight="bold" letterSpacing="0em"><tspan x="121.143" y="57.176">:</tspan></text>
       <text fill="white" fontFamily="Rajdhani" fontSize="28" fontWeight="bold" letterSpacing="0em"><tspan x="187.143" y="57.176">:</tspan></text>
@@ -82,7 +95,7 @@ const CountdownSVG = ({ action, title, deadline, onAction }:{ title?: string; ac
         }
 
         onAction()
-      }}><path fillRule="evenodd" clipRule="evenodd" d="M272 54L262 61.5V88C262 89.1046 262.895 90 264 90H272H362L372 82.5V56C372 54.8954 371.105 54 370 54H362H272Z" fill="#6CDB00"/>
+      }}><path fillRule="evenodd" clipRule="evenodd" d="M272 54L262 61.5V88C262 89.1046 262.895 90 264 90H272H362L372 82.5V56C372 54.8954 371.105 54 370 54H362H272Z" fill="#6CDB00" />
         <text x="315" y="73" dominantBaseline="middle" textAnchor="middle" fill="#0D0F15" fontFamily="Rajdhani" fontSize="13" fontWeight="bold" letterSpacing="0.02em">{action}</text>
       </g>
     }

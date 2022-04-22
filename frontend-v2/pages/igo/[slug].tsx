@@ -3,7 +3,7 @@ import { getTierById } from '@/utils/tiers'
 import React, { useEffect, useMemo, useState, useCallback, createContext, ChangeEvent } from 'react'
 import { fetchOneWithSlug } from '../api/igo'
 import { useMyWeb3 } from '@/components/web3/context'
-import { fetcher, printNumber, formatterUSD, useFetch, formatNumber, safeToFixed } from '@/utils'
+import { fetcher, printNumber, formatterUSD, useFetch, formatNumber, safeToFixed, shortenAddress } from '@/utils'
 import Swap from '@/components/Pages/IGO/Swap'
 import Claim from '@/components/Pages/IGO/Claim'
 import { API_BASE_URL } from '@/utils/constants'
@@ -29,6 +29,7 @@ import { useRouter } from 'next/router'
 import imgRocket from '@/assets/images/rocket.png'
 import { useCountdown } from '@/components/Pages/Aggregator/Countdown'
 import useWalletSignature from '@/hooks/useWalletSignature'
+import Modal from '@/components/Base/Modal'
 
 type Milestone = {
   key: string;
@@ -841,6 +842,10 @@ const GameDetails = ({ game }) => {
   const { signMessage } = useWalletSignature()
 
   useEffect(() => {
+    console.log(winners)
+  }, [winners])
+
+  useEffect(() => {
     if (!game.answer) {
       return
     }
@@ -967,6 +972,8 @@ const GameDetails = ({ game }) => {
     }).filter(x => !!x) || []
   }, [game, winners])
 
+  const [modalWinners, setModalWinners] = useState(false)
+
   return <div className="mt-20">
     <div className="bg-black/50 relative min-h-[240px] rounded-lg">
       <div className="absolute w-full h-full overflow-hidden rounded-lg">
@@ -982,7 +989,6 @@ const GameDetails = ({ game }) => {
             <h3 className="text-4xl uppercase">Prediction</h3>
           </div>
           <p className="text-white/80 text-base">{game.description || `Guest the highest ROI to win ${game.settings?.rewards?.map((reward) => {
-            console.log(reward)
             return `${reward.amount} $${reward.token}`
           }).join(', ') || ''}`}</p>
           <p className="text-xs mt-6">
@@ -1012,13 +1018,37 @@ const GameDetails = ({ game }) => {
                 {game.answer}
               </div>
             </div>
-            <div>
+            <div onClick={(e) => { setModalWinners(true) }}>
               <p className="text-sm text-white/80 uppercase">Winners</p>
-              <div className="text-base font-medium">
-                {winners?.length ? `${winners?.length} winners` : 'No winners'}
+              <div className="text-base font-medium hover:underline cursor-pointer">
+                {winners?.length ? `${winners?.length} winner(s)` : 'No winners'}
               </div>
             </div>
           </div>}
+
+          <Modal show={modalWinners} toggle={x => setModalWinners(x)} className='dark:bg-transparent fixed z-50 sm:!max-w-xl'>
+            <div className="bg-gamefiDark-700">
+              <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full">
+                <strong className="uppercase text-2xl font-mechanic">ROI Prediction Winners</strong>
+                <table className="table-auto mt-4">
+                  <thead>
+                    <tr>
+                      <th>Wallet</th>
+                      <th>Prediction</th>
+                      <th>Reward</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    { winners?.map(winner => <tr key={winner.wallet}>
+                      <td>{shortenAddress(winner.wallet, '*', 6)}</td>
+                      <td>{winner.answer}</td>
+                      <td>{rewardsEach.join(', ')}</td>
+                    </tr>)}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </Modal>
 
           <p className="text-sm text-white/80 uppercase mt-6">Your prediction</p>
           { !account && <div className="text-base font-medium text-rose-500">

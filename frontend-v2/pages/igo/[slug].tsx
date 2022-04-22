@@ -880,6 +880,11 @@ const GameDetails = ({ game }) => {
 
   const [number, setNumber] = useState('')
   const [errorNumber, setErrorNumber] = useState('')
+  useEffect(() => {
+    setNumber('')
+    setErrorNumber('')
+  }, [account])
+
   const handleNumber = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setErrorNumber('')
     const target = event.target
@@ -976,7 +981,10 @@ const GameDetails = ({ game }) => {
             <h2 className="text-5xl font-bold">ROI</h2>
             <h3 className="text-4xl uppercase">Prediction</h3>
           </div>
-          <p className="text-white/80 text-base">{game.description || `Guest the highest ROI to win ${game.settings?.rewards?.map((reward) => `${reward.amount} $${reward.token}`).join(', ') || ''}`}</p>
+          <p className="text-white/80 text-base">{game.description || `Guest the highest ROI to win ${game.settings?.rewards?.map((reward) => {
+            console.log(reward)
+            return `${reward.amount} $${reward.token}`
+          }).join(', ') || ''}`}</p>
           <p className="text-xs mt-6">
             <a href={`#/${game.id}`} className="text-gamefiGreen-500 hover:underline inline-flex">
               Learn More
@@ -1033,9 +1041,13 @@ const GameDetails = ({ game }) => {
             { !!winners?.length && won && <div className="text-base font-medium text-gamefiGreen-500">
             Congratulations. You won {rewardsEach.join(', ')} !
             </div> }
+            { !!winners?.length && !won && <div className="text-base font-medium text-[#DE4343]">
+            Your prediction is not correct
+            </div> }
             <p className="text-xs mt-1">
               { recordsMine?.[0] && !winners?.length && <span className="text-white/60">Stay tuned for the result at <strong>{format(snapshot, 'yyyy-MM-dd HH:mm:ss')}</strong></span> }
               { recordsMine?.[0] && won && <span className="text-white/60">Reward Distribution: <strong>{game?.settings?.distribution}</strong></span> }
+              { recordsMine?.[0] && !won && <span className="text-white/60">Good luck next time!</span> }
               { errorNumber ? <span className="text-[#DE4343]">{errorNumber}</span> : <span>&nbsp;</span> }
             </p>
           </> }

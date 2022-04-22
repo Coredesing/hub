@@ -39,7 +39,6 @@ const Article = ({ post }) => {
       <div className="relative mt-6">
         <img src={post.feature_image} alt={post.title} className="w-full aspect-[16/9]"></img>
       </div>
-      <p className="mt-6 italic font-casual text-base text-white text-opacity-75">{post.excerpt}</p>
       <div className="mt-6 font-casual editor-content !text-base text-white text-opacity-95" dangerouslySetInnerHTML={{ __html: post.html }} />
       <div className="h-px bg-gradient-to-r from-gray-300/30 mt-8"></div>
       <p className="font-bold font-casual text-base mt-2">Tags</p>

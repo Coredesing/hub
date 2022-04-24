@@ -113,22 +113,34 @@ class HomeController {
 
   async getNFTDetail({ request, auth, params }) {
     const nft = request.params.nft
+    const param = request.all();
+
     let image = ''
+    let data = {}
 
     switch (nft) {
       case 'kingdomquest':
         image = 'https://gamefi-public.s3.amazonaws.com/aggregator/optimized/kingdom-quest/Bundle.png'
         break
+      case 'kingdomquest-chest':
+        const rarity = param.rarity || 0
+        image = 'https://gamefi-public.s3.amazonaws.com/aggregator/optimized/kingdom-quest/Bundle.png'
+        data.name = `KingdomQuest-Chest`
+        data.rarity = rarity
+        break
       default:
         return {}
     }
-
-    return {
-      image: image,
-      external_url: image,
-      description: `GameFi-${nft} Box`,
-      name: `GameFi-${nft} Box`
+    data.image = image
+    data.external_url =  image
+    if (!data.description) {
+      data.description = `GameFi-${nft} Box`
     }
+    if (!data.name) {
+      data.name = `GameFi-${nft} Box`
+    }
+
+    return data
   }
 
   async getMetaGodTicketDetail({ request, auth, params }) {

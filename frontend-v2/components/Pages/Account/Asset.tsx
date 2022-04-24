@@ -38,9 +38,9 @@ const Asset = () => {
   const router = useRouter()
   const slug = useMemo(() => {
     const x = router.query.slug
-    if (!availableSlugs.includes(x)) return ''
+    // if (!availableSlugs.includes(x)) return ''
     return x || ''
-  }, [availableSlugs, router.query.slug])
+  }, [router.query.slug])
 
   const tab = useMemo(() => {
     return Number(router.query.tab) || 0
@@ -135,7 +135,7 @@ const Asset = () => {
     const type = assetTypes[currentTab].type || assetTypes[0].type
     setAssetLoading(true)
     fetcher(`${API_BASE_URL}/marketplace/collections/support?type=${type}`).then(async (res) => {
-      const arr = res.data || []
+      let arr = res.data || []
       const listSlug = []
       arr.forEach(item => {
         if (item.slug && !listSlug.includes(item.slug)) {
@@ -144,14 +144,13 @@ const Asset = () => {
       })
 
       setAvailableSlug(listSlug)
-      console.log('ccc', listSlug)
+
+      arr = arr.filter(item => (!slug || item.slug === slug))
+      console.log('asdad', arr)
 
       if (arr.length) {
         for (let i = 0; i < arr.length; i++) {
           const p = arr[i]
-          if (slug && p.slug !== slug) {
-            continue
-          }
           try {
             const projectAddress = p?.token_address
             const erc721Contract = new Contract(projectAddress, ERC721Abi, library)

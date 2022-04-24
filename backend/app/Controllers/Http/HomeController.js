@@ -123,7 +123,7 @@ class HomeController {
         image = 'https://gamefi-public.s3.amazonaws.com/aggregator/optimized/kingdom-quest/Bundle.png'
         break
       case 'kingdomquest-chest':
-        const rarity = param.rarity || 0
+        const rarity = parseInt(param.rarity) || 0
         image = 'https://gamefi-public.s3.amazonaws.com/aggregator/optimized/kingdom-quest/Bundle.png'
         data.name = `KingdomQuest-Chest`
         data.rarity = rarity

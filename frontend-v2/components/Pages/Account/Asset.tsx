@@ -11,6 +11,7 @@ import ERC721Abi from '@/components/web3/abis/Erc721.json'
 import { API_BASE_URL } from '@/utils/constants'
 import { BeatLoader, MoonLoader } from 'react-spinners'
 import clsx from 'clsx'
+import { useRouter } from 'next/router'
 
 const Asset = () => {
   const assetTypes = useMemo(() => ({
@@ -32,6 +33,22 @@ const Asset = () => {
   }), [])
   const { account, library } = useMyWeb3()
   const [currentTab, setTab] = useState(0)
+  const [availableSlugs, setAvailableSlug] = useState([])
+
+  const router = useRouter()
+  const slug = useMemo(() => {
+    const x = router.query.slug
+    if (!availableSlugs.includes(x)) return ''
+    return router.query.slug || ''
+  }, [availableSlugs, router.query.slug])
+
+  const tab = useMemo(() => {
+    return Number(router.query.tab) || 0
+  }, [router.query.tab])
+
+  useEffect(() => {
+    setTab(tab)
+  }, [tab])
   const onChangeTab = (val: number) => {
     setTab(val)
   }
@@ -42,7 +59,7 @@ const Asset = () => {
   const getMyListAsset = useCallback(async (account: string, erc721Contract: any, prjInfo: any) => {
     try {
       const collections: any[] = []
-      const result = await fetcher(`${API_BASE_URL}/marketplace/owner/${prjInfo.slug}?wallet=${account}`)
+      const result = await fetcher(`${API_BASE_URL}/marketplace/owner/${slug || prjInfo.slug}?wallet=${account}`)
       const array = result.data?.data || []
       for (let j = 0; j < array.length; j++) {
         const collection: any = {
@@ -64,7 +81,7 @@ const Asset = () => {
         collections.push(collection)
         setAssetComponents((c) => [
           ...c,
-          <CardSlim item={collection} key={collection.id} detailLink={`/account/collections/${prjInfo.slug}/${collection.id}`} />
+          <CardSlim item={collection} key={collection.id} detailLink={`/account/collections/${slug || prjInfo.slug}/${collection.id}`} />
         ])
       }
       return collections
@@ -119,6 +136,15 @@ const Asset = () => {
     setAssetLoading(true)
     fetcher(`${API_BASE_URL}/marketplace/collections/support?type=${type}`).then(async (res) => {
       const arr = res.data || []
+      const listSlug = []
+      arr.forEach(item => {
+        if (item.slug && !listSlug.includes(item.slug)) {
+          listSlug.push(item.slug)
+        }
+      })
+
+      setAvailableSlug(listSlug)
+
       if (arr.length) {
         for (let i = 0; i < arr.length; i++) {
           const p = arr[i]

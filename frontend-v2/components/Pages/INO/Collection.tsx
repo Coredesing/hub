@@ -85,7 +85,7 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT,
                 </div>
                 <div className='flex gap-2 flex-wrap'>
                   {
-                    (!POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id) || (ownedBox && ownedBox <= 10)) &&
+                    !POOL_IDS_IS_CLAIMED_ONE_BY_ONE.includes(poolInfo.id) &&
                     <button
                       className={clsx(
                         styles.btnClaimAll,

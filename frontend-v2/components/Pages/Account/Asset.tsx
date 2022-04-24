@@ -39,7 +39,7 @@ const Asset = () => {
   const slug = useMemo(() => {
     const x = router.query.slug
     if (!availableSlugs.includes(x)) return ''
-    return router.query.slug || ''
+    return x || ''
   }, [availableSlugs, router.query.slug])
 
   const tab = useMemo(() => {
@@ -59,7 +59,7 @@ const Asset = () => {
   const getMyListAsset = useCallback(async (account: string, erc721Contract: any, prjInfo: any) => {
     try {
       const collections: any[] = []
-      const result = await fetcher(`${API_BASE_URL}/marketplace/owner/${slug || prjInfo.slug}?wallet=${account}`)
+      const result = await fetcher(`${API_BASE_URL}/marketplace/owner/${prjInfo.slug}?wallet=${account}`)
       const array = result.data?.data || []
       for (let j = 0; j < array.length; j++) {
         const collection: any = {
@@ -81,7 +81,7 @@ const Asset = () => {
         collections.push(collection)
         setAssetComponents((c) => [
           ...c,
-          <CardSlim item={collection} key={collection.id} detailLink={`/account/collections/${slug || prjInfo.slug}/${collection.id}`} />
+          <CardSlim item={collection} key={collection.id} detailLink={`/account/collections/${prjInfo.slug}/${collection.id}`} />
         ])
       }
       return collections
@@ -144,10 +144,14 @@ const Asset = () => {
       })
 
       setAvailableSlug(listSlug)
+      console.log('ccc', listSlug)
 
       if (arr.length) {
         for (let i = 0; i < arr.length; i++) {
           const p = arr[i]
+          if (slug && p.slug !== slug) {
+            continue
+          }
           try {
             const projectAddress = p?.token_address
             const erc721Contract = new Contract(projectAddress, ERC721Abi, library)
@@ -169,7 +173,7 @@ const Asset = () => {
       }
       setAssetLoading(false)
     })
-  }, [currentTab, account, library, assetTypes, getMyAssetsFromExternalUri, getMyListAsset])
+  }, [currentTab, account, library, assetTypes, getMyAssetsFromExternalUri, getMyListAsset, slug])
 
   return <div>
     <div className='header px-9 '>

@@ -125,7 +125,8 @@ class HomeController {
       case 'kingdomquest-chest':
         const rarity = parseInt(param.rarity) || 0
         image = NFTDetailUtils.getKingdomQuestNFTDetail(rarity)
-        data.name = `KingdomQuest-Chest`
+        data.name = `KingdomQuest Chest`
+        data.description = `KingdomQuest Mystery Chest`
         data.rarity = rarity
         break
       default:

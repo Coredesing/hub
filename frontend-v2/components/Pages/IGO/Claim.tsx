@@ -344,7 +344,7 @@ const Claim = () => {
                         {printNumber(((Number(purchasedTokens) * Number(item.max_percent_claim) / 100) - (Number(purchasedTokens) * Number(configs[index - 1]?.max_percent_claim) / 100 || 0)))} {poolData?.symbol}
                       </div>
                       {
-                        Number(purchasedTokens || 0)
+                        Number(purchasedTokens || 0) > 0
                           ? <div className="table-cell align-middle py-2 rounded font-light">
                             {Number(item.claim_type) === 0
                               ? item.status === 'Claimable'
@@ -371,7 +371,8 @@ const Claim = () => {
                             Number(item.claim_type) === 2 && 'text-gamefiRed flex items-center gap-1 justify-end'
                           }`}
                         >
-                          {CLAIM_TYPE[Number(item.claim_type)]}
+                          {/* {CLAIM_TYPE[Number(item.claim_type)]} */}
+                          {CLAIM_TYPE[Number(item.claim_type)] || `Unknown: ${JSON.stringify(item.claim_type)}`}
                           {Number(item.claim_type) === 2
                             ? <a href={item.claim_url} target="_blank" rel="noreferrer" className="cursor-pointer">
                               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">

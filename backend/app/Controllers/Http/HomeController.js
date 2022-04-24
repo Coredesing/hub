@@ -5,7 +5,7 @@ const HelperUtils = use('App/Common/HelperUtils');
 const SubscribeEmailService = use('App/Services/SubscribeEmailService');
 const HomeService = use('App/Services/HomeService');
 const GameFiVestingService = use('App/Services/GameFiVestingService');
-const MetagodNFTTicketUtils = use('App/Common/MetagodNFTTicketUtils');
+const NFTDetailUtils = use('App/Common/NFTDetailUtils');
 
 class HomeController {
   async subscribe({request}) {
@@ -124,7 +124,7 @@ class HomeController {
         break
       case 'kingdomquest-chest':
         const rarity = parseInt(param.rarity) || 0
-        image = 'https://gamefi-public.s3.amazonaws.com/aggregator/optimized/kingdom-quest/Bundle.png'
+        image = NFTDetailUtils.getKingdomQuestNFTDetail(rarity)
         data.name = `KingdomQuest-Chest`
         data.rarity = rarity
         break
@@ -132,7 +132,7 @@ class HomeController {
         return {}
     }
     data.image = image
-    data.external_url =  image
+    data.external_url = image
     if (!data.description) {
       data.description = `GameFi-${nft} Box`
     }
@@ -150,7 +150,7 @@ class HomeController {
         return HelperUtils.responseNotFound()
       }
 
-      const data = MetagodNFTTicketUtils.getDetailByID(nftId)
+      const data = NFTDetailUtils.getMetagodNFTDetail(nftId)
       if (!data) {
         return HelperUtils.responseNotFound()
       }

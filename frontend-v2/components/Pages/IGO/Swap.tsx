@@ -38,7 +38,7 @@ const Swap = () => {
   const [rounds, setRounds] = useState([
     {
       phase: 1,
-      name: 'Pre-order/Buying Phase 1 - Guarantee',
+      name: poolData.is_private === 3 ? 'Buying Phase' : 'Pre-order/Buying Phase 1 - Guarantee',
       token: usd,
       allocation: allocation?.max_buy || 0,
       purchased: '0'

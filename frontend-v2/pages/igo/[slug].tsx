@@ -1018,7 +1018,7 @@ const GameDetails = ({ game }) => {
                 {game.answer}
               </div>
             </div>
-            <div onClick={(e) => { setModalWinners(true) }}>
+            <div onClick={() => { setModalWinners(true) }}>
               <p className="text-sm text-white/80 uppercase">Winners</p>
               <div className="text-base font-medium hover:underline cursor-pointer">
                 {winners?.length ? `${winners?.length} winner(s)` : 'No winners'}

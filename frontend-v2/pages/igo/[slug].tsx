@@ -1033,7 +1033,7 @@ const GameDetails = ({ game }) => {
             <h2 className="text-5xl font-bold">ROI</h2>
             <h3 className="text-4xl uppercase">Prediction</h3>
           </div>
-          <p className="text-white/80 text-base">{game.description || `Guess the highest ROI to win ${game.settings?.rewards?.map((reward) => {
+          <p className="text-white/80 text-sm">{game.description ? `${game.description}. ` : ''}{`Guess the highest ROI to win ${game.settings?.rewards?.map((reward) => {
             return `${reward.amount} $${reward.token}`
           }).join(', ') || ''}`}</p>
           <p className="text-xs mt-6">

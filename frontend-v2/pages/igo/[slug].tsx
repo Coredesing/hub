@@ -1019,9 +1019,9 @@ const GameDetails = ({ game }) => {
   const [modalWinners, setModalWinners] = useState(false)
   const [modalRules, setModalRules] = useState(false)
 
-  return <div className="mt-20">
-    <div className="bg-black/50 relative sm:min-h-[240px] rounded-lg">
-      <div className="absolute w-full h-full overflow-hidden rounded-lg">
+  return <div className="mt-10 sm:mt-20">
+    <div className="bg-black/50 relative sm:min-h-[240px] rounded-lg z-0">
+      <div className="absolute w-full h-full overflow-hidden rounded-lg z-[-1]">
         <div className="absolute bg-[#FF8A00] w-64 h-64 rounded-full blur-2xl -top-32 -left-32 bg-opacity-[15%]"></div>
       </div>
       <div className="hidden xl:block absolute right-3 bottom-[-11%]">
@@ -1044,36 +1044,6 @@ const GameDetails = ({ game }) => {
               </svg>
             </a>
           </p>
-
-          <Modal show={modalRules} toggle={x => setModalRules(x)} className='dark:bg-transparent fixed z-50 sm:!max-w-xl'>
-            <div className="bg-gamefiDark-700">
-              <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full text-white/90 leading-normal">
-                <strong className="uppercase text-2xl font-mechanic mt-4 mb-6 block text-white">ROI Prediction</strong>
-                <p className="mb-4">
-                  Predict highest ROI in a time-frame to win rewards. It&#39;s free to play for all users who meet any of these requirements
-                </p>
-                <ul className="mb-4 font-semibold">
-                  <li>
-                  - Are Rookies or above
-                  </li>
-                  <li>
-                  - Stake at least 1 GAFI in the Earn pool
-                  </li>
-                </ul>
-                <p className="mb-4">
-                  ROI = <strong className="font-semibold">Highest price / sale price</strong><br />
-                  E.g. In 24 hours after TGE<br />
-                  <strong className="font-semibold">- Sale price = $0.005</strong> <br />
-                  <strong className="font-semibold">- Highest price = $0.123456</strong><br />
-                  The correct answer will be <strong className="font-semibold">24.69</strong> (24.6912 - 2 digits rounding)
-                </p>
-
-                <p className="mb-4">Predictions must be done before TGE.</p>
-                <p className="mb-4">If no one gives correct answer, 10 closest answers will be selected based on submission time. If there are more than one winner, rewards will be equally shared among them.</p>
-                <p className="mb-4">There might be difference of prices between exchanges or snapshot times, GameFi.org decision will be the final decision.</p>
-              </div>
-            </div>
-          </Modal>
         </div>
 
         <div className="flex-1 p-8 sm:py-0 font-casual w-full">
@@ -1101,32 +1071,6 @@ const GameDetails = ({ game }) => {
               </div>
             </div>
           </div>}
-
-          <Modal show={modalWinners} toggle={x => setModalWinners(x)} className='dark:bg-transparent fixed z-50 sm:!max-w-xl'>
-            <div className="bg-gamefiDark-700">
-              <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full">
-                <strong className="uppercase text-2xl font-mechanic mb-6 block">ROI Prediction Winners</strong>
-                <table className="table-auto mt-4 w-full">
-                  <thead className="font-mechanic uppercase">
-                    <tr>
-                      <th>Wallet</th>
-                      <th>Prediction</th>
-                      <th>Reward</th>
-                      <th>Time</th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-sm">
-                    {winners?.map(winner => <tr key={winner.wallet}>
-                      <td>{shortenAddress(winner.wallet, '*', 6)}</td>
-                      <td>{winner.answer}</td>
-                      <td>{rewardsEach.join(', ')}</td>
-                      <td>{format(new Date(winner.createdAt), 'yyyy-MM-dd HH:mm:ss')}</td>
-                    </tr>)}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </Modal>
 
           <p className="text-sm text-white/80 uppercase mt-6">Your prediction</p>
           {!account && <div className="text-base font-medium text-rose-500">
@@ -1174,6 +1118,62 @@ const GameDetails = ({ game }) => {
         </div>
       </div>
     </div>
+
+    <Modal show={modalRules} toggle={x => setModalRules(x)} className='dark:bg-transparent fixed z-50 sm:!max-w-xl'>
+      <div className="bg-gamefiDark-700">
+        <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full text-white/90 leading-normal">
+          <strong className="uppercase text-2xl font-mechanic mt-4 mb-6 block text-white">ROI Prediction</strong>
+          <p className="mb-4">
+            Predict highest ROI in a time-frame to win rewards. It&#39;s free to play for all users who meet any of these requirements
+          </p>
+          <ul className="mb-4 font-semibold">
+            <li>
+              - Are Rookies or above
+            </li>
+            <li>
+              - Stake at least 1 GAFI in the Earn pool
+            </li>
+          </ul>
+          <p className="mb-4">
+              ROI = <strong className="font-semibold">Highest price / sale price</strong><br />
+              E.g. In 24 hours after TGE<br />
+            <strong className="font-semibold">- Sale price = $0.005</strong> <br />
+            <strong className="font-semibold">- Highest price = $0.123456</strong><br />
+              The correct answer will be <strong className="font-semibold">24.69</strong> (24.6912 - 2 digits rounding)
+          </p>
+
+          <p className="mb-4">Predictions must be done before TGE.</p>
+          <p className="mb-4">If no one gives correct answer, 10 closest answers will be selected based on submission time. If there are more than one winner, rewards will be equally shared among them.</p>
+          <p className="mb-4">There might be difference of prices between exchanges or snapshot times, GameFi.org decision will be the final decision.</p>
+        </div>
+      </div>
+    </Modal>
+
+    <Modal show={modalWinners} toggle={x => setModalWinners(x)} className='dark:bg-transparent fixed z-50 sm:!max-w-xl'>
+      <div className="bg-gamefiDark-700">
+        <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full">
+          <strong className="uppercase text-2xl font-mechanic mb-6 block">ROI Prediction Winners</strong>
+          <table className="table-auto mt-4 w-full">
+            <thead className="font-mechanic uppercase">
+              <tr>
+                <th>Wallet</th>
+                <th>Prediction</th>
+                <th>Reward</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody className="text-sm">
+              {winners?.map(winner => <tr key={winner.wallet}>
+                <td>{shortenAddress(winner.wallet, '*', 6)}</td>
+                <td>{winner.answer}</td>
+                <td>{rewardsEach.join(', ')}</td>
+                <td>{format(new Date(winner.createdAt), 'yyyy-MM-dd HH:mm:ss')}</td>
+              </tr>)}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </Modal>
   </div>
 }
 

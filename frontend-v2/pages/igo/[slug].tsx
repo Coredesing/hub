@@ -875,7 +875,7 @@ const GameDetails = ({ game }) => {
     if (!earnStake) {
       return false
     }
-    return Number(earnStake) > 1
+    return Number(earnStake) >= 1
   }, [earnStake])
 
   useEffect(() => {
@@ -945,7 +945,15 @@ const GameDetails = ({ game }) => {
     setNumber(value)
   }, [game])
 
+  const disabled = useMemo(() => {
+    return ended || !!recordsMine?.[0]
+  }, [ended, recordsMine])
+
   const submit = useCallback(() => {
+    if (disabled) {
+      return
+    }
+
     if (!number) {
       toast.error('Please enter your prediction')
       return
@@ -989,11 +997,8 @@ const GameDetails = ({ game }) => {
       console.debug(err)
       toast.error('Could not sign the authentication message')
     })
-  }, [number, errorNumber, signMessage, account, game.id, loadRecordsMine])
+  }, [number, errorNumber, signMessage, account, game.id, loadRecordsMine, disabled])
 
-  const disabled = useMemo(() => {
-    return ended || !!recordsMine?.[0]
-  }, [ended, recordsMine])
   const won = useMemo(() => {
     return !!winners?.length && !!winners.find(x => x.wallet?.toLowerCase() === account?.toLowerCase())
   }, [winners, account])

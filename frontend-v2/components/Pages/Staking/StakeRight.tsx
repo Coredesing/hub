@@ -86,7 +86,8 @@ export default function StakeRight ({ loadMyPending, account, pendingWithdrawal,
               return
             }
 
-            toast.error('Restaking Failed!')
+            toast.error(`Restaking Failed: ${err.code}`)
+            console.debug(err)
           })
       } catch (err) {
         console.debug(err)

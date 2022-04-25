@@ -1095,7 +1095,7 @@ const GameDetails = ({ game }) => {
                   Stake at least 1 $GAFI in Earn to join
                 </div>}
                 { earnStake !== null && (validRank || validEarn) && <>
-                  <input type="number" className="hide-spin text-base bg-white/10 rounded-sm clipped-t-r-sm w-full border-transparent px-3 pr-24 py-2 block shadow-lg focus:ring-0 focus:shadow-none focus:border-transparent" placeholder="Enter your number here" disabled={disabled} value={recordsMine?.[0]?.answer || number} onChange={handleNumber} />
+                  <input type="number" className="hide-spin text-base bg-white/10 rounded-sm clipped-t-r-sm w-full border-transparent px-3 pr-24 py-2 block shadow-lg focus:ring-0 focus:shadow-none focus:border-transparent" placeholder="ROI = Highest Price / IGO Price" disabled={disabled} value={recordsMine?.[0]?.answer || number} onChange={handleNumber} />
                   <button className={`font-[13px] font-mechanic uppercase font-bold absolute right-1.5 top-[50%] -translate-y-1/2 rounded-sm clipped-t-r-sm  block text-sm px-4 py-1 ${disabled ? 'text-white/40 bg-gamefiDark-500/50 cursor-not-allowed' : 'text-black cursor-pointer bg-gradient-to-br from-amber-400 via-amber-400 to-rose-400'}`} onClick={() => { submit() }}>Submit</button>
                 </>
                 }

@@ -1114,7 +1114,6 @@ const GameDetails = ({ game }) => {
               Your prediction is not correct
             </div>}
             <p className="text-xs mt-1">
-              {recordsMine?.[0] && !winners?.length && <span className="text-white/60">Stay tuned for the result at <strong>{format(snapshot, 'yyyy-MM-dd HH:mm:ss')}</strong></span>}
               {recordsMine?.[0] && won && <span className="text-white/60">Reward Distribution: <strong>{game?.settings?.distribution}</strong></span>}
               {recordsMine?.[0] && winners?.length && !won && <span className="text-white/60">Good luck next time!</span>}
               {errorNumber ? <span className="text-[#DE4343]">{errorNumber}</span> : <span>&nbsp;</span>}

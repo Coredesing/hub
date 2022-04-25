@@ -11,6 +11,7 @@ import ERC721Abi from '@/components/web3/abis/Erc721.json'
 import { API_BASE_URL } from '@/utils/constants'
 import { BeatLoader, MoonLoader } from 'react-spinners'
 import clsx from 'clsx'
+import { useRouter } from 'next/router'
 
 const Asset = () => {
   const assetTypes = useMemo(() => ({
@@ -32,6 +33,22 @@ const Asset = () => {
   }), [])
   const { account, library } = useMyWeb3()
   const [currentTab, setTab] = useState(0)
+  const [availableSlugs, setAvailableSlug] = useState([])
+
+  const router = useRouter()
+  const slug = useMemo(() => {
+    const x = router.query.slug
+    // if (!availableSlugs.includes(x)) return ''
+    return x || ''
+  }, [router.query.slug])
+
+  const tab = useMemo(() => {
+    return Number(router.query.tab) || 0
+  }, [router.query.tab])
+
+  useEffect(() => {
+    setTab(tab)
+  }, [tab])
   const onChangeTab = (val: number) => {
     setTab(val)
   }
@@ -118,7 +135,19 @@ const Asset = () => {
     const type = assetTypes[currentTab].type || assetTypes[0].type
     setAssetLoading(true)
     fetcher(`${API_BASE_URL}/marketplace/collections/support?type=${type}`).then(async (res) => {
-      const arr = res.data || []
+      let arr = res.data || []
+      const listSlug = []
+      arr.forEach(item => {
+        if (item.slug && !listSlug.includes(item.slug)) {
+          listSlug.push(item.slug)
+        }
+      })
+
+      setAvailableSlug(listSlug)
+
+      arr = arr.filter(item => (!slug || item.slug === slug))
+      console.log('asdad', arr)
+
       if (arr.length) {
         for (let i = 0; i < arr.length; i++) {
           const p = arr[i]
@@ -143,7 +172,7 @@ const Asset = () => {
       }
       setAssetLoading(false)
     })
-  }, [currentTab, account, library, assetTypes, getMyAssetsFromExternalUri, getMyListAsset])
+  }, [currentTab, account, library, assetTypes, getMyAssetsFromExternalUri, getMyListAsset, slug])
 
   return <div>
     <div className='header px-9 '>

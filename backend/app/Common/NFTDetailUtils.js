@@ -1,6 +1,6 @@
 'use strict'
 
-const data = [{"id": 0, "name": "Shadow Medusa Ticket", "coordinates": "(-1, -5)", "size": "1x1", "level": "2-4", "image": "https://gamefi-public.s3.amazonaws.com/shadow_medusa_0_-1_-5.png", "external_url": "https://gamefi-public.s3.amazonaws.com/shadow_medusa_0_-1_-5.png", "description":"Lower-leveled Dungeon. Can bring attract battles soon, since most players start with the easy. However, an easy one means players tend to win more, and fewer loots will be dropped. So owning this means you have more battles, lower-valued loots, and an early income."},
+const metagodNFTData = [{"id": 0, "name": "Shadow Medusa Ticket", "coordinates": "(-1, -5)", "size": "1x1", "level": "2-4", "image": "https://gamefi-public.s3.amazonaws.com/shadow_medusa_0_-1_-5.png", "external_url": "https://gamefi-public.s3.amazonaws.com/shadow_medusa_0_-1_-5.png", "description":"Lower-leveled Dungeon. Can bring attract battles soon, since most players start with the easy. However, an easy one means players tend to win more, and fewer loots will be dropped. So owning this means you have more battles, lower-valued loots, and an early income."},
   {"id": 1, "name": "Shadow Medusa Ticket", "coordinates": "(-1, -6)", "size": "1x1", "level": "2-4", "image": "https://gamefi-public.s3.amazonaws.com/shadow_medusa_1_-1_-6.png", "external_url": "https://gamefi-public.s3.amazonaws.com/shadow_medusa_1_-1_-6.png", "description":"Lower-leveled Dungeon. Can bring attract battles soon, since most players start with the easy. However, an easy one means players tend to win more, and fewer loots will be dropped. So owning this means you have more battles, lower-valued loots, and an early income."},
   {"id": 2, "name": "Shadow Medusa Ticket", "coordinates": "(-2, -5)", "size": "1x1", "level": "2-4", "image": "https://gamefi-public.s3.amazonaws.com/shadow_medusa_2_-2_-5.png", "external_url": "https://gamefi-public.s3.amazonaws.com/shadow_medusa_2_-2_-5.png", "description":"Lower-leveled Dungeon. Can bring attract battles soon, since most players start with the easy. However, an easy one means players tend to win more, and fewer loots will be dropped. So owning this means you have more battles, lower-valued loots, and an early income."},
   {"id": 3, "name": "Shadow Medusa Ticket", "coordinates": "(-2, -6)", "size": "1x1", "level": "2-4", "image": "https://gamefi-public.s3.amazonaws.com/shadow_medusa_3_-2_-6.png", "external_url": "https://gamefi-public.s3.amazonaws.com/shadow_medusa_3_-2_-6.png", "description":"Lower-leveled Dungeon. Can bring attract battles soon, since most players start with the easy. However, an easy one means players tend to win more, and fewer loots will be dropped. So owning this means you have more battles, lower-valued loots, and an early income."},
@@ -51,10 +51,26 @@ const data = [{"id": 0, "name": "Shadow Medusa Ticket", "coordinates": "(-1, -5)
   {"id": 48, "name": "Dark Aphrodite Ticket", "coordinates": "(-29, 12)", "size": "1x1", "level": "5-7", "image": "https://gamefi-public.s3.amazonaws.com/dark_aphrodite_48_-29_12.png", "external_url": "https://gamefi-public.s3.amazonaws.com/dark_aphrodite_48_-29_12.png", "description":"Mid-leveled Dungeon. A great choice for buyers who do not have a preference and want to wait to see the future of the game. This type of Land bring an average number of battles and loots dropped. Income may come early or in long term, depending on your vote."},
   {"id": 49, "name": "Dark Aphrodite Ticket", "coordinates": "(-29, 13)", "size": "1x1", "level": "5-7", "image": "https://gamefi-public.s3.amazonaws.com/dark_aphrodite_49_-29_13.png", "external_url": "https://gamefi-public.s3.amazonaws.com/dark_aphrodite_49_-29_13.png", "description":"Mid-leveled Dungeon. A great choice for buyers who do not have a preference and want to wait to see the future of the game. This type of Land bring an average number of battles and loots dropped. Income may come early or in long term, depending on your vote."}]
 
-const getDetailByID = (id) => {
-  return data.find(o => o.id === id)
-};
+const KingdomQuestData = [
+  'https://gamefi-public.s3.amazonaws.com/kingdomquest_common_chest.png',
+  'https://gamefi-public.s3.amazonaws.com/kingdomquest_rare_chest.png',
+  'https://gamefi-public.s3.amazonaws.com/kingdomquest_epic_chest.png',
+  'https://gamefi-public.s3.amazonaws.com/kingdomquest_legend_chest.png'
+]
+
+const getMetagodNFTDetail = (id) => {
+  return metagodNFTData.find(o => o.id === id)
+}
+
+const getKingdomQuestNFTDetail = (rarity) => {
+  if (rarity >= KingdomQuestData.length || rarity < 0) {
+    return ''
+  }
+
+  return KingdomQuestData[rarity]
+}
 
 module.exports = {
-  getDetailByID,
+  getMetagodNFTDetail,
+  getKingdomQuestNFTDetail,
 };

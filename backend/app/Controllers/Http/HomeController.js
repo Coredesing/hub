@@ -5,7 +5,7 @@ const HelperUtils = use('App/Common/HelperUtils');
 const SubscribeEmailService = use('App/Services/SubscribeEmailService');
 const HomeService = use('App/Services/HomeService');
 const GameFiVestingService = use('App/Services/GameFiVestingService');
-const MetagodNFTTicketUtils = use('App/Common/MetagodNFTTicketUtils');
+const NFTDetailUtils = use('App/Common/NFTDetailUtils');
 
 class HomeController {
   async subscribe({request}) {
@@ -113,22 +113,35 @@ class HomeController {
 
   async getNFTDetail({ request, auth, params }) {
     const nft = request.params.nft
+    const param = request.all();
+
     let image = ''
+    let data = {}
 
     switch (nft) {
       case 'kingdomquest':
         image = 'https://gamefi-public.s3.amazonaws.com/aggregator/optimized/kingdom-quest/Bundle.png'
         break
+      case 'kingdomquest-chest':
+        const rarity = parseInt(param.rarity) || 0
+        image = NFTDetailUtils.getKingdomQuestNFTDetail(rarity)
+        data.name = `KingdomQuest Chest`
+        data.description = `KingdomQuest Mystery Chest`
+        data.rarity = rarity
+        break
       default:
         return {}
     }
-
-    return {
-      image: image,
-      external_url: image,
-      description: `GameFi-${nft} Box`,
-      name: `GameFi-${nft} Box`
+    data.image = image
+    data.external_url = image
+    if (!data.description) {
+      data.description = `GameFi-${nft} Box`
     }
+    if (!data.name) {
+      data.name = `GameFi-${nft} Box`
+    }
+
+    return data
   }
 
   async getMetaGodTicketDetail({ request, auth, params }) {
@@ -138,7 +151,7 @@ class HomeController {
         return HelperUtils.responseNotFound()
       }
 
-      const data = MetagodNFTTicketUtils.getDetailByID(nftId)
+      const data = NFTDetailUtils.getMetagodNFTDetail(nftId)
       if (!data) {
         return HelperUtils.responseNotFound()
       }

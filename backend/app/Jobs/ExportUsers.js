@@ -64,7 +64,7 @@ class ExportUsers {
                 .andWhere('partner_group_status', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
                 .andWhere('partner_channel_status', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
                 .andWhere('partner_retweet_post_status', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
-            });
+            }).with('user')
           break
         default:
           throw new Error('Type not supported')
@@ -82,7 +82,10 @@ class ExportUsers {
         userList[i].user_telegram = userList[i].user_telegram || (userList[i].whitelistSubmission && userList[i].whitelistSubmission.user_telegram)
         userList[i].tier = Number(response[i] && response[i].tier) || 0
         userList[i].total_gafi = Number(response[i] && response[i].total_gafi) || 0
-        userList[i].solana_address = userList[i].solana_address ? userList[i].solana_address : ((userList[i].whitelistSubmission ? userList[i].whitelistSubmission.solana_address : ''))
+        userList[i].solana_address = userList[i].user.solana_address || ''
+        if (!userList[i].solana_address) {
+          userList[i].solana_address = userList[i].solana_address ? userList[i].solana_address : ((userList[i].whitelistSubmission ? userList[i].whitelistSubmission.solana_address : ''))
+        }
       }
 
       const fields = [{

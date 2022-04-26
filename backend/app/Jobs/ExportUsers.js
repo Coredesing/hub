@@ -118,6 +118,7 @@ class ExportUsers {
 
       await ExportUserModel.query().where('file_name', fileName).update({ status: 'success' })
     } catch (error) {
+      console.log('e', error)
       await ExportUserModel.query().where('file_name', fileName).update({ status: 'fail' })
       throw error
     } finally {

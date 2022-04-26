@@ -860,7 +860,7 @@ const GameDetails = ({ game }) => {
       return
     }
     setEarnStake(null)
-    contractReadonly.linearStakingData(IS_TESTNET ? 4 : 3, account)
+    contractReadonly.linearStakingData(IS_TESTNET ? 4 : 2, account)
       .then(x => utils.formatUnits(x.balance, 18))
       .then(x => {
         setEarnStake(x)

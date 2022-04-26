@@ -80,8 +80,9 @@ class ExportUsers {
       const response = await Promise.all(userAdditionInfoPromises);
       for (let i = 0; i < userList.length; i++) {
         userList[i].user_telegram = userList[i].user_telegram || (userList[i].whitelistSubmission && userList[i].whitelistSubmission.user_telegram)
-        userList[i].tier = Number(response[i] && response[i].tier) || 0;
-        userList[i].total_gafi = Number(response[i] && response[i].total_gafi) || 0;
+        userList[i].tier = Number(response[i] && response[i].tier) || 0
+        userList[i].total_gafi = Number(response[i] && response[i].total_gafi) || 0
+        userList[i].solana_address = userList[i].whitelistSubmission ? userList[i].whitelistSubmission.user_telegram : ''
       }
 
       const fields = [{
@@ -102,6 +103,9 @@ class ExportUsers {
       }, {
         label: 'Email',
         value: 'email'
+      }, {
+        label: 'Solana Address',
+        value: 'solana_address'
       }]
 
       const json2csvParser = new Parser({ fields });

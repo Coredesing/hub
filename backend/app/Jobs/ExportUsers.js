@@ -84,7 +84,7 @@ class ExportUsers {
         userList[i].total_gafi = Number(response[i] && response[i].total_gafi) || 0
         userList[i].solana_address = userList[i].user ? userList[i].user.solana_address : ''
         if (!userList[i].solana_address) {
-          userList[i].solana_address = userList[i].solana_address ? userList[i].solana_address : ((userList[i].whitelistSubmission ? userList[i].whitelistSubmission.solana_address : ''))
+          userList[i].solana_address = userList[i].whitelistSubmission ? userList[i].whitelistSubmission.solana_address : ''
         }
       }
 

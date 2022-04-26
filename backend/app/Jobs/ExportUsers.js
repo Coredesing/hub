@@ -64,7 +64,7 @@ class ExportUsers {
                 .andWhere('partner_group_status', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
                 .andWhere('partner_channel_status', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
                 .andWhere('partner_retweet_post_status', Const.SOCIAL_SUBMISSION_STATUS.COMPLETED)
-            }).with('user')
+            })
           break
         default:
           throw new Error('Type not supported')

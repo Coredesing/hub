@@ -82,7 +82,7 @@ class ExportUsers {
         userList[i].user_telegram = userList[i].user_telegram || (userList[i].whitelistSubmission && userList[i].whitelistSubmission.user_telegram)
         userList[i].tier = Number(response[i] && response[i].tier) || 0
         userList[i].total_gafi = Number(response[i] && response[i].total_gafi) || 0
-        userList[i].solana_address = userList[i].solana_address ? (userList[i].whitelistSubmission ? userList[i].whitelistSubmission.solana_address : '') : ''
+        userList[i].solana_address = userList[i].solana_address ? userList[i].solana_address : ((userList[i].whitelistSubmission ? userList[i].whitelistSubmission.solana_address : ''))
       }
 
       const fields = [{

@@ -16,7 +16,7 @@ const Pagination = ({ totalPage, currentPage, onChange, className }: Props) => {
   const renderPageElm = (p: number) => (<div
     key={p}
     className={clsx(styles.page, 'page font-casual rounded w-7 h-7 text-xs p-1 grid place-items-center font-medium transition ease-in-out delay-150', {
-      ['cursor-pointer ' + styles.bordered]: currentPage !== p,
+      ['cursor-pointer ' + styles.bordered]: currentPage !== p && !!onChange,
       [styles['page-active']]: currentPage === p
     })}
     onClick={() => handleChangePage(p)}
@@ -67,7 +67,7 @@ const Pagination = ({ totalPage, currentPage, onChange, className }: Props) => {
       <div className={clsx(styles.pages)}>
         <div
           className={clsx(styles.page, 'page rounded w-7 h-7 text-xs p-1 grid place-items-center font-medium transition ease-in-out delay-150', {
-            ['cursor-pointer ' + styles.bordered]: currentPage !== 1
+            ['cursor-pointer ' + styles.bordered]: currentPage !== 1 && !!onChange
           })}
           onClick={() => (currentPage - 1 > 0) && handleChangePage(1)}
         >
@@ -78,7 +78,7 @@ const Pagination = ({ totalPage, currentPage, onChange, className }: Props) => {
         </div>
         <div
           className={clsx(styles.page, 'page rounded w-7 h-7 text-xs p-1 grid place-items-center font-medium transition ease-in-out delay-150', {
-            ['cursor-pointer ' + styles.bordered]: currentPage !== 1
+            ['cursor-pointer ' + styles.bordered]: currentPage !== 1 && !!onChange
           })}
           onClick={() => (currentPage - 1 > 0) && handleChangePage(currentPage - 1)}
         >
@@ -89,7 +89,7 @@ const Pagination = ({ totalPage, currentPage, onChange, className }: Props) => {
         {renderPage()}
         <div
           className={clsx(styles.page, 'page rounded w-7 h-7 text-xs p-1 grid place-items-center font-medium transition ease-in-out delay-150', {
-            ['cursor-pointer ' + styles.bordered]: currentPage !== totalPage
+            ['cursor-pointer ' + styles.bordered]: currentPage !== totalPage && !!onChange
           })}
           onClick={() => (currentPage + 1 <= totalPage) && handleChangePage(currentPage + 1)}
         >
@@ -99,7 +99,7 @@ const Pagination = ({ totalPage, currentPage, onChange, className }: Props) => {
         </div>
         <div
           className={clsx(styles.page, 'page rounded w-7 h-7 text-xs p-1 grid place-items-center font-medium transition ease-in-out delay-150', {
-            ['cursor-pointer ' + styles.bordered]: currentPage !== totalPage
+            ['cursor-pointer ' + styles.bordered]: currentPage !== totalPage && !!onChange
           })}
           onClick={() => (currentPage + 1 <= totalPage) && handleChangePage(totalPage)}
         >

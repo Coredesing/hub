@@ -1123,7 +1123,7 @@ const GameDetails = ({ game }) => {
       </div>
     </div>
 
-    <Modal show={modalRules} toggle={x => setModalRules(x)} className='dark:bg-transparent fixed z-50 sm:!max-w-xl'>
+    <Modal show={modalRules} toggle={x => setModalRules(x)} className='dark:bg-transparent fixed z-50 sm:!max-w-2xl'>
       <div className="bg-gamefiDark-700">
         <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full text-white/90 leading-normal">
           <strong className="uppercase text-2xl font-mechanic mt-4 mb-6 block text-white">ROI Prediction</strong>
@@ -1153,7 +1153,7 @@ const GameDetails = ({ game }) => {
       </div>
     </Modal>
 
-    <Modal show={modalWinners} toggle={x => setModalWinners(x)} className='dark:bg-transparent fixed z-50 sm:!max-w-xl'>
+    <Modal show={modalWinners} toggle={x => setModalWinners(x)} className='dark:bg-transparent fixed z-50 sm:!max-w-2xl'>
       <div className="bg-gamefiDark-700">
         <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full">
           <strong className="uppercase text-2xl font-mechanic mb-6 block">ROI Prediction Winners</strong>
@@ -1162,32 +1162,32 @@ const GameDetails = ({ game }) => {
               <table className="min-w-full mb-2">
                 <thead className="border-b">
                   <tr>
-                    <th scope="col" className="text-sm font-medium pr-4 py-4 text-left">
+                    <th scope="col" className="text-sm font-medium pr-4 py-2 text-left font-semibold">
                       Wallet
                     </th>
-                    <th scope="col" className="text-sm font-medium p-4 text-left">
+                    <th scope="col" className="text-sm font-medium px-4 py-2 text-left font-semibold">
                       Prediction
                     </th>
-                    <th scope="col" className="text-sm font-medium p-4 text-left">
+                    <th scope="col" className="text-sm font-medium px-4 py-2 text-left font-semibold">
                       Reward
                     </th>
-                    <th scope="col" className="text-sm font-medium pl-4 py-4 text-left">
+                    <th scope="col" className="text-sm font-medium pl-4 py-2 text-left font-semibold">
                       Time
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {winners?.map(winner => <tr key={winner.wallet} className="border-b">
-                    <td className="text-sm pr-4 py-4 whitespace-nowrap font-semibold">
-                      {shortenAddress(winner.wallet, '*', 4)}
+                  {winners?.map((winner, i) => <tr key={winner.wallet} className={i < winners.length - 1 ? 'border-b border-white/30' : ''}>
+                    <td className="text-sm pr-4 py-2 whitespace-nowrap font-medium">
+                      {shortenAddress(winner.wallet, '*', 6, 4)}
                     </td>
-                    <td className="text-sm p-4 whitespace-nowrap font-semibold">
+                    <td className="text-sm px-4 py-2 whitespace-nowrap">
                       {winner.answer}
                     </td>
-                    <td className="text-sm p-4 whitespace-nowrap font-semibold">
+                    <td className="text-sm px-4 py-2 whitespace-nowrap">
                       {rewardsEach.join(' + ')}
                     </td>
-                    <td className="text-sm pl-4 py-4 whitespace-nowrap">
+                    <td className="text-sm pl-4 py-2 whitespace-nowrap">
                       {format(new Date(winner.createdAt), 'yyyy-MM-dd HH:mm:ss')}
                     </td>
                   </tr>)}

@@ -1153,7 +1153,7 @@ const GameDetails = ({ game }) => {
       </div>
     </Modal>
 
-    <Modal show={modalWinners} toggle={x => setModalWinners(x)} className='dark:bg-transparent fixed z-50 sm:!max-w-xl'>
+    <Modal show={modalWinners} toggle={x => setModalWinners(x)} className='dark:bg-transparent fixed z-50 sm:!max-w-2xl'>
       <div className="bg-gamefiDark-700">
         <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full">
           <strong className="uppercase text-2xl font-mechanic mb-6 block">ROI Prediction Winners</strong>

@@ -1,12 +1,24 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import Image from 'next/image'
 import ToolboxItem from './ToolboxItem'
 import MenuLink from './MenuLink'
 import WalletConnector from '../WalletConnector'
 import Topbar from '../Topbar'
+import Badge from '../Badge'
+import { useFetch } from '@/utils'
 
 const Toolbox = () => {
   const [showMenu, setShowMenu] = useState(false)
+
+  const { response: openingResponse } = useFetch('/pools/active-pools?token_type=erc20&is_display=1')
+  const { response: upcomingResponse } = useFetch('/pools/upcoming-pools?token_type=erc20&is_display=1')
+
+  const totalOpeningItems = useMemo<number>(() => {
+    const openingPool = openingResponse?.data?.data || []
+    const upcomingPool = upcomingResponse?.data?.data || []
+    return parseInt(openingPool.length) + parseInt(upcomingPool.length)
+  }, [openingResponse, upcomingResponse])
+
   return (
     <>
       <div className="fixed w-full bottom-0 grid grid-cols-5 md:hidden dark:bg-gamefiDark-700" style={{ boxShadow: 'inset -1px 0px 0px #303442', zIndex: '1000' }}>
@@ -21,6 +33,7 @@ const Toolbox = () => {
         </ToolboxItem>
         <ToolboxItem path='/igo'>
           <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
+          <Badge count={totalOpeningItems} className='absolute top-2 left-1/2'></Badge>
         </ToolboxItem>
         <button
           className={'relative w-full py-4 flex flex-col align-middle items-center justify-center uppercase text-xs lg:text-sm font-semibold cursor-pointer opacity-40'}
@@ -43,6 +56,7 @@ const Toolbox = () => {
           <MenuLink onClick={() => setShowMenu(false)} path='/igo'>
             <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
             <span>Launchpad</span>
+            <Badge count={totalOpeningItems} className=''></Badge>
           </MenuLink>
           <MenuLink onClick={() => setShowMenu(false)} path='/ino'>
             <Image src={require('@/assets/images/icons/nft.svg')} alt='ino'></Image>

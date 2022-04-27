@@ -32,6 +32,7 @@ import useWalletSignature from '@/hooks/useWalletSignature'
 import Modal from '@/components/Base/Modal'
 import ABIStakingPool from '@/components/web3/abis/StakingPool.json'
 import { IS_TESTNET } from '@/components/web3/connectors'
+import Link from 'next/link'
 
 type Milestone = {
   key: string;
@@ -859,7 +860,7 @@ const GameDetails = ({ game }) => {
       return
     }
     setEarnStake(null)
-    contractReadonly.linearStakingData(IS_TESTNET ? 4 : 3, account)
+    contractReadonly.linearStakingData(IS_TESTNET ? 4 : 2, account)
       .then(x => utils.formatUnits(x.balance, 18))
       .then(x => {
         setEarnStake(x)
@@ -1033,9 +1034,9 @@ const GameDetails = ({ game }) => {
             <h2 className="text-5xl font-bold">ROI</h2>
             <h3 className="text-4xl uppercase">Prediction</h3>
           </div>
-          <p className="text-white/80 text-base">{game.description || `Guess the highest ROI to win ${game.settings?.rewards?.map((reward) => {
+          <p className="text-white/90 text-base">Guess the highest ROI to win <strong>{game.settings?.rewards?.map((reward) => {
             return `${reward.amount} $${reward.token}`
-          }).join(', ') || ''}`}</p>
+          }).join(' + ') || ''}</strong></p>
           <p className="text-xs mt-6">
             <a href={`#/${game.id}`} className="text-gamefiGreen-500 hover:underline inline-flex" onClick={() => { setModalRules(true) }}>
               Learn More
@@ -1067,7 +1068,7 @@ const GameDetails = ({ game }) => {
             <div onClick={() => { setModalWinners(true) }}>
               <p className="text-sm text-white/80 uppercase">Winners</p>
               <div className="text-base font-medium hover:underline cursor-pointer">
-                {winners?.length ? `${winners?.length} winner(s)` : 'No winners'}
+                {winners?.length ? `${winners?.length} winner(s)` : 'To be updated'}
               </div>
             </div>
           </div>}
@@ -1088,14 +1089,18 @@ const GameDetails = ({ game }) => {
           {account && recordsMine !== null && !endedNotJoined && <>
             {!winners?.length && <>
               <div className="relative mt-1">
-                { earnStake === null && <div className="text-base font-medium">
+                {earnStake === null && <div className="text-base font-medium">
                   Loading...
                 </div>}
-                { earnStake !== null && !validRank && !validEarn && <div className="text-base font-medium text-[#DE4343]">
-                  Stake at least 1 $GAFI in Earn to join
+                {earnStake !== null && !validRank && !validEarn && <div className="text-base font-medium text-[#DE4343] hover:underline">
+                  <Link href="/earn" passHref><a href="#">Stake <span className="hidden sm:inline">at least</span> 1 $GAFI in <span className="inline-flex justify-center items-center">Earn
+                    <svg className="ml-1 inline w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M20 16H16.7C16.8657 16.6579 16.955 17.3327 16.966 18.011C16.9631 18.2743 16.8565 18.5258 16.6692 18.711C16.482 18.8962 16.2293 19 15.966 19H7V17H15C15 15.9391 14.5786 14.9217 13.8284 14.1716C13.0783 13.4214 12.0609 13 11 13H7C5.8 11.289 3.305 11 2.1 11H0V19.5L8.192 23.263C9.19998 23.7665 10.3631 23.8625 11.44 23.531L24 19.667C24 19.667 23.208 16 20 16Z" fill="currentColor" />
+                      <path d="M15 0C13.8133 0 12.6533 0.351894 11.6666 1.01118C10.6799 1.67047 9.91085 2.60754 9.45673 3.7039C9.0026 4.80026 8.88378 6.00666 9.11529 7.17054C9.3468 8.33443 9.91825 9.40353 10.7574 10.2426C11.5965 11.0818 12.6656 11.6532 13.8295 11.8847C14.9933 12.1162 16.1997 11.9974 17.2961 11.5433C18.3925 11.0892 19.3295 10.3201 19.9888 9.33342C20.6481 8.34673 21 7.18669 21 6C20.9984 4.40919 20.3658 2.88399 19.2409 1.75911C18.116 0.63424 16.5908 0.00158843 15 0V0ZM16 9H14V3H16V9Z" fill="currentColor" />
+                    </svg></span> to join</a></Link>
                 </div>}
-                { earnStake !== null && (validRank || validEarn) && <>
-                  <input type="number" className="hide-spin text-base bg-white/10 rounded-sm clipped-t-r-sm w-full border-transparent px-3 pr-24 py-2 block shadow-lg focus:ring-0 focus:shadow-none focus:border-transparent" placeholder="Enter your number here" disabled={disabled} value={recordsMine?.[0]?.answer || number} onChange={handleNumber} />
+                {earnStake !== null && (validRank || validEarn) && <>
+                  <input type="number" className="hide-spin text-base bg-white/10 rounded-sm clipped-t-r-sm w-full border-transparent px-3 pr-24 py-2 block shadow-lg focus:ring-0 focus:shadow-none focus:border-transparent" placeholder="ROI = Highest Price / IGO Price" disabled={disabled} value={recordsMine?.[0]?.answer || number} onChange={handleNumber} />
                   <button className={`font-[13px] font-mechanic uppercase font-bold absolute right-1.5 top-[50%] -translate-y-1/2 rounded-sm clipped-t-r-sm  block text-sm px-4 py-1 ${disabled ? 'text-white/40 bg-gamefiDark-500/50 cursor-not-allowed' : 'text-black cursor-pointer bg-gradient-to-br from-amber-400 via-amber-400 to-rose-400'}`} onClick={() => { submit() }}>Submit</button>
                 </>
                 }
@@ -1109,7 +1114,6 @@ const GameDetails = ({ game }) => {
               Your prediction is not correct
             </div>}
             <p className="text-xs mt-1">
-              {recordsMine?.[0] && !winners?.length && <span className="text-white/60">Stay tuned for the result at <strong>{format(snapshot, 'yyyy-MM-dd HH:mm:ss')}</strong></span>}
               {recordsMine?.[0] && won && <span className="text-white/60">Reward Distribution: <strong>{game?.settings?.distribution}</strong></span>}
               {recordsMine?.[0] && winners?.length && !won && <span className="text-white/60">Good luck next time!</span>}
               {errorNumber ? <span className="text-[#DE4343]">{errorNumber}</span> : <span>&nbsp;</span>}
@@ -1135,14 +1139,14 @@ const GameDetails = ({ game }) => {
             </li>
           </ul>
           <p className="mb-4">
-              ROI = <strong className="font-semibold">Highest price / sale price</strong><br />
-              E.g. In 24 hours after TGE<br />
+            ROI = <strong className="font-semibold">Highest price / sale price</strong><br />
+            E.g. In 24 hours after TGE<br />
             <strong className="font-semibold">- Sale price = $0.005</strong> <br />
             <strong className="font-semibold">- Highest price = $0.123456</strong><br />
-              The correct answer will be <strong className="font-semibold">24.69</strong> (24.6912 - 2 digits rounding)
+            The correct answer will be <strong className="font-semibold">24.69</strong> (24.6912 - 2 digits rounding)
           </p>
-
           <p className="mb-4">Predictions must be done before TGE.</p>
+          {game?.description && <p className="mb-4">{game.description}</p>}
           <p className="mb-4">If no one gives correct answer, 10 closest answers will be selected based on submission time. If there are more than one winner, rewards will be equally shared among them.</p>
           <p className="mb-4">There might be difference of prices between exchanges or snapshot times, GameFi.org decision will be the final decision.</p>
         </div>
@@ -1153,7 +1157,45 @@ const GameDetails = ({ game }) => {
       <div className="bg-gamefiDark-700">
         <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full">
           <strong className="uppercase text-2xl font-mechanic mb-6 block">ROI Prediction Winners</strong>
-          <table className="table-auto mt-4 w-full">
+          <div className="flex flex-col">
+            <div className="overflow-x-auto">
+              <table className="min-w-full mb-2">
+                <thead className="border-b">
+                  <tr>
+                    <th scope="col" className="text-sm font-medium pr-4 py-4 text-left">
+                      Wallet
+                    </th>
+                    <th scope="col" className="text-sm font-medium p-4 text-left">
+                      Prediction
+                    </th>
+                    <th scope="col" className="text-sm font-medium p-4 text-left">
+                      Reward
+                    </th>
+                    <th scope="col" className="text-sm font-medium pl-4 py-4 text-left">
+                      Time
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {winners?.map(winner => <tr key={winner.wallet} className="border-b">
+                    <td className="text-sm pr-4 py-4 whitespace-nowrap font-semibold">
+                      {shortenAddress(winner.wallet, '*', 4)}
+                    </td>
+                    <td className="text-sm p-4 whitespace-nowrap font-semibold">
+                      {winner.answer}
+                    </td>
+                    <td className="text-sm p-4 whitespace-nowrap font-semibold">
+                      {rewardsEach.join(' + ')}
+                    </td>
+                    <td className="text-sm pl-4 py-4 whitespace-nowrap">
+                      {format(new Date(winner.createdAt), 'yyyy-MM-dd HH:mm:ss')}
+                    </td>
+                  </tr>)}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          {/* <table className="table-auto mt-4 w-full">
             <thead className="font-mechanic uppercase">
               <tr>
                 <th>Wallet</th>
@@ -1170,7 +1212,7 @@ const GameDetails = ({ game }) => {
                 <td>{format(new Date(winner.createdAt), 'yyyy-MM-dd HH:mm:ss')}</td>
               </tr>)}
             </tbody>
-          </table>
+          </table> */}
         </div>
       </div>
     </Modal>

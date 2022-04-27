@@ -159,11 +159,11 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT,
                   }
                 </div>
                 {
-                  !loading && <Pagination
+                  +ownedBox > perPage && <Pagination
                     className='mt-8'
-                    totalPage={Math.ceil(totalCollection / perPage)}
+                    totalPage={Math.ceil(+ownedBox / perPage)}
                     currentPage={currentPage}
-                    onChange={setCurrentPage}
+                    onChange={loading ? undefined : setCurrentPage}
                   />
                 }
               </div>

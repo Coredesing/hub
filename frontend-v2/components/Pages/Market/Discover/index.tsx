@@ -117,7 +117,7 @@ const Discover = () => {
                   isToggle={false}
                   selected={{ [filter.network]: true }}
                   onChange={handleChangeNetwork}
-                  className='h-10'
+                  className='sm:h-10'
                   style={{ marginBottom: '0' }}></NetworkSelector></div>
                 <div className='flex gap-2'>
                   <CurrencySelector

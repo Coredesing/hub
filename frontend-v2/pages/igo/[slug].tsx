@@ -22,14 +22,17 @@ import { useAppContext } from '@/context'
 import toast from 'react-hot-toast'
 import Image from 'next/image'
 import Tippy from '@tippyjs/react'
-import { ethers } from 'ethers'
-import { airdropNetworks, switchNetwork } from '@/components/web3'
+import { Contract, ethers, utils } from 'ethers'
+import { airdropNetworks, STAKING_CONTRACT, switchNetwork, useWeb3Default } from '@/components/web3'
 import ERC20_ABI from '@/components/web3/abis/ERC20.json'
 import { useRouter } from 'next/router'
 import imgRocket from '@/assets/images/rocket.png'
 import { useCountdown } from '@/components/Pages/Aggregator/Countdown'
 import useWalletSignature from '@/hooks/useWalletSignature'
 import Modal from '@/components/Base/Modal'
+import ABIStakingPool from '@/components/web3/abis/StakingPool.json'
+import { IS_TESTNET } from '@/components/web3/connectors'
+import Link from 'next/link'
 
 type Milestone = {
   key: string;
@@ -839,11 +842,42 @@ const GameDetails = ({ game }) => {
   const [winners, setWinners] = useState(null)
   const [recordsMine, setRecordsMine] = useState(null)
   const { account } = useMyWeb3()
+  const { library } = useWeb3Default()
   const { signMessage } = useWalletSignature()
+  const { tierMine } = useAppContext()
 
+  const contractReadonly = useMemo(() => {
+    if (!library) {
+      return null
+    }
+    return new Contract(STAKING_CONTRACT, ABIStakingPool, library)
+  }, [library])
+
+  const [earnStake, setEarnStake] = useState(null)
   useEffect(() => {
-    console.log(winners)
-  }, [winners])
+    if (!contractReadonly || !account) {
+      setEarnStake('')
+      return
+    }
+    setEarnStake(null)
+    contractReadonly.linearStakingData(IS_TESTNET ? 4 : 2, account)
+      .then(x => utils.formatUnits(x.balance, 18))
+      .then(x => {
+        setEarnStake(x)
+      })
+      .catch(() => {
+        setEarnStake('')
+      })
+  }, [contractReadonly, account])
+  const validRank = useMemo(() => {
+    return tierMine?.id > 0
+  }, [tierMine])
+  const validEarn = useMemo(() => {
+    if (!earnStake) {
+      return false
+    }
+    return Number(earnStake) >= 1
+  }, [earnStake])
 
   useEffect(() => {
     if (!game.answer) {
@@ -895,6 +929,7 @@ const GameDetails = ({ game }) => {
     const target = event.target
     const value = safeToFixed(target.value, game?.settings?.digits || 2)
     if (!value) {
+      setErrorNumber('Your prediction is invalid')
       setNumber('')
       return
     }
@@ -903,10 +938,23 @@ const GameDetails = ({ game }) => {
       setErrorNumber('Your prediction is too large')
     }
 
+    if (Number(value) < 0) {
+      setNumber(`${Math.abs(Number(value))}`)
+      return
+    }
+
     setNumber(value)
   }, [game])
 
+  const disabled = useMemo(() => {
+    return ended || !!recordsMine?.[0]
+  }, [ended, recordsMine])
+
   const submit = useCallback(() => {
+    if (disabled) {
+      return
+    }
+
     if (!number) {
       toast.error('Please enter your prediction')
       return
@@ -950,11 +998,8 @@ const GameDetails = ({ game }) => {
       console.debug(err)
       toast.error('Could not sign the authentication message')
     })
-  }, [number, errorNumber, signMessage, account, game.id, loadRecordsMine])
+  }, [number, errorNumber, signMessage, account, game.id, loadRecordsMine, disabled])
 
-  const disabled = useMemo(() => {
-    return ended || !!recordsMine?.[0]
-  }, [ended, recordsMine])
   const won = useMemo(() => {
     return !!winners?.length && !!winners.find(x => x.wallet?.toLowerCase() === account?.toLowerCase())
   }, [winners, account])
@@ -973,26 +1018,27 @@ const GameDetails = ({ game }) => {
   }, [game, winners])
 
   const [modalWinners, setModalWinners] = useState(false)
+  const [modalRules, setModalRules] = useState(false)
 
-  return <div className="mt-20">
-    <div className="bg-black/50 relative min-h-[240px] rounded-lg">
-      <div className="absolute w-full h-full overflow-hidden rounded-lg">
+  return <div className="mt-10 sm:mt-20">
+    <div className="bg-black/50 relative sm:min-h-[240px] rounded-lg z-0">
+      <div className="absolute w-full h-full overflow-hidden rounded-lg z-[-1]">
         <div className="absolute bg-[#FF8A00] w-64 h-64 rounded-full blur-2xl -top-32 -left-32 bg-opacity-[15%]"></div>
       </div>
-      <div className="absolute right-3 bottom-[-11%]">
+      <div className="hidden xl:block absolute right-3 bottom-[-11%]">
         <Image src={imgRocket} alt={game.name} />
       </div>
-      <div className="absolute flex items-center w-full h-full pr-72">
-        <div className="flex-1 font-casual px-8 border-r border-white/10">
+      <div className="sm:absolute flex flex-col sm:flex-row items-center w-full h-full xl:pr-72">
+        <div className="flex-1 font-casual p-8 sm:py-0 sm:border-r sm:border-white/10">
           <div className="text-transparent bg-clip-text bg-gradient-to-br from-amber-400 to-rose-400">
             <h2 className="text-5xl font-bold">ROI</h2>
             <h3 className="text-4xl uppercase">Prediction</h3>
           </div>
-          <p className="text-white/80 text-base">{game.description || `Guest the highest ROI to win ${game.settings?.rewards?.map((reward) => {
+          <p className="text-white/90 text-base">Guess the highest ROI to win <strong>{game.settings?.rewards?.map((reward) => {
             return `${reward.amount} $${reward.token}`
-          }).join(', ') || ''}`}</p>
+          }).join(' + ') || ''}</strong></p>
           <p className="text-xs mt-6">
-            <a href={`#/${game.id}`} className="text-gamefiGreen-500 hover:underline inline-flex">
+            <a href={`#/${game.id}`} className="text-gamefiGreen-500 hover:underline inline-flex" onClick={() => { setModalRules(true) }}>
               Learn More
               <svg xmlns="http://www.w3.org/2000/svg" className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -1000,7 +1046,8 @@ const GameDetails = ({ game }) => {
             </a>
           </p>
         </div>
-        <div className="flex-1 px-8 font-casual">
+
+        <div className="flex-1 p-8 sm:py-0 font-casual w-full">
           {!ended && <><p className="text-sm text-white/80 uppercase">Ends in</p>
             <div className="text-base font-medium">
               {countdown.days ? formatNumber(countdown.days, 2) : '00'}d : {countdown.hours ? formatNumber(countdown.hours, 2) : '00'}h : {countdown.minutes ? formatNumber(countdown.minutes, 2) : '00'}m : {countdown.seconds ? formatNumber(countdown.seconds, 2) : '00'}s
@@ -1021,69 +1068,154 @@ const GameDetails = ({ game }) => {
             <div onClick={() => { setModalWinners(true) }}>
               <p className="text-sm text-white/80 uppercase">Winners</p>
               <div className="text-base font-medium hover:underline cursor-pointer">
-                {winners?.length ? `${winners?.length} winner(s)` : 'No winners'}
+                {winners?.length ? `${winners?.length} winner(s)` : 'To be updated'}
               </div>
             </div>
           </div>}
 
-          <Modal show={modalWinners} toggle={x => setModalWinners(x)} className='dark:bg-transparent fixed z-50 sm:!max-w-xl'>
-            <div className="bg-gamefiDark-700">
-              <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full">
-                <strong className="uppercase text-2xl font-mechanic">ROI Prediction Winners</strong>
-                <table className="table-auto mt-4">
-                  <thead>
-                    <tr>
-                      <th>Wallet</th>
-                      <th>Prediction</th>
-                      <th>Reward</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    { winners?.map(winner => <tr key={winner.wallet}>
-                      <td>{shortenAddress(winner.wallet, '*', 6)}</td>
-                      <td>{winner.answer}</td>
-                      <td>{rewardsEach.join(', ')}</td>
-                    </tr>)}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </Modal>
-
           <p className="text-sm text-white/80 uppercase mt-6">Your prediction</p>
-          { !account && <div className="text-base font-medium text-rose-500">
+          {!account && <div className="text-base font-medium text-rose-500">
             Please connect your wallet
-          </div> }
+          </div>}
 
-          { account && recordsMine === null && <div className="text-base font-medium">
+          {account && recordsMine === null && <div className="text-base font-medium">
             Loading...
-          </div> }
+          </div>}
 
-          { account && recordsMine !== null && endedNotJoined && <div className="text-base font-medium text-[#DE4343]">
+          {account && recordsMine !== null && endedNotJoined && <div className="text-base font-medium text-[#DE4343]">
             You did not join this game
-          </div> }
+          </div>}
 
-          { account && recordsMine !== null && !endedNotJoined && <>
-            {!winners?.length && <div className="relative mt-1">
-              <input type="number" className="hide-spin text-base bg-white/10 rounded-sm clipped-t-r-sm w-full border-transparent px-3 pr-24 py-2 block shadow-lg focus:ring-0 focus:shadow-none focus:border-transparent" placeholder="Enter your number here" disabled={disabled} value={recordsMine?.[0]?.answer || number} onChange={handleNumber} />
-              <button className={`font-[13px] font-mechanic uppercase font-bold absolute right-1.5 top-[50%] -translate-y-1/2 rounded-sm clipped-t-r-sm  block text-sm px-4 py-1 ${disabled ? 'text-white/40 bg-gamefiDark-500/50 cursor-not-allowed' : 'text-black cursor-pointer bg-gradient-to-br from-amber-400 via-amber-400 to-rose-400'}`} onClick={() => { submit() }}>Submit</button>
-            </div> }
-            { !!winners?.length && won && <div className="text-base font-medium text-gamefiGreen-500">
-            Congratulations. You won {rewardsEach.join(', ')} !
-            </div> }
-            { !!winners?.length && !won && <div className="text-base font-medium text-[#DE4343]">
-            Your prediction is not correct
-            </div> }
+          {account && recordsMine !== null && !endedNotJoined && <>
+            {!winners?.length && <>
+              <div className="relative mt-1">
+                {earnStake === null && <div className="text-base font-medium">
+                  Loading...
+                </div>}
+                {earnStake !== null && !validRank && !validEarn && <div className="text-base font-medium text-[#DE4343] hover:underline">
+                  <Link href="/earn" passHref><a href="#">Stake <span className="hidden sm:inline">at least</span> 1 $GAFI in <span className="inline-flex justify-center items-center">Earn
+                    <svg className="ml-1 inline w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M20 16H16.7C16.8657 16.6579 16.955 17.3327 16.966 18.011C16.9631 18.2743 16.8565 18.5258 16.6692 18.711C16.482 18.8962 16.2293 19 15.966 19H7V17H15C15 15.9391 14.5786 14.9217 13.8284 14.1716C13.0783 13.4214 12.0609 13 11 13H7C5.8 11.289 3.305 11 2.1 11H0V19.5L8.192 23.263C9.19998 23.7665 10.3631 23.8625 11.44 23.531L24 19.667C24 19.667 23.208 16 20 16Z" fill="currentColor" />
+                      <path d="M15 0C13.8133 0 12.6533 0.351894 11.6666 1.01118C10.6799 1.67047 9.91085 2.60754 9.45673 3.7039C9.0026 4.80026 8.88378 6.00666 9.11529 7.17054C9.3468 8.33443 9.91825 9.40353 10.7574 10.2426C11.5965 11.0818 12.6656 11.6532 13.8295 11.8847C14.9933 12.1162 16.1997 11.9974 17.2961 11.5433C18.3925 11.0892 19.3295 10.3201 19.9888 9.33342C20.6481 8.34673 21 7.18669 21 6C20.9984 4.40919 20.3658 2.88399 19.2409 1.75911C18.116 0.63424 16.5908 0.00158843 15 0V0ZM16 9H14V3H16V9Z" fill="currentColor" />
+                    </svg></span> to join</a></Link>
+                </div>}
+                {earnStake !== null && (validRank || validEarn) && <>
+                  <input type="number" className="hide-spin text-base bg-white/10 rounded-sm clipped-t-r-sm w-full border-transparent px-3 pr-24 py-2 block shadow-lg focus:ring-0 focus:shadow-none focus:border-transparent" placeholder="ROI = Highest Price / IGO Price" disabled={disabled} value={recordsMine?.[0]?.answer || number} onChange={handleNumber} />
+                  <button className={`font-[13px] font-mechanic uppercase font-bold absolute right-1.5 top-[50%] -translate-y-1/2 rounded-sm clipped-t-r-sm  block text-sm px-4 py-1 ${disabled ? 'text-white/40 bg-gamefiDark-500/50 cursor-not-allowed' : 'text-black cursor-pointer bg-gradient-to-br from-amber-400 via-amber-400 to-rose-400'}`} onClick={() => { submit() }}>Submit</button>
+                </>
+                }
+              </div>
+              <p className="mt-1 text-xs uppercase text-white/80">Result snapshot: {format(snapshot, 'yyyy-MM-dd HH:mm:ss')}</p>
+            </>}
+            {!!winners?.length && won && <div className="text-base font-medium text-gamefiGreen-500">
+              Congratulations. You won {rewardsEach.join(', ')} !
+            </div>}
+            {!!winners?.length && !won && <div className="text-base font-medium text-[#DE4343]">
+              Your prediction is not correct
+            </div>}
             <p className="text-xs mt-1">
-              { recordsMine?.[0] && !winners?.length && <span className="text-white/60">Stay tuned for the result at <strong>{format(snapshot, 'yyyy-MM-dd HH:mm:ss')}</strong></span> }
-              { recordsMine?.[0] && won && <span className="text-white/60">Reward Distribution: <strong>{game?.settings?.distribution}</strong></span> }
-              { recordsMine?.[0] && !won && <span className="text-white/60">Good luck next time!</span> }
-              { errorNumber ? <span className="text-[#DE4343]">{errorNumber}</span> : <span>&nbsp;</span> }
+              {recordsMine?.[0] && won && <span className="text-white/60">Reward Distribution: <strong>{game?.settings?.distribution}</strong></span>}
+              {recordsMine?.[0] && winners?.length && !won && <span className="text-white/60">Good luck next time!</span>}
+              {errorNumber ? <span className="text-[#DE4343]">{errorNumber}</span> : <span>&nbsp;</span>}
             </p>
-          </> }
+          </>}
         </div>
       </div>
     </div>
+
+    <Modal show={modalRules} toggle={x => setModalRules(x)} className='dark:bg-transparent fixed z-50 sm:!max-w-2xl'>
+      <div className="bg-gamefiDark-700">
+        <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full text-white/90 leading-normal">
+          <strong className="uppercase text-2xl font-mechanic mt-4 mb-6 block text-white">ROI Prediction</strong>
+          <p className="mb-4">
+            Predict highest ROI in a time-frame to win rewards. It&#39;s free to play for all users who meet any of these requirements
+          </p>
+          <ul className="mb-4 font-semibold">
+            <li>
+              - Are Rookies or above
+            </li>
+            <li>
+              - Stake at least 1 GAFI in the Earn pool
+            </li>
+          </ul>
+          <p className="mb-4">
+            ROI = <strong className="font-semibold">Highest price / sale price</strong><br />
+            E.g. In 24 hours after TGE<br />
+            <strong className="font-semibold">- Sale price = $0.005</strong> <br />
+            <strong className="font-semibold">- Highest price = $0.123456</strong><br />
+            The correct answer will be <strong className="font-semibold">24.69</strong> (24.6912 - 2 digits rounding)
+          </p>
+          <p className="mb-4">Predictions must be done before TGE.</p>
+          {game?.description && <p className="mb-4">{game.description}</p>}
+          <p className="mb-4">If no one gives correct answer, 10 closest answers will be selected based on submission time. If there are more than one winner, rewards will be equally shared among them.</p>
+          <p className="mb-4">There might be difference of prices between exchanges or snapshot times, GameFi.org decision will be the final decision.</p>
+        </div>
+      </div>
+    </Modal>
+
+    <Modal show={modalWinners} toggle={x => setModalWinners(x)} className='dark:bg-transparent fixed z-50 sm:!max-w-2xl'>
+      <div className="bg-gamefiDark-700">
+        <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full">
+          <strong className="uppercase text-2xl font-mechanic mb-6 block">ROI Prediction Winners</strong>
+          <div className="flex flex-col">
+            <div className="overflow-x-auto">
+              <table className="min-w-full mb-2">
+                <thead className="border-b">
+                  <tr>
+                    <th scope="col" className="text-sm font-medium pr-4 py-2 text-left font-semibold">
+                      Wallet
+                    </th>
+                    <th scope="col" className="text-sm font-medium px-4 py-2 text-left font-semibold">
+                      Prediction
+                    </th>
+                    <th scope="col" className="text-sm font-medium px-4 py-2 text-left font-semibold">
+                      Reward
+                    </th>
+                    <th scope="col" className="text-sm font-medium pl-4 py-2 text-left font-semibold">
+                      Time
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {winners?.map((winner, i) => <tr key={winner.wallet} className={i < winners.length - 1 ? 'border-b border-white/30' : ''}>
+                    <td className="text-sm pr-4 py-2 whitespace-nowrap font-medium">
+                      {shortenAddress(winner.wallet, '*', 6, 4)}
+                    </td>
+                    <td className="text-sm px-4 py-2 whitespace-nowrap">
+                      {winner.answer}
+                    </td>
+                    <td className="text-sm px-4 py-2 whitespace-nowrap">
+                      {rewardsEach.join(' + ')}
+                    </td>
+                    <td className="text-sm pl-4 py-2 whitespace-nowrap">
+                      {format(new Date(winner.createdAt), 'yyyy-MM-dd HH:mm:ss')}
+                    </td>
+                  </tr>)}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          {/* <table className="table-auto mt-4 w-full">
+            <thead className="font-mechanic uppercase">
+              <tr>
+                <th>Wallet</th>
+                <th>Prediction</th>
+                <th>Reward</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody className="text-sm">
+              {winners?.map(winner => <tr key={winner.wallet}>
+                <td>{shortenAddress(winner.wallet, '*', 6)}</td>
+                <td>{winner.answer}</td>
+                <td>{rewardsEach.join(', ')}</td>
+                <td>{format(new Date(winner.createdAt), 'yyyy-MM-dd HH:mm:ss')}</td>
+              </tr>)}
+            </tbody>
+          </table> */}
+        </div>
+      </div>
+    </Modal>
   </div>
 }
 

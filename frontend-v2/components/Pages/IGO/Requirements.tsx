@@ -5,7 +5,7 @@ import WalletConnector from '@/components/Base/WalletConnector'
 import { useContext, useMemo, useCallback, useState, useEffect } from 'react'
 import { useAppContext } from '@/context'
 import { getTierById } from '@/utils/tiers'
-import { fetcher, useProfile } from '@/utils'
+import { fetcher, shorten, useProfile } from '@/utils'
 import { IGOContext } from '@/pages/igo/[slug]'
 import useWalletSignature, { MESSAGE_SIGNATURE } from '@/hooks/useWalletSignature'
 import Modal from '@/components/Base/Modal'
@@ -200,8 +200,12 @@ const Requirements = () => {
       setFailedRequirements(false)
       return
     }
-    setFailedRequirements(poolNetworkInvalid || poolRankInvalid || (!poolData?.kyc_bypass && !profile?.verified) || !whitelistJoined)
-  }, [poolData?.is_private, poolData?.kyc_bypass, poolNetworkInvalid, poolRankInvalid, profile, setFailedRequirements, whitelistJoined])
+    setFailedRequirements(poolNetworkInvalid ||
+      poolRankInvalid ||
+      (!poolData?.kyc_bypass && !profile?.verified) ||
+      !whitelistJoined || (poolData.airdrop_network === 'solana' &&
+      !profile.solana_address))
+  }, [poolData.airdrop_network, poolData?.is_private, poolData?.kyc_bypass, poolNetworkInvalid, poolRankInvalid, profile, setFailedRequirements, whitelistJoined])
 
   return <>
     <div className="bg-gamefiDark-630 bg-opacity-30 p-4 xl:p-6 2xl:p-7 rounded">
@@ -211,7 +215,7 @@ const Requirements = () => {
           <div className="table-cell align-middle w-6">
             { poolNetworkInvalid ? <IconError className="w-4 h-4" /> : <IconOK className="w-4 h-4" /> }
           </div>
-          <div className="table-cell align-middle text-white/90">Network</div>
+          <div className="table-cell align-middle text-white/90">IGO Network</div>
           <div className="table-cell align-middle text-white/90"><strong className="tracking-wider">{poolNetwork?.name || 'Unknown'}</strong></div>
           <div className="table-cell align-middle h-10 w-32">
             { poolNetworkInvalid && <>
@@ -228,6 +232,27 @@ const Requirements = () => {
             }
           </div>
         </div>
+        {poolData.airdrop_network && poolData.airdrop_network === 'solana' && <div className="table-row">
+          <div className="table-cell align-middle w-6">
+            { profile.solana_address ? <IconOK className="w-4 h-4" /> : <IconError className="w-4 h-4" /> }
+          </div>
+          <div className="table-cell align-middle text-white/90 w-32 h-10">Solana Wallet</div>
+          <div className="table-cell align-middle text-white/90 w-32">
+            {
+              profile.solana_address && shorten(profile.solana_address, 16)
+            }
+          </div>
+          {!profile.solana_address && <div className="table-cell align-middle h-10 whitespace-nowrap">
+
+            { (!account || poolNetworkInvalid || poolRankInvalid || !profile.verified) &&
+              <Link href="/account" passHref={true}>
+                <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiGreen-500 text-gamefiDark-900'>
+                  Edit
+                </button>
+              </Link>
+            }
+          </div>}
+        </div>}
         <div className="table-row">
           <div className="table-cell align-middle w-6">
             { poolRankInvalid ? <IconError className="w-4 h-4" /> : <IconOK className="w-4 h-4" /> }

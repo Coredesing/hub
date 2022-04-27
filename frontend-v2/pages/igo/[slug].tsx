@@ -1162,16 +1162,16 @@ const GameDetails = ({ game }) => {
               <table className="min-w-full mb-2">
                 <thead className="border-b">
                   <tr>
-                    <th scope="col" className="text-sm font-medium pr-4 py-2 text-left font-semibold">
+                    <th scope="col" className="text-sm pr-4 py-2 text-left font-semibold">
                       Wallet
                     </th>
-                    <th scope="col" className="text-sm font-medium px-4 py-2 text-left font-semibold">
+                    <th scope="col" className="text-sm px-4 py-2 text-left font-semibold">
                       Prediction
                     </th>
-                    <th scope="col" className="text-sm font-medium px-4 py-2 text-left font-semibold">
+                    <th scope="col" className="text-sm px-4 py-2 text-left font-semibold">
                       Reward
                     </th>
-                    <th scope="col" className="text-sm font-medium pl-4 py-2 text-left font-semibold">
+                    <th scope="col" className="text-sm pl-4 py-2 text-left font-semibold">
                       Time
                     </th>
                   </tr>

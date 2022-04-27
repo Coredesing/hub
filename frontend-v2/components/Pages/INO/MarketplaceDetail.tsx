@@ -629,9 +629,9 @@ const MarketplaceDetail = ({ tokenInfo, projectInfo }: Props) => {
         }
         {
           isAllowBuyOffer &&
-          <div className={`grid ${isFirstEdition ? 'grid-cols-1' : 'grid-cols-2'} gap-2 justify-center`}>
+          <div className={`grid ${isFirstEdition || checkingToBuyOffer ? 'grid-cols-1' : 'grid-cols-2'} gap-2 justify-center`}>
             {
-              !isFirstEdition && <button
+              !isFirstEdition && !checkingToBuyOffer && <button
                 disabled={checkingToBuyOffer || lockingAction.lock}
                 onClick={() => setOpenMakeOfferModal(true)}
                 className={clsx(

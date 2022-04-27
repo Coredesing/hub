@@ -629,9 +629,11 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               })}>
               {countdown.title}
             </div>
-            <div className={clsx(styles.countdown)} >
-              {countdown.date2 !== 0 && !countdown.isFinished && <CountDownTimeV1 time={countdown} className="bg-transparent" background='bg-transparent' onFinish={onSetCountdown} />}
-            </div>
+            {
+              !countdown.isFinished && <div className={clsx(styles.countdown)} >
+                {countdown.date2 !== 0 && <CountDownTimeV1 time={countdown} className="bg-transparent" background='bg-transparent' onFinish={onSetCountdown} />}
+              </div>
+            }
           </div>
         </div>
       </div>}

@@ -57,7 +57,7 @@ const BoxInformation = ({ boxes }: Props) => {
               {b.maxSupply || b.limit}
             </TableCell>
             <TableCell>
-              {(+(b.maxSupply || b.limit) - (+b.totalSold || 0)) || (b.maxSupply || b.limit)}
+              {(+(b.maxSupply || b.limit) - (+b.totalSold || 0)) ?? (b.maxSupply || b.limit)}
             </TableCell>
             {
               boxes?.[0]?.description && <TableCell>

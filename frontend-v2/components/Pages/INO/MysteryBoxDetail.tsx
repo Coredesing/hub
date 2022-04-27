@@ -40,7 +40,6 @@ import { getTierById } from '@/utils/tiers'
 import Progress from './Progress'
 
 const MysteryBoxDetail = ({ poolInfo }: any) => {
-  poolInfo.campaign_hash = '0xef812926df082e4884e9849e2fc2a16fbac5c7ac'
   const eventId = 0
   const tiersState = useAppContext()?.$tiers
   const userTier = tiersState?.state?.data?.tier || 0
@@ -407,7 +406,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         try {
           const tokenURI = await erc721Contract.tokenURI(collectionId)
           collection.collectionId = collectionId
-          let infoBoxType = {} || await fetcher(tokenURI)
+          let infoBoxType = await fetcher(tokenURI)
           infoBoxType = infoBoxType?.data || infoBoxType || {}
           Object.assign(collection, infoBoxType)
           return collection

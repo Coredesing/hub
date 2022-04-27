@@ -485,14 +485,14 @@ const Swap = () => {
           : <></>
       }
       {
-        ((timeline[TIMELINE.PRE_ORDER].start &&
-          now?.getTime() < timeline[TIMELINE.PRE_ORDER].start?.getTime()) ||
-          (!timeline[TIMELINE.PRE_ORDER].start && now?.getTime() < timeline[TIMELINE.BUYING_PHASE].start?.getTime())) &&
-          <div className="my-4 w-full flex flex-col gap-4 p-12 rounded items-center justify-center">
-            <Image src={require('@/assets/images/icons/calendar.png')} alt=""></Image>
-            <div className="text-gamefiDark-200">
-              This pool has not start yet. Please wait until Buying Phase.</div>
-          </div>
+        // ((timeline[TIMELINE.PRE_ORDER].start &&
+        //   now?.getTime() < timeline[TIMELINE.PRE_ORDER].start?.getTime()) ||
+        //   (!timeline[TIMELINE.PRE_ORDER].start && now?.getTime() < timeline[TIMELINE.BUYING_PHASE].start?.getTime())) &&
+        //   <div className="my-4 w-full flex flex-col gap-4 p-12 rounded items-center justify-center">
+        //     <Image src={require('@/assets/images/icons/calendar.png')} alt=""></Image>
+        //     <div className="text-gamefiDark-200">
+        //       This pool has not start yet. Please wait until Buying Phase.</div>
+        //   </div>
       }
       {
         now?.getTime() > timeline[TIMELINE.BUYING_PHASE].end?.getTime() &&

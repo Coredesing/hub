@@ -42,6 +42,9 @@
         @media all and (max-width: 1024px) {
             background: linear-gradient(90deg, rgba(132, 26, 26, 0.1292892156862745) 0%, rgba(132, 26, 26, 1) 50%, rgba(132, 26, 26, 0.13209033613445376) 100%);
         }
+        @media all and (max-width: 640px) {
+            padding-right: 0;
+        }
     }
     // transform: skew(-30deg);
     // width: calc(100% + 40px);

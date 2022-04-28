@@ -25,6 +25,25 @@
     .collectionDetail {
         height: 25px;
     }
+    @media screen and (max-width: 640px) {
+        width: 140px;
+        &.clippedpath {
+            -webkit-clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - (140px / 5 * 3) + 20px) calc(100% - 25px), calc(100% - (140px / 5 * 3)) 100%, 0 100%);
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - (140px / 5 * 3) + 20px) calc(100% - 25px), calc(100% - (140px / 5 * 3)) 100%, 0 100%);
+            &>div {
+                border-radius: 2px;
+                -webkit-clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - (140px / 5 * 3) + 20px) calc(100% - 25px), calc(100% - (140px / 5 * 3)) 100%, 0 100%);
+                clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - (140px / 5 * 3) + 20px) calc(100% - 25px), calc(100% - (140px / 5 * 3)) 100%, 0 100%);
+            }
+        }
+        .collectionImage {
+            height: 110px;
+            padding: 10px;
+        }
+        .collectionDetail {
+            height: 25px;
+        }
+    }
 }
 
 .btnClaim {

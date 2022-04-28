@@ -63,6 +63,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const [collections, setCollections] = useState<ObjectType[]>([])
   const [ownedBox, setOwnedBox] = useState(0)
   const balanceInfo = useMyBalance(currencySelected as any, poolInfo.network_available)
+  const [supplyBox, setSupplyBox] = useState({ total: 0, sold: 0 })
   const networkPool = useMemo(() => {
     const network = getNetworkByAlias(poolInfo.network_available)
     return network
@@ -94,10 +95,16 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     return contract
   }, [poolInfo, libraryDefaultTemporary])
 
+  const remainingBox = supplyBox.total - supplyBox.sold
+
   const maxBoxCanBuy = useMemo(() => {
     const currentTier = poolInfo.tiers.find(t => t.level === userTier)
-    return currentTier?.ticket_allow || 0
-  }, [poolInfo, userTier])
+    const ticketAllow = currentTier?.ticket_allow || 0
+    if (ticketAllow <= remainingBox) {
+      return ticketAllow
+    }
+    return myBoxThisPool + remainingBox
+  }, [poolInfo, userTier, remainingBox, myBoxThisPool])
 
   const getMyBoxThisPool = useCallback(async () => {
     try {
@@ -154,8 +161,6 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   useEffect(() => {
     handleSetSupplyBoxes()
   }, [handleSetSupplyBoxes])
-
-  const [supplyBox, setSupplyBox] = useState({ total: 0, sold: 0 })
 
   useEffect(() => {
     const handleSetSupplyBox = () => {

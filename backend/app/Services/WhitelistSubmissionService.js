@@ -37,6 +37,7 @@ class WhitelistSubmissionService {
     let builder = this.buildQueryBuilder(params);
     return await builder.first();
   }
+
   async findLastSubmission(params) {
     let builder = this.buildQueryBuilder(params);
     return await builder.last();
@@ -199,6 +200,21 @@ class WhitelistSubmissionService {
       partner_retweet_post_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
     });
     await submission.save();
+  }
+
+  async approveAllSubmission(campaignId) {
+    await WhitelistSubmissionModel.query()
+      .where('campaign_id', campaignId)
+      .update({
+        self_twitter_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
+        self_group_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
+        self_channel_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
+        self_retweet_post_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
+        partner_twitter_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
+        partner_group_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
+        partner_channel_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
+        partner_retweet_post_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
+      })
   }
 
   async checkSubmission(submission, requirement, type) {

@@ -11,7 +11,7 @@ import {useCommonStyle} from "../../../../styles";
 import {
   addParticipantUserToWinner, deleteParticipantUser, getParticipantUser,
   updateParticipantWhitelistSubmission, verifyParticipantWhitelistSubmission,
-  verifyBatchParticipantWhitelistSubmission, approveBatchParticipantWhitelistSubmission} from "../../../../request/participants";
+  verifyBatchParticipantWhitelistSubmission, approveBatchParticipantWhitelistSubmission, approveAllParticipantWhitelistSubmission} from "../../../../request/participants";
 import {useDispatch} from "react-redux";
 import {withRouter} from "react-router";
 import {alertFailure, alertSuccess} from "../../../../store/actions/alert";
@@ -220,6 +220,23 @@ function UserParticipant(props: any) {
         })
   }
 
+  const handleApproveAllWhitelistSubmission = async () => {
+    return approveAllParticipantWhitelistSubmission(poolDetail?.id)
+        .then((res: any) => {
+          if (res.status === 200) {
+            dispatch(alertSuccess('Approve All Participant Whitelist Submission Success'));
+            search(); // Re-search list
+            setSelectedWhitelistSubmission({});
+            setIsOpenWhitelistPopup(false);
+            setAddedUsers([]);  // Reset list checked user
+            onChange([]); // Reset check-all checkbox
+          } else {
+            dispatch(alertFailure('Approve All Participant Whitelist Submission Fail'));
+          }
+        })
+  }
+
+
   const onCheckToAdd = (e: any, row: any, index: number) => {
     console.log('[onCheckToAdd]: ', e.target.value, row, index);
     const isChecked = e.target.checked;
@@ -324,6 +341,13 @@ function UserParticipant(props: any) {
               style={{marginLeft: '10px'}}
               onClick={handleApproveBatchWhitelistSubmission}
           >Approve Selected</Button>
+
+          <Button
+              variant="contained"
+              color="primary"
+              style={{marginLeft: '10px'}}
+              onClick={handleApproveAllWhitelistSubmission}
+          >Approve All</Button>
         </div>
       </div>
 

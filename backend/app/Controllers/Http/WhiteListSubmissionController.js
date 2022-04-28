@@ -423,6 +423,29 @@ class WhiteListSubmissionController {
     }
   }
 
+  async approveAllWhitelistSubmission({ params }) {
+    const campaignId = params.campaignId;
+
+    if (!campaignId) {
+      return HelperUtils.responseBadRequest('Bad request with campaign_id');
+    }
+
+    try {
+      const whitelistSubmissionService = new WhitelistSubmissionService();
+
+      await whitelistSubmissionService.approveAllSubmission(campaignId)
+      return HelperUtils.responseSuccess();
+
+    } catch (e) {
+      console.log("error", e)
+      if (e instanceof BadRequestException) {
+        return HelperUtils.responseBadRequest(e.message);
+      } else {
+        return HelperUtils.responseErrorInternal('ERROR : Approve All Whitelist Submission fail !');
+      }
+    }
+  }
+
   async applyAndJoinCampaign({request, params}) {
     // get request params
     const campaign_id = params.campaignId;

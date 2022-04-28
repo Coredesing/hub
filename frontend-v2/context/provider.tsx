@@ -10,6 +10,21 @@ import { fetcher } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 import { Contract, utils } from 'ethers'
 
+const useIgoPool = () => {
+  const [poolCount, setPoolCount] = useState(0)
+
+  useEffect(() => {
+    fetcher(`${API_BASE_URL}/pools/count-pools?token_type=erc20&is_display=1`).then(response => {
+      const count = response?.data?.count || 0
+      setPoolCount(count)
+    })
+  }, [])
+
+  return {
+    count: poolCount
+  }
+}
+
 const useTiers = () => {
   const all = useMemo<Tier[]>(() => {
     return TIERS
@@ -134,6 +149,7 @@ const useTierMine = (tiers) => {
 const AppProvider = (props: any) => {
   const $tiers = useTiersOld()
   const tiers = useTiers()
+  const igoPool = useIgoPool()
   const {
     loading: tierMineLoading,
     loadMyStaking,
@@ -178,7 +194,8 @@ const AppProvider = (props: any) => {
       contractStakingReadonly,
       marketActivities,
       discoverMarket,
-      collectionsMarket
+      collectionsMarket,
+      igoPool
     }}>
       {props.children}
     </AppContext.Provider>

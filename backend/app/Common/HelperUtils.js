@@ -197,7 +197,20 @@ const responseSuccess = (data = null, message) => {
 const checkSumAddress = (address) => {
   const addressVerified = Web3.utils.toChecksumAddress(address);
   return addressVerified;
-};
+}
+
+const isAddress = (address) => {
+  try {
+    if (!address) {
+      return false
+    }
+
+    return Web3.utils.isAddress(address.toLowerCase())
+  }
+  catch (e) {
+    return false
+  }
+}
 
 const paginationArray = (array, page_number, page_size) => {
   const newData = JSON.parse(JSON.stringify(array));
@@ -907,6 +920,7 @@ module.exports = {
   responseErrorInternal,
   responseBadRequest,
   checkSumAddress,
+  isAddress,
   paginationArray,
   getERC721TokenContractInstance,
   getUserTierSmartWithCached,

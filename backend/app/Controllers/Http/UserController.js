@@ -215,30 +215,34 @@ class UserController {
   async updateProfile({ request }) {
     try {
       const userService = new UserService();
-      const params = request.only(['user_twitter', 'user_telegram']);
-      const solana_address = request.input('solana_address');
-      const terra_address = request.input('terra_address');
-      const wallet_address = request.header('wallet_address');
-      const user = await userService.buildQueryBuilder({ wallet_address }).first();
+      const params = request.only(['user_twitter', 'user_telegram'])
+      const solana_address = request.input('solana_address')
+      const terra_address = request.input('terra_address')
+      const wallet_address = request.header('wallet_address')
+      // verify wallet_address
+      if (!HelperUtils.isAddress(wallet_address)) {
+        return HelperUtils.responseNotFound('Wallet not found')
+      }
+
+      let user = await UserModel.query().where('wallet_address', wallet_address).first()
       if (!user) {
-        return HelperUtils.responseNotFound('User Not Found');
+        // create new profile if they don't KYC
+        user = new UserModel()
+        user.fill({
+          is_kyc: Const.KYC_STATUS.INCOMPLETE,
+          wallet_address: wallet_address,
+          status: Const.USER_STATUS.UNVERIFIED,
+        })
       }
 
       user.solana_address = solana_address
       user.terra_address = terra_address
       await user.save()
-
-      const whitelistSubmission = JSON.parse(JSON.stringify(
-        await (new WhitelistSubmissionService).findSubmission({ wallet_address })
-      ));
-
-      if (whitelistSubmission) {
-        await (new WhitelistSubmissionService).buildQueryBuilder({ wallet_address }).update(params);
-      } else {
-        await (new WhitelistSubmissionService).createWhitelistSubmissionAccount({
-          ...params,
-          wallet_address,
-        });
+      if (params && (params.user_twitter || params.user_telegram)) {
+        const whitelistSubmission = await (new WhitelistSubmissionService).findSubmission({ wallet_address })
+        if (whitelistSubmission) {
+          await (new WhitelistSubmissionService).buildQueryBuilder({ wallet_address }).update(params)
+        }
       }
 
       await RedisUserUtils.deleteRedisUserProfile(wallet_address)
@@ -248,10 +252,9 @@ class UserController {
           id: user.id,
           wallet_address: user.wallet_address,
         }
-      }, 'Update Success');
+      }, 'Update Success')
     } catch (e) {
-      console.log(e);
-      return ErrorFactory.internal('ERROR: Update profile fail!');
+      return HelperUtils.responseErrorInternal()
     }
   }
 

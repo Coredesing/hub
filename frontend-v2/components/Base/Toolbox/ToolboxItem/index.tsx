@@ -10,7 +10,7 @@ const ToolboxItem = ({ children, path }: Props) => {
   const router = useRouter()
   return (
     <Link href={path} passHref>
-      <div
+      <a
         className={`relative w-full py-4 flex flex-col align-middle items-center justify-center uppercase text-xs lg:text-sm font-semibold cursor-pointer ${
           ((path.length === 1 && router.asPath === path) || (path.length > 1 && router.asPath.includes(path))) ? 'dark:bg-gamefiDark-900 opacity-100' : 'opacity-40'
         }`}
@@ -28,7 +28,7 @@ const ToolboxItem = ({ children, path }: Props) => {
           className="rounded-t-sm"
         ></span>}
         {children}
-      </div>
+      </a>
     </Link>
   )
 }

@@ -97,6 +97,7 @@ Route.group(() => {
   Route.get('pools/complete-sale-pools', 'PoolController.getCompleteSalePoolsV3');
   Route.get('pools/mysterious-box', 'PoolController.getMysteriousBoxPoolsV3');
   Route.get('pools/total-completed-pools', 'PoolController.countTotalCompleteSalePoolsV3');
+  Route.get('pools/count-pools', 'PoolController.getCountPools');
 
   // user
   Route.get('user/profile', 'UserController.profile').middleware(['maskInfoNonAuthorized']);

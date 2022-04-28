@@ -1,19 +1,13 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import SidebarLink from './SidebarLink'
 import Badge from '../Badge'
-import { useFetch } from '@/utils'
+import { useAppContext } from '@/context'
 
 const Sidebar = () => {
-  const { response: openingResponse } = useFetch('/pools/active-pools?token_type=erc20&is_display=1')
-  const { response: upcomingResponse } = useFetch('/pools/upcoming-pools?token_type=erc20&is_display=1')
-
-  const totalOpeningItems = useMemo<number>(() => {
-    const openingPool = openingResponse?.data?.data || []
-    const upcomingPool = upcomingResponse?.data?.data || []
-    return parseInt(openingPool.length) + parseInt(upcomingPool.length)
-  }, [openingResponse, upcomingResponse])
+  const poolStore = useAppContext()?.pool
+  const igoPoolCount = poolStore?.state?.igo?.count || 0
 
   return (
     <>
@@ -30,7 +24,7 @@ const Sidebar = () => {
         <SidebarLink path='/igo'>
           <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
           <span className="mt-2">IGO</span>
-          <Badge count={totalOpeningItems} className='absolute top-2 left-1/2'></Badge>
+          <Badge count={igoPoolCount} className='absolute top-2 left-1/2'></Badge>
         </SidebarLink>
         <SidebarLink path='/hub'>
           <Image src={require('@/assets/images/icons/controller.svg')} alt='hub'></Image>

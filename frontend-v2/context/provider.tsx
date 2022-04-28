@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import AppContext from './index'
 import useTiersOld from './tiersOld'
+import usePool from './pool'
 import useMarketActivities, { useCollectionsMarket, useDiscoverMarket } from './market-activities'
 import { TIERS, Tier } from '@/utils/tiers'
 import { useMyWeb3 } from '@/components/web3/context'
@@ -134,6 +135,7 @@ const useTierMine = (tiers) => {
 const AppProvider = (props: any) => {
   const $tiers = useTiersOld()
   const tiers = useTiers()
+  const pool = usePool()
   const {
     loading: tierMineLoading,
     loadMyStaking,
@@ -164,6 +166,10 @@ const AppProvider = (props: any) => {
     return () => clearInterval(interval)
   }, [])
 
+  useEffect(() => {
+    pool.actions.getIgoPoolCount()
+  }, [])
+
   return (
     <AppContext.Provider value={{
       now,
@@ -178,7 +184,8 @@ const AppProvider = (props: any) => {
       contractStakingReadonly,
       marketActivities,
       discoverMarket,
-      collectionsMarket
+      collectionsMarket,
+      pool
     }}>
       {props.children}
     </AppContext.Provider>

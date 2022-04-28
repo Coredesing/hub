@@ -242,7 +242,7 @@ class PoolService {
   }
 
   async getCountPools(filterParams) {
-    const now = parseInt((Date.now() / 1000).toFixed(0))
+    const now = new Date().getTime() / 1000
 
     const result = await this.buildQueryBuilder(filterParams)
       .with('campaignClaimConfig')
@@ -263,7 +263,7 @@ class PoolService {
           })
       }).count({ total: 'id' })
 
-    return result && result[0] && result[0].total || 0
+    return result?.[0]?.total || 0
   }
 
   async getMysteriousBoxPoolsV3(filterParams) {

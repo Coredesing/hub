@@ -10,8 +10,7 @@ import { useAppContext } from '@/context'
 const Toolbox = () => {
   const [showMenu, setShowMenu] = useState(false)
 
-  const poolStore = useAppContext()?.pool
-  const igoPoolCount = poolStore?.state?.igo?.count || 0
+  const igoPoolCount = useAppContext()?.igoPool?.count || 0
 
   return (
     <>

@@ -6,8 +6,7 @@ import Badge from '../Badge'
 import { useAppContext } from '@/context'
 
 const Sidebar = () => {
-  const poolStore = useAppContext()?.pool
-  const igoPoolCount = poolStore?.state?.igo?.count || 0
+  const igoPoolCount = useAppContext()?.igoPool?.count || 0
 
   return (
     <>

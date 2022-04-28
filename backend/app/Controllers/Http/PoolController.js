@@ -723,8 +723,7 @@ class PoolController {
     try {
       const count = await (new PoolService).getCountPools(inputParams);
       return HelperUtils.responseSuccess({count});
-    } catch (e) {
-      console.log(e);
+    } catch {
       return HelperUtils.responseErrorInternal('getCountPool Fail !!!');
     }
   }

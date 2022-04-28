@@ -27,7 +27,7 @@ const SidebarLink = ({ children, path, external }: Props) => {
 
   return (
     <Link href={path} passHref>
-      <div
+      <a
         className={`relative w-full py-4 flex flex-col align-middle items-center justify-center uppercase text-xs font-semibold cursor-pointer ${
           isActive ? 'dark:bg-gamefiDark-900 opacity-100' : 'opacity-40'
         }`}
@@ -46,7 +46,7 @@ const SidebarLink = ({ children, path, external }: Props) => {
           className="rounded-r-sm"
         ></span>}
         {children}
-      </div>
+      </a>
     </Link>
   )
 }

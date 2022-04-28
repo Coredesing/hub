@@ -60,7 +60,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const [openPlaceOrderModal, setOpenPlaceOrderModal] = useState(false)
   const [openBuyBoxModal, setOpenBuyBoxModal] = useState(false)
   const [loadingCollection, setLoadingCollection] = useState(false)
-  const [collections, setCollections] = useState<ObjectType[]>([])
+  // const [collections, setCollections] = useState<ObjectType[]>([])
   const [ownedBox, setOwnedBox] = useState(0)
   const balanceInfo = useMyBalance(currencySelected as any, poolInfo.network_available)
   const [supplyBox, setSupplyBox] = useState({ total: 0, sold: 0 })

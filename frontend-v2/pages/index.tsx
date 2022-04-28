@@ -46,7 +46,7 @@ const PageIndex = () => {
   }, [])
 
   const bannerShow = useMemo(() => {
-    const bannerDeadline = new Date('2022-04-28T00:00:00Z')
+    const bannerDeadline = new Date('2022-05-13T00:00:00Z')
     return bannerDeadline > now
   }, [now])
 
@@ -55,7 +55,7 @@ const PageIndex = () => {
       {/* <GameFiCarousel likes={likes} items={featuredGames}></GameFiCarousel> */}
       <div className="md:px-4 lg:px-16 mt-4 md:container mx-auto lg:block">
         {bannerShow && <div className="mx-auto relative mb-4 sm:mb-16">
-          <a href="https://www.youtube.com/watch?v=TLfJ_z-wtQo" target="_blank" rel="noreferrer">
+          <a href="https://gamefi.org/igo/131" target="_blank" rel="noreferrer">
             <img src={banner.src} alt="" className="mx-auto aspect-[970/90] max-h-[90px]" />
           </a>
         </div>}

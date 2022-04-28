@@ -224,7 +224,7 @@ class UserController {
         return HelperUtils.responseNotFound('Wallet not found')
       }
 
-      let user = await userService.buildQueryBuilder({ wallet_address }).first()
+      let user = await UserModel.query().where('wallet_address', wallet_address).first()
       if (!user) {
         // create new profile if they don't KYC
         user = new UserModel()

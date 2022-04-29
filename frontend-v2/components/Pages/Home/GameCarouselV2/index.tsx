@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { useMediaQuery } from 'react-responsive'
 import Link from 'next/link'
@@ -40,6 +40,41 @@ const GameCarousel = ({ items, likes }: Props) => {
     }), new AutoPlay({ duration: 3000, direction: 'NEXT', stopOnHover: true })])
   }, [])
 
+  const toggleAutoplay = useCallback((status) => {
+    if (status) {
+      setPlugins([new Sync({
+        type: 'index',
+        synchronizedFlickingOptions: [
+          {
+            flicking: refSlider.current,
+            isSlidable: true
+          },
+          {
+            flicking: refSlider1.current,
+            isClickable: true,
+            activeClass: 'thumbnail-bullet-active'
+          }
+        ]
+      }), new AutoPlay({ duration: 3000, direction: 'NEXT', stopOnHover: true })])
+      return
+    }
+
+    setPlugins([new Sync({
+      type: 'index',
+      synchronizedFlickingOptions: [
+        {
+          flicking: refSlider.current,
+          isSlidable: true
+        },
+        {
+          flicking: refSlider1.current,
+          isClickable: true,
+          activeClass: 'thumbnail-bullet-active'
+        }
+      ]
+    })])
+  }, [])
+
   const prev = () => {
     if (!refSlider.current) {
       return
@@ -69,7 +104,23 @@ const GameCarousel = ({ items, likes }: Props) => {
                   <div className="absolute z-10 top-0 left-0 uppercase font-medium tracking-widest text-xs xl:text-sm text-left bg-gamefiDark-900 w-1/2 md:pb-1 lg:pb-2 clipped-b-r-full inline-block">
                     <span className="text-gamefiGreen-500">Featured</span> games
                   </div>
-                  <video className="clipped-t-r-lg" style={{ aspectRatio: '16/9', objectFit: 'fill' }} muted controls controlsList="nodownload" poster={item.screen_shots_1}>
+                  <video
+                    className="clipped-t-r-lg"
+                    style={{ aspectRatio: '16/9', objectFit: 'fill' }}
+                    muted
+                    controls
+                    controlsList="nodownload"
+                    poster={item.screen_shots_1}
+                    onPlay={() => {
+                      toggleAutoplay(false)
+                    }}
+                    onPause={() => {
+                      toggleAutoplay(true)
+                    }}
+                    onEnded={() => {
+                      toggleAutoplay(true)
+                    }}
+                  >
                     <source src={item.intro_video} type="video/mp4"></source>
                     Your browser does not support the video tag.
                   </video>
@@ -125,7 +176,24 @@ const GameCarousel = ({ items, likes }: Props) => {
               <div key={`mobile-game-${item.id}`} className="w-full">
                 <div className="w-full">
                   <div className="absolute z-20 top-0 left-0 uppercase font-medium tracking-widest md:text-xs xl:text-sm text-center md:text-left bg-gamefiDark-900 w-1/2 md:pb-1 lg:pb-2 clipped-b-r-full inline-block"><span className="text-gamefiGreen-500">Featured</span> games</div>
-                  <video key={`video-${item.id}`} className='clipped-t-r-lg' style={{ aspectRatio: '16/9', objectFit: 'fill' }} muted controls controlsList="nodownload" poster={item.screen_shots_1}>
+                  <video
+                    key={`video-${item.id}`}
+                    className='clipped-t-r-lg'
+                    style={{ aspectRatio: '16/9', objectFit: 'fill' }}
+                    muted
+                    controls
+                    controlsList="nodownload"
+                    poster={item.screen_shots_1}
+                    onPlay={() => {
+                      toggleAutoplay(false)
+                    }}
+                    onPause={() => {
+                      toggleAutoplay(true)
+                    }}
+                    onEnded={() => {
+                      toggleAutoplay(true)
+                    }}
+                  >
                     <source src={item.intro_video} type="video/mp4"></source>
                   </video>
                 </div>

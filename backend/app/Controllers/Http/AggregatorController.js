@@ -289,7 +289,7 @@ class AggregatorController {
       const ido_type = params?.ido_type
       const price = params?.price
       const gameLaunchStatus = params?.game_launch_status
-      const sort_by = params?.sort_by ? params?.sort_by : 'cmc_rank'
+      const sort_by = params?.sort_by ? params?.sort_by : 'created_at'
       const sort_order = params?.sort_order ? params?.sort_order.toUpperCase() : 'ASC'
       const cacheKey = [ page, perPage, display_area, game_name, ido_type, category, gameLaunchStatus, sort_by, sort_order ]
       const selectColumn = [

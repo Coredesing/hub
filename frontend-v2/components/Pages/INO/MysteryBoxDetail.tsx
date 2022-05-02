@@ -60,7 +60,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const [openPlaceOrderModal, setOpenPlaceOrderModal] = useState(false)
   const [openBuyBoxModal, setOpenBuyBoxModal] = useState(false)
   const [loadingCollection, setLoadingCollection] = useState(false)
-  const [collections, setCollections] = useState<ObjectType[]>([])
+  // const [collections, setCollections] = useState<ObjectType[]>([])
   const [ownedBox, setOwnedBox] = useState(0)
   const balanceInfo = useMyBalance(currencySelected as any, poolInfo.network_available)
   const [supplyBox, setSupplyBox] = useState({ total: 0, sold: 0 })
@@ -197,6 +197,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       getMyBoxThisPool()
       getMyNumBox()
       handleSetSupplyBoxes()
+      setAmountBoxBuy(1)
     }
   }, [getMyBoxThisPool, getMyNumBox, handleSetSupplyBoxes])
 
@@ -397,61 +398,96 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     getMyNumBox()
   }, [account, erc721Contract, getMyNumBox])
 
-  const handleSetCollections = useCallback(async (ownedBox: number) => {
-    if (!presaleContract) return
-    setLoadingCollection(true)
-    setCollections([])
-    try {
-      if (!erc721Contract) return
-      const isCallDefaultCollection = poolInfo.campaign_hash === poolInfo.token
-      // const arrCollections = []
-      if (!account) return
-      const callWithExternalApi = !!poolInfo.use_external_api
-      const handleInfoTokenExternal = async (collectionId: number, collection: ObjectType) => {
-        try {
-          const tokenURI = await erc721Contract.tokenURI(collectionId)
-          collection.collectionId = collectionId
-          let infoBoxType = await fetcher(tokenURI)
-          infoBoxType = infoBoxType?.data || infoBoxType || {}
-          Object.assign(collection, infoBoxType)
-          return collection
-        } catch (error) {
-          console.debug('error', error)
-        }
-      }
-      const handleSetCollection = (collection: ObjectType) => {
-        setCollections((c) => {
-          const newArr = [...c]
-          const existId = c.find((b) => b.collectionId === collection.collectionId)
-          if (!existId) {
-            newArr.push(collection)
-          }
-          return newArr
+  const [filterCollection, setFilterCollection] = useState({ page: 1, totalRecords: 0, dataExternals: [], perPage: 8, totalPage: 0 })
+  const [collectionData, setCollectionData] = useState<ObjectType<ObjectType>>({})
+  const isCallDefaultCollection = poolInfo.campaign_hash === poolInfo.token
+  const callWithExternalApi = !!poolInfo.use_external_api
+
+  const onChangePageCollection = useCallback((page: number) => {
+    setFilterCollection(f => ({ ...f, page }))
+  }, [])
+
+  useEffect(() => {
+    if (callWithExternalApi) {
+      fetcher(`${API_BASE_URL}/pool/owner/${poolInfo.token}?wallet=${account}`)
+        .then((result) => {
+          const arr = result.data.data?.data || []
+          setFilterCollection(f => ({ ...f, totalRecords: arr.length, dataExternals: arr, totalPage: Math.ceil(arr.length / f.perPage) }))
         })
+    } else {
+      setFilterCollection(f => ({ ...f, totalRecords: +ownedBox || 0, totalPage: Math.ceil((+ownedBox || 0) / f.perPage) }))
+    }
+  }, [isCallDefaultCollection, callWithExternalApi, ownedBox])
+
+  useEffect(() => {
+    if (!account || !erc721Contract || !presaleContract || !filterCollection.totalRecords) {
+      return setCollectionData({})
+    }
+    const handleInfoTokenExternal = async (collectionId: number, collection: ObjectType) => {
+      try {
+        const tokenURI = await erc721Contract.tokenURI(collectionId)
+        collection.collectionId = collectionId
+        let infoBoxType = await fetcher(tokenURI)
+        infoBoxType = infoBoxType?.data || infoBoxType || {}
+        Object.assign(collection, infoBoxType)
+        return collection
+      } catch (error) {
+        console.debug('error', error)
       }
-      if (callWithExternalApi) {
-        const result = await fetcher(`${API_BASE_URL}/pool/owner/${poolInfo.token}?wallet=${account}&limit=100`)
-        const arr = result.data.data?.data || []
-        for (let i = 0; i < arr.length; i++) {
-          const collectionId = arr[i]?.token_id
-          const collection: ObjectType = {
-            collectionId
+    }
+    const handleSetCollection = (collection: ObjectType) => {
+      setCollectionData((c) => {
+        return {
+          ...c,
+          [filterCollection.page]: {
+            ...(c[filterCollection.page] || {}),
+            [collection.collectionId]: collection
           }
+        }
+      })
+    }
+    const getTokenInfo = async () => {
+      const to = (filterCollection.totalRecords - 1) - ((filterCollection.page - 1) * filterCollection.perPage)
+      let from = filterCollection.totalRecords - ((filterCollection.page - 1) * filterCollection.perPage) - filterCollection.perPage
+      from = from >= 0 ? from : 0
+      setLoadingCollection(true)
+      if (callWithExternalApi) {
+        const length = filterCollection.dataExternals?.length
+        if (!length) {
+          return setCollectionData({})
+        }
+        const promises = []
+        const getInfo = async (index: number) => {
+          const collectionId = filterCollection.dataExternals[index]?.token_id
+          if (collectionId === null || collectionId === undefined) return
+          const collection: ObjectType = { collectionId }
           try {
             await handleInfoTokenExternal(collectionId, collection)
           } catch (error) {
             console.debug(error)
           }
           handleSetCollection(collection)
-          // arrCollections.push(collection)
-          // setCollections(arrCollections)
         }
+
+        for (let index = to; index >= from; index--) {
+          // const collectionId = filterCollection.dataExternals[index]?.token_id
+          // if (collectionId === null || collectionId === undefined) continue
+          // const collection: ObjectType = { collectionId }
+          // try {
+          //   await handleInfoTokenExternal(collectionId, collection)
+          // } catch (error) {
+          //   console.debug(error)
+          // }
+          // handleSetCollection(collection)
+          promises.push(getInfo(index))
+        }
+        await Promise.all(promises)
       } else {
-        for (let id = 0; id < ownedBox; id++) {
-          if (isCallDefaultCollection) {
+        if (isCallDefaultCollection) {
+          const getInfo = async (index: number) => {
             const collection: ObjectType = {}
             try {
-              const collectionId = await presaleContract.tokenOfOwnerByIndex(account, id)
+              const collectionId = await presaleContract.tokenOfOwnerByIndex(account, index)
               collection.collectionId = collectionId.toNumber()
               const boxType = await presaleContract.boxes(collection.collectionId)
               const idBoxType = boxType.subBoxId.toNumber()
@@ -459,41 +495,135 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               infoBox && Object.assign(collection, infoBox)
               handleSetCollection(collection)
             } catch (error) {
-              // console.debug('error', error)
-            }
-            // arrCollections.push(collection)
-          } else {
-            const collection: ObjectType = {}
-            try {
-              const collectionId = await erc721Contract.tokenOfOwnerByIndex(account, id)
-              collection.collectionId = collectionId.toNumber()
-              await handleInfoTokenExternal(collection.collectionId, collection)
-              // arrCollections.push(collection)
-              handleSetCollection(collection)
-            } catch (error) {
-              // console.debug('error', error)
+              console.debug('error', error)
             }
           }
+          const promises = []
+          for (let index = to; index >= from; index--) {
+            promises.push(getInfo(index))
+          }
+          await Promise.all(promises)
+        } else {
+          const getInfo = async (index: number) => {
+            const collection: ObjectType = {}
+            try {
+              const collectionId = await erc721Contract.tokenOfOwnerByIndex(account, index)
+              collection.collectionId = collectionId.toNumber()
+              await handleInfoTokenExternal(collection.collectionId, collection)
+              handleSetCollection(collection)
+            } catch (error) {
+              console.debug('error', error)
+            }
+          }
+          const promises = []
+          for (let index = to; index >= from; index--) {
+            promises.push(getInfo(index))
+          }
+          await Promise.all(promises)
         }
       }
-      // setCollections(arrCollections)
-    } catch (error) {
-      console.debug(error)
-      console.error('Something went wrong when show collections')
-    } finally {
       setLoadingCollection(false)
     }
-  }, [presaleContract, erc721Contract, boxTypes, poolInfo, account])
+    getTokenInfo().catch()
+  }, [filterCollection, isCallDefaultCollection, callWithExternalApi, erc721Contract, presaleContract, account])
 
-  useEffect(() => {
-    setCollections([])
-  }, [account])
+  // const handleSetCollections = useCallback(async (ownedBox: number) => {
+  //   if (!presaleContract) return
+  //   setLoadingCollection(true)
+  //   setCollections([])
+  //   try {
+  //     if (!erc721Contract) return
+  //     const isCallDefaultCollection = poolInfo.campaign_hash === poolInfo.token
+  //     // const arrCollections = []
+  //     if (!account) return
+  //     const callWithExternalApi = !!poolInfo.use_external_api
+  //     const handleInfoTokenExternal = async (collectionId: number, collection: ObjectType) => {
+  //       try {
+  //         const tokenURI = await erc721Contract.tokenURI(collectionId)
+  //         collection.collectionId = collectionId
+  //         let infoBoxType = await fetcher(tokenURI)
+  //         infoBoxType = infoBoxType?.data || infoBoxType || {}
+  //         Object.assign(collection, infoBoxType)
+  //         return collection
+  //       } catch (error) {
+  //         console.debug('error', error)
+  //       }
+  //     }
+  //     const handleSetCollection = (collection: ObjectType) => {
+  //       setCollections((c) => {
+  //         const newArr = [...c]
+  //         const existId = c.find((b) => b.collectionId === collection.collectionId)
+  //         if (!existId) {
+  //           newArr.push(collection)
+  //         }
+  //         return newArr
+  //       })
+  //     }
+  //     if (callWithExternalApi) {
+  //       const result = await fetcher(`${API_BASE_URL}/pool/owner/${poolInfo.token}?wallet=${account}&limit=100`)
+  //       const arr = result.data.data?.data || []
+  //       for (let i = 0; i < arr.length; i++) {
+  //         const collectionId = arr[i]?.token_id
+  //         const collection: ObjectType = {
+  //           collectionId
+  //         }
+  //         try {
+  //           await handleInfoTokenExternal(collectionId, collection)
+  //         } catch (error) {
+  //           console.debug(error)
+  //         }
+  //         handleSetCollection(collection)
+  //         // arrCollections.push(collection)
+  //         // setCollections(arrCollections)
+  //       }
+  //     } else {
+  //       for (let id = 0; id < ownedBox; id++) {
+  //         if (isCallDefaultCollection) {
+  //           const collection: ObjectType = {}
+  //           try {
+  //             const collectionId = await presaleContract.tokenOfOwnerByIndex(account, id)
+  //             collection.collectionId = collectionId.toNumber()
+  //             const boxType = await presaleContract.boxes(collection.collectionId)
+  //             const idBoxType = boxType.subBoxId.toNumber()
+  //             const infoBox = boxTypes.find((b, subBoxId) => subBoxId === idBoxType) || {}
+  //             infoBox && Object.assign(collection, infoBox)
+  //             handleSetCollection(collection)
+  //           } catch (error) {
+  //             // console.debug('error', error)
+  //           }
+  //           // arrCollections.push(collection)
+  //         } else {
+  //           const collection: ObjectType = {}
+  //           try {
+  //             const collectionId = await erc721Contract.tokenOfOwnerByIndex(account, id)
+  //             collection.collectionId = collectionId.toNumber()
+  //             await handleInfoTokenExternal(collection.collectionId, collection)
+  //             // arrCollections.push(collection)
+  //             handleSetCollection(collection)
+  //           } catch (error) {
+  //             console.log('error', error)
+  //           }
+  //         }
+  //       }
+  //     }
+  //     // setCollections(arrCollections)
+  //   } catch (error) {
+  //     console.debug(error)
+  //     console.error('Something went wrong when show collections')
+  //   } finally {
+  //     setLoadingCollection(false)
+  //   }
+  // }, [presaleContract, erc721Contract, boxTypes, poolInfo, account])
 
-  useEffect(() => {
-    if (+ownedBox > 0 && boxTypes.length) {
-      handleSetCollections(ownedBox)
-    }
-  }, [ownedBox, boxTypes.length, handleSetCollections])
+  // useEffect(() => {
+  //   setCollections([])
+  // }, [account])
+
+  // useEffect(() => {
+  //   if (+ownedBox > 0 && boxTypes.length) {
+  //     handleSetCollections(ownedBox)
+  //   }
+  // }, [ownedBox, boxTypes.length, handleSetCollections])
   const onClaimAllNFT = async () => {
     try {
       if (!library || !account) {
@@ -779,12 +909,15 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           <TabPanel value={currentTab} index={4}>
             <Collection
               poolInfo={poolInfo}
-              collections={collections}
+              // collections={collections}
+              collections={Object.values(collectionData[filterCollection.page] || {}).reverse().slice(0, filterCollection.perPage)}
               loading={loadingCollection}
               onClaimAllNFT={onClaimAllNFT}
               onClaimNFT={onClaimNFT}
               isValidChain={isValidChain}
               ownedBox={ownedBox}
+              handleChangePage={onChangePageCollection}
+              filter={filterCollection}
             />
           </TabPanel>
         </div>

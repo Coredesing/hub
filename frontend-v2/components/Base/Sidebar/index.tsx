@@ -2,8 +2,12 @@ import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import SidebarLink from './SidebarLink'
+import Badge from '../Badge'
+import { useAppContext } from '@/context'
 
 const Sidebar = () => {
+  const igoPoolCount = useAppContext()?.igoPool?.count || 0
+
   return (
     <>
       <div className="hidden h-full w-20 md:block md:w-24 lg:w-28 dark:bg-gamefiDark-800 overflow-y-auto hide-scrollbar" style={{ boxShadow: 'inset -1px 0px 0px #303442' }}>
@@ -19,6 +23,7 @@ const Sidebar = () => {
         <SidebarLink path='/igo'>
           <Image src={require('@/assets/images/icons/spaceship.svg')} alt='launchpad'></Image>
           <span className="mt-2">IGO</span>
+          <Badge count={igoPoolCount} className='absolute top-2 left-1/2'></Badge>
         </SidebarLink>
         <SidebarLink path='/hub'>
           <Image src={require('@/assets/images/icons/controller.svg')} alt='hub'></Image>

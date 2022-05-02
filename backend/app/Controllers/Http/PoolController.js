@@ -718,6 +718,16 @@ class PoolController {
     }
   }
 
+  async getCountPools({ request }) {
+    const inputParams = request.all();
+    try {
+      const count = await (new PoolService).getCountPools(inputParams);
+      return HelperUtils.responseSuccess({count});
+    } catch {
+      return HelperUtils.responseErrorInternal('getCountPool Fail !!!');
+    }
+  }
+
   async getNextToLaunchPoolsV3({ request }) {
     const inputParams = request.all();
     console.log('[getNextToLaunchPoolsV3] - inputParams: ', inputParams);

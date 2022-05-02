@@ -241,6 +241,31 @@ class PoolService {
     return pools;
   }
 
+  async getCountPools(filterParams) {
+    const now = new Date().getTime() / 1000
+
+    const result = await this.buildQueryBuilder(filterParams)
+      .with('campaignClaimConfig')
+      .with('socialNetworkSetting')
+      .where('is_display', Const.POOL_DISPLAY.DISPLAY)
+      .where(builder => {
+        builder
+          .whereIn('campaign_status', [
+            Const.POOL_STATUS.FILLED,
+            Const.POOL_STATUS.SWAP,
+            Const.POOL_STATUS.TBA,
+            Const.POOL_STATUS.UPCOMING,
+          ])
+          .orWhere(builderClaim => {
+            builderClaim
+              .where('campaign_status', Const.POOL_STATUS.CLAIMABLE)
+              .where('actual_finish_time', '>', now)
+          })
+      }).count({ total: 'id' })
+
+    return result?.[0]?.total || 0
+  }
+
   async getMysteriousBoxPoolsV3(filterParams) {
     const limit = filterParams.limit ? filterParams.limit : 20;
     const page = filterParams.page ? filterParams.page : 1;

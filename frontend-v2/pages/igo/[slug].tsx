@@ -836,6 +836,35 @@ const IGODetails = ({ poolData }) => {
   )
 }
 
+const plural = (text, amount) => {
+  const parts = text.split(' ')
+  const word = parts.pop()
+  if (!word) {
+    return text
+  }
+
+  const matches = word.match(/(\w+)\((\w+)\)/)
+  if (!matches) {
+    return text
+  }
+
+  if (amount <= 1) {
+    return `${parts.join(' ')} ${matches[1]}`
+  }
+
+  return `${parts.join(' ')} ${matches[1]}${matches[2]}`
+}
+
+const GameDetailsRewards = ({ game }) => {
+  const rewards = useMemo(() => game?.settings?.rewards.map((reward, index) => {
+    return <div key={index}>
+      <strong className="font-semibold uppercase text-transparent bg-clip-text bg-gradient-to-br from-white to-white">- {reward.amount} {plural(reward.token || reward.reward, reward.amount)}</strong>
+    </div>
+  }), [game])
+
+  return rewards
+}
+
 const GameDetails = ({ game }) => {
   const { countdown, ended } = useCountdown({ deadline: game?.endedAt })
   const snapshot = useMemo(() => new Date(game?.settings?.snapshot), [game])
@@ -1003,17 +1032,27 @@ const GameDetails = ({ game }) => {
   const won = useMemo(() => {
     return !!winners?.length && !!winners.find(x => x.wallet?.toLowerCase() === account?.toLowerCase())
   }, [winners, account])
-  const rewardsEach = useMemo(() => {
+  const rewardsEach = useCallback((index: number) => {
     if (!winners?.length) {
       return []
     }
 
-    return game.settings?.rewards?.map(x => {
-      if (!x?.amount) {
+    return game.settings?.rewards?.map((reward) => {
+      if (!reward?.amount) {
         return null
       }
 
-      return `${Math.round(x.amount / winners?.length)} ${x.token}`
+      if (reward.token) {
+        const amount = Math.round(reward.amount / winners?.length)
+        return `${amount} ${plural(reward.token || reward.reward, amount)}`
+      }
+
+      if (reward.amount < index + 1) {
+        return null
+      }
+
+      const amount = 1
+      return `${amount} ${plural(reward.token || reward.reward, amount)}`
     }).filter(x => !!x) || []
   }, [game, winners])
 
@@ -1021,7 +1060,7 @@ const GameDetails = ({ game }) => {
   const [modalRules, setModalRules] = useState(false)
 
   return <div className="mt-10 sm:mt-20">
-    <div className="bg-black/50 relative sm:min-h-[240px] rounded-lg z-0">
+    <div className="bg-black/50 relative sm:min-h-[250px] rounded-lg z-0">
       <div className="absolute w-full h-full overflow-hidden rounded-lg z-[-1]">
         <div className="absolute bg-[#FF8A00] w-64 h-64 rounded-full blur-2xl -top-32 -left-32 bg-opacity-[15%]"></div>
       </div>
@@ -1029,15 +1068,13 @@ const GameDetails = ({ game }) => {
         <Image src={imgRocket} alt={game.name} />
       </div>
       <div className="sm:absolute flex flex-col sm:flex-row items-center w-full h-full xl:pr-72">
-        <div className="flex-1 font-casual p-8 sm:py-0 sm:border-r sm:border-white/10">
+        <div className="flex-1 font-casual p-6 sm:p-8 sm:py-0 sm:border-r sm:border-white/10 w-full">
           <div className="text-transparent bg-clip-text bg-gradient-to-br from-amber-400 to-rose-400">
-            <h2 className="text-5xl font-bold">ROI</h2>
-            <h3 className="text-4xl uppercase">Prediction</h3>
+            <h2 className="text-4xl font-bold">ROI</h2>
+            <h3 className="text-3xl uppercase">Prediction</h3>
           </div>
-          <p className="text-white/90 text-base">Guess the highest ROI to win <strong>{game.settings?.rewards?.map((reward) => {
-            return `${reward.amount} $${reward.token}`
-          }).join(' + ') || ''}</strong></p>
-          <p className="text-xs mt-6">
+          <div className="text-white/90 text-base">Guess the highest ROI to earn exclusive rewards <GameDetailsRewards game={game}></GameDetailsRewards></div>
+          <p className="text-xs mt-4">
             <a href={`#/${game.id}`} className="text-gamefiGreen-500 hover:underline inline-flex" onClick={() => { setModalRules(true) }}>
               Learn More
               <svg xmlns="http://www.w3.org/2000/svg" className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -1047,7 +1084,7 @@ const GameDetails = ({ game }) => {
           </p>
         </div>
 
-        <div className="flex-1 p-8 sm:py-0 font-casual w-full">
+        <div className="flex-1 w-full sm:flex-none sm:w-80 p-6 sm:p-8 sm:py-0 font-casual">
           {!ended && <><p className="text-sm text-white/80 uppercase">Ends in</p>
             <div className="text-base font-medium">
               {countdown.days ? formatNumber(countdown.days, 2) : '00'}d : {countdown.hours ? formatNumber(countdown.hours, 2) : '00'}h : {countdown.minutes ? formatNumber(countdown.minutes, 2) : '00'}m : {countdown.seconds ? formatNumber(countdown.seconds, 2) : '00'}s
@@ -1099,16 +1136,19 @@ const GameDetails = ({ game }) => {
                       <path d="M15 0C13.8133 0 12.6533 0.351894 11.6666 1.01118C10.6799 1.67047 9.91085 2.60754 9.45673 3.7039C9.0026 4.80026 8.88378 6.00666 9.11529 7.17054C9.3468 8.33443 9.91825 9.40353 10.7574 10.2426C11.5965 11.0818 12.6656 11.6532 13.8295 11.8847C14.9933 12.1162 16.1997 11.9974 17.2961 11.5433C18.3925 11.0892 19.3295 10.3201 19.9888 9.33342C20.6481 8.34673 21 7.18669 21 6C20.9984 4.40919 20.3658 2.88399 19.2409 1.75911C18.116 0.63424 16.5908 0.00158843 15 0V0ZM16 9H14V3H16V9Z" fill="currentColor" />
                     </svg></span> to join</a></Link>
                 </div>}
-                {earnStake !== null && (validRank || validEarn) && <>
-                  <input type="number" className="hide-spin text-base bg-white/10 rounded-sm clipped-t-r-sm w-full border-transparent px-3 pr-24 py-2 block shadow-lg focus:ring-0 focus:shadow-none focus:border-transparent" placeholder="ROI = Highest Price / IGO Price" disabled={disabled} value={recordsMine?.[0]?.answer || number} onChange={handleNumber} />
+                {earnStake !== null && (validRank || validEarn) && <div>
+                  <input type="number" className="hide-spin text-base bg-white/10 rounded-sm clipped-t-r-sm w-full border-transparent px-3 pr-24 py-2 block shadow-lg focus:ring-0 focus:shadow-none focus:border-transparent" placeholder="Highest / IGO Price" disabled={disabled} value={recordsMine?.[0]?.answer || number} onChange={handleNumber} />
                   <button className={`font-[13px] font-mechanic uppercase font-bold absolute right-1.5 top-[50%] -translate-y-1/2 rounded-sm clipped-t-r-sm  block text-sm px-4 py-1 ${disabled ? 'text-white/40 bg-gamefiDark-500/50 cursor-not-allowed' : 'text-black cursor-pointer bg-gradient-to-br from-amber-400 via-amber-400 to-rose-400'}`} onClick={() => { submit() }}>Submit</button>
-                </>
+                </div>
                 }
               </div>
               <p className="mt-1 text-xs uppercase text-white/80">Result snapshot: {format(snapshot, 'yyyy-MM-dd HH:mm:ss')}</p>
             </>}
+            { winners?.length && <div className="text-base font-medium">
+              {recordsMine?.[0]?.answer || ''}
+            </div> }
             {!!winners?.length && won && <div className="text-base font-medium text-gamefiGreen-500">
-              Congratulations. You won {rewardsEach.join(', ')} !
+              Congratulations. You won!
             </div>}
             {!!winners?.length && !won && <div className="text-base font-medium text-[#DE4343]">
               Your prediction is not correct
@@ -1169,7 +1209,7 @@ const GameDetails = ({ game }) => {
                       Prediction
                     </th>
                     <th scope="col" className="text-sm px-4 py-2 text-left font-semibold">
-                      Reward
+                      Rewards
                     </th>
                     <th scope="col" className="text-sm pl-4 py-2 text-left font-semibold">
                       Time
@@ -1185,7 +1225,7 @@ const GameDetails = ({ game }) => {
                       {winner.answer}
                     </td>
                     <td className="text-sm px-4 py-2 whitespace-nowrap">
-                      {rewardsEach.join(' + ')}
+                      {rewardsEach(i).join(' + ')}
                     </td>
                     <td className="text-sm pl-4 py-2 whitespace-nowrap">
                       {format(new Date(winner.createdAt), 'yyyy-MM-dd HH:mm:ss')}
@@ -1195,24 +1235,6 @@ const GameDetails = ({ game }) => {
               </table>
             </div>
           </div>
-          {/* <table className="table-auto mt-4 w-full">
-            <thead className="font-mechanic uppercase">
-              <tr>
-                <th>Wallet</th>
-                <th>Prediction</th>
-                <th>Reward</th>
-                <th>Time</th>
-              </tr>
-            </thead>
-            <tbody className="text-sm">
-              {winners?.map(winner => <tr key={winner.wallet}>
-                <td>{shortenAddress(winner.wallet, '*', 6)}</td>
-                <td>{winner.answer}</td>
-                <td>{rewardsEach.join(', ')}</td>
-                <td>{format(new Date(winner.createdAt), 'yyyy-MM-dd HH:mm:ss')}</td>
-              </tr>)}
-            </tbody>
-          </table> */}
         </div>
       </div>
     </Modal>

@@ -23,7 +23,7 @@ const PageIndex = () => {
   const [gameLikeIds, setGameLikesIds] = useState([])
   const [likes, setLikes] = useState([])
 
-  const { data: fetchFeaturedGamesResponse } = useSWR(`${API_BASE_URL}/aggregator?display_area=Top Game`, fetcher)
+  const { data: fetchFeaturedGamesResponse } = useSWR(`${API_BASE_URL}/aggregator?display_area=Top Game&sort_by=created_at&sort_order=desc`, fetcher)
   const { data: fetchLikesResponse } = useSWR(`${API_BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`, fetcher)
 
   useEffect(() => {

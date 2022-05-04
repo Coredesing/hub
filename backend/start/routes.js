@@ -112,7 +112,7 @@ Route.group(() => {
   Route.post('user/check-active', 'UserController.checkUserActive');
   Route.post('user/join-campaign', 'CampaignController.joinCampaign').middleware(['checkSignature']);
   // Route.get('user/whitelist-search/:campaignId', 'WhiteListUserController.search');
-  Route.get('user/whitelist-apply/previous', 'WhiteListSubmissionController.getPreviousWhitelistSubmission');
+  Route.get('user/whitelist-apply/previous', 'WhiteListSubmissionController.getPreviousWhitelistSubmissionV2');
   Route.get('user/whitelist-apply/:campaignId', 'WhiteListSubmissionController.getWhitelistSubmission');
   Route.post('user/whitelist-apply/:campaignId', 'WhiteListSubmissionController.addWhitelistSubmission');
   Route.get('user/winner-list/:campaignId', 'WinnerListUserController.getWinnerListPublic').middleware(['maskEmailAndWallet']);

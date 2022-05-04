@@ -979,8 +979,14 @@ const GameDetails = ({ game }) => {
     return ended || !!recordsMine?.[0]
   }, [ended, recordsMine])
 
+  const [submitting, setSubmitting] = useState(false)
   const submit = useCallback(() => {
     if (disabled) {
+      return
+    }
+
+    if (submitting) {
+      toast.error('Processing...')
       return
     }
 
@@ -994,6 +1000,7 @@ const GameDetails = ({ game }) => {
       return
     }
 
+    setSubmitting(true)
     signMessage().then(data => {
       if (!data) {
         return
@@ -1026,8 +1033,10 @@ const GameDetails = ({ game }) => {
     }).catch(err => {
       console.debug(err)
       toast.error('Could not sign the authentication message')
+    }).finally(() => {
+      setSubmitting(false)
     })
-  }, [number, errorNumber, signMessage, account, game.id, loadRecordsMine, disabled])
+  }, [number, errorNumber, signMessage, account, game.id, loadRecordsMine, disabled, submitting])
 
   const won = useMemo(() => {
     return !!winners?.length && !!winners.find(x => x.wallet?.toLowerCase() === account?.toLowerCase())

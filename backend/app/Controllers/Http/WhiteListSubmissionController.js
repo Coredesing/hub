@@ -98,7 +98,7 @@ class WhiteListSubmissionController {
         wallet_address,
         campaign_id
       }
-      const submission = await whitelistSubmissionService.findSubmission(submissionParams)
+      const submission = await whitelistSubmissionService.findLastSubmission(submissionParams)
       if (submission) {
         submission.user_telegram = ''
         submission.user_twitter = ''

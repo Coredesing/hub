@@ -202,12 +202,12 @@ export default function WalletProvider ({ children }) {
       (window as any).gtag('event', 'wallet_connect', {
         address: account + '_',
         network: networkChosen?.name,
-        wallet: walletChosen.name,
+        wallet: walletChosen?.name,
         path: location.pathname + location.hash
       });
 
       (window as any).gtag('event', 'login', {
-        method: walletChosen.name + ' ' + networkChosen?.name
+        method: walletChosen?.name + ' ' + networkChosen?.name
       })
     }
   }, [networkChosen, walletChosen, account])

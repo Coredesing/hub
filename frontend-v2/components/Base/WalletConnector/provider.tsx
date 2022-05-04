@@ -94,7 +94,7 @@ export default function WalletProvider ({ children }) {
     setAgreed(value)
   }
   const defaultNetwork = getNetworkAvailable().find(x => x.alias === 'bsc')
-  const [networkChosen, setNetworkChosen] = useState<{ id: any } | undefined>(defaultNetwork)
+  const [networkChosen, setNetworkChosen] = useState<{ id: any; name: string } | undefined>(defaultNetwork)
   const chooseNetwork = network => {
     if (!agreed) {
       return
@@ -102,7 +102,7 @@ export default function WalletProvider ({ children }) {
 
     setNetworkChosen(network)
   }
-  const [walletChosen, setWalletChosen] = useState<{ id: any } | undefined>()
+  const [walletChosen, setWalletChosen] = useState<{ id: any; name: string } | undefined>()
   const [connectorChosen, setConnectorChosen] = useState<AbstractConnector | undefined>()
   const walletsAvailable = useMemo(() => {
     if (!networkChosen) {
@@ -192,6 +192,22 @@ export default function WalletProvider ({ children }) {
 
     setWalletChosen(undefined)
   }, [networkChosen, dispatch])
+
+  useEffect(() => {
+    if (!networkChosen || !walletChosen || !account) {
+      return
+    }
+
+    console.log(networkChosen, walletChosen, account, location.pathname)
+
+    if ((window as any).gtag) {
+      (window as any).gtag('event', 'wallet_connect', {
+        address: account,
+        network: networkChosen?.name,
+        wallet: walletChosen.name
+      })
+    }
+  }, [networkChosen, walletChosen, account])
 
   return <ctx.Provider value={{ setShowModal, tryDeactivate }}>
     {children}

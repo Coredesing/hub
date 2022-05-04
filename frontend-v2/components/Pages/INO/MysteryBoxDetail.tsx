@@ -67,8 +67,6 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const [supplyBox, setSupplyBox] = useState({ total: 0, sold: 0 })
   const [showApplyWhitelist, setShowApplyWhitelist] = useState(false)
 
-  // Hard code for EPIC WAR
-  const { response: submission } = useFetch(`/user/whitelist-apply/previous?wallet_address=${account}&campaign_id=${poolInfo.id}`)
   const [formData, setFormData] = useState({
     email: ''
   })
@@ -81,10 +79,18 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const { joinPool, loading: loadingJPool, success: isJoinSuccess } = useJoinPool(poolInfo?.id, account, formData.email)
 
   useEffect(() => {
-    if (isJoinPool && submission) {
-      setEmail(submission?.data?.email || '')
+    const fetchSubmission = async () => {
+      try {
+        const submission = await fetcher(`${API_BASE_URL}/user/whitelist-apply/previous?wallet_address=${account}&campaign_id=${poolInfo.id}`)
+        setEmail(submission?.data?.email || '')
+      } catch (e) {
+        return null
+      }
     }
-  }, [isJoinPool])
+    if (isJoinPool) {
+      fetchSubmission()
+    }
+  }, [isJoinPool, account])
 
   const handleJoinPool = useCallback(async () => {
     if (!formData.email) {

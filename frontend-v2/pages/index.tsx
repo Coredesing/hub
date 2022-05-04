@@ -1,7 +1,7 @@
 import GameCarousel from '@/components/Pages/Home/GameCarouselV2'
 
 import { useRouter } from 'next/router'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 import IGOList from 'components/Pages/Home/IGOList'
 import INOList from 'components/Pages/Home/INOList'
@@ -13,9 +13,8 @@ import { API_BASE_URL } from '@/utils/constants'
 import Partners from '@/components/Pages/Home/Partners'
 import Performance from '@/components/Pages/Home/Performance'
 import { fetcher } from '@/utils'
-import banner from '@/assets/images/banner.png'
 import Layout from '@/components/Layout'
-import { useAppContext } from '../context'
+import Banners from '@/components/Banners'
 
 const PageIndex = () => {
   const router = useRouter()
@@ -37,21 +36,11 @@ const PageIndex = () => {
     setLikes(fetchLikesResponse?.data)
   }, [featuredGames, gameLikeIds, fetchLikesResponse?.data])
 
-  const { now } = useAppContext()
-  const bannerShow = useMemo(() => {
-    const bannerDeadline = new Date('2022-05-13T00:00:00Z')
-    return bannerDeadline > now
-  }, [now])
-
   return (
     <Layout title="GameFi.org">
       {/* <GameFiCarousel likes={likes} items={featuredGames}></GameFiCarousel> */}
       <div className="md:px-4 lg:px-16 mt-4 md:container mx-auto lg:block">
-        {bannerShow && <div className="mx-auto relative mb-4 sm:mb-16">
-          <a href="https://gamefi.org/igo/131" target="_blank" rel="noreferrer">
-            <img src={banner.src} alt="" className="mx-auto aspect-[970/90] max-h-[90px]" />
-          </a>
-        </div>}
+        <Banners></Banners>
         {/* Load error here */}
         {/* Loading here */}
         {featuredGames && featuredGames.length ? <GameCarousel likes={likes} items={featuredGames}></GameCarousel> : <></>}

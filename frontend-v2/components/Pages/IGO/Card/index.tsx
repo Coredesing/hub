@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Item } from '../type'
 import Image from 'next/image'
 import { getCurrency, useLibraryDefaultFlexible } from '@/components/web3/utils'
@@ -7,18 +7,11 @@ import Progress from './Progress'
 import Countdown from './Countdown'
 import { useRouter } from 'next/router'
 import { airdropNetworks } from '@/components/web3'
+import { useAppContext } from '@/context'
 
 const Card = ({ item, color, background }: { item: Item; color?: string; background?:string }) => {
   const { network } = useLibraryDefaultFlexible(item?.network_available)
-  const [now, setNow] = useState(new Date())
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(new Date())
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [])
-
+  const { now } = useAppContext()
   const router = useRouter()
   // const [participants, setParticipants] = useState(0)
 

@@ -70,14 +70,7 @@ const IGODetails = ({ poolData }) => {
   const router = useRouter()
   const { tierMine } = useAppContext()
   const [readMore, setReadMore] = useState(false)
-  const [now, setNow] = useState(new Date())
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(new Date())
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [])
+  const { now } = useAppContext()
 
   const [failedRequirements, setFailedRequirements] = useState(false)
   const [completed, setCompleted] = useState(false)

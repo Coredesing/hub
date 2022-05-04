@@ -15,6 +15,7 @@ import Performance from '@/components/Pages/Home/Performance'
 import { fetcher } from '@/utils'
 import banner from '@/assets/images/banner.png'
 import Layout from '@/components/Layout'
+import { useAppContext } from '../context'
 
 const PageIndex = () => {
   const router = useRouter()
@@ -36,15 +37,7 @@ const PageIndex = () => {
     setLikes(fetchLikesResponse?.data)
   }, [featuredGames, gameLikeIds, fetchLikesResponse?.data])
 
-  const [now, setNow] = useState(new Date())
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(new Date())
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [])
-
+  const { now } = useAppContext()
   const bannerShow = useMemo(() => {
     const bannerDeadline = new Date('2022-05-13T00:00:00Z')
     return bannerDeadline > now

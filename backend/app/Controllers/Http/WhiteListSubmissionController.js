@@ -84,6 +84,39 @@ class WhiteListSubmissionController {
     }
   }
 
+  async getPreviousWhitelistSubmissionV2({ request, params }) {
+    const wallet_address = request.input('wallet_address');
+    const campaign_id = request.input('campaign_id')
+
+    if (!wallet_address) {
+      return HelperUtils.responseBadRequest('Bad request with wallet_address');
+    }
+
+    try {
+      const whitelistSubmissionService = new WhitelistSubmissionService();
+      const submissionParams = {
+        wallet_address,
+        campaign_id
+      }
+      const submission = await whitelistSubmissionService.findSubmission(submissionParams)
+      if (submission) {
+        submission.user_telegram = ''
+        submission.user_twitter = ''
+      }
+      return HelperUtils.responseSuccess(
+        submission
+      );
+
+    } catch (e) {
+      console.log("error", e)
+      if (e instanceof BadRequestException) {
+        return HelperUtils.responseBadRequest(e.message);
+      } else {
+        return HelperUtils.responseErrorInternal('ERROR : Get Whitelist Submission fail !');
+      }
+    }
+  }
+
   async applyWhitelistSubmissionBox({ request, params }) {
     // get request params
     const campaign_id = params.campaignId;

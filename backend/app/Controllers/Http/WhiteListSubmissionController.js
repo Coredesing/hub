@@ -185,7 +185,7 @@ class WhiteListSubmissionController {
       // call to whitelist submission service
       const whitelistSubmissionService = new WhitelistSubmissionService();
 
-      const checkEmailExist = whitelistSubmissionService.findSubmission({ email, campaign_id })
+      const checkEmailExist = whitelistSubmissionService.buildQueryBuilder({ email, campaign_id }).first()
       if (checkEmailExist) {
         return HelperUtils.responseBadRequest("Duplicate email address with another user")
       }

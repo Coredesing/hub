@@ -16,7 +16,7 @@ import RuleIntroduce from './RuleIntroduce'
 import SerieContent from './SerieContent'
 import { useMyWeb3 } from '@/components/web3/context'
 import { useLibraryDefaultFlexible, useMyBalance, useTokenAllowance, useTokenApproval } from '@/components/web3/utils'
-import { fetcher } from '@/utils'
+import { fetcher, useFetch } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 import { useCheckJoinPool, useJoinPool } from '@/hooks/useJoinPool'
 import Alert from '@/components/Base/Alert'
@@ -38,6 +38,7 @@ import { getNetworkByAlias } from '@/components/web3'
 import Collection from './Collection'
 import { getTierById } from '@/utils/tiers'
 import Progress from './Progress'
+import Modal from '@/components/Base/Modal'
 
 const MysteryBoxDetail = ({ poolInfo }: any) => {
   const eventId = 0
@@ -64,6 +65,43 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const [ownedBox, setOwnedBox] = useState(0)
   const balanceInfo = useMyBalance(currencySelected as any, poolInfo.network_available)
   const [supplyBox, setSupplyBox] = useState({ total: 0, sold: 0 })
+  const [showApplyWhitelist, setShowApplyWhitelist] = useState(false)
+
+  // Hard code for EPIC WAR
+  const { response: submission } = useFetch(`/user/whitelist-apply/previous?wallet_address=${account}&campaign_id=${poolInfo.id}`)
+  const [formData, setFormData] = useState({
+    email: ''
+  })
+
+  const setEmail = useCallback((v) => {
+    setFormData({ ...formData, email: v })
+  }, [formData])
+
+  const { isJoinPool, loading: loadingCheckJPool } = useCheckJoinPool(poolInfo?.id, account)
+  const { joinPool, loading: loadingJPool, success: isJoinSuccess } = useJoinPool(poolInfo?.id, account, formData.email)
+
+  useEffect(() => {
+    if (isJoinPool && submission) {
+      setEmail(submission?.data?.email || '')
+    }
+  }, [isJoinPool])
+
+  const handleJoinPool = useCallback(async () => {
+    if (!formData.email) {
+      toast.error('Email required')
+      return
+    }
+
+    if (!formData.email.match(/^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/)) {
+      toast.error('Email is not correct')
+      return
+    }
+
+    await joinPool().finally(() => {
+      setShowApplyWhitelist(false)
+    })
+  }, [formData.email, joinPool])
+
   const networkPool = useMemo(() => {
     const network = getNetworkByAlias(poolInfo.network_available)
     return network
@@ -349,8 +387,6 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   useEffect(() => {
     getBoxOrdered()
   }, [getBoxOrdered])
-  const { isJoinPool, loading: loadingCheckJPool } = useCheckJoinPool(poolInfo?.id, account)
-  const { joinPool, loading: loadingJPool, success: isJoinSuccess } = useJoinPool(poolInfo?.id, account)
 
   const onChangeNumBuyBox = (num: number) => {
     setAmountBoxBuy(num)
@@ -706,6 +742,10 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       return <Alert type="info">
         You have successfully applied whitelist.
         {timelinePool.freeBuyTime ? <>&nbsp;Please stay tuned, you can buy from <b>Phase 1</b></> : ' Please stay tuned and wait until time to buy Mystery boxes'}
+        {
+          // Hard code for EPIC WAR
+          poolInfo.id === 345 && <button className="ml-2 underline text-gamefiGreen" onClick={() => { setShowApplyWhitelist(true) }}>Review</button>
+        }
       </Alert>
     }
     if (isAppliedWhitelist && (countdown.isSale || countdown.isUpcomingSale)) {
@@ -841,6 +881,12 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               isLoading={loadingJPool || loadingCheckJPool}
               disabled={loadingCheckJPool || loadingJPool}
               onClick={() => {
+                // Hard code for EPIC WAR
+                if (poolInfo.id === 345) {
+                  setShowApplyWhitelist(true)
+                  return
+                }
+
                 joinPool()
               }}
               className={clsx('w-full mt-4 uppercase')}>
@@ -921,6 +967,39 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             />
           </TabPanel>
         </div>
+        <Modal show={showApplyWhitelist} toggle={setShowApplyWhitelist} className='dark:bg-transparent fixed z-50 sm:!max-w-3xl'>
+          <div className="bg-gamefiDark-700 pt-4">
+            <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full">
+              <strong className="uppercase text-2xl font-mechanic">Welcome to {poolInfo?.title || ''} on GameFi.org</strong>
+              <p className="mt-6 text-sm">In order to participate in the IGO, you must fulfill requirements as below.</p>
+              <div className="mt-6 w-full text-sm inline-flex items-center font-medium">
+                <span className="flex items-center justify-center mr-2 bg-black w-6 h-6 rounded-full font-bold">1</span>
+                  Provide social information
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4 mt-2">
+                <div className="w-full text-sm">
+                  <span className="text-[13px]"><span className="hidden sm:inline">Your</span> Email Address</span>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    placeholder="example@email.com"
+                    onChange={e => setEmail(e.target.value)}
+                    className="mt-2 w-full bg-gamefiDark-600 border-gamefiDark-400 rounded text-sm"
+                    disabled={isJoinPool || loadingJPool}
+                    readOnly={isJoinPool || loadingJPool}
+                  />
+                </div>
+              </div>
+              <div className="mt-6 text-sm flex items-center justify-end gap-6 font-mechanic text-[13px]">
+                <button className="font-bold uppercase text-gamefiGreen-500 hover:text-white" onClick={() => setShowApplyWhitelist(false)}>Close</button>
+                { !isJoinPool && !loadingJPool && <button className="font-bold uppercase clipped-t-r bg-gamefiGreen-600 hover:bg-gamefiGreen-500 text-black py-2 px-6 tracking-wider rounded-sm" onClick={() => { handleJoinPool() }}>Apply Whitelist</button> }
+                {loadingJPool && <div className="font-bold uppercase clipped-t-r bg-gamefiGreen-600 hover:bg-gamefiGreen-500 text-black py-4 px-6 w-36 tracking-wider rounded-sm">
+                  <div className="dot-flashing mx-auto"></div>
+                </div>}
+              </div>
+            </div>
+          </div>
+        </Modal>
       </>}
     />
   </WrapperPoolDetail>

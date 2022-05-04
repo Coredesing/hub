@@ -77,7 +77,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     setFormData({ ...formData, email: v })
   }, [formData])
 
-  const { isJoinPool, loading: loadingCheckJPool } = useCheckJoinPool(poolInfo?.id, account)
+  const { isJoinPool, loading: loadingCheckJPool, checkJoinPool } = useCheckJoinPool(poolInfo?.id, account)
   const { joinPool, loading: loadingJPool, success: isJoinSuccess } = useJoinPool(poolInfo?.id, account, formData.email)
 
   useEffect(() => {
@@ -99,8 +99,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
 
     await joinPool().finally(() => {
       setShowApplyWhitelist(false)
+      checkJoinPool()
     })
-  }, [formData.email, joinPool])
+  }, [checkJoinPool, formData.email, joinPool])
 
   const networkPool = useMemo(() => {
     const network = getNetworkByAlias(poolInfo.network_available)

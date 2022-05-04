@@ -986,7 +986,6 @@ const GameDetails = ({ game }) => {
     }
 
     if (submitting) {
-      toast.error('Processing...')
       return
     }
 

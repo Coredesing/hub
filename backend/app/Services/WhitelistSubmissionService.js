@@ -29,6 +29,9 @@ class WhitelistSubmissionService {
     if (params.whitelist_user_id) {
       builder = builder.where('whitelist_user_id', params.whitelist_user_id);
     }
+    if (params.email) {
+      builder = builder.where('email', params.email);
+    }
 
     return builder;
   }

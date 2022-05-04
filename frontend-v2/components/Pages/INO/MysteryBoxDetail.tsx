@@ -751,7 +751,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         {timelinePool.freeBuyTime ? <>&nbsp;Please stay tuned, you can buy from <b>Phase 1</b></> : ' Please stay tuned and wait until time to buy Mystery boxes'}
         {
           // Hard code for EPIC WAR
-          poolInfo.id === 345 && <button className="ml-2 underline text-gamefiGreen" onClick={() => { setShowApplyWhitelist(true) }}>Review</button>
+          poolInfo.id === 345 && <button className="underline text-gamefiGreen" onClick={() => { setShowApplyWhitelist(true) }}>Review</button>
         }
       </Alert>
     }

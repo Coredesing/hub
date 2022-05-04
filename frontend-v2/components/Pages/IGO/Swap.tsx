@@ -295,6 +295,13 @@ const Swap = () => {
 
       if (+result?.status === 1) {
         toast.success('Token Deposit Successfully!')
+        if ((window as any).gtag) {
+          (window as any).gtag('event', 'spend_virtual_currency', {
+            value: inputAmount || 0,
+            virtual_currency_name: usd?.symbol || 'Unknown',
+            item_name: poolData?.title || 'Unknown'
+          })
+        }
         // setTxHash(transaction?.hash || '')
       } else {
         toast.error('Token Deposit Failed')

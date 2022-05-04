@@ -198,13 +198,16 @@ export default function WalletProvider ({ children }) {
       return
     }
 
-    console.log(networkChosen, walletChosen, account, location.pathname)
-
     if ((window as any).gtag) {
       (window as any).gtag('event', 'wallet_connect', {
-        address: account,
+        address: account + '_',
         network: networkChosen?.name,
-        wallet: walletChosen.name
+        wallet: walletChosen.name,
+        path: location.pathname + location.hash
+      });
+
+      (window as any).gtag('event', 'login', {
+        method: walletChosen.name + ' ' + networkChosen?.name
       })
     }
   }, [networkChosen, walletChosen, account])

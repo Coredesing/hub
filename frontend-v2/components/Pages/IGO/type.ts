@@ -1,5 +1,5 @@
 export type Item = {
-  id: string;
+  id: number;
   accept_currency: string;
   network_available: string;
   mini_banner: string;

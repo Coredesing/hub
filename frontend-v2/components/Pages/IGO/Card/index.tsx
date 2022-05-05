@@ -92,7 +92,7 @@ const Card = ({ item, color, background, external }: { item: Item; color?: strin
       <div className="w-full text-left">
         <div className="text-white/50 uppercase font-medium text-xs">Rate</div>
         <div className="text-gamefiGreen uppercase font-medium text-sm">
-          1 {item.symbol} = {item.token_conversion_rate} {getCurrency(item).symbol}
+          1 {item.symbol} = {item.token_conversion_rate} {item.id === 150 ? 'GAFI' : getCurrency(item).symbol}
         </div>
       </div>
       <div className="w-full grid grid-cols-2 gap-2">
@@ -119,7 +119,7 @@ const Card = ({ item, color, background, external }: { item: Item; color?: strin
       <div className="w-full grid grid-cols-2 gap-2">
         <div className="text-left">
           <div className="text-white/50 uppercase font-medium text-xs">Total Raise</div>
-          <div className="text-sm">${Math.round(Number(item?.total_sold_coin) * Number(item?.token_conversion_rate)).toLocaleString('en-US')}</div>
+          {item.id === 150 ? <div className="text-sm">-</div> : <div className="text-sm">${Math.round(Number(item?.total_sold_coin) * Number(item?.token_conversion_rate)).toLocaleString('en-US')}</div>}
         </div>
         <div className="text-left">
           <div className="text-white/50 uppercase font-medium text-xs">Participants</div>

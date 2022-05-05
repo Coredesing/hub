@@ -801,7 +801,11 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           </div>
           }
           {
-            poolInfo.process === 'only-buy' && <div className={clsx('flex mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}></div>
+            poolInfo.process === 'only-buy' && needAllpyWhitelist && <div className={clsx('flex mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}>
+              {!!poolInfo.claim_policy && <div className="w-full block text-sm px-3 py-2">{poolInfo.claim_policy.split('. ').map(item => {
+                return item.match(/https:.*/) ? <a href={item} className="text-gamefiGreen" target="_blank" rel="norel noreferrer">{item}</a> : <p key={`policy-${item}`} className="">{item}</p>
+              })}</div>}
+            </div>
           }
           <div className={clsx('flex items-center gap-2',
             styles.headCountdown,
@@ -876,11 +880,11 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             />
           </div>
         }
-        <div className='mb-8'>
+        {/* <div className='mb-8'>
           <div className={clsx('gap-2 flex flex-wrap', stylesBoxType.boxTypes)}>
             <Progress {...supplyBox}></Progress>
           </div>
-        </div>
+        </div> */}
         <div>
           {isAllowedJoinCompetition && !isClickedCompetition && <ButtonBase color="red"
             onClick={() => onJoinCompetition(poolInfo.socialRequirement.gleam_link)}

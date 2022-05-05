@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Table, TableBody, TableCell, TableCellHead, TableHead, TableRow } from '@/components/Base/Table'
 import BoxesInformationModal from './BoxesInformationModal'
 import { useMediaQuery } from 'react-responsive'
+import { printNumber } from '@/utils'
 
 type Props = {
   boxes: any[];
@@ -54,10 +55,10 @@ const BoxInformation = ({ boxes }: Props) => {
               </div>
             </TableCell>
             <TableCell>
-              {b.maxSupply || b.limit}
+              {printNumber(b.maxSupply || b.limit)}
             </TableCell>
             <TableCell>
-              {(+(b.maxSupply || b.limit) - (+b.totalSold || 0)) ?? (b.maxSupply || b.limit)}
+              {printNumber((+(b.maxSupply || b.limit) - (+b.totalSold || 0)) ?? (b.maxSupply || b.limit))}
             </TableCell>
             {
               boxes?.[0]?.description && <TableCell>

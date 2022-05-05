@@ -128,7 +128,7 @@ const IGO = () => {
               <div className="w-full max-w-[1180px] mx-auto mt-14">
                 <p><span className="uppercase font-semibold text-xl">Community Pool</span> <span className="text-white/60">($GAFI Staking not required)</span></p>
                 <div className="hidden mt-4 w-full lg:grid lg:grid-cols-3 gap-6">
-                  <Card external={'/ino/150'} item={ticketPool} color="gamefiDark" background="black"></Card>
+                  <Card external={'/ticket/150'} item={ticketPool} color="gamefiDark" background="black"></Card>
                 </div>
                 <div className="mt-4 w-full lg:hidden">
                   <Flicking circular={true} className="w-full" align="center" ref={refOpeningPublic} interruptable={true}>

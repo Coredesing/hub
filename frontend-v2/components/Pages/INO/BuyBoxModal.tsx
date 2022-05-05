@@ -21,14 +21,14 @@ type Props = {
 }
 
 const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, poolInfo, eventId, isValidChain, balanceInfo }: Props) => {
-  const [isVerified, setVerify] = useState<string | null>('aa')
+  const [isVerified, setVerify] = useState<string | null>('')
   const totalBuy = currencyInfo?.price ? BigNumber.from(amountBoxBuy).mul(utils.parseEther(currencyInfo?.price)).toString() : 0
   const recaptchaRef: any = React.useRef()
   const onRefreshRecaptcha = debounce(() => {
     if (!isVerified) return
     if (typeof recaptchaRef?.current?.resetCaptcha === 'function') {
       recaptchaRef.current.resetCaptcha()
-      setVerify('aa')
+      setVerify('')
     }
   }, 5000)
 

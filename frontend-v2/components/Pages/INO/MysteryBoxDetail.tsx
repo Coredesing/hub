@@ -50,7 +50,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const [currencySelected, setCurrencySelected] = useState<ObjectType>({})
   const [myBoxOrdered, setMyBoxOrdered] = useState(0)
   const [currentTab, setCurrentTab] = useState(0)
-  const [amountBoxBuy, setAmountBoxBuy] = useState(1)
+  const [amountBoxBuy, setAmountBoxBuy] = useState(0)
   const [countdown, setCountdown] = useState<CountDownTimeType & { title: string;[k: string]: any }>({ date1: 0, date2: 0, title: '' })
   const [timelinePool, setTimelinePool] = useState<ObjectType>({})
   const [timelines, setTimelines] = useState<ObjectType<{

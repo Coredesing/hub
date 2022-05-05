@@ -77,12 +77,12 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT,
   return (
     <div className='relative'>
       {loading && <div className='flex items-center w-full h-5 justify-center absolute -top-5'><PropagateLoader color='#fff'></PropagateLoader></div>}
-      {
+      {/* {
         !loading && +ownedBox <= 0 &&
         <div className='flex items-center w-full h-32 justify-center'>
-          <h1 className='uppercase text-4xl text-center font-bold'>No Box Found</h1>
+          <h1 className='uppercase text-4xl text-center font-bold'>Empty</h1>
         </div>
-      }
+      } */}
       {
         +ownedBox > 0 && !!timeClaim &&
         <div className='flex gap-3 justify-between flex-wrap items-center mb-9' id='collections'>

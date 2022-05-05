@@ -86,12 +86,12 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
       />
       <Modal show={open} toggle={onClose}>
         <div className='px-8 pt-11 pb-8' style={{ background: 'rgb(31 31 35)' }}>
-          <h3 className='uppercase text-2xl font-bold mb-4'>Confirmation Buy Boxes </h3>
+          <h3 className='uppercase text-2xl font-bold mb-4'>Confirmation Buy {poolInfo?.process === 'only-buy' ? 'Ticket' : 'Boxes'} </h3>
           <div className='flex justify-between mb-6'>
-            <label className='text-base font-casual'>Box Type</label>
+            <label className='text-base font-casual'>Type</label>
             <div className='flex items-center gap-2'>
               <img src={boxTypeBuy?.icon} alt="" style={{ maxWidth: '80px', maxHeight: '30px' }} className='w-full h-full object-contain' />
-              <span className='font-bold'>
+              <span className='font-bold whitespace-nowrap'>
                 {boxTypeBuy?.name}
               </span>
             </div>
@@ -121,7 +121,7 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
               disabled={disabledBuy || !isValidChain}
               isLoading={loadingBuyBox}
               className={clsx('mt-4 uppercase w-full ')}>
-              Buy Box
+              Buy
             </ButtonBase>
           </div>
         </div>

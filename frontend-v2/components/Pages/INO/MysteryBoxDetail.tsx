@@ -269,7 +269,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       if (timeLine.freeBuyTime) {
         timeLinesInfo[!neededApplyWl ? 2 : 3] = {
           title: 'BUYING - PHASE 1',
-          desc: neededApplyWl ? 'Whitelist registrants will be given favorable deals to buy Mystery Boxes on a First-Come First-Served basis.' : `You can buy ${poolInfo.process === 'only-buy' ? 'Ticket' : 'Mystery Box'} before the Buy Phase ends`
+          desc: neededApplyWl ? `Whitelist registrants will be given favorable deals to buy ${poolInfo.process === 'only-buy' ? 'Ticket' : 'Mystery Box'} on a First-Come First-Served basis.` : `You can buy ${poolInfo.process === 'only-buy' ? 'Ticket' : 'Mystery Box'} before the Buy Phase ends`
         }
         timeLinesInfo[!neededApplyWl ? 3 : 4] = {
           title: 'BUYING - PHASE 2',
@@ -282,7 +282,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       } else {
         timeLinesInfo[!neededApplyWl ? 2 : 3] = {
           title: 'BUYING - PHASE 1',
-          desc: neededApplyWl ? 'Whitelist registrants will be given favorable deals to buy Mystery Boxes in Phase 1, on a First-Come First-Served basis.' : `You can buy ${poolInfo.process === 'only-buy' ? 'Ticket' : 'Mystery Box'} before the Buy Phase ends`
+          desc: neededApplyWl ? `Whitelist registrants will be given favorable deals to buy ${poolInfo.process === 'only-buy' ? 'Ticket' : 'Mystery Box'} in Phase 1, on a First-Come First-Served basis.` : `You can buy ${poolInfo.process === 'only-buy' ? 'Ticket' : 'Mystery Box'} before the Buy Phase ends`
         }
         timeLinesInfo[!neededApplyWl ? 3 : 4] = {
           title: 'END',

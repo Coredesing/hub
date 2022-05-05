@@ -50,7 +50,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const [currencySelected, setCurrencySelected] = useState<ObjectType>({})
   const [myBoxOrdered, setMyBoxOrdered] = useState(0)
   const [currentTab, setCurrentTab] = useState(0)
-  const [amountBoxBuy, setAmountBoxBuy] = useState(0)
+  const [amountBoxBuy, setAmountBoxBuy] = useState(1)
   const [countdown, setCountdown] = useState<CountDownTimeType & { title: string;[k: string]: any }>({ date1: 0, date2: 0, title: '' })
   const [timelinePool, setTimelinePool] = useState<ObjectType>({})
   const [timelines, setTimelines] = useState<ObjectType<{
@@ -242,7 +242,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       getMyBoxThisPool()
       getMyNumBox()
       handleSetSupplyBoxes()
-      setAmountBoxBuy(1)
+      setAmountBoxBuy(0)
     }
   }, [getMyBoxThisPool, getMyNumBox, handleSetSupplyBoxes])
 
@@ -269,7 +269,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       if (timeLine.freeBuyTime) {
         timeLinesInfo[!neededApplyWl ? 2 : 3] = {
           title: 'BUYING - PHASE 1',
-          desc: neededApplyWl ? 'Whitelist registrants will be given favorable deals to buy Mystery Boxes on a First-Come First-Served basis.' : 'You can buy Mystery Box before the Buy Phase ends'
+          desc: neededApplyWl ? 'Whitelist registrants will be given favorable deals to buy Mystery Boxes on a First-Come First-Served basis.' : `You can buy ${poolInfo.process === 'only-buy' ? 'Ticket' : 'Mystery Box'} before the Buy Phase ends`
         }
         timeLinesInfo[!neededApplyWl ? 3 : 4] = {
           title: 'BUYING - PHASE 2',
@@ -282,7 +282,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       } else {
         timeLinesInfo[!neededApplyWl ? 2 : 3] = {
           title: 'BUYING - PHASE 1',
-          desc: neededApplyWl ? 'Whitelist registrants will be given favorable deals to buy Mystery Boxes in Phase 1, on a First-Come First-Served basis.' : 'You can buy Mystery Box before the Buy Phase ends'
+          desc: neededApplyWl ? 'Whitelist registrants will be given favorable deals to buy Mystery Boxes in Phase 1, on a First-Come First-Served basis.' : `You can buy ${poolInfo.process === 'only-buy' ? 'Ticket' : 'Mystery Box'} before the Buy Phase ends`
         }
         timeLinesInfo[!neededApplyWl ? 3 : 4] = {
           title: 'END',
@@ -726,7 +726,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const isAppliedWhitelist = isJoinPool || isJoinSuccess
   const isDeployedPool = !!+poolInfo.is_deploy
   const isShowBtnApprove = !!account && isDeployedPool && currencySelected.neededApprove && !isApprovedToken && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2)
-  const isShowBtnBuy = !!account && isDeployedPool && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && countdown.isSale && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken))
+  const isShowBtnBuy = useMemo(() => {
+    return !!account && isDeployedPool && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && countdown.isSale && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken))
+  }, [account, isDeployedPool, countdown, currencySelected, isApprovedToken, isAppliedWhitelist])
   const isAllowedJoinCompetition = (countdown.isWhitelist || countdown.isUpcoming) && isCommunityPool && poolInfo.socialRequirement?.gleam_link && !isAppliedWhitelist
   const needAllpyWhitelist = !!poolInfo.start_join_pool_time
   const renderMsg = () => {
@@ -749,7 +751,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     if (isAppliedWhitelist && countdown.isWhitelist) {
       return <Alert type="info">
         You have successfully applied whitelist.
-        {timelinePool.freeBuyTime ? <>&nbsp;Please stay tuned, you can buy from <b>Phase 1</b></> : ' Please stay tuned and wait until time to buy Mystery boxes'}
+        {timelinePool.freeBuyTime ? <>&nbsp;Please stay tuned, you can buy from <b>Phase 1</b></> : `Please stay tuned and wait until time to buy ${poolInfo.process === 'only-buy' ? 'Ticket' : 'Mystery Box'}`}
         {
           // Hard code for EPIC WAR
           poolInfo.id === 345 && <button className="underline text-gamefiGreen" onClick={() => { setShowApplyWhitelist(true) }}>Review</button>
@@ -758,7 +760,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     }
     if (isAppliedWhitelist && (countdown.isSale || countdown.isUpcomingSale)) {
       return <Alert type="info">
-        Congratulations! You have successfully applied whitelist and can buy Mystery boxes
+        Congratulations! You have successfully applied whitelist and can buy {poolInfo.process === 'only-buy' ? 'Ticket' : 'Mystery Box'}
       </Alert>
     }
     if (needAllpyWhitelist && ((!loadingCheckJPool && !loadingJPool) && account && (countdown.isSale || countdown.isUpcomingSale)) && !countdown.isPhase2 && !isAppliedWhitelist) {
@@ -827,20 +829,20 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       bodyDetailContent={<>
         <h2 className="font-semibold text-4xl mb-2 uppercase">{poolInfo.title || poolInfo.name}</h2>
         <div className="creator flex items-center gap-1">
-          <img src={poolInfo.token_images} className="icon rounded-full w-5 -h-5" alt="" />
+          <img src={poolInfo.token_images} className="icon rounded-full w-8 h-8" alt="" />
           <span className="text-white/70 uppercase text-sm">{poolInfo.symbol}</span>
         </div>
         <div className="divider bg-white/20 w-full mt-3 mb-8" style={{ height: '1px' }}></div>
         <div className='mb-4'>
           <div className="grid gap-1">
             <div className="flex items-center gap-2">
-              <img src={currencySelected?.icon} className="icon rounded-full w-5 -h-5" alt="" />
+              <img src={currencySelected?.icon} className="icon rounded-full w-8 h-8" alt="" />
               <span className="uppercase font-bold text-white text-2xl">{Number(currencySelected?.price) || ''} {currencySelected?.name}</span>
             </div>
           </div>
         </div>
         <div className="flex gap-12 mb-8">
-          <DetailPoolItem label='TOTAL SALES' value={`${poolInfo.total_sold_coin} Boxes`} />
+          <DetailPoolItem label='TOTAL SALES' value={`${poolInfo.total_sold_coin} ${poolInfo.process === 'only-buy' ? 'Tickets' : 'Boxes'}`} />
           <DetailPoolItem label='SUPPORTED'
             icon={getNetworkByAlias(poolInfo.network_available)?.image}
             value={poolInfo.network_available} />
@@ -933,7 +935,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               disabled={+amountBoxBuy < 1 || !isValidChain}
               onClick={() => setOpenBuyBoxModal(true)}
               className={clsx('w-full mt-4 uppercase')}>
-              Buy Box
+              Buy
             </ButtonBase>
           }
         </div>
@@ -943,7 +945,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           titles={poolInfo.process === 'only-buy'
             ? [
               'Rule Introduction',
-              'Box Information',
+              'Ticket Information',
               '',
               'TimeLine',
               'Ticket'

@@ -1,7 +1,7 @@
 import { ObjectType } from '@/utils/types'
 import clsx from 'clsx'
 import { FormInputNumber } from '@/components/Base/FormInputNumber'
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { BeatLoader } from 'react-spinners'
 import styles from './AscDescAmount.module.scss'
 type Props = {
@@ -15,7 +15,9 @@ type Props = {
   [k: string]: any;
 }
 const AscDescAmount = ({ value, maxBuy, onChangeValue, bought, currencyInfo, disabled, balanceInfo }: Props) => {
-  const remaining = +maxBuy - +bought || 0
+  const remaining = useMemo(() => {
+    return maxBuy - bought > 0 ? maxBuy - bought : 0
+  }, [bought, maxBuy])
   // useEffect(() => {
   //   onChangeValue(remaining)
   // }, [remaining])
@@ -49,20 +51,20 @@ const AscDescAmount = ({ value, maxBuy, onChangeValue, bought, currencyInfo, dis
           styles['h-30px'],
           styles['clip-path-b-l'],
           {
-            [styles.disabled]: !remaining || value === 1 || disabled
+            [styles.disabled]: remaining <= 0 || value === 1 || disabled
           }
         )}
-        onClick={disabled ? undefined : onSetMin}>Min</div>
+        onClick={() => (disabled && value >= remaining) && onSetMin}>Min</div>
       <div
         className={clsx('px-2 text-lg font-semibold border-t border-b border-white/50 border-r flex items-center w-8 justify-center cursor-pointer', styles['h-30px'], {
           'cursor-not-allowed': disabled
         })}
-        onClick={disabled ? undefined : onDesc}>-</div>
+        onClick={() => (disabled && value >= remaining) && onDesc}>-</div>
       <div className={clsx('px-2 text-lg font-bold border-t border-b border-r  border-white/50 flex items-center w-20 justify-center', styles['h-30px'])}>
         <FormInputNumber
           value={value}
           default={remaining}
-          disabled={disabled}
+          disabled={disabled || value >= remaining}
           onChange={onChangeInput}
           isPositive isInteger
           max={remaining}
@@ -70,16 +72,16 @@ const AscDescAmount = ({ value, maxBuy, onChangeValue, bought, currencyInfo, dis
       </div>
       <div className={clsx('px-2 text-lg font-semibold border-t border-b border-white/50 border-r flex items-center w-8 justify-center cursor-pointer', styles['h-30px'], {
         'cursor-not-allowed': disabled
-      })} onClick={disabled ? undefined : onAsc}>+</div>
+      })} onClick={() => (disabled || value >= remaining) && onAsc}>+</div>
       <div
         className={clsx('px-3 uppercase text-xs bg-gamefiGreen-700 text-black font-medium flex items-center justify-center w-12 cursor-pointer',
           styles['h-30px'],
           styles['clip-path-t-r'],
           {
-            [styles.disabled]: value === remaining || disabled
+            [styles.disabled]: value >= remaining || disabled
           }
         )}
-        onClick={disabled ? undefined : onSetMax}>Max</div>
+        onClick={() => (disabled || value >= remaining) && onSetMax}>Max</div>
     </div>
     <div className='flex justify-between gap-2 w-60'>
       <span className='text-white/80 uppercase text-xs  font-casual'>BOUGHT/MAX</span>

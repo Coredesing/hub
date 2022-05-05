@@ -2,6 +2,7 @@ import React from 'react'
 import clsx from 'clsx'
 import { ObjectType } from '@/utils/types'
 import styles from './BoxTypeItem.module.scss'
+import { printNumber } from '@/utils'
 type Props = {
   onClick?: (value: any) => any;
   selected?: boolean;
@@ -19,7 +20,7 @@ const BoxTypeItem = ({ item, ...props }: Props) => {
     <img src={item.icon} alt="" className='rounded object-contain w-6 h-6' />
     <span className='font-casual text-sm flex gap-1 items-center'>
       <span className={clsx(styles.name, 'block')}>{item.name}</span>
-      <span className='font-semibold'>{(item.maxSupply || item.limit) ? `${item.totalSold || 0}/${item.maxSupply || item.limit}` : ''}</span>
+      <span className='font-semibold'>{(item.maxSupply || item.limit) ? `${printNumber(item.totalSold || 0)}/${printNumber(item.maxSupply || item.limit)}` : ''}</span>
     </span>
   </div>
 }

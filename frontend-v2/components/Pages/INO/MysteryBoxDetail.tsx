@@ -754,7 +754,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         {timelinePool.freeBuyTime ? <>&nbsp;Please stay tuned, you can buy from <b>Phase 1</b></> : `Please stay tuned and wait until time to buy ${poolInfo.process === 'only-buy' ? 'Ticket' : 'Mystery Box'}`}
         {
           // Hard code for EPIC WAR
-          poolInfo.id === 345 && <button className="underline text-gamefiGreen" onClick={() => { setShowApplyWhitelist(true) }}>Review</button>
+          poolInfo.id === 150 && <button className="underline text-gamefiGreen" onClick={() => { setShowApplyWhitelist(true) }}>Review</button>
         }
       </Alert>
     }
@@ -899,7 +899,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               disabled={loadingCheckJPool || loadingJPool}
               onClick={() => {
                 // Hard code for EPIC WAR
-                if (poolInfo.id === 345) {
+                if (poolInfo.id === 150) {
                   setShowApplyWhitelist(true)
                   return
                 }

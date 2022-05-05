@@ -326,3 +326,13 @@ export const isDifferentObj = (obj1: object, obj2: object, excludeProps?: string
 export const stripTags = (str = '') => {
   return (str || '').replace(/(<([^>]+)>)/gi, '')
 }
+
+export const gtagEvent = (name: string, params?: {[key: string]: any}) => {
+  if (!(window as any).gtag) {
+    return
+  }
+
+  try {
+    (window as any).gtag('event', name, params || {})
+  } catch (_) {}
+}

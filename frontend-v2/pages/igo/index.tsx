@@ -120,7 +120,7 @@ const IGO = () => {
               : <>
                 {openingPublicList?.length > 0
                   ? <div className="w-full max-w-[1180px] mx-auto mt-14">
-                    <p><span className="uppercase font-semibold text-xl">IGO Pool</span> <span className="text-white/60">($GAFI Staking required)</span></p>
+                    <p className="text-center"><span className="uppercase font-semibold text-xl">IGO Pool</span><br /><span className="text-white/60">($GAFI Staking required)</span></p>
                     <div className="hidden mt-4 w-full lg:grid lg:grid-cols-3 gap-6">
                       {openingPublicList.map(item => <div key={`opening-public-${item.id}`} className="w-full">
                         <Card item={item} color="black" background="gamefiDark"></Card>
@@ -129,7 +129,9 @@ const IGO = () => {
                     <div className="mt-4 w-full lg:hidden">
                       <Flicking circular={true} className="w-full" align="center" ref={refOpeningPublic} interruptable={true}>
                         {openingPublicList.map(item => (
-                          <div key={`opening-public-mobile-${item.id}`} className="w-2/3 px-2"><Card item={item} color="black" background="gamefiDark"></Card></div>
+                          <div key={`opening-public-mobile-${item.id}`} className="w-3/4 px-2">
+                            <Card item={item} color="black" background="gamefiDark"></Card>
+                          </div>
                         ))}
                       </Flicking>
                     </div>
@@ -138,7 +140,7 @@ const IGO = () => {
                 {openingCommunityList?.length > 0
                   ? <>
                     <div className="w-full max-w-[1180px] mx-auto mt-14">
-                      <p><span className="uppercase font-semibold text-xl">Community Pool</span> <span className="text-white/60">($GAFI Staking not required)</span></p>
+                      <p className="text-center"><span className="uppercase font-semibold text-xl">Community Pool</span><br /><span className="text-white/60">($GAFI Staking not required)</span></p>
                       <div className="hidden mt-4 w-full lg:grid md:grid-cols-3 lg:grid-cols-3 gap-6">
                         {openingCommunityList.map(item => <div key={`opening-com-${item.id}`} className="w-full">
                           <Card item={item} color="black" background="gamefiDark"></Card>
@@ -147,7 +149,9 @@ const IGO = () => {
                       <div className="mt-4 w-full lg:hidden">
                         <Flicking circular={true} className="w-full" align="center" ref={refOpeningCommunity} interruptable={true}>
                           {openingCommunityList.map(item => (
-                            <div key={`opening-com-mobile-${item.id}`} className="w-2/3 px-2"><Card item={item} color="black" background="gamefiDark"></Card></div>
+                            <div key={`opening-com-mobile-${item.id}`} className="w-3/4 px-2">
+                              <Card item={item} color="black" background="gamefiDark"></Card>
+                            </div>
                           ))}
                         </Flicking>
                       </div>
@@ -180,7 +184,7 @@ const IGO = () => {
               : <>
                 {upcomingPublicList?.length > 0
                   ? <div className="w-full max-w-[1180px] mx-auto mt-14">
-                    <p><span className="uppercase font-semibold text-xl">IGO Pool</span> <span className="text-white/60">($GAFI Staking required)</span></p>
+                    <p className="text-center"><span className="uppercase font-semibold text-xl">IGO Pool</span><br /><span className="text-white/60">($GAFI Staking required)</span></p>
                     <div className="hidden mt-4 w-full lg:grid md:grid-cols-3 lg:grid-cols-3 lg:gap-6">
                       {upcomingPublicList.map(item => <div key={`upcoming-public-${item.id}`} className="w-full">
                         <Card item={item} color={openingItems?.length > 0 ? 'gamefiDark' : 'black'} background={openingItems?.length > 0 ? 'black' : 'gamefiDark'}></Card>
@@ -189,7 +193,7 @@ const IGO = () => {
                     <div className="mt-4 w-full lg:hidden">
                       <Flicking circular={true} className="w-full" align="center" ref={refUpcomingPublic} interruptable={true}>
                         {upcomingPublicList.map(item => (
-                          <div key={`upcoming-public-mobile-${item.id}`} className="w-2/3 px-2">
+                          <div key={`upcoming-public-mobile-${item.id}`} className="w-3/4 px-2">
                             <Card item={item} color={openingItems?.length > 0 ? 'gamefiDark' : 'black'} background={openingItems?.length > 0 ? 'black' : 'gamefiDark'}></Card>
                           </div>
                         ))}
@@ -200,7 +204,7 @@ const IGO = () => {
                 {upcomingCommunityList?.length > 0
                   ? <>
                     <div className="w-full max-w-[1180px] mx-auto mt-14">
-                      <p><span className="uppercase font-semibold text-xl">Community Pool</span> <span className="text-white/60">($GAFI Staking not required)</span></p>
+                      <p className="text-center"><span className="uppercase font-semibold text-xl">Community Pool</span><br /><span className="text-white/60">($GAFI Staking not required)</span></p>
                       <div className="hidden mt-4 w-full lg:grid md:grid-cols-3 lg:grid-cols-3 gap-6">
                         {upcomingCommunityList.map(item => <div key={`upcoming-com-${item.id}`} className="w-full">
                           <Card item={item} color={openingItems?.length > 0 ? 'gamefiDark' : 'black'} background={openingItems?.length > 0 ? 'black' : 'gamefiDark'}></Card>
@@ -209,7 +213,7 @@ const IGO = () => {
                       <div className="mt-4 w-full lg:hidden">
                         <Flicking circular={true} className="w-full" align="center" ref={refUpcomingCommunity} interruptable={true}>
                           {upcomingCommunityList.map(item => (
-                            <div key={`upcoming-com-mobile-${item.id}`} className="w-2/3 px-2">
+                            <div key={`upcoming-com-mobile-${item.id}`} className="w-3/4 px-2">
                               <Card item={item} color={openingItems?.length > 0 ? 'gamefiDark' : 'black'} background={openingItems?.length > 0 ? 'black' : 'gamefiDark'}></Card>
                             </div>
                           ))}

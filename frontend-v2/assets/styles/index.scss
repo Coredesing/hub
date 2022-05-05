@@ -308,3 +308,15 @@ input.hide-spin::-webkit-inner-spin-button {
 -webkit-appearance: none;
 margin: 0;
 }
+
+.animate-ping2 {
+    animation: ping2 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ping2 {
+    75%,
+    100% {
+        transform: scale(1.85);
+        opacity: 0;
+    }
+}

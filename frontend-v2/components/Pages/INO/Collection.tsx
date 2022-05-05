@@ -84,7 +84,7 @@ const Collection = ({ poolInfo, collections, loading, onClaimAllNFT, onClaimNFT,
         </div>
       }
       {
-        +ownedBox > 0 &&
+        +ownedBox > 0 && !!timeClaim &&
         <div className='flex gap-3 justify-between flex-wrap items-center mb-9' id='collections'>
           <div className={clsx(styles.wrapperCountdown, 'items-center')}>
             <div className='text-sm font-bold uppercase w-max'>

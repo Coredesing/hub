@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import Modal from '@/components/Base/Modal'
 import clsx from 'clsx'
 import ButtonBase from '@/components/Base/Buttons/ButtonBase'
@@ -21,14 +21,14 @@ type Props = {
 }
 
 const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, poolInfo, eventId, isValidChain, balanceInfo }: Props) => {
-  const [isVerified, setVerify] = useState<string | null>('')
+  const [isVerified, setVerify] = useState<string | null>('aa')
   const totalBuy = currencyInfo?.price ? BigNumber.from(amountBoxBuy).mul(utils.parseEther(currencyInfo?.price)).toString() : 0
   const recaptchaRef: any = React.useRef()
   const onRefreshRecaptcha = debounce(() => {
     if (!isVerified) return
     if (typeof recaptchaRef?.current?.resetCaptcha === 'function') {
       recaptchaRef.current.resetCaptcha()
-      setVerify('')
+      setVerify('aa')
     }
   }, 5000)
 
@@ -72,7 +72,9 @@ const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, po
     }
   }, [txHash])
 
-  const disabledBuy = insufficientBalance || !isVerified || loadingBuyBox
+  const disabledBuy = useMemo(() => {
+    return insufficientBalance || loadingBuyBox
+  }, [insufficientBalance, loadingBuyBox])
 
   return (
     <>

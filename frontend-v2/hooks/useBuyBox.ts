@@ -63,6 +63,7 @@ const useBuyBox = ({ poolId, currencyInfo, poolAddress, subBoxId, eventId, price
       const msgError = handleErrMsg(error)
       toast.error(msgError)
     }
+    setLoading(false)
   }, [poolId, library, currencyInfo, poolAddress, subBoxId, apiSignMessage, eventId, priceOfBox])
 
   return {

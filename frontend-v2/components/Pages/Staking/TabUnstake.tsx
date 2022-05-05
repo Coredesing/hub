@@ -12,14 +12,7 @@ import copy from 'copy-to-clipboard'
 export default function TabUnstake ({ loadMyPending, pendingWithdrawal, goStake }) {
   const { tierMine, stakingPool, stakingMine, loadMyStaking, contractStaking } = useAppContext()
 
-  const [now, setNow] = useState(new Date())
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(new Date())
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [])
+  const { now } = useAppContext()
 
   const hasPendingWithdrawalAvailable = useMemo(() => {
     return pendingWithdrawal?.time <= now

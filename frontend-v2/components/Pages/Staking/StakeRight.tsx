@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import toast from 'react-hot-toast'
 import { utils } from 'ethers'
 import { GAFI } from '@/components/web3'
@@ -12,15 +12,7 @@ export default function StakeRight ({ loadMyPending, account, pendingWithdrawal,
   const [restaking, setRestaking] = useState(false)
   const { updateBalance } = useBalanceToken(GAFI)
 
-  const [now, setNow] = useState(new Date())
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(new Date())
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [])
-
+  const { now } = useAppContext()
   const pendingAmount = useMemo(() => {
     if (!pendingWithdrawal?.amount) {
       return 0

@@ -24,6 +24,12 @@ export const useJoinPool = (poolId: string | number, account: Address) => {
       await apiSignMessage({
         campaign_id: poolId
       })
+
+      if ((window as any).gtag) {
+        (window as any).gtag('event', 'join_group', {
+          group_id: poolId
+        })
+      }
       toast.success('Apply whitelist successfully')
       setSuccess(true)
       return true

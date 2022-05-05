@@ -52,6 +52,7 @@ const Layout = ({ children, title, description, image, disableFooter, extended }
           <meta property="og:description" content={description || 'GameFi.org is an all-in-one discovery gaming hub for games, guilds, and metaverses.'} key="description" />
           <meta property="og:image" content={image || imageSocial.src} key="image" />
           <meta name="keywords" content="launchpad, game hub, nft marketplace, game portal, game pass, game guild, tournament, metaverse, ido"></meta>
+          <meta name="facebook-domain-verification" content="u9czumbdc5j2knpb18pgoxch3docu6" />
         </Head>
 
         <div>

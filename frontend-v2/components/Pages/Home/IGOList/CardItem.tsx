@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Countdown from '@/components/Pages/IGO/Card/Countdown'
 import { poolStatus } from '@/utils/pool'
+import { useAppContext } from '@/context'
 
 type Props = {
   item: any;
@@ -12,14 +12,7 @@ type Props = {
 }
 
 const CardItem = ({ item, ...props }: Props) => {
-  const [now, setNow] = useState(new Date())
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(new Date())
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [])
+  const { now } = useAppContext()
 
   return (
     <div className={`w-full rounded overflow-hidden border border-transparent hover:opacity-80 ${props.className}`}>

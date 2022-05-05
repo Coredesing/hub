@@ -146,8 +146,6 @@ const Asset = () => {
       setAvailableSlug(listSlug)
 
       arr = arr.filter(item => (!slug || item.slug === slug))
-      console.log('asdad', arr)
-
       if (arr.length) {
         for (let i = 0; i < arr.length; i++) {
           const p = arr[i]

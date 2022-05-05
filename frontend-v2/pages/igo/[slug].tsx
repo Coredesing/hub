@@ -70,14 +70,7 @@ const IGODetails = ({ poolData }) => {
   const router = useRouter()
   const { tierMine } = useAppContext()
   const [readMore, setReadMore] = useState(false)
-  const [now, setNow] = useState(new Date())
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(new Date())
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [])
+  const { now } = useAppContext()
 
   const [failedRequirements, setFailedRequirements] = useState(false)
   const [completed, setCompleted] = useState(false)
@@ -469,7 +462,7 @@ const IGODetails = ({ poolData }) => {
             <div className="flex-1 bg-gradient-to-b from-gamefiDark-630/30 p-4 xl:p-6 2xl:p-7 rounded">
               <div className="flex items-center gap-6">
                 <div>
-                  <img src={poolData?.token_images} alt={poolData.name} className="w-[120px] h-[120px] object-contain bg-black rounded" />
+                  <img src={poolData?.token_images} alt={poolData.title} className="w-[120px] h-[120px] object-contain bg-black rounded" />
                 </div>
                 <div>
                   <h2 className="font-semibold text-2xl font-casual capitalize my-2">{poolData?.title}</h2>

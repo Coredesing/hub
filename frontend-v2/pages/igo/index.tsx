@@ -10,6 +10,7 @@ import Flicking from '@egjs/react-flicking'
 import '@egjs/flicking-plugins/dist/pagination.css'
 import '@egjs/flicking/dist/flicking.css'
 import CountUp from 'react-countup'
+import Banners from '@/components/Banners'
 
 const IGO = () => {
   const refOpeningPublic = useRef(null)
@@ -68,7 +69,8 @@ const IGO = () => {
 
   return (
     <Layout title="GameFi.org - Initial DEX Offering" description="The first game-specific launchpad conducting Initial Game Offerings for game projects.">
-      <div className="px-4 lg:px-16 md:container mx-auto lg:block pt-16">
+      <Banners></Banners>
+      <div className="px-4 lg:px-16 md:container mx-auto lg:block">
         <div className="w-full text-center text-[60px] xl:text-[84px] leading-[80%] font-bold uppercase select-none">
         Dedicated Gaming <br></br>Launchpad & IGO
         </div>

@@ -12,6 +12,7 @@ import { getNetworkByAlias, switchNetwork, Token } from '@/components/web3'
 import { printNumber, safeToFixed } from '@/utils'
 import { addSeconds, format, formatDistanceStrict, intervalToDuration } from 'date-fns'
 import Modal from '@/components/Base/Modal'
+import { useAppContext } from '@/context'
 
 const ContractPools = ({ pools, contractAddress, className }: {
     pools: Pool[];
@@ -98,14 +99,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
     loadMyExtended(v)
   }, [selected, contractAddress, loadMyExtended])
 
-  const [now, setNow] = useState(new Date())
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(new Date())
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [])
+  const { now } = useAppContext()
 
   const upcoming = useMemo(() => {
     if (!selectedExtended) {

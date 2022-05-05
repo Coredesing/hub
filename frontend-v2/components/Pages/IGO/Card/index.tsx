@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 import { airdropNetworks } from '@/components/web3'
 import { useAppContext } from '@/context'
 
-const Card = ({ item, color, background }: { item: Item; color?: string; background?:string }) => {
+const Card = ({ item, color, background, external }: { item: Item; color?: string; background?:string; external?: string }) => {
   const { network } = useLibraryDefaultFlexible(item?.network_available)
   const { now } = useAppContext()
   const router = useRouter()
@@ -37,7 +37,7 @@ const Card = ({ item, color, background }: { item: Item; color?: string; backgro
     return poolClaimTime.start <= now
   }, [poolClaimTime, now])
 
-  return <div onClick={() => { router.push(`/igo/${item.id}`) }} className={`bg-${background} cursor-pointer w-full flex flex-col font-casual hover:opacity-90`}>
+  return <div onClick={() => { external ? router.push(external) : router.push(`/igo/${item.id}`) }} className={`bg-${background} cursor-pointer w-full flex flex-col font-casual hover:opacity-90`}>
     <div className="w-full aspect-[16/9] bg-black relative">
       <img src={item?.banner} alt="" className="object-cover w-full h-full"></img>
       <div className={`absolute h-6 w-36 xl:w-2/5 inline-flex align-middle items-center -top-[1px] -left-[1px] uppercase text-xs text-left bg-${color} clipped-b-r-full`}>

@@ -279,6 +279,7 @@ class PoolService {
     }
 
     let queryBuilder = this.buildQueryBuilder(filterParams)
+      .where('process', 'all')
       .orderBy('priority', 'DESC')
       .orderBy('created_at', 'DESC')
       .orderBy('start_time', 'ASC')
@@ -418,7 +419,7 @@ class PoolService {
      let result = await builder
       // .where('campaign_status', Const.POOL_STATUS.ENDED)
       .countDistinct('token as sum').first()
-    
+
     if (!result) {
       return {
         total: 0

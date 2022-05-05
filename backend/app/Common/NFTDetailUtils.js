@@ -70,7 +70,12 @@ const getKingdomQuestNFTDetail = (rarity) => {
   return KingdomQuestData[rarity]
 }
 
+const getEpicWarNFTDetail = () => {
+  return 'https://gamefi-public.s3.amazonaws.com/aggregator/optimized/epic-war/epic-ticket.png'
+}
+
 module.exports = {
   getMetagodNFTDetail,
   getKingdomQuestNFTDetail,
+  getEpicWarNFTDetail,
 };

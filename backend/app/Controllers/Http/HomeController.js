@@ -129,6 +129,11 @@ class HomeController {
         data.description = `KingdomQuest Mystery Chest`
         data.rarity = rarity
         break
+      case 'epicwar-ticket':
+        image = NFTDetailUtils.getEpicWarNFTDetail()
+        data.name = `Epic War Gamer ticket`
+        data.description = `Epic War Gamer ticket`
+        break
       default:
         return {}
     }

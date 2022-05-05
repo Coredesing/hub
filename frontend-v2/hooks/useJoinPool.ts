@@ -5,7 +5,7 @@ import { API_BASE_URL } from '@/utils/constants'
 import useApiSignature from './useApiSignature'
 import toast from 'react-hot-toast'
 
-export const useJoinPool = (poolId: string | number, account: Address) => {
+export const useJoinPool = (poolId: string | number, account: Address, email: string) => {
   const { apiSignMessage } = useApiSignature('/user/join-campaign')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -15,7 +15,7 @@ export const useJoinPool = (poolId: string | number, account: Address) => {
   const joinPool = useCallback(async () => {
     try {
       setLoading(true)
-      const res = await fetcher(`${API_BASE_URL}/pool/${poolId}/whitelist-apply-box`, { method: 'POST', body: JSON.stringify({ wallet_address: account }), headers: { 'content-type': 'application/json' } })
+      const res = await fetcher(`${API_BASE_URL}/pool/${poolId}/whitelist-apply-box`, { method: 'POST', body: JSON.stringify({ wallet_address: account, email }), headers: { 'content-type': 'application/json' } })
       if (res?.status !== 200) {
         toast.error((res?.status < 500 && res?.message) || 'Could not apply for whitelisting')
         return
@@ -37,7 +37,7 @@ export const useJoinPool = (poolId: string | number, account: Address) => {
     } finally {
       setLoading(false)
     }
-  }, [poolId, apiSignMessage, account])
+  }, [poolId, account, email, apiSignMessage])
 
   return { joinPool, loading, success }
 }

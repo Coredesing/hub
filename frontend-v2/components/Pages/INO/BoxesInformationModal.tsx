@@ -44,7 +44,7 @@ const BoxesInformationModal = ({ open, onClose, items, idShow }: Props) => {
   return <Modal show={open} toggle={onClose} className={styles.modal}>
     <div className={clsx('px-8 pt-14 pb-8', styles.content)}>
       <div className='relative'>
-        <h3 className='font-bold text-2xl mb-5 font-mechanic uppercase'>Box information</h3>
+        <h3 className='font-bold text-2xl mb-5 font-mechanic uppercase'>Information</h3>
         <Carousel
           className={`${styles.carousel} box-informations`}
           showStatus={false}
@@ -82,11 +82,11 @@ const BoxesInformationModal = ({ open, onClose, items, idShow }: Props) => {
                 <div className='text-left flex gap-10'>
                   <div>
                     <span className='block font-mechanic text-13px font-bold uppercase text-white/50'>TOTAL SALE</span>
-                    <span className='block text-base font-casual font-medium'>{box.maxSupply || box.limit} Boxes</span>
+                    <span className='block text-base font-casual font-medium'>{box.maxSupply || box.limit} Items</span>
                   </div>
                   <div>
                     <span className='block font-mechanic text-13px font-bold uppercase text-white/50'>Remaining</span>
-                    <span className='block text-base font-casual font-medium'>{(+(box.maxSupply || box.limit) - (+box.totalSold || 0)) || (box.maxSupply || box.limit)} Boxes</span>
+                    <span className='block text-base font-casual font-medium'>{(+(box.maxSupply || box.limit) - (+box.totalSold || 0)) || (box.maxSupply || box.limit)} Items</span>
                   </div>
                 </div>
               </div>

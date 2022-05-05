@@ -128,7 +128,7 @@ const Card = ({ item, color, background, external }: { item: Item; color?: strin
         </div>
       </div>
       {
-        item.campaign_status?.toLowerCase() === 'swap' && <div className="mt-4">
+        item.campaign_status?.toLowerCase() === 'swap' && item.token_type === 'erc20' && <div className="mt-4">
           { item && <Progress poolData={item} isClaimTime={isClaimTime}></Progress>}
         </div>
       }

@@ -77,6 +77,16 @@ export const approveBatchParticipantWhitelistSubmission = async (campaignId: any
   return resObject;
 };
 
+export const approveAllParticipantWhitelistSubmission = async (campaignId: any, payload: any = []) => {
+  const baseRequest = new BaseRequest();
+
+  let url = apiRoute(`/pool/${campaignId}/whitelist-submission/batch/approve-all`);
+  const response = await baseRequest.post(url, payload) as any;
+  const resObject = await response.json();
+
+  return resObject;
+};
+
 export const pickerRandomWinner = async (campaignId: any, numberRandom: any = 100) => {
   const baseRequest = new BaseRequest();
 

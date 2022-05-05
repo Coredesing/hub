@@ -18,7 +18,7 @@ const TokenItem = ({ item, ...props }: Props) => {
         [styles.active]: props.selected
       }
     )}>
-    <img src={item.icon} alt="" className='rounded-full w-4 h-4' width={16} height={16} />
+    <img src={item.icon} alt="" className='rounded-full w-6 h-6' />
     <span className='font-semibold text-base'>{item.name}</span>
   </div>
 }

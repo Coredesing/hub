@@ -52,10 +52,10 @@ const useBuyBox = ({ poolId, currencyInfo, poolAddress, subBoxId, eventId, price
       const result = await tx.wait(1)
       setLoading(false)
       if (+result?.status === 1) {
-        toast.success('Buy box successfully')
+        toast.success('Purchase successfully')
         setSuccess(true)
       } else {
-        toast.error('Buy box failed')
+        toast.error('Purchase failed')
         setSuccess(false)
       }
     } catch (error: any) {
@@ -63,6 +63,7 @@ const useBuyBox = ({ poolId, currencyInfo, poolAddress, subBoxId, eventId, price
       const msgError = handleErrMsg(error)
       toast.error(msgError)
     }
+    setLoading(false)
   }, [poolId, library, currencyInfo, poolAddress, subBoxId, apiSignMessage, eventId, priceOfBox])
 
   return {

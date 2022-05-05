@@ -10,7 +10,7 @@ type Props = {
 
 const Alert = ({ type = 'info', children, className }: Props) => {
   return <div className={clsx(styles.alert, 'w-full', styles[type], className)}>
-    <div className="flex gap-2 items-center justify-center font-casual text-sm">
+    <div className="flex flex-col md:flex-row gap-2 items-center justify-center text-center font-casual text-sm">
       { type === 'info' && <QuestionIcon /> }
       { type === 'danger' && <QuestionIcon /> }
       { type === 'warn' && <QuestionIcon /> }

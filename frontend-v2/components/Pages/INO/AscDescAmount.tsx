@@ -1,7 +1,7 @@
 import { ObjectType } from '@/utils/types'
 import clsx from 'clsx'
 import { FormInputNumber } from '@/components/Base/FormInputNumber'
-import React from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { BeatLoader } from 'react-spinners'
 import styles from './AscDescAmount.module.scss'
 type Props = {
@@ -15,7 +15,12 @@ type Props = {
   [k: string]: any;
 }
 const AscDescAmount = ({ value, maxBuy, onChangeValue, bought, currencyInfo, disabled, balanceInfo }: Props) => {
-  const remaining = +maxBuy - +bought || 0
+  const remaining = useMemo(() => {
+    return maxBuy - bought > 0 ? maxBuy - bought : 0
+  }, [bought, maxBuy])
+  // useEffect(() => {
+  //   onChangeValue(remaining)
+  // }, [remaining])
   const onDesc = () => {
     onChangeValue(value - 1 > -1 ? value - 1 : 0)
   }
@@ -58,6 +63,7 @@ const AscDescAmount = ({ value, maxBuy, onChangeValue, bought, currencyInfo, dis
       <div className={clsx('px-2 text-lg font-bold border-t border-b border-r  border-white/50 flex items-center w-20 justify-center', styles['h-30px'])}>
         <FormInputNumber
           value={value}
+          default={remaining}
           disabled={disabled}
           onChange={onChangeInput}
           isPositive isInteger

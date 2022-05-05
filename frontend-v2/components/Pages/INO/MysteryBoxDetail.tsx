@@ -16,7 +16,7 @@ import RuleIntroduce from './RuleIntroduce'
 import SerieContent from './SerieContent'
 import { useMyWeb3 } from '@/components/web3/context'
 import { useLibraryDefaultFlexible, useMyBalance, useTokenAllowance, useTokenApproval } from '@/components/web3/utils'
-import { fetcher } from '@/utils'
+import { fetcher, useFetch } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 import { useCheckJoinPool, useJoinPool } from '@/hooks/useJoinPool'
 import Alert from '@/components/Base/Alert'
@@ -38,6 +38,7 @@ import { getNetworkByAlias } from '@/components/web3'
 import Collection from './Collection'
 import { getTierById } from '@/utils/tiers'
 import Progress from './Progress'
+import Modal from '@/components/Base/Modal'
 
 const MysteryBoxDetail = ({ poolInfo }: any) => {
   const eventId = 0
@@ -64,6 +65,50 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const [ownedBox, setOwnedBox] = useState(0)
   const balanceInfo = useMyBalance(currencySelected as any, poolInfo.network_available)
   const [supplyBox, setSupplyBox] = useState({ total: 0, sold: 0 })
+  const [showApplyWhitelist, setShowApplyWhitelist] = useState(false)
+
+  const [formData, setFormData] = useState({
+    email: ''
+  })
+
+  const setEmail = useCallback((v) => {
+    setFormData({ ...formData, email: v })
+  }, [formData])
+
+  const { isJoinPool, loading: loadingCheckJPool, checkJoinPool } = useCheckJoinPool(poolInfo?.id, account)
+  const { joinPool, loading: loadingJPool, success: isJoinSuccess } = useJoinPool(poolInfo?.id, account, formData.email)
+
+  useEffect(() => {
+    const fetchSubmission = async () => {
+      try {
+        const submission = await fetcher(`${API_BASE_URL}/user/whitelist-apply/previous?wallet_address=${account}&campaign_id=${poolInfo.id}`)
+        setEmail(submission?.data?.email || '')
+      } catch (e) {
+        return null
+      }
+    }
+    if (isJoinPool) {
+      fetchSubmission()
+    }
+  }, [isJoinPool, account])
+
+  const handleJoinPool = useCallback(async () => {
+    if (!formData.email) {
+      toast.error('Email required')
+      return
+    }
+
+    if (!formData.email.match(/^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/)) {
+      toast.error('Email is not correct')
+      return
+    }
+
+    await joinPool().finally(() => {
+      setShowApplyWhitelist(false)
+      checkJoinPool()
+    })
+  }, [checkJoinPool, formData.email, joinPool])
+
   const networkPool = useMemo(() => {
     const network = getNetworkByAlias(poolInfo.network_available)
     return network
@@ -197,7 +242,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       getMyBoxThisPool()
       getMyNumBox()
       handleSetSupplyBoxes()
-      setAmountBoxBuy(1)
+      setAmountBoxBuy(0)
     }
   }, [getMyBoxThisPool, getMyNumBox, handleSetSupplyBoxes])
 
@@ -224,7 +269,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       if (timeLine.freeBuyTime) {
         timeLinesInfo[!neededApplyWl ? 2 : 3] = {
           title: 'BUYING - PHASE 1',
-          desc: neededApplyWl ? 'Whitelist registrants will be given favorable deals to buy Mystery Boxes on a First-Come First-Served basis.' : 'You can buy Mystery Box before the Buy Phase ends'
+          desc: neededApplyWl ? `Whitelist registrants will be given favorable deals to buy ${poolInfo.process === 'only-buy' ? 'Ticket' : 'Mystery Box'} on a First-Come First-Served basis.` : `You can buy ${poolInfo.process === 'only-buy' ? 'Ticket' : 'Mystery Box'} before the Buy Phase ends`
         }
         timeLinesInfo[!neededApplyWl ? 3 : 4] = {
           title: 'BUYING - PHASE 2',
@@ -237,7 +282,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       } else {
         timeLinesInfo[!neededApplyWl ? 2 : 3] = {
           title: 'BUYING - PHASE 1',
-          desc: neededApplyWl ? 'Whitelist registrants will be given favorable deals to buy Mystery Boxes in Phase 1, on a First-Come First-Served basis.' : 'You can buy Mystery Box before the Buy Phase ends'
+          desc: neededApplyWl ? `Whitelist registrants will be given favorable deals to buy ${poolInfo.process === 'only-buy' ? 'Ticket' : 'Mystery Box'} in Phase 1, on a First-Come First-Served basis.` : `You can buy ${poolInfo.process === 'only-buy' ? 'Ticket' : 'Mystery Box'} before the Buy Phase ends`
         }
         timeLinesInfo[!neededApplyWl ? 3 : 4] = {
           title: 'END',
@@ -347,10 +392,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }, [account, poolInfo])
 
   useEffect(() => {
+    console.log(poolInfo)
     getBoxOrdered()
   }, [getBoxOrdered])
-  const { isJoinPool, loading: loadingCheckJPool } = useCheckJoinPool(poolInfo?.id, account)
-  const { joinPool, loading: loadingJPool, success: isJoinSuccess } = useJoinPool(poolInfo?.id, account)
 
   const onChangeNumBuyBox = (num: number) => {
     setAmountBoxBuy(num)
@@ -682,7 +726,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const isAppliedWhitelist = isJoinPool || isJoinSuccess
   const isDeployedPool = !!+poolInfo.is_deploy
   const isShowBtnApprove = !!account && isDeployedPool && currencySelected.neededApprove && !isApprovedToken && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2)
-  const isShowBtnBuy = !!account && isDeployedPool && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && countdown.isSale && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken))
+  const isShowBtnBuy = useMemo(() => {
+    return !!account && isDeployedPool && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && countdown.isSale && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken))
+  }, [account, isDeployedPool, countdown, currencySelected, isApprovedToken, isAppliedWhitelist])
   const isAllowedJoinCompetition = (countdown.isWhitelist || countdown.isUpcoming) && isCommunityPool && poolInfo.socialRequirement?.gleam_link && !isAppliedWhitelist
   const needAllpyWhitelist = !!poolInfo.start_join_pool_time
   const renderMsg = () => {
@@ -705,12 +751,16 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     if (isAppliedWhitelist && countdown.isWhitelist) {
       return <Alert type="info">
         You have successfully applied whitelist.
-        {timelinePool.freeBuyTime ? <>&nbsp;Please stay tuned, you can buy from <b>Phase 1</b></> : ' Please stay tuned and wait until time to buy Mystery boxes'}
+        {timelinePool.freeBuyTime ? <>&nbsp;Please stay tuned, you can buy from <b>Phase 1</b></> : `Please stay tuned and wait until time to buy ${poolInfo.process === 'only-buy' ? 'Ticket' : 'Mystery Box'}`}
+        {
+          // Hard code for EPIC WAR
+          poolInfo.id === 345 && <button className="underline text-gamefiGreen" onClick={() => { setShowApplyWhitelist(true) }}>Review</button>
+        }
       </Alert>
     }
     if (isAppliedWhitelist && (countdown.isSale || countdown.isUpcomingSale)) {
       return <Alert type="info">
-        Congratulations! You have successfully applied whitelist and can buy Mystery boxes
+        Congratulations! You have successfully applied whitelist and can buy {poolInfo.process === 'only-buy' ? 'Ticket' : 'Mystery Box'}
       </Alert>
     }
     if (needAllpyWhitelist && ((!loadingCheckJPool && !loadingJPool) && account && (countdown.isSale || countdown.isUpcomingSale)) && !countdown.isPhase2 && !isAppliedWhitelist) {
@@ -744,11 +794,14 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       headContent={<div className={clsx(styles.headPool)}>
         {!countdown.isFinished && <div className='mb-10'>{renderMsg()}</div>}
         <div className={`grid ${needAllpyWhitelist ? 'lg:grid-cols-2' : ''} `}>
-          {needAllpyWhitelist && <div className={clsx('flex mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}>
+          {needAllpyWhitelist && poolInfo.process !== 'only-buy' && <div className={clsx('flex mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}>
             <InfoBoxOrderItem label='Registered Users' value={poolInfo.totalRegistered || 0} />
             <InfoBoxOrderItem label='Ordered Boxes' value={poolInfo.totalOrder || 0} />
             <InfoBoxOrderItem label='Your Ordered' value={myBoxOrdered} />
           </div>
+          }
+          {
+            poolInfo.process === 'only-buy' && <div className={clsx('flex mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}></div>
           }
           <div className={clsx('flex items-center gap-2',
             styles.headCountdown,
@@ -776,20 +829,20 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       bodyDetailContent={<>
         <h2 className="font-semibold text-4xl mb-2 uppercase">{poolInfo.title || poolInfo.name}</h2>
         <div className="creator flex items-center gap-1">
-          <img src={poolInfo.token_images} className="icon rounded-full w-5 -h-5" alt="" />
+          <img src={poolInfo.token_images} className="icon rounded-full w-8 h-8" alt="" />
           <span className="text-white/70 uppercase text-sm">{poolInfo.symbol}</span>
         </div>
         <div className="divider bg-white/20 w-full mt-3 mb-8" style={{ height: '1px' }}></div>
         <div className='mb-4'>
           <div className="grid gap-1">
             <div className="flex items-center gap-2">
-              <img src={currencySelected?.icon} className="icon rounded-full w-5 -h-5" alt="" />
+              <img src={currencySelected?.icon} className="icon rounded-full w-8 h-8" alt="" />
               <span className="uppercase font-bold text-white text-2xl">{Number(currencySelected?.price) || ''} {currencySelected?.name}</span>
             </div>
           </div>
         </div>
         <div className="flex gap-12 mb-8">
-          <DetailPoolItem label='TOTAL SALES' value={`${poolInfo.total_sold_coin} Boxes`} />
+          <DetailPoolItem label='TOTAL SALES' value={`${poolInfo.total_sold_coin} ${poolInfo.process === 'only-buy' ? 'Tickets' : 'Boxes'}`} />
           <DetailPoolItem label='SUPPORTED'
             icon={getNetworkByAlias(poolInfo.network_available)?.image}
             value={poolInfo.network_available} />
@@ -841,6 +894,12 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               isLoading={loadingJPool || loadingCheckJPool}
               disabled={loadingCheckJPool || loadingJPool}
               onClick={() => {
+                // Hard code for EPIC WAR
+                if (poolInfo.id === 345) {
+                  setShowApplyWhitelist(true)
+                  return
+                }
+
                 joinPool()
               }}
               className={clsx('w-full mt-4 uppercase')}>
@@ -848,7 +907,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             </ButtonBase>
           }
           {
-            isAppliedWhitelist && countdown.isWhitelist &&
+            poolInfo.process !== 'only-buy' && isAppliedWhitelist && countdown.isWhitelist &&
             <ButtonBase
               color={'green'}
               onClick={() => setOpenPlaceOrderModal(true)}
@@ -876,20 +935,28 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               disabled={+amountBoxBuy < 1 || !isValidChain}
               onClick={() => setOpenBuyBoxModal(true)}
               className={clsx('w-full mt-4 uppercase')}>
-              Buy Box
+              Buy
             </ButtonBase>
           }
         </div>
       </>}
       footerContent={<>
         <Tabs
-          titles={[
-            'Rule Introduction',
-            'Box Information',
-            'Series Content',
-            'TimeLine',
-            `Collection ${ownedBox ? `(${ownedBox})` : ''}`
-          ]}
+          titles={poolInfo.process === 'only-buy'
+            ? [
+              'Rule Introduction',
+              'Ticket Information',
+              '',
+              'TimeLine',
+              `My Tickets ${ownedBox ? `(${ownedBox})` : ''}`
+            ]
+            : [
+              'Rule Introduction',
+              'Box Information',
+              'Series Content',
+              'TimeLine',
+              `Collection ${ownedBox ? `(${ownedBox})` : ''}`
+            ]}
           currentValue={currentTab}
           onChange={onChangeTab}
         />
@@ -900,9 +967,11 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           <TabPanel value={currentTab} index={1}>
             <BoxInformation boxes={boxTypes} />
           </TabPanel>
-          <TabPanel value={currentTab} index={2}>
-            <SerieContent poolInfo={poolInfo} selected={boxSelected} />
-          </TabPanel>
+          {
+            poolInfo.process !== 'only-buy' && <TabPanel value={currentTab} index={2}>
+              <SerieContent poolInfo={poolInfo} selected={boxSelected} />
+            </TabPanel>
+          }
           <TabPanel value={currentTab} index={3}>
             <TimeLine timelines={timelines} />
           </TabPanel>
@@ -921,6 +990,39 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             />
           </TabPanel>
         </div>
+        <Modal show={showApplyWhitelist} toggle={setShowApplyWhitelist} className='dark:bg-transparent fixed z-50 sm:!max-w-3xl'>
+          <div className="bg-gamefiDark-700 pt-4">
+            <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full">
+              <strong className="uppercase text-2xl font-mechanic">Welcome to {poolInfo?.title || ''} on GameFi.org</strong>
+              <p className="mt-6 text-sm">In order to participate in the IGO, you must fulfill requirements as below.</p>
+              <div className="mt-6 w-full text-sm inline-flex items-center font-medium">
+                <span className="flex items-center justify-center mr-2 bg-black w-6 h-6 rounded-full font-bold">1</span>
+                  Provide social information
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4 mt-2">
+                <div className="w-full text-sm">
+                  <span className="text-[13px]"><span className="hidden sm:inline">Your</span> Email Address</span>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    placeholder="example@email.com"
+                    onChange={e => setEmail(e.target.value)}
+                    className="mt-2 w-full bg-gamefiDark-600 border-gamefiDark-400 rounded text-sm"
+                    disabled={isJoinPool || loadingJPool}
+                    readOnly={isJoinPool || loadingJPool}
+                  />
+                </div>
+              </div>
+              <div className="mt-6 text-sm flex items-center justify-end gap-6 font-mechanic text-[13px]">
+                <button className="font-bold uppercase text-gamefiGreen-500 hover:text-white" onClick={() => setShowApplyWhitelist(false)}>Close</button>
+                { !isJoinPool && !loadingJPool && <button className="font-bold uppercase clipped-t-r bg-gamefiGreen-600 hover:bg-gamefiGreen-500 text-black py-2 px-6 tracking-wider rounded-sm" onClick={() => { handleJoinPool() }}>Apply Whitelist</button> }
+                {loadingJPool && <div className="font-bold uppercase clipped-t-r bg-gamefiGreen-600 hover:bg-gamefiGreen-500 text-black py-4 px-6 w-36 tracking-wider rounded-sm">
+                  <div className="dot-flashing mx-auto"></div>
+                </div>}
+              </div>
+            </div>
+          </div>
+        </Modal>
       </>}
     />
   </WrapperPoolDetail>

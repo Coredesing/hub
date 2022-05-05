@@ -33,7 +33,7 @@ const useApiSignature = (url: string) => {
         throw new Error('User denied message signature')
       }
 
-      throw new Error('Something went wrong when signing message')
+      throw new Error(error.message || 'Something went wrong when signing message')
     }
   }, [account, signMessage, url])
 

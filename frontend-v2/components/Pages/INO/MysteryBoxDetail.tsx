@@ -392,6 +392,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }, [account, poolInfo])
 
   useEffect(() => {
+    console.log(poolInfo)
     getBoxOrdered()
   }, [getBoxOrdered])
 
@@ -791,11 +792,14 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       headContent={<div className={clsx(styles.headPool)}>
         {!countdown.isFinished && <div className='mb-10'>{renderMsg()}</div>}
         <div className={`grid ${needAllpyWhitelist ? 'lg:grid-cols-2' : ''} `}>
-          {needAllpyWhitelist && <div className={clsx('flex mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}>
+          {needAllpyWhitelist && poolInfo.process !== 'only-buy' && <div className={clsx('flex mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}>
             <InfoBoxOrderItem label='Registered Users' value={poolInfo.totalRegistered || 0} />
             <InfoBoxOrderItem label='Ordered Boxes' value={poolInfo.totalOrder || 0} />
             <InfoBoxOrderItem label='Your Ordered' value={myBoxOrdered} />
           </div>
+          }
+          {
+            poolInfo.process === 'only-buy' && <div className={clsx('flex mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}></div>
           }
           <div className={clsx('flex items-center gap-2',
             styles.headCountdown,
@@ -901,7 +905,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             </ButtonBase>
           }
           {
-            isAppliedWhitelist && countdown.isWhitelist &&
+            poolInfo.process !== 'only-buy' && isAppliedWhitelist && countdown.isWhitelist &&
             <ButtonBase
               color={'green'}
               onClick={() => setOpenPlaceOrderModal(true)}
@@ -936,13 +940,21 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       </>}
       footerContent={<>
         <Tabs
-          titles={[
-            'Rule Introduction',
-            'Box Information',
-            'Series Content',
-            'TimeLine',
-            `Collection ${ownedBox ? `(${ownedBox})` : ''}`
-          ]}
+          titles={poolInfo.process === 'only-buy'
+            ? [
+              'Rule Introduction',
+              'Box Information',
+              '',
+              'TimeLine',
+              'Ticket'
+            ]
+            : [
+              'Rule Introduction',
+              'Box Information',
+              'Series Content',
+              'TimeLine',
+              `Collection ${ownedBox ? `(${ownedBox})` : ''}`
+            ]}
           currentValue={currentTab}
           onChange={onChangeTab}
         />
@@ -953,9 +965,11 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           <TabPanel value={currentTab} index={1}>
             <BoxInformation boxes={boxTypes} />
           </TabPanel>
-          <TabPanel value={currentTab} index={2}>
-            <SerieContent poolInfo={poolInfo} selected={boxSelected} />
-          </TabPanel>
+          {
+            poolInfo.process !== 'only-buy' && <TabPanel value={currentTab} index={2}>
+              <SerieContent poolInfo={poolInfo} selected={boxSelected} />
+            </TabPanel>
+          }
           <TabPanel value={currentTab} index={3}>
             <TimeLine timelines={timelines} />
           </TabPanel>

@@ -764,6 +764,16 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
     }
   }
 
+  if (poolDetails.token_type === Const.TOKEN_TYPE.MYSTERY_BOX &&
+    poolDetails.process && poolDetails.process === Const.PROCESS.ONLY_BUY &&
+    startBuyTime && today >= startBuyTime.getTime() &&
+    endBuyTime && today <= endBuyTime.getTime()) {
+    return {
+      status: PoolStatus.SWAP,
+      tokenSold: tokenSold
+    }
+  }
+
   // Upcoming in case:
   // today < startJoin: wait for whitelist
   // today < endJoin: in whitelist phase

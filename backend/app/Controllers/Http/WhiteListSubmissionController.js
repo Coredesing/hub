@@ -84,10 +84,51 @@ class WhiteListSubmissionController {
     }
   }
 
+  async getPreviousWhitelistSubmissionV2({ request, params }) {
+    const wallet_address = request.input('wallet_address');
+    const campaign_id = request.input('campaign_id')
+
+    if (!wallet_address) {
+      return HelperUtils.responseBadRequest('Bad request with wallet_address');
+    }
+
+    try {
+      const whitelistSubmissionService = new WhitelistSubmissionService();
+      const submissionParams = {
+        wallet_address,
+        campaign_id
+      }
+      const submission = await whitelistSubmissionService.findLastSubmission(submissionParams)
+      if (submission) {
+        submission.user_telegram = ''
+        submission.user_twitter = ''
+      }
+      return HelperUtils.responseSuccess(
+        submission
+      );
+
+    } catch (e) {
+      console.log("error", e)
+      if (e instanceof BadRequestException) {
+        return HelperUtils.responseBadRequest(e.message);
+      } else {
+        return HelperUtils.responseErrorInternal('ERROR : Get Whitelist Submission fail !');
+      }
+    }
+  }
+
   async applyWhitelistSubmissionBox({ request, params }) {
     // get request params
     const campaign_id = params.campaignId;
     const wallet_address = request.input('wallet_address');
+    const email = request.input('email');
+    
+    // start hard code for EPIC WAR
+    if ((campaign_id === 345 || campaign_id === '345') && !email) {
+      return HelperUtils.responseBadRequest('Email required');
+    }
+    // end hard code for EPIC WAR
+
     if (!campaign_id) {
       return HelperUtils.responseBadRequest('Bad request with campaign_id');
     }
@@ -143,11 +184,18 @@ class WhiteListSubmissionController {
 
       // call to whitelist submission service
       const whitelistSubmissionService = new WhitelistSubmissionService();
+
+      const checkEmailExist = await whitelistSubmissionService.findSubmission({ email, campaign_id })
+      if (!!checkEmailExist && checkEmailExist?.wallet_address !== wallet_address) {
+        console.log('exist email', checkEmailExist)
+        return HelperUtils.responseBadRequest("Duplicate email address with another user")
+      }
       const submissionParams = {
         wallet_address,
         campaign_id,
         user_telegram: wallet_address,
         user_twitter: wallet_address,
+        email: email,
         self_twitter_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
         self_group_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
         self_channel_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,

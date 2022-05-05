@@ -223,16 +223,17 @@ function UserParticipant(props: any) {
   const handleApproveAllWhitelistSubmission = async () => {
     return approveAllParticipantWhitelistSubmission(poolDetail?.id)
         .then((res: any) => {
-          if (res.status === 200) {
-            dispatch(alertSuccess('Approve All Participant Whitelist Submission Success'));
-            search(); // Re-search list
-            setSelectedWhitelistSubmission({});
-            setIsOpenWhitelistPopup(false);
-            setAddedUsers([]);  // Reset list checked user
-            onChange([]); // Reset check-all checkbox
-          } else {
+          if (res.status !== 200) {
             dispatch(alertFailure('Approve All Participant Whitelist Submission Fail'));
+            return
           }
+
+          dispatch(alertSuccess('Approve All Participant Whitelist Submission Success'));
+          search();
+          setSelectedWhitelistSubmission({});
+          setIsOpenWhitelistPopup(false);
+          setAddedUsers([]);
+          onChange([]);
         })
   }
 

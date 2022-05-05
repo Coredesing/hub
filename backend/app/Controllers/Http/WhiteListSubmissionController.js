@@ -437,12 +437,9 @@ class WhiteListSubmissionController {
       return HelperUtils.responseSuccess();
 
     } catch (e) {
-      console.log("error", e)
-      if (e instanceof BadRequestException) {
-        return HelperUtils.responseBadRequest(e.message);
-      } else {
-        return HelperUtils.responseErrorInternal('ERROR : Approve All Whitelist Submission fail !');
-      }
+      if (e instanceof BadRequestException) return HelperUtils.responseBadRequest(e.message);
+
+      return HelperUtils.responseErrorInternal('ERROR : Approve All Whitelist Submission fail !');
     }
   }
 

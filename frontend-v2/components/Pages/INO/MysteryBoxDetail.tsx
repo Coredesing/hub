@@ -948,7 +948,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               'Ticket Information',
               '',
               'TimeLine',
-              'Ticket'
+              `My Tickets ${ownedBox ? `(${ownedBox})` : ''}`
             ]
             : [
               'Rule Introduction',

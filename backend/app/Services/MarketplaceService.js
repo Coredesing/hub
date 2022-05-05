@@ -146,15 +146,15 @@ class MarketplaceService {
 
   // TODO: cached
   async getSupportCollections(filterParams) {
-    // if (await RedisMarketplaceUtils.existRedisMarketplaceSupportCollections()) {
-    //   let data = await RedisMarketplaceUtils.getRedisMarketplaceSupportCollections()
-    //   data = JSON.parse(data)
-    //   return data
-    // }
+    if (await RedisMarketplaceUtils.existRedisMarketplaceSupportCollections()) {
+      let data = await RedisMarketplaceUtils.getRedisMarketplaceSupportCollections()
+      data = JSON.parse(data)
+      return data
+    }
 
     let data = await this.buildQueryCollectionBuilder(filterParams).fetch()
-    // data = JSON.parse(JSON.stringify(data))
-    // await RedisMarketplaceUtils.setRedisMarketplaceSupportCollections(data)
+    data = JSON.parse(JSON.stringify(data))
+    await RedisMarketplaceUtils.setRedisMarketplaceSupportCollections(data)
 
     return data
   }
@@ -407,6 +407,7 @@ class MarketplaceService {
     await RedisMarketplaceUtils.deleteRedisMarketplaceTopCollections()
     await RedisMarketplaceUtils.deleteRedisMarketplaceFirstEditionCollections()
     await RedisMarketplaceUtils.deleteRedisMarketplaceCollectionDetail(params?.token_address)
+    await RedisMarketplaceUtils.deleteRedisMarketplaceSupportCollections()
     return collection;
   }
 }

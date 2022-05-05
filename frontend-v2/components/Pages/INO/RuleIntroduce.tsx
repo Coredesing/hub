@@ -20,10 +20,9 @@ const RuleIntroduce = ({ poolInfo }: Props) => {
   return <div>
     <div style={{ maxWidth: '780px' }}>
       <div className="desc mb-6">
-        <ul className={'grid gap-2 font-casual text-sm'}>
+        <ul className={'grid gap-2 font-casual text-sm list-none'}>
           {getRules(poolInfo.rule).map((rule, idx) => (
-            <li key={idx} className='flex'>
-              <div className='flex'><span className='font-bold'></span>&nbsp;-&nbsp;</div>
+            <li key={idx} className='flex list-none'>
               <div>
                 {rule}
               </div>

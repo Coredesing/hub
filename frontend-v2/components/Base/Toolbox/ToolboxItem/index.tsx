@@ -12,7 +12,7 @@ const ToolboxItem = ({ children, path }: Props) => {
     <Link href={path} passHref>
       <a
         className={`relative w-full py-4 flex flex-col align-middle items-center justify-center uppercase text-xs lg:text-sm font-semibold cursor-pointer ${
-          ((path.length === 1 && router.asPath === path) || (path.length > 1 && router.asPath.includes(path))) ? 'dark:bg-gamefiDark-900 opacity-100' : 'opacity-40'
+          ((path.length === 1 && router.asPath === path) || (path.length > 1 && router.asPath.includes(path))) ? 'dark:bg-gamefiDark-900 text-white' : 'text-gamefiDark-300'
         }`}
       >
         {((path.length === 1 && router.asPath === path) || (path.length > 1 && router.asPath.includes(path))) && <span

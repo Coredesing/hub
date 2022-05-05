@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import Recaptcha from '@/components/Base/Recaptcha'
-import { debounce, fetcher, printNumber } from '@/utils'
+import { debounce, fetcher, gtagEvent, printNumber } from '@/utils'
 import { useMyWeb3 } from '@/components/web3/context'
 import { useBalanceToken, useTokenAllowance, useTokenApproval } from '@/components/web3/utils'
 import { ethers } from 'ethers'
@@ -289,21 +289,30 @@ const Swap = () => {
       ]
 
     const loading = toast.loading('Processing...')
+    gtagEvent('swap_start', {
+      value: inputAmount || 0,
+      virtual_currency_name: usd?.symbol || 'Unknown',
+      item_name: poolData?.title || 'Unknown'
+    })
+
     try {
       const transaction = await poolContract[method](...params)
       const result = await transaction.wait(1)
 
       if (+result?.status === 1) {
         toast.success('Token Deposit Successfully!')
-        if ((window as any).gtag) {
-          (window as any).gtag('event', 'spend_virtual_currency', {
-            value: inputAmount || 0,
-            virtual_currency_name: usd?.symbol || 'Unknown',
-            item_name: poolData?.title || 'Unknown'
-          })
-        }
+        gtagEvent('swap_done', {
+          value: inputAmount || 0,
+          virtual_currency_name: usd?.symbol || 'Unknown',
+          item_name: poolData?.title || 'Unknown'
+        })
         // setTxHash(transaction?.hash || '')
       } else {
+        gtagEvent('swap_error', {
+          value: inputAmount || 0,
+          virtual_currency_name: usd?.symbol || 'Unknown',
+          item_name: poolData?.title || 'Unknown'
+        })
         toast.error('Token Deposit Failed')
       }
       updateUsdBalance()

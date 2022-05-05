@@ -29,7 +29,7 @@ const SidebarLink = ({ children, path, external }: Props) => {
     <Link href={path} passHref>
       <a
         className={`relative w-full py-4 flex flex-col align-middle items-center justify-center uppercase text-xs font-semibold cursor-pointer ${
-          isActive ? 'dark:bg-gamefiDark-900 opacity-100' : 'opacity-40'
+          isActive ? 'dark:bg-gamefiDark-900 text-white' : 'text-gamefiDark-300'
         }`}
       >
         {isActive && <span

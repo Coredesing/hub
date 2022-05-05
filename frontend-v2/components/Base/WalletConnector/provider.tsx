@@ -9,7 +9,7 @@ import Link from 'next/link'
 import { useWeb3React } from '@web3-react/core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import copy from 'copy-to-clipboard'
-import { shorten } from '@/utils'
+import { gtagEvent, shorten } from '@/utils'
 
 export const ctx = createContext<{
   setShowModal:(any) => void;
@@ -62,6 +62,14 @@ export default function WalletProvider ({ children }) {
   }, [updateBalance])
 
   const [showModal, setShowModal] = useState(false)
+  useEffect(() => {
+    if (!showModal) {
+      return
+    }
+
+    gtagEvent('wallet_modal')
+  }, [showModal])
+
   useEffect(() => {
     dispatch({
       type: 'SET_CHAINID',
@@ -198,18 +206,16 @@ export default function WalletProvider ({ children }) {
       return
     }
 
-    if ((window as any).gtag) {
-      (window as any).gtag('event', 'wallet_connect', {
-        address: account + '_',
-        network: networkChosen?.name,
-        wallet: walletChosen?.name,
-        path: location.pathname + location.hash
-      });
+    gtagEvent('wallet_connect', {
+      address: account + '_',
+      network: networkChosen?.name,
+      wallet: walletChosen?.name,
+      path: location.pathname + location.hash
+    })
 
-      (window as any).gtag('event', 'login', {
-        method: walletChosen?.name + ' ' + networkChosen?.name
-      })
-    }
+    gtagEvent('login', {
+      method: walletChosen?.name + ' ' + networkChosen?.name
+    })
   }, [networkChosen, walletChosen, account])
 
   return <ctx.Provider value={{ setShowModal, tryDeactivate }}>

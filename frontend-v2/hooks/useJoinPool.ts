@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Address } from 'utils/types'
-import { fetcher } from '@/utils'
+import { fetcher, gtagEvent } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 import useApiSignature from './useApiSignature'
 import toast from 'react-hot-toast'
@@ -25,11 +25,10 @@ export const useJoinPool = (poolId: string | number, account: Address) => {
         campaign_id: poolId
       })
 
-      if ((window as any).gtag) {
-        (window as any).gtag('event', 'join_group', {
-          group_id: poolId
-        })
-      }
+      gtagEvent('join_group', {
+        group_id: poolId
+      })
+
       toast.success('Apply whitelist successfully')
       setSuccess(true)
       return true

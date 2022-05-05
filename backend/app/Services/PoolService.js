@@ -222,6 +222,7 @@ class PoolService {
       .with('socialNetworkSetting')
       // .where('start_time', '<=', now)
       // .where('finish_time', '>', now)
+      .where('process', 'all')
       .where(builder => {
         builder
           .whereIn('campaign_status', [

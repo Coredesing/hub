@@ -122,12 +122,6 @@ class WhiteListSubmissionController {
     const campaign_id = params.campaignId;
     const wallet_address = request.input('wallet_address');
     const email = request.input('email');
-    
-    // start hard code for EPIC WAR
-    if ((campaign_id === 345 || campaign_id === '345') && !email) {
-      return HelperUtils.responseBadRequest('Email required');
-    }
-    // end hard code for EPIC WAR
 
     if (!campaign_id) {
       return HelperUtils.responseBadRequest('Bad request with campaign_id');

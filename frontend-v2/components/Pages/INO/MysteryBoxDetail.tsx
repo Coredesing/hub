@@ -39,6 +39,7 @@ import Collection from './Collection'
 import { getTierById } from '@/utils/tiers'
 import Progress from './Progress'
 import Modal from '@/components/Base/Modal'
+import Tippy from '@tippyjs/react'
 
 const MysteryBoxDetail = ({ poolInfo }: any) => {
   const eventId = 0
@@ -801,12 +802,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           </div>
           }
           {
-            poolInfo.process === 'only-buy' && needAllpyWhitelist && <div className={clsx('flex items-center mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}>
-              {!!poolInfo.claim_policy && myBoxThisPool > 0 && <div className="w-full block text-sm px-3 py-2">{poolInfo.claim_policy.split('. ').map(item => {
-                return item.match(/https:.*/) ? <a href={item} className="text-gamefiGreen" target="_blank" rel="norel noreferrer">{item}</a> : <p key={`policy-${item}`} className="">{item}</p>
-              })}</div>}
-              {!!poolInfo.claim_policy && !myBoxThisPool && <div className="w-full block text-sm px-3 py-2 font-semibold">You need to buy at least 1 ticket to see the next mission</div>}
-            </div>
+            poolInfo.process === 'only-buy' && needAllpyWhitelist && <div className={clsx('flex items-center mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}></div>
           }
           <div className={clsx('flex items-center gap-2',
             styles.headCountdown,
@@ -886,7 +882,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             <Progress {...supplyBox}></Progress>
           </div>
         </div> */}
-        <div>
+        <div className={poolInfo.process === 'only-buy' && 'md:flex gap-2'}>
           {isAllowedJoinCompetition && !isClickedCompetition && <ButtonBase color="red"
             onClick={() => onJoinCompetition(poolInfo.socialRequirement.gleam_link)}
             className={clsx('w-full mt-4 uppercase')}>
@@ -942,6 +938,19 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               className={clsx('w-full mt-4 uppercase')}>
               Buy
             </ButtonBase>
+          }
+          {
+            (isShowBtnBuy || isShowBtnApprove) && poolInfo.process === 'only-buy' && (ownedBox > 0
+              ? <a
+                href={poolInfo.claim_policy}
+                target="_blank"
+                rel="norel noreferrer"
+                className="w-full mt-4 uppercase text-black rounded-sm clipped-t-r flex items-center justify-center bg-gamefiGreen font-semibold cursor-pointer">
+                  Play
+              </a>
+              : <Tippy content={<div className="">You need to buy <b>1 Ticket</b> to get allocation after playing the game</div>}>
+                <div className="w-full px-6 py-4 mt-4 uppercase bg-gamefiDark-600 rounded-sm clipped-t-r flex items-center justify-center text-gamefiDark-200 font-semibold cursor-not-allowed">Play</div>
+              </Tippy>)
           }
         </div>
       </>}

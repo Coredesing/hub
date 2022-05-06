@@ -21,7 +21,7 @@ type Props = {
 }
 
 const BuyBoxModal = ({ open, onClose, boxTypeBuy, amountBoxBuy, currencyInfo, poolInfo, eventId, isValidChain, balanceInfo }: Props) => {
-  const [isVerified, setVerify] = useState<string | null>('')
+  const [isVerified, setVerify] = useState<string | null>('aaa')
   const totalBuy = currencyInfo?.price ? BigNumber.from(amountBoxBuy).mul(utils.parseEther(currencyInfo?.price)).toString() : 0
   const recaptchaRef: any = React.useRef()
   const onRefreshRecaptcha = debounce(() => {

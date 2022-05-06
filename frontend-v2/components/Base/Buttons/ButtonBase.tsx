@@ -32,7 +32,7 @@ export const ButtonBase = ({
         {
           [styles.base]: !noneStyle,
           [styles['clip-path-t-r']]: !notClipPath,
-          [styles.disabled]: disabled
+          'bg-gamefiDark-600 font-semibold text-gamefiDark-200 cursor-not-allowed': disabled
         })
       }
       onClick={onClick}

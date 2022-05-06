@@ -16,6 +16,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
+const AW_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
 
 function MyApp ({ Component, pageProps }: AppProps) {
   const router = useRouter()
@@ -50,6 +51,7 @@ function MyApp ({ Component, pageProps }: AppProps) {
           gtag('js', new Date());
 
           gtag('config', '${GA_MEASUREMENT_ID}');
+          gtag('config', '${AW_MEASUREMENT_ID}');
         `}
       </Script>
       <div id="fb-root"></div>

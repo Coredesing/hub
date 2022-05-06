@@ -801,10 +801,11 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           </div>
           }
           {
-            poolInfo.process === 'only-buy' && needAllpyWhitelist && <div className={clsx('flex mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}>
-              {!!poolInfo.claim_policy && <div className="w-full block text-sm px-3 py-2">{poolInfo.claim_policy.split('. ').map(item => {
+            poolInfo.process === 'only-buy' && needAllpyWhitelist && <div className={clsx('flex items-center mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}>
+              {!!poolInfo.claim_policy && myBoxThisPool > 0 && <div className="w-full block text-sm px-3 py-2">{poolInfo.claim_policy.split('. ').map(item => {
                 return item.match(/https:.*/) ? <a href={item} className="text-gamefiGreen" target="_blank" rel="norel noreferrer">{item}</a> : <p key={`policy-${item}`} className="">{item}</p>
               })}</div>}
+              {!!poolInfo.claim_policy && !myBoxThisPool && <div className="w-full block text-sm px-3 py-2 font-semibold">You need to buy at least 1 ticket to see the next mission</div>}
             </div>
           }
           <div className={clsx('flex items-center gap-2',

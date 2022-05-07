@@ -71,7 +71,7 @@ const getKingdomQuestNFTDetail = (rarity) => {
 }
 
 const getEpicWarNFTDetail = () => {
-  return 'https://gamefi-public.s3.amazonaws.com/aggregator/optimized/epic-war/epic-ticket.png'
+  return 'https://gamefi-public.s3.amazonaws.com/aggregator/optimized/epic-war/570x460.png'
 }
 
 module.exports = {

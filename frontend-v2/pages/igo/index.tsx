@@ -17,6 +17,7 @@ const IGO = () => {
   const refOpeningCommunity = useRef(null)
   const refUpcomingPublic = useRef(null)
   const refUpcomingCommunity = useRef(null)
+  const refTicket = useRef(null)
 
   const { response: totalCompletedResponse } = useFetch('/pools/total-completed-pools')
   const totalCompletedPools = useMemo(() => {
@@ -131,10 +132,10 @@ const IGO = () => {
                   <Card external={'/ticket/150'} item={ticketPool} color="gamefiDark" background="black"></Card>
                 </div>
                 <div className="mt-4 w-full lg:hidden">
-                  <Flicking circular={true} className="w-full" align="center" ref={refOpeningPublic} interruptable={true}>
-                    {openingPublicList.map(item => (
-                      <div key={`opening-public-mobile-${item.id}`} className="w-2/3 px-2"><Card item={item} color="black" background="gamefiDark"></Card></div>
-                    ))}
+                  <Flicking circular={true} className="w-full" align="center" ref={refTicket} interruptable={true}>
+                    <div className="w-3/4 px-2">
+                      <Card external={'/ticket/150'} item={ticketPool} color="gamefiDark" background="black"></Card>
+                    </div>
                   </Flicking>
                 </div>
               </div>

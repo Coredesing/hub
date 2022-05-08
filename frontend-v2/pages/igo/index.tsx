@@ -47,7 +47,6 @@ const IGO = () => {
   }, [openingItems])
 
   const ticketPool = useMemo<Item>(() => {
-    console.log(openingTicketResponse?.data)
     return openingTicketResponse?.data || {}
   }, [openingTicketResponse])
 

@@ -393,7 +393,6 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   }, [account, poolInfo])
 
   useEffect(() => {
-    console.log(poolInfo)
     getBoxOrdered()
   }, [getBoxOrdered])
 

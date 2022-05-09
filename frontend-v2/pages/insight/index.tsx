@@ -13,10 +13,11 @@ export const api = new GhostContentAPI({
 })
 
 export const categories = {
-  update: 'Updates',
+  update: 'Update',
   partnership: 'Partnership',
   igo: 'IGO',
   ino: 'INO & Marketplace',
+  review: 'Game Review',
   ama: 'AMA'
 }
 
@@ -27,7 +28,7 @@ export const Categories = ({ active }:{ active?: string }) => (
   </div>
 )
 
-const News = ({ postsFeatured, postsUpdate, postsPartnership, postsIGO, postsINO, postsAMA, tags }) => {
+const News = ({ postsFeatured, postsLatest, postsUpdate, postsPartnership, postsIGO, postsINO, postsAMA, tags }) => {
   const featured = useMemo(() => {
     if (!postsFeatured?.length) {
       return {}
@@ -39,6 +40,18 @@ const News = ({ postsFeatured, postsUpdate, postsPartnership, postsIGO, postsINO
       others
     }
   }, [postsFeatured])
+
+  const latest = useMemo(() => {
+    if (!postsLatest?.length) {
+      return {}
+    }
+
+    const [big, ...others] = postsLatest
+    return {
+      big,
+      others
+    }
+  }, [postsLatest])
 
   const updates = useMemo(() => {
     if (!postsUpdate?.length) {
@@ -156,35 +169,58 @@ const News = ({ postsFeatured, postsUpdate, postsPartnership, postsIGO, postsINO
 
       <div className="flex flex-col sm:flex-row gap-6 mt-14">
         <div className="flex-1">
+          <NewsLayoutLeft3Right items={latest}>
+            <Link href="/insight/latest" passHref>
+              <a className="hover:underline">
+                GameFi.org
+                <span className="text-gamefiGreen-500 ml-2">Latest News</span>
+              </a>
+            </Link>
+          </NewsLayoutLeft3Right>
+
           <NewsLayoutLeft3Right items={updates}>
-            <>
-              <span>GameFi.org</span>
-              <span className="text-gamefiGreen-500 ml-2">Updates</span>
-            </>
+            <Link href="/insight/tag/update" passHref>
+              <a className="hover:underline">
+                GameFi.org
+                <span className="text-gamefiGreen-500 ml-2">Update</span>
+              </a>
+            </Link>
           </NewsLayoutLeft3Right>
 
           <NewsLayoutLeft3Right items={partnership}>
-            <>
-              <span>GameFi.org</span>
-              <span className="text-gamefiGreen-500 ml-2">Partnership</span>
-            </>
+            <Link href="/insight/tag/partnership" passHref>
+              <a className="hover:underline">
+                GameFi.org
+                <span className="text-gamefiGreen-500 ml-2">Partnership</span>
+              </a>
+            </Link>
           </NewsLayoutLeft3Right>
 
           <NewsLayoutLeftRight4Bottom items={igo}>
-            <span>GameFi.org</span>
-            <span className="text-gamefiGreen-500 ml-2">IGO</span>
+            <Link href="/insight/tag/igo" passHref>
+              <a className="hover:underline">
+                GameFi.org
+                <span className="text-gamefiGreen-500 ml-2">IGO</span>
+              </a>
+            </Link>
           </NewsLayoutLeftRight4Bottom>
 
           <NewsLayoutLeftRight4Bottom items={ino}>
-            <span>GameFi.org</span>
-            <span className="text-gamefiGreen-500 ml-2">INO & Marketplace</span>
+            <Link href="/insight/tag/ino" passHref>
+              <a className="hover:underline">
+                GameFi.org
+                <span className="text-gamefiGreen-500 ml-2">INO & Marketplace</span>
+              </a>
+            </Link>
           </NewsLayoutLeftRight4Bottom>
 
           <NewsLayoutLeft3Right items={ama}>
-            <>
-              <span>GameFi.org</span>
-              <span className="text-gamefiGreen-500 ml-2">AMA</span>
-            </>
+            <Link href="/insight/tag/ama">
+              <a className="hover:underline">
+                GameFi.org
+                <span className="text-gamefiGreen-500 ml-2">AMA</span>
+              </a>
+            </Link>
           </NewsLayoutLeft3Right>
 
         </div>
@@ -445,6 +481,7 @@ export default News
 
 export async function getStaticProps () {
   const postsFeatured = await api.posts.browse({ include: 'authors', limit: 4, filter: 'featured:true' })
+  const postsLatest = await api.posts.browse({ limit: 4 })
   const postsUpdate = await api.posts.browse({ limit: 4, filter: 'tag:update' })
   const postsPartnership = await api.posts.browse({ limit: 4, filter: 'tag:partnership' })
   const postsIGO = await api.posts.browse({ limit: 6, filter: 'tag:igo' })
@@ -455,6 +492,7 @@ export async function getStaticProps () {
   return {
     props: {
       postsFeatured,
+      postsLatest,
       postsUpdate,
       postsPartnership,
       postsIGO,

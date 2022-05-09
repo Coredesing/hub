@@ -9,7 +9,7 @@ import avatar from '@/assets/images/avatar.png'
 export const api = new GhostContentAPI({
   url: 'https://gamefi.ghost.io',
   key: process.env.NEXT_GHOST_API_KEY,
-  version: 'v3'
+  version: 'v4.46'
 })
 
 export const categories = {
@@ -22,7 +22,7 @@ export const categories = {
 
 export const Categories = ({ active }:{ active?: string }) => (
   <div className="bg-gamefiDark-630/50 inline-flex items-center justify-center w-full gap-3 sm:gap-8 p-3 sm:px-6 font-casual font-medium rounded text-xs sm:text-sm overflow-x-auto flex-wrap">
-    <Link href="/insight" passHref={true}><a className={`whitespace-nowrap hover:text-white ${!active ? 'text-gamefiGreen-400' : 'text-white/60'}`}>Latest News</a></Link>
+    <Link href="/insight/latest" passHref={true}><a className={`whitespace-nowrap hover:text-white ${active === 'latest' ? 'text-gamefiGreen-400' : 'text-white/60'}`}>Latest News</a></Link>
     {Object.keys(categories).map(category => <Link key={category} href={`/insight/tag/${category}`} passHref={true}><a className={`whitespace-nowrap hover:text-white ${active === category ? 'text-gamefiGreen-400' : 'text-white/60'}`}>{categories[category] || category}</a></Link>)}
   </div>
 )

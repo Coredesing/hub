@@ -30,7 +30,14 @@ module.exports = {
         source: '/press',
         destination: '/press-kit',
         permanent: false
-      },
+      }
     ]
+  },
+  webpack: (config, options) => {
+    config.module.rules.push({
+      test: /\.glsl/,
+      type: 'asset/source'
+    })
+    return config
   }
 }

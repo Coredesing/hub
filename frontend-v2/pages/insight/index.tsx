@@ -271,6 +271,11 @@ export const Right = ({ tags }: { tags?: { link: string; image: any; count: any;
       id: 'metacity',
       link: 'https://metacity.game/',
       image: require('@/assets/images/ads/metacity.jpg')
+    },
+    {
+      id: 'securichain',
+      link: 'https://www.securichain.io/',
+      image: require('@/assets/images/ads/securichain.jpg')
     }
   ])
 

@@ -9,6 +9,7 @@ const POOL_BY_TOKEN_TYPEP_CACHED_TTL = 120 // 2 minutes
 const COMPLETED_POOLS_CACHED_TTL = 120 // 2 minutes
 const LATEST_POOLS_CACHED_TTL = 600 // 10 minutes
 const TOTAL_COMPLETED_TTL = 12 * 60 * 60; // 12 hours
+const COUNT_POOL_TTL = 60 * 60; // 1 hour
 
 const LATEST_POOL_KEY = 'latest_pools';
 
@@ -556,6 +557,32 @@ const deleteRedisTotalCompleted = (walletAddress) => {
   return false;
 };
 
+/**
+ * Count Pools
+ */
+const getRedisCountPoolKey = () => {
+  return `count_pool`;
+}
+
+const getRedisCountPool = async () => {
+  return await Redis.get(getRedisCountPoolKey())
+}
+
+const checkExistRedisCountPool = async () => {
+  return await Redis.exists(getRedisCountPoolKey())
+}
+
+const createRedisCountPool = async (data) => {
+  try {
+    data = parseInt(data)
+  }
+  catch (e) {
+    return false
+  }
+
+  return await Redis.setex(getRedisCountPoolKey(), COUNT_POOL_TTL, data)
+}
+
 module.exports = {
   // POOL LIST
   checkExistRedisPoolList,
@@ -645,5 +672,10 @@ module.exports = {
   getRedisTotalCompleted,
   checkExistRedisTotalCompleted,
   createRedisTotalCompleted,
-  deleteRedisTotalCompleted
+  deleteRedisTotalCompleted,
+
+  // count pool
+  getRedisCountPool,
+  checkExistRedisCountPool,
+  createRedisCountPool,
 };

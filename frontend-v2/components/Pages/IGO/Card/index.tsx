@@ -38,7 +38,7 @@ const Card = ({ item, color, background, external }: { item: Item; color?: strin
   }, [poolClaimTime, now])
 
   return <div onClick={() => { external ? router.push(external) : router.push(`/igo/${item.id}`) }} className={`bg-${background} cursor-pointer w-full flex flex-col font-casual hover:opacity-90`}>
-    <div className="w-full aspect-[16/9] bg-black relative">
+    <div className="w-full aspect-[16/9] overflow-hidden bg-black relative">
       <img src={item?.banner} alt="" className="object-cover w-full h-full"></img>
       <div className={`absolute h-6 w-36 xl:w-2/5 inline-flex align-middle items-center -top-[1px] -left-[1px] uppercase text-xs text-left bg-${color} clipped-b-r-full`}>
         <Image src={poolStatus(item.is_private).icon} alt="lock"></Image>
@@ -92,7 +92,8 @@ const Card = ({ item, color, background, external }: { item: Item; color?: strin
       <div className="w-full text-left">
         <div className="text-white/50 uppercase font-medium text-xs">Rate</div>
         <div className="text-gamefiGreen uppercase font-medium text-sm">
-          1 {item.symbol} = {item.token_conversion_rate} {item.id === 150 ? 'GAFI' : getCurrency(item).symbol}
+          {/* Hard code for Epic War */}
+          1 {item.symbol} = {item.token_conversion_rate} {item.process === 'only-buy' ? 'GAFI' : getCurrency(item).symbol}
         </div>
       </div>
       <div className="w-full grid grid-cols-2 gap-2">

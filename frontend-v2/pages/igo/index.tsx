@@ -30,7 +30,8 @@ const IGO = () => {
   const { response: openingResponse, loading: openingLoading } = useFetch('/pools/active-pools?token_type=erc20&is_display=1')
   const { response: upcomingResponse, loading: upcomingLoading } = useFetch('/pools/upcoming-pools?token_type=erc20&is_display=1')
   // Hard code for Epic War
-  const { response: openingTicketResponse, loading: ticketLoading } = useFetch('/pool/150')
+  const { response: upcomingTicketResponse1, loading: upcomingTicketLoading1 } = useFetch('/pool/150')
+  const { response: upcomingTicketResponse2, loading: upcomingTicketLoading2 } = useFetch('/pool/153')
 
   const openingItems = useMemo<Item[]>(() => {
     const origin = openingResponse?.data?.data || []
@@ -46,10 +47,9 @@ const IGO = () => {
     return openingItems.filter(item => item.is_private === 3)
   }, [openingItems])
 
-  const ticketPool = useMemo<Item>(() => {
-    console.log(openingTicketResponse?.data)
-    return openingTicketResponse?.data || {}
-  }, [openingTicketResponse])
+  const upcomingTicketPools = useMemo<Item[]>(() => {
+    return upcomingTicketResponse1 && upcomingTicketResponse2 ? [upcomingTicketResponse1?.data, upcomingTicketResponse2?.data] : []
+  }, [upcomingTicketResponse1, upcomingTicketResponse2])
 
   const upcomingItems = useMemo<Item[]>(() => {
     const origin = upcomingResponse?.data?.data || []
@@ -106,18 +106,17 @@ const IGO = () => {
           <Instruction></Instruction>
         </div>
       </div>
-      {/* hard code for Epic War */}
       <div className="md:px-4 lg:px-16 mx-auto mt-20 pb-32">
         <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
           <div className="inline-block top-0 left-0 right-0 uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
-                Ticket Sale
+                Opening Ticket Sales
           </div>
           <div className="absolute -bottom-5 left-0 right-0">
             <Image src={require('@/assets/images/under-stroke-green.svg')} alt=""></Image>
           </div>
         </div>
         {
-          ticketLoading
+          upcomingTicketLoading1 || upcomingTicketLoading2
             ? <div className="loader-wrapper mx-auto mt-14">
               <svg className="loader" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -129,12 +128,12 @@ const IGO = () => {
               <div className="w-full max-w-[1180px] mx-auto mt-14">
                 <p><span className="uppercase font-semibold text-xl">Community Pool</span> <span className="text-white/60">($GAFI Staking not required)</span></p>
                 <div className="hidden mt-4 w-full lg:grid lg:grid-cols-3 gap-6">
-                  <Card external={'/ticket/150'} item={ticketPool} color="gamefiDark" background="black"></Card>
+                  {upcomingTicketPools?.length > 0 && upcomingTicketPools.map(ticketPool => <Card key={`ticket-${ticketPool.id}`} external={`/ticket/${ticketPool.id}`} item={ticketPool} color="gamefiDark" background="black"></Card>)}
                 </div>
                 <div className="mt-4 w-full lg:hidden">
                   <Flicking circular={true} className="w-full" align="center" ref={refTicket} interruptable={true}>
                     <div className="w-3/4 px-2">
-                      <Card external={'/ticket/150'} item={ticketPool} color="gamefiDark" background="black"></Card>
+                      {upcomingTicketPools?.length > 0 && upcomingTicketPools.map(ticketPool => <Card key={`ticket-${ticketPool.id}`} external={`/ticket/${ticketPool.id}`} item={ticketPool} color="gamefiDark" background="black"></Card>)}
                     </div>
                   </Flicking>
                 </div>

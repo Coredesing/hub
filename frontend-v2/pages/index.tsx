@@ -15,6 +15,7 @@ import Performance from '@/components/Pages/Home/Performance'
 import { fetcher } from '@/utils'
 import Layout from '@/components/Layout'
 import Banners from '@/components/Banners'
+import TicketList from '@/components/Pages/Home/TicketList'
 
 const PageIndex = () => {
   const router = useRouter()
@@ -46,9 +47,10 @@ const PageIndex = () => {
         {featuredGames && featuredGames.length ? <GameCarousel likes={likes} items={featuredGames}></GameCarousel> : <></>}
       </div>
       <Instruction></Instruction>
+      <TicketList></TicketList>
       <IGOList></IGOList>
       <div className="bg-gamefiDark-900">
-        <INOList></INOList>
+        {/* <INOList></INOList> */}
         <GameList></GameList>
         {/* <NFTList></NFTList> */}
         <Partners></Partners>

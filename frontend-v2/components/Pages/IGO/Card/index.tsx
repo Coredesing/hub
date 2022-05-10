@@ -8,6 +8,7 @@ import Countdown from './Countdown'
 import { useRouter } from 'next/router'
 import { airdropNetworks } from '@/components/web3'
 import { useAppContext } from '@/context'
+import Link from 'next/link'
 
 const Card = ({ item, color, background, external }: { item: Item; color?: string; background?:string; external?: string }) => {
   const { network } = useLibraryDefaultFlexible(item?.network_available)
@@ -37,7 +38,7 @@ const Card = ({ item, color, background, external }: { item: Item; color?: strin
     return poolClaimTime.start <= now
   }, [poolClaimTime, now])
 
-  return <div onClick={() => { external ? router.push(external) : router.push(`/igo/${item.id}`) }} className={`bg-${background} cursor-pointer w-full flex flex-col font-casual hover:opacity-90`}>
+  return <div onClick={() => { external ? router.push(external) : router.push(`/igo/${item.slug || item.id}`) }} className={`bg-${background} cursor-pointer w-full flex flex-col font-casual hover:opacity-90`}>
     <div className="w-full aspect-[16/9] overflow-hidden bg-black relative">
       <img src={item?.banner} alt="" className="object-cover w-full h-full"></img>
       <div className={`absolute h-6 w-36 xl:w-2/5 inline-flex align-middle items-center -top-[1px] -left-[1px] uppercase text-xs text-left bg-${color} clipped-b-r-full`}>
@@ -61,7 +62,7 @@ const Card = ({ item, color, background, external }: { item: Item; color?: strin
     <div className="px-4 py-4 flex flex-col gap-4">
       <div className="w-full flex justify-between items-center">
         <div className="w-5/6 overflow-hidden text-left text-ellipsis whitespace-nowrap uppercase font-semibold hover:underline xl:text-lg">
-          <div className="w-full overflow-hidden text-ellipsis">{item.title}</div>
+          <Link href={external || `/igo/${item.slug || item.id}`} passHref className="w-full overflow-hidden text-ellipsis"><a>{item.title}</a></Link>
         </div>
       </div>
       <div className="inline-flex gap-5">

@@ -45,16 +45,23 @@ const Progress = ({ poolData, isClaimTime }: { poolData: Item; isClaimTime: any 
       return
     }
 
-    poolContractReadonly.tokenSold().then(x => {
-      setSoldWithContract(x)
-    })
+    if (progress >= 100) {
+      return
+    }
 
-    const interval = setInterval(() => poolContractReadonly.tokenSold().then(x => {
-      setSoldWithContract(x)
-    }), 15000)
+    const interval = setInterval(() => {
+      if (Number(progress) >= 100) {
+        clearInterval(interval)
+        return
+      }
+
+      poolContractReadonly.tokenSold().then(x => {
+        setSoldWithContract(x)
+      })
+    }, 15000)
 
     return () => clearInterval(interval)
-  }, [poolContractReadonly])
+  }, [poolContractReadonly, progress])
 
   return <div className="">
     <h4 className="font-semibold uppercase text-sm text-white/50">Swap Progress</h4>

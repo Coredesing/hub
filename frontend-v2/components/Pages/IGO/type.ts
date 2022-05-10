@@ -1,5 +1,6 @@
 export type Item = {
-  id: number;
+  id: number | string;
+  slug?: string;
   accept_currency: string;
   network_available: string;
   mini_banner: string;

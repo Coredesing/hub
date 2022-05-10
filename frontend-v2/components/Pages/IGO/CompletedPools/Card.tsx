@@ -32,7 +32,7 @@ const Card = ({ item }: {item: Item}) => {
   // }, [fetchParticipants, setParticipants])
 
   return <div className="px-6 py-4 bg-gamefiDark-630/30 clipped-t-r rounded w-full flex items-stretch justify-between gap-6 font-casual">
-    <a href={`/igo/${item.id}`} className="hidden lg:block relative w-24 h-24 bg-black">
+    <a href={`/igo/${item.slug || item.id}`} className="hidden lg:block relative w-24 h-24 bg-black">
       <img src={item.banner} alt="" className="w-full h-full object-cover rounded-sm"></img>
       <div className="w-6 h-6 xl:w-8 xl:h-8 absolute -top-2 -left-2"><Image src={network?.image} alt=""></Image></div>
     </a>
@@ -62,14 +62,14 @@ const Card = ({ item }: {item: Item}) => {
           </svg>
         </a> }
       </div>
-      <a href={`/igo/${item.id}`} className="w-full text-lg font-semibold leading-4 hover:underline flex items-center gap-4">
+      <a href={`/igo/${item.slug || item.id}`} className="w-full text-lg font-semibold leading-4 hover:underline flex items-center gap-4">
         {item.title}
         <div className="inline-flex items-center gap-1 text-[12px] font-mechanic">
           <Image src={poolStatus(item.is_private).icon} width={12} height={12} alt="lock"></Image>
           <span className="tracking-wider uppercase">{poolStatus(item.is_private).title}</span>
         </div>
       </a>
-      <a href={`/igo/${item.id}`} className="w-full 2xl:pr-[200px] xl:pr-[100px] grid grid-cols-2 gap-4 lg:inline-flex justify-between mt-4">
+      <a href={`/igo/${item.slug || item.id}`} className="w-full 2xl:pr-[200px] xl:pr-[100px] grid grid-cols-2 gap-4 lg:inline-flex justify-between mt-4">
         <div className="w-[100px]">
           <div className="text-white/50 uppercase font-semibold text-xs font-mechanic">Total Raise</div>
           <div className="text-sm">

@@ -110,7 +110,7 @@ const List = () => {
       { !loading && items.map(item => {
         return (
           <div className="sm:flex p-4 border-b border-gamefiDark-600" key={item.id}>
-            <Link href={`/ino/${item.id}`} passHref={true}>
+            <Link href={`/ino/${item.slug || item.id}`} passHref={true}>
               <a className="flex sm:flex-row flex-col gap-x-5 sm:gap-x-4 sm:items-center sm:w-2/3 md:w-1/2 lg:w-5/12">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={item.mini_banner} alt={item.title} className="flex-none w-full sm:w-36 md:w-40 aspect-[16/9]" />

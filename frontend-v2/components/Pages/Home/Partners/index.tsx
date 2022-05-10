@@ -157,6 +157,7 @@ const Partners = () => {
           </div>
           <ViewportSlot>
             <div className="flicking-pagination !relative flex items-center justify-center gap-1"></div>
+            <div></div>
           </ViewportSlot>
         </Flicking>
         <div className="hidden sm:block">

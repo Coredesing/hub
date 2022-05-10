@@ -113,11 +113,11 @@ const CardSlim = ({ item, now }: Props) => {
         <span>{poolType}</span>
       </div>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <Link href={`/ino/${item.id}`} passHref>
+      <Link href={`/ino/${item.slug || item.id}`} passHref>
         <img src={item.mini_banner} alt={item.title} className={`${styles.banner} hover:cursor-pointer`} />
       </Link>
       <div className={styles.information}>
-        <Link href={`/ino/${item.id}`} passHref={true}>
+        <Link href={`/ino/${item.slug || item.id}`} passHref={true}>
           <a className={styles.title}>
             {item.title} <span className="w-6 h-6 relative"><Image src={networkImage(item.network_available)} alt={item.network_available} /></span>
           </a>

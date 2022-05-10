@@ -243,6 +243,10 @@ class PoolService {
   }
 
   async getCountPools(filterParams) {
+    if (await RedisUtils.checkExistRedisCountPool()) {
+      return await RedisUtils.getRedisCountPool()
+    }
+
     const now = new Date().getTime() / 1000
 
     const result = await this.buildQueryBuilder(filterParams)
@@ -264,7 +268,10 @@ class PoolService {
           })
       }).count({ total: 'id' })
 
-    return result?.[0]?.total || 0
+    const count = result?.[0]?.total || 0
+    await RedisUtils.createRedisCountPool(count)
+
+    return count
   }
 
   async getMysteriousBoxPoolsV3(filterParams) {

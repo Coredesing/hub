@@ -134,6 +134,11 @@ class HomeController {
         data.name = `Epic War Gamer ticket`
         data.description = `Epic War Gamer ticket`
         break
+      case 'monsterra-ticket':
+        image = NFTDetailUtils.getMonsterraNFTDetail()
+        data.name = `Monsterra Gamer ticket`
+        data.description = `Monsterra Gamer ticket`
+        break
       default:
         return {}
     }

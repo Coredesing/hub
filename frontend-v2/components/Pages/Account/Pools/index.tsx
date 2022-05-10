@@ -154,10 +154,10 @@ const Pools = () => {
 
   const poolHref = useCallback((pool) => {
     if (pool.token_type === TOKEN_TYPE.ERC20) {
-      return `/igo/${pool.id}`
+      return `/igo/${pool.slug || pool.id}`
     }
 
-    return `/ino/${pool.id}`
+    return `/ino/${pool.slug || pool.id}`
   }, [])
 
   const currentClaimPhase = (item: any) => {

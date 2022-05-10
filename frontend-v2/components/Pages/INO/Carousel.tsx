@@ -80,7 +80,7 @@ const CarouselAction = ({ item, now }: { item: Item; now: Date }) => {
     return (
       <>
         <div className="relative mt-2 lg:mt-auto">
-          <Link href={`/ino/${item.id}`} passHref={true}>
+          <Link href={`/ino/${item.slug || item.id}`} passHref={true}>
             <div className={styles.actionBtn}>
               Details <Image src={require('@/assets/images/icons/arrow-right-dark.svg')} alt="right" />
             </div>
@@ -110,7 +110,7 @@ const CarouselAction = ({ item, now }: { item: Item; now: Date }) => {
           <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }}><tspan x="208.344" y="32.176">{formatNumber(duration.seconds)}</tspan></text>
           <text fill="white" xmlSpace="preserve" style={{ whiteSpace: 'pre' }} fontSize="10" fontWeight="600"><tspan x="203.972" y="50.92">SECONDS</tspan></text>
         </svg>
-        <Link href={`/ino/${item.id}`} passHref={true}>
+        <Link href={`/ino/${item.slug || item.id}`} passHref={true}>
           <a className={styles.actionBtn}>Join Now <Image src={require('@/assets/images/icons/arrow-right-dark.svg')} alt="right" /></a>
         </Link>
       </div>
@@ -166,13 +166,13 @@ const _Carousel = ({ items, style, now }: Props) => {
         {items.map(item => {
           return (
             <div key={`ino-${item.id}`} className="sm:px-14 mx-auto grid grid-cols-12 gap-4">
-              <Link href={`/ino/${item.id}`} passHref>
+              <Link href={`/ino/${item.slug || item.id}`} passHref>
                 <div className="col-span-12 md:col-span-7 lg:col-span-8 relative hover:cursor-pointer">
                   <img src={item.banner} alt={item.title} className="clipped-t-r-lg" style={{ aspectRatio: '16 / 9' }} />
                 </div>
               </Link>
               <div className="relative col-span-12 md:col-span-5 lg:col-span-4 w-full px-4 flex flex-col">
-                <Link href={`/ino/${item.id}`} passHref>
+                <Link href={`/ino/${item.slug || item.id}`} passHref>
                   <h3 className={`${styles.title} hover:cursor-pointer hover:underline`}>{item.title} <span className="inline-flex items-center justify-center ml-2"><span className="w-6 h-6 relative"><Image src={networkImage(item.network_available)} alt={item.network_available} layout="fill" objectFit="cover" /></span></span></h3>
                 </Link>
                 <p className={styles.description}>{item.description}</p>

@@ -8,7 +8,7 @@ import Pagination from '@/components/Pages/Aggregator/Pagination'
 import { useEffect, useState } from 'react'
 
 const PER_PAGE = 10
-const Articles = ({ posts, tag, pagination }) => {
+const Articles = ({ posts, pagination }) => {
   const original = pagination.page
   const router = useRouter()
   const [page, setPage] = useState<number>(pagination.page)
@@ -17,12 +17,12 @@ const Articles = ({ posts, tag, pagination }) => {
       return
     }
 
-    router.push(`/insight/tag/${tag}/${page}`)
+    router.push(`/insight/latest/${page}`)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page])
-  return <Layout title={tag ? `GameFi.org - ${tag.toUpperCase()} Insight` : 'GameFi.org - Insight'} description="An integrated information channel providing the latest news on GameFi.org">
+  return <Layout title={'GameFi.org - Latest News'} description="An integrated information channel providing the latest news on GameFi.org">
     <div className="px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-16">
-      <Categories active={tag}></Categories>
+      <Categories active={'latest'}></Categories>
       <div className="flex flex-col sm:flex-row gap-12 mt-10 mb-12">
         <div className="flex-1">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -59,16 +59,9 @@ const Articles = ({ posts, tag, pagination }) => {
 export default Articles
 
 export async function getStaticProps (context) {
-  const tag = context.params.slug?.[0]
-  const page = context.params.slug?.[1] || 1
-  if (!tag) {
-    return {
-      notFound: true,
-      revalidate: 60
-    }
-  }
+  const page = context.params.slug?.[0] || 1
+  const posts = await api.posts.browse({ limit: PER_PAGE, page }).catch(() => {})
 
-  const posts = await api.posts.browse({ filter: `tag:${tag}`, limit: PER_PAGE, page }).catch(() => {})
   if (!posts) {
     return {
       notFound: true,
@@ -78,28 +71,35 @@ export async function getStaticProps (context) {
 
   const { pagination } = posts.meta
   return {
-    props: { posts, tag, pagination },
+    props: { posts, pagination },
     revalidate: 60
   }
 }
 
 export async function getStaticPaths () {
-  const tags = await api.tags.browse({ limit: 'all', filter: 'visibility:public', include: 'count.posts' })
-  const paths = tags.map((tag) => ({
-    params: { slug: [tag.slug] }
-  }))
+  const posts = await api.posts.browse({ limit: PER_PAGE, fields: ['title'] }).catch(() => {})
+  const pages = posts?.meta?.pagination?.pages || 1
+  if (pages === 1) {
+    return {
+      paths: [
+        { slug: [] },
+        { slug: ['1'] }
+      ],
+      fallback: 'blocking'
+    }
+  }
 
-  tags.map(tag => {
-    return Array.from(Array(Math.ceil(tag.count.posts / PER_PAGE)).keys()).map(x => {
-      return [tag.slug, `${x + 1}`]
-    })
-  }).forEach(slugs => {
-    slugs.forEach(slug => {
-      paths.push({
-        params: { slug }
-      })
-    })
+  const paths = Array.from(Array(pages).keys()).map(x => {
+    return {
+      params: { slug: [`${x + 1}`] }
+    }
   })
 
-  return { paths, fallback: 'blocking' }
+  return {
+    paths: [
+      { params: { slug: [] } },
+      ...paths
+    ],
+    fallback: 'blocking'
+  }
 }

@@ -4,11 +4,11 @@ import useTiersOld from './tiersOld'
 import useMarketActivities, { useCollectionsMarket, useDiscoverMarket } from './market-activities'
 import { TIERS, Tier } from '@/utils/tiers'
 import { useMyWeb3 } from '@/components/web3/context'
-import { useWeb3Default, GAFI } from '@/components/web3'
+import { useWeb3Default } from '@/components/web3'
 import ABIStakingPool from '@/components/web3/abis/StakingPool.json'
 import { fetcher } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
-import { Contract, utils } from 'ethers'
+import { Contract } from 'ethers'
 
 const useIgoPool = () => {
   const [poolCount, setPoolCount] = useState(0)
@@ -76,15 +76,14 @@ const useTierMine = (tiers) => {
   }, [library, pool])
 
   const loadMyStaking = useCallback(() => {
-    if (!contractStakingReadonly) {
+    if (!account) {
       setData(null)
       return
     }
 
     setLoading(true)
     return Promise.allSettled([
-      fetcher(`${API_BASE_URL}/user/tier-info?wallet_address=${account}`),
-      contractStakingReadonly.linearStakingData(pool.pool_id, account).then(x => utils.formatUnits(x.balance, GAFI.decimals))
+      fetcher(`${API_BASE_URL}/user/tier-info?wallet_address=${account}`)
     ]).then((results) => {
       setLoading(false)
       if (results[0]?.status !== 'fulfilled') {
@@ -93,22 +92,9 @@ const useTierMine = (tiers) => {
       }
 
       const data = results[0]?.value?.data
-
-      if (results[1]?.status !== 'fulfilled') {
-        setData(data)
-        return
-      }
-
-      if (data?.stakedInfo) {
-        data.stakedInfo.tokenStaked = results[1]?.value
-      }
-
       setData(data)
     })
-  }, [account, setData, pool, contractStakingReadonly])
-  useEffect(() => {
-    loadMyStaking()
-  }, [loadMyStaking])
+  }, [account, setData])
 
   const tierNextTokens = useMemo<number | string>(() => {
     if (!data || !tiers.all || !tier) {
@@ -164,13 +150,6 @@ const AppProvider = (props: any) => {
   const discoverMarket = useDiscoverMarket()
   const collectionsMarket = useCollectionsMarket()
 
-  useEffect(() => {
-    fetcher(`${API_BASE_URL}/staking-pool`).then(pools => {
-      const pool = pools?.data?.find(x => !!x?.rkp_rate)
-      setStakingPool(pool)
-    })
-  }, [setStakingPool])
-
   const [now, setNow] = useState(new Date())
   useEffect(() => {
     const interval = setInterval(() => {
@@ -189,6 +168,7 @@ const AppProvider = (props: any) => {
       tierMineLoading,
       stakingMine,
       stakingPool,
+      setStakingPool,
       loadMyStaking,
       contractStaking,
       contractStakingReadonly,

@@ -27,7 +27,17 @@ const Staking = ({ legendSnapshots, legendCurrent }) => {
     return () => { mounted.current = false }
   }, [])
 
-  const { tierMine, stakingMine, stakingPool, contractStaking, contractStakingReadonly } = useAppContext()
+  const { tierMine, stakingMine, setStakingPool, stakingPool, loadMyStaking, contractStaking, contractStakingReadonly } = useAppContext()
+
+  useEffect(() => {
+    fetcher(`${API_BASE_URL}/staking-pool`).then(pools => {
+      const pool = pools?.data?.find(x => !!x?.rkp_rate)
+      setStakingPool(pool)
+    })
+  }, [setStakingPool])
+  useEffect(() => {
+    loadMyStaking()
+  }, [loadMyStaking])
 
   const [totalStaked, setTotalStaked] = useState<BigNumber | null>(null)
   const totalStakedNumber = useMemo(() => {

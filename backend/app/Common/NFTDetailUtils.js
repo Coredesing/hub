@@ -74,8 +74,13 @@ const getEpicWarNFTDetail = () => {
   return 'https://gamefi-public.s3.amazonaws.com/aggregator/optimized/epic-war/570x460.png'
 }
 
+const getMonsterraNFTDetail = () => {
+  return 'https://gamefi-public.s3.amazonaws.com/aggregator/optimized/monsterra/monsterra_igo.png'
+}
+
 module.exports = {
   getMetagodNFTDetail,
   getKingdomQuestNFTDetail,
   getEpicWarNFTDetail,
+  getMonsterraNFTDetail,
 };

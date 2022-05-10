@@ -35,7 +35,7 @@ class TierService {
   }
 
   formatDataPrivateWinner(data, isPublicWinner) {
-    const formattedData = {
+    return {
       min_buy: isPublicWinner ? data.min_buy : 0,
       max_buy: isPublicWinner ? data.max_buy : 0,
       start_time: isPublicWinner ? data.start_time : 0,
@@ -43,8 +43,7 @@ class TierService {
       level: data.level,
       exist_whitelist: data.exist_whitelist,
       max_bonus: isPublicWinner ? data.max_bonus : 0
-    };
-    return formattedData;
+    }
   }
 }
 

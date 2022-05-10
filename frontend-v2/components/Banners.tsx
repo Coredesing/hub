@@ -14,7 +14,7 @@ const banners = {
   '/': {
     deadline: new Date('2022-05-10T15:00:00Z'),
     img: banner2,
-    link: 'https://www.youtube.com/c/GameFiOfficialChannel',
+    link: 'https://www.youtube.com/watch?v=gbZXeUfXmDA',
     text: 'GameFi.org Panel Discussion'
   }
 }

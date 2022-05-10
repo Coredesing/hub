@@ -55,16 +55,27 @@ const SwapProgress = () => {
       return
     }
 
+    if (progress >= 100) {
+      return
+    }
+
     poolContractReadonly.tokenSold().then(x => {
       setSoldWithContract(x)
     })
 
-    const interval = setInterval(() => poolContractReadonly.tokenSold().then(x => {
-      setSoldWithContract(x)
-    }), 3000)
+    const interval = setInterval(() => {
+      if (Number(progress) >= 100) {
+        clearInterval(interval)
+        return
+      }
+
+      poolContractReadonly.tokenSold().then(x => {
+        setSoldWithContract(x)
+      })
+    }, 3000)
 
     return () => clearInterval(interval)
-  }, [poolContractReadonly])
+  }, [poolContractReadonly, progress])
 
   return <div className="bg-gradient-to-b from-gamefiDark-630/30 via-gamefiDark-630/30 p-4 xl:p-6 2xl:p-7 rounded">
     <h4 className="font-bold uppercase text-lg">Swap Progress </h4>

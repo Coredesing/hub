@@ -281,7 +281,7 @@ const IGODetails = ({ poolData }) => {
 
   const [current, setCurrent] = useState(null)
 
-  const { response: allocationResponse, errorMessage: allocationError } = useFetch(`/pool/${poolData.id}/user/${account}/current-tier`, !poolData)
+  const { response: allocationResponse, errorMessage: allocationError } = useFetch(`/pool/${poolData.id}/user/${account}/current-tier`, !poolData || !account)
   const allocation = useMemo(() => {
     return allocationResponse?.data
   }, [allocationResponse?.data])

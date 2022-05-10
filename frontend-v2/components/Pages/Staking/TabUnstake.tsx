@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, ChangeEvent } from 'react'
-import { safeToFixed } from '@/utils'
+import { gtagEvent, safeToFixed } from '@/utils'
 import { useWeb3Default, switchNetwork, GAFI } from '@/components/web3'
 import { utils } from 'ethers'
 import { useMyWeb3 } from '@/components/web3/context'
@@ -151,8 +151,19 @@ export default function TabUnstake ({ loadMyPending, pendingWithdrawal, goStake 
       return
     }
 
+    if (step === 2) {
+      gtagEvent('unstaking_step2')
+    }
+
+    if (step === 3) {
+      gtagEvent('unstaking_step3', {
+        value: amount || 0,
+        virtual_currency_name: GAFI.symbol
+      })
+    }
+
     setStep(step)
-  }, [setStep, stepOK1, stepOK2, stepOK3])
+  }, [setStep, stepOK1, stepOK2, stepOK3, amount])
 
   const confirmOrNext = useCallback(() => {
     if (confirmed) {
@@ -170,11 +181,19 @@ export default function TabUnstake ({ loadMyPending, pendingWithdrawal, goStake 
 
     (async function () {
       try {
+        gtagEvent('unstaking_unstake', {
+          value: amount || 0,
+          virtual_currency_name: GAFI.symbol
+        })
         setConfirming(true)
         await contractStaking.linearWithdraw(stakingPool?.pool_id, utils.parseUnits(amount, GAFI.decimals))
           .then(tx => {
             setTx(tx.hash)
             return tx.wait(1).then(() => {
+              gtagEvent('unstaking_unstaked', {
+                value: amount || 0,
+                virtual_currency_name: GAFI.symbol
+              })
               loadMyStaking()
               loadMyPending()
               setConfirmed(true)
@@ -183,6 +202,11 @@ export default function TabUnstake ({ loadMyPending, pendingWithdrawal, goStake 
             })
           })
           .catch(err => {
+            gtagEvent('unstaking_error', {
+              value: amount || 0,
+              virtual_currency_name: GAFI.symbol,
+              code: err.code || 0
+            })
             if (err.code === 4001) {
               toast.error('User Denied Transaction')
               return
@@ -206,6 +230,7 @@ export default function TabUnstake ({ loadMyPending, pendingWithdrawal, goStake 
     setConfirmed(false)
     setAmount('')
     setStep(2)
+    gtagEvent('unstaking_step2')
   }, [setTx, setConfirmed, setAmount, setStep])
 
   useEffect(() => {

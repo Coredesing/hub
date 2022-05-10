@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import Layout from '@/components/Layout'
 import imgNA from '@/assets/images/ranks/na.png'
 import { API_BASE_URL } from '@/utils/constants'
-import { fetcher, printNumber, safeToFixed, shortenAddress } from '@/utils'
+import { fetcher, gtagEvent, printNumber, safeToFixed, shortenAddress } from '@/utils'
 import ABIERC20 from '@/components/web3/abis/ERC20.json'
 import { useWeb3Default, GAFI } from '@/components/web3'
 import { Contract, BigNumber, utils } from 'ethers'
@@ -127,14 +127,32 @@ const Staking = ({ legendSnapshots, legendCurrent }) => {
     loadMyPending()
   }, [loadMyPending])
 
-  const [tab, setTab] = useState(0)
   const router = useRouter()
+  const [tab, setTab] = useState(null)
   useEffect(() => {
+    if (tab === 0) {
+      gtagEvent('staking')
+    }
+
+    if (tab === 1) {
+      gtagEvent('unstaking')
+    }
+
+    if (tab === 2) {
+      gtagEvent('ranking')
+    }
+  }, [tab])
+  useEffect(() => {
+    if (!router.isReady) {
+      return
+    }
+
     if (router.query.u !== undefined) {
       setTab(1)
+      return
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    setTab(0)
+  }, [router.isReady, router.query])
 
   const [rankingSelected, setRankingSelected] = useState()
   const [isLive, setIsLive] = useState(null)

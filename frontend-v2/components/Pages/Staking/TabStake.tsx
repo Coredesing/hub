@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, ChangeEvent } from 'react'
-import { safeToFixed, shorten } from '@/utils'
+import { gtagEvent, safeToFixed, shorten } from '@/utils'
 import { useWeb3Default, switchNetwork, GAFI, BUSD_BSC } from '@/components/web3'
 import { utils, constants } from 'ethers'
 import { useMyWeb3 } from '@/components/web3/context'
@@ -96,9 +96,11 @@ export default function TabStake ({ loadMyPending, pendingWithdrawal }) {
     }
   }, [allowance, amount])
   const approveAndReload = useCallback((amount) => {
+    gtagEvent('staking_approve')
     approve(amount)
       .then(ok => {
         if (ok) {
+          gtagEvent('staking_approved')
           toast.success('Successfully Approved Your $GAFI')
         }
       })
@@ -166,8 +168,26 @@ export default function TabStake ({ loadMyPending, pendingWithdrawal }) {
       return
     }
 
+    if (step === 2) {
+      gtagEvent('staking_step2')
+    }
+
+    if (step === 3) {
+      gtagEvent('staking_step3', {
+        value: amount || 0,
+        virtual_currency_name: GAFI.symbol
+      })
+    }
+
+    if (step === 4) {
+      gtagEvent('staking_step4', {
+        value: amount || 0,
+        virtual_currency_name: GAFI.symbol
+      })
+    }
+
     setStep(step)
-  }, [setStep, stepOK1, stepOK2, stepOK3, stepOK4])
+  }, [setStep, stepOK1, stepOK2, stepOK3, stepOK4, amount])
 
   const approveOrNext = useCallback(() => {
     if (loadingAllowance || loadingApproval) {
@@ -198,11 +218,19 @@ export default function TabStake ({ loadMyPending, pendingWithdrawal }) {
     (async function () {
       try {
         setConfirming(true)
+        gtagEvent('staking_stake', {
+          value: amount || 0,
+          virtual_currency_name: GAFI.symbol
+        })
         await contractStaking.linearDeposit(stakingPool.pool_id, utils.parseUnits(amount, GAFI.decimals))
           .then(tx => {
             tx.wait(2).then()
             setTx(tx.hash)
             return tx.wait(1).then(() => {
+              gtagEvent('staking_staked', {
+                value: amount || 0,
+                virtual_currency_name: GAFI.symbol
+              })
               setConfirmed(true)
               setStep(5)
               loadMyStaking()
@@ -211,6 +239,11 @@ export default function TabStake ({ loadMyPending, pendingWithdrawal }) {
             })
           })
           .catch(err => {
+            gtagEvent('staking_error', {
+              value: amount || 0,
+              virtual_currency_name: GAFI.symbol,
+              code: err.code || 0
+            })
             if (err.code === 4001) {
               toast.error('User Denied Transaction')
               return
@@ -234,6 +267,7 @@ export default function TabStake ({ loadMyPending, pendingWithdrawal }) {
     setConfirmed(false)
     setAmount('')
     setStep(2)
+    gtagEvent('staking_step2')
   }, [setTx, setConfirmed, setAmount, setStep])
 
   useEffect(() => {

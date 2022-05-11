@@ -132,9 +132,9 @@ const IGO = () => {
                 </div>
                 <div className="mt-4 w-full lg:hidden">
                   <Flicking circular={true} className="w-full" align="center" ref={refTicket} interruptable={true}>
-                    <div className="w-3/4 px-2">
-                      {upcomingTicketPools?.length > 0 && upcomingTicketPools.map(ticketPool => <Card key={`ticket-${ticketPool.id}`} external={`/ticket/${ticketPool.id}`} item={ticketPool} color="gamefiDark" background="black"></Card>)}
-                    </div>
+                    {upcomingTicketPools?.length > 0 && upcomingTicketPools.map(ticketPool => <div key={`ticket-${ticketPool.id}`} className="w-3/4 px-2">
+                      <Card external={`/ticket/${ticketPool.id}`} item={ticketPool} color="gamefiDark" background="black"></Card>
+                    </div>)}
                   </Flicking>
                 </div>
               </div>

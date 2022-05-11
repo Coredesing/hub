@@ -46,10 +46,15 @@ class UserService {
   }
 
   buildSearchQuery(query, searchQuery) {
-    return query.where((q) => {
-      q.where('email', 'like', `%${searchQuery}%`)
-        .orWhere('wallet_address', 'like', `%${searchQuery}%`);
-    })
+    if (!query) {
+      query = UserModel.query()
+    }
+
+    if (searchQuery) {
+      query = query.where((q) => { q.where('email', 'like', `%${searchQuery}%`).orWhere('wallet_address', 'like', `%${searchQuery}%`) })
+    }
+
+    return query
   }
 
   async findUser(params) {

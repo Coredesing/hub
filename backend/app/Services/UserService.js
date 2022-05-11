@@ -37,10 +37,9 @@ class UserService {
     if (params.confirmation_token) {
       builder = builder.where('confirmation_token', params.confirmation_token);
     }
+
     if (params.status !== undefined) {
       builder = builder.where('status', params.status);
-    } else {
-      builder = builder.where('status', Const.USER_STATUS.ACTIVE);
     }
     return builder;
   }

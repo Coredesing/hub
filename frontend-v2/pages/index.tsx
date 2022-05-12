@@ -55,7 +55,7 @@ const PageIndex = () => {
         {/* <NFTList></NFTList> */}
         <Partners></Partners>
       </div>
-      <Performance></Performance>
+      {/* <Performance></Performance> */}
     </Layout>
   )
 }

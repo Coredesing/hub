@@ -310,7 +310,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       } else if (startBuyTime > currentTime) {
         timeLinesInfo[!neededApplyWl ? 1 : 2].current = true
         if (timeLine.freeBuyTime) {
-          setCountdown({ date1: startBuyTime, date2: currentTime, title: 'Sale Phase 1 Starts In', isUpcomingSale: true, isMultiPhase: true })
+          setCountdown({ date1: startBuyTime, date2: currentTime, title: poolInfo.process === 'only-buy' ? 'Buying Phase Starts In' : 'Sale Phase 1 Starts In', isUpcomingSale: true, isMultiPhase: true })
         } else {
           setCountdown({ date1: startBuyTime, date2: currentTime, title: 'Sale Starts In', isUpcomingSale: true })
         }
@@ -320,7 +320,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       } else if (timeLine.finishTime > currentTime) {
         if (timeLine.freeBuyTime) {
           timeLinesInfo[!neededApplyWl ? 3 : 4].current = true
-          setCountdown({ date1: timeLine.finishTime, date2: currentTime, title: 'Phase 2 Ends In', isSale: true, isPhase2: true })
+          setCountdown({ date1: timeLine.finishTime, date2: currentTime, title: poolInfo.process === 'only-buy' ? 'Buying Phase Ends In' : 'Phase 2 Ends In', isSale: true, isPhase2: true })
         } else {
           timeLinesInfo[!neededApplyWl ? 2 : 3].current = true
           setCountdown({ date1: timeLine.finishTime, date2: currentTime, title: 'Sale Ends In', isSale: true, isPhase1: true })
@@ -978,7 +978,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             <RuleIntroduce poolInfo={poolInfo} />
           </TabPanel>
           <TabPanel value={currentTab} index={1}>
-            <BoxInformation boxes={boxTypes} />
+            <BoxInformation boxes={boxTypes} poolInfo={poolInfo} />
           </TabPanel>
           {
             poolInfo.process !== 'only-buy' && <TabPanel value={currentTab} index={2}>

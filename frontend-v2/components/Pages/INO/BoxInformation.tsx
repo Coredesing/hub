@@ -6,9 +6,10 @@ import { printNumber } from '@/utils'
 
 type Props = {
   boxes: any[];
+  poolInfo: any;
 }
 
-const BoxInformation = ({ boxes }: Props) => {
+const BoxInformation = ({ boxes, poolInfo }: Props) => {
   const [idSelected, setIdSelected] = useState(0)
   const [openModal, setOpenModal] = useState(false)
   const onShowBoxModal = (id: number) => {
@@ -35,9 +36,9 @@ const BoxInformation = ({ boxes }: Props) => {
           <TableCellHead>
             <span className='text-sm'>Total Sale</span>
           </TableCellHead>
-          <TableCellHead>
+          {poolInfo.process !== 'only-buy' && <TableCellHead>
             <span className='text-sm'>Remaining</span>
-          </TableCellHead>
+          </TableCellHead>}
           {
             boxes?.[0]?.description && <TableCellHead>
               <span className='text-sm'>Description</span>
@@ -57,9 +58,11 @@ const BoxInformation = ({ boxes }: Props) => {
             <TableCell>
               {printNumber(b.maxSupply || b.limit)}
             </TableCell>
-            <TableCell>
-              {printNumber((+(b.maxSupply || b.limit) - (+b.totalSold || 0)) ?? (b.maxSupply || b.limit))}
-            </TableCell>
+            {
+              poolInfo.process !== 'only-buy' && <TableCell>
+                {printNumber((+(b.maxSupply || b.limit) - (+b.totalSold || 0)) ?? (b.maxSupply || b.limit))}
+              </TableCell>
+            }
             {
               boxes?.[0]?.description && <TableCell>
                 <div style={{ maxWidth: '500px' }}>

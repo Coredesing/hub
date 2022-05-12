@@ -75,7 +75,7 @@ const getEpicWarNFTDetail = () => {
 }
 
 const getMonsterraNFTDetail = () => {
-  return 'https://gamefi-public.s3.amazonaws.com/aggregator/optimized/monsterra/monsterra_igo.png'
+  return 'https://gamefi-public.s3.amazonaws.com/aggregator/optimized/monsterra/ticket.png'
 }
 
 module.exports = {

@@ -800,14 +800,10 @@ class UserController {
       const page = params.page || 1;
 
       const userService = new UserService();
-      let userQuery = userService.buildQueryBuilder(params);
-      if (searchQuery) {
-        userQuery = userService.buildSearchQuery(userQuery, searchQuery);
-      }
+      let userQuery = userService.buildSearchQuery(null, searchQuery)
       const admins = await userQuery.orderBy('id', 'DESC').paginate(page, limit);
       return HelperUtils.responseSuccess(admins);
     } catch (e) {
-      console.log(e);
       return HelperUtils.responseErrorInternal('ERROR: get user list fail !');
     }
   }

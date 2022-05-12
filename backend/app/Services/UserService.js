@@ -37,19 +37,23 @@ class UserService {
     if (params.confirmation_token) {
       builder = builder.where('confirmation_token', params.confirmation_token);
     }
+
     if (params.status !== undefined) {
       builder = builder.where('status', params.status);
-    } else {
-      builder = builder.where('status', Const.USER_STATUS.ACTIVE);
     }
     return builder;
   }
 
   buildSearchQuery(query, searchQuery) {
-    return query.where((q) => {
-      q.where('email', 'like', `%${searchQuery}%`)
-        .orWhere('wallet_address', 'like', `%${searchQuery}%`);
-    })
+    if (!query) {
+      query = UserModel.query()
+    }
+
+    if (searchQuery) {
+      query = query.where((q) => { q.where('email', 'like', `%${searchQuery}%`).orWhere('wallet_address', 'like', `%${searchQuery}%`) })
+    }
+
+    return query
   }
 
   async findUser(params) {

@@ -859,6 +859,8 @@ class UserController {
       }
 
       const updateInputs = inputs;
+      // force all user has status 1
+      updateInputs.status = 1
       if (password) {
         updateInputs.password = await Hash.make(password);
       }

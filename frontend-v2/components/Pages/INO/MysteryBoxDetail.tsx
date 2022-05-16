@@ -947,7 +947,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
                 className="w-full mt-4 uppercase text-black rounded-sm clipped-t-r flex items-center justify-center bg-gamefiGreen font-semibold cursor-pointer">
                   Play
               </a>
-              : <Tippy content={<div className="">You need to buy <b>1 Ticket</b> to get allocation after playing the game</div>}>
+              : <Tippy content={<div className="">You need to buy <b>1 Ticket</b> and play the game to get the allocation</div>}>
                 <div className="w-full px-6 py-4 mt-4 uppercase bg-gamefiDark-600 rounded-sm clipped-t-r flex items-center justify-center text-gamefiDark-200 font-semibold cursor-not-allowed">Play</div>
               </Tippy>)
           }

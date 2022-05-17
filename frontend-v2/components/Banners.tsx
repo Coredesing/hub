@@ -6,7 +6,7 @@ import banner2 from '@/assets/images/banner2.png'
 
 const banners = {
   default: {
-    deadline: new Date('2022-05-13T00:00:00Z'),
+    deadline: new Date('2022-05-30T00:00:00Z'),
     img: banner,
     link: 'https://gamefi.org/igo/131',
     text: 'Epic War IGO'

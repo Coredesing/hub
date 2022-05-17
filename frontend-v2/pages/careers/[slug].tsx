@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { jobs } from './index'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
+import Script from 'next/script'
 
 const Career = ({ data }) => {
   const router = useRouter()
@@ -19,6 +20,28 @@ const Career = ({ data }) => {
   }
 
   return (<Layout title={data.title ? `GameFi.org - ${data.title}` : 'GameFi.org - Careers'}>
+    <div id="fb-root"></div>
+    <Script id="twitter-share">
+      {`
+          window.twttr = (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0],
+              t = window.twttr || {};
+            if (d.getElementById(id)) return t;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "https://platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js, fjs);
+
+            t._e = [];
+            t.ready = function(f) {
+              t._e.push(f);
+            };
+
+            return t;
+          }(document, "script", "twitter-wjs"));
+        `}
+    </Script>
+    <Script async defer crossOrigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v13.0" nonce="FBK6mkSr" id="facebook-share"></Script>
     <div className="px-4 lg:px-16 mx-auto lg:block pb-12 max-w-4xl">
       <Link href="/careers" passHref={true}>
         <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">

@@ -2,7 +2,7 @@ import React from 'react'
 import clsx from 'clsx'
 import { ObjectType } from '@/utils/types'
 import styles from './BoxTypeItem.module.scss'
-import { printNumber } from '@/utils'
+// import { printNumber } from '@/utils'
 type Props = {
   onClick?: (value: any) => any;
   selected?: boolean;

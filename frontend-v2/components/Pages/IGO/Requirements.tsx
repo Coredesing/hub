@@ -360,7 +360,7 @@ const Requirements = () => {
     </div>
 
     <Modal show={showModal} toggle={setShowModal} onClose={() => { setSignature('') }} className='dark:bg-transparent fixed z-50 sm:!max-w-3xl'>
-      <div className="bg-gamefiDark-700 pt-4">
+      <div className="bg-gamefiDark-700">
         <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full">
           <strong className="uppercase text-2xl font-mechanic">Welcome to {poolData?.title || ''} on GameFi.org</strong>
           <p className="mt-6 text-sm">In order to participate in the IGO, you must fulfill requirements as below.</p>

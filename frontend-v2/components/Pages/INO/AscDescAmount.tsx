@@ -1,7 +1,7 @@
 import { ObjectType } from '@/utils/types'
 import clsx from 'clsx'
 import { FormInputNumber } from '@/components/Base/FormInputNumber'
-import React, { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { BeatLoader } from 'react-spinners'
 import styles from './AscDescAmount.module.scss'
 type Props = {

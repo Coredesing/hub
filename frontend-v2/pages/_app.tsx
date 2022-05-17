@@ -71,16 +71,15 @@ function MyApp ({ Component, pageProps }: AppProps) {
       <Web3ReactProvider getLibrary={getLibrary}>
         <Web3ProviderNetwork getLibrary={getLibrary}>
           <MyWeb3Provider>
-            <AppProvider>
-              <WalletProvider>
+            <WalletProvider>
+              <AppProvider>
                 <Component {...pageProps} />
-              </WalletProvider>
-              <Toaster
-                position="top-right"
-              />
-              <LoadingOverlay loading={loading}></LoadingOverlay>
-            </AppProvider>
-
+                <Toaster
+                  position="top-right"
+                />
+                <LoadingOverlay loading={loading}></LoadingOverlay>
+              </AppProvider>
+            </WalletProvider>
           </MyWeb3Provider>
         </Web3ProviderNetwork>
       </Web3ReactProvider>

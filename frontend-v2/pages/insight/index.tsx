@@ -357,7 +357,7 @@ export const Right = ({ tags }: { tags?: { link: string; image: any; count: any;
     </div>
 
     { ad && <a className="block w-full text-center mt-10" href={ad.link} target="_blank" rel="noreferrer">
-      <img src={ad.image?.default?.src} alt="" className="rounded max-w-full block mx-auto" />
+      <img src={ad.image?.default?.src} alt="" className="rounded max-w-full block mx-auto" width={ad.image?.default?.width} height={ad.image?.default?.height} />
     </a> }
 
     { tags && <div className="relative mt-14">

@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/require-await */
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('path')
 
-module.exports = {
+let config = {
   distDir: process.env.BUILD_DIR || '.next',
+  swcMinify: true,
   eslint: {
     ignoreDuringBuilds: true,
     dirs: ['pages', 'components', 'utils', 'hooks', 'context']
@@ -33,7 +34,7 @@ module.exports = {
       }
     ]
   },
-  webpack: (config, options) => {
+  webpack: (config) => {
     config.module.rules.push({
       test: /\.glsl/,
       type: 'asset/source'
@@ -41,3 +42,13 @@ module.exports = {
     return config
   }
 }
+
+if (process.env.ANALYZE === 'true') {
+  const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true'
+  })
+
+  config = withBundleAnalyzer(config)
+}
+
+module.exports = config

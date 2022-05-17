@@ -16,7 +16,7 @@ import RuleIntroduce from './RuleIntroduce'
 import SerieContent from './SerieContent'
 import { useMyWeb3 } from '@/components/web3/context'
 import { useLibraryDefaultFlexible, useMyBalance, useTokenAllowance, useTokenApproval } from '@/components/web3/utils'
-import { fetcher, useFetch } from '@/utils'
+import { fetcher } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 import { useCheckJoinPool, useJoinPool } from '@/hooks/useJoinPool'
 import Alert from '@/components/Base/Alert'
@@ -37,7 +37,7 @@ import Link from 'next/link'
 import { getNetworkByAlias } from '@/components/web3'
 import Collection from './Collection'
 import { getTierById } from '@/utils/tiers'
-import Progress from './Progress'
+// import Progress from './Progress'
 import Modal from '@/components/Base/Modal'
 import Tippy from '@tippyjs/react'
 
@@ -80,6 +80,10 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const { joinPool, loading: loadingJPool, success: isJoinSuccess } = useJoinPool(poolInfo?.id, account, formData.email)
 
   useEffect(() => {
+    if (!poolInfo.id) {
+      return
+    }
+
     const fetchSubmission = async () => {
       try {
         const submission = await fetcher(`${API_BASE_URL}/user/whitelist-apply/previous?wallet_address=${account}&campaign_id=${poolInfo.id}`)
@@ -91,7 +95,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     if (isJoinPool) {
       fetchSubmission()
     }
-  }, [isJoinPool, account])
+  }, [isJoinPool, account, poolInfo.id, setEmail])
 
   const handleJoinPool = useCallback(async () => {
     if (!formData.email) {
@@ -453,6 +457,9 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
 
   useEffect(() => {
     if (callWithExternalApi) {
+      if (!account || !poolInfo.token) {
+        return
+      }
       fetcher(`${API_BASE_URL}/pool/owner/${poolInfo.token}?wallet=${account}`)
         .then((result) => {
           const arr = result.data.data?.data || []
@@ -461,7 +468,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     } else {
       setFilterCollection(f => ({ ...f, totalRecords: +ownedBox || 0, totalPage: Math.ceil((+ownedBox || 0) / f.perPage) }))
     }
-  }, [isCallDefaultCollection, callWithExternalApi, ownedBox])
+  }, [isCallDefaultCollection, callWithExternalApi, ownedBox, poolInfo.token, account])
 
   useEffect(() => {
     if (!account || !erc721Contract || !presaleContract || !filterCollection.totalRecords) {
@@ -569,7 +576,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       setLoadingCollection(false)
     }
     getTokenInfo().catch()
-  }, [filterCollection, isCallDefaultCollection, callWithExternalApi, erc721Contract, presaleContract, account])
+  }, [filterCollection, isCallDefaultCollection, callWithExternalApi, erc721Contract, presaleContract, account, boxTypes])
 
   // const handleSetCollections = useCallback(async (ownedBox: number) => {
   //   if (!presaleContract) return
@@ -1004,7 +1011,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
           </TabPanel>
         </div>
         <Modal show={showApplyWhitelist} toggle={setShowApplyWhitelist} className='dark:bg-transparent fixed z-50 sm:!max-w-3xl'>
-          <div className="bg-gamefiDark-700 pt-4">
+          <div className="bg-gamefiDark-700">
             <div className="p-4 xl:p-6 2xl:p-7 pt-11 font-casual w-full">
               <strong className="uppercase text-2xl font-mechanic">Welcome to {poolInfo?.title || ''} on GameFi.org</strong>
               <p className="mt-6 text-sm">In order to participate in the IGO, you must fulfill requirements as below.</p>

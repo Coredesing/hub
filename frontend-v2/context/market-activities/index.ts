@@ -9,8 +9,7 @@ import { fetcher, isDifferentObj } from '@/utils'
 import { API_BASE_URL } from '@/utils/constants'
 import { ObjectType } from '@/utils/types'
 import { getNftInfo } from '@/components/Pages/Market/utils'
-import Web3 from 'web3'
-const web3 = new Web3(Web3.givenProvider)
+import { useWeb3Default } from '@/components/web3'
 
 type MarketDetailFilter = {
   limit?: number;
@@ -106,6 +105,7 @@ const useMarketActivities = () => {
 }
 
 export const useDiscoverMarket = () => {
+  const { library: libraryDefault } = useWeb3Default()
   const initState = {
     data: null,
     loading: false,
@@ -166,7 +166,7 @@ export const useDiscoverMarket = () => {
         return setData
       }
       if (isGetInfoFromContract) {
-        const provider = await getLibraryDefaultFlexible(web3.currentProvider, 'bsc')
+        const provider = await getLibraryDefaultFlexible(libraryDefault, 'bsc')
         // const list = []
         if (!listData.length) {
           dispatch({
@@ -210,7 +210,7 @@ export const useDiscoverMarket = () => {
       console.debug('error', error)
       dispatch({ type: discoverMarketActions.FAILURE, payload: error })
     }
-  }, [state])
+  }, [state, libraryDefault])
 
   return {
     state,
@@ -221,6 +221,7 @@ export const useDiscoverMarket = () => {
 }
 
 export const useCollectionsMarket = () => {
+  const { library: libraryDefault } = useWeb3Default()
   const initState = {
     data: null,
     loading: false,
@@ -286,7 +287,7 @@ export const useCollectionsMarket = () => {
       }
 
       if (isGetInfoFromContract) {
-        const provider = await getLibraryDefaultFlexible(web3.currentProvider, 'bsc')
+        const provider = await getLibraryDefaultFlexible(libraryDefault, 'bsc')
         // const list = []
 
         if (!listData.length) {
@@ -331,7 +332,7 @@ export const useCollectionsMarket = () => {
       console.debug('error', error)
       dispatch({ type: collectionMarketActions.FAILURE, payload: error })
     }
-  }, [state])
+  }, [state, libraryDefault])
 
   return {
     state,

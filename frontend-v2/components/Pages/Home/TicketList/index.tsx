@@ -16,7 +16,6 @@ const TicketList = () => {
 
   const listUpcoming = useMemo<any[]>(() => {
     const origin = response1 && response2 ? [response1?.data, response2?.data] : []
-    console.log(origin)
     return origin
     // let remain = origin
     // const tba = origin.filter(item => !item.start_join_pool_time)

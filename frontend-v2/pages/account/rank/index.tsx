@@ -4,10 +4,11 @@ import imgNA from '@/assets/images/ranks/na.png'
 import AccountLayout from '@/components/Pages/Account/AccountLayout'
 import Image from 'next/image'
 import Link from 'next/link'
-import { safeToFixed } from '@/utils'
+import { fetcher, safeToFixed } from '@/utils'
 import { useAppContext } from '@/context'
 import { useMyWeb3 } from '@/components/web3/context'
 import Ranks from '@/components/Pages/Staking/Ranks'
+import { API_BASE_URL } from '@/utils/constants'
 
 const RankPage = () => {
   const mounted = useRef(false)
@@ -16,7 +17,22 @@ const RankPage = () => {
     return () => { mounted.current = false }
   }, [])
 
-  const { tierMine, stakingMine } = useAppContext()
+  const { tierMine, stakingMine, setStakingPool, stakingPool, loadMyStaking } = useAppContext()
+  useEffect(() => {
+    loadMyStaking()
+  }, [loadMyStaking])
+
+  useEffect(() => {
+    if (stakingPool) {
+      return
+    }
+
+    fetcher(`${API_BASE_URL}/staking-pool`).then(pools => {
+      const pool = pools?.data?.find(x => !!x?.rkp_rate)
+      setStakingPool(pool)
+    })
+  }, [stakingPool, setStakingPool])
+
   const { account } = useMyWeb3()
 
   return (

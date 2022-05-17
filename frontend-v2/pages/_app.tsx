@@ -19,6 +19,20 @@ const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
 const AW_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
 
 function MyApp ({ Component, pageProps }: AppProps) {
+  // migration signature from localStorage to sessionStorage
+  // this is temporary
+
+  useEffect(() => {
+    if (window?.localStorage) {
+      const keys = Object.keys(window.localStorage)
+      keys.forEach(key => {
+        if (key.match(/SIGNATURE_0x(\w+)/)) {
+          window.localStorage.removeItem(key)
+        }
+      })
+    }
+  }, [])
+
   const router = useRouter()
 
   const [loading, setLoading] = useState(false)

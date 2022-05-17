@@ -17,8 +17,8 @@ const useWalletSignature = () => {
 
       const key = `SIGNATURE_${account}`
 
-      if (window.localStorage) {
-        const sig = window.localStorage.getItem(key)
+      if (window?.sessionStorage) {
+        const sig = window.sessionStorage.getItem(key)
         if (sig) {
           const addr = utils.verifyMessage(MESSAGE_SIGNATURE, sig)
           if (addr.toLowerCase() === account.toLowerCase()) {
@@ -29,8 +29,8 @@ const useWalletSignature = () => {
       }
 
       library.getSigner().signMessage(MESSAGE_SIGNATURE).then(sig => {
-        if (window.localStorage) {
-          window.localStorage.setItem(key, sig)
+        if (window?.sessionStorage) {
+          window.sessionStorage.setItem(key, sig)
         }
         resolve(sig)
       }).catch(error => {

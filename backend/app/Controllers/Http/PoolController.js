@@ -301,17 +301,20 @@ class PoolController {
       });
 
       // Delete cache
-      RedisUtils.deleteRedisPoolDetail(campaignId);
-      RedisUtils.deleteRedisTierList(campaignId);
-
-      if (inputParams.token_type === 'box') {
-        RedisMysteriousBoxUtils.deleteAllRedisMysteriousBoxes();
+      RedisUtils.deleteRedisPoolDetail(campaignId)
+      RedisUtils.deleteRedisTierList(campaignId)
+      if (data && data.slug) {
+        RedisUtils.deleteRedisPoolDetail(data.slug)
+        RedisUtils.deleteRedisTierList(data.slug)
       }
 
-      return HelperUtils.responseSuccess(campaign);
+      if (inputParams.token_type === 'box') {
+        RedisMysteriousBoxUtils.deleteAllRedisMysteriousBoxes()
+      }
+
+      return HelperUtils.responseSuccess(campaign)
     } catch (e) {
-      console.log('[PoolController::updatePool] - ERROR: ', e);
-      return HelperUtils.responseErrorInternal();
+      return HelperUtils.responseErrorInternal()
     } finally {
       // Clear cache
       RedisUtils.deleteAllRedisUpcomingPools([1, 2])
@@ -325,7 +328,6 @@ class PoolController {
       'campaign_hash', 'token_symbol', 'token_name', 'token_decimals', 'token_address',
     ]);
 
-    console.log('Update Deploy Success with data: ', inputParams);
     const campaignId = params.campaignId;
     try {
       const campaign = await CampaignModel.query().where('id', campaignId).first();
@@ -340,7 +342,6 @@ class PoolController {
       campaign.decimals = inputParams.token_decimals;
       campaign.save();
 
-      console.log('[updateDeploySuccess] - CAMPAIGN: ', campaign);
       // const camp = await CampaignModel.query().where('id', campaignId).update({
       //   is_deploy: true,
       //   campaign_hash: inputParams.campaign_hash,
@@ -351,12 +352,14 @@ class PoolController {
       // });
 
       // Delete cache
-      RedisUtils.deleteRedisPoolDetail(campaignId);
+      RedisUtils.deleteRedisPoolDetail(campaignId)
+      if (campaign && campaign.slug) {
+        RedisUtils.deleteRedisPoolDetail(campaign.slug)
+      }
 
-      return HelperUtils.responseSuccess(campaign);
+      return HelperUtils.responseSuccess(campaign)
     } catch (e) {
-      console.log(e)
-      return HelperUtils.responseErrorInternal();
+      return HelperUtils.responseErrorInternal()
     }
   }
 
@@ -365,7 +368,6 @@ class PoolController {
       'is_display'
     ]);
 
-    console.log('Update Change Display with data: ', inputParams);
     const campaignId = params.campaignId;
     try {
       const campaign = await CampaignModel.query().where('id', campaignId).first();
@@ -377,12 +379,14 @@ class PoolController {
       });
 
       // Delete cache
-      RedisUtils.deleteRedisPoolDetail(campaignId);
+      RedisUtils.deleteRedisPoolDetail(campaignId)
+      if (campaign && campaign.slug) {
+        RedisUtils.deleteRedisPoolDetail(campaign.slug)
+      }
 
-      return HelperUtils.responseSuccess();
+      return HelperUtils.responseSuccess()
     } catch (e) {
-      console.log(e)
-      return HelperUtils.responseErrorInternal();
+      return HelperUtils.responseErrorInternal()
     }
   }
 
@@ -391,7 +395,6 @@ class PoolController {
       'public_winner_status'
     ]);
 
-    console.log('[changePublicWinnerStatus] - Update Public Winner Status with data: ', inputParams);
     const campaignId = params.campaignId;
 
     try {
@@ -403,15 +406,15 @@ class PoolController {
         public_winner_status: inputParams.public_winner_status,
       });
 
-      console.log('[changePublicWinnerStatus] - Update Success campaign ID: ', res);
-
       // Delete cache
-      RedisUtils.deleteRedisPoolDetail(campaignId);
+      RedisUtils.deleteRedisPoolDetail(campaignId)
+      if (campaign && campaign.slug) {
+        RedisUtils.deleteRedisPoolDetail(campaign.slug)
+      }
 
-      return HelperUtils.responseSuccess();
+      return HelperUtils.responseSuccess()
     } catch (e) {
-      console.log(e)
-      return HelperUtils.responseErrorInternal();
+      return HelperUtils.responseErrorInternal()
     }
   }
 

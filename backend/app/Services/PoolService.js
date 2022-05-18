@@ -776,9 +776,12 @@ class PoolService {
       }
     } catch (e) {
       if (pool && pool.id) {
-        await RedisUtils.deleteRedisPoolDetail(pool.id);
+        RedisUtils.deleteRedisPoolDetail(pool.id)
       }
-      console.log('[PoolService::updatePoolInformation] - ERROR: ', e);
+      if (pool && pool.slug) {
+        RedisUtils.deleteRedisPoolDetail(pool.slug)
+      }
+      console.log('[PoolService::updatePoolInformation] - ERROR: ', e)
     } finally {
       // Clear cache
       RedisUtils.deleteAllRedisUpcomingPools([1, 2])

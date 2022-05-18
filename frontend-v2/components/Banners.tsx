@@ -12,10 +12,16 @@ const banners = {
     text: 'Epic War IGO'
   },
   '/': {
-    deadline: new Date('2022-05-10T15:00:00Z'),
+    deadline: new Date('2022-05-21T00:00:00Z'),
     img: banner2,
-    link: 'https://www.youtube.com/watch?v=gbZXeUfXmDA',
-    text: 'GameFi.org Panel Discussion'
+    link: 'https://www.youtube.com/c/GameFiOfficialChannel',
+    text: 'Monsterra AMA'
+  },
+  '/igo': {
+    deadline: new Date('2022-05-21T00:00:00Z'),
+    img: banner2,
+    link: 'https://www.youtube.com/c/GameFiOfficialChannel',
+    text: 'Monsterra AMA'
   }
 }
 

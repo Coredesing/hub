@@ -34,6 +34,15 @@ const News = ({ postsFeatured, postsLatest, postsUpdate, postsPartnership, posts
       return {}
     }
 
+    const first = postsFeatured.find(x => !!x.tags.find(t => t.name === '#1'))
+    if (first) {
+      const others = postsFeatured.filter(x => x.uuid !== first.uuid)
+      return {
+        big: first,
+        others
+      }
+    }
+
     const [big, ...others] = postsFeatured
     return {
       big,
@@ -485,7 +494,7 @@ const NewsLayoutLeftRight4Bottom = ({ items, children }: { items: { big?: any[];
 export default News
 
 export async function getStaticProps () {
-  const postsFeatured = await api.posts.browse({ include: 'authors', limit: 4, filter: 'featured:true' })
+  const postsFeatured = await api.posts.browse({ include: 'authors,tags', limit: 4, filter: 'featured:true' })
   const postsLatest = await api.posts.browse({ limit: 4 })
   const postsUpdate = await api.posts.browse({ limit: 4, filter: 'tag:update' })
   const postsPartnership = await api.posts.browse({ limit: 4, filter: 'tag:partnership' })

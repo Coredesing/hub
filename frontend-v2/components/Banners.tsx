@@ -8,8 +8,8 @@ const banners = {
   default: {
     deadline: new Date('2022-05-30T00:00:00Z'),
     img: banner,
-    link: 'https://gamefi.org/igo/131',
-    text: 'Epic War IGO'
+    link: 'https://gamefi.org/igo/x-metaverse',
+    text: 'X-Metaverse IGO'
   },
   '/': {
     deadline: new Date('2022-05-21T00:00:00Z'),

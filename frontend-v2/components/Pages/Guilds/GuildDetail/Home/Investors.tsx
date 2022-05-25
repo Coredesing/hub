@@ -4,7 +4,7 @@ import { useGuildDetailContext } from '../utils'
 const Investors = () => {
   const { guildData } = useGuildDetailContext()
   return (
-    guildData?.backers
+    guildData?.backers?.length > 0
       ? <div className="container mx-auto px-4 lg:px-16">
         <h4 className="text-2xl font-bold uppercase mb-4">Backed By</h4>
         <div className="mb-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">

@@ -4,7 +4,7 @@ import { useGuildDetailContext } from '../utils'
 const Team = () => {
   const { guildData } = useGuildDetailContext()
   return (
-    guildData?.members
+    guildData?.members?.length > 0
       ? <div className="container mx-auto px-4 lg:px-16">
         <h4 className="text-2xl font-bold uppercase mb-4">Team Members</h4>
         <div className="mb-5 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">

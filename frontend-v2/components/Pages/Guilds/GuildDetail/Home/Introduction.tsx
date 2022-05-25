@@ -24,7 +24,7 @@ const Introduction = () => {
                 </svg>
               </span>
               <span className='text-13px font-casual font-light leading-5'>
-                <span className="font-medium text-white">{printNumber(guildData.like_count || 0)}</span> people like this
+                <span className="font-medium text-white">{printNumber(guildData.likeCount || 0)}</span> people like this
               </span>
             </div>
             <div className='flex gap-4 items-center'>
@@ -36,7 +36,7 @@ const Introduction = () => {
                 </svg>
               </span>
               <span className='text-13px font-casual font-light leading-5'>
-                <span className="font-medium text-white">Founding Date:</span> {guildData.founding_date ? format(new Date(guildData.founding_date), guildData.foundingDateFormat || 'dd MMMM yyyy') : 'Unknown'}
+                <span className="font-medium text-white">Founding Date:</span> {guildData.foundingDate ? format(new Date(guildData.foundingDate), guildData.foundingDateFormat || 'dd MMMM yyyy') : 'Unknown'}
               </span>
             </div>
             <div className='flex gap-4 items-center'>

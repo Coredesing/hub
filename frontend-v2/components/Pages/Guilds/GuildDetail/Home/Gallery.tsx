@@ -59,7 +59,7 @@ const Gallery = () => {
           }}
         >
           {guildData.gallery.map((item, index) => <div key={`guild-gallery-${item.id}`} className="w-2/3 mb-12">
-            <img src={item.media?.url} alt="" className={`w-full px-2 aspect-[16/9] overflow-hidden object-cover ${currentIndex === index ? '' : 'opacity-40'}`}></img>
+            <img src={item.media?.url} alt="" className={`w-full px-2 aspect-[16/9] bg-black overflow-hidden object-contain ${currentIndex === index ? '' : 'opacity-40'}`}></img>
             {currentIndex === index && <div
               className="flex items-center gap-2 w-full h-[9px] text-[13px] font-casual px-2 mt-3"
             >

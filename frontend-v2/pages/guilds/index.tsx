@@ -1,106 +1,165 @@
 import Layout from '@/components/Layout'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { printNumber } from '@/utils'
-import SearchInput from '@/components/Base/SearchInput'
-import Dropdown from '@/components/Base/Dropdown'
+import { fetcher } from '@/utils'
+import { GUILD_API_BASE_URL } from '@/utils/constants'
+import GuildCard from '@/components/Pages/Guilds/GuildCard'
+import ScholarshipCard from '@/components/Pages/Guilds/ScholarshipCard'
+import { Pagination } from '@egjs/flicking-plugins'
+import Flicking, { ViewportSlot } from '@egjs/react-flicking'
+import '@egjs/flicking-plugins/dist/pagination.css'
+import '@egjs/flicking/dist/flicking.css'
+import arrowLeft from '@/assets/images/icons/arrow-left.png'
+import arrowRight from '@/assets/images/icons/arrow-right.png'
+import { useMediaQuery } from 'react-responsive'
+import { fetchScholarshipPrograms, fetchTopSelected } from '../api/guilds'
 
-const Guilds = () => {
+type Props = {
+  guilds: any[];
+  scholarshipPrograms: any[];
+}
+
+const Guilds = ({ guilds, scholarshipPrograms }: Props) => {
+  const isMobile = useMediaQuery({ maxWidth: '1000px' })
+  useEffect(() => {
+    console.log(scholarshipPrograms)
+    console.log(guilds)
+  }, [scholarshipPrograms])
+
+  const [plugins] = useState([
+    new Pagination({
+      type: 'bullet',
+      renderBullet: () => {
+        return '<div class="h-[2px] w-[50px] bg-gamefiDark-400"></div>'
+      }
+    })
+  ])
+
+  const refScholar = useRef(null)
+  const refGuild = useRef(null)
+  const prev = (ref) => {
+    if (!ref.current) {
+      return
+    }
+
+    ref.current.prev().catch(() => {})
+  }
+  const next = (ref) => {
+    if (!ref.current) {
+      return
+    }
+
+    ref.current.next().catch(() => {})
+  }
+
   return (
-    <Layout>
+    <Layout title='GameFi.org - Guilds' extended={true}>
       <>
-        <div className="container mx-auto px-4 lg:px-16 mt-8">
-          <Image src={require('@/assets/images/gamefi-guild.png')} alt=""></Image>
+        <div className="w-full pt-16 lg:pt-0" style={{ background: 'linear-gradient(180deg, #0C0D12 0%, rgba(12, 13, 18, 0) 100%)' }}>
+          <div className="container mx-auto w-full h-full select-none hidden lg:block">
+            <Image src={require('@/assets/images/guilds/guilds-banner.png')} alt=""></Image>
+          </div>
+          <div className="container mx-auto w-full h-full select-none lg:hidden">
+            <Image src={require('@/assets/images/guilds/banner-mobile.png')} alt=""></Image>
+          </div>
         </div>
-        <div className="container mx-auto px-4 lg:px-16 my-8">
-          <div className="w-full grid grid-cols-8 gap-4">
-            <div className="col-span-2 p-8 flex flex-col justify-center gap-4 bg-gamefiDark-630/30 rounded">
-              <div className="w-full flex items-center">
-                <div>
-                  <Image src={require('@/assets/images/guilds/total-guilds.png')} alt=""></Image>
+        {
+          guilds?.length > 0
+            ? <div className="max-w-[1380px] mx-auto lg:px-16 my-8 mt-12">
+              <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
+                <div className="inline-block top-0 left-0 right-0 uppercase w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
+                Top Selected Guilds
                 </div>
-                <div className="ml-2 flex-1 flex-col gap-2">
-                  <div className="uppercase text-gamefiDark-100 text-sm font-semibold">Total Guilds</div>
-                  <div className="font-medium text-xl leading-4">{printNumber(15000)}</div>
-                </div>
-              </div>
-              <div className="w-full flex items-center">
-                <div>
-                  <Image src={require('@/assets/images/guilds/avg-scholar-count.png')} alt=""></Image>
-                </div>
-                <div className="ml-2 flex-1 flex-col gap-2">
-                  <div className="uppercase text-gamefiDark-100 text-sm font-semibold">AVG Scholar Count</div>
-                  <div className="font-medium text-xl leading-4">{printNumber(15000)}</div>
+                <div className="absolute -bottom-5 left-0 right-0">
+                  <Image src={require('@/assets/images/under-stroke-green.svg')} alt="understroke"></Image>
                 </div>
               </div>
+              <div className="hidden mt-14 lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
+                {guilds?.length && guilds.map(guild => <GuildCard key={`guild-card-${guild.id}`} item={guild}></GuildCard>)}
+              </div>
+              <div className="w-full lg:hidden mt-14">
+                <Flicking circular={true} className="w-full" align="center" ref={refGuild} interruptable={true}>
+                  {guilds?.length && guilds.map(guild => <div key={`guild-card-mobile-${guild.id}`} className="w-3/4 px-2"><GuildCard item={guild}></GuildCard></div>)}
+                </Flicking>
+              </div>
             </div>
-            <div className="col-span-3 p-8 bg-gamefiDark-630/30 rounded">
+            : <></>
+        }
+        {
+          scholarshipPrograms?.length > 0
+            ? <div className="w-full bg-black pb-24 mt-14" style={{ clipPath: isMobile ? 'polygon(50% 100%, 100% 95%, 100% 0, 0 0, 0 95%)' : 'polygon(50% 100%, 100% 85%, 100% 0, 0 0, 0 85%)' }}>
+              <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-[500px] mx-auto text-center font-bold md:text-lg lg:text-xl">
+                <div className="inline-block -top-1px left-0 right-0 uppercase bg-gamefiDark w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
+                  Top Scholarship Program
+                </div>
+                <div className="absolute -bottom-5 left-0 right-0">
+                  <Image src={require('@/assets/images/under-stroke-yellow.svg')} alt="understroke"></Image>
+                </div>
+              </div>
+              <div className="mt-14 max-w-[1380px] mx-auto px-4 lg:px-16 flex gap-4">
+                <div className="hidden sm:block">
+                  <img src={arrowLeft.src} alt="" className="w-8 cursor-pointer opacity-80 hover:opacity-100 select-none" onClick={() => { prev(refScholar) }}/>
+                </div>
+                <Flicking
+                  circular={true}
+                  panelsPerView={isMobile ? 1 : 2}
+                  className="flex-1 gap-2"
+                  plugins={plugins}
+                  align="prev"
+                  ref={refScholar}
+                  interruptable={true}
+                >
+                  {scholarshipPrograms.map(program => <div className="px-2 mb-8" key={`scholarship-${program.id}`}><ScholarshipCard item={program} className="mb-4"></ScholarshipCard></div>)}
+                  <ViewportSlot>
+                    <div className="flicking-pagination !relative flex items-center justify-center gap-1"></div>
+                    <div></div>
+                  </ViewportSlot>
+                </Flicking>
+                <div className="hidden sm:block">
+                  <img src={arrowRight.src} alt="" className="w-8 cursor-pointer opacity-80 hover:opacity-100 select-none" onClick={() => { next(refScholar) }}/>
+                </div>
+              </div>
             </div>
-            <div className="col-span-3 p-8 bg-gamefiDark-630/30 rounded">
-            </div>
-            <div className="col-span-8 p-8 bg-gamefiDark-630/30 rounded">
-              <div className="uppercase font-bold text-xl">Performance By Region</div>
+            : ''
+        }
+        <div className="pt-32 w-full overflow-hidden">
+          <div className="max-w-[1380px] mx-auto px-4 lg:px-16 w-full select-none grid lg:grid-cols-2 gap-4">
+            <div className="w-full text-[36px] leading-[36px] lg:text-[84px] lg:leading-[67px] uppercase font-bold">Get Involved With Guild Games</div>
+            <div className="flex flex-col gap-4 relative text-gamefiDark-100">
+              <div className="leading-[24px] max-w-[450px]">Players will receive the game&apos;s NFT, proceed to play, and receive rewards (will be divided according to the percentage agreed by the parties in advance).</div>
+              <div className="leading-[24px] max-w-[450px]">Depending on the guild, there will be different selection criteria. Once being selected, you will receive instructions on the tasks to do (corresponding to the role you choose).</div>
+              <div className="mt-12 z-[1]">
+                <Image src={require('@/assets/images/guilds/banner-1.png')} width={431} height={168} alt=""></Image>
+              </div>
+              <div className="hidden lg:block absolute -top-[200px] -right-[200px]">
+                <Image className="absolute -top-24 -right-[100px]" src={require('@/assets/images/guilds/light.png')} alt=""></Image>
+              </div>
             </div>
           </div>
-          <div className="w-full my-14">
-            <div className="w-full flex items-center">
-              <div className="uppercase font-bold text-xl">Performance By Guild</div>
-              <div className="flex-1 flex gap-2 justify-end">
-                <div className="min-w-[400px]"><SearchInput placeholder="Search By Game"></SearchInput></div>
-                <Dropdown items={[{
-                  key: 'all-regions',
-                  label: 'All Regions',
-                  value: 'all-regions'
-                }]}
-                selected={{
-                  key: 'all-regions',
-                  label: 'All Regions',
-                  value: 'all-regions'
-                }}></Dropdown>
+          <div className="mt-14 px-4 lg:px-16 w-full o max-w-[1380px] mx-auto">
+            <div className="max-w-[400px]">There are normally 4 roles in a guild. Person can take on various roles depending on the project.</div>
+          </div>
+          <div className="overflow-auto max-w-[1380px] mx-auto px-4 lg:px-16 w-full pb-8 font-casual text-sm font-light hide-scrollbar">
+            <div className="mt-8 min-w-[800px] grid grid-cols-4 gap-4">
+              <div className="bg-gamefiDark-800 pt-12 pb-16 px-4 flex flex-col gap-4">
+                <div className="text-gamefiDark-200 font-semibold">01</div>
+                <div>Scholar</div>
+                <div className="text-gamefiDark-200">As the main game player, this is the member that guilds recruit a lot.</div>
               </div>
-            </div>
-            <div className="w-full px-4 mt-6 mb-3 flex gap-1 md:gap-4 xl:gap-6 text-gamefiDark-100 text-sm uppercase font-medium leading-4">
-              <div className="w-52">Guild</div>
-              <div className="w-40">Game</div>
-              <div className="w-40">Region</div>
-              <div className="w-40">Daily Active <br></br> Discord Members</div>
-              <div className="w-40">Activeness</div>
-              <div className="w-40">Avg Scholar <br></br> Commission</div>
-              <div className="w-40">Avg Guild <br></br> Commission</div>
-              <div className="w-40">AVG SLP</div>
-            </div>
-            <div className="w-full flex gap-1 md:gap-4 xl:gap-6 items-center my-1 bg-gamefiDark-630/30 rounded-sm clipped-b-r p-4">
-              <div className="w-52">This is Guild Name</div>
-              <div className="w-40">Game Name</div>
-              <div className="w-40">North America</div>
-              <div className="w-40">
-                <div className="w-full flex items-center gap-2 lg:pr-2">
-                  <div>{printNumber(1500)}</div>
-                  <div className="w-full h-2 rounded-full" style={{ background: 'linear-gradient(269.43deg, #9075FF 19.03%, #AB9FF8 89.99%), #C4C4C4' }}>
-                  </div>
-                </div>
+              <div className="bg-gamefiDark-800 pt-12 pb-16 px-4 flex flex-col gap-4">
+                <div className="text-gamefiDark-200 font-semibold">02</div>
+                <div>Trainer</div>
+                <div className="text-gamefiDark-200">Guide new Scholars about the game: NFTs, gameplay, strategies,...</div>
               </div>
-              <div className="w-40">2.6%</div>
-              <div className="w-40">
-                <div className="w-full flex items-center gap-2 lg:pr-2">
-                  <div>56%</div>
-                  <div className="w-full h-2 rounded-full" style={{ background: 'linear-gradient(269.53deg, #FFA800 -2.13%, #FFB800 94.16%)' }}>
-                  </div>
-                </div>
+              <div className="bg-gamefiDark-800 pt-12 pb-16 px-4 flex flex-col gap-4">
+                <div className="text-gamefiDark-200 font-semibold">03</div>
+                <div>Manager</div>
+                <div className="text-gamefiDark-200">Receive NFTs from scholarship programs. Be responsible for recruiting, guiding Trainers & Scholars</div>
               </div>
-              <div className="w-40">
-                <div className="w-full flex items-center gap-2 lg:pr-2">
-                  <div>56%</div>
-                  <div className="w-full h-2 rounded-full" style={{ background: 'linear-gradient(269.6deg, #FF9649 3.55%, #FFB379 86.23%)' }}>
-                  </div>
-                </div>
-              </div>
-              <div className="w-40">
-                <div className="w-full flex items-center gap-2 lg:pr-2">
-                  <div>44</div>
-                  <div className="w-full h-2 rounded-full" style={{ background: 'linear-gradient(269.73deg, #00C2FF 8.09%, #71DDFF 100%)' }}>
-                  </div>
-                </div>
+              <div className="bg-gamefiDark-800 pt-12 pb-16 px-4 flex flex-col gap-4">
+                <div className="text-gamefiDark-200 font-semibold">04</div>
+                <div>Investor</div>
+                <div className="text-gamefiDark-200">People who want to earn extra income from lending NFT to others through scholarship programs</div>
               </div>
             </div>
           </div>
@@ -112,9 +171,20 @@ const Guilds = () => {
 
 export default Guilds
 
-export function getStaticProps () {
-  return {
-    // returns the default 404 page with a status code of 404 in production
-    notFound: true
+export const getServerSideProps = async () => {
+  try {
+    const guilds = await fetchTopSelected()
+    const scholarshipPrograms = await fetchScholarshipPrograms()
+
+    return {
+      props: {
+        guilds: guilds?.data || [],
+        scholarshipPrograms: scholarshipPrograms?.data || []
+      }
+    }
+  } catch (error) {
+    return {
+      props: {}
+    }
   }
 }

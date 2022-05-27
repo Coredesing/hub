@@ -68,9 +68,19 @@ export const IGOContext = createContext({
 
 const IGODetails = ({ poolData }) => {
   const router = useRouter()
-  const { tierMine } = useAppContext()
+  const { setStakingPool, loadMyStaking, tierMine } = useAppContext()
   const [readMore, setReadMore] = useState(false)
   const { now } = useAppContext()
+
+  useEffect(() => {
+    fetcher(`${API_BASE_URL}/staking-pool`).then(pools => {
+      const pool = pools?.data?.find(x => !!x?.rkp_rate)
+      setStakingPool(pool)
+    })
+  }, [setStakingPool])
+  useEffect(() => {
+    loadMyStaking()
+  }, [loadMyStaking])
 
   const [failedRequirements, setFailedRequirements] = useState(false)
   const [completed, setCompleted] = useState(false)

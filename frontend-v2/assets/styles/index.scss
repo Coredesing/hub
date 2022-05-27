@@ -320,3 +320,108 @@ margin: 0;
         opacity: 0;
     }
 }
+
+// Animation loading
+.dots {
+    display: inline-flex;
+  
+    &--animate .dot {
+  
+      &.z {
+        animation: scale .8s .2s forwards;
+      }
+  
+      &.f,
+      &.s {
+        animation: right .5s forwards;
+      }
+  
+      &.l {
+        animation: rightDown .4s .1s forwards linear, drop 2s .4s forwards linear;
+      }
+  
+    }
+  }
+  
+  .dot {
+  
+    & {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: #ffffff;
+      border-radius: 10px;
+      position: relative;
+      margin-left: 6px;
+    }
+  
+    &.z {
+      position: absolute;
+      transform: scale(0);
+  
+      @keyframes scale {
+        100% {
+          transform: scale(1);
+        }
+      }
+    }
+  
+    &.f,
+    &.s {
+      transform: translateX(0px);
+  
+      @keyframes right {
+        100% {
+          transform: translateX(16px);
+        }
+      }
+    }
+  
+    &.t {
+      background: transparent;
+    }
+  
+    .l {
+      margin-left: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+  
+      @keyframes rightDown {
+  
+        50% {
+          top: 4px;
+          left: 16px;
+        }
+  
+        100% {
+          top: 12px;
+          left: 24px;
+        }
+      }
+  
+      @keyframes drop {
+        100% {
+          transform: translate(70px, calc(35px + (100vh/2)));
+        }
+      }
+    }
+  
+  }
+
+//   End animation loading
+
+// Animation shrink
+.guild-gallery-description-transition {
+    animation: scale 1s;
+    transform-origin: 100% 50%;
+}
+
+@keyframes scale {
+    0% {
+      transform: scaleX(0);
+    }
+    100% {
+      transform: scaleX(1);
+    }
+  }

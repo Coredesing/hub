@@ -46,12 +46,18 @@ const Toolbox = () => {
           </svg>
           <Badge count={igoPoolCount} className='absolute top-3 left-1/2 ml-1.5'></Badge>
         </ToolboxItem>
-        <button
-          className={'relative w-full py-4 flex flex-col align-middle items-center justify-center uppercase text-xs lg:text-sm font-semibold cursor-pointer opacity-40'}
-          onClick={() => setShowMenu(true)}
-        >
-          <Image src={require('@/assets/images/icons/menuToggler.svg')} alt='menu'></Image>
-        </button>
+        {
+          showMenu
+            ? <button className="cursor-pointer" onClick={() => setShowMenu(false)}>
+              <Image src={require('@/assets/images/icons/x.svg')} alt='x'></Image>
+            </button>
+            : <button
+              className={'relative w-full py-4 flex flex-col align-middle items-center justify-center uppercase text-xs lg:text-sm font-semibold cursor-pointer opacity-40'}
+              onClick={() => setShowMenu(true)}
+            >
+              <Image src={require('@/assets/images/icons/menuToggler.svg')} alt='menu'></Image>
+            </button>
+        }
       </div>
       <div className={`flex flex-col fixed left-0 top-0 bottom-0 right-0 md:hidden dark:bg-gamefiDark-900 overflow-auto hide-scrollbar menu-slide-up ${showMenu ? 'h-full' : 'h-0'}`} style={{ boxShadow: 'inset -1px 0px 0px #303442', zIndex: '99' }}>
         <Topbar className="flex-none"></Topbar>

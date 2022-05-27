@@ -91,23 +91,23 @@ export const SolanaIcon = () => {
 
 export const TerraIcon = () => {
   return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
-    <path fill="#0e3ca5" d="M34.4 62.108c2.192 8.109 10.056 14.3 14.027 14.041.14-.009 15.064-2.791 23.234-16.442 6.358-10.623 4.193-20.878-4.454-21.1-3.111.227-36.984 8.053-32.807 23.5m32.006-52.084-.009-.008.012-.007a37.951 37.951 0 0 0-40-5.772A22.386 22.386 0 0 0 24 5.414c-.532.283-1.065.565-1.582.873l.126.039a17.255 17.255 0 0 0-4 3.792C7.649 24.509 44.159 34.969 63.679 35c8.98 6.45 11.501-18.147 2.727-24.977Z"/>
-    <path fill="#5493f7" d="M28.609 10.315C23.6 17.853 6.888 23.165 4.14 22.338l-.018-.038c.112-.227.227-.453.343-.678a40.2 40.2 0 0 1 11.913-13.9q1.542-1.131 3.193-2.114a11.823 11.823 0 0 1 5.523-1.468c7.44.142 3.555 6.115 3.515 6.175M24.5 63.591c.36 2.369-.009 11.725-.494 12.514-.417.025-1.286.078-3.8-1.334A40.054 40.054 0 0 1 2.039 27.364q.2-.6.42-1.2C5.346 30 8.683 33.47 11.52 37.344c2.7 3.688 6.417 9.7 7.173 10.986 4.7 7.976 5.444 12.9 5.8 15.261M80 40.007A39.9 39.9 0 0 1 77.216 54.7c-4.711 5.063-36.477-7.4-36.788-7.538-4.346-1.9-17.57-7.7-18.763-16.8C19.949 17.273 46.509 8.15 58.181 7.8c1.4.017 5.659.066 8.142 2.083A39.911 39.911 0 0 1 80 40.007M58.5 75.486c-3.463 1.616-7.275.439-6.285-2.933 1.9-6.476 18.507-13.115 22.174-13.475.452-.045.644.263.444.615A40.4 40.4 0 0 1 58.5 75.486"/>
+    <path fill="#0e3ca5" d="M34.4 62.108c2.192 8.109 10.056 14.3 14.027 14.041.14-.009 15.064-2.791 23.234-16.442 6.358-10.623 4.193-20.878-4.454-21.1-3.111.227-36.984 8.053-32.807 23.5m32.006-52.084-.009-.008.012-.007a37.951 37.951 0 0 0-40-5.772A22.386 22.386 0 0 0 24 5.414c-.532.283-1.065.565-1.582.873l.126.039a17.255 17.255 0 0 0-4 3.792C7.649 24.509 44.159 34.969 63.679 35c8.98 6.45 11.501-18.147 2.727-24.977Z" />
+    <path fill="#5493f7" d="M28.609 10.315C23.6 17.853 6.888 23.165 4.14 22.338l-.018-.038c.112-.227.227-.453.343-.678a40.2 40.2 0 0 1 11.913-13.9q1.542-1.131 3.193-2.114a11.823 11.823 0 0 1 5.523-1.468c7.44.142 3.555 6.115 3.515 6.175M24.5 63.591c.36 2.369-.009 11.725-.494 12.514-.417.025-1.286.078-3.8-1.334A40.054 40.054 0 0 1 2.039 27.364q.2-.6.42-1.2C5.346 30 8.683 33.47 11.52 37.344c2.7 3.688 6.417 9.7 7.173 10.986 4.7 7.976 5.444 12.9 5.8 15.261M80 40.007A39.9 39.9 0 0 1 77.216 54.7c-4.711 5.063-36.477-7.4-36.788-7.538-4.346-1.9-17.57-7.7-18.763-16.8C19.949 17.273 46.509 8.15 58.181 7.8c1.4.017 5.659.066 8.142 2.083A39.911 39.911 0 0 1 80 40.007M58.5 75.486c-3.463 1.616-7.275.439-6.285-2.933 1.9-6.476 18.507-13.115 22.174-13.475.452-.045.644.263.444.615A40.4 40.4 0 0 1 58.5 75.486" />
   </svg>
 }
 
 export const IconError = ({ className }: { className?: string }) => {
   return <svg className={className || ''} viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="18" cy="18" r="18" fill="#DE4343"/>
-    <path d="M24 12L12 24" stroke="#1A1C23" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke"/>
-    <path d="M12 12L15 15L18 18M24 24L21 21" stroke="#1A1C23" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke"/>
+    <circle cx="18" cy="18" r="18" fill="#DE4343" />
+    <path d="M24 12L12 24" stroke="#1A1C23" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+    <path d="M12 12L15 15L18 18M24 24L21 21" stroke="#1A1C23" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
   </svg>
 }
 
 export const IconOK = ({ className }: { className?: string }) => {
   return <svg className={className || ''} viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="18" cy="18" r="18" fill="#67CF02"/>
-    <path d="M8.83325 18L15.2499 24.4167L27.1666 12.5" stroke="#212121" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" vectorEffect="non-scaling-stroke"/>
+    <circle cx="18" cy="18" r="18" fill="#67CF02" />
+    <path d="M8.83325 18L15.2499 24.4167L27.1666 12.5" stroke="#212121" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" vectorEffect="non-scaling-stroke" />
   </svg>
 }
 
@@ -151,6 +151,54 @@ export const SoldOutIcon = () => {
     <defs>
       <clipPath id="clip0_4_80">
         <rect width="184" height="145" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+}
+
+export const MetamaskIcon = () => {
+  return <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M15.4857 2.00565L9.86426 6.18079L10.9038 3.71751L15.4857 2.00565Z" fill="#E2761B" stroke="#E2761B" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M2.5083 2.00565L8.08457 6.22034L7.09587 3.71751L2.5083 2.00565Z" fill="#E4761B" stroke="#E4761B" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M13.463 11.6836L11.9658 13.9774L15.1692 14.8588L16.0901 11.7345L13.463 11.6836Z" fill="#E4761B" stroke="#E4761B" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M1.91504 11.7345L2.83029 14.8588L6.03368 13.9774L4.53651 11.6836L1.91504 11.7345Z" fill="#E4761B" stroke="#E4761B" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M5.8531 7.8079L4.96045 9.15818L8.14124 9.29943L8.02825 5.88135L5.8531 7.8079Z" fill="#E4761B" stroke="#E4761B" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M12.1411 7.8079L9.9377 5.8418L9.86426 9.29942L13.0394 9.15818L12.1411 7.8079Z" fill="#E4761B" stroke="#E4761B" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M6.03369 13.9774L7.9433 13.0452L6.29358 11.7571L6.03369 13.9774Z" fill="#E4761B" stroke="#E4761B" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M10.0508 13.0452L11.966 13.9774L11.7005 11.7571L10.0508 13.0452Z" fill="#E4761B" stroke="#E4761B" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M11.966 13.9774L10.0508 13.0452L10.2033 14.2938L10.1864 14.8192L11.966 13.9774Z" fill="#D7C1B3" stroke="#D7C1B3" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M6.03369 13.9774L7.81335 14.8192L7.80205 14.2938L7.9433 13.0452L6.03369 13.9774Z" fill="#D7C1B3" stroke="#D7C1B3" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M7.84176 10.9322L6.24854 10.4633L7.37283 9.94916L7.84176 10.9322Z" fill="#233447" stroke="#233447" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M10.1523 10.9322L10.6213 9.94916L11.7512 10.4633L10.1523 10.9322Z" fill="#233447" stroke="#233447" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M6.0338 13.9774L6.30499 11.6836L4.53662 11.7345L6.0338 13.9774Z" fill="#CD6116" stroke="#CD6116" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M11.6948 11.6836L11.966 13.9774L13.4632 11.7345L11.6948 11.6836Z" fill="#CD6116" stroke="#CD6116" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M13.0394 9.15819L9.86426 9.29943L10.158 10.9322L10.627 9.94915L11.7569 10.4633L13.0394 9.15819Z" fill="#CD6116" stroke="#CD6116" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M6.24858 10.4633L7.37853 9.94915L7.84181 10.9322L8.14124 9.29943L4.96045 9.15819L6.24858 10.4633Z" fill="#CD6116" stroke="#CD6116" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M4.96045 9.15819L6.29378 11.7571L6.24858 10.4633L4.96045 9.15819Z" fill="#E4751F" stroke="#E4751F" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M11.7572 10.4633L11.7007 11.7571L13.0397 9.15819L11.7572 10.4633Z" fill="#E4751F" stroke="#E4751F" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M8.14123 9.29944L7.8418 10.9322L8.21468 12.8588L8.29942 10.322L8.14123 9.29944Z" fill="#E4751F" stroke="#E4751F" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M9.86446 9.29944L9.71191 10.3164L9.77971 12.8588L10.1582 10.9322L9.86446 9.29944Z" fill="#E4751F" stroke="#E4751F" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M10.1583 10.9322L9.77979 12.8588L10.051 13.0452L11.7007 11.7571L11.7572 10.4633L10.1583 10.9322Z" fill="#F6851B" stroke="#F6851B" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M6.24854 10.4633L6.29373 11.7571L7.94345 13.0452L8.21464 12.8588L7.84176 10.9322L6.24854 10.4633Z" fill="#F6851B" stroke="#F6851B" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M10.1862 14.8192L10.2032 14.2938L10.0619 14.1695H7.932L7.80205 14.2938L7.81335 14.8192L6.03369 13.9774L6.65516 14.4859L7.91505 15.3616H10.0789L11.3444 14.4859L11.9659 13.9774L10.1862 14.8192Z" fill="#C0AD9E" stroke="#C0AD9E" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M10.0508 13.0452L9.77965 12.8587H8.21467L7.94349 13.0452L7.80225 14.2938L7.93219 14.1695H10.0621L10.2034 14.2938L10.0508 13.0452Z" fill="#161616" stroke="#161616" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M15.7231 6.45197L16.2033 4.14689L15.4858 2.00565L10.0508 6.03955L12.1412 7.80791L15.096 8.67231L15.7513 7.9096L15.4689 7.70621L15.9208 7.29378L15.5706 7.0226L16.0225 6.67796L15.7231 6.45197Z" fill="#763D16" stroke="#763D16" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M1.79639 4.14689L2.27661 6.45197L1.97153 6.67796L2.42351 7.0226L2.07887 7.29378L2.53085 7.70621L2.24836 7.9096L2.89808 8.67231L5.85289 7.80791L7.94328 6.03955L2.50825 2.00565L1.79639 4.14689Z" fill="#763D16" stroke="#763D16" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M15.0962 8.67231L12.1414 7.80791L13.0397 9.15819L11.7007 11.7571L13.4634 11.7345H16.0905L15.0962 8.67231Z" fill="#F6851B" stroke="#F6851B" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M5.85289 7.80791L2.89809 8.67231L1.91504 11.7345H4.53651L6.29357 11.7571L4.96024 9.15819L5.85289 7.80791Z" fill="#F6851B" stroke="#F6851B" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M9.86455 9.29943L10.051 6.03955L10.9097 3.71751H7.09619L7.94365 6.03955L8.14139 9.29943L8.20919 10.3277L8.21483 12.8588H9.77981L9.7911 10.3277L9.86455 9.29943Z" fill="#F6851B" stroke="#F6851B" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+}
+
+export const GreenTickIcon = () => {
+  return <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="12" fill="#6CDB00" />
+    <g clipPath="url(#clip0_157_3117)">
+      <path d="M16.725 7.725L9.75 14.7L7.275 12.225C6.975 11.925 6.525 11.925 6.225 12.225C5.925 12.525 5.925 12.975 6.225 13.275L9.225 16.275C9.375 16.425 9.525 16.5 9.75 16.5C9.975 16.5 10.125 16.425 10.275 16.275L17.775 8.775C18.075 8.475 18.075 8.025 17.775 7.725C17.475 7.425 17.025 7.425 16.725 7.725Z" fill="#21232A" />
+    </g>
+    <defs>
+      <clipPath id="clip0_157_3117">
+        <rect width="12" height="12" fill="white" transform="translate(6 6)" />
       </clipPath>
     </defs>
   </svg>

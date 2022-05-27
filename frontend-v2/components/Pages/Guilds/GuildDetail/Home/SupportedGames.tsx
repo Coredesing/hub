@@ -25,21 +25,6 @@ const SupportedGames = () => {
     })
   ])
 
-  const prev = () => {
-    if (!ref.current) {
-      return
-    }
-
-    ref.current.prev().catch(() => {})
-  }
-  const next = () => {
-    if (!ref.current) {
-      return
-    }
-
-    ref.current.next().catch(() => {})
-  }
-
   return (
     <div className="container mx-auto px-4 lg:px-16">
       <h4 className='text-2xl font-bold uppercase mb-4'>GAMES SUPPORTED</h4>

@@ -37,7 +37,7 @@ export function fetchOneWithId (id) {
   return fetcher(`${GUILD_API_BASE_URL}/guilds/${id}?${query}`)
 }
 
-export function fetchTopSelected (limit?) {
+export function fetchTopSelected () {
   const query = qs.stringify({
     populate: {
       projects: {
@@ -59,7 +59,7 @@ export function fetchTopSelected (limit?) {
   return fetcher(`${GUILD_API_BASE_URL}/guilds?${query}&filters[topSelected][$eq]=true`)
 }
 
-export function fetchScholarshipPrograms (limit?) {
+export function fetchScholarshipPrograms () {
   const query = qs.stringify({
     populate: {
       project: {

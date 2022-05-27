@@ -1,8 +1,6 @@
 import Layout from '@/components/Layout'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Image from 'next/image'
-import { fetcher } from '@/utils'
-import { GUILD_API_BASE_URL } from '@/utils/constants'
 import GuildCard from '@/components/Pages/Guilds/GuildCard'
 import ScholarshipCard from '@/components/Pages/Guilds/ScholarshipCard'
 import { Pagination } from '@egjs/flicking-plugins'
@@ -21,10 +19,6 @@ type Props = {
 
 const Guilds = ({ guilds, scholarshipPrograms }: Props) => {
   const isMobile = useMediaQuery({ maxWidth: '1000px' })
-  useEffect(() => {
-    console.log(scholarshipPrograms)
-    console.log(guilds)
-  }, [scholarshipPrograms])
 
   const [plugins] = useState([
     new Pagination({

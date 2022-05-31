@@ -131,6 +131,12 @@ body {
     aspect-ratio: 2/1;
 }
 
+.feed a {
+    color: #049EF4;
+    &:hover {
+      text-decoration: underline;
+    }
+}
 video[poster] {
     height: 100% !important;
     width: 100% !important;

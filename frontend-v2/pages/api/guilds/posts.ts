@@ -7,7 +7,6 @@ export function fetchPosts (tag, perPage = 20) {
     version: 'v4.46'
   })
 
-  console.log('tag', tag)
   return api.posts.browse({ filter: `tag:${tag}`, limit: perPage })
 }
 
@@ -21,7 +20,6 @@ export default async function handler (req, res) {
 
   try {
     const data = await fetchPosts(tag, limit)
-    console.log('data', data)
 
     if (!data) {
       res.status(200).json({ status: 200, message: 'No Post Found', data })

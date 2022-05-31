@@ -16,7 +16,7 @@ const Home = () => {
       <Gallery></Gallery>
       <Investors />
       <Team/>
-      {/* <TwitterFeed/> */}
+      <TwitterFeed/>
     </div>
   )
 }

@@ -22,12 +22,15 @@ const GuildCard = ({ item }: { item: any }) => {
     </div>
     <div className="px-4 text-sm text-gamefiDark-200">{item.region}</div>
     <div className="px-4 pt-4 pb-12 flex flex-col gap-4">
-      <div className="flex mb-4 relative">
+      <div className="flex gap-1 mb-4 relative">
         {item?.projects?.map((game, index) => index < 5 && <div key={`supported-${index}`}>
           <Tippy key={`game-logo-${game.id}`} content={game.name}>
-            <img src={game.logo?.url} className="w-9 h-9 rounded object-cover" alt="" />
+            <img src={game.logo?.url} className="w-9 h-9 rounded-full object-cover" alt="" />
           </Tippy>
         </div>)}
+        {
+          item?.projects?.length > 5 && <div className="w-9 h-9 rounded bg-gamefiDark-600 flex items-center justify-center font-medium">+{item?.projects?.length - 5}</div>
+        }
       </div>
       <div className="w-full grid grid-cols-2 gap-4">
         <div className="text-left flex flex-col gap-2 text-sm">

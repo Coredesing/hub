@@ -11,12 +11,12 @@ const Home = () => {
   return (
     <div className="w-full flex flex-col gap-12">
       <Introduction />
+      <TwitterFeed/>
       <SupportedGames />
       <RoadMap />
       <Gallery></Gallery>
       <Investors />
       <Team/>
-      <TwitterFeed/>
     </div>
   )
 }

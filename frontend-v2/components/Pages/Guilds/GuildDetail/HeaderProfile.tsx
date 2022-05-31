@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { useGuildDetailContext } from './utils'
 import Tippy from '@tippyjs/react'
+import { printNumber } from '@/utils'
 
 const HeaderProfile = () => {
   const router = useRouter()
@@ -67,7 +68,7 @@ const HeaderProfile = () => {
                 </a>}
               </p>
             </div>
-            <div className="font-semibold flex my-4 lg:mb-8"><span className="bg-gamefiDark-600 px-2 py-1 rounded-sm">{guildData?.scholarship || 0} Scholars</span></div>
+            <div className="font-semibold flex my-4 lg:mb-8"><span className="bg-gamefiDark-600 px-2 py-1 rounded-sm">{printNumber(guildData?.scholarship || 0)}+ Scholars</span></div>
             <div className='flex gap-2'>
               {guildData?.projects?.map((game, index) => index < 5 && <div key={`supported-${index}`}>
                 <Tippy key={`game-logo-${game.id}`} content={game.name}>

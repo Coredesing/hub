@@ -52,7 +52,8 @@ export function fetchTopSelected () {
       logo: {
         populate: '*'
       }
-    }
+    },
+    sort: ['scholarship:desc']
   }, {
     encodeValuesOnly: true
   })

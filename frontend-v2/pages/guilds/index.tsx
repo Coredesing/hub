@@ -70,6 +70,7 @@ const Guilds = ({ guilds, scholarshipPrograms }: Props) => {
               </div>
               <div className="hidden mt-14 lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
                 {guilds?.length && guilds.map(guild => <GuildCard key={`guild-card-${guild.id}`} item={guild}></GuildCard>)}
+                {guilds?.length < 6 && [...Array(6 - guilds.length)].map(value => <GuildCard item={null} key={`draft-${value}`} isDraft={true}></GuildCard>)}
               </div>
               <div className="w-full lg:hidden mt-14">
                 <Flicking circular={true} className="w-full" align="center" ref={refGuild} interruptable={true}>

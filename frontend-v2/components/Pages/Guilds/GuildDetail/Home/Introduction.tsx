@@ -15,7 +15,7 @@ const Introduction = () => {
         </div>
         <div className='p-6 bg-gamefiDark-700 rounded-bl-sm md:rounded-bl-none md:rounded-tr-sm rounded-br-sm text-gamefiDark-100'>
           <div className="grid md:grid-cols-2 gap-4">
-            <div className='flex gap-4 items-center'>
+            {/* <div className='flex gap-4 items-center'>
               <span className='w-5 h-5 block rounded-full'>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M2.66667 7.33334H0.666667C0.489856 7.33334 0.320286 7.40357 0.195262 7.5286C0.0702379 7.65362 0 7.82319 0 8L0 15.3333C0 15.5101 0.0702379 15.6797 0.195262 15.8047C0.320286 15.9298 0.489856 16 0.666667 16H2.66667V7.33334Z" fill="#3E3C43" />
@@ -25,7 +25,7 @@ const Introduction = () => {
               <span className='text-13px font-casual font-light leading-5'>
                 <span className="font-medium text-white">{printNumber(guildData.likeCount || 0)}</span> people like this
               </span>
-            </div>
+            </div> */}
             <div className='flex gap-4 items-center'>
               <span className='w-5 h-5 block rounded-full'>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -68,7 +68,7 @@ const Introduction = () => {
                 </svg>
               </span>
               <span className='text-13px font-casual font-light leading-5'>
-                <span className="font-medium text-white">Region of Member:</span> {guildData.memberRegions}
+                <span className="font-medium text-white">Member Regions:</span> {guildData.memberRegions}
               </span>
             </div>
           </div>

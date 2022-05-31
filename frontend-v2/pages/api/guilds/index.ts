@@ -37,6 +37,40 @@ export function fetchOneWithId (id) {
   return fetcher(`${GUILD_API_BASE_URL}/guilds/${id}?${query}`)
 }
 
+export function fetchOneWithSlug (slug) {
+  const query = qs.stringify({
+    populate: {
+      projects: {
+        populate: '*'
+      },
+      backers: {
+        populate: '*'
+      },
+      members: {
+        populate: '*'
+      },
+      ImageRepeater: {
+        populate: 'image'
+      },
+      banner: {
+        populate: '*'
+      },
+      logo: {
+        populate: '*'
+      },
+      roadmapPicture: {
+        populate: '*'
+      },
+      gallery: {
+        populate: '*'
+      }
+    }
+  }, {
+    encodeValuesOnly: true
+  })
+  return fetcher(`${GUILD_API_BASE_URL}/guilds?filters[slug][$eq]=${slug}&${query}`)
+}
+
 export function fetchTopSelected () {
   const query = qs.stringify({
     populate: {

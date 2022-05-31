@@ -6,7 +6,7 @@ import News from '@/components/Pages/Guilds/GuildDetail/News'
 import { GuildDetailContext } from '@/components/Pages/Guilds/GuildDetail/utils'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useMemo } from 'react'
-import { fetchOneWithId } from '../api/guilds'
+import { fetchOneWithId, fetchOneWithSlug } from '../api/guilds'
 import 'tippy.js/dist/tippy.css'
 
 const GuildDetail = ({ guildData }: { guildData: any }) => {
@@ -85,7 +85,7 @@ export async function getServerSideProps ({ params }) {
     return { props: { guildData: null } }
   }
 
-  const guildData = await fetchOneWithId(params.slug)
+  const guildData = await fetchOneWithSlug(params.slug)
 
-  return { props: { guildData: guildData.data } }
+  return { props: { guildData: guildData.data[0] } }
 }

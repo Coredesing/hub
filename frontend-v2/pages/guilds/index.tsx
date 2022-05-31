@@ -78,7 +78,7 @@ const Guilds = ({ guilds }: Props) => {
             ? <div className="max-w-[1380px] mx-auto lg:px-16 my-8 mt-12">
               <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
                 <div className="inline-block top-0 left-0 right-0 uppercase w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
-                Guild News
+                Top Selected Guilds
                 </div>
                 <div className="absolute -bottom-5 left-0 right-0">
                   <Image src={require('@/assets/images/under-stroke-green.svg')} alt="understroke"></Image>
@@ -101,7 +101,7 @@ const Guilds = ({ guilds }: Props) => {
             ? <div className="w-full bg-black pb-24 mt-14" style={{ clipPath: isMobile ? 'polygon(50% 100%, 100% 95%, 100% 0, 0 0, 0 95%)' : 'polygon(50% 100%, 100% 85%, 100% 0, 0 0, 0 85%)' }}>
               <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-[500px] mx-auto text-center font-bold md:text-lg lg:text-xl">
                 <div className="inline-block -top-1px left-0 right-0 uppercase bg-gamefiDark w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
-                  Top Scholarship Program
+                  Guild News
                 </div>
                 <div className="absolute -bottom-5 left-0 right-0">
                   <Image src={require('@/assets/images/under-stroke-yellow.svg')} alt="understroke"></Image>

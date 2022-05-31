@@ -1,17 +1,32 @@
 import { printNumber } from '@/utils'
 import { format } from 'date-fns'
+import { useState } from 'react'
 import { useGuildDetailContext } from '../utils'
 
 const Introduction = () => {
   const { guildData } = useGuildDetailContext()
+  const [showMore, setShowMore] = useState(false)
 
   return (
     <div className="container mx-auto px-4 lg:px-16">
       <div className='grid md:grid-cols-2'>
         <div className='p-6 bg-gamefiDark-700/70 text-gamefiDark-100 rounded-tl-sm md:rounded-bl-sm md:rounded-tr-none rounded-tr-sm font-casual text-sm leading-7'>
-          <p>
+          <p className={!showMore && 'line-clamp-6'}>
             {guildData.introduction}
           </p>
+          {
+            showMore
+              ? <button className="w-full flex justify-center" onClick={() => setShowMore(false)}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 9L12.3536 8.64645L12 8.29289L11.6464 8.64645L12 9ZM18.3536 14.6464L12.3536 8.64645L11.6464 9.35355L17.6464 15.3536L18.3536 14.6464ZM11.6464 8.64645L5.64645 14.6464L6.35355 15.3536L12.3536 9.35355L11.6464 8.64645Z" fill="white" />
+                </svg>
+              </button>
+              : <button className="w-full flex justify-center" onClick={() => setShowMore(true)}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 15L12.3536 15.3536L12 15.7071L11.6464 15.3536L12 15ZM18.3536 9.35355L12.3536 15.3536L11.6464 14.6464L17.6464 8.64645L18.3536 9.35355ZM11.6464 15.3536L5.64645 9.35355L6.35355 8.64645L12.3536 14.6464L11.6464 15.3536Z" fill="white" />
+                </svg>
+              </button>
+          }
         </div>
         <div className='p-6 bg-gamefiDark-700 rounded-bl-sm md:rounded-bl-none md:rounded-tr-sm rounded-br-sm text-gamefiDark-100'>
           <div className="grid md:grid-cols-2 gap-4">

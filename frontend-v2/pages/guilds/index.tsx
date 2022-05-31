@@ -1,5 +1,5 @@
 import Layout from '@/components/Layout'
-import React, { useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import GuildCard from '@/components/Pages/Guilds/GuildCard'
 import ScholarshipCard from '@/components/Pages/Guilds/ScholarshipCard'
@@ -11,14 +11,17 @@ import arrowLeft from '@/assets/images/icons/arrow-left.png'
 import arrowRight from '@/assets/images/icons/arrow-right.png'
 import { useMediaQuery } from 'react-responsive'
 import { fetchScholarshipPrograms, fetchTopSelected } from '../api/guilds'
+import { fetcher } from '@/utils'
+import toast from 'react-hot-toast'
+import PostItem from '@/components/Pages/Guilds/GuildDetail/News/PostItem'
 
 type Props = {
   guilds: any[];
-  scholarshipPrograms: any[];
 }
 
-const Guilds = ({ guilds, scholarshipPrograms }: Props) => {
+const Guilds = ({ guilds }: Props) => {
   const isMobile = useMediaQuery({ maxWidth: '1000px' })
+  const [posts, setPosts] = useState([])
 
   const [plugins] = useState([
     new Pagination({
@@ -45,6 +48,19 @@ const Guilds = ({ guilds, scholarshipPrograms }: Props) => {
 
     ref.current.next().catch(() => {})
   }
+
+  const fetchNews = useCallback(async () => {
+    try {
+      const response = await fetcher(`/api/guilds/posts?tag=guild&limit=${6}`)
+      setPosts(response.data)
+      console.log(response)
+    } catch (e) {
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchNews()
+  }, [fetchNews])
 
   return (
     <Layout title='GameFi.org - Guilds' extended={true}>
@@ -81,7 +97,7 @@ const Guilds = ({ guilds, scholarshipPrograms }: Props) => {
             : <></>
         }
         {
-          scholarshipPrograms?.length > 0
+          posts?.length > 0
             ? <div className="w-full bg-black pb-24 mt-14" style={{ clipPath: isMobile ? 'polygon(50% 100%, 100% 95%, 100% 0, 0 0, 0 95%)' : 'polygon(50% 100%, 100% 85%, 100% 0, 0 0, 0 85%)' }}>
               <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-[500px] mx-auto text-center font-bold md:text-lg lg:text-xl">
                 <div className="inline-block -top-1px left-0 right-0 uppercase bg-gamefiDark w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
@@ -104,7 +120,7 @@ const Guilds = ({ guilds, scholarshipPrograms }: Props) => {
                   ref={refScholar}
                   interruptable={true}
                 >
-                  {scholarshipPrograms.map(program => <div className="px-2 mb-8" key={`scholarship-${program.id}`}><ScholarshipCard item={program} className="mb-4"></ScholarshipCard></div>)}
+                  {posts.map(program => <div className="px-2 mb-8" key={`scholarship-${program.id}`}><PostItem item={program} className="mb-4"></PostItem></div>)}
                   <ViewportSlot>
                     <div className="flicking-pagination !relative flex items-center justify-center gap-1"></div>
                     <div></div>

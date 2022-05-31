@@ -1,4 +1,3 @@
-import React, { useMemo } from 'react'
 import { format } from 'date-fns'
 
 const ScholarshipCard = ({ item, className }: { item: any; className?: string }) => {

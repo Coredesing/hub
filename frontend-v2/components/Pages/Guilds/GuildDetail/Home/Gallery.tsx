@@ -1,7 +1,7 @@
 import { Pagination } from '@egjs/flicking-plugins'
 import Flicking, { ViewportSlot } from '@egjs/react-flicking'
 import Image from 'next/image'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useGuildDetailContext } from '../utils'
 
 import '@egjs/flicking-plugins/dist/pagination.css'

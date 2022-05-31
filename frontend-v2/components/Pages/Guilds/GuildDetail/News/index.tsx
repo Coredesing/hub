@@ -1,20 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PostItem from './PostItem'
 import { fetcher } from '@/utils'
 import toast from 'react-hot-toast'
 import { ContentLoading } from '@/components/Base/Animation'
-import { useRouter } from 'next/router'
 import { useGuildDetailContext } from '../utils'
 
 const PER_PAGE = 20
 
 const News = () => {
   const [posts, setPosts] = useState([])
-  const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
   const { guildData } = useGuildDetailContext()
-
-  const router = useRouter()
 
   const fetchNews = useCallback(async () => {
     setLoading(true)
@@ -27,7 +23,7 @@ const News = () => {
       setLoading(false)
       toast.error(e.message || 'Loading News Failed!')
     }
-  }, [])
+  }, [guildData.slug])
 
   useEffect(() => {
     fetchNews()

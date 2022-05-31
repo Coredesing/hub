@@ -7,7 +7,7 @@ type Props = {
   item: any;
 }
 
-const PostItem = ({ className, item }: Props) => {
+const PostItem = ({ item }: Props) => {
   return (
     <div className="bg-gamefiDark-630/30 rounded flex flex-col gap-0">
       <Link href={`/insight/${item.slug}`} passHref={true}>

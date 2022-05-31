@@ -45,7 +45,7 @@ const Article = ({ post }) => {
       <div className="mt-4 inline-flex gap-2 flex-wrap font-casual text-sm">
         { post.tags && post.tags.map(tag =>
           <Link href={`/insight/tag/${tag.slug}`} passHref={true} key={tag.id}>
-            <a className="px-2 py-1 bg-[#242732] cursor-pointer hover:bg-gamefiDark-650 uppercase rounded-sm" key={tag.id}>#{tag.name}</a>
+            <a className="px-2 py-1 bg-[#242732] cursor-pointer hover:bg-gamefiDark-650 uppercase rounded-sm" key={tag.id}>{tag.name}</a>
           </Link>
         )}
       </div>

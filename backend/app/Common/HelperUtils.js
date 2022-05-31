@@ -364,6 +364,10 @@ const getStakingPool = async (wallet_address) => {
       continue;
     }
 
+    if (Number(pool.rkp_rate) < 0.01) {
+      continue;
+    }
+
     try {
       switch (pool.staking_type) {
         case 'alloc':

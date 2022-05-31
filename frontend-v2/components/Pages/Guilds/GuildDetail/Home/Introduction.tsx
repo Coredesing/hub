@@ -1,6 +1,5 @@
 import { printNumber } from '@/utils'
 import { format } from 'date-fns'
-import React, { useEffect } from 'react'
 import { useGuildDetailContext } from '../utils'
 
 const Introduction = () => {

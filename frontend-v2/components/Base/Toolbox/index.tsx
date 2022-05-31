@@ -86,7 +86,7 @@ const Toolbox = () => {
             <svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M17 8H7c-3.86 0-7 3.14-7 7s3.14 7 7 7h10c3.86 0 7-3.14 7-7s-3.14-7-7-7Zm-7 8H8v2H6v-2H4v-2h2v-2h2v2h2v2Zm5 1a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm3-2a1 1 0 1 1 0-2 1 1 0 0 1 0 2ZM13 2a1 1 0 0 0-2 0v4h2V2Z" fill="currentColor" />
             </svg>
-            <span>Hub</span>
+            <span>Games</span>
           </MenuLink>
           <MenuLink onClick={() => setShowMenu(false)} path='/guilds'>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -97,7 +97,7 @@ const Toolbox = () => {
               <path d="M20 19V11C20 9.87 19.609 8.838 18.974 8H22C23.105 8 24 8.895 24 10V16H22V21C22 21.552 21.552 22 21 22H19C18.448 22 18 21.552 18 21V19H20Z" fill="currentColor"/>
               <path d="M20 7C21.105 7 22 6.105 22 5C22 3.895 21.105 3 20 3C18.895 3 18 3.895 18 5C18 6.105 18.895 7 20 7Z" fill="currentColor"/>
             </svg>
-            <span>Guild Hub</span>
+            <span>Guilds</span>
           </MenuLink>
           <MenuLink onClick={() => setShowMenu(false)} path='/ino'>
             <svg width="30" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">

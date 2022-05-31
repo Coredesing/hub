@@ -6,6 +6,8 @@ import { format } from 'date-fns'
 import TwitterParser from './TwitterParser'
 import Flicking, { ViewportSlot } from '@egjs/react-flicking'
 import { Pagination } from '@egjs/flicking-plugins'
+import '@egjs/flicking-plugins/dist/pagination.css'
+import '@egjs/flicking/dist/flicking.css'
 
 const PER_PAGE = 6
 
@@ -24,7 +26,6 @@ const TwitterFeed = () => {
       setMeta(response?.data?.posts?.meta)
       setUser(response?.data?.user?.data)
       setLoading(false)
-      console.log(response)
     } catch (e) {
       setLoading(false)
     }

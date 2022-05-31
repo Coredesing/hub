@@ -55,7 +55,7 @@ const Gallery = () => {
           ref={ref}
           onChanged={e => {
             setCurrentIndex(e.index)
-            console.log(e)
+            console.debug(e)
           }}
         >
           {guildData.gallery.map((item, index) => <div key={`guild-gallery-${item.id}`} className="w-2/3 mb-12">

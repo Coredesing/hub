@@ -18,7 +18,6 @@ const TwitterParser = (props) => {
       const link = `<a href="${url}" target="_blank" rel="noreferer noopener noreferrer">@${userOnly}</a>`
       return link
     })
-    console.log(html)
     html = html.replace(REGEX_HASHTAG, (hashtag) => {
       const hashtagOnly = hashtag.slice(1)
       const url = `https://twitter.com/hashtag/${hashtagOnly}`

@@ -18,7 +18,6 @@ const News = () => {
       const response = await fetcher(`/api/guilds/posts?tag=${guildData.slug}&limit=${PER_PAGE}`)
       setPosts(response.data)
       setLoading(false)
-      console.log(response)
     } catch (e) {
       setLoading(false)
       toast.error(e.message || 'Loading News Failed!')

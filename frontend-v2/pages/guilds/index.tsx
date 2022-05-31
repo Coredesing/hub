@@ -53,7 +53,6 @@ const Guilds = ({ guilds }: Props) => {
     try {
       const response = await fetcher(`/api/guilds/posts?tag=guild&limit=${6}`)
       setPosts(response.data)
-      console.log(response)
     } catch (e) {
     }
   }, [])
@@ -86,10 +85,10 @@ const Guilds = ({ guilds }: Props) => {
               </div>
               <div className="hidden mt-14 lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
                 {guilds?.length && guilds.map(guild => <GuildCard key={`guild-card-${guild.id}`} item={guild}></GuildCard>)}
-                {guilds?.length < 6 && [...Array(6 - guilds.length)].map((value, index) => <GuildCard item={null} key={`draft-${value}`} isDraft={true}></GuildCard>)}
+                {guilds?.length < 6 && [...Array(6 - guilds.length)].map((value, index) => <GuildCard item={null} key={`draft-card-${index}`} isDraft={true}></GuildCard>)}
               </div>
               <div className="w-full lg:hidden mt-14">
-                <Flicking circular={true} className="w-full" align="center" ref={refGuild} interruptable={true}>
+                <Flicking circular={true} className="w-full" align="center" ref={refGuild}>
                   {guilds?.length && guilds.map(guild => <div key={`guild-card-mobile-${guild.id}`} className="w-3/4 px-2"><GuildCard item={guild}></GuildCard></div>)}
                 </Flicking>
               </div>
@@ -118,9 +117,9 @@ const Guilds = ({ guilds }: Props) => {
                   plugins={plugins}
                   align="prev"
                   ref={refScholar}
-                  interruptable={true}
+                  // interruptable={true}
                 >
-                  {posts.map(program => <div className="px-2 mb-8" key={`scholarship-${program.id}`}><PostItem item={program} className="mb-4"></PostItem></div>)}
+                  {posts.map(program => <div className="px-2 mb-8" key={`guild-news-${program.id}`}><PostItem item={program} className="mb-4"></PostItem></div>)}
                   <ViewportSlot>
                     <div className="flicking-pagination !relative flex items-center justify-center gap-1"></div>
                     <div></div>

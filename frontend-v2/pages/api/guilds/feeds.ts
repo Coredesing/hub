@@ -12,7 +12,6 @@ const fetchTimeline = async (id, limit = 6) => {
   const url = `https://api.twitter.com/2/users/${id}/tweets?expansions=attachments.media_keys&media.fields=preview_image_url,url&tweet.fields=created_at&max_results=${limit}`
   const cachedResponse = await cache.get(url)
   if (cachedResponse) {
-    console.log('get-cache', cachedResponse)
     return cachedResponse
   }
 
@@ -25,7 +24,6 @@ const fetchUser = async (id) => {
   const url = `https://api.twitter.com/2/users/${id}?user.fields=profile_image_url,url,username,verified`
   const cachedResponse = await cache.get(url)
   if (cachedResponse) {
-    console.log('get-cache', cachedResponse)
     return cachedResponse
   }
 

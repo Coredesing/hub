@@ -133,7 +133,7 @@ const Guilds = ({ guilds }: Props) => {
             </div>
             : ''
         }
-        <div className="pt-32 w-full overflow-hidden">
+        <div className="pt-32 w-full overflow-hidden font-casual">
           <div className="max-w-[1380px] mx-auto px-4 lg:px-16 w-full select-none grid lg:grid-cols-2 gap-4">
             <div className="w-full text-[36px] leading-[36px] lg:text-[84px] lg:leading-[67px] uppercase font-bold">Get Involved With Guild Games</div>
             <div className="flex flex-col gap-4 relative text-gamefiDark-100">
@@ -147,7 +147,7 @@ const Guilds = ({ guilds }: Props) => {
               </div>
             </div>
           </div>
-          <div className="mt-14 px-4 lg:px-16 w-full o max-w-[1380px] mx-auto">
+          <div className="mt-14 px-4 lg:px-16 w-full o max-w-[1380px] mx-auto font-casual">
             <div className="max-w-[400px]">There are normally 4 roles in a guild. Person can take on various roles depending on the project.</div>
           </div>
           <div className="overflow-auto max-w-[1380px] mx-auto px-4 lg:px-16 w-full pb-8 font-casual text-sm font-light hide-scrollbar">

@@ -55,8 +55,11 @@ export default async function handler (req, res) {
           posts: response
         }
       })
+
+      return
     } catch (e) {
       res.status(500).json({ status: 500, message: e?.message || 'Something went wrong!', data: null })
+      return
     }
   }
 

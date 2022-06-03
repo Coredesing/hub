@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import styles from '@/assets/styles/animation.module.scss'
 
 export const ContentLoading = ({ className }: { className?: string }) => {
   useEffect(() => {
@@ -25,4 +26,8 @@ export const ContentLoading = ({ className }: { className?: string }) => {
       <span className="dot t"><span className="dot l"></span></span>
     </div>
   </div>
+}
+
+export const Spinning = ({ className }: { className?:string }) => {
+  return <div className={`${styles.spinning} ${className}`}></div>
 }

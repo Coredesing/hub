@@ -17,6 +17,7 @@ export const categories = {
   partnership: 'Partnership',
   igo: 'IGO',
   ino: 'INO & Marketplace',
+  learn: 'Learn',
   review: 'Game Review',
   ama: 'AMA'
 }

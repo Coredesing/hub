@@ -458,7 +458,7 @@ const GameCarousel = ({ items, likes }: Props) => {
   return (
     !isMobile
       ? <div>
-        <div id='flicking1wrapper' className="flex w-full items-center gap-4 relative">
+        <div id='flicking1wrapper' className="flex max-w-[1180px] mx-auto items-center gap-4 relative">
           <div className="hidden sm:block">
             <img src={arrowLeft.src} alt="" className="w-8 cursor-pointer opacity-80 hover:opacity-100 select-none" onClick={prev}/>
           </div>
@@ -556,6 +556,8 @@ const GameCarousel = ({ items, likes }: Props) => {
         </div>
       </div>
       : <div>
+        {/* TODO: Deep dive into debug to fix Did not expect server HTML to contain a <div> in <div>. */}
+        <div></div>
         <div className="flex w-full h-full items-center gap-4">
           <Flicking circular={true} plugins={plugins} className="w-full h-full flex" align="center" ref={refSlider} interruptable={true}>
             {items.map(item => (
@@ -569,6 +571,7 @@ const GameCarousel = ({ items, likes }: Props) => {
                     style={{ aspectRatio: '16/9', objectFit: 'fill' }}
                     muted
                     controls
+                    preload="auto"
                     controlsList="nodownload"
                     poster={item.screen_shots_1}
                     onPlay={() => {

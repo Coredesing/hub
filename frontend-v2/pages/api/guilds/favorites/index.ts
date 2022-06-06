@@ -27,7 +27,7 @@ export default async function handler (req, res) {
       const response = await actionFavorite(JSON.parse(req.body), req.headers)
       const { data, e } = response || {}
       if (!e) {
-        res.status(200).json({ data })
+        res.status(200).json({ data, response })
       } else {
         res.status(500).json(e)
       }
@@ -41,7 +41,7 @@ export default async function handler (req, res) {
     try {
       console.log(req?.query?.id?.toString())
       const result = await fetchFavorites({ objectID: req?.query?.id?.toString() })
-      // console.log(result?.data?.favorites?.meta?.pagination)
+      console.log(result?.data?.favorites?.meta?.pagination)
       if (!result?.data) {
         res.status(200).json({ data: 0 })
         return

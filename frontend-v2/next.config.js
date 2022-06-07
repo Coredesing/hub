@@ -31,6 +31,11 @@ let config = {
         source: '/press',
         destination: '/press-kit',
         permanent: false
+      },
+      {
+        source: '/guildhub/free-to-join',
+        destination: '/guilds',
+        permanent: false
       }
     ]
   },

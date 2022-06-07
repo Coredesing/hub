@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export const GET_FAVORITE_BY_USER_ID = gql`
-  query favorite($userId: ID $objectID: String) {
-    favorites(filters: { objectID: {eq: $objectID} user: { id: { eq: $userId } } }) {
+  query favorite($walletAddress: String $objectID: String) {
+    favorites(filters: { objectID: {eq: $objectID} user: { walletAddress: { eq: $walletAddress } } }) {
       data {
         id,
         attributes{type, user{data{attributes{username}}}, objectID}

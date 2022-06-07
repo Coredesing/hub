@@ -7,16 +7,18 @@ import useConnectWallet from '@/hooks/useConnectWallet'
 import useHubProfile from '@/hooks/useHubProfile'
 import toast from 'react-hot-toast'
 import { Spinning } from '@/components/Base/Animation'
+import { useMyWeb3 } from '@/components/web3/context'
 
 const HeaderProfile = () => {
   const router = useRouter()
   const { guildData } = useGuildDetailContext()
   const { accountHub } = useHubProfile()
+  const { account } = useMyWeb3()
   const [favorite, setFavorite] = useState(false)
   const [loadingFavorite, setLoadingFavorite] = useState(false)
 
   const getFavoriteByUserId = useCallback(async () => {
-    await fetcher('/api/guilds/favorites/getFavoritesByUserId', { method: 'POST', body: JSON.stringify({ variables: { userId: accountHub?.id, objectID: guildData?.id?.toString(), type: 'guild' } }) }).then((response) => {
+    await fetcher('/api/guilds/favorites/getFavoritesByUserId', { method: 'POST', body: JSON.stringify({ variables: { walletAddress: account, objectID: guildData?.id?.toString(), type: 'guild' } }) }).then((response) => {
       const result = response?.data?.favorites?.data
       if (result.length > 0) {
         setFavorite(true)
@@ -24,7 +26,7 @@ const HeaderProfile = () => {
     }).catch((err) => {
       console.debug('err', err)
     })
-  }, [accountHub?.id, guildData.id])
+  }, [account, guildData?.id])
 
   useEffect(() => {
     if (accountHub) {
@@ -55,7 +57,7 @@ const HeaderProfile = () => {
           toast.error('Failed!')
           setLoadingFavorite(false)
         } else {
-          setFavorite(!favorite)
+          getFavoriteByUserId()
           toast.success('Success')
           setLoadingFavorite(false)
         }
@@ -68,7 +70,7 @@ const HeaderProfile = () => {
       toast.error(e?.message || 'Something went wrong!')
       setLoadingFavorite(false)
     })
-  }, [connectWallet, favorite, guildData?.id])
+  }, [connectWallet, favorite, getFavoriteByUserId, guildData?.id])
 
   return (
     <div className="container mx-auto px-4 lg:px-16">

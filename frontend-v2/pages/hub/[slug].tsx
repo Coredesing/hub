@@ -123,7 +123,7 @@ const GameDetails = ({ data }) => {
     <Layout title={data.game_name || 'GameFi.org Hub'} description={stripTags(data?.game_intro)} image={data.screen_shots_1}>
       <Head>
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={data.game_name || 'GameFi.org Hub'} />
+        <meta name="twitter:title" content={data.game_name || 'GameFi.org Games'} />
         <meta name="twitter:description" content={stripTags(data?.game_intro)} />
         <meta name="twitter:url" content={`https://gamefi.org/hub/${data.slug}`} />
         <meta name="twitter:image" content={data.screen_shots_1} />

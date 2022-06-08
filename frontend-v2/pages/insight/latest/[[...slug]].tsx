@@ -60,7 +60,7 @@ export default Articles
 
 export async function getStaticProps (context) {
   const page = context.params.slug?.[0] || 1
-  const posts = await api.posts.browse({ limit: PER_PAGE, page }).catch(() => {})
+  const posts = await api.posts.browse({ limit: PER_PAGE, filter: 'tag:-unlisted', page }).catch(() => {})
 
   if (!posts) {
     return {
@@ -77,7 +77,7 @@ export async function getStaticProps (context) {
 }
 
 export async function getStaticPaths () {
-  const posts = await api.posts.browse({ limit: PER_PAGE, fields: ['title'] }).catch(() => {})
+  const posts = await api.posts.browse({ limit: PER_PAGE, fields: ['title'], filter: 'tag:-unlisted' }).catch(() => {})
   const pages = posts?.meta?.pagination?.pages || 1
   if (pages === 1) {
     return {

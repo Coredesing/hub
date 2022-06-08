@@ -38,7 +38,7 @@ const PageIndex = () => {
   }, [featuredGames, gameLikeIds, fetchLikesResponse?.data])
 
   return (
-    <Layout title="GameFi.org">
+    <Layout>
       {/* <GameFiCarousel likes={likes} items={featuredGames}></GameFiCarousel> */}
       <div className="md:px-4 lg:px-16 mt-4 md:container mx-auto lg:block">
         <Banners></Banners>

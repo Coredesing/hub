@@ -59,7 +59,7 @@ const PageIndex = ({ featuredGames = [], currentPools = [], likes = [] }) => {
         {itemsSorted && itemsSorted.length ? <GameCarousel likes={likes} items={itemsSorted}></GameCarousel> : <></>}
       </div>
       <Instruction></Instruction>
-      <TicketList></TicketList>
+      {/* <TicketList></TicketList> */}
       <IGOList listUpcoming={listUpcoming}></IGOList>
       <div className="bg-gamefiDark-900">
         <GameList></GameList>

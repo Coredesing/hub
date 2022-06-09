@@ -4,7 +4,6 @@ import Sidebar from '@/components/Base/Sidebar'
 import Topbar from '@/components/Base/Topbar'
 import Toolbox from '@/components/Base/Toolbox'
 import Footer from '@/components/Base/Footer'
-import imageSocial from '@/assets/images/gamefi.jpg'
 
 type Props = {
   children?: ReactNode;
@@ -44,14 +43,18 @@ const Layout = ({ children, title, description, image, disableFooter, extended }
     <div className={`flex w-full h-screen ${theme}`}>
       <div className="dark:bg-gamefiDark-900 dark:text-white w-full h-full flex flex-col md:flex-row">
         <Head>
-          <title>{title}</title>
+          <title>{title || 'GameFi.org - The One-stop Web3 Game Hub'}</title>
           <meta charSet="utf-8" />
           <link rel="shortcut icon" href="/favicon.ico" />
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-          <meta property="og:title" content={title || 'GameFi.org'} key="title" />
-          <meta property="og:description" content={description || 'GameFi.org is an all-in-one discovery gaming hub for games, guilds, and metaverses.'} key="description" />
-          <meta property="og:image" content={image || imageSocial.src} key="image" />
+          <meta property="og:title" content={title || 'GameFi.org - The One-stop Web3 Game Hub'} key="title" />
+          <meta property="og:description" content={description || 'GameFi.org is an all-in-one discovery gaming hub for games and metaverses.'} key="description" />
+          <meta property="og:image" content={image || 'https://gamefi.org/gamefi.jpeg'} key="image" />
           <meta name="keywords" content="launchpad, game hub, nft marketplace, game portal, game pass, game guild, tournament, metaverse, ido"></meta>
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content={title || 'GameFi.org - The One-stop Web3 Game Hub'} />
+          <meta name="twitter:description" content={description || 'GameFi.org is an all-in-one discovery gaming hub for games and metaverses.'} />
+          <meta name="twitter:image" content={image || 'https://gamefi.org/gamefi.jpeg'} />
         </Head>
 
         <div>

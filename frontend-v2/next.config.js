@@ -7,7 +7,7 @@ let config = {
   swcMinify: true,
   eslint: {
     ignoreDuringBuilds: true,
-    dirs: ['pages', 'components', 'utils', 'hooks', 'context']
+    dirs: ['pages', 'components', 'utils', 'hooks', 'context', 'graphql']
   },
   sassOptions: {
     includePaths: [path.join(__dirname, 'styles'), path.join(__dirname, 'node_modules')]
@@ -30,6 +30,11 @@ let config = {
       {
         source: '/press',
         destination: '/press-kit',
+        permanent: false
+      },
+      {
+        source: '/guildhub/free-to-join',
+        destination: '/guilds',
         permanent: false
       }
     ]

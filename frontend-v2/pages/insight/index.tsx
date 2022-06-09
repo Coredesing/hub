@@ -17,6 +17,7 @@ export const categories = {
   partnership: 'Partnership',
   igo: 'IGO',
   ino: 'INO & Marketplace',
+  learn: 'Learn',
   review: 'Game Review',
   ama: 'AMA'
 }
@@ -495,7 +496,7 @@ export default News
 
 export async function getStaticProps () {
   const postsFeatured = await api.posts.browse({ include: 'authors,tags', limit: 4, filter: 'featured:true' })
-  const postsLatest = await api.posts.browse({ limit: 4 })
+  const postsLatest = await api.posts.browse({ limit: 4, filter: 'tag:-unlisted' })
   const postsUpdate = await api.posts.browse({ limit: 4, filter: 'tag:update' })
   const postsPartnership = await api.posts.browse({ limit: 4, filter: 'tag:partnership' })
   const postsIGO = await api.posts.browse({ limit: 6, filter: 'tag:igo' })

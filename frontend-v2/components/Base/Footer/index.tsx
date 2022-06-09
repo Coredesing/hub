@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="flex flex-wrap align-middle items-start justify-center lg:items-start lg:grid lg:grid-cols-5 lg:gap-2 zl:gap-4">
         <div className="basis-full lg:col-span-2 flex flex-col items-center lg:block">
           <Image src={require('@/assets/images/logo-color.png')} alt="gamefi" width={291.75} height={30}></Image>
-          <div className="mt-8 font-thin text-base"><span className="font-bold text-gamefiGreen-700">GameFi.org</span> is an all-in-one discovery gaming hub for games, guilds, and metaverses.</div>
+          <div className="mt-8 font-thin text-base"><span className="font-bold text-gamefiGreen-700">GameFi.org</span> is an all-in-one discovery hub for games and metaverses.</div>
           <div className="flex mt-6">
             <div className="mr-3 cursor-pointer">
               <a href="https://gamefi.org/" target="_blank" rel="noreferrer">
@@ -87,8 +87,8 @@ const Footer = () => {
         <div className="basis-1/3 text-center lg:text-left mt-8 lg:mt-0">
           <div className="font-mechanic font-bold text-base uppercase text-white opacity-50">OUR TEAM</div>
           <div className="mt-3 lg:mt-4 flex flex-col text-base leading-7 font-extralight">
-            <a href="https://about.gamefi.org/#features" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Features</a>
-            <a href="https://about.gamefi.org/#roadmap" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Roadmap</a>
+            {/* <a href="https://about.gamefi.org/#features" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Features</a>
+            <a href="https://about.gamefi.org/#roadmap" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Roadmap</a> */}
             <a href="https://about.gamefi.org/#ourteam" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Team</a>
             <a href="https://about.gamefi.org/#advisors" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Advisors</a>
           </div>

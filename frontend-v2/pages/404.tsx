@@ -8,8 +8,8 @@ export default function Custom404 () {
       <meta charSet="utf-8" />
       <link rel="shortcut icon" href="/favicon.ico" />
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      <meta property="og:title" content={'GameFi.org'} key="title" />
-      <meta property="og:description" content={'GameFi.org is an all-in-one discovery gaming hub for games, guilds, and metaverses.'} key="description" />
+      <meta property="og:title" content={'GameFi.org - The One-stop Web3 Game Hub'} key="title" />
+      <meta property="og:description" content={'GameFi.org is an all-in-one discovery gaming hub for games and metaverses.'} key="description" />
     </Head>
     <NotFound />
   </div>

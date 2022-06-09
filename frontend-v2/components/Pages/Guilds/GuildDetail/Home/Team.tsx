@@ -10,7 +10,7 @@ const Team = () => {
         <div className="mb-5 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
           {guildData.members.map((member, index) => <div key={`team-member-${index}`}>
             <div className="w-full aspect-1 bg-gamefiDark-630/30 rounded overflow-hidden">
-              {member.avatar ? <img src={member.avatar?.url} className="w-full h-full object-contain" alt=""></img> : ''}
+              {member.avatar ? <a href={member.linkedin} target="_blank" rel="noreferrer noopener"><img src={member.avatar?.url} className="w-full h-full object-contain" alt=""></img></a> : ''}
             </div>
             <div className="mt-4 w-full text-center">
               <div className="font-semibold">{member.name}</div>

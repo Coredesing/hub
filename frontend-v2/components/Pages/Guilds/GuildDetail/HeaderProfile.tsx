@@ -1,12 +1,76 @@
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useGuildDetailContext } from './utils'
 import Tippy from '@tippyjs/react'
-import { printNumber } from '@/utils'
+import { fetcher, printNumber } from '@/utils'
+import useConnectWallet from '@/hooks/useConnectWallet'
+import useHubProfile from '@/hooks/useHubProfile'
+import toast from 'react-hot-toast'
+import { Spinning } from '@/components/Base/Animation'
+import { useMyWeb3 } from '@/components/web3/context'
 
 const HeaderProfile = () => {
   const router = useRouter()
   const { guildData } = useGuildDetailContext()
+  const { accountHub } = useHubProfile()
+  const { account } = useMyWeb3()
+  const [favorite, setFavorite] = useState(false)
+  const [loadingFavorite, setLoadingFavorite] = useState(false)
+
+  const getFavoriteByUserId = useCallback(async () => {
+    await fetcher('/api/guilds/favorites/getFavoritesByUserId', { method: 'POST', body: JSON.stringify({ variables: { walletAddress: account, objectID: guildData?.id?.toString(), type: 'guild' } }) }).then((response) => {
+      const result = response?.data?.favorites?.data
+      if (result.length > 0) {
+        setFavorite(true)
+      } else setFavorite(false)
+    }).catch((err) => {
+      console.debug('err', err)
+    })
+  }, [account, guildData?.id])
+
+  useEffect(() => {
+    if (accountHub) {
+      getFavoriteByUserId()
+    }
+  }, [accountHub, getFavoriteByUserId])
+  const { connectWallet } = useConnectWallet()
+
+  const handleFavorite = useCallback(() => {
+    setLoadingFavorite(true)
+    connectWallet().then((res: any) => {
+      if (!res) {
+        toast.error('User not found!')
+        setLoadingFavorite(false)
+        return
+      }
+
+      const { walletAddress, signature } = res
+      fetcher('/api/guilds/favorites', {
+        method: 'POST',
+        body: JSON.stringify({ objectID: guildData?.id?.toString(), type: 'guild', favorite }),
+        headers: {
+          'X-Signature': signature,
+          'X-Wallet-Address': walletAddress
+        }
+      }).then(({ err }) => {
+        if (err) {
+          toast.error('Failed!')
+          setLoadingFavorite(false)
+        } else {
+          getFavoriteByUserId()
+          toast.success('Success')
+          setLoadingFavorite(false)
+        }
+      }).catch((err) => {
+        toast.error('Failed')
+        setLoadingFavorite(false)
+        console.debug('err', err)
+      })
+    }).catch(e => {
+      toast.error(e?.message || 'Something went wrong!')
+      setLoadingFavorite(false)
+    })
+  }, [connectWallet, favorite, getFavoriteByUserId, guildData?.id])
 
   return (
     <div className="container mx-auto px-4 lg:px-16">
@@ -79,6 +143,35 @@ const HeaderProfile = () => {
                 guildData?.projects?.length > 5 && <div className="w-9 h-9 rounded bg-gamefiDark-600 flex items-center justify-center font-medium">+{guildData?.projects?.length - 5}</div>
               }
             </div>
+            {favorite
+              ? <button onClick={handleFavorite} className="float-right mt-4 lg:mt-0 w-full cursor-pointer lg:w-[146px] h-[36px] clipped-b-l p-px bg-[#FF5959] rounded-sm flex items-center justify-center">
+                <div className="w-full h-full bg-gamefiDark-900/95 hover:opacity-95 rounded-sm flex justify-center items-center gap-2 font-bold uppercase text-sm clipped-b-l">
+                  {
+                    loadingFavorite
+                      ? <Spinning className="w-6 h-6"></Spinning>
+                      : <>
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M9.91671 0.583984C8.69171 0.583984 7.64171 1.22565 7.00004 2.15898C6.35837 1.22565 5.30837 0.583984 4.08337 0.583984C2.15837 0.583984 0.583374 2.15898 0.583374 4.08398C0.583374 7.58398 7.00004 12.834 7.00004 12.834C7.00004 12.834 13.4167 7.58398 13.4167 4.08398C13.4167 2.15898 11.8417 0.583984 9.91671 0.583984Z" fill="#FF5959"/>
+                        </svg>
+                        Unlike
+                      </>
+                  }
+                </div>
+              </button>
+              : <button onClick={handleFavorite} className="float-right mt-4 lg:mt-0 w-full cursor-pointer lg:w-[146px] h-[36px] clipped-b-l p-px bg-gamefiDark-500 rounded-sm flex items-center justify-center">
+                <div className="w-full h-full bg-gamefiDark-700 hover:opacity-95 rounded-sm flex justify-center items-center gap-2 font-bold uppercase text-sm clipped-b-l">
+                  {
+                    loadingFavorite
+                      ? <Spinning className="w-6 h-6"></Spinning>
+                      : <>
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M9.91659 0.583984C8.69159 0.583984 7.64159 1.22565 6.99992 2.15898C6.35825 1.22565 5.30825 0.583984 4.08325 0.583984C2.15825 0.583984 0.583252 2.15898 0.583252 4.08398C0.583252 7.58398 6.99992 12.834 6.99992 12.834C6.99992 12.834 13.4166 7.58398 13.4166 4.08398C13.4166 2.15898 11.8416 0.583984 9.91659 0.583984Z" stroke="white" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        Like
+                      </>
+                  }
+                </div>
+              </button>}
           </div>
         </div>
       </div>

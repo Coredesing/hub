@@ -48,39 +48,12 @@ const PlayIcon = ({ onClick }: IconProps) => <svg onClick={onClick} width="70" h
   <path d="M30.2333 23.3833C30.0724 23.2626 29.881 23.1891 29.6806 23.171C29.4802 23.153 29.2788 23.1911 29.0989 23.281C28.9189 23.371 28.7676 23.5093 28.6618 23.6805C28.556 23.8516 28.5 24.0488 28.5 24.25V43.75C28.5 43.9512 28.556 44.1484 28.6618 44.3195C28.7676 44.4907 28.9189 44.629 29.0989 44.719C29.2788 44.8089 29.4802 44.847 29.6806 44.829C29.881 44.8109 30.0724 44.7374 30.2333 44.6167L46.2333 34.8667C46.3679 34.7658 46.4771 34.6349 46.5523 34.4845C46.6275 34.3341 46.6667 34.1682 46.6667 34C46.6667 33.8318 46.6275 33.6659 46.5523 33.5155C46.4771 33.3651 46.3679 33.2342 46.2333 33.1333L30.2333 23.3833Z" fill="white"/>
 </svg>
 
-const Countdown = ({ curItem, current }) => {
+const Countdown = ({ to }) => {
   const [mounted, setMounted] = useState(false)
   const [days, setDays] = useState('00')
   const [hours, setHours] = useState('00')
   const [minutes, setMinutes] = useState('00')
   const [seconds, setSeconds] = useState('00')
-  const { tierMine } = useAppContext()
-
-  const poolData = useMemo(() => {
-    return get(curItem, 'pool')
-  }, [curItem])
-
-  const to = useMemo(() => {
-    const currentKey = current?.key
-    switch (currentKey) {
-    case 'pre-whitelist':
-      return get(poolData, 'start_join_pool_time')
-    case 'whitelist':
-      return get(poolData, 'end_join_pool_time')
-    case 'winner-announcement':
-      return tierMine?.id >= poolData?.pre_order_min_tier ? get(poolData, 'start_pre_order_time') : get(poolData, 'start_time')
-    case 'pre-order':
-      return get(poolData, 'start_time')
-    case 'buying-phase':
-      return get(poolData, 'finish_time')
-    case 'buying-phase-1':
-      return get(poolData, 'freeBuyTimeSetting.start_buy_time')
-    case 'buying-phase-2':
-      return get(poolData, 'finish_time')
-    default:
-      return ''
-    }
-  }, [current?.key, poolData, tierMine?.id])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -101,7 +74,7 @@ const Countdown = ({ curItem, current }) => {
 
   useEffect(() => setMounted(true), [])
   if (!mounted || !to) return null
-  if (current?.key === 'tba') return <div className="font-semibold text-2xl">Coming Soon</div>
+  // if (to === 'TBA') return <div className="font-semibold text-2xl">Coming Soon</div>
 
   return <div className="text-[28px] text-white leading-[100%] font-bold font-mechanic flex mb-8 bg-black bg-opacity-20 clipped-t-l overflow-hidden">
     <div className='flex px-5 py-3 gap-4'>
@@ -136,9 +109,9 @@ const GameCarousel = ({ items, likes }: Props) => {
   const [calculatedVideoLayerWidth, setCalculatedVideoLayerWidth] = useState(0)
   const [curItem, setCurItem] = useState(items?.[0] || {})
   const [isCurVideoPlaying, setIsCurVideoPlaying] = useState(false)
-  const [current, setCurrent] = useState(null)
+  const [countdown, setCountDown] = useState({ title: '', toTime: null })
 
-  const { tierMine, now } = useAppContext()
+  const { now } = useAppContext()
 
   const isMobile = useMediaQuery({ maxWidth: '1000px' })
   const getLikeById = (id: any) => {
@@ -294,166 +267,25 @@ const GameCarousel = ({ items, likes }: Props) => {
     setCurItem(items[curPanelIndex] || {})
   }, [curPanelIndex, items])
 
-  const [hasFCFS, preOrderMinTier] = useMemo(() => {
-    const poolData = get(curItem, 'pool')
-    const _hasFCFS = poolData?.freeBuyTimeSetting?.start_buy_time
-    const _preOrderMinTier = getTierById(poolData?.pre_order_min_tier)
-
-    return [_hasFCFS, _preOrderMinTier]
-  }, [curItem])
-
-  const timeline = useMemo<Milestone[]>(() => {
-    const poolData = get(curItem, 'pool')
-    return [
-      {
-        key: 'tba',
-        milestone: 'Upcoming - TBA',
-        active: false,
-        start: undefined,
-        end: undefined,
-        info: {
-          countdownTitle: 'TBA'
-        }
-      },
-      {
-        key: 'pre-whitelist',
-        milestone: 'Upcoming - Whitelist',
-        active: false,
-        start: undefined,
-        end: poolData?.start_join_pool_time ? new Date(Number(poolData?.start_join_pool_time) * 1000) : undefined,
-        info: {
-          countdownTitle: 'Whitelist Starts In'
-        }
-      },
-      {
-        key: 'whitelist',
-        milestone: 'Apply Whitelist',
-        active: true,
-        start: poolData?.start_join_pool_time ? new Date(Number(poolData?.start_join_pool_time) * 1000) : undefined,
-        end: poolData?.end_join_pool_time ? new Date(Number(poolData?.end_join_pool_time) * 1000) : undefined,
-        info: {
-          countdownTitle: 'Whitelist Ends In'
-        }
-      },
-      {
-        key: 'winner-announcement',
-        milestone: 'Winner Announcement',
-        active: true,
-        start: poolData?.end_join_pool_time ? new Date(Number(poolData?.end_join_pool_time) * 1000) : undefined,
-        end: tierMine?.id >= poolData?.pre_order_min_tier
-          ? (poolData?.start_pre_order_time ? new Date(Number(poolData?.start_pre_order_time) * 1000) : undefined)
-          : (poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined),
-        info: {
-          countdownTitle: tierMine?.id >= poolData?.pre_order_min_tier ? 'Pre-order starts in' : (hasFCFS ? 'Phase 1 Starts In' : 'Buying Phase Starts In')
-        }
-      },
-      {
-        key: 'pre-order',
-        milestone: 'Pre-order',
-        active: !!poolData?.start_pre_order_time,
-        start: poolData?.start_pre_order_time ? new Date(Number(poolData?.start_pre_order_time) * 1000) : undefined,
-        end: poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined,
-        info: {
-          minTier: preOrderMinTier,
-          countdownTitle: hasFCFS ? 'Phase 1 Starts In' : 'Buying Phase Starts In'
-        }
-      },
-      {
-        key: 'buying-phase',
-        milestone: 'Buying Phase',
-        active: true,
-        start: poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined,
-        end: poolData?.finish_time ? new Date(Number(poolData?.finish_time) * 1000) : undefined,
-        info: {
-          countdownTitle: 'Buying Phase Ends In'
-        },
-        subMilestones: hasFCFS
-          ? [
-            {
-              key: 'buying-phase-1',
-              milestone: 'Phase 1 - Guaranteed',
-              active: true,
-              start: poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined,
-              end: poolData?.freeBuyTimeSetting?.start_buy_time ? new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000) : undefined,
-              info: {
-                countdownTitle: 'Phase 2 Starts In'
-              }
-            },
-            {
-              key: 'buying-phase-2',
-              milestone: 'Phase 2 - FCFS',
-              active: true,
-              start: poolData?.freeBuyTimeSetting?.start_buy_time ? new Date(Number(poolData?.freeBuyTimeSetting?.start_buy_time) * 1000) : undefined,
-              end: poolData?.finish_time ? new Date(Number(poolData?.finish_time) * 1000) : undefined,
-              info: {
-                countdownTitle: 'Phase 2 Ends In'
-              }
-            }
-          ]
-          : []
-      },
-      {
-        key: 'claim',
-        milestone: 'Claim',
-        active: !!poolData?.start_pre_order_time,
-        start: poolData?.start_pre_order_time ? new Date(Number(poolData?.start_pre_order_time) * 1000) : undefined,
-        end: poolData?.start_time ? new Date(Number(poolData?.start_time) * 1000) : undefined,
-        info: {
-          countdownTitle: 'Next Claim In'
-        }
-      }
-    ]
-  }, [curItem, hasFCFS, preOrderMinTier, tierMine?.id])
-
   useEffect(() => {
-    const poolData = get(curItem, 'pool')
-    if (!poolData) return setCurrent(null)
-    if (!poolData.start_join_pool_time && poolData.campaign_status?.toLowerCase() === 'tba') {
-      return setCurrent(timeline[TIMELINE.TBA])
+    if (!curItem?.pool?.start_time && ['tba', 'upcoming'].includes(curItem?.pool?.campaign_status?.toLowerCase())) {
+      return setCountDown({ title: 'Whitelist Starts In', toTime: 'TBA' })
     }
-
-    if (now?.getTime() < dateFromString(poolData.start_join_pool_time)?.getTime()) {
-      return setCurrent(timeline[TIMELINE.PRE_WHITELIST])
+    if (curItem?.pool?.finish_time && curItem?.pool?.campaign_status?.toLowerCase() === 'swap') {
+      return setCountDown({ title: 'Swap Ends In', toTime: curItem?.pool?.finish_time })
     }
-
-    if (isInRange(poolData?.start_join_pool_time, poolData?.end_join_pool_time, now)) {
-      return setCurrent(timeline[TIMELINE.WHITELIST])
+    if (curItem?.pool?.buy_type?.toLowerCase() === 'whitelist' &&
+    curItem?.pool?.campaign_status?.toLowerCase() === 'upcoming' &&
+    now?.getTime() >= new Date(Number(curItem?.pool?.start_join_pool_time) * 1000).getTime() &&
+    now?.getTime() < new Date(Number(curItem?.pool?.end_join_pool_time) * 1000).getTime()) {
+      return setCountDown({ title: 'Whitelist Ends In', toTime: curItem?.pool?.end_join_pool_time })
     }
-
-    if (poolData.start_pre_order_time && tierMine?.id >= poolData.pre_order_min_tier && isInRange(poolData?.end_join_pool_time, poolData?.start_pre_order_time, now)) {
-      return setCurrent(timeline[TIMELINE.WINNER_ANNOUNCEMENT])
+    if (curItem?.pool?.buy_type?.toLowerCase() === 'whitelist' &&
+    now?.getTime() < new Date(Number(curItem?.pool?.start_join_pool_time) * 1000).getTime()) {
+      return setCountDown({ title: 'Whitelist Starts In', toTime: curItem?.pool?.start_time })
     }
-
-    if ((!poolData.start_pre_order_time || tierMine?.id < poolData.pre_order_min_tier) &&
-      isInRange(poolData.end_join_pool_time, poolData.start_time, now)) {
-      return setCurrent(timeline[TIMELINE.WINNER_ANNOUNCEMENT])
-    }
-
-    if (poolData.start_pre_order_time &&
-      tierMine?.id >= poolData?.pre_order_min_tier &&
-      isInRange(poolData?.start_pre_order_time, poolData?.start_time, now)) {
-      return setCurrent(timeline[TIMELINE.PRE_ORDER])
-    }
-
-    if (!hasFCFS &&
-      isInRange(poolData?.start_time, poolData?.finish_time, now)) {
-      return setCurrent(timeline[TIMELINE.BUYING_PHASE])
-    }
-
-    if (hasFCFS &&
-      isInRange(poolData?.start_time, poolData?.freeBuyTimeSetting?.start_buy_time, now)) {
-      return setCurrent(timeline[TIMELINE.BUYING_PHASE].subMilestones[0])
-    }
-
-    if (hasFCFS &&
-      isInRange(poolData?.freeBuyTimeSetting?.start_buy_time, poolData?.finish_time, now)) {
-      return setCurrent(timeline[TIMELINE.BUYING_PHASE].subMilestones[1])
-    }
-
-    if (now?.getTime() > dateFromString(poolData.finish_time)?.getTime()) {
-      return setCurrent(timeline.find(item => item.key === 'claim'))
-    }
-  }, [curItem, hasFCFS, now, tierMine?.id, timeline])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [curItem])
 
   return (
     !isMobile
@@ -530,9 +362,12 @@ const GameCarousel = ({ items, likes }: Props) => {
                   }
                 </div>
                 <div className="text-[40px] font-bold uppercase text-left mb-8  leading-[100%]">{get(curItem, 'game_name')}</div>
-                { curItem.pool && <div className='uppercase mt-8 font-bold text-[13px] tracking-[0.04em] leading-[150%] mb-1'>{get(current, 'info.countdownTitle') || ''}</div> }
+                { curItem.pool && <div className='uppercase mt-8 font-bold text-[13px] tracking-[0.04em] leading-[150%] mb-1'>{get(countdown, 'title') || ''}</div> }
                 {
-                  curItem.pool && <Countdown curItem={curItem} current={current}/>
+                  curItem.pool && countdown?.toTime !== 'TBA' && <Countdown to={countdown.toTime}/>
+                }
+                {
+                  curItem.pool && countdown?.toTime === 'TBA' && <div className='font-casual pb-3'>TBA</div>
                 }
                 <div>
                   <Link href={curItem.pool ? `/igo/${get(curItem, 'pool.id')}` : `/hub/${get(curItem, 'slug')}`} passHref>
@@ -556,7 +391,6 @@ const GameCarousel = ({ items, likes }: Props) => {
         </div>
       </div>
       : <div>
-        {/* TODO: Deep dive into debug to fix Did not expect server HTML to contain a <div> in <div>. */}
         <div></div>
         <div className="flex w-full h-full items-center gap-4">
           <Flicking circular={true} plugins={plugins} className="w-full h-full flex" align="center" ref={refSlider} interruptable={true}>

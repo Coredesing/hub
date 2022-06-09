@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useScreens } from '../utils'
 import Image from 'next/image'
 import CardItem from './CardItem'
@@ -6,9 +6,14 @@ import Flicking from '@egjs/react-flicking'
 import '@egjs/flicking-plugins/dist/pagination.css'
 import '@egjs/flicking/dist/flicking.css'
 
-const IGOList = ({ listUpcoming, loading }) => {
+const IGOList = ({ listUpcoming }) => {
+  const [loading, setLoading] = useState(true)
   const screens = useScreens()
   const refSlider = useRef(null)
+
+  useEffect(() => {
+    setLoading(false)
+  }, [])
 
   return (listUpcoming && listUpcoming.length > 0
     ? <>
@@ -24,28 +29,19 @@ const IGOList = ({ listUpcoming, loading }) => {
         {
           screens.mobile || screens.tablet
             ? <div className="mt-14">
-              <Flicking circular={true} className="w-full" align="center" ref={refSlider} interruptable={true}>
+              { !loading && <Flicking circular={true} className="w-full" align="center" ref={refSlider} interruptable={true}>
                 {listUpcoming.map(item => (
                   <div key={item.id} className="w-2/3 px-3"><CardItem item={item}></CardItem></div>
                 ))}
-              </Flicking>
+              </Flicking>}
             </div>
             : <div className="mx-auto md:container 2xl:px-16">
-              <div className={`text-center justify-center ${listUpcoming.length <= 3 ? 'flex' : 'grid grid-cols-3'} gap-4 xl:gap-6 mt-14`}>
-                {listUpcoming.map(item => (
-                  <CardItem key={`igo-${item.id}`} item={item} className="max-w-[400px]"></CardItem>
-                ))}
-              </div>
               {
-                loading
-                  ? <div className="loader-wrapper mx-auto mt-14">
-                    <svg className="loader" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                  Loading...
-                  </div>
-                  : <></>
+                !loading && <div className={`text-center justify-center ${listUpcoming.length <= 3 ? 'flex' : 'grid grid-cols-3'} gap-4 xl:gap-6 mt-14`}>
+                  {listUpcoming.map(item => (
+                    <CardItem key={`igo-${item.id}`} item={item} className="max-w-[400px]"></CardItem>
+                  ))}
+                </div>
               }
             </div>
         }

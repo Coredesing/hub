@@ -60,7 +60,7 @@ const PageIndex = ({ featuredGames = [], currentPools = [], likes = [] }) => {
       </div>
       <Instruction></Instruction>
       <TicketList></TicketList>
-      <IGOList listUpcoming={listUpcoming} loading={false}></IGOList>
+      <IGOList listUpcoming={listUpcoming}></IGOList>
       <div className="bg-gamefiDark-900">
         <GameList></GameList>
         <Partners></Partners>

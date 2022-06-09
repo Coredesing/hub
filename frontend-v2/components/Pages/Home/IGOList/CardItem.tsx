@@ -36,7 +36,7 @@ const CardItem = ({ item, ...props }: Props) => {
           </Link>
         </div>
         {
-          !item?.start_time && ['tba', 'upcoming'].includes(item.campaign_status?.toLowerCase()) && <div className="py-3 w-full flex flex-col items-center justify-center">
+          !item?.start_join_pool_time && !item?.start_time && ['tba', 'upcoming'].includes(item.campaign_status?.toLowerCase()) && <div className="py-3 w-full flex flex-col items-center justify-center">
             <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Starts In</div>
             <div className="mt-2 font-medium">TBA</div>
           </div>

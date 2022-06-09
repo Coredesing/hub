@@ -61,6 +61,10 @@ const Countdown = ({ to }) => {
         start: new Date(Number(to) * 1000),
         end: new Date()
       })
+      if (duration.days === 0 && duration.hours === 0 && duration.minutes === 0 && duration.seconds === 0) {
+        clearInterval(interval)
+        return
+      }
       setDays(duration.days < 10 ? `0${duration.days}` : `${duration.days}`)
       setHours(duration.hours < 10 ? `0${duration.hours}` : `${duration.hours}`)
       setMinutes(duration.minutes < 10 ? `0${duration.minutes}` : `${duration.minutes}`)
@@ -68,7 +72,7 @@ const Countdown = ({ to }) => {
     }, 1000)
 
     return () => {
-      clearInterval(interval)
+      interval && clearInterval(interval)
     }
   }, [to])
 
@@ -282,7 +286,11 @@ const GameCarousel = ({ items, likes }: Props) => {
     }
     if (curItem?.pool?.buy_type?.toLowerCase() === 'whitelist' &&
     now?.getTime() < new Date(Number(curItem?.pool?.start_join_pool_time) * 1000).getTime()) {
-      return setCountDown({ title: 'Whitelist Starts In', toTime: curItem?.pool?.start_time })
+      return setCountDown({ title: 'Whitelist Starts In', toTime: curItem?.pool?.start_join_pool_time })
+    }
+    if (now?.getTime() > new Date(Number(curItem?.pool?.end_join_pool_time) * 1000).getTime() &&
+    now?.getTime() <= new Date(Number(curItem?.pool?.start_time) * 1000).getTime()) {
+      return setCountDown({ title: 'Buying Phase Starts In', toTime: curItem?.pool?.start_time })
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [curItem])

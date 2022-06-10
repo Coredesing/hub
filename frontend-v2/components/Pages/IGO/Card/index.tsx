@@ -28,7 +28,6 @@ const Card = ({ item, color, background, external }: { item: Item; color?: strin
   // }, [fetchParticipants, setParticipants])
 
   const poolClaimTime = useMemo(() => {
-    console.log(item)
     const start = item?.campaignClaimConfig?.[0]?.finish_time ? new Date(Number(item?.campaignClaimConfig?.[0]?.finish_time) * 1000) : undefined
     return {
       start

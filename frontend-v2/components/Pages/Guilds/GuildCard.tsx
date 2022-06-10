@@ -7,10 +7,6 @@ import Image from 'next/image'
 const GuildCard = ({ item, isDraft }: { item: any; isDraft?: boolean }) => {
   const router = useRouter()
 
-  useEffect(() => {
-    console.log(item)
-  }, [item])
-
   return isDraft
     ? <div className="bg-gamefiDark-630/30 cursor-pointer w-full flex flex-col font-casual hover:opacity-90 clipped-b-r relative">
       <div className="font-bold text-[30px] w-64 uppercase leading-[30px] absolute right-[10px] top-[140px] z-[1]">New Guild Coming Soon</div>

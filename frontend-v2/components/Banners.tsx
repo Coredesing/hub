@@ -2,26 +2,13 @@ import { useMemo } from 'react'
 import { useAppContext } from '../context'
 import { useRouter } from 'next/router'
 import banner from '@/assets/images/banner.png'
-import banner2 from '@/assets/images/banner2.png'
 
 const banners = {
   default: {
-    deadline: new Date('2022-05-30T00:00:00Z'),
+    deadline: new Date('2022-07-30T00:00:00Z'),
     img: banner,
-    link: 'https://gamefi.org/igo/x-metaverse',
-    text: 'X-Metaverse IGO'
-  },
-  '/': {
-    deadline: new Date('2022-05-21T00:00:00Z'),
-    img: banner2,
-    link: 'https://www.youtube.com/c/GameFiOfficialChannel',
-    text: 'Monsterra AMA'
-  },
-  '/igo': {
-    deadline: new Date('2022-05-21T00:00:00Z'),
-    img: banner2,
-    link: 'https://www.youtube.com/c/GameFiOfficialChannel',
-    text: 'Monsterra AMA'
+    link: 'https://gamefi.org/guilds',
+    text: 'GameFi.org Guilds'
   }
 }
 

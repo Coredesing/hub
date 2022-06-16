@@ -150,6 +150,11 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const maxBoxCanBuy = useMemo(() => {
     const currentTier = poolInfo.tiers.find(t => t.level === userTier)
     const ticketAllow = currentTier?.ticket_allow || 0
+
+    if (myBoxThisPool <= 0) {
+      return ticketAllow
+    }
+
     if (ticketAllow <= remainingBox) {
       return ticketAllow
     }

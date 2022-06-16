@@ -71,7 +71,7 @@ const BoxesInformationModal = ({ open, onClose, items, idShow }: Props) => {
             items.map((box, id) => <div key={id} className={clsx(styles.itemSlide, 'flex md:flex-row flex-col gap-12 mb-10 font-mechanic')}>
               <div className='md:w-2/5 w-full'>
                 <div className={styles.itemSlideImage}>
-                  <img src={box.banner} className={'w-60 h-32 object-contain relative'} alt="" />
+                  <img src={box.image} className={'w-60 h-32 object-contain relative'} alt="" />
                 </div>
               </div>
               <div className='md:w-3/5 w-full overflow-auto' style={{ maxHeight: '300px' }}>

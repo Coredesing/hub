@@ -189,7 +189,7 @@ class WhiteListSubmissionController {
         campaign_id,
         user_telegram: wallet_address,
         user_twitter: wallet_address,
-        email: email,
+        // email: email,
         self_twitter_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
         self_group_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,
         self_channel_status: Const.SOCIAL_SUBMISSION_STATUS.COMPLETED,

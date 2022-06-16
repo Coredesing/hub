@@ -263,11 +263,6 @@ export const Right = ({ tags }: { tags?: { link: string; image: any; count: any;
       image: require('@/assets/images/ads/nextverse2.jpeg')
     },
     {
-      id: 'nextverse3',
-      link: 'https://nextverse.org',
-      image: require('@/assets/images/ads/nextverse3.jpeg')
-    },
-    {
       id: 'mechmaster-testnet',
       link: 'https://app.mechmaster.io/#/beta-testing-event',
       image: require('@/assets/images/ads/mech-testnet.jpeg')

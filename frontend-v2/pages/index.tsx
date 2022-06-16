@@ -10,7 +10,6 @@ import Partners from '@/components/Pages/Home/Partners'
 import { fetcher } from '@/utils'
 import Layout from '@/components/Layout'
 import Banners from '@/components/Banners'
-import TicketList from '@/components/Pages/Home/TicketList'
 
 const PageIndex = ({ featuredGames = [], currentPools = [], likes = [] }) => {
   const [listUpcoming, listPublic] = useMemo<any[]>(() => {

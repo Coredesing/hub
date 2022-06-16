@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { useMediaQuery } from 'react-responsive'
 import Link from 'next/link'
@@ -9,20 +9,7 @@ import arrowRight from '@/assets/images/icons/arrow-right.png'
 import clsx from 'clsx'
 import get from 'lodash.get'
 import { useAppContext } from '@/context'
-import { TIMELINE } from '@/components/Pages/IGO/constants'
-import { getTierById } from '@/utils/tiers'
-import { dateFromString, isInRange } from '@/utils/pool'
 import { intervalToDuration } from 'date-fns'
-
-type Milestone = {
-  key: string;
-  milestone: string;
-  active: boolean;
-  start: Date | undefined;
-  end: Date | undefined;
-  info?: any;
-  subMilestones?: Milestone[];
-}
 
 type Props = {
   items?: any[];

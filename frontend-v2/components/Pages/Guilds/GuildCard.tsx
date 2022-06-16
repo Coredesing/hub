@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { printNumber } from '@/utils'
 import Tippy from '@tippyjs/react'

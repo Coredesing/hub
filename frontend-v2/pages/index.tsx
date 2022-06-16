@@ -10,6 +10,7 @@ import Partners from '@/components/Pages/Home/Partners'
 import { fetcher } from '@/utils'
 import Layout from '@/components/Layout'
 import Banners from '@/components/Banners'
+import INOList from '@/components/Pages/Home/INOList'
 
 const PageIndex = ({ featuredGames = [], currentPools = [], likes = [] }) => {
   const [listUpcoming, listPublic] = useMemo<any[]>(() => {
@@ -60,6 +61,7 @@ const PageIndex = ({ featuredGames = [], currentPools = [], likes = [] }) => {
       <Instruction></Instruction>
       {/* <TicketList></TicketList> */}
       <IGOList listUpcoming={listUpcoming}></IGOList>
+      <INOList></INOList>
       <div className="bg-gamefiDark-900">
         <GameList></GameList>
         <Partners></Partners>

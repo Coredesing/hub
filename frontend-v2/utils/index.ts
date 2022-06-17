@@ -328,11 +328,13 @@ export const stripTags = (str = '') => {
 }
 
 export const gtagEvent = (name: string, params?: {[key: string]: any}) => {
-  if (!(window as any).gtag) {
-    return
-  }
-
   try {
-    (window as any).gtag('event', name, params || {})
+    if ((window as any).gtag) {
+      (window as any).gtag('event', name, params || {})
+    }
+
+    if ((window as any).fbq) {
+      (window as any).fbq('trackCustom', name, params || {})
+    }
   } catch (_) {}
 }

@@ -37,7 +37,7 @@ const INOList = () => {
             </div>
             : <div className={`pt-14 mx-auto md:container 2xl:px-16 ${listUpcoming.length <= 3 ? 'flex' : 'grid grid-cols-3'} gap-4 xl:gap-6 justify-center items-center`}>
               {listUpcoming.map(item => (
-                <PoolBanner key={`ino-${item.id}`} item={item} color="yellow" tagColor="gamefiDark-700" className="max-w-[400px]" url={`/ino/${item.slug || item.id}`}></PoolBanner>
+                <PoolBanner key={`ino-${item.id}`} item={item} color="yellow" tagColor="gamefiDark-900" className="max-w-[400px]" url={`/ino/${item.slug || item.id}`}></PoolBanner>
               ))}
             </div>
         }

@@ -25,8 +25,8 @@ export const useJoinPool = (poolId: string | number, account: Address, email: st
         campaign_id: poolId
       })
 
-      gtagEvent('join_group', {
-        group_id: poolId
+      gtagEvent('join_pool', {
+        pool_id: poolId
       })
 
       toast.success('Apply whitelist successfully')

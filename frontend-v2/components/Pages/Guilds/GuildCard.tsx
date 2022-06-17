@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { printNumber } from '@/utils'
 import Tippy from '@tippyjs/react'
@@ -6,10 +5,6 @@ import Image from 'next/image'
 
 const GuildCard = ({ item, isDraft }: { item: any; isDraft?: boolean }) => {
   const router = useRouter()
-
-  useEffect(() => {
-    console.log(item)
-  }, [item])
 
   return isDraft
     ? <div className="bg-gamefiDark-630/30 cursor-pointer w-full flex flex-col font-casual hover:opacity-90 clipped-b-r relative">

@@ -83,34 +83,34 @@ export const CountDownTimeV1 = (props: Props) => {
             {formatNumber(time.days)}
           </span>
           <span className="text font-semibold sm:text-xs text-xs text-white uppercase">
-                        Day{time.days > 1 ? 's' : ''}
+            Day{time.days > 1 ? 's' : ''}
           </span>
         </span>
-        <span className="dot sm:text-3xl text-2xl font-bold">:</span>
+        <span className="sm:text-3xl text-2xl font-bold">:</span>
         <span className="time grid place-items-center sm:px-4 px-1 py-2">
           <span className="number text-white sm:text-3xl text-2xl font-bold">
             {formatNumber(time.hours)}
           </span>
           <span className="text font-semibold sm:text-xs text-xs text-white uppercase">
-                        Hour{time.hours > 1 ? 's' : ''}
+            Hour{time.hours > 1 ? 's' : ''}
           </span>
         </span>
-        <span className="dot sm:text-3xl text-2xl font-bold">:</span>
+        <span className="sm:text-3xl text-2xl font-bold">:</span>
         <span className="time grid place-items-center sm:px-4 px-1 py-2">
           <span className="number text-white sm:text-3xl text-2xl font-bold">
             {formatNumber(time.minutes)}
           </span>
           <span className="text font-semibold sm:text-xs text-xs text-white uppercase">
-                        Minute{time.minutes > 1 ? 's' : ''}
+            Minute{time.minutes > 1 ? 's' : ''}
           </span>
         </span>
-        <span className="dot sm:text-3xl text-2xl font-bold">:</span>
+        <span className="sm:text-3xl text-2xl font-bold">:</span>
         <span className="time grid place-items-center sm:px-4 px-1 py-2">
           <span className="number text-white sm:text-3xl text-2xl font-bold">
             {formatNumber(time.seconds)}
           </span>
           <span className="text font-semibold sm:text-xs text-xs text-white uppercase">
-                        Second{time.seconds > 1 ? 's' : ''}
+            Second{time.seconds > 1 ? 's' : ''}
           </span>
         </span>
       </div>

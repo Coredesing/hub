@@ -24,10 +24,6 @@ const GuildDetail = ({ guildData }: { guildData: any }) => {
     }
   }, [router.query.tab])
 
-  useEffect(() => {
-    console.log(guildData)
-  }, [guildData])
-
   return (
     <Layout title={`GameFi.org - ${guildData?.name || 'Guild'}`} description="" extended={!!guildData}>
       {

@@ -163,7 +163,7 @@ const Card = ({ item, color, background, external }: { item: Item; color?: strin
         </div>
       }
       {
-        item.buy_type?.toLowerCase() === 'whitelist' &&
+        item?.campaign_status === 'Upcoming' &&
         now?.getTime() < new Date(Number(item.start_join_pool_time) * 1000).getTime() &&
         <div className="w-full flex flex-col items-center justify-center">
           <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Starts In</div>

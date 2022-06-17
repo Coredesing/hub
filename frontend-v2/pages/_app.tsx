@@ -17,6 +17,7 @@ import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
 const AW_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
+const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID
 
 function MyApp ({ Component, pageProps }: AppProps) {
   // migration signature from localStorage to sessionStorage
@@ -68,6 +69,25 @@ function MyApp ({ Component, pageProps }: AppProps) {
           gtag('config', '${AW_MEASUREMENT_ID}');
         `}
       </Script>
+      <Script id="fb-pixel" strategy="afterInteractive">
+        {`
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '${FB_PIXEL_ID}');
+            fbq('track', 'PageView');
+            `}
+      </Script>
+      <noscript dangerouslySetInnerHTML={{
+        __html: `<img alt="fb-pixel" height="1" width="1" style={{ display: 'none' }} src="https://www.facebook.com/tr?id=803968947595373&ev=PageView&noscript=1"
+        />`
+      }}></noscript>
+
       <Web3ReactProvider getLibrary={getLibrary}>
         <Web3ProviderNetwork getLibrary={getLibrary}>
           <MyWeb3Provider>

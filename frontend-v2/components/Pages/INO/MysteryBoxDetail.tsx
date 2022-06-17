@@ -150,6 +150,11 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   const maxBoxCanBuy = useMemo(() => {
     const currentTier = poolInfo.tiers.find(t => t.level === userTier)
     const ticketAllow = currentTier?.ticket_allow || 0
+
+    if (myBoxThisPool <= 0) {
+      return ticketAllow
+    }
+
     if (ticketAllow <= remainingBox) {
       return ticketAllow
     }
@@ -737,7 +742,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     return !!account && isDeployedPool && ((countdown.isPhase1 && isAppliedWhitelist) || countdown.isPhase2) && countdown.isSale && (!currencySelected.neededApprove || (currencySelected.neededApprove && isApprovedToken))
   }, [account, isDeployedPool, countdown, currencySelected, isApprovedToken, isAppliedWhitelist])
   const isAllowedJoinCompetition = (countdown.isWhitelist || countdown.isUpcoming) && isCommunityPool && poolInfo.socialRequirement?.gleam_link && !isAppliedWhitelist
-  const needAllpyWhitelist = !!poolInfo.start_join_pool_time
+  const needApplyWhitelist = !!poolInfo.start_join_pool_time
   const renderMsg = () => {
     if (!account) {
       return <Alert type="danger">
@@ -770,7 +775,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
         Congratulations! You have successfully applied whitelist and can buy {poolInfo.process === 'only-buy' ? 'Ticket' : 'Mystery Box'}
       </Alert>
     }
-    if (needAllpyWhitelist && ((!loadingCheckJPool && !loadingJPool) && account && (countdown.isSale || countdown.isUpcomingSale)) && !countdown.isPhase2 && !isAppliedWhitelist) {
+    if (needApplyWhitelist && ((!loadingCheckJPool && !loadingJPool) && account && (countdown.isSale || countdown.isUpcomingSale)) && !countdown.isPhase2 && !isAppliedWhitelist) {
       return <Alert type="danger">
         You have not applied whitelist.
         {(timelinePool.freeBuyTime && !countdown.isPhase2) ? ' Please stay tuned, you can buy from Phase 2' : ' Please stay tuned and join other pools'}
@@ -800,20 +805,20 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
     <PoolDetail
       headContent={<div className={clsx(styles.headPool)}>
         {!countdown.isFinished && <div className='mb-10'>{renderMsg()}</div>}
-        <div className={`grid ${needAllpyWhitelist ? 'lg:grid-cols-2' : ''} `}>
-          {needAllpyWhitelist && poolInfo.process !== 'only-buy' && <div className={clsx('flex mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}>
+        <div className={`grid ${needApplyWhitelist ? 'lg:grid-cols-2' : ''} `}>
+          {needApplyWhitelist && poolInfo.process !== 'only-buy' && <div className={clsx('flex mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}>
             <InfoBoxOrderItem label='Registered Users' value={poolInfo.totalRegistered || 0} />
             <InfoBoxOrderItem label='Ordered Boxes' value={poolInfo.totalOrder || 0} />
             <InfoBoxOrderItem label='Your Ordered' value={myBoxOrdered} />
           </div>
           }
           {
-            poolInfo.process === 'only-buy' && needAllpyWhitelist && <div className={clsx('flex items-center mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}></div>
+            poolInfo.process === 'only-buy' && needApplyWhitelist && <div className={clsx('flex items-center mb-2 lg:mb-0 justify-center lg:justify-start', styles.headInfoBoxOrder)}></div>
           }
           <div className={clsx('flex items-center gap-2',
             styles.headCountdown,
             {
-              [styles.headClipedpath]: needAllpyWhitelist,
+              [styles.headClipedpath]: needApplyWhitelist,
               'bg-black justify-center': !countdown.isFinished,
               [`${styles.countdownFinished} justify-center lg:justify-end`]: countdown.isFinished
             })} >
@@ -888,7 +893,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             <Progress {...supplyBox}></Progress>
           </div>
         </div> */}
-        <div className={poolInfo.process === 'only-buy' && 'md:flex gap-2'}>
+        <div className={poolInfo.process === 'only-buy' ? 'md:flex gap-2' : ''}>
           {isAllowedJoinCompetition && !isClickedCompetition && <ButtonBase color="red"
             onClick={() => onJoinCompetition(poolInfo.socialRequirement.gleam_link)}
             className={clsx('w-full mt-4 uppercase')}>

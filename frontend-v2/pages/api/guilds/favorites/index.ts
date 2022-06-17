@@ -17,7 +17,6 @@ export function actionFavorite (data, headers) {
 }
 
 export function fetchFavorites (variables) {
-  console.log(variables)
   return client.query({ query: guilds.GET_TOTAL_FAVORITES, variables })
 }
 
@@ -39,9 +38,7 @@ export default async function handler (req, res) {
 
   if (req?.method === 'GET') {
     try {
-      console.log(req?.query?.id?.toString())
       const result = await fetchFavorites({ objectID: req?.query?.id?.toString() })
-      console.log(result?.data?.favorites?.meta?.pagination)
       if (!result?.data) {
         res.status(200).json({ data: 0 })
         return

@@ -1,63 +1,97 @@
 import GameCarousel from '@/components/Pages/Home/GameCarouselV2'
 
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import useSWR from 'swr'
+import { useMemo } from 'react'
 import IGOList from 'components/Pages/Home/IGOList'
-import INOList from 'components/Pages/Home/INOList'
 import GameList from 'components/Pages/Home/GameList'
-// import NFTList from 'components/Pages/Home/NFTList'
 import Instruction from 'components/Pages/Home/Instruction'
 
 import { API_BASE_URL } from '@/utils/constants'
 import Partners from '@/components/Pages/Home/Partners'
-import Performance from '@/components/Pages/Home/Performance'
 import { fetcher } from '@/utils'
 import Layout from '@/components/Layout'
 import Banners from '@/components/Banners'
-import TicketList from '@/components/Pages/Home/TicketList'
+import INOList from '@/components/Pages/Home/INOList'
 
-const PageIndex = () => {
-  const router = useRouter()
+const PageIndex = ({ featuredGames = [], currentPools = [], likes = [] }) => {
+  const [listUpcoming, listPublic] = useMemo<any[]>(() => {
+    const origin = currentPools
+    let remain = origin
+    const tba = origin.filter(item => !item.start_join_pool_time)
+    remain = remain.filter(item => !tba.includes(item))
+    const preWhitelist = remain.filter(item => new Date().getTime() < new Date(Number(item?.start_join_pool_time) * 1000).getTime()).sort((a, b) => {
+      if (a?.start_join_pool_time < b?.start_join_pool_time) return -1
+      if (a?.start_join_pool_time > b?.start_join_pool_time) return 1
+      return 0
+    })
+    remain = remain.filter(item => !preWhitelist.includes(item))
+    const whitelist = remain.filter(item => new Date().getTime() < new Date(Number(item?.end_join_pool_time) * 1000).getTime()).sort((a, b) => {
+      if (a?.end_join_pool_time < b?.end_join_pool_time) return -1
+      if (a?.end_join_pool_time < b?.end_join_pool_time) return 1
+      return 0
+    })
+    remain = remain.filter(item => !whitelist.includes(item))
+    const preStart = remain.filter(item => new Date().getTime() < new Date(Number(item?.start_time) * 1000).getTime()).sort((a, b) => {
+      if (a?.start_time < b?.start_time) return -1
+      if (a?.start_time < b?.start_time) return 1
+      return 0
+    })
+    remain = remain.filter(item => !preStart.includes(item))?.sort((a, b) => {
+      if (a.finish_time < b.finish_time) return -1
+      if (a.finish_time < b.finish_time) return 1
+      return 0
+    })
+    const sortedItems = [].concat(remain).concat(preStart).concat(whitelist).concat(preWhitelist).concat(tba) || []
+    return [sortedItems, sortedItems.filter(e => e.is_private === 0)]
+  }, [currentPools])
 
-  const [featuredGames, setFeaturedGames] = useState([])
-  const [gameLikeIds, setGameLikesIds] = useState([])
-  const [likes, setLikes] = useState([])
-
-  const { data: fetchFeaturedGamesResponse } = useSWR(`${API_BASE_URL}/aggregator?display_area=Top Game&sort_by=created_at&sort_order=desc`, fetcher)
-  const { data: fetchLikesResponse } = useSWR(`${API_BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`, fetcher)
-
-  useEffect(() => {
-    setFeaturedGames(fetchFeaturedGamesResponse?.data?.data)
-  }, [featuredGames, fetchFeaturedGamesResponse, fetchLikesResponse, gameLikeIds, router])
-
-  useEffect(() => {
-    featuredGames?.map(game => gameLikeIds?.indexOf(game.id) === -1 ? gameLikeIds.push(game.id) : null)
-    setGameLikesIds(gameLikeIds)
-    setLikes(fetchLikesResponse?.data)
-  }, [featuredGames, gameLikeIds, fetchLikesResponse?.data])
+  const itemsSorted = useMemo(() => {
+    const _items = featuredGames.map(aggregator => {
+      const poolDetail = listPublic.find(pool => pool.aggregator_slug === aggregator.slug)
+      return { ...aggregator, pool: poolDetail }
+    })
+    return [..._items.filter(e => e.pool), ..._items.filter(e => !e.pool)]
+  }, [listPublic, featuredGames])
 
   return (
-    <Layout>
-      {/* <GameFiCarousel likes={likes} items={featuredGames}></GameFiCarousel> */}
+    <Layout title="GameFi.org">
       <div className="md:px-4 lg:px-16 mt-4 md:container mx-auto lg:block">
         <Banners></Banners>
-        {/* Load error here */}
-        {/* Loading here */}
-        {featuredGames && featuredGames.length ? <GameCarousel likes={likes} items={featuredGames}></GameCarousel> : <></>}
+        {itemsSorted && itemsSorted.length ? <GameCarousel likes={likes} items={itemsSorted}></GameCarousel> : <></>}
       </div>
       <Instruction></Instruction>
       {/* <TicketList></TicketList> */}
-      <IGOList></IGOList>
+      <IGOList listUpcoming={listUpcoming}></IGOList>
+      <INOList></INOList>
       <div className="bg-gamefiDark-900">
-        {/* <INOList></INOList> */}
         <GameList></GameList>
-        {/* <NFTList></NFTList> */}
         <Partners></Partners>
       </div>
-      {/* <Performance></Performance> */}
     </Layout>
   )
+}
+
+export async function getServerSideProps () {
+  const serverSideProps = { props: {} }
+  try {
+    const gameLikeIds = []
+    const [featureGamesResponse, currentPoolsResponse] = await Promise.all([
+      fetcher(`${API_BASE_URL}/aggregator?display_area=Top Game&sort_by=created_at&sort_order=desc`),
+      fetcher(`${API_BASE_URL}/pools/current-pools?token_type=erc20&limit=100000&page=1&is_private=0,1,2,3`)
+    ])
+    const featuredGames = featureGamesResponse?.data?.data
+    featuredGames?.map(game => gameLikeIds?.indexOf(game.id) === -1 ? gameLikeIds.push(game.id) : null)
+    const fetchLikesResponse = await fetcher(`${API_BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`)
+
+    serverSideProps.props = {
+      featuredGames,
+      currentPools: currentPoolsResponse?.data?.data,
+      likes: fetchLikesResponse?.data
+    }
+
+    return serverSideProps
+  } catch (error) {
+    return serverSideProps
+  }
 }
 
 export default PageIndex

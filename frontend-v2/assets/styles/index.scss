@@ -122,6 +122,7 @@ body {
 
 .thumbs-wrapper {
     margin: 5px 0 !important;
+
     .selected {
         border: 1px solid #72F34B !important;
     }
@@ -133,10 +134,12 @@ body {
 
 .feed a {
     color: #049EF4;
+
     &:hover {
-      text-decoration: underline;
+        text-decoration: underline;
     }
 }
+
 video[poster] {
     height: 100% !important;
     width: 100% !important;
@@ -160,12 +163,15 @@ video[poster] {
     width: 1.25em;
     height: 1.25em;
     margin-right: 0.5em;
+
     circle {
         opacity: 0.25;
     }
+
     path {
         opacity: 0.75;
     }
+
     animation: spin 1s linear infinite;
 }
 
@@ -173,12 +179,15 @@ video[poster] {
     width: 2.5em;
     height: 2.5em;
     margin-right: 0.5em;
+
     circle {
         opacity: 0.25;
     }
+
     path {
         opacity: 0.75;
     }
+
     animation: spin 1s linear infinite;
 }
 
@@ -186,6 +195,7 @@ video[poster] {
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(360deg);
     }
@@ -193,25 +203,51 @@ video[poster] {
 
 .editor-content {
     font-size: 14px;
+
+    blockquote {
+        margin: 2rem 0 0;
+        border-left: 2px solid #6CDB00;
+        padding-left: 2rem;
+        font-style: italic;
+    }
+
     p {
         margin-top: 1em;
-        margin-bottom: 0.25em;
+        margin-bottom: 0.5em;
         color: #f4f4f4;
         line-height: 1.75em;
     }
+
     ul {
         padding-left: 2em;
         list-style: disc;
     }
+
+    ol {
+        li {
+            list-style: decimal;
+            margin: 0 0 0 2.2rem;
+            padding: 0 0 0 0.8rem;
+            line-height: 2;
+        }
+    }
+
     a {
         color: #6CDB00;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
+
     strong {
         color: #fff;
         font-weight: 600;
     }
+
     h1,
-    h2 {
+    h2,
+    h3 {
         font-size: 24px;
         font-family: Rajdhani;
         font-weight: 700;
@@ -219,11 +255,25 @@ video[poster] {
         margin-top: 1.5em;
         margin-bottom: 0.5em;
     }
+
+    h3 {
+        font-size: 20px;
+    }
+
+    figure {
+        margin-bottom: 1em;
+    }
+
     figcaption {
         text-align: center;
         font-size: 0.9em;
         font-style: italic;
         margin-top: 0.5em;
+    }
+
+    .kg-embed-card {
+        width: 75%;
+        margin: auto;
     }
 }
 
@@ -303,6 +353,7 @@ input[type="checkbox"].dark:checked {
     0% {
         background-color: #3e4150;
     }
+
     50%,
     100% {
         background-color: #caccd6;
@@ -310,7 +361,7 @@ input[type="checkbox"].dark:checked {
 }
 
 .flicking-pagination-bullet-active {
-    background-color: #6CDB00!important;
+    background-color: #6CDB00 !important;
 }
 
 .thumbnail-bullet-active {
@@ -319,8 +370,8 @@ input[type="checkbox"].dark:checked {
 
 input.hide-spin::-webkit-outer-spin-button,
 input.hide-spin::-webkit-inner-spin-button {
--webkit-appearance: none;
-margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .animate-ping2 {
@@ -328,6 +379,7 @@ margin: 0;
 }
 
 @keyframes ping2 {
+
     75%,
     100% {
         transform: scale(1.85);
@@ -338,90 +390,90 @@ margin: 0;
 // Animation loading
 .dots {
     display: inline-flex;
-  
+
     &--animate .dot {
-  
-      &.z {
-        animation: scale .8s .2s forwards;
-      }
-  
-      &.f,
-      &.s {
-        animation: right .5s forwards;
-      }
-  
-      &.l {
-        animation: rightDown .4s .1s forwards linear, drop 2s .4s forwards linear;
-      }
-  
-    }
-  }
-  
-  .dot {
-  
-    & {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      background: #ffffff;
-      border-radius: 10px;
-      position: relative;
-      margin-left: 6px;
-    }
-  
-    &.z {
-      position: absolute;
-      transform: scale(0);
-  
-      @keyframes scale {
-        100% {
-          transform: scale(1);
+
+        &.z {
+            animation: scale .8s .2s forwards;
         }
-      }
+
+        &.f,
+        &.s {
+            animation: right .5s forwards;
+        }
+
+        &.l {
+            animation: rightDown .4s .1s forwards linear, drop 2s .4s forwards linear;
+        }
+
     }
-  
+}
+
+.dot {
+
+    & {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background: #ffffff;
+        border-radius: 10px;
+        position: relative;
+        margin-left: 6px;
+    }
+
+    &.z {
+        position: absolute;
+        transform: scale(0);
+
+        @keyframes scale {
+            100% {
+                transform: scale(1);
+            }
+        }
+    }
+
     &.f,
     &.s {
-      transform: translateX(0px);
-  
-      @keyframes right {
-        100% {
-          transform: translateX(16px);
+        transform: translateX(0px);
+
+        @keyframes right {
+            100% {
+                transform: translateX(16px);
+            }
         }
-      }
     }
-  
+
     &.t {
-      background: transparent;
+        background: transparent;
     }
-  
+
     .l {
-      margin-left: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-  
-      @keyframes rightDown {
-  
-        50% {
-          top: 4px;
-          left: 16px;
+        margin-left: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        @keyframes rightDown {
+
+            50% {
+                top: 4px;
+                left: 16px;
+            }
+
+            100% {
+                top: 12px;
+                left: 24px;
+            }
         }
-  
-        100% {
-          top: 12px;
-          left: 24px;
+
+        @keyframes drop {
+            100% {
+                transform: translate(70px, calc(35px + (100vh/2)));
+            }
         }
-      }
-  
-      @keyframes drop {
-        100% {
-          transform: translate(70px, calc(35px + (100vh/2)));
-        }
-      }
     }
-  
-  }
+
+}
 
 //   End animation loading
 
@@ -433,9 +485,10 @@ margin: 0;
 
 @keyframes scale {
     0% {
-      transform: scaleX(0);
+        transform: scaleX(0);
     }
+
     100% {
-      transform: scaleX(1);
+        transform: scaleX(1);
     }
-  }
+}

@@ -73,8 +73,11 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   })
 
   const setEmail = useCallback((v) => {
-    setFormData({ ...formData, email: v })
-  }, [formData])
+    setFormData(_formData => ({
+      ..._formData,
+      email: v
+    }))
+  }, [])
 
   const { isJoinPool, loading: loadingCheckJPool, checkJoinPool } = useCheckJoinPool(poolInfo?.id, account)
   const { joinPool, loading: loadingJPool, success: isJoinSuccess } = useJoinPool(poolInfo?.id, account, formData.email)
@@ -957,7 +960,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
                 target="_blank"
                 rel="norel noreferrer"
                 className="w-full mt-4 uppercase text-black rounded-sm clipped-t-r flex items-center justify-center bg-gamefiGreen font-semibold cursor-pointer">
-                  Play
+                Play
               </a>
               : <Tippy content={<div className="">You need to buy <b>1 Ticket</b> and play the game to get the allocation</div>}>
                 <div className="w-full px-6 py-4 mt-4 uppercase bg-gamefiDark-600 rounded-sm clipped-t-r flex items-center justify-center text-gamefiDark-200 font-semibold cursor-not-allowed">Play</div>
@@ -1022,7 +1025,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               <p className="mt-6 text-sm">In order to participate in the IGO, you must fulfill requirements as below.</p>
               <div className="mt-6 w-full text-sm inline-flex items-center font-medium">
                 <span className="flex items-center justify-center mr-2 bg-black w-6 h-6 rounded-full font-bold">1</span>
-                  Provide social information
+                Provide social information
               </div>
               <div className="flex flex-col sm:flex-row gap-4 mt-2">
                 <div className="w-full text-sm">
@@ -1040,7 +1043,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               </div>
               <div className="mt-6 text-sm flex items-center justify-end gap-6 font-mechanic text-[13px]">
                 <button className="font-bold uppercase text-gamefiGreen-500 hover:text-white" onClick={() => setShowApplyWhitelist(false)}>Close</button>
-                { !isJoinPool && !loadingJPool && <button className="font-bold uppercase clipped-t-r bg-gamefiGreen-600 hover:bg-gamefiGreen-500 text-black py-2 px-6 tracking-wider rounded-sm" onClick={() => { handleJoinPool() }}>Apply Whitelist</button> }
+                {!isJoinPool && !loadingJPool && <button className="font-bold uppercase clipped-t-r bg-gamefiGreen-600 hover:bg-gamefiGreen-500 text-black py-2 px-6 tracking-wider rounded-sm" onClick={() => { handleJoinPool() }}>Apply Whitelist</button>}
                 {loadingJPool && <div className="font-bold uppercase clipped-t-r bg-gamefiGreen-600 hover:bg-gamefiGreen-500 text-black py-4 px-6 w-36 tracking-wider rounded-sm">
                   <div className="dot-flashing mx-auto"></div>
                 </div>}

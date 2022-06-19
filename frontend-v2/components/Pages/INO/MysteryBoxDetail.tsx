@@ -37,7 +37,7 @@ import Link from 'next/link'
 import { getNetworkByAlias } from '@/components/web3'
 import Collection from './Collection'
 import { getTierById } from '@/utils/tiers'
-// import Progress from './Progress'
+import Progress from './Progress'
 import Modal from '@/components/Base/Modal'
 import Tippy from '@tippyjs/react'
 
@@ -891,11 +891,11 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
             />
           </div>
         }
-        {/* <div className='mb-8'>
+        <div className='mb-8'>
           <div className={clsx('gap-2 flex flex-wrap', stylesBoxType.boxTypes)}>
             <Progress {...supplyBox}></Progress>
           </div>
-        </div> */}
+        </div>
         <div className={poolInfo.process === 'only-buy' ? 'md:flex gap-2' : ''}>
           {isAllowedJoinCompetition && !isClickedCompetition && <ButtonBase color="red"
             onClick={() => onJoinCompetition(poolInfo.socialRequirement.gleam_link)}

@@ -306,7 +306,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
       const soldOut = supplyBox.sold !== 0 && supplyBox.total !== 0 && supplyBox.sold >= supplyBox.total
       const currentTime = Date.now()
       if (soldOut) {
-        setCountdown({ date1: 0, date2: 0, title: 'This pool is over. See you in the next pool.', isFinished: true })
+        setCountdown({ date1: 0, date2: 0, title: 'Sold out! See you in the next pool.', isFinished: true })
         timeLine.freeBuyTime ? (timeLinesInfo[!neededApplyWl ? 4 : 5].current = true) : (timeLinesInfo[!neededApplyWl ? 3 : 4].current = true)
       } else if (timeLine.startJoinPooltime > currentTime) {
         setCountdown({ date1: timeLine.startJoinPooltime, date2: currentTime, title: 'Whitelist Opens In', isUpcoming: true })

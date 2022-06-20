@@ -958,7 +958,7 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
               ? <a
                 href={poolInfo.claim_policy}
                 target="_blank"
-                rel="norel noreferrer"
+                rel="noopenner noreferrer"
                 className="w-full mt-4 uppercase text-black rounded-sm clipped-t-r flex items-center justify-center bg-gamefiGreen font-semibold cursor-pointer">
                 Play
               </a>

@@ -122,6 +122,9 @@ class HomeController {
       case 'kingdomquest':
         image = 'https://gamefi-public.s3.amazonaws.com/aggregator/optimized/kingdom-quest/Bundle.png'
         break
+      case 'befitter':
+        image = 'https://gamefi-public.s3.amazonaws.com/aggregator/optimized/befitter/beFITTER_s_Mystery_Shoe_Box_160x160.png'
+        break
       case 'kingdomquest-chest':
         const rarity = parseInt(param.rarity) || 0
         image = NFTDetailUtils.getKingdomQuestNFTDetail(rarity)

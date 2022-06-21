@@ -53,7 +53,7 @@ const PageIndex = ({ featuredGames = [], currentPools = [], likes = [] }) => {
   }, [listPublic, featuredGames])
 
   return (
-    <Layout title="GameFi.org">
+    <Layout>
       <div className="md:px-4 lg:px-16 mt-4 md:container mx-auto lg:block">
         <Banners></Banners>
         {itemsSorted && itemsSorted.length ? <GameCarousel likes={likes} items={itemsSorted}></GameCarousel> : <></>}

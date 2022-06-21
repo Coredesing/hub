@@ -3,10 +3,11 @@ import { forwardRef, useCallback, useEffect, useRef, useState } from 'react'
 
 type Props = {
   src: string;
+  classWrapper?: string;
   size?: 'small' | 'medium';
 } & ObjectType
 
-const ImageLoader = ({ src, size = 'medium', ...props }: Props, ref) => {
+const ImageLoader = ({ src, classWrapper = '', size = 'medium', ...props }: Props, ref) => {
   const [loading, setLoading] = useState(true)
   const mounted = useRef(false)
   useEffect(() => {
@@ -23,7 +24,7 @@ const ImageLoader = ({ src, size = 'medium', ...props }: Props, ref) => {
   }, [mounted])
 
   return (
-    <div ref={ref} className="w-full">
+    <div ref={ref} className={`w-full ${classWrapper}`}>
       {
         loading && <>
           {

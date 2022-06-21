@@ -6,8 +6,9 @@ export function fetchFavorite ({ variables }) {
 }
 
 export default async function handler (req, res) {
+  const payload = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
   try {
-    const data = await fetchFavorite(JSON.parse(req.body))
+    const data = await fetchFavorite(payload)
     res.status(200).json({ data: data.data })
   } catch (e) {
     res

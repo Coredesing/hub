@@ -660,7 +660,6 @@ const MysteryBoxDetail = ({ poolInfo }: any) => {
   //             // arrCollections.push(collection)
   //             handleSetCollection(collection)
   //           } catch (error) {
-  //             console.log('error', error)
   //           }
   //         }
   //       }

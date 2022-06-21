@@ -72,6 +72,12 @@ body {
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 0);
 }
 
+.clipped-b-r-md {
+    margin-top: -1px;
+    margin-left: -1px;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 0);
+}
+
 .clipped-b-r-full {
     margin-top: -1px;
     margin-left: -1px;
@@ -271,6 +277,10 @@ video[poster] {
         margin-top: 0.5em;
     }
 
+    a {
+        color: #FFFFFF;
+    }
+
     .kg-embed-card {
         width: 75%;
         margin: auto;
@@ -302,6 +312,14 @@ input[type="radio"]:checked+label span {
 
 input[type="radio"]:checked+label {
     color: #6cdb00; //text-blue
+}
+
+.tippy-box[data-theme~="no-padding"] {
+    padding: 0;
+
+    .tippy-content {
+        padding: 0;
+    }
 }
 
 input[type="checkbox"].dark:checked {
@@ -374,6 +392,45 @@ input.hide-spin::-webkit-inner-spin-button {
     margin: 0;
 }
 
+.codex-editor {
+    .codex-editor__redactor {
+        padding-bottom: 0px !important;
+    }
+
+    .editor-content {
+        font-size: 16px !important;
+    }
+
+    .ce-paragraph {
+        line-height: 24px !important;
+    }
+
+    .ce-block__content {
+        max-width: 740px !important;
+    }
+
+    .image-tool__image-picture {
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    .ce-header {
+        margin-top: 2px !important;
+    }
+}
+
+#container_introduction {
+    .codex-editor {
+        .codex-editor__redactor {
+            .ce-block__content {
+                margin-left: 0px !important;
+                margin-right: 0px !important;
+                max-width: 100% !important;
+            }
+        }
+    }
+}
+
 .animate-ping2 {
     animation: ping2 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
@@ -385,6 +442,22 @@ input.hide-spin::-webkit-inner-spin-button {
         transform: scale(1.85);
         opacity: 0;
     }
+}
+
+::selection {
+    background: #3297fd !important;
+}
+
+::-moz-selection {
+    background-color: #3297fd !important;
+}
+
+.ce-block--selected .ce-block__content {
+    background: #3297fd !important;
+}
+
+.image-tool__caption {
+    display: none !important;
 }
 
 // Animation loading

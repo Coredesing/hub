@@ -38,6 +38,17 @@ const LeftSideBar = ({ className }) => {
       <div className='mb-6'>
         <div className='flex gap-2 items-center'>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14.5 0.5H1.5C0.948 0.5 0.5 0.948 0.5 1.5V11.5C0.5 12.052 0.948 12.5 1.5 12.5H5.5L8 15.5L10.5 12.5H14.5C15.052 12.5 15.5 12.052 15.5 11.5V1.5C15.5 0.948 15.052 0.5 14.5 0.5Z" stroke={isCurrentLink('/account/review') ? '#6CDB00' : 'white'} strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M3.5 4.5H12.5" stroke={isCurrentLink('/account/review') ? '#6CDB00' : 'white'} strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M3.5 8.5H12.5" stroke={isCurrentLink('/account/review') ? '#6CDB00' : 'white'} strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+
+          <Link href={'/account/review'}><a className={`uppercase text-sm font-bold ${isCurrentLink('/account/review') ? 'text-gamefiGreen-700' : ''}`}>My Review</a></Link>
+        </div>
+      </div>
+      <div className='mb-6'>
+        <div className='flex gap-2 items-center'>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M13.5 0.5H2.5C1.948 0.5 1.5 0.948 1.5 1.5V15.5L4 13.5L6 15.5L8 13.5L10 15.5L12 13.5L14.5 15.5V1.5C14.5 0.948 14.052 0.5 13.5 0.5Z" stroke={isCurrentLink('/account/pools') ? '#6CDB00' : 'white'} strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M4.5 5.5H11.5" stroke={isCurrentLink('/account/pools') ? '#6CDB00' : 'white'} strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M4.5 9.5H11.5" stroke={isCurrentLink('/account/pools') ? '#6CDB00' : 'white'} strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />

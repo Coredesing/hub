@@ -33,7 +33,7 @@ const Asset = () => {
   }), [])
   const { account, library } = useMyWeb3()
   const [currentTab, setTab] = useState(0)
-  const [availableSlugs, setAvailableSlug] = useState([])
+  const [, setAvailableSlug] = useState([])
 
   const router = useRouter()
   const slug = useMemo(() => {

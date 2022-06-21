@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { api, Categories, Right } from '..'
 import { format } from 'date-fns'
-import Pagination from '@/components/Pages/Aggregator/Pagination'
+import Pagination from '@/components/Pages/Hub/Pagination'
 import { useEffect, useState } from 'react'
 
 const PER_PAGE = 10

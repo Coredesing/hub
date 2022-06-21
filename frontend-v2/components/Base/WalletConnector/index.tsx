@@ -31,7 +31,7 @@ const WalletConnector = (props) => {
     <>
       {(!account) &&
         <button
-          className={`uppercase overflow-hidden py-3 px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-bold text-[13px] rounded-xs hover:opacity-95 cursor-pointer w-full md:w-auto rounded-sm clipped-t-r ${btnClass}`}
+          className={`uppercase overflow-hidden py-3 px-8 bg-gamefiGreen-700 text-gamefiDark-900 font-bold text-[13px] rounded-xs hover:opacity-95 cursor-pointer w-full md:w-auto rounded-sm clipped-t-r ${btnClass}`}
           onClick={() => setShowModal(true)}
         >
           Connect Wallet
@@ -79,6 +79,15 @@ const WalletConnector = (props) => {
                           <path d="M0,172v-172h172v172z" fill="none"></path><g fill="currentColor"><path d="M86,11.46667c-6.33287,0 -11.46667,5.1338 -11.46667,11.46667c0.00193,4.23237 2.33509,8.11953 6.06927,10.11172l-22.67578,42.51849l-30.85026,-18.15183c1.03863,-1.76086 1.58762,-3.76737 1.5901,-5.81172c0,-6.33287 -5.1338,-11.46667 -11.46667,-11.46667c-6.33287,0 -11.46667,5.1338 -11.46667,11.46667c0,6.33287 5.1338,11.46667 11.46667,11.46667c0.38161,-0.00338 0.76281,-0.0258 1.14219,-0.06719l4.59115,45.93386h17.2h74.53333h17.2h17.2l4.59114,-45.92266c0.37956,0.03765 0.76077,0.05634 1.14219,0.05599c6.33287,0 11.46667,-5.1338 11.46667,-11.46667c0,-6.33287 -5.1338,-11.46667 -11.46667,-11.46667c-6.33287,0 -11.46667,5.1338 -11.46667,11.46667c0.00248,2.04435 0.55147,4.05086 1.59011,5.81172l-30.85026,18.15183l-22.67578,-42.51849c3.73418,-1.99219 6.06734,-5.87935 6.06927,-10.11172c0,-6.33287 -5.1338,-11.46667 -11.46667,-11.46667zM22.93333,120.4v11.46667c0,6.33533 5.13133,11.46667 11.46667,11.46667h103.2c6.33533,0 11.46667,-5.13133 11.46667,-11.46667v-11.46667z"></path></g>
                         </svg>
                           My Rank
+                      </a>
+                    </Link>
+                    <Link href="/account/review" passHref={true}>
+                      <a className="flex min-w-[15rem] items-center p-1.5 mb-1 bg-gradient-to-r via-transparent hover:from-gamefiDark-400 hover:cursor-pointer rounded-sm">
+                        <svg className='w-4 h-4 mr-2.5 text-gamefiDark-200' width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M1 0H15C15.552 0 16 0.448 16 1V11C16 11.552 15.552 12 15 12H10L4 16V12H1C0.448 12 0 11.552 0 11V1C0 0.448 0.448 0 1 0Z" fill="currentColor"/>
+                        </svg>
+
+                          My Review
                       </a>
                     </Link>
                     <Link href="/account/pools" passHref={true}>

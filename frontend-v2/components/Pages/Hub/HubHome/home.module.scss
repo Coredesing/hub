@@ -1,0 +1,11 @@
+.arrow {
+  &:hover path {
+    stroke:#15171E;
+  }
+}
+
+.countdown {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}

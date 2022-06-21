@@ -13,7 +13,7 @@ let config = {
     includePaths: [path.join(__dirname, 'styles'), path.join(__dirname, 'node_modules')]
   },
   images: {
-    domains: ['i.imgur.com', 'gamefi-public.s3.amazonaws.com', 'imgur.com', 'images.ctfassets.net', 's2.coinmarketcap.com', 's3.coinmarketcap.com', 'gamefi.ghost.io']
+    domains: ['gamefi-cms.s3.ap-southeast-1.amazonaws.com', 'i.imgur.com', 'gamefi-public.s3.amazonaws.com', 'imgur.com', 'images.ctfassets.net', 's2.coinmarketcap.com', 's3.coinmarketcap.com', 'gamefi.ghost.io', 'test-cms.gamefi.org', 'migration-cms.gamefi.org']
   },
   redirects () {
     return [

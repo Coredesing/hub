@@ -27,7 +27,7 @@ import { airdropNetworks, STAKING_CONTRACT, switchNetwork, useWeb3Default } from
 import ERC20_ABI from '@/components/web3/abis/ERC20.json'
 import { useRouter } from 'next/router'
 import imgRocket from '@/assets/images/rocket.png'
-import { useCountdown } from '@/components/Pages/Aggregator/Countdown'
+import { useCountdown } from '@/components/Pages/Hub/Countdown'
 import useWalletSignature from '@/hooks/useWalletSignature'
 import Modal from '@/components/Base/Modal'
 import ABIStakingPool from '@/components/web3/abis/StakingPool.json'

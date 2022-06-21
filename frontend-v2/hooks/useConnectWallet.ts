@@ -2,13 +2,16 @@ import { useCallback } from 'react'
 import { useMyWeb3 } from '@/components/web3/context'
 import useWalletSignature from '@/hooks/useWalletSignature'
 import { fetcher } from '@/utils'
+import { useWalletContext } from '@/components/Base/WalletConnector/provider'
 
 const useConnectWallet = () => {
   const { account } = useMyWeb3()
+  const { setShowModal: showConnectWallet } = useWalletContext()
   const { signMessage } = useWalletSignature()
   const connectWallet = useCallback(() => {
     return new Promise((resolve, reject) => {
       if (!account) {
+        showConnectWallet(true)
         reject(new Error('Please connect wallet'))
         return
       }
@@ -42,7 +45,7 @@ const useConnectWallet = () => {
           reject(error)
         })
     })
-  }, [account, signMessage])
+  }, [account, signMessage, showConnectWallet])
 
   return {
     connectWallet

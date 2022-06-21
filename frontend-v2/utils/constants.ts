@@ -11,6 +11,8 @@ export const GATE_GAFI_SWAP_URL = process.env.NEXT_PUBLIC_GATE_GAFI_SWAP_URL
 export const API_BASE_URL = process.env.NEXT_PUBLIC_SITE_URL + '/api/v1'
 export const API_CMS_URL = process.env.NEXT_PUBLIC_CMS_URL
 export const GUILD_API_BASE_URL = process.env.NEXT_PUBLIC_GUILD_BASE_URL
+export const GAME_HUB_START_TIME = process.env.NEXT_PUBLIC_GAME_HUB_START_TIME
+export const GAME_HUB_GG_CALENDAR_EVENT = process.env.NEXT_PUBLIC_GAME_HUB_GG_CALENDAR_EVENT
 export const INTERNAL_BASE_URL = process.env.NEXT_BASE_URL
 
 export const CLAIM_TYPE = {

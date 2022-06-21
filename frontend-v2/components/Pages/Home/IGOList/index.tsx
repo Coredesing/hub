@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useScreens } from '../utils'
 import Image from 'next/image'
 import CardItem from './CardItem'
@@ -20,16 +20,16 @@ const IGOList = ({ listUpcoming }) => {
       <div className="md:px-4 lg:px-16 mx-auto bg-black mt-20 pb-32">
         <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
           <div className="inline-block top-0 left-0 right-0 uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
-              Upcoming IGOs
+            Upcoming IGOs
           </div>
           <div className="absolute -bottom-5 left-0 right-0">
-            <Image src={require('@/assets/images/under-stroke-green.svg')} alt="understroke"></Image>
+            <Image src={require('@/assets/images/under-stroke-green.svg')} alt="under stroke"></Image>
           </div>
         </div>
         {
           screens.mobile || screens.tablet
             ? <div className="mt-14">
-              { !loading && <Flicking circular={true} className="w-full" align="center" ref={refSlider} interruptable={true}>
+              {!loading && <Flicking circular={true} className="w-full" align="center" ref={refSlider} interruptable={true}>
                 {listUpcoming.map(item => (
                   <div key={item.id} className="w-2/3 px-3"><CardItem item={item}></CardItem></div>
                 ))}

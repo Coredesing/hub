@@ -2,11 +2,12 @@ import { useMediaQuery } from 'react-responsive'
 
 export const useScreens = () => {
   const screens = {
-    mobile: useMediaQuery({ maxWidth: '700px' }),
-    tablet: useMediaQuery({ minWidth: '701px', maxWidth: '1023px' }),
-    md: useMediaQuery({ minWidth: '1024px', maxWidth: '1367px' }),
-    lg: useMediaQuery({ minWidth: '1368px', maxWidth: '1919px' }),
-    xl: useMediaQuery({ minWidth: '1920px' })
+    mobile: useMediaQuery({ maxWidth: '640px' }),
+    tablet: useMediaQuery({ minWidth: '641px', maxWidth: '960px' }),
+    md: useMediaQuery({ minWidth: '961px', maxWidth: '1279px' }),
+    lg: useMediaQuery({ minWidth: '1280px', maxWidth: '1535px' }),
+    xl: useMediaQuery({ minWidth: '1536px' }),
+    '2xl': useMediaQuery({ minWidth: '1920px' })
   }
   return screens
 }

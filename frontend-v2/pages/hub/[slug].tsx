@@ -1,403 +1,202 @@
-import { fetchOneWithSlug } from '@/pages/api/aggregator'
-import Layout from '@/components/Layout'
-import { formatterUSD, formatPrice, fetcher, printNumber, isVideoFile, isImageFile, stripTags } from '@/utils'
-import PriceChange from '@/components/Pages/Aggregator/PriceChange'
-import Link from 'next/link'
-import { TabPanel, Tabs } from '@/components/Base/Tabs'
-import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
-import { useMyWeb3 } from '@/components/web3/context'
-import { useWalletContext } from '@/components/Base/WalletConnector/provider'
-import useSWR, { useSWRConfig } from 'swr'
-import Flicking from '@egjs/react-flicking'
-import { Sync, AutoPlay } from '@egjs/flicking-plugins'
-import '@egjs/flicking/dist/flicking.css'
-import { useRouter } from 'next/router'
-import CountdownSVG from '@/components/Pages/Aggregator/Countdown'
+import { useEffect, useRef, useState } from 'react'
+import { client } from '@/graphql/apolloClient'
+import { GET_AGGREGATORS_BY_SLUG } from '@/graphql/aggregator'
+import LayoutHub from '@/components/Layout/Hub'
+import HubDetail from '@/components/Pages/Hub/HubDetails'
+import Header from '@/components/Pages/Hub/HubDetails/Header'
+import get from 'lodash.get'
+import isEmpty from 'lodash.isempty'
+import Script from 'next/script'
+import { HubDetailContext } from '@/components/Pages/Hub/HubDetails/utils'
+import { useScreens } from '@/components/Pages/Home/utils'
 import Head from 'next/head'
-
-const Carousel = ({ items }: { items: any[] }) => {
-  const flicking0 = useRef()
-  const flicking1 = useRef()
-
-  const [plugins, setPlugins] = useState([])
-
-  useEffect(() => {
-    setPlugins([
-      new Sync({
-        type: 'index',
-        synchronizedFlickingOptions: [
-          {
-            flicking: flicking0.current,
-            isSlidable: true
-          },
-          {
-            flicking: flicking1.current,
-            isClickable: true,
-            activeClass: 'border-gamefiGreen-500'
-          }
-        ]
-      }),
-      new AutoPlay({ duration: 10000, direction: 'NEXT', stopOnHover: true })
-    ])
-  }, [])
-
-  return <>
-    <Flicking ref={flicking0}
-      className="mb-4 w-full"
-      bounce={5}
-      plugins={plugins}>
-      {items.map((item, index) => {
-        if (isVideoFile(items?.[index - 1])) {
-          return null
-        }
-
-        if (isImageFile(item)) {
-          return <img key={item} src={item} className="w-full aspect-[144/66]" alt="" />
-        }
-
-        if (isVideoFile(item)) {
-          return <video className="w-full aspect-[144/66] object-cover" key={item} src={item} preload="auto" autoPlay muted controls controlsList="nodownload" poster={items?.[1]}></video>
-        }
-
-        return null
-      })}
-    </Flicking>
-
-    <Flicking ref={flicking1}
-      moveType="freeScroll"
-      bound={true}
-      interruptable={true}
-      preventClickOnDrag={false}
-      bounce={5}>
-      {items.map((item, index) => {
-        if (isVideoFile(items?.[index - 1])) {
-          return null
-        }
-
-        return (
-          <div key={item} className="p-[2px] rounded border-2 border-transparent cursor-pointer">
-            {isVideoFile(item) && <img src={items?.[1]} className="rounded w-32 aspect-[144/66]" alt="" />}
-            {isImageFile(item) && <img src={item} className="rounded w-32 aspect-[144/66]" alt="" />}
-          </div>
-        )
-      })}
-    </Flicking>
-  </>
-}
+import { nFormatter } from '@/components/Pages/Hub/utils'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { gtagEvent, fetcher } from '@/utils'
+import { gql } from '@apollo/client'
 
 const GameDetails = ({ data }) => {
+  const [values, setValues] = useState(data)
+  const [firstCome, setFirstCome] = useState(true)
+  const changeData = useRef(null)
+  const screen = useScreens()
   const router = useRouter()
-  const items = [data.intro_video, data.screen_shots_1, data.screen_shots_2, data.screen_shots_3, data.screen_shots_4, data.screen_shots_5].filter(x => !!x)
-  const [tab, setTab] = useState(0)
 
-  const { account, library } = useMyWeb3()
-  const { setShowModal } = useWalletContext()
-  const [signature, setSignature] = useState('')
-  const { mutate } = useSWRConfig()
-  const { data: likes } = useSWR(account ? `/api/aggregator/liked/${account}` : null, fetcher)
-  const liked = useMemo(() => {
-    if (!likes?.data) {
-      return false
-    }
+  useEffect(() => {
+    changeData?.current?.scrollIntoView({ behavior: 'smooth' })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.query.slug])
 
-    return !!likes.data.find(x => x.game_id === data.id)
-  }, [data, likes])
-  const like = useCallback(async (game) => {
-    if (!library || !account) {
-      setShowModal(true)
+  useEffect(() => {
+    if (firstCome) {
+      setFirstCome(false)
       return
     }
+    const reviewFilterValue: any = { aggregator: { slug: { eq: router.query.slug } }, status: { eq: 'published' } }
+    fetcher('/api/hub/detail/getLiveData', { method: 'POST', body: JSON.stringify({ variables: { slug: router.query.slug, reviewFilterValue, pageSize: 5 }, query: 'GET_AGGREGATORS_BY_SLUG' }) }).then(({ data }) => {
+      const { five, four, three, two, one, totalReviewMeta } = data
+      const aggregators = get(data, 'aggregators.data[0]')
+      setValues({
+        ...values,
+        ...aggregators.attributes,
+        reviews: data?.reviews || [],
+        totalReviewWithoutFilter: get(totalReviewMeta, 'meta.pagination.total', 0),
+        rates: {
+          five: get(five, 'meta.pagination.total', 0),
+          four: get(four, 'meta.pagination.total', 0),
+          three: get(three, 'meta.pagination.total', 0),
+          two: get(two, 'meta.pagination.total', 0),
+          one: get(one, 'meta.pagination.total', 0)
+        }
+      })
+    }).catch((err) => console.debug('err', err))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router])
 
-    let sign = signature
-    if (!sign) {
-      const signer = library.getSigner()
-      sign = await signer.signMessage('GameFi User Message')
-    }
-
-    setSignature(sign)
-    await fetcher(`/api/aggregator/like/${game.id}`, { method: 'POST', body: JSON.stringify({ address: account, signature: sign, status: !liked }) })
-    await mutate(`/api/aggregator/liked/${account}`)
-  }, [library, liked, mutate, signature, account, setShowModal])
+  const isMobile = screen.mobile || screen.tablet
 
   return (
-    <Layout title={data.game_name || 'GameFi.org Hub'} description={stripTags(data?.game_intro)} image={data.screen_shots_1}>
+    <LayoutHub title={data?.name ? `GameFi.org - ${data?.name}` : 'GameFi.org Games'} description={data?.gameIntroduction || 'An ultimate gaming destination for gamers, investors, and other game studios.'} image={get(data, 'mobileThumbnail.data.[0].attributes.url', '/')}>
       <Head>
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={data.game_name || 'GameFi.org Games'} />
-        <meta name="twitter:description" content={stripTags(data?.game_intro)} />
+        <meta name="twitter:title" content={data?.name || 'GameFi.org Games'} />
+        <meta name="twitter:description" content={data?.gameIntroduction || 'An ultimate gaming destination for gamers, investors, and other game studios.'} />
         <meta name="twitter:url" content={`https://gamefi.org/hub/${data.slug}`} />
         <meta name="twitter:image" content={data.screen_shots_1} />
       </Head>
-      <div className="px-4 lg:px-24 md:container mx-auto lg:block">
-        <a onClick={() => {
-          router.back()
-        }} className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500 cursor-pointer">
-          <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10" />
-            <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square" />
-          </svg>
-          Back
-        </a>
-        {!data.id && <div className="uppercase font-bold text-3xl mb-6">Game Not Found</div>}
-        {data.id && <>
-          <div className="uppercase font-bold text-3xl mb-6">{data.game_name}</div>
-          <div className="flex flex-col md:flex-row font-casual gap-10">
-            <div className="md:w-8/12 relative">
-              <Carousel items={items} />
-
-              <GameRight data={data} liked={liked} account={account} like={like} className="mt-6 md:hidden" />
-
-              <Tabs
-                titles={[
-                  'About Game',
-                  'Tokenomics',
-                  'Team'
-                ]}
-                currentValue={tab}
-                onChange={setTab}
-                className="mt-10"
-              />
-
-              <div className="mt-6 mb-10 editor-content text-gray-200 leading-6">
-                <TabPanel value={tab} index={0}>
-                  <div className="mt-6 text-base"><strong>Introduction</strong></div>
-                  <div dangerouslySetInnerHTML={{ __html: data.game_intro }}></div>
-                  {data.game_features && <>
-                    <div className="mt-6 text-base"><strong>Highlight Features</strong></div>
-                    <div dangerouslySetInnerHTML={{ __html: data.game_features }}></div>
-                  </>
-                  }
-
-                  {data.system_require && <>
-                    <div className="mt-6 text-base"><strong>System Requirements</strong></div>
-                    <div dangerouslySetInnerHTML={{ __html: data.system_require }}></div>
-                  </>
-                  }
-
-                  <div className="h-px bg-gradient-to-r from-gray-300 my-8"></div>
-
-                  {data.hashtags && <>
-                    <div className="mt-6 text-base"><strong>Tags</strong></div>
-                    {data.hashtags.split(',').map(tag => <div key={tag} className="m-1 inline-block px-3 py-1 bg-gamefiDark-500 rounded text-sm">{tag}</div>)}
-                  </>
-                  }
-                </TabPanel>
-                <TabPanel value={tab} index={1}>
-                  <div className="text-xl mb-4">{data.game_name} ({data?.tokenomic?.ticker})</div>
-                  <div className="flex w-full leading-7">
-                    <div className="mr-2">Network</div>
-                    <div className="flex-1 border-dotted border-b-2 border-gamefiDark-500"></div>
-                    <div className="ml-2">{data?.tokenomic?.network_chain}</div>
-                  </div>
-                  <div className="flex w-full leading-7">
-                    <div className="mr-2">Token Supply</div>
-                    <div className="flex-1 border-dotted border-b-2 border-gamefiDark-500"></div>
-                    <div className="ml-2">{(data?.tokenomic?.token_supply && printNumber(data?.tokenomic?.token_supply)) || 'N/A'}</div>
-                  </div>
-                  <div className="flex w-full leading-7">
-                    <div className="mr-2">Project Valuation</div>
-                    <div className="flex-1 border-dotted border-b-2 border-gamefiDark-500"></div>
-                    <div className="ml-2">{(data?.tokenomic?.project_valuation && printNumber(data?.tokenomic?.project_valuation)) || 'N/A'}</div>
-                  </div>
-                  <div className="flex w-full leading-7">
-                    <div className="mr-2">Initial Circulating Supply</div>
-                    <div className="flex-1 border-dotted border-b-2 border-gamefiDark-500"></div>
-                    <div className="ml-2">{(data?.tokenomic?.initial_token_cir && printNumber(data?.tokenomic?.initial_token_cir)) || 'N/A'}</div>
-                  </div>
-                  <div className="flex w-full leading-7">
-                    <div className="mr-2">Initial Market Cap</div>
-                    <div className="flex-1 border-dotted border-b-2 border-gamefiDark-500"></div>
-                    <div className="ml-2">{(data?.tokenomic?.initial_token_market && printNumber(data?.tokenomic?.initial_token_market)) || 'N/A'}</div>
-                  </div>
-
-                  {data?.tokenomic?.token_utilities && <>
-                    <div className="mt-6"><strong>How tokens are used in game</strong></div>
-                    <div dangerouslySetInnerHTML={{ __html: data?.tokenomic?.token_utilities }}></div>
-                  </>
-                  }
-
-                  {data?.tokenomic?.token_economy && <>
-                    <div className="mt-6"><strong>Token Economy</strong></div>
-                    <div dangerouslySetInnerHTML={{ __html: data?.tokenomic?.token_economy }}></div>
-                  </>
-                  }
-
-                  {data?.tokenomic?.token_metrics && <>
-                    <div className="mt-6"><strong>Token Metrics</strong></div>
-                    <div dangerouslySetInnerHTML={{ __html: data?.tokenomic?.token_metrics }}></div>
-                  </>
-                  }
-
-                  {data?.tokenomic?.token_distribution && <>
-                    <div className="mt-6"><strong>Token Distribution</strong></div>
-                    <div dangerouslySetInnerHTML={{ __html: data?.tokenomic?.token_distribution }}></div>
-                  </>
-                  }
-
-                  {data?.tokenomic?.token_release && <>
-                    <div className="mt-6"><strong>Token Release Schedule</strong></div>
-                    <div dangerouslySetInnerHTML={{ __html: data?.tokenomic?.token_release }}></div>
-                  </>
-                  }
-                </TabPanel>
-                <TabPanel value={tab} index={2}>
-                  {data?.projectInformation?.roadmap?.replace(/(<([^>]+)>)/gi, '') && <>
-                    <div className="mt-6"><strong>Roadmap</strong></div>
-                    <div>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={data?.projectInformation?.roadmap?.replace(/(<([^>]+)>)/gi, '')} alt={data?.game_name} />
-                    </div>
-                  </>
-                  }
-
-                  {data?.projectInformation?.investors && <>
-                    <div className="mt-6"><strong>Partners</strong></div>
-                    <div dangerouslySetInnerHTML={{ __html: data?.projectInformation?.investors }}></div>
-                  </>
-                  }
-
-                  {data?.projectInformation?.technologist && <>
-                    <div className="mt-6"><strong>Technology</strong></div>
-                    <div dangerouslySetInnerHTML={{ __html: data?.projectInformation?.technologist }}></div>
-                  </>
-                  }
-                </TabPanel>
+      <Script type="text/javascript" src="https://s3.tradingview.com/tv.js" strategy="beforeInteractive"></Script>
+      <div className="px-4 lg:px-24 md:container mx-auto lg:block" ref={changeData}>
+        <nav className="hidden md:flex mb-6 items-center" aria-label="Breadcrumb">
+          <ol className="inline-flex items-center space-x-1 md:space-x-3">
+            <li className="inline-flex items-center">
+              <Link href={'/hub'} passHref>
+                <a className="inline-flex items-center text-sm font-medium hover:text-gamefiGreen-500 cursor-pointer text-gray-200">Game Hub</a>
+              </Link>
+            </li>
+            <li>
+              <svg className="w-6 h-6 text-gray-200" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
+            </li>
+            <li>
+              <div className="flex items-center">
+                <Link href={'/hub/list'} passHref>
+                  <a className="inline-flex items-center text-sm font-medium hover:text-gamefiGreen-500 cursor-pointer text-gray-200">All Games</a>
+                </Link>
               </div>
-            </div>
-            <GameRight data={data} liked={liked} account={account} like={like} className="hidden md:block" />
+            </li>
+            <li>
+              <svg className="w-6 h-6 text-gray-200" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
+            </li>
+            <li aria-current="page">
+              <div className="flex items-center">
+                <span className="inline-flex items-center text-sm font-medium cursor-pointer text-gray-200">{data?.name}</span>
+              </div>
+            </li>
+          </ol>
+        </nav>
+        {!data && <div className="uppercase font-bold text-3xl mb-6">Game Not Found</div>}
+        <Link href={`${data?.slug}/info`} passHref>
+          <a className="w-full flex md:hidden items-center uppercase overflow-hidden py-3 px-8 bg-white/20 font-bold text-[13px] rounded-xs hover:opacity-95 cursor-pointer justify-center rounded-sm clipped-b-l ml-auto" onClick={() => {
+            gtagEvent('hub_more_info', {
+              name: data?.slug
+            })
+          }}>
+            <div className='uppercase'><span>More Information</span></div>
+          </a>
+        </Link>
+        {data && <HubDetailContext.Provider value={{
+          hubData: values
+        }}>
+          <Header
+            callApi={!isMobile}
+            className={'hidden md:flex'}
+            name={data?.name}
+            id={data?.id}
+            isVerified={get(data, 'project.data.attributes.isVerifiedGameFi')}
+            totalFavorites={nFormatter(values?.totalFavorites)}
+            slug={data?.slug}
+          />
+
+          <div id='HubDetailContent' className="flex flex-col font-casual gap-2">
+            <HubDetail data={values} />
           </div>
-        </>}
+        </HubDetailContext.Provider>}
       </div>
-    </Layout>
+    </LayoutHub>
   )
 }
 
-const GameRight = ({ data, liked, account, className, like }) => {
-  const p = parseFloat(data.tokenomic?.price)
-  const roi = ((p || 0) / parseFloat(data.token_price)).toFixed(2)
-  const idoUpcoming = useMemo(() => {
-    try {
-      const d = new Date(data?.ido_date)
-      return d.getTime() > 0
-    } catch (err) {
-      return false
+export async function getStaticProps ({ params }) {
+  if (!params?.slug) {
+    return { props: { data: {} }, revalidate: 5 * 60 }
+  }
+  try {
+    const reviewFilterValue: any = { aggregator: { slug: { eq: params.slug } }, status: { eq: 'published' } }
+    const { data = {} } = await client.query({
+      query: GET_AGGREGATORS_BY_SLUG,
+      variables: { slug: params.slug, reviewFilterValue, pageSize: 5 }
+    })
+
+    const { five, four, three, two, one, totalReviewMeta } = data
+    const aggregators = get(data, 'aggregators.data[0]')
+    if (isEmpty(aggregators)) {
+      return { props: { data: {} }, revalidate: 5 * 60 }
     }
-  }, [data])
 
-  return <div className={`flex-1 overflow-x-hidden ${className || ''}`}>
-    {!!p && <><p className="hidden md:block text-sm mb-2">Current Price (% Chg 24H)</p>
-      <div className="inline-flex items-center mb-8">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={data.icon_token_link} className="w-6 h-6" alt={data.game_name} />
-        <span className="ml-3 text-3xl font-mechanic font-bold">{p ? formatPrice(data.tokenomic?.price) : 'N/A'}</span>
-        <PriceChange className="ml-3 py-1 text-xs font-medium" tokenomic={data.tokenomic} />
-      </div></>}
+    let gameIntroduction = ''
 
-    <div className="flex items-center justify-between mb-4 gap-2">
-      <span className="text-sm text-gray-300">IGO Price</span>
-      <span className="font-medium text-base">{formatPrice(data.token_price)}</span>
-    </div>
-    {!!p && <>
-      <div className="flex items-center justify-between mb-4 gap-2">
-        <span className="text-sm text-gray-300">IGO ROI</span>
-        <span className="font-medium text-base">{roi}x</span>
-      </div>
+    try {
+      if (aggregators?.attributes?.introduction) {
+        const obj = JSON.parse(aggregators?.attributes?.introduction)
+        gameIntroduction = obj?.blocks?.[0]?.data?.text || ''
+      }
+    } catch (err) {
 
-      <div className="flex items-center justify-between mb-4 gap-2">
-        <span className="text-sm text-gray-300">Volume (24H)</span>
-        <span className="font-medium text-base">{formatterUSD.format(data.tokenomic?.volume_24h)}</span>
-      </div>
+    }
 
-      <div className="flex items-center justify-between mb-4 gap-2">
-        <span className="text-sm text-gray-300">Fully Diluted Market Cap</span>
-        <span className="font-medium text-base">{formatterUSD.format(data.tokenomic?.fully_diluted_market_cap)}</span>
-      </div>
-    </>}
-
-    <div className="flex items-center justify-between mb-4 gap-2">
-      <span className="text-sm text-gray-300">Game Release Status</span>
-      <span className="font-medium text-base truncate capitalize">{data.game_launch_status || 'Coming Soon'}</span>
-    </div>
-
-    <div className="h-px bg-gradient-to-r from-gray-300 my-8"></div>
-
-    <div className="flex items-center justify-between mb-4 gap-4">
-      <span className="text-sm text-gray-300">Developer</span>
-      <span className="font-medium text-base truncate max-w-xs">{data.developer}</span>
-    </div>
-
-    <div className="flex items-center justify-between mb-4 gap-4">
-      <span className="text-sm text-gray-300">Language</span>
-      <span className="font-medium text-base">{data.language}</span>
-    </div>
-
-    <div className="flex items-center justify-between mb-8 gap-4">
-      <span className="text-sm text-gray-300">Community</span>
-      <p className="flex-1 inline-flex gap-5 justify-end">
-        {data?.projectInformation?.official_website && <a href={data?.projectInformation?.official_website} className="hover:text-gray-300" target="_blank" rel="noopenner noreferrer">
-          <svg className="w-5 h-5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM13.9 7H12C11.9 5.5 11.6 4.1 11.2 2.9C12.6 3.8 13.6 5.3 13.9 7ZM8 14C7.4 14 6.2 12.1 6 9H10C9.8 12.1 8.6 14 8 14ZM6 7C6.2 3.9 7.3 2 8 2C8.7 2 9.8 3.9 10 7H6ZM4.9 2.9C4.4 4.1 4.1 5.5 4 7H2.1C2.4 5.3 3.4 3.8 4.9 2.9ZM2.1 9H4C4.1 10.5 4.4 11.9 4.8 13.1C3.4 12.2 2.4 10.7 2.1 9ZM11.1 13.1C11.6 11.9 11.8 10.5 11.9 9H13.8C13.6 10.7 12.6 12.2 11.1 13.1Z" fill="currentColor" />
-          </svg>
-        </a>}
-
-        {data?.projectInformation?.official_telegram_link && <a href={data?.projectInformation?.official_telegram_link} className="hover:text-gray-300" target="_blank" rel="noopenner noreferrer">
-          <svg className="w-5 h-5" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M15.9683 0.684219C15.9557 0.625173 15.9276 0.570567 15.8868 0.526075C15.846 0.481584 15.794 0.44883 15.7363 0.431219C15.526 0.389298 15.3084 0.404843 15.1063 0.476219C15.1063 0.476219 1.08725 5.51422 0.286252 6.07222C0.114252 6.19322 0.056252 6.26222 0.027252 6.34422C-0.110748 6.74422 0.320252 6.91722 0.320252 6.91722L3.93325 8.09422C3.99426 8.10522 4.05701 8.10145 4.11625 8.08322C4.93825 7.56422 12.3863 2.86122 12.8163 2.70322C12.8843 2.68322 12.9343 2.70322 12.9163 2.75222C12.7443 3.35222 6.31025 9.07122 6.27525 9.10622C6.25818 9.12048 6.2448 9.13866 6.23627 9.15921C6.22774 9.17975 6.2243 9.20206 6.22625 9.22422L5.88925 12.7522C5.88925 12.7522 5.74725 13.8522 6.84525 12.7522C7.62425 11.9732 8.37225 11.3272 8.74525 11.0142C9.98725 11.8722 11.3243 12.8202 11.9013 13.3142C11.9979 13.4083 12.1125 13.4819 12.2383 13.5305C12.3641 13.5792 12.4985 13.6018 12.6333 13.5972C12.7992 13.5767 12.955 13.5062 13.0801 13.3952C13.2051 13.2841 13.2934 13.1376 13.3333 12.9752C13.3333 12.9752 15.8943 2.70022 15.9793 1.31722C15.9873 1.18222 16.0003 1.10022 16.0003 1.00022C16.0039 0.893924 15.9931 0.787623 15.9683 0.684219Z" fill="currentColor" />
-          </svg>
-        </a>}
-
-        {data?.projectInformation?.twitter_link && <a href={data?.projectInformation?.twitter_link} className="hover:text-gray-300" target="_blank" rel="noopenner noreferrer">
-          <svg className="w-5 h-5" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M16 2C15.4 2.3 14.8 2.4 14.1 2.5C14.8 2.1 15.3 1.5 15.5 0.7C14.9 1.1 14.2 1.3 13.4 1.5C12.8 0.9 11.9 0.5 11 0.5C9.3 0.5 7.8 2 7.8 3.8C7.8 4.1 7.8 4.3 7.9 4.5C5.2 4.4 2.7 3.1 1.1 1.1C0.8 1.6 0.7 2.1 0.7 2.8C0.7 3.9 1.3 4.9 2.2 5.5C1.7 5.5 1.2 5.3 0.7 5.1C0.7 6.7 1.8 8 3.3 8.3C3 8.4 2.7 8.4 2.4 8.4C2.2 8.4 2 8.4 1.8 8.3C2.2 9.6 3.4 10.6 4.9 10.6C3.8 11.5 2.4 12 0.8 12C0.5 12 0.3 12 0 12C1.5 12.9 3.2 13.5 5 13.5C11 13.5 14.3 8.5 14.3 4.2C14.3 4.1 14.3 3.9 14.3 3.8C15 3.3 15.6 2.7 16 2Z" fill="currentColor" />
-          </svg>
-        </a>}
-
-        {data?.projectInformation?.medium_link && <a href={data?.projectInformation?.medium_link} className="hover:text-gray-300" target="_blank" rel="noopenner noreferrer">
-          <svg className="w-5 h-5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M15 0H1C0.734784 0 0.48043 0.105357 0.292893 0.292893C0.105357 0.48043 0 0.734784 0 1L0 15C0 15.2652 0.105357 15.5196 0.292893 15.7071C0.48043 15.8946 0.734784 16 1 16H15C15.2652 16 15.5196 15.8946 15.7071 15.7071C15.8946 15.5196 16 15.2652 16 15V1C16 0.734784 15.8946 0.48043 15.7071 0.292893C15.5196 0.105357 15.2652 0 15 0V0ZM13.292 3.791L12.434 4.614C12.3968 4.64114 12.3679 4.67798 12.3502 4.72048C12.3326 4.76299 12.327 4.80952 12.334 4.855V10.9C12.327 10.9455 12.3326 10.992 12.3502 11.0345C12.3679 11.077 12.3968 11.1139 12.434 11.141L13.272 11.964V12.145H9.057V11.964L9.925 11.121C10.01 11.036 10.01 11.011 10.01 10.88V5.993L7.6 12.124H7.271L4.461 5.994V10.1C4.44944 10.1854 4.45748 10.2722 4.48452 10.354C4.51155 10.4358 4.55685 10.5103 4.617 10.572L5.746 11.942V12.123H2.546V11.942L3.675 10.572C3.73466 10.5103 3.77896 10.4354 3.80433 10.3534C3.82969 10.2714 3.8354 10.1846 3.821 10.1V5.351C3.82727 5.28576 3.81804 5.21996 3.79406 5.15896C3.77008 5.09797 3.73203 5.0435 3.683 5L2.683 3.791V3.61H5.8L8.2 8.893L10.322 3.61H13.293L13.292 3.791Z" fill="currentColor" />
-          </svg>
-        </a>}
-      </p>
-    </div>
-
-    <div className="flex flex-wrap gap-2 mb-8">
-      {data.category?.split(',').map(x => <Link href={`/hub?category=${x}`} passHref key={x}><a className="text-xs px-2 py-1.5 bg-gamefiDark-630/50 hover:bg-gamefiDark-630 rounded">{x}</a></Link>)}
-    </div>
-
-    <div className="font-mechanic font-bold uppercase text-center text-sm">
-      <div className={`cursor-pointer clipped-t-l p-px mb-3 ${liked ? 'bg-gamefiYellow-500 text-gamefiYellow-500 hover:bg-gamefiYellow-600 hover:text-gamefiYellow-600' : 'bg-gamefiGreen-500 text-gamefiGreen-500 hover:bg-gamefiGreen-700 hover:text-gamefiGreen-700'}`} onClick={() => like(data)}>
-        <div className="clipped-t-l bg-gamefiDark-900 p-4 flex justify-center items-center">
-          <svg className="w-4 h-4 mr-2" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M14 9.625H12.25V7.875H10.5V9.625H8.75V11.375H10.5V13.125H12.25V11.375H14V9.625Z" fill="currentColor" />
-            <path d="M7.00003 10.7161L2.37565 6.34462C1.53828 5.48975 1.54265 4.11338 2.39053 3.2655C2.80353 2.8525 3.35303 2.625 3.93753 2.625C4.6244 2.625 5.24653 2.95575 5.52828 3.32675C5.69103 3.53675 6.8189 4.69 7.00003 4.9175C7.18115 4.69 8.30903 3.53675 8.47178 3.32675C8.75178 2.95837 9.38003 2.625 10.0625 2.625C10.647 2.625 11.1965 2.8525 11.6095 3.2655C12.3892 4.046 12.4469 5.26837 11.8003 6.125H13.762C14.252 4.739 13.9554 3.13688 12.8468 2.02825C12.0777 1.25913 11.0705 0.875 10.0625 0.875C9.05453 0.875 8.0474 1.25913 7.27828 2.02825C7.1724 2.13413 7.09103 2.25488 7.00003 2.36863C6.90903 2.25488 6.82765 2.13413 6.72178 2.02825C5.95265 1.25913 4.94553 0.875 3.93753 0.875C2.92953 0.875 1.9224 1.25913 1.15328 2.02825C-0.3841 3.56562 -0.3841 6.05938 1.15328 7.59675L7.00003 13.125V10.7161Z" fill="currentColor" />
-          </svg>
-          {!account ? 'Add to favorite List' : (liked ? 'Remove from favorite List' : 'Add to favorite List')}
-        </div>
-      </div>
-      {data.web_game_link && <Link href={data.web_game_link} passHref={true}><a target="_blank" rel="noopenner noreferrer" className={`mb-3 block cursor-pointer bg-gamefiGreen-500 hover:bg-gamefiGreen-700 p-4 text-gamefiDark-900 ${data.gamefi_ido_link && data.ido_type === 'launched' ? '' : 'clipped-b-r'}`}>
-        Play
-      </a></Link>}
-      {data.gamefi_ido_link && data.ido_type === 'launched' && <Link href={data.gamefi_ido_link} passHref={true}><a target="_blank" rel="noopenner noreferrer" className="mb-3 block cursor-pointer clipped-b-r bg-gamefiYellow-400 hover:bg-gamefiYellow-500 p-4 text-gamefiDark-900">
-        {data.game_name} IDO on GameFi
-      </a></Link>}
-      {data.gamefi_ido_link && data.ido_type !== 'launched' && idoUpcoming && <CountdownSVG title={`${data.game_name} IDO on GameFi in`} deadline={data?.ido_date} action="Join Now" onAction={() => {
-        window.open(data.gamefi_ido_link, '_blank')
-      }}></CountdownSVG>}
-    </div>
-  </div>
+    return {
+      props: {
+        data: {
+          ...aggregators.attributes,
+          id: aggregators.id,
+          reviews: data?.reviews || [],
+          totalReviewWithoutFilter: get(totalReviewMeta, 'meta.pagination.total', 0),
+          userRanks: ['Expert', 'Professional', 'Middle', 'Amateur'],
+          gameIntroduction,
+          rates: {
+            five: get(five, 'meta.pagination.total', 0),
+            four: get(four, 'meta.pagination.total', 0),
+            three: get(three, 'meta.pagination.total', 0),
+            two: get(two, 'meta.pagination.total', 0),
+            one: get(one, 'meta.pagination.total', 0)
+          }
+        }
+      },
+      revalidate: 60
+    }
+  } catch (e) {
+    console.debug('error1', JSON.stringify(e))
+    return { props: { data: {} }, revalidate: 60 }
+  }
 }
 
-export async function getServerSideProps ({ params }) {
-  if (!params?.slug) {
-    return { props: { data: {} } }
-  }
+export async function getStaticPaths () {
+  const { data = {} } = await client.query({
+    query: gql`{
+      aggregators(pagination:{ pageSize: 1000 }) {
+        data {
+          attributes {
+            slug
+          }
+        }
+      }
+    }`
+  })
 
-  const data = await fetchOneWithSlug(params.slug)
-  if (!data?.data) {
-    return { props: { data: {} } }
+  return {
+    paths: (data?.aggregators?.data || []).map(x => ({ params: x?.attributes })),
+    fallback: 'blocking'
   }
-
-  return { props: { data: data.data } }
 }
 
 export default GameDetails

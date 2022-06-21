@@ -11,7 +11,7 @@ const useWalletSignature = () => {
   const signMessage = useCallback(() => {
     return new Promise((resolve, reject) => {
       if (!library || !account) {
-        reject(new Error('Please connect wallet to sign'))
+        reject(new Error('Please connect wallet'))
         return
       }
 

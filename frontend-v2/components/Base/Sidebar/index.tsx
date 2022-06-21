@@ -10,7 +10,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className="hidden h-full w-20 md:block md:w-24 lg:w-28 dark:bg-gamefiDark-800 overflow-y-auto hide-scrollbar" style={{ boxShadow: 'inset -1px 0px 0px #303442' }}>
+      <div id='AppSideBar' className="hidden h-full w-20 md:block md:w-24 lg:w-28 dark:bg-gamefiDark-800 overflow-y-auto hide-scrollbar" style={{ boxShadow: 'inset -1px 0px 0px #303442' }}>
         <Link href="/" passHref>
           <div className="w-full md:py-7 lg:py-9 flex align-middle items-center justify-center cursor-pointer">
             <Image src={require('@/assets/images/gamefi.svg')} alt='gamefi'></Image>
@@ -41,6 +41,29 @@ const Sidebar = () => {
             <path d="M17 8H7c-3.86 0-7 3.14-7 7s3.14 7 7 7h10c3.86 0 7-3.14 7-7s-3.14-7-7-7Zm-7 8H8v2H6v-2H4v-2h2v-2h2v2h2v2Zm5 1a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm3-2a1 1 0 1 1 0-2 1 1 0 0 1 0 2ZM13 2a1 1 0 0 0-2 0v4h2V2Z" fill="currentColor" />
           </svg>
           <span className="mt-2">Games</span>
+          <svg width="60" height="45" viewBox="0 0 60 45" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute top-1.5 right-1.5">
+            <g filter="url(#filter0_d_8086_18133)">
+              <rect x="14" y="11" width="28" height="13" rx="1" fill="url(#paint0_linear_8086_18133)"/>
+            </g>
+            <path d="M20.8355 20H20.0885C19.9625 20 19.8995 19.937 19.8995 19.811V14.402C19.8995 14.276 19.9625 14.213 20.0885 14.213H20.7635C20.8895 14.213 20.9735 14.255 21.0155 14.339L22.8335 17.75H22.8695V14.402C22.8695 14.276 22.9325 14.213 23.0585 14.213H23.8055C23.9315 14.213 23.9945 14.276 23.9945 14.402V19.811C23.9945 19.937 23.9315 20 23.8055 20H23.1485C23.0165 20 22.9205 19.94 22.8605 19.82L21.0605 16.472H21.0245V19.811C21.0245 19.937 20.9615 20 20.8355 20ZM28.5661 20H25.6231C25.4971 20 25.4341 19.937 25.4341 19.811V14.402C25.4341 14.276 25.4971 14.213 25.6231 14.213H28.5661C28.6861 14.213 28.7461 14.276 28.7461 14.402V15.014C28.7461 15.14 28.6861 15.203 28.5661 15.203H26.6851C26.6131 15.203 26.5771 15.236 26.5771 15.302V16.472C26.5771 16.538 26.6131 16.571 26.6851 16.571H28.2241C28.3501 16.571 28.4131 16.634 28.4131 16.76V17.372C28.4131 17.498 28.3501 17.561 28.2241 17.561H26.6851C26.6131 17.561 26.5771 17.594 26.5771 17.66V18.911C26.5771 18.977 26.6131 19.01 26.6851 19.01H28.5661C28.6861 19.01 28.7461 19.073 28.7461 19.199V19.811C28.7461 19.937 28.6861 20 28.5661 20ZM32.0088 20H30.7488C30.6168 20 30.5418 19.937 30.5238 19.811L29.5608 14.402C29.5428 14.276 29.6058 14.213 29.7498 14.213H30.6858C30.8238 14.213 30.8958 14.276 30.9018 14.402L31.4238 18.839H31.4868L32.3508 14.375C32.3688 14.267 32.4318 14.213 32.5398 14.213H33.5478C33.6618 14.213 33.7278 14.264 33.7458 14.366L34.6278 18.839H34.6998L35.2128 14.411C35.2188 14.279 35.2908 14.213 35.4288 14.213H36.3648C36.5088 14.213 36.5718 14.279 36.5538 14.411L35.5818 19.811C35.5638 19.937 35.4948 20 35.3748 20H34.1058C33.9798 20 33.9078 19.937 33.8898 19.811L33.0798 15.59H33.0438L32.2248 19.811C32.2008 19.937 32.1288 20 32.0088 20Z" fill="black"/>
+            <defs>
+              <filter id="filter0_d_8086_18133" x="0" y="0" width="60" height="45" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                <feOffset dx="2" dy="5"/>
+                <feGaussianBlur stdDeviation="8"/>
+                <feComposite in2="hardAlpha" operator="out"/>
+                <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.54 0 0 0 0 0 0 0 0 1 0"/>
+                <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_8086_18133"/>
+                <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_8086_18133" result="shape"/>
+              </filter>
+              <linearGradient id="paint0_linear_8086_18133" x1="15.5" y1="11" x2="40.5" y2="24" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#FFC700"/>
+                <stop offset="1" stopColor="#FF9900"/>
+              </linearGradient>
+            </defs>
+          </svg>
+
         </SidebarLink>
         <SidebarLink path='/guilds'>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -134,6 +134,6 @@ export function getStaticPaths () {
 
   return {
     paths,
-    fallback: true // false or 'blocking'
+    fallback: true
   }
 }

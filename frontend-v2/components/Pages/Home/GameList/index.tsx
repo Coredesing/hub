@@ -2,10 +2,13 @@ import { API_BASE_URL } from '@/utils/constants'
 import { fetcher, useFetch } from '@/utils'
 import ShadowLoader from '@/components/Base/ShadowLoader'
 import { useRouter } from 'next/router'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import FilterDropdown from '../FilterDropdown'
 import TopGame from '../TopGame'
 import { useScreens } from '../utils'
+import { GET_RATING_AGGREGATORS, GET_TRENDING_AGGREGATORS } from '@/graphql/aggregator'
+import { client } from '@/graphql/apolloClient'
+import { normalize } from '@/graphql/utils'
 
 const gameFilterOptions = [
   {
@@ -23,40 +26,92 @@ const gameFilterOptions = [
 const GameList = () => {
   const router = useRouter()
 
-  const [gameLikeIds, setGameLikesIds] = useState([])
-  const [likes, setLikes] = useState([])
+  // const [gameLikeIds, setGameLikesIds] = useState([])
+  // const [likes, setLikes] = useState([])
   const screens = useScreens()
-  const [gameFilterOption, setGameFilterOption] = useState(router?.query?.topGames?.toString() || gameFilterOptions[0].value)
+  const [gameFilterOption, setGameFilterOption] = useState(gameFilterOptions[0].value)
+  const [topFavoriteGames, setTopFavoriteGames] = useState([])
+  const [topTrendingGames, setTopTrendingGames] = useState([])
 
-  const topGamesUrl = `/aggregator?display_area=${gameFilterOption}&price=true&per_page=4`
-  const { response: topGamesResponse, loading: topGamesLoading } = useFetch(topGamesUrl)
+  const getTopFavorites = useCallback(() => {
+    fetcher('/api/hub/home', {
+      method: 'POST', body: JSON.stringify({ query: 'GET_TOP_FAVORITE_AGGREGATORS', variables: { filtersValue: 'interactivePoint30d:desc' } })
+    }).then(({ data }) => {
+      const formatData = data?.aggregators?.data?.map(v => {
+        const d = v.attributes
+        return { ...d, verticalThumbnail: d?.verticalThumbnail?.data?.attributes, tokenomic: d?.project?.data?.attributes?.tokenomic }
+      }) || []
+      const chunk = []
+      const chunkSize = 5
+      for (let i = 0; i < formatData.length; i += chunkSize) {
+        chunk.push(formatData.slice(i, i + chunkSize))
+      }
+      setTopFavoriteGames(formatData?.length > 4 ? formatData.slice(0, 4) : formatData)
+      // setChunkData(chunk)
+    }).catch((err) => {
+      console.debug('err', err)
+    })
+  }, [])
 
+  const getTrendingFavorites = useCallback(() => {
+    fetcher('/api/hub/home', {
+      method: 'POST', body: JSON.stringify({ query: 'GET_TRENDING_AGGREGATORS', variables: { filtersValue: 'interactivePoint30d:desc' } })
+    }).then(({ data }) => {
+      const formatData = data?.aggregators?.data?.map(v => {
+        const d = v.attributes
+        return { ...d, verticalThumbnail: d?.verticalThumbnail?.data?.attributes, tokenomic: d?.project?.data?.attributes?.tokenomic }
+      }) || []
+      const chunk = []
+      const chunkSize = 5
+      for (let i = 0; i < formatData.length; i += chunkSize) {
+        chunk.push(formatData.slice(i, i + chunkSize))
+      }
+      setTopTrendingGames(formatData?.length > 4 ? formatData.slice(0, 4) : formatData)
+    }).catch((err) => {
+      console.debug('err', err)
+    })
+  }, [])
+
+  // const { response: topGamesResponse, loading: topGamesLoading } = useFetch('')
+
+  // const topGames = useMemo(() => {
+  //   return topGamesResponse?.data?.data || []
+  // }, [topGamesResponse])
   const topGames = useMemo(() => {
-    return topGamesResponse?.data?.data || []
-  }, [topGamesResponse])
+    switch (gameFilterOption) {
+    case gameFilterOptions[0].value:
+      return topFavoriteGames
+    case gameFilterOptions[1].value:
+      return topTrendingGames
+    default:
+      return topFavoriteGames
+    }
+  }, [gameFilterOption, topFavoriteGames, topTrendingGames])
 
   useEffect(() => {
-    if (router?.query?.topGames) {
-      setGameFilterOption(router?.query?.topGames?.toString())
-    }
-    topGames?.map(game => gameLikeIds?.indexOf(game.id) === -1 ? gameLikeIds.push(game.id) : null)
-    setGameLikesIds(gameLikeIds)
-    const getLikes = async () => {
-      const res = await fetcher(`${API_BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`)
-      setLikes(res?.data)
-    }
+    // if (router?.query?.topGames) {
+    //   setGameFilterOption(router?.query?.topGames?.toString())
+    // }
+    // topGames?.map(game => gameLikeIds?.indexOf(game.id) === -1 ? gameLikeIds.push(game.id) : null)
+    // setGameLikesIds(gameLikeIds)
+    // const getLikes = async () => {
+    //   const res = await fetcher(`${API_BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`)
+    //   setLikes(res?.data)
+    // }
 
-    getLikes().catch(e => console.debug(e?.message))
-  }, [gameLikeIds, router?.query?.topGames, topGames])
+    // getLikes().catch(e => console.debug(e?.message))
+    getTopFavorites()
+    getTrendingFavorites()
+  }, [getTopFavorites, getTrendingFavorites, router.query.topGames])
 
-  const handleChangeGameFilter = async (item: any) => {
+  const handleChangeGameFilter = useCallback((item: any) => {
     setGameFilterOption(item?.value)
-    await router.push({ query: { topGames: item.value || 'Top Favourite' } }, undefined, { shallow: true })
-  }
+    // await router.push({ query: { topGames: item.value || 'Top Favourite' } }, undefined, { shallow: true })
+  }, [])
 
   return <>
     {
-      topGames && topGames.length > 0
+      topFavoriteGames && topFavoriteGames.length > 0
         ? <div className="px-4 lg:px-16 md:container mx-auto pt-20 pb-14">
           <div className="md:text-lg 2xl:text-3xl uppercase font-bold flex">
             <FilterDropdown items={gameFilterOptions} selected={gameFilterOption} onChange={handleChangeGameFilter}></FilterDropdown> <span className="ml-2">Games</span>
@@ -69,13 +124,13 @@ const GameList = () => {
               screens.mobile || screens.tablet
                 ? <>
                   <div className="w-full">
-                    <TopGame item={topGames[0]} like={likes?.find(like => like?.game_id === topGames[0].id)} isTop={true}></TopGame>
+                    <TopGame item={topGames[0]} isTop={true}></TopGame>
                   </div>
                   <div className="mt-4 flex w-full overflow-x-auto hide-scrollbar">
                     {topGames.map((item, i) => (
                       i !== 0
                         ? <div className="mr-4" style={{ minWidth: '300px' }} key={`game-list-${i}`}>
-                          <TopGame item={item} like={likes?.find(like => like?.game_id === item.id)} isTop={false}></TopGame>
+                          <TopGame item={item} isTop={false}></TopGame>
                         </div>
                         : <div key={`game-list-${i}`}></div>
                     ))}
@@ -85,13 +140,13 @@ const GameList = () => {
                   {
                     topGames.map((item, i) => (
                       <div style={{ width: i === 0 ? 'calc(40% - 1.2rem)' : 'calc(20% + 0.3rem)', paddingLeft: i === 0 ? '' : '0.9rem' }} key={`game-mobile-${i}`}>
-                        <TopGame item={item} like={likes?.find(like => like?.game_id === item.id)} isTop={i === 0}></TopGame>
+                        <TopGame item={item} isTop={i === 0}></TopGame>
                       </div>
                     ))
                   }
                 </div>
             }
-            {
+            {/* {
               topGamesLoading
                 ? <div className="grid grid-cols-5 gap-4">
                   <ShadowLoader></ShadowLoader>
@@ -101,7 +156,7 @@ const GameList = () => {
                   <ShadowLoader></ShadowLoader>
                 </div>
                 : <></>
-            }
+            } */}
           </div>
         </div>
         : <></>

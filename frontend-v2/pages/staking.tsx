@@ -16,7 +16,7 @@ import TabUnstake from '@/components/Pages/Staking/TabUnstake'
 import Ranks from '@/components/Pages/Staking/Ranks'
 import TopRanking from '@/components/Pages/Staking/TopRanking'
 import { handleChangeStaking } from '@/components/Pages/Staking/utils'
-import CountdownSVG from '@/components/Pages/Aggregator/Countdown'
+import CountdownSVG from '@/components/Pages/Hub/Countdown'
 import { format } from 'date-fns'
 import imgLegend from '@/assets/images/ranks/legend.png'
 

@@ -79,6 +79,7 @@ export const shortenAddress = (address: string, symbol = '*', lengHide = 14, len
 }
 
 export function shorten (s: string, max = 12) {
+  if (!s) return ''
   return s.length > max ? s.substring(0, (max / 2) - 1) + '…' + s.substring(s.length - (max / 2) + 2, s.length) : s
 }
 
@@ -137,18 +138,20 @@ export const formatterUSD = new Intl.NumberFormat('en-US', {
 })
 
 export function formatPrice (price: string): string {
+  if (!price) return '$0'
+
   const priceInFloat = parseFloat(price)
   if (priceInFloat > 1) {
     return `$${priceInFloat.toFixed(4)}`
   }
 
-  const matches = price?.match(/(\.([0])*)/)
+  const matches = price?.toString()?.match(/(\.([0])*)/)
   if (!matches?.[0]) {
     return price
   }
 
-  const position = price.indexOf(matches[0])
-  return `$${price.slice(0, position + matches[0].length + 4)}`
+  const position = price?.toString()?.indexOf(matches[0])
+  return `$${price?.toString()?.slice(0, position + matches[0].length + 4)}`
 }
 
 export function printNumber (_n: string | number, fixed?: number): string {
@@ -328,6 +331,7 @@ export const stripTags = (str = '') => {
 }
 
 export const gtagEvent = (name: string, params?: {[key: string]: any}) => {
+  console.debug('event', name, params)
   try {
     if ((window as any).gtag) {
       (window as any).gtag('event', name, params || {})
@@ -337,4 +341,8 @@ export const gtagEvent = (name: string, params?: {[key: string]: any}) => {
       (window as any).fbq('trackCustom', name, params || {})
     }
   } catch (_) {}
+}
+
+export const numberWithCommas = (num) => {
+  return (num || '0').toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }

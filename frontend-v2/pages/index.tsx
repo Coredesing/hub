@@ -11,8 +11,30 @@ import { fetcher } from '@/utils'
 import Layout from '@/components/Layout'
 import Banners from '@/components/Banners'
 import INOList from '@/components/Pages/Home/INOList'
+import { client } from '@/graphql/apolloClient'
+import { GET_BANNER_AGGREGATORS } from '@/graphql/aggregator'
+import { normalize } from '@/graphql/utils'
 
-const PageIndex = ({ featuredGames = [], currentPools = [], likes = [] }) => {
+export type CarouselItem = {
+  id: string | number;
+  title: string;
+  likes: number;
+  aggregatorSlug: string;
+  slug: string;
+  video: string;
+  thumbnail: string;
+  shortDescription: string;
+  upcoming: boolean;
+  poolInfo: {
+    whitelistStartTime?: Date;
+    whitelistEndTime?: Date;
+    saleStartTime?: Date;
+    saleEndTime?: Date;
+    campaignStatus?: string;
+    buyType?: string;
+  };
+}
+const PageIndex = ({ featuredGames = [], currentPools = [], likes = [], cmsData = [] }) => {
   const [listUpcoming, listPublic] = useMemo<any[]>(() => {
     const origin = currentPools
     let remain = origin
@@ -44,19 +66,39 @@ const PageIndex = ({ featuredGames = [], currentPools = [], likes = [] }) => {
     return [sortedItems, sortedItems.filter(e => e.is_private === 0)]
   }, [currentPools])
 
-  const itemsSorted = useMemo(() => {
-    const _items = featuredGames.map(aggregator => {
+  const itemsSorted = useMemo<CarouselItem[]>(() => {
+    const _items = cmsData.map(aggregator => {
       const poolDetail = listPublic.find(pool => pool.aggregator_slug === aggregator.slug)
-      return { ...aggregator, pool: poolDetail }
+      return {
+        id: aggregator?.id,
+        title: aggregator?.name || '',
+        aggregatorSlug: aggregator?.slug,
+        slug: poolDetail?.slug,
+        logo: aggregator?.logo?.url,
+        video: aggregator?.youtubeLinks[0]?.url,
+        thumbnail: aggregator?.youtubeLinks[0]?.videoThumbnail?.url,
+        likes: Number(aggregator?.totalVotes),
+        shortDescription: aggregator?.project?.shortDesc,
+        upcoming: !!poolDetail,
+        poolInfo: {
+          whitelistStartTime: poolDetail?.start_join_pool_time ? new Date(Number(poolDetail?.start_join_pool_time) * 1000) : null,
+          whitelistEndTime: poolDetail?.end_join_pool_time ? new Date(Number(poolDetail?.end_join_pool_time) * 1000) : null,
+          saleStartTime: poolDetail?.start_time ? new Date(Number(poolDetail?.start_time) * 1000) : null,
+          saleEndTime: poolDetail?.end_time ? new Date(Number(poolDetail?.end_time) * 1000) : null,
+          campaignStatus: poolDetail?.campaign_status || '',
+          buyType: poolDetail?.buy_type || ''
+        }
+      }
     })
-    return [..._items.filter(e => e.pool), ..._items.filter(e => !e.pool)]
-  }, [listPublic, featuredGames])
+    const _sortedItems = [..._items.filter(e => e.upcoming), ..._items.filter(e => !e.upcoming)]
+    return _sortedItems
+  }, [cmsData, listPublic])
 
   return (
     <Layout>
       <div className="md:px-4 lg:px-16 mt-4 md:container mx-auto lg:block">
         <Banners></Banners>
-        {itemsSorted && itemsSorted.length ? <GameCarousel likes={likes} items={itemsSorted}></GameCarousel> : <></>}
+        {itemsSorted && itemsSorted.length ? <GameCarousel items={itemsSorted}></GameCarousel> : <></>}
       </div>
       <Instruction></Instruction>
       {/* <TicketList></TicketList> */}
@@ -73,19 +115,24 @@ const PageIndex = ({ featuredGames = [], currentPools = [], likes = [] }) => {
 export async function getServerSideProps () {
   const serverSideProps = { props: {} }
   try {
+    const res = await client.query({
+      query: GET_BANNER_AGGREGATORS
+    })
+
     const gameLikeIds = []
     const [featureGamesResponse, currentPoolsResponse] = await Promise.all([
       fetcher(`${INTERNAL_BASE_URL}/aggregator?display_area=Top Game&sort_by=created_at&sort_order=desc`),
       fetcher(`${INTERNAL_BASE_URL}/pools/current-pools?token_type=erc20&limit=100000&page=1&is_private=0,1,2,3`)
     ])
-    const featuredGames = featureGamesResponse?.data?.data
+    const featuredGames = featureGamesResponse?.data?.data || []
     featuredGames?.map(game => gameLikeIds?.indexOf(game.id) === -1 ? gameLikeIds.push(game.id) : null)
     const fetchLikesResponse = await fetcher(`${INTERNAL_BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`)
 
     serverSideProps.props = {
       featuredGames,
       currentPools: currentPoolsResponse?.data?.data,
-      likes: fetchLikesResponse?.data
+      likes: fetchLikesResponse?.data,
+      cmsData: normalize(res)?.aggregators || []
     }
 
     return serverSideProps

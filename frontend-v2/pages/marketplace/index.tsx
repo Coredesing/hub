@@ -7,7 +7,7 @@ import ListTrending from '@/components/Pages/Market/ListTrending'
 import Discover from '@/components/Pages/Market/Discover'
 // import Banner from '@/components/Pages/Market/Banner'
 import { fetcher } from '@/utils'
-import { API_BASE_URL } from '@/utils/constants'
+import { INTERNAL_BASE_URL } from '@/utils/constants'
 import { ObjectType } from '@/utils/types'
 import TopCollections from '@/components/Pages/Market/TopCollections'
 import WrapperContent from '@/components/Pages/Market/WrapperContent'
@@ -68,7 +68,7 @@ export default Market
 
 export const getServerSideProps = async () => {
   try {
-    const data = await fetcher(`${API_BASE_URL}/marketplace/first-edition-collections`)
+    const data = await fetcher(`${INTERNAL_BASE_URL}/marketplace/first-edition-collections`)
     return {
       props: {
         topCollections: data?.data || []

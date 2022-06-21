@@ -5,7 +5,7 @@ import IGOList from 'components/Pages/Home/IGOList'
 import GameList from 'components/Pages/Home/GameList'
 import Instruction from 'components/Pages/Home/Instruction'
 
-import { API_BASE_URL } from '@/utils/constants'
+import { INTERNAL_BASE_URL } from '@/utils/constants'
 import Partners from '@/components/Pages/Home/Partners'
 import { fetcher } from '@/utils'
 import Layout from '@/components/Layout'
@@ -75,12 +75,12 @@ export async function getServerSideProps () {
   try {
     const gameLikeIds = []
     const [featureGamesResponse, currentPoolsResponse] = await Promise.all([
-      fetcher(`${API_BASE_URL}/aggregator?display_area=Top Game&sort_by=created_at&sort_order=desc`),
-      fetcher(`${API_BASE_URL}/pools/current-pools?token_type=erc20&limit=100000&page=1&is_private=0,1,2,3`)
+      fetcher(`${INTERNAL_BASE_URL}/aggregator?display_area=Top Game&sort_by=created_at&sort_order=desc`),
+      fetcher(`${INTERNAL_BASE_URL}/pools/current-pools?token_type=erc20&limit=100000&page=1&is_private=0,1,2,3`)
     ])
     const featuredGames = featureGamesResponse?.data?.data
     featuredGames?.map(game => gameLikeIds?.indexOf(game.id) === -1 ? gameLikeIds.push(game.id) : null)
-    const fetchLikesResponse = await fetcher(`${API_BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`)
+    const fetchLikesResponse = await fetcher(`${INTERNAL_BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`)
 
     serverSideProps.props = {
       featuredGames,

@@ -1,8 +1,8 @@
 import { fetcher } from '@/utils'
-import { API_BASE_URL } from '@/utils/constants'
+import { INTERNAL_BASE_URL } from '@/utils/constants'
 
 export function send (id, body) {
-  return fetcher(encodeURI(`${API_BASE_URL}/aggregator/like/${id}`), { method: 'POST', body, headers: { 'content-type': 'application/json' } })
+  return fetcher(encodeURI(`${INTERNAL_BASE_URL}/aggregator/like/${id}`), { method: 'POST', body, headers: { 'content-type': 'application/json' } })
 }
 
 export default async function handler (req, res) {

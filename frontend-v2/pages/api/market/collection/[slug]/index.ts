@@ -1,8 +1,8 @@
 import { fetcher } from '@/utils'
-import { API_BASE_URL } from '@/utils/constants'
+import { INTERNAL_BASE_URL } from '@/utils/constants'
 
 export function fetchOneCollection (slug) {
-  return fetcher(encodeURI(`${API_BASE_URL}/marketplace/collection/${slug}`))
+  return fetcher(encodeURI(`${INTERNAL_BASE_URL}/marketplace/collection/${slug}`))
 }
 
 export default async function handler (req, res) {

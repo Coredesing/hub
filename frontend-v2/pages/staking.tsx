@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import Layout from '@/components/Layout'
 import imgNA from '@/assets/images/ranks/na.png'
-import { API_BASE_URL } from '@/utils/constants'
+import { INTERNAL_BASE_URL, API_BASE_URL } from '@/utils/constants'
 import { fetcher, gtagEvent, printNumber, safeToFixed, shortenAddress } from '@/utils'
 import ABIERC20 from '@/components/web3/abis/ERC20.json'
 import { useWeb3Default, GAFI } from '@/components/web3'
@@ -363,8 +363,8 @@ export default Staking
 
 export async function getStaticProps () {
   const [legendSnapshots, legendCurrent] = await Promise.all([
-    fetcher(`${API_BASE_URL}/staking-pool/legend-snapshots`),
-    fetcher(`${API_BASE_URL}/staking-pool/legend-current`)
+    fetcher(`${INTERNAL_BASE_URL}/staking-pool/legend-snapshots`),
+    fetcher(`${INTERNAL_BASE_URL}/staking-pool/legend-current`)
   ])
 
   return {

@@ -1,6 +1,6 @@
 import { getLibraryDefaultFlexible } from '@/components/web3/utils'
 import { fetcher } from '@/utils'
-import { API_BASE_URL } from '@/utils/constants'
+import { INTERNAL_BASE_URL } from '@/utils/constants'
 import { Contract } from 'ethers'
 import ABIStakingPool from '@/components/web3/abis/StakingPool.json'
 import { BUSD_BSC, GAFI, Token } from '@/components/web3'
@@ -33,7 +33,7 @@ export enum PoolSubjects {
 }
 
 export function fetchAll () {
-  return fetcher(`${API_BASE_URL}/staking-pool`).then(pools => {
+  return fetcher(`${INTERNAL_BASE_URL}/staking-pool`).then(pools => {
     const poolsAPI = (pools?.data || []).filter(x => !x?.rkp_rate)
     const poolsActual = Promise.all(poolsAPI.map(async ({ pool_id: poolID, title, logo, pool_address: contractAddress, network_available: network }): Promise<Pool> => {
       const library = await getLibraryDefaultFlexible(null, network)

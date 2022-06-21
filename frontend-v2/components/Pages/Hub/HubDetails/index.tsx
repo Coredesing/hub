@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Carousel from './Carousel'
 import GameRight from './GameRight'
 import MoreLike from './MoreLike'
-import { gtagEvent, numberWithCommas, printNumber, shorten } from '@/utils'
+import { gtagEvent, numberWithCommas, printNumber, shorten, formatPrice } from '@/utils'
 import RenderEditorJs from '@/components/Base/RenderEditorJs'
 import Image from 'next/image'
 import BGRank from '@/assets/images/aggregator/bg-rank-gamefi.png'
@@ -471,7 +471,7 @@ export const TokenSummary = ({ data }) => {
         <div className='flex flex-col justify-between gap-5 md:gap-0'>
           <div className='uppercase text-white/50 text-xs font-bold'><span>Current price</span></div>
           <div className='flex items-center'>
-            <div className='text-2xl font-mechanic'><strong>{data?.currentPrice > 0 ? `$${printNumber(data?.currentPrice)}` : '-'}</strong></div>
+            <div className='text-2xl font-mechanic'><strong>{data?.currentPrice > 0 ? `${formatPrice(data?.currentPrice)}` : '-'}</strong></div>
             <PriceChangeBg className='mx-2 text-xs gap-1 py-[2px]' priceChange24h={data?.priceChange24h} />
           </div>
         </div>

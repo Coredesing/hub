@@ -5,12 +5,12 @@ import { gtagEvent } from '@/utils'
 import Link from 'next/link'
 
 const TOOL_TIPS = {
-  player: "Number of unique wallet addresses interacting with the game's smart contracts",
-  release: 'Games that recently released Testnet/Mainnet version',
-  view: 'Games that users visited the most on GameFi.org',
+  player: 'The Most Popular game is a game that has most unique wallets interacting with its smart contracts.',
+  release: 'New Release game is a game that has recently released a new version, including Alpha, Open Beta, Closed Beta, and Official versions.',
+  view: 'The Most Viewed game is a game that has the most visitors on GameFi.org.',
   rating: 'Games with the highest ratings',
-  trending: 'Games with the most interactions. Calculated based on the number of (weighted) views, likes, reviews, and comments',
-  review: 'The most interacted reviews of the most-reviewed games'
+  trending: 'Trending game is a game that has the most interactions within the last 7 days on GameFi.org. Interactions include views, likes, reviews, and comments.',
+  review: 'Top Review is a game that has the most reviews and interactions in its reviews.'
 }
 
 const SORT_BY = {

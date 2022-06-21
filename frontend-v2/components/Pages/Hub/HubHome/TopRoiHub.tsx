@@ -18,7 +18,7 @@ export default function TopRoiHub ({ data: propData }) {
   return (
     <div className="mb-6">
       <div className="flex justify-between mb-3 md:text-lg 2xl:text-2xl items-center">
-        <Tippy content={<div><div>The approximate current return on investment (ROI) if purchased at the time of launch (at public price)</div><div>Token ROI = Current Price / Public Price</div></div>} className="font-casual text-sm leading-5 text-white bg-black opacity-100 p-3">
+        <Tippy content={<div><div>Token ROI is the approximate current return on investment (ROI) of a token.</div><div>Token ROI = Current Price/Public Price</div></div>} className="font-casual text-sm leading-5 text-white bg-black opacity-100 p-3">
           <div className="flex">
             <div className="font-bold uppercase">Token ROI</div>
             <button className='ml-2'><svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

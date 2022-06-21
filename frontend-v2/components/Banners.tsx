@@ -3,6 +3,7 @@ import { useAppContext } from '../context'
 import { useRouter } from 'next/router'
 import banner from '@/assets/images/banner.png'
 import banner2 from '@/assets/images/banner2.png'
+import banner3 from '@/assets/images/banner3.jpg'
 
 const banners = {
   default: {
@@ -12,10 +13,10 @@ const banners = {
     text: 'GameFi.org Guilds'
   },
   '/': {
-    deadline: new Date('2022-06-21T14:00:00Z'),
-    img: banner2,
-    link: 'https://gamefi.org/ino/befitter-ino-public',
-    text: 'beFitter INO Public'
+    deadline: new Date('2022-06-28T14:00:00Z'),
+    img: banner3,
+    link: 'https://gamefi.org/hub',
+    text: 'GameFi.org Games'
   }
 }
 

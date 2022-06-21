@@ -11,6 +11,7 @@ import get from 'lodash.get'
 import isEmpty from 'lodash.isempty'
 import useHubProfile from '@/hooks/useHubProfile'
 import { useRouter } from 'next/router'
+import { fetcher } from '@/utils'
 
 const ReviewPage = () => {
   const [data, setData] = useState({})
@@ -27,25 +28,29 @@ const ReviewPage = () => {
   useEffect(() => {
     const { id } = accountHub || {}
     if (!id) return
-    client.query({
-      query: GET_REVIEWS_AND_COMMENTS_BY_USER,
-      variables: {
-        reviewFilterValue: {
-          author: { id: { eq: id } },
-          status: { eq: _status }
+
+    fetcher('/api/hub/reviews', {
+      method: 'POST',
+      body: JSON.stringify({
+        variables: {
+          reviewFilterValue: {
+            author: { id: { eq: id } },
+            status: { eq: _status }
+          },
+          reviewPagination: {
+            pageSize: REVIEW_PAGE_SIZE
+          },
+          commentFilterValue: {
+            user: { id: { eq: id } }
+          },
+          commentPagination: {
+            pageSize: COMMENT_PAGE_SIZE
+          },
+          userId: id
         },
-        reviewPagination: {
-          pageSize: REVIEW_PAGE_SIZE
-        },
-        commentFilterValue: {
-          user: { id: { eq: id } }
-        },
-        commentPagination: {
-          pageSize: COMMENT_PAGE_SIZE
-        },
-        userId: id
-      }
-    }).then(res => {
+        query: 'GET_REVIEWS_AND_COMMENTS_BY_USER'
+      })
+    }).then((res) => {
       setData(normalize(res.data))
     }).catch(() => { })
   }, [accountHub, _status])

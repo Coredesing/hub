@@ -37,9 +37,8 @@ const EventLeaderboard = ({ event }: { event: string }) => {
           Leaderboard
           <Tippy
             content={<span>
-              <div>Performance point = Like + Rate + Review</div>
+              <div>Performance point = Like + Review</div>
               <div>1 Like = 1 point</div>
-              <div>1 Rate = 1 point</div>
               <div>1 Review = 5 points</div>
             </span>}
             className="font-casual text-sm leading-5 text-gamefiDark-100 bg-black opacity-100 p-3"

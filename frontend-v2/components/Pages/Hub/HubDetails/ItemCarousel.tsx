@@ -70,7 +70,7 @@ export default function ItemCarousel ({ item, index }: any) {
             </div>
           </Link>
           <div className="w-full pt-2 pb-2 flex flex-col flex-1 justify-between font-casual">
-            <div className="mb-2">
+            <div className="flex mb-2">
               <Tippy
                 duration={500}
                 theme="no-padding"
@@ -91,15 +91,17 @@ export default function ItemCarousel ({ item, index }: any) {
                     <div className="px-3 pt-2">
                       <div className="mb-3 line-clamp-1">
                         {categories?.data?.map(v => (
-                          <div key={v?.attributes?.slug} className={`${styles.cardLink} mr-2 mb-2 bg-gamefiDark-500 hover:bg-gamefiDark-300 text-white px-4 py-1 inline-block rounded font-normal`}>
-                            {v?.attributes?.name}
-                          </div>
+                          <Link key={v?.attributes?.slug} href={`/hub/list?category=${v?.attributes?.slug}`} passHref>
+                            <a className={`${styles.cardLink} mr-2 mb-2 bg-gamefiDark-500 hover:bg-gamefiDark-300 text-white px-4 py-1 inline-block rounded font-normal`}>
+                              {v?.attributes?.name}
+                            </a>
+                          </Link>
                         ))}
                       </div>
                       <div className="truncate uppercase font-bold text-lg mb-2">{name}</div>
                       <div className="flex-none font-casual text-sm w-20 xl:w-48">
                         <p className="font-medium inline-flex items-center text-base mb-3">
-                          {formatPrice(get(tokenomic, 'currentPrice', '-'))}
+                          {formatPrice(get(tokenomic, 'currentPrice', '-')) === '0' ? '-' : formatPrice(get(tokenomic, 'currentPrice', '-'))}
                           <PriceChangeBg className="ml-2 text-xs" priceChange24h={get(tokenomic, 'priceChange24h', '-')} />
                         </p>
                       </div>

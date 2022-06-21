@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Layout from '@/components/Layout'
 import { TopReviewsHub, GameBanner, TopPlayerHub, TopRoiHub, TopReleasedHub, TopViewHub, TrendingHub, TopRatingHub, TopRight, Categories } from '@/components/Pages/Hub/HubHome'
 import { GET_AGGREGATORS_HOME } from '@/graphql/aggregator'
@@ -8,33 +8,17 @@ import HubCountdown from '@/components/Pages/Hub/HubHome/HubCountDown'
 import EventLeaderboard from '@/components/Pages/Hub/HubHome/EventLeaderboard'
 import { GAME_HUB_START_TIME } from '@/utils/constants'
 
-const MOBILE_AND_TABLET_MAX_WIDTH = 1024
-
 function Hub ({ data }) {
-  const [isEnded, setIsEnded] = useState(false)
-  const [isMobileAndTablet, setIsMobileAndTablet] = useState(false)
   const [validCountdownTime] = useState(GAME_HUB_START_TIME && new Date().getTime() < new Date(GAME_HUB_START_TIME).getTime())
+  const [isEnded, setIsEnded] = useState(!validCountdownTime)
   const { categories } = data || {}
-
-  const onWindowResizeHandler = () => {
-    setIsMobileAndTablet(window.innerWidth < MOBILE_AND_TABLET_MAX_WIDTH)
-  }
-
-  useEffect(() => {
-    setIsMobileAndTablet(window.innerWidth < MOBILE_AND_TABLET_MAX_WIDTH)
-    window.addEventListener('resize', onWindowResizeHandler)
-
-    return () => {
-      window.removeEventListener('resize', onWindowResizeHandler)
-    }
-  }, [])
 
   return (
     <Layout
       title="GameFi.org - Games"
       description="An ultimate gaming destination for gamers, investors, and other game studios."
-      hideTopBar={!isEnded && !isMobileAndTablet}
-      disableFooter={!isEnded}
+      hideTopBar={validCountdownTime && !isEnded}
+      disableFooter={validCountdownTime && !isEnded}
       className="overflow-x-hidden"
     >
       {(!validCountdownTime || isEnded) && (

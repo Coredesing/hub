@@ -83,7 +83,7 @@ export default function ItemComment ({ data, index, defaultLikeStatus }) {
         </div>
       </div>
 
-      <div id={`commentContent_${index}`} className={clsx(styles.content, 'mt-4 font-casual break-all', isShowMore ? 'max-h-fit' : 'max-h-[168px]')}>
+      <div id={`commentContent_${index}`} style={{ wordBreak: 'break-word' }} className={clsx(styles.content, 'mt-4 font-casual whitespace-pre-wrap', isShowMore ? 'max-h-fit' : 'max-h-[168px]')}>
         {comment}
         {!isShowMore && isOver && <div className={`${styles.blur}`}></div>}
       </div>

@@ -1,8 +1,16 @@
-import { client } from '@/graphql/apolloClient'
+import { client, clientNew } from '@/graphql/apolloClient'
 import * as aggregator from '@/graphql/aggregator'
 
+const shouldUseCache = [
+  'GET_MORE_LIKE_THIS'
+]
+
 export function fetchWidthGraphql ({ query, variables }) {
-  return client.query({ query: aggregator[query], variables: variables })
+  if (shouldUseCache.indexOf(query) > -1) {
+    return clientNew.query({ query: aggregator[query], variables })
+  }
+
+  return client.query({ query: aggregator[query], variables })
 }
 
 export default async function handler (req, res) {

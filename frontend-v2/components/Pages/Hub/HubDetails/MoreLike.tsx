@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useMemo } from 'react'
 import Flicking from '@egjs/react-flicking'
 import '@egjs/flicking-plugins/dist/pagination.css'
 import get from 'lodash.get'
@@ -13,9 +13,16 @@ export default function MoreLike ({ categories = [], slug = '' }) {
   const [chunkData, setChunkData] = useState([])
   const refSlider = useRef(null)
 
+  const names = useMemo(() => {
+    return (categories || []).map(e => e?.attributes?.name).join(',')
+  }, [categories])
+
   useEffect(() => {
-    if (!categories || !slug) return
-    const cateData = categories?.map(e => e?.attributes?.name)
+    const cateData = names.split(',')
+    if (!slug || !cateData) {
+      return
+    }
+
     fetcher('/api/hub/detail', {
       method: 'POST',
       body: JSON.stringify({
@@ -59,7 +66,7 @@ export default function MoreLike ({ categories = [], slug = '' }) {
     }).catch((err) => {
       console.debug('err', err)
     })
-  }, [categories, slug])
+  }, [names, slug])
 
   const prev = () => {
     if (!refSlider.current) {

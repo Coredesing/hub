@@ -535,7 +535,7 @@ const HubDetail = ({ data }) => {
     setIntroductionHeight(elm.clientHeight)
   })
 
-  const { slug } = router.query
+  const slug = router.query?.slug?.toString() || ''
   return (
     <div className="flex flex-col font-casual gap-2 w-full">
       <div className="flex flex-col md:flex-row gap-10">

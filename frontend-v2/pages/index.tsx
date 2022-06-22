@@ -69,7 +69,6 @@ const PageIndex = ({ currentPools = [], cmsData = [] }) => {
   const itemsSorted = useMemo<CarouselItem[]>(() => {
     const _items = cmsData.map(aggregator => {
       const poolDetail = listPublic.find(pool => pool.aggregator_slug === aggregator.slug)
-      console.log('asdfsdf', aggregator?.totalVotes)
       return {
         id: aggregator?.id,
         title: aggregator?.name || '',

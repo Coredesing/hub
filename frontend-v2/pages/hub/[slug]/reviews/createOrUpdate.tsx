@@ -2,7 +2,6 @@ import React from 'react'
 import Layout from '@/components/Layout'
 import { CreateReview } from '@/components/Pages/Hub/Reviews'
 import { useRouter } from 'next/router'
-import Head from 'next/head'
 import { callWidthGraphql } from '@/pages/api/hub/[slug]'
 import get from 'lodash.get'
 import isEmpty from 'lodash.isempty'
@@ -11,23 +10,7 @@ function Create ({ data }) {
   const router = useRouter()
 
   return (
-    <Layout title="GameFi.org - Hub" description="An ultimate gaming destination for gamers, investors, and other game studios.">
-      <Head>
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content={data.name || 'GameFi.org Hub'}
-        />
-        {/* <meta
-          name="twitter:description"
-          content={stripTags(data?.game_intro)}
-        />
-        <meta
-          name="twitter:url"
-          content={`https://gamefi.org/hub/${data.slug}`}
-        />
-        <meta name="twitter:image" content={data.screen_shots_1} /> */}
-      </Head>
+    <Layout title="GameFi.org - Games" description="An ultimate gaming destination for gamers, investors, and other game studios.">
       <div className="px-4 xl:p-16 2xl:px-36 container mx-auto lg:block">
         <a onClick={() => {
           // router.push(`/hub/${router.query.slug}?tab=2`).finally(() => {})

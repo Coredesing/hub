@@ -1,19 +1,38 @@
 import { API_CMS_URL } from '@/utils/constants'
 import qs from 'qs'
+import cache from 'memory-cache'
 
-export const fetchLeaderboards = (slug) => {
-  const query = qs.stringify({
-    populate: {
-      aggregator: {
-        populate: '*'
-      }
-    },
-    filter: [slug],
-    sort: ['activePoint:desc', 'aggregator.totalViews:desc']
-  }, {
-    encodeValuesOnly: true
-  })
-  return fetch(`${API_CMS_URL}/api/leader-boards?${query}`).then(res => res.json())
+const CACHE_TIME = 1000 * 60 // 1 min
+
+export const fetchLeaderboards = async (slug) => {
+  try {
+    const query = qs.stringify({
+      populate: {
+        aggregator: {
+          populate: '*'
+        }
+      },
+      filter: [slug],
+      sort: ['activePoint:desc', 'aggregator.totalViews:desc']
+    }, {
+      encodeValuesOnly: true
+    })
+
+    const url = `${API_CMS_URL}/api/leader-boards?${query}`
+    const cachedResponse = await cache.get(url)
+    if (cachedResponse) {
+      console.log('cache', cachedResponse)
+      return cachedResponse
+    }
+    const response = await fetch(url).then(res => res.json())
+    console.log('no cache')
+    cache.put(url, response, CACHE_TIME)
+    console.log('go here')
+    return response
+  } catch (e) {
+    console.log(e)
+    return null
+  }
 }
 export default async function handler (req, res) {
   if (req?.method === 'GET') {

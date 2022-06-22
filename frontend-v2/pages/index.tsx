@@ -34,7 +34,7 @@ export type CarouselItem = {
     buyType?: string;
   };
 }
-const PageIndex = ({ featuredGames = [], currentPools = [], likes = [], cmsData = [] }) => {
+const PageIndex = ({ currentPools = [], cmsData = [] }) => {
   const [listUpcoming, listPublic] = useMemo<any[]>(() => {
     const origin = currentPools
     let remain = origin
@@ -69,6 +69,7 @@ const PageIndex = ({ featuredGames = [], currentPools = [], likes = [], cmsData 
   const itemsSorted = useMemo<CarouselItem[]>(() => {
     const _items = cmsData.map(aggregator => {
       const poolDetail = listPublic.find(pool => pool.aggregator_slug === aggregator.slug)
+      console.log('asdfsdf', aggregator?.totalVotes)
       return {
         id: aggregator?.id,
         title: aggregator?.name || '',
@@ -77,7 +78,7 @@ const PageIndex = ({ featuredGames = [], currentPools = [], likes = [], cmsData 
         logo: aggregator?.logo?.url,
         video: aggregator?.youtubeLinks[0]?.url,
         thumbnail: aggregator?.youtubeLinks[0]?.videoThumbnail?.url,
-        likes: Number(aggregator?.totalVotes),
+        likes: Number(aggregator?.totalFavorites),
         shortDescription: aggregator?.project?.shortDesc,
         upcoming: !!poolDetail,
         poolInfo: {
@@ -119,19 +120,12 @@ export async function getServerSideProps () {
       query: GET_BANNER_AGGREGATORS
     })
 
-    const gameLikeIds = []
-    const [featureGamesResponse, currentPoolsResponse] = await Promise.all([
-      fetcher(`${INTERNAL_BASE_URL}/aggregator?display_area=Top Game&sort_by=created_at&sort_order=desc`),
+    const [currentPoolsResponse] = await Promise.all([
       fetcher(`${INTERNAL_BASE_URL}/pools/current-pools?token_type=erc20&limit=100000&page=1&is_private=0,1,2,3`)
     ])
-    const featuredGames = featureGamesResponse?.data?.data || []
-    featuredGames?.map(game => gameLikeIds?.indexOf(game.id) === -1 ? gameLikeIds.push(game.id) : null)
-    const fetchLikesResponse = await fetcher(`${INTERNAL_BASE_URL}/aggregator/get-like?ids=${gameLikeIds.join(',')}`)
 
     serverSideProps.props = {
-      featuredGames,
       currentPools: currentPoolsResponse?.data?.data,
-      likes: fetchLikesResponse?.data,
       cmsData: normalize(res)?.aggregators || []
     }
 

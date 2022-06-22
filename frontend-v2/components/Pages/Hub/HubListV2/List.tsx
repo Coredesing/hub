@@ -121,7 +121,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
           }
 
           return (
-            <div key={e.id} className='flex py-[10px] last:pb-0 items-center gap-1 first:border-0 border-t-[1px] border-t-[#3B3E4A]' onClick={openGameDetail}>
+            <div key={e.id} className='flex py-[10px] last:pb-0 items-center gap-2 first:border-0 border-t-[1px] border-t-[#3B3E4A]' onClick={openGameDetail}>
               <img
                 className="w-[46px] h-[46px] object-cover rounded-tl-sm rounded-bl-sm"
                 src={get(e, 'rectangleThumbnail.url')}

@@ -11,11 +11,11 @@ const VERSION_RELEASED = [{ text: 'Official', value: 'official' }, { text: 'Test
 const VERIFY_STATUS = [{ text: 'Launched on GameFi.org', value: 'true' }]
 const SORT_VALUES = [
   { text: 'Recently Added', field: 'createdAt', order: 'desc' },
-  { text: 'Top player', field: 'project.tokenomic.totalHolders', order: 'desc' },
-  { text: 'New releases', field: 'topReleased', order: 'desc' },
-  { text: 'Most viewed', field: 'totalViews', order: 'desc' },
-  { text: 'Top trending', field: 'totalFavorites', order: 'desc' },
-  { text: 'Top rating', field: 'rate', order: 'desc' },
+  { text: 'Most Popular', field: 'project.tokenomic.totalHolders', order: 'desc' },
+  { text: 'New Releases', field: 'topReleased', order: 'desc' },
+  { text: 'Most Viewed', field: 'totalViews', order: 'desc' },
+  { text: 'Top Trending', field: 'totalFavorites', order: 'desc' },
+  { text: 'Top Rating', field: 'rate', order: 'desc' },
   { text: 'Token ROI', field: 'roi', order: 'desc' }
 ]
 
@@ -447,7 +447,7 @@ function SearchAndFilterMobile ({
                 </div>
 
                 <div className="uppercase font-bold text-lg">
-                  Verion released
+                  Version released
                 </div>
                 <div className="mb-6 font-casual text-sm">
                   {VERSION_RELEASED.map((e) => {

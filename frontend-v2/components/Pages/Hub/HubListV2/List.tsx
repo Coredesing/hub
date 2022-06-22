@@ -5,7 +5,6 @@ import get from 'lodash.get'
 import { useScreens } from '@/components/Pages/Home/utils'
 import { nFormatter } from '@/components/Pages/Hub/utils'
 import { useRouter } from 'next/router'
-import { getNetworkByAlias } from '@/components/web3'
 import Image from 'next/image'
 import isEmpty from 'lodash.isempty'
 import { format } from 'date-fns'
@@ -70,7 +69,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
         {(get(data, 'aggregators') || []).map((e) => {
           const totalViews = get(e, 'totalViews')
           const networksAlias = (get(e, 'project.tokenomic.network') || []).map(e => e.name)
-          const networks = networksAlias.map(alias => getNetworkByAlias(alias)).filter(Boolean)
+          const networks = networksAlias.map(alias => networkConfig.find(network => network.alias === alias))
           const aggregatorName = get(e, 'name') || '-'
           const totalHolders = get(e, 'project.tokenomic.totalHolders')
           const createdAt = get(e, 'createdAt')
@@ -121,7 +120,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
           }
 
           return (
-            <div key={e.id} className='flex py-[10px] last:pb-0 items-center gap-1 first:border-0 border-t-[1px] border-t-[#3B3E4A]' onClick={openGameDetail}>
+            <div key={e.id} className='flex py-[10px] last:pb-0 items-center gap-2 first:border-0 border-t-[1px] border-t-[#3B3E4A]' onClick={openGameDetail}>
               <img
                 className="w-[46px] h-[46px] object-cover rounded-tl-sm rounded-bl-sm"
                 src={get(e, 'rectangleThumbnail.url')}

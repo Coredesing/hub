@@ -74,7 +74,7 @@ export async function getStaticProps (context) {
     slug = 'gamefi-org-game-hub-a-steam-like-platform-bring-together-all-blockchain-games-and-gamified-projects'
   }
 
-  const post = await api.posts.read({ slug: context.params.slug, include: 'authors,tags' }).catch(() => { })
+  const post = await api.posts.read({ slug, include: 'authors,tags' }).catch(() => { })
 
   if (!post) {
     return {

@@ -70,7 +70,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
         {(get(data, 'aggregators') || []).map((e) => {
           const totalViews = get(e, 'totalViews')
           const networksAlias = (get(e, 'project.tokenomic.network') || []).map(e => e.name)
-          const networks = networksAlias.map(alias => getNetworkByAlias(alias)).filter(Boolean)
+          const networks = networksAlias.map(alias => networkConfig.find(network => network.alias === alias))
           const aggregatorName = get(e, 'name') || '-'
           const totalHolders = get(e, 'project.tokenomic.totalHolders')
           const createdAt = get(e, 'createdAt')

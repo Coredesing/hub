@@ -465,15 +465,15 @@ export const TokenSummary = ({ data }) => {
           </Tippy>
         </div>}
       </div>
-      <div className='grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-14 md:pr-20'>
-        <div className='flex flex-col justify-between gap-5 md:gap-0'>
+      <div className='grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 xl:gap-12 2xl:gap-20'>
+        <div className='flex flex-col justify-between gap-5 md:gap-0 md:col-span-3 xl:col-span-1'>
           <div className='uppercase text-white/50 text-xs font-bold'><span>Current price</span></div>
           <div className='flex items-center'>
             <div className='text-2xl font-mechanic'><strong>{data?.currentPrice > 0 ? `${formatPrice(data?.currentPrice)}` : '-'}</strong></div>
             <PriceChangeBg className='mx-2 text-xs gap-1 py-[2px]' priceChange24h={data?.priceChange24h} />
           </div>
         </div>
-        <div className='flex flex-col justify-between gap-5 md:gap-0 mt-2 md:mt-0 md:px-6'>
+        <div className='flex flex-col justify-between gap-5 md:gap-0 mt-2 md:mt-0'>
           <div className='flex'>
             <div className='uppercase text-sm text-white/50 mr-auto'><span>Token roi:</span></div>
             <div className='font-semibold text-sm'><span>{data?.roi}{data?.roi !== '-' && 'x'}</span></div>
@@ -492,12 +492,12 @@ export const TokenSummary = ({ data }) => {
           <div className='flex'>
             <div className='uppercase text-sm text-white/50 mr-auto'><span>Vol (24h):</span></div>
             <div className='font-semibold text-sm'><span>{data?.volume24h}</span></div>
-            {data?.volumeChange24h > 0 && (
+            {data?.volumeChange24h && (
               <PriceChange className='text-xs gap-1 py-[2px] pr-0' priceChange24h={data?.volumeChange24h} />
             )}
           </div>
         </div>
-        <div className='flex flex-col justify-between gap-5 md:gap-0 md:px-2'>
+        <div className='flex flex-col justify-between gap-5 md:gap-0'>
           <div className='flex'>
             <div className='uppercase text-sm text-white/50 mr-auto'><span>Igo price:</span></div>
             <div className='font-semibold text-sm'><span>{data?.publicPrice > 0 ? `$${printNumber(data?.publicPrice)}` : '-'}</span></div>

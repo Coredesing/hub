@@ -6,12 +6,36 @@ import { client } from '@/graphql/apolloClient'
 import { normalize } from '@/graphql/utils'
 import { useState } from 'react'
 import get from 'lodash.get'
-import ListAggregator from '@/components/Pages/Hub/HubListV2/List'
+import ListAggregator, { HEADERS } from '@/components/Pages/Hub/HubListV2/List'
+import { useRouter } from 'next/router'
 
 function HubListV2 ({ data }) {
+  const router = useRouter()
+  const getDefaultSortedField = () => {
+    const { sort: sortQuery = '' } = router.query
+    if (!sortQuery) return null
+
+    const listSort = (sortQuery as string).split(',')
+    if (!listSort.length) return null
+    const [field, order] = get(listSort, '[0]').split(':')
+    const listSortedFieldHeader = HEADERS.filter(e => {
+      return e.field
+    })
+
+    const sortedField = listSortedFieldHeader.find(e => {
+      return e.field === field || SORT_ALIAS[e.field] === field
+    })
+
+    const fieldAlias = Object.entries(SORT_ALIAS).find(([originField]) => {
+      return originField === sortedField.field
+    })
+
+    return { field: get(fieldAlias, '[0]') || field, order }
+  }
+
   const [title, setTitle] = useState<string>('')
   const [filterDescription, setFilterDescription] = useState<string>('')
-  const [sortedField, setSortedField] = useState(null)
+  const [sortedField, setSortedField] = useState(getDefaultSortedField)
 
   return (
     <Layout

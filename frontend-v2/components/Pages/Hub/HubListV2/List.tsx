@@ -9,6 +9,7 @@ import { getNetworkByAlias } from '@/components/web3'
 import Image from 'next/image'
 import isEmpty from 'lodash.isempty'
 import { format } from 'date-fns'
+import { SORT_ALIAS } from '@/components/Pages/Hub/HubListV2/Filter'
 
 type TblHeaderAlign = 'left' | 'center' | 'right' | 'justify' | 'char'
 
@@ -194,6 +195,12 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
               const existSortFilter = sortQuery
                 ? (sortQuery as string).split(',').some(q => {
                   const [field] = q.split(':')
+                  const fieldAlias = Object.entries(SORT_ALIAS).find(([key, value]) => {
+                    return value === field
+                  })
+                  if (fieldAlias) {
+                    return fieldAlias[0] === e.field
+                  }
                   return field === e.field
                 })
                 : false

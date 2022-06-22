@@ -42,3 +42,9 @@ export const client = new ApolloClient({
   defaultOptions: defaultOptions,
   link: authLink.concat(httpLink)
 })
+
+export const clientNew = new ApolloClient({
+  ssrMode: typeof window === 'undefined',
+  cache: new InMemoryCache(),
+  link: authLink.concat(httpLink)
+})

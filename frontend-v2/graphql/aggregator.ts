@@ -672,6 +672,7 @@ export const GET_AGGREGATORS_BY_SLUG = gql`
                 rank
                 avatar {
                   data {
+                    id
                     attributes {
                       name
                       url
@@ -706,6 +707,7 @@ export const GET_AGGREGATORS_BY_SLUG = gql`
             url
             videoThumbnail {
               data {
+                id
                 attributes {
                   url
                 }
@@ -717,6 +719,7 @@ export const GET_AGGREGATORS_BY_SLUG = gql`
           totalReviews
           mobileThumbnail {
             data {
+              id
               attributes {
                 url
               }
@@ -724,6 +727,7 @@ export const GET_AGGREGATORS_BY_SLUG = gql`
           }
           rectangleThumbnail {
             data {
+              id
               attributes {
                 url
               }
@@ -747,12 +751,14 @@ export const GET_AGGREGATORS_BY_SLUG = gql`
           }
           project {
             data {
+              id
               attributes {
                 isVerifiedGameFi
                 twitterId
                 name
                 logo {
                   data {
+                    id
                     attributes {
                       url
                     }
@@ -760,10 +766,12 @@ export const GET_AGGREGATORS_BY_SLUG = gql`
                 }
                 guilds {
                   data {
+                    id
                     attributes {
                       slug
                       logo {
                         data {
+                          id
                           attributes {
                             url
                           }
@@ -806,9 +814,11 @@ export const GET_AGGREGATORS_BY_SLUG = gql`
                   pagination: { pageSize: 100 }
                 ) {
                   data {
+                    id
                     attributes {
                       logo {
                         data {
+                          id
                           attributes {
                             url
                           }
@@ -823,6 +833,7 @@ export const GET_AGGREGATORS_BY_SLUG = gql`
                   name
                   avatar {
                     data {
+                      id
                       attributes {
                         url
                       }
@@ -842,6 +853,7 @@ export const GET_AGGREGATORS_BY_SLUG = gql`
                     name
                     avatar {
                       data {
+                        id
                         attributes {
                           url
                         }
@@ -858,6 +870,7 @@ export const GET_AGGREGATORS_BY_SLUG = gql`
                   }
                   icon {
                     data {
+                      id
                       attributes {
                         url
                       }
@@ -971,6 +984,7 @@ export const GET_MORE_LIKE_THIS = gql`
       filters: $filterCate
     ){
       data {
+        id
         attributes {
           name
           rate

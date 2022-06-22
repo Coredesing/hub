@@ -35,11 +35,18 @@ const EventLeaderboard = ({ event }: { event: string }) => {
         <div className="font-bold uppercase flex items-center gap-2">
           Leaderboard
           <Tippy
-            content={<span>
+            content={<div className="normal-case font-normal">
               <div>Performance point = Like + Review</div>
               <div>1 Like = 1 point</div>
-              <div>1 Review = 5 points</div>
-            </span>}
+              <div className="mb-3">1 Review = 5 points</div>
+              <a
+                href="https://gamefi.org/insight/join-league-of-gamefi-finding-top-favorite-games-on-gamefi-org-game-hub"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="mt-4 text-gamefiGreen-700 hover:underline"
+              >View Detail</a>
+            </div>}
+            interactive={true}
             className="font-casual text-sm leading-5 text-gamefiDark-100 bg-black opacity-100 p-3"
             placement="bottom"
           >
@@ -106,7 +113,7 @@ const EventLeaderboard = ({ event }: { event: string }) => {
           </a>)}
           {
             data.length > 10 && <button
-              className="text-gamefiGreen-700 hover:text-gamefiGreen-200 px-2 xl:px-4 py-2 leading-5 font-semibold text-sm"
+              className="text-gamefiGreen-700 hover:text-gamefiGreen-200 px-2 xl:px-4 py-2 leading-5 font-normal text-sm font-casual"
               onClick={() => {
                 setViewMore(!viewMore)
               }}

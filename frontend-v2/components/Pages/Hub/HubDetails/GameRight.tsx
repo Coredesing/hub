@@ -162,10 +162,6 @@ const GameRight = ({ data, className, dataBase = null, callApi }) => {
     telegramANN
   } = communityOfficial || { website: false, telegram: false, facebook: false, twitch: false, reddit: false, medium: false, discordServer: false, twitter: false, youtube: false, tiktok: false, instagram: false, telegramANN: false }
 
-  const goTabReview = () => {
-    router.push(`/hub/${slug}?tab=2`)
-  }
-
   return (
     <div className={`flex-1 overflow-x-hidden ${className || ''}`}>
       <img src={imageCMS(data?.mobileThumbnail)} className="w-full aspect-[16/9] mb-3" alt="" />
@@ -285,9 +281,11 @@ const GameRight = ({ data, className, dataBase = null, callApi }) => {
       <div className="flex items-center justify-between mb-3 gap-4">
         <span className="text-sm text-gray-300">Rating</span>
         <div className='flex items-center'>
-          <div className='hover:cursor-pointer inline-block' onClick={goTabReview}>
-            <Image src={require('@/assets/images/icons/star-rating.svg')} alt="" />
-          </div>
+          <Link href={`/hub/${slug}/reviews`}>
+            <a className='hover:cursor-pointer inline-block'>
+              <Image src={require('@/assets/images/icons/star-rating.svg')} alt="" />
+            </a>
+          </Link>
           <span className="font-medium text-base truncate max-w-xs ml-2">{data?.rating !== '-' ? data?.rating?.toFixed(1) : data?.rating}</span>
         </div>
       </div>

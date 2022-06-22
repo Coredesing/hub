@@ -8,21 +8,29 @@ import arrowRight from '@/assets/images/icons/arrow-right.png'
 import { WrapperSection } from '../HubHome/StyleElement'
 import ItemCarousel from './ItemCarousel'
 
-export default function MoreLike ({ categories = [] }) {
+export default function MoreLike ({ categories = [], slug = '' }) {
   const [data, setData] = useState([])
   const [chunkData, setChunkData] = useState([])
   const refSlider = useRef(null)
 
   useEffect(() => {
+    if (!categories || !slug) return
     const cateData = categories?.map(e => e?.attributes?.name)
     fetcher('/api/hub/detail', {
       method: 'POST',
       body: JSON.stringify({
         query: 'GET_MORE_LIKE_THIS',
         variables: {
-          project: {
-            categories: {
-              name: { in: cateData }
+          filterCate: {
+            slug: {
+              not: {
+                eq: slug
+              }
+            },
+            project: {
+              categories: {
+                name: { in: cateData }
+              }
             }
           }
         }
@@ -51,7 +59,7 @@ export default function MoreLike ({ categories = [] }) {
     }).catch((err) => {
       console.debug('err', err)
     })
-  }, [categories])
+  }, [categories, slug])
 
   const prev = () => {
     if (!refSlider.current) {

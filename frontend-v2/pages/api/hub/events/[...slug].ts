@@ -9,7 +9,7 @@ export const fetchLeaderboards = (slug) => {
       }
     },
     filter: [slug],
-    sort: ['activePoint:desc']
+    sort: ['activePoint:desc', 'aggregator.totalViews:desc']
   }, {
     encodeValuesOnly: true
   })

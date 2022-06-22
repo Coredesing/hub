@@ -10,6 +10,7 @@ import Image from 'next/image'
 import isEmpty from 'lodash.isempty'
 import { format } from 'date-fns'
 import { SORT_ALIAS } from '@/components/Pages/Hub/HubListV2/Filter'
+import { networks as networkConfig } from '@/components/Pages/Hub/HubDetails'
 
 type TblHeaderAlign = 'left' | 'center' | 'right' | 'justify' | 'char'
 
@@ -131,7 +132,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
                   <div className='font-casual font-medium text-[13px] leading-[100%] text-white'>{aggregatorName}</div>
                   <div className='flex items-center gap-1'>
                     {field === 'rate' && <svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M15.1441 5.43697L10.8281 4.80997L8.8971 0.898969C8.5591 0.215969 7.4411 0.215969 7.1031 0.898969L5.1731 4.80997L0.856096 5.43697C0.0390965 5.55597 -0.291904 6.56397 0.302096 7.14397L3.4261 10.188L2.6891 14.487C2.5501 15.301 3.4061 15.926 4.1401 15.541L8.0001 13.512L11.8611 15.542C12.5891 15.923 13.4521 15.308 13.3121 14.488L12.5751 10.189L15.6991 7.14497C16.2921 6.56397 15.9611 5.55597 15.1441 5.43697Z" fill="#FFB800"/>
+                      <path d="M15.1441 5.43697L10.8281 4.80997L8.8971 0.898969C8.5591 0.215969 7.4411 0.215969 7.1031 0.898969L5.1731 4.80997L0.856096 5.43697C0.0390965 5.55597 -0.291904 6.56397 0.302096 7.14397L3.4261 10.188L2.6891 14.487C2.5501 15.301 3.4061 15.926 4.1401 15.541L8.0001 13.512L11.8611 15.542C12.5891 15.923 13.4521 15.308 13.3121 14.488L12.5751 10.189L15.6991 7.14497C16.2921 6.56397 15.9611 5.55597 15.1441 5.43697Z" fill="#FFB800" />
                     </svg>
                     }
                     <div className='font-casual font-semibold text-[13px] leading-[100%] text-white'>{valueShow}</div>
@@ -143,7 +144,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
                     <div className='flex min-w-[14px] items-center gap-1'>
                       {
                         !isEmpty(networks)
-                          ? networks.map(e => <Image
+                          ? networks.map(e => e?.image && <Image
                             key={`network_${e.id}`}
                             width={14}
                             height={14}
@@ -157,7 +158,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
 
                     <div className='flex items-center gap-[6px] font-casual font-normal text-[12px] leading-[18px] text-[#D4D7E1]'>
                       <svg width="12" height="10" viewBox="0 0 12 10" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5.9998 9.5C8.6998 9.5 10.7998 7.175 11.6998 5.825C12.0748 5.3 12.0748 4.625 11.6998 4.1C10.7998 2.825 8.6998 0.5 5.9998 0.5C3.2998 0.5 1.1998 2.825 0.299805 4.175C-0.0751953 4.7 -0.0751953 5.375 0.299805 5.825C1.1998 7.175 3.2998 9.5 5.9998 9.5ZM5.9998 2.75C7.2748 2.75 8.24981 3.725 8.24981 5C8.24981 6.275 7.2748 7.25 5.9998 7.25C4.7248 7.25 3.7498 6.275 3.7498 5C3.7498 3.725 4.7248 2.75 5.9998 2.75Z" fill="currentColor"/>
+                        <path d="M5.9998 9.5C8.6998 9.5 10.7998 7.175 11.6998 5.825C12.0748 5.3 12.0748 4.625 11.6998 4.1C10.7998 2.825 8.6998 0.5 5.9998 0.5C3.2998 0.5 1.1998 2.825 0.299805 4.175C-0.0751953 4.7 -0.0751953 5.375 0.299805 5.825C1.1998 7.175 3.2998 9.5 5.9998 9.5ZM5.9998 2.75C7.2748 2.75 8.24981 3.725 8.24981 5C8.24981 6.275 7.2748 7.25 5.9998 7.25C4.7248 7.25 3.7498 6.275 3.7498 5C3.7498 3.725 4.7248 2.75 5.9998 2.75Z" fill="currentColor" />
                       </svg>
                       {totalViews ? printNumber(totalViews) : ''}
                     </div>
@@ -219,7 +220,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
                     onClick={() => (!existSortFilter || (existSortFilter && sortQueryLength > 1)) && handleClickSortableHeader(e)}
                   >
                     {e.text}
-                    {isSorting && <DropIcon className={clsx(sortedField.order === 'asc' ? 'rotate-180' : '')}/>}
+                    {isSorting && <DropIcon className={clsx(sortedField.order === 'asc' ? 'rotate-180' : '')} />}
                   </div>
                 </th>
               )
@@ -235,7 +236,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
             const rate = get(e, 'rate')
             const totalFavorites = get(e, 'totalFavorites')
             const networksAlias = (get(e, 'project.tokenomic.network') || []).map(e => e.name)
-            const networks = networksAlias.map(alias => getNetworkByAlias(alias)).filter(Boolean)
+            const networks = networksAlias.map(alias => networkConfig.find(network => network.alias === alias))
             const totalHolders = get(e, 'project.tokenomic.totalHolders')
             const volume24h = get(e, 'project.tokenomic.volume24h')
             const roi = get(e, 'roi')
@@ -247,7 +248,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
               <tr
                 key={e.id}
                 className="border-b-4 border-gamefiDark-900 bg-gamefiDark-650 hover:bg-gamefiDark-600 cursor-pointer rounded overflow-hidden"
-                // onClick={openGameDetail}
+              // onClick={openGameDetail}
               >
                 <td>
                   <a className="flex" href={`/hub/${get(e, 'slug')}`}>
@@ -266,7 +267,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
                         {
                           <div className="w-[52px] flex items-center gap-[6px] font-casual font-normal text-[12px] leading-[18px] text-[#D4D7E1]">
                             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M11.3581 4.08066L8.12107 3.61041L6.67282 0.677156C6.41932 0.164906 5.58082 0.164906 5.32732 0.677156L3.87982 3.61041L0.642072 4.08066C0.0293224 4.16991 -0.218928 4.92591 0.226572 5.36091L2.56957 7.64391L2.01682 10.8682C1.91257 11.4787 2.55457 11.9474 3.10507 11.6587L6.00007 10.1369L8.89582 11.6594C9.44182 11.9452 10.0891 11.4839 9.98407 10.8689L9.43132 7.64466L11.7743 5.36166C12.2191 4.92591 11.9708 4.16991 11.3581 4.08066Z" fill="#FFB800"/>
+                              <path d="M11.3581 4.08066L8.12107 3.61041L6.67282 0.677156C6.41932 0.164906 5.58082 0.164906 5.32732 0.677156L3.87982 3.61041L0.642072 4.08066C0.0293224 4.16991 -0.218928 4.92591 0.226572 5.36091L2.56957 7.64391L2.01682 10.8682C1.91257 11.4787 2.55457 11.9474 3.10507 11.6587L6.00007 10.1369L8.89582 11.6594C9.44182 11.9452 10.0891 11.4839 9.98407 10.8689L9.43132 7.64466L11.7743 5.36166C12.2191 4.92591 11.9708 4.16991 11.3581 4.08066Z" fill="#FFB800" />
                             </svg>
 
                             {txtRate}
@@ -327,7 +328,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
                   <a href={`/hub/${get(e, 'slug')}`} className='flex min-w-[22px] items-center justify-center gap-1'>
                     {
                       !isEmpty(networks)
-                        ? networks.map(e => <Image
+                        ? networks.map(e => e?.image && <Image
                           key={`network_${e.id}`}
                           width={22}
                           height={22}

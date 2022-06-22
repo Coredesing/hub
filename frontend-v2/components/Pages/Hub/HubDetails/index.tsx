@@ -10,7 +10,7 @@ import BGRankVer from '@/assets/images/aggregator/bg-rank-gamefi-ver.png'
 import { useScreens } from '@/components/Pages/Home/utils'
 import get from 'lodash.get'
 import { format } from 'date-fns'
-import { getNetworkByAlias, switchNetwork } from '@/components/web3'
+import { AVAX, BNB, ETH, FTM, MATIC, switchNetwork } from '@/components/web3'
 import ReviewList from '@/components/Pages/Hub/Reviews/List'
 import isEmpty from 'lodash.isempty'
 import { PriceChange, PriceChangeBg } from './PriceChange'
@@ -25,6 +25,51 @@ import { useLibraryDefaultFlexible } from '@/components/web3/utils'
 import { nFormatter } from '@/components/Pages/Hub/utils'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+
+export const networks = [{
+  name: 'Ethereum',
+  alias: 'eth',
+  currency: ETH.symbol,
+  image: require('@/assets/images/networks/eth.svg'),
+  image2: require('@/assets/images/networks/ethereum.svg')
+}, {
+  name: 'BNB Chain',
+  alias: 'bsc',
+  currency: BNB.symbol,
+  image: require('@/assets/images/networks/bsc.svg'),
+  image2: require('@/assets/images/networks/bnbchain.svg'),
+  colorText: '#28282E'
+}, {
+  name: 'Polygon',
+  alias: 'polygon',
+  currency: MATIC.symbol,
+  image: require('@/assets/images/networks/matic.svg'),
+  image2: require('@/assets/images/networks/polygon.svg')
+}, {
+  name: 'Avalanche',
+  alias: 'avax',
+  currency: AVAX.symbol,
+  image: require('@/assets/images/networks/avax.svg'),
+  image2: require('@/assets/images/networks/avalanche.svg')
+}, {
+  name: 'Arbitrum One',
+  alias: 'arb',
+  currency: ETH.symbol,
+  image: require('@/assets/images/networks/arb.svg'),
+  image2: require('@/assets/images/networks/arbitrum.svg')
+}, {
+  name: 'Fantom Opera',
+  alias: 'ftm',
+  currency: FTM.symbol,
+  image: require('@/assets/images/networks/ftm.svg'),
+  image2: require('@/assets/images/networks/fantom.svg')
+}, {
+  name: 'Solana',
+  alias: 'solana',
+  currency: 'SOL',
+  image: require('@/assets/images/networks/solana.svg'),
+  image2: require('@/assets/images/networks/solana.svg')
+}]
 
 const DEFAULT_HEIGHT_BEFORE_SHOW_MORE = 168
 
@@ -123,7 +168,10 @@ const handleData = (
 
   dataGuilds = get(project, 'data.attributes.guilds.data', [])
 
-  const networkData = tokenomic?.network?.map(v => getNetworkByAlias(v.name)) || ''
+  const networkData = tokenomic?.network?.map(v => {
+    return networks.find(network => network.alias === v.name)
+  }) || ''
+
   dataGameRight = {
     shortDesc: shortDesc || '-',
     developer: studio?.[0]?.name || '-',
@@ -465,15 +513,15 @@ export const TokenSummary = ({ data }) => {
           </Tippy>
         </div>}
       </div>
-      <div className='grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-14 md:pr-20'>
-        <div className='flex flex-col justify-between gap-5 md:gap-0'>
+      <div className='grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 xl:gap-12 2xl:gap-20'>
+        <div className='flex flex-col justify-between gap-5 md:gap-0 md:col-span-3 xl:col-span-1'>
           <div className='uppercase text-white/50 text-xs font-bold'><span>Current price</span></div>
           <div className='flex items-center'>
             <div className='text-2xl font-mechanic'><strong>{data?.currentPrice > 0 ? `${formatPrice(data?.currentPrice)}` : '-'}</strong></div>
             <PriceChangeBg className='mx-2 text-xs gap-1 py-[2px]' priceChange24h={data?.priceChange24h} />
           </div>
         </div>
-        <div className='flex flex-col justify-between gap-5 md:gap-0 mt-2 md:mt-0 md:px-6'>
+        <div className='flex flex-col justify-between gap-5 md:gap-0 mt-2 md:mt-0'>
           <div className='flex'>
             <div className='uppercase text-sm text-white/50 mr-auto'><span>Token roi:</span></div>
             <div className='font-semibold text-sm'><span>{data?.roi}{data?.roi !== '-' && 'x'}</span></div>
@@ -492,12 +540,12 @@ export const TokenSummary = ({ data }) => {
           <div className='flex'>
             <div className='uppercase text-sm text-white/50 mr-auto'><span>Vol (24h):</span></div>
             <div className='font-semibold text-sm'><span>{data?.volume24h}</span></div>
-            {data?.volumeChange24h > 0 && (
+            {!!data?.volumeChange24h && (
               <PriceChange className='text-xs gap-1 py-[2px] pr-0' priceChange24h={data?.volumeChange24h} />
             )}
           </div>
         </div>
-        <div className='flex flex-col justify-between gap-5 md:gap-0 md:px-2'>
+        <div className='flex flex-col justify-between gap-5 md:gap-0'>
           <div className='flex'>
             <div className='uppercase text-sm text-white/50 mr-auto'><span>Igo price:</span></div>
             <div className='font-semibold text-sm'><span>{data?.publicPrice > 0 ? `$${printNumber(data?.publicPrice)}` : '-'}</span></div>
@@ -659,7 +707,7 @@ const HubDetail = ({ data }) => {
         }
       </div>
       <div className="mt-10 md:mt-14 text-lg md:text-2xl font-mechanic uppercase"><strong>Related games</strong></div>
-      <MoreLike categories={get(data, 'project.data.attributes.categories.data', [])} slug={slug}/>
+      <MoreLike categories={get(data, 'project.data.attributes.categories.data', [])} slug={slug} />
     </div>
   )
 }

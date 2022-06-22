@@ -27,7 +27,7 @@ function HubListV2 ({ data }) {
     })
 
     const fieldAlias = Object.entries(SORT_ALIAS).find(([originField]) => {
-      return originField === sortedField.field
+      return originField === sortedField?.field
     })
 
     return { field: get(fieldAlias, '[0]') || field, order }

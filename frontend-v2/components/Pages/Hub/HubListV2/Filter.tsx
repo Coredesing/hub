@@ -447,7 +447,7 @@ function SearchAndFilterMobile ({
                 </div>
 
                 <div className="uppercase font-bold text-lg">
-                  Verion released
+                  Version released
                 </div>
                 <div className="mb-6 font-casual text-sm">
                   {VERSION_RELEASED.map((e) => {

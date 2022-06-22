@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { useAppContext } from '../context'
 import { useRouter } from 'next/router'
 import banner from '@/assets/images/banner.png'
-import banner2 from '@/assets/images/banner2.png'
 import banner3 from '@/assets/images/banner3.jpg'
 
 const banners = {

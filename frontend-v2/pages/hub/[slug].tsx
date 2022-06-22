@@ -18,7 +18,6 @@ import { gql } from '@apollo/client'
 
 const GameDetails = ({ data }) => {
   const [values, setValues] = useState(data)
-  const [firstCome, setFirstCome] = useState(true)
   const changeData = useRef(null)
   const screen = useScreens()
   const router = useRouter()
@@ -29,10 +28,6 @@ const GameDetails = ({ data }) => {
   }, [router.query.slug])
 
   useEffect(() => {
-    if (firstCome) {
-      setFirstCome(false)
-      return
-    }
     const reviewFilterValue: any = { aggregator: { slug: { eq: router.query.slug } }, status: { eq: 'published' } }
     fetcher('/api/hub/detail/getLiveData', { method: 'POST', body: JSON.stringify({ variables: { slug: router.query.slug, reviewFilterValue, pageSize: 5 }, query: 'GET_AGGREGATORS_BY_SLUG' }) }).then(({ data }) => {
       const { five, four, three, two, one, totalReviewMeta } = data

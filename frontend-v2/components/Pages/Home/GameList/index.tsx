@@ -1,20 +1,15 @@
-import { API_BASE_URL } from '@/utils/constants'
-import { fetcher, useFetch } from '@/utils'
-import ShadowLoader from '@/components/Base/ShadowLoader'
+import { fetcher } from '@/utils'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import FilterDropdown from '../FilterDropdown'
 import TopGame from '../TopGame'
 import { useScreens } from '../utils'
-import { GET_RATING_AGGREGATORS, GET_TRENDING_AGGREGATORS } from '@/graphql/aggregator'
-import { client } from '@/graphql/apolloClient'
-import { normalize } from '@/graphql/utils'
 
 const gameFilterOptions = [
   {
     key: 'filter-top-favorite',
     label: 'Top Favorite',
-    value: 'Top Favourite'
+    value: 'Top Favorite'
   },
   {
     key: 'filter-top-trending',
@@ -106,7 +101,7 @@ const GameList = () => {
 
   const handleChangeGameFilter = useCallback((item: any) => {
     setGameFilterOption(item?.value)
-    // await router.push({ query: { topGames: item.value || 'Top Favourite' } }, undefined, { shallow: true })
+    // await router.push({ query: { topGames: item.value || 'Top Favorite' } }, undefined, { shallow: true })
   }, [])
 
   return <>

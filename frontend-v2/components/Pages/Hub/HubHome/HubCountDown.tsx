@@ -45,7 +45,7 @@ const HubCountdown = ({ onEnded }) => {
     return () => {
       window.removeEventListener('resize', onWindowResizeHandler)
     }
-  }, [])
+  }, [onEnded])
 
   return (
     <div

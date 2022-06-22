@@ -69,6 +69,12 @@ export const networks = [{
   currency: 'SOL',
   image: require('@/assets/images/networks/solana.svg'),
   image2: require('@/assets/images/networks/solana.svg')
+}, {
+  name: 'Algorand',
+  alias: 'algorand',
+  currency: 'ALGO',
+  image: require('@/assets/images/networks/algorand.png'),
+  image2: require('@/assets/images/networks/algorand.png')
 }]
 
 const DEFAULT_HEIGHT_BEFORE_SHOW_MORE = 168

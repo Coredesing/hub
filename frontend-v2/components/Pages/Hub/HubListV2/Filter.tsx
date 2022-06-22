@@ -181,8 +181,8 @@ function SideBarFilter (props) {
 }
 
 function PaginationOption ({ pageSize, setPageSize, sort, setSort, onSearch, isMobileAndTablet = false, searchValue, setSortedField }) {
-  const defaultSortField = get(sort, '[0].field') || 'project.tokenomic.totalHolders'
-  const defaultSortOrder = get(sort, '[0].order') || 'desc'
+  const defaultSortField = get(sort, '[1].field') || get(sort, '[0].field') || 'project.tokenomic.totalHolders'
+  const defaultSortOrder = get(sort, '[1].order') || get(sort, '[0].order') || 'desc'
 
   const fieldAlias = Object.entries(SORT_ALIAS).find(alias => {
     const [, value] = alias
@@ -211,21 +211,13 @@ function PaginationOption ({ pageSize, setPageSize, sort, setSort, onSearch, isM
     _setSort(newSortValue)
     const [field, order] = newSortValue.split(':')
     const newSortValueField = SORT_ALIAS[field] || field
-
-    const uniqueFields = SORT_VALUES.map(e => {
-      return SORT_ALIAS[e.field] || e.field
-    })
-    setSort([...sort.filter(e => !uniqueFields.includes(e.field) && e.field !== newSortValueField), { field: newSortValueField, order }])
+    setSort([{ field: newSortValueField, order }])
     setSortedField(null)
   }
   const onChangeSortMobile = (newSortValue) => {
     _setSort(newSortValue)
     const [field, order] = newSortValue.split(':')
-    const uniqueFields = SORT_VALUES.map(e => {
-      return SORT_ALIAS[e.field] || e.field
-    })
-
-    setSort([...sort.filter(e => !uniqueFields.includes(e.field)), { field, order }])
+    setSort([{ field, order }])
   }
 
   // Watch event reset filter

@@ -141,7 +141,7 @@ query Aggregators {
       attributes {
         name
         slug
-        totalVotes
+        totalFavorites
         releaseStatus
         releaseDate
         rate

@@ -81,7 +81,7 @@ export default function HubTitle ({ hideViewAll, title, showFilterTime, getData,
 
                 </button>
                 {show
-                  ? <div ref={wrapperRef} className="origin-top-left absolute mt-2 z-10 left-0 w-52 rounded-sm py-1 shadow-lg focus:outline-none text-base bg-gamefiDark-500">
+                  ? <div ref={wrapperRef} className="origin-top-left absolute mt-2 z-20 left-0 w-52 rounded-sm py-1 shadow-lg focus:outline-none text-base bg-gamefiDark-500">
                     {
                       availableOptions().length
                         ? availableOptions().map(item =>

@@ -492,7 +492,7 @@ export const TokenSummary = ({ data }) => {
           <div className='flex'>
             <div className='uppercase text-sm text-white/50 mr-auto'><span>Vol (24h):</span></div>
             <div className='font-semibold text-sm'><span>{data?.volume24h}</span></div>
-            {data?.volumeChange24h && (
+            {!!data?.volumeChange24h && (
               <PriceChange className='text-xs gap-1 py-[2px] pr-0' priceChange24h={data?.volumeChange24h} />
             )}
           </div>

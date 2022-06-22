@@ -21,13 +21,10 @@ export const fetchLeaderboards = async (slug) => {
     const url = `${API_CMS_URL}/api/leader-boards?${query}`
     const cachedResponse = await cache.get(url)
     if (cachedResponse) {
-      console.log('cache', cachedResponse)
       return cachedResponse
     }
     const response = await fetch(url).then(res => res.json())
-    console.log('no cache')
     cache.put(url, response, CACHE_TIME)
-    console.log('go here')
     return response
   } catch (e) {
     console.log(e)

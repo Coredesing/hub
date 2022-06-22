@@ -57,8 +57,8 @@ const GameDetails = ({ data }) => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={data?.name || 'GameFi.org Games'} />
         <meta name="twitter:description" content={data?.gameIntroduction || 'An ultimate gaming destination for gamers, investors, and other game studios.'} />
-        <meta name="twitter:url" content={`https://gamefi.org/hub/${data.slug}`} />
-        <meta name="twitter:image" content={data.screen_shots_1} />
+        <meta name="twitter:url" content={`https://gamefi.org/hub/${data?.slug}`} />
+        <meta name="twitter:image" content={data?.screen_shots_1} />
       </Head>
       <Script type="text/javascript" src="https://s3.tradingview.com/tv.js" strategy="beforeInteractive"></Script>
       <div className="px-4 lg:px-24 md:container mx-auto lg:block" ref={changeData}>
@@ -176,21 +176,28 @@ export async function getStaticProps ({ params }) {
 }
 
 export async function getStaticPaths () {
-  const { data = {} } = await client.query({
-    query: gql`{
-      aggregators(pagination:{ pageSize: 1000 }) {
-        data {
-          attributes {
-            slug
+  try {
+    const { data = {} } = await client.query({
+      query: gql`{
+        aggregators(pagination:{ pageSize: 1000 }) {
+          data {
+            attributes {
+              slug
+            }
           }
         }
-      }
-    }`
-  })
+      }`
+    })
 
-  return {
-    paths: (data?.aggregators?.data || []).map(x => ({ params: x?.attributes })),
-    fallback: 'blocking'
+    return {
+      paths: (data?.aggregators?.data || []).map(x => ({ params: x?.attributes })),
+      fallback: 'blocking'
+    }
+  } catch (err) {
+    return {
+      paths: [],
+      fallback: true
+    }
   }
 }
 

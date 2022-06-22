@@ -61,7 +61,6 @@ export default function TopRatingHub () {
 
   const getData = (time: string) => {
     setLoading(true)
-    console.log('NEXT_PUBLIC_CMS_URL', process.env.NEXT_PUBLIC_CMS_URL)
     fetcher('/api/hub/home', {
       method: 'POST', body: JSON.stringify({ query: 'GET_RATING_AGGREGATORS', variables: { filtersValue: `interactivePoint${time}:desc` } })
     }).then(({ data }) => {

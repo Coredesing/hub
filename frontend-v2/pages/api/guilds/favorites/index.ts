@@ -21,8 +21,8 @@ export function fetchFavorites (variables) {
 }
 
 export default async function handler (req, res) {
-  const payload = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
   if (req?.method === 'POST') {
+    const payload = (typeof req.body === 'string' && req.body) ? JSON.parse(req.body) : req.body
     try {
       const response = await actionFavorite(payload, req.headers)
       const { data, e } = response || {}

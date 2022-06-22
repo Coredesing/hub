@@ -144,7 +144,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
                     <div className='flex min-w-[14px] items-center gap-1'>
                       {
                         !isEmpty(networks)
-                          ? networks.map(e => <Image
+                          ? networks.map(e => e?.image && <Image
                             key={`network_${e.id}`}
                             width={14}
                             height={14}
@@ -328,7 +328,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
                   <a href={`/hub/${get(e, 'slug')}`} className='flex min-w-[22px] items-center justify-center gap-1'>
                     {
                       !isEmpty(networks)
-                        ? networks.map(e => <Image
+                        ? networks.map(e => e?.image && <Image
                           key={`network_${e.id}`}
                           width={22}
                           height={22}

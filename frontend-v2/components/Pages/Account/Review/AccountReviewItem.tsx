@@ -138,7 +138,7 @@ function AccountReviewItem ({ data, visibleGroupAction, visibleStatistics, user 
         }
 
         <div className='relative'>
-          <div id={`reviewContent_${data.id}`} className={clsx(styles.content, 'px-4 md:px-0 font-casual text-sm font-normal leading-[150%] tracking-[0.03em] text-white overflow-hidden w-full text-ellipsis', isShowMore ? 'max-h-fit' : 'max-h-[168px]')}>{data.review}</div>
+          <div id={`reviewContent_${data.id}`} className={clsx(styles.content, 'px-4 md:px-0 font-casual text-sm font-normal leading-[150%] tracking-[0.03em] text-white overflow-hidden w-full text-ellipsis break-all', isShowMore ? 'max-h-fit' : 'max-h-[168px]')}>{data.review}</div>
           {isOver && !isShowMore && <div className={`${styles.blur}`}></div>}
         </div>
         {!isShowMore && isOver && <div className='w-full flex justify-end pr-4 md:pr-0'>

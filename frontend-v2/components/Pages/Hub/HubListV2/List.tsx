@@ -46,7 +46,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
 
   const handleClickSortableHeader = (header) => {
     if (!header.field) return
-    if (sortedField && sortedField.field === header.field) {
+    if (sortedField && sortedField?.field === header?.field) {
       if (sortedField.order === 'asc') {
         return setSortedField(null)
       }

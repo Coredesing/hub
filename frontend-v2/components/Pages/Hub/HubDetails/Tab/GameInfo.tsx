@@ -3,8 +3,7 @@ import RenderEditorJs from '@/components/Base/RenderEditorJs'
 import get from 'lodash.get'
 import Image from 'next/image'
 import Link from 'next/link'
-import { imageCMS } from '@/utils'
-import { isEmptyDataParse } from '@/utils/editor'
+import { imageCMS, isEmptyDataParse } from '@/utils'
 import avatar from '@/assets/images/hub/avatar-scam.svg'
 
 const GameInfo = ({ data = {}, tabRef }: { data: any; tabRef: any }) => {

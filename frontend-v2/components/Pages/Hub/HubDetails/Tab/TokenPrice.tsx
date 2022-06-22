@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import RenderEditorJs from '@/components/Base/RenderEditorJs'
 import { TokenSummary, KeyMetrics } from '../index'
-import { isEmptyDataParse } from '@/utils/editor'
+import { isEmptyDataParse } from '@/utils'
 
 const TokenPrice = ({ data, tabRef }: { data: any; tabRef: any }) => {
   const [, setTv] = useState(null)

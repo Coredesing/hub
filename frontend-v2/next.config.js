@@ -39,7 +39,7 @@ let config = {
       },
       {
         source: '/insight/game-hub-in-gamefi-org-improve-your-experience-to-overview-the-blockchain-gaming-world',
-        destination: '/insight/gamefi-org-game-hub-a-steam-like-platform-bring-together-all-blockchain-games-and-gamified-projects',
+        destination: '/insight/gamefi-org-game-hub-a-steam-like-platform-to-bring-together-all-blockchain-games-and-gamified-projects',
         permanent: true
       }
     ]

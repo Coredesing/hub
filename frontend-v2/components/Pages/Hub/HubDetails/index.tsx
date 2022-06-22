@@ -10,7 +10,7 @@ import BGRankVer from '@/assets/images/aggregator/bg-rank-gamefi-ver.png'
 import { useScreens } from '@/components/Pages/Home/utils'
 import get from 'lodash.get'
 import { format } from 'date-fns'
-import { getNetworkByAlias, switchNetwork } from '@/components/web3'
+import { AVAX, BNB, ETH, FTM, getNetworkByAlias, MATIC, switchNetwork } from '@/components/web3'
 import ReviewList from '@/components/Pages/Hub/Reviews/List'
 import isEmpty from 'lodash.isempty'
 import { PriceChange, PriceChangeBg } from './PriceChange'
@@ -25,6 +25,51 @@ import { useLibraryDefaultFlexible } from '@/components/web3/utils'
 import { nFormatter } from '@/components/Pages/Hub/utils'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+
+export const networks = [{
+  name: 'Ethereum',
+  alias: 'eth',
+  currency: ETH.symbol,
+  image: require('@/assets/images/networks/eth.svg'),
+  image2: require('@/assets/images/networks/ethereum.svg')
+}, {
+  name: 'BNB Chain',
+  alias: 'bsc',
+  currency: BNB.symbol,
+  image: require('@/assets/images/networks/bsc.svg'),
+  image2: require('@/assets/images/networks/bnbchain.svg'),
+  colorText: '#28282E'
+}, {
+  name: 'Polygon',
+  alias: 'polygon',
+  currency: MATIC.symbol,
+  image: require('@/assets/images/networks/matic.svg'),
+  image2: require('@/assets/images/networks/polygon.svg')
+}, {
+  name: 'Avalanche',
+  alias: 'avax',
+  currency: AVAX.symbol,
+  image: require('@/assets/images/networks/avax.svg'),
+  image2: require('@/assets/images/networks/avalanche.svg')
+}, {
+  name: 'Arbitrum One',
+  alias: 'arb',
+  currency: ETH.symbol,
+  image: require('@/assets/images/networks/arb.svg'),
+  image2: require('@/assets/images/networks/arbitrum.svg')
+}, {
+  name: 'Fantom Opera',
+  alias: 'ftm',
+  currency: FTM.symbol,
+  image: require('@/assets/images/networks/ftm.svg'),
+  image2: require('@/assets/images/networks/fantom.svg')
+}, {
+  name: 'Solana',
+  alias: 'solana',
+  currency: 'SOL',
+  image: require('@/assets/images/networks/solana.svg'),
+  image2: require('@/assets/images/networks/solana.svg')
+}]
 
 const DEFAULT_HEIGHT_BEFORE_SHOW_MORE = 168
 
@@ -123,7 +168,10 @@ const handleData = (
 
   dataGuilds = get(project, 'data.attributes.guilds.data', [])
 
-  const networkData = tokenomic?.network?.map(v => getNetworkByAlias(v.name)) || ''
+  const networkData = tokenomic?.network?.map(v => {
+    return networks.find(network => network.alias === v.name)
+  }) || ''
+
   dataGameRight = {
     shortDesc: shortDesc || '-',
     developer: studio?.[0]?.name || '-',
@@ -659,7 +707,7 @@ const HubDetail = ({ data }) => {
         }
       </div>
       <div className="mt-10 md:mt-14 text-lg md:text-2xl font-mechanic uppercase"><strong>Related games</strong></div>
-      <MoreLike categories={get(data, 'project.data.attributes.categories.data', [])} slug={slug}/>
+      <MoreLike categories={get(data, 'project.data.attributes.categories.data', [])} slug={slug} />
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import useSWR, { SWRResponse } from 'swr'
+import get from 'lodash.get'
 import { API_BASE_URL } from '@/utils/constants'
 import { ObjectType } from './types'
 import { formatDistance } from 'date-fns'
@@ -345,4 +346,22 @@ export const gtagEvent = (name: string, params?: {[key: string]: any}) => {
 
 export const numberWithCommas = (num) => {
   return (num || '0').toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
+
+export const imageCMS = (path) => {
+  // TODO: since images are moved to S3 and CMS URL is hidden, this is obsolete
+  return path
+}
+
+export const isEmptyDataParse = (data) => {
+  const dataParse = data && JSON.parse(data)
+
+  // eslint-disable-next-line no-extra-boolean-cast
+  if (!dataParse) return false
+
+  const text = get(dataParse, 'blocks.[0].data.text')
+
+  if (text === '&nbsp;') return false
+
+  return true
 }

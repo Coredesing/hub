@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 import Flicking from '@egjs/react-flicking'
-import { isVideoFile, isImageFile } from '@/utils'
+import { isVideoFile, isImageFile, imageCMS } from '@/utils'
 import { Sync, AutoPlay } from '@egjs/flicking-plugins'
 import '@egjs/flicking/dist/flicking.css'
-import { checkPathImage } from '@/utils/image'
 import get from 'lodash.get'
 
 const Carousel = ({ items, length, className }: { items: any[]; length: any; className: string }) => {
@@ -43,29 +42,29 @@ const Carousel = ({ items, length, className }: { items: any[]; length: any; cla
       >
         {items &&
           items.map((item, i) => {
-            if (isImageFile(checkPathImage(item.url))) {
+            if (isImageFile(imageCMS(item.url))) {
               return (
                 <img
                   key={i}
-                  src={checkPathImage(item.url)}
+                  src={imageCMS(item.url)}
                   className="w-full aspect-[16/9]"
                   alt=""
                 />
               )
             }
 
-            if (isVideoFile(checkPathImage(item.url))) {
+            if (isVideoFile(imageCMS(item.url))) {
               return (
                 <video
                   className="w-full aspect-[16/9] object-cover"
                   key={i}
-                  src={checkPathImage(item.url)}
+                  src={imageCMS(item.url)}
                   preload="auto"
                   autoPlay
                   muted
                   controls
                   controlsList="nodownload"
-                  poster={checkPathImage(get(item, 'videoThumbnail.data.attributes.url') || items[1].url)}
+                  poster={imageCMS(get(item, 'videoThumbnail.data.attributes.url') || items[1].url)}
                 ></video>
               )
             }
@@ -87,10 +86,10 @@ const Carousel = ({ items, length, className }: { items: any[]; length: any; cla
               key={i}
               className="p-[2px] rounded border-2 border-transparent cursor-pointer"
             >
-              {isVideoFile(checkPathImage(item.url)) && (
+              {isVideoFile(imageCMS(item.url)) && (
                 <div className="relative">
                   <img
-                    src={checkPathImage(get(item, 'videoThumbnail.data.attributes.url') || items?.[length]?.url)}
+                    src={imageCMS(get(item, 'videoThumbnail.data.attributes.url') || items?.[length]?.url)}
                     className="rounded w-40 aspect-[16/9]"
                     alt=""
                   />
@@ -118,9 +117,9 @@ const Carousel = ({ items, length, className }: { items: any[]; length: any; cla
                   </div>
                 </div>
               )}
-              {isImageFile(checkPathImage(item.url)) && (
+              {isImageFile(imageCMS(item.url)) && (
                 <img
-                  src={checkPathImage(item.url)}
+                  src={imageCMS(item.url)}
                   className="rounded w-40 aspect-[16/9]"
                   alt=""
                 />

@@ -4,10 +4,9 @@ import '@egjs/flicking/dist/flicking.css'
 import Image from 'next/image'
 import get from 'lodash.get'
 import isEmpty from 'lodash.isempty'
-import { checkPathImage } from '@/utils/image'
+import { imageCMS, formatNumber, gtagEvent } from '@/utils'
 import Header from './Header'
 import { intervalToDuration, format } from 'date-fns'
-import { formatNumber, gtagEvent } from '@/utils'
 import styles from './Carousel.module.scss'
 import { useAppContext } from '@/context'
 import { useRouter } from 'next/router'
@@ -169,7 +168,7 @@ const GameRight = ({ data, className, dataBase = null, callApi }) => {
 
   return (
     <div className={`flex-1 overflow-x-hidden ${className || ''}`}>
-      <img src={checkPathImage(data?.mobileThumbnail)} className="w-full aspect-[16/9] mb-3" alt="" />
+      <img src={imageCMS(data?.mobileThumbnail)} className="w-full aspect-[16/9] mb-3" alt="" />
       <Header
         className={'flex md:hidden flex-col mt-6'}
         name={dataBase?.name}

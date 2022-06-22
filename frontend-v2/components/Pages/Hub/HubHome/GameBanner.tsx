@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Flicking, { ViewportSlot } from '@egjs/react-flicking'
 import { Pagination, AutoPlay } from '@egjs/flicking-plugins'
-import { checkPathImage } from '@/utils/image'
+import { imageCMS } from '@/utils'
 import { format } from 'date-fns'
 import clsx from 'clsx'
 import { nFormatter } from '@/components/Pages/Hub/utils'
@@ -97,7 +97,7 @@ const GameBanner = ({ data }) => {
             <div key={`game-${item.slug}`} className="w-full relative pb-40 sm:pb-0">
               <div className="relative">
                 <img
-                  src={checkPathImage(item.banner.url)}
+                  src={imageCMS(item.banner.url)}
                   className="rounded"
                   alt={item.slug}
                   style={{ width: '100%', height: '472px', objectFit: 'cover', aspectRatio: handleAspectRatio(screens) }}

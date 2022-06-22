@@ -23,7 +23,6 @@ const mapIndex = (tab) => {
 
 function Tab ({ data }) {
   const [values, setValues] = useState(data)
-  const [firstCome, setFirstCome] = useState(true)
   const screen = useScreens()
   const router = useRouter()
   const [index, setIndex] = useState(mapIndex(router.query.tab[0]))
@@ -33,10 +32,6 @@ function Tab ({ data }) {
   }, [router.query.tab])
 
   useEffect(() => {
-    if (firstCome) {
-      setFirstCome(false)
-      return
-    }
     const reviewFilterValue: any = { aggregator: { slug: { eq: router.query.slug } }, status: { eq: 'published' } }
     fetcher('/api/hub/detail/getLiveData', { method: 'POST', body: JSON.stringify({ variables: { slug: router.query.slug, reviewFilterValue, pageSize: 5 }, query: 'GET_AGGREGATORS_BY_SLUG' }) }).then(({ data }) => {
       const { five, four, three, two, one, totalReviewMeta } = data

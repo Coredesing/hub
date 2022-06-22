@@ -1,10 +1,9 @@
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { formatPrice, formatterUSD } from '@/utils'
+import { formatPrice, formatterUSD, imageCMS } from '@/utils'
 import PriceChange from '@/components/Pages/Hub/PriceChange'
 import Tippy from '@tippyjs/react'
-import { checkPathImage } from '@/utils/image'
 import { CMC_ASSETS_DOMAIN_CHART } from '@/utils/constants'
 import get from 'lodash.get'
 import styles from './hubList.module.scss'
@@ -23,7 +22,7 @@ function Item ({ item }: any) {
           <div className="relative w-24 h-14 sm:w-48 sm:h-28">
             {url && (
               <Image
-                src={checkPathImage(url)}
+                src={imageCMS(url)}
                 layout="fill"
                 alt={name || 'game'}
               // style={{ width: '100%', objectFit: 'cover', aspectRatio: isMobile ? '5/3' : '7/3' }}
@@ -49,7 +48,7 @@ function Item ({ item }: any) {
                   <div className="w-96">
                     <img
                       width={384}
-                      src={checkPathImage(url)}
+                      src={imageCMS(url)}
                       alt={name || 'game'}
                       className={`${styles.banner} hover:cursor-pointer`} />
                     <div className="px-3 pt-4 pb-6">

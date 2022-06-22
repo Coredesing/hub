@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import get from 'lodash.get'
 import Image from 'next/image'
-import { checkPathImage } from '@/utils/image'
-import { fetcher, shorten } from '@/utils'
+import { imageCMS, fetcher, shorten } from '@/utils'
 import isEmpty from 'lodash.isempty'
 import Avatar from '@/components/Pages/Hub/Reviews/Avatar'
 import clsx from 'clsx'
@@ -86,7 +85,7 @@ export default function TopReviewsHub () {
       const aggregators = normalize(data?.aggregators?.data)
       setData(aggregators.map((v: { slug: any; id: any }, i: number) => {
         const reviews = get(v, 'reviews', []).map(d => ({ ...d, rate: d?.author?.rates?.find(t => t.aggregator?.slug === v.slug)?.rate }))
-        const value = { ...v, reviews, id: v.id, ref: refs[i], plugins: plugins[i], url: checkPathImage(get(v, 'verticalThumbnail.url')) }
+        const value = { ...v, reviews, id: v.id, ref: refs[i], plugins: plugins[i], url: imageCMS(get(v, 'verticalThumbnail.url')) }
         return value
       }) || [])
     }).catch((err) => console.debug('err', err))
@@ -182,7 +181,7 @@ export default function TopReviewsHub () {
                             <div className="flex mb-6">
                               <a href={`/user/${get(v, 'author.id')}`} className="w-11 h-11 mr-3">
                                 <Avatar
-                                  url={checkPathImage(get(v, 'author.avatar.url'))}
+                                  url={imageCMS(get(v, 'author.avatar.url'))}
                                   size={44}
                                   className="rounded-full"
                                 />

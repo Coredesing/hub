@@ -1,9 +1,8 @@
 import React, { useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { printNumber } from '@/utils'
+import { printNumber, imageCMS } from '@/utils'
 import PriceChange from '@/components/Pages/Hub/PriceChange'
-import { checkPathImage } from '@/utils/image'
 import isEmpty from 'lodash.isempty'
 import get from 'lodash.get'
 import { useScreens } from '@/components/Pages/Home/utils'
@@ -49,7 +48,7 @@ const Item = ({ item }) => {
           <Link href={`/hub/${item?.slug}`} passHref>
             <div className="cursor-pointer w-full h-[272px] sm:h-[250px] 2xl:h-[309px] overflow-y-hidden relative">
               <div className="bg-black flex items-center justify-center cursor-pointer w-full h-full" style={{ aspectRatio: '1' }}>
-                <img className="w-full h-full object-cover" src={checkPathImage(get(item, 'verticalThumbnail.url'))} alt="img" />
+                <img className="w-full h-full object-cover" src={imageCMS(get(item, 'verticalThumbnail.url'))} alt="img" />
               </div>
               <div
                 className="absolute h-full w-full items-start top-0 left-0 pt-2 pr-2 pl-5 opacity-90 flex justify-between group-hover:h-1/2 group-hover:transition-[height] duration-0 group-hover:duration-200"
@@ -74,7 +73,7 @@ const Item = ({ item }) => {
                     <img
                       width={21}
                       height={21}
-                      src={checkPathImage(get(item, 'project.tokenomic.icon.url'))}
+                      src={imageCMS(get(item, 'project.tokenomic.icon.url'))}
                       alt=""
                     />
                   )}

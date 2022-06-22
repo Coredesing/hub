@@ -1,8 +1,7 @@
-import { fetcher, printNumber, useFetch } from '@/utils'
+import { printNumber } from '@/utils'
 import Tippy from '@tippyjs/react'
 import Image from 'next/image'
-import { API_CMS_URL } from '@/utils/constants'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
 const EventLeaderboard = ({ event }: { event: string }) => {

@@ -31,7 +31,7 @@ const EventLeaderboard = ({ event }: { event: string }) => {
 
   return (
     <div className="mb-6 rounded pt-4 xl:pt-6" style={{ background: 'linear-gradient(180deg, #2F323A 24.73%, #1D1F25 100%)' }}>
-      <div className="flex justify-center mb-3 md:text-lg 2xl:text-2xl items-center px-2 xl:px-4">
+      <div className="flex justify-center mb-3 md:text-lg 2xl:text-2xl items-center px-4">
         <div className="font-bold uppercase flex items-center gap-2">
           Leaderboard
           <Tippy
@@ -56,7 +56,7 @@ const EventLeaderboard = ({ event }: { event: string }) => {
           </Tippy>
         </div>
       </div>
-      <div className="w-full grid grid-cols-3 font-casual text-[12px] px-2 xl:px-4">
+      <div className="w-full grid grid-cols-3 font-casual text-[12px] px-4">
         <div className="flex flex-col gap-3 justify-end">
           {
             !!data[1] && !loading && <a href={`/hub/${data[1]?.aggregator?.project?.slug}`} target="_blank" rel="noreferrer noopenner" className="flex flex-col m-2">
@@ -104,8 +104,8 @@ const EventLeaderboard = ({ event }: { event: string }) => {
         </div>
       </div>
       {
-        !loading && data?.length > 3 && <div className={`${viewMore ? 'h-[600px]' : 'h-[400px]'} overflow-y-scroll pt-2`} style={{ background: 'linear-gradient(180deg, #2F323A 24.73%, #1D1F25 100%)' }}>
-          {data.slice(3, data.length < 10 || viewMore ? data.length : 10).map((item, index) => <a href={`/hub/${data[1]?.aggregator?.project?.slug}`} target="_blank" rel="noreferrer noopenner" key={`leaderboard-${item?.id}`} className="w-full flex items-center px-2 xl:px-4 py-2">
+        !loading && data?.length > 3 && <div className={`${viewMore ? 'h-[600px]' : 'h-[400px]'} overflow-scroll p-0 pt-2`} style={{ background: 'linear-gradient(180deg, #2F323A 24.73%, #1D1F25 100%)' }}>
+          {data.slice(3, data.length < 10 || viewMore ? data.length : 10).map((item, index) => <a href={`/hub/${data[1]?.aggregator?.project?.slug}`} target="_blank" rel="noreferrer noopenner" key={`leaderboard-${item?.id}`} className="w-full flex items-center px-4 py-2 hover:bg-gamefiDark-350/10">
             <div className="font-semibold text-sm text-gamefiDark-200 w-3">{4 + index}</div>
             {item?.verticalThumbnail?.url ? <div className="ml-2"><img src={item?.verticalThumbnail?.url} className="w-8 h-8 rounded-sm" alt=""></img></div> : <div className="w-8 h-8 ml-2"></div>}
             <div className="ml-2 text-sm font-semibold overflow-hidden text-ellipsis whitespace-nowrap">{item?.aggregator?.project?.name}</div>
@@ -113,12 +113,12 @@ const EventLeaderboard = ({ event }: { event: string }) => {
           </a>)}
           {
             data.length > 10 && <button
-              className="text-gamefiGreen-700 hover:text-gamefiGreen-200 px-2 xl:px-4 py-2 leading-5 font-normal text-sm font-casual"
+              className="text-gamefiGreen-700 hover:text-gamefiGreen-200 px-4 py-2 leading-5 font-normal text-sm font-casual"
               onClick={() => {
                 setViewMore(!viewMore)
               }}
             >
-              { viewMore ? 'View Less' : 'View More' }
+              {viewMore ? 'View Less' : 'View More'}
             </button>
           }
         </div>

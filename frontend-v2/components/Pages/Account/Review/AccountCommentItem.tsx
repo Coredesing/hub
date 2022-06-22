@@ -83,7 +83,7 @@ function AccountCommentItem ({ data }) {
           className={
             clsx(
               // styles.content,
-              'mx-4 px-4 md:px-0 md:mx-0 border-l-[3px] border-[#2E313C] md:pl-4 font-casual not-italic font-normal text-base leading-[150%] tracking-[0.03em] text-white overflow-hidden',
+              'mx-4 px-4 md:px-0 md:mx-0 border-l-[3px] border-[#2E313C] md:pl-4 font-casual not-italic font-normal text-base leading-[150%] tracking-[0.03em] text-white overflow-hidden break-words',
               isShowMore ? 'max-h-fit' : 'max-h-[168px]'
             )}>
           {data.comment}

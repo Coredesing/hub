@@ -42,7 +42,7 @@ const Item = ({ item }) => {
         <div className='h-full rounded relative flex flex-col'>
           <div className="pl-[1px] absolute z-10 h-[27px] w-1/2 inline-flex align-middle items-center uppercase text-xs text-left dark:bg-gamefiDark-900 clipped-b-r-full">
             <Image src={require('@/assets/images/icons/user.svg')} alt="user" width={12}></Image>
-            <span className="ml-2 font-bold text-base">{printNumber(get(item, 'project.tokenomic.totalHolders'))}</span>
+            <span className="ml-1 sm:ml-2 font-bold text-sm xl:text-base">{printNumber(get(item, 'project.tokenomic.totalHolders'))}</span>
           </div>
 
           <Link href={`/hub/${item?.slug}`} passHref>

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import styles from './review.module.scss'
-import { printNumber } from '@/utils'
+import { printNumber, shorten } from '@/utils'
 import Image from 'next/image'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
@@ -57,7 +57,7 @@ export default function UserInfo ({ user, className = '' }) {
           <Avatar url={get(user, 'avatar.url')} />
         </div>
         <div className='flex flex-col'>
-          <div className={`${styles.username} font-casual mt-0 cursor-pointer hover:underline`} onClick={openUserProfile}>{fullName}</div>
+          <div className={`${styles.username} font-casual mt-0 cursor-pointer hover:underline`} onClick={openUserProfile}>{fullName && (fullName.length > 9 ? shorten(fullName || '', 15) : fullName)}</div>
           <div className={`${styles.rank} font-casual mt-3 md:min-w-[128px]`}>{rankAndLevel}</div>
         </div>
       </div>

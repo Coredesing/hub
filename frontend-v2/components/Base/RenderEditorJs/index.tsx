@@ -29,7 +29,7 @@ const RenderEditorJs = ({ data: propData, index } : {data: string; index: string
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { createReactEditorJS } = require('react-editor-js')
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { EDITOR_JS_TOOLS } = require('@/utilsTools')
+    const { EDITOR_JS_TOOLS } = require('@/utils/editorTools')
 
     ReactEditorJS = createReactEditorJS()
 

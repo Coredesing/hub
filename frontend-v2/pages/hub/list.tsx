@@ -16,7 +16,7 @@ function HubListV2 ({ data }) {
     if (!sortQuery) return null
 
     const listSort = (sortQuery as string).split(',')
-    if (!listSort.length) return null
+    if (listSort.length <= 1) return null
     const [field, order] = get(listSort, '[0]').split(':')
     const listSortedFieldHeader = HEADERS.filter(e => {
       return e.field

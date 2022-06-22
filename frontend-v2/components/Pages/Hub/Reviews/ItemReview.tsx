@@ -66,7 +66,7 @@ export default function ItemReview ({ data, index, defaultLikeStatus }) {
         <a href={`/hub/${get(router.query, 'slug')}/reviews/${get(data, 'id')}`}>
           <div className='font-mechanic not-italic font-bold text-xl leading-[150%] text-white uppercase mb-4 cursor-pointer w-fit hover:underline' >{data?.title || ''}</div>
         </a>
-        <div id={`reviewContent_${index}`} className={clsx(styles.review, isShowMore ? 'max-h-fit' : 'max-h-[168px]')}>
+        <div id={`reviewContent_${index}`} className={clsx(styles.review, 'break-words', isShowMore ? 'max-h-fit' : 'max-h-[168px]')}>
           {data.review}
           {isOver && !isShowMore && <div className={`${styles.blur}`}></div>}
         </div>

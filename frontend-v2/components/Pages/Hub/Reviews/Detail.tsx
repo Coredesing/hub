@@ -226,8 +226,8 @@ export default function Detail ({ data }) {
     return get(data, 'user.rates.data.[0].attributes.rate') || 0
   }, [data])
   return (
-    <div className="review_detail flex flex-col md:flex-row">
-      <UserInfo user={data.user} className='md:w-1/4' />
+    <div className="review_detail flex flex-col md:flex-row overflow-x-hidden">
+      <UserInfo user={data.user} className='md:w-1/4 flex-none' />
       <div className="flex-1 flex flex-col mt-4 sm:mt-0">
         <div className="flex mb-5">
           <p className="text-2xl font-bold uppercase font-mechanic">REVIEW <a href={`/hub/${router.query.slug}`} target="_blank" rel="noreferrer"><span className='text-gamefiGreen-500 font-mechanic cursor-pointer hover:underline'>{data.gameName || ''}</span></a></p>
@@ -243,7 +243,7 @@ export default function Detail ({ data }) {
           </div>
           {data.publishedAt && <div className={clsx(styles.published_date, 'font-casual md:justify-between')}>{isMDScreen ? `Published ${format(new Date(data.publishedAt), 'd LLL, yyyy - hh:mm:ss OOO')}` : format(new Date(data.publishedAt), 'd LLL, yyyy')}</div>}
         </div>
-        <div className={`${styles.content} font-casual whitespace-pre-line text-base font-normal text-white mb-10`}>{data.review}</div>
+        <div className={`${styles.content} font-casual break-all text-base font-normal text-white mb-10`}>{data.review}</div>
 
         {(data?.pros?.length || data?.cons?.length)
           ? <div>

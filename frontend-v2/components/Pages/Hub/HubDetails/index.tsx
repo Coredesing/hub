@@ -371,7 +371,7 @@ export const KeyMetrics = ({ data }) => {
         </div>
       </div>
       <div className='flex justify-between md:grid md:grid-cols-2 gap-2'>
-        <div className='text-white/50'><span>Initial Project Valuation</span></div>
+        <div className='text-white/50'><span>Project Valuation</span></div>
         <div className='flex'>
           <strong>{data?.valuation}</strong>
         </div>
@@ -465,7 +465,7 @@ export const TokenSummary = ({ data }) => {
           </Tippy>
         </div>}
       </div>
-      <div className='grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-16 md:pr-20'>
+      <div className='grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-14 md:pr-20'>
         <div className='flex flex-col justify-between gap-5 md:gap-0'>
           <div className='uppercase text-white/50 text-xs font-bold'><span>Current price</span></div>
           <div className='flex items-center'>
@@ -484,7 +484,7 @@ export const TokenSummary = ({ data }) => {
             <div className='font-semibold text-sm'><span>{data?.tokenSymbol}</span></div>
           </div>
         </div>
-        <div className='flex flex-col justify-between gap-5 md:gap-0 md:px-4'>
+        <div className='flex flex-col justify-between gap-5 md:gap-0'>
           <div className='flex'>
             <div className='uppercase text-sm text-white/50 mr-auto'><span>Market Cap:</span></div>
             <div className='font-semibold text-sm overflow-hidden text-ellipsis whitespace-nowrap'><strong>{data?.marketCap}</strong></div>
@@ -497,7 +497,7 @@ export const TokenSummary = ({ data }) => {
             )}
           </div>
         </div>
-        <div className='flex flex-col justify-between gap-5 md:gap-0 md:px-5'>
+        <div className='flex flex-col justify-between gap-5 md:gap-0 md:px-2'>
           <div className='flex'>
             <div className='uppercase text-sm text-white/50 mr-auto'><span>Igo price:</span></div>
             <div className='font-semibold text-sm'><span>{data?.publicPrice > 0 ? `$${printNumber(data?.publicPrice)}` : '-'}</span></div>
@@ -535,7 +535,7 @@ const HubDetail = ({ data }) => {
     setIntroductionHeight(elm.clientHeight)
   })
 
-  const { slug } = router.query
+  const slug = router.query?.slug?.toString() || ''
   return (
     <div className="flex flex-col font-casual gap-2 w-full">
       <div className="flex flex-col md:flex-row gap-10">
@@ -659,7 +659,7 @@ const HubDetail = ({ data }) => {
         }
       </div>
       <div className="mt-10 md:mt-14 text-lg md:text-2xl font-mechanic uppercase"><strong>Related games</strong></div>
-      <MoreLike categories={get(data, 'project.data.attributes.categories.data', [])} />
+      <MoreLike categories={get(data, 'project.data.attributes.categories.data', [])} slug={slug}/>
     </div>
   )
 }

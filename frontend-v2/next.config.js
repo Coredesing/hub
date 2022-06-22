@@ -36,6 +36,11 @@ let config = {
         source: '/guildhub/free-to-join',
         destination: '/guilds',
         permanent: false
+      },
+      {
+        source: '/insight/game-hub-in-gamefi-org-improve-your-experience-to-overview-the-blockchain-gaming-world',
+        destination: '/insight/gamefi-org-game-hub-a-steam-like-platform-bring-together-all-blockchain-games-and-gamified-projects',
+        permanent: true
       }
     ]
   },

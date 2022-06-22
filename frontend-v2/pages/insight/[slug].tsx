@@ -69,11 +69,7 @@ const Article = ({ post }) => {
 export default Article
 
 export async function getStaticProps (context) {
-  let slug = context.params.slug
-  if (slug === 'game-hub-in-gamefi-org-improve-your-experience-to-overview-the-blockchain-gaming-world') {
-    slug = 'gamefi-org-game-hub-a-steam-like-platform-bring-together-all-blockchain-games-and-gamified-projects'
-  }
-
+  const slug = context.params.slug
   const post = await api.posts.read({ slug, include: 'authors,tags' }).catch(() => { })
 
   if (!post) {

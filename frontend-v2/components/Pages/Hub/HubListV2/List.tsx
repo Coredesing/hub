@@ -143,8 +143,8 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
                     <div className='flex min-w-[14px] items-center gap-1'>
                       {
                         !isEmpty(networks)
-                          ? networks.map(e => e?.image && <Image
-                            key={`network_${e.id}`}
+                          ? networks.map((e, index) => e?.image && <Image
+                            key={`network_${(e?.id || index)}`}
                             width={14}
                             height={14}
                             src={e.image}

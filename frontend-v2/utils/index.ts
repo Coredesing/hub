@@ -346,3 +346,8 @@ export const gtagEvent = (name: string, params?: {[key: string]: any}) => {
 export const numberWithCommas = (num) => {
   return (num || '0').toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
+
+export const imageCMS = (path) => {
+  // TODO: since images are moved to S3 and CMS URL is hidden, this is obsolete
+  return path
+}

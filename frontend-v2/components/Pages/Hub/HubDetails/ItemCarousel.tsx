@@ -1,7 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import { checkPathImage } from '@/utils/image'
-import { formatPrice } from '@/utils'
+import { imageCMS, formatPrice } from '@/utils'
 import Link from 'next/link'
 import { nFormatter } from '@/components/Pages/Hub/utils'
 import ImageLoader from '@/components/Base/ImageLoader'
@@ -51,7 +50,7 @@ export default function ItemCarousel ({ item, index }: any) {
                     className="rounded-full"
                     width={40}
                     height={40}
-                    src={checkPathImage(icon.url)}
+                    src={imageCMS(icon.url)}
                     alt={icon.name}
                   />
                 </div>
@@ -65,7 +64,7 @@ export default function ItemCarousel ({ item, index }: any) {
                 style={{ background: 'linear-gradient(180deg, #15171E 0%, rgba(21, 23, 30, 0) 100%)' }}
               ></div>
               <div className="bg-black flex items-center justify-center w-full h-full" style={{ aspectRatio: '1' }}>
-                <ImageLoader src={checkPathImage(verticalThumbnail.url)} className="w-full h-full object-contain" />
+                <ImageLoader src={imageCMS(verticalThumbnail.url)} className="w-full h-full object-contain" />
               </div>
             </div>
           </Link>
@@ -85,7 +84,7 @@ export default function ItemCarousel ({ item, index }: any) {
                   <div className="w-96 pb-6">
                     <img
                       width={384}
-                      src={checkPathImage(get(mobileThumbnail, 'data.[0].attributes.url', '/'))}
+                      src={imageCMS(get(mobileThumbnail, 'data.[0].attributes.url', '/'))}
                       alt={name || 'game'}
                       className={`${styles.banner} hover:cursor-pointer`} />
                     <div className="px-3 pt-2">

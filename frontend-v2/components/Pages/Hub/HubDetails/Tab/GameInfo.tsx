@@ -3,7 +3,7 @@ import RenderEditorJs from '@/components/Base/RenderEditorJs'
 import get from 'lodash.get'
 import Image from 'next/image'
 import Link from 'next/link'
-import { checkPathImage } from '@/utils/image'
+import { imageCMS } from '@/utils'
 import { isEmptyDataParse } from '@/utils/editor'
 import avatar from '@/assets/images/hub/avatar-scam.svg'
 
@@ -94,7 +94,7 @@ const GameInfo = ({ data = {}, tabRef }: { data: any; tabRef: any }) => {
               <Link key={i} href={get(e, 'attributes.link') || get(e, 'attributes.twitter')}>
                 <a className="w-full md:py-9 md:px-7 grayscale hover:grayscale-0 hover:cursor-pointer" target="_blank">
                   <div className='w-full aspect-[16/9] relative '>
-                    <Image alt="" key={i} src={checkPathImage(url)} layout="fill" objectFit="contain"/>
+                    <Image alt="" key={i} src={imageCMS(url)} layout="fill" objectFit="contain"/>
                   </div>
                 </a>
               </Link>
@@ -108,7 +108,7 @@ const GameInfo = ({ data = {}, tabRef }: { data: any; tabRef: any }) => {
         <div className='grid grid-cols-1 md:grid-cols-3 gap-7'>
           { data?.advisor?.map((e, i) => {
             const url = get(e, 'avatar.data.attributes.url', false)
-            const image = url ? checkPathImage(url) : avatar
+            const image = url ? imageCMS(url) : avatar
 
             if (showImageAdvisors) {
               return (
@@ -163,7 +163,7 @@ const GameInfo = ({ data = {}, tabRef }: { data: any; tabRef: any }) => {
         <div className={`grid md:grid-cols-3 ${showImageStudio ? 'md:grid-cols-5' : 'md:grid-cols-3'}  gap-5`}>
           { data?.studio?.[0]?.teamMembers?.map((e, i) => {
             const url = get(e, 'avatar.data.attributes.url', false)
-            const image = url ? checkPathImage(url) : avatar
+            const image = url ? imageCMS(url) : avatar
             const linkIn = get(e, 'link', false)
 
             if (showImageStudio) {

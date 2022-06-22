@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import Link from 'next/link'
 import React from 'react'
-import { checkPathImage } from '@/utils/image'
+import { imageCMS } from '@/utils'
 type Props = {
   className?: string;
   item: any;
@@ -12,7 +12,7 @@ const PostItem = ({ item }: Props) => {
     <div className="flex flex-1 gap-4 items-center">
       <Link href={`/insight/${item?.slug}`} passHref={true}>
         <a className="block relative w-full aspect-[16/9]">
-          <img src={checkPathImage(item?.feature_image)} alt={item.title} className="rounded-[2px] object-cover" />
+          <img src={imageCMS(item?.feature_image)} alt={item.title} className="rounded-[2px] object-cover" />
         </a>
       </Link>
       <div className="w-full">

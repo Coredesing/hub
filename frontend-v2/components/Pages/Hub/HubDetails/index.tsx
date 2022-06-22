@@ -2,12 +2,11 @@ import { useState, useEffect } from 'react'
 import Carousel from './Carousel'
 import GameRight from './GameRight'
 import MoreLike from './MoreLike'
-import { gtagEvent, numberWithCommas, printNumber, shorten, formatPrice } from '@/utils'
+import { gtagEvent, numberWithCommas, printNumber, shorten, formatPrice, imageCMS } from '@/utils'
 import RenderEditorJs from '@/components/Base/RenderEditorJs'
 import Image from 'next/image'
 import BGRank from '@/assets/images/aggregator/bg-rank-gamefi.png'
 import BGRankVer from '@/assets/images/aggregator/bg-rank-gamefi-ver.png'
-import { checkPathImage } from '@/utils/image'
 import { useScreens } from '@/components/Pages/Home/utils'
 import get from 'lodash.get'
 import { format } from 'date-fns'
@@ -355,14 +354,14 @@ export const KeyMetrics = ({ data }) => {
       <div className='flex justify-between md:grid md:grid-cols-2 gap-2'>
         <div className='text-white/50'><span>Symbol</span></div>
         <div className='flex'>
-          <img src={checkPathImage(data?.icon)} alt="" className='w-6 h-6 mr-3' />
+          <img src={imageCMS(data?.icon)} alt="" className='w-6 h-6 mr-3' />
           <strong>{data?.tokenSymbol !== '-' && '$'}{data?.tokenSymbol}</strong>
         </div>
       </div>
       <div className='flex justify-between md:grid md:grid-cols-2 gap-2'>
         <div className='text-white/50'><span>Token Public Price</span></div>
         <div className='flex'>
-          <img src={checkPathImage(data?.icon)} alt="" className='w-6 h-6 mr-3' />
+          <img src={imageCMS(data?.icon)} alt="" className='w-6 h-6 mr-3' />
           <strong>{data?.publicPrice > 0 ? `$${printNumber(data?.publicPrice)}` : '-'}</strong>
         </div>
       </div>
@@ -441,7 +440,7 @@ export const TokenSummary = ({ data }) => {
       <div className='flex flex-col md:flex-row p-6 md:px-4 md:py-3 items-center bg-gradient-to-r from-[#3B3F4B] to-[#2A2D36] rounded gap-7 md:gap-0'>
         <div className='flex mr-auto rounded items-center'>
           <div className='flex w-10 h-10 mr-3 items-center'>
-            {data?.logo && <img src={checkPathImage(data?.logo)} alt="logo-token" />}
+            {data?.logo && <img src={imageCMS(data?.logo)} alt="logo-token" />}
           </div>
           <div className='mx-3'><span>{data?.name}</span></div>
           <Tippy
@@ -482,7 +481,7 @@ export const TokenSummary = ({ data }) => {
           </div>
           <div className='flex items-center'>
             <div className='uppercase text-sm text-white/50 mr-auto'><span>Token:</span></div>
-            {data?.icon && <img src={checkPathImage(data?.icon)} alt="" className='w-4 h-4 mr-3' />}
+            {data?.icon && <img src={imageCMS(data?.icon)} alt="" className='w-4 h-4 mr-3' />}
             <div className='font-semibold text-sm'><span>{data?.tokenSymbol}</span></div>
           </div>
         </div>
@@ -605,7 +604,7 @@ const HubDetail = ({ data }) => {
             return (
               <div className="flex flex-col md:flex-row w-full md:h-24 p-4 bg-[#292C36] mt-2 rounded-sm" key={i}>
                 <a className='flex items-center' href={`/guilds/${guilds.slug}`}>
-                  <img className="w-16 h-16 object-cover mr-4" src={checkPathImage(guilds?.logo)} alt="" />
+                  <img className="w-16 h-16 object-cover mr-4" src={imageCMS(guilds?.logo)} alt="" />
                   <div className='w-[176px] font-semibold'><p>{guilds?.name}</p></div>
                 </a>
                 <div className='flex-1 grid grid-cols-2 mt-6 md:mt-0 md:grid-cols-3 gap-6 md:gap-6 md:ml-20'>

@@ -8,8 +8,7 @@ import HubCountdown from '@/components/Pages/Hub/HubHome/HubCountDown'
 import EventLeaderboard from '@/components/Pages/Hub/HubHome/EventLeaderboard'
 import { GAME_HUB_START_TIME } from '@/utils/constants'
 
-function Hub ({ data }) {
-  const [validCountdownTime] = useState(GAME_HUB_START_TIME && new Date().getTime() < new Date(GAME_HUB_START_TIME).getTime())
+function Hub ({ data, validCountdownTime }) {
   const [isEnded, setIsEnded] = useState(!validCountdownTime)
   const { categories } = data || {}
 
@@ -54,16 +53,17 @@ function Hub ({ data }) {
 }
 
 export async function getServerSideProps () {
+  const validCountdownTime = GAME_HUB_START_TIME && new Date().getTime() < new Date(GAME_HUB_START_TIME).getTime()
   try {
     const res = await client.query({
       query: GET_AGGREGATORS_HOME
     })
     return {
-      props: { data: normalize(res) }
+      props: { data: normalize(res), validCountdownTime }
     }
   } catch (error) {
     return {
-      props: { data: {}, test: 1 }
+      props: { data: {}, validCountdownTime }
     }
   }
 }

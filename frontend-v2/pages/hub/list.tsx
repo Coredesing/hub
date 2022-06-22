@@ -63,7 +63,7 @@ export async function getServerSideProps ({ query }) {
   }
 
   if (search) {
-    aggregatorsFilterValue.name = { containsi: search }
+    aggregatorsFilterValue.name = { contains: search }
   }
   if (sort) {
     sortAggregator = sort.split(',').map(e => {

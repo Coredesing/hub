@@ -198,8 +198,8 @@ const GameInfo = ({ data = {}, tabRef }: { data: any; tabRef: any }) => {
 
             if (linkIn) {
               return (
-                <div className='flex flex-col px-6 py-4 bg-[#262A37]'>
-                  <Link key={i} href={linkIn} passHref>
+                <div key={i} className='flex flex-col px-6 py-4 bg-[#262A37]'>
+                  <Link href={linkIn} passHref>
                     <a className='cursor-pointer' target="_blank">
                       <span className='font-semibold text-base'>{e?.name}</span>
                     </a>

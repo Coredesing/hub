@@ -141,7 +141,7 @@ function Header ({ callApi, name, id, className, isVerified = false, totalFavori
                 <div className='uppercase'>Back To Overview</div>
               </a>
             </Link>
-            : <Link href={`${slug}/info`} passHref>
+            : <Link href={`/hub/${slug}/info`} passHref>
               <a className="hidden md:flex items-center uppercase overflow-hidden py-2.5 px-8 bg-white/10 font-bold text-[13px] hover:opacity-95 cursor-pointer w-full md:w-auto rounded-sm clipped-b-l">
                 <div className='uppercase'>More Information</div>
               </a>
@@ -192,7 +192,7 @@ function Header ({ callApi, name, id, className, isVerified = false, totalFavori
                   <div className='uppercase'>Back To Overview</div>
                 </a>
               </Link>
-              : <Link href={`${slug}/info`} passHref>
+              : <Link href={`/hub/${slug}/info`} passHref>
                 <a className="hidden md:flex items-center uppercase overflow-hidden py-2.5 px-8 bg-white/10 font-bold text-[13px] hover:opacity-95 cursor-pointer w-full md:w-auto rounded-sm clipped-b-l">
                   <div className='uppercase'>More Information</div>
                 </a>

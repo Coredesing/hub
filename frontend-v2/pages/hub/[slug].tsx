@@ -90,7 +90,7 @@ const GameDetails = ({ data }) => {
           </ol>
         </nav>
         {!data && <div className="uppercase font-bold text-3xl mb-6">Game Not Found</div>}
-        <Link href={`${data?.slug}/info`} passHref>
+        <Link href={`/hub/${data?.slug}/info`} passHref>
           <a className="w-full flex md:hidden items-center uppercase overflow-hidden py-3 px-8 bg-white/20 font-bold text-[13px] rounded-xs hover:opacity-95 cursor-pointer justify-center rounded-sm clipped-b-l ml-auto" onClick={() => {
             gtagEvent('hub_more_info', {
               name: data?.slug

@@ -369,7 +369,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
                   </a>
                 </td>
                 <td align="right">
-                  {cmcId && (
+                  {!!cmcId && (
                     <a href={`/hub/${get(e, 'slug')}`} className='pr-[18px] block'>
                       <img
                         id={`chart_cmc_${cmcId}`}

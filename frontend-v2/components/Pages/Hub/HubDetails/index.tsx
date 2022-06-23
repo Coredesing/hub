@@ -711,7 +711,7 @@ const HubDetail = ({ data }) => {
                 <Image src={require('@/assets/images/hub/no-review.png')} width={93} height={75} alt="no-review" />
                 <span className='text-sm font-normal opacity-50 mt-[14px]'>No review available</span>
                 <Link href={`/hub/${slug}/reviews/createOrUpdate`} passHref>
-                  <a className="hidden sm:inline-flex bg-gamefiGreen-600 clipped-b-l p-px rounded cursor-pointer mr-1 mt-6" onClick={() => {
+                  <a className="inline-flex bg-gamefiGreen-600 clipped-b-l p-px rounded cursor-pointer mr-1 mt-6" onClick={() => {
                     gtagEvent('hub_write_review', { name: slug })
                   }}>
                     <div className='font-mechanic bg-gamefiDark-900 text-gamefiGreen-500 hover:text-gamefiGreen-200 clipped-b-l py-2 px-6 rounded leading-5 uppercase font-bold text-[13px]'>

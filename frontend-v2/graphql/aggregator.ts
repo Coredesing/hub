@@ -300,6 +300,7 @@ export const GET_RATING_AGGREGATORS = gql`
       sort: ["rate:desc", $filtersValue]
     ) {
       data {
+        id
         attributes {
           name
           totalViews
@@ -421,6 +422,7 @@ export const GET_LAUNCHED_AGGREGATORS = gql`
       filters: { project: { isLaunchedGameFi: { eq: true } } }
     ) {
       data {
+        id
         attributes {
           name
           slug
@@ -449,6 +451,7 @@ export const GET_RELEASED_AGGREGATORS = gql`
       ]
     ) {
       data {
+        id
         attributes {
           name
           rate

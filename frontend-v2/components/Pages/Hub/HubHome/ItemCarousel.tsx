@@ -83,7 +83,7 @@ export default function ItemCarousel ({ item, index }: any) {
             </div>
           </div> */}
           <Link href={`/hub/${slug}`} passHref>
-            <div className="cursor-pointer relative w-full h-[272px] sm:h-[250px] xl:h-[309px] overflow-hidden">
+            <div className="cursor-pointer relative w-full h-[272px] sm:h-[250px] xl:h-[266px] 2xl:h-[309px] overflow-hidden">
               <div
                 className="absolute h-full w-full items-start top-0 left-0 pt-2 pr-2 pl-5 opacity-90 flex justify-between group-hover:h-1/2 group-hover:transition-[height] duration-0 group-hover:duration-200"
                 style={{ background: 'linear-gradient(180deg, #15171E 0%, rgba(21, 23, 30, 0) 100%)' }}

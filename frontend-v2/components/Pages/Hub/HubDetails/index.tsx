@@ -421,6 +421,7 @@ export const KeyMetrics = ({ data }) => {
       <div className='flex justify-between md:grid md:grid-cols-2 gap-2'>
         <div className='text-white/50'><span>Token Supply</span></div>
         <div className='flex'>
+          <div className='w-6 h-6 mr-3'></div>
           <strong>{data?.totalSupply}</strong>
         </div>
       </div>

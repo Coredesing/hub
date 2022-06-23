@@ -178,6 +178,16 @@
   }
 }
 
+@media screen and (max-width: 330px) {
+  .group_action {
+    button {
+      .text {
+        display: none;
+      }
+    }
+  }
+}
+
 .rating_container {
   border-radius: 4px;
 

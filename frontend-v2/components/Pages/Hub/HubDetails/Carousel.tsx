@@ -118,11 +118,13 @@ const Carousel = ({ items, length, className }: { items: any[]; length: any; cla
                 </div>
               )}
               {isImageFile(imageCMS(item.url)) && (
-                <img
+                <div className='rounded w-40 h-full bg-cover' style={{ backgroundImage: `url(${imageCMS(item.url)})` }}>
+                  {/* <img
                   src={imageCMS(item.url)}
                   className="rounded w-40 aspect-[16/9]"
                   alt=""
-                />
+                /> */}
+                </div>
               )}
             </div>
           ))}

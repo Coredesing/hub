@@ -82,13 +82,23 @@ function Header ({ callApi, name, id, className, isVerified = false, totalFavori
         return
       }
       const { walletAddress, signature } = res
-      fetcher('https://gamefi.org/api/hub/favorite/handleFavorite', {
+      fetch('/api/hub/favorite/handleFavorite', {
         method: 'POST',
         body: JSON.stringify({ objectID: id, type: 'aggregator', favorite: !favorite }),
         headers: {
           'X-Signature': signature,
           'X-Wallet-Address': walletAddress
         }
+      }).then(res => {
+        if (res?.status === 429) {
+          return {
+            err: {
+              status: 429
+            }
+          }
+        }
+
+        return res.json()
       }).then(({ err }) => {
         setLoading(false)
         if (err?.status === 429) {
@@ -109,10 +119,7 @@ function Header ({ callApi, name, id, className, isVerified = false, totalFavori
         gtagEvent('like', { name: slug })
       }).catch((err) => {
         setLoading(false)
-        if (err?.status === 429) {
-          toast.error('You reached the request limit. Please try again later!')
-          return
-        }
+        console.log(err)
         toast.error('Failed to like!')
         console.debug('err', err)
       })

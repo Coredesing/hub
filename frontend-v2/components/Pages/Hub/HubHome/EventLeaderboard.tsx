@@ -104,10 +104,10 @@ const EventLeaderboard = ({ event }: { event: string }) => {
         </div>
       </div>
       {
-        !loading && data?.length > 3 && <div className={`${viewMore ? 'h-[600px]' : 'h-[400px]'} overflow-scroll p-0 pt-2`} style={{ background: 'linear-gradient(180deg, #2F323A 24.73%, #1D1F25 100%)' }}>
+        !loading && data?.length > 3 && <div className={`${viewMore ? 'h-[600px]' : 'h-[400px]'} overflow-y-auto p-0 pt-2`} style={{ background: 'linear-gradient(180deg, #2F323A 24.73%, #1D1F25 100%)' }}>
           {data.slice(3, data.length < 10 || viewMore ? data.length : 10).map((item, index) => <a href={`/hub/${item?.aggregator?.project?.slug}`} target="_blank" rel="noreferrer noopenner" key={`leaderboard-${item?.id}`} className="w-full flex items-center px-4 py-2 hover:bg-gamefiDark-350/10">
             <div className="font-semibold text-sm text-gamefiDark-200 w-3">{4 + index}</div>
-            {item?.verticalThumbnail?.url ? <div className="ml-2"><img src={item?.verticalThumbnail?.url} className="w-8 h-8 rounded-sm" alt=""></img></div> : <div className="w-8 h-8 ml-2"></div>}
+            {item?.aggregator?.verticalThumbnail?.url ? <div className="ml-2"><img src={item?.aggregator?.verticalThumbnail?.url} className="w-8 h-8 rounded-sm" alt=""></img></div> : <div className="w-8 h-8 ml-2"></div>}
             <div className="ml-2 text-sm font-semibold overflow-hidden text-ellipsis whitespace-nowrap">{item?.aggregator?.project?.name}</div>
             <div className="ml-auto font-semibold text-sm text-gamefiDark-200">{printNumber(item?.activePoint || 0)} pts</div>
           </a>)}

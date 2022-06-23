@@ -11,9 +11,10 @@ type Props = {
   description?: string;
   image?: string;
   disableFooter?: boolean;
+  disableSearchBar?: boolean;
 }
 
-const LayoutHub = ({ children, title, description, image, disableFooter }: Props) => {
+const LayoutHub = ({ children, title, description, image, disableFooter, disableSearchBar = false }: Props) => {
   const theme = 'dark'
 
   return (<div className={`flex w-full h-screen ${theme}`}>
@@ -39,7 +40,7 @@ const LayoutHub = ({ children, title, description, image, disableFooter }: Props
         <div className='absolute w-full h-full bg-no-repeat bg-cover grayscale opacity-20' style={{ backgroundImage: `url(${image})` }} />
         <div className='absolute w-full h-full bg-gradient-to-t from-gamefiDark-900 via-gamefiDark-900/80 to-transparent' />
         <div className='relative'>
-          <Topbar></Topbar>
+          <Topbar disableSearchBar={disableSearchBar}></Topbar>
           {children}
           {!disableFooter && <Footer></Footer>}
         </div>

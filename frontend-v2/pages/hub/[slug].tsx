@@ -52,7 +52,7 @@ const GameDetails = ({ data }) => {
   const isMobile = screen.mobile || screen.tablet
 
   return (
-    <LayoutHub title={data?.name ? `GameFi.org - ${data?.name}` : 'GameFi.org Games'} description={data?.gameIntroduction || 'An ultimate gaming destination for gamers, investors, and other game studios.'} image={get(data, 'mobileThumbnail.data.[0].attributes.url', '/')}>
+    <LayoutHub disableSearchBar title={data?.name ? `GameFi.org - ${data?.name}` : 'GameFi.org Games'} description={data?.gameIntroduction || 'An ultimate gaming destination for gamers, investors, and other game studios.'} image={get(data, 'mobileThumbnail.data.[0].attributes.url', '/')}>
       <Head>
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={data?.name || 'GameFi.org Games'} />

@@ -37,7 +37,7 @@ export default function ItemCarousel ({ item, index }: any) {
                 rate
                   ? <div className="inline-flex pt-3 font-casual">
                     <Image src={require('@/assets/images/icons/star.svg')} alt="star" />
-                    <span className="ml-2 font-bold text-sm font-casual">{rate?.toFixed(1)}</span>
+                    <div className="ml-2 font-normal text-sm font-casual pt-0.5">{rate?.toFixed(1)}</div>
                   </div>
                   : <div></div>
               }

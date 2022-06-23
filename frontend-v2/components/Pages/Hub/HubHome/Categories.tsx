@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 export default function Categories ({ data }) {
   return (
-    <div className="mb-6 px-2 py-4 xl:py-6 xl:px-4 rounded" style={{ background: '#292C36' }}>
+    <div className="mb-6 py-4 xl:py-6 px-4 rounded" style={{ background: '#292C36' }}>
       <div className="flex justify-between mb-3 md:text-lg 2xl:text-2xl items-center">
         <div className="font-bold uppercase">Categories</div>
         <Link href="/hub/list" passHref>

@@ -588,7 +588,7 @@ export const GET_REVIEWS_AGGREGATORS = gql`
               }
             }
           }
-          reviews(pagination: { pageSize: 3 }, sort: "interactivePoint:desc") {
+          reviews(pagination: { pageSize: 3 }, sort: "interactivePoint:desc", filters: { status: { eq: "published" } }) {
             data {
               id
               attributes {

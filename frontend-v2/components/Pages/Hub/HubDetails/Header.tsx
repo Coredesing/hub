@@ -109,15 +109,15 @@ function Header ({ callApi, name, id, className, isVerified = false, totalFavori
         gtagEvent('like', { name: slug })
       }).catch((err) => {
         setLoading(false)
+        if (err?.status === 429) {
+          toast.error('You reached the request limit. Please try again later!')
+          return
+        }
         toast.error('Failed to like!')
         console.debug('err', err)
       })
     }).catch(err => {
       setLoading(false)
-      if (err?.status === 429) {
-        toast.error('You reached the request limit. Please try again later!')
-        return
-      }
       console.debug(err)
       // toast.error(err?.toString() || 'Could not sign the authentication message')
     })

@@ -421,6 +421,7 @@ export const KeyMetrics = ({ data }) => {
       <div className='flex justify-between md:grid md:grid-cols-2 gap-2'>
         <div className='text-white/50'><span>Token Supply</span></div>
         <div className='flex'>
+          <div className='w-6 h-6 mr-3'></div>
           <strong>{data?.totalSupply}</strong>
         </div>
       </div>
@@ -448,6 +449,7 @@ export const KeyMetrics = ({ data }) => {
 
 export const TokenSummary = ({ data }) => {
   const { library, network } = useMyWeb3()
+  const [copiedAddress, setCopiedAddress] = useState(false)
   const networkData = get(data, 'networkData.[0]') || {}
   const { network: poolNetwork } = useLibraryDefaultFlexible(networkData?.name)
   const addToWallet = async () => {
@@ -488,6 +490,13 @@ export const TokenSummary = ({ data }) => {
     }
   }
 
+  const onCopyContractAddress = (address = '') => {
+    if (!address) return
+
+    navigator.clipboard.writeText(address)
+    setCopiedAddress(true)
+  }
+
   return (
     <>
       <div className='flex flex-col md:flex-row p-6 md:px-4 md:py-3 items-center bg-gradient-to-r from-[#3B3F4B] to-[#2A2D36] rounded gap-7 md:gap-0'>
@@ -506,8 +515,10 @@ export const TokenSummary = ({ data }) => {
         </div>
         {data?.address !== '-' && <div className='flex items-center w-full md:w-auto'>
           <span className='md:mr-7 text-sm mr-5'>Contract</span>
-          {data?.network && <Image width={20} height={20} className="inline-block rounded-full h" src={data?.network} alt=""></Image>}
-          <div className='flex-1 text-ellipsis font-semibold overflow-hidden mx-3 text-sm'><span>{shorten(data?.address, 15)}</span></div>
+          {data?.network && <Image width={20} height={20} className="inline-block rounded-full" src={data?.network} alt=""></Image>}
+          <Tippy content={`${copiedAddress ? 'Copied' : 'Click to copy'}`}>
+            <div className='flex-1 font-semibold overflow-hidden mx-3 text-sm cursor-pointer' onMouseOut={() => setCopiedAddress(false)} onClick={() => onCopyContractAddress(data?.address)}><span>{shorten(data?.address, 15)}</span></div>
+          </Tippy>
           <Tippy content="Add to Metamask">
             <button
               className="w-6 h-6 hover:opacity-90"
@@ -700,7 +711,7 @@ const HubDetail = ({ data }) => {
                 <Image src={require('@/assets/images/hub/no-review.png')} width={93} height={75} alt="no-review" />
                 <span className='text-sm font-normal opacity-50 mt-[14px]'>No review available</span>
                 <Link href={`/hub/${slug}/reviews/createOrUpdate`} passHref>
-                  <a className="hidden sm:inline-flex bg-gamefiGreen-600 clipped-b-l p-px rounded cursor-pointer mr-1 mt-6" onClick={() => {
+                  <a className="inline-flex bg-gamefiGreen-600 clipped-b-l p-px rounded cursor-pointer mr-1 mt-6" onClick={() => {
                     gtagEvent('hub_write_review', { name: slug })
                   }}>
                     <div className='font-mechanic bg-gamefiDark-900 text-gamefiGreen-500 hover:text-gamefiGreen-200 clipped-b-l py-2 px-6 rounded leading-5 uppercase font-bold text-[13px]'>

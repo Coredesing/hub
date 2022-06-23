@@ -243,7 +243,7 @@ export default function Detail ({ data }) {
           </div>
           {data.publishedAt && <div className={clsx(styles.published_date, 'font-casual md:justify-between')}>{isMDScreen ? `Published ${format(new Date(data.publishedAt), 'd LLL, yyyy - hh:mm:ss OOO')}` : format(new Date(data.publishedAt), 'd LLL, yyyy')}</div>}
         </div>
-        <div className={`${styles.content} font-casual break-all text-base font-normal text-white mb-10`}>{data.review}</div>
+        <div className={`${styles.content} font-casual whitespace-pre-wrap text-base font-normal text-white mb-10`} style={{ wordBreak: 'break-word' }}>{data.review}</div>
 
         {(data?.pros?.length || data?.cons?.length)
           ? <div>

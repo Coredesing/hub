@@ -2,46 +2,47 @@ import { gql } from '@apollo/client'
 import { UploadFileRelationResponseCollection } from '@/graphql/image'
 
 export const GET_AGGREGATORS_HOME = gql`
-query Categories {
-  categories(pagination: {page: 1 pageSize: 5} sort: "totalGames:desc") {
-    data {
-      id
-      attributes {
-        name
-        totalGames
-        slug
+  query Categories {
+    categories(pagination: { page: 1, pageSize: 5 }, sort: "totalGames:desc") {
+      data {
+        id
+        attributes {
+          name
+          totalGames
+          slug
+        }
       }
     }
-  }
 
-  topPlayer:aggregators(
-    sort: "project.tokenomic.totalHolders:desc"
-    pagination: { pageSize: 8 }
-  ) {
-    data {
-      attributes {
-        name
-        slug
-        verticalThumbnail {
-          data {
-            attributes {
-              name
-              url
+    topPlayer: aggregators(
+      sort: "project.tokenomic.totalHolders:desc"
+      pagination: { pageSize: 8 }
+    ) {
+      data {
+        attributes {
+          name
+          slug
+          verticalThumbnail {
+            data {
+              attributes {
+                name
+                url
+              }
             }
           }
-        }
-        project {
-          data {
-            attributes {
-              tokenomic {
-                currentPrice
-                priceChange24h
-                totalHolders
-                icon {
-                  data {
-                    attributes {
-                      name
-                      url
+          project {
+            data {
+              attributes {
+                tokenomic {
+                  currentPrice
+                  priceChange24h
+                  totalHolders
+                  icon {
+                    data {
+                      attributes {
+                        name
+                        url
+                      }
                     }
                   }
                 }
@@ -51,147 +52,76 @@ query Categories {
         }
       }
     }
-  }
 
-  topROI:aggregators(pagination: { pageSize: 5 }, sort: "roi:desc") {
-    data {
-      attributes {
-        name
-        slug
-        rate
-        roi
-        rectangleThumbnail {
-          data {
-            attributes {
-              name
-              url
-            }
-          }
-        }
-      }
-    }
-  }
-
-  gameBanners:aggregators(
-    pagination: { pageSize: 10 }
-    filters: { displayArea: { eq: "topGame" } }
-  ) {
-    data {
-      attributes {
-        name
-        slug
-        totalVotes
-        releaseStatus
-        releaseDate
-        rate
-        project {
-          data {
-            attributes {
-              shortDesc
-              banner {
-                data {
-                  attributes {
-                    name
-                    url
-                  }
-                }
-              }
-              categories {
-                data {
-                  attributes {
-                    name
-                    slug
-                  }
-                }
-              }
-              studio {
-                id
-                name
-                teamMembers {
-                  id
-                  name
-                }
-              }
-              tokenomic {
-                network {
-                  id
-                  name
-                }
-                marketCap
-                currentPrice
-                priceChange24h
-                cmcId
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-`
-export const GET_BANNER_AGGREGATORS = gql`
-query Aggregators {
-  aggregators(
-    pagination: { pageSize: 10 }
-    filters: { displayArea: { eq: "topGame" } }
-  ) {
-    data {
-      id
-      attributes {
-        name
-        slug
-        totalFavorites
-        releaseStatus
-        releaseDate
-        rate
-        youtubeLinks {
-          url,
-          videoThumbnail{
+    topROI: aggregators(pagination: { pageSize: 5 }, sort: "roi:desc") {
+      data {
+        attributes {
+          name
+          slug
+          rate
+          roi
+          rectangleThumbnail {
             data {
               attributes {
+                name
                 url
               }
             }
           }
         }
-        project {
-          data {
-            attributes {
-              shortDesc
-              banner {
-                data {
-                  attributes {
-                    name
-                    url
+      }
+    }
+
+    gameBanners: aggregators(
+      pagination: { pageSize: 10 }
+      filters: { displayArea: { eq: "topGame" } }
+    ) {
+      data {
+        attributes {
+          name
+          slug
+          totalVotes
+          releaseStatus
+          releaseDate
+          rate
+          project {
+            data {
+              attributes {
+                shortDesc
+                banner {
+                  data {
+                    attributes {
+                      name
+                      url
+                    }
                   }
                 }
-              }
-              categories {
-                data {
-                  attributes {
-                    name
-                    slug
+                categories {
+                  data {
+                    attributes {
+                      name
+                      slug
+                    }
                   }
                 }
-              }
-              studio {
-                id
-                name
-                teamMembers {
+                studio {
                   id
                   name
+                  teamMembers {
+                    id
+                    name
+                  }
                 }
-              }
-              tokenomic {
-                network {
-                  id
-                  name
+                tokenomic {
+                  network {
+                    id
+                    name
+                  }
+                  marketCap
+                  currentPrice
+                  priceChange24h
+                  cmcId
                 }
-                marketCap
-                currentPrice
-                priceChange24h
-                cmcId
               }
             }
           }
@@ -199,7 +129,77 @@ query Aggregators {
       }
     }
   }
-}
+`
+export const GET_BANNER_AGGREGATORS = gql`
+  query Aggregators {
+    aggregators(
+      pagination: { pageSize: 10 }
+      filters: { displayArea: { eq: "topGame" } }
+    ) {
+      data {
+        id
+        attributes {
+          name
+          slug
+          totalFavorites
+          releaseStatus
+          releaseDate
+          rate
+          youtubeLinks {
+            url
+            videoThumbnail {
+              data {
+                attributes {
+                  url
+                }
+              }
+            }
+          }
+          project {
+            data {
+              attributes {
+                shortDesc
+                banner {
+                  data {
+                    attributes {
+                      name
+                      url
+                    }
+                  }
+                }
+                categories {
+                  data {
+                    attributes {
+                      name
+                      slug
+                    }
+                  }
+                }
+                studio {
+                  id
+                  name
+                  teamMembers {
+                    id
+                    name
+                  }
+                }
+                tokenomic {
+                  network {
+                    id
+                    name
+                  }
+                  marketCap
+                  currentPrice
+                  priceChange24h
+                  cmcId
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 `
 
 export const GET_TOP_PLAYER_AGGREGATORS = gql`
@@ -345,10 +345,7 @@ export const GET_RATING_AGGREGATORS = gql`
 `
 export const GET_TOP_FAVORITE_AGGREGATORS = gql`
   query Aggregators {
-    aggregators(
-      pagination: { pageSize: 15 }
-      sort: ["totalFavorites:desc"]
-    ) {
+    aggregators(pagination: { pageSize: 15 }, sort: ["totalFavorites:desc"]) {
       data {
         attributes {
           name
@@ -482,10 +479,7 @@ export const GET_RELEASED_AGGREGATORS = gql`
 `
 export const GET_VIEW_AGGREGATORS = gql`
   query Aggregators($filtersValue: String) {
-    aggregators(
-      pagination: { pageSize: 5 }
-      sort: [$filtersValue]
-    ) {
+    aggregators(pagination: { pageSize: 5 }, sort: [$filtersValue]) {
       data {
         attributes {
           name
@@ -572,7 +566,10 @@ export const GET_REVIEWS_AGGREGATORS = gql`
     aggregators(
       pagination: { pageSize: 4 }
       sort: "interactivePoint7d:desc"
-      filters: { reviews: { review: { ne: "" }, status: { eq: "published" } } }
+      filters: {
+        totalVotes: { gt: 5 }
+        reviews: { review: { ne: "" }, status: { eq: "published" } }
+      }
     ) {
       data {
         id
@@ -580,6 +577,7 @@ export const GET_REVIEWS_AGGREGATORS = gql`
           name
           slug
           totalReviews
+          totalVotes
           verticalThumbnail {
             data {
               attributes {
@@ -588,7 +586,11 @@ export const GET_REVIEWS_AGGREGATORS = gql`
               }
             }
           }
-          reviews(pagination: { pageSize: 3 }, sort: "interactivePoint:desc") {
+          reviews(
+            pagination: { pageSize: 3 }
+            sort: "interactivePoint:desc"
+            filters: { status: { eq: "published" } }
+          ) {
             data {
               id
               attributes {
@@ -679,7 +681,10 @@ export const GET_AGGREGATORS_BY_SLUG = gql`
                     }
                   }
                 }
-                rates(pagination: {pageSize: 1}, filters: {aggregator: { slug: { eq: $slug } }}) {
+                rates(
+                  pagination: { pageSize: 1 }
+                  filters: { aggregator: { slug: { eq: $slug } } }
+                ) {
                   data {
                     id
                     attributes {
@@ -810,9 +815,7 @@ export const GET_AGGREGATORS_BY_SLUG = gql`
                     }
                   }
                 }
-                backers (
-                  pagination: { pageSize: 100 }
-                ) {
+                backers(pagination: { pageSize: 100 }) {
                   data {
                     id
                     attributes {
@@ -846,9 +849,7 @@ export const GET_AGGREGATORS_BY_SLUG = gql`
                 }
                 studio {
                   name
-                  teamMembers (
-                    pagination: { pageSize: 100 }
-                  ) {
+                  teamMembers(pagination: { pageSize: 100 }) {
                     position
                     name
                     avatar {
@@ -952,7 +953,10 @@ export const GET_AGGREGATORS_BY_SLUG = gql`
     }
 
     totalReviewMeta: reviews(
-      filters: { aggregator: { slug: { eq: $slug } }, status: { eq: "published" } }
+      filters: {
+        aggregator: { slug: { eq: $slug } }
+        status: { eq: "published" }
+      }
     ) {
       meta {
         pagination {
@@ -975,14 +979,12 @@ export const GET_SUM_AGGREGATORS = gql`
 `
 
 export const GET_MORE_LIKE_THIS = gql`
-  query Aggregators(
-      $filterCate: AggregatorFiltersInput
-    ){
+  query Aggregators($filterCate: AggregatorFiltersInput) {
     aggregators(
-      pagination: { pageSize: 15}
+      pagination: { pageSize: 15 }
       sort: ["rate:desc", "totalViews:desc", "totalReviews:desc"]
       filters: $filterCate
-    ){
+    ) {
       data {
         id
         attributes {
@@ -1136,9 +1138,9 @@ export const GET_LISTING_AGGREGATORS_V2 = gql`
       pagination: { pageSize: 5 }
       filters: { project: { categories: { slug: { eq: $categorySlug } } } }
       sort: [
-        "releaseDate:desc",
-        "project.tokenomic.volume24h:desc",
-        "interactivePoint:desc",
+        "releaseDate:desc"
+        "project.tokenomic.volume24h:desc"
+        "interactivePoint:desc"
         "rate:desc"
       ]
     ) {
@@ -1231,7 +1233,7 @@ export const GET_LISTING_AGGREGATORS_V2 = gql`
         }
       }
     }
-    categories(pagination: {pageSize: 1000}, sort: "priority:asc") {
+    categories(pagination: { pageSize: 1000 }, sort: "priority:asc") {
       data {
         id
         attributes {
@@ -1269,7 +1271,9 @@ export const GET_LISTING_AGGREGATORS_V2 = gql`
         }
       }
     }
-    aggregatorVersionUpcoming: aggregators(filters: $aggregatorVersionUpcomingFilterValue) {
+    aggregatorVersionUpcoming: aggregators(
+      filters: $aggregatorVersionUpcomingFilterValue
+    ) {
       meta {
         pagination {
           total
@@ -1298,8 +1302,14 @@ export const GET_LISTING_AGGREGATORS_V2 = gql`
 `
 
 export const GET_FAVORITE_BY_USER_ID = gql`
-  query favorite($userId: ID $aggregatorId: String) {
-    favorites(filters: { objectID: {eq: $aggregatorId} user: { id: { eq: $userId } }  type: {eq: "aggregator"}}) {
+  query favorite($userId: ID, $aggregatorId: String) {
+    favorites(
+      filters: {
+        objectID: { eq: $aggregatorId }
+        user: { id: { eq: $userId } }
+        type: { eq: "aggregator" }
+      }
+    ) {
       data {
         id
       }

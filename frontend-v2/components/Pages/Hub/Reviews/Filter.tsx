@@ -36,7 +36,7 @@ function Filter ({
         </select>
         {/* <span className="opacity-60 hidden md:inline">items per page</span> */}
       </p>
-      <p className="font-casual text-sm text-right">
+      {/* <p className="font-casual text-sm text-right">
         <select
           value={userRank}
           onChange={e => setUserRank(e.target.value)}
@@ -45,7 +45,7 @@ function Filter ({
           <option value="">All reviewer level</option>
           {ranks.map(e => <option key={e} value={e}>{e}</option>)}
         </select>
-      </p>
+      </p> */}
     </div>
   )
 }

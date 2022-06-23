@@ -25,13 +25,13 @@ const STAR_LEVEL = [5, 4, 3, 2, 1]
 
 function StarsWithBar ({ level, percent }) {
   return (
-    <div className='flex mb-2'>
+    <div className='flex w-full mb-2'>
       <div className='flex items-center gap-1'>
         {
           STAR_LEVEL.map(curLevel => <Star key={`star_${curLevel}`} selected={level >= curLevel} size={'8px'} activeColor="white" inactiveColor="transparent"></Star>)
         }
       </div>
-      <div className='w-[240px] sm:w-[276px] md:w-[180px] xl:w-[276px] h-[7px] p-0 ml-4 relative items-center'>
+      <div className='flex-1 md:w-[180px] xl:w-[276px] md:flex-none h-[7px] p-0 ml-4 relative items-center'>
         <div className={`${styles.rating_col} w-full h-full`}></div>
         <div className={`${styles.rating_col_active} h-full absolute z-10 top-0 rounded-full bg-white`} style={{ width: `${percent}%` }}></div>
       </div>
@@ -101,8 +101,8 @@ function Rating ({ overall, totalCount, rates, currentRate, setCurrentRate, id }
             </div>
           </div>
         </div>
-        <div className={`${styles.rating_chart} flex m-auto sm:ml-8 flex-1`}>
-          <div className='flex-col m-auto'>
+        <div className={`${styles.rating_chart} flex w-full m-auto sm:ml-8 flex-1`}>
+          <div className='flex-col w-full m-auto'>
             {rates.map((e, i) => {
               return <StarsWithBar key={`star_${i}`} level={e.level} percent={e.percent} />
             })}

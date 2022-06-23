@@ -84,7 +84,6 @@ const List = ({ data, pagination = false, viewAll = false, filter = false, loadM
   }
 
   const handleSetFilterShown = () => setFilterShown(false)
-
   return (
     <div
       className="md:container mx-auto lg:block"
@@ -110,7 +109,7 @@ const List = ({ data, pagination = false, viewAll = false, filter = false, loadM
       {
         isEmpty(data?.data) && !data?.totalReviews && <div className='flex flex-col w-full items-center mt-4'>
           <Link href={`/hub/${slug}/reviews/createOrUpdate`} passHref>
-            <a className="hidden sm:inline-flex bg-gamefiGreen-600 clipped-b-l p-px rounded cursor-pointer mr-1 mt-6 no-underline" style={{ textDecoration: 'none' }}>
+            <a className="inline-flex bg-gamefiGreen-600 clipped-b-l p-px rounded cursor-pointer mr-1 mt-6 no-underline" style={{ textDecoration: 'none' }}>
               <div className='font-mechanic bg-gamefiDark-900 text-gamefiGreen-500 hover:text-gamefiGreen-200 clipped-b-l py-2 px-6 rounded leading-5 uppercase font-bold text-[13px]'>
                 Write first review
               </div>

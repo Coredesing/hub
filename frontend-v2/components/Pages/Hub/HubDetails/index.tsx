@@ -635,7 +635,7 @@ const HubDetail = ({ data }) => {
           <Link href={`/hub/${data?.slug}/token`} passHref>
             <a className="p-2 text-gamefiGreen cursor-pointer text-sm"
               onClick={() => {
-                gtagEvent('hub_token_details', { name: data?.slug })
+                gtagEvent('hub_token_details', { game: data?.slug })
               }}>
               <span className='mt-auto'>View Details</span>
             </a>
@@ -696,7 +696,7 @@ const HubDetail = ({ data }) => {
         <div className="flex items-center mt-10 md:mt-14 text-lg md:text-2xl font-mechanic uppercase">
           <strong>Reviews</strong>
           {!isEmpty(dataReviews) && <Link href={`/hub/${slug}/reviews/createOrUpdate`} passHref><a onClick={() => {
-            gtagEvent('hub_write_review', { name: slug })
+            gtagEvent('hub_write_review', { game: slug })
           }} className="bg-gamefiGreen-700 md:self-end text-gamefiDark-900 py-0.5 px-6 rounded-sm clipped-t-r hover:opacity-90 cursor-pointer ml-auto">
             <span className="uppercase font-bold text-[13px] tracking-[0.02em] text-[#0D0F15] not-italic font-mechanic">Write my review</span>
           </a></Link>}
@@ -712,7 +712,7 @@ const HubDetail = ({ data }) => {
                 <span className='text-sm font-normal opacity-50 mt-[14px]'>No review available</span>
                 <Link href={`/hub/${slug}/reviews/createOrUpdate`} passHref>
                   <a className="inline-flex bg-gamefiGreen-600 clipped-b-l p-px rounded cursor-pointer mr-1 mt-6" onClick={() => {
-                    gtagEvent('hub_write_review', { name: slug })
+                    gtagEvent('hub_write_review', { game: slug })
                   }}>
                     <div className='font-mechanic bg-gamefiDark-900 text-gamefiGreen-500 hover:text-gamefiGreen-200 clipped-b-l py-2 px-6 rounded leading-5 uppercase font-bold text-[13px]'>
                       Write first review

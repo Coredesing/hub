@@ -98,7 +98,7 @@ const MoreInfoGame = ({ data, dataBase }) => {
                 {data?.gameDownloads?.map((e, i) => {
                   return (
                     <a key={i} href={e?.link || ''} className="text-xs px-2 py-1.5 bg-gamefiDark-630/50 hover:bg-gamefiDark-630 rounded" target="_blank" rel="noopenner noreferrer" onClick={() => {
-                      gtagEvent('hub_download', { name: dataBase?.slug, type: e.type, link: e.link })
+                      gtagEvent('hub_download', { game: dataBase?.slug, type: e.type, link: e.link })
                     }}>
                       {
                         (e.type === 'ios') ? <IosIcon /> : (e.type === 'android') ? <AndroidIcon /> : <WebIcon />
@@ -310,8 +310,8 @@ const GameRight = ({ data, className, dataBase = null, callApi }) => {
           <Link key={i} href={`/hub/list?category=${x?.attributes?.slug}`} passHref>
             <a className="mr-2 mb-2 text-xs px-2 py-1.5 bg-gamefiDark-630/50 hover:bg-gamefiDark-630 rounded inline-block" onClick={() => {
               gtagEvent('hub_category', {
-                game: dataBase?.slug,
-                name: x?.attributes?.slug
+                game_name: dataBase?.slug,
+                game: x?.attributes?.slug
               })
             }}>
               {x?.attributes?.name}

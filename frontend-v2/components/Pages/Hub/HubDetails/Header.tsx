@@ -112,11 +112,11 @@ function Header ({ callApi, name, id, className, isVerified = false, totalFavori
         setFavorite(!favorite)
         router.replace(router.asPath)
         if (favorite) {
-          gtagEvent('unlike', { name: slug })
+          gtagEvent('unlike', { game: slug })
           return
         }
 
-        gtagEvent('like', { name: slug })
+        gtagEvent('like', { game: slug })
       }).catch((err) => {
         setLoading(false)
         console.log(err)

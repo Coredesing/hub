@@ -232,6 +232,7 @@ const CarouselMobile = ({
         bound={true}
         bounce={30}
         moveType="freeScroll"
+        interruptable={true}
       >
         {items &&
           items.map((item) => (

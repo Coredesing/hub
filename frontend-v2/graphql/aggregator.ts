@@ -1320,16 +1320,40 @@ export const GET_FAVORITE_BY_USER_ID = gql`
   }
 `
 
-export const CUSTOM_EPICWAR_FAVORITES = gql`
-query FavoriteAddressesList ($limit: Int, $start: Int) {
-  favorites(pagination: {limit: $limit, start: $start}, filters: {type: { eq: "aggregator" }, objectID: { eq: "76" }}) {
-    aggregate {
-      count
+export const CUSTOM_PARTNER_ANALYTICS = gql`
+query ($limit: Int, $start: Int, $limitReviews: Int, $startReviews: Int, $favoriteID: String, $reviewSlug: String) {
+  favorites(pagination: {limit: $limit, start: $start}, filters: {type: { eq: "aggregator" }, objectID: { eq: $favoriteID }}) {
+    meta {
+      pagination {
+        total
+      }
     }
     data {
       id
       attributes {
         user {
+          data {
+            attributes {
+              walletAddress
+            }
+          }
+        }
+      }
+    }
+  }
+
+  reviews(pagination: {limit: $limitReviews, start: $startReviews}, filters: { aggregator: { slug: { eq: $reviewSlug } } }) {
+    data {
+      attributes {
+        aggregator {
+          data {
+            id
+            attributes {
+              slug
+            }
+          }
+        }
+        author {
           data {
             attributes {
               walletAddress

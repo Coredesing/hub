@@ -47,7 +47,7 @@ const Carousel = ({ items, length, className }: { items: any[]; length: any; cla
                 <img
                   key={i}
                   src={imageCMS(item.url)}
-                  className="w-full aspect-[16/9] object-contain"
+                  className="w-full aspect-[16/9]"
                   alt=""
                 />
               )
@@ -56,7 +56,7 @@ const Carousel = ({ items, length, className }: { items: any[]; length: any; cla
             if (isVideoFile(imageCMS(item.url))) {
               return (
                 <video
-                  className="w-full aspect-[16/9] object-contain"
+                  className="w-full aspect-[16/9] object-contain bg-black"
                   key={i}
                   src={imageCMS(item.url)}
                   preload="auto"

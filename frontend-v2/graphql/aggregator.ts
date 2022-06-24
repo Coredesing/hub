@@ -1319,3 +1319,25 @@ export const GET_FAVORITE_BY_USER_ID = gql`
     }
   }
 `
+
+export const CUSTOM_EPICWAR_FAVORITES = gql`
+query FavoriteAddressesList ($limit: Int, $start: Int) {
+  favorites(pagination: {limit: $limit, start: $start}, filters: {type: { eq: "aggregator" }, objectID: { eq: "76" }}) {
+    aggregate {
+      count
+    }
+    data {
+      id
+      attributes {
+        user {
+          data {
+            attributes {
+              walletAddress
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`

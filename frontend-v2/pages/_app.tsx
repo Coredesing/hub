@@ -12,7 +12,6 @@ import Script from 'next/script'
 
 import 'tippy.js/dist/tippy.css'
 import '@/assets/styles/index.scss'
-import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID

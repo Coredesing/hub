@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { Carousel } from 'react-responsive-carousel'
 import { useMediaQuery } from 'react-responsive'
 import Link from 'next/link'
+import 'react-responsive-carousel/lib/styles/carousel.min.css'
 
 type Props = {
   items?: any[];

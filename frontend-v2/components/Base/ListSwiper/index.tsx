@@ -7,6 +7,7 @@ import arrowLeft from '@/assets/images/icons/arrow-left.png'
 import arrowRight from '@/assets/images/icons/arrow-right.png'
 import { Carousel as CarouselMobile } from 'react-responsive-carousel'
 import { useMediaQuery } from 'react-responsive'
+import 'react-responsive-carousel/lib/styles/carousel.min.css'
 
 type Props = {
   children: any;

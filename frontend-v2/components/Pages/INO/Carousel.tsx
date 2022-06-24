@@ -9,6 +9,7 @@ import { networkImage } from './List'
 import { intervalToDuration } from 'date-fns'
 import { formatNumber } from '@/utils'
 import { getCurrency } from '@/components/web3/utils'
+import 'react-responsive-carousel/lib/styles/carousel.min.css'
 
 type Props = {
   items: Item[];

@@ -3,6 +3,7 @@ import Modal from '@/components/Base/Modal'
 import styles from './BoxesInformationModal.module.scss'
 import clsx from 'clsx'
 import { Carousel } from 'react-responsive-carousel'
+import 'react-responsive-carousel/lib/styles/carousel.min.css'
 
 type Props = {
   open?: boolean;
@@ -13,10 +14,10 @@ type Props = {
 
 const BoxesInformationModal = ({ open, onClose, items, idShow }: Props) => {
   useLayoutEffect(() => {
-    const boxInformationsCarouselList = document.querySelector('.box-informations')
-    if (!boxInformationsCarouselList || !open) return
-    const btnPrev = boxInformationsCarouselList.querySelector('.control-arrow.control-prev')
-    const btnNext = boxInformationsCarouselList.querySelector('.control-arrow.control-next')
+    const boxInformationCarouselList = document.querySelector('.box-information')
+    if (!boxInformationCarouselList || !open) return
+    const btnPrev = boxInformationCarouselList.querySelector('.control-arrow.control-prev')
+    const btnNext = boxInformationCarouselList.querySelector('.control-arrow.control-next')
 
     const handleKeydown = (e: any) => {
       if (e.code === 'ArrowLeft') {
@@ -46,7 +47,7 @@ const BoxesInformationModal = ({ open, onClose, items, idShow }: Props) => {
       <div className='relative'>
         <h3 className='font-bold text-2xl mb-5 font-mechanic uppercase'>Information</h3>
         <Carousel
-          className={`${styles.carousel} box-informations`}
+          className={`${styles.carousel} box-information`}
           showStatus={false}
           showIndicators={false}
           selectedItem={idShow || 0}

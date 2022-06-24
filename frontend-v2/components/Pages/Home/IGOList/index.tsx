@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { useScreens } from '../utils'
 import Image from 'next/image'
 import CardItem from './CardItem'
 import Flicking from '@egjs/react-flicking'
@@ -8,7 +7,6 @@ import '@egjs/flicking/dist/flicking.css'
 
 const IGOList = ({ listUpcoming }) => {
   const [loading, setLoading] = useState(true)
-  const screens = useScreens()
   const refSlider = useRef(null)
 
   useEffect(() => {
@@ -26,25 +24,22 @@ const IGOList = ({ listUpcoming }) => {
             <Image src={require('@/assets/images/under-stroke-green.svg')} alt="under stroke"></Image>
           </div>
         </div>
-        {
-          screens.mobile || screens.tablet
-            ? <div className="mt-14">
-              {!loading && <Flicking circular={true} className="w-full" align="center" ref={refSlider} interruptable={true}>
-                {listUpcoming.map(item => (
-                  <div key={item.id} className="w-2/3 px-3"><CardItem item={item}></CardItem></div>
-                ))}
-              </Flicking>}
+        <div className="lg:hidden mt-14">
+          {!loading && <Flicking circular={true} className="w-full" align="center" ref={refSlider} interruptable={true}>
+            {listUpcoming.map(item => (
+              <div key={item.id} className="w-2/3 px-3"><CardItem item={item}></CardItem></div>
+            ))}
+          </Flicking>}
+        </div>
+        <div className="hidden lg:block mx-auto md:container 2xl:px-16">
+          {
+            !loading && <div className={`text-center justify-center ${listUpcoming.length <= 3 ? 'flex' : 'grid grid-cols-3'} gap-4 xl:gap-6 mt-14`}>
+              {listUpcoming.map(item => (
+                <CardItem key={`igo-${item.id}`} item={item} className="max-w-[400px]"></CardItem>
+              ))}
             </div>
-            : <div className="mx-auto md:container 2xl:px-16">
-              {
-                !loading && <div className={`text-center justify-center ${listUpcoming.length <= 3 ? 'flex' : 'grid grid-cols-3'} gap-4 xl:gap-6 mt-14`}>
-                  {listUpcoming.map(item => (
-                    <CardItem key={`igo-${item.id}`} item={item} className="max-w-[400px]"></CardItem>
-                  ))}
-                </div>
-              }
-            </div>
-        }
+          }
+        </div>
       </div>
     </>
     : <></>

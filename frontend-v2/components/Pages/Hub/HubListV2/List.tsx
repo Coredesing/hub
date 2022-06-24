@@ -195,7 +195,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
               const existSortFilter = sortQuery
                 ? (sortQuery as string).split(',').some(q => {
                   const [field] = q.split(':')
-                  const fieldAlias = Object.entries(SORT_ALIAS).find(([key, value]) => {
+                  const fieldAlias = Object.entries(SORT_ALIAS).find(([, value]) => {
                     return value === field
                   })
                   if (fieldAlias) {

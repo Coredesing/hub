@@ -13,9 +13,9 @@ const PER_PAGE = 6
 
 const TwitterFeed = () => {
   const [posts, setPosts] = useState([])
-  const [meta, setMeta] = useState(null)
+  const [, setMeta] = useState(null)
   const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [, setLoading] = useState(false)
   const { guildData } = useGuildDetailContext()
 
   const fetchNews = useCallback(async () => {

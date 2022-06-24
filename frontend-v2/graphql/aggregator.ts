@@ -1343,6 +1343,11 @@ query ($limit: Int, $start: Int, $limitReviews: Int, $startReviews: Int, $favori
   }
 
   reviews(pagination: {limit: $limitReviews, start: $startReviews}, filters: { aggregator: { slug: { eq: $reviewSlug } } }) {
+    meta {
+      pagination {
+        total
+      }
+    }
     data {
       attributes {
         aggregator {

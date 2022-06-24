@@ -210,7 +210,7 @@ const CarouselMobile = ({
                   </p>
                 </div>
                 <div className="mt-3">
-                  <Link href={`/hub/${item?.slug}`} passHref>
+                  <Link href={`/hub/${item?.aggregatorSlug}`} passHref>
                     <button className="bg-gamefiGreen-700 text-gamefiDark-900 py-2 px-6 flex align-middle items-center rounded-xs clipped-t-r hover:opacity-90">
                       <div className="mr-2 uppercase font-bold text-xs">
                         View more

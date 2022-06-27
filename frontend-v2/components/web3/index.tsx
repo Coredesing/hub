@@ -86,6 +86,13 @@ export function useEagerConnect () {
       return
     }
 
+    if (walletChosen === WalletConnect.id) {
+      activate(walletconnect, undefined, true).catch(() => {
+        setTried(true)
+      })
+      return
+    }
+
     const tryMetamask = async () => {
       const _provider = await injected.getProvider()
       if (_provider?.overrideIsMetaMask) {
@@ -204,7 +211,7 @@ export const DefaultConnector = ({ children }) => {
       return
     }
 
-    activateDefault(DEFAULT_CONNECTOR).finally(() => {})
+    activateDefault(DEFAULT_CONNECTOR).finally(() => { })
     console.debug('activate default connector')
   }, [activeDefault, activateDefault])
   return <>{children}</>
@@ -212,7 +219,7 @@ export const DefaultConnector = ({ children }) => {
 
 interface PropsType {
   children?: ReactNode;
-  getLibrary (provider: any): Web3Provider;
+  getLibrary(provider: any): Web3Provider;
 }
 
 let Web3ReactProviderDefault

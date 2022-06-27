@@ -14,6 +14,12 @@ import 'tippy.js/dist/tippy.css'
 import '@/assets/styles/index.scss'
 import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
 
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const eruda = require('eruda')
+  eruda.init()
+}
+
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
 const AW_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
 const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID

@@ -192,15 +192,6 @@ export default function WalletProvider ({ children }) {
     dispatch({ type: 'SET_ERROR', payload: { error: _error } })
   }, [_error, dispatch])
 
-  // sync chainID from user choice -> app context
-  useEffect(() => {
-    if (networkChosen?.id !== undefined) {
-      dispatch({ type: 'SET_CHAINID', payload: { chainID: networkChosen?.id } })
-    }
-
-    setWalletChosen(undefined)
-  }, [networkChosen, dispatch])
-
   useEffect(() => {
     if (!networkChosen || !walletChosen || !account) {
       return

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, createContext, ChangeEvent, useContext } from 'react'
-import { useEagerConnect, NoEthereumProviderError, getNetworkAvailable, wallets, connectorFromWallet, switchNetwork, activated, deactivated, WALLET_CHOSEN } from '@/components/web3'
+import { useEagerConnect, NoEthereumProviderError, getNetworkAvailable, wallets, connectorFromWallet, switchNetwork, activated, deactivated, WALLET_CHOSEN, WalletConnect } from '@/components/web3'
 import { injected } from '@/components/web3/connectors'
 import { useMyWeb3 } from '@/components/web3/context'
 import Modal from '@/components/Base/Modal'
@@ -10,6 +10,9 @@ import { useWeb3React } from '@web3-react/core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import copy from 'copy-to-clipboard'
 import { gtagEvent, shorten } from '@/utils'
+
+const errorUnsupportedNetwork = new Error('Unsupported Network')
+const errorNoEthereumProvider = new Error('No Ethereum Wallet Detected')
 
 export const ctx = createContext<{
   setShowModal:(any) => void;
@@ -34,12 +37,7 @@ export default function WalletProvider ({ children }) {
       return
     }
 
-    if (error instanceof NoEthereumProviderError) {
-      toast.error('No Ethereum Wallet Detected')
-      return
-    }
-
-    toast.error(error.message)
+    toast.error(error?.message || 'Error Occurred')
   }, [error])
   useEffect(() => {
     if (!library) {
@@ -146,14 +144,30 @@ export default function WalletProvider ({ children }) {
       }
       await activate(connectorChosen)
       localStorage.setItem(WALLET_CHOSEN, walletChosen.id)
-    } catch (err) {
-      console.debug(err)
     } finally {
       setShowModal(false)
       setActivating(false)
       setConnectorChosen(undefined)
     }
   }, [active, connectorChosen, networkChosen, setActivating, activate, setConnectorChosen, walletChosen])
+
+  // sync error from current context -> app context
+  useEffect(() => {
+    if (_error?.name === 'UnsupportedChainIdError') {
+      if (walletChosen?.id === WalletConnect.id) {
+        deactivate()
+      }
+      dispatch({ type: 'SET_ERROR', payload: { error: errorUnsupportedNetwork } })
+      return
+    }
+
+    if (_error instanceof NoEthereumProviderError) {
+      dispatch({ type: 'SET_ERROR', payload: { error: errorNoEthereumProvider } })
+      return
+    }
+
+    dispatch({ type: 'SET_ERROR', payload: { error: _error } })
+  }, [_error, dispatch, connectorChosen, walletChosen, deactivate])
 
   const tryDeactivate = useCallback(() => {
     if (!active) {
@@ -186,11 +200,6 @@ export default function WalletProvider ({ children }) {
         console.debug(err)
       })
   }, [connectorChosen, tryActivate])
-
-  // sync error from current context -> app context
-  useEffect(() => {
-    dispatch({ type: 'SET_ERROR', payload: { error: _error } })
-  }, [_error, dispatch])
 
   useEffect(() => {
     if (!networkChosen || !walletChosen || !account) {

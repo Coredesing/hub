@@ -94,6 +94,7 @@ export function useEagerConnect () {
 
     if (walletChosen === WalletConnect.id) {
       activate(walletconnect, undefined, true).catch(() => {
+        localStorage.removeItem(WALLET_CHOSEN)
         setTried(true)
       })
       return

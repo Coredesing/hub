@@ -9,3 +9,43 @@
   background-repeat: no-repeat;
   background-size: cover;
 }
+
+@media (min-width: 640px) {
+  .itemBannerHub {
+    background: linear-gradient(90deg, #15171E 0%, rgba(21, 23, 30, 0.7) 68.75%, rgba(21, 23, 30, 0) 100%);
+  }
+}
+
+@media (min-width: 1024px) {
+  .itemCarousel{
+    width: calc(20% - 13px);
+    min-width: auto;
+  }
+}
+
+@media (min-width: 1280px) {
+  .paginationBanner{
+    bottom: 20px !important;
+  }
+  .topReviewItem {
+    max-width: 230px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .topReviewItem {
+    max-width: 320px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .itemBannerHub {
+    background: linear-gradient(90deg, #15171E 0%, rgba(21, 23, 30, 0.7) 68.75%, rgba(21, 23, 30, 0) 100%);
+  }
+  .paginationBanner{
+    bottom: 48px !important;
+  }
+  .topReviewItem {
+    max-width: 350px;
+  }
+}

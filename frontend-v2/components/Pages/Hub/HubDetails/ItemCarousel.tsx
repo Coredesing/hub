@@ -5,31 +5,19 @@ import Link from 'next/link'
 import { nFormatter } from '@/components/Pages/Hub/utils'
 import ImageLoader from '@/components/Base/ImageLoader'
 import get from 'lodash.get'
-import { useScreens } from '@/components/Pages/Home/utils'
+import clsx from 'clsx'
+import stylesHome from '@/components/Pages/Hub/HubHome/home.module.scss'
 import { WrapperItem } from '../HubHome/StyleElement'
 import Tippy from '@tippyjs/react'
 import styles from '../HubList/hubList.module.scss'
 import { PriceChangeBg } from './PriceChange'
 
-function handleWidth (screens: { mobile: any; tablet: any; md?: boolean; lg: any; xl?: boolean }) {
-  switch (true) {
-  case screens.mobile:
-  case screens.tablet:
-    return {
-      minWidth: '210px'
-    }
-  default:
-    return { width: 'calc(20% - 13px)' }
-  }
-}
-
 export default function ItemCarousel ({ item, index }: any) {
   const { rate, verticalThumbnail, mobileThumbnail, name, totalViews, totalFavorites, slug, tokenomic, shortDesc, categories } = item
   const icon = get(tokenomic, 'icon.data.attributes', {})
-  const style = handleWidth(useScreens())
 
   return (
-    <WrapperItem key={index} className="w-full mr-4 last:mr-0 h-full" style={style}>
+    <WrapperItem key={index} className={clsx(stylesHome.itemCarousel, 'min-w-[210px] w-full mr-4 last:mr-0 h-full')}>
       <div className="rounded p-px h-full">
         <div className='h-full rounded relative flex flex-col group'>
           <div

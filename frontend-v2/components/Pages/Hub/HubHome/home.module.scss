@@ -1,7 +1,19 @@
+
 .arrow {
+
   &:hover path {
     stroke:#15171E;
   }
+}
+.gradientText {
+  background: 
+  linear-gradient(90.61deg, #FAFF00 -4.94%, #7DFF00 142.13%),
+  linear-gradient(90.72deg, #FFE600 28.17%, #ADFF00 134.17%);
+  background-size: 100%;
+  background-repeat: repeat;
+  background-clip: text;
+  -webkit-text-fill-color: transparent; 
+  -moz-text-fill-color: transparent;
 }
 
 .countdown {

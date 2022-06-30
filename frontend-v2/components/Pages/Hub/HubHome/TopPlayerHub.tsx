@@ -5,39 +5,13 @@ import { printNumber, imageCMS } from '@/utils'
 import PriceChange from '@/components/Pages/Hub/PriceChange'
 import isEmpty from 'lodash.isempty'
 import get from 'lodash.get'
-import { useScreens } from '@/components/Pages/Home/utils'
 import { WrapperSection, WrapperItem } from './StyleElement'
 import { formatPriceHub } from '../utils'
 import HubTitle from '../HubTitle'
 
-function handleResponsive (screens: { mobile: any; tablet: any; md?: boolean; lg: any; xl?: boolean }) {
-  let width: string
-  switch (true) {
-  case screens.mobile:
-    width = '220px'
-    break
-  case screens.tablet:
-    width = '195px'
-    break
-  case screens.lg:
-    width = '180px'
-    break
-  case screens.xl:
-    width = '180px'
-    break
-  default:
-    width = '200px'
-    break
-  }
-  return width
-}
-
 const Item = ({ item }) => {
-  const screens = useScreens()
-  const width = handleResponsive(screens)
-
   return (
-    <WrapperItem style={{ minWidth: width }} className="pr-4 xl:pr-0 tracking-normal">
+    <WrapperItem className="min-w-[220px] sm:min-w-[195px] md:min-w-[195px] lg:min-w-[200px] xl:min-w-[180px] pr-4 xl:pr-0 tracking-normal">
       <div className="rounded overflow-hidden p-px h-full group">
         <div className='h-full rounded relative flex flex-col'>
           <div className="pl-[1px] absolute z-10 h-[27px] w-1/2 inline-flex align-middle items-center uppercase text-xs text-left dark:bg-gamefiDark-900 clipped-b-r-full">

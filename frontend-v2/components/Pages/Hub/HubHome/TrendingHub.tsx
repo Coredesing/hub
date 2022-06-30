@@ -6,7 +6,6 @@ import get from 'lodash.get'
 import arrowLeft from '@/assets/images/icons/arrow-left.png'
 import arrowRight from '@/assets/images/icons/arrow-right.png'
 import { fetcher, gtagEvent } from '@/utils'
-import { useScreens } from '@/components/Pages/Home/utils'
 import { WrapperSection } from './StyleElement'
 import ItemCarousel from './ItemCarousel'
 import HubTitle from '../HubTitle'
@@ -20,25 +19,23 @@ export default function TrendingHub () {
   const refSlider1 = useRef(null)
 
   useEffect(() => {
-    if (!(screens.mobile || screens.tablet || screens.md)) {
-      setPlugins([new Sync({
-        type: 'index',
-        synchronizedFlickingOptions: [
-          {
-            flicking: refSlider.current,
-            isSlidable: true
-          },
-          {
-            flicking: refSlider1.current,
-            isClickable: true,
-            activeClass: 'thumbnail-bullet-active'
-          }
-        ]
-      }),
-      new AutoPlay({ duration: 300000, direction: 'NEXT', stopOnHover: true })
-      ])
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    setPlugins([new Sync({
+      type: 'index',
+      synchronizedFlickingOptions: [
+        {
+          flicking: refSlider.current,
+          isSlidable: true
+        },
+        {
+          flicking: refSlider1.current,
+          isClickable: true,
+          activeClass: 'thumbnail-bullet-active'
+        }
+      ]
+    }),
+    new AutoPlay({ duration: 300000, direction: 'NEXT', stopOnHover: true })
+    ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const prev = () => {
@@ -71,71 +68,68 @@ export default function TrendingHub () {
       setChunkData(chunk)
     }).catch((err) => console.debug('err', err))
   }, [])
-  const screens = useScreens()
+
   return (
     <div className="xl:mb-14">
-
-      {(typeof window !== 'undefined') && <div className="">
-        {(screens.mobile || screens.tablet || screens.md)
-          ? <>
-            < HubTitle title="Trending 7 days" source="trending" />
-            <WrapperSection>
-              <div className="flex w-full overflow-x-auto hide-scrollbar">
-                {
-                  data.map((item, i) => (
-                    <ItemCarousel item={item} index={`TrendingHub-${i}`} key={`TrendingHub-${i}`} />
-                  ))
-                }
-              </div>
-            </WrapperSection>
-          </>
-          : <>
-            <div className="flex flex-row">
-              <div className="flex-1 mr-2">
-                < HubTitle title="Trending 7 days" source="trending" hideViewAll />
-              </div>
-              <div className="max-w-[162px] flex items-end justify-end mb-7 flex-col">
-                <Link href="/hub/list?sort=totalFavorites:desc" passHref>
-                  <a
-                    className="font-casual text-gamefiGreen-700 hover:text-gamefiGreen-200 py-2 pl-2 leading-5 font-semibold text-sm"
-                    onClick={() => {
-                      gtagEvent('hub_all_trending')
-                    }}
-                  >
-                    View All
-                  </a>
-                </Link>
-                <Flicking ref={refSlider1} bound={true} bounce={30}>
-                  {
-                    chunkData.map((v, i) => (
-                      <div className="h-[1px] border w-[46px] bg-white mr-2" key={`ChunkTrendingHub-${i}`}></div>
-                    ))
-                  }
-                </Flicking>
-              </div>
+      <div className="">
+        <div className="xl:hidden">
+          < HubTitle title="Trending 7 days" source="trending" />
+          <WrapperSection>
+            <div className="flex w-full overflow-x-auto hide-scrollbar">
+              {
+                data.map((item, i) => (
+                  <ItemCarousel item={item} index={`TrendingHub-${i}`} key={`TrendingHub-${i}`} />
+                ))
+              }
             </div>
-            <div className="flex mt-8 gap-4 -mx-[50px]">
-              <div className="hidden sm:block">
-                <img src={arrowLeft.src} alt="" className="w-8 cursor-pointer opacity-80 hover:opacity-100 select-none" onClick={prev} />
-              </div>
-              <Flicking circular={true} className="flex-1" plugins={plugins} align="center" ref={refSlider} interruptable={true}>
+          </WrapperSection>
+        </div>
+        <div className="hidden xl:block">
+          <div className="flex flex-row">
+            <div className="flex-1 mr-2">
+              < HubTitle title="Trending 7 days" source="trending" hideViewAll />
+            </div>
+            <div className="max-w-[162px] flex items-end justify-end mb-7 flex-col">
+              <Link href="/hub/list?sort=totalFavorites:desc" passHref>
+                <a
+                  className="font-casual text-gamefiGreen-700 hover:text-gamefiGreen-200 py-2 pl-2 leading-5 font-semibold text-sm"
+                  onClick={() => {
+                    gtagEvent('hub_all_trending')
+                  }}
+                >
+                  View All
+                </a>
+              </Link>
+              <Flicking ref={refSlider1} bound={true} bounce={30}>
                 {
                   chunkData.map((v, i) => (
-                    <div className="w-full mb-8 flex" key={`ChunkTrendingHub-${i}`}>
-                      {v.map((item, i) => (
-                        <ItemCarousel item={item} index={`TrendingHub-${i}`} key={`TrendingHub-${i}`} />
-                      ))}
-                    </div>
+                    <div className="h-[1px] border w-[46px] bg-white mr-2" key={`ChunkTrendingHub-${i}`}></div>
                   ))
                 }
               </Flicking>
-              <div className="hidden sm:block">
-                <img src={arrowRight.src} alt="" className="w-8 cursor-pointer opacity-80 hover:opacity-100 select-none" onClick={next} />
-              </div>
             </div>
-          </>
-        }
-      </div>}
+          </div>
+          <div className="flex mt-8 gap-4 -mx-[50px]">
+            <div className="hidden sm:block">
+              <img src={arrowLeft.src} alt="" className="w-8 cursor-pointer opacity-80 hover:opacity-100 select-none" onClick={prev} />
+            </div>
+            <Flicking circular={true} className="flex-1" plugins={plugins} align="center" ref={refSlider} interruptable={true}>
+              {
+                chunkData.map((v, i) => (
+                  <div className="w-full mb-8 flex" key={`ChunkTrendingHub-${i}`}>
+                    {v.map((item, i) => (
+                      <ItemCarousel item={item} index={`TrendingHub-${i}`} key={`TrendingHub-${i}`} />
+                    ))}
+                  </div>
+                ))
+              }
+            </Flicking>
+            <div className="hidden sm:block">
+              <img src={arrowRight.src} alt="" className="w-8 cursor-pointer opacity-80 hover:opacity-100 select-none" onClick={next} />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

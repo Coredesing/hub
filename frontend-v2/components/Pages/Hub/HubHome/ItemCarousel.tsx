@@ -3,30 +3,18 @@ import Image from 'next/image'
 import { imageCMS } from '@/utils'
 import { nFormatter } from '@/components/Pages/Hub/utils'
 import Link from 'next/link'
+import clsx from 'clsx'
+import styles from './home.module.scss'
 import ImageLoader from '@/components/Base/ImageLoader'
 import get from 'lodash.get'
-import { useScreens } from '@/components/Pages/Home/utils'
 import { WrapperItem } from './StyleElement'
-
-function handleWidth (screens: { mobile: any; tablet: any; md?: boolean; lg: any; xl?: boolean }) {
-  switch (true) {
-  case screens.mobile:
-  case screens.tablet:
-    return {
-      minWidth: '210px'
-    }
-  default:
-    return { width: 'calc(20% - 13px)' }
-  }
-}
 
 export default function ItemCarousel ({ item, index }: any) {
   const { rate, tokenomic, verticalThumbnail, name, totalViews, totalFavorites, slug } = item
   const icon = get(tokenomic, 'icon.data.attributes', {})
-  const style = handleWidth(useScreens())
 
   return (
-    <WrapperItem key={index} className="w-full mr-4 last:mr-0 h-full" style={style}>
+    <WrapperItem key={index} className={clsx(styles.itemCarousel, 'min-w-[210px] w-full mr-4 last:mr-0 h-full')}>
       <div className="rounded overflow-hidden p-px h-full">
         <div className='h-full rounded relative flex flex-col group'>
           <Link href={`/hub/${slug}`} passHref>

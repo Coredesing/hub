@@ -9,8 +9,8 @@ import Link from 'next/link'
 import { nFormatter } from '@/components/Pages/Hub/utils'
 import { normalize } from '@/graphql/utils'
 import { Pagination } from '@egjs/flicking-plugins'
-import { useScreens } from '@/components/Pages/Home/utils'
 import Flicking, { ViewportSlot } from '@egjs/react-flicking'
+import styles from './home.module.scss'
 import HubTitle from '../HubTitle'
 
 const STARS = [1, 2, 3, 4, 5]
@@ -79,7 +79,6 @@ export default function TopReviewsHub () {
     })]
   ])
 
-  const screens = useScreens()
   useEffect(() => {
     fetcher('/api/hub/home', { method: 'POST', body: JSON.stringify({ query: 'GET_REVIEWS_AGGREGATORS' }) }).then(({ data }) => {
       const aggregators = normalize(data?.aggregators?.data)
@@ -161,7 +160,7 @@ export default function TopReviewsHub () {
                       {item.name}
                     </a>
                   </Link>
-                  <div className={clsx(screens['2xl'] ? 'xl:max-w-[350px]' : 'xl:max-w-[290px]')}>
+                  <div className={clsx(styles.topReviewItem)}>
                     {/* <div className="xl:max-w-[290px] 3xl:max-w-[350px]"> */}
                     <Flicking circular={true} key={`ReviewsHub-${item.id}`} plugins={item.plugins} ref={item.ref} align="center" interruptable={true}>
                       {item.reviews.map(v => {

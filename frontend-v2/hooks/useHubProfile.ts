@@ -15,8 +15,8 @@ const useHubProfile = () => {
 
       const key = `HUB_PROFILE_${account}`
 
-      if (window?.localStorage && window.localStorage.getItem(key)) {
-        const profile = JSON.parse(window.localStorage.getItem(key))
+      if (window?.sessionStorage && window.sessionStorage.getItem(key)) {
+        const profile = JSON.parse(window.sessionStorage.getItem(key))
         if (profile) {
           resolve(profile)
           return
@@ -38,8 +38,8 @@ const useHubProfile = () => {
             return
           }
 
-          if (window?.localStorage) {
-            window.localStorage.setItem(key, JSON.stringify(data))
+          if (window?.sessionStorage) {
+            window.sessionStorage.setItem(key, JSON.stringify(data))
           }
 
           resolve(data)

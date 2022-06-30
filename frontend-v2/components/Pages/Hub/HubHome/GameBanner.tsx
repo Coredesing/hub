@@ -9,33 +9,10 @@ import clsx from 'clsx'
 import { nFormatter } from '@/components/Pages/Hub/utils'
 import styles from './home.module.scss'
 import { getNetworkByAlias } from '@/components/web3'
-import { useScreens } from '@/components/Pages/Home/utils'
 import '@egjs/flicking-plugins/dist/pagination.css'
 import '@egjs/flicking/dist/flicking.css'
 import get from 'lodash.get'
 import { WrapperSection } from './StyleElement'
-
-const handleAspectRatio = (screens) => {
-  let aspectRatio
-  switch (true) {
-  case screens.tablet:
-    aspectRatio = '839/500'
-    break
-  case screens.md:
-    aspectRatio = '839/520'
-    break
-  case screens.lg:
-    aspectRatio = '839/460'
-    break
-  case screens.xl:
-    aspectRatio = '839/401'
-    break
-  default:
-    aspectRatio = '376/310'
-    break
-  }
-  return aspectRatio
-}
 
 const GameBanner = ({ data }) => {
   const refSlider = useRef(null)
@@ -73,8 +50,6 @@ const GameBanner = ({ data }) => {
 
     refSlider.current.next().catch(() => { })
   }
-  const screens = useScreens()
-  const isMobile = screens.mobile
   return (
     <WrapperSection>
       <div className="group relative">
@@ -98,9 +73,9 @@ const GameBanner = ({ data }) => {
               <div className="relative">
                 <img
                   src={imageCMS(item.banner.url)}
-                  className="rounded"
+                  className="aspect-[376/310] sm:aspect-[839/500] md:aspect-[839/520] lg:aspect-[839/520] xl:aspect-[839/460] 2xl:aspect-[839/401] rounded"
                   alt={item.slug}
-                  style={{ width: '100%', height: '472px', objectFit: 'cover', aspectRatio: handleAspectRatio(screens) }}
+                  style={{ width: '100%', height: '472px', objectFit: 'cover' }}
                 />
                 <div
                   className="hidden sm:block absolute bg-gamefiDark-900 right-[-15px] bottom-[-15px] w-[30px] h-[30px] rotate-45"
@@ -118,10 +93,7 @@ const GameBanner = ({ data }) => {
                 </div>
               </div>
               < div
-                className="absolute w-full lg:w-3/4 xl:w-2/3 bottom-0 sm:top-0 left-0 sm:h-full sm:pt-5 xl:pt-12 px-5 md:pl-5 xl:pl-12"
-                style={{
-                  background: isMobile ? '' : 'linear-gradient(90deg, #15171E 0%, rgba(21, 23, 30, 0.7) 68.75%, rgba(21, 23, 30, 0) 100%)'
-                }}
+                className={clsx(styles.itemBannerHub, 'absolute w-full lg:w-3/4 xl:w-2/3 bottom-0 sm:top-0 left-0 sm:h-full sm:pt-5 xl:pt-12 px-5 md:pl-5 xl:pl-12')}
               >
                 <div className="col-span-12 mb-7 xl:mb-0 md:col-span-10 2xl:col-span-8">
                   <div className="flex justify-between mb-2 md:mb-3">
@@ -206,7 +178,7 @@ const GameBanner = ({ data }) => {
             </div >
           ))}
           <ViewportSlot>
-            <div className={clsx('flicking-pagination !relative flex items-center justify-center md:justify-start md:pl-5 xl:pl-12 gap-1', screens['2xl'] ? '!bottom-12' : 'xl:!bottom-5')}></div>
+            <div className={clsx(styles.paginationBanner, 'flicking-pagination !relative flex items-center justify-center md:justify-start md:pl-5 xl:pl-12 gap-1')}></div>
             <div></div>
           </ViewportSlot>
         </Flicking >

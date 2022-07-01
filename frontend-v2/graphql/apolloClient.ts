@@ -23,13 +23,17 @@ const httpLink = createHttpLink({
   uri: `${API_CMS_URL}/graphql`
 })
 
+const b64 = (str: string): string => {
+  return Buffer.from(str).toString('base64')
+}
+
 const authLink = setContext((_, { headers }) => {
   const token = process.env.CMS_TOKEN
 
   return {
     headers: {
       ...headers,
-      authorization: token ? `Basic ${btoa(token)}` : undefined
+      authorization: token ? `Basic ${b64(token)}` : undefined
     }
   }
 })

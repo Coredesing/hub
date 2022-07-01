@@ -24,14 +24,12 @@ const httpLink = createHttpLink({
 })
 
 const authLink = setContext((_, { headers }) => {
-  // const { account, library, network } = useMyWeb3()
+  const token = process.env.CMS_TOKEN
 
-  // get the authentication token from local storage if it exists
-  // const token = localStorage.getItem('token')
-  // return the headers to the context so httpLink can read them
   return {
     headers: {
-      ...headers
+      ...headers,
+      authorization: token ? `Basic ${btoa(token)}` : undefined
     }
   }
 })

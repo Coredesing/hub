@@ -15,11 +15,15 @@ const STEP = 5000
 class StakingEventService {
   async queryTop(param) {
     try {
-      let LEGEND = HelperUtils.getLegendData()
-      LEGEND = LEGEND.map((data) => { return data.wallet_address })
-      LEGEND = LEGEND.filter(( data) => {
-        if (!EXCLUDE_LEGENDS.find(item => item === data)) {
-          return data
+      let excludeWallets = new Set()
+      EXCLUDE_LEGENDS.forEach((data) => {
+        excludeWallets.add(data)
+      })
+
+      const LEGEND = HelperUtils.getLegendData()
+      LEGEND.forEach((data) => {
+        if (data.valid === true && !EXCLUDE_LEGENDS.find(item => item === data.wallet_address)) {
+          excludeWallets.add(data.wallet_address)
         }
       })
 

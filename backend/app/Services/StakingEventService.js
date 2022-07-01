@@ -30,7 +30,7 @@ class StakingEventService {
       let data = await StakingEventModel.query()
         .whereBetween('dispatch_at', [param.start_time, param.end_time])
         .select('wallet_address')
-        .whereNotIn('wallet_address', LEGEND)
+        .whereNotIn('wallet_address', Array.from(excludeWallets))
         .sum('amount as amount')
         .max('dispatch_at as last_time')
         .groupBy('wallet_address')

@@ -79,7 +79,7 @@ export const GET_AGGREGATORS_HOME = gql`
     gameBanners: aggregators(
       pagination: { pageSize: 10 }
       filters: { displayArea: { eq: "topGame" }, topGamePriority: { ne: null } }
-      sort: ["topGamePriority:asc"]
+      sort: ["topGamePriority:desc"]
     ) {
       data {
         id

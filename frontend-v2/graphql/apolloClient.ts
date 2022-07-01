@@ -23,15 +23,17 @@ const httpLink = createHttpLink({
   uri: `${API_CMS_URL}/graphql`
 })
 
-const authLink = setContext((_, { headers }) => {
-  // const { account, library, network } = useMyWeb3()
+const b64 = (str: string): string => {
+  return Buffer.from(str).toString('base64')
+}
 
-  // get the authentication token from local storage if it exists
-  // const token = localStorage.getItem('token')
-  // return the headers to the context so httpLink can read them
+const authLink = setContext((_, { headers }) => {
+  const token = process.env.CMS_TOKEN
+
   return {
     headers: {
-      ...headers
+      ...headers,
+      authorization: token ? `Basic ${b64(token)}` : undefined
     }
   }
 })

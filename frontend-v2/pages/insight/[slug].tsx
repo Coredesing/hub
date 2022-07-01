@@ -75,13 +75,13 @@ export async function getStaticProps (context) {
   if (!post) {
     return {
       notFound: true,
-      revalidate: 10
+      revalidate: 60
     }
   }
 
   return {
     props: { post },
-    revalidate: 10
+    revalidate: 60
   }
 }
 

@@ -122,7 +122,7 @@ const GameDetails = ({ data }) => {
 
 export async function getStaticProps ({ params }) {
   if (!params?.slug) {
-    return { props: { data: {} }, revalidate: 5 * 60 }
+    return { props: { data: {} }, revalidate: 60 }
   }
   try {
     const reviewFilterValue: any = { aggregator: { slug: { eq: params.slug } }, status: { eq: 'published' } }
@@ -134,7 +134,7 @@ export async function getStaticProps ({ params }) {
     const { five, four, three, two, one, totalReviewMeta } = data
     const aggregators = get(data, 'aggregators.data[0]')
     if (isEmpty(aggregators)) {
-      return { props: { data: {} }, revalidate: 5 * 60 }
+      return { props: { data: {} }, revalidate: 60 }
     }
 
     let gameIntroduction = ''

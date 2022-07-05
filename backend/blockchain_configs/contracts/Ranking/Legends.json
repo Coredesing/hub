@@ -112,6 +112,16 @@
   {
     "id": 22,
     "wallet_address": "0x18124E0c5D5EbdeDEa59593D3e8b10620Abd87ae",
+    "valid": false
+  },
+  {
+    "id": 23,
+    "wallet_address": "0xB7dEfb12B27d55cd703AC9b01acBE11D60dDD6c0",
+    "valid": true
+  },
+  {
+    "id": 24,
+    "wallet_address": "0x05739C6F455e9c0B1695C6daE23A4d224f432Ab5",
     "valid": true
   }
 ]

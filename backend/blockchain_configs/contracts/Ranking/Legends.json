@@ -117,11 +117,11 @@
   {
     "id": 23,
     "wallet_address": "0xB7dEfb12B27d55cd703AC9b01acBE11D60dDD6c0",
-    "valid": true
+    "valid": false
   },
   {
     "id": 24,
     "wallet_address": "0x05739C6F455e9c0B1695C6daE23A4d224f432Ab5",
-    "valid": false
+    "valid": true
   }
 ]

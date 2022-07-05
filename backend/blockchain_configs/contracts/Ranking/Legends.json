@@ -112,7 +112,7 @@
   {
     "id": 22,
     "wallet_address": "0x18124E0c5D5EbdeDEa59593D3e8b10620Abd87ae",
-    "valid": false
+    "valid": true
   },
   {
     "id": 23,
@@ -122,6 +122,6 @@
   {
     "id": 24,
     "wallet_address": "0x05739C6F455e9c0B1695C6daE23A4d224f432Ab5",
-    "valid": true
+    "valid": false
   }
 ]

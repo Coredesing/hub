@@ -163,38 +163,20 @@ class StakingEventService {
     catch (e) {}
   }
 
-  async forceRun(fromBlock) {
+  async forceRun(fromBlock, toBlock) {
     try {
-      if (!fromBlock) {
+      if (!fromBlock || !toBlock) {
         return
       }
 
-      console.log('fromblock', fromBlock)
+      console.log('from-to', fromBlock, toBlock)
       const provider = await HelperUtils.getStakingProvider()
-      const latestBlockNumber = (await provider.eth.getBlockNumber()) - 1
-      let from = {
-        deposit: fromBlock,
-        withdraw: fromBlock,
-      }
 
       // fetch staking
-      for (let index = from.deposit; index < latestBlockNumber; index += STEP) {
-        let to = index + STEP
-        if (to >= latestBlockNumber) {
-          to = latestBlockNumber
-        }
-
-        await this.run(provider, LINEAR_DEPOSIT_EVENT, index, to)
-      }
+      await this.run(provider, LINEAR_DEPOSIT_EVENT, fromBlock, toBlock)
 
       // fetch withdraw
-      for (let index = from.withdraw; index < latestBlockNumber; index += STEP) {
-        let to = index + STEP
-        if (to > latestBlockNumber) {
-          to = latestBlockNumber
-        }
-        await this.run(provider, LINEAR_WITHDRAW_EVENT, index, to)
-      }
+      await this.run(provider, LINEAR_WITHDRAW_EVENT, fromBlock, toBlock)
     }
     catch (e) {
       console.log('err', e)

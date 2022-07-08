@@ -15,18 +15,22 @@ const STEP = 5000
 class StakingEventService {
   async queryTop(param) {
     try {
-      let LEGEND = HelperUtils.getLegendData()
-      LEGEND = LEGEND.map((data) => { return data.wallet_address })
-      LEGEND = LEGEND.filter(( data) => {
-        if (!EXCLUDE_LEGENDS.find(item => item === data)) {
-          return data
+      let excludeWallets = new Set()
+      EXCLUDE_LEGENDS.forEach((data) => {
+        excludeWallets.add(data)
+      })
+
+      const LEGEND = HelperUtils.getLegendData()
+      LEGEND.forEach((data) => {
+        if (data.valid === true && !EXCLUDE_LEGENDS.find(item => item === data.wallet_address)) {
+          excludeWallets.add(data.wallet_address)
         }
       })
 
       let data = await StakingEventModel.query()
         .whereBetween('dispatch_at', [param.start_time, param.end_time])
         .select('wallet_address')
-        .whereNotIn('wallet_address', LEGEND)
+        .whereNotIn('wallet_address', Array.from(excludeWallets))
         .sum('amount as amount')
         .max('dispatch_at as last_time')
         .groupBy('wallet_address')
@@ -159,38 +163,20 @@ class StakingEventService {
     catch (e) {}
   }
 
-  async forceRun(fromBlock) {
+  async forceRun(fromBlock, toBlock) {
     try {
-      if (!fromBlock) {
+      if (!fromBlock || !toBlock) {
         return
       }
 
-      console.log('fromblock', fromBlock)
+      console.log('from-to', fromBlock, toBlock)
       const provider = await HelperUtils.getStakingProvider()
-      const latestBlockNumber = (await provider.eth.getBlockNumber()) - 1
-      let from = {
-        deposit: fromBlock,
-        withdraw: fromBlock,
-      }
 
       // fetch staking
-      for (let index = from.deposit; index < latestBlockNumber; index += STEP) {
-        let to = index + STEP
-        if (to >= latestBlockNumber) {
-          to = latestBlockNumber
-        }
-
-        await this.run(provider, LINEAR_DEPOSIT_EVENT, index, to)
-      }
+      await this.run(provider, LINEAR_DEPOSIT_EVENT, fromBlock, toBlock)
 
       // fetch withdraw
-      for (let index = from.withdraw; index < latestBlockNumber; index += STEP) {
-        let to = index + STEP
-        if (to > latestBlockNumber) {
-          to = latestBlockNumber
-        }
-        await this.run(provider, LINEAR_WITHDRAW_EVENT, index, to)
-      }
+      await this.run(provider, LINEAR_WITHDRAW_EVENT, fromBlock, toBlock)
     }
     catch (e) {
       console.log('err', e)

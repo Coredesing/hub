@@ -38,6 +38,75 @@ const Card = ({ item, color, background, external }: { item: Item; color?: strin
     return poolClaimTime.start <= now
   }, [poolClaimTime, now])
 
+  const renderBottom = () => {
+    let content: JSX.Element
+    switch (true) {
+    case !item?.start_join_pool_time && ['tba', 'upcoming'].includes(item.campaign_status?.toLowerCase()):
+      content = <div className="w-full flex flex-col items-center justify-center">
+        <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Starts In</div>
+        <div className="mt-2 font-medium">TBA</div>
+      </div>
+      break
+
+    case item.finish_time && item.campaign_status?.toLowerCase() === 'swap':
+      content = <div className="w-full flex flex-col items-center justify-center">
+        <div className="text-xs font-semibold text-white/50 uppercase">Swap Ends In</div>
+        <div className="mt-2">
+          <Countdown to={item?.finish_time}></Countdown>
+        </div>
+      </div>
+      break
+
+    case item.buy_type?.toLowerCase() === 'whitelist' &&
+        item.campaign_status?.toLowerCase() === 'upcoming' &&
+        now?.getTime() >= new Date(Number(item.start_join_pool_time) * 1000).getTime() &&
+        now?.getTime() < new Date(Number(item.end_join_pool_time) * 1000).getTime():
+      content = <div className="w-full flex flex-col items-center justify-center">
+        <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Ends In</div>
+        <div className="mt-2">
+          <Countdown to={item?.end_join_pool_time}></Countdown>
+        </div>
+      </div>
+      break
+
+    case item?.campaign_status === 'Upcoming' &&
+        now?.getTime() < new Date(Number(item.start_join_pool_time) * 1000).getTime():
+      content = <div className="w-full flex flex-col items-center justify-center">
+        <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Starts In</div>
+        <div className="mt-2">
+          <Countdown to={item?.start_join_pool_time}></Countdown>
+        </div>
+      </div>
+      break
+
+    case now?.getTime() > new Date(Number(item.end_join_pool_time) * 1000).getTime() &&
+        now?.getTime() <= new Date(Number(item.start_time) * 1000).getTime():
+      content = <div className="w-full flex flex-col items-center justify-center">
+        <div className="text-xs font-semibold text-white/50 uppercase">Buying Phase Starts In</div>
+        <div className="mt-2">
+          <Countdown to={item?.start_time}></Countdown>
+        </div>
+      </div>
+      break
+
+    case now?.getTime() > new Date(Number(item.end_join_pool_time) * 1000).getTime() &&
+        !item.start_time:
+      content = <div className="w-full flex flex-col items-center justify-center">
+        <div className="text-xs font-semibold text-white/50 uppercase">Buying Phase Starts In</div>
+        <div className="mt-2 font-medium">TBA</div>
+      </div>
+      break
+
+    default:
+      content = <div className="w-full flex flex-col items-center justify-center">
+        <div className="text-xs font-semibold text-white/50 uppercase invisible">Whitelist Starts In</div>
+        <div className="mt-2 font-medium invisible">TBA</div>
+      </div>
+      break
+    }
+    return content
+  }
+
   return <div onClick={() => { external ? router.push(external) : router.push(`/igo/${item.slug || item.id}`) }} className={`bg-${background} cursor-pointer w-full flex flex-col font-casual hover:opacity-90`}>
     <div className="w-full aspect-[16/9] overflow-hidden bg-black relative">
       <img src={item?.banner} alt="" className="object-cover w-full h-full"></img>
@@ -136,51 +205,7 @@ const Card = ({ item, color, background, external }: { item: Item; color?: strin
       }
     </div>
     <div className="mt-2 border-t-[1px] border-white/10 py-4">
-      {
-        !item?.start_join_pool_time && ['tba', 'upcoming'].includes(item.campaign_status?.toLowerCase()) && <div className="w-full flex flex-col items-center justify-center">
-          <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Starts In</div>
-          <div className="mt-2 font-medium">TBA</div>
-        </div>
-      }
-      {
-        item.finish_time && item.campaign_status?.toLowerCase() === 'swap' && <div className="w-full flex flex-col items-center justify-center">
-          <div className="text-xs font-semibold text-white/50 uppercase">Swap Ends In</div>
-          <div className="mt-2">
-            <Countdown to={item?.finish_time}></Countdown>
-          </div>
-        </div>
-      }
-      {
-        item.buy_type?.toLowerCase() === 'whitelist' &&
-        item.campaign_status?.toLowerCase() === 'upcoming' &&
-        now?.getTime() >= new Date(Number(item.start_join_pool_time) * 1000).getTime() &&
-        now?.getTime() < new Date(Number(item.end_join_pool_time) * 1000).getTime() &&
-        <div className="w-full flex flex-col items-center justify-center">
-          <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Ends In</div>
-          <div className="mt-2">
-            <Countdown to={item?.end_join_pool_time}></Countdown>
-          </div>
-        </div>
-      }
-      {
-        item?.campaign_status === 'Upcoming' &&
-        now?.getTime() < new Date(Number(item.start_join_pool_time) * 1000).getTime() &&
-        <div className="w-full flex flex-col items-center justify-center">
-          <div className="text-xs font-semibold text-white/50 uppercase">Whitelist Starts In</div>
-          <div className="mt-2">
-            <Countdown to={item?.start_join_pool_time}></Countdown>
-          </div>
-        </div>
-      }
-      {now?.getTime() > new Date(Number(item.end_join_pool_time) * 1000).getTime() &&
-      now?.getTime() <= new Date(Number(item.start_time) * 1000).getTime() &&
-        <div className="w-full flex flex-col items-center justify-center">
-          <div className="text-xs font-semibold text-white/50 uppercase">Buying Phase Starts In</div>
-          <div className="mt-2">
-            <Countdown to={item?.start_time}></Countdown>
-          </div>
-        </div>
-      }
+      {renderBottom()}
     </div>
   </div>
 }

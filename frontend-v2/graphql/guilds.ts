@@ -13,7 +13,7 @@ export const GET_FAVORITE_BY_USER_ID = gql`
 
 export const GET_TOTAL_FAVORITES = gql`
   query favorite($objectID: String) {
-    favorites(filters: { objectID: { eq: $objectID } }) {
+    favorites(filters: { objectID: { eq: $objectID }, type: {eq: "guild"} }) {
       meta {
         pagination {
           total

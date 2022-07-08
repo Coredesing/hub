@@ -32,9 +32,9 @@ const GameDetails = ({ data }) => {
     fetcher('/api/hub/detail/getLiveData', { method: 'POST', body: JSON.stringify({ variables: { slug: router.query.slug, reviewFilterValue, pageSize: 5 }, query: 'GET_AGGREGATORS_BY_SLUG' }) }).then(({ data }) => {
       const { five, four, three, two, one, totalReviewMeta } = data
       const aggregators = get(data, 'aggregators.data[0]')
-      setValues({
-        ...values,
-        ...aggregators.attributes,
+      setValues(vs => ({
+        ...vs,
+        ...(aggregators?.attributes || {}),
         reviews: data?.reviews || [],
         totalReviewWithoutFilter: get(totalReviewMeta, 'meta.pagination.total', 0),
         rates: {
@@ -44,9 +44,8 @@ const GameDetails = ({ data }) => {
           two: get(two, 'meta.pagination.total', 0),
           one: get(one, 'meta.pagination.total', 0)
         }
-      })
+      }))
     }).catch((err) => console.debug('err', err))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router])
 
   const isMobile = screen.mobile || screen.tablet
@@ -123,7 +122,7 @@ const GameDetails = ({ data }) => {
 
 export async function getStaticProps ({ params }) {
   if (!params?.slug) {
-    return { props: { data: {} }, revalidate: 5 * 60 }
+    return { props: { data: {} }, revalidate: 60 }
   }
   try {
     const reviewFilterValue: any = { aggregator: { slug: { eq: params.slug } }, status: { eq: 'published' } }
@@ -135,7 +134,7 @@ export async function getStaticProps ({ params }) {
     const { five, four, three, two, one, totalReviewMeta } = data
     const aggregators = get(data, 'aggregators.data[0]')
     if (isEmpty(aggregators)) {
-      return { props: { data: {} }, revalidate: 5 * 60 }
+      return { props: { data: {} }, revalidate: 60 }
     }
 
     let gameIntroduction = ''

@@ -6,6 +6,7 @@ import { network, injected, walletconnect, POLLING_INTERVAL, RPC_URLS, IS_TESTNE
 import type { AddEthereumChainParameter } from '@web3-react/metamask'
 import { BigNumber, ethers } from 'ethers'
 import { CMC_ASSETS_DOMAIN } from '@/utils/constants'
+import toast from 'react-hot-toast'
 
 export const WALLET_CHOSEN = 'WALLET_CHOSEN'
 
@@ -35,6 +36,11 @@ function parseChainId (chainId: string) {
   return Number.parseInt(chainId, 16)
 }
 export function switchNetwork (provider: any, chainId: number) {
+  if (provider?.isWalletConnect && provider?.connector?._peerMeta?.name?.match(/Trust Wallet/i)) {
+    toast.error('Unable to switch network on Trust wallet')
+    return
+  }
+
   if (!chainId) {
     return
   }
@@ -88,6 +94,7 @@ export function useEagerConnect () {
 
     if (walletChosen === WalletConnect.id) {
       activate(walletconnect, undefined, true).catch(() => {
+        localStorage.removeItem(WALLET_CHOSEN)
         setTried(true)
       })
       return

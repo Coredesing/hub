@@ -3,9 +3,7 @@ import Tippy from '@tippyjs/react'
 import Image from 'next/image'
 import { useCallback, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import clsx from 'clsx'
 import bgImage from '@/assets/images/aggregator/bg-leaderBoard.jpg'
-import styles from './home.module.scss'
 
 const EventLeaderboard = ({ event }: { event: string }) => {
   const [data, setData] = useState([])
@@ -33,8 +31,8 @@ const EventLeaderboard = ({ event }: { event: string }) => {
   }, [fetchData])
 
   return (
-    <div className="mb-6 rounded pt-4 xl:pt-6" style={{ background: 'linear-gradient(180deg, #2F323A 24.73%, #1D1F25 100%)' }}>
-      <div className="mb-3 px-4 xl:px-5 text-center font-casual text-xs">We are reviewing the results. The winners will be unveiled <span className={clsx(styles.gradientText, 'font-bold')}>on June 30, 2022.</span></div>
+    <div className="mb-6 rounded" style={{ background: 'linear-gradient(180deg, #2F323A 24.73%, #1D1F25 100%)' }}>
+      {/* <div className="mb-3 px-4 xl:px-5 text-center font-casual text-xs">We are reviewing the results. The winners will be unveiled <span className={clsx(styles.gradientText, 'font-bold')}>on June 30, 2022.</span></div> */}
       <div style={{ backgroundImage: `url(${bgImage.src})` }}>
         <div className="flex items-center justify-center pt-6 mb-2">
           {/* <Image src={require('@/assets/images/aggregator/bg-leaderBoard.jpg')} alt=""></Image> */}

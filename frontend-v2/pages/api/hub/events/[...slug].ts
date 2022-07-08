@@ -7,11 +7,7 @@ const CACHE_TIME = 1000 * 60 // 1 min
 export const fetchLeaderboards = async (slug) => {
   try {
     const query = qs.stringify({
-      populate: {
-        aggregator: {
-          populate: '*'
-        }
-      },
+      populate: ['aggregator.verticalThumbnail', 'aggregator.project'],
       filter: [slug],
       sort: ['activePoint:desc', 'aggregator.totalViews:desc']
     }, {

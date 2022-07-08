@@ -81,10 +81,10 @@ const PageIndex = ({ currentPools = [], cmsData = [] }) => {
         shortDescription: aggregator?.project?.shortDesc,
         upcoming: !!poolDetail,
         poolInfo: {
-          whitelistStartTime: poolDetail?.start_join_pool_time ? new Date(Number(poolDetail?.start_join_pool_time) * 1000) : null,
-          whitelistEndTime: poolDetail?.end_join_pool_time ? new Date(Number(poolDetail?.end_join_pool_time) * 1000) : null,
-          saleStartTime: poolDetail?.start_time ? new Date(Number(poolDetail?.start_time) * 1000) : null,
-          saleEndTime: poolDetail?.end_time ? new Date(Number(poolDetail?.end_time) * 1000) : null,
+          whitelistStartTime: poolDetail?.start_join_pool_time ? new Date(Number(poolDetail?.start_join_pool_time)) : null,
+          whitelistEndTime: poolDetail?.end_join_pool_time ? new Date(Number(poolDetail?.end_join_pool_time)) : null,
+          saleStartTime: poolDetail?.start_time ? new Date(Number(poolDetail?.start_time)) : null,
+          saleEndTime: poolDetail?.end_time ? new Date(Number(poolDetail?.end_time)) : null,
           campaignStatus: poolDetail?.campaign_status || '',
           buyType: poolDetail?.buy_type || ''
         }

@@ -19,11 +19,13 @@ export const GET_AGGREGATORS_HOME = gql`
       pagination: { pageSize: 8 }
     ) {
       data {
+        id
         attributes {
           name
           slug
           verticalThumbnail {
             data {
+              id
               attributes {
                 name
                 url
@@ -55,6 +57,7 @@ export const GET_AGGREGATORS_HOME = gql`
 
     topROI: aggregators(pagination: { pageSize: 5 }, sort: "roi:desc") {
       data {
+        id
         attributes {
           name
           slug
@@ -62,6 +65,7 @@ export const GET_AGGREGATORS_HOME = gql`
           roi
           rectangleThumbnail {
             data {
+              id
               attributes {
                 name
                 url
@@ -75,9 +79,10 @@ export const GET_AGGREGATORS_HOME = gql`
     gameBanners: aggregators(
       pagination: { pageSize: 10 }
       filters: { displayArea: { eq: "topGame" }, topGamePriority: { ne: null } }
-      sort: ["topGamePriority:asc"]
+      sort: ["topGamePriority:desc"]
     ) {
       data {
+        id
         attributes {
           name
           slug
@@ -211,6 +216,7 @@ export const GET_TOP_PLAYER_AGGREGATORS = gql`
       pagination: { pageSize: 8 }
     ) {
       data {
+        id
         attributes {
           name
           slug
@@ -310,6 +316,7 @@ export const GET_RATING_AGGREGATORS = gql`
           slug
           verticalThumbnail {
             data {
+              id
               attributes {
                 name
                 url
@@ -318,6 +325,7 @@ export const GET_RATING_AGGREGATORS = gql`
           }
           mobileThumbnail {
             data {
+              id
               attributes {
                 name
                 url
@@ -326,6 +334,7 @@ export const GET_RATING_AGGREGATORS = gql`
           }
           project {
             data {
+              id
               attributes {
                 tokenomic {
                   icon {
@@ -349,6 +358,7 @@ export const GET_TOP_FAVORITE_AGGREGATORS = gql`
   query Aggregators {
     aggregators(pagination: { pageSize: 15 }, sort: ["totalFavorites:desc"]) {
       data {
+        id
         attributes {
           name
           totalViews
@@ -397,6 +407,7 @@ export const GET_TOP_ROI_AGGREGATORS = gql`
   query Aggregators {
     aggregators(pagination: { pageSize: 5 }, sort: "roi:desc") {
       data {
+        id
         attributes {
           name
           slug
@@ -485,6 +496,7 @@ export const GET_VIEW_AGGREGATORS = gql`
   query Aggregators($filtersValue: String) {
     aggregators(pagination: { pageSize: 5 }, sort: [$filtersValue]) {
       data {
+        id
         attributes {
           name
           totalViews
@@ -584,6 +596,7 @@ export const GET_REVIEWS_AGGREGATORS = gql`
           totalVotes
           verticalThumbnail {
             data {
+              id
               attributes {
                 name
                 url
@@ -609,10 +622,12 @@ export const GET_REVIEWS_AGGREGATORS = gql`
                       username
                       rates {
                         data {
+                          id
                           attributes {
                             rate
                             aggregator {
                               data {
+                                id
                                 attributes {
                                   slug
                                 }
@@ -623,6 +638,7 @@ export const GET_REVIEWS_AGGREGATORS = gql`
                       }
                       avatar {
                         data {
+                          id
                           attributes {
                             url
                           }

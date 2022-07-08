@@ -513,11 +513,11 @@ export const TokenSummary = ({ data }) => {
             </svg>
           </Tippy>
         </div>
-        {data?.address !== '-' && <div className='flex items-center w-full md:w-auto'>
+        {data?.address !== '-' && <div className='flex items-center w-full md:w-auto flex-wrap'>
           <span className='md:mr-7 text-sm mr-5'>Contract</span>
           {data?.network && <Image width={20} height={20} className="inline-block rounded-full" src={data?.network} alt=""></Image>}
           <Tippy content={`${copiedAddress ? 'Copied' : 'Click to copy'}`}>
-            <div className='flex-1 font-semibold overflow-hidden mx-3 text-sm cursor-pointer' onMouseOut={() => setCopiedAddress(false)} onClick={() => onCopyContractAddress(data?.address)}><span>{shorten(data?.address, 15)}</span></div>
+            <div className='flex-1 font-semibold overflow-hidden mx-1 sm:mx-3 text-sm cursor-pointer min-w-[100px]' onMouseOut={() => setCopiedAddress(false)} onClick={() => onCopyContractAddress(data?.address)}><span>{shorten(data?.address, 15)}</span></div>
           </Tippy>
           <Tippy content="Add to Metamask">
             <button
@@ -652,7 +652,17 @@ const HubDetail = ({ data }) => {
         }
       </div>}
 
-      {!!dataGuilds?.length && <><div className="mt-10 md:mt-16 text-lg md:text-2xl font-mechanic uppercase"><strong>Guilds Supported</strong></div>
+      {!!dataGuilds?.length && <>
+        <div className="mt-10 md:mt-16 text-lg md:text-2xl font-mechanic uppercase flex items-center">
+          <strong className="pr-2">Guilds Supported</strong>
+          <Tippy
+            placement="top"
+            content={<div className='w-52 p-2 md:w-52'>Guilds Supported is the list of guilds that provide scholarships for this game.</div>}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM9 12H7V7H9V12ZM8 6C7.4 6 7 5.6 7 5C7 4.4 7.4 4 8 4C8.6 4 9 4.4 9 5C9 5.6 8.6 6 8 6Z" fill="white" />
+            </svg>
+          </Tippy>
+        </div>
         <div className='mt-2 md:mt-4'>
           {dataGuilds?.map((e, i) => {
             const attributes = get(e, 'attributes', {})

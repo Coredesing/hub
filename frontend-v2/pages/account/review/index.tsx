@@ -61,7 +61,7 @@ const ReviewPage = () => {
   const userData = get(data, 'user') || {}
 
   return <Layout title="GameFi.org - My Review">
-    <AccountLayout>
+    <AccountLayout className="flex-1">
       {isEmpty(data) || <div className='p-4 md:p-10'>
         <UserProfile editable data={userData} totalReviewOfAllStatus={totalReviewOfAllStatus}></UserProfile>
         <ReviewAndComment data={data} status={_status} showReviewFilter={true} user={userData} meta={{ published, draft, pending, declined }} ></ReviewAndComment>

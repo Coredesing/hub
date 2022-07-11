@@ -9,7 +9,7 @@ import '@egjs/flicking/dist/flicking.css'
 import arrowLeft from '@/assets/images/icons/arrow-left.png'
 import arrowRight from '@/assets/images/icons/arrow-right.png'
 import { useMediaQuery } from 'react-responsive'
-import { fetchScholarshipPrograms, fetchTopSelected } from '../api/guilds'
+import { fetchScholarshipPrograms, fetchTopSelected } from '../api/hub/guilds'
 import { fetcher } from '@/utils'
 import PostItem from '@/components/Pages/Guilds/GuildDetail/News/PostItem'
 
@@ -49,7 +49,7 @@ const Guilds = ({ guilds }: Props) => {
 
   const fetchNews = useCallback(async () => {
     try {
-      const response = await fetcher(`/api/guilds/posts?tag=guild&limit=${6}`)
+      const response = await fetcher(`/api/hub/guilds/posts?tag=guild&limit=${6}`)
       setPosts(response.data)
     } catch (e) {
     }

@@ -8,7 +8,7 @@ const Introduction = () => {
   const [totalFavorites, setTotalFavorites] = useState(0)
 
   const getFavorites = useCallback(async () => {
-    await fetcher(`/api/guilds/favorites?id=${guildData?.id}`).then(res => {
+    await fetcher(`/api/hub/guilds/favorites?id=${guildData?.id}`).then(res => {
       if (!res?.data) {
         return
       }

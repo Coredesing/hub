@@ -13,12 +13,14 @@ import { printNumber, safeToFixed } from '@/utils'
 import { addSeconds, format, formatDistanceStrict, intervalToDuration } from 'date-fns'
 import Modal from '@/components/Base/Modal'
 import { useAppContext } from '@/context'
+import clsx from 'clsx'
 
 const ContractPools = ({ pools, contractAddress, className }: {
     pools: Pool[];
     contractAddress: string;
     className?: string;
   }) => {
+  const { now } = useAppContext()
   const { setShowModal: showConnectWallet } = useWalletContext()
 
   const poolFirst = useMemo<Pool | undefined>(() => {
@@ -39,6 +41,15 @@ const ContractPools = ({ pools, contractAddress, className }: {
     return selectedExtended?.myPendingReward?.gte(parseUnits('0.01', selectedExtended?.tokenDecimals))
   }, [selectedExtended])
 
+  const [withdrawing, setWithdrawing] = useState<boolean>(false)
+  const myInvestmentWithdrawable = useMemo(() => {
+    if (withdrawing) {
+      return false
+    }
+
+    return selectedExtended?.myStartTime?.getTime() && addSeconds(selectedExtended?.myStartTime, Number(selectedExtended?.lockDuration || 0)) <= now
+  }, [withdrawing, selectedExtended, now])
+
   const loadMyExtended = useCallback(async (v?: PoolExtended) => {
     if (!v) {
       return
@@ -50,7 +61,8 @@ const ContractPools = ({ pools, contractAddress, className }: {
         myPendingReward: constants.Zero,
         myPendingRewardParsed: '0',
         myStake: constants.Zero,
-        myStakeParsed: '0'
+        myStakeParsed: '0',
+        myStartTime: null
       }))
       return
     }
@@ -59,17 +71,26 @@ const ContractPools = ({ pools, contractAddress, className }: {
     try {
       const library = await getLibraryDefaultFlexible(null, v?.network)
       const contract = new Contract(contractAddress, ABIStakingPool, library)
-      const [pendingReward, stakingData] = [
-        await contract.linearPendingReward(v?.id, account),
-        await contract.linearStakingData(v?.id, account)
+      const [stakingData, pendingReward] = [
+        await contract.linearStakingData(v?.id, '0x4F05cD22Bd5983fa1D0C58ee5050CcadBfC6b949'),
+        await contract.linearPendingReward(v?.id, '0x4F05cD22Bd5983fa1D0C58ee5050CcadBfC6b949')
       ]
+
+      let myStartTime = null
+      const joinTimeRaw = stakingData.joinTime.toString()
+      try {
+        myStartTime = new Date(parseInt(joinTimeRaw) * 1000)
+      } catch (_) {
+
+      }
 
       setSelectedExtended(prevState => ({
         ...prevState,
         myPendingReward: pendingReward,
         myPendingRewardParsed: formatUnits(pendingReward, v?.tokenDecimals),
         myStake: stakingData.balance,
-        myStakeParsed: formatUnits(stakingData.balance, v?.tokenDecimals)
+        myStakeParsed: formatUnits(stakingData.balance, v?.tokenDecimals),
+        myStartTime
       }))
     } finally {
       setLoading(false)
@@ -98,8 +119,6 @@ const ContractPools = ({ pools, contractAddress, className }: {
     setSelectedExtended(v)
     loadMyExtended(v)
   }, [selected, contractAddress, loadMyExtended])
-
-  const { now } = useAppContext()
 
   const upcoming = useMemo(() => {
     if (!selectedExtended) {
@@ -318,6 +337,41 @@ const ContractPools = ({ pools, contractAddress, className }: {
     return approveAndReload(constants.MaxUint256)
   }, [loadingAllowance, loadingApproval, allowanceEnough, approveAndReload, stake])
 
+  const withdraw = useCallback(() => {
+    if (!myInvestmentWithdrawable) {
+      return
+    }
+
+    (async function () {
+      try {
+        setWithdrawing(true)
+        const contract = new Contract(contractAddress, ABIStakingPool, library.getSigner())
+        await contract.linearWithdraw(selectedExtended.id, selectedExtended.myStake)
+          .then(tx => {
+            return tx.wait(1).then(() => {
+              loadMyExtended()
+              toast.success('Successfully withdrawn your investment')
+            })
+          })
+          .catch(err => {
+            if (err.code === 4001) {
+              toast.error('User Denied Transaction')
+              return
+            }
+
+            toast.error('Withdrawing failed!')
+          })
+          .finally(() => {
+            setWithdrawing(false)
+          })
+      } catch (err) {
+        console.debug(err)
+      } finally {
+        setConfirming(false)
+      }
+    })()
+  }, [contractAddress, library, loadMyExtended, myInvestmentWithdrawable, selectedExtended])
+
   return <div className={`rounded-sm shadow overflow-hidden ${className || ''}`}>
     <div className="flex flex-col md:flex-row gap-y-4 md:gap-y-0 w-full md:items-center bg-gamefiDark-630/80 p-4 md:px-6 md:py-4">
       <div className="flex justify-between">
@@ -417,8 +471,10 @@ const ContractPools = ({ pools, contractAddress, className }: {
             <p className="text-base text-white font-casual font-medium">{ loading ? 'Loading...' : `${safeToFixed(selectedExtended?.myStakeParsed, 2)} ${poolFirst?.token}` }</p>
             <div className="mt-auto">
               <div className="flex gap-2">
-                <div className="flex-1 bg-gamefiDark-300 uppercase py-2 px-5 rounded-sm clipped-b-l text-[13px] font-bold text-center cursor-not-allowed text-gamefiDark-800">
-                  Withdraw
+                <div
+                  onClick={() => withdraw()}
+                  className={clsx('flex-1 uppercase py-2 px-5 rounded-sm clipped-b-l text-[13px] font-bold text-center', myInvestmentWithdrawable ? 'cursor-pointer bg-gamefiGreen-600 hover:bg-opacity-80 text-gamefiDark-800' : 'cursor-not-allowed bg-gamefiDark-300 text-gamefiDark-800')}>
+                  {(selectedExtended?.myStartTime === undefined || withdrawing) ? 'Loading...' : 'Withdraw'}
                 </div>
                 { account && !networkIncorrect && <>
                   <div

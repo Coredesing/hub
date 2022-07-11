@@ -72,8 +72,8 @@ const ContractPools = ({ pools, contractAddress, className }: {
       const library = await getLibraryDefaultFlexible(null, v?.network)
       const contract = new Contract(contractAddress, ABIStakingPool, library)
       const [stakingData, pendingReward] = [
-        await contract.linearStakingData(v?.id, '0x4F05cD22Bd5983fa1D0C58ee5050CcadBfC6b949'),
-        await contract.linearPendingReward(v?.id, '0x4F05cD22Bd5983fa1D0C58ee5050CcadBfC6b949')
+        await contract.linearStakingData(v?.id, account),
+        await contract.linearPendingReward(v?.id, account)
       ]
 
       let myStartTime = null

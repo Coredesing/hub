@@ -6,7 +6,7 @@ import News from '@/components/Pages/Guilds/GuildDetail/News'
 import { GuildDetailContext } from '@/components/Pages/Guilds/GuildDetail/utils'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
-import { fetchOneWithSlug } from '../api/guilds'
+import { fetchOneWithSlug } from '../api/hub/guilds'
 import 'tippy.js/dist/tippy.css'
 
 const GuildDetail = ({ guildData }: { guildData: any }) => {

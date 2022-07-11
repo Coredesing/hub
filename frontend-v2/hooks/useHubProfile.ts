@@ -23,7 +23,7 @@ const useHubProfile = () => {
         }
       }
 
-      fetcher(`/api/guilds/profile/${account}`, {
+      fetcher(`/api/hub/profile/${account}`, {
         method: 'GET'
       })
         .then((response) => {

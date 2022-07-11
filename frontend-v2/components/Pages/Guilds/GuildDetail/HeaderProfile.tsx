@@ -18,8 +18,9 @@ const HeaderProfile = () => {
   const [loadingFavorite, setLoadingFavorite] = useState(false)
 
   const getFavoriteByUserId = useCallback(async () => {
-    await fetcher('/api/guilds/favorites/getFavoritesByUserId', { method: 'POST', body: JSON.stringify({ variables: { walletAddress: account, objectID: guildData?.id?.toString(), type: 'guild' } }) }).then((response) => {
+    await fetcher('/api/hub/guilds/getFavoriteByUserId', { method: 'POST', body: JSON.stringify({ variables: { walletAddress: account, objectID: guildData?.id?.toString(), type: 'guild' } }) }).then((response) => {
       const result = response?.data?.favorites?.data
+      console.log(result)
       if (result.length > 0) {
         setFavorite(true)
       } else setFavorite(false)
@@ -45,32 +46,68 @@ const HeaderProfile = () => {
       }
 
       const { walletAddress, signature } = res
-      fetcher('/api/guilds/favorites', {
+      // fetcher('/api/hub/favorite/handleFavorite', {
+      //   method: 'POST',
+      //   body: JSON.stringify({ objectID: guildData?.id?.toString(), type: 'guild', favorite: !favorite }),
+      //   headers: {
+      //     'X-Signature': signature,
+      //     'X-Wallet-Address': walletAddress
+      //   }
+      // }).then(({ err }) => {
+      //   if (err) {
+      //     toast.error('Failed!')
+      //     setLoadingFavorite(false)
+      //   } else {
+      //     getFavoriteByUserId()
+      //     toast.success('Success')
+      //     setLoadingFavorite(false)
+      //   }
+      // }).catch((err) => {
+      //   toast.error('Failed')
+      //   setLoadingFavorite(false)
+      //   console.debug('err', err)
+      // })
+
+      fetch('/api/hub/favorite/handleFavorite', {
         method: 'POST',
-        body: JSON.stringify({ objectID: guildData?.id?.toString(), type: 'guild', favorite }),
+        body: JSON.stringify({ objectID: guildData?.id?.toString(), type: 'guild', favorite: !favorite }),
         headers: {
           'X-Signature': signature,
           'X-Wallet-Address': walletAddress
         }
-      }).then(({ err }) => {
-        if (err) {
-          toast.error('Failed!')
-          setLoadingFavorite(false)
-        } else {
-          getFavoriteByUserId()
-          toast.success('Success')
-          setLoadingFavorite(false)
+      }).then(res => {
+        if (res?.status === 429) {
+          return {
+            err: {
+              status: 429
+            }
+          }
         }
-      }).catch((err) => {
-        toast.error('Failed')
+
+        return res.json()
+      }).then(({ err }) => {
         setLoadingFavorite(false)
+        if (err?.status === 429) {
+          toast.error('You reached the request limit. Please try again later!')
+          return
+        }
+        if (err) {
+          toast.error(err || 'Could not like')
+          return
+        }
+        setFavorite(!favorite)
+        router.replace(router.asPath)
+      }).catch((err) => {
+        setLoadingFavorite(false)
+        console.log(err)
+        toast.error('Failed to like!')
         console.debug('err', err)
       })
     }).catch(e => {
       toast.error(e?.message || 'Something went wrong!')
       setLoadingFavorite(false)
     })
-  }, [connectWallet, favorite, getFavoriteByUserId, guildData?.id])
+  }, [connectWallet, favorite, guildData?.id, router])
 
   return (
     <div className="container mx-auto px-4 lg:px-16">

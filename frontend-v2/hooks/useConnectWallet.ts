@@ -19,7 +19,7 @@ const useConnectWallet = () => {
       signMessage()
         .then((data) => {
           if (!data) resolve({ error: 'Could not create account' })
-          fetcher('/api/guilds/connectWallet', {
+          fetcher('/api/hub/connectWallet', {
             method: 'POST',
             body: JSON.stringify({ walletAddress: account })
           })

@@ -21,7 +21,7 @@ const TwitterFeed = () => {
   const fetchNews = useCallback(async () => {
     setLoading(true)
     try {
-      const response = await fetcher(`/api/guilds/feeds?id=${guildData.twitterId}&limit=${PER_PAGE}`)
+      const response = await fetcher(`/api/hub/guilds/feeds?id=${guildData.twitterId}&limit=${PER_PAGE}`)
       setPosts(response?.data?.posts?.data)
       setMeta(response?.data?.posts?.meta)
       setUser(response?.data?.user?.data)

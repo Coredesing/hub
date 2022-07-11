@@ -15,7 +15,7 @@ const News = () => {
   const fetchNews = useCallback(async () => {
     setLoading(true)
     try {
-      const response = await fetcher(`/api/guilds/posts?tag=${guildData.slug}&limit=${PER_PAGE}`)
+      const response = await fetcher(`/api/hub/guilds/posts?tag=${guildData.slug}&limit=${PER_PAGE}`)
       setPosts(response.data)
       setLoading(false)
     } catch (e) {

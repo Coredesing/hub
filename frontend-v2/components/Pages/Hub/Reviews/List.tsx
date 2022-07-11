@@ -9,10 +9,21 @@ import Image from 'next/image'
 import useHubProfile from '@/hooks/useHubProfile'
 import Link from 'next/link'
 
-const List = ({ data, pagination = false, viewAll = false, filter = false, loadMore = false, review = false, ranks }) => {
+type Props = {
+  data: any;
+  pagination?: any;
+  filter?: any;
+  viewAll?: any;
+  loadMore?: boolean;
+  ranks: any;
+  review?: any;
+  pageCountReviews?: number;
+}
+
+const List = ({ data, pagination = false, viewAll = false, filter = false, loadMore = false, review = false, ranks, pageCountReviews }: Props) => {
   const router = useRouter()
   const [, setFilterShown] = useState<boolean>(false)
-  const [page, setPage] = useState<string>(router?.query?.page?.[0] || '1')
+  const [page, setPage] = useState<string>((!router?.query?.page?.[0] || +router?.query?.page?.[0] > pageCountReviews) ? '1' : router?.query?.page?.[0])
   const [likeStatusOfReviews, setLikeStatusOfReviews] = useState({})
   const [pageSize] = useState<string>(data.pageSize)
   const [ratingLevel, setRatingLevel] = useState<string>(data.ratingLevel)
@@ -141,7 +152,7 @@ const List = ({ data, pagination = false, viewAll = false, filter = false, loadM
             <span className='capitalize mr-3 font-medium text-sm not-italic'>View All</span>
             <Image width={12} height={12} src={require('@/assets/images/hub/arrow-down.svg')} alt='down'></Image>
           </a>}
-        {loadMore && <div className='flex mt-8 w-full justify-center items-center'>
+        {(loadMore && pageCountReviews > +page) && <div className='flex mt-8 w-full justify-center items-center'>
           <div className="inline-flex bg-gamefiGreen-600 clipped-b-l p-px rounded cursor-pointer mr-1" onClick={() => setPage(`${Number(page) + 1}`)}>
             <span className="font-mechanic bg-gamefiDark-900 text-gamefiGreen-500 hover:text-gamefiGreen-200 clipped-b-l py-2 px-16 rounded leading-5 uppercase font-bold text-[13px]">
               Load More

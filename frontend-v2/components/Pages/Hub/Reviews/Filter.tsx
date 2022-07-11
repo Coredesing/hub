@@ -10,11 +10,11 @@ type Props = {
 
 function Filter ({
   // setPage,
-  ranks,
+  // ranks,
   ratingLevel,
-  setRatingLevel,
-  userRank,
-  setUserRank
+  setRatingLevel
+  // userRank,
+  // setUserRank
 }: Props) {
   const onChangeRatingLevel = e => setRatingLevel(e.target.value)
 

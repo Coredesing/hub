@@ -43,7 +43,7 @@ function getRatePercent (rates = {}) {
   return [{ level: 5, percent: fiveStarPercent }, { level: 4, percent: fourStarPercent }, { level: 3, percent: threeStarPercent }, { level: 2, percent: twoStarPercent }, { level: 1, percent: oneStarPercent }]
 }
 
-const Reviews = ({ data, totalReviews, rates, ranks, id, tabRef }) => {
+const Reviews = ({ data, totalReviews, rates, ranks, id, tabRef, pageCountReviews }) => {
   const [, setLoading] = useState(false)
   const [currentRate, setCurrentRate] = useState(0)
   const router = useRouter()
@@ -80,7 +80,7 @@ const Reviews = ({ data, totalReviews, rates, ranks, id, tabRef }) => {
     <div className="flex flex-col">
       <Rating overall={overall} totalCount={countRating} rates={ratesWithPercent} currentRate={currentRate} setCurrentRate={setCurrentRate} id={id} />
       <div className="mt-14 uppercase text-lg md:text-2xl"><strong>{`All Reviews ${totalReviews ? `(${printNumber(totalReviews)})` : ''}`}</strong></div>
-      <List ranks={ranks} data={{ data, totalReviews: totalReviews }} filter loadMore={totalReviews > data?.length} review />
+      <List ranks={ranks} data={{ data, totalReviews: totalReviews }} pageCountReviews={pageCountReviews} filter loadMore={(totalReviews > data?.length)} review />
     </div>
   )
 }

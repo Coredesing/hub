@@ -19,6 +19,7 @@ interface GameDetail {
   rates: any;
   userRanks: any;
   totalReviews: any;
+  pageCountReviews: number;
 }
 
 function formatRoi (price: string): string {
@@ -50,6 +51,7 @@ const handleData = (
     reviews = [],
     rates = {},
     userRanks = [],
+    pageCountReviews = 0,
     totalReviews = 0
   }: GameDetail
 ) => {
@@ -149,7 +151,7 @@ const handleData = (
     }
   })
 
-  return { dataGameInfo, dataTokenPrice, dataPreview, dataReviews, dataRating: rates, dataUserRanks: userRanks, totalReviews }
+  return { dataGameInfo, dataTokenPrice, dataPreview, dataReviews, dataRating: rates, dataUserRanks: userRanks, totalReviews, pageCountReviews }
 }
 
 interface PropsTab {
@@ -161,7 +163,7 @@ interface PropsTab {
 
 const Tab = ({ data, tab, index, setIndex }: PropsTab) => {
   const tabRef = useRef(null)
-  const { dataGameInfo, dataTokenPrice, dataReviews, dataRating, dataUserRanks, totalReviews } = handleData(data)
+  const { dataGameInfo, dataTokenPrice, dataReviews, dataRating, dataUserRanks, totalReviews, pageCountReviews } = handleData(data)
 
   return (
     <div>
@@ -183,7 +185,7 @@ const Tab = ({ data, tab, index, setIndex }: PropsTab) => {
           {dataTokenPrice ? <TokenPrice data={dataTokenPrice} tabRef={tabRef}/> : <div className="uppercase font-bold text-3xl mb-6 font-mechanic">Coming Soon</div>}
         </TabPanel>
         <TabPanel value={tab} index={'reviews'}>
-          <Reviews data={dataReviews} totalReviews={totalReviews} rates={dataRating} ranks={dataUserRanks} id={data?.id} tabRef={tabRef} />
+          <Reviews data={dataReviews} totalReviews={totalReviews} pageCountReviews={pageCountReviews} rates={dataRating} ranks={dataUserRanks} id={data?.id} tabRef={tabRef} />
         </TabPanel>
       </div>
     </div>

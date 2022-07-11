@@ -15,6 +15,8 @@ import { fetcher } from '@/utils'
 import { nFormatter } from '@/components/Pages/Hub/utils'
 import Link from 'next/link'
 
+const PAGE_SIZE = 5
+
 const mapIndex = (tab) => {
   if (tab === 'info') return 0
   if (tab === 'token') return 1
@@ -33,14 +35,15 @@ function Tab ({ data }) {
 
   useEffect(() => {
     const reviewFilterValue: any = { aggregator: { slug: { eq: router.query.slug } }, status: { eq: 'published' } }
-    fetcher('/api/hub/detail/getLiveData', { method: 'POST', body: JSON.stringify({ variables: { slug: router.query.slug, reviewFilterValue, pageSize: 5 }, query: 'GET_AGGREGATORS_BY_SLUG' }) }).then(({ data }) => {
-      const { five, four, three, two, one, totalReviewMeta } = data
+    fetcher('/api/hub/detail/getLiveData', { method: 'POST', body: JSON.stringify({ variables: { slug: router.query.slug, reviewFilterValue, pageSize: PAGE_SIZE }, query: 'GET_AGGREGATORS_BY_SLUG' }) }).then(({ v }) => {
+      const { five, four, three, two, one, totalReviewMeta } = v
       const aggregators = get(data, 'aggregators.data[0]')
       setValues({
         ...values,
         ...aggregators.attributes,
         reviews: data?.reviews || [],
         totalReviewWithoutFilter: get(totalReviewMeta, 'meta.pagination.total', 0),
+        pageCountReviews: Math.ceil(get(data, 'reviews.meta.pagination.total', 0) / PAGE_SIZE),
         rates: {
           five: get(five, 'meta.pagination.total', 0),
           four: get(four, 'meta.pagination.total', 0),
@@ -181,7 +184,7 @@ export async function getServerSideProps ({ params, query }) {
       }
     }
 
-    const pageSize = page * 5
+    const pageSize = page * PAGE_SIZE
     const { data = {} } = await client.query({
       query: GET_AGGREGATORS_BY_SLUG,
       variables: { slug: params.slug, reviewFilterValue, pageSize }
@@ -211,6 +214,7 @@ export async function getServerSideProps ({ params, query }) {
           id: aggregators.id,
           reviews: data?.reviews || [],
           totalReviewWithoutFilter: get(totalReviewMeta, 'meta.pagination.total', 0),
+          pageCountReviews: Math.ceil(get(data, 'reviews.meta.pagination.total', 0) / PAGE_SIZE),
           userRanks: ['Expert', 'Professional', 'Middle', 'Amateur'],
           gameIntroduction,
           rates: {

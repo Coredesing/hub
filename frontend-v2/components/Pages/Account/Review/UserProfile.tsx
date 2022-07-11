@@ -11,7 +11,6 @@ import useConnectWallet from '@/hooks/useConnectWallet'
 import Avatar from '@/components/Pages/Hub/Reviews/Avatar'
 import { useRouter } from 'next/router'
 import { useScreens } from '@/components/Pages/Home/utils'
-import { API_CMS_URL } from '@/utils/constants'
 import Loading from '@/components/Pages/Hub/Loading'
 
 const VALID_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif']
@@ -103,7 +102,7 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
         if (avatar?.length) {
           const formData = new FormData()
           formData.append('files', avatar[0])
-          const responseUpload = await fetcher(`${API_CMS_URL}/api/upload`, {
+          const responseUpload = await fetcher('/api/hub/upload', {
             method: 'POST',
             body: formData,
             headers: {

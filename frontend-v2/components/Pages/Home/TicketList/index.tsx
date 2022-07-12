@@ -15,7 +15,7 @@ const TicketList = () => {
   const refSlider = useRef(null)
 
   const listUpcoming = useMemo<any[]>(() => {
-    const origin = response1 ? [response1?.data] : []
+    const origin = response1?.data ? [response1?.data] : []
     return origin
     // let remain = origin
     // const tba = origin.filter(item => !item.start_join_pool_time)

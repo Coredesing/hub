@@ -43,6 +43,20 @@ const Claim = () => {
     return Math.ceil((poolData?.campaignClaimConfig?.length || 0) / PER_PAGE) || 1
   }, [poolData?.campaignClaimConfig?.length])
 
+  const [refundSteps, setRefundSteps] = useState([
+    {
+      step: 1,
+      title: 'Refund Request',
+      value: ''
+    },
+    {
+      step: 2,
+      title: 'Confirm Refund Request',
+      value: ''
+    }
+  ])
+  const [currentStep, setCurrentStep] = useState(1)
+
   // Claim Info
   const { userPurchasedTokens: purchasedTokens } = useUserPurchased(poolData?.campaign_hash, poolData?.network_available, [99, 100].includes(poolData?.id) ? 18 : poolData?.decimals)
   const { userClaimedTokens: claimedTokens, updateClaimedTokens } = useUserClaimed(poolData?.campaign_hash, poolData?.network_available, poolData?.decimals)
@@ -461,17 +475,42 @@ const Claim = () => {
         </div>
       }
 
-      <Modal show={showModalRefund} toggle={setShowModalRefund}>
+      <Modal show={showModalRefund} toggle={setShowModalRefund} onClose={() => { setCurrentStep(1) }}>
         <div className="p-9 bg-[#28282E]">
           <div className="flex gap-2 items-center mb-4">
             <div>
               <Image src={require('assets/images/icons/request-refund.png')} alt="refund"></Image>
             </div>
-            <div className="text-[24px] font-bold text-gamefiDark-300">1/2</div>
+            <div className="text-[24px] font-bold text-gamefiDark-300">{currentStep}/2</div>
             <h3 className="text-[24px] font-bold uppercase">Refund Request</h3>
           </div>
           <div className="font-casual text-sm mb-4">Aliqua id fugiat nostrud irure ex duis ea quis id quis ad et. Sunt qui esse pariatur duis deserunt mollit “Refund” minim tempor enim. Elit aute irure tempor cupidatat incididunt sint</div>
-          <Input classes={ { input: 'bg-[#3C3C42] !important' } }></Input>
+          <Input value={refundSteps[0].value} onChange={e => {
+            const newValue = refundSteps.map(item => {
+              if (item.step === 1) {
+                console.log(e.target.value, { value: e.target.value, ...item })
+                return { value: e.target.value, ...item }
+              }
+              return item
+            })
+            console.log(newValue)
+            setRefundSteps(newValue)
+          }} classes={ { input: 'bg-[#3C3C42] !important' } }></Input>
+          <div className="flex justify-end">
+            {
+              refundSteps[0].value
+                ? <button className="p-[1px] rounded-sm clipped-t-r bg-gamefiGreen-700 mt-6">
+                  <div className="bg-[#28282E] rounded-sm clipped-t-r">
+                    <div className="px-5 py-2 rounded-sm clip ped-t-r text-gamefiDark-200 text-xs font-bold font-mechanic uppercase whitespace-nowrap bg-gamefiGreen-700">Next Step</div>
+                  </div>
+                </button>
+                : <button disabled className="p-[1px] rounded-sm clipped-t-r bg-gamefiDark-200 mt-6">
+                  <div className="bg-[#28282E] rounded-sm clipped-t-r">
+                    <div className="px-5 py-2 rounded-sm clip ped-t-r text-gamefiDark-200 text-xs font-bold font-mechanic uppercase whitespace-nowrap bg-[#28282E]">Next Step</div>
+                  </div>
+                </button>
+            }
+          </div>
         </div>
       </Modal>
       {/* {

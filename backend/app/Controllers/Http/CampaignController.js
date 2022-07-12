@@ -761,12 +761,12 @@ class CampaignController {
       }
 
       // Force user min tier from campaign_id 81. (MetaGod)
-      if (camp.id >= 81) {
-        const currentTier = (await HelperUtils.getUserTierSmartWithCached(userWalletAddress))[0];
-        if (currentTier < camp.min_tier) {
-          return HelperUtils.responseBadRequest("You need to increase your rank to claim tokens");
-        }
-      }
+      // if (camp.id >= 81) {
+      //   const currentTier = (await HelperUtils.getUserTierSmartWithCached(userWalletAddress))[0];
+      //   if (currentTier < camp.min_tier) {
+      //     return HelperUtils.responseBadRequest("You need to increase your rank to claim tokens");
+      //   }
+      // }
 
       // get campaign claim config from db
       const claimParams = {

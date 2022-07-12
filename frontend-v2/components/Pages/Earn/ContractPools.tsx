@@ -47,7 +47,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
       return false
     }
 
-    return selectedExtended?.myStartTime?.getTime() && addSeconds(selectedExtended?.myStartTime, Number(selectedExtended?.lockDuration || 0)) <= now
+    return selectedExtended?.myStartTime?.getTime() && addSeconds(selectedExtended?.myStartTime, Number(selectedExtended?.lockDuration || 0)) <= now && selectedExtended?.myStake?.gt(0)
   }, [withdrawing, selectedExtended, now])
 
   const loadMyExtended = useCallback(async (v?: PoolExtended) => {

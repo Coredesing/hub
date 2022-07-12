@@ -22,14 +22,14 @@ const CardItem = ({ item, ...props }: Props) => {
           <span className="ml-2 font-medium tracking-widest">{poolStatus(item.is_private).title}</span>
         </div>
         <div className="cursor-pointer">
-          <Link href={`/ticket/${item.id}`} passHref>
+          <Link href={`/ticket/${item.slug}`} passHref>
             <img src={item?.banner} alt="" style={{ width: '100%', objectFit: 'cover', aspectRatio: '16/9' }} />
           </Link>
         </div>
       </div>
       <div className="bg-gamefiDark-650 w-full clipped-b-l">
         <div className="w-full flex items-center justify-center border-b border-gamefiDark-600" style={{ height: '80px' }}>
-          <Link href={`/ticket/${item.id}`} passHref>
+          <Link href={`/ticket/${item.slug}`} passHref>
             <a className="text-center font-semibold text-lg cursor-pointer hover:underline">
               {item?.title || ''}
             </a>

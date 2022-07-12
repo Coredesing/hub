@@ -18,16 +18,26 @@ import Tippy from '@tippyjs/react'
 import ERC20_ABI from '@/components/web3/abis/ERC20.json'
 import { roundNumber } from '@/utils/pool'
 import Link from 'next/link'
+import Modal from '@/components/Base/Modal'
+import Input from '@/components/Base/Input'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 const PER_PAGE = 5
+
+type REFUND_DEADLINE = {
+  from: Date | null;
+  to: Date | null;
+}
 
 const Claim = () => {
   const { poolData, usd, timeline, now } = useContext(IGOContext)
 
   const { account, library, network } = useMyWeb3()
   const [page, setPage] = useState(1)
+  // Refund info
   const [isRefund, setIsRefund] = useState(false)
+  const [refundDeadline, setRefundDeadline] = useState<REFUND_DEADLINE>({ from: new Date(), to: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000) })
+  const [showModalRefund, setShowModalRefund] = useState(false)
 
   const lastPage = useMemo(() => {
     return Math.ceil((poolData?.campaignClaimConfig?.length || 0) / PER_PAGE) || 1
@@ -415,23 +425,33 @@ const Claim = () => {
               </div>
             }
           </div>
-          <div className="w-full bg-gamefiDark-630/50 p-7 rounded-b overflow-x-auto">
+          {(!!refundDeadline.from && !!refundDeadline.to) && <div className="w-full bg-gamefiDark-630/40 p-7 rounded-b overflow-x-auto">
             <div className="w-full flex justify-between items-center mb-6">
               <p className="uppercase font-mechanic font-bold text-lg">Refund</p>
               <div className="text-gamefiDark-200 text-xs font-medium font-casual">Learn more about our <Link href="/insight" passHref><a className="underline">Refund Policies</a></Link></div>
             </div>
-            <div className="w-full flex items-center font-casual text-sm">
+            <div className="w-full flex gap-2 items-center font-casual text-sm">
               <div>
                 <div className="font-medium mb-2">You can request a refund for ${poolData?.symbol} purchased if you have not yet claimed ${poolData?.symbol}.</div>
-                <div className="text-xs">Deadline to request a refund: <span className="text-gamefiGreen-700">12:00 AM, 15 May 2021 - 14:00 AM, 15 May 2021</span></div>
+                <div className="text-xs">Deadline to request a refund: <span className="text-gamefiGreen-700">{format(refundDeadline.from, 'HH:mm, dd MMM yyyy')} - {format(refundDeadline.to, 'HH:mm, dd MMM yyyy')}</span></div>
               </div>
               <div>
-                <button className="p-[1px] rounded-sm clipped-t-r text-gamefiDark-200 text-sm font-bold font-mechanic uppercase whitespace-nowrap hover:opacity-95 bg-gamefiDark-200">
-                  <div className="px-4 py-2 rounded-sm clipped-t-r text-gamefiDark-200 text-sm font-bold font-mechanic uppercase whitespace-nowrap hover:opacity-95 bg-gamefiDark-700">Request Refund</div>
-                </button>
+                {
+                  now.getTime() >= refundDeadline.from.getTime() && now.getTime() <= refundDeadline.to.getTime()
+                    ? <button onClick={() => { setShowModalRefund(true) }} className="p-[1px] rounded-sm clipped-t-r bg-gamefiGreen-700">
+                      <div className="bg-gamefiDark-900 rounded-sm clipped-t-r">
+                        <div className="px-5 py-2 rounded-sm clipped-t-r text-gamefiGreen-700 text-xs font-bold font-mechanic uppercase whitespace-nowrap hover:opacity-95 bg-gamefiDark-630/40">Request Refund</div>
+                      </div>
+                    </button>
+                    : <button disabled className="p-[1px] rounded-sm clipped-t-r bg-gamefiDark-200">
+                      <div className="bg-gamefiDark-900 rounded-sm clipped-t-r">
+                        <div className="px-5 py-2 rounded-sm clipped-t-r text-gamefiDark-200 text-xs font-bold font-mechanic uppercase whitespace-nowrap hover:opacity-95 bg-gamefiDark-630/40">Request Refund</div>
+                      </div>
+                    </button>
+                }
               </div>
             </div>
-          </div>
+          </div>}
         </div>
       </div>}
       {
@@ -440,6 +460,20 @@ const Claim = () => {
           <div>This pool has not completed yet. Please wait until Claim Phase.</div>
         </div>
       }
+
+      <Modal show={showModalRefund} toggle={setShowModalRefund}>
+        <div className="p-9 bg-[#28282E]">
+          <div className="flex gap-2 items-center mb-4">
+            <div>
+              <Image src={require('assets/images/icons/request-refund.png')} alt="refund"></Image>
+            </div>
+            <div className="text-[24px] font-bold text-gamefiDark-300">1/2</div>
+            <h3 className="text-[24px] font-bold uppercase">Refund Request</h3>
+          </div>
+          <div className="font-casual text-sm mb-4">Aliqua id fugiat nostrud irure ex duis ea quis id quis ad et. Sunt qui esse pariatur duis deserunt mollit “Refund” minim tempor enim. Elit aute irure tempor cupidatat incididunt sint</div>
+          <Input classes={ { input: 'bg-[#3C3C42] !important' } }></Input>
+        </div>
+      </Modal>
       {/* {
         current?.key === 'claim' && !usdPurchased && <div className="w-full mt-6 p-12 text-gamefiDark-200 flex flex-col items-center justify-center gap-4">
           <Image src={require('@/assets/images/icons/calendar.png')} alt=""></Image>

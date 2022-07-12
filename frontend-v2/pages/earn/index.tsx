@@ -22,6 +22,7 @@ export type PoolExtended = Pool & {
   myPendingRewardParsed?: string;
   myStake?: BigNumber;
   myStakeParsed?: string;
+  myStartTime?: Date;
 }
 
 const Earn = ({ pools: initPools }) => {

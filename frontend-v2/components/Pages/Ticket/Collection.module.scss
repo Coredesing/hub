@@ -1,0 +1,80 @@
+.collection {
+    width: 280px;
+    transition: .3s;
+    padding: 1px;
+    border-radius: 2px;
+    &>div {
+        background: #23252B;
+    }
+    &.clippedpath {
+        -webkit-clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - (280px / 5 * 3) + 20px) calc(100% - 25px), calc(100% - (280px / 5 * 3)) 100%, 0 100%);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - (280px / 5 * 3) + 20px) calc(100% - 25px), calc(100% - (280px / 5 * 3)) 100%, 0 100%);
+        &>div {
+            border-radius: 2px;
+            -webkit-clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - (280px / 5 * 3) + 20px) calc(100% - 25px), calc(100% - (280px / 5 * 3)) 100%, 0 100%);
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - (280px / 5 * 3) + 20px) calc(100% - 25px), calc(100% - (280px / 5 * 3)) 100%, 0 100%);
+        }
+    }
+    &:hover {
+        background: #6CDB00;
+    }
+    .collectionImage {
+        height: 190px;
+        padding: 37px 29px;
+    }
+    .collectionDetail {
+        height: 25px;
+    }
+    @media screen and (max-width: 640px) {
+        width: 140px;
+        &.clippedpath {
+            -webkit-clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - (140px / 5 * 3) + 20px) calc(100% - 25px), calc(100% - (140px / 5 * 3)) 100%, 0 100%);
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - (140px / 5 * 3) + 20px) calc(100% - 25px), calc(100% - (140px / 5 * 3)) 100%, 0 100%);
+            &>div {
+                border-radius: 2px;
+                -webkit-clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - (140px / 5 * 3) + 20px) calc(100% - 25px), calc(100% - (140px / 5 * 3)) 100%, 0 100%);
+                clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - (140px / 5 * 3) + 20px) calc(100% - 25px), calc(100% - (140px / 5 * 3)) 100%, 0 100%);
+            }
+        }
+        .collectionImage {
+            height: 110px;
+            padding: 10px;
+        }
+        .collectionDetail {
+            height: 25px;
+        }
+    }
+}
+
+.btnClaim {
+    -webkit-clip-path: polygon(20px 0, 101% 0, 101% 101%, 0 101%);
+    clip-path: polygon(20px 0, 101% 0, 101% 101%, 0 101%);
+}
+
+.btnClaimAll {
+    // height: 34px;
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    div {
+        height: 34px;
+    }
+}
+
+.btnViewNft {
+    -webkit-clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+}
+
+.wrapperCountdown {
+    display: grid;
+    grid-template-columns: auto auto;
+    place-content: flex-start;
+    gap: 4px;
+    @media (max-width: 640px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.countdown {
+    background: transparent;
+}

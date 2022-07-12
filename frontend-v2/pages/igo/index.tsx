@@ -11,6 +11,7 @@ import '@egjs/flicking-plugins/dist/pagination.css'
 import '@egjs/flicking/dist/flicking.css'
 import CountUp from 'react-countup'
 import Banners from '@/components/Banners'
+import TicketList from '@/components/Pages/Home/TicketList'
 
 const IGO = () => {
   const refOpeningPublic = useRef(null)
@@ -141,6 +142,7 @@ const IGO = () => {
             </>
         }
       </div> */}
+      <div className="mb-20"><TicketList></TicketList></div>
       {
         openingItems?.length > 0 && <div className="md:px-4 lg:px-16 mx-auto bg-black mt-20 pb-32">
           <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">

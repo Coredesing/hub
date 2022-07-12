@@ -9,13 +9,13 @@ import '@egjs/flicking/dist/flicking.css'
 
 const TicketList = () => {
   const screens = useScreens()
-  const { response: response1, loading: loading1 } = useFetch('/pool/150')
-  const { response: response2, loading: loading2 } = useFetch('/pool/153')
+  const { response: response1, loading: loading1 } = useFetch('/pool/befitter-player-pool')
+  // const { response: response2, loading: loading2 } = useFetch('/pool/153')
 
   const refSlider = useRef(null)
 
   const listUpcoming = useMemo<any[]>(() => {
-    const origin = response1 && response2 ? [response1?.data, response2?.data] : []
+    const origin = response1?.data ? [response1?.data] : []
     return origin
     // let remain = origin
     // const tba = origin.filter(item => !item.start_join_pool_time)
@@ -28,11 +28,11 @@ const TicketList = () => {
     // remain = remain.filter(item => !preStart.includes(item))?.sort((a, b) => a.finish_time < b.finish_time)
     // const sortedItems = [].concat(remain).concat(preStart).concat(whitelist).concat(preWhitelist).concat(tba)
     // return sortedItems || []
-  }, [response1, response2])
+  }, [response1])
 
   return (listUpcoming && listUpcoming.length > 0
     ? <>
-      <div className="md:px-4 lg:px-16 mx-auto mt-20 pb-32">
+      <div className="md:px-4 lg:px-16 mx-auto">
         <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
           <div className="inline-block top-0 left-0 right-0 uppercase bg-gamefiDark-900 w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
             Gamer Pool Tickets
@@ -57,7 +57,7 @@ const TicketList = () => {
                 ))}
               </div>
               {
-                loading1 || loading2
+                loading1
                   ? <div className="loader-wrapper mx-auto mt-14">
                     <svg className="loader" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>

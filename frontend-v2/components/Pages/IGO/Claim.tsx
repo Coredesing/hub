@@ -17,6 +17,7 @@ import { airdropNetworks, getNetworkByAlias, switchNetwork } from '@/components/
 import Tippy from '@tippyjs/react'
 import ERC20_ABI from '@/components/web3/abis/ERC20.json'
 import { roundNumber } from '@/utils/pool'
+import Link from 'next/link'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 const PER_PAGE = 5
@@ -26,6 +27,7 @@ const Claim = () => {
 
   const { account, library, network } = useMyWeb3()
   const [page, setPage] = useState(1)
+  const [isRefund, setIsRefund] = useState(false)
 
   const lastPage = useMemo(() => {
     return Math.ceil((poolData?.campaignClaimConfig?.length || 0) / PER_PAGE) || 1
@@ -241,7 +243,7 @@ const Claim = () => {
     <>
       { now?.getTime() > timeline[TIMELINE.BUYING_PHASE].end?.getTime() &&
       <div className="w-full my-4 flex flex-col xl:flex-row gap-6">
-        <div className="w-full xl:w-1/3 bg-gamefiDark-630/30 p-7 rounded clipped-t-r">
+        <div className="w-full xl:w-1/3 h-full bg-gamefiDark-630/30 p-7 rounded clipped-t-r">
           <p className="uppercase font-mechanic font-bold text-lg mb-6">Your Allocation</p>
           <div className="flex justify-between mb-4 items-center">
             <strong className="font-semibold">Network</strong>
@@ -301,115 +303,135 @@ const Claim = () => {
             </span>
           </div>
         </div>
-        <div className="flex-1 bg-gamefiDark-630/30 p-7 rounded clipped-t-r overflow-x-auto">
-          <p className="uppercase font-mechanic font-bold text-lg mb-6">Claim Details</p>
-          {
-            <>
-              <div className="table w-full min-w-[600px] font-casual text-sm mt-2 font-medium border-separate [border-spacing:0_0.4rem]">
-                <div className="table-row">
-                  <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
+        <div>
+          <div className="flex-1 bg-gamefiDark-630/30 p-7 rounded-t clipped-t-r overflow-x-auto">
+            <p className="uppercase font-mechanic font-bold text-lg mb-6">Claim Details</p>
+            {
+              <div>
+                <div className="table w-full min-w-[600px] font-casual text-sm mt-2 font-medium border-separate [border-spacing:0_0.4rem]">
+                  <div className="table-row">
+                    <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
               No.
-                  </div>
-                  <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
-              Open ({format(new Date(), 'z')})
-                  </div>
-                  <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
-              Percentage
-                  </div>
-                  <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
-              Amount
-                  </div>
-                  <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
-              Status
-                  </div>
-                  <div className="table-cell align-middle text-right font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
-              Claim Type
-                  </div>
-                </div>
-
-                {data && data.items?.map((item, i) => {
-                  const index = (page - 1) * PER_PAGE + Number(i)
-                  return (
-                    <div key={`claim-${item.id}`} className="table-row">
-                      <div className="table-cell align-middle py-2 rounded font-light">
-                        {Number(index) + 1}
-                      </div>
-                      <div className="table-cell align-middle py-2 rounded font-light">
-                        {format(new Date(Number(item.start_time) * 1000), 'yyyy-MM-dd HH:mm:ss')}
-                      </div>
-                      <div className="table-cell align-middle py-2 rounded font-light">
-                        {printNumber(Number(item.max_percent_claim) - (Number(configs[index - 1]?.max_percent_claim) || 0))}%
-                      </div>
-                      <div className="table-cell align-middle py-2 rounded font-light">
-                        {printNumber(((Number(purchasedTokens) * Number(item.max_percent_claim) / 100) - (Number(purchasedTokens) * Number(configs[index - 1]?.max_percent_claim) / 100 || 0)))} {poolData?.symbol}
-                      </div>
-                      {
-                        Number(purchasedTokens || 0) > 0
-                          ? <div className="table-cell align-middle py-2 rounded font-light">
-                            {Number(item.claim_type) === 0
-                              ? item.status === 'Claimable'
-                                ? <div style={{
-                                  background: 'linear-gradient(270deg, #7EFF00 2.11%, #BCDB00 98.59%), #FFFFFF',
-                                  WebkitBackgroundClip: 'text',
-                                  WebkitTextFillColor: 'transparent',
-                                  backgroundClip: 'text'
-                                }}>{item.status}</div>
-                                : <div className={`${item.status === 'Waiting' && 'text-gamefiYellow-500'} ${item.status === 'Claimed' && 'text-gamefiDark-200'}`}>{item.status}</div>
-                              : <></>}
-                          </div>
-                          : <div className="table-cell align-middle py-2 rounded font-light">
-                            <div className="text-gamefiDark-200"></div>
-                          </div>
-                      }
-                      <div className="table-cell align-middle py-2 rounded font-light text-right">
-                        <span
-                          className={`${
-                            Number(item.claim_type) === 0 && 'text-gamefiGreen-600'
-                          } ${
-                            Number(item.claim_type) === 1 && 'text-blue-400'
-                          } ${
-                            Number(item.claim_type) === 2 && 'text-gamefiRed flex items-center gap-1 justify-end'
-                          }`}
-                        >
-                          {/* {CLAIM_TYPE[Number(item.claim_type)]} */}
-                          {CLAIM_TYPE[Number(item.claim_type)] || `Unknown: ${JSON.stringify(item.claim_type)}`}
-                          {Number(item.claim_type) === 2
-                            ? <a href={item.claim_url} target="_blank" rel="noreferrer" className="cursor-pointer">
-                              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g clipPath="url(#clip0_52_5097)">
-                                  <path d="M13.5625 0.4375L6.5625 7.4375" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                                  <path d="M7.4375 0.4375H13.5625V6.5625" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                                  <path d="M3.9375 0.4375H1.3125C0.8295 0.4375 0.4375 0.8295 0.4375 1.3125V12.6875C0.4375 13.1705 0.8295 13.5625 1.3125 13.5625H12.6875C13.1705 13.5625 13.5625 13.1705 13.5625 12.6875V10.0625" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                                </g>
-                                <defs>
-                                  <clipPath id="clip0_52_5097">
-                                    <rect width="14" height="14" fill="white"/>
-                                  </clipPath>
-                                </defs>
-                              </svg>
-                            </a>
-                            : ''}
-                        </span>
-                      </div>
                     </div>
-                  )
-                })}
-              </div>
-              <div className="w-full mt-6 flex flex-col-reverse xl:flex-row justify-between xl:items-center gap-4">
-                <button
-                  className={`px-8 py-3 rounded-sm clipped-t-r text-gamefiDark text-sm font-bold uppercase whitespace-nowrap ${claimable ? 'hover:opacity-95 bg-gamefiGreen-600 ' : 'bg-gamefiDark-300 cursor-not-allowed'}`}
-                  onClick={() => {
-                    if (!claimable) {
-                      return
-                    }
-                    handleClaim()
-                  }}
-                >
+                    <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
+              Open ({format(new Date(), 'z')})
+                    </div>
+                    <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
+              Percentage
+                    </div>
+                    <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
+              Amount
+                    </div>
+                    <div className="table-cell align-middle font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
+              Status
+                    </div>
+                    <div className="table-cell align-middle text-right font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
+              Claim Type
+                    </div>
+                  </div>
+
+                  {data && data.items?.map((item, i) => {
+                    const index = (page - 1) * PER_PAGE + Number(i)
+                    return (
+                      <div key={`claim-${item.id}`} className="table-row">
+                        <div className="table-cell align-middle py-2 rounded font-light">
+                          {Number(index) + 1}
+                        </div>
+                        <div className="table-cell align-middle py-2 rounded font-light">
+                          {format(new Date(Number(item.start_time) * 1000), 'yyyy-MM-dd HH:mm:ss')}
+                        </div>
+                        <div className="table-cell align-middle py-2 rounded font-light">
+                          {printNumber(Number(item.max_percent_claim) - (Number(configs[index - 1]?.max_percent_claim) || 0))}%
+                        </div>
+                        <div className="table-cell align-middle py-2 rounded font-light">
+                          {printNumber(((Number(purchasedTokens) * Number(item.max_percent_claim) / 100) - (Number(purchasedTokens) * Number(configs[index - 1]?.max_percent_claim) / 100 || 0)))} {poolData?.symbol}
+                        </div>
+                        {
+                          Number(purchasedTokens || 0) > 0
+                            ? <div className="table-cell align-middle py-2 rounded font-light">
+                              {Number(item.claim_type) === 0
+                                ? item.status === 'Claimable'
+                                  ? <div style={{
+                                    background: 'linear-gradient(270deg, #7EFF00 2.11%, #BCDB00 98.59%), #FFFFFF',
+                                    WebkitBackgroundClip: 'text',
+                                    WebkitTextFillColor: 'transparent',
+                                    backgroundClip: 'text'
+                                  }}>{item.status}</div>
+                                  : <div className={`${item.status === 'Waiting' && 'text-gamefiYellow-500'} ${item.status === 'Claimed' && 'text-gamefiDark-200'}`}>{item.status}</div>
+                                : <></>}
+                            </div>
+                            : <div className="table-cell align-middle py-2 rounded font-light">
+                              <div className="text-gamefiDark-200"></div>
+                            </div>
+                        }
+                        <div className="table-cell align-middle py-2 rounded font-light text-right">
+                          <span
+                            className={`${
+                              Number(item.claim_type) === 0 && 'text-gamefiGreen-600'
+                            } ${
+                              Number(item.claim_type) === 1 && 'text-blue-400'
+                            } ${
+                              Number(item.claim_type) === 2 && 'text-gamefiRed flex items-center gap-1 justify-end'
+                            }`}
+                          >
+                            {/* {CLAIM_TYPE[Number(item.claim_type)]} */}
+                            {CLAIM_TYPE[Number(item.claim_type)] || `Unknown: ${JSON.stringify(item.claim_type)}`}
+                            {Number(item.claim_type) === 2
+                              ? <a href={item.claim_url} target="_blank" rel="noreferrer" className="cursor-pointer">
+                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <g clipPath="url(#clip0_52_5097)">
+                                    <path d="M13.5625 0.4375L6.5625 7.4375" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M7.4375 0.4375H13.5625V6.5625" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M3.9375 0.4375H1.3125C0.8295 0.4375 0.4375 0.8295 0.4375 1.3125V12.6875C0.4375 13.1705 0.8295 13.5625 1.3125 13.5625H12.6875C13.1705 13.5625 13.5625 13.1705 13.5625 12.6875V10.0625" stroke="white" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </g>
+                                  <defs>
+                                    <clipPath id="clip0_52_5097">
+                                      <rect width="14" height="14" fill="white"/>
+                                    </clipPath>
+                                  </defs>
+                                </svg>
+                              </a>
+                              : ''}
+                          </span>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+                <div className="w-full mt-6 flex flex-col-reverse xl:flex-row justify-between xl:items-center gap-4">
+                  <button
+                    className={`px-8 py-3 rounded-sm clipped-t-r text-gamefiDark text-sm font-bold uppercase whitespace-nowrap ${claimable ? 'hover:opacity-95 bg-gamefiGreen-600 ' : 'bg-gamefiDark-300 cursor-not-allowed'}`}
+                    onClick={() => {
+                      if (!claimable) {
+                        return
+                      }
+                      handleClaim()
+                    }}
+                  >
                   Claim On GameFi.org
+                  </button>
+                  <Pagination page={data.page} pageLast={data.lastPage} setPage={setPage} />
+                </div>
+              </div>
+            }
+          </div>
+          <div className="w-full bg-gamefiDark-630/50 p-7 rounded-b overflow-x-auto">
+            <div className="w-full flex justify-between items-center mb-6">
+              <p className="uppercase font-mechanic font-bold text-lg">Refund</p>
+              <div className="text-gamefiDark-200 text-xs font-medium font-casual">Learn more about our <Link href="/insight" passHref><a className="underline">Refund Policies</a></Link></div>
+            </div>
+            <div className="w-full flex items-center font-casual text-sm">
+              <div>
+                <div className="font-medium mb-2">You can request a refund for ${poolData?.symbol} purchased if you have not yet claimed ${poolData?.symbol}.</div>
+                <div className="text-xs">Deadline to request a refund: <span className="text-gamefiGreen-700">12:00 AM, 15 May 2021 - 14:00 AM, 15 May 2021</span></div>
+              </div>
+              <div>
+                <button className="p-[1px] rounded-sm clipped-t-r text-gamefiDark-200 text-sm font-bold font-mechanic uppercase whitespace-nowrap hover:opacity-95 bg-gamefiDark-200">
+                  <div className="px-4 py-2 rounded-sm clipped-t-r text-gamefiDark-200 text-sm font-bold font-mechanic uppercase whitespace-nowrap hover:opacity-95 bg-gamefiDark-700">Request Refund</div>
                 </button>
-                <Pagination page={data.page} pageLast={data.lastPage} setPage={setPage} />
-              </div></>
-          }
+              </div>
+            </div>
+          </div>
         </div>
       </div>}
       {

@@ -106,6 +106,9 @@ Route.group(() => {
   Route.post('user/deposit-box', 'CampaignController.depositBox').middleware(['checkSignature']);
   Route.post('user/auction-box', 'CampaignController.auctionBox').middleware(['checkSignature']);
   Route.post('user/claim', 'CampaignController.claim').middleware(['checkSignature']);
+  Route.post('user/refund', 'CampaignController.refundIDOToken').middleware(['checkSignature']);
+  Route.post('user/claim-refund', 'CampaignController.claimRefundIDOToken').middleware(['checkSignature']);
+
   Route.put('user/update-profile', 'UserController.updateProfile').middleware(['checkSignature']);
 
   Route.get('user/check-wallet-address', 'UserAuthController.checkWalletAddress');

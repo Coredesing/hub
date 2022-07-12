@@ -35,6 +35,7 @@ class PoolController {
       'claim_policy',
       'forbidden_countries',
       'freeBuyTimeSetting',
+      'start_refund_time', 'end_refund_time',
       'seriesContentConfig', 'boxTypesConfig', 'acceptedTokensConfig', 'airdrop_network',
       'is_featured'
     ]);
@@ -90,10 +91,11 @@ class PoolController {
       'claim_policy': inputParams.claim_policy,
       'airdrop_network': inputParams.airdrop_network,
       'is_featured': inputParams.is_featured,
+      'start_refund_time': inputParams.start_refund_time,
+      'end_refund_time': inputParams.end_refund_time,
 
       'forbidden_countries': JSON.stringify(inputParams && inputParams.forbidden_countries || []),
     };
-    console.log('Create Pool with data: ', data);
 
     try {
       // Create Pool
@@ -190,6 +192,7 @@ class PoolController {
       'boxTypesConfig',
       'acceptedTokensConfig',
       'airdrop_network',
+      'start_refund_time', 'end_refund_time',
       'is_featured'
     ]);
 
@@ -241,6 +244,8 @@ class PoolController {
       'claim_policy': inputParams.claim_policy,
       'airdrop_network': inputParams.airdrop_network,
       'is_featured': inputParams.is_featured,
+      'start_refund_time': inputParams.start_refund_time,
+      'end_refund_time': inputParams.end_refund_time,
       'forbidden_countries': JSON.stringify((inputParams && inputParams.forbidden_countries) || []),
     };
 
@@ -443,7 +448,6 @@ class PoolController {
       } catch (_) {
         pool.forbidden_countries = []
       }
-      console.log('[getPool] - pool.tiers: ', JSON.stringify(pool.tiers));
       if (pool.tiers && pool.tiers.length > 0) {
         pool.tiers = pool.tiers.map((item, index) => {
           return {
@@ -477,7 +481,6 @@ class PoolController {
     const idRegex = /^\d+$/;
     const slugRegex = /^[a-z0-9_-]+$/;
 
-    console.log('[getPublicPool] - Start getPublicPool with poolId: ', poolId);
     try {
       if (await RedisUtils.checkExistRedisPoolDetail(poolId)) {
         const cachedPoolDetail = await RedisUtils.getRedisPoolDetail(poolId);
@@ -523,6 +526,7 @@ class PoolController {
 
         // Time
         'release_time', 'start_join_pool_time', 'start_time', 'end_join_pool_time', 'finish_time',
+        'start_refund_time', 'end_refund_time',
 
         // Pre-order
         'pre_order_min_tier', 'start_pre_order_time',

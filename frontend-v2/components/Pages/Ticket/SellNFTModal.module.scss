@@ -1,0 +1,82 @@
+.content {
+    padding: 32px 30px;
+    padding-top: 54px;
+    background: #28282E;
+}
+
+.descBox {
+    min-height: 200px;
+    background: #303035;
+    border: 1px solid #3C3C42;
+    box-sizing: border-box;
+    border-radius: 2px;
+}
+
+.tagsBox {
+    padding: 5px 8px;
+    position: relative;
+    background: #303035;
+    border: 1px solid #3C3C42;
+    box-sizing: border-box;
+    border-radius: 2px;
+    &::before {
+        content: "";
+        position: absolute;
+        width: 2px;
+        height: calc(100% - 10px);
+        left: -2px;
+        transform: translate(50%);
+        background: #44454B;
+    }
+    .tag {
+        background: #252529;
+        border-radius: 2px;
+        min-height: 28px;
+        label {
+            min-width: 70px;
+        }
+    }
+}
+
+.btnSubmit {
+    padding: 11px;
+    min-width: 240px;
+    height: unset;
+    color: #0D0F15;
+    @apply text-13px;
+    @apply font-bold;
+}
+
+.wrapperDropdown {
+    border-color: #3C3C42 !important;
+    background: #303035;
+    width: 145px;
+    @media screen and (max-width: 640px) {
+        width: 100%
+    }
+    button {
+        background: #303035;
+    }
+}
+
+.formInput {
+    position: relative;
+    input {
+        @apply font-casual;
+        border: 1px solid #3C3C42 !important;
+        box-sizing: border-box !important;
+        background: #303035 !important;
+        width: 100% !important;
+        outline: none !important;
+    }
+    &>span {
+        position: absolute;
+        content: "";
+        width: 2px;
+        height: 20px;
+        left: 0;
+        top: 50%;
+        transform: translate(0, -50%);
+        @apply bg-gamefiDark-300;
+    }
+}

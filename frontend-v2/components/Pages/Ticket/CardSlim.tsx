@@ -12,10 +12,9 @@ import { useCurrency } from '@/components/web3/utils'
 type Props = {
   item: Item;
   now: Date;
-  isTicket?: boolean;
 }
 
-const CardSlim = ({ item, now, isTicket }: Props) => {
+const CardSlim = ({ item, now }: Props) => {
   const { currency } = useCurrency(item)
   const stages = useMemo(() => {
     const timeBuy = item.start_time && new Date(parseInt(item.start_time) * 1000)
@@ -114,11 +113,11 @@ const CardSlim = ({ item, now, isTicket }: Props) => {
         <span>{poolType}</span>
       </div>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <Link href={`/${isTicket ? 'ticket' : 'ino'}/${item.slug || item.id}`} passHref>
+      <Link href={`/ino/${item.slug || item.id}`} passHref>
         <img src={item.mini_banner} alt={item.title} className={`${styles.banner} hover:cursor-pointer`} />
       </Link>
       <div className={styles.information}>
-        <Link href={`/${isTicket ? 'ticket' : 'ino'}/${item.slug || item.id}`} passHref={true}>
+        <Link href={`/ino/${item.slug || item.id}`} passHref={true}>
           <a className={styles.title}>
             {item.title} <span className="w-6 h-6 relative"><Image src={networkImage(item.network_available)} alt={item.network_available} /></span>
           </a>

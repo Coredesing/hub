@@ -349,7 +349,7 @@ const ContractPools = ({ pools, contractAddress, className }: {
         await contract.linearWithdraw(selectedExtended.id, selectedExtended.myStake)
           .then(tx => {
             return tx.wait(1).then(() => {
-              loadMyExtended()
+              loadMyExtended(selectedExtended)
               toast.success('Successfully withdrawn your investment')
             })
           })

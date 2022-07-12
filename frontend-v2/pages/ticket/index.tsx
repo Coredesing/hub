@@ -1,13 +1,13 @@
 import Layout from '@/components/Layout'
-import Carousel from '@/components/Pages/INO/Carousel'
-import List, { TOKEN_TYPE } from '@/components/Pages/INO/List'
-import ListAuction from '@/components/Pages/INO/ListAuction'
-import ListOpening from '@/components/Pages/INO/ListOpening'
-import ListUpcoming from '@/components/Pages/INO/ListUpcoming'
+import Carousel from '@/components/Pages/Ticket/Carousel'
+import List, { TOKEN_TYPE } from '@/components/Pages/Ticket/List'
+import ListAuction from '@/components/Pages/Ticket/ListAuction'
+import ListOpening from '@/components/Pages/Ticket/ListOpening'
+import ListUpcoming from '@/components/Pages/Ticket/ListUpcoming'
 import { useAppContext } from '@/context'
 import { useFetch } from '@/utils'
 
-const INO = () => {
+const Ticket = () => {
   const { now } = useAppContext()
 
   const { response } = useFetch(`/pools/mysterious-box?token_type=${TOKEN_TYPE}&limit=10&is_featured=1&is_display=1`)
@@ -25,4 +25,4 @@ const INO = () => {
   )
 }
 
-export default INO
+export default Ticket

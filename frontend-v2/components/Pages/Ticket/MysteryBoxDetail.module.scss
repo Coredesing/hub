@@ -1,0 +1,55 @@
+.headPool {
+    width: 100%;
+    overflow: hidden;
+}
+
+.headInfoBoxOrder {
+    background: linear-gradient(91.55deg, rgba(255, 255, 255, 0.3) -7.35%, rgba(255, 255, 255, 0) 52.92%);
+    position: relative;
+    border-radius: 2px;
+    @media screen and (max-width: 1024px) {
+        background: linear-gradient(90deg, rgba(57, 59, 65, 0.14889705882352944) 0%, rgba(57, 59, 65, 1) 50%, rgba(57, 59, 65, 0.1516981792717087) 100%);
+    }
+    div:nth-child(2) {
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+.headClipedpath {
+    @media all and (min-width: 1024px) {
+        -webkit-clip-path: polygon(30px 0, 100% 0, 100% 100%, 0% 100%);
+        clip-path: polygon(30px 0, 100% 0, 100% 100%, 0% 100%);
+        width: calc(100% + 20px);
+        margin-left: -20px;
+        padding-left: 20px;
+    }
+}
+
+.headCountdown {
+    min-height: 70px;
+    border-radius: 2px;
+    // @media all and (min-width: 1024px) {
+    //     -webkit-clip-path: polygon(30px 0, 100% 0, 100% 100%, 0% 100%);
+    //     clip-path: polygon(30px 0, 100% 0, 100% 100%, 0% 100%);
+    //     width: calc(100% + 20px);
+    //     margin-left: -20px;
+    //     padding-left: 20px;
+    // }
+    &.countdownFinished {
+        background: linear-gradient(268.42deg, #841A1A 5.62%, rgba(180, 24, 24, 0) 87.32%);
+        padding-right: 30px;
+        @media all and (max-width: 1024px) {
+            background: linear-gradient(90deg, rgba(132, 26, 26, 0.1292892156862745) 0%, rgba(132, 26, 26, 1) 50%, rgba(132, 26, 26, 0.13209033613445376) 100%);
+        }
+        @media all and (max-width: 640px) {
+            padding-right: 0;
+        }
+    }
+    // transform: skew(-30deg);
+    // width: calc(100% + 40px);
+    // .countdown,
+    // .titleCountdown {
+    //     transform: skew(30deg);
+    // }
+}

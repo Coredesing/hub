@@ -1,0 +1,106 @@
+.modal {
+    max-width: 715px !important;
+}
+
+.content {
+    background: rgba(40, 40, 46, 1);
+}
+
+.itemThumb {
+    flex-basis: 160px;
+    width: 160px;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 48px 100%, 39px calc(100% - 9px), 0% calc(100% - 9px));
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 48px 100%, 39px calc(100% - 9px), 0% calc(100% - 9px));
+    &>div {
+        width: 100%;
+        height: 140px;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 48px 100%, 39px calc(100% - 9px), 0% calc(100% - 9px));
+        -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 48px 100%, 39px calc(100% - 9px), 0% calc(100% - 9px));
+    }
+}
+
+.carousel {
+    li[class*="slide"] {
+        width: unset !important;
+        height: unset !important;
+    }
+    li[class*="slide"]:first-child {
+        &[class*="selected"] {
+            @media screen and (min-width: 640px) {
+                margin-left: 45px;
+            }
+            margin-left: 30px;
+        }
+    }
+    li[class*="slide"]:last-child {
+        &[class*="selected"] {
+            @media screen and (min-width: 640px) {
+                margin-left: -55px;
+            }
+            margin-left: -30px;
+        }
+    }
+    li[class*="thumb"] {
+        // width: 112px !important;
+        height: unset !important;
+        // div {
+        //     width: 100%;
+        //     height: 100%;
+        // }
+    }
+    button[class*="control-arrow"] {
+        top: 50% !important;
+        transform: translate(0, -50%);
+        height: 50px !important;
+    }
+    div[class*="thumbs-wrapper"] {
+        // overflow: auto !important;
+        margin: 20px 30px 0px 30px !important;
+        li[class*="thumb"] {
+            border: unset !important;
+        }
+        li[class*="thumb selected"] {
+            border: unset !important;
+            div[class*="item-thumb"] {
+                background: #72F34B;
+                transition: .3s;
+            }
+        }
+        ul {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+    }
+}
+
+.itemSlide {
+    max-width: 400px;
+    // max-height: 300px;
+    width: 100%;
+    // height: 100%;
+    // height: auto;
+}
+
+.itemSlideImage {
+    width: 100%;
+    max-height: 250px;
+    height: 100%;
+}
+
+.itemDesc {
+    max-height: 100px;
+    height: fit-content;
+    overflow: auto;
+    &:-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+    }
+    &:-webkit-scrollbar-track {
+        background: #888;
+        border-radius: 12px;
+    }
+    &:-webkit-scrollbar-thumb {
+        background-color: #FFFFFF;
+        border-radius: 12px;
+    }
+}

@@ -6,9 +6,13 @@ import ListOpening from '@/components/Pages/INO/ListOpening'
 import ListUpcoming from '@/components/Pages/INO/ListUpcoming'
 import { useAppContext } from '@/context'
 import { useFetch } from '@/utils'
+import { useMemo } from 'react'
 
 const INO = () => {
   const { now } = useAppContext()
+  const ticketPools = useMemo(() => {
+    return ['befitter-player-pool']
+  }, [])
 
   const { response } = useFetch(`/pools/mysterious-box?token_type=${TOKEN_TYPE}&limit=10&is_featured=1&is_display=1`)
 
@@ -17,8 +21,8 @@ const INO = () => {
       <>
         {response?.data?.data?.length ? <Carousel items={response?.data?.data || []} style={{ paddingBottom: '2rem' }} now={now}></Carousel> : <></>}
         <ListAuction now={now} />
-        <ListOpening now={now} />
-        <ListUpcoming now={now} />
+        <ListOpening now={now} ticketPools={ticketPools} />
+        <ListUpcoming now={now} ticketPools={ticketPools} />
         <List />
       </>
     </Layout>

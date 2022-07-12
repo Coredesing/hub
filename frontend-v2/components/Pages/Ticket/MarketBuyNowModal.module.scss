@@ -1,0 +1,22 @@
+.content {
+    padding: 32px 30px;
+    padding-top: 54px;
+    background: #28282E;
+}
+
+.input {
+    border: 1px solid #3C3C42;
+    box-sizing: border-box;
+    background: #303035;
+    width: 100%;
+    outline: none;
+}
+
+.btnOffer {
+    padding: 11px;
+    min-width: 150px;
+    height: unset;
+    color: #0D0F15;
+    @apply text-13px;
+    @apply font-bold;
+}

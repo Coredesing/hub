@@ -8,9 +8,10 @@ import CardSlim from './CardSlim'
 
 type Props = {
   now: Date;
+  ticketPools: string[];
 }
 
-const List = ({ now }: Props) => {
+const List = ({ now, ticketPools }: Props) => {
   const url = `/pools/active-pools?token_type=${TOKEN_TYPE}&is_display=1&limit=6`
 
   const { response, loading } = useFetch(url)
@@ -62,7 +63,7 @@ const List = ({ now }: Props) => {
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
                 {!loading && itemsExclusive.map(item => {
                   return (
-                    <CardSlim key={item.id} item={item} now={now} />
+                    <CardSlim key={item.id} item={item} now={now} isTicket={ticketPools.includes(item.slug)} />
                   )
                 })}
               </div></>
@@ -76,7 +77,7 @@ const List = ({ now }: Props) => {
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
                 {!loading && itemsOpen.map(item => {
                   return (
-                    <CardSlim key={item.id} item={item} now={now} />
+                    <CardSlim key={item.id} item={item} now={now} isTicket={ticketPools.includes(item.slug)} />
                   )
                 })}
               </div></>

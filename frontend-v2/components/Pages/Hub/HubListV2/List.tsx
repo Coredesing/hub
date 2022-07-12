@@ -71,7 +71,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
       value = 'rate'
       break
     default:
-      value = '-'
+      value = 'player'
       break
     }
     return value
@@ -153,7 +153,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
             valueShow = txtRate
             break
           default:
-            valueShow = '-'
+            valueShow = nFormatter(totalHolders, 2)
             break
           }
 

@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client'
 import { UploadFileRelationResponseCollection } from '@/graphql/image'
+import { CommonField } from '@/graphql/commonField'
 
 export const GET_AGGREGATORS_HOME = gql`
   query Categories {
@@ -658,6 +659,7 @@ export const GET_REVIEWS_AGGREGATORS = gql`
 
 export const GET_AGGREGATORS_BY_SLUG = gql`
   ${UploadFileRelationResponseCollection}
+  ${CommonField}
   query Aggregators(
     $slug: String
     $reviewFilterValue: ReviewFiltersInput
@@ -668,55 +670,7 @@ export const GET_AGGREGATORS_BY_SLUG = gql`
       pagination: { pageSize: $pageSize }
       sort: "publishedAt:desc"
     ) {
-      meta {
-        pagination {
-          total
-        }
-      }
-      data {
-        id
-        attributes {
-          title
-          review
-          publishedAt
-          likeCount
-          dislikeCount
-          commentCount
-          author {
-            data {
-              id
-              attributes {
-                walletAddress
-                reviewCount
-                firstName
-                lastName
-                level
-                rank
-                avatar {
-                  data {
-                    id
-                    attributes {
-                      name
-                      url
-                    }
-                  }
-                }
-                rates(
-                  pagination: { pageSize: 1 }
-                  filters: { aggregator: { slug: { eq: $slug } } }
-                ) {
-                  data {
-                    id
-                    attributes {
-                      rate
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+      ...ReviewEntityResponseCollection
     }
     aggregators(filters: { slug: { eq: $slug } }) {
       data {
@@ -986,6 +940,24 @@ export const GET_AGGREGATORS_BY_SLUG = gql`
     }
   }
 `
+
+export const GET_REVIEWS_BY_SLUG = gql`
+  ${CommonField}
+  query Aggregators(
+    $slug: String
+    $reviewFilterValue: ReviewFiltersInput
+    $paginationArg: PaginationArg
+  ) {
+    reviews(
+      filters: $reviewFilterValue
+      pagination: $paginationArg
+      sort: "publishedAt:desc"
+    ) {
+      ...ReviewEntityResponseCollection
+    }
+  }
+`
+
 export const GET_SUM_AGGREGATORS = gql`
   query Aggregators {
     aggregators {

@@ -75,6 +75,8 @@ export default function GroupAction ({ likeCount, dislikeCount, commentCount, pa
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [likeStatus, setLikeStatus] = useState(defaultLikeStatus)
+  const [defaultLikeCount, setDefaultLikeCount] = useState(likeCount || 0)
+  const [defaultDislikeCount, setDefaultDislikeCount] = useState(dislikeCount || 0)
 
   const { connectWallet } = useConnectWallet()
   const isLike = likeStatus === 'like'
@@ -118,8 +120,17 @@ export default function GroupAction ({ likeCount, dislikeCount, commentCount, pa
         if (err) {
           // toast.error('something went wrong')
         } else {
+          if (typeAPi === 'like') {
+            if (type === 'like') {
+              setDefaultLikeCount(defaultLikeCount + 1)
+            } else setDefaultDislikeCount(defaultDislikeCount + 1)
+          } else {
+            if (type === 'like') {
+              setDefaultLikeCount(defaultLikeCount - 1)
+            } else setDefaultDislikeCount(defaultDislikeCount - 1)
+          }
           onChangeStatus && onChangeStatus('review', typeAPi === 'like' ? type : '')
-          router.replace(router.asPath)
+          // router.replace(router.asPath)
         }
       }).catch((err) => {
         setLoading(false)
@@ -144,11 +155,11 @@ export default function GroupAction ({ likeCount, dislikeCount, commentCount, pa
 
       <button disabled={loading} onClick={onSubmit('like')} className={`flex items-center justify-center w-full md:w-[145px] px-1 h-10 ${isLike ? 'bg-gamefiGreen-700' : 'bg-[#2A2D36]'} hover:opacity-80 rounded-sm`}>
         <Like selected={isLike} activeColor={'#000000'} inactiveColor={'#ffffff'} size={16}></Like>
-        <span className={`${styles.text} ${isLike ? 'text-black' : 'text-white'} ml-3 font-semibold leading-5 capitalize font-casual`}>{likeCount || 'Like'}</span>
+        <span className={`${styles.text} ${isLike ? 'text-black' : 'text-white'} ml-3 font-semibold leading-5 capitalize font-casual`}>{defaultLikeCount || 'Like'}</span>
       </button>
       <button disabled={loading} onClick={onSubmit('dislike')} className={`flex items-center justify-center w-full md:w-[145px] px-1 h-10 ${isDislike ? 'bg-gamefiGreen-700' : 'bg-[#2A2D36]'} hover:opacity-80 rounded-sm`}>
         <DisLike selected={isDislike} activeColor={'#000000'} inactiveColor={'#ffffff'} size={16}></DisLike>
-        <span className={`${styles.text} ${isDislike ? 'text-black' : 'text-white'} ml-3 font-semibold leading-5 capitalize font-casual`}>{dislikeCount || 'Dislike'}</span>
+        <span className={`${styles.text} ${isDislike ? 'text-black' : 'text-white'} ml-3 font-semibold leading-5 capitalize font-casual`}>{defaultDislikeCount || 'Dislike'}</span>
       </button>
       {
         comment && <button onClick={openReviewDetail} className={'flex items-center justify-center w-full md:w-[145px] px-1 h-10 bg-[#2A2D36] hover:opacity-80 rounded-sm'}>

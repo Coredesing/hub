@@ -412,7 +412,7 @@ export const KeyMetrics = ({ data }) => {
         </div>
       </div>
       <div className='flex justify-between md:grid md:grid-cols-2 gap-2'>
-        <div className='text-white/50'><span>Token Public Price</span></div>
+        <div className='text-white/50'><span>Public sales price</span></div>
         <div className='flex'>
           <img src={imageCMS(data?.icon)} alt="" className='w-6 h-6 mr-3' />
           <strong>{data?.publicPrice > 0 ? `$${printNumber(data?.publicPrice)}` : '-'}</strong>
@@ -494,6 +494,7 @@ export const TokenSummary = ({ data }) => {
     if (!address) return
 
     navigator.clipboard.writeText(address)
+    toast.success('Copied!', { position: 'top-center' })
     setCopiedAddress(true)
   }
 
@@ -564,7 +565,7 @@ export const TokenSummary = ({ data }) => {
         </div>
         <div className='flex flex-col justify-between gap-5 md:gap-0'>
           <div className='flex'>
-            <div className='uppercase text-sm text-white/50 mr-auto'><span>Igo price:</span></div>
+            <div className='uppercase text-sm text-white/50 mr-auto'><span>Public sales price:</span></div>
             <div className='font-semibold text-sm'><span>{data?.publicPrice > 0 ? `$${printNumber(data?.publicPrice)}` : '-'}</span></div>
           </div>
           <div className='flex'>

@@ -142,6 +142,9 @@ class HomeController {
         data.name = `Monsterra Gamer ticket`
         data.description = `Monsterra Gamer ticket`
         break
+      case 'befitter-ticket':
+        image = 'https://gamefi-public.s3.amazonaws.com/aggregator/optimized/befitter/ticket.png'
+        break
       default:
         return {}
     }

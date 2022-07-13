@@ -778,7 +778,7 @@ class CampaignController {
       //   return HelperUtils.responseBadRequest("Can not refund");
       // }
 
-      const currency = HelperUtils.getCurrencyAddress(camp.network, camp.accept_currency)
+      const currency = HelperUtils.getCurrencyAddress(camp.network_available, camp.accept_currency)
       const deadline = camp.end_refund_time
       const messageHash = web3.utils.soliditySha3(userWalletAddress, currency, deadline)
 

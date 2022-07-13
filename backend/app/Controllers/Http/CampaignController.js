@@ -826,11 +826,7 @@ class CampaignController {
       }
 
       if (!camp) {
-        camp = await campaignService.buildQueryBuilder({ id: campaign_id })
-          .with('freeBuyTimeSetting')
-          .with('tiers')
-          .first();
-
+        camp = await campaignService.buildQueryBuilder({ id: campaign_id }).first();
         camp = JSON.parse(JSON.stringify(camp))
       }
 
@@ -851,7 +847,7 @@ class CampaignController {
       //   return HelperUtils.responseBadRequest("Can not to claim refund");
       // }
 
-      const currency = HelperUtils.getCurrencyAddress(camp.network, camp.accept_currency)
+      const currency = HelperUtils.getCurrencyAddress(camp.network_available, camp.accept_currency)
       const messageHash = web3.utils.soliditySha3(userWalletAddress, currency);
       const walletService = new WalletService();
       const wallet = await walletService.findByCampaignId(filterParams);
@@ -870,7 +866,7 @@ class CampaignController {
         currency
       });
     } catch (error) {
-      return HelperUtils.responseErrorInternal('Claim refund error');
+      return HelperUtils.responseErrorInternal('Claim refund error', error);
     }
   }
 

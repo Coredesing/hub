@@ -159,7 +159,7 @@ const Swap = () => {
   }, [approve, loadAllowance])
 
   // Swap Token
-  const [captchaToken, setCaptchaToken] = useState('')
+  const [captchaToken, setCaptchaToken] = useState('a')
   const recaptchaRef: any = useRef()
   const [inputAmount, setInputAmount] = useState('0')
 

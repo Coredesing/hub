@@ -301,6 +301,11 @@ const IGODetails = ({ poolData }) => {
   }, [allocationError])
 
   useEffect(() => {
+    if (poolData.campaign_status.toLowerCase() === 'ended') {
+      setCurrent(timeline[TIMELINE.CLAIM])
+      return
+    }
+
     if (!poolData.start_join_pool_time && poolData.campaign_status?.toLowerCase() === 'tba') {
       return setCurrent(timeline[TIMELINE.TBA])
     }
@@ -396,6 +401,7 @@ const IGODetails = ({ poolData }) => {
 
   const [games, setGames] = useState([])
   useEffect(() => {
+    if (!poolData?.id) return
     fetcher(`${API_BASE_URL}/gaming/pools/${poolData?.id}/games`)
       .then(data => {
         setGames((data?.data || []).filter(x => !x.disabled))

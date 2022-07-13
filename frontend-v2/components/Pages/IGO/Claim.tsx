@@ -1,6 +1,6 @@
 import { useMyWeb3 } from '@/components/web3/context'
 import { fetcher, printNumber } from '@/utils'
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
 import PresalePoolABI from '@/components/web3/abis/PreSalePool.json'
 import { API_BASE_URL, CLAIM_TYPE } from '@/utils/constants'
@@ -20,42 +20,31 @@ import { roundNumber } from '@/utils/pool'
 import Link from 'next/link'
 import Modal from '@/components/Base/Modal'
 import Input from '@/components/Base/Input'
+import useWalletSignature from '@/hooks/useWalletSignature'
+import Countdown from './Card/Countdown'
 
 const MESSAGE_SIGNATURE = process.env.NEXT_PUBLIC_MESSAGE_SIGNATURE || ''
 const PER_PAGE = 5
+const CLAIM_REFUND_AFTER = process.env.IS_TESTNET ? 5 * 60 * 1000 : 1 * 24 * 60 * 60 * 1000 // 1 day
 
-type REFUND_DEADLINE = {
-  from: Date | null;
-  to: Date | null;
+enum REFUND_REASON {
+  ONE= "The token price doesn't meet my expectations.",
+  TWO= 'I change my mind.',
+  THREE= 'I found a better investment.',
+  FOUR= 'I am in need of money.',
+  FIVE= 'Other'
 }
 
 const Claim = () => {
   const { poolData, usd, timeline, now } = useContext(IGOContext)
 
   const { account, library, network } = useMyWeb3()
+  const { provider: defaultProvider } = useLibraryDefaultFlexible(poolData?.network_available)
   const [page, setPage] = useState(1)
-  // Refund info
-  const [isRefund, setIsRefund] = useState(false)
-  const [refundDeadline, setRefundDeadline] = useState<REFUND_DEADLINE>({ from: new Date(), to: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000) })
-  const [showModalRefund, setShowModalRefund] = useState(false)
 
   const lastPage = useMemo(() => {
     return Math.ceil((poolData?.campaignClaimConfig?.length || 0) / PER_PAGE) || 1
   }, [poolData?.campaignClaimConfig?.length])
-
-  const [refundSteps, setRefundSteps] = useState([
-    {
-      step: 1,
-      title: 'Refund Request',
-      value: ''
-    },
-    {
-      step: 2,
-      title: 'Confirm Refund Request',
-      value: ''
-    }
-  ])
-  const [currentStep, setCurrentStep] = useState(1)
 
   // Claim Info
   const { userPurchasedTokens: purchasedTokens } = useUserPurchased(poolData?.campaign_hash, poolData?.network_available, [99, 100].includes(poolData?.id) ? 18 : poolData?.decimals)
@@ -263,11 +252,236 @@ const Claim = () => {
     })
   }
 
+  // Refund info
+  const [userRefund, setUserRefund] = useState(null)
+  const [showModalRefund, setShowModalRefund] = useState(false)
+  const [refundConfirm, setRefundConfirm] = useState('')
+  const [refundReason, setRefundReason] = useState('')
+  const [otherReason, setOtherReason] = useState('')
+  const [signature, setSignature] = useState('')
+
+  const { signMessage } = useWalletSignature()
+
+  const refundDeadline = useMemo(() => {
+    return {
+      from: new Date(Number(poolData?.start_refund_time) * 1000),
+      to: new Date(Number(poolData?.end_refund_time) * 1000),
+      claim: new Date(Number(poolData?.end_refund_time) * 1000 + CLAIM_REFUND_AFTER)
+    }
+  }, [poolData?.end_refund_time, poolData?.start_refund_time])
+
+  const [currentStep, setCurrentStep] = useState(1)
+
+  const getUserRefund = useCallback(async () => {
+    if (!account) return
+    const abi = PresalePoolABI
+    const poolContract = new ethers.Contract(poolData?.campaign_hash, abi, defaultProvider)
+
+    const method = 'userRefundToken'
+    const params = [
+      account
+    ]
+
+    try {
+      const transaction = await poolContract[method](...params)
+      if (!transaction) return
+
+      setUserRefund({
+        currencyAmount: transaction?.currencyAmount,
+        currency: transaction?.currency,
+        isClaimed: transaction?.isClaimed
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }, [account, defaultProvider, poolData?.campaign_hash])
+
+  useEffect(() => {
+    getUserRefund()
+  }, [getUserRefund])
+
+  const usdToRefund = useMemo(() => {
+    return roundNumber(Number(userRefund?.currencyAmount?.div(BigNumber.from(10).pow(usd.decimals)).toString() || 0), DECIMAL_PLACES)
+  }, [usd?.decimals, userRefund])
+
+  const handleRefund = useCallback(async () => {
+    if (!refundConfirm || !refundReason || (refundReason === REFUND_REASON.FIVE && !otherReason)) {
+      toast.error('Requirements do not match')
+      return
+    }
+
+    let s = ''
+    await signMessage().then(data => {
+      if (!data) {
+        return
+      }
+
+      s = data.toString()
+    }).catch(err => {
+      console.debug(err)
+      toast.error('Could not sign the authentication message')
+    })
+
+    if (!s) return
+
+    try {
+      const res = await fetcher(`${API_BASE_URL}/user/refund`, {
+        headers: {
+          msgSignature: MESSAGE_SIGNATURE,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          campaign_id: poolData?.id,
+          wallet_address: account,
+          signature: s,
+          reason: refundReason !== REFUND_REASON.FIVE ? refundReason : otherReason
+        }),
+        method: 'POST'
+      })
+
+      if (!res || !res.data) {
+        toast.error(res?.message || 'Failed to request refund')
+        return
+      }
+
+      const { data } = res
+
+      const abi = PresalePoolABI
+      const poolContract = new ethers.Contract(poolData?.campaign_hash, abi, library.getSigner())
+
+      const method = 'refundTokens'
+      const params = [
+        account,
+        data.currency,
+        data.deadline,
+        data.signature
+      ]
+      const loading = toast.loading('Processing...')
+
+      try {
+        const transaction = await poolContract[method](...params)
+        const result = await transaction.wait(1)
+
+        if (+result?.status === 1) {
+          getUserRefund()
+          toast.success('Request Refund Successfully!')
+        } else {
+          toast.error('Request Refund Failed')
+        }
+      } catch (e) {
+        toast.error(e?.data?.message || 'Request Refund Failed')
+      } finally {
+        toast.dismiss(loading)
+      }
+    } catch (e) {
+      toast.error(e?.message || 'Failed to request refund')
+    }
+  }, [account, getUserRefund, library, otherReason, poolData?.campaign_hash, poolData?.id, refundConfirm, refundReason, signMessage, signature])
+
+  const claimRefund = useCallback(async () => {
+    if (!account) return
+
+    let s = ''
+    await signMessage().then(data => {
+      if (!data) {
+        return
+      }
+
+      s = data.toString()
+    }).catch(err => {
+      console.debug(err)
+      toast.error('Could not sign the authentication message')
+    })
+
+    if (!s) return
+
+    try {
+      const res = await fetcher(`${API_BASE_URL}/user/claim-refund`, {
+        headers: {
+          msgSignature: MESSAGE_SIGNATURE,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          campaign_id: poolData?.id,
+          wallet_address: account,
+          signature: s
+        }),
+        method: 'POST'
+      })
+
+      if (!res || !res.data) {
+        toast.error(res?.message || 'Failed to claim refund')
+        return
+      }
+
+      const { data } = res
+
+      const abi = PresalePoolABI
+      const poolContract = new ethers.Contract(poolData?.campaign_hash, abi, library.getSigner())
+
+      const method = 'claimRefundTokens'
+      const params = [
+        account,
+        data.currency,
+        data.signature
+      ]
+      const loading = toast.loading('Processing...')
+
+      try {
+        const transaction = await poolContract[method](...params)
+        const result = await transaction.wait(1)
+
+        if (+result?.status === 1) {
+          toast.success('Token Refund Successfully!')
+          getUserRefund()
+        } else {
+          toast.error('Token Refund Failed')
+        }
+      } catch (e) {
+        toast.error(e?.data?.message || 'Token Refund Failed')
+      } finally {
+        toast.dismiss(loading)
+      }
+    } catch (e) {
+      toast.error(e?.message || 'Failed to request refund')
+    }
+  }, [account, getUserRefund, library, poolData?.campaign_hash, poolData?.id, signMessage, signature])
+
+  const allowToRefund = useMemo(() => {
+    if (!refundDeadline?.from || !refundDeadline?.to) return false // Pool does not have refund
+    if (userRefund?.currencyAmount?.eq(0) && Number(purchasedTokens) === 0) return false // User do not buy tokens
+
+    if (Number(claimedTokens) !== 0) return false // User has claimed tokens
+
+    return true
+  }, [claimedTokens, purchasedTokens, refundDeadline?.from, refundDeadline?.to, userRefund?.currencyAmount])
+
+  const [refundFee, setRefundFee] = useState(null)
+  const getRefundFee = useCallback(async () => {
+    if (!account) return
+    const abi = PresalePoolABI
+    const poolContract = new ethers.Contract(poolData?.campaign_hash, abi, defaultProvider)
+
+    const method = 'staticFee'
+
+    try {
+      const fee = await poolContract[method]()
+
+      setRefundFee(fee)
+    } catch (e) {
+      console.log(e)
+    }
+  }, [account, defaultProvider, poolData?.campaign_hash])
+
+  useEffect(() => {
+    getRefundFee()
+  }, [getRefundFee])
+
   return (
     <>
       { now?.getTime() > timeline[TIMELINE.BUYING_PHASE].end?.getTime() &&
       <div className="w-full my-4 flex flex-col xl:flex-row gap-6">
-        <div className="w-full xl:w-1/3 h-full bg-gamefiDark-630/30 p-7 rounded clipped-t-r">
+        <div className="w-full xl:w-1/3 bg-gamefiDark-630/30 p-7 rounded clipped-t-r">
           <p className="uppercase font-mechanic font-bold text-lg mb-6">Your Allocation</p>
           <div className="flex justify-between mb-4 items-center">
             <strong className="font-semibold">Network</strong>
@@ -439,33 +653,68 @@ const Claim = () => {
               </div>
             }
           </div>
-          {(!!refundDeadline.from && !!refundDeadline.to) && <div className="w-full bg-gamefiDark-630/40 p-7 rounded-b overflow-x-auto">
-            <div className="w-full flex justify-between items-center mb-6">
-              <p className="uppercase font-mechanic font-bold text-lg">Refund</p>
-              <div className="text-gamefiDark-200 text-xs font-medium font-casual">Learn more about our <Link href="/insight" passHref><a className="underline">Refund Policies</a></Link></div>
-            </div>
-            <div className="w-full flex gap-2 items-center font-casual text-sm">
-              <div>
-                <div className="font-medium mb-2">You can request a refund for ${poolData?.symbol} purchased if you have not yet claimed ${poolData?.symbol}.</div>
-                <div className="text-xs">Deadline to request a refund: <span className="text-gamefiGreen-700">{format(refundDeadline.from, 'HH:mm, dd MMM yyyy')} - {format(refundDeadline.to, 'HH:mm, dd MMM yyyy')}</span></div>
+          {
+            allowToRefund && <div className="w-full bg-gamefiDark-630/40 p-7 rounded-b overflow-x-auto">
+              <div className="w-full flex justify-between items-center mb-6">
+                <p className="uppercase font-mechanic font-bold text-lg">Refund</p>
+                <div className="text-gamefiDark-200 text-xs font-medium font-casual">Learn more about our <Link href="/insight" passHref><a className="underline">Refund Policies</a></Link></div>
               </div>
-              <div>
+              <div className="w-full flex gap-2 items-center font-casual text-sm">
+                <div>
+                  <div className="font-medium mb-2">You can request a refund if you have not yet claimed ${poolData?.symbol}</div>
+                  <div className="text-xs">Deadline to request a refund: <span className="text-gamefiGreen-700">{format(refundDeadline.from, 'HH:mm, dd MMM yyyy')} - {format(refundDeadline.to, 'HH:mm, dd MMM yyyy')}</span></div>
+                  { refundFee?.gt(0) && <div className="text-xs mt-2">Users will be charged an operation fee equivalent of <span className="text-gamefiGreen">{roundNumber(refundFee?.div(BigNumber.from(10).pow(usd.decimals)), DECIMAL_PLACES)} {usd.symbol}</span> for refunding.</div> }
+                </div>
                 {
-                  now.getTime() >= refundDeadline.from.getTime() && now.getTime() <= refundDeadline.to.getTime()
-                    ? <button onClick={() => { setShowModalRefund(true) }} className="p-[1px] rounded-sm clipped-t-r bg-gamefiGreen-700">
-                      <div className="bg-gamefiDark-900 rounded-sm clipped-t-r">
-                        <div className="px-5 py-2 rounded-sm clipped-t-r text-gamefiGreen-700 text-xs font-bold font-mechanic uppercase whitespace-nowrap hover:opacity-95 bg-gamefiDark-630/40">Request Refund</div>
-                      </div>
-                    </button>
-                    : <button disabled className="p-[1px] rounded-sm clipped-t-r bg-gamefiDark-200">
-                      <div className="bg-gamefiDark-900 rounded-sm clipped-t-r">
-                        <div className="px-5 py-2 rounded-sm clipped-t-r text-gamefiDark-200 text-xs font-bold font-mechanic uppercase whitespace-nowrap hover:opacity-95 bg-gamefiDark-630/40">Request Refund</div>
-                      </div>
-                    </button>
+                  userRefund?.currencyAmount?.eq(0) && <div>
+                    {
+                      now.getTime() >= refundDeadline.from.getTime() && now.getTime() <= refundDeadline.to.getTime()
+                        ? <button onClick={() => { setShowModalRefund(true) }} className="p-[1px] rounded-sm clipped-t-r bg-gamefiGreen-700">
+                          <div className="bg-gamefiDark-900 rounded-sm clipped-t-r">
+                            <div className="px-5 py-2 rounded-sm clipped-t-r text-gamefiGreen-700 text-xs font-bold font-mechanic uppercase whitespace-nowrap hover:opacity-95 bg-gamefiDark-630/40">Request Refund</div>
+                          </div>
+                        </button>
+                        : <button disabled className="p-[1px] rounded-sm clipped-t-r bg-gamefiDark-200">
+                          <div className="bg-gamefiDark-900 rounded-sm clipped-t-r">
+                            <div className="px-5 py-2 rounded-sm clipped-t-r text-gamefiDark-200 text-xs font-bold font-mechanic uppercase whitespace-nowrap hover:opacity-95 bg-gamefiDark-630/40">Request Refund</div>
+                          </div>
+                        </button>
+                    }
+                  </div>
                 }
               </div>
-            </div>
-          </div>}
+              {
+                userRefund?.currencyAmount?.gt(0) && <div className="mt-6 pt-6 border-t border-gamefiDark-600 flex items-center gap-4 font-casual text-sm">
+                  <div className="">Status</div>
+                  <div className={userRefund?.isClaimed ? 'text-gamefiGreen' : 'text-gamefiYellow'}>{userRefund?.isClaimed ? `Fully Refunded (${usdToRefund} ${usd.symbol})` : `Refund Requested (${usdToRefund} ${usd.symbol})`}</div>
+                  {
+                    !userRefund?.isClaimed && <div className="flex gap-2">
+                      {
+                        now.getTime() >= refundDeadline.to.getTime() + CLAIM_REFUND_AFTER
+                          ? <button onClick={() => { claimRefund() }} className="p-[1px] rounded-sm clipped-t-r bg-gamefiGreen-700">
+                            <div className="bg-gamefiDark-900 rounded-sm clipped-t-r">
+                              <div className="px-8 py-2 rounded-sm clipped-t-r text-gamefiGreen-700 text-xs font-bold font-mechanic uppercase whitespace-nowrap hover:opacity-95 bg-gamefiDark-630/40">
+                                Claim Refund
+                              </div>
+                            </div>
+                          </button>
+                          : <button disabled className="p-[1px] rounded-sm clipped-t-r bg-gamefiDark-200">
+                            <div className="bg-gamefiDark-900 rounded-sm clipped-t-r">
+                              <div className="px-8 py-2 rounded-sm clipped-t-r text-gamefiDark-200 text-xs font-bold font-mechanic uppercase whitespace-nowrap hover:opacity-95 bg-gamefiDark-630/40">
+                                Claim Refund
+                              </div>
+                            </div>
+                          </button>
+                      }
+                    </div>
+                  }
+                  {
+                    now?.getTime() < refundDeadline?.claim?.getTime() &&
+                  <div>Refund’s available after <span className="text-green"><Countdown className="font-regular text-sm" to={refundDeadline?.claim?.getTime() / 1000}></Countdown></span></div>
+                  }
+                </div>
+              }
+            </div>}
         </div>
       </div>}
       {
@@ -475,43 +724,128 @@ const Claim = () => {
         </div>
       }
 
-      <Modal show={showModalRefund} toggle={setShowModalRefund} onClose={() => { setCurrentStep(1) }}>
-        <div className="p-9 bg-[#28282E]">
-          <div className="flex gap-2 items-center mb-4">
-            <div>
-              <Image src={require('assets/images/icons/request-refund.png')} alt="refund"></Image>
+      <Modal show={showModalRefund} toggle={setShowModalRefund} onClose={() => {
+        setCurrentStep(1)
+        setRefundReason('')
+        setOtherReason('')
+        setRefundConfirm('')
+      }}>
+        {
+          currentStep === 1 && <div className="p-9 bg-[#28282E]">
+            <div className="flex gap-2 items-center mb-4">
+              <div>
+                <Image src={require('assets/images/icons/request-refund.png')} alt="refund"></Image>
+              </div>
+              <div className="text-[24px] font-bold text-gamefiDark-300">{currentStep}/2</div>
+              <h3 className="text-[24px] font-bold uppercase">Refund Request</h3>
             </div>
-            <div className="text-[24px] font-bold text-gamefiDark-300">{currentStep}/2</div>
-            <h3 className="text-[24px] font-bold uppercase">Refund Request</h3>
-          </div>
-          <div className="font-casual text-sm mb-4">Aliqua id fugiat nostrud irure ex duis ea quis id quis ad et. Sunt qui esse pariatur duis deserunt mollit “Refund” minim tempor enim. Elit aute irure tempor cupidatat incididunt sint</div>
-          <Input value={refundSteps[0].value} onChange={e => {
-            const newValue = refundSteps.map(item => {
-              if (item.step === 1) {
-                console.log(e.target.value, { value: e.target.value, ...item })
-                return { value: e.target.value, ...item }
+            <div className="font-casual text-sm mb-4">Aliqua id fugiat nostrud irure ex duis ea quis id quis ad et. Sunt qui esse pariatur duis deserunt mollit “Refund” minim tempor enim. Elit aute irure tempor cupidatat incididunt sint</div>
+            <Input value={refundConfirm} onKeyPress={(e) => {
+              if (e.key === 'Enter' && refundConfirm.toLowerCase() === 'refund') setCurrentStep(2)
+            }} placeholder="Refund" onChange={e => { setRefundConfirm(e.target.value) }} classes={ { input: 'bg-[#3C3C42] !important' } }></Input>
+            <div className="flex justify-end">
+              {
+                refundConfirm.toLowerCase() === 'refund'
+                  ? <button onClick={() => { setCurrentStep(2) }} className="p-[1px] rounded-sm clipped-t-r bg-gamefiGreen-700 mt-6">
+                    <div className="px-5 py-2 rounded-sm clip ped-t-r text-gamefiGreen-700 text-xs font-bold font-mechanic uppercase whitespace-nowrap bg-[#28282E]">Next Step</div>
+                  </button>
+                  : <button disabled className="p-[1px] rounded-sm clipped-t-r bg-gamefiDark-200 mt-6">
+                    <div className="bg-[#28282E] rounded-sm clipped-t-r">
+                      <div className="px-5 py-2 rounded-sm clip ped-t-r text-gamefiDark-200 text-xs font-bold font-mechanic uppercase whitespace-nowrap bg-[#28282E]">Next Step</div>
+                    </div>
+                  </button>
               }
-              return item
-            })
-            console.log(newValue)
-            setRefundSteps(newValue)
-          }} classes={ { input: 'bg-[#3C3C42] !important' } }></Input>
-          <div className="flex justify-end">
-            {
-              refundSteps[0].value
-                ? <button className="p-[1px] rounded-sm clipped-t-r bg-gamefiGreen-700 mt-6">
-                  <div className="bg-[#28282E] rounded-sm clipped-t-r">
-                    <div className="px-5 py-2 rounded-sm clip ped-t-r text-gamefiDark-200 text-xs font-bold font-mechanic uppercase whitespace-nowrap bg-gamefiGreen-700">Next Step</div>
-                  </div>
-                </button>
-                : <button disabled className="p-[1px] rounded-sm clipped-t-r bg-gamefiDark-200 mt-6">
-                  <div className="bg-[#28282E] rounded-sm clipped-t-r">
-                    <div className="px-5 py-2 rounded-sm clip ped-t-r text-gamefiDark-200 text-xs font-bold font-mechanic uppercase whitespace-nowrap bg-[#28282E]">Next Step</div>
-                  </div>
-                </button>
-            }
+            </div>
           </div>
-        </div>
+        }
+        {
+          currentStep === 2 && <div className="p-9 bg-[#28282E]">
+            <div className="flex gap-2 items-center mb-4">
+              <div>
+                <Image src={require('assets/images/icons/request-refund.png')} alt="refund"></Image>
+              </div>
+              <div className="text-[24px] font-bold text-gamefiDark-300">{currentStep}/2</div>
+              <h3 className="text-[24px] font-bold uppercase">Confirm Refund Request</h3>
+            </div>
+            <div className="uppercase font-semibold mb-6">Why Do You Want The Refund <span className="text-gamefiRed">*</span></div>
+            <div className="font-casual text-sm flex flex-col gap-4">
+              <div className="flex items-center gap-2 cursor-pointer" onClick={() => { setRefundReason(REFUND_REASON.ONE) }}>
+                <div className="bg-gamefiDark-200 rounded-sm clipped-t-r-sm pr-[1px] pb-[0.5px] pl-[1px]">
+                  <input onChange={() => { setRefundReason(REFUND_REASON.ONE) }} checked={refundReason === REFUND_REASON.ONE} className="text-gamefiGreen-700 w-5 h-5 border-[1px] focus:ring-gamefiGreen-700 focus:ring-opacity-25 rounded-sm clipped-t-r-sm cursor-pointer bg-[#28282E]" type="checkbox" />
+                </div>
+                <div>The token price doesn&apos;t meet my expectations.</div>
+              </div>
+              <div className="flex items-center gap-2 cursor-pointer" onClick={() => { setRefundReason(REFUND_REASON.TWO) }}>
+                <div className="bg-gamefiDark-200 rounded-sm clipped-t-r-sm pr-[1px] pb-[0.5px] pl-[1px]">
+                  <input onChange={() => { setRefundReason(REFUND_REASON.TWO) }} checked={refundReason === REFUND_REASON.TWO} className="text-gamefiGreen-700 w-5 h-5 border-[1px] focus:ring-gamefiGreen-700 focus:ring-opacity-25 rounded-sm clipped-t-r-sm cursor-pointer bg-[#28282E]" type="checkbox" />
+                </div>
+                <div>I change my mind.</div>
+              </div>
+              <div className="flex items-center gap-2 cursor-pointer" onClick={() => { setRefundReason(REFUND_REASON.THREE) }}>
+                <div className="bg-gamefiDark-200 rounded-sm clipped-t-r-sm pr-[1px] pb-[0.5px] pl-[1px]">
+                  <input onChange={() => { setRefundReason(REFUND_REASON.THREE) }} checked={refundReason === REFUND_REASON.THREE} className="text-gamefiGreen-700 w-5 h-5 border-[1px] focus:ring-gamefiGreen-700 focus:ring-opacity-25 rounded-sm clipped-t-r-sm cursor-pointer bg-[#28282E]" type="checkbox" />
+                </div>
+                <div>I found a better investment.</div>
+              </div>
+              <div className="flex items-center gap-2 cursor-pointer" onClick={() => { setRefundReason(REFUND_REASON.FOUR) }}>
+                <div className="bg-gamefiDark-200 rounded-sm clipped-t-r-sm pr-[1px] pb-[0.5px] pl-[1px]">
+                  <input onChange={() => { setRefundReason(REFUND_REASON.FOUR) }} checked={refundReason === REFUND_REASON.FOUR} className="text-gamefiGreen-700 w-5 h-5 border-[1px] focus:ring-gamefiGreen-700 focus:ring-opacity-25 rounded-sm clipped-t-r-sm cursor-pointer bg-[#28282E]" type="checkbox" />
+                </div>
+                <div>I am in need of money.</div>
+              </div>
+              <div className="flex items-center gap-2 cursor-pointer" onClick={() => { setRefundReason(REFUND_REASON.FIVE) }}>
+                <div className="bg-gamefiDark-200 rounded-sm clipped-t-r-sm pr-[1px] pb-[0.5px] pl-[1px]">
+                  <input onChange={() => { setRefundReason(REFUND_REASON.FIVE) }} checked={refundReason === REFUND_REASON.FIVE} className="text-gamefiGreen-700 w-5 h-5 border-[1px] focus:ring-gamefiGreen-700 focus:ring-opacity-25 rounded-sm clipped-t-r-sm cursor-pointer bg-[#28282E]" type="checkbox" />
+                </div>
+                <div>Others</div>
+              </div>
+              {refundReason === REFUND_REASON.FIVE && <div className="w-full relative">
+                <textarea
+                  className={`w-full text-sm border-[1px] focus:ring-opacity-25 rounded-sm cursor-pointer bg-[#28282E] ${otherReason.trim() === '' && 'border-gamefiRed'}`}
+                  placeholder="Please provide more details of this request"
+                  onChange={e => { setOtherReason(e.target.value) }}
+                  rows={5}
+                  maxLength={200}
+                ></textarea>
+                <div className={`absolute ${otherReason ? 'bottom-3' : 'bottom-8'} right-3 text-gamefiDark-200 text-xs`}>{otherReason.length}/200</div>
+                {otherReason.trim() === '' && <div className="text-gamefiRed">Please provide more details of this request</div>}
+              </div>}
+              {(refundReason && refundReason !== REFUND_REASON.FIVE) || (refundReason === REFUND_REASON.FIVE && otherReason)
+                ? <>
+                  <div className="mt-3 text-center lg:mx-20 font-light">Once you confirm the refund request, you will not be able to repurchase your allocation.</div>
+                  <div className="mt-3 text-center lg:mx-20 font-medium">Are you sure you want the refund?</div>
+                </>
+                : ''}
+            </div>
+            <div className="flex flex-col lg:flex-row justify-center gap-4 mt-6">
+              {
+                (refundReason && refundReason !== REFUND_REASON.FIVE) || (refundReason === REFUND_REASON.FIVE && otherReason)
+                  ? <>
+                    <button onClick={() => {
+                      handleRefund()
+                      setShowModalRefund(false)
+                      setCurrentStep(1)
+                      setRefundReason('')
+                      setOtherReason('')
+                      setRefundConfirm('')
+                    }} className="p-[1px] rounded-sm clipped-b-l bg-gamefiGreen-700">
+                      <div className="px-5 py-2 lg:w-32 rounded-sm clipped-b-l text-gamefiDark-900 text-xs font-bold font-mechanic uppercase whitespace-nowrap bg-gamefiGreen-700">Yes, I&apos;m Sure</div>
+                    </button>
+                    <button onClick={() => {
+                      setShowModalRefund(false)
+                      setCurrentStep(1)
+                      setRefundReason('')
+                      setOtherReason('')
+                      setRefundConfirm('')
+                    }} className="p-[1px] rounded-sm clipped-t-r bg-gamefiGreen-700">
+                      <div className="px-5 py-2 lg:w-32 rounded-sm clipped-t-r text-gamefiGreen-700 text-xs font-bold font-mechanic uppercase whitespace-nowrap bg-[#28282E]">No</div>
+                    </button>
+                  </>
+                  : <></>
+              }
+            </div>
+          </div>
+        }
       </Modal>
       {/* {
         current?.key === 'claim' && !usdPurchased && <div className="w-full mt-6 p-12 text-gamefiDark-200 flex flex-col items-center justify-center gap-4">

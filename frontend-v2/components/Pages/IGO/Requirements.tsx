@@ -204,8 +204,12 @@ const Requirements = () => {
       poolRankInvalid ||
       (!poolData?.kyc_bypass && !profile?.verified) ||
       !whitelistJoined || (poolData.airdrop_network === 'solana' &&
-      !profile.solana_address))
+        !profile.solana_address))
   }, [poolData.airdrop_network, poolData?.is_private, poolData?.kyc_bypass, poolNetworkInvalid, poolRankInvalid, profile, setFailedRequirements, whitelistJoined])
+
+  const columnPartner = useMemo(() => {
+    return poolData?.socialRequirement?.partner_twitter && poolData?.socialRequirement?.partner_group && poolData?.socialRequirement?.partner_channel
+  }, [poolData])
 
   return <>
     <div className="bg-gamefiDark-630 bg-opacity-30 p-4 xl:p-6 2xl:p-7 rounded">
@@ -213,19 +217,19 @@ const Requirements = () => {
       <div className="table w-full font-casual text-sm">
         <div className="table-row">
           <div className="table-cell align-middle w-6">
-            { poolNetworkInvalid ? <IconError className="w-4 h-4" /> : <IconOK className="w-4 h-4" /> }
+            {poolNetworkInvalid ? <IconError className="w-4 h-4" /> : <IconOK className="w-4 h-4" />}
           </div>
           <div className="table-cell align-middle text-white/90">IGO Network</div>
           <div className="table-cell align-middle text-white/90"><strong className="tracking-wider">{poolNetwork?.name || 'Unknown'}</strong></div>
           <div className="table-cell align-middle h-10 w-32">
-            { poolNetworkInvalid && <>
-              { !account && <WalletConnector buttonClassName="!px-2 !py-1 font-mechanic !w-full"></WalletConnector> }
-              { account &&
+            {poolNetworkInvalid && <>
+              {!account && <WalletConnector buttonClassName="!px-2 !py-1 font-mechanic !w-full"></WalletConnector>}
+              {account &&
                 <button
                   onClick={() => switchNetwork(library?.provider, poolNetwork?.id)}
                   className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r bg-gamefiGreen-500 text-gamefiDark-900 w-full'
                 >
-                Switch Network
+                  Switch Network
                 </button>
               }
             </>
@@ -234,7 +238,7 @@ const Requirements = () => {
         </div>
         {poolData.airdrop_network && poolData.airdrop_network === 'solana' && <div className="table-row">
           <div className="table-cell align-middle w-6">
-            { profile.solana_address ? <IconOK className="w-4 h-4" /> : <IconError className="w-4 h-4" /> }
+            {profile.solana_address ? <IconOK className="w-4 h-4" /> : <IconError className="w-4 h-4" />}
           </div>
           <div className="table-cell align-middle text-white/90 w-32 h-10">Solana Wallet</div>
           <div className="table-cell align-middle text-white/90 w-32">
@@ -244,7 +248,7 @@ const Requirements = () => {
           </div>
           {!profile.solana_address && <div className="table-cell align-middle h-10 whitespace-nowrap">
 
-            { (!account || poolNetworkInvalid || poolRankInvalid || !profile.verified) &&
+            {(!account || poolNetworkInvalid || poolRankInvalid || !profile.verified) &&
               <Link href="/account" passHref={true}>
                 <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiGreen-500 text-gamefiDark-900'>
                   Edit
@@ -255,20 +259,20 @@ const Requirements = () => {
         </div>}
         <div className="table-row">
           <div className="table-cell align-middle w-6">
-            { poolRankInvalid ? <IconError className="w-4 h-4" /> : <IconOK className="w-4 h-4" /> }
+            {poolRankInvalid ? <IconError className="w-4 h-4" /> : <IconOK className="w-4 h-4" />}
           </div>
           <div className="table-cell align-middle text-white/90">Min Rank</div>
           <div className="table-cell align-middle text-white/90"><strong className="tracking-wider">{poolRank?.name || 'Unknown'}</strong></div>
           <div className="table-cell align-middle h-10 w-32">
-            { tierMineLoading && <button className="px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm clipped-t-r w-full bg-gamefiDark-400 text-black">Loading...</button> }
-            { !tierMineLoading && poolRankInvalid && <>
-              { (!account || poolNetworkInvalid) &&
+            {tierMineLoading && <button className="px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm clipped-t-r w-full bg-gamefiDark-400 text-black">Loading...</button>}
+            {!tierMineLoading && poolRankInvalid && <>
+              {(!account || poolNetworkInvalid) &&
                 <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiDark-400 text-black'>
-                Stake
+                  Stake
                 </button>
               }
 
-              { (account && !poolNetworkInvalid) &&
+              {(account && !poolNetworkInvalid) &&
                 <Link href="/staking" passHref={true}>
                   <a className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiGreen-500 text-gamefiDark-900 inline-block text-center'>
                     Stake
@@ -281,20 +285,20 @@ const Requirements = () => {
         </div>
         <div className="table-row">
           <div className="table-cell align-middle w-6">
-            { !profile.verified ? (poolData?.is_private === 3 ? <IconOK className="w-4 h-4" /> : <IconError className="w-4 h-4" />) : <IconOK className="w-4 h-4" /> }
+            {!profile.verified ? (poolData?.is_private === 3 ? <IconOK className="w-4 h-4" /> : <IconError className="w-4 h-4" />) : <IconOK className="w-4 h-4" />}
           </div>
           <div className="table-cell align-middle text-white/90">KYC Status</div>
           <div className="table-cell align-middle text-white/90"><strong className="tracking-wider">{profile?.verified ? 'Verified' : (poolData?.is_private === 3 ? 'Not Required' : 'Unverified')}</strong></div>
           <div className="table-cell align-middle h-10 w-32">
-            { profileLoading && <button className="px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm clipped-t-r w-full bg-gamefiDark-400 text-black">Loading...</button> }
-            { !profileLoading && !poolData?.kyc_bypass && !profile?.verified && <>
-              { (!account || poolNetworkInvalid || poolRankInvalid) &&
+            {profileLoading && <button className="px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm clipped-t-r w-full bg-gamefiDark-400 text-black">Loading...</button>}
+            {!profileLoading && !poolData?.kyc_bypass && !profile?.verified && <>
+              {(!account || poolNetworkInvalid || poolRankInvalid) &&
                 <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiDark-400 text-black'>
-                Verify Now
+                  Verify Now
                 </button>
               }
 
-              { (account && !poolNetworkInvalid && !poolRankInvalid) &&
+              {(account && !poolNetworkInvalid && !poolRankInvalid) &&
                 <Link href="/account/profile" passHref={true}>
                   <a className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiGreen-500 text-gamefiDark-900 inline-block text-center'>
                     Verify Now
@@ -307,7 +311,7 @@ const Requirements = () => {
         </div>
         <div className="table-row">
           <div className="table-cell align-middle w-6">
-            { whitelistJoined ? (!poolWhitelistOKSocial ? <IconWarning className="w-4 h-4" /> : <IconOK className="w-4 h-4" />) : (poolData?.is_private === 3 ? <IconOK className="w-4 h-4" /> : <IconError className="w-4 h-4" />) }
+            {whitelistJoined ? (!poolWhitelistOKSocial ? <IconWarning className="w-4 h-4" /> : <IconOK className="w-4 h-4" />) : (poolData?.is_private === 3 ? <IconOK className="w-4 h-4" /> : <IconError className="w-4 h-4" />)}
           </div>
           <div className="table-cell align-middle text-white/90">Whitelist</div>
           <div className="table-cell align-middle text-white/90">
@@ -321,21 +325,21 @@ const Requirements = () => {
                   {poolWhitelistReady && 'Unapplied'}
                 </strong>
                 : <strong className="tracking-wider">
-                Not Required
+                  Not Required
                 </strong>
             }
           </div>
           <div className="table-cell align-middle h-10 w-32">
-            { poolData?.is_private !== 3 && poolWhitelistReady && <>
-              { (!account || poolNetworkInvalid || poolRankInvalid || !profile.verified) &&
+            {poolData?.is_private !== 3 && poolWhitelistReady && <>
+              {(!account || poolNetworkInvalid || poolRankInvalid || !profile.verified) &&
                 <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiDark-400 text-black'>
-                Apply Whitelist
+                  Apply Whitelist
                 </button>
               }
 
-              { (account && !poolNetworkInvalid && !poolRankInvalid && profile.verified) &&
+              {(account && !poolNetworkInvalid && !poolRankInvalid && profile.verified) &&
                 <button className='px-2 py-1 font-bold font-mechanic text-[13px] uppercase rounded-sm hover:opacity-95 cursor-pointer clipped-t-r w-full bg-gamefiGreen-500 text-gamefiDark-900 inline-block text-center' onClick={showApplyWhitelist}>
-                Apply Whitelist
+                  Apply Whitelist
                 </button>
               }
             </>
@@ -423,108 +427,114 @@ const Requirements = () => {
           <div className="lg:table w-full overflow-x-scroll font-casual text-sm mt-2 font-medium border-separate [border-spacing:0_0.4rem]">
             <div className="table-row">
               <div className="table-cell align-middle px-3 font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
-                  Account
+                Account
               </div>
-              <div className="table-cell align-middle px-3 font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
+              {columnPartner && <div className="table-cell align-middle px-3 font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
                 <img src={poolData?.token_images} className="inline-block w-6 h-6 object-contain mr-1" alt={poolData?.title} />
                 {poolData?.title}
-              </div>
+              </div>}
               <div className="table-cell align-middle px-3 font-mechanic font-bold uppercase text-[13px] text-gamefiDark-200">
-                <img src={GAFI.image} className="inline-block w-6 h-6 object-contain mr-1" alt="GameFi.org"/>
-                  GAMEFI
+                <img src={GAFI.image} className="inline-block w-6 h-6 object-contain mr-1" alt="GameFi.org" />
+                GAMEFI
               </div>
             </div>
 
             <div className="table-row bg-gradient-to-r from-gamefiDark-900 via-gamefiDark-900">
               <div className="table-cell align-middle px-3 py-2 rounded">
-                  Official Twitter
+                Official Twitter
               </div>
-              <div className="table-cell align-middle px-3 py-2">
-                <a href={`https://twitter.com/${poolData?.socialRequirement?.partner_twitter}`} target="_blank" className="text-gamefiGreen-600 hover:text-gamefiGreen-500 hover:underline" rel="noreferrer">
-                  @{ poolData?.socialRequirement?.partner_twitter }
-                </a>
-                { whitelistJoined && <>
-                  { poolWhitelistSocialProblems.partner_twitter === SOCIAL_STATUS.REJECTED && <IconError className="inline w-4 h-4 ml-2" ></IconError> }
-                  { poolWhitelistSocialProblems.partner_twitter === SOCIAL_STATUS.COMPLETED && <IconOK className="inline w-4 h-4 ml-2" ></IconOK> }
-                  { (poolWhitelistSocialProblems.partner_twitter === SOCIAL_STATUS.PENDING || poolWhitelistSocialProblems.partner_twitter === SOCIAL_STATUS.ERROR) && <IconWarning className="inline w-4 h-4 ml-2" ></IconWarning> }
-                </> }
-              </div>
+              {columnPartner && <div className="table-cell align-middle px-3 py-2">
+                {poolData?.socialRequirement?.partner_twitter && <>
+                  <a href={`https://twitter.com/${poolData?.socialRequirement?.partner_twitter}`} target="_blank" className="text-gamefiGreen-600 hover:text-gamefiGreen-500 hover:underline" rel="noreferrer">
+                    @{poolData?.socialRequirement?.partner_twitter}
+                  </a>
+                  {whitelistJoined && <>
+                    {poolWhitelistSocialProblems.partner_twitter === SOCIAL_STATUS.REJECTED && <IconError className="inline w-4 h-4 ml-2" ></IconError>}
+                    {poolWhitelistSocialProblems.partner_twitter === SOCIAL_STATUS.COMPLETED && <IconOK className="inline w-4 h-4 ml-2" ></IconOK>}
+                    {(poolWhitelistSocialProblems.partner_twitter === SOCIAL_STATUS.PENDING || poolWhitelistSocialProblems.partner_twitter === SOCIAL_STATUS.ERROR) && <IconWarning className="inline w-4 h-4 ml-2" ></IconWarning>}
+                  </>}
+                </>}
+              </div>}
               <div className="table-cell align-middle px-3 py-2">
                 <a href={`https://twitter.com/${poolData?.socialRequirement?.self_twitter}`} target="_blank" className="text-gamefiGreen-600 hover:text-gamefiGreen-500 hover:underline" rel="noreferrer">
-                  @{ poolData?.socialRequirement?.self_twitter }
+                  @{poolData?.socialRequirement?.self_twitter}
                 </a>
-                { whitelistJoined && <>
-                  { poolWhitelistSocialProblems.self_twitter === SOCIAL_STATUS.REJECTED && <IconError className="inline w-4 h-4 ml-2" ></IconError> }
-                  { poolWhitelistSocialProblems.self_twitter === SOCIAL_STATUS.COMPLETED && <IconOK className="inline w-4 h-4 ml-2" ></IconOK> }
-                  { (poolWhitelistSocialProblems.self_twitter === SOCIAL_STATUS.PENDING || poolWhitelistSocialProblems.partner_twitter === SOCIAL_STATUS.ERROR) && <IconWarning className="inline w-4 h-4 ml-2" ></IconWarning> }
-                </> }
+                {whitelistJoined && <>
+                  {poolWhitelistSocialProblems.self_twitter === SOCIAL_STATUS.REJECTED && <IconError className="inline w-4 h-4 ml-2" ></IconError>}
+                  {poolWhitelistSocialProblems.self_twitter === SOCIAL_STATUS.COMPLETED && <IconOK className="inline w-4 h-4 ml-2" ></IconOK>}
+                  {(poolWhitelistSocialProblems.self_twitter === SOCIAL_STATUS.PENDING || poolWhitelistSocialProblems.partner_twitter === SOCIAL_STATUS.ERROR) && <IconWarning className="inline w-4 h-4 ml-2" ></IconWarning>}
+                </>}
               </div>
             </div>
 
             <div className="table-row bg-gradient-to-r from-gamefiDark-900 via-gamefiDark-900">
               <div className="table-cell align-middle px-3 py-2 rounded">
-                  Community Group
+                Community Group
               </div>
-              <div className="table-cell align-middle px-3 py-2">
-                <a href={`https://t.me/${poolData?.socialRequirement?.partner_group}`} target="_blank" className="text-gamefiGreen-600 hover:text-gamefiGreen-500 hover:underline" rel="noreferrer">
-                  @{ poolData?.socialRequirement?.partner_group }
-                </a>
-                { whitelistJoined && <>
-                  { poolWhitelistSocialProblems.partner_group === SOCIAL_STATUS.REJECTED && <IconError className="inline w-4 h-4 ml-2" ></IconError> }
-                  { poolWhitelistSocialProblems.partner_group === SOCIAL_STATUS.COMPLETED && <IconOK className="inline w-4 h-4 ml-2" ></IconOK> }
-                  { (poolWhitelistSocialProblems.partner_group === SOCIAL_STATUS.PENDING || poolWhitelistSocialProblems.partner_twitter === SOCIAL_STATUS.ERROR) && <IconWarning className="inline w-4 h-4 ml-2" ></IconWarning> }
-                </> }
-              </div>
+              {columnPartner && <div className="table-cell align-middle px-3 py-2">
+                {poolData?.socialRequirement?.partner_group && <>
+                  <a href={`https://t.me/${poolData?.socialRequirement?.partner_group}`} target="_blank" className="text-gamefiGreen-600 hover:text-gamefiGreen-500 hover:underline" rel="noreferrer">
+                    @{poolData?.socialRequirement?.partner_group}
+                  </a>
+                  {whitelistJoined && <>
+                    {poolWhitelistSocialProblems.partner_group === SOCIAL_STATUS.REJECTED && <IconError className="inline w-4 h-4 ml-2" ></IconError>}
+                    {poolWhitelistSocialProblems.partner_group === SOCIAL_STATUS.COMPLETED && <IconOK className="inline w-4 h-4 ml-2" ></IconOK>}
+                    {(poolWhitelistSocialProblems.partner_group === SOCIAL_STATUS.PENDING || poolWhitelistSocialProblems.partner_twitter === SOCIAL_STATUS.ERROR) && <IconWarning className="inline w-4 h-4 ml-2" ></IconWarning>}
+                  </>}
+                </>}
+              </div>}
               <div className="table-cell align-middle px-3 py-2">
                 <a href={`https://t.me/${poolData?.socialRequirement?.self_group}`} target="_blank" className="text-gamefiGreen-600 hover:text-gamefiGreen-500 hover:underline" rel="noreferrer">
-                  @{ poolData?.socialRequirement?.self_group }
+                  @{poolData?.socialRequirement?.self_group}
                 </a>
-                { whitelistJoined && <>
-                  { poolWhitelistSocialProblems.self_group === SOCIAL_STATUS.REJECTED && <IconError className="inline w-4 h-4 ml-2" ></IconError> }
-                  { poolWhitelistSocialProblems.self_group === SOCIAL_STATUS.COMPLETED && <IconOK className="inline w-4 h-4 ml-2" ></IconOK> }
-                  { (poolWhitelistSocialProblems.self_group === SOCIAL_STATUS.PENDING || poolWhitelistSocialProblems.partner_twitter === SOCIAL_STATUS.ERROR) && <IconWarning className="inline w-4 h-4 ml-2" ></IconWarning> }
-                </> }
+                {whitelistJoined && <>
+                  {poolWhitelistSocialProblems.self_group === SOCIAL_STATUS.REJECTED && <IconError className="inline w-4 h-4 ml-2" ></IconError>}
+                  {poolWhitelistSocialProblems.self_group === SOCIAL_STATUS.COMPLETED && <IconOK className="inline w-4 h-4 ml-2" ></IconOK>}
+                  {(poolWhitelistSocialProblems.self_group === SOCIAL_STATUS.PENDING || poolWhitelistSocialProblems.partner_twitter === SOCIAL_STATUS.ERROR) && <IconWarning className="inline w-4 h-4 ml-2" ></IconWarning>}
+                </>}
               </div>
             </div>
 
             <div className="table-row bg-gradient-to-r from-gamefiDark-900 via-gamefiDark-900">
               <div className="table-cell align-middle px-3 py-2 rounded">
-                  Announcement Channel
+                Announcement Channel
               </div>
-              <div className="table-cell align-middle px-3 py-2">
-                <a href={`https://t.me/${poolData?.socialRequirement?.partner_channel}`} target="_blank" className="text-gamefiGreen-600 hover:text-gamefiGreen-500 hover:underline" rel="noreferrer">
-                  @{ poolData?.socialRequirement?.partner_channel }
-                </a>
-                { whitelistJoined && <>
-                  { poolWhitelistSocialProblems.partner_channel === SOCIAL_STATUS.REJECTED && <IconError className="inline w-4 h-4 ml-2" ></IconError> }
-                  { poolWhitelistSocialProblems.partner_channel === SOCIAL_STATUS.COMPLETED && <IconOK className="inline w-4 h-4 ml-2" ></IconOK> }
-                  { (poolWhitelistSocialProblems.partner_channel === SOCIAL_STATUS.PENDING || poolWhitelistSocialProblems.partner_twitter === SOCIAL_STATUS.ERROR) && <IconWarning className="inline w-4 h-4 ml-2" ></IconWarning> }
-                </> }
-              </div>
+              {columnPartner && <div className="table-cell align-middle px-3 py-2">
+                {poolData?.socialRequirement?.partner_channel && <>
+                  <a href={`https://t.me/${poolData?.socialRequirement?.partner_channel}`} target="_blank" className="text-gamefiGreen-600 hover:text-gamefiGreen-500 hover:underline" rel="noreferrer">
+                    @{poolData?.socialRequirement?.partner_channel}
+                  </a>
+                  {whitelistJoined && <>
+                    {poolWhitelistSocialProblems.partner_channel === SOCIAL_STATUS.REJECTED && <IconError className="inline w-4 h-4 ml-2" ></IconError>}
+                    {poolWhitelistSocialProblems.partner_channel === SOCIAL_STATUS.COMPLETED && <IconOK className="inline w-4 h-4 ml-2" ></IconOK>}
+                    {(poolWhitelistSocialProblems.partner_channel === SOCIAL_STATUS.PENDING || poolWhitelistSocialProblems.partner_twitter === SOCIAL_STATUS.ERROR) && <IconWarning className="inline w-4 h-4 ml-2" ></IconWarning>}
+                  </>}
+                </>}
+              </div>}
               <div className="table-cell align-middle px-3 py-2">
                 <a href={`https://t.me/${poolData?.socialRequirement?.self_channel}`} target="_blank" className="text-gamefiGreen-600 hover:text-gamefiGreen-500 hover:underline" rel="noreferrer">
-                  @{ poolData?.socialRequirement?.self_channel }
+                  @{poolData?.socialRequirement?.self_channel}
                 </a>
-                { whitelistJoined && <>
-                  { poolWhitelistSocialProblems.self_channel === SOCIAL_STATUS.REJECTED && <IconError className="inline w-4 h-4 ml-2" ></IconError> }
-                  { poolWhitelistSocialProblems.self_channel === SOCIAL_STATUS.COMPLETED && <IconOK className="inline w-4 h-4 ml-2" ></IconOK> }
-                  { (poolWhitelistSocialProblems.self_channel === SOCIAL_STATUS.PENDING || poolWhitelistSocialProblems.partner_twitter === SOCIAL_STATUS.ERROR) && <IconWarning className="inline w-4 h-4 ml-2" ></IconWarning> }
-                </> }
+                {whitelistJoined && <>
+                  {poolWhitelistSocialProblems.self_channel === SOCIAL_STATUS.REJECTED && <IconError className="inline w-4 h-4 ml-2" ></IconError>}
+                  {poolWhitelistSocialProblems.self_channel === SOCIAL_STATUS.COMPLETED && <IconOK className="inline w-4 h-4 ml-2" ></IconOK>}
+                  {(poolWhitelistSocialProblems.self_channel === SOCIAL_STATUS.PENDING || poolWhitelistSocialProblems.partner_twitter === SOCIAL_STATUS.ERROR) && <IconWarning className="inline w-4 h-4 ml-2" ></IconWarning>}
+                </>}
               </div>
             </div>
           </div>
-          { poolData?.socialRequirement?.self_retweet_post && <>
+          {poolData?.socialRequirement?.self_retweet_post && <>
             <p className="mt-6 text-sm inline-flex items-center font-medium">
               <span className="flex items-center justify-center mr-2 bg-black w-6 h-6 rounded-full font-bold">3</span>
-                Like and retweet the
+              Like and retweet the
               <a className="ml-1 text-gamefiGreen-600 hover:text-gamefiGreen-500 hover:underline" target="_blank" href={poolData?.socialRequirement?.self_retweet_post} rel="noreferrer">{poolData?.title} announcement on GameFi’s Twitter
               </a>
             </p>
-          </> }
+          </>}
 
           <div className="mt-6 text-sm flex items-center justify-end gap-6 font-mechanic text-[13px]">
             <button className="font-bold uppercase text-gamefiGreen-500 hover:text-white" onClick={() => setShowModal(false)}>Close</button>
-            { !whitelistJoined && !whitelistLoading && <button className="font-bold uppercase clipped-t-r bg-gamefiGreen-600 hover:bg-gamefiGreen-500 text-black py-2 px-6 tracking-wider rounded-sm" onClick={() => { handleApplyWhitelist() }}>Apply Whitelist</button> }
+            {!whitelistJoined && !whitelistLoading && <button className="font-bold uppercase clipped-t-r bg-gamefiGreen-600 hover:bg-gamefiGreen-500 text-black py-2 px-6 tracking-wider rounded-sm" onClick={() => { handleApplyWhitelist() }}>Apply Whitelist</button>}
             {whitelistLoading && <div className="font-bold uppercase clipped-t-r bg-gamefiGreen-600 hover:bg-gamefiGreen-500 text-black py-4 px-6 w-36 tracking-wider rounded-sm">
               <div className="dot-flashing mx-auto"></div>
             </div>}

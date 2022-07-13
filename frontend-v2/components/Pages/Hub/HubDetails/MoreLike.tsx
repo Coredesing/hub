@@ -5,8 +5,8 @@ import get from 'lodash.get'
 import { fetcher } from '@/utils'
 import arrowLeft from '@/assets/images/icons/arrow-left.png'
 import arrowRight from '@/assets/images/icons/arrow-right.png'
-import { WrapperSection } from '../HubHome/StyleElement'
-import ItemCarousel from './ItemCarousel'
+import ItemCarousel from '@/components/Pages/Hub/HubHome/ItemCarousel'
+import { WrapperSection } from '@/components/Pages/Hub/HubHome/StyleElement'
 
 export default function MoreLike ({ categories = [], slug = '' }) {
   const [data, setData] = useState([])
@@ -88,7 +88,7 @@ export default function MoreLike ({ categories = [], slug = '' }) {
       <div className='md:hidden'>
         <WrapperSection>
           <div className="flex w-full overflow-x-auto hide-scrollbar">
-            { data?.map((item, i) => <ItemCarousel item={item} index={`MoreLike-${i}`} key={`MoreLike-${i}`} />) }
+            { data?.map((item, i) => <ItemCarousel item={item} index={`MoreLike-${i}`} key={`MoreLike-${i}`} showToolTip />) }
           </div>
         </WrapperSection>
       </div>
@@ -96,12 +96,12 @@ export default function MoreLike ({ categories = [], slug = '' }) {
         <div className="hidden sm:block">
           <img src={arrowLeft.src} alt="" className="w-8 cursor-pointer opacity-80 hover:opacity-100 select-none" onClick={prev} />
         </div>
-        <Flicking circular={true} className="flex-1" align="center" interruptable={true} ref={refSlider}>
+        <Flicking className="flex-1" align="center" interruptable={true} ref={refSlider}>
           {
             chunkData?.map((v, i) => (
               <div className="w-full mb-8 flex" key={`MoreLike-${i}`}>
                 {v?.map((item, i) => {
-                  return <ItemCarousel item={item} index={`MoreLike-${i}`} key={`MoreLike-${i}`} />
+                  return <ItemCarousel item={item} index={`MoreLike-${i}`} key={`MoreLike-${i}`} showToolTip />
                 })}
               </div>
             ))

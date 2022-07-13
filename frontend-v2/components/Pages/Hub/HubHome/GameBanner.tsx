@@ -118,13 +118,15 @@ const GameBanner = ({ data }) => {
                   </div>
 
                   <div className="flex align-middle items-center w-full mb-5 xl:mb-5 text-sm md:text-base font-casual">
-                    <div className="flex align-middle items-center flex-1 sm:flex-initial">
-                      <Image src={require('@/assets/images/icons/star.svg')} alt="star" />
-                      <p className="ml-2 text-gray-200">
-                        {(item.rate || 0).toFixed(1)}{' '}
-                        <span className="text-gray-400">({nFormatter(item.totalVotes || 0)} Rating{item.totalVotes > 1 ? 's' : ''})</span>
-                      </p>
-                    </div>
+                    <Link href={`/hub/${item?.slug}/reviews`} passHref>
+                      <div className="flex align-middle items-center flex-1 sm:flex-initial cursor-pointer">
+                        <Image src={require('@/assets/images/icons/star.svg')} alt="star" />
+                        <p className="ml-2 text-gray-200">
+                          {(item.rate || 0).toFixed(1)}{' '}
+                          <span className="text-gray-400">({nFormatter(item.totalVotes || 0)} Rating{item.totalVotes > 1 ? 's' : ''})</span>
+                        </p>
+                      </div>
+                    </Link>
                     <div className="text-gamefiGreen-700 mx-3 md:mx-4 2xl:mx-9 flex-1 sm:flex-initial line-clamp-1">
                       {get(item, 'project.studio[0].name')}
                     </div>

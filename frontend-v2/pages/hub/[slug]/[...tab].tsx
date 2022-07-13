@@ -165,7 +165,10 @@ export async function getServerSideProps ({ params, query }) {
     return { props: { data: {} } }
   }
   try {
-    const page = query.page || 1
+    // const page = query.page || 1
+    // const pageSize = page * PAGE_SIZE
+    const pageSize = 5 // default page size
+
     const reviewFilterValue: any = { aggregator: { slug: { eq: params.slug } }, status: { eq: 'published' } }
 
     if (query.rating_level) {
@@ -184,7 +187,6 @@ export async function getServerSideProps ({ params, query }) {
       }
     }
 
-    const pageSize = page * PAGE_SIZE
     const { data = {} } = await client.query({
       query: GET_AGGREGATORS_BY_SLUG,
       variables: { slug: params.slug, reviewFilterValue, pageSize }

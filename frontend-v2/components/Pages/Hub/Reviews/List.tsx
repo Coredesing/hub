@@ -9,6 +9,8 @@ import Item from '@/components/Pages/Hub/Reviews/ItemReview'
 import Image from 'next/image'
 import useHubProfile from '@/hooks/useHubProfile'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
+import Loading from '@/components/Pages/Hub/Loading'
 
 type Props = {
   data: any;
@@ -30,7 +32,7 @@ const List = ({ data, pagination = false, viewAll = false, filter = false, loadM
   const [ratingLevel, setRatingLevel] = useState<string>(data.ratingLevel)
   const [userRank, setUserRank] = useState<string>(data.userRank)
   const [listReview, setListReview] = useState<any[]>(data?.data || [])
-  const [, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [firstCome, setFirstCome] = useState<boolean>(true)
   const { accountHub } = useHubProfile()
 
@@ -122,6 +124,10 @@ const List = ({ data, pagination = false, viewAll = false, filter = false, loadM
     fetcher('/api/hub/reviews/list', { method: 'POST', body: JSON.stringify({ variables: { slug, reviewFilterValue, paginationArg: { pageSize, page } } }) }).then((result) => {
       setLoading(false)
       const reviews = get(result, 'data.reviews.data', [])
+      if (result?.error) {
+        toast.error('please try again!')
+        return
+      }
       if (!isEmpty(reviews)) {
         const formatData = reviews.map((e: { attributes: any; id: number }) => {
           const { author = {}, publishedAt, rate, review, title, likeCount, dislikeCount, commentCount } = e?.attributes || {}
@@ -161,6 +167,7 @@ const List = ({ data, pagination = false, viewAll = false, filter = false, loadM
       }
     }).catch((err) => {
       setLoading(false)
+      toast.error('please try again!')
       console.debug('err', err)
     })
   }
@@ -246,6 +253,7 @@ const List = ({ data, pagination = false, viewAll = false, filter = false, loadM
           </div>
         </div>}
       </div>
+      {loading && <Loading />}
     </div>
   )
 }

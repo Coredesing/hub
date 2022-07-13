@@ -866,7 +866,8 @@ class CampaignController {
         currency
       });
     } catch (error) {
-      return HelperUtils.responseErrorInternal('Claim refund error', error);
+      console.log('error', error)
+      return HelperUtils.responseErrorInternal('Claim refund error');
     }
   }
 

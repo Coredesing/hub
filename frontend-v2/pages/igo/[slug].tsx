@@ -728,7 +728,7 @@ const IGODetails = ({ poolData }) => {
                   {
                     poolData?.start_pre_order_time && <div className={`table-row ${current?.key === 'pre-order' && 'text-gamefiGreen'}`}>
                       <div className="table-cell align-middle py-2 rounded">
-                        Pre-order (Min Rank: {preOrderMinTier.name})
+                        Pre-order (Min Rank: {preOrderMinTier?.name})
                       </div>
                       <div className="table-cell align-middle py-2 font-normal">
                         {timeline[TIMELINE.PRE_ORDER].start ? format(timeline[TIMELINE.PRE_ORDER].start, 'HH:mm, dd MMM yyyy') : 'TBA'}

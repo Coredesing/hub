@@ -75,6 +75,12 @@ export const networks = [{
   currency: 'ALGO',
   image: require('@/assets/images/networks/algorand.png'),
   image2: require('@/assets/images/networks/algorand.png')
+}, {
+  name: 'MoonBeam',
+  alias: 'moonbeam',
+  currency: 'GLMR',
+  image: require('@/assets/images/networks/moonbeam.svg'),
+  image2: require('@/assets/images/networks/moonbeam.svg')
 }]
 
 const DEFAULT_HEIGHT_BEFORE_SHOW_MORE = 168

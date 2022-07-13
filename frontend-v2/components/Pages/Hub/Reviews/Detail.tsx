@@ -256,7 +256,7 @@ export default function Detail ({ data }) {
 
         <div className='flex flex-col py-2 md:py-4 md:flex-row md:gap-0 gap-2 md:justify-between md:items-center'>
           <p className={`${styles.total_like}`}>{likeCountText}</p>
-          <GroupAction id={data.id} pageSource="review" defaultLikeStatus={likeStatusOfReview} onChangeStatus={handleOnChangeStatus} />
+          <GroupAction id={data.id} pageSource="review" defaultLikeStatus={likeStatusOfReview} onChangeStatus={handleOnChangeStatus} notShowCount />
         </div>
 
         <Divide />

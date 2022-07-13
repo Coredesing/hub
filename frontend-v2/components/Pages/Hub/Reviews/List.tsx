@@ -122,7 +122,6 @@ const List = ({ data, pagination = false, viewAll = false, filter = false, loadM
     fetcher('/api/hub/reviews/list', { method: 'POST', body: JSON.stringify({ variables: { slug, reviewFilterValue, paginationArg: { pageSize, page } } }) }).then((result) => {
       setLoading(false)
       const reviews = get(result, 'data.reviews.data', [])
-      console.log('result :>> ', reviews, data.data)
       if (!isEmpty(reviews)) {
         const formatData = reviews.map((e: { attributes: any; id: number }) => {
           const { author = {}, publishedAt, rate, review, title, likeCount, dislikeCount, commentCount } = e?.attributes || {}
@@ -157,6 +156,8 @@ const List = ({ data, pagination = false, viewAll = false, filter = false, loadM
           return
         }
         setListReview([...listReview, ...formatData])
+      } else {
+        setListReview([])
       }
     }).catch((err) => {
       setLoading(false)

@@ -64,6 +64,7 @@ type GroupActionProps = {
   pageSource?: string;
   id?: string;
   comment?: boolean;
+  notShowCount?: boolean;
   defaultLikeStatus?: string;
   onChangeStatus?: (type: string, value: string) => void;
   likeCount?: number;
@@ -71,7 +72,7 @@ type GroupActionProps = {
   commentCount?: number;
 }
 
-export default function GroupAction ({ likeCount, dislikeCount, commentCount, pageSource, id, comment = false, defaultLikeStatus, onChangeStatus }: GroupActionProps) {
+export default function GroupAction ({ likeCount, dislikeCount, commentCount, pageSource, id, comment = false, defaultLikeStatus, onChangeStatus, notShowCount }: GroupActionProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [likeStatus, setLikeStatus] = useState(defaultLikeStatus)
@@ -120,14 +121,20 @@ export default function GroupAction ({ likeCount, dislikeCount, commentCount, pa
         if (err) {
           // toast.error('something went wrong')
         } else {
-          if (typeAPi === 'like') {
-            if (type === 'like') {
-              setDefaultLikeCount(defaultLikeCount + 1)
-            } else setDefaultDislikeCount(defaultDislikeCount + 1)
-          } else {
-            if (type === 'like') {
-              setDefaultLikeCount(defaultLikeCount - 1)
-            } else setDefaultDislikeCount(defaultDislikeCount - 1)
+          if (!notShowCount) {
+            if (typeAPi === 'like') {
+              if (type === 'like') {
+                setDefaultLikeCount(defaultLikeCount + 1)
+                if (isDislike) setDefaultDislikeCount(defaultDislikeCount - 1)
+              } else {
+                setDefaultDislikeCount(defaultDislikeCount + 1)
+                if (isLike) setDefaultLikeCount(defaultLikeCount - 1)
+              }
+            } else {
+              if (type === 'like') {
+                setDefaultLikeCount(defaultLikeCount - 1)
+              } else setDefaultDislikeCount(defaultDislikeCount - 1)
+            }
           }
           onChangeStatus && onChangeStatus('review', typeAPi === 'like' ? type : '')
           // router.replace(router.asPath)

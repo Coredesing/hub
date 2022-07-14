@@ -1,21 +1,97 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { imageCMS, formatPrice } from '@/utils'
+import { imageCMS, formatPrice, gtagEvent } from '@/utils'
 import { nFormatter } from '@/components/Pages/Hub/utils'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
 import clsx from 'clsx'
+import useConnectWallet from '@/hooks/useConnectWallet'
 import styles from './home.module.scss'
 import ImageLoader from '@/components/Base/ImageLoader'
 import get from 'lodash.get'
 import stylesDetail from '@/components/Pages/Hub/HubList/hubList.module.scss'
 import Tippy from '@tippyjs/react'
 import { PriceChangeBg } from '@/components/Pages/Hub/HubDetails/PriceChange'
+import { useRouter } from 'next/router'
 
 import { WrapperItem } from './StyleElement'
 
-export default function ItemCarousel ({ item, index, showToolTip }: any) {
-  const { rate, tokenomic, verticalThumbnail, name, totalViews, totalFavorites, slug, shortDesc, categories, mobileThumbnail } = item
+export default function ItemCarousel ({ item, index, showToolTip, defaultFavorite, disabled }: any) {
+  const [loading, setLoading] = useState(disabled)
+  const [favorite, setFavorite] = useState(defaultFavorite)
+  const { connectWallet } = useConnectWallet()
+  const router = useRouter()
+
+  useEffect(() => {
+    setFavorite(defaultFavorite)
+  }, [defaultFavorite])
+
+  useEffect(() => {
+    setLoading(disabled)
+  }, [disabled])
+
+  const { rate, tokenomic, verticalThumbnail, name, totalViews, totalFavorites, slug, shortDesc, categories, mobileThumbnail, id } = item
   const icon = get(tokenomic, 'icon.data.attributes', {})
+
+  const handleLike = (e: { stopPropagation: () => void }) => {
+    e?.stopPropagation()
+    setLoading(true)
+    connectWallet().then((v: any) => {
+      if (v.error) {
+        setLoading(false)
+        console.debug(v.error)
+        toast.error('Could not like')
+        return
+      }
+      const { walletAddress, signature } = v
+      fetch('/api/hub/favorite/handleFavorite', {
+        method: 'POST',
+        body: JSON.stringify({ objectID: id, type: 'aggregator', favorite: !favorite }),
+        headers: {
+          'X-Signature': signature,
+          'X-Wallet-Address': walletAddress
+        }
+      }).then(res => {
+        if (res?.status === 429) {
+          return {
+            err: {
+              status: 429
+            }
+          }
+        }
+
+        return res.json()
+      }).then(({ err }) => {
+        setLoading(false)
+        if (err?.status === 429) {
+          toast.error('You reached the request limit. Please try again later!')
+          return
+        }
+        if (err) {
+          console.log('first1', err, id)
+          toast.error('Could not like')
+          return
+        }
+        setFavorite(!favorite)
+        router.replace(router.asPath)
+        if (favorite) {
+          gtagEvent('unlike', { game: slug })
+          return
+        }
+
+        gtagEvent('like', { game: slug })
+      }).catch((err) => {
+        setLoading(false)
+        console.log(err)
+        toast.error('Failed to like!')
+        console.debug('err', err)
+      })
+    }).catch(err => {
+      setLoading(false)
+      console.debug(err)
+      // toast.error(err?.toString() || 'Could not sign the authentication message')
+    })
+  }
 
   return (
     <WrapperItem key={index} className={clsx(styles.itemCarousel, 'min-w-[210px] w-full mr-4 last:mr-0 h-full')}>
@@ -33,18 +109,16 @@ export default function ItemCarousel ({ item, index, showToolTip }: any) {
                   </div></Link>
                   : <div></div>
               }
-              <div className="h-10">
-                {icon.url && (
-                  <div className="flex align-middle items-center">
-                    <img
-                      className="rounded-full"
-                      width={40}
-                      height={40}
-                      src={imageCMS(icon.url)}
-                      alt={icon.name}
-                    />
-                  </div>
-                )}
+              <div className="h-10 flex items-end">
+                <button
+                  onClick={handleLike}
+                  className={clsx('cursor-pointer disabled:cursor-not-allowed p-3')}
+                  disabled={loading}
+                >
+                  <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.91671 0.583984C8.69171 0.583984 7.64171 1.22565 7.00004 2.15898C6.35837 1.22565 5.30837 0.583984 4.08337 0.583984C2.15837 0.583984 0.583374 2.15898 0.583374 4.08398C0.583374 7.58398 7.00004 12.834 7.00004 12.834C7.00004 12.834 13.4167 7.58398 13.4167 4.08398C13.4167 2.15898 11.8417 0.583984 9.91671 0.583984Z" fill={favorite ? '#ff5959' : '#ffffff'} stroke={favorite ? '#ff5959' : '#ffffff'} />
+                  </svg>
+                </button>
               </div>
             </div>
           </Link>
@@ -86,7 +160,7 @@ export default function ItemCarousel ({ item, index, showToolTip }: any) {
               </div>
             </div>
           </Link>
-          <div className="w-full pt-2 pb-2 flex flex-col flex-1 justify-between font-casual">
+          <div className="w-full pt-3 pb-2 flex flex-col flex-1 justify-between font-casual">
             <div className="flex mb-2">
               {showToolTip
                 ? <Tippy
@@ -140,7 +214,22 @@ export default function ItemCarousel ({ item, index, showToolTip }: any) {
                 </Tippy>
                 : <Link href={`/hub/${slug}`} passHref>
                   <a className="group-hover:text-gamefiGreen-700 font-semibold text-base tracking-wide cursor-pointer hover:underline line-clamp-1">
-                    {name}
+                    <div className="flex items-center">
+                      {icon.url && (
+                        <div className="flex align-middle items-center mr-2">
+                          <img
+                            className="rounded-full"
+                            width={25}
+                            height={25}
+                            src={imageCMS(icon.url)}
+                            alt={icon.name}
+                          />
+                        </div>
+                      )}
+                      <div className="">
+                        {name}
+                      </div>
+                    </div>
                   </a>
                 </Link>}
             </div>

@@ -1309,53 +1309,85 @@ export const GET_FAVORITE_BY_USER_ID = gql`
   }
 `
 
-export const CUSTOM_PARTNER_ANALYTICS = gql`
-query ($limit: Int, $start: Int, $limitReviews: Int, $startReviews: Int, $favoriteID: String, $reviewSlug: String) {
-  favorites(pagination: {limit: $limit, start: $start}, filters: {type: { eq: "aggregator" }, objectID: { eq: $favoriteID }}) {
-    meta {
-      pagination {
-        total
+export const GET_LIST_FAVORITE_BY_USER_ID = gql`
+  query favorite($userId: ID, $aggregatorIds: [String]) {
+    favorites(
+      filters: {
+        objectID: { in: $aggregatorIds }
+        user: { id: { eq: $userId } }
+        type: { eq: "aggregator" }
       }
-    }
-    data {
-      id
-      attributes {
-        user {
-          data {
-            attributes {
-              walletAddress
-            }
-          }
+    ) {
+      data {
+        id
+        attributes {
+          objectID
         }
       }
     }
   }
+`
 
-  reviews(pagination: {limit: $limitReviews, start: $startReviews}, filters: { aggregator: { slug: { eq: $reviewSlug } } }) {
-    meta {
-      pagination {
-        total
+export const CUSTOM_PARTNER_ANALYTICS = gql`
+  query (
+    $limit: Int
+    $start: Int
+    $limitReviews: Int
+    $startReviews: Int
+    $favoriteID: String
+    $reviewSlug: String
+  ) {
+    favorites(
+      pagination: { limit: $limit, start: $start }
+      filters: { type: { eq: "aggregator" }, objectID: { eq: $favoriteID } }
+    ) {
+      meta {
+        pagination {
+          total
+        }
       }
-    }
-    data {
-      attributes {
-        aggregator {
-          data {
-            id
-            attributes {
-              slug
+      data {
+        id
+        attributes {
+          user {
+            data {
+              attributes {
+                walletAddress
+              }
             }
           }
         }
-        author {
-          data {
-            attributes {
-              walletAddress
+      }
+    }
+
+    reviews(
+      pagination: { limit: $limitReviews, start: $startReviews }
+      filters: { aggregator: { slug: { eq: $reviewSlug } } }
+    ) {
+      meta {
+        pagination {
+          total
+        }
+      }
+      data {
+        attributes {
+          aggregator {
+            data {
+              id
+              attributes {
+                slug
+              }
+            }
+          }
+          author {
+            data {
+              attributes {
+                walletAddress
+              }
             }
           }
         }
       }
     }
   }
-}
 `

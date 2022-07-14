@@ -7,10 +7,15 @@ import arrowLeft from '@/assets/images/icons/arrow-left.png'
 import arrowRight from '@/assets/images/icons/arrow-right.png'
 import ItemCarousel from '@/components/Pages/Hub/HubHome/ItemCarousel'
 import { WrapperSection } from '@/components/Pages/Hub/HubHome/StyleElement'
+import isEmpty from 'lodash.isempty'
+import useHubProfile from '@/hooks/useHubProfile'
 
 export default function MoreLike ({ categories = [], slug = '' }) {
   const [data, setData] = useState([])
   const [chunkData, setChunkData] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [listFavorite, setListFavorite] = useState([])
+  const { accountHub } = useHubProfile()
   const refSlider = useRef(null)
 
   const names = useMemo(() => {
@@ -47,6 +52,7 @@ export default function MoreLike ({ categories = [], slug = '' }) {
         const d = v.attributes
         return {
           ...d,
+          id: v.id,
           verticalThumbnail: get(d, 'verticalThumbnail.data.attributes', {}),
           tokenomic: get(d, 'project.data.attributes.tokenomic', {}),
           categories: get(d, 'project.data.attributes.categories', []),
@@ -68,6 +74,31 @@ export default function MoreLike ({ categories = [], slug = '' }) {
     })
   }, [names, slug])
 
+  useEffect(() => {
+    if (!isEmpty(data) && !isEmpty(accountHub) && isEmpty(listFavorite)) {
+      getListFavoriteByUser()
+    } else setListFavorite([])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accountHub?.id, data])
+
+  const getListFavoriteByUser = () => {
+    setLoading(true)
+    setListFavorite([])
+    fetcher('/api/hub/favorite/getListFavoriteByUserId', { method: 'POST', body: JSON.stringify({ variables: { userId: accountHub?.id, aggregatorIds: data.map(v => v.id) } }) }).then((result) => {
+      setLoading(false)
+      if (!isEmpty(result)) {
+        setListFavorite(get(result, 'data.favorites.data', [])?.reduce((total, v: { attributes: any }) => {
+          const objectId = v?.attributes?.objectID
+          total[objectId] = objectId
+          return total
+        }, {}))
+      } else setListFavorite([])
+    }).catch((err) => {
+      setLoading(false)
+      console.debug('err', err)
+    })
+  }
+
   const prev = () => {
     if (!refSlider.current) {
       return
@@ -88,7 +119,7 @@ export default function MoreLike ({ categories = [], slug = '' }) {
       <div className='md:hidden'>
         <WrapperSection>
           <div className="flex w-full overflow-x-auto hide-scrollbar">
-            { data?.map((item, i) => <ItemCarousel item={item} index={`MoreLike-${i}`} key={`MoreLike-${i}`} showToolTip />) }
+            {data?.map((item, i) => <ItemCarousel defaultFavorite={!!listFavorite[item.id]} disabled={loading} item={item} index={`MoreLike-${i}`} key={`MoreLike-${i}`} showToolTip />)}
           </div>
         </WrapperSection>
       </div>
@@ -101,7 +132,7 @@ export default function MoreLike ({ categories = [], slug = '' }) {
             chunkData?.map((v, i) => (
               <div className="w-full mb-8 flex" key={`MoreLike-${i}`}>
                 {v?.map((item, i) => {
-                  return <ItemCarousel item={item} index={`MoreLike-${i}`} key={`MoreLike-${i}`} showToolTip />
+                  return <ItemCarousel defaultFavorite={!!listFavorite[item.id]} disabled={loading} item={item} index={`MoreLike-${i}`} key={`MoreLike-${i}`} showToolTip />
                 })}
               </div>
             ))

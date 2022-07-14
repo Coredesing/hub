@@ -264,8 +264,8 @@ const Claim = () => {
 
   const refundDeadline = useMemo(() => {
     return {
-      from: new Date(Number(poolData?.start_refund_time) * 1000),
-      to: new Date(Number(poolData?.end_refund_time) * 1000),
+      from: poolData?.start_refund_time ? new Date(Number(poolData?.start_refund_time) * 1000) : null,
+      to: poolData?.start_refund_time ? new Date(Number(poolData?.end_refund_time) * 1000) : null,
       claim: new Date(Number(poolData?.end_refund_time) * 1000 + CLAIM_REFUND_AFTER)
     }
   }, [poolData?.end_refund_time, poolData?.start_refund_time])
@@ -662,7 +662,7 @@ const Claim = () => {
               <div className="w-full flex gap-2 items-center font-casual text-sm">
                 <div>
                   <div className="font-medium mb-2">You can request a refund if you have not yet claimed ${poolData?.symbol}</div>
-                  <div className="text-xs">Deadline to request a refund: <span className="text-gamefiGreen-700">{format(refundDeadline.from, 'HH:mm, dd MMM yyyy')} - {format(refundDeadline.to, 'HH:mm, dd MMM yyyy')}</span></div>
+                  <div className="text-xs">Deadline to request a refund: <span className="text-gamefiGreen-700">{!!refundDeadline.from && format(refundDeadline.from, 'HH:mm, dd MMM yyyy')} - {!!refundDeadline.to && format(refundDeadline.to, 'HH:mm, dd MMM yyyy')}</span></div>
                   { refundFee?.gt(0) && <div className="text-xs mt-2">Users will be charged an operation fee equivalent of <span className="text-gamefiGreen">{roundNumber(refundFee?.div(BigNumber.from(10).pow(usd.decimals)), DECIMAL_PLACES)} {usd.symbol}</span> for refunding.</div> }
                 </div>
                 {

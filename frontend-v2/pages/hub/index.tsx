@@ -5,7 +5,6 @@ import { GET_AGGREGATORS_HOME } from '@/graphql/aggregator'
 import { normalize } from '@/graphql/utils'
 import { client } from '@/graphql/apolloClient'
 import HubCountdown from '@/components/Pages/Hub/HubHome/HubCountDown'
-import EventLeaderboard from '@/components/Pages/Hub/HubHome/EventLeaderboard'
 import { GAME_HUB_START_TIME } from '@/utils/constants'
 
 function Hub ({ data, validCountdownTime }) {
@@ -35,7 +34,7 @@ function Hub ({ data, validCountdownTime }) {
             </div>
             {/* <div className="w-full sm:w-60 xl:w-80 col-span-1"> */}
             <div className="md:col-span-1">
-              <EventLeaderboard event="game-league" />
+              {/* <EventLeaderboard event="game-league" /> */}
               <TopRight />
               <TopRoiHub data={data.topROI}/>
               <Categories data={categories || []} />

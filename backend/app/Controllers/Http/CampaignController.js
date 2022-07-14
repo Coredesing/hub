@@ -725,6 +725,151 @@ class CampaignController {
     }
   }
 
+  async refundIDOToken({ request, params }) {
+    try {
+      const params = request.all()
+      const campaign_id = params.campaign_id
+      const userWalletAddress = request.header('wallet_address')
+      if (!campaign_id) {
+        return HelperUtils.responseBadRequest('Bad request with campaign_id')
+      }
+
+      // call to db get campaign info
+      const campaignService = new PoolService();
+      let camp = null
+      try {
+        if (await RedisUtils.checkExistRedisPoolDetail(campaign_id)) {
+          const cachedPoolDetail = await RedisUtils.getRedisPoolDetail(campaign_id);
+          camp = JSON.parse(cachedPoolDetail)
+        }
+      } catch (e) {
+        camp = null
+      }
+
+      if (!camp) {
+        camp = await campaignService.buildQueryBuilder({ id: campaign_id })
+          .with('freeBuyTimeSetting')
+          .with('tiers')
+          .first();
+
+        camp = JSON.parse(JSON.stringify(camp))
+      }
+
+      if (!camp) {
+        return HelperUtils.responseBadRequest("Do not found campaign")
+      }
+
+      // check type of pool
+
+      // call to SC to get amount token purchased of user
+      // const campaignClaimSC = await HelperUtils.getContractClaimInstance(camp);
+      // const [userPurchased, userClaimed] = await Promise.all([
+      //   campaignClaimSC.methods.userPurchased(userWalletAddress).call(),
+      //   campaignClaimSC.methods.userClaimed(userWalletAddress).call(),
+      // ]);
+
+      const now = Date.now() / 1000
+      if (!camp.start_refund_time || !camp.end_refund_time || now < +camp.start_refund_time || now > +camp.end_refund_time) {
+        return HelperUtils.responseBadRequest("Can not refund at this time")
+      }
+
+      // Check user claimed & user purchased
+      // if (userClaimed > 0 || userPurchased === 0) {
+      //   return HelperUtils.responseBadRequest("Can not refund");
+      // }
+
+      const currency = HelperUtils.getCurrencyAddress(camp.network_available, camp.accept_currency)
+      const deadline = camp.end_refund_time
+      const messageHash = web3.utils.soliditySha3(userWalletAddress, currency, deadline)
+
+      // get private key for campaign from db
+      const walletService = new WalletService()
+      const wallet = await walletService.findByCampaignId({campaign_id: campaign_id})
+      if (!wallet) {
+        return HelperUtils.responseBadRequest("Do not found wallet for campaign")
+      }
+      const privateKey = wallet.private_key
+      // create signature
+      const account = web3.eth.accounts.privateKeyToAccount(privateKey)
+      const accAddress = account.address
+      web3.eth.accounts.wallet.add(account)
+      web3.eth.defaultAccount = accAddress
+      const signature = await web3.eth.sign(messageHash, accAddress)
+      return HelperUtils.responseSuccess({
+        signature: signature,
+        currency,
+        deadline
+      });
+    } catch (e) {
+      return HelperUtils.responseErrorInternal('Refund error')
+    }
+  }
+
+  async claimRefundIDOToken({ request, params }) {
+    try {
+      const params = request.all()
+      const campaign_id = params.campaign_id
+      const userWalletAddress = request.header('wallet_address')
+
+      if (!campaign_id) {
+        return HelperUtils.responseBadRequest('Bad request with campaign_id')
+      }
+      const campaignService = new PoolService()
+      let camp = null
+      try {
+        if (await RedisUtils.checkExistRedisPoolDetail(campaign_id)) {
+          const cachedPoolDetail = await RedisUtils.getRedisPoolDetail(campaign_id)
+          camp = JSON.parse(cachedPoolDetail)
+        }
+      } catch (e) {
+        camp = null
+      }
+
+      if (!camp) {
+        camp = await campaignService.buildQueryBuilder({ id: campaign_id }).first()
+        camp = JSON.parse(JSON.stringify(camp))
+      }
+
+      if (!camp) {
+        return HelperUtils.responseBadRequest("Do not found campaign")
+      }
+
+      // check type of pool
+
+      // call to SC to get amount token purchased of user
+      // const campaignClaimSC = await HelperUtils.getContractClaimInstance(camp);
+      // const [userRefundToken, tokenSold] = await Promise.all([
+      //   campaignClaimSC.methods.userRefundToken(userWalletAddress).call(),
+      //   HelperUtils.getTokenSoldSmartContract(camp)
+      // ]);
+      // Check claim refund
+      // if (userRefundToken.isClaimed || userRefundToken.currencyAmount == 0) {
+      //   return HelperUtils.responseBadRequest("Can not to claim refund");
+      // }
+
+      const currency = HelperUtils.getCurrencyAddress(camp.network_available, camp.accept_currency)
+      const messageHash = web3.utils.soliditySha3(userWalletAddress, currency)
+      const walletService = new WalletService()
+      const wallet = await walletService.findByCampaignId({campaign_id: campaign_id})
+      if (!wallet) {
+        return HelperUtils.responseBadRequest("Do not found wallet for campaign")
+      }
+      const privateKey = wallet.private_key
+      // create signature
+      const account = web3.eth.accounts.privateKeyToAccount(privateKey)
+      const accAddress = account.address
+      web3.eth.accounts.wallet.add(account)
+      web3.eth.defaultAccount = accAddress
+      const signature = await web3.eth.sign(messageHash, accAddress)
+      return HelperUtils.responseSuccess({
+        signature: signature,
+        currency
+      })
+    } catch (error) {
+      return HelperUtils.responseErrorInternal('Claim refund error')
+    }
+  }
+
   async claim({ request }) {
     // get all request params
     const params = request.all();

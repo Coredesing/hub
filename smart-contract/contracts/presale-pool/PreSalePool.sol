@@ -8,14 +8,20 @@ import "../libraries/Ownable.sol";
 import "../libraries/ReentrancyGuard.sol";
 import "../libraries/SafeMath.sol";
 import "../libraries/Pausable.sol";
-import "../extensions/RedKiteWhitelist.sol";
+import "../extensions/Whitelist.sol";
 
-contract PreSalePool is Ownable, ReentrancyGuard, Pausable, RedKiteWhitelist {
+contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
     using SafeMath for uint256;
 
     struct OfferedCurrency {
         uint256 decimals;
         uint256 rate;
+    }
+
+    struct UserRefundToken {
+        uint256 currencyAmount;
+        address currency;
+        bool isClaimed;
     }
 
     // The token being sold
@@ -60,6 +66,15 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, RedKiteWhitelist {
     // Pool extensions
     bool public useWhitelist = true;
 
+    // User refund token
+    mapping(address => UserRefundToken) public userRefundToken;
+
+    // Total amount of user refund by currency
+    uint256 public totalRefundCurrency = 0;
+
+    // Amount of user refund by currency
+    uint256 public refundCurrency = 0;
+
     // -----------------------------------------
     // Lauchpad Starter's event
     // -----------------------------------------
@@ -89,32 +104,17 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, RedKiteWhitelist {
 
     event TokenClaimed(address user, uint256 amount);
     event RefundedIcoToken(address wallet, uint256 amount);
+    event RefundedIcoCurrency(address wallet, uint256 amount);
     event PoolStatsChanged();
     event TokenChanged(address token);
+    event RefundToken(address user, uint256 currencyAmount, address currency);
+    event ClaimRefund(address user, uint256 currencyAmount, address currency);
 
     // -----------------------------------------
     // Constructor
     // -----------------------------------------
     constructor() {
         factory = msg.sender;
-    }
-
-    // -----------------------------------------
-    // Red Kite external interface
-    // -----------------------------------------
-
-    /**
-     * @dev fallback function
-     */
-    fallback() external {
-        revert();
-    }
-
-    /**
-     * @dev fallback function
-     */
-    receive() external payable {
-        revert();
     }
 
     /**
@@ -272,6 +272,7 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, RedKiteWhitelist {
         uint256 _minAmount,
         bytes memory _signature
     ) public payable whenNotPaused nonReentrant {
+        require(userRefundToken[_candidate].currencyAmount == 0, "POOL::USER_REFUNDED");
         uint256 weiAmount = msg.value;
 
         require(offeredCurrencies[address(0)].rate != 0, "POOL::PURCHASE_METHOD_NOT_ALLOWED");
@@ -305,6 +306,7 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, RedKiteWhitelist {
         uint256 _minAmount,
         bytes memory _signature
     ) public whenNotPaused nonReentrant {
+        require(userRefundToken[_candidate].currencyAmount == 0, "POOL::USER_REFUNDED");
         require(offeredCurrencies[_token].rate != 0, "POOL::PURCHASE_METHOD_NOT_ALLOWED");
         require(_validPurchase(), "POOL::ENDED");
         require(_verifyWhitelist(_candidate, _maxAmount, _minAmount, _signature), "POOL:INVALID_SIGNATURE");
@@ -358,6 +360,25 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, RedKiteWhitelist {
     }
 
     /**
+      * @notice Owner can receive their remaining currency
+      * @dev  Can refund remainning currency if user can't claim refund
+      * @param _wallet Address wallet who receive the remainning currency
+      */
+    function refundRemainingCurrency(address _wallet, address _currency) external onlyOwner {
+        require(isFinalized(), "POOL::NOT_FINALIZED");
+
+        uint256 contractBalance = address(this).balance;
+
+        if(_currency != address(0)){
+            contractBalance = IERC20(_currency).balanceOf(address(this));
+        }
+
+        require(contractBalance > 0, "POOL::EMPTY_BALANCE");
+        _deliverCurrency(_currency, _wallet, contractBalance);
+        emit RefundedIcoCurrency(_wallet, contractBalance);
+    }
+
+    /**
      * @notice User can receive their tokens when pool finished
      */
     function claimTokens(address _candidate, uint256 _amount, bytes memory _signature) nonReentrant public {
@@ -380,6 +401,69 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, RedKiteWhitelist {
         totalUnclaimed = totalUnclaimed.sub(claimAmount);
 
         emit TokenClaimed(msg.sender, claimAmount);
+    }
+
+    /**
+      * @notice User can request refund ido tokens to receipt offered currency
+     */
+    function refundTokens(address _candidate, address _currency, uint256 _deadline, bytes memory _signature) nonReentrant public {
+        require(isFinalized(), "POOL::NOT_FINALIZED");
+        require(block.timestamp <= _deadline, "POOL:REFUND_ENDED");
+        require(userClaimed[_candidate] == 0 && userPurchased[_candidate] > 0, "POOL::NOT_ALLOW_TO_REFUND");
+
+        require(_verifyRefundToken(_candidate, _currency, _deadline, _signature), "POOL:INVALID_SIGNATURE");
+
+        uint256 currencyAmount = investedAmountOf[_currency][_candidate];
+        require(currencyAmount > 0, "POOL::NOT_ALLOW_CURRENCY_TO_REFUND");
+
+        userRefundToken[_candidate] = UserRefundToken({
+            currencyAmount: currencyAmount,
+            currency: _currency,
+            isClaimed: false
+        });
+
+        uint256 refundTokenAmount = userPurchased[_candidate];
+        totalRefundCurrency = totalRefundCurrency.add(currencyAmount);
+        refundCurrency = refundCurrency.add(currencyAmount);
+
+        totalUnclaimed = totalUnclaimed.sub(refundTokenAmount);
+        tokenSold = tokenSold.sub(refundTokenAmount);
+        userPurchased[_candidate] = 0;
+        weiRaised = weiRaised.sub(currencyAmount);
+        investedAmountOf[_currency][_candidate] = 0;
+
+        emit RefundToken(_candidate, currencyAmount, _currency);
+    }
+
+    /**
+      * @notice User claim request refund ido tokens
+     */
+    function claimRefundTokens(address _candidate, address _currency, bytes memory _signature) nonReentrant public {
+        require(isFinalized(), "POOL::NOT_FINALIZED");
+        require(userRefundToken[_candidate].currencyAmount > 0 && !userRefundToken[_candidate].isClaimed, "POOL::NOT_ALLOW_TO_CLAIM_REFUND");
+        require(_verifyClaimRefundToken(_candidate, _currency, _signature), "POOL:INVALID_SIGNATURE");
+
+        refundCurrency = refundCurrency.sub(userRefundToken[_candidate].currencyAmount);
+        userRefundToken[_candidate].isClaimed = true;
+
+        uint256 claimAmount = userRefundToken[_candidate].currencyAmount;
+
+        require(_currency == address(0) ? address(this).balance >= claimAmount : IERC20(_currency).balanceOf(address(this)) >= claimAmount, "POOL::NOT_ENOUGHT_CURRENCY_FOR_CLAIM_REFUND");
+
+        _deliverCurrency(_currency, _candidate, claimAmount);
+
+        emit ClaimRefund(_candidate, claimAmount, _currency);
+    }
+
+    /**
+      * @notice Get total refund currency
+     */
+    function getTotalRefundToken(address _token)
+    public
+    view
+    returns (uint256)
+    {
+        return _getOfferedCurrencyToTokenAmount(_token, totalRefundCurrency);
     }
 
     /**
@@ -422,6 +506,26 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, RedKiteWhitelist {
     }
 
     /**
+      * @dev Transfer currency for claim refund function
+      * @param _currency Address token currency to buy token purchase
+      * @param _beneficiary Address performing the token purchase
+      * @param _currencyAmount Number of currency to be emitted
+      */
+    function _deliverCurrency(address _currency, address _beneficiary, uint256 _currencyAmount)
+        internal
+    {
+        if(_currency == address(0)){
+            _transfer(_beneficiary, _currencyAmount);
+        } else {
+            TransferHelper.safeTransfer(
+                _currency,
+                _beneficiary,
+                _currencyAmount
+            );
+        }
+    }
+
+    /**
      * @dev Determines how ETH is stored/forwarded on purchases.
      */
     function _forwardFunds(uint256 _value) internal {
@@ -453,7 +557,7 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, RedKiteWhitelist {
     // @return true if the transaction can buy tokens
     function _validPurchase() internal view returns (bool) {
         bool withinPeriod =
-            block.timestamp >= openTime && block.timestamp <= closeTime;
+        block.timestamp >= openTime && block.timestamp <= closeTime;
         return withinPeriod;
     }
 
@@ -503,5 +607,40 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, RedKiteWhitelist {
         require(msg.sender == _candidate, "POOL::WRONG_CANDIDATE");
 
         return (verifyClaimToken(signer, _candidate, _amount, _signature));
+    }
+
+    function _verifyRefundToken(
+        address _candidate,
+        address _currency,
+        uint256 _deadline,
+        bytes memory _signature
+    ) private view returns (bool){
+        require(msg.sender == _candidate, "POOL::WRONG_CANDIDATE");
+
+        return (verifyRefundToken(signer, _candidate, _currency, _deadline, _signature));
+    }
+
+    function _verifyClaimRefundToken(
+        address _candidate,
+        address _currency,
+        bytes memory _signature
+    ) private view returns (bool){
+        require(msg.sender == _candidate, "POOL::WRONG_CANDIDATE");
+
+        return (verifyClaimRefundToken(signer, _candidate, _currency, _signature));
+    }
+
+    /**
+     * @dev fallback function
+     */
+    fallback() external {
+    //        revert();
+    }
+
+    /**
+     * @dev fallback function
+     */
+    receive() external payable {
+    //        revert();
     }
 }

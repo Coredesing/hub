@@ -99,8 +99,43 @@ const BSC_SMART_CONTRACT_USDC_ADDRESS = process.env.BSC_SMART_CONTRACT_USDC_ADDR
 const BSC_SMART_CONTRACT_BUSD_ADDRESS = process.env.BSC_SMART_CONTRACT_BUSD_ADDRESS;
 const POLYGON_SMART_CONTRACT_USDT_ADDRESS = process.env.POLYGON_SMART_CONTRACT_USDT_ADDRESS;
 const POLYGON_SMART_CONTRACT_USDC_ADDRESS = process.env.POLYGON_SMART_CONTRACT_USDC_ADDRESS;
+const AVALANCHE_SMART_CONTRACT_USDT_ADDRESS = process.env.AVALANCHE_SMART_CONTRACT_USDT_ADDRESS
+
+const currencyAddresses = {
+  eth: {
+    usdt: ETH_SMART_CONTRACT_USDT_ADDRESS,
+    usdc: ETH_SMART_CONTRACT_USDC_ADDRESS
+  },
+  bsc: {
+    usdt: BSC_SMART_CONTRACT_USDT_ADDRESS,
+    busd: BSC_SMART_CONTRACT_BUSD_ADDRESS,
+    usdc: BSC_SMART_CONTRACT_USDC_ADDRESS
+  },
+  polygon: {
+    usdt: POLYGON_SMART_CONTRACT_USDT_ADDRESS,
+    usdc: POLYGON_SMART_CONTRACT_USDC_ADDRESS
+  },
+  avalanche: {
+    usdt: AVALANCHE_SMART_CONTRACT_USDT_ADDRESS,
+  }
+}
 
 const PoolStatus = Const.POOL_STATUS;
+
+const getCurrencyAddress = (network, currency) => {
+  if (!network || !currency) {
+    return '0x0000000000000000000000000000000000000000'
+  }
+
+  if (currency === 'eth') {
+    return '0x0000000000000000000000000000000000000000'
+  }
+
+  network = network.toLowerCase()
+  currency = currency.toLowerCase()
+
+  return currencyAddresses[network][currency]
+}
 
 /**
  * Generate "random" alpha-numeric string.
@@ -967,4 +1002,6 @@ module.exports = {
   getMarketplaceInstance,
   getLFWInstance,
   getTokenURI,
+
+  getCurrencyAddress,
 };

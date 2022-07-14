@@ -301,6 +301,11 @@ const IGODetails = ({ poolData }) => {
   }, [allocationError])
 
   useEffect(() => {
+    if (poolData.campaign_status.toLowerCase() === 'ended') {
+      setCurrent(timeline[TIMELINE.CLAIM])
+      return
+    }
+
     if (!poolData.start_join_pool_time && poolData.campaign_status?.toLowerCase() === 'tba') {
       return setCurrent(timeline[TIMELINE.TBA])
     }
@@ -396,6 +401,7 @@ const IGODetails = ({ poolData }) => {
 
   const [games, setGames] = useState([])
   useEffect(() => {
+    if (!poolData?.id) return
     fetcher(`${API_BASE_URL}/gaming/pools/${poolData?.id}/games`)
       .then(data => {
         setGames((data?.data || []).filter(x => !x.disabled))
@@ -722,7 +728,7 @@ const IGODetails = ({ poolData }) => {
                   {
                     poolData?.start_pre_order_time && <div className={`table-row ${current?.key === 'pre-order' && 'text-gamefiGreen'}`}>
                       <div className="table-cell align-middle py-2 rounded">
-                        Pre-order (Min Rank: {preOrderMinTier.name})
+                        Pre-order (Min Rank: {preOrderMinTier?.name})
                       </div>
                       <div className="table-cell align-middle py-2 font-normal">
                         {timeline[TIMELINE.PRE_ORDER].start ? format(timeline[TIMELINE.PRE_ORDER].start, 'HH:mm, dd MMM yyyy') : 'TBA'}

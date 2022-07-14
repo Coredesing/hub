@@ -301,7 +301,7 @@ const IGODetails = ({ poolData }) => {
   }, [allocationError])
 
   useEffect(() => {
-    if (poolData.campaign_status.toLowerCase() === 'ended') {
+    if (poolData?.campaign_status?.toLowerCase() === 'ended') {
       setCurrent(timeline[TIMELINE.CLAIM])
       return
     }

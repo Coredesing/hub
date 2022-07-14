@@ -182,6 +182,7 @@ const Claim = () => {
   }
 
   const handleClaim = async () => {
+    if (!poolData?.campaign_hash) return
     if (!account || !network) {
       return
     }
@@ -273,6 +274,7 @@ const Claim = () => {
   const [currentStep, setCurrentStep] = useState(1)
 
   const getUserRefund = useCallback(async () => {
+    if (!poolData?.campaign_hash) return
     if (!account) return
     const abi = PresalePoolABI
     const poolContract = new ethers.Contract(poolData?.campaign_hash, abi, defaultProvider)
@@ -305,6 +307,7 @@ const Claim = () => {
   }, [usd?.decimals, userRefund])
 
   const handleRefund = useCallback(async () => {
+    if (!poolData?.campaign_hash) return
     if (!refundConfirm || !refundReason || (refundReason === REFUND_REASON.FIVE && !otherReason)) {
       toast.error('Requirements do not match')
       return
@@ -379,6 +382,7 @@ const Claim = () => {
   }, [account, getUserRefund, library, otherReason, poolData?.campaign_hash, poolData?.id, refundConfirm, refundReason, signMessage, signature])
 
   const claimRefund = useCallback(async () => {
+    if (!poolData?.campaign_hash) return
     if (!account) return
 
     let s = ''
@@ -448,6 +452,7 @@ const Claim = () => {
   }, [account, getUserRefund, library, poolData?.campaign_hash, poolData?.id, signMessage, signature])
 
   const allowToRefund = useMemo(() => {
+    if (!poolData?.campaign_hash) return false
     if (!refundDeadline?.from || !refundDeadline?.to) return false // Pool does not have refund
     if (userRefund?.currencyAmount?.eq(0) && Number(purchasedTokens) === 0) return false // User do not buy tokens
 
@@ -458,6 +463,7 @@ const Claim = () => {
 
   const [refundFee, setRefundFee] = useState(null)
   const getRefundFee = useCallback(async () => {
+    if (!poolData?.campaign_hash) return
     if (!account) return
     const abi = PresalePoolABI
     const poolContract = new ethers.Contract(poolData?.campaign_hash, abi, defaultProvider)
@@ -739,7 +745,12 @@ const Claim = () => {
               <div className="text-[24px] font-bold text-gamefiDark-300">{currentStep}/2</div>
               <h3 className="text-[24px] font-bold uppercase">Refund Request</h3>
             </div>
-            <div className="font-casual text-sm mb-4">Aliqua id fugiat nostrud irure ex duis ea quis id quis ad et. Sunt qui esse pariatur duis deserunt mollit “Refund” minim tempor enim. Elit aute irure tempor cupidatat incididunt sint</div>
+            <div className="font-casual text-sm mb-4">
+            You are requesting a refund.<br/>
+            To confirm your action, please type the letter <span className="text-gamefiRed font-semibold">Refund</span> into the below box to continue the next step.
+              <br /> <br />
+            Refer to the full policy <a className="text-gamefiGreen underline" href="https://gamefi.org/insight/one-hour-refund-policy-on-gamefi-org-way-to-safeguard-community-investments" target="_blank" rel="noopener noreferrer">here</a>
+            </div>
             <Input value={refundConfirm} onKeyPress={(e) => {
               if (e.key === 'Enter' && refundConfirm.toLowerCase() === 'refund') setCurrentStep(2)
             }} placeholder="Refund" onChange={e => { setRefundConfirm(e.target.value) }} classes={ { input: 'bg-[#3C3C42] !important' } }></Input>

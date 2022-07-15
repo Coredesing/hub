@@ -8,7 +8,9 @@ const Countdown = ({ to, className }: { to: string | number; className?: string 
   const [seconds, setSeconds] = useState('00')
 
   useEffect(() => {
+    if (new Date(Number(to) * 1000).getTime() < new Date().getTime()) return
     const interval = setInterval(() => {
+      if (new Date(Number(to) * 1000).getTime() < new Date().getTime()) return
       const duration = intervalToDuration({
         start: new Date(Number(to) * 1000),
         end: new Date()

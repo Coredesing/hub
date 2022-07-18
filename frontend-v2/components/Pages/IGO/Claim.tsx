@@ -299,15 +299,18 @@ const Claim = () => {
   }, [account, defaultProvider, poolData?.campaign_hash])
 
   useEffect(() => {
+    if (!refundDeadline?.to || !refundDeadline?.from) return
     getUserRefund()
-  }, [getUserRefund])
+  }, [getUserRefund, refundDeadline?.from, refundDeadline?.to])
 
   const usdToRefund = useMemo(() => {
+    if (!userRefund) return 0
     return roundNumber(Number(userRefund?.currencyAmount?.div(BigNumber.from(10).pow(usd.decimals)).toString() || 0), DECIMAL_PLACES)
   }, [usd?.decimals, userRefund])
 
   const handleRefund = useCallback(async () => {
     if (!poolData?.campaign_hash) return
+    if (!userRefund) return
     if (!refundConfirm || !refundReason || (refundReason === REFUND_REASON.FIVE && !otherReason)) {
       toast.error('Requirements do not match')
       return
@@ -379,11 +382,12 @@ const Claim = () => {
     } catch (e) {
       toast.error(e?.message || 'Failed to request refund')
     }
-  }, [account, getUserRefund, library, otherReason, poolData?.campaign_hash, poolData?.id, refundConfirm, refundReason, signMessage, signature])
+  }, [account, getUserRefund, library, otherReason, poolData?.campaign_hash, poolData?.id, refundConfirm, refundReason, signMessage, userRefund])
 
   const claimRefund = useCallback(async () => {
     if (!poolData?.campaign_hash) return
     if (!account) return
+    if (!userRefund) return
 
     let s = ''
     await signMessage().then(data => {

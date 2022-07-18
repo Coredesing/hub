@@ -299,9 +299,9 @@ const Claim = () => {
   }, [account, defaultProvider, poolData?.campaign_hash])
 
   useEffect(() => {
-    if (!refundDeadline?.to || !refundDeadline?.from) return
+    if (!poolData?.start_refund_time) return
     getUserRefund()
-  }, [getUserRefund, refundDeadline?.from, refundDeadline?.to])
+  }, [getUserRefund, poolData?.start_refund_time])
 
   const [refundFee, setRefundFee] = useState(null)
   const getRefundFee = useCallback(async () => {
@@ -327,7 +327,7 @@ const Claim = () => {
 
   const usdToRefund = useMemo(() => {
     if (!userRefund) return 0
-    return roundNumber(Number(userRefund?.currencyAmount?.sub(BigNumber.from(refundFee)).div(BigNumber.from(10).pow(usd.decimals)).toString() || 0), DECIMAL_PLACES)
+    return roundNumber(Number(userRefund?.currencyAmount?.sub(BigNumber.from(refundFee || 0)).div(BigNumber.from(10).pow(usd.decimals)).toString() || 0), DECIMAL_PLACES)
   }, [refundFee, usd.decimals, userRefund])
 
   const handleRefund = useCallback(async () => {

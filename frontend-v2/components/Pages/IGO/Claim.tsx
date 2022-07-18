@@ -303,10 +303,32 @@ const Claim = () => {
     getUserRefund()
   }, [getUserRefund, refundDeadline?.from, refundDeadline?.to])
 
+  const [refundFee, setRefundFee] = useState(null)
+  const getRefundFee = useCallback(async () => {
+    if (!poolData?.campaign_hash) return
+    if (!account) return
+    const abi = PresalePoolABI
+    const poolContract = new ethers.Contract(poolData?.campaign_hash, abi, defaultProvider)
+
+    const method = 'staticFee'
+
+    try {
+      const fee = await poolContract[method]()
+
+      setRefundFee(fee)
+    } catch (e) {
+      console.log(e)
+    }
+  }, [account, defaultProvider, poolData?.campaign_hash])
+
+  useEffect(() => {
+    getRefundFee()
+  }, [getRefundFee])
+
   const usdToRefund = useMemo(() => {
     if (!userRefund) return 0
-    return roundNumber(Number(userRefund?.currencyAmount?.div(BigNumber.from(10).pow(usd.decimals)).toString() || 0), DECIMAL_PLACES)
-  }, [usd?.decimals, userRefund])
+    return roundNumber(Number(userRefund?.currencyAmount?.sub(BigNumber.from(refundFee)).div(BigNumber.from(10).pow(usd.decimals)).toString() || 0), DECIMAL_PLACES)
+  }, [refundFee, usd.decimals, userRefund])
 
   const handleRefund = useCallback(async () => {
     if (!poolData?.campaign_hash) return
@@ -464,28 +486,6 @@ const Claim = () => {
 
     return true
   }, [claimedTokens, purchasedTokens, refundDeadline?.from, refundDeadline?.to, userRefund?.currencyAmount])
-
-  const [refundFee, setRefundFee] = useState(null)
-  const getRefundFee = useCallback(async () => {
-    if (!poolData?.campaign_hash) return
-    if (!account) return
-    const abi = PresalePoolABI
-    const poolContract = new ethers.Contract(poolData?.campaign_hash, abi, defaultProvider)
-
-    const method = 'staticFee'
-
-    try {
-      const fee = await poolContract[method]()
-
-      setRefundFee(fee)
-    } catch (e) {
-      console.log(e)
-    }
-  }, [account, defaultProvider, poolData?.campaign_hash])
-
-  useEffect(() => {
-    getRefundFee()
-  }, [getRefundFee])
 
   return (
     <>

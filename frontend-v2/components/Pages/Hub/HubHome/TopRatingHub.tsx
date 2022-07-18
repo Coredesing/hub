@@ -60,9 +60,11 @@ export default function TopRatingHub ({ listFavorite, setListFavorite, getListFa
   }
 
   useEffect(() => {
+    // console.log('firstRating', accountHub?.id, listFavorite)
     if (!isEmpty(data) && !isEmpty(accountHub) && isEmpty(listFavorite)) {
-      getListFavoriteByUser(data, setLoading)
-    } else setListFavorite({})
+      getListFavoriteByUser(data, setLoading, accountHub?.id)
+    }
+    // } else setListFavorite({})
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountHub?.id, data])
 

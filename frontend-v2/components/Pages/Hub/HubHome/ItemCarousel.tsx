@@ -5,6 +5,7 @@ import { nFormatter } from '@/components/Pages/Hub/utils'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
 import clsx from 'clsx'
+import useHubProfile from '@/hooks/useHubProfile'
 import useConnectWallet from '@/hooks/useConnectWallet'
 import styles from './home.module.scss'
 import ImageLoader from '@/components/Base/ImageLoader'
@@ -12,6 +13,7 @@ import get from 'lodash.get'
 import stylesDetail from '@/components/Pages/Hub/HubList/hubList.module.scss'
 import Tippy from '@tippyjs/react'
 import { PriceChangeBg } from '@/components/Pages/Hub/HubDetails/PriceChange'
+import isEmpty from 'lodash.isempty'
 
 import { WrapperItem } from './StyleElement'
 
@@ -19,6 +21,15 @@ export default function ItemCarousel ({ item, index, showToolTip, defaultFavorit
   const [loading, setLoading] = useState(disabled)
   const [favorite, setFavorite] = useState(defaultFavorite)
   const { connectWallet } = useConnectWallet()
+  const { accountHub } = useHubProfile()
+
+  useEffect(() => {
+    if (isEmpty(accountHub) || (!isEmpty(accountHub) && !isEmpty(listFavorite))) {
+      console.log('first', accountHub?.id)
+      setListFavorite && setListFavorite({})
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accountHub?.id])
 
   useEffect(() => {
     setFavorite(defaultFavorite)

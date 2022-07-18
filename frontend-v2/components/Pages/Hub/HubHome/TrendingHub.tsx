@@ -59,9 +59,11 @@ export default function TrendingHub ({ listFavorite, setListFavorite, getListFav
   }
 
   useEffect(() => {
+    // console.log('firstTrending', accountHub?.id, listFavorite)
     if (!isEmpty(data) && !isEmpty(accountHub) && isEmpty(listFavorite)) {
-      getListFavoriteByUser(data, setLoading)
-    } else setListFavorite({})
+      getListFavoriteByUser(data, setLoading, accountHub?.id)
+    }
+    // } else setListFavorite({})
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountHub?.id, data])
 

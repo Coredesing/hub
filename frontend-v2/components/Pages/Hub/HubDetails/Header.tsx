@@ -119,7 +119,6 @@ function Header ({ callApi, name, id, className, isVerified = false, totalFavori
         gtagEvent('like', { game: slug })
       }).catch((err) => {
         setLoading(false)
-        console.log(err)
         toast.error('Failed to like!')
         console.debug('err', err)
       })

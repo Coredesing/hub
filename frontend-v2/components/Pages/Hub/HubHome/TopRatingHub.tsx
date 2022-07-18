@@ -14,12 +14,11 @@ import Loading from '../Loading'
 import HubTitle from '../HubTitle'
 import Link from 'next/link'
 
-export default function TopRatingHub () {
+export default function TopRatingHub ({ listFavorite, setListFavorite, getListFavoriteByUser }) {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
   const [chunkData, setChunkData] = useState([])
   const [plugins, setPlugins] = useState([])
-  const [listFavorite, setListFavorite] = useState([])
 
   const refSlider = useRef(null)
   const refSlider1 = useRef(null)
@@ -62,28 +61,10 @@ export default function TopRatingHub () {
 
   useEffect(() => {
     if (!isEmpty(data) && !isEmpty(accountHub) && isEmpty(listFavorite)) {
-      getListFavoriteByUser()
-    } else setListFavorite([])
+      getListFavoriteByUser(data, setLoading)
+    } else setListFavorite({})
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountHub?.id, data])
-
-  const getListFavoriteByUser = () => {
-    setLoading(true)
-    setListFavorite([])
-    fetcher('/api/hub/favorite/getListFavoriteByUserId', { method: 'POST', body: JSON.stringify({ variables: { userId: accountHub?.id, aggregatorIds: data.map(v => v.id) } }) }).then((result) => {
-      setLoading(false)
-      if (!isEmpty(result)) {
-        setListFavorite(get(result, 'data.favorites.data', [])?.reduce((total, v: { attributes: any }) => {
-          const objectId = v?.attributes?.objectID
-          total[objectId] = objectId
-          return total
-        }, {}))
-      } else setListFavorite([])
-    }).catch((err) => {
-      setLoading(false)
-      console.debug('err', err)
-    })
-  }
 
   const getData = (time: string) => {
     setLoading(true)
@@ -116,7 +97,7 @@ export default function TopRatingHub () {
           <WrapperSection><div className="flex w-full overflow-x-auto hide-scrollbar">
             {
               data?.map((item, i) => (
-                <ItemCarousel item={item} index={`TopRatingHub-${i}`} key={`TopRatingHub-${i}`} defaultFavorite={!!listFavorite[item.id]} disabled={loading} />
+                <ItemCarousel listFavorite={listFavorite} setListFavorite={setListFavorite} item={item} index={`TopRatingHub-${i}`} key={`TopRatingHub-${i}`} defaultFavorite={!!listFavorite[item.id]} disabled={loading} />
               ))
             }
           </div>
@@ -157,7 +138,7 @@ export default function TopRatingHub () {
                 chunkData.map((v, i) => (
                   <div className="w-full mb-8 flex" key={`ChunkTrendingHub-${i}`}>
                     {v.map((item, i) => (
-                      <ItemCarousel defaultFavorite={!!listFavorite[item.id]} disabled={loading} item={item} index={`TopRatingHub-${i}`} key={`TopRatingHub-${i}`} />
+                      <ItemCarousel listFavorite={listFavorite} setListFavorite={setListFavorite} defaultFavorite={!!listFavorite[item.id]} disabled={loading} item={item} index={`TopRatingHub-${i}`} key={`TopRatingHub-${i}`} />
                     ))}
                   </div>
                 ))

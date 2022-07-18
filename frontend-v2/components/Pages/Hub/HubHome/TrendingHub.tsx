@@ -13,12 +13,11 @@ import { WrapperSection } from './StyleElement'
 import ItemCarousel from './ItemCarousel'
 import HubTitle from '../HubTitle'
 
-export default function TrendingHub () {
+export default function TrendingHub ({ listFavorite, setListFavorite, getListFavoriteByUser }) {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [chunkData, setChunkData] = useState([])
   const [plugins, setPlugins] = useState([])
-  const [listFavorite, setListFavorite] = useState([])
 
   const refSlider = useRef(null)
   const refSlider1 = useRef(null)
@@ -61,28 +60,10 @@ export default function TrendingHub () {
 
   useEffect(() => {
     if (!isEmpty(data) && !isEmpty(accountHub) && isEmpty(listFavorite)) {
-      getListFavoriteByUser()
-    } else setListFavorite([])
+      getListFavoriteByUser(data, setLoading)
+    } else setListFavorite({})
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountHub?.id, data])
-
-  const getListFavoriteByUser = () => {
-    setLoading(true)
-    setListFavorite([])
-    fetcher('/api/hub/favorite/getListFavoriteByUserId', { method: 'POST', body: JSON.stringify({ variables: { userId: accountHub?.id, aggregatorIds: data.map(v => v.id) } }) }).then((result) => {
-      setLoading(false)
-      if (!isEmpty(result)) {
-        setListFavorite(get(result, 'data.favorites.data', [])?.reduce((total, v: { attributes: any }) => {
-          const objectId = v?.attributes?.objectID
-          total[objectId] = objectId
-          return total
-        }, {}))
-      } else setListFavorite([])
-    }).catch((err) => {
-      setLoading(false)
-      console.debug('err', err)
-    })
-  }
 
   useEffect(() => {
     fetcher('/api/hub/home', { method: 'POST', body: JSON.stringify({ query: 'GET_TRENDING_AGGREGATORS' }) }).then(({ data }) => {
@@ -109,7 +90,7 @@ export default function TrendingHub () {
             <div className="flex w-full overflow-x-auto hide-scrollbar">
               {
                 data.map((item, i) => (
-                  <ItemCarousel item={item} index={`TrendingHub-${i}`} key={`TrendingHub-${i}`} defaultFavorite={!!listFavorite[item.id]} disabled={loading} />
+                  <ItemCarousel listFavorite={listFavorite} setListFavorite={setListFavorite} item={item} index={`TrendingHub-${i}`} key={`TrendingHub-${i}`} defaultFavorite={!!listFavorite[item.id]} disabled={loading} />
                 ))
               }
             </div>
@@ -149,7 +130,7 @@ export default function TrendingHub () {
                 chunkData.map((v, i) => (
                   <div className="w-full mb-8 flex" key={`ChunkTrendingHub-${i}`}>
                     {v.map((item, i) => (
-                      <ItemCarousel item={item} index={`TrendingHub-${i}`} key={`TrendingHub-${i}`} defaultFavorite={!!listFavorite[item.id]} disabled={loading} />
+                      <ItemCarousel listFavorite={listFavorite} setListFavorite={setListFavorite} item={item} index={`TrendingHub-${i}`} key={`TrendingHub-${i}`} defaultFavorite={!!listFavorite[item.id]} disabled={loading} />
                     ))}
                   </div>
                 ))

@@ -12,15 +12,13 @@ import get from 'lodash.get'
 import stylesDetail from '@/components/Pages/Hub/HubList/hubList.module.scss'
 import Tippy from '@tippyjs/react'
 import { PriceChangeBg } from '@/components/Pages/Hub/HubDetails/PriceChange'
-import { useRouter } from 'next/router'
 
 import { WrapperItem } from './StyleElement'
 
-export default function ItemCarousel ({ item, index, showToolTip, defaultFavorite, disabled }: any) {
+export default function ItemCarousel ({ item, index, showToolTip, defaultFavorite, disabled, setListFavorite, listFavorite }: any) {
   const [loading, setLoading] = useState(disabled)
   const [favorite, setFavorite] = useState(defaultFavorite)
   const { connectWallet } = useConnectWallet()
-  const router = useRouter()
 
   useEffect(() => {
     setFavorite(defaultFavorite)
@@ -29,10 +27,8 @@ export default function ItemCarousel ({ item, index, showToolTip, defaultFavorit
   useEffect(() => {
     setLoading(disabled)
   }, [disabled])
-
   const { rate, tokenomic, verticalThumbnail, name, totalViews, totalFavorites, slug, shortDesc, categories, mobileThumbnail, id } = item
   const icon = get(tokenomic, 'icon.data.attributes', {})
-
   const handleLike = (e: { stopPropagation: () => void }) => {
     e?.stopPropagation()
     setLoading(true)
@@ -68,12 +64,17 @@ export default function ItemCarousel ({ item, index, showToolTip, defaultFavorit
           return
         }
         if (err) {
-          console.log('first1', err, id)
           toast.error('Could not like')
           return
         }
         setFavorite(!favorite)
-        router.replace(router.asPath)
+        const newListFavorite = { ...listFavorite }
+        if (favorite) {
+          delete newListFavorite[id]
+        } else {
+          newListFavorite[id] = id
+        }
+        setListFavorite(newListFavorite)
         if (favorite) {
           gtagEvent('unlike', { game: slug })
           return
@@ -82,7 +83,6 @@ export default function ItemCarousel ({ item, index, showToolTip, defaultFavorit
         gtagEvent('like', { game: slug })
       }).catch((err) => {
         setLoading(false)
-        console.log(err)
         toast.error('Failed to like!')
         console.debug('err', err)
       })

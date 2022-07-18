@@ -88,7 +88,6 @@ const List = ({ data, pagination = false, viewAll = false, filter = false, loadM
     fetcher('/api/hub/likes/getLikesByUserId', { method: 'POST', body: JSON.stringify({ variables: { userId: accountHub?.id } }) }).then((result) => {
       setLoading(false)
       if (!isEmpty(result)) {
-        console.log('result?.data?.likes?.data', result?.data?.likes?.data)
         setLikeStatusOfReviews(result?.data?.likes?.data?.reduce((total: { [x: string]: any }, v: { attributes: any }) => {
           const like = v.attributes
           if (like.objectType === 'review') {

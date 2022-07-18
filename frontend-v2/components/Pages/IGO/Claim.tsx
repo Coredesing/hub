@@ -299,15 +299,40 @@ const Claim = () => {
   }, [account, defaultProvider, poolData?.campaign_hash])
 
   useEffect(() => {
+    if (!poolData?.start_refund_time) return
     getUserRefund()
-  }, [getUserRefund])
+  }, [getUserRefund, poolData?.start_refund_time])
+
+  const [refundFee, setRefundFee] = useState(null)
+  const getRefundFee = useCallback(async () => {
+    if (!poolData?.campaign_hash) return
+    if (!account) return
+    const abi = PresalePoolABI
+    const poolContract = new ethers.Contract(poolData?.campaign_hash, abi, defaultProvider)
+
+    const method = 'staticFee'
+
+    try {
+      const fee = await poolContract[method]()
+
+      setRefundFee(fee)
+    } catch (e) {
+      console.log(e)
+    }
+  }, [account, defaultProvider, poolData?.campaign_hash])
+
+  useEffect(() => {
+    getRefundFee()
+  }, [getRefundFee])
 
   const usdToRefund = useMemo(() => {
-    return roundNumber(Number(userRefund?.currencyAmount?.div(BigNumber.from(10).pow(usd.decimals)).toString() || 0), DECIMAL_PLACES)
-  }, [usd?.decimals, userRefund])
+    if (!userRefund) return 0
+    return roundNumber(Number(userRefund?.currencyAmount?.sub(BigNumber.from(refundFee || 0)).div(BigNumber.from(10).pow(usd.decimals)).toString() || 0), DECIMAL_PLACES)
+  }, [refundFee, usd.decimals, userRefund])
 
   const handleRefund = useCallback(async () => {
     if (!poolData?.campaign_hash) return
+    if (!userRefund) return
     if (!refundConfirm || !refundReason || (refundReason === REFUND_REASON.FIVE && !otherReason)) {
       toast.error('Requirements do not match')
       return
@@ -379,11 +404,12 @@ const Claim = () => {
     } catch (e) {
       toast.error(e?.message || 'Failed to request refund')
     }
-  }, [account, getUserRefund, library, otherReason, poolData?.campaign_hash, poolData?.id, refundConfirm, refundReason, signMessage, signature])
+  }, [account, getUserRefund, library, otherReason, poolData?.campaign_hash, poolData?.id, refundConfirm, refundReason, signMessage, userRefund])
 
   const claimRefund = useCallback(async () => {
     if (!poolData?.campaign_hash) return
     if (!account) return
+    if (!userRefund) return
 
     let s = ''
     await signMessage().then(data => {
@@ -460,28 +486,6 @@ const Claim = () => {
 
     return true
   }, [claimedTokens, purchasedTokens, refundDeadline?.from, refundDeadline?.to, userRefund?.currencyAmount])
-
-  const [refundFee, setRefundFee] = useState(null)
-  const getRefundFee = useCallback(async () => {
-    if (!poolData?.campaign_hash) return
-    if (!account) return
-    const abi = PresalePoolABI
-    const poolContract = new ethers.Contract(poolData?.campaign_hash, abi, defaultProvider)
-
-    const method = 'staticFee'
-
-    try {
-      const fee = await poolContract[method]()
-
-      setRefundFee(fee)
-    } catch (e) {
-      console.log(e)
-    }
-  }, [account, defaultProvider, poolData?.campaign_hash])
-
-  useEffect(() => {
-    getRefundFee()
-  }, [getRefundFee])
 
   return (
     <>

@@ -17,7 +17,7 @@ import isEmpty from 'lodash.isempty'
 
 import { WrapperItem } from './StyleElement'
 
-export default function ItemCarousel ({ item, index, showToolTip, defaultFavorite, disabled, setListFavorite, listFavorite }: any) {
+export default function ItemCarousel ({ item, index, showToolTip, defaultFavorite, disabled, setListFavorite, listFavorite, clearFavorite }: any) {
   const [loading, setLoading] = useState(disabled)
   const [favorite, setFavorite] = useState(defaultFavorite)
   const { connectWallet } = useConnectWallet()
@@ -25,8 +25,7 @@ export default function ItemCarousel ({ item, index, showToolTip, defaultFavorit
 
   useEffect(() => {
     if (isEmpty(accountHub) || (!isEmpty(accountHub) && !isEmpty(listFavorite))) {
-      console.log('first', accountHub?.id)
-      setListFavorite && setListFavorite({})
+      clearFavorite && clearFavorite({})
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountHub?.id])
@@ -123,12 +122,21 @@ export default function ItemCarousel ({ item, index, showToolTip, defaultFavorit
               <div className="h-10 flex items-end">
                 <button
                   onClick={handleLike}
-                  className={clsx('cursor-pointer disabled:cursor-not-allowed p-3')}
+                  className={clsx('cursor-pointer disabled:cursor-not-allowed p-3', styles.favoriteIcon)}
                   disabled={loading}
                 >
-                  <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {favorite
+                    ? <svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M11.1818 1C9.84545 1 8.7 1.68095 8 2.67143C7.3 1.68095 6.15455 1 4.81818 1C2.71818 1 1 2.67143 1 4.71429C1 8.42857 8 14 8 14C8 14 15 8.42857 15 4.71429C15 2.67143 13.2818 1 11.1818 1Z" fill="#FF5959" stroke="#FF5959" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    : <svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M11.1818 1C9.84545 1 8.7 1.68095 8 2.67143C7.3 1.68095 6.15455 1 4.81818 1C2.71818 1 1 2.67143 1 4.71429C1 8.42857 8 14 8 14C8 14 15 8.42857 15 4.71429C15 2.67143 13.2818 1 11.1818 1Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+
+                  }
+                  {/* <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M9.91671 0.583984C8.69171 0.583984 7.64171 1.22565 7.00004 2.15898C6.35837 1.22565 5.30837 0.583984 4.08337 0.583984C2.15837 0.583984 0.583374 2.15898 0.583374 4.08398C0.583374 7.58398 7.00004 12.834 7.00004 12.834C7.00004 12.834 13.4167 7.58398 13.4167 4.08398C13.4167 2.15898 11.8417 0.583984 9.91671 0.583984Z" fill={favorite ? '#ff5959' : '#ffffff'} stroke={favorite ? '#ff5959' : '#ffffff'} />
-                  </svg>
+                  </svg> */}
                 </button>
               </div>
             </div>

@@ -14,7 +14,7 @@ export default function MoreLike ({ categories = [], slug = '' }) {
   const [data, setData] = useState([])
   const [chunkData, setChunkData] = useState([])
   const [loading, setLoading] = useState(true)
-  const [listFavorite, setListFavorite] = useState([])
+  const [listFavorite, setListFavorite] = useState({})
   const { accountHub } = useHubProfile()
   const refSlider = useRef(null)
 
@@ -75,16 +75,16 @@ export default function MoreLike ({ categories = [], slug = '' }) {
   }, [names, slug])
 
   useEffect(() => {
-    if (!isEmpty(data) && !isEmpty(accountHub) && isEmpty(listFavorite)) {
-      getListFavoriteByUser()
-    } else setListFavorite([])
+    if (!isEmpty(data) && !isEmpty(accountHub)) {
+      getListFavoriteByUser(data, accountHub?.id)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountHub?.id, data])
 
-  const getListFavoriteByUser = () => {
+  const getListFavoriteByUser = (data: any[], userId: any) => {
     setLoading(true)
-    setListFavorite([])
-    fetcher('/api/hub/favorite/getListFavoriteByUserId', { method: 'POST', body: JSON.stringify({ variables: { userId: accountHub?.id, aggregatorIds: data.map(v => v.id) } }) }).then((result) => {
+    setListFavorite({})
+    fetcher('/api/hub/favorite/getListFavoriteByUserId', { method: 'POST', body: JSON.stringify({ variables: { userId, aggregatorIds: data.map(v => v.id) } }) }).then((result) => {
       setLoading(false)
       if (!isEmpty(result)) {
         setListFavorite(get(result, 'data.favorites.data', [])?.reduce((total, v: { attributes: any }) => {
@@ -92,7 +92,7 @@ export default function MoreLike ({ categories = [], slug = '' }) {
           total[objectId] = objectId
           return total
         }, {}))
-      } else setListFavorite([])
+      } else setListFavorite({})
     }).catch((err) => {
       setLoading(false)
       console.debug('err', err)
@@ -119,7 +119,7 @@ export default function MoreLike ({ categories = [], slug = '' }) {
       <div className='md:hidden'>
         <WrapperSection>
           <div className="flex w-full overflow-x-auto hide-scrollbar">
-            {data?.map((item, i) => <ItemCarousel defaultFavorite={!!listFavorite[item.id]} disabled={loading} item={item} index={`MoreLike-${i}`} key={`MoreLike-${i}`} showToolTip />)}
+            {data?.map((item, i) => <ItemCarousel defaultFavorite={!!listFavorite[item.id]} setListFavorite={setListFavorite} clearFavorite={setListFavorite} listFavorite={listFavorite} disabled={loading} item={item} index={`MoreLike-${i}`} key={`MoreLike-${i}`} showToolTip />)}
           </div>
         </WrapperSection>
       </div>
@@ -132,7 +132,7 @@ export default function MoreLike ({ categories = [], slug = '' }) {
             chunkData?.map((v, i) => (
               <div className="w-full mb-8 flex" key={`MoreLike-${i}`}>
                 {v?.map((item, i) => {
-                  return <ItemCarousel defaultFavorite={!!listFavorite[item.id]} disabled={loading} item={item} index={`MoreLike-${i}`} key={`MoreLike-${i}`} showToolTip />
+                  return <ItemCarousel defaultFavorite={!!listFavorite[item.id]} setListFavorite={setListFavorite} clearFavorite={setListFavorite} listFavorite={listFavorite} disabled={loading} item={item} index={`MoreLike-${i}`} key={`MoreLike-${i}`} showToolTip />
                 })}
               </div>
             ))

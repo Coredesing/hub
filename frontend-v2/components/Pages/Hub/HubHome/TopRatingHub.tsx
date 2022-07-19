@@ -14,7 +14,7 @@ import Loading from '../Loading'
 import HubTitle from '../HubTitle'
 import Link from 'next/link'
 
-export default function TopRatingHub ({ listFavorite, setListFavorite, getListFavoriteByUser }) {
+export default function TopRatingHub ({ listFavorite, setListFavorite, getListFavoriteByUser, clearFavorite }) {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
   const [chunkData, setChunkData] = useState([])
@@ -60,9 +60,8 @@ export default function TopRatingHub ({ listFavorite, setListFavorite, getListFa
   }
 
   useEffect(() => {
-    // console.log('firstRating', accountHub?.id, listFavorite)
-    if (!isEmpty(data) && !isEmpty(accountHub) && isEmpty(listFavorite)) {
-      getListFavoriteByUser(data, setLoading, accountHub?.id)
+    if (!isEmpty(data) && !isEmpty(accountHub)) {
+      getListFavoriteByUser(data, setLoading, accountHub?.id, 'rating')
     }
     // } else setListFavorite({})
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -99,7 +98,7 @@ export default function TopRatingHub ({ listFavorite, setListFavorite, getListFa
           <WrapperSection><div className="flex w-full overflow-x-auto hide-scrollbar">
             {
               data?.map((item, i) => (
-                <ItemCarousel listFavorite={listFavorite} setListFavorite={setListFavorite} item={item} index={`TopRatingHub-${i}`} key={`TopRatingHub-${i}`} defaultFavorite={!!listFavorite[item.id]} disabled={loading} />
+                <ItemCarousel listFavorite={listFavorite} setListFavorite={setListFavorite} clearFavorite={clearFavorite} item={item} index={`TopRatingHub-${i}`} key={`TopRatingHub-${i}`} defaultFavorite={!!listFavorite[item.id]} disabled={loading} />
               ))
             }
           </div>
@@ -140,7 +139,7 @@ export default function TopRatingHub ({ listFavorite, setListFavorite, getListFa
                 chunkData.map((v, i) => (
                   <div className="w-full mb-8 flex" key={`ChunkTrendingHub-${i}`}>
                     {v.map((item, i) => (
-                      <ItemCarousel listFavorite={listFavorite} setListFavorite={setListFavorite} defaultFavorite={!!listFavorite[item.id]} disabled={loading} item={item} index={`TopRatingHub-${i}`} key={`TopRatingHub-${i}`} />
+                      <ItemCarousel listFavorite={listFavorite} setListFavorite={setListFavorite} clearFavorite={clearFavorite} defaultFavorite={!!listFavorite[item.id]} disabled={loading} item={item} index={`TopRatingHub-${i}`} key={`TopRatingHub-${i}`} />
                     ))}
                   </div>
                 ))

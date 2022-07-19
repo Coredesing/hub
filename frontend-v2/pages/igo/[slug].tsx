@@ -92,6 +92,9 @@ const IGODetails = ({ poolData }) => {
     return getCurrency(poolData)
   }, [poolData])
 
+  const isAirdropPool = useMemo(() => {
+    return poolData?.campaignClaimConfig[0]?.claim_type?.toString() === '1'
+  }, [poolData?.campaignClaimConfig])
   const totalRaise = useMemo(() => {
     return Math.round(parseInt(poolData?.total_sold_coin) * parseFloat(poolData?.token_conversion_rate))
   }, [poolData])
@@ -789,6 +792,18 @@ const IGODetails = ({ poolData }) => {
                     </div>
                     <div className="table-cell align-middle py-2 font-normal"></div>
                   </div>
+
+                  {
+                    isAirdropPool && <div className="table-row">
+                      <div className="table-cell align-middle py-2 rounded">
+                      Refund
+                      </div>
+                      <div className="table-cell align-middle py-2 font-normal text-gamefiRed">
+                        Refund Policy is not available in this pool
+                      </div>
+                      <div className="table-cell align-middle py-2 font-normal"></div>
+                    </div>
+                  }
                 </div>
               </div>
             </div>

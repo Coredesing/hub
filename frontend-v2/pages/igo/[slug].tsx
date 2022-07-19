@@ -93,8 +93,8 @@ const IGODetails = ({ poolData }) => {
   }, [poolData])
 
   const isAirdropPool = useMemo(() => {
-    return poolData?.campaignClaimConfig[0]?.claim_type?.toString() === '1'
-  }, [poolData?.campaignClaimConfig])
+    return poolData?.airdrop_network && poolData?.airdrop_network !== 'none'
+  }, [poolData?.airdrop_network])
   const totalRaise = useMemo(() => {
     return Math.round(parseInt(poolData?.total_sold_coin) * parseFloat(poolData?.token_conversion_rate))
   }, [poolData])

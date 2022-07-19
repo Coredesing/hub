@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Layout from '@/components/Layout'
-import { TopReviewsHub, GameBanner, TopPlayerHub, TopRoiHub, TopReleasedHub, TopViewHub, TrendingHub, TopRatingHub, TopRight, Categories } from '@/components/Pages/Hub/HubHome'
+import { TopReviewsHub, GameBanner, TopPlayerHub, TopRoiHub, TopReleasedHub, TopViewHub, TrendingHub, TopRatingHub, TopRight, Categories, ListLaunchedOnGamefi } from '@/components/Pages/Hub/HubHome'
 import { GET_AGGREGATORS_HOME } from '@/graphql/aggregator'
 import { normalize } from '@/graphql/utils'
 import { client } from '@/graphql/apolloClient'
@@ -74,7 +74,7 @@ function Hub ({ data, validCountdownTime }) {
               <TopRight />
               <TopRoiHub data={data.topROI} />
               <Categories data={categories || []} />
-              {/* <ListLaunchedOnGamefi /> */}
+              <ListLaunchedOnGamefi />
             </div>
           </div>
           <TrendingHub getListFavoriteByUser={getListFavoriteByUser} setListFavorite={setListFavorite} clearFavorite={clearFavorite} listFavorite={listFavorite} />

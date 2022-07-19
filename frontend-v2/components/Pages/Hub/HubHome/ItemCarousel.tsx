@@ -10,6 +10,7 @@ import useConnectWallet from '@/hooks/useConnectWallet'
 import styles from './home.module.scss'
 import ImageLoader from '@/components/Base/ImageLoader'
 import get from 'lodash.get'
+import Recaptcha from '@/components/Base/Recaptcha'
 import stylesDetail from '@/components/Pages/Hub/HubList/hubList.module.scss'
 import Tippy from '@tippyjs/react'
 import { PriceChangeBg } from '@/components/Pages/Hub/HubDetails/PriceChange'
@@ -22,6 +23,8 @@ export default function ItemCarousel ({ item, index, showToolTip, defaultFavorit
   const [favorite, setFavorite] = useState(defaultFavorite)
   const { connectWallet } = useConnectWallet()
   const { accountHub } = useHubProfile()
+  const recaptchaRef: any = React.useRef()
+  const [verify, setVerify] = useState('')
 
   useEffect(() => {
     if (isEmpty(accountHub) || (!isEmpty(accountHub) && !isEmpty(listFavorite))) {
@@ -102,9 +105,18 @@ export default function ItemCarousel ({ item, index, showToolTip, defaultFavorit
       // toast.error(err?.toString() || 'Could not sign the authentication message')
     })
   }
+  const onChangeRecaptcha = (value: string | null) => {
+    setVerify(value)
+  }
 
+  const onCaptchaWinnerLoad = (params) => {
+    console.log('params', params)
+  }
   return (
     <WrapperItem key={index} className={clsx(styles.itemCarousel, 'min-w-[210px] w-full mr-4 last:mr-0 h-full')}>
+      <div className='mb-4'>
+        <Recaptcha className="w-full mb-3" onChange={onChangeRecaptcha} ref={recaptchaRef} onLoad={onCaptchaWinnerLoad} />
+      </div>
       <div className="rounded p-px h-full">
         <div className='h-full rounded relative flex flex-col group'>
           <Link href={`/hub/${slug}`} passHref>

@@ -17,18 +17,18 @@ const banners = {
     id: 'guilds'
   },
   '/': {
-    deadline: new Date('2022-07-19T17:00:00Z'),
+    deadline: new Date('2022-07-20T14:00:00Z'),
     img: banner2,
-    link: 'https://www.youtube.com/watch?v=m9rnDrQ0GoQ',
-    text: 'Livestream with XANA',
-    id: 'xana-live-stream'
+    link: 'https://gamefi.org/igo/xana',
+    text: 'XANA IGO',
+    id: 'xana-igo'
   },
   '/igo': {
-    deadline: new Date('2022-07-19T17:00:00Z'),
+    deadline: new Date('2022-07-20T14:00:00Z'),
     img: banner2,
-    link: 'https://www.youtube.com/watch?v=m9rnDrQ0GoQ',
-    text: 'Livestream with XANA',
-    id: 'xana-live-stream'
+    link: 'https://gamefi.org/igo/xana',
+    text: 'XANA IGO',
+    id: 'xana-igo'
   },
   '/hub': {
     deadline: new Date('2022-07-28T14:00:00Z'),

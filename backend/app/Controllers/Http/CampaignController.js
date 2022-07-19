@@ -763,7 +763,9 @@ class CampaignController {
       }
 
       // check type of pool
-
+      if (camp.airdrop_network && camp.airdrop_network !== 'none') {
+        return HelperUtils.responseBadRequest("Request refund is not available in this campaign")
+      }
       // call to SC to get amount token purchased of user
       // const campaignClaimSC = await HelperUtils.getContractClaimInstance(camp);
       // const [userPurchased, userClaimed] = await Promise.all([
@@ -841,7 +843,9 @@ class CampaignController {
       }
 
       // check type of pool
-
+      if (camp.airdrop_network && camp.airdrop_network !== 'none') {
+        return HelperUtils.responseBadRequest("Claim refund is not available in this campaign")
+      }
       // call to SC to get amount token purchased of user
       // const campaignClaimSC = await HelperUtils.getContractClaimInstance(camp);
       // const [userRefundToken, tokenSold] = await Promise.all([

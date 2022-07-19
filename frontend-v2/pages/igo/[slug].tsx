@@ -799,7 +799,7 @@ const IGODetails = ({ poolData }) => {
                       Refund
                       </div>
                       <div className="table-cell align-middle py-2 font-normal text-gamefiRed">
-                        Refund Policy is not available in this pool
+                        Refund Policy is not available for this pool
                       </div>
                       <div className="table-cell align-middle py-2 font-normal"></div>
                     </div>

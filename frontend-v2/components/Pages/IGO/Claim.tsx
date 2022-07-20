@@ -475,7 +475,7 @@ const Claim = () => {
     } catch (e) {
       toast.error(e?.message || 'Failed to request refund')
     }
-  }, [account, getUserRefund, library, poolData?.campaign_hash, poolData?.id, signMessage, signature])
+  }, [account, getUserRefund, library, poolData?.campaign_hash, poolData?.id, signMessage, userRefund])
 
   const allowToRefund = useMemo(() => {
     if (!poolData?.campaign_hash) return false

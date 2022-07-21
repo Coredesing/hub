@@ -1,20 +1,22 @@
-import React, { useEffect, useState, useMemo } from 'react'
-import Layout from 'components/Layout'
+import { useEffect, useState, useMemo } from 'react'
+import { useRouter } from 'next/router'
+import get from 'lodash.get'
+import isEmpty from 'lodash.isempty'
+import { fetcher } from '@/utils'
+import { normalize } from '@/graphql/utils'
+import useHubProfile from '@/hooks/useHubProfile'
+import { COMMENT_PAGE_SIZE, REVIEW_PAGE_SIZE, REVIEW_STATUS } from '@/components/Pages/Account/Review/TabReviews'
+import Layout from '@/components/Layout'
 import ReviewAndComment from '@/components/Pages/Account/ReviewAndComment'
 import AccountLayout from '@/components/Pages/Account/AccountLayout'
 import UserProfile from '@/components/Pages/Account/Review/UserProfile'
-import { normalize } from '@/graphql/utils'
-import { COMMENT_PAGE_SIZE, REVIEW_PAGE_SIZE, REVIEW_STATUS } from '@/components/Pages/Account/Review/TabReviews'
-import get from 'lodash.get'
-import isEmpty from 'lodash.isempty'
-import useHubProfile from '@/hooks/useHubProfile'
-import { useRouter } from 'next/router'
-import { fetcher } from '@/utils'
+import LoadingOverlay from '@/components/Base/LoadingOverlay'
 
 const ReviewPage = () => {
   const [data, setData] = useState({})
   const { accountHub } = useHubProfile()
   const router = useRouter()
+  const [loading, setLoading] = useState(false)
 
   const _status = useMemo(() => {
     const { status = REVIEW_STATUS.PUBLISHED } = router.query
@@ -24,6 +26,7 @@ const ReviewPage = () => {
   }, [router.query])
 
   useEffect(() => {
+    setLoading(true)
     const { id } = accountHub || {}
     if (!id) return
 
@@ -51,6 +54,7 @@ const ReviewPage = () => {
     }).then((res) => {
       setData(normalize(res.data))
     }).catch(() => { })
+      .finally(() => setLoading(false))
   }, [accountHub, _status])
 
   const published = get(data, 'publishedReview.meta.pagination.total', 0)
@@ -60,14 +64,25 @@ const ReviewPage = () => {
   const totalReviewOfAllStatus = Number(published) + Number(draft) + Number(pending) + Number(declined)
   const userData = get(data, 'user') || {}
 
-  return <Layout title="GameFi.org - My Review">
-    <AccountLayout className="flex-1">
-      {isEmpty(data) || <div className='p-4 md:p-10'>
-        <UserProfile editable data={userData} totalReviewOfAllStatus={totalReviewOfAllStatus}></UserProfile>
-        <ReviewAndComment data={data} status={_status} showReviewFilter={true} user={userData} meta={{ published, draft, pending, declined }} ></ReviewAndComment>
-      </div>}
-    </AccountLayout>
-  </Layout>
+  return (
+    <Layout title="GameFi.org - My Review">
+      { loading && (<LoadingOverlay loading/>) }
+      <AccountLayout className="flex-1">
+        {isEmpty(data) || (
+          <div className="p-4 md:p-10">
+            <UserProfile editable data={userData} totalReviewOfAllStatus={totalReviewOfAllStatus} />
+            <ReviewAndComment
+              data={data}
+              status={_status}
+              showReviewFilter={true}
+              user={userData}
+              meta={{ published, draft, pending, declined }}
+            />
+          </div>
+        )}
+      </AccountLayout>
+    </Layout>
+  )
 }
 
 export default ReviewPage

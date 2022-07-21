@@ -335,6 +335,7 @@ const Swap = () => {
             <div className="flex flex-col lg:flex-row gap-14 lg:gap-4 w-full">
               <div className="w-full lg:w-1/2">
                 <div className="uppercase font-bold w-full mb-5 px-2 tracking-wide leading-7">Rounds Info</div>
+                {poolData?.airdrop_network && poolData?.airdrop_network !== 'none' && <div className="text-gamefiRed px-2">Refund Policy is not available for this pool</div>}
                 <table className="w-full">
                   <thead>
                     <tr>

@@ -311,7 +311,7 @@ const GameRight = ({ data, className, dataBase = null, callApi }) => {
             <a className="mr-2 mb-2 text-xs px-2 py-1.5 bg-gamefiDark-630/50 hover:bg-gamefiDark-630 rounded inline-block" onClick={() => {
               gtagEvent('hub_category', {
                 game_name: dataBase?.slug,
-                game: x?.attributes?.slug
+                category: x?.attributes?.slug
               })
             }}>
               {x?.attributes?.name}

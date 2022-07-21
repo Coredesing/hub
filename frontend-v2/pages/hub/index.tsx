@@ -9,6 +9,7 @@ import { GAME_HUB_START_TIME } from '@/utils/constants'
 import { fetcher } from '@/utils'
 import isEmpty from 'lodash.isempty'
 import get from 'lodash.get'
+import Banners from '@/components/Banners'
 
 function Hub ({ data, validCountdownTime }) {
   const [isEnded, setIsEnded] = useState(!validCountdownTime)
@@ -60,8 +61,9 @@ function Hub ({ data, validCountdownTime }) {
           {/* <div className="flex flex-col sm:flex-row gap-6 mt-14 w-full"> */}
           <div className="md:grid grid-rows md:grid-cols-4 md:gap-4 xl:gap-6 mb-4 md:mb-10">
             <div className="md:col-span-3 mb-4 md:mb-10">
-              <GameBanner data={data.gameBanners} />
-              <TopPlayerHub data={data.topPlayer} />
+              <Banners></Banners>
+              <GameBanner data={data.gameBanners}/>
+              <TopPlayerHub data={data.topPlayer}/>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <TopReleasedHub />
                 <TopViewHub />

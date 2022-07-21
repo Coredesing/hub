@@ -1,6 +1,4 @@
-import React, { FC } from 'react'
-
-interface Props {
+interface ReviewStarProps {
   selected: boolean;
   activeColor?: string;
   inactiveColor?: string;
@@ -11,7 +9,7 @@ interface Props {
   onClick?: () => void;
 }
 
-const Star: FC<Props> = ({ selected, activeColor = '#FFB800', inactiveColor = '#6E6E79', size, className = '', onMouseOver, onMouseLeave, onClick }) => {
+const ReviewStar = ({ selected, activeColor = '#FFB800', inactiveColor = '#6E6E79', size, className = '', onMouseOver, onMouseLeave, onClick }: ReviewStarProps) => {
   return (
     <svg
       className={`${className}`}
@@ -37,4 +35,4 @@ const Star: FC<Props> = ({ selected, activeColor = '#FFB800', inactiveColor = '#
   )
 }
 
-export default Star
+export default ReviewStar

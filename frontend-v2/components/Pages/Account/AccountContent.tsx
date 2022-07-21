@@ -4,7 +4,7 @@ type Props = {
     children: ReactNode;
 }
 const AccountContent = ({ className, children }: Props) => {
-  return <div className={`${className} overflow-hidden`}>
+  return <div className={`${className} overflow-hidden w-full`}>
     {children}
   </div>
 }

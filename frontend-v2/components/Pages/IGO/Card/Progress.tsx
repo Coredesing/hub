@@ -49,6 +49,10 @@ const Progress = ({ poolData, isClaimTime }: { poolData: Item; isClaimTime: any 
       return
     }
 
+    poolContractReadonly.tokenSold().then(x => {
+      setSoldWithContract(x)
+    })
+
     const interval = setInterval(() => {
       if (Number(progress) >= 100) {
         clearInterval(interval)

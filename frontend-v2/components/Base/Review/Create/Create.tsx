@@ -1,47 +1,71 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect, SetStateAction } from 'react'
+import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { useRouter } from 'next/router'
-import { fetcher } from '@/utils'
-import ProsAndCons, { MIN_LENGTH_PROS_CONS } from './ProsAndCons'
-import Loading from '@/components/Pages/Hub/Loading'
-import { REVIEWS_STATUS } from '@/components/Pages/Hub/constants'
-import useConnectWallet from '@/hooks/useConnectWallet'
-import { normalize } from '@/graphql/utils'
-import useHubProfile from '@/hooks/useHubProfile'
 import isEmpty from 'lodash.isempty'
 import get from 'lodash.get'
-import RateAction from '@/components/Pages/Hub/Reviews/RateAction'
-
-const CHECKPOINTS = [
-  'Rate this project is required',
-  'At least 10 and max 100 characters are required in Title',
-  'At least 50 characters are required in Review'
-]
+import { fetcher } from '@/utils'
+import { normalize } from '@/graphql/utils'
+import useConnectWallet from '@/hooks/useConnectWallet'
+import useHubProfile from '@/hooks/useHubProfile'
+import { REVIEWS_STATUS } from '@/components/Base/Review/constants'
+import Loading from '@/components/Pages/Hub/Loading'
+import ReviewRatingAction from '@/components/Base/Review/Rating/Action'
+import ReviewCreateProsAndCons, { MIN_LENGTH_PROS_CONS } from '@/components/Base/Review/Create/ProsAndCons'
 
 const handleProsAndCons = data => {
   return data.reduce((t, v) => {
     const value = v?.trim()
+
     if (value) {
       t.push({ text: value })
     }
+
     return t
   }, [])
 }
 
-export default function CreateReview ({ data }) {
+const buildCheckpoints = (currentResource) => {
+  const checkPoints = []
+
+  switch (currentResource) {
+  case 'aggregator':
+    checkPoints.push('Rate this project is required')
+    break
+  case 'guild':
+    checkPoints.push('Rate this guild is required')
+    break
+  }
+
+  checkPoints.push('At least 10 and max 100 characters are required in Title', 'At least 50 characters are required in Review')
+
+  return checkPoints
+}
+
+interface ReviewCreateProps {
+  data: any;
+  currentResource: 'guild' | 'aggregator';
+}
+
+const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
   const [pros, setPros] = useState([''])
   const [cons, setCons] = useState([''])
   const [currentReview, setCurrentReview] = useState(null)
   const [currentRate, setCurrentRate] = useState('')
-  const { register, formState: { errors, isSubmitted }, handleSubmit, setValue } = useForm()
+  const { register, formState: { errors, isSubmitted }, setError, handleSubmit, setValue } = useForm()
   const [loading, setLoading] = useState(false)
   const [disabledSubmit, setDisabledSubmit] = useState(false)
   const router = useRouter()
   const { slug } = router.query
+  const CHECKPOINTS = buildCheckpoints(currentResource)
 
   const { id, name } = data
   const { accountHub } = useHubProfile()
+
+  const MIN_LENGTH_TITLE = 10
+  const MAX_LENGTH_TITLE = 100
+
+  const MIN_LENGTH_REVIEW = 10
 
   const { connectWallet } = useConnectWallet()
   useEffect(() => {
@@ -49,9 +73,31 @@ export default function CreateReview ({ data }) {
       resetForm()
       return
     }
+
     setLoading(true)
-    fetcher('/api/hub/reviews', { method: 'POST', body: JSON.stringify({ variables: { userId: accountHub.id, slug }, query: 'GET_REVIEW_AND_RATE_BY_USER_ID' }) }).then((res) => {
+
+    let query
+    switch (currentResource) {
+    case 'aggregator':
+      query = 'GET_REVIEW_AND_RATE_BY_USER_ID_FOR_AGGREGATOR'
+      break
+    case 'guild':
+      query = 'GET_REVIEW_AND_RATE_BY_USER_ID_FOR_GUILD'
+      break
+    }
+
+    fetcher('/api/hub/reviews', {
+      method: 'POST',
+      body: JSON.stringify({
+        variables: {
+          userId: accountHub.id,
+          slug
+        },
+        query: query
+      })
+    }).then((res) => {
       setLoading(false)
+
       if (!isEmpty(res)) {
         const data = normalize(res.data)
         const review = get(data, 'reviews[0]', {})
@@ -82,12 +128,24 @@ export default function CreateReview ({ data }) {
   }
 
   const onSubmit = status => data => {
+    if (data.title.trim().length < MIN_LENGTH_TITLE || data.title.trim().length > MAX_LENGTH_TITLE) {
+      setError('title', { message: 'error' })
+      return
+    }
+
+    if (data.review.trim().length < MIN_LENGTH_REVIEW) {
+      setError('review', { message: 'error' })
+      return
+    }
+
     if ([...pros, ...cons].some(v => v?.trim() && v.trim().length < MIN_LENGTH_PROS_CONS)) {
       return toast.error('please check for errors!')
     }
+
     if (!currentRate) {
       return toast.error('please rate this game!')
     }
+
     setLoading(true)
     connectWallet(true).then((res: any) => {
       if (res.error) {
@@ -96,43 +154,60 @@ export default function CreateReview ({ data }) {
         toast.error('Could not create the review')
         return
       }
+
       const { walletAddress, signature, captcha } = res
-      const url = currentReview ? `/api/hub/reviews/${currentReview.id}` : '/api/hub/reviews/createReview'
-      Promise.all([
-        fetcher(url, {
-          method: currentReview ? 'PUT' : 'POST',
-          body: JSON.stringify({ ...data, status, aggregator: id, pros: handleProsAndCons(pros), cons: handleProsAndCons(cons) }),
-          headers: {
-            'X-Signature': signature,
-            'X-Wallet-Address': walletAddress
-          }
-        }),
-        fetcher('/api/hub/reviews/createRate', {
-          method: 'POST',
-          body: JSON.stringify({ aggregator: id, rate: currentRate, captcha }),
-          headers: {
-            'X-Signature': signature,
-            'X-Wallet-Address': walletAddress
-          }
-        })
-      ])
-        .then((value) => {
-          setLoading(false)
-          if (!value || value.some(v => v.error)) {
-            toast.error('Could not create the review')
-          } else {
-            toast.success(status === REVIEWS_STATUS.DRAFT ? 'Save draft successfully' : 'Submit review successfully')
-            router.push(`/account/review?status=${status}`)
-          }
-        }).catch((err) => {
-          setLoading(false)
+      const createOrUpdateReviewUrl = currentReview ? `/api/hub/reviews/${currentReview.id}` : '/api/hub/reviews/createReview'
+      const createOrUpdateReviewBody = {
+        ...data,
+        status,
+        captcha,
+        pros: handleProsAndCons(pros),
+        cons: handleProsAndCons(cons)
+      }
+      createOrUpdateReviewBody[currentResource] = id
+      const createRateUrl = '/api/hub/reviews/createRate'
+      const createRateBody = {
+        rate: currentRate
+      }
+      createRateBody[currentResource] = id
+
+      const createOrUpdateReviewFetcher = fetcher(createOrUpdateReviewUrl, {
+        method: currentReview ? 'PUT' : 'POST',
+        body: JSON.stringify(createOrUpdateReviewBody),
+        headers: {
+          'X-Signature': signature,
+          'X-Wallet-Address': walletAddress
+        }
+      })
+
+      const createRateFetcher = fetcher(createRateUrl, {
+        method: 'POST',
+        body: JSON.stringify(createRateBody),
+        headers: {
+          'X-Signature': signature,
+          'X-Wallet-Address': walletAddress
+        }
+      })
+
+      const createOrUpdateFetchers = [createOrUpdateReviewFetcher, createRateFetcher]
+
+      Promise.all(createOrUpdateFetchers).then((value) => {
+        setLoading(false)
+
+        if (!value || value.some(v => v.error)) {
           toast.error('Could not create the review')
-          console.debug('err', err)
-        })
+        } else {
+          toast.success(status === REVIEWS_STATUS.DRAFT ? 'Save draft successfully' : 'Submit review successfully')
+          router.push(`/account/review?status=${status}`)
+        }
+      }).catch((err) => {
+        setLoading(false)
+        toast.error('Could not create the review')
+        console.debug('err', err)
+      })
     }).catch(err => {
       setLoading(false)
       console.debug(err)
-      // toast.error(err?.toString() || 'Could not sign the authentication message')
     })
   }
 
@@ -145,12 +220,20 @@ export default function CreateReview ({ data }) {
   }
 
   const back = () => {
-    router.push(`/hub/${slug}?tab=2`).finally(() => { })
+    switch (currentResource) {
+    case 'aggregator':
+      router.push(`/hub/${slug}?tab=2`).finally(() => { })
+      break
+    case 'guild':
+      router.back()
+      break
+    }
   }
 
-  const handleSetCurrentRate = (v: React.SetStateAction<string>) => () => {
+  const handleSetCurrentRate = (v: SetStateAction<string>) => () => {
     setCurrentRate(v)
   }
+
   return (
     <div className="md:grid grid-rows md:grid-cols-8 md:gap-4 xl:gap-7 mb-4">
       {loading && <Loading />}
@@ -158,7 +241,7 @@ export default function CreateReview ({ data }) {
         <div className="uppercase font-bold text-2xl mb-9">
           You are reviewing <span className="text-gamefiGreen-700">{name}</span>
         </div>
-        <div className="">
+        <div>
           <div className="mb-8">
             <div
               style={{ background: 'linear-gradient(90.55deg, #303035 0.3%, rgba(48, 48, 53, 0) 90.04%)' }}
@@ -167,17 +250,15 @@ export default function CreateReview ({ data }) {
               <div className="font-bold text-center sm:text-left flex-1 mb-3 sm:mb-0">RATE THIS PROJECT</div>
               <div className="flex justify-end items-center flex-wrap">
                 <div className="pr-6 font-casual text-white/30 hidden sm:block">Click to rate</div>
-                <RateAction rate={currentRate} callBack={handleSetCurrentRate} disabled={loading} />
+                <ReviewRatingAction rate={currentRate} callBack={handleSetCurrentRate} disabled={loading} />
               </div>
             </div>
             {isSubmitted && !currentRate && (
               <div className="mt-2 text-normal text-red-500 ">{CHECKPOINTS[0]}</div>
             )}
           </div>
-          <form
-            className="w-full m-auto pb-4"
-          // onSubmit={handleSubmit(onSubmit)}
-          >
+
+          <form className="w-full m-auto pb-4">
             <div className="mb-6">
               <div className="text-sm mb-2 font-casual text-gamefiDark-350 text-[13px]">Title *</div>
               <input
@@ -186,7 +267,7 @@ export default function CreateReview ({ data }) {
                 placeholder="Summarise your experience in one phrase"
                 autoFocus
                 maxLength={100}
-                {...register('title', { required: true, minLength: 10, maxLength: 100 })}
+                {...register('title', { required: true, minLength: MIN_LENGTH_TITLE, maxLength: MAX_LENGTH_TITLE })}
               />
               {errors.title && (
                 <div className="mt-2 text-normal text-red-500 ">{CHECKPOINTS[1]}</div>
@@ -201,17 +282,19 @@ export default function CreateReview ({ data }) {
                 rows={12}
                 cols={10}
                 placeholder="Tell your personal experience with this game"
-                {...register('review', { required: true, minLength: 50 })}
+                {...register('review', { required: true, minLength: MIN_LENGTH_REVIEW })}
               />
               {errors.review && (
                 <div className="mt-2 text-normal text-red-500 ">{CHECKPOINTS[2]}</div>
               )}
             </div>
           </form>
+
           <div className="mb-14">
-            <ProsAndCons data={pros} title="pros" onChange={setPros} />
-            <ProsAndCons data={cons} title="cons" onChange={setCons} />
+            <ReviewCreateProsAndCons data={pros} title="pros" onChange={setPros} />
+            <ReviewCreateProsAndCons data={cons} title="cons" onChange={setCons} />
           </div>
+
           <div className="flex justify-end h-9">
             <button
               className="font-mechanic bg-gamefiDark-900 text-gamefiGreen-700 hover:text-gamefiGreen-200 clipped-b-l py-2 px-7 rounded leading-5 font-bold text-sm"
@@ -223,7 +306,6 @@ export default function CreateReview ({ data }) {
               className="w-36 bg-gamefiGreen-700 clipped-b-l p-px rounded cursor-pointer mr-3 h-9 disabled:cursor-not-allowed"
               onClick={handleSubmitDraft}
               disabled={disabledSubmit}
-            // disabled={data?.status === REVIEWS_STATUS.PENDING}
             >
               <div className="flex align-center justify-center h-full font-mechanic bg-gamefiDark-900 text-gamefiGreen-700 hover:text-gamefiGreen-200 clipped-b-l py-2 px-6 rounded leading-5 uppercase font-bold text-[13px]">
                 save draft
@@ -237,10 +319,10 @@ export default function CreateReview ({ data }) {
               Submit
             </button>
           </div>
-
         </div>
-      </div >
-      < div className="hidden md:block md:col-span-3" >
+      </div>
+
+      <div className="hidden md:block md:col-span-3">
         <div className="uppercase font-bold text-2xl mb-8">Checkpoints</div>
         {CHECKPOINTS.map(v => (
           <div className="flex mb-4" key={v}>
@@ -252,7 +334,9 @@ export default function CreateReview ({ data }) {
             </div>
           </div>
         ))}
-      </div >
-    </div >
+      </div>
+    </div>
   )
 }
+
+export default ReviewCreate

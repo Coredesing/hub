@@ -1,28 +1,74 @@
-import { TabPanel, Tabs } from '@/components/Base/Tabs'
+import { useCallback, useMemo } from 'react'
+import { useRouter } from 'next/router'
+import get from 'lodash.get'
+import { client } from '@/graphql/apolloClient'
+import { GET_GUILD_REVIEWS_BY_SLUG } from '@/graphql/guilds'
 import Layout from '@/components/Layout'
+import { BackIcon } from '@/components/Base/Icon'
+import { TabPanel, Tabs } from '@/components/Base/Tabs'
 import Home from '@/components/Pages/Guilds/GuildDetail/Home'
 import HeaderProfile from '@/components/Pages/Guilds/GuildDetail/HeaderProfile'
 import News from '@/components/Pages/Guilds/GuildDetail/News'
 import { GuildDetailContext } from '@/components/Pages/Guilds/GuildDetail/utils'
-import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
-import { fetchOneWithSlug } from '../api/hub/guilds'
+import { fetchOneWithSlug } from '@/pages/api/hub/guilds'
 import 'tippy.js/dist/tippy.css'
+import Reviews from '@/components/Pages/Guilds/GuildDetail/Reviews'
 
-const GuildDetail = ({ guildData }: { guildData: any }) => {
+interface GuildDetailProps {
+  guildData: any;
+  guildReviewsData: any;
+}
+
+const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
   const router = useRouter()
   const setTab = useCallback((index: number) => {
     switch (index) {
     case 1: return router.push(`/guilds/${router.query.slug}?tab=news`)
+    case 2: return router.push(`/guilds/${router.query.slug}?tab=reviews`)
     default: router.push(`/guilds/${router.query.slug}`)
     }
   }, [router])
   const tab = useMemo(() => {
     switch (router.query.tab) {
     case 'news': return 1
+    case 'reviews': return 2
     default: return 0
     }
   }, [router.query.tab])
+
+  const formattedReviews = useMemo(() => {
+    return {
+      data: guildReviewsData.reviews.data.map(e => {
+        const { author = {}, publishedAt, rate, review, title, likeCount, dislikeCount, commentCount } = e?.attributes || {}
+        const { level, rank, repPoint, firstName, lastName, avatar, walletAddress, reviewCount, rates } = author?.data?.attributes || {}
+
+        return {
+          id: e?.id || '',
+          publishedAt,
+          rate,
+          title,
+          review,
+          likeCount,
+          dislikeCount,
+          commentCount,
+          user: {
+            id: get(author, 'data.id'),
+            level,
+            rank,
+            firstName,
+            lastName,
+            reps: repPoint,
+            avatar: {
+              url: avatar?.data?.attributes?.url
+            },
+            walletAddress,
+            reviewCount,
+            rates
+          }
+        }
+      })
+    }
+  }, [guildReviewsData])
 
   return (
     <Layout title={`GameFi.org - ${guildData?.name || 'Guild'}`} description="" extended={!!guildData}>
@@ -31,10 +77,7 @@ const GuildDetail = ({ guildData }: { guildData: any }) => {
           <a onClick={() => {
             router.back()
           }} className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500 cursor-pointer">
-            <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10" />
-              <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square" />
-            </svg>
+            <BackIcon />
             Back
           </a>
           <div className="w-full h-32 flex items-center justify-center text-2xl font-bold uppercase">Guild Not Found</div>
@@ -44,12 +87,13 @@ const GuildDetail = ({ guildData }: { guildData: any }) => {
         guildData && <GuildDetailContext.Provider value={{
           guildData
         }}>
-          <HeaderProfile />
+          <HeaderProfile totalFavorites = {guildData.totalFavorites}/>
           <div className="mx-auto">
             <Tabs
               titles={[
                 'HOME',
-                'NEWS'
+                'NEWS',
+                'RATING & REVIEWS'
               ]}
               currentValue={tab}
               onChange={(index) => {
@@ -59,12 +103,17 @@ const GuildDetail = ({ guildData }: { guildData: any }) => {
             />
             <TabPanel value={tab} index={0}>
               <div className="py-8">
-                <Home />
+                <Home guildReviewsData={guildReviewsData} />
               </div>
             </TabPanel>
             <TabPanel value={tab} index={1}>
               <div className="container mx-auto py-8">
                 <News />
+              </div>
+            </TabPanel>
+            <TabPanel value={tab} index={2}>
+              <div className="container mx-auto py-8 px-4 lg:px-16">
+                <Reviews data={formattedReviews} totalReviews={guildReviewsData.totalReviews} rates={guildReviewsData.rates} id={guildData.id} tabRef={null} currentResource='guilds' />
               </div>
             </TabPanel>
           </div>
@@ -76,12 +125,54 @@ const GuildDetail = ({ guildData }: { guildData: any }) => {
 
 export default GuildDetail
 
-export async function getServerSideProps ({ params }) {
-  if (!params?.slug) {
-    return { props: { guildData: null } }
+const getGuildReviewsData = async (slug, query) => {
+  try {
+    const reviewFilterValue: any = { guild: { slug: { eq: slug } }, status: { eq: 'published' } }
+
+    if (query.rating_level) {
+      reviewFilterValue.author = {
+        ...(reviewFilterValue.author || {}),
+        rates: {
+          rate: { eq: +query.rating_level },
+          guild: { slug: { eq: slug } }
+        }
+      }
+    }
+    const { data = {} } = await client.query({
+      query: GET_GUILD_REVIEWS_BY_SLUG,
+      variables: { slug: slug, reviewFilterValue, pageSize: 5 }
+    })
+    const { five, four, three, two, one } = data
+
+    return {
+      reviews: data?.reviews || [],
+      rates: {
+        five: get(five, 'meta.pagination.total', 0),
+        four: get(four, 'meta.pagination.total', 0),
+        three: get(three, 'meta.pagination.total', 0),
+        two: get(two, 'meta.pagination.total', 0),
+        one: get(one, 'meta.pagination.total', 0)
+      },
+      totalReviews: get(data, 'totalReviewMeta.meta.pagination.total', 0)
+    }
+  } catch (e) {
+    console.debug('error1', JSON.stringify(e))
+    return {}
+  }
+}
+
+export async function getServerSideProps ({ params, query }) {
+  const slug = params?.slug
+  let guildData = null
+  let guildReviewsData = {}
+
+  if (!slug) {
+    return { props: { guildData, guildReviewsData } }
   }
 
-  const guildData = await fetchOneWithSlug(params.slug)
+  const { data: guilds } = await fetchOneWithSlug(slug)
+  guildData = guilds[0]
+  guildReviewsData = await getGuildReviewsData(slug, query)
 
-  return { props: { guildData: guildData.data[0] } }
+  return { props: { guildData, guildReviewsData } }
 }

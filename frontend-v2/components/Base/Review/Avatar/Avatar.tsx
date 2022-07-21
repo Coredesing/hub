@@ -1,8 +1,9 @@
-import Image from 'next/image'
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 
-export default function Avatar ({ url, size = 64, ...res }) {
+const ReviewAvatar = ({ url, size = 64, ...res }) => {
   const [avatarUrl, setAvatarUrl] = useState(url)
+
   useEffect(() => {
     setAvatarUrl(url)
   }, [url])
@@ -15,3 +16,5 @@ export default function Avatar ({ url, size = 64, ...res }) {
     <Image width={size} height={size} src={avatarUrl || require('@/assets/images/avatar2.png')} alt="avatar" onError={handleOnError} {...res} />
   )
 }
+
+export default ReviewAvatar

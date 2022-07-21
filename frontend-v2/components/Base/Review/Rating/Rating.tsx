@@ -1,25 +1,12 @@
-import React from 'react'
-import styles from './review.module.scss'
-import Star from '@/components/Pages/Hub/Reviews/Star'
-import RateAction from '@/components/Pages/Hub/Reviews/RateAction'
+import { useState } from 'react'
+import { useRouter } from 'next/router'
+import toast from 'react-hot-toast'
 import { fetcher } from '@/utils'
 import useConnectWallet from '@/hooks/useConnectWallet'
-import toast from 'react-hot-toast'
-import { useRouter } from 'next/router'
-
-type Rate = {
-  level: number;
-  percent: string;
-}
-
-type PropsData = {
-  overall: string;
-  id: string;
-  totalCount: number;
-  rates: Array<Rate>;
-  currentRate: number;
-  setCurrentRate: (v: number) => any;
-}
+import ReviewRatingAction from '@/components/Base/Review/Rating/Action'
+import ReviewStar from '@/components/Base/Review/Star'
+import styles from '@/components/Base/Review/Rating/Rating.module.scss'
+import Link from 'next/link'
 
 const STAR_LEVEL = [5, 4, 3, 2, 1]
 
@@ -28,7 +15,7 @@ function StarsWithBar ({ level, percent }) {
     <div className='flex w-full mb-2'>
       <div className='flex items-center gap-1'>
         {
-          STAR_LEVEL.map(curLevel => <Star key={`star_${curLevel}`} selected={level >= curLevel} size={'8px'} activeColor="white" inactiveColor="transparent"></Star>)
+          STAR_LEVEL.map(curLevel => <ReviewStar key={`star_${curLevel}`} selected={level >= curLevel} size={'8px'} activeColor="white" inactiveColor="transparent" />)
         }
       </div>
       <div className='flex-1 md:w-[180px] xl:w-[276px] md:flex-none h-[7px] p-0 ml-4 relative items-center'>
@@ -39,9 +26,26 @@ function StarsWithBar ({ level, percent }) {
   )
 }
 
-function Rating ({ overall, totalCount, rates, currentRate, setCurrentRate, id }: PropsData) {
-  const [loading, setLoading] = React.useState(false)
+type Rate = {
+  level: number;
+  percent: string;
+}
+
+type ReviewRatingProps = {
+  overall: string;
+  id: string;
+  totalCount: number;
+  rates: Array<Rate>;
+  currentRate: number;
+  setCurrentRate: (v: number) => any;
+  currentResource?: 'guilds' | 'hub';
+}
+
+const ReviewRating = ({ overall, totalCount, rates, currentRate, setCurrentRate, id, currentResource = 'hub' }: ReviewRatingProps) => {
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
+
+  const createOrUpdateReviewUrl = `/${currentResource}/${router.query.slug}/reviews/createOrUpdate`
 
   const { connectWallet } = useConnectWallet()
   const handleSetCurrentRate = (rate) => () => {
@@ -57,15 +61,18 @@ function Rating ({ overall, totalCount, rates, currentRate, setCurrentRate, id }
     }).catch(err => {
       setLoading(false)
       console.debug(err)
-      // toast.error(err?.toString() || 'Could not sign the authentication message')
     })
   }
 
   const handleCreateRate = (response, rate) => {
     const { walletAddress, signature } = response
-    fetcher('/api/hub/reviews/createRate', {
+    const createRateUrl = '/api/hub/reviews/createRate'
+    fetcher(createRateUrl, {
       method: 'POST',
-      body: JSON.stringify({ aggregator: id, rate }),
+      body: JSON.stringify({
+        aggregator: id,
+        rate
+      }),
       headers: {
         'X-Signature': signature,
         'X-Wallet-Address': walletAddress
@@ -111,15 +118,24 @@ function Rating ({ overall, totalCount, rates, currentRate, setCurrentRate, id }
         </div>
       </div>
       <div className={`${styles.rating_action} flex justify-center flex-1 md:p-0 pb-4 pt-8`}>
-        <div className="text-[13px] flex items-center justify-center flex-col">
-          <div className="font-bold text-center sm:text-left">RATE THIS PROJECT</div>
-          <div className="font-casual text-white/30 hidden sm:block mb-3">Click to rate</div>
-          <RateAction rate={currentRate} callBack={handleSetCurrentRate} disabled={loading} />
-        </div>
+        {
+          currentResource === 'hub' && <div className="text-[13px] flex items-center justify-center flex-col">
+            <div className="font-bold text-center sm:text-left">RATE THIS PROJECT</div>
+            <div className="font-casual text-white/30 hidden sm:block mb-3">Click to rate</div>
+            <ReviewRatingAction rate={currentRate} callBack={handleSetCurrentRate} disabled={loading} />
+          </div>
+        }
+        {
+          currentResource === 'guilds' && <Link href={createOrUpdateReviewUrl} passHref><a className='flex items-center justify-center'>
+            <div className='bg-[#6CDB00] cursor-pointer py-2 px-5 w-fit h-fit text-[#0D0F15] font-mechanic font-bold text-[13px] leading-[150%] tracking-[0.02em] rounded-sm clipped-t-r uppercase'>
+            Rate this guild
+            </div>
+          </a></Link>
+        }
       </div>
       <div></div>
-    </div >
+    </div>
   )
 }
 
-export default Rating
+export default ReviewRating

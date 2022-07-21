@@ -203,3 +203,12 @@ export const GreenTickIcon = () => {
     </defs>
   </svg>
 }
+
+export const BackIcon = () => {
+  return (
+    <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10" />
+      <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square" />
+    </svg>
+  )
+}

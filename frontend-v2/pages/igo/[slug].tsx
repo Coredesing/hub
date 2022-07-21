@@ -1,6 +1,6 @@
 import Layout from '@/components/Layout'
 import { getTierById } from '@/utils/tiers'
-import React, { useEffect, useMemo, useState, useCallback, createContext, ChangeEvent } from 'react'
+import { useEffect, useMemo, useState, useCallback, createContext, ChangeEvent } from 'react'
 import { fetchOneWithSlug } from '../api/igo'
 import { useMyWeb3 } from '@/components/web3/context'
 import { fetcher, printNumber, formatterUSD, useFetch, formatNumber, safeToFixed, shortenAddress } from '@/utils'
@@ -33,6 +33,7 @@ import Modal from '@/components/Base/Modal'
 import ABIStakingPool from '@/components/web3/abis/StakingPool.json'
 import { IS_TESTNET } from '@/components/web3/connectors'
 import Link from 'next/link'
+import { BackIcon } from '@/components/Base/Icon'
 
 type Milestone = {
   key: string;
@@ -92,6 +93,9 @@ const IGODetails = ({ poolData }) => {
     return getCurrency(poolData)
   }, [poolData])
 
+  const isAirdropPool = useMemo(() => {
+    return poolData?.airdrop_network && poolData?.airdrop_network !== 'none'
+  }, [poolData?.airdrop_network])
   const totalRaise = useMemo(() => {
     return Math.round(parseInt(poolData?.total_sold_coin) * parseFloat(poolData?.token_conversion_rate))
   }, [poolData])
@@ -418,10 +422,7 @@ const IGODetails = ({ poolData }) => {
         <a onClick={() => {
           router.back()
         }} className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500 cursor-pointer">
-          <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10" />
-            <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square" />
-          </svg>
+          <BackIcon/>
           Back
         </a>
         {!poolData.id && <div className="uppercase font-bold text-3xl mb-6">IGO Not Found</div>}
@@ -789,6 +790,18 @@ const IGODetails = ({ poolData }) => {
                     </div>
                     <div className="table-cell align-middle py-2 font-normal"></div>
                   </div>
+
+                  {
+                    isAirdropPool && <div className="table-row">
+                      <div className="table-cell align-middle py-2 rounded">
+                      Refund
+                      </div>
+                      <div className="table-cell align-middle py-2 font-normal text-gamefiRed">
+                        Refund Policy is not available for this pool
+                      </div>
+                      <div className="table-cell align-middle py-2 font-normal"></div>
+                    </div>
+                  }
                 </div>
               </div>
             </div>

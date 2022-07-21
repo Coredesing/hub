@@ -1294,11 +1294,11 @@ export const GET_LISTING_AGGREGATORS_V2 = gql`
 `
 
 export const GET_FAVORITE_BY_USER_ID = gql`
-  query favorite($userId: ID, $aggregatorId: String) {
+  query favorite($walletAddress: String, $aggregatorId: String) {
     favorites(
       filters: {
         objectID: { eq: $aggregatorId }
-        user: { id: { eq: $userId } }
+        user: { walletAddress: { eq: $walletAddress } }
         type: { eq: "aggregator" }
       }
     ) {

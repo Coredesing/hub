@@ -30,10 +30,10 @@ export const GET_LIKES_BY_USER_ID = gql`
 `
 
 export const GET_REVIEW_AND_RATE_BY_USER_ID = gql`
-  query getReviewByID($userId: ID $slug: String) {
+  query getReviewByID($walletAddress: String $slug: String) {
     rates(
       filters: {
-        user: { id: { eq: $userId } }
+        user: { walletAddress: { eq: $walletAddress } }
         aggregator: { slug: { eq: $slug } }
       }
     ) {
@@ -46,7 +46,7 @@ export const GET_REVIEW_AND_RATE_BY_USER_ID = gql`
     }
     reviews(
       filters: {
-        author: { id: { eq: $userId } }
+        author: { walletAddress: { eq: $walletAddress } }
         aggregator: { slug: { eq: $slug } }
       }
     ) {

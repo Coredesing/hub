@@ -35,15 +35,16 @@ function Tab ({ data }) {
 
   useEffect(() => {
     const reviewFilterValue: any = { aggregator: { slug: { eq: router.query.slug } }, status: { eq: 'published' } }
-    fetcher('/api/hub/detail/getLiveData', { method: 'POST', body: JSON.stringify({ variables: { slug: router.query.slug, reviewFilterValue, pageSize: PAGE_SIZE }, query: 'GET_AGGREGATORS_BY_SLUG' }) }).then(({ v }) => {
-      const { five, four, three, two, one, totalReviewMeta } = v
-      const aggregators = get(data, 'aggregators.data[0]')
+    fetcher('/api/hub/detail/getLiveData', { method: 'POST', body: JSON.stringify({ variables: { slug: router.query.slug, reviewFilterValue, pageSize: PAGE_SIZE }, query: 'GET_AGGREGATORS_BY_SLUG' }) }).then(({ ...v }) => {
+      const dataNew = v?.data
+      const { five, four, three, two, one, totalReviewMeta } = dataNew || {}
+      const aggregators = get(dataNew, 'aggregators.data[0]')
       setValues({
         ...values,
         ...aggregators.attributes,
-        reviews: data?.reviews || [],
+        reviews: dataNew?.reviews || [],
         totalReviewWithoutFilter: get(totalReviewMeta, 'meta.pagination.total', 0),
-        pageCountReviews: Math.ceil(get(data, 'reviews.meta.pagination.total', 0) / PAGE_SIZE),
+        pageCountReviews: Math.ceil(get(dataNew, 'reviews.meta.pagination.total', 0) / PAGE_SIZE),
         rates: {
           five: get(five, 'meta.pagination.total', 0),
           four: get(four, 'meta.pagination.total', 0),
@@ -66,7 +67,7 @@ function Tab ({ data }) {
     if (index === 2) {
       router.push(`/hub/${router.query.slug}/reviews`)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index])
 
   const isMobile = screen.mobile || screen.tablet
@@ -152,7 +153,7 @@ function Tab ({ data }) {
             viewDetail={true}
           />
           <div id='HubDetailContent' className="flex flex-col font-casual gap-2">
-            <HubTab data={data} tab={router.query.tab[0]} index={index} setIndex={setIndex}/>
+            <HubTab data={data} tab={router.query.tab[0]} index={index} setIndex={setIndex} />
           </div>
         </HubDetailContext.Provider>}
       </div>

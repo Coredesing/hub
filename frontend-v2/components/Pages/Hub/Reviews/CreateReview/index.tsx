@@ -89,14 +89,14 @@ export default function CreateReview ({ data }) {
       return toast.error('please rate this game!')
     }
     setLoading(true)
-    connectWallet().then((res: any) => {
+    connectWallet(true).then((res: any) => {
       if (res.error) {
         setLoading(false)
         console.debug(res.error)
         toast.error('Could not create the review')
         return
       }
-      const { walletAddress, signature } = res
+      const { walletAddress, signature, captcha } = res
       const url = currentReview ? `/api/hub/reviews/${currentReview.id}` : '/api/hub/reviews/createReview'
       Promise.all([
         fetcher(url, {
@@ -109,7 +109,7 @@ export default function CreateReview ({ data }) {
         }),
         fetcher('/api/hub/reviews/createRate', {
           method: 'POST',
-          body: JSON.stringify({ aggregator: id, rate: currentRate }),
+          body: JSON.stringify({ aggregator: id, rate: currentRate, captcha }),
           headers: {
             'X-Signature': signature,
             'X-Wallet-Address': walletAddress

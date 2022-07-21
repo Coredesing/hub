@@ -64,7 +64,7 @@ const Reviews = ({ data, totalReviews, rates, ranks, id, tabRef, pageCountReview
       setCurrentRate(0)
       return
     }
-    fetcher('/api/hub/reviews', { method: 'POST', body: JSON.stringify({ variables: { userId: accountHub.id, slug: router.query.slug }, query: 'GET_REVIEW_AND_RATE_BY_USER_ID' }) }).then((res) => {
+    fetcher('/api/hub/reviews', { method: 'POST', body: JSON.stringify({ variables: { walletAddress: accountHub.walletAddress, slug: router.query.slug }, query: 'GET_REVIEW_AND_RATE_BY_USER_ID' }) }).then((res) => {
       setLoading(false)
       if (!isEmpty(res)) {
         const data = normalize(res.data)

@@ -56,11 +56,11 @@ function Header ({ callApi, name, id, className, isVerified = false, totalFavori
       if (callApi) getFavoriteByUser()
     } else setFavorite(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accountHub?.id, router.query.slug])
+  }, [accountHub?.walletAddress, router.query.slug])
   const getFavoriteByUser = () => {
     setLoading(true)
     setFavorite(false)
-    fetcher('/api/hub/favorite/getFavoriteByUserId', { method: 'POST', body: JSON.stringify({ variables: { userId: accountHub?.id, aggregatorId: id } }) }).then((result) => {
+    fetcher('/api/hub/favorite/getFavoriteByUserId', { method: 'POST', body: JSON.stringify({ variables: { walletAddress: accountHub?.walletAddress, aggregatorId: id } }) }).then((result) => {
       setLoading(false)
       const v = get(result, 'data.favorites.data')
       if (!isEmpty(v)) {

@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+import get from 'lodash.get'
 import { TabPanel, Tabs } from '@/components/Base/Tabs'
 import TabReviews from '@/components/Pages/Account/Review/TabReviews'
 import TabComments from '@/components/Pages/Account/Review/TabComments'
-import get from 'lodash.get'
 
 const ReviewAndComment = ({ data, status, showReviewFilter = false, user, meta = {} }) => {
   const [tab, setTab] = useState(0)
@@ -11,13 +11,11 @@ const ReviewAndComment = ({ data, status, showReviewFilter = false, user, meta =
   const totalReviews = get(data, 'reviewMeta.meta.pagination.total', 0)
 
   const onChangeTab = (tab) => {
-    // const tabReviewElm = document.getElementById('tabReview')
-    // tabReviewElm?.scrollIntoView()
     setTab(tab)
   }
 
   return (
-    <div id='tabReview' className=''>
+    <div id="tabReview">
       <Tabs
         titles={[
           'Reviews',
@@ -27,13 +25,19 @@ const ReviewAndComment = ({ data, status, showReviewFilter = false, user, meta =
         onChange={onChangeTab}
         className="mt-2 sm:mt-6 lg:mt-10 sticky top-0 bg-gamefiDark-900 z-50"
       />
-
       <div>
         <TabPanel value={tab} index={0}>
-          <TabReviews user={user} status={status} totalReviews={totalReviews} reviews={data.reviews} showFilter={showReviewFilter} meta={meta}></TabReviews>
+          <TabReviews
+            user={user}
+            status={status}
+            totalReviews={totalReviews}
+            reviews={data.reviews}
+            showFilter={showReviewFilter}
+            meta={meta}
+          />
         </TabPanel>
         <TabPanel value={tab} index={1}>
-          <TabComments comments={data.comments} totalComment={totalComment}></TabComments>
+          <TabComments comments={data.comments} totalComment={totalComment}/>
         </TabPanel>
       </div>
     </div>

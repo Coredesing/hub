@@ -1,48 +1,34 @@
-import Layout from '@/components/Layout'
 import { useRouter } from 'next/router'
-import Detail from '@/components/Pages/Hub/Reviews/Detail'
-import { client } from '@/graphql/apolloClient'
 import get from 'lodash.get'
-import { GET_REVIEW_BY_ID } from '@/graphql/reviews'
+import { client } from '@/graphql/apolloClient'
+import { GET_REVIEW_BY_ID_FOR_AGGREGATOR } from '@/graphql/reviews'
+import Layout from '@/components/Layout'
+import { BackIcon } from '@/components/Base/Icon'
+import ReviewDetail from '@/components/Base/Review/Detail'
 
-function ReviewDetail ({ data }) {
+function ReviewDetailPage ({ data }) {
   const router = useRouter()
 
   return (
     <Layout title={'GameFi.org - Review'}>
       <div className="px-4 lg:px-24 md:container mx-auto lg:block">
         <a
-          onClick={() => {
-            router.back()
-          }}
           className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500 cursor-pointer"
+          onClick={() => { router.back() }}
         >
-          <svg
-            className="w-6 h-6 mr-2"
-            viewBox="0 0 22 17"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M21.5 8.5H1.5"
-              stroke="currentColor"
-              strokeMiterlimit="10"
-            />
-            <path
-              d="M8.5 15.5L1.5 8.5L8.5 1.5"
-              stroke="currentColor"
-              strokeMiterlimit="10"
-              strokeLinecap="square"
-            />
-          </svg>
+          <BackIcon />
           Back
         </a>
-        {!data.id && (
-          <div className="uppercase font-bold text-3xl mb-6">
-            Review Not Found
-          </div>
-        )}
-        {data.id && <Detail data={data} />}
+        {data.id
+          ? (
+            <ReviewDetail data={data} currentResource="hub" />
+          )
+          : (
+            <div className="uppercase font-bold text-3xl mb-6">
+              Review Not Found
+            </div>
+          )
+        }
       </div>
     </Layout>
   )
@@ -60,7 +46,7 @@ export async function getServerSideProps ({ query }) {
         pageSize: Number(page || 1) * DEFAULT_NUMBER_COMMENT,
         aggSlug: slug
       },
-      query: GET_REVIEW_BY_ID
+      query: GET_REVIEW_BY_ID_FOR_AGGREGATOR
     })
 
     const reviewDetail = get(result, 'data.reviews.data[0].attributes', {})
@@ -145,4 +131,4 @@ export async function getServerSideProps ({ query }) {
   }
 }
 
-export default ReviewDetail
+export default ReviewDetailPage

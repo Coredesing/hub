@@ -1,4 +1,4 @@
-import React from 'react'
+import { useRouter } from 'next/router'
 import SupportedGames from './SupportedGames'
 import Introduction from './Introduction'
 import Investors from './Investors'
@@ -6,12 +6,17 @@ import RoadMap from './RoadMap'
 import Team from './Team'
 import TwitterFeed from './TwitterFeed'
 import Gallery from './Gallery'
+import Reviews from './Reviews'
 
-const Home = () => {
+const Home = ({ guildReviewsData }) => {
+  const router = useRouter()
+  const slug = router.query?.slug?.toString() || ''
+
   return (
     <div className="w-full flex flex-col gap-12">
       <Introduction />
       <TwitterFeed/>
+      <Reviews data={guildReviewsData} slug={slug} />
       <SupportedGames />
       <RoadMap />
       <Gallery></Gallery>

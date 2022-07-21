@@ -1,9 +1,10 @@
-import Layout from '@/components/Layout'
-import Link from 'next/link'
-import { jobs } from './index'
-import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import Script from 'next/script'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { jobs } from './index'
+import Layout from '@/components/Layout'
+import { BackIcon } from '@/components/Base/Icon'
 
 const Career = ({ data }) => {
   const router = useRouter()
@@ -45,10 +46,7 @@ const Career = ({ data }) => {
     <div className="px-4 lg:px-16 mx-auto lg:block pb-12 max-w-4xl">
       <Link href="/careers" passHref={true}>
         <a className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500">
-          <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10" />
-            <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square" />
-          </svg>
+          <BackIcon/>
           CURRENT POSITIONS
         </a>
       </Link>

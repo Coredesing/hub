@@ -1,15 +1,20 @@
+import { useCallback, useEffect, useState, SetStateAction } from 'react'
 import { useRouter } from 'next/router'
-import React, { useCallback, useEffect, useState } from 'react'
-import { useGuildDetailContext } from './utils'
+import toast from 'react-hot-toast'
 import Tippy from '@tippyjs/react'
+import isEmpty from 'lodash.isempty'
+import get from 'lodash.get'
+import { useGuildDetailContext } from './utils'
+import { normalize } from '@/graphql/utils'
 import { fetcher, printNumber } from '@/utils'
 import useConnectWallet from '@/hooks/useConnectWallet'
 import useHubProfile from '@/hooks/useHubProfile'
-import toast from 'react-hot-toast'
+import { BackIcon } from '@/components/Base/Icon'
 import { Spinning } from '@/components/Base/Animation'
 import { useMyWeb3 } from '@/components/web3/context'
+import ReviewRatingAction from '@/components/Base/Review/Rating/Action'
 
-const HeaderProfile = () => {
+const HeaderProfile = ({ totalFavorites }) => {
   const router = useRouter()
   const { guildData } = useGuildDetailContext()
   const { accountHub } = useHubProfile()
@@ -17,13 +22,66 @@ const HeaderProfile = () => {
   const [favorite, setFavorite] = useState(false)
   const [loadingFavorite, setLoadingFavorite] = useState(false)
 
+  const [loading, setLoading] = useState(false)
+  const [currentRate, setCurrentRate] = useState(0)
+
+  const handleSetCurrentRate = (rate, v: SetStateAction<number>) => () => {
+    setCurrentRate(v)
+    setLoading(true)
+    connectWallet().then((res: any) => {
+      if (res.error) {
+        console.debug(res.error)
+        toast.error('Could not rate')
+        return
+      }
+      handleCreateRate(res, rate)
+    }).catch(err => {
+      setLoading(false)
+      console.debug(err)
+    })
+  }
+
+  const handleCreateRate = (response, rate) => {
+    const { walletAddress, signature } = response
+    fetcher('/api/hub/reviews/createRate', {
+      method: 'POST',
+      body: JSON.stringify({
+        guild: guildData?.id,
+        rate
+      }),
+      headers: {
+        'X-Signature': signature,
+        'X-Wallet-Address': walletAddress
+      }
+    }).then(({ err }) => {
+      setLoading(false)
+      if (err) {
+        toast.error('Could not create rate')
+      } else {
+        setCurrentRate(rate)
+        router.replace(router.asPath)
+      }
+    }).catch((err) => {
+      setLoading(false)
+      toast.error('Could not create rate')
+      console.debug('err', err)
+    })
+  }
+
   const getFavoriteByUserId = useCallback(async () => {
-    await fetcher('/api/hub/guilds/getFavoriteByUserId', { method: 'POST', body: JSON.stringify({ variables: { walletAddress: account, objectID: guildData?.id?.toString(), type: 'guild' } }) }).then((response) => {
+    await fetcher('/api/hub/guilds/getFavoriteByUserId', {
+      method: 'POST',
+      body: JSON.stringify({
+        variables: {
+          walletAddress: account,
+          objectID: guildData?.id?.toString(),
+          type: 'guild'
+        }
+      })
+    }).then((response) => {
       const result = response?.data?.favorites?.data
-      console.log(result)
-      if (result.length > 0) {
-        setFavorite(true)
-      } else setFavorite(false)
+
+      setFavorite(result.length > 0)
     }).catch((err) => {
       console.debug('err', err)
     })
@@ -36,6 +94,35 @@ const HeaderProfile = () => {
   }, [accountHub, getFavoriteByUserId])
   const { connectWallet } = useConnectWallet()
 
+  useEffect(() => {
+    if (isEmpty(accountHub)) {
+      setCurrentRate(0)
+      return
+    }
+
+    fetcher('/api/hub/reviews', {
+      method: 'POST',
+      body: JSON.stringify({
+        variables: {
+          userId: accountHub.id,
+          slug: router.query.slug
+        },
+        query: 'GET_REVIEW_AND_RATE_BY_USER_ID_FOR_GUILD'
+      })
+    }).then((res) => {
+      setLoading(false)
+      if (!isEmpty(res)) {
+        const data = normalize(res.data)
+        const rate = get(data, 'rates[0].rate', '')
+        if (rate) {
+          setCurrentRate(rate)
+        } else {
+          setCurrentRate(0)
+        }
+      }
+    }).catch(() => setLoading(false))
+  }, [accountHub, router.query.slug])
+
   const handleFavorite = useCallback(() => {
     setLoadingFavorite(true)
     connectWallet().then((res: any) => {
@@ -46,31 +133,14 @@ const HeaderProfile = () => {
       }
 
       const { walletAddress, signature } = res
-      // fetcher('/api/hub/favorite/handleFavorite', {
-      //   method: 'POST',
-      //   body: JSON.stringify({ objectID: guildData?.id?.toString(), type: 'guild', favorite: !favorite }),
-      //   headers: {
-      //     'X-Signature': signature,
-      //     'X-Wallet-Address': walletAddress
-      //   }
-      // }).then(({ err }) => {
-      //   if (err) {
-      //     toast.error('Failed!')
-      //     setLoadingFavorite(false)
-      //   } else {
-      //     getFavoriteByUserId()
-      //     toast.success('Success')
-      //     setLoadingFavorite(false)
-      //   }
-      // }).catch((err) => {
-      //   toast.error('Failed')
-      //   setLoadingFavorite(false)
-      //   console.debug('err', err)
-      // })
 
       fetch('/api/hub/favorite/handleFavorite', {
         method: 'POST',
-        body: JSON.stringify({ objectID: guildData?.id?.toString(), type: 'guild', favorite: !favorite }),
+        body: JSON.stringify({
+          objectID: guildData?.id?.toString(),
+          type: 'guild',
+          favorite: !favorite
+        }),
         headers: {
           'X-Signature': signature,
           'X-Wallet-Address': walletAddress
@@ -121,13 +191,11 @@ const HeaderProfile = () => {
         </div>
       </div>
       <div className="container mx-auto px-4 xl:px-16 mt-28 relative">
-        <a onClick={() => {
-          router.push('/guilds')
-        }} className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500 cursor-pointer">
-          <svg className="w-6 h-6 mr-2" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21.5 8.5H1.5" stroke="currentColor" strokeMiterlimit="10" />
-            <path d="M8.5 15.5L1.5 8.5L8.5 1.5" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="square" />
-          </svg>
+        <a
+          className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500 cursor-pointer"
+          onClick={() => { router.push('/guilds') }}
+        >
+          <BackIcon/>
           Back
         </a>
         <div className="w-full flex flex-col lg:flex-row gap-8">
@@ -170,7 +238,7 @@ const HeaderProfile = () => {
               </p>
             </div>
             <div className="font-semibold flex my-4 lg:mb-8"><span className="bg-gamefiDark-600 px-2 py-1 rounded-sm">{printNumber(guildData?.scholarship || 0)}+ Scholars</span></div>
-            <div className='flex gap-2'>
+            <div className="flex gap-2">
               {guildData?.projects?.map((game, index) => index < 5 && <div key={`supported-${index}`}>
                 <Tippy key={`game-logo-${game.id}`} content={game.name}>
                   <img src={game.logo?.url} className="w-9 h-9 rounded object-cover" alt="" />
@@ -180,35 +248,41 @@ const HeaderProfile = () => {
                 guildData?.projects?.length > 5 && <div className="w-9 h-9 rounded bg-gamefiDark-600 flex items-center justify-center font-medium">+{guildData?.projects?.length - 5}</div>
               }
             </div>
-            {favorite
-              ? <button onClick={handleFavorite} className="float-right mt-4 lg:mt-0 w-full cursor-pointer lg:w-[146px] h-[36px] clipped-b-l p-px bg-[#FF5959] rounded-sm flex items-center justify-center">
-                <div className="w-full h-full bg-gamefiDark-900/95 hover:opacity-95 rounded-sm flex justify-center items-center gap-2 font-bold uppercase text-sm clipped-b-l">
-                  {
-                    loadingFavorite
-                      ? <Spinning className="w-6 h-6"></Spinning>
-                      : <>
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M9.91671 0.583984C8.69171 0.583984 7.64171 1.22565 7.00004 2.15898C6.35837 1.22565 5.30837 0.583984 4.08337 0.583984C2.15837 0.583984 0.583374 2.15898 0.583374 4.08398C0.583374 7.58398 7.00004 12.834 7.00004 12.834C7.00004 12.834 13.4167 7.58398 13.4167 4.08398C13.4167 2.15898 11.8417 0.583984 9.91671 0.583984Z" fill="#FF5959"/>
-                        </svg>
-                        Unlike
-                      </>
-                  }
-                </div>
-              </button>
-              : <button onClick={handleFavorite} className="float-right mt-4 lg:mt-0 w-full cursor-pointer lg:w-[146px] h-[36px] clipped-b-l p-px bg-gamefiDark-500 rounded-sm flex items-center justify-center">
-                <div className="w-full h-full bg-gamefiDark-700 hover:opacity-95 rounded-sm flex justify-center items-center gap-2 font-bold uppercase text-sm clipped-b-l">
-                  {
-                    loadingFavorite
-                      ? <Spinning className="w-6 h-6"></Spinning>
-                      : <>
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M9.91659 0.583984C8.69159 0.583984 7.64159 1.22565 6.99992 2.15898C6.35825 1.22565 5.30825 0.583984 4.08325 0.583984C2.15825 0.583984 0.583252 2.15898 0.583252 4.08398C0.583252 7.58398 6.99992 12.834 6.99992 12.834C6.99992 12.834 13.4166 7.58398 13.4166 4.08398C13.4166 2.15898 11.8416 0.583984 9.91659 0.583984Z" stroke="white" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
+            <div className="mt-8 md:mt-4 flex justify-end flex-col md:flex-row">
+              <div className="sm:w-72 w-full bg-gamefiDark-700 clipped-b-l p-px rounded cursor-pointer mr-3 h-9  hover:opacity-95 disabled:cursor-not-allowed flex px-6 py-[10px] justify-between">
+                <p className="text-sm text-white uppercase font-semibold">Rate this guild</p>
+                <ReviewRatingAction rate={currentRate} callBack={handleSetCurrentRate} disabled={loading} extraClass="w-4 h-4" />
+              </div>
+              {favorite
+                ? <button onClick={handleFavorite} className="mt-4 lg:mt-0 w-full cursor-pointer lg:w-[146px] h-[36px] clipped-t-r p-px bg-[#FF5959]/10 rounded-sm flex items-center justify-center">
+                  <div className="w-full h-full bg-[#FF5959]/10 hover:opacity-95 rounded-sm flex justify-center items-center gap-2 font-bold uppercase text-sm clipped-t-r">
+                    {
+                      loadingFavorite
+                        ? <Spinning className="w-6 h-6"/>
+                        : <>
+                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9.91671 0.583984C8.69171 0.583984 7.64171 1.22565 7.00004 2.15898C6.35837 1.22565 5.30837 0.583984 4.08337 0.583984C2.15837 0.583984 0.583374 2.15898 0.583374 4.08398C0.583374 7.58398 7.00004 12.834 7.00004 12.834C7.00004 12.834 13.4167 7.58398 13.4167 4.08398C13.4167 2.15898 11.8417 0.583984 9.91671 0.583984Z" fill="#FF5959"/>
+                          </svg>
+                          {totalFavorites}
+                        </>
+                    }
+                  </div>
+                </button>
+                : <button onClick={handleFavorite} className="float-right mt-4 lg:mt-0 w-full cursor-pointer lg:w-[146px] h-[36px] clipped-t-r p-px bg-[#DE4343] rounded-sm flex items-center justify-center">
+                  <div className="w-full h-full hover:opacity-95 rounded-sm flex justify-center items-center gap-2 font-bold uppercase text-sm clipped-t-r">
+                    {
+                      loadingFavorite
+                        ? <Spinning className="w-6 h-6"/>
+                        : <>
+                          <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9.91671 0.583984C8.69171 0.583984 7.64171 1.22565 7.00004 2.15898C6.35837 1.22565 5.30837 0.583984 4.08337 0.583984C2.15837 0.583984 0.583374 2.15898 0.583374 4.08398C0.583374 7.58398 7.00004 12.834 7.00004 12.834C7.00004 12.834 13.4167 7.58398 13.4167 4.08398C13.4167 2.15898 11.8417 0.583984 9.91671 0.583984Z" fill={favorite ? '#ff5959' : '#ffffff'} stroke={favorite ? '#ff5959' : '#ffffff'} />
+                          </svg>
                         Like
-                      </>
-                  }
-                </div>
-              </button>}
+                        </>
+                    }
+                  </div>
+                </button>}
+            </div>
           </div>
         </div>
       </div>

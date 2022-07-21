@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -178,10 +178,10 @@ const ReviewList = ({ data, pagination = false, viewAll = false, filter = false,
     setRatingLevel(v)
   }
 
-  const handleSetsUserRank = (v: React.SetStateAction<string>) => {
-    setPage(1)
-    setUserRank(v)
-  }
+  // const handleSetsUserRank = (v: React.SetStateAction<string>) => {
+  //   setPage(1)
+  //   setUserRank(v)
+  // }
 
   let viewAllReviewsPath
   switch (currentResource) {

@@ -12,7 +12,6 @@ const useConnectWallet = () => {
     return new Promise((resolve, reject) => {
       if (!account) {
         showConnectWallet(true)
-        reject(new Error('Please connect wallet'))
         return
       }
 

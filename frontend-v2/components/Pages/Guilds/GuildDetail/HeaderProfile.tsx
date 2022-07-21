@@ -124,8 +124,8 @@ const HeaderProfile = ({ totalFavorites }) => {
   }, [accountHub, router.query.slug])
 
   const handleFavorite = useCallback(() => {
-    setLoadingFavorite(true)
     connectWallet().then((res: any) => {
+      setLoadingFavorite(true)
       if (!res) {
         toast.error('User not found!')
         setLoadingFavorite(false)

@@ -16,7 +16,6 @@ function getOverall (rates = {}) {
   const totalTwoStar = two * 2
   const totalOneStar = one * 1
   const totalAllStar = totalFiveStar + totalFourStar + totalThreeStar + totalTwoStar + totalOneStar
-  // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
   const countRating = getCountRating(rates)
   if (!countRating) return '0.0'
   const overall = (totalAllStar / (countRating))
@@ -89,7 +88,7 @@ const Reviews = ({ data, totalReviews, rates, id, tabRef, currentResource = 'hub
           userId: accountHub.id,
           slug: router.query.slug
         },
-        query: 'GET_REVIEW_AND_RATE_BY_USER_ID_FOR_AGGREGATOR'
+        query: 'GET_REVIEW_AND_RATE_BY_USER_ID_FOR_GUILD'
       })
     }).then((res) => {
       setLoading(false)

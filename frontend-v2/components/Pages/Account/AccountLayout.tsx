@@ -4,10 +4,10 @@ import AccountContent from '@/components/Pages/Account/AccountContent'
 import AccountTopBar from '@/components/Pages/Account/AccountTopBar'
 
 const AccountLayout = ({ children }: { children: ReactNode }) => {
-  return <div className="flex flex-col lg:flex-row">
+  return <div className="flex flex-col lg:flex-row w-full">
     <AccountTopBar />
     <LeftSideBar className="hidden lg:block px-7 py-12 md:-mt-24 flex-none w-56"></LeftSideBar>
-    <AccountContent>
+    <AccountContent className='w-full'>
       {children}
     </AccountContent>
   </div>

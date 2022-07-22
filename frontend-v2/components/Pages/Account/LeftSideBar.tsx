@@ -38,6 +38,15 @@ const LeftSideBar = ({ className }) => {
       <div className='mb-6'>
         <div className='flex gap-2 items-center'>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 9.5C10.4853 9.5 12.5 7.48528 12.5 5C12.5 2.51472 10.4853 0.5 8 0.5C5.51472 0.5 3.5 2.51472 3.5 5C3.5 7.48528 5.51472 9.5 8 9.5Z" stroke={isCurrentLink('/account/exp') ? '#6CDB00' : 'white'} strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M11.5 10.5V15.5L8 13.5L4.5 15.5V10.5" stroke={isCurrentLink('/account/exp') ? '#6CDB00' : 'white'} strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <Link href={'/account/exp'}><a className={`uppercase text-sm font-bold ${isCurrentLink('/account/exp') ? 'text-gamefiGreen-700' : ''}`}>My EXP</a></Link>
+        </div>
+      </div>
+      <div className='mb-6'>
+        <div className='flex gap-2 items-center'>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M14.5 0.5H1.5C0.948 0.5 0.5 0.948 0.5 1.5V11.5C0.5 12.052 0.948 12.5 1.5 12.5H5.5L8 15.5L10.5 12.5H14.5C15.052 12.5 15.5 12.052 15.5 11.5V1.5C15.5 0.948 15.052 0.5 14.5 0.5Z" stroke={isCurrentLink('/account/review') ? '#6CDB00' : 'white'} strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M3.5 4.5H12.5" stroke={isCurrentLink('/account/review') ? '#6CDB00' : 'white'} strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M3.5 8.5H12.5" stroke={isCurrentLink('/account/review') ? '#6CDB00' : 'white'} strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>

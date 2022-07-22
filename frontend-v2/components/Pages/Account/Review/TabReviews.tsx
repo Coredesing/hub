@@ -1,14 +1,14 @@
-import AccountReviewItem from '@/components/Pages/Account/Review/AccountReviewItem'
-import clsx from 'clsx'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import styles from '@/components/Pages/Account/Review/account_review.module.scss'
-import { printNumber } from '@/utils'
 import { useRouter } from 'next/router'
+import clsx from 'clsx'
+import isEmpty from 'lodash.isempty'
 import { client } from '@/graphql/apolloClient'
 import { normalize } from '@/graphql/utils'
-import useHubProfile from '@/hooks/useHubProfile'
 import { GET_REVIEWS_AND_COMMENTS_BY_USER } from '@/graphql/reviews'
-import isEmpty from 'lodash.isempty'
+import useHubProfile from '@/hooks/useHubProfile'
+import { printNumber } from '@/utils'
+import AccountReviewItem from '@/components/Pages/Account/Review/AccountReviewItem'
+import styles from '@/components/Pages/Account/Review/account_review.module.scss'
 
 export const REVIEW_STATUS = {
   PUBLISHED: 'published',
@@ -18,7 +18,7 @@ export const REVIEW_STATUS = {
 }
 
 export const REVIEW_PAGE_SIZE = 6
-export const COMMENT_PAGE_SIZE = 5
+export const COMMENT_PAGE_SIZE = 6
 
 function Option ({ isActive, onSelectOption, text, value }) {
   return (
@@ -70,6 +70,12 @@ function ReviewFilter ({ data, status }) {
   }, [curOption])
 
   useEffect(() => {
+    if (!router.query.status) {
+      setCurOption(OPTIONS.PUBLISHED.value)
+    }
+  }, [router.query])
+
+  useEffect(() => {
     router.replace(`${router.asPath.split('?')[0]}${params ? `?${params}` : ''}`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params])
@@ -80,22 +86,26 @@ function ReviewFilter ({ data, status }) {
         isActive={curOption === OPTIONS.PUBLISHED.value}
         onSelectOption={setCurOption}
         value={OPTIONS.PUBLISHED.value}
-        text={`${OPTIONS.PUBLISHED.text}` + (published ? ` (${printNumber(published)})` : '')}></Option>
+        text={`${OPTIONS.PUBLISHED.text}` + (published ? ` (${printNumber(published)})` : '')}
+      />
       <Option
         isActive={curOption === OPTIONS.DRAFT.value}
         onSelectOption={setCurOption}
         value={OPTIONS.DRAFT.value}
-        text={`${OPTIONS.DRAFT.text}` + (draft ? ` (${printNumber(draft)})` : '')}></Option>
+        text={`${OPTIONS.DRAFT.text}` + (draft ? ` (${printNumber(draft)})` : '')}
+      />
       <Option
         isActive={curOption === OPTIONS.PENDING_APPROVAL.value}
         onSelectOption={setCurOption}
         value={OPTIONS.PENDING_APPROVAL.value}
-        text={`${OPTIONS.PENDING_APPROVAL.text}` + (pending ? ` (${printNumber(pending)})` : '')}></Option>
+        text={`${OPTIONS.PENDING_APPROVAL.text}` + (pending ? ` (${printNumber(pending)})` : '')}
+      />
       <Option
         isActive={curOption === OPTIONS.DECLINED.value}
         onSelectOption={setCurOption}
         value={OPTIONS.DECLINED.value}
-        text={`${OPTIONS.DECLINED.text}` + (declined ? ` (${printNumber(declined)})` : '')}></Option>
+        text={`${OPTIONS.DECLINED.text}` + (declined ? ` (${printNumber(declined)})` : '')}
+      />
     </div>
   )
 }
@@ -150,7 +160,7 @@ function ReviewSkeleton () {
       <div className='flex flex-col flex-1 py-6 px-5'>
         <div className='h-4 rounded-sm bg-[#30343F] w-full mb-4'></div>
         <div className={clsx(styles.rating_bar, 'p-[18px] flex items-center mb-[22px]')}>
-          <ListStarSVG></ListStarSVG>
+          <ListStarSVG/>
           <div className='h-3 rounded-sm bg-[#30343F] ml-[22px] w-1/2'></div>
         </div>
 
@@ -184,20 +194,25 @@ function ReviewSkeleton () {
 function TabReviews ({ reviews, showFilter, meta, status, totalReviews, user }) {
   const router = useRouter()
   const { query } = router
-  const [isOwner] = useState<boolean>(true)
-  const [loadMore, setLoadMore] = useState<boolean>(false)
+  const [isOwner] = useState(true)
+  const [loadMore, setLoadMore] = useState(false)
   const [_reviews, setReviews] = useState(reviews)
-  const [isLoading, setLoading] = useState<boolean>(false)
+  const [isLoading, setLoading] = useState(false)
   const [page, setPage] = useState(1)
   const { accountHub } = useHubProfile()
-  const [isNoMore, setIsNoMore] = useState<boolean>(false)
+  const [isNoMore, setIsNoMore] = useState(false)
 
   const handleLayoutScroll = useCallback(() => {
     const detectBottomElement = document.getElementById('detectBottomReview')
 
     const bounding = detectBottomElement?.getBoundingClientRect()
     if (!bounding) return
-    if (bounding.top >= 0 && bounding.left >= 0 && bounding.right <= (window.innerWidth || document.documentElement.clientWidth) && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight)) {
+    if (
+      bounding.top >= 0 &&
+      bounding.left >= 0 &&
+      bounding.right <= (window.innerWidth || document.documentElement.clientWidth) &&
+      bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+    ) {
       !isLoading && !loadMore && setLoadMore(true)
     }
   }, [isLoading, loadMore])
@@ -272,20 +287,23 @@ function TabReviews ({ reviews, showFilter, meta, status, totalReviews, user }) 
     return router.query.status === REVIEW_STATUS.PUBLISHED
   }, [router.query.status])
 
-  return <div className={clsx(styles.tab_review, showFilter ? '' : 'mt-[32px]')}>
-    {isOwner && showFilter && <ReviewFilter data={meta} status={status}></ReviewFilter>}
-    {
-      _reviews.map(e => <AccountReviewItem key={`acc_review_${e.id}`} data={e} visibleGroupAction={visibleGroupAction} visibleStatistics={visibleStatistics} user={user}/>)
-    }
-    {
-      isEmpty(_reviews) && <div>No review found</div>
-    }
-    <div id='detectBottomReview' className='w-full h-[1px]'></div>
-
-    {
-      isLoading && <ReviewSkeleton />
-    }
-  </div>
+  return (
+    <div className={clsx(styles.tab_review, showFilter ? '' : 'mt-[32px]')}>
+      {isOwner && showFilter && <ReviewFilter data={meta} status={status} />}
+      {_reviews.map(e => (
+        <AccountReviewItem
+          key={`acc_review_${e.id}`}
+          data={e}
+          visibleGroupAction={visibleGroupAction}
+          visibleStatistics={visibleStatistics}
+          user={user}
+        />)
+      )}
+      {isEmpty(_reviews) && <div>No review found</div>}
+      <div id="detectBottomReview" className="w-full h-[1px]"></div>
+      {isLoading && <ReviewSkeleton />}
+    </div>
+  )
 }
 
 export default TabReviews

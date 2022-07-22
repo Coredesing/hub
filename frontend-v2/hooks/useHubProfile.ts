@@ -3,7 +3,7 @@ import { fetcher } from '@/utils'
 import { useState, useEffect } from 'react'
 
 const useHubProfile = () => {
-  const [accountHub, setCountHub] = useState(null)
+  const [accountHub, setAccountHub] = useState(null)
   const { account } = useMyWeb3()
 
   const hubProfileId = () => {
@@ -53,12 +53,12 @@ const useHubProfile = () => {
   useEffect(() => {
     if (account) {
       hubProfileId()
-        .then((result) => setCountHub(result))
+        .then((result) => setAccountHub(result))
         .catch((err) => {
-          setCountHub(null)
+          setAccountHub(null)
           console.debug('err', err)
         })
-    } else setCountHub(null)
+    } else setAccountHub(null)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
 

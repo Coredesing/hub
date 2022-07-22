@@ -1,0 +1,39 @@
+.review_item {
+  width: 100%;
+
+  .user_info {
+    background: #2a2d36;
+    border-radius: 4px 0 0 4px;
+  }
+
+  .content {
+    background: #21232a;
+    border-radius: 0 4px 4px 0;
+
+    .review {
+      font-family: 'Poppins';
+      font-style: normal;
+      position: relative;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 150%;
+      letter-spacing: 0.03px;
+      color: #ffffff;
+
+      > .blur {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 60px;
+        width: 100%;
+        background: linear-gradient(
+            180deg,
+            rgba(33, 35, 42, 0) -16.67%,
+            #21232a 89.67%
+        );
+      }
+    }
+  }
+}

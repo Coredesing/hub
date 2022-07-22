@@ -1,14 +1,14 @@
-import AccountCommentItem from '@/components/Pages/Account/Review/AccountCommentItem'
-import clsx from 'clsx'
-import styles from '@/components/Pages/Account/Review/account_review.module.scss'
 import { useCallback, useEffect, useState } from 'react'
-import { COMMENT_PAGE_SIZE, REVIEW_PAGE_SIZE, REVIEW_STATUS } from '@/components/Pages/Account/Review/TabReviews'
 import { useRouter } from 'next/router'
-import useHubProfile from '@/hooks/useHubProfile'
-import { client } from '@/graphql/apolloClient'
-import { normalize } from '@/graphql/utils'
-import { GET_REVIEWS_AND_COMMENTS_BY_USER } from '@/graphql/reviews'
+import clsx from 'clsx'
 import isEmpty from 'lodash.isempty'
+import { client } from '@/graphql/apolloClient'
+import { GET_REVIEWS_AND_COMMENTS_BY_USER } from '@/graphql/reviews'
+import { normalize } from '@/graphql/utils'
+import useHubProfile from '@/hooks/useHubProfile'
+import { COMMENT_PAGE_SIZE, REVIEW_PAGE_SIZE, REVIEW_STATUS } from '@/components/Pages/Account/Review/TabReviews'
+import AccountCommentItem from '@/components/Pages/Account/Review/AccountCommentItem'
+import styles from '@/components/Pages/Account/Review/account_review.module.scss'
 
 function CommentSkeleton () {
   return (
@@ -46,22 +46,27 @@ function CommentSkeleton () {
   )
 }
 
-function TabComments ({ comments, totalComment }) {
+const TabComments = ({ comments, totalComment }) => {
   const router = useRouter()
   const { query } = router
-  const [isLoading, setLoading] = useState<boolean>(false)
+  const [isLoading, setLoading] = useState(false)
   const [page, setPage] = useState(1)
-  const [loadMore, setLoadMore] = useState<boolean>(false)
+  const [loadMore, setLoadMore] = useState(false)
   const [_comments, setComments] = useState(comments)
   const { accountHub } = useHubProfile()
-  const [isNoMore, setIsNoMore] = useState<boolean>(false)
+  const [isNoMore, setIsNoMore] = useState(false)
 
   const handleLayoutScroll = useCallback(() => {
     const detectBottomElement = document.getElementById('detectBottomComment')
 
     const bounding = detectBottomElement?.getBoundingClientRect()
     if (!bounding) return
-    if (bounding.top >= 0 && bounding.left >= 0 && bounding.right <= (window.innerWidth || document.documentElement.clientWidth) && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight)) {
+    if (
+      bounding.top >= 0 &&
+      bounding.left >= 0 &&
+      bounding.right <= (window.innerWidth || document.documentElement.clientWidth) &&
+      bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+    ) {
       !isLoading && isNoMore && setLoadMore(true)
     }
   }, [isLoading, isNoMore])
@@ -126,18 +131,14 @@ function TabComments ({ comments, totalComment }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadMore, accountHub])
 
-  return <div className={clsx(styles.tab_comment, 'mt-6')}>
-    {
-      _comments.map((e, i) => <AccountCommentItem key={`acc_review_${i}`} data={e}></AccountCommentItem>)
-    }
-    {
-      isEmpty(_comments) && <div>No comment found</div>
-    }
-    <div id='detectBottomComment' className='w-full h-[1px]'></div>
-    {
-      isLoading && <CommentSkeleton />
-    }
-  </div>
+  return (
+    <div className={clsx(styles.tab_comment, 'mt-6')}>
+      {_comments.map((e, i) => <AccountCommentItem key={`acc_review_${i}`} data={e} />)}
+      {isEmpty(_comments) && <div>No comment found</div>}
+      <div id="detectBottomComment" className="w-full h-[1px]"></div>
+      {isLoading && <CommentSkeleton />}
+    </div>
+  )
 }
 
 export default TabComments

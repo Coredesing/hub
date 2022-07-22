@@ -2,10 +2,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { useAppContext } from '../context'
 import { useRouter } from 'next/router'
 import banner from '@/assets/images/banner.png'
-import banner3 from '@/assets/images/banner3.jpg'
-import orbitau from '@/assets//images/ads/orbitau.png'
-import gunstar from '@/assets//images/ads/gunstar.png'
-import nextwar from '@/assets//images/ads/nextwar.png'
+import banner2 from '@/assets/images/banner2.png'
+import orbitau from '@/assets/images/ads/orbitau.png'
+import gunstar from '@/assets/images/ads/gunstar.png'
+import nextwar from '@/assets/images/ads/nextwar.png'
 import { gtagEvent } from '@/utils'
 
 const banners = {
@@ -17,11 +17,18 @@ const banners = {
     id: 'guilds'
   },
   '/': {
-    deadline: new Date('2022-06-28T14:00:00Z'),
-    img: banner3,
-    link: 'https://gamefi.org/hub',
-    text: 'GameFi.org Games',
-    id: 'league-of-gamefi'
+    deadline: new Date('2022-07-20T14:00:00Z'),
+    img: banner2,
+    link: 'https://gamefi.org/igo/xana',
+    text: 'XANA IGO',
+    id: 'xana-igo'
+  },
+  '/igo': {
+    deadline: new Date('2022-07-20T14:00:00Z'),
+    img: banner2,
+    link: 'https://gamefi.org/igo/xana',
+    text: 'XANA IGO',
+    id: 'xana-igo'
   },
   '/hub': {
     deadline: new Date('2022-07-28T14:00:00Z'),

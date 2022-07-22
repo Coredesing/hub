@@ -1,8 +1,8 @@
 import { client } from '@/graphql/apolloClient'
-import * as reviews from '@/graphql/reviews'
+import { GET_LIKES_BY_USER_ID } from '@/graphql/reviews'
 
 export function fetchWidthGraphql ({ variables }) {
-  return client.query({ query: reviews.GET_LIKES_BY_USER_ID, variables })
+  return client.query({ query: GET_LIKES_BY_USER_ID, variables })
 }
 
 export default async function handler (req, res) {

@@ -2,6 +2,7 @@
 
 const CampaignModel = use('App/Models/Campaign');
 const CampaignService = use('App/Services/CampaignService');
+const RefundService = use('App/Services/RefundService');
 const PoolService = use('App/Services/PoolService');
 const WalletService = use('App/Services/WalletAccountService');
 const TierService = use('App/Services/TierService');
@@ -730,6 +731,8 @@ class CampaignController {
       const params = request.all()
       const campaign_id = params.campaign_id
       const userWalletAddress = request.header('wallet_address')
+      const reason = params.reason
+
       if (!campaign_id) {
         return HelperUtils.responseBadRequest('Bad request with campaign_id')
       }
@@ -760,7 +763,9 @@ class CampaignController {
       }
 
       // check type of pool
-
+      if (camp.airdrop_network && camp.airdrop_network !== 'none') {
+        return HelperUtils.responseBadRequest("Request refund is not available in this campaign")
+      }
       // call to SC to get amount token purchased of user
       // const campaignClaimSC = await HelperUtils.getContractClaimInstance(camp);
       // const [userPurchased, userClaimed] = await Promise.all([
@@ -777,6 +782,9 @@ class CampaignController {
       // if (userClaimed > 0 || userPurchased === 0) {
       //   return HelperUtils.responseBadRequest("Can not refund");
       // }
+
+      const refundService = new RefundService()
+      await refundService.createRefundRequest(campaign_id, userWalletAddress, reason)
 
       const currency = HelperUtils.getCurrencyAddress(camp.network_available, camp.accept_currency)
       const deadline = camp.end_refund_time
@@ -835,7 +843,9 @@ class CampaignController {
       }
 
       // check type of pool
-
+      if (camp.airdrop_network && camp.airdrop_network !== 'none') {
+        return HelperUtils.responseBadRequest("Claim refund is not available in this campaign")
+      }
       // call to SC to get amount token purchased of user
       // const campaignClaimSC = await HelperUtils.getContractClaimInstance(camp);
       // const [userRefundToken, tokenSold] = await Promise.all([

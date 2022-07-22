@@ -483,6 +483,12 @@ export const airdropNetworks = {
     name: 'Terra',
     alias: 'terra',
     image: require('@/assets/images/networks/terra.svg')
+  },
+  avax: {
+    id: 1003,
+    name: 'Avalanche',
+    alias: 'avax',
+    image: require('@/assets/images/networks/avalanche.svg')
   }
 }
 

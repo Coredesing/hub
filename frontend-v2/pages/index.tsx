@@ -10,7 +10,7 @@ import Partners from '@/components/Pages/Home/Partners'
 import { fetcher } from '@/utils'
 import Layout from '@/components/Layout'
 import Banners from '@/components/Banners'
-// import INOList from '@/components/Pages/Home/INOList'
+import INOList from '@/components/Pages/Home/INOList'
 import { client } from '@/graphql/apolloClient'
 import { GET_BANNER_AGGREGATORS } from '@/graphql/aggregator'
 import { normalize } from '@/graphql/utils'
@@ -102,9 +102,9 @@ const PageIndex = ({ currentPools = [], cmsData = [] }) => {
         {itemsSorted && itemsSorted.length ? <GameCarousel items={itemsSorted}></GameCarousel> : <></>}
       </div>
       <Instruction></Instruction>
-      <TicketList></TicketList>
+      {/* <TicketList></TicketList> */}
       <IGOList listUpcoming={listUpcoming}></IGOList>
-      {/* <INOList></INOList> */}
+      <INOList></INOList>
       <div className="bg-gamefiDark-900">
         <GameList></GameList>
         <Partners></Partners>

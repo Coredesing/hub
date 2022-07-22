@@ -1,10 +1,5 @@
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import isEmpty from 'lodash.isempty'
-import get from 'lodash.get'
-import { normalize } from '@/graphql/utils'
-import useHubProfile from '@/hooks/useHubProfile'
-import { printNumber, fetcher } from '@/utils'
+import { useEffect } from 'react'
+import { printNumber } from '@/utils'
 import ReviewRating from '@/components/Base/Review/Rating'
 import ReviewList from '@/components/Base/Review/List'
 
@@ -59,13 +54,7 @@ function getRatePercent (rates = {}) {
   ]
 }
 
-const Reviews = ({ data, totalReviews, rates, id, tabRef, currentResource = 'hub' as 'guilds' | 'hub' }) => {
-  const [, setLoading] = useState(false)
-  const [currentRate, setCurrentRate] = useState(0)
-  const router = useRouter()
-
-  const { accountHub } = useHubProfile()
-
+const Reviews = ({ data, totalReviews, rates, id, tabRef, currentResource = 'hub' as 'guilds' | 'hub', currentRate, setCurrentRate }) => {
   const overall = getOverall(rates)
   const countRating = getCountRating(rates)
 
@@ -74,36 +63,6 @@ const Reviews = ({ data, totalReviews, rates, id, tabRef, currentResource = 'hub
   useEffect(() => {
     tabRef?.current?.scrollIntoView({ behavior: 'smooth' })
   }, [tabRef])
-
-  useEffect(() => {
-    if (isEmpty(accountHub)) {
-      setCurrentRate(0)
-      return
-    }
-
-    fetcher('/api/hub/reviews', {
-      method: 'POST',
-      body: JSON.stringify({
-        variables: {
-          userId: accountHub.id,
-          slug: router.query.slug
-        },
-        query: 'GET_REVIEW_AND_RATE_BY_USER_ID_FOR_GUILD'
-      })
-    }).then((res) => {
-      setLoading(false)
-      if (!isEmpty(res)) {
-        const data = normalize(res.data)
-        const rate = get(data, 'rates[0].rate', '')
-        if (rate) {
-          setCurrentRate(rate)
-        } else {
-          setCurrentRate(0)
-        }
-      }
-    }).catch(() => setLoading(false))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accountHub, router.query.slug])
 
   return (
     <div className="flex flex-col">

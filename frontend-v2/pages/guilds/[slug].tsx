@@ -1,8 +1,12 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import get from 'lodash.get'
+import isEmpty from 'lodash.isempty'
+import { fetcher } from '@/utils'
+import useHubProfile from '@/hooks/useHubProfile'
 import { client } from '@/graphql/apolloClient'
 import { GET_GUILD_REVIEWS_BY_SLUG } from '@/graphql/guilds'
+import { normalize } from '@/graphql/utils'
 import Layout from '@/components/Layout'
 import { BackIcon } from '@/components/Base/Icon'
 import { TabPanel, Tabs } from '@/components/Base/Tabs'
@@ -35,6 +39,39 @@ const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
     default: return 0
     }
   }, [router.query.tab])
+
+  const [loading, setLoading] = useState(false)
+  const [currentRate, setCurrentRate] = useState(0)
+  const { accountHub } = useHubProfile()
+
+  useEffect(() => {
+    if (isEmpty(accountHub)) {
+      setCurrentRate(0)
+      return
+    }
+
+    fetcher('/api/hub/reviews', {
+      method: 'POST',
+      body: JSON.stringify({
+        variables: {
+          userId: accountHub.id,
+          slug: router.query.slug
+        },
+        query: 'GET_REVIEW_AND_RATE_BY_USER_ID_FOR_GUILD'
+      })
+    }).then((res) => {
+      setLoading(false)
+      if (!isEmpty(res)) {
+        const data = normalize(res.data)
+        const rate = get(data, 'rates[0].rate', '')
+        if (rate) {
+          setCurrentRate(rate)
+        } else {
+          setCurrentRate(0)
+        }
+      }
+    }).catch(() => setLoading(false))
+  }, [accountHub, router.query.slug])
 
   const formattedReviews = useMemo(() => {
     return {
@@ -87,7 +124,7 @@ const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
         guildData && <GuildDetailContext.Provider value={{
           guildData
         }}>
-          <HeaderProfile totalFavorites = {guildData.totalFavorites}/>
+          <HeaderProfile totalFavorites={guildData.totalFavorites} currentRate={currentRate} setCurrentRate={setCurrentRate} loading={loading} setLoading={setLoading} />
           <div className="mx-auto">
             <Tabs
               titles={[
@@ -113,7 +150,16 @@ const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
             </TabPanel>
             <TabPanel value={tab} index={2}>
               <div className="container mx-auto py-8 px-4 lg:px-16">
-                <Reviews data={formattedReviews} totalReviews={guildReviewsData.totalReviews} rates={guildReviewsData.rates} id={guildData.id} tabRef={null} currentResource='guilds' />
+                <Reviews
+                  data={formattedReviews}
+                  totalReviews={guildReviewsData.totalReviews}
+                  rates={guildReviewsData.rates}
+                  id={guildData.id}
+                  tabRef={null}
+                  currentResource='guilds'
+                  currentRate={currentRate}
+                  setCurrentRate={setCurrentRate}
+                />
               </div>
             </TabPanel>
           </div>

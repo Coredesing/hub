@@ -25,6 +25,8 @@ const HeaderProfile = ({ totalFavorites }) => {
   const [loading, setLoading] = useState(false)
   const [currentRate, setCurrentRate] = useState(0)
 
+  const visibleRating = router.query.tab !== 'reviews'
+
   const handleSetCurrentRate = (rate, v: SetStateAction<number>) => () => {
     setCurrentRate(v)
     setLoading(true)
@@ -249,10 +251,12 @@ const HeaderProfile = ({ totalFavorites }) => {
               }
             </div>
             <div className="mt-8 md:mt-4 flex justify-end flex-col md:flex-row">
+              { visibleRating &&
               <div className="sm:w-72 w-full bg-gamefiDark-700 clipped-b-l p-px rounded cursor-pointer mr-3 h-9  hover:opacity-95 disabled:cursor-not-allowed flex px-6 py-[10px] justify-between">
                 <p className="text-sm text-white uppercase font-semibold">Rate this guild</p>
                 <ReviewRatingAction rate={currentRate} callBack={handleSetCurrentRate} disabled={loading} extraClass="w-4 h-4" />
               </div>
+              }
               {favorite
                 ? <button onClick={handleFavorite} className="mt-4 lg:mt-0 w-full cursor-pointer lg:w-[146px] h-[36px] clipped-t-r p-px bg-[#FF5959]/10 rounded-sm flex items-center justify-center">
                   <div className="w-full h-full bg-[#FF5959]/10 hover:opacity-95 rounded-sm flex justify-center items-center gap-2 font-bold uppercase text-sm clipped-t-r">

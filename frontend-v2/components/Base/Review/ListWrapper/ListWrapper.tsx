@@ -89,7 +89,7 @@ const ReviewListWrapper = ({ data, slug, currentResource }: ReviewListWrapperPro
           </div>
         )
         : (
-          <ReviewList viewAll={dataReviews?.length >= 5} data={{ data: dataReviews, rates: dataRating }} currentResource={currentResource} />
+          <ReviewList viewAll={dataReviews?.length >= 5} data={{ data: dataReviews, rates: dataRating }} currentResource={currentResource} review={false}/>
         )
       }
     </>

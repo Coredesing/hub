@@ -19,7 +19,7 @@ interface ReviewListProps {
   currentResource: 'guilds' | 'hub';
 }
 
-const ReviewList = ({ data, pagination = false, viewAll = false, filter = false, loadMore = false, review = false, currentResource }: ReviewListProps) => {
+const ReviewList = ({ data, pagination = false, viewAll = false, filter = false, loadMore = false, review = true, currentResource }: ReviewListProps) => {
   const router = useRouter()
   const [, setFilterShown] = useState(false)
   const [page, setPage] = useState<string>(router?.query?.page?.[0] || '1')
@@ -129,25 +129,24 @@ const ReviewList = ({ data, pagination = false, viewAll = false, filter = false,
 
   return (
     <div
-      className="md:container mx-auto lg:block"
+      className="md:container mx-auto lg:block mt-4"
       onClick={handleSetFilterShown}
     >
       {(data?.totalReviews || !isEmpty(data?.data))
         ? (
           <div className="flex flex-col gap-2 md:gap-0 md:flex-row items-start md:items-center md:justify-between">
             {filter && <ReviewListFilter ratingLevel={ratingLevel} setRatingLevel={onChangeRatingLevel} />}
-            {review && (
-              <Link href={createOrUpdateReviewUrl} passHref>
-                <a
-                  className="bg-gamefiGreen-700 md:self-end text-gamefiDark-900 py-2 px-6 rounded-sm clipped-t-r hover:opacity-90 cursor-pointer"
-                  style={{ textDecoration: 'none' }}
-                >
-                  <span className="uppercase font-bold text-[13px] leading-[150%] tracking-[0.02em] text-[#0D0F15] not-italic font-mechanic">
+            { review && <Link href={createOrUpdateReviewUrl} passHref>
+              <a
+                className="bg-gamefiGreen-700 md:self-end text-gamefiDark-900 py-2 px-6 rounded-sm clipped-t-r hover:opacity-90 cursor-pointer"
+                style={{ textDecoration: 'none' }}
+              >
+                <span className="uppercase font-bold text-[13px] leading-[150%] tracking-[0.02em] text-[#0D0F15] not-italic font-mechanic">
                     Write my review
-                  </span>
-                </a>
-              </Link>
-            )}
+                </span>
+              </a>
+            </Link>
+            }
           </div>
         )
         : null

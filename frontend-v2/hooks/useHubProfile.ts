@@ -27,8 +27,13 @@ const useHubProfile = () => {
         method: 'GET'
       })
         .then((response) => {
-          const { data, error } = response
+          const { data, error, err } = response
           if (error) {
+            console.debug('first2', error, err)
+            if (err?.status === 403) {
+              setAccountHub(null)
+              sessionStorage.clear()
+            }
             reject(error)
             return
           }

@@ -1,14 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   useState,
   createContext,
   useRef,
   useContext
 } from 'react'
-import { useMyWeb3 } from '@/components/web3/context'
-import useWalletSignature from '@/hooks/useWalletSignature'
-import { fetcher, debounce } from '@/utils'
-import { useWalletContext } from '@/components/Base/WalletConnector/provider'
 import Recaptcha from '@/components/Base/Recaptcha'
 
 export const HubContext = createContext<{
@@ -25,19 +20,7 @@ export const useHubContext = () => useContext(HubContext)
 
 const HubProvider = ({ children }) => {
   const [tokenCaptcha, setTokenCaptcha] = useState('')
-  const { account } = useMyWeb3()
-  const { setShowModal: showConnectWallet } = useWalletContext()
   const recaptchaRef: any = useRef()
-  const { signMessage } = useWalletSignature()
-
-  const onRefreshRecaptcha = debounce(() => {
-    console.log('come')
-    if (!tokenCaptcha) return
-    console.log('come1')
-    if (typeof recaptchaRef?.current?.resetCaptcha === 'function') {
-      recaptchaRef.current.resetCaptcha()
-    }
-  }, 5000)
 
   const onChangeRecaptcha = (value: string | null) => {
     setTokenCaptcha(value)

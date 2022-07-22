@@ -147,7 +147,7 @@ const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
     }
 
     setLoading(true)
-    connectWallet(true).then((res: any) => {
+    connectWallet().then((res: any) => {
       if (res.error) {
         setLoading(false)
         console.debug(res.error)
@@ -155,12 +155,11 @@ const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
         return
       }
 
-      const { walletAddress, signature, captcha } = res
+      const { walletAddress, signature } = res
       const createOrUpdateReviewUrl = currentReview ? `/api/hub/reviews/${currentReview.id}` : '/api/hub/reviews/createReview'
       const createOrUpdateReviewBody = {
         ...data,
         status,
-        captcha,
         pros: handleProsAndCons(pros),
         cons: handleProsAndCons(cons)
       }

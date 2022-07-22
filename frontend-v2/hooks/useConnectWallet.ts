@@ -15,7 +15,7 @@ const useConnectWallet = () => {
   const { showCaptcha, tokenCaptcha, resetToken } = useHubContext()
 
   const connectWallet = useCallback(
-    (needResetCaptcha?: boolean) => {
+    (needCaptcha?: boolean) => {
       return new Promise((resolve, reject) => {
         if (!account) {
           showConnectWallet(true)
@@ -70,7 +70,7 @@ const useConnectWallet = () => {
               reject(error)
             })
         }
-        if (!tokenCaptcha || needResetCaptcha) {
+        if (needCaptcha || isEmpty(accountHub)) {
           // reject(new Error(''))
           showCaptcha(handleCallback, reject)
           return

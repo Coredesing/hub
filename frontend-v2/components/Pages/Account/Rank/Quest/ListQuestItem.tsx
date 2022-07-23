@@ -41,7 +41,14 @@ const Item = ({ data }) => {
         walletId,
         actionId: action._id
       }
-      window.open(`${link}?state=${Buffer.from(JSON.stringify(payload)).toString('base64')}`)
+      const authWindow = window.open(`${link}?state=${Buffer.from(JSON.stringify(payload)).toString('base64')}`, '', 'width=800,height=600')
+      const interval = setInterval(() => {
+        if (authWindow.closed) {
+          router.reload()
+          clearInterval(interval)
+        }
+      }, 1000)
+
       return
     }
     setLoading(true)

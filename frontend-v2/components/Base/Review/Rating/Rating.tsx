@@ -64,7 +64,11 @@ const ReviewRating = ({ overall, totalCount, rates, currentRate, setCurrentRate,
     const { walletAddress, signature } = response
     const createRateUrl = '/api/hub/reviews/createRate'
 
-    const createRateBody = {
+    const createRateBody: {
+      rate: number;
+      guild?: string;
+      aggregator?: string;
+    } = {
       rate
     }
     switch (currentResource) {

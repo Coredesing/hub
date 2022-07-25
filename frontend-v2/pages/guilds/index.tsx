@@ -81,7 +81,7 @@ const Guilds = ({ guilds }: Props) => {
                   <Image src={require('@/assets/images/under-stroke-green.svg')} alt="understroke"></Image>
                 </div>
               </div>
-              <div className="hidden mt-14 lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
+              <div className="hidden mt-14 lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-8 grid-flow-col">
                 {guilds?.length && guilds.map(guild => <GuildCard key={`guild-card-${guild.id}`} item={guild}></GuildCard>)}
                 {guilds?.length < 6 && [...Array(6 - guilds.length)].map((value, index) => <GuildCard item={null} key={`draft-card-${index}`} isDraft={true}></GuildCard>)}
               </div>

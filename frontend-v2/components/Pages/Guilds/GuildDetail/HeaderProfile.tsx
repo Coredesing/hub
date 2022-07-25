@@ -2,10 +2,7 @@ import { useCallback, useEffect, useState, SetStateAction } from 'react'
 import { useRouter } from 'next/router'
 import toast from 'react-hot-toast'
 import Tippy from '@tippyjs/react'
-import isEmpty from 'lodash.isempty'
-import get from 'lodash.get'
 import { useGuildDetailContext } from './utils'
-import { normalize } from '@/graphql/utils'
 import { fetcher, printNumber } from '@/utils'
 import useConnectWallet from '@/hooks/useConnectWallet'
 import useHubProfile from '@/hooks/useHubProfile'
@@ -14,7 +11,7 @@ import { Spinning } from '@/components/Base/Animation'
 import { useMyWeb3 } from '@/components/web3/context'
 import ReviewRatingAction from '@/components/Base/Review/Rating/Action'
 
-const HeaderProfile = ({ totalFavorites }) => {
+const HeaderProfile = ({ totalFavorites, currentRate, setCurrentRate, loading, setLoading }) => {
   const router = useRouter()
   const { guildData } = useGuildDetailContext()
   const { accountHub } = useHubProfile()
@@ -22,8 +19,7 @@ const HeaderProfile = ({ totalFavorites }) => {
   const [favorite, setFavorite] = useState(false)
   const [loadingFavorite, setLoadingFavorite] = useState(false)
 
-  const [loading, setLoading] = useState(false)
-  const [currentRate, setCurrentRate] = useState(0)
+  const visibleRating = router.query.tab !== 'reviews'
 
   const handleSetCurrentRate = (rate, v: SetStateAction<number>) => () => {
     setCurrentRate(v)
@@ -93,35 +89,6 @@ const HeaderProfile = ({ totalFavorites }) => {
     }
   }, [accountHub, getFavoriteByUserId])
   const { connectWallet } = useConnectWallet()
-
-  useEffect(() => {
-    if (isEmpty(accountHub)) {
-      setCurrentRate(0)
-      return
-    }
-
-    fetcher('/api/hub/reviews', {
-      method: 'POST',
-      body: JSON.stringify({
-        variables: {
-          userId: accountHub.id,
-          slug: router.query.slug
-        },
-        query: 'GET_REVIEW_AND_RATE_BY_USER_ID_FOR_GUILD'
-      })
-    }).then((res) => {
-      setLoading(false)
-      if (!isEmpty(res)) {
-        const data = normalize(res.data)
-        const rate = get(data, 'rates[0].rate', '')
-        if (rate) {
-          setCurrentRate(rate)
-        } else {
-          setCurrentRate(0)
-        }
-      }
-    }).catch(() => setLoading(false))
-  }, [accountHub, router.query.slug])
 
   const handleFavorite = useCallback(() => {
     connectWallet().then((res: any) => {
@@ -249,10 +216,12 @@ const HeaderProfile = ({ totalFavorites }) => {
               }
             </div>
             <div className="mt-8 md:mt-4 flex justify-end flex-col md:flex-row">
+              { visibleRating &&
               <div className="sm:w-72 w-full bg-gamefiDark-700 clipped-b-l p-px rounded cursor-pointer mr-3 h-9  hover:opacity-95 disabled:cursor-not-allowed flex px-6 py-[10px] justify-between">
                 <p className="text-sm text-white uppercase font-semibold">Rate this guild</p>
                 <ReviewRatingAction rate={currentRate} callBack={handleSetCurrentRate} disabled={loading} extraClass="w-4 h-4" />
               </div>
+              }
               {favorite
                 ? <button onClick={handleFavorite} className="mt-4 lg:mt-0 w-full cursor-pointer lg:w-[146px] h-[36px] clipped-t-r p-px bg-[#FF5959]/10 rounded-sm flex items-center justify-center">
                   <div className="w-full h-full bg-[#FF5959]/10 hover:opacity-95 rounded-sm flex justify-center items-center gap-2 font-bold uppercase text-sm clipped-t-r">

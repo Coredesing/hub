@@ -22,7 +22,7 @@ interface ReviewListProps {
   currentResource: 'guilds' | 'hub';
 }
 
-const ReviewList = ({ data, pagination = false, viewAll = false, filter = false, loadMore = false, review = false, currentResource, pageCountReviews }: ReviewListProps) => {
+const ReviewList = ({ data, pagination = false, viewAll = false, filter = false, loadMore = false, review = true, currentResource, pageCountReviews }: ReviewListProps) => {
   const router = useRouter()
   const [, setFilterShown] = useState<boolean>(false)
   const [page, setPage] = useState<number>(1)
@@ -231,23 +231,30 @@ const ReviewList = ({ data, pagination = false, viewAll = false, filter = false,
 
   return (
     <div
-      className="md:container mx-auto lg:block"
+      className="md:container mx-auto lg:block mt-4"
       onClick={handleSetFilterShown}
     >
-      {
-        (data?.totalReviews || !isEmpty(listReview))
-          ? <div className='flex flex-col gap-2 md:gap-0 md:flex-row items-start md:items-center md:justify-between'>
+      {(data?.totalReviews || !isEmpty(listReview))
+        ? (
+          <div className="flex flex-col gap-2 md:gap-0 md:flex-row items-start md:items-center md:justify-between">
             {filter && <ReviewListFilter
               ratingLevel={ratingLevel}
               setRatingLevel={handleSetRatingLevel}
             />}
             {review && <Link href={createOrUpdateReviewUrl} passHref>
-              <a className="bg-gamefiGreen-700 md:self-end text-gamefiDark-900 py-2 px-6 rounded-sm clipped-t-r hover:opacity-90 cursor-pointer" style={{ textDecoration: 'none' }}>
-                <span className="uppercase font-bold text-[13px] leading-[150%] tracking-[0.02em] text-[#0D0F15] not-italic font-mechanic">Write my review</span>
+              <a
+                className="bg-gamefiGreen-700 md:self-end text-gamefiDark-900 py-2 px-6 rounded-sm clipped-t-r hover:opacity-90 cursor-pointer"
+                style={{ textDecoration: 'none' }}
+              >
+                <span className="uppercase font-bold text-[13px] leading-[150%] tracking-[0.02em] text-[#0D0F15] not-italic font-mechanic">
+                  Write my review
+                </span>
               </a>
-            </Link>}
+            </Link>
+            }
           </div>
-          : null
+        )
+        : null
       }
       {
         isEmpty(listReview) && !data?.totalReviews && <div className='flex flex-col w-full items-center mt-4'>

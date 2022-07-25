@@ -69,6 +69,7 @@ const useHubProfile = () => {
 
   return {
     hubProfileId,
+    setAccountHub,
     accountHub
   }
 }

@@ -29,7 +29,7 @@ const ReviewList = ({ data, pagination = false, viewAll = false, filter = false,
   const [likeStatusOfReviews, setLikeStatusOfReviews] = useState({})
   const [pageSize] = useState<number>(5)
   const [ratingLevel, setRatingLevel] = useState<string>(data.ratingLevel)
-  const [userRank, setUserRank] = useState<string>(data.userRank)
+  const [userRank] = useState<string>(data.userRank)
   const [listReview, setListReview] = useState<any[]>(data?.data || [])
   const [loading, setLoading] = useState(false)
   const [firstCome, setFirstCome] = useState<boolean>(true)

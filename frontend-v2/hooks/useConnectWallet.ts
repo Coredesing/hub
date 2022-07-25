@@ -11,9 +11,9 @@ const useConnectWallet = () => {
   const { account } = useMyWeb3()
   const { setShowModal: showConnectWallet } = useWalletContext()
   const { signMessage } = useWalletSignature()
-  const { accountHub } = useHubProfile()
+  const { accountHub, setAccountHub } = useHubProfile()
   const { showCaptcha, tokenCaptcha, resetToken } = useHubContext()
-
+  console.log('accountHub1', accountHub)
   const connectWallet = useCallback(
     (needCaptcha?: boolean) => {
       return new Promise((resolve, reject) => {
@@ -22,6 +22,7 @@ const useConnectWallet = () => {
           reject(new Error('Please connect wallet'))
           return
         }
+        console.log('accountHub', accountHub)
         const handleCallback = (newCaptcha: string) => {
           signMessage()
             .then((data) => {
@@ -54,7 +55,7 @@ const useConnectWallet = () => {
                   if (!response.data?.walletAddress) {
                     resolve({ error: 'Could not create account' })
                   }
-
+                  setAccountHub(response.data)
                   resolve({
                     walletAddress: response.data?.walletAddress,
                     signature: data

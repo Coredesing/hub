@@ -90,7 +90,7 @@ const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
       method: 'POST',
       body: JSON.stringify({
         variables: {
-          userId: accountHub.id,
+          walletAddress: accountHub.walletAddress,
           slug
         },
         query: query

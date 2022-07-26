@@ -41,6 +41,7 @@
         "@web3-react/walletconnect-connector": "^6.2.8",
         "abortcontroller-polyfill": "^1.7.3",
         "axios": "^0.24.0",
+        "bad-words": "^3.0.4",
         "bignumber.js": "^9.0.2",
         "clsx": "^1.1.1",
         "comma-number": "^2.1.0",

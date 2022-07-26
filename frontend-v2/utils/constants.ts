@@ -24,3 +24,5 @@ export const CLAIM_TYPE = {
 
 export const CMC_ASSETS_DOMAIN = 's2.coinmarketcap.com'
 export const CMC_ASSETS_DOMAIN_CHART = 's3.coinmarketcap.com'
+export const defaultTitle = 'GameFi.org – A one-stop destination for web3 gaming'
+export const defaultDescription = 'We aim to build digital communities and manage virtual economies for mainstream adoption.'

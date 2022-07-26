@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Head from 'next/head'
 import logo from '@/assets/images/logo-white.png'
+import { defaultDescription, defaultTitle } from '@/utils/constants'
 
 const Apply = () => {
   const refContent = useRef(null)
@@ -29,13 +30,13 @@ const Apply = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>{title || 'GameFi.org - The One-stop Web3 Game Hub'}</title>
+        <title>{title || defaultTitle}</title>
         <meta charSet="utf-8" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <meta property="og:title" content={title || 'GameFi.org - The One-stop Web3 Game Hub'} key="title" />
-        <meta property="og:description" content={'GameFi.org is an all-in-one discovery gaming hub for games and metaverses.'} key="description" />
-        <meta property="og:image" content='https://gamefi.org/gamefi.jpeg' key="image" />
+        <meta property="og:title" content={title || defaultTitle} key="title" />
+        <meta property="og:description" content={defaultDescription} key="description" />
+        <meta property="og:image" content='https://gamefi.org/gamefi.jpg' key="image" />
         <meta name="keywords" content="launchpad, game hub, nft marketplace, game portal, game pass, game guild, tournament, metaverse, ido"></meta>
       </Head>
       <div className="absolute z-50 w-full">

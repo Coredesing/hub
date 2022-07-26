@@ -4,16 +4,14 @@ import useWalletSignature from '@/hooks/useWalletSignature'
 import { fetcher } from '@/utils'
 import { useWalletContext } from '@/components/Base/WalletConnector/provider'
 import { useHubContext } from '@/context/hubProvider'
-import useHubProfile from '@/hooks/useHubProfile'
 import isEmpty from 'lodash.isempty'
 
 const useConnectWallet = () => {
   const { account } = useMyWeb3()
   const { setShowModal: showConnectWallet } = useWalletContext()
   const { signMessage } = useWalletSignature()
-  const { accountHub, setAccountHub } = useHubProfile()
-  const { showCaptcha, tokenCaptcha, resetToken } = useHubContext()
-  console.log('accountHub1', accountHub)
+  const { showCaptcha, tokenCaptcha, resetToken, accountHub, setAccountHub } =
+    useHubContext()
   const connectWallet = useCallback(
     (needCaptcha?: boolean) => {
       return new Promise((resolve, reject) => {
@@ -22,7 +20,6 @@ const useConnectWallet = () => {
           reject(new Error('Please connect wallet'))
           return
         }
-        console.log('accountHub', accountHub)
         const handleCallback = (newCaptcha: string) => {
           signMessage()
             .then((data) => {
@@ -81,11 +78,12 @@ const useConnectWallet = () => {
     },
     [
       account,
-      tokenCaptcha,
+      accountHub,
       showConnectWallet,
       signMessage,
-      accountHub,
+      tokenCaptcha,
       resetToken,
+      setAccountHub,
       showCaptcha
     ]
   )

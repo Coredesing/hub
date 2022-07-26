@@ -20,6 +20,7 @@ import { WrapperItem } from './StyleElement'
 export default function ItemCarousel ({ item, index, showToolTip, defaultFavorite, disabled, setListFavorite, listFavorite, clearFavorite }: any) {
   const [loading, setLoading] = useState(disabled)
   const [favorite, setFavorite] = useState(defaultFavorite)
+  const [totalFavorites, setTotalFavorites] = useState(item.totalFavorites)
   const { connectWallet } = useConnectWallet()
   const { accountHub } = useHubProfile()
 
@@ -35,9 +36,13 @@ export default function ItemCarousel ({ item, index, showToolTip, defaultFavorit
   }, [defaultFavorite])
 
   useEffect(() => {
+    setTotalFavorites(item.totalFavorites)
+  }, [item.totalFavorites])
+
+  useEffect(() => {
     setLoading(disabled)
   }, [disabled])
-  const { rate, tokenomic, verticalThumbnail, name, totalViews, totalFavorites, slug, shortDesc, categories, mobileThumbnail, id } = item
+  const { rate, tokenomic, verticalThumbnail, name, totalViews, slug, shortDesc, categories, mobileThumbnail, id } = item
   const icon = get(tokenomic, 'icon.data.attributes', {})
   const handleLike = (e: { stopPropagation: () => void }) => {
     e?.stopPropagation()
@@ -77,6 +82,7 @@ export default function ItemCarousel ({ item, index, showToolTip, defaultFavorit
           toast.error('Could not like')
           return
         }
+        setTotalFavorites(favorite ? +totalFavorites - 1 : +totalFavorites + 1)
         setFavorite(!favorite)
         const newListFavorite = { ...listFavorite }
         if (favorite) {

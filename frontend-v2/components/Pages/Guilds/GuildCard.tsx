@@ -11,7 +11,7 @@ const GuildCard = ({ item, isDraft }: { item: any; isDraft?: boolean }) => {
       <div className="font-bold text-[30px] w-64 uppercase leading-[30px] absolute right-[10px] top-[140px] z-[1]">New Guild Coming Soon</div>
       <Image src={require('@/assets/images/guilds/coming-soon.png')} alt=""></Image>
     </div>
-    : <div onClick={() => { router.push(`/guilds/${item.slug}`) }} className="bg-gamefiDark-630/30 cursor-pointer w-full flex flex-col font-casual hover:opacity-90 clipped-b-r h-full">
+    : <div onClick={() => { router.push(`/guilds/${item.slug}`) }} className="bg-gamefiDark-630/30 cursor-pointer w-full flex flex-col font-casual hover:opacity-90 clipped-b-r min-h-[430px]">
       <div className="w-full aspect-[16/9] overflow-hidden bg-black relative" >
         {!!item.banner?.url && <img src={item.banner?.url} alt="" className="object-cover w-full h-full"></img>}
         <div

@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="flex flex-wrap align-middle items-start justify-center lg:items-start lg:grid lg:grid-cols-5 lg:gap-2 zl:gap-4">
         <div className="basis-full lg:col-span-3 flex flex-col items-center lg:block">
           <Image src={require('@/assets/images/logo-color.png')} alt="gamefi" width={291.75} height={30}></Image>
-          <div className="mt-8 font-thin text-base"><span className="font-bold text-gamefiGreen-700">GameFi.org</span> is an all-in-one discovery hub for games and metaverses.</div>
+          <div className="mt-8 font-thin text-base">A one-stop destination for web3 gaming.</div>
           <div className="flex mt-6">
             <div className="mr-3 cursor-pointer">
               <a href="https://gamefi.org/" target="_blank" rel="noreferrer">

@@ -6,17 +6,22 @@ import get from 'lodash.get'
 import arrowLeft from '@/assets/images/icons/arrow-left.png'
 import arrowRight from '@/assets/images/icons/arrow-right.png'
 import { fetcher, gtagEvent } from '@/utils'
+import Link from 'next/link'
+import isEmpty from 'lodash.isempty'
+import useHubProfile from '@/hooks/useHubProfile'
 import { WrapperSection } from './StyleElement'
 import ItemCarousel from './ItemCarousel'
 import HubTitle from '../HubTitle'
-import Link from 'next/link'
 
-export default function TrendingHub () {
+export default function TrendingHub ({ listFavorite, setListFavorite, getListFavoriteByUser, clearFavorite }) {
   const [data, setData] = useState([])
+  const [loading, setLoading] = useState(false)
   const [chunkData, setChunkData] = useState([])
   const [plugins, setPlugins] = useState([])
+
   const refSlider = useRef(null)
   const refSlider1 = useRef(null)
+  const { accountHub } = useHubProfile()
 
   useEffect(() => {
     setPlugins([new Sync({
@@ -54,10 +59,18 @@ export default function TrendingHub () {
   }
 
   useEffect(() => {
+    if (!isEmpty(data) && !isEmpty(accountHub)) {
+      getListFavoriteByUser(data, setLoading, accountHub?.id, 'trending')
+    }
+    // } else setListFavorite({})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accountHub?.id, data])
+
+  useEffect(() => {
     fetcher('/api/hub/home', { method: 'POST', body: JSON.stringify({ query: 'GET_TRENDING_AGGREGATORS' }) }).then(({ data }) => {
       const formatData = data?.aggregators?.data?.map(v => {
         const d = v.attributes
-        return { ...d, verticalThumbnail: get(d, 'verticalThumbnail.data.attributes', {}), tokenomic: get(d, 'project.data.attributes.tokenomic', {}) }
+        return { ...d, id: v.id, verticalThumbnail: get(d, 'verticalThumbnail.data.attributes', {}), tokenomic: get(d, 'project.data.attributes.tokenomic', {}) }
       }) || []
       const chunk = []
       const chunkSize = 5
@@ -78,7 +91,7 @@ export default function TrendingHub () {
             <div className="flex w-full overflow-x-auto hide-scrollbar">
               {
                 data.map((item, i) => (
-                  <ItemCarousel item={item} index={`TrendingHub-${i}`} key={`TrendingHub-${i}`} />
+                  <ItemCarousel listFavorite={listFavorite} setListFavorite={setListFavorite} clearFavorite={clearFavorite} item={item} index={`TrendingHub-${i}`} key={`TrendingHub-${i}`} defaultFavorite={!!listFavorite[item.id]} disabled={loading} />
                 ))
               }
             </div>
@@ -118,7 +131,7 @@ export default function TrendingHub () {
                 chunkData.map((v, i) => (
                   <div className="w-full mb-8 flex" key={`ChunkTrendingHub-${i}`}>
                     {v.map((item, i) => (
-                      <ItemCarousel item={item} index={`TrendingHub-${i}`} key={`TrendingHub-${i}`} />
+                      <ItemCarousel listFavorite={listFavorite} setListFavorite={setListFavorite} clearFavorite={clearFavorite} item={item} index={`TrendingHub-${i}`} key={`TrendingHub-${i}`} defaultFavorite={!!listFavorite[item.id]} disabled={loading} />
                     ))}
                   </div>
                 ))

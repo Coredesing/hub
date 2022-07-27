@@ -324,7 +324,7 @@ const CarouselDesktop = ({
 
         <div
           className={clsx(
-            'group overflow-hidden absolute top-0 left-12 -right-14 bottom-0 h-full z-10 w-fit'
+            'group overflow-hidden absolute top-0 left-12 -right-14 bottom-0 h-full z-10'
           )}
           style={{ width: `${calculatedVideoLayerWidth}px` }}
         >

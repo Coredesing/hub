@@ -67,7 +67,7 @@ const ReviewPage = () => {
   return (
     <Layout title="GameFi.org - My Review">
       { loading && (<LoadingOverlay loading/>) }
-      <AccountLayout>
+      <AccountLayout className="flex-1">
         {isEmpty(data) || (
           <div className="p-4 md:p-10">
             <UserProfile editable data={userData} totalReviewOfAllStatus={totalReviewOfAllStatus} />

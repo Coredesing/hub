@@ -141,7 +141,8 @@ const HeaderProfile = ({ totalFavorites, currentRate, setCurrentRate, loading, s
         console.debug('err', err)
       })
     }).catch(e => {
-      toast.error(e?.message || 'Something went wrong!')
+      // toast.error(e?.message || 'Something went wrong!')
+      console.debug(e)
       setLoadingFavorite(false)
     })
   }, [connectWallet, favorite, guildData?.id, router])

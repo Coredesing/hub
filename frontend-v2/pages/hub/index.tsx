@@ -1,16 +1,52 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Layout from '@/components/Layout'
-import { TopReviewsHub, GameBanner, TopPlayerHub, TopRoiHub, TopReleasedHub, TopViewHub, TrendingHub, TopRatingHub, TopRight, Categories } from '@/components/Pages/Hub/HubHome'
+import { TopReviewsHub, GameBanner, TopPlayerHub, TopRoiHub, TopReleasedHub, TopViewHub, TrendingHub, TopRatingHub, TopRight, Categories, ListLaunchedOnGamefi } from '@/components/Pages/Hub/HubHome'
 import { GET_AGGREGATORS_HOME } from '@/graphql/aggregator'
 import { normalize } from '@/graphql/utils'
 import { client } from '@/graphql/apolloClient'
 import HubCountdown from '@/components/Pages/Hub/HubHome/HubCountDown'
 import { GAME_HUB_START_TIME } from '@/utils/constants'
+import { fetcher } from '@/utils'
+import isEmpty from 'lodash.isempty'
+import get from 'lodash.get'
 import Banners from '@/components/Banners'
 
 function Hub ({ data, validCountdownTime }) {
   const [isEnded, setIsEnded] = useState(!validCountdownTime)
   const { categories } = data || {}
+  const [listFavorite, setListFavorite] = useState({})
+  const [listFavoriteTrending, setListFavoriteTrending] = useState({})
+  const [listFavoriteRating, setListFavoriteRating] = useState({})
+
+  useEffect(() => {
+    setListFavorite({ ...listFavorite, ...listFavoriteTrending, ...listFavoriteRating })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listFavoriteTrending, listFavoriteRating])
+
+  const clearFavorite = () => {
+    setListFavorite({})
+    setListFavoriteTrending({})
+    setListFavoriteRating({})
+  }
+
+  const getListFavoriteByUser = (v: any[], setLoading: (arg0: boolean) => void, userId: any, source) => {
+    setLoading(true)
+    // setListFavorite({})
+    const action = source === 'trending' ? setListFavoriteTrending : setListFavoriteRating
+    fetcher('/api/hub/favorite/getListFavoriteByUserId', { method: 'POST', body: JSON.stringify({ variables: { userId, aggregatorIds: v.map(v => v.id) } }) }).then((result) => {
+      setLoading(false)
+      if (!isEmpty(result)) {
+        action(get(result, 'data.favorites.data', [])?.reduce((total: { [x: string]: any }, v: { attributes: any }) => {
+          const objectId = v?.attributes?.objectID
+          total[objectId] = objectId
+          return total
+        }, {}))
+      } else action({})
+    }).catch((err) => {
+      setLoading(false)
+      console.debug('err', err)
+    })
+  }
 
   return (
     <Layout
@@ -38,13 +74,13 @@ function Hub ({ data, validCountdownTime }) {
             <div className="md:col-span-1">
               {/* <EventLeaderboard event="game-league" /> */}
               <TopRight />
-              <TopRoiHub data={data.topROI}/>
+              <TopRoiHub data={data.topROI} />
               <Categories data={categories || []} />
-              {/* <ListLaunchedOnGamefi /> */}
+              <ListLaunchedOnGamefi />
             </div>
           </div>
-          <TrendingHub />
-          <TopRatingHub />
+          <TrendingHub getListFavoriteByUser={getListFavoriteByUser} setListFavorite={setListFavorite} clearFavorite={clearFavorite} listFavorite={listFavorite} />
+          <TopRatingHub getListFavoriteByUser={getListFavoriteByUser} setListFavorite={setListFavorite} clearFavorite={clearFavorite} listFavorite={listFavorite} />
           <TopReviewsHub />
         </div>
       )}

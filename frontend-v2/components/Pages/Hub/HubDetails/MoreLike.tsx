@@ -5,12 +5,17 @@ import get from 'lodash.get'
 import { fetcher } from '@/utils'
 import arrowLeft from '@/assets/images/icons/arrow-left.png'
 import arrowRight from '@/assets/images/icons/arrow-right.png'
-import { WrapperSection } from '../HubHome/StyleElement'
-import ItemCarousel from './ItemCarousel'
+import ItemCarousel from '@/components/Pages/Hub/HubHome/ItemCarousel'
+import { WrapperSection } from '@/components/Pages/Hub/HubHome/StyleElement'
+import isEmpty from 'lodash.isempty'
+import useHubProfile from '@/hooks/useHubProfile'
 
 export default function MoreLike ({ categories = [], slug = '' }) {
   const [data, setData] = useState([])
   const [chunkData, setChunkData] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [listFavorite, setListFavorite] = useState({})
+  const { accountHub } = useHubProfile()
   const refSlider = useRef(null)
 
   const names = useMemo(() => {
@@ -47,6 +52,7 @@ export default function MoreLike ({ categories = [], slug = '' }) {
         const d = v.attributes
         return {
           ...d,
+          id: v.id,
           verticalThumbnail: get(d, 'verticalThumbnail.data.attributes', {}),
           tokenomic: get(d, 'project.data.attributes.tokenomic', {}),
           categories: get(d, 'project.data.attributes.categories', []),
@@ -68,6 +74,31 @@ export default function MoreLike ({ categories = [], slug = '' }) {
     })
   }, [names, slug])
 
+  useEffect(() => {
+    if (!isEmpty(data) && !isEmpty(accountHub)) {
+      getListFavoriteByUser(data, accountHub?.id)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accountHub?.id, data])
+
+  const getListFavoriteByUser = (data: any[], userId: any) => {
+    setLoading(true)
+    setListFavorite({})
+    fetcher('/api/hub/favorite/getListFavoriteByUserId', { method: 'POST', body: JSON.stringify({ variables: { userId, aggregatorIds: data.map(v => v.id) } }) }).then((result) => {
+      setLoading(false)
+      if (!isEmpty(result)) {
+        setListFavorite(get(result, 'data.favorites.data', [])?.reduce((total, v: { attributes: any }) => {
+          const objectId = v?.attributes?.objectID
+          total[objectId] = objectId
+          return total
+        }, {}))
+      } else setListFavorite({})
+    }).catch((err) => {
+      setLoading(false)
+      console.debug('err', err)
+    })
+  }
+
   const prev = () => {
     if (!refSlider.current) {
       return
@@ -88,7 +119,7 @@ export default function MoreLike ({ categories = [], slug = '' }) {
       <div className='md:hidden'>
         <WrapperSection>
           <div className="flex w-full overflow-x-auto hide-scrollbar">
-            { data?.map((item, i) => <ItemCarousel item={item} index={`MoreLike-${i}`} key={`MoreLike-${i}`} />) }
+            {data?.map((item, i) => <ItemCarousel defaultFavorite={!!listFavorite[item.id]} setListFavorite={setListFavorite} clearFavorite={setListFavorite} listFavorite={listFavorite} disabled={loading} item={item} index={`MoreLike-${i}`} key={`MoreLike-${i}`} showToolTip />)}
           </div>
         </WrapperSection>
       </div>
@@ -96,12 +127,12 @@ export default function MoreLike ({ categories = [], slug = '' }) {
         <div className="hidden sm:block">
           <img src={arrowLeft.src} alt="" className="w-8 cursor-pointer opacity-80 hover:opacity-100 select-none" onClick={prev} />
         </div>
-        <Flicking circular={true} className="flex-1" align="center" interruptable={true} ref={refSlider}>
+        <Flicking className="flex-1" align="center" interruptable={true} ref={refSlider}>
           {
             chunkData?.map((v, i) => (
               <div className="w-full mb-8 flex" key={`MoreLike-${i}`}>
                 {v?.map((item, i) => {
-                  return <ItemCarousel item={item} index={`MoreLike-${i}`} key={`MoreLike-${i}`} />
+                  return <ItemCarousel defaultFavorite={!!listFavorite[item.id]} setListFavorite={setListFavorite} clearFavorite={setListFavorite} listFavorite={listFavorite} disabled={loading} item={item} index={`MoreLike-${i}`} key={`MoreLike-${i}`} showToolTip />
                 })}
               </div>
             ))

@@ -49,6 +49,7 @@ const ReviewRating = ({ overall, totalCount, rates, currentRate, setCurrentRate,
     setLoading(true)
     connectWallet().then((res: any) => {
       if (res.error) {
+        setLoading(false)
         console.debug(res.error)
         toast.error('Could not rate')
         return

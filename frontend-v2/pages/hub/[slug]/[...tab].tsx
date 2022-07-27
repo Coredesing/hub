@@ -15,6 +15,8 @@ import { fetcher } from '@/utils'
 import { nFormatter } from '@/components/Pages/Hub/utils'
 import Link from 'next/link'
 
+const PAGE_SIZE = 5
+
 const mapIndex = (tab) => {
   if (tab === 'info') return 0
   if (tab === 'token') return 1
@@ -33,14 +35,16 @@ function Tab ({ data }) {
 
   useEffect(() => {
     const reviewFilterValue: any = { aggregator: { slug: { eq: router.query.slug } }, status: { eq: 'published' } }
-    fetcher('/api/hub/detail/getLiveData', { method: 'POST', body: JSON.stringify({ variables: { slug: router.query.slug, reviewFilterValue, pageSize: 5 }, query: 'GET_AGGREGATORS_BY_SLUG' }) }).then(({ data }) => {
-      const { five, four, three, two, one, totalReviewMeta } = data
-      const aggregators = get(data, 'aggregators.data[0]')
+    fetcher('/api/hub/detail/getLiveData', { method: 'POST', body: JSON.stringify({ variables: { slug: router.query.slug, reviewFilterValue, pageSize: PAGE_SIZE }, query: 'GET_AGGREGATORS_BY_SLUG' }) }).then(({ ...v }) => {
+      const dataNew = v?.data
+      const { five, four, three, two, one, totalReviewMeta } = dataNew || {}
+      const aggregators = get(dataNew, 'aggregators.data[0]')
       setValues({
         ...values,
         ...aggregators.attributes,
-        reviews: data?.reviews || [],
+        reviews: dataNew?.reviews || [],
         totalReviewWithoutFilter: get(totalReviewMeta, 'meta.pagination.total', 0),
+        pageCountReviews: Math.ceil(get(dataNew, 'reviews.meta.pagination.total', 0) / PAGE_SIZE),
         rates: {
           five: get(five, 'meta.pagination.total', 0),
           four: get(four, 'meta.pagination.total', 0),
@@ -63,7 +67,7 @@ function Tab ({ data }) {
     if (index === 2) {
       router.push(`/hub/${router.query.slug}/reviews`)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index])
 
   const isMobile = screen.mobile || screen.tablet
@@ -149,7 +153,7 @@ function Tab ({ data }) {
             viewDetail={true}
           />
           <div id='HubDetailContent' className="flex flex-col font-casual gap-2">
-            <HubTab data={data} tab={router.query.tab[0]} index={index} setIndex={setIndex}/>
+            <HubTab data={data} tab={router.query.tab[0]} index={index} setIndex={setIndex} />
           </div>
         </HubDetailContext.Provider>}
       </div>
@@ -162,7 +166,10 @@ export async function getServerSideProps ({ params, query }) {
     return { props: { data: {} } }
   }
   try {
-    const page = query.page || 1
+    // const page = query.page || 1
+    // const pageSize = page * PAGE_SIZE
+    const pageSize = 5 // default page size
+
     const reviewFilterValue: any = { aggregator: { slug: { eq: params.slug } }, status: { eq: 'published' } }
 
     if (query.rating_level) {
@@ -181,7 +188,6 @@ export async function getServerSideProps ({ params, query }) {
       }
     }
 
-    const pageSize = page * 5
     const { data = {} } = await client.query({
       query: GET_AGGREGATORS_BY_SLUG,
       variables: { slug: params.slug, reviewFilterValue, pageSize }
@@ -211,6 +217,7 @@ export async function getServerSideProps ({ params, query }) {
           id: aggregators.id,
           reviews: data?.reviews || [],
           totalReviewWithoutFilter: get(totalReviewMeta, 'meta.pagination.total', 0),
+          pageCountReviews: Math.ceil(get(data, 'reviews.meta.pagination.total', 0) / PAGE_SIZE),
           userRanks: ['Expert', 'Professional', 'Middle', 'Amateur'],
           gameIntroduction,
           rates: {

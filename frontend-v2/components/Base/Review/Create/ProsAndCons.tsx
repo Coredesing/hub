@@ -36,7 +36,7 @@ const ReviewCreateProsAndCons = ({ data, title, onChange, currentResource }) => 
     } else {
       setProsAndConsPlaceholder('What the ' + (currentResource === 'guild' ? 'guild' : 'game') + ' should be improve')
     }
-  }, [prosAndConsPlaceholder])
+  }, [])
 
   return (
     <div className="mb-9">

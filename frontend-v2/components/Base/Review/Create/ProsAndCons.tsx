@@ -38,8 +38,6 @@ const ReviewCreateProsAndCons = ({ data, title, onChange, currentResource }) => 
     }
   }, [prosAndConsPlaceholder])
 
-  console.log('prosAndConsPlaceholder', prosAndConsPlaceholder)
-
   return (
     <div className="mb-9">
       <div className="font-bold text-base uppercase mb-6">add {title}</div>

@@ -145,7 +145,7 @@ const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
     }
 
     if (!currentRate) {
-      return toast.error('Please rate this guild!')
+      return toast.error('Please rate this ' + (currentResource === 'guild' ? 'guild !' : 'game !'))
     }
 
     setLoading(true)

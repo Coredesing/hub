@@ -6,7 +6,6 @@ import useConnectWallet from '@/hooks/useConnectWallet'
 import ReviewRatingAction from '@/components/Base/Review/Rating/Action'
 import ReviewStar from '@/components/Base/Review/Star'
 import styles from '@/components/Base/Review/Rating/Rating.module.scss'
-import Link from 'next/link'
 
 const STAR_LEVEL = [5, 4, 3, 2, 1]
 
@@ -45,13 +44,12 @@ const ReviewRating = ({ overall, totalCount, rates, currentRate, setCurrentRate,
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  const createOrUpdateReviewUrl = `/${currentResource}/${router.query.slug}/reviews/createOrUpdate`
-
   const { connectWallet } = useConnectWallet()
   const handleSetCurrentRate = (rate) => () => {
     setLoading(true)
     connectWallet().then((res: any) => {
       if (res.error) {
+        setLoading(false)
         console.debug(res.error)
         toast.error('Could not rate')
         return
@@ -66,12 +64,26 @@ const ReviewRating = ({ overall, totalCount, rates, currentRate, setCurrentRate,
   const handleCreateRate = (response, rate) => {
     const { walletAddress, signature } = response
     const createRateUrl = '/api/hub/reviews/createRate'
+
+    const createRateBody: {
+      rate: number;
+      guild?: string;
+      aggregator?: string;
+    } = {
+      rate
+    }
+    switch (currentResource) {
+    case 'guilds':
+      createRateBody.guild = id
+      break
+    case 'hub':
+      createRateBody.aggregator = id
+      break
+    }
+
     fetcher(createRateUrl, {
       method: 'POST',
-      body: JSON.stringify({
-        aggregator: id,
-        rate
-      }),
+      body: JSON.stringify(createRateBody),
       headers: {
         'X-Signature': signature,
         'X-Wallet-Address': walletAddress
@@ -117,20 +129,11 @@ const ReviewRating = ({ overall, totalCount, rates, currentRate, setCurrentRate,
         </div>
       </div>
       <div className={`${styles.rating_action} flex justify-center flex-1 md:p-0 pb-4 pt-8`}>
-        {
-          currentResource === 'hub' && <div className="text-[13px] flex items-center justify-center flex-col">
-            <div className="font-bold text-center sm:text-left">RATE THIS PROJECT</div>
-            <div className="font-casual text-white/30 hidden sm:block mb-3">Click to rate</div>
-            <ReviewRatingAction rate={currentRate} callBack={handleSetCurrentRate} disabled={loading} />
-          </div>
-        }
-        {
-          currentResource === 'guilds' && <Link href={createOrUpdateReviewUrl} passHref><a className='flex items-center justify-center'>
-            <div className='bg-[#6CDB00] cursor-pointer py-2 px-5 w-fit h-fit text-[#0D0F15] font-mechanic font-bold text-[13px] leading-[150%] tracking-[0.02em] rounded-sm clipped-t-r uppercase'>
-            Rate this guild
-            </div>
-          </a></Link>
-        }
+        <div className="text-[13px] flex items-center justify-center flex-col">
+          <div className="font-bold text-center sm:text-left">RATE THIS PROJECT</div>
+          <div className="font-casual text-white/30 hidden sm:block mb-3">Click to rate</div>
+          <ReviewRatingAction rate={currentRate} callBack={handleSetCurrentRate} disabled={loading} />
+        </div>
       </div>
       <div></div>
     </div>

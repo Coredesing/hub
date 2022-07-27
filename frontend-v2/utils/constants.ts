@@ -5,6 +5,7 @@ export enum TOKEN_TYPE {
 }
 
 export const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+export const RECAPTCHA_SITE_KEY_HUB = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY_HUB
 export const PANCAKE_GAFI_SWAP_URL = process.env.NEXT_PUBLIC_PANCAKE_GAFI_SWAP_URL
 export const KUCOIN_GAFI_SWAP_URL = process.env.NEXT_PUBLIC_KUCOIN_GAFI_SWAP_URL
 export const GATE_GAFI_SWAP_URL = process.env.NEXT_PUBLIC_GATE_GAFI_SWAP_URL
@@ -25,3 +26,5 @@ export const CLAIM_TYPE = {
 
 export const CMC_ASSETS_DOMAIN = 's2.coinmarketcap.com'
 export const CMC_ASSETS_DOMAIN_CHART = 's3.coinmarketcap.com'
+export const defaultTitle = 'GameFi.org – A one-stop destination for web3 gaming'
+export const defaultDescription = 'We aim to build digital communities and manage virtual economies for mainstream adoption.'

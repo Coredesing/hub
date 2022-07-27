@@ -4,6 +4,7 @@ import Sidebar from '@/components/Base/Sidebar'
 import Topbar from '@/components/Base/Topbar'
 import Toolbox from '@/components/Base/Toolbox'
 import Footer from '@/components/Base/Footer'
+import { defaultDescription, defaultTitle } from '@/utils/constants'
 
 type Props = {
   children?: ReactNode;
@@ -45,18 +46,18 @@ const Layout = ({ children, title, description, image, disableFooter, extended, 
     <div className={`flex w-full h-screen ${theme}`}>
       <div className="dark:bg-gamefiDark-900 dark:text-white w-full h-full flex flex-col md:flex-row">
         <Head>
-          <title>{title || 'GameFi.org - The One-stop Web3 Game Hub'}</title>
+          <title>{title || defaultTitle}</title>
           <meta charSet="utf-8" />
           <link rel="shortcut icon" href="/favicon.ico" />
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-          <meta property="og:title" content={title || 'GameFi.org - The One-stop Web3 Game Hub'} key="title" />
-          <meta property="og:description" content={description || 'GameFi.org is an all-in-one discovery gaming hub for games and metaverses.'} key="description" />
-          <meta property="og:image" content={image || 'https://gamefi.org/gamefi.jpeg?v=1655805418132'} key="image" />
+          <meta property="og:title" content={title || defaultTitle} key="title" />
+          <meta property="og:description" content={description || defaultDescription} key="description" />
+          <meta property="og:image" content={image || 'https://gamefi.org/gamefi.jpg?v=1655805418132'} key="image" />
           <meta name="keywords" content="launchpad, game hub, nft marketplace, game portal, game pass, game guild, tournament, metaverse, ido"></meta>
           <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content={title || 'GameFi.org - The One-stop Web3 Game Hub'} />
-          <meta name="twitter:description" content={description || 'GameFi.org is an all-in-one discovery gaming hub for games and metaverses.'} />
-          <meta name="twitter:image" content={image || 'https://gamefi.org/gamefi.jpeg?v=1655805418132'} />
+          <meta name="twitter:title" content={title || defaultTitle} />
+          <meta name="twitter:description" content={description || defaultDescription} />
+          <meta name="twitter:image" content={image || 'https://gamefi.org/gamefi.jpg?v=1655805418132'} />
         </Head>
 
         <div>

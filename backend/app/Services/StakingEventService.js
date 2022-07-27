@@ -22,9 +22,16 @@ class StakingEventService {
 
       const LEGEND = HelperUtils.getLegendData()
       LEGEND.forEach((data) => {
-        if (data.valid === true && !EXCLUDE_LEGENDS.find(item => item === data.wallet_address)) {
-          excludeWallets.add(data.wallet_address)
+        if (data.valid !== true) {
+          return
         }
+
+        if (!EXCLUDE_LEGENDS.find(item => item === data.wallet_address)) {
+          excludeWallets.add(data.wallet_address)
+          return
+        }
+
+        excludeWallets.delete(data.wallet_address)
       })
 
       let data = await StakingEventModel.query()

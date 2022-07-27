@@ -60,7 +60,7 @@ function getRatePercent (rates = {}) {
   ]
 }
 
-const Reviews = ({ data, totalReviews, rates, id, tabRef, currentResource = 'hub' as 'guilds' | 'hub' }) => {
+const Reviews = ({ data, totalReviews, rates, id, tabRef, pageCountReviews, currentResource = 'hub' as 'guilds' | 'hub' }) => {
   const [, setLoading] = useState(false)
   const [currentRate, setCurrentRate] = useState(0)
   const router = useRouter()
@@ -86,7 +86,7 @@ const Reviews = ({ data, totalReviews, rates, id, tabRef, currentResource = 'hub
       method: 'POST',
       body: JSON.stringify({
         variables: {
-          userId: accountHub.id,
+          walletAddress: accountHub.walletAddress,
           slug: router.query.slug
         },
         query: 'GET_REVIEW_AND_RATE_BY_USER_ID_FOR_AGGREGATOR'
@@ -117,7 +117,7 @@ const Reviews = ({ data, totalReviews, rates, id, tabRef, currentResource = 'hub
         id={id}
       />
       <div className="mt-14 uppercase text-lg md:text-2xl"><strong>{`All Reviews ${totalReviews ? `(${printNumber(totalReviews)})` : ''}`}</strong></div>
-      <ReviewList data={{ data, totalReviews: totalReviews }} filter loadMore={totalReviews > data?.length} review currentResource={currentResource} />
+      <ReviewList currentResource={currentResource} data={{ data, totalReviews: totalReviews }} pageCountReviews={pageCountReviews} filter loadMore={(totalReviews > data?.length)} review />
     </div>
   )
 }

@@ -5,6 +5,7 @@ import { MyWeb3Provider } from '@/components/web3/context'
 import WalletProvider from '@/components/Base/WalletConnector/provider'
 import { Toaster } from 'react-hot-toast'
 import AppProvider from '@/context/provider'
+import HubProvider from '@/context/hubProvider'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import LoadingOverlay from '@/components/Base/LoadingOverlay'
@@ -112,11 +113,13 @@ function MyApp ({ Component, pageProps }: AppProps) {
           <MyWeb3Provider>
             <WalletProvider>
               <AppProvider>
-                <Component {...pageProps} />
-                <Toaster
-                  position="top-right"
-                />
-                <LoadingOverlay loading={loading}></LoadingOverlay>
+                <HubProvider>
+                  <Component {...pageProps} />
+                  <Toaster
+                    position="top-right"
+                  />
+                  <LoadingOverlay loading={loading}></LoadingOverlay>
+                </HubProvider>
               </AppProvider>
             </WalletProvider>
           </MyWeb3Provider>

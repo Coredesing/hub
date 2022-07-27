@@ -6,13 +6,15 @@ import '@egjs/flicking-plugins/dist/pagination.css'
 import { fetcher, gtagEvent } from '@/utils'
 import arrowRight from '@/assets/images/icons/arrow-right.png'
 import arrowLeft from '@/assets/images/icons/arrow-left.png'
+import isEmpty from 'lodash.isempty'
+import useHubProfile from '@/hooks/useHubProfile'
 import ItemCarousel from './ItemCarousel'
 import { WrapperSection } from './StyleElement'
 import Loading from '../Loading'
 import HubTitle from '../HubTitle'
 import Link from 'next/link'
 
-export default function TopRatingHub () {
+export default function TopRatingHub ({ listFavorite, setListFavorite, getListFavoriteByUser, clearFavorite }) {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
   const [chunkData, setChunkData] = useState([])
@@ -20,6 +22,7 @@ export default function TopRatingHub () {
 
   const refSlider = useRef(null)
   const refSlider1 = useRef(null)
+  const { accountHub } = useHubProfile()
 
   useEffect(() => {
     setPlugins([new Sync({
@@ -56,6 +59,14 @@ export default function TopRatingHub () {
     refSlider.current.next().catch(() => { })
   }
 
+  useEffect(() => {
+    if (!isEmpty(data) && !isEmpty(accountHub)) {
+      getListFavoriteByUser(data, setLoading, accountHub?.id, 'rating')
+    }
+    // } else setListFavorite({})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accountHub?.id, data])
+
   const getData = (time: string) => {
     setLoading(true)
     fetcher('/api/hub/home', {
@@ -64,7 +75,7 @@ export default function TopRatingHub () {
       setLoading(false)
       const formatData = data?.aggregators?.data?.map(v => {
         const d = v.attributes
-        return { ...d, verticalThumbnail: get(d, 'verticalThumbnail.data.attributes', {}), tokenomic: get(d, 'project.data.attributes.tokenomic', {}) }
+        return { ...d, id: v.id, verticalThumbnail: get(d, 'verticalThumbnail.data.attributes', {}), tokenomic: get(d, 'project.data.attributes.tokenomic', {}) }
       }) || []
       const chunk = []
       const chunkSize = 5
@@ -87,7 +98,7 @@ export default function TopRatingHub () {
           <WrapperSection><div className="flex w-full overflow-x-auto hide-scrollbar">
             {
               data?.map((item, i) => (
-                <ItemCarousel item={item} index={`TopRatingHub-${i}`} key={`TopRatingHub-${i}`} />
+                <ItemCarousel listFavorite={listFavorite} setListFavorite={setListFavorite} clearFavorite={clearFavorite} item={item} index={`TopRatingHub-${i}`} key={`TopRatingHub-${i}`} defaultFavorite={!!listFavorite[item.id]} disabled={loading} />
               ))
             }
           </div>
@@ -128,7 +139,7 @@ export default function TopRatingHub () {
                 chunkData.map((v, i) => (
                   <div className="w-full mb-8 flex" key={`ChunkTrendingHub-${i}`}>
                     {v.map((item, i) => (
-                      <ItemCarousel item={item} index={`TopRatingHub-${i}`} key={`TopRatingHub-${i}`} />
+                      <ItemCarousel listFavorite={listFavorite} setListFavorite={setListFavorite} clearFavorite={clearFavorite} defaultFavorite={!!listFavorite[item.id]} disabled={loading} item={item} index={`TopRatingHub-${i}`} key={`TopRatingHub-${i}`} />
                     ))}
                   </div>
                 ))

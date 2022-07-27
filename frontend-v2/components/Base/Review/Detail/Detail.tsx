@@ -284,7 +284,7 @@ const ReviewDetail = ({ data, currentResource }: ReviewDetailProps) => {
 
         <div className="flex flex-col py-2 md:py-4 md:flex-row md:gap-0 gap-2 md:justify-between md:items-center">
           <p className={`${styles.total_like}`}>{likeCountText}</p>
-          <ReviewGroupAction id={data.id} pageSource="review" defaultLikeStatus={reviewLikeStatus} onChangeStatus={handleOnChangeStatus} currentResource={currentResource} />
+          <ReviewGroupAction id={data.id} pageSource="review" defaultLikeStatus={reviewLikeStatus} onChangeStatus={handleOnChangeStatus} currentResource={currentResource} notShowCount />
         </div>
 
         <Divide />

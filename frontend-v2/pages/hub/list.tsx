@@ -83,9 +83,8 @@ export async function getServerSideProps ({ query }) {
   let sortAggregator = ['project.tokenomic.totalHolders:desc']
   const paginationValue = {
     page: Number(page),
-    pageSize: Number(pageSize)
+    pageSize: Number(pageSize > 50 ? 10 : pageSize)
   }
-
   if (search) {
     aggregatorsFilterValue.name = { contains: search }
   }
@@ -138,7 +137,6 @@ export async function getServerSideProps ({ query }) {
   }
 
   let paginationMeta = {}
-
   const data = await client
     .query({
       query: GET_LISTING_AGGREGATORS_V2,

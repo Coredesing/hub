@@ -15,15 +15,18 @@ type ReviewGroupActionProps = {
   defaultLikeStatus?: string;
   onChangeStatus?: (type: string, value: string) => void;
   likeCount?: number;
+  notShowCount?: boolean;
   dislikeCount?: number;
   commentCount?: number;
   currentResource: 'guilds' | 'hub';
 }
 
-const ReviewGroupAction = ({ likeCount, dislikeCount, commentCount, pageSource, id, comment = false, defaultLikeStatus, onChangeStatus, currentResource }: ReviewGroupActionProps) => {
+const ReviewGroupAction = ({ likeCount, dislikeCount, commentCount, pageSource, id, comment = false, defaultLikeStatus, onChangeStatus, currentResource, notShowCount }: ReviewGroupActionProps) => {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [likeStatus, setLikeStatus] = useState(defaultLikeStatus)
+  const [defaultLikeCount, setDefaultLikeCount] = useState(likeCount || 0)
+  const [defaultDislikeCount, setDefaultDislikeCount] = useState(dislikeCount || 0)
 
   const { connectWallet } = useConnectWallet()
   const isLike = likeStatus === 'like'
@@ -69,6 +72,21 @@ const ReviewGroupAction = ({ likeCount, dislikeCount, commentCount, pageSource, 
         if (err) {
           // toast.error('something went wrong')
         } else {
+          if (!notShowCount) {
+            if (typeAPi === 'like') {
+              if (type === 'like') {
+                setDefaultLikeCount(defaultLikeCount + 1)
+                if (isDislike) setDefaultDislikeCount(defaultDislikeCount - 1)
+              } else {
+                setDefaultDislikeCount(defaultDislikeCount + 1)
+                if (isLike) setDefaultLikeCount(defaultLikeCount - 1)
+              }
+            } else {
+              if (type === 'like') {
+                setDefaultLikeCount(defaultLikeCount - 1)
+              } else setDefaultDislikeCount(defaultDislikeCount - 1)
+            }
+          }
           onChangeStatus && onChangeStatus('review', typeAPi === 'like' ? type : '')
           router.replace(router.asPath)
         }
@@ -98,7 +116,7 @@ const ReviewGroupAction = ({ likeCount, dislikeCount, commentCount, pageSource, 
       >
         <ReviewGroupActionLike selected={isLike} activeColor={'#000000'} inactiveColor={'#ffffff'} size={16} />
         <span className={`${styles.text} ${isLike ? 'text-black' : 'text-white'} ml-3 font-semibold leading-5 capitalize font-casual`}>
-          {likeCount || 'Like'}
+          {defaultLikeCount || 'Like'}
         </span>
       </button>
       <button
@@ -108,7 +126,7 @@ const ReviewGroupAction = ({ likeCount, dislikeCount, commentCount, pageSource, 
       >
         <ReviewGroupActionDislike selected={isDislike} activeColor={'#000000'} inactiveColor={'#ffffff'} size={16} />
         <span className={`${styles.text} ${isDislike ? 'text-black' : 'text-white'} ml-3 font-semibold leading-5 capitalize font-casual`}>
-          {dislikeCount || 'Dislike'}
+          {defaultDislikeCount || 'Dislike'}
         </span>
       </button>
       {comment && (

@@ -209,7 +209,7 @@ const Level = ({ data, ranks, specialRank }) => {
                 <div className="uppercase font-mechanic font-bold text-[18px] leading-[100%] text-white">
                   LEVEL {rank}
                 </div>
-                <Tippy
+                {/* <Tippy
                   placement="auto"
                   theme="no-padding"
                   touch={true}
@@ -228,7 +228,7 @@ const Level = ({ data, ranks, specialRank }) => {
                       layout="fill"
                     ></Image>
                   </div>
-                </Tippy>
+                </Tippy> */}
               </div>
 
               <div
@@ -260,9 +260,10 @@ const Level = ({ data, ranks, specialRank }) => {
             </div>
 
             <div className="font-casual font-semibold text-xs leading-[150%] text-white opacity-50">
-              {`EXP ${printNumber(exp.current)}${
+              {/* {`EXP ${printNumber(exp.current)}${
                 exp.current ? ` / ${printNumber(exp.next)}` : ''
-              }`}
+              }`} */}
+              {`EXP ${printNumber(exp.current)}`}
             </div>
           </div>
         </div>

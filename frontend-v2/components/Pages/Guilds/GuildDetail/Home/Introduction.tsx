@@ -1,56 +1,28 @@
-import { fetcher, printNumber } from '@/utils'
+import { printNumber } from '@/utils'
 import { format } from 'date-fns'
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useGuildDetailContext } from '../utils'
-import { useMediaQuery } from 'react-responsive'
 
-const Introduction = () => {
+const Introduction = ({ totalFavorites, showMoreIntroduction }) => {
   const { guildData } = useGuildDetailContext()
-  const [showMore, setShowMore] = useState(false)
-  const [totalFavorites, setTotalFavorites] = useState(0)
-  const [visibleShowMore, setVisibleShowMore] = useState(false)
-
-  const MIN_LENGTH_OF_INTRO = 500
-  const isFullHDScreen = useMediaQuery({ maxWidth: '1600px' })
-
-  const getFavorites = useCallback(async () => {
-    try {
-      const res = await fetcher(`/api/hub/guilds/favorites?id=${guildData?.id}`)
-
-      if (!res?.data) {
-        return
-      }
-
-      setTotalFavorites(res.data)
-    } catch (e) {
-      console.debug(e)
-    }
-
-    (guildData.introduction.length < MIN_LENGTH_OF_INTRO && isFullHDScreen)
-      ? setVisibleShowMore(true)
-      : setVisibleShowMore(false)
-  }, [guildData?.id])
-
-  useEffect(() => {
-    getFavorites()
-  }, [getFavorites])
+  const [isUpArrow, setIsUpArrow] = useState(false)
 
   return (
     <div className="container mx-auto px-4 lg:px-16">
       <div className='grid md:grid-cols-2'>
         <div className='p-6 bg-gamefiDark-700/70 text-gamefiDark-100 rounded-tl-sm md:rounded-bl-sm md:rounded-tr-none rounded-tr-sm font-casual text-sm leading-7'>
-          <p className={ !showMore ? 'line-clamp-6' : ''}>
+          <p className={ !isUpArrow ? 'line-clamp-6' : ''}>
             {guildData.introduction}
           </p>
-          { visibleShowMore && (showMore
+          { showMoreIntroduction && (isUpArrow
           // up
-            ? <button className='w-full flex justify-center' onClick={() => setShowMore(false)}>
+            ? <button className='w-full flex justify-center' onClick={() => setIsUpArrow(false)}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 9L12.3536 8.64645L12 8.29289L11.6464 8.64645L12 9ZM18.3536 14.6464L12.3536 8.64645L11.6464 9.35355L17.6464 15.3536L18.3536 14.6464ZM11.6464 8.64645L5.64645 14.6464L6.35355 15.3536L12.3536 9.35355L11.6464 8.64645Z" fill="white" />
               </svg>
             </button>
           // down
-            : <button className='w-full flex justify-center' onClick={() => setShowMore(true)}>
+            : <button className='w-full flex justify-center' onClick={() => setIsUpArrow(true)}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 15L12.3536 15.3536L12 15.7071L11.6464 15.3536L12 15ZM18.3536 9.35355L12.3536 15.3536L11.6464 14.6464L17.6464 8.64645L18.3536 9.35355ZM11.6464 15.3536L5.64645 9.35355L6.35355 8.64645L12.3536 14.6464L11.6464 15.3536Z" fill="white" />
               </svg>

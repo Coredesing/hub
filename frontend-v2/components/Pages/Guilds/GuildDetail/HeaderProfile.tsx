@@ -11,7 +11,7 @@ import { Spinning } from '@/components/Base/Animation'
 import { useMyWeb3 } from '@/components/web3/context'
 import ReviewRatingAction from '@/components/Base/Review/Rating/Action'
 
-const HeaderProfile = ({ totalFavorites, currentRate, setCurrentRate, loading, setLoading }) => {
+const HeaderProfile = ({ totalFavorites, setTotalFavorites, currentRate, setCurrentRate, loading, setLoading }) => {
   const router = useRouter()
   const { guildData } = useGuildDetailContext()
   const { accountHub } = useHubProfile()
@@ -133,7 +133,11 @@ const HeaderProfile = ({ totalFavorites, currentRate, setCurrentRate, loading, s
           return
         }
         setFavorite(!favorite)
-        router.replace(router.asPath)
+        if (favorite) {
+          setTotalFavorites((prevTotalFavorites: number) => prevTotalFavorites - 1)
+        } else {
+          setTotalFavorites((prevTotalFavorites: number) => prevTotalFavorites + 1)
+        }
       }).catch((err) => {
         setLoadingFavorite(false)
         console.log(err)

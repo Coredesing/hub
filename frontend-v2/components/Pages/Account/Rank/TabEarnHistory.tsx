@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { format } from 'date-fns'
 
 const TabEarnHistory = ({ data }) => {
   return (
@@ -37,7 +38,7 @@ const TabEarnHistory = ({ data }) => {
                     (e.totalAmount ? e.totalAmount : 1)}
                 </td>
                 <td className="py-4" align="center">
-                  {e.completedAt}
+                  {format(new Date(e.completedAt), 'd LLL, yyyy - hh:mm:ss OOO')}
                 </td>
               </tr>
             )

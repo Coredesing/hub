@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import isEmpty from 'lodash.isempty'
 import get from 'lodash.get'
-import { fetcher } from '@/utils'
+import { fetcher, checkProfane } from '@/utils'
 import { normalize } from '@/graphql/utils'
 import useConnectWallet from '@/hooks/useConnectWallet'
 import useHubProfile from '@/hooks/useHubProfile'
@@ -42,6 +42,10 @@ const buildCheckpoints = (currentResource) => {
   return checkPoints
 }
 
+const handleMessageBadWord = (v: any) => {
+  return `Please remove profane word${v ? `: ${v}` : ''}`
+}
+
 interface ReviewCreateProps {
   data: any;
   currentResource: 'guild' | 'aggregator';
@@ -52,7 +56,7 @@ const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
   const [cons, setCons] = useState([''])
   const [currentReview, setCurrentReview] = useState(null)
   const [currentRate, setCurrentRate] = useState('')
-  const { register, formState: { errors, isSubmitted }, setError, handleSubmit, setValue } = useForm()
+  const { register, formState: { errors, isSubmitted }, setError, clearErrors, handleSubmit, setValue, watch } = useForm()
   const [loading, setLoading] = useState(false)
   const [disabledSubmit, setDisabledSubmit] = useState(false)
   const router = useRouter()
@@ -61,13 +65,33 @@ const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
 
   const { id, name } = data
   const { accountHub } = useHubProfile()
-
   const MIN_LENGTH_TITLE = 10
   const MAX_LENGTH_TITLE = 100
 
-  const MIN_LENGTH_REVIEW = 10
+  const MIN_LENGTH_REVIEW = 50
 
   const { connectWallet } = useConnectWallet()
+
+  useEffect(() => {
+    if (!isEmpty(pros)) {
+      const isBadWord = checkProfane(pros.join(' ')).isProfane
+      if (isBadWord) {
+        setError('pros', { type: 'pros', message: 'pros' })
+      } else clearErrors('pros')
+    } else clearErrors('pros')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pros])
+
+  useEffect(() => {
+    if (!isEmpty(cons)) {
+      const isBadWord = checkProfane(cons.join(' ')).isProfane
+      if (isBadWord) {
+        setError('cons', { type: 'cons', message: 'cons' })
+      } else clearErrors('cons')
+    } else clearErrors('cons')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cons])
+
   useEffect(() => {
     if (isEmpty(accountHub)) {
       resetForm()
@@ -118,6 +142,11 @@ const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountHub, slug])
 
+  const handleValidateText = (value) => {
+    const v = checkProfane(value)
+    return !v.isProfane || v.listText.join(', ')
+  }
+
   const resetForm = () => {
     setValue('title', '')
     setValue('review', '')
@@ -132,7 +161,6 @@ const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
       setError('title', { message: 'error' })
       return
     }
-
     if (data.review.trim().length < MIN_LENGTH_REVIEW) {
       setError('review', { message: 'error' })
       return
@@ -266,10 +294,10 @@ const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
                 placeholder="Summarise your experience in one phrase"
                 autoFocus
                 maxLength={100}
-                {...register('title', { required: true, minLength: MIN_LENGTH_TITLE, maxLength: MAX_LENGTH_TITLE })}
+                {...register('title', { required: true, minLength: MIN_LENGTH_TITLE, maxLength: MAX_LENGTH_TITLE, validate: handleValidateText })}
               />
               {errors.title && (
-                <div className="mt-2 text-normal text-red-500 ">{CHECKPOINTS[1]}</div>
+                <div className="mt-2 text-normal text-red-500 ">{String(errors.title?.type) === 'validate' ? handleMessageBadWord(errors.title?.message) : CHECKPOINTS[1]}</div>
               )}
             </div>
 
@@ -281,11 +309,16 @@ const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
                 rows={12}
                 cols={10}
                 placeholder="Tell your personal experience with this game"
-                {...register('review', { required: true, minLength: MIN_LENGTH_REVIEW })}
+                {...register('review', { required: true, minLength: MIN_LENGTH_REVIEW, validate: handleValidateText })}
               />
-              {errors.review && (
-                <div className="mt-2 text-normal text-red-500 ">{CHECKPOINTS[2]}</div>
-              )}
+              <div className="flex justify-between items-center mt-2">
+                {errors.review
+                  ? (
+                    <div className="text-normal text-red-500 ">{String(errors.review?.type) === 'validate' ? handleMessageBadWord(errors.review?.message) : CHECKPOINTS[2]}</div>
+                  )
+                  : <div></div>}
+                <div className="">{watch('review')?.length}</div>
+              </div>
             </div>
           </form>
 

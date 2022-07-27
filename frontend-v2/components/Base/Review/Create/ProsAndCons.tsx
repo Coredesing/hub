@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { checkProfane } from '@/utils'
 
 export const MIN_LENGTH_PROS_CONS = 5
 
@@ -29,6 +30,11 @@ const ReviewCreateProsAndCons = ({ data, title, onChange }) => {
     setShowButton(value)
   }
 
+  const handleValidateText = (value: string) => {
+    const badWord = checkProfane(value).listText.join(', ')
+    return badWord ? `Please remove profane word: ${badWord}` : ''
+  }
+
   return (
     <div className="mb-9">
       <div className="font-bold text-base uppercase mb-6">add {title}</div>
@@ -51,9 +57,11 @@ const ReviewCreateProsAndCons = ({ data, title, onChange }) => {
               placeholder={title === 'pros' ? 'What you like about the game' : 'What the game should improve'}
               onChange={handleChangeText(i)}
             />
-            {v?.trim() && v.trim().length < MIN_LENGTH_PROS_CONS && (
-              <div className="mt-2 text-normal text-red-500 ">At least 5 characters</div>
-            )}
+            {v?.trim() && v.trim().length < MIN_LENGTH_PROS_CONS
+              ? (
+                <div className="mt-2 text-normal text-red-500 ">At least 5 characters</div>
+              )
+              : <div className="mt-2 text-normal text-red-500 ">{handleValidateText(v)}</div>}
             {showButton && <button className="absolute right-[-11px] top-2 rounded-full p-1 bg-[#15171E] cursor-pointer" onClick={handleClear(i)}>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM11.5 10.1L10.1 11.5L8 9.4L5.9 11.5L4.5 10.1L6.6 8L4.5 5.9L5.9 4.5L8 6.6L10.1 4.5L11.5 5.9L9.4 8L11.5 10.1Z" fill="#53535B" className="hover:fill-[#36C40C]" />

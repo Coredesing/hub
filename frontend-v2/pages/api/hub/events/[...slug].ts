@@ -23,7 +23,7 @@ export const fetchLeaderboards = async (slug) => {
     cache.put(url, response, CACHE_TIME)
     return response
   } catch (e) {
-    console.log(e)
+    console.debug(e)
     return null
   }
 }

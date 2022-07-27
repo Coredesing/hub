@@ -140,7 +140,6 @@ const HeaderProfile = ({ totalFavorites, setTotalFavorites, currentRate, setCurr
         }
       }).catch((err) => {
         setLoadingFavorite(false)
-        console.log(err)
         toast.error('Failed to like!')
         console.debug('err', err)
       })

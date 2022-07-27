@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export const MIN_LENGTH_PROS_CONS = 5
 
-const ReviewCreateProsAndCons = ({ data, title, onChange }) => {
+const ReviewCreateProsAndCons = ({ data, title, onChange, currentResource }) => {
   const [showButton, setShowButton] = useState(false)
+  const [prosAndConsPlaceholder, setProsAndConsPlaceholder] = useState('')
 
   const addMore = () => {
     onChange([...data, ''])
@@ -29,6 +30,16 @@ const ReviewCreateProsAndCons = ({ data, title, onChange }) => {
     setShowButton(value)
   }
 
+  useEffect(() => {
+    if (title === 'pros') {
+      setProsAndConsPlaceholder('What you like about ' + (currentResource === 'guild' ? 'guild' : 'game'))
+    } else {
+      setProsAndConsPlaceholder('What the ' + (currentResource === 'guild' ? 'guild' : 'game') + ' should be improve')
+    }
+  }, [prosAndConsPlaceholder])
+
+  console.log('prosAndConsPlaceholder', prosAndConsPlaceholder)
+
   return (
     <div className="mb-9">
       <div className="font-bold text-base uppercase mb-6">add {title}</div>
@@ -48,7 +59,7 @@ const ReviewCreateProsAndCons = ({ data, title, onChange }) => {
               minLength={MIN_LENGTH_PROS_CONS}
               className=" bg-[#303035] border border-[#3C3C42] placeholder-white placeholder-size-[26px] placeholder-opacity-30 font-casual text-sm rounded-sm px-4 py-2 w-full focus-visible:border-gamefiDark-350 invalid:border-gamefiRed"
               name={`${title}-${i}`}
-              placeholder={title === 'pros' ? 'What you like about the game' : 'What the game should improve'}
+              placeholder={prosAndConsPlaceholder}
               onChange={handleChangeText(i)}
             />
             {v?.trim() && v.trim().length < MIN_LENGTH_PROS_CONS && (

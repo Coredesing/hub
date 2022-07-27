@@ -130,7 +130,7 @@ const ReviewRating = ({ overall, totalCount, rates, currentRate, setCurrentRate,
       </div>
       <div className={`${styles.rating_action} flex justify-center flex-1 md:p-0 pb-4 pt-8`}>
         <div className="text-[13px] flex items-center justify-center flex-col">
-          <div className="font-bold text-center sm:text-left">RATE THIS PROJECT</div>
+          <div className="font-bold text-center sm:text-left">RATE THIS {currentResource === 'hub' ? 'PROJECT' : 'GUILD' }</div>
           <div className="font-casual text-white/30 hidden sm:block mb-3">Click to rate</div>
           <ReviewRatingAction rate={currentRate} callBack={handleSetCurrentRate} disabled={loading} />
         </div>

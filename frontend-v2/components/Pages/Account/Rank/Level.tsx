@@ -242,7 +242,7 @@ const Level = ({ data, ranks, specialRank }) => {
                     className={clsx(
                       styles['gradient-exp'],
                       'h-full',
-                      exp.percent < 5 ? '' : 'clipped-t-r'
+                      exp.percent < 10 ? '' : 'clipped-t-r'
                     )}
                     style={{ width: `${exp.percent < 1 ? 1 : exp.percent}%` }}
                   ></div>

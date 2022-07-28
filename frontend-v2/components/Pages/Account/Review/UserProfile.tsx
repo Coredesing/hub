@@ -8,8 +8,8 @@ import get from 'lodash.get'
 import useConnectWallet from '@/hooks/useConnectWallet'
 import { printNumber, fetcher } from '@/utils'
 import { useScreens } from '@/components/Pages/Home/utils'
-import Loading from '@/components/Pages/Hub/Loading'
 import Modal from '@/components/Base/Modal'
+import { Spinning } from '@/components/Base/Animation'
 import ReviewAvatar from '@/components/Base/Review/Avatar'
 import styles from '@/components/Pages/Account/Review/account_review.module.scss'
 
@@ -85,7 +85,7 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
     }
     setShowModal(isShow)
   }
-  const onSubmit = (dataSubmit) => {
+  const onSubmit = (dataSubmit: { firstName: any; lastName: any; avatar: any }) => {
     if (loading) return
     setLoading(true)
     connectWallet().then(async (res: any) => {
@@ -414,12 +414,11 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
                 CANCEL
               </button>
               <button
-                className="w-36 overflow-hidden px-8 bg-gamefiGreen-700 text-gamefiDark-900 font-bold text-[13px] rounded-xs hover:opacity-95 cursor-pointer rounded-sm clipped-t-r "
+                className="flex items-center justify-center w-36 overflow-hidden px-8 bg-gamefiGreen-700 text-gamefiDark-900 font-bold text-[13px] rounded-xs hover:opacity-95 cursor-pointer rounded-sm clipped-t-r "
                 onClick={handleUpdate}
                 disabled={loading}
               >
-                UPDATE
-                { loading && <Loading/>}
+                { loading ? <Spinning className="w-6 h-6"/> : 'UPDATE'}
               </button>
             </div>
           </div>

@@ -4,6 +4,7 @@ import get from 'lodash.get'
 import { API_BASE_URL } from '@/utils/constants'
 import { ObjectType } from './types'
 import { formatDistance } from 'date-fns'
+export { default as checkProfane } from './badWord'
 
 export const isImageFile = (str: string) => (/\.(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(str)
 export const isVideoFile = (str: string) => (/\.(mp4)$/i).test(str)

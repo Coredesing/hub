@@ -2,7 +2,7 @@ import { client, clientNew } from '@/graphql/apolloClient'
 import * as aggregator from '@/graphql/aggregator'
 
 const shouldUseCache = [
-  'GET_AGGREGATORS_BY_SLUG'
+  // 'GET_AGGREGATORS_BY_SLUG'
 ]
 
 export function fetchWidthGraphql ({ query, variables }) {

@@ -62,6 +62,8 @@ const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
   const { id, name } = data
   const { accountHub } = useHubProfile()
 
+  const reviewPlaceholder = 'Tell your personal experience with this ' + (currentResource === 'guild' ? 'guild' : 'game')
+
   const MIN_LENGTH_TITLE = 10
   const MAX_LENGTH_TITLE = 100
 
@@ -139,11 +141,11 @@ const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
     }
 
     if ([...pros, ...cons].some(v => v?.trim() && v.trim().length < MIN_LENGTH_PROS_CONS)) {
-      return toast.error('please check for errors!')
+      return toast.error('Please check for errors!')
     }
 
     if (!currentRate) {
-      return toast.error('please rate this game!')
+      return toast.error('Please rate this ' + (currentResource === 'guild' ? 'guild !' : 'game !'))
     }
 
     setLoading(true)
@@ -246,7 +248,7 @@ const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
               style={{ background: 'linear-gradient(90.55deg, #303035 0.3%, rgba(48, 48, 53, 0) 90.04%)' }}
               className="p-7 radius-1 flex justify-between items-center text-[13px] flex-col sm:flex-row"
             >
-              <div className="font-bold text-center sm:text-left flex-1 mb-3 sm:mb-0">RATE THIS PROJECT</div>
+              <div className="font-bold text-center sm:text-left flex-1 mb-3 sm:mb-0">RATE THIS {currentResource === 'guild' ? 'GUILD' : 'PROJECT'}</div>
               <div className="flex justify-end items-center flex-wrap">
                 <div className="pr-6 font-casual text-white/30 hidden sm:block">Click to rate</div>
                 <ReviewRatingAction rate={currentRate} callBack={handleSetCurrentRate} disabled={loading} />
@@ -280,7 +282,7 @@ const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
                 name="review"
                 rows={12}
                 cols={10}
-                placeholder="Tell your personal experience with this game"
+                placeholder={reviewPlaceholder}
                 {...register('review', { required: true, minLength: MIN_LENGTH_REVIEW })}
               />
               {errors.review && (
@@ -290,8 +292,8 @@ const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
           </form>
 
           <div className="mb-14">
-            <ReviewCreateProsAndCons data={pros} title="pros" onChange={setPros} />
-            <ReviewCreateProsAndCons data={cons} title="cons" onChange={setCons} />
+            <ReviewCreateProsAndCons data={pros} title="pros" onChange={setPros} currentResource={currentResource}/>
+            <ReviewCreateProsAndCons data={cons} title="cons" onChange={setCons} currentResource={currentResource}/>
           </div>
 
           <div className="flex justify-end h-9">

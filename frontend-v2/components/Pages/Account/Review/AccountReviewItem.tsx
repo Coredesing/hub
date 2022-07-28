@@ -121,7 +121,7 @@ function AccountReviewItem ({ data, visibleGroupAction, visibleStatistics, user 
       <a href={resource.pageUrl} target="_blank" rel="noreferrer">
         <div className={`${clsx(styles.game_info, 'flex md:flex-col items-center group')}`}>
           <div className={clsx(styles.image, 'w-14 h-14 md:w-[180px] md:h-[248px] mr-4 md:mr-0 md:mb-[22px] mb-0 overflow-hidden')}>
-            <img src={resource.thumbnailUrl} alt="thumb" />
+            <img src={resource.thumbnailUrl} alt="thumb" className='w-[180px] h-[120px] object-cover' />
           </div>
           <div
             className={clsx(

@@ -17,7 +17,7 @@ const List = ({ data }) => {
   return (
     <div>
       <div className="flex flex-col gap-3">
-        {/* <div className="flex gap-3 mt-20">
+        <div className="flex gap-3 mt-20">
           <div className="uppercase font-mechanic font-bold text-[18px] leading-[100%] text-white">
             {name}
           </div>
@@ -32,7 +32,7 @@ const List = ({ data }) => {
               </div>
             </Tippy>
           )}
-        </div> */}
+        </div>
         {description && (
           <div className="font-casual font-normal text-sm leading-[150%] text-white">
             {description}

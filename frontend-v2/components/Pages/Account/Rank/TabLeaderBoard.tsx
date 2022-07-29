@@ -1,3 +1,4 @@
+import { printNumber } from '@/utils'
 import clsx from 'clsx'
 
 const TabLeaderBoard = ({ data, ranks }) => {
@@ -35,7 +36,7 @@ const TabLeaderBoard = ({ data, ranks }) => {
                   {e.walletId}
                 </td>
                 <td className="py-4" align="center">
-                  {e.exp.total}
+                  {printNumber(parseInt(e.exp.total))}
                 </td>
               </tr>
             )

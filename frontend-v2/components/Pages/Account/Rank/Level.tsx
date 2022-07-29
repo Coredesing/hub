@@ -28,7 +28,8 @@ const LevelItem = ({ data }) => {
         </div>
         <div className="p-4">
           <div className="flex flex-col pt-[48px] gap-5">
-            {privileges.map((e) => {
+            <p className='mx-auto font-casual font-normal text-sm leading-[150%] text-white'>REWARD COMING SOON</p>
+            {/* {privileges.map((e) => {
               return (
                 <div key={e._id} className="flex justify-between">
                   <span className="font-casual font-normal text-[13px] leading-[150%] text-[#F4F4F4]">
@@ -39,7 +40,7 @@ const LevelItem = ({ data }) => {
                   </span>
                 </div>
               )
-            })}
+            })} */}
           </div>
         </div>
       </div>
@@ -209,7 +210,7 @@ const Level = ({ data, ranks, specialRank }) => {
                 <div className="uppercase font-mechanic font-bold text-[18px] leading-[100%] text-white">
                   LEVEL {rank}
                 </div>
-                {/* <Tippy
+                <Tippy
                   placement="auto"
                   theme="no-padding"
                   touch={true}
@@ -228,7 +229,7 @@ const Level = ({ data, ranks, specialRank }) => {
                       layout="fill"
                     ></Image>
                   </div>
-                </Tippy> */}
+                </Tippy>
               </div>
 
               <div
@@ -260,10 +261,9 @@ const Level = ({ data, ranks, specialRank }) => {
             </div>
 
             <div className="font-casual font-semibold text-xs leading-[150%] text-white opacity-50">
-              {/* {`EXP ${printNumber(exp.current)}${
+              {`EXP ${printNumber(exp.current)}${
                 exp.current ? ` / ${printNumber(exp.next)}` : ''
-              }`} */}
-              {`EXP ${printNumber(exp.current)}`}
+              }`}
             </div>
           </div>
         </div>

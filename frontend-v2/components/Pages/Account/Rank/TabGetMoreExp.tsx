@@ -1,21 +1,21 @@
-// import Tippy from '@tippyjs/react'
-// import clsx from 'clsx'
-// import Image from 'next/image'
+import Tippy from '@tippyjs/react'
+import clsx from 'clsx'
+import Image from 'next/image'
 import get from 'lodash.get'
-// import Link from 'next/link'
+import Link from 'next/link'
 
-// import styles from './AccountRank.module.scss'
-// import stakeBanner from '@/assets/images/ranks/stakeGAFI.png'
-// import stakeBanner2 from '@/assets/images/ranks/stakeGAFI-2.svg'
-// import stakeBanner3 from '@/assets/images/ranks/stakeGAFI-3.png'
-// import stakeBanner4 from '@/assets/images/ranks/stakeGAFI-4.png'
+import styles from './AccountRank.module.scss'
+import stakeBanner from '@/assets/images/ranks/stakeGAFI.png'
+import stakeBanner2 from '@/assets/images/ranks/stakeGAFI-2.svg'
+import stakeBanner3 from '@/assets/images/ranks/stakeGAFI-3.png'
+import stakeBanner4 from '@/assets/images/ranks/stakeGAFI-4.png'
 import List from '@/components/Pages/Account/Rank/Quest/ListQuest'
 
 const TabGetMoreExp = ({ data }) => {
   return (
     <div id="task-list" className="mt-8 w-full h-full">
-      <div className="flex justify-between flex-col xl:flex-row ">
-        {/* <div className="flex flex-col gap-3 mr-4 2xl:mr-[124px]">
+      <div className="flex justify-between flex-col xl:flex-row">
+        <div className="flex flex-col gap-3 mr-4 2xl:mr-[124px]">
           <div className="flex gap-3">
             <div className="uppercase font-mechanic font-bold text-[18px] leading-[100%] text-white">
               STAKING GAFI
@@ -34,8 +34,8 @@ const TabGetMoreExp = ({ data }) => {
           <div className="font-casual font-normal text-sm leading-[150%] text-white">
             Get 100 Exp For Each $GAFI Staked
           </div>
-        </div> */}
-        {/* <div className="relative flex-1">
+        </div>
+        <div className="relative flex-1">
           <div
             className={clsx(
               'h-[82px] rounded-[4px] bg-white relative overflow-hidden'
@@ -70,7 +70,7 @@ const TabGetMoreExp = ({ data }) => {
           <div className="absolute -top-3 left-1 w-10 h-10 z-10">
             <Image layout="fill" src={stakeBanner4} alt=""></Image>
           </div>
-        </div> */}
+        </div>
       </div>
 
       {get(data, 'groupQuests', []).map((group) => (

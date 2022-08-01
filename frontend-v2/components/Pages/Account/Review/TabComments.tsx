@@ -108,7 +108,12 @@ const TabComments = ({ comments, totalComment }) => {
             pageSize: REVIEW_PAGE_SIZE
           },
           commentFilterValue: {
-            user: { id: { eq: id } }
+            user: { id: { eq: id } },
+            review: {
+              id: {
+                ne: null
+              }
+            }
           },
           commentPagination: {
             page: nextPage,

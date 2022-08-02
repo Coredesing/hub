@@ -29,13 +29,13 @@ const GameDetails = ({ data }) => {
 
   useEffect(() => {
     const reviewFilterValue: any = { aggregator: { slug: { eq: router.query.slug } }, status: { eq: 'published' } }
-    fetcher('/api/hub/detail/getLiveData', { method: 'POST', body: JSON.stringify({ variables: { slug: router.query.slug, reviewFilterValue, pageSize: 5 }, query: 'GET_AGGREGATORS_BY_SLUG' }) }).then(({ data }) => {
-      const { five, four, three, two, one, totalReviewMeta } = data
-      const aggregators = get(data, 'aggregators.data[0]')
+    fetcher('/api/hub/detail/getLiveData', { method: 'POST', body: JSON.stringify({ variables: { slug: router.query.slug, reviewFilterValue, pageSize: 5 }, query: 'GET_AGGREGATORS_BY_SLUG' }) }).then(({ data: dataNew }) => {
+      const { five, four, three, two, one, totalReviewMeta } = dataNew
+      const aggregators = get(dataNew, 'aggregators.data[0]')
       setValues(vs => ({
         ...vs,
         ...(aggregators?.attributes || {}),
-        reviews: data?.reviews || [],
+        reviews: dataNew?.reviews || [],
         totalReviewWithoutFilter: get(totalReviewMeta, 'meta.pagination.total', 0),
         rates: {
           five: get(five, 'meta.pagination.total', 0),

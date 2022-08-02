@@ -48,6 +48,7 @@ export default function MoreLike ({ categories = [], slug = '' }) {
         }
       })
     }).then(({ data }) => {
+      setLoading(false)
       const formatData = data?.aggregators?.data?.map(v => {
         const d = v.attributes
         return {
@@ -70,6 +71,7 @@ export default function MoreLike ({ categories = [], slug = '' }) {
       }
       setChunkData(chunk)
     }).catch((err) => {
+      setLoading(false)
       console.debug('err', err)
     })
   }, [names, slug])

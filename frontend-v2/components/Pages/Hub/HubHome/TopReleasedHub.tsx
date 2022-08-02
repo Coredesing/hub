@@ -37,7 +37,7 @@ export default function TopReleasedHub () {
                       </a>
                     </Link>
                     <Link href={`/hub/${item?.slug}/reviews`} passHref>
-                      <div className="text-sm flex text-gray-300 cursor-pointer">
+                      <div className="w-20 text-sm flex text-gray-300 cursor-pointer">
                         <Image src={require('@/assets/images/icons/star.svg')} alt="star" />
                         <p className="ml-2 mr-4">
                           {item.rate?.toFixed(1)}

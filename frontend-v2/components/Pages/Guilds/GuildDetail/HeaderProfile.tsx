@@ -11,7 +11,7 @@ import { Spinning } from '@/components/Base/Animation'
 import { useMyWeb3 } from '@/components/web3/context'
 import ReviewRatingAction from '@/components/Base/Review/Rating/Action'
 
-const HeaderProfile = ({ totalFavorites, currentRate, setCurrentRate, loading, setLoading }) => {
+const HeaderProfile = ({ totalFavorites, setTotalFavorites, currentRate, setCurrentRate, loading, setLoading }) => {
   const router = useRouter()
   const { guildData } = useGuildDetailContext()
   const { accountHub } = useHubProfile()
@@ -65,6 +65,7 @@ const HeaderProfile = ({ totalFavorites, currentRate, setCurrentRate, loading, s
   }
 
   const getFavoriteByUserId = useCallback(async () => {
+    if (!account) return
     await fetcher('/api/hub/guilds/getFavoriteByUserId', {
       method: 'POST',
       body: JSON.stringify({
@@ -76,7 +77,6 @@ const HeaderProfile = ({ totalFavorites, currentRate, setCurrentRate, loading, s
       })
     }).then((response) => {
       const result = response?.data?.favorites?.data
-
       setFavorite(result.length > 0)
     }).catch((err) => {
       console.debug('err', err)
@@ -86,8 +86,9 @@ const HeaderProfile = ({ totalFavorites, currentRate, setCurrentRate, loading, s
   useEffect(() => {
     if (accountHub) {
       getFavoriteByUserId()
-    }
+    } else setFavorite(false)
   }, [accountHub, getFavoriteByUserId])
+
   const { connectWallet } = useConnectWallet()
 
   const handleFavorite = useCallback(() => {
@@ -133,10 +134,13 @@ const HeaderProfile = ({ totalFavorites, currentRate, setCurrentRate, loading, s
           return
         }
         setFavorite(!favorite)
-        router.replace(router.asPath)
+        if (favorite) {
+          setTotalFavorites((prevTotalFavorites: number) => prevTotalFavorites - 1)
+        } else {
+          setTotalFavorites((prevTotalFavorites: number) => prevTotalFavorites + 1)
+        }
       }).catch((err) => {
         setLoadingFavorite(false)
-        console.log(err)
         toast.error('Failed to like!')
         console.debug('err', err)
       })
@@ -163,7 +167,7 @@ const HeaderProfile = ({ totalFavorites, currentRate, setCurrentRate, loading, s
           className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500 cursor-pointer"
           onClick={() => { router.push('/guilds') }}
         >
-          <BackIcon/>
+          <BackIcon />
           Back
         </a>
         <div className="w-full flex flex-col lg:flex-row gap-8">
@@ -217,21 +221,21 @@ const HeaderProfile = ({ totalFavorites, currentRate, setCurrentRate, loading, s
               }
             </div>
             <div className="mt-8 md:mt-4 flex justify-end flex-col md:flex-row">
-              { visibleRating &&
-              <div className="sm:w-72 w-full bg-gamefiDark-700 clipped-b-l p-px rounded cursor-pointer mr-3 h-9  hover:opacity-95 disabled:cursor-not-allowed flex px-6 py-[10px] justify-between">
-                <p className="text-sm text-white uppercase font-semibold">Rate this guild</p>
-                <ReviewRatingAction rate={currentRate} callBack={handleSetCurrentRate} disabled={loading} extraClass="w-4 h-4" />
-              </div>
+              {visibleRating &&
+                <div className="sm:w-72 w-full bg-gamefiDark-700 clipped-b-l p-px rounded cursor-pointer mr-3 h-9  hover:opacity-95 disabled:cursor-not-allowed flex px-6 py-[10px] justify-between">
+                  <p className="text-sm text-white uppercase font-semibold">Rate this guild</p>
+                  <ReviewRatingAction rate={currentRate} callBack={handleSetCurrentRate} disabled={loading} extraClass="w-4 h-4" />
+                </div>
               }
               {favorite
                 ? <button onClick={handleFavorite} className="mt-4 lg:mt-0 w-full cursor-pointer lg:w-[146px] h-[36px] clipped-t-r p-px bg-[#FF5959]/10 rounded-sm flex items-center justify-center">
                   <div className="w-full h-full bg-[#FF5959]/10 hover:opacity-95 rounded-sm flex justify-center items-center gap-2 font-bold uppercase text-sm clipped-t-r">
                     {
                       loadingFavorite
-                        ? <Spinning className="w-6 h-6"/>
+                        ? <Spinning className="w-6 h-6" />
                         : <>
                           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M9.91671 0.583984C8.69171 0.583984 7.64171 1.22565 7.00004 2.15898C6.35837 1.22565 5.30837 0.583984 4.08337 0.583984C2.15837 0.583984 0.583374 2.15898 0.583374 4.08398C0.583374 7.58398 7.00004 12.834 7.00004 12.834C7.00004 12.834 13.4167 7.58398 13.4167 4.08398C13.4167 2.15898 11.8417 0.583984 9.91671 0.583984Z" fill="#FF5959"/>
+                            <path d="M9.91671 0.583984C8.69171 0.583984 7.64171 1.22565 7.00004 2.15898C6.35837 1.22565 5.30837 0.583984 4.08337 0.583984C2.15837 0.583984 0.583374 2.15898 0.583374 4.08398C0.583374 7.58398 7.00004 12.834 7.00004 12.834C7.00004 12.834 13.4167 7.58398 13.4167 4.08398C13.4167 2.15898 11.8417 0.583984 9.91671 0.583984Z" fill="#FF5959" />
                           </svg>
                           {totalFavorites}
                         </>
@@ -242,12 +246,12 @@ const HeaderProfile = ({ totalFavorites, currentRate, setCurrentRate, loading, s
                   <div className="w-full h-full hover:opacity-95 rounded-sm flex justify-center items-center gap-2 font-bold uppercase text-sm clipped-t-r">
                     {
                       loadingFavorite
-                        ? <Spinning className="w-6 h-6"/>
+                        ? <Spinning className="w-6 h-6" />
                         : <>
                           <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M9.91671 0.583984C8.69171 0.583984 7.64171 1.22565 7.00004 2.15898C6.35837 1.22565 5.30837 0.583984 4.08337 0.583984C2.15837 0.583984 0.583374 2.15898 0.583374 4.08398C0.583374 7.58398 7.00004 12.834 7.00004 12.834C7.00004 12.834 13.4167 7.58398 13.4167 4.08398C13.4167 2.15898 11.8417 0.583984 9.91671 0.583984Z" fill={favorite ? '#ff5959' : '#ffffff'} stroke={favorite ? '#ff5959' : '#ffffff'} />
                           </svg>
-                        Like
+                          Like
                         </>
                     }
                   </div>

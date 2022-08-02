@@ -17,6 +17,7 @@ import { GuildDetailContext } from '@/components/Pages/Guilds/GuildDetail/utils'
 import { fetchOneWithSlug } from '@/pages/api/hub/guilds'
 import 'tippy.js/dist/tippy.css'
 import Reviews from '@/components/Pages/Guilds/GuildDetail/Reviews'
+import { useMediaQuery } from 'react-responsive'
 
 interface GuildDetailProps {
   guildData: any;
@@ -107,6 +108,32 @@ const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
     }
   }, [guildReviewsData])
 
+  const [totalFavorites, setTotalFavorites] = useState(guildData.totalFavorites)
+  const [showMoreIntroduction, setShowMoreIntroduction] = useState(false)
+  const MIN_LENGTH_OF_INTRO = 500
+  const isFullHDScreen = useMediaQuery({ maxWidth: '1600px' })
+  const getFavorites = async () => {
+    try {
+      const res = await fetcher(`/api/hub/guilds/favorites?id=${guildData?.id}`)
+
+      if (!res?.data) {
+        return
+      }
+
+      setTotalFavorites(res.data)
+    } catch (e) {
+      console.debug(e)
+    }
+
+    (guildData.introduction.length < MIN_LENGTH_OF_INTRO && isFullHDScreen)
+      ? setShowMoreIntroduction(true)
+      : setShowMoreIntroduction(false)
+  }
+
+  useEffect(() => {
+    getFavorites()
+  }, [guildData?.id])
+
   return (
     <Layout title={`GameFi.org - ${guildData?.name || 'Guild'}`} description="" extended={!!guildData}>
       {
@@ -124,7 +151,7 @@ const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
         guildData && <GuildDetailContext.Provider value={{
           guildData
         }}>
-          <HeaderProfile totalFavorites={guildData.totalFavorites} currentRate={currentRate} setCurrentRate={setCurrentRate} loading={loading} setLoading={setLoading} />
+          <HeaderProfile totalFavorites={totalFavorites} setTotalFavorites={setTotalFavorites} currentRate={currentRate} setCurrentRate={setCurrentRate} loading={loading} setLoading={setLoading} />
           <div className="mx-auto">
             <Tabs
               titles={[
@@ -140,7 +167,7 @@ const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
             />
             <TabPanel value={tab} index={0}>
               <div className="py-8">
-                <Home guildReviewsData={guildReviewsData} />
+                <Home guildReviewsData={guildReviewsData} totalFavorites={totalFavorites} showMoreIntroduction={showMoreIntroduction} />
               </div>
             </TabPanel>
             <TabPanel value={tab} index={1}>

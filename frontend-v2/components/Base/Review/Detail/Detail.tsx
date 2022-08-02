@@ -9,7 +9,7 @@ import get from 'lodash.get'
 import isEmpty from 'lodash.isempty'
 import useConnectWallet from '@/hooks/useConnectWallet'
 import useHubProfile from '@/hooks/useHubProfile'
-import { printNumber, fetcher } from '@/utils'
+import { printNumber, fetcher, checkProfane } from '@/utils'
 import Loading from '@/components/Pages/Hub/Loading'
 import ReviewUserInfo from '@/components/Base/Review/UserInfo'
 import ReviewDetailCommentList from '@/components/Base/Review/Detail/Comment/List'
@@ -71,6 +71,7 @@ interface ReviewDetailProps {
 const ReviewDetail = ({ data, currentResource }: ReviewDetailProps) => {
   const router = useRouter()
   const [page, setPage] = useState('')
+  const [badWord, setBadWord] = useState('')
   const [isShowCommentAction, setIsShowCommentAction] = useState(false)
   const [comment, setComment] = useState('')
   const [loading, setLoading] = useState(false)
@@ -184,8 +185,13 @@ const ReviewDetail = ({ data, currentResource }: ReviewDetailProps) => {
     setIsFocusCommentInput(false)
   }
 
-  const handleOnChangeComment = (e) => {
-    setComment(e.target.value)
+  const handleOnChangeComment = (e: { target: { value: any } }) => {
+    const value = e.target.value
+    setComment(value)
+    const v = checkProfane(value)
+    if (v.isProfane) {
+      setBadWord(v.listText.join(', '))
+    } else setBadWord('')
   }
 
   const handleOnChangeStatus = (type, value) => {
@@ -197,6 +203,7 @@ const ReviewDetail = ({ data, currentResource }: ReviewDetailProps) => {
   }
 
   const handleCancel = () => {
+    setBadWord('')
     setComment('')
   }
 
@@ -256,11 +263,11 @@ const ReviewDetail = ({ data, currentResource }: ReviewDetailProps) => {
 
         <div className={`${reviewCommonStyles.rating_bar} h-14 w-full flex items-center mb-10 px-[18px] justify-between md:justify-start`}>
           <div className='flex gap-2'>
-            { STARS.map(level => <ReviewStar key={`acc_review_rate_${level}`} selected={userRate >= level} size={'20px'} />) }
+            {STARS.map(level => <ReviewStar key={`acc_review_rate_${level}`} selected={userRate >= level} size={'20px'} />)}
           </div>
           {data.publishedAt && (
             <div className={clsx(reviewCommonStyles.published_date, 'font-casual md:justify-between')}>
-              { isMDScreen ? `Published ${format(new Date(data.publishedAt), 'd LLL, yyyy - hh:mm:ss OOO')}` : format(new Date(data.publishedAt), 'd LLL, yyyy') }
+              {isMDScreen ? `Published ${format(new Date(data.publishedAt), 'd LLL, yyyy - hh:mm:ss OOO')}` : format(new Date(data.publishedAt), 'd LLL, yyyy')}
             </div>
           )}
         </div>
@@ -296,16 +303,20 @@ const ReviewDetail = ({ data, currentResource }: ReviewDetailProps) => {
             <div className="block w-fit h-fit rounded mr-3 overflow-hidden">
               <ReviewAvatar url={get(accountHub, 'avatar.url')} />
             </div>
-            <textarea
-              id="commentTextarea"
-              className={`${styles.input} ring-0 pt-5 h-16 flex-1 placeholder:font-semibold placeholder:text-sm hover:placeholder:text-white placeholder:font-['Poppins'] font-['Poppins']`}
-              placeholder={isFocusCommentInput ? '' : 'Write your comment'}
-              onChange={handleOnChangeComment}
-              onFocus={handleFocusCommentInput}
-              onBlur={handleOnBlurCommentInput}
-              onKeyUp={setTextAreaHeight}
-              value={comment}
-            />
+            <div className="flex-1">
+              <textarea
+                id="commentTextarea"
+                className={`${styles.input} w-full ring-0 pt-5 h-16 flex-1 placeholder:font-semibold placeholder:text-sm hover:placeholder:text-white placeholder:font-['Poppins'] font-['Poppins']`}
+                placeholder={isFocusCommentInput ? '' : 'Write your comment'}
+                onChange={handleOnChangeComment}
+                onFocus={handleFocusCommentInput}
+                onBlur={handleOnBlurCommentInput}
+                onKeyUp={setTextAreaHeight}
+                value={comment}
+              />
+              <div className="mt-2 text-normal text-red-500 ">{badWord ? `Please remove profane word: ${badWord}` : ''}</div>
+            </div>
+
           </div>
           {isShowCommentAction && (
             <div className="flex gap-2 self-end mt-6">
@@ -313,7 +324,7 @@ const ReviewDetail = ({ data, currentResource }: ReviewDetailProps) => {
               <div className="flex group">
                 <button
                   className={`${styles.button_submit} h-9 w-36 bg-gamefiGreen-700 group-hover:opacity-95 text-black font-bold uppercase text-sm disabled:cursor-not-allowed`}
-                  disabled={!comment?.length}
+                  disabled={!comment?.length || !!badWord}
                   onClick={onSubmit}
                 >
                   Submit
@@ -326,7 +337,7 @@ const ReviewDetail = ({ data, currentResource }: ReviewDetailProps) => {
           )}
         </div>
 
-        { data?.comments && <ReviewDetailCommentList comments={data?.comments} likeStatus={commentLikeStatus} currentResource={currentResource} /> }
+        {data?.comments && <ReviewDetailCommentList comments={data?.comments} likeStatus={commentLikeStatus} currentResource={currentResource} />}
 
         {get(data, 'totalComment', 0) > (get(data, 'comments', []).length) && (
           <div className="flex mt-8 w-full justify-center items-center mb-4">

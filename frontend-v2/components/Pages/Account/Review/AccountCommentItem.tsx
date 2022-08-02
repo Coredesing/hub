@@ -40,8 +40,6 @@ function AccountCommentItem ({ data }) {
   }
   resource.name = get(data, `review.${resource.type}.name`)
   resource.slug = get(data, `review.${resource.type}.slug`)
-  console.log(resource.name)
-  console.log(resource.slug)
   switch (resource.type) {
   case 'aggregator':
     resource.pageUrl = `/hub/${resource.slug}`

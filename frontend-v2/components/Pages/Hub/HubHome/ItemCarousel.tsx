@@ -19,6 +19,7 @@ import { WrapperItem } from './StyleElement'
 
 export default function ItemCarousel ({ item, index, showToolTip, defaultFavorite, disabled, setListFavorite, listFavorite, clearFavorite }: any) {
   const [loading, setLoading] = useState(disabled)
+  const [showGameIcon, setShowGameIcon] = useState(true)
   const [favorite, setFavorite] = useState(defaultFavorite)
   const [totalFavorites, setTotalFavorites] = useState(item.totalFavorites)
   const { connectWallet } = useConnectWallet()
@@ -240,12 +241,15 @@ export default function ItemCarousel ({ item, index, showToolTip, defaultFavorit
                 : <Link href={`/hub/${slug}`} passHref>
                   <a className="group-hover:text-gamefiGreen-700 font-semibold text-base tracking-wide cursor-pointer hover:underline line-clamp-1">
                     <div className="flex items-center">
-                      {icon.url && (
+                      {icon.url && showGameIcon && (
                         <div className="flex align-middle items-center mr-2">
                           <img
                             className="rounded-full"
                             width={25}
                             height={25}
+                            onError={() => {
+                              setShowGameIcon(false)
+                            }}
                             src={imageCMS(icon.url)}
                             alt={icon.name}
                           />

@@ -54,7 +54,7 @@ function getRatePercent (rates = {}) {
   ]
 }
 
-const Reviews = ({ data, totalReviews, rates, id, tabRef, currentResource = 'hub' as 'guilds' | 'hub', currentRate, setCurrentRate }) => {
+const Reviews = ({ data, totalReviews, rates, id, tabRef, currentResource = 'hub' as 'guilds' | 'hub', currentRate, setCurrentRate, pageCountReviews }) => {
   const overall = getOverall(rates)
   const countRating = getCountRating(rates)
 
@@ -76,7 +76,7 @@ const Reviews = ({ data, totalReviews, rates, id, tabRef, currentResource = 'hub
         currentResource="guilds"
       />
       <div className="mt-14 uppercase text-lg md:text-2xl"><strong>{`All Reviews ${totalReviews ? `(${printNumber(totalReviews)})` : ''}`}</strong></div>
-      <ReviewList data={{ ...data, totalReviews: totalReviews }} filter loadMore={totalReviews > data?.length} currentResource={currentResource} />
+      <ReviewList data={{ ...data, totalReviews: totalReviews }} filter loadMore={totalReviews > 5} currentResource={currentResource} pageCountReviews={pageCountReviews} />
     </div>
   )
 }

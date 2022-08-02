@@ -27,6 +27,7 @@ const LayoutHub = ({ children, title, description, image, disableFooter, disable
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta property="og:title" content={title || defaultTitle} key="title" />
         <meta property="og:description" content={description || defaultDescription} key="description" />
+        <meta name="description" content={description || defaultDescription} />
         <meta property="og:image" content={image || 'https://gamefi.org/gamefi.jpg'} key="image" />
         <meta name="keywords" content="launchpad, game hub, nft marketplace, game portal, game pass, game guild, tournament, metaverse, ido"></meta>
         <meta name="twitter:card" content="summary_large_image" />

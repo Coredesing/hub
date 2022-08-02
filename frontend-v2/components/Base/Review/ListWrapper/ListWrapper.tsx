@@ -55,7 +55,6 @@ interface ReviewListWrapperProps {
 const ReviewListWrapper = ({ data, slug, currentResource }: ReviewListWrapperProps) => {
   const { dataReviews, dataRating } = handleData(data)
   const createOrUpdateReviewPageUrl = `/${currentResource}/${slug}/reviews/createOrUpdate`
-
   return (
     <>
       <div className="flex items-center mt-10 md:mt-14 text-lg md:text-2xl font-mechanic uppercase">
@@ -89,7 +88,7 @@ const ReviewListWrapper = ({ data, slug, currentResource }: ReviewListWrapperPro
           </div>
         )
         : (
-          <ReviewList viewAll={dataReviews?.length >= 5} data={{ data: dataReviews, rates: dataRating }} currentResource={currentResource} review={false}/>
+          <ReviewList viewAll={data?.totalReviews >= 5} data={{ data: dataReviews, rates: dataRating }} currentResource={currentResource} review={false}/>
         )
       }
     </>

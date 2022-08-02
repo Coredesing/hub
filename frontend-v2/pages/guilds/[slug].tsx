@@ -55,7 +55,7 @@ const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
       method: 'POST',
       body: JSON.stringify({
         variables: {
-          userId: accountHub.id,
+          walletAddress: accountHub.walletAddress,
           slug: router.query.slug
         },
         query: 'GET_REVIEW_AND_RATE_BY_USER_ID_FOR_GUILD'
@@ -75,8 +75,11 @@ const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
   }, [accountHub, router.query.slug])
 
   const formattedReviews = useMemo(() => {
+    if (isEmpty(guildReviewsData)) {
+      return []
+    }
     return {
-      data: guildReviewsData.reviews.data.map(e => {
+      data: guildReviewsData.reviews?.data?.map(e => {
         const { author = {}, publishedAt, rate, review, title, likeCount, dislikeCount, commentCount } = e?.attributes || {}
         const { level, rank, repPoint, firstName, lastName, avatar, walletAddress, reviewCount, rates } = author?.data?.attributes || {}
 
@@ -180,6 +183,7 @@ const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
                 <Reviews
                   data={formattedReviews}
                   totalReviews={guildReviewsData.totalReviews}
+                  pageCountReviews={guildReviewsData.pageCountReviews}
                   rates={guildReviewsData.rates}
                   id={guildData.id}
                   tabRef={null}
@@ -199,6 +203,7 @@ const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
 export default GuildDetail
 
 const getGuildReviewsData = async (slug, query) => {
+  const PAGE_SIZE = 5
   try {
     const reviewFilterValue: any = { guild: { slug: { eq: slug } }, status: { eq: 'published' } }
 
@@ -213,7 +218,7 @@ const getGuildReviewsData = async (slug, query) => {
     }
     const { data = {} } = await client.query({
       query: GET_GUILD_REVIEWS_BY_SLUG,
-      variables: { slug: slug, reviewFilterValue, pageSize: 5 }
+      variables: { slug: slug, reviewFilterValue, pageSize: PAGE_SIZE }
     })
     const { five, four, three, two, one } = data
 
@@ -226,6 +231,7 @@ const getGuildReviewsData = async (slug, query) => {
         two: get(two, 'meta.pagination.total', 0),
         one: get(one, 'meta.pagination.total', 0)
       },
+      pageCountReviews: Math.ceil(get(data, 'reviews.meta.pagination.total', 0) / PAGE_SIZE),
       totalReviews: get(data, 'totalReviewMeta.meta.pagination.total', 0)
     }
   } catch (e) {

@@ -185,16 +185,11 @@ const Level = ({ data, ranks, specialRank }) => {
     if (!exp?.current) return ''
     let text = `EXP ${printNumber(parseInt(exp.current))}`
 
-    if (exp.current > 0) {
-      if (exp.next === 'MAX') {
-        text += ' (MAX)'
-      } else {
-        text += ` / ${printNumber(exp.next)}`
-      }
+    if (exp.next === 'MAX') {
+      text += ' (MAX)'
+      return text
     }
-
-    console.log({ text })
-
+    text += ` / ${printNumber(exp.next)}`
     return text
   }
 

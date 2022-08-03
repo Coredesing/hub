@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react'
 import get from 'lodash.get'
 import clsx from 'clsx'
-import { fetcher } from '@/utils'
+import { fetcher, pad } from '@/utils'
 import { useMyWeb3 } from '@/components/web3/context'
 import { useRouter } from 'next/router'
 import toast from 'react-hot-toast'
+import { useCountdown } from '@/components/Pages/Hub/Countdown'
 
 const Item = ({ data }) => {
   const { account: walletId } = useMyWeb3()
@@ -12,11 +13,17 @@ const Item = ({ data }) => {
 
   const [isLoading, setLoading] = useState(false)
 
+  const resetAt = get(data, 'resetAt')
+  const { countdown, ended } = useCountdown({ deadline: resetAt || new Date() })
+
   const { name, reward, description, link, buttonLabel, isCompleted, action } =
     useMemo(() => {
       const rewardQuantity = get(data, 'rewards[0].quantity')
       const isCompleted = get(data, 'isCompleted')
-      const resetAt = get(data, 'resetAt')
+
+      const countdownText = `${pad(countdown.hours)}H : ${pad(countdown.minutes)}M : ${pad(
+        countdown.seconds
+      )}S`
       return {
         isCompleted,
         name: get(data, 'name'),
@@ -27,15 +34,15 @@ const Item = ({ data }) => {
         link: get(data, 'link'),
         buttonLabel: isCompleted
           ? resetAt
-            ? `Reset in ${new Date(resetAt).toLocaleString()}`
+            ? `Reset in ${countdownText}`
             : 'Completed'
           : get(data, 'buttonLabel'),
         action: get(data, 'conditions.[0].action', {})
       }
-    }, [data])
+    }, [countdown.hours, countdown.minutes, countdown.seconds, data, resetAt])
 
   const doAction = () => {
-    if (!walletId || !action || isLoading || isCompleted) return
+    if (!walletId || !action || isLoading || isCompleted || (resetAt && !ended)) return
     if (link) {
       const payload = {
         walletId,

@@ -21,7 +21,7 @@ const LevelItem = ({ data }) => {
       <div className="absolute top-0 left-0 w-full h-full z-10">
         <div className="w-[70px] h-[70px] absolute left-[calc(50%-35px)] -top-[calc(30px)]">
           <Image
-            src={require(`@/assets/images/ranks/${rank}-sd.png`)}
+            src={require(`@/assets/images/ranks/${rank}.png`)}
             alt=""
             layout="fill"
           ></Image>

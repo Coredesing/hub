@@ -124,21 +124,16 @@ const Level = ({ data, ranks, specialRank }) => {
                 const getPercent = () => {
                   if (isHigherThanCurrentLevel) return 0
                   if (isSmallerThanCurrentLevel) return 100
-                  let percent = 0
                   if (isFirstStep) {
-                    percent =
-                      (exp.current /
-                        (exp.next === 'MAX' ? exp.current : exp.next)) *
-                      100
-                  } else {
-                    const diffExpFromCurrent =
-                      exp.current - get(data, 'rank.exp', exp.current)
-                    const diffExpFromNext = exp.next - exp.current
+                    const nextExp = (exp.next === 'MAX' ? exp.current : exp.next)
 
-                    percent = (diffExpFromCurrent / diffExpFromNext) * 100
+                    return (exp.current / nextExp) * 100
                   }
 
-                  return percent
+                  const diffExpFromCurrent = exp.current - get(data, 'rank.exp', exp.current)
+                  const diffExpFromNext = exp.next - exp.current
+
+                  return (diffExpFromCurrent / diffExpFromNext) * 100
                 }
 
                 return (
@@ -186,6 +181,23 @@ const Level = ({ data, ranks, specialRank }) => {
     )
   }, [data, exp, rank, ranks, specialRank])
 
+  const getExpText = () => {
+    if (!exp?.current) return ''
+    let text = `EXP ${printNumber(parseInt(exp.current))}`
+
+    if (exp.current > 0) {
+      if (exp.next === 'MAX') {
+        text += ' (MAX)'
+      } else {
+        text += ` / ${printNumber(exp.next)}`
+      }
+    }
+
+    console.log({ text })
+
+    return text
+  }
+
   return (
     <div className="flex">
       <div
@@ -194,7 +206,7 @@ const Level = ({ data, ranks, specialRank }) => {
           'flex items-center rounded-[4px] p-4 md:p-[30px]'
         )}
       >
-        <div className="w-[88px] h-[88px] relative z-10">
+        <div className={clsx('w-[88px] h-[88px] relative z-10', rank >= 4 ? 'translate-x-[14px]' : 'translate-x-[6px]')}>
           {rank && (
             <Image
               src={require(`@/assets/images/ranks/${rank}.png`)}
@@ -207,7 +219,7 @@ const Level = ({ data, ranks, specialRank }) => {
           <div className="flex justify-between">
             <div className="flex flex-col gap-2">
               <div className="flex gap-3">
-                <div className="uppercase font-mechanic font-bold text-[18px] leading-[100%] text-white">
+                <div className={clsx('uppercase font-mechanic font-bold text-[18px] leading-[100%] text-white pl-2')}>
                   LEVEL {rank}
                 </div>
                 <Tippy
@@ -250,7 +262,7 @@ const Level = ({ data, ranks, specialRank }) => {
                 )}
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 pl-2">
                 <span className="text-[#838487] font-casual font-normal, text-xs leading-[150%]">
                   Reputation:
                 </span>
@@ -261,9 +273,7 @@ const Level = ({ data, ranks, specialRank }) => {
             </div>
 
             <div className="font-casual font-semibold text-xs leading-[150%] text-white opacity-50">
-              {`EXP ${printNumber(exp.current)}${
-                exp.current ? ` / ${printNumber(exp.next)}` : ''
-              }`}
+              {getExpText()}
             </div>
           </div>
         </div>

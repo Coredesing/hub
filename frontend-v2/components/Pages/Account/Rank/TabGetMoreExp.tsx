@@ -4,7 +4,6 @@ import Image from 'next/image'
 import get from 'lodash.get'
 import Link from 'next/link'
 
-import styles from './AccountRank.module.scss'
 import stakeBanner from '@/assets/images/ranks/stakeGAFI.png'
 import stakeBanner2 from '@/assets/images/ranks/stakeGAFI-2.svg'
 import stakeBanner3 from '@/assets/images/ranks/stakeGAFI-3.png'
@@ -20,7 +19,15 @@ const TabGetMoreExp = ({ data }) => {
             <div className="uppercase font-mechanic font-bold text-[18px] leading-[100%] text-white">
               STAKING GAFI
             </div>
-            <Tippy content="Staking GAFI">
+            <Tippy
+              content={
+                <div>
+                  You get 100 exp for each GAFI staked<br></br>
+                  You lost 100 exp for
+                  each GAFI unstaked
+                </div>
+              }
+            >
               <div className="w-4 h-4 relative mr-36 cursor-pointer">
                 <Image
                   src={require('@/assets/images/ranks/tooltip.svg')}

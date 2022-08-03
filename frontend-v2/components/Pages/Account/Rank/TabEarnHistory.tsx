@@ -25,7 +25,10 @@ const TabEarnHistory = ({ data }) => {
           {data.map((e, i) => {
             const isOld = i % 2
             return (
-              <tr key={e._id} className={clsx(isOld ? 'bg-gamefiDark-800' : '')}>
+              <tr
+                key={e._id}
+                className={clsx(isOld ? 'bg-gamefiDark-800' : '')}
+              >
                 <td className="py-4" align="center">
                   {e.quest.name}
                 </td>
@@ -34,11 +37,16 @@ const TabEarnHistory = ({ data }) => {
                 </td>
                 <td className="py-4" align="center">
                   {e.quest.rewards[0].quantity >= 0 ? '+' : ''}
-                  {e.quest.rewards[0].quantity *
-                    (e.totalAmount ? e.totalAmount : 1)}
+                  {Math.floor(
+                    e.quest.rewards[0].quantity *
+                      (e.totalAmount ? e.totalAmount : 1)
+                  )}
                 </td>
                 <td className="py-4" align="center">
-                  {format(new Date(e.completedAt), 'd LLL, yyyy - hh:mm:ss OOO')}
+                  {format(
+                    new Date(e.completedAt),
+                    'd LLL, yyyy - hh:mm:ss OOO'
+                  )}
                 </td>
               </tr>
             )

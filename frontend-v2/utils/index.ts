@@ -366,3 +366,11 @@ export const isEmptyDataParse = (data) => {
 
   return true
 }
+
+export const pad = (num = 0, width = 2, char = '0') => {
+  const _num = num.toString()
+
+  return _num.length >= width
+    ? _num
+    : new Array(width - _num.length + 1).join(char) + _num
+}

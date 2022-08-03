@@ -4,16 +4,9 @@ import clsx from 'clsx'
 import styles from './home.module.scss'
 import bgImage from '@/assets/images/hub/countdownBg.png'
 import { GAME_HUB_GG_CALENDAR_EVENT, GAME_HUB_START_TIME } from '@/utils/constants'
+import { pad } from '@/utils'
 
 const SMALL_CONTENT_HEIGHT = 500
-
-const pad = (num = 0, width = 2, char = '0') => {
-  const _num = num.toString()
-
-  return _num.length >= width
-    ? _num
-    : new Array(width - _num.length + 1).join(char) + _num
-}
 
 const HubCountdown = ({ onEnded }) => {
   const [isSmallHeight, setIsSmallHeight] = useState(true)

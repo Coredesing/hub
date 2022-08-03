@@ -9,9 +9,9 @@ import '@egjs/flicking/dist/flicking.css'
 import arrowLeft from '@/assets/images/icons/arrow-left.png'
 import arrowRight from '@/assets/images/icons/arrow-right.png'
 import { useMediaQuery } from 'react-responsive'
-import { fetchScholarshipPrograms, fetchTopSelected } from '../api/hub/guilds'
 import { fetcher } from '@/utils'
 import PostItem from '@/components/Pages/Guilds/GuildDetail/News/PostItem'
+import { fetchTopSelected } from '@/pages/api/hub/guilds'
 
 type Props = {
   guilds: any[];
@@ -37,14 +37,14 @@ const Guilds = ({ guilds }: Props) => {
       return
     }
 
-    ref.current.prev().catch(() => {})
+    ref.current.prev().catch(() => { })
   }
   const next = (ref) => {
     if (!ref.current) {
       return
     }
 
-    ref.current.next().catch(() => {})
+    ref.current.next().catch(() => { })
   }
 
   const fetchNews = useCallback(async () => {
@@ -75,7 +75,7 @@ const Guilds = ({ guilds }: Props) => {
             ? <div className="max-w-[1380px] mx-auto lg:px-16 my-8 mt-12">
               <div className="relative w-64 md:w-64 lg:w-1/3 xl:w-96 mx-auto text-center font-bold md:text-lg lg:text-xl">
                 <div className="inline-block top-0 left-0 right-0 uppercase w-full mx-auto text-center clipped-b p-3 font-bold md:text-lg lg:text-xl xl:text-3xl">
-                Top Selected Guilds
+                  Top Selected Guilds
                 </div>
                 <div className="absolute -bottom-5 left-0 right-0">
                   <Image src={require('@/assets/images/under-stroke-green.svg')} alt="understroke"></Image>
@@ -106,7 +106,7 @@ const Guilds = ({ guilds }: Props) => {
               </div>
               <div className="mt-14 max-w-[1380px] mx-auto px-4 lg:px-16 flex gap-4">
                 <div className="hidden sm:block">
-                  <img src={arrowLeft.src} alt="" className="w-8 cursor-pointer opacity-80 hover:opacity-100 select-none" onClick={() => { prev(refScholar) }}/>
+                  <img src={arrowLeft.src} alt="" className="w-8 cursor-pointer opacity-80 hover:opacity-100 select-none" onClick={() => { prev(refScholar) }} />
                 </div>
                 <Flicking
                   circular={true}
@@ -115,7 +115,7 @@ const Guilds = ({ guilds }: Props) => {
                   plugins={plugins}
                   align="prev"
                   ref={refScholar}
-                  // interruptable={true}
+                // interruptable={true}
                 >
                   {posts.map(program => <div className="px-2 mb-8" key={`guild-news-${program.id}`}><PostItem item={program} className="mb-4"></PostItem></div>)}
                   <ViewportSlot>
@@ -124,7 +124,7 @@ const Guilds = ({ guilds }: Props) => {
                   </ViewportSlot>
                 </Flicking>
                 <div className="hidden sm:block">
-                  <img src={arrowRight.src} alt="" className="w-8 cursor-pointer opacity-80 hover:opacity-100 select-none" onClick={() => { next(refScholar) }}/>
+                  <img src={arrowRight.src} alt="" className="w-8 cursor-pointer opacity-80 hover:opacity-100 select-none" onClick={() => { next(refScholar) }} />
                 </div>
               </div>
             </div>
@@ -179,20 +179,22 @@ const Guilds = ({ guilds }: Props) => {
 
 export default Guilds
 
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
   try {
     const guilds = await fetchTopSelected()
-    const scholarshipPrograms = await fetchScholarshipPrograms()
+    // const scholarshipPrograms = await fetchScholarshipPrograms()
 
     return {
       props: {
-        guilds: guilds?.data || [],
-        scholarshipPrograms: scholarshipPrograms?.data || []
-      }
+        guilds: guilds?.data || []
+        // scholarshipPrograms: scholarshipPrograms?.data || []
+      },
+      revalidate: 60
     }
   } catch (error) {
     return {
-      props: {}
+      props: {},
+      revalidate: 60
     }
   }
 }

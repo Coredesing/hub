@@ -242,16 +242,15 @@ const getGuildReviewsData = async (slug, query) => {
 
 export async function getServerSideProps ({ params, query }) {
   const slug = params?.slug
-  let guildData = null
+  let guildData = {}
   let guildReviewsData = {}
 
   if (!slug) {
     return { props: { guildData, guildReviewsData } }
   }
-
-  const { data: guilds } = await fetchOneWithSlug(slug)
-  guildData = guilds[0]
-  guildReviewsData = await getGuildReviewsData(slug, query)
+  const [guilds, review] = await Promise.all([fetchOneWithSlug(slug), getGuildReviewsData(slug, query)])
+  guildData = guilds?.data?.[0]
+  guildReviewsData = review
 
   return { props: { guildData, guildReviewsData } }
 }

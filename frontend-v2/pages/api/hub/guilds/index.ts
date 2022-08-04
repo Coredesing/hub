@@ -39,7 +39,7 @@ export function fetchOneWithId (id) {
 
 export function fetchOneWithSlug (slug) {
   const query = qs.stringify({
-    populate: ['projects', 'projects.communityOfficial', 'projects.banner', 'projects.logo', 'backers', 'members', 'logo', 'roadmapPicture', 'gallery']
+    populate: ['projects', 'projects.communityOfficial', 'projects.banner', 'projects.logo', 'backers', 'members', 'members.avatar', 'logo', 'roadmapPicture', 'gallery', 'gallery.media']
   }, {
     encodeValuesOnly: true
   })

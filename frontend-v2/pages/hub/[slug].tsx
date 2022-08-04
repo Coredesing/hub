@@ -16,7 +16,7 @@ import { useRouter } from 'next/router'
 import { gtagEvent, fetcher } from '@/utils'
 import { gql } from '@apollo/client'
 
-const GameDetails = ({ data }) => {
+const GameDetails = ({ data = {} }) => {
   const [values, setValues] = useState(data)
   const changeData = useRef(null)
   const screen = useScreens()

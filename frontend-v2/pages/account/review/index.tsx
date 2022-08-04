@@ -25,10 +25,14 @@ const ReviewPage = () => {
     return isValidStatus ? status : REVIEW_STATUS.PUBLISHED
   }, [router.query])
 
+  const { id } = accountHub || {}
   useEffect(() => {
     setLoading(true)
-    const { id } = accountHub || {}
-    if (!id) return
+    if (!id) {
+      setLoading(false)
+      setData({})
+      return
+    }
 
     fetcher('/api/hub/reviews', {
       method: 'POST',
@@ -60,7 +64,7 @@ const ReviewPage = () => {
       setData(normalize(res.data))
     }).catch(() => { })
       .finally(() => setLoading(false))
-  }, [accountHub, _status])
+  }, [id, _status])
 
   const published = get(data, 'publishedReview.meta.pagination.total', 0)
   const draft = get(data, 'draftReview.meta.pagination.total', 0)
@@ -71,7 +75,7 @@ const ReviewPage = () => {
 
   return (
     <Layout title="GameFi.org - My Review">
-      { loading && (<LoadingOverlay loading/>) }
+      {loading && (<LoadingOverlay loading />)}
       <AccountLayout className="flex-1">
         {isEmpty(data) || (
           <div className="p-4 md:p-10">

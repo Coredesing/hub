@@ -97,6 +97,7 @@ const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
 
   useEffect(() => {
     if (isEmpty(accountHub)) {
+      setDisabledSubmit(false)
       resetForm()
       return
     }

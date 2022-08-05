@@ -23,7 +23,7 @@ const mapIndex = (tab) => {
   if (tab === 'reviews') return 2
 }
 
-function Tab ({ data }) {
+function Tab ({ data, notFound }) {
   const [values, setValues] = useState(data)
   const screen = useScreens()
   const router = useRouter()
@@ -32,6 +32,11 @@ function Tab ({ data }) {
   useEffect(() => {
     setIndex(mapIndex(router.query.tab[0]))
   }, [router.query.tab])
+
+  useEffect(() => {
+    if (notFound) router.replace('/hub')
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notFound])
 
   useEffect(() => {
     const reviewFilterValue: any = { aggregator: { slug: { eq: router.query.slug } }, status: { eq: 'published' } }
@@ -196,7 +201,7 @@ export async function getServerSideProps ({ params, query }) {
     const { five, four, three, two, one, totalReviewMeta } = data
     const aggregators = get(data, 'aggregators.data[0]')
     if (isEmpty(aggregators)) {
-      return { props: { data: {} } }
+      return { props: { data: {}, notFound: true } }
     }
 
     let gameIntroduction = ''

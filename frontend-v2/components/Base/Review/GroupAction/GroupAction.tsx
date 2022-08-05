@@ -76,15 +76,15 @@ const ReviewGroupAction = ({ likeCount, dislikeCount, commentCount, pageSource, 
             if (typeAPi === 'like') {
               if (type === 'like') {
                 setDefaultLikeCount(defaultLikeCount + 1)
-                if (isDislike) setDefaultDislikeCount(defaultDislikeCount - 1)
+                if (isDislike) setDefaultDislikeCount(defaultDislikeCount ? defaultDislikeCount - 1 : 0)
               } else {
                 setDefaultDislikeCount(defaultDislikeCount + 1)
-                if (isLike) setDefaultLikeCount(defaultLikeCount - 1)
+                if (isLike) setDefaultLikeCount(defaultLikeCount ? defaultLikeCount - 1 : 0)
               }
             } else {
               if (type === 'like') {
-                setDefaultLikeCount(defaultLikeCount - 1)
-              } else setDefaultDislikeCount(defaultDislikeCount - 1)
+                setDefaultLikeCount(defaultLikeCount ? defaultLikeCount - 1 : 0)
+              } else setDefaultDislikeCount(defaultDislikeCount ? defaultDislikeCount - 1 : 0)
             }
           }
           onChangeStatus && onChangeStatus('review', typeAPi === 'like' ? type : '')

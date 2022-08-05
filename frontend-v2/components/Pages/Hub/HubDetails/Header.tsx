@@ -14,6 +14,7 @@ function Header ({ callApi, name, id, className, isVerified = false, totalFavori
   const [loading, setLoading] = useState(false)
   const [favorite, setFavorite] = useState(false)
   const [pinHeader, setPinHeader] = useState(false)
+  const [totalLocalFavorites, setTotalLocalFavorites] = useState<number>(+totalFavorites || 0)
 
   const { connectWallet } = useConnectWallet()
   const { accountHub } = useHubProfile()
@@ -112,10 +113,11 @@ function Header ({ callApi, name, id, className, isVerified = false, totalFavori
         setFavorite(!favorite)
         router.replace(router.asPath)
         if (favorite) {
+          if (totalLocalFavorites) setTotalLocalFavorites(totalLocalFavorites - 1)
           gtagEvent('unlike', { game: slug })
           return
         }
-
+        setTotalLocalFavorites(totalLocalFavorites + 1)
         gtagEvent('like', { game: slug })
       }).catch((err) => {
         setLoading(false)
@@ -141,7 +143,7 @@ function Header ({ callApi, name, id, className, isVerified = false, totalFavori
           }
           {name}</div>
         <div>
-          { viewDetail
+          {viewDetail
             ? <Link
               href={{
                 pathname: '/hub/[slug]',
@@ -174,7 +176,7 @@ function Header ({ callApi, name, id, className, isVerified = false, totalFavori
           <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.91671 0.583984C8.69171 0.583984 7.64171 1.22565 7.00004 2.15898C6.35837 1.22565 5.30837 0.583984 4.08337 0.583984C2.15837 0.583984 0.583374 2.15898 0.583374 4.08398C0.583374 7.58398 7.00004 12.834 7.00004 12.834C7.00004 12.834 13.4167 7.58398 13.4167 4.08398C13.4167 2.15898 11.8417 0.583984 9.91671 0.583984Z" fill={favorite ? '#ff5959' : '#ffffff'} stroke={favorite ? '#ff5959' : '#ffffff'} />
           </svg>
-          <span className="pl-2 font-bold text-[13px]">{favorite ? totalFavorites : 'LIKE'}</span>
+          <span className="pl-2 font-bold text-[13px]">{favorite ? totalLocalFavorites : 'LIKE'}</span>
         </div>
       </button>
 
@@ -192,7 +194,7 @@ function Header ({ callApi, name, id, className, isVerified = false, totalFavori
         </div>
         <div className='flex gap-[10px]'>
           <div>
-            { viewDetail
+            {viewDetail
               ? <Link
                 href={{
                   pathname: '/hub/[slug]',
@@ -223,7 +225,7 @@ function Header ({ callApi, name, id, className, isVerified = false, totalFavori
               <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9.91671 0.583984C8.69171 0.583984 7.64171 1.22565 7.00004 2.15898C6.35837 1.22565 5.30837 0.583984 4.08337 0.583984C2.15837 0.583984 0.583374 2.15898 0.583374 4.08398C0.583374 7.58398 7.00004 12.834 7.00004 12.834C7.00004 12.834 13.4167 7.58398 13.4167 4.08398C13.4167 2.15898 11.8417 0.583984 9.91671 0.583984Z" fill={favorite ? '#ff5959' : '#ffffff'} stroke={favorite ? '#ff5959' : '#ffffff'} />
               </svg>
-              <span className="pl-2 font-bold text-[13px]">{favorite ? totalFavorites : 'LIKE'}</span>
+              <span className="pl-2 font-bold text-[13px]">{favorite ? totalLocalFavorites : 'LIKE'}</span>
             </div>
           </button>
         </div>

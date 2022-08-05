@@ -16,16 +16,20 @@ import { useRouter } from 'next/router'
 import { gtagEvent, fetcher } from '@/utils'
 import { gql } from '@apollo/client'
 
-const GameDetails = ({ data = {} } : any) => {
+const GameDetails = ({ data = {} }: any) => {
   const [values, setValues] = useState(data)
   const changeData = useRef(null)
   const screen = useScreens()
   const router = useRouter()
-
   useEffect(() => {
     changeData?.current?.scrollIntoView({ behavior: 'smooth' })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query.slug])
+
+  useEffect(() => {
+    if (isEmpty(data)) router.replace('/hub')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data])
 
   useEffect(() => {
     const reviewFilterValue: any = { aggregator: { slug: { eq: router.query.slug } }, status: { eq: 'published' } }
@@ -88,7 +92,7 @@ const GameDetails = ({ data = {} } : any) => {
             </li>
           </ol>
         </nav>
-        {!data && <div className="uppercase font-bold text-3xl mb-6">Game Not Found</div>}
+        {isEmpty(data) && <div className="uppercase font-bold text-3xl mb-6">Game Not Found</div>}
         <Link href={`/hub/${data?.slug}/info`} passHref>
           <a className="w-full flex md:hidden items-center uppercase overflow-hidden py-3 px-8 bg-white/20 font-bold text-[13px] rounded-xs hover:opacity-95 cursor-pointer justify-center rounded-sm clipped-b-l ml-auto" onClick={() => {
             gtagEvent('hub_more_info', {
@@ -98,7 +102,7 @@ const GameDetails = ({ data = {} } : any) => {
             <div className='uppercase'><span>More Information</span></div>
           </a>
         </Link>
-        {data && <HubDetailContext.Provider value={{
+        {!isEmpty(data) && <HubDetailContext.Provider value={{
           hubData: values
         }}>
           <Header
@@ -134,7 +138,7 @@ export async function getStaticProps ({ params }) {
     const { five, four, three, two, one, totalReviewMeta } = data
     const aggregators = get(data, 'aggregators.data[0]')
     if (isEmpty(aggregators)) {
-      return { props: { data: {} }, revalidate: 60 }
+      return { props: { data: {} }, revalidate: 60, notFound: true }
     }
 
     let gameIntroduction = ''
@@ -190,7 +194,7 @@ export async function getStaticPaths () {
 
     return {
       paths: (data?.aggregators?.data || []).map(x => ({ params: x?.attributes })),
-      fallback: 'blocking'
+      fallback: true
     }
   } catch (err) {
     return {

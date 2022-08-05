@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 import get from 'lodash.get'
 import { client } from '@/graphql/apolloClient'
 import { GET_REVIEW_BY_ID_FOR_AGGREGATOR } from '@/graphql/reviews'
@@ -8,6 +9,11 @@ import ReviewDetail from '@/components/Base/Review/Detail'
 
 function ReviewDetailPage ({ data }) {
   const router = useRouter()
+
+  useEffect(() => {
+    if (!data.id) router.replace('/hub')
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.id])
 
   return (
     <Layout title={'GameFi.org - Review'}>

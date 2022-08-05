@@ -77,18 +77,22 @@ const ReviewPage = () => {
     <Layout title="GameFi.org - My Review">
       {loading && (<LoadingOverlay loading />)}
       <AccountLayout className="flex-1">
-        {isEmpty(data) || (
-          <div className="p-4 md:p-10">
-            <UserProfile editable data={userData} totalReviewOfAllStatus={totalReviewOfAllStatus} />
-            <ReviewAndComment
-              data={data}
-              status={_status}
-              showReviewFilter={true}
-              user={userData}
-              meta={{ published, draft, pending, declined }}
-            />
-          </div>
-        )}
+        {!isEmpty(data)
+          ? (
+            <div className="p-4 md:p-10">
+              <UserProfile editable data={userData} totalReviewOfAllStatus={totalReviewOfAllStatus} />
+              <ReviewAndComment
+                data={data}
+                status={_status}
+                showReviewFilter={true}
+                user={userData}
+                meta={{ published, draft, pending, declined }}
+              />
+            </div>
+          )
+          : (
+            <div className="uppercase text-4xl text-center font-bold bg-[#000] py-14">No Reviews Found</div>
+          )}
       </AccountLayout>
     </Layout>
   )

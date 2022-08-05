@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import get from 'lodash.get'
 import isEmpty from 'lodash.isempty'
@@ -6,8 +7,13 @@ import { BackIcon } from '@/components/Base/Icon'
 import Layout from '@/components/Layout'
 import ReviewCreate from '@/components/Base/Review/Create'
 
-const Create = ({ data }) => {
+const Create = ({ data, notFound }) => {
   const router = useRouter()
+
+  useEffect(() => {
+    if (notFound) router.replace('/hub')
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notFound])
 
   return (
     <Layout title="GameFi.org - Games" description="An ultimate gaming destination for gamers, investors, and other game studios.">
@@ -29,13 +35,13 @@ export async function getServerSideProps ({ query }) {
 
   try {
     const { data: allData } = await callWidthGraphql(slug)
-    const guildData = get(allData, 'aggregators.data[0]')
+    const detail = get(allData, 'aggregators.data[0]')
 
-    if (isEmpty(guildData)) {
-      return { props: { data: {} } }
+    if (isEmpty(detail)) {
+      return { props: { data: {}, notFound: true } }
     }
 
-    return { props: { data: { id: guildData.id, ...guildData.attributes } } }
+    return { props: { data: { id: detail.id, ...detail.attributes } } }
   } catch (e) {
     return { props: { data: {} } }
   }

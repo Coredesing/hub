@@ -55,17 +55,17 @@ const RankPage = () => {
           setData(res.data)
         })
         .catch(() => {})
-    }
 
-    fetcher('/api/account/ranks/earnHistory', {
-      method: 'POST',
-      body: JSON.stringify({ walletId })
-    }).then((res) => {
-      const { data, error } = res
-      if (!error) {
-        setEarnHistories(data)
-      }
-    })
+      fetcher('/api/account/ranks/earnHistory', {
+        method: 'POST',
+        body: JSON.stringify({ walletId })
+      }).then((res) => {
+        const { data, error } = res
+        if (!error) {
+          setEarnHistories(data)
+        }
+      })
+    }
   }, [walletId])
 
   return (

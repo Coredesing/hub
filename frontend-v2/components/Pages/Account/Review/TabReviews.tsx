@@ -1,12 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import isEmpty from 'lodash.isempty'
-import { client } from '@/graphql/apolloClient'
 import { normalize } from '@/graphql/utils'
-import { GET_REVIEWS_AND_COMMENTS_BY_USER } from '@/graphql/reviews'
 import useHubProfile from '@/hooks/useHubProfile'
-import { printNumber } from '@/utils'
+import { printNumber, fetcher } from '@/utils'
 import AccountReviewItem from '@/components/Pages/Account/Review/AccountReviewItem'
 import styles from '@/components/Pages/Account/Review/account_review.module.scss'
 
@@ -160,7 +158,7 @@ function ReviewSkeleton () {
       <div className='flex flex-col flex-1 py-6 px-5'>
         <div className='h-4 rounded-sm bg-[#30343F] w-full mb-4'></div>
         <div className={clsx(styles.rating_bar, 'p-[18px] flex items-center mb-[22px]')}>
-          <ListStarSVG/>
+          <ListStarSVG />
           <div className='h-3 rounded-sm bg-[#30343F] ml-[22px] w-1/2'></div>
         </div>
 
@@ -200,22 +198,26 @@ function TabReviews ({ reviews, showFilter, meta, status, totalReviews, user }) 
   const [isLoading, setLoading] = useState(false)
   const [page, setPage] = useState(1)
   const { accountHub } = useHubProfile()
-  const [isNoMore, setIsNoMore] = useState(false)
+  // const [isNoMore, setIsNoMore] = useState(false)
 
-  const handleLayoutScroll = useCallback(() => {
-    const detectBottomElement = document.getElementById('detectBottomReview')
+  let delayTimerReview: string | number | NodeJS.Timeout
 
-    const bounding = detectBottomElement?.getBoundingClientRect()
-    if (!bounding) return
-    if (
-      bounding.top >= 0 &&
-      bounding.left >= 0 &&
-      bounding.right <= (window.innerWidth || document.documentElement.clientWidth) &&
-      bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight)
-    ) {
-      !isLoading && !loadMore && setLoadMore(true)
-    }
-  }, [isLoading, loadMore])
+  const handleLayoutScroll = () => {
+    clearTimeout(delayTimerReview)
+    delayTimerReview = setTimeout(function () {
+      const detectBottomElement = document.getElementById('detectBottomReview')
+      const bounding = detectBottomElement?.getBoundingClientRect()
+      if (!bounding) return
+      if (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth) &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+      ) {
+        !isLoading && setLoadMore(true)
+      }
+    }, 300)
+  }
 
   useEffect(() => {
     const layoutElement = document.getElementById('layoutBody')
@@ -233,41 +235,43 @@ function TabReviews ({ reviews, showFilter, meta, status, totalReviews, user }) 
   }, [query.status, router.query.id, reviews])
 
   useEffect(() => {
-    if (_reviews.length >= totalReviews) return
-    if (loadMore && !isLoading && !isNoMore) {
+    if (_reviews.length >= totalReviews || page + 1 > Math.ceil(totalReviews / REVIEW_PAGE_SIZE)) return
+    if (loadMore && !isLoading) {
       const _queryStatus = Array.isArray(query.status) ? query.status[0] : query.status
       const isValidStatus = _queryStatus in REVIEW_STATUS
       const _status = isValidStatus ? status : REVIEW_STATUS.PUBLISHED
 
       if (_reviews.length >= meta[_status]) return
-      const id = accountHub?.id
-
+      const id = router.query.id || accountHub?.id
       setLoading(true)
       const nextPage = page + 1
-      client.query({
-        query: GET_REVIEWS_AND_COMMENTS_BY_USER,
-        variables: {
-          reviewFilterValue: {
-            author: { id: { eq: id } },
-            status: { eq: _status }
-          },
-          reviewPagination: {
-            page: nextPage,
-            pageSize: REVIEW_PAGE_SIZE
-          },
-          commentFilterValue: {
-            user: { id: { eq: id } }
-          },
-          commentPagination: {
-            page: nextPage,
-            pageSize: COMMENT_PAGE_SIZE
-          },
-          userId: id
-        }
+      fetcher('/api/hub/reviews', {
+        method: 'POST',
+        body: JSON.stringify({
+          query: 'GET_REVIEWS_AND_COMMENTS_BY_USER',
+          variables: {
+            reviewFilterValue: {
+              author: { id: { eq: id } },
+              status: { eq: _status }
+            },
+            reviewPagination: {
+              page: nextPage,
+              pageSize: REVIEW_PAGE_SIZE
+            },
+            commentFilterValue: {
+              user: { id: { eq: id } }
+            },
+            commentPagination: {
+              page: nextPage,
+              pageSize: COMMENT_PAGE_SIZE
+            },
+            userId: id
+          }
+        })
       }).then(res => {
         const result = normalize(res.data)
         if (!result.reviews.length) {
-          setIsNoMore(true)
+          // setIsNoMore(true)
         }
         setReviews([..._reviews, ...result.reviews])
       }).finally(() => {

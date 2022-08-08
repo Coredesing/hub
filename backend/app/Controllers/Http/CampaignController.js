@@ -625,8 +625,7 @@ class CampaignController {
       }
       return HelperUtils.responseSuccess(response);
     } catch (e) {
-      console.log(e);
-      return HelperUtils.responseErrorInternal("Deposit has internal server error !");
+      return HelperUtils.responseErrorInternal("Deposit has internal server error!");
     }
   }
 
@@ -767,7 +766,7 @@ class CampaignController {
         return HelperUtils.responseBadRequest("Request refund is not available in this campaign")
       }
       // call to SC to get amount token purchased of user
-      // const campaignClaimSC = await HelperUtils.getContractClaimInstance(camp);
+      // const campaignClaimSC = await HelperUtils.getContractInstance(camp);
       // const [userPurchased, userClaimed] = await Promise.all([
       //   campaignClaimSC.methods.userPurchased(userWalletAddress).call(),
       //   campaignClaimSC.methods.userClaimed(userWalletAddress).call(),
@@ -847,7 +846,7 @@ class CampaignController {
         return HelperUtils.responseBadRequest("Claim refund is not available in this campaign")
       }
       // call to SC to get amount token purchased of user
-      // const campaignClaimSC = await HelperUtils.getContractClaimInstance(camp);
+      // const campaignClaimSC = await HelperUtils.getContractInstance(camp);
       // const [userRefundToken, tokenSold] = await Promise.all([
       //   campaignClaimSC.methods.userRefundToken(userWalletAddress).call(),
       //   HelperUtils.getTokenSoldSmartContract(camp)
@@ -950,7 +949,7 @@ class CampaignController {
         maxTokenClaim = new BigNumber(winner.lottery_ticket);
       } else {
         // call to SC to get amount token purchased of user
-        const campaignClaimSC = await HelperUtils.getContractClaimInstance(camp);
+        const campaignClaimSC = await HelperUtils.getContractInstance(camp);
         const received = await Promise.all([
           campaignClaimSC.methods.userPurchased(userWalletAddress).call(),
           campaignClaimSC.methods.userClaimed(userWalletAddress).call()

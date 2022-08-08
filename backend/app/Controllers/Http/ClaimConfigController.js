@@ -63,7 +63,7 @@ class ClaimConfigController {
         return HelperUtils.responseErrorInternal('ERROR: Pool is not deploy!');
       }
 
-      const campaignClaimSC = await HelperUtils.getContractClaimInstance(campaign);
+      const campaignClaimSC = await HelperUtils.getContractInstance(campaign);
       const tokenPurchased = await campaignClaimSC.methods.userPurchased(walletAddress).call();
 
       return HelperUtils.responseSuccess({

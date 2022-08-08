@@ -119,6 +119,7 @@ module.exports = Object.freeze({
     ETH: 'eth',
     BNB: 'bnb',
     POLYGON: 'matic',
+    AVAX: 'avax',
     USDT: 'usdt',
     USDC: 'usdc',
     BUSD: 'busd'
@@ -134,7 +135,8 @@ module.exports = Object.freeze({
   NETWORK_AVAILABLE: {
     ETH: 'eth',
     BSC: 'bsc',
-    POLYGON: 'polygon'
+    POLYGON: 'polygon',
+    AVAX: 'avax'
   },
   DEPLOY_STATUS: {
     DEPLOYED: 1,

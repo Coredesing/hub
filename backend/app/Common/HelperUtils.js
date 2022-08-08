@@ -1,14 +1,10 @@
 'use strict'
 
-const RateSetting = use('App/Models/RateSetting');
-
 const crypto = use('crypto');
 const BigNumber = use('bignumber.js');
-const axios = use('axios');
 const moment = use('moment');
 
 const Const = use('App/Common/Const');
-const ErrorFactory = use('App/Common/ErrorFactory');
 const RedisUtils = use('App/Common/RedisUtils')
 const RedisStakingPoolUtils = use('App/Common/RedisStakingPoolUtils')
 const StakingPoolModel = use('App/Models/StakingPool');
@@ -21,102 +17,143 @@ const { abi: STAKING_POOL_CONTRACT_ABI } = STAKING_CONTRACT_CONFIGS.CONTRACT_DAT
 const ERC721_ABI = require('../../blockchain_configs/contracts/Erc721');
 const MARKETPLACE_ABI = require('../../blockchain_configs/contracts/Marketplace');
 const { abi: CONTRACT_ABI } = CONTRACT_CONFIGS.CONTRACT_DATA;
-const { abi: CONTRACT_CLAIM_ABI } = CONTRACT_CONFIGS.CONTRACT_CLAIMABLE;
 
 const GAFI_SMART_CONTRACT_ADDRESS = process.env.GAFI_SMART_CONTRACT_ADDRESS
 const UNI_LP_GAFI_SMART_CONTRACT_ADDRESS = process.env.UNI_LP_GAFI_SMART_CONTRACT_ADDRESS
 const STAKING_POOL_SMART_CONTRACT = process.env.STAKING_POOL_SMART_CONTRACT
 const MARKETPLACE_SMART_CONTRACT = process.env.MARKETPLACE_SMART_CONTRACT
-const LFW_SMART_CONTRACT = process.env.LFW_SMART_CONTRACT
 const LEGEND_DATA = NETWORK_CONFIGS.contracts[Const.CONTRACTS.Legend].DATA;
-const BONUS_DATA = NETWORK_CONFIGS.contracts[Const.CONTRACTS.STAKING_POOL].BONUS;
 const ONE_UNIT = new BigNumber(Math.pow(10, 18))
+
+const WEB3_ETH_PROVIDER = process.env.ETH_PROVIDER
+const WEB3_BSC_PROVIDER = process.env.BSC_PROVIDER
+const WEB3_POLYGON_PROVIDER = process.env.POLYGON_PROVIDER
+const WEB3_AVAX_PROVIDER = process.env.AVAX_PROVIDER
 
 /**
  * Switch Link Web3
  */
 const isDevelopment = process.env.NODE_ENV === 'development';
 console.log('isDevelopment:===========>', isDevelopment, process.env.NODE_ENV);
-const getWeb3ProviderLink = () => {
-  if (isDevelopment) {
-    const WEB3_API_URLS = [
-      'https://goerli.infura.io/v3/c745d07314904c539668b553dbd6b670',
-      'https://goerli.infura.io/v3/f1464dc327c64a93a31220b50334bf78',
-      'https://goerli.infura.io/v3/2bf3314408cb41fe9e6e34f706d30d22',
-      'https://goerli.infura.io/v3/1462716938c549688773a726a3f3114f',
-      'https://goerli.infura.io/v3/25fd6f14fda14ae2b14c4176d0794509',
-      'https://goerli.infura.io/v3/cc59d48c26f54ab58d831f545eda2bb7',
-      'https://goerli.infura.io/v3/3a18fd787c2342c4915364de4955bcf5',
-    ];
-    const randomElement = WEB3_API_URLS[Math.floor(Math.random() * WEB3_API_URLS.length)];
-    console.log('Random WEB3_API_URL: ===============> ', randomElement);
-    return randomElement;
-  } else {
-    return NETWORK_CONFIGS.WEB3_API_URL;
-  }
-};
-const getWeb3BscProviderLink = () => {
-  if (isDevelopment) {
-    const WEB3_API_URLS = [
-      'https://data-seed-prebsc-1-s1.binance.org:8545',
-    ];
-    const randomElement = WEB3_API_URLS[Math.floor(Math.random() * WEB3_API_URLS.length)];
-    return randomElement;
-  } else {
-    return NETWORK_CONFIGS.WEB3_BSC_API_URL;
-  }
-};
-const getWeb3PolygonProviderLink = () => {
-  if (isDevelopment) {
-    const WEB3_API_URLS = [
-      'https://rpc-mumbai.maticvigil.com/'
-    ];
-    const randomElement = WEB3_API_URLS[Math.floor(Math.random() * WEB3_API_URLS.length)];
-    return randomElement;
-  } else {
-    return NETWORK_CONFIGS.WEB3_POLYGON_API_URL;
-  }
-};
 
-const Web3 = require('web3');
-// const web3 = new Web3(NETWORK_CONFIGS.WEB3_API_URL);
-// const web3Bsc = new Web3(NETWORK_CONFIGS.WEB3_BSC_API_URL);
-const web3 = new Web3(getWeb3ProviderLink());
-const web3Bsc = new Web3(getWeb3BscProviderLink());
-const web3Polygon = new Web3(getWeb3PolygonProviderLink());
+const getWeb3Provider = (network) => {
+  if (!network) {
+    network = Const.NETWORK_AVAILABLE.BSC
+  }
+
+  if (isDevelopment) {
+    return getTestnetWeb3Provider(network)
+  }
+
+  return getMainnetWeb3Provider(network)
+}
+
+const getTestnetWeb3Provider = (network) => {
+  let provider = ''
+  switch (network) {
+    case Const.NETWORK_AVAILABLE.ETH:
+      provider = [
+        'https://goerli.infura.io/v3/c745d07314904c539668b553dbd6b670',
+        'https://goerli.infura.io/v3/f1464dc327c64a93a31220b50334bf78',
+        'https://goerli.infura.io/v3/2bf3314408cb41fe9e6e34f706d30d22',
+        'https://goerli.infura.io/v3/1462716938c549688773a726a3f3114f',
+        'https://goerli.infura.io/v3/25fd6f14fda14ae2b14c4176d0794509',
+        'https://goerli.infura.io/v3/cc59d48c26f54ab58d831f545eda2bb7',
+        'https://goerli.infura.io/v3/3a18fd787c2342c4915364de4955bcf5'
+      ]
+    case Const.NETWORK_AVAILABLE.POLYGON:
+      provider = ['https://rpc-mumbai.maticvigil.com/']
+    case Const.NETWORK_AVAILABLE.AVAX:
+      provider = ['https://api.avax-test.network/ext/bc/C/rpc']
+    default:
+      provider = ['https://data-seed-prebsc-1-s1.binance.org:8545']
+  }
+
+  return provider[Math.floor(Math.random() * provider.length)]
+}
+
+const getMainnetWeb3Provider = (network) => {
+  switch (network) {
+    case Const.NETWORK_AVAILABLE.BSC:
+      return WEB3_BSC_PROVIDER
+    case Const.NETWORK_AVAILABLE.ETH:
+      return WEB3_ETH_PROVIDER
+    case Const.NETWORK_AVAILABLE.POLYGON:
+      return WEB3_POLYGON_PROVIDER
+    case Const.NETWORK_AVAILABLE.AVAX:
+      return WEB3_AVAX_PROVIDER
+    default:
+      return WEB3_BSC_PROVIDER
+  }
+}
+
+const Web3 = require('web3')
+const web3 = new Web3(getWeb3Provider(Const.NETWORK_AVAILABLE.ETH))
+const web3Bsc = new Web3(getWeb3Provider(Const.NETWORK_AVAILABLE.BSC))
+const web3Polygon = new Web3(getWeb3Provider(Const.NETWORK_AVAILABLE.POLYGON))
+const web3Avax = new Web3(getWeb3Provider(Const.NETWORK_AVAILABLE.AVAX))
 
 const networkToWeb3 = {
   [Const.NETWORK_AVAILABLE.ETH]: web3,
   [Const.NETWORK_AVAILABLE.BSC]: web3Bsc,
-  [Const.NETWORK_AVAILABLE.POLYGON]: web3Polygon
+  [Const.NETWORK_AVAILABLE.POLYGON]: web3Polygon,
+  [Const.NETWORK_AVAILABLE.AVAX]: web3Avax
 }
 
-const { abi: CONTRACT_ERC20_ABI } = require('../../blockchain_configs/contracts/Normal/Erc20.json');
 const ETH_SMART_CONTRACT_USDT_ADDRESS = process.env.ETH_SMART_CONTRACT_USDT_ADDRESS;
 const ETH_SMART_CONTRACT_USDC_ADDRESS = process.env.ETH_SMART_CONTRACT_USDC_ADDRESS;
 const BSC_SMART_CONTRACT_USDT_ADDRESS = process.env.BSC_SMART_CONTRACT_USDT_ADDRESS;
 const BSC_SMART_CONTRACT_USDC_ADDRESS = process.env.BSC_SMART_CONTRACT_USDC_ADDRESS;
 const BSC_SMART_CONTRACT_BUSD_ADDRESS = process.env.BSC_SMART_CONTRACT_BUSD_ADDRESS;
-const POLYGON_SMART_CONTRACT_USDT_ADDRESS = process.env.POLYGON_SMART_CONTRACT_USDT_ADDRESS;
-const POLYGON_SMART_CONTRACT_USDC_ADDRESS = process.env.POLYGON_SMART_CONTRACT_USDC_ADDRESS;
+const POLYGON_SMART_CONTRACT_USDT_ADDRESS = process.env.POLYGON_SMART_CONTRACT_USDT_ADDRESS
+const POLYGON_SMART_CONTRACT_USDC_ADDRESS = process.env.POLYGON_SMART_CONTRACT_USDC_ADDRESS
 const AVALANCHE_SMART_CONTRACT_USDT_ADDRESS = process.env.AVALANCHE_SMART_CONTRACT_USDT_ADDRESS
+const AVALANCHE_SMART_CONTRACT_USDC_ADDRESS = process.env.AVALANCHE_SMART_CONTRACT_USDC_ADDRESS
 
 const currencyAddresses = {
   eth: {
-    usdt: ETH_SMART_CONTRACT_USDT_ADDRESS,
-    usdc: ETH_SMART_CONTRACT_USDC_ADDRESS
+    usdt: {
+      address: ETH_SMART_CONTRACT_USDT_ADDRESS,
+      decimal: 6
+    },
+    usdc: {
+      address: ETH_SMART_CONTRACT_USDC_ADDRESS,
+      decimal: 6
+    }
   },
   bsc: {
-    usdt: BSC_SMART_CONTRACT_USDT_ADDRESS,
-    busd: BSC_SMART_CONTRACT_BUSD_ADDRESS,
-    usdc: BSC_SMART_CONTRACT_USDC_ADDRESS
+    usdt: {
+      address: BSC_SMART_CONTRACT_USDT_ADDRESS,
+      decimal: 18
+    },
+    busd: {
+      address: BSC_SMART_CONTRACT_BUSD_ADDRESS,
+      decimal: 18
+    },
+    usdc: {
+      address: BSC_SMART_CONTRACT_USDC_ADDRESS,
+      decimal: 18
+    }
   },
   polygon: {
-    usdt: POLYGON_SMART_CONTRACT_USDT_ADDRESS,
-    usdc: POLYGON_SMART_CONTRACT_USDC_ADDRESS
+    usdt: {
+      address: POLYGON_SMART_CONTRACT_USDT_ADDRESS,
+      decimal: 6
+    },
+    usdc: {
+      address: POLYGON_SMART_CONTRACT_USDC_ADDRESS,
+      decimal: 6
+    }
   },
   avalanche: {
-    usdt: AVALANCHE_SMART_CONTRACT_USDT_ADDRESS,
+    usdt: {
+      address: AVALANCHE_SMART_CONTRACT_USDT_ADDRESS,
+      decimal: 6
+    },
+    usdc: {
+      address: AVALANCHE_SMART_CONTRACT_USDC_ADDRESS,
+      decimal: 6
+    }
   }
 }
 
@@ -127,14 +164,14 @@ const getCurrencyAddress = (network, currency) => {
     return '0x0000000000000000000000000000000000000000'
   }
 
+  network = network.toLowerCase()
+  currency = currency.toLowerCase()
+
   if (currency === 'eth') {
     return '0x0000000000000000000000000000000000000000'
   }
 
-  network = network.toLowerCase()
-  currency = currency.toLowerCase()
-
-  return currencyAddresses[network][currency]
+  return currencyAddresses[network][currency].address
 }
 
 /**
@@ -230,8 +267,7 @@ const responseSuccess = (data = null, message) => {
 };
 
 const checkSumAddress = (address) => {
-  const addressVerified = Web3.utils.toChecksumAddress(address);
-  return addressVerified;
+  return Web3.utils.toChecksumAddress(address)
 }
 
 const isAddress = (address) => {
@@ -276,29 +312,6 @@ const getTiers = () => {
   }
 }
 
-const getRateSetting = async () => {
-  let rateSetting
-  try {
-    if (await RedisUtils.checkExistRedisRateSetting()) {
-      rateSetting = JSON.parse(await RedisUtils.getRedisRateSetting())
-    } else {
-      rateSetting = JSON.parse(JSON.stringify(await RateSetting.query().first()));
-      RedisUtils.createRedisRateSetting(rateSetting)
-    }
-  } catch (error) {
-  }
-
-  if (!rateSetting) {
-    rateSetting = {
-      lp_pkf_rate: 0,
-      spkf_rate: 0,
-      epkf_rate: 0,
-    }
-  }
-
-  return rateSetting
-}
-
 const getStakingPoolInstance = async () => {
   const pool = STAKING_POOL_SMART_CONTRACT
   if (!pool) {
@@ -320,20 +333,6 @@ const getMarketplaceInstance = async () => {
   }
 
   const instance = new networkToWeb3[Const.NETWORK_AVAILABLE.BSC].eth.Contract(MARKETPLACE_ABI, pool);
-  if (!instance) {
-    return null
-  }
-
-  return instance
-}
-
-const getLFWInstance = async () => {
-  const pool = LFW_SMART_CONTRACT
-  if (!pool) {
-    return null
-  }
-
-  const instance = new networkToWeb3[Const.NETWORK_AVAILABLE.BSC].eth.Contract(ERC721_ABI, pool);
   if (!instance) {
     return null
   }
@@ -461,7 +460,7 @@ const getUserTierSmart = async (wallet_address) => {
   try {
     // Get cached Rate Setting
     // const rateSetting = await getRateSetting()
-    const tiers = (await getTiers()).tiers
+    const tiers = getTiers().tiers
     const stakingData = await getStakingPool(wallet_address)
 
     // Caculate PKF Staked
@@ -471,10 +470,6 @@ const getUserTierSmart = async (wallet_address) => {
     // TODO: .multipliedBy(rateSetting.lp_pkf_rate)
     // let stakedUni = new BigNumber((stakingData && stakingData.stakedUni) || 0);
     let stakedUni = new BigNumber(0);
-
-    // Bonus points
-    const bonus = new BigNumber(getBonusPoint(wallet_address)).multipliedBy(ONE_UNIT)
-    stakedToken = stakedToken.plus(bonus)
 
     // get tiers
     let userTier = 0;
@@ -504,91 +499,25 @@ const getUserTierSmart = async (wallet_address) => {
   }
 };
 
-const getContractInstanceDev = async (camp) => {
-  const web3Dev = new Web3(getWeb3ProviderLink());
-  const web3BscDev = new Web3(getWeb3BscProviderLink());
-  const web3PolygonDev = new Web3(getWeb3PolygonProviderLink());
-  const networkToWeb3Dev = {
-    [Const.NETWORK_AVAILABLE.ETH]: web3Dev,
-    [Const.NETWORK_AVAILABLE.BSC]: web3BscDev,
-    [Const.NETWORK_AVAILABLE.POLYGON]: web3PolygonDev
-  }
-
-  return new networkToWeb3Dev[camp.network_available].eth.Contract(CONTRACT_ABI, camp.campaign_hash);
-};
-
 const getContractInstance = async (camp) => {
-  if (isDevelopment) {  // Prevent limit request Infura when dev
-    return getContractInstanceDev(camp);
-  }
-
   return new networkToWeb3[camp.network_available].eth.Contract(CONTRACT_ABI, camp.campaign_hash);
 }
 
-const getERC721TokenContractInstanceDev = async (camp) => {
-  const web3Dev = new Web3(getWeb3ProviderLink());
-  const web3BscDev = new Web3(getWeb3BscProviderLink());
-  const web3PolygonDev = new Web3(getWeb3PolygonProviderLink());
-  const networkToWeb3Dev = {
-    [Const.NETWORK_AVAILABLE.ETH]: web3Dev,
-    [Const.NETWORK_AVAILABLE.BSC]: web3BscDev,
-    [Const.NETWORK_AVAILABLE.POLYGON]: web3PolygonDev
-  }
-  return new networkToWeb3Dev[camp.network_available].eth.Contract(ERC721_ABI, camp.token);
-};
-
 const getERC721TokenContractInstance = async (camp) => {
-  if (isDevelopment) {  // Prevent limit request Infura when dev
-    return getERC721TokenContractInstanceDev(camp);
-  }
-  return new networkToWeb3[camp.network_available].eth.Contract(ERC721_ABI, camp.token);
-}
-
-const getContractClaimInstance = async (camp) => {
-  return new networkToWeb3[camp.network_available].eth.Contract(CONTRACT_CLAIM_ABI, camp.campaign_hash);
+  return new networkToWeb3[camp.network_available].eth.Contract(ERC721_ABI, camp.token)
 }
 
 const getOfferCurrencyInfo = async (camp) => {
   // init pool contract
   const poolContract = await getContractInstance(camp);
-  // get convert rate token erc20 -> our token
 
   let scCurrency, unit;
   switch (camp.accept_currency) {
     case Const.ACCEPT_CURRENCY.USDT:
     case Const.ACCEPT_CURRENCY.USDC:
-      let networkCurrencyToContract = {
-        [Const.ACCEPT_CURRENCY.USDT]: {
-          [Const.NETWORK_AVAILABLE.ETH]: {
-            scCurrency: ETH_SMART_CONTRACT_USDT_ADDRESS,
-            uint: 6
-          },
-          [Const.NETWORK_AVAILABLE.BSC]: {
-            scCurrency: BSC_SMART_CONTRACT_USDT_ADDRESS,
-            uint: 18
-          },
-          [Const.NETWORK_AVAILABLE.POLYGON]: {
-            scCurrency: POLYGON_SMART_CONTRACT_USDT_ADDRESS,
-            uint: 6
-          }
-        },
-        [Const.ACCEPT_CURRENCY.USDC]: {
-          [Const.NETWORK_AVAILABLE.ETH]: {
-            scCurrency: ETH_SMART_CONTRACT_USDC_ADDRESS,
-            uint: 6
-          },
-          [Const.NETWORK_AVAILABLE.BSC]: {
-            scCurrency: BSC_SMART_CONTRACT_USDC_ADDRESS,
-            uint: 18
-          },
-          [Const.NETWORK_AVAILABLE.POLYGON]: {
-            scCurrency: POLYGON_SMART_CONTRACT_USDC_ADDRESS,
-            uint: 6
-          }
-        }
-      }
-      scCurrency = networkCurrencyToContract[camp.accept_currency][camp.network_available].scCurrency;
-      unit = networkCurrencyToContract[camp.accept_currency][camp.network_available].uint;
+
+      scCurrency = currencyAddresses[camp.network_available][camp.accept_currency].address
+      unit = currencyAddresses[camp.network_available][camp.accept_currency].decimal
       break;
     case Const.ACCEPT_CURRENCY.BUSD:
       scCurrency = BSC_SMART_CONTRACT_BUSD_ADDRESS;
@@ -597,12 +526,13 @@ const getOfferCurrencyInfo = async (camp) => {
     case Const.ACCEPT_CURRENCY.ETH:
     case Const.ACCEPT_CURRENCY.BNB:
     case Const.ACCEPT_CURRENCY.POLYGON:
+    case Const.ACCEPT_CURRENCY.AVAX:
       scCurrency = '0x0000000000000000000000000000000000000000';
       unit = 18;
       break;
     default:
       console.log(`Do not found currency support ${camp.accept_currency} of campaignId ${camp.id}`);
-      return ErrorFactory.responseErrorInternal();
+      return null
   }
   // call to SC to get rate
   const receipt = await Promise.all([
@@ -619,8 +549,8 @@ const getTokenSoldSmartContract = async (pool) => {
   if (!pool.campaign_hash) {
     return 0;
   }
-  const isClaimable = pool.pool_type === Const.POOL_TYPE.CLAIMABLE;
-  let poolContract = isClaimable ? await getContractClaimInstance(pool) : await getContractInstance(pool);
+
+  let poolContract = await getContractInstance(pool)
   if (pool && pool.token_type === Const.TOKEN_TYPE.MYSTERY_BOX) {
     poolContract = await getERC721TokenContractInstance(pool)
   }
@@ -879,14 +809,6 @@ const getPoolStatusByPoolDetail = async (poolDetails, tokenSold) => {
   }
 };
 
-const getDecimalsByTokenAddress = async ({ network = Const.NETWORK_AVAILABLE.ETH, address }) => {
-  const contractToken = new networkToWeb3[network].eth.Contract(CONTRACT_ERC20_ABI, address);
-  const decimals = await contractToken.methods.decimals().call();
-  return {
-    [checkSumAddress(address)]: +decimals
-  }
-}
-
 const getStakingProvider = async () => {
   return networkToWeb3[Const.NETWORK_AVAILABLE.BSC]
 }
@@ -910,21 +832,6 @@ const getLegendIdByOwner = (wallet_address) => {
   }
 
   return data[0]
-}
-
-const getBonusPoint = (wallet_address) => {
-  if (!BONUS_DATA) {
-    return 0
-  }
-
-  const data = BONUS_DATA.filter(data => data.wallet_address === wallet_address);
-  if (!data || data.length < 1) {
-    return 0
-  }
-
-  const bonus = parseInt(data[0].gafi)
-
-  return isNaN(bonus) ? 0 : bonus
 }
 
 const checkIsInPreOrderTime = (poolDetails, currentUserTierLevel) => {
@@ -975,7 +882,6 @@ module.exports = {
   getUserTierSmartWithCached,
   getUserTierSmart,
   getContractInstance,
-  getContractClaimInstance,
   getStakingPoolInstance,
   getStakingPoolsDetail,
   getOfferCurrencyInfo,
@@ -983,14 +889,11 @@ module.exports = {
   getPoolStatusByPoolDetail,
   getProgressWithPools,
   checkPoolIsFinish,
-  getWeb3ProviderLink,
-  getWeb3BscProviderLink,
 
   getLastClaimConfig,
   getLastClaimConfigTime,
   getLastActualFinishTime,
   getFirstClaimConfig,
-  getDecimalsByTokenAddress,
   getTiers,
   getPathExportUsers,
   getStakingProvider,
@@ -1000,7 +903,6 @@ module.exports = {
   getLegendIdByOwner,
 
   getMarketplaceInstance,
-  getLFWInstance,
   getTokenURI,
 
   getCurrencyAddress,

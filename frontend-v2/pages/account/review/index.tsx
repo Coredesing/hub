@@ -64,7 +64,7 @@ const ReviewPage = () => {
       setData(normalize(res.data))
     }).catch(() => { })
       .finally(() => setLoading(false))
-  }, [id, _status])
+  }, [id, _status, router])
 
   const published = get(data, 'publishedReview.meta.pagination.total', 0)
   const draft = get(data, 'draftReview.meta.pagination.total', 0)

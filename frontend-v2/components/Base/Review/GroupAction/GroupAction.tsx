@@ -27,7 +27,6 @@ const ReviewGroupAction = ({ likeCount, dislikeCount, commentCount, pageSource, 
   const [likeStatus, setLikeStatus] = useState(defaultLikeStatus)
   const [defaultLikeCount, setDefaultLikeCount] = useState(likeCount || 0)
   const [defaultDislikeCount, setDefaultDislikeCount] = useState(dislikeCount || 0)
-
   const { connectWallet } = useConnectWallet()
   const isLike = likeStatus === 'like'
   const isDislike = likeStatus === 'dislike'
@@ -116,7 +115,7 @@ const ReviewGroupAction = ({ likeCount, dislikeCount, commentCount, pageSource, 
       >
         <ReviewGroupActionLike selected={isLike} activeColor={'#000000'} inactiveColor={'#ffffff'} size={16} />
         <span className={`${styles.text} ${isLike ? 'text-black' : 'text-white'} ml-3 font-semibold leading-5 capitalize font-casual`}>
-          {defaultLikeCount || 'Like'}
+          {defaultLikeCount || ((isLike && !notShowCount) ? 1 : 'Like')}
         </span>
       </button>
       <button
@@ -126,7 +125,7 @@ const ReviewGroupAction = ({ likeCount, dislikeCount, commentCount, pageSource, 
       >
         <ReviewGroupActionDislike selected={isDislike} activeColor={'#000000'} inactiveColor={'#ffffff'} size={16} />
         <span className={`${styles.text} ${isDislike ? 'text-black' : 'text-white'} ml-3 font-semibold leading-5 capitalize font-casual`}>
-          {defaultDislikeCount || 'Dislike'}
+          {defaultDislikeCount || ((isDislike && !notShowCount) ? 1 : 'Dislike')}
         </span>
       </button>
       {comment && (

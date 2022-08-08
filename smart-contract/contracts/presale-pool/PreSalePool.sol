@@ -75,6 +75,10 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
     // Amount of user refund by currency
     uint256 public refundCurrency = 0;
 
+    // Operation fee for refund
+    uint256 public staticFee = 0; // $
+    uint256 public dynamicFeePerMil = 0; // per a thousand
+
     // -----------------------------------------
     // Lauchpad Starter's event
     // -----------------------------------------
@@ -150,7 +154,7 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
         offeredCurrencies[_offeredCurrency] = OfferedCurrency({
             rate: _offeredRate,
             decimals: _offeredCurrencyDecimals
-        });
+            });
 
         emit PresalePoolCreated(
             _token,
@@ -265,6 +269,23 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
         emit TokenChanged(_token);
     }
 
+    function setFee(uint256 _staticFee, uint256 _dynamicFeePerMil) external onlyOwner() {
+        if (_staticFee > 0) {
+            dynamicFeePerMil = 0;
+            staticFee = _staticFee;
+            return;
+        }
+
+        if (_dynamicFeePerMil > 0) {
+            dynamicFeePerMil = _dynamicFeePerMil;
+            staticFee = 0;
+            return;
+        }
+
+        dynamicFeePerMil = 0;
+        staticFee = 0;
+    }
+
     function buyTokenByEtherWithPermission(
         address _beneficiary,
         address _candidate,
@@ -322,7 +343,7 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
 
         _updatePurchasingState(_amount, tokens);
 
-        investedAmountOf[_token][_candidate] = investedAmountOf[address(0)][_candidate].add(_amount);
+        investedAmountOf[_token][_candidate] = investedAmountOf[_token][_candidate].add(_amount);
 
         emit TokenPurchaseByToken(
             msg.sender,
@@ -420,7 +441,7 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
             currencyAmount: currencyAmount,
             currency: _currency,
             isClaimed: false
-        });
+            });
 
         uint256 refundTokenAmount = userPurchased[_candidate];
         totalRefundCurrency = totalRefundCurrency.add(currencyAmount);
@@ -449,6 +470,14 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
         uint256 claimAmount = userRefundToken[_candidate].currencyAmount;
 
         require(_currency == address(0) ? address(this).balance >= claimAmount : IERC20(_currency).balanceOf(address(this)) >= claimAmount, "POOL::NOT_ENOUGHT_CURRENCY_FOR_CLAIM_REFUND");
+
+        if (dynamicFeePerMil > 0) {
+            claimAmount = claimAmount.mul(dynamicFeePerMil).div(1000);
+        }
+
+        if (staticFee > 0) {
+            claimAmount = claimAmount.sub(staticFee);
+        }
 
         _deliverCurrency(_currency, _candidate, claimAmount);
 

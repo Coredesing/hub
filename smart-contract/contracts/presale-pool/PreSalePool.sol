@@ -75,6 +75,12 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
     // Amount of user refund by currency
     uint256 public refundCurrency = 0;
 
+    // Allow owner change the purchased state
+    bool public allowChangePurchasedState = false;
+
+    // Allow owner change the claimed state
+    bool public claimable = true;
+
     // Operation fee for refund
     uint256 public staticFee = 0; // $
     uint256 public dynamicFeePerMil = 0; // per a thousand
@@ -263,6 +269,51 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
         emit PoolStatsChanged();
     }
 
+    function setClaimable(bool _isAllow) external onlyOwner {
+        claimable = _isAllow;
+    }
+
+    function setAllowChangePurchasedState(bool _isAllow) external onlyOwner {
+        allowChangePurchasedState = _isAllow;
+    }
+
+    function setPurchasingState(
+        address _token,
+        address[] calldata _candidates,
+        uint256[] calldata _amounts
+    ) external onlyOwner {
+        require(allowChangePurchasedState, "POOL::PURCHASE_MODE_NOT_ALLOWED");
+        require(
+            offeredCurrencies[_token].rate != 0,
+            "POOL::PURCHASE_METHOD_NOT_ALLOWED"
+        );
+        require(
+            _candidates.length == _amounts.length,
+            "POOL::INVALID_DATA_LENGTH"
+        );
+
+        for (uint256 i; i < _candidates.length; i++) {
+            address _candidate = _candidates[i];
+            uint256 _amount = _amounts[i];
+
+            _preValidatePurchase(_candidate, _amount);
+
+            tokenSold = tokenSold.add(_amount);
+            userPurchased[_candidate] = userPurchased[_candidate].add(_amount);
+            totalUnclaimed = totalUnclaimed.add(_amount);
+
+            emit TokenPurchaseByToken(
+                _candidate,
+                _candidate,
+                _token,
+                0,
+                _amount
+            );
+        }
+
+        allowChangePurchasedState = false;
+    }
+
     function changeSaleToken(address _token) external onlyOwner() {
         require(_token != address(0));
         token = IERC20(_token);
@@ -293,6 +344,7 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
         uint256 _minAmount,
         bytes memory _signature
     ) public payable whenNotPaused nonReentrant {
+        require(!allowChangePurchasedState, "POOL::PURCHASE_MODE_NOT_ALLOWED");
         require(userRefundToken[_candidate].currencyAmount == 0, "POOL::USER_REFUNDED");
         uint256 weiAmount = msg.value;
 
@@ -327,6 +379,8 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
         uint256 _minAmount,
         bytes memory _signature
     ) public whenNotPaused nonReentrant {
+        require(_token != address(0), "POOL::PURCHASE_TOKEN_NOT_ALLOWED");
+        require(!allowChangePurchasedState, "POOL::PURCHASE_MODE_NOT_ALLOWED");
         require(userRefundToken[_candidate].currencyAmount == 0, "POOL::USER_REFUNDED");
         require(offeredCurrencies[_token].rate != 0, "POOL::PURCHASE_METHOD_NOT_ALLOWED");
         require(_validPurchase(), "POOL::ENDED");
@@ -403,6 +457,7 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
      * @notice User can receive their tokens when pool finished
      */
     function claimTokens(address _candidate, uint256 _amount, bytes memory _signature) nonReentrant public {
+        require(claimable, "POOL::NOT_CLAIMABLE");
         require(_verifyClaimToken(_candidate, _amount, _signature), "POOL::NOT_ALLOW_TO_CLAIM");
         require(isFinalized(), "POOL::NOT_FINALIZED");
         require(_amount >= userClaimed[_candidate], "POOL::AMOUNT_MUST_GREATER_THAN_CLAIMED");

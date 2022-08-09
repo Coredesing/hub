@@ -65,46 +65,48 @@ const GameDetails = ({ data = {} }: any) => {
       </Head>
       <Script type="text/javascript" src="https://s3.tradingview.com/tv.js" strategy="beforeInteractive"></Script>
       <div className="px-4 lg:px-24 md:container mx-auto lg:block" ref={changeData}>
-        <nav className="hidden md:flex mb-6 items-center" aria-label="Breadcrumb">
-          <ol className="inline-flex items-center space-x-1 md:space-x-3">
-            <li className="inline-flex items-center">
-              <Link href={'/hub'} passHref>
-                <a className="inline-flex items-center text-sm font-medium hover:text-gamefiGreen-500 cursor-pointer text-gray-200">Game Hub</a>
-              </Link>
-            </li>
-            <li>
-              <svg className="w-6 h-6 text-gray-200" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
-            </li>
-            <li>
-              <div className="flex items-center">
-                <Link href={'/hub/list'} passHref>
-                  <a className="inline-flex items-center text-sm font-medium hover:text-gamefiGreen-500 cursor-pointer text-gray-200">All Games</a>
-                </Link>
-              </div>
-            </li>
-            <li>
-              <svg className="w-6 h-6 text-gray-200" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
-            </li>
-            <li aria-current="page">
-              <div className="flex items-center">
-                <span className="inline-flex items-center text-sm font-medium cursor-pointer text-gray-200">{data?.name}</span>
-              </div>
-            </li>
-          </ol>
-        </nav>
-        {isEmpty(data) && <div className="uppercase font-bold text-3xl mb-6">Game Not Found</div>}
-        <Link href={`/hub/${data?.slug}/info`} passHref>
-          <a className="w-full flex md:hidden items-center uppercase overflow-hidden py-3 px-8 bg-white/20 font-bold text-[13px] rounded-xs hover:opacity-95 cursor-pointer justify-center rounded-sm clipped-b-l ml-auto" onClick={() => {
-            gtagEvent('hub_more_info', {
-              name: data?.slug
-            })
-          }}>
-            <div className='uppercase'><span>More Information</span></div>
-          </a>
-        </Link>
+
+        {isEmpty(data) && <div className="uppercase font-bold text-3xl mb-6 invisible">Game Not Found</div>}
+
         {!isEmpty(data) && <HubDetailContext.Provider value={{
           hubData: values
         }}>
+          <nav className="hidden md:flex mb-6 items-center" aria-label="Breadcrumb">
+            <ol className="inline-flex items-center space-x-1 md:space-x-3">
+              <li className="inline-flex items-center">
+                <Link href={'/hub'} passHref>
+                  <a className="inline-flex items-center text-sm font-medium hover:text-gamefiGreen-500 cursor-pointer text-gray-200">Game Hub</a>
+                </Link>
+              </li>
+              <li>
+                <svg className="w-6 h-6 text-gray-200" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
+              </li>
+              <li>
+                <div className="flex items-center">
+                  <Link href={'/hub/list'} passHref>
+                    <a className="inline-flex items-center text-sm font-medium hover:text-gamefiGreen-500 cursor-pointer text-gray-200">All Games</a>
+                  </Link>
+                </div>
+              </li>
+              <li>
+                <svg className="w-6 h-6 text-gray-200" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
+              </li>
+              <li aria-current="page">
+                <div className="flex items-center">
+                  <span className="inline-flex items-center text-sm font-medium cursor-pointer text-gray-200">{data?.name}</span>
+                </div>
+              </li>
+            </ol>
+          </nav>
+          <Link href={`/hub/${data?.slug}/info`} passHref>
+            <a className="w-full flex md:hidden items-center uppercase overflow-hidden py-3 px-8 bg-white/20 font-bold text-[13px] rounded-xs hover:opacity-95 cursor-pointer justify-center rounded-sm clipped-b-l ml-auto" onClick={() => {
+              gtagEvent('hub_more_info', {
+                name: data?.slug
+              })
+            }}>
+              <div className='uppercase'><span>More Information</span></div>
+            </a>
+          </Link>
           <Header
             callApi={!isMobile}
             className={'hidden md:flex'}
@@ -178,22 +180,21 @@ export async function getStaticProps ({ params }) {
   }
 }
 
-export async function getStaticPaths () {
+export function getStaticPaths () {
   try {
-    const { data = {} } = await client.query({
-      query: gql`{
-        aggregators(pagination:{ pageSize: 1000 }) {
-          data {
-            attributes {
-              slug
-            }
-          }
-        }
-      }`
-    })
-
+    // const { data = {} } = await client.query({
+    //   query: gql`{
+    //     aggregators(pagination:{ pageSize: 1000 }) {
+    //       data {
+    //         attributes {
+    //           slug
+    //         }
+    //       }
+    //     }
+    //   }`
+    // })
     return {
-      paths: (data?.aggregators?.data || []).map(x => ({ params: x?.attributes })),
+      paths: [],
       fallback: true
     }
   } catch (err) {

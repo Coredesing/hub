@@ -146,7 +146,7 @@ const GuildDetail = ({ guildData, guildReviewsData, notFound }: GuildDetailProps
   return (
     <Layout title={`GameFi.org - ${guildData?.name || 'Guild'}`} description="" extended={!!guildData}>
       {
-        isEmpty(guildData) && <div>
+        isEmpty(guildData) && <div className="invisible">
           <a onClick={() => {
             router.back()
           }} className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500 cursor-pointer">

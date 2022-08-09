@@ -42,6 +42,13 @@ const ReviewList = ({ data, pagination = false, viewAll = false, filter = false,
   const createOrUpdateReviewUrl = `/${currentResource}/${slug}/reviews/createOrUpdate`
 
   useEffect(() => {
+    if (isEmpty(data?.data)) {
+      setListReview([])
+    } else setListReview(data?.data)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.data])
+
+  useEffect(() => {
     if (pageCountReviews) setTotalPage(pageCountReviews)
   }, [pageCountReviews])
 

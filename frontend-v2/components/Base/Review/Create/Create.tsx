@@ -183,7 +183,7 @@ const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
       if (res.error) {
         setLoading(false)
         console.debug(res.error)
-        toast.error('Could not create the review')
+        toast.error('Something went wrong. Please try again.')
         return
       }
 
@@ -226,14 +226,14 @@ const ReviewCreate = ({ data, currentResource }: ReviewCreateProps) => {
         setLoading(false)
 
         if (!value || value.some(v => v.error)) {
-          toast.error('Could not create the review')
+          toast.error('Something went wrong. Please try again.')
         } else {
-          toast.success(status === REVIEWS_STATUS.DRAFT ? 'Save draft successfully' : 'Submit review successfully')
+          toast.success(status === REVIEWS_STATUS.DRAFT ? 'Your draft is saved.' : 'Your submission has been sent')
           router.push(`/account/review?status=${status}`)
         }
       }).catch((err) => {
         setLoading(false)
-        toast.error('Could not create the review')
+        toast.error('Something went wrong. Please try again.')
         console.debug('err', err)
       })
     }).catch(err => {

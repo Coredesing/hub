@@ -76,6 +76,7 @@ const BAD_WORD = [
   'fart',
   'flipping the bird',
   'fuck',
+  'f*ck',
   'fucker',
   'fuckin',
   'fucking',

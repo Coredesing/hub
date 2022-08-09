@@ -180,27 +180,27 @@ export async function getStaticProps ({ params }) {
   }
 }
 
-export function getStaticPaths () {
+export async function getStaticPaths () {
   try {
-    // const { data = {} } = await client.query({
-    //   query: gql`{
-    //     aggregators(pagination:{ pageSize: 1000 }) {
-    //       data {
-    //         attributes {
-    //           slug
-    //         }
-    //       }
-    //     }
-    //   }`
-    // })
+    const { data = {} } = await client.query({
+      query: gql`{
+        aggregators(pagination:{ pageSize: 1000 }) {
+          data {
+            attributes {
+              slug
+            }
+          }
+        }
+      }`
+    })
     return {
-      paths: [],
-      fallback: true
+      paths: (data?.aggregators?.data || []).map(x => ({ params: x?.attributes })),
+      fallback: 'blocking'
     }
   } catch (err) {
     return {
       paths: [],
-      fallback: true
+      fallback: 'blocking'
     }
   }
 }

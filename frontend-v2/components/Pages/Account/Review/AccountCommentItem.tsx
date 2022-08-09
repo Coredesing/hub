@@ -97,12 +97,12 @@ function AccountCommentItem ({ data }) {
   return (
     <div className={clsx(styles.account_comment_item, 'p-0 md:p-6 bg-[#21232A] rounded-[4px] mb-2')}>
       <div className={`${clsx(styles.game_info, 'flex items-center')}`}>
-        <div className={clsx(styles.image, 'w-[60px] h-[60px] overflow-hidden rounded-sm')}>
-          <img src={resource.thumbnailUrl} alt={`${resource.type}_thumb`}></img>
+        <div className={clsx(styles.image, 'overflow-hidden rounded-sm')}>
+          <img src={resource.thumbnailUrl} alt={`${resource.type}_thumb`} className="w-[60px] h-[60px] object-cover"></img>
         </div>
         {mediumScreen
           ? (
-            <div className="ml-12 flex flex-col justify-center gap-2">
+            <div className="ml-4 flex flex-col justify-center gap-2">
               <div
                 className="font-mechanic not-italic font-bold text-xl leading-[150%] uppercase text-white cursor-pointer hover:underline w-fit"
                 onClick={openReviewDetail}

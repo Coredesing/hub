@@ -120,7 +120,7 @@ const GuildDetail = ({ guildData, guildReviewsData, notFound }: GuildDetailProps
   const [totalFavorites, setTotalFavorites] = useState(guildData.totalFavorites)
   const [showMoreIntroduction, setShowMoreIntroduction] = useState(false)
   const MIN_LENGTH_OF_INTRO = 500
-  const isFullHDScreen = useMediaQuery({ maxWidth: '1600px' })
+  const isFullHDScreen = useMediaQuery({ minWidth: '1600px' })
   const getFavorites = async () => {
     try {
       const res = await fetcher(`/api/hub/guilds/favorites?id=${guildData?.id}`)
@@ -135,8 +135,8 @@ const GuildDetail = ({ guildData, guildReviewsData, notFound }: GuildDetailProps
     }
 
     (guildData.introduction.length < MIN_LENGTH_OF_INTRO && isFullHDScreen)
-      ? setShowMoreIntroduction(true)
-      : setShowMoreIntroduction(false)
+      ? setShowMoreIntroduction(false)
+      : setShowMoreIntroduction(true)
   }
 
   useEffect(() => {

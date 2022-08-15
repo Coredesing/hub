@@ -2,9 +2,13 @@ import { useCountdown } from '@/components/Pages/Hub/Countdown'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
-import styles from '@/components/Pages/Adventure/index.module.scss'
+import fonts from '@/components/Pages/Adventure/index.module.scss'
 import { CATVENTURE_GG_CALENDAR_EVENT } from '@/utils/constants'
 import Head from 'next/head'
+import bg from '@/components/Pages/Adventure/images/bg-countdown.png'
+
+// eslint-disable-next-line no-unused-expressions
+fonts // this is intentional to avoid tree-shaking
 
 const CATVENTURE_START_TIME = new Date(Date.UTC(2022, 8, 22, 13))
 
@@ -34,7 +38,7 @@ const Catventure = () => {
   const title = 'Happy Gamefiversary - Catventure in the Multiverse'
   const description = 'Come along with Gafi the Catstronaut and his space clowder as they explore uncharted web3 gaming universes in hunt of the legendary Golden Gafish.'
 
-  return <div className='flex dark bg-black w-full h-[100vh] flex-col overflow-hidden relative' style={styles}>
+  return <div className='flex bg-black text-white w-full h-[100vh] flex-col overflow-hidden relative bg-repeat-x bg-bottom' style={{ backgroundImage: `url(${bg.src})` }}>
     <Head>
       <title>{title}</title>
       <meta charSet="utf-8" />
@@ -49,71 +53,53 @@ const Catventure = () => {
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={'https://gamefi.org/happy-gamefiversary.jpg?v=1655805418132'} />
     </Head>
-    <a href='https://gamefi.org' className='mx-auto mt-10 cursor-pointer'>
+    <a href='https://gamefi.org' className='mx-auto mt-10 xtall:mt-20 cursor-pointer z-10'>
       <Image src={require('@/assets/images/logo-color.png')} width={156} height={17} alt="gamefi-logo" />
     </a>
-    <div className='mx-auto px-10 mt-14'>
+
+    <div className='mx-auto px-10 mt-14 xtall:mt-20 z-10'>
       <Image src={require('@/components/Pages/Adventure/images/text-countdown.svg')} alt="text-countdown" />
     </div>
-    <div className="relative z-50 mt-6 w-fit block gap-2 text-transparent font-bold font-spotnik bg-clip-text bg-gradient-to-r from-[#6CDB00] to-[#A2DB00] text-[30px] text-center md:text-[48px] lg:text-[64px] lg:leading-[82px] leading-[62px] mx-auto px-10">
-      {`${countdown.days > 0 ? `${pad(countdown.days)}D :` : ''} ${pad(countdown.hours)}H : ${pad(countdown.minutes)}M`}
+
+    <div className="relative mt-6 xtall:mt-20 block gap-2 text-transparent font-bold font-spotnik bg-clip-text selection:text-white bg-gradient-to-r from-[#6CDB00] to-[#A2DB00] text-base lsm:text-2xl sm:text-3xl xl:text-4xl 2xl:text-[40px] text-center mx-auto px-10 z-10">
+      {`${countdown.days > 0 ? `${pad(countdown.days)}D :` : ''} ${pad(countdown.hours)}H : ${pad(countdown.minutes)}M : ${pad(countdown.seconds)}S`}
     </div>
+
     <a
       target="_blank"
       rel="noreferrer"
       href={CATVENTURE_GG_CALENDAR_EVENT || ''}
-      className='mt-10 flex h-11 mx-auto font-semibold font-casual text-[13px] leading-[13px] gap-3 uppercase relative z-10'>
-      <div className='flex items-center justify-center px-32 md:px-[90px] bg-gamefiGreen-700 rounded-sm py-3'>
+      className='mt-10 flex mx-auto font-semibold font-casual text-[13px] uppercase'>
+      <div className='flex items-center justify-center px-24 text-gamefiDark-900 bg-gamefiGreen-700 rounded-sm py-3 z-10'>
         Remind me
       </div>
     </a>
-    <a href='https://gamefi.org' className='relative z-10 mt-8 mx-auto text-[13px] leading-[13px] text-white/60 tracking-[0.05em] font-casual cursor-pointer'>Back to GameFi.org</a>
-    <div className='absolute bottom-0 left-0 w-full h-[439px]'>
-      <Image src={require('@/components/Pages/Adventure/images/bg-countdown.png')} layout={'fill'} objectFit={'cover'} alt="meow-logo" />
+
+    <a href='https://gamefi.org' className='mt-8 mx-auto text-[13px] text-white/60 tracking-[0.05em] font-casual cursor-pointer leading-none hover:underline z-10'>Back to GameFi.org</a>
+
+    <div className='absolute w-full bottom-0 tall:bottom-[4rem] z-0'>
+      <div className="flex justify-center max-w-[16rem] tall:max-w-md mx-auto w-[60%]">
+        <Image src={require('@/components/Pages/Adventure/images/meow_dark.png')} alt="meow-logo" />
+      </div>
     </div>
-    <div className='mx-auto mt-10'>
-      <Image src={require('@/components/Pages/Adventure/images/meow_dark.png')} alt="meow-logo" />
-    </div>
-    <div className="absolute bottom-0 left-0 hidden items-center w-full overflow-x-hidden text-[20px] md:text-[30px]">
-      <div className='py-2 md:py-3 px-2 animate-marquee whitespace-nowrap w-full h-full flex items-center bg-white gap-7'>
-        <span className="font-bold pb-1 text-black uppercase font-spotnik ">Adventure Event</span>
-        <div style={{ alignSelf: 'center', flex: '0 0 auto' }}>
-          <Image src={require('@/components/Pages/Adventure/images/fish.svg')} alt="icon-fish"/>
-        </div>
-        <span className="font-bold pb-1 text-black uppercase font-spotnik ">Adventure Event</span>
-        <div style={{ alignSelf: 'center', flex: '0 0 auto' }}>
-          <Image src={require('@/components/Pages/Adventure/images/fish.svg')} alt="icon-fish"/>
-        </div>
-        <span className="font-bold pb-1 text-black uppercase font-spotnik ">Adventure Event</span>
-        <div style={{ alignSelf: 'center', flex: '0 0 auto' }}>
-          <Image src={require('@/components/Pages/Adventure/images/fish.svg')} alt="icon-fish"/>
-        </div>
-        <span className="font-bold pb-1 text-black uppercase font-spotnik ">Adventure Event</span>
-        <div style={{ alignSelf: 'center', flex: '0 0 auto' }}>
-          <Image src={require('@/components/Pages/Adventure/images/fish.svg')} alt="icon-fish"/>
-        </div>
+
+    <div className="hidden absolute bottom-0 w-full h-[4rem] tall:flex overflow-x-hidden bg-white">
+      <div className="animate-marquee whitespace-nowrap flex items-center">
+        {Array.from(Array(8)).map((_, i) => {
+          return <div key={i} className="mx-4 inline-flex gap-8 items-center">
+            <span className="font-bold pb-1 text-black uppercase font-spotnik ">Adventure Event</span>
+            <svg width="39" height="39" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M35 19.5c0 5.821-8.79 8.5-13.232 8.5-2.66 0-7.505-2.275-11-4.456a1.018 1.018 0 0 0-1.227.108L5.16 27.677C3.572 29.105 3 27.5 3 25.482V13.76c0-2.02.597-3.581 2.184-2.153L9.22 15.34c.34.315.852.354 1.244.105C13.983 13.216 19.069 11 21.768 11 26.21 11 35 13.679 35 19.5Zm-5.04-1.7c0 1.252-1.129 2.267-2.521 2.267s-2.52-1.015-2.52-2.267 1.128-2.267 2.52-2.267c1.392 0 2.52 1.015 2.52 2.267Z" fill="#000" /></svg>
+          </div>
+        })}
       </div>
 
-      <div className='py-2 md:py-3 absolute top-0 -left-1 px-2 animate-marquee2 whitespace-nowrap w-full h-full flex items-center bg-white gap-7'>
-        <div style={{ alignSelf: 'center', flex: '0 0 auto' }}>
-          <Image src={require('@/components/Pages/Adventure/images/fish.svg')} alt="icon-fish"/>
-        </div>
-        <span className="font-bold pb-1 text-black uppercase font-spotnik ">Adventure Event</span>
-        <div style={{ alignSelf: 'center', flex: '0 0 auto' }}>
-          <Image src={require('@/components/Pages/Adventure/images/fish.svg')} alt="icon-fish"/>
-        </div>
-        <span className="font-bold pb-1 text-black uppercase font-spotnik ">Adventure Event</span>
-        <div style={{ alignSelf: 'center', flex: '0 0 auto' }}>
-          <Image src={require('@/components/Pages/Adventure/images/fish.svg')} alt="icon-fish"/>
-        </div>
-        <span className="font-bold pb-1 text-black uppercase font-spotnik ">Adventure Event</span>
-        <div style={{ alignSelf: 'center', flex: '0 0 auto' }}>
-          <Image src={require('@/components/Pages/Adventure/images/fish.svg')} alt="icon-fish"/>
-        </div>
-        <span className="font-bold pb-1 text-black uppercase font-spotnik ">Adventure Event</span>
-        <div style={{ alignSelf: 'center', flex: '0 0 auto' }}>
-          <Image src={require('@/components/Pages/Adventure/images/fish.svg')} alt="icon-fish"/>
-        </div>
+      <div className="animate-marquee2 whitespace-nowrap flex h-full items-center absolute top-0">
+        {Array.from(Array(8)).map((_, i) => {
+          return <div key={i} className="mx-4 inline-flex gap-8 items-center">
+            <span className="font-bold pb-1 text-black uppercase font-spotnik ">Adventure Event</span>
+            <svg width="39" height="39" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M35 19.5c0 5.821-8.79 8.5-13.232 8.5-2.66 0-7.505-2.275-11-4.456a1.018 1.018 0 0 0-1.227.108L5.16 27.677C3.572 29.105 3 27.5 3 25.482V13.76c0-2.02.597-3.581 2.184-2.153L9.22 15.34c.34.315.852.354 1.244.105C13.983 13.216 19.069 11 21.768 11 26.21 11 35 13.679 35 19.5Zm-5.04-1.7c0 1.252-1.129 2.267-2.521 2.267s-2.52-1.015-2.52-2.267 1.128-2.267 2.52-2.267c1.392 0 2.52 1.015 2.52 2.267Z" fill="#000" /></svg>
+          </div>
+        })}
       </div>
     </div>
   </div>

@@ -91,6 +91,7 @@ module.exports = {
       ...colors
     },
     screens: {
+      lsm: '375px',
       sm: '640px',
       // => @media (min-width: 640px) { ... }
 
@@ -103,8 +104,16 @@ module.exports = {
       xl: '1280px',
       // => @media (min-width: 1280px) { ... }
 
-      '2xl': '1536px'
+      '2xl': '1536px',
       // => @media (min-width: 1536px) { ... }
+
+      tall: {
+        raw: '(min-height: 840px)'
+      },
+
+      xtall: {
+        raw: '(min-height: 1180px)'
+      }
     },
     fontSize: {
       xs: ['0.75rem', { lineHeight: '1rem' }],

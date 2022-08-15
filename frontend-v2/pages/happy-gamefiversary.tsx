@@ -56,7 +56,7 @@ const Catventure = () => {
       <Image src={require('@/components/Pages/Adventure/images/text-countdown.svg')} alt="text-countdown" />
     </div>
     <div className="relative z-50 mt-6 w-fit block gap-2 text-transparent font-bold font-spotnik bg-clip-text bg-gradient-to-r from-[#6CDB00] to-[#A2DB00] text-[30px] text-center md:text-[48px] lg:text-[64px] lg:leading-[82px] leading-[62px] mx-auto px-10">
-      {`${pad(countdown.hours)}H : ${pad(countdown.minutes)}M : ${pad(countdown.seconds)}S`}
+      {`${countdown.days > 0 ? `${pad(countdown.days)}D :` : ''} ${pad(countdown.hours)}H : ${pad(countdown.minutes)}M`}
     </div>
     <a
       target="_blank"
@@ -74,7 +74,7 @@ const Catventure = () => {
     <div className='mx-auto mt-10'>
       <Image src={require('@/components/Pages/Adventure/images/meow_dark.png')} alt="meow-logo" />
     </div>
-    <div className="absolute bottom-0 left-0 flex items-center w-full overflow-x-hidden text-[20px] md:text-[30px]">
+    <div className="absolute bottom-0 left-0 hidden items-center w-full overflow-x-hidden text-[20px] md:text-[30px]">
       <div className='py-2 md:py-3 px-2 animate-marquee whitespace-nowrap w-full h-full flex items-center bg-white gap-7'>
         <span className="font-bold pb-1 text-black uppercase font-spotnik ">Adventure Event</span>
         <div style={{ alignSelf: 'center', flex: '0 0 auto' }}>

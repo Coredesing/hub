@@ -55,15 +55,15 @@ const Catventure = () => {
     <div className='mx-auto px-10 mt-14'>
       <Image src={require('@/components/Pages/Adventure/images/text-countdown.svg')} alt="text-countdown" />
     </div>
-    <div className="mt-6 w-fit block gap-2 text-transparent font-bold font-spotnik bg-clip-text bg-gradient-to-r from-[#6CDB00] to-[#A2DB00] text-[30px] text-center md:text-[48px] lg:text-[64px] lg:leading-[82px] leading-[62px] mx-auto px-10">
-      {`${countdown.days > 0 ? `${pad(countdown.days)}D :` : ''} ${pad(countdown.hours)}H : ${pad(countdown.minutes)}M : ${pad(countdown.seconds)}S`}
+    <div className="relative z-50 mt-6 w-fit block gap-2 text-transparent font-bold font-spotnik bg-clip-text bg-gradient-to-r from-[#6CDB00] to-[#A2DB00] text-[30px] text-center md:text-[48px] lg:text-[64px] lg:leading-[82px] leading-[62px] mx-auto px-10">
+      {`${pad(countdown.hours)}H : ${pad(countdown.minutes)}M : ${pad(countdown.seconds)}S`}
     </div>
     <a
       target="_blank"
       rel="noreferrer"
       href={CATVENTURE_GG_CALENDAR_EVENT || ''}
       className='mt-10 flex h-11 mx-auto font-semibold font-casual text-[13px] leading-[13px] gap-3 uppercase relative z-10'>
-      <div className='flex items-center justify-center px-[20px] md:px-[90px] bg-gamefiGreen-700 rounded-sm py-3'>
+      <div className='flex items-center justify-center px-32 md:px-[90px] bg-gamefiGreen-700 rounded-sm py-3'>
         Remind me
       </div>
     </a>

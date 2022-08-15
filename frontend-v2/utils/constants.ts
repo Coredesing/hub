@@ -14,6 +14,7 @@ export const GUILD_API_BASE_URL = process.env.NEXT_PUBLIC_GUILD_BASE_URL
 export const GAME_HUB_START_TIME = process.env.NEXT_PUBLIC_GAME_HUB_START_TIME
 export const GAME_HUB_GG_CALENDAR_EVENT = process.env.NEXT_PUBLIC_GAME_HUB_GG_CALENDAR_EVENT
 export const INTERNAL_BASE_URL = process.env.NEXT_BASE_URL
+export const CATVENTURE_GG_CALENDAR_EVENT = process.env.NEXT_PUBLIC_CATVENTURE_GG_CALENDAR_EVENT
 
 export const CLAIM_TYPE = {
   0: 'On GameFi.org',

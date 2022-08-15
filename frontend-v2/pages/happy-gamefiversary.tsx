@@ -49,9 +49,9 @@ const Catventure = () => {
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={'https://gamefi.org/happy-gamefiversary.jpg?v=1655805418132'} />
     </Head>
-    <div className='mx-auto mt-10'>
+    <a href='https://gamefi.org' className='mx-auto mt-10 cursor-pointer'>
       <Image src={require('@/assets/images/logo-color.png')} width={156} height={17} alt="gamefi-logo" />
-    </div>
+    </a>
     <div className='mx-auto px-10 mt-14'>
       <Image src={require('@/components/Pages/Adventure/images/text-countdown.svg')} alt="text-countdown" />
     </div>
@@ -67,7 +67,7 @@ const Catventure = () => {
         Remind me
       </div>
     </a>
-    <p className='relative z-10 mt-8 mx-auto text-[13px] leading-[13px] text-white/60 tracking-[0.05em] font-casual'>Back to GameFi.org</p>
+    <a href='https://gamefi.org' className='relative z-10 mt-8 mx-auto text-[13px] leading-[13px] text-white/60 tracking-[0.05em] font-casual cursor-pointer'>Back to GameFi.org</a>
     <div className='absolute bottom-0 left-0 w-full h-[439px]'>
       <Image src={require('@/components/Pages/Adventure/images/bg-countdown.png')} layout={'fill'} objectFit={'cover'} alt="meow-logo" />
     </div>

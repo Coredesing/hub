@@ -10,8 +10,8 @@ const Countdown = ({ title, to }: { title: string; to: string | number }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       const duration = intervalToDuration({
-        start: new Date(Number(to) * 1000),
-        end: new Date()
+        end: new Date(Number(to) * 1000),
+        start: new Date()
       })
       setDays(duration.days < 10 ? `0${duration.days}` : `${duration.days}`)
       setHours(duration.hours < 10 ? `0${duration.hours}` : `${duration.hours}`)

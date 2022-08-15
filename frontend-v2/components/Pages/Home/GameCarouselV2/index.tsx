@@ -69,8 +69,8 @@ const Countdown = ({ to }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       const duration = intervalToDuration({
-        start: new Date(Number(to) * 1000),
-        end: new Date()
+        end: new Date(Number(to) * 1000),
+        start: new Date()
       })
       if (
         duration.days === 0 &&

@@ -9,7 +9,6 @@ export default function Custom404 () {
   const router = useRouter()
 
   useEffect(() => {
-    console.log('router', router)
     if (['hub', 'guild'].some(v => router.asPath.includes(v))) {
       router.replace(`/${router.asPath.split('/')?.[1]}`)
     } else setShowNotFound(true)

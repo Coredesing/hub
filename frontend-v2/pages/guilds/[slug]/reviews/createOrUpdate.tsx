@@ -4,7 +4,7 @@ import get from 'lodash.get'
 import isEmpty from 'lodash.isempty'
 import { callWidthGraphql } from '@/pages/api/hub/guilds/[slug]'
 import { BackIcon } from '@/components/Base/Icon'
-import Layout from '@/components/Layout'
+import Layout from '@/components/Layout/Guild'
 import ReviewCreate from '@/components/Base/Review/Create'
 
 const Create = ({ data, notFound }) => {

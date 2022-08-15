@@ -1,4 +1,4 @@
-import Layout from '@/components/Layout'
+import Layout from '@/components/Layout/Guild'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import GuildCard from '@/components/Pages/Guilds/GuildCard'

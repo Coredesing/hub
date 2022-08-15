@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import get from 'lodash.get'
 import { client } from '@/graphql/apolloClient'
 import { GET_REVIEW_BY_ID_FOR_GUILD } from '@/graphql/reviews'
-import Layout from '@/components/Layout'
+import Layout from '@/components/Layout/Guild'
 import { BackIcon } from '@/components/Base/Icon'
 import ReviewDetail from '@/components/Base/Review/Detail'
 

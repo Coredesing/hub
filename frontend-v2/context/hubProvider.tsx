@@ -127,7 +127,7 @@ const HubProvider = ({ children }) => {
     <HubContext.Provider value={{ showCaptcha, tokenCaptcha, resetToken, accountHub, setAccountHub }}>
       {children}
       <Recaptcha
-        className="w-full mb-3"
+        className="w-full"
         onChange={onChangeRecaptcha}
         ref={recaptchaRef}
         onLoad={onCaptchaWinnerLoad}

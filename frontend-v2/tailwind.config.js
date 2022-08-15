@@ -12,7 +12,9 @@ module.exports = {
     extend: {
       fontFamily: {
         casual: ['Poppins'],
-        mechanic: ['Rajdhani']
+        mechanic: ['Rajdhani'],
+        spotnik: ['CASpotnik'],
+        atlas: ['AtlasGrotesk']
       },
       borderRadius: {
         DEFAULT: '0.2rem'
@@ -24,6 +26,20 @@ module.exports = {
         '4-auto': 'repeat(4, auto)',
         '3-auto': 'repeat(3, auto)',
         '2-auto': 'repeat(2, auto)'
+      },
+      animation: {
+        marquee: 'marquee 25s linear infinite',
+        marquee2: 'marquee2 25s linear infinite'
+      },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-100%)' }
+        },
+        marquee2: {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(0%)' }
+        }
       }
     },
     colors: {

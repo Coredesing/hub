@@ -79,7 +79,7 @@ const commands = [
 const jobs = [
   'App/Jobs/ExportUsers',
   'App/Jobs/FetchMarketplaceEvent',
-  'App/Jobs/FetchLFWEventJob',
+  // 'App/Jobs/FetchLFWEventJob',
 ];
 
 module.exports = { providers, aceProviders, aliases, commands, jobs }

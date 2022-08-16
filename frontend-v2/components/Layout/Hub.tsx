@@ -41,7 +41,7 @@ const LayoutHub = ({ children, title, description, image, disableFooter, disable
       <div>
         <Sidebar></Sidebar>
       </div>
-      <div id='layoutBodyHub' className={`${className} 'w-full h-full overflow-auto relative'`}>
+      <div id='layoutBodyHub' className={`${className} w-full h-full overflow-auto relative`}>
         <div className='absolute w-full h-full bg-no-repeat bg-cover grayscale opacity-20' style={{ backgroundImage: `url(${image})` }} />
         <div className='absolute w-full h-full bg-gradient-to-t from-gamefiDark-900 via-gamefiDark-900/80 to-transparent' />
         <div className='relative'>

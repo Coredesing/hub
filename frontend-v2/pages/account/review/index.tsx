@@ -4,17 +4,17 @@ import get from 'lodash.get'
 import isEmpty from 'lodash.isempty'
 import { fetcher } from '@/utils'
 import { normalize } from '@/graphql/utils'
-import useHubProfile from '@/hooks/useHubProfile'
 import { COMMENT_PAGE_SIZE, REVIEW_PAGE_SIZE, REVIEW_STATUS } from '@/components/Pages/Account/Review/TabReviews'
 import Layout from '@/components/Layout'
 import ReviewAndComment from '@/components/Pages/Account/ReviewAndComment'
 import AccountLayout from '@/components/Pages/Account/AccountLayout'
+import HubProvider, { useHubContext } from '@/context/hubProvider'
 import UserProfile from '@/components/Pages/Account/Review/UserProfile'
 import LoadingOverlay from '@/components/Base/LoadingOverlay'
 
-const ReviewPage = () => {
+const Component = () => {
   const [data, setData] = useState({})
-  const { accountHub } = useHubProfile()
+  const { accountHub } = useHubContext()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
@@ -25,9 +25,9 @@ const ReviewPage = () => {
     return isValidStatus ? status : REVIEW_STATUS.PUBLISHED
   }, [router.query])
 
-  const { id } = accountHub || {}
   useEffect(() => {
     setLoading(true)
+    const { id } = accountHub || {}
     if (!id) {
       setLoading(false)
       setData({})
@@ -64,7 +64,7 @@ const ReviewPage = () => {
       setData(normalize(res.data))
     }).catch(() => { })
       .finally(() => setLoading(false))
-  }, [id, _status, router])
+  }, [accountHub, _status, router])
 
   const published = get(data, 'publishedReview.meta.pagination.total', 0)
   const draft = get(data, 'draftReview.meta.pagination.total', 0)
@@ -74,7 +74,7 @@ const ReviewPage = () => {
   const userData = get(data, 'user') || {}
 
   return (
-    <Layout title="GameFi.org - My Review">
+    <>
       {loading && (<LoadingOverlay loading />)}
       <AccountLayout className="flex-1">
         {!isEmpty(data)
@@ -94,6 +94,16 @@ const ReviewPage = () => {
             <div className="uppercase text-4xl text-center font-bold bg-[#000] py-14">No Reviews Found</div>
           )}
       </AccountLayout>
+    </>
+  )
+}
+
+const ReviewPage = () => {
+  return (
+    <Layout title="GameFi.org - My Review">
+      <HubProvider>
+        <Component />
+      </HubProvider>
     </Layout>
   )
 }

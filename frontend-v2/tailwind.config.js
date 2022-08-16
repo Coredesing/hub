@@ -12,7 +12,9 @@ module.exports = {
     extend: {
       fontFamily: {
         casual: ['Poppins'],
-        mechanic: ['Rajdhani']
+        mechanic: ['Rajdhani'],
+        spotnik: ['CASpotnik'],
+        atlas: ['AtlasGrotesk']
       },
       borderRadius: {
         DEFAULT: '0.2rem'
@@ -24,6 +26,20 @@ module.exports = {
         '4-auto': 'repeat(4, auto)',
         '3-auto': 'repeat(3, auto)',
         '2-auto': 'repeat(2, auto)'
+      },
+      animation: {
+        marquee: 'marquee 25s linear infinite',
+        marquee2: 'marquee2 25s linear infinite'
+      },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-100%)' }
+        },
+        marquee2: {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(0%)' }
+        }
       }
     },
     colors: {
@@ -75,6 +91,7 @@ module.exports = {
       ...colors
     },
     screens: {
+      lsm: '375px',
       sm: '640px',
       // => @media (min-width: 640px) { ... }
 
@@ -87,8 +104,16 @@ module.exports = {
       xl: '1280px',
       // => @media (min-width: 1280px) { ... }
 
-      '2xl': '1536px'
+      '2xl': '1536px',
       // => @media (min-width: 1536px) { ... }
+
+      tall: {
+        raw: '(min-height: 840px)'
+      },
+
+      xtall: {
+        raw: '(min-height: 1180px)'
+      }
     },
     fontSize: {
       xs: ['0.75rem', { lineHeight: '1rem' }],

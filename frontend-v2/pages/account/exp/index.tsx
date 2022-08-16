@@ -69,11 +69,11 @@ const RankPage = () => {
   }, [walletId])
 
   return (
-    <Layout title="GameFi.org - My EXP">
+    <Layout title="GameFi.org - My GXP">
       <AccountLayout>
         <div className="py-10 px-4 xl:px-9 w-full flex-1">
           <h3 className="hidden lg:block uppercase font-bold text-2xl mb-6">
-            My EXP
+            My GXP
           </h3>
           <section id="rank-info">
             <Level

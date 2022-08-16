@@ -22,8 +22,8 @@ const TabGetMoreExp = ({ data }) => {
             <Tippy
               content={
                 <div>
-                  You get 100 exp for each GAFI staked<br></br>
-                  You lost 100 exp for
+                  You get 100 GXP for each GAFI staked<br></br>
+                  You lost 100 GXP for
                   each GAFI unstaked
                 </div>
               }
@@ -39,7 +39,7 @@ const TabGetMoreExp = ({ data }) => {
           </div>
 
           <div className="font-casual font-normal text-sm leading-[150%] text-white">
-            Get 100 Exp For Each $GAFI Staked
+            Get 100 GXP For Each $GAFI Staked
           </div>
         </div>
         <div className="relative flex-1">
@@ -59,7 +59,7 @@ const TabGetMoreExp = ({ data }) => {
                 <Image layout="fill" src={stakeBanner2} alt=""></Image>
               </div>
               <span className="ml-2 mr-auto 2xl:ml-6 uppercase font-mechanic font-bold text-lg leading-[150%]">
-                GET 100 EXP FOR EACH GAFI STAKED
+                GET 100 GXP FOR EACH GAFI STAKED
               </span>
               <Link href="/staking">
                 <a className="hidden sm:inline-flex bg-gamefiGreen-600 clipped-t-r rounded-sm cursor-pointer">

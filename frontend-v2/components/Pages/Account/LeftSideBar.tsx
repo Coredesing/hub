@@ -41,7 +41,7 @@ const LeftSideBar = ({ className }) => {
             <path d="M8 9.5C10.4853 9.5 12.5 7.48528 12.5 5C12.5 2.51472 10.4853 0.5 8 0.5C5.51472 0.5 3.5 2.51472 3.5 5C3.5 7.48528 5.51472 9.5 8 9.5Z" stroke={isCurrentLink('/account/exp') ? '#6CDB00' : 'white'} strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M11.5 10.5V15.5L8 13.5L4.5 15.5V10.5" stroke={isCurrentLink('/account/exp') ? '#6CDB00' : 'white'} strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <Link href={'/account/exp'}><a className={`uppercase text-sm font-bold ${isCurrentLink('/account/exp') ? 'text-gamefiGreen-700' : ''}`}>My EXP</a></Link>
+          <Link href={'/account/exp'}><a className={`uppercase text-sm font-bold ${isCurrentLink('/account/exp') ? 'text-gamefiGreen-700' : ''}`}>My GXP</a></Link>
         </div>
       </div>
       <div className='mb-6'>

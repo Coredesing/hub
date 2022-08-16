@@ -14,7 +14,7 @@ const TabLeaderBoard = ({ data, ranks }) => {
               Wallet Address
             </th>
             <th className="py-4" align="center">
-              EXP
+              GXP
             </th>
             {/* <th className="py-4" align="center">
               Time

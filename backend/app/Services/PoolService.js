@@ -235,7 +235,7 @@ class PoolService {
       .orderBy('start_time', 'ASC')
       .paginate(page, limit);
 
-    RedisUtils.createRedisCompletedPools(filterParams, pools)
+    await RedisUtils.createRedisCompletedPools(filterParams, pools)
     return pools;
   }
 
@@ -353,7 +353,7 @@ class PoolService {
       .paginate(page, limit);
 
     // cache data
-    RedisUtils.createRedisUpcomingPools(filterParams, pools)
+    await RedisUtils.createRedisUpcomingPools(filterParams, pools)
 
     return pools;
   }
@@ -417,7 +417,7 @@ class PoolService {
 
     // cache data
     if (!isSearch) {
-      RedisUtils.createRedisCompletedPools(filterParams, pools)
+      await RedisUtils.createRedisCompletedPools(filterParams, pools)
     }
 
     return pools;

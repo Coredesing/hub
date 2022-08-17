@@ -246,49 +246,35 @@ const deleteAllRedisCurrentPools = (pages = []) => {
 /**
  * COMPLETED POOLS
  */
- const getRedisKeyCompletedPools = (page = 1) => {
-  return `v2_completed_pools_${page}`;
+const getRedisKeyCompletedPools = ({
+    page = 1, limit = 10, token_type = 'erc20', is_display = 1
+}) => {
+  return `v3_completed_pools_${page}_${limit}_${token_type}_${is_display}`;
 };
 
-const getRedisCompletedPools = async (page) => {
-  return await Redis.get(getRedisKeyCompletedPools(page));
+const getRedisCompletedPools = async (params) => {
+  return await Redis.get(getRedisKeyCompletedPools(params));
 };
 
-const checkExistRedisCompletedPools = async (page) => {
-  let redisKey = getRedisKeyCompletedPools(page);
-  logRedisUtil(`checkExistRedisCompletedPools - redisKey: ${redisKey}`);
-
+const checkExistRedisCompletedPools = async (params) => {
+  let redisKey = getRedisKeyCompletedPools(params);
   const isExistRedisData = await Redis.exists(redisKey);
   if (isExistRedisData) {
-    logRedisUtil(`checkExistRedisCompletedPools - Exist Redis cache with key: ${redisKey}`);
     return true;
   }
-  logRedisUtil(`checkExistRedisCompletedPools - Not exist Redis cache with key: ${redisKey}`);
   return false;
 };
 
-const createRedisCompletedPools = async (page, data) => {
-  const redisKey = getRedisKeyCompletedPools(page);
-  logRedisUtil(`createRedisCompletedPools - Create Cache data with key: ${redisKey}`);
+const createRedisCompletedPools = async (params, data) => {
+  const redisKey = getRedisKeyCompletedPools(params);
   return await Redis.setex(redisKey, COMPLETED_POOLS_CACHED_TTL, JSON.stringify(data));
 };
 
-const deleteRedisCompletedPools = (page) => {
-  let redisKey = getRedisKeyCompletedPools(page);
-  if (Redis.exists(redisKey)) {
-    logRedisUtil(`deleteRedisCompletedPools - existed key ${redisKey} on redis`);
-    // remove old key
-    Redis.del(redisKey);
-    return true;
+const deleteRedisCompletedPools = async (page) => {
+  const keys = await Redis.keys('v3_completed_pools_*');
+  for (const key of keys) {
+    await Redis.del(key);
   }
-  logRedisUtil(`deleteRedisCompletedPools - not exist key ${redisKey}`);
-  return false;
-};
-
-const deleteAllRedisCompletedPools = (pages = []) => {
-  pages.forEach(page => {
-    deleteRedisCompletedPools(page)
-  })
 };
 
 /**
@@ -627,7 +613,6 @@ module.exports = {
   getRedisCompletedPools,
   createRedisCompletedPools,
   deleteRedisCompletedPools,
-  deleteAllRedisCompletedPools,
 
   // POOL DETAIL
   checkExistRedisPoolDetail,

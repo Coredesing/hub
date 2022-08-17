@@ -395,15 +395,16 @@ class PoolService {
   async getCompleteSalePoolsV3(filterParams) {
     const limit = filterParams.limit ? filterParams.limit : 20;
     const page = filterParams.page ? filterParams.page : 1;
-    const isSearch =filterParams?.is_search
+    const isSearch = filterParams?.is_search
     filterParams.limit = limit;
     filterParams.page = page;
     if (filterParams.limit > 20) {
       filterParams.limit = 20
     }
 
-    if (!isSearch && await RedisUtils.checkExistRedisCompletedPools(page)) {
-      const cachedPools = await RedisUtils.getRedisCompletedPools(page)
+    // cache with token_type, page, limit
+    if (!isSearch && await RedisUtils.checkExistRedisCompletedPools(filterParams)) {
+      const cachedPools = await RedisUtils.getRedisCompletedPools(filterParams)
       return JSON.parse(cachedPools)
     }
 
@@ -416,9 +417,10 @@ class PoolService {
       .paginate(page, limit);
 
     // cache data
-    if (page <= 2 && !isSearch) {
-      await RedisUtils.createRedisCompletedPools(page, pools)
+    if (!isSearch) {
+      await RedisUtils.createRedisCompletedPools(filterParams, pools)
     }
+
     return pools;
   }
 

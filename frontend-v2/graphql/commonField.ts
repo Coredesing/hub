@@ -37,7 +37,7 @@ fragment ReviewEntityResponseCollection on ReviewEntityResponseCollection {
             }
             rates(
               pagination: { pageSize: 1 }
-              filters: { aggregator: { slug: { eq: $slug } } }
+              filters: { or: [{aggregator: { slug: { eq: $slug } }}, { guild: { slug: { eq: $slug } } }] }
             ) {
               data {
                 id

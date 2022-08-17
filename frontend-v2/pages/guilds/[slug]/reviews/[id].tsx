@@ -1,13 +1,19 @@
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 import get from 'lodash.get'
 import { client } from '@/graphql/apolloClient'
 import { GET_REVIEW_BY_ID_FOR_GUILD } from '@/graphql/reviews'
-import Layout from '@/components/Layout'
+import Layout from '@/components/Layout/Guild'
 import { BackIcon } from '@/components/Base/Icon'
 import ReviewDetail from '@/components/Base/Review/Detail'
 
 function ReviewDetailPage ({ data }) {
   const router = useRouter()
+
+  useEffect(() => {
+    if (!data.id) router.replace('/guilds')
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.id])
 
   return (
     <Layout title={'GameFi.org - Review'}>

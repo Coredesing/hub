@@ -9,7 +9,6 @@ import '@egjs/flicking/dist/flicking.css'
 
 const SupportedGames = () => {
   const { guildData } = useGuildDetailContext()
-
   const gamesSupported = useMemo(() => {
     return guildData.projects || []
   }, [guildData])

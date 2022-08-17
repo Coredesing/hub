@@ -461,7 +461,7 @@ export const TokenSummary = ({ data }) => {
   const onCopyContractAddress = (address = '') => {
     if (!address) return
 
-    navigator.clipboard.writeText(address)
+    navigator.clipboard?.writeText(address)
     toast.success('Copied!', { position: 'top-center' })
     setCopiedAddress(true)
   }
@@ -486,15 +486,20 @@ export const TokenSummary = ({ data }) => {
           <span className='md:mr-7 text-sm mr-5'>Contract</span>
           {data?.network && <Image width={20} height={20} className="inline-block rounded-full" src={data?.network} alt=""></Image>}
           <Tippy content={`${copiedAddress ? 'Copied' : 'Click to copy'}`}>
-            <div className='flex-1 font-semibold overflow-hidden mx-1 sm:mx-3 text-sm cursor-pointer min-w-[100px]' onMouseOut={() => setCopiedAddress(false)} onClick={() => onCopyContractAddress(data?.address)}><span>{shorten(data?.address, 15)}</span></div>
+            <div className='flex items-center flex-1 font-semibold overflow-hidden mx-1 sm:mx-3 text-sm cursor-pointer min-w-[100px]' onMouseOut={() => setCopiedAddress(false)} onClick={() => onCopyContractAddress(data?.address)}>
+              <span>{shorten(data?.address, 15)}</span>
+              <div className=" bg-[#3B3F4B] rounded-md w-[34px] h-[34px] flex items-center justify-center ml-2 md:ml-4">
+                <Image src={require('@/assets/images/icons/copy.svg')} alt="" width={16} height={16}></Image>
+              </div>
+            </div>
           </Tippy>
           <Tippy content="Add to Metamask">
             <button
-              className="w-6 h-6 hover:opacity-90"
+              className="hover:opacity-90 bg-[#3B3F4B] rounded-md w-[34px] h-[34px] flex items-center justify-center"
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onClick={() => addToWallet()}
             >
-              <Image src={require('@/assets/images/wallets/metamask.svg')} alt=""></Image>
+              <Image src={require('@/assets/images/wallets/metamask.svg')} alt="" width={20} height={20}></Image>
             </button>
           </Tippy>
         </div>}

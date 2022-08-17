@@ -7,7 +7,7 @@ import useHubProfile from '@/hooks/useHubProfile'
 import { client } from '@/graphql/apolloClient'
 import { GET_GUILD_REVIEWS_BY_SLUG } from '@/graphql/guilds'
 import { normalize } from '@/graphql/utils'
-import Layout from '@/components/Layout'
+import Layout from '@/components/Layout/Guild'
 import { BackIcon } from '@/components/Base/Icon'
 import { TabPanel, Tabs } from '@/components/Base/Tabs'
 import Home from '@/components/Pages/Guilds/GuildDetail/Home'
@@ -22,9 +22,10 @@ import { useMediaQuery } from 'react-responsive'
 interface GuildDetailProps {
   guildData: any;
   guildReviewsData: any;
+  notFound: any;
 }
 
-const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
+const GuildDetail = ({ guildData, guildReviewsData, notFound }: GuildDetailProps) => {
   const router = useRouter()
   const setTab = useCallback((index: number) => {
     switch (index) {
@@ -46,6 +47,11 @@ const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
   const { accountHub } = useHubProfile()
 
   useEffect(() => {
+    if (notFound) router.replace('/guilds')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notFound])
+
+  useEffect(() => {
     if (isEmpty(accountHub)) {
       setCurrentRate(0)
       return
@@ -55,7 +61,7 @@ const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
       method: 'POST',
       body: JSON.stringify({
         variables: {
-          userId: accountHub.id,
+          walletAddress: accountHub.walletAddress,
           slug: router.query.slug
         },
         query: 'GET_REVIEW_AND_RATE_BY_USER_ID_FOR_GUILD'
@@ -75,8 +81,11 @@ const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
   }, [accountHub, router.query.slug])
 
   const formattedReviews = useMemo(() => {
+    if (isEmpty(guildReviewsData)) {
+      return []
+    }
     return {
-      data: guildReviewsData.reviews.data.map(e => {
+      data: guildReviewsData.reviews?.data?.map(e => {
         const { author = {}, publishedAt, rate, review, title, likeCount, dislikeCount, commentCount } = e?.attributes || {}
         const { level, rank, repPoint, firstName, lastName, avatar, walletAddress, reviewCount, rates } = author?.data?.attributes || {}
 
@@ -111,7 +120,7 @@ const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
   const [totalFavorites, setTotalFavorites] = useState(guildData.totalFavorites)
   const [showMoreIntroduction, setShowMoreIntroduction] = useState(false)
   const MIN_LENGTH_OF_INTRO = 500
-  const isFullHDScreen = useMediaQuery({ maxWidth: '1600px' })
+  const isFullHDScreen = useMediaQuery({ minWidth: '1600px' })
   const getFavorites = async () => {
     try {
       const res = await fetcher(`/api/hub/guilds/favorites?id=${guildData?.id}`)
@@ -126,18 +135,18 @@ const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
     }
 
     (guildData.introduction.length < MIN_LENGTH_OF_INTRO && isFullHDScreen)
-      ? setShowMoreIntroduction(true)
-      : setShowMoreIntroduction(false)
+      ? setShowMoreIntroduction(false)
+      : setShowMoreIntroduction(true)
   }
 
   useEffect(() => {
-    getFavorites()
+    if (guildData?.id) getFavorites()
   }, [guildData?.id])
 
   return (
     <Layout title={`GameFi.org - ${guildData?.name || 'Guild'}`} description="" extended={!!guildData}>
       {
-        !guildData && <div>
+        isEmpty(guildData) && <div className="invisible">
           <a onClick={() => {
             router.back()
           }} className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500 cursor-pointer">
@@ -148,7 +157,7 @@ const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
         </div>
       }
       {
-        guildData && <GuildDetailContext.Provider value={{
+        !isEmpty(guildData) && <GuildDetailContext.Provider value={{
           guildData
         }}>
           <HeaderProfile totalFavorites={totalFavorites} setTotalFavorites={setTotalFavorites} currentRate={currentRate} setCurrentRate={setCurrentRate} loading={loading} setLoading={setLoading} />
@@ -180,6 +189,7 @@ const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
                 <Reviews
                   data={formattedReviews}
                   totalReviews={guildReviewsData.totalReviews}
+                  pageCountReviews={guildReviewsData.pageCountReviews}
                   rates={guildReviewsData.rates}
                   id={guildData.id}
                   tabRef={null}
@@ -199,6 +209,7 @@ const GuildDetail = ({ guildData, guildReviewsData }: GuildDetailProps) => {
 export default GuildDetail
 
 const getGuildReviewsData = async (slug, query) => {
+  const PAGE_SIZE = 5
   try {
     const reviewFilterValue: any = { guild: { slug: { eq: slug } }, status: { eq: 'published' } }
 
@@ -213,7 +224,7 @@ const getGuildReviewsData = async (slug, query) => {
     }
     const { data = {} } = await client.query({
       query: GET_GUILD_REVIEWS_BY_SLUG,
-      variables: { slug: slug, reviewFilterValue, pageSize: 5 }
+      variables: { slug: slug, reviewFilterValue, pageSize: PAGE_SIZE }
     })
     const { five, four, three, two, one } = data
 
@@ -226,6 +237,7 @@ const getGuildReviewsData = async (slug, query) => {
         two: get(two, 'meta.pagination.total', 0),
         one: get(one, 'meta.pagination.total', 0)
       },
+      pageCountReviews: Math.ceil(get(data, 'reviews.meta.pagination.total', 0) / PAGE_SIZE),
       totalReviews: get(data, 'totalReviewMeta.meta.pagination.total', 0)
     }
   } catch (e) {
@@ -236,16 +248,19 @@ const getGuildReviewsData = async (slug, query) => {
 
 export async function getServerSideProps ({ params, query }) {
   const slug = params?.slug
-  let guildData = null
+  let guildData = {}
   let guildReviewsData = {}
 
   if (!slug) {
     return { props: { guildData, guildReviewsData } }
   }
-
-  const { data: guilds } = await fetchOneWithSlug(slug)
-  guildData = guilds[0]
-  guildReviewsData = await getGuildReviewsData(slug, query)
-
+  const [guilds, review] = await Promise.all([fetchOneWithSlug(slug), getGuildReviewsData(slug, query)])
+  guildData = guilds?.data?.[0]
+  guildReviewsData = review
+  if (!guildData || !guildReviewsData) {
+    return {
+      props: { guildData: {}, guildReviewsData: {}, notFound: true }
+    }
+  }
   return { props: { guildData, guildReviewsData } }
 }

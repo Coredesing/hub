@@ -6,6 +6,7 @@ import { client } from '@/graphql/apolloClient'
 import { normalize } from '@/graphql/utils'
 import { useState } from 'react'
 import get from 'lodash.get'
+import HubProvider from '@/context/hubProvider'
 import ListAggregator, { HEADERS } from '@/components/Pages/Hub/HubListV2/List'
 import { useRouter } from 'next/router'
 
@@ -42,28 +43,30 @@ function HubListV2 ({ data }) {
       title="GameFi.org - Hub"
       description="An ultimate gaming destination for gamers, investors, and other game studios."
     >
-      <div className="w-full mb-[54px] mt-9">
-        <div className="font-mechanic font-bold text-[40px] leading-[80%] uppercase px-6 2xl:px-[148px] xl:px-12 mb-5">
-          {title}
+      <HubProvider>
+        <div className="w-full mb-[54px] mt-9">
+          <div className="font-mechanic font-bold text-[40px] leading-[80%] uppercase px-6 2xl:px-[148px] xl:px-12 mb-5">
+            {title}
+          </div>
+          <div className="font-casual font-normal text-base leading-[150%] tracking-[0.03px] text-[#D4D7E1] px-6 2xl:px-[148px] xl:px-12 w-full">
+            {filterDescription}
+          </div>
+          <CategoryCarousel
+            top5Aggregators={data.top5Aggregators}
+            defaultTop5Aggregators={data.defaultTop5Aggregators}
+          ></CategoryCarousel>
+          <Filter
+            className="2xl:px-[148px] xl:px-12 px-4 mt-6 md:mt-[60px] w-full"
+            {...data}
+            setTitle={setTitle}
+            setFilterDescription={setFilterDescription}
+            sortedField={sortedField}
+            setSortedField={setSortedField}
+          >
+            <ListAggregator {...{ data, sortedField, setSortedField }} />
+          </Filter>
         </div>
-        <div className="font-casual font-normal text-base leading-[150%] tracking-[0.03px] text-[#D4D7E1] px-6 2xl:px-[148px] xl:px-12 w-full">
-          {filterDescription}
-        </div>
-        <CategoryCarousel
-          top5Aggregators={data.top5Aggregators}
-          defaultTop5Aggregators={data.defaultTop5Aggregators}
-        ></CategoryCarousel>
-        <Filter
-          className="2xl:px-[148px] xl:px-12 px-4 mt-6 md:mt-[60px] w-full"
-          {...data}
-          setTitle={setTitle}
-          setFilterDescription={setFilterDescription}
-          sortedField={sortedField}
-          setSortedField={setSortedField}
-        >
-          <ListAggregator {...{ data, sortedField, setSortedField }}/>
-        </Filter>
-      </div>
+      </HubProvider>
     </Layout>
   )
 }

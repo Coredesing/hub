@@ -120,15 +120,15 @@ const ReviewDetail = ({ data, currentResource }: ReviewDetailProps) => {
     }).then(({ err }) => {
       setLoading(false)
       if (err) {
-        toast.error('Could not create the comment')
+        toast.error('Something went wrong. Please try again.')
       } else {
-        toast.success('success')
+        toast.success('Your comment is added.')
         setComment('')
         router.replace(router.asPath)
       }
     }).catch((err) => {
       setLoading(false)
-      toast.error('Could not create the comment')
+      toast.error('Something went wrong. Please try again.')
       console.debug('err', err)
     })
   }
@@ -209,7 +209,7 @@ const ReviewDetail = ({ data, currentResource }: ReviewDetailProps) => {
 
   const onSubmit = () => {
     if (!comment.trim()) {
-      toast.error('Could not create the comment')
+      toast.error('Something went wrong. Please try again.')
       return
     }
 
@@ -219,7 +219,7 @@ const ReviewDetail = ({ data, currentResource }: ReviewDetailProps) => {
       if (res.error) {
         setLoading(false)
         console.debug(res.error)
-        toast.error('Could not create the comment')
+        toast.error('Something went wrong. Please try again.')
         return
       }
       handleCreateComment(res)

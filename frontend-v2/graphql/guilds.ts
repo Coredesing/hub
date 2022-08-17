@@ -1,8 +1,9 @@
 import { gql } from '@apollo/client'
+import { CommonField } from '@/graphql/commonField'
 
 export const GET_FAVORITE_BY_USER_ID = gql`
   query favorite($walletAddress: String $objectID: String) {
-    favorites(filters: { objectID: {eq: $objectID} user: { walletAddress: { eq: $walletAddress } } }) {
+    favorites(filters: {type: {eq: "guild"} , objectID: {eq: $objectID} user: { walletAddress: { eq: $walletAddress } } }) {
       data {
         id,
         attributes{type, user{data{attributes{username}}}, objectID}
@@ -36,6 +37,7 @@ export const GET_TOTAL_FAVORITES = gql`
 `
 
 export const GET_GUILD_REVIEWS_BY_SLUG = gql`
+    ${CommonField}
     query GuildReviews(
         $slug: String
         $reviewFilterValue: ReviewFiltersInput
@@ -46,55 +48,7 @@ export const GET_GUILD_REVIEWS_BY_SLUG = gql`
             pagination: { pageSize: $pageSize }
             sort: "publishedAt:desc"
         ) {
-            meta {
-                pagination {
-                    total
-                }
-            }
-            data {
-                id
-                attributes {
-                    title
-                    review
-                    publishedAt
-                    likeCount
-                    dislikeCount
-                    commentCount
-                    author {
-                        data {
-                            id
-                            attributes {
-                                walletAddress
-                                reviewCount
-                                firstName
-                                lastName
-                                level
-                                rank
-                                avatar {
-                                    data {
-                                        id
-                                        attributes {
-                                            name
-                                            url
-                                        }
-                                    }
-                                }
-                                rates(
-                                    pagination: { pageSize: 1 }
-                                    filters: { guild: { slug: { eq: $slug } } }
-                                ) {
-                                    data {
-                                        id
-                                        attributes {
-                                            rate
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            ...ReviewEntityResponseCollection
         }
 
         five: rates(
@@ -159,6 +113,24 @@ export const GET_GUILD_REVIEWS_BY_SLUG = gql`
                 }
             }
         }
+    }
+`
+
+export const GET_MORE_REVIEW_BY_SLUG = gql`
+    ${CommonField}
+    query GuildReviews(
+        $slug: String
+        $reviewFilterValue: ReviewFiltersInput
+        $paginationArg: PaginationArg
+    ) {
+        reviews(
+            filters: $reviewFilterValue
+            pagination: $paginationArg
+            sort: "publishedAt:desc"
+        ) {
+            ...ReviewEntityResponseCollection
+        }
+
     }
 `
 

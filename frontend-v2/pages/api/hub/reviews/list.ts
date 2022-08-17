@@ -1,9 +1,21 @@
 import { client } from '@/graphql/apolloClient'
 import { GET_REVIEWS_BY_SLUG } from '@/graphql/aggregator'
+import { GET_MORE_REVIEW_BY_SLUG } from '@/graphql/guilds'
 import isEmpty from 'lodash.isempty'
+import { DocumentNode } from 'graphql'
 
-export function fetchWidthGraphql ({ variables }) {
-  return client.query({ query: GET_REVIEWS_BY_SLUG, variables })
+export function fetchWidthGraphql ({ variables, type }) {
+  let query: DocumentNode
+  switch (type) {
+  case 'guild':
+    query = GET_MORE_REVIEW_BY_SLUG
+    break
+
+  default:
+    query = GET_REVIEWS_BY_SLUG
+    break
+  }
+  return client.query({ query, variables })
 }
 
 export default async function handler (req, res) {

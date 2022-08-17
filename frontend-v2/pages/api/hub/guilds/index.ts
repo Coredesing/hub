@@ -39,32 +39,7 @@ export function fetchOneWithId (id) {
 
 export function fetchOneWithSlug (slug) {
   const query = qs.stringify({
-    populate: {
-      projects: {
-        populate: '*'
-      },
-      backers: {
-        populate: '*'
-      },
-      members: {
-        populate: '*'
-      },
-      ImageRepeater: {
-        populate: 'image'
-      },
-      banner: {
-        populate: '*'
-      },
-      logo: {
-        populate: '*'
-      },
-      roadmapPicture: {
-        populate: '*'
-      },
-      gallery: {
-        populate: '*'
-      }
-    }
+    populate: ['projects', 'projects.communityOfficial', 'projects.banner', 'projects.logo', 'backers', 'backers.logo', 'members', 'members.avatar', 'logo', 'roadmapPicture', 'gallery', 'gallery.media']
   }, {
     encodeValuesOnly: true
   })
@@ -75,7 +50,7 @@ export function fetchTopSelected () {
   const query = qs.stringify({
     populate: {
       projects: {
-        populate: '*'
+        populate: ['banner', 'communityOfficial', 'logo']
       },
       ImageRepeater: {
         populate: 'image'

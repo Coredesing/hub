@@ -75,6 +75,16 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
     // Amount of user refund by currency
     uint256 public refundCurrency = 0;
 
+    // Allow owner change the purchased state
+    bool public allowChangePurchasedState = false;
+
+    // Allow owner change the claimed state
+    bool public claimable = true;
+
+    // Operation fee for refund
+    uint256 public staticFee = 0; // $
+    uint256 public dynamicFeePerMil = 0; // per a thousand
+
     // -----------------------------------------
     // Lauchpad Starter's event
     // -----------------------------------------
@@ -150,7 +160,7 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
         offeredCurrencies[_offeredCurrency] = OfferedCurrency({
             rate: _offeredRate,
             decimals: _offeredCurrencyDecimals
-        });
+            });
 
         emit PresalePoolCreated(
             _token,
@@ -259,10 +269,72 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
         emit PoolStatsChanged();
     }
 
+    function setClaimable(bool _isAllow) external onlyOwner {
+        claimable = _isAllow;
+    }
+
+    function setAllowChangePurchasedState(bool _isAllow) external onlyOwner {
+        allowChangePurchasedState = _isAllow;
+    }
+
+    function setPurchasingState(
+        address _token,
+        address[] calldata _candidates,
+        uint256[] calldata _amounts
+    ) external onlyOwner {
+        require(allowChangePurchasedState, "POOL::PURCHASE_MODE_NOT_ALLOWED");
+        require(
+            offeredCurrencies[_token].rate != 0,
+            "POOL::PURCHASE_METHOD_NOT_ALLOWED"
+        );
+        require(
+            _candidates.length == _amounts.length,
+            "POOL::INVALID_DATA_LENGTH"
+        );
+
+        for (uint256 i; i < _candidates.length; i++) {
+            address _candidate = _candidates[i];
+            uint256 _amount = _amounts[i];
+
+            _preValidatePurchase(_candidate, _amount);
+
+            tokenSold = tokenSold.add(_amount);
+            userPurchased[_candidate] = userPurchased[_candidate].add(_amount);
+            totalUnclaimed = totalUnclaimed.add(_amount);
+
+            emit TokenPurchaseByToken(
+                _candidate,
+                _candidate,
+                _token,
+                0,
+                _amount
+            );
+        }
+
+        allowChangePurchasedState = false;
+    }
+
     function changeSaleToken(address _token) external onlyOwner() {
         require(_token != address(0));
         token = IERC20(_token);
         emit TokenChanged(_token);
+    }
+
+    function setFee(uint256 _staticFee, uint256 _dynamicFeePerMil) external onlyOwner() {
+        if (_staticFee > 0) {
+            dynamicFeePerMil = 0;
+            staticFee = _staticFee;
+            return;
+        }
+
+        if (_dynamicFeePerMil > 0) {
+            dynamicFeePerMil = _dynamicFeePerMil;
+            staticFee = 0;
+            return;
+        }
+
+        dynamicFeePerMil = 0;
+        staticFee = 0;
     }
 
     function buyTokenByEtherWithPermission(
@@ -272,6 +344,7 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
         uint256 _minAmount,
         bytes memory _signature
     ) public payable whenNotPaused nonReentrant {
+        require(!allowChangePurchasedState, "POOL::PURCHASE_MODE_NOT_ALLOWED");
         require(userRefundToken[_candidate].currencyAmount == 0, "POOL::USER_REFUNDED");
         uint256 weiAmount = msg.value;
 
@@ -306,6 +379,8 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
         uint256 _minAmount,
         bytes memory _signature
     ) public whenNotPaused nonReentrant {
+        require(_token != address(0), "POOL::PURCHASE_TOKEN_NOT_ALLOWED");
+        require(!allowChangePurchasedState, "POOL::PURCHASE_MODE_NOT_ALLOWED");
         require(userRefundToken[_candidate].currencyAmount == 0, "POOL::USER_REFUNDED");
         require(offeredCurrencies[_token].rate != 0, "POOL::PURCHASE_METHOD_NOT_ALLOWED");
         require(_validPurchase(), "POOL::ENDED");
@@ -322,7 +397,7 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
 
         _updatePurchasingState(_amount, tokens);
 
-        investedAmountOf[_token][_candidate] = investedAmountOf[address(0)][_candidate].add(_amount);
+        investedAmountOf[_token][_candidate] = investedAmountOf[_token][_candidate].add(_amount);
 
         emit TokenPurchaseByToken(
             msg.sender,
@@ -382,6 +457,7 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
      * @notice User can receive their tokens when pool finished
      */
     function claimTokens(address _candidate, uint256 _amount, bytes memory _signature) nonReentrant public {
+        require(claimable, "POOL::NOT_CLAIMABLE");
         require(_verifyClaimToken(_candidate, _amount, _signature), "POOL::NOT_ALLOW_TO_CLAIM");
         require(isFinalized(), "POOL::NOT_FINALIZED");
         require(_amount >= userClaimed[_candidate], "POOL::AMOUNT_MUST_GREATER_THAN_CLAIMED");
@@ -420,7 +496,7 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
             currencyAmount: currencyAmount,
             currency: _currency,
             isClaimed: false
-        });
+            });
 
         uint256 refundTokenAmount = userPurchased[_candidate];
         totalRefundCurrency = totalRefundCurrency.add(currencyAmount);
@@ -449,6 +525,14 @@ contract PreSalePool is Ownable, ReentrancyGuard, Pausable, Whitelist {
         uint256 claimAmount = userRefundToken[_candidate].currencyAmount;
 
         require(_currency == address(0) ? address(this).balance >= claimAmount : IERC20(_currency).balanceOf(address(this)) >= claimAmount, "POOL::NOT_ENOUGHT_CURRENCY_FOR_CLAIM_REFUND");
+
+        if (dynamicFeePerMil > 0) {
+            claimAmount = claimAmount.mul(dynamicFeePerMil).div(1000);
+        }
+
+        if (staticFee > 0) {
+            claimAmount = claimAmount.sub(staticFee);
+        }
 
         _deliverCurrency(_currency, _candidate, claimAmount);
 

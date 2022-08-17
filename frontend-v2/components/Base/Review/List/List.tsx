@@ -22,12 +22,15 @@ interface ReviewListProps {
   currentResource: 'guilds' | 'hub';
 }
 
+const DEFAULT_PAGE_SIZE = 5
+
 const ReviewList = ({ data, pagination = false, viewAll = false, filter = false, loadMore = false, review = true, currentResource, pageCountReviews }: ReviewListProps) => {
   const router = useRouter()
   const [, setFilterShown] = useState<boolean>(false)
   const [page, setPage] = useState<number>(1)
   const [likeStatusOfReviews, setLikeStatusOfReviews] = useState({})
-  const [pageSize] = useState<number>(5)
+  const [pageSize] = useState<number>(DEFAULT_PAGE_SIZE)
+  const [totalPage, setTotalPage] = useState<number>(pageCountReviews)
   const [ratingLevel, setRatingLevel] = useState<string>(data.ratingLevel)
   const [userRank] = useState<string>(data.userRank)
   const [listReview, setListReview] = useState<any[]>(data?.data || [])
@@ -37,6 +40,17 @@ const ReviewList = ({ data, pagination = false, viewAll = false, filter = false,
 
   const { slug } = router.query
   const createOrUpdateReviewUrl = `/${currentResource}/${slug}/reviews/createOrUpdate`
+
+  useEffect(() => {
+    if (isEmpty(data?.data)) {
+      setListReview([])
+    } else setListReview(data?.data)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.data])
+
+  useEffect(() => {
+    if (pageCountReviews) setTotalPage(pageCountReviews)
+  }, [pageCountReviews])
 
   // const params = useMemo(() => {
   //   const params = new URLSearchParams()
@@ -83,9 +97,6 @@ const ReviewList = ({ data, pagination = false, viewAll = false, filter = false,
   // }, [params])
 
   useEffect(() => {
-    if (router.query?.tab?.[0] !== 'reviews') {
-      return
-    }
     if (firstCome) {
       setFirstCome(false)
       return
@@ -100,13 +111,25 @@ const ReviewList = ({ data, pagination = false, viewAll = false, filter = false,
   }, [page, ratingLevel, userRank])
 
   const getListReviews = () => {
-    const reviewFilterValue: any = { aggregator: { slug: { eq: slug } }, status: { eq: 'published' } }
+    let type: string
+    switch (currentResource) {
+    case 'guilds':
+      type = 'guild'
+      break
+
+    default:
+      type = 'aggregator'
+      break
+    }
+    const reviewFilterValue: any = {
+      [type]: { slug: { eq: slug } }, status: { eq: 'published' }
+    }
     if (ratingLevel) {
       reviewFilterValue.author = {
         ...(reviewFilterValue.author || {}),
         rates: {
           rate: { eq: +ratingLevel },
-          aggregator: { slug: { eq: slug } }
+          [type]: { slug: { eq: slug } }
         }
       }
     }
@@ -117,9 +140,13 @@ const ReviewList = ({ data, pagination = false, viewAll = false, filter = false,
       }
     }
     setLoading(true)
-    fetcher('/api/hub/reviews/list', { method: 'POST', body: JSON.stringify({ variables: { slug, reviewFilterValue, paginationArg: { pageSize, page } } }) }).then((result) => {
+    fetcher('/api/hub/reviews/list', {
+      method: 'POST', body: JSON.stringify({ type, variables: { slug, reviewFilterValue, paginationArg: { pageSize, page } } })
+    }).then((result) => {
       setLoading(false)
       const reviews = get(result, 'data.reviews.data', [])
+      const totalItem = get(result, 'data.reviews.meta.pagination.total', 0)
+      setTotalPage(totalItem / DEFAULT_PAGE_SIZE)
       if (result?.error) {
         toast.error('please try again!')
         return
@@ -189,7 +216,7 @@ const ReviewList = ({ data, pagination = false, viewAll = false, filter = false,
     viewAllReviewsPath = `/${currentResource}/${slug}/reviews`
     break
   case 'guilds':
-    viewAllReviewsPath = `/${currentResource}/${slug}?tab=reviews&page=1`
+    viewAllReviewsPath = `/${currentResource}/${slug}?tab=reviews`
     break
   }
 
@@ -291,7 +318,7 @@ const ReviewList = ({ data, pagination = false, viewAll = false, filter = false,
             <span className='capitalize mr-3 font-medium text-sm not-italic'>View All</span>
             <Image width={12} height={12} src={require('@/assets/images/hub/arrow-down.svg')} alt='down'></Image>
           </a>}
-        {(loadMore && pageCountReviews > +page) && <div className='flex mt-8 w-full justify-center items-center'>
+        {(loadMore && totalPage > +page) && <div className='flex mt-8 w-full justify-center items-center'>
           <div className="inline-flex bg-gamefiGreen-600 clipped-b-l p-px rounded cursor-pointer mr-1" onClick={handleLoadMore}>
             <span className="font-mechanic bg-gamefiDark-900 text-gamefiGreen-500 hover:text-gamefiGreen-200 clipped-b-l py-2 px-16 rounded leading-5 uppercase font-bold text-[13px]">
               Load More

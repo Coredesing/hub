@@ -1,35 +1,44 @@
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 import get from 'lodash.get'
 import { client } from '@/graphql/apolloClient'
 import { GET_REVIEW_BY_ID_FOR_AGGREGATOR } from '@/graphql/reviews'
 import Layout from '@/components/Layout'
+import HubProvider from '@/context/hubProvider'
 import { BackIcon } from '@/components/Base/Icon'
 import ReviewDetail from '@/components/Base/Review/Detail'
 
 function ReviewDetailPage ({ data }) {
   const router = useRouter()
 
+  useEffect(() => {
+    if (!data.id) router.replace('/hub')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.id])
+
   return (
     <Layout title={'GameFi.org - Review'}>
-      <div className="px-4 lg:px-24 md:container mx-auto lg:block">
-        <a
-          className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500 cursor-pointer"
-          onClick={() => { router.back() }}
-        >
-          <BackIcon />
-          Back
-        </a>
-        {data.id
-          ? (
-            <ReviewDetail data={data} currentResource="hub" />
-          )
-          : (
-            <div className="uppercase font-bold text-3xl mb-6">
-              Review Not Found
-            </div>
-          )
-        }
-      </div>
+      <HubProvider>
+        <div className="px-4 lg:px-24 md:container mx-auto lg:block">
+          <a
+            className="inline-flex items-center text-sm font-casual mb-6 hover:text-gamefiGreen-500 cursor-pointer"
+            onClick={() => { router.back() }}
+          >
+            <BackIcon />
+            Back
+          </a>
+          {data.id
+            ? (
+              <ReviewDetail data={data} currentResource="hub" />
+            )
+            : (
+              <div className="uppercase font-bold text-3xl mb-6">
+                Review Not Found
+              </div>
+            )
+          }
+        </div>
+      </HubProvider>
     </Layout>
   )
 }

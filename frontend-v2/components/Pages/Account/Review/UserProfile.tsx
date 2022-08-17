@@ -132,8 +132,8 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
         if (response?.error) {
           toast.error('Could not update info')
         } else {
+          router.replace(router.asPath)
           setShowModal(false)
-          router.reload()
           toast.success('update successfully')
         }
       } catch (err) {

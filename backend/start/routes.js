@@ -124,9 +124,6 @@ Route.group(() => {
   Route.get('user/check-join-campaign/:campaignId', 'CampaignController.checkJoinedCampaign');
   Route.post('user/apply-join-campaign/:campaignId', 'WhiteListSubmissionController.applyAndJoinCampaign').middleware(['checkSignature']);
 
-  // config
-  Route.get('get-rate-setting', 'RateSettingController.getRateSetting');
-
   // reputation
   // Route.get('reputation/points/:walletAddress', 'ReputationController.getReputationPoint');
   // Route.get('reputation/histories/:walletAddress', 'ReputationController.getReputationHistory');

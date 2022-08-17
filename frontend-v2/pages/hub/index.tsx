@@ -10,6 +10,7 @@ import { fetcher } from '@/utils'
 import isEmpty from 'lodash.isempty'
 import get from 'lodash.get'
 import Banners from '@/components/Banners'
+import HubProvider from '@/context/hubProvider'
 
 function Hub ({ data, validCountdownTime }) {
   const [isEnded, setIsEnded] = useState(!validCountdownTime)
@@ -56,34 +57,36 @@ function Hub ({ data, validCountdownTime }) {
       disableFooter={validCountdownTime && !isEnded}
       className="overflow-x-hidden"
     >
-      {(!validCountdownTime || isEnded) && (
-        <div className="px-4 xl:p-16 2xl:px-32 container mx-auto lg:block">
-          {/* <div className="flex flex-col sm:flex-row gap-6 mt-14 w-full"> */}
-          <div className="md:grid grid-rows md:grid-cols-4 md:gap-4 xl:gap-6 mb-4 md:mb-10">
-            <div className="md:col-span-3 mb-4 md:mb-10">
-              <Banners></Banners>
-              <GameBanner data={data.gameBanners}/>
-              <TopPlayerHub data={data.topPlayer}/>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <TopReleasedHub />
-                <TopViewHub />
+      <HubProvider>
+        {(!validCountdownTime || isEnded) && (
+          <div className="px-4 xl:p-16 2xl:px-32 container mx-auto lg:block">
+            {/* <div className="flex flex-col sm:flex-row gap-6 mt-14 w-full"> */}
+            <div className="md:grid grid-rows md:grid-cols-4 md:gap-4 xl:gap-6 mb-4 md:mb-10">
+              <div className="md:col-span-3 mb-4 md:mb-10">
+                <Banners></Banners>
+                <GameBanner data={data.gameBanners} />
+                <TopPlayerHub data={data.topPlayer} />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <TopReleasedHub />
+                  <TopViewHub />
 
+                </div>
+              </div>
+              {/* <div className="w-full sm:w-60 xl:w-80 col-span-1"> */}
+              <div className="md:col-span-1">
+                {/* <EventLeaderboard event="game-league" /> */}
+                <TopRight />
+                <TopRoiHub data={data.topROI} />
+                <Categories data={categories || []} />
+                <ListLaunchedOnGamefi />
               </div>
             </div>
-            {/* <div className="w-full sm:w-60 xl:w-80 col-span-1"> */}
-            <div className="md:col-span-1">
-              {/* <EventLeaderboard event="game-league" /> */}
-              <TopRight />
-              <TopRoiHub data={data.topROI} />
-              <Categories data={categories || []} />
-              <ListLaunchedOnGamefi />
-            </div>
+            <TrendingHub getListFavoriteByUser={getListFavoriteByUser} setListFavorite={setListFavorite} clearFavorite={clearFavorite} listFavorite={listFavorite} />
+            <TopRatingHub getListFavoriteByUser={getListFavoriteByUser} setListFavorite={setListFavorite} clearFavorite={clearFavorite} listFavorite={listFavorite} />
+            <TopReviewsHub />
           </div>
-          <TrendingHub getListFavoriteByUser={getListFavoriteByUser} setListFavorite={setListFavorite} clearFavorite={clearFavorite} listFavorite={listFavorite} />
-          <TopRatingHub getListFavoriteByUser={getListFavoriteByUser} setListFavorite={setListFavorite} clearFavorite={clearFavorite} listFavorite={listFavorite} />
-          <TopReviewsHub />
-        </div>
-      )}
+        )}
+      </HubProvider>
       {validCountdownTime && !isEnded && <HubCountdown onEnded={() => setIsEnded(true)} />}
     </Layout>
   )

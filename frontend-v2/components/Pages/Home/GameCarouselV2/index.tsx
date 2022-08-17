@@ -67,32 +67,37 @@ const Countdown = ({ to }) => {
   const [seconds, setSeconds] = useState('00')
 
   useEffect(() => {
+    const toDate = new Date(Number(to) * 1000)
+    if (toDate < new Date()) {
+      setDays('00')
+      setHours('00')
+      setMinutes('00')
+      setSeconds('00')
+      return
+    }
+
     const interval = setInterval(() => {
-      const duration = intervalToDuration({
-        start: new Date(Number(to) * 1000),
-        end: new Date()
-      })
-      if (
-        duration.days === 0 &&
-        duration.hours === 0 &&
-        duration.minutes === 0 &&
-        duration.seconds === 0
-      ) {
-        clearInterval(interval)
+      if (toDate < new Date()) {
+        setDays('00')
+        setHours('00')
+        setMinutes('00')
+        setSeconds('00')
         return
       }
+
+      const duration = intervalToDuration({
+        start: new Date(),
+        end: toDate
+      })
+
       setDays(duration.days < 10 ? `0${duration.days}` : `${duration.days}`)
       setHours(duration.hours < 10 ? `0${duration.hours}` : `${duration.hours}`)
-      setMinutes(
-        duration.minutes < 10 ? `0${duration.minutes}` : `${duration.minutes}`
-      )
-      setSeconds(
-        duration.seconds < 10 ? `0${duration.seconds}` : `${duration.seconds}`
-      )
+      setMinutes(duration.minutes < 10 ? `0${duration.minutes}` : `${duration.minutes}`)
+      setSeconds(duration.seconds < 10 ? `0${duration.seconds}` : `${duration.seconds}`)
     }, 1000)
 
     return () => {
-      interval && clearInterval(interval)
+      clearInterval(interval)
     }
   }, [to])
 

@@ -84,7 +84,7 @@ const Carousel = ({ items, length, className }: { items: any[]; length: any; cla
           items.map((item, i) => (
             <div
               key={i}
-              className="p-[2px] rounded border-2 border-transparent cursor-pointer"
+              className="p-[2px] rounded border-2 border-transparent cursor-pointer min-h-[90px]"
             >
               {isVideoFile(imageCMS(item.url)) && (
                 <div className="relative">

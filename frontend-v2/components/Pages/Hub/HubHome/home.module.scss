@@ -39,8 +39,8 @@
 
 @media (min-width: 1024px) {
   .itemCarousel{
-    width: calc(20% - 13px);
-    min-width: auto;
+    width: calc(20% - 13px) !important;
+    min-width: auto !important;
   }
 }
 

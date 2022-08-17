@@ -19,7 +19,7 @@ const TabGetMoreExp = ({ data }) => {
             <div className="uppercase font-mechanic font-bold text-[18px] leading-[100%] text-white">
               STAKING GAFI
             </div>
-            <Tippy
+            {/* <Tippy
               content={
                 <div>
                   You get 100 GXP for each GAFI staked<br></br>
@@ -35,11 +35,13 @@ const TabGetMoreExp = ({ data }) => {
                   layout="fill"
                 ></Image>
               </div>
-            </Tippy>
+            </Tippy> */}
           </div>
 
           <div className="font-casual font-normal text-sm leading-[150%] text-white">
-            Get 100 GXP For Each $GAFI Staked
+            Get 100 GXP per $GAFI staked
+            <br />
+            Lose 100 GXP per $GAFI staked
           </div>
         </div>
         <div className="relative flex-1">
@@ -80,7 +82,17 @@ const TabGetMoreExp = ({ data }) => {
         </div>
       </div>
 
-      {get(data, 'groupQuests', []).map((group) => (
+      {[
+        ...get(data, 'groupQuests', []),
+        {
+          _id: '62cbc9a19756de073879ec5b',
+          name: 'Social activities',
+          description: 'Coming soon',
+          tooltipText: '',
+          priority: 6,
+          quests: [{ _id: 1 }, { _id: 2 }, { _id: 3 }, { _id: 4 }]
+        }
+      ].map((group) => (
         <List key={group._id} data={group}></List>
       ))}
     </div>

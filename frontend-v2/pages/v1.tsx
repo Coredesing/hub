@@ -40,7 +40,7 @@ export default function Custom404 () {
       }
 
       if (path.indexOf('exp') > -1) {
-        router.push('/account/exp')
+        router.push('/account/gxp')
         return
       }
 

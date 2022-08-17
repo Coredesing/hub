@@ -182,7 +182,7 @@ const Level = ({ data, ranks, specialRank }) => {
   }, [data, exp, rank, ranks, specialRank])
 
   const getExpText = () => {
-    if (!exp?.current) return ''
+    if (!exp?.current) return '0 GXP'
     let text = `GXP ${printNumber(parseInt(exp.current))}`
 
     if (exp.next === 'MAX') {

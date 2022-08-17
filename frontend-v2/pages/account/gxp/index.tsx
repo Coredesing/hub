@@ -84,7 +84,7 @@ const RankPage = () => {
 
             <div id="tabReview" className="">
               <Tabs
-                titles={['TASK LIST', 'LEADER BOARD', 'HISTORY']}
+                titles={['TASK LIST', 'LEADERBOARD', 'HISTORY']}
                 currentValue={tab}
                 onChange={onChangeTab}
                 className="mt-2 sm:mt-6 lg:mt-10 sticky top-0 bg-gamefiDark-900 z-50"

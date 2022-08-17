@@ -32,6 +32,13 @@ const CarouselAction = ({ item, now }: { item: Item; now: Date }) => {
   const duration = useMemo(() => {
     const { timeJoin, timeBuy, timeFinish, timePreorder } = stages
 
+    if (now > timeFinish) {
+      return intervalToDuration({
+        start: timeFinish,
+        end: now
+      })
+    }
+
     if (timeJoin && now < timeJoin) {
       return intervalToDuration({
         start: now,

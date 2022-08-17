@@ -715,12 +715,10 @@ class PoolController {
 
   async getActivePoolsV3({ request }) {
     const inputParams = request.all();
-    console.log('[getActivePoolsV3] - inputParams: ', inputParams);
     try {
       let listData = await (new PoolService).getActivePoolsV3(inputParams);
       return HelperUtils.responseSuccess(listData);
     } catch (e) {
-      console.log(e);
       return HelperUtils.responseErrorInternal('getActivePoolsV3 Fail !!!');
     }
   }

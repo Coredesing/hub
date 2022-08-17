@@ -199,29 +199,24 @@ class PoolService {
    * API Pool List V3
    */
   async getActivePoolsV3(filterParams) {
-    const limit = filterParams.limit ? filterParams.limit : 100000;
+    const limit = filterParams.limit ? filterParams.limit : 20;
     const page = filterParams.page ? filterParams.page : 1;
     filterParams.limit = limit;
     filterParams.page = page;
+    if (filterParams.limit > 20) {
+      filterParams.limit = 20
+    }
 
-    // Sample SQL
-    // select *
-    //   from `campaigns`
-    //     where
-    //       `is_display` = '1'
-    //       and (
-    //           `campaign_status` in ('Filled', 'Swap')
-    //         or (`campaign_status` = 'Claimable' and `actual_finish_time` > 1625339367)
-    //       )
-    //     order by `priority` DESC, `start_time` ASC
-    //     limit 100000;
+    // cache with token_type, page, limit
+    if (await RedisUtils.checkExistRedisActivePools(filterParams)) {
+      const cachedPools = await RedisUtils.getRedisActivePools(filterParams)
+      return JSON.parse(cachedPools)
+    }
 
     const now = moment().unix();
     let pools = await this.buildQueryBuilder(filterParams)
       .with('campaignClaimConfig')
       .with('socialNetworkSetting')
-      // .where('start_time', '<=', now)
-      // .where('finish_time', '>', now)
       .where('process', 'all')
       .where(builder => {
         builder
@@ -239,6 +234,8 @@ class PoolService {
       .orderBy('priority', 'DESC')
       .orderBy('start_time', 'ASC')
       .paginate(page, limit);
+
+    RedisUtils.createRedisCompletedPools(filterParams, pools)
     return pools;
   }
 
@@ -418,7 +415,7 @@ class PoolService {
 
     // cache data
     if (!isSearch) {
-      await RedisUtils.createRedisCompletedPools(filterParams, pools)
+      RedisUtils.createRedisCompletedPools(filterParams, pools)
     }
 
     return pools;

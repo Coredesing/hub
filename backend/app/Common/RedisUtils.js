@@ -7,6 +7,7 @@ const UPCOMING_POOLS_CACHED_TTL = 120 // 2 minutes
 const CURRENT_POOLS_CACHED_TTL = 120 // 2 minutes
 const POOL_BY_TOKEN_TYPEP_CACHED_TTL = 120 // 2 minutes
 const COMPLETED_POOLS_CACHED_TTL = 120 // 2 minutes
+const ACTIVE_POOLS_CACHED_TTL = 30 // 30 seconds
 const LATEST_POOLS_CACHED_TTL = 600 // 10 minutes
 const TOTAL_COMPLETED_TTL = 12 * 60 * 60; // 12 hours
 const COUNT_POOL_TTL = 60 * 60; // 1 hour
@@ -272,6 +273,40 @@ const createRedisCompletedPools = async (params, data) => {
 
 const deleteRedisCompletedPools = async (page) => {
   const keys = await Redis.keys('v3_completed_pools_*');
+  for (const key of keys) {
+    await Redis.del(key);
+  }
+};
+
+/**
+ * ACTIVE POOLS
+ */
+const getRedisKeyActivePools = ({
+   page = 1, limit = 10, token_type = 'erc20', is_display = 1
+}) => {
+  return `v3_active_pools_${page}_${limit}_${token_type}_${is_display}`;
+};
+
+const getRedisActivePools = async (params) => {
+  return await Redis.get(getRedisKeyActivePools(params));
+};
+
+const checkExistRedisActivePools = async (params) => {
+  let redisKey = getRedisKeyActivePools(params);
+  const isExistRedisData = await Redis.exists(redisKey);
+  if (isExistRedisData) {
+    return true;
+  }
+  return false;
+};
+
+const createRedisActivePools = async (params, data) => {
+  const redisKey = getRedisKeyActivePools(params);
+  return await Redis.setex(redisKey, ACTIVE_POOLS_CACHED_TTL, JSON.stringify(data));
+};
+
+const deleteRedisActivePools = async (page) => {
+  const keys = await Redis.keys('v3_active_pools_*');
   for (const key of keys) {
     await Redis.del(key);
   }
@@ -613,6 +648,12 @@ module.exports = {
   getRedisCompletedPools,
   createRedisCompletedPools,
   deleteRedisCompletedPools,
+
+  // ACTIVE POOL
+  getRedisActivePools,
+  checkExistRedisActivePools,
+  createRedisActivePools,
+  deleteRedisActivePools,
 
   // POOL DETAIL
   checkExistRedisPoolDetail,

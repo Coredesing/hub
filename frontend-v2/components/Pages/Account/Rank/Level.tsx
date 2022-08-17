@@ -183,7 +183,7 @@ const Level = ({ data, ranks, specialRank }) => {
 
   const getExpText = () => {
     if (!exp?.current) return ''
-    let text = `EXP ${printNumber(parseInt(exp.current))}`
+    let text = `GXP ${printNumber(parseInt(exp.current))}`
 
     if (exp.next === 'MAX') {
       text += ' (MAX)'
@@ -277,10 +277,10 @@ const Level = ({ data, ranks, specialRank }) => {
       {/* <div className="bg-[#272930] flex-1 clipped-t-l-full pl-[52px] py-10 pr-[30px] flex gap-5 rounded-tr-[4px] rounded-br-[4px]">
         <div className="flex flex-col gap-2 max-w-[305px]">
           <div className="font-mechanic font-bold text-sm leading-[150%] uppercase">
-            Get EXP by doing task
+            Get GXP by doing task
           </div>
           <div className="font-casual font-normal text-sm leading-[150%] text-white opacity-70">
-            Exp give you benefit...
+            GXP give you benefit...
           </div>
         </div>
 

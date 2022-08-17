@@ -8,7 +8,7 @@ const TabEarnHistory = ({ data }) => {
         <thead className="bg-[#242529]">
           <tr>
             <th className="py-4" align="center">
-              Task
+              Action
             </th>
             <th className="py-4" align="center">
               Reward

@@ -10,11 +10,11 @@ import { gtagEvent } from '@/utils'
 
 const banners = {
   default: {
-    deadline: new Date('2022-07-30T00:00:00Z'),
+    deadline: new Date('2022-08-22T13:00:00Z'),
     img: banner,
-    link: 'https://gamefi.org/guilds',
-    text: 'GameFi.org Guilds',
-    id: 'guilds'
+    link: 'https://gamefi.org/happy-gamefiversary',
+    text: 'GameFi.org Happy Gamefiversary - Catventure in the Multiverse',
+    id: 'happy-gamefiversary'
   },
   '/': {
     deadline: new Date('2022-07-20T14:00:00Z'),

@@ -107,68 +107,39 @@ const deleteRedisPoolList = (params) => {
 /**
  * UPCOMING COMMUNITY & IGO POOLS
  */
- const getRedisKeyUpcomingPools = (page = 1, type, token_type) => {
-  let poolType = type;
-  if (type === undefined || type === null) {
-    poolType = 'all'
-  }
+const getRedisKeyUpcomingPools = ({
+   page = 1, limit = 10, token_type = 'erc20', is_display = 1,  is_private = 10
+ }) => {
+  // is_private:
+  // 0 --> igo
+  // 1 --> private
+  // 2 --> seed
+  // 3 --> community
 
-  // Change to support filter by multiple value
-  // if (type === 0 || type === '0') {
-  //   poolType = 'igo'
-  // }
-  //
-  // if (type === 1 || type === '1') {
-  //   poolType = 'private'
-  // }
-  //
-  // if (type === 2 || type === '2') {
-  //   poolType = 'seed'
-  // }
-  //
-  // if (type === 3 || type === '3') {
-  //   poolType = 'community'
-  // }
-
-  return `upcoming_pools_${poolType}_${page}_${token_type}`;
+  return `v3_upcoming_pools_${page}_${limit}_${token_type}_${is_display}_${is_private}`;
 };
 
-const getRedisUpcomingPools = async (page, type, token_type) => {
-  return await Redis.get(getRedisKeyUpcomingPools(page, type, token_type));
+const getRedisUpcomingPools = async (params) => {
+  return await Redis.get(getRedisKeyUpcomingPools(params));
 };
 
-const checkExistRedisUpcomingPools = async (page, type, token_type) => {
-  let redisKey = getRedisKeyUpcomingPools(page, type, token_type);
-  const isExistRedisData = await Redis.exists(redisKey, type);
+const checkExistRedisUpcomingPools = async (params) => {
+  const isExistRedisData = await Redis.exists(getRedisKeyUpcomingPools(params));
   if (isExistRedisData) {
     return true;
   }
   return false;
 };
 
-const createRedisUpcomingPools = async (page, type, token_type, data) => {
-  const redisKey = getRedisKeyUpcomingPools(page, type, token_type);
-  return await Redis.setex(redisKey, UPCOMING_POOLS_CACHED_TTL, JSON.stringify(data));
+const createRedisUpcomingPools = async (params, data) => {
+  return await Redis.setex(getRedisKeyUpcomingPools(params), UPCOMING_POOLS_CACHED_TTL, JSON.stringify(data));
 };
 
-const deleteRedisUpcomingPools = (page, type, token_type) => {
-  let redisKey = getRedisKeyUpcomingPools(page, type, token_type);
-  if (Redis.exists(redisKey)) {
-    // remove old key
-    Redis.del(redisKey);
-    return true;
+const deleteRedisUpcomingPools = async () => {
+  const keys = await Redis.keys('v3_upcoming_pools_*');
+  for (const key of keys) {
+    await Redis.del(key);
   }
-  return false;
-};
-
-const deleteAllRedisUpcomingPools = (pages = []) => {
-  pages.forEach(page => {
-    deleteRedisUpcomingPools(page, null)
-    deleteRedisUpcomingPools(page, 0)
-    deleteRedisUpcomingPools(page, 1)
-    deleteRedisUpcomingPools(page, 2)
-    deleteRedisUpcomingPools(page, 3)
-  })
 };
 
 /**
@@ -618,7 +589,6 @@ module.exports = {
   getRedisUpcomingPools,
   createRedisUpcomingPools,
   deleteRedisUpcomingPools,
-  deleteAllRedisUpcomingPools,
 
   // CURRENT POOLS
   checkExistRedisCurrentPools,

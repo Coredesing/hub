@@ -304,7 +304,7 @@ class PoolService {
   }
 
   async getNextToLaunchPoolsV3(filterParams) {
-    const limit = filterParams.limit ? filterParams.limit : 100000;
+    const limit = filterParams.limit ? filterParams.limit : 20;
     const page = filterParams.page ? filterParams.page : 1;
     filterParams.limit = limit;
     filterParams.page = page;
@@ -325,14 +325,17 @@ class PoolService {
   }
 
   async getUpcomingPoolsV3(filterParams) {
-    const limit = filterParams.limit ? filterParams.limit : 100000;
+    const limit = filterParams.limit ? filterParams.limit : 20;
     const page = filterParams.page ? filterParams.page : 1;
 
     filterParams.limit = limit;
     filterParams.page = page;
+    if (filterParams.limit > 20) {
+      filterParams.limit = 20
+    }
 
-    if (await RedisUtils.checkExistRedisUpcomingPools(page, filterParams.is_private, filterParams.token_type || 'erc20')) {
-      const cachedPools = await RedisUtils.getRedisUpcomingPools(page, filterParams.is_private, filterParams.token_type || 'erc20')
+    if (await RedisUtils.checkExistRedisUpcomingPools(filterParams)) {
+      const cachedPools = await RedisUtils.getRedisUpcomingPools(filterParams)
       return JSON.parse(cachedPools)
     }
 
@@ -350,9 +353,8 @@ class PoolService {
       .paginate(page, limit);
 
     // cache data
-    if (page <= 2) {
-      await RedisUtils.createRedisUpcomingPools(page, filterParams.is_private, filterParams.token_type || 'erc20', pools)
-    }
+    RedisUtils.createRedisUpcomingPools(filterParams, pools)
+
     return pools;
   }
 
@@ -783,7 +785,7 @@ class PoolService {
       console.log('[PoolService::updatePoolInformation] - ERROR: ', e)
     } finally {
       // Clear cache
-      RedisUtils.deleteAllRedisUpcomingPools([1, 2])
+      RedisUtils.deleteRedisUpcomingPools()
       RedisUtils.deleteAllRedisCurrentPools([1, 2])
       RedisUtils.deleteAllRedisPoolByTokenType([1, 2])
     }

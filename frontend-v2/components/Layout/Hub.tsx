@@ -4,6 +4,7 @@ import Sidebar from '@/components/Base/Sidebar'
 import Topbar from '@/components/Base/Topbar/Hub'
 import Toolbox from '@/components/Base/Toolbox'
 import Footer from '@/components/Base/Footer'
+import HubProvider from '@/context/hubProvider'
 import { defaultDescription, defaultTitle } from '@/utils/constants'
 
 type Props = {
@@ -12,10 +13,12 @@ type Props = {
   description?: string;
   image?: string;
   disableFooter?: boolean;
+  hideTopBar?: boolean;
   disableSearchBar?: boolean;
+  className?: string;
 }
 
-const LayoutHub = ({ children, title, description, image, disableFooter, disableSearchBar = false }: Props) => {
+const LayoutHub = ({ children, title, description, image, disableFooter, disableSearchBar = false, hideTopBar = false, className = '' }: Props) => {
   const theme = 'dark'
 
   return (<div className={`flex w-full h-screen ${theme}`}>
@@ -27,6 +30,7 @@ const LayoutHub = ({ children, title, description, image, disableFooter, disable
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta property="og:title" content={title || defaultTitle} key="title" />
         <meta property="og:description" content={description || defaultDescription} key="description" />
+        <meta name="description" content={description || defaultDescription} />
         <meta property="og:image" content={image || 'https://gamefi.org/gamefi.jpg'} key="image" />
         <meta name="keywords" content="launchpad, game hub, nft marketplace, game portal, game pass, game guild, tournament, metaverse, ido"></meta>
         <meta name="twitter:card" content="summary_large_image" />
@@ -37,13 +41,15 @@ const LayoutHub = ({ children, title, description, image, disableFooter, disable
       <div>
         <Sidebar></Sidebar>
       </div>
-      <div id='layoutBodyHub' className="w-full h-full overflow-auto relative">
+      <div id='layoutBodyHub' className={`${className} w-full h-full overflow-auto relative`}>
         <div className='absolute w-full h-full bg-no-repeat bg-cover grayscale opacity-20' style={{ backgroundImage: `url(${image})` }} />
         <div className='absolute w-full h-full bg-gradient-to-t from-gamefiDark-900 via-gamefiDark-900/80 to-transparent' />
         <div className='relative'>
-          <Topbar disableSearchBar={disableSearchBar}></Topbar>
-          {children}
-          {!disableFooter && <Footer></Footer>}
+          <HubProvider>
+            {!hideTopBar && <Topbar disableSearchBar={disableSearchBar}></Topbar>}
+            {children}
+            {!disableFooter && <Footer></Footer>}
+          </HubProvider>
         </div>
       </div>
       <Toolbox></Toolbox>

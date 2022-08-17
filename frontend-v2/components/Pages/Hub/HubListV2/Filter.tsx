@@ -6,6 +6,8 @@ import { debounce, printNumber } from '@/utils'
 import Pagination from '@/components/Pages/Market/Pagination'
 import { useScreens } from '@/components/Pages/Home/utils'
 
+const PAGE_SIZES = [10, 20, 50]
+const DEFAULT_SORT = { field: 'project.tokenomic.totalHolders', order: 'desc' }
 const IGO_STATUS = [{ text: 'Launched', value: 'launched' }, { text: 'Upcoming', value: 'upcoming' }]
 const VERSION_RELEASED = [{ text: 'Official', value: 'official' }, { text: 'Testnet', value: 'testnet' }, { text: 'Upcoming', value: 'upcoming' }]
 const VERIFY_STATUS = [{ text: 'Launched on GameFi.org', value: 'true' }]
@@ -70,7 +72,7 @@ function SideBarFilter (props) {
 
             return (
               <button key={`option_${e.slug}`} className={clsx('flex items-center justify-between px-2 py-[14px]', checked ? 'bg-[#2B2D35] rounded-[3px]' : '')} onClick={() => props.setCategory(e.slug)}>
-                <input type="radio" name="radio" className="hidden" checked={checked} onChange={() => props.setCategory(e.slug)}/>
+                <input type="radio" name="radio" className="hidden" checked={checked} onChange={() => props.setCategory(e.slug)} />
                 <label htmlFor="category" className="flex items-center cursor-pointer">
                   <span className="w-4 h-4 inline-block mr-2 rounded-full border border-grey flex-no-shrink border-[#545763]"></span>
                   <div className='text-white flex font-casual font-normal text-sm leading-[100%]'>
@@ -236,7 +238,7 @@ function PaginationOption ({ pageSize, setPageSize, sort, setSort, onSearch, isM
             onClick={() => setShowSelectSortMobile(!showSelectSortMobile)}
           >
             <div className="font-casual font-normal text-sm leading-[22px] text-white">
-              Sort by: <strong>{selectedSortMobile.text}</strong>
+              Sort by: <strong>{selectedSortMobile?.text}</strong>
             </div>
 
             <svg
@@ -313,9 +315,9 @@ function PaginationOption ({ pageSize, setPageSize, sort, setSort, onSearch, isM
                 onChange={onChangePageSize}
                 className="mr-2 font-casual text-sm w-full md:w-auto bg-gamefiDark-800 border-gamefiDark-600 rounded py-1 leading-6 shadow-lg"
               >
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={50}>50</option>
+                {PAGE_SIZES.map(v => (
+                  <option key={v} value={v}>{v}</option>
+                ))}
               </select>
               <span className="opacity-60 hidden md:inline mr-[15px]">
                 items per page
@@ -405,9 +407,7 @@ function SearchAndFilterMobile ({
         </svg>
 
         <div
-          className={`z-50 origin-top-right top-[40px] absolute right-0 mt-2 min-w-max border border-gamefiDark-600 rounded shadow-lg bg-gamefiDark-800 ${
-            filterShown ? 'visible' : 'invisible'
-          }`}
+          className={`z-50 origin-top-right top-[40px] absolute right-0 mt-2 min-w-max border border-gamefiDark-600 rounded shadow-lg bg-gamefiDark-800 ${filterShown ? 'visible' : 'invisible'}`}
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="menu-button"
@@ -547,7 +547,7 @@ function Filter (props) {
 
   const getDefaultSort = () => {
     const { sort: querySort } = router.query
-    if (!querySort) return [{ field: 'project.tokenomic.totalHolders', order: 'desc' }]
+    if (!querySort) return [DEFAULT_SORT]
     const _sort = (querySort as string).split(',').map(e => {
       const [field, order] = e.split(':')
       return {
@@ -555,12 +555,12 @@ function Filter (props) {
         order
       }
     })
-
-    return _sort
+    const isValid = _sort.every(v => (SORT_VALUES.some(item => item.field === v.field) || Object.values(SORT_ALIAS).some(item => item === v.field)) && ['desc', 'asc'].includes(v.order))
+    return isValid ? _sort : [DEFAULT_SORT]
   }
 
   const [page, setPage] = useState<number>(Number(router.query.page || 1))
-  const [pageSize, setPageSize] = useState<number>(Number(router.query.page_size || 10))
+  const [pageSize, setPageSize] = useState<number>(Number((!router.query.page_size || !PAGE_SIZES.includes(Number(router.query.page_size))) ? PAGE_SIZES[0] : router.query.page_size))
   const [sort, setSort] = useState(getDefaultSort())
   const [category, setCategory] = useState<string>(router.query.category as string || '')
   const [igoStatuses, setIgoStatuses] = useState<Array<string>>(getDefaultIGOStatus())
@@ -577,7 +577,7 @@ function Filter (props) {
   const resetFilter = () => {
     setPage(1)
     setPageSize(10)
-    setSort([{ field: 'project.tokenomic.totalHolders', order: 'desc' }])
+    setSort([DEFAULT_SORT])
     setCategory('')
     setIgoStatuses([])
     setVersionReleases([])
@@ -632,7 +632,7 @@ function Filter (props) {
   useEffect(() => {
     const _filterDesc = generateFilterDesc()
     props?.setFilterDescription(_filterDesc)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const [countLaunched, countUpcoming, countOfficial, countTestnet, countVersionUpcoming, countLaunchedStatus, countVerifiedStatus] = useMemo(() => {
@@ -645,29 +645,33 @@ function Filter (props) {
     const _countVerifiedStatus = get(props, 'aggregatorStatusVerified.meta.pagination.total') || 0
 
     return [_countLaunched, _countUpcoming, _countOfficial, _countTestnet, _countVersionUpcoming, _countLaunchedStatus, _countVerifiedStatus]
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props])
 
   const [params, filterDesc] = useMemo(() => {
     const _filterDesc = generateFilterDesc()
     const _params = new URLSearchParams()
 
-    if (page) {
+    if (page && page > 1) {
       _params.set('page', page.toString())
     }
-    if (pageSize) {
+    if (pageSize && pageSize > 10) {
       _params.set('page_size', pageSize.toString())
     }
-    if (sort?.length || props?.sortedField) {
-      const sortString = [props.sortedField, ...sort].filter(Boolean).reduce((acc, e) => {
-        const fieldAlias = SORT_ALIAS[e.field] || e.field
-        const nextSortValue = `${fieldAlias}:${e.order}`
-        if (acc.includes(nextSortValue)) return acc
-        if (acc) acc += ','
-        acc += nextSortValue
-        return acc
-      }, '')
-      _params.set('sort', sortString)
+    if ((sort?.length || props?.sortedField)) {
+      const sortValue = props.sortedField || sort[0]
+      const isDefault = ((DEFAULT_SORT.field === sortValue.field) || (SORT_ALIAS[DEFAULT_SORT.field] === sortValue.field)) && sortValue.order === 'desc'
+      if (!isDefault) {
+        const sortString = [props.sortedField, ...sort].filter(Boolean).reduce((acc, e) => {
+          const fieldAlias = SORT_ALIAS[e.field] || e.field
+          const nextSortValue = `${fieldAlias}:${e.order}`
+          if (acc.includes(nextSortValue)) return acc
+          if (acc) acc += ','
+          acc += nextSortValue
+          return acc
+        }, '')
+        _params.set('sort', sortString)
+      }
     }
     if (category) {
       _params.set('category', category)
@@ -686,7 +690,7 @@ function Filter (props) {
     }
 
     return [_params.toString(), _filterDesc]
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, pageSize, sort, category, igoStatuses, versionReleases, verifyStatuses, searchValue, props.sortedField])
 
   useEffect(() => {
@@ -695,17 +699,17 @@ function Filter (props) {
 
   useEffect(() => {
     props?.setTitle(`${category || 'All'} games`)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category])
 
   useEffect(() => {
     props?.setFilterDescription(filterDesc)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterDesc])
 
   useEffect(() => {
     router.replace(`/hub/list${params ? `?${params}` : ''}`)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params])
 
   const curPage = get(props, 'paginationMeta.page') || 0
@@ -736,8 +740,8 @@ function Filter (props) {
             setVersionReleases,
             verifyStatuses,
             setVerifyStatuses
-          }}/>
-          <PaginationOption {...{ pageSize, setPageSize, sort, setSort, searchValue, onSearch, isMobileAndTablet, setSortedField: props?.setSortedField }}/>
+          }} />
+          <PaginationOption {...{ pageSize, setPageSize, sort, setSort, searchValue, onSearch, isMobileAndTablet, setSortedField: props?.setSortedField }} />
           {props.children}
           {
             pageCount
@@ -777,7 +781,7 @@ function Filter (props) {
             }}
           ></SideBarFilter>
           <div className='flex-1 pl-[30px]'>
-            <PaginationOption {...{ pageSize, setPageSize, sort, setSort, searchValue, onSearch, isMobileAndTablet, setSortedField: props?.setSortedField }}/>
+            <PaginationOption {...{ pageSize, setPageSize, sort, setSort, searchValue, onSearch, isMobileAndTablet, setSortedField: props?.setSortedField }} />
             {props.children}
             {
               pageCount

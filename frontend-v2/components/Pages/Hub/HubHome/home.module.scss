@@ -22,6 +22,15 @@
   background-size: cover;
 }
 
+.favoriteIcon {
+  &:hover {
+    path {
+      stroke: #fff;
+      fill: #fff;
+    }
+  }
+}
+
 @media (min-width: 640px) {
   .itemBannerHub {
     background: linear-gradient(90deg, #15171E 0%, rgba(21, 23, 30, 0.7) 68.75%, rgba(21, 23, 30, 0) 100%);
@@ -30,8 +39,8 @@
 
 @media (min-width: 1024px) {
   .itemCarousel{
-    width: calc(20% - 13px);
-    min-width: auto;
+    width: calc(20% - 13px) !important;
+    min-width: auto !important;
   }
 }
 

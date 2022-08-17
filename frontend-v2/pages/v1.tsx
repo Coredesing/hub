@@ -39,6 +39,11 @@ export default function Custom404 () {
         return
       }
 
+      if (path.indexOf('exp') > -1) {
+        router.push('/account/gxp')
+        return
+      }
+
       if (path.indexOf('pool') > -1) {
         router.push('/account/pools')
         return

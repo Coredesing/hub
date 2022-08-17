@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react'
-import get from 'lodash.get'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { imageCMS, fetcher, shorten } from '@/utils'
-import isEmpty from 'lodash.isempty'
-import Avatar from '@/components/Pages/Hub/Reviews/Avatar'
-import clsx from 'clsx'
 import Link from 'next/link'
-import { nFormatter } from '@/components/Pages/Hub/utils'
-import { normalize } from '@/graphql/utils'
+import clsx from 'clsx'
+import get from 'lodash.get'
+import isEmpty from 'lodash.isempty'
 import { Pagination } from '@egjs/flicking-plugins'
 import Flicking, { ViewportSlot } from '@egjs/react-flicking'
-import styles from './home.module.scss'
+import { normalize } from '@/graphql/utils'
+import { imageCMS, fetcher, shorten } from '@/utils'
+import ReviewAvatar from '@/components/Base/Review/Avatar'
+import { nFormatter } from '@/components/Pages/Hub/utils'
 import HubTitle from '../HubTitle'
+import styles from './home.module.scss'
 
 const STARS = [1, 2, 3, 4, 5]
 
-function Star ({ hightLight, halfSar }) {
-  return halfSar
+function Star ({ highLight, halfStar }) {
+  return halfStar
     ? (
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" >
         <g clipPath="url(#clip0_3831_4653)">
@@ -37,9 +37,8 @@ function Star ({ hightLight, halfSar }) {
     )
     : (
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path fill={hightLight ? '#FFB800' : '#6E6E79'} strokeMiterlimit="10" d="M13.251 4.75881L9.47452 4.21019L7.7849 0.788063C7.48915 0.190437 6.5109 0.190437 6.21515 0.788063L4.5264 4.21019L0.749023 4.75881C0.0341484 4.86294 -0.255477 5.74494 0.264273 6.25244L2.99777 8.91594L2.3529 12.6776C2.23127 13.3898 2.98027 13.9367 3.62252 13.5998L7.00002 11.8244L10.3784 13.6007C11.0154 13.9341 11.7705 13.3959 11.648 12.6784L11.0031 8.91681L13.7366 6.25331C14.2555 5.74494 13.9659 4.86294 13.251 4.75881Z" />
+        <path fill={highLight ? '#FFB800' : '#6E6E79'} strokeMiterlimit="10" d="M13.251 4.75881L9.47452 4.21019L7.7849 0.788063C7.48915 0.190437 6.5109 0.190437 6.21515 0.788063L4.5264 4.21019L0.749023 4.75881C0.0341484 4.86294 -0.255477 5.74494 0.264273 6.25244L2.99777 8.91594L2.3529 12.6776C2.23127 13.3898 2.98027 13.9367 3.62252 13.5998L7.00002 11.8244L10.3784 13.6007C11.0154 13.9341 11.7705 13.3959 11.648 12.6784L11.0031 8.91681L13.7366 6.25331C14.2555 5.74494 13.9659 4.86294 13.251 4.75881Z" />
       </svg>
-
     )
 }
 
@@ -124,9 +123,6 @@ export default function TopReviewsHub () {
         {!isEmpty(data)
           ? data.map(item => (
             <div
-              // style={{
-              //   background: 'linear-gradient(90.68deg, #292C36 55.27%, rgba(41, 44, 54, 0) 99.82%)'
-              // }}
               key={`TopReviewsHub-${item.id}`}
               className=" overflow-hidden group">
               <div className="h-full bg-gamefiDark-630/30 group-hover:bg-[#292C36] rounded w-full flex flex-col xl:flex-row items-stretch justify-between gap-3 font-casual">
@@ -151,8 +147,6 @@ export default function TopReviewsHub () {
                     </div>
                   </a>
                 </div>
-
-                {/* <div className=""> */}
                 <div className="flex-1 flex flex-col p-5 md:pt-2 pr-2 md:pb-5 relative">
                   {groupButton('justify-end hidden md:flex', item.ref)}
                   <Link href={`/hub/${item.slug}`} passHref>
@@ -161,7 +155,6 @@ export default function TopReviewsHub () {
                     </a>
                   </Link>
                   <div className={clsx(styles.topReviewItem)}>
-                    {/* <div className="xl:max-w-[290px] 3xl:max-w-[350px]"> */}
                     <Flicking circular={true} key={`ReviewsHub-${item.id}`} plugins={item.plugins} ref={item.ref} align="center" interruptable={true}>
                       {item.reviews.map(v => {
                         const rate = get(v, 'rate')
@@ -179,7 +172,7 @@ export default function TopReviewsHub () {
 
                             <div className="flex mb-6">
                               <a href={`/user/${get(v, 'author.id')}`} className="w-11 h-11 mr-3">
-                                <Avatar
+                                <ReviewAvatar
                                   url={imageCMS(get(v, 'author.avatar.url'))}
                                   size={44}
                                   className="rounded-full"
@@ -192,7 +185,7 @@ export default function TopReviewsHub () {
                                     ? <div className="flex">
                                       {STARS.map(v => (
                                         <div key={`RateAction-${v}`} className="mr-1">
-                                          <Star halfSar={rate > v && Math.trunc(rate) === v} hightLight={rate >= v} />
+                                          <Star halfStar={rate > v && Math.trunc(rate) === v} highLight={rate >= v} />
                                         </div>
                                       ))}
                                     </div>

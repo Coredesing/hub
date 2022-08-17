@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { useMemo } from 'react'
 import { printNumber } from '@/utils'
 import { CMC_ASSETS_DOMAIN_CHART } from '@/utils/constants'
 import get from 'lodash.get'
@@ -43,6 +44,39 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
   const router = useRouter()
   const screens = useScreens()
 
+  const currentSort = useMemo(() => {
+    const sort = router.query.sort as string || ''
+    const [field] = sort.split(':')
+    let value = ''
+    switch (field) {
+    case 'createdAt':
+      value = 'create date'
+      break
+    case 'totalHolders':
+      value = 'player'
+      break
+    case 'topReleased':
+      value = 'released date'
+      break
+    case 'totalViews':
+      value = 'views'
+      break
+    case 'totalFavorites':
+      value = 'favorites'
+      break
+    case 'roi':
+      value = 'token roi'
+      break
+    case 'rate':
+      value = 'rate'
+      break
+    default:
+      value = 'player'
+      break
+    }
+    return value
+  }, [router.query.sort])
+
   const handleClickSortableHeader = (header) => {
     if (!header.field) return
     if (sortedField && sortedField?.field === header?.field) {
@@ -66,6 +100,10 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
   return (
     (screens.mobile || screens.tablet)
       ? <div className='bg-[#242732] p-[10px]'>
+        <div className='flex justify-between py-[10px] last:pb-0 items-center gap-2 first:border-0 border-t-[1px] border-t-[#3B3E4A] font-mechanic font-bold text-[13px] leading-[150%] tracking-[0.04em] uppercase text-white opacity-50 py-4'>
+          <div className="">{HEADERS[0]?.text}</div>
+          <div className="">{currentSort}</div>
+        </div>
         {(get(data, 'aggregators') || []).map((e) => {
           const totalViews = get(e, 'totalViews')
           const networksAlias = (get(e, 'project.tokenomic.network') || []).map(e => e.name)
@@ -115,7 +153,7 @@ export default function ListAggregatorV2 ({ data, sortedField, setSortedField })
             valueShow = txtRate
             break
           default:
-            valueShow = '-'
+            valueShow = nFormatter(totalHolders, 2)
             break
           }
 

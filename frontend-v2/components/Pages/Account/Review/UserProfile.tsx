@@ -1,17 +1,17 @@
-import clsx from 'clsx'
-import styles from '@/components/Pages/Account/Review/account_review.module.scss'
-import { printNumber, fetcher } from '@/utils'
 import { useMemo, useState } from 'react'
-import get from 'lodash.get'
-import { useForm } from 'react-hook-form'
-import toast from 'react-hot-toast'
-import Modal from '@/components/Base/Modal'
 import Image from 'next/image'
-import useConnectWallet from '@/hooks/useConnectWallet'
-import Avatar from '@/components/Pages/Hub/Reviews/Avatar'
 import { useRouter } from 'next/router'
+import clsx from 'clsx'
+import toast from 'react-hot-toast'
+import { useForm } from 'react-hook-form'
+import get from 'lodash.get'
+import useConnectWallet from '@/hooks/useConnectWallet'
+import { printNumber, fetcher } from '@/utils'
 import { useScreens } from '@/components/Pages/Home/utils'
-import Loading from '@/components/Pages/Hub/Loading'
+import Modal from '@/components/Base/Modal'
+import { Spinning } from '@/components/Base/Animation'
+import ReviewAvatar from '@/components/Base/Review/Avatar'
+import styles from '@/components/Pages/Account/Review/account_review.module.scss'
 
 const VALID_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif']
 
@@ -36,7 +36,6 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
       lastName: lastName
     }
   })
-  // const watchAvatar = watch('avatar', avatar?.url)
 
   const router = useRouter()
   const screens = useScreens()
@@ -86,7 +85,7 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
     }
     setShowModal(isShow)
   }
-  const onSubmit = (dataSubmit) => {
+  const onSubmit = (dataSubmit: { firstName: any; lastName: any; avatar: any }) => {
     if (loading) return
     setLoading(true)
     connectWallet().then(async (res: any) => {
@@ -133,8 +132,8 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
         if (response?.error) {
           toast.error('Could not update info')
         } else {
+          router.replace(router.asPath)
           setShowModal(false)
-          router.reload()
           toast.success('update successfully')
         }
       } catch (err) {
@@ -203,7 +202,7 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
           'rounded-[3px] w-[60px] h-[60px] md:w-[164px] md:h-[164px] overflow-hidden'
         )}
       >
-        <Avatar
+        <ReviewAvatar
           size={!screens.mobile || !screens.tablet ? 164 : 60}
           url={get(data, 'avatar.url', '')}
         />
@@ -263,7 +262,6 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
             </div>
             <form
               className="w-full m-auto pb-2 md:pb-8"
-              // onSubmit={handleSubmit(onSubmit)}
             >
               <div className="flex flex-col md:flex-row gap-10">
                 <div className="mx-auto md:mx-0 w-[150px] h-[150px] md:w-[237px] md:h-[237px] relative">
@@ -416,12 +414,11 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
                 CANCEL
               </button>
               <button
-                className="w-36 overflow-hidden px-8 bg-gamefiGreen-700 text-gamefiDark-900 font-bold text-[13px] rounded-xs hover:opacity-95 cursor-pointer rounded-sm clipped-t-r "
+                className="flex items-center justify-center w-36 overflow-hidden px-8 bg-gamefiGreen-700 text-gamefiDark-900 font-bold text-[13px] rounded-xs hover:opacity-95 cursor-pointer rounded-sm clipped-t-r "
                 onClick={handleUpdate}
                 disabled={loading}
               >
-                UPDATE
-                { loading && <Loading/>}
+                { loading ? <Spinning className="w-6 h-6"/> : 'UPDATE'}
               </button>
             </div>
           </div>

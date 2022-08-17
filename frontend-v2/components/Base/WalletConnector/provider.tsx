@@ -10,6 +10,7 @@ import { useWeb3React } from '@web3-react/core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import copy from 'copy-to-clipboard'
 import { gtagEvent, shorten } from '@/utils'
+import style from './provider.module.scss'
 
 const errorUnsupportedNetwork = new Error('Unsupported Network')
 const errorNoEthereumProvider = new Error('No Ethereum Wallet Detected')
@@ -265,7 +266,7 @@ export default function WalletProvider ({ children }) {
                   setShowModal(false)
                   setConnectorChosen(undefined)
                 }}>
-                  View My Account
+                  View GameFi Pass
                 </a>
               </Link>
               <span className="text-[13px] sm:text-base inline-flex items-center text-red-400 hover:text-red-500" onClick={tryDeactivate}>
@@ -284,7 +285,8 @@ export default function WalletProvider ({ children }) {
             <div className="font-bold text-2xl uppercase mb-5">Connect Wallet</div>
             <div className="font-bold text-sm uppercase">1. Agree to GameFi.org terms & conditions</div>
             <label className="py-2 leading-relaxed mb-5 inline-block font-casual text-sm">
-              <input type="checkbox" className="rounded bg-transparent border-white checked:text-gamefiGreen-700 dark mr-2" checked={agreed} onChange={handleAgreement} />
+              { agreed && <div id={`${style.tickMark}`}></div> }
+              <input type="checkbox" className="rounded bg-transparent checked:bg-gamefiGreen-500 checked:border-gamefiGreen-500 hover:border-gamefiGreen-500 border-white outline-none ring-0 mr-2 checked:ml-[-8px]" checked={agreed} onChange={handleAgreement} />
               I have read and agreed with the <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">Terms of Service</a> and <a className="text-gamefiGreen-500 hover:text-gamefiGreen-200 hover:underline" href="#" target="_blank" rel="noopener nofollower">Privacy Policy</a>.
             </label>
             <div className="mb-7">

@@ -36,13 +36,14 @@ export default function TopReleasedHub () {
                         {item.name}
                       </a>
                     </Link>
-                    <div className="text-sm flex text-gray-300">
-                      <Image src={require('@/assets/images/icons/star.svg')} alt="star" />
-                      <p className="ml-2 mr-4">
-                        {item.rate?.toFixed(1)}
-                      </p>
-
-                    </div>
+                    <Link href={`/hub/${item?.slug}/reviews`} passHref>
+                      <div className="w-20 text-sm flex text-gray-300 cursor-pointer">
+                        <Image src={require('@/assets/images/icons/star.svg')} alt="star" />
+                        <p className="ml-2 mr-4">
+                          {item.rate?.toFixed(1)}
+                        </p>
+                      </div>
+                    </Link>
                   </div>
                   {item?.releaseDate && (<div className="flex ml-auto items-center min-w-[107px] justify-end">
                     <Image src={require('@/assets/images/icons/date.svg')} alt="eye" />

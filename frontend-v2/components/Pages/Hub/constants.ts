@@ -9,10 +9,3 @@ export const FILTER_TIMES = [
   { name: '90 Days', value: '90d' },
   { name: 'All Time', value: '' }
 ]
-
-export enum REVIEWS_STATUS {
-  DRAFT = 'draft',
-  PUBLISHED = 'published',
-  PENDING = 'pending',
-  DECLINED = 'declined'
-}

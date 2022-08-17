@@ -4,6 +4,7 @@ import get from 'lodash.get'
 import { API_BASE_URL } from '@/utils/constants'
 import { ObjectType } from './types'
 import { formatDistance } from 'date-fns'
+export { default as checkProfane } from './badWord'
 
 export const isImageFile = (str: string) => (/\.(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(str)
 export const isVideoFile = (str: string) => (/\.(mp4)$/i).test(str)
@@ -364,4 +365,12 @@ export const isEmptyDataParse = (data) => {
   if (text === '&nbsp;') return false
 
   return true
+}
+
+export const pad = (num = 0, width = 2, char = '0') => {
+  const _num = num.toString()
+
+  return _num.length >= width
+    ? _num
+    : new Array(width - _num.length + 1).join(char) + _num
 }

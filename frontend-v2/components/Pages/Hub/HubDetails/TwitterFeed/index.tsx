@@ -32,7 +32,7 @@ const TwitterFeed = () => {
             <a href={`https://twitter.com/${user?.username}`} target="_blank" rel="noreferrer noopener" className="w-10 h-10 rounded-full overflow-hidden">
               <img src={user?.profile_image_url} className="w-full h-full" alt=""></img>
             </a>
-            <div className="h-10 flex flex-col">
+            <div className="min-h-[40px] flex flex-col">
               <div className="flex items-center gap-2">
                 <a href={`https://twitter.com/${user?.username}`} target="_blank" rel="noreferrer noopener" className="font-semibold hover:underline">{user?.name}</a>
                 {user?.verified && <div><Image src={require('@/assets/images/guilds/verified.png')} alt=""></Image></div>}

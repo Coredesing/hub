@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import List from '@/components/Pages/Hub/Reviews/List'
-import Rating from '@/components/Pages/Hub/Reviews/Rating'
-import { printNumber, fetcher } from '@/utils'
+import { useRouter } from 'next/router'
 import isEmpty from 'lodash.isempty'
+import get from 'lodash.get'
 import { normalize } from '@/graphql/utils'
 import useHubProfile from '@/hooks/useHubProfile'
-import get from 'lodash.get'
-import { useRouter } from 'next/router'
+import { printNumber, fetcher } from '@/utils'
+import ReviewRating from '@/components/Base/Review/Rating'
+import ReviewList from '@/components/Base/Review/List'
 
 function getOverall (rates = {}) {
   const { five = 0, four = 0, three = 0, two = 0, one = 0 }: any = rates
@@ -40,10 +40,27 @@ function getRatePercent (rates = {}) {
   const twoStarPercent = (two / countRating * 100).toFixed(0)
   const oneStarPercent = (one / countRating * 100).toFixed(0)
 
-  return [{ level: 5, percent: fiveStarPercent }, { level: 4, percent: fourStarPercent }, { level: 3, percent: threeStarPercent }, { level: 2, percent: twoStarPercent }, { level: 1, percent: oneStarPercent }]
+  return [
+    {
+      level: 5,
+      percent: fiveStarPercent
+    }, {
+      level: 4,
+      percent: fourStarPercent
+    }, {
+      level: 3,
+      percent: threeStarPercent
+    }, {
+      level: 2,
+      percent: twoStarPercent
+    }, {
+      level: 1,
+      percent: oneStarPercent
+    }
+  ]
 }
 
-const Reviews = ({ data, totalReviews, rates, ranks, id, tabRef }) => {
+const Reviews = ({ data, totalReviews, rates, id, tabRef, pageCountReviews, currentResource = 'hub' as 'guilds' | 'hub' }) => {
   const [, setLoading] = useState(false)
   const [currentRate, setCurrentRate] = useState(0)
   const router = useRouter()
@@ -64,23 +81,43 @@ const Reviews = ({ data, totalReviews, rates, ranks, id, tabRef }) => {
       setCurrentRate(0)
       return
     }
-    fetcher('/api/hub/reviews', { method: 'POST', body: JSON.stringify({ variables: { userId: accountHub.id, slug: router.query.slug }, query: 'GET_REVIEW_AND_RATE_BY_USER_ID' }) }).then((res) => {
+
+    fetcher('/api/hub/reviews', {
+      method: 'POST',
+      body: JSON.stringify({
+        variables: {
+          walletAddress: accountHub.walletAddress,
+          slug: router.query.slug
+        },
+        query: 'GET_REVIEW_AND_RATE_BY_USER_ID_FOR_AGGREGATOR'
+      })
+    }).then((res) => {
       setLoading(false)
       if (!isEmpty(res)) {
         const data = normalize(res.data)
         const rate = get(data, 'rates[0].rate', '')
         if (rate) {
           setCurrentRate(rate)
-        } else setCurrentRate(0)
+        } else {
+          setCurrentRate(0)
+        }
       }
     }).catch(() => setLoading(false))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountHub, router.query.slug])
+
   return (
     <div className="flex flex-col">
-      <Rating overall={overall} totalCount={countRating} rates={ratesWithPercent} currentRate={currentRate} setCurrentRate={setCurrentRate} id={id} />
+      <ReviewRating
+        overall={overall}
+        totalCount={countRating}
+        rates={ratesWithPercent}
+        currentRate={currentRate}
+        setCurrentRate={setCurrentRate}
+        id={id}
+      />
       <div className="mt-14 uppercase text-lg md:text-2xl"><strong>{`All Reviews ${totalReviews ? `(${printNumber(totalReviews)})` : ''}`}</strong></div>
-      <List ranks={ranks} data={{ data, totalReviews: totalReviews }} filter loadMore={totalReviews > data?.length} review />
+      <ReviewList currentResource={currentResource} data={{ data, totalReviews: totalReviews }} pageCountReviews={pageCountReviews} filter loadMore={(totalReviews > data?.length)} review />
     </div>
   )
 }

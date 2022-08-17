@@ -16,26 +16,30 @@ import { useRouter } from 'next/router'
 import { gtagEvent, fetcher } from '@/utils'
 import { gql } from '@apollo/client'
 
-const GameDetails = ({ data }) => {
+const GameDetails = ({ data = {} }: any) => {
   const [values, setValues] = useState(data)
   const changeData = useRef(null)
   const screen = useScreens()
   const router = useRouter()
-
   useEffect(() => {
     changeData?.current?.scrollIntoView({ behavior: 'smooth' })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query.slug])
 
   useEffect(() => {
+    if (isEmpty(data)) router.replace('/hub')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data])
+
+  useEffect(() => {
     const reviewFilterValue: any = { aggregator: { slug: { eq: router.query.slug } }, status: { eq: 'published' } }
-    fetcher('/api/hub/detail/getLiveData', { method: 'POST', body: JSON.stringify({ variables: { slug: router.query.slug, reviewFilterValue, pageSize: 5 }, query: 'GET_AGGREGATORS_BY_SLUG' }) }).then(({ data }) => {
-      const { five, four, three, two, one, totalReviewMeta } = data
-      const aggregators = get(data, 'aggregators.data[0]')
+    fetcher('/api/hub/detail/getLiveData', { method: 'POST', body: JSON.stringify({ variables: { slug: router.query.slug, reviewFilterValue, pageSize: 5 }, query: 'GET_AGGREGATORS_BY_SLUG' }) }).then(({ data: dataNew }) => {
+      const { five, four, three, two, one, totalReviewMeta } = dataNew
+      const aggregators = get(dataNew, 'aggregators.data[0]')
       setValues(vs => ({
         ...vs,
         ...(aggregators?.attributes || {}),
-        reviews: data?.reviews || [],
+        reviews: dataNew?.reviews || [],
         totalReviewWithoutFilter: get(totalReviewMeta, 'meta.pagination.total', 0),
         rates: {
           five: get(five, 'meta.pagination.total', 0),
@@ -61,46 +65,48 @@ const GameDetails = ({ data }) => {
       </Head>
       <Script type="text/javascript" src="https://s3.tradingview.com/tv.js" strategy="beforeInteractive"></Script>
       <div className="px-4 lg:px-24 md:container mx-auto lg:block" ref={changeData}>
-        <nav className="hidden md:flex mb-6 items-center" aria-label="Breadcrumb">
-          <ol className="inline-flex items-center space-x-1 md:space-x-3">
-            <li className="inline-flex items-center">
-              <Link href={'/hub'} passHref>
-                <a className="inline-flex items-center text-sm font-medium hover:text-gamefiGreen-500 cursor-pointer text-gray-200">Game Hub</a>
-              </Link>
-            </li>
-            <li>
-              <svg className="w-6 h-6 text-gray-200" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
-            </li>
-            <li>
-              <div className="flex items-center">
-                <Link href={'/hub/list'} passHref>
-                  <a className="inline-flex items-center text-sm font-medium hover:text-gamefiGreen-500 cursor-pointer text-gray-200">All Games</a>
-                </Link>
-              </div>
-            </li>
-            <li>
-              <svg className="w-6 h-6 text-gray-200" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
-            </li>
-            <li aria-current="page">
-              <div className="flex items-center">
-                <span className="inline-flex items-center text-sm font-medium cursor-pointer text-gray-200">{data?.name}</span>
-              </div>
-            </li>
-          </ol>
-        </nav>
-        {!data && <div className="uppercase font-bold text-3xl mb-6">Game Not Found</div>}
-        <Link href={`/hub/${data?.slug}/info`} passHref>
-          <a className="w-full flex md:hidden items-center uppercase overflow-hidden py-3 px-8 bg-white/20 font-bold text-[13px] rounded-xs hover:opacity-95 cursor-pointer justify-center rounded-sm clipped-b-l ml-auto" onClick={() => {
-            gtagEvent('hub_more_info', {
-              name: data?.slug
-            })
-          }}>
-            <div className='uppercase'><span>More Information</span></div>
-          </a>
-        </Link>
-        {data && <HubDetailContext.Provider value={{
+
+        {isEmpty(data) && <div className="uppercase font-bold text-3xl mb-6 invisible">Game Not Found</div>}
+
+        {!isEmpty(data) && <HubDetailContext.Provider value={{
           hubData: values
         }}>
+          <nav className="hidden md:flex mb-6 items-center" aria-label="Breadcrumb">
+            <ol className="inline-flex items-center space-x-1 md:space-x-3">
+              <li className="inline-flex items-center">
+                <Link href={'/hub'} passHref>
+                  <a className="inline-flex items-center text-sm font-medium hover:text-gamefiGreen-500 cursor-pointer text-gray-200">Game Hub</a>
+                </Link>
+              </li>
+              <li>
+                <svg className="w-6 h-6 text-gray-200" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
+              </li>
+              <li>
+                <div className="flex items-center">
+                  <Link href={'/hub/list'} passHref>
+                    <a className="inline-flex items-center text-sm font-medium hover:text-gamefiGreen-500 cursor-pointer text-gray-200">All Games</a>
+                  </Link>
+                </div>
+              </li>
+              <li>
+                <svg className="w-6 h-6 text-gray-200" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
+              </li>
+              <li aria-current="page">
+                <div className="flex items-center">
+                  <span className="inline-flex items-center text-sm font-medium cursor-pointer text-gray-200">{data?.name}</span>
+                </div>
+              </li>
+            </ol>
+          </nav>
+          <Link href={`/hub/${data?.slug}/info`} passHref>
+            <a className="w-full flex md:hidden items-center uppercase overflow-hidden py-3 px-8 bg-white/20 font-bold text-[13px] rounded-xs hover:opacity-95 cursor-pointer justify-center rounded-sm clipped-b-l ml-auto" onClick={() => {
+              gtagEvent('hub_more_info', {
+                name: data?.slug
+              })
+            }}>
+              <div className='uppercase'><span>More Information</span></div>
+            </a>
+          </Link>
           <Header
             callApi={!isMobile}
             className={'hidden md:flex'}
@@ -134,7 +140,7 @@ export async function getStaticProps ({ params }) {
     const { five, four, three, two, one, totalReviewMeta } = data
     const aggregators = get(data, 'aggregators.data[0]')
     if (isEmpty(aggregators)) {
-      return { props: { data: {} }, revalidate: 60 }
+      return { props: { data: {} }, revalidate: 60, notFound: true }
     }
 
     let gameIntroduction = ''
@@ -187,7 +193,6 @@ export async function getStaticPaths () {
         }
       }`
     })
-
     return {
       paths: (data?.aggregators?.data || []).map(x => ({ params: x?.attributes })),
       fallback: 'blocking'
@@ -195,7 +200,7 @@ export async function getStaticPaths () {
   } catch (err) {
     return {
       paths: [],
-      fallback: true
+      fallback: 'blocking'
     }
   }
 }

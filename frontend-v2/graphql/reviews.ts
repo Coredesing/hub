@@ -15,7 +15,7 @@ export const CREATE_REVIEW = gql`
 `
 
 export const GET_LIKES_BY_USER_ID = gql`
-  query getReviewByID($userId: ID) {
+  query getLikesByUserId($userId: ID) {
     likes(pagination: { pageSize: 100000 } filters: { user: { id: { eq: $userId } } }) {
       data {
         id
@@ -29,11 +29,11 @@ export const GET_LIKES_BY_USER_ID = gql`
   }
 `
 
-export const GET_REVIEW_AND_RATE_BY_USER_ID = gql`
-  query getReviewByID($userId: ID $slug: String) {
+export const GET_REVIEW_AND_RATE_BY_USER_ID_FOR_AGGREGATOR = gql`
+  query getReviewByID($walletAddress: String $slug: String) {
     rates(
       filters: {
-        user: { id: { eq: $userId } }
+        user: { walletAddress: { eq: $walletAddress } }
         aggregator: { slug: { eq: $slug } }
       }
     ) {
@@ -46,7 +46,7 @@ export const GET_REVIEW_AND_RATE_BY_USER_ID = gql`
     }
     reviews(
       filters: {
-        author: { id: { eq: $userId } }
+        author: { walletAddress: { eq: $walletAddress } }
         aggregator: { slug: { eq: $slug } }
       }
     ) {
@@ -70,8 +70,78 @@ export const GET_REVIEW_AND_RATE_BY_USER_ID = gql`
   }
 `
 
+export const GET_REVIEW_AND_RATE_BY_USER_ID_FOR_GUILD = gql`
+    query getReviewAndRateByUserIdForGuild($walletAddress: String $slug: String) {
+        rates(
+            filters: {
+                user: { walletAddress: { eq: $walletAddress } }
+                guild: { slug: { eq: $slug } }
+            }
+        ) {
+            data {
+                id
+                attributes {
+                    rate
+                }
+            }
+        }
+        reviews(
+            filters: {
+                author: { walletAddress: { eq: $walletAddress } }
+                guild: { slug: { eq: $slug } }
+            }
+        ) {
+            data {
+                id
+                attributes {
+                    title
+                    review
+                    status
+                    cons {
+                        id
+                        text
+                    }
+                    pros {
+                        id
+                        text
+                    }
+                }
+            }
+        }
+    }
+`
+
+export const GET_USER_RATES_BY_GAME_AND_GUILD = gql`
+    query getUserRatesByGameAndGuild(
+      $rateFilterValue: RateFiltersInput!
+    ) {
+      rates(filters: $rateFilterValue) {
+        data {
+          id
+          attributes {
+            rate
+            aggregator {
+              data {
+                attributes {
+                  slug
+                }
+              }
+            }
+            guild {
+              data {
+                attributes {
+                  slug
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+`
+
 export const GET_REVIEWS_AND_COMMENTS_BY_USER = gql`
-  query getReviewsByUser(
+  query getReviewsAndCommentsByUser(
     $reviewFilterValue: ReviewFiltersInput!
     $commentFilterValue: CommentFiltersInput!
     $reviewPagination: PaginationArg
@@ -99,11 +169,21 @@ export const GET_REVIEWS_AND_COMMENTS_BY_USER = gql`
               }
             }
           }
-          rates {
+          rates(
+            pagination: $reviewPagination
+            sort: "createdAt:desc"
+          ) {
             data {
               attributes {
                 rate
                 aggregator {
+                  data {
+                    attributes {
+                      slug
+                    }
+                  }
+                }
+                guild {
                   data {
                     attributes {
                       slug
@@ -150,6 +230,22 @@ export const GET_REVIEWS_AND_COMMENTS_BY_USER = gql`
               }
             }
           }
+          guild {
+            data {
+              id
+              attributes {
+                name
+                slug
+                banner { # TODO: add verticalThumbnail for guild?
+                  data {
+                    attributes {
+                      url
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -167,14 +263,6 @@ export const GET_REVIEWS_AND_COMMENTS_BY_USER = gql`
               id
               attributes {
                 title
-                aggregator {
-                  data {
-                    id
-                    attributes {
-                      name
-                    }
-                  }
-                }
                 author {
                   data {
                     id
@@ -192,6 +280,22 @@ export const GET_REVIEWS_AND_COMMENTS_BY_USER = gql`
                       name
                       slug
                       verticalThumbnail {
+                        data {
+                          attributes {
+                            url
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                guild {
+                  data {
+                    id
+                    attributes {
+                      name
+                      slug
+                      banner { # TODO: add verticalThumbnail for guild?
                         data {
                           attributes {
                             url
@@ -275,8 +379,8 @@ export const GET_REVIEWS_AND_COMMENTS_BY_USER = gql`
   }
 `
 
-export const GET_REVIEW_BY_ID = gql`
-  query getReviewByID($reviewId: ID!, $pageSize: Int, $aggSlug: String) {
+export const GET_REVIEW_BY_ID_FOR_AGGREGATOR = gql`
+  query getReviewByIdForAggregator($reviewId: ID!, $pageSize: Int, $aggSlug: String) {
     reviews(filters: { id: { eq: $reviewId }, status: { eq: "published" } }) {
       data {
         id
@@ -387,4 +491,118 @@ export const GET_REVIEW_BY_ID = gql`
       }
     }
   }
+`
+
+export const GET_REVIEW_BY_ID_FOR_GUILD = gql`
+    query getReviewByIdForGuild($reviewId: ID!, $pageSize: Int, $guildSlug: String) {
+        reviews(filters: { id: { eq: $reviewId }, status: { eq: "published" } }) {
+            data {
+                id
+                attributes {
+                    review
+                    status
+                    likeCount
+                    dislikeCount
+                    commentCount
+                    publishedAt
+                    author {
+                        data {
+                            id
+                            attributes {
+                                walletAddress
+                                firstName
+                                lastName
+                                level
+                                rank
+                                repPoint
+                                reviewCount
+                                reviews {
+                                    data {
+                                        id
+                                    }
+                                }
+                                avatar {
+                                    data {
+                                        attributes {
+                                            name
+                                            url
+                                        }
+                                    }
+                                }
+                                rates(filters: {
+                                    guild: {
+                                        slug: {
+                                            eq: $guildSlug
+                                        }
+                                    }
+                                }) {
+                                    data {
+                                        id
+                                        attributes {
+                                            rate
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    pros {
+                        id
+                        text
+                    }
+                    cons {
+                        id
+                        text
+                    }
+                    guild {
+                        data {
+                            attributes {
+                                slug
+                                name
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        comments(
+            filters: { review: { id: { eq: $reviewId } } }
+            pagination: { pageSize: $pageSize }
+            sort: "createdAt:asc"
+        ) {
+            meta {
+                pagination {
+                    total
+                }
+            }
+            data {
+                id
+                attributes {
+                    comment
+                    likeCount
+                    dislikeCount
+                    user {
+                        data {
+                            id
+                            attributes {
+                                walletAddress
+                                firstName
+                                lastName
+                                rank
+                                level
+                                avatar {
+                                    data {
+                                        attributes {
+                                            name
+                                            url
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 `

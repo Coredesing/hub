@@ -63,7 +63,7 @@ const Layout = ({ children, title, description, image, disableFooter, extended, 
         <div>
           <Sidebar></Sidebar>
         </div>
-        <div id='layoutBody' className={`${className} w-full h-full overflow-auto relative`}>
+        <div id='layoutBody' className={`${className} w-full h-full overflow-auto relative scroll-smooth`}>
           {/* { !suppressed && <div className="text-[11px] font-casual flex py-1 px-4 bg-gamefiGreen-700 text-gamefiDark-900 items-center justify-center">
               <span className="hidden sm:inline">This is the beta version of GameFi.org!</span>
               <a href="#" target="_blank" className="sm:ml-1 uppercase sm:normal-case font-semibold hover:underline" rel="noreferrer">Go back to the old version</a>

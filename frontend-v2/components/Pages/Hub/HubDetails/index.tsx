@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import Carousel from './Carousel'
 import GameRight from './GameRight'
 import MoreLike from './MoreLike'
@@ -11,8 +13,6 @@ import { useScreens } from '@/components/Pages/Home/utils'
 import get from 'lodash.get'
 import { format } from 'date-fns'
 import { AVAX, BNB, ETH, FTM, MATIC, switchNetwork } from '@/components/web3'
-import ReviewList from '@/components/Pages/Hub/Reviews/List'
-import isEmpty from 'lodash.isempty'
 import { PriceChange, PriceChangeBg } from './PriceChange'
 import News from './News/index'
 import Tippy from '@tippyjs/react'
@@ -23,65 +23,66 @@ import ERC20_ABI from '@/components/web3/abis/ERC20.json'
 import { ethers } from 'ethers'
 import { useLibraryDefaultFlexible } from '@/components/web3/utils'
 import { nFormatter } from '@/components/Pages/Hub/utils'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
+import Reviews from './Reviews'
 
-export const networks = [{
-  name: 'Ethereum',
-  alias: 'eth',
-  currency: ETH.symbol,
-  image: require('@/assets/images/networks/eth.svg'),
-  image2: require('@/assets/images/networks/ethereum.svg')
-}, {
-  name: 'BNB Chain',
-  alias: 'bsc',
-  currency: BNB.symbol,
-  image: require('@/assets/images/networks/bsc.svg'),
-  image2: require('@/assets/images/networks/bnbchain.svg'),
-  colorText: '#28282E'
-}, {
-  name: 'Polygon',
-  alias: 'polygon',
-  currency: MATIC.symbol,
-  image: require('@/assets/images/networks/matic.svg'),
-  image2: require('@/assets/images/networks/polygon.svg')
-}, {
-  name: 'Avalanche',
-  alias: 'avax',
-  currency: AVAX.symbol,
-  image: require('@/assets/images/networks/avax.svg'),
-  image2: require('@/assets/images/networks/avalanche.svg')
-}, {
-  name: 'Arbitrum One',
-  alias: 'arb',
-  currency: ETH.symbol,
-  image: require('@/assets/images/networks/arb.svg'),
-  image2: require('@/assets/images/networks/arbitrum.svg')
-}, {
-  name: 'Fantom Opera',
-  alias: 'ftm',
-  currency: FTM.symbol,
-  image: require('@/assets/images/networks/ftm.svg'),
-  image2: require('@/assets/images/networks/fantom.svg')
-}, {
-  name: 'Solana',
-  alias: 'solana',
-  currency: 'SOL',
-  image: require('@/assets/images/networks/solana.svg'),
-  image2: require('@/assets/images/networks/solana.svg')
-}, {
-  name: 'Algorand',
-  alias: 'algorand',
-  currency: 'ALGO',
-  image: require('@/assets/images/networks/algorand.png'),
-  image2: require('@/assets/images/networks/algorand.png')
-}, {
-  name: 'MoonBeam',
-  alias: 'moonbeam',
-  currency: 'GLMR',
-  image: require('@/assets/images/networks/moonbeam.svg'),
-  image2: require('@/assets/images/networks/moonbeam.svg')
-}]
+export const networks = [
+  {
+    name: 'Ethereum',
+    alias: 'eth',
+    currency: ETH.symbol,
+    image: require('@/assets/images/networks/eth.svg'),
+    image2: require('@/assets/images/networks/ethereum.svg')
+  }, {
+    name: 'BNB Chain',
+    alias: 'bsc',
+    currency: BNB.symbol,
+    image: require('@/assets/images/networks/bsc.svg'),
+    image2: require('@/assets/images/networks/bnbchain.svg'),
+    colorText: '#28282E'
+  }, {
+    name: 'Polygon',
+    alias: 'polygon',
+    currency: MATIC.symbol,
+    image: require('@/assets/images/networks/matic.svg'),
+    image2: require('@/assets/images/networks/polygon.svg')
+  }, {
+    name: 'Avalanche',
+    alias: 'avax',
+    currency: AVAX.symbol,
+    image: require('@/assets/images/networks/avax.svg'),
+    image2: require('@/assets/images/networks/avalanche.svg')
+  }, {
+    name: 'Arbitrum One',
+    alias: 'arb',
+    currency: ETH.symbol,
+    image: require('@/assets/images/networks/arb.svg'),
+    image2: require('@/assets/images/networks/arbitrum.svg')
+  }, {
+    name: 'Fantom Opera',
+    alias: 'ftm',
+    currency: FTM.symbol,
+    image: require('@/assets/images/networks/ftm.svg'),
+    image2: require('@/assets/images/networks/fantom.svg')
+  }, {
+    name: 'Solana',
+    alias: 'solana',
+    currency: 'SOL',
+    image: require('@/assets/images/networks/solana.svg'),
+    image2: require('@/assets/images/networks/solana.svg')
+  }, {
+    name: 'Algorand',
+    alias: 'algorand',
+    currency: 'ALGO',
+    image: require('@/assets/images/networks/algorand.png'),
+    image2: require('@/assets/images/networks/algorand.png')
+  }, {
+    name: 'MoonBeam',
+    alias: 'moonbeam',
+    currency: 'GLMR',
+    image: require('@/assets/images/networks/moonbeam.svg'),
+    image2: require('@/assets/images/networks/moonbeam.svg')
+  }
+]
 
 const DEFAULT_HEIGHT_BEFORE_SHOW_MORE = 168
 
@@ -101,8 +102,6 @@ interface GameDetail {
   gallery: any;
   project: any;
   reviews: any;
-  rates: any;
-  userRanks: any;
 }
 
 function formatRoi (price: string): string {
@@ -145,24 +144,20 @@ const handleData = (
     ranking = null,
     gallery = null,
     project = null,
-    reviews = [],
-    rates = {},
-    userRanks = {}
+    reviews = []
   }: GameDetail
 ) => {
   let items = []
   let dataGameRight = null
   let dataOverview = null
   let dataTokenSummary = null
-  let dataReviews = []
   let dataGuilds = null
-  let dataUserRanks = []
 
-  if (!gallery?.data) return { items, dataGameRight, dataOverview, dataTokenSummary, dataGuilds, dataReviews, dataUserRanks }
+  if (!gallery?.data) return { items, dataGameRight, dataOverview, dataTokenSummary, dataGuilds }
 
   const images = gallery.data
 
-  if (!images?.length) return { items, dataGameRight, dataOverview, dataTokenSummary, dataGuilds, dataReviews, dataUserRanks }
+  if (!images?.length) return { items, dataGameRight, dataOverview, dataTokenSummary, dataGuilds }
 
   items = images
     .map(g => g.attributes)
@@ -172,9 +167,9 @@ const handleData = (
 
   items = video?.length !== 0 ? video.concat(items) : items
 
-  if (!mobileThumbnail?.data) return { items, dataGameRight, dataOverview, dataTokenSummary, dataGuilds, dataReviews, dataUserRanks }
+  if (!mobileThumbnail?.data) return { items, dataGameRight, dataOverview, dataTokenSummary, dataGuilds }
 
-  if (!project) return { items, dataGameRight, dataOverview, dataTokenSummary, dataGuilds, dataReviews, dataUserRanks }
+  if (!project) return { items, dataGameRight, dataOverview, dataTokenSummary, dataGuilds }
 
   const { logo, categories, studio, tokenomic, shortDesc } = get(project, 'data.attributes', {})
 
@@ -233,40 +228,7 @@ const handleData = (
     initialMarketCap: tokenomic?.initMarketCap ? nFormatter(tokenomic?.initMarketCap) : '-'
   }
 
-  dataReviews = reviews?.data?.length && reviews.data.map(e => {
-    const { author = {}, publishedAt, rate, review, title, likeCount, dislikeCount, commentCount } = e?.attributes || {}
-    const { level, rank, repPoint, firstName, lastName, avatar, walletAddress, reviewCount, rates } = author?.data?.attributes || {}
-
-    return {
-      id: e?.id || '',
-      publishedAt,
-      rate,
-      title,
-      review,
-      likeCount,
-      dislikeCount,
-      commentCount,
-      user: {
-        id: get(author, 'data.id'),
-        level,
-        rank,
-        firstName,
-        lastName,
-        reps: repPoint,
-        avatar: {
-          url: avatar?.data?.attributes?.url
-        },
-        walletAddress,
-        reviewCount,
-        rates
-      }
-    }
-  })
-
-  const typeRank = get(userRanks, 'fields', []).filter(e => e.name === 'rank')
-  dataUserRanks = get(typeRank?.[0] || {}, 'type.enumValues', []).map(e => e.name)
-
-  return { items, dataGameRight, dataOverview, dataTokenSummary, dataGuilds, dataReviews, dataRating: rates, dataUserRanks, totalReviews: get(reviews, 'meta.pagination.total', 0) }
+  return { items, dataGameRight, dataOverview, dataTokenSummary, dataGuilds, totalReviews: get(reviews, 'meta.pagination.total', 0) }
 }
 
 const GamefiRanking = ({ data }) => {
@@ -409,43 +371,43 @@ const GamefiRanking = ({ data }) => {
 
 export const KeyMetrics = ({ data }) => {
   return (
-    <div className='grid md:grid-rows-3 md:grid-flow-col gap-4 rounded-sm'>
-      <div className='flex justify-between md:grid md:grid-cols-2 gap-2'>
-        <div className='text-white/50'><span>Symbol</span></div>
-        <div className='flex'>
-          <img src={imageCMS(data?.icon)} alt="" className='w-6 h-6 mr-3' />
+    <div className="grid md:grid-rows-3 md:grid-flow-col gap-4 rounded-sm">
+      <div className="flex justify-between md:grid md:grid-cols-2 gap-2">
+        <div className="text-white/50"><span>Symbol</span></div>
+        <div className="flex">
+          <img src={imageCMS(data?.icon)} alt="" className="w-6 h-6 mr-3" />
           <strong>{data?.tokenSymbol !== '-' && '$'}{data?.tokenSymbol}</strong>
         </div>
       </div>
-      <div className='flex justify-between md:grid md:grid-cols-2 gap-2'>
-        <div className='text-white/50'><span>Token Public Price</span></div>
-        <div className='flex'>
-          <img src={imageCMS(data?.icon)} alt="" className='w-6 h-6 mr-3' />
+      <div className="flex justify-between md:grid md:grid-cols-2 gap-2">
+        <div className="text-white/50"><span>Public sales price</span></div>
+        <div className="flex">
+          <img src={imageCMS(data?.icon)} alt="" className="w-6 h-6 mr-3" />
           <strong>{data?.publicPrice > 0 ? `$${printNumber(data?.publicPrice)}` : '-'}</strong>
         </div>
       </div>
-      <div className='flex justify-between md:grid md:grid-cols-2 gap-2'>
-        <div className='text-white/50'><span>Token Supply</span></div>
-        <div className='flex'>
-          <div className='w-6 h-6 mr-3'></div>
+      <div className="flex justify-between md:grid md:grid-cols-2 gap-2">
+        <div className="text-white/50"><span>Token Supply</span></div>
+        <div className="flex">
+          <div className="w-6 h-6 mr-3"></div>
           <strong>{data?.totalSupply}</strong>
         </div>
       </div>
-      <div className='flex justify-between md:grid md:grid-cols-2 gap-2'>
-        <div className='text-white/50'><span>Project Valuation</span></div>
-        <div className='flex'>
+      <div className="flex justify-between md:grid md:grid-cols-2 gap-2">
+        <div className="text-white/50"><span>Project Valuation</span></div>
+        <div className="flex">
           <strong>{data?.valuation}</strong>
         </div>
       </div>
-      <div className='flex justify-between md:grid md:grid-cols-2 gap-2'>
-        <div className='text-white/50'><span>Initial Token Circulation</span></div>
-        <div className='flex'>
+      <div className="flex justify-between md:grid md:grid-cols-2 gap-2">
+        <div className="text-white/50"><span>Initial Token Circulation</span></div>
+        <div className="flex">
           <strong>{data?.initTokenCirculation}</strong>
         </div>
       </div>
-      <div className='flex justify-between md:grid md:grid-cols-2 gap-2'>
-        <div className='text-white/50'><span>Initial Market Cap</span></div>
-        <div className='flex'>
+      <div className="flex justify-between md:grid md:grid-cols-2 gap-2">
+        <div className="text-white/50"><span>Initial Market Cap</span></div>
+        <div className="flex">
           <strong>{data?.initialMarketCap}</strong>
         </div>
       </div>
@@ -499,83 +461,89 @@ export const TokenSummary = ({ data }) => {
   const onCopyContractAddress = (address = '') => {
     if (!address) return
 
-    navigator.clipboard.writeText(address)
+    navigator.clipboard?.writeText(address)
+    toast.success('Copied!', { position: 'top-center' })
     setCopiedAddress(true)
   }
 
   return (
     <>
-      <div className='flex flex-col md:flex-row p-6 md:px-4 md:py-3 items-center bg-gradient-to-r from-[#3B3F4B] to-[#2A2D36] rounded gap-7 md:gap-0'>
-        <div className='flex mr-auto rounded items-center'>
-          <div className='flex w-10 h-10 mr-3 items-center'>
+      <div className="flex flex-col md:flex-row p-6 md:px-4 md:py-3 items-center bg-gradient-to-r from-[#3B3F4B] to-[#2A2D36] rounded gap-7 md:gap-0">
+        <div className="flex mr-auto rounded items-center">
+          <div className="flex w-10 h-10 mr-3 items-center">
             {data?.logo && <img src={imageCMS(data?.logo)} alt="logo-token" />}
           </div>
-          <div className='mx-3'><span>{data?.name}</span></div>
+          <div className="mx-3"><span>{data?.name}</span></div>
           <Tippy
             placement="top-start"
-            content={<div className='w-52 p-2 md:w-52'>The database is calculated from many sources in the market</div>}>
+            content={<div className="w-52 p-2 md:w-52">The database is calculated from many sources in the market</div>}>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM8 12C7.4 12 7 11.6 7 11C7 10.4 7.4 10 8 10C8.6 10 9 10.4 9 11C9 11.6 8.6 12 8 12ZM9 9H7V4H9V9Z" fill="white" />
             </svg>
           </Tippy>
         </div>
-        {data?.address !== '-' && <div className='flex items-center w-full md:w-auto'>
+        {data?.address !== '-' && <div className='flex items-center w-full md:w-auto flex-wrap'>
           <span className='md:mr-7 text-sm mr-5'>Contract</span>
           {data?.network && <Image width={20} height={20} className="inline-block rounded-full" src={data?.network} alt=""></Image>}
           <Tippy content={`${copiedAddress ? 'Copied' : 'Click to copy'}`}>
-            <div className='flex-1 font-semibold overflow-hidden mx-3 text-sm cursor-pointer' onMouseOut={() => setCopiedAddress(false)} onClick={() => onCopyContractAddress(data?.address)}><span>{shorten(data?.address, 15)}</span></div>
+            <div className='flex items-center flex-1 font-semibold overflow-hidden mx-1 sm:mx-3 text-sm cursor-pointer min-w-[100px]' onMouseOut={() => setCopiedAddress(false)} onClick={() => onCopyContractAddress(data?.address)}>
+              <span>{shorten(data?.address, 15)}</span>
+              <div className=" bg-[#3B3F4B] rounded-md w-[34px] h-[34px] flex items-center justify-center ml-2 md:ml-4">
+                <Image src={require('@/assets/images/icons/copy.svg')} alt="" width={16} height={16}></Image>
+              </div>
+            </div>
           </Tippy>
           <Tippy content="Add to Metamask">
             <button
-              className="w-6 h-6 hover:opacity-90"
+              className="hover:opacity-90 bg-[#3B3F4B] rounded-md w-[34px] h-[34px] flex items-center justify-center"
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onClick={() => addToWallet()}
             >
-              <Image src={require('@/assets/images/wallets/metamask.svg')} alt=""></Image>
+              <Image src={require('@/assets/images/wallets/metamask.svg')} alt="" width={20} height={20}></Image>
             </button>
           </Tippy>
         </div>}
       </div>
-      <div className='grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 xl:gap-12 2xl:gap-20'>
-        <div className='flex flex-col justify-between gap-5 md:gap-0 md:col-span-3 xl:col-span-1'>
-          <div className='uppercase text-white/50 text-xs font-bold'><span>Current price</span></div>
-          <div className='flex items-center'>
-            <div className='text-2xl font-mechanic'><strong>{data?.currentPrice > 0 ? `${formatPrice(data?.currentPrice)}` : '-'}</strong></div>
-            <PriceChangeBg className='mx-2 text-xs gap-1 py-[2px]' priceChange24h={data?.priceChange24h} />
+      <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 xl:gap-12 2xl:gap-20">
+        <div className="flex flex-col justify-between gap-5 md:gap-0 md:col-span-3 xl:col-span-1">
+          <div className="uppercase text-white/50 text-xs font-bold"><span>Current price</span></div>
+          <div className="flex items-center">
+            <div className="text-2xl font-mechanic"><strong>{data?.currentPrice > 0 ? `${formatPrice(data?.currentPrice)}` : '-'}</strong></div>
+            <PriceChangeBg className="mx-2 text-xs gap-1 py-[2px]" priceChange24h={data?.priceChange24h} />
           </div>
         </div>
-        <div className='flex flex-col justify-between gap-5 md:gap-0 mt-2 md:mt-0'>
-          <div className='flex'>
-            <div className='uppercase text-sm text-white/50 mr-auto'><span>Token roi:</span></div>
-            <div className='font-semibold text-sm'><span>{data?.roi}{data?.roi !== '-' && 'x'}</span></div>
+        <div className="flex flex-col justify-between gap-5 md:gap-0 mt-2 md:mt-0">
+          <div className="flex">
+            <div className="uppercase text-sm text-white/50 mr-auto"><span>Token roi:</span></div>
+            <div className="font-semibold text-sm"><span>{data?.roi}{data?.roi !== '-' && 'x'}</span></div>
           </div>
-          <div className='flex items-center'>
-            <div className='uppercase text-sm text-white/50 mr-auto'><span>Token:</span></div>
+          <div className="flex items-center">
+            <div className="uppercase text-sm text-white/50 mr-auto"><span>Token:</span></div>
             {data?.icon && <img src={imageCMS(data?.icon)} alt="" className='w-4 h-4 mr-3' />}
-            <div className='font-semibold text-sm'><span>{data?.tokenSymbol}</span></div>
+            <div className="font-semibold text-sm"><span>{data?.tokenSymbol}</span></div>
           </div>
         </div>
-        <div className='flex flex-col justify-between gap-5 md:gap-0'>
-          <div className='flex'>
-            <div className='uppercase text-sm text-white/50 mr-auto'><span>Market Cap:</span></div>
-            <div className='font-semibold text-sm overflow-hidden text-ellipsis whitespace-nowrap'><strong>{data?.marketCap}</strong></div>
+        <div className="flex flex-col justify-between gap-5 md:gap-0">
+          <div className="flex">
+            <div className="uppercase text-sm text-white/50 mr-auto"><span>Market Cap:</span></div>
+            <div className="font-semibold text-sm overflow-hidden text-ellipsis whitespace-nowrap"><strong>{data?.marketCap}</strong></div>
           </div>
-          <div className='flex'>
-            <div className='uppercase text-sm text-white/50 mr-auto'><span>Vol (24h):</span></div>
-            <div className='font-semibold text-sm'><span>{data?.volume24h}</span></div>
+          <div className="flex">
+            <div className="uppercase text-sm text-white/50 mr-auto"><span>Vol (24h):</span></div>
+            <div className="font-semibold text-sm"><span>{data?.volume24h}</span></div>
             {!!data?.volumeChange24h && (
-              <PriceChange className='text-xs gap-1 py-[2px] pr-0' priceChange24h={data?.volumeChange24h} />
+              <PriceChange className="text-xs gap-1 py-[2px] pr-0" priceChange24h={data?.volumeChange24h} />
             )}
           </div>
         </div>
-        <div className='flex flex-col justify-between gap-5 md:gap-0'>
-          <div className='flex'>
-            <div className='uppercase text-sm text-white/50 mr-auto'><span>Igo price:</span></div>
-            <div className='font-semibold text-sm'><span>{data?.publicPrice > 0 ? `$${printNumber(data?.publicPrice)}` : '-'}</span></div>
+        <div className="flex flex-col justify-between gap-5 md:gap-0">
+          <div className="flex">
+            <div className="uppercase text-sm text-white/50 mr-auto"><span>Public sales price:</span></div>
+            <div className="font-semibold text-sm"><span>{data?.publicPrice > 0 ? `$${printNumber(data?.publicPrice)}` : '-'}</span></div>
           </div>
-          <div className='flex'>
-            <div className='uppercase text-sm text-white/50 mr-auto'><span>{data?.igoDate && 'Igo date:'}</span></div>
-            <div className='font-semibold text-sm'><span>{data?.igoDate && format(new Date(data?.igoDate), 'dd MMM, yyyy')}</span></div>
+          <div className="flex">
+            <div className="uppercase text-sm text-white/50 mr-auto"><span>{data?.igoDate && 'Igo date:'}</span></div>
+            <div className="font-semibold text-sm"><span>{data?.igoDate && format(new Date(data?.igoDate), 'dd MMM, yyyy')}</span></div>
           </div>
         </div>
       </div>
@@ -584,13 +552,13 @@ export const TokenSummary = ({ data }) => {
 }
 
 const HubDetail = ({ data }) => {
-  const [isOver, setIsOverDefaultHeight] = useState<boolean>(false)
-  const [isShowMore, setIsShowMore] = useState<boolean>(false)
+  const [isOver, setIsOverDefaultHeight] = useState(false)
+  const [isShowMore, setIsShowMore] = useState(false)
   const [introductionHeight, setIntroductionHeight] = useState(0)
 
   const router = useRouter()
   const screen = useScreens()
-  const { items, dataGameRight, dataOverview, dataTokenSummary, dataGuilds, dataReviews, dataRating, dataUserRanks } = handleData(data)
+  const { items, dataGameRight, dataOverview, dataTokenSummary, dataGuilds } = handleData(data)
 
   const isMobile = screen.mobile || screen.tablet
 
@@ -658,7 +626,17 @@ const HubDetail = ({ data }) => {
         }
       </div>}
 
-      {!!dataGuilds?.length && <><div className="mt-10 md:mt-16 text-lg md:text-2xl font-mechanic uppercase"><strong>Guilds Supported</strong></div>
+      {!!dataGuilds?.length && <>
+        <div className="mt-10 md:mt-16 text-lg md:text-2xl font-mechanic uppercase flex items-center">
+          <strong className="pr-2">Guilds Supported</strong>
+          <Tippy
+            placement="top"
+            content={<div className='w-52 p-2 md:w-52'>Guilds Supported is the list of guilds that provide scholarships for this game.</div>}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM9 12H7V7H9V12ZM8 6C7.4 6 7 5.6 7 5C7 4.4 7.4 4 8 4C8.6 4 9 4.4 9 5C9 5.6 8.6 6 8 6Z" fill="white" />
+            </svg>
+          </Tippy>
+        </div>
         <div className='mt-2 md:mt-4'>
           {dataGuilds?.map((e, i) => {
             const attributes = get(e, 'attributes', {})
@@ -698,37 +676,7 @@ const HubDetail = ({ data }) => {
       }
       <News />
       <TwitterFeed />
-      <div>
-        <div className="flex items-center mt-10 md:mt-14 text-lg md:text-2xl font-mechanic uppercase">
-          <strong>Reviews</strong>
-          {!isEmpty(dataReviews) && <Link href={`/hub/${slug}/reviews/createOrUpdate`} passHref><a onClick={() => {
-            gtagEvent('hub_write_review', { game: slug })
-          }} className="bg-gamefiGreen-700 md:self-end text-gamefiDark-900 py-0.5 px-6 rounded-sm clipped-t-r hover:opacity-90 cursor-pointer ml-auto">
-            <span className="uppercase font-bold text-[13px] tracking-[0.02em] text-[#0D0F15] not-italic font-mechanic">Write my review</span>
-          </a></Link>}
-        </div>
-        {
-          !isEmpty(dataReviews)
-            ? <>
-              <ReviewList viewAll={dataReviews?.length >= 5} data={{ data: dataReviews, rates: dataRating }} ranks={dataUserRanks} />
-            </>
-            : <>
-              <div className='flex flex-col w-full items-center'>
-                <Image src={require('@/assets/images/hub/no-review.png')} width={93} height={75} alt="no-review" />
-                <span className='text-sm font-normal opacity-50 mt-[14px]'>No review available</span>
-                <Link href={`/hub/${slug}/reviews/createOrUpdate`} passHref>
-                  <a className="inline-flex bg-gamefiGreen-600 clipped-b-l p-px rounded cursor-pointer mr-1 mt-6" onClick={() => {
-                    gtagEvent('hub_write_review', { game: slug })
-                  }}>
-                    <div className='font-mechanic bg-gamefiDark-900 text-gamefiGreen-500 hover:text-gamefiGreen-200 clipped-b-l py-2 px-6 rounded leading-5 uppercase font-bold text-[13px]'>
-                      Write first review
-                    </div>
-                  </a>
-                </Link>
-              </div>
-            </>
-        }
-      </div>
+      <Reviews data={data} slug={slug} />
       <div className="mt-10 md:mt-14 text-lg md:text-2xl font-mechanic uppercase"><strong>Related games</strong></div>
       <MoreLike categories={get(data, 'project.data.attributes.categories.data', [])} slug={slug} />
     </div>

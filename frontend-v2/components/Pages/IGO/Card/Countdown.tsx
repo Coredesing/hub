@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { intervalToDuration } from 'date-fns'
 
-const Countdown = ({ to, className }: { to: string | number; className?: string }) => {
+export const Countdown = ({ to, className }: { to: string | number; className?: string }) => {
   const [days, setDays] = useState('00')
   const [hours, setHours] = useState('00')
   const [minutes, setMinutes] = useState('00')

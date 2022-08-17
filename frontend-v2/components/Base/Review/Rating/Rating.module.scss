@@ -1,0 +1,34 @@
+.rating_container {
+  border-radius: 4px;
+  background: #292c36;
+
+  > .rating_overall {
+    border-radius: 4px 0 0 4px;
+
+    .text {
+      font-family: 'Rajdhani';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 74px;
+      line-height: 100%;
+      background: linear-gradient(270deg, #7eff00 2.11%, #bcdb00 98.59%),
+      #ffffff;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+    }
+  }
+
+  .rating_chart {
+    .rating_col {
+      background: #373b48;
+      border-radius: 1px;
+    }
+  }
+
+  .rating_action {
+    background: linear-gradient(180deg, #343742 0%, rgba(52, 55, 66, 0) 250%);
+    border-radius: 0 4px 4px 0;
+  }
+}

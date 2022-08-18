@@ -122,11 +122,11 @@ const Level = ({ data, ranks, specialRank }) => {
 
   return (
     <div className="bg-[#0E0F14] border border-[#23252C] rounded-[4px]">
-      <div className="flex bg-[#0E0F14]">
+      <div className="flex md:flex-row flex-col bg-[#0E0F14]">
         <div
           className={clsx(
             // styles['gradient-box'],
-            'flex items-center rounded-[4px] p-4 md:p-[30px] w-3/5'
+            'flex items-center rounded-[4px] p-4 md:p-[30px] w-full md:w-3/5'
           )}
         >
           <div
@@ -223,7 +223,7 @@ const Level = ({ data, ranks, specialRank }) => {
         <div
           className={clsx(
             isShowRankDetail ? 'rotate-180' : 'rotate-0',
-            'w-8 h-8 border transition-all duration-300 border-[#23252C] rounded-full absolute bg-[#101015] -top-4 left-[calc(50%-16px)] flex justify-center items-center cursor-pointer'
+            'w-8 h-8 border transition-all duration-300 border-[#23252C] rounded-full absolute bg-[#101015] -top-4 left-[calc(50%-16px)] hidden md:flex justify-center items-center cursor-pointer'
           )}
           onClick={toggleShowRankDetail}
         >
@@ -242,7 +242,7 @@ const Level = ({ data, ranks, specialRank }) => {
         </div>
         <div
           className={clsx(
-            'flex w-full',
+            'w-full hidden md:flex',
             isShowRankDetail ? 'h-fit opacity-100' : 'h-0 overflow-hidden'
           )}
         >
@@ -313,7 +313,7 @@ const Level = ({ data, ranks, specialRank }) => {
         {specialRank?.name && (
           <div
             className={clsx(
-              'bg-black flex justify-center items-center',
+              'bg-black hidden md:flex justify-center items-center',
               isShowRankDetail ? 'h-fit opacity-100' : 'h-0 overflow-hidden'
             )}
           >

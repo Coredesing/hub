@@ -3,6 +3,7 @@ import get from 'lodash.get'
 import Image from 'next/image'
 import Item from '@/components/Pages/Account/Rank/Quest/ListQuestItem'
 import { useMemo } from 'react'
+import clsx from 'clsx'
 
 const List = ({ data }) => {
   const { name, tooltipText, description, quests } = useMemo(() => {
@@ -15,7 +16,7 @@ const List = ({ data }) => {
   }, [data])
 
   return (
-    <div>
+    <div className={clsx(data._id === '1' ? 'md:block hidden' : 'block')}>
       <div className="flex flex-col gap-3">
         <div className="flex gap-3 mt-20">
           <div className="uppercase font-mechanic font-bold text-[18px] leading-[100%] text-white">

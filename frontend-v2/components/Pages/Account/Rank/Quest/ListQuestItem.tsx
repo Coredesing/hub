@@ -105,7 +105,7 @@ const Item = ({ data }) => {
   return (
     <div className="flex flex-col justify-between flex-1">
       <div
-        className="bg-[#383A43] min-h-[146px] relative bg-cover"
+        className="bg-[#383A43] min-h-[200px] md:min-h-[146px] relative bg-cover"
         style={banner ? { backgroundImage: `url(${banner})` } : {}}
       >
         <div className="absolute top-0 left-0 bg-[#15171E] clipped-b-r-full w-24 h-6 pl-[10px] flex items-center">

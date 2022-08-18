@@ -85,7 +85,7 @@ const TabGetMoreExp = ({ data }) => {
       {[
         ...get(data, 'groupQuests', []),
         {
-          _id: '62cbc9a19756de073879ec5b',
+          _id: '1',
           name: 'Social activities',
           description: 'Coming soon',
           tooltipText: '',

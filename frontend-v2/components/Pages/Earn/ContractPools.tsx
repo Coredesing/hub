@@ -144,6 +144,13 @@ const ContractPools = ({ pools, contractAddress, className }: {
       return
     }
 
+    if (selectedExtended?.timeOpening < now) {
+      return intervalToDuration({
+        start: new Date(),
+        end: new Date()
+      })
+    }
+
     return intervalToDuration({
       start: now,
       end: selectedExtended?.timeOpening

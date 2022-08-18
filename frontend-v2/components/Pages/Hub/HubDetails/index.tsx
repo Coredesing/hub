@@ -191,7 +191,7 @@ const handleData = (
     mobileThumbnail: mobileThumbnail.data?.[0]?.attributes?.url || '-',
     gameDownloads,
     categories: categories?.data || [],
-    totalFavorites: nFormatter(totalFavorites)
+    totalFavorites: totalFavorites
   }
 
   dataOverview = {

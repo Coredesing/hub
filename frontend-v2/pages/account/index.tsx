@@ -23,7 +23,7 @@ const Account = () => {
     })
   }, [stakingPool, setStakingPool])
 
-  return <Layout title="GameFi Pass">
+  return <Layout title="My Account">
     <AccountLayout>
       <Profile></Profile>
     </AccountLayout>

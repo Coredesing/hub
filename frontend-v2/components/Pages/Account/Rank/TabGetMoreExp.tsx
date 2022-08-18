@@ -41,7 +41,7 @@ const TabGetMoreExp = ({ data }) => {
           <div className="font-casual font-normal text-sm leading-[150%] text-white">
             Get 100 GXP per $GAFI staked
             <br />
-            Lose 100 GXP per $GAFI staked
+            Lose 100 GXP per $GAFI unstaked
           </div>
         </div>
         <div className="relative flex-1">

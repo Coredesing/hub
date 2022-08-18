@@ -87,7 +87,7 @@ const TabGetMoreExp = ({ data }) => {
         {
           _id: '1',
           name: 'Social activities',
-          description: 'Coming soon',
+          description: '',
           tooltipText: '',
           priority: 6,
           quests: [{ _id: 1 }, { _id: 2 }, { _id: 3 }, { _id: 4 }]

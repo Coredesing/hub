@@ -27,21 +27,18 @@ const LevelItem = ({ data }) => {
         </div>
         <div className="p-4">
           <div className="flex flex-col pt-[48px] gap-5">
-            {/* <p className="mx-auto font-casual font-normal text-sm leading-[150%] text-white">
-              REWARD COMING SOON
-            </p> */}
-            {privileges.map((e) => {
+            <span className="font-casual mx-auto font-semibold text-xs leading-[150%] text-white">
+              Coming Soon
+            </span>
+            {/* {privileges.map((e) => {
               return (
                 <div key={e._id} className="flex justify-center">
-                  {/* <span className="font-casual font-normal text-[13px] leading-[150%] text-[#F4F4F4]">
-                    {e.name}
-                  </span> */}
                   <span className="font-casual font-bold text-[13px] leading-[150%] text-[#F4F4F4]">
                     {e.description || '-'}
                   </span>
                 </div>
               )
-            })}
+            })} */}
           </div>
         </div>
       </div>
@@ -92,7 +89,7 @@ const Stepper = ({ data, currentRankExp }) => {
 }
 
 const Level = ({ data, ranks, specialRank }) => {
-  const [isShowRankDetail, setShowRankDetail] = useState(false)
+  const [isShowRankDetail, setShowRankDetail] = useState(true)
   const toggleShowRankDetail = () => {
     setShowRankDetail((prev) => {
       return !prev
@@ -188,7 +185,11 @@ const Level = ({ data, ranks, specialRank }) => {
               </div>
 
               <div className="font-casual font-normal text-xs leading-[150%] text-white opacity-50">
-                Need <b>{getExpText()}</b> to next rank
+                {exp.next !== 'MAX' && (
+                  <span>
+                    Need <b>{getExpText()}</b> to next rank
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -198,7 +199,10 @@ const Level = ({ data, ranks, specialRank }) => {
           <div className="font-mechanic font-bold text-13px leading-[100%] uppercase text-white/50">
             Current rank benefit
           </div>
-          <div>
+          <span className="font-casual font-semibold text-xs leading-[150%] text-white">
+            Coming Soon
+          </span>
+          {/* <div>
             {privileges.map((e) => {
               return (
                 <div key={e._id} className="flex">
@@ -211,7 +215,7 @@ const Level = ({ data, ranks, specialRank }) => {
                 </div>
               )
             })}
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -339,7 +343,10 @@ const Level = ({ data, ranks, specialRank }) => {
               </div>
 
               <div className="mt-4">
-                {get(specialRank, 'privileges', []).map((e) => {
+                <span className="font-casual font-semibold text-xs leading-[150%] text-white">
+                  Coming Soon
+                </span>
+                {/* {get(specialRank, 'privileges', []).map((e) => {
                   return (
                     <div key={e._id} className="flex">
                       <span className="flex-1 font-casual font-normal text-[13px] leading-[150%] text-[#F4F4F4]">
@@ -350,7 +357,7 @@ const Level = ({ data, ranks, specialRank }) => {
                       </span>
                     </div>
                   )
-                })}
+                })} */}
               </div>
             </div>
           </div>

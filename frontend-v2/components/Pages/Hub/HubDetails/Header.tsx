@@ -8,19 +8,20 @@ import { fetcher, gtagEvent } from '@/utils'
 import useHubProfile from '@/hooks/useHubProfile'
 import styles from './Carousel.module.scss'
 import Link from 'next/link'
+import { useHubDetailContext } from '@/components/Pages/Hub/HubDetails/utils'
 import { nFormatter } from '@/components/Pages/Hub/utils'
 import { useRouter } from 'next/router'
 
-function Header ({ callApi, name, id, className, isVerified = false, totalFavorites, slug, viewDetail = false }) {
+function Header ({ callApi, name, id, className, isVerified = false, slug, viewDetail = false } : any) {
   const [loading, setLoading] = useState(false)
   const [favorite, setFavorite] = useState(false)
   const [pinHeader, setPinHeader] = useState(false)
-  const [totalLocalFavorites, setTotalLocalFavorites] = useState<number>(+totalFavorites || 0)
+  const { hubData } = useHubDetailContext()
+  const [totalLocalFavorites, setTotalLocalFavorites] = useState<number>(+(hubData?.totalFavorites) || 0)
 
   const { connectWallet } = useConnectWallet()
   const { accountHub } = useHubProfile()
   const router = useRouter()
-  console.log('totalFavorites', totalFavorites)
   useEffect(() => {
     function handleScroll () {
       const layoutBodyHubElm = document.getElementById('layoutBodyHub')

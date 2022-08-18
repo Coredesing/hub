@@ -52,33 +52,6 @@ const CardSlim = ({ item, now, isTicket }: Props) => {
     return { text: 'Ended' }
   }, [stages, now])
 
-  // const duration = useMemo(() => {
-  //   const { timeBuy, timeFinish } = stages
-  //   if (!timeBuy || !timeFinish) return null
-  //   if (now < timeBuy) {
-  //     return intervalToDuration({
-  //       start: now,
-  //       end: timeBuy
-  //     })
-  //   }
-
-  //   return intervalToDuration({
-  //     start: now,
-  //     end: timeFinish
-  //   })
-  // }, [now, stages])
-
-  // const text = useMemo(() => {
-  //   const { timeBuy, timeFinish } = stages
-  //   if (!timeBuy || !timeFinish) return ''
-
-  //   if (now < timeBuy) {
-  //     return 'Starts in'
-  //   }
-
-  //   return 'Ends in'
-  // }, [stages, now])
-
   const poolType = useMemo(() => {
     return visibility(item)
   }, [item])

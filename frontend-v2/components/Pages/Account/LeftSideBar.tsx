@@ -13,7 +13,7 @@ const LeftSideBar = ({ className }) => {
     minHeight: '100vh'
     // width: '234px'
   }}>
-    <h3 className='mb-11 font-bold text-2xl'>GameFi Pass</h3>
+    <h3 className='mb-11 font-bold text-2xl'>My Account</h3>
     <div className="grid">
       <div className='mb-6'>
         <div className='flex gap-2 items-center'>
@@ -35,7 +35,7 @@ const LeftSideBar = ({ className }) => {
           <Link href={'/account/rank'}><a className={`uppercase text-sm font-bold ${isCurrentLink('/account/rank') ? 'text-gamefiGreen-700' : ''}`}>My Rank</a></Link>
         </div>
       </div>
-      <div className='mb-6'>
+      {/* <div className='mb-6'>
         <div className='flex gap-2 items-center'>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M8 9.5C10.4853 9.5 12.5 7.48528 12.5 5C12.5 2.51472 10.4853 0.5 8 0.5C5.51472 0.5 3.5 2.51472 3.5 5C3.5 7.48528 5.51472 9.5 8 9.5Z" stroke={isCurrentLink('/account/gxp') ? '#6CDB00' : 'white'} strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
@@ -43,7 +43,7 @@ const LeftSideBar = ({ className }) => {
           </svg>
           <Link href={'/account/gxp'}><a className={`uppercase text-sm font-bold ${isCurrentLink('/account/gxp') ? 'text-gamefiGreen-700' : ''}`}>My GXP</a></Link>
         </div>
-      </div>
+      </div> */}
       <div className='mb-6'>
         <div className='flex gap-2 items-center'>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

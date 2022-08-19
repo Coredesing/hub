@@ -259,7 +259,7 @@ const Claim = () => {
   const [refundConfirm, setRefundConfirm] = useState('')
   const [refundReason, setRefundReason] = useState('')
   const [otherReason, setOtherReason] = useState('')
-  const [signature, setSignature] = useState('')
+  // const [signature, setSignature] = useState('')
 
   const { signMessage } = useWalletSignature()
 
@@ -333,6 +333,16 @@ const Claim = () => {
   const handleRefund = useCallback(async () => {
     if (!poolData?.campaign_hash) return
     if (!userRefund) return
+
+    if (!account || !network) {
+      return
+    }
+
+    if (network?.alias !== poolData?.network_available) {
+      switchNetwork(library?.provider, getNetworkByAlias(poolData?.network_available).id)
+      return
+    }
+
     if (!refundConfirm || !refundReason || (refundReason === REFUND_REASON.FIVE && !otherReason)) {
       toast.error('Requirements do not match')
       return
@@ -404,12 +414,20 @@ const Claim = () => {
     } catch (e) {
       toast.error(e?.message || 'Failed to request refund')
     }
-  }, [account, getUserRefund, library, otherReason, poolData?.campaign_hash, poolData?.id, refundConfirm, refundReason, signMessage, userRefund])
+  }, [account, getUserRefund, library, network, otherReason, poolData?.campaign_hash, poolData?.id, poolData?.network_available, refundConfirm, refundReason, signMessage, userRefund])
 
   const claimRefund = useCallback(async () => {
     if (!poolData?.campaign_hash) return
-    if (!account) return
     if (!userRefund) return
+
+    if (!account || !network) {
+      return
+    }
+
+    if (network?.alias !== poolData?.network_available) {
+      switchNetwork(library?.provider, getNetworkByAlias(poolData?.network_available).id)
+      return
+    }
 
     let s = ''
     await signMessage().then(data => {
@@ -475,7 +493,7 @@ const Claim = () => {
     } catch (e) {
       toast.error(e?.message || 'Failed to request refund')
     }
-  }, [account, getUserRefund, library, poolData?.campaign_hash, poolData?.id, signMessage, userRefund])
+  }, [account, getUserRefund, library, network, poolData?.campaign_hash, poolData?.id, poolData?.network_available, signMessage, userRefund])
 
   const allowToRefund = useMemo(() => {
     if (!poolData?.campaign_hash) return false
@@ -485,7 +503,7 @@ const Claim = () => {
     if (Number(claimedTokens) !== 0) return false // User has claimed tokens
 
     return true
-  }, [claimedTokens, purchasedTokens, refundDeadline?.from, refundDeadline?.to, userRefund?.currencyAmount])
+  }, [claimedTokens, poolData?.campaign_hash, purchasedTokens, refundDeadline?.from, refundDeadline?.to, userRefund?.currencyAmount])
 
   return (
     <>

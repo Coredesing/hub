@@ -15,7 +15,8 @@ const LevelItem = ({ data }) => {
   }, [data])
 
   return (
-    <div className="relative min-w-[248px] h-[194px]  rounded-[3px]">
+    // Need set height to 194px when show reward
+    <div className="relative min-w-[248px] h-[80px]  rounded-[3px]">
       <div className="absolute top-0 left-0 w-full h-full"></div>
       <div className="absolute top-0 left-0 w-full h-full z-10">
         <div className="w-[70px] h-[70px] absolute left-[calc(50%-35px)] -top-[calc(30px)]">
@@ -27,7 +28,7 @@ const LevelItem = ({ data }) => {
         </div>
         <div className="p-4">
           <div className="flex flex-col pt-[48px] gap-5">
-            <span className="font-casual mx-auto font-semibold text-xs leading-[150%] text-white">
+            <span className="font-casual mx-auto font-semibold text-13px leading-[150%] text-[#F4F4F4]/40">
               Coming Soon
             </span>
             {/* {privileges.map((e) => {
@@ -178,7 +179,7 @@ const Level = ({ data, ranks, specialRank }) => {
                   <span className="text-[#838487] font-casual font-normal, text-xs leading-[150%]">
                     Reputation:
                   </span>
-                  <span className="font-casual font-semibold text-xs leading-[150%] text-white">
+                  <span className="font-casual mx-auto font-semibold text-13px leading-[150%] text-[#F4F4F4]/40">
                     Coming Soon
                   </span>
                 </div>
@@ -319,12 +320,17 @@ const Level = ({ data, ranks, specialRank }) => {
           >
             <div className="w-[300px] h-[250px] relative">
               <Image
-                src={require(`@/assets/images/ranks/${specialRank.name}.png`)}
+                src={require(`@/assets/images/ranks/${
+                  specialRank.name || 5
+                }.png`)}
                 alt=""
                 layout="fill"
               ></Image>
             </div>
-            <div className="flex flex-col">
+            <span className="font-casual font-semibold text-13px leading-[150%] text-[#F4F4F4]/40">
+              Coming Soon
+            </span>
+            {/* <div className="flex flex-col">
               <div className="font-mechanic font-bold text-base leading-[100%] uppercase text-white flex gap-2">
                 <span>Level {specialRank.name}</span>
                 <span className="opacity-50"> — Special Auction</span>
@@ -343,10 +349,7 @@ const Level = ({ data, ranks, specialRank }) => {
               </div>
 
               <div className="mt-4">
-                <span className="font-casual font-semibold text-xs leading-[150%] text-white">
-                  Coming Soon
-                </span>
-                {/* {get(specialRank, 'privileges', []).map((e) => {
+                {get(specialRank, 'privileges', []).map((e) => {
                   return (
                     <div key={e._id} className="flex">
                       <span className="flex-1 font-casual font-normal text-[13px] leading-[150%] text-[#F4F4F4]">
@@ -357,9 +360,9 @@ const Level = ({ data, ranks, specialRank }) => {
                       </span>
                     </div>
                   )
-                })} */}
+                })}
               </div>
-            </div>
+            </div> */}
           </div>
         )}
       </div>

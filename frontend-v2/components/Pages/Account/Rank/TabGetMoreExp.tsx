@@ -90,7 +90,40 @@ const TabGetMoreExp = ({ data }) => {
           description: '',
           tooltipText: '',
           priority: 6,
-          quests: [{ _id: 1 }, { _id: 2 }, { _id: 3 }, { _id: 4 }]
+          quests: [
+            {
+              _id: 1,
+              description: 'Lorem ipsum dolor sit amet.',
+              rewards: [{
+                name: 'GXP',
+                quantity: 10
+              }]
+            },
+            {
+              _id: 2,
+              description: 'Lorem ipsum dolor sit amet.',
+              rewards: [{
+                name: 'GXP',
+                quantity: 10
+              }]
+            },
+            {
+              _id: 3,
+              description: 'Lorem ipsum dolor sit amet.',
+              rewards: [{
+                name: 'GXP',
+                quantity: 10
+              }]
+            },
+            {
+              _id: 4,
+              description: 'Lorem ipsum dolor sit amet.',
+              rewards: [{
+                name: 'GXP',
+                quantity: 10
+              }]
+            }
+          ]
         }
       ].map((group) => (
         <List key={group._id} data={group}></List>

@@ -10,7 +10,6 @@ import Script from 'next/script'
 import { HubDetailContext } from '@/components/Pages/Hub/HubDetails/utils'
 import { useScreens } from '@/components/Pages/Home/utils'
 import Head from 'next/head'
-import { nFormatter } from '@/components/Pages/Hub/utils'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { gtagEvent, fetcher } from '@/utils'
@@ -113,7 +112,7 @@ const GameDetails = ({ data = {} }: any) => {
             name={data?.name}
             id={data?.id}
             isVerified={get(data, 'project.data.attributes.isVerifiedGameFi')}
-            totalFavorites={nFormatter(values?.totalFavorites)}
+            totalFavorites={values?.totalFavorites}
             slug={data?.slug}
           />
 

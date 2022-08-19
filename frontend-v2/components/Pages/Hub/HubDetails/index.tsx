@@ -12,6 +12,7 @@ import BGRankVer from '@/assets/images/aggregator/bg-rank-gamefi-ver.png'
 import { useScreens } from '@/components/Pages/Home/utils'
 import get from 'lodash.get'
 import { format } from 'date-fns'
+import { useHubDetailContext } from '@/components/Pages/Hub/HubDetails/utils'
 import { AVAX, BNB, ETH, FTM, MATIC, switchNetwork } from '@/components/web3'
 import { PriceChange, PriceChangeBg } from './PriceChange'
 import News from './News/index'
@@ -191,7 +192,7 @@ const handleData = (
     mobileThumbnail: mobileThumbnail.data?.[0]?.attributes?.url || '-',
     gameDownloads,
     categories: categories?.data || [],
-    totalFavorites: nFormatter(totalFavorites)
+    totalFavorites: totalFavorites
   }
 
   dataOverview = {
@@ -233,6 +234,8 @@ const handleData = (
 
 const GamefiRanking = ({ data }) => {
   const [bg, setBg] = useState(BGRank)
+  const { hubData } = useHubDetailContext()
+
   const screen = useScreens()
 
   useEffect(() => {
@@ -301,7 +304,7 @@ const GamefiRanking = ({ data }) => {
               </svg>
               <p className='font-medium  ml-2'>Likes</p>
             </div>
-            <strong className="ml-auto">{data?.totalFavorites}</strong>
+            <strong className="ml-auto">{nFormatter(hubData?.totalFavorites)}</strong>
           </div>
           <div className="flex">
             <div className="flex items-center">
@@ -352,7 +355,7 @@ const GamefiRanking = ({ data }) => {
               </svg>
               <p className='font-medium  ml-2'>Likes</p>
             </div>
-            <strong className="ml-auto">{data?.totalFavorites}</strong>
+            <strong className="ml-auto">{nFormatter(hubData?.totalFavorites)}</strong>
           </div>
           <div className="flex">
             <div className="flex items-center">

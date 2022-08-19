@@ -38,7 +38,7 @@ const TabGetMoreExp = ({ data }) => {
             </Tippy> */}
           </div>
 
-          <div className="font-casual font-normal text-sm leading-[150%] text-white">
+          <div className="font-casual font-normal text-sm leading-[150%] text-white mb-4 md:mb-0">
             Get 100 GXP per $GAFI staked
             <br />
             Lose 100 GXP per $GAFI unstaked
@@ -87,7 +87,7 @@ const TabGetMoreExp = ({ data }) => {
         {
           _id: '1',
           name: 'Social activities',
-          description: 'Coming soon',
+          description: '',
           tooltipText: '',
           priority: 6,
           quests: [{ _id: 1 }, { _id: 2 }, { _id: 3 }, { _id: 4 }]

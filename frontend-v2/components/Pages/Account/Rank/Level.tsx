@@ -27,21 +27,18 @@ const LevelItem = ({ data }) => {
         </div>
         <div className="p-4">
           <div className="flex flex-col pt-[48px] gap-5">
-            {/* <p className="mx-auto font-casual font-normal text-sm leading-[150%] text-white">
-              REWARD COMING SOON
-            </p> */}
-            {privileges.map((e) => {
+            <span className="font-casual mx-auto font-semibold text-xs leading-[150%] text-white">
+              Coming Soon
+            </span>
+            {/* {privileges.map((e) => {
               return (
                 <div key={e._id} className="flex justify-center">
-                  {/* <span className="font-casual font-normal text-[13px] leading-[150%] text-[#F4F4F4]">
-                    {e.name}
-                  </span> */}
                   <span className="font-casual font-bold text-[13px] leading-[150%] text-[#F4F4F4]">
                     {e.description || '-'}
                   </span>
                 </div>
               )
-            })}
+            })} */}
           </div>
         </div>
       </div>
@@ -92,7 +89,7 @@ const Stepper = ({ data, currentRankExp }) => {
 }
 
 const Level = ({ data, ranks, specialRank }) => {
-  const [isShowRankDetail, setShowRankDetail] = useState(false)
+  const [isShowRankDetail, setShowRankDetail] = useState(true)
   const toggleShowRankDetail = () => {
     setShowRankDetail((prev) => {
       return !prev
@@ -125,11 +122,11 @@ const Level = ({ data, ranks, specialRank }) => {
 
   return (
     <div className="bg-[#0E0F14] border border-[#23252C] rounded-[4px]">
-      <div className="flex bg-[#0E0F14]">
+      <div className="flex md:flex-row flex-col bg-[#0E0F14]">
         <div
           className={clsx(
             // styles['gradient-box'],
-            'flex items-center rounded-[4px] p-4 md:p-[30px] w-3/5'
+            'flex items-center rounded-[4px] p-4 md:p-[30px] w-full md:w-3/5'
           )}
         >
           <div
@@ -188,7 +185,11 @@ const Level = ({ data, ranks, specialRank }) => {
               </div>
 
               <div className="font-casual font-normal text-xs leading-[150%] text-white opacity-50">
-                Need <b>{getExpText()}</b> to next rank
+                {exp.next !== 'MAX' && (
+                  <span>
+                    Need <b>{getExpText()}</b> to next rank
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -198,7 +199,10 @@ const Level = ({ data, ranks, specialRank }) => {
           <div className="font-mechanic font-bold text-13px leading-[100%] uppercase text-white/50">
             Current rank benefit
           </div>
-          <div>
+          <span className="font-casual font-semibold text-xs leading-[150%] text-white">
+            Coming Soon
+          </span>
+          {/* <div>
             {privileges.map((e) => {
               return (
                 <div key={e._id} className="flex">
@@ -211,7 +215,7 @@ const Level = ({ data, ranks, specialRank }) => {
                 </div>
               )
             })}
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -219,7 +223,7 @@ const Level = ({ data, ranks, specialRank }) => {
         <div
           className={clsx(
             isShowRankDetail ? 'rotate-180' : 'rotate-0',
-            'w-8 h-8 border transition-all duration-300 border-[#23252C] rounded-full absolute bg-[#101015] -top-4 left-[calc(50%-16px)] flex justify-center items-center cursor-pointer'
+            'w-8 h-8 border transition-all duration-300 border-[#23252C] rounded-full absolute bg-[#101015] -top-4 left-[calc(50%-16px)] hidden md:flex justify-center items-center cursor-pointer'
           )}
           onClick={toggleShowRankDetail}
         >
@@ -238,7 +242,7 @@ const Level = ({ data, ranks, specialRank }) => {
         </div>
         <div
           className={clsx(
-            'flex w-full',
+            'w-full hidden md:flex',
             isShowRankDetail ? 'h-fit opacity-100' : 'h-0 overflow-hidden'
           )}
         >
@@ -309,7 +313,7 @@ const Level = ({ data, ranks, specialRank }) => {
         {specialRank?.name && (
           <div
             className={clsx(
-              'bg-black flex justify-center items-center',
+              'bg-black hidden md:flex justify-center items-center',
               isShowRankDetail ? 'h-fit opacity-100' : 'h-0 overflow-hidden'
             )}
           >
@@ -339,7 +343,10 @@ const Level = ({ data, ranks, specialRank }) => {
               </div>
 
               <div className="mt-4">
-                {get(specialRank, 'privileges', []).map((e) => {
+                <span className="font-casual font-semibold text-xs leading-[150%] text-white">
+                  Coming Soon
+                </span>
+                {/* {get(specialRank, 'privileges', []).map((e) => {
                   return (
                     <div key={e._id} className="flex">
                       <span className="flex-1 font-casual font-normal text-[13px] leading-[150%] text-[#F4F4F4]">
@@ -350,7 +357,7 @@ const Level = ({ data, ranks, specialRank }) => {
                       </span>
                     </div>
                   )
-                })}
+                })} */}
               </div>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { printNumber } from '@/utils'
+import { printNumber, shorten } from '@/utils'
 import clsx from 'clsx'
 
 const TabLeaderBoard = ({ data, ranks }) => {
@@ -33,7 +33,10 @@ const TabLeaderBoard = ({ data, ranks }) => {
                   {i + 1}
                 </td>
                 <td className="py-4" align="center">
-                  {e.walletId}
+                  <div className="md:hidden block">
+                    {shorten(e.walletId, 10)}
+                  </div>
+                  <div className="hidden md:block">{e.walletId}</div>
                 </td>
                 <td className="py-4" align="center">
                   {printNumber(parseInt(e.exp.total))}

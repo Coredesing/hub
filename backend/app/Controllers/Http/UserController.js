@@ -189,7 +189,7 @@ class UserController {
       ));
 
       const user = {
-        email: await RedisUtils.maskEmail(findedUser.email),
+        email: await HelperUtils.maskEmail(findedUser.email),
         id: findedUser.id,
         status: findedUser.status,
         is_kyc: findedUser.is_kyc,

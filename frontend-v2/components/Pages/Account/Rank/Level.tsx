@@ -188,7 +188,7 @@ const Level = ({ data, ranks, specialRank }) => {
               <div className="font-casual font-normal text-xs leading-[150%] text-white opacity-50">
                 {exp.next !== 'MAX' && (
                   <span>
-                    Need <b>{getExpText()}</b> to next rank
+                    You need <b>{getExpText()}</b> to next rank
                   </span>
                 )}
               </div>

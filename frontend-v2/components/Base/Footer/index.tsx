@@ -97,10 +97,10 @@ const Footer = () => {
       <div className="flex align-middle items-center justify-between text-base font-light pt-6 pb-8 border-t border-gray-700 text-gray-400 px-4">
         <div className="text-sm sm:text-base leading-6">&#169; Icetea Labs, 2021</div>
         <div className="flex gap-x-4 items-center">
-          {/* <Link href="#" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Terms of Use</a></Link>
+          <Link href="/terms-of-use" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Terms of Use</a></Link>
           <div className="h-4 w-px bg-gray-600"></div>
           <Link href="/privacy" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Privacy</a></Link>
-          <div className="h-4 w-px bg-gray-600"></div> */}
+          <div className="h-4 w-px bg-gray-600"></div>
           <Link href="/disclaimer" passHref><a className="text-sm lg:text-base leading-6 hover:underline cursor-pointer">Disclaimer</a></Link>
           <div className="h-4 w-px bg-gray-600"></div>
           <a href="https://faq.gamefi.org/" target="_blank" className="text-sm lg:text-base leading-6 hover:underline cursor-pointer" rel="noreferrer">Help Center</a>

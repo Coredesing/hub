@@ -175,6 +175,14 @@ const Level = ({ data, ranks, specialRank }) => {
                   )}
                 </div>
 
+                <div className="pl-2 block md:hidden font-casual font-normal text-xs leading-[150%] text-white opacity-50">
+                  {exp.next !== 'MAX' && (
+                    <span>
+                      You need <b>{getExpText()}</b> to next rank
+                    </span>
+                  )}
+                </div>
+
                 <div className="flex gap-2 pl-2">
                   <span className="text-[#838487] font-casual font-normal, text-xs leading-[150%]">
                     Reputation:
@@ -185,7 +193,7 @@ const Level = ({ data, ranks, specialRank }) => {
                 </div>
               </div>
 
-              <div className="font-casual font-normal text-xs leading-[150%] text-white opacity-50">
+              <div className="md:block hidden font-casual font-normal text-xs leading-[150%] text-white opacity-50">
                 {exp.next !== 'MAX' && (
                   <span>
                     You need <b>{getExpText()}</b> to next rank

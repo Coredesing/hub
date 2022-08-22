@@ -10,7 +10,7 @@ import bg from '@/components/Pages/Adventure/images/bg-countdown.png'
 // eslint-disable-next-line no-unused-expressions
 fonts // this is intentional to avoid tree-shaking
 
-const CATVENTURE_START_TIME = new Date(Date.UTC(2022, 8, 22, 13))
+const CATVENTURE_START_TIME = new Date(Date.UTC(2022, 8, 22, 15))
 
 const pad = (num = 0, width = 2, char = '0') => {
   const _num = num.toString()

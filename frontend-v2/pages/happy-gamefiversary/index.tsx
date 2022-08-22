@@ -20,7 +20,7 @@ import { fetcher, gtagEvent } from '@/utils'
 import Image from 'next/image'
 import { format } from 'date-fns'
 import Head from 'next/head'
-import WalletConnector from '@/components/Base/WalletConnector'
+import Link from 'next/link'
 
 // eslint-disable-next-line no-unused-expressions
 fonts
@@ -171,7 +171,11 @@ const Content = () => {
               </a>
             </li>)}
             <li className="px-4 xl:px-6">
-              <WalletConnector hideBuy buttonClassName="sm:!w-full"></WalletConnector>
+              <Link href="/happy-gamefiversary/tasks" passHref={true}>
+                <a className="mt-auto bg-gradient-to-r from-[#93FF61] to-[#FAFF00] text-black font-casual font-semibold text-[12px] uppercase block w-full clipped-t-r px-6 py-3 mb-2 lg:mb-4 text-center">
+                  Join Now
+                </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -204,8 +208,8 @@ const Content = () => {
 
       <Parallax speed={20} className="-mb-40 sm:-mb-20 3xl:mt-24">
         <section className="mx-auto max-w-[1920px] overflow-hidden z-20">
-          <div className="md:container mx-auto max-w-4xl text-center bg-black p-8">
-            <div className="font-spotnik">
+          <div className="md:container mx-auto text-center bg-black p-8 w-full">
+            <div className="font-spotnik max-w-4xl mx-auto">
               <p className="text-2xl xl:text-3xl py-8">
                 Catventure in the Multiverse - bringing players a captivating, thrilling, and diverse experience of multiple gameplays. Participating in Catventure, players become the Castronauts and Space Clowders to travel through our multiverse of games and metaverse.
               </p>

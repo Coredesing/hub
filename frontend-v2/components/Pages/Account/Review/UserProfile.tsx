@@ -6,7 +6,7 @@ import toast from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
 import get from 'lodash.get'
 import useConnectWallet from '@/hooks/useConnectWallet'
-import { printNumber, fetcher } from '@/utils'
+import { printNumber, fetcher, shorten } from '@/utils'
 import { useScreens } from '@/components/Pages/Home/utils'
 import Modal from '@/components/Base/Modal'
 import { Spinning } from '@/components/Base/Animation'
@@ -20,7 +20,7 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0, tier
   const [loading, setLoading] = useState(false)
   const [tempAvatar, setTempAvatar] = useState(get(data, 'avatar.url') || '')
   const { connectWallet } = useConnectWallet()
-  const { username, firstName, lastName, avatar: defaultAvatar } = data || {}
+  const { username, firstName, lastName, avatar: defaultAvatar, walletAddress } = data || {}
   const _originFirstName = firstName
 
   const _originLastName = lastName
@@ -118,7 +118,7 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0, tier
             }
           }
         }
-        const payload : any = { username, firstName, lastName, avatar: avatarId }
+        const payload: any = { username, firstName, lastName, avatar: avatarId }
         if (email && email.match(/\S+@\S+\.\S+/)) {
           payload.email = email
         }
@@ -215,7 +215,7 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0, tier
           {fullName}
         </div>
         <div className="font-casual font-medium text-sm leading-[100%] tracking-[0.03px] text-white/60 mb-[8px] md:mb-[10px]">
-          {data?.username}
+          {data?.username === walletAddress ? shorten(walletAddress) : data?.username}
         </div>
         <div className="font-casual font-medium text-[13px] md:text-sm leading-[100%] text-white opacity-60 mb-2 md:mb-[34px]">
           {txtRankAndLevel}
@@ -388,10 +388,11 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0, tier
                         Username *
                       </div>
                       <input
-                        className="bg-[#303035] border border-[#3C3C42] placeholder-white placeholder-opacity-30 font-casual text-sm rounded-sm px-4 py-1.5 w-full focus-visible:border-gamefiDark-350"
+                        className="bg-[#303035] border border-[#3C3C42] placeholder-white placeholder-opacity-30 font-casual text-sm rounded-sm px-4 py-1.5 w-full focus-visible:border-gamefiDark-350  disabled:cursor-not-allowed"
                         name="username"
                         placeholder="Your Username"
                         autoFocus
+                        disabled
                         maxLength={100}
                         {...register('username', {
                           required: true,

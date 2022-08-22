@@ -60,7 +60,7 @@ const TabGetMoreExp = ({ data }) => {
               >
                 <Image layout="fill" src={stakeBanner2} alt=""></Image>
               </div>
-              <span className="ml-2 mr-auto 2xl:ml-6 uppercase font-mechanic font-bold text-lg leading-[150%]">
+              <span className="ml-6 md:ml-2 mr-auto 2xl:ml-6 uppercase font-mechanic font-bold text-lg leading-[150%]">
                 GET 100 GXP PER EACH GAFI STAKED
               </span>
               <Link href="/staking">

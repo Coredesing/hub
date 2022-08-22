@@ -54,9 +54,7 @@ export default async function handler (req, res) {
       if (isEmpty(error)) {
         res.status(200).json(data)
       } else {
-        res.status(500).json({
-          err: error
-        })
+        res.status(500).json(response)
       }
     } catch (err) {
       res.status(500).json({

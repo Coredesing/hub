@@ -41,7 +41,7 @@ const TabGetMoreExp = ({ data }) => {
           <div className="font-casual font-normal text-sm leading-[150%] text-white mb-4 md:mb-0">
             Get 100 GXP per $GAFI staked
             <br />
-            Lose 100 GXP per $GAFI staked
+            Lose 100 GXP per $GAFI unstaked
           </div>
         </div>
         <div className="relative flex-1">
@@ -61,7 +61,7 @@ const TabGetMoreExp = ({ data }) => {
                 <Image layout="fill" src={stakeBanner2} alt=""></Image>
               </div>
               <span className="ml-2 mr-auto 2xl:ml-6 uppercase font-mechanic font-bold text-lg leading-[150%]">
-                GET 100 GXP FOR EACH GAFI STAKED
+                GET 100 GXP PER EACH GAFI STAKED
               </span>
               <Link href="/staking">
                 <a className="hidden sm:inline-flex bg-gamefiGreen-600 clipped-t-r rounded-sm cursor-pointer">

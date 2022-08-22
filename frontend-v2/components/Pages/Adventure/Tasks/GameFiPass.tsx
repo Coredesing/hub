@@ -24,6 +24,7 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
   const { accountHub: data } = useHubContext()
   const { connectWallet } = useConnectWallet()
   const { setShowModal: showConnectWallet } = useWalletContext()
+  const [disableVerify, setDisableVerify] = useState(false)
   const { account } = useMyWeb3()
   const screens = useScreens()
   const { walletAddress, email, confirmed } = data || {}
@@ -54,6 +55,7 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
   }, [account])
 
   useEffect(() => {
+    if (!account) return
     if (isEmpty(data) || isEmpty(listSocial)) {
       setConnectedAllSocial(false)
       return
@@ -87,8 +89,9 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
   }, [email, account])
 
   const onSubmit = (dataSubmit: { email: any }) => {
-    if (loading) return
+    if (loading || disableVerify) return
     setLoading(true)
+    setDisableVerify(true)
     const { email } = dataSubmit
     connectWallet(false, email).then(async (res: any) => {
       if (res.error) {
@@ -210,12 +213,12 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
                           })}
                         />
                         <button
-                          className="flex hidden md:block items-center justify-center overflow-hidden text-gamefiGreen-700 font-semibold font-casual text-[13px] hover:opacity-95 cursor-pointer w-[200px] "
+                          className="flex-none hidden md:block items-center justify-center overflow-hidden text-gamefiGreen-700 font-semibold font-casual text-[13px] hover:opacity-95 cursor-pointer w-[200px] "
                           onClick={handleUpdate}
                           type="submit"
                           disabled={loading}
                         >
-                          {loading ? <Spinning className="w-6 h-6" /> : 'Verify my Email'}
+                          {loading ? <Spinning className="w-6 h-6" /> : (disableVerify ? 'Please check your email' : 'Verify my email')}
                         </button>
                       </>}
                   </div>
@@ -226,7 +229,7 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
                       type="submit"
                       disabled={loading}
                     >
-                      {loading ? <Spinning className="w-6 h-6" /> : 'Verify my Email'}
+                      {loading ? <Spinning className="w-6 h-6" /> : (disableVerify ? 'Please check your email' : 'Verify my email')}
                     </button>
                   </div>}
                   {errors.email && (

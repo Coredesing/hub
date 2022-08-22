@@ -43,6 +43,7 @@ import { fetcher, printNumber } from '@/utils'
 import HubProvider from '@/context/hubProvider'
 import { useMyWeb3 } from '@/components/web3/context'
 import Modal from '@/components/Base/Modal'
+import { useRouter } from 'next/router'
 
 // eslint-disable-next-line no-unused-expressions
 fonts
@@ -202,6 +203,8 @@ const Content = () => {
   const flickingMiddle = useRef()
   const flickingListMiddle = useRef()
 
+  const router = useRouter()
+
   useEffect(() => {
     if (account) {
       fetcher('/api/account/ranks/getUserRankAndQuests', {
@@ -256,6 +259,12 @@ const Content = () => {
     }
   }, [account])
 
+  useEffect(() => {
+    if (router?.query?.team) {
+      setReferrerLink(router.query.team?.toString())
+    }
+  }, [router.query.team])
+
   const listProjectTop = useMemo(() => {
     if (!projects?.length || !projects) return []
 
@@ -299,11 +308,21 @@ const Content = () => {
     if (!referrerLink) return
     const regex = /^https:\/\/gamefi\.org\/adventure\/join\?team=([a-zA-Z0-9-]*)$/
 
-    if (!regex.test(referrerLink)) return
+    let matches = []
+    let slug = ''
+    if (regex.test(referrerLink)) {
+      matches = referrerLink.match(regex)
+      slug = matches?.length > 0 && matches[1]
+    } else {
+      slug = /^[a-zA-Z0-9-]*$/.test(referrerLink) && referrerLink
+    }
 
-    const matches = referrerLink.match(regex)
-    const slug = matches?.length > 0 && matches[1]
     console.log(slug)
+    if (!slug) {
+      setShowModalJoinTeam(false)
+      toast.error('Team not found')
+      return
+    }
 
     const toasting = toast.loading('Processing')
     fetcher(`/api/adventure/project/${account}?slug=${slug}`, {
@@ -313,11 +332,11 @@ const Content = () => {
       }
     }).then(res => {
       console.log(res)
-      if (!res || !res.user_id) {
+      if (!res || res.error) {
         toast.error(res?.message)
         return
       }
-      toast.success('Join team successfully')
+      toast.success(res?.message || 'Join team successfully')
     }).catch(e => {
       toast.error(e?.message)
     }).finally(() => {
@@ -325,6 +344,10 @@ const Content = () => {
       toast.dismiss(toasting)
     })
   }, [account, referrerLink])
+
+  const playGame = useCallback(async (id) => {
+    return fetcher(`/api/adventure/${account}/connect?id=${id}`, { method: 'PATCH' }).then(res => console.log(res)).catch(e => console.debug(e))
+  }, [account])
 
   return <div className={`flex w-full h-screen ${theme}`}>
     <div className="dark:bg-gamefiDark-900 dark:text-white w-full flex flex-col md:flex-row">
@@ -554,6 +577,7 @@ const Content = () => {
                                 ? <a
                                   className="bg-gradient-to-tl from-[#6CDB00] via-[#6CDB00] to-[#C9DB00] ml-auto flex items-center justify-center w-2/3 sm:w-1/3 md:w-1/5 aspect-6 md:aspect-[5/1.1] 2xl:aspect-6 uppercase text-sm text-black font-bold tracking-[0.02em] rounded-br"
                                   style={{ clipPath: 'polygon(14% 0, 100% 0, 100% 100%, 0% 100%)' }}
+                                  onClick={() => { playGame(el.id) }}
                                   href={`${el?.slug === 'epic-war' ? 'https://portal.epicwar.io/' : el?.slug === 'befitter' ? 'https://befitter.io/' : ''}`}
                                   target="_blank"
                                   rel="noreferrer"

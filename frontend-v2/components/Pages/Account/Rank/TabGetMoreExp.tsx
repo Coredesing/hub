@@ -38,7 +38,7 @@ const TabGetMoreExp = ({ data }) => {
             </Tippy> */}
           </div>
 
-          <div className="font-casual font-normal text-sm leading-[150%] text-white">
+          <div className="font-casual font-normal text-sm leading-[150%] text-white mb-4 md:mb-0">
             Get 100 GXP per $GAFI staked
             <br />
             Lose 100 GXP per $GAFI unstaked
@@ -61,7 +61,7 @@ const TabGetMoreExp = ({ data }) => {
                 <Image layout="fill" src={stakeBanner2} alt=""></Image>
               </div>
               <span className="ml-2 mr-auto 2xl:ml-6 uppercase font-mechanic font-bold text-lg leading-[150%]">
-                GET 100 GXP FOR EACH GAFI STAKED
+                GET 100 GXP PER EACH GAFI STAKED
               </span>
               <Link href="/staking">
                 <a className="hidden sm:inline-flex bg-gamefiGreen-600 clipped-t-r rounded-sm cursor-pointer">
@@ -85,12 +85,45 @@ const TabGetMoreExp = ({ data }) => {
       {[
         ...get(data, 'groupQuests', []),
         {
-          _id: '62cbc9a19756de073879ec5b',
+          _id: '1',
           name: 'Social activities',
-          description: 'Coming soon',
+          description: '',
           tooltipText: '',
           priority: 6,
-          quests: [{ _id: 1 }, { _id: 2 }, { _id: 3 }, { _id: 4 }]
+          quests: [
+            {
+              _id: 1,
+              description: 'Lorem ipsum dolor sit amet.',
+              rewards: [{
+                name: 'GXP',
+                quantity: 10
+              }]
+            },
+            {
+              _id: 2,
+              description: 'Lorem ipsum dolor sit amet.',
+              rewards: [{
+                name: 'GXP',
+                quantity: 10
+              }]
+            },
+            {
+              _id: 3,
+              description: 'Lorem ipsum dolor sit amet.',
+              rewards: [{
+                name: 'GXP',
+                quantity: 10
+              }]
+            },
+            {
+              _id: 4,
+              description: 'Lorem ipsum dolor sit amet.',
+              rewards: [{
+                name: 'GXP',
+                quantity: 10
+              }]
+            }
+          ]
         }
       ].map((group) => (
         <List key={group._id} data={group}></List>

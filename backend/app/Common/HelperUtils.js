@@ -210,10 +210,13 @@ const doMask = (obj, fields) => {
 };
 
 const maskEmail = async (email) => {
+  if (!email || email.indexOf('@') < 0) {
+    return email
+  }
+
   const preEmailLength = email.split("@")[0].length;
   // get number of word to hide, half of preEmail
   const hideLength = ~~(preEmailLength / 2);
-  console.log(hideLength);
   // create regex pattern
   const r = new RegExp(".{" + hideLength + "}@", "g")
   // replace hide with ***

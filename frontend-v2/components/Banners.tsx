@@ -10,7 +10,7 @@ import { gtagEvent } from '@/utils'
 
 const banners = {
   default: {
-    deadline: new Date('2022-08-22T15:00:00Z'),
+    deadline: new Date('2022-09-10T13:00:00Z'),
     img: banner,
     link: 'https://gamefi.org/happy-gamefiversary',
     text: 'GameFi.org Happy Gamefiversary - Catventure in the Multiverse',

@@ -166,11 +166,11 @@ const Content = () => {
               <a href={`#${item.id}`} className={`px-4 lg:px-6 py-3 hover:text-gamefiGreen-500 relative block ${item.secondary ? 'md:hidden xl:block' : ''}`} onClick={() => {
                 gtagEvent('catventure', { section: item.id })
               }}>
-                <span className="hidden lg:block lg:absolute lg:top-0 lg:left-0 font-light">0{i + 1}</span>
+                <span className="hidden xl:block xl:absolute xl:top-0 xl:left-0 font-light">0{i + 1}</span>
                 {item.text}
               </a>
             </li>)}
-            <li className="px-4 lg:px-6">
+            <li className="px-4 xl:px-6">
               <WalletConnector hideBuy buttonClassName="sm:!w-full"></WalletConnector>
             </li>
           </ul>

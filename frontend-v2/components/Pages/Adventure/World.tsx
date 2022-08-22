@@ -6,8 +6,8 @@ import fonts from '@/components/Pages/Adventure/index.module.scss'
 
 import logoKucoin from '@/components/Pages/Adventure/images/lands/kucoin-logo.png'
 import imgKucoin from '@/components/Pages/Adventure/images/lands/kucoin.png'
-import logoHeroesLand from '@/components/Pages/Adventure/images/lands/heroes-of-the-land-logo.png'
-import imgHeroesLand from '@/components/Pages/Adventure/images/lands/heroes-of-the-land.png'
+import logoHeroesLand from '@/components/Pages/Adventure/images/lands/heroes-land-logo.png'
+import imgHeroesLand from '@/components/Pages/Adventure/images/lands/heroes-land.jpeg'
 import logoThunderlands from '@/components/Pages/Adventure/images/lands/thunderlands-logo.png'
 import imgThunderlands from '@/components/Pages/Adventure/images/lands/thunderlands.png'
 import logoEnginesOfFury from '@/components/Pages/Adventure/images/lands/engines-of-fury-logo.png'
@@ -457,10 +457,10 @@ const landsDefault: LandRaw[] = [{
   logo: logoAradena,
   ping: 2
 }, {
-  slug: 'heroes-of-the-land',
+  slug: 'heroes-land',
   shape: LandShape.FIVE,
   positions: [3, 61],
-  name: 'Heroes of the Land',
+  name: 'Heroes Land',
   categories: ['Casual', 'Role Playing', 'Puzzle'],
   description: 'Heroes Land is a match-3 puzzle RPG game with a unique dual-gameplay model combining both traditional gameplay mode and blockchain game mode. There are various game activities where users can enjoy and utilize their skills, from evolving and summoning heroes, and upgrading lands to Daily Quests, Tower Conquest, PvE, PvP, and Clan to earn game tokens.',
   img: imgHeroesLand,
@@ -669,9 +669,9 @@ const LandDetails = ({ land, onClose }: { land: Land; onClose: () => void }) => 
   return <div className="flex flex-col w-full h-full sm:h-auto md:h-full font-atlas bg-black relative">
     <div className="block md:absolute xl:relative z-0 w-full"><Image src={land.img} alt="image" layout="responsive"></Image></div>
     <div className="p-4 flex-1 flex flex-col overflow-hidden z-10 md:pt-28 lg:pt-36 xl:pt-4">
-      <p className="text-xs xl:text-sm 2xl:text-base text-white xl:text-gamefiDark-300 mb-2">{land.categories.join(', ')}</p>
-      <h3 className="font-spotnik text-xl xl:text-2xl 2xl:text-[32px] leading-none uppercase font-bold">{land.name}</h3>
-      <p className="leading-normal my-4 xl:my-6 2xl:my-8 text-sm 2xl:text-base line-clamp-4 lg:line-clamp-3 xl:line-clamp-4 2xl:line-clamp-none">{land.description}</p>
+      <p className="text-xs xl:text-sm 2xl:text-base text-white xl:text-gamefiDark-300 mb-2" style={{ textShadow: '0px 0px 4px black' }}>{land.categories.join(', ')}</p>
+      <h3 className="font-spotnik text-xl xl:text-2xl 2xl:text-[32px] leading-none uppercase font-bold" style={{ textShadow: '0px 0px 4px black' }}>{land.name}</h3>
+      <p className="leading-normal my-4 xl:my-6 2xl:my-8 text-sm 2xl:text-base line-clamp-4 lg:line-clamp-3 xl:line-clamp-4 2xl:line-clamp-none" style={{ textShadow: '0px 0px 4px black' }}>{land.description}</p>
       <p className="font-bold mb-2 text-sm 2xl:text-base 2xl:mb-4">Missions</p>
       <div className="flex-1 overflow-auto mb-4">
         {!!missions?.length && missions.map(mission =>
@@ -858,6 +858,12 @@ const World = ({ width = 1600, height = 750, screens = 3, r = 22, items = landsD
       // eslint-disable-next-line @typescript-eslint/unbound-method
       .transition().duration(400).call(zoomRef.current.translateTo, x, y)
   }, [height, landActive, resetZoom, width])
+
+  useEffect(() => {
+    select(ref.current)
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      .transition().duration(300).call(zoomRef.current.translateTo, (width * 3 / 4), (height * 3 / 4))
+  }, [height, width])
 
   return (
     <div className={clsx('mx-auto', className)}>

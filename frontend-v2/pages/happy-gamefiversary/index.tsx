@@ -142,12 +142,12 @@ const Content = () => {
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       <meta property="og:title" content={title} key="title" />
       <meta property="og:description" content={description} key="description" />
-      <meta property="og:image" content={'https://gamefi.org/happy-gamefiversary.jpg?v=1655805418132'} key="image" />
+      <meta property="og:image" content={'https://gamefi.org/happy-gamefiversary.jpg?v=1661187628261'} key="image" />
       <meta name="keywords" content="launchpad, game hub, nft marketplace, game portal, game pass, game guild, tournament, metaverse, ido"></meta>
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={'https://gamefi.org/happy-gamefiversary.jpg?v=1655805418132'} />
+      <meta name="twitter:image" content={'https://gamefi.org/happy-gamefiversary.jpg?v=1661187628261'} />
     </Head>
     <header className="fixed top-0 z-40 flex-none mx-auto w-full dark:bg-black dark:text-white font-atlas">
       <div className="sm:container mx-auto flex justify-between items-center p-3 lg:px-4 relative">
@@ -178,7 +178,7 @@ const Content = () => {
       </div>
     </header>
     <div className="dark:bg-black dark:text-white font-atlas min-h-screen">
-      <div className="transform -mb-40 sm:-mb-16 relative">
+      <div className="transform -mb-40 sm:-mb-20 relative">
         <section className="relative md:container mx-auto z-10 pt-20" id="about">
           <div className="w-screen md:w-auto h-screen md:aspect-[16/7.5] md:h-auto relative">
             <div className="absolute inset-0 flex items-center justify-center">
@@ -202,9 +202,9 @@ const Content = () => {
         </section>
       </div>
 
-      <Parallax speed={20} className="-mb-40 sm:-mb-16 3xl:mt-24">
+      <Parallax speed={20} className="-mb-40 sm:-mb-20 3xl:mt-24">
         <section className="mx-auto max-w-[1920px] overflow-hidden z-20">
-          <div className="md:container mx-auto text-center bg-black p-8">
+          <div className="md:container mx-auto max-w-4xl text-center bg-black p-8">
             <div className="font-spotnik">
               <p className="text-2xl xl:text-3xl py-8">
                 Catventure in the Multiverse - bringing players a captivating, thrilling, and diverse experience of multiple gameplays. Participating in Catventure, players become the Castronauts and Space Clowders to travel through our multiverse of games and metaverse.

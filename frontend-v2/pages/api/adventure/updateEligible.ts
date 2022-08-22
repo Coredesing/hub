@@ -21,6 +21,7 @@ export default async function handler (req, res) {
   const payload = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
   try {
     const response = await callWithRest(payload?.walletAddress)
+    console.log(response)
     const { data, error } = response || {}
     if (isEmpty(error)) {
       res.status(200).json(data)

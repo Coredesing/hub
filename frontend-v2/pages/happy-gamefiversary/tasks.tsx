@@ -187,8 +187,8 @@ const Content = () => {
   const { account } = useMyWeb3()
   const [gafish, setGafish] = useState(0)
   const [referrerLink, setReferrerLink] = useState('')
+  const [joinedTeam, setJoinedTeam] = useState(null)
 
-  const [disabled] = useState(true)
   const [loading, setLoading] = useState(false)
   const [projects, setProjects] = useState([])
   const [topWorld, setTopWorld] = useState(0)
@@ -225,9 +225,19 @@ const Content = () => {
   useEffect(() => {
     if (!account) return
 
-    fetcher(`api/adventure/${account}/points`).then(res => {
+    fetcher(`/api/adventure/${account}/points`).then(res => {
       if (res?.currentPoint) {
         setGafish(res.currentPoint)
+      }
+    }).catch(e => console.debug(e))
+  }, [account])
+
+  useEffect(() => {
+    if (!account) return
+
+    fetcher(`/api/adventure/${account}/team`).then(res => {
+      if (res?.data?.team) {
+        setJoinedTeam(res?.data?.team)
       }
     }).catch(e => console.debug(e))
   }, [account])
@@ -260,7 +270,6 @@ const Content = () => {
 
   const listTaskGamefi = useMemo(() => {
     if (!projects?.length || !projects) return []
-    console.log(projects)
 
     return projects.find(el => el?.name === 'GAMEFI_WORLD')?.projects?.[0]?.tasks
   }, [projects])
@@ -304,9 +313,15 @@ const Content = () => {
       }
     }).then(res => {
       console.log(res)
+      if (!res || !res.user_id) {
+        toast.error(res?.message)
+        return
+      }
+      toast.success('Join team successfully')
     }).catch(e => {
       toast.error(e?.message)
     }).finally(() => {
+      setShowModalJoinTeam(false)
       toast.dismiss(toasting)
     })
   }, [account, referrerLink])
@@ -330,7 +345,7 @@ const Content = () => {
       <div><Sidebar></Sidebar></div>
       <div id='layoutBody' className='bg-[#15171E] w-full h-full overflow-auto relative scroll-smooth'>
         <Topbar absolute={true}></Topbar>
-        <div className={clsx('flex min-h-screen h-full mx-auto', !disabled ? 'hidden' : 'block')}>
+        <div className={clsx('flex min-h-screen h-full mx-auto', account ? 'hidden' : 'block')}>
           <section className='flex-1 max-w-[1920px] mx-auto mt-32 mb-14 md:mt-60 md:mb-0 lg:mt-52 xl:mt-40 2xl:mt-24'>
             <div className='h-full mx-auto flex flex-col items-center md:container relative'>
               <div className="flex items-center justify-center">
@@ -367,7 +382,7 @@ const Content = () => {
         </Modal>
 
         {
-          !disabled && <div className={`mx-auto pb-20 relative z-0 ${connectedAllSocial ? 'mb-28' : 'h-screen overflow-hidden'}`}>
+          account && <div className={`mx-auto pb-20 relative z-0 ${connectedAllSocial ? 'mb-28' : 'h-screen overflow-hidden'}`}>
             <div className={`${connectedAllSocial ? 'top-20' : 'top-48'} absolute left-0 right-0 z-[-1] mx-auto clipped-down h-full w-full pt-4`} style={{ background: 'linear-gradient(90.03deg, #52FF00 0%, #15171E 25vw, #15171E 75vw, #52FF00 99.44%)' }}>
               <div className="clipped-down h-full w-full" style={{ background: 'linear-gradient(180deg, #1D1F28 31.35%, #0F1116 104.36%)' }}></div>
             </div>
@@ -392,36 +407,40 @@ const Content = () => {
                   <img src={textMultiverse.src} alt="" />
                 </div>
                 <div className='flex justify-center'>
-                  <p className='p-4 font-casual font-medium text-[11px] sm:text-sm'>Finish all <img src={smile.src} alt="" className='inline' /> <span className='text-[#70C81B]'>Easy Task</span> to get bonus fish</p>
+                  <p className='p-4 font-casual font-medium text-[11px] sm:text-sm'>Finish all <img src={smile.src} alt="" className='inline' /> <span className='text-[#70C81B]'>Easy Tasks</span> to get bonus Gafish</p>
                 </div>
-                <div className='flex flex-col items-center pt-5 pb-10 md:pt-10 md:pb-20 md:flex-row md:items-center gap-7 md:gap-0'>
-                  <div className="w-full md:w-1/3 flex gap-2">
-                    <input
-                      type="text"
-                      placeholder="Enter referral link here"
-                      value={referrerLink}
-                      onChange={(e) => { setReferrerLink(e?.target?.value) }}
-                      className='w-full px-4 h-14 justify-between bg-[#22252F] rounded border-[1px] border-[#303342] focus:border-none focus:ring-0'
-                    >
-                    </input>
-                    <button
-                      className="w-32 flex items-center justify-start font-bold text-sm tracking-[0.02em] uppercase text-gamefiDark-200 cursor-not-allowed"
-                      // onClick={() => { setShowModalJoinTeam(true) }}
-                    >Join a team</button>
-                  </div>
-                  {/* <div className='flex items-center md:ml-auto'>
-                    <img src={leaderboard.src} alt="" />
-                    <span className='ml-2 font-casual text-[#FFD600] text-sm border-b-[1px] border-[#FFD600]'>Event Leaderboard</span>
-                  </div> */}
-                  <div className='w-full md:w-1/5 md:ml-auto px-4 h-14 flex items-center bg-[#FFA800]/5 rounded border-[1px] border-[#FFD600]/40'>
-                    <img src={currentFish.src} alt="" />
-                    <div className='ml-5'>
-                      <p className='font-mechanic font-bold text-white/50 uppercase text-sm'>Current gafish</p>
-                      <p className='font-casual font-medium text-sm mt-auto'>{printNumber(gafish)}</p>
+                {
+                  <div className='flex flex-col items-center pt-5 pb-10 md:pt-10 md:pb-20 md:flex-row md:items-center gap-7 md:gap-0'>
+                    {joinedTeam
+                      ? <div className="font-casual text-gamefiGreen">You have joined team {joinedTeam.name}</div>
+                      : <div className="w-full md:w-1/3 flex gap-2">
+                        <input
+                          type="text"
+                          placeholder="Enter referral link here"
+                          value={referrerLink}
+                          onChange={(e) => { setReferrerLink(e?.target?.value) }}
+                          className='w-full px-4 h-14 justify-between bg-[#22252F] rounded border-[1px] border-[#303342] focus:border-none focus:ring-0'
+                        >
+                        </input>
+                        <button
+                          className={`w-32 flex items-center justify-start font-bold text-sm tracking-[0.02em] uppercase ${referrerLink ? 'text-gamefiGreen-700' : 'text-gamefiDark-200 cursor-not-allowed'}`}
+                          onClick={() => { referrerLink && setShowModalJoinTeam(true) }}
+                        >Join a team</button>
+                      </div>}
+                    {/* <div className='flex items-center md:ml-auto'>
+                  <img src={leaderboard.src} alt="" />
+                  <span className='ml-2 font-casual text-[#FFD600] text-sm border-b-[1px] border-[#FFD600]'>Event Leaderboard</span>
+                </div> */}
+                    <div className='w-full md:w-1/5 md:ml-auto px-4 h-14 flex items-center bg-[#FFA800]/5 rounded border-[1px] border-[#FFD600]/40'>
+                      <img src={currentFish.src} alt="" />
+                      <div className='ml-5'>
+                        <p className='font-mechanic font-bold text-white/50 uppercase text-sm'>Current gafish</p>
+                        <p className='font-casual font-medium text-sm mt-auto'>{printNumber(gafish)}</p>
+                      </div>
+                      {/* <img src={add.src} alt="" className='ml-auto cursor-pointer' /> */}
                     </div>
-                    {/* <img src={add.src} alt="" className='ml-auto cursor-pointer' /> */}
                   </div>
-                </div>
+                }
 
                 {/* top world */}
                 {

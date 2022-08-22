@@ -81,18 +81,21 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listSocial, confirmed, walletAddress])
 
-  useEffect(() => {
-    if (!email || email.toLowerCase().includes(account?.toLowerCase())) {
-      setValue('email', '')
-    } else setValue('email', email)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [email, account])
+  // useEffect(() => {
+  //   if (!email || email.toLowerCase().includes(account?.toLowerCase())) {
+  //     setValue('email', '')
+  //   } else setValue('email', email)
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [email, account])
 
   const onSubmit = (dataSubmit: { email: any }) => {
     if (loading || disableVerify) return
+    let { email } = dataSubmit
+    if (email?.indexOf('*') > -1) {
+      email = ''
+    }
     setLoading(true)
     setDisableVerify(true)
-    const { email } = dataSubmit
     connectWallet(false, email).then(async (res: any) => {
       if (res.error) {
         setLoading(false)
@@ -106,7 +109,7 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
         }
 
         let response: { err: any }, responseSendMail
-        if (!isRegister) {
+        if (!isRegister && email) {
           response = await fetcher('/api/hub/profile/update', {
             method: 'POST',
             body: JSON.stringify(payload),
@@ -211,6 +214,10 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
                             required: true,
                             validate: isValidEmail
                           })}
+
+                          onChange={e => {
+                            setValue('email', e.target.value)
+                          }}
                         />
                         <button
                           className="flex-none hidden md:block items-center justify-center overflow-hidden text-gamefiGreen-700 font-semibold font-casual text-[13px] hover:opacity-95 cursor-pointer w-[200px] "

@@ -266,7 +266,7 @@ export default function WalletProvider ({ children }) {
                   setShowModal(false)
                   setConnectorChosen(undefined)
                 }}>
-                  View My Account
+                  View GameFi Pass
                 </a>
               </Link>
               <span className="text-[13px] sm:text-base inline-flex items-center text-red-400 hover:text-red-500" onClick={tryDeactivate}>

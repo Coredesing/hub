@@ -45,7 +45,7 @@ const TabEarnHistory = ({ data }) => {
                 <td className="py-4" align="center">
                   {format(
                     new Date(e.completedAt),
-                    'd LLL, yyyy - hh:mm:ss OOO'
+                    'd LLL, yyyy - hh:mm:ss'
                   )}
                 </td>
               </tr>

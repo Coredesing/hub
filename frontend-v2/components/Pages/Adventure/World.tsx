@@ -320,7 +320,7 @@ const landsDefault: LandRaw[] = [{
   positions: [16, 18],
   name: 'Kucoin',
   categories: ['Exchange', 'CEX'],
-  description: '',
+  description: 'KuCoin is a global crypto currency exchange for numerous digital assets and crypto currencies. Launched in September2017, KuCoin has grown into one of the most popular crypto exchanges and already has over 20 million registered users across 207 countries and regions around the world.',
   img: imgKucoin,
   logo: logoKucoin,
   ping: 4

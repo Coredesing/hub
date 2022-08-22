@@ -529,14 +529,24 @@ const Content = () => {
                                 <span className='text-white'>This game has extra contribute bonus. </span>
                                 <span className='text-gamefiGreen-700'>View Detail</span>
                               </div>
-                              <button
-                                className={`${el?.status?.toUpperCase() === 'LOCK' ? 'bg-gamefiDark-400' : 'bg-gradient-to-tl from-[#6CDB00] via-[#6CDB00] to-[#C9DB00]'} ml-auto flex items-center justify-center w-2/3 sm:w-1/3 md:w-1/5 aspect-6 md:aspect-[5/1.1] 2xl:aspect-6 uppercase text-sm text-black font-bold tracking-[0.02em] rounded-br`}
-                                style={{ clipPath: 'polygon(14% 0, 100% 0, 100% 100%, 0% 100%)' }}
-                                disabled={el?.status?.toUpperCase() === 'LOCK'}
-                              >
-                                {el?.status?.toUpperCase() === 'LOCK' ? 'Coming Soon' : 'Play now'}
-                                <img src={playNow.src} alt="" className='m-2' />
-                              </button>
+                              { el?.status?.toUpperCase() !== 'LOCK' || el?.slug === 'epic-war' || el?.slug === 'befitter'
+                                ? <a
+                                  className="bg-gradient-to-tl from-[#6CDB00] via-[#6CDB00] to-[#C9DB00] ml-auto flex items-center justify-center w-2/3 sm:w-1/3 md:w-1/5 aspect-6 md:aspect-[5/1.1] 2xl:aspect-6 uppercase text-sm text-black font-bold tracking-[0.02em] rounded-br"
+                                  style={{ clipPath: 'polygon(14% 0, 100% 0, 100% 100%, 0% 100%)' }}
+                                  href={`${el?.slug === 'epic-war' ? 'https://portal.epicwar.io/' : el?.slug === 'befitter' ? 'https://befitter.io/' : ''}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
+                                  {(el?.status?.toUpperCase() !== 'LOCK' || el?.slug === 'epic-war' || el?.slug === 'befitter') ? 'Play now' : 'Coming soon'}
+                                  <img src={playNow.src} alt="" className='m-2' />
+                                </a>
+                                : <div
+                                  className="bg-gamefiDark-400 ml-auto flex items-center justify-center w-2/3 sm:w-1/3 md:w-1/5 aspect-6 md:aspect-[5/1.1] 2xl:aspect-6 uppercase text-sm text-black font-bold tracking-[0.02em] rounded-br"
+                                  style={{ clipPath: 'polygon(14% 0, 100% 0, 100% 100%, 0% 100%)' }}
+                                >
+                                Coming Soon
+                                  <img src={playNow.src} alt="" className='m-2' />
+                                </div>}
                             </div>
                           </div>
                         </div>
@@ -652,8 +662,9 @@ const Content = () => {
                   <span className='uppercase font-bold min-w-fit sm:text-2xl'>Gamefi World</span>
                   <img src={right.src} alt="" />
                 </div>
-                {/* <div className="my-4">
-                  <div className="w-full"><Image src={require('@/assets/images/adventure/bg-countdown.png')} alt=""></Image></div>
+                {/* <div className="my-4 mx-auto z-0">
+                  <div className="uppercase text-gamefiDark-200 font-semibold">We will land on this world in</div>
+                  <div className="w-full absolute top-0 left-0 right-0 bottom-0 z-[-1]"><Image src={require('@/assets/images/adventure/bg-countdown.png')} alt=""></Image></div>
                 </div> */}
                 <div className='max-w-[1920px] w-full pt-4 gap-1 mx-auto'>
                   {listTaskGamefi?.map((el, i) => <div key={`task-gamefi-${i}`} className='flex flex-col gap-2 w-full md:w-2/3 p-2 mx-auto'>

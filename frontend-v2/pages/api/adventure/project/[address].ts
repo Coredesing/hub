@@ -14,22 +14,53 @@ export function callWithRest (address) {
   })
 }
 
+export function joinTeam (address, slug) {
+  console.log(`${CATVENTURE_API_BASE_URL}/users/${address}/connect/teams/${slug}`)
+  return fetcher(`${CATVENTURE_API_BASE_URL}/users/${address}/connect/teams/${slug}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: bearer
+    }
+  })
+}
+
 export default async function handler (req, res) {
-  try {
-    const response = await callWithRest(req.query?.address)
-    const { data, error } = response || {}
-    if (isEmpty(error)) {
-      res.status(200).json(data)
-    } else {
+  if (req.method === 'GET') {
+    try {
+      const response = await callWithRest(req.query?.address)
+      const { data, error } = response || {}
+      if (isEmpty(error)) {
+        res.status(200).json(data)
+      } else {
+        res.status(500).json({
+          err: error
+        })
+      }
+    } catch (err) {
       res.status(500).json({
-        error: 'failed to load data',
-        err: error
+        err
       })
     }
-  } catch (err) {
-    res.status(500).json({
-      error: 'failed to load data',
-      err
-    })
+  }
+
+  if (req.method === 'POST') {
+    try {
+      const { address, slug } = req.query
+      const response = await joinTeam(address, slug)
+
+      const { data, error } = response || {}
+      if (isEmpty(error)) {
+        res.status(200).json(data)
+      } else {
+        res.status(500).json({
+          err: error
+        })
+      }
+    } catch (err) {
+      res.status(500).json({
+        err
+      })
+    }
   }
 }

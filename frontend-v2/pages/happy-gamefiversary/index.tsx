@@ -20,6 +20,7 @@ import { fetcher, gtagEvent } from '@/utils'
 import Image from 'next/image'
 import { format } from 'date-fns'
 import Head from 'next/head'
+import WalletConnector from '@/components/Base/WalletConnector'
 
 // eslint-disable-next-line no-unused-expressions
 fonts
@@ -83,7 +84,7 @@ const history = [{
 
 const Content = () => {
   const [menuMobile, setMenuMobile] = useState(false)
-  const [historyActive, setHistoryActive] = useState(2)
+  const [historyActive, setHistoryActive] = useState(1)
   const [plugins, setPlugins] = useState<Plugin[]>([])
 
   const flickingHistory = useRef()
@@ -169,13 +170,16 @@ const Content = () => {
                 {item.text}
               </a>
             </li>)}
+            <li className="px-4 lg:px-6">
+              <WalletConnector hideBuy buttonClassName="sm:!w-full"></WalletConnector>
+            </li>
           </ul>
         </div>
       </div>
     </header>
     <div className="dark:bg-black dark:text-white font-atlas min-h-screen">
       <div className="transform -mb-40 sm:-mb-16 relative">
-        <section className="relative md:container mx-auto z-10" id="about">
+        <section className="relative md:container mx-auto z-10 pt-20" id="about">
           <div className="w-screen md:w-auto h-screen md:aspect-[16/7.5] md:h-auto relative">
             <div className="absolute inset-0 flex items-center justify-center">
               <img src={banner.src} alt="" className="absolute bottom-0 w-full" />
@@ -255,7 +259,7 @@ const Content = () => {
         <section className="mx-auto max-w-[1920px]" id="history">
           <div className="md:container mx-auto p-8">
             <span className="text-transparent bg-gradient-to-br from-[#93FF61] to-[#FAFF00] bg-clip-text font-spotnik text-lg md:text-2xl font-bold uppercase">
-              [ GameFi.ORG History ]
+              [ GameFi.Org History ]
             </span>
           </div>
           <Flicking
@@ -289,7 +293,7 @@ const Content = () => {
             ref={flickingTimeline}
             bound={true}
           >
-            {history.map((item, i) => <div className={clsx('group flex-none w-1/3 lg:w-1/4 xl:w-1/6 text-center relative cursor-pointer text-white text-opacity-40 hover:text-opacity-75', i === historyActive && 'text-opacity-100')} key={i}>
+            {history.map((item, i) => <div className={clsx('group flex-none w-1/3 lg:w-1/4 xl:w-1/6 text-center relative cursor-pointer text-white text-opacity-70 hover:text-opacity-75', i === historyActive && 'text-opacity-100')} key={i}>
               <div className="relative !bg-transparent cursor-pointer flex items-center justify-center">
                 <div className={`rounded-full border ${i === historyActive ? 'border-gamefiGreen-500' : 'border-transparent group-hover:border-white'}`}>
                   <div className={`h-2 w-2 m-4 ${i === historyActive ? 'bg-gamefiGreen-500' : 'bg-white'} rounded-full`}></div>

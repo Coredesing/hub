@@ -9,6 +9,7 @@ import { ObjectType } from '@/utils/types'
 import Tippy from '@tippyjs/react/headless'
 import ModalConnect from './ModalConnect'
 import 'tippy.js/dist/tippy.css'
+import clsx from 'clsx'
 
 const WalletConnector = (props) => {
   const { network, account, balance, currencyNative, balanceShort } = useMyWeb3()
@@ -40,7 +41,7 @@ const WalletConnector = (props) => {
       {
         account &&
         <div className="font-casual leading-6 text-sm flex items-center justify-center w-full">
-          <a className="hidden sm:inline-flex bg-gamefiGreen-600 clipped-b-l p-px rounded cursor-pointer mr-1" href="https://pancakeswap.finance/swap?outputCurrency=0x89af13a10b32f1b2f8d1588f93027f69b6f4e27e&inputCurrency=0xe9e7cea3dedca5984780bafc599bd69add087d56" target="_blank" rel="noreferrer">
+          <a className={`hidden bg-gamefiGreen-600 clipped-b-l p-px rounded cursor-pointer mr-1 ${!props.hideBuy && 'sm:inline-flex'}`} href="https://pancakeswap.finance/swap?outputCurrency=0x89af13a10b32f1b2f8d1588f93027f69b6f4e27e&inputCurrency=0xe9e7cea3dedca5984780bafc599bd69add087d56" target="_blank" rel="noreferrer">
             <span className="font-mechanic bg-gamefiDark-900 text-gamefiGreen-500 hover:text-gamefiGreen-200 clipped-b-l py-2 px-6 rounded leading-5 uppercase font-bold text-[13px]">
               Buy $GAFI
             </span>
@@ -133,14 +134,14 @@ const WalletConnector = (props) => {
             trigger="click"
             interactive={true}
             appendTo="parent">
-            <div className="w-full sm:w-auto flex">
+            <div className={clsx('w-full sm:w-auto flex', props.hideBuy && btnClass)}>
               <div className="flex-1 bg-gamefiDark-500 p-2 pl-6 rounded-l inline-flex justify-center cursor-pointer text-[13px]">
-                <div className="inline-flex font-bold mr-2 items-center">
+                { !props.hideBuy && <div className="inline-flex font-bold mr-2 items-center">
                   <div className="inline-flex w-5 h-5 relative mr-2">
                     <Image src={network.image} layout="fill" alt={network.name} />
                   </div>
                   {balance && balanceShort} {currencyNative}
-                </div>
+                </div> }
                 <span className="bg-gamefiDark-700 px-2 rounded-sm">{accountShort}</span>
               </div>
               <button className="bg-gamefiDark-600 px-3 clipped-t-r">

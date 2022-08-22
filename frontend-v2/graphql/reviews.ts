@@ -153,6 +153,7 @@ export const GET_REVIEWS_AND_COMMENTS_BY_USER = gql`
         id
         attributes {
           walletAddress
+          username
           firstName
           lastName
           level

@@ -9,7 +9,6 @@ import Layout from '@/components/Layout'
 import ReviewAndComment from '@/components/Pages/Account/ReviewAndComment'
 import AccountLayout from '@/components/Pages/Account/AccountLayout'
 import HubProvider, { useHubContext } from '@/context/hubProvider'
-import UserProfile from '@/components/Pages/Account/Review/UserProfile'
 import LoadingOverlay from '@/components/Base/LoadingOverlay'
 
 const Component = () => {
@@ -70,7 +69,6 @@ const Component = () => {
   const draft = get(data, 'draftReview.meta.pagination.total', 0)
   const pending = get(data, 'pendingReview.meta.pagination.total', 0)
   const declined = get(data, 'declinedReview.meta.pagination.total', 0)
-  const totalReviewOfAllStatus = Number(published) + Number(draft) + Number(pending) + Number(declined)
   const userData = get(data, 'user') || {}
 
   return (
@@ -80,7 +78,6 @@ const Component = () => {
         {!isEmpty(data)
           ? (
             <div className="p-4 md:p-10">
-              <UserProfile editable data={userData} totalReviewOfAllStatus={totalReviewOfAllStatus} />
               <ReviewAndComment
                 data={data}
                 status={_status}

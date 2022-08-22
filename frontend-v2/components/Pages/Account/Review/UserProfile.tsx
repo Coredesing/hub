@@ -6,7 +6,7 @@ import toast from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
 import get from 'lodash.get'
 import useConnectWallet from '@/hooks/useConnectWallet'
-import { printNumber, fetcher } from '@/utils'
+import { printNumber, fetcher, shorten } from '@/utils'
 import { useScreens } from '@/components/Pages/Home/utils'
 import Modal from '@/components/Base/Modal'
 import { Spinning } from '@/components/Base/Animation'
@@ -15,13 +15,14 @@ import styles from '@/components/Pages/Account/Review/account_review.module.scss
 
 const VALID_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif']
 
-function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
+function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0, tierMine = {}, email }: any) {
   const [showModal, setShowModal] = useState(false)
   const [loading, setLoading] = useState(false)
   const [tempAvatar, setTempAvatar] = useState(get(data, 'avatar.url') || '')
   const { connectWallet } = useConnectWallet()
-  const { firstName, lastName, avatar: defaultAvatar } = data || {}
+  const { username, firstName, lastName, avatar: defaultAvatar, walletAddress } = data || {}
   const _originFirstName = firstName
+
   const _originLastName = lastName
   const {
     register,
@@ -32,6 +33,7 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
   } = useForm({
     defaultValues: {
       avatar: tempAvatar,
+      username: username,
       firstName: firstName,
       lastName: lastName
     }
@@ -81,11 +83,11 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
     const isShow = !showModal
     if (isShow) {
       handleClearTempAvatar()
-      reset({ firstName: _originFirstName, lastName: _originLastName })
+      reset({ firstName: _originFirstName, lastName: _originLastName, username: username })
     }
     setShowModal(isShow)
   }
-  const onSubmit = (dataSubmit: { firstName: any; lastName: any; avatar: any }) => {
+  const onSubmit = (dataSubmit: { username: any; firstName: any; lastName: any; avatar: any }) => {
     if (loading) return
     setLoading(true)
     connectWallet().then(async (res: any) => {
@@ -95,7 +97,7 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
         return
       }
       try {
-        const { firstName, lastName, avatar } = dataSubmit
+        const { username, firstName, lastName, avatar } = dataSubmit
         const { walletAddress, signature } = res
         let avatarId = get(defaultAvatar, 'id', null)
         if (avatar?.length) {
@@ -116,9 +118,10 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
             }
           }
         }
-
-        const payload = { firstName, lastName, avatar: avatarId }
-
+        const payload: any = { username, firstName, lastName, avatar: avatarId }
+        if (email && email.match(/\S+@\S+\.\S+/)) {
+          payload.email = email
+        }
         const response = await fetcher('/api/hub/profile/update', {
           method: 'POST',
           body: JSON.stringify(payload),
@@ -211,28 +214,50 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
         <div className="font-casual not-italic font-semibold md:text-base text-sm leading-[100%] tracking-[0.03px] text-white mb-[8px] md:mb-[10px]">
           {fullName}
         </div>
+        <div className="font-casual font-medium text-sm leading-[100%] tracking-[0.03px] text-white/60 mb-[8px] md:mb-[10px]">
+          {data?.username === walletAddress ? shorten(walletAddress) : data?.username}
+        </div>
         <div className="font-casual font-medium text-[13px] md:text-sm leading-[100%] text-white opacity-60 mb-2 md:mb-[34px]">
           {txtRankAndLevel}
         </div>
         {(!screens.mobile || !screens.tablet) && (
-          <div className="flex gap-[10px]">
-            <div className="w-4 h-4">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M1 0H15C15.552 0 16 0.448 16 1V11C16 11.552 15.552 12 15 12H10L4 16V12H1C0.448 12 0 11.552 0 11V1C0 0.448 0.448 0 1 0Z"
-                  fill="#53545A"
-                />
-              </svg>
+          <div className="flex">
+            <div className="flex gap-[10px]">
+              <div className="w-4 h-4">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 2L12 6L8 2L4 6L0 2V13C0 13.5523 0.447715 14 1 14H15C15.5523 14 16 13.5523 16 13V2Z" fill="#53545A" />
+                </svg>
+
+              </div>
+              <div className='font-casual font-semibold not-italic text-[13px] text-white'>
+                <span className={`font-semibold font-casual ${!tierMine?.id ? 'text-yellow-300' : ''}`}>{tierMine?.name || 'Loading...'}</span>
+              </div>
             </div>
-            <div className="font-casual font-semibold not-italic text-[13px] leading-[12px] text-white">{`${printNumber(
-              totalReviews
-            )} ${totalReviews > 1 ? 'Reviews' : 'Review'}`}</div>
+            <div className="mx-8">
+              <svg width="1" height="14" viewBox="0 0 1 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect opacity="0.2" y="0.5" width="1" height="13" fill="#D9D9D9" />
+              </svg>
+
+            </div>
+            <div className="flex gap-[10px]">
+              <div className="w-4 h-4">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1 0H15C15.552 0 16 0.448 16 1V11C16 11.552 15.552 12 15 12H10L4 16V12H1C0.448 12 0 11.552 0 11V1C0 0.448 0.448 0 1 0Z"
+                    fill="#53545A"
+                  />
+                </svg>
+              </div>
+              <div className="font-casual font-semibold not-italic text-[13px] text-white">{`${printNumber(
+                totalReviews
+              )} ${totalReviews > 1 ? 'Reviews' : 'Review'}`}</div>
+            </div>
           </div>
         )}
       </div>
@@ -354,19 +379,42 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <div className="uppercase text-[13px] font-bold mb-6">
+                  {/* <div className="uppercase text-[13px] font-bold mb-5">
                     Your Info
-                  </div>
+                  </div> */}
                   <div className="">
-                    <div className="mb-6">
+                    <div className="mb-5">
+                      <div className="text-sm mb-2 font-casual text-gamefiDark-350 text-[13px]">
+                        Username *
+                      </div>
+                      <input
+                        className="bg-[#303035] border border-[#3C3C42] placeholder-white placeholder-opacity-30 font-casual text-sm rounded-sm px-4 py-1.5 w-full focus-visible:border-gamefiDark-350  disabled:cursor-not-allowed"
+                        name="username"
+                        placeholder="Your Username"
+                        autoFocus
+                        disabled
+                        maxLength={100}
+                        {...register('username', {
+                          required: true,
+                          minLength: 0,
+                          maxLength: 50
+                        })}
+                      />
+                      {errors.username && (
+                        <div className="mt-2 text-normal text-red-500 ">
+                          Username is required
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mb-5">
                       <div className="text-sm mb-2 font-casual text-gamefiDark-350 text-[13px]">
                         First Name *
                       </div>
                       <input
-                        className="bg-[#303035] border border-[#3C3C42] placeholder-white placeholder-opacity-30 font-casual text-sm rounded-sm px-4 py-2 w-full focus-visible:border-gamefiDark-350"
+                        className="bg-[#303035] border border-[#3C3C42] placeholder-white placeholder-opacity-30 font-casual text-sm rounded-sm px-4 py-1.5 w-full focus-visible:border-gamefiDark-350"
                         name="firstName"
                         placeholder="Your First Name"
-                        autoFocus
                         maxLength={100}
                         {...register('firstName', {
                           required: true,
@@ -381,12 +429,12 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
                       )}
                     </div>
 
-                    <div className="mb-6">
+                    <div className="mb-5">
                       <div className="text-sm mb-2 font-casual text-gamefiDark-350 text-[13px]">
                         Last Name *
                       </div>
                       <input
-                        className="bg-[#303035] border border-[#3C3C42] placeholder-white placeholder-opacity-30 font-casual text-sm rounded-sm px-4 py-2 w-full focus-visible:border-gamefiDark-350"
+                        className="bg-[#303035] border border-[#3C3C42] placeholder-white placeholder-opacity-30 font-casual text-sm rounded-sm px-4 py-1.5 w-full focus-visible:border-gamefiDark-350"
                         name="lastName"
                         placeholder="Your Last Name"
                         {...register('lastName', {
@@ -418,7 +466,7 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0 }) {
                 onClick={handleUpdate}
                 disabled={loading}
               >
-                { loading ? <Spinning className="w-6 h-6"/> : 'UPDATE'}
+                {loading ? <Spinning className="w-6 h-6" /> : 'UPDATE'}
               </button>
             </div>
           </div>

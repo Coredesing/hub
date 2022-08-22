@@ -13,25 +13,29 @@ import Script from 'next/script'
 import 'tippy.js/dist/tippy.css'
 import '@/assets/styles/index.scss'
 import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
+import { debounce } from '@/utils'
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
 const AW_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
 const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID
 
-function MyApp ({ Component, pageProps }: AppProps) {
-  // migration signature from localStorage to sessionStorage
-  // this is temporary
+const callbackVH = () => {
+  const vh = window.innerHeight * 0.01
+  document.documentElement.style.setProperty('--vh', `${vh}px`)
+}
 
+const debounced = debounce(callbackVH, 100)
+
+function MyApp ({ Component, pageProps }: AppProps) {
   useEffect(() => {
-    if (window?.localStorage) {
-      const keys = Object.keys(window.localStorage)
-      keys.forEach(key => {
-        if (key.match(/SIGNATURE_0x(\w+)/)) {
-          window.localStorage.removeItem(key)
-        }
-      })
-    }
+    debounced()
+    // comment below to avoid jerkiness
+    // window.addEventListener('resize', debounced)
+
+    // return () => {
+    //   window.removeEventListener('resize', debounced)
+    // }
   }, [])
 
   const router = useRouter()

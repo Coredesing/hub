@@ -12,6 +12,7 @@ body {
     padding: 0 !important;
     font-family: Rajdhani;
     line-height: 17px;
+    scroll-behavior: smooth;
 }
 
 ::-webkit-scrollbar {
@@ -40,6 +41,12 @@ body {
 
 .menu-slide-up>.h-full {
     transition: height 0.4ms ease-out;
+}
+
+.h-screen {
+    height: 100vh!important;
+    /* Fallback for browsers that do not support Custom Properties */
+    height: calc(var(--vh, 1vh) * 100)!important;
 }
 
 .clipped-t-r {
@@ -441,6 +448,7 @@ input.hide-spin::-webkit-inner-spin-button {
 }
 
 ::selection {
+    color: #fff;
     background: #3297fd !important;
 }
 
@@ -559,5 +567,15 @@ input.hide-spin::-webkit-inner-spin-button {
 
     100% {
         transform: scaleX(1);
+    }
+}
+
+.clipped-down {
+    clip-path: polygon(0 0, 50% 5%, 100% 0, 100% 95%, 50% 100%, 0 95%);
+}
+
+@media screen and (max-height: 900px) {
+    .hide-on-small-device {
+        display: none;
     }
 }

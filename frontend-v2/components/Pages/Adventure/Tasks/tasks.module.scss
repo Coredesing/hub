@@ -1,0 +1,20 @@
+.Twitter {
+  background: #00C2FF;
+  border: 1px solid #00AEE4;
+  box-shadow: inset 0px 2px 0px rgba(255, 255, 255, 0.2);
+  >:first-child {
+    background: #00C2FF;
+    border: 1px solid #00AEE4;
+    box-shadow: inset -2px 2px 0px rgba(255, 255, 255, 0.2);
+  }
+}
+.Telegram {
+  background: #3AACFF;
+  border: 1px solid #2B9BEC;
+  box-shadow: inset 0px 2px 0px rgba(255, 255, 255, 0.25);
+  >:first-child {
+    background: #3AACFF;
+    border: 1px solid #2B9BEC;
+    box-shadow: inset -2px 2px 0px rgba(255, 255, 255, 0.25);
+  }
+}

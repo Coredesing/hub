@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import useSWR, { SWRResponse } from 'swr'
 import get from 'lodash.get'
 import { API_BASE_URL } from '@/utils/constants'
@@ -86,18 +86,18 @@ export function shorten (s: string, max = 12) {
 }
 
 type PaginatorInput = {
-    current: number;
-    last: number;
-    betweenFirstAndLast?: number;
+  current: number;
+  last: number;
+  betweenFirstAndLast?: number;
 };
 
 type Paginator = {
-    first: number;
-    current: number;
-    last: number;
-    pages: Array<number>;
-    leftCluster: boolean;
-    rightCluster: boolean;
+  first: number;
+  current: number;
+  last: number;
+  pages: Array<number>;
+  leftCluster: boolean;
+  rightCluster: boolean;
 };
 
 export const paginator = (options: PaginatorInput): Paginator | null => {
@@ -332,7 +332,7 @@ export const stripTags = (str = '') => {
   return (str || '').replace(/(<([^>]+)>)/gi, '')
 }
 
-export const gtagEvent = (name: string, params?: {[key: string]: any}) => {
+export const gtagEvent = (name: string, params?: { [key: string]: any }) => {
   console.debug('event', name, params)
   try {
     if ((window as any).gtag) {
@@ -342,7 +342,7 @@ export const gtagEvent = (name: string, params?: {[key: string]: any}) => {
     if ((window as any).fbq) {
       (window as any).fbq('trackCustom', name, params || {})
     }
-  } catch (_) {}
+  } catch (_) { }
 }
 
 export const numberWithCommas = (num) => {
@@ -374,3 +374,18 @@ export const pad = (num = 0, width = 2, char = '0') => {
     ? _num
     : new Array(width - _num.length + 1).join(char) + _num
 }
+
+function usePrevious (value) {
+  const ref = useRef(value)
+  useEffect(() => {
+    ref.current = value // assign the value of ref to the argument
+  }, [value]) // this code will run when the value of 'value' changes
+  return ref.current // in the end, return the current ref value.
+}
+export default usePrevious
+
+export const isValidEmail = (email: string) =>
+  // eslint-disable-next-line no-useless-escape
+  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+    email
+  )

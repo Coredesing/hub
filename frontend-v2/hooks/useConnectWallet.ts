@@ -13,7 +13,7 @@ const useConnectWallet = () => {
   const { showCaptcha, tokenCaptcha, resetToken, accountHub, setAccountHub } =
     useHubContext()
   const connectWallet = useCallback(
-    (needCaptcha?: boolean) => {
+    (needCaptcha?: boolean, email?: string) => {
       return new Promise((resolve, reject) => {
         if (!account) {
           showConnectWallet(true)
@@ -32,12 +32,16 @@ const useConnectWallet = () => {
                 })
                 return
               }
+              const payload : any = {
+                walletAddress: account,
+                captcha: newCaptcha || tokenCaptcha
+              }
+              if (email) {
+                payload.email = email
+              }
               fetcher('/api/hub/registerWallet', {
                 method: 'POST',
-                body: JSON.stringify({
-                  walletAddress: account,
-                  captcha: newCaptcha || tokenCaptcha
-                }),
+                body: JSON.stringify(payload),
                 headers: {
                   'X-Signature': data,
                   'X-Wallet-Address': account
@@ -55,6 +59,7 @@ const useConnectWallet = () => {
                   setAccountHub(response.data)
                   resolve({
                     walletAddress: response.data?.walletAddress,
+                    isRegister: true,
                     signature: data
                   })
                 })

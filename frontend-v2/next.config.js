@@ -13,7 +13,7 @@ let config = {
     includePaths: [path.join(__dirname, 'styles'), path.join(__dirname, 'node_modules')]
   },
   images: {
-    domains: ['gamefi-cms.s3.ap-southeast-1.amazonaws.com', 'i.imgur.com', 'gamefi-public.s3.amazonaws.com', 'imgur.com', 'images.ctfassets.net', 's2.coinmarketcap.com', 's3.coinmarketcap.com', 'gamefi.ghost.io', 'test-cms.gamefi.org', 'migration-cms.gamefi.org']
+    domains: ['gamefi-cms.s3.ap-southeast-1.amazonaws.com', 'i.imgur.com', 'gamefi-public.s3.amazonaws.com', 'imgur.com', 'images.ctfassets.net', 's2.coinmarketcap.com', 's3.coinmarketcap.com', 'gamefi.ghost.io', 'test-cms.gamefi.org', 'migration-cms.gamefi.org', 'images.weserv.nl']
   },
   redirects () {
     return [
@@ -45,6 +45,17 @@ let config = {
       {
         source: '/insight/game-hub-in-gamefi-org-improve-your-experience-to-overview-the-blockchain-gaming-world',
         destination: '/insight/gamefi-org-game-hub-a-steam-like-platform-to-bring-together-all-blockchain-games-and-gamified-projects',
+        permanent: true
+      },
+      {
+        source: '/adventure/join',
+        has: [
+          {
+            type: 'query',
+            key: 'team'
+          }
+        ],
+        destination: '/happy-gamefiversary/tasks?team=:team',
         permanent: true
       }
     ]

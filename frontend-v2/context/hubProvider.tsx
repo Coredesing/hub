@@ -6,6 +6,7 @@ import {
   useContext
 } from 'react'
 import { fetcher } from '@/utils'
+import { useRouter } from 'next/router'
 import { useMyWeb3 } from '@/components/web3/context'
 import Recaptcha from '@/components/Base/Recaptcha'
 
@@ -13,7 +14,7 @@ export const HubContext = createContext<{
   showCaptcha:(arg0: any, arg1: any) => void;
   resetToken: () => void;
   tokenCaptcha: string;
-  setAccountHub:(arg0: any) => void;
+  setAccountHub: (arg0: any) => void;
   accountHub: any;
     }>({
       showCaptcha () { },
@@ -29,6 +30,7 @@ const HubProvider = ({ children }) => {
   const [tokenCaptcha, setTokenCaptcha] = useState('')
   const [accountHub, setAccountHub] = useState(null)
   const { account } = useMyWeb3()
+  const router = useRouter()
   const recaptchaRef: any = useRef()
 
   const hubProfileId = () => {
@@ -39,15 +41,14 @@ const HubProvider = ({ children }) => {
       }
 
       const key = `HUB_PROFILE_${account}`
-
-      if (window?.sessionStorage && window.sessionStorage.getItem(key)) {
+      const needGetNew = ['tasks'].some(v => router.asPath.includes(v))
+      if (window?.sessionStorage && window.sessionStorage.getItem(key) && !needGetNew) {
         const profile = JSON.parse(window.sessionStorage.getItem(key))
         if (profile) {
           resolve(profile)
           return
         }
       }
-
       fetcher(`/api/hub/profile/${account}`, {
         method: 'GET'
       })

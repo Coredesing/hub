@@ -3,8 +3,12 @@ import { fetcher } from '@/utils'
 import { API_CMS_URL } from '@/utils/constants'
 
 export function callWidthRest (param) {
-  return fetcher(`${API_CMS_URL}/api/users/profile/${param}`, {
-    method: 'GET'
+  return fetcher(`${API_CMS_URL}/api/users/profile/me`, {
+    method: 'GET',
+    headers: {
+      'X-Signature': 'sdsd',
+      'X-Wallet-Address': param
+    }
   })
 }
 

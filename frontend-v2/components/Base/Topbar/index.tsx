@@ -1,10 +1,11 @@
 import Link from 'next/link'
 import WalletConnector from '../WalletConnector'
 import Image from 'next/image'
+import clsx from 'clsx'
 
 const Topbar = ({ className, absolute }: { className?: string; absolute?: boolean }) => {
   return (
-    <div className={`${className} ${absolute && 'absolute top-0 left-0 right-0 z-10'}`}>
+    <div className={clsx(className, absolute && 'absolute top-0 left-0 right-0 z-10')}>
       <div className="hidden w-full md:container md:mx-auto md:flex justify-between items-center md:h-22 lg:h-24 py-8 px-8">
         <div>
           {/* <div className="flex align-middle items-center cursor-pointer">

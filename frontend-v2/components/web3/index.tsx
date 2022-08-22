@@ -36,12 +36,12 @@ function parseChainId (chainId: string) {
   return Number.parseInt(chainId, 16)
 }
 export function switchNetwork (provider: any, chainId: number) {
-  if (provider?.isWalletConnect && provider?.connector?._peerMeta?.name?.match(/Trust Wallet/i)) {
-    toast.error('Unable to switch network on Trust wallet')
+  if (!provider || !chainId) {
     return
   }
 
-  if (!chainId) {
+  if (provider?.isWalletConnect && provider?.connector?._peerMeta?.name?.match(/Trust Wallet/i)) {
+    toast.error('Unable to switch network on Trust wallet')
     return
   }
 

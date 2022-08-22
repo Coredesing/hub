@@ -179,8 +179,8 @@ export const useBalanceToken = (token?: Token, networkAlias?: string) => {
       return '0'
     }
 
-    return safeToFixed(parseFloat(utils.formatEther(balance)), 4)
-  }, [balance])
+    return safeToFixed(parseFloat(utils.formatUnits(balance, token.decimals)), 3)
+  }, [balance, token])
   const updateBalance = useCallback(() => {
     if (!account || !provider || !token?.address) {
       setBalance(null)

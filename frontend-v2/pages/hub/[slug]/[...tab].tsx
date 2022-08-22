@@ -154,7 +154,7 @@ function Tab ({ data, notFound }) {
             id={data?.id}
             slug={data?.slug}
             isVerified={get(data, 'project.data.attributes.isVerifiedGameFi')}
-            totalFavorites={nFormatter(data?.totalFavorites)}
+            totalFavorites={data?.totalFavorites}
             viewDetail={true}
           />
           <div id='HubDetailContent' className="flex flex-col font-casual gap-2">

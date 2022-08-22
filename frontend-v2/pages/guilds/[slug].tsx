@@ -22,10 +22,10 @@ import { useMediaQuery } from 'react-responsive'
 interface GuildDetailProps {
   guildData: any;
   guildReviewsData: any;
-  notFound: any;
+  notFound?: any;
 }
 
-const GuildDetail = ({ guildData, guildReviewsData, notFound }: GuildDetailProps) => {
+const Component = ({ guildData, guildReviewsData }: GuildDetailProps) => {
   const router = useRouter()
   const setTab = useCallback((index: number) => {
     switch (index) {
@@ -45,11 +45,6 @@ const GuildDetail = ({ guildData, guildReviewsData, notFound }: GuildDetailProps
   const [loading, setLoading] = useState(false)
   const [currentRate, setCurrentRate] = useState(0)
   const { accountHub } = useHubProfile()
-
-  useEffect(() => {
-    if (notFound) router.replace('/guilds')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [notFound])
 
   useEffect(() => {
     if (isEmpty(accountHub)) {
@@ -144,6 +139,60 @@ const GuildDetail = ({ guildData, guildReviewsData, notFound }: GuildDetailProps
   }, [guildData?.id])
 
   return (
+    <>
+      <HeaderProfile totalFavorites={totalFavorites} setTotalFavorites={setTotalFavorites} currentRate={currentRate} setCurrentRate={setCurrentRate} loading={loading} setLoading={setLoading} />
+      <div className="mx-auto">
+        <Tabs
+          titles={[
+            'HOME',
+            'NEWS',
+            'RATING & REVIEWS'
+          ]}
+          currentValue={tab}
+          onChange={(index) => {
+            setTab(index)
+          }}
+          className="container mx-auto mt-10 px-4 lg:px-16"
+        />
+        <TabPanel value={tab} index={0}>
+          <div className="py-8">
+            <Home guildReviewsData={guildReviewsData} totalFavorites={totalFavorites} showMoreIntroduction={showMoreIntroduction} />
+          </div>
+        </TabPanel>
+        <TabPanel value={tab} index={1}>
+          <div className="container mx-auto py-8">
+            <News />
+          </div>
+        </TabPanel>
+        <TabPanel value={tab} index={2}>
+          <div className="container mx-auto py-8 px-4 lg:px-16">
+            <Reviews
+              data={formattedReviews}
+              totalReviews={guildReviewsData.totalReviews}
+              pageCountReviews={guildReviewsData.pageCountReviews}
+              rates={guildReviewsData.rates}
+              id={guildData.id}
+              tabRef={null}
+              currentResource='guilds'
+              currentRate={currentRate}
+              setCurrentRate={setCurrentRate}
+            />
+          </div>
+        </TabPanel>
+      </div>
+    </>
+  )
+}
+
+const GuildDetail = ({ guildData, guildReviewsData, notFound }: GuildDetailProps) => {
+  const router = useRouter()
+
+  useEffect(() => {
+    if (notFound) router.replace('/guilds')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notFound])
+
+  return (
     <Layout title={`GameFi.org - ${guildData?.name || 'Guild'}`} description="" extended={!!guildData}>
       {
         isEmpty(guildData) && <div className="invisible">
@@ -160,46 +209,7 @@ const GuildDetail = ({ guildData, guildReviewsData, notFound }: GuildDetailProps
         !isEmpty(guildData) && <GuildDetailContext.Provider value={{
           guildData
         }}>
-          <HeaderProfile totalFavorites={totalFavorites} setTotalFavorites={setTotalFavorites} currentRate={currentRate} setCurrentRate={setCurrentRate} loading={loading} setLoading={setLoading} />
-          <div className="mx-auto">
-            <Tabs
-              titles={[
-                'HOME',
-                'NEWS',
-                'RATING & REVIEWS'
-              ]}
-              currentValue={tab}
-              onChange={(index) => {
-                setTab(index)
-              }}
-              className="container mx-auto mt-10 px-4 lg:px-16"
-            />
-            <TabPanel value={tab} index={0}>
-              <div className="py-8">
-                <Home guildReviewsData={guildReviewsData} totalFavorites={totalFavorites} showMoreIntroduction={showMoreIntroduction} />
-              </div>
-            </TabPanel>
-            <TabPanel value={tab} index={1}>
-              <div className="container mx-auto py-8">
-                <News />
-              </div>
-            </TabPanel>
-            <TabPanel value={tab} index={2}>
-              <div className="container mx-auto py-8 px-4 lg:px-16">
-                <Reviews
-                  data={formattedReviews}
-                  totalReviews={guildReviewsData.totalReviews}
-                  pageCountReviews={guildReviewsData.pageCountReviews}
-                  rates={guildReviewsData.rates}
-                  id={guildData.id}
-                  tabRef={null}
-                  currentResource='guilds'
-                  currentRate={currentRate}
-                  setCurrentRate={setCurrentRate}
-                />
-              </div>
-            </TabPanel>
-          </div>
+          <Component guildData={guildData} guildReviewsData={guildReviewsData} />
         </GuildDetailContext.Provider>
       }
     </Layout>

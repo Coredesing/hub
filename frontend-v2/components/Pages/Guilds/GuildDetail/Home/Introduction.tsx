@@ -1,4 +1,4 @@
-import { printNumber } from '@/utils'
+import { nFormatter } from '@/components/Pages/Hub/utils'
 import { format } from 'date-fns'
 import { useState } from 'react'
 import { useGuildDetailContext } from '../utils'
@@ -39,7 +39,7 @@ const Introduction = ({ totalFavorites, showMoreIntroduction }) => {
                 </svg>
               </span>
               <span className='text-13px font-casual font-light leading-5'>
-                <span className="font-medium text-white">{printNumber(totalFavorites || 0)}</span> people like this
+                <span className="font-medium text-white">{nFormatter(totalFavorites || 0)}</span> people like this
               </span>
             </div>
             <div className='flex gap-4 items-center'>

@@ -188,6 +188,7 @@ const Content = () => {
   const [gafish, setGafish] = useState(0)
   const [referrerLink, setReferrerLink] = useState('')
 
+  const [disabled] = useState(true)
   const [loading, setLoading] = useState(false)
   const [projects, setProjects] = useState([])
   const [topWorld, setTopWorld] = useState(0)
@@ -329,13 +330,13 @@ const Content = () => {
       <div><Sidebar></Sidebar></div>
       <div id='layoutBody' className='bg-[#15171E] w-full h-full overflow-auto relative scroll-smooth'>
         <Topbar absolute={true}></Topbar>
-        <div className={clsx('flex min-h-screen h-full mx-auto', account ? 'hidden' : 'block')}>
+        <div className={clsx('flex min-h-screen h-full mx-auto', !disabled ? 'hidden' : 'block')}>
           <section className='flex-1 max-w-[1920px] mx-auto mt-32 mb-14 md:mt-60 md:mb-0 lg:mt-52 xl:mt-40 2xl:mt-24'>
             <div className='h-full mx-auto flex flex-col items-center md:container relative'>
               <div className="flex items-center justify-center">
                 <img src={welcome.src} alt="" className="px-5 md:px-0" />
               </div>
-              <div className="text-gamefiGreen font-casual font-medium mt-4">Connect wallet first before starting your adventure!</div>
+              <div className="text-gamefiGreen font-casual font-medium mt-4">Coming soon!</div>
               <a href="https://www.youtube.com/watch?v=X4XWR6lZ63I" target="_blank" rel="noreferrer" className="relative mt-16" onClick={() => {}}>
                 <div className="w-24 h-24"><Image src={require('@/assets/images/adventure/play.png')} alt=""></Image></div>
                 {/* <div className="" style={{ transformOrigin: 'center' }}>GameFi.org aniversary - join multiversee adventure - </div> */}
@@ -366,7 +367,7 @@ const Content = () => {
         </Modal>
 
         {
-          account && <div className={`mx-auto pb-20 relative z-0 ${connectedAllSocial ? 'mb-28' : 'h-screen overflow-hidden'}`}>
+          !disabled && <div className={`mx-auto pb-20 relative z-0 ${connectedAllSocial ? 'mb-28' : 'h-screen overflow-hidden'}`}>
             <div className={`${connectedAllSocial ? 'top-20' : 'top-48'} absolute left-0 right-0 z-[-1] mx-auto clipped-down h-full w-full pt-4`} style={{ background: 'linear-gradient(90.03deg, #52FF00 0%, #15171E 25vw, #15171E 75vw, #52FF00 99.44%)' }}>
               <div className="clipped-down h-full w-full" style={{ background: 'linear-gradient(180deg, #1D1F28 31.35%, #0F1116 104.36%)' }}></div>
             </div>

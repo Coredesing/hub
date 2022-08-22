@@ -374,7 +374,7 @@ const Content = () => {
               <div className="flex items-center justify-center">
                 <img src={welcome.src} alt="" className="px-5 md:px-0" />
               </div>
-              <div className="text-gamefiGreen font-casual font-medium mt-4">Coming soon!</div>
+              <div className="text-gamefiGreen font-casual font-medium mt-4">Please connect wallet before joining the adventure!</div>
               <a href="https://www.youtube.com/watch?v=X4XWR6lZ63I" target="_blank" rel="noreferrer" className="relative mt-16" onClick={() => {}}>
                 <div className="w-24 h-24"><Image src={require('@/assets/images/adventure/play.png')} alt=""></Image></div>
                 {/* <div className="" style={{ transformOrigin: 'center' }}>GameFi.org aniversary - join multiversee adventure - </div> */}

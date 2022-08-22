@@ -233,15 +233,16 @@ const Content = () => {
 
   useEffect(() => {
     setLoading(true)
-    fetcher(`/api/adventure/project/${account}`).then(data => {
-      if (data) {
-        console.log('sdsds', data)
-        setProjects(data)
-        setLoading(true)
-      }
-    }).catch(e => {
-      toast.error('Failed to fetch data, please try again!')
-    })
+    if (account) {
+      fetcher(`/api/adventure/project/${account}`).then(data => {
+        if (data) {
+          setProjects(data)
+          setLoading(true)
+        }
+      }).catch(e => {
+        toast.error('Failed to fetch data, please try again!')
+      })
+    }
   }, [account])
 
   const listProjectTop = useMemo(() => {
@@ -296,7 +297,7 @@ const Content = () => {
 
     const toasting = toast.loading('Processing')
     fetcher(`/api/adventure/project/${account}?slug=${slug}`, {
-      method: 'POST',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       }
@@ -403,8 +404,8 @@ const Content = () => {
                     >
                     </input>
                     <button
-                      className="w-32 flex items-center justify-start font-bold text-sm tracking-[0.02em] uppercase text-gamefiGreen-700"
-                      onClick={() => { setShowModalJoinTeam(true) }}
+                      className="w-32 flex items-center justify-start font-bold text-sm tracking-[0.02em] uppercase text-gamefiDark-200 cursor-not-allowed"
+                      // onClick={() => { setShowModalJoinTeam(true) }}
                     >Join a team</button>
                   </div>
                   {/* <div className='flex items-center md:ml-auto'>

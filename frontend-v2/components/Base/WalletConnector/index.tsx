@@ -135,7 +135,7 @@ const WalletConnector = (props) => {
             interactive={true}
             appendTo="parent">
             <div className={clsx('w-full sm:w-auto flex', props.hideBuy && btnClass)}>
-              <div className="flex-1 bg-gamefiDark-500 p-2 pl-6 rounded-l inline-flex justify-center cursor-pointer text-[13px]">
+              <div className={`flex-1 bg-gamefiDark-500 p-2 ${!props.hideBuy && 'pl-6'} rounded-l inline-flex justify-center cursor-pointer text-[13px]`}>
                 { !props.hideBuy && <div className="inline-flex font-bold mr-2 items-center">
                   <div className="inline-flex w-5 h-5 relative mr-2">
                     <Image src={network.image} layout="fill" alt={network.name} />

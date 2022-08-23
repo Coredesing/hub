@@ -8,12 +8,8 @@ import { useMyWeb3 } from '@/components/web3/context'
 
 const TopWorldItem = ({ data, playGame, connectedAllSocial = false }) => {
   const canPlayNow = useMemo(() => {
-    return (
-      data?.status?.toUpperCase() !== 'LOCK' ||
-      data?.slug === 'epic-war' ||
-      data?.slug === 'befitter'
-    )
-  }, [data?.slug, data?.status])
+    return data?.status?.toUpperCase() !== 'LOCK' && data.playUrl
+  }, [data])
   const { account } = useMyWeb3()
 
   return (
@@ -143,13 +139,7 @@ const TopWorldItem = ({ data, playGame, connectedAllSocial = false }) => {
                 }}
                 href={
                   account && connectedAllSocial &&
-                `${
-                  data?.slug === 'epic-war'
-                    ? 'https://portal.epicwar.io/'
-                    : data?.slug === 'befitter'
-                      ? 'https://befitter.io/'
-                      : ''
-                }`
+                  data.playUrl
                 }
                 target="_blank"
                 rel="noreferrer"

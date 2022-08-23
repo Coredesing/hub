@@ -39,7 +39,7 @@ import { Sync } from '@egjs/flicking-plugins'
 import { ParallaxProvider, Parallax } from 'react-scroll-parallax'
 import '@egjs/flicking-plugins/dist/pagination.css'
 import '@egjs/react-flicking/dist/flicking.css'
-import { fetcher, printNumber } from '@/utils'
+import { fetcher, gtagEvent, printNumber } from '@/utils'
 import HubProvider from '@/context/hubProvider'
 import { useMyWeb3 } from '@/components/web3/context'
 import Modal from '@/components/Base/Modal'
@@ -577,7 +577,10 @@ const Content = () => {
                                 ? <a
                                   className="bg-gradient-to-tl from-[#6CDB00] via-[#6CDB00] to-[#C9DB00] ml-auto flex items-center justify-center w-2/3 sm:w-1/3 md:w-1/5 aspect-6 md:aspect-[5/1.1] 2xl:aspect-6 uppercase text-sm text-black font-bold tracking-[0.02em] rounded-br"
                                   style={{ clipPath: 'polygon(14% 0, 100% 0, 100% 100%, 0% 100%)' }}
-                                  onClick={() => { playGame(el.id) }}
+                                  onClick={() => {
+                                    gtagEvent(`catuniverse_${el.slug}`, { wallet: `${account}_`, position: 'top_world' })
+                                    playGame(el.id)
+                                  }}
                                   href={`${el?.slug === 'epic-war' ? 'https://portal.epicwar.io/' : el?.slug === 'befitter' ? 'https://befitter.io/' : ''}`}
                                   target="_blank"
                                   rel="noreferrer"
